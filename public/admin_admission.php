@@ -529,9 +529,9 @@ if (($seminar_id) && (!$uebernehmen_x) &&(!$adm_null_x) &&(!$adm_los_x) &&(!$adm
                                 $errormsg.=sprintf ("error§"._("Das Enddatum der Kontingentierung liegt in der Vergangenheit. Bitte &auml;ndern Sie das Datum!")."§");
                         } elseif (($admin_admission_data["admission_endtime"] < (time() + (24 * 60 *60))) && ($admin_admission_data["admission_endtime"] != -1)) {
                             if ($admin_admission_data["admission_type"] == 1)
-                                $errormsg.=sprintf ("error§"._("Das Losdatum liegt zu nah am aktuellen Datum. Bitte &auml;ndern Sie das Losdatum!")."§");
+                                $errormsg.=sprintf ("error§"._("Das Losdatum muss mindestens einen Tag in der Zukunft liegen!")."§");
                             else
-                                $errormsg.=sprintf ("error§"._("Das Enddatum der Kontingentierung liegt zu nah am aktuellen Datum. Bitte &auml;ndern Sie das Enddatum!")."§");
+                                $errormsg.=sprintf ("error§"._("Das Enddatum der Kontingentierung muss mindestens einen Tag in der Zukunft liegen!")."§");
                         }
                     }
                 } else {

@@ -635,7 +635,7 @@ function in_archiv ($sem_id) {
     $fakultaet=$db2->f("Name");
     while ($db2->next_record())
         {
-        $fakultaet=$fakultaet.", ".$db2->f("Name");
+        $fakultaet=$fakultaet." | ".$db2->f("Name");
         }
 
     // Schreiben Datenbank -> Datenbank

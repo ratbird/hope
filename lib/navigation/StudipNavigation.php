@@ -64,14 +64,10 @@ class StudipNavigation extends Navigation
 
             // community page
             $this->addSubNavigation('community', new CommunityNavigation());
-        }
 
-        // user profile page
-        if (is_object($user) && $perm->have_perm('autor')) {
+            // user profile page
             $this->addSubNavigation('profile', new ProfileNavigation());
-        }
 
-        if (is_object($user) && $user->id != 'nobody') {
             // calendar and schedule page
             $this->addSubNavigation('calendar', new CalendarNavigation());
 
@@ -105,7 +101,7 @@ class StudipNavigation extends Navigation
         $links = new Navigation('Links');
 
         // settings
-        if (is_object($user) && $user->id != 'nobody' && $perm->have_perm('autor')) {
+        if (is_object($user) && $perm->have_perm('autor')) {
             $navigation = new Navigation(_('Einstellungen'));
             $navigation->addSubNavigation('general', new Navigation(_('Allgemeines'), 'edit_about.php', array('view' => 'allgemein')));
             $navigation->addSubNavigation('privacy', new Navigation(_('Privatsphäre'), 'edit_about.php', array('view' => 'privacy')));

@@ -152,11 +152,13 @@ class StartNavigation extends Navigation
             $navigation->addSubNavigation('schedule', new Navigation(_('Stundenplan'), 'dispatch.php/calendar/schedule'));
             $this->addSubNavigation('messaging', $navigation);
 
+            $navigation = new Navigation(_('Profil'), 'about.php');
+
             if ($perm->have_perm('autor')) {
-                $navigation = new Navigation(_('Profil'), 'about.php');
                 $navigation->addSubNavigation('settings', new Navigation(_('Einstellungen'), 'edit_about.php?view=allgemein'));
-                $this->addSubNavigation('homepage', $navigation);
             }
+
+            $this->addSubNavigation('profile', $navigation);
         }
 
         // module administration

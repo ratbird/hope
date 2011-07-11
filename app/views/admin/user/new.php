@@ -42,17 +42,19 @@
     <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
         <td>
             <?= _("Vorname:") ?>
+            <span style="color: red; font-size: 1.6em">*</span>
         </td>
         <td>
-            <input class="user_form" type="text" name="Vorname" value="<?= htmlReady($user['Vorname']) ?>">
+            <input class="user_form" type="text" name="Vorname" value="<?= htmlReady($user['Vorname']) ?>" required>
         </td>
     </tr>
     <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
         <td>
             <?= _("Nachname:") ?>
+            <span style="color: red; font-size: 1.6em">*</span>
         </td>
         <td>
-            <input class="user_form" type="text" name="Nachname" value="<?= htmlReady($user['Nachname']) ?>">
+            <input class="user_form" type="text" name="Nachname" value="<?= htmlReady($user['Nachname']) ?>" required>
         </td>
     </tr>
     <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">

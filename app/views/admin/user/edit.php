@@ -24,6 +24,7 @@
     <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
         <td width="25%">
             <?= _("Benutzername:") ?>
+            <span style="color: red; font-size: 1.6em">*</span>
         </td>
         <td colspan="2">
         <? if (StudipAuthAbstract::CheckField("auth_user_md5.username", $user['auth_plugin']) || LockRules::check($user['user_id'], 'username')) : ?>
@@ -52,24 +53,26 @@
     <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
         <td>
             <?= _("Vorname:") ?>
+            <span style="color: red; font-size: 1.6em">*</span>
         </td>
         <td colspan="2">
         <? if (StudipAuthAbstract::CheckField("auth_user_md5.Vorname", $user['auth_plugin']) || LockRules::check($user['user_id'], 'name')) : ?>
             <?=  htmlReady($user['Vorname']) ?>
         <? else : ?>
-            <input class="user_form" type="text" name="Vorname" value="<?= htmlReady($user['Vorname']) ?>">
+            <input class="user_form" type="text" name="Vorname" value="<?= htmlReady($user['Vorname']) ?>" required>
         <? endif ?>
         </td>
     </tr>
     <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
         <td>
             <?= _("Nachname:") ?>
+            <span style="color: red; font-size: 1.6em">*</span>
         </td>
         <td colspan="2">
         <? if (StudipAuthAbstract::CheckField("auth_user_md5.Nachname", $user['auth_plugin']) || LockRules::check($user['user_id'], 'name')) : ?>
             <?= htmlReady($user['Nachname']) ?>
         <? else : ?>
-            <input class="user_form" type="text" name="Nachname" value="<?= htmlReady($user['Nachname']) ?>">
+            <input class="user_form" type="text" name="Nachname" value="<?= htmlReady($user['Nachname']) ?>" required>
         <? endif ?>
         </td>
     </tr>
@@ -164,6 +167,7 @@
     <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
         <td>
             <?= _("E-Mail:") ?>
+            <span style="color: red; font-size: 1.6em">*</span>
         </td>
         <td colspan="2">
         <? if (StudipAuthAbstract::CheckField("auth_user_md5.Email", $auth_plugin) || LockRules::check($user['user_id'], 'email')) : ?>

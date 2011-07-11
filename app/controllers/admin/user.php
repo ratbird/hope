@@ -287,7 +287,7 @@ class Admin_UserController extends AuthenticatedController
                 if (Request::get($param)) $editUser['auth_user_md5.' . $param] = Request::get($param);
             }
             foreach(words('title_front title_rear geschlecht') as $param) {
-                if (Request::get($param)) $editUser['user_info.' . $param] = Request::get($param);
+                if (Request::get($param) !== null) $editUser['user_info.' . $param] = Request::get($param);
             }
             //change username
             if (Request::get('username') && $this->user['username'] != Request::get('username')) {

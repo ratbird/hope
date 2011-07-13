@@ -937,7 +937,7 @@ STUDIP.QuickSearch = {
      *        when user has selected something
      * @return: void
      */
-    autocomplete: function (name, url, func, title, disabled) {
+    autocomplete: function (name, url, func, disabled) {
         if (typeof disabled === "undefined" || disabled !== true) {
             jQuery('#' + name).autocomplete({
                 delay: 500,

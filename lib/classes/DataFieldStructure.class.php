@@ -195,7 +195,7 @@ class DataFieldStructure
       $expr[] = "object_type='$objectType'";
 
     if ($objectClass)
-      $expr[] = "(object_class=$objectClass" .
+      $expr[] = "(object_class & $objectClass" .
                 ($includeNullClass ? ' OR object_class IS NULL)' : ')');
 
 

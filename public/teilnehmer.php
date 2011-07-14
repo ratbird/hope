@@ -524,6 +524,16 @@ if (Seminar_Session::check_ticket($studipticket) && !LockRules::Check($id, 'part
         $csv_mult_founds = array();
         $csv_count_insert = 0;
         $csv_count_multiple = 0;
+        $df_id = null;
+        if ($_REQUEST['csv_import_format'] && !in_array($_REQUEST['csv_import_format'], words('realname username'))){
+            //check accessible datafields for ("user" => 1, "autor" => 2, "tutor" => 4, "dozent" => 8)
+            foreach(DataFieldStructure::getDataFieldStructures('user', (1|2|4|8), true) as $df) {
+                if ($df->accessAllowed($perm) && $df->getId() == $_REQUEST['csv_import_format']) {
+                    $df_id = $df->getId();
+                    break;
+                }
+            }
+        }
         if ($_REQUEST['csv_import']) {
             $csv_lines = preg_split('/(\n\r|\r\n|\n|\r)/', trim($_REQUEST['csv_import']));
             foreach ($csv_lines as $csv_line) {
@@ -538,17 +548,24 @@ if (Seminar_Session::check_ticket($studipticket) && !LockRules::Check($id, 'part
                         "(Nachname LIKE '" . $csv_nachname . "'"
                         . ($csv_vorname ? " AND Vorname LIKE '" . $csv_vorname . "'" : '')
                         . ") ORDER BY Nachname");
-                    } else {
+                    } elseif($_REQUEST['csv_import_format'] == 'username') {
                         $db->query("SELECT a.user_id, username, " . $_fullname_sql['full_rev'] ." AS fullname, perms, b.Seminar_id as is_present FROM auth_user_md5 a ".
                         "LEFT JOIN user_info USING(user_id) LEFT JOIN seminar_user b ON (b.user_id=a.user_id AND b.Seminar_id='$SessSemName[1]')  ".
                         "WHERE perms IN ('autor','tutor','dozent') AND ".
                         "username LIKE '" . $csv_nachname . "' ORDER BY Nachname");
+                    } else {
+                        $db->query("SELECT a.user_id, username, " . $_fullname_sql['full_rev'] ." AS fullname, perms, b.Seminar_id as is_present FROM
+                        datafields_entries de LEFT JOIN auth_user_md5 a on a.user_id=de.range_id ".
+                        "LEFT JOIN user_info USING(user_id) LEFT JOIN seminar_user b ON (b.user_id=a.user_id AND b.Seminar_id='$SessSemName[1]')  ".
+                        "WHERE perms IN ('autor','tutor','dozent') AND ".
+                        "de.datafield_id='".$df_id."' AND de.content = '" . $csv_nachname . "' ORDER BY Nachname");
                     }
                     if ($db->num_rows() > 1) {
                         while ($db->next_record()) {
-                            $csv_mult_founds[$csv_line][] = $db->Record;
+                            if($db->f('is_present')) $csv_count_present++;
+                            else $csv_mult_founds[$csv_line][] = $db->Record;
                         }
-                        $csv_count_multiple++;
+                        if (is_array($csv_mult_founds[$csv_line])) $csv_count_multiple++;
                     } else if ($db->num_rows() > 0) {
                         $db->next_record();
                         if(!$db->f('is_present')){
@@ -1667,6 +1684,25 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
     echo "<table width=\"99%\" border=\"0\" cellpadding=\"2\" cellspacing=\"0\" border=\"0\" ";
     echo "align=\"center\">\n";
     if (!sizeof($csv_mult_founds)) {
+        $accessible_df = array();
+        //check accessible datafields for ("user" => 1, "autor" => 2, "tutor" => 4, "dozent" => 8)
+        foreach(DataFieldStructure::getDataFieldStructures('user', (1|2|4|8), true) as $df) {
+            if ($df->accessAllowed($perm)) {
+                //check cardinality
+                $cardinality = DbManager::get()
+                               ->query("SELECT COUNT(*)
+                                        FROM datafields_entries WHERE
+                                        datafield_id = '" . $df->getId() . "'
+                                        AND content <> ''
+                                        GROUP BY content
+                                        ORDER BY COUNT(*) DESC
+                                        LIMIT 1")
+                               ->fetchColumn();
+                if ($cardinality == 1) {
+                    $accessible_df[] = $df;
+                }
+            }
+        }
         echo "<tr><td width=\"40%\" class=\"steel1\">\n<div style=\"font-size: small; margin-left:6px; width:300px;\">";
         echo '<b>' . _("Teilnehmerliste übernehmen") . '</b><br>';
         echo _("In das nebenstehende Textfeld können Sie eine Liste mit Namen von NutzerInnen eingeben, die in die Veranstaltung aufgenommen werden sollen.");
@@ -1681,6 +1717,9 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
         echo '<select style="margin-left:10px;" name="csv_import_format">';
         echo '<option value="realname">'._("Nachname, Vorname").' &crarr;</option>';
         echo '<option value="username" '.($_REQUEST['csv_import_format'] == 'username' ? 'selected': '').'>'. _("Nutzername"). '&crarr;</option>';
+        foreach($accessible_df as $df) {
+            echo '<option value="' . $df->getId() . '" '.($_REQUEST['csv_import_format'] ==  $df->getId()? 'selected': '').'>'. htmlReady($df->getName()) . '&crarr;</option>';
+        }
         echo '</select></div>';
         echo "<textarea name=\"csv_import\" rows=\"6\" cols=\"50\">";
         foreach($csv_not_found as $line) echo htmlReady($line) . chr(10);
@@ -1722,6 +1761,7 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
                 echo "<select name=\"selected_users[]\">\n";
                 echo '<option value=""> - - ' . _("bitte ausw&auml;hlen") . " - - </option>\n";
                 foreach ($csv_mult_found as $csv_found) {
+                    if ($csv_found['is_present']) continue;
                     echo "<option value=\"{$csv_found['username']}\">";
                     echo htmlReady(my_substr($csv_found['fullname'], 0, 50)) . " ({$csv_found['username']}) - {$csv_found['perms']}</option>\n";
                 }

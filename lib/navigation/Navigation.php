@@ -290,7 +290,7 @@ class Navigation implements IteratorAggregate
      */
     public function setImage($image, $options = array())
     {
-        if (!isset($image)) {
+        if (isset($image)) {
             $options['src'] = Assets::image_path($image);
             $this->image = $options;
         } else {

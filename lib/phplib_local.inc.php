@@ -938,12 +938,19 @@ class Seminar_Perm extends Perm {
             return $status;
         }
 
-        if (get_config('DEPUTIES_ENABLE') && isDeputy($user_id, $range_id)) {
+        if (get_config('DEPUTIES_ENABLE') && isDeputy($user_id, $range_id) && !$_SESSION['seminar_change_view']) {
             $status = 'dozent';
         } else {
             $db->query("SELECT status FROM seminar_user WHERE user_id='$user_id' AND Seminar_id='$range_id'");
             if ($db->next_record()){
                 $status=$db->f("status");
+                if ($status == 'dozent' && $_SESSION['seminar_change_view']) {
+                    if ($_SESSION['seminar_change_view']['cid'] == $range_id) {
+                        $status = $_SESSION['seminar_change_view']['perm'];
+                    } else {
+                        session_unregister('seminar_change_view');
+                    }
+                }
             } else {
                 $db->query("SELECT inst_perms FROM user_inst WHERE user_id='$user_id' AND Institut_id='$range_id'");
                 if ($db->next_record()){

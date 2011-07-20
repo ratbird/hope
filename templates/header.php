@@ -102,6 +102,7 @@
 
 <!-- Beginn Page -->
 <div id="layout_page">
+<?= $this->render_partial('change_view') ?>
 <? if (isset($navigation)) : ?>
     <?= $this->render_partial('tabs') ?>
 <? endif ?>

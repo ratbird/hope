@@ -1232,6 +1232,13 @@ div.messagebox_exception {
     background-image: url("../images/messagebox/exception.png");
 }
 
+div.messagebox_warning {
+    color: #B06500;
+    border-color: #B06500;
+    background-color: #F7E98E;
+    background-image: url("../images/messagebox/advice.png");
+}
+
 div.messagebox_modal {
     color: #000000;
     background-color: #f3e180;

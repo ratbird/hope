@@ -9,9 +9,9 @@
                 <? if ($nav->isEnabled()) : ?>
                     <a href="<?= URLHelper::getLink($nav->getURL()) ?>">
                         <? if ($image = $nav->getImage()) : ?>
-                            <img class="tab-icon" src="<?=$image['src']?>" title="<?= htmlReady($nav->getTitle()) ?>" />
+                            <img class="tab-icon" src="<?=$image['src']?>" title="<?= $nav->getTitle() ? htmlReady($nav->getTitle()) : htmlReady($nav->getDescription()) ?>" />
                         <? endif ?>
-                        <span><?= htmlReady($nav->getTitle()) ?></span>
+                        <span><?= $nav->getTitle() ? htmlReady($nav->getTitle()) : '&nbsp;' ?></span>
                     </a>
                 <? else: ?>
                     <span class="quiet">

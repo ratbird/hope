@@ -84,6 +84,13 @@ class CourseNavigation extends Navigation
 
         $sem_create_perm = in_array(get_config('SEM_CREATE_PERM'), array('root','admin','dozent')) ? get_config('SEM_CREATE_PERM') : 'dozent';
 
+        if ($sem_class == 'sem' && $perm->have_studip_perm('dozent', $SessSemName[1]) && !$studygroup_mode) {
+            $navigation = new Navigation(_(''), 'dispatch.php/course/change_view?cid='.$SessSemName[1]);
+            $navigation->setDescription(_('Ansicht simulieren'));
+            $navigation->setImage('icons/16/grey/tools.png');
+            $this->addSubNavigation('change_view', $navigation);
+        }
+
         // general information
         $navigation = new Navigation(_('Übersicht'));
         $navigation->setImage('icons/16/grey/seminar.png');

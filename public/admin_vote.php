@@ -65,8 +65,6 @@ if ($list || $view && !(isDeputyEditAboutActivated() && isDeputy($auth->auth["ui
             Navigation::activateItem('/admin/institute/vote');
         }
     } else {
-        PageLayout::setTitle(getHeaderLine(Request::option('cid'))
-            . ' - ' . PageLayout::getTitle());
         Navigation::activateItem('/course/admin/vote');
     }
 } else {

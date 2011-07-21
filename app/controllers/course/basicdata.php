@@ -50,7 +50,6 @@ class Course_BasicdataController extends AuthenticatedController
             Navigation::activateItem('/admin/course/details');
         } else {
             //Navigation in der Veranstaltung:
-            mark_public_course();
             Navigation::activateItem('/course/admin/details');
         }
 

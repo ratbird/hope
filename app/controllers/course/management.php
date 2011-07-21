@@ -30,8 +30,7 @@ class Course_ManagementController extends AuthenticatedController
                 throw new Exception(_('Dies ist eine Studiengruppe und kein Seminar!'));
             }
         }
-
-        PageLayout::setTitle(sprintf(_("%s - Verwaltung"), getHeaderLine(Request::option('cid'))));
+        PageLayout::setTitle(sprintf(_("%s - Verwaltung"), $GLOBALS['SessSemName']['header_line']));
         PageLayout::setHelpKeyword('Basis.InVeranstaltungVerwaltung');
     }
 

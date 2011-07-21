@@ -58,12 +58,9 @@ require_once ('lib/exceptions/CheckObjectException.php');
 *
 */
 function getHeaderLine($id, $object_name = null) {
-    $object_type = get_object_type($id);
-
     if(!$object_name){
-        $object_name = get_object_name($id, $object_type);
+        $object_name = get_object_name($id, get_object_type($id));
     }
-
     $header_line = $object_name['type'];
     if ($object_name['name']) $header_line.=": ";
     if (studip_strlen($object_name['name']) > 60){
@@ -72,22 +69,6 @@ function getHeaderLine($id, $object_name = null) {
     } else {
         $header_line .= $object_name['name'];
     }
-
-    // for seminars, mark the page-title as public
-    if ($object_type == 'sem') {
-        require_once "lib/classes/Seminar.class.php";
-        $course = Seminar::getInstance($id);
-
-        // change class attribute of the body tag and headline if this course is
-        // publicly visible
-        if ($course->isPublic()) {
-            $header_line .=
-                " (" . _("öffentliche Veranstaltung") . ")";
-            PageLayout::addStyle('div#barBottommiddle, div#barBottomright, div#barBottomLeft { background-color: #C92C3C; }'
-                                .'div#barBottommiddle { background-image: url(' .  Assets::image_path('header/header_bottom_isolator_public.png'). '); }');
-        }
-    }
-
     return $header_line;
 }
 

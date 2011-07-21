@@ -70,8 +70,6 @@ if ($list || $view) {
             Navigation::activateItem('/admin/institute/evaluation');
         }
     } else {
-        PageLayout::setTitle(getHeaderLine(Request::option('cid'))
-            . ' - ' . PageLayout::getTitle());
         Navigation::activateItem('/course/admin/evaluation');
     }
 } else {

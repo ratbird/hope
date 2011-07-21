@@ -27,12 +27,12 @@ require '../lib/bootstrap.php';
 
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 
+include ('lib/seminar_open.php'); // initialise Stud.IP-Session
+
 if (!isset($SessSemName[0]) || $SessSemName[0] == "") {
     header("Location: index.php");
     die;
 }
-
-include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
 // -- here you have to put initialisations for the current page
 PageLayout::removeStylesheet('style.css');

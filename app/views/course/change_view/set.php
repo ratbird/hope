@@ -13,5 +13,5 @@
  * @since       2.1
  */
 
-header('Location: '.URLHelper::getLink('seminar_main.php', array('cid' => Request::get('cid'))));
+header('Location: '.$_SERVER['HTTP_REFERER']);
 ?>

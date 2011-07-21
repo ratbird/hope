@@ -86,7 +86,7 @@ class Calendar_ScheduleController extends AuthenticatedController
                 }
             }
 
-            if (!$institute_id || !in_array(get_object_type($institute_id), words('fak', 'inst'))) {
+            if (!$institute_id || !in_array(get_object_type($institute_id), words('fak inst'))) {
                 throw new Exception('Cannot display institute-calender. No valid ID given!');
             }
         }

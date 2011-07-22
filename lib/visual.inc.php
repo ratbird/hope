@@ -219,8 +219,24 @@ function htmlReady ($what, $trim = TRUE, $br = FALSE) {
     return $what;
 }
 
-function JSReady ($what = "", $target = "overlib") {
+function jsReady ($what = "", $target = "overlib") {
     switch ($target) {
+
+    case "script-single" :
+        return addcslashes($what, "\\'\n\r");
+    break;
+
+    case "script-double" :
+        return addcslashes($what, "\\\"\n\r");
+    break;
+
+    case "inline-single" :
+        return htmlspecialchars(addcslashes($what, "\\'\n\r"));
+    break;
+
+    case "inline-double" :
+        return htmlspecialchars(addcslashes($what, "\\\"\n\r"));
+    break;
 
     case "contact" :
         $what = htmlentities($what,ENT_COMPAT);

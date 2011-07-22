@@ -1549,7 +1549,7 @@ class Seminar
     }
 
     // Funktion fuer die Ressourcenverwaltung
-    function getGroupedDates($singledate = '')
+    function getGroupedDates($singledate = null, $metadate = null)
     {
         $i = 0;
         $first_event = FALSE;
@@ -1569,6 +1569,7 @@ class Seminar
         if (!$singledate) {
             foreach ($all_semester as $semester) {
                 foreach ($this->metadate->cycles as $metadate_id => $cycle) {
+                    if ($metadate && $metadate_id != $metadate) continue;
                     $group = $cycle->getSingleDates();
                     $metadate_has_termine = 0;
                     $single = true;
@@ -1589,7 +1590,7 @@ class Seminar
                     }
 
                     if ($metadate_has_termine) {
-                        $info[$i]['name'] = $cycle->toString().' ('.$semester['name'].')';
+                        $info[$i]['name'] = $cycle->toString('long').' ('.$semester['name'].')';
                         $info[$i]['weekend'] = ($cycle->getDay() == 6 || $cycle->getDay() == 0);
                         $this->applyTimeFilter($semester['beginn'], $semester['ende']);
                         $raum = $this->getDatesTemplate('dates/seminar_predominant_html', array('cycle_id' => $metadate_id));
@@ -1603,7 +1604,7 @@ class Seminar
                     }
                 }
             }
-
+            if (!$metadate) {
             $irreg = $this->getSingleDates();
 
             if ($GLOBALS['RESOURCES_HIDE_PAST_SINGLE_DATES']) {
@@ -1669,6 +1670,7 @@ class Seminar
                         }
                     }
                 }
+            }
             }
         } else {    // we have a single date
             $termin = new SingleDate($singledate);
@@ -1741,10 +1743,14 @@ class Seminar
 
     function removeSeminarRequest()
     {
+        $request_id = RoomRequest::existsByCourse($this->getId());
+        if ($request_id) {
         // logging >>>>>>
         log_event("SEM_DELETE_REQUEST", $this->getId());
         // logging <<<<<<
-        return SeminarDB::deleteRequest($this->id);
+            $this->requestData = '';
+            return RoomRequest::find($request_id)->delete();
+    }
     }
 
     /**

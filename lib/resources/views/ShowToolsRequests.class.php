@@ -377,9 +377,9 @@ class ShowToolsRequests
         $sem_link = $perm->have_studip_perm('tutor', $semObj->getId()) ?
             "seminar_main.php?auswahl=" . $semObj->getId() :
             "details.php?sem_id=" . $semObj->getId() . "&send_from_search=1&send_from_search_page="
-            . rawurlencode($PHP_SELF . "?working_on_request=$request_id");
+            . UrlHelper::getLink("resources.php?working_on_request=$request_id");
         ?>
-        <form method="POST" action="<?echo $PHP_SELF ?>?working_on_request=<?=$request_id?>">
+        <form method="POST" action="<?echo UrlHelper::getLink('?working_on_request=' . $request_id);?>">
         <?= CSRFProtection::tokenTag() ?>
         <input type="hidden" name="view" value="edit_request">
         <table border=0 celpadding=2 cellspacing=0 width="99%" align="center">
@@ -387,7 +387,7 @@ class ShowToolsRequests
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" colspan="2" width="96%" valign="top">
-                    <a href="<?=$sem_link?>">
+                    <a href="<?=UrlHelper::getLink($sem_link)?>">
                         <b><?= $semObj->seminar_number ? htmlReady($semObj->seminar_number).':' : '' ?><?=htmlReady($semObj->getName())?></b>
                     </a>
                     <font size="-1">
@@ -395,8 +395,8 @@ class ShowToolsRequests
                         <?
                         $this->selectSemInstituteNames($semObj->getInstitutId());
 
-                        print "&nbsp;&nbsp;&nbsp;&nbsp;"._("Art der Anfrage:")." ".(($reqObj->getTerminId()) ? _("Einzeltermin einer Veranstaltung") : _("alle Termine einer Veranstaltung"))."<br>";
-                        print "&nbsp;&nbsp;&nbsp;&nbsp;"._("Erstellt von:")." <a href=\"about.php?username=".get_username($reqObj->getUserId())."\">".htmlReady(get_fullname($reqObj->getUserId()))."</a><br>";
+                        print "&nbsp;&nbsp;&nbsp;&nbsp;"._("Art der Anfrage:")." ".($reqObj->getTerminId() ? _("Einzeltermin einer Veranstaltung") : ($reqObj->getMetadateId() ? _("Regelm‰ﬂige Zeit einer Veranstaltung") : _("alle Termine einer Veranstaltung")))."<br>";
+                        print "&nbsp;&nbsp;&nbsp;&nbsp;"._("Erstellt von:")." <a href=\"".UrlHelper::getLink('about.php?username='.get_username($reqObj->getUserId()))."\">".htmlReady(get_fullname($reqObj->getUserId()))."</a><br>";
                         print "&nbsp;&nbsp;&nbsp;&nbsp;"._("Lehrende: ");
                         foreach ($semObj->getMembers('dozent') as $doz) {
                             if ($dozent){
@@ -419,11 +419,8 @@ class ShowToolsRequests
                 <td class="<? echo $cssSw->getClass() ?>" width="35%" valign="top">
                     <font size="-1"><b><?=_("angeforderte Belegungszeiten:")?></b><br><br>
                     <?
-                    if (!$reqObj->getTerminId()) {
-                        $this->selectDates($reqObj->getSeminarId());
-                        if ($this->db->num_rows() > 0) {
-
-                            $dates = $semObj->getGroupedDates();
+                    $dates = $semObj->getGroupedDates($reqObj->getTerminId(),$reqObj->getMetadateId());
+                    if (count($dates)) {
                             $i = 1;
                             foreach ($dates['info'] as $info) {
                                 $name = $info['name'];
@@ -432,41 +429,12 @@ class ShowToolsRequests
                                 $i++;
                             }
 
-                            if ($semObj->getTurnus() == 0) {
-                                print "<br>"._("w&ouml;chentlich");
-                            } elseif ($semObj->getTurnus() == 1) {
-                                print "<br>"._("zweiw&ouml;chentlich");
-                            }
-
-                            print ", "._("ab:")." ".date("d.m.Y", $semObj->getFirstDate('int'));
-                        } else {
-                            print _("nicht angegeben");
-                        }
-                    } else {
-
-                        $this->selectDates($reqObj->getSeminarId(), $reqObj->getTerminId());
-
-                        if ($this->db->nf() ) {
-                            $i=1;
-                            while ($this->db->next_record()) {
-                                $zw_day = date('w', $this->db->f('date'));
-                                if ($zw_day == 0 || $zw_day == 6) {
-                                    $day_name = '<font color="red">'.getWeekDay($zw_day).'.</font>';
-                                } else {
-                                    $day_name = getWeekDay($zw_day).'.';
-                                }
-
-                                printf ("<font color=\"blue\"><i><b>%s</b></i></font>. %s %s%s<br>", $i, $day_name, date("d.m.Y, H:i", $this->db->f("date")), ($this->db->f("date") != $this->db->f("end_time")) ? " - ".date("H:i", $this->db->f("end_time")) : "");
-                                $resObj = ResourceObject::Factory($this->db->f("resource_id"));
-                                if ($link = $resObj->getFormattedLink($this->db->f("date")))
-                                    print "&nbsp;&nbsp;&nbsp;&nbsp;$link<br>";
-                                $i++;
+                        if ($reqObj->getType() != 'date') {
+                            echo _("regelm‰ﬂige Buchung ab:")." ".strftime("%x", $dates['first_event']);
                             }
                         } else {
                             print _("nicht angegeben");
                         }
-
-                    }
                     ?>
                     </font>
                 </td>

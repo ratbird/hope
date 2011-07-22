@@ -195,14 +195,13 @@ function check_opener(obj){
             <table width="100%" cellspacing="0" cellpadding="0" border="0">
             <tr>
                 <td valign ="top">
+                <?php
+                        if ($msg->checkMsgs()) {
+                            $msg->displayAllMsg("line");
+                        }
+                ?>
                     <table width="100%" cellspacing="0" cellpadding="0" border="0">
                         <?
-                        if ($msg->checkMsgs()) {
-                            if (!$infobox)
-                                    print "<tr><td class=\"blank\">&nbsp; </td></tr>";
-                            $msg->displayAllMsg("line");
-                            print "<tr><td class=\"blank\">&nbsp; </td></tr>";
-                        }
                         if ($page_intro) {
                         ?>
                         <tr>

@@ -35,6 +35,12 @@ if (!$sd_open[$tpl['md_id']] || $_LOCKED) { ?>
                         <?= Assets::img('icons/16/red/exclaim-circle.png', tooltip(_("Wichtige Informationen über Raumbuchungen anzeigen"))) ?>
                     </a>
                     <? } ?>
+                    <? if ($tpl['room_request_ausruf']) { ?>
+                        &nbsp;
+                        <A href="javascript:;" onClick="alert('<?=jsReady($tpl['room_request_ausruf'], 'inline-single')?>');">
+                            <?= Assets::img($tpl['symbol'], tooltip($tpl['room_request_ausruf']))?>
+                        </A>
+                    <? } ?>
                 </TD>
                 <TD width="20%" nowrap="nowrap" class="<?=$tpl['class']?>">
                 <? if( $GLOBALS['RESOURCES_ALLOW_ROOM_REQUESTS']) : ?>
@@ -118,7 +124,21 @@ if (!$sd_open[$tpl['md_id']] || $_LOCKED) { ?>
                         <?=_("SWS Dozent:")?>
                         &nbsp;
                         <INPUT type="text" name="sws" maxlength="3" size="1" value="<?=$tpl['sws']?>">
-                </TD>
+                        <? if($GLOBALS['RESOURCES_ENABLE'] && $GLOBALS['RESOURCES_ALLOW_ROOM_REQUESTS']) : ?>
+                        <div style="padding-top:2px">
+                        <?=_("Raumanfrage")?>
+                        <A href="<?= URLHelper::getLink('admin_room_requests.php?seminar_id='. $tpl['seminar_id'] .'&metadate_id='. $tpl['md_id']) ?>">
+                            <?=($tpl['room_request']) ? makebutton('bearbeiten', 'img') : makebutton('erstellen', 'img')?>
+                        </A>
+                        <? if ($tpl['room_request']) { ?>
+                        <?=_("oder")?>
+                        <A href="<?= URLHelper::getLink('?cmd=removeMetadateRequest&metadate_id='. $tpl['md_id'] ) ?>">
+                            <?=($tpl['room_request']) ? makebutton('zurueckziehen', 'img') : ''?>
+                        </A>
+                        </div>
+                        <? } ?>
+                        <? endif;?>
+                    </FORM></TD>
                 <TD width="5%" nowrap="nowrap" class="<?=$tpl['class']?>" align="right">
                     <? if ($show_sorter) : ?>
 	                    <a href="<?=URLHelper::getLink('?cmd=moveCycle&direction=up&cycle_id='. $tpl['md_id']) ?>">

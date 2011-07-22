@@ -149,6 +149,7 @@ $sem->registerCommand('editDeletedSingleDate', 'raumzeit_editDeletedSingleDate')
 $sem->registerCommand('freeText', 'raumzeit_freeText');
 $sem->registerCommand('removeRequest', 'raumzeit_removeRequest');
 $sem->registerCommand('removeSeminarRequest', 'raumzeit_removeSeminarRequest');
+$sem->registerCommand('removeMetadateRequest', 'raumzeit_removeMetadateRequest');
 $sem->registerCommand('moveCycle', 'raumzeit_moveCycle');
 $sem->registerCommand('related_persons_action_do', 'raumzeit_related_persons_action_do');
 $sem->processCommands();
@@ -305,7 +306,18 @@ if ($perm->have_studip_perm("admin",$sem->getId())) {
                         $tpl['mdStartMinute'] = $cycle_element['start_minute'];
                         $tpl['mdEndMinute'] = $cycle_element['end_minute'];
                         $tpl['mdDescription'] = htmlReady($cycle_element['desc']);
-
+                        if ($request_id = RoomRequest::existsByCycle($metadate_id)) {
+                            $tpl['room_request'] = RoomRequest::find($request_id);
+                            $tpl['room_request_ausruf']  = _("Für diese Zeit existiert eine Raumanfrage:");
+                            $tpl['room_request_ausruf'] .= "\n\n" . $tpl['room_request']->getInfo();
+                            if ($tpl['room_request']->getStatus() == 'declined') {
+                                $tpl['symbol'] = 'icons/16/red/exclaim.png';
+                            } else {
+                                $tpl['symbol'] = 'icons/16/grey/pause/date.png';
+                            }
+                        } else {
+                            $tpl['room_request'] = false;
+                        }
                         include('lib/raumzeit/templates/metadate.tpl');
 
                         if ($sd_open[$metadate_id]) {

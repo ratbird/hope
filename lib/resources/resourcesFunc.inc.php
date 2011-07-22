@@ -354,23 +354,11 @@ function getResourceObjectCategory($id){
 }
 
 function getDateRoomRequest($termin_id) {
-    $db=new DB_Seminar;
-    $query = sprintf("SELECT request_id FROM resources_requests WHERE termin_id = '%s' ",$termin_id);
-    $db->query($query);
-    if ($db->next_record())
-        return $db->f("request_id");
-    else
-        return FALSE;
+    return RoomRequest::existsByDate($termin_id);
 }
 
 function getSeminarRoomRequest($seminar_id) {
-    $db=new DB_Seminar;
-    $query = "SELECT request_id FROM resources_requests WHERE seminar_id = '$seminar_id' AND (termin_id = '' OR termin_id IS NULL)";
-    $db->query($query);
-    if ($db->next_record())
-        return $db->f("request_id");
-    else
-        return FALSE;
+    return RoomRequest::existsByCourse($seminar_id);
 }
 
 
@@ -379,8 +367,8 @@ function getMyRoomRequests($user_id = '', $semester_id = null, $only_not_closed 
 
     require_once ($RELATIVE_PATH_RESOURCES."/lib/ResourcesUserRoomsList.class.php");
 
-    $db = new DB_Seminar;
-    $db2 = new DB_Seminar;
+
+    $db = DBManager::get();
 
     if (!$user_id)
         $user_id = $user->id;
@@ -393,23 +381,25 @@ function getMyRoomRequests($user_id = '', $semester_id = null, $only_not_closed 
         $criteria .= " AND rr.request_id='$single_request' ";
     } elseif ($semester_id){
         $semester = SemesterData::GetInstance()->getSemesterData($semester_id);
-        $criteria .= ' AND ((rr.termin_id <> \'\' AND tt.date BETWEEN ' . (int)$semester['beginn'] . ' AND ' . (int)$semester['ende']
-                    . ')  OR (rr.termin_id = \'\' AND t.date BETWEEN ' . (int)$semester['beginn'] . ' AND ' . (int)$semester['ende'] . ')) ';
+        $sem_criteria = ' BETWEEN ' . (int)$semester['beginn'] . ' AND ' . (int)$semester['ende'];
     }
-    if ((getGlobalPerms($user_id) == "admin") || ($perm->have_perm("root"))) {
-        $query = sprintf("SELECT request_id, closed, tt.termin_id as tt_termin_id, rr.termin_id as rr_termin_id,
-                            COUNT(IF(t.date_typ IN ".getPresenceTypeClause(). ",t.termin_id,NULL)) as anzahl_termine,
-                            rr.resource_id
+    $query = "SELECT request_id, closed, rr.resource_id,
+                            COUNT(IF(t.date_typ IN ".getPresenceTypeClause(). ",t.termin_id,NULL)) as anzahl_termine_seminar,
+                            COUNT(ttt.termin_id) as anzahl_termine_metadate,
+                            COUNT(tt.termin_id) as anzahl_termin
                             FROM resources_requests rr
-                            INNER JOIN seminare s USING(seminar_id)
-                            LEFT JOIN termine tt ON (tt.termin_id = rr.termin_id AND tt.date > UNIX_TIMESTAMP())
-                            LEFT JOIN termine t ON(s.Seminar_id = t.range_id AND t.date > UNIX_TIMESTAMP()) WHERE $criteria GROUP BY request_id");
+                            LEFT JOIN termine tt ON (tt.termin_id = rr.termin_id AND rr.termin_id <> '' AND tt.date > UNIX_TIMESTAMP() ".($sem_criteria ? ' AND tt.date ' . $sem_criteria : '').")
+                            LEFT JOIN termine t ON(rr.seminar_id = t.range_id AND rr.termin_id = '' AND rr.metadate_id = '' AND t.date > UNIX_TIMESTAMP()".($sem_criteria ? ' AND t.date ' . $sem_criteria : '').")
+                            LEFT JOIN termine ttt ON (ttt.metadate_id = rr.metadate_id AND rr.metadate_id <> '' AND ttt.date > UNIX_TIMESTAMP()".($sem_criteria ? ' AND ttt.date ' . $sem_criteria : '').")
+                            WHERE %s GROUP BY request_id";
 
-        $db->cache_query($query);
-        while ($db->next_record()) {
-            $requests [$db->f("request_id")] = array("my_sem"=>TRUE, "my_res"=> strlen($db->f("resource_id")) > 0, "closed"=>$db->f("closed"));
-            $requests [$db->f("request_id")]["have_times"] = $db->f('rr_termin_id') ? ($db->f("tt_termin_id") == $db->f('rr_termin_id')) : $db->f("anzahl_termine");
-            $requests [$db->f("request_id")]["resource_id"] = $db->f('resource_id');
+    if ((getGlobalPerms($user_id) == "admin") || ($perm->have_perm("root"))) {
+        if ($rs = $db->query(sprintf($query, $criteria))) {
+            while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
+                $requests[$row["request_id"]] = array("my_sem"=>TRUE, "my_res"=> strlen($row["resource_id"]) > 0, "closed"=>$row["closed"]);
+                $requests[$row["request_id"]]["have_times"] = max(array($row['anzahl_termine_seminar'], $row["anzahl_termine_metadate"], $row['anzahl_termin']));
+                $requests[$row["request_id"]]["resource_id"] = $row['resource_id'];
+        }
         }
     } else {
         //load all my resources
@@ -428,40 +418,27 @@ function getMyRoomRequests($user_id = '', $semester_id = null, $only_not_closed 
             }
         }
         if (sizeof($my_res)) {
-            $in_resource_id =  "('".join("','",array_keys($my_res))."')";
-            $query_res = sprintf("SELECT request_id, closed, tt.termin_id as tt_termin_id, rr.termin_id as rr_termin_id,
-                                COUNT(IF(t.date_typ IN ".getPresenceTypeClause(). ",t.termin_id,NULL)) as anzahl_termine,
-                                rr.resource_id
-                                FROM resources_requests rr
-                                INNER JOIN seminare s USING(seminar_id)
-                                LEFT JOIN termine tt ON (tt.termin_id = rr.termin_id AND tt.date > UNIX_TIMESTAMP())
-                                LEFT JOIN termine t ON(s.Seminar_id = t.range_id AND t.date > UNIX_TIMESTAMP())  WHERE $criteria AND rr.resource_id IN %s GROUP BY request_id", $in_resource_id);
-
-            $db2->cache_query($query_res);
-            while ($db2->next_record()) {
-                $requests [$db2->f("request_id")]["resource_id"] = $db2->f('resource_id');
-                $requests [$db2->f("request_id")]["my_res"] = TRUE;
-                $requests [$db2->f("request_id")]["closed"] = $db2->f("closed");
-                $requests [$db2->f("request_id")]["have_times"] = $db2->f('rr_termin_id') ? ($db2->f("tt_termin_id") == $db2->f('rr_termin_id')) : $db2->f("anzahl_termine");
+            $criteria .= " AND rr.resource_id IN ('".join("','",array_keys($my_res))."')";
+            if ($rs = $db->query(sprintf($query, $criteria))) {
+                while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
+                    $requests[$row["request_id"]]["resource_id"] = $row['resource_id'];
+                    $requests[$row["request_id"]]["my_res"] = TRUE;
+                    $requests[$row["request_id"]]["closed"] = $row['closed'];
+                    $requests[$row["request_id"]]["have_times"] = max(array($row['anzahl_termine_seminar'], $row["anzahl_termine_metadate"], $row['anzahl_termin']));
             }
+        }
         }
         if (sizeof($my_sems)) {
-            $in_seminar_id =  "('".join("','",array_keys($my_sems))."')";
-            $query_sem = sprintf("SELECT request_id, closed, tt.termin_id as tt_termin_id, rr.termin_id as rr_termin_id,
-                                COUNT(IF(t.date_typ IN ".getPresenceTypeClause(). ",t.termin_id,NULL)) as anzahl_termine,
-                                rr.resource_id
-                                FROM resources_requests rr
-                                INNER JOIN seminare s USING(seminar_id)
-                                LEFT JOIN termine tt ON (tt.termin_id = rr.termin_id AND tt.date > UNIX_TIMESTAMP())
-                                LEFT JOIN termine t ON(s.Seminar_id = t.range_id AND t.date > UNIX_TIMESTAMP())  WHERE $criteria AND rr.seminar_id IN %s GROUP BY request_id", $in_seminar_id);
-            $db->cache_query($query_sem);
-            while ($db->next_record()) {
-                $requests [$db->f("request_id")]["resource_id"] = $db->f('resource_id');
-                $requests [$db->f("request_id")]["my_sem"] = TRUE;
-                $requests [$db->f("request_id")]["closed"] = $db->f("closed");
-                $requests [$db->f("request_id")]["have_times"] =  $db->f('rr_termin_id') ? ($db->f("tt_termin_id") == $db->f('rr_termin_id')) : $db->f("anzahl_termine");
+            $criteria .= " AND rr.seminar_id IN " . "('".join("','",array_keys($my_sems))."')";
+            if ($rs = $db->query(sprintf($query, $criteria))) {
+                while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
+                    $requests[$row["request_id"]]["resource_id"] = $row['resource_id'];
+                    $requests[$row["request_id"]]["my_sem"] = TRUE;
+                    $requests[$row["request_id"]]["closed"] = $row['closed'];
+                    $requests[$row["request_id"]]["have_times"] = max(array($row['anzahl_termine_seminar'], $row["anzahl_termine_metadate"], $row['anzahl_termin']));
             }
         }
+    }
     }
 
     return $requests;

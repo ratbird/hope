@@ -1387,18 +1387,17 @@ if ($save_state_x) {
     //single date mode - just create one assign-object
     if ($reqObj->getTerminId()) {
         $dateRequest = TRUE;
-        $assignObjects[] =& $semResAssign->getDateAssignObject($reqObj->getTerminId());
+        $assignObjects[] = $semResAssign->getDateAssignObject($reqObj->getTerminId());
     }
 
     //multiple assign_objects (every date one assign-object or every metadate one assign-object)
     elseif (is_array ($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["assign_objects"])) {
         $i=0;
         //check, if one assignment should assigned to a room, which is only particularly free - so we have treat every single date
-
-        if (($semObj->getMetaDateType() == 1) || (isSchedule($semObj->getId(), FALSE))) {
-            $assignObjects =& $semResAssign->getDateAssignObjects(TRUE);
-        } else {
-            $assignObjects =& $semResAssign->getMetaAssignObjects();
+        if ($reqObj->getType() == 'cycle' ) {
+            $assignObjects = $semResAssign->getMetaDateAssignObjects($reqObj->getMetadateId());
+        } else if ($reqObj->getType() == 'course' ) {
+            $assignObjects = $semResAssign->getDateAssignObjects(TRUE);
         }
     }
 
@@ -1447,7 +1446,7 @@ if ($save_state_x) {
 
                 $semObj->store();
             //normal metadate mode
-            } elseif (($semObj->getMetaDateType() == 1) || (isSchedule($semObj->getId(), FALSE))) {
+            } elseif (count($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["selected_resources"])) {
                 foreach ($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["selected_resources"] as $key=>$val){
                     if (!$dates_with_request[$key]) {
                         $result = array_merge((array)$result, (array)$semResAssign->changeDateAssign($key, $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["selected_resources"][$key]));
@@ -1768,12 +1767,12 @@ if (($inc_request_x) || ($dec_request_x) || ($new_session_started) || ($marked_c
 
         //create the assign-objects for the seminar (virtual!)
         $assignObjects = array();
-        if ($reqObj->getTerminId()) {
-            $assignObjects[] =& $semResAssign->getDateAssignObject($reqObj->getTerminId());
-        } elseif (($semObj->getMetaDateType() == 1) || (isSchedule($semObj->getId(), FALSE, TRUE))) {
-            $assignObjects =& $semResAssign->getDateAssignObjects(TRUE);
-        } else {
-            $assignObjects =& $semResAssign->getMetaAssignObjects();
+        if ($reqObj->getType() == 'date') {
+            $assignObjects[] = $semResAssign->getDateAssignObject($reqObj->getTerminId());
+        } else if ($reqObj->getType() == 'cycle' ) {
+            $assignObjects = $semResAssign->getMetaDateAssignObjects($reqObj->getMetadateId());
+        } else if ($reqObj->getType() == 'course' ) {
+            $assignObjects = $semResAssign->getDateAssignObjects(TRUE);
         }
 
         $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["assign_objects"]=array();
@@ -1805,11 +1804,7 @@ if (($inc_request_x) || ($dec_request_x) || ($new_session_started) || ($marked_c
             }
 
             //set the time range to check;
-            if (($semObj->getMetaDateType() == 1) || ($reqObj->getTerminId()) || (isSchedule($semObj->getId(), FALSE))) {
                 $multiOverlaps->setAutoTimeRange($assignObjects);
-            } else {
-                $multiOverlaps->setTimeRange($semObj->getSemesterStartTime(), $all_semester[get_sem_num($semObj->getSemesterStartTime())]["ende"]); //!!!!!
-            }
 
             //add the considered resources to the check-set
             if (is_array($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["considered_resources"])) {
@@ -1829,7 +1824,7 @@ if (($inc_request_x) || ($dec_request_x) || ($new_session_started) || ($marked_c
 
             $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["grouping"] = TRUE;
 
-            $groupedDates = $semObj->getGroupedDates($reqObj->getTerminId());
+            $groupedDates = $semObj->getGroupedDates($reqObj->getTerminId(),$reqObj->getMetadateId());
             $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["groups"] = $groupedDates['groups'];
 
             //gruppierte Termine durchlaufen
@@ -1924,6 +1919,10 @@ if ($_sendMessage) {
             $message .= "\n\n". _("Betroffener Termin:") . "\n" . $termin->toString();
         }
 
+        if ($reqObj->getMetadateId()) {
+            $cycle = SeminarCycleDate::find($reqObj->getMetadateId());
+            $message .= "\n\n". _("Betroffene Zeit:") . "\n" . $cycle->toString('full');
+        }
         // fetch the names of the lecutrers to display them in the message
         foreach($semObj->getMembers('dozent') as $dozenten){
             $title[] = $dozenten['Nachname'];

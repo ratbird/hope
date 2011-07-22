@@ -506,34 +506,13 @@ class SingleDate {
    * @return string the mapped text
    */
     function getRoomRequestStatus() {
-        if (getDateRoomRequest($this->termin_id)) {
             // check if there is any room-request
-            if (!$this->request_id) {
-                $this->request_id = SingleDateDB::getRequestID($this->termin_id);
-
-                // no room request found
+       $this->request_id = RoomRequest::existsByDate($this->termin_id);
                 if (!$this->request_id) return FALSE;
-            }
-
             // room-request found, parse int-status and return string-status
-            if (!$this->room_request) {
-                $this->room_request = new RoomRequest($this->request_id);
-                if ($this->room_request->isNewObject) {
-                    throw new Exception("Room-Request with the id {$this->request_id} does not exists!");
+       $this->room_request = RoomRequest::find($this->request_id);
+       return $this->room_request->getStatus();
                 }
-            }
-
-            switch ($this->room_request->getClosed()) {
-                case '0'; return 'open'; break;
-                case '1'; return 'pending'; break;
-                case '2'; return 'closed'; break;
-                case '3'; return 'declined'; break;
-            }
-
-        }
-
-        return FALSE;
-    }
 
     function getRequestedRoom() {
         if ($this->hasRoomRequest()) {
@@ -546,47 +525,9 @@ class SingleDate {
 
     function getRoomRequestInfo() {
         $room_request = $this->getRoomRequestStatus();
-        if ($room_request) {
-            if (!$this->requestData) {
-                $rD = new RoomRequest($this->request_id);
-                $resObject = ResourceObject::Factory($rD->resource_id);
-                $this->requestData .= 'Raum: '.$resObject->getName().'\n';
-                $this->requestData .= 'verantworlich: '.$resObject->getOwnerName().'\n\n';
-                foreach ($rD->getProperties() as $val) {
-                    $this->requestData .= $val['name'].': ';
-                    if ($val['type'] == 'bool') {
-                        if ($val['state'] == 'on') {
-                            $this->requestData .= 'vorhanden\n';
+        if ($this->room_request) {
+            return jsReady($this->room_request->getInfo(), 'inline-single');
                         } else {
-                            $this->requestData .= 'nicht vorhanden\n';
-                        }
-                    } else {
-                        $this->requestData .= $val['state'].'\n';
-                    }
-                }
-                if  ($rD->getClosed() == 0) {
-                    $txt = _("Die Anfrage wurde noch nicht bearbeitet.");
-                } else if ($rD->getClosed() == 3) {
-                    $txt = _("Die Anfrage wurde bearbeitet und abgelehnt.");
-                } else {
-                    $txt = _("Die Anfrage wurde bearbeitet.");
-                }
-
-                $this->requestData .= '\nStatus: '.$txt.'\n';
-
-       // if the room-request has been declined, show the decline-notice placed by the room-administrator
-                if ($room_request == 'declined') {
-                    $this->requestData .= '\nNachricht RaumadministratorIn:\n';
-                    $this->requestData .= str_replace("\r", '', str_replace("\n", '\n', $rD->getReplyComment()));
-                } else {
-                    $this->requestData .= '\nNachricht an den/die RaumadministratorIn:\n';
-                    $this->requestData .= str_replace("\r", '', str_replace("\n", '\n', $rD->getComment()));
-                }
-
-            }
-
-            return $this->requestData;
-        } else {
             return FALSE;
         }
     }

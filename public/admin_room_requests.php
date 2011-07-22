@@ -109,17 +109,26 @@ include ('lib/include/header.php');   // Output of Stud.IP head
 include 'lib/include/admin_search_form.inc.php';
 
 //wenn wir frisch reinkommen, werden benoetigte Daten eingelesen
-if ((($seminar_id) || ($termin_id)) && (!$uebernehmen_x) && (!$search_room_x) && (!$reset_room_search_x) && (!$send_room_x)
+if ((($seminar_id) || ($termin_id) || ($metadate_id)) && (!$uebernehmen_x) && (!$search_room_x) && (!$reset_room_search_x) && (!$send_room_x)
     && (!$search_properties_x) && (!$select_room_type) && (!$send_room_type_x) && (!$reset_room_type_x)
     && (!$reset_resource_id_x)) {
     $db->query("SELECT admission_turnout FROM seminare WHERE Seminar_id = '$seminar_id' ");
     $db->next_record();
-
+    $admin_rooms_data = array();
     $admin_rooms_data["admission_turnout"] = $db->f("admission_turnout");
 
     //initialisations for room-requests
     if ($RESOURCES_ENABLE && $RESOURCES_ALLOW_ROOM_REQUESTS) {
-        $db->query("SELECT request_id FROM resources_requests WHERE seminar_id = '$seminar_id' AND ".(($termin_id) ? "termin_id = '".$termin_id."'" : "termin_id = ''"));
+        if (isset($termin_id)) {
+            $cond = "termin_id = '$termin_id'";
+        } elseif (isset($metadate_id)) {
+            $cond = "metadate_id = '$metadate_id'";
+        } else {
+            $cond = "seminar_id = '$seminar_id' AND metadate_id='' AND termin_id=''";
+        }
+
+        $db->query("SELECT request_id FROM resources_requests WHERE " . $cond);
+        
         $db->next_record();
 
         if ($db->nf()) {
@@ -137,6 +146,9 @@ if ((($seminar_id) || ($termin_id)) && (!$uebernehmen_x) && (!$search_room_x) &&
             $db->next_record();
             $admin_rooms_data["date_begin"] = $db->f("date");
             $admin_rooms_data["date_end"] = $db->f("end_time");
+        }
+        if ($metadate_id) {
+            $admin_rooms_data["resRequest"]->setMetadateId($metadate_id);
         }
 
     }
@@ -179,6 +191,7 @@ if ((($seminar_id) || ($termin_id)) && (!$uebernehmen_x) && (!$search_room_x) &&
             }
         }
     }
+
     /*
     if ($admin_rooms_data["resRequest"]->store()) {
         $errormsg.="msgß"._("Die Raumanfragen und gew&uuml;nschte Raumeingenschaften wurden gespeichert");
@@ -288,10 +301,11 @@ if ($perm->have_perm("admin"))
                 if ($admin_rooms_data["resRequest"]->getTerminId()) {
                     print _("Einzeltermin der Veranstaltung");
                     print "<br>"._("am:")."&nbsp;".date("d.m.Y, H:i", $admin_rooms_data["date_begin"]).(($admin_rooms_data["date_end"]) ? " - ".date("H:i", $admin_rooms_data["date_end"]) : "");
-                } elseif ($semObj->getMetaDateType() == 1) {
-                    print _("alle Ablaufplan-Termine der Veranstaltung (unregelm&auml;&szlig;ige Belegung)");
+                } elseif ($admin_rooms_data["resRequest"]->getMetadateId()) {
+                    print _("alle Termine einer regelm‰ﬂigen Zeit");
+                    print "<br>".SeminarCycleDate::find($admin_rooms_data["resRequest"]->getMetadateId())->toString('full');
                 } else {
-                    print _("alle Veranstaltungszeiten (regelm&auml;&szlig;ige Belegung)");
+                    print _("alle regelm‰ﬂigen und unregelm‰ﬂigen Termine der Veranstaltung");
                     print "<br>"._("am:")."&nbsp;".htmlReady($semObj->getFormattedTurnus());
                 }
                 ?>

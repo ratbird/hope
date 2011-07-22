@@ -90,9 +90,9 @@ class SeminarDB {
 
 
         // count how many singledates have a declined room-request
-        $stmt = DBManager::get()->query("SELECT * FROM termine
-            LEFT JOIN resources_requests ON (termine.termin_id = resources_requests.termin_id)
-            WHERE range_id = '$seminar_id' AND metadate_id = '$cycle_id' AND closed = 3"
+        $stmt = DBManager::get()->query("SELECT * FROM termine t
+            LEFT JOIN resources_requests rr ON (t.termin_id = rr.termin_id)
+            WHERE range_id = '$seminar_id' AND t.metadate_id = '$cycle_id' AND closed = 3"
             . (($filterStart != 0 && $filterEnd != 0) ? " AND date >= $filterStart AND end_time <= $filterEnd " : '') .
             " ORDER BY date");
 
@@ -108,9 +108,9 @@ class SeminarDB {
     function countRequestsForSingleDates($cycle_id, $seminar_id, $filterStart = 0, $filterEnd = 0) {
         $db = new DB_Seminar();
         if (($filterStart == 0) && ($filterEnd == 0)) {
-            $query = "SELECT COUNT(*) AS anzahl FROM termine LEFT JOIN resources_requests ON (termine.termin_id = resources_requests.termin_id) WHERE seminar_id = '$seminar_id' AND metadate_id = '$cycle_id' AND closed = 0";
+            $query = "SELECT COUNT(*) AS anzahl FROM termine t LEFT JOIN resources_requests rr ON (t.termin_id = rr.termin_id) WHERE seminar_id = '$seminar_id' AND t.metadate_id = '$cycle_id' AND closed = 0";
         } else {
-            $query = "SELECT COUNT(*) AS anzahl FROM termine LEFT JOIN resources_requests ON (termine.termin_id = resources_requests.termin_id) WHERE seminar_id = '$seminar_id' AND metadate_id = '$cycle_id' AND closed = 0 AND date >= $filterStart AND end_time <= $filterEnd";
+            $query = "SELECT COUNT(*) AS anzahl FROM termine t LEFT JOIN resources_requests rr ON (t.termin_id = rr.termin_id) WHERE seminar_id = '$seminar_id' AND t.metadate_id = '$cycle_id' AND closed = 0 AND date >= $filterStart AND end_time <= $filterEnd";
         }
 
         $db->query($query);
@@ -193,6 +193,12 @@ class SeminarDB {
         return array('termin' => $termin, 'ex_termin' => $ex_termin);
     }
 
+    /**
+     * vergisst die Einträge in resources_requests_properties
+     * @deprecated
+     * @param unknown_type $id
+     * @return boolean
+     */
     function deleteRequest($id) {
         $db = new DB_Seminar();
         $db->query("DELETE FROM resources_requests WHERE seminar_id = '$id' AND (termin_id = '' OR termin_id IS NULL)");

@@ -542,6 +542,21 @@ function raumzeit_removeSeminarRequest() {
     $sem->createMessage(sprintf(_("Die Raumanfrage für die Veranstaltung wurde gelöscht.")));
 }
 
+function raumzeit_removeMetadateRequest() {
+    global $sem;
+
+    $request_id = RoomRequest::existsByCycle(Request::option('metadate_id'));
+    if ($request_id) {
+        $cycles = $sem->getCycles();
+        $cycle = $cycles[Request::option('metadate_id')];
+        // logging >>>>>>
+        log_event("SEM_DELETE_METADATE_REQUEST", $sem->getId(), $cycle->toString());
+        // logging <<<<<<
+        $sem->createMessage(sprintf(_("Die Raumanfrage für die regelmäßige Zeit %s wurde gelöscht."), htmlReady($cycle->toString())));
+        return RoomRequest::find($request_id)->delete();
+    }
+}
+
 function raumzeit_MoveCycle() {
     global $sem;
     $cycle_id = Request::option('cycle_id');

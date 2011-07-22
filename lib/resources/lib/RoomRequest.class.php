@@ -1,198 +1,196 @@
 <?php
-# Lifter002: TODO
-# Lifter007: TODO
-# Lifter003: TODO
 # Lifter010: TODO
 /**
-* RoomRequest.class.php
+ * RoomRequest.class.php - model class for table resources_requests
 * 
-* class for room requests and room-property requests
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
 * 
-*
-* @author       Cornelis Kater <ckater@gwdg.de>, Suchi & Berg GmbH <info@data-quest.de>
-* @access       public
-* @modulegroup      resources
-* @module       AssignObject.class.php
-* @package      resources
+ * @author      Cornelis Kater <ckater@gwdg.de>
+ * @author      Till Glöggler <tgloeggl@uos.de>
+ * @author      André Noack <noack@data-quest.de>
+ * @author      Suchi & Berg GmbH <info@data-quest.de>
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
 */
 
-// +---------------------------------------------------------------------------+
-// This file is part of Stud.IP
-// RoomRequest.class.php
-// zentrale Klasse Raumwuensche und Raumeigenschaftswuensche
-// Copyright (C) 2004 Cornelis Kater <ckater@gwdg.de>, Suchi & Berg GmbH <info@data-quest.de>
-// +---------------------------------------------------------------------------+
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or any later version.
-// +---------------------------------------------------------------------------+
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-// +---------------------------------------------------------------------------+
-
-require_once('lib/log_events.inc.php');
-require_once($GLOBALS['RELATIVE_PATH_RESOURCES'] .'/lib/ResourcesUserRoomsList.class.php');
+require_once 'lib/log_events.inc.php';
+require_once 'lib/resources/lib/ResourcesUserRoomsList.class.php';
+require_once 'lib/classes/SimpleORMap.class.php';
 
 /**
 * RoomRequest, class for room-requests and room-property-requests
 *
-* @access   public  
-* @author   Cornelis Kater <kater@data-quest.de>
-* @package  resources
 **/
-class RoomRequest {
-    var $id;                    //request-id
-    var $seminar_id;                //seminar_id from the assigned seminar
-    var $properties = array();          //the assigned property-requests
-    var $last_search_result_count;          //the number of found rooms from last executed search
-    var $reply_comment;
-    var $category_id;
-    var $chng_flag;
-    var $user_id;
-    var $isNewObject;
-    var $resource_id;
-    var $termin_id;
-    var $comment;
-    var $closed;
-    var $default_seats;
-    var $mkdate;
-    var $chdate;
+class RoomRequest extends SimpleORMap
+{
+    private $properties = array();          //the assigned property-requests
+    public $last_search_result_count;          //the number of found rooms from last executed search
+    private $properties_changed = false;
+    private $default_seats;
 
-    //Konstruktor
-    function RoomRequest($id='') {
-        global $RELATIVE_PATH_RESOURCES, $user;
+     /**
+     * returns new instance for given key
+     * when found in db, else null
+     * @param string $id
+     * @return NULL|RoomRequest
+     */
+    static function find($id)
+    {
+        return SimpleORMap::find(__CLASS__, $id);
+    }
         
-        $this->user_id = $user->id;
 
-        if($id) {
-            $this->id =$id;
-            if (!$this->restore($this->id)) 
-                $this->isNewObject = TRUE;
-        } else {
-            if (!$this->id)
-                $this->id=$this->createId();
-            $this->isNewObject =TRUE;
+    static function existsByCourse($seminar_id, $is_open = false)
+    {
+        $db = DbManager::get();
+        $id = self::existsForSQL(($is_open ? "closed = 0 AND " : "") . "termin_id = '' AND metadate_id = '' AND seminar_id = " . $db->quote($seminar_id));
+        return $id;
         }   
+
+    static function existsByDate($termin_id, $is_open = false)
+    {
+        $db = DbManager::get();
+        $id = self::existsForSQL(($is_open ? "closed = 0 AND " : "") . "termin_id = " . $db->quote($termin_id));
+        return $id;
     }
 
-    function createId() {
-        return md5(uniqid("wintergoe",1));
+    static function existsByCycle($metadate_id, $is_open = false)
+    {
+        $db = DbManager::get();
+        $id = self::existsForSQL(($is_open ? "closed = 0 AND " : "") . "metadate_id = " . $db->quote($metadate_id));
+        return $id;
     }
     
-    /* TEST: brauchen wir das wirklich irgendwo?
-    function create() {
-        $query = sprintf("SELECT assign_id FROM resources_assign WHERE assign_id ='%s' ", $this->id);
-        $this->db->query($query);
-        if ($this->db->nf()) {
-            $this->chng_flag=TRUE;
-            return $this->store();
-        } else
-            return $this->store(TRUE);
+    public static function existsForSQL($where)
+    {
+        $db = DBManager::get();
+        $sql = "SELECT request_id FROM resources_requests WHERE " . $where;
+        return $db->query($sql)->fetchColumn();
     }
-    */
-    function getId() {
-        return $this->id;
+    //Konstruktor
+    function __construct($id = null)
+    {
+        $this->db_table = "resources_requests";
+        parent::__construct($id);
     }
     
-    function getResourceId() {
+
+    function getResourceId()
+    {
         return $this->resource_id;
     }
     
-    function getSeminarId() {
+    function getSeminarId()
+    {
         return $this->seminar_id;
     }
 
-    function getTerminId() {
+    function getTerminId()
+    {
         return $this->termin_id;
     }
     
-    function getUserId() {
+    function getMetadateId()
+    {
+        return $this->metadate_id;
+    }
+
+    function getUserId()
+    {
         return $this->user_id;
     }
     
-    function getCategoryId() {
+    function getCategoryId()
+    {
         return $this->category_id;
     }
     
-    function getComment() {
+    function getComment()
+    {
         return $this->comment;
     }
 
-    function getReplyComment() {
+    function getReplyComment()
+    {
         return $this->reply_comment;
     }
 
-    function getClosed() {
+    function getClosed()
+    {
         return $this->closed;
     }
     
-    function getPropertyState($property_id) {
+    function getPropertyState($property_id)
+    {
         return $this->properties[$property_id]["state"];
     }
 
-    function getProperties() {
+    function getProperties()
+    {
         return $this->properties;
     }
     
-    function getAvailableProperties() {
+    function getAvailableProperties()
+    {
+        $available_properties = array();
         if ($this->category_id) {
-            $query = sprintf("SELECT b.name, b.type, b.system, b.property_id FROM resources_categories_properties a LEFT JOIN resources_properties b USING (property_id) WHERE requestable ='1' AND category_id = '%s' ", $this->category_id);
             $db = DBManager::get();
-            foreach( $db->query( $query ) as $row ) {
-                $available_properties[$row["property_id"] ] = array("name"=>$row["name"], "type"=>$row["type"], "system"=>$row["system"] );
+
+            $st = $db->prepare("SELECT  b.property_id,b.name, b.type, b.system
+            					FROM resources_categories_properties a
+            					LEFT JOIN resources_properties b USING (property_id)
+            					WHERE requestable = 1 AND category_id = ?");
+            if ($st->execute(array($this->category_id))) {
+                $available_properties = array_map('array_shift', $st->fetchAll(PDO::FETCH_ASSOC|PDO::FETCH_GROUP));
             }
+        }
             return $available_properties;
-        } else 
-            return FALSE;
     }
     
-    function getSettedPropertiesCount() {
+    function getSettedPropertiesCount()
+    {
         $count = 0;
         foreach ($this->properties as $val) {
-            if ($val)
-                $count++;
+            if ($val) $count++;
         }
         return $count;
     }
     
-    function getSeats() {
+    function getSeats()
+    {
         foreach ($this->properties as $val) {
-            if ($val["system"] == 2)
-                return $val["state"];
+            if ($val["system"] == 2) return $val["state"];
         }
-        return FALSE;
+        return false;
     }
     
-    function isNew() {
-        return $this->isNewObject;
-    }
-    
-    function setResourceId($value) {
+    function setResourceId($value)
+    {
         $this->resource_id=$value;
-        $this->chng_flag=TRUE;
     }
 
-    function setUserId($value) {
+    function setUserId($value)
+    {
         $this->user_id=$value;
-        $this->chng_flag=TRUE;
     }
     
-    function setSeminarId($value) {
+    function setSeminarId($value)
+    {
         $this->seminar_id=$value;
-        $this->chng_flag=TRUE;
     }
     
-    function setCategoryId($value) {
-        if ($value != $this->category_id) {
+    function setCategoryId($value)
+    {
+        $this->category_id = $value;
+    }
+
+    private function inititalizeProperties()
+    {
             $this->properties = array();
-            $this->category_id=$value;
-            $this->chng_flag=TRUE;          
+        $this->properties_changed = true;
             if ($this->default_seats) {
                 foreach ($this->getAvailableProperties() as $key=>$val) {
                     if ($val["system"] == 2) {
@@ -201,16 +199,39 @@ class RoomRequest {
                 }
             }
         }
-    }   
 
-    function setComment($value) {
-        $this->comment=$value;
-        $this->chng_flag=TRUE;
+    function setValue($field, $value)
+    {
+        $field = strtolower($field);
+        if ($field == 'id') {
+            return $this->setId($value);
+        }
+        if ($field == 'category_id') {
+            if ($value != $this->category_id) {
+                parent::setValue($field, $value);
+                $this->inititalizeProperties();
+                return $this->category_id;
+    }   
+        }
+        return parent::setValue($field, $value);
+    }
+
+    function getValue($field)
+    {
+        if (strtolower($field) == 'id') {
+            return $this->getId();
+        }
+        return parent::getValue($field);
     }
     
-    function setReplyComment($value) {
+    function setComment($value)
+    {
+        $this->comment=$value;
+    }
+    
+    function setReplyComment($value)
+    {
         $this->reply_comment=$value;
-        $this->chng_flag=TRUE;
     }
 
     /**
@@ -224,28 +245,38 @@ class RoomRequest {
      *
      * @param integer $value one of the states 
      */
-    function setClosed($value) {
+    function setClosed($value)
+    {
         $this->closed=$value;
-        $this->chng_flag=TRUE;
     }
     
-    function setTerminId($value) {
+    function setTerminId($value)
+    {
         $this->termin_id=$value;
-        $this->chng_flag=TRUE;
+    }
+
+    function setMetadateId($value)
+    {
+        $this->metadate_id=$value;
     }
 
     function setPropertyState($property_id, $value) {
+        if ($this->properties[$property_id]['state'] !== $value) {
+            $this->properties_changed = true;
+        }
         if ($value)
             $this->properties[$property_id] = array("state" => $value);
         else
             $this->properties[$property_id] = FALSE;
     }
     
-    function setDefaultSeats($value) {
-        $this->default_seats=($value);
+    function setDefaultSeats($value)
+    {
+        $this->default_seats = (int)$value;
     }
     
-    function searchRoomsToRequest($search_exp, $properties = false){
+    function searchRoomsToRequest($search_exp, $properties = false)
+    {
         $permitted_rooms = null;
         if(getGlobalPerms($GLOBALS['user']->id) != 'admin' && !Config::GetInstance()->getValue('RESOURCES_ALLOW_ROOM_REQUESTS_ALL_ROOMS')){
             $my_rooms = new ResourcesUserRoomsList($GLOBALS['user']->id, false, false, true);
@@ -327,33 +358,28 @@ class RoomRequest {
         return $found;
     }
 
-    function restore() {
-        $query = sprintf("SELECT * FROM resources_requests WHERE request_id='%s' ",$this->id);
+    function restore()
+    {
+        $found = parent::restore();
+        if ($found) {
         $db = DBManager::get();
-        $result = $db->query( $query );
-        if( $res = $result->fetch() ) {
-            $this->seminar_id = $res[ "seminar_id" ];
-            $this->termin_id = $res["termin_id"];
-            $this->mkdate = $res["mkdate"];
-            $this->resource_id = $res["resource_id"];
-            $this->user_id = $res["user_id"];
-            $this->category_id = $res["category_id"];
-            $this->comment = $res["comment"];
-            $this->closed = $res["closed"];
-            $this->chdate = $res["chdate"];
-            $this->reply_comment = $res['reply_comment'];
-            
-            $query = sprintf("SELECT a.*, b.type, b.name, b.options, b.system FROM resources_requests_properties a LEFT JOIN resources_properties b USING (property_id) WHERE a.request_id='%s' ", $this->id);
-            foreach ( $db->query( $query ) as $res ) {
-                $this->properties[$res["property_id"]] = array("state"=>$res["state"], "type"=>$res["type"], "name"=>$res["name"], "options"=>$res["options"], "system"=>$res["system"], "mkdate"=>$res["mkdate"], "chdate"=>$res["chdate"]);
+            $st = $db->prepare("SELECT a.property_id, state, mkdate, chdate, type, name, options, system
+            					FROM resources_requests_properties a
+            					LEFT JOIN resources_properties b USING (property_id)
+            					WHERE a.request_id=? ");
+            if ($st->execute(array($this->getId()))) {
+                $this->properties = array_map('array_shift', $st->fetchAll(PDO::FETCH_ASSOC|PDO::FETCH_GROUP));
+                $this->properties_changed = false;
             }
-            return TRUE;
+        } else {
+            $this->inititalizeProperties();
         }
-        return FALSE;
+        return $found;
     }
     
     //private
-    function cleanProperties() {
+    private function cleanProperties()
+    {
         $db = DBManager::get();
         foreach ($this->properties as $key => $val) {
             if ($val)
@@ -362,16 +388,17 @@ class RoomRequest {
         if (is_array($properties)) {
             $in="('".join("','",$properties)."')";
         }
-        $query = sprintf("DELETE FROM resources_requests_properties WHERE %s request_id = '%s' ", (is_array($properties)) ? "property_id  NOT IN ".$in." AND " : "", $this->id);
+        $query = sprintf("DELETE FROM resources_requests_properties WHERE %s request_id = '%s' ", (is_array($properties)) ? "property_id  NOT IN ".$in." AND " : "", $this->getId());
         $result = $db->exec( $query );
         return $result > 0 ;
     }
     
     //private
-    function storeProperties() {
+    private function storeProperties()
+    {
         $db = DBManager::get();
         foreach ($this->properties as $key=>$val) {
-            $query = sprintf ("REPLACE INTO resources_requests_properties SET request_id = '%s', property_id = '%s', state = '%s', mkdate = '%s', chdate = '%s'", $this->id, $key, $val["state"], (!$val["mkdate"]) ? time() : $val["mkdate"], time());
+            $query = sprintf ("REPLACE INTO resources_requests_properties SET request_id = '%s', property_id = '%s', state = '%s', mkdate = '%s', chdate = '%s'", $this->getId(), $key, $val["state"], (!$val["mkdate"]) ? time() : $val["mkdate"], time());
             
             if ($db->exec( $query ))
                 $changed = TRUE;
@@ -382,108 +409,169 @@ class RoomRequest {
         return $changed;
     }
     
-    function checkOpen($also_change = FALSE) {
+    function checkOpen($also_change = FALSE)
+    {
         $db = DBManager::get();
         $existing_assign = false;
         //a request for a date is easy...
         if ($this->termin_id) {
-            $query = sprintf ("SELECT assign_id FROM resources_assign WHERE assign_user_id = '%s' ", $this->termin_id);
-            $result = $db->query( $query );
-            if ($result->rowCount())
-                $existing_assign = TRUE;
+            $query = sprintf ("SELECT assign_id FROM resources_assign WHERE assign_user_id = %s ", $db->quote($this->termin_id));
+            $existing_assign = $db->query( $query )->fetchColumn();
+        //metadate request
+        } elseif ($this->metadate_id){
+            $query = sprintf("SELECT count(termin_id)=count(assign_id) FROM termine LEFT JOIN resources_assign ON(termin_id=assign_user_id)
+                    WHERE metadate_id=%s" , $db->quote($this->seminar_id));
         //seminar request
         } else {
             $query = sprintf("SELECT count(termin_id)=count(assign_id) FROM termine LEFT JOIN resources_assign ON(termin_id=assign_user_id)
                     WHERE range_id='%s' AND date_typ IN".getPresenceTypeClause(), $this->seminar_id);
-            $result = $db->query( $query );
-            $res = $result->fetch();
-            if ( $res && $res[0] ){
-                $existing_assign = TRUE;
             }
+        if ($query) {
+            $existing_assign = $db->query( $query )->fetchColumn();
         }
+
         if($existing_assign && $also_change){
             $this->setClosed(1);
             $this->store();
         }
-        return $existing_assign;
+        return (bool)$existing_assign;
     }
     
     
-    function copy() {
-        $this->id = $this->createId();
-        $this->isNewObject = TRUE;
-        $this->chng_flag = TRUE;
+    function copy()
+    {
+        $this->setId($this->getNewId());
+        $this->setNew(true);
+        $this->properties_changed = true;
     }
 
-    function store(){
-        $db = DBManager::get();
-        // save only, if changes were made or the object is new and we have a resource_id or properties
-        if ($this->chng_flag || ($this->isNew() && ($this->resource_id || $this->getSettedPropertiesCount())) ) {
-            $chdate = time();
-            $mkdate = time();
-
+    function store()
+    {
+        if (!$this->user_id) {
+            $this->user_id = $GLOBALS['user']->id;
+        }
+        $this->closed = (int)$this->closed;
+        if ($this->resource_id || $this->getSettedPropertiesCount()) {
+            if ($this->isNew() && !$this->getId()) {
+                $this->setId($this->getNewId());
+            }
+            if ($this->properties_changed) {
+                $properties_changed = $this->properties_changed;
+                $properties_stored = $this->storeProperties();
+            }
+            $stored = parent::store();
+                // LOGGING
+                $props="";
+                foreach ($this->properties as $key => $val) {
+                    $props.=$val['name']."=".$val['state']." "; 
+                }
+                if (!$props) {
+                    $props="--";
+                }
             if ($this->isNew()) {
-                $query = sprintf("INSERT INTO resources_requests SET request_id='%s', resource_id='%s', " 
-                    ."user_id='%s', seminar_id= '%s', termin_id = '%s', category_id = '%s', closed='%s', comment='%s', "
-                    ."mkdate='%s' "
-                             , $this->id, $this->resource_id, $this->user_id, $this->seminar_id, $this->termin_id, $this->category_id
-                             , $this->closed, mysql_escape_string($this->comment), $mkdate);
-                $this->isNewObject = FALSE;
-                $changed = TRUE;
-                // LOGGING
-                $props="";
-                foreach ($this->properties as $key => $val) {
-                    $props.=$val['name']."=".$val['state']." "; 
-                }
-                if (!$props) {
-                    $props="--";
-                }
-                log_event("RES_REQUEST_NEW",$this->seminar_id,$this->resource_id,"Termin: $this->termin_id, Properties: $props, Kommentar: $this->comment",$query);
+                log_event("RES_REQUEST_NEW",$this->seminar_id,$this->resource_id,"Termin: $this->termin_id, Metadate: $this->metadate_id, Properties: $props, Kommentar: $this->comment",$query);
             } else {
-                $query = sprintf("UPDATE resources_requests SET resource_id='%s', " 
-                    ."user_id='%s', seminar_id='%s', termin_id = '%s', category_id = '%s', comment='%s', "  
-                    ."closed='%s', reply_comment = '%s' WHERE request_id='%s' "
-                             , $this->resource_id, $this->user_id, $this->seminar_id, $this->termin_id, $this->category_id,  mysql_escape_string($this->comment)
-                             , $this->closed,  mysql_escape_string($this->reply_comment), $this->id);
-                // LOGGING
-                $props="";
-                foreach ($this->properties as $key => $val) {
-                    $props.=$val['name']."=".$val['state']." "; 
-                }
-                if (!$props) {
-                    $props="--";
+                if($properties_changed && !$stored) {
+                    $this->triggerChdate();
                 }
                 if ($this->closed==1 || $this->closed==2) {
-                    log_event("RES_REQUEST_RESOLVE",$this->seminar_id,$this->resource_id,"Termin: {$this->termin_id}, Properties: $props, Status: ".$this->closed,$query);
+                    log_event("RES_REQUEST_RESOLVE",$this->seminar_id,$this->resource_id,"Termin: {$this->termin_id}, Metadate: $this->metadate_id, Properties: $props, Status: ".$this->closed,$query);
                 } else if ($this->closed==3) {
-                    log_event("RES_REQUEST_DENY",$this->seminar_id,$this->resource_id,"Termin: {$this->termin_id}, Properties: $props, Status: ".$this->closed,$query);
+                    log_event("RES_REQUEST_DENY",$this->seminar_id,$this->resource_id,"Termin: {$this->termin_id}, Metadate: $this->metadate_id, Properties: $props, Status: ".$this->closed,$query);
                 } else {
-                    log_event("RES_REQUEST_UPDATE",$this->seminar_id,$this->resource_id,"Termin: {$this->termin_id}, Properties: $props, Status: ".$this->closed,$query);
+                    log_event("RES_REQUEST_UPDATE",$this->seminar_id,$this->resource_id,"Termin: {$this->termin_id}, Metadate: $this->metadate_id, Properties: $props, Status: ".$this->closed,$query);
                 }
             }
-            $result = $db->exec( $query );
+        }
+        return $stored || $properties_changed;
+    }
             
-            $changed_prop = $this->storeProperties();
+    function delete()
+    {
+        $db = DBManager::get();
+        $query = "DELETE FROM resources_requests_properties WHERE request_id=". $db->quote($this->getId());
+        $properties_deleted = $db->exec($query);
+        // LOGGING
+        log_event("RES_REQUEST_DEL",$this->seminar_id,$this->resource_id,"Termin: $this->termin_id, Metadate: $this->metadate_id","");
+        return parent::delete() || $properties_deleted;
+    }
             
-            if ($result > 0) {
-                $query = sprintf("UPDATE resources_requests SET chdate='%s' WHERE request_id='%s' ", $chdate, $this->id);
-                $db->query( $query );
-                $changed = TRUE;
+    function toArray()
+    {
+        $ret = parent::toArray();
+        $ret['properties'] = $this->getProperties();
+        return $ret;
             }
+
+    function getType()
+    {
+        if ($this->termin_id) return 'date';
+        if ($this->metadate_id) return 'cycle';
+        if ($this->seminar_id) return 'course';
+        return null;
         }
         
-        return ($changed || $changed_prop);
+    function getStatus()
+    {
+        switch ($this->getClosed()) {
+                case '0'; return 'open'; break;
+                case '1'; return 'pending'; break;
+                case '2'; return 'closed'; break;
+                case '3'; return 'declined'; break;
+    }
     }
 
-    function delete() {
-        $db = DBManager::get();
-        $query = sprintf("DELETE FROM resources_requests_properties WHERE request_id='%s'", $this->id);
+    function getInfo()
+    {
+        if (!$this->isNew()) {
+            if ($this->resource_id) {
+                $resObject = ResourceObject::Factory($this->resource_id);
+                $requestData[] = sprintf(_('Raum: %s'), $resObject->getName());
+                $requestData[] = sprintf(_('verantwortlich: %s'), $resObject->getOwnerName());
+            } else {
+                $requestData[] = _('Es wurde kein spezifischer Raum gewünscht');
+            }
+            $requestData[] = '';
         
-        $db->exec( $query );
-        // LOGGING
-        log_event("RES_REQUEST_DEL",$this->seminar_id,$this->resource_id,"Termin: $this->termin_id","");
-        $query = sprintf("DELETE FROM resources_requests WHERE request_id='%s'", $this->id);
-        return $db->exec( $query );
+            foreach ($this->getProperties() as $val) {
+                $prop = $val['name'].': ';
+                if ($val['type'] == 'bool') {
+                    if ($val['state'] == 'on') {
+                        $prop .= _('vorhanden');
+                    } else {
+                        $prop .= _('nicht vorhanden');
     }
+                } else {
+                    $prop .= $val['state'];
+}
+                $requestData[] = $prop;
+            }
+            if  ($this->getClosed() == 0) {
+                $txt = _("Die Anfrage wurde noch nicht bearbeitet.");
+            } else if ($this->getClosed() == 3) {
+                $txt = _("Die Anfrage wurde bearbeitet und abgelehnt.");
+            } else {
+                $txt = _("Die Anfrage wurde bearbeitet.");
+            }
+            $requestData[] = '';
+
+            $requestData[] = sprintf(_('Status: %s'), $txt);
+            $requestData[] = '';
+
+            // if the room-request has been declined, show the decline-notice placed by the room-administrator
+            if ($this->getClosed() == 3) {
+                $requestData[] = _('Nachricht RaumadministratorIn:');
+                $requestData[] = $this->getReplyComment();
+            } else {
+                $requestData[] = _('Nachricht an den/die RaumadministratorIn:');
+                $requestData[] = $this->getComment();
+            }
+            return join("\n", $requestData);
+        } else {
+            return _('Die Raumanfrage ist neu.');
+        }
+    }
+
+
 }
 ?>

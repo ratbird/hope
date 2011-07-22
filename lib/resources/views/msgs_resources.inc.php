@@ -185,13 +185,13 @@ $this->msg[43] = array (
         "mode" => "info",
         "msg"=> "<form action=\"%s\" method=\"post\">"
             . CSRFProtection::tokenTag()
-            ."<table border=\"0\" cellspacing=\"5\" cellpadding=\"0\"><tr><td valign=\"top\">"
+            . "<table class=\"default\"><tr><td style=\"vertical-align:top\">"
             . _("Wollen Sie die Anfrage wirklich ablehnen?")
-            ."<br><input type=\"image\" ".makeButton('ja2', 'src')." align=\"middle\"></a>"
+            ."<br><br>" . makeButton('ja2', 'input')
             ."&nbsp;<a href=\"%s?decline_request=0\">".makeButton("nein")."</a><br>"
-            .'<input type="hidden" name="decline_request" value="1"></td><td valign=\"top\">'
-            .'<font size="-1">'._("Grund der Ablehnung:").'</font><br>'
-            .'<textarea cols="30" rows="3" name="decline_message"></textarea></td></tr></table>'
+            .'<input type="hidden" name="decline_request" value="1"></td><td style="vertical-align:top">'
+            ._("Grund der Ablehnung:").'<br>'
+            .'<textarea cols="30" rows="3" name="decline_message" style="width:90%%"></textarea></td></tr></table>'
             .'</form>');
 $this->msg[44] = array (
         "mode" => "error",

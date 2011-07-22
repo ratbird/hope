@@ -177,7 +177,7 @@ class SeminarCycleDate extends SimpleORMap
     function toString($format = 'short')
     {
         $template['short'] = '%s. %02s:%02s - %02s:%02s';
-        $template['long'] = '%s: %02s:%02s - %02s:%02s';
+        $template['long'] = '%s: %02s:%02s - %02s:%02s, %s';
         $template['full'] = '%s: %02s:%02s - %02s:%02s, ' . _("%s, ab der %s. Semesterwoche") . '%s';
         $cycles = array(_("wöchentlich"), _("zweiwöchentlich"), _("dreiwöchentlich"));
         $day = getWeekDay($this->weekday, $format == 'short');

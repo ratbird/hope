@@ -85,7 +85,7 @@ class VeranstaltungResourcesAssign {
 
 
 
-    function &getDateAssignObjects($presence_dates_only = FALSE) {
+    function getDateAssignObjects($presence_dates_only = FALSE) {
         $sem = Seminar::getInstance($this->seminar_id);
 
         // get regular metadates
@@ -109,8 +109,18 @@ class VeranstaltungResourcesAssign {
         return $assignObjects;
     }
 
+    function getMetaDateAssignObjects($cycle_id) {
+        $sem = Seminar::getInstance($this->seminar_id);
+        // get the assigned singledates
+        $dates = $sem->getSingleDatesForCycle($cycle_id);
+        foreach ($dates as $date) {
+            $assignObjects[$date->getSingleDateId()] = $this->getDateAssignObject($date->getSingleDateId());
+        }
+        return $assignObjects;
+    }
+
     //this method creates an assign-object for a seminar-date
-    function &getDateAssignObject($termin_id, $resource_id='', $begin=0, $end=0) {
+    function getDateAssignObject($termin_id, $resource_id='', $begin=0, $end=0) {
         if (!$begin) {
             $query = sprintf("SELECT date, content, end_time, assign_id FROM termine LEFT JOIN resources_assign ON (assign_user_id = termin_id) WHERE termin_id = '%s' ORDER BY date, content", $termin_id);
             $this->db->query($query);

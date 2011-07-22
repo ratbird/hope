@@ -59,7 +59,7 @@ class RSSFeed
         echo "<table width=\"100%\" border=\"0\" cellpadding=\"2\" cellspacing=\"0\">\n";
         foreach ($this->ausgabe->items as $v) {
             if (strlen(trim($v["title"]))>0) {
-                $desc = strip_tags(studip_utf8decode($v["description"] ? $v["description"] : $v['summary']));
+                $desc = strip_tags(html_entity_decode(studip_utf8decode($v["description"] ? $v["description"] : $v['summary'])));
                 if (strlen($desc) > 150) $desc = substr($desc, 0, 150) . "...";
                 if ($i > $this->max_items && $more != $this->class_id) {
                     echo "<tr><td align=\"left\" valign=\"TOP\" colspan=\"2\"><a href=\"$PHP_SELF?more=".$this->class_id."#news_anchor\"><font size=\"-1\"><I>mehr...</I></font></a></td></tr>\n";

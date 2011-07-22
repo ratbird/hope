@@ -135,6 +135,14 @@ if (($cmd == 'do_copy' && SeminarCategories::GetBySeminarId($cp_id)->course_crea
     $errormsg = "error§" . sprintf(_("Veranstaltungen dieser Kategorie dürfen in dieser Installation nicht angelegt werden!"));
 }
 
+//letze angelegte Veranstaltung kopieren
+if (Request::get('start_from_backup') && isset($_SESSION['sem_create_data_backup']['timestamp'])) {
+    $sem_create_data = $_SESSION['sem_create_data_backup'];
+    $sem_create_data['resRequest'] = '';
+    $sem_create_data['timestamp'] = time();
+    unset($sem_create_data['level']);
+    unset($sem_create_data['sem_entry']);
+}
 // Kopieren einer vorhandenen Veranstaltung
 //
 if (isset($cmd) && ($cmd == 'do_copy') && $perm->have_studip_perm('tutor',$cp_id)) {
@@ -1541,6 +1549,8 @@ if (($form == 6) && ($jump_next_x))
             $run = FALSE;
             }
 
+    $_SESSION['sem_create_data_backup'] = $sem_create_data;
+
     if ($run) {
         //Termin-Metadaten-Array zusammenmatschen zum besseren speichern in der Datenbank
         if ($sem_create_data['term_art'] == -1) {
@@ -2072,6 +2082,17 @@ if ((!$sem_create_data["sem_class"]) && (!$level)){
             </td>
             <td class="blank"></td>
         </tr>
+        <? if (isset($_SESSION['sem_create_data_backup']['timestamp'])) : ?>
+        <tr>
+            <td class="blank">
+            <p class="info">
+            <?=_("Sie können ein Kopie der letzten angelegten Veranstaltung anlegen:");?>
+            <a href="<?=URLHelper::getLink('?start_from_backup=1')?>"><?=sprintf(_("Kopie anlegen (%s)"), htmlReady(stripslashes($_SESSION['sem_create_data_backup']['sem_name'])). ' - ' . strftime('%x %X',$_SESSION['sem_create_data_backup']['timestamp']) );?></a>.
+            </p>
+            </td>
+            <td class="blank"></td>
+        </tr>
+        <? endif; ?>
         <? if ($GLOBALS['STUDYGROUPS_ENABLE']) : ?>
         <tr>
             <td class="blank">
@@ -2249,12 +2270,12 @@ elseif ((!$level) || ($level == 1))
                             <?=_("Anmeldemodus:"); ?>
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" nowrap width="90%" colspan=3>
-                            &nbsp; <input type="radio" name="sem_payment" value=0 <? if ($sem_create_data["sem_payment"]=="0") echo 'checked'?>>
+                            &nbsp; <input type="radio" name="sem_payment" value=0 <? if ($sem_create_data["sem_payment"]==0) echo 'checked'?>>
                             <?=_("direkter Eintrag"); ?>&nbsp;
                             <img  src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/grey/info-circle.png"
                                 <? echo tooltip(_("Neue Teilnehmer werden direkt in die Veranstaltung eingetragen."), TRUE, TRUE) ?>
                             >
-                            &nbsp; <input type="radio" name="sem_payment" value=1 <? if ($sem_create_data["sem_payment"]=="1") echo 'checked'?>>
+                            &nbsp; <input type="radio" name="sem_payment" value=1 <? if ($sem_create_data["sem_payment"]==1) echo 'checked'?>>
                             <?=_("vorl&auml;ufiger Eintrag"); ?>&nbsp;
                             <img  src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/grey/info-circle.png"
                                 <? echo tooltip(_("Neue Teilnehmer bekommen den Status \"vorläufig aktzeptiert\". Sie können von Hand die zugelassenen Teilnehmer auswählen. Vorläufig akzeptierte Teilnehmer haben keinen Zugriff auf die Veranstaltung."), TRUE, TRUE) ?>
@@ -4162,6 +4183,11 @@ if ($level == 7)
                         print "<br><br><font size=-1>"._("Sie haben jederzeit die M&ouml;glichkeit, die bereits erfassten Daten zu &auml;ndern und die n&auml;chsten Schritte sp&auml;ter nachzuholen.")."</font>";
                     }
                     ?><br><br>
+                    <? if (isset($_SESSION['sem_create_data_backup']['timestamp'])) : ?>
+                        <?=_("Sie können direkt eine Kopie der neu angelegten Veranstaltung anlegen:")?>
+                        <a href="<?=URLHelper::getLink('?start_from_backup=1')?>"><?=_("Kopie anlegen")?></a>
+                        <br><br>
+                    <? endif; ?>
                     <form method="POST" action="<?= URLHelper::getLink() ?>">
                         <?= CSRFProtection::tokenTag() ?>
                         <input type="hidden" name="form" value=7>

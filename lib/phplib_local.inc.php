@@ -27,6 +27,7 @@
 
 
 //
+require_once('lib/classes/SkipLinks.php');
 require_once('lib/deputies_functions.inc.php');
 
 $_never_globalize_request_params = array(

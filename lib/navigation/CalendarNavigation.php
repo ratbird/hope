@@ -20,18 +20,20 @@ class CalendarNavigation extends Navigation
      */
     public function __construct()
     {
-        parent::__construct(_('Planer'));
+        if (get_config('CALENDAR_ENABLE') || get_config('SCHEDULE_ENABLE')) {
+            parent::__construct(_('Planer'));
 
-        if (get_config('CALENDAR_ENABLE')) {
-            $planerurl  = 'calendar.php';
-            $planerinfo = _('Termine und Kontakte');
-        } else {
-            $planerurl  = 'dispatch.php/calendar/schedule';
-            $planerinfo = _('Stundenplan und Kontakte');
+            if (get_config('CALENDAR_ENABLE')) {
+                $planerurl  = 'calendar.php';
+                $planerinfo = _('Termine und Kontakte');
+            } else {
+                $planerurl  = 'dispatch.php/calendar/schedule';
+                $planerinfo = _('Stundenplan und Kontakte');
+            }
+
+            $this->setURL($planerurl);
+            $this->setImage('header/schedule.png', array('title' => $planerinfo));
         }
-
-        $this->setURL($planerurl);
-        $this->setImage('header/schedule.png', array('title' => $planerinfo));
     }
 
     /**
@@ -58,7 +60,7 @@ class CalendarNavigation extends Navigation
         }
 
         // schedule
-        if (!$perm->have_perm('admin')) {
+        if (!$perm->have_perm('admin') && get_config('SCHEDULE_ENABLE')) {
             $navigation = new Navigation(_('Stundenplan'), 'dispatch.php/calendar/schedule');
             $this->addSubNavigation('schedule', $navigation);
         }

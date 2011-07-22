@@ -76,7 +76,6 @@ if ($messaging_cmd=="change_view_insert" && !$set_msg_default_x && $newmsgset_x)
     // write to user config table
     $user_cfg->store("FOAF_SHOW_IDENTITY", (int)isset($foaf_show_identity));
     $user_cfg->store("ONLINE_NAME_FORMAT", $_REQUEST['online_format']);
-    $user_cfg->store("CHAT_USE_AJAX_CLIENT", (int)($_REQUEST['chat_client_version'] == 'ajax'));
     $user_cfg->store("MAIL_AS_HTML", Request::int('mail_format'));
 
     $my_messaging_settings["changed"] = TRUE;
@@ -361,21 +360,6 @@ function change_messaging_view()
                 <?php
                 }
                 ?>
-                <tr <? $cssSw->resetClass() ?>>
-                    <td colspan="2" align="center" class="steelgraulight" style="border-bottom:1px dotted black;border-top:1px dotted black;"><font size="-1"><b><?=_("Stud.IP-Chat")?></b></font></td>
-                </tr>
-                <tr <? $cssSw->switchClass() ?>>
-                    <td align="right" class="blank">
-                        <font size=-1><?=_("Version des Stud.IP-Chatfensters")?></font>
-                    </td>
-                    <td <?=$cssSw->getFullClass()?>>
-                        <label><input style="vertical-align:middle" type="radio" name="chat_client_version" value="stream" <? if (!$user_cfg->getValue("CHAT_USE_AJAX_CLIENT")) echo " checked"; ?> >
-                        &nbsp;<font size=-1><?=_("Version für ältere Browser (Netscape 4, Internet Explorer 5)")?></label></font>
-                        <br>
-                        <label><input style="vertical-align:middle" type="radio" name="chat_client_version" value="ajax" <? if ($user_cfg->getValue("CHAT_USE_AJAX_CLIENT")) echo " checked"; ?> >
-                        &nbsp;<font size=-1><?=_("Version für neuere Browser (Firefox, Safari, Opera 9)")?></label></font>
-                    </td>
-                </tr>
                 <tr <? $cssSw->switchClass() ?>>
                     <td colspan="2" align="center" class="steelgraulight" style="border-bottom:1px dotted black;border-top:1px dotted black;"><font size="-1"><b><?=_("Buddies/ Wer ist online?")?></b></font></td>
                 </tr>

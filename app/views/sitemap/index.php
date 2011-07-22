@@ -14,6 +14,17 @@
         <td valign="top">
             <?= $this->render_partial('sitemap/navigation',
                     array('navigation' => $quicklinks, 'needs_image' => false, 'style' => 'bold')) ?>
+            <table class="default">
+                <tr>
+                    <th><?= _('Fußzeile') ?></th>
+                </tr>
+                <tr>
+                    <td>
+                        <?= $this->render_partial('sitemap/navigation',
+                                array('navigation' => $footer, 'needs_image' => false, 'style' => 'bold')) ?>
+                    </td>
+                </tr>
+            </table>
         </td>
     </tr>
 </table>

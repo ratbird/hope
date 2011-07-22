@@ -35,5 +35,6 @@ class SitemapController extends AuthenticatedController
 
         $this->navigation = Navigation::getItem('/');
         $this->quicklinks = Navigation::getItem('/links');
+        $this->footer     = Navigation::getItem('/footer');
     }
 }

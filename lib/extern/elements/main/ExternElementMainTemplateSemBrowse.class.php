@@ -45,7 +45,7 @@ class ExternElementMainTemplateSemBrowse extends ExternElementMain {
             'name', 'includeurl', 'grouping', 'semstart', 'semrange', 'semswitch', 'allseminars', 'rangepathlevel',
             'time', 'lecturer', 'semclasses', 'aliasesgrouping', 'nameformat',
             'language', 'genericdatafields', 'mode', 'countshowsublevels', 'startitem',
-            'disableemptylevels', 'selectedeventtypes'
+            'disableemptylevels', 'selectedeventtypes', 'resultsortby', 'maxnumberofhits', 'maxpagesresultbrowser'
         );
         $this->real_name = _("Grundeinstellungen");
         $this->description = _("In den Grundeinstellungen k&ouml;nnen Sie allgemeine Daten des Moduls &auml;ndern.");
@@ -72,7 +72,10 @@ class ExternElementMainTemplateSemBrowse extends ExternElementMain {
             'countshowsublevels' => '0',
             'startitem' => '',
             'disableemptylevels' => '',
-            'selectedeventtypes' => '|all'
+            'selectedeventtypes' => '|all',
+            'resultorderby' => 'VeranstaltungsNummer',
+            'maxnumberofhits' => '10',
+            'maxpagesresultbrowser' => ''
         );
         
         get_default_generic_datafields($config, 'sem');
@@ -89,15 +92,17 @@ class ExternElementMainTemplateSemBrowse extends ExternElementMain {
         
         $out = '';
         $table = '';
-        if ($edit_form == '')
+        if ($edit_form == '') {
             $edit_form = new ExternEditModule($this->config, $post_vars, $faulty_values, $anker);
+        }
         
         $edit_form->setElementName($this->getName());
         $element_headline = $edit_form->editElementHeadline($this->real_name,
                 $this->config->getName(), $this->config->getId(), TRUE, $anker);
         
-        if ($faulty_values == '')
+        if ($faulty_values == '') {
             $faulty_values = array();
+        }
         
         $headline = $edit_form->editHeadline(_("Name der Konfiguration"));
         $table = $edit_form->editName('name');
@@ -156,8 +161,9 @@ class ExternElementMainTemplateSemBrowse extends ExternElementMain {
         $title = _("Umschalten des aktuellen Semesters:");
         $info = _("Geben Sie an, wieviele Wochen vor Semesterende automatisch auf das nächste Semester umgeschaltet werden soll.");
         $names = array(_("keine Auswahl"), _("am Semesterende"), _("1 Woche vor Semesterende"));
-        for ($i = 2; $i < 13; $i++)
+        for ($i = 2; $i < 13; $i++) {
             $names[] = sprintf(_("%s Wochen vor Semesterende"), $i);
+        }
         $values = array('', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12');
         $table .= $edit_form->editOptionGeneric('semswitch', $title, $info, $values, $names);
         
@@ -177,8 +183,8 @@ class ExternElementMainTemplateSemBrowse extends ExternElementMain {
         
         $title = _("Anzeige von Unterebenen:");
         $info = _("Anzahl der Unterebenen des Baumes, die angezeigt werden sollen.");
-        $values = array('0', '1', '2');
-        $names = array('0', '1', '2');
+        $values = array('0', '1', '2', '3', '4', '5', '6');
+        $names = array('0', '1', '2', '3', '4', '5', '6');
         $table .= $edit_form->editOptionGeneric('countshowsublevels', $title, $info, $values, $names);
         
         if ($GLOBALS['perm']->have_perm('root') && $_REQUEST['cid'] = 'studip') {
@@ -194,11 +200,29 @@ class ExternElementMainTemplateSemBrowse extends ExternElementMain {
         $content_table .= $edit_form->editContentTable($headline, $table);
         $content_table .= $edit_form->editBlankContent();
         
+        $headline = $edit_form->editHeadline(_("Konfiguration der Suche"));
+
+        $title = _("Sortierung des Treffersets:");
+        $info = _("Nach welchem Tabellenfeld soll das Trefferset sortiert werden?");
+        $values = array('VeranstaltungsNummer', 'Name');
+        $names = array('Veranstaltungsnummer', 'Name');
+        $table = $edit_form->editOptionGeneric('resultorderby', $title, $info, $values, $names);
+
+        $title = _("Anzahl der Treffer bei Suche:");
+        $info = _("Maximale Anzahl der Veranstaltungen im Trefferset. Angabe 0, um alle anzuzeigen.");
+        $table .= $edit_form->editTextfieldGeneric('maxnumberofhits', $title, $info, 3, 3);
+
+        $title = _("Anzahl der Seiten im Result Browser:");
+        $info = _("Maximale Anzahl der Seiten, die der Result Browser anzeigen soll.");
+        $table .= $edit_form->editTextfieldGeneric('maxpagesresultbrowser', $title, $info, 3, 3);
+
+        $content_table .= $edit_form->editContentTable($headline, $table);
+        $content_table .= $edit_form->editBlankContent();
+
         $headline = $edit_form->editHeadline(_("Ausgabe bestimmter Veranstaltungsklassen"));
         
-        $table = '';
-        unset($names);
-        unset($values);
+        $names = array();
+        $values = array();
         $info = _("Wählen Sie die anzuzeigenden Veranstaltungsklassen aus.");
         
         foreach ($GLOBALS['SEM_CLASS'] as $key => $class) {
@@ -282,6 +306,15 @@ class ExternElementMainTemplateSemBrowse extends ExternElementMain {
                 return FALSE;
             }
             return !($value == '1' || $value == '');
+        }
+        if ($attribute == 'resultorderby') {
+            $_POST[$this->getName() . '_resultorderby'] = (in_array($_POST[$this->getName() . '_resultorderby'], array('Name', 'VeranstaltungsNummer')) ? $_POST[$this->getName() . '_resultorderby'] : 'VeranstaltungsNummer');
+        }
+        if ($attribute == 'maxpagesresultbrowser') {
+            $_POST[$this->getName() . '_maxpagesresultbrowser'] = intval($_POST[$this->getName() . '_maxpagesresultbrowser']);
+        }
+        if ($attribute == 'maxnumberofhits') {
+            $_POST[$this->getName() . '_maxnumberofhits'] = intval($_POST[$this->getName() . '_maxnumberofhits']);
         }
         return false;
     }

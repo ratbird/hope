@@ -260,14 +260,14 @@ class AdminNewsController {
         echo "\n<tr><td class=\"blank\" colspan=\"2\">" . _("Einstelldatum:");
         ?>
         <input type="text" required ="required" id="startdate" name="startdate" maxlength="10" size="10" value="<?= date('d.m.Y', $this->news_query['date'])?>">
-        <? echo _("Ablaufdatum:");?>
+        <?= _("Ablaufdatum:");?>
         <input type="text" required ="required" id="enddate" name="enddate" maxlength="10" size="10" value="<?= date('d.m.Y', $this->news_query['enddate'])?>">
         <script>
             jQuery('#startdate').datepicker();
             jQuery('#enddate').datepicker();
         </script>
         <?
-        echo "\n</tr>";
+        echo "\n</td></tr>";
 
         echo "<tr><td class=\"blank\">"._("Kommentare zulassen")."&nbsp;<input name=\"allow_comments\" value=\"1\" type=\"checkbox\" style=\"vertical-align:middle\"";
         if ($this->news_query["allow_comments"]) print " checked";

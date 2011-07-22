@@ -173,11 +173,7 @@ foreach ($order as $position) {
                     echo "<tr" . $this->config->getAttributes("TableParagraphText", "tr") . ">";
                     echo "<td" . $this->config->getAttributes("TableParagraphText", "td") . ">";
                     echo "$text_div<font" . $this->config->getAttributes("TableParagraphText", "font") . ">\n";
-                    if ($fieldEntries[$data_field]->getType() == 'link') {
-                        echo ExternModule::extHtmlReady($fieldEntries[$data_field]->getValue());
-                    } else {
-                        echo $fieldEntries[$data_field]->getDisplayValue();
-                    }
+                    echo $fieldEntries[$data_field]->getDisplayValue();
                     echo "</font>$text_div_end</td></tr>\n</table>\n</td></tr>\n";
                 }
         }

@@ -249,11 +249,6 @@ class ExternModuleLecturedetails extends ExternModule {
                 $localEntries = DataFieldEntry::getDataFieldEntries($this->seminar_id);
                 foreach ($generic_datafields as $id) {
                     if ($visible[++$j] && isset($localEntries[$id]) && is_object($localEntries[$id])) {
-                        if ($localEntries[$id]->getType() == 'link') {
-                            $localEntry = ExternModule::extHtmlReady($localEntries[$id]->getValue());
-                        } else {
-                            $localEntry = $localEntries[$id]->getDisplayValue();
-                        }
                         $data[$id] = $localEntries[$id]->getDisplayValue();
                     }
                 }
@@ -583,3 +578,4 @@ class ExternModuleLecturedetails extends ExternModule {
 
 }
 
+?>

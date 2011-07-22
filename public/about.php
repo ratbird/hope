@@ -68,8 +68,7 @@ function print_kings($username) {
     $result = '';
     foreach ($is_king as $type => $text) {
         $alt =
-        $result .= Assets::img("crowns/king_$type.gif", array(
-            'style' => 'padding: 0.5em;',
+        $result .= Assets::img("crowns/crown-$type.png", array(
             'alt'   => $text,
             'title' => $text
         ));

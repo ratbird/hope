@@ -22,7 +22,7 @@ if ($GLOBALS['RESOURCES_ENABLE'] && $GLOBALS['RESOURCES_ENABLE_BOOKINGSTATUS_COL
                 <TD width="98%" nowrap class="<?=$class?>" colspan="8">
                     <FONT size="-1">
                         <SELECT name="day">
-                            <? foreach(range(1,6) + array(0) as $d) : ?>
+                            <? foreach(range(1,6) + array(6 => 0) as $d) : ?> <? /* the + operator creates a union of two arrays, it's not an addition! */ ?>
                                 <OPTION value="<?=$d?>"<?=($tpl['mdDayNumber']==$d) ? 'selected="selected"' : ''?>><?=getWeekday($d, false)?></OPTION>
                             <? endforeach; ?>
                             </SELECT>

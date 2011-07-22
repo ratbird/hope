@@ -1609,15 +1609,6 @@ jQuery(function ($) {
     $.datepicker.setDefaults($.datepicker.regional.de);
 }(jQuery));
 
-jQuery(function () {
-    jQuery(".datepickerbutton").datepicker({
-        showOn: "button",
-        buttonImage: STUDIP.ASSETS_URL + "images/popupcalendar.png",
-        buttonImageOnly: true,
-        dateFormat: 'dd.mm.yy'
-    });
-});
-
 STUDIP.SkipLinks = {
     activeElement : null,
     navigationStatus : 0,

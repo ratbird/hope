@@ -118,6 +118,8 @@ $SEM_CLASS[1]=array("name"=>_("Lehre"),                     //the name of the cl
                     "literature"=>TRUE,         //literature, this module is stud_ip core; always available
                     "chat"=>TRUE,               //chat, only, if the module is global activated; see config_local.inc.php
                     "wiki"=>TRUE,               //wikiwiki-web, this module is stud_ip core; always available
+                    "admission_prelim_default" => 0,     //default for direct (0) or provisional(1) entry
+                    "admission_type_default" => 0,     //default for participant restriction type (0 = none, 1 = chronological, 2 = by lots, 3 = locked)
                     //descriptions
                     "description"=>_("Hier finden Sie alle in Stud.IP registrierten Lehrveranstaltungen"),                      //the description
                     "create_description"=>_("Verwenden Sie diese Kategorie, um normale Lehrveranstaltungen anzulegen"));        //the description in the creation process

@@ -310,7 +310,6 @@ if (($auth->lifetime != 0 && ((time() - $sem_create_data["timestamp"]) >$auth->l
     $sem_create_data["sem_admission_ratios_changed"]=FALSE;
     $sem_create_data["sem_admission_start_date"]=-1;
     $sem_create_data["sem_admission_end_date"]=-1;
-    $sem_create_data["sem_payment"]=0;
 
     # reset study area selection
     $area_selection = new StudipStudyAreaSelection();
@@ -345,9 +344,9 @@ if ($start_level) { //create defaults
         $sem_create_data = '';
         $errormsg = "error§" . sprintf(_("Veranstaltungen dieser Kategorie dürfen in dieser Installation nicht angelegt werden!"));
     } else {
-        if (!array_key_exists('sem_class', $sem_create_data))
+        if (!array_key_exists('sem_class', $sem_create_data)) {
         $sem_create_data['sem_class'] = $class;
-
+        }
         if (!array_key_exists('sem_modules', $sem_create_data)){
             foreach ($SEM_TYPE as $key => $val) {
                 if ($val['class'] == $class) {
@@ -357,16 +356,23 @@ if ($start_level) { //create defaults
             }
         }
 
-
-        if ($SEM_CLASS[$class]['turnus_default'] && !array_key_exists('term_art', $sem_create_data))
+        //add default values from config.inc.php ($SEM_CLASS)
+        if ($SEM_CLASS[$class]['turnus_default'] && !array_key_exists('term_art', $sem_create_data)) {
         $sem_create_data['term_art'] = $SEM_CLASS[$class]['turnus_default'];
-
-        if ($SEM_CLASS[$class]['default_read_level'] && !array_key_exists('sem_sec_lese', $sem_create_data))
+        }
+        if ($SEM_CLASS[$class]['default_read_level'] && !array_key_exists('sem_sec_lese', $sem_create_data)) {
         $sem_create_data['sem_sec_lese'] = $SEM_CLASS[$class]['default_read_level'];
-
-        if ($SEM_CLASS[$class]['default_write_level'] && !array_key_exists('sem_sec_schreib', $sem_create_data))
+        }
+        if ($SEM_CLASS[$class]['default_write_level'] && !array_key_exists('sem_sec_schreib', $sem_create_data)){
         $sem_create_data['sem_sec_schreib'] = $SEM_CLASS[$class]['default_write_level'];
-
+        }
+        if ($SEM_CLASS[$class]['admission_prelim_default'] && !array_key_exists('sem_payment', $sem_create_data)){
+            $sem_create_data['sem_payment'] = $SEM_CLASS[$class]['admission_prelim_default'];
+        }
+        if ($SEM_CLASS[$class]['admission_type_default'] && !array_key_exists('sem_admission', $sem_create_data)){
+            $sem_create_data['sem_admission'] = $SEM_CLASS[$class]['admission_type_default'];
+        }
+        //if current user is 'dozent' add to list of lecturers
         if ($auth->auth['perm'] == 'dozent') {
             $sem_create_data['sem_doz'][$user->id] = 1;
             if ($deputies_enabled && $default_deputies_enabled) {
@@ -1651,8 +1657,8 @@ if (($form == 6) && ($jump_next_x))
         $sem->ects = stripslashes($sem_create_data['sem_ects']);
         $sem->admission_endtime = $sem_create_data['sem_admission_date'];
         $sem->admission_turnout = $sem_create_data['sem_turnout'];
-        $sem->admission_type = $sem_create_data['sem_admission'];
-        $sem->admission_prelim = $sem_create_data['sem_payment'];
+        $sem->admission_type = (int)$sem_create_data['sem_admission'];
+        $sem->admission_prelim = (int)$sem_create_data['sem_payment'];
         $sem->admission_prelim_txt = stripslashes($sem_create_data['sem_paytxt']);
         $sem->admission_starttime = $sem_create_data['sem_admission_start_date'];
         $sem->admission_endtime_sem = $sem_create_data['sem_admission_end_date'];

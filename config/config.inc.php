@@ -659,3 +659,5 @@ $NOT_HIDEABLE_FIELDS = array(
     'admin' => array(),
     'root' => array()
 );
+//Add ids of datafields to use for import on teilnehmer.php
+$TEILNEHMER_IMPORT_DATAFIELDS = array('36908df6f81f7401d96856f69e522d20');

@@ -71,7 +71,8 @@ global
   $username_prefix,
   $xml_filename,
   $xslt_filename_default,
-  $SEM_TREE_TYPES;
+  $SEM_TREE_TYPES,
+  $TEILNEHMER_IMPORT_DATAFIELDS;
 
 /*basic settings for Stud.IP
 ----------------------------------------------------------------
@@ -536,3 +537,6 @@ $INST_ADMIN_DATAFIELDS_VIEW = array(
     'default' => array(),
     'extended' => array()
 );
+//Add ids of datafields to use for import on teilnehmer.php
+$TEILNEHMER_IMPORT_DATAFIELDS = array();
+ 

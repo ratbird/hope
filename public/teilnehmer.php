@@ -528,7 +528,7 @@ if (Seminar_Session::check_ticket($studipticket) && !LockRules::Check($id, 'part
         if ($_REQUEST['csv_import_format'] && !in_array($_REQUEST['csv_import_format'], words('realname username'))){
             //check accessible datafields for ("user" => 1, "autor" => 2, "tutor" => 4, "dozent" => 8)
             foreach(DataFieldStructure::getDataFieldStructures('user', (1|2|4|8), true) as $df) {
-                if ($df->accessAllowed($perm) && $df->getId() == $_REQUEST['csv_import_format']) {
+                if ($df->accessAllowed($perm) && in_array($df->getId(), $TEILNEHMER_IMPORT_DATAFIELDS) && $df->getId() == $_REQUEST['csv_import_format']) {
                     $df_id = $df->getId();
                     break;
                 }
@@ -1687,20 +1687,8 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
         $accessible_df = array();
         //check accessible datafields for ("user" => 1, "autor" => 2, "tutor" => 4, "dozent" => 8)
         foreach(DataFieldStructure::getDataFieldStructures('user', (1|2|4|8), true) as $df) {
-            if ($df->accessAllowed($perm)) {
-                //check cardinality
-                $cardinality = DbManager::get()
-                               ->query("SELECT COUNT(*)
-                                        FROM datafields_entries WHERE
-                                        datafield_id = '" . $df->getId() . "'
-                                        AND content <> ''
-                                        GROUP BY content
-                                        ORDER BY COUNT(*) DESC
-                                        LIMIT 1")
-                               ->fetchColumn();
-                if ($cardinality == 1) {
-                    $accessible_df[] = $df;
-                }
+            if ($df->accessAllowed($perm) && in_array($df->getId(), $TEILNEHMER_IMPORT_DATAFIELDS)) {
+                $accessible_df[] = $df;
             }
         }
         echo "<tr><td width=\"40%\" class=\"steel1\">\n<div style=\"font-size: small; margin-left:6px; width:300px;\">";

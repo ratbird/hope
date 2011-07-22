@@ -205,12 +205,12 @@ class AdminNewsController {
     function restore_edited_fields() {
         $this->news_query['topic'] = Request::get('topic', $this->news_query['topic'] );
         $this->news_query['body'] = Request::get('body', $this->news_query['body']);
-        $this->news_query['date'] = Request::int('startdate', $this->news_query['date']);
-        $this->news_query['enddate'] = Request::int('enddate', $this->news_query['date'] + $this->news_query['expire']);
+        $this->news_query['date'] = strtotime(Request::get('startdate')) ? strtotime(Request::get('startdate')) : $this->news_query['date'];
+        $this->news_query['enddate'] = strtotime(Request::get('enddate')) ? strtotime(Request::get('enddate')) : $this->news_query['date'] + $this->news_query['expire'];
         $this->news_query['expire'] = $this->news_query['enddate'] - $this->news_query['date'];
         $this->news_query['allow_comments'] = Request::int('allow_comments', $this->news_query['allow_comments']);
     }
-    
+
     function edit_news($news_id=0) {
         global $perm;
         $aktuell=mktime(0,0,0,strftime("%m",time()),strftime("%d",time()),strftime("%y",time()));

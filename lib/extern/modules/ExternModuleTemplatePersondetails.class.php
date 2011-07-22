@@ -467,9 +467,13 @@ class ExternModuleTemplatePersondetails extends ExternModule {
                 if (isset($localEntries[$datafield]) &&
                         is_object($localEntries[$datafield]) &&
                         is_element_visible_externally($this->user_id,
-                            $uthis->ser_perm, $localEntries[$datafield]->getId(),
+                            $this->user_perm, $localEntries[$datafield]->getId(),
                             $this->visibilities[$localEntries[$datafield]->getId()])) {
-                    $localEntry = $localEntries[$datafield]->getDisplayValue();
+                    if ($localEntries[$datafield]->getType() == 'link') {
+                        $localEntry = ExternModule::extHtmlReady($localEntries[$datafield]->getValue());
+                    } else {
+                        $localEntry = $localEntries[$datafield]->getDisplayValue();
+                    }
                     if ($localEntry) {
                         $content['PERSONDETAILS']["DATAFIELD_$k"] = $localEntry;
                     }

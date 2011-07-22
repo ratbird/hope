@@ -196,9 +196,16 @@ foreach ($visible_groups as $group_id => $group) {
             // generic data fields
             if (is_array($generic_datafields)) {
                 $localEntries = DataFieldEntry::getDataFieldEntries($$db_out->f('user_id'));
-//              $datafields = $datafields_obj->getLocalFields($$db_out->f("user_id"));
                 foreach ($generic_datafields as $id) {
-                    $data['content'][$id] = is_object($localEntries[$id]) ? $localEntries[$id]->getDisplayValue() : '';
+                    if (is_object($localEntries[$id])) {
+                        if ($localEntries[$id]->getType() == 'link') {
+                            $data['content'][$id] = ExternModule::extHtmlReady($localEntries[$id]->getValue());
+                        } else {
+                            $data['content'][$id] = $localEntries[$id]->getDisplayValue();
+                        }
+                    } else {
+                        $data['content'][$id] = '';
+                    }
                 }
             }
             $out .= $this->elements["TableRow"]->toString($data);

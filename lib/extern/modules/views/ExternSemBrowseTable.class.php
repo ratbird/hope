@@ -403,7 +403,11 @@ class ExternSemBrowseTable extends SemBrowse {
                             $localEntries = DataFieldEntry::getDataFieldEntries($seminar_id);
                             foreach ($generic_datafields as $id) {
                                 if (isset($localEntries[$id]) && is_object($localEntries[$id])) {
-                                    $data["content"][$id] = $localEntries[$id]->getDisplayValue();
+                                    if ($localEntries[$id]->getType() == 'link') {
+                                        $data["content"][$id] = ExternModule::extHtmlReady($localEntries[$id]->getValue());
+                                    } else {
+                                        $data["content"][$id] = $localEntries[$id]->getDisplayValue();
+                                    }
                                 }
                             }
                         }

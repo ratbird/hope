@@ -319,7 +319,11 @@ class ExternModuleTemplatePersons extends ExternModule {
                                     is_element_visible_externally($db_out->f('user_id'), 
                                         $user_perm, $localEntries[$datafield]->getId(), 
                                         $visibilities[$localEntries[$datafield]->getId()]))) {
-                                $localEntry = $localEntries[$datafield]->getDisplayValue();
+                                if ($localEntries[$datafield]->getType() == 'link') {
+                                    $localEntry = ExternModule::extHtmlReady($localEntries[$datafield]->getValue());
+                                } else {
+                                    $localEntry = $localEntries[$datafield]->getDisplayValue();
+                                }
                                 if ($localEntry) {
                                     $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['DATAFIELD_' . $k] = $localEntry;
                                 }

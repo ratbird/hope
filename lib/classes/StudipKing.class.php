@@ -74,7 +74,7 @@ class StudipKing {
 
     private static function get_kings_uncached()
     {
-        $types = words('file forum guestbook_entry guestbook_writer news voter votes wiki');
+        $types = words('files forum guestbook_entry guestbook_writer news voter votes wiki');
         $kings = array();
         foreach ($types as $type) {
             $method = "{$type}_kings";
@@ -108,7 +108,7 @@ class StudipKing {
         return self::select_kings("SELECT user_id AS id, COUNT(*) AS num FROM px_topics WHERE parent_id != '0' GROUP BY user_id");
     }
 
-    private static function file_kings()
+    private static function files_kings()
     {
         return self::select_kings("SELECT user_id AS id, COUNT(*) AS num FROM dokumente GROUP BY user_id");
     }

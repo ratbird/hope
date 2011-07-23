@@ -33,7 +33,7 @@
         <?= sprintf(_('(+ %s implizit)'), Semester::countContinuousSeminars($single["semester_id"])) ?>
     </td>
     <td align="right">
-        <a href="<?= URLHelper::getLink('dispatch.php/admin/semester/edit_semester/' . $single["semester_id"]) ?>">
+        <a class="load-in-new-row" href="<?= URLHelper::getLink('dispatch.php/admin/semester/edit_semester/' . $single["semester_id"]) ?>">
             <?= Assets::img('icons/16/blue/edit.png', array('title' => _('Semesterangaben bearbeiten'))) ?>
         </a>
     </td>
@@ -46,6 +46,20 @@
     </td>
 </tr>
 <? endforeach ?>
+<tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td align="right">
+        <a class="load-in-new-row" href="<?=URLHelper::getLink('dispatch.php/admin/semester/edit_semester') ?>">
+            <?= Assets::img('icons/16/blue/plus.png', array('title' => _('Neue Ferien anlegen'))) ?>
+        </a>
+    </td>
+</tr>
 </table>
 <br>
 
@@ -63,7 +77,7 @@
     <td><?= date("d.m.Y", $single["beginn"]) ?></td>
     <td><?= date("d.m.Y", $single["ende"]) ?></td>
     <td align="right">
-        <a href="<?=URLHelper::getLink('dispatch.php/admin/semester/edit_holidays/' . $single["holiday_id"]) ?>">
+        <a class="load-in-new-row" href="<?=URLHelper::getLink('dispatch.php/admin/semester/edit_holidays/' . $single["holiday_id"]) ?>">
             <?= Assets::img('icons/16/blue/edit.png', array('title' => _('Ferienangaben bearbeiten'))) ?>
         </a>
         <a href="<?=URLHelper::getLink('dispatch.php/admin/semester/delete/' . $single["holiday_id"] . '/holiday') ?>">
@@ -72,4 +86,22 @@
     </td>
 </tr>
 <? endforeach ?>
+<tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+    <td></td>
+    <td></td>
+    <td></td>
+    <td align="right">
+        <a class="load-in-new-row" href="<?=URLHelper::getLink('dispatch.php/admin/semester/edit_holidays') ?>">
+            <?= Assets::img('icons/16/blue/plus.png', array('title' => _('Neue Ferien anlegen'))) ?>
+        </a>
+    </td>
+</tr>
 </table>
+<script>
+    jQuery('body').bind('ajaxLoaded', function(){
+        jQuery('#beginn').datepicker();
+        jQuery('#ende').datepicker();
+        jQuery('#vorles_beginn').datepicker();
+        jQuery('#vorles_ende').datepicker();
+    });
+</script>

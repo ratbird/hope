@@ -1191,6 +1191,8 @@ jQuery(function ($) {
             $(that)
                 .hideAjaxNotification()
                 .closest('tr').after(row);
+            
+            $('body').trigger('ajaxLoaded');
         });
 
         return false;

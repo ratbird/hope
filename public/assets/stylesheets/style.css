@@ -9,6 +9,10 @@ html, body {
     height: 100%;
 }
 
+body {
+    overflow-y: scroll;
+}
+
 /* --- Schrift (Vorgaben: Typ, Größe, Farbe --------------------------------- */
 body, input, textarea, td, th, blockquote, p, form {
     font-family: Arial, Helvetica, sans-serif;

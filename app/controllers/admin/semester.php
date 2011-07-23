@@ -27,12 +27,16 @@ class Admin_SemesterController extends AuthenticatedController
      */
     function before_filter (&$action, &$args)
     {
-        global $perm;
-
         parent::before_filter($action, $args);
 
+        // ajax
+        if (@$_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
+            $this->via_ajax = true;
+            $this->set_layout(null);
+        }
+
         # user must have root permission
-        $perm->check('root');
+        $GLOBALS['perm']->check('root');
 
         //setting title and navigation
         PageLayout::setTitle(_("Verwaltung von Semestern und Ferien"));
@@ -96,6 +100,7 @@ class Admin_SemesterController extends AuthenticatedController
      */
     public function edit_semester_action($id = null)
     {
+        $this->response->add_header('Content-Type', 'text/html; charset=windows-1252');
         if (!is_null($id)) {
             //get infos
             $this->semester = SemesterData::getInstance()->getSemesterData($id);
@@ -329,6 +334,10 @@ class Admin_SemesterController extends AuthenticatedController
                     ),
                     array(
                         "text" => _("Die Daten müssen im Format tt.mm.jjjj eingegeben werden."),
+                        "icon" => "icons/16/black/info.png"
+                    ),
+                    array(
+                        "text" => _("Das Startdatum kann nur bei Semestern geändert werden, in denen keine Veranstaltungen liegen!"),
                         "icon" => "icons/16/black/info.png"
                     )
                 )

@@ -821,7 +821,7 @@ function form($refresh = FALSE) {
  * @param string $filename original filename
  * @param bool $shorten if true, filename is shortened to 31 chars
  * @param bool $checkfolder if true, uniqueness of filename in this folder is guaranteed
- * @return string
+ * @return string the modified filename
  */
 function prepareFilename($filename, $shorten = FALSE, $checkfolder = false) {
     $bad_characters = array (":", chr(92), "/", "\"", ">", "<", "*", "|", "?", " ", "(", ")", "&", "[", "]", "#", chr(36), "'", "*", ";", "^", "`", "{", "}", "|", "~", chr(255));

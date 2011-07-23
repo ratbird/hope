@@ -72,6 +72,7 @@ global
   $xml_filename,
   $xslt_filename_default,
   $SEM_TREE_TYPES,
+  $NOT_HIDEABLE_FIELDS,
   $TEILNEHMER_IMPORT_DATAFIELDS;
 
 /*basic settings for Stud.IP
@@ -536,6 +537,21 @@ $FLASHPLAYER_DEFAULT_CONFIG_MAX = "&amp;showstop=1&amp;showvolume=1&amp;bgcolor=
 $INST_ADMIN_DATAFIELDS_VIEW = array(
     'default' => array(),
     'extended' => array()
+);
+/*
+ * Fields that may not be hidden by users in their privacy settings.
+ * Can be configured per permission level.
+ * @see lib/edit_about.inc.php in function get_homepage_elements for
+ * available fields.
+ * Entries look like "'field_name' => true".
+ */
+$NOT_HIDEABLE_FIELDS = array(
+    'user' => array(),
+    'autor' => array(),
+    'tutor' => array(),
+    'dozent' => array(),
+    'admin' => array(),
+    'root' => array()
 );
 //Add ids of datafields to use for import on teilnehmer.php
 $TEILNEHMER_IMPORT_DATAFIELDS = array();

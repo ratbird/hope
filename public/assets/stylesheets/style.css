@@ -26,10 +26,14 @@ body {
 }
 
 th {
-    border:0px;
-    background: url('../images/steelgraudunkel.gif');
-    background-color:#B5B5B5;
-    color:#FFFFFF;
+    border-bottom: 1px solid #aaaaaa;
+    padding: 4px;
+    background-color:#d1d1d1;
+    color:#000000;
+}
+
+th a, th a:link, th a:visited {
+    color: #000000;
 }
 
 h1, h2, h3 {
@@ -319,11 +323,11 @@ table.blank, td.blank, td.onlineinfo, td.blanksmall {
 }
 
 tr.cycle_odd {
-    background-color: #F2F2F2;
+    background-color: #f3f5f8;
 }
 
 tr.cycle_even {
-    background-color: #E2E2E2;
+    background-color: #e7ebf1;
 }
 
 tr.cycle_odd:hover {
@@ -494,9 +498,8 @@ td.tree-elbow-end img {
 .steelgraudunkel {
     background-image: url('../images/steelgraudunkel.gif');
 }
-.steelgraulight {
-    background-image: url('../images/steelgraulight.jpg');
-}
+
+
 .steelgraulight_shadow {
     background-image: url('../images/steelgraulight_shadow.jpg');
 }
@@ -509,19 +512,36 @@ td.tree-elbow-end img {
 .steelkante2 {
     background-image: url('../images/steelkante2.jpg');
 }
+
+/* dunkelster Standardhintergrund blau, überall umbenennen! */
 .steel2 {
-    background-color: #FFFFFF; background-image: url('../images/steel2.jpg');
+    background-color: #cdd7e9; 
 }
+
+/* hellerer Standardhintergrund, überall umbenennen! */
 .steel1 {
-    background-color: #FFFFFF; background-image: url('../images/steel1.jpg');
+    background-color: #f3f5f8;
 }
+
+/* dunklerer Standardhintergrund, überall umbenennen! */
+.steelgraulight {
+	background-color: #e7ebf1;
+}
+
 .steelblau_schatten {
     background-color: #FFFFFF;
     background-image: url('../images/steelblau_schatten.jpg');
 }
-.blue_gradient {
-    background-color: #FFFFFF; background-image: url('../images/blue_gradient.jpg');
+
+.category_divider {
+    border-top: 1px solid #D0D0D0;
+    background-image: url('../images/background_stripes.jpg');
 }
+
+.blue_gradient {
+    background-image: url('../images/blue_gradient.jpg');
+}
+
 .red_gradient {
     background-color: #FFFFFF;
     background-image: url('../images/red_gradient.jpg');
@@ -1059,6 +1079,10 @@ div.clear {
 }
 
 #tabs2 li {
+    line-height: 20pt;
+}
+
+#tabs2 li {
     background: url("../images/icons/16/grey/arr_1right.png") no-repeat left center;
     padding-left: 20px;
     margin-left: 1em;
@@ -1435,7 +1459,6 @@ img.plugin_preview {
     background-image: url('../images/background_stripes.jpg');
     background-repeat: repeat-x;
 }
-
 /* --- textarea resizer ----------------------------------------------------- */
 .ui-resizable-handle.ui-resizable-s {
     background: #eee url(../images/vendor/handle_background.png) no-repeat center;
@@ -1675,17 +1698,17 @@ div#schedule-settings-dialog-shadow {
 
 /* classes for sortable table headers --------------------------------------- */
 tr.sortable {
-    background: url('../images/steelgraudunkel.gif');
+	background-color: #d1d1d1;
 }
 
 tr.sortable th.sortasc {
-    background: transparent url('../images/dreieck_up.png') no-repeat center right;
-    padding-right: 15px;
+    background: transparent url('../images/dreieck_up.png') no-repeat center left;
+    padding-left: 17px;
 }
 
 tr.sortable th.sortdesc {
-    background: transparent url('../images/dreieck_down.png') no-repeat center right;
-    padding-right: 15px;
+    background: transparent url('../images/dreieck_down.png') no-repeat center left;
+    padding-left: 17px;
 }
 
 /* classes for the evaluation modules in Stud.IP ---------------------------- */

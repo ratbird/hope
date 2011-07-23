@@ -20,7 +20,7 @@
     <td>
         <a href="<?=URLHelper::getLink("about.php?username=". $person['username'])?>"><?=$person['name']?></a>
         <? foreach ($person['is_king'] as $type => $text) : ?>
-            <?= Assets::img("icons/16/grey/crown.png", array('alt' => $text, 'title' => $text, 'class' => 'text-top')) ?>
+            <?= Assets::img("icons/16/yellow/crown.png", array('alt' => $text, 'title' => $text, 'class' => 'text-top')) ?>
         <? endforeach ?>
     </td>
     <td><?=$person['content']?></td>

@@ -496,8 +496,8 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      */
     function restore()
     {
-        $this->initializeContent();
         $where_query = $this->getWhereQuery();
+
         if ($where_query) {
             $query = "SELECT * FROM `{$this->db_table}` WHERE "
                     . join(" AND ", $where_query);
@@ -514,6 +514,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
             }
         } else {
             $this->setNew(true);
+            $this->initializeContent();
             return FALSE;
         }
     }

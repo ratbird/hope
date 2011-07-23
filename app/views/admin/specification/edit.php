@@ -17,9 +17,9 @@
     <?= CSRFProtection::tokenTag() ?>
     <table class="default">
         <tr class="steelgraulight">
-            <td><?= _("Name der Regel *:") ?> </td>
+            <td><?= _("Name der Regel:") ?> <span style="color: red; font-size: 1.6em">*</span></td>
             <td colspan="2">
-                <input type="text" name="rulename" value="<?= htmlReady(Request::get('rulename', $rule['name'])) ?>" style="width: 350px;">
+                <input type="text" name="rulename" value="<?= htmlReady(Request::get('rulename', $rule['name'])) ?>" style="width: 350px;" required="required">
             </td>
         </tr>
         <tr class="steel1">
@@ -88,7 +88,7 @@ $infobox = array(
                 ),
                 array(
                     "icon" => "icons/16/black/info.png",
-                    "text" => _('* Pflichtfeld')
+                    "text" => _('Mit roten Sternchen markierte Felder sind Pflichtfelder.')
                 )
             )
         )

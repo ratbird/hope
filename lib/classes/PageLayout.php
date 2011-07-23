@@ -67,13 +67,15 @@ class PageLayout
         self::addStylesheet('header.css', array('media' => 'screen, print'));
 
         // include jQuery + UI
-        self::addStylesheet('jquery-ui-1.8.7.custom.css', array('media' => 'screen, print'));
-        self::addScript('jquery-1.5.2.min.js');
-        self::addScript('jquery-ui-1.8.7.custom.min.js');
+        self::addStylesheet('jquery-ui-1.8.14.custom.css', array('media' => 'screen, print'));
+        self::addStylesheet('jquery-ui-studip-2.2.css', array('media' => 'screen, print'));
+        self::addScript('jquery-1.6.2.min.js');
+        self::addScript('jquery-ui-1.8.14.custom.min.js');
+       
         self::addScript('jquery.metadata.js');
         self::addScript('jquery.placehold-0.3.js');
         self::addScript('validator.min.js');
-
+        self::addScript('tinymce/jscripts/tiny_mce/tiny_mce.js');
         // include underscore.js
         self::addScript('underscore-min.js');
 

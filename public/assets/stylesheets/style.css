@@ -381,7 +381,6 @@ td.tree-elbow-end img {
 
 .collapsable .toggle-indicator {
     color: #000;
-    padding-left: 0;
 }
 
 .collapsable .toggle-indicator a {
@@ -1005,7 +1004,8 @@ div.clear {
 
 #tabs li {
     background-color: #899AB9;
-    border-right: 1px solid #FFFFFF;
+    border-right: 1px solid #1E3E70;
+    border-bottom: 1px solid #1E3E70;
 }
 
 #tabs li:last-child {
@@ -1022,6 +1022,9 @@ div.clear {
 
 #tabs a:hover {
     background: #7890BC;
+}
+#tabs li.current {
+    border-bottom: 1px solid #FFFFFF;
 }
 
 #tabs li.current, #tabs li.current a:hover {

@@ -467,7 +467,7 @@ STUDIP.Tabs = (function () {
 
     // check heights of list and items to check for wrapping
     function needs_compression() {
-        return jQuery(list).height() > jQuery('li:first', list).height();
+        return jQuery(list).height() > jQuery('li:first', list).height()+1;
     }
 
     // returns the largest feasible item

@@ -4,10 +4,10 @@
  * and open the template in the editor.
  */
 
-require_once 'app/controllers/studip_controller.php';
+require_once 'app/controllers/authenticated_controller.php';
 require_once 'lib/classes/UpdateInformation.class.php';
 
-class JsupdaterController extends StudipController {
+class JsupdaterController extends AuthenticatedController {
 
     public function get_action() {
         $data = UpdateInformation::getInformation();

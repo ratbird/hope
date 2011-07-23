@@ -2308,7 +2308,7 @@ elseif ((!$level) || ($level == 1))
                             echo "<select name=\"sem_start_time\">";
                             if(!$GLOBALS['ASSI_SEMESTER_PRESELECT'])
                             {
-                                echo "<option value=\"-1\" >"._('Bitte auswählen')."</option>";
+                                echo "<option value=\"-1\" >["._('bitte auswählen')."]</option>";
                             }
                             foreach ($all_semester as $key => $semester) {
                                 if ((!$semester["past"]) && ($semester["ende"] > time())) {
@@ -2755,7 +2755,7 @@ if ($level == 2)
                         print QuickSearch::get("add_tut", $searchForTutorUser)
                               ->withButton(array('search_button_name' => 'search_tut', 'reset_button_name' => 'reset_search'))
                               ->render();
-                        
+
                         print "<input type=\"text\" name=\"sem_tut_label\" placeholder=\""._("Label festlegen")."\">";
                         ?>
                         <br><font size=-1><?=_("Geben Sie zur Suche den Vor-, Nach- oder Benutzernamen ein.")?></font>
@@ -3394,6 +3394,7 @@ if ($level == 4) {
                                         } elseif ($db->nf() > 0) {
                                             print _("Bitte geben Sie zun&auml;chst einen Raumtyp an, der f&uuml;r Sie am besten geeignet ist:")."<br><br>";
                                             print "<select name=\"select_room_type\">";
+                                                print ("<option value=\"\">["._("bitte ausw&auml;hlen")."]</option>");
                                                 while ($db->next_record()) {
                                                     printf ("<option value=\"%s\">%s </option>", $db->f("category_id"), htmlReady(my_substr($db->f("name"), 0, 30)));
                                                 }

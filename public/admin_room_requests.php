@@ -128,7 +128,7 @@ if ((($seminar_id) || ($termin_id) || ($metadate_id)) && (!$uebernehmen_x) && (!
         }
 
         $db->query("SELECT request_id FROM resources_requests WHERE " . $cond);
-        
+
         $db->next_record();
 
         if ($db->nf()) {
@@ -439,6 +439,7 @@ if ($perm->have_perm("admin"))
                             } elseif (($db->nf() > 0) && (!$admin_rooms_data["resRequest"]->getCategoryId())){
                                 print _("Bitte geben Sie zun&auml;chst einen Raumtyp an, der f&uuml;r Sie am besten geeignet ist:")."<br><br>";
                                 print "<select name=\"select_room_type\">";
+                                    print ("<option value=\"\">["._("bitte ausw&auml;hlen")."]</option>");
                                     while ($db->next_record()) {
                                         printf ("<option value=\"%s\">%s </option>", $db->f("category_id"), htmlReady(my_substr($db->f("name"), 0, 30)));
                                     }

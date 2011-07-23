@@ -33,6 +33,14 @@
             <th><?= _("Sortierung:") ?></th>
             <th><?= _("aktivieren:") ?></th>
         </tr>
+        <? if (count($entries_semdata) > 0) : ?>
+        <tr class="steel">
+            <td colspan="3"><b><?= _("Zusatzinformationen") ?></b></td>
+        </tr>
+        <? foreach ($entries_semdata as $id => $entry) : ?>
+          <?= $this->render_partial('admin/specification/_field', array_merge(compact('rule', 'id'), array('name' => $entry->getName()), array('required' => true))) ?>
+        <? endforeach ?>
+        <? endif ?>
         <? if (count($semFields) > 0) : ?>
         <tr class="steel">
             <td colspan="3"><b><?= _("Veranstaltungsinformationen") ?></b></td>
@@ -46,14 +54,6 @@
             <td colspan="3"><b><?= _("Personenbezogene Informationen") ?></b></td>
         </tr>
         <? foreach ($entries_user as $id => $entry) : ?>
-          <?= $this->render_partial('admin/specification/_field', array_merge(compact('rule', 'id'), array('name' => $entry->getName()))) ?>
-        <? endforeach ?>
-        <? endif ?>
-        <? if (count($entries_semdata) > 0) : ?>
-        <tr class="steel">
-            <td colspan="3"><b><?= _("Zusatzinformationen *") ?></b></td>
-        </tr>
-        <? foreach ($entries_semdata as $id => $entry) : ?>
           <?= $this->render_partial('admin/specification/_field', array_merge(compact('rule', 'id'), array('name' => $entry->getName()))) ?>
         <? endforeach ?>
         <? endif ?>

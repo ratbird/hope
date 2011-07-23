@@ -1421,10 +1421,10 @@ img.plugin_preview {
     float: left;
     margin: 0.5em;
     background : url('../images/steel1.jpg');
-    width: 19em;
+    width: 21.5em;
     height: 10em;
-    min-width: 19em;
-    max-width: 19em;
+    min-width: 21.5em;
+    max-width: 21.5em;
     padding: 1em;
     border: 1px solid #D0D0D0;
     overflow: hidden;

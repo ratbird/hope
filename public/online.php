@@ -226,7 +226,7 @@ if (is_array($non_group_buddies))
                 <? if ($group_buddies || $non_group_buddies) { ?>
                     <tr>
                         <th colspan="3" width="65%">
-                                <?= _("Name") ?>
+                            <?= _("Name") ?>
                         </th>
                         <th width="20%" colspan="4">
                             <?= _("letztes Lebenszeichen") ?>
@@ -235,9 +235,7 @@ if (is_array($non_group_buddies))
                 <? } else { // gar keine Buddies online ?>
                     <tr>
                         <td class="steel1" width="50%" align="center" colspan="7">
-                            <font size="-1" color="white">
-                                <b><?= _("Es sind keine Ihrer Buddies online.") ?></b>
-                            </font>
+                            <?= _("Es sind keine Ihrer Buddies online.") ?>
                         </td>
                     </tr>
                 <? } ?>

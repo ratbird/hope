@@ -24,7 +24,7 @@
     <? SkipLinks::insertContainer() ?>
     <? SkipLinks::addIndex(_("Hauptinhalt"), 'layout_content', 100, true) ?>
     <?= PageLayout::getBodyElements() ?>
-    
+
     <? include 'lib/include/header.php' ?>
 
     <div id="layout_container">
@@ -43,6 +43,11 @@
       <div class="clear"></div>
     </div>
 </div>
+    <script>
+        if(jQuery('#layout_sidebar').height() < jQuery('#layout_content').height()) {
+            jQuery('#layout_sidebar').css("height", jQuery('#layout_content').height());
+        }
+    </script>
 <!-- Ende Page -->
     <div id="layout_push"></div>
 </div>

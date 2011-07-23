@@ -9,7 +9,8 @@
                 <? if ($nav->isEnabled()) : ?>
                     <a href="<?= URLHelper::getLink($nav->getURL()) ?>">
                         <? if ($image = $nav->getImage()) : ?>
-                            <img class="tab-icon" src="<?=$image['src']?>" title="<?= $nav->getTitle() ? htmlReady($nav->getTitle()) : htmlReady($nav->getDescription()) ?>" />
+                        <? $color = ($nav->isActive())? 'black/' : 'white/' ?>
+                            <img class="tab-icon" src="<?= str_replace("%COLOR%", ($nav->isActive()) ? 'black' : 'white', $image['src']) ?>" title="<?= $nav->getTitle() ? htmlReady($nav->getTitle()) : htmlReady($nav->getDescription()) ?>" />
                         <? endif ?>
                         <span><?= $nav->getTitle() ? htmlReady($nav->getTitle()) : '&nbsp;' ?></span>
                     </a>

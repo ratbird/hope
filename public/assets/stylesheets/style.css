@@ -182,7 +182,6 @@ a.printhead {
 #layout_push {
     clear: both;
     height: 25px; /* must be the same height as #layout_footer */
-
 }
 
 #layout_footer {
@@ -197,6 +196,7 @@ a.printhead {
     height: 24px;
 }
 
+/* --- Infobox -------------------------------------------------------------- */
 table.infobox td {
     background-color: #dee2e8;
     text-align: left;
@@ -381,7 +381,6 @@ td.tree-elbow-end img {
 
 .collapsable .toggle-indicator {
     color: #000;
-    font-weight: bold;
     padding-left: 0;
 }
 
@@ -558,7 +557,6 @@ p.info {
 }
 
 /* --- Styles fuer printhead und printcontent ------------------------------- */
-
 td.printhead2 {
     background-image: url('../images/steelblau2.png');
 }
@@ -1006,8 +1004,12 @@ div.clear {
 }
 
 #tabs li {
-    background: url("../images/normal_right.png") repeat-x right top;
-    background-color: #9A9A9A;
+    background-color: #899AB9;
+    border-right: 1px solid #FFFFFF;
+}
+
+#tabs li:last-child {
+    border-right: none;
 }
 
 #tabs a, #tabs span.quiet {
@@ -1015,28 +1017,34 @@ div.clear {
     padding-left: 1.3em;
     padding-right: 1.3em;
     white-space: nowrap;
+    color: #FFFFFF;
 }
 
-#tabs li.current {
-    background: url("../images/current_right.png") repeat-x right top;
+#tabs a:hover {
+    background: #7890BC;
+}
+
+#tabs li.current, #tabs li.current a:hover {
     background-color: #F1F5Fe;
+    background: -webkit-gradient(linear, left top, left bottom, from(#EEEEEE), to(#FFFFFF));
+    background: -webkit-linear-gradient(top, #EEEEEE, #FFFFFF);
+    background: -moz-linear-gradient(top, #EEEEEE, #FFFFFF);
+    background: -o-linear-gradient(top, #EEEEEE, #FFFFFF);
+    background: -ms-linear-gradient(top, #EEEEEE, #FFFFFF);
+    background: linear-gradient(top, #EEEEEE, #FFFFFF);
 }
 
 #tabs li.current a, #tabs li.current span.quiet {
-    background: url("../images/current_left.png") no-repeat left top;
+    color: #000000;
 }
 
-#tabs li.current + li a, #tabs li.current + li span.quiet {
-    background: url("../images/reiter2.jpg") no-repeat left top;
-}
 #tabs .quiet img {
     opacity: 0.25;
 }
 
 #tabs2 {
     width: 100%;
-    background: url("../images/steelblau4.jpg") repeat left top;
-    min-height: 8pt;
+    background: #FFFFFF;
     clear: both;
     margin: 0 0 0 0;
     padding: 4px 0 4px 0;
@@ -1052,9 +1060,10 @@ div.clear {
     margin-left: 1em;
 }
 
-#tabs2 li.current {
-    background: url("../images/icons/16/red/arr_1right.png") no-repeat left center;
+#tabs2 li a:hover, #tabs2 li.current a {
+    color: #6E6E6E;
 }
+
 #tabs span {
     padding: 0;
 }

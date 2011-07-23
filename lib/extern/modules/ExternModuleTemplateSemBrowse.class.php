@@ -990,7 +990,7 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
         //$cont['REGULAR_TYPE'] = $GLOBALS['TERMIN_TYP'][$meta->getArt()]['name'];
         $i = 0;
 
-        $cycle_data = array_reverse($meta->getCycleData(), true);
+        $cycle_data = $meta->getCycleData();
 
         foreach ($cycle_data as $metadate_id => $cycle) {
             $cont['REGULAR_DATES']['REGULAR_DATE'][$i] = array(

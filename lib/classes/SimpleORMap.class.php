@@ -23,6 +23,11 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      */
     protected $content = array();
     /**
+     * table row data
+     * @var array
+     */
+    protected $content_db = array();
+    /**
      * new state of entry
      * @var boolean
      */
@@ -66,7 +71,9 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
                 $db_fields[strtolower($rs['Field'])] = array(
                                                             'name' => $rs['Field'],
                                                             'type' => $rs['Type'],
-                                                            'key'  => $rs['Key']
+                                                            'key'  => $rs['Key'],
+                                                            'null' => $rs['Null'],
+                                                            'default' => $rs['Default']
                                                             );
                 if ($rs['Key'] == 'PRI'){
                     $pk[] = strtolower($rs['Field']);
@@ -146,6 +153,41 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
     }
 
     /**
+     * returns object of given class for given id or null
+     * the param could be a string, an assoc array containing primary key field
+     * or an already matching object. In all these cases an object is returned
+     * 
+     * @param mixed $id
+     * @return NULL|object
+     */
+    public static function toObject($class, $id_or_object)
+    {
+        if ($id_or_object instanceof $class) {
+            return $id_or_object;
+        }
+        if (is_array($id_or_object)) {
+            $object = new $class();
+            list( ,$pk) = array_values($object->getTableMetadata());
+            $key_values = array();
+            foreach($pk as $key) {
+                if (array_key_exists($key, $id_or_object)) {
+                    $key_values[] = $id_or_object[$key];
+                }
+            }
+            if (count($pk) === count($key_values)) {
+                if (count($pk) === 1) {
+                    $id = $key_values[0];
+                } else {
+                    $id = $key_values;
+                }
+            }
+        } else {
+            $id = $id_or_object;
+        }
+        return call_user_func(array($class, 'find'), $id);
+    }
+
+    /**
      *
      * @param string $id primary key of table
      */
@@ -174,7 +216,12 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
             $this->pk =& self::$schemes[$this->db_table]['pk'];
         }
     }
-
+    
+    function getTableMetadata()
+    {
+        return array('fields' => $this->db_fields, 'pk' => $this->pk);
+    }
+    
     /**
      * set primary key for entry, combined keys must be passed as array
      * @param string|array primary key
@@ -282,7 +329,6 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         $field = strtolower($field);
         $ret = false;
         if($this->db_fields[$field]){
-            if (is_float($value)) $value = str_replace(',','.',$value);
             $ret = ($this->content[$field] = $value);
         }
         return $ret;
@@ -315,7 +361,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      */
     public function offsetExists($offset)
     {
-        return isset($this->$offset);
+        return array_key_exists($offset, $this->content);
     }
 
     /**
@@ -377,13 +423,13 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
     function setData($data, $reset = false)
     {
         $count = 0;
-        if ($reset){
-            $this->content = array();
+        if ($reset) {
+            $this->initializeContent();
         }
-        if (is_array($data)){
-            foreach($data as $key => $value){
+        if (is_array($data)) {
+            foreach($data as $key => $value) {
                 $key = strtolower($key);
-                if(isset($this->db_fields[$key])){
+                if (isset($this->db_fields[$key])) {
                     $this->content[$key] = $value;
                     ++$count;
                 }
@@ -398,7 +444,10 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      */
     function haveData()
     {
-        return count($this->content);
+        foreach ($this->content as $c) {
+            if ($c !== null) return true;
+        }
+        return false;
     }
 
     /**
@@ -430,7 +479,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         $pk_not_set = array();
         foreach ($this->pk as $key){
             if (isset($this->content[$key])){
-                $where_query[] = "`{$this->db_table}`.`{$key}`" . "='{$this->content[$key]}'";
+                $where_query[] = "`{$this->db_table}`.`{$key}` = "  . DBManager::get()->quote($this->content[$key]);
             } else {
                 $pk_not_set[] = $key;
             }
@@ -447,13 +496,15 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      */
     function restore()
     {
+        $this->initializeContent();
         $where_query = $this->getWhereQuery();
-        if ($where_query){
+        if ($where_query) {
             $query = "SELECT * FROM `{$this->db_table}` WHERE "
                     . join(" AND ", $where_query);
             $rs = DBManager::get()->query($query)->fetchAll(PDO::FETCH_ASSOC);
             if (isset($rs[0])) {
                 if ($this->setData($rs[0], true)){
+                    $this->content_db = $this->content;
                     $this->setNew(false);
                     return true;
                 } else {
@@ -481,32 +532,45 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
 
         $where_query = $this->getWhereQuery();
 
-        foreach ($this->content as $key => $value) {
-            if (is_float($value)) $value = str_replace(',','.',$value);
-            if (isset($this->db_fields[$key]) && $key != 'chdate' && $key != 'mkdate'){
-                $query_part[] = "`$key` = " . DBManager::get()->quote($value) . " ";
+        if ($where_query) {
+            foreach ($this->db_fields as $field => $meta) {
+                $value = $this->getValue($field);
+                if ($value === null && $meta['null'] == 'NO') {
+                    $value = $meta['default'];
+                    if ($value === null) {
+                        throw new Exception($this->db_table . '.' . $field . ' must not be null.');
+                    }
+                }
+                if (is_float($value)) {
+                    $value = str_replace(',','.', $value);
+                }
+                if ($field == 'chdate' && !$this->isFieldDirty($field) && $this->isDirty()) {
+                    $value = time();
+                }
+                if ($field == 'mktime') {
+                    if($this->isNew()) {
+                        $value = time();
+                    } else {
+                        continue;
+                    }
+                }
+                if ($value === null) {
+                    $query_part[] = "`$field` = NULL ";
+                } else {
+                    $query_part[] = "`$field` = " . DBManager::get()->quote($value) . " ";
+                }
             }
-        }
 
-        if ($where_query){
+
             if (!$this->isNew()){
                 $query = "UPDATE `{$this->db_table}` SET "
-                    . implode(',', $query_part);
+                . implode(',', $query_part);
                 $query .= " WHERE ". join(" AND ", $where_query);
-                if ($ret = DBManager::get()->exec($query)){
-                    $this->triggerChdate();
-                }
             } else {
-            $query = "INSERT INTO `{$this->db_table}` SET "
-                    . implode(',', $query_part);
-            if ($this->db_fields['mkdate']){
-                $query .= " ,mkdate=UNIX_TIMESTAMP()";
-            }
-            if ($this->db_fields['chdate']){
-                $query .= " , chdate=UNIX_TIMESTAMP()";
+                $query = "INSERT INTO `{$this->db_table}` SET "
+                . implode(',', $query_part);
             }
             $ret = DBManager::get()->exec($query);
-            }
             $this->restore();
             return $ret;
         } else {
@@ -550,5 +614,54 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         $this->setNew(true);
         $this->setData(array(), true);
         return TRUE;
+    }
+    
+    /**
+     * init internal content arrays with nulls
+     */
+    private function initializeContent()
+    {
+        $this->content = array();
+        foreach(array_keys($this->db_fields) as $field) {
+            $this->content[$field] = null;
+        }
+        $this->content_db = $this->content;
+    }
+    
+    /**
+     * checks if at least one field was modified since last restore
+     * 
+     * @return boolean
+     */
+    public function isDirty() 
+    {
+        foreach(array_keys($this->db_fields) as $field) {
+            if ($this->content[$field] !== $this->content_db[$field]) return true;
+        }
+        return false;
+    }
+    
+    /**
+     * checks if given field was modified since last restore
+     * 
+     * @param string $field
+     * @return boolean
+     */
+    public function isFieldDirty($field)
+    {
+        $field = strtolower($field);
+        return ($this->content[$field] !== $this->content_db[$field]);
+    }
+
+    /**
+     * reverts value of given field to last restored value
+     * 
+     * @param string $field
+     * @return mixed the restored value
+     */
+    public function revertValue($field)
+    {
+        $field = strtolower($field);
+        return ($this->content[$field] = $this->content_db[$field]);
     }
 }

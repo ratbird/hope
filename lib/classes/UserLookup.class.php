@@ -26,7 +26,7 @@
  *
  *   # Filter all users that have an 'autor' or 'tutor' permission
  *   $user_lookup->setFilter('status', array('autor', 'tutor'));
- *   
+ *
  *   # Get a list of all matching user ids (sorted by the user's names)
  *   $user_ids = $user_lookup->execute(UserLookup::FLAG_SORT_NAME);
  *
@@ -39,7 +39,7 @@
 final class UserLookup
 {
     // At the moment, the cache is only used for the GetValuesForType method
-    const USE_CACHE = true;
+    const USE_CACHE = false;
     const CACHE_DURATION = 3600; // 1 hour
 
     const FLAG_SORT_NAME = 1;

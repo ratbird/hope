@@ -177,13 +177,13 @@ class Admin_DatafieldsController extends AuthenticatedController
      * @param md5 $datafield_id
      * @param string $name
      */
-    public function delete_action($datafield_id, $name = null)
+    public function delete_action($datafield_id)
     {
 
         $struct = new DataFieldStructure(compact('datafield_id'));
         $struct->load();
         $type = $struct->getObjectType();
-
+        $name = $struct->getName();
         if (Request::int('delete') == 1) {
             $struct->remove();
             $this->flash['success'] = _('Das Datenfeld wurde erfolgreich gelöscht!');

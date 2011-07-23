@@ -82,7 +82,7 @@
                 <a class="load-in-new-row" href="<?=$controller->url_for('admin/datafields/edit/'.$val->getID())?>">
                     <?= Assets::img('icons/16/blue/edit.png', array('title' => 'Datenfeld ändern')) ?>
                 </a>
-                <a href="<?=$controller->url_for('admin/datafields/delete/'.$val->getID()).'/'.$val->getName()?>">
+                <a href="<?=$controller->url_for('admin/datafields/delete/'.$val->getID())?>">
                     <?= Assets::img('icons/16/blue/trash.png', array('title' => 'Datenfeld löschen')) ?>
                 </a>
             </td>

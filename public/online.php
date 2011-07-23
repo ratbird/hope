@@ -196,9 +196,9 @@ if (is_array($non_group_buddies))
 
 <?  //Kopfzeile
     if ($my_messaging_settings["show_only_buddys"])
-        echo "\n<td class=\"".$cssSw->getHeaderClass()."\" width=\"50%\" align=\"center\"><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=1 height=20><font size=-1><b>" . _("Kontakte") . "</b></font></td></tr>\n";
+        echo "\n<td class=\"topic\" width=\"50%\" align=\"center\"><b>" . _("Kontakte") . "</b></td></tr>\n";
     else
-        echo "\n<td class=\"".$cssSw->getHeaderClass()."\" width=\"50%\" align=\"center\"><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=1 height=20><font size=-1><b>" . _("Kontakte") . "</b></font></td><td class=\"".$cssSw->getHeaderClass()."\" width=\"50%\" align=\"center\"><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=1 height=20><font size=-1><b>" . _("andere Nutzer") . "</b></font></td></tr>\n";
+        echo "\n<td class=\"topic\" width=\"50%\" align=\"center\"><b>" . _("Kontakte") . "</b></td><td class=\"topic\" width=\"50%\" align=\"center\"><b>" . _("andere Nutzer") . "</b></td></tr>\n";
     echo "<tr>";
 
     //Buddiespalte
@@ -209,13 +209,11 @@ if (is_array($non_group_buddies))
             <table width="100%" cellspacing="0" cellpadding="1" border="0">
                 <tr>
                     <td class="steel1" width="50%" align="center">
-                        <font size="-1">
                             <?= _("Sie haben keine Buddies ausgew&auml;hlt.") ?>
                             <br>
                             <? printf(_("Zum Adressbuch (%d Eintr&auml;ge) klicken Sie %shier%s"),
                                       GetSizeofBook(),
                                       "<a href=\"contact.php\">", "</a>") ?>
-                        </font>
                     </td>
                 </tr>
             </table>
@@ -227,21 +225,16 @@ if (is_array($non_group_buddies))
             <table width="100%" cellspacing="0" cellpadding="1" border="0">
                 <? if ($group_buddies || $non_group_buddies) { ?>
                     <tr>
-                        <td class="steelgraudunkel" colspan="3" width="65%">
-                            <font size="-1" color="white">
-                                &nbsp;
-                                <b><?= _("Name") ?></b>
-                            </font>
-                        </td>
-                        <td class="steelgraudunkel" width="20%" colspan="4">
-                            <font size="-1" color="white">
-                                <b><?= _("letztes Lebenszeichen") ?></b>
-                            </font>
-                        </td>
+                        <th colspan="3" width="65%">
+                                <?= _("Name") ?>
+                        </th>
+                        <th width="20%" colspan="4">
+                            <?= _("letztes Lebenszeichen") ?>
+                        </th>
                     </tr>
                 <? } else { // gar keine Buddies online ?>
                     <tr>
-                        <td class="steelgraudunkel" width="50%" align="center" colspan="7">
+                        <td class="steel1" width="50%" align="center" colspan="7">
                             <font size="-1" color="white">
                                 <b><?= _("Es sind keine Ihrer Buddies online.") ?></b>
                             </font>
@@ -313,7 +306,7 @@ if (is_array($non_group_buddies))
         echo "\n<table width=\"100%\" cellspacing=0 cellpadding=1 border=0>\n";
 
         if (is_array($n_buddies)) {
-            echo "<tr>\n<td class=\"steelgraudunkel\"  colspan=3><font size=-1 color=\"white\"><b>&nbsp;" . _("Name") . "</b></font></td><td class=\"steelgraudunkel\" colspan=4><font size=-1 color=\"white\"><b>" . _("letztes Lebenszeichen") . "</b></font></td></tr>\n";
+            echo "<tr>\n<th colspan=3>" . _("Name") . "</th><th colspan=4>" . _("letztes Lebenszeichen") . "</th></tr>\n";
             reset($n_buddies);
             $template = $GLOBALS['template_factory']->open('online/user');
             while (list($index)=each($n_buddies)) {
@@ -331,20 +324,16 @@ if (is_array($non_group_buddies))
             if ($weitere > 0) {
             ?>
             <tr>
-                <td class="steelgraudunkel" align="center">
-                    <font size="-1" color="white">
-                        <b>&nbsp;<?=_("Keine sichtbaren Nutzer online.")?></b>
-                    </font>
+                <td class="steel1" align="center">
+                    <?=_("Keine sichtbaren Nutzer online.")?>
                 </td>
             </tr>
             <?
             } else {
             ?>
-            <td class="steelgraudunkel" width="50%" align="center">
-                <font size="-1" color="white">
-                    <b><?=_("Kein anderer Nutzer ist online.")?></b>
-                </font>
-            </td>
+                <td class="steel1" width="50%" align="center">
+                    <?=_("Kein anderer Nutzer ist online.")?>
+                </td>
             </tr>
             <?
             }

@@ -5,7 +5,7 @@
  * * * * * * * * * * * * */
 
 $infobox = array(
-    'picture' => 'infobox/administration.jpg',
+    'picture' => 'infobox/administration.png',
     'content' => array(
         array(
             'kategorie' => _('Information'),

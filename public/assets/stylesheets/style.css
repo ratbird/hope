@@ -369,18 +369,20 @@ td.tree-elbow-end img {
 
 .collapsable .header-row > td {
     border-bottom: 0;
-	padding-left: 0;
+    padding-left: 0;
 }
+
+
 
 .collapsable td.label-cell,
 .collapsable .toggle-indicator a,
 .collapsable .empty .toggle-indicator {
     padding-left: 20px;
-	font-weight: normal !important;
 }
 
 .collapsable .toggle-indicator {
     color: #000;
+    font-weight: bold;
 }
 
 .collapsable .toggle-indicator a {
@@ -394,7 +396,6 @@ td.tree-elbow-end img {
 }
 .collapsable .collapsed .toggle-indicator a {
     background-image: url(../images/icons/16/blue/arr_1right.png);
-    font-weight: normal;
     cursor: pointer;
 }
 

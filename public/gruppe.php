@@ -58,7 +58,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
 <table class="index_box">
     <tr>
         <td class="topic">
-            <img src="<?= Assets::image_path('icons/16/white/group.png')?>" <?= tooltip(_("Gruppe ändern")) ?>>
+            <img src="<?= Assets::image_path('icons/16/blue/group.png')?>" <?= tooltip(_("Gruppe ändern")) ?>>
             <b><?=_("Gruppenzuordnung")?></b>
         </td>
     </tr>

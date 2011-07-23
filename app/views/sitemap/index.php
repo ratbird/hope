@@ -42,5 +42,5 @@ $infobox_content = array(
     )
 );
 
-$infobox = array('picture' => 'infobox/administration.jpg', 'content' => $infobox_content);
+$infobox = array('picture' => 'infobox/administration.png', 'content' => $infobox_content);
 ?>

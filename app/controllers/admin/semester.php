@@ -16,8 +16,7 @@
  * @since       2.1
  */
 require_once 'app/controllers/authenticated_controller.php';
-require_once 'lib/classes/SemesterData.class.php';
-require_once 'lib/classes/HolidayData.class.php';
+require_once 'lib/classes/SemesterHoliday.class.php';
 require_once 'lib/classes/Semester.class.php';
 
 class Admin_SemesterController extends AuthenticatedController
@@ -51,8 +50,8 @@ class Admin_SemesterController extends AuthenticatedController
      */
     public function index_action()
     {
-        $this->semesters = SemesterData::getInstance(true)->getAllSemesterData();
-        $this->holidays = HolidayData::GetInstance()->getAllHolidays();
+        $this->semesters = Semester::getAll(true);
+        $this->holidays = SemesterHoliday::getAll(true);
     }
 
     /**
@@ -70,23 +69,25 @@ class Admin_SemesterController extends AuthenticatedController
                 if ($semester_count > 0) {
                     PageLayout::postMessage(MessageBox::error(_("Semester, in denen Veranstaltungen liegen, können nicht gelöscht werden!")));
                 } else {
-                     $this->flash['delete'] = SemesterData::getInstance()->getSemesterData($id);
+                     $this->flash['delete'] = Semester::find($id);
                 }
 
                 //sicherheitsabfrage
                 if (Request::get('delete') == 1 && $semester_count == 0) {
-                    SemesterData::getInstance()->deleteSemester($id);
-                    PageLayout::postMessage(MessageBox::success(_("Das Semester wurde erfolgreich gelöscht")));
+                    if (($semester = Semester::find($id)) && $semester->delete()) {
+                        PageLayout::postMessage(MessageBox::success(_("Das Semester wurde erfolgreich gelöscht")));
+                    }
                     $this->flash->discard();
                 }
             //delete holiday
             } elseif( $mode == "holiday" ) {
-                $this->flash['delete'] = HolidayData::getInstance()->getHolidayData($id);
+                $this->flash['delete'] = SemesterHoliday::find($id);
 
                 //sicherheitsabfrage
                 if( Request::get('delete') == 1 ) {
-                    HolidayData::getInstance()->deleteHoliday($id);
-                    PageLayout::postMessage(MessageBox::success(_("Die Ferien wurden erfolgreich gelöscht")));
+                    if (($holiday = SemesterHoliday::find($id)) && $holiday->delete()) {
+                        PageLayout::postMessage(MessageBox::success(_("Die Ferien wurden erfolgreich gelöscht")));
+                    }
                     $this->flash->discard();
                 }
             }
@@ -103,33 +104,32 @@ class Admin_SemesterController extends AuthenticatedController
         $this->response->add_header('Content-Type', 'text/html; charset=windows-1252');
         if (!is_null($id)) {
             //get infos
-            $this->semester = SemesterData::getInstance()->getSemesterData($id);
+            $this->semester = Semester::find($id);
             if (Semester::countAbsolutSeminars($id) > 0) {
                 $this->noteditable = true;
             }
 
             //save changes
             if (Request::submitted('speichern')) {
-                $semester = array(
-                    'semester_id' => $id,
-                    'name' => Request::get('name'),
-                    'description' => Request::get('description'),
-                    'semester_token' => $this->semester['semester_token'],
-                    'beginn' => $this->getTimeStamp(Request::get('beginn')),
-                    'ende' => $this->getTimeStamp(Request::get('ende')),
-                    'vorles_beginn' => $this->getTimeStamp(Request::get('vorles_beginn')),
-                    'vorles_ende' => $this->getTimeStamp(Request::get('vorles_ende')),
-                    'past' => $this->semester['past'],
-                    'first_sem_week' => $this->semester['first_sem_week'],
-                    'last_sem_week' => $this->semester['last_sem_week']
+                $semester = Semester::find($id);
+                $data = array(
+                    'name' => Request::get('name', $semester->name),
+                    'description' => Request::get('description', $semester->description),
+                    'semester_token' => $semester->semester_token,
+                    'beginn' => Request::get('beginn') ? $this->getTimeStamp(Request::get('beginn')) : $semester->beginn,
+                    'ende' => Request::get('ende') ? $this->getTimeStamp(Request::get('ende')) : $semester->ende,
+                    'vorles_beginn' => Request::get('vorles_beginn') ? $this->getTimeStamp(Request::get('vorles_beginn')) : $semester->vorles_beginn,
+                    'vorles_ende' => Request::get('vorles_ende') ? $this->getTimeStamp(Request::get('vorles_ende')) : $semester->vorles_ende
                 );
-
+                $semester->setData($data);
                 //check parameters
                 if(!$this->validateSemester($semester)) {
                     PageLayout::postMessage(MessageBox::error(_("Ihre eingegeben Daten sind ungültig.")));
                 } elseif (!$this->checkOverlap($semester)) {
-                    if (SemesterData::getInstance()->updateExistingSemester($semester)) {
-                        PageLayout::postMessage(MessageBox::success(_("Das Semester wurde erfolgreich gespeichert.")));
+                    if (($ok = $semester->store()) !== false) {
+                        if ($ok > 0) {
+                            PageLayout::postMessage(MessageBox::success(_("Das Semester wurde erfolgreich gespeichert.")));
+                        }
                         $this->redirect('admin/semester');
                     } else {
                         PageLayout::postMessage(MessageBox::error(_("Fehler bei der Speicherung Ihrer Daten. Bitte überprüfen Sie Ihre Angaben.")));
@@ -155,7 +155,9 @@ class Admin_SemesterController extends AuthenticatedController
             if(!$this->validateSemester($this->semester)) {
                 PageLayout::postMessage(MessageBox::error(_("Ihre eingegeben Daten sind ungültig.")));
             } elseif (!$this->checkOverlap($this->semester)) {
-                if (SemesterData::getInstance()->insertNewSemester($this->semester)) {
+                $semester = new Semester();
+                $semester->setData($this->semester);
+                if ($semester->store()) {
                      PageLayout::postMessage(MessageBox::success(_("Das Semester wurde erfolgreich gespeichert.")));
                     $this->redirect('admin/semester');
                 } else {
@@ -177,18 +179,17 @@ class Admin_SemesterController extends AuthenticatedController
         $this->is_new = true;
         if (!is_null($id) && !Request::submitted('anlegen')) {
             $this->is_new = false;
-            $this->holiday = HolidayData::getInstance()->getHolidayData($id);
+            $this->holiday = SemesterHoliday::find($id);
 
             //save changes
             if(Request::submitted('speichern')) {
                 $holiday = array(
-                    'holiday_id' => $id,
                     'name' => Request::get('name'),
                     'description' => Request::get('description'),
                     'beginn' => $this->getTimeStamp(Request::get('beginn')),
                     'ende' => $this->getTimeStamp(Request::get('ende'))
                 );
-
+                $this->holiday->setData($holiday);
                 if($holiday['beginn'] == false || $holiday['ende'] == false
                     || $holiday['name'] == "" || $holiday['beginn'] > $holiday['ende'] ) {
 
@@ -203,11 +204,11 @@ class Admin_SemesterController extends AuthenticatedController
                         $details[] = _("Bitte geben Sie einen Namen ein.");
                     }
                     if ($holiday['beginn'] > $holiday['ende']) {
-                        $details[] = _("Das Ferienende leigt vor dem Beginn.");
+                        $details[] = _("Das Ferienende liegt vor dem Beginn.");
                     }
                     PageLayout::postMessage(MessageBox::error(_("Ihre eingegeben Daten sind ungültig."), $details));
-                    $this->holiday = $holiday;
-                } elseif (HolidayData::getInstance()->updateExistingHoliday($holiday)) {
+                    
+                } elseif ($this->holiday->store() !== false) {
                     PageLayout::postMessage(MessageBox::success(_("Die Ferien wurden erfolgreich gespeichert.")));
                     $this->redirect('admin/semester');
                 }
@@ -216,13 +217,14 @@ class Admin_SemesterController extends AuthenticatedController
 
         // add new holiday
         if(Request::submitted('anlegen')) {
-            $this->holiday = array(
+            $holiday = array(
                 'name' => Request::get('name'),
                 'description' => Request::get('description'),
                 'beginn' => $this->getTimeStamp(Request::get('beginn')),
                 'ende' => $this->getTimeStamp(Request::get('ende'))
             );
-
+            $this->holiday = new SemesterHoliday();
+            $this->holiday->setData($holiday);
             if($this->holiday['beginn'] == false || $this->holiday['ende'] == false
                 || $this->holiday['name'] == ""
                 || $this->holiday['beginn'] > $this->holiday['ende'] ) {
@@ -240,7 +242,7 @@ class Admin_SemesterController extends AuthenticatedController
                     $details[] = _("Das Ferienende leigt vor dem Beginn.");
                 }
                 PageLayout::postMessage(MessageBox::error(_("Ihre eingegeben Daten sind ungültig."), $details));
-            } elseif (HolidayData::getInstance()->insertNewHoliday($this->holiday)) {
+            } elseif ($this->holiday->store()) {
                 PageLayout::postMessage(MessageBox::success(_("Die Ferien wurden erfolgreich gespeichert.")));
                 $this->redirect('admin/semester');
             }
@@ -256,7 +258,7 @@ class Admin_SemesterController extends AuthenticatedController
      */
     private function checkOverlap($semesterdata)
     {
-        $allSemesters = SemesterData::getInstance()->getAllSemesterData();
+        $allSemesters = Semester::getAll();
 
         foreach ($allSemesters as $semester) {
             if (($semesterdata["beginn"] < $semester["beginn"]) && ($semesterdata["ende"] > $semester["ende"])) {

@@ -55,4 +55,4 @@ echo $message;
 if (!$GLOBALS['perm']->have_perm('root')) {
     unset($infobox_content[0]['eintrag'][0]);
 }
-$infobox = array('picture' => 'infobox/administration.jpg', 'content' => $infobox_content);
+$infobox = array('picture' => 'infobox/administration.png', 'content' => $infobox_content);

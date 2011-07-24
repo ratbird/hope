@@ -620,7 +620,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
     /**
      * init internal content arrays with nulls
      */
-    private function initializeContent()
+    protected function initializeContent()
     {
         $this->content = array();
         foreach(array_keys($this->db_fields) as $field) {

@@ -7,12 +7,12 @@
 * @package    PHPLib
 * @access     public
 */
-class User {
+class PhpLibUser {
 
   /**
   *
   */
-  var $classname = "User";
+  var $classname = "PhpLibUser";
 
 
   /**

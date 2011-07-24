@@ -168,6 +168,7 @@ require_once('lib/classes/StudipNews.class.php');
 require_once('lib/classes/StudipCacheFactory.class.php');
 require_once 'lib/classes/SessionDecoder.class.php';
 require_once 'lib/classes/StudipMail.class.php';
+require_once 'lib/classes/User.class.php';
 
 //Besser hier globale Variablen definieren...
 $GLOBALS['_fullname_sql'] = array();
@@ -378,12 +379,13 @@ class Seminar_User_CT_Sql extends CT_Sql {
     var $database_table = PHPLIB_USERDATA_TABLE;
 }
 
-class Seminar_User extends User {
+class Seminar_User extends PhpLibUser {
     var $classname = "Seminar_User";
     var $magic    = "dsfgakdfld";     // ID seed
     var $that_class     = "Seminar_User_CT_Sql"; // data storage container
     var $fake_user = false;
     var $cfg = null; //UserConfig object
+    private $user = null; //User object
 
     function Seminar_User($uid = null){
         if ($uid){
@@ -398,7 +400,12 @@ class Seminar_User extends User {
 
     function start($uid){
         parent::start($uid);
+        $this->user = User::find($uid);
         $this->cfg = UserConfig::get($uid);
+        if (!isset($this->user)) {
+        	$this->user = new User();
+        	$this->user->user_id = 'nobody';
+        }
     }
 
     function freeze(){
@@ -427,6 +434,21 @@ class Seminar_User extends User {
             $timestamp = time();
         }
         $this->that->ac_set_changed($this->id, $this->name, $timestamp);
+    }
+    
+	function __get($field)
+    {
+        return $this->user->$field;
+    }
+
+    function __set($field, $value)
+    {
+        return null;
+    }
+
+    function __isset($field)
+    {
+        return isset($this->user->$field);
     }
 }
 

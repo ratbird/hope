@@ -1013,7 +1013,7 @@ div.autocomplete {
 }
 
 #tabs a, #tabs2 a {
-    color: black;
+    color: #000000;
     font-weight: bold;
 }
 
@@ -1080,20 +1080,25 @@ div.clear {
 
 #tabs2 li {
     line-height: 20pt;
-}
-
-#tabs2 li {
-    line-height: 20pt;
-}
-
-#tabs2 li {
     background: url("../images/icons/16/grey/arr_1right.png") no-repeat left center;
     padding-left: 20px;
     margin-left: 1em;
 }
 
-#tabs2 li a:hover, #tabs2 li.current a {
+#tabs2 li:hover {
+    background: url("../images/icons/16/black/arr_1right.png") no-repeat left center;
+}
+
+#tabs2 li.current {
+    background: url("../images/icons/16/red/arr_1right.png") no-repeat left center;
+}
+
+#tabs2 li a {
     color: #6E6E6E;
+}
+
+#tabs2 li a:hover, #tabs2 li.current a {
+    color: #000000;
 }
 
 #tabs span {

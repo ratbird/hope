@@ -203,6 +203,7 @@ class UserConfig extends Config
             $entry = new UserConfigEntry();
             $entry->user_id = $this->user_id;
             $entry->field = $field;
+            $entry->comment = '';
         }
         $metadata = Config::get()->getMetadata($field);
         switch ($metadata['type']) {

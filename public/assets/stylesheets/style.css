@@ -1087,6 +1087,7 @@ div.clear {
 
 #tabs2 li:hover {
     background: url("../images/icons/16/black/arr_1right.png") no-repeat left center;
+    cursor: pointer;
 }
 
 #tabs2 li.current {
@@ -1095,9 +1096,10 @@ div.clear {
 
 #tabs2 li a {
     color: #6E6E6E;
+    display: block;
 }
 
-#tabs2 li a:hover, #tabs2 li.current a {
+#tabs2 li a:hover, #tabs2 li:hover a, #tabs2 li.current a {
     color: #000000;
 }
 

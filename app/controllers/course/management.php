@@ -32,6 +32,8 @@ class Course_ManagementController extends AuthenticatedController
         }
         PageLayout::setTitle(sprintf(_("%s - Verwaltung"), $GLOBALS['SessSemName']['header_line']));
         PageLayout::setHelpKeyword('Basis.InVeranstaltungVerwaltung');
+
+        mark_public_course();
     }
 
     /**

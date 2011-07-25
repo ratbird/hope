@@ -133,8 +133,6 @@ checkObject();
 checkObjectModule('documents');
 object_set_visit_module('documents');
 
-mark_public_course();
-
     // add skip links
     SkipLinks::addIndex(Navigation::getItem('/course/files/all')->getTitle(), 'main_content', 100);
     SkipLinks::addIndex(Navigation::getItem('/course/files/tree')->getTitle(), 'main_content', 100);

@@ -38,8 +38,6 @@ checkObject(); // do we have an open object?
 checkObjectModule("literature");
 object_set_visit_module("literature");
 
-mark_public_course();
-
 PageLayout::setHelpKeyword("Basis.Literatur");
 PageLayout::setTitle($SessSemName["header_line"]. " - " . _("Literatur"));
 Navigation::activateItem('/course/literature/view');

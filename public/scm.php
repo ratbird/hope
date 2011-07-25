@@ -46,8 +46,6 @@ checkObject(); // do we have an open object?
 checkObjectModule("scm");
 object_set_visit_module("scm");
 
-mark_public_course();
-
 $scms = array_values(StudipScmEntry::GetSCMEntriesForRange($SessSemName[1]));
 
 $msg = ""; // Message to display

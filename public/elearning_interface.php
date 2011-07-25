@@ -39,8 +39,6 @@ checkObject();
 checkObjectModule("elearning_interface");
 object_set_visit_module("elearning_interface");
 
-mark_public_course();
-
 PageLayout::setHelpKeyword("Basis.Ilias");
 PageLayout::setTitle($SessSemName["header_line"]. " - " . _("Lernmodule"));
 Navigation::activateItem('/course/elearning/' . Request::get('view'));

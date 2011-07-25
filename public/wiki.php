@@ -72,8 +72,6 @@ checkObject(); // do we have an open object?
 checkObjectModule("wiki"); //are we allowed to use this module here?
 object_set_visit_module("wiki");
 
-mark_public_course();
-
 PageLayout::setHelpKeyword("Basis.Wiki"); // Hilfeseite im Hilfewiki
 PageLayout::setTitle($SessSemName["header_line"]. " - " . _("Wiki"));
 

@@ -84,8 +84,6 @@ if (get_config('NEWS_RSS_EXPORT_ENABLE') && $course_id){
 
 checkObject();
 
-mark_public_course();
-
 PageLayout::setHelpKeyword("Basis.InVeranstaltungKurzinfo");
 PageLayout::setTitle($GLOBALS['SessSemName']["header_line"]. " - " . _("Kurzinfo"));
 Navigation::activateItem('/course/main/info');

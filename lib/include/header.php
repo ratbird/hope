@@ -59,6 +59,18 @@ if (PageLayout::isHeaderEnabled()) //Einige Seiten benötigen keinen Header, spri
     $header_template->link_params = array_fill_keys(array_keys(URLHelper::getLinkParams()), NULL);
 
     if (is_object($GLOBALS['user']) && $GLOBALS['user']->id != 'nobody') {
+        // only mark course if user is logged in and free access enabled
+        if (get_config('ENABLE_FREE_ACCESS') &&
+            Navigation::hasItem('/course') && Navigation::getItem('/course')->isActive()) {
+            // indicate to the template that this course is publicly visible
+            // need to handle institutes separately (always visible)
+            if ($GLOBALS['SessSemName']['class'] == 'inst') {
+                $header_template->public_hint = _('öffentliche Einrichtung');
+            } else if ($GLOBALS['SemSecLevelRead'] == 0) {
+                $header_template->public_hint = _('öffentliche Veranstaltung');
+            }
+        }
+
         if ($GLOBALS['user']->cfg->getValue('ACCESSKEY_ENABLE')){
             $header_template->accesskey_enabled = true;
         }

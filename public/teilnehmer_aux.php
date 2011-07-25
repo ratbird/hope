@@ -38,8 +38,6 @@ require_once('lib/dates.inc.php');
 checkObject();
 checkObjectModule("participants");
 
-mark_public_course();
-
 PageLayout::setTitle($SessSemName["header_line"]. " - " . _("Zusatzangaben"));
 Navigation::activateItem('/course/members/aux_data');
 

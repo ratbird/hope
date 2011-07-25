@@ -42,8 +42,6 @@ checkObject();
 checkObjectModule("forum");
 object_set_visit_module("forum");
 
-mark_public_course();
-
 if (Request::option('neuesthema')) {
     PageLayout::setHelpKeyword("Basis.ForumBeteiligen");
     PageLayout::setTitle($SessSemName["header_line"]. " - " . _("Forum"));

@@ -45,8 +45,6 @@ checkObject();
 checkObjectModule("schedule");
 object_set_visit_module("schedule");
 
-mark_public_course($sem);
-
 PageLayout::setTitle($SessSemName["header_line"].' - '._("Ablaufplan"));
 
 if (Request::get('date_type') == '1') {

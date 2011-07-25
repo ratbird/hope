@@ -91,8 +91,6 @@ checkObjectModule("participants");
 object_set_visit_module('participants');
 $last_visitdate = object_get_visit($SessSemName[1], 'participants');
 
-mark_public_course();
-
 if ($rechte) {
     PageLayout::setHelpKeyword("Basis.VeranstaltungenVerwaltenTeilnehmer");
 } else {

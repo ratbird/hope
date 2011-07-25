@@ -39,8 +39,6 @@ require_once 'lib/functions.php';
 checkObject();
 checkObjectModule("participants");
 
-mark_public_course();
-
 PageLayout::setHelpKeyword("Basis.InVeranstaltungGruppen");
 PageLayout::setTitle($SessSemName["header_line"]. " - " . _("Funktionen / Gruppen"));
 Navigation::activateItem('/course/members/view_groups');

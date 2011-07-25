@@ -1462,40 +1462,6 @@ function studip_utf8decode($string){
     }
 }
 
-function mark_public_course($course = NULL) {
-
-    // only mark course if user is logged in and free access enabled
-    if ($GLOBALS['auth']->auth['uid'] == 'nobody' || !get_config('ENABLE_FREE_ACCESS')) {
-        return;
-    }
-
-    // need to handle institutes separately (always visible)
-    if ($GLOBALS['SessSemName']['class'] == 'inst') {
-        $GLOBALS["SessSemName"]["header_line"] .=
-            " (" . _("öffentliche Einrichtung") . ")";
-        PageLayout::addStyle('div#barBottommiddle, div#barBottomright, div#barBottomLeft { background-color: #C92C3C; }'
-                            .'div#barBottommiddle { background-image: url(' .  Assets::image_path('header/header_bottom_isolator_public.png'). '); }');
-        return;
-    }
-
-    if ($course === NULL) {
-        require_once "lib/classes/Seminar.class.php";
-        $course = Seminar::getInstance($GLOBALS['SessSemName'][1]);
-    }
-
-    // change class attribute of the body tag and headline if this course is
-    // publicly visible
-    if ($course->isPublic()) {
-        $name = $course->getName();
-        $type = $GLOBALS["SessSemName"]["art"];
-        $GLOBALS["SessSemName"]["header_line"] =
-            getHeaderLine($course->getId(), compact('name', 'type')) .
-            " (" . _("öffentliche Veranstaltung") . ")";
-        PageLayout::addStyle('div#barBottommiddle, div#barBottomright, div#barBottomLeft { background-color: #C92C3C; }'
-                            .'div#barBottommiddle { background-image: url(' .  Assets::image_path('header/header_bottom_isolator_public.png'). '); }');
-    }
-}
-
 /*
  * Get the title used for the given status ('dozent', 'tutor' etc.) for the
  * specified SEM_TYPE. Alternative titles can be defined in the config.inc.php.

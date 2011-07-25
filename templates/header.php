@@ -42,12 +42,13 @@
     </a>
 </div>
 <!-- Leiste unten -->
-<div id="barBottomContainer">
+<div id="barBottomContainer" <?= $public_hint ? 'class="public_course"' : '' ?>>
     <div id="barBottomLeft">
         <?=($current_page != "" ? _("Aktuelle Seite:") : "")?>
     </div>
     <div id="barBottommiddle">
         <?=($current_page != "" ? htmlReady($current_page) : "")?>
+        <?= $public_hint ? '(' . htmlReady($public_hint) . ')' : '' ?>
     </div>
     <!-- Dynamische Links ohne Icons -->
     <div id="barBottomright">

@@ -224,8 +224,6 @@ class AbstractStudIPStandardPlugin extends AbstractStudIPLegacyPlugin
      * @return void
      */
     function display_action($action) {
-        mark_public_course();
-
         $GLOBALS['CURRENT_PAGE'] =
             $GLOBALS['SessSemName']['header_line'] . ' - ' . $this->getDisplayTitle();
 

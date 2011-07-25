@@ -120,6 +120,18 @@ div#header {
     background-repeat: repeat-x;
 }
 
+/* --- public course marker ----------------------------------------------------*/
+
+#barBottomContainer.public_course div#barBottommiddle,
+#barBottomContainer.public_course div#barBottomright,
+#barBottomContainer.public_course div#barBottomLeft {
+    background-color: #C92C3C;
+}
+
+#barBottomContainer.public_course div#barBottommiddle {
+    background-image: url('../images/header/header_bottom_isolator_public.png');
+}
+
 /* --- main navigation ------------------------------------------------------ */
 #barTopMenu {
     position: absolute;

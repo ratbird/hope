@@ -290,7 +290,7 @@ $pic_path = $GLOBALS['ASSETS_URL'] . 'images';
             LEFT JOIN semester_data sd2 ON ((start_time + duration_time) BETWEEN sd2.beginn AND sd2.ende)
             LEFT JOIN seminar_user ON (d.seminar_id=seminar_user.seminar_id AND seminar_user.user_id='$user_id')
             WHERE d.user_id = '$user_id'
-            GROUP BY s.Seminar_id ORDER BY numdok DESC";
+            GROUP BY s.Seminar_id ORDER BY sd1.beginn, numdok DESC";
     $db->query($query);
     while ($db->next_record()){
         $title = $db->f("Name") . " (".$db->f('startsem')

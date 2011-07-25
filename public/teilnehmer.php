@@ -113,7 +113,7 @@ if (isset($_REQUEST['do_send_msg_x']) && isset($_REQUEST['send_msg']) && Seminar
         $send_msg = array_keys($_REQUEST['send_msg']);
         page_close(NULL);
 
-        header('Location: '.URLHelper::getURL('sms_send.php', array('sms_source_page' => 'teilnehmer.php', 'subject' => $subject, 'tmpsavesnd' => 1, 'rec_uname' => $send_msg)));
+        header('Location: '.URLHelper::getURL('sms_send.php', array('sms_source_page' => 'teilnehmer.php?cid=' . $SessionSeminar, 'subject' => $subject, 'tmpsavesnd' => 1, 'rec_uname' => $send_msg)));
         die;
 }
 
@@ -890,7 +890,7 @@ $anzahl_teilnehmer_kontingent += $db->f('teilnehmer_kontingent');
     </tr>
     <tr>
         <td class="blank" width="100%" colspan="2">
-        <a href="<?= URLHelper::getLink('sms_send.php', array('sms_source_page' => 'teilnehmer.php', 'course_id' => $SessSemName[1], 'emailrequest' => 1, 'subject' => $subject, 'filter' => 'all')) ?>">
+        <a href="<?= URLHelper::getLink('sms_send.php', array('sms_source_page' => 'teilnehmer.php?cid=' . $SessionSeminar, 'course_id' => $SessSemName[1], 'emailrequest' => 1, 'subject' => $subject, 'filter' => 'all')) ?>">
         <?= Assets::img('icons/16/blue/move_right/mail.png', array('class' => 'text-top')) ?>
         <?=_("Systemnachricht mit Emailweiterleitung an alle Teilnehmer verschicken")?>
         </a>
@@ -1043,9 +1043,9 @@ while (list ($key, $val) = each ($gruppe)) {
         }
 
         if ($key == 'accepted') {
-            $msg_params = array('filter' => 'prelim', 'sms_source_page' => 'teilnehmer.php', 'course_id' => $SessSemName[1], 'subject' => $subject);
+            $msg_params = array('filter' => 'prelim', 'sms_source_page' => 'teilnehmer.php?cid=' . $SessionSeminar, 'course_id' => $SessSemName[1], 'subject' => $subject);
         } else {
-            $msg_params = array('filter' => 'send_sms_to_all', 'who' => $key, 'sms_source_page' => 'teilnehmer.php', 'course_id' => $SessSemName[1], 'subject' => $subject);
+            $msg_params = array('filter' => 'send_sms_to_all', 'who' => $key, 'sms_source_page' => 'teilnehmer.php?cid=' . $SessionSeminar, 'course_id' => $SessSemName[1], 'subject' => $subject);
         }
         echo '<a href="'.URLHelper::getLink('sms_send.php', $msg_params).'">';
         echo Assets::img('icons/16/blue/mail.png', array('title' => sprintf(_('Nachricht an alle %s schicken'), $val), 'align' => 'absmiddle'));
@@ -1240,7 +1240,7 @@ if ($db->f('visible') == 'yes' || $i_see_everybody || $db->f('user_id') == $user
             echo chat_get_online_icon($db->f("user_id"),$db->f("username"),$SessSemName[1]) . " ";
         }
 
-        printf ("<a href=\"%s\"><img class=\"text-top\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/mail.png\" %s ></a>", URLHelper::getLink("sms_send.php", array("sms_source_page" => "teilnehmer.php", "subject" => $subject, "rec_uname" => $db->f("username"))), tooltip(_("Nachricht an Benutzer verschicken")));
+        printf ("<a href=\"%s\"><img class=\"text-top\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/mail.png\" %s ></a>", URLHelper::getLink("sms_send.php", array("sms_source_page" => 'teilnehmer.php?cid=' . $SessionSeminar, "subject" => $subject, "rec_uname" => $db->f("username"))), tooltip(_("Nachricht an Benutzer verschicken")));
 
     if (isset($multiaction[$key]['send'][0]) && $rechte)
     printf("<input class=\"text-top\" type=\"checkbox\" name=\"send_msg[%s]\" value=\"1\"></td>", $username);
@@ -1462,7 +1462,7 @@ if ($rechte) {
         ?>
         <tr>
         <td class="blank" width="100%" colspan="2">
-        <a href="<?= URLHelper::getLink('sms_send.php', array( 'sms_source_page' => 'teilnehmer.php', 'course_id' => $SessSemName[1],  'emailrequest' => 1, 'subject' => $subject, 'filter' => 'waiting')) ?>">
+        <a href="<?= URLHelper::getLink('sms_send.php', array( 'sms_source_page' => 'teilnehmer.php?cid=' . $SessionSeminar, 'course_id' => $SessSemName[1],  'emailrequest' => 1, 'subject' => $subject, 'filter' => 'waiting')) ?>">
         <?= Assets::img('icons/16/blue/move_right/mail.png', array('class' => 'text-top'))?>
         <?=_("Systemnachricht mit Emailweiterleitung an alle Wartenden verschicken")?>
         </a>
@@ -1498,7 +1498,7 @@ if ($rechte) {
                 printf ("<td width=\"10%%\" align=\"center\" class=\"%s\"><font size=\"-1\">%s</font></td>", $cssSw->getClass(), $db->f("position"));
             printf ("<td width=\"10%%\" align=\"center\" class=\"%s\">&nbsp; </td>", $cssSw->getClass());
 
-            printf ("<td width=\"10%%\" align=\"center\" class=\"%s\"><a href=\"%s\"><img class=\"text-bottom\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/mail.png\" %s></a></td>", $cssSw->getClass(), URLHelper::getLink('sms_send.php', array('sms_source_page' => 'teilnehmer.php', 'rec_uname' => $db->f("username"))), tooltip(_("Nachricht an Benutzer verschicken")));
+            printf ("<td width=\"10%%\" align=\"center\" class=\"%s\"><a href=\"%s\"><img class=\"text-bottom\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/mail.png\" %s></a></td>", $cssSw->getClass(), URLHelper::getLink('sms_send.php', array('sms_source_page' => 'teilnehmer.php?cid=' . $SessionSeminar, 'rec_uname' => $db->f("username"))), tooltip(_("Nachricht an Benutzer verschicken")));
             if(!LockRules::Check($id, 'participants')){
                 printf ("<td width=\"15%%\" align=\"center\" class=\"%s\"><input type=\"image\" name=\"admission_rein[%s]\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/yellow/arr_2up.png\">
                         <input type=\"checkbox\" name=\"admission_insert[%s]\" value=\"1\"></td>", $cssSw->getClass(), $db->f("username"), $db->f("username"));

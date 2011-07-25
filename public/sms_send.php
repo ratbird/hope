@@ -180,7 +180,7 @@ if ($cmd_insert_x) {
         $msg = "error§" . _("Ihre Nachricht konnte nicht gesendet werden.");
     }
 
-    if (!preg_match('/^[a-zA-Z0-9_-]+\.php$/',$sms_source_page)) $sms_source_page = '';
+    if (!preg_match('/^([a-zA-Z0-9_-]+\.php)([a-zA-Z0-9_?&=-]*)$/',$sms_source_page)) $sms_source_page = '';
     if ($sms_source_page) {
         $sess->register('sms_msg');
         $sms_msg = $msg;

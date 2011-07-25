@@ -84,13 +84,6 @@ class CourseNavigation extends Navigation
 
         $sem_create_perm = in_array(get_config('SEM_CREATE_PERM'), array('root','admin','dozent')) ? get_config('SEM_CREATE_PERM') : 'dozent';
 
-        if ($sem_class == 'sem' && $perm->have_studip_perm('tutor', $SessSemName[1]) && !$studygroup_mode) {
-            $navigation = new Navigation('', 'dispatch.php/course/change_view?cid='.$SessSemName[1]);
-            $navigation->setDescription(_('Ansicht simulieren'));
-            $navigation->setImage('icons/16/%COLOR%/tools.png');
-            $this->addSubNavigation('change_view', $navigation);
-        }
-
         // general information
         $navigation = new Navigation(_('Übersicht'));
         $navigation->setImage('icons/16/%COLOR%/seminar.png');
@@ -174,7 +167,9 @@ class CourseNavigation extends Navigation
                         $main->addSubNavigation('visibility', $item);
                     }
                 }
+
             }
+
         }
 
         if ($perm->have_studip_perm('tutor', $SessSemName[1]) && !$perm->have_perm('admin')) {
@@ -191,6 +186,13 @@ class CourseNavigation extends Navigation
                 $item->setDescription(_('Richten Sie fragebogenbasierte Umfragen und Lehrevaluationen ein.'));
                 $navigation->addSubNavigation('evaluation', $item);
             }
+        }
+
+        if ($perm->have_studip_perm('tutor', $SessSemName[1]) && !$perm->have_perm('admin') && !$studygroup_mode) {
+            // show entry for simulated participant view
+            $item= new Navigation('Ansicht simulieren', 'dispatch.php/course/change_view?cid='.Request::option('cid'));
+            $item->setDescription(_('Hier können Sie sich die Veranstaltung so ansehen, wie sie für Ihre TeilnehmerInnen aussieht.'));
+            $navigation->addSubNavigation('change_view', $item);
         }
 
         $this->addSubNavigation('admin', $navigation);

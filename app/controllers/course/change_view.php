@@ -41,23 +41,16 @@ class Course_ChangeViewController extends AuthenticatedController
     }
 
     function index_action() {
-        //Navigation::activateItem('/course/main/change_view');
     }
 
     function set_action() {
         session_start();
-        if ($_SESSION['seminar_change_view']) {
-            session_unregister('seminar_change_view');
+        if ($_SESSION['seminar_change_view_'.Request::option('cid')]) {
+            session_unregister('seminar_change_view_'.Request::option('cid'));
+            unset($_SESSION['seminar_change_view_'.Request::option('cid')]);
         } else {
-            session_register('seminar_change_view');
-            /*$_SESSION['seminar_change_view'] = array(
-                'cid' => Request::option('cid'),
-                'perm' => Request::get('change_view_perm')
-            );*/
-            $_SESSION['seminar_change_view'] = array(
-                'cid' => Request::option('cid'),
-                'perm' => 'autor'
-            );
+            session_register('seminar_change_view_'.Request::option('cid'));
+            $_SESSION['seminar_change_view_'.Request::option('cid')] = 'autor';
         }
     }
 

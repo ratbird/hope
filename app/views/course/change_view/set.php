@@ -12,6 +12,12 @@
  * @category    Stud.IP
  * @since       2.1
  */
-
-header('Location: '.$_SERVER['HTTP_REFERER']);
+// Set simulated view, redirect to overview page.
+if ($_SESSION['seminar_change_view_'.Request::option('cid')]) {
+    $location = URLHelper::getURL('seminar_main.php', array('cid' => Request::option('cid')));
+// Reset simulated view, redirect to administration page.
+} else {
+    $location = URLHelper::getURL('dispatch.php/course/management', array('cid' => Request::option('cid')));
+}
+header('Location: '.$location);
 ?>

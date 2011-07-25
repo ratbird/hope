@@ -75,7 +75,6 @@ class PageLayout
         self::addScript('jquery.metadata.js');
         self::addScript('jquery.placehold-0.3.js');
         self::addScript('validator.min.js');
-        self::addScript('tinymce/jscripts/tiny_mce/tiny_mce.js');
         // include underscore.js
         self::addScript('underscore-min.js');
 

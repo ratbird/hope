@@ -1,97 +1,82 @@
 <?
 # Lifter002: TODO
 # Lifter007: TODO
-# Lifter003: TODO
-# Lifter010: TODO
-/**
-* CalendarWriteriCalendar.class.php
-*
-*
-* Based on the iCalendar export functions from The Horde Project
-* www.horde.org
-* horde/lib/iCalendar.php,v 1.19
-* Copyright 2003 Mike Cochrane <mike@graftonhall.co.nz>
-*
-*
-* @author       Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
-* @access       public
-* @modulegroup  calendar_modules
-* @module       calendar_export
-* @package  Calendar
-*/
 
-// +---------------------------------------------------------------------------+
-// This file is part of Stud.IP
-// CalendarWriteriCalendar.class.php
-// 
-// Copyright (C) 2003 Peter Thienel <pthienel@web.de>,
-// Suchi & Berg GmbH <info@data-quest.de>
-// +---------------------------------------------------------------------------+
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or any later version.
-// +---------------------------------------------------------------------------+
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-// +---------------------------------------------------------------------------+
+/**
+ * CalendarWriterICalendar.class.php
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * @author      Peter Thienel <thienel@data-quest.de>, Suchi & Berg GmbH <info@data-quest.de>
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+ * @package     calendar
+ */
 
 global $RELATIVE_PATH_CALENDAR;
 
-require_once("$RELATIVE_PATH_CALENDAR/lib/sync/CalendarWriter.class.php");
+define('CALENDAR_WEEKSTART', 'MO');
 
-class CalendarWriteriCalendar extends CalendarWriter {
-    
+require_once($RELATIVE_PATH_CALENDAR . '/lib/sync/CalendarWriter.class.php');
+
+class CalendarWriteriCalendar extends CalendarWriter
+{
+
     var $newline = "\r\n";
-    
-    function CalendarWriteriCalendar () {
-        
+
+    function CalendarWriteriCalendar()
+    {
+
         parent::CalendarWriter();
         $this->default_filename_suffix = "ics";
         $this->format = "iCalendar";
     }
-    
-    function writeHeader () {
-    
+
+    function writeHeader()
+    {
+
         // Default values
         $header = "BEGIN:VCALENDAR" . $this->newline;
         $header .= "VERSION:2.0" . $this->newline;
-        $header .= "PRODID:-//Stud.IP//Stud.IP_iCalendar Library, Stud.IP ";
-        $header .= $GLOBALS['SOFTWARE_VERSION'] . " //EN" . $this->newline;
+        if ($this->client_identifier) {
+            $header .= "PRODID:" . $this->client_identifier . $this->newline;
+        } else {
+            $header .= "PRODID:-//Stud.IP@{$_SERVER['SERVER_NAME']}//Stud.IP_iCalendar Library";
+            $header .= " //EN" . $this->newline;
+        }
         $header .= "METHOD:PUBLISH" . $this->newline;
-        
+
         return $header;
     }
-    
-    function writeFooter () {
-    
+
+    function writeFooter()
+    {
+
         return "END:VCALENDAR" . $this->newline;
     }
-    
+
     /**
      * Export this component as iCalendar format
      *
      * @param object $event The event to export.
      * @return String iCalendar formatted data
      */
-    function write (&$event) {
-        
+    function write(&$event)
+    {
+
         $match_pattern_1 = array('\\', '\n', ';', ',');
         $replace_pattern_1 = array('\\\\', '\\n', '\;', '\,');
         $match_pattern_2 = array('\\', '\n', ';');
         $replace_pattern_2 = array('\\\\', '\\n', '\;');
-        
+
         $safe_categories = $event->properties['CATEGORIES'];
-        $event->properties['CATEGORIES'] = str_replace($match_pattern_2, $replace_pattern_2,
-                $event->toStringCategories());
-        
-        $result = 'BEGIN:VEVENT' . $this->newline;
-        
+        $event->properties['CATEGORIES'] = str_replace($match_pattern_2, $replace_pattern_2, $event->toStringCategories());
+
+        $result = "BEGIN:VEVENT" . $this->newline;
+
         foreach ($event->properties as $name => $value) {
             $name = $name;
             $params = array();
@@ -99,32 +84,42 @@ class CalendarWriteriCalendar extends CalendarWriter {
 
             if ($value === '')
                 continue;
-            
+
             switch ($name) {
                 // not supported event properties
                 case 'SEMNAME':
                 case 'EXPIRE':
                 case 'STUDIP_CATEGORY':
+                case 'STUDIP_AUTHOR_ID':
+                case 'STUDIP_ID':
+                case 'BEGIN':
+                case 'END':
                     continue 2;
-                    
+
                 // text fields
                 case 'SUMMARY':
                 case 'DESCRIPTION':
                 case 'LOCATION':
-                    $value = str_replace($match_pattern_1, $replace_pattern_1, $value);
+                    if ($event->havePermission(CALENDAR_EVENT_PERM_READABLE))
+                        $value = str_replace($match_pattern_1, $replace_pattern_1, $value);
+                    else
+                        $value = $event->getTitle();
                     break;
-                
+
                 case 'CATEGORIES':
-                    $event->properties['CATEGORIES'] = $safe_categories;
+                    if ($event->havePermission(CALENDAR_EVENT_PERM_READABLE))
+                        $event->properties['CATEGORIES'] = $safe_categories;
+                    else
+                        $event->properties['CATEGORIES'] = $GLOBALS['PERS_TERMIN_KAT'][255]['name'];
                     break;
-                
+
                 // Date fields
                 case 'LAST-MODIFIED':
                 case 'CREATED':
                 case 'COMPLETED':
                     $value = $this->_exportDateTime($value);
                     break;
-                
+
                 case 'DTSTAMP':
                     $value = $this->_exportDateTime(time());
                     break;
@@ -141,12 +136,10 @@ class CalendarWriteriCalendar extends CalendarWriter {
                     if (array_key_exists('VALUE', $params)) {
                         if ($params['VALUE'] == 'DATE') {
                             $value = $this->_exportDate($value);
-                        }
-                        else {
+                        } else {
                             $value = $this->_exportDateTime($value);
                         }
-                    }
-                    else {
+                    } else {
                         $value = $this->_exportDateTime($value);
                     }
                     break;
@@ -157,20 +150,17 @@ class CalendarWriteriCalendar extends CalendarWriter {
                     else
                         $value = $this->_exportExdate($value, 'DATE-TIME');
                     break;
-                    
+
                 case 'RDATE':
                     if (array_key_exists('VALUE', $params)) {
                         if ($params['VALUE'] == 'DATE') {
                             $value = $this->_exportDate($value);
-                        }
-                        else if ($params['VALUE'] == 'PERIOD') {
+                        } else if ($params['VALUE'] == 'PERIOD') {
                             $value = $this->_exportPeriod($value);
-                        }
-                        else {
+                        } else {
                             $value = $this->_exportDateTime($value);
                         }
-                    }
-                    else {
+                    } else {
                         $value = $this->_exportDateTime($value);
                     }
                     break;
@@ -179,12 +169,10 @@ class CalendarWriteriCalendar extends CalendarWriter {
                     if (array_key_exists('VALUE', $params)) {
                         if ($params['VALUE'] == 'DATE-TIME') {
                             $value = $this->_exportDateTime($value);
-                        }
-                        else if ($params['VALUE'] == 'DURATION') {
+                        } else if ($params['VALUE'] == 'DURATION') {
                             $value = $this->_exportDuration($value);
                         }
-                    }
-                    else {
+                    } else {
                         $value = $this->_exportDuration($value);
                     }
                     break;
@@ -213,65 +201,73 @@ class CalendarWriteriCalendar extends CalendarWriter {
 
                 // Integer fields
                 case 'PERCENT-COMPLETE':
+                    if ($event->getPermission() == CALENDAR_EVENT_PERM_CONFIDENTIAL)
+                        $value = '';
                 case 'REPEAT':
                 case 'SEQUENCE':
                     $value = "$value";
                     break;
-                
+
                 case 'PRIORITY':
-                    switch ($value) {
-                        case 1:
-                            $value = '1';
-                            break;
-                        case 2:
-                            $value = '5';
-                            break;
-                        case 3:
-                            $value = '9';
-                            break;
-                        default:
-                            $value = '0';
+                    if ($event->getPermission() == CALENDAR_EVENT_PERM_CONFIDENTIAL)
+                        $value = '0';
+                    else {
+                        switch ($value) {
+                            case 1:
+                                $value = '1';
+                                break;
+                            case 2:
+                                $value = '5';
+                                break;
+                            case 3:
+                                $value = '9';
+                                break;
+                            default:
+                                $value = '0';
+                        }
                     }
                     break;
-                
+
                 // Geo fields
                 case 'GEO':
-                    $value = $value['latitude'] . ',' . $value['longitude'];
+                    if ($event->getPermission() == CALENDAR_EVENT_PERM_CONFIDENTIAL)
+                        $value = '';
+                    else
+                        $value = $value['latitude'] . ',' . $value['longitude'];
                     break;
 
                 // Recursion fields
                 case 'EXRULE':
                 case 'RRULE':
-                    if ($event->properties['RRULE']['rtype'] != 'SINGLE')
+                    if ($event->properties["RRULE"]["rtype"] != "SINGLE")
                         $value = $this->_exportRecurrence($value);
                     else
                         continue 2;
                     break;
-                
+
                 case "UID":
                     $value = "$value";
-                
             }
-            
+
             $attr_string = "$name$params_str:$value";
             $result .= $this->_foldLine($attr_string) . $this->newline;
         }
-    //  $result .= 'DTSTAMP:' . $this->_exportDateTime(time()) . $this->newline;
+        //	$result .= 'DTSTAMP:' . $this->_exportDateTime(time()) . $this->newline;
         $result .= "END:VEVENT" . $this->newline;
 
         return utf8_encode($result);
     }
-    
-        /**
+
+    /**
      * Export a UTC Offset field
      *
      * @param array $value 
      * @return String UTC offset field iCalendar formatted
      */
-    function _exportUtcOffset ($value) {
+    function _exportUtcOffset($value)
+    {
         $offset = $value['ahead'] ? '+' : '-';
-        $offset .= sprintf('%02d%02d',
-                    $value['hour'], $value['minute']);
+        $offset .= sprintf('%02d%02d', $value['hour'], $value['minute']);
         if (array_key_exists('second', $value)) {
             $offset .= sprintf('%02d', $value['second']);
         }
@@ -285,13 +281,13 @@ class CalendarWriteriCalendar extends CalendarWriter {
      * @param array $value
      * @return String Period field iCalendar formatted
      */
-    function _exportPeriod ($value) {
+    function _exportPeriod($value)
+    {
         $period = $this->_exportDateTime($value['start']);
         $period .= '/';
         if (array_key_exists('duration', $value)) {
             $period .= $this->_exportDuration($value['duration']);
-        }
-        else {
+        } else {
             $period .= $this->_exportDateTime($value['end']);
         }
         return $period;
@@ -303,11 +299,11 @@ class CalendarWriteriCalendar extends CalendarWriter {
      * @param int $value Unix timestamp
      * @return String Date and time (UTC) iCalendar formatted
      */
-    function _exportDateTime ($value) {
-        
-//      $TZOffset  = 3600 * substr(date('O', $value), 0, 3);
-//      $TZOffset += 60 * substr(date('O', $value), 3, 2);
+    function _exportDateTime($value)
+    {
 
+//		$TZOffset  = 3600 * substr(date('O', $value), 0, 3);
+//		$TZOffset += 60 * substr(date('O', $value), 3, 2);
         //transform local time in UTC
         $value -= date('Z', $value);
 
@@ -320,27 +316,30 @@ class CalendarWriteriCalendar extends CalendarWriter {
      * @param int $value Unix timestamp
      * @return String Time (UTC) iCalendar formatted
      */
-    function _exportTime ($value) {
-        $time = date ("His", $value);
+    function _exportTime($value)
+    {
+        $time = date("His", $value);
         $time .= 'Z';
-        
+
         return $time;
     }
 
     /**
      * Export a Date field
      */
-    function _exportDate ($value) {
+    function _exportDate($value)
+    {
         return date("Ymd", $value);
     }
 
     /**
      * Export a duration value
      */
-    function _exportDuration ($value) {
+    function _exportDuration($value)
+    {
         $duration = '';
         if ($value < 0) {
-            $value *= -1;
+            $value *= - 1;
             $duration .= '-';
         }
         $duration .= 'P';
@@ -379,20 +378,21 @@ class CalendarWriteriCalendar extends CalendarWriter {
 
         return $duration;
     }
-    
+
     /**
-    *Export a recurrence rule
-    */
-    function _exportRecurrence ($value) {
+     * Export a recurrence rule
+     */
+    function _exportRecurrence($value)
+    {
         $rrule = array();
         // the last day of week in a MONTHLY or YEARLY recurrence in the
         // Stud.IP calendar is 5, in iCalendar it is -1
         if ($value['sinterval'] == 5)
             $value['sinterval'] = -1;
-            
+
         if ($value['count'])
             unset($value['expire']);
-        
+
         foreach ($value as $r_param => $r_value) {
             if ($r_value) {
                 switch ($r_param) {
@@ -401,7 +401,7 @@ class CalendarWriteriCalendar extends CalendarWriter {
                         break;
                     case 'expire':
                         // end of unix epoche (this is also the end of Stud.IP epoche ;-) )
-                        if ($r_value != 2114377200)
+                        if ($r_value < CALENDAR_END)
                             $rrule[] = 'UNTIL=' . $this->_exportDateTime($r_value);
                         break;
                     case 'linterval':
@@ -439,26 +439,32 @@ class CalendarWriteriCalendar extends CalendarWriter {
                 }
             }
         }
-                
+
+        if ($value['rtype'] == 'WEEKLY' && CALENDAR_WEEKSTART != 'MO') {
+            $rrule[] = 'WKST=' . CALENDAR_WEEKSTART;
+        }
+
         return implode(';', $rrule);
     }
-    
+
     /**
-    * Return the Stud.IP calendar wdays attribute of a event recurrence
-    */
-    function _exportWdays ($value) {
+     * Return the Stud.IP calendar wdays attribute of a event recurrence
+     */
+    function _exportWdays($value)
+    {
         $wdays_map = array('1' => 'MO', '2' => 'TU', '3' => 'WE', '4' => 'TH', '5' => 'FR',
-                '6' => 'SA', '7' => 'SU');
+            '6' => 'SA', '7' => 'SU');
         $wdays = array();
         preg_match_all('/(\d)/', $value, $matches);
         foreach ($matches[1] as $match) {
             $wdays[] = $wdays_map[$match];
         }
-        
+
         return implode(',', $wdays);
     }
-    
-    function _exportExdate ($value, $param) {
+
+    function _exportExdate($value, $param)
+    {
         $exdates = array();
         $date_times = explode(',', $value);
         foreach ($date_times as $date_time) {
@@ -467,34 +473,31 @@ class CalendarWriteriCalendar extends CalendarWriter {
             else
                 $exdates[] = $this->_exportDate($date_time);
         }
-        
+
         return implode(',', $exdates);
     }
-            
-    
+
     /**
-    * Return the folded version of a line
-    */
-    function _foldLine ($line) {
-        $line = preg_replace ('/(\r\n|\n|\r)/', '\n', $line);
+     * Return the folded version of a line
+     */
+    function _foldLine($line)
+    {
+        $line = preg_replace('/(\r\n|\n|\r)/', '\n', $line);
         if (strlen($line) > 75) {
             $foldedline = '';
             while (!empty($line)) {
                 $maxLine = substr($line, 0, 75);
                 $cutPoint = max(60, max(strrpos($maxLine, ';'), strrpos($maxLine, ':')) + 1);
 
-                $foldedline .= (empty($foldedline)) ?
-                                    substr($line, 0, $cutPoint) :
-                                    $this->newline . ' ' . substr($line, 0, $cutPoint);
+                $foldedline .= ( empty($foldedline)) ?
+                        substr($line, 0, $cutPoint) :
+                        $this->newline . ' ' . substr($line, 0, $cutPoint);
 
                 $line = (strlen($line) <= $cutPoint) ? '' : substr($line, $cutPoint);
             }
             return $foldedline;
         }
         return $line;
-
     }
 
 }
-
-?>

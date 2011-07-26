@@ -682,7 +682,8 @@ class Course_StudygroupController extends AuthenticatedController {
                     $this->flash['messages'] = $messages;
                 }
                 unset($sem);
-                $this->redirect('course/studygroup/new');
+                $this->redirect(URLHelper::getURL('meine_seminare.php'));
+                return;
             } else if (!$approveDelete) {
                 $template = $GLOBALS['template_factory']->open('shared/question');
 
@@ -692,13 +693,10 @@ class Course_StudygroupController extends AuthenticatedController {
 
                 $this->flash['question'] = $template->render();
                 $this->redirect('course/studygroup/edit/' . $id);
-            } else {
-                $this->redirect(URLHelper::getURL('seminar_main.php?auswahl=' . $id));
+                return;
             }
-        } else {
-            $this->redirect(URLHelper::getURL('seminar_main.php?auswahl=' . $id));
         }
-
+        throw new Trails_Exception(401);
     }
 
 

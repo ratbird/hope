@@ -29,7 +29,7 @@
             <?= Assets::img('icons/16/black/info.png') ?>
         </td>
         <td width="99%" align="left">
-            <a href="<?= $help_url=format_help_url("Basis.EinrichtungenVerwaltenGruppen") ?>">
+            <a href="<?= $help_url=format_help_url("Basis.EinrichtungenVerwaltenGruppen") ?>" target="_blank">
                 <?= _("Bedienungshinweise in der Hilfe") ?>
             </a>
         </td>

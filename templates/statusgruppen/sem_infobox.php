@@ -39,7 +39,7 @@
                     <?
                     $help_url = format_help_url("Basis.VeranstaltungenVerwaltenGruppen");
                     ?>
-                    <a href="<?= $help_url ?>">
+                    <a href="<?= $help_url ?>" target="_blank">
                         <?= _("Bedienungshinweise in der Hilfe") ?>
                     </a>
                 </td>

@@ -41,9 +41,12 @@ function check_terms($userid, $_language_path) {
 
     global $i_accept_the_terms;
 
-    if ($i_accept_the_terms == "yes") return;
+    if ($i_accept_the_terms == "yes") {
+        UserConfig::get($userid)->store('TERMS_ACCEPTED', 1);
+        return;
+    }
 
-    if ($GLOBALS['auth']->auth['uid'] != 'nobody' && !empty($GLOBALS['user']) && !$GLOBALS['user']->get_last_action())
+    if ($GLOBALS['auth']->auth['uid'] != 'nobody' && !empty($GLOBALS['user']) && !$GLOBALS['user']->cfg->getValue('TERMS_ACCEPTED'))
     {
 ?>
 

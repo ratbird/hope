@@ -24,7 +24,7 @@ class CalendarNavigation extends Navigation
             parent::__construct(_('Planer'));
 
             if (get_config('CALENDAR_ENABLE')) {
-                $planerurl  = 'calendar.php?caluser=self';
+                $planerurl  = 'calendar.php';
                 $planerinfo = _('Termine und Kontakte');
             } else {
                 $planerurl  = 'dispatch.php/calendar/schedule';

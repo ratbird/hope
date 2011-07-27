@@ -48,9 +48,6 @@ require_once ('lib/classes/StudipLitList.class.php');
 require_once ('lib/classes/StudipDocumentTree.class.php');
 require_once ($RELATIVE_PATH_ELEARNING_INTERFACE . "/ObjectConnections.class.php");
 require_once ($RELATIVE_PATH_ELEARNING_INTERFACE . "/ELearningUtils.class.php");
-if (get_config('CALENDAR_ENABLE')) {
-    require_once ('lib/calendar/lib/Calendar.class.php');
-}
 
 class AdminModules extends ModulesNotification {
     var $db;
@@ -111,13 +108,6 @@ class AdminModules extends ModulesNotification {
         $this->registered_modules["documents_folder_permissions"]["msg_deactivate"] = _("Die Dateiordnerberechtigungen k&ouml;nnen jederzeit deaktiviert werden.");
         $this->registered_modules["documents_folder_permissions"]["msg_pre_warning"] = _("Achtung: Beim Deaktivieren der Dateiordnerberechtigungen werden <b>%s</b> gesch&uuml;tzte Ordner zug&auml;nglich!");
         $this->registered_modules["documents_folder_permissions"]['preconditions'] = array('documents');
-        if (get_config('CALENDAR_GROUP_ENABLE')) {
-            $this->registered_modules["calendar"]["name"] = _("Kalender");
-            $this->registered_modules["calendar"]["msg_activate"] = _("Der Kalender kann jederzeit aktiviert werden.");
-            $this->registered_modules["calendar"]["msg_warning"] = _("Wollen Sie wirklich den Kalender deaktivieren?");
-            $this->registered_modules["calendar"]["msg_pre_warning"] = _("Achtung: Beim Deaktivieren des Kalenders werden <b>%s</b> Termine ebenfalls gel&ouml;scht!");
-            $this->registered_modules["calendar"]["msg_deactivate"] = _("Der Kalender kann jederzeit deaktiviert werden.");
-        }
     }
     
     function getModuleForumExistingItems($range_id) {
@@ -274,20 +264,5 @@ class AdminModules extends ModulesNotification {
         return null;
     }
     
-    function getModuleCalendarExistingItems($range_id)
-    {
-        $calendar_connect = CalendarDriver::GetInstance($range_id);
-        $calendar_connect->openDatabase('COUNT', 'CALENDAR_EVENTS');
-        return $calendar_connect->getCountEvents();
-    }
-
-    function moduleCalendarDeactivate($range_id)
-    {
-        $calendar_connect = CalendarDriver::GetInstance($range_id);
-        if ($deleted = $calendar_connect->deleteFromDatabase('ALL')) {
-            return $deleted;
-        }
-        return 0;
-    }
-
+    
 }

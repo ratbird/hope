@@ -4,7 +4,7 @@
 # Lifter003: TODO
 # Lifter010: TODO
 /**
-* Error.class.php
+* MysqlDriver.class.php
 * 
 * 
 * 
@@ -12,13 +12,13 @@
 * @author       Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
 * @access       public
 * @modulegroup  calendar_modules
-* @module       Calendar
-* @package  calendar_export
+* @module       calendar_sync
+* @package  Calendar
 */
 
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
-// Error.class.php
+// MysqlDriver.class.php
 // 
 // Copyright (C) 2003 Peter Thienel <pthienel@web.de>,
 // Suchi & Berg GmbH <info@data-quest.de>
@@ -36,43 +36,33 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
+ 
 
+class MysqlDriver {
 
-class Error {
-
-    var $status;
-    var $message;
-    var $file;
-    var $line;
+    var $db;
+    var $count; 
     
-    function Error ($status, $message, $file = '', $line = '') {
+    function MysqlDriver () {
     
-        $this->status = $status;
-        $this->message = $message;
-        $this->file = $file;
-        $this->line = $line;
+        $this->count = 0;
     }
     
-    function getStatus () {
-        
-        return $this->status;
+    function initialize ($db_name) {
+    
+        if (!is_object($this->db["$db_name"]))
+            $this->db["$db_name"] = new DB_Seminar();
     }
     
-    function getMessage () {
-        
-        return $this->message;
+    function count () {
+    
+        $this->count++;
     }
     
-    function getFile () {
+    function getCount () {
     
-        return $this->file;
-    }
-    
-    function getLine () {
-    
-        return $this->line;
+        return $this->count;
     }
     
 }
-
-        
+    

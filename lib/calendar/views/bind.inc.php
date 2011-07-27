@@ -3,21 +3,39 @@
 # Lifter007: TODO
 # Lifter003: TODO
 # Lifter010: TODO
-
 /**
- * bind.inc.php
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of
- * the License, or (at your option) any later version.
- *
- * @author      Peter Thienel <thienel@data-quest.de>, Suchi & Berg GmbH <info@data-quest.de>
- * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
- * @category    Stud.IP
- * @package     calendar
- */
+* bind.inc.php
+*
+*
+*
+* @author       Peter Thienel <pthienel@web.de>
+* @access       public
+* @modulegroup  calendar
+* @module       calendar
+* @package  calendar
+*/
 
+// +---------------------------------------------------------------------------+
+// This file is part of Stud.IP
+// bind.inc.php
+//
+// Copyright (c) 2003 Peter Tienel <pthienel@web.de>
+// +---------------------------------------------------------------------------+
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or any later version.
+// +---------------------------------------------------------------------------+
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+// +---------------------------------------------------------------------------+
+
+// Begin of output
 //TODO: templates
 include('lib/include/html_head.inc.php');
 include('lib/include/header.php');
@@ -26,23 +44,22 @@ include('lib/include/header.php');
 SkipLinks::addIndex(_("Veranstaltungstermine"), 'main_content', 100);
 
 // alle vom user abonnierten Seminare
-$db = DBManager::get();
+$db = new DB_Seminar;
 $sortby = Request::option('sortby', 'seminar_user.gruppe, seminare.Name');
 
-if($order == 'ASC') {
+if($order == 'ASC')
     $order = 'DESC';
-} else {
-	$order = 'ASC';
-}
-$query = "SELECT bind_calendar, visitdate, seminare.Name, seminare.Seminar_id, seminar_user.status, seminar_user.gruppe, count(termin_id) as count,
-			sd1.name AS startsem,IF(duration_time=-1, '"._("unbegrenzt")."', sd2.name) AS endsem
-			FROM seminar_user LEFT JOIN seminare ON seminare.Seminar_id=seminar_user.seminar_id
-			LEFT JOIN object_user_visits  ouv ON ouv.object_id = seminare.Seminar_id AND ouv.user_id = '{$user->id}' AND ouv.type = 'sem'
-			LEFT JOIN semester_data sd1 ON ( start_time BETWEEN sd1.beginn AND sd1.ende)
-			LEFT JOIN semester_data sd2 ON ((start_time + duration_time) BETWEEN sd2.beginn AND sd2.ende)
-			LEFT JOIN termine ON range_id=seminare.Seminar_id WHERE seminar_user.user_id = '"
-			 . $user->id."' GROUP BY Seminar_id ORDER BY $sortby $order";
-$result = $db->query($query)->fetchAll(PDO::FETCH_ASSOC);
+else
+    $order = 'ASC';
+$query = "SELECT visitdate, seminare.Name, seminare.Seminar_id, seminar_user.status, seminar_user.gruppe, count(termin_id) as count,
+            sd1.name AS startsem,IF(duration_time=-1, '"._("unbegrenzt")."', sd2.name) AS endsem
+            FROM seminar_user LEFT JOIN seminare ON seminare.Seminar_id=seminar_user.seminar_id
+            LEFT JOIN object_user_visits  ouv ON ouv.object_id = seminare.Seminar_id AND ouv.user_id = '{$user->id}' AND ouv.type = 'sem'
+            LEFT JOIN semester_data sd1 ON ( start_time BETWEEN sd1.beginn AND sd1.ende)
+            LEFT JOIN semester_data sd2 ON ((start_time + duration_time) BETWEEN sd2.beginn AND sd2.ende)
+            LEFT JOIN termine ON range_id=seminare.Seminar_id WHERE seminar_user.user_id = '"
+             . $user->id."' GROUP BY Seminar_id ORDER BY $sortby $order";
+$db->query($query);
 
 echo "<table width=\"100%\" border=\"0\" cellpadding=\"5\" cellspacing=\"0\">\n";
 echo "<tr><td class=\"blank\">\n";
@@ -73,41 +90,40 @@ echo $css_switcher->GetHoverJSFunction();
 $css_switcher->enableHover();
 $css_switcher->switchClass();
 
-foreach ($result as $row) {
-	$name = $row['Name'] . " (".$row['startsem'] . ($row['startsem'] != $row['endsem'] ? " - " . $row['endsem'] : "") . ")";
-	$style = $css_switcher->getFullClass();
-	echo "<tr" . $css_switcher->getHover() . "><td width=\"1%\" class=\"gruppe" . $row['gruppe'] . "\">";
-	echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" alt=\"Gruppe\" border=\"0\" width=\"7\" height=\"12\"></td>\n";
-	echo "<td$style>&nbsp; </td>";
-	echo "<td$style><font size=\"-1\">";
-	echo "<a href=\"" . $CANONICAL_RELATIVE_PATH_STUDIP;
-	echo "seminar_main.php?auswahl=" . $row['Seminar_id'] . "\">";
-	echo htmlReady(mila($name));
-	echo "</a></font></td>\n";
-	echo "<td$style align=\"center\"><font size=\"-1\">";
-	echo $row['count'];
-	echo "</font></td>\n";
-	if ($row['visitdate'] == 0) {
-		echo "<td$style align=\"center\"><font size=\"-1\">";
-		echo _("nicht besucht") . "</font></td>\n";
-	}
-	else{
-		echo "<td$style align=\"center\"><font size=\"-1\">";
-		echo strftime("%x", $row['visitdate']);
-		echo "</font></td>";
-	}
-	echo "<td$style align=\"center\"><font size=\"-1\">";
-	echo $row['status'];
-	echo "</font></td>\n";
-	if($row['bind_calendar']) {
-		$is_checked = ' checked';
-	} else {
-		$is_checked = '';
-	}
-	echo "<td$style>";
-	echo "<input type=\"checkbox\" name=\"sem[" . $row['Seminar_id']
-		. "]\" value=\"1\"$is_checked></td></tr>\n",
-	$css_switcher->switchClass();
+while($db->next_record()){
+    $name = $db->f("Name") . " (".$db->f('startsem') . ($db->f('startsem') != $db->f('endsem') ? " - ".$db->f('endsem') : "") . ")";
+    $style = $css_switcher->getFullClass();
+    echo "<tr" . $css_switcher->getHover() . "><td width=\"1%\" class=\"gruppe" . $db->f("gruppe") . "\">";
+    echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" alt=\"Gruppe\" border=\"0\" width=\"7\" height=\"12\"></td>\n";
+    echo "<td$style>&nbsp; </td>";
+    echo "<td$style><font size=\"-1\">";
+    echo "<a href=\"" . $CANONICAL_RELATIVE_PATH_STUDIP;
+    echo "seminar_main.php?auswahl=" . $db->f("Seminar_id") . "\">";
+    echo htmlReady(mila($name));
+    echo "</a></font></td>\n";
+    echo "<td$style align=\"center\"><font size=\"-1\">";
+    echo $db->f("count");
+    echo "</font></td>\n";
+    if ($db->f("visitdate") == 0) {
+        echo "<td$style align=\"center\"><font size=\"-1\">";
+        echo _("nicht besucht") . "</font></td>\n";
+    }
+    else{
+        echo "<td$style align=\"center\"><font size=\"-1\">";
+        echo strftime("%x", $db->f("visitdate"));
+        echo "</font></td>";
+    }
+    echo "<td$style align=\"center\"><font size=\"-1\">";
+    echo $db->f("status");
+    echo "</font></td>\n";
+    if($calendar_user_control_data["bind_seminare"][$db->f("Seminar_id")])
+        $is_checked = " checked";
+    else
+        $is_checked = "";
+    echo "<td$style>";
+    echo "<input type=\"checkbox\" name=\"sem[" . $db->f("Seminar_id")
+        . "]\" value=\"TRUE\"$is_checked></td></tr>\n",
+    $css_switcher->switchClass();
 }
 
 echo "<tr><td class=\"blank\">&nbsp;</td></tr>\n";

@@ -318,7 +318,7 @@ STUDIP.JSUpdater = {
         var pause_time = STUDIP.JSUpdater.lastAjaxDuration *
             Math.pow(1.33, STUDIP.JSUpdater.currentDelayFactor) *
             15; //bei 200 ms von einer Anfrage, sind das mindestens 4 Sekunden bis zum nächsten Request
-        window.setTimeout(function () { 
+        window.setTimeout(function () {
             STUDIP.JSUpdater.call(queue_id);
         }, pause_time);
         STUDIP.JSUpdater.currentDelayFactor += 1;
@@ -475,10 +475,10 @@ STUDIP.Tabs = (function () {
     // returns the largest feasible item
     function findCompressable() {
         var largest = _.max(items, function (item) {
-            return jQuery(item).html().length;
+            return jQuery(item).text().length;
         });
 
-        return largest && jQuery(largest).html().length > 5 ? largest : null;
+        return largest && jQuery(largest).text().length > 5 ? largest : null;
     }
 
     // truncates an item
@@ -506,11 +506,11 @@ STUDIP.Tabs = (function () {
 
             // strip contents and set titles
             items
-                .html(function () {
-                    return jQuery.trim(jQuery(this).html());
+                .text(function () {
+                    return jQuery.trim(jQuery(this).text());
                 })
                 .attr('title', function () {
-                    return jQuery(this).html();
+                    return jQuery(this).text();
                 });
 
             jQuery(window).resize(this.resize);
@@ -531,7 +531,7 @@ STUDIP.Tabs = (function () {
         resize: function () {
             var new_width = jQuery(window).width();
             if (new_width > jQuery(list).data('old_width')) {
-                items.html(function () {
+                items.text(function () {
                     return jQuery(this).attr('title');
                 });
             }
@@ -1191,7 +1191,7 @@ jQuery(function ($) {
             $(that)
                 .hideAjaxNotification()
                 .closest('tr').after(row);
-            
+
             $('body').trigger('ajaxLoaded');
         });
 

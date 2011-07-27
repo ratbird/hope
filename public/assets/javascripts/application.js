@@ -1636,7 +1636,7 @@ STUDIP.SkipLinks = {
         if (STUDIP.SkipLinks.navigationStatus === 0) {
             var VpWidth = jQuery(window).width();
             jQuery('#skip_link_navigation li:first a').focus();
-            jQuery('#skip_link_navigation').show().css({left: VpWidth / 2, opacity: 0});
+      jQuery('#skip_link_navigation').css({left: VpWidth / 2, opacity: 0});
             jQuery('#skip_link_navigation').animate({opacity: 1.0}, 500);
             STUDIP.SkipLinks.navigationStatus = 1;
         }

@@ -343,6 +343,20 @@ class CourseNavigation extends Navigation
             }
         }
 
+        // calendar
+        if (get_config('CALENDAR_GROUP_ENABLE') && $modules['calendar']) {
+            $navigation = new Navigation(_('Kalender'), 'calendar.php');
+            $navigation->setImage('icons/16/%COLOR%/schedule.png');
+
+            $navigation->addSubNavigation('day', new Navigation(_('Tag'), 'calendar.php', array('cmd' => 'showday')));
+            $navigation->addSubNavigation('week', new Navigation(_('Woche'), 'calendar.php', array('cmd' => 'showweek')));
+            $navigation->addSubNavigation('month', new Navigation(_('Monat'), 'calendar.php', array('cmd' => 'showmonth')));
+            $navigation->addSubNavigation('year', new Navigation(_('Jahr'), 'calendar.php', array('cmd' => 'showyear')));
+            $navigation->addSubNavigation('edit', new Navigation(_('Termin anlegen/bearbeiten'), 'calendar.php', array('cmd' => 'edit')));
+            $navigation->addSubNavigation('export', new Navigation(_('Export/Sync'), 'calendar.php', array('cmd' => 'export')));
+            $this->addSubNavigation('calendar', $navigation);
+        }
+
         // content modules
         if (get_config('ELEARNING_INTERFACE_ENABLE') && $modules['elearning_interface'] && $user->id != 'nobody') {
             $navigation = new Navigation(_('Lernmodule'));

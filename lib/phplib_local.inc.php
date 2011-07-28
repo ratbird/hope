@@ -144,7 +144,7 @@ if (isset($GLOBALS['DB_STUDIP_SLAVE_HOST'])) {
 } else {
     DBManager::getInstance()->aliasConnection('studip', 'studip-slave');
 }
-include 'tools/debug/DBManager.class.php';
+
 
 /**
  * @deprecated

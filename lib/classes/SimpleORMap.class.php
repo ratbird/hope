@@ -156,7 +156,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      * returns object of given class for given id or null
      * the param could be a string, an assoc array containing primary key field
      * or an already matching object. In all these cases an object is returned
-     *
+     * 
      * @param mixed $id
      * @return NULL|object
      */
@@ -216,12 +216,12 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
             $this->pk =& self::$schemes[$this->db_table]['pk'];
         }
     }
-
+    
     function getTableMetadata()
     {
         return array('fields' => $this->db_fields, 'pk' => $this->pk);
     }
-
+    
     /**
      * set primary key for entry, combined keys must be passed as array
      * @param string|array primary key
@@ -536,16 +536,6 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         if ($where_query) {
             foreach ($this->db_fields as $field => $meta) {
                 $value = $this->getValue($field);
-                if ($field == 'chdate' && !$this->isFieldDirty($field) && $this->isDirty()) {
-                    $value = time();
-                }
-                if ($field == 'mkdate') {
-                    if($this->isNew()) {
-                        $value = time();
-                    } else {
-                        continue;
-                    }
-                }
                 if ($value === null && $meta['null'] == 'NO') {
                     $value = $meta['default'];
                     if ($value === null) {
@@ -554,6 +544,16 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
                 }
                 if (is_float($value)) {
                     $value = str_replace(',','.', $value);
+                }
+                if ($field == 'chdate' && !$this->isFieldDirty($field) && $this->isDirty()) {
+                    $value = time();
+                }
+                if ($field == 'mktime') {
+                    if($this->isNew()) {
+                        $value = time();
+                    } else {
+                        continue;
+                    }
                 }
                 if ($value === null) {
                     $query_part[] = "`$field` = NULL ";
@@ -616,7 +616,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         $this->setData(array(), true);
         return TRUE;
     }
-
+    
     /**
      * init internal content arrays with nulls
      */
@@ -628,23 +628,23 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         }
         $this->content_db = $this->content;
     }
-
+    
     /**
      * checks if at least one field was modified since last restore
-     *
+     * 
      * @return boolean
      */
-    public function isDirty()
+    public function isDirty() 
     {
         foreach(array_keys($this->db_fields) as $field) {
             if ($this->content[$field] !== $this->content_db[$field]) return true;
         }
         return false;
     }
-
+    
     /**
      * checks if given field was modified since last restore
-     *
+     * 
      * @param string $field
      * @return boolean
      */
@@ -656,7 +656,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
 
     /**
      * reverts value of given field to last restored value
-     *
+     * 
      * @param string $field
      * @return mixed the restored value
      */

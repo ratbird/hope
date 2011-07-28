@@ -15,6 +15,81 @@
  * @license     http://www.gnu.org/licenses/gpl.html GPL Licence 3
  */
 
+
+class CachingRegistry extends ArrayObject
+{
+    private $expire_times = array();
+
+    public function __construct($objects = array())
+    {
+        parent::__construct();
+        foreach($objects as $key => $value) {
+            $this->register($key, $value['value'], $value['expire']);
+        }
+    }
+
+    public function register($key, $value = null, $expire = 0)
+    {
+        $this->expire_times[$key] = (int)$expire;
+        if ($value === null && $expire > 0) {
+            $value = $this->getFromCache($key);
+            return parent::offsetSet($key, $value);
+        }
+       return $this->offsetSet($key, $value);
+    }
+
+    public function unregister($key)
+    {
+        if ($this->expire_times[$key] > 0) {
+            $this->expireFromCache($key);
+        }
+        unset($this->expire_times[$key]);
+        return $this->offsetUnset($key);
+    }
+
+    public function offsetUnset($key)
+    {
+        if ($this->expire_times[$key] > 0 ) {
+            $this->expireFromCache($key);
+        }
+        return parent::offsetUnset($key);
+    }
+
+    public function offsetGet($key)
+    {
+        if ($this->expire_times[$key] > 0 && !$this->offsetExists($key)) {
+            $value = $this->getFromCache($key);
+            parent::offsetSet($key, $value);
+        }
+        return parent::offsetGet($key);
+    }
+
+    public function offsetSet($key, $value)
+    {
+        if ($this->expire_times[$key] > 0 && $this->offsetGet($key) !== $value) {
+            $this->putInCache($key, $value, $this->expire_times[$key]);
+        }
+        return parent::offsetSet($key, $value);
+    }
+
+    private function getFromCache($key)
+    {
+        $cache = StudipCacheFactory::getCache();
+        return unserialize($cache->read($key));
+    }
+
+     private function putInCache($key, $value, $expire)
+    {
+        $cache = StudipCacheFactory::getCache();
+        return $cache->write($key, serialize($value), $expire);
+    }
+
+    private function expireFromCache($key)
+    {
+        $cache = StudipCacheFactory::getCache();
+        return $cache->expire($key);
+    }
+}
 /**
  * role id unknown
  */
@@ -31,8 +106,18 @@ class RolePersistence
     const ROLES_CACHE_KEY = 'plugins/rolepersistence/roles';
     const ROLES_PLUGINS_CACHE_KEY = 'plugins/rolepersistence/roles_plugins/';
 
-    private static $user_roles = array();
+    private static $registry;
 
+    public function __construct()
+    {
+        if (self::$registry === null) {
+            $items[self::ROLES_CACHE_KEY]['expire'] = 43200;
+            $items[self::ROLES_PLUGINS_CACHE_KEY]['expire'] = 43200;
+            $items['user_roles']['expire'] = 0;
+            $items['user_roles']['value'] = array();
+            self::$registry = new CachingRegistry($items);
+        }
+    }
     /**
      * Enter description here...
      *
@@ -40,11 +125,7 @@ class RolePersistence
      */
     public function getAllRoles()
     {
-        $cache = StudipCacheFactory::getCache();
-
-        // read cache (unserializing a cache miss - FALSE - does not matter)
-        $roles = unserialize($cache->read(self::ROLES_CACHE_KEY));
-
+        $roles = self::$registry[self::ROLES_CACHE_KEY];
         // cache miss, retrieve from database
         if (!$roles) {
             $roles = array();
@@ -58,7 +139,7 @@ class RolePersistence
             }
 
             // write to cache
-            $cache->write(self::ROLES_CACHE_KEY, serialize($roles));
+            self::$registry[self::ROLES_CACHE_KEY] = $roles;
         }
         return $roles;
     }
@@ -72,8 +153,8 @@ class RolePersistence
     public function saveRole($role)
     {
         // sweep roles cache, see #getAllRoles
-        StudipCacheFactory::getCache()->expire(self::ROLES_CACHE_KEY);
-        self::$user_roles = array();
+        unset(self::$registry[self::ROLES_CACHE_KEY]);
+        unset(self::$registry['user_roles']);
 
         $db = DBManager::get();
 
@@ -104,8 +185,9 @@ class RolePersistence
         $id = $role->getRoleid();
 
         // sweep roles cache
-        StudipCacheFactory::getCache()->expire(self::ROLES_CACHE_KEY);
-        self::$user_roles = array();
+        unset(self::$registry[self::ROLES_CACHE_KEY]);
+        unset(self::$registry[self::ROLES_PLUGINS_CACHE_KEY]);
+        unset(self::$registry['user_roles']);
 
         $db = DBManager::get();
         $stmt = $db->prepare("DELETE FROM roles WHERE roleid=? AND system='n'");
@@ -140,7 +222,7 @@ class RolePersistence
         $stmt = DBManager::get()->prepare("REPLACE INTO roles_user ".
           "(roleid, userid) VALUES (?, ?)");
         $stmt->execute(array($roleid, $user->getUserid()));
-        self::$user_roles = array();
+        self::$registry['user_roles'] = array();
     }
 
     /**
@@ -153,7 +235,8 @@ class RolePersistence
     public function getAssignedRoles($userid, $implicit = false)
     {
         $key = $userid . (int)$implicit;
-        if (!array_key_exists($key, self::$user_roles)) {
+        $user_roles = (array)self::$registry['user_roles'];
+        if (!array_key_exists($key, $user_roles)) {
             if ($implicit && is_object($GLOBALS['perm']))
             {
                 $global_perm = $GLOBALS['perm']->get_perm($userid);
@@ -170,9 +253,10 @@ class RolePersistence
                 $stmt = DBManager::get()->prepare("SELECT r.roleid FROM roles_user r WHERE r.userid=?");
                 $stmt->execute(array($userid));
             }
-            self::$user_roles[$key] = $stmt->fetchAll(PDO::FETCH_COLUMN);
+            $user_roles[$key] = $stmt->fetchAll(PDO::FETCH_COLUMN);
+            self::$registry['user_roles'] = $user_roles;
         }
-        return array_intersect_key(self::getAllRoles(), array_flip(self::$user_roles[$key]));
+        return array_intersect_key(self::getAllRoles(), array_flip($user_roles[$key]));
     }
 
     /**
@@ -205,7 +289,7 @@ class RolePersistence
     {
         $stmt = DBManager::get()->prepare("DELETE FROM roles_user WHERE roleid=? AND userid=?");
         $stmt->execute(array($role->getRoleid(),$user->getUserid()));
-        self::$user_roles = array();
+        unset(self::$registry['user_roles']);
     }
 
     /**
@@ -243,8 +327,7 @@ class RolePersistence
      */
     public function assignPluginRoles($pluginid,$roleids)
     {
-        StudipCacheFactory::getCache()->expire(self::ROLES_PLUGINS_CACHE_KEY . (int) $pluginid);
-
+        unset(self::$registry[self::ROLES_PLUGINS_CACHE_KEY]);
         $stmt = DBManager::get()->prepare("REPLACE INTO roles_plugins (roleid, pluginid) VALUES (?, ?)");
         foreach ($roleids as $roleid) {
             $stmt->execute(array($roleid, $pluginid));
@@ -259,7 +342,7 @@ class RolePersistence
      */
     public function deleteAssignedPluginRoles($pluginid,$roleids)
     {
-        StudipCacheFactory::getCache()->expire(self::ROLES_PLUGINS_CACHE_KEY . (int) $pluginid);
+        unset(self::$registry[self::ROLES_PLUGINS_CACHE_KEY]);
 
         $stmt = DBManager::get()->prepare("DELETE FROM roles_plugins WHERE roleid=? AND pluginid=?");
         foreach ($roleids as $roleid) {
@@ -275,30 +358,26 @@ class RolePersistence
      */
     public function getAssignedPluginRoles($pluginid=-1)
     {
-        $cache = StudipCacheFactory::getCache();
-
-        // read plugin roles from cache (unserialize does not matter on cache
-        $key = self::ROLES_PLUGINS_CACHE_KEY . (int) $pluginid;
-        $result = unserialize($cache->read($key));
+        $plugin_roles = self::$registry[self::ROLES_PLUGINS_CACHE_KEY];
 
         // cache miss, retrieve roles from database
-        if (!$result) {
+        if (!$plugin_roles) {
 
-            $result = array();
+            $plugin_roles = array();
             $roles = self::getAllRoles();
 
-            $stmt = DBManager::get()->prepare("SELECT * FROM roles_plugins WHERE pluginid=?");
-            $stmt->execute(array($pluginid));
+            $stmt = DBManager::get()->prepare("SELECT * FROM roles_plugins");
+            $stmt->execute(array());
 
             while ($row = $stmt->fetch()) {
                 if (isset($roles[$row["roleid"]])) {
-                    $result[] = $roles[$row["roleid"]];
+                    $plugin_roles[$row['pluginid']][] = $roles[$row["roleid"]];
                 }
             }
 
             // write to cache
-            $cache->write($key, serialize($result));
+            self::$registry[self::ROLES_PLUGINS_CACHE_KEY] = $plugin_roles;
         }
-        return $result;
+        return is_array($plugin_roles[$pluginid]) ? $plugin_roles[$pluginid] : array();
     }
 }

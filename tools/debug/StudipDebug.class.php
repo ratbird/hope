@@ -9,6 +9,7 @@
 */
 
 require_once "Log.php";
+require_once "FirePHPCore/fb.php";
 
 class StudipDebug {
 
@@ -28,6 +29,11 @@ class StudipDebug {
         $query_time = microtime(true) - $starttime;
         self::$total_query_time += $query_time;
         StudipDebug::log($query_string."\nquery time: ".round($query_time, 4)."; total query time: " .round(self::$total_query_time, 4) . "; memory: ". (int)(memory_get_usage() / 1024) ." KB");
+    }
+
+    public static function log_time($msg, $starttime) {
+        $query_time = microtime(true) - $starttime;
+        StudipDebug::log($msg."\nquery time: ".round($query_time, 4)."; memory: ". (int)(memory_get_usage() / 1024) ." KB");
     }
 
     public static function get_backtrace($NL = "\n") {

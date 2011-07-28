@@ -26,25 +26,52 @@ class DebugPDO extends PDO {
     }
 }
 
-class DebugPDOStatement extends PDOStatement {
+class DebugPDOStatement extends PDOStatement
+{
     public $query_params = NULL;
     public $dbh;
-    protected function __construct($dbh) {
+    protected function __construct($dbh)
+    {
         $this->dbh = $dbh;
     }
-    public function execute($arr){
-        $this->queryParams = $arr;
+
+    public function execute($arr = null)
+    {
+        if (is_array($arr)) $this->queryParams = $arr;
         $time = microtime(true);
         $ret =  parent::execute($arr);
         StudipDebug::log_query($this->getActualQuery(), $time);
         return $ret;
     }
 
-    public function getActualQuery(){
+    public function bindValue($n, $value, $data_type = PDO::PARAM_STR)
+    {
+        $this->queryParams[$n] = $value;
+        return parent::bindValue($n, $value, $data_type) ;
+    }
+
+    public function bindParam($parameter , &$variable, $data_type = PDO::PARAM_STR, $length = null, $driver_options = null)
+    {
+        $this->queryParams[$parameter] =& $variable;
+        return parent::bindParam($parameter, $variable, $data_type, $length, $driver_options);
+    }
+
+    public function getActualQuery()
+    {
         $rv = $this->queryString;
-        while (preg_match('/\?/', $rv)) $rv = preg_replace('/\?/','%'.(++$i).'$s',$rv,1);
-        foreach ($this->queryParams as $k=>$v) $arr[$k]= $this->dbh->quote($v);
-        return vsprintf($rv, $arr);
+        if (preg_match('/\?/', $rv)) {
+            while (preg_match('/\?/', $rv)) $rv = preg_replace('/\?/','%'.(++$i).'$s',$rv,1);
+            foreach ((array)$this->queryParams as $k=>$v) $arr[$k]= $this->dbh->quote($v);
+            return vsprintf($rv, $arr);
+        }
+        if (is_array($this->queryParams)) {
+            foreach($this->queryParams as $key => $value) {
+                $search = $key;
+                $replace = $this->dbh->quote($value);
+            }
+            return str_replace($search, $replace, $rv);
+        }
+        return $rv;
     }
 }
 

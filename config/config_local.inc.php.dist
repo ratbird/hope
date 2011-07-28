@@ -158,8 +158,6 @@ $SOAP_USE_PHP5 = FALSE;
 
 $WEBSERVICES_ENABLE = FALSE;                            //Stud.IP module: webservices
 
-$STUDIP_API_KEY=''; // webservice api key
-
 $ELEARNING_INTERFACE_MODULES = array(
     "ilias3" => array(
         "name" => "ILIAS 3",

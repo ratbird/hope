@@ -39,9 +39,7 @@
 
 function check_terms($userid, $_language_path) {
 
-    global $i_accept_the_terms;
-
-    if ($i_accept_the_terms == "yes") {
+    if (Request::get('i_accept_the_terms') == "yes") {
         UserConfig::get($userid)->store('TERMS_ACCEPTED', 1);
         return;
     }

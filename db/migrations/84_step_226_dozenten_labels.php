@@ -11,8 +11,8 @@ class Step226DozentenLabels extends Migration
     {
         $db = DBManager::get();
         $db->exec(
-            "ALTER IGNORE TABLE seminar_user " .
-            "ADD COLUMN label VARCHAR(128) NOT NULL " .
+            "ALTER TABLE seminar_user " .
+            "ADD COLUMN label VARCHAR(128) NOT NULL DEFAULT ''" .
         "");
 
         $name = "PROPOSED_TEACHER_LABELS";
@@ -30,7 +30,7 @@ class Step226DozentenLabels extends Migration
     {
         $db = DBManager::get();
         $db->exec(
-            "ALTER IGNORE TABLE seminar_user " .
+            "ALTER TABLE seminar_user " .
             "DROP COLUMN label " .
         "");
         $db->exec(

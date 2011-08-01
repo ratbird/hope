@@ -1760,7 +1760,7 @@ if (($form == 6) && ($jump_next_x))
                     $query = "insert into seminar_user SET Seminar_id = '".
                     $sem_create_data["sem_id"]."', user_id = '".
                     $key."', status = 'dozent', gruppe = '$group', visible = 'yes',".
-                    " mkdate = '".time()."', position = '$next_pos', label = ".DBManager::get()->quote($sem_create_data["sem_doz_label"][$key])." ";
+                    " mkdate = '".time()."', position = '$next_pos', label = ".DBManager::get()->quote($sem_create_data["sem_doz_label"][$key], PDO::PARAM_STR)." ";
                     $db3->query($query);// Dozenten eintragen:w
 
                     if ($db3->affected_rows() >=1)
@@ -1777,7 +1777,7 @@ if (($form == 6) && ($jump_next_x))
                 $query = "insert into seminar_user SET Seminar_id = '".
                     $sem_create_data["sem_id"]."', user_id = '".
                     $user_id."', status = 'dozent', gruppe = '$group', mkdate = '".time()."', position = '$next_pos', " .
-                    "label = ".DBManager::get()->quote($sem_create_data["sem_doz_label"][$user_id])." ";
+                    "label = ".DBManager::get()->quote($sem_create_data["sem_doz_label"][$user_id], PDO::PARAM_STR)." ";
                 $db3->query($query);
                 if ($db3->affected_rows() >=1)
                     $count_doz++;

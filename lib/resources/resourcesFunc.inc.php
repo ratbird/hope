@@ -383,23 +383,40 @@ function getMyRoomRequests($user_id = '', $semester_id = null, $only_not_closed 
         $semester = SemesterData::GetInstance()->getSemesterData($semester_id);
         $sem_criteria = ' BETWEEN ' . (int)$semester['beginn'] . ' AND ' . (int)$semester['ende'];
     }
-    $query = "SELECT request_id, closed, rr.resource_id,
-                            COUNT(IF(t.date_typ IN ".getPresenceTypeClause(). ",t.termin_id,NULL)) as anzahl_termine_seminar,
-                            COUNT(ttt.termin_id) as anzahl_termine_metadate,
-                            COUNT(tt.termin_id) as anzahl_termin
-                            FROM resources_requests rr
-                            LEFT JOIN termine tt ON (tt.termin_id = rr.termin_id AND rr.termin_id <> '' AND tt.date > UNIX_TIMESTAMP() ".($sem_criteria ? ' AND tt.date ' . $sem_criteria : '').")
-                            LEFT JOIN termine t ON(rr.seminar_id = t.range_id AND rr.termin_id = '' AND rr.metadate_id = '' AND t.date > UNIX_TIMESTAMP()".($sem_criteria ? ' AND t.date ' . $sem_criteria : '').")
-                            LEFT JOIN termine ttt ON (ttt.metadate_id = rr.metadate_id AND rr.metadate_id <> '' AND ttt.date > UNIX_TIMESTAMP()".($sem_criteria ? ' AND ttt.date ' . $sem_criteria : '').")
-                            WHERE %s GROUP BY request_id";
+    $query = "SELECT request_id, closed, rr.resource_id
+              FROM resources_requests rr
+              WHERE %s ";
+    $query1 = "SELECT request_id FROM resources_requests rr
+               INNER JOIN termine tt ON (tt.termin_id = rr.termin_id AND tt.date > UNIX_TIMESTAMP() ".($sem_criteria ? ' AND tt.date ' . $sem_criteria : '').")
+               WHERE rr.termin_id <> ''  AND %s";
+    $query2 = "SELECT DISTINCT request_id FROM resources_requests rr
+               INNER JOIN termine t ON(rr.seminar_id = t.range_id AND t.date_typ IN ".getPresenceTypeClause(). " AND t.date > UNIX_TIMESTAMP()".($sem_criteria ? ' AND t.date ' . $sem_criteria : '').")
+               WHERE  rr.termin_id = '' AND rr.metadate_id = '' AND %s ";
+    $query3 = "SELECT DISTINCT request_id FROM resources_requests rr
+               INNER JOIN termine ttt ON (ttt.metadate_id = rr.metadate_id AND ttt.date > UNIX_TIMESTAMP()".($sem_criteria ? ' AND ttt.date ' . $sem_criteria : '').")
+               WHERE  rr.metadate_id <> '' AND %s ";
 
     if ((getGlobalPerms($user_id) == "admin") || ($perm->have_perm("root"))) {
         if ($rs = $db->query(sprintf($query, $criteria))) {
             while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
                 $requests[$row["request_id"]] = array("my_sem"=>TRUE, "my_res"=> strlen($row["resource_id"]) > 0, "closed"=>$row["closed"]);
-                $requests[$row["request_id"]]["have_times"] = max(array($row['anzahl_termine_seminar'], $row["anzahl_termine_metadate"], $row['anzahl_termin']));
                 $requests[$row["request_id"]]["resource_id"] = $row['resource_id'];
+            }
         }
+        if ($rs = $db->query(sprintf($query1, $criteria))) {
+            while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
+                $requests[$row["request_id"]]["have_times"] = 1;
+            }
+        }
+        if ($rs = $db->query(sprintf($query2, $criteria))) {
+            while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
+                $requests[$row["request_id"]]["have_times"] = 1;
+            }
+        }
+        if ($rs = $db->query(sprintf($query3, $criteria))) {
+            while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
+                $requests[$row["request_id"]]["have_times"] = 1;
+            }
         }
     } else {
         //load all my resources
@@ -424,9 +441,23 @@ function getMyRoomRequests($user_id = '', $semester_id = null, $only_not_closed 
                     $requests[$row["request_id"]]["resource_id"] = $row['resource_id'];
                     $requests[$row["request_id"]]["my_res"] = TRUE;
                     $requests[$row["request_id"]]["closed"] = $row['closed'];
-                    $requests[$row["request_id"]]["have_times"] = max(array($row['anzahl_termine_seminar'], $row["anzahl_termine_metadate"], $row['anzahl_termin']));
+                }
             }
-        }
+            if ($rs = $db->query(sprintf($query1, $criteria))) {
+                while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
+                    $requests[$row["request_id"]]["have_times"] = 1;
+                }
+            }
+            if ($rs = $db->query(sprintf($query2, $criteria))) {
+                while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
+                    $requests[$row["request_id"]]["have_times"] = 1;
+                }
+            }
+            if ($rs = $db->query(sprintf($query3, $criteria))) {
+                while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
+                    $requests[$row["request_id"]]["have_times"] = 1;
+                }
+            }
         }
         if (sizeof($my_sems)) {
             $criteria .= " AND rr.seminar_id IN " . "('".join("','",array_keys($my_sems))."')";
@@ -435,10 +466,24 @@ function getMyRoomRequests($user_id = '', $semester_id = null, $only_not_closed 
                     $requests[$row["request_id"]]["resource_id"] = $row['resource_id'];
                     $requests[$row["request_id"]]["my_sem"] = TRUE;
                     $requests[$row["request_id"]]["closed"] = $row['closed'];
-                    $requests[$row["request_id"]]["have_times"] = max(array($row['anzahl_termine_seminar'], $row["anzahl_termine_metadate"], $row['anzahl_termin']));
+                }
+            }
+            if ($rs = $db->query(sprintf($query1, $criteria))) {
+                while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
+                    $requests[$row["request_id"]]["have_times"] = 1;
+                }
+            }
+            if ($rs = $db->query(sprintf($query2, $criteria))) {
+                while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
+                    $requests[$row["request_id"]]["have_times"] = 1;
+                }
+            }
+            if ($rs = $db->query(sprintf($query3, $criteria))) {
+                while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
+                    $requests[$row["request_id"]]["have_times"] = 1;
+                }
             }
         }
-    }
     }
 
     return $requests;

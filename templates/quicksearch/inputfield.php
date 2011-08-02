@@ -14,7 +14,7 @@
                     print ' '.$attr_name.'="'.$attr_value.'"';
                 }
                 ?> id="<?= $id ?>"<?= ($clear_input ? $clear_input : "") ?> type=text name="<?=
-                    $name ?>_parameter" value="<?= $defaultName ?>" placeholder="<?= $beschriftung && !$defaultID ? $beschriftung : '' ?>">
+                    $name ?>_parameter" value="<?= htmlReady($defaultName) ?>" placeholder="<?= $beschriftung && !$defaultID ? $beschriftung : '' ?>">
 <? if ($withButton) : ?>
     <? if ($box_align !== "left") : ?>
             <input <?=($search_button_name ? 'name="'.$search_button_name.'"' : '')?> class="text-bottom" type="image" src="<?= Assets::image_path("icons/16/blue/search.png")?>" title="<?= _("Suche starten") ?>">

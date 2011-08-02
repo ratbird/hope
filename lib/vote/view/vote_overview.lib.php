@@ -105,7 +105,7 @@ $html = "\n" . $cssSw->GetHoverJSFunction() . "\n";
           . "   <table align=\"center\" width=99% class=blank border=0 cellpadding=2 cellspacing=0>\n"
           . "   <tr>\n"
           . "    <td colspan=\"9\" align=\"left\" valign=\"top\" class=\"blank\">\n"
-          . "     <br><font size=\"2\"><b>".$label["searchresults_title"]." <".$searchString.">:</b>\n"
+          . "     <br><font size=\"2\"><b>".$label["searchresults_title"]." <". htmlReady($searchString) .">:</b>\n"
           . "    </td>\n";
 
     if ((empty($rangeAR)) || ($searchString == NULL )){
@@ -733,7 +733,7 @@ function makeSearchForm(){
           .          CSRFProtection::tokenTag()
           . "        <font size=\"-1\" style=\"vertical-align:middle;\"><br>&nbsp;\n"
           . "        ".$label["search_text"]."\n"
-          . "        <input type=\"text\" name=\"searchRange\"  value=\"$searchRange\" size=\"30\" style=\"vertical-align:middle;\">"
+          . "        <input type=\"text\" name=\"searchRange\"  value=\"". htmlReady($searchRange) ."\" size=\"30\" style=\"vertical-align:middle;\">"
           . "        <input type=\"hidden\" name=\"voteaction\" value=\"search\">"
           . "        <input type=\"image\" style=\"vertical-align:middle;\" border=\"0\" "
           .         makeButton($label["search_button"],"src") . " title=\"".$label["search_tooltip"]."\" alt=\"".$label["search_tooltip"]."\">\n"

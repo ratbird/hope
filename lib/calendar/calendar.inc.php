@@ -175,7 +175,6 @@ if ($cmd == 'add' && $calendar_user_control_data['delete'] > 0) {
 $db_control->openDatabase('COUNT', 'CALENDAR_EVENTS');
 $count_events = $db_control->getCountEvents();
 if (Request::getArray('sem') && $_calendar->getRange() == CALENDAR_RANGE_USER) {
-    var_dump(Request::getArray('sem'));exit;
     $_calendar->updateBindSeminare();
 }
 

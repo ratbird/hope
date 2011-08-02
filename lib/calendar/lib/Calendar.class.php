@@ -371,17 +371,15 @@ class Calendar
 
         $sem = Request::getArray('sem');
         if (is_array($sem)) {
-            $db1 = DBManager::get();
-            $db1->prepare('SELECT Seminar_id FROM seminar_user WHERE user_id = ?');
+            $db1 = DBManager::get()->prepare('SELECT Seminar_id FROM seminar_user WHERE user_id = ?');
             $db1->execute(array($GLOBALS['user']->id));
-            $db2 = DBManager::get();
+            $db2 = DBManager::get()->prepare('UPDATE seminar_user SET bind_calendar = ? WHERE Seminar_id = ? AND user_id = ?');
             foreach ($db1->fetchAll(PDO::FETCH_COLUMN, 0) as $sem_id) {
                 if ($sem[$sem_id]) {
-                    $db2->prepare('UPDATE seminar_user SET bind_calendar = 1 WHERE Seminar_id = ? AND user_id = ?');
+                    $db2->execute(array(1, $sem_id, $GLOBALS['user']->id));
                 } else {
-                    $db2->prepare('UPDATE seminar_user SET bind_calendar = 0 WHERE Seminar_id = ? AND user_id = ?');
+                    $db2->execute(array(0, $sem_id, $GLOBALS['user']->id));
                 }
-                $db2->execute(array($sem_id, $GLOBALS['user']->id));
             }
         } else {
             return false;

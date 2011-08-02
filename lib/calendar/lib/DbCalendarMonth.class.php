@@ -256,9 +256,9 @@ class DbCalendarMonth extends DbCalendarYear
 
     function createEvent($properties, &$day, $lwst = NULL, $hgst = NULL)
     {
-        //	if ($date < $this->getStart() - 518400 || $date > $this->getEnd() + 518400) {
-        //		return false;
-        //	}
+        //  if ($date < $this->getStart() - 518400 || $date > $this->getEnd() + 518400) {
+        //      return false;
+        //  }
 
         $exdates = explode(',', $properties['EXDATE']);
         foreach ($exdates as $exdate) {
@@ -295,7 +295,7 @@ class DbCalendarMonth extends DbCalendarYear
                     $event = new SeminarEvent($properties['STUDIP_ID'], $properties, $this->user_id);
                     break;
             }
-            /* 	if (isset($properties['SEM_ID'])) {
+            /*  if (isset($properties['SEM_ID'])) {
               $event = new SeminarCalendarEvent($properties, $properties['STUDIP_ID'], $properties['SEM_ID'], $this->permission);
               $event->sem_id = $properties['SEM_ID'];
               } else {

@@ -38,7 +38,7 @@ class CalendarImport
         $this->data = $data;
     }
 
-    /* 	function setParser (&$parser) {
+    /*  function setParser (&$parser) {
 
       $this->_parser = $parser;
       }

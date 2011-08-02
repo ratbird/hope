@@ -57,7 +57,7 @@ class Calendar
           if ($this->getRange() == CALENDAR_RANGE_USER) {
           $this->user_name = get_username($range_id);
           } */
-//		$this->getUserId();
+//      $this->getUserId();
         $this->user_id = $range_id;
         $this->setUserSettings();
     }
@@ -239,7 +239,7 @@ class Calendar
             return $this->user_id;
         }
 
-        //	$user_id = $GLOBALS['user']->id;
+        // $user_id = $GLOBALS['user']->id;
         $user_id = get_userid($this->user_name);
         if (!$user_id) {
             $_calendar_error->throwError(ERROR_FATAL, _("Der Benutzername existiert nicht."), __FILE__, __LINE__);
@@ -763,8 +763,8 @@ class Calendar
                 if (!$this->event->restore($termin_id)) {
                     // throw error
                     // its something wrong... better to go back to the last view
-                    /* 	page_close();
-                      header("Location: " . $PHP_SELF	. "?cmd="
+                    /*  page_close();
+                      header("Location: " . $PHP_SELF . "?cmd="
                       . $calendar_sess_control_data['view_prv'] . "&atime=$atime");
                       exit; */
                 }

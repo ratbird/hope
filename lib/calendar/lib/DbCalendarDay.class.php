@@ -84,7 +84,7 @@ class DbCalendarDay extends CalendarDay
     {
         $this->events[] = $term;
         $this->sort();
-        //	return true;
+        // return true;
     }
 
     // Termin loeschen
@@ -175,7 +175,7 @@ class DbCalendarDay extends CalendarDay
     function restore($restrictions = NULL, $sem_ids = NULL)
     {
 
-        //	$this->driver->openDatabaseGetView($this);
+        // $this->driver->openDatabaseGetView($this);
         $this->driver->openDatabase('EVENTS', 'ALL_EVENTS', $this->getStart(), $this->getEnd(), NULL, $sem_ids);
 
         while ($properties = $this->driver->nextProperties()) {

@@ -195,7 +195,7 @@ class CalendarSynchronizer
                     $event->setImportDate();
                     $int[] = $event;
                     $ext[] = $event;
-                    //		$create_export = TRUE;
+                    // $create_export = TRUE;
                 } else {
                     $this->deleted[] = $event->properties['UID'];
                     $create_export = TRUE;
@@ -217,9 +217,9 @@ class CalendarSynchronizer
             $_calendar_error->throwError(ERROR_MESSAGE, sprintf(_("Es wurde(n) %s Termin(e) in Ihrem Stud.IP-Terminkalender gel&ouml;scht."), sizeof($del)));
         }
         $db->writeObjectsIntoDatabase($int, 'REPLACE');
-        //	if (!$create_export) {
-        //		$ext = array();
-        //	}
+        //  if (!$create_export) {
+        //      $ext = array();
+        //  }
         $this->_export->exportFromObjects($ext);
         if (!$compareLastSync) {
             CalendarSynchronizer::SetLastSync($this->_import->getClientIdentifier());

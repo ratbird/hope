@@ -272,7 +272,7 @@ function insert_time_noform() {
                 t = opener.document.getElementById('$txt_em');
                 t.value = zz[c][3];
         }
-	}
+    }
     window.close();
 }
 

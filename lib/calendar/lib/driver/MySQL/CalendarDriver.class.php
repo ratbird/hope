@@ -115,12 +115,13 @@ class CalendarDriver
                 $sem_ids = '';
             }
 
-            $query = "SELECT $select_semcal FROM calendar_events ce LEFT JOIN seminar_user su ON su.Seminar_id = ce.range_id
-						LEFT JOIN seminare s USING(Seminar_id) WHERE su.user_id = ?
-						AND range_id IN ('$sem_ids') AND su.bind_calendar = 1 "
-                    . "AND (start BETWEEN ? AND ? "
-                    . "OR (start <= ? AND (expire + end - start) >= ? AND rtype != 'SINGLE') "
-                    . "OR (? BETWEEN start AND end))";
+            $query = "SELECT $select_semcal FROM calendar_events ce 
+                LEFT JOIN seminar_user su ON su.Seminar_id = ce.range_id
+                LEFT JOIN seminare s USING(Seminar_id) WHERE su.user_id = ?
+                AND range_id IN ('$sem_ids') AND su.bind_calendar = 1
+                AND (start BETWEEN ? AND ?
+                OR (start <= ? AND (expire + end - start) >= ?
+                AND rtype != 'SINGLE') OR (? BETWEEN start AND end))";
             $db_semcal = DBManager::get()->prepare($query);
             $db_semcal->execute(array($this->range_id, $start, $end, $end, $start, $start));
 

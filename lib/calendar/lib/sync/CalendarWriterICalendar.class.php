@@ -252,7 +252,7 @@ class CalendarWriteriCalendar extends CalendarWriter
             $attr_string = "$name$params_str:$value";
             $result .= $this->_foldLine($attr_string) . $this->newline;
         }
-        //	$result .= 'DTSTAMP:' . $this->_exportDateTime(time()) . $this->newline;
+        //  $result .= 'DTSTAMP:' . $this->_exportDateTime(time()) . $this->newline;
         $result .= "END:VEVENT" . $this->newline;
 
         return utf8_encode($result);
@@ -302,8 +302,8 @@ class CalendarWriteriCalendar extends CalendarWriter
     function _exportDateTime($value)
     {
 
-//		$TZOffset  = 3600 * substr(date('O', $value), 0, 3);
-//		$TZOffset += 60 * substr(date('O', $value), 3, 2);
+//      $TZOffset  = 3600 * substr(date('O', $value), 0, 3);
+//      $TZOffset += 60 * substr(date('O', $value), 3, 2);
         //transform local time in UTC
         $value -= date('Z', $value);
 

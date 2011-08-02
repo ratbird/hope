@@ -556,7 +556,7 @@ function javascript_hover_year(&$calendar, $day_time)
 
             $out = " onmouseover=\"return overlib('" . JSReady($out, 'contact') . "',CAPTION,'"
                     . ldate($day_time)
-                    //	. "&nbsp; &nbsp; ". $jscript_title
+                    //  . "&nbsp; &nbsp; ". $jscript_title
                     . "',NOCLOSE,CSSOFF);\" onmouseout=\"return nd();\"";
         }
     } else {
@@ -794,7 +794,7 @@ function js_hover($aterm)
         $jscript_text = "'" . JSReady($jscript_text, 'contact')
                 . "',CAPTION,'"
                 . JSReady($aterm->toStringDate('SHORT_DAY'))
-                //	. "&nbsp; &nbsp; ". $jscript_title
+                //  . "&nbsp; &nbsp; ". $jscript_title
                 . "',NOCLOSE,CSSOFF";
 
         return " onmouseover=\"return overlib($jscript_text);\" onmouseout=\"return nd();\"";

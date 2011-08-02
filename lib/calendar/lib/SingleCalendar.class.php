@@ -99,7 +99,7 @@ class SingleCalendar extends Calendar
         $tmpl->step = $this->getUserSettings('step_day');
         $tmpl->params = $params;
         return $tmpl->render();
-        //return create_day_view($this, $start_time, $end_time,	$this->getUserSettings('step_day'), $day_time, $params);
+        //return create_day_view($this, $start_time, $end_time, $this->getUserSettings('step_day'), $day_time, $params);
     }
 
     function toStringWeek($week_time, $start_time, $end_time, $restrictions = NULL, $sem_ids = NULL)
@@ -153,7 +153,7 @@ class SingleCalendar extends Calendar
           $this->event = new DbSeminarCalendarEvent($this, $event_id);
           } else { */
         $this->event = new DbCalendarEvent($this, $event_id);
-        //	}
+        // }
         if ($this->getRange() == CALENDAR_RANGE_SEM || $this->getRange() == CALENDAR_RANGE_INST) {
             $this->headline = getHeaderLine($this->user_id) . ' - ' . _("Terminkalender - Termin bearbeiten");
         } else if ($this->checkPermission(CALENDAR_PERMISSION_OWN)) {

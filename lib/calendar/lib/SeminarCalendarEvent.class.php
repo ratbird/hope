@@ -36,7 +36,7 @@ class SeminarCalendarEvent extends CalendarEvent
             $this->restore();
         } elseif (!is_null($properties)) {
             parent::CalendarEvent($properties, $id, '', $permission);
-            //	$this->id = $id;
+            // $this->id = $id;
             $this->sem_id = $sem_id;
         }
 

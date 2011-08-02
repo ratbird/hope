@@ -328,7 +328,7 @@ class Event
     /**
      * Changes the location.
      *
-     * 	After calling this method, isModified() returns true.
+     * After calling this method, isModified() returns true.
      *
      * @access public
      * @param String $location the location
@@ -342,7 +342,7 @@ class Event
     /**
      * Changes the starttime of this event.
      *
-     * 	After calling this method, isModified() returns true.
+     * After calling this method, isModified() returns true.
      *
      * @access public
      * @param int $start a valid unix timestamp
@@ -359,7 +359,7 @@ class Event
     /**
      * Changes the endtime of this event.
      *
-     * 	After calling this method, isModified() returns true.
+     * After calling this method, isModified() returns true.
      *
      * @access public
      * @param int $end a valid unix timestamp
@@ -383,7 +383,7 @@ class Event
     function setDayEvent()
     {
         $this->setStart(mktime(0, 0, 0, date('n', $this->getStart()), date('j', $this->getStart()), date('Y', $this->getStart())));
-        /* 	if (date('Ymd', $this->getStart()) == date('Ymd', $this->getEnd())) {
+        /*  if (date('Ymd', $this->getStart()) == date('Ymd', $this->getEnd())) {
           $this->setEnd(mktime(23, 59,59, date('n', $this->getEnd()),
           date('j', $this->getEnd()) + 1, date('Y', $this->getEnd())));
           }

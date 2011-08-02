@@ -33,8 +33,8 @@ if (!$calendar_sess_control_data) {
 
 // switch to own calendar if called from header
 if (!get_config('CALENDAR_GROUP_ENABLE') || Request::get('caluser') == 'self') {
-    //	|| !isset($calendar_sess_control_data['cal_select'])) {
-//	$calendar_sess_control_data['cal_select'] = 'user.' . get_username();
+    //  || !isset($calendar_sess_control_data['cal_select'])) {
+//  $calendar_sess_control_data['cal_select'] = 'user.' . get_username();
     closeObject();
     $calendar_sess_control_data['cal_select'] = 'user.' . $GLOABLS['user']->id;
 }/*

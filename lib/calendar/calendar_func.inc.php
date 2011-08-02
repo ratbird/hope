@@ -101,7 +101,7 @@ function ldate($tmstamp)
 function holiday($tmstamp, $mod = "")
 {
     // erstmal brauchen wir den Ostersonntag fuer die meisten kirchlichen Feiertage
-//	$easterday = easter_date(date("Y", $tmstamp)); // geht leider nicht
+//  $easterday = easter_date(date("Y", $tmstamp)); // geht leider nicht
     // Berechnung nach Carters Algorithmus (gueltig von 1900 - 2099)
     $tmstamp = mktime(0, 0, 0, date("n", $tmstamp), date("j", $tmstamp), date("Y", $tmstamp));
     $year = date("Y", $tmstamp);
@@ -129,7 +129,7 @@ function holiday($tmstamp, $mod = "")
         case -46: $name = "Aschermittwoch";
             $col = 1;
             break;
-        //	case -8: $name = "Palmsonntag"; $col = 1; break;
+        //  case -8: $name = "Palmsonntag"; $col = 1; break;
         case -2: $name = "Karfreitag";
             $col = 3;
             break;
@@ -173,7 +173,7 @@ function holiday($tmstamp, $mod = "")
         case 121: $name = "Maifeiertag";
             $col = 3;
             break;
-//		case 125: $name = "Europatag"; $col = 1; break;
+//  case 125: $name = "Europatag"; $col = 1; break;
         case 172: $name = "Sommeranfang";
             $col = 1;
             break;

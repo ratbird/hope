@@ -52,8 +52,8 @@ if (!$termin_id && !$_calendar->havePermission(CALENDAR_PERMISSION_WRITABLE)) {
 echo "<tr><td class=\"blank\" width=\"99%\" valign=\"top\">\n";
 
 if ($evtype == 'semcal' || (isset($_calendar->event) && ($_calendar->event instanceof SeminarEvent || $_calendar->event instanceof SeminarCalendarEvent)
-//		|| $_calendar->checkPermission(CALENDAR_PERMISSION_READABLE)
-//		|| $_calendar->event->getPermission() == CALENDAR_EVENT_PERM_CONFIDENTIAL) {
+//      || $_calendar->checkPermission(CALENDAR_PERMISSION_READABLE)
+//      || $_calendar->event->getPermission() == CALENDAR_EVENT_PERM_CONFIDENTIAL) {
         || !$_calendar->event->havePermission(CALENDAR_EVENT_PERM_WRITABLE))) {
     // form is not editable
     $disabled = " style=\"color:#000000; background-color:#FFFFFF;\" disabled=\"disabled\"";
@@ -335,13 +335,13 @@ if (!$set_recur_x) {
             echo htmlReady($_calendar->event->toStringRecurrence());
         echo "&nbsp; &nbsp; &nbsp;";
 
-//		if ($_calendar->havePermission(CALENDAR_PERMISSION_WRITABLE)
-        //			&& $_calendar->event->getPermission() == CALENDAR_EVENT_PERM_PUBLIC) {
+//      if ($_calendar->havePermission(CALENDAR_PERMISSION_WRITABLE)
+        //      && $_calendar->event->getPermission() == CALENDAR_EVENT_PERM_PUBLIC) {
         if ($_calendar->event->havePermission(CALENDAR_EVENT_PERM_WRITABLE) && !($_calendar->event instanceof SeminarCalendarEvent)) {
             echo "<input style=\"vertical-align: middle;\" type=\"image\" ";
             echo makeButton("bearbeiten", "src") . " name=\"set_recur\" border=\"0\">\n";
         }
-        //	elseif ($_calendar->event->getRepeat('rtype') != 'SINGLE') {
+        //  elseif ($_calendar->event->getRepeat('rtype') != 'SINGLE') {
         else {
             echo "<input style=\"vertical-align: middle;\" type=\"image\" ";
             echo makeButton("details", "src") . " name=\"set_recur\" border=\"0\">\n";
@@ -844,8 +844,8 @@ if (isset($_calendar->event) && ($_calendar->event instanceof SeminarEvent || $_
         echo "<input type=\"hidden\" name=\"set_recur_x\" value=\"1\">\n";
         echo "<input type=\"hidden\" name=\"wholeday\" value=\"{$_POST['wholeday']}\">\n";
     }
-//	if ($_calendar->havePermission(CALENDAR_PERMISSION_WRITABLE)
-    //		&& $_calendar->event->getPermission() == CALENDAR_EVENT_PERM_PUBLIC) {
+//  if ($_calendar->havePermission(CALENDAR_PERMISSION_WRITABLE)
+    //      && $_calendar->event->getPermission() == CALENDAR_EVENT_PERM_PUBLIC) {
     if ($_calendar->event->havePermission(CALENDAR_EVENT_PERM_WRITABLE) && $evtype != 'semcal') {
         if ($atime && strtolower(get_class($_calendar->event)) == 'calendarevent') {
             if ($count_events < $CALENDAR_MAX_EVENTS) {

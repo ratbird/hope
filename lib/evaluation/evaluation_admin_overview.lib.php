@@ -1576,9 +1576,9 @@ class EvalOverview {
             if (empty($search))
                $safeguard .= $this->createSafeguard("ausruf", _("Bitte einen Suchbegriff eingeben."), $search);
             elseif (sizeof($results) == 0)
-               $safeguard .= $this->createSafeguard("ausruf", sprintf(_("Es wurde kein Bereich gefunden, der den Suchbegriff <b>%s</b> enthält."), $search), $search);
+               $safeguard .= $this->createSafeguard("ausruf", sprintf(_("Es wurde kein Bereich gefunden, der den Suchbegriff <b>%s</b> enthält."), htmlReady($search)), $search);
             else
-               $safeguard .= $this->createSafeguard("ok", sprintf(_("Es wurden %s Bereiche gefunden, die den Suchbegriff <b>%s</b> enthalten."), sizeof($results), $search), $search);
+               $safeguard .= $this->createSafeguard("ok", sprintf(_("Es wurden %s Bereiche gefunden, die den Suchbegriff <b>%s</b> enthalten."), sizeof($results), htmlReady($search)), $search);
             break;
 
          case "check_abort_creation":
@@ -1682,7 +1682,7 @@ class EvalOverview {
 
       $html .="    </td>\n";
       $html .="    <td align=\"left\" valign=\"middle\" style=\"vertical-align:middle;\">\n";
-      $html .="     <span class=\"".($sign == "ausruf" ? "eval_error" : "eval_success")."\"><br>$text</span><br><br>\n";
+      $html .="     <span class=\"".($sign == "ausruf" ? "eval_error" : "eval_success")."\"><br>". htmlReady($text) ."</span><br><br>\n";
 
       if ($referer)
      $linkreferer = "&referer=".$referer;

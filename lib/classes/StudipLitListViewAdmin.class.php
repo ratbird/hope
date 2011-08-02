@@ -628,11 +628,11 @@ class StudipLitListViewAdmin extends TreeView
             $content .= "\n<tr><td class=\"steelgraulight\"style=\"border-top: 1px solid black;border-left: 1px solid black;border-right: 1px solid black;\" ><b>". _("Anmerkung zu einem Eintrag bearbeiten:") . "</b></td></tr>";
             $edit_name = "note";
             $rows = 5;
-            $content .= "<tr><td class=\"steel1\" style=\"border-bottom: 1px solid black;border-left: 1px solid black;border-right: 1px solid black;\"><textarea name=\"edit_{$edit_name}\" style=\"width:99%\" rows=\"$rows\">" . $this->tree->tree_data[$this->edit_item_id][$edit_name]
+            $content .= "<tr><td class=\"steel1\" style=\"border-bottom: 1px solid black;border-left: 1px solid black;border-right: 1px solid black;\"><textarea name=\"edit_{$edit_name}\" style=\"width:99%\" rows=\"$rows\">" . htmlReady($this->tree->tree_data[$this->edit_item_id][$edit_name])
                 . "</textarea></td></tr>";
         } else {
             $content .= "\n<tr><td class=\"steelgraulight\" style=\"border-top: 1px solid black;border-left: 1px solid black;border-right: 1px solid black;\" ><b>". _("Name der Liste bearbeiten:") . "</b></td></tr>";
-            $content .= "<tr><td class=\"steel1\" align=\"center\" style=\"border-left: 1px solid black;border-right: 1px solid black;\"><input type=\"text\" name=\"edit_name\" style=\"width:99%\" value=\"" . $this->tree->tree_data[$this->edit_item_id]['name']
+            $content .= "<tr><td class=\"steel1\" align=\"center\" style=\"border-left: 1px solid black;border-right: 1px solid black;\"><input type=\"text\" name=\"edit_name\" style=\"width:99%\" value=\"" . htmlReady($this->tree->tree_data[$this->edit_item_id]['name'])
                 . "\"></td></tr>";
 
             $edit_name = "format";
@@ -640,7 +640,7 @@ class StudipLitListViewAdmin extends TreeView
             $content .= "\n<tr><td class=\"steelgraulight\" style=\"border-left: 1px solid black;border-right: 1px solid black;\" ><b>". _("Formatierung der Liste bearbeiten:") . "</b>"
                     . "&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/info-circle.png\""
                     . tooltip($this->format_info, TRUE, TRUE) . " class=\"text-top\"></td></tr>";
-            $content .= "<tr><td class=\"steel1\" align=\"center\" style=\"border-left: 1px solid black;border-right: 1px solid black;\"><textarea name=\"edit_{$edit_name}\" style=\"width:99%\" rows=\"$rows\">" . $this->tree->tree_data[$this->edit_item_id][$edit_name]
+            $content .= "<tr><td class=\"steel1\" align=\"center\" style=\"border-left: 1px solid black;border-right: 1px solid black;\"><textarea name=\"edit_{$edit_name}\" style=\"width:99%\" rows=\"$rows\">" . htmlReady($this->tree->tree_data[$this->edit_item_id][$edit_name])
                 . "</textarea></td></tr>";
             $content .= "\n<tr><td class=\"steelgraulight\" style=\"border-bottom: 1px solid black;;border-left: 1px solid black;border-right: 1px solid black;\" >
             <b>". _("Sichtbarkeit der Liste:") . "</b>&nbsp;&nbsp;&nbsp;

@@ -88,7 +88,9 @@ PageLayout::setTitle(($SessSemName[1] && ($list || $view || ($news_range_id != $
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
 
-include 'lib/include/admin_search_form.inc.php';
+if ($view_mode != 'user') {
+    include 'lib/include/admin_search_form.inc.php';
+}
 
 echo cssClassSwitcher::GetHoverJSFunction() . "\n";
 

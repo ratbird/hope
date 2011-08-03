@@ -106,7 +106,9 @@ if ($the_range != $auth->auth['uname'] && $the_range != 'studip' && !$isUserrang
 include_once('lib/include/html_head.inc.php');
 include_once('lib/include/header.php');
 
-include 'lib/include/admin_search_form.inc.php';
+if (!$isUserrange) {
+    include 'lib/include/admin_search_form.inc.php';
+}
 
 if ($_REQUEST["page"] == "edit")
     include (EVAL_PATH.EVAL_FILE_EDIT);

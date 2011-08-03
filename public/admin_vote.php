@@ -74,7 +74,9 @@ if ($list || $view && !(isDeputyEditAboutActivated() && isDeputy($auth->auth["ui
 include_once('lib/include/html_head.inc.php');
 include_once('lib/include/header.php');
 
-include 'lib/include/admin_search_form.inc.php';
+if ($list || $view) {
+    include 'lib/include/admin_search_form.inc.php';
+}
 
 if ($page == "edit")
     include 'lib/vote/vote_edit.inc.php';

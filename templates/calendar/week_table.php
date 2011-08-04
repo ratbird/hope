@@ -94,7 +94,7 @@ if ($calendar->view->getType() == 7) {
         </td>
     </tr>
     <tr>
-        <? // Zeile mit Tagesterminen audgeben ?>
+        <? // Zeile mit Tagesterminen ausgeben ?>
         <td class="precol1w"<?= $colspan_1 ?> height="25">
             <?= _("Tag") ?>
         </td>
@@ -163,96 +163,3 @@ if ($calendar->view->getType() == 7) {
         </td>
     </tr>
 </table>
-
-<?
-/*
-// put the table together
-for ($i = 1; $i < $rows + 2; $i++){
-    if ($compact) {
-        $tab[$i] .= '<tr>';
-    }
-    for ($j = 0; $j < $week_obj->getType(); $j++){
-        $tab[$i] .= $tab_arr[$j]['table'][$i - 1];
-    }
-    if ($compact) {
-        $tab[$i] .= "</tr>\n";
-    }
-}
-
-if ($compact) {
-    $tab = implode('', $tab);
-}
-
-$tab = array('table' => $tab, 'max_columns' => $max_columns);
-
-
-
-// Zeile mit Tagesterminen ausgeben
-$out .= "<tr><td class=\"precol1w\"$colspan_1 height=\"25\">" . _("Tag");
-$out .= "</td>{$tab['table'][1]}<td class=\"precol1w\"$colspan_1>";
-$out .= _("Tag") . "</td></tr>\n";
-$out .= "<tr height=\"2\"><td colspan=\"" . (2 * $colspan_1 + $colspan_2) . "\"></tr>\n";
-
-$j = $start;
-for ($i = 2; $i < sizeof($tab['table']); $i++) {
-    $out .= "<tr>";
-
-    if ($i % $rowspan == 0) {
-        if ($rowspan == 1) {
-            $out .= "<td class=\"precol1w\"$height>$j</td>";
-        } else {
-            $out .= "<td class=\"precol1w\" rowspan=\"$rowspan\">$j</td>";
-        }
-    }
-    if ($rowspan > 1) {
-        $minutes = (60 / $rowspan) * ($i % $rowspan);
-        if ($minutes == 0) {
-            $minutes = '00';
-        }
-        $out .= "<td class=\"precol2w\"$height>$minutes</td>\n";
-    }
-
-    $out .= $tab['table'][$i];
-
-    if ($rowspan > 1) {
-        $out .= "<td class=\"precol2w\">$minutes</td>\n";
-    }
-    if ($i % $rowspan == 0) {
-        if ($rowspan == 1) {
-            $out .= "<td class=\"precol1w\">$j</td>";
-        } else {
-            $out .= "<td class=\"precol1w\" rowspan=\"$rowspan\">$j</td>";
-        }
-        $j = $j + ceil($step / 3600);
-    }
-
-    $out .= "</tr>\n";
-}
-
-$out .= "<tr><td$colspan_1 align=\"center\">";
-if ($end < 23) {
-    $out .= "<a href=\"$PHP_SELF?cmd=showweek&atime=";
-    $out .= mktime($end + 1, 0, 0, date('n', $week_obj->getStart()),
-        date('j', $week_obj->getStart()), date('Y', $week_obj->getStart()));
-    $out .= '"><img border="0" src="' . Assets::image_path('icons/16/blue/arr_1down.png') . '" ';
-    $out .= tooltip(_("zeig danach")) . "></a>";
-} else {
-    $out .= '&nbsp';
-}
-$out .= "</td><td colspan=\"{$tab['max_columns']}\">&nbsp;</td>";
-$out .= "<td$colspan_1 align=\"center\">";
-if ($end < 23) {
-    $out .= "<a href=\"$PHP_SELF?cmd=showweek&atime=";
-    $out .= mktime($end + 1, 0, 0, date('n', $week_obj->getStart()),
-        date('j', $week_obj->getStart()), date('Y', $week_obj->getStart()));
-    $out .= '"><img border="0" src="' . Assets::image_path('icons/16/blue/arr_1down.png') . '" ';
-    $out .= tooltip(_("zeig danach")) . "></a>";
-} else {
-    $out .= '&nbsp;';
-}
-$out .= "</td></tr>\n</table>\n";
-
-return $out;
-*/
-
-?>

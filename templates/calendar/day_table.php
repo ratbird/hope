@@ -33,18 +33,7 @@ else {
 }
 
 $em = createEventMatrix($calendar->view, $start, $end, $step);
-/*
-$em['map'] = $em['map'];
-$em['day_events'] = $em['day_events'];
-$em['day_map'] = $em['day_map'];
 
-$em['cspan'] = $em['cspan'];
-$rows = $em['rows'];
-$colsp = $em['colsp'];
-$term = $em['term'];
-$max_cols = $em['max_cols'];
-$mapping = $em['mapping'];
-*/
 ?>
 <tr>
 

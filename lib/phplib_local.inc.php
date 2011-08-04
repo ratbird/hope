@@ -145,7 +145,6 @@ if (isset($GLOBALS['DB_STUDIP_SLAVE_HOST'])) {
     DBManager::getInstance()->aliasConnection('studip', 'studip-slave');
 }
 
-
 /**
  * @deprecated
  */
@@ -435,7 +434,7 @@ class Seminar_User extends PhpLibUser {
         }
         $this->that->ac_set_changed($this->id, $this->name, $timestamp);
     }
-    
+
     function __get($field)
     {
         return $this->user->$field;
@@ -449,6 +448,11 @@ class Seminar_User extends PhpLibUser {
     function __isset($field)
     {
         return isset($this->user->$field);
+    }
+
+    function getFullName($format = 'full')
+    {
+        return $this->user->getFullName($format);
     }
 }
 

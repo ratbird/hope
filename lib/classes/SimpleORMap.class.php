@@ -140,6 +140,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
 
     /**
      * deletes table rows specified by given class and sql clause
+     * should be overridden in subclass to omit $class param
      * @param string $class
      * @param string sql clause to use on the right side of WHERE
      * @return number
@@ -156,8 +157,10 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      * returns object of given class for given id or null
      * the param could be a string, an assoc array containing primary key field
      * or an already matching object. In all these cases an object is returned
+     * should be overridden in subclass to omit $class param
      *
-     * @param mixed $id
+     * @param string $class
+     * @param mixed id as string, object or assoc array
      * @return NULL|object
      */
     public static function toObject($class, $id_or_object)
@@ -415,9 +418,11 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
     /**
      * set multiple column values
      * if second param is set, existing data in object will be
-     * discarded, else new data overrides old data
+     * discarded and dirty state is cleared,
+     * else new data overrides old data
+     *
      * @param array $data assoc array
-     * @param boolean $reset
+     * @param boolean $reset existing data in object will be discarded
      * @return number of columns changed
      */
     function setData($data, $reset = false)
@@ -434,6 +439,9 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
                     ++$count;
                 }
             }
+        }
+        if ($reset) {
+            $this->content_db = $this->content;
         }
         return $count;
     }
@@ -504,7 +512,6 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
             $rs = DBManager::get()->query($query)->fetchAll(PDO::FETCH_ASSOC);
             if (isset($rs[0])) {
                 if ($this->setData($rs[0], true)){
-                    $this->content_db = $this->content;
                     $this->setNew(false);
                     return true;
                 } else {

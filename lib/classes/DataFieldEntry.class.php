@@ -109,8 +109,6 @@ abstract class DataFieldEntry
                     $object_class = is_object($GLOBALS['perm']) ? DataFieldStructure::permMask($GLOBALS['perm']->get_perm($rangeID)) : 0;
                     $clause2 = "((object_class & " . (int) $object_class . ") OR object_class IS NULL)";
                     break;
-                case 'plugin':
-                    $clause2 = '(object_class=' . (int) $object_class_hint . ')';
             }
             $query = "SELECT a.*, content ";
             $query .= "FROM datafields a LEFT JOIN datafields_entries b ON (a.datafield_id=b.datafield_id AND range_id = '$rangeID' $clause1) ";

@@ -403,8 +403,8 @@ class Seminar_User extends PhpLibUser {
         $this->user = User::find($uid);
         $this->cfg = UserConfig::get($uid);
         if (!isset($this->user)) {
-        	$this->user = new User();
-        	$this->user->user_id = 'nobody';
+            $this->user = new User();
+            $this->user->user_id = 'nobody';
         }
     }
 
@@ -436,7 +436,7 @@ class Seminar_User extends PhpLibUser {
         $this->that->ac_set_changed($this->id, $this->name, $timestamp);
     }
     
-	function __get($field)
+    function __get($field)
     {
         return $this->user->$field;
     }

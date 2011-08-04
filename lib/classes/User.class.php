@@ -24,7 +24,7 @@ class User extends SimpleORMap
     
     static function find($id) 
     {
-    	return SimpleORMap::find(__CLASS__, $id);
+        return SimpleORMap::find(__CLASS__, $id);
     }
     
     static function findByUsername($username)
@@ -52,7 +52,7 @@ class User extends SimpleORMap
     
     public static function toObject($id_or_object)
     {
-    	return SimpleORMap::toObject(__CLASS__, $id_or_object);
+        return SimpleORMap::toObject(__CLASS__, $id_or_object);
     }
     
     function __construct($id = null)
@@ -117,16 +117,16 @@ class User extends SimpleORMap
         $this->auth_user_md5->setNew($this->isNew());
         $this->user_info->setData($data, true);
         $this->user_info->setNew($this->isNew() && $this->content['user_info_set']);
-		
+        
         $trigger_chdate = !$this->isFieldDirty('chdate') && ($this->auth_user_md5->isDirty() || $this->user_info->isDirty());
-		
+        
         $ret_a = $this->auth_user_md5->store();
         $ret_u = $this->user_info->store();
         
         if ($ret_a === false || $ret_u === false) {
             $ret = false;
         } else if ($ret_a === 1 || $ret_u === 1) {
-        	$this->triggerChdate();
+            $this->triggerChdate();
             $ret = 1;
         } else {
             $ret = 0;

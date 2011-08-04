@@ -48,7 +48,7 @@ class RoomRequest extends SimpleORMap
         $db = DbManager::get();
         $id = self::existsForSQL(($is_open ? "closed = 0 AND " : "") . "termin_id = '' AND metadate_id = '' AND seminar_id = " . $db->quote($seminar_id));
         return $id;
-        }   
+    }
 
     static function existsByDate($termin_id, $is_open = false)
     {
@@ -70,6 +70,7 @@ class RoomRequest extends SimpleORMap
         $sql = "SELECT request_id FROM resources_requests WHERE " . $where;
         return $db->query($sql)->fetchColumn();
     }
+
     //Konstruktor
     function __construct($id = null)
     {
@@ -140,9 +141,9 @@ class RoomRequest extends SimpleORMap
             $db = DBManager::get();
 
             $st = $db->prepare("SELECT  b.property_id,b.name, b.type, b.system
-            					FROM resources_categories_properties a
-            					LEFT JOIN resources_properties b USING (property_id)
-            					WHERE requestable = 1 AND category_id = ?");
+                                FROM resources_categories_properties a
+                                LEFT JOIN resources_properties b USING (property_id)
+                                WHERE requestable = 1 AND category_id = ?");
             if ($st->execute(array($this->category_id))) {
                 $available_properties = array_map('array_shift', $st->fetchAll(PDO::FETCH_ASSOC|PDO::FETCH_GROUP));
             }
@@ -189,16 +190,16 @@ class RoomRequest extends SimpleORMap
 
     private function inititalizeProperties()
     {
-            $this->properties = array();
+        $this->properties = array();
         $this->properties_changed = true;
-            if ($this->default_seats) {
-                foreach ($this->getAvailableProperties() as $key=>$val) {
-                    if ($val["system"] == 2) {
-                        $this->setPropertyState($key, $this->default_seats);
-                    }
+        if ($this->default_seats) {
+            foreach ($this->getAvailableProperties() as $key=>$val) {
+                if ($val["system"] == 2) {
+                    $this->setPropertyState($key, $this->default_seats);
                 }
             }
         }
+    }
 
     function setValue($field, $value)
     {
@@ -206,13 +207,15 @@ class RoomRequest extends SimpleORMap
         if ($field == 'id') {
             return $this->setId($value);
         }
+
         if ($field == 'category_id') {
             if ($value != $this->category_id) {
                 parent::setValue($field, $value);
                 $this->inititalizeProperties();
                 return $this->category_id;
-    }   
+            }
         }
+
         return parent::setValue($field, $value);
     }
 
@@ -264,10 +267,12 @@ class RoomRequest extends SimpleORMap
         if ($this->properties[$property_id]['state'] !== $value) {
             $this->properties_changed = true;
         }
-        if ($value)
+
+        if ($value) {
             $this->properties[$property_id] = array("state" => $value);
-        else
+        } else {
             $this->properties[$property_id] = FALSE;
+        }
     }
     
     function setDefaultSeats($value)
@@ -364,9 +369,9 @@ class RoomRequest extends SimpleORMap
         if ($found) {
         $db = DBManager::get();
             $st = $db->prepare("SELECT a.property_id, state, mkdate, chdate, type, name, options, system
-            					FROM resources_requests_properties a
-            					LEFT JOIN resources_properties b USING (property_id)
-            					WHERE a.request_id=? ");
+                                FROM resources_requests_properties a
+                                LEFT JOIN resources_properties b USING (property_id)
+                                WHERE a.request_id=? ");
             if ($st->execute(array($this->getId()))) {
                 $this->properties = array_map('array_shift', $st->fetchAll(PDO::FETCH_ASSOC|PDO::FETCH_GROUP));
                 $this->properties_changed = false;
@@ -509,16 +514,16 @@ class RoomRequest extends SimpleORMap
         if ($this->metadate_id) return 'cycle';
         if ($this->seminar_id) return 'course';
         return null;
-        }
+    }
         
     function getStatus()
     {
         switch ($this->getClosed()) {
-                case '0'; return 'open'; break;
-                case '1'; return 'pending'; break;
-                case '2'; return 'closed'; break;
-                case '3'; return 'declined'; break;
-    }
+            case '0'; return 'open'; break;
+            case '1'; return 'pending'; break;
+            case '2'; return 'closed'; break;
+            case '3'; return 'declined'; break;
+        }
     }
 
     function getInfo()
@@ -540,13 +545,14 @@ class RoomRequest extends SimpleORMap
                         $prop .= _('vorhanden');
                     } else {
                         $prop .= _('nicht vorhanden');
-    }
+                    }
                 } else {
                     $prop .= $val['state'];
-}
+                }
                 $requestData[] = $prop;
             }
-            if  ($this->getClosed() == 0) {
+
+            if ($this->getClosed() == 0) {
                 $txt = _("Die Anfrage wurde noch nicht bearbeitet.");
             } else if ($this->getClosed() == 3) {
                 $txt = _("Die Anfrage wurde bearbeitet und abgelehnt.");
@@ -572,6 +578,4 @@ class RoomRequest extends SimpleORMap
         }
     }
 
-
 }
-?>

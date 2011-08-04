@@ -506,13 +506,16 @@ class SingleDate {
    * @return string the mapped text
    */
     function getRoomRequestStatus() {
-            // check if there is any room-request
-       $this->request_id = RoomRequest::existsByDate($this->termin_id);
-                if (!$this->request_id) return FALSE;
-            // room-request found, parse int-status and return string-status
+        // check if there is any room-request
+        $this->request_id = RoomRequest::existsByDate($this->termin_id);
+        if (!$this->request_id) {
+            return FALSE;
+        }
+
+       // room-request found, parse int-status and return string-status
        $this->room_request = RoomRequest::find($this->request_id);
        return $this->room_request->getStatus();
-                }
+    }
 
     function getRequestedRoom() {
         if ($this->hasRoomRequest()) {
@@ -524,10 +527,9 @@ class SingleDate {
     }
 
     function getRoomRequestInfo() {
-        $room_request = $this->getRoomRequestStatus();
         if ($this->room_request) {
             return jsReady($this->room_request->getInfo(), 'inline-single');
-                        } else {
+        } else {
             return FALSE;
         }
     }

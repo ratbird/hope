@@ -73,7 +73,7 @@ class SemesterHoliday extends SimpleORMap
         $ret = array();
         if ($timestamp_start < $timestamp_end) {
             foreach(self::getAll() as $holiday) {
-                if ( ($holiday->beginn >= $timestamp_start && $holiday->beginn <= $timestamp_end) 
+                if ( ($holiday->beginn >= $timestamp_start && $holiday->beginn <= $timestamp_end)
                     || ($holiday->beginn < $timestamp_start && $holiday->ende <= $timestamp_end) ) {
                     $ret[] = $holiday;
                 }
@@ -84,13 +84,13 @@ class SemesterHoliday extends SimpleORMap
 
     /**
      * returns all SemesterHolidays for given semester
-     * 
+     *
      * @param mixed semester object or id as string or assoc array
      * @return array of SemesterHoliday
      */
     static function findBySemester($semester)
     {
-        $semester = self::toObject($semester);
+        $semester = Semester::toObject($semester);
         return self::findByTimestampRange($semester->beginn, $semester->ende);
     }
 

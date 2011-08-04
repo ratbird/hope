@@ -116,6 +116,18 @@ class Semester extends SimpleORMap
     }
 
     /**
+     * returns user object for given id or null
+     * the param could be a string, an assoc array containing primary key field
+     * or an already matching object. In all these cases an object is returned
+     *
+     * @param mixed $id_or_object id as string, object or assoc array
+     * @return Semester
+     */
+    public static function toObject($id_or_object)
+    {
+        return SimpleORMap::toObject(__CLASS__, $id_or_object);
+    }
+    /**
      *
      * @param string $id primary key of table
      */

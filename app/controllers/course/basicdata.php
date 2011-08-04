@@ -43,7 +43,7 @@ class Course_BasicdataController extends AuthenticatedController
         }
         Request::set('new_tut_parameter', $this->flash['new_tut_parameter']);
 
-        $this->course_id = Request::option('cid') ? Request::option('cid') : $course_id;
+        $this->course_id = Request::option('cid', $course_id);
 
         if ($perm->have_perm('admin')) {
             //Navigation im Admin-Bereich:

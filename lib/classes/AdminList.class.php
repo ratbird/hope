@@ -35,7 +35,6 @@ class AdminList {
      */
     static public function getInstance() {
         if (!self::$instance) {
-            //include_once 'lib/admin_search.inc.php';
             self::$instance = new AdminList();
         }
         return self::$instance;

@@ -82,9 +82,9 @@ function output_data($object_data, $output_mode = "file", $flush = false)
 
     fwrite($fp, $object_data);
 
-    if($flush && is_resource($fp)) {
+    if ($flush && is_resource($fp)) {
         rewind($fp);
-        if (in_array($output_mode, words('file processor passthrough choose')) ) {
+        if (in_array($output_mode, words('file processor passthrough choose'))) {
             stream_copy_to_stream($fp, $xml_file);
         } elseif ($output_mode == "direct") {
             $out = fopen('php://output', 'w');
@@ -173,7 +173,7 @@ function export_range($range_id)
     if ($db->next_record() || $range_id=='root'){
         if (!$output_startet)  output_data(xml_header(), $o_mode);
         $output_startet = true;
-        if (isset($ex_sem) && $semester = Semester::find($ex_sem)){
+        if (isset($ex_sem) && $semester = Semester::find($ex_sem)) {
             $args = array('sem_number' => array(SemesterData::GetSemesterIndexById($ex_sem)));
         } else {
             $args = array();
@@ -182,8 +182,8 @@ function export_range($range_id)
             $the_tree = TreeAbstract::GetInstance('StudipSemTree', $args);
             $sem_ids = array_unique($the_tree->getSemIds($range_id, true));
         }
-        if(is_array($sem_ids) || $range_id == 'root'){
-            if(is_array($sem_ids)) {
+        if (is_array($sem_ids) || $range_id == 'root') {
+            if (is_array($sem_ids)) {
                 $to_export = DbManager::get()
                         ->query("SELECT DISTINCT Institut_id FROM seminare
                                   WHERE Seminar_id IN('".join("','", $sem_ids)."')")
@@ -196,7 +196,10 @@ function export_range($range_id)
                                    "WHERE seminare.start_time <=".$semester->beginn." AND (".$semester->beginn." <= (seminare.start_time + seminare.duration_time) OR seminare.duration_time = -1)"
                                     : ""))->fetchAll(PDO::FETCH_COLUMN);
             }
-            foreach($to_export as $inst) export_inst($inst, $sem_ids);
+
+            foreach($to_export as $inst) {
+                export_inst($inst, $sem_ids);
+            }
         }
     }
 
@@ -301,10 +304,7 @@ function export_sem($inst_id, $ex_sem_id = "all")
             $order = "seminare.status, seminare.Name";
             $group = "FIRSTGROUP";
             $group_tab_zelle = "status";
-//          $subgroup = "FIRSTGROUP";
-//          $subgroup_tab_zelle = "name";
             $do_group = true;
-//          $do_subgroup = true;
         break;
         default:
             $order = "seminare.status, seminare.Name";
@@ -448,7 +448,7 @@ function export_sem($inst_id, $ex_sem_id = "all")
                 }
             $data_object .= xml_close_tag( $xml_groupnames_lecture["childgroup2"] );
         // freie Datenfelder ausgeben
-            $data_object .= export_datafields($db->f("seminar_id"), $xml_groupnames_lecture["childgroup4"], $xml_groupnames_lecture["childobject4"],'sem',$db->f("status"));
+            $data_object .= export_datafields($db->f("seminar_id"), $xml_groupnames_lecture["childgroup4"], $xml_groupnames_lecture["childobject4"], 'sem', $db->f("status"));
             $data_object .= xml_close_tag( $xml_groupnames_lecture["object"] );
             reset($xml_names_lecture);
             output_data($data_object, $o_mode);
@@ -592,7 +592,7 @@ function export_teilis($inst_id, $ex_sem_id = "no")
                             $data_object_tmp .= xml_tag($val, $db->f($key));
                     }
                 // freie Datenfelder ausgeben
-                    $data_object_tmp .= export_datafields($db->f("user_id"), $xml_groupnames_person["childgroup1"], $xml_groupnames_person["childobject1"],'user');
+                    $data_object_tmp .= export_datafields($db->f("user_id"), $xml_groupnames_person["childgroup1"], $xml_groupnames_person["childobject1"], 'user');
 
                     $data_object_tmp .= export_additional_data($db->f("user_id"), $range_id, $xml_groupnames_person['childgroup2']);
 
@@ -736,7 +736,7 @@ function export_persons($persons)
                 if ($db->f($key) != "") $data_object .= xml_tag($val, $db->f($key));
             }
             // freie Datenfelder ausgeben
-            $data_object .= export_datafields($db->f("user_id"), $xml_groupnames_person["childgroup1"], $xml_groupnames_person["childobject1"],'user');
+            $data_object .= export_datafields($db->f("user_id"), $xml_groupnames_person["childgroup1"], $xml_groupnames_person["childobject1"], 'user');
             $data_object .= xml_close_tag( $xml_groupnames_person["object"] );
             reset($xml_names_person);
             output_data($data_object, $o_mode);
@@ -758,7 +758,7 @@ function export_persons($persons)
 function export_datafields($range_id, $childgroup_tag, $childobject_tag, $object_type = null, $object_class_hint = null){
     $ret = '';
     $d_fields = false;
-    $localEntries = DataFieldEntry::getDataFieldEntries($range_id,$object_type, $object_class_hint);
+    $localEntries = DataFieldEntry::getDataFieldEntries($range_id, $object_type, $object_class_hint);
     if(is_array($localEntries )){
         foreach ($localEntries as $entry){
             if ($entry->structure->accessAllowed($GLOBALS['perm'], $GLOBALS['user']->id) && $entry->getDisplayValue()) {

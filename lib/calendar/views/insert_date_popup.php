@@ -23,19 +23,17 @@ page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" =>
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 require_once ('config.inc.php');
 require_once ('lib/visual.inc.php');
-$atime = (int) $_REQUEST['atime'];
-$element_switch = (isset($_REQUEST['element_switch']) ? $_REQUEST['element_switch'] : 0); // Wert für Auswahl der Feldbezeichner
-$element_depending = (isset($_REQUEST['element_depending'])
-        && preg_match('!^[0-9a-z_-]{2,40}$!i', $_REQUEST['element_depending'])) ? $_REQUEST['element_depending'] : '';
-$form_name = (isset($_REQUEST['form_name'])
-        && preg_match('!^[0-9a-z_-]{2,40}$!i', $_REQUEST['form_name'])) ? $_REQUEST['form_name'] : '';
-$submit = intval($_REQUEST['submit']);
-$c = (isset($_REQUEST['c'])) ? $_REQUEST['c'] : 0;                   // Zaehler wenn mehrere gleiche Eingabefelder im Zielformular
-$mcount = (isset($_REQUEST['mcount'])) ? $_REQUEST['mcount'] : 1;    // Anzahl der anzuzeigenden Monate
-$ss = (isset($_REQUEST['ss'])) ? sprintf('%02d', $_REQUEST['ss']) : ''; // Startstunde
-$sm = (isset($_REQUEST['sm'])) ? sprintf('%02d', $_REQUEST['sm']) : ''; // Startminute
-$es = (isset($_REQUEST['es'])) ? sprintf('%02d', $_REQUEST['es']) : ''; // Endstunde
-$em = (isset($_REQUEST['em'])) ? sprintf('%02d', $_REQUEST['em']) : ''; // Endminute
+$atime = Request::int('atime');
+$element_switch = Request::get('element_switch', 0); // Wert für Auswahl der Feldbezeichner
+$element_depending = (!is_null(Request::get('element_depending')) && preg_match('!^[0-9a-z_-]{2,40}$!i', Request::get('element_depending'))) ? Request::get('element_depending') : '';
+$form_name = (!is_null(Request::get('form_name')) && preg_match('!^[0-9a-z_-]{2,40}$!i', Request::get('form_name'))) ? $_REQUEST['form_name'] : '';
+$submit = Request::int('submit');
+$c = !is_null(Request::get('c')) ? Request::get('c') : 0;                   // Zaehler wenn mehrere gleiche Eingabefelder im Zielformular
+$mcount = Request::get('mcount', 1);    // Anzahl der anzuzeigenden Monate
+$ss = Request::int('ss', ''); // Startstunde
+$sm = Request::int('sm', ''); // Startminute
+$es = Request::int('es', ''); // Endstunde
+$em = Request::int('em', ''); // Endminute
 $q = ($ss !== '') ? "&ss=$ss&sm=$sm&es=$es&em=$em" : '';
 
 // Array mit Standardzeiten vorhanden?
@@ -331,7 +329,7 @@ EOT;
 
 require_once($RELATIVE_PATH_CALENDAR . '/calendar_visual.inc.php');
 
-$imt = (isset($_REQUEST['imt']) && $_REQUEST['imt']) ? intval($_REQUEST['imt']) : time();
+$imt = Request::int('imt', time());
 
 $js['function'] = 'insert_date' . $function_addition;
 
@@ -392,37 +390,21 @@ if ($mcount > 3) {
         echo '<tr>';
         $zeiten_buttons = '<a href="javascript:insert_time' . $function_addition . '();">' . makeButton('uebernehmen', 'img') . '</a> &nbsp; <a href="javascript:window.close();">' . makeButton('abbrechen', 'img') . '</a>';
         if ($kalender) {
-            echo '<td class="blank">&nbsp;<a href="', $PHP_SELF, '?imt=', mktime(0, 0, 0, $atimex['mon'] - $mcount, 10, $atimex['year']);
-            echo ($form_name ? "&form_name=$form_name" : '');
-            echo ($submit ? '&submit=1' : '');
-            echo '&mcount=', $mcount, '&element_switch=', $element_switch, '&c=', $c, '&atime=', $atime, $q, '">';
-            echo '<img border="0" src="' . $GLOBALS['ASSETS_URL'] . 'images/calendar_previous_double_small.gif"';
-            echo tooltip($mcount . ' ' . _('Monate zurück')), ' border="0"></a>';
-            echo '&nbsp;<a href="', $PHP_SELF, '?imt=', mktime(0, 0, 0, $atimex['mon'] - $mcounth, 10, $atimex['year']);
-            echo ($form_name ? "&form_name=$form_name" : '');
-            echo ($submit ? '&submit=1' : '');
-            echo '&mcount=', $mcount, '&element_switch=', $element_switch, '&c=', $c, '&atime=', $atime, $q, '">';
-            echo '<img border="0" src="' . $GLOBALS['ASSETS_URL'] . 'images/calendar_previous_small.gif"';
-            echo tooltip($mcounth . ' ' . _('Monate zurück')), ' border="0"></a></td>', "\n";
+            echo '<td class="blank">&nbsp;<a href="';
+            echo URLHelper::getLink('', array('imt' => mktime(0, 0, 0, $atimex['mon'] - $mcount, 10, $atimex['year']), 'form_name' => ($form_name ? $form_name : ''), 'submit' => ($submit ? '1' : ''), 'mcount' =>  $mcount, 'element_switch' => $element_switch, 'c' => $c, 'atime' => $atime)) . $q . '">';
+            echo Assets::img('icons/16/blue/arr_2left.png', tooltip($mcount . ' ' . _('Monate zurück'))) . '</a>';
+            echo '&nbsp;<a href="' . URLHelper::getLink('', array('imt' => mktime(0, 0, 0, $atimex['mon'] - $mcounth, 10, $atimex['year']), 'form_name' => ($form_name ? $form_name : ''), 'submit' => ($submit ? '1' : ''), 'mcount' => $mcount, 'element_switch' => $element_switch, 'c' => $c, 'atime' => $atime)) .  $q . '">';
+            echo Assets::img('icons/16/blue/arr_1left.png', tooltip($mcounth . ' ' . _('Monate zurück'))) . '</a></td>', "\n";
             if ($mcounth - 2 > 0) {
                 echo '<td class="blank" colspan="', ($mcounth - 2), '" align=center>';
                 if ($zeiten)
                     echo $zeiten_buttons;
                 echo '&nbsp;</td>';
             }
-            echo '<td class="blank" align="right"><a href="', $PHP_SELF, '?imt=';
-            echo mktime(0, 0, 0, $atimex['mon'] + $mcounth, 10, $atimex['year']), '&mcount=', $mcount;
-            echo ($form_name ? "&form_name=$form_name" : '');
-            echo ($submit ? '&submit=1' : '');
-            echo '&element_switch=', $element_switch, '&c=', $c, '&atime=', $atime, $q, '">';
-            echo '<img border="0" src="' . $GLOBALS['ASSETS_URL'] . 'images/calendar_next_small.gif"';
-            echo tooltip($mcounth . ' ' . _('Monate vor')), ' border="0"></a>&nbsp;', "\n";
-            echo '<a href="', $PHP_SELF, '?imt=', mktime(0, 0, 0, $atimex['mon'] + $mcount, 10, $atimex['year']);
-            echo ($form_name ? "&form_name=$form_name" : '');
-            echo ($submit ? '&submit=1' : '');
-            echo '&mcount=', $mcount, '&element_switch=', $element_switch, '&c=', $c, '&atime=', $atime, $q, '">';
-            echo '<img border="0" src="' . $GLOBALS['ASSETS_URL'] . 'images/calendar_next_double_small.gif"';
-            echo tooltip($mcount . ' ' . _('Monate vor')), ' border="0"></a>&nbsp;</td>';
+            echo '<td class="blank" align="right"><a href="' . URLHelper::getLink('', array('imt' => mktime(0, 0, 0, $atimex['mon'] + $mcounth, 10, $atimex['year']), 'mcount' => $mcount, 'form_name' => ($form_name ? $form_name : ''), 'submit' => ($submit ? '1' : ''), 'element_switch' =>  $element_switch, 'c' => $c, 'atime' => $atime)) . $q . '">';
+            echo Assets::img('icons/16/blue/arr_1right.png', tooltip($mcounth . ' ' . _('Monate vor'))) . '</a>&nbsp;', "\n";
+            echo '<a href="' . URLHelper::getLink('', array('imt' => mktime(0, 0, 0, $atimex['mon'] + $mcount, 10, $atimex['year']), 'form_name' => ($form_name ? $form_name : ''), 'submit' => ($submit ? '1' : ''), 'mcount' => $mcount, 'element_switch' => $element_switch, 'c' => $c, 'atime' => $atime)) . $q . '">';
+            echo Assets::img('icons/16/blue/arr_2right.png', tooltip($mcount . ' ' . _('Monate vor'))) . '</a>&nbsp;</td>';
         } elseif ($zeiten) {
             echo '<td class="blank" colspan="', $mcounth, '" align="center">', $zeiten_buttons, "</td>\n";
         }
@@ -430,9 +412,9 @@ if ($mcount > 3) {
     }
 } else { // nur einen Monat anzeigen
     if ($studipform) {
-        echo includeMonth($imt, "$PHP_SELF?form_name=$form_name&submit=$submit&element_switch=$element_switch&c=$c&atime=", 'NOKW', $js, $atime);
+        echo includeMonth($imt, URLHelper::getLink('', array('form_name' => $form_name, 'submit' => $submit, 'element_switch' => $element_switch, 'c' => $c, 'atime' => '')), 'NOKW', $js, $atime);
     } else {
-        echo includeMonth($imt, "$PHP_SELF?element_switch=$element_switch&c=$c&atime=", 'NOKW', $js, $atime);
+        echo includeMonth($imt, URLHelper::getLink('', array('element_switch' => $element_switch, 'c' => $c, 'atime' => '')), 'NOKW', $js, $atime);
     }
 }
 echo "</body>\n</html>";

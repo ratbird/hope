@@ -353,7 +353,7 @@ if ($start_level) { //create defaults
         $errormsg = "error§" . sprintf(_("Veranstaltungen dieser Kategorie dürfen in dieser Installation nicht angelegt werden!"));
     } else {
         if (!array_key_exists('sem_class', $sem_create_data)) {
-        $sem_create_data['sem_class'] = $class;
+            $sem_create_data['sem_class'] = $class;
         }
         if (!array_key_exists('sem_modules', $sem_create_data)){
             foreach ($SEM_TYPE as $key => $val) {
@@ -366,20 +366,25 @@ if ($start_level) { //create defaults
 
         //add default values from config.inc.php ($SEM_CLASS)
         if ($SEM_CLASS[$class]['turnus_default'] && !array_key_exists('term_art', $sem_create_data)) {
-        $sem_create_data['term_art'] = $SEM_CLASS[$class]['turnus_default'];
+            $sem_create_data['term_art'] = $SEM_CLASS[$class]['turnus_default'];
         }
+
         if ($SEM_CLASS[$class]['default_read_level'] && !array_key_exists('sem_sec_lese', $sem_create_data)) {
-        $sem_create_data['sem_sec_lese'] = $SEM_CLASS[$class]['default_read_level'];
+            $sem_create_data['sem_sec_lese'] = $SEM_CLASS[$class]['default_read_level'];
         }
-        if ($SEM_CLASS[$class]['default_write_level'] && !array_key_exists('sem_sec_schreib', $sem_create_data)){
-        $sem_create_data['sem_sec_schreib'] = $SEM_CLASS[$class]['default_write_level'];
+
+        if ($SEM_CLASS[$class]['default_write_level'] && !array_key_exists('sem_sec_schreib', $sem_create_data)) {
+            $sem_create_data['sem_sec_schreib'] = $SEM_CLASS[$class]['default_write_level'];
         }
-        if ($SEM_CLASS[$class]['admission_prelim_default'] && !array_key_exists('sem_payment', $sem_create_data)){
+
+        if ($SEM_CLASS[$class]['admission_prelim_default'] && !array_key_exists('sem_payment', $sem_create_data)) {
             $sem_create_data['sem_payment'] = $SEM_CLASS[$class]['admission_prelim_default'];
         }
-        if ($SEM_CLASS[$class]['admission_type_default'] && !array_key_exists('sem_admission', $sem_create_data)){
+
+        if ($SEM_CLASS[$class]['admission_type_default'] && !array_key_exists('sem_admission', $sem_create_data)) {
             $sem_create_data['sem_admission'] = $SEM_CLASS[$class]['admission_type_default'];
         }
+
         //if current user is 'dozent' add to list of lecturers
         if ($auth->auth['perm'] == 'dozent') {
             $sem_create_data['sem_doz'][$user->id] = 1;

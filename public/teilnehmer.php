@@ -523,10 +523,11 @@ if (Seminar_Session::check_ticket($studipticket) && !LockRules::Check($id, 'part
         $csv_count_insert = 0;
         $csv_count_multiple = 0;
         $df_id = null;
-        if ($_REQUEST['csv_import_format'] && !in_array($_REQUEST['csv_import_format'], words('realname username'))){
+        if ($_REQUEST['csv_import_format'] && !in_array($_REQUEST['csv_import_format'], words('realname username'))) {
             //check accessible datafields for ("user" => 1, "autor" => 2, "tutor" => 4, "dozent" => 8)
             foreach(DataFieldStructure::getDataFieldStructures('user', (1|2|4|8), true) as $df) {
-                if ($df->accessAllowed($perm) && in_array($df->getId(), $TEILNEHMER_IMPORT_DATAFIELDS) && $df->getId() == $_REQUEST['csv_import_format']) {
+                if ($df->accessAllowed($perm) && in_array($df->getId(), $TEILNEHMER_IMPORT_DATAFIELDS) 
+                    && $df->getId() == $_REQUEST['csv_import_format']) {
                     $df_id = $df->getId();
                     break;
                 }
@@ -546,7 +547,7 @@ if (Seminar_Session::check_ticket($studipticket) && !LockRules::Check($id, 'part
                         "(Nachname LIKE '" . $csv_nachname . "'"
                         . ($csv_vorname ? " AND Vorname LIKE '" . $csv_vorname . "'" : '')
                         . ") ORDER BY Nachname");
-                    } elseif($_REQUEST['csv_import_format'] == 'username') {
+                    } elseif ($_REQUEST['csv_import_format'] == 'username') {
                         $db->query("SELECT a.user_id, username, " . $_fullname_sql['full_rev'] ." AS fullname, perms, b.Seminar_id as is_present FROM auth_user_md5 a ".
                         "LEFT JOIN user_info USING(user_id) LEFT JOIN seminar_user b ON (b.user_id=a.user_id AND b.Seminar_id='$SessSemName[1]')  ".
                         "WHERE perms IN ('autor','tutor','dozent') AND ".
@@ -560,11 +561,17 @@ if (Seminar_Session::check_ticket($studipticket) && !LockRules::Check($id, 'part
                     }
                     if ($db->num_rows() > 1) {
                         while ($db->next_record()) {
-                            if($db->f('is_present')) $csv_count_present++;
-                            else $csv_mult_founds[$csv_line][] = $db->Record;
+                            if($db->f('is_present')) {
+                                $csv_count_present++;
+                            } else {
+                                $csv_mult_founds[$csv_line][] = $db->Record;
+                            }
                         }
-                        if (is_array($csv_mult_founds[$csv_line])) $csv_count_multiple++;
-                    } else if ($db->num_rows() > 0) {
+
+                        if (is_array($csv_mult_founds[$csv_line])) {
+                            $csv_count_multiple++;
+                        }
+                    } elseif ($db->num_rows() > 0) {
                         $db->next_record();
                         if(!$db->f('is_present')){
                             if(insert_seminar_user($id, $db->f('user_id'), 'autor', isset($_REQUEST['consider_contingent']), $_REQUEST['consider_contingent'])){
@@ -1684,7 +1691,7 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
     if (!sizeof($csv_mult_founds)) {
         $accessible_df = array();
         //check accessible datafields for ("user" => 1, "autor" => 2, "tutor" => 4, "dozent" => 8)
-        foreach(DataFieldStructure::getDataFieldStructures('user', (1|2|4|8), true) as $df) {
+        foreach (DataFieldStructure::getDataFieldStructures('user', (1|2|4|8), true) as $df) {
             if ($df->accessAllowed($perm) && in_array($df->getId(), $TEILNEHMER_IMPORT_DATAFIELDS)) {
                 $accessible_df[] = $df;
             }
@@ -1703,14 +1710,16 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
         echo '<select style="margin-left:10px;" name="csv_import_format">';
         echo '<option value="realname">'._("Nachname, Vorname").' &crarr;</option>';
         echo '<option value="username" '.($_REQUEST['csv_import_format'] == 'username' ? 'selected': '').'>'. _("Nutzername"). '&crarr;</option>';
-        foreach($accessible_df as $df) {
+        foreach ($accessible_df as $df) {
             echo '<option value="' . $df->getId() . '" '.($_REQUEST['csv_import_format'] ==  $df->getId()? 'selected': '').'>'. htmlReady($df->getName()) . '&crarr;</option>';
         }
         echo '</select></div>';
         echo "<textarea name=\"csv_import\" rows=\"6\" cols=\"50\">";
-        foreach($csv_not_found as $line) echo htmlReady($line) . chr(10);
+        foreach ($csv_not_found as $line) {
+            echo htmlReady($line) . chr(10);
+        }
         echo "</textarea>";
-        if($sem->isAdmissionEnabled()){
+        if ($sem->isAdmissionEnabled()) {
             echo '<br><br><img src="'.$GLOBALS['ASSETS_URL'].'images/icons/16/black/info.png" align="absmiddle" hspace="3" border="0" '.tooltip(_("Mit dieser Einstellung beeinflussen Sie, ob Teilnehmer die Sie hinzufügen auf die Kontingentplätze angerechnet werden."),1,1).' >';
             echo '<font size="-1"><label for="kontingent2">'._("Kontingent berücksichtigen:");
             echo '&nbsp;<select name="consider_contingent" id="kontingent2">';
@@ -1746,11 +1755,16 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
                 printf("<td%s width=\"60%%\">", $cssSw->getFullClass());
                 echo "<select name=\"selected_users[]\">\n";
                 echo '<option value=""> - - ' . _("bitte ausw&auml;hlen") . " - - </option>\n";
+
                 foreach ($csv_mult_found as $csv_found) {
-                    if ($csv_found['is_present']) continue;
+                    if ($csv_found['is_present']) {
+                        continue;
+                    }
+
                     echo "<option value=\"{$csv_found['username']}\">";
                     echo htmlReady(my_substr($csv_found['fullname'], 0, 50)) . " ({$csv_found['username']}) - {$csv_found['perms']}</option>\n";
                 }
+
                 echo "</select>\n</td></tr>\n";
                 $cssSw->switchClass();
             }

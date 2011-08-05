@@ -37,7 +37,7 @@
 // +---------------------------------------------------------------------------+
 require_once ('lib/visual.inc.php');
 
-/* --- 
+/* ---
  * Mögliche Datenschutz-/Sichtbarkeitsentscheidung: Beim ersten Login wird ein
  * informierender Text mit Entscheidungsmöglichkeit: "Ich will sichtbar sein" oder
  * "Ich will unsichtbar sein" angezeigt.
@@ -45,7 +45,7 @@ require_once ('lib/visual.inc.php');
  * Bei Nutzung dieser Funktion unbedingt die Texte unter locale/de/LC_HELP/visibility_decision.php bzw.
  * locale/en/LC_HELP/visibility_decision.php an die lokalen Verhältnisse anpassen!
  */
-if ($GLOBALS['USER_VISIBILITY_CHECK']) 
+if ($GLOBALS['USER_VISIBILITY_CHECK'])
 {
    require_once('lib/user_visible.inc.php');
    first_decision($GLOBALS['user']->id);
@@ -70,7 +70,11 @@ if (PageLayout::isHeaderEnabled()) //Einige Seiten benötigen keinen Header, spri
                 $header_template->public_hint = _('öffentliche Veranstaltung');
             }
         }
-
+        //show hint if change view is used
+        if (Navigation::hasItem('/course') && Navigation::getItem('/course')->isActive() &&
+            isset($_SESSION['seminar_change_view_'.$GLOBALS['SessionSeminar']])) {
+            $header_template->changed_status = $_SESSION['seminar_change_view_'.$GLOBALS['SessionSeminar']];
+        }
         if ($GLOBALS['user']->cfg->getValue('ACCESSKEY_ENABLE')){
             $header_template->accesskey_enabled = true;
         }

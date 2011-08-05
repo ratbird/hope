@@ -11,7 +11,7 @@
  * @author      Thomas Hackl <thomas.hackl@uni-passau.de>
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
- * @since       2.1
+ * @since       2.2
  */
 
 require_once 'app/controllers/authenticated_controller.php';
@@ -19,39 +19,29 @@ require_once 'app/controllers/authenticated_controller.php';
 /**
  * This controller realises a redirector for administrative pages
  *
- * @since 2.1
+ * @since 2.2
  * @author hackl
  */
 class Course_ChangeViewController extends AuthenticatedController
 {
 
-    var $changedPerm = 'dozent';
-
     // see Trails_Controller#before_filter
     function before_filter(&$action, &$args) {
         parent::before_filter($action, $args);
 
-        if ($_SESSION['SessSemName']['class'] == 'sem') {
-            if (SeminarCategories::GetBySeminarId($_SESSION['SessSemName'][1])->studygroup_mode == true) {
-                throw new Exception(_('Dies ist eine Studiengruppe und kein Seminar!'));
-            }
-        }
-        PageLayout::setTitle(sprintf(_("%s - Ansicht simulieren"), $GLOBALS['SessSemName']["header_line"]));
-        PageLayout::setHelpKeyword('Basis.InVeranstaltungAnsichtSimulieren');
-    }
-
-    function index_action() {
-    }
-
-    function set_action() {
-        session_start();
-        if ($_SESSION['seminar_change_view_'.Request::option('cid')]) {
-            session_unregister('seminar_change_view_'.Request::option('cid'));
-            unset($_SESSION['seminar_change_view_'.Request::option('cid')]);
+        $course_id = Request::option('cid');
+        if (isset($_SESSION['seminar_change_view_' . $course_id])) {
+            unset($_SESSION['seminar_change_view_' . $course_id]);
+            // Reset simulated view, redirect to administration page.
+            $this->redirect(URLHelper::getURL('dispatch.php/course/management'));
+        } elseif (get_object_type($course_id, array('sem'))
+        && !SeminarCategories::GetBySeminarId($course_id)->studygroup_mode
+        && in_array($GLOBALS['perm']->get_studip_perm($course_id), words('tutor dozent'))) {
+            // Set simulated view, redirect to overview page.
+            $_SESSION['seminar_change_view_' . $course_id] = 'autor';
+            $this->redirect(URLHelper::getURL('seminar_main.php'));
         } else {
-            session_register('seminar_change_view_'.Request::option('cid'));
-            $_SESSION['seminar_change_view_'.Request::option('cid')] = 'autor';
+            throw new Trails_Exception(400);
         }
     }
-
 }

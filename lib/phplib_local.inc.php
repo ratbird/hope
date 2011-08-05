@@ -971,12 +971,8 @@ class Seminar_Perm extends Perm {
             $db->query("SELECT status FROM seminar_user WHERE user_id='$user_id' AND Seminar_id='$range_id'");
             if ($db->next_record()){
                 $status=$db->f("status");
-                if ($status == 'dozent' && $_SESSION['seminar_change_view_'.$range_id]) {
-                    if ($_SESSION['seminar_change_view_'.$range_id]) {
-                        $status = $_SESSION['seminar_change_view_'.$range_id];
-                    } else {
-                        session_unregister('seminar_change_view_'.$range_id);
-                    }
+                if (in_array($status, words('dozent tutor')) && isset($_SESSION['seminar_change_view_'.$range_id])) {
+                    $status = $_SESSION['seminar_change_view_'.$range_id];
                 }
             } else {
                 $db->query("SELECT inst_perms FROM user_inst WHERE user_id='$user_id' AND Institut_id='$range_id'");

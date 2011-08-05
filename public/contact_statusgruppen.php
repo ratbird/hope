@@ -39,7 +39,6 @@ require_once ('lib/visual.inc.php');
 require_once 'lib/functions.php';
 require_once ('lib/statusgruppe.inc.php');
 require_once ('lib/user_visible.inc.php');
-#include ("calendar/calendar_links.inc.php");
 
 PageLayout::setTitle(_("Kontaktgruppen"));
 Navigation::activateItem('/community/contacts/admin_groups');
@@ -114,10 +113,10 @@ function PrintAktualStatusgruppen($range_id, $view, $edit_id = '')
             $s_name = htmlReady($db->f("name"));
         } else {
             $s_name = "<a class=\"tree\" href=\"" . URLHelper::getLink("?toggle_statusgruppe=$statusgruppe_id&range_id=$range_id&view=$view&foo=" . md5(uniqid('foo', 1)) . "#$statusgruppe_id") . '">'
-                    . '<img align="absbottom" src="' . Assets::image_path($_SESSION['contact_statusgruppen']['group_open'][$statusgruppe_id] ? 'forumgraurunt2.png' : 'forumgrau2.png')
+                    . '<img style="vertical-align:top;" src="' . Assets::image_path($_SESSION['contact_statusgruppen']['group_open'][$statusgruppe_id] ? 'icons/16/blue/arr_1down.png' : 'icons/16/blue/arr_1right.png')
                     . '">&nbsp;' . htmlReady($db->f("name")) . '</a>';
         }
-        printf("<td width=\"85%%\" class=\"%s\">&nbsp; %s </td><td class=\"%s\" width=\"5%%\"><a href=\"%s\"><img src=\"" . Assets::image_path('icons/16/white/edit.png') . "\" %s></a></td>", ($edit_id == $statusgruppe_id ? "topicwrite" : "topic"), $s_name, ($edit_id == $statusgruppe_id ? "topicwrite" : "topic"), URLHelper::getLink("?edit_id=" . $statusgruppe_id . "&range_id=" . $range_id . "&view=" . $view . "&cmd=edit_statusgruppe"), tooltip(_("Gruppenname oder -größe anpassen")));
+        printf("<td width=\"85%%\" class=\"%s\">%s </td><td class=\"%s\" width=\"5%%\"><a href=\"%s\"><img src=\"" . Assets::image_path('icons/16/white/edit.png') . "\" %s></a></td>", ($edit_id == $statusgruppe_id ? "topicwrite" : "topic"), $s_name, ($edit_id == $statusgruppe_id ? "topicwrite" : "topic"), URLHelper::getLink("?edit_id=" . $statusgruppe_id . "&range_id=" . $range_id . "&view=" . $view . "&cmd=edit_statusgruppe"), tooltip(_("Gruppenname oder -größe anpassen")));
 
         printf("<td align=\"right\" width=\"5%%\" class=\"%s\"><a href=\"%s\"><img src=\"" . Assets::image_path('icons/16/white/trash.png') . "\" %s></a></td>", ($edit_id == $statusgruppe_id ? "topicwrite" : "topic"), URLHelper::getLink("?cmd=verify_remove_statusgruppe&statusgruppe_id=" . $statusgruppe_id . "&range_id=" . $range_id . "&view=" . $view . "&name=" . $db->f("name")), tooltip(_("Gruppe mit Personenzuordnung entfernen")));
         echo "\n</tr>";
@@ -464,10 +463,7 @@ if (is_array($msgs)) {
         }
         echo "<br><br>\n";
         if ($GLOBALS['CALENDAR_GROUP_ENABLE']) {
-            echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" class=\"blank\">\n";
-            echo "<tr><td>\n<font size=\"-1\">&nbsp;&nbsp;</font></td><td><font size=\"-1\">";
             printf(_("%sRot%s dargestellte Benutzernamen kennzeichnen Benutzer, auf deren Kalender Sie Zugriff haben."), '<span style="color:#FF0000;">', '</span>');
-            echo "</td></tr></table>";
         }
     }
     echo "\n</td>\n";

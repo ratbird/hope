@@ -2097,7 +2097,7 @@ if ((!$sem_create_data["sem_class"]) && (!$level)){
             </td>
             <td class="blank"></td>
         </tr>
-        <? endif; ?>
+        <? endif ?>
         <? if ($GLOBALS['STUDYGROUPS_ENABLE']) : ?>
         <tr>
             <td class="blank">
@@ -2108,7 +2108,7 @@ if ((!$sem_create_data["sem_class"]) && (!$level)){
             </td>
             <td class="blank"></td>
         </tr>
-        <? endif; ?>
+        <? endif ?>
     </table>
     <?
 }
@@ -2275,13 +2275,13 @@ elseif ((!$level) || ($level == 1))
                             <?=_("Anmeldemodus:"); ?>
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" nowrap width="90%" colspan=3>
-                            &nbsp; <input type="radio" name="sem_payment" value=0 <? if ($sem_create_data["sem_payment"]==0) echo 'checked'?>>
-                            <?=_("direkter Eintrag"); ?>&nbsp;
+                            &nbsp; <input type="radio" name="sem_payment" value=0 <? if ($sem_create_data["sem_payment"] == 0) echo 'checked'?>>
+                            <?= _("direkter Eintrag"); ?>&nbsp;
                             <img  src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/grey/info-circle.png"
                                 <? echo tooltip(_("Neue Teilnehmer werden direkt in die Veranstaltung eingetragen."), TRUE, TRUE) ?>
                             >
-                            &nbsp; <input type="radio" name="sem_payment" value=1 <? if ($sem_create_data["sem_payment"]==1) echo 'checked'?>>
-                            <?=_("vorl&auml;ufiger Eintrag"); ?>&nbsp;
+                            &nbsp; <input type="radio" name="sem_payment" value=1 <? if ($sem_create_data["sem_payment"] == 1) echo 'checked'?>>
+                            <?= _("vorl&auml;ufiger Eintrag"); ?>&nbsp;
                             <img  src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/grey/info-circle.png"
                                 <? echo tooltip(_("Neue Teilnehmer bekommen den Status \"vorläufig aktzeptiert\". Sie können von Hand die zugelassenen Teilnehmer auswählen. Vorläufig akzeptierte Teilnehmer haben keinen Zugriff auf die Veranstaltung."), TRUE, TRUE) ?>
                             >
@@ -4190,10 +4190,10 @@ if ($level == 7)
                     }
                     ?><br><br>
                     <? if (isset($_SESSION['sem_create_data_backup']['timestamp'])) : ?>
-                        <?=_("Sie können direkt eine Kopie der neu angelegten Veranstaltung anlegen:")?>
-                        <a href="<?=URLHelper::getLink('?start_from_backup=1')?>"><?=_("Kopie anlegen")?></a>
+                        <?= _("Sie können direkt eine Kopie der neu angelegten Veranstaltung anlegen:") ?>
+                        <a href="<?= URLHelper::getLink('?start_from_backup=1') ?>"><?= _("Kopie anlegen") ?></a>
                         <br><br>
-                    <? endif; ?>
+                    <? endif ?>
                     <form method="POST" action="<?= URLHelper::getLink() ?>">
                         <?= CSRFProtection::tokenTag() ?>
                         <input type="hidden" name="form" value=7>

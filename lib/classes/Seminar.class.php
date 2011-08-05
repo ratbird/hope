@@ -2414,16 +2414,15 @@ class Seminar
     /**
      * sets the almost never used column position in the table seminar_user
      * @param members array: array of user_id's - wrong IDs will be ignored
-     * @param status string: status of the users
      * @return $this
      */
-    public function setMemberPriority($members, $status = "dozent")
+    public function setMemberPriority($members)
     {
         $db = DBManager::get();
         $num = 0;
         foreach($members as $member) {
             $num++;
-            $db->exec("UPDATE IGNORE seminar_user " .
+            $db->exec("UPDATE seminar_user " .
                     "SET position = ".$db->quote($num)." " .
                     "WHERE Seminar_id = ".$db->quote($this->id)." " .
                         "AND user_id = ".$db->quote($member));
@@ -2432,9 +2431,7 @@ class Seminar
     }
 
     public function setLabel($user_id, $label) {
-        $dozent_members = $this->getMembers('dozent');
-        $tutor_members = $this->getMembers('tutor');
-        if (isset($dozent_members[$user_id]) || isset($tutor_members[$user_id])) {
+        if ($GLOBALS['perm']->have_studip_perm('tutor', $this->getId(), $user_id)) {
             $statement = DBManager::get()->prepare(
                 "UPDATE seminar_user " .
                 "SET label = :label " .

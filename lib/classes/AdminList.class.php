@@ -13,7 +13,7 @@
  * @since       2.2
  */
 
-require_once 'lib/classes/SemesterData.class.php';
+require_once 'lib/classes/Semester.class.php';
 
 /**
  * Singleton class for the admin search list. This is a singleton-class because
@@ -56,25 +56,23 @@ class AdminList {
     {
         global $perm, $user;
         //the search parameters are completely saved in the following session variable
-        global $links_admin_data;
         $links_admin_data = $_SESSION['links_admin_data'];
-        $semester = new SemesterData;
-        $db = DBManager::get();
-        if (!$perm->have_perm("root")) {
-            $statement = $db->prepare(
+        if ($links_admin_data["srch_on"]) {
+            $db = DBManager::get();
+            if (!$perm->have_perm("root")) {
+                $statement = $db->prepare(
                 "SELECT b.Institut_id " .
                 "FROM user_inst AS a " .
                     "INNER JOIN Institute AS b ON (a.Institut_id = b.fakultaets_id) " .
                 "WHERE a.user_id = :user_id " .
-                    "AND a.inst_perms='admin' " .
-            "");
-            $statement->execute(array('user_id' => $user->id));
-            $my_inst = $statement->fetchAll(PDO::FETCH_COLUMN, 0);
-        }
+                    "AND a.inst_perms='admin' ");
+                $statement->execute(array('user_id' => $user->id));
+                $my_inst = $statement->fetchAll(PDO::FETCH_COLUMN, 0);
+            }
 
-        $params = array();
-        $query=
-            "SELECT DISTINCT sem.*, inst.Name AS Institut, sd1.name AS startsem,IF(duration_time=-1, '"._("unbegrenzt")."', sd2.name) AS endsem " .
+            $params = array();
+            $query =
+            "SELECT DISTINCT sem.Seminar_id,sem.Name,VeranstaltungsNummer,sem.visible,sem.status, inst.Name AS Institut, sd1.name AS startsem,IF(duration_time=-1, '"._("unbegrenzt")."', sd2.name) AS endsem " .
             "FROM seminar_user AS su " .
                 "LEFT JOIN seminare AS sem USING (seminar_id) " .
                 "LEFT JOIN Institute AS inst USING (institut_id) " .
@@ -83,47 +81,48 @@ class AdminList {
                 "LEFT JOIN semester_data AS sd2 ON ((start_time + duration_time) BETWEEN sd2.beginn AND sd2.ende) " .
             "WHERE su.status = 'dozent' " .
                 "AND sem.status NOT IN ('".implode("', '", studygroup_sem_types())."') ";
-        //$params = array('studygroup_sem_types' => studygroup_sem_types());
-        
-        if ($links_admin_data["srch_sem"]) {
-            $one_semester = $semester->getSemesterData($links_admin_data["srch_sem"]);
-            $query.="AND sem.start_time <= :semester_begin AND (:semester_begin <= (sem.start_time + sem.duration_time) OR sem.duration_time = -1) ";
-            $params['semester_begin'] = $one_semester["beginn"];
-        }
+            //$params = array('studygroup_sem_types' => studygroup_sem_types());
 
-        if (is_array($my_inst) && !$perm->have_perm("root")) {
-            $query.="AND inst.Institut_id IN ('".implode("', '", $my_inst)."') ";
-            //$params['my_inst'] = $my_inst;
-        }
+            if ($links_admin_data["srch_sem"]) {
+                $one_semester = Semester::find($links_admin_data["srch_sem"]);
+                $query.="AND sem.start_time <= :semester_begin AND (:semester_begin <= (sem.start_time + sem.duration_time) OR sem.duration_time = -1) ";
+                $params['semester_begin'] = $one_semester["beginn"];
+            }
 
-        if ($links_admin_data["srch_inst"]) {
-            $query.="AND inst.Institut_id = :special_institute ";
-            $params['special_institute'] = $links_admin_data["srch_inst"];
-        }
+            if (is_array($my_inst) && !$perm->have_perm("root")) {
+                $query.="AND inst.Institut_id IN ('".implode("', '", $my_inst)."') ";
+                //$params['my_inst'] = $my_inst;
+            }
 
-        if ($links_admin_data["srch_fak"]) {
-            $query.="AND fakultaets_id = :special_faculty ";
-            $params['special_faculty'] = $links_admin_data["srch_fak"];
-        }
+            if ($links_admin_data["srch_inst"]) {
+                $query.="AND inst.Institut_id = :special_institute ";
+                $params['special_institute'] = $links_admin_data["srch_inst"];
+            }
 
-        if ($links_admin_data["srch_doz"]) {
-            $query.="AND su.user_id = :dozent ";
-            $params['dozent'] = $links_admin_data["srch_doz"];
-        }
+            if ($links_admin_data["srch_fak"]) {
+                $query.="AND fakultaets_id = :special_faculty ";
+                $params['special_faculty'] = $links_admin_data["srch_fak"];
+            }
 
-        if ($links_admin_data["srch_exp"]) {
-            $query.="AND (sem.Name LIKE :search_expression OR sem.VeranstaltungsNummer LIKE :search_expression OR sem.Untertitel LIKE :search_expression OR sem.Beschreibung LIKE :search_expression OR u.Nachname LIKE :search_expression) ";
-            $params['search_expression'] = "%".$links_admin_data["srch_exp"]."%";
-        }
+            if ($links_admin_data["srch_doz"]) {
+                $query.="AND su.user_id = :dozent ";
+                $params['dozent'] = $links_admin_data["srch_doz"];
+            }
 
-        $query.=" ORDER BY `".addslashes($links_admin_data["sortby"])."` ";
-        if ($links_admin_data["sortby"] === 'start_time') {
-            $query .= ' DESC';
-        }
+            if ($links_admin_data["srch_exp"]) {
+                $query.="AND (sem.Name LIKE :search_expression OR sem.VeranstaltungsNummer LIKE :search_expression OR sem.Untertitel LIKE :search_expression OR sem.Beschreibung LIKE :search_expression OR u.Nachname LIKE :search_expression) ";
+                $params['search_expression'] = "%".$links_admin_data["srch_exp"]."%";
+            }
 
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute($params);
-        $this->results = $statement->fetchAll(PDO::FETCH_ASSOC);
+            $query.=" ORDER BY `" . $links_admin_data["sortby"] . "` ";
+            if ($links_admin_data["sortby"] === 'start_time') {
+                $query .= ' DESC';
+            }
+
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute($params);
+            $this->results = $statement->fetchAll(PDO::FETCH_ASSOC);
+        }
     }
 
     /**
@@ -145,10 +144,12 @@ class AdminList {
      */
     public function getSelectTemplate($course_id)
     {
-        $adminList = $GLOBALS['template_factory']->open('admin/adminList.php');
-        $adminList->set_attribute('adminList', $this->results);
-        $adminList->set_attribute('course_id', $course_id);
-        return $adminList;
+        if (count($this->results)) {
+            $adminList = $GLOBALS['template_factory']->open('admin/adminList.php');
+            $adminList->set_attribute('adminList', $this->results);
+            $adminList->set_attribute('course_id', $course_id);
+            return $adminList;
+        }
     }
 
     /**
@@ -158,12 +159,13 @@ class AdminList {
      */
     public function getTopLinkTemplate($course_id)
     {
-        $adminTopLinks = $GLOBALS['template_factory']->open("admin/topLinks.php");
-        $adminTopLinks->set_attribute('adminList', $this->results);
-        $adminTopLinks->set_attribute('course_id', $course_id);
-        return $adminTopLinks;
+        if (count($this->results)) {
+            $adminTopLinks = $GLOBALS['template_factory']->open("admin/topLinks.php");
+            $adminTopLinks->set_attribute('adminList', $this->results);
+            $adminTopLinks->set_attribute('course_id', $course_id);
+            return $adminTopLinks;
+        }
     }
 
-    
-}
 
+}

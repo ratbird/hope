@@ -140,18 +140,18 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
     // end tic #650
 
     if ($_REQUEST['view'])
-        $links_admin_data["view"]=$_REQUEST['view'];
+        $links_admin_data["view"] = Request::option('view');
 
     if ($_REQUEST['srch_send']) {
-        $links_admin_data["srch_sem"]= trim($_REQUEST['srch_sem']);
-        $links_admin_data["srch_doz"]= trim($_REQUEST['srch_doz']);
-        $links_admin_data["srch_inst"]= trim($_REQUEST['srch_inst']);
-        $links_admin_data["srch_fak"]= trim($_REQUEST['srch_fak']);
-        $links_admin_data["srch_exp"]= trim($_REQUEST['srch_exp']);
-        $links_admin_data["select_old"]=$_REQUEST['select_old'];
-        $links_admin_data["select_inactive"]=$_REQUEST['select_inactive'];
-        $links_admin_data["srch_on"]=TRUE;
-        $list=TRUE;
+        $links_admin_data["srch_sem"] = Request::option('srch_sem');
+        $links_admin_data["srch_doz"] = Request::option('srch_doz');
+        $links_admin_data["srch_inst"]= Request::option('srch_inst');
+        $links_admin_data["srch_fak"] = Request::option('srch_fak');
+        $links_admin_data["srch_exp"] = Request::get('srch_exp');
+        $links_admin_data["select_old"] = Request::int('select_old');
+        $links_admin_data["select_inactive"] = Request::int('select_inactive');
+        $links_admin_data["srch_on"] = true;
+        $list = true;
     }
 
     if(isset($_REQUEST['links_admin_reset_search_x'])){

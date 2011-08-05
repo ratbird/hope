@@ -173,21 +173,21 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                         ?>
                         <font size=-1><?=_("Einrichtung:")?></font><br>
                         <select name="srch_inst">
-                            <option value=0><?=_("alle")?></option>
+                            <option value="0"><?=_("alle")?></option>
                             <?
                             while ($db->next_record()) {
                                 $my_inst[]=$db->f("Institut_id");
                                 if ($links_admin_data["srch_inst"] == $db->f("Institut_id"))
-                                    echo"<option selected value=".$db->f("Institut_id").">".substr($db->f("Name"), 0, 30)."</option>";
+                                    echo"<option selected value=\"".$db->f("Institut_id")."\">".substr($db->f("Name"), 0, 30)."</option>";
                                 else
-                                    echo"<option value=".$db->f("Institut_id").">".substr($db->f("Name"), 0, 30)."</option>";
+                                    echo"<option value=\"".$db->f("Institut_id")."\">".substr($db->f("Name"), 0, 30)."</option>";
                                 if ($db->f("is_fak")) {
                                     $db2->query("SELECT Institut_id, Name FROM Institute WHERE fakultaets_id='" .$db->f("Institut_id") . "' AND institut_id!='" .$db->f("Institut_id") . "'");
                                     while ($db2->next_record()) {
                                         if ($links_admin_data["srch_inst"] == $db2->f("Institut_id"))
-                                            echo"<option selected value=".$db2->f("Institut_id").">&nbsp;&nbsp;&nbsp;".substr($db2->f("Name"), 0, 30)."</option>";
+                                            echo"<option selected value=\"".$db2->f("Institut_id")."\">&nbsp;&nbsp;&nbsp;".substr($db2->f("Name"), 0, 30)."</option>";
                                         else
-                                            echo"<option value=".$db2->f("Institut_id").">&nbsp;&nbsp;&nbsp;".substr($db2->f("Name"), 0, 30)."</option>";
+                                            echo"<option value=\"".$db2->f("Institut_id")."\">&nbsp;&nbsp;&nbsp;".substr($db2->f("Name"), 0, 30)."</option>";
                                         $my_inst[]=$db2->f("Institut_id");
                                     }
                                 }
@@ -201,7 +201,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                             ?>
                             <font size=-1><?=_("DozentIn:")?></font><br>
                             <select name="srch_doz">
-                            <option value=0><?=_("alle")?></option>
+                            <option value="0"><?=_("alle")?></option>
                             <?
                             if (is_array($my_inst)) {
                                 $inst_id_query = "'";
@@ -213,9 +213,9 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                                 if ($db->num_rows()) {
                                     while ($db->next_record()) {
                                         if ($links_admin_data["srch_doz"] == $db->f("user_id"))
-                                            echo"<option selected value=".$db->f("user_id").">".htmlReady(my_substr($db->f("fullname"),0,35))."</option>";
+                                            echo"<option selected value=\"".$db->f("user_id").">\"".htmlReady(my_substr($db->f("fullname"),0,35))."</option>";
                                         else
-                                            echo"<option value=".$db->f("user_id").">".htmlReady(my_substr($db->f("fullname"),0,35))."</option>";
+                                            echo"<option value=\"".$db->f("user_id").">\"".htmlReady(my_substr($db->f("fullname"),0,35))."</option>";
                                     }
                                 }
                             }
@@ -229,13 +229,13 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                             ?>
                             <font size=-1><?=_("Fakultät:")?></font><br>
                             <select name="srch_fak">
-                                <option value=0><?=_("alle")?></option>
+                                <option value="0"><?=_("alle")?></option>
                                 <?
                                 while ($db->next_record()) {
                                     if ($links_admin_data["srch_fak"] == $db->f("Institut_id"))
-                                        echo"<option selected value=".$db->f("Institut_id").">".substr($db->f("Name"), 0, 30)."</option>";
+                                        echo"<option selected value=\"".$db->f("Institut_id")."\">".substr($db->f("Name"), 0, 30)."</option>";
                                     else
-                                        echo"<option value=".$db->f("Institut_id").">".substr($db->f("Name"), 0, 30)."</option>";
+                                        echo"<option value=\"".$db->f("Institut_id")."\">".substr($db->f("Name"), 0, 30)."</option>";
                                 }
                                 ?>
                             </select>
@@ -244,7 +244,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                         ?>&nbsp;
                         </td>
                         <td class="steel1">
-                            <font size=-1><?=_("freie Suche:")?></font><br><input type="text" name="srch_exp" maxlength=255 size=20 value="<? echo $links_admin_data["srch_exp"] ?>">
+                            <font size=-1><?=_("freie Suche:")?></font><br><input type="text" name="srch_exp" maxlength=255 size=20 value="<? echo htmlReady($links_admin_data["srch_exp"]) ?>">
                             <input type="hidden" name="srch_send" value="TRUE">
                         </td>
                         <td class="steel1" valign="bottom" width="20%" nowrap="nowrap">
@@ -254,7 +254,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                                 echo '&nbsp;' . makeButton('zuruecksetzen','input', _("zurücksetzen"),'links_admin_reset_search');
                             }
                             ?>
-                            <input type="hidden" name="view" value="<? echo $links_admin_data["view"]?>">
+                            <input type="hidden" name="view" value="<? echo htmlReady($links_admin_data["view"])?>">
                         </td>
                     </tr>
                 <tr>
@@ -311,7 +311,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
 
         //Suchresultate abholen:
         $results = AdminList::getInstance()->getSearchResults();
-        
+
         ?>
         <form name="links_admin_action" action="<?=URLHelper::getLink()?>" method="POST">
         <?= CSRFProtection::tokenTag() ?>
@@ -465,7 +465,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
             if (!$show_rooms_check_url) {
                 $_room = "&nbsp;";
             } else {
-                $sem = Seminar::getInstance($result['Seminar_id']);
+                $sem = new Seminar($result['Seminar_id']);
                 $_room = $sem->getDatesHTML(array(
                     'semester_id' => $links_admin_data['search_sem'],
                     'show_room'   => true
@@ -511,7 +511,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                 }
             }
             echo "</font></td>";
-            echo "<td class=\"".$cssSw->getClass()."\" align=\"center\"><font size=-1>".$SEM_TYPE[$db->f("status")]["name"]."<br>" . _("Kategorie:") . " <b>".$SEM_CLASS[$SEM_TYPE[$db->f("status")]["class"]]["name"]."</b><font></td>";
+            echo "<td class=\"".$cssSw->getClass()."\" align=\"center\"><font size=-1>".htmlReady(SeminarCategories::GetByTypeId($result['status'])->getNameOfType($result['status']))."<br>" . _("Kategorie:") . " <b>".htmlReady(SeminarCategories::GetByTypeId($result['status'])->name)."</b><font></td>";
             echo "<td class=\"".$cssSw->getClass()."\" nowrap align=\"center\">";
 
             //Kommandos fuer die jeweilgen Seiten
@@ -608,10 +608,10 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                         if(!LockRules::check($seminar_id, 'seminar_visibility')){
                             ?>
                             <input type="hidden" name="all_sem[]" value="<? echo $seminar_id ?>">
-                            <input type="CHECKBOX" name="visibility_sem[<? echo $seminar_id ?>]" <? if (!$_REQUEST['select_none'] && ($_REQUEST['select_all'] || $db->f("visible"))) echo ' checked'; ?>>
+                            <input type="CHECKBOX" name="visibility_sem[<? echo $seminar_id ?>]" <? if (!$_REQUEST['select_none'] && ($_REQUEST['select_all'] || $result['visible'])) echo ' checked'; ?>>
                             <?
                         } else {
-                            echo $db->f('visible') ? _("sichtbar") : _("versteckt");
+                            echo $result['visible'] ? _("sichtbar") : _("versteckt");
                         }
                     }
                     break;

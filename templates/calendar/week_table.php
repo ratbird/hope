@@ -51,7 +51,7 @@ if ($calendar->view->getType() == 7) {
                 <tr>
                     <td align="center" width="15%">
                         <a href="<?= URLHelper::getLink('', array('cmd' => 'showweek', 'atime' => mktime(12, 0, 0, date('n', $calendar->view->getStart()), date('j', $calendar->view->getStart()) - 7, date('Y', $calendar->view->getStart())))) ?>">
-                            <?= Assets::img('icons/16/blue/arr_2left.png', tooltip2(_("eine Woche zurück"))) ?>
+                            <?= Assets::img('icons/16/blue/arr_1left.png', tooltip2(_("eine Woche zurück"))) ?>
                         </a>
                     </td>
                     <td width="70%" class="calhead">
@@ -59,7 +59,7 @@ if ($calendar->view->getType() == 7) {
                     </td>
                     <td align="center" width="15%">
                         <a href="<?= URLHelper::getLink('', array('cmd' => 'showweek', 'atime' => mktime(12, 0, 0, date('n', $calendar->view->getStart()), date('j', $calendar->view->getStart()) + 7, date('Y', $calendar->view->getStart())))) ?>">
-                            <?= Assets::img('icons/16/blue/arr_2right.png', tooltip2(_("eine Woche vor"))) ?>
+                            <?= Assets::img('icons/16/blue/arr_1right.png', tooltip2(_("eine Woche vor"))) ?>
                         </a>
                     </td>
                 </tr>
@@ -126,7 +126,7 @@ if ($calendar->view->getType() == 7) {
             <? endif ?>
         <? endif ?>
         <? for ($y = 0; $y < $calendar->view->getType(); $y++) : ?>
-            <?= $this->render_partial('calendar/_day_cell', array('day' => $calendar->view->wdays[$y], 'em' => $tab_arr[$y], 'row' => $i, 'i' => $j)); ?>
+            <?= $this->render_partial('calendar/_day_cell', array('day' => $calendar->view->wdays[$y], 'em' => $tab_arr[$y], 'row' => $i, 'start' => $start * 3600)); ?>
         <? endfor ?>
         <? if ($rowspan > 1) : ?>
             <? if ($minutes == 0) : ?>
@@ -140,8 +140,8 @@ if ($calendar->view->getType() == 7) {
             <td class="precol1w"<?= $height ?>><?= $j ?></td>
             <?  else : ?>
             <td class="precol1w" rowspan="<?= $rowspan ?>"><?= $j ?></td>
-            <? $j = $j + ceil($calendar->getUserSettings('step_week') / 3600); ?>
             <? endif ?>
+            <? $j = $j + ceil($calendar->getUserSettings('step_week') / 3600); ?>
         <? endif ?>
     </tr>
     <? endfor ?>

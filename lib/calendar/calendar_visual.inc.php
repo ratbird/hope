@@ -231,17 +231,17 @@ function create_month_view(&$calendar, $atime, $step = NULL)
     $out .= "<table width=\"100%\" border=\"0\" cellspacing=\"1\" cellpadding=\"1\">\n";
     $out .= "<tr>\n<td align=\"center\">";
     $out .= '&nbsp;<a href="' . URLHelper::getLink('', array('cmd' => 'showmonth', 'atime' => mktime(12, 0, 0, $month->getMonth(), date('j', $month->getStart()), date('Y', $month->getStart()) - 1))) . '">';
-    $out .= Assets::img('icons/16/blue/arr_eol-left.png', tooltip2(_("ein Jahr zurück"))) . '</a>';
+    $out .= Assets::img('icons/16/blue/arr_2left.png', tooltip2(_("ein Jahr zurück"))) . '</a>';
     $out .= '&nbsp; &nbsp; &nbsp; &nbsp;<a href="' . URLHelper::getLink('', array('cmd' => 'showmonth', 'atime' => $month->getStart() - 1)) . '">';
-    $out .= Assets::img('icons/16/blue/arr_2left.png', tooltip2(_("einen Monat zurück"))) . "</a>&nbsp;</td>\n";
+    $out .= Assets::img('icons/16/blue/arr_1left.png', tooltip2(_("einen Monat zurück"))) . "</a>&nbsp;</td>\n";
     $out .= sprintf("<td colspan=\"%s\" class=\"calhead\">\n", $mod == "nokw" ? "5" : "6");
     $out .= '<font size="+2">';
     $out .= htmlentities(strftime("%B ", $month->getStart()), ENT_QUOTES) . $month->getYear();
     $out .= "</font></td>\n";
     $out .= '<td align="center">&nbsp;<a href="' . URLHelper::getLink('', array('cmd' => 'showmonth', 'atime' => $month->getEnd() + 1)) . '">';
-    $out .= Assets::img('icons/16/blue/arr_2left.png', tooltip2(_("einen Monat vor"))) . '</a>';
+    $out .= Assets::img('icons/16/blue/arr_1right.png', tooltip2(_("einen Monat vor"))) . '</a>';
     $out .= '&nbsp; &nbsp; &nbsp; &nbsp;<a href="' . URLHelper::getLink('', array('cmd' => 'showmonth', 'atime' => mktime(12, 0, 0, $month->getMonth(), date('j', $month->getStart()), date('Y', $month->getEnd()) + 1))) . '">';
-    $out .= Assets::img('icons/16/blue/arr_eol-left.png', tooltip2(_("ein Jahr vor"))) . '</a></td>';
+    $out .= Assets::img('icons/16/blue/arr_2right.png', tooltip2(_("ein Jahr vor"))) . '</a></td>';
     $out .= "</tr>\n<tr>\n";
 
     $weekdays_german = array('MO', 'DI', 'MI', 'DO', 'FR', 'SA', 'SO');
@@ -407,11 +407,11 @@ function create_year_view(&$calendar)
     $out = "<table class=\"steelgroup0\" width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
     $out .= "<tr><td align=\"center\" width=\"10%\">\n";
     $out .= '<a href="' . URLHelper::getLink('', array('', 'cmd' => 'showyear', 'atime' => $year->getStart() - 1)) . '">';
-    $out .= Assets::img('icons/16/blue/arr_2left.png', tooltip2(_("zurück"))). "&nbsp;</a></td>\n";
+    $out .= Assets::img('icons/16/blue/arr_1left.png', tooltip2(_("zurück"))). "&nbsp;</a></td>\n";
     $out .= "<td class=\"calhead\" align=\"center\" width=\"80%\">\n";
     $out .= "<font size=\"+2\"><b>" . $year->getYear() . "</b></font></td>\n";
     $out .= '<td align="center" width="10%"><a href="' . URLHelper::getLink('', array('', 'cmd' => 'showyear', 'atime' => $year->getEnd() + 1)) . '">';
-    $out .= Assets::img('icons/16/blue/arr_2right.png', tooltip2(_("vor"))) . '&nbsp;</a></td>';
+    $out .= Assets::img('icons/16/blue/arr_1right.png', tooltip2(_("vor"))) . '&nbsp;</a></td>';
     $out .= "</tr>\n";
     $out .= "<tr><td colspan=\"3\" class=\"blank\">";
     $out .= '<table class="steelgroup0" width="100%" border="0" ';
@@ -602,9 +602,9 @@ function includeMonth($imt, $href, $mod = '', $js_include = '', $ptime = '')
         $ret .= '&nbsp;';
     } else {
         $ret .= '<a href="' . URLHelper::getLink($href . $ptime, array('imt' => mktime(0, 0, -1, $amonth->mon, 15, $amonth->year - 1))) . '">';
-        $ret .= Assets::img('icons/16/blue/arr_eol-left.png', tooltip2(_("ein Jahr zurück"))) . '</a>';
+        $ret .= Assets::img('icons/16/blue/arr_2left.png', tooltip2(_("ein Jahr zurück"))) . '</a>';
         $ret .= '<a href="' . URLHelper::getLink($href . $ptime, array('imt' => $amonth->getStart() - 1)) . '">';
-        $ret .= Assets::img('icons/16/blue/arr_2left.png', tooltip2(_("einen Monat zurück"))) . "</a>\n";
+        $ret .= Assets::img('icons/16/blue/arr_1left.png', tooltip2(_("einen Monat zurück"))) . "</a>\n";
     }
     $ret .= '</div><div class="precol1w" style="float:left; text-align:center; width:70%;">';
 
@@ -616,9 +616,9 @@ function includeMonth($imt, $href, $mod = '', $js_include = '', $ptime = '')
         $ret .= '&nbsp;';
     } else {
         $ret .= '<a href="' . URLHelper::getLink($href . $ptime, array('imt' => $amonth->getEnd() + 1)) . '">';
-        $ret .= Assets::img('icons/16/blue/arr_2right.png', tooltip2(_("einen Monat vor"))) . '</a>';
+        $ret .= Assets::img('icons/16/blue/arr_1right.png', tooltip2(_("einen Monat vor"))) . '</a>';
         $ret .= '<a href="' . URLHelper::getLink($href . $ptime, array('imt' => mktime(0, 0, 1, $amonth->mon, 1, $amonth->year + 1))) . '">';
-        $ret .= Assets::img('icons/16/blue/arr_eol-right.png', tooltip2(_("ein Jahr vor"))) . "</a>\n";
+        $ret .= Assets::img('icons/16/blue/arr_2right.png', tooltip2(_("ein Jahr vor"))) . "</a>\n";
     }
     $ret .= "</div></td></tr>\n";
 

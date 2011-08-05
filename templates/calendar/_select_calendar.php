@@ -66,7 +66,7 @@
                 <span style="font-size: small; color: #555555; white-space: nowrap;">
                     <? if (get_object_type($_calendar->getId()) == 'user' || get_object_type($_calendar->getId()) == 'group') : ?>
                     <?= _("Veranstaltungstermine anzeigen"); ?>
-                    <input type="checkbox" name="show_project_events" value="1" onChange="document.cal_select_calendars.submit();"<?= ($show_project_events ? ' checked="checked"' : '') ?>>
+                    <input type="checkbox" name="show_project_events" value="1" onChange="document.cal_select_calendars.submit();"<?= ($_SESSION['calendar_sess_control_data']['show_project_events'] ? ' checked="checked"' : '') ?>>
                     <? elseif ($show_project_events) : ?>
                     <input type="hidden" name="show_project_events" value="1">
                     <? endif; ?>

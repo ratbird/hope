@@ -5,7 +5,7 @@
                 <tr>
                     <td align="center" width="10%" height="40">
                         <a href="<?= URLHelper::getLink('', array('cmd' => 'showday', 'atime' => $atime - 86400)) ?>">
-                            <img border="0" src="<?= Assets::image_path('icons/16/blue/arr_2left.png') ?>"<?= tooltip(_("zurück")) ?>>
+                            <img border="0" src="<?= Assets::image_path('icons/16/blue/arr_1left.png') ?>"<?= tooltip(_("zurück")) ?>>
                         </a>
                     </td>
                     <td class="calhead" width="80%">
@@ -14,7 +14,7 @@
                     </td>
                     <td align="center" width="10%">
                         <a href="<?= URLHelper::getLink('', array('cmd' => 'showday', 'atime' => $atime + 86400)) ?>">
-                            <img border="0" src="<?= Assets::image_path('icons/16/blue/arr_2right.png') ?>"<?= tooltip(_("vor")) ?>>
+                            <img border="0" src="<?= Assets::image_path('icons/16/blue/arr_1right.png') ?>"<?= tooltip(_("vor")) ?>>
                         </a>
                     </td>
                 </tr>

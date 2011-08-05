@@ -99,7 +99,6 @@ class SingleCalendar extends Calendar
         $tmpl->step = $this->getUserSettings('step_day');
         $tmpl->params = $params;
         return $tmpl->render();
-        //return create_day_view($this, $start_time, $end_time, $this->getUserSettings('step_day'), $day_time, $params);
     }
 
     function toStringWeek($week_time, $start_time, $end_time, $restrictions = NULL, $sem_ids = NULL)
@@ -112,20 +111,9 @@ class SingleCalendar extends Calendar
         $tmpl->calendar = $this;
         $tmpl->start = $start_time;
         $tmpl->end = $end_time;
+        $tmpl->step = $this->getUserSettings('step_week');
 
         return $tmpl->render();
-
-        /*
-
-          if ($this->havePermission(CALENDAR_PERMISSION_WRITABLE)) {
-          $string = create_week_view($this->view, $start_time, $end_time, $this->getUserSettings('step_week'), false, true);
-          } else {
-          $string = create_week_view($this->view, $start_time, $end_time, $this->getUserSettings('step_week'), false, false);
-          }
-
-          return $string;
-         *
-         */
     }
 
     function toStringMonth($month_time, $step = NULL, $restrictions = NULL, $sem_ids = NULL)

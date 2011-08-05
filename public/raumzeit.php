@@ -44,11 +44,7 @@ if (isset($_REQUEST['seminar_id'])) {
     URLHelper::bindLinkParam('seminar_id', $seminar_id);
 }
 
-if (isset($seminar_id)) {
-    $id = $seminar_id;
-} else {
-    $id = $SessSemName[1];
-}
+$id = Request::option('seminar_id', $SessSemName[1]);
 
 require_once ('lib/classes/Seminar.class.php');
 require_once ('lib/raumzeit/raumzeit_functions.inc.php');
@@ -496,7 +492,7 @@ if ($perm->have_studip_perm("admin",$sem->getId())) {
                 } else { ?>
                 <tr>
                     <td>
-                         
+
                     </td>
                 </tr>
                 <tr>
@@ -556,7 +552,7 @@ if ($perm->have_studip_perm("admin",$sem->getId())) {
                         <br>
                         <? endif; ?>
 
-                        Raumanfrage
+                        <?= _("Raumanfrage") ?>
                         <a href="<?= URLHelper::getLink('admin_room_requests.php?seminar_id='. $id) ?>">
                             <? if ($request_status && $request_status == 'open') {
                             ?>

@@ -154,19 +154,15 @@ class RolePersistence
     {
         $key = $userid . (int)$implicit;
         if (!array_key_exists($key, self::$user_roles)) {
-            if ($implicit && is_object($GLOBALS['perm']))
-            {
+            if ($implicit && is_object($GLOBALS['perm'])) {
                 $global_perm = $GLOBALS['perm']->get_perm($userid);
 
-                $stmt = DBManager::get()->prepare(
-              "SELECT r.roleid FROM roles_user r ".
-              "WHERE r.userid=? ".
-              "UNION ".
-              "SELECT rp.roleid FROM roles_studipperms rp WHERE rp.permname = ?");
+                $stmt = DBManager::get()->prepare("SELECT r.roleid FROM roles_user r "
+                      . "WHERE r.userid=? "
+                      . "UNION "
+                      . "SELECT rp.roleid FROM roles_studipperms rp WHERE rp.permname = ?");
                 $stmt->execute(array($userid, $global_perm));
-            }
-            else
-            {
+            } else {
                 $stmt = DBManager::get()->prepare("SELECT r.roleid FROM roles_user r WHERE r.userid=?");
                 $stmt->execute(array($userid));
             }

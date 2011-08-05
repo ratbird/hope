@@ -18,7 +18,15 @@ require_once 'AuthUserMd5.class.php';
 require_once 'UserInfo.class.php';
 
 /**
- * Enter description here ...
+ * this class represents one user, the attributes from tables
+ * auth_user_md5 and user_info were merged.
+ *
+ * @code
+ * $a_user = User::find($id);
+ * $another_users_email = User::findByUsername($username)->email;
+ * $a_user->email = $another_users_email;
+ * $a_user->store();
+ * @endcode
  *
  */
 class User extends SimpleORMap
@@ -118,7 +126,7 @@ class User extends SimpleORMap
         $this->pk = $this->auth_user_md5->pk;
     }
 
-    /* (non-PHPdoc)
+    /**
      * @see SimpleORMap::setId()
      */
     function setId($id)
@@ -126,7 +134,7 @@ class User extends SimpleORMap
         return $this->auth_user_md5->setId($id);
     }
 
-    /* (non-PHPdoc)
+    /**
      * @see SimpleORMap::getNewId()
      */
     function getNewId()
@@ -134,7 +142,7 @@ class User extends SimpleORMap
         return  $this->auth_user_md5->getNewId();
     }
 
-    /* (non-PHPdoc)
+    /**
      * @see SimpleORMap::getWhereQuery()
      */
     function getWhereQuery()
@@ -142,7 +150,7 @@ class User extends SimpleORMap
         return $this->auth_user_md5->getWhereQuery();
     }
 
-    /* (non-PHPdoc)
+    /**
      * @see SimpleORMap::setData()
      */
     function setData($data, $reset = false)
@@ -152,7 +160,7 @@ class User extends SimpleORMap
         return $ret;
     }
 
-    /* (non-PHPdoc)
+    /**
      * @see SimpleORMap::restore()
      */
     function restore()
@@ -179,7 +187,7 @@ class User extends SimpleORMap
         }
     }
 
-    /* (non-PHPdoc)
+    /**
      * @see SimpleORMap::store()
      */
     function store()
@@ -189,8 +197,6 @@ class User extends SimpleORMap
         $this->auth_user_md5->setNew($this->isNew());
         $this->user_info->setData($data, true);
         $this->user_info->setNew($this->isNew() || !$this->user_info_exists);
-
-        $trigger_chdate = !$this->isFieldDirty('chdate') && $this->isDirty();
 
         $ret_a = $this->auth_user_md5->store();
         $ret_u = $this->user_info->store();
@@ -207,7 +213,7 @@ class User extends SimpleORMap
         return $ret;
     }
 
-    /* (non-PHPdoc)
+    /**
      * @see SimpleORMap::triggerChdate()
      */
     function triggerChdate()
@@ -215,7 +221,7 @@ class User extends SimpleORMap
        return $this->user_info->triggerChdate();
     }
 
-    /* (non-PHPdoc)
+    /**
      * @see SimpleORMap::delete()
      */
     function delete()

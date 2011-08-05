@@ -72,7 +72,7 @@ class UserConfig extends Config
         }
     }
 
-    /* (non-PHPdoc)
+    /**
      * @see lib/classes/Config::fetchData()
      */
     protected function fetchData($data = null)
@@ -125,9 +125,9 @@ class UserConfig extends Config
         return $this->user_id;
     }
 
-    /* old style usage with $user_id, $key as params
+    /** old style usage with $user_id, $key as params
      * still works but is deprecated
-     * (non-PHPdoc)
+     *
      * @see lib/classes/Config::getValue()
      */
     function getValue($field)
@@ -147,9 +147,9 @@ class UserConfig extends Config
         return parent::getValue($field);
     }
 
-    /* old style usage with $value, $user_id, $key as params
+    /** old style usage with $value, $user_id, $key as params
      * still works but is deprecated
-     * (non-PHPdoc)
+     *
      * @see lib/classes/Config::setValue()
      */
     function setValue($field, $value)
@@ -192,7 +192,7 @@ class UserConfig extends Config
         return $this->delete($field);
     }
 
-    /* (non-PHPdoc)
+    /**
      * @see lib/classes/Config::store()
      */
     function store($field, $value)
@@ -223,7 +223,7 @@ class UserConfig extends Config
 
     }
 
-    /* (non-PHPdoc)
+    /**
      * @see lib/classes/Config::delete()
      */
     function delete($field)

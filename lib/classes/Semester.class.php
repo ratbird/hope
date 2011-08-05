@@ -137,7 +137,7 @@ class Semester extends SimpleORMap
         parent::__construct($id);
     }
 
-    /* (non-PHPdoc)
+    /**
      * @see lib/classes/SimpleORMap::setData()
      */
     function setData($data, $reset = false)
@@ -151,7 +151,7 @@ class Semester extends SimpleORMap
         return $this->haveData();
     }
 
-    /* (non-PHPdoc)
+    /**
      * @see lib/classes/SimpleORMap::toArray()
      */
     function toArray()

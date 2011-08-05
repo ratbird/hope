@@ -28,7 +28,7 @@ require_once 'SimpleORMap.class.php';
  * $csvarray[] = 'vier';
  * echo $csvarray; // prints out "eins,zwei,drei,vier"
  * @endcode
- * 
+ *
  * @link http://www.php.net/manual/en/class.arrayobject.php
 */
 class CSVArrayObject extends ArrayObject
@@ -61,7 +61,7 @@ class CSVArrayObject extends ArrayObject
  * this class represents one record of the table webservice_access_rules
  * the column ip_range is converted from a comma separated list to an ArrayObject and vice-versa,
  * to allow array-like access
- * 
+ *
  * Example:
  * @code
  * $rule = WebserviceAccessRule::find($id);
@@ -69,12 +69,12 @@ class CSVArrayObject extends ArrayObject
  * $rule['ip_range'][] = '192.168.19.0/8';
  * echo $rule['ip_range']; //prints out 127.0.0.1,192.168.19.0/8
  * @endcode
- * 
+ *
  */
 class WebserviceAccessRule extends SimpleORMap
 {
 
-    /* (non-PHPdoc)
+    /**
      * @see SimpleORMap::find()
      */
     static function find($id)
@@ -82,7 +82,7 @@ class WebserviceAccessRule extends SimpleORMap
         return SimpleORMap::find(__CLASS__, $id);
     }
 
-    /* (non-PHPdoc)
+    /**
      * @see SimpleORMap::findBySql()
      */
     static function findBySql($where)
@@ -111,7 +111,7 @@ class WebserviceAccessRule extends SimpleORMap
         return self::findBySQL("1 ORDER BY api_key, type");
     }
 
-    /* (non-PHPdoc)
+    /**
      * @see SimpleORMap::deleteBySql()
      */
     static function deleteBySql($where)
@@ -160,7 +160,7 @@ class WebserviceAccessRule extends SimpleORMap
         }
     }
 
-    /* (non-PHPdoc)
+    /**
      * @see SimpleORMap::setData()
      */
     function setData($data, $reset)
@@ -170,7 +170,7 @@ class WebserviceAccessRule extends SimpleORMap
         return $ret;
     }
 
-    /* (non-PHPdoc)
+    /**
      * @see SimpleORMap::setValue()
      */
     function setValue($field, $value)

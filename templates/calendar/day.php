@@ -1,4 +1,4 @@
-<table width="100%" class="blank" border="0" cellpadding="0" cellspacing="0">
+<table class="steelgroup0" width="100%" class="blank" border="0" cellpadding="0" cellspacing="0">
     <tr>
         <td class="blank" width="100%">
             <table class="steelgroup0" width="100%" border="0" cellpadding="0" cellspacing="0">
@@ -20,7 +20,7 @@
                 </tr>
             <? if ($start > 0) : ?>
                 <tr><td align="center" colspan="3">
-                        <a href="<?= URLHelper::getLink('', array('cmd' => 'showday', 'atime' => ($atime - (date('G', $atime) - $start + 1) * 3600))) ?>">
+                        <a href="<?= URLHelper::getLink('', array('cmd' => 'showday', 'atime' => ($atime - (date('G', $atime) * 3600 - $start + 3600)))) ?>">
                             <img border="0" src="<?= Assets::image_path('icons/16/blue/arr_1up.png') ?>"<?= tooltip(_("zeig davor")) ?>>
                         </a>
                     </td>
@@ -36,10 +36,10 @@
             </table>
         </td>
     </tr>
-<? if ($end < 23) : ?>
+<? if ($end / 3600 < 23) : ?>
     <tr>
         <td align="center">
-            <a href="<?= URLHelper::getLink('', array('cmd' => 'showday', 'atime' => ($atime + ($end - date('G', $atime) + 1) * 3600))) ?>">
+            <a href="<?= URLHelper::getLink('', array('cmd' => 'showday', 'atime' => ($atime + $end - date('G', $atime) * 3600 + 3600))) ?>">
                 <img border="0" src="<?= Assets::image_path('icons/16/blue/arr_1down.png') ?>"<?= tooltip(_("zeig danach")) ?>>
             </a>
         </td>

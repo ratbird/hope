@@ -98,6 +98,7 @@ class SingleCalendar extends Calendar
         $tmpl->end = $end_time * 3600;
         $tmpl->step = $this->getUserSettings('step_day');
         $tmpl->params = $params;
+        $tmpl->atime = $day_time;
         return $tmpl->render();
     }
 

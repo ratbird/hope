@@ -601,9 +601,9 @@ function includeMonth($imt, $href, $mod = '', $js_include = '', $ptime = '')
     if ($mod == 'NONAV' || $mod == 'NONAVARROWS') {
         $ret .= '&nbsp;';
     } else {
-        $ret .= '<a href="' . URLHelper::getLink($href . $ptime, array('imt' => mktime(0, 0, -1, $amonth->mon, 15, $amonth->year - 1))) . '">';
+        $ret .= '<a href="' . URLHelper::getLink($href . $ptime, array('imt' => mktime(12, 0, 0, $amonth->mon, 1, $amonth->year - 1))) . '">';
         $ret .= Assets::img('icons/16/blue/arr_2left.png', tooltip2(_("ein Jahr zurück"))) . '</a>';
-        $ret .= '<a href="' . URLHelper::getLink($href . $ptime, array('imt' => $amonth->getStart() - 1)) . '">';
+        $ret .= '<a href="' . URLHelper::getLink($href . $ptime, array('imt' => mktime(12, 0, 0, $amonth->mon - 1, 1, $amonth->year))) . '">';
         $ret .= Assets::img('icons/16/blue/arr_1left.png', tooltip2(_("einen Monat zurück"))) . "</a>\n";
     }
     $ret .= '</div><div class="precol1w" style="float:left; text-align:center; width:70%;">';
@@ -615,9 +615,9 @@ function includeMonth($imt, $href, $mod = '', $js_include = '', $ptime = '')
     if ($mod == 'NONAV' || $mod == 'NONAVARROWS') {
         $ret .= '&nbsp;';
     } else {
-        $ret .= '<a href="' . URLHelper::getLink($href . $ptime, array('imt' => $amonth->getEnd() + 1)) . '">';
+        $ret .= '<a href="' . URLHelper::getLink($href . $ptime, array('imt' => mktime(12, 0, 0, $amonth->mon + 1, 1, $amonth->year))) . '">';
         $ret .= Assets::img('icons/16/blue/arr_1right.png', tooltip2(_("einen Monat vor"))) . '</a>';
-        $ret .= '<a href="' . URLHelper::getLink($href . $ptime, array('imt' => mktime(0, 0, 1, $amonth->mon, 1, $amonth->year + 1))) . '">';
+        $ret .= '<a href="' . URLHelper::getLink($href . $ptime, array('imt' => mktime(12, 0, 0, $amonth->mon, 1, $amonth->year + 1))) . '">';
         $ret .= Assets::img('icons/16/blue/arr_2right.png', tooltip2(_("ein Jahr vor"))) . "</a>\n";
     }
     $ret .= "</div></td></tr>\n";

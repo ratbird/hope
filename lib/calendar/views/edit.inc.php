@@ -704,9 +704,9 @@ else {
             echo Assets::img('popupcalendar.png', array('onClick' => "window.open('" . UrlHelper::getLink("termin_eingabe_dispatch.php?element_switch=exc{$atimetxt}&form_name=edit_event&mcount=6") . "', 'InsertDate', 'dependent=yes, width=700, height=450, left=250, top=150')", 'style' => 'vertical-align:middle;'));
 
             echo '&nbsp;&nbsp;';
-            echo "<input type=\"image\" src=\"{$CANONICAL_RELATIVE_PATH_STUDIP}pictures/add_right.gif\"";
-            echo " name=\"add_exc\"" . tooltip(_("Ausnahme hinzufügen")) . " align=\"absmiddle\">";
-            echo "&nbsp; &nbsp;</td>";
+            echo '<input type="image" src="' . Assets::image_path('icons/16/yellow/arr_2right.png');
+            echo '" name="add_exc"' . tooltip(_("Ausnahme hinzufügen")) . ' align="absmiddle">';
+            echo '&nbsp; &nbsp;</td>';
         }
         echo "<td>\n";
         echo "<select name=\"exc_delete[]\" size=\"4\" multiple=\"multiple\" style=\"width:170px; vertical-align:middle;\"$disabled>\n";

@@ -138,19 +138,20 @@ else
         $export_weiter_button = "<form method=\"POST\" action=\"" . $PHP_SELF . "\">";
         $export_weiter_button .= CSRFProtection::tokenTag();
         $export_weiter_button .= "<input type=\"hidden\" name=\"page\" value=\"4\">";
-        $export_weiter_button .= "<input type=\"hidden\" name=\"choose\" value=\"" . $choose . "\">";
-        $export_weiter_button .= "<input type=\"hidden\" name=\"format\" value=\"" . $format . "\">";
-        $export_weiter_button .= "<input type=\"hidden\" name=\"o_mode\" value=\"" . $o_mode . "\">";
-        $export_weiter_button .= "<input type=\"hidden\" name=\"ex_type\" value=\"" . $ex_type . "\">";
-        $export_pagecontent .= "<input type=\"hidden\" name=\"ex_sem\" value=\"" . $ex_sem . "\">";
+        $export_weiter_button .= "<input type=\"hidden\" name=\"choose\" value=\"" . htmlReady($choose) . "\">";
+        $export_weiter_button .= "<input type=\"hidden\" name=\"format\" value=\"" . htmlReady($format) . "\">";
+        $export_weiter_button .= "<input type=\"hidden\" name=\"o_mode\" value=\"" . htmlReady($o_mode) . "\">";
+        $export_weiter_button .= "<input type=\"hidden\" name=\"ex_type\" value=\"" . htmlReady($ex_type) . "\">";
+        $export_pagecontent .= "<input type=\"hidden\" name=\"ex_sem\" value=\"" . htmlReady($ex_sem) . "\">";
         foreach(array_keys($ex_sem_class) as $semclassid){
-            $export_pagecontent .= "<input type=\"hidden\" name=\"ex_sem_class[$semclassid]\" value=\"1\">";
+            $export_pagecontent .= "<input type=\"hidden\" name=\"ex_sem_class[". htmlReady($semclassid) ."]\" value=\"1\">";
         }
-        $export_weiter_button .= "<input type=\"hidden\" name=\"range_id\" value=\"" . $range_id . "\">";
-        $export_weiter_button .= "<input type=\"hidden\" name=\"xml_file_id\" value=\"" . $xml_file_id . "\">";
+        $export_weiter_button .= "<input type=\"hidden\" name=\"range_id\" value=\"" . htmlReady($range_id) . "\">";
+        $export_weiter_button .= "<input type=\"hidden\" name=\"xml_file_id\" value=\"" . htmlReady($xml_file_id) . "\">";
         $export_weiter_button .= "<input type=\"hidden\" name=\"xslt_filename\" value=\"" . htmlReady($xslt_filename) . "\">";
         if (isset($jump))
-            $export_weiter_button .= "<center><a href=\"./seminar_main.php?auswahl=$range_id&redirect_to=$jump\">" . makeButton("zurueck", "img") . "</a><br>";
+            $export_weiter_button .= '<center><a href="'. URLHelper::getLink("seminar_main.php?auswahl=$range_id&redirect_to=$jump") . '">'
+                                  .  makeButton("zurueck", "img") . "</a><br>";
         else
             $export_weiter_button .= "<center><input type=\"IMAGE\" " . makeButton("zurueck", "src") . " name=\"back\" value=\"". _("Zur&uuml;ck")."\"><br>";
         $export_weiter_button .= "</center></form>";
@@ -159,16 +160,13 @@ else
         {
             $export_pagecontent .= "<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\"><tr><td width=\"40%\">";
             $export_pagecontent .= "&nbsp; <b>" . _("Ausgabe-Datei: ") . "</b>";
-            $export_pagecontent .= "</td><td>" . $link2 . htmlReady($xslt_filename) . "." . $format . "</a>";
-//          $export_pagecontent .= "</td></tr><tr><td colspan=\"2\">";
-//          $export_pagecontent .= "&nbsp;&nbsp;&nbsp;&nbsp; - &nbsp;&nbsp;" . $link1 . _("Datei &ouml;ffnen") . "</a></td></tr><tr><td colspan=\"2\">";
-//          $export_pagecontent .= "&nbsp;&nbsp;&nbsp;&nbsp; - &nbsp;&nbsp;" . $link2 . _("Datei herunterladen") . "</a></td></tr>";
+            $export_pagecontent .= "</td><td>" . $link2 . htmlReady($xslt_filename) . "." . htmlReady($format) . "</a>";
             $export_pagecontent .= "</td></tr></table></center><br>";
         }
 
 
         $xml_printimage = ' <a href="' . GetDownloadLink($xml_file_id, $xml_filename, 2) . '" target="_blank"><img class="text-top" src="'.$GLOBALS['ASSETS_URL'].'images/' . $export_icon['xml'] . '"></a>';
-        $xml_printlink = ' <a href="'. GetDownloadLink($xml_file_id, $xml_filename, 2) . '" class="tree">' . $xml_filename . '</a>';
+        $xml_printlink = ' <a href="'. GetDownloadLink($xml_file_id, $xml_filename, 2) . '" class="tree">' . htmlReady($xml_filename) . '</a>';
         $xml_printdesc = _("XML-Daten");
         $xml_printcontent = _("In dieser Datei sind die Daten als XML-Tags gespeichert. Diese Tags können mit einem XSLT-Script verarbeitet werden.") . '<br>';
 
@@ -180,7 +178,7 @@ else
         if ($xslt_process)
         {
             $result_printimage = '<a href="'. GetDownloadLink($result_file, $xslt_filename .'.'. $format, 2) . '"> <img class="text-top" src="'.$GLOBALS['ASSETS_URL'].'images/' . $export_icon[$format] . '"></a>';
-            $result_printlink = '<a href="'. GetDownloadLink($result_file, $xslt_filename .'.'. $format, 2) . '" class="tree"> ' . htmlReady($xslt_filename) . '.' . $format . '</a>';
+            $result_printlink = '<a href="'. GetDownloadLink($result_file, $xslt_filename .'.'. $format, 2) . '" class="tree"> ' . htmlReady($xslt_filename) . '.' . htmlReady($format) . '</a>';
             $result_printdesc = _("Ausgabe-Datei");
             $result_printcontent = _("Dies ist die fertige Ausgabedatei.") . "<br>";
         }
@@ -207,4 +205,3 @@ else
     }
 
 }
-?>

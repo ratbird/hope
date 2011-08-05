@@ -127,14 +127,11 @@ if (($o_mode == "file") OR ($o_mode == "choose"))
 
     if ($object_counter<1)
     {
-        $link = "<a href=\"$PHP_SELF?range_id=$range_id&ex_type=$ex_type&ex_sem=$ex_sem&o_mode=start\">";
+        $link = '<a href="'. URLHelper::getLink("?range_id=$range_id&ex_type=$ex_type&ex_sem=$ex_sem&o_mode=start") . '">';
         $xml_export_text = _("Es wurden keine Daten gefunden!");
         $export_error = _("Es wurden keine Daten gefunden! Die &uuml;bergebene ID ist mit keinen Veranstaltungs- / Personendaten verbunden.");
-//      $export_pagecontent .= sprintf(_("%s Hier %s gelangen Sie zur&uuml;ck zur Startseite des Exportmoduls. "), $link, "</a>");
         $export_pagecontent .= "<br><br><br><center>" . $link . makeButton("zurueck", "img") . "</a></center>";
         $export_error_num ++;
-//      echo "</td></tr>";
-//      die("</table></td></tr></table></body>");
 
     }
     else
@@ -145,26 +142,22 @@ if (($o_mode == "file") OR ($o_mode == "choose"))
         else
             $export_msg = sprintf(_("%s Objekte wurden verarbeitet.") . " ", $object_counter);
 
-//      $export_info = _("Die Daten wurden in eine XML-Datei exportiert. <br>Wenn Sie die Datei in ein anderes Format konvertieren wollen, klicken Sie auf weiter.<br>Um die Datei herunterzuladen, klicken Sie auf den Dateinamen.");
-
-//      $export_weiter_button = "<br><br><center><a href=\"" . $PHP_SELF . "?xml_file_id=" . $xml_file_id . "&ex_type=" . $ex_type . "&o_mode=choose\">" . makeButton("weiter") . "</a></center>";
-
         $export_pagecontent .= "<form method=\"POST\" action=\"" . $PHP_SELF . "\">";
         $export_pagecontent .= CSRFProtection::tokenTag();
         $export_pagecontent .= "<input type=\"hidden\" name=\"page\" value=\"2\">";
-        $export_pagecontent .= "<input type=\"hidden\" name=\"format\" value=\"" . $format . "\">";
+        $export_pagecontent .= "<input type=\"hidden\" name=\"format\" value=\"" . htmlReady($format) . "\">";
         $export_pagecontent .= "<input type=\"hidden\" name=\"o_mode\" value=\"choose\">";
-        $export_pagecontent .= "<input type=\"hidden\" name=\"ex_type\" value=\"" . $ex_type . "\">";
-        $export_pagecontent .= "<input type=\"hidden\" name=\"ex_sem\" value=\"" . $ex_sem . "\">";
+        $export_pagecontent .= "<input type=\"hidden\" name=\"ex_type\" value=\"" . htmlReady($ex_type) . "\">";
+        $export_pagecontent .= "<input type=\"hidden\" name=\"ex_sem\" value=\"" . htmlReady($ex_sem) . "\">";
         foreach(array_keys($ex_sem_class) as $semclassid){
-            $export_pagecontent .= "<input type=\"hidden\" name=\"ex_sem_class[$semclassid]\" value=\"1\">";
+            $export_pagecontent .= "<input type=\"hidden\" name=\"ex_sem_class[". htmlReady($semclassid) ."]\" value=\"1\">";
         }
-        $export_pagecontent .= "<input type=\"hidden\" name=\"range_id\" value=\"" . $range_id . "\">";
-        $export_pagecontent .= "<input type=\"hidden\" name=\"xslt_filename\" value=\"" . $xslt_filename . "\">";
+        $export_pagecontent .= "<input type=\"hidden\" name=\"range_id\" value=\"" . htmlReady($range_id) . "\">";
+        $export_pagecontent .= "<input type=\"hidden\" name=\"xslt_filename\" value=\"" . htmlReady($xslt_filename) . "\">";
 
         $export_weiter_button = "<br><br><center><input type=\"IMAGE\" " . makeButton("zurueck", "src") . " value=\"" . _("Zur&uuml;ck") . "\" name=\"back\">&nbsp;</center></form>";
         $xml_printimage = '<a href="'. GetDownloadLink($xml_file_id, $xml_filename, 2) .  '"><img src="'.$GLOBALS['ASSETS_URL'].'images/' . $export_icon['xml'] . '" border=0></a>';
-        $xml_printlink = '<a href="'. GetDownloadLink($xml_file_id, $xml_filename, 2). '" class="tree">' . $xml_filename . '</a>';
+        $xml_printlink = '<a href="'. GetDownloadLink($xml_file_id, $xml_filename, 2). '" class="tree">' . htmlReady($xml_filename) . '</a>';
         $xml_printdesc = _("XML-Daten");
         $xml_printcontent = _("In dieser Datei sind die Daten als XML-Tags gespeichert. Diese Tags können mit einem XSLT-Script verarbeitet werden.") . "<br>";
     }
@@ -185,10 +178,6 @@ if (($o_mode == "file") OR ($o_mode == "choose"))
             $infobox[1]["eintrag"][] = array (  'icon' => "icons/16/black/download.png" ,
                                         "text"  => sprintf(_("Um die XML-Datei jetzt herunterzuladen klicken Sie %s hier %s."), $link, "</a>")
                                     );
-//          $infobox[1]["eintrag"][] = array (  'icon' => "icons/16/black/link-intern.png" ,
-//                                      "text"  => _("Wenn Sie die Daten in ein anderes Format konvertieren wollen, klicken Sie auf 'weiter'.")
-//                                  );
     }
 
 }
-?>

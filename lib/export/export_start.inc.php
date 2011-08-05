@@ -45,7 +45,7 @@ require_once ("lib/classes/SemesterData.class.php");   // Checken des aktuellen 
     $db2=new DB_Seminar;
     $semester = new SemesterData;
 
-$export_pagename = _("Datenexport - Startseite");
+    $export_pagename = _("Datenexport - Startseite");
 
     $export_info = _("Bitte wählen Sie Datenart und Einrichtung.") . "<br>";
 
@@ -55,33 +55,6 @@ $export_pagename = _("Datenexport - Startseite");
 
     $export_pagecontent .="<br><b><font size=\"-1\">". _("Bitte w&auml;hlen Sie eine Einrichtung: ") .  "</font></b><br><select name=\"range_id\">";
 
-/*  if ($auth->auth['perm'] == "root")
-    {
-        $db->query("SELECT Institut_id, Name, 1 AS is_fak  FROM Institute WHERE Institut_id=fakultaets_id ORDER BY Name");
-    }
-    elseif ($auth->auth['perm'] == "admin")
-    {
-        $db->query("SELECT a.Institut_id,Name, IF(b.Institut_id=b.fakultaets_id,1,0) AS is_fak FROM user_inst a LEFT JOIN Institute b USING (Institut_id)
-                    WHERE a.user_id='$user->id' AND a.inst_perms='admin' ORDER BY is_fak,Name");
-    }
-    else
-    {
-        $db->query("SELECT a.Institut_id,Name FROM user_inst a LEFT JOIN Institute b USING (Institut_id) WHERE inst_perms IN('tutor','dozent') AND user_id='$user->id'");
-    }
-
-    $export_pagecontent .= sprintf ("<option value=\"NULL\">-- " . _("bitte Einrichtung ausw&auml;hlen") . " --</option>\n");
-    while ($db->next_record())
-    {
-        $export_pagecontent .= sprintf ("<option value=\"%s\" style=\"%s\">%s </option>\n", $db->f("Institut_id"),($db->f("is_fak") ? "font-weight:bold;" : ""), htmlReady(my_substr($db->f("Name"), 0, 60)));
-        if ($db->f("is_fak"))
-        {
-            $db2->query("SELECT Institut_id, Name FROM Institute WHERE fakultaets_id='" .$db->f("Institut_id") . "' AND institut_id!='" .$db->f("Institut_id") . "'");
-            while ($db2->next_record())
-            {
-                $export_pagecontent .= sprintf("<option value=\"%s\">&nbsp;&nbsp;&nbsp;&nbsp;%s </option>\n", $db2->f("Institut_id"), htmlReady(my_substr($db2->f("Name"), 0, 60)));
-            }
-        }
-    } /**/
     $db->query("SELECT Institut_id, Name, fakultaets_id FROM Institute WHERE fakultaets_id = Institut_id ORDER BY Name");
 
     while ($db->next_record())
@@ -101,9 +74,12 @@ $export_pagename = _("Datenexport - Startseite");
                 $export_pagecontent .= sprintf(">&nbsp;&nbsp;&nbsp;&nbsp;%s </option>\n", htmlReady(my_substr($db2->f("Name"), 0, 60)));
             }
         }
-    } /**/
-    if ($perm->have_perm("root"))
+    }
+
+    if ($perm->have_perm("root")) {
         $export_pagecontent .= "<option style=\"font-weight:bold;\" value=\"root\">Alle Einrichtungen";
+    }
+
     $export_pagecontent .= "</select><br><br>";
 
     $export_pagecontent .= "<b><font size=\"-1\">"._("Art der auszugebenden Daten: ") .  "</font></b><br><select name=\"ex_type\">";
@@ -144,9 +120,9 @@ $export_pagename = _("Datenexport - Startseite");
     }
 
     $export_pagecontent .= "<input type=\"hidden\" name=\"o_mode\" value=\"choose\">";
-    $export_pagecontent .= "<input type=\"hidden\" name=\"xslt_filename\" value=\"" . $xslt_filename . "\">";
-    $export_pagecontent .= "<input type=\"hidden\" name=\"choose\" value=\"" . $choose . "\">";
-    $export_pagecontent .= "<input type=\"hidden\" name=\"format\" value=\"" . $format . "\">";
+    $export_pagecontent .= "<input type=\"hidden\" name=\"xslt_filename\" value=\"" . htmlReady($xslt_filename) . "\">";
+    $export_pagecontent .= "<input type=\"hidden\" name=\"choose\" value=\"" . htmlReady($choose) . "\">";
+    $export_pagecontent .= "<input type=\"hidden\" name=\"format\" value=\"" . htmlReady($format) . "\">";
 
     $export_weiter_button = "<center><input type=\"IMAGE\"" . makeButton("weiter", "src") . " name=\"\"></center></form>";
         $infobox = array    (
@@ -164,4 +140,3 @@ $export_pagename = _("Datenexport - Startseite");
                                             "text"  => sprintf(_("W&auml;hlen Sie die Art der Daten, die Sie exportieren wollen, und die Einrichtung, aus der die Daten gelesen werden sollen. Klicken Sie dann auf 'weiter.'"), $link2, "</a>")
                                         );
         }
-?>

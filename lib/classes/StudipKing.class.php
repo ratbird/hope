@@ -143,7 +143,7 @@ class StudipKing {
     private static function textual_representation($type, $amount)
     {
         $alt_text = array(
-            'files'             => "%d hochgeladene Dateien",
+            'files'            => "%d hochgeladene Dateien",
             'forum'            => "%d Forums-Beiträge",
             'wiki'             => "%d Wiki-Beiträge",
             'guestbook_writer' => "%d geschriebene Gästebucheinträge",

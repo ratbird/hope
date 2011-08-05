@@ -39,7 +39,6 @@ if ($cmd_cal == 'chng_cal_settings') {
         'type_week' => $cal_type_week,
         'holidays' => $cal_holidays,
         'sem_data' => $cal_sem_data,
-        'link_edit' => $cal_link_edit,
         'delete' => $cal_delete,
         'step_week_group' => $cal_step_week_group,
         'step_day_group' => $cal_step_day_group

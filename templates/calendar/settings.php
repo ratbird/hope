@@ -46,14 +46,6 @@ $css_switcher->switchClass();
                     </td>
                 </tr>
                 <tr><? $css_switcher->switchClass(); ?>
-                    <td align="right" class="blank" style="border-bottom:1px dotted black;">
-                        <?= _("Extras:"); ?>
-                    </td>
-                    <td class="<? echo $css_switcher->getClass(); ?>">
-                        <label><input type="checkbox" name="cal_link_edit" value="TRUE"<? if($calendar_user_control_data['link_edit']) : echo ' checked'; endif ?>>&nbsp;<?= _("Bearbeiten-Link in Wochenansicht"); ?></label>
-                    </td>
-                </tr>
-                <tr><? $css_switcher->switchClass(); ?>
                     <td align="right" class="blank">
                         <label for="cal_delete"><?= _("L&ouml;schen von Terminen:"); ?></label>
                     </td>

@@ -105,16 +105,16 @@ else
     $result = "" . $TMP_PATH . "/export/" . $result_file;
     $xml_process_file = "" . $TMP_PATH . "/export/" . $xml_file_id;
     $xslt_process_file = $GLOBALS['STUDIP_BASE_PATH'] . '/' . $PATH_EXPORT . "/" . $xslt_files[$choose]["file"];
-    if (xslt_process($xh, "file://$xml_process_file" , "file://$xslt_process_file", "file://$result") AND ($o_mode != "passthrough"))
-    {
+
+    if (xslt_process($xh, "file://$xml_process_file" , "file://$xslt_process_file", "file://$result") && ($o_mode != "passthrough")) {
         $export_msg .= sprintf(_("Die Daten wurden erfolgreich konvertiert. %s Sie k&ouml;nnen die Ausgabedatei jetzt herunterladen. %s"), "<br>", "<br>");
         $xslt_info = _("Die Daten sind nun im gew&auml;hlten Format verf&uuml;gbar.");
         $xslt_process = true;
         $link1 = "<a href=\"" . $TMP_PATH . "/" . $result_file . "\">";
         $link2 = '<a href="'. GetDownloadLink($result_file, $xslt_filename .'.'. $format, 2) . '">';
-    }
-    elseif ($o_mode != "passthrough")
-    {
+
+    } elseif ($o_mode != "passthrough") {
+
         $export_error .= sprintf(_("Bei der Konvertierung ist ein Fehler aufgetreten. %sDer XSLT-Prozessor meldet den Fehler Nr. %s: %s %s"), "<br>", xslt_errno($xh), xslt_error($xh), "<br>");
         $xslt_info = _("Bei der Konvertierung ist ein Fehler aufgetreten.");
         $xslt_process = false;
@@ -127,13 +127,8 @@ else
     if ($o_mode == "passthrough")
     {
         header("Location: " . GetDownloadLink($result_file, $xslt_filename .'.'. $format, 2));
-        //readfile( $TMP_PATH . "/export/" . $result_file);
         unlink( $TMP_PATH . "/export/" . $xml_file_id);
-        //unlink( $TMP_PATH . "/export/" . $result_file);
-    }
-    else
-    {
-
+    } else {
 
         $export_weiter_button = "<form method=\"POST\" action=\"" . $PHP_SELF . "\">";
         $export_weiter_button .= CSRFProtection::tokenTag();
@@ -156,8 +151,7 @@ else
             $export_weiter_button .= "<center><input type=\"IMAGE\" " . makeButton("zurueck", "src") . " name=\"back\" value=\"". _("Zur&uuml;ck")."\"><br>";
         $export_weiter_button .= "</center></form>";
 
-        if ($xslt_process)
-        {
+        if ($xslt_process) {
             $export_pagecontent .= "<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\"><tr><td width=\"40%\">";
             $export_pagecontent .= "&nbsp; <b>" . _("Ausgabe-Datei: ") . "</b>";
             $export_pagecontent .= "</td><td>" . $link2 . htmlReady($xslt_filename) . "." . htmlReady($format) . "</a>";
@@ -175,8 +169,7 @@ else
         $xslt_printdesc = _("XSLT-Datei");
         $xslt_printcontent = _("Dies ist das XSLT-Script zur Konvertierung der Daten. Klicken Sie auf den Dateinamen, um die Datei zu öffnen.") . '<br>';
 
-        if ($xslt_process)
-        {
+        if ($xslt_process) {
             $result_printimage = '<a href="'. GetDownloadLink($result_file, $xslt_filename .'.'. $format, 2) . '"> <img class="text-top" src="'.$GLOBALS['ASSETS_URL'].'images/' . $export_icon[$format] . '"></a>';
             $result_printlink = '<a href="'. GetDownloadLink($result_file, $xslt_filename .'.'. $format, 2) . '" class="tree"> ' . htmlReady($xslt_filename) . '.' . htmlReady($format) . '</a>';
             $result_printdesc = _("Ausgabe-Datei");
@@ -184,21 +177,24 @@ else
         }
 
 
-        $infobox = array    (
-        array ("kategorie"  => _("Information:"),
-            "eintrag" => array  (
-                            array ( "icon" => "icons/16/black/info.png",
-                                    "text"  => $xslt_info
-                                 )
-                            )
+        $infobox = array(
+            array(
+                'kategorie'  => _("Information:"),
+                'eintrag'    => array(
+                    array(
+                        'icon' => 'icons/16/black/info.png',
+                        'text' => $xslt_info
+                     )
+                )
             )
         );
-        if ($xslt_process)
-        {
+
+        if ($xslt_process) {
             $infobox[1]["kategorie"] = _("Aktionen:");
-                $infobox[1]["eintrag"][] = array (  'icon' => "icons/16/black/download.png" ,
-                                            "text"  => sprintf(_("Um die Ausgabe-Datei herunterzuladen, klicken Sie %shier%s."), $link2, "</a>")
-                                        );
+            $infobox[1]["eintrag"][] = array(
+                'icon' => 'icons/16/black/download.png' ,
+                'text' => sprintf(_("Um die Ausgabe-Datei herunterzuladen, klicken Sie %shier%s."), $link2, "</a>")
+            );
         }
 
         include_once ("$PATH_EXPORT/oscar.php");

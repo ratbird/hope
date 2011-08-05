@@ -101,6 +101,13 @@ if ($calendar->view->getType() == 7) {
         <? for ($i = 0; $i < $calendar->view->getType(); $i++) : ?>
         <td class="steel1" style="text-align:right; vertical-align:bottom;"<?= (($tab_arr[$i]['max_cols'] > 0) ? ' colspan="' . ($tab_arr[$i]['max_cols'] + 1) . '"' : '') ?>>
             <?= $this->render_partial('calendar/_day_dayevents', array('em' => $tab_arr[$i])) ?>
+            <? if ($calendar->havePermission(CALENDAR_PERMISSION_WRITABLE)) : ?>
+                <div>
+                    <a href="<?= URLHelper::getLink('',  array('cmd' => 'edit', 'atime' => $calendar->view->wdays[$i]->getTs(), 'devent' => '1')) ?>">
+                        <img src="<?= Assets::image_path('calplus.gif') ?>"<?= tooltip(_("neuer Tagestermin")) ?>>
+                    </a>
+                </div>
+            <? endif ?>
         </td>
         <? endfor ?>
         <td class="precol1w"<?= $colspan_1 ?>>
@@ -126,7 +133,7 @@ if ($calendar->view->getType() == 7) {
             <? endif ?>
         <? endif ?>
         <? for ($y = 0; $y < $calendar->view->getType(); $y++) : ?>
-            <?= $this->render_partial('calendar/_day_cell', array('day' => $calendar->view->wdays[$y], 'em' => $tab_arr[$y], 'row' => $i, 'start' => $start * 3600)); ?>
+            <?= $this->render_partial('calendar/_day_cell', array('day' => $calendar->view->wdays[$y], 'em' => $tab_arr[$y], 'row' => $i, 'start' => $start * 3600, 'i' => $i + ($start * 3600 / $calendar->getUserSettings('step_week')), 'step' => $calendar->getUserSettings('step_week'))); ?>
         <? endfor ?>
         <? if ($rowspan > 1) : ?>
             <? if ($minutes == 0) : ?>

@@ -133,11 +133,11 @@ class EvaluationExportManagerCSV extends EvaluationExportManager {
       if (empty ($this->filehandle))
          return $this->throwError (1, _("ExportManager::Konnte temporäre Datei nicht öffnen."));
 
-      fputs ($this->filehandle, EVALEXPORT_DELIMITER._("Nummer").EVALEXPORT_DELIMITER.EVALEXPORT_SEPERATOR);
-      fputs ($this->filehandle, EVALEXPORT_DELIMITER._("Benutzername").EVALEXPORT_DELIMITER.EVALEXPORT_SEPERATOR);
-      fputs ($this->filehandle, EVALEXPORT_DELIMITER._("Nachname").EVALEXPORT_DELIMITER.EVALEXPORT_SEPERATOR);
-      fputs ($this->filehandle, EVALEXPORT_DELIMITER._("Vorname").EVALEXPORT_DELIMITER.EVALEXPORT_SEPERATOR);
-      fputs ($this->filehandle, EVALEXPORT_DELIMITER._("Email").EVALEXPORT_DELIMITER.EVALEXPORT_SEPERATOR);
+      fputs ($this->filehandle, EVALEXPORT_DELIMITER . _("Nummer") . EVALEXPORT_DELIMITER.EVALEXPORT_SEPERATOR);
+      fputs ($this->filehandle, EVALEXPORT_DELIMITER . _("Benutzername") . EVALEXPORT_DELIMITER.EVALEXPORT_SEPERATOR);
+      fputs ($this->filehandle, EVALEXPORT_DELIMITER . _("Nachname") . EVALEXPORT_DELIMITER.EVALEXPORT_SEPERATOR);
+      fputs ($this->filehandle, EVALEXPORT_DELIMITER . _("Vorname") . EVALEXPORT_DELIMITER.EVALEXPORT_SEPERATOR);
+      fputs ($this->filehandle, EVALEXPORT_DELIMITER . _("Email") . EVALEXPORT_DELIMITER.EVALEXPORT_SEPERATOR);
 
       $db      = new EvaluationAnswerDB ();
 
@@ -235,16 +235,18 @@ class EvaluationExportManagerCSV extends EvaluationExportManager {
          $surname  = "";
          $email    = "";
          if (!$this->eval->isAnonymous ()) {
-             $data = DBManager::get()->query("SELECT username, Vorname, Nachname, Email FROM auth_user_md5 WHERE user_id = " . DBManager::get()->quote($userID))->fetchAll(PDO::FETCH_NUM);
+             $data = DBManager::get()->query("SELECT username, Vorname, Nachname, Email"
+                   . "FROM auth_user_md5 WHERE user_id = "
+                   . DBManager::get()->quote($userID))->fetchAll(PDO::FETCH_NUM);
              if (is_array($data[0])) {
                  list($username, $name, $surname, $email) = $data[0];
              }
          }
-         fputs ($this->filehandle, EVALEXPORT_DELIMITER.++$counter.EVALEXPORT_DELIMITER.EVALEXPORT_SEPERATOR);
-         fputs ($this->filehandle, EVALEXPORT_DELIMITER.$username.EVALEXPORT_DELIMITER.EVALEXPORT_SEPERATOR);
-         fputs ($this->filehandle, EVALEXPORT_DELIMITER.$surname.EVALEXPORT_DELIMITER.EVALEXPORT_SEPERATOR);
-         fputs ($this->filehandle, EVALEXPORT_DELIMITER.$name.EVALEXPORT_DELIMITER.EVALEXPORT_SEPERATOR);
-         fputs ($this->filehandle, EVALEXPORT_DELIMITER.$email.EVALEXPORT_DELIMITER.EVALEXPORT_SEPERATOR);
+         fputs ($this->filehandle, EVALEXPORT_DELIMITER . ++$counter . EVALEXPORT_DELIMITER.EVALEXPORT_SEPERATOR);
+         fputs ($this->filehandle, EVALEXPORT_DELIMITER . $username . EVALEXPORT_DELIMITER.EVALEXPORT_SEPERATOR);
+         fputs ($this->filehandle, EVALEXPORT_DELIMITER . $surname . EVALEXPORT_DELIMITER.EVALEXPORT_SEPERATOR);
+         fputs ($this->filehandle, EVALEXPORT_DELIMITER . $name . EVALEXPORT_DELIMITER.EVALEXPORT_SEPERATOR);
+         fputs ($this->filehandle, EVALEXPORT_DELIMITER . $email . EVALEXPORT_DELIMITER.EVALEXPORT_SEPERATOR);
 
          /* ------------------------------------------------- end: user info */
 
@@ -281,21 +283,24 @@ class EvaluationExportManagerCSV extends EvaluationExportManager {
 
             /* Questiontype: multiple chioice ------------------------------ */
             elseif ($type == EVALQUESTION_TYPE_MC) {
-               if ($evalquestion->isMultiplechoice ()) {
-                   foreach($db->getAllAnswers($evalquestion->getObjectID(), $userID) as $answer) {
-                     if ($answer['has_voted'])
-                        $entry = 1;
-                     else
-                        $entry = 0;
-                     $this->addCol ($entry);
-                  }
-               } else {
-                  $entry = "";
-                  foreach($db->getAllAnswers($evalquestion->getObjectID(), $userID, true) as $answer) {
-                      if ($answer['has_voted']) $entry = preg_replace ("(\r\n|\n|\r)", " ", $answer['text']);
-                  }
-                  $this->addCol ($entry);
-               }
+                if ($evalquestion->isMultiplechoice ()) {
+                    foreach($db->getAllAnswers($evalquestion->getObjectID(), $userID) as $answer) {
+                        if ($answer['has_voted']) {
+                            $entry = 1;
+                        } else {
+                            $entry = 0;
+                        }
+                        $this->addCol ($entry);
+                    }
+                } else {
+                    $entry = "";
+                    foreach($db->getAllAnswers($evalquestion->getObjectID(), $userID, true) as $answer) {
+                        if ($answer['has_voted']) {
+                            $entry = preg_replace ("(\r\n|\n|\r)", " ", $answer['text']);
+                        }
+                    }
+                    $this->addCol ($entry);
+                }
             }
             /* ------------------------------------------------------ end: mc */
 

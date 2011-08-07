@@ -298,14 +298,14 @@ td.rahmen_steel {
     border-style: solid;
     border-color: #000000;
     border-width: 1px;
-    background-image: url('../images/steel1.jpg');
+    background-color: #f3f5f8;
 }
 
 td.rahmen_steelgraulight {
     border-style: solid;
     border-color: #000000;
     border-width: 1px;
-    background-image: url('../images/steelgraulight.jpg');
+    background-color: #e7ebf1;
 }
 
 td.quote {
@@ -846,7 +846,7 @@ table.index_box {
 
 td.index_box_cell {
     padding: 4px;
-    background-image: url('../images/steel1.jpg');
+    background-color: #f3f5f8;
 }
 
 /* --- Inhaltsverzeichnis Wikis --------------------------------------------- */
@@ -1142,11 +1142,11 @@ div.clear {
 }
 
 #study_area_selection .odd {
-    background-image: url("../images/steel1.jpg");
+    background-color: #f3f5f8;
 }
 
 #study_area_selection .even {
-    background-image: url("../images/steelgraulight.jpg");
+    background-color: #e7ebf1;
 }
 
 #study_area_selection_chosen ul,
@@ -1176,7 +1176,7 @@ div.overdiv {
     margin: 0px;
     padding: 0px;
     width: 600px;
-    background-image: url('../images/steel1.jpg');
+    background-color: #f3f5f8;
     z-index: 2;
 }
 div.overdiv div.title {
@@ -1203,7 +1203,7 @@ div.overdiv a.title {
 div.overdiv div.content {
     margin:0px;
     padding:2px;
-    background-image: url('../images/steel1.jpg');
+    background-color: #f3f5f8;
     overflow: hidden;
     clear: both;
 }
@@ -1427,7 +1427,7 @@ img.plugin_preview {
 .click_me div {
     float: left;
     margin: 0.5em;
-    background : url('../images/steel1.jpg');
+    background-color: #f3f5f8;
     width: 21.5em;
     height: 10em;
     min-width: 21.5em;

@@ -21,6 +21,10 @@ require_once 'lib/classes/Semester.class.php';
  *
  * Get the results dependend on the current session with
  *   AdminList::getInstance()->getSearchResults();
+ * It also returns templates for a select-box or navigation-arrows with
+ *   AdminList::getInstance()->getSelectTemplate()
+ * or
+ *   AdminList::getInstance()->getTopLinkTemplate()
  *
  * @author Rasmus Fuhse <fuhse@data-quest.de>
  */

@@ -76,7 +76,8 @@ class DateTemplatesTests extends UnitTestCase
 
         $data = renderTemplate('dates/seminar_export_location', $this->testData);
         $compare = 'Hörsaal 1 <br>: Mo. 10:00 - 12:00 (2x), ' . "\n"
-                 . '(<script>alert("böse");</script>): Mo. 10:00 - 12:00 (16x)';
+                 . '(<script>alert("böse");</script>): Mo. 10:00 - 12:00 (16x)' . "\n"
+                 . ' 12.05. 09:00 - 13:00';
         $this->assertEqual($data, $compare);
 
         $data = renderTemplate('dates/date_export', $this->testData, array('date' => new SingleDate()));

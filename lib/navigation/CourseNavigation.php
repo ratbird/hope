@@ -168,6 +168,12 @@ class CourseNavigation extends Navigation
                     }
                 }
 
+                // show entry for simulated participant view
+                $item= new Navigation('Studierendenansicht simulieren', 'dispatch.php/course/change_view?cid='.Request::option('cid'));
+                $item->setDescription(_('Hier können Sie sich die Veranstaltung so ansehen, wie sie für Ihre TeilnehmerInnen aussieht.'));
+                $item->setImage('icons/16/black/visibility-visible.png');
+                $main->addSubNavigation('change_view', $item);
+
             }
 
         }
@@ -186,13 +192,6 @@ class CourseNavigation extends Navigation
                 $item->setDescription(_('Richten Sie fragebogenbasierte Umfragen und Lehrevaluationen ein.'));
                 $navigation->addSubNavigation('evaluation', $item);
             }
-        }
-
-        if ($perm->have_studip_perm('tutor', $SessSemName[1]) && !$perm->have_perm('admin') && !$studygroup_mode) {
-            // show entry for simulated participant view
-            $item= new Navigation('Ansicht simulieren', 'dispatch.php/course/change_view?cid='.Request::option('cid'));
-            $item->setDescription(_('Hier können Sie sich die Veranstaltung so ansehen, wie sie für Ihre TeilnehmerInnen aussieht.'));
-            $navigation->addSubNavigation('change_view', $item);
         }
 
         $this->addSubNavigation('admin', $navigation);

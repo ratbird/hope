@@ -34,6 +34,9 @@
 // +---------------------------------------------------------------------------+
 
 require_once('lib/classes/Avatar.class.php');
+if (Config::get()->getValue('CALENDAR_GROUP_ENABLE')) {
+    require_once('lib/calendar/lib/Calendar.class.php');
+}
 
 /**
 * built a not existing ID
@@ -338,7 +341,7 @@ function ShowUserInfo ($contact_id)
 
 function ShowContact ($contact_id)
 {   // Ausgabe eines Kontaktes
-    global $PHP_SELF, $open, $filter, $forum, $auth, $view;
+    global $PHP_SELF, $open, $filter, $view;
     $db=new DB_Seminar;
     $db->query ("SELECT contact_id, user_id, buddy, calpermission FROM contact WHERE contact_id = '$contact_id'");
     if ($db->next_record()) {
@@ -347,70 +350,63 @@ function ShowContact ($contact_id)
 
             // switch icon to display the users permission
             if (get_config('CALENDAR_GROUP_ENABLE') && $GLOBALS['perm']->get_perm($db->f('user_id') != 'root')) {
-                $calstatus = '<a href="' . URLHelper::getLink('', array('view' => $view, 'cmd' => 'changecal', 'contact_id' => $contact_id, 'userid' => $db->f('user_id'), 'open' => $open, 'rnd' => $rnd));
-                $calstatus .= '#anker">';
                 switch ($db->f('calpermission')) {
                     case 2:
-                        $calstatus .= sprintf("<img src=\"{$GLOBALS['ASSETS_URL']}images/group_cal_visible.gif\" border=\"0\" %s>",
-                        tooltip(_("Mein Kalender ist für dieses Mitglied lesbar")));
+                        $calstatus .= Assets::img('icons/16/blue/visibility/calendar-visible.png', tooltip(_("Mein Kalender ist für diese Person sichtbar")));
                     break;
                     case 4:
-                        $calstatus .= sprintf("<img src=\"{$GLOBALS['ASSETS_URL']}images/group_cal_writable.gif\" border=\"0\" %s>",
-                        tooltip(_("Mein Kalender ist für dieses Mitglied schreibbar")));
+                        $calstatus .= Assets::img('group_cal_writable.gif', tooltip(_("Mein Kalender ist für diese Person schreibbar")));
                     break;
                     default:
-                        $calstatus .= sprintf("<img src=\"{$GLOBALS['ASSETS_URL']}images/group_cal.gif\" border=\"0\" %s>",
-                        tooltip(_("Mein Kalender ist für dieses Mitglied unsichtbar")));
+                        $calstatus .= Assets::img('icons/16/blue/visibility/calendar-invisible.png', tooltip(_("Mein Kalender ist für diese Person unsichtbar")));
                     break;
                 }
-                $calstatus .= '</a>&nbsp;';
+                $calstatus .= '&nbsp;';
             } else {
                 $calstatus = '';
             }
 
             if ($db->f("buddy")=="1") {
-                $buddy = "<a href=\"$PHP_SELF?view=$view&cmd=changebuddy&contact_id=$contact_id&open=$open&rnd=$rnd#anker\">".Assets::img('icons/16/red/person.png', array('class' => 'text-top', 'title' =>_('Als Buddy entfernen'))) . "</a>&nbsp; ";
+                $buddy = '<a href=' . URLHelper::getLink('#anker', array('view' => $view, 'cmd' => 'changebuddy', 'contact_id' => $contact_id, 'open' => $open, 'rnd' => $rnd)) . '">' . Assets::img('icons/16/red/person.png', array('class' => 'text-top', 'title' =>_('Als Buddy entfernen'))) . '</a>&nbsp; ';
             } else {
-                $buddy = "<a href=\"$PHP_SELF?view=$view&cmd=changebuddy&contact_id=$contact_id&open=$open&rnd=$rnd#anker\">".Assets::img('icons/16/blue/person.png', array('class' => 'text-top', 'title' =>_('Zu Buddies hinzufügen'))) . "</a>&nbsp; ";
+                $buddy = '<a href="' . URLHelper::getLink('#anker', array('view' => $view, 'cmd' => 'changebuddy', 'contact_id' => $contact_id, 'open' => $open, 'rnd' => $rnd)) . '">' . Assets::img('icons/16/blue/person.png', array('class' => 'text-top', 'title' =>_('Zu Buddies hinzufügen'))) . '</a>&nbsp; ';
             }
-            $lastrow =      "<tr><td colspan=\"2\" class=\"steel1\" align=\"right\">"
-                        .$calstatus . $buddy
-                        ."<a href=\"$PHP_SELF?edit_id=$contact_id\">" . Assets::img('icons/16/blue/edit.png', array('class' => 'text-top', 'title' => _('Editieren'))) . "</a> "
-                        ."<a href=\"contact_export.php?contactid=$contact_id\">"
+            $lastrow = "<tr><td colspan=\"2\" class=\"steel1\" align=\"right\">"
+                        . $calstatus . $buddy
+                        . '<a href="' . URLHelper::getLink('', array('edit_id' => $contact_id)) . '">' . Assets::img('icons/16/blue/edit.png', array('class' => 'text-top', 'title' => _('Editieren'))) . '</a> '
+                        . '<a href="' . URLHelper::getLink('contact_export.php', array('contactid' => $contact_id)) . '">'
                         .  Assets::img('icons/16/blue/vcard.png', array('class' => 'text-top', 'title' => _("Als vCard exportieren")))
-                        ." <a href=\"$PHP_SELF?view=$view&cmd=delete&contact_id=$contact_id&open=$open\">"
+                        . ' <a href="' . URLHelper::getLink('', array('view' => $view, 'cmd' => 'delete', 'contact_id' => $contact_id, 'open' => $open)) . '">'
                         .  Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _("Kontakt löschen")))
-                        ." </a></td></tr>"
-                        ."<tr><td colspan=\"2\" class=\"steelgraulight\" align=\"center\"><a href=\"$PHP_SELF?view=$view&filter=$filter\">"
-                        .Assets::img('icons/16/blue/arr_1up.png', array('class' => 'text-top', 'title' =>_('Kontakte schließen')))
-                        ."</a></td></tr>";
+                        . ' </a></td></tr>'
+                        . '<tr><td colspan="2" class="steelgraulight" align="center"><a href="' . URLHelper::getLink('', array('view' => $view, 'filter' => $filter)) . '">'
+                        . Assets::img('icons/16/blue/arr_1up.png', array('class' => 'text-top', 'title' =>_('Kontakte schließen')))
+                        . '</a></td></tr>';
         } else {
-
-            $link = "<a href=\"$PHP_SELF?view=$view&filter=$filter&open=".$contact_id."#anker\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/arr_1down.png\" border=\"0\"></a>";
-
-            $lastrow = "<tr><td colspan=\"3\" class=\"steelgraulight\" align=\"center\">".$link."</td></tr>";
+            $link = '<a href="' . URLHelper::getLink('#anker', array('view' => $view, 'filter' => $filter, 'open' => $contact_id)) . '">'. Assets::img('icons/16/blue/arr_1down.png') . '</a>';
+            $lastrow = '<tr><td colspan="3" class="steelgraulight" align="center">' . $link . '</td></tr>';
         }
         if ($open == $contact_id) {     //es ist ein einzelner Beitrag aufgeklappt, also Anker setzen
-            $output = "<a name=\"anker\"></a>";
+            $output = '<a name=\"anker\"></a>';
         } else {
-            $output = "";
+            $output = '';
         }
         $output .= "<table border=\"0\" cellspacing=\"0\" width=\"280\" class=\"blank\">
                     <tr>
-                        <td class=\"blue_gradient\" width=\"99%\"><font size=\"2\"><b>"
-                            .get_fullname($db->f("user_id"), $format = "full_rev",true )."</b></font></td>"
+                        <td class=\"blue_gradient\" width=\"99%\" style=\"font-weight:bold;\">"
+                            . get_fullname($db->f("user_id"), $format = "full_rev",true ) . '</td>'
                             . "<td class=\"blue_gradient\">"
                             // export to vcf
-                            ."<a href=\"sms_send.php?sms_source_page=contact.php&rec_uname=".get_username($db->f("user_id"))."\">" . Assets::img('icons/16/blue/mail.png', array('class' => 'text-top', 'title' =>_('Nachricht schreiben'))) . "</a>"
-                            ."</td>"
-                            ."
+                            . '<a href="' . URLHelper::getLink('sms_send.php', array('sms_source_page' => 'contact.php', 'rec_uname' => get_username($db->f("user_id")))) . '">' . Assets::img('icons/16/blue/mail.png', array('class' => 'text-top', 'title' =>_('Nachricht schreiben'))) . '</a>'
+                            . '</td>'
+                            . "
                         </td>
                     </tr>
                     </table>
                     <table border=\"0\" cellspacing=\"0\" width=\"280\" class=\"blank\">"
-                        .ShowUserInfo ($contact_id)
+                        . ShowUserInfo ($contact_id)
                         . $lastrow
-                ."</table>";
+                . '</table>';
     } else {
         $output = _("Fehler!");
     }
@@ -439,45 +435,57 @@ function SearchResults ($search_exp)
 
 function ShowEditContact ($contact_id)
 {   // Ausgabe eines zu editierenden Kontaktes
-    global $PHP_SELF, $open, $filter, $edit_id;
-    $db=new DB_Seminar;
-    $db2=new DB_Seminar;
-    $db->query ("SELECT user_id FROM contact WHERE contact_id = '".$contact_id."' ");
-    if ($db->next_record()) {
-
-        $lastrow =  "<tr><td class=\"steelkante\">&nbsp; "
-                    ."<input type=\"text\" name=\"owninfolabel[]\" value=\"" . _("Neue Rubrik") . "\"></td>"
-                    ."<td colspan=\"2\" class=\"steelkante\"><br><textarea style=\"width: 90%\" cols=\"20\" rows\"3\" wrap=virtual name=\"owninfocontent[]\" value=\"Inhalt\">" . _("Inhalt") . "</textarea>"
-                    ."\n"
-                    . "</td></tr>";
-        $lastrow .= "<tr><td valign=\"middle\" colspan=\"3\" class=\"steelgraulight\" align=\"center\"><br><a href=\"$PHP_SELF?open=$contact_id#anker\"><img " . makeButton("zurueck", "src") . " border=\"0\" ".tooltip(_("zurück zur Übersicht"))."></a>&nbsp; <input type=\"IMAGE\" name=\"search\" " . makeButton("uebernehmen", "src") . " border=\"0\" value=\"uebernehmen\" ".tooltip(_("Seite aktualisieren"))."></form></td></tr>";
+    global $open, $filter, $edit_id;
+    $db = DBManager::get()->prepare('SELECT user_id FROM contact WHERE contact_id = ?');
+    $db->execute(array($contact_id));
+    $result = $db->fetch(PDO::FETCH_ASSOC);
+    if ($result) {
+        $css_switcher = new cssClassSwitcher();
         $output = "<table cellspacing=\"0\" cellpadding=\"3\" width=\"700\" class=\"blank\">
                     <tr>
                         <td class=\"topicwrite\" colspan=\"3\">"
-                            .get_fullname($db->f("user_id"), $format = "full_rev",true )."</td>"
+                            .get_fullname($result['user_id'], $format = "full_rev",true )."</td>"
                             ."
                         </td>
                     </tr>"
                         .ShowUserInfo ($contact_id)."</table><table cellspacing=\"0\" width=\"700\" class=\"blank\">"
-                        ."<form action=\"$PHP_SELF?edit_id=$contact_id\" method=\"POST\">"
+                        .'<form action="' . URLHelper::getLink('', array('edit_id' => $contact_id)) . '" method="post">'
                         . CSRFProtection::tokenTag();
-
-        $db2->query ("SELECT * FROM contact_userinfo WHERE contact_id = '$contact_id' ORDER BY priority");
+        if (Config::get()->getValue('CALENDAR_GROUP_ENABLE')) {
+            $stmt = DBManager::get()->prepare('SELECT calpermission FROM contact WHERE owner_id = ? AND user_id = ?');
+            $stmt->execute(array($GLOBALS['user']->id, $result['user_id']));
+            $cal_perm = $stmt->fetch(PDO::FETCH_ASSOC);
+            $css_switcher->switchClass();
+            $output .= '<input type="hidden" name="user_id" value="' . $result['user_id'] . '">';
+            $output .= '<tr><td class="' . $css_switcher->getClass() . '">&nbsp;' . _("Mein Kalender ist für diese Person:") . '</td><td colspan="2" class="' . $css_switcher->getClass() . '" width="250">';
+            $output .= '<label><input type="radio" name="calperm" value="' . CALENDAR_PERMISSION_FORBIDDEN . '"' . (!$cal_perm['calpermission'] || $cal_perm['calpermission'] == CALENDAR_PERMISSION_FORBIDDEN ? ' checked="checked"' : '') . '>' . _("unsichtbar") . '</label>';
+            $output .= '<label><input type="radio" name="calperm" value="' . CALENDAR_PERMISSION_READABLE . '"' . ($cal_perm['calpermission'] == CALENDAR_PERMISSION_READABLE ? ' checked="checked"' : '') . '>' . _("sichtbar") . '</label>';
+            $output .= '<label><input type="radio" name="calperm" value="' . CALENDAR_PERMISSION_WRITABLE . '"' . ($cal_perm['calpermission'] == CALENDAR_PERMISSION_WRITABLE ? ' checked="checked"' : '') . '>' . _("schreibbar") . '</label>';
+        }
+        $db2 = DBManager::get()->prepare('SELECT * FROM contact_userinfo WHERE contact_id = ? ORDER BY priority');
+        $db2->execute(array($contact_id));
         $i = 0;
-        $output .= "<tr><td class=\"steel1\" colspan=\"3\">&nbsp; </td></tr>";
-        while ($db2->next_record())     {
-            if ($i ==0) {
-                $output .= "<tr><td class=\"steel1\" width=\"100\" NOWRAP>&nbsp; <input type=\"HIDDEN\" name=\"userinfo_id[]\" value=\"".$db2->f("userinfo_id")."\"><input type=\"text\" name=\"existingowninfolabel[]\" value=\"".htmlReady($db2->f("name"))."\"></td><td class=\"steel1\" width=\"250\"><textarea name=\"existingowninfocontent[]\" value=\"".htmlReady($db2->f("content"))."\" style=\"width: 90%\" cols=\"20\" rows\"3\" wrap=virtual>".htmlReady($db2->f("content"))."</textarea></td><td class=\"steel1\" width=\"50\"><a href=\"$PHP_SELF?edit_id=$contact_id&deluserinfo=".$db2->f("userinfo_id")."\">" . Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _("Diesen Eintrag löschen"))) . "</a></td></tr>";
+        foreach ($db2->fetchAll(PDO::FETCH_ASSOC) as $result) {
+            $css_switcher->switchClass();
+            if ($i == 0) {
+                $output .= '<tr><td class="' . $css_switcher->getClass() . '" width="100" nowrap="nowrap">&nbsp; <input type="hidden" name="userinfo_id[]" value="' . $result['userinfo_id'] . '"><input type="text" name="existingowninfolabel[]" value="' . htmlReady($result['name']) . '"></td><td class="' . $css_switcher->getClass() . '" width="250"><textarea name="existingowninfocontent[]" value="' . htmlReady($result['content']) . '" style="width: 90%" cols="20" rows="3" wrap="virtual">' . htmlReady($result['content']) . '</textarea></td><td class="' . $css_switcher->getClass() . '" width="50"><a href="' . URLHelper::getLink('', array('edit_id' => $contact_id, 'deluserinfo' => $result['userinfo_id'])) . '">' . Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _("Diesen Eintrag löschen"))) . "</a></td></tr>";
             } else {
-                $output .= "<tr><td class=\"steel1\" width=\"100\" NOWRAP>&nbsp; <input type=\"HIDDEN\" name=\"userinfo_id[]\" value=\"".$db2->f("userinfo_id")."\"><input type=\"text\" name=\"existingowninfolabel[]\" value=\"".htmlReady($db2->f("name"))."\"></td><td NOWRAP class=\"steel1\" width=\"250\"><textarea name=\"existingowninfocontent[]\" value=\"".htmlReady($db2->f("content"))."\" style=\"width: 90%\" cols=\"20\" rows\"3\" wrap=virtual>".htmlReady($db2->f("content"))."</textarea></td><td class=\"steel1\" width=\"50\" nowrap><a href=\"$PHP_SELF?edit_id=$contact_id&deluserinfo=".$db2->f("userinfo_id")."\">" . Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _("Diesen Eintrag löschen"))) . "</a>&nbsp; <a href=\"$PHP_SELF?edit_id=$contact_id&move=".$db2->f("userinfo_id")."\">" . Assets::img('icons/16/yellow/arr_2up.png', array('class' => 'text-top', 'title' =>_('Diesen Eintrag nach oben schieben')))."</a></td></tr>";
+                $output .= '<tr><td class="' . $css_switcher->getClass() . '" width="100" nowrap="nowrap">&nbsp; <input type="hidden" name="userinfo_id[]" value="' . $result['userinfo_id'] . '"><input type="text" name="existingowninfolabel[]" value="' . htmlReady($result['name']) . '"></td><td nowrap="nowrap" class="' . $css_switcher->getClass() . '" width="250"><textarea name="existingowninfocontent[]" value="' . htmlReady($result['content']) . '" style="width: 90%" cols="20" rows="3" wrap="virtual">' . htmlReady($result['content']) . '</textarea></td><td class="' . $css_switcher->getClass() . '" width="50" nowrap><a href="' . URLHelper::getLink('', array('edit_id' => $contact_id, 'deluserinfo' => $result['userinfo_id'])) . '">' . Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _("Diesen Eintrag löschen"))) . '</a>&nbsp; <a href="' . URLHelper::getLink('', array('edit_id' => $contact_id, 'move' => $result['userinfo_id'])) . '">' . Assets::img('icons/16/yellow/arr_2up.png', array('class' => 'text-top', 'title' =>_('Diesen Eintrag nach oben schieben')))."</a></td></tr>";
             }
             $i++;
         }
         if ($i == 0) { // noch nichts angelegt
             $output .= "<tr><td class=\"steel1\" colspan=\"3\">&nbsp;<font size=\"2\">"._("Sie können hier eigene Rubriken für diesen Kontakt anlegen:")."</font></td></tr>";
         }
-        $output .= "<tr><td class=\"steel1\" colspan=\"3\">&nbsp; </td></tr>".$lastrow
-                ."</table>";
+        $css_switcher->switchClass();
+        $output .= '<tr><td class="' . $css_switcher->getClass() . '">&nbsp; '
+                    . '<input type="text" name="owninfolabel[]" value="' . _("Neue Rubrik") . '"></td>'
+                    . '<td colspan="2" class="' . $css_switcher->getClass() . '"><textarea style="width: 90%" cols="20" rows="3" wrap="virtual" name="owninfocontent[]" value="Inhalt">' . _("Inhalt") . '</textarea>'
+                    . "\n"
+                    . '</td></tr>';
+        $css_switcher->switchClass();
+        $output .= '<tr><td valign="middle" colspan="3" class="' . $css_switcher->getClass() . '" align="center"><a href="' . URLHelper::getLink('#anker', array('open' => $contact_id)) . '">' . makeButton('zurueck', 'img', _("zurück zur Übersicht")) . '</a>&nbsp; ' . makeButton('uebernehmen', 'input', _("übernehmen")) . '</form></td></tr>';
+        $output .= '</table>';
     } else {
         $output = _("Fehler!");
     }
@@ -638,22 +646,11 @@ function PrintAllContact($filter="")
     echo "</td></tr></table>";
 }
 
-function switch_member_cal ($user_id) {
-    global $user;
-
-    $perm_user = $GLOBALS['perm']->get_perm($user_id);
-    // users with global perm 'root' or 'admin' have no calendar
-    if ($perm_user != 'admin' && $perm_user != 'root') {
-        $stmt = DBManager::get()->prepare('SELECT calpermission FROM contact WHERE owner_id = ? AND user_id = ?');
-        $stmt->execute(array($user->id, $user_id));
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($result) {
-            $calperm = $result['calpermission'];
-            $calperm = (($calperm > 4 || $calperm < 1) ? 1 : $calperm);
-            $calperm = ($calperm < 4 ? $calperm * 2 : 1);
-            $stmt = DBManager::get()->prepare('UPDATE contact SET calpermission = ? WHERE owner_id = ? AND user_id = ?');
-            $stmt->execute(array($calperm, $user->id, $user_id));
-        }
+// set the permission for the own calendar for the contact with the given user_id
+function switch_member_cal ($user_id, $permission) {
+    if (in_array($permission, array(CALENDAR_PERMISSION_FORBIDDEN, CALENDAR_PERMISSION_READABLE, CALENDAR_PERMISSION_WRITABLE))) {
+        $stmt = DBManager::get()->prepare('UPDATE contact SET calpermission = ? WHERE owner_id = ? AND user_id = ?');
+        $stmt->execute(array($permission, $GLOBALS['user']->id, $user_id));
     }
 }
 

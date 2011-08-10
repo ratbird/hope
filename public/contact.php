@@ -98,6 +98,13 @@ if ($cmd == "changebuddy") {
     }
 }
 
+// change calendar permissions
+if (!is_null(Request::get('calperm')))  {
+    if (Config::get()->getValue('CALENDAR_GROUP_ENABLE')) {
+        switch_member_cal(Request::get('user_id'), Request::get('calperm', CALENDAR_PERMISSION_FORBIDDEN));
+    }
+}
+
 // delete a single userinfo
 
 if ($deluserinfo) {
@@ -127,6 +134,13 @@ $size_of_book = GetSizeofBook()
 <form action="<? echo $PHP_SELF ?>?cmd=search#anker" method="post">
 <?= CSRFProtection::tokenTag() ?>
 <table width = "100%" cellspacing="0" border="0" cellpadding="0">
+<?
+if (Request::get('edit_id') && Request::submitted('uebernehmen')) {
+    echo '<tr><td class="blank" colspan="2">';
+    echo MessageBox::success(_("Die Änderungen wurden übernommen."));
+    echo '</td></tr>';
+}
+?>
     <tr>
         <td class="blank" align="left">
 <?

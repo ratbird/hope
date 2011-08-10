@@ -5,7 +5,7 @@
 # Lifter003: TODO
 # Lifter010: TODO
 /*
-  admin_statusgruppe.php - Statusgruppen-Verwaltung von Stud.IP.
+  contact_statusgruppe.php - Statusgruppen-Verwaltung von Stud.IP.
   Copyright (C) 2002 Ralf Stockmann <rstockm@gwdg.de>
 
   This program is free software; you can redistribute it and/or
@@ -133,11 +133,10 @@ function PrintAktualStatusgruppen($range_id, $view, $edit_id = '')
 
                     $fullname = $db2->f('fullname');
                     $identifier = $db2->f('username');
-                    $have_calendar = true;
 
                     // query whether the current user has the permission to access the calendar
                     // of this user
-                    if ($GLOBALS['CALENDAR_GROUP_ENABLE'] && $have_calendar) {
+                    if ($GLOBALS['CALENDAR_GROUP_ENABLE']) {
                         $query = "SELECT calpermission FROM contact WHERE owner_id = '" . $db2->f('user_id');
                         $query .= "' AND user_id = '{$user->id}' AND calpermission > 1";
                         $db3->query($query);
@@ -158,30 +157,25 @@ function PrintAktualStatusgruppen($range_id, $view, $edit_id = '')
                     echo "\n<tr>\n\t\t<td><font color=\"#AAAAAA\">$k</font></td>";
                     echo "<td class=\"$class\"><font size=\"2\" color=\"$color\">";
                     echo htmlReady($fullname) . "</font></td>";
-                    if ($GLOBALS['CALENDAR_GROUP_ENABLE'] && $have_calendar) {
-                        $perm_user = $GLOBALS['perm']->get_perm($db2->f('user_id'));
-                        $perm_own = !$GLOBALS['perm']->have_perm('admin');
-                        if ($perm_user != 'admin'
-                                && $perm_user != 'root'
-                                && $perm_own) {
-                            echo "<td class=\"$class\">";
-                            echo "<a href=\"$PHP_SELF?cmd=switch_member_cal&group_id=$statusgruppe_id";
-                            echo "&username=" . $db2->f('username') . "&view=$view&lid=$lid#$statusgruppe_id\">";
-                            switch ($db3->f('calpermission')) {
-                                case 2:
-                                    echo Assets::img('group_cal_visible.gif', tooltip(_("Mein Kalender ist für dieses Mitglied lesbar")));
-                                    break;
-                                case 4:
-                                    echo Assets::img('group_cal_writable.gif', tooltip(_("Mein Kalender ist für dieses Mitglied schreibbar")));
-                                    break;
-                                default:
-                                    echo Assets::img('group_cal.gif', tooltip(_("Mein Kalender ist für dieses Mitglied unsichtbar")));
-                                    break;
-                            }
-                            echo '</a></td>';
-                        } else {
-                            echo "<td class=\"$class\">&nbsp;</td>\n";
+                    if ($GLOBALS['CALENDAR_GROUP_ENABLE']) {
+                        echo "<td class=\"$class\">";
+                        echo '<a href="';
+                        switch ($db3->f('calpermission')) {
+                            case CALENDAR_PERMISSION_READABLE:
+                                echo URLHelper::getLink('#' . $statusgruppe_id, array('user_id' => $db2->f('user_id'), 'view' => $view, 'lid' => $lid, 'calperm' => CALENDAR_PERMISSION_WRITABLE)) . '">';
+                                echo Assets::img('icons/16/blue/visibility/calendar-visible.png', tooltip(_("Mein Kalender ist für diese Person lesbar")));
+                                break;
+                            case CALENDAR_PERMISSION_WRITABLE:
+                                echo URLHelper::getLink('#' . $statusgruppe_id, array('user_id' => $db2->f('user_id'), 'view' => $view, 'lid' => $lid, 'calperm' => CALENDAR_PERMISSION_FORBIDDEN)) . '">';
+                                echo Assets::img('group_cal_writable.gif', tooltip(_("Mein Kalender ist für diese Person schreibbar")));
+                                break;
+                            default:
+                                echo URLHelper::getLink('#' . $statusgruppe_id, array('user_id' => $db2->f('user_id'), 'view' => $view, 'lid' => $lid, 'calperm' => CALENDAR_PERMISSION_READABLE)) . '">';
+                                echo Assets::img('icons/16/blue/visibility/calendar-invisible.png', tooltip(_("Mein Kalender ist für diese Person unsichtbar")));
+                                break;
                         }
+                        echo '</a></td>';
+
                     } else {
                         echo "<td class=\"$class\">&nbsp;</td>\n";
                     }
@@ -346,13 +340,9 @@ if ($cmd == 'swap') {
 
 // Switch Group calendar access
 if ($CALENDAR_GROUP_ENABLE) {
-    if ($cmd == 'switch_grp_cal')
-        switch_grp_cal($group_id);
-
     // Switch calendar access for group members
-
-    if ($cmd == 'switch_member_cal') {
-        switch_member_cal(get_userid($_GET['username']));
+    if (Request::get('calperm')) {
+        switch_member_cal(Request::get('user_id'), Request::get('calperm', CALENDAR_PERMISSION_FORBIDDEN));
     }
 }
 
@@ -463,7 +453,7 @@ if (is_array($msgs)) {
         }
         echo "<br><br>\n";
         if ($GLOBALS['CALENDAR_GROUP_ENABLE']) {
-            printf(_("%sRot%s dargestellte Benutzernamen kennzeichnen Benutzer, auf deren Kalender Sie Zugriff haben."), '<span style="color:#FF0000;">', '</span>');
+            printf(_("%sRot%s dargestellte Nutzernamen kennzeichnen Personen, auf deren Kalender Sie Zugriff haben."), '<span style="color:#FF0000;">', '</span>');
         }
     }
     echo "\n</td>\n";

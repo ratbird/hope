@@ -71,10 +71,6 @@ $message_types = array('msg' => "success", 'error' => "error", 'info' => "info")
      <?= MessageBox::$message_types[$msg[0]]($msg[1]) ?>
 <? endforeach ?>
 
-<? if ($adminTopLinks) : ?>
-    <?= $adminTopLinks->render() ?>
-<? endif ?>
-
 <div style="min-width: 600px">
 
 <form name="details" method="post" action="<?= $controller->url_for('course/basicdata/set' , $course_id) ?>">

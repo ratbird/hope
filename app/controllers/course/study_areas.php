@@ -133,7 +133,6 @@ class Course_StudyAreasController extends AuthenticatedController
         }
         if ($perm->have_perm("admin")) {
             $this->adminList = AdminList::getInstance()->getSelectTemplate($this->course_id);
-            $this->adminTopLinks = AdminList::getInstance()->getTopLinkTemplate($this->course_id);
         }
 
         $this->url = $this->url_for('course/study_areas/show/'.$course_id);

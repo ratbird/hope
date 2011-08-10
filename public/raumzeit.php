@@ -171,7 +171,6 @@ $dozenten = $sem->getMembers('dozent');
 
 if ($perm->have_studip_perm("admin",$sem->getId())) {
     $adminList = AdminList::getInstance()->getSelectTemplate($sem->getId());
-    $adminTopLinks = AdminList::getInstance()->getTopLinkTemplate($sem->getId());
 }
 
 // template-like output
@@ -179,7 +178,6 @@ if ($perm->have_studip_perm("admin",$sem->getId())) {
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
     <tr>
         <td class="blank" width="100%" valign="top" style="padding-left: 8px">
-            <?= $adminTopLinks ? $adminTopLinks->render() : "" ?>
             <table width="99%" border="0" cellpadding="2" cellspacing="0">
 
             <?php

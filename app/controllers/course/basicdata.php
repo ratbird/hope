@@ -86,7 +86,6 @@ class Course_BasicdataController extends AuthenticatedController
         //Admin-Liste für den Admin
         if ($perm->have_studip_perm("admin",$this->course_id)) {
             $this->adminList = AdminList::getInstance()->getSelectTemplate($this->course_id);
-            $this->adminTopLinks = AdminList::getInstance()->getTopLinkTemplate($this->course_id);
         }
 
         //Erster Reiter des Akkordions: Grundeinstellungen

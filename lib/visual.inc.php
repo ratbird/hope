@@ -781,6 +781,7 @@ function kill_format ($text) {
                     "'--(((--)*)(\S|\S.*?\S)?\\2)--'s",        // ML-kleiner
                     "'>>(\S|\S.*?\S)>>'is",  // ML-hochgestellt
                     "'<<(\S|\S.*?\S)<<'is",  // ML-tiefgestellt
+                    "'{-(.+?)-}'is" ,        // durchgestrichen
                     "'\n\n  (((\n\n)  )*(.+?))(\Z|\n\n(?! ))'s",  // Absatz eingerueckt
                     "'(?<=\n|^)--+(\d?)(\n|$|(?=<))'m", // Trennlinie
                     "'\[pre\](.+?)\[/pre\]'is" ,        // praeformatierter Text
@@ -802,7 +803,7 @@ function kill_format ($text) {
                     "'\\1'.substr(str_replace('>', ' ', '\\2'), 0, -1)",
                     "'\\1'.substr(str_replace('<', ' ', '\\2'), 0, -1)",
                     "\\1", "\\1", "\\1", "\\1", "\\1", "\\1",
-                    "\\1", "\\1", "\n\\1\n", "", "\\1",'[nop] [/nop]',
+                    "\\1", "\\1", "\\1", "\n\\1\n", "", "\\1",'[nop] [/nop]',
                     //"\\2",
                     '$1 ($2)',
                      //"",

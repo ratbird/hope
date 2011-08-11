@@ -160,8 +160,6 @@ class ResourcesBrowse {
                 $result .= '</a>';
             }
 
-            $result = $top_level_name;
-
             for ($i = sizeof($result_arr)-1; $i>=0; $i--) {
                 if ($view) {
                     $result .= '> <a href="';

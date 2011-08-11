@@ -94,7 +94,13 @@
         </td>
         <td class="<?= $cssSw->getClass() ?>" >
             <?=_("organisatorische Einordnung:")?><br>
-            <?= ($resObject->getInstitutId()) ? "<a href=\"".$resObject->getOrgaLink()."\">" : ""; echo ($resObject->getInstitutId()) ? $resObject->getOrgaName(TRUE)."</a>" : _("keine Zuordnung") ?>
+            <? if ($resObject->getInstitutId()) : ?>
+                <a href="<?= $resObject->getOrgaLink() ?>">
+                    <?= htmlReady($resObject->getOrgaName(TRUE)) ?>
+                </a>
+            <? else : ?>
+                <?= _("keine Zuordnung") ?>
+            <? endif ?>
         </td>
         <td class="<?= $cssSw->getClass() ?>" width="40%">
         <? if ($ObjectPerms->havePerm("admin")) : ?>

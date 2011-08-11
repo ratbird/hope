@@ -170,9 +170,6 @@ switch ($view) {
             $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/add/date.png",
                                     "text"  =>sprintf (_("Eine neue Belegung %serstellen%s"), ($view_mode == "oobj") ? "<a href=\"$PHP_SELF?cancel_edit_assign=1&quick_view=openobject_assign&quick_view_mode=".$view_mode."\">" : "<a href=\"$PHP_SELF?cancel_edit_assign=1&quick_view=edit_object_assign&quick_view_mode=".$view_mode."\">", "</a>"));
 
-        if ($view_mode == "no_nav")
-            $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/search.png",
-                                    "text"  =>"<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."\">"._("zur Ressourcensuche")."</a>");
 
         if ($view_mode != "no_nav") {
             if ($SessSemName["class"] == "sem")
@@ -192,7 +189,7 @@ switch ($view) {
             "text" => '<a href="'. URLHelper::getLink('', array('view' => 'view_schedule', 'print_view' => '1')) . '" target="_blank">' . _("Druckansicht") . '</a>'
         );
 
-       $infobox[0]['eintrag'][] = array(
+        $infobox[0]['eintrag'][] = array(
             'icon' => 'icons/16/black/search.png',
             'text' => '<a href="'. URLHelper::getLink('resources.php?view=search&quick_view_mode=' . $view_mode) .'">'
                    . _('zur Ressourcensuche') . '</a>'

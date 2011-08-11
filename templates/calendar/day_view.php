@@ -17,7 +17,7 @@ SkipLinks::addIndex(_("Tagesansicht"), 'main_content', 100);
     </tr>
 <?  else : ?>
     <tr>
-        <td class="blank" nowrap="nowrap" colspan="2">
+        <td class="blank" nowrap="nowrap">
             <?= $this->render_partial('calendar/_jump_to'); ?>
         </td>
         <td class="blank">
@@ -25,22 +25,19 @@ SkipLinks::addIndex(_("Tagesansicht"), 'main_content', 100);
         </td>
     </tr>
 <? endif ?>
+</table>
+<table class="blank" border="0" cellpadding="10" cellspacing="0" width="100%">
     <tr>
-        <td valign="top" class="blank" colspan="2" nowrap="nowrap">
+        <td valign="top" class="blank" nowrap="nowrap" width="70%">
             <?= $_calendar->toStringDay($atime, $st, $et, Request::get('cal_restrict'), Calendar::getBindSeminare($_calendar->getUserId())) ?>
         </td>
-        <td valign="top" align="left" class="blank">
+        <td valign="top" align="left" class="blank" width="30%">
             <? $imt = Request::int('imt', mktime(12, 0, 0, date('n', $atime) - 1, date('j', $atime), date('Y', $atime))) ?>
             <?= includeMonth($imt, "$PHP_SELF?cmd=showday&atime=", '', '', $atime) ?>
             <? $imt = mktime(12, 0, 0, date('n', $imt) + 1, date('j', $imt), date('Y', $imt)) ?>
             <?= includeMonth($imt, "$PHP_SELF?cmd=showday&atime=", 'NONAVARROWS', '', $atime) ?>
             <? $imt = mktime(12, 0, 0, date('n', $imt) + 1, date('j', $imt), date('Y', $imt)) ?>
             <?= includeMonth($imt, "$PHP_SELF?cmd=showday&atime=", 'NONAVARROWS', '', $atime) ?>
-        </td>
-    </tr>
-    <tr>
-        <td class="blank" width="100%" colspan="3">
-            &nbsp;
         </td>
     </tr>
 </table>

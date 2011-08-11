@@ -26,13 +26,11 @@ SkipLinks::addIndex(_("Wochenansicht"), 'main_content', 100);
     </tr>
 <? endif ?>
 </table>
-<table class="blank" border="0" cellpadding="0" cellspacing="0" style="width:100%; table-layout: fixed;">
+<table class="blank" border="0" cellpadding="10" cellspacing="0" style="width:100%; table-layout: fixed;">
     <tr>
-        <td style="width:100%; overflow:hidden; padding:0 1%;">
-            <div style="overflow:auto; width:100%;">
-                <? //$_calendar->toStringWeek($week_time, $start_time, $end_time, $restrictions = NULL, $sem_ids = NULL) ?>
-                <?= $_calendar->toStringWeek($atime, $st, $et, $_REQUEST['cal_restrict'], Calendar::getBindSeminare($_calendar->getUserId())); ?>
-            </div>
+        <td style="width:100%;">
+            <? //$_calendar->toStringWeek($week_time, $start_time, $end_time, $restrictions = NULL, $sem_ids = NULL) ?>
+            <?= $_calendar->toStringWeek($atime, $st, $et, $_REQUEST['cal_restrict'], Calendar::getBindSeminare($_calendar->getUserId())); ?>
         </td>
     </tr>
 </table>

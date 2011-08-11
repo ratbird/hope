@@ -10,11 +10,11 @@ $end = ($group_calendar->getUserSettings('end') + 1) * 3600;
 // add skip link
 SkipLinks::addIndex(_("Tagesansicht"), 'main_content', 100);
 ?>
-<table id="main_content" class="steelgroup0" width="100%" border="0" cellpadding="0" cellspacing="0">
+<table id="main_content" class="steelgroup0" style="width:100%; table-layout:fixed;" border="0" cellpadding="0" cellspacing="0">
     <tr>
         <td align="center" width="10%" height="40">
             <a href="<?= URLHelper::getLink('', array('cmd' => 'showday', 'atime' => $group_calendar->view->getStart() + $calendar_user_control_data['start'] * 3600 - 86400)) ?>">
-                <?= Assets::img('icons/16/blue/arr_2left.png', tooltip2(_("zurück"))) ?>
+                <?= Assets::img('icons/16/blue/arr_1left.png', tooltip2(_("zurück"))) ?>
             </a>
         </td>
         <td class="calhead" width="80%" class="cal">
@@ -26,12 +26,13 @@ SkipLinks::addIndex(_("Tagesansicht"), 'main_content', 100);
         </td>
         <td align="center" width="10%">
             <a href="<?= URLHelper::getLink('', array('cmd' => 'showday', 'atime' => $group_calendar->view->getStart() + $calendar_user_control_data['start'] * 3600  + 86400)) ?>">
-                <?= Assets::img('icons/16/blue/arr_2right.png', tooltip2(_("vor"))) ?>
+                <?= Assets::img('icons/16/blue/arr_1right.png', tooltip2(_("vor"))) ?>
             </a>
         </td>
     </tr>
     <tr>
         <td colspan="3">
+            <div style="overflow:auto; width:100%;">
             <table width="100%" border="0" cellpadding="2" cellspacing="1" align="center" class="steelgroup0">
                 <? $time = mktime(0, 0, 0, date('n', $atime), date('j', $atime), date('Y', $atime)); ?>
                 <? if ($step < 1) : $colsp = ' colspan="' . (1 / $step) . '"'; endif ?>
@@ -41,7 +42,7 @@ SkipLinks::addIndex(_("Tagesansicht"), 'main_content', 100);
                     </td>
                     <td width="<?= $width1 ?>%" class="precol1w" align="center">
                         <a href="<?= URLHelper::getLink('', array('cmd' => 'edit', 'atime' => $atime, 'cal_group' => $group_id, 'devent' => '1')) ?>">
-                            <?= Assets::img('day.gif', tooltip2(_("Tagestermin"))) ?>
+                            <?= Assets::img('icons/16/blue/schedule.png', tooltip2(_("Tagestermin"))) ?>
                         </a>
                     </td>
                     <? for ($i = $time + $start; $i < $time + $end; $i += 3600 * ceil($step)) : ?>
@@ -109,7 +110,7 @@ SkipLinks::addIndex(_("Tagesansicht"), 'main_content', 100);
                     <td width="<?= $width2 ?>%" class="precol1w" nowrap="nowrap" align="center">&nbsp;</td>
                     <td width="<?= $width1 ?>%" class="precol1w" align="center">
                         <a href="<?= URLHelper::getLink('', array('cmd' => 'edit', 'atime' => $atime, 'cal_group' => $group_id, 'devent' => '1')) ?>">
-                            <?= Assets::img('day.gif', tooltip2(_("Tagestermin"))) ?>
+                            <?= Assets::img('icons/16/blue/schedule.png', tooltip2(_("Tagestermin"))) ?>
                         </a>
                     </td>
                     <? for ($i = $time + $start; $i < $time + $end; $i += 3600 * ceil($step)) : ?>
@@ -121,6 +122,7 @@ SkipLinks::addIndex(_("Tagesansicht"), 'main_content', 100);
                     <? endfor ?>
                 </tr>
             </table>
+            </div>
         </td>
     </tr>
 </table>

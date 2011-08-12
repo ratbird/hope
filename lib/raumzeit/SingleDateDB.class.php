@@ -170,5 +170,21 @@ class SingleDateDB {
         $db->query("DELETE FROM resources_requests WHERE termin_id = '$termin_id'");
         return TRUE;
     }
-
+    
+    static function deleteAllDates($course_id) {
+        $db = DBManager::get();
+        $db->exec("DELETE FROM ex_termine WHERE range_id = " . $db->quote($course_id));
+        $termine = $db->query("SELECT termin_id FROM termine WHERE range_id = " . $db->quote($course_id))->fetchAll(PDO::FETCH_COLUMN);
+        foreach ($termine as $termin_id) {
+            self::deleteSingleDate($termin_id, false);
+            if (Config::get()->RESOURCES_ENABLE) {
+                $db->exec("DELETE FROM resources_assign WHERE assign_user_id = " . $db->quote($termin_id));
+                if ($request_id = self::getRequestID($termin_id)) {
+                    $rr = new RoomRequest($request_id);
+                    $rr->delete();
+                }
+            }
+        }
+        return count($termine);
+    }
 }

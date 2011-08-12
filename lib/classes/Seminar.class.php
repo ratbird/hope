@@ -2039,9 +2039,15 @@ class Seminar
         }
 
         // Alle Termine mit allem was dranhaengt zu diesem Seminar loeschen.
-        if (($db_ar = delete_range_of_dates($s_id, TRUE)) > 0) {
+        if (($db_ar = SingleDateDB::deleteAllDates($s_id)) > 0) {
             $this->createMessage(sprintf(_("%s Veranstaltungstermine archiviert."), $db_ar));
         }
+
+        //Themen
+        IssueDB::deleteAllIssues($s_id);
+
+        //Cycles
+        SeminarCycleDate::deleteBySQL('seminar_id = ' . DBManager::get()->quote($s_id));
 
         // Alle weiteren Postings zu diesem Seminar loeschen.
         $query = "DELETE from px_topics where Seminar_id='$s_id'";
@@ -2095,11 +2101,15 @@ class Seminar
         if ($GLOBALS['RESOURCES_ENABLE']) {
             $killAssign = new DeleteResourcesUser($s_id);
             $killAssign->delete();
+            if ($rr = RoomRequest::existsByCourse($s_id)) {
+                RoomRequest::find($rr)->delete();
+            }
         }
 
         // kill virtual seminar-entries in calendar
-        $query = "DELETE FROM seminar_user_schedule WHERE range_id = '$s_id'";
-        $db->query($query);
+        $stmt = DBManager::get()->prepare("DELETE FROM schedule_seminare
+            WHERE seminar_id = ?");
+        $stmt->execute(array($seminar_id));
 
         if(get_config('ELEARNING_INTERFACE_ENABLE')){
             global $connected_cms;
@@ -2116,19 +2126,23 @@ class Seminar
         //kill the object_user_vists for this seminar
         object_kill_visits(null, $s_id);
 
-                // Logging...
-                $query="SELECT seminare.name as name, seminare.VeranstaltungsNummer as number, semester_data.name as semester FROM seminare LEFT JOIN semester_data ON (seminare.start_time = semester_data.beginn) WHERE seminare.Seminar_id='$s_id'";
-                $db->query($query);
-                if ($db->next_record()) {
-                        $semlogname=$db->f('number')." ".$db->f('name')." (".$db->f('semester').")";
-                } else {
-                        $semlogname="unknown sem_id: $s_id";
-                }
-                log_event("SEM_ARCHIVE",$s_id,NULL,$semlogname);
-                // ...logged
+        // Logging...
+        $query="SELECT seminare.name as name, seminare.VeranstaltungsNummer as number, semester_data.name as semester FROM seminare LEFT JOIN semester_data ON (seminare.start_time = semester_data.beginn) WHERE seminare.Seminar_id='$s_id'";
+        $db->query($query);
+        if ($db->next_record()) {
+            $semlogname=$db->f('number')." ".$db->f('name')." (".$db->f('semester').")";
+        } else {
+            $semlogname="unknown sem_id: $s_id";
+        }
+        log_event("SEM_ARCHIVE",$s_id,NULL,$semlogname);
+        // ...logged
 
         // delete deputies if necessary
         deleteAllDeputies($s_id);
+
+        UserDomain::removeUserDomainsForSeminar($s_id);
+
+        AutoInsert::deleteSeminar($s_id);
 
         // und das Seminar loeschen.
         $query = "DELETE FROM seminare where Seminar_id= '$s_id'";

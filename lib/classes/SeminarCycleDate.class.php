@@ -16,6 +16,7 @@
 */
 
 require_once 'SimpleORMap.class.php';
+require_once 'lib/resources/lib/RoomRequest.class.php';
 
 class SeminarCycleDate extends SimpleORMap
 {
@@ -190,5 +191,16 @@ class SeminarCycleDate extends SimpleORMap
                        $cycles[(int)$this->cycle],
                        $this->week_offset + 1,
                        $this->description ? ' ('.$this->description.')' : '');
+    }
+
+    /**
+     * @see SimpleORMap::delete()
+     */
+    function delete()
+    {
+        if ($rr = RoomRequest::existsByCycle($this->getId())) {
+            RoomRequest::find($rr)->delete();
+        }
+        return parent::delete();
     }
 }

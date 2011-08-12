@@ -119,5 +119,14 @@ class IssueDB {
         while($db->next_record()) $ret[$db->f('termin_id')] = $db->Record;
         return $ret;
     }
+    
+    static function deleteAllIssues($course_id) {
+        $db = DBManager::get();
+        $themen = $db->query("SELECT issue_id FROM themen WHERE seminar_id = " . $db->quote($course_id))->fetchAll(PDO::FETCH_COLUMN);
+        foreach ($themen as $issue_id) {
+            self::deleteIssue($issue_id, $course_id);
+        }
+        return count($themen);
+    }
 }
 ?>

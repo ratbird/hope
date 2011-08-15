@@ -141,12 +141,21 @@ class CalendarScheduleModel
      * @param string  $seminar_id  the ID of the course
      * @param string  $user_id     the ID of the user
      * @param mixed   $cycle_id    either false or the ID of the cycle
+     * @param mixed   $semester    filter for this semester
      *
      * @return array  the course's entry
      */
-    static function getSeminarEntry($seminar_id, $user_id, $cycle_id = false)
+    static function getSeminarEntry($seminar_id, $user_id, $cycle_id = false, $semester = false)
     {
         $ret = array();
+        $filterStart = 0;
+        $filterEnd   = 0;
+
+        // filter dates (and their rooms) if semester is passed
+        if ($semester) {
+            $filterStart = $semester['vorles_beginn'];
+            $filterEnd   = $semester['vorles_ende'];
+        }
 
         $sem = new Seminar($seminar_id);
         foreach ($sem->getCycles() as $cycle) {
@@ -166,10 +175,16 @@ class CalendarScheduleModel
                 $entry['content'] = $sem->getNumber() . ' ' . $sem->getName();
 
                 $entry['title']   = $cycle->getDescription();
+
                 // check, if the date is assigned to a room
-                if ($rooms = $cycle->getPredominantRoom()) {
+                if ($rooms = $cycle->getPredominantRoom($filterStart, $filterEnd)) {
                     $entry['title'] .= implode('', getPlainRooms(array_slice($rooms, 0, 1)))
                                     . (sizeof($rooms) > 1 ? ', u.a.' : '');
+                } else if ($rooms = $cycle->getFreeTextPredominantRoom($filterStart, $filterEnd)) {
+                    unset($rooms['']);
+                    if (!empty($rooms)) {
+                        $entry['title'] .= '('. implode('), (', array_slice(array_keys($rooms), 0, 3)) .')';
+                    }
                 }
 
                 // add the lecturer
@@ -314,7 +329,7 @@ class CalendarScheduleModel
 
         $ret = array();
         foreach ($seminars as $data) {
-            $entries = self::getSeminarEntry($data['Seminar_id'], $user_id);
+            $entries = self::getSeminarEntry($data['Seminar_id'], $user_id, false, $semester);
 
             foreach ($entries as $entry) {
                 if (($entry['start'] >= $start_hour * 100 && $entry['start'] <= $end_hour * 100
@@ -362,7 +377,7 @@ class CalendarScheduleModel
         $seminars = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($seminars as $data) {
-            $entries = self::getSeminarEntry($data['Seminar_id'], $user_id);
+            $entries = self::getSeminarEntry($data['Seminar_id'], $user_id, false, $semester);
 
             foreach ($entries as $entry) {
                 unset($entry['url']);

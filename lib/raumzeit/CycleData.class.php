@@ -357,7 +357,7 @@ class CycleData
             return $rooms;
         }
 
-        return FALSE;
+        return false;
     }
 
     /**

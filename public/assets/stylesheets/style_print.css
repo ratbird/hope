@@ -131,7 +131,7 @@ div.window_heading {
 #barTopStudip, #barBottomLeft, #barBottommiddle,
 #barBottomright, #barBottomshadow, #tabs, #tabs2,
 #layout_infobox, #schedule_icons, #edit_inst_entry,
-#layout_footer {
+#layout_footer, #layout_sidebar {
     display: none !important;
 }
 
@@ -141,4 +141,8 @@ a, a:link, a:visited {
 
 body, input, textarea, td, th, blockquote, p, form, ul {
     font-size: 10pt;
+}
+
+div.schedule_day {
+    border-right: 1px solid black;
 }

@@ -81,7 +81,7 @@
                     </SELECT>
                     <br>
                     <? endif; ?>
-                    <?=_("freie Raumangabe:")?>
+                    <?=_("freie Ortsangabe:")?>
                     <INPUT type="text" name="freeRoomText_sd" size="50" maxlength="255" value="<?=$tpl['freeRoomText']?>">
                     <?=$GLOBALS['RESOURCES_ENABLE'] ? _("(f&uuml;hrt <em>nicht</em> zu einer Raumbuchung)"): ''?><br>
                     <? if ($GLOBALS['RESOURCES_ENABLE'] && $GLOBALS['RESOURCES_ALLOW_ROOM_REQUESTS']) { ?>

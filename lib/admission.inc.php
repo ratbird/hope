@@ -601,7 +601,7 @@ function admission_seminar_user_get_position($user_id, $seminar_id){
 function get_readable_admission_difference ($aado, $aad) {
     $message = array();
 
-    $changes = array_diff_assoc( $aad, $aado );
+    $changes = array_diff_assoc($aad, $aado);
 
     foreach ($changes as $field => $value) {
         switch ($field) {
@@ -656,6 +656,39 @@ function get_readable_admission_difference ($aado, $aad) {
             case 'admission_binding':
                 $message[] = 'Verbindliche Anmeldung wurde '. (($aad[$field] == 1) ? 'aktiviert' : 'deaktiviert');
                 break;
+
+            case 'admission_enable_quota':
+                $message[] = 'Die prozentuale Kontingentierung wurde '. (($value == 1) ? 'aktiviert' : 'deaktiviert');
+                break;
+
+            case 'admission_endtime':
+                $message[] = 'Das Enddatum für die Kontingentierung wurde auf '. date('d.m.Y H:i', $value) .' gesetzt.';
+                break;
+
+        }
+
+    }
+
+    // check, if something has been deleted
+    foreach (array_diff_assoc((array)$aado['studg'], (array)$aad['studg']) as $id => $data) {
+        $message[] = 'Der Studiengang '. $data['name'] 
+                   . ' wurde aus der Kontingentierung entfernt.';
+    }
+
+    // check, if something has been added
+    foreach (array_diff_assoc((array)$aad['studg'], (array)$aado['studg']) as $id => $data) {
+        $message[] = 'Der Studiengang '. $data['name']
+                   . ($data['ratio'] ? ' ('. $data['ratio'] .'%)' : '')
+                   . ' wurde der Kontingentierung hinzugefügt.';
+    }
+
+    // check for changed ratios
+    if (!empty($aado['studg'])) {
+        foreach ($aado['studg'] as $id => $data) {
+            if  ($aad['studg'][$id] &&  $aad['studg'][$id]['ratio'] != $data['ratio']) {
+                $message[] = 'Der Prozentsatz bei '. $data['name'] .' wurde von '
+                           . $data['ratio'] . '% auf '.  $aad['studg'][$id]['ratio'] .'% geändert.';
+            }
         }
     }
 

@@ -110,11 +110,14 @@ class StudipCacheFactory {
         $cfg = self::getConfig();
 
         $cfg->create('cache_class', array(
-            'description' => 'Pfad der Datei, die die StudipCache-Klasse enthält'));
+            'comment' => 'Pfad der Datei, die die StudipCache-Klasse enthält',
+            'value'   => $class));
         $cfg->create('cache_class_file', array(
-            'description' => 'Klassenname des zu verwendenden StudipCaches'));
+            'comment' => 'Klassenname des zu verwendenden StudipCaches',
+            'value'   => $file));
         $cfg->create('cache_init_args', array(
-            'description' => 'JSON-kodiertes Array von Argumenten für die Instanziierung der StudipCache-Klasse'));
+            'comment' => 'JSON-kodiertes Array von Argumenten für die Instanziierung der StudipCache-Klasse',
+            'value'   => $arguments));
 
         $cfg->store('cache_class', $class);
         $cfg->store('cache_class_file', $file);

@@ -347,21 +347,21 @@ function indentJson($str) {
         $_char = substr($str,$loop,1);
         //part 1
         if($_char == '}' || $_char == ']'){
-            $strOut .= chr(13);
+            $strOut .= "\n";
             $identPos --;
             for($ident = 0;$ident < $identPos;$ident++){
-                $strOut .= chr(9);
+                $strOut .= "\t";
             }
         }
         //part 2
         $strOut .= $_char;
         //part 3
         if($_char == ',' || $_char == '{' || $_char == '['){
-            $strOut .= chr(13);
+            $strOut .= "\n";
             if($_char == '{' || $_char == '[')
                 $identPos ++;
             for($ident = 0;$ident < $identPos;$ident++){
-                $strOut .= chr(9);
+                $strOut .= "\t";
             }
         }
     }

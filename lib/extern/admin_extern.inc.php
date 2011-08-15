@@ -89,8 +89,10 @@ if ($header_line) {
 // upload of configuration
 if ($_REQUEST['com'] == "do_upload_config") {
     $file_content = file_get_contents($the_file);
-    $file_content_wo_tabs = preg_replace("/\t/", "  ", $file_content);
 
+    // revert the changes done by indentJson
+    $file_content_wo_tabs = str_replace("\t", '', str_replace("\n", '', $file_content));
+    
     $jsonconfig = json_decode($file_content_wo_tabs, true);
 
     // utf8-decode the values after json_decode has worked on it

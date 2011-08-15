@@ -2384,6 +2384,14 @@ class Seminar
                       "WHERE Seminar_id = ".$db->quote($this->id)." " .
                       "AND user_id = ".$db->quote($user_id)
                        );
+            if ($old_status === "dozent") {
+                $termine = $db->query(
+                    "SELECT termin_id FROM termine WHERE range_id = ".$db->quote($this->id)." " .
+                "")->fetchAll(PDO::FETCH_COLUMN, 0);
+                foreach ($termine as $termin_id) {
+                    $db->exec("DELETE FROM termin_related_persons WHERE range_id = ".$db->quote($termin_id)." AND user_id = ".$db->quote($user_id)." ");
+                }
+            }
             return $this;
         } else {
             if ($old_status === "dozent" && $numberOfTeachers <= 1) {
@@ -2404,16 +2412,21 @@ class Seminar
     public function deleteMember($user_id)
     {
         $db = DBManager::get();
-        $stillleft = $db->query("SELECT count(*) " .
-                    "FROM seminar_user " .
-                    "WHERE user_id != ".$db->quote($user_id)." " .
-                        "AND status = 'dozent' ".
-                        "AND Seminar_id = ".$db->quote($this->id))->fetch(PDO::FETCH_COLUMN, 0);
-
-        if ($stillleft > 0) {
-            $db->exec("DELETE FROM seminar_user " .
-                   "WHERE Seminar_id = ".$db->quote($this->id)." " .
-                       "AND user_id = ".$db->quote($user_id));
+        $dozenten = $this->getMembers('dozent');
+        if (count($dozenten) >= 2 || !$dozenten[$user_id]) {
+            $db->exec(
+                "DELETE FROM seminar_user " .
+                "WHERE Seminar_id = ".$db->quote($this->id)." " .
+                    "AND user_id = ".$db->quote($user_id)." " .
+            "");
+            if ($dozenten[$user_id]) {
+                $termine = $db->query(
+                    "SELECT termin_id FROM termine WHERE range_id = ".$db->quote($this->id)." " .
+                "")->fetchAll(PDO::FETCH_COLUMN, 0);
+                foreach ($termine as $termin_id) {
+                    $db->exec("DELETE FROM termin_related_persons WHERE range_id = ".$db->quote($termin_id)." AND user_id = ".$db->quote($user_id)." ");
+                }
+            }
             $this->createMessage(sprintf(_("Nutzer %s wurde aus der Veranstaltung entfernt."),
                     "<i>".htmlReady(get_fullname($user_id))."</i>"));
             return $this;

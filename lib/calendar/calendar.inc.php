@@ -37,7 +37,8 @@ if (!get_config('CALENDAR_GROUP_ENABLE') || Request::get('caluser') == 'self') {
 //  $calendar_sess_control_data['cal_select'] = 'user.' . get_username();
     closeObject();
     $calendar_sess_control_data['cal_select'] = 'user.' . $GLOABLS['user']->id;
-}/*
+} else
+/*
   else if ($cal_select) {
   $calendar_sess_control_data['cal_select'] = $cal_select;
   } elseif ($cal_user) {
@@ -46,13 +47,49 @@ if (!get_config('CALENDAR_GROUP_ENABLE') || Request::get('caluser') == 'self') {
   $calendar_sess_control_data['cal_select'] = 'group.' . $cal_group;
   }
  */
-$cal_select = Request::get('cal_select');
+if (Request::get('cal_select')) {
+    list($cal_select_range, $cal_select_id) = explode('.', $cal_select);
+    if ($cal_select_range == 'user') {
+        $cal_select_id = get_userid($cal_select_id);
+    }
+    $calendar_sess_control_data['cal_select'] = $cal_select_range . '.' . $cal_select_id;
+    switch ($cal_select_range) {
+        case 'sem':
+            URLHelper::setBaseURL($GLOBALS['ABSOLUTE_URI_STUDIP']);
+            header('Location: ' . URLHelper::getURL('calendar.php', array('cid' => $cal_select_id, 'cmd' => Request::option('cmd'), 'atime' => Request::int('atime', time()))));
+            exit;
+            break;
+        case 'inst':
+            URLHelper::setBaseURL($GLOBALS['ABSOLUTE_URI_STUDIP']);
+            header('Location: ' . URLHelper::getURL('calendar.php', array('cid' => $cal_select_id, 'cmd' => Request::option('cmd'), 'atime' => Request::int('atime', time()))));
+            exit;
+            break;
+        case 'group':
+        default:
+            break;
+
+    }
+} else if (isset($GLOBALS['SessSemName'][1]) && $GLOBALS['SessSemName'][1] != '') {
+    checkObject();
+    checkObjectModule('calendar');
+    object_set_visit_module('calendar');
+    $cal_select_range = 'sem';
+    $cal_select_id = $GLOBALS['SessSemName'][1];
+    $calendar_sess_control_data['cal_select'] = $cal_select_range . '.' . $cal_select_id;
+} else if ($calendar_sess_control_data['cal_select']) {
+    list($cal_select_range, $cal_select_id) = explode('.', $calendar_sess_control_data['cal_select']);
+} else {
+    $cal_select_range = 'user';
+    $cal_select_id = $GLOBALS['user']->id;
+    $calendar_sess_control_data['cal_select'] = $cal_select_range . '.' . $cal_select_id;
+}
+
 if (!is_null(Request::get('show_project_events')) && !is_null($cal_select)) {
     $calendar_sess_control_data['show_project_events'] = true;
 } elseif (!is_null($cal_select)) {
     $calendar_sess_control_data['show_project_events'] = false;
 }
-
+/*
 if ($cal_select) {
     list($cal_select_range, $cal_select_id) = explode('.', $cal_select);
     if ($cal_select_range == 'user') {
@@ -80,7 +117,7 @@ if ($cal_select) {
     $cal_select_id = $GLOBALS['user']->id;
     $calendar_sess_control_data['cal_select'] = $cal_select_range . '.' . $cal_select_id;
 }
-
+*/
 if (Request::get('cmd') == 'export'
         && array_shift(explode('.', $calendar_sess_control_data['cal_select'])) == 'group') {
     $_calendar = Calendar::getInstance(CALENDAR_RANGE_USER, $GLOBALS['user']->id);
@@ -119,28 +156,40 @@ if ($cmd_cal == 'chng_cal_settings') {
 if (!$atime && !$termin_id)
     $atime = time();
 
-if (isset($mod_s_x))
+if (Request::submitted('mod_s')) {
     $mod = 'SINGLE';
-if (isset($mod_d_x))
+}
+if (Request::submitted('mod_d')) {
     $mod = 'DAILY';
-if (isset($mod_w_x))
+}
+if (Request::submitted('mod_w')) {
     $mod = 'WEEKLY';
-if (isset($mod_m_x))
+}
+if (Request::submitted('mod_m')) {
     $mod = 'MONTHLY';
-if (isset($mod_y_x))
+}
+if (Request::submitted('mod_y')) {
     $mod = 'YEARLY';
+}
 
-if ($mod)
+if ($mod) {
     $cmd = 'edit';
+}
 
-if ($store_x || $change_x)
+if ($store_x || $change_x) {
     $cmd = 'add';
+}
 
-if ($del_x && $termin_id)
+if (Request::submitted('del') && $termin_id) {
     $cmd = 'del';
+}
 
-if ($back_recur_x)
+$set_recur_x = Request::int('set_recur_x');
+$back_recur_x = Request::int('back_recur_x');
+
+if ($back_recur_x) {
     unset($set_recur_x);
+}
 
 if ($cancel_x) {
     if ($calendar_sess_control_data['source']) {
@@ -191,34 +240,39 @@ $_calendar->setUserSettings($calendar_user_control_data);
 $accepted_vars = array('start_m', 'start_h', 'start_day', 'start_month', 'start_year', 'end_m',
     'end_h', 'end_day', 'end_month', 'end_year', 'exp_day', 'exp_month',
     'exp_year', 'cat', 'priority', 'txt', 'content', 'loc', 'linterval_d',
-    'linterval_w', 'wdays', 'type_d', 'type_m', 'linterval_m2', 'sinterval_m',
+    'linterval_w', 'type_d', 'type_m', 'linterval_m2', 'sinterval_m',
     'linterval_m1', 'wday_m', 'day_m', 'type_y', 'sinterval_y', 'wday_y',
     'day_y', 'month_y1', 'month_y2', 'atime', 'termin_id', 'exp_c', 'via',
     'cat_text', 'mod_prv', 'exc_day', 'exc_month', 'exc_year', 'exceptions',
-    'exc_delete', 'add_exc_x', 'del_exc_x', 'exp_count', 'select_user', 'evtype');
+    'add_exc_x', 'del_exc_x', 'exp_count', 'select_user', 'evtype');
 
 if ($cmd == 'add' || $cmd == 'edit') {
-    if (!isset($calendar_sess_forms_data))
-        $sess->register('calendar_sess_forms_data');
+    if (!isset($_SESSION['calendar_sess_forms_data'])) {
+        $_SESSION['calendar_sess_forms_data'] = array();
+    }
     if (!empty($_POST)) {
         // Formulardaten uebernehmen
         foreach ($accepted_vars as $key) {
-            if (!is_null(Request::get($key)))
-                $calendar_sess_forms_data[$key] = Request::get($key);
+            if (!is_null(Request::get($key))) {
+                $_SESSION['calendar_sess_forms_data'][$key] = Request::get($key);
+            }
+        }
+        if (sizeof(Request::getArray('exc_delete'))) {
+            $_SESSION['calendar_sess_forms_data']['exc_delete'] = Request::getArray('exc_delete');
+        }
+        if (sizeof(Request::getArray('wdays'))) {
+            $_SESSION['calendar_sess_forms_data']['wdays'] = Request::intArray('wdays');
         }
     } else {
         $calendar_sess_control_data['mod'] = '';
     }
     // checkbox-values
-    if (!$set_recur_x)
-        $calendar_sess_forms_data['wholeday'] = Request::get('wholeday');
+    if (!$set_recur_x) {
+        $_SESSION['calendar_sess_forms_data']['wholeday'] = Request::get('wholeday');
+    }
+} elseif ($cmd != 'export') {
+    unset($_SESSION['calendar_sess_forms_data']);
 }
-elseif ($cmd != 'export') {
-    unset($calendar_sess_forms_data);
-    $sess->unregister('calendar_sess_forms_data');
-}
-
-$write_permission = true;
 
 if ($source_page && ($cmd == 'edit' || $cmd == 'add' || $cmd == 'delete')) {
     $calendar_sess_control_data['source'] = preg_replace('![^0-9a-z+_?&#/=.-\[\]]!i', '', rawurldecode($source_page));
@@ -357,7 +411,7 @@ switch ($cmd) {
             }
             if ($_calendar->getRange() == CALENDAR_RANGE_SEM || $_calendar->getRange() == CALENDAR_RANGE_INST) {
                 PageLayout::setTitle(getHeaderLine($_calendar->user_id) . ' - ' . _("Terminkalender - Termin bearbeiten"));
-            } else if (strtolower(get_class($_calendar)) == 'groupcalendar') {
+            } else if ($_calendar instanceof GroupCalendar) {
                 PageLayout::setTitle(sprintf(_("Terminkalender der Gruppe %s - Termin bearbeiten"), $_calendar->getGroupName()));
             } else if ($_calendar->checkPermission(CALENDAR_PERMISSION_OWN)) {
                 PageLayout::setTitle(_("Mein persönlicher Terminkalender - Termin bearbeiten"));
@@ -367,7 +421,7 @@ switch ($cmd) {
         } elseif ($_calendar->havePermission(CALENDAR_PERMISSION_WRITABLE)) {
             if ($_calendar->getRange() == CALENDAR_RANGE_SEM || $_calendar->getRange() == CALENDAR_RANGE_INST) {
                 PageLayout::setTitle(getHeaderLine($_calendar->user_id) . ' - ' . _("Terminkalender - Termin anlegen"));
-            } else if (strtolower(get_class($_calendar)) == 'groupcalendar') {
+            } else if ($_calendar instanceof GroupCalendar) {
                 PageLayout::setTitle(sprintf(_("Terminkalender der Gruppe %s - Termin anlegen"), $_calendar->getGroupName()));
             } else if ($_calendar->checkPermission(CALENDAR_PERMISSION_OWN)) {
                 PageLayout::setTitle(_("Mein persönlicher Terminkalender - Termin anlegen"));
@@ -409,28 +463,25 @@ switch ($cmd) {
             header('Location: ' . $PHP_SELF . '?cmd='
                     . $calendar_sess_control_data['view_prv'] . "&atime=$atime");
             exit;
-            $write_permission = false;
-            //$title = sprintf(_("Terminkalender von %s %s - Zugriff verweigert"),
-            //      get_fullname($_calendar->getUserId()), $text_permission);
         }
-
-        if ($write_permission) {
+        if ($_calendar->havePermission(CALENDAR_PERMISSION_WRITABLE)) {
             if (empty($_POST)) {
-                $_calendar->getEventProperties($calendar_sess_forms_data);
+                $_calendar->getEventProperties($_SESSION['calendar_sess_forms_data']);
             } else {
-                $err = Calendar::checkFormData($calendar_sess_forms_data);
+                $err = Calendar::checkFormData($_SESSION['calendar_sess_forms_data']);
                 if (empty($err)) {
-                    $_calendar->setEventProperties($calendar_sess_forms_data, $mod);
+                    $_calendar->setEventProperties($_SESSION['calendar_sess_forms_data'], $mod);
                 } else {
-                    if ($back_recur_x)
+                    if ($back_recur_x) {
                         $set_recur_x = 1;
-                    elseif ($set_recur_x && $err['set_recur'])
+                    } elseif ($set_recur_x && $err['set_recur']) {
                         $mod = $mod_prv;
-                    elseif ($set_recur_x)
+                    } elseif ($set_recur_x) {
                         unset($set_recur_x);
+                    }
                 }
             }
-            extract($calendar_sess_forms_data, EXTR_OVERWRITE);
+            extract($_SESSION['calendar_sess_forms_data'], EXTR_OVERWRITE);
         }
         break;
 }
@@ -441,7 +492,7 @@ if (!$_calendar->havePermission(CALENDAR_PERMISSION_WRITABLE)) {
 
 if ($cmd == 'add') {
     // Ueberpruefung der Formulareingaben
-    $err = Calendar::checkFormData($calendar_sess_forms_data);
+    $err = Calendar::checkFormData($_SESSION['calendar_sess_forms_data']);
     // wenn alle Daten OK, dann Termin anlegen, oder bei vorhandener
     // termin_id updaten
     if (empty($err) && $count_events < $CALENDAR_MAX_EVENTS) {
@@ -450,8 +501,7 @@ if ($cmd == 'add') {
         if ($calendar_sess_control_data['source']) {
             $destination = $calendar_sess_control_data['source'] . "#a";
             $calendar_sess_control_data['source'] = '';
-            unset($calendar_sess_forms_data);
-            $sess->unregister('calendar_sess_forms_data');
+            unset($_SESSION['calendar_sess_forms_data']);
             page_close();
             header('Location: ' . $destination);
             exit;
@@ -463,13 +513,12 @@ if ($cmd == 'add') {
             $cmd = 'showday';
         }
 
-        unset($calendar_sess_forms_data);
-        $sess->unregister('calendar_sess_forms_data');
+        unset($_SESSION['calendar_sess_forms_data']);
     } else {
         // wrong data? -> switch back to edit mode
         $cmd = 'edit';
         $_calendar->restoreEvent($termin_id);
-        $_calendar->setEventProperties($calendar_sess_forms_data, $mod);
+        $_calendar->setEventProperties($_SESSION['calendar_sess_forms_data'], $mod);
         $mod = $mod_prv ? $mod_prv : 'SINGLE';
         if ($back_recur_x) {
             $set_recur_x = 1;
@@ -495,8 +544,7 @@ if ($cmd == 'del') {
         $cmd = 'showday';
     }
 
-    unset($calendar_sess_forms_data);
-    $sess->unregister('calendar_sess_forms_data');
+    unset($_SESSION['calendar_sess_forms_data']);
 }
 
 // Tagesuebersicht anzeigen ***************************************************
@@ -515,16 +563,16 @@ if ($cmd == 'showday') {
         $et = 23;
     }
 
-    include('lib/include/html_head.inc.php');
-    include('lib/include/header.php');
-
     $tmpl = $GLOBALS['template_factory']->open('calendar/day_view');
     $tmpl->_calendar = $_calendar;
     $tmpl->atime = $atime;
     $tmpl->cmd = $cmd;
     $tmpl->st = $st;
     $tmpl->et = $et;
-    echo $tmpl->render();
+    $view = $tmpl->render();
+    include('lib/include/html_head.inc.php');
+    include('lib/include/header.php');
+    echo $view;
 }
 
 // Wochenuebersicht anzeigen **************************************************
@@ -544,16 +592,16 @@ if ($cmd == 'showweek') {
 
     include_once($RELATIVE_PATH_CALENDAR . '/lib/DbCalendarWeek.class.php');
 
-    include('lib/include/html_head.inc.php');
-    include('lib/include/header.php');
-
     $tmpl = $GLOBALS['template_factory']->open('calendar/week_view');
     $tmpl->_calendar = $_calendar;
     $tmpl->atime = $atime;
     $tmpl->cmd = $cmd;
     $tmpl->st = $st;
     $tmpl->et = $et;
-    echo $tmpl->render();
+    $view = $tmpl->render();
+    include('lib/include/html_head.inc.php');
+    include('lib/include/header.php');
+    echo $view;
 
 }
 
@@ -609,32 +657,24 @@ if ($cmd == 'showlist') {
 // ist $termin_id an das Skript uebergeben worden, dann bearbeite diesen Termin
 // ist $atime an das Skript uebergeben worden, dann erzeuge neuen Termin (s.o.)
 if ($cmd == 'edit') {
-    if ($write_permission) {
-        if (strtolower(get_class($_calendar->event)) == 'seminarevent' || strtolower(get_class($_calendar->event)) == 'seminarcalendarevent'
-                || !$_calendar->event->havePermission(CALENDAR_EVENT_PERM_WRITABLE)) {
-            PageLayout::setTitle(sprintf(_("Termin am %s"), ldate($_calendar->event->getStart())));
-        } elseif (strtolower(get_class($_calendar->event)) == 'dbcalendarevent') {
-            PageLayout::setTitle(sprintf(_("Termin am %s bearbeiten"), ldate($atime)));
-        } elseif ($atime) {
-            if (check_date($start_month, $start_day, $start_year)) {
-                PageLayout::setTitle(sprintf(_("Termin erstellen am %s"), ldate(mktime(0, 0, 0, $start_month, $start_day, $start_year))));
-            }
-        } else {
-            page_close();
-            die;
-        }
+    if ($_calendar->havePermission(CALENDAR_PERMISSION_WRITABLE)) {
         if (!$mod) {
             $mod = 'SINGLE';
         }
 
         // transfer form->form
+        /*
         if ($set_recur_x || $back_recur_x) {
-            $txt = htmlentities(stripslashes($txt), ENT_QUOTES);
-            $content = htmlentities(stripslashes($content), ENT_QUOTES);
-            $loc = htmlentities(stripslashes($loc), ENT_QUOTES);
-            $cat_text = htmlentities(stripslashes($cat_text), ENT_QUOTES);
+            $txt = Request::addslashes($txt);
+            //$txt = htmlentities(stripslashes($txt), ENT_QUOTES);
+            $content = Request::addslashes($content);
+            //$content = htmlentities(stripslashes($content), ENT_QUOTES);
+            $loc = Request::addslashes($loc);
+            //$loc = htmlentities(stripslashes($loc), ENT_QUOTES);
+            $cat_text = Request::addslashes($cat_text);
+            //$cat_text = htmlentities($cat_text, ENT_QUOTES);
         }
-
+*/
         // start and end time in 5 minute steps
         $start_m = $start_m - ($start_m % 5);
         $end_m = $end_m - ($end_m % 5);

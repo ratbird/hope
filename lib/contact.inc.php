@@ -352,13 +352,13 @@ function ShowContact ($contact_id)
             if (get_config('CALENDAR_GROUP_ENABLE') && $GLOBALS['perm']->get_perm($db->f('user_id') != 'root')) {
                 switch ($db->f('calpermission')) {
                     case 2:
-                        $calstatus .= Assets::img('icons/16/blue/visibility/calendar-visible.png', tooltip(_("Mein Kalender ist für diese Person sichtbar")));
+                        $calstatus .= Assets::img('icons/16/blue/visibility/calendar-visible.png', tooltip(_("Mein Kalender ist für diese Person sichtbar")) . ' class="text-top"');
                     break;
                     case 4:
-                        $calstatus .= Assets::img('group_cal_writable.gif', tooltip(_("Mein Kalender ist für diese Person schreibbar")));
+                        $calstatus .= Assets::img('icons/16/red/schedule.png', tooltip(_("Mein Kalender ist für diese Person schreibbar")) . ' class="text-top"');
                     break;
                     default:
-                        $calstatus .= Assets::img('icons/16/blue/visibility/calendar-invisible.png', tooltip(_("Mein Kalender ist für diese Person unsichtbar")));
+                        $calstatus .= Assets::img('icons/16/blue/visibility/calendar-invisible.png', tooltip(_("Mein Kalender ist für diese Person unsichtbar")) . ' class="text-top"');
                     break;
                 }
                 $calstatus .= '&nbsp;';

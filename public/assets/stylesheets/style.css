@@ -671,7 +671,7 @@ a.lighthdaymin {
     color: #AAAAAA;
     text-align: center;
 }
-td.calhead {
+td.calhead, div.calhead {
     font-size: 18pt;
     font-weight: bold;
     color: #AAAAAA;

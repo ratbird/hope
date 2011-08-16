@@ -465,12 +465,12 @@ class Calendar
             $this->event->properties['DTSTART'] = mktime($calendar_form_data['start_h'], $calendar_form_data['start_m'], 0, $calendar_form_data['start_month'], $calendar_form_data['start_day'], $calendar_form_data['start_year']);
             $this->event->properties['DTEND'] = mktime($calendar_form_data['end_h'], $calendar_form_data['end_m'], 0, $calendar_form_data['end_month'], $calendar_form_data['end_day'], $calendar_form_data['end_year']);
         }
-        $this->event->properties['SUMMARY'] = $calendar_form_data['txt'];
-        $this->event->properties['CATEGORIES'] = $calendar_form_data['cat_text'];
+        $this->event->properties['SUMMARY'] = html_entity_decode($calendar_form_data['txt']);
+        $this->event->properties['CATEGORIES'] = html_entity_decode($calendar_form_data['cat_text']);
         $this->event->properties['STUDIP_CATEGORY'] = $calendar_form_data['cat'];
         $this->event->properties['PRIORITY'] = $calendar_form_data['priority'];
-        $this->event->properties['LOCATION'] = $calendar_form_data['loc'];
-        $this->event->properties['DESCRIPTION'] = $calendar_form_data['content'];
+        $this->event->properties['LOCATION'] = html_entity_decode($calendar_form_data['loc']);
+        $this->event->properties['DESCRIPTION'] = html_entity_decode($calendar_form_data['content']);
 
         switch ($calendar_form_data['via']) {
             case 'PUBLIC':
@@ -588,16 +588,16 @@ class Calendar
         $calendar_form_data['wholeday'] = $this->event->isDayEvent();
 
         $calendar_form_data['cat'] = $this->event->properties['STUDIP_CATEGORY'];
-        $calendar_form_data['txt'] = htmlReady($this->event->getTitle());
-        $calendar_form_data['content'] = htmlReady($this->event->properties['DESCRIPTION']);
-        $calendar_form_data['loc'] = htmlReady($this->event->getLocation());
+        $calendar_form_data['txt'] = $this->event->getTitle();
+        $calendar_form_data['content'] = $this->event->properties['DESCRIPTION'];
+        $calendar_form_data['loc'] = $this->event->getLocation();
 
-        if (strtolower(get_class($this->event)) != 'seminarevent') {
+        if (!($this->event instanceof SeminarEvent)) {
 
             // exceptions
             $calendar_form_data['exceptions'] = $this->event->getExceptions();
 
-            $calendar_form_data['cat_text'] = htmlReady($this->event->properties['CATEGORIES']);
+            $calendar_form_data['cat_text'] = $this->event->properties['CATEGORIES'];
 
             switch ($this->event->getType()) {
                 case 'PUBLIC':
@@ -633,10 +633,11 @@ class Calendar
                     $calendar_form_data['linterval_d'] = $repeat['linterval'];
                     $calendar_form_data['type_d'] = 'daily';
                     break;
-                case 'WEEKLY':
+                case 'WEEKLY':                  
                     $calendar_form_data['linterval_w'] = $repeat['linterval'];
-                    for ($i = 0; $i < strlen($repeat['wdays']); $i++)
+                    for ($i = 0; $i < strlen($repeat['wdays']); $i++) {
                         $calendar_form_data['wdays'][$repeat['wdays']{$i}] = $repeat['wdays']{$i};
+                    }
                     break;
                 case 'MONTHLY':
                     if ($repeat['wdays']) {

@@ -42,8 +42,7 @@ if (!$termin_id && !$_calendar->havePermission(CALENDAR_PERMISSION_WRITABLE)) {
     }
     my_error($error_message, 'blank', 2, TRUE);
     echo "<tr><td class=\"blank\" width=\"15%\">&nbsp;</td>";
-    echo "<td class=\"blank\" width=\"85%\"><a href=\"$PHP_SELF?cmd=";
-    echo $calendar_sess_control_data['view_prv'] . "&atime=$atime\">";
+    echo '<td class="blank" width="85%"><a href="' . URLHelper::getLink('', array('cmd' => $calendar_sess_control_data['view_prv'], 'atime' => $atime)) . '">';
     echo makeButton("zurueck") . "</a></td></tr>\n";
     echo "</table><br />&nbsp;<br /></td></tr></table>\n";
     page_close();
@@ -61,7 +60,7 @@ if ($evtype == 'semcal' || (isset($_calendar->event) && ($_calendar->event insta
     $disabled = '';
 }
 
-echo "<form name=\"edit_event\" action=\"$PHP_SELF?cmd=edit\" method=\"post\">";
+echo '<form name="edit_event" action="' . URLHelper::getLink('', array('cmd' => 'edit')) . '" method="post">';
 echo CSRFProtection::tokenTag();
 echo "<table class=\"blank\" width=\"99%\" border=\"0\" cellspacing=\"0\" cellpadding=\"10\">\n";
 echo "<tr><th width=\"100%\" align=\"left\">";
@@ -200,14 +199,14 @@ if (!$set_recur_x) {
         echo '<tr><td>';
         echo _("Zusammenfassung:") . "&nbsp;&nbsp;</td>\n";
         echo "<td>";
-        echo "<input type=\"text\" name=\"txt\" size=\"50\" maxlength=\"255\" value=\"$txt\"$disabled></input>";
+        echo '<input type="text" name="txt" size="50" maxlength="255" value="' . htmlReady($txt) . '"' . $disabled . '></input>';
         printf("%s</td>\n", ($err["titel"] ? $error_sign : ""));
         echo "</tr><tr>\n";
         echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
         echo '<td>';
         echo _("Beschreibung:") . "&nbsp;&nbsp;</td>";
         echo "<td><textarea name=\"content\" cols=\"48\" rows=\"5\" wrap=\"virtual\"$disabled>";
-        echo $content;
+        echo htmlReady($content);
         echo "</textarea></td>\n";
         echo "</tr>\n</table>\n</td>\n</tr>\n";
 
@@ -238,7 +237,7 @@ if (!$set_recur_x) {
                 printf(">%s\n", htmlReady($value['name']));
             }
             echo "</select>\n&nbsp; &nbsp;";
-            echo "<input type=\"text\" name=\"cat_text\" size=\"30\" maxlength=\"255\" value=\"$cat_text\"$disabled>\n";
+            echo '<input type="text" name="cat_text" size="30" maxlength="255" value="' . htmlReady($cat_text) . '"' . $disabled . '>';
             $info = _("Sie können beliebige Kategorien in das Freitextfeld eingeben. Trennen Sie einzelne Kategorien bitte durch ein Komma.");
             echo '&nbsp;&nbsp;&nbsp;<img src="' . Assets::image_path('icons/16/grey/info-circle.png') . '" ';
             echo tooltip($info, TRUE, TRUE) . ">\n";
@@ -248,7 +247,7 @@ if (!$set_recur_x) {
         $css_switcher->switchClass();
         echo "<tr><td class=\"" . $css_switcher->getClass() . "\">\n";
         echo _("Raum:") . "&nbsp;&nbsp;";
-        echo "<input type=\"text\" name=\"loc\" size=\"30\" maxlength=\"255\" value=\"$loc\"$disabled>";
+        echo '<input type="text" name="loc" size="30" maxlength="255" value="' . htmlReady($loc) . '"' . $disabled . '>';
         echo "</td>\n</tr>\n";
     }
 
@@ -473,47 +472,40 @@ else {
             break;
 
         case "WEEKLY":
-            if (!is_array($wdays))
-                $wdays = array(strftime('%u', mktime(0, 0, 0, $start_month, $start_day, $start_year)));
-
-            $css_switcher->switchClass();
+			if (!is_array($wdays)) {
+				$wdays = array(strftime('%u', mktime(0, 0, 0, $start_month, $start_day, $start_year)));
+            }
+			$css_switcher->switchClass();
             echo "<tr><td nowrap=\"nowrap\" class=\"" . $css_switcher->getClass() . "\">\n";
-            echo "&nbsp; ";
+            echo "&nbsp; <label>";
             $out_1 = '<input type="text" name="linterval_w" size="3" maxlength="3" value="';
             $out_1 .= ( $linterval_w ? $linterval_w : "1");
             $out_1 .= '">';
             printf(_("Alle %s Wochen %s am:"), $out_1, $err["linterval_w"] ? $error_sign : "");
-            echo "<table width=\"75%\" border=\"0\" cellpadding=\"3\" cellspacing=\"0\">\n";
+            echo "</label><table width=\"75%\" border=\"0\" cellpadding=\"3\" cellspacing=\"0\">\n";
             echo "<tr><td width=\"8%\" rowspan=\"2\">&nbsp;</td>\n<td width=\"23%\">";
-            echo "<input type=\"checkbox\" name=\"wdays[]\" value=\"1\"";
-            if (in_array(1, $wdays))
-                echo " checked=\"checked\"";
-            echo ">&nbsp;" . _("Montag") . "</td>\n";
-            echo "<td width=\"23%\"><input type=\"checkbox\" name=\"wdays[]\" value=\"2\"";
-            if (in_array(2, $wdays))
-                echo " checked=\"checked\"";
-            echo ">&nbsp;" . _("Dienstag") . "</td>\n";
-            echo "<td width=\"23%\"><input type=\"checkbox\" name=\"wdays[]\" value=\"3\"";
-            if (in_array(3, $wdays))
-                echo " checked=\"checked\"";
-            echo ">&nbsp;" . _("Mittwoch") . "</td>\n";
-            echo "<td nowrap=\"nowrap\" width=\"23%\"><input type=\"checkbox\" name=\"wdays[]\" value=\"4\"";
-            if (in_array(4, $wdays))
-                echo " checked=\"checked\"";
-            echo ">&nbsp;" . _("Donnerstag") . "</td>\n";
+            echo "<label><input type=\"checkbox\" name=\"wdays[]\" value=\"1\"";
+            echo (in_array(1, $wdays) ? ' checked="checked"' : '');
+            echo ">&nbsp;" . _("Montag") . "</label></td>\n";
+            echo "<td width=\"23%\"><label><input type=\"checkbox\" name=\"wdays[]\" value=\"2\"";
+            echo (in_array(2, $wdays) ? ' checked="checked"' : '');
+            echo ">&nbsp;" . _("Dienstag") . "</label></td>\n";
+            echo "<td width=\"23%\"><label><input type=\"checkbox\" name=\"wdays[]\" value=\"3\"";
+            echo (in_array(3, $wdays) ? ' checked="checked"' : '');
+            echo ">&nbsp;" . _("Mittwoch") . "</label></td>\n";
+            echo "<td nowrap=\"nowrap\" width=\"23%\"><label><input type=\"checkbox\" name=\"wdays[]\" value=\"4\"";
+            echo (in_array(4, $wdays) ? ' checked="checked"' : '');
+            echo ">&nbsp;" . _("Donnerstag") . "</label></td>\n";
             echo "</tr><tr>\n";
-            echo "<td><input type=\"checkbox\" name=\"wdays[]\" value=\"5\"";
-            if (in_array(5, $wdays))
-                echo " checked=\"checked\"";
-            echo ">&nbsp;" . _("Freitag") . "</td>\n";
-            echo "<td><input type=\"checkbox\" name=\"wdays[]\" value=\"6\"";
-            if (in_array(6, $wdays))
-                echo " checked=\"checked\"";
-            echo ">&nbsp;" . _("Samstag") . "</td>\n";
-            echo "<td colspan=\"2\"><input type=\"checkbox\" name=\"wdays[]\" value=\"7\"";
-            if (in_array(7, $wdays))
-                echo " checked=\"checked\"";
-            echo ">&nbsp;" . _("Sonntag") . "</td>\n";
+            echo "<td><label><input type=\"checkbox\" name=\"wdays[]\" value=\"5\"";
+            echo (in_array(5, $wdays) ? ' checked="checked"' : '');
+            echo ">&nbsp;" . _("Freitag") . "</label></td>\n";
+            echo "<td><label><input type=\"checkbox\" name=\"wdays[]\" value=\"6\"";
+            echo (in_array(6, $wdays) ? ' checked="checked"' : '');
+            echo ">&nbsp;" . _("Samstag") . "</label></td>\n";
+            echo "<td colspan=\"2\"><label><input type=\"checkbox\" name=\"wdays[]\" value=\"7\"";
+            echo (in_array(7, $wdays) ? ' checked="checked"' : '');
+            echo ">&nbsp;" . _("Sonntag") . "</label></td>\n";
             echo "</tr>\n</table></td></tr>\n";
             break;
 
@@ -748,12 +740,13 @@ if ($editor_id = $_calendar->event->getEditorId()) {
 
 
 if ($termin_id) {
-    $info_box['export_link'] = "$PHP_SELF?cmd=export&expmod=exp_direct&termin_id=";
-    $info_box['export_link'] .= $_calendar->event->getId();
-    if ($_calendar->event instanceof SeminarEvent)
-        $info_box['export_link'] .= '&evtype=sem';
+    if ($_calendar->event instanceof SeminarEvent) {
+        $info_box['export_link'] = URLHelper::getLink('', array('cmd' => 'export', 'expmod' => 'exp_direct', 'termin_id' => $_calendar->event->getId(), 'evtype' => 'sem'));
+    } else {
+        $info_box['export_link'] = URLHelper::getLink('', array('cmd' => 'export', 'expmod' => 'exp_direct', 'termin_id' => $_calendar->event->getId()));
+    }
     $info_box['export'] = array('icon' => 'icons/16/black/date.png',
-        'text' => sprintf(_("Sie k&ouml;nnen diesen Termin einzeln %sexportieren%s."), "<a href=\"{$info_box['export_link']}\">", "</a>"));
+        'text' => sprintf(_("Diesen Termin einzeln %sexportieren%s."), "<a href=\"{$info_box['export_link']}\">", "</a>"));
 }
 
 if (isset($_calendar->event) && ($_calendar->event instanceof SeminarEvent || $_calendar->event instanceof SeminarCalendarEvent || $evtype == 'semcal')) {
@@ -762,14 +755,9 @@ if (isset($_calendar->event) && ($_calendar->event instanceof SeminarEvent || $_
     $db->query($query);
     $db->next_record();
     if ($_calendar->event instanceof SeminarCalendarEvent) {
-        $link_to_seminar = "<a href=\"" . $CANONICAL_RELATIVE_PATH_STUDIP
-                . "seminar_main.php?auswahl=" . $_calendar->event->getSeminarId()
-                . "&redirect_to=calendar.php&cmd=edit&atime=$atime&termin_id=" . $_calendar->event->getId()
-                . "\">" . htmlReady($db->f("name")) . "</a>";
+        $link_to_seminar = '<a href="' . URLHelper::getLink('seminar_main.php', array('auswahl' => $_calendar->event->getSeminarId(), 'redirect_to' => 'calendar.php&cmd=edit&atime=' . $atime . '&termin_id=' . $_calendar->event->getId())) . '">' . htmlReady($db->f('name')) . '</a>';
     } else {
-        $link_to_seminar = "<a href=\"" . $CANONICAL_RELATIVE_PATH_STUDIP
-                . "seminar_main.php?auswahl=" . $_calendar->event->getSeminarId()
-                . "\">" . htmlReady($db->f("name")) . "</a>";
+        $link_to_seminar = '<a href="' . URLHelper::getLink('seminar_main.php', array('auswahl' => $_calendar->event->getSeminarId())) . '">' . htmlReady($db->f('name')) . '</a>';
     }
 
     // create infobox entries
@@ -784,22 +772,20 @@ if (isset($_calendar->event) && ($_calendar->event instanceof SeminarEvent || $_
             // events/dates at "Einrichtungen" are not implemented
             break;
     }
-    $info_box['sem2'] = sprintf(_("<a href=\"%s?cmd=bind\">W&auml;hlen</a> Sie aus, welche Veranstaltungstermine in Ihrem Terminkalender angezeigt werden sollen.")
-            , $PHP_SELF);
+    $info_box['sem2'] = sprintf(_("%sWählen%s Sie aus, welche Veranstaltungstermine in Ihrem Terminkalender angezeigt werden sollen."), '<a href="' . URLHelper::getLink('', array('cmd' => 'bind')) . '">', '</a>');
     if ($GLOBALS['perm']->have_studip_perm('tutor', $_calendar->event->getSeminarId())) {
         if ($_calendar->event instanceof SeminarEvent) {
-            $link_to_seminar = sprintf("<a href=\"%sraumzeit.php?cmd=open&open_close_id=%s&cid=%s#%s\">"
-                    , $CANONICAL_RELATIVE_PATH_STUDIP, $_calendar->event->getId(), $_calendar->event->getSeminarId(), $_calendar->event->getId());
-            $info_box['sem3'] = sprintf(_("Um diesen Termin zu bearbeiten, wechseln Sie bitte in die %sTerminverwaltung</a>.")
-                    , $link_to_seminar);
-            $info_box['all'][1]['eintrag'][] = array('icon' => 'admin.gif', 'text' => $info_box['sem3']);
+            $link_to_seminar = '<a href="' . URLHelper::getLink('raumzeit.php#' . $_calendar->event->getId(), array('cmd' => 'open', 'open_close_id' => $_calendar->event->getId(), 'cid' => $_calendar->event->getSeminarId())) . '">';
+            $info_box['sem3'] = sprintf(_("Um diesen Termin zu bearbeiten, wechseln Sie bitte in die %sTerminverwaltung%s.")
+                    , $link_to_seminar, '</a>');
+            $info_box['all'][1]['eintrag'][] = array('icon' => 'icons/16/black/admin.png', 'text' => $info_box['sem3']);
         }
 
         $info_box['all'][0]['kategorie'] = _("Information:");
         $info_box['all'][0]['eintrag'][] = array('icon' => 'icons/16/black/info.png',
             'text' => $info_box['sem1']);
         $info_box['all'][1]['kategorie'] = _("Aktion:");
-        $info_box['all'][1]['eintrag'][] = array('icon' => 'meinesem.gif',
+        $info_box['all'][1]['eintrag'][] = array('icon' => 'icons/16/black/seminar.png',
             'text' => $info_box['sem2']);
         $info_box['all'][1]['eintrag'][] = $info_box['export'];
     } else {
@@ -826,7 +812,7 @@ if (isset($_calendar->event) && ($_calendar->event instanceof SeminarEvent || $_
         echo "<input type=\"image\" " . makeButton("zurueck", "src") . " name=\"back_recur\" border=\"0\">\n";
         echo "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ";
         echo "<input type=\"hidden\" name=\"set_recur_x\" value=\"1\">\n";
-        echo "<input type=\"hidden\" name=\"wholeday\" value=\"{$_POST['wholeday']}\">\n";
+        echo '<input type="hidden" name="wholeday" value="' . Request::get('wholeday') . "\">\n";
     }
 
     echo "<input type=\"image\" " . makeButton("zurueck", "src") . " border=\"0\" name=\"cancel\">\n";
@@ -842,7 +828,7 @@ if (isset($_calendar->event) && ($_calendar->event instanceof SeminarEvent || $_
         echo "<input type=\"image\" " . makeButton("zurueck", "src") . " name=\"back_recur\" border=\"0\">\n";
         echo "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ";
         echo "<input type=\"hidden\" name=\"set_recur_x\" value=\"1\">\n";
-        echo "<input type=\"hidden\" name=\"wholeday\" value=\"{$_POST['wholeday']}\">\n";
+        echo '<input type="hidden" name="wholeday" value="' . Request::get('wholeday') . "\">\n";
     }
 //  if ($_calendar->havePermission(CALENDAR_PERMISSION_WRITABLE)
     //      && $_calendar->event->getPermission() == CALENDAR_EVENT_PERM_PUBLIC) {
@@ -866,14 +852,14 @@ if (isset($_calendar->event) && ($_calendar->event instanceof SeminarEvent || $_
         // max number of events reached
         $info_box['count'] = _("Sie k&ouml;nnen keine weiteren Termine mehr speichern!")
                 . '<br><br>'
-                . sprintf(_("L&ouml;schen Sie &auml;ltere Termine, oder w&auml;hlen Sie eine automatische L&ouml;schfunktion in Ihren %sKalenderoptionen%s."), "<a href=\"" . URLHelper::getLink('edit_about.php?view=calendar') . "\">", '</a>');
+                . sprintf(_("L&ouml;schen Sie &auml;ltere Termine, oder w&auml;hlen Sie eine automatische L&ouml;schfunktion in Ihren %sKalenderoptionen%s."), '<a href="' . URLHelper::getLink('edit_about.php', array('view' => 'calendar')) . '">', '</a>');
     } elseif ($count_events >= ($CALENDAR_MAX_EVENTS - $CALENDAR_MAX_EVENTS / 20)) {
         // only 5% of max number of events free
         $info_box['count'] = sprintf(_("Sie k&ouml;nnen noch %s Termine speichern."), $CALENDAR_MAX_EVENTS - $count_events);
         $info_box['count'] .= '<br><br>';
-        $info_box['count'] .= sprintf(_("W&auml;hlen Sie eine automatische L&ouml;schfunktion in Ihren %sKalenderoptionen%s, um &auml;ltere Termine zu l&ouml;schen."), "<a href=\"" . URLHelper::getLink('edit_about.php?view=calendar') . "\">", "</a>");
+        $info_box['count'] .= sprintf(_("W&auml;hlen Sie eine automatische L&ouml;schfunktion in Ihren %sKalenderoptionen%s, um &auml;ltere Termine zu l&ouml;schen."), '<a href="' . URLHelper::getLink('edit_about.php', array('view' => 'calendar')) . '">', '</a>');
     } else {
-        $info_box['count'] = sprintf(_("Sie k&ouml;nnen abgelaufene Termine automatisch l&ouml;schen lassen. W&auml;hlen Sie dazu eine L&ouml;schfunktion in Ihren %sKalenderoptionen%s."), "<a href=\"" . URLHelper::getLink('edit_about.php?view=calendar') . "\">", "</a>");
+        $info_box['count'] = sprintf(_("Sie k&ouml;nnen abgelaufene Termine automatisch l&ouml;schen lassen. W&auml;hlen Sie dazu eine L&ouml;schfunktion in Ihren %sKalenderoptionen%s."), '<a href="' . URLHelper::getLink('edit_about.php', array('view' => 'calendar')) . '">', '</a>');
     }
     $info_box['all'][0]['kategorie'] = _("Information:");
     $info_box['all'][0]['eintrag'][] = array('icon' => 'icons/16/black/info.png',

@@ -167,7 +167,7 @@ function PrintAktualStatusgruppen($range_id, $view, $edit_id = '')
                                 break;
                             case CALENDAR_PERMISSION_WRITABLE:
                                 echo URLHelper::getLink('#' . $statusgruppe_id, array('user_id' => $db2->f('user_id'), 'view' => $view, 'lid' => $lid, 'calperm' => CALENDAR_PERMISSION_FORBIDDEN)) . '">';
-                                echo Assets::img('group_cal_writable.gif', tooltip(_("Mein Kalender ist für diese Person schreibbar")));
+                                echo Assets::img('icons/16/red/schedule.png', tooltip(_("Mein Kalender ist für diese Person schreibbar")));
                                 break;
                             default:
                                 echo URLHelper::getLink('#' . $statusgruppe_id, array('user_id' => $db2->f('user_id'), 'view' => $view, 'lid' => $lid, 'calperm' => CALENDAR_PERMISSION_READABLE)) . '">';

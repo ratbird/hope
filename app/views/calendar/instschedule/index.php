@@ -2,9 +2,8 @@
 # Lifter010: TODO
 $zoom = Request::get('zoom', 0);
 
-$text  = _("Der Stundenplan zeigt Ihre regelmäßigen Veranstaltungen dieses Semesters sowie von Ihnen selbst erstellte Belegungen.");
-$text2 = sprintf( _("Um neue Veranstaltungen hinzuzufügen, verwenden Sie die %sVeranstaltungssuche%s."),
-        '<a href="'. UrlHelper::getLink('sem_portal.php') .'">', '</a>');
+$text  = _("Der Stundenplan zeigt die regelmäßigen Veranstaltungen dieser Einrichtung.");
+
 if ($zoom) {
     $zoom_text = '<a href="'. UrlHelper::getLink('', array('zoom' => 0)) .'">'. _("Normalansicht") .'</a>';
 } else {
@@ -18,8 +17,7 @@ $infobox['content'] = array(
     array(
         'kategorie' => _("Information:"),
         'eintrag'   => array(
-            array("text" => $text, "icon" => "icons/16/black/info.png"),
-            array("text" => $text2, "icon" => "icons/16/black/info.png")
+            array("text" => $text, "icon" => "icons/16/black/info.png")
         )
     ),
 

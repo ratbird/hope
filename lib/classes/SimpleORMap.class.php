@@ -644,7 +644,9 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
     public function isDirty()
     {
         foreach(array_keys($this->db_fields) as $field) {
-            if ($this->content[$field] !== $this->content_db[$field]) return true;
+            if ($this->isFieldDirty($field)) {
+                return true;
+            }
         }
         return false;
     }
@@ -658,7 +660,11 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
     public function isFieldDirty($field)
     {
         $field = strtolower($field);
-        return ($this->content[$field] !== $this->content_db[$field]);
+        if ($this->content[$field] === null || $this->content_db[$field] === null) {
+            return $this->content[$field] !== $this->content_db[$field];
+        } else {
+            return (string)$this->content[$field] !== (string)$this->content_db[$field];
+        }
     }
 
     /**

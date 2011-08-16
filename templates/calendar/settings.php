@@ -24,7 +24,7 @@ $css_switcher->switchClass();
                 </tr>
                 <tr>
                     <td align="right" class="blank" style="border-bottom:1px dotted black;">
-                        <label for="cal_view"><? echo _("Startansicht anpassen:"); ?></label>
+                        <label for="cal_view"><? echo _("Startansicht anpassen"); ?></label>
                     </td>
                     <td class="<? echo $css_switcher->getClass(); ?>">
                         <select name="cal_view" id="cal_view" size="1">
@@ -38,7 +38,7 @@ $css_switcher->switchClass();
                 </tr>
                 <tr><? $css_switcher->switchClass(); ?>
                     <td align="right" class="blank" style="border-bottom:1px dotted black;">
-                        <? echo _("Wochenansicht anpassen:"); ?>
+                        <? echo _("Wochenansicht anpassen"); ?>
                     </td>
                     <td class="<? echo $css_switcher->getClass(); ?>">
                         <label><input type="radio" name="cal_type_week" value="LONG"<? if ($calendar_user_control_data['type_week'] == 'LONG') : echo ' checked'; endif ?>>&nbsp;<?= _("7 Tage-Woche") ?></label><br>
@@ -47,7 +47,7 @@ $css_switcher->switchClass();
                 </tr>
                 <tr><? $css_switcher->switchClass(); ?>
                     <td align="right" class="blank">
-                        <label for="cal_delete"><?= _("L&ouml;schen von Terminen:"); ?></label>
+                        <label for="cal_delete"><?= _("L&ouml;schen von Terminen"); ?></label>
                     </td>
                     <td class="<? echo $css_switcher->getClass(); ?>">
                         <select name="cal_delete" id="cal_delete" size="1">
@@ -67,7 +67,7 @@ $css_switcher->switchClass();
                 <? endif ?>
                 <tr><? $css_switcher->switchClass(); ?>
                 <td align="right" class="blank" style="border-bottom:1px dotted black;">
-                    <? echo _("Zeitraum der Tages- und Wochenansicht:"); ?>
+                    <? echo _("Zeitraum der Tages- und Wochenansicht"); ?>
                 </td>
                 <td class="<? echo $css_switcher->getClass(); ?>">
                     <select name="cal_start" aria-label="<?= _("Startzeit der Tages- und Wochenansicht") ?>">
@@ -118,7 +118,7 @@ $css_switcher->switchClass();
                 </tr>
                 <tr><? $css_switcher->switchClass(); ?>
                     <td align="right" class="blank" style="border-bottom:1px dotted black;">
-                        <label for="cal_step_day"><?= _("Zeitintervall der Tagesansicht:"); ?></label>
+                        <label for="cal_step_day"><?= _("Zeitintervall der Tagesansicht"); ?></label>
                     </td>
                     <td class="<?= $css_switcher->getClass(); ?>">
                         <select name="cal_step_day" for="cal_step_day" size="1">
@@ -132,7 +132,7 @@ $css_switcher->switchClass();
                 </tr>
                 <tr><? $css_switcher->switchClass(); ?>
                     <td align="right" class="blank">
-                        <label for="cal_step_week"><?= _("Zeitintervall der Wochenansicht:"); ?></label>
+                        <label for="cal_step_week"><?= _("Zeitintervall der Wochenansicht"); ?></label>
                     </td>
                     <td class="<?= $css_switcher->getClass(); ?>">
                         <select name="cal_step_week" id="cal_step_week" size="1">
@@ -171,7 +171,7 @@ $css_switcher->switchClass();
                 </tr>
                 <tr><? $css_switcher->switchClass(); ?>
                     <td align="right" class="blank" style="border-bottom:1px dotted black;">
-                        <label for="cal_step_day_group"><?= _("Zeitintervall der Tagesansicht:"); ?></label>
+                        <label for="cal_step_day_group"><?= _("Zeitintervall der Tagesansicht"); ?></label>
                     </td>
                     <td class="<?= $css_switcher->getClass(); ?>">
                         <select name="cal_step_day_group" id="cal_step_day_group" size="1">
@@ -184,7 +184,7 @@ $css_switcher->switchClass();
                 </tr>
                 <tr><? $css_switcher->switchClass(); ?>
                     <td align="right" class="blank">
-                        <label for="cal_step_week_group"><?= _("Zeitintervall der Wochenansicht:"); ?></label>
+                        <label for="cal_step_week_group"><?= _("Zeitintervall der Wochenansicht"); ?></label>
                     </td>
                     <td class="<?= $css_switcher->getClass(); ?>">
                         <select name="cal_step_week_group" id="cal_step_week_group" size="1">

@@ -1636,12 +1636,12 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
         </td>
     </tr>
     <tr><td class=blank colspan=2>
-    <form action="<?= URLHelper::getLink() ?>" method="POST">
+    <form action="<?= URLHelper::getLink()."#suchergebnisse" ?>" method="POST">
     <?= CSRFProtection::tokenTag() ?>
     <table width="99%" border="0" cellpadding="2" cellspacing="0" border=0 align="center">
     <tr>
         <td class="steel1" width="40%" align="left">&nbsp; <font size=-1><b><?=_("Nutzer in die Veranstaltung eintragen")?></b></font>
-        <br><font size=-1>&nbsp; <? printf(_("Bitte geben Sie den Vornamen, Nachnamen %s oder Benutzernamen zur Suche ein"), "<br>&nbsp;")?> </font></td>
+            <a name="suchergebnisse"><br><font size=-1>&nbsp; <? printf(_("Bitte geben Sie den Vornamen, Nachnamen %s oder Benutzernamen zur Suche ein"), "<br>&nbsp;")?> </font></a></td>
         <td class="steel1" width="20%" align="left">
         <input type="hidden" name="studipticket" value="<?=$studipticket?>">
         <?php

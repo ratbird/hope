@@ -2,12 +2,12 @@
 # Lifter010: TODO
 /**
  * RoomRequest.class.php - model class for table resources_requests
-* 
+*
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
-* 
+*
  * @author      Cornelis Kater <ckater@gwdg.de>
  * @author      Till Glöggler <tgloeggl@uos.de>
  * @author      André Noack <noack@data-quest.de>
@@ -41,7 +41,17 @@ class RoomRequest extends SimpleORMap
     {
         return SimpleORMap::find(__CLASS__, $id);
     }
-        
+
+    /**
+     * returns array of instances of RommRequest filtered by given sql where-clause
+     * @param string where: clause to use on the right side of WHERE
+     * @return array of instances of SeminarCycleDates filtered by given sql
+     * where-clause or an empty array if nothing matches the clause
+     */
+    static function findBySql($where)
+    {
+        return SimpleORMap::findBySql(__CLASS__, $where);
+    }
 
     static function existsByCourse($seminar_id, $is_open = false)
     {
@@ -63,7 +73,7 @@ class RoomRequest extends SimpleORMap
         $id = self::existsForSQL(($is_open ? "closed = 0 AND " : "") . "metadate_id = " . $db->quote($metadate_id));
         return $id;
     }
-    
+
     public static function existsForSQL($where)
     {
         $db = DBManager::get();
@@ -77,13 +87,13 @@ class RoomRequest extends SimpleORMap
         $this->db_table = "resources_requests";
         parent::__construct($id);
     }
-    
+
 
     function getResourceId()
     {
         return $this->resource_id;
     }
-    
+
     function getSeminarId()
     {
         return $this->seminar_id;
@@ -93,7 +103,7 @@ class RoomRequest extends SimpleORMap
     {
         return $this->termin_id;
     }
-    
+
     function getMetadateId()
     {
         return $this->metadate_id;
@@ -103,12 +113,12 @@ class RoomRequest extends SimpleORMap
     {
         return $this->user_id;
     }
-    
+
     function getCategoryId()
     {
         return $this->category_id;
     }
-    
+
     function getComment()
     {
         return $this->comment;
@@ -123,7 +133,7 @@ class RoomRequest extends SimpleORMap
     {
         return $this->closed;
     }
-    
+
     function getPropertyState($property_id)
     {
         return $this->properties[$property_id]["state"];
@@ -133,24 +143,24 @@ class RoomRequest extends SimpleORMap
     {
         return $this->properties;
     }
-    
+
     function getAvailableProperties()
     {
         $available_properties = array();
         if ($this->category_id) {
             $db = DBManager::get();
 
-            $st = $db->prepare("SELECT  b.property_id,b.name, b.type, b.system
+            $st = $db->prepare("SELECT b.*
                                 FROM resources_categories_properties a
                                 LEFT JOIN resources_properties b USING (property_id)
                                 WHERE requestable = 1 AND category_id = ?");
             if ($st->execute(array($this->category_id))) {
-                $available_properties = array_map('array_shift', $st->fetchAll(PDO::FETCH_ASSOC|PDO::FETCH_GROUP));
+                $available_properties = $st->fetchAll(PDO::FETCH_ASSOC);
             }
         }
-            return $available_properties;
+        return $available_properties;
     }
-    
+
     function getSettedPropertiesCount()
     {
         $count = 0;
@@ -159,7 +169,7 @@ class RoomRequest extends SimpleORMap
         }
         return $count;
     }
-    
+
     function getSeats()
     {
         foreach ($this->properties as $val) {
@@ -167,7 +177,7 @@ class RoomRequest extends SimpleORMap
         }
         return false;
     }
-    
+
     function setResourceId($value)
     {
         $this->resource_id=$value;
@@ -177,12 +187,12 @@ class RoomRequest extends SimpleORMap
     {
         $this->user_id=$value;
     }
-    
+
     function setSeminarId($value)
     {
         $this->seminar_id=$value;
     }
-    
+
     function setCategoryId($value)
     {
         $this->category_id = $value;
@@ -226,12 +236,12 @@ class RoomRequest extends SimpleORMap
         }
         return parent::getValue($field);
     }
-    
+
     function setComment($value)
     {
         $this->comment=$value;
     }
-    
+
     function setReplyComment($value)
     {
         $this->reply_comment=$value;
@@ -246,13 +256,13 @@ class RoomRequest extends SimpleORMap
      *  2 - room-request has been edited and a confirmation has been sent
      *  3 - room-request has been declined
      *
-     * @param integer $value one of the states 
+     * @param integer $value one of the states
      */
     function setClosed($value)
     {
         $this->closed=$value;
     }
-    
+
     function setTerminId($value)
     {
         $this->termin_id=$value;
@@ -264,7 +274,7 @@ class RoomRequest extends SimpleORMap
     }
 
     function setPropertyState($property_id, $value) {
-        if ($this->properties[$property_id]['state'] !== $value) {
+        if ($this->properties[$property_id]['state'] != $value) {
             $this->properties_changed = true;
         }
 
@@ -274,12 +284,12 @@ class RoomRequest extends SimpleORMap
             $this->properties[$property_id] = FALSE;
         }
     }
-    
+
     function setDefaultSeats($value)
     {
         $this->default_seats = (int)$value;
     }
-    
+
     function searchRoomsToRequest($search_exp, $properties = false)
     {
         $permitted_rooms = null;
@@ -292,7 +302,7 @@ class RoomRequest extends SimpleORMap
         }
         return $this->searchRooms($search_exp, $properties, 0, 0, true, $permitted_rooms);
     }
-    
+
     function searchRooms($search_exp, $properties = FALSE, $limit_lower = 0, $limit_upper = 0, $only_rooms = TRUE, $permitted_resources = FALSE) {
         $search_exp = mysql_escape_string($search_exp);
         //create permitted resource clause
@@ -304,7 +314,7 @@ class RoomRequest extends SimpleORMap
         if ($search_exp && !$properties)
             $query = sprintf ("SELECT a.resource_id, a.name FROM resources_objects a %s WHERE a.name LIKE '%%%s%%' %s ORDER BY a.name", ($only_rooms) ? "INNER JOIN resources_categories b ON (a.category_id=b.category_id AND is_room = 1)" : "", $search_exp, $permitted_resources_clause);
 
-        //create the very complex query for room search AND room propterties search...  
+        //create the very complex query for room search AND room propterties search...
         if ($properties) {
             $availalable_properties = $this->getAvailableProperties();
             $setted_properties = $this->getSettedPropertiesCount();
@@ -330,29 +340,29 @@ class RoomRequest extends SimpleORMap
                         } elseif ($availalable_properties[$key]["system"] == "2") {
                             $linking = ">=";
                         } else $linking = "=";
-                        
+
                         $query.= sprintf(" %s (property_id = '%s' AND state %s %s%s%s) ", ($i) ? "OR" : "", $key, $linking,  (!is_numeric($val["state"])) ? "'" : "", $val["state"], (!is_numeric($val["state"])) ? "'" : "");
                         $i++;
                     }
                 }
             }
-                
-            if ($search_exp) 
+
+            if ($search_exp)
                 $query.= sprintf(" %s (b.name LIKE '%%%s%%' OR b.description LIKE '%%%s%%') ", ($setted_properties) ? "AND" : "", $search_exp, $search_exp);
 
             $query.= sprintf ("%s b.category_id ='%s' ", ($setted_properties) ? "AND" : "", $this->category_id);
 
             if ($setted_properties)
                 $query.= sprintf (" GROUP BY a.resource_id  HAVING resource_id_count = '%s' ", $i);
-            
+
             $query.= sprintf ("ORDER BY b.name %s", ($limit_upper) ? "LIMIT ".(($limit_lower) ? $limit_lower : 0).",".($limit_upper - $limit_lower) : "");
         }
 
         $db = DBManager::get();
         $result = $db->query( $query );
-        
+
         $found = array();
-        
+
         foreach( $result as $res ){
             if ($res["name"]) {
                 $found [$res["resource_id"]] = $res["name"];
@@ -367,7 +377,7 @@ class RoomRequest extends SimpleORMap
     {
         $found = parent::restore();
         if ($found) {
-        $db = DBManager::get();
+            $db = DBManager::get();
             $st = $db->prepare("SELECT a.property_id, state, mkdate, chdate, type, name, options, system
                                 FROM resources_requests_properties a
                                 LEFT JOIN resources_properties b USING (property_id)
@@ -381,7 +391,7 @@ class RoomRequest extends SimpleORMap
         }
         return $found;
     }
-    
+
     //private
     private function cleanProperties()
     {
@@ -397,23 +407,23 @@ class RoomRequest extends SimpleORMap
         $result = $db->exec( $query );
         return $result > 0 ;
     }
-    
+
     //private
     private function storeProperties()
     {
         $db = DBManager::get();
         foreach ($this->properties as $key=>$val) {
             $query = sprintf ("REPLACE INTO resources_requests_properties SET request_id = '%s', property_id = '%s', state = '%s', mkdate = '%s', chdate = '%s'", $this->getId(), $key, $val["state"], (!$val["mkdate"]) ? time() : $val["mkdate"], time());
-            
+
             if ($db->exec( $query ))
                 $changed = TRUE;
         }
         if ($this->cleanProperties())
             $changed = TRUE;
-        
+
         return $changed;
     }
-    
+
     function checkOpen($also_change = FALSE)
     {
         $db = DBManager::get();
@@ -441,8 +451,8 @@ class RoomRequest extends SimpleORMap
         }
         return (bool)$existing_assign;
     }
-    
-    
+
+
     function copy()
     {
         $this->setId($this->getNewId());
@@ -455,7 +465,7 @@ class RoomRequest extends SimpleORMap
         if (!$this->user_id) {
             $this->user_id = $GLOBALS['user']->id;
         }
-        $this->closed = (int)$this->closed;
+
         if ($this->resource_id || $this->getSettedPropertiesCount()) {
             if ($this->isNew() && !$this->getId()) {
                 $this->setId($this->getNewId());
@@ -465,14 +475,14 @@ class RoomRequest extends SimpleORMap
                 $properties_stored = $this->storeProperties();
             }
             $stored = parent::store();
-                // LOGGING
-                $props="";
-                foreach ($this->properties as $key => $val) {
-                    $props.=$val['name']."=".$val['state']." "; 
-                }
-                if (!$props) {
-                    $props="--";
-                }
+            // LOGGING
+            $props="";
+            foreach ($this->properties as $key => $val) {
+                $props.=$val['name']."=".$val['state']." ";
+            }
+            if (!$props) {
+                $props="--";
+            }
             if ($this->isNew()) {
                 log_event("RES_REQUEST_NEW",$this->seminar_id,$this->resource_id,"Termin: $this->termin_id, Metadate: $this->metadate_id, Properties: $props, Kommentar: $this->comment",$query);
             } else {
@@ -490,7 +500,7 @@ class RoomRequest extends SimpleORMap
         }
         return $stored || $properties_changed;
     }
-            
+
     function delete()
     {
         $db = DBManager::get();
@@ -500,13 +510,13 @@ class RoomRequest extends SimpleORMap
         log_event("RES_REQUEST_DEL",$this->seminar_id,$this->resource_id,"Termin: $this->termin_id, Metadate: $this->metadate_id","");
         return parent::delete() || $properties_deleted;
     }
-            
+
     function toArray()
     {
         $ret = parent::toArray();
         $ret['properties'] = $this->getProperties();
         return $ret;
-            }
+    }
 
     function getType()
     {
@@ -515,7 +525,7 @@ class RoomRequest extends SimpleORMap
         if ($this->seminar_id) return 'course';
         return null;
     }
-        
+
     function getStatus()
     {
         switch ($this->getClosed()) {
@@ -537,7 +547,7 @@ class RoomRequest extends SimpleORMap
                 $requestData[] = _('Es wurde kein spezifischer Raum gewünscht');
             }
             $requestData[] = '';
-        
+
             foreach ($this->getProperties() as $val) {
                 $prop = $val['name'].': ';
                 if ($val['type'] == 'bool') {
@@ -552,16 +562,9 @@ class RoomRequest extends SimpleORMap
                 $requestData[] = $prop;
             }
 
-            if ($this->getClosed() == 0) {
-                $txt = _("Die Anfrage wurde noch nicht bearbeitet.");
-            } else if ($this->getClosed() == 3) {
-                $txt = _("Die Anfrage wurde bearbeitet und abgelehnt.");
-            } else {
-                $txt = _("Die Anfrage wurde bearbeitet.");
-            }
             $requestData[] = '';
 
-            $requestData[] = sprintf(_('Status: %s'), $txt);
+            $requestData[] = sprintf(_('Status: %s'), $this->getStatusExplained());
             $requestData[] = '';
 
             // if the room-request has been declined, show the decline-notice placed by the room-administrator
@@ -578,4 +581,41 @@ class RoomRequest extends SimpleORMap
         }
     }
 
+    function getTypeExplained()
+    {
+        $ret = '';
+        if ($this->termin_id) {
+            $ret = _("Einzeltermin der Veranstaltung");
+            if (get_object_type($this->termin_id, array('date'))) {
+                $termin = new SingleDate($this->termin_id);
+                $ret .= chr(10) . '(' . $termin->toString() . ')';
+            }
+        } elseif ($this->metadate_id) {
+            $ret = _("alle Termine einer regelmäßigen Zeit");
+            if ($cycle = SeminarCycleDate::find($this->metadate_id)) {
+                $ret .= chr(10) . ' (' . $cycle->toString('full') . ')';
+            }
+        } elseif ($this->seminar_id) {
+            $ret =  _("alle regelmäßigen und unregelmäßigen Termine der Veranstaltung");
+            if (get_object_type($this->seminar_id, array('sem'))) {
+                $course = new Seminar($this->seminar_id);
+                $ret .= chr(10) . ' (' . $course->getDatesExport(array('short' => true, 'shrink' => true)) . ')';
+            }
+        } else {
+            $ret = _("Kein Typ zugewiesen");
+        }
+        return $ret;
+    }
+
+    function getStatusExplained()
+    {
+        if ($this->getClosed() == 0) {
+            $txt = _("Die Anfrage wurde noch nicht bearbeitet.");
+        } else if ($this->getClosed() == 3) {
+            $txt = _("Die Anfrage wurde bearbeitet und abgelehnt.");
+        } else {
+            $txt = _("Die Anfrage wurde bearbeitet.");
+        }
+        return $txt;
+    }
 }

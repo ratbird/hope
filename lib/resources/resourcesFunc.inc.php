@@ -370,6 +370,8 @@ function getMyRoomRequests($user_id = '', $semester_id = null, $only_not_closed 
 
     $db = DBManager::get();
 
+    $requests = array();
+
     if (!$user_id)
         $user_id = $user->id;
     if ($only_not_closed) {
@@ -907,4 +909,11 @@ function showSearchForm($name, $search_string='', $user_only=FALSE, $administrab
         <?
     }
 }
+
+function getResourcesCategories()
+{
+    $query = "SELECT * FROM resources_categories ORDER BY name";
+    return DBManager::get()->query($query)->fetchAll();
+}
+
 ?>

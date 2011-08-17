@@ -528,9 +528,6 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                 case "admin_admission.php":
                     printf("<font size=-1>" . _("Zugangsberechtigungen") . "<br><a href=\"%s\">%s</a></font>", URLHelper::getLink('?seminar_id=' . $seminar_id), makeButton("bearbeiten"));
                     break;
-                case "admin_room_requests.php":
-                    printf("<font size=-1>" . _("Raumwünsche") . "<br><a href=\"%s\">%s</a></font>", URLHelper::getLink('?seminar_id=' . $seminar_id), makeButton("bearbeiten"));
-                    break;
                 case "admin_lit_list.php":
                     printf("<font size=-1>" . _("Literatur") . "<br><a href=\"%s\">%s</a></font>", URLHelper::getLink('?_range_id=' . $seminar_id), makeButton("bearbeiten"));
                     break;
@@ -635,6 +632,10 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                     } elseif ($this instanceof Course_BasicdataController){
                         printf(_("Veranstaltung") . '<br><a href="%s">%s</a>',
                             $this->url_for('course/basicdata/view/' . $seminar_id),
+                            makeButton("bearbeiten"));
+                    } elseif ($this instanceof Course_RoomRequestsController){
+                        printf(_("Raumanfragen") . '<br><a href="%s">%s</a>',
+                            $this->url_for('course/room_requests/index/' . $seminar_id),
                             makeButton("bearbeiten"));
                     }
                     break;

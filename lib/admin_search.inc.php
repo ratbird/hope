@@ -187,7 +187,6 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
     if ($i_page == "themen.php"
             OR $i_page == "raumzeit.php"
             OR $i_page == "admin_admission.php"
-            OR $i_page == "admin_room_requests.php"
             OR ($i_page == "admin_statusgruppe.php" AND $links_admin_data["view"]=="statusgruppe_sem")
             OR ($i_page == "admin_lit_list.php" AND $links_admin_data["view"]=="literatur_sem")
             OR $i_page == "archiv_assi.php"

@@ -62,6 +62,9 @@ class AdminNavigation extends Navigation
         $navigation->addSubNavigation('study_areas', new Navigation(_('Studienbereiche'),
                                       'dispatch.php/course/study_areas/show/', array('list' => 'TRUE')));
         $navigation->addSubNavigation('dates', new Navigation(_('Zeiten / Räume'), 'raumzeit.php?list=TRUE'));
+        if (get_config('RESOURCES_ENABLE') && get_config('RESOURCES_ALLOW_ROOM_REQUESTS')) {
+            $navigation->addSubNavigation('room_requests', new Navigation(_('Raumanfragen'), 'dispatch.php/course/room_requests', array('list' => 'TRUE')));
+        }
         $navigation->addSubNavigation('schedule', new Navigation(_('Ablaufplan'), 'themen.php?list=TRUE'));
         $navigation->addSubNavigation('news', new Navigation(_('Ankündigungen'), 'admin_news.php?list=TRUE&view=news_sem'));
 

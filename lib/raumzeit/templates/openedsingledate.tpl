@@ -86,7 +86,7 @@
                     <?=$GLOBALS['RESOURCES_ENABLE'] ? _("(f&uuml;hrt <em>nicht</em> zu einer Raumbuchung)"): ''?><br>
                     <? if ($GLOBALS['RESOURCES_ENABLE'] && $GLOBALS['RESOURCES_ALLOW_ROOM_REQUESTS']) { ?>
                     <?=_("Raumanfrage")?>
-                    <A href="<?= URLHelper::getLink('admin_room_requests.php?seminar_id='. $tpl['seminar_id'] .'&termin_id='. $tpl['sd_id']) ?>">
+                    <A href="<?= URLHelper::getLink('dispatch.php/course/room_requests/edit/' .$tpl['seminar_id'], $tpl['room_request'] ? array('request_id' => $tpl['room_request']->request_id) : array('new_room_request_type' => 'date_' . $tpl['sd_id'])) ?>">
                         <IMG <?=($tpl['room_request']) ? makebutton('bearbeiten', 'src') : makebutton('erstellen', 'src')?> border="0" align="absmiddle">
                     </A>
                     <? if ($tpl['room_request']) { ?>

@@ -140,6 +140,12 @@ class CourseNavigation extends Navigation
                 $item->setDescription(_('Verändern Sie hier Angaben über regelmäßige Veranstaltungszeiten, Einzeltermine und Ortsangaben.'));
                 $navigation->addSubNavigation('dates', $item);
 
+                if (get_config('RESOURCES_ENABLE') && get_config('RESOURCES_ALLOW_ROOM_REQUESTS')) {
+                    $item = new Navigation(_('Raumanfragen'), 'dispatch.php/course/room_requests');
+                    $item->setDescription(_('Verwalten Sie hier Raumanfragen zu Veranstaltungszeiten.'));
+                    $navigation->addSubNavigation('room_requests', $item);
+                }
+
                 $item = new Navigation(_('Zugangsberechtigungen'), 'admin_admission.php');
                 $item->setDescription(_('Richten Sie hier verschiedene Zugangsbeschränkungen, Anmeldeverfahren oder einen Passwortschutz für Ihre Veranstaltung ein.'));
                 $navigation->addSubNavigation('admission', $item);

@@ -551,13 +551,14 @@ if ($perm->have_studip_perm("admin",$sem->getId())) {
                         <? endif; ?>
 
                         <?= _("Raumanfrage") ?>
-                        <a href="<?= URLHelper::getLink('admin_room_requests.php?seminar_id='. $id) ?>">
                             <? if ($request_status && $request_status == 'open') {
                             ?>
+                            <a href="<?= URLHelper::getLink('dispatch.php/course/room_requests/edit/' . $sem->getId(), array('request_id' => RoomRequest::existsByCourse($id))) ?>">
                                 <?= makebutton('bearbeiten') ?>
                             <?
                             } else {
                             ?>
+                                <a href="<?= URLHelper::getLink('dispatch.php/course/room_requests/edit/' . $sem->getId(), array('new_room_request_type' => 'course')) ?>">
                                 <?= makebutton('erstellen') ?>
                             <?
                             } ?>

@@ -28,6 +28,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 
 require '../lib/bootstrap.php';
+require_once 'lib/resources/lib/RoomRequest.class.php';
 
 page_open(array('sess' => 'Seminar_Session', 'auth' => 'Seminar_Auth', 'perm' => 'Seminar_Perm', 'user' => 'Seminar_User'));
 
@@ -60,7 +61,8 @@ include ('lib/seminar_open.php');   //hier werden die sessions initialisiert
 if ($RESOURCES_ENABLE) {
     include_once ($RELATIVE_PATH_RESOURCES."/lib/VeranstaltungResourcesAssign.class.php");
     include_once ($RELATIVE_PATH_RESOURCES."/lib/ResourcesUserRoomsList.class.php");
-    include_once ($RELATIVE_PATH_RESOURCES."/lib/RoomRequest.class.php");
+    require_once 'vendor/trails/trails.php';
+    require_once 'app/controllers/course/room_requests.php';
     $resAssign = new VeranstaltungResourcesAssign();
 }
 
@@ -115,16 +117,6 @@ $errormsg='';
 $deputies_enabled = get_config('DEPUTIES_ENABLE');
 $default_deputies_enabled = get_config('DEPUTIES_DEFAULTENTRY_ENABLE');
 
-//initialisations for room-requests
-if ($RESOURCES_ENABLE && $RESOURCES_ALLOW_ROOM_REQUESTS && $form <7) {
-    $sem_create_data["resRequest"] = @unserialize($sem_create_data["resRequest"]);
-    if (!$sem_create_data["resRequest"]) {
-        $sem_create_data["resRequest"] = new RoomRequest();
-    }
-}
-
-
-
 //verbotene Kategorien checken
 if (($cmd == 'do_copy' && SeminarCategories::GetBySeminarId($cp_id)->course_creation_forbidden)
     || ( $form && (SeminarCategories::Get($sem_create_data['sem_class']) === false || SeminarCategories::Get($sem_create_data['sem_class'])->course_creation_forbidden))){
@@ -138,7 +130,7 @@ if (($cmd == 'do_copy' && SeminarCategories::GetBySeminarId($cp_id)->course_crea
 //letze angelegte Veranstaltung kopieren
 if (Request::get('start_from_backup') && isset($_SESSION['sem_create_data_backup']['timestamp'])) {
     $sem_create_data = $_SESSION['sem_create_data_backup'];
-    $sem_create_data['resRequest'] = '';
+    unset($sem_create_data['room_requests']);
     $sem_create_data['timestamp'] = time();
     unset($sem_create_data['level']);
     unset($sem_create_data['sem_entry']);
@@ -440,10 +432,6 @@ if ($form == 1)
 
     $sem_create_data["sem_turnout"]=$sem_turnout;
 
-    //save max. count of participants for room-request
-    if (($RESOURCES_ENABLE) && (is_object($sem_create_data["resRequest"])))
-        $sem_create_data["resRequest"]->setDefaultSeats($sem_turnout);
-
     //Anmeldeverfahren festlegen
     if (($sem_create_data["sem_admission"] = $sem_admission) && $sem_create_data["sem_admission"] != 3) {
         if(!is_array($sem_create_data["sem_studg"]) || !count($sem_create_data["sem_studg"])) $sem_create_data["sem_studg"]['all'] = array('name' => _("Alle Studiengänge"), 'ratio' => 100);
@@ -520,6 +508,14 @@ if ($form == 3)
         $sem_create_data["term_turnus_cycle"]='';
         $sem_create_data["term_turnus_sws"]='';
 
+        //evtl. Raumanfragen löschen
+        if (is_array($sem_create_data['room_requests'])) {
+            foreach($sem_create_data['room_requests'] as $key => $request) {
+                if (strpos($key, 'cycle') !== false) {
+                    unset($sem_create_data['room_requests'][$key]);
+                }
+            }
+        }
         //Alle eingegebenen Turnus-Daten in Sessionvariable uebernehmen
         for ($i=0; $i<$sem_create_data["turnus_count"]; $i++) {
             $sem_create_data["term_turnus_date"][$i]=$term_turnus_date[$i];
@@ -588,6 +584,14 @@ if ($form == 3)
         $sem_create_data["term_end_minute"]='';
         $sem_create_data["term_first_date"]='';
 
+        //evtl. Raumanfragen löschen
+        if (is_array($sem_create_data['room_requests'])) {
+            foreach($sem_create_data['room_requests'] as $key => $request) {
+                if (strpos($key, 'date') !== false) {
+                    unset($sem_create_data['room_requests'][$key]);
+                }
+            }
+        }
 
         //Alle eingegebenen Termin-Daten in Sessionvariable uebernehmen
         for ($i=0; $i<$sem_create_data["term_count"]; $i++) {
@@ -635,39 +639,34 @@ if ($form == 4) {
         $sem_create_data["sem_vor_raum"]=$resObject->getName();
     }*/
 
-    if (($RESOURCES_ENABLE) && (is_object($sem_create_data["resRequest"]))) {
+    if ($RESOURCES_ENABLE) {
+        $room_request_form_attributes = array();
         //Room-Requests
         $sem_create_data['skip_room_request'] = (isset($_REQUEST['skip_room_request']));
-
-        if ($send_room_x)
-            $sem_create_data["resRequest"]->setResourceId($select_room);
-        if ($reset_resource_id_x)
-            $sem_create_data["resRequest"]->setResourceId(FALSE);
-        if ($send_room_type_x)
-            $sem_create_data["resRequest"]->setCategoryId($select_room_type);
-        if ($reset_room_type_x)
-            $sem_create_data["resRequest"]->setCategoryId(FALSE);
-
-        $sem_create_data["resRequest"]->setComment(remove_magic_quotes($sem_room_comment));
-
-        //Property Requests
-        if ($sem_create_data["resRequest"]->getCategoryId()) {
-            $availableProperties = $sem_create_data["resRequest"]->getAvailableProperties();
-            if (is_array($availableProperties)) {
-                foreach ($sem_create_data["resRequest"]->getAvailableProperties() as $key=>$val) {
-                    if ($val["system"] == 2) { //it's the property for the seat/room-size!
-                        if ($seats_are_admission_turnout)
-                            $sem_create_data["resRequest"]->setPropertyState($key, $sem_create_data["sem_turnout"]);
-                        elseif (!$send_room_type_x)
-                            $sem_create_data["resRequest"]->setPropertyState($key, abs($request_property_val[$key]));
-                    } else {
-                        $sem_create_data["resRequest"]->setPropertyState($key, $request_property_val[$key]);
+        if (Request::submitted('room_request_form')) {
+            if (Request::option('new_room_request_type')) {
+                if ( $sem_create_data['room_requests'][Request::option('new_room_request_type')] instanceof RoomRequest) {
+                    $request = $sem_create_data['room_requests'][Request::option('new_room_request_type')];
+                } else {
+                    $request = new RoomRequest();
+                    $request->seminar_id = 'assi';
+                    $sem_create_data['room_requests'][Request::option('new_room_request_type')] = $request;
+                    $request->user_id = $GLOBALS['user']->id;
+                    list($new_type, $id) = explode('_', Request::option('new_room_request_type'));
+                    if ($new_type == 'date') {
+                        $request->termin_id = Request::option('new_room_request_type');
+                    } elseif ($new_type == 'cycle') {
+                        $request->metadate_id = Request::option('new_room_request_type');
                     }
+                }
+                if (!Request::submitted('room_request_choose')) {
+                    $room_request_form_attributes = Course_RoomRequestsController::process_form($request, $sem_create_data['sem_turnout']);
+                } elseif (Request::option('current_room_request_type') &&  $sem_create_data['room_requests'][Request::option('current_room_request_type')] instanceof RoomRequest) {
+                    //store last choosen request
+                    Course_RoomRequestsController::process_form($sem_create_data['room_requests'][Request::option('current_room_request_type')], $sem_create_data['sem_turnout']);
                 }
             }
         }
-
-    }
 
     if ($sem_create_data["term_art"]==0) {
         //get incoming room-data
@@ -694,6 +693,7 @@ if ($form == 4) {
                 $sem_create_data["term_room"][$i]=$resObject->getName();
             }*/
         }
+    }
     }
 }
 
@@ -844,6 +844,8 @@ if (!$jump_back_x
     && !$send_room_type_x
     && !$reset_room_type_x
     && !$reset_resource_id_x
+    && !Request::submitted('room_request_choose')
+    && !Request::submitted('room_request_save')
     && !$reset_admission_time_x
     && !$toggle_admission_quota_x) {
     $jump_next_x=TRUE;
@@ -1273,17 +1275,22 @@ if (($form == 3) && ($jump_next_x))
         $level=3;
     }
 
-if (($search_room_x) ||($search_properties_x) || ($reset_room_search_x) || ($reset_room_type_x) || ($reset_resource_id_x)
-    || ($send_room_x) || ($send_room_type_x)) {
+if (Request::submitted('room_request_form') && !(Request::submitted('jump_back') || Request::submitted('jump_next'))) {
     $level=4;
 }
 
 if (($form == 4) && ($jump_next_x)) {
     //checks for room-request
-    if (is_object($sem_create_data["resRequest"])) {
-        if (($sem_create_data["resRequest"]->getSettedPropertiesCount() === 0)
-        && ($sem_create_data["resRequest"]->getResourceId() === NULL)
-        && (!(get_config('RESOURCES_ALLOW_SEMASSI_SKIP_REQUEST') && $sem_create_data['skip_room_request']))) {
+    $requests_ok = false;
+    if (is_array($sem_create_data['room_requests'])) {
+        foreach ($sem_create_data['room_requests'] as $request) {
+            if ($request->getSettedPropertiesCount() || $request->getResourceId()) {
+                $requests_ok = true;
+                break;
+        }
+    }
+
+    if (!$requests_ok && (!(get_config('RESOURCES_ALLOW_SEMASSI_SKIP_REQUEST') && $sem_create_data['skip_room_request']))) {
             $errormsg.="error§"._("Die Anfrage konnte nicht gespeichert werden, da Sie mindestens einen Raumwunsch oder eine gew&uuml;nschte Eigenschaft (z.B. Anzahl der Sitzpl&auml;tze) angeben m&uuml;ssen!") . '§';
             if(get_config('RESOURCES_ALLOW_SEMASSI_SKIP_REQUEST')){
                 $errormsg.="info§"._("Wenn Sie keinen Raum ben&ouml;tigen, aktivieren Sie die entsprechende Option. Die freien Angaben zu R&auml;umen werden auch ohne Raumwunsch gespeichert.") . '§';
@@ -1334,6 +1341,47 @@ if (($form == 4) && ($jump_next_x)) {
         $level=4;
 }
 
+if ($level == 4 && $RESOURCES_ENABLE && $RESOURCES_ALLOW_ROOM_REQUESTS) {
+        $room_requests_options = array();
+        $room_requests_options[] = array('value' => 'course', 'name' => _('alle regelmäßigen und unregelmäßigen Termine der Veranstaltung'));
+        if ($sem_create_data["term_art"] == 0) {
+            foreach ($sem_create_data['metadata_termin']['turnus_data'] as $key => $value) {
+                $cycle = new SeminarCycleDate();
+                $cycle->weekday = $value['day'];
+                $cycle->week_offset = $value['week_offset'];
+                $cycle->cycle = $value['cycle'];
+                $cycle->start_hour = $value['start_stunde'];
+                $cycle->start_minute = $value['start_minute'];
+                $cycle->end_hour = $value['end_stunde'];
+                $cycle->end_minute = $value['end_minute'];
+                $name = _("alle Termine einer regelmäßigen Zeit");
+                $name .= ' (' . $cycle->toString('full') . ')';
+                $room_requests_options[] = array('value' => 'cycle_' . $key, 'name' => $name);
+            }
+        } else {
+            for ($i=0; $i < count($sem_create_data['term_tag']); $i++) {
+                $name = _("Einzeltermin der Veranstaltung");
+                $termin = new SingleDate();
+                $new_date = array('start' => 0, 'end' => 0);
+                if (check_and_set_date($sem_create_data['term_tag'][$i], $sem_create_data['term_monat'][$i], $sem_create_data['term_jahr'][$i],
+                    $sem_create_data['term_start_stunde'][$i], $sem_create_data['term_start_minute'][$i], $new_date, 'start') &&
+                    check_and_set_date($sem_create_data['term_tag'][$i], $sem_create_data['term_monat'][$i], $sem_create_data['term_jahr'][$i],
+                    $sem_create_data['term_end_stunde'][$i], $sem_create_data['term_end_minute'][$i], $new_date, 'end'))
+                {
+                    $termin->setTime($new_date['start'], $new_date['end']);
+                }
+                $name .= ' (' . $termin->toString() . ')';
+                $room_requests_options[] = array('value' => 'date_' . $i, 'name' => $name);
+            }
+        }
+       if (!is_array($sem_create_data['room_requests'])) {
+           $request = new RoomRequest();
+           $request->seminar_id = 'assi';
+           $request->user_id = $GLOBALS['user']->id;
+           $sem_create_data['room_requests']['course'] = $request;
+        }
+
+}
 
 //Neuen Studiengang zur Begrenzung aufnehmen
 if ($add_studg_x) {
@@ -1621,9 +1669,12 @@ if (($form == 6) && ($jump_next_x))
                     $metadate_id = $sem->metadate->addCycle($sem_create_data["metadata_termin"]["turnus_data"][$key]);
                     $temp_rooms[$metadate_id] = $sem_create_data["metadata_termin"]["turnus_data"][$key]["room"];
                     $temp_resources[$metadate_id] = $sem_create_data["metadata_termin"]["turnus_data"][$key]["resource_id"];
+                    if ($sem_create_data['room_requests']['cycle_' . $key] instanceof RoomRequest) {
+                        $sem_create_data['room_requests']['cycle_' . $key]->metadate_id = $metadate_id;
+                    }
                 }
             }
-        }   else {
+        } else {
             if ($sem_create_data['term_count'] > 0)
             for ($i = 0; $i < $sem_create_data['term_count']; $i++) {
                 $termin = new SingleDate(array('seminar_id' => $sem->getId()));
@@ -1642,6 +1693,9 @@ if (($form == 6) && ($jump_next_x))
                     }
                     if ($termin->validate()) {
                         $sem->addSingleDate($termin);
+                        if ($sem_create_data['room_requests']['date_' . $i] instanceof RoomRequest) {
+                            $sem_create_data['room_requests']['date_' . $i]->termin_id = $termin->termin_id;
+                        }
                     }
                     unset($termin);
                 }
@@ -1686,11 +1740,16 @@ if (($form == 6) && ($jump_next_x))
 
         $sem_create_data["sem_id"] = $sem->getId();
 
-        // Raumanfrage erzeugen
+        // Raumanfragen erzeugen
         if ($RESOURCES_ENABLE && $RESOURCES_ALLOW_ROOM_REQUESTS) {
-            if (!$sem_create_data['skip_room_request']) {
-                $sem_create_data['resRequest']->setSeminarId($sem->getId());
-                $sem_create_data['resRequest']->store();
+            if (!$sem_create_data['skip_room_request'] && is_array($sem_create_data['room_requests'])) {
+                foreach ($sem_create_data['room_requests'] as $request) {
+                    $request->seminar_id = $sem->getId();
+                    $request->user_id = $GLOBALS['user']->id;
+                    if ($request->getSettedPropertiesCount() || $request->getResourceId()) {
+                        $request->store();
+                    }
+                }
             }
         }
 
@@ -1915,8 +1974,7 @@ if (($form == 6) && ($jump_next_x))
             }
 
             //if room-reqquest stored in the session, destroy (we don't need it anymore)
-            if (is_object($sem_create_data["resRequest"]))
-                $sem_create_data["resRequest"] = '';
+            unset($sem_create_data["room_requests"]);
             //BIEST00072
             if ($sem_create_data["modules_list"]["scm"]){
                 $sem_create_data["sem_scm_name"] = ($SCM_PRESET[1]['name'] ? $SCM_PRESET[1]['name'] : _("Informationen"));
@@ -3279,204 +3337,33 @@ if ($level == 4) {
                                 if ($sem_create_data['skip_room_request']) echo " checked ";
                                 echo "><br><br>";
                             }
-                            print _("Sie haben die M&ouml;glichkeit, sich Raumeigenschaften sowie einen konkreten Raum zu w&uuml;nschen. Diese Raumw&uuml;nsche werden von der zentralen Raumverwaltung bearbeitet.");
-                            print "<br>"._("<b>Achtung:</b> Um sp&auml;ter einen passenden Raum f&uuml;r Ihre Veranstaltung zu bekommen, geben Sie bitte <u>immer</u> die gew&uuml;nschten Eigenschaften mit an!");
                             ?>
-                        <td>
-                    </tr>
-                    <?
-                    if ($request_resource_id = $sem_create_data["resRequest"]->getResourceId()) {
-                        $resObject = ResourceObject::Factory($request_resource_id);
-                    ?>
-                    <tr>
-                        <td class="<? echo $cssSw->getClass() ?>" width="4%" align="right">
-                            &nbsp;
-                        </td>
-                        <td class="<? echo $cssSw->getClass() ?>" width="96%">
-                            <br><font size="-1"><b><?=("gew&uuml;nschter Raum:")?></b><br><br>
+                            <div>
+                            <label for="new_room_request_type"><?= _("Art der Raumanfrage:")?></label>
+                            <select onChange="jQuery('input[name=room_request_choose]')[0].click();" id="new_room_request_type" name="new_room_request_type">
+                            <? foreach ($room_requests_options as $one) :?>
+                            <option value="<?= $one['value']?>" <?= (Request::option('new_room_request_type') == $one['value'] ? 'selected' : '')?>>
+                                <?= htmlReady($one['name'])?>
+                            </option>
+                            <? endforeach ?>
+                            </select>
+                                <?= makeButton('auswaehlen', 'input', _("einen anderen Anfragetyp bearbeiten"), 'room_request_choose')?>
+                            </div>
+
                             <?
-                            print "<b>".htmlReady($resObject->getName())."</b>,&nbsp;"._("verantwortlich:")."&nbsp;<a href=\"".URLHelper::getLink($resObject->getOwnerLink())."\">".$resObject->getOwnerName()."</a>";  //getOwnerLink() does not contain the output of an URLHelper
-                            print "&nbsp;&nbsp;<input type=\"IMAGE\" src=\"" . Assets::image_path('icons/16/blue/refresh.png') . "\" ".tooltip(_("den ausgewählten Raum löschen"))." border=\"0\" name=\"reset_resource_id\">";
-                            ?>
-                            </font>
-                        </td>
-                    </tr>
-                    <?
-                    }
-                    ?>
-                    <tr <? $cssSw->switchClass() ?>>
-                        <td class="<? echo $cssSw->getClass() ?>" width="4%" align="right">
-                            &nbsp;
-                        </td>
-                        <td class="<? echo $cssSw->getClass() ?>" width="96%">
-                            <table border="0" width="100%" cellspaceing="2" cellpadding="0">
-                                <tr>
-                                    <td width="49%" valign="top">
-                                        <font size="-1">
-                                        <?
-                                        //$sem_create_data["room_request_type"] = FALSE;
-                                        print "<b>"._("Raumeigenschaften angeben:")."</b><br><br>";
-                                        if (!$dont_anchor)
-                                            print "<a name=\"anker\"></a>";
-                                        $query = "SELECT * FROM resources_categories  WHERE is_room = '1' ORDER BY name";
-                                        $db->query($query);
-
-                                        if (($db->nf() == 1) || ($sem_create_data["resRequest"]->getCategoryId())) {
-                                            $room_categories = $db->nf();
-                                            if ($db->nf() == 1) {
-                                                $db->next_record();
-                                                $category_id = $db->f("category_id");
-                                                $sem_create_data["resRequest"]->setCategoryId($category_id);
-                                            } else
-                                                $category_id = $sem_create_data["resRequest"]->getCategoryId();
-
-                                            $query2 = sprintf("SELECT  b.*, c.name AS cat_name FROM resources_categories_properties a LEFT JOIN resources_properties b USING (property_id) LEFT JOIN resources_categories c ON (a.category_id = c.category_id) WHERE c.is_room = '1' AND a.requestable = '1' AND a.category_id = '%s' ORDER BY b.name", $category_id);
-                                            $db2->query($query2);
-
-                                            $i=0;
-                                            while ($db2->next_record()) {
-                                                if (!$i) {
-                                                    if ($room_categories> 1) {
-                                                        print ("Gew&auml;hlter Raumtyp:");
-                                                        print "&nbsp;<select name=\"select_room_type\">";
-                                                        while ($db->next_record()) {
-                                                            printf ("<option value=\"%s\" %s>%s </option>", $db->f("category_id"), ($category_id == $db->f("category_id")) ? "selected" : "", htmlReady(my_substr($db->f("name"), 0, 30)));
-                                                        }
-                                                        print "</select>";
-                                                        print "&nbsp;<input type=\"image\" value=\""._("Raumtyp ausw&auml;hlen")."\" name=\"send_room_type\" src=\"".Assets::image_path('icons/16/blue/accept.png')."\" ".tooltip(_("Raumtyp auswählen")).">";
-                                                        print "&nbsp;&nbsp;<input type=\"image\"  name=\"reset_room_type\" src=\"" . Assets::image_path('icons/16/blue/refresh.png') . "\" ".tooltip(_("alle Angaben zurücksetzen"))."><br><br>";
-                                                    }
-
-                                                    print _("Folgende Eigenschaften sind w&uuml;nschbar:")."<br><br>";
-                                                    print "<table border=\"0\" width=\"100%\" cellspaceing=\"2\" cellpadding=\"0\">";
-                                                }
-                                                ?>
-                                                <tr>
-                                                    <td width="30%" valign="top">
-                                                        <font size="-1"><?=htmlReady($db2->f("name"))?></font>
-                                                    </td>
-                                                    <td width="70%" align ="left" valign="top">
-                                                    <?
-                                                    switch ($db2->f("type")) {
-                                                        case "bool":
-                                                            printf ("<input type=\"CHECKBOX\" name=\"request_property_val[%s]\" %s><font size=-1>&nbsp;%s</font>", $db2->f("property_id"), ($sem_create_data["resRequest"]->getPropertyState($db2->f("property_id"))) ? "checked": "", htmlReady($db2->f("options")));
-                                                        break;
-                                                        case "num":
-                                                            if ($db2->f("system") == 2) {
-                                                                printf ("<input type=\"TEXT\" name=\"request_property_val[%s]\" value=\"%s\" size=5 maxlength=10>", $db2->f("property_id"), htmlReady($sem_create_data["resRequest"]->getPropertyState($db2->f("property_id"))));
-                                                                if ($sem_create_data["sem_turnout"]) {
-                                                                    print "<font size=\"-1\">"._("max. Teilnehmeranzahl &uuml;bernehmen")."</font>";
-                                                                    printf ("<br><input type=\"CHECKBOX\" name=\"seats_are_admission_turnout\" %s>&nbsp;",  (($sem_create_data["resRequest"]->getPropertyState($db2->f("property_id")) == $sem_create_data["sem_turnout"]) && ($sem_create_data["sem_turnout"])>0) ? "checked" :"");
-                                                                }
-
-                                                            } else {
-                                                                printf ("<input type=\"TEXT\" name=\"request_property_val[%s]\" value=\"%s\" size=30 maxlength=255>", $db2->f("property_id"), htmlReady($sem_create_data["resRequest"]->getPropertyState($db2->f("property_id"))));
-                                                            }
-                                                        break;
-                                                        case "text":
-                                                            printf ("<textarea name=\"request_property_val[%s]\" cols=30 rows=2 >%s</textarea>", $db2->f("property_id"), htmlReady($sem_create_data["resRequest"]->getPropertyState($db2->f("property_id"))));
-                                                        break;
-                                                        case "select":
-                                                            $options=explode (";",$db2->f("options"));
-                                                            printf ("<select name=\"request_property_val[%s]\">", $db2->f("property_id"));
-                                                            print   "<option value=\"\">--</option>";
-                                                            foreach ($options as $a) {
-                                                                printf ("<option %s value=\"%s\">%s</option>", ($sem_create_data["resRequest"]->getPropertyState($db2->f("property_id")) == $a) ? "selected":"", $a, htmlReady($a));
-                                                            }
-                                                            printf ("</select>");
-                                                        break;
-                                                    }
-                                                    ?>
-                                                    </td>
-                                                </tr>
-                                                <?
-                                                $i++;
-                                                if ($i == $db2->nf()) {
-                                                    print "</table>";
-                                                }
-                                            }
-
-                                        } elseif ($db->nf() > 0) {
-                                            print _("Bitte geben Sie zun&auml;chst einen Raumtyp an, der f&uuml;r Sie am besten geeignet ist:")."<br><br>";
-                                            print "<select name=\"select_room_type\">";
-                                                print ("<option value=\"\">["._("bitte ausw&auml;hlen")."]</option>");
-                                                while ($db->next_record()) {
-                                                    printf ("<option value=\"%s\">%s </option>", $db->f("category_id"), htmlReady(my_substr($db->f("name"), 0, 30)));
-                                                }
-                                            print "</select></font>";
-                                            print "&nbsp;<input type=\"image\" value=\""._("Raumtyp ausw&auml;hlen")."\" name=\"send_room_type\" src=\"".Assets::image_path('icons/16/blue/accept.png')."\" ".tooltip(_("Raumtyp auswählen")).">";
-                                        }
-                                        ?>
-                                        </font>
-                                    </td>
-                                    <td width="1px" align="center" valign="top" style="background-image: url('<?= $GLOBALS['ASSETS_URL'] ?>images/line2.gif');" nowrap>
-                                        &nbsp;&nbsp;
-                                    </td>
-                                    <td width="50%" valign="top">
-                                        <font size="-1">
-                                        <?
-                                        print "<b>"._("Raum suchen:")."</b><br>";
-                                        if ((($search_exp_room) && ($search_room_x)) || ($search_properties_x)) {
-                                            $result = $sem_create_data["resRequest"]->searchRoomsToRequest(remove_magic_quotes($search_exp_room), ($search_properties_x) ? TRUE : FALSE);
-                                            if ($result) {
-                                                printf ("<br><font size=-1><b>%s</b> ".((!$search_properties_x) ? _("R&auml;ume gefunden:") : _("passende R&auml;ume gefunden"))."<br><br>", sizeof($result));
-                                                print "<select name=\"select_room\">";
-                                                foreach ($result as $key => $val) {
-                                                    printf ("<option value=\"%s\">%s </option>", $key, htmlReady(my_substr($val, 0, 30)));
-                                                }
-                                                print "</select></font>";
-                                                print "&nbsp;<input type=\"IMAGE\" src=\"" . Assets::image_path('icons/16/blue/accept.png') . "\"".tooltip(_("Den Raum als Wunschraum auswählen"))." border=\"0\" name=\"send_room\">";
-                                                print "&nbsp;&nbsp;<input type=\"IMAGE\" src=\"" . Assets::image_path('icons/16/blue/refresh.png') . "\" ".tooltip(_("neue Suche starten"))." border=\"0\" name=\"reset_room_search\">";
-                                                if ($search_properties_x)
-                                                    print "<br><br>"._("(Diese R&auml;ume erf&uuml;llen die Wunschkriterien, die Sie links angegeben haben.)");
-                                            }
-                                        }
-                                        if (((!$search_exp_room) && (!$search_properties_x)) || (($search_exp_room) && (!$result)) || (($search_properties_x) && (!$result))) {
-                                            ?>
-                                            <font size=-1>
-                                            <? print ((($search_exp_room) || ($search_properties_x)) && (!$result)) ? _("<b>Keinen</b> Raum gefunden.") : "";?>
-                                            </font><br>
-                                            <font size=-1><?=_("Geben Sie zur Suche den Raumnamen ganz oder teilweise ein:"); ?></font>
-                                            <input type="text" size="30" maxlength="255" name="search_exp_room">&nbsp;
-                                            <input type="image" src="<?= Assets::image_path('icons/16/blue/search.png') ?>" <? echo tooltip(_("Suche starten")) ?> name="search_room"><br>
-                                            <?
-                                        }
-                                        ?>
-                                        </font>
-                                    </td>
-                                </tr>
-                                <?
-                                if ($category_id) {
-                                ?>
-                                <tr>
-                                    <td colspan="2" align="right">
-                                        <font size="-1"><?=("passende R&auml;ume suchen")?></font>
-                                        <input type="image" src="<?= Assets::image_path('icons/16/yellow/arr_2right.png') ?>" <? echo tooltip(_("passende Räume suchen")) ?> name="search_properties">
-                                    </td>
-                                    <td>
-                                        &nbsp;
-                                    </td>
-                                </tr>
-                                <?
-                                }
-                                ?>
-                            </table>
-                            </font>
-
-                        </td>
-                    </tr>
-                    <tr <? $cssSw->switchClass() ?>>
-                        <td class="<? echo $cssSw->getClass() ?>" width="4%" align="right">
-                            &nbsp;
-                        </td>
-                        <td class="<? echo $cssSw->getClass() ?>" width="96%">
-                            <font size="-1"><b><?=("Nachricht an den Raumadministrator:")?></b><br><br>
-                                <?=_("Sie k&ouml;nnen hier eine Nachricht an den Raumadministrator verfassen, um weitere W&uuml;nsche oder Bermerkungen zur gew&uuml;nschten Raumbelegung anzugeben.")?> <br><br>
-                                <textarea name="sem_room_comment" cols=58 rows=4><?=htmlReady($sem_create_data["resRequest"]->getComment()); ?></textarea>
-                            </font>
-                        </td>
-                    </tr>
-                    <?
+                            $current_request_type = Request::option('new_room_request_type', 'course');
+                            $form_attributes = array('admission_turnout' => $sem_create_data['sem_turnout'],
+                                                     'request' => $sem_create_data['room_requests'][$current_request_type],
+                                                     'room_categories' => array_filter(getResourcesCategories(), create_function('$a', 'return $a["is_room"] == 1;'))
+                                                    );
+                            if (Request::option('new_room_request_type')) {
+                                $form_attributes = array_merge($form_attributes, $room_request_form_attributes);
+                            }
+                            $trails_views = $GLOBALS['STUDIP_BASE_PATH'] . '/app/views';
+                            $factory = new Flexi_TemplateFactory($trails_views);
+                            echo $factory->render('course/room_requests/_form.php', $form_attributes);
+                            echo '<div style="text-align:center">' . makeButton('uebernehmen', 'input', _("Eingaben zur Raumanfrage speichern"),'room_request_save'). '</div>';
+                            printf('<input type="hidden" name="current_room_request_type" value="%s">', $current_request_type);
                     }
                     if ($RESOURCES_ENABLE && $resList->roomsExist() &&
                         (((is_array($sem_create_data["metadata_termin"]["turnus_data"])) && ($sem_create_data["term_art"] == 0))
@@ -4418,10 +4305,7 @@ if ($level == 8)
     </table>
     <?php
     }
-//de-initialisations for room-requests
-if (is_object($sem_create_data["resRequest"])) {
-    $sem_create_data["resRequest"] = serialize ($sem_create_data["resRequest"]);
-}
+
 include ('lib/include/html_end.inc.php');
 //save all the data back to database
 page_close();

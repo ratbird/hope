@@ -56,13 +56,13 @@ if (!$sd_open[$tpl['md_id']] || $_LOCKED) { ?>
                 <TD width="20%" nowrap="nowrap" class="<?=$tpl['class']?>" align="right">
                     <? if (!$_LOCKED) { ?>
                         <? if ($show_sorter) : ?>
-	                        <a href="<?=URLHelper::getLink('?cmd=moveCycle&direction=up&cycle_id='. $tpl['md_id']) ?>">
-		                    <?= Assets::img('icons/16/yellow/arr_2up.png', array('align' => 'absmiddle'))?>
-		                    </a>
-		                    <a href="<?=URLHelper::getLink('?cmd=moveCycle&direction=down&cycle_id='. $tpl['md_id']) ?>">
-		                    <?= Assets::img('icons/16/yellow/arr_2down.png', array('align' => 'absmiddle'))?>
-		                    </a>
-	                    <? endif;?>
+                            <a href="<?=URLHelper::getLink('?cmd=moveCycle&direction=up&cycle_id='. $tpl['md_id']) ?>">
+                            <?= Assets::img('icons/16/yellow/arr_2up.png', array('align' => 'absmiddle'))?>
+                            </a>
+                            <a href="<?=URLHelper::getLink('?cmd=moveCycle&direction=down&cycle_id='. $tpl['md_id']) ?>">
+                            <?= Assets::img('icons/16/yellow/arr_2down.png', array('align' => 'absmiddle'))?>
+                            </a>
+                        <? endif;?>
                     <A href="<?= URLHelper::getLink('?cmd=deleteCycle&cycle_id='. $tpl['md_id']) ?>">
                         <?=Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _('Regelmäßige Zeit inklusive aller zugehörigen Termine löschen!'))) ?>
                     </A>
@@ -88,7 +88,7 @@ if (!$sd_open[$tpl['md_id']] || $_LOCKED) { ?>
                         <?= CSRFProtection::tokenTag() ?>
                         <FONT size="-1"><B>
                             <SELECT name="day">
-                            <? foreach(range(1,6) + array(0) as $d) : ?>
+                            <? foreach(array_merge(range(1,6), array(0)) as $d) : ?>
                                 <OPTION value="<?=$d?>"<?=($tpl['mdDayNumber']==$d) ? 'selected="selected"' : ''?>><?=getWeekday($d, false)?></OPTION>
                             <? endforeach; ?>
                             </SELECT>,
@@ -127,7 +127,7 @@ if (!$sd_open[$tpl['md_id']] || $_LOCKED) { ?>
                         <? if($GLOBALS['RESOURCES_ENABLE'] && $GLOBALS['RESOURCES_ALLOW_ROOM_REQUESTS']) : ?>
                         <div style="padding-top:2px">
                         <?=_("Raumanfrage")?>
-                        <A href="<?= URLHelper::getLink('admin_room_requests.php?seminar_id='. $tpl['seminar_id'] .'&metadate_id='. $tpl['md_id']) ?>">
+                        <A href="<?= URLHelper::getLink('dispatch.php/course/room_requests/edit/' .$tpl['seminar_id'], $tpl['room_request'] ? array('request_id' => $tpl['room_request']->request_id) : array('new_room_request_type' => 'cycle_' . $tpl['md_id'])) ?>">
                             <?=($tpl['room_request']) ? makebutton('bearbeiten', 'img') : makebutton('erstellen', 'img')?>
                         </A>
                         <? if ($tpl['room_request']) { ?>
@@ -141,12 +141,12 @@ if (!$sd_open[$tpl['md_id']] || $_LOCKED) { ?>
                     </FORM></TD>
                 <TD width="5%" nowrap="nowrap" class="<?=$tpl['class']?>" align="right">
                     <? if ($show_sorter) : ?>
-	                    <a href="<?=URLHelper::getLink('?cmd=moveCycle&direction=up&cycle_id='. $tpl['md_id']) ?>">
-	                    <?= Assets::img('icons/16/yellow/arr_2up.png', array('align' => 'absmiddle'))?>
-	                    </a>
-	                    <a href="<?=URLHelper::getLink('?cmd=moveCycle&direction=down&cycle_id='. $tpl['md_id']) ?>">
-	                    <?= Assets::img('icons/16/yellow/arr_2down.png', array('align' => 'absmiddle'))?>
-	                    </a>
+                        <a href="<?=URLHelper::getLink('?cmd=moveCycle&direction=up&cycle_id='. $tpl['md_id']) ?>">
+                        <?= Assets::img('icons/16/yellow/arr_2up.png', array('align' => 'absmiddle'))?>
+                        </a>
+                        <a href="<?=URLHelper::getLink('?cmd=moveCycle&direction=down&cycle_id='. $tpl['md_id']) ?>">
+                        <?= Assets::img('icons/16/yellow/arr_2down.png', array('align' => 'absmiddle'))?>
+                        </a>
                     <? endif; ?>
                     <A href="<?= URLHelper::getLink('?cmd=deleteCycle&cycle_id='. $tpl['md_id']) ?>">
                         <?=Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _('Regelmäßige Zeit inklusive aller zugehörigen Termine löschen!'))) ?>

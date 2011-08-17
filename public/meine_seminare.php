@@ -97,7 +97,14 @@ $userConfig = UserConfig::get($GLOBALS['user']->id);
 // we are defintely not in an lexture or institute
 closeObject();
 $links_admin_data='';    //Auch im Adminbereich gesetzte Veranstaltungen muessen geloescht werden.
-
+//delete all temporary permission changes
+if (is_array($_SESSION)) {
+    foreach (array_keys($_SESSION) as $key) {
+        if (strpos($key, 'seminar_change_view_') !== false) {
+            unset($_SESSION[$key]);
+        }
+    }
+}
 PageLayout::setHelpKeyword("Basis.MeineVeranstaltungen");
 PageLayout::setTitle(_("Meine Veranstaltungen und Einrichtungen"));
 if (!$perm->have_perm("root")) {

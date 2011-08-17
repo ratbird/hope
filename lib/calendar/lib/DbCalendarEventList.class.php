@@ -59,7 +59,7 @@ class DbCalendarEventList
         foreach ((array) $this->wdays as $wday) {
             foreach ($wday->events as $event) {
                 if ($event->getStart() <= $this->end && $event->getEnd() >= $this->start
-                        && ($calendar->havePermission(CALENDAR_PERMISSION_READABLE) || $event->properties['CLASS'] == 'PUBLIC' || $calendar->getRange() == CALENDAR_RANGE_SEM)) {
+                        && ($calendar->havePermission(Calendar::PERMISSION_READABLE) || $event->properties['CLASS'] == 'PUBLIC' || $calendar->getRange() == Calendar::RANGE_SEM)) {
                     $event_key = $event->getId() . $event->getStart();
                     $this->events["$event_key"] = $event;
                 }

@@ -176,7 +176,7 @@ class SeminarEvent extends Event
 
     function getCategory()
     {
-        if ($this->permission == CALENDAR_EVENT_PERM_CONFIDENTIAL) {
+        if ($this->permission == Event::PERMISSION_CONFIDENTIAL) {
             return 255;
         }
 

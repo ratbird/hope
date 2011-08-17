@@ -145,9 +145,9 @@ if (($expmod != 'exp' && $expmod != 'imp' && $expmod != 'sync') || ($expmod == '
         SkipLinks::addIndex(_("Exportieren Ihrer Kalenderdaten"), 'calendar_export', 100);
 
         echo "<tr><th align=\"left\" width=\"100%\">\n";
-        if ($_calendar->checkPermission(CALENDAR_PERMISSION_OWN)) {
+        if ($_calendar->checkPermission(Calendar::PERMISSION_OWN)) {
             echo _("Exportieren Ihrer Kalenderdaten");
-        } else if ($_calendar->getRange() == CALENDAR_RANGE_SEM || $_calendar->getRange() == CALENDAR_RANGE_INST) {
+        } else if ($_calendar->getRange() == Calendar::RANGE_SEM || $_calendar->getRange() == Calendar::RANGE_INST) {
             echo _("Exportieren der Termine");
         } else {
             printf(_("Exportieren der Termine von %s"), get_fullname($_calendar->getUserId()));
@@ -158,7 +158,7 @@ if (($expmod != 'exp' && $expmod != 'imp' && $expmod != 'sync') || ($expmod == '
         $params['form'] .= CSRFProtection::tokenTag();
 
         $params['content'] = '';
-        if ($_calendar->checkPermission(CALENDAR_PERMISSION_OWN)) {
+        if ($_calendar->checkPermission(Calendar::PERMISSION_OWN)) {
             $tooltip = _("Es werden nur Termine von Veranstaltungen exportiert, die zuvor im Menüpunkt \"Veranstaltungstermine\" ausgewählt wurden.");
             $params['content'] = _("Bitte w&auml;hlen Sie, welche Termine exportiert werden sollen:") . "</div>\n"
                     . "<br>&nbsp; &nbsp; <select name=\"extype\" size=\"1\">\n"
@@ -171,7 +171,7 @@ if (($expmod != 'exp' && $expmod != 'imp' && $expmod != 'sync') || ($expmod == '
                     . '&nbsp;&nbsp;&nbsp;' . Assets::img('icons/16/grey/info-circle.png', tooltip2($tooltip, true, true))
                     . "<br>&nbsp;\n";
         } else {
-            if ($_calendar->getRange() == CALENDAR_RANGE_SEM || $_calendar->getRange() == CALENDAR_RANGE_INST) {
+            if ($_calendar->getRange() == Calendar::RANGE_SEM || $_calendar->getRange() == Calendar::RANGE_INST) {
                 $params['content'] = '<input type="hidden" name="extype" value="ALL">';
             } else {
                 $params['content'] = _("Bitte w&auml;hlen Sie, welche Termine exportiert werden sollen:") . "</div>\n"
@@ -243,7 +243,7 @@ if (($expmod != 'exp' && $expmod != 'imp' && $expmod != 'sync') || ($expmod == '
         $params['expmod'] = "exp";
         print_cell($params);
 
-        if ($_calendar->checkPermission(CALENDAR_PERMISSION_OWN)) {
+        if ($_calendar->checkPermission(Calendar::PERMISSION_OWN)) {
 
             // add skip link
             SkipLinks::addIndex(_("Importieren Ihrer Kalenderdaten"), 'calendar_import');
@@ -338,17 +338,17 @@ if (($expmod != 'exp' && $expmod != 'imp' && $expmod != 'sync') || ($expmod == '
 
     $export = new CalendarExportFile(new CalendarWriterICalendar());
     if ($experiod != 'period') {
-        $export->exportFromDatabase($_calendar->getUserId(), 0, CALENDAR_END, $extype, Calendar::getBindSeminare($_calendar->getUserId()));
+        $export->exportFromDatabase($_calendar->getUserId(), 0, Calendar::CALENDAR_END, $extype, Calendar::getBindSeminare($_calendar->getUserId()));
     } else {
         $export->exportFromDatabase($_calendar->getUserId(), $exstart, $exend, $extype, Calendar::getBindSeminare($_calendar->getUserId()));
     }
 
-    if ($_calendar_error->getMaxStatus(ERROR_CRITICAL)) {
+    if ($_calendar_error->getMaxStatus(ErrorHandler::ERROR_CRITICAL)) {
         $calendar_sess_export['msg'] = 'error§' . _("Der Export konnte nicht durchgef&uuml;hrt werden!");
-        while ($error = $_calendar_error->nextError(ERROR_CRITICAL)) {
+        while ($error = $_calendar_error->nextError(ErrorHandler::ERROR_CRITICAL)) {
             $calendar_sess_export['msg'] .= '<br>' . $error->getMessage();
         }
-        while ($error = $_calendar_error->nextError(ERROR_FATAL)) {
+        while ($error = $_calendar_error->nextError(ErrorHandler::ERROR_FATAL)) {
             $calendar_sess_export['msg'] .= '<br>' . $error->getMessage();
         }
 
@@ -377,20 +377,20 @@ if (($expmod != 'exp' && $expmod != 'imp' && $expmod != 'sync') || ($expmod == '
 
         $import->importIntoDatabase($_calendar->getUserId());
 
-        if ($_calendar_error->getMaxStatus(ERROR_CRITICAL)) {
+        if ($_calendar_error->getMaxStatus(ErrorHandler::ERROR_CRITICAL)) {
             $calendar_sess_export['count_import'] = 0;
             $calendar_sess_export['msg'] = 'error§' . _("Der Import konnte nicht durchgef&uuml;hrt werden!");
-            while ($error = $_calendar_error->nextError(ERROR_CRITICAL))
+            while ($error = $_calendar_error->nextError(ErrorHandler::ERROR_CRITICAL))
                 $calendar_sess_export['msg'] .= '<br>' . $error->getMessage();
-            while ($error = $_calendar_error->nextError(ERROR_FATAL))
+            while ($error = $_calendar_error->nextError(ErrorHandler::ERROR_FATAL))
                 $calendar_sess_export['msg'] .= '<br>' . $error->getMessage();
         } else {
             $calendar_sess_export['count_import'] = $import->getCount();
             $calendar_sess_export['msg'] = 'msg§' . _("Der Import wurde erfolgreich durchgef&uuml;hrt!");
-            if ($_calendar_error->getMaxStatus(ERROR_WARNING)) {
+            if ($_calendar_error->getMaxStatus(ErrorHandler::ERROR_WARNING)) {
                 $warnings = array();
                 $calendar_sess_export['msg'] .= '§info§';
-                while ($error = $_calendar_error->nextError(ERROR_WARNING)) {
+                while ($error = $_calendar_error->nextError(ErrorHandler::ERROR_WARNING)) {
                     $warnings[] = $error->getMessage();
                 }
                 $calendar_sess_export['msg'] .= implode('<br />', $warnings);
@@ -423,14 +423,14 @@ if (($expmod != 'exp' && $expmod != 'imp' && $expmod != 'sync') || ($expmod == '
     $synchronizer->setMaxEvents($CALENDAR_MAX_EVENTS - $count_events);
     $synchronizer->synchronize($_calendar->getUserId());
 
-    if ($_calendar_error->getMaxStatus(ERROR_CRITICAL)) {
+    if ($_calendar_error->getMaxStatus(ErrorHandler::ERROR_CRITICAL)) {
         unset($calendar_sess_export['count_import']);
         unset($calendar_sess_export['count_export']);
         unset($calendar_sess_export['count_synchronized']);
         $calendar_sess_export['msg'] = 'error§' . _("Die Synchronisation konnte nicht durchgef&uuml;hrt werden!");
-        while ($error = $_calendar_error->nextError(ERROR_CRITICAL))
+        while ($error = $_calendar_error->nextError(ErrorHandler::ERROR_CRITICAL))
             $calendar_sess_export['msg'] .= '<br />' . $error->getMessage();
-        while ($error = $_calendar_error->nextError(ERROR_FATAL))
+        while ($error = $_calendar_error->nextError(ErrorHandler::ERROR_FATAL))
             $calendar_sess_export['msg'] .= '<br />' . $error->getMessage();
         $location = "Location: $PHP_SELF?cmd=export&atime=$atime";
     } else {
@@ -438,10 +438,10 @@ if (($expmod != 'exp' && $expmod != 'imp' && $expmod != 'sync') || ($expmod == '
         $calendar_sess_export['count_export'] = $export->getCount();
         $calendar_sess_export['count_synchronized'] = $synchronizer->getCount();
         $calendar_sess_export['msg'] = 'msg§' . _("Die Synchronisation wurde erfolgreich durchgef&uuml;hrt!");
-        while ($error = $_calendar_error->nextError(ERROR_MESSAGE))
+        while ($error = $_calendar_error->nextError(ErrorHandler::ERROR_MESSAGE))
             $calendar_sess_export['msg'] .= '<br />' . $error->getMessage();
         $warnings = array();
-        while ($error = $_calendar_error->nextError(ERROR_WARNING))
+        while ($error = $_calendar_error->nextError(ErrorHandler::ERROR_WARNING))
             $warnings[] = $error->getMessage();
         if (sizeof($warnings)) {
             $calendar_sess_export['msg'] .= '§info§' . implode('<br />', $warnings);

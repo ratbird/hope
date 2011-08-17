@@ -380,7 +380,7 @@ function show_personal_dates ($range_id, $date_start, $date_end, $show_docs = FA
         $date_end = $date_start + 7*24*60*60;
     }
 
-    $list = new DbCalendarEventList(new SingleCalendar($range_id, CALENDAR_PERMISSION_READABLE), $date_start, $date_end, TRUE, null, ($GLOBALS['user']->id == $range_id ? array() : array('CLASS' => 'PUBLIC')));
+    $list = new DbCalendarEventList(new SingleCalendar($range_id, Calendar::PERMISSION_READABLE), $date_start, $date_end, TRUE, null, ($GLOBALS['user']->id == $range_id ? array() : array('CLASS' => 'PUBLIC')));
 
     if ($list->existEvent()) {
         // set skip link
@@ -548,7 +548,7 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
     else
         $bind_seminare = "";
 
-    $list = new DbCalendarEventList(new SingleCalendar($user->id, CALENDAR_PERMISSION_OWN), $date_start, $date_end, TRUE, Calendar::getBindSeminare());
+    $list = new DbCalendarEventList(new SingleCalendar($user->id, Calendar::PERMISSION_OWN), $date_start, $date_end, TRUE, Calendar::getBindSeminare());
 
     if ($list->existEvent()) {
         // set skip link

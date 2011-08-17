@@ -18,12 +18,6 @@
 
 require_once($RELATIVE_PATH_CALENDAR . '/lib/Error.class.php');
 
-define('ERROR_NORMAL', 1);
-define('ERROR_MESSAGE', 2);
-define('ERROR_WARNING', 4);
-define('ERROR_CRITICAL', 8);
-define('ERROR_FATAL', 16);
-
 function init_error_handler($handler_name)
 {
     global $$handler_name;
@@ -39,6 +33,17 @@ function init_error_handler($handler_name)
 class ErrorHandler
 {
 
+    // this is the state of the error handling if no error has occured
+    const ERROR_NORMAL = 1;
+    // this is the state of the error handling  a message has to be displayed
+    const ERROR_MESSAGE = 2;
+    // this is the state of the error handling if something was going wrong but without data-loss
+    const ERROR_WARNING = 4;
+    // this is the state of the error handling if a critical error occured (maybe with data loss)
+    const ERROR_CRITICAL = 8;
+    // this is the state of the error handling if a fatal error occured and the execution of the process (e.g. import of events) was stopped
+    const ERROR_FATAL = 16;
+
     var $errors;
     var $status;
 
@@ -46,7 +51,7 @@ class ErrorHandler
     {
 
         $this->errors = array();
-        $this->status = ERROR_NORMAL;
+        $this->status = ErrorHandler::ERROR_NORMAL;
         $this->_is_instantiated = true;
     }
 
@@ -89,8 +94,8 @@ class ErrorHandler
     function getAllErrors()
     {
 
-        $status = array(ERROR_FATAL, ERROR_CRITICAL, ERROR_WARNING,
-            ERROR_MESSAGE, ERROR_NORMAL);
+        $status = array(ErrorHandler::ERROR_FATAL, ErrorHandler::ERROR_CRITICAL, ErrorHandler::ERROR_WARNING,
+            ErrorHandler::ERROR_MESSAGE, ErrorHandler::ERROR_NORMAL);
         $errors = array();
         foreach ($status as $stat) {
             if (is_array($this->errors[$stat])) {
@@ -119,9 +124,9 @@ class ErrorHandler
         $this->errors[$status][] = new Error($status, $message, $file, $line);
         $this->status |= $status;
         reset($this->errors[$status]);
-        if ($status == ERROR_FATAL) {
+        if ($status == ErrorHandler::ERROR_FATAL) {
             echo '<b>';
-            while ($error = $this->nextError(ERROR_FATAL)) {
+            while ($error = $this->nextError(ErrorHandler::ERROR_FATAL)) {
                 echo '<br />' . $error->getMessage();
             }
             echo '</b><br />';

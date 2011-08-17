@@ -46,7 +46,7 @@ class CalendarImportFile extends CalendarImport
 
         $data = '';
         if (!$file = @fopen($this->file['tmp_name'], 'rb')) {
-            $_calendar_error->throwError(ERROR_FATAL, _("Die Import-Datei konnte nicht geöffnet werden!"));
+            $_calendar_error->throwError(ErrorHandler::ERROR_FATAL, _("Die Import-Datei konnte nicht geöffnet werden!"));
             return FALSE;
         }
 
@@ -109,7 +109,7 @@ class CalendarImportFile extends CalendarImport
             parent::importIntoDatabase($range_id, $ignore);
             return TRUE;
         }
-        $_calendar_error->throwError(ERROR_CRITICAL, _("Die Datei konnte nicht gelesen werden!"));
+        $_calendar_error->throwError(ErrorHandler::ERROR_CRITICAL, _("Die Datei konnte nicht gelesen werden!"));
         return FALSE;
     }
 
@@ -124,7 +124,7 @@ class CalendarImportFile extends CalendarImport
             parent::importIntoObjects($ignore);
             return TRUE;
         }
-        $_calendar_error->throwError(ERROR_CRITICAL, _("Die Datei konnte nicht gelesen werden!"));
+        $_calendar_error->throwError(ErrorHandler::ERROR_CRITICAL, _("Die Datei konnte nicht gelesen werden!"));
         return FALSE;
     }
 
@@ -136,7 +136,7 @@ class CalendarImportFile extends CalendarImport
         global $_calendar_error;
 
         if (!unlink($this->file['tmp_name'])) {
-            $_calendar_error->throwError(ERROR_FATAL, _("Die Datei konnte nicht gel&ouml;scht werden!"));
+            $_calendar_error->throwError(ErrorHandler::ERROR_FATAL, _("Die Datei konnte nicht gel&ouml;scht werden!"));
             return FALSE;
         }
 

@@ -120,13 +120,13 @@ if ($cal_select) {
 */
 if (Request::get('cmd') == 'export'
         && array_shift(explode('.', $calendar_sess_control_data['cal_select'])) == 'group') {
-    $_calendar = Calendar::getInstance(CALENDAR_RANGE_USER, $GLOBALS['user']->id);
+    $_calendar = Calendar::getInstance(Calendar::RANGE_USER, $GLOBALS['user']->id);
 } else {
     $_calendar = Calendar::getInstance($cal_select_id);
 }
 
 // remove user setting (bind_seminare)
-if ($_calendar->getRange() == CALENDAR_RANGE_USER) {
+if ($_calendar->getRange() == Calendar::RANGE_USER) {
     if (is_array($calendar_user_control_data['bind_seminare'])) {
         unset($calendar_user_control_data['bind_seminare']);
     }
@@ -206,7 +206,7 @@ if ($cancel_x) {
 }
 
 // allowed time range
-if (isset($atime) && ($atime < 0 || $atime > CALENDAR_END))
+if (isset($atime) && ($atime < 0 || $atime > Calendar::CALENDAR_END))
     $atime = time();
 
 // check date of "go-to-function"
@@ -222,7 +222,7 @@ if ($cmd == 'add' && $calendar_user_control_data['delete'] > 0) {
 }
 $db_control->openDatabase('COUNT', 'CALENDAR_EVENTS');
 $count_events = $db_control->getCountEvents();
-if (Request::getArray('sem') && $_calendar->getRange() == CALENDAR_RANGE_USER) {
+if (Request::getArray('sem') && $_calendar->getRange() == Calendar::RANGE_USER) {
     $_calendar->updateBindSeminare();
 }
 
@@ -282,7 +282,7 @@ if ($source_page && ($cmd == 'edit' || $cmd == 'add' || $cmd == 'delete')) {
 $HELP_KEYWORD = "Basis.Terminkalender";
 
 // switch navigation by range
-if ($_calendar->getRange() == CALENDAR_RANGE_SEM || $_calendar->getRange() == CALENDAR_RANGE_INST) {
+if ($_calendar->getRange() == Calendar::RANGE_SEM || $_calendar->getRange() == Calendar::RANGE_INST) {
     $calendar_range = 'course';
 } else {
     $calendar_range = 'calendar';
@@ -291,7 +291,7 @@ if ($_calendar->getRange() == CALENDAR_RANGE_SEM || $_calendar->getRange() == CA
 switch ($cmd) {
     /*
     case 'showlist':
-        if ($_calendar->getRange() == CALENDAR_RANGE_GROUP) {
+        if ($_calendar->getRange() == Calendar::RANGE_GROUP) {
             $cmd = 'showweek';
             Navigation::activateItem($active_item . 'week');
         } else {
@@ -301,9 +301,9 @@ switch ($cmd) {
         break;
     */
     case 'showday':
-        if ($_calendar->checkPermission(CALENDAR_PERMISSION_OWN)) {
+        if ($_calendar->checkPermission(Calendar::PERMISSION_OWN)) {
             PageLayout::setTitle(_("Mein persönlicher Terminkalender - Tagesansicht"));
-        } else if ($_calendar->getRange() == CALENDAR_RANGE_SEM || $_calendar->getRange() == CALENDAR_RANGE_INST) {
+        } else if ($_calendar->getRange() == Calendar::RANGE_SEM || $_calendar->getRange() == Calendar::RANGE_INST) {
             PageLayout::setTitle(getHeaderLine($_calendar->user_id) . ' - ' . _("Terminkalender - Tagesansicht"));
         } else {
             PageLayout::setTitle(sprintf(_("Terminkalender von %s %s - Tagesansicht"), get_fullname($_calendar->getUserId()), $_calendar->perm_string));
@@ -313,9 +313,9 @@ switch ($cmd) {
         break;
 
     case 'showweek':
-        if ($_calendar->checkPermission(CALENDAR_PERMISSION_OWN)) {
+        if ($_calendar->checkPermission(Calendar::PERMISSION_OWN)) {
             PageLayout::setTitle(_("Mein persönlicher Terminkalender - Wochenansicht"));
-        } else if ($_calendar->getRange() == CALENDAR_RANGE_SEM || $_calendar->getRange() == CALENDAR_RANGE_INST) {
+        } else if ($_calendar->getRange() == Calendar::RANGE_SEM || $_calendar->getRange() == Calendar::RANGE_INST) {
             PageLayout::setTitle(getHeaderLine($_calendar->user_id) . ' - ' . _("Terminkalender - Wochenansicht"));
         } else {
             PageLayout::setTitle(sprintf(_("Terminkalender von %s %s - Wochenansicht"), get_fullname($_calendar->getUserId()), $_calendar->perm_string));
@@ -325,9 +325,9 @@ switch ($cmd) {
         break;
 
     case 'showmonth':
-        if ($_calendar->checkPermission(CALENDAR_PERMISSION_OWN)) {
+        if ($_calendar->checkPermission(Calendar::PERMISSION_OWN)) {
             PageLayout::setTitle(_("Mein persönlicher Terminkalender - Monatsansicht"));
-        } else if ($_calendar->getRange() == CALENDAR_RANGE_SEM || $_calendar->getRange() == CALENDAR_RANGE_INST) {
+        } else if ($_calendar->getRange() == Calendar::RANGE_SEM || $_calendar->getRange() == Calendar::RANGE_INST) {
             PageLayout::setTitle(getHeaderLine($_calendar->user_id) . ' - ' . _("Terminkalender - Monatsansicht"));
         } else {
             PageLayout::setTitle(sprintf(_("Terminkalender von %s %s - Monatsansicht"), get_fullname($_calendar->getUserId()), $_calendar->perm_string));
@@ -337,9 +337,9 @@ switch ($cmd) {
         break;
 
     case 'showyear':
-        if ($_calendar->checkPermission(CALENDAR_PERMISSION_OWN)) {
+        if ($_calendar->checkPermission(Calendar::PERMISSION_OWN)) {
             PageLayout::setTitle(_("Mein persönlicher Terminkalender - Jahresansicht"));
-        } else if ($_calendar->getRange() == CALENDAR_RANGE_SEM || $_calendar->getRange() == CALENDAR_RANGE_INST) {
+        } else if ($_calendar->getRange() == Calendar::RANGE_SEM || $_calendar->getRange() == Calendar::RANGE_INST) {
             PageLayout::setTitle(getHeaderLine($_calendar->user_id) . ' - ' . _("Terminkalender - Jahresansicht"));
         } else {
             PageLayout::setTitle(sprintf(_("Terminkalender von %s %s - Jahresansicht"), get_fullname($_calendar->getUserId()), $_calendar->perm_string));
@@ -350,9 +350,9 @@ switch ($cmd) {
 
     case 'export':
         Navigation::activateItem("/$calendar_range/calendar/export");
-        if ($_calendar->getRange() == CALENDAR_RANGE_SEM || $_calendar->getRange() == CALENDAR_RANGE_INST) {
+        if ($_calendar->getRange() == Calendar::RANGE_SEM || $_calendar->getRange() == Calendar::RANGE_INST) {
             PageLayout::setTitle(getHeaderLine($_calendar->user_id) . ' - ' . _("Terminkalender - Termine exportieren"));
-        } else if ($_calendar->checkPermission(CALENDAR_PERMISSION_OWN)) {
+        } else if ($_calendar->checkPermission(Calendar::PERMISSION_OWN)) {
             PageLayout::setTitle(_("Mein persönlicher Terminkalender - Termindaten importieren, exportieren und synchronisieren"));
         } else {
             PageLayout::setTitle(sprintf(_("Terminkalender von %s %s - Termindaten exportieren"), get_fullname($_calendar->getUserId()), $_calendar->perm_string));
@@ -409,21 +409,21 @@ switch ($cmd) {
                 }
                 $atime = $_calendar->event->getStart();
             }
-            if ($_calendar->getRange() == CALENDAR_RANGE_SEM || $_calendar->getRange() == CALENDAR_RANGE_INST) {
+            if ($_calendar->getRange() == Calendar::RANGE_SEM || $_calendar->getRange() == Calendar::RANGE_INST) {
                 PageLayout::setTitle(getHeaderLine($_calendar->user_id) . ' - ' . _("Terminkalender - Termin bearbeiten"));
             } else if ($_calendar instanceof GroupCalendar) {
                 PageLayout::setTitle(sprintf(_("Terminkalender der Gruppe %s - Termin bearbeiten"), $_calendar->getGroupName()));
-            } else if ($_calendar->checkPermission(CALENDAR_PERMISSION_OWN)) {
+            } else if ($_calendar->checkPermission(Calendar::PERMISSION_OWN)) {
                 PageLayout::setTitle(_("Mein persönlicher Terminkalender - Termin bearbeiten"));
             } else {
                 PageLayout::setTitle(sprintf(_("Terminkalender von %s %s - Termin bearbeiten"), get_fullname($_calendar->getUserId()), $text_permission));
             }
-        } elseif ($_calendar->havePermission(CALENDAR_PERMISSION_WRITABLE)) {
-            if ($_calendar->getRange() == CALENDAR_RANGE_SEM || $_calendar->getRange() == CALENDAR_RANGE_INST) {
+        } elseif ($_calendar->havePermission(Calendar::PERMISSION_WRITABLE)) {
+            if ($_calendar->getRange() == Calendar::RANGE_SEM || $_calendar->getRange() == Calendar::RANGE_INST) {
                 PageLayout::setTitle(getHeaderLine($_calendar->user_id) . ' - ' . _("Terminkalender - Termin anlegen"));
             } else if ($_calendar instanceof GroupCalendar) {
                 PageLayout::setTitle(sprintf(_("Terminkalender der Gruppe %s - Termin anlegen"), $_calendar->getGroupName()));
-            } else if ($_calendar->checkPermission(CALENDAR_PERMISSION_OWN)) {
+            } else if ($_calendar->checkPermission(Calendar::PERMISSION_OWN)) {
                 PageLayout::setTitle(_("Mein persönlicher Terminkalender - Termin anlegen"));
             } else {
                 PageLayout::setTitle(sprintf(_("Terminkalender von %s %s - Termin anlegen"), get_fullname($_calendar->getUserId()), $text_permission));
@@ -464,7 +464,7 @@ switch ($cmd) {
                     . $calendar_sess_control_data['view_prv'] . "&atime=$atime");
             exit;
         }
-        if ($_calendar->havePermission(CALENDAR_PERMISSION_WRITABLE)) {
+        if ($_calendar->havePermission(Calendar::PERMISSION_WRITABLE)) {
             if (empty($_POST)) {
                 $_calendar->getEventProperties($_SESSION['calendar_sess_forms_data']);
             } else {
@@ -486,7 +486,7 @@ switch ($cmd) {
         break;
 }
 
-if (!$_calendar->havePermission(CALENDAR_PERMISSION_WRITABLE)) {
+if (!$_calendar->havePermission(Calendar::PERMISSION_WRITABLE)) {
     Navigation::removeItem("/$calendar_rangecalendar/edit");
 }
 
@@ -626,7 +626,7 @@ if ($cmd == 'showlist') {
     $event_list_start = $atime;
     $event_list_end = mktime(23, 59, 59, date('n', $event_list_start), date('j', $event_list_start) + 14, date('Y', $event_list_start));
 
-    if ($_calendar->getPermission() == CALENDAR_PERMISSION_OWN) {
+    if ($_calendar->getPermission() == Calendar::PERMISSION_OWN) {
         $view = new DbCalendarEventList($_calendar, $event_list_start, $event_list_end, true, Calendar::getBindSeminare(), Request::int('cal_restrict'));
     } else {
         $view = new DbCalendarEventList($_calendar, $event_list_start, $event_list_end, true, Calendar::getBindSeminare($_calendar->getUserId()), Request::int('cal_restrict', ''));
@@ -642,9 +642,9 @@ if ($cmd == 'showlist') {
         $_REQUEST['dopen'] = $calendar_sess_control_data['dopen'];
     }
 
-    if ($_calendar->getRange() == CALENDAR_RANGE_SEM || $_calendar->getRange() == CALENDAR_RANGE_INST) {
+    if ($_calendar->getRange() == Calendar::RANGE_SEM || $_calendar->getRange() == Calendar::RANGE_INST) {
         PageLayout::setTitle(getHeaderLine($_calendar->user_id) . ' - ' . _("Terminkalender - Listenansicht"));
-    } else if ($_calendar->checkPermission(CALENDAR_PERMISSION_OWN)) {
+    } else if ($_calendar->checkPermission(Calendar::PERMISSION_OWN)) {
         PageLayout::setTitle(_("Mein persönlicher Terminkalender - Listenansicht"));
     } else {
         PageLayout::setTitle(sprintf(_("Terminkalender von %s %s - Listenansicht"), get_fullname($_calendar->getUserId()), $_calendar->perm_string));
@@ -657,7 +657,7 @@ if ($cmd == 'showlist') {
 // ist $termin_id an das Skript uebergeben worden, dann bearbeite diesen Termin
 // ist $atime an das Skript uebergeben worden, dann erzeuge neuen Termin (s.o.)
 if ($cmd == 'edit') {
-    if ($_calendar->havePermission(CALENDAR_PERMISSION_WRITABLE)) {
+    if ($_calendar->havePermission(Calendar::PERMISSION_WRITABLE)) {
         if (!$mod) {
             $mod = 'SINGLE';
         }

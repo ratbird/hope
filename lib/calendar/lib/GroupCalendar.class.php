@@ -33,7 +33,7 @@ class GroupCalendar extends Calendar
     {
         //    Calendar::Calendar($user_name);
         $this->group_id = $group_id;
-        $this->permission = CALENDAR_PERMISSION_FORBIDDEN;
+        $this->permission = Calendar::PERMISSION_FORBIDDEN;
         $this->user_id = $user_id;
         $this->getCalendars();
     }

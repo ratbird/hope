@@ -18,42 +18,40 @@
 
 require_once('lib/calendar_functions.inc.php');
 
-define('CALENDAR_EVENT_PERM_CONFIDENTIAL', 1);
-define('CALENDAR_EVENT_PERM_READABLE', 2);
-define('CALENDAR_EVENT_PERM_WRITABLE', 4);
-//define('CALENDAR_EVENT_PERM_PUBLIC', 2);
-define('CALENDAR_EVENT_PERM_FOBIDDEN', 0);
-
 class Event
 {
+    const PERMISSION_FORBIDDEN = 0;
+    const PERMISSION_CONFIDENTIAL = 1;
+    const PERMISSION_READABLE = 2;
+    const PERMISSION_WRITABLE = 4;
 
     var $id;
     var $properties = array();
     var $chng_flag = false;   // true if event was changed
-    var $permission = CALENDAR_EVENT_PERM_WRITABLE;
+    var $permission = Event::PERMISSION_WRITABLE;
 
     function Event($properties, $permission = NULL)
     {
         $this->properties = $properties;
         if (!is_null($permission)) {
-            if ($permission != CALENDAR_PERMISSION_OWN) {
+            if ($permission != Calendar::PERMISSION_OWN) {
                 if ($this->properties['CLASS'] == 'CONFIDENTIAL') {
                     if ($this->properties['STUDIP_AUTHOR_ID'] == $GLOBALS['auth']->auth['uid']) {
-                        $this->permission = CALENDAR_EVENT_PERM_WRITABLE;
+                        $this->permission = Event::PERMISSION_WRITABLE;
                     } else {
-                        $this->permission = CALENDAR_EVENT_PERM_CONFIDENTIAL;
+                        $this->permission = Event::PERMISSION_CONFIDENTIAL;
                     }
                 } elseif ($this->properties['CLASS'] == 'PRIVATE') {
-                    if ($permission == CALENDAR_PERMISSION_WRITABLE) {
-                        $this->permission = CALENDAR_EVENT_PERM_WRITABLE;
+                    if ($permission == Calendar::PERMISSION_WRITABLE) {
+                        $this->permission = Event::PERMISSION_WRITABLE;
                     } else {
-                        $this->permission = CALENDAR_EVENT_PERM_READABLE;
+                        $this->permission = Event::PERMISSION_READABLE;
                     }
                 } elseif ($this->properties['CLASS'] == 'PUBLIC') {
-                    $this->permission = CALENDAR_EVENT_PERM_READABLE;
+                    $this->permission = Event::PERMISSION_READABLE;
                 }
             } else {
-                $this->permission = CALENDAR_EVENT_PERM_WRITABLE;
+                $this->permission = Event::PERMISSION_WRITABLE;
             }
         }
 
@@ -127,7 +125,7 @@ class Event
      */
     function getTitle()
     {
-        if ($this->permission == CALENDAR_EVENT_PERM_CONFIDENTIAL)
+        if ($this->permission == Event::PERMISSION_CONFIDENTIAL)
             return _("Keine Berechtigung.");
         if ($this->properties['SUMMARY'] == '')
             return _("Kein Titel");
@@ -165,7 +163,7 @@ class Event
      */
     function getCategory()
     {
-        if ($this->permission == CALENDAR_EVENT_PERM_CONFIDENTIAL)
+        if ($this->permission == Event::PERMISSION_CONFIDENTIAL)
             return '';
 
         return $this->properties['CATEGORIES'];
@@ -180,7 +178,7 @@ class Event
      */
     function getStudipCategory()
     {
-        if ($this->permission == CALENDAR_EVENT_PERM_CONFIDENTIAL)
+        if ($this->permission == Event::PERMISSION_CONFIDENTIAL)
             return 255;
 
         return $this->properties['STUDIP_CATEGORY'];
@@ -196,7 +194,7 @@ class Event
      */
     function getDescription()
     {
-        if ($this->permission == CALENDAR_EVENT_PERM_CONFIDENTIAL)
+        if ($this->permission == Event::PERMISSION_CONFIDENTIAL)
             return '';
 
         if (!$this->properties['DESCRIPTION'])
@@ -223,7 +221,7 @@ class Event
      */
     function getLocation()
     {
-        if ($this->permission == CALENDAR_EVENT_PERM_CONFIDENTIAL)
+        if ($this->permission == Event::PERMISSION_CONFIDENTIAL)
             return '';
 
         if ($this->properties['LOCATION'] == '')

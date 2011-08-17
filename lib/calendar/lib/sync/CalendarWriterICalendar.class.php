@@ -100,14 +100,14 @@ class CalendarWriteriCalendar extends CalendarWriter
                 case 'SUMMARY':
                 case 'DESCRIPTION':
                 case 'LOCATION':
-                    if ($event->havePermission(CALENDAR_EVENT_PERM_READABLE))
+                    if ($event->havePermission(Event::PERMISSION_READABLE))
                         $value = str_replace($match_pattern_1, $replace_pattern_1, $value);
                     else
                         $value = $event->getTitle();
                     break;
 
                 case 'CATEGORIES':
-                    if ($event->havePermission(CALENDAR_EVENT_PERM_READABLE))
+                    if ($event->havePermission(Event::PERMISSION_READABLE))
                         $event->properties['CATEGORIES'] = $safe_categories;
                     else
                         $event->properties['CATEGORIES'] = $GLOBALS['PERS_TERMIN_KAT'][255]['name'];
@@ -201,7 +201,7 @@ class CalendarWriteriCalendar extends CalendarWriter
 
                 // Integer fields
                 case 'PERCENT-COMPLETE':
-                    if ($event->getPermission() == CALENDAR_EVENT_PERM_CONFIDENTIAL)
+                    if ($event->getPermission() == Event::PERMISSION_CONFIDENTIAL)
                         $value = '';
                 case 'REPEAT':
                 case 'SEQUENCE':
@@ -209,7 +209,7 @@ class CalendarWriteriCalendar extends CalendarWriter
                     break;
 
                 case 'PRIORITY':
-                    if ($event->getPermission() == CALENDAR_EVENT_PERM_CONFIDENTIAL)
+                    if ($event->getPermission() == Event::PERMISSION_CONFIDENTIAL)
                         $value = '0';
                     else {
                         switch ($value) {
@@ -230,7 +230,7 @@ class CalendarWriteriCalendar extends CalendarWriter
 
                 // Geo fields
                 case 'GEO':
-                    if ($event->getPermission() == CALENDAR_EVENT_PERM_CONFIDENTIAL)
+                    if ($event->getPermission() == Event::PERMISSION_CONFIDENTIAL)
                         $value = '';
                     else
                         $value = $value['latitude'] . ',' . $value['longitude'];
@@ -401,7 +401,7 @@ class CalendarWriteriCalendar extends CalendarWriter
                         break;
                     case 'expire':
                         // end of unix epoche (this is also the end of Stud.IP epoche ;-) )
-                        if ($r_value < CALENDAR_END)
+                        if ($r_value < Calendar::CALENDAR_END)
                             $rrule[] = 'UNTIL=' . $this->_exportDateTime($r_value);
                         break;
                     case 'linterval':

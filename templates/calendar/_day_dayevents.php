@@ -11,7 +11,7 @@
                 <? $cstyle = $day_event->getCategoryStyle($calendar->view instanceof DbCalendarDay ? 'big' : 'small') ?>
                 <tr>
                     <td style="width:100%; height:20px; vertical-align:top; text-align:left; border:solid 1px <?= $cstyle['color'] ?>; background-image:url(<?= $cstyle['image'] ?>);">
-                        <? if ($day_event->getPermission == CALENDAR_EVENT_PERM_CONFIDENTIAL) : ?>
+                        <? if ($day_event->getPermission == Event::PERMISSION_CONFIDENTIAL) : ?>
                             <?= fit_title($day_event->getTitle(), 1, 1, $title_length); ?>
                         <? else : ?>
                             <? if (strtolower(get_class($day_event)) == 'seminarevent') : ?>

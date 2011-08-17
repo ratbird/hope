@@ -161,16 +161,16 @@ function PrintAktualStatusgruppen($range_id, $view, $edit_id = '')
                         echo "<td class=\"$class\">";
                         echo '<a href="';
                         switch ($db3->f('calpermission')) {
-                            case CALENDAR_PERMISSION_READABLE:
-                                echo URLHelper::getLink('#' . $statusgruppe_id, array('user_id' => $db2->f('user_id'), 'view' => $view, 'lid' => $lid, 'calperm' => CALENDAR_PERMISSION_WRITABLE)) . '">';
+                            case Calendar::PERMISSION_READABLE:
+                                echo URLHelper::getLink('#' . $statusgruppe_id, array('user_id' => $db2->f('user_id'), 'view' => $view, 'lid' => $lid, 'calperm' => Calendar::PERMISSION_WRITABLE)) . '">';
                                 echo Assets::img('icons/16/blue/visibility/calendar-visible.png', tooltip(_("Mein Kalender ist für diese Person lesbar")));
                                 break;
-                            case CALENDAR_PERMISSION_WRITABLE:
-                                echo URLHelper::getLink('#' . $statusgruppe_id, array('user_id' => $db2->f('user_id'), 'view' => $view, 'lid' => $lid, 'calperm' => CALENDAR_PERMISSION_FORBIDDEN)) . '">';
+                            case Calendar::PERMISSION_WRITABLE:
+                                echo URLHelper::getLink('#' . $statusgruppe_id, array('user_id' => $db2->f('user_id'), 'view' => $view, 'lid' => $lid, 'calperm' => Calendar::PERMISSION_FORBIDDEN)) . '">';
                                 echo Assets::img('icons/16/red/schedule.png', tooltip(_("Mein Kalender ist für diese Person schreibbar")));
                                 break;
                             default:
-                                echo URLHelper::getLink('#' . $statusgruppe_id, array('user_id' => $db2->f('user_id'), 'view' => $view, 'lid' => $lid, 'calperm' => CALENDAR_PERMISSION_READABLE)) . '">';
+                                echo URLHelper::getLink('#' . $statusgruppe_id, array('user_id' => $db2->f('user_id'), 'view' => $view, 'lid' => $lid, 'calperm' => Calendar::PERMISSION_READABLE)) . '">';
                                 echo Assets::img('icons/16/blue/visibility/calendar-invisible.png', tooltip(_("Mein Kalender ist für diese Person unsichtbar")));
                                 break;
                         }
@@ -342,7 +342,7 @@ if ($cmd == 'swap') {
 if ($CALENDAR_GROUP_ENABLE) {
     // Switch calendar access for group members
     if (Request::get('calperm')) {
-        switch_member_cal(Request::get('user_id'), Request::get('calperm', CALENDAR_PERMISSION_FORBIDDEN));
+        switch_member_cal(Request::get('user_id'), Request::get('calperm', Calendar::PERMISSION_FORBIDDEN));
     }
 }
 

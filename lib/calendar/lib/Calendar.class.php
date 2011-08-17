@@ -16,17 +16,6 @@
  * @package     calendar
  */
 
-define('CALENDAR_END', 0x7FFFFFFF);
-define('CALENDAR_PERMISSION_OWN', 16);
-define('CALENDAR_PERMISSION_ADMIN', 8);
-define('CALENDAR_PERMISSION_WRITABLE', 4);
-define('CALENDAR_PERMISSION_READABLE', 2);
-define('CALENDAR_PERMISSION_FORBIDDEN', 1);
-define('CALENDAR_RANGE_USER', 1);
-define('CALENDAR_RANGE_GROUP', 2);
-define('CALENDAR_RANGE_SEM', 3);
-define('CALENDAR_RANGE_INST', 4);
-
 global $RELATIVE_PATH_CALENDAR, $CALENDAR_DRIVER;
 
 require_once($RELATIVE_PATH_CALENDAR . '/lib/ErrorHandler.class.php');
@@ -40,10 +29,20 @@ require_once('lib/classes/Modules.class.php');
 
 class Calendar
 {
+    const CALENDAR_END = 0x7FFFFFFF;
+    const PERMISSION_OWN = 16;
+    const PERMISSION_ADMIN = 8;
+    const PERMISSION_WRITABLE = 4;
+    const PERMISSION_READABLE = 2;
+    const PERMISSION_FORBIDDEN = 1;
+    const RANGE_USER = 1;
+    const RANGE_GROUP = 2;
+    const RANGE_SEM = 3;
+    const RANGE_INST = 4;
 
     var $user_name = '';
     var $user_id = '';
-    var $permission = CALENDAR_PERMISSION_WRITABLE; //CALENDAR_PERMISSION_FORBIDDEN;
+    var $permission = Calendar::PERMISSION_WRITABLE; //Calendar::_PERMISSION_FORBIDDEN;
     var $headline = '';
     var $user_settings;
     var $event = NULL;
@@ -54,7 +53,7 @@ class Calendar
 
         init_error_handler('_calendar_error');
         /*
-          if ($this->getRange() == CALENDAR_RANGE_USER) {
+          if ($this->getRange() == Calendar::RANGE_USER) {
           $this->user_name = get_username($range_id);
           } */
 //      $this->getUserId();
@@ -83,43 +82,43 @@ class Calendar
                 case 'user' :
                     closeObject();
                     $instance[$range_id] = new SingleCalendar($range_id);
-                    $instance[$range_id]->range = CALENDAR_RANGE_USER;
+                    $instance[$range_id]->range = Calendar::RANGE_USER;
                     $instance[$range_id]->user_name = get_username($range_id);
                     break;
                 case 'group' :
                     closeObject();
                     if (get_config('CALENDAR_GROUP_ENABLE')) {
                         $instance[$range_id] = new GroupCalendar($range_id, $user->id);
-                        $instance[$range_id]->range = CALENDAR_RANGE_GROUP;
+                        $instance[$range_id]->range = Calendar::RANGE_GROUP;
                         $instance[$range_id]->user_name = get_username();
                     } else {
                         $instance[$range_id] = new SingleCalendar($user->id);
-                        $instance[$range_id]->range = CALENDAR_RANGE_USER;
+                        $instance[$range_id]->range = Calendar::RANGE_USER;
                         $instance[$range_id]->user_name = get_username();
                     }
                     break;
                 case 'sem' :
                     if ($perm->have_studip_perm('user', $range_id)) {
                         $instance[$range_id] = new SingleCalendar($range_id);
-                        $instance[$range_id]->range = CALENDAR_RANGE_SEM;
+                        $instance[$range_id]->range = Calendar::RANGE_SEM;
                         $instance[$range_id]->user_name = get_username();
                     } else {
                         $range_id = $user->id;
                         $instance[$range_id] = new SingleCalendar($user->id);
-                        $instance[$range_id]->range = CALENDAR_RANGE_USER;
+                        $instance[$range_id]->range = Calendar::RANGE_USER;
                         $instance[$range_id]->user_name = get_username();
                     }
                     break;
                 case 'inst' :
                 case 'fak' :
                     $instance[$range_id] = new SingleCalendar($range_id);
-                    $instance[$range_id]->range = CALENDAR_RANGE_INST;
+                    $instance[$range_id]->range = Calendar::RANGE_INST;
                     $instance[$range_id]->user_name = get_username();
                     break;
                 default :
                     $range_id = $user->id;
                     $instance[$range_id] = new SingleCalendar($user->id);
-                    $instance[$range_id]->range = CALENDAR_RANGE_USER;
+                    $instance[$range_id]->range = Calendar::RANGE_USER;
                     $instance[$range_id]->user_name = get_username();
             }
         }
@@ -154,7 +153,7 @@ class Calendar
     function GetPermissionByUserRange($user_id, $range_id)
     {
         if (get_object_type($range_id) == 'user' && $user_id == $range_id) {
-            return CALENDAR_PERMISSION_OWN;
+            return Calendar::PERMISSION_OWN;
         }
 
         switch (get_object_type($range_id)) {
@@ -162,7 +161,7 @@ class Calendar
 
                 // alle Dozenten haben gegenseitig schreibenden Zugriff, ab dozent immer schreibenden Zugriff
                 if ($GLOBALS['perm']->have_perm('dozent') && $GLOBALS['perm']->get_perm($range_id) == 'dozent') {
-                    return CALENDAR_PERMISSION_WRITABLE;
+                    return Calendar::PERMISSION_WRITABLE;
                 }
 
                 $stmt = DBManager::get()->prepare('SELECT calpermission FROM contact WHERE owner_id = ? AND user_id = ?');
@@ -171,59 +170,59 @@ class Calendar
                 if ($result) {
                     switch ($result['calpermission']) {
                         case 1 :
-                            return CALENDAR_PERMISSION_FORBIDDEN;
+                            return Calendar::PERMISSION_FORBIDDEN;
                         case 2 :
-                            return CALENDAR_PERMISSION_READABLE;
+                            return Calendar::PERMISSION_READABLE;
                         case 4 :
-                            return CALENDAR_PERMISSION_WRITABLE;
+                            return Calendar::PERMISSION_WRITABLE;
                         default :
-                            return CALENDAR_PERMISSION_FORBIDDEN;
+                            return Calendar::PERMISSION_FORBIDDEN;
                     }
                 }
-                return CALENDAR_PERMISSION_FORBIDDEN;
+                return Calendar::PERMISSION_FORBIDDEN;
             case 'group' :
                 $stmt = DBManager::get()->prepare('SELECT range_id FROM statusgruppen WHERE statusgruppe_id = ?');
                 $stmt->execute(array($range_id));
                 $result = $stmt->fetch(PDO::FETCH_ASSOC);
                 if ($result) {
                     if ($result['range_id'] == $user_id) {
-                        return CALENDAR_PERMISSION_OWN;
+                        return Calendar::PERMISSION_OWN;
                     }
                 }
-                return CALENDAR_PERMISSION_FORBIDDEN;
+                return Calendar::PERMISSION_FORBIDDEN;
             case 'sem' :
                 switch ($GLOBALS['perm']->get_studip_perm($range_id, $user_id)) {
                     case 'user' :
                     case 'autor' :
-                        return CALENDAR_PERMISSION_READABLE;
+                        return Calendar::PERMISSION_READABLE;
                     case 'tutor' :
                     case 'dozent' :
                     case 'admin' :
                     case 'root' :
-                        return CALENDAR_PERMISSION_WRITABLE;
+                        return Calendar::PERMISSION_WRITABLE;
                     default :
-                        return CALENDAR_PERMISSION_FORBIDDEN;
+                        return Calendar::PERMISSION_FORBIDDEN;
                 }
             case 'inst' :
             case 'fak' :
                 switch ($GLOBALS['perm']->get_studip_perm($range_id, $user_id)) {
                     case 'user' :
-                        return CALENDAR_PERMISSION_READABLE;
+                        return Calendar::PERMISSION_READABLE;
                     case 'autor' :
-                        return CALENDAR_PERMISSION_READABLE;
+                        return Calendar::PERMISSION_READABLE;
                     case 'tutor' :
                     case 'dozent' :
                     case 'admin' :
                     case 'root' :
-                        return CALENDAR_PERMISSION_WRITABLE;
+                        return Calendar::PERMISSION_WRITABLE;
                     default :
                         // readable for all
-                        return CALENDAR_PERMISSION_READABLE;
+                        return Calendar::PERMISSION_READABLE;
                 }
             default :
-                return CALENDAR_PERMISSION_FORBIDDEN;
+                return Calendar::PERMISSION_FORBIDDEN;
         }
-        return CALENDAR_PERMISSION_FORBIDDEN;
+        return Calendar::PERMISSION_FORBIDDEN;
     }
 
     function getRange()
@@ -242,7 +241,7 @@ class Calendar
         // $user_id = $GLOBALS['user']->id;
         $user_id = get_userid($this->user_name);
         if (!$user_id) {
-            $_calendar_error->throwError(ERROR_FATAL, _("Der Benutzername existiert nicht."), __FILE__, __LINE__);
+            $_calendar_error->throwError(ErrorHandler::ERROR_FATAL, _("Der Benutzername existiert nicht."), __FILE__, __LINE__);
             return false;
         }
         $this->user_id = $user_id;
@@ -487,7 +486,7 @@ class Calendar
             $expire = mktime(23, 59, 59, $calendar_form_data['exp_month'], $calendar_form_data['exp_day'], $calendar_form_data['exp_year']);
             $calendar_form_data['exp_count'] = 0;
         } elseif ($calendar_form_data['exp_c'] == 'never') {
-            $expire = CALENDAR_END;
+            $expire = Calendar::CALENDAR_END;
             $calendar_form_data['exp_count'] = 0;
         }
 
@@ -617,7 +616,7 @@ class Calendar
                 $calendar_form_data['exp_c'] = 'count';
             } else {
                 $expire = $this->event->getExpire();
-                if (!$expire || $expire == CALENDAR_END)
+                if (!$expire || $expire == Calendar::CALENDAR_END)
                     $calendar_form_data['exp_c'] = 'never';
                 else
                     $calendar_form_data['exp_c'] = 'date';
@@ -774,12 +773,12 @@ class Calendar
                     $mod = $this->event->getRepeat('rtype');
             }
         }
-        elseif (isset($cal_group) || $this->havePermission(CALENDAR_PERMISSION_WRITABLE)) {
-            if ($this->getRange() == CALENDAR_RANGE_SEM || $this->getRange() == CALENDAR_RANGE_INST) {
+        elseif (isset($cal_group) || $this->havePermission(Calendar::PERMISSION_WRITABLE)) {
+            if ($this->getRange() == Calendar::RANGE_SEM || $this->getRange() == Calendar::RANGE_INST) {
                 $this->headline = getHeaderLine($this->user_id) . ' - ' . _("Terminkalender - Termin anlegen/bearbeiten");
             } else if (strtolower(get_class($_calendar)) == 'groupcalendar') {
                 $this->headline = sprintf(_("Terminkalender der Gruppe %s - Termin anlegen/bearbeiten"), $this->getGroupName());
-            } else if ($this->checkPermission(CALENDAR_PERMISSION_OWN)) {
+            } else if ($this->checkPermission(Calendar::PERMISSION_OWN)) {
                 $this->headline = _("Mein pers&ouml;nlicher Terminkalender - Termin anlegen/bearbeiten");
             } else {
                 $this->headline = sprintf(_("Terminkalender von %s %s - Termin anlegen/bearbeiten"), get_fullname($this->getUserId()), $this->perm_string);

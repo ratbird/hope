@@ -102,14 +102,14 @@ class SeminarCalendarEvent extends CalendarEvent
         switch ($GLOBALS['perm']->get_studip_perm($this->sem_id)) {
             case 'user' :
             case 'autor' :
-                return CALENDAR_EVENT_PERM_READABLE;
+                return Event::PERMISSION_READABLE;
             case 'tutor' :
             case 'dozent' :
             case 'admin' :
             case 'root' :
-                return CALENDAR_EVENT_PERM_WRITABLE;
+                return Event::PERMISSION_WRITABLE;
             default :
-                return CALENDAR_EVENT_PERM_FOBIDDEN;
+                return Event::PERMISSION_FORBIDDEN;
         }
     }
 

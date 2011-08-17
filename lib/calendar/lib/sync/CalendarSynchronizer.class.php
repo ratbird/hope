@@ -72,7 +72,7 @@ class CalendarSynchronizer
         // dont't synchronize with empty import files, except for the first time
         // (would delete all events in Stud.IP)
         if ($this->last_sync > 0 && $this->_import->getCount() == 0) {
-            $_calendar_error->throwError(ERROR_WARNING, _("Der Stud.IP-Terminkalender kann nicht mit einem Import synchronisiert werden, der keine Termindaten enthält!"));
+            $_calendar_error->throwError(ErrorHandler::ERROR_WARNING, _("Der Stud.IP-Terminkalender kann nicht mit einem Import synchronisiert werden, der keine Termindaten enthält!"));
             return FALSE;
         }
 
@@ -88,7 +88,7 @@ class CalendarSynchronizer
 
         // get events from database
         $db = CalendarDriver::getInstance($range_id);
-        $db->openDatabase('EVENTS', 'ALL_EVENTS', 0, CALENDAR_END, NULL, Calendar::getBindSeminare());
+        $db->openDatabase('EVENTS', 'ALL_EVENTS', 0, Calendar::CALENDAR_END, NULL, Calendar::getBindSeminare());
         $in_changed = TRUE;
         $sentinel = '#';
         $create_export = FALSE;
@@ -120,7 +120,7 @@ class CalendarSynchronizer
 
                 // no LAST-MODIFIED...
                 if (!$ex->properties['LAST-MODIFIED']) {
-                    $_calendar_error->throwError(ERROR_CRITICAL, _("Die Datei kann nicht mit dem Stud.IP-Terminkalender synchronisiert werden."));
+                    $_calendar_error->throwError(ErrorHandler::ERROR_CRITICAL, _("Die Datei kann nicht mit dem Stud.IP-Terminkalender synchronisiert werden."));
                     return FALSE;
                 }
 
@@ -207,14 +207,14 @@ class CalendarSynchronizer
         }
 
         if (sizeof($int) > $this->max_events) {
-            $_calendar_error->throwError(ERROR_CRITICAL, _("Die zu synchronisierende Datei enth&auml;lt zu viele Termine."));
+            $_calendar_error->throwError(ErrorHandler::ERROR_CRITICAL, _("Die zu synchronisierende Datei enth&auml;lt zu viele Termine."));
             return FALSE;
         }
 
         // OK, work is done, import and export the events
         if (sizeof($del)) {
             $db->deleteFromDatabase('SINGLE', $del);
-            $_calendar_error->throwError(ERROR_MESSAGE, sprintf(_("Es wurde(n) %s Termin(e) in Ihrem Stud.IP-Terminkalender gel&ouml;scht."), sizeof($del)));
+            $_calendar_error->throwError(ErrorHandler::ERROR_MESSAGE, sprintf(_("Es wurde(n) %s Termin(e) in Ihrem Stud.IP-Terminkalender gel&ouml;scht."), sizeof($del)));
         }
         $db->writeObjectsIntoDatabase($int, 'REPLACE');
         //  if (!$create_export) {

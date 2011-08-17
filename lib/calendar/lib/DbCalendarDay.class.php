@@ -324,7 +324,7 @@ class DbCalendarDay extends CalendarDay
                 continue;
             }
             if (!in_array($event->getSeminarId(), $user_sems)) {
-                $event->setPermission(CALENDAR_EVENT_PERM_CONFIDENTIAL);
+                $event->setPermission(Event::PERMISSION_CONFIDENTIAL);
             }
             $this->events[] = $event;
         }

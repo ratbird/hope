@@ -34,8 +34,8 @@ if (!empty($err)) {
     my_info($error_message, 'blank', 2);
 }
 
-if (!$termin_id && !$_calendar->havePermission(CALENDAR_PERMISSION_WRITABLE)) {
-    if ($_calendar->getRange() == CALENDAR_RANGE_USER) {
+if (!$termin_id && !$_calendar->havePermission(Calendar::PERMISSION_WRITABLE)) {
+    if ($_calendar->getRange() == Calendar::RANGE_USER) {
         $error_message = sprintf(_("Der Kalender von %s ist f&uuml;r Sie nur lesbar. Sie haben keine Berechtigung Termine anzulegen."), get_fullname($_calendar->getUserId()));
     } else {
         $error_message = sprintf(_("Der Kalender von %s ist f&uuml;r Sie nur lesbar. Sie haben keine Berechtigung Termine anzulegen."), $SessSemName[1]);
@@ -51,9 +51,9 @@ if (!$termin_id && !$_calendar->havePermission(CALENDAR_PERMISSION_WRITABLE)) {
 echo "<tr><td class=\"blank\" width=\"99%\" valign=\"top\">\n";
 
 if ($evtype == 'semcal' || (isset($_calendar->event) && ($_calendar->event instanceof SeminarEvent || $_calendar->event instanceof SeminarCalendarEvent)
-//      || $_calendar->checkPermission(CALENDAR_PERMISSION_READABLE)
-//      || $_calendar->event->getPermission() == CALENDAR_EVENT_PERM_CONFIDENTIAL) {
-        || !$_calendar->event->havePermission(CALENDAR_EVENT_PERM_WRITABLE))) {
+//      || $_calendar->checkPermission(Calendar::PERMISSION_READABLE)
+//      || $_calendar->event->getPermission() == Event::PERMISSION_CONFIDENTIAL) {
+        || !$_calendar->event->havePermission(Event::PERMISSION_WRITABLE))) {
     // form is not editable
     $disabled = " style=\"color:#000000; background-color:#FFFFFF;\" disabled=\"disabled\"";
 } else {
@@ -96,10 +96,10 @@ if (!$set_recur_x) {
     $atimetxt = ($start_day && $start_month && $start_year) ?
             '&atime=' . mktime(12, 0, 0, $start_month, $start_day, $start_year) : '';
     echo "&nbsp;";
-    if (!(is_object($_calendar->event) && (($_calendar->event instanceof SeminarEvent) || !$_calendar->event->havePermission(CALENDAR_EVENT_PERM_WRITABLE)))) {
+    if (!(is_object($_calendar->event) && (($_calendar->event instanceof SeminarEvent) || !$_calendar->event->havePermission(Event::PERMISSION_WRITABLE)))) {
         /*
           if (!((isset($_calendar->event) && !($_calendar->event instanceof SeminarEvent))
-          || !$_calendar->event->havePermission(CALENDAR_EVENT_PERM_WRITABLE))) {
+          || !$_calendar->event->havePermission(Event::PERMISSION_WRITABLE))) {
          */
         echo Assets::img('popupcalendar.png', array('onClick' => "window.open('" . UrlHelper::getLink("termin_eingabe_dispatch.php?element_switch=start{$atimetxt}&form_name=edit_event&element_depending=end") . "', 'InsertDate', 'dependent=yes, width=210, height=210, left=500, top=150')", 'style' => 'vertical-align:middle;'));
     }
@@ -154,11 +154,11 @@ if (!$set_recur_x) {
     $atimetxt = ($end_day && $end_month && $end_year) ?
             '&atime=' . mktime(12, 0, 0, $end_month, $end_day, $end_year) : '';
     echo '&nbsp;';
-    if (!(is_object($_calendar->event) && (($_calendar->event instanceof SeminarEvent) || !$_calendar->event->havePermission(CALENDAR_EVENT_PERM_WRITABLE)))) {
+    if (!(is_object($_calendar->event) && (($_calendar->event instanceof SeminarEvent) || !$_calendar->event->havePermission(Event::PERMISSION_WRITABLE)))) {
 
         /*
           if (!((isset($_calendar->event) && strtolower(get_class($_calendar->event)) == 'seminarevent')
-          || !$_calendar->event->havePermission(CALENDAR_EVENT_PERM_WRITABLE))) {
+          || !$_calendar->event->havePermission(Event::PERMISSION_WRITABLE))) {
          */
         echo Assets::img('popupcalendar.png', array('onClick' => "window.open('" . UrlHelper::getLink("termin_eingabe_dispatch.php?element_switch=end{$atimetxt}&form_name=edit_event") . "', 'InsertDate', 'dependent=yes, width=210, height=210, left=500, top=150')", 'style' => 'vertical-align:middle;'));
     }
@@ -192,7 +192,7 @@ if (!$set_recur_x) {
     echo ($err["end_time"] ? $error_sign : "");
     echo "</td>\n</tr>\n</table>\n</td>\n</tr>\n";
 
-    if ($_calendar->event->havePermission(CALENDAR_EVENT_PERM_READABLE)) {
+    if ($_calendar->event->havePermission(Event::PERMISSION_READABLE)) {
         $css_switcher->switchClass();
         echo "<tr><td class=\"" . $css_switcher->getClass() . "\">\n";
         echo "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\">";
@@ -252,18 +252,18 @@ if (!$set_recur_x) {
     }
 
     if (!($_calendar->event instanceof SeminarEvent)) {
-        if ($_calendar->event->havePermission(CALENDAR_EVENT_PERM_WRITABLE) && !($_calendar->event instanceof SeminarCalendarEvent)) {
+        if ($_calendar->event->havePermission(Event::PERMISSION_WRITABLE) && !($_calendar->event instanceof SeminarCalendarEvent)) {
             $css_switcher->switchClass();
             echo "<tr><td class=\"" . $css_switcher->getClass() . "\">\n";
             echo _("Zugriff:") . "&nbsp;&nbsp;\n";
             echo "<select name=\"via\" size=\"1\"$disabled>\n";
-            if ($_calendar->checkPermission(CALENDAR_PERMISSION_OWN)) {
+            if ($_calendar->checkPermission(Calendar::PERMISSION_OWN)) {
                 $info = _("Private und vertrauliche Termine sind nur für Sie sichtbar. Öffentliche Termine werden auf ihrer internen Homepage auch anderen Nutzern bekanntgegeben.");
                 $via_names = array(
                     'PUBLIC' => _("&ouml;ffentlich"),
                     'PRIVATE' => _("privat"),
                     'CONFIDENTIAL' => _("vertraulich"));
-            } elseif ($_calendar->getRange() == CALENDAR_RANGE_SEM || $_calendar->getRange() == CALENDAR_RANGE_INST) {
+            } elseif ($_calendar->getRange() == Calendar::RANGE_SEM || $_calendar->getRange() == Calendar::RANGE_INST) {
                 $info = _("In Veranstaltungskalendern können nur private Termine angelegt werden");
                 $via_names = array(
                     'PRIVATE' => _("privat")
@@ -334,9 +334,9 @@ if (!$set_recur_x) {
             echo htmlReady($_calendar->event->toStringRecurrence());
         echo "&nbsp; &nbsp; &nbsp;";
 
-//      if ($_calendar->havePermission(CALENDAR_PERMISSION_WRITABLE)
+//      if ($_calendar->havePermission(Calendar::PERMISSION_WRITABLE)
         //      && $_calendar->event->getPermission() == CALENDAR_EVENT_PERM_PUBLIC) {
-        if ($_calendar->event->havePermission(CALENDAR_EVENT_PERM_WRITABLE) && !($_calendar->event instanceof SeminarCalendarEvent)) {
+        if ($_calendar->event->havePermission(Event::PERMISSION_WRITABLE) && !($_calendar->event instanceof SeminarCalendarEvent)) {
             echo "<input style=\"vertical-align: middle;\" type=\"image\" ";
             echo makeButton("bearbeiten", "src") . " name=\"set_recur\" border=\"0\">\n";
         }
@@ -353,12 +353,12 @@ if (!$set_recur_x) {
 ######################################################################################
 else {
 
-    if ($_calendar->havePermission(CALENDAR_PERMISSION_READABLE)) {
+    if ($_calendar->havePermission(Calendar::PERMISSION_READABLE)) {
         if (!isset($_calendar->event) || !($_calendar->event instanceof SeminarEvent) || $evtype != 'semcal') {
             echo "<tr><td align=\"center\" class=\"" . $css_switcher->getClass();
             echo "\" colspan=\"2\" nowrap=\"nowrap\">\n&nbsp;";
 
-            if ($_calendar->event->havePermission(CALENDAR_EVENT_PERM_WRITABLE) && $evtype != 'semcal') {
+            if ($_calendar->event->havePermission(Event::PERMISSION_WRITABLE) && $evtype != 'semcal') {
 
                 if ($mod == "SINGLE")
                     echo "<input type=\"image\" name=\"mod_s\" " . makeButton("keine2", "src") . " border=\"0\">\n";
@@ -651,11 +651,11 @@ else {
                 '&atime=' . mktime(12, 0, 0, $start_month, $start_day, $start_year) : '';
         echo '&nbsp;&nbsp;';
 
-        if (!(is_object($_calendar->event) && (($_calendar->event instanceof SeminarEvent) || !$_calendar->event->havePermission(CALENDAR_EVENT_PERM_WRITABLE)))) {
+        if (!(is_object($_calendar->event) && (($_calendar->event instanceof SeminarEvent) || !$_calendar->event->havePermission(Event::PERMISSION_WRITABLE)))) {
 
             /*
               if (!((isset($_calendar->event) && strtolower(get_class($_calendar->event)) == 'seminarevent')
-              || !$_calendar->event->havePermission(CALENDAR_EVENT_PERM_WRITABLE))) {
+              || !$_calendar->event->havePermission(Event::PERMISSION_WRITABLE))) {
              */
 
             echo Assets::img('popupcalendar.png', array('onClick' => "window.open('" . UrlHelper::getLink("termin_eingabe_dispatch.php?element_switch=exp{$atimetxt}&form_name=edit_event&mcount=6") . "', 'InsertDate', 'dependent=yes, width=700, height=450, left=250, top=150')", 'style' => 'vertical-align:middle;'));
@@ -677,11 +677,11 @@ else {
         echo "<br>&nbsp; ";
         echo _("Ausnahmen:") . '&nbsp; ';
 
-        if (!(is_object($_calendar->event) && (($_calendar->event instanceof SeminarEvent) || !$_calendar->event->havePermission(CALENDAR_EVENT_PERM_WRITABLE)))) {
+        if (!(is_object($_calendar->event) && (($_calendar->event instanceof SeminarEvent) || !$_calendar->event->havePermission(Event::PERMISSION_WRITABLE)))) {
 
             /*
               if (!((isset($_calendar->event) && strtolower(get_class($_calendar->event)) == 'seminarevent')
-              || !$_calendar->event->havePermission(CALENDAR_EVENT_PERM_WRITABLE))) {
+              || !$_calendar->event->havePermission(Event::PERMISSION_WRITABLE))) {
              */
 
             echo "<input type=\"text\" size=\"2\" maxlength=\"2\" name=\"exc_day\" value=\"TT\">";
@@ -709,11 +709,11 @@ else {
         echo "</select>\n</td></tr>\n";
         echo "<tr><td>&nbsp;</td>\n<td>";
 
-        if (!(is_object($_calendar->event) && (($_calendar->event instanceof SeminarEvent) || !$_calendar->event->havePermission(CALENDAR_EVENT_PERM_WRITABLE)))) {
+        if (!(is_object($_calendar->event) && (($_calendar->event instanceof SeminarEvent) || !$_calendar->event->havePermission(Event::PERMISSION_WRITABLE)))) {
 
             /*
               if (!((isset($_calendar->event) && strtolower(get_class($_calendar->event)) == 'seminarevent')
-              || !$_calendar->event->havePermission(CALENDAR_EVENT_PERM_WRITABLE))) {
+              || !$_calendar->event->havePermission(Event::PERMISSION_WRITABLE))) {
              */
 
             echo "<input style=\"vertical-align:middle;\" type=\"image\" ";
@@ -762,13 +762,13 @@ if (isset($_calendar->event) && ($_calendar->event instanceof SeminarEvent || $_
 
     // create infobox entries
     switch ($_calendar->getRange()) {
-        case CALENDAR_RANGE_USER :
+        case Calendar::RANGE_USER :
             $info_box['sem1'] = sprintf(_("Dieser Termin geh&ouml;rt zur Veranstaltung:<p>%s</p>Veranstaltungstermine k&ouml;nnen nicht im pers&ouml;nlichen Terminkalender bearbeitet werden."), $link_to_seminar);
             break;
-        case CALENDAR_RANGE_SEM :
+        case Calendar::RANGE_SEM :
             $info_box['sem1'] = _("Dieser Termin ist ein Termin aus dem Ablaufplan.");
             break;
-        case CALENDAR_RANGE_INST :
+        case Calendar::RANGE_INST :
             // events/dates at "Einrichtungen" are not implemented
             break;
     }
@@ -830,9 +830,9 @@ if (isset($_calendar->event) && ($_calendar->event instanceof SeminarEvent || $_
         echo "<input type=\"hidden\" name=\"set_recur_x\" value=\"1\">\n";
         echo '<input type="hidden" name="wholeday" value="' . Request::get('wholeday') . "\">\n";
     }
-//  if ($_calendar->havePermission(CALENDAR_PERMISSION_WRITABLE)
+//  if ($_calendar->havePermission(Calendar::PERMISSION_WRITABLE)
     //      && $_calendar->event->getPermission() == CALENDAR_EVENT_PERM_PUBLIC) {
-    if ($_calendar->event->havePermission(CALENDAR_EVENT_PERM_WRITABLE) && $evtype != 'semcal') {
+    if ($_calendar->event->havePermission(Event::PERMISSION_WRITABLE) && $evtype != 'semcal') {
         if ($atime && strtolower(get_class($_calendar->event)) == 'calendarevent') {
             if ($count_events < $CALENDAR_MAX_EVENTS) {
                 echo "<input type=\"image\" " . makeButton("terminspeichern", "src") . " name=\"store\" border=\"0\">\n";

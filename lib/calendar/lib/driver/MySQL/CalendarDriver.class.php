@@ -41,7 +41,7 @@ class CalendarDriver
         $this->user_id = $GLOBALS['auth']->auth['uid'];
         $this->range_id = $range_id;
         if (is_null($permission)) {
-            $permission = CALENDAR_PERMISSION_OWN;
+            $permission = Calendar::PERMISSION_OWN;
         }
         $this->permission = $permission;
     }
@@ -67,7 +67,7 @@ class CalendarDriver
         $this->sem_events = true;
     }
 
-    function openDatabase($mod, $event_type = '', $start = 0, $end = CALENDAR_END, $except = NULL, $sem_ids = NULL)
+    function openDatabase($mod, $event_type = '', $start = 0, $end = Calendar::CALENDAR_END, $except = NULL, $sem_ids = NULL)
     {
         if ($event_type == '')
             $event_type = 'CALENDAR_EVENTS';
@@ -501,7 +501,7 @@ class CalendarDriver
         return $count;
     }
 
-    function deleteFromDatabase($mod, $event_ids = NULL, $start = 0, $end = CALENDAR_END, $range_id = '')
+    function deleteFromDatabase($mod, $event_ids = NULL, $start = 0, $end = Calendar::CALENDAR_END, $range_id = '')
     {
 
         if ($range_id == '') {

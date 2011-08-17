@@ -86,7 +86,7 @@ class CalendarParser
             return TRUE;
         }
 
-        $_calendar_error->throwError(ERROR_CRITICAL, _("Die Import-Daten konnten nicht verarbeitet werden!"), __FILE__, __LINE__);
+        $_calendar_error->throwError(ErrorHandler::ERROR_CRITICAL, _("Die Import-Daten konnten nicht verarbeitet werden!"), __FILE__, __LINE__);
 
         return FALSE;
     }

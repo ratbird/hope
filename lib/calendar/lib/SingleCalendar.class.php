@@ -32,18 +32,18 @@ class SingleCalendar extends Calendar
             $permission = $this->checkUserPermissions($this->user_id);
         }
         // switch back to the users own calendar, if the user has no permission
-        if ($permission == CALENDAR_PERMISSION_FORBIDDEN) {
+        if ($permission == Calendar::PERMISSION_FORBIDDEN) {
             $this->user_id = $GLOBALS['user']->id;
-            $this->permissions = CALENDAR_PERMISSION_OWN;
+            $this->permissions = Calendar::PERMISSION_OWN;
             $this->user_name = $GLOBALS['auth']->auth['uname'];
             $this->perm_string = _("(schreibberechtigt)");
         } else {
             $this->permission = $permission;
-            if ($permission == CALENDAR_PERMISSION_OWN)
+            if ($permission == Calendar::PERMISSION_OWN)
                 $this->perm_string = _("(schreibberechtigt)");
-            elseif ($permission == CALENDAR_PERMISSION_WRITABLE)
+            elseif ($permission == Calendar::PERMISSION_WRITABLE)
                 $this->perm_string = _("(schreibberechtigt)");
-            elseif ($permission == CALENDAR_PERMISSION_READABLE)
+            elseif ($permission == Calendar::PERMISSION_READABLE)
                 $this->perm_string = _("(leseberechtigt)");
         }
         CalendarDriver::getInstance($this->user_id, $this->permission);
@@ -69,7 +69,7 @@ class SingleCalendar extends Calendar
 
         $this->view = new DbCalendarDay($this, $day_time, NULL, $restrictions, $sem_ids);
 
-        if ($this->havePermission(CALENDAR_PERMISSION_WRITABLE)) {
+        if ($this->havePermission(Calendar::PERMISSION_WRITABLE)) {
             $params = array('precol' => true,
                 'compact' => true,
                 'link_edit' => false,
@@ -92,7 +92,7 @@ class SingleCalendar extends Calendar
         }
 
         $tmpl = $GLOBALS['template_factory']->open('calendar/day');
-        $tmpl->writable = $this->havePermission(CALENDAR_PERMISSION_WRITABLE);
+        $tmpl->writable = $this->havePermission(Calendar::PERMISSION_WRITABLE);
         $tmpl->calendar = $this;
         $tmpl->start = $start_time * 3600;
         $tmpl->end = $end_time * 3600;
@@ -143,17 +143,17 @@ class SingleCalendar extends Calendar
           } else { */
         $this->event = new DbCalendarEvent($this, $event_id);
         // }
-        if ($this->getRange() == CALENDAR_RANGE_SEM || $this->getRange() == CALENDAR_RANGE_INST) {
+        if ($this->getRange() == Calendar::RANGE_SEM || $this->getRange() == Calendar::RANGE_INST) {
             $this->headline = getHeaderLine($this->user_id) . ' - ' . _("Terminkalender - Termin bearbeiten");
-        } else if ($this->checkPermission(CALENDAR_PERMISSION_OWN)) {
+        } else if ($this->checkPermission(Calendar::PERMISSION_OWN)) {
             $this->headline = _("Mein pers&ouml;nlicher Terminkalender - Termin bearbeiten");
         } else {
-            if ($this->event->havePermission(CALENDAR_EVENT_PERM_WRITABLE)) {
+            if ($this->event->havePermission(Event::PERMISSION_WRITABLE)) {
                 $this->headline = sprintf(_("Terminkalender von %s %s - Termin bearbeiten"), get_fullname($this->getUserId()), $this->perm_string);
-            } elseif ($this->event->havePermission(CALENDAR_EVENT_PERM_READABLE)) {
+            } elseif ($this->event->havePermission(Event::PERMISSION_READABLE)) {
                 $this->headline = sprintf(_("Terminkalender von %s %s - Termin-Details"), get_fullname($this->getUserId()), $this->perm_string);
             } else {
-                $_calendar_error->throwError(ERROR_CRITICAL, _("Sie haben keine Berechtigung, diesen Termin einzusehen."));
+                $_calendar_error->throwError(ErrorHandler::ERROR_CRITICAL, _("Sie haben keine Berechtigung, diesen Termin einzusehen."));
             }
         }
     }
@@ -177,10 +177,10 @@ class SingleCalendar extends Calendar
     {
         global $ABSOLUTE_PATH_STUDIP, $RELATIVE_PATH_CHAT;
 
-        if ($this->havePermission(CALENDAR_PERMISSION_WRITABLE)) {
+        if ($this->havePermission(Calendar::PERMISSION_WRITABLE)) {
             $this->event = $event;
             // send a message if it is not the users own calendar
-            if (!$this->checkPermission(CALENDAR_PERMISSION_OWN) && $this->getRange() == CALENDAR_RANGE_USER) {
+            if (!$this->checkPermission(Calendar::PERMISSION_OWN) && $this->getRange() == Calendar::RANGE_USER) {
                 include_once('lib/messaging.inc.php');
                 $message = new messaging();
                 $event_data = '';
@@ -218,17 +218,17 @@ class SingleCalendar extends Calendar
     {
         global $ABSOLUTE_PATH_STUDIP, $RELATIVE_PATH_CHAT;
 
-        if ($this->havePermission(CALENDAR_PERMISSION_WRITABLE)) {
+        if ($this->havePermission(Calendar::PERMISSION_WRITABLE)) {
 
             $this->event = new DbCalendarEvent($this, $event_id);
 
-            if (!$this->event->havePermission(CALENDAR_EVENT_PERM_WRITABLE)) {
+            if (!$this->event->havePermission(Event::PERMISSION_WRITABLE)) {
                 $this->event = NULL;
 
                 return false;
             }
 
-            if (!$this->checkPermission(CALENDAR_PERMISSION_OWN) && $this->getRange() == CALENDAR_RANGE_USER) {
+            if (!$this->checkPermission(Calendar::PERMISSION_OWN) && $this->getRange() == Calendar::RANGE_USER) {
                 include_once('lib/messaging.inc.php');
                 $message = new messaging();
                 $event_data = '';

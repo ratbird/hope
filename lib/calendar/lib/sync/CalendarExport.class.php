@@ -36,7 +36,7 @@ class CalendarExport
         $this->_writer = $writer;
     }
 
-    function exportFromDatabase($range_id = '', $start = 0, $end = CALENDAR_END, $event_types = 'ALL_EVENTS', $sem_ids = NULL, $except = NULL)
+    function exportFromDatabase($range_id = '', $start = 0, $end = Calendar::CALENDAR_END, $event_types = 'ALL_EVENTS', $sem_ids = NULL, $except = NULL)
     {
         global $_calendar_error, $user;
 
@@ -52,16 +52,16 @@ class CalendarExport
         while ($event = $export_driver->nextObject()) {
             if (strtolower(get_class($event)) == 'seminarevent'
                     && !in_array($event->getSeminarId(), $user_sems)) {
-                $event->setPermission(CALENDAR_EVENT_PERM_CONFIDENTIAL);
+                $event->setPermission(Event::PERMISSION_CONFIDENTIAL);
             }
             $this->_export($this->_writer->write($event));
         }
         $this->count = $export_driver->getCount();
 
         if ($this->count == 0) {
-            $_calendar_error->throwError(ERROR_MESSAGE, _("Es wurden keine Termine exportiert."));
+            $_calendar_error->throwError(ErrorHandler::ERROR_MESSAGE, _("Es wurden keine Termine exportiert."));
         } else {
-            $_calendar_error->throwError(ERROR_MESSAGE, sprintf(_("Es wurden %s Termine exportiert"), $export_driver->getCount()));
+            $_calendar_error->throwError(ErrorHandler::ERROR_MESSAGE, sprintf(_("Es wurden %s Termine exportiert"), $export_driver->getCount()));
         }
 
         $this->_export($this->_writer->writeFooter());
@@ -80,9 +80,9 @@ class CalendarExport
         }
 
         if (!sizeof($events)) {
-            $_calendar_error->throwError(ERROR_MESSAGE, _("Es wurden keine Termine exportiert."));
+            $_calendar_error->throwError(ErrorHandler::ERROR_MESSAGE, _("Es wurden keine Termine exportiert."));
         } else {
-            $_calendar_error->throwError(ERROR_MESSAGE, sprintf(_("Es wurden %s Termine exportiert"), sizeof($events)));
+            $_calendar_error->throwError(ErrorHandler::ERROR_MESSAGE, sprintf(_("Es wurden %s Termine exportiert"), sizeof($events)));
         }
 
         $this->_export($this->_writer->writeFooter());

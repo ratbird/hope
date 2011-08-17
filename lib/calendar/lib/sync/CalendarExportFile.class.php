@@ -48,7 +48,7 @@ class CalendarExportFile extends CalendarExport
         $this->_writer = $writer;
     }
 
-    function exportFromDatabase($range_id = '', $start = 0, $end = CALENDAR_END, $event_types = 'ALL_EVENTS', $sem_ids = NULL, $except = NULL)
+    function exportFromDatabase($range_id = '', $start = 0, $end = Calendar::CALENDAR_END, $event_types = 'ALL_EVENTS', $sem_ids = NULL, $except = NULL)
     {
 
         $this->_createFile();
@@ -71,7 +71,7 @@ class CalendarExportFile extends CalendarExport
         if (file_exists($this->path . $this->tmp_file_name)) {
             header('Location: ' . GetDownloadLink($this->tmp_file_name, $this->file_name, 2, 'force'));
         } else {
-            $_calendar_error->throwError(ERROR_FATAL, _("Die Export-Datei konnte nicht erstellt werden!"), __FILE__, __LINE__);
+            $_calendar_error->throwError(ErrorHandler::ERROR_FATAL, _("Die Export-Datei konnte nicht erstellt werden!"), __FILE__, __LINE__);
         }
     }
 
@@ -106,22 +106,22 @@ class CalendarExportFile extends CalendarExport
 
         if (!(is_dir($this->path))) {
             if (!mkdir($this->path)) {
-                $_calendar_error->throwError(ERROR_FATAL, _("Das Export-Verzeichnis konnte nicht angelegt werden!"), __FILE__, __LINE__);
+                $_calendar_error->throwError(ErrorHandler::ERROR_FATAL, _("Das Export-Verzeichnis konnte nicht angelegt werden!"), __FILE__, __LINE__);
             } else {
                 if (!chmod($this->path, 0777)) {
-                    $_calendar_error->throwError(ERROR_FATAL, _("Die Zugriffsrechte auf das Export-Verzeichnis konnten nicht ge&auml;ndert werden!")
+                    $_calendar_error->throwError(ErrorHandler::ERROR_FATAL, _("Die Zugriffsrechte auf das Export-Verzeichnis konnten nicht ge&auml;ndert werden!")
                             , __FILE__, __LINE__);
                 }
             }
         }
         if (file_exists($this->path . $this->tmp_file_name)) {
             if (!unlink($this->path . $this->tmp_file_name)) {
-                $_calendar_error->throwError(ERROR_FATAL, _("Eine bestehende Export-Datei konnte nicht gel&ouml;scht werden!"), __FILE__, __LINE__);
+                $_calendar_error->throwError(ErrorHandler::ERROR_FATAL, _("Eine bestehende Export-Datei konnte nicht gel&ouml;scht werden!"), __FILE__, __LINE__);
             }
         }
         $this->export = fopen($this->path . $this->tmp_file_name, "wb");
         if (!$this->export) {
-            $_calendar_error->throwError(ERROR_FATAL, _("Die Export-Datei konnte nicht erstellt werden!"), __FILE__, __LINE__);
+            $_calendar_error->throwError(ErrorHandler::ERROR_FATAL, _("Die Export-Datei konnte nicht erstellt werden!"), __FILE__, __LINE__);
         }
     }
 

@@ -56,7 +56,7 @@ SkipLinks::addIndex(_("Tagesansicht"), 'main_content', 100);
                     <tr>
                         <td width="<?= $width2 ?>%" nowrap="nowrap" class="month">
                             <span class="precol2">
-                                <a class="calhead" href="<?= URLHelper::getLink('', array('cmd' => 'showday', 'atime' => $atime, 'cal_select' => 'user.' . get_username($calendar->getUserId()))); ?>"><?= htmlReady(($calendar->checkPermission(CALENDAR_PERMISSION_OWN) ? _("Eigener Kalender") : get_fullname($calendar->getUserId(), 'no_title_short'))) ?></a>
+                                <a class="calhead" href="<?= URLHelper::getLink('', array('cmd' => 'showday', 'atime' => $atime, 'cal_select' => 'user.' . get_username($calendar->getUserId()))); ?>"><?= htmlReady(($calendar->checkPermission(Calendar::PERMISSION_OWN) ? _("Eigener Kalender") : get_fullname($calendar->getUserId(), 'no_title_short'))) ?></a>
                             </span>
                         </td>
                         <? // display day events
@@ -69,7 +69,7 @@ SkipLinks::addIndex(_("Tagesansicht"), 'main_content', 100);
                         <? else : ?>
                             <td width="<?= $width1 ?>%" class="lightmonth" align="right">
                         <? endif ?>
-                        <? if ($calendar->havePermission(CALENDAR_PERMISSION_WRITABLE)) : ?>
+                        <? if ($calendar->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
                                 <a href="<?= URLHelper::getLink('', array('cmd' => 'edit', 'atime' => $atime, 'devent' => '1', 'cal_select' => get_username($calendar->getUserId()))) ?>">
                                     <?= Assets::img('calplus.gif', tooltip2(_("neuer Tagestermin"))) ?>
                                 </a>
@@ -97,7 +97,7 @@ SkipLinks::addIndex(_("Tagesansicht"), 'main_content', 100);
                                 <td width="<?= $width1 ?>%" align="right" class="<?= (($k % 2) ? 'month' : 'lightmonth') ?>">
                             <? endif ?>
 
-                            <? if ($calendar->havePermission(CALENDAR_PERMISSION_WRITABLE)) : ?>
+                            <? if ($calendar->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
                                 <a href="<?= URLHelper::getLink('', array('cmd' => 'edit', 'atime' => $i, 'cal_select' => 'user.' . get_username($calendar->getUserId()))) ?>">
                                     <?= Assets::img('calplus.gif', tooltip2(strftime(_("neuer Termin um %R Uhr"), $i))) ?>
                                 </a>

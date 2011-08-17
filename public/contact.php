@@ -101,7 +101,7 @@ if ($cmd == "changebuddy") {
 // change calendar permissions
 if (!is_null(Request::get('calperm')))  {
     if (Config::get()->getValue('CALENDAR_GROUP_ENABLE')) {
-        switch_member_cal(Request::get('user_id'), Request::get('calperm', CALENDAR_PERMISSION_FORBIDDEN));
+        switch_member_cal(Request::get('user_id'), Request::get('calperm', Calendar::PERMISSION_FORBIDDEN));
     }
 }
 

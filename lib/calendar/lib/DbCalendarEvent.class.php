@@ -38,7 +38,7 @@ class DbCalendarEvent extends CalendarEvent
     // public
     function save()
     {
-        if (!$this->havePermission(CALENDAR_EVENT_PERM_WRITABLE)) {
+        if (!$this->havePermission(Event::PERMISSION_WRITABLE)) {
             return false;
         }
 
@@ -52,7 +52,7 @@ class DbCalendarEvent extends CalendarEvent
     // public
     function delete()
     {
-        if ($this->havePermission(CALENDAR_EVENT_PERM_WRITABLE)) {
+        if ($this->havePermission(Event::PERMISSION_WRITABLE)) {
             return $this->driver->deleteObjectsFromDatabase($this);
         }
 
@@ -71,7 +71,7 @@ class DbCalendarEvent extends CalendarEvent
 
     function update($new_event)
     {
-        if ($this->havePermission(CALENDAR_EVENT_PERM_WRITABLE)) {
+        if ($this->havePermission(Event::PERMISSION_WRITABLE)) {
             return false;
         }
 

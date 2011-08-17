@@ -808,7 +808,7 @@ function info_icons(&$event)
     global $CANONICAL_RELATIVE_PATH_STUDIP;
 
     $out = '';
-    if ($event->havePermission(CALENDAR_EVENT_PERM_READABLE) && (strtolower(get_class($event)) == 'seminarcalendarevent' || strtolower(get_class($event)) == 'seminarevent')) {
+    if ($event->havePermission(Event::PERMISSION_READABLE) && (strtolower(get_class($event)) == 'seminarcalendarevent' || strtolower(get_class($event)) == 'seminarevent')) {
         $out .= "<img src=\"{$GLOBALS['ASSETS_URL']}images/projectevent-icon.gif\" ";
         $out .= "border=\"0\"" . tooltip(_("Veranstaltungstermin") . ' - ' . $event->getSemName()) . " valign>";
     }

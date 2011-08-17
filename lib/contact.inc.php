@@ -458,9 +458,9 @@ function ShowEditContact ($contact_id)
             $css_switcher->switchClass();
             $output .= '<input type="hidden" name="user_id" value="' . $result['user_id'] . '">';
             $output .= '<tr><td class="' . $css_switcher->getClass() . '">&nbsp;' . _("Mein Kalender ist für diese Person:") . '</td><td colspan="2" class="' . $css_switcher->getClass() . '" width="250">';
-            $output .= '<label><input type="radio" name="calperm" value="' . CALENDAR_PERMISSION_FORBIDDEN . '"' . (!$cal_perm['calpermission'] || $cal_perm['calpermission'] == CALENDAR_PERMISSION_FORBIDDEN ? ' checked="checked"' : '') . '>' . _("unsichtbar") . '</label>';
-            $output .= '<label><input type="radio" name="calperm" value="' . CALENDAR_PERMISSION_READABLE . '"' . ($cal_perm['calpermission'] == CALENDAR_PERMISSION_READABLE ? ' checked="checked"' : '') . '>' . _("sichtbar") . '</label>';
-            $output .= '<label><input type="radio" name="calperm" value="' . CALENDAR_PERMISSION_WRITABLE . '"' . ($cal_perm['calpermission'] == CALENDAR_PERMISSION_WRITABLE ? ' checked="checked"' : '') . '>' . _("schreibbar") . '</label>';
+            $output .= '<label><input type="radio" name="calperm" value="' . Calendar::PERMISSION_FORBIDDEN . '"' . (!$cal_perm['calpermission'] || $cal_perm['calpermission'] == Calendar::PERMISSION_FORBIDDEN ? ' checked="checked"' : '') . '>' . _("unsichtbar") . '</label>';
+            $output .= '<label><input type="radio" name="calperm" value="' . Calendar::PERMISSION_READABLE . '"' . ($cal_perm['calpermission'] == Calendar::PERMISSION_READABLE ? ' checked="checked"' : '') . '>' . _("sichtbar") . '</label>';
+            $output .= '<label><input type="radio" name="calperm" value="' . Calendar::PERMISSION_WRITABLE . '"' . ($cal_perm['calpermission'] == Calendar::PERMISSION_WRITABLE ? ' checked="checked"' : '') . '>' . _("schreibbar") . '</label>';
         }
         $db2 = DBManager::get()->prepare('SELECT * FROM contact_userinfo WHERE contact_id = ? ORDER BY priority');
         $db2->execute(array($contact_id));
@@ -648,7 +648,7 @@ function PrintAllContact($filter="")
 
 // set the permission for the own calendar for the contact with the given user_id
 function switch_member_cal ($user_id, $permission) {
-    if (in_array($permission, array(CALENDAR_PERMISSION_FORBIDDEN, CALENDAR_PERMISSION_READABLE, CALENDAR_PERMISSION_WRITABLE))) {
+    if (in_array($permission, array(Calendar::PERMISSION_FORBIDDEN, Calendar::PERMISSION_READABLE, Calendar::PERMISSION_WRITABLE))) {
         $stmt = DBManager::get()->prepare('UPDATE contact SET calpermission = ? WHERE owner_id = ? AND user_id = ?');
         $stmt->execute(array($permission, $GLOBALS['user']->id, $user_id));
     }

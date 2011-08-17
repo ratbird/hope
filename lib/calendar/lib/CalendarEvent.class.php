@@ -84,7 +84,7 @@ class CalendarEvent extends Event
     {
         global $PERS_TERMIN_KAT;
 
-        if ($this->permission == CALENDAR_EVENT_PERM_CONFIDENTIAL) {
+        if ($this->permission == Event::PERMISSION_CONFIDENTIAL) {
             return '';
         }
 
@@ -154,7 +154,7 @@ class CalendarEvent extends Event
 
     function toStringPriority()
     {
-        if ($this->permission == CALENDAR_EVENT_PERM_CONFIDENTIAL) {
+        if ($this->permission == Event::PERMISSION_CONFIDENTIAL) {
             return '';
         }
         switch ($this->properties['PRIORITY']) {
@@ -373,8 +373,8 @@ class CalendarEvent extends Event
                 $r_rule['count'] = 0;
         }
 
-        if (!$r_rule['expire'] || $r_rule['expire'] > CALENDAR_END)
-            $r_rule['expire'] = CALENDAR_END;
+        if (!$r_rule['expire'] || $r_rule['expire'] > Calendar::CALENDAR_END)
+            $r_rule['expire'] = Calendar::CALENDAR_END;
 
         return array(
             'ts' => $rrule[0],
@@ -406,7 +406,7 @@ class CalendarEvent extends Event
     {
         global $PERS_TERMIN_KAT;
 
-        if ($this->permission == CALENDAR_EVENT_PERM_CONFIDENTIAL)
+        if ($this->permission == Event::PERMISSION_CONFIDENTIAL)
             return 255;
 
         if ($this->properties['STUDIP_CATEGORY'])

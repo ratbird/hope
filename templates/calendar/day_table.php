@@ -45,7 +45,7 @@ $em = createEventMatrix($calendar->view, $start, $end, $step);
     <td class="steel1" style="text-align:right; vertical-align:bottom; width:91%;"<?= (($em['max_cols'] > 0) ? ' colspan="' . ($em['max_cols'] + 1) . '"' : '') ?>>
 <? endif ?>
 <?= $this->render_partial('calendar/_day_dayevents', array('em' => $em)); ?>
-    <? if ($calendar->havePermission(CALENDAR_PERMISSION_WRITABLE)) : ?>
+    <? if ($calendar->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
         <div>
             <a href="<?= URLHelper::getLink('',  array('cmd' => 'edit', 'atime' => $calendar->view->getTs(), 'devent' => '1')) ?>">
                 <img src="<?= Assets::image_path('calplus.gif') ?>"<?= tooltip(_("neuer Tagestermin")) ?>>

@@ -32,36 +32,37 @@ class Course_RoomRequestsController extends AuthenticatedController
 
         $course_id = $args[0];
         $this->course_id = Request::option('cid', $course_id);
+        //$course_id == '-' means dialog called from Assi
+        if ($course_id != '-') {
+            if ($perm->have_perm('admin')) {
+                //Navigation im Admin-Bereich:
+                Navigation::activateItem('/admin/course/room_requests');
+            } else {
+                //Navigation in der Veranstaltung:
+                Navigation::activateItem('/course/admin/room_requests');
+            }
 
-        if ($perm->have_perm('admin')) {
-            //Navigation im Admin-Bereich:
-            Navigation::activateItem('/admin/course/room_requests');
-        } else {
-            //Navigation in der Veranstaltung:
-            Navigation::activateItem('/course/admin/room_requests');
+            if (!$this->course_id) {
+                PageLayout::setTitle(_("Verwaltung von Raumanfragen"));
+                $GLOBALS['view_mode'] = "sem";
+
+                require_once 'lib/admin_search.inc.php';
+
+                include 'lib/include/html_head.inc.php';
+                include 'lib/include/header.php';
+                include 'lib/include/admin_search_form.inc.php';  // will not return
+                die(); //must not return
+            }
+
+            if (!get_object_type($this->course_id, array('sem')) ||
+                SeminarCategories::GetBySeminarId($this->course_id)->studygroup_mode ||
+                !$perm->have_studip_perm("tutor", $this->course_id)) {
+                throw new Trails_Exception(400);
+            }
+
+            PageLayout::setHelpKeyword("Basis.VeranstaltungenVerwaltenAendernVonZeitenUndTerminen");
+            PageLayout::setTitle(getHeaderLine($this->course_id)." - " ._("Verwaltung von Raumanfragen"));
         }
-
-        if (!$this->course_id) {
-            PageLayout::setTitle(_("Verwaltung von Raumanfragen"));
-            $GLOBALS['view_mode'] = "sem";
-
-            require_once 'lib/admin_search.inc.php';
-
-            include 'lib/include/html_head.inc.php';
-            include 'lib/include/header.php';
-            include 'lib/include/admin_search_form.inc.php';  // will not return
-            die(); //must not return
-        }
-
-        if (!get_object_type($this->course_id, array('sem')) ||
-            SeminarCategories::GetBySeminarId($this->course_id)->studygroup_mode ||
-            !$perm->have_studip_perm("tutor", $this->course_id)) {
-            throw new Trails_Exception(400);
-        }
-
-        PageLayout::setHelpKeyword("Basis.VeranstaltungenVerwaltenAendernVonZeitenUndTerminen");
-        PageLayout::setTitle(getHeaderLine($this->course_id)." - " ._("Verwaltung von Raumanfragen"));
-
     }
 
     /**
@@ -93,10 +94,21 @@ class Course_RoomRequestsController extends AuthenticatedController
             $request->seminar_id = $this->course_id;
             $request->user_id = $GLOBALS['user']->id;
             list($new_type, $id) = explode('_', Request::option('new_room_request_type'));
+            if ($new_type == 'course') {
+                if ($existing_request = RoomRequest::existsByCourse($this->course_id)) {
+                    $request = RoomRequest::find($existing_request);
+                }
+            }
             if ($new_type == 'date') {
                 $request->termin_id = $id;
+                if ($existing_request = RoomRequest::existsByDate($id)) {
+                    $request = RoomRequest::find($existing_request);
+                }
             } elseif ($new_type == 'cycle') {
                 $request->metadate_id = $id;
+                if ($existing_request = RoomRequest::existsByCycle($id)) {
+                    $request = RoomRequest::find($existing_request);
+                }
             }
         } else {
             $request = RoomRequest::find(Request::option('request_id'));
@@ -123,13 +135,64 @@ class Course_RoomRequestsController extends AuthenticatedController
         if (!$request->getCategoryId() && count($room_categories) == 1) {
             $request->setCategoryId($room_categories[0]['category_id ']);
         }
-
         $this->search_result = $attributes['search_result'];
         $this->search_by_properties = $attributes['search_by_properties'];
         $this->admission_turnout = $admission_turnout;
         $this->request = $request;
         $this->room_categories = $room_categories;
         $this->new_room_request_type = Request::option('new_room_request_type');
+    }
+
+    function edit_dialog_action()
+    {
+        if (Request::isXhr()) {
+            foreach((array)$_REQUEST as $k => $v) {
+                if (is_array($v)) {
+                    array_walk_recursive(&$v, create_function('&$v', 'if (!is_array($v)) $v = studip_utf8decode($v);'));
+                    Request::set($k, $v);
+                } else {
+                    Request::set($k, studip_utf8decode($v));
+                }
+            }
+            if ($this->course_id != '-') {
+                $this->edit_action();
+                $title = PageLayout::getTitle();
+            } else {
+                $sem_create_data =& $_SESSION['sem_create_data'];
+                    if (Request::option('new_room_request_type')) {
+                        if ( $sem_create_data['room_requests'][Request::option('new_room_request_type')] instanceof RoomRequest) {
+                            $request = $sem_create_data['room_requests'][Request::option('new_room_request_type')];
+                        } else {
+                            $request = new RoomRequest();
+                            $request->seminar_id = '-';
+                            $sem_create_data['room_requests'][Request::option('new_room_request_type')] = $request;
+                            $request->user_id = $GLOBALS['user']->id;
+                            list($new_type, $id) = explode('_', Request::option('new_room_request_type'));
+                            if ($new_type == 'date') {
+                                $request->termin_id = Request::option('new_room_request_type');
+                            } elseif ($new_type == 'cycle') {
+                                $request->metadate_id = Request::option('new_room_request_type');
+                            }
+                        }
+                        $room_request_form_attributes = self::process_form($request, $sem_create_data['sem_turnout']);
+                        $this->search_result = $room_request_form_attributes['search_result'];
+                        $this->search_by_properties = $room_request_form_attributes['search_by_properties'];
+                        $this->admission_turnout = $sem_create_data['sem_turnout'];
+                        $this->request = $request;
+                        $this->room_categories = array_filter(getResourcesCategories(), create_function('$a', 'return $a["is_room"] == 1;'));
+                        $this->new_room_request_type = Request::option('new_room_request_type');
+                        $title = _("Verwaltung von Raumanfragen");
+                    }
+                }
+
+            $this->render_template('course/room_requests/edit_dialog.php', null);
+            $this->flash->discard();
+            $content = $this->get_response()->body;
+            $this->erase_response();
+            return $this->render_json(array('title' => studip_utf8encode($title), 'content' => studip_utf8encode($content)));
+        } else {
+            return $this->render_text('');
+        }
     }
 
     /**
@@ -257,5 +320,10 @@ class Course_RoomRequestsController extends AuthenticatedController
         }
         $link = UrlHelper::getLink($this->dispatcher->trails_uri . '/' . $whereto, $params);
         return $link;
+    }
+
+    function render_json($data){
+        $this->set_content_type('application/json;charset=utf-8');
+        return $this->render_text(json_encode($data));
     }
 }

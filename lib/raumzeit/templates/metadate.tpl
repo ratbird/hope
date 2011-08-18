@@ -127,7 +127,7 @@ if (!$sd_open[$tpl['md_id']] || $_LOCKED) { ?>
                         <? if($GLOBALS['RESOURCES_ENABLE'] && $GLOBALS['RESOURCES_ALLOW_ROOM_REQUESTS']) : ?>
                         <div style="padding-top:2px">
                         <?=_("Raumanfrage")?>
-                        <A href="<?= URLHelper::getLink('dispatch.php/course/room_requests/edit/' .$tpl['seminar_id'], $tpl['room_request'] ? array('request_id' => $tpl['room_request']->request_id) : array('new_room_request_type' => 'cycle_' . $tpl['md_id'])) ?>">
+                        <A onClick="STUDIP.RoomRequestDialog.initialize(this.href.replace('edit','edit_dialog'));return false;" href="<?= URLHelper::getLink('dispatch.php/course/room_requests/edit/' .$tpl['seminar_id'], $tpl['room_request'] ? array('request_id' => $tpl['room_request']->request_id) : array('new_room_request_type' => 'cycle_' . $tpl['md_id'])) ?>">
                             <?=($tpl['room_request']) ? makebutton('bearbeiten', 'img') : makebutton('erstellen', 'img')?>
                         </A>
                         <? if ($tpl['room_request']) { ?>

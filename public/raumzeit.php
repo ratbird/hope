@@ -553,12 +553,12 @@ if ($perm->have_studip_perm("admin",$sem->getId())) {
                         <?= _("Raumanfrage") ?>
                             <? if ($request_status && $request_status == 'open') {
                             ?>
-                            <a href="<?= URLHelper::getLink('dispatch.php/course/room_requests/edit/' . $sem->getId(), array('request_id' => RoomRequest::existsByCourse($id))) ?>">
+                            <a onClick="STUDIP.RoomRequestDialog.initialize(this.href.replace('edit','edit_dialog'));return false;" href="<?= URLHelper::getLink('dispatch.php/course/room_requests/edit/' . $sem->getId(), array('request_id' => RoomRequest::existsByCourse($id))) ?>">
                                 <?= makebutton('bearbeiten') ?>
                             <?
                             } else {
                             ?>
-                                <a href="<?= URLHelper::getLink('dispatch.php/course/room_requests/edit/' . $sem->getId(), array('new_room_request_type' => 'course')) ?>">
+                                <a onClick="STUDIP.RoomRequestDialog.initialize(this.href.replace('edit','edit_dialog'));return false;" href="<?= URLHelper::getLink('dispatch.php/course/room_requests/edit/' . $sem->getId(), array('new_room_request_type' => 'course')) ?>">
                                 <?= makebutton('erstellen') ?>
                             <?
                             } ?>

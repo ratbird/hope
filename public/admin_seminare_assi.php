@@ -3338,7 +3338,7 @@ if ($level == 4) {
                                 echo "><br><br>";
                             }
                             ?>
-                            <div>
+                            <noscript>
                             <label for="new_room_request_type"><?= _("Art der Raumanfrage:")?></label>
                             <select onChange="jQuery('input[name=room_request_choose]')[0].click();" id="new_room_request_type" name="new_room_request_type">
                             <? foreach ($room_requests_options as $one) :?>
@@ -3347,9 +3347,7 @@ if ($level == 4) {
                             </option>
                             <? endforeach ?>
                             </select>
-                                <?= makeButton('auswaehlen', 'input', _("einen anderen Anfragetyp bearbeiten"), 'room_request_choose')?>
-                            </div>
-
+                            <?= makeButton('auswaehlen', 'input', _("einen anderen Anfragetyp bearbeiten"), 'room_request_choose')?>
                             <?
                             $current_request_type = Request::option('new_room_request_type', 'course');
                             $form_attributes = array('admission_turnout' => $sem_create_data['sem_turnout'],
@@ -3364,6 +3362,32 @@ if ($level == 4) {
                             echo $factory->render('course/room_requests/_form.php', $form_attributes);
                             echo '<div style="text-align:center">' . makeButton('uebernehmen', 'input', _("Eingaben zur Raumanfrage speichern"),'room_request_save'). '</div>';
                             printf('<input type="hidden" name="current_room_request_type" value="%s">', $current_request_type);
+                            ?>
+                            </noscript>
+                            <div id="assi_room_request_with_js" style="display:none;margin-bottom:10px;width:75%">
+                                <table class="default">
+                                    <tr>
+                                        <th><?= _('Art der Anfrage') ?></th>
+                                        <th><?= _('Bearbeiten') ?></th>
+                                    </tr>
+                                    <? foreach ($room_requests_options as $one): ?>
+                                    <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+                                        <td>
+                                        <?=htmlReady($one['name'])?>
+                                        </td>
+                                        <td style="text-align:center;white-space: nowrap">
+                                        <a onClick="STUDIP.RoomRequestDialog.initialize('<?=URLHelper::getLink('dispatch.php/course/room_requests/edit_dialog/-', array('new_room_request_type' => $one['value']))?>');return false;" href="#">
+                                            <?= Assets::img('icons/16/blue/edit.png', array('title' => _('Diese Anfrage bearbeiten'))) ?>
+                                        </a>
+                                        </td>
+                                    </tr>
+                                    <? endforeach ?>
+                                </table>
+                            </div>
+                            <script>
+                                jQuery('#assi_room_request_with_js').show();
+                            </script>
+                            <?
                     }
                     if ($RESOURCES_ENABLE && $resList->roomsExist() &&
                         (((is_array($sem_create_data["metadata_termin"]["turnus_data"])) && ($sem_create_data["term_art"] == 0))

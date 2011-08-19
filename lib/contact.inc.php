@@ -68,14 +68,18 @@ function MakeUniqueUserinfoID ()
     RETURN $tmp_id;
 }
 
+/**
+ * Toggles the buddy-flag for the passed contact
+ *
+ * @param  string  $contact_id the md5-hash of the contact (not the user_id!)
+ * @return bool
+ */
 function ChangeBuddy($contact_id)
 {
-    $db=new DB_Seminar;
-    $db->query ("SELECT buddy FROM contact WHERE contact_id = '$contact_id'");
-    while ($db->next_record()) {
-        $buddynew = abs($db->f("buddy")-1);  //setzt buddy auf den anderen Wert
-        $db->query("UPDATE contact SET buddy=$buddynew WHERE contact_id = '$contact_id'");
-    }
+    $stmt = DBManager::get()->prepare('UPDATE contact '
+          . 'SET buddy = IF(buddy = 1, 0, 1) '
+          . 'WHERE contact_id = ?');
+    return $stmt->execute(array($contact_id));
 }
 
 function RemoveBuddy($username)
@@ -421,15 +425,16 @@ function ShowContact ($contact_id)
  * @param  string  $search_exp  the search string to search for
  * @return string  a HTML select-box containing all results
  */
-function SearchResults ($search_exp) {
+function SearchResults ($search_exp)
+{
 
     $stmt = DBManager::get()->prepare($query = 'SELECT DISTINCT auth_user_md5.user_id, '
-        . $GLOBALS['_fullname_sql']['full_rev'] .' AS fullname, username, perms '
-        . 'FROM auth_user_md5 '
-        . 'LEFT JOIN user_info USING (user_id) '
-        . 'WHERE user_id != :user_id AND (Vorname LIKE :search_exp OR Nachname LIKE :search_exp '
-        . 'OR username LIKE :search_exp) AND ' . get_vis_query()
-        . 'ORDER BY Nachname');
+          . $GLOBALS['_fullname_sql']['full_rev'] .' AS fullname, username, perms '
+          . 'FROM auth_user_md5 '
+          . 'LEFT JOIN user_info USING (user_id) '
+          . 'WHERE user_id != :user_id AND (Vorname LIKE :search_exp OR Nachname LIKE :search_exp '
+          . 'OR username LIKE :search_exp) AND ' . get_vis_query()
+          . 'ORDER BY Nachname');
 
     $search_for = '%'. $search_exp .'%';
     $stmt->bindParam(':search_exp', $search_for);

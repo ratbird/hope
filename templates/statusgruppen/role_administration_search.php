@@ -16,7 +16,11 @@
         </option>
         <? endforeach; ?>
     </select>
-    <input type="image" valign="bottom" name="search" src="<?= Assets::image_path('icons/16/blue/refresh.png') ?>" value="<?=_("Personen suchen")?>" <?= tooltip(_("neue Suche")) ?>>&nbsp;
+    <a href="<?= URLHelper::getLink("?role_id=$role_id&refresh=true#$anker") ?>">
+        <?= Assets::img('icons/16/blue/refresh.png', array(
+            'title' => _('neue Suche')
+        )) ?>
+    </a>
     <br><br>
     <input type="hidden" name="cmd" value="addPersonsToRoleSearch">
     <input type="image" <?=makebutton('eintragen', 'src')?>>

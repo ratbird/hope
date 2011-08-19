@@ -73,6 +73,7 @@ $visible_users=array();
 $myDomains = UserDomain::getUserDomainsForUser($user->id);
 
 foreach($kompletter_datensatz as $key=>$val){
+    $val['username'] = $key;
     $global_visibility = get_global_visibility_by_id($val['userid']);
     $domains = UserDomain::getUserDomainsForUser($val['userid']);
     if (count($domains) && $global_visibility == 'yes') {
@@ -178,7 +179,7 @@ ob_start();
 
     foreach($other_users as $username=>$value) {
         $user_id = $value["userid"];
-            $n_buddies[]=array($other_users[$username]["name"],$other_users[$username]["last_action"],$username,$user_id);
+            $n_buddies[]=array($other_users[$username]["name"],$other_users[$username]["last_action"],$other_users[$username]["username"],$user_id);
     }
 
 

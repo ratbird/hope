@@ -413,24 +413,43 @@ function ShowContact ($contact_id)
     return $output;
 }
 
-function SearchResults ($search_exp)
-{ global $SessSemName, $_fullname_sql,$_range_type;
-    $db=new DB_Seminar;
-    $query = "SELECT DISTINCT auth_user_md5.user_id, ".$_fullname_sql["full_rev"]." AS fullname, username, perms ".
-        "FROM auth_user_md5 LEFT JOIN user_info USING (user_id) ".
-        "WHERE (Vorname LIKE '%$search_exp%' OR Nachname LIKE '%$search_exp%' OR username LIKE '%$search_exp%') ORDER BY Nachname ";
+/**
+ * Search for an user containing the passed string in his first name, last name
+ * or username, excluding the searching user itself an all invisible users
+ * Returns a HTML select-box
+ *
+ * @param  string  $search_exp  the search string to search for
+ * @return string  a HTML select-box containing all results
+ */
+function SearchResults ($search_exp) {
 
-    $db->query($query); // results all users which are not in the seminar
-    if (!$db->num_rows()) {
-        $msg = false;
-    } else {
-        $msg = "&nbsp; <select name=\"Freesearch\">";
-        while ($db->next_record()) {
-            $msg .= sprintf ("<option value=\"%s\">%s - %s\n", $db->f("username"), htmlReady(my_substr($db->f("fullname"),0,35)." (".$db->f("username").")"), $db->f("perms"));
-        }
-        $msg .=  "</select>";
+    $stmt = DBManager::get()->prepare($query = 'SELECT DISTINCT auth_user_md5.user_id, '
+        . $GLOBALS['_fullname_sql']['full_rev'] .' AS fullname, username, perms '
+        . 'FROM auth_user_md5 '
+        . 'LEFT JOIN user_info USING (user_id) '
+        . 'WHERE user_id != :user_id AND (Vorname LIKE :search_exp OR Nachname LIKE :search_exp '
+        . 'OR username LIKE :search_exp) AND ' . get_vis_query()
+        . 'ORDER BY Nachname');
+
+    $search_for = '%'. $search_exp .'%';
+    $stmt->bindParam(':search_exp', $search_for);
+    $stmt->bindParam(':user_id', $GLOBALS['user']->id);
+    $stmt->execute();
+
+    $ret = false;
+
+    while ($data = $stmt->fetch()) {
+        $ret .= sprintf ('<option value="%s">%s - %s'. "\n",
+            $data['username'],
+            htmlReady(my_substr($data['fullname'], 0, 35) .' ('. $data['username'] . ')'),
+            $data['perms']);
     }
-    return $msg;
+
+    if (strlen($ret)) {
+        $ret = '<select name="Freesearch">' . $ret . '</select>';
+    }
+
+    return $ret;
 }
 
 function ShowEditContact ($contact_id)

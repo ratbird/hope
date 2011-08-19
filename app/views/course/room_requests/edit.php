@@ -1,11 +1,10 @@
-<?php
-
-?>
 <h3><?=sprintf(_("Raumanfrage \"%s\" bearbeiten"), htmlready($request->getTypeExplained()))?></h3>
 <form method="POST" name="room_request" action="<?=$this->controller->link_for('edit/' . $course_id, array('request_id' => $request->getId()))?>">
 <?= CSRFProtection::tokenTag() ?>
 <?
-echo $this->render_partial('course/room_requests/_form.php', array('submit' => makeButton('uebernehmen','input',_("Änderungen speichern"),'save')));
+$buttons = '<span>' . makeButton('uebernehmen','input',_("Änderungen speichern"),'save') . '</span>';
+$buttons .= '<span style="padding-left:1em"><a href="'.$controller->link_for('index/'.$course_id).'">' . makeButton('abbrechen','img',_("Abbrechen")) . '</a></span>';
+echo $this->render_partial('course/room_requests/_form.php', array('submit' => $buttons));
 echo '</form>';
 $infobox_content = array(
     array(

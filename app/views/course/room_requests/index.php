@@ -8,8 +8,8 @@ echo $flash['message'];
     <table class="default">
         <tr>
             <th width="50%"><?= _('Art der Anfrage') ?></th>
-            <th width="20%"><?= _('Anfragender') ?></th>
-            <th width="20%"><?= _('Bearbeitungsstatus')?></th>
+            <th width="15%"><?= _('Anfragender') ?></th>
+            <th width="25%"><?= _('Bearbeitungsstatus')?></th>
             <th style="text-align:center"><?= _('Aktionen') ?></th>
         </tr>
     <? foreach ($room_requests as $rr): ?>
@@ -23,21 +23,23 @@ echo $flash['message'];
         <td>
         <?=htmlReady($rr->getStatusExplained())?>
         </td>
-        <td style="text-align:center; white-space: nowrap">
-        <a class="load-in-new-row" href="<?= $controller->link_for('index/'.$course_id, array('request_id' => $rr->getId())) ?>">
-            <?= Assets::img('icons/16/blue/info.png', array('title' => _('Weitere Informationen einblenden'))) ?>
-        </a>
-        <a href="<?= $controller->link_for('edit/'.$course_id, array('request_id' => $rr->getId())) ?>">
-            <?= Assets::img('icons/16/blue/edit.png', array('title' => _('Diese Anfrage bearbeiten'))) ?>
-        </a>
-        <? if (getGlobalPerms($GLOBALS['user']->id) || count(getMyRoomRequests(null, null, true, $rr->getId()))) : ?>
-            <a href="<?= UrlHelper::getLink('resources.php', array('view' => 'edit_request', 'single_request' => $rr->getId())) ?>">
-                <?= Assets::img('icons/16/blue/admin.png', array('title' => _('Diese Anfrage selbst auflösen'))) ?>
+        <td>
+        <div style="width:100px;text-align:right;white-space: nowrap">
+            <a class="load-in-new-row" href="<?= $controller->link_for('index/'.$course_id, array('request_id' => $rr->getId())) ?>">
+                <?= Assets::img('icons/16/blue/info.png', array('title' => _('Weitere Informationen einblenden'))) ?>
             </a>
-        <? endif ?>
-        <a href="<?= $controller->link_for('delete/'.$course_id, array('request_id' => $rr->getId())) ?>">
-            <?= Assets::img('icons/16/blue/trash.png', array('title' => _('Diese Anfrage zurückziehen'))) ?>
-        </a>
+            <a href="<?= $controller->link_for('edit/'.$course_id, array('request_id' => $rr->getId())) ?>">
+                <?= Assets::img('icons/16/blue/edit.png', array('title' => _('Diese Anfrage bearbeiten'))) ?>
+            </a>
+            <? if (getGlobalPerms($GLOBALS['user']->id) || ($GLOBALS['perm']->have_perm('admin') && count(getMyRoomRequests(null, null, true, $rr->getId())))) : ?>
+                <a href="<?= UrlHelper::getLink('resources.php', array('view' => 'edit_request', 'single_request' => $rr->getId())) ?>">
+                    <?= Assets::img('icons/16/blue/admin.png', array('title' => _('Diese Anfrage selbst auflösen'))) ?>
+                </a>
+            <? endif ?>
+            <a href="<?= $controller->link_for('delete/'.$course_id, array('request_id' => $rr->getId())) ?>">
+                <?= Assets::img('icons/16/blue/trash.png', array('title' => _('Diese Anfrage zurückziehen'))) ?>
+            </a>
+        </div>
         </td>
     </tr>
     <? endforeach ?>

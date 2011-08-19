@@ -425,9 +425,6 @@ function getMyRoomRequests($user_id = '', $semester_id = null, $only_not_closed 
         $resList = new ResourcesUserRoomsList($user_id, FALSE, FALSE);
         $my_res = $resList->getRooms();
 
-        //load all my seminars
-        $my_sems = search_administrable_seminars();
-
         if (sizeof($my_res)) {
             foreach ($my_res as $res_id => $dummy){
                 $object_perms = ResourceObjectPerms::Factory($res_id, $user_id);
@@ -460,29 +457,31 @@ function getMyRoomRequests($user_id = '', $semester_id = null, $only_not_closed 
                     $requests[$row["request_id"]]["have_times"] = 1;
                 }
             }
-        }
-        if (sizeof($my_sems)) {
-            $criteria .= " AND rr.seminar_id IN " . "('".join("','",array_keys($my_sems))."')";
-            if ($rs = $db->query(sprintf($query, $criteria))) {
-                while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
-                    $requests[$row["request_id"]]["resource_id"] = $row['resource_id'];
-                    $requests[$row["request_id"]]["my_sem"] = TRUE;
-                    $requests[$row["request_id"]]["closed"] = $row['closed'];
+            //load all my seminars
+            $my_sems = search_administrable_seminars();
+            if (sizeof($my_sems)) {
+                $criteria .= " AND rr.seminar_id IN " . "('".join("','",array_keys($my_sems))."')";
+                if ($rs = $db->query(sprintf($query, $criteria))) {
+                    while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
+                        $requests[$row["request_id"]]["resource_id"] = $row['resource_id'];
+                        $requests[$row["request_id"]]["my_sem"] = TRUE;
+                        $requests[$row["request_id"]]["closed"] = $row['closed'];
+                    }
                 }
-            }
-            if ($rs = $db->query(sprintf($query1, $criteria))) {
-                while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
-                    $requests[$row["request_id"]]["have_times"] = 1;
+                if ($rs = $db->query(sprintf($query1, $criteria))) {
+                    while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
+                        $requests[$row["request_id"]]["have_times"] = 1;
+                    }
                 }
-            }
-            if ($rs = $db->query(sprintf($query2, $criteria))) {
-                while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
-                    $requests[$row["request_id"]]["have_times"] = 1;
+                if ($rs = $db->query(sprintf($query2, $criteria))) {
+                    while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
+                        $requests[$row["request_id"]]["have_times"] = 1;
+                    }
                 }
-            }
-            if ($rs = $db->query(sprintf($query3, $criteria))) {
-                while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
-                    $requests[$row["request_id"]]["have_times"] = 1;
+                if ($rs = $db->query(sprintf($query3, $criteria))) {
+                    while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
+                        $requests[$row["request_id"]]["have_times"] = 1;
+                    }
                 }
             }
         }

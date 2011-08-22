@@ -115,6 +115,7 @@ div#header {
 
 /* --- public course marker ----------------------------------------------------*/
 
+#barBottomContainer.public_course,
 #barBottomContainer.public_course div#barBottommiddle,
 #barBottomContainer.public_course div#barBottomright,
 #barBottomContainer.public_course div#barBottomLeft {

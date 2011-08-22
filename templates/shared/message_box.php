@@ -4,9 +4,9 @@
 <div class="messagebox messagebox_<?= $class ?> <? if (sizeof($details) && $close_details): ?>details_hidden<? endif; ?>">
     <div class="messagebox_buttons">
     <? if (sizeof($details) && $close_details) : ?>
-        <a class="details" href="#" title="<?=_('Detailanzeige umschalten')?>"><?=_('Detailanzeige umschalten')?></a>
+        <a class="details" href="#" title="<?=_('Detailanzeige umschalten')?>"><span><?=_('Detailanzeige umschalten')?></span></a>
     <? endif ?>
-        <a class="close" href="#" title="<?=_('Nachrichtenbox schliessen')?>"><?=_('Nachrichtenbox schliessen')?></a>
+        <a class="close" href="#" title="<?=_('Nachrichtenbox schliessen')?>"><span><?=_('Nachrichtenbox schliessen')?></span></a>
     </div>
     <?= $message ?>
 <? if (sizeof($details)) : ?>

@@ -15,70 +15,63 @@ div#barBottom {
 }
 
 div#barBottomContainer {
-    display: table-row;
-    width: 100%;
     background-color: #899ab9;
+    border-width: 1px;
     border-color: #1e3e70;
     border-top-style: solid;
     border-bottom-style: solid;
+    float: left;
+    width: 100%;
+    height: 24px;
+    margin-bottom: 1.5em;
+}
+
+#barBottomLeft, #barBottommiddle, #barBottomright {
+    vertical-align: middle;
+    height: 24px;
+    line-height: 24px;
+    background-color: #899ab9;
+    color: #ffffff;
+    padding: 0;
 }
 
 div#barBottomLeft {
-    background-color: #899ab9;
-    padding:0 0 0 15px;
-    height: 24px;
+    float: left;
+    padding-left: 15px;
     text-align: right;
-    vertical-align: middle;
     white-space: nowrap;
-    color: #ffffff;
-    display: table-cell;
-    border-color: #1e3e70;
-    border-width: 1px;
-    border-top-style: solid;
-    border-bottom-style: solid;
 }
 
 div#barBottommiddle {
-    background-color: #899ab9;
+    float: left;
     background: url('../images/header/header_bottom_isolator.png');
     background-repeat: no-repeat;
-    text-align: left;
-    vertical-align: middle;
-    height: 24px;
-    width: 100%;
-    padding: 0 0 0 40px;
-    color: #ffffff;
+    padding-left: 40px;
     font-weight: bold;
-    display: table-cell;
-    border-color: #1e3e70;
-    border-width: 1px;
-    border-top-style: solid;
-    border-bottom-style: solid;
 }
 
 div#barBottomright {
-    background-color: #899ab9;
     text-align: right;
-    vertical-align: middle;
-    height: 24px;
     float: right;
     white-space: nowrap;
-    color: #ffffff; 
-    display: table-cell;
-    border-color: #1e3e70;
-    border-width: 1px; 
-    border-top-style: solid;
-    border-bottom-style: solid;
 }
 
 div#barBottomright ul, #layout_footer ul {
-    margin: 4px;
+    margin: 0;
 }
 
 div#barBottomright li, #layout_footer li {
     display: inline;
     list-style-type: none;
+    height: 24px;
+    line-height: 24px;
 }
+
+div#barBottomright li input {
+    vertical-align: text-bottom;
+}
+
+
 
 div#barBottomright a, #layout_footer a {
     text-decoration: none;

@@ -10,7 +10,7 @@ html, body {
 }
 
 body {
-    overflow-y: scroll;
+/*    overflow-y: scroll; */
 }
 
 /* --- Schrift (Vorgaben: Typ, Größe, Farbe --------------------------------- */
@@ -140,6 +140,7 @@ a.printhead {
 /* --- Layouts -------------------------------------------------------------- */
 #layout_page {
     margin: 15px;
+    clear: both;
 }
 
 #layout_container {
@@ -193,7 +194,6 @@ a.printhead {
 }
 
 #layout_footer {
-    position: relative;
     clear: both;
     margin: 0;
     border-top: 1px solid #1E3E70;
@@ -1307,13 +1307,16 @@ div.messagebox .messagebox_buttons a {
     background-position: center center;
     background-repeat: no-repeat;
     display: inline-block;
-    height: 16px;
     margin: 1px;
-    text-indent: -10000px;
+    height: 16px;
     width: 16px;
-    zoom: 1; /* IE specific */
-    *display: inline; /* IE star hack */
 }
+
+div.messagebox .messagebox_buttons a.close span,
+div.messagebox .messagebox_buttons a.details span {
+  display: none;
+}
+
 div.messagebox .messagebox_buttons a.close {
   background-image: url("../images/messagebox/cross_inv.png");
 }

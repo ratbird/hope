@@ -31,7 +31,7 @@ echo $flash['message'];
             <a href="<?= $controller->link_for('edit/'.$course_id, array('request_id' => $rr->getId())) ?>">
                 <?= Assets::img('icons/16/blue/edit.png', array('title' => _('Diese Anfrage bearbeiten'))) ?>
             </a>
-            <? if (getGlobalPerms($GLOBALS['user']->id) || ($GLOBALS['perm']->have_perm('admin') && count(getMyRoomRequests(null, null, true, $rr->getId())))) : ?>
+            <? if (getGlobalPerms($GLOBALS['user']->id) == 'root' || ($GLOBALS['perm']->have_perm('admin') && count(getMyRoomRequests(null, null, true, $rr->getId())))) : ?>
                 <a href="<?= UrlHelper::getLink('resources.php', array('view' => 'edit_request', 'single_request' => $rr->getId())) ?>">
                     <?= Assets::img('icons/16/blue/admin.png', array('title' => _('Diese Anfrage selbst auflösen'))) ?>
                 </a>

@@ -120,19 +120,19 @@ class SeminarCycleDate extends SimpleORMap
     function setValue($field, $value)
     {
         if ($field == 'start_hour') {
-            $this->start_time = $value . ':' . $this->start_minute;
+            $this->start_time = sprintf('%02u:%02u:00', $value, $this->start_minute);
             return $this->start_hour;
         }
         if ($field == 'start_minute') {
-            $this->start_time = $this->start_hour . ':' . $value ;
+            $this->start_time = sprintf('%02u:%02u:00', $this->start_hour, $value);
             return $this->start_minute;
         }
         if ($field == 'end_hour') {
-            $this->end_time = $value . ':' . $this->end_minute;
+            $this->end_time = sprintf('%02u:%02u:00', $value , $this->end_minute);
             return $this->end_hour;
         }
         if ($field == 'end_minute') {
-            $this->end_time = $this->end_hour . ':' . $value ;
+            $this->end_time = sprintf('%02u:%02u:00', $this->end_hour, $value);
             return $this->end_minute;
         }
         if ($field == 'sws') {
@@ -153,6 +153,7 @@ class SeminarCycleDate extends SimpleORMap
     {
         $count = parent::setData($data, $reset);
         $this->sws = $this->content['sws'];
+        $this->content_db['sws'] = $this->sws;
         return $count;
     }
 

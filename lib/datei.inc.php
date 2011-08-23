@@ -470,18 +470,19 @@ function move_item($item_id, $new_parent, $change_sem_to = false) {
 
 
     if ($item_id != $new_parent) {
-
         $doc = new StudipDocument($item_id);
+        if ($doc['range_id']) {
+            if ($change_sem_to && $new_folder_id) {
+                $doc['range_id'] = $new_folder_id;
+                $doc['seminar_id'] = $change_sem_to;
+            } else {
+                $doc['range_id'] = $new_parent;
+            }
 
-        if ($change_sem_to && $new_folder_id) {
-            $doc['range_id'] = $new_folder_id;
-            $doc['seminar_id'] = $change_sem_to;
-        }
-        else {
-            $doc['range_id'] = $new_parent;
-        }
+            $doc->store();
 
-        if (!$doc->store()) {
+            return array(0,1);
+        } else {
             //we want to move a folder, so we have first to check if we want to move a folder in a subordinated folder
 
             $folder = getFolderId($item_id);
@@ -502,9 +503,6 @@ function move_item($item_id, $new_parent, $change_sem_to = false) {
                     return array(1, doc_count($item_id));
                 }
             }
-
-        } else {
-            return array(0,1);
         }
     }
     return false;

@@ -253,7 +253,7 @@ class CalendarScheduleModel
                     $entry['icons'][] = array(
                         'url'     => $unbind_url,
                         'image'   => Assets::image_path('icons/16/white/visibility-visible.png'),
-                        'onClick' => "function(id) { STUDIP.Schedule.hideEntry(id, '$seminar_id', '". $cycle->getMetaDateId() ."'); }",
+                        'onClick' => "function(id) { window.location = '". $unbind_url ."'; }",
                         'title'   => _("Diesen Eintrag ausblenden")
                     );
 

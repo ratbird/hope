@@ -1533,23 +1533,6 @@ STUDIP.Schedule = {
     },
 
     /**
-     * hide a seminar-entry in the schedule an remove it from display immediately
-     *
-     * @param  string  the id of the entry in the schedule
-     * @param  string  the seminar to be shown
-     * @param  string  the cycle-id of the regular time-entry to be shown
-     *                 (a seminar can have multiple of these
-     */
-    hideEntry: function (id, seminar_id, cycle_id) {
-        STUDIP.Schedule.cancelNewEntry();
-        jQuery.ajax({
-            type: 'GET',
-            url: STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/calendar/schedule/unbind/' + seminar_id + '/' + cycle_id + '/true'
-        });
-        jQuery('#schedule_entry_' + id + '_' + seminar_id + '-' + cycle_id).fadeOut('fast').remove();
-    },
-
-    /**
      * calls STUDIP.Calendar.checkTimeslot to check that the time is valid
      *
      * @param  bool  returns true if the time is valid, false otherwise

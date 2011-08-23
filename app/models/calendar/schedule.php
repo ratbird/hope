@@ -233,10 +233,10 @@ class CalendarScheduleModel
 
                 // show an unhide icon if entry is invisible
                 if (!$entry['visible']) {
-                    $entry['url'] .= '/?show_hidden=true';
+                    $entry['url'] .= '/?show_hidden=1';
 
                     $bind_url = UrlHelper::getLink('dispatch.php/calendar/schedule/bind/'
-                              . $seminar_id . '/' . $cycle->getMetaDateId() . '/?show_hidden=true');
+                              . $seminar_id . '/' . $cycle->getMetaDateId() . '/?show_hidden=1');
 
                     $entry['icons'][] = array(
                         'url'   => $bind_url,

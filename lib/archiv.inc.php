@@ -325,7 +325,7 @@ function dump_sem($sem_id, $print_view = false) {
 
             // die eigentliche Teil-Tabelle
 
-                $sortby = "doll DESC";
+                $sortby = "Nachname, Vorname ASC";
                 $db->query ("SELECT seminar_user.user_id, " . $_fullname_sql['full'] . " AS fullname, username, status, count(topic_id) AS doll,
                             " . get_ext_vis_query('seminar_user') . " as user_is_visible
                             FROM seminar_user LEFT JOIN px_topics USING (user_id,Seminar_id)

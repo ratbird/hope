@@ -4,17 +4,26 @@
 # Lifter003: TODO
 # Lifter010: TODO
 /**
-* functions.php
-*
-* The Stud.IP-Core functions. Look to the descriptions to get further details
-*
-*
-* @author       Cornelis Kater <ckater@gwdg.de>, Suchi & Berg GmbH <info@data-quest.de>, Ralf Stockmann <rstockm@gwdg.de>, André Noack André Noack <andre.noack@gmx.net>
-* @access       public
-* @package      studip_core
-* @modulegroup      library
-* @module       functions.php
-*/
+ * functions.php
+ *
+ * The Stud.IP-Core functions. Look to the descriptions to get further details
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * @author      Cornelis Kater <ckater@gwdg.de>
+ * @author      Suchi & Berg GmbH <info@data-quest.de>
+ * @author      Ralf Stockmann <rstockm@gwdg.de>
+ * @author      André Noack <andre.noack@gmx.net>
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+ * @access      public
+ * @package     studip_core
+ * @modulegroup library
+ * @module      functions.php
+ */
 
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
@@ -49,15 +58,18 @@ require_once ('lib/exceptions/AccessDeniedException.php');
 require_once ('lib/exceptions/CheckObjectException.php');
 
 /**
-* This function creates the header line for studip-objects
-*
-* you will get a line like this "Veranstaltung: Name..."
-*
-* @param        string  the id of the Veranstaltung
-* @return       string  the header-line
-*
-*/
-function getHeaderLine($id, $object_name = null) {
+ * This function creates the header line for studip-objects
+ *
+ * you will get a line like this "Veranstaltung: Name..."
+ *
+ * @param string $id          the id of the Veranstaltung
+ * @param string $object_name the name of the object (optional)
+ *
+ * @return string  the header-line
+ *
+ */
+function getHeaderLine($id, $object_name = null)
+{
     if(!$object_name){
         $object_name = get_object_name($id, get_object_type($id));
     }
@@ -72,8 +84,21 @@ function getHeaderLine($id, $object_name = null) {
     return $header_line;
 }
 
-function get_object_name($range_id, $object_type){
-
+/**
+ * returns an array containing name and type of the passed objeact
+ * denoted by $range_id
+ *
+ * @global array $SEM_TYPE
+ * @global array $INST_TYPE
+ * @global array $SEM_TYPE_MISC_NAME
+ *
+ * @param string $range_id    the id of the object
+ * @param string $object_type the type of the object
+ * 
+ * @return array  an array containing name and type of the object
+ */
+function get_object_name($range_id, $object_type)
+{
     global $SEM_TYPE,$INST_TYPE, $SEM_TYPE_MISC_NAME;
 
     $db = new DB_Seminar();
@@ -105,27 +130,29 @@ function get_object_name($range_id, $object_type){
 }
 
 /**
-* This function "selects" a Veranstaltung to work with it
-*
-* The following variables will bet set:
-*   $SessionSeminar                 Veranstaltung id<br>
-*   $SessSemName[0]                 Veranstaltung name<br>
-*   $SessSemName[1]                 Veranstaltung id<br>
-*   $SessSemName[2]                 Veranstaltung ort (room)<br>
-*   $SessSemName[3]                 Veranstaltung Untertitel (subtitle)<br>
-*   $SessSemName[4]                 Veranstaltung start_time (the Semester start_time)<br>
-*   $SessSemName[5]                 Veranstaltung institut_id (the home-intitute)<br>
-*   $SessSemName["art"]             Veranstaltung type in alphanumeric form<br>
-*   $SessSemName["art_num"]         Veranstaltung type in numeric form<br>
-*   $SessSemName["art_generic"]     Veranstaltung generic type in alhanumeric form (self description)<br>
-*   $SessSemName["class"]               Veranstaltung class (sem or inst, in this function always sem)<br>
-*   $SessSemName["header_line"]     the header-line to use on every page of the Veranstaltung<br>
-*
-* @param        string  the id of the Veranstaltung
-* @return       boolean true if successful
-*
-*/
-function selectSem ($sem_id) {
+ * This function "selects" a Veranstaltung to work with it
+ *
+ * The following variables will bet set:
+ *   $SessionSeminar                 Veranstaltung id<br>
+ *   $SessSemName[0]                 Veranstaltung name<br>
+ *   $SessSemName[1]                 Veranstaltung id<br>
+ *   $SessSemName[2]                 Veranstaltung ort (room)<br>
+ *   $SessSemName[3]                 Veranstaltung Untertitel (subtitle)<br>
+ *   $SessSemName[4]                 Veranstaltung start_time (the Semester start_time)<br>
+ *   $SessSemName[5]                 Veranstaltung institut_id (the home-intitute)<br>
+ *   $SessSemName["art"]             Veranstaltung type in alphanumeric form<br>
+ *   $SessSemName["art_num"]         Veranstaltung type in numeric form<br>
+ *   $SessSemName["art_generic"]     Veranstaltung generic type in alhanumeric form (self description)<br>
+ *   $SessSemName["class"]               Veranstaltung class (sem or inst, in this function always sem)<br>
+ *   $SessSemName["header_line"]     the header-line to use on every page of the Veranstaltung<br>
+ *
+ * @param string $sem_id the id of the Veranstaltung
+ *
+ * @return boolean  true if successful
+ *
+ */
+function selectSem ($sem_id)
+{
     global $perm, $SEM_TYPE, $SEM_TYPE_MISC_NAME, $SessionSeminar, $SessSemName, $SemSecLevelRead, $SemSecLevelWrite, $SemUserStatus, $rechte;
 
     $db = DBManager::get();
@@ -169,26 +196,28 @@ function selectSem ($sem_id) {
 }
 
 /**
-* This function "selects" an Einrichtung to work with it
-*
-* Note: Stud.IP treats Einrichtungen like Veranstaltungen, yu can see this
-* especially if you look at the variable names....
-*
-* The following variables will bet set:
-*   $SessionSeminar                 Einrichtung id<br>
-*   $SessSemName[0]                 Einrichtung name<br>
-*   $SessSemName[1]                 Einrichtung id<br>
-*   $SessSemName["art"]             Einrichtung type in alphanumeric form<br>
-*   $SessSemName["art_num"]         Einrichtung type in numeric form<br>
-*   $SessSemName["art_generic"]     Einrichtung generic type in alhanumeric form (self description)<br>
-*   $SessSemName["class"]               Einrichtung class (sem or inst, in this function always inst)<br>
-*   $SessSemName["header_line"]     the header-line to use on every page of the Einrichtung<br>
-*
-* @param        string  the id of the Veranstaltung
-* @return       boolean true if successful
-*
-*/
-function selectInst ($inst_id) {
+ * This function "selects" an Einrichtung to work with it
+ *
+ * Note: Stud.IP treats Einrichtungen like Veranstaltungen, yu can see this
+ * especially if you look at the variable names....
+ *
+ * The following variables will bet set:
+ *   $SessionSeminar                 Einrichtung id<br>
+ *   $SessSemName[0]                 Einrichtung name<br>
+ *   $SessSemName[1]                 Einrichtung id<br>
+ *   $SessSemName["art"]             Einrichtung type in alphanumeric form<br>
+ *   $SessSemName["art_num"]         Einrichtung type in numeric form<br>
+ *   $SessSemName["art_generic"]     Einrichtung generic type in alhanumeric form (self description)<br>
+ *   $SessSemName["class"]               Einrichtung class (sem or inst, in this function always inst)<br>
+ *   $SessSemName["header_line"]     the header-line to use on every page of the Einrichtung<br>
+ *
+ * @param string $inst_id the id of the Veranstaltung
+ *
+ * @return boolean  true if successful
+ *
+ */
+function selectInst ($inst_id)
+{
     global $SessionSeminar, $SessSemName, $INST_TYPE, $SemUserStatus, $rechte, $perm;
 
     $db = DBManager::get();
@@ -232,10 +261,12 @@ function selectInst ($inst_id) {
  * This function "opens" a course to work with it. Does the same
  * as selectSem() but also sets the visit date.
  *
- * @param       string  the id of the course
- * @return      boolean true if successful
+ * @param string $sem_id the id of the course
+ * 
+ * @return boolean  true if successful
  */
-function openSem ($sem_id) {
+function openSem ($sem_id)
+{
     if (($result = selectSem($sem_id))) {
         object_set_visit($sem_id, "sem");
     }
@@ -247,10 +278,12 @@ function openSem ($sem_id) {
  * This function "opens" an institute to work with it. Does the same
  * as selectInst() but also sets the visit date.
  *
- * @param       string  the id of the institute
- * @return      boolean true if successful
+ * @param string $inst_id the id of the institute
+ * 
+ * @return boolean  true if successful
  */
-function openInst ($inst_id) {
+function openInst ($inst_id)
+{
     if (($result = selectInst($inst_id))) {
         object_set_visit($inst_id, "inst");
     }
@@ -259,9 +292,16 @@ function openInst ($inst_id) {
 }
 
 /**
-* This function checks, if there is an open Veranstaltung or Einrichtung
-*/
-function checkObject() {
+ * This function checks, if there is an open Veranstaltung or Einrichtung
+ *
+ * @global array $SessSemName
+ *
+ * @throws CheckObjectException
+ *
+ * @return void
+ */
+function checkObject()
+{
     global $SessSemName;
 
     if ($SessSemName[1] == "") {
@@ -271,9 +311,16 @@ function checkObject() {
 
 
 /**
-* This function checks, if given module is allowed in this stud-ip object
-*/
-function checkObjectModule($module) {
+ * This function checks, if given module is allowed in this stud-ip object
+ *
+ * @global array $SessSemName
+ *
+ * @param string $module the module to check for
+ *
+ * @return void
+ */
+function checkObjectModule($module)
+{
     global $SessSemName;
 
     if ($SessSemName[1]) {
@@ -286,9 +333,20 @@ function checkObjectModule($module) {
 }
 
 /**
-* This function closes a opened Veranstaltung or Einrichtung
-*/
-function closeObject() {
+ * This function closes a opened Veranstaltung or Einrichtung
+ *
+ * @global string  $SessionSeminar
+ * @global array   $SessSemName
+ * @global string  $SemSecLevelRead
+ * @global string  $SemSecLevelWrite
+ * @global string  $SemUserStatus
+ * @global boolean $rechte
+ * @global object  $sess
+ *
+ * @return void
+ */
+function closeObject()
+{
     global $SessionSeminar, $SessSemName, $SemSecLevelRead, $SemSecLevelWrite, $SemUserStatus, $rechte, $sess;
 
     $SessionSeminar = null;
@@ -303,13 +361,15 @@ function closeObject() {
 }
 
 /**
-* This function returns the last activity in the Veranstaltung
-*
-* @param        string  the id of the Veranstaltung
-* @return       integer unix timestamp
-*
-*/
-function lastActivity ($sem_id) {
+ * This function returns the last activity in the Veranstaltung
+ *
+ * @param string $sem_id the id of the Veranstaltung
+ *
+ * @return integer  unix timestamp
+ *
+ */
+function lastActivity ($sem_id)
+{
     $db=new DB_Seminar;
 
     //Veranstaltungs-data
@@ -385,16 +445,23 @@ function lastActivity ($sem_id) {
 
 
 /**
-* This function determines, from which type an id is from.
-*
-* The function recognizes the following types at this moment:
-* Einrichtungen, Veranstaltungen, Statusgruppen and Fakultaeten
-*
-* @param        string  id  the id of the object
-* @return       string  return "inst" (Einrichtung), "sem" (Veranstaltung), "fak" (Fakultaeten), "group" (Statusgruppe), "dokument" (Dateien)
-*
-*/
-function get_object_type($id, $check_only = array()) {
+ * This function determines the type of the passed id
+ *
+ * The function recognizes the following types at the moment:
+ * Einrichtungen, Veranstaltungen, Statusgruppen and Fakultaeten
+ *
+ * @staticvar array $object_type_cache
+ *
+ * @param string $id         the id of the object
+ * @param array  $check_only an array to narrow the search, may contain
+ *                            'sem', 'fak', 'group' or 'dokument' (optional)
+ *
+ * @return string  return "inst" (Einrichtung), "sem" (Veranstaltung),
+ *                 "fak" (Fakultaeten), "group" (Statusgruppe), "dokument" (Dateien)
+ *
+ */
+function get_object_type($id, $check_only = array())
+{
     static $object_type_cache;
     $check_all = !count($check_only);
     if ($id){
@@ -452,18 +519,21 @@ function get_object_type($id, $check_only = array()) {
 }
 
 /**
-* The function calculate one of the group colors unique for the Semester of the Veranstaltung
-*
-* It calculate a unique color number to create the initial entry for a new user in a Veranstaltung.
-* It will create a unique number for every Semester and will start over, if the max. number
-* (7) is reached.
-*
-* @param        integer the timestamp of the start time from the Semester
-* @param        string  this field is no more necessary but only for compatibilty reasons here
-* @return       integer the color number
-*
-*/
-function select_group($sem_start_time, $user_id='') {
+ * The function calculate one of the group colors unique for the Semester of the Veranstaltung
+ *
+ * It calculate a unique color number to create the initial entry for a new user in a Veranstaltung.
+ * It will create a unique number for every Semester and will start over, if the max. number
+ * (7) is reached.
+ *
+ * @param integer $sem_start_time the timestamp of the start time from the Semester
+ * @param string  $user_id        this field is not necessary anymore and remains
+ *                                for compatibilty reasons only
+ * 
+ * @return integer  the color number
+ *
+ */
+function select_group($sem_start_time, $user_id='')
+{
     //Farben Algorhytmus, erzeugt eindeutige Farbe fuer jedes Semester. Funktioniert ab 2001 die naechsten 1000 Jahre.....
     $year_of_millenium=date ("Y", $sem_start_time) % 1000;
     $index=$year_of_millenium * 2;
@@ -475,19 +545,21 @@ function select_group($sem_start_time, $user_id='') {
 }
 
 /**
-* The function shortens a string, but it uses the first 2/3 and the last 1/3
-*
-* The parts will be divided by a "[...]". The functions is to use like php's
-* substr function.
-*
-* @param        string  the original string
-* @param        integer start pos, 0 is the first pos
-* @param        integer end pos
-* @return       string
-*
-*
-*/
-function my_substr($what, $start, $end) {
+ * The function shortens a string, but it uses the first 2/3 and the last 1/3
+ *
+ * The parts will be divided by a "[...]". The functions is to use like php's
+ * substr function.
+ *
+ * @param string  $what  the original string
+ * @param integer $start start pos, 0 is the first pos
+ * @param integer $end   end pos
+ *
+ * @return string
+ *
+ *
+ */
+function my_substr($what, $start, $end)
+{
     $length=$end-$start;
     $what_length = studip_strlen($what);
     if ($what_length > $length) {
@@ -498,77 +570,88 @@ function my_substr($what, $start, $end) {
 
 
 /**
-* The function determines, if the current user have write perm in a Veranstaltung or Einrichtung
-*
-* It uses the Variables $SemSecLevelWrite, $SemUserStatus and $rechte, which are created in the
-* modul check_sem_entry.inc.php and $perm from PHP-lib
-*
-* @return       string  the error msg. If no msg is returned, the user has write permission
-*
-*/
-function have_sem_write_perm () {
+ * The function determines, if the current user have write perm in a Veranstaltung or Einrichtung
+ *
+ * It uses the Variables $SemSecLevelWrite, $SemUserStatus and $rechte, which are created in the
+ * modul check_sem_entry.inc.php and $perm from PHP-lib
+ *
+ * @global string  $SemSecLevelWrite
+ * @global string  $SemUserStatus
+ * @global array   $perm
+ * @global boolean $rechte
+ * @global integer $AUTH_LIFETIME
+ *
+ * @return string  the error msg. If no msg is returned, the user has write permission
+ *
+ */
+function have_sem_write_perm ()
+{
+    global $SemSecLevelWrite, $SemUserStatus, $perm, $rechte, $AUTH_LIFETIME;
 
-global $SemSecLevelWrite, $SemUserStatus, $perm, $rechte, $AUTH_LIFETIME;
-
-$error_msg="";
-if (!($perm->have_perm("root"))) {
-    if (!($rechte || ($SemUserStatus=="autor") || ($SemUserStatus=="tutor") || ($SemUserStatus=="dozent"))) {
-        //Auch eigentlich uberfluessig...
-        //$error_msg = "<br><b>Sie haben nicht die Berechtigung in dieser Veranstaltung zu schreiben!</b><br><br>";
-        switch ($SemSecLevelWrite) {
-            case 2 :
-                $error_msg=$error_msg."error§" . _("In dieser Veranstaltung ist ein Passwort f&uuml;r den Schreibzugriff n&ouml;tig.") . "<br>" . sprintf(_("Zur %sPassworteingabe%s"), "<a href=\"sem_verify.php\">", "</a>") . "§";
-                break;
-            case 1 :
-                if ($perm->have_perm("autor"))
-                    $error_msg=$error_msg."info§" . _("Sie müssen sich erneut für diese Veranstaltung anmelden, um Dateien hochzuladen und Beitr&auml;ge im Forum schreiben zu können!") . "<br>" . sprintf(_("Hier kommen Sie zur %sFreischaltung%s der Veranstaltung."), "<a href=\"sem_verify.php\">", "</a>") . "§";
-                elseif ($perm->have_perm("user"))
-                    $error_msg=$error_msg."info§" . _("Bitte folgen Sie den Anweisungen in der Registrierungsmail.") . "§";
-                else
-                    $error_msg=$error_msg."info§" . _("Bitte melden Sie sich an.") . "<br>" . sprintf(_("Hier geht es zur %sRegistrierung%s wenn Sie noch keinen Account im System haben."), "<a href=\"register1.php\">", "</a>") . "§";
-                break;
-            default :
-                //Wenn Schreiben fuer Nobody jemals wieder komplett verboten werden soll, diesen Teil bitte wieder einkommentieren (man wei&szlig; ja nie...)
-                //$error_msg=$error_msg."Bitte melden Sie sich an.<br><br><a href=\"register1.php\"><b>Registrierung</b></a> wenn Sie noch keinen Account im System haben.<br><a href=\"index.php?again=yes\"><b>Login</b></a> f&uuml;r registrierte Benutzer.<br><br>";
-                break;
+    $error_msg="";
+    if (!($perm->have_perm("root"))) {
+        if (!($rechte || ($SemUserStatus=="autor") || ($SemUserStatus=="tutor") || ($SemUserStatus=="dozent"))) {
+            //Auch eigentlich uberfluessig...
+            //$error_msg = "<br><b>Sie haben nicht die Berechtigung in dieser Veranstaltung zu schreiben!</b><br><br>";
+            switch ($SemSecLevelWrite) {
+                case 2 :
+                    $error_msg=$error_msg."error§" . _("In dieser Veranstaltung ist ein Passwort f&uuml;r den Schreibzugriff n&ouml;tig.") . "<br>" . sprintf(_("Zur %sPassworteingabe%s"), "<a href=\"sem_verify.php\">", "</a>") . "§";
+                    break;
+                case 1 :
+                    if ($perm->have_perm("autor"))
+                        $error_msg=$error_msg."info§" . _("Sie müssen sich erneut für diese Veranstaltung anmelden, um Dateien hochzuladen und Beitr&auml;ge im Forum schreiben zu können!") . "<br>" . sprintf(_("Hier kommen Sie zur %sFreischaltung%s der Veranstaltung."), "<a href=\"sem_verify.php\">", "</a>") . "§";
+                    elseif ($perm->have_perm("user"))
+                        $error_msg=$error_msg."info§" . _("Bitte folgen Sie den Anweisungen in der Registrierungsmail.") . "§";
+                    else
+                        $error_msg=$error_msg."info§" . _("Bitte melden Sie sich an.") . "<br>" . sprintf(_("Hier geht es zur %sRegistrierung%s wenn Sie noch keinen Account im System haben."), "<a href=\"register1.php\">", "</a>") . "§";
+                    break;
+                default :
+                    //Wenn Schreiben fuer Nobody jemals wieder komplett verboten werden soll, diesen Teil bitte wieder einkommentieren (man wei&szlig; ja nie...)
+                    //$error_msg=$error_msg."Bitte melden Sie sich an.<br><br><a href=\"register1.php\"><b>Registrierung</b></a> wenn Sie noch keinen Account im System haben.<br><a href=\"index.php?again=yes\"><b>Login</b></a> f&uuml;r registrierte Benutzer.<br><br>";
+                    break;
+                }
+            $error_msg=$error_msg."info§" . _("Dieser Fehler kann auch auftreten, wenn Sie zu lange inaktiv gewesen sind.") . " <br>" . sprintf(_("Wenn Sie l&auml;nger als %s Minuten keine Aktion mehr ausgef&uuml;hrt haben, m&uuml;ssen Sie sich neu anmelden."), $AUTH_LIFETIME) . "§";
             }
-        $error_msg=$error_msg."info§" . _("Dieser Fehler kann auch auftreten, wenn Sie zu lange inaktiv gewesen sind.") . " <br>" . sprintf(_("Wenn Sie l&auml;nger als %s Minuten keine Aktion mehr ausgef&uuml;hrt haben, m&uuml;ssen Sie sich neu anmelden."), $AUTH_LIFETIME) . "§";
         }
-    }
-return $error_msg;
+    return $error_msg;
 }
 
 /**
-* The function gives the global perm of an user
-*
-* It ist recommended to use $auth->auth["perm"] for this query,
-* but the function is useful, if you want to query an user_id from another user
-* (which ist not the current user)
-*
-* @deprecated   use $GLOBALS['perm']->get_perm($user_id)
-* @param        string  if omitted, current user_id is used
-* @return       string  the perm level or an error msg
-*
-*/
-function get_global_perm($user_id="") {
+ * The function gives the global perm of an user
+ *
+ * It ist recommended to use $auth->auth["perm"] for this query,
+ * but the function is useful, if you want to query an user_id from another user
+ * (which ist not the current user)
+ *
+ * @deprecated   use $GLOBALS['perm']->get_perm($user_id)
+ *
+ * @param string $user_id if omitted, current user_id is used
+ *
+ * @return string  the perm level or an error msg
+ *
+ */
+function get_global_perm($user_id = "")
+{
     global $perm;
     $status = $perm->get_perm($user_id);
     return (!$status) ? _("Fehler!") : $status;
 }
 
 /**
-* Returns permission for given range_id and user_id
-*
-* Function works for Veranstaltungen, Einrichtungen, Fakultaeten.
-* admins get status 'admin' if range_id is a seminar
-*
-* @deprecated   use $GLOBALS['perm']->get_studip_perm($range_id, $user_id)
-* @param        string  an id a Veranstaltung, Einrichtung or Fakultaet
-* @param        string  if omitted,current user_id is used
-* @return       string  the perm level
-*
-*/
-function get_perm($range_id,$user_id="") {
+ * Returns permission for given range_id and user_id
+ *
+ * Function works for Veranstaltungen, Einrichtungen, Fakultaeten.
+ * admins get status 'admin' if range_id is a seminar
+ *
+ * @deprecated  use $GLOBALS['perm']->get_studip_perm($range_id, $user_id)
+ *
+ * @param string $range_id an id a Veranstaltung, Einrichtung or Fakultaet
+ * @param string $user_id  if omitted,current user_id is used
+ * 
+ * @return string  the perm level
+ */
+function get_perm($range_id, $user_id = "")
+{
     global $perm;
     $status = $perm->get_studip_perm($range_id,$user_id);
     return (!$status) ? _("Fehler!") : $status;
@@ -576,15 +659,16 @@ function get_perm($range_id,$user_id="") {
 
 
 /**
-* Retrieves the fullname for a given user_id
-*
-*
-* @param        string  if omitted, current user_id is used
-* @param        string  output format
-* @return       string
-*
-*/
-function get_fullname($user_id = "", $format = "full" , $htmlready = false){
+ * Retrieves the fullname for a given user_id
+ *
+ * @param string $user_id   if omitted, current user_id is used
+ * @param string $format    output format
+ * @param bool   $htmlready if true, htmlReady is applied to all output-strings
+ *
+ * @return string
+ */
+function get_fullname($user_id = "", $format = "full" , $htmlready = false)
+{
     static $cache;
     global $user,$_fullname_sql;
     $author = _("unbekannt");
@@ -603,14 +687,16 @@ function get_fullname($user_id = "", $format = "full" , $htmlready = false){
  }
 
 /**
-* Retrieves the fullname for a given username
-*
-* @param        string  if omitted, current user_id is used
-* @param        string  output format
-* @return       string
-*
-*/
-function get_fullname_from_uname($uname = "", $format = "full", $htmlready = false){
+ * Retrieves the fullname for a given username
+ *
+ * @param string $uname     if omitted, current user_id is used
+ * @param string $format    output format
+ * @param bool   $htmlready if true, htmlReady is applied to all output-strings
+ *
+ * @return       string
+ */
+function get_fullname_from_uname($uname = "", $format = "full", $htmlready = false)
+{
     static $cache;
     global $auth,$_fullname_sql;
     $author = _("unbekannt");
@@ -629,33 +715,34 @@ function get_fullname_from_uname($uname = "", $format = "full", $htmlready = fal
  }
 
 /**
-* Retrieves the Vorname for a given user_id
-*
-* @param        string  if omitted, current user_id is used
-* @return       string
-*
-*/
- function get_vorname($user_id="")
+ * Retrieves the Vorname for a given user_id
+ *
+ * @param string $user_id if omitted, current user_id is used
+ *
+ * @return string
+ */
+function get_vorname($user_id = "")
 {
- global $user;
- if (!($user_id)) $user_id=$user->id;
- $db=new DB_Seminar;
- $db->query ("SELECT Vorname FROM auth_user_md5 WHERE user_id = '$user_id'");
-                 while ($db->next_record())
-                     $author=$db->f("Vorname");
- if ($author=="") $author= _("unbekannt");
+    global $user;
+    if (!($user_id)) $user_id=$user->id;
+    $db=new DB_Seminar;
+    $db->query ("SELECT Vorname FROM auth_user_md5 WHERE user_id = '$user_id'");
+    while ($db->next_record())
+        $author=$db->f("Vorname");
 
- return $author;
- }
+    if ($author=="") $author= _("unbekannt");
+
+    return $author;
+}
 
 /**
-* Retrieves the Nachname for a given user_id
-*
-* @param        string  if omitted, current user_id is used
-* @return       string
-*
-*/
-function get_nachname($user_id="")
+ * Retrieves the Nachname for a given user_id
+ *
+ * @param string $user_id if omitted, current user_id is used
+ *
+ * @return string
+ */
+function get_nachname($user_id = "")
 {
  global $user;
  if (!($user_id)) $user_id=$user->id;
@@ -669,14 +756,18 @@ function get_nachname($user_id="")
  }
 
 /**
-* Retrieves the username for a given user_id
-*
-*
-* @param        string  if omitted, current username will be returned
-* @return       string
-*
-*/
-function get_username($user_id="") {
+ * Retrieves the username for a given user_id
+ *
+ * @global object $auth
+ * @staticvar array $cache
+ *
+ * @param string $user_id if omitted, current username will be returned
+ * 
+ * @return string
+ *
+ */
+function get_username($user_id = "")
+{
     static $cache;
     global $auth;
     $author = "";
@@ -695,15 +786,19 @@ function get_username($user_id="") {
 }
 
 /**
-* Retrieves the userid for a given username
-*
-* uses global $online array if user is online
-*
-* @param        string  if omitted, current user_id will be returned
-* @return       string
-*
-*/
-function get_userid($username="") {
+ * Retrieves the userid for a given username
+ *
+ * uses global $online array if user is online
+ *
+ * @global object $auth
+ * @staticvar array $cache
+ *
+ * @param string $username if omitted, current user_id will be returned
+ *
+ * @return string
+ */
+function get_userid($username = "")
+{
     static $cache;
     global $auth;
     $author = "";
@@ -723,13 +818,15 @@ function get_userid($username="") {
 
 
 /**
-* This function tracks user acces to several Data (only dokuments by now, to be extended)
-*
-*
-* @param        string  the id of the object to track
-*
-*/
-function TrackAccess ($id, $object_type = null) {
+ * This function tracks user acces to several Data (only dokuments by now, to be extended)
+ *
+ * @param string $id          the id of the object to track
+ * @param string $object_type the object type (optional)
+ *
+ * @return void
+ */
+function TrackAccess ($id, $object_type = null)
+{
     if (!$object_type){
         $object_type = get_object_type($id, array('dokument'));
     }
@@ -741,8 +838,17 @@ function TrackAccess ($id, $object_type = null) {
     }
 }
 
-
-function get_sem_tree_path($seminar_id, $depth = false, $delimeter = ">"){
+/**
+ * Return an array containing the nodes of the sem-tree-path
+ *
+ * @param string $seminar_id the seminar to get the path for
+ * @param int    $depth      the depth
+ * @param string $delimeter  a string to separate the path parts
+ *
+ * @return array
+ */
+function get_sem_tree_path($seminar_id, $depth = false, $delimeter = ">")
+{
     $the_tree = TreeAbstract::GetInstance("StudipSemTree");
     $view = new DbView();
     $ret = null;
@@ -754,7 +860,17 @@ function get_sem_tree_path($seminar_id, $depth = false, $delimeter = ">"){
     return $ret;
 }
 
-function get_range_tree_path($institut_id, $depth = false, $delimeter = ">"){
+/**
+ * Return an array containing the nodes of the range-tree-path
+ *
+ * @param string $institut_id the institute to get the path for
+ * @param int    $depth       the depth
+ * @param string $delimeter   a string to separate the path parts
+ *
+ * @return array
+ */
+function get_range_tree_path($institut_id, $depth = false, $delimeter = ">")
+{
     $the_tree = TreeAbstract::GetInstance("StudipRangeTree");
     $view = new DbView();
     $ret = null;
@@ -773,18 +889,18 @@ function get_range_tree_path($institut_id, $depth = false, $delimeter = ">"){
  * Checks if given date is valid and sets field in array accordingly.
  * (E.g. $admin_admission_data['admission_enddate'])
  *
- * @param   mixed   day or placeholder for day
- * @param   mixed   month or placeholder for month
- * @param   mixed   year or placeholder for year
- * @param   mixed   hours or placeholder for hours
- * @param   mixed   minutes or placeholder for minutes
- * @param   array   Reference to array to update. If NULL, only check is performed
- * @param   mixed   Name of field in array to be set
+ * @param mixed $tag    day or placeholder for day
+ * @param mixed $monat  month or placeholder for month
+ * @param mixed $jahr   year or placeholder for year
+ * @param mixed $stunde hours or placeholder for hours
+ * @param mixed $minute minutes or placeholder for minutes
+ * @param array &$arr   Reference to array to update. If NULL, only check is performed
+ * @param mixed $field  Name of field in array to be set
  *
- * @return  bool    true if date was valid, false else
- *
- **/
-function check_and_set_date($tag, $monat, $jahr, $stunde, $minute, &$arr, $field) {
+ * @return bool  true if date was valid, false else
+ */
+function check_and_set_date($tag, $monat, $jahr, $stunde, $minute, &$arr, $field)
+{
 
     $check=TRUE; // everything ok?
     if (($jahr>0) && ($jahr<100))
@@ -827,20 +943,17 @@ function check_and_set_date($tag, $monat, $jahr, $stunde, $minute, &$arr, $field
 }
 
 /**
- * write_config
- *
  * writes an entry into the studip configuration table
  *
  * @deprecated
- * @param   string  the key for the config entry
- * @param   string  the value that should be set
- * @param   array   an array with key=>value to write into config
+ * @param string $key the key for the config entry
+ * @param string $val the value that should be set
+ * @param array  $arr an array with key=>value to write into config
  *
- * @return  bool    true if date was valid, else false
- *
- **/
-function write_config ($key, $val, $arr = null) {
-
+ * @return bool  true if date was valid, else false
+ */
+function write_config ($key, $val, $arr = null)
+{
     if (is_null($arr)) {
         $arr[$key] = $val;
     }
@@ -859,22 +972,31 @@ function write_config ($key, $val, $arr = null) {
 }
 
 /**
- * get_config
- *
  * gets an entry from the studip configuration table
  *
- * @param   string  the key for the config entry
+ * @param string $key the key for the config entry
  *
- * @return  string  the value
+ * @return string  the value
  *
- **/
-function get_config($key) {
+ */
+function get_config($key)
+{
     return Config::get()->$key;
 }
 
-// folgende Funktion ist nur notwendig, wenn die zu kopierende Veranstaltung nicht vom Dozenten selbst,
-// sondern vom Admin oder vom root kopiert wird (sonst wird das Dozentenfeld leer gelassen, was ja keiner will...)
-function get_seminar_dozent($seminar_id) {
+/**
+ * get the lecturers and their order-positions in the passed seminar
+ *
+ * folgende Funktion ist nur notwendig, wenn die zu kopierende Veranstaltung nicht
+ * vom Dozenten selbst, sondern vom Admin oder vom root kopiert wird (sonst wird
+ * das Dozentenfeld leer gelassen, was ja keiner will...)
+ *
+ * @param string $seminar_id the seminar to get the lecturers from
+ *
+ * @return array  an array containing user_ids as key and positions as value
+ */
+function get_seminar_dozent($seminar_id)
+{
     $db = new DB_Seminar;
     $sql = "SELECT user_id, position FROM seminar_user WHERE Seminar_id='".$seminar_id."' AND status='dozent' ORDER BY position";
     if (!$db->query($sql)) {
@@ -890,19 +1012,16 @@ function get_seminar_dozent($seminar_id) {
     }
     return $dozent;
 }
-/*
-function get_seminar_next_position($seminar_id)
-{
-   $db_pos = new DB_Seminar;
-   $db_pos->query("SELECT max(position) + 1 as next_pos " .
-                  " FROM seminar_user" .
-                  " WHERE status = 'dozent' AND Seminar_id = '$seminar_id'");
 
-   $db_pos->next_record();
-
-   return $db_pos->f("next_pos");
-
-}*/
+/**
+ * reset the order-positions for the lecturers in the passed seminar,
+ * starting at the passed position
+ *
+ * @param string $s_id     the seminar to work on
+ * @param int    $position the position to start with
+ *
+ * @return void
+ */
 function re_sort_dozenten($s_id, $position)
 {
     $db = new DB_Seminar;
@@ -923,6 +1042,16 @@ function re_sort_dozenten($s_id, $position)
                   " AND user_id = '$user_id'");
    }
 }
+
+/**
+ * reset the order-positions for the tutors in the passed seminar,
+ * starting at the passed position
+ *
+ * @param string $s_id     the seminar to work on
+ * @param int    $position the position to start with
+ *
+ * @return void
+ */
 function re_sort_tutoren($s_id, $position)
 {
     $db = new DB_Seminar;
@@ -943,7 +1072,17 @@ function re_sort_tutoren($s_id, $position)
                   " AND user_id = '$user_id'");
    }
 }
-function get_next_position($status,$seminar_id)
+
+/**
+ * return the highest position-number increased by one for the
+ * passed user-group in the passed seminar
+ *
+ * @param string $status     can be on of 'tutor', 'dozent', ...
+ * @param string $seminar_id the seminar to work on
+ *
+ * @return int  the next available position
+ */
+function get_next_position($status, $seminar_id)
 {
    $db_pos = new DB_Seminar;
    $db_pos->query("SELECT max(position) + 1 as next_pos " .
@@ -956,7 +1095,15 @@ function get_next_position($status,$seminar_id)
    return $db_pos->f("next_pos");
 }
 
-function get_seminar_tutor($seminar_id) {
+/**
+ * get the tutors and their order-positions in the passed seminar
+ *
+ * @param string $seminar_id the seminar to get the tutors from
+ *
+ * @return array  an array containing user_ids as key and positions as value
+ */
+function get_seminar_tutor($seminar_id)
+{
     $db = new DB_Seminar;
     $sql = "SELECT user_id, position FROM seminar_user WHERE Seminar_id='".$seminar_id."' AND status='tutor' ORDER BY position";
     if (!$db->query($sql)) {
@@ -972,8 +1119,15 @@ function get_seminar_tutor($seminar_id) {
     return $tutor;
 }
 
-function get_seminar_sem_tree_entries($seminar_id) {
-
+/**
+ * return all sem_tree-entries for the passed seminar
+ *
+ * @param string $seminar_id the seminar
+ * 
+ * @return array  a list of sem_tree_id's
+ */
+function get_seminar_sem_tree_entries($seminar_id)
+{
     $view = new DbView();
     $ret = null;
     $view->params[0] = $seminar_id;
@@ -984,8 +1138,16 @@ function get_seminar_sem_tree_entries($seminar_id) {
     return $ret;
 }
 
-
-function get_seminars_user($user_id) {
+/**
+ * return an array of all seminars for the passed user, containing
+ * the name, id, makedate and sem-number.
+ *
+ * @param string $user_id the user's id
+ *
+ * @return array the user seminars as an array of four fields
+ */
+function get_seminars_user($user_id)
+{
     $db = new DB_Seminar;
     $sql =  "SELECT seminare.name, seminare.Seminar_id, seminare.mkdate, seminare.VeranstaltungsNummer as va_nummer ".
             "FROM seminare ".
@@ -1007,14 +1169,14 @@ function get_seminars_user($user_id) {
 }
 
 /**
-* converts a string to a float, depending on the locale
-*
-* @param        string
-* @return       float
-*
-*/
-
-function StringToFloat($str){
+ * converts a string to a float, depending on the locale
+ *
+ * @param string $str the string to convert to float
+ *
+ * @return float the string casted to float
+ */
+function StringToFloat($str)
+{
     $str = substr((string)$str,0,13);
     $locale = localeconv();
     $from = ($locale["thousands_sep"] ? $locale["thousands_sep"] : ',');
@@ -1027,7 +1189,20 @@ function StringToFloat($str){
     return (float)$str;
 }
 
-function archiv_check_perm($seminar_id){
+/**
+ * check which perms the currently logged in user had in the
+ * passed archived seminar
+ *
+ * @global array $perm
+ * @global object $auth
+ * @staticvar array $archiv_perms
+ *
+ * @param string $seminar_id the seminar in the archive
+ *
+ * @return string the perm the user had
+ */
+function archiv_check_perm($seminar_id)
+{
     static $archiv_perms;
     global $perm,$auth;
     $u_id = $auth->auth['uid'];
@@ -1056,7 +1231,19 @@ function archiv_check_perm($seminar_id){
     return $archiv_perms[$seminar_id];
 }
 
-function get_users_online($active_time = 5, $name_format = 'full_rev'){
+/**
+ * retrieve a list of all online users
+ *
+ * @global object $user
+ * @global array  $_fullname_sql
+ *
+ * @param int    $active_time filter: the time in minutes until last life-sign
+ * @param string $name_format format the fullname shall have
+ *
+ * @return array
+ */
+function get_users_online($active_time = 5, $name_format = 'full_rev')
+{
     global $user, $_fullname_sql;
     $online = null;
     if (!isset($_fullname_sql[$name_format])) {
@@ -1079,7 +1266,15 @@ function get_users_online($active_time = 5, $name_format = 'full_rev'){
     return array_map('array_shift', $online);
 }
 
-function get_users_online_count($active_time = 5){
+/**
+ * get the number of currently online users
+ *
+ * @param int $active_time filter: the time in minutes until last life-sign
+ * 
+ * @return int
+ */
+function get_users_online_count($active_time = 5)
+{
     return  DBManager::get()
             ->query("SELECT COUNT(*) FROM " . PHPLIB_USERDATA_TABLE . " WHERE
                     changed > '".date("YmdHis", (time() - ($active_time * 60))) . "' AND sid NOT IN
@@ -1087,16 +1282,43 @@ function get_users_online_count($active_time = 5){
             ->fetchColumn();
 }
 
-function get_ticket(){
+/**
+ * return a studip-ticket
+ *
+ * @return string a unique id referring to a newly created ticket
+ */
+function get_ticket()
+{
     return Seminar_Session::get_ticket();
 }
 
-function check_ticket($studipticket){
+/**
+ * check if the passed ticket is valid
+ *
+ * @param string $studipticket the ticket-id to check
+ * 
+ * @return bool
+ */
+function check_ticket($studipticket)
+{
     return Seminar_Session::check_ticket($studipticket);
 }
 
-function search_range($search_str = false, $search_user = false, $show_sem = true) {
-
+/**
+ * searches
+ *
+ * @global array $perm
+ * @global object $user
+ * @global array $_fullname_sql
+ *
+ * @param string $search_str  optional search-string
+ * @param string $search_user optional user to search for
+ * @param bool   $show_sem    if true, the seminar is added to the result
+ *
+ * @return array
+ */
+function search_range($search_str = false, $search_user = false, $show_sem = true)
+{
     global $perm, $user, $_fullname_sql;
 
     $db = new DB_Seminar();
@@ -1252,12 +1474,18 @@ function search_range($search_str = false, $search_user = false, $show_sem = tru
     return $search_result;
 }
 
-/*
+/**
  * format_help_url($keyword)
  * returns URL for given help keyword
+ *
+ * @deprecated
+ *
+ * @param string $keyword the help-keyword
+ *
+ * @return string the help-url
  */
-
-function format_help_url($keyword) {
+function format_help_url($keyword)
+{
     global $auth, $_language;
 
     $helppage=$keyword;
@@ -1291,12 +1519,12 @@ function format_help_url($keyword) {
 /**
  * Remove slashes if magic quotes are enabled
  *
- * @param  mixed  string or array to strip slashes from
+ * @param mixed $mixed string or array to strip slashes from
  *
- * @return mixed  cleaned string or array
+ * @return mixed cleaned string or array
  */
-
-function remove_magic_quotes($mixed) {
+function remove_magic_quotes($mixed)
+{
     if (get_magic_quotes_gpc()) {
         if (is_array($mixed)) {
             foreach ($mixed as $k => $v) {
@@ -1313,6 +1541,8 @@ function remove_magic_quotes($mixed) {
 /**
  * Unset all variables set by register_globals (if enabled).
  * Note: The session variables 'auth' and 'SessSemName' are preserved.
+ *
+ * @return void
  */
 function unregister_globals ()
 {
@@ -1346,16 +1576,17 @@ function unregister_globals ()
   * found, null is returned.
   * Ex: text_excerpt("hello my world", "my", 3) => "...lo my wo..."
   *
-  * @param string  the text to excerpted
-  * @param string  the search phrase
-  * @param integer the radius around the phrase
-  * @param integer the maximum length of the excerpt string
-  * @param string  the excerpt string
+  * @param string  $text           the text to excerpt
+  * @param string  $phrase         the search phrase
+  * @param integer $radius         the radius around the phrase
+  * @param integer $length         the maximum length of the excerpt string
+  * @param string  $excerpt_string the excerpt string
   *
-  * @return type <description>
+  * @return string
 */
 function text_excerpt($text, $phrase, $radius = 100, $length = 200,
-                      $excerpt_string = '...') {
+                      $excerpt_string = '...')
+{
   if ($text == '' || $phrase == '') {
     return '';
   }
@@ -1385,22 +1616,24 @@ function text_excerpt($text, $phrase, $radius = 100, $length = 200,
 /**
  * Splits a string by space characters and returns these words as an array.
  *
- * @param  string       the string to split
+ * @param string $string the string to split
  *
- * @return array        the words of the string as array
+ * @return array  the words of the string as array
  */
-function words($string) {
+function words($string)
+{
   return preg_split('/ /', $string, -1, PREG_SPLIT_NO_EMPTY);
 }
 
 /**
  * Encodes a string from Stud.IP encoding (WINDOWS-1252/ISO-8859-1 with numeric HTML-ENTITIES) to UTF-8
  *
- * @param  string       a string to encode in WINDOWS-1252/HTML-ENTITIES
+ * @param string $string a string to encode in WINDOWS-1252/HTML-ENTITIES
  *
- * @return string       the string in UTF-8
+ * @return string  the string in UTF-8
  */
-function studip_utf8encode($string){
+function studip_utf8encode($string)
+{
     if(!preg_match('/[\200-\377]/', $string) && !preg_match("'&#[0-9]+;'", $string)){
         return $string;
     } else {
@@ -1411,11 +1644,12 @@ function studip_utf8encode($string){
 /**
  * Encodes a string from UTF-8 to Stud.IP encoding (WINDOWS-1252/ISO-8859-1 with numeric HTML-ENTITIES)
  *
- * @param  string       a string in UTF-8
+ * @param string $string a string in UTF-8
  *
- * @return string       the string in WINDOWS-1252/HTML-ENTITIES
+ * @return string  the string in WINDOWS-1252/HTML-ENTITIES
  */
-function studip_utf8decode($string){
+function studip_utf8decode($string)
+{
     if(!preg_match('/[\200-\377]/', $string)){
         return $string;
     } else {
@@ -1462,17 +1696,22 @@ function studip_utf8decode($string){
     }
 }
 
-/*
+/**
  * Get the title used for the given status ('dozent', 'tutor' etc.) for the
  * specified SEM_TYPE. Alternative titles can be defined in the config.inc.php.
  *
- * @param string        status ('dozent', 'tutor', 'autor', 'user' or 'accepted')
- * @param int           count, this determines singular or plural form of title
- * @param int           sem_type of course (defaults to type of current course)
+ * @global array $SEM_TYPE
+ * @global array $SessSemName
+ * @global array $DEFAULT_TITLE_FOR_STATUS
  *
- * @return string       translated title for status
+ * @param string $type     status ('dozent', 'tutor', 'autor', 'user' or 'accepted')
+ * @param int    $count    count, this determines singular or plural form of title
+ * @param int    $sem_type sem_type of course (defaults to type of current course)
+ *
+ * @return string  translated title for status
  */
-function get_title_for_status($type, $count, $sem_type = NULL) {
+function get_title_for_status($type, $count, $sem_type = NULL)
+{
     global $SEM_TYPE, $SessSemName, $DEFAULT_TITLE_FOR_STATUS;
 
     if (is_null($sem_type)) {
@@ -1496,12 +1735,14 @@ function get_title_for_status($type, $count, $sem_type = NULL) {
  * Stud.IP encoding aware version of good ol' substr(), treats numeric HTML-ENTITIES as one character
  * use only if really necessary
  *
- * @param  string
- * @param  integer
- * @param  integer
- * @return string       the part of the string
+ * @param string  $string string to shorten
+ * @param integer $offset position to start with
+ * @param integer $length maximum length
+ *
+ * @return string  the part of the string
  */
-function studip_substr($string, $offset, $length = false){
+function studip_substr($string, $offset, $length = false)
+{
     if(!preg_match("'&#[0-9]+;'", $string)){
         return substr($string, $offset, $length);
     }
@@ -1517,10 +1758,12 @@ function studip_substr($string, $offset, $length = false){
  * Stud.IP encoding aware version of good ol' strlen(), treats numeric HTML-ENTITIES as one character
  * use only if really necessary
  *
- * @param  string
- * @return integer      the number of characters in string
+ * @param string $string the string to measure
+ * 
+ * @return integer  the number of characters in string
  */
-function studip_strlen($string){
+function studip_strlen($string)
+{
     if(!preg_match("'&#[0-9]+;'", $string)){
         return strlen($string);
     }
@@ -1531,7 +1774,9 @@ function studip_strlen($string){
  * Test whether the given URL refers to some page or resource of
  * this Stud.IP installation.
  *
- * @param string        url to check
+ * @param string $url url to check
+ *
+ * @return mixed
  */
 function is_internal_url($url)
 {
@@ -1550,7 +1795,7 @@ function is_internal_url($url)
  * Return the list of SEM_TYPES that represent study groups in this
  * Stud.IP installation.
  *
- * @return array     list of SEM_TYPES used for study groups
+ * @return array  list of SEM_TYPES used for study groups
  */
 function studygroup_sem_types()
 {
@@ -1568,12 +1813,11 @@ function studygroup_sem_types()
 /**
  * generates form fields for the submitted multidimensional array
  *
- * @param string  $variable the name of the array, which is filled with the data
- * @param mixed   $data     the data-array
- * @param mixed   $parent   leave this entry as is
+ * @param string $variable the name of the array, which is filled with the data
+ * @param mixed  $data     the data-array
+ * @param mixed  $parent   leave this entry as is
  *
  * @return string the inputs of type hidden as html
- *
  */
 function addHiddenFields($variable, $data, $parent = array())
 {

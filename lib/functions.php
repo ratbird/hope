@@ -188,6 +188,8 @@ function selectSem ($sem_id)
         $SessSemName["header_line"] = getHeaderLine ($sem_id, array('name' => $row["Name"], 'type' => $SessSemName["art"]));
 
         $_SESSION['SessionSeminar'] =& $SessionSeminar;
+        $_SESSION['SessSemName'] =& $SessSemName;
+
         URLHelper::addLinkParam('cid', $SessionSeminar);
         return true;
     } else {
@@ -250,6 +252,8 @@ function selectInst ($inst_id)
         $SessSemName["header_line"] = getHeaderLine ($inst_id, array('name' => $row["Name"], 'type' => $SessSemName["art"]));
 
         $_SESSION['SessionSeminar'] =& $SessionSeminar;
+        $_SESSION['SessSemName'] =& $SessSemName;
+
         URLHelper::addLinkParam('cid', $SessionSeminar);
         return true;
     } else {
@@ -1460,13 +1464,13 @@ function search_range($search_str = false, $search_user = false, $show_sem = tru
         if (isDeputyEditAboutActivated()) {
             $query = "SELECT a.user_id, a.username, ".$_fullname_sql['full']." AS name
                 FROM auth_user_md5 a
-                    JOIN user_info USING (user_id) 
+                    JOIN user_info USING (user_id)
                     JOIN deputies d ON (a.user_id=d.range_id)
                 WHERE d.user_id='$user->id' ORDER BY name ASC";
             $db->query($query);
             while ($db->next_record()) {
-                $search_result[$db->f("user_id")] = array("type" => "user", 
-                    "name" => $db->f("name")." (".$db->f("username").")", 
+                $search_result[$db->f("user_id")] = array("type" => "user",
+                    "name" => $db->f("name")." (".$db->f("username").")",
                     "username" => $db->f("username"));
             }
         }
@@ -1556,7 +1560,7 @@ function unregister_globals ()
 
     $noUnset = array('GLOBALS', '_GET', '_POST', '_COOKIE',
                      '_REQUEST', '_SERVER', '_ENV', '_FILES',
-                     'auth', 'SessionSeminar');
+                     'auth', 'SessionSeminar', 'SessSemName');
     $vars = array_merge($_GET, $_POST, $_COOKIE, $_SERVER, $_ENV, $_FILES);
 
     if (isset($_SESSION)) {

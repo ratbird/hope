@@ -5,7 +5,7 @@
 <div>
     <label for="new_room_request_type"><?= _("Art der Raumanfrage:")?></label>
     <select id="new_room_request_type" name="new_room_request_type">
-        <? foreach ($options as $one) :?>
+        <? foreach ($options as $one) : ?>
         <option value="<?= $one['value']?>">
         <?= htmlReady($one['name'])?>
         </option>

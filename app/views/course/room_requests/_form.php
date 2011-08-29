@@ -1,8 +1,9 @@
 <input type="hidden" name="room_request_form" value="1">
 <? if (isset($new_room_request_type)) : ?>
-    <input type="hidden" name="new_room_request_type" value="<?=$new_room_request_type?>">
+    <input type="hidden" name="new_room_request_type" value="<?= $new_room_request_type ?>">
 <? endif ?>
 <table class="default">
+<tr>
     <td colspan="2">
         <?
         echo _("Sie haben die Möglichkeit, gewünschte Raumeigenschaften sowie einen konkreten Raum anzugeben. Diese Raumwünsche werden von der zentralen Raumverwaltung bearbeitet.");
@@ -29,22 +30,22 @@
     </td>
 </tr>
 <?
-if ($request_resource_id = $request->getResourceId()) {
+if ($request_resource_id = $request->getResourceId()) :
     $resObject = ResourceObject::Factory($request_resource_id);
 ?>
+<tr>
     <td colspan="2">
         <b><?=("gewünschter Raum:")?></b><br><br>
-            <?
-            print "<b>".htmlReady($resObject->getName())."</b>,&nbsp;"._("verantwortlich:")."&nbsp;<a href=\"".$resObject->getOwnerLink()."\">".$resObject->getOwnerName()."</a>";
-            print "&nbsp;&nbsp;<input type=\"IMAGE\" src=\"" . Assets::image_path('icons/16/blue/refresh.png') . "\" ".tooltip(_("den ausgewählten Raum löschen"))." name=\"reset_resource_id\">";
-            ?>
-            <img  src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/grey/info-circle.png"
-            <? echo tooltip(_("Der ausgewählte Raum bietet folgende der wünschbaren Eigenschaften:")." \n".$resObject->getPlainProperties(TRUE), TRUE, TRUE) ?>>
+        <b><?= htmlReady($resObject->getName()) ?></b>,
+        <?= _("verantwortlich:") ?>
+        <a href="<?= $resObject->getOwnerLink() ?>"><?= htmlReady($resObject->getOwnerName()) ?></a>
+        <input type="image" src="<?= Assets::image_path('icons/16/blue/refresh.png') ?>" <?= tooltip(_("den ausgewählten Raum löschen")) ?> name="reset_resource_id">
+        <img  src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/grey/info-circle.png"
+            <?= tooltip(_("Der ausgewählte Raum bietet folgende der wünschbaren Eigenschaften:")
+            ." \n".$resObject->getPlainProperties(TRUE), TRUE, TRUE) ?>>
     </td>
 </tr>
-<?
-}
-?>
+<? endif ?>
 <tr>
     <td colspan="2">
         <table class="default">
@@ -74,7 +75,7 @@ if ($request_resource_id = $request->getResourceId()) {
                             ?>
                             <tr>
                                 <td width="30%" >
-                                    <?=htmlReady($prop["name"])?>
+                                    <?= htmlReady($prop["name"]) ?>
                                 </td>
                                 <td width="70%">
                                 <?

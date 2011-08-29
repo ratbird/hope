@@ -1482,8 +1482,6 @@ function search_range($search_str = false, $search_user = false, $show_sem = tru
  * format_help_url($keyword)
  * returns URL for given help keyword
  *
- * @deprecated
- *
  * @param string $keyword the help-keyword
  *
  * @return string the help-url

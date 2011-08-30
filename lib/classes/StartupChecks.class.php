@@ -92,7 +92,7 @@ class StartupChecks {
         $this->registered_checks["myInstitutes"]["link_name"] = _("Kontakt zu den Administratoren");
 
         $this->registered_checks["semester"]["msg"] = _("Um Veranstaltungen anlegen zu können muss mindestens ein Semester existieren, welches den jetzigen Zeitpunkt beinhaltet. Bitte legen Sie ein passendes Semester an.");
-        $this->registered_checks["semester"]["link"] = "admin_semester.php";
+        $this->registered_checks["semester"]["link"] = "dispatch.php/admin/semester/edit_semester";
         $this->registered_checks["semester"]["link_name"] = _("Neues Semester anlegen");
 
         $this->registered_checks["semesterAdmin"]["msg"] = _("Um Veranstaltungen anlegen zu können muss mindestens ein Semester existieren, welches den jetzigen Zeitpunkt beinhaltet. Um ein neues Semester anzulegen werden root-Rechte benötigt. Bitte wenden Sie sich an jemanden mit den nötigen Rechten.");

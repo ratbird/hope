@@ -2368,11 +2368,10 @@ class Seminar
                       "SET status = ".$db->quote($status).", " .
                       "Seminar_id = ".$db->quote($this->id).", " .
                       "user_id = ".$db->quote($user_id).", " .
-                      "position = ".$db->quote($new_position).", " .
+                      "position = ".$db->quote($new_position ? $new_position : 0).", " .
                       "gruppe = " . (int)select_group($this->getSemesterStartTime()) . ", " .
                        (in_array($status, words('tutor dozent')) ? "visible='yes', " : "" ) .
-                      "mkdate = ".time()." " .
-                       "");
+                      "mkdate = ".time());
             removeScheduleEntriesMarkedAsVirtual($user_id, $this->getId());
             return $this;
         } elseif (($force || $rangordnung[$old_status] < $rangordnung[$status])
@@ -2382,8 +2381,7 @@ class Seminar
                       (in_array($status, words('tutor dozent')) ? "visible='yes', " : "" ) .
                       "position = ".$db->quote($new_position)." " .
                       "WHERE Seminar_id = ".$db->quote($this->id)." " .
-                      "AND user_id = ".$db->quote($user_id)
-                       );
+                      "AND user_id = ".$db->quote($user_id));
             if ($old_status === "dozent") {
                 $termine = $db->query(
                     "SELECT termin_id FROM termine WHERE range_id = ".$db->quote($this->id)." " .

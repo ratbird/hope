@@ -993,6 +993,16 @@ class Seminar
         return $new_id;
     }
 
+    /**
+     * Change a regular timeslot of the seminar. The data is passed as an array
+     * conatining the following fields:
+     *   start_stunde, start_minute, end_stunde, end_minute
+     *   description, turnus, startWeek, day, sws
+     *
+     * @param array $data the cycle-data
+     *
+     * @return void
+     */
     function editCycle($data = array())
     {
         $cycle = $this->metadate->cycles[$data['cycle_id']];
@@ -1002,15 +1012,20 @@ class Seminar
         $old_end = mktime($cycle->getEndStunde(), $cycle->getEndMinute());
         $do_changes = false;
 
+        // check, if the new timeslot exceeds the old one
         if (($new_start < $old_start) || ($new_end > $old_end) || ($data['day'] != $cycle->day) ) {
             $has_bookings = false;
 
+            // check, if there are any booked rooms
             foreach($cycle->getSingleDates() as $singleDate) {
                 if ($singleDate->getStarttime() > (time() - 3600) && $singleDate->hasRoom()) {
                     $has_bookings = true;
                     break;
                 }
             }
+
+            // if the timeslot exceeds the previous one and has some booked rooms
+            // they would be lost, so ask the user for permission to do so.
             if (!$data['really_change'] && $has_bookings) {
                 $link_params = array(
                     'editCycle_x' => '1',
@@ -1040,38 +1055,40 @@ class Seminar
         $messages = false;
         $same_time = false;
 
-        if ($data['description'] != $cycle->getDescription()) {
-            $this->createMessage(_("Die Beschreibung des regelmäßigen Eintrags wurde geändert."));
-            $message = true;
-            $do_changes = true;
-        }
-
-        if ($old_start == $new_start && $old_end == $new_end) {
-            $same_time = true;
-        }
-        if ($data['startWeek'] != $cycle->week_offset) {
-            $this->setStartWeek($data['startWeek'], $cycle->metadate_id);
-            $message = true;
-            $do_changes = true;
-        }
-        if ($data['turnus'] != $cycle->cycle) {
-            $this->setTurnus($data['turnus'], $cycle->metadate_id);
-            $message = true;
-            $do_changes = true;
-        }
-        if ($data['day'] != $cycle->day) {
-            $message = true;
-            $same_time = false;
-            $do_changes = true;
-        }
-        if (round(str_replace(',','.', $data['sws']),1) != $cycle->sws) {
-            $cycle->sws = $data['sws'];
-            $this->createMessage(_("Die Semesterwochenstunden für Dozenten des regelmäßigen Eintrags wurden geändert."));
-            $message = true;
-            $do_changes = true;
-        }
-
+        // only apply changes, if the user approved the change or
+        // the change does not need any approval
         if ($do_changes) {
+            if ($data['description'] != $cycle->getDescription()) {
+                $this->createMessage(_("Die Beschreibung des regelmäßigen Eintrags wurde geändert."));
+                $message = true;
+                $do_changes = true;
+            }
+
+            if ($old_start == $new_start && $old_end == $new_end) {
+                $same_time = true;
+            }
+            if ($data['startWeek'] != $cycle->week_offset) {
+                $this->setStartWeek($data['startWeek'], $cycle->metadate_id);
+                $message = true;
+                $do_changes = true;
+            }
+            if ($data['turnus'] != $cycle->cycle) {
+                $this->setTurnus($data['turnus'], $cycle->metadate_id);
+                $message = true;
+                $do_changes = true;
+            }
+            if ($data['day'] != $cycle->day) {
+                $message = true;
+                $same_time = false;
+                $do_changes = true;
+            }
+            if (round(str_replace(',','.', $data['sws']),1) != $cycle->sws) {
+                $cycle->sws = $data['sws'];
+                $this->createMessage(_("Die Semesterwochenstunden für Dozenten des regelmäßigen Eintrags wurden geändert."));
+                $message = true;
+                $do_changes = true;
+            }
+        
             $change_from = $cycle->toString();
             if ($this->metadate->editCycle($data)) {
                 if (!$same_time) {
@@ -1088,12 +1105,11 @@ class Seminar
                 }
             }
             $this->metadate->sortCycleData();
-        }
 
-        if (!$message) {
-            $this->createInfo("Sie haben keine Änderungen vorgenommen!");
+            if (!$message) {
+                $this->createInfo("Sie haben keine Änderungen vorgenommen!");
+            }
         }
-
     }
 
     function deleteCycle($cycle_id)

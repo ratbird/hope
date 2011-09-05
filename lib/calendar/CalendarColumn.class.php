@@ -19,7 +19,7 @@ class CalendarColumn {
     protected static $number = 0;
     protected $title = "";
     protected $id = "";
-    protected $entries = array();
+    public    $entries = array();
     protected $url = "";
     protected $grouped    = false;
 

@@ -92,14 +92,6 @@ class CalendarWeekView extends CalendarView
     }
 
     /**
-     * @return bool true if read only, false otherwise
-     */
-    public function isReadOnly()
-    {
-        return $this->read_only;
-    }
-
-    /**
      * @return mixed the days
      */
     public function getDays()
@@ -107,4 +99,38 @@ class CalendarWeekView extends CalendarView
         return $this->days;
     }
 
+    /**
+     * returns the previously set javasscript insert-function only
+     * if read_only is not set.
+     *
+     * @return  string  name of js-function or anonymous js-function
+     */
+    public function getInsertFunction() {
+        if (!$this->read_only) {
+            return parent::getInsertFunction();
+        }
+
+        return false;
+    }
+
+    /**
+     * returns all columns of the calendar-view nad removes the url if
+     * read_only is set
+     *
+     * @return  array  of CalendarColumn
+     */
+    public function getColumns() {
+        if ($this->read_only) {
+            foreach ($this->entries as $column) {
+                $column->setURL(false);
+                foreach ($column->entries as $key => $entry) {
+                    unset($column->entries[$key]['url']);
+                    unset($column->entries[$key]['onClick']);
+                    unset($column->entries[$key]['icons']);
+                }
+            }
+        }
+
+        return parent::getColumns();
+    }
 }

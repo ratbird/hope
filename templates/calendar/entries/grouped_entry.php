@@ -29,10 +29,8 @@ $element_id = md5(uniqid());
     style="top: <?= $top ?>px; height: <?= $height ?>px; width: <?= $width ?>%<?= ($col > 0) ? ';left:'. ($col * $width) .'%' : '' ?>"
     title="<?= htmlReady(implode(', ', $title)) ?>">
 
-    <? if (!$calendar_view->isReadOnly()) : ?>
     <a <?= $entry['url'] ? ' href="'.$entry['url'].'"' : '' ?>
         <?= $entry[0]['onClick'] ? 'onClick="STUDIP.Calendar.clickEngine(' . $entry[0]['onClick'] . ', this, event); return false;"' : '' ?>>
-    <? endif ?>
 
     <!-- for safari5 we need to set the height for the dl as well -->
     <dl class="hover" style="height: <?= $height ?>px;
@@ -52,9 +50,7 @@ $element_id = md5(uniqid());
         </dd>
     </dl>
 
-    <? if (!$calendar_view->isReadOnly()) : ?>
     </a>
-    <? endif ?>
 
     <div class="snatch" style="display: none"><div> </div></div>
     <?= $this->render_partial('calendar/entries/icons', compact('element_id')) ?>

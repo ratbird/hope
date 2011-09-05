@@ -2,9 +2,11 @@
     Druck-Stylesheet für Stud.IP
 *******************************************************************************/
 /* //TODO: für druck noch weiter optmieren */
-body {
+html, body {
     font-family: Arial, Helvetica, sans-serif;
     background-image: none;
+    background: none;
+    height: auto;
 }
 
 a:visited, a:link, a:hover, a:active {
@@ -131,7 +133,8 @@ div.window_heading {
 #barTopStudip, #barBottomLeft, #barBottommiddle,
 #barBottomright, #barBottomshadow, #tabs, #tabs2,
 #layout_infobox, #schedule_icons, #edit_inst_entry,
-#layout_footer, #layout_sidebar {
+#layout_footer, #layout_sidebar, #barBottomContainer,
+#layout_push {
     display: none !important;
 }
 

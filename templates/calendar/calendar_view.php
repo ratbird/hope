@@ -17,7 +17,7 @@ $cell_width = floor (100 / sizeof($calendar_view->getColumns()));
   STUDIP.Calendar.the_entry_content = '<?= str_replace("\n", '', $this->render_partial('calendar/entries/empty_entry')) ?>';
   STUDIP.Calendar.start_hour = <?= $start_hour ?>;
 
-  <? if (!$calendar_view->isReadOnly() && $js_function = $calendar_view->getInsertFunction()) : ?>
+  <? if ($js_function = $calendar_view->getInsertFunction()) : ?>
   jQuery(function() {
 
     jQuery('[id^=calendar_view_<?= $view_id ?>_column_] div.schedule_entry').bind('mousedown', function(event) {
@@ -87,7 +87,6 @@ $cell_width = floor (100 / sizeof($calendar_view->getColumns()));
             <? foreach ($calendar_view->getColumns() as $column) : ?>
             <td style="text-align: center; vertical-align: top; background-color: #E8EEF7; padding-right: 2px; padding: 0px; width: <?= $cell_width ?>%">
                 <? $link_or_not = $column->getURL() ? '<a href="'.URLHelper::getLink($column->getURL()).'">%s</a>' : '%s';
-                if ($calendar_view->isReadOnly()) $link_or_not = '%s';
                 printf($link_or_not, htmlReady($column->getTitle()));
                 ?>
             </td>

@@ -182,6 +182,12 @@ class Course_RoomRequestsController extends AuthenticatedController
                     $this->room_categories = array_filter(getResourcesCategories(), create_function('$a', 'return $a["is_room"] == 1;'));
                     $this->new_room_request_type = Request::option('new_room_request_type');
                     $title = _("Verwaltung von Raumanfragen");
+                    if (Request::submitted('save') && ($request->getSettedPropertiesCount() || $request->getResourceId())) {
+                        PageLayout::postMessage(MessageBox::success(_("Die Raumanfrage und gewünschte Raumeigenschaften wurden gespeichert")));
+                }
+                    if (!($request->getSettedPropertiesCount() || $request->getResourceId())) {
+                        PageLayout::postMessage(MessageBox::error(_("Die Anfrage kann noch nicht gespeichert werden, da Sie mindestens einen Raum oder mindestens eine Eigenschaft (z.B. Anzahl der Sitzplätze) angeben müssen!")));
+            }
                 }
             }
 
@@ -190,6 +196,31 @@ class Course_RoomRequestsController extends AuthenticatedController
             $content = $this->get_response()->body;
             $this->erase_response();
             return $this->render_json(array('title' => studip_utf8encode($title), 'content' => studip_utf8encode($content)));
+        } else {
+            return $this->render_text('');
+        }
+    }
+
+    function index_assi_action()
+    {
+        if (Request::isXhr() && $this->course_id == '-') {
+            $this->response->add_header('Content-Type', 'text/html; charset=windows-1252');
+            $sem_create_data =& $_SESSION['sem_create_data'];
+            $options = array();
+            foreach ($sem_create_data['room_requests_options'] as $one) {
+                if ($sem_create_data['room_requests'][$one['value']] instanceof RoomRequest) {
+                    $options[$one['value']]['request'] = $sem_create_data['room_requests'][$one['value']];
+                } else {
+                    $options[$one['value']]['request'] = null;
+                }
+                $options[$one['value']]['name'] = $one['name'];
+            }
+            if (Request::option('request_id') !== null) {
+                $this->request = $options[Request::option('request_id')]['request'];
+                return $this->render_template('course/room_requests/_request.php', null);
+            }
+            $this->options = $options;
+            return $this->render_template('course/room_requests/index_assi.php', null);
         } else {
             return $this->render_text('');
         }

@@ -1825,7 +1825,6 @@ STUDIP.RoomRequestDialog = {
                             height: 'auto',
                             maxHeight: jQuery(window).height(),
                             close: function () {
-                                STUDIP.RoomRequestDialog.submit(jQuery('form[name=room_request]')[0], 'save');
                                 jQuery(this).remove();
                                 STUDIP.RoomRequestDialog.dialog = null;
                             }

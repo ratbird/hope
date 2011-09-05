@@ -62,8 +62,8 @@ class SeminarCycleDate extends SimpleORMap
      */
     static function findByTermin($termin_id)
     {
-        $found = self::findBySql("metadate_id=(SELECT metadate_id FROM termine WHERE temin_id=" . DbManager::get()->quote($termin_id) . "
-                                  UNION SELECT metadate_id FROM ex_termine WHERE temin_id=" . DbManager::get()->quote($termin_id) . ")");
+        $found = self::findBySql("metadate_id=(SELECT metadate_id FROM termine WHERE termin_id=" . DbManager::get()->quote($termin_id) . "
+                                  UNION SELECT metadate_id FROM ex_termine WHERE termin_id=" . DbManager::get()->quote($termin_id) . ")");
         return is_array($found) ? $found[0] : null;
     }
 

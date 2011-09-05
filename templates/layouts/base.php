@@ -44,9 +44,11 @@
     </div>
 </div>
     <script>
+    jQuery(function () {
         if(jQuery('#layout_sidebar').height() < jQuery('#layout_content').height()) {
             jQuery('#layout_sidebar').css("height", jQuery('#layout_content').height());
         }
+    });
     </script>
 <!-- Ende Page -->
     <div id="layout_push"></div>

@@ -277,7 +277,6 @@ class RoomRequest extends SimpleORMap
         if ($this->properties[$property_id]['state'] != $value) {
             $this->properties_changed = true;
         }
-
         if ($value) {
             $this->properties[$property_id] = array("state" => $value);
         } else {
@@ -538,47 +537,54 @@ class RoomRequest extends SimpleORMap
 
     function getInfo()
     {
-        if (!$this->isNew()) {
-            if ($this->resource_id) {
-                $resObject = ResourceObject::Factory($this->resource_id);
-                $requestData[] = sprintf(_('Raum: %s'), $resObject->getName());
-                $requestData[] = sprintf(_('verantwortlich: %s'), $resObject->getOwnerName());
+        if ($this->isNew()) {
+            if (!($this->getSettedPropertiesCount() || $this->getResourceId())) {
+                $requestData[] = _('Die Raumanfrage ist unvollständig, und kann so nicht dauerhaft gespeichert werden!');
             } else {
-                $requestData[] = _('Es wurde kein spezifischer Raum gewünscht');
+                $requestData[] = _('Die Raumanfrage ist neu.');
             }
             $requestData[] = '';
 
-            foreach ($this->getProperties() as $val) {
+        }
+        if ($this->resource_id) {
+            $resObject = ResourceObject::Factory($this->resource_id);
+            $requestData[] = sprintf(_('Raum: %s'), $resObject->getName());
+            $requestData[] = sprintf(_('verantwortlich: %s'), $resObject->getOwnerName());
+        } else {
+            $requestData[] = _('Es wurde kein spezifischer Raum gewünscht');
+        }
+        $requestData[] = '';
+
+        foreach ($this->getAvailableProperties() as $val) {
+            if ($this->getPropertyState($val['property_id']) !== null) {
+                $state = $this->getPropertyState($val['property_id']);
                 $prop = $val['name'].': ';
                 if ($val['type'] == 'bool') {
-                    if ($val['state'] == 'on') {
+                    if ($state == 'on') {
                         $prop .= _('vorhanden');
                     } else {
                         $prop .= _('nicht vorhanden');
                     }
                 } else {
-                    $prop .= $val['state'];
+                    $prop .= $state;
                 }
                 $requestData[] = $prop;
             }
-
-            $requestData[] = '';
-
-            $requestData[] = sprintf(_('Status: %s'), $this->getStatusExplained());
-            $requestData[] = '';
-
-            // if the room-request has been declined, show the decline-notice placed by the room-administrator
-            if ($this->getClosed() == 3) {
-                $requestData[] = _('Nachricht RaumadministratorIn:');
-                $requestData[] = $this->getReplyComment();
-            } else {
-                $requestData[] = _('Nachricht an den/die RaumadministratorIn:');
-                $requestData[] = $this->getComment();
-            }
-            return join("\n", $requestData);
-        } else {
-            return _('Die Raumanfrage ist neu.');
         }
+        $requestData[] = '';
+
+        $requestData[] = sprintf(_('Bearbeitung durch den/die RaumadministratorIn: %s'), $this->getStatusExplained());
+        $requestData[] = '';
+
+        // if the room-request has been declined, show the decline-notice placed by the room-administrator
+        if ($this->getClosed() == 3) {
+            $requestData[] = _('Nachricht RaumadministratorIn:');
+            $requestData[] = $this->getReplyComment();
+        } else {
+            $requestData[] = _('Nachricht an den/die RaumadministratorIn:');
+            $requestData[] = $this->getComment();
+        }
+        return join("\n", $requestData);
     }
 
     function getTypeExplained()

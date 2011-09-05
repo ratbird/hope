@@ -343,7 +343,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                 <? if ($show_rooms_check_url) : ?>
                 <td width="25%" class="steel" valign=bottom>
                     <img src="<?=$GLOBALS['ASSETS_URL']?>images/blank.gif" width=1 height=20>
-                    <b><?=_("Raum")?></b></a>
+                    <b><?=_("Raum")?></b>
                 </td>
                 <? endif; ?>
                 <td width="15%" align="center" class="steel" valign=bottom>

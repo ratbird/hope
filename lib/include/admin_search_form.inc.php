@@ -511,7 +511,19 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                 }
             }
             echo "</font></td>";
-            echo "<td class=\"".$cssSw->getClass()."\" align=\"center\"><font size=-1>".htmlReady(SeminarCategories::GetByTypeId($result['status'])->getNameOfType($result['status']))."<br>" . _("Kategorie:") . " <b>".htmlReady(SeminarCategories::GetByTypeId($result['status'])->name)."</b><font></td>";
+            ?>
+
+            <td class="<?= $cssSw->getClass() ?>" align="center">
+                <? if (SeminarCategories::getByTypeId($result['status'])) : ?>
+                <?= htmlReady(SeminarCategories::GetByTypeId($result['status'])->getNameOfType($result['status'])) ?><br>
+                <?= _("Kategorie:") ?>
+                <b> <?= htmlReady(SeminarCategories::GetByTypeId($result['status'])->name) ?></b>
+                <? else : ?>
+                <?= _('nicht zugeordnet') ?>
+                <? endif ?>
+            </td>
+
+            <?
             echo "<td class=\"".$cssSw->getClass()."\" nowrap align=\"center\">";
 
             //Kommandos fuer die jeweilgen Seiten

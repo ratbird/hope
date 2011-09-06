@@ -13,13 +13,16 @@
  *
  * For a plugin to hand the information "test" to the javascript-function
  * STUDIP.myplugin.myfunction just put the line:
- *  UpdateInformation::setInformation("myplugin.myfunction", "test");
+ *  if (UpdateInformation::isCollecting()) {
+ *      UpdateInformation::setInformation("myplugin.myfunction", "test");
+ *  }
  *
  * @author Rasmus Fuhse
  */
 class UpdateInformation {
 
     static protected $infos = array();
+    static protected $collecting = null;
 
     /**
      * Gives information to the buffer for the javascript. The first parameter is
@@ -38,6 +41,22 @@ class UpdateInformation {
      */
     static public function getInformation() {
         return self::$infos;
+    }
+    
+    /**
+     * returns if this request is a request, that wants to collect information
+     * to hand it to javascript. Ask for this in your SystemPlugin-constructor.
+     * @return: boolean
+     */
+    static public function isCollecting() {
+        if (self::$collecting === null) {
+            $page = $_SERVER['REQUEST_URI'];
+            if (strpos($page, "?") !== false) {
+                $page = substr($page, 0, strpos($page, "?"));
+            }
+            self::$collecting = (stripos($page, "dispatch.php/jsupdater/get") !== false);
+        }
+        return self::$collecting;
     }
 }
 

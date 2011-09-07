@@ -167,14 +167,17 @@ $message_types = array('msg' => "success", 'error' => "error", 'info' => "info")
                   <?= get_fullname($dozent["user_id"], 'full_rev', true)." (".$dozent["username"].")" ?>
               </td>
               <td>
+                  <label>
+                  <?= _("Funktion") ?>:
+                  <input value="<?= htmlReady($dozent["label"]) ?>" type="text" name="label[<?= htmlReady($dozent["user_id"]) ?>]" title="<?= _("Die Funktion, die die Person in der Veranstaltung erfüllt.") ?>">
+                  </label>
+              </td>
+              <td>
                   <? if ($perm_dozent && !$dozent_is_locked) : ?>
                   <a href="<?= $controller->url_for('course/basicdata/deletedozent', $course_id, $dozent["user_id"]) ?>">
                   <?= Assets::img("icons/16/blue/trash.png") ?>
                   </a>
                   <? endif ?>
-              </td>
-              <td>
-                  <input value="<?= htmlReady($dozent["label"]) ?>" type="text" name="label[<?= htmlReady($dozent["user_id"]) ?>]" placeholder="<?= _("Funktion") ?>" title="<?= _("Funktion") ?>">
               </td>
           </tr>
           <? $num++; endforeach ?>
@@ -205,12 +208,12 @@ $message_types = array('msg' => "success", 'error' => "error", 'info' => "info")
               <td>
                   <?= get_fullname($deputy["user_id"], 'full_rev', true)." (".$deputy["username"].", "._("Status").": ".$deputy['perms'].")" ?>
               </td>
+              <td></td>
               <td>
                   <a href="<?= $controller->url_for('course/basicdata/deletedeputy', $course_id, $deputy["user_id"]) ?>">
                       <?= Assets::img("icons/16/blue/trash.png") ?>
                   </a>
               </td>
-              <td></td>
           </tr>
           <? endforeach ?>
           <tr>
@@ -253,13 +256,17 @@ $message_types = array('msg' => "success", 'error' => "error", 'info' => "info")
                   <?= get_fullname($tutor["user_id"], 'full_rev', true)." (".$tutor["username"].")" ?>
               </td>
               <td>
+                  <label><?= _("Funktion") ?>:
+                      <input value="<?= htmlReady($tutor["label"]) ?>" type="text" name="label[<?= htmlReady($tutor["user_id"]) ?>]" title="<?= _("Die Funktion, die die Person in der Veranstaltung erfüllt.") ?>">
+                  </label>
+              </td>
+              <td>
                   <? if ($perm_dozent && !$tutor_is_locked) : ?>
                   <a href="<?= $controller->url_for('course/basicdata/deletetutor', $course_id, $tutor["user_id"]) ?>">
                   <?= Assets::img("icons/16/blue/trash.png") ?>
                   </a>
                   <? endif ?>
               </td>
-              <td><input value="<?= htmlReady($tutor["label"]) ?>" type="text" name="label[<?= htmlReady($tutor["user_id"]) ?>]" placeholder="<?= _("Funktion") ?>" title="<?= _("Funktion") ?>"></td>
           </tr>
           <? $num++; endforeach ?>
           <tr>
@@ -272,8 +279,6 @@ $message_types = array('msg' => "success", 'error' => "error", 'info' => "info")
           </tr>
 
       </table>
-
-
 
   </div>
 

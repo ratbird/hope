@@ -15,6 +15,8 @@
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
+
 require_once 'lib/functions.php';
 require_once 'lib/exceptions/AccessDeniedException.php';
 require_once 'vendor/trails/trails.php';
@@ -31,8 +33,6 @@ page_open(array('sess' => 'Seminar_Session',
 try {
 
   require_once 'lib/seminar_open.php';
-
-  unregister_globals();
 
   # get plugin class from request
   $dispatch_to = isset($_SERVER['PATH_INFO']) ?$_SERVER['PATH_INFO'] : '';

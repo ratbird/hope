@@ -217,9 +217,9 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                                 if ($db->num_rows()) {
                                     while ($db->next_record()) {
                                         if ($links_admin_data["srch_doz"] == $db->f("user_id"))
-                                            echo"<option selected value=\"".$db->f("user_id").">\"".htmlReady(my_substr($db->f("fullname"),0,35))."</option>";
+                                            echo"<option selected value=\"".$db->f("user_id")."\">".htmlReady(my_substr($db->f("fullname"),0,35))."</option>";
                                         else
-                                            echo"<option value=\"".$db->f("user_id").">\"".htmlReady(my_substr($db->f("fullname"),0,35))."</option>";
+                                            echo"<option value=\"".$db->f("user_id")."\">".htmlReady(my_substr($db->f("fullname"),0,35))."</option>";
                                     }
                                 }
                             }

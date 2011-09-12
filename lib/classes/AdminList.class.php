@@ -14,6 +14,7 @@
  */
 
 require_once 'lib/classes/Semester.class.php';
+require_once 'lib/classes/Institute.class.php';
 
 /**
  * Singleton class for the admin search list. This is a singleton-class because
@@ -64,14 +65,9 @@ class AdminList {
         if ($links_admin_data["srch_on"]) {
             $db = DBManager::get();
             if (!$perm->have_perm("root")) {
-                $statement = $db->prepare(
-                "SELECT b.Institut_id " .
-                "FROM user_inst AS a " .
-                    "INNER JOIN Institute AS b ON (a.Institut_id = b.fakultaets_id) " .
-                "WHERE a.user_id = :user_id " .
-                    "AND a.inst_perms='admin' ");
-                $statement->execute(array('user_id' => $user->id));
-                $my_inst = $statement->fetchAll(PDO::FETCH_COLUMN, 0);
+                foreach (Institute::getMyInstitutes() as $institute) {
+                    $my_inst[] = $institute['Institut_id'];
+                }
             }
 
             $params = array();

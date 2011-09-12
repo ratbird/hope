@@ -6,7 +6,7 @@
     <?= CSRFProtection::tokenTag() ?>
     <div>
         <?= _("Geben Sie zur Suche den Vor-, Nach- oder Benutzernamen ein.") ?><br>
-        <?= $test = QuickSearch::get("choose_member", $inviting_search)
+        <?= QuickSearch::get("choose_member", $inviting_search)
                             ->withButton()
                             ->render() ?>
         <? if(isset($this->flash['choose_member_parameter'])) : ?>

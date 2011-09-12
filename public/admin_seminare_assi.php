@@ -4082,9 +4082,12 @@ if ($level == 7)
                             print " "._("Sie können den Terminen im Ablaufplan Themen zuordnen.");
                         if ((!$sem_create_data["modules_list"]["schedule"]) && ($sem_create_data["modules_list"]["scm"]))
                             print " "._("Sie haben die M&ouml;glichkeit,  eine Informationsseite anzulegen.");
-                        print "<br><br><font size=-1>"._("Sie haben jederzeit die M&ouml;glichkeit, die bereits erfassten Daten zu &auml;ndern und die n&auml;chsten Schritte sp&auml;ter nachzuholen.")."</font>";
+                        print "<br><br><font size=-1>"._("Sie haben jederzeit die M&ouml;glichkeit, die bereits erfassten Daten zu &auml;ndern und die n&auml;chsten Schritte sp&auml;ter nachzuholen.")."</font>";                       
                     }
                     ?><br><br>
+                    <?= _("Klicken Sie auf den Titel der Veranstaltung, um direkt zur neu angelegten Veranstaltung zu gelangen:") ?>
+                    <a href="<?= URLHelper::getLink('seminar_main.php') ?>"><?= htmlReady(stripslashes($sem_create_data["sem_name"])) ?></a>
+                    <br><br>
                     <? if (isset($_SESSION['sem_create_data_backup']['timestamp'])) : ?>
                         <?= _("Sie können direkt eine Kopie der neu angelegten Veranstaltung anlegen:") ?>
                         <a href="<?= URLHelper::getLink('?start_from_backup=1') ?>"><?= _("Kopie anlegen") ?></a>
@@ -4096,8 +4099,7 @@ if ($level == 7)
                         <?
                         if (($sem_create_data["modules_list"]["schedule"]) || ($sem_create_data["modules_list"]["scm"])) {
                             ?>
-                            <input type="image" <?=makeButton("abbrechen", "src"); ?> border=0 value="<?=_("abbrechen");?>" name="cancel">
-                            &nbsp;<input type="image" <?=makeButton("weiter", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
+                            <input type="image" <?=makeButton("weiter", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
                             <?
                         }
                         ?>

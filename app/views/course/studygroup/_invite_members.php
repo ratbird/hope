@@ -10,8 +10,7 @@
                             ->withButton()
                             ->render() ?>
         <? if(isset($this->flash['choose_member_parameter'])) : ?>
-            <input type="image" name="add_member" <?= makebutton('einladen','src')?> style="vertical-align:middle;">
-            <a href="<?= $controller->url_for('course/studygroup/edit_members/') ?>"><?=  makeButton('abbrechen', 'img') ?></a><br>
+            <input type="image" name="add_member" <?= makebutton('einladen','src')?> style="vertical-align:middle;"><br>
         <? endif; ?>
     </div>
 </form>

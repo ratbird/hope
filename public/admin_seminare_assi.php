@@ -2401,7 +2401,7 @@ elseif ((!$level) || ($level == 1))
                                 else
                                     echo "<option value=0>"._("1 Semester")."</option>";
                                 for ($i=0; $i<sizeof($all_semester); $i++)
-                                    if ((!$all_semester[$i]["past"]) && ($all_semester[$i]["semester_id"] != Semester::findCurrent()->getId()) && (($all_semester[$i]["vorles_ende"] > time())))
+                                    if ((!$all_semester[$i]["past"]) && ($all_semester[$i]["semester_id"] != Semester::findCurrent()->semester_id) && (($all_semester[$i]["vorles_ende"] > time())))
                                         {
                                         if (($sem_create_data["sem_start_time"] + $sem_create_data["sem_duration_time"]) == $all_semester[$i]["beginn"])
                                             {
@@ -4082,7 +4082,7 @@ if ($level == 7)
                             print " "._("Sie können den Terminen im Ablaufplan Themen zuordnen.");
                         if ((!$sem_create_data["modules_list"]["schedule"]) && ($sem_create_data["modules_list"]["scm"]))
                             print " "._("Sie haben die M&ouml;glichkeit,  eine Informationsseite anzulegen.");
-                        print "<br><br><font size=-1>"._("Sie haben jederzeit die M&ouml;glichkeit, die bereits erfassten Daten zu &auml;ndern und die n&auml;chsten Schritte sp&auml;ter nachzuholen.")."</font>";                       
+                        print "<br><br><font size=-1>"._("Sie haben jederzeit die M&ouml;glichkeit, die bereits erfassten Daten zu &auml;ndern und die n&auml;chsten Schritte sp&auml;ter nachzuholen.")."</font>";
                     }
                     ?><br><br>
                     <?= _("Klicken Sie auf den Titel der Veranstaltung, um direkt zur neu angelegten Veranstaltung zu gelangen:") ?>

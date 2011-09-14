@@ -91,15 +91,15 @@ class StartupChecks {
         $this->registered_checks["myInstitutes"]["link"] = "dispatch.php/siteinfo/show";
         $this->registered_checks["myInstitutes"]["link_name"] = _("Kontakt zu den Administratoren");
 
-        $this->registered_checks["semester"]["msg"] = _("Um Veranstaltungen anlegen zu können muss mindestens ein Semester existieren, welches den jetzigen Zeitpunkt beinhaltet. Bitte legen Sie ein passendes Semester an.");
+        $this->registered_checks["semester"]["msg"] = _("Um Veranstaltungen anlegen zu können muss mindestens ein noch nicht abgelaufenes Semester existieren. Bitte legen Sie ein passendes Semester an.");
         $this->registered_checks["semester"]["link"] = "dispatch.php/admin/semester/edit_semester";
         $this->registered_checks["semester"]["link_name"] = _("Neues Semester anlegen");
 
-        $this->registered_checks["semesterAdmin"]["msg"] = _("Um Veranstaltungen anlegen zu können muss mindestens ein Semester existieren, welches den jetzigen Zeitpunkt beinhaltet. Um ein neues Semester anzulegen werden root-Rechte benötigt. Bitte wenden Sie sich an jemanden mit den nötigen Rechten.");
+        $this->registered_checks["semesterAdmin"]["msg"] = _("Um Veranstaltungen anlegen zu können muss mindestens ein noch nicht abgelaufenes Semester existieren. Um ein neues Semester anzulegen werden root-Rechte benötigt. Bitte wenden Sie sich an jemanden mit den nötigen Rechten.");
         $this->registered_checks["semesterAdmin"]["link"] = "dispatch.php/siteinfo/show";
         $this->registered_checks["semesterAdmin"]["link_name"] = _("Kontakt zu den Administratoren");
 
-        $this->registered_checks["semesterDozent"]["msg"] = _("Um Veranstaltungen anlegen zu können muss mindestens ein Semester existieren, welches den jetzigen Zeitpunkt beinhaltet. Bitte wenden Sie sich an einen der Administratoren des Systems.");
+        $this->registered_checks["semesterDozent"]["msg"] = _("Um Veranstaltungen anlegen zu können muss mindestens ein noch nicht abgelaufenes Semester existieren. Bitte wenden Sie sich an einen der Administratoren des Systems.");
         $this->registered_checks["semesterDozent"]["link"] = "dispatch.php/siteinfo/show";
         $this->registered_checks["semesterDozent"]["link_name"] = _("Kontakt zu den Administratoren");
     }
@@ -235,15 +235,11 @@ class StartupChecks {
     }
 
     function semester() {
-        $semester = new SemesterData();
-        $all_semester = $semester->getAllSemesterData();
-
-        foreach ($all_semester as $key => $semester) {
-            if ((!$semester["past"]) && ($semester["ende"] > time())) {
+        foreach (Semester::getAll() as $semester) {
+            if (!$semester["past"]) {
                 return false;
             }
         }
-
         return true;
     }
 

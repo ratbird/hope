@@ -51,14 +51,12 @@ foreach ($list as $key=>$val) {
         $problems_found++;
 }
 
-if ($problems_found) { ?>
+if ($problems_found) {
+    ?>
     <table width="100%" border=0 cellpadding=0 cellspacing=0>
     <tr>
-        <td class="topic" colspan=2><b>Startup Checks</b></td>
-    </tr>
-    <tr>
          <td class="blank" colspan=2>
-            <?= MessageBox::info(_("Das Anlegen einer Veranstaltung ist leider zu diesem Zeitpunkt noch nicht möglich, da zunächst die folgenden Voraussetzungen geschaffen werden m&uuml;ssen."), ($problems_found > 1) ? array(_("(Beachten Sie bitte die angegebene Reihenfolge!)")) : ""); ?>
+            <?= MessageBox::info(_("Das Anlegen einer Veranstaltung ist leider zu diesem Zeitpunkt noch nicht möglich, da zunächst die folgenden Voraussetzungen geschaffen werden m&uuml;ssen."), ($problems_found > 1) ? array(_("(Beachten Sie bitte die angegebene Reihenfolge!)")) : array()); ?>
         </td>
     </tr>
     <tr>

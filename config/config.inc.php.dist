@@ -454,12 +454,13 @@ $SMILE_SHORT = array( //diese Kuerzel fuegen das angegebene Smiley ein (Dateinam
     ";-)"=>"wink");
 
 //Shortcuts for symbols
-$SYMBOL_SHORT = array( //use this shorts to insert an symbols (filename + ".gif")
-    "=)"=>"symbol03" ,
-    "(="=>"symbol04" ,
-    "(c)"=>"symbol05" ,
-    "(r)"=>"symbol06" ,
-    " tm "=>"symbol08");
+$SYMBOL_SHORT = array(
+    "=)"    => "&rArr;" ,
+    "(="    => "&lArr;" ,
+    "(c)"   => "&copy;" ,
+    "(r)"   => "&reg;" ,
+    " tm "  => "&trade;"
+);
 
 
 /*configuration for additional modules
@@ -555,4 +556,4 @@ $NOT_HIDEABLE_FIELDS = array(
 );
 //Add ids of datafields to use for import on teilnehmer.php
 $TEILNEHMER_IMPORT_DATAFIELDS = array();
- 
+

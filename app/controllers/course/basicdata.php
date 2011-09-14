@@ -412,9 +412,7 @@ class Course_BasicdataController extends AuthenticatedController
 
             if ($changemade) {
                 $this->msg[] = array("msg", _("Die Grunddaten der Veranstaltung wurden verändert."));
-            } else {
-                $this->msg[] = array("info", _("An den Grunddaten wurde nichts geändert."));
-            }
+            } 
 
             //Dozenten hinzufügen:
             if ($_POST['new_doz'] && $_POST['add_dozent_x']

@@ -233,11 +233,11 @@ if (($contact["view"])=="gruppen") {
     if (!$filter) {
         $cssSw->switchClass();
     }
-    echo "<td nowrap ".$cssSw->getHover()." class=\"".$cssSw->getClass()."\">&nbsp; "
-    ."<a href=\"".URLHelper::getLink('',array('filter'=>'all'))."\"><font size=\"2\">" . _("Alle Gruppen") . "</font></a>"
-    ."&nbsp; <a href=\"".URLHelper::getLink('',array('groupid'=>'all'))."\"><img style=\"vertical-align:middle;\""
-    .  Assets::img('icons/16/blue/vcard.png', array('class' => 'text-top', 'title' => _("Alle Einträge als vCard exportieren")))
-    . "</a>&nbsp; </td>";
+    echo '<td nowrap ' . $cssSw->getHover() . ' class="' . $cssSw->getClass() . '">&nbsp; '
+    . '<a href="' . URLHelper::getLink('', array('filter' => 'all', 'view' => 'gruppen')) . '">' . _("Alle Gruppen") . '</a>'
+    . '&nbsp; <a href="' . URLHelper::getLink('', array('groupid' => 'all')) . '"><img style="vertical-align:middle;"'
+    . Assets::img('icons/16/blue/vcard.png', array('class' => 'text-top', 'title' => _("Alle Einträge als vCard exportieren")))
+    . '</a>&nbsp; </td>';
     if (!$filter) {
         $cssSw->switchClass();
     }

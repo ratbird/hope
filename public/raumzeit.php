@@ -539,7 +539,7 @@ if ($perm->have_studip_perm("admin",$sem->getId())) {
                             $req_info = $sem->getRoomRequestInfo();
                         ?>
                         <!-- the room-request has not yet been resolved -->
-                        <?= MessageBox::info(_("Für diese Veranstaltung liegt eine noch offene Raumanfrage vor."), array(nl2br($req_info))) ?>
+                        <?= MessageBox::info(_("Für diese Veranstaltung liegt eine noch offene Raumanfrage vor."), array(nl2br(htmlReady($req_info)))) ?>
                         <br>
 
                         <? elseif ($request_status && $request_status == 'declined') :

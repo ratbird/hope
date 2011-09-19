@@ -183,7 +183,7 @@ if (check_ticket($studipticket)) {
     if ($cmd == "copy") {
         try {
             Avatar::getAvatar($my_about->auth_user["user_id"])->createFromUpload('imgfile');
-            $my_about->msg = "msg§" . _("Die Bilddatei wurde erfolgreich hochgeladen. Eventuell sehen Sie das neue Bild erst, nachdem Sie diese Seite neu geladen haben (in den meisten Browsern F5 dr&uuml;cken).") . '§';
+            $my_about->msg .= "msg§" . _("Die Bilddatei wurde erfolgreich hochgeladen. Eventuell sehen Sie das neue Bild erst, nachdem Sie diese Seite neu geladen haben (in den meisten Browsern F5 dr&uuml;cken).") . '§';
         } catch (Exception $e) {
             $my_about->msg = 'error§' . $e->getMessage() . '§';
         }

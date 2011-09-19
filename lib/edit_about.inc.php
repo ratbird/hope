@@ -344,7 +344,7 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
         if ( ($new || $delete|| $edit_fachsem) && !$this->msg) {
             $this->msg = "msg§" . _("Die Zuordnung zu Studiengängen wurde ge&auml;ndert.");
             setTempLanguage($this->auth_user["user_id"]);
-            $this->priv_msg= _("Die Zuordnung zu Studiengängen wurde geändert!\n");
+            $this->priv_msg .= _("Die Zuordnung zu Studiengängen wurde geändert!\n");
             restoreLanguage();
         }
 
@@ -366,7 +366,7 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
         if (($userdomain_delete || $new_userdomain) && !$this->msg) {
             $this->msg = "msg§" . _("Die Zuordnung zu Nutzerdomänen wurde ge&auml;ndert.");
             setTempLanguage($this->auth_user["user_id"]);
-            $this->priv_msg= _("Die Zuordnung zu Nutzerdomänen wurde geändert!\n");
+            $this->priv_msg .= _("Die Zuordnung zu Nutzerdomänen wurde geändert!\n");
             restoreLanguage();
         }
     }
@@ -395,7 +395,7 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
         if ( $delete || $new ) {
             $this->msg = "msg§" . _("Die Zuordnung zu Einrichtungen wurde ge&auml;ndert.");
             setTempLanguage($this->auth_user["user_id"]);
-            $this->priv_msg= _("Die Zuordnung zu Einrichtungen wurde geändert!\n");
+            $this->priv_msg .= _("Die Zuordnung zu Einrichtungen wurde geändert!\n");
             restoreLanguage();
         }
 
@@ -438,7 +438,7 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
                 if ($this->db->affected_rows()) {
                     $this->msg = $this->msg . "msg§" . sprintf(_("Ihre Daten an der Einrichtung %s wurden ge&auml;ndert"), htmlReady($name[$inst_id])) . "§";
                     setTempLanguage($this->auth_user["user_id"]);
-                    $this->priv_msg = $this->priv_msg . sprintf(_("Ihre Daten an der Einrichtung %s wurden geändert.\n"), htmlReady($name[$inst_id]));
+                    $this->priv_msg .= $this->priv_msg . sprintf(_("Ihre Daten an der Einrichtung %s wurden geändert.\n"), htmlReady($name[$inst_id]));
                     restoreLanguage();
                 }
             }
@@ -519,6 +519,7 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
 
         $query = "UPDATE user_info SET " . $query . " chdate='".time()."' WHERE user_id='".$this->auth_user["user_id"]."'";
         DBManager::get()->query($query);
+        $this->priv_msg .= "Private Daten wurden geändert";
     }
 
 
@@ -549,7 +550,7 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
             $this->db->query("UPDATE user_info SET lebenslauf='$lebenslauf', schwerp='$schwerp', publi='$publi', chdate='".time()."' WHERE user_id='".$this->auth_user["user_id"]."'");
             $this->msg = $this->msg . "msg§" . _("Daten im Lebenslauf u.a. wurden ge&auml;ndert") . "§";
             setTempLanguage($this->auth_user["user_id"]);
-            $this->priv_msg = _("Daten im Lebenslauf u.a. wurden geändert.\n");
+            $this->priv_msg .= _("Daten im Lebenslauf u.a. wurden geändert.\n");
             restoreLanguage();
         }
         return $invalidEntries;
@@ -581,7 +582,7 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
             if ($this->db->affected_rows()) {
                 $this->msg = $this->msg . "msg§" . _("Ihre pers&ouml;nlichen Daten wurden ge&auml;ndert.") . "§";
                 setTempLanguage($this->auth_user["user_id"]);
-                $this->priv_msg = _("Ihre persönlichen Daten wurden geändert.\n");
+                $this->priv_msg .= _("Ihre persönlichen Daten wurden geändert.\n");
                 restoreLanguage();
             }
         }

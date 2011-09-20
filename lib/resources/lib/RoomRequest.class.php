@@ -315,7 +315,6 @@ class RoomRequest extends SimpleORMap
 
         //create the very complex query for room search AND room propterties search...
         if ($properties) {
-            $availalable_properties = $this->getAvailableProperties();
             $setted_properties = $this->getSettedPropertiesCount();
             $query = sprintf ("SELECT DISTINCT a.resource_id, b.name %s FROM resources_objects_properties a LEFT JOIN resources_objects b USING (resource_id) WHERE %s ", ($setted_properties) ? ", COUNT(a.resource_id) AS resource_id_count" : "", ($permitted_resources_clause) ? "1 ".$permitted_resources_clause." AND " : "");
 
@@ -336,7 +335,7 @@ class RoomRequest extends SimpleORMap
                         } elseif (preg_match("/>/", $val["state"])) {
                             $val["state"] = trim(substr($val["state"], strpos($val["state"], "<")+1, strlen($val["state"])));
                             $linking = ">";
-                        } elseif ($availalable_properties[$key]["system"] == "2") {
+                        } elseif ($val["system"] == "2") {
                             $linking = ">=";
                         } else $linking = "=";
 

@@ -519,7 +519,7 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
 
         $query = "UPDATE user_info SET " . $query . " chdate='".time()."' WHERE user_id='".$this->auth_user["user_id"]."'";
         DBManager::get()->query($query);
-        $this->priv_msg .= "Private Daten wurden geändert";
+        $this->priv_msg .= _("Private Daten wurden geändert.\n");
     }
 
 

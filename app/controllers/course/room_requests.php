@@ -32,10 +32,6 @@ class Course_RoomRequestsController extends AuthenticatedController
 
         $course_id = $args[0];
 
-        if (!$course_id && $SessSemName[1]) {
-            $course_id = $SessSemName[1];
-        }
-
         $this->course_id = Request::option('cid', $course_id);
         //$course_id == '-' means dialog called from Assi
         if ($course_id != '-') {

@@ -49,10 +49,10 @@ PageLayout::disableHeader();
 include ('lib/include/html_head.inc.php');
 include ('lib/include/header.php');
 
+$seminar_id = Request::option('seminar_id', Request::option('cid', $SessSemName[1]));
+
 if (isset($_REQUEST['seminar_id'])) {
-    $seminar_id = $_REQUEST['seminar_id'];
-} else {
-    $seminar_id = $SessSemName[1];
+    URLHelper::addLinkParam('seminar_id', $seminar_id);
 }
 
 if (!$perm->have_studip_perm('tutor', $seminar_id)) {
@@ -62,10 +62,17 @@ if (!$perm->have_studip_perm('tutor', $seminar_id)) {
 //Content
 if (isset($_POST['command']) && ($_POST['command'] == 'create')) {
     $return = create_block_schedule_dates($seminar_id,$_POST);
+    $reload_url = $ABSOLUTE_URI_STUDIP . URLHelper::getUrl('raumzeit.php'
+                . '?newFilter=all&cmd=applyFilter#irregular_dates');
     ?>
     <script>
-        STUDIP.BlockAssi.reload('<?= URLHelper::getLink('raumzeit.php'
-            . '?newFilter=all&x=4&y=4&cmd=applyFilter#irregular_dates'); ?>');
+        if (typeof(opener) !== 'undefined') {
+            if (opener.location.href == '<?= $reload_url ?>') {
+                opener.location.reload();
+            } else {
+                opener.location.href = '<?= $reload_url ?>';
+            }
+        }
     </script>
     <?
 }
@@ -78,14 +85,14 @@ $cssSw = new cssClassSwitcher();
         min-width: 0px;
     }
 </style>
-<form method="post" action="<?=$PHP_SELF?>">
+<form method="post" action="<?=UrlHelper::getLink()?>">
 <?= CSRFProtection::tokenTag() ?>
 <table width="100%" border="0" cellspacing="0" cellpadding="1" >
     <tr>
         <td class="topic"><b><?=_("Blockveranstaltungstermine anlegen")?></b></td>
     </tr>
     <tr>
-        <th><?=getHeaderLine($SessSemName[1])?></th>
+        <th><?=getHeaderLine($seminar_id)?></th>
     </tr>
     <? if (!$return['ready'] && ($return['errors'])) :
             foreach($return['errors'] as $error) {
@@ -105,7 +112,6 @@ $cssSw = new cssClassSwitcher();
         endif; ?>
     <tr>
         <td class="blank" colspan="2">
-                <input type="hidden" name="seminar_id" value="<?=htmlReady($seminar_id)?>">
                 <input type="hidden" name="command" value="create">
                 <table border="0" cellspacing="0" cellpadding="3" width="100%">
                     <tr>
@@ -174,15 +180,15 @@ $cssSw = new cssClassSwitcher();
                         <td class="<?=$cssSw->getClass()?>" colspan="2">
                             <b><?=_("Die Veranstaltung findet an folgenden Tagen statt")?>:</b>
                             <br><br>
-                            <input type="checkbox" name="every_day" value="1" <?=($_POST["every_day"]=='1'?"checked=checked":"")?>>&nbsp;Jeden Tag<br>
+                            <input type="checkbox" name="every_day" value="1" <?=($_POST["every_day"]=='1'?"checked=checked":"")?>>&nbsp;<?= _("Jeden Tag")?><br>
                                 <br>
-                            <input type="checkbox" name="days[]" value="Monday"<?=day_checked('Monday')?>>&nbsp;Montag<br>
-                            <input type="checkbox" name="days[]" value="Tuesday"<?=day_checked('Tuesday')?>>&nbsp;Dienstag<br>
-                            <input type="checkbox" name="days[]" value="Wednesday"<?=day_checked('Wednesday')?>>&nbsp;Mittwoch<br>
-                            <input type="checkbox" name="days[]" value="Thursday"<?=day_checked('Thursday')?>>&nbsp;Donnerstag<br>
-                            <input type="checkbox" name="days[]" value="Friday"<?=day_checked('Friday')?>>&nbsp;Freitag<br>
-                            <input type="checkbox" name="days[]" value="Saturday"<?=day_checked('Saturday')?>>&nbsp;Samstag<br>
-                            <input type="checkbox" name="days[]" value="Sunday"<?=day_checked('Sunday')?>>&nbsp;Sonntag<br>
+                            <input type="checkbox" name="days[]" value="Monday"<?=day_checked('Monday')?>>&nbsp;<?= _("Montag")?><br>
+                            <input type="checkbox" name="days[]" value="Tuesday"<?=day_checked('Tuesday')?>>&nbsp;<?= _("Dienstag")?><br>
+                            <input type="checkbox" name="days[]" value="Wednesday"<?=day_checked('Wednesday')?>>&nbsp;<?= _("Mittwoch")?><br>
+                            <input type="checkbox" name="days[]" value="Thursday"<?=day_checked('Thursday')?>>&nbsp;<?= _("Donnerstag")?><br>
+                            <input type="checkbox" name="days[]" value="Friday"<?=day_checked('Friday')?>>&nbsp;<?= _("Freitag")?><br>
+                            <input type="checkbox" name="days[]" value="Saturday"<?=day_checked('Saturday')?>>&nbsp;<?= _("Samstag")?><br>
+                            <input type="checkbox" name="days[]" value="Sunday"<?=day_checked('Sunday')?>>&nbsp;<?= _("Sonntag")?><br>
                             <br>
                         </td>
                     </tr>

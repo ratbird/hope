@@ -496,16 +496,20 @@ if ($perm->have_studip_perm("admin",$sem->getId())) {
                 <tr>
                     <td colspan="9" class="blank">
                         <script type ="text/javascript">
-                            function block_fenster () {
-                                f1 = window.open("blockveranstaltungs_assistent.php?seminar_id=<?=$id?>", "Zweitfenster", "width=550,height=600,toolbar=no, menubar=no, scrollbars=yes");
-                                f1.focus();
-                            }
+                            STUDIP.BlockAssi = {
+                                block_fenster: function () {
+                                    var f1 = window.open("<?= UrlHelper::getUrl('blockveranstaltungs_assistent.php')?>",
+                                                     "Zweitfenster",
+                                                     "width=550,height=600,toolbar=no, menubar=no, scrollbars=yes");
+                                    f1.focus();
+                                }
+                            };
                         </script>
 
                         <?= sprintf (_('Einen neuen Termin %s oder mehrere Termine mit dem Blockveranstaltungsassistenten %s'),
                             '<a href="'. URLHelper::getLink('?cmd=createNewSingleDate#newSingleDate') .'">'
                             . makebutton('erstellen') . '</a>',
-                            '<a href="javascript:window.block_fenster()">'
+                            '<a href="javascript:STUDIP.BlockAssi.block_fenster()">'
                             . makebutton("anlegen") . '</a>'); ?>
                     </td>
                 </tr>

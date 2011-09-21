@@ -32,7 +32,7 @@ SkipLinks::addIndex(_("Wochenansicht"), 'main_content', 100);
             <? $time = $calendar->view->getStart(); ?>
             <? for ($i = 0; $i < $calendar->view->getType(); $i++) : ?>
                 <td colspan="<?= $cols ?>" align="center" class="precol1w">
-                    <a href="<?= URLHelper::getLink($_SERVER['PHP_SELF'], array('cmd' => 'showday', 'atime' => $time, 'cal_group' => $group_id)) ?>" class="calhead">
+                    <a href="<?= URLHelper::getLink($_SERVER['PHP_SELF'], array('cmd' => 'showday', 'atime' => $time, 'cal_group' => $calendar->getId())) ?>" class="calhead">
                         <?= wday($time, "SHORT") . " " . date("d", $time) ?>
                     </a>
                 </td>
@@ -45,13 +45,13 @@ SkipLinks::addIndex(_("Wochenansicht"), 'main_content', 100);
             </td>
             <? foreach ($calendar->view->wdays as $day) : ?>
                 <td width="<?= $width1 ?>%" class="precol1w" align="center">
-                    <a href="<?= URLHelper::getLink($_SERVER['PHP_SELF'], array('cmd' => 'edit', 'atime' => $atime, 'cal_group' => $group_id, 'devent' => '1')) ?>">
+                    <a href="<?= URLHelper::getLink($_SERVER['PHP_SELF'], array('cmd' => 'edit', 'atime' => $atime, 'cal_group' => $calendar->getId(), 'devent' => '1')) ?>">
                         <?= Assets::img('icons/16/blue/schedule.png', tooltip2(_("Tagestermin"))) ?>
                     </a>
                 </td>
                 <? for ($i = $day->getStart() + $start; $i < $day->getStart() + $end; $i += 3600 * ceil($calendar->getUserSettings('step_week_group') / 3600)) : ?>
                     <td colspan="<?= ceil(3600 / $calendar->getUserSettings('step_week_group')) ?>" class="precol2w" align="center">
-                        <a href="<?= URLHelper::getLink($_SERVER['PHP_SELF'], array('cmd' => 'edit', 'atime' => $i, 'cal_group' => $group_id)) ?>" class="calhead">
+                        <a href="<?= URLHelper::getLink($_SERVER['PHP_SELF'], array('cmd' => 'edit', 'atime' => $i, 'cal_group' => $calendar->getId())) ?>" class="calhead">
                             <?= (date('G', $i) < 10 ? '&nbsp;' . date('G', $i) . '&nbsp;' : date('G', $i)) ?>
                         </a>
                     </td>
@@ -63,13 +63,13 @@ SkipLinks::addIndex(_("Wochenansicht"), 'main_content', 100);
             <tr>
                 <td width="<?= $width2 ?>%" nowrap="nowrap" class="month">
                     <span class="precol2">
-                        <a class="calhead" href="<?= URLHelper::getLink($_SERVER['PHP_SELF'], array('cmd' => 'showweek', 'atime' => $atime, 'cal_select' => get_username($user_calendar->getUserId()))) ?>">
+                        <a class="calhead" href="<?= URLHelper::getLink($_SERVER['PHP_SELF'], array('cmd' => 'showweek', 'atime' => $atime, 'cal_select' => 'user.' . get_username($user_calendar->getUserId()))) ?>">
                             <?= htmlReady($user_calendar->checkPermission(Calendar::PERMISSION_OWN) ? _("Eigener Kalender") : get_fullname($user_calendar->getUserId(), 'no_title_short')) ?>
                         </a>
                     </span>
                 </td>
                 <? $k = 1; ?>
-                <? foreach ($calendar->view->wdays as $day) : ?>
+                <? foreach ($user_calendar->view->wdays as $day) : ?>
                     <? // emphesize the current day if $compact is FALSE (this means week-view)
                     if (date("Ymd", $day->getStart()) == date("Ymd")) {
                         $css_class = 'celltoday';
@@ -115,7 +115,7 @@ SkipLinks::addIndex(_("Wochenansicht"), 'main_content', 100);
                             <td width="<?= $width1 ?>%" align="right" nowrap="nowrap" class="<?= $css_class ?>">
                         <? endif ?>
                         <? if ($user_calendar->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
-                            <a href="<?= URLHelper::getLink($_SERVER['PHP_SELF'], array('cmd' => 'edit', 'atime' => $i, 'cal_select' => get_username($user_calendar->getUserId()))) ?>">
+                            <a href="<?= URLHelper::getLink($_SERVER['PHP_SELF'], array('cmd' => 'edit', 'atime' => $i, 'cal_select' => 'user.' . get_username($user_calendar->getUserId()))) ?>">
                                 <?= Assets::img('calplus.gif', tooltip2(strftime(_("neuer Termin um %R Uhr"), $i))) ?>
                             </a>
                         <? endif ?>
@@ -129,13 +129,13 @@ SkipLinks::addIndex(_("Wochenansicht"), 'main_content', 100);
             <td width="<?= $width2 ?>%" class="precol1" nowrap="nowrap" align="center">&nbsp;</td>
             <? foreach ($calendar->view->wdays as $day) : ?>
                 <td width="<?= $width1 ?>%" class="precol1w" align="center">
-                    <a href="<?= URLHelper::getLink($_SERVER['PHP_SELF'], array('cmd' => 'edit', 'atime' => $atime, 'cal_group' => $group_id, 'devent' => '1')) ?>">
+                    <a href="<?= URLHelper::getLink($_SERVER['PHP_SELF'], array('cmd' => 'edit', 'atime' => $atime, 'cal_group' => $calendar->getId(), 'devent' => '1')) ?>">
                         <?= Assets::img('icons/16/blue/schedule.png', tooltip2(_("Tagestermin"))) ?>
                     </a>
                 </td>
                 <? for ($i = $day->getStart() + $start; $i < $day->getStart() + $end; $i += 3600 * ceil($calendar->getUserSettings('step_week_group') / 3600)) : ?>
                     <td colspan="<?= ceil(3600 / $calendar->getUserSettings('step_week_group')) ?>" class="precol2w" align="center">
-                        <a href="<?= URLHelper::getLink($_SERVER['PHP_SELF'], array('cmd' => 'edit', 'atime' => $i, 'cal_group' => $group_id)) ?>" class="calhead">
+                        <a href="<?= URLHelper::getLink($_SERVER['PHP_SELF'], array('cmd' => 'edit', 'atime' => $i, 'cal_group' => $calendar->getId())) ?>" class="calhead">
                             <?= (date('G', $i) < 10 ? '&nbsp;' . date('G', $i) . '&nbsp;' : date('G', $i)) ?>
                         </a>
                     </td>

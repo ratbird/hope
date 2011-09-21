@@ -31,7 +31,6 @@ class GroupCalendar extends Calendar
 
     function GroupCalendar($group_id, $user_id)
     {
-        //    Calendar::Calendar($user_name);
         $this->group_id = $group_id;
         $this->permission = Calendar::PERMISSION_FORBIDDEN;
         $this->user_id = $user_id;
@@ -51,10 +50,10 @@ class GroupCalendar extends Calendar
 
         $stmt = DBManager::get()->prepare($query);
         $stmt->execute(array($this->group_id, $this->user_id, $this->user_id));
-        $stmt2 = DBManager::get()->prepare("SELECT calpermission FROM contact WHERE owner_id = ? AND user_id = ? AND calpermission > 1");
+        $stmt2 = DBManager::get()->prepare("SELECT COUNT(*) FROM contact WHERE owner_id = ? AND user_id = ? AND calpermission >= ?");
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
-            $stmt2->execute(array($row['user_id'], $this->user_id));
-            if (!$stmt2->rowCount()) {
+            $stmt2->execute(array($row['user_id'], $this->user_id, Calendar::PERMISSION_READABLE));
+            if (!$stmt2->fetchColumn()) {
                 continue;
             }
             $this->calendars[] = Calendar::getInstance($row['user_id']);
@@ -141,7 +140,7 @@ class GroupCalendar extends Calendar
 
         $this->view = $this->calendars[0]->view;
 
-        return $GLOBALS['template_factory']->render('calendar/week_view_group', array('calendar' => $this, 'atime' => $week_time, 'start_time' => $start_time, 'end_time' => $end_time, 'group_id' => $this->group_id));
+        return $GLOBALS['template_factory']->render('calendar/week_view_group', array('calendar' => $this, 'atime' => $week_time, 'start_time' => $start_time, 'end_time' => $end_time));
     }
 
     function toStringMonth($month_time, $step = NULL, $restrictions = NULL)

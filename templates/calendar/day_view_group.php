@@ -41,13 +41,13 @@ SkipLinks::addIndex(_("Tagesansicht"), 'main_content', 100);
                         <?= _("Mitglied") ?>
                     </td>
                     <td width="<?= $width1 ?>%" class="precol1w" align="center">
-                        <a href="<?= URLHelper::getLink('', array('cmd' => 'edit', 'atime' => $atime, 'cal_group' => $group_id, 'devent' => '1')) ?>">
+                        <a href="<?= URLHelper::getLink('', array('cmd' => 'edit', 'atime' => $atime, 'cal_group' => $group_calendar->getId(), 'devent' => '1')) ?>">
                             <?= Assets::img('icons/16/blue/schedule.png', tooltip2(_("Tagestermin"))) ?>
                         </a>
                     </td>
                     <? for ($i = $time + $start; $i < $time + $end; $i += 3600 * ceil($step)) : ?>
                         <td<?= $colsp ?> class="precol1w" align="center">
-                            <a href="<?= URLHelper::getLink('', array('cmd'=> 'edit', 'atime' => $i, 'cal_group' => $group_id)) ?>" class="calhead"><?= date('G', $i) ?></a>
+                            <a href="<?= URLHelper::getLink('', array('cmd'=> 'edit', 'atime' => $i, 'cal_group' => $group_calendar->getId())) ?>" class="calhead"><?= date('G', $i) ?></a>
                         </td>
                     <? endfor ?>
                 </tr>
@@ -70,7 +70,7 @@ SkipLinks::addIndex(_("Tagesansicht"), 'main_content', 100);
                             <td width="<?= $width1 ?>%" class="lightmonth" align="right">
                         <? endif ?>
                         <? if ($calendar->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
-                                <a href="<?= URLHelper::getLink('', array('cmd' => 'edit', 'atime' => $atime, 'devent' => '1', 'cal_select' => get_username($calendar->getUserId()))) ?>">
+                                <a href="<?= URLHelper::getLink('', array('cmd' => 'edit', 'atime' => $atime, 'devent' => '1', 'cal_select' => 'user.' . get_username($calendar->getUserId()))) ?>">
                                     <?= Assets::img('calplus.gif', tooltip2(_("neuer Tagestermin"))) ?>
                                 </a>
                             </td>
@@ -109,13 +109,13 @@ SkipLinks::addIndex(_("Tagesansicht"), 'main_content', 100);
                 <tr>
                     <td width="<?= $width2 ?>%" class="precol1w" nowrap="nowrap" align="center">&nbsp;</td>
                     <td width="<?= $width1 ?>%" class="precol1w" align="center">
-                        <a href="<?= URLHelper::getLink('', array('cmd' => 'edit', 'atime' => $atime, 'cal_group' => $group_id, 'devent' => '1')) ?>">
+                        <a href="<?= URLHelper::getLink('', array('cmd' => 'edit', 'atime' => $atime, 'cal_group' => $group_calendar->getId(), 'devent' => '1')) ?>">
                             <?= Assets::img('icons/16/blue/schedule.png', tooltip2(_("Tagestermin"))) ?>
                         </a>
                     </td>
                     <? for ($i = $time + $start; $i < $time + $end; $i += 3600 * ceil($step)) : ?>
                         <td<?= $colsp ?> class="precol1w" align="center">
-                            <a href="<?= URLHelper::getLink('', array('cmd' => 'edit', 'atime' => $i, 'cal_group' => $group_id)) ?>" class="calhead">
+                            <a href="<?= URLHelper::getLink('', array('cmd' => 'edit', 'atime' => $i, 'cal_group' => $group_calendar->getId())) ?>" class="calhead">
                                 <?= date('G', $i) ?>
                             </a>
                         </td>

@@ -1424,7 +1424,7 @@ if ($save_state_x) {
                 $result = $semResAssign->changeDateAssign($reqObj->getTerminId(), $res_id);
 
             //grouped multiple dates mode
-            } elseif ($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["grouping"]) {
+            } else {
                 foreach ($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["selected_resources"] as $key=>$val) {
                     $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["groups"][$key]["resource_id"] = $val;
                     foreach ($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["groups"][$key]["termin_ids"] as $key2 => $val2) {
@@ -1446,14 +1446,6 @@ if ($save_state_x) {
 
                 $semObj->store();
             //normal metadate mode
-            } elseif (count($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["selected_resources"])) {
-                foreach ($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["selected_resources"] as $key=>$val){
-                    if (!$dates_with_request[$key]) {
-                        $result = array_merge((array)$result, (array)$semResAssign->changeDateAssign($key, $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["selected_resources"][$key]));
-                        $result_termin_id[] = $key;
-                    } else
-                        $skipped_termin_ids[$key]=TRUE;
-                }
             }
 
             //---------------------------------------------- second part, msgs and some other operations
@@ -1475,7 +1467,7 @@ if ($save_state_x) {
                 }
 
             //create msgs, grouped multi date mode
-            } elseif ($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["grouping"]) {
+            } else {
                 $i=0;
                 foreach ($result as $key=>$val) {
                     $resObj = ResourceObject::Factory($val["resource_id"]);
@@ -1491,20 +1483,6 @@ if ($save_state_x) {
                     $i++;
                 }
 
-        } else {
-                $i=0;
-                $assign_ids = array_keys($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["assign_objects"]);
-                foreach ($result as $key=>$val) {
-                    $resObj = ResourceObject::Factory($val["resource_id"]);
-                    if (!$val["overlap_assigns"]) {
-                        $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["assign_objects"][$assign_ids[$i]]["resource_id"] = $resObj->getId();
-                        $good_msg.="<br>".sprintf(_("%s, Belegungszeit: %s"), $resObj->getFormattedLink( $assignObjects[$result_termin_id[$i]]->getBegin() ), $assignObjects[$result_termin_id[$i]]->getFormattedShortInfo());
-                    } else {
-                        $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["assign_objects"][$assign_ids[$i]]["resource_id"] = FALSE;
-                        $bad_msg.="<br>".sprintf(_("%s, Belegungszeit: %s"), $resObj->getFormattedLink( $assignObjects[$result_termin_id[$i]]->getBegin() ), $assignObjects[$result_termin_id[$i]]->getFormattedShortInfo());
-                    }
-                    $i++;
-                }
             }
 
             //create additional msgs for skipped dates (this ones have got an own request, so the generel request doesn't affect them)
@@ -1821,8 +1799,6 @@ if (($inc_request_x) || ($dec_request_x) || ($new_session_started) || ($marked_c
             /* * * * * * * * * * * * * *
              * * * Group the dates * * *
              * * * * * * * * * * * * * */
-
-            $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["grouping"] = TRUE;
 
             $groupedDates = $semObj->getGroupedDates($reqObj->getTerminId(),$reqObj->getMetadateId());
             $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["groups"] = $groupedDates['groups'];

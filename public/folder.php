@@ -52,6 +52,7 @@ $db2 = DBManager::get();
 
 $open = Request::option('open');
 $close = Request::option('close');
+$check_all = Request::option('check_all');
 
 //Switch fuer die Ansichten
 URLHelper::bindLinkParam('data', $folder_system_data);

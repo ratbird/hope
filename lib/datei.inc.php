@@ -470,8 +470,8 @@ function move_item($item_id, $new_parent, $change_sem_to = false) {
 
 
     if ($item_id != $new_parent) {
-        $doc = new StudipDocument($item_id);
-        if ($doc['range_id']) {
+        $doc = StudipDocument::find($item_id);
+        if (isset($doc)) {
             if ($change_sem_to && $new_folder_id) {
                 $doc['range_id'] = $new_folder_id;
                 $doc['seminar_id'] = $change_sem_to;
@@ -2524,7 +2524,7 @@ function upload_recursively($range_id, $dir) {
     // Alle Dateien hinzufuegen.
     while (list ($nr, $file) = each($files)) {
         if ($count['files'] >= $max_files) break;
-        if (validate_upload($file, $file)) {
+        if (validate_upload(array('name' => $file, 'size' => filesize($file)))) {
             $count['files'] += upload_zip_file($range_id, $file);
         }
     }
@@ -2549,15 +2549,14 @@ function upload_recursively($range_id, $dir) {
  */
 function upload_zip_file($dir_id, $file) {
 
-    global $user, $upload_seminar_id;
+    global $user;
 
     $file_size = filesize($file);
     if (!$file_size) {
         return false;
     }
 
-    $pos = strrpos($file, "/");
-    $file_name = substr($file, $pos + 1, strlen($file) - $pos);
+    $file_name = basename($file);
 
     $data = array(
         'filename'    => $file_name,
@@ -2566,11 +2565,12 @@ function upload_zip_file($dir_id, $file) {
         'autor_host'  => $_SERVER['REMOTE_ADDR'],
         'user_id'     => $user->id,
         'range_id'    => $dir_id,
-        'seminar_id'  => $upload_seminar_id,
+        'seminar_id'  => Request::option('upload_seminar_id'),
+        'description' => '',
         'author_name' => get_fullname()
     );
-
-    return StudipDocument::createWithFile($file, $data) ? 1 : 0;
+    $ret = StudipDocument::createWithFile($file, $data);
+    return (int)$ret;
 }
 
 function pclzip_convert_filename_cb($p_event, &$p_header) {

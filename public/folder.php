@@ -69,6 +69,7 @@ if ($_REQUEST['cmd'] == 'tree') {
 } elseif(!isset($folder_system_data['cmd'])) {
     $folder_system_data['cmd'] = 'all';
 }
+$check_all = Request::get('check_all');
 
 if (Request::option('orderby')) {
     $folder_system_data['orderby'] = Request::option('orderby');
@@ -541,6 +542,7 @@ if ($close) {
     $folder_system_data["open"]['anker'] = $close;
 }
 
+
 ///////////////////////////////////////////////////////////
 //Ajax-Funktionen
 ///////////////////////////////////////////////////////////
@@ -1009,8 +1011,9 @@ div.droppable.hover {
             print '<table border=0 cellpadding=0 cellspacing=0 width="100%">';
             print "<tr>" .
                     "<td class=\"blank\"></td><td class=\"blank\"><div align=\"right\">" .
-                        "<a href=\"".URLHelper::getLink("?check_all=TRUE")."\">" . makeButton("alleauswaehlen", 'img', _("alle auswählen")) . "</a>" .
-                        "&nbsp;".makeButton("herunterladen", 'input', _("herunterladen"), 'download_selected')."&nbsp;</div>" .
+                        "<a href=\"".URLHelper::getLink(sprintf("%s",(isset($check_all))?"":"?check_all=".true))."\">" . makeButton((isset($check_all))?"keineauswaehlen":"alleauswaehlen", 'img',(isset($check_all))?  _("keine auswählen"):_("alle auswählen")) . "</a>" .
+                        "&nbsp;".makeButton("herunterladen", 'input', _("herunterladen"), 'download_selected')."&nbsp;".
+                    "</div>" .
                     "</td><td class=\"blank\"></td></tr> <tr><td></td><td class=\"blank\">&nbsp;</td><td class=\"blank\"></td></tr>";
             $dreieck_runter = "dreieck_down.png";
             $dreieck_hoch = "dreieck_up.png";
@@ -1120,7 +1123,7 @@ div.droppable.hover {
             print " &nbsp;</td></tr></table>";
             print "</td><td class=\"blank\">&nbsp;</td></tr>";
 
-            print "<tr><td class=\"blank\"></td><td class=\"blank\"><div align=\"right\"><br><a href=\"".URLHelper::getLink("?check_all=TRUE")."\">".makeButton("alleauswaehlen")."</a>&nbsp;<input style=\"vertical-align: middle;\" type=\"IMAGE\" name=\"download_selected\" border=\"0\" ".makeButton("herunterladen", "src").">&nbsp;</div></td><td class=\"blank\"></td></tr> <tr><td class=\"blank\"></td><td class=\"blank\">&nbsp;</td><td class=\"blank\"></td></tr>";
+            print "<tr><td class=\"blank\"></td><td class=\"blank\"><div align=\"right\"><br><a href=\"".URLHelper::getLink(sprintf("%s",(isset($check_all))?"":"?check_all=".true))."\">" . makeButton((isset($check_all))?"keineauswaehlen":"alleauswaehlen", 'img',(isset($check_all))? _("keine auswählen"):_("alle auswählen")) . "</a>&nbsp;<input style=\"vertical-align: middle;\" type=\"IMAGE\" name=\"download_selected\" border=\"0\" ".makeButton("herunterladen", "src").">&nbsp;</div></td><td class=\"blank\"></td></tr> <tr><td class=\"blank\"></td><td class=\"blank\">&nbsp;</td><td class=\"blank\"></td></tr>";
         }
     }
     print "</table></form>";

@@ -74,13 +74,15 @@ class StudipPDO extends PDO
                     }
                 } else if ($part === "'" || $part === '"') {
                     $quote_chr = $part;
+                    $saved_pos = key($parts);
                 } else {
                     $result .= $part;
                 }
             }
 
             if ($quote_chr !== NULL) {
-                $result .= '?';
+                // unterminated quote: copy to end of string
+                $result .= implode(array_slice($parts, $saved_pos));
             }
         }
 

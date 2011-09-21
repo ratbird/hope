@@ -74,7 +74,7 @@ class StudipPDOTest extends UnitTestCase
     public function testUnterminatedSingleQuote()
     {
         $query  = 'SELECT \'1\' ORDER BY \'au.username asc';
-        $expect = 'SELECT ? ORDER BY ?';
+        $expect = 'SELECT ? ORDER BY \'au.username asc';
 
         $this->assertEqual(TestStudipPDO::testReplaceStrings($query), $expect);
     }
@@ -82,7 +82,7 @@ class StudipPDOTest extends UnitTestCase
     public function testUnterminatedDoubleQuote()
     {
         $query  = 'SELECT "1" ORDER BY "au.username asc';
-        $expect = 'SELECT ? ORDER BY ?';
+        $expect = 'SELECT ? ORDER BY "au.username asc';
 
         $this->assertEqual(TestStudipPDO::testReplaceStrings($query), $expect);
     }

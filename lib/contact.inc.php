@@ -433,7 +433,7 @@ function SearchResults ($search_exp)
           . 'FROM auth_user_md5 '
           . 'LEFT JOIN user_info USING (user_id) '
           . 'WHERE user_id != :user_id AND (Vorname LIKE :search_exp OR Nachname LIKE :search_exp '
-          . 'OR username LIKE :search_exp) AND ' . get_vis_query()
+          . 'OR username LIKE :search_exp) AND ' . get_vis_query() . ' '
           . 'ORDER BY Nachname');
 
     $search_for = '%'. $search_exp .'%';

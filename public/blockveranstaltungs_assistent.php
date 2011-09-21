@@ -60,23 +60,24 @@ if (!$perm->have_studip_perm('tutor', $seminar_id)) {
 }
 
 //Content
-$destination=$ABSOLUTE_URI_STUDIP."raumzeit.php?newFilter=all&x=4&y=4&cmd=applyFilter#irregular_dates";
-echo "<SCRIPT> function reload_opener() {
-                if (opener.location.href != '$destination')
-                        opener.location.href = '$destination';
-                else
-                        opener.location.reload();
-                return true;
-                }  </SCRIPT>";
-
 if (isset($_POST['command']) && ($_POST['command'] == 'create')) {
     $return = create_block_schedule_dates($seminar_id,$_POST);
-    ?><script>reload_opener();</script><?
+    ?>
+    <script>
+        STUDIP.BlockAssi.reload('<?= URLHelper::getLink('raumzeit.php'
+            . '?newFilter=all&x=4&y=4&cmd=applyFilter#irregular_dates'); ?>');
+    </script>
+    <?
 }
 
 $cssSw = new cssClassSwitcher();
 // HTML Template
 ?>
+<style>
+    #layout_wrapper {
+        min-width: 0px;
+    }
+</style>
 <form method="post" action="<?=$PHP_SELF?>">
 <?= CSRFProtection::tokenTag() ?>
 <table width="100%" border="0" cellspacing="0" cellpadding="1" >

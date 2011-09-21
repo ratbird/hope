@@ -1867,3 +1867,15 @@ STUDIP.RoomRequestDialog = {
         });
     }
 };
+
+STUDIP.BlockAssi = {
+    reload: function(destination) {
+        if (opener.location.href != destination) {
+            opener.location.href = destination;
+        } else {
+            opener.location.reload();
+        }
+
+        return true;
+    }
+}

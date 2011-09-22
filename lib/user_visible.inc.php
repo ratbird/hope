@@ -188,39 +188,29 @@ function vis_chooser($vis, $new = false) {
 // DON'T USE UNMODIFIED TEXTS!
 //
 function first_decision($userid) {
-    global $PHP_SELF, $vis_cmd, $vis_state, $auth;
+    $vis_cmd = Request::option('vis_cmd');
+    $vis_state = Request::option('vis_state');
+    $user_language = getUserLanguagePath($userid);
 
-    $user_language=getUserLanguagePath($userid);
     if ($vis_cmd == "apply" && ($vis_state == "global" || $vis_state == "yes" || $vis_state == "no")) {
         $db = new DB_Seminar("UPDATE auth_user_md5 SET visible = '$vis_state' WHERE user_id = '$userid'");
         return;
     }
 
-    $db = new DB_Seminar("SELECT auth_user_md5.visible, user_info.preferred_language as pl FROM auth_user_md5, user_info WHERE auth_user_md5.user_id = '$userid' AND auth_user_md5.user_id = user_info.user_id");
+    $db = new DB_Seminar("SELECT visible FROM auth_user_md5 WHERE user_id = '$userid'");
     $db->next_record();
     if ($db->f("visible") != "unknown") return;
-    ?>
-    <table width="80%" align="center" border=0 cellpadding=0 cellspacing=0>
-    <tr>
-        <td class="topic" colspan="3" valign="top">
-            <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/white/door-enter.png" border="0"><b>&nbsp;<?=_("Bitte wählen Sie Ihren Sichtbarkeitsstatus aus!")?></b>
-        </td>
-    </tr>
-    <tr>
-        <td class="blank" colspan="3">&nbsp;</td>
-    </tr>
-    <tr>
-        <td class="blank" width="1%"></td>
-        <td class="blank">
-            <center>
-            <?
-        include("locale/$user_language/LC_HELP/visibility_decision.php");
-            ?>
-            </center>
-        </td>
-    </tr>
-    </table>
-    <?
+
+    PageLayout::setTitle(_('Bitte wählen Sie Ihren Sichtbarkeitsstatus aus!'));
+    PageLayout::setTabNavigation(NULL);
+
+    // avoid recursion when loading the header
+    $GLOBALS['USER_VISIBILITY_CHECK'] = false;
+
+    $template = $GLOBALS['template_factory']->open("../locale/$user_language/LC_HELP/visibility_decision.php");
+    $template->set_layout('layouts/base_without_infobox');
+
+    echo $template->render();
     page_close();
     die;
 }

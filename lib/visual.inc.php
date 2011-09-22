@@ -6,6 +6,7 @@
 
 
 require_once('config.inc.php');
+require_once 'lib/classes/StudipFormat.php';
 require_once('lib/classes/cssClassSwitcher.inc.php');
 include_once('vendor/idna_convert/idna_convert.class.php');
 include_once('lib/classes/QuickSearch.class.php');
@@ -366,16 +367,17 @@ function quotes_encode($description,$author)
 
 // Hilfsfunktion für formatReady
 function format_help($what, $trim = TRUE, $extern = FALSE, $wiki = FALSE, $show_comments="icon") {
+    $markup = new StudipFormat();
 
     if (preg_match_all("'\[code\](.+)\[/code\]'isU", $what, $match_code)) {
         $what = htmlReady($what, $trim, FALSE);
         $what = preg_replace("'\[code\].+\[/code\]'isU", 'ü', $what);
         if ($wiki == TRUE)
             //$what = wiki_format(symbol(smile(FixLinks(format(latex($what, $extern)), FALSE, TRUE, TRUE, $extern), $extern), $extern), $show_comments);
-            $what = wiki_format(symbol(smile(latex(FixLinks(format($what), FALSE, FALSE, TRUE, $extern, TRUE), $extern), $extern), $extern), $show_comments);
+            $what = wiki_format(symbol(smile(latex($markup->format(FixLinks(format($what), FALSE, FALSE, TRUE, $extern, TRUE)), $extern), $extern), $extern), $show_comments);
         else
             //$what = symbol(smile(FixLinks(format(latex($what, $extern)), FALSE, TRUE, TRUE, $extern), $extern), $extern);
-            $what = symbol(smile(latex(FixLinks(format($what), FALSE, FALSE, TRUE, $extern), $extern), $extern), $extern);
+            $what = symbol(smile(latex($markup->format(FixLinks(format($what), FALSE, FALSE, TRUE, $extern)), $extern), $extern), $extern);
         $what = explode('ü', $what);
         $i = 0;
         $all = '';
@@ -394,10 +396,10 @@ function format_help($what, $trim = TRUE, $extern = FALSE, $wiki = FALSE, $show_
     if ($wiki == TRUE)
         //return symbol(smile(FixLinks(wiki_format(format(latex($what, $extern)), $show_comments), FALSE, TRUE, TRUE, $extern), $extern), $extern);
         //return wiki_format(symbol(smile(FixLinks(format(latex($what, $extern)), FALSE, TRUE, TRUE, $extern), $extern), $extern), $show_comments);
-        return wiki_format(symbol(smile(latex(FixLinks(format($what), FALSE, FALSE, TRUE, $extern, TRUE), $extern), $extern), $extern), $show_comments);
+        return wiki_format(symbol(smile(latex($markup->format(FixLinks(format($what), FALSE, FALSE, TRUE, $extern, TRUE)), $extern), $extern), $extern), $show_comments);
     else
     //  return symbol(smile(FixLinks(format(latex($what, $extern)), FALSE, TRUE, TRUE, $extern), $extern), $extern);
-        return symbol(smile(latex(FixLinks(format($what), FALSE, FALSE, TRUE, $extern), $extern), $extern), $extern);
+        return symbol(smile(latex($markup->format(FixLinks(format($what), FALSE, FALSE, TRUE, $extern)), $extern), $extern), $extern);
 }
 
 /**

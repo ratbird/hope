@@ -1,7 +1,4 @@
 <?php
-# Lifter007: TODO
-# Lifter010: TODO
-
 /**
  * datenschutz.php
  *
@@ -17,8 +14,9 @@
  * @access      public
  */
 
-
 require '../lib/bootstrap.php';
+
+unregister_globals();
 
 page_open(array(
     'sess' => 'Seminar_Session',
@@ -30,10 +28,12 @@ page_open(array(
 // set up user session
 include 'lib/seminar_open.php';
 
+// this page must be accessible during visibility decision
+$USER_VISIBILITY_CHECK = false;
+
 PageLayout::setTitle(_('Erläuterungen zum Datenschutz'));
 
 $template = $template_factory->open('privacy');
 $template->set_layout('layouts/base_without_infobox');
 
 echo $template->render();
-?>

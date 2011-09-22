@@ -113,24 +113,24 @@ class SeminarEvent extends Event
     {
         global $auth;
 
-        if ($id == '')
+        if ($id == '') {
             $id = $this->id;
-        else
+        } else {
             $this->id = $id;
+        }
 
         if (!is_object($this->driver)) {
-            //$this->driver = CalendarDriver::getInstance($auth->auth['uid']);
             $this->driver = CalendarDriver::getInstance($sem_id);
         }
 
         $this->driver->openDatabaseGetSingleObject($id, 'SEMINAR_EVENTS');
-        if (!$event = & $this->driver->nextObject()) {
+        if (!$properties = $this->driver->nextProperties()) {
             return FALSE;
         }
-        $this->properties = $event->properties;
-        $this->id = $event->id;
-        $this->sem_id = $event->sem_id;
-        $this->sem_write_perm = $event->sem_write_perm;
+        $this->properties = $properties;
+        $this->id = $properties['STUDIP_ID'];
+        $this->sem_id = $properties['SEM_ID'];
+        $this->sem_write_perm = $GLOBALS['perm']->have_studip_perm('tutor', $this->sem_id);
 
         return TRUE;
     }

@@ -70,7 +70,7 @@
                     <? elseif ($show_project_events) : ?>
                     <input type="hidden" name="show_project_events" value="1">
                     <? endif; ?>
-                    <input type="image" src="<?= Assets::image_path('icons/16/blue/accept.png') ?>" border="0">
+                    <input type="image" src="<?= Assets::image_path('icons/16/blue/accept.png') ?>" border="0" class="text-top">
                 </span>
             </td>
         </tr>

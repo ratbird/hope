@@ -47,7 +47,8 @@ if (!get_config('CALENDAR_GROUP_ENABLE') || Request::get('caluser') == 'self') {
   $calendar_sess_control_data['cal_select'] = 'group.' . $cal_group;
   }
  */
-if (Request::get('cal_select')) {
+$cal_select = Request::get('cal_select');
+if (!is_null($cal_select)) {
     list($cal_select_range, $cal_select_id) = explode('.', $cal_select);
     if ($cal_select_range == 'user') {
         $cal_select_id = get_userid($cal_select_id);
@@ -153,9 +154,8 @@ if ($cmd_cal == 'chng_cal_settings') {
 }
 
 // use current timestamp if no timestamp is given
-if (!$atime && !$termin_id)
-    $atime = time();
-
+$atime = Request::int('atime', time());
+$termin_id = Request::get('termin_id');
 if (Request::submitted('mod_s')) {
     $mod = 'SINGLE';
 }
@@ -206,11 +206,12 @@ if ($cancel_x) {
 }
 
 // allowed time range
-if (isset($atime) && ($atime < 0 || $atime > Calendar::CALENDAR_END))
+if ($atime <= 0 || $atime > Calendar::CALENDAR_END) {
     $atime = time();
+}
 
 // check date of "go-to-function"
-if (check_date(Request::int('jmp_month'), Request::int('jmp_day'), Request::int('jmp_year'))) {
+if (Request::get('jmp_month') && check_date(Request::int('jmp_month'), Request::int('jmp_day'), Request::int('jmp_year'))) {
     $atime = mktime(12, 0, 0, Request::int('jmp_month'), Request::int('jmp_day'), Request::int('jmp_year'));
 }
 
@@ -288,14 +289,71 @@ if ($_calendar->getRange() == Calendar::RANGE_SEM || $_calendar->getRange() == C
     $calendar_range = 'calendar';
 }
 
+if ($cmd == 'add') {
+    // Ueberpruefung der Formulareingaben
+    $err = Calendar::checkFormData($_SESSION['calendar_sess_forms_data']);
+    // wenn alle Daten OK, dann Termin anlegen, oder bei vorhandener
+    // termin_id updaten
+    if (empty($err) && $count_events < $CALENDAR_MAX_EVENTS) {
+        $_calendar->addEvent($termin_id, $select_user);
+        $atime = $_calendar->event->getStart();
+        if ($calendar_sess_control_data['source']) {
+            $destination = $calendar_sess_control_data['source'] . "#a";
+            $calendar_sess_control_data['source'] = '';
+            unset($_SESSION['calendar_sess_forms_data']);
+            page_close();
+            header('Location: ' . $destination);
+            exit;
+        }
+
+        if (!empty($calendar_sess_control_data['view_prv'])) {
+            $cmd = $calendar_sess_control_data['view_prv'];
+        } else {
+            $cmd = 'showday';
+        }
+
+        unset($_SESSION['calendar_sess_forms_data']);
+    } else {
+        // wrong data? -> switch back to edit mode
+        $cmd = 'edit';
+        $_calendar->restoreEvent($termin_id);
+        $_calendar->setEventProperties($_SESSION['calendar_sess_forms_data'], $mod);
+        $mod = $mod_prv ? $mod_prv : 'SINGLE';
+        if ($back_recur_x) {
+            $set_recur_x = 1;
+            unset($back_recur_x);
+        }
+    }
+}
+
+if ($cmd == 'del') {
+    $_calendar->deleteEvent($termin_id);
+
+    if ($calendar_sess_control_data['source']) {
+        $destination = $calendar_sess_control_data['source'];
+        $calendar_sess_control_data['source'] = '';
+        header("Location: $destination");
+        page_close();
+        die;
+    }
+
+    if (!empty($calendar_sess_control_data['view_prv'])) {
+        $cmd = $calendar_sess_control_data['view_prv'];
+    } else {
+        $cmd = 'showday';
+    }
+
+    unset($_SESSION['calendar_sess_forms_data']);
+}
+
 switch ($cmd) {
     /*
     case 'showlist':
         if ($_calendar->getRange() == Calendar::RANGE_GROUP) {
             $cmd = 'showweek';
-            Navigation::activateItem($active_item . 'week');
+            Navigation::activateItem("/$calendar_range/calendar/week");
         } else {
-            Navigation::activateItem($active_range . 'list');
+            Navigation::activateItem("/$calendar_range/calendar/list");
         }
         $calendar_sess_control_data['view_prv'] = $cmd;
         break;
@@ -365,32 +423,12 @@ switch ($cmd) {
         Navigation::activateItem('/calendar/calendar/course');
         break;
 
-    case 'add':
-    case 'del':
-        switch ($calendar_sess_control_data['view_prv']) {
-            case 'showday':
-                PageLayout::setTitle(_("Mein persönlicher Terminkalender - Tagesansicht"));
-                Navigation::activateItem("/$calendar_range/calendar/day");
-                break;
-            case 'showweek':
-                PageLayout::setTitle(_("Mein persönlicher Terminkalender - Wochenansicht"));
-                Navigation::activateItem("/$calendar_range/calendar/week");
-                break;
-            case 'showmonth':
-                PageLayout::setTitle(_("Mein persönlicher Terminkalender - Monatsansicht"));
-                Navigation::activateItem("/$calendar_range/calendar/month");
-                break;
-            case 'showyear':
-                PageLayout::setTitle(_("Mein persönlicher Terminkalender - Jahresansicht"));
-                Navigation::activateItem("/$calendar_range/calendar/year");
-        }
-        break;
-
     case 'edit':
         PageLayout::setHelpKeyword("Basis.TerminkalenderBearbeiten");
         Navigation::activateItem("/$calendar_range/calendar/edit");
 
         if ($termin_id) {
+            $evtype = Request::get('evtype', '');
             if ($evtype == 'sem' || $evtype == 'semcal') {
                 $_calendar->createSeminarEvent($evtype);
                 if (!$_calendar->event->restore($termin_id)) {
@@ -488,63 +526,6 @@ switch ($cmd) {
 
 if (!$_calendar->havePermission(Calendar::PERMISSION_WRITABLE)) {
     Navigation::removeItem("/$calendar_rangecalendar/edit");
-}
-
-if ($cmd == 'add') {
-    // Ueberpruefung der Formulareingaben
-    $err = Calendar::checkFormData($_SESSION['calendar_sess_forms_data']);
-    // wenn alle Daten OK, dann Termin anlegen, oder bei vorhandener
-    // termin_id updaten
-    if (empty($err) && $count_events < $CALENDAR_MAX_EVENTS) {
-        $_calendar->addEvent($termin_id, $select_user);
-        $atime = $_calendar->event->getStart();
-        if ($calendar_sess_control_data['source']) {
-            $destination = $calendar_sess_control_data['source'] . "#a";
-            $calendar_sess_control_data['source'] = '';
-            unset($_SESSION['calendar_sess_forms_data']);
-            page_close();
-            header('Location: ' . $destination);
-            exit;
-        }
-
-        if (!empty($calendar_sess_control_data['view_prv'])) {
-            $cmd = $calendar_sess_control_data['view_prv'];
-        } else {
-            $cmd = 'showday';
-        }
-
-        unset($_SESSION['calendar_sess_forms_data']);
-    } else {
-        // wrong data? -> switch back to edit mode
-        $cmd = 'edit';
-        $_calendar->restoreEvent($termin_id);
-        $_calendar->setEventProperties($_SESSION['calendar_sess_forms_data'], $mod);
-        $mod = $mod_prv ? $mod_prv : 'SINGLE';
-        if ($back_recur_x) {
-            $set_recur_x = 1;
-            unset($back_recur_x);
-        }
-    }
-}
-
-if ($cmd == 'del') {
-    $_calendar->deleteEvent($termin_id);
-
-    if ($calendar_sess_control_data['source']) {
-        $destination = $calendar_sess_control_data['source'];
-        $calendar_sess_control_data['source'] = '';
-        header("Location: $destination");
-        page_close();
-        die;
-    }
-
-    if (!empty($calendar_sess_control_data['view_prv'])) {
-        $cmd = $calendar_sess_control_data['view_prv'];
-    } else {
-        $cmd = 'showday';
-    }
-
-    unset($_SESSION['calendar_sess_forms_data']);
 }
 
 // Tagesuebersicht anzeigen ***************************************************
@@ -650,7 +631,7 @@ if ($cmd == 'showlist') {
         PageLayout::setTitle(sprintf(_("Terminkalender von %s %s - Listenansicht"), get_fullname($_calendar->getUserId()), $_calendar->perm_string));
     }
 
-    include($ABSOLUTE_PATH_STUDIP . $RELATIVE_PATH_CALENDAR . "/views/list.inc.php");
+    include($RELATIVE_PATH_CALENDAR . "/views/list.inc.php");
 }
 */
 // edit an event *********************************************************

@@ -73,7 +73,7 @@ class CalendarDriver
             $event_type = 'CALENDAR_EVENTS';
 
         $this->mod = $mod;
-
+        $this->result = array();
         if (!isset($GLOBALS['SessSemName'][1])) {
             if (!$GLOBALS['calendar_sess_control_data']['show_project_events']) {
                 $event_type = 'CALENDAR_EVENTS';
@@ -216,15 +216,11 @@ class CalendarDriver
                 'EXDATE' => $result['exceptions'],
                 'CREATED' => $result['mkdate'],
                 'LAST-MODIFIED' => $result['chdate'],
-                'STUDIP_ID' => $result['event_id'],
                 'DTSTAMP' => time(),
                 'EVENT_TYPE' => 'semcal',
                 'STUDIP_AUTHOR_ID' => $result['autor_id']);
 
-            $db_semperms = DBManager::get()->prepare('SELECT COUNT(*) AS count FROM seminar_user WHERE Seminar_id = ? AND user_id = ?');
-            $db_semperms->execute(array($properties['SEM_ID'], $GLOBALS['user']->id));
-            $result = $this->db['semperms']->fetch(PDO::FETCH_ASSOC);
-            if ($result && $result['count'] > 0) {
+            if ($GLOBALS['perm']->have_studip_perm('autor', $properties['SEM_ID'], $GLOBALS['user']->id)) {
                 $properties['CLASS'] = 'PRIVATE';
             } else {
                 $properties['CLASS'] = 'CONFIDENTIAL';
@@ -244,6 +240,7 @@ class CalendarDriver
                 'CREATED' => $result['mkdate'],
                 'LAST-MODIFIED' => $result['chdate'],
                 'STUDIP_ID' => $result['termin_id'],
+                'SEM_ID' => $result['range_id'],
                 'SEMNAME' => stripslashes($result['Name']),
                 'CLASS' => 'PRIVATE',
                 'UID' => SeminarEvent::createUid($result['termin_id']),
@@ -290,7 +287,7 @@ class CalendarDriver
     function openDatabaseGetSingleObject($event_id, $event_type = 'CALENDAR_EVENTS')
     {
         $this->mod = 'EVENTS';
-
+        $this->result = array();
         if ($event_type == 'CALENDAR_EVENTS') {
             $db_cal = DBManager::get()->prepare("SELECT * FROM calendar_events WHERE range_id = '{$this->range_id}' AND event_id = '$event_id'");
             $db_cal->execute(array($this->range_id, $event_id));
@@ -317,6 +314,7 @@ class CalendarDriver
     // depricated
     function openDatabaseGetView(&$view, $event_type = 'CALENDAR_EVENTS')
     {
+        $this->result = array();
         $calendar_view = strtolower(get_class($view));
         switch ($calendar_view) {
             case 'dbcalendarday' :

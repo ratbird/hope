@@ -28,7 +28,6 @@ $css_switcher->switchClass();
                     </td>
                     <td class="<? echo $css_switcher->getClass(); ?>">
                         <select name="cal_view" id="cal_view" size="1">
-                            <option value="showlist"<? if ($calendar_user_control_data['view'] == 'showlist') : echo ' selected'; endif ?>><?= ("Aktuell") ?></option>
                             <option value="showday"<? if ($calendar_user_control_data['view'] == 'showday') : echo ' selected'; endif ?>><?= _("Tagesansicht") ?></option>
                             <option value="showweek"<? if ($calendar_user_control_data['view'] == 'showweek') : echo ' selected'; endif ?>><?= _("Wochenansicht") ?></option>
                             <option value="showmonth"<? if ($calendar_user_control_data['view'] == 'showmonth') : echo ' selected'; endif ?>><?= _("Monatsansicht") ?></option>

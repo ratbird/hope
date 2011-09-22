@@ -46,7 +46,6 @@ class SingleCalendar extends Calendar
             elseif ($permission == Calendar::PERMISSION_READABLE)
                 $this->perm_string = _("(leseberechtigt)");
         }
-        CalendarDriver::getInstance($this->user_id, $this->permission);
     }
 
     function getId()

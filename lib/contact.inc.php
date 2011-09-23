@@ -185,7 +185,7 @@ function AddNewContact ($user_id)
 
     // get default permission if group calendar is enabled
     if (get_config('CALENDAR_GROUP_ENABLE')) {
-        $calpermission = 'calpermission = ' . (int) get_config('CALENDAR_DEFAULT_PERMISSION') . ', ';
+        $calpermission = 'calpermission = ' . Calendar::PERMISSION_FORBIDDEN . ', ';
     } else {
         $calpermission = '';
     }
@@ -428,7 +428,7 @@ function ShowContact ($contact_id)
 function SearchResults ($search_exp)
 {
 
-    $stmt = DBManager::get()->prepare($query = 'SELECT DISTINCT auth_user_md5.user_id, '
+    $stmt = DBManager::get()->prepare('SELECT DISTINCT auth_user_md5.user_id, '
           . $GLOBALS['_fullname_sql']['full_rev'] .' AS fullname, username, perms '
           . 'FROM auth_user_md5 '
           . 'LEFT JOIN user_info USING (user_id) '

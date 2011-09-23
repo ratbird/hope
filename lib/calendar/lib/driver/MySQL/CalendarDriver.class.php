@@ -248,6 +248,12 @@ class CalendarDriver
                 'EVENT_TYPE' => 'sem',
                 'DTSTAMP' => time());
 
+            if ($GLOBALS['perm']->have_studip_perm('autor', $properties['SEM_ID'], $GLOBALS['user']->id)) {
+                $properties['CLASS'] = 'PRIVATE';
+            } else {
+                $properties['CLASS'] = 'CONFIDENTIAL';
+            }
+
             $this->count();
             return $properties;
         } else {

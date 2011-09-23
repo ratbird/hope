@@ -125,10 +125,12 @@ class Event
      */
     function getTitle()
     {
-        if ($this->permission == Event::PERMISSION_CONFIDENTIAL)
+        if (!$this->havePermission(Event::PERMISSION_READABLE)) {
             return _("Keine Berechtigung.");
-        if ($this->properties['SUMMARY'] == '')
+        }
+        if ($this->properties['SUMMARY'] == '') {
             return _("Kein Titel");
+        }
 
         return $this->properties['SUMMARY'];
     }
@@ -163,10 +165,10 @@ class Event
      */
     function getCategory()
     {
-        if ($this->permission == Event::PERMISSION_CONFIDENTIAL)
-            return '';
-
-        return $this->properties['CATEGORIES'];
+        if ($this->havePermission(Event::PERMISSION_READABLE)) {
+            return $this->properties['CATEGORIES'];
+        }
+        return $GLOBALS['PERS_TERMIN_KAT'][255]['name'];
     }
 
     /**
@@ -178,10 +180,10 @@ class Event
      */
     function getStudipCategory()
     {
-        if ($this->permission == Event::PERMISSION_CONFIDENTIAL)
-            return 255;
-
-        return $this->properties['STUDIP_CATEGORY'];
+        if ($this->havePermission(Event::PERMISSION_READABLE)) {
+            return $this->properties['STUDIP_CATEGORY'];
+        }
+        return 255;
     }
 
     /**
@@ -194,12 +196,13 @@ class Event
      */
     function getDescription()
     {
-        if ($this->permission == Event::PERMISSION_CONFIDENTIAL)
-            return '';
-
-        if (!$this->properties['DESCRIPTION'])
-            return false;
-        return $this->properties['DESCRIPTION'];
+        if ($this->havePermission(Event::PERMISSION_READABLE)) {
+            if (!$this->properties['DESCRIPTION']) {
+                return false;
+            }
+            return $this->properties['DESCRIPTION'];
+        }
+        return '';
     }
 
     /**
@@ -221,12 +224,13 @@ class Event
      */
     function getLocation()
     {
-        if ($this->permission == Event::PERMISSION_CONFIDENTIAL)
-            return '';
-
-        if ($this->properties['LOCATION'] == '')
-            return false;
-        return $this->properties['LOCATION'];
+        if ($this->havePermission(Event::PERMISSION_READABLE)) {
+            if ($this->properties['LOCATION'] == '') {
+                return false;
+            }
+            return $this->properties['LOCATION'];
+        }
+        return '';
     }
 
     /**
@@ -236,7 +240,6 @@ class Event
      */
     function getMakeDate()
     {
-
         return $this->getProperty('CREATED');
     }
 
@@ -255,14 +258,16 @@ class Event
      * @access public
      * @param int $timestamp a valid unix timestamp
      */
-    function setMakeDate($timestamp = "")
+    function setMakeDate($timestamp = '')
     {
-        if ($timestamp === "")
+        if ($timestamp === '') {
             $this->properties['CREATED'] = time();
-        else
+        } else {
             $this->properties['CREATED'] = $timestamp;
-        if ($this->properties['LAST-MODIFIED'] < $this->properties['CREATED'])
+        }
+        if ($this->properties['LAST-MODIFIED'] < $this->properties['CREATED']) {
             $this->properties['LAST-MODIFIED'] = $this->properties['CREATED'];
+        }
         $this->chng_flag = true;
     }
 
@@ -273,7 +278,6 @@ class Event
      */
     function getChangeDate()
     {
-
         return $this->getProperty('LAST-MODIFIED');
     }
 
@@ -288,14 +292,16 @@ class Event
      * @access public
      * @param int $timestamp a valid unix timestamp
      */
-    function setChangeDate($timestamp = "")
+    function setChangeDate($timestamp = '')
     {
-        if ($timestamp === "")
+        if ($timestamp === '') {
             $this->properties['LAST-MODIFIED'] = time();
-        else
+        } else {
             $this->properties['LAST-MODIFIED'] = $timestamp;
-        if ($this->properties['CREATED'] > $this->properties['LAST-MODIFIED'])
+        }
+        if ($this->properties['CREATED'] > $this->properties['LAST-MODIFIED']) {
             $this->properties['LAST-MODIFIED'] = $this->properties['CREATED'];
+        }
     }
 
     /**
@@ -347,8 +353,9 @@ class Event
      */
     function setStart($start)
     {
-        if ($this->properties['DTEND'] && $this->properties['DTEND'] < $start)
+        if ($this->properties['DTEND'] && $this->properties['DTEND'] < $start) {
             return false;
+        }
         $this->properties['DTSTART'] = $start;
         $this->chng_flag = true;
         return true;
@@ -364,8 +371,9 @@ class Event
      */
     function setEnd($end)
     {
-        if ($this->properties['DTSTART'] && $this->properties['DTSTART'] > $end)
+        if ($this->properties['DTSTART'] && $this->properties['DTSTART'] > $end) {
             return false;
+        }
         $this->properties['DTEND'] = $end;
         $this->chng_flag = true;
         return true;

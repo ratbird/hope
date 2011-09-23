@@ -70,7 +70,7 @@ function MovePersonStatusgruppe($range_id, $AktualMembers = '', $Freesearch = ''
             $statusgruppe_id = substr($key, 0, -2);
         }
     }
-
+    $_SESSION['contact_statusgruppen']['group_open'][$statusgruppe_id] = true;
     if ($AktualMembers != '') {
         for ($i = 0; $i < sizeof($AktualMembers); $i++) {
             InsertPersonStatusgruppe(get_userid($AktualMembers[$i]), $statusgruppe_id);
@@ -79,7 +79,7 @@ function MovePersonStatusgruppe($range_id, $AktualMembers = '', $Freesearch = ''
     if ($Freesearch != '') {
         for ($i = 0; $i < sizeof($Freesearch); $i++) {
             if (InsertPersonStatusgruppe(get_userid($Freesearch[$i]), $statusgruppe_id)) {
-                AddNewContact($Freesearch[$i], $range_id);
+                AddNewContact(get_userid($Freesearch[$i]), $range_id);
             }
         }
     }
@@ -101,8 +101,7 @@ function PrintAktualStatusgruppen($range_id, $view, $edit_id = '')
     while ($db->next_record()) {
         $statusgruppe_id = $db->f("statusgruppe_id");
         $size = $db->f("size");
-        echo "<a id=\"$statusgruppe_id\">\n";
-        echo "\n<table width=\"95%\" border=\"0\" cellpadding=\"2\" cellspacing=\"0\">";
+        echo "\n<table id=\"$statusgruppe_id\" width=\"95%\" border=\"0\" cellpadding=\"2\" cellspacing=\"0\">";
         echo "\n<tr>";
         echo "\n<td width=\"5%\">";
         echo "<input type=\"IMAGE\" name=\"$statusgruppe_id\" ";
@@ -203,31 +202,34 @@ function PrintAktualStatusgruppen($range_id, $view, $edit_id = '')
 function PrintSearchResults($search_exp, $range_id)
 {
     global $_fullname_sql, $user;
-    $db = new DB_Seminar();
-    $db2 = new DB_Seminar();
-    $query = "SELECT DISTINCT auth_user_md5.user_id, " . $_fullname_sql['full_rev'] . " AS fullname, username, perms " .
-            "FROM auth_user_md5 LEFT JOIN user_info USING (user_id) " .
-            "WHERE perms !='root' AND perms !='admin' AND perms !='user' AND " .
-            "(Vorname LIKE '%$search_exp%' OR Nachname LIKE '%$search_exp%' OR username LIKE '%$search_exp%') ORDER BY Nachname ";
-    $db->query($query); // results all users which are not in the seminar
-    if (!$db->num_rows()) {
+    $search_exp = '%' . $search_exp . '%';
+    $query = 'SELECT DISTINCT auth_user_md5.user_id, ' . $_fullname_sql['full_rev']
+            . ' AS fullname, username, perms '
+            . 'FROM auth_user_md5 LEFT JOIN user_info USING (user_id) '
+            . 'WHERE perms != ? AND '
+            . '(Vorname LIKE ? OR Nachname LIKE ? OR username LIKE ?) '
+            . 'ORDER BY Nachname';
+    $stmt = DBManager::get()->prepare($query);
+    $stmt->execute(array('user', $search_exp, $search_exp, $search_exp));
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    if (!$result) {
         echo "&nbsp; " . _("keine Treffer") . "&nbsp; ";
     } else {
-        $perm_own = !$GLOBALS['perm']->have_perm('admin');
+        $stmt2 = DBManager::get()->prepare('SELECT COUNT(*) FROM contact '
+                . 'WHERE owner_id = ? '
+                . 'AND user_id = ? AND calpermission > 1');
         echo "&nbsp; <select name=\"Freesearch[]\" size=\"4\" >";
-        while ($db->next_record()) {
-            if (get_visibility_by_id($db->f("user_id"))) {
+        foreach ($result as $row) {
+            if (get_visibility_by_id($row['user_id'])) {
                 $have_perm = false;
-                if ($GLOBALS['CALENDAR_GROUP_ENABLE']) {
-                    $query = "SELECT calpermission FROM contact WHERE owner_id = '" . $db->f('user_id');
-                    $query .= "' AND user_id = '{$user->id}' AND calpermission > 1";
-                    $db2->query($query);
-                    $have_perm = $db2->num_rows();
+                if (get_config('CALENDAR_GROUP_ENABLE')) {
+                    $stmt2->execute(array($row['user_id'], $GLOBALS['user']->id));
+                    $have_perm = $stmt2->fetchColumn() > 0;
                 }
-                if ($perm_own && $have_perm) {
-                    printf("<option style=\"color:#ff0000;\" value=\"%s\">%s - %s\n", $db->f("username"), htmlReady(my_substr($db->f("fullname"), 0, 35) . " (" . $db->f("username") . ")"), $db->f("perms"));
+                if ($have_perm) {
+                    printf("<option style=\"color:#ff0000;\" value=\"%s\">%s - %s\n", $row['username'], htmlReady(my_substr($row['fullname'], 0, 35) . " (" . $row['username'] . ")"), $row['perms']);
                 } else {
-                    printf("<option value=\"%s\">%s - %s\n", $db->f("username"), htmlReady(my_substr($db->f("fullname"), 0, 35) . " (" . $db->f("username") . ")"), $db->f("perms"));
+                    printf("<option value=\"%s\">%s - %s\n", $row['username'], htmlReady(my_substr($row['fullname'], 0, 35) . " (" . $row['username'] . ")"), $row['perms']);
                 }
             }
         }
@@ -339,7 +341,7 @@ if ($cmd == 'swap') {
 }
 
 // Switch Group calendar access
-if ($CALENDAR_GROUP_ENABLE) {
+if (get_config('CALENDAR_GROUP_ENABLE')) {
     // Switch calendar access for group members
     if (Request::get('calperm')) {
         switch_member_cal(Request::get('user_id'), Request::get('calperm', Calendar::PERMISSION_FORBIDDEN));

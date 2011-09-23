@@ -78,13 +78,19 @@ class SeminarEvent extends Event
     {
         global $TERMIN_TYP;
 
-        return $TERMIN_TYP[$this->getProperty('STUDIP_CATEGORY') - 1]['name'];
+        if ($this->havePermission(Event::PERMISSION_READABLE)) {
+            return $TERMIN_TYP[$this->getProperty('STUDIP_CATEGORY') - 1]['name'];
+        }
+        return '';
     }
 
     // public
     function getSeminarId()
     {
-        return $this->sem_id;
+        if ($this->havePermission(Event::PERMISSION_READABLE)) {
+            return $this->sem_id;
+        }
+        return null;
     }
 
     // public
@@ -131,13 +137,22 @@ class SeminarEvent extends Event
         $this->id = $properties['STUDIP_ID'];
         $this->sem_id = $properties['SEM_ID'];
         $this->sem_write_perm = $GLOBALS['perm']->have_studip_perm('tutor', $this->sem_id);
+        if ($this->haveWritePermission()) {
+            $this->permission = Event::PERMISSION_WRITABLE;
+        } else {
+            $this->permission = $this->properties['CLASS'] == 'CONFIDENTIAL' ? Event::PERMISSION_CONFIDENTIAL :
+                Event::PERMISSION_READABLE;
+        }
 
         return TRUE;
     }
 
     function getSemName()
     {
-        return $this->properties["SEMNAME"];
+        if ($this->havePermission(Event::PERMISSION_READABLE)) {
+            return $this->properties["SEMNAME"];
+        }
+        return '';
     }
 
     function setSemName($name)
@@ -148,6 +163,18 @@ class SeminarEvent extends Event
     function getType()
     {
         return 1;
+    }
+
+    function getTitle()
+    {
+        if (!$this->havePermission(Event::PERMISSION_READABLE)) {
+            return _("Keine Berechtigung.");
+        }
+        if ($this->properties['SUMMARY'] == '') {
+            return $this->getSemName();
+        }
+
+        return $this->properties['SUMMARY'];
     }
 
     function setWritePermission($perm)
@@ -162,25 +189,23 @@ class SeminarEvent extends Event
 
     function getUid()
     {
-        if ($this->properties['UID'] == '')
+        if ($this->properties['UID'] == '') {
             $this->properties['UID'] = SeminarEvent::createUid($this->id);
-
+        }
         return $this->properties['UID'];
     }
 
-    // static
-    function createUid($sem_id)
+    function createUid($id)
     {
-        return "Stud.IP-SEM-$sem_id-{$this->id}@{$_SERVER['SERVER_NAME']}";
+        return "Stud.IP-SEM-$id@{$_SERVER['SERVER_NAME']}";
     }
 
     function getCategory()
     {
-        if ($this->permission == Event::PERMISSION_CONFIDENTIAL) {
-            return 255;
+        if ($this->havePermission(Event::PERMISSION_READABLE)) {
+            return $this->properties['STUDIP_CATEGORY'];
         }
-
-        return $this->properties['STUDIP_CATEGORY'];
+        return 255;
     }
 
     function getCategoryStyle($image_size = 'small')
@@ -191,16 +216,14 @@ class SeminarEvent extends Event
         $index = $this->getCategory();
         if ($index == 255) {
             return array('image' => $image_size == 'small' ?
-                        "{$GLOBALS['ASSETS_URL']}images/calendar/category{$index}_small.jpg" :
-                        "{$GLOBALS['ASSETS_URL']}images/calendar/category{$index}.jpg",
+                Assets::image_path('calendar/category' . $index . '_small.jpg') :
+                Assets::image_path('calendar/category' . $index . '.jpg'),
                 'color' => $PERS_TERMIN_KAT[$index]['color']);
         }
 
         return array('image' => $image_size == 'small' ?
-                    "{$GLOBALS['ASSETS_URL']}images/calendar/category_sem"
-                    . ($index - 1) . "_small.jpg" :
-                    "{$GLOBALS['ASSETS_URL']}images/calendar/category_sem"
-                    . ($index - 1) . ".jpg",
+            Assets::image_path('calendar/category_sem' . ($index - 1) . '_small.jpg') :
+            Assets::image_path('calendar/category_sem' . ($index - 1) . '.jpg'),
             'color' => $TERMIN_TYP[$index - 1]['color']);
     }
 

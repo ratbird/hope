@@ -46,7 +46,10 @@ class SeminarCalendarEvent extends CalendarEvent
     // public
     function getSeminarId()
     {
-        return $this->sem_id;
+        if ($this->havePermission(Event::PERMISSION_READABLE)) {
+            return $this->sem_id;
+        }
+        return null;
     }
 
     // public
@@ -70,7 +73,7 @@ class SeminarCalendarEvent extends CalendarEvent
 
         $this->driver->openDatabaseGetSingleObject($id, 'SEMINAR_CALENDAR_EVENTS');
 
-        if (!$event = & $this->driver->nextObject()) {
+        if (!$event = $this->driver->nextObject()) {
             return false;
         }
 
@@ -84,7 +87,10 @@ class SeminarCalendarEvent extends CalendarEvent
 
     function getSemName()
     {
-        return $this->properties["SEMNAME"];
+        if ($this->havePermission(Event::PERMISSION_READABLE)) {
+            return $this->properties["SEMNAME"];
+        }
+        return '';
     }
 
     function setSemName($name)
@@ -131,15 +137,15 @@ class SeminarCalendarEvent extends CalendarEvent
     function getUid()
     {
         if ($this->properties['UID'] == '')
-            $this->properties['UID'] = SeminarEvent::createUid($this->id);
+            $this->properties['UID'] = SeminarCalendarEvent::createUid($this->id);
 
         return $this->properties['UID'];
     }
 
     // static
-    function createUid($sem_id)
+    function createUid($id)
     {
-        return "Stud.IP-SEM-$sem_id-{$this->id}@{$_SERVER['SERVER_NAME']}";
+        return "Stud.IP-SEMCAL-$id@{$_SERVER['SERVER_NAME']}";
     }
 
 }

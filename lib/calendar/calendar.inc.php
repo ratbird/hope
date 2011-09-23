@@ -85,11 +85,9 @@ if (!is_null($cal_select)) {
     $calendar_sess_control_data['cal_select'] = $cal_select_range . '.' . $cal_select_id;
 }
 
-if (!is_null(Request::get('show_project_events')) && !is_null($cal_select)) {
-    $calendar_sess_control_data['show_project_events'] = true;
-} elseif (!is_null($cal_select)) {
-    $calendar_sess_control_data['show_project_events'] = false;
-}
+// always show course events
+$calendar_sess_control_data['show_project_events'] = true;
+
 /*
 if ($cal_select) {
     list($cal_select_range, $cal_select_id) = explode('.', $cal_select);

@@ -72,18 +72,18 @@ class CalendarWriteriCalendar extends CalendarWriter
         $match_pattern_2 = array('\\', '\n', ';');
         $replace_pattern_2 = array('\\\\', '\\n', '\;');
 
-        $safe_categories = $event->properties['CATEGORIES'];
-        $event->properties['CATEGORIES'] = str_replace($match_pattern_2, $replace_pattern_2, $event->toStringCategories());
-
         $result = "BEGIN:VEVENT" . $this->newline;
 
         foreach ($event->properties as $name => $value) {
-            $name = $name;
             $params = array();
             $params_str = '';
-
-            if ($value === '')
+            
+            if ($name === 'SUMMARY') {
+                $value = $event->getTitle();
+            }
+            if ($value === '') {
                 continue;
+            }
 
             switch ($name) {
                 // not supported event properties
@@ -94,23 +94,23 @@ class CalendarWriteriCalendar extends CalendarWriter
                 case 'STUDIP_ID':
                 case 'BEGIN':
                 case 'END':
+                case 'EVENT_TYPE':
+                case 'SEM_ID':
                     continue 2;
 
                 // text fields
                 case 'SUMMARY':
+                    $value = str_replace($match_pattern_1, $replace_pattern_1, $value);
+                    break;
                 case 'DESCRIPTION':
+                    $value = str_replace($match_pattern_1, $replace_pattern_1, $event->getDescription());
+                    break;
                 case 'LOCATION':
-                    if ($event->havePermission(Event::PERMISSION_READABLE))
-                        $value = str_replace($match_pattern_1, $replace_pattern_1, $value);
-                    else
-                        $value = $event->getTitle();
+                    $value = str_replace($match_pattern_1, $replace_pattern_1, $event->getLocation());
                     break;
 
                 case 'CATEGORIES':
-                    if ($event->havePermission(Event::PERMISSION_READABLE))
-                        $event->properties['CATEGORIES'] = $safe_categories;
-                    else
-                        $event->properties['CATEGORIES'] = $GLOBALS['PERS_TERMIN_KAT'][255]['name'];
+                    $value = str_replace($match_pattern_1, $replace_pattern_1, $event->getCategory());
                     break;
 
                 // Date fields

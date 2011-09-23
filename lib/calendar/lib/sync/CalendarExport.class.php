@@ -50,12 +50,9 @@ class CalendarExport
         $this->_export($this->_writer->writeHeader());
 
         while ($event = $export_driver->nextObject()) {
-            if (strtolower(get_class($event)) == 'seminarevent'
-                    && !in_array($event->getSeminarId(), $user_sems)) {
-                $event->setPermission(Event::PERMISSION_CONFIDENTIAL);
-            }
             $this->_export($this->_writer->write($event));
         }
+
         $this->count = $export_driver->getCount();
 
         if ($this->count == 0) {

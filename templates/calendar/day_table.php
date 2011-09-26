@@ -1,5 +1,4 @@
 <?
-$compact = TRUE;
 $link_edit = FALSE;
 $title_length = 70;
 $height = 20;
@@ -10,12 +9,6 @@ extract($params);
 $width_precol_1 = 5;
 $width_precol_2 = 4;
 $day_event_row = '';
-// emphesize the current day if $compact is FALSE (this means week-view)
-if (date('Ymd', $calendar->view->getStart()) == date('Ymd') && !$compact) {
-    $style_cell = 'celltoday';
-} else {
-    $style_cell = 'steel1';
-}
 
 if ($step >= 3600) {
     $height_precol_1 = ' height="' . ($step / 3600) * $height . '"';

@@ -1,13 +1,20 @@
 <?
 if ($calendar->view instanceof DbCalendarDay) {
     $title_length = 70;
+    $style_cell = 'steel1';
 } else {
+    // emphesize the current day if $compact is FALSE (this means week-view)
+    if (date('Ymd', $day->getStart()) == date('Ymd')) {
+        $style_cell = 'celltoday';
+    } else {
+        $style_cell = 'steel1';
+    }
     $title_length = ceil(125 / $calendar->view->getType());
 }
 ?>
 <? $link_notset = true ?>
 <? if (!$em['term'][$row]) : ?>
-<td class="steel1" align="right"  valign="middle"<?= ($em['max_cols'] > 0 ? ' colspan="' . ($em['max_cols'] + 1) . '"' : '') ?>>
+<td class="<?= $style_cell ?>" align="right"  valign="middle"<?= ($em['max_cols'] > 0 ? ' colspan="' . ($em['max_cols'] + 1) . '"' : '') ?>>
     <? if ($calendar->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
     <a href="<?= URLHelper::getLink('', array('cmd' => 'edit', 'atime' => $day->getStart() + $i * $step)) ?>">
         <img src="<?= Assets::image_path('calplus.gif') ?>"<?= tooltip(strftime(_("neuer Termin um %R Uhr"), $row * $step + $start - 3600)) ?>>
@@ -46,11 +53,11 @@ if ($calendar->view instanceof DbCalendarDay) {
                 <? endif ?>
             </td>
         <? elseif ($em['term'][$row][$j] == '#') : ?>
-            <td class="steel1"<?= ($em['cspan'][$row][$j] > 1 ? ' colspan="' . $em['cspan'][$row][$j] . '"' : '') ?>>
+            <td class="<?= $style_cell ?>"<?= ($em['cspan'][$row][$j] > 1 ? ' colspan="' . $em['cspan'][$row][$j] . '"' : '') ?>>
                 <span class="inday">&nbsp;</span>
             </td>
         <? elseif ($em['term'][$row][$j] == '') : ?>
-            <td class="steel1"<?= ($em['cspan'][$row][$j] > 1 ? ' colspan="' . $em['cspan'][$row][$j] . '"' : '') ?> align="right" valign="middle">
+            <td class="<?= $style_cell ?>"<?= ($em['cspan'][$row][$j] > 1 ? ' colspan="' . $em['cspan'][$row][$j] . '"' : '') ?> align="right" valign="middle">
                 <? if ($calendar->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
                 <a href="<?= URLHelper::getLink('', array('cmd' => 'edit', 'atime' => $day->getStart() + $i * $step)) ?>">
                     <img src="<?= Assets::image_path('calplus.gif') ?>"<?= tooltip(strftime(_("neuer Termin um %R Uhr"), $row * $step + $start - 3600)) ?>>
@@ -63,7 +70,7 @@ if ($calendar->view instanceof DbCalendarDay) {
     <? endfor ?>
 <? endif ?>
 <? if ($link_notset) : ?>
-    <td class="steel1" align="right" valign="middle">
+    <td class="<?= $style_cell ?>" align="right" valign="middle">
         <? if ($calendar->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
         <a href="<?= URLHelper::getLink('', array('cmd' => 'edit', 'atime' => $day->getStart() + $i * $step)) ?>">
             <img src="<?= Assets::image_path('calplus.gif') ?>"<?= tooltip(strftime(_("neuer Termin um %R Uhr"), $row * $step + $start - 3600)) ?>>

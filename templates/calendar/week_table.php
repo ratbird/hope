@@ -99,7 +99,15 @@ if ($calendar->view->getType() == 7) {
             <?= _("Tag") ?>
         </td>
         <? for ($i = 0; $i < $calendar->view->getType(); $i++) : ?>
-        <td class="steel1" style="text-align:right; vertical-align:bottom;"<?= (($tab_arr[$i]['max_cols'] > 0) ? ' colspan="' . ($tab_arr[$i]['max_cols'] + 1) . '"' : '') ?>>
+        <?
+        // emphesize the current day if $compact is FALSE (this means week-view)
+        if (date('Ymd', $calendar->view->wdays[$i]->getStart()) == date('Ymd')) {
+            $style_cell = 'celltoday';
+        } else {
+            $style_cell = 'steel1';
+        }
+        ?>
+        <td class="<?= $style_cell ?>" style="text-align:right; vertical-align:bottom;"<?= (($tab_arr[$i]['max_cols'] > 0) ? ' colspan="' . ($tab_arr[$i]['max_cols'] + 1) . '"' : '') ?>>
             <?= $this->render_partial('calendar/_day_dayevents', array('em' => $tab_arr[$i])) ?>
             <? if ($calendar->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
                 <div>

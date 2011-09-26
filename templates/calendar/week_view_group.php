@@ -2,7 +2,6 @@
 $width1 = 0;
 $width2 = 0;
 $cols = ceil(($calendar->getUserSettings('end') - $calendar->getUserSettings('start') + 1) * 3600 / $calendar->getUserSettings('step_week_group')) + 1;
-var_dump($start_time, $end_time, $cols);
 $start = $calendar->getUserSettings('start') * 3600;
 $end = ($calendar->getUserSettings('end') + 1) * 3600;
 

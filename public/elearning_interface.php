@@ -32,7 +32,6 @@ $perm->check("autor");
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
-require_once ('config.inc.php');
 require_once ('lib/visual.inc.php');
 
 checkObject();
@@ -56,10 +55,12 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
 
     ELearningUtils::bench("checkObject");
 
+    $rechte = $perm->have_studip_perm('tutor', $SessSemName[1]);
+    $seminar_id = $SessSemName[1];
+
     if ((! $rechte) AND ($view == "edit"))
         $view = "show";
 
-    $seminar_id = $SessSemName[1];
     if ($seminar_id != $elearning_open_close["id"])
     {
         $sess->unregister("cache_data");

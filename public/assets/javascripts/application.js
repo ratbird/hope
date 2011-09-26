@@ -1867,3 +1867,49 @@ STUDIP.RoomRequestDialog = {
         });
     }
 };
+
+STUDIP.CalendarDialog = {
+    dialog: null,
+    calendarTimeout: null,
+    openBox: function (title, content, element) {
+        var coord = "center"; //coordinates to give to dialogbox - "center" means center of window
+        if (element) {
+            coord = jQuery(element).position();
+            coord = [coord.left + jQuery(element).width() + 2, coord.top - jQuery(window).scrollTop() + 30];
+        }
+        if (STUDIP.CalendarDialog.dialog === null) {
+            STUDIP.CalendarDialog.dialog =
+                jQuery('<div id="CalendarDialog">' + content + '</div>').dialog({
+                    show: 'fade',
+                    hide: 'fade',
+                    position: coord,
+                    title: title,
+                    draggable: false,
+                    modal: false,
+                    width: Math.min(600, jQuery(window).width() - 64),
+                    height: 'auto',
+                    maxHeight: jQuery(window).height(),
+                    close: function () {
+                        jQuery(this).remove();
+                        STUDIP.CalendarDialog.dialog = null;
+                    }
+                });
+        } else {
+            jQuery('#CalendarDialog').html(content),
+            jQuery('#CalendarDialog').dialog('option', 'position', coord);
+            jQuery('#CalendarDialog').dialog('option', 'title', title);
+        }
+    },
+
+    openCalendarHover: function (title, content, element) {
+        STUDIP.CalendarDialog.calendarTimeout = window.setTimeout(function () {
+            STUDIP.CalendarDialog.openBox(title, content, element);
+        }, 500);
+    },
+
+    closeCalendarHover: function () {
+        window.clearTimeout(STUDIP.CalendarDialog.calendarTimeout);
+        jQuery('#CalendarDialog').dialog('close');
+        STUDIP.CalendarDialog.calendarTimeout = null;
+    }
+};

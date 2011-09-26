@@ -1,7 +1,8 @@
 <?
-$step = $group_calendar->getUserSettings('step_day_group') / 3600;
+$step_day = $group_calendar->getUserSettings('step_day_group');
+$step = 3600 / $step_day;
 // add one cell for day events
-$cells = (($group_calendar->getUserSettings('end') - $group_calendar->getUserSettings('start') + 1) / $step) + 1;
+$cells = (($group_calendar->getUserSettings('end') - $group_calendar->getUserSettings('start')) / (1 / $step)) + 2;
 $width1 = floor(90 / $cells);
 $width2 = 10 + (90 - $width1 * $cells);
 $start = $group_calendar->getUserSettings('start') * 3600;
@@ -35,7 +36,7 @@ SkipLinks::addIndex(_("Tagesansicht"), 'main_content', 100);
             <div style="overflow:auto; width:100%;">
             <table width="100%" border="0" cellpadding="2" cellspacing="1" align="center" class="steelgroup0">
                 <? $time = mktime(0, 0, 0, date('n', $atime), date('j', $atime), date('Y', $atime)); ?>
-                <? if ($step < 1) : $colsp = ' colspan="' . (1 / $step) . '"'; endif ?>
+                <? if ($step_day < 3600) : $colsp = ' colspan="' . $step . '"'; endif ?>
                 <tr>
                     <td width="<?= $width2 ?>%" class="precol1w" nowrap="nowrap" align="center">
                         <?= _("Mitglied") ?>
@@ -45,10 +46,12 @@ SkipLinks::addIndex(_("Tagesansicht"), 'main_content', 100);
                             <?= Assets::img('icons/16/blue/schedule.png', tooltip2(_("Tagestermin"))) ?>
                         </a>
                     </td>
-                    <? for ($i = $time + $start; $i < $time + $end; $i += 3600 * ceil($step)) : ?>
+                    <? for ($i = $time + $start; $i < $time + $end; $i += $step_day) : ?>
+                        <? if (!($i % 3600)) : ?>
                         <td<?= $colsp ?> class="precol1w" align="center">
                             <a href="<?= URLHelper::getLink('', array('cmd'=> 'edit', 'atime' => $i, 'cal_group' => $group_calendar->getId())) ?>" class="calhead"><?= date('G', $i) ?></a>
                         </td>
+                        <? endif ?>
                     <? endfor ?>
                 </tr>
                 <? while ($calendar = $group_calendar->nextCalendar()) : ?>
@@ -65,7 +68,7 @@ SkipLinks::addIndex(_("Tagesansicht"), 'main_content', 100);
                             $js_events[] = $calendar->view->events[$adapted['day_map'][$i]];
                         endfor; ?>
                         <? if (sizeof($js_events)) : ?>
-                            <td width="<?= $width1 ?>%" class="lightmonth" align="right" style="background-image: url('<?= Assets::url('images/calendar/category5_small.jpg') ?>" <?/*= js_hover_group($js_events, $calendar->view->getStart(), $calendar->view->getEnd(), $calendar->getUserId()); */ ?>>
+                            <td width="<?= $width1 ?>%" class="lightmonth" align="right" style="background-image: url('<?= Assets::url('images/calendar/category5_small.jpg') ?>" <?= js_hover_group($js_events, $calendar->view->getStart(), $calendar->view->getEnd(), $calendar->getUserId()); ?>>
                         <? else : ?>
                             <td width="<?= $width1 ?>%" class="lightmonth" align="right">
                         <? endif ?>
@@ -78,21 +81,21 @@ SkipLinks::addIndex(_("Tagesansicht"), 'main_content', 100);
                             </td>
                         <? endif ?>
                         <? $k = 0;
-                        for ($i = $start + $calendar->view->getStart(); $i < $end + $calendar->view->getStart(); $i += $group_calendar->getUserSettings('step_day_group')) :
-                            if (!($i % ($group_calendar->getUserSettings('step_day') / $step))) {
+                        for ($i = $start + $calendar->view->getStart(); $i < $end + $calendar->view->getStart(); $i += $step_day) :
+                            if (!($i % 3600)) {
                                 $k++;
                             }
                             $js_events = array();
                             ?>
 
                             <? for ($j = 0; $j < sizeof($adapted['events']); $j++) : ?>
-                                <? if (($adapted['events'][$j]->getStart() <= $i && $adapted['events'][$j]->getEnd() > $i) || ($adapted['events'][$j]->getStart() > $i && $adapted['events'][$j]->getStart() < $i + $group_calendar->getUserSettings('step_day_group'))) :
+                                <? if (($adapted['events'][$j]->getStart() <= $i && $adapted['events'][$j]->getEnd() > $i) || ($adapted['events'][$j]->getStart() > $i && $adapted['events'][$j]->getStart() < $i + $step_day)) :
                                     $js_events[] = $calendar->view->events[$adapted['map'][$j]];
                                 endif ?>
                             <? endfor ?>
 
                             <? if (sizeof($js_events)) : ?>
-                                <td width="<?= $width1 ?>%" align="right" style="background-image: url('<?= Assets::url('/images/calendar/category5_small.jpg') ?>" <?/*= js_hover_group($js_events, $i, $i + $group_calendar->getUserSettings('step_day_group'), $calendar->getUserId()); */ ?>>
+                                <td width="<?= $width1 ?>%" align="right" style="background-image: url('<?= Assets::url('/images/calendar/category5_small.jpg') ?>" <?= js_hover_group($js_events, $i, $i + $step_day, $calendar->getUserId()); ?>>
                             <? else: ?>
                                 <td width="<?= $width1 ?>%" align="right" class="<?= (($k % 2) ? 'month' : 'lightmonth') ?>">
                             <? endif ?>
@@ -113,12 +116,14 @@ SkipLinks::addIndex(_("Tagesansicht"), 'main_content', 100);
                             <?= Assets::img('icons/16/blue/schedule.png', tooltip2(_("Tagestermin"))) ?>
                         </a>
                     </td>
-                    <? for ($i = $time + $start; $i < $time + $end; $i += 3600 * ceil($step)) : ?>
+                    <? for ($i = $time + $start; $i < $time + $end; $i += $step_day) : ?>
+                        <? if (!($i % 3600)) : ?>
                         <td<?= $colsp ?> class="precol1w" align="center">
                             <a href="<?= URLHelper::getLink('', array('cmd' => 'edit', 'atime' => $i, 'cal_group' => $group_calendar->getId())) ?>" class="calhead">
                                 <?= date('G', $i) ?>
                             </a>
                         </td>
+                        <? endif ?>
                     <? endfor ?>
                 </tr>
             </table>

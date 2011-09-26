@@ -187,14 +187,14 @@ class SingleCalendar extends Calendar
                 if ($updated) {
                     $msg_text = sprintf(_("%s hat einen Termin in Ihrem Kalender geändert."), get_fullname());
                     $subject = sprintf(_("Termin am %s geändert"), $this->event->toStringDate('SHORT_DAY'));
-                    $msg_text .= '\n\n**';
+                    $msg_text .= "\n\n**";
                 } else {
                     $msg_text = sprintf(_("%s hat einen neuen Termin in Ihren Kalender eingetragen."), get_fullname());
                     $subject = sprintf(_("Neuer Termin am %s"), $this->event->toStringDate('SHORT_DAY'));
-                    $msg_text .= '\n\n**';
+                    $msg_text .= "\n\n**";
                 }
-                $msg_text .= _("Zeit:") . '** ' . $this->event->toStringDate('LONG') . '\n**';
-                $msg_text .= _("Zusammenfassung:") . '** ' . $this->event->getTitle() . '\n';
+                $msg_text .= _("Zeit:") . '** ' . $this->event->toStringDate('LONG') . "\n**";
+                $msg_text .= _("Zusammenfassung:") . '** ' . $this->event->getTitle() . "\n";
                 if ($event_data = $this->event->getDescription())
                     $msg_text .= '**' . _("Beschreibung:") . "** $event_data\n";
                 if ($event_data = $this->event->toStringCategories())
@@ -234,10 +234,10 @@ class SingleCalendar extends Calendar
 
                 $subject = sprintf(_("Termin am %s gelöscht"), $this->event->toStringDate('SHORT_DAY'));
                 $msg_text = sprintf(_("%s hat folgenden Termin in Ihrem Kalender gelöscht:"), get_fullname());
-                $msg_text .= '\n\n**';
+                $msg_text .= "\n\n**";
 
-                $msg_text .= _("Zeit:") . '** ' . $this->event->toStringDate('LONG') . '\n**';
-                $msg_text .= _("Zusammenfassung:") . '** ' . $this->event->getTitle() . '\n';
+                $msg_text .= _("Zeit:") . '** ' . $this->event->toStringDate('LONG') . "\n**";
+                $msg_text .= _("Zusammenfassung:") . '** ' . $this->event->getTitle() . "\n";
                 if ($event_data = $this->event->getDescription())
                     $msg_text .= '**' . _("Beschreibung:") . "** $event_data\n";
                 if ($event_data = $this->event->toStringCategories())

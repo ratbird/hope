@@ -367,11 +367,13 @@ function to_string_month_events(&$calendar, $day_timestamp, $max_events = NULL)
     }
     $out = '';
     $count = 0;
-    if (strtolower(get_class($calendar)) == 'groupcalendar') {
+    if ($calendar instanceof GroupCalendar) {
         for ($i = 0; $i < sizeof($calendar->calendars); $i++) {
             $events = $calendar->calendars[$i]->view->getEventsOfDay($day_timestamp);
             if (sizeof($events) && $count < $max_events) {
-                $out .= '<br><a class="inday" href="' . URLHelper::getLink('', array('cmd' => 'showday', 'cal_user' => get_username($calendar->calendars[$i]->getUserId()), 'atime' => $day_timestamp)) . '">';
+                $js_hover = js_hover_group($events, $calendar->calendars[$i]->view->getStart(),
+						$calendar->calendars[$i]->view->getEnd(), $calendar->calendars[$i]->getUserId());
+                $out .= '<br><a class="inday" href="' . URLHelper::getLink('', array('cmd' => 'showday', 'cal_user' => get_username($calendar->calendars[$i]->getUserId()), 'atime' => $day_timestamp)) . '" ' . $js_hover .'>';
                 $out .= fit_title(get_fullname($calendar->calendars[$i]->getUserId(), 'no_title_rev'), 1, 1, 15) . "</a>";
                 $count++;
             }
@@ -379,10 +381,10 @@ function to_string_month_events(&$calendar, $day_timestamp, $max_events = NULL)
     } else {
         $month = $calendar->view;
         while (($event = $month->nextEvent($day_timestamp)) && $count < $max_events) {
-            if (strtolower(get_class($event)) == 'seminarevent') {
+            if ($event instanceof SeminarEvent) {
                 $html_title = fit_title($event->getSemName(), 1, 1, 15);
                 $ev_type = 'sem';
-            } elseif (strtolower(get_class($event)) == 'seminarcalendarevent') {
+            } elseif ($event instanceof SeminarCalendarEvent) {
                 $html_title = fit_title($event->getTitle(), 1, 1, 15);
                 $ev_type = 'semcal';
             } else {
@@ -527,11 +529,11 @@ function create_year_view(&$calendar)
 
 function javascript_hover_year(&$calendar, $day_time)
 {
-    global $forum, $auth;
+    global $forum;
 
     $out = '';
     $event_count_txt = array();
-    if (strtolower(get_class($calendar)) == 'groupcalendar') {
+    if ($calendar instanceof GroupCalendar) {
         foreach ($calendar->calendars as $user_calendar) {
             if ($event_count = $user_calendar->view->numberOfEvents($day_time)) {
                 if ($event_count > 1) {
@@ -540,7 +542,7 @@ function javascript_hover_year(&$calendar, $day_time)
                     $txt = _("%s hat 1 Termin");
                 }
 
-                if ($forum['jshover'] == 1 && $auth->auth['jscript']) {
+                if ($forum['jshover'] == 1) {
                     $event_count_txt[] = sprintf($txt, '<b>' . get_fullname($user_calendar->getUserId(), 'no_title_rev') . '</b>', $event_count);
                 } else {
                     $event_count_txt[] = sprintf($txt, get_fullname($user_calendar->getUserId(), 'no_title_rev'), $event_count);
@@ -548,16 +550,14 @@ function javascript_hover_year(&$calendar, $day_time)
             }
         }
         if (sizeof($event_count_txt)) {
-            if ($forum['jshover'] == 1 && $auth->auth['jscript']) {
+            if ($forum['jshover'] == 1) {
+                $js_title = sprintf(_("Termine am %s"), strftime('%x, ', $day_time));
                 $out .= implode('<hr>', $event_count_txt);
+                $out = " onmouseover=\"STUDIP.CalendarDialog.openCalendarHover('" . JSReady($js_title) . "', '" . JSReady($out, 'contact') . "', this);\" onmouseout=\"STUDIP.CalendarDialog.closeCalendarHover();\"";
             } else {
                 $out .= implode('; ', $event_count_txt);
+                $out = tooltip($out);
             }
-
-            $out = " onmouseover=\"return overlib('" . JSReady($out, 'contact') . "',CAPTION,'"
-                    . ldate($day_time)
-                    //  . "&nbsp; &nbsp; ". $jscript_title
-                    . "',NOCLOSE,CSSOFF);\" onmouseout=\"return nd();\"";
         }
     } else {
         $event_count = $calendar->view->numberOfEvents($day_time);
@@ -861,4 +861,43 @@ function quick_search_form($search_string, $cmd, $atime)
     $out .= "<!-- END CALENDAR QUICK SEARCH -->\n";
 
     return $out;
+}
+
+function js_hover_group ($events, $start, $end, $user_id)
+{
+	global $forum, $auth;
+
+	if (!$forum['jshover']) {
+		return '';
+    }
+
+	if ($end) {
+		$date_time = strftime('%x, ', $start) . strftime('%H:%M - ', $start)
+			. strftime('%H:%M', $end);
+    } else {
+		$date_time = strftime('%x, ', $start);
+    }
+	if ($user_id == $GLOBALS['user']->id) {
+		$js_title = sprintf(_("Termine am %s, Eigener Kalender"), $date_time);
+    } else {
+		$js_title = sprintf(_("Termine am %s, Gruppenmitglied: %s"), $date_time, get_fullname($user_id, 'no_title_short'));
+    }
+
+	if (!is_array($events)) {
+		$events = array();
+    }
+
+    $js_text = '';
+	foreach ($events as $event) {
+		if (date('j', $event->getStart()) != date('j', $event->getEnd())) {
+			$js_text .= '<b>' . $event->toStringDate('SHORT_DAY') . '</b> &nbsp; ';
+        } else {
+			$js_text .= '<b>' . $event->toStringDate('SHORT') . '</b> &nbsp; ';
+        }
+		$js_text .= htmlReady($event->getTitle()) . '<br>';
+	}
+
+	//$js_text = "'" . JSReady($js_text, 'contact') . "',CAPTION,'" . JSReady($js_title) . "',NOCLOSE,CSSOFF";
+
+	return " onmouseover=\"STUDIP.CalendarDialog.openCalendarHover('" . JSReady($js_title) . "', '" . JSReady($js_text, 'contact') . "', this);\" onmouseout=\"STUDIP.CalendarDialog.closeCalendarHover();\"";
 }

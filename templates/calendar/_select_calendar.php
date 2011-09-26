@@ -44,23 +44,25 @@
                         </option>
                         <? endforeach ?>
                     <? endif ?>
-                    <? $sems = Calendar::GetSeminarActivatedCalendar(); ?>
-                    <? if (sizeof($sems)) : ?>
-                        <option style="font-weight:bold;" value="user.<?= get_username() ?>"><?= _("Veranstaltungskalender:") ?></option>
-                        <? foreach ($sems as $sem_id => $sem_name) : ?>
-                        <option value="sem.<?= $sem_id ?>"<?= ($_calendar->getId() == $sem_id ? ' selected="selected"' : '') ?>>
-                            &nbsp; &nbsp;<?= htmlReady(my_substr($sem_name, 0, 30)) ?>
-                        </option>
-                        <? endforeach ?>
-                    <? endif ?>
-                    <? $insts = Calendar::GetInstituteActivatedCalendar(); ?>
-                    <? if (sizeof($insts)) : ?>
-                        <option style="font-weight:bold;" value="user.<?= get_username() ?>"><?= _("Einrichtungskalender:") ?></option>
-                        <? foreach ($insts as $inst_id => $inst_name) : ?>
-                        <option value="inst.<?= $inst_id ?>"<?= ($_calendar->getId() == $inst_id ? ' selected="selected"' : '') ?>>
-                            &nbsp; &nbsp;<?= htmlReady(my_substr($inst_name, 0, 30)); ?>
-                        </option>
-                        <? endforeach ?>
+                    <? if (get_config('COURSE_CALENDAR_ENABLE')) : ?>
+                        <? $sems = Calendar::GetSeminarActivatedCalendar(); ?>
+                        <? if (sizeof($sems)) : ?>
+                            <option style="font-weight:bold;" value="user.<?= get_username() ?>"><?= _("Veranstaltungskalender:") ?></option>
+                            <? foreach ($sems as $sem_id => $sem_name) : ?>
+                            <option value="sem.<?= $sem_id ?>"<?= ($_calendar->getId() == $sem_id ? ' selected="selected"' : '') ?>>
+                                &nbsp; &nbsp;<?= htmlReady(my_substr($sem_name, 0, 30)) ?>
+                            </option>
+                            <? endforeach ?>
+                        <? endif ?>
+                        <? $insts = Calendar::GetInstituteActivatedCalendar(); ?>
+                        <? if (sizeof($insts)) : ?>
+                            <option style="font-weight:bold;" value="user.<?= get_username() ?>"><?= _("Einrichtungskalender:") ?></option>
+                            <? foreach ($insts as $inst_id => $inst_name) : ?>
+                            <option value="inst.<?= $inst_id ?>"<?= ($_calendar->getId() == $inst_id ? ' selected="selected"' : '') ?>>
+                                &nbsp; &nbsp;<?= htmlReady(my_substr($inst_name, 0, 30)); ?>
+                            </option>
+                            <? endforeach ?>
+                        <? endif ?>
                     <? endif ?>
                 </select>
                 <span style="font-size: small; color: #555555; white-space: nowrap;">

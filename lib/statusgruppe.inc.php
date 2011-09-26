@@ -74,7 +74,8 @@ function AddNewStatusgruppe ($new_statusgruppe_name, $range_id, $new_statusgrupp
     } else {
         $position = "1";
     }
-    $db->query("INSERT INTO statusgruppen SET statusgruppe_id = '$statusgruppe_id', name = '$new_statusgruppe_name', range_id= '$range_id', position='$position', size = '$new_statusgruppe_size', selfassign = '$new_selfassign', mkdate = '$mkdate', chdate = '$chdate'");
+    $calendar_group = Request::get('is_cal_group') ? 1 : 0;
+    $db->query("INSERT INTO statusgruppen SET statusgruppe_id = '$statusgruppe_id', name = '$new_statusgruppe_name', range_id= '$range_id', position='$position', size = '$new_statusgruppe_size', selfassign = '$new_selfassign', mkdate = '$mkdate', chdate = '$chdate', calendar_group = $calendar_group");
     if($db->affected_rows() && $new_doc_folder){
         create_folder(mysql_escape_string(_("Dateiordner der Gruppe:") . ' ' . $new_statusgruppe_name), mysql_escape_string(_("Ablage für Ordner und Dokumente dieser Gruppe")), $statusgruppe_id, 15);
     }
@@ -201,7 +202,8 @@ function EditStatusgruppe ($new_statusgruppe_name, $new_statusgruppe_size, $edit
 
     $chdate = time();
     $db=new DB_Seminar;
-    $db->query("UPDATE statusgruppen SET name = '$new_statusgruppe_name', size = '$new_statusgruppe_size', chdate = '$chdate', selfassign = '$new_selfassign' WHERE statusgruppe_id = '$edit_id'");
+    $calendar_group = Request::get('is_cal_group') ? 1 : 0;
+    $db->query("UPDATE statusgruppen SET name = '$new_statusgruppe_name', size = '$new_statusgruppe_size', chdate = '$chdate', selfassign = '$new_selfassign', calendar_group = $calendar_group WHERE statusgruppe_id = '$edit_id'");
     if($new_doc_folder){
         create_folder(mysql_escape_string(_("Dateiordner der Gruppe:") . ' '. $new_statusgruppe_name), mysql_escape_string(_("Ablage für Ordner und Dokumente dieser Gruppe")), $edit_id, 15);
     }

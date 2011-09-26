@@ -271,7 +271,7 @@ class Calendar
     function getGroups()
     {
 
-        $stmt = DBManager::get()->prepare("SELECT DISTINCT sg.statusgruppe_id, sg.name FROM statusgruppen sg LEFT JOIN statusgruppe_user su USING(statusgruppe_id) LEFT JOIN contact c ON(su.user_id = c.owner_id) WHERE sg.range_id = ?  AND c.calpermission > 1 ORDER BY sg.name");
+        $stmt = DBManager::get()->prepare("SELECT DISTINCT sg.statusgruppe_id, sg.name FROM statusgruppen sg LEFT JOIN statusgruppe_user su USING(statusgruppe_id) LEFT JOIN contact c ON(su.user_id = c.owner_id) WHERE sg.range_id = ? AND sg.calendar_group = 1 AND c.calpermission > 1 ORDER BY sg.name");
         $stmt->execute(array($GLOBALS['user']->id));
 
         $groups = array();

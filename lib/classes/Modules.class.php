@@ -52,7 +52,7 @@ class Modules {
                 "scm" => array("id" => 12, "const" => "SCM_ENABLE", "sem" => TRUE, "inst" => TRUE),
                 "elearning_interface" => array("id" => 13, "const" => "ELEARNING_INTERFACE_ENABLE", "sem" => TRUE, "inst" => TRUE),
                 "documents_folder_permissions" => array("id" => 14, "const" => "", "sem" => TRUE, "inst" => TRUE),
-                "calendar" => array('id' => 16, 'const' => 'CALENDAR_ENABLE', 'sem' => TRUE, 'inst' => TRUE)
+                "calendar" => array('id' => 16, 'const' => 'COURSE_CALENDAR_ENABLE', 'sem' => TRUE, 'inst' => TRUE)
                 );
     var $db;
     

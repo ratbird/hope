@@ -349,7 +349,7 @@ class CourseNavigation extends Navigation
         }
 
         // calendar
-        if (get_config('CALENDAR_GROUP_ENABLE') && $modules['calendar']) {
+        if (get_config('CALENDAR_GROUP_ENABLE') && get_config('COURSE_CALENDAR_ENABLE') && $modules['calendar']) {
             $navigation = new Navigation(_('Kalender'), 'calendar.php');
             $navigation->setImage('icons/16/%COLOR%/schedule.png');
 

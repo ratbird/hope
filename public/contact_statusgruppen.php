@@ -94,7 +94,7 @@ function PrintAktualStatusgruppen($range_id, $view, $edit_id = '')
     $db = new DB_Seminar();
     $db2 = new DB_Seminar();
     $db3 = new DB_Seminar();
-    $db->query("SELECT name, statusgruppe_id FROM statusgruppen WHERE range_id = '$range_id_statusgruppe' ORDER BY position ASC");
+    $db->query("SELECT name, statusgruppe_id, calendar_group FROM statusgruppen WHERE range_id = '$range_id_statusgruppe' ORDER BY position ASC");
     $AnzahlStatusgruppen = $db->num_rows();
     $lid = rand(1, 1000);
     $i = 0;
@@ -115,7 +115,18 @@ function PrintAktualStatusgruppen($range_id, $view, $edit_id = '')
                     . '<img style="vertical-align:top;" src="' . Assets::image_path($_SESSION['contact_statusgruppen']['group_open'][$statusgruppe_id] ? 'icons/16/blue/arr_1down.png' : 'icons/16/blue/arr_1right.png')
                     . '">&nbsp;' . htmlReady($db->f("name")) . '</a>';
         }
-        printf("<td width=\"85%%\" class=\"%s\">%s </td><td class=\"%s\" width=\"5%%\"><a href=\"%s\"><img src=\"" . Assets::image_path('icons/16/white/edit.png') . "\" %s></a></td>", ($edit_id == $statusgruppe_id ? "topicwrite" : "topic"), $s_name, ($edit_id == $statusgruppe_id ? "topicwrite" : "topic"), URLHelper::getLink("?edit_id=" . $statusgruppe_id . "&range_id=" . $range_id . "&view=" . $view . "&cmd=edit_statusgruppe"), tooltip(_("Gruppenname oder -größe anpassen")));
+        $cal_group = get_config('CALENDAR_GROUP_ENABLE') && $db->f('calendar_group');
+        echo '<td width="' . ($cal_group ? '80%' : '85%') . '" class="';
+        echo ($edit_id == $statusgruppe_id ? 'topicwrite' : 'topic') . '">';
+        echo $s_name . '</td>';
+        echo '<td class="' . ($edit_id == $statusgruppe_id ? 'topicwrite' : 'topic') . '" width="5%">';
+        if ($cal_group) {
+            echo '<img src="' . Assets::image_path('icons/16/white/schedule.png') . '" ' . tooltip(_('Kalendergruppe')) . '>';
+            echo '</td><td class="' . ($edit_id == $statusgruppe_id ? 'topicwrite' : 'topic') . '" style="whitespace: width="5%">';
+        }
+        echo '<a href="' . URLHelper::getLink('', array('edit_id' => $statusgruppe_id, 'range_id' => $range_id, 'view' => $view, 'cmd' => 'edit_statusgruppe')) . '">';
+        echo '<img src="' . Assets::image_path('icons/16/white/edit.png') . '" ';
+        echo tooltip(_("Gruppenname oder -größe anpassen")) . '></a></td>';
 
         printf("<td align=\"right\" width=\"5%%\" class=\"%s\"><a href=\"%s\"><img src=\"" . Assets::image_path('icons/16/white/trash.png') . "\" %s></a></td>", ($edit_id == $statusgruppe_id ? "topicwrite" : "topic"), URLHelper::getLink("?cmd=verify_remove_statusgruppe&statusgruppe_id=" . $statusgruppe_id . "&range_id=" . $range_id . "&view=" . $view . "&name=" . $db->f("name")), tooltip(_("Gruppe mit Personenzuordnung entfernen")));
         echo "\n</tr>";
@@ -135,7 +146,7 @@ function PrintAktualStatusgruppen($range_id, $view, $edit_id = '')
 
                     // query whether the current user has the permission to access the calendar
                     // of this user
-                    if ($GLOBALS['CALENDAR_GROUP_ENABLE']) {
+                    if (get_config('CALENDAR_GROUP_ENABLE')) {
                         $query = "SELECT calpermission FROM contact WHERE owner_id = '" . $db2->f('user_id');
                         $query .= "' AND user_id = '{$user->id}' AND calpermission > 1";
                         $db3->query($query);
@@ -156,8 +167,11 @@ function PrintAktualStatusgruppen($range_id, $view, $edit_id = '')
                     echo "\n<tr>\n\t\t<td><font color=\"#AAAAAA\">$k</font></td>";
                     echo "<td class=\"$class\"><font size=\"2\" color=\"$color\">";
                     echo htmlReady($fullname) . "</font></td>";
-                    if ($GLOBALS['CALENDAR_GROUP_ENABLE']) {
-                        echo "<td class=\"$class\">";
+                    if (get_config('CALENDAR_GROUP_ENABLE')) {
+                        if ($cal_group) {
+                            echo '<td class="' . $class . '"> </td>';
+                        }
+                        echo '<td style="text-align: center;" class="' . $class . '">';
                         echo '<a href="';
                         switch ($db3->f('calpermission')) {
                             case Calendar::PERMISSION_READABLE:
@@ -178,7 +192,8 @@ function PrintAktualStatusgruppen($range_id, $view, $edit_id = '')
                     } else {
                         echo "<td class=\"$class\">&nbsp;</td>\n";
                     }
-                    echo "<td class=\"$class\"><a href=\"" . URLHelper::getLink("?cmd=remove_person&statusgruppe_id=$statusgruppe_id&entry_id=$identifier&range_id=$range_id&view=$view#$statusgruppe_id") . '">';
+                    echo '<td style="text-align: center;" class="' . $class . '">';
+                    echo '<a href="' . URLHelper::getLink('#' . $statusgruppe_id, array('cmd' => 'remove_person', 'statusgruppe_id' => $statusgruppe_id, 'entry_id' => $identifier, 'range_id' => $range_id, 'view' => $view)) . '">';
                     echo Assets::img('icons/16/blue/trash.png', tooltip(_("Person aus der Gruppe entfernen"))) . '</a></td>';
                     echo "\n\t</tr>";
                     $k++;
@@ -380,7 +395,12 @@ if (is_array($msgs)) {
         echo"<input type=\"hidden\" name=\"view\" value=\"$view\">";
         ?>
                     <font size="2"><?= _("Adressbuchgruppe anlegen:") ?></font>
+
                     <input type="text" name="new_statusgruppe_name" style="vertical-align:middle" value="<?= _("Gruppenname") ?>">
+                    <? if (get_config('CALENDAR_GROUP_ENABLE')) : ?>
+                        <label><?= _('im Kalender auswählbar:') ?>
+                        <input type="checkbox" name="is_cal_group" value="1" class="text-top"></label>
+                    <? endif ?>
                     &nbsp; &nbsp; &nbsp; <b><?= _("Einf&uuml;gen") ?></b>&nbsp;
                 <?
                 printf("<input type=\"IMAGE\" name=\"add_new_statusgruppe\" src=\"" . Assets::image_path('icons/16/yellow/arr_2down.png') . "\" value=\" %s \" %s>&nbsp;  &nbsp; &nbsp; ", _("neue Statusgruppe"), tooltip(_("neue Gruppe anlegen")));
@@ -392,7 +412,7 @@ if (is_array($msgs)) {
                 <form action="<? echo URLHelper::getLink(sprintf('?cmd=edit_existing_statusgruppe#%s', $edit_id)) ?>" method="POST">
     <?= CSRFProtection::tokenTag() ?>
                     <?
-                    $db = new DB_Seminar("SELECT name, size FROM statusgruppen WHERE statusgruppe_id = '$edit_id'");
+                    $db = new DB_Seminar("SELECT name, size, calendar_group FROM statusgruppen WHERE statusgruppe_id = '$edit_id'");
                     if ($db->next_record()) {
                         $gruppe_name = $db->f("name");
                     }
@@ -402,6 +422,10 @@ if (is_array($msgs)) {
                     ?>
                     <font size="2"><?= _("neuer Gruppenname:") ?> </font>
                     <input type="text" name="new_statusgruppe_name" style="vertical-align:middle" value="<? echo htmlReady($gruppe_name); ?>">
+                    <? if (get_config('CALENDAR_GROUP_ENABLE')) : ?>
+                        <label><?= _('im Kalender auswählbar:') ?>
+                        <input type="checkbox" name="is_cal_group" value="1" class="text-top"<?= ($db->f('calendar_group') ? ' checked="checked"' : '') ?>></label>
+                    <? endif ?>
                     &nbsp; &nbsp; &nbsp; <b><?= _("&Auml;ndern") ?></b>&nbsp;
                     <?
                     printf("<input type=\"IMAGE\" name=\"add_new_statusgruppe\" src=\"" . Assets::image_path('icons/16/green/accept.png') . "\" value=\" %s \" %s>&nbsp;  &nbsp; &nbsp; ", _("Gruppe anpassen"), tooltip(_("Gruppe anpassen")));

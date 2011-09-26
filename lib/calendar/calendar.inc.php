@@ -85,38 +85,15 @@ if (!is_null($cal_select)) {
     $calendar_sess_control_data['cal_select'] = $cal_select_range . '.' . $cal_select_id;
 }
 
-// always show course events
-$calendar_sess_control_data['show_project_events'] = true;
-
-/*
-if ($cal_select) {
-    list($cal_select_range, $cal_select_id) = explode('.', $cal_select);
-    if ($cal_select_range == 'user') {
-        $cal_select_id = get_userid($cal_select_id);
-    } elseif ($cal_select_range == 'sem') {
-        URLHelper::setBaseURL($GLOBALS['ABSOLUTE_URI_STUDIP']);
-        header('Location: ' . URLHelper::getURL('calendar.php', array('cid' => $cal_select_id, 'cmd' => Request::option('cmd'), 'atime' => Request::int('atime'))));
-        exit;
-    } else if ($cal_select_range == 'inst') {
-        header('Location: ' . URLHelper::getURL('calendar.php', array('cid' => $cal_select_id, 'cmd' => Request::option('cmd'), 'atime' => Request::int('atime'))));
-        exit;
-    }
-    $calendar_sess_control_data['cal_select'] = $cal_select_range . '.' . $cal_select_id;
-} else if (isset($GLOBALS['SessSemName'][1]) && $GLOBALS['SessSemName'][1] != '') {
-    checkObject();
-    checkObjectModule('calendar');
-    object_set_visit_module('calendar');
-    $cal_select_range = 'sem';
-    $cal_select_id = $GLOBALS['SessSemName'][1];
-    $calendar_sess_control_data['cal_select'] = $cal_select_range . '.' . $cal_select_id;
-} else if ($calendar_sess_control_data['cal_select']) {
-    list($cal_select_range, $cal_select_id) = explode('.', $calendar_sess_control_data['cal_select']);
-} else {
+if (!get_config('COURSE_CALENDAR_ENABLE') && in_array($cal_select_range, array('inst', 'sem'))) {
     $cal_select_range = 'user';
     $cal_select_id = $GLOBALS['user']->id;
     $calendar_sess_control_data['cal_select'] = $cal_select_range . '.' . $cal_select_id;
 }
-*/
+
+// always show course events
+$calendar_sess_control_data['show_project_events'] = true;
+
 if (Request::get('cmd') == 'export'
         && array_shift(explode('.', $calendar_sess_control_data['cal_select'])) == 'group') {
     $_calendar = Calendar::getInstance(Calendar::RANGE_USER, $GLOBALS['user']->id);

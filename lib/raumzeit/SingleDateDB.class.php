@@ -111,13 +111,22 @@ class SingleDateDB {
     }
 
     static function deleteSingleDate($id, $ex_termin) {
-        $db = new DB_Seminar();
+        $db = DBManager::get();
         if ($ex_termin) {
             $table = 'ex_termine';
         } else  {
             $table = 'termine';
         }
-
+        
+        if (Config::get()->RESOURCES_ENABLE) {
+            $db->exec("DELETE FROM resources_temporary_events WHERE assign_id = ". $db->quote(self::getAssignID($id)));
+            $db->exec("DELETE FROM resources_assign WHERE assign_user_id = " . $db->quote($id));
+            if ($request_id = self::getRequestID($id)) {
+                $rr = new RoomRequest($request_id);
+                $rr->delete();
+            }
+        }
+        
         $db->query("DELETE FROM $table WHERE termin_id = '$id'");
         $db->query("DELETE FROM themen_termine WHERE termin_id = '$id'");
         $db->query("DELETE FROM termin_related_persons WHERE range_id = '$id'");
@@ -177,13 +186,6 @@ class SingleDateDB {
         $termine = $db->query("SELECT termin_id FROM termine WHERE range_id = " . $db->quote($course_id))->fetchAll(PDO::FETCH_COLUMN);
         foreach ($termine as $termin_id) {
             self::deleteSingleDate($termin_id, false);
-            if (Config::get()->RESOURCES_ENABLE) {
-                $db->exec("DELETE FROM resources_assign WHERE assign_user_id = " . $db->quote($termin_id));
-                if ($request_id = self::getRequestID($termin_id)) {
-                    $rr = new RoomRequest($request_id);
-                    $rr->delete();
-                }
-            }
         }
         return count($termine);
     }

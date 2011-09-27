@@ -237,7 +237,7 @@ if (is_object($user) && $user->id != 'nobody') {
 
             ob_start();
             $feed->rssfeed_start();
-            echo $layout->render(array('title' => $feedtitle, 'icon_url' => 'icons/16/white/rss.png', 'admin_url' => URLHelper::getLink('edit_about.php', array('view' => 'rss')), 'content_for_layout' => ob_get_clean()));
+            echo $layout->render(array('title' => $feedtitle, 'icon_url' => 'icons/16/white/rss.png', 'admin_url' => 'edit_about.php?view=rss', 'content_for_layout' => ob_get_clean()));
         }
     }
 }

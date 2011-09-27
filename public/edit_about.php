@@ -67,6 +67,9 @@ checkExternDefaultForUser(get_userid($username));
 $my_about = new about($username,$msg);
 $cssSw = new cssClassSwitcher;
 
+$pattern= '/^\w+$/';
+$view = preg_match($pattern,$_REQUEST['view']) ? $_REQUEST['view'] : '';
+
 if ($logout && $auth->auth["uid"] == "nobody")  // wir wurden gerade ausgeloggt...
     {
 

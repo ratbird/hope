@@ -131,7 +131,7 @@ class SemBrowse {
             }
             $this->show_result = true;
             $this->sem_browse_data['show_entries'] = false;
-            $this->sem_browse_data['sset'] = true;
+            $this->sem_browse_data['sset'] = Request::get($this->search_obj->form_name . "_quick_search_parameter");
         }
 
 
@@ -255,7 +255,8 @@ class SemBrowse {
                     ->setAttributes(array('aria-label' => _("Suchbegriff")))
                     ->setInputStyle("vertical-align:middle;font-size:9pt;width:50%;")
                     ->fireJSFunctionOnSelect("selectSem")
-                    ->noSelectbox();
+                    ->noSelectbox()
+                    ->defaultValue($this->sem_browse_data['sset'] && strlen($this->sem_browse_data['sset']) ? $this->sem_browse_data['sset'] : '', $this->sem_browse_data['sset'] && strlen($this->sem_browse_data['sset']) ? $this->sem_browse_data['sset'] : '');
         echo $quicksearch->render();
         echo "&nbsp;";
         echo $this->search_obj->getSearchButton(array('style' => 'vertical-align:middle', 'class' => "quicksearchbutton"), true);

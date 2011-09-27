@@ -8,13 +8,13 @@
             <input class="text-bottom" type="image" src="<?= Assets::image_path("icons/16/blue/search.png")?>">
     <? endif ?>
 <? endif ?>
-            <input type=hidden id="<?= $id ?>_realvalue" name="<?= $name ?>" value="<?= $defaultID ?>">
+            <input type=hidden id="<?= $id ?>_realvalue" name="<?= $name ?>" value="<?= htmlReady($defaultID) ?>">
             <input<?
                 foreach ($withAttributes as $attr_name => $attr_value) {
                     print ' '.$attr_name.'="'.$attr_value.'"';
                 }
                 ?> id="<?= $id ?>"<?= ($clear_input ? $clear_input : "") ?> type=text name="<?=
-                    $name ?>_parameter" value="<?= htmlReady($defaultName) ?>" placeholder="<?= $beschriftung && !$defaultID ? $beschriftung : '' ?>">
+                    $name ?>_parameter" value="<?= htmlReady($defaultName) ?>" placeholder="<?= $beschriftung && !$defaultID ? htmlReady($beschriftung) : '' ?>">
 <? if ($withButton) : ?>
     <? if ($box_align !== "left") : ?>
             <input <?=($search_button_name ? 'name="'.$search_button_name.'"' : '')?> class="text-bottom" type="image" src="<?= Assets::image_path("icons/16/blue/search.png")?>" title="<?= _("Suche starten") ?>">

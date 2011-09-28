@@ -157,10 +157,10 @@ function change_messaging_view()
             <? if ($reset_txt) {
                 ?><table width="70%" align="center" cellpadding=8 cellspacing=0 border=0><tr><td align="left" class="steel1"><?
                 echo $reset_txt; ?>
-                <br><div align="center"><font size="-1">
+                <br><div align="center">
                 <?=_("Möchten Sie fortfahren?")?>
                 <a href="<?=$PHP_SELF?>?messaging_cmd=reset_msg_settings&change_view=TRUE"><?=makeButton("ja2", "img")?></a>&nbsp;
-                <a href="<?=$PHP_SELF?>?change_view=TRUE"><?=makeButton("nein", "img")?></a></font><div>
+                <a href="<?=$PHP_SELF?>?change_view=TRUE"><?=makeButton("nein", "img")?></a><div>
                 </td></tr></table><br><?
             } ?>
             <table width="70%" align="center"cellpadding=8 cellspacing=0 border=0  id="main_content">
@@ -169,7 +169,7 @@ function change_messaging_view()
                     <th align=center><?=_("Auswahl")?></th>
                 </tr>
                 <tr>
-                    <td colspan="2" align="center" class="steelgraulight" style="border-bottom:1px dotted black;border-top:1px dotted black;"><font size="-1"><b><?=_("Einstellungen des system-internen Nachrichten-Systems")?></b></font></td>
+                    <td colspan="2" align="center" class="steelgraulight" style="border-bottom:1px dotted black;border-top:1px dotted black;"><b><?=_("Einstellungen des system-internen Nachrichten-Systems")?></b></td>
                 </tr>
                 <tr  <? $cssSw->switchClass() ?>>
                     <td  align="right" class="blank" style="border-bottom:1px dotted black;">
@@ -201,10 +201,10 @@ function change_messaging_view()
                 <tr  <? $cssSw->switchClass() ?>>
                     <td  align="right" class="blank" style="border-bottom:1px dotted black;">
                         <label for="delete_messages_after_logout"><?print _("Beim Logout alle Nachrichten löschen");?></label>
+                            <div class="setting_info">(<?=_("davon ausgenommen sind geschützte Nachrichten")?>)</div>
                     </td>
                     <td <?=$cssSw->getFullClass()?>>
                         <input type="checkbox" value="1" name="delete_messages_after_logout" id="delete_messages_after_logout"<? if ($my_messaging_settings["delete_messages_after_logout"] == "1") echo " checked"; ?>>
-                        &nbsp;<font size="-1">(<?=_("davon ausgenommen sind geschützte Nachrichten")?>)</font>
                     </td>
                 </tr>
 
@@ -223,11 +223,9 @@ function change_messaging_view()
                         <?print _("Kopie empfangener Nachrichten an eigene E-Mail-Adresse schicken");?>
                     </td>
                     <td <?=$cssSw->getFullClass()?>>
-                        <font size="-1">
                         <label><input type="radio" name="send_as_email" value="1"<?=($email_forward == "1") ? " checked": "";?>>&nbsp;<?=_("nie")?></label><br>
                         <label><input type="radio" name="send_as_email" value="2"<?=($email_forward == "2") ? " checked": "";?>>&nbsp;<?=_("immer")?></label><br>
                         <label><input type="radio" name="send_as_email" value="3"<?=($email_forward == "3") ? " checked": "";?>>&nbsp;<?=_("wenn vom Absender gewünscht")?></label>
-                        </font>
                     </td>
                 </tr>
                 <tr  <? $cssSw->switchClass() ?>>
@@ -243,22 +241,19 @@ function change_messaging_view()
 
                 <tr  <? $cssSw->switchClass() ?>>
                     <td  align="right" class="blank" style="border-bottom:1px dotted black;">
-                        <font size="-1"><?print _("Umgang mit angeforderter Lesebestätigung");?></font>
+                       <?print _("Umgang mit angeforderter Lesebestätigung");?>
                     </td>
                     <td <?=$cssSw->getFullClass()?>>
-                        <font size="-1">
                         <label><input type="radio" name="confirm_reading" value="1"<?=($my_messaging_settings["confirm_reading"] == "1") ? " checked": "";?>>&nbsp;<?=_("ignorieren")?></label><br>
                         <label><input type="radio" name="confirm_reading" value="2"<?=($my_messaging_settings["confirm_reading"] == "2") ? " checked": "";?>>&nbsp;<?=_("immer automatisch bestätigen")?></label><br>
                         <label><input type="radio" name="confirm_reading" value="3"<?=($my_messaging_settings["confirm_reading"] == "3") ? " checked": "";?>>&nbsp;<?=_("je Nachricht selbst entscheiden")?></label>
-                        </font>
                     </td>
                 </tr>
 
 
                 <tr <? $cssSw->switchClass() ?>>
                     <td  align="right" class="blank" style="border-bottom:1px dotted black;">
-                        <font size="-1">
-                        <label for="search_exp"><?print _("Weiterleitung empfangener Nachrichten");?></label></font>
+                        <label for="search_exp"><?print _("Weiterleitung empfangener Nachrichten");?></label>
                     </td>
                     <td <?=$cssSw->getFullClass()?>> <?
                         $query = "SELECT * FROM user_info WHERE user_id='".$user->id."'";
@@ -299,10 +294,10 @@ function change_messaging_view()
                 </tr>
                 <tr <? $cssSw->switchClass() ?>>
                     <td align="right" class="blank" style="border-bottom:1px dotted black;">
-                        <font size=-1><label for="timefilter"><?echo _("Zeitfilter der Anzeige in Postein- bzw. ausgang");?></label></font>
+                        <label for="timefilter"><?echo _("Zeitfilter der Anzeige in Postein- bzw. ausgang");?></label>
                     </td>
                     <td <?=$cssSw->getFullClass()?>>
-                        <font size=-1> &nbsp;<select name="timefilter" id="timefilter"> <?
+                        &nbsp;<select name="timefilter" id="timefilter"> <?
                         printf("<option value=\"%s\" %s>%s</option>", "new", CheckSelected($my_messaging_settings["timefilter"], "new"), _("neue Nachrichten"));
                         printf("<option value=\"%s\" %s>%s</option>", "all", CheckSelected($my_messaging_settings["timefilter"], "all"), _("alle Nachrichten"));
                         printf("<option value=\"%s\" %s>%s</option>", "24h", CheckSelected($my_messaging_settings["timefilter"], "24h"), _("letzte 24 Stunden"));
@@ -315,17 +310,17 @@ function change_messaging_view()
 
                 <tr <? $cssSw->switchClass() ?>>
                     <td align="right" class="blank" style="border-bottom:1px dotted black;">
-                        <font size=-1><?echo _("Signatur gesendeten Nachrichten anhängen");?></font>
+                        <?echo _("Signatur gesendeten Nachrichten anhängen");?>
                     </td>
                     <td align="left" <?=$cssSw->getFullClass()?>>
-                        <font size=-1><label><input type="checkbox" value="1" name="addsignature"<? if ($my_messaging_settings["addsignature"] == "1") echo " checked"; ?>>&nbsp;<?=_("Signatur anhängen")?></label></font> <br>
+                        <label><input type="checkbox" value="1" name="addsignature"<? if ($my_messaging_settings["addsignature"] == "1") echo " checked"; ?>>&nbsp;<?=_("Signatur anhängen")?></label><br>
                         &nbsp;<textarea name="sms_sig" aria-label="<?= _("Signatur") ?>" rows=3 cols=30><? echo htmlready($my_messaging_settings["sms_sig"]); ?></textarea>
                     </td>
                 </tr>
 
                 <tr  <? $cssSw->switchClass() ?>>
                     <td  align="right" class="blank">
-                        <font size="-1"><label for="show_sndpicture"><?print _("Bild des Absenders in Nachricht anzeigen");?></label></font>
+                        <label for="show_sndpicture"><?print _("Bild des Absenders in Nachricht anzeigen");?></label>
                     </td>
                     <td <?=$cssSw->getFullClass()?>>
                         <input type="checkbox" value="1" id="show_sndpicture" name="show_sndpicture"<? if ($my_messaging_settings["show_sndpicture"] == "1") echo " checked"; ?>>
@@ -333,11 +328,13 @@ function change_messaging_view()
                 </tr>
 
                 <tr <? $cssSw->resetClass() ?>>
-                    <td colspan="2" align="center" class="steelgraulight" style="border-bottom:1px dotted black;border-top:1px dotted black;"><font size="-1"><b><?=_("Stud.IP-Messenger")?></b></font></td>
+                    <td colspan="2" align="center" class="steelgraulight" style="border-bottom:1px dotted black;border-top:1px dotted black;">
+                        <b><?=_("Stud.IP-Messenger")?></b>
+                    </td>
                 </tr>
                 <tr <? $cssSw->switchClass() ?>>
                     <td align="right" class="blank">
-                        <font size=-1><label for="start_messenger_at_startup"><?=_("Stud.IP-Messenger automatisch nach dem Login starten")?></label></font>
+                        <label for="start_messenger_at_startup"><?=_("Stud.IP-Messenger automatisch nach dem Login starten")?></font>
                     </td>
                     <td <?=$cssSw->getFullClass()?>>
                         <input type="checkbox" id="start_messenger_at_startup" name="start_messenger_at_startup" <? if ($my_messaging_settings["start_messenger_at_startup"]) echo " checked"; ?> >
@@ -347,11 +344,13 @@ function change_messaging_view()
                 if (get_config('NEWS_RSS_EXPORT_ENABLE')){
                 ?>
                 <tr <? $cssSw->resetClass() ?>>
-                    <td colspan="2" align="center" class="steelgraulight" style="border-bottom:1px dotted black;border-top:1px dotted black;"><font size="-1"><b><?=_("Stud.IP-Ankündigungen")?></b></font></td>
+                    <td colspan="2" align="center" class="steelgraulight" style="border-bottom:1px dotted black;border-top:1px dotted black;">
+                        <b><?=_("Stud.IP-Ankündigungen")?></b>
+                    </td>
                 </tr>
                 <tr <? $cssSw->switchClass() ?>>
                     <td align="right" class="blank">
-                        <font size=-1><label for="export_news_as_rss"><?=_("Stud.IP-Ankündigungen per RSS-Feed exportieren")?></label></font>
+                        <label for="export_news_as_rss"><?=_("Stud.IP-Ankündigungen per RSS-Feed exportieren")?></font>
                     </td>
                     <td <?=$cssSw->getFullClass()?>>
                         <input type="checkbox" id="export_news_as_rss" name="export_news_as_rss" <? if (StudipNews::GetRssIdFromUserId($user->id)) echo " checked"; ?> >
@@ -361,12 +360,14 @@ function change_messaging_view()
                 }
                 ?>
                 <tr <? $cssSw->switchClass() ?>>
-                    <td colspan="2" align="center" class="steelgraulight" style="border-bottom:1px dotted black;border-top:1px dotted black;"><font size="-1"><b><?=_("Buddies/ Wer ist online?")?></b></font></td>
+                    <td colspan="2" align="center" class="steelgraulight" style="border-bottom:1px dotted black;border-top:1px dotted black;">
+                        <b><?=_("Buddies/ Wer ist online?")?></b>
+                    </td>
                 </tr>
                 <? if (GetNumberOfBuddies()) { ?>
                 <tr <? $cssSw->switchClass() ?>>
                     <td  align="right" class="blank" style="border-bottom:1px dotted black;">
-                        <font size=-1><label for="show_only_buddys"><?=_("Nur Buddies in der &Uuml;bersicht der aktiven Benutzer anzeigen")?></label></font>
+                        <label for="show_only_buddys"><?=_("Nur Buddies in der &Uuml;bersicht der aktiven Benutzer anzeigen")?></label>
                     </td>
                     <td <?=$cssSw->getFullClass()?>>
                         <input type="checkbox" id="show_only_buddys" name="show_only_buddys"<? if ($my_messaging_settings["show_only_buddys"]) echo " checked"; ?> >
@@ -376,7 +377,7 @@ function change_messaging_view()
                 <? if ($FOAF_ENABLE) { ?>
                 <tr <? $cssSw->switchClass() ?>>
                     <td  align="right" class="blank" style="border-bottom:1px dotted black;">
-                        <font size=-1><label for="foaf_show_identity"><?=_("Eigene Identität in Verbindungsketten zwischen Nutzern (\"Friend of a friend\"-Liste) offenlegen")?></label></font>
+                        <label for="foaf_show_identity"><?=_("Eigene Identität in Verbindungsketten zwischen Nutzern (\"Friend of a friend\"-Liste) offenlegen")?></label>
                     </td>
                     <td <?=$cssSw->getFullClass()?>>
                         <input type="checkbox" id="foaf_show_identity" name="foaf_show_identity"<? if ($user_cfg->getValue("FOAF_SHOW_IDENTITY")) echo " checked"; ?> >
@@ -385,7 +386,7 @@ function change_messaging_view()
                 <? } ?>
                 <tr <? $cssSw->switchClass() ?>>
                     <td  align="right" class="blank" style="border-bottom:1px dotted black;">
-                        <font size=-1><label for="active_time"><?=_("Dauer bis inaktiv:")?></label></font>
+                        <label for="active_time"><?=_("Dauer bis inaktiv:")?></font>
                     </td>
                     <td <?=$cssSw->getFullClass()?>>
                         <select name="active_time" id="active_time"> <?
@@ -403,7 +404,7 @@ function change_messaging_view()
                 </tr>
                 <tr  <? $cssSw->switchClass() ?>>
                     <td  align="right" class="blank" style="border-bottom:1px dotted black;">
-                        <font size="-1"><label for="online_format"><?print _("Formatierung der Namen auf &raquo;Wer ist Online?&laquo;");?></label></font>
+                        <label for="online_format"><?print _("Formatierung der Namen auf &raquo;Wer ist Online?&laquo;");?></font>
                     </td>
                     <td <?=$cssSw->getFullClass()?>>
                         <select name="online_format" id="online_format">

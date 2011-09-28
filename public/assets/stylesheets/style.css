@@ -1832,3 +1832,9 @@ h3.eval {
 	position:absolute;
 	width:0;
 }
+.setting_info {
+        font-size: 0.9em;
+        font-style: italic;
+        text-align: right;
+        color: #444;
+}

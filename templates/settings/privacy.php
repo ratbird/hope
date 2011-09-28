@@ -21,10 +21,10 @@
                     </tr>
                     <tr>
                         <td width="50%" align="right" class="blank" style="border-bottom:1px dotted black;" width="66%">
-                            <font size="-1"><label for="global_vis"><?print _("globale Sichtbarkeit");?></label></font><br>
-                            <br><div align="left" id="global_vis_description"><font size="-1">
+                            <label for="global_vis"><?print _("globale Sichtbarkeit");?></label><br>
+                            <br><div align="left" id="global_vis_description" class="setting_info">
                             <?= _("Sie können wählen, ob Sie für andere NutzerInnen sichtbar sein und alle Kommunikationsfunktionen von Stud.IP nutzen können wollen, oder ob Sie unsichtbar sein möchten und dann nur eingeschränkte Kommunikationsfunktionen nutzen können.");?>
-                            </font></div>
+                            </div>
                         </td>
                         <td width="50%" class="<?=TextHelper::cycle('steel1', 'steelgraulight')?>" width="34%">
                             <?php
@@ -69,10 +69,10 @@
                     ?>
                     <tr>
                         <td align="right" class="blank" style="border-bottom:1px dotted black;">
-                            <font size="-1"><?print _("erweiterte Einstellungen");?></font><br>
+                            <?print _("erweiterte Einstellungen");?><br>
                             <br>
-                            <div align="left">
-                            <font size="-1">
+                            <div align="left" class="setting_info">
+                            
                             <?= _("Stellen Sie hier ein, in welchen Bereichen des Systems Sie erscheinen wollen."); ?>
                             <?php
                             if (!$NOT_HIDEABLE_FIELDS[$user_perm]['email']) {
@@ -80,7 +80,7 @@
                                 echo _("Wenn Sie hier Ihre E-Mail-Adresse verstecken, wird stattdessen die E-Mailadresse Ihrer (Standard-)Einrichtung angezeigt.");
                             }
                             ?>
-                            </font>
+                            
                             </div>
                         </td>
                         <td class="<?=TextHelper::cycle('steel1', 'steelgraulight')?>">

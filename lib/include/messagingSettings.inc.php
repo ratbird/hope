@@ -334,7 +334,7 @@ function change_messaging_view()
                 </tr>
                 <tr <? $cssSw->switchClass() ?>>
                     <td align="right" class="blank">
-                        <label for="start_messenger_at_startup"><?=_("Stud.IP-Messenger automatisch nach dem Login starten")?></font>
+                        <label for="start_messenger_at_startup"><?=_("Stud.IP-Messenger automatisch nach dem Login starten")?></label>
                     </td>
                     <td <?=$cssSw->getFullClass()?>>
                         <input type="checkbox" id="start_messenger_at_startup" name="start_messenger_at_startup" <? if ($my_messaging_settings["start_messenger_at_startup"]) echo " checked"; ?> >
@@ -350,7 +350,7 @@ function change_messaging_view()
                 </tr>
                 <tr <? $cssSw->switchClass() ?>>
                     <td align="right" class="blank">
-                        <label for="export_news_as_rss"><?=_("Stud.IP-Ankündigungen per RSS-Feed exportieren")?></font>
+                        <label for="export_news_as_rss"><?=_("Stud.IP-Ankündigungen per RSS-Feed exportieren")?></label>
                     </td>
                     <td <?=$cssSw->getFullClass()?>>
                         <input type="checkbox" id="export_news_as_rss" name="export_news_as_rss" <? if (StudipNews::GetRssIdFromUserId($user->id)) echo " checked"; ?> >
@@ -386,7 +386,7 @@ function change_messaging_view()
                 <? } ?>
                 <tr <? $cssSw->switchClass() ?>>
                     <td  align="right" class="blank" style="border-bottom:1px dotted black;">
-                        <label for="active_time"><?=_("Dauer bis inaktiv:")?></font>
+                        <label for="active_time"><?=_("Dauer bis inaktiv:")?></label>
                     </td>
                     <td <?=$cssSw->getFullClass()?>>
                         <select name="active_time" id="active_time"> <?
@@ -404,7 +404,7 @@ function change_messaging_view()
                 </tr>
                 <tr  <? $cssSw->switchClass() ?>>
                     <td  align="right" class="blank" style="border-bottom:1px dotted black;">
-                        <label for="online_format"><?print _("Formatierung der Namen auf &raquo;Wer ist Online?&laquo;");?></font>
+                        <label for="online_format"><?print _("Formatierung der Namen auf &raquo;Wer ist Online?&laquo;");?></label>
                     </td>
                     <td <?=$cssSw->getFullClass()?>>
                         <select name="online_format" id="online_format">

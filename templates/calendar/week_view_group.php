@@ -19,7 +19,7 @@ SkipLinks::addIndex(_("Wochenansicht"), 'main_content', 100);
             <?= sprintf(_("%s. Woche vom %s bis %s"), strftime("%V", $calendar->view->getStart()), strftime("%x", $calendar->view->getStart()), strftime("%x", $calendar->view->getEnd())); ?>
         </td>
         <td align="center" width="15%">
-            <a href="<?= URLHelper::getLink('' , array('cmd' => 'showweek', 'atime' => $calendar->view->getEnd() + $calendar->getUserSettings('start') * 3600 + 1)) ?>">
+            <a href="<?= URLHelper::getLink('' , array('cmd' => 'showweek', 'atime' => mktime(12, 0, 0, date('n', $calendar->view->getStart()), date('j', $calendar->view->getStart()) + 7, date('Y', $calendar->view->getStart())))) ?>">
                 <?= Assets::img('icons/16/blue/arr_1right.png', tooltip2(_("eine Woche vor"))) ?>
             </a>
         </td>

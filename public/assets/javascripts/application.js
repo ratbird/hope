@@ -1193,10 +1193,10 @@ jQuery(function ($) {
                 .appendTo(row);
 
             $(that)
-                .data('busy', false)
                 .hideAjaxNotification()
                 .closest('tr').after(row);
 
+            $(that).data('busy', false)
             $('body').trigger('ajaxLoaded');
         });
 

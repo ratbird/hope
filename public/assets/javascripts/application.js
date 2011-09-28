@@ -1173,11 +1173,15 @@ jQuery(function ($) {
     });
 
     $('a.load-in-new-row').live('click', function () {
+        if ($(this).data('busy')) {
+            return false;
+        }
+
         if ($(this).closest('tr').next().hasClass('loaded-details')) {
             $(this).closest('tr').next().remove();
             return false;
         }
-        $(this).showAjaxNotification();
+        $(this).showAjaxNotification().data('busy', true);
 
         var that = this;
         $.get($(this).attr('href'), function (response) {
@@ -1189,6 +1193,7 @@ jQuery(function ($) {
                 .appendTo(row);
 
             $(that)
+                .data('busy', false)
                 .hideAjaxNotification()
                 .closest('tr').after(row);
 

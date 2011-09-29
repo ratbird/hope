@@ -6,8 +6,8 @@
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
 // StudipLitSearchPluginZ3950Abstract.class.php
-// 
-// 
+//
+//
 // Copyright (c) 2003 André Noack <noack@data-quest.de>
 // +---------------------------------------------------------------------------+
 // This program is free software; you can redistribute it and/or
@@ -30,14 +30,14 @@ require_once ("lib/classes/lit_search_plugins/StudipLitSearchPluginAbstract.clas
 /**
 *
 *
-* 
 *
-* @access   public  
+*
+* @access   public
 * @author   André Noack <noack@data-quest.de>
-* @package  
+* @package
 **/
 class StudipLitSearchPluginZ3950Abstract extends StudipLitSearchPluginAbstract{
-    
+
     var $z_host;
     var $z_options = array(); // ('user' => 'dummy', 'password' => 'bla', 'persistent' => true, 'piggyback' => true);
     var $z_id;
@@ -51,7 +51,7 @@ class StudipLitSearchPluginZ3950Abstract extends StudipLitSearchPluginAbstract{
     var $z_accession_re = false; // RegEx to check for valid accession number
     var $z_record_encoding = 'latin1';
     var $z_sort = '';
-    
+
     function StudipLitSearchPluginZ3950Abstract(){
         parent::StudipLitSearchPluginAbstract();
         $this->z_hits =& $this->search_result['z_hits'];
@@ -77,7 +77,7 @@ class StudipLitSearchPluginZ3950Abstract extends StudipLitSearchPluginAbstract{
                                 '712' => array('field' => 'dc_creator', 'callback' => 'notEmptyMap', 'cb_args' => array('$a, $b','dc_contributor','$a, $b;')),
                                 '856' => array('field' => 'dc_identifier', 'callback' => 'simpleMap', 'cb_args' => 'URL: $u '),
                                 );
-        
+
         //MARC mapping
         $this->mapping['USMARC'] = array('001' => array('field' => 'accession_number', 'callback' => 'simpleMap', 'cb_args' => ''),
                                         '008' => array( array('field' => 'dc_language', 'callback' => 'simpleFixFieldMap', 'cb_args' => array('start'=>34,'length'=>3)),
@@ -111,7 +111,7 @@ class StudipLitSearchPluginZ3950Abstract extends StudipLitSearchPluginAbstract{
                                         '856' => array('field' => 'dc_identifier', 'callback' => 'simpleMap', 'cb_args' => 'URL: $u '),
                                         );
     }
-    
+
     function doSearch($search_values = false){
         $rpn =& $this->search_result['rpn'];
         if ($search_values){
@@ -144,7 +144,7 @@ class StudipLitSearchPluginZ3950Abstract extends StudipLitSearchPluginAbstract{
             }
         }
     }
-    
+
     function doZConnect(){
         $zid = yaz_connect($this->z_host,$this->z_options);
         if (!$zid){
@@ -153,12 +153,13 @@ class StudipLitSearchPluginZ3950Abstract extends StudipLitSearchPluginAbstract{
         }
         return $zid;
     }
-    
+
     function doZSearch($zid, $rpn, $start, $number){
-        
+
         yaz_range($zid, $start, $number);
         yaz_syntax($zid, $this->z_syntax);
         if($this->z_sort) yaz_sort($zid, $this->z_sort);
+        yaz_element($zid, 'F');
         yaz_search($zid,"rpn", $rpn);
         yaz_wait(($options = array('timeout' => $this->z_timeout)));
         if (yaz_errno($zid)){
@@ -168,7 +169,7 @@ class StudipLitSearchPluginZ3950Abstract extends StudipLitSearchPluginAbstract{
             return yaz_hits($zid);
         }
     }
-    
+
     function doCheckAccession($accession_number){
         if (!$this->z_accession_bib){
             $this->addError("error", sprintf(_("Attribut für Zugriffsnummer fehlt! (%s)"), strtolower(get_class($this))));
@@ -201,7 +202,7 @@ class StudipLitSearchPluginZ3950Abstract extends StudipLitSearchPluginAbstract{
         }
         return $ret;
     }
-    
+
     function checkAccessionNumber($accession_number){
         if (!$this->z_accession_re){
             return true;
@@ -209,7 +210,7 @@ class StudipLitSearchPluginZ3950Abstract extends StudipLitSearchPluginAbstract{
             return preg_match($this->z_accession_re, $accession_number);
         }
     }
-    
+
     function parseSearchValues(){
         $rpn = false;
         $search_values = $this->search_values;
@@ -306,7 +307,7 @@ class StudipLitSearchPluginZ3950Abstract extends StudipLitSearchPluginAbstract{
         }
 
     }
-    
+
     function simpleMap(&$cat_element, $data, $field, $args){
         $trim_chars = " \t\n\r\0/,:.";
         if ($args != "" && is_array($data)){
@@ -324,7 +325,7 @@ class StudipLitSearchPluginZ3950Abstract extends StudipLitSearchPluginAbstract{
         $cat_element->setValue($field, $cat_element->getValue($field) . " " . $result);
         return;
     }
-    
+
     function simpleListMap(&$cat_element, $data, $field, $args){
         if(is_array($data)){
             $result = join('; ', $data);
@@ -335,7 +336,7 @@ class StudipLitSearchPluginZ3950Abstract extends StudipLitSearchPluginAbstract{
         $cat_element->setValue($field, $result);
         return;
     }
-    
+
     function simpleFixFieldMap(&$cat_element, $data, $field, $args){
         if (is_array($args) && $data != ""){
             $result = substr($data,$args['start'],$args['length']);
@@ -346,7 +347,7 @@ class StudipLitSearchPluginZ3950Abstract extends StudipLitSearchPluginAbstract{
         }
         return;
     }
-    
+
     function notEmptyMap(&$cat_element, $data, $field, $args){
         if (!$cat_element->getValue($field)){
             $this->simpleMap($cat_element, $data, $field, $args[0]);
@@ -355,15 +356,15 @@ class StudipLitSearchPluginZ3950Abstract extends StudipLitSearchPluginAbstract{
         }
         return;
     }
-    
+
     function getSearchFields(){
         foreach ($this->z_profile as $attribute => $name){
             $ret[] = array('name' => $name, 'value' => $attribute);
         }
         return $ret;
     }
-    
-        
+
+
     function getSearchResult($num_hit){
         if (!isset($this->search_result[$num_hit]) && $num_hit <= $this->z_hits){
             $this->z_start_range = floor($num_hit/5)*5 + 1;
@@ -375,24 +376,24 @@ class StudipLitSearchPluginZ3950Abstract extends StudipLitSearchPluginAbstract{
             $cat_element->setValues($this->search_result[$num_hit]);
             $cat_element->setValue("catalog_id", $this->sess_var_name . "__" . $num_hit);
         }
-        
+
         if($this->z_id != NULL){
             yaz_close($this->z_id);
             $this->z_id = NULL;
         }
-        
+
         return $cat_element;
     }
-    
+
     function doResetSearch(){
         $this->search_result = array();
         $this->z_hits = 0;
     }
-    
+
     function getNumHits(){
         return $this->z_hits;
     }
-    
+
     function ConvertUmlaute($text){
         $text = str_replace("ä","ae",$text);
         $text = str_replace("Ä","Ae",$text);
@@ -401,7 +402,7 @@ class StudipLitSearchPluginZ3950Abstract extends StudipLitSearchPluginAbstract{
         $text = str_replace("ü","ue",$text);
         $text = str_replace("Ü","Ue",$text);
         $text = str_replace("ß","ss",$text);
-    
+
         $text = str_replace("É","E",$text);
         $text = str_replace("È","E",$text);
         $text = str_replace("Ê","E",$text);
@@ -413,7 +414,7 @@ class StudipLitSearchPluginZ3950Abstract extends StudipLitSearchPluginAbstract{
         $text = str_replace("í","i",$text);
         $text = str_replace("ì","i",$text);
         $text = str_replace("ç","c",$text);
-        
+
         return $text;
     }
 }

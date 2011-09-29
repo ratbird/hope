@@ -435,7 +435,7 @@ class  AbstractStm {
             }
             
             if ($workloadsum != $this->workload)        
-                    $msg[] = array('error', sprintf(_("Die Summe des Arbeitsaufwandes der einzelnen Veranstaltungen in Kombination %s (%s) entspricht nicht des Arbeitsaufwandes des ganzen Moduls (%s)!"), $index+1, $workloadsum, $this->workload));
+                    $msg[] = array('error', sprintf(_("Die Summe des Arbeitsaufwandes der einzelnen Veranstaltungen in Kombination %s (%s) entspricht nicht dem Arbeitsaufwand des ganzen Moduls (%s)!"), $index+1, $workloadsum, $this->workload));
         }       
         return $msg;
     }

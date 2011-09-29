@@ -16,7 +16,7 @@
     <?= makeButton('erstellen', 'input')?>
 </div>
 <? else :?>
-    <?= MessageBox::info(_("In dieser Veranstaltung können keine weiteren Raumfragen gestellt werden.")) ?>
+    <?= MessageBox::info(_("In dieser Veranstaltung können keine weiteren Raumanfragen gestellt werden.")) ?>
 <? endif ?>
 </form>
 <?

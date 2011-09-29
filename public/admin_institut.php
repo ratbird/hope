@@ -112,7 +112,7 @@ while ( is_array($_REQUEST)
             if ($perm->have_perm("root")) {
                 $Fakultaet = $i_id;
             } else {
-                $msg = "error§<b>" . _("Sie haben nicht die Berechtigung neue Fakult&auml;ten zu erstellen");
+                $msg = "error§<b>" . _("Sie haben nicht die Berechtigung, neue Fakult&auml;ten zu erstellen");
                 break;
             }
         }

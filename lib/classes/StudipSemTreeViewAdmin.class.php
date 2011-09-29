@@ -164,7 +164,7 @@ class StudipSemTreeViewAdmin extends TreeView {
             $this->anchor = $item_id;
             $this->edit_item_id = $item_id;
             if($this->tree->tree_data[$this->edit_item_id]['studip_object_id']){
-                $this->msg[$item_id] = "info§" . _("Hier k&ouml;nnen Sie die Kurzinformation zu diesem Bereich eingeben. Der Name kann nicht ge&auml;ndert werden, da es sich um eine Stud.IP Einrichtung handelt.");
+                $this->msg[$item_id] = "info§" . _("Hier k&ouml;nnen Sie die Kurzinformation zu diesem Bereich eingeben. Der Name kann nicht ge&auml;ndert werden, da es sich um eine Stud.IP-Einrichtung handelt.");
             } else {
                 $this->msg[$item_id] = "info§" . _("Hier k&ouml;nnen Sie die Bezeichnung und die Kurzinformation zu diesem Bereich eingeben");
             }

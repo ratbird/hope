@@ -52,7 +52,7 @@ echo $flash['message'];
     <? endif ?>
     </table>
 <? else : ?>
-    <?= MessageBox::info(_("Zu dieser Veranstaltung sind noch keine Raumfragen vorhanden.")) ?>
+    <?= MessageBox::info(_("Zu dieser Veranstaltung sind noch keine Raumanfragen vorhanden.")) ?>
 <? endif ?>
 <?
 $infobox_content = array(
@@ -65,7 +65,7 @@ $infobox_content = array(
     ),
     array(
             'icon' => 'icons/16/black/plus.png',
-            'text' => '<a href="'.$controller->link_for('new/'.$course_id).'">'._('Neue Raumfrage erstellen').'</a>'
+            'text' => '<a href="'.$controller->link_for('new/'.$course_id).'">'._('Neue Raumanfrage erstellen').'</a>'
         ))
     ),
 );

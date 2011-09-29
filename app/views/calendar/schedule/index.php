@@ -3,8 +3,8 @@
 $zoom = Request::get('zoom', 0);
 
 if ($inst_mode) {
-    $text  = _("Der Stundenplan zeigt die regelm‰ﬂigen Veranstaltungen dieser
-        Einrichtung sowie von Ihnen selbst erstellte Belegungen.");
+    $text  = _("Der Stundenplan zeigt die regelm‰ﬂigen Veranstaltungen dieser '
+        . 'Einrichtung sowie von Ihnen selbst erstellte Belegungen.");
 } else {
     $text  = _('Der Stundenplan zeigt Ihre regelm‰ﬂigen Veranstaltungen'
         . ' dieses Semesters sowie von Ihnen selbst erstellte Belegungen.');

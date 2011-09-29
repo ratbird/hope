@@ -401,7 +401,7 @@ function createInfoxboxArray($mode){
             array  ("kategorie" => "Aktionen:",
                     "eintrag" => array(
                         array ( "icon" => "icons/16/blue/trash.png",
-                                "text"  => _("Entfernen Sie nicht benötigte Veranstaltungen mit Hilfe der Markierungsboxen und/oder fügen Sie  beliebig viele neue Veranstallungen hinzu.")
+                                "text"  => _("Entfernen Sie nicht benötigte Veranstaltungen mit Hilfe der Markierungsboxen und/oder fügen Sie beliebig viele neue Veranstaltungen hinzu.")
                                 ),
                         array ( "icon" => "icons/16/blue/info.png",
                                 "text"  => _("Nachdem alle Informationen korrekt angezeigt werden, erstellen Sie Ihre Veranstaltungsübersicht mit Hilfe des Buttons 'speichern'.")

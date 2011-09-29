@@ -232,7 +232,7 @@ function printPdfAssortment($infobox,$seminars){
           . "   <table align=\"center\" width=\"99%\" class=\"blank\" border=\"0\" cellpadding=\"0\" cellspacing=0>\n"
           . "    <tr>\n"
           . "     <td align=\"left\" valign=\"top\" id=\"main_content\"><font size=\"-1\">\n"
-          . sprintf(_("Sie haben %s Einträge für Ihre Veranstaltungsübersicht ausgewählt. "),$seminars["numberofseminars"]);
+          . sprintf(_("Sie haben %s Einträge für Ihre Veranstaltungsübersicht ausgewählt."),$seminars["numberofseminars"]);
     $html .= ($seminars["numberofpages"]>1)
           ? sprintf(_("Deshalb werden Ihre Einträge auf %s Seiten verteilt."),$seminars["numberofpages"])."\n"
           : sprintf(_("Ihre Einträge können auf einer Seite untergebracht werden."),$seminars["numberofseminars"])."\n";

@@ -743,7 +743,7 @@ class ELearningUtils
             $messages["info"] .= CSRFProtection::tokenTag();
             $messages["info"] .= "<table>";
             $messages["info"] .= "<tr><td>&nbsp;</td></tr>";
-            $messages["info"] .= "<tr><td>" . sprintf(_("Durch das L&ouml;schen der Daten zum System mit dem Index \"%s\" werden %s Konfigurationseintr&auml;ge und Verkn&uuml;pfungen von Stud.IP-Veranstaltungen und -User-Accounts unwiederbringlich aus der Stud.IP_Datenbank entfernt. Wollen Sie diese Daten jetzt l&ouml;schen?"), $_REQUEST['delete_cms'], $cmsystems[$_REQUEST['delete_cms']]["accounts"]+$cmsystems[$_REQUEST['delete_cms']]["modules"]+$cmsystems[$_REQUEST['delete_cms']]["config"] ) . "</td></tr>";
+            $messages["info"] .= "<tr><td>" . sprintf(_("Durch das L&ouml;schen der Daten zum System mit dem Index \"%s\" werden %s Konfigurationseintr&auml;ge und Verkn&uuml;pfungen von Stud.IP-Veranstaltungen und -User-Accounts unwiederbringlich aus der Stud.IP-Datenbank entfernt. Wollen Sie diese Daten jetzt l&ouml;schen?"), $_REQUEST['delete_cms'], $cmsystems[$_REQUEST['delete_cms']]["accounts"]+$cmsystems[$_REQUEST['delete_cms']]["modules"]+$cmsystems[$_REQUEST['delete_cms']]["config"] ) . "</td></tr>";
             $messages["info"] .= "<tr><td align=\"center\"><input type=\"hidden\" name=\"delete_cms\" value=\"".$_REQUEST['delete_cms']."\"><input type=\"IMAGE\" " . makeButton("alleloeschen", "src") . " border=0 value=\"" . _("alle l&ouml;schen") . "\" name=\"confirm_delete\">&nbsp;<input type=\"IMAGE\" " . makeButton("abbrechen", "src") . " border=0 value=\"" . _("abbrechen") . "\" name=\"abbruch\"></td></tr>";
             $messages["info"] .= "<tr><td align=\"center\"></td></tr>";
             $messages["info"] .= "</table>";

@@ -782,7 +782,7 @@ function CreateTopic ($name="[no name]", $author="[no author]", $description="",
     if ($user->id == "nobody") {    // darf Nobody hier schreiben?
         $db->query("SELECT Seminar_id FROM seminare WHERE Seminar_id='{$_SESSION['SessionSeminar']}' AND Schreibzugriff=0");
         if (!$db->num_rows()) {
-            throw new AccessDeniedException(_("Ihnen fehlen die Rechte, in dieser Veranstaltung zu Schreiben."));
+            throw new AccessDeniedException(_("Ihnen fehlen die Rechte, in dieser Veranstaltung zu schreiben."));
         }
         else
             $db->query ($query);

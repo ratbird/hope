@@ -77,7 +77,7 @@ $EXTERN_MODULE_TYPES[7] = array("module" => "Newsticker", "name" => _("Newsticke
                                                     "description" => _("Das Modul &quot;Newsticker&quot; gibt alle News einer Einrichtung in einem Ticker aus."), 'order' => 75, 'view' => array('inst','fak'));
 
 $EXTERN_MODULE_TYPES[8] = array("module" => "Lecturestable", "name" => _("Veranstaltungen (Tabelle)"), "level" => 1,
-                                                    "description" => _("Das Modul &quot;Veranstaltungen&quot; gibt alle Veranstaltungen einer Einrichtung a Tabelle aus."), 'order' => 45, 'view' => array('inst','fak'));
+                                                    "description" => _("Das Modul &quot;Veranstaltungen&quot; gibt alle Veranstaltungen einer Einrichtung als Tabelle aus."), 'order' => 45, 'view' => array('inst','fak'));
 
 $EXTERN_MODULE_TYPES[9] = array("module" => "TemplatePersons", "name" => _("Mitarbeiter (templatebasiert)"), "level" => 1,
                                                     "description" => _("Das Modul &quot;Mitarbeiter&quot; gibt ein Mitarbeiterverzeichnis einer Einrichtung aus."), 'order' => 22, 'view' => array('inst','fak', 'studip'));

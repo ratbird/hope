@@ -656,7 +656,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                             makeButton("bearbeiten"));
                     } elseif ($this instanceof Course_RoomRequestsController){
                         printf(_("Raumanfragen") . '<br><a href="%s">%s</a>',
-                            $this->url_for('course/room_requests/index/' . $seminar_id),
+                            $this->url_for('index/' . $seminar_id),
                             makeButton("bearbeiten"));
                     }
                     break;

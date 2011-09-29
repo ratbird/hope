@@ -141,7 +141,7 @@ class CourseNavigation extends Navigation
                 $navigation->addSubNavigation('dates', $item);
 
                 if (get_config('RESOURCES_ENABLE') && get_config('RESOURCES_ALLOW_ROOM_REQUESTS')) {
-                    $item = new Navigation(_('Raumanfragen'), 'dispatch.php/course/room_requests/' . $_SESSION['SessionSeminar']);
+                    $item = new Navigation(_('Raumanfragen'), 'dispatch.php/course/room_requests/index/' . $_SESSION['SessionSeminar']);
                     $item->setDescription(_('Verwalten Sie hier Raumanfragen zu Veranstaltungszeiten.'));
                     $navigation->addSubNavigation('room_requests', $item);
                 }

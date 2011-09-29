@@ -91,9 +91,6 @@ if (!get_config('COURSE_CALENDAR_ENABLE') && in_array($cal_select_range, array('
     $calendar_sess_control_data['cal_select'] = $cal_select_range . '.' . $cal_select_id;
 }
 
-// always show course events
-$calendar_sess_control_data['show_project_events'] = true;
-
 if (Request::get('cmd') == 'export'
         && array_shift(explode('.', $calendar_sess_control_data['cal_select'])) == 'group') {
     $_calendar = Calendar::getInstance(Calendar::RANGE_USER, $GLOBALS['user']->id);

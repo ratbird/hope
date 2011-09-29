@@ -74,11 +74,6 @@ class CalendarDriver
 
         $this->mod = $mod;
         $this->result = array();
-        if (!isset($GLOBALS['SessSemName'][1])) {
-            if (!$GLOBALS['calendar_sess_control_data']['show_project_events']) {
-                $event_type = 'CALENDAR_EVENTS';
-            }
-        }
 
         switch ($this->mod) {
             case 'EVENTS':

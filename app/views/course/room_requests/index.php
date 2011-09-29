@@ -69,4 +69,16 @@ $infobox_content = array(
         ))
     ),
 );
+if ($adminList) {
+    $infobox_content[] = array(
+        "kategorie" => _("Veranstaltungsliste:"),
+        "eintrag"   =>
+            array(
+                array(
+                      "icon" => "icons/16/black/link-intern.png",
+                      "text" => $adminList->render()
+                )
+            )
+    );
+}
 $infobox = array('picture' => 'infobox/board2.jpg', 'content' => $infobox_content);

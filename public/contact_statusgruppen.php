@@ -40,10 +40,18 @@ require_once 'lib/functions.php';
 require_once ('lib/statusgruppe.inc.php');
 require_once ('lib/user_visible.inc.php');
 
-PageLayout::setTitle(_("Kontaktgruppen"));
-Navigation::activateItem('/community/contacts/admin_groups');
-// add skip link
-SkipLinks::addIndex(Navigation::getItem('/community/contacts/admin_groups')->getTitle(), 'main_content', 100);
+if (get_config('CALENDAR_GROUP_ENABLE') && Request::get('nav') == 'calendar') {
+    PageLayout::setTitle(_("Mein persönlicher Terminkalender - Kontaktgruppen"));
+    Navigation::activateItem('/calendar/calendar/admin_groups');
+    URLHelper::addLinkParam('nav', 'calendar');
+    // add skip link
+    SkipLinks::addIndex(Navigation::getItem('/calendar/calendar/admin_groups')->getTitle(), 'main_content', 100);
+} else {
+    PageLayout::setTitle(_("Kontaktgruppen"));
+    Navigation::activateItem('/community/contacts/admin_groups');
+    // add skip link
+    SkipLinks::addIndex(Navigation::getItem('/community/contacts/admin_groups')->getTitle(), 'main_content', 100);
+}
 
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head

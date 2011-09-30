@@ -56,6 +56,9 @@ class CalendarNavigation extends Navigation
             $navigation->addSubNavigation('edit', new Navigation(_('Termin anlegen/bearbeiten'), 'calendar.php', array('cmd' => 'edit')));
             $navigation->addSubNavigation('course', new Navigation(_('Veranstaltungstermine'), 'calendar.php', array('cmd' => 'bind')));
             $navigation->addSubNavigation('export', new Navigation(_('Export/Sync'), 'calendar.php', array('cmd' => 'export')));
+            if (get_config('CALENDAR_GROUP_ENABLE')) {
+                $navigation->addSubNavigation('admin_groups', new Navigation(_('Kalendergruppen'), 'contact_statusgruppen.php', array('nav' => 'calendar')));
+            }
             $this->addSubNavigation('calendar', $navigation);
         }
 

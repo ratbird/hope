@@ -12,6 +12,13 @@ class Step00205GroupCalendar extends Migration
             'section' => 'modules',
             'type' => 'boolean',
             'value' => '0'
+        ),
+        array(
+            'name' => 'COURSE_CALENDAR_ENABLE',
+            'description' => 'Kalender als Inhaltselement in Veranstaltungen.',
+            'section' => 'modules',
+            'type' => 'boolean',
+            'value' => '0'
         )
     );
 
@@ -58,24 +65,6 @@ class Step00205GroupCalendar extends Migration
     }
 
     /**
-     * get binded seminars out of user settings and set flag in seminar_user
-     */
-    function transferBoundSeminars()
-    {
-        $stmt = DBManager::get()->prepare('SELECT sid, val FROM user_data');
-        $stmt->execute(array($user_id));
-        $stmt2 = DBManager::get()->prepare('UPDATE seminar_user SET bind_calendar = 1 WHERE Seminar_id = ? AND user_id = ?');
-        while ($result = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $user_data = @unserialize($result['val']);
-            if (is_array($user_data['calendar_user_control_data']['bind_seminare'])) {
-                foreach (array_keys($user_data['calendar_user_control_data']['bind_seminare']) as $seminar_id) {
-                    $stmt2->execute(array($seminar_id, $result['sid']));
-                }
-            }
-        }
-    }
-
-    /**
      * perform this migration
      */
     function up()
@@ -86,9 +75,8 @@ class Step00205GroupCalendar extends Migration
         $db->exec("ALTER TABLE `calendar_events` ADD `editor_id` VARCHAR( 32 ) NOT NULL AFTER `autor_id`");
         $db->exec("ALTER TABLE `calendar_events` ADD `importdate` INT( 11 ) NOT NULL DEFAULT '0'");
         $db->exec("ALTER TABLE `contact` ADD `calpermission` TINYINT( 2 ) UNSIGNED NOT NULL DEFAULT '1'");
-        $db->exec("ALTER TABLE `statusgruppen` ADD `calpermission` INT( 2 ) UNSIGNED NOT NULL DEFAULT '1'");
+        $db->exec("ALTER TABLE `statusgruppen` ADD `calendar_group` TINYINT( 2 ) UNSIGNED NOT NULL DEFAULT '0'");
         $this->insertConfig($this->options_new);
-        $this->transferBoundSeminars();
     }
 
     /**
@@ -102,7 +90,7 @@ class Step00205GroupCalendar extends Migration
         $db->exec("ALTER TABLE `calendar_events` DROP `editor_id`");
         $db->exec("ALTER TABLE `calendar_events` DROP `importdate`");
         $db->exec("ALTER TABLE `contact` DROP `calpermission`");
-        $db->exec("ALTER TABLE `statusgruppen` DROP `calpermission`");
+        $db->exec("ALTER TABLE `statusgruppen` DROP `calendar_group`");
         $this->deleteConfig($this->options_new);
     }
 }

@@ -34,20 +34,11 @@ require_once('lib/raumzeit/raumzeit_functions.inc.php');
 unQuoteAll();
 $sess->register('viewModeFilter');
 
-if ($list) {
-    $sess->unregister('temporary_id');
-    unset($temporary_id);
-}
-
-if (isset($_REQUEST['seminar_id'])) {
-    $sess->register('temporary_id');
-    $temporary_id = $_REQUEST['seminar_id'];
-}
-
-if (isset($temporary_id)) {
-    $id = $temporary_id;
-} else {
-    $id = $SessSemName[1];
+if (!Request::option('list')) {
+    $id = Request::option('cid', Request::option('seminar_id'));
+    if (Request::option('seminar_id')) {
+        URLHelper::bindLinkParam('seminar_id', $id);
+    }
 }
 
 if (!$viewModeFilter) {

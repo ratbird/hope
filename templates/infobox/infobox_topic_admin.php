@@ -39,7 +39,8 @@
             <?= Assets::img('icons/16/black/info.png') ?>
           </td>
           <td width="99%" align="left">
-            <?= sprintf(_("Zeitänderungen, Raumbuchungen und Termine anlegen können Sie unter %sZeiten%s."), '<a href="raumzeit.php">', '</a>')?><br>
+            <?= sprintf(_("Zeitänderungen, Raumbuchungen und Termine anlegen können Sie unter %sZeiten%s."),
+                '<a href="'. URLHelper::getLink('raumzeit.php') . '">', '</a>')?><br>
             <br>
             <?= $times_info?>
           </td>
@@ -59,7 +60,7 @@
           <img src="<?= $GLOBALS['ASSETS_URL']?>images/icons/16/red/arr_1right.png">
         </td>
         <td width="99%" align="left">
-          <a href="themen.php?cmd=changeViewMode&newFilter=simple"><?= _("Standardansicht")?></a>
+            <a href="<?= URLHelper::getLink('themen.php?cmd=changeViewMode&newFilter=simple') ?>"><?= _("Standardansicht")?></a>
           <br>
         </td>
       </tr>
@@ -69,7 +70,7 @@
           <img src="<?= $GLOBALS['ASSETS_URL']?>images/icons/16/black/arr_1right.png">
         </td>
         <td width="99%" align="left">
-          <a href="themen.php?cmd=changeViewMode&newFilter=expert"><?= _("Erweiterte Ansicht")?></a>
+          <a href="<?= URLHelper::getLink('themen.php?cmd=changeViewMode&newFilter=expert') ?>"><?= _("Erweiterte Ansicht")?></a>
           <br>
         </td>
       </tr>
@@ -93,7 +94,7 @@
            <img src="<?= $GLOBALS['ASSETS_URL']?>images/icons/16/black/schedule.png">
          </td>
          <td width="99%" align="left">
-           <a href="raumzeit.php?cmd=createNewSingleDate#newSingleDate"><?= _("Einen neuen Termin anlegen") ?></a>
+           <a href="<?= URLHelper::getLink('raumzeit.php?cmd=createNewSingleDate#newSingleDate') ?>"><?= _("Einen neuen Termin anlegen") ?></a>
            <br>
          </td>
       </tr>

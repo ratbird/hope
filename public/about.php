@@ -370,7 +370,8 @@ function open_im() {
                 <br>
 
                 <b>&nbsp;<?= _("E-mail:") ?></b>
-                <a href="mailto:<?= get_visible_email($user_id) ?>"><?= htmlReady(get_visible_email($user_id)) ?></a>
+                <? $email = get_visible_email($user_id) ?>
+                <a href="mailto:<?= htmlReady($email) ?>"><?= htmlReady($email) ?></a>
                 <br>
 
                 <? if ($db->f("privatnr") != "" &&

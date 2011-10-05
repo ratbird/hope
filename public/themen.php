@@ -34,8 +34,9 @@ require_once('lib/raumzeit/raumzeit_functions.inc.php');
 unQuoteAll();
 $sess->register('viewModeFilter');
 
+$id = Request::option('cid', Request::option('seminar_id'));
+
 if (!Request::option('list')) {
-    $id = Request::option('cid', Request::option('seminar_id'));
     if (Request::option('seminar_id')) {
         URLHelper::bindLinkParam('seminar_id', $id);
     }

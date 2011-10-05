@@ -1956,8 +1956,13 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
         foreach ($dates_for_issue as $date) {
             $dates_title[] .= date('d.m.y, H:i', $date['date']).' - '.date('H:i', $date['end_time']);
         }
-        $tmp_titel = sprintf(_("Sitzung am: %s"), implode(', ', $dates_title)) .
-             ", " . ($tmp_titel ? $tmp_titel : _("ohne Titel"));
+
+        if (!empty($dates_title)) {
+            $tmp_titel = sprintf(_("Sitzung am: %s"), implode(', ', $dates_title)) .
+                 ", " . ($tmp_titel ? $tmp_titel : _("ohne Titel"));
+        } else {
+            $tmp_titel = $tmp_titel ? $tmp_titel : _("ohne Titel");
+        }
     }
 
     if (($change == $folder_id)

@@ -369,10 +369,11 @@ function open_im() {
 
                 <br>
 
-                <b>&nbsp;<?= _("E-mail:") ?></b>
-                <? $email = get_visible_email($user_id) ?>
-                <a href="mailto:<?= htmlReady($email) ?>"><?= htmlReady($email) ?></a>
-                <br>
+                <? if (($email = get_visible_email($user_id)) != '') : ?>
+                    <b>&nbsp;<?= _("E-mail:") ?></b>
+                    <a href="mailto:<?= htmlReady($email) ?>"><?= htmlReady($email) ?></a>
+                    <br>
+                <? endif ?>
 
                 <? if ($db->f("privatnr") != "" &&
                         is_element_visible_for_user($user->id, $user_id, $visibilities['private_phone'])) : ?>

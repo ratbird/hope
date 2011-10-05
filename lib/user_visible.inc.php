@@ -444,26 +444,19 @@ function get_visible_email($user_id) {
             $result = $current['Email'];
         }
     // User's email is not visible
-    } else {
-        //Plugins sollen über die Emailadressen bestimmen können
-        $obj = new stdClass();
-        NotificationCenter::postNotification("AlternativeEmailOfUuser", $obj, array('user_id' => $user_id));
-        $result = isset($obj->email) ? $obj->email : null;
-        
-        //ansonsten wird bei Dozenten eine Institutsadresse verwendet
-        if ($result === null && get_global_perm($user_id) === "dozent") {
-            $data = DBManager::get()->query("SELECT i.email, u.externdefault 
-                FROM user_inst u JOIN Institute i USING (Institut_id) 
-                WHERE u.user_id='".$user_id."' AND u.inst_perms != 'user' 
-                ORDER BY u.priority");
-            while ($current = $data->fetch()) {
-                if (!$result || $current['externdefault']) {
-                    $result = $current['email'];
-                }
+    } else if ($GLOBALS['perm']->get_perm($user_id) == 'dozent') {
+        // bei Dozenten eine Institutsadresse verwenden
+        $data = DBManager::get()->query("SELECT i.email, u.externdefault 
+            FROM user_inst u JOIN Institute i USING (Institut_id) 
+            WHERE u.user_id='".$user_id."' AND u.inst_perms != 'user' 
+            ORDER BY u.priority");
+        while ($current = $data->fetch()) {
+            if (!$result || $current['externdefault']) {
+                $result = $current['email'];
             }
         }
     }
-    return $result ? $result : "";
+    return $result;
 }
 
 /**

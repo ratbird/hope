@@ -156,7 +156,7 @@ class StudipLitSearchPluginZ3950Abstract extends StudipLitSearchPluginAbstract{
 
     function doZSearch($zid, $rpn, $start, $number){
 
-        yaz_range($zid, $start, $number);
+        yaz_range($zid, (int)$start, (int)$number);
         yaz_syntax($zid, $this->z_syntax);
         if($this->z_sort) yaz_sort($zid, $this->z_sort);
         yaz_element($zid, 'F');
@@ -263,7 +263,7 @@ class StudipLitSearchPluginZ3950Abstract extends StudipLitSearchPluginAbstract{
     function getZRecord($zid, $rn){
         $syntax = 'xml';
         if($this->z_record_encoding != 'utf-8') $syntax .= ";charset={$this->z_record_encoding},utf-8";
-        $record = yaz_record($zid,$rn,$syntax);
+        $record = yaz_record($zid,(int)$rn,$syntax);
         //echo "<pre>" .htmlReady( print_R($record,1)). '</pre>';
         $plugin_mapping = $this->mapping[$this->z_syntax];
         if ($record){
@@ -367,7 +367,7 @@ class StudipLitSearchPluginZ3950Abstract extends StudipLitSearchPluginAbstract{
 
     function getSearchResult($num_hit){
         if (!isset($this->search_result[$num_hit]) && $num_hit <= $this->z_hits){
-            $this->z_start_range = floor($num_hit/5)*5 + 1;
+            $this->z_start_range = (int)floor($num_hit/5)*5 + 1;
             $this->doSearch();
         }
         $catalog_id = ($this->search_result[$num_hit]['catalog_id']{0} != "_") ? $this->search_result[$num_hit]['catalog_id'] : false;

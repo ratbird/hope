@@ -34,13 +34,21 @@ require_once('lib/raumzeit/raumzeit_functions.inc.php');
 unQuoteAll();
 $sess->register('viewModeFilter');
 
-$id = Request::option('cid', Request::option('seminar_id'));
+// search for a valid id
+$id = Request::option('cid');
 
 if (!Request::option('list')) {
     if (Request::option('seminar_id')) {
+        $id = Request::option('seminar_id');
         URLHelper::bindLinkParam('seminar_id', $id);
     }
 }
+
+// prevent usage of seminr-id in session
+if (!$id) {
+    unset($GLOBALS['SessSemName']);
+}
+
 
 if (!$viewModeFilter) {
     $viewModeFilter = 'simple';

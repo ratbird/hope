@@ -13,8 +13,8 @@ require_once('lib/statusgruppe.inc.php');
 require_once($GLOBALS['RELATIVE_PATH_EXTERN'] . '/lib/extern_functions.inc.php');
 
 if ($GLOBALS["CALENDAR_ENABLE"]) {
-    require_once($GLOBALS["RELATIVE_PATH_CALENDAR"]
-            . "/lib/DbCalendarEventList.class.php");
+    require_once($GLOBALS["RELATIVE_PATH_CALENDAR"] . "/lib/SingleCalendar.class.php");
+    require_once($GLOBALS["RELATIVE_PATH_CALENDAR"] . "/lib/DbCalendarEventList.class.php");
 }
 
 $instituts_id = $this->config->range_id;
@@ -243,7 +243,7 @@ function termine (&$module, $db, $alias_content, $text_div, $text_div_end) {
             $subheadline_div_end = "";
         }
 
-        $event_list = new DbCalendarEventList($db->f("user_id"));
+        $event_list = new DbCalendarEventList(new SingleCalendar($db->f("user_id"), Calendar::PERMISSION_READABLE));
         if ($event_list->existEvent()) {
             echo "<tr><td width=\"100%\">\n";
             echo "<table" . $module->config->getAttributes("TableParagraph", "table") . ">\n";

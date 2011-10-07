@@ -27,6 +27,7 @@
 require_once('lib/messaging.inc.php');
 require_once('lib/log_events.inc.php');
 require_once('lib/classes/StudipNews.class.php');
+require_once('lib/calendar/lib/SingleCalendar.class.php');
 require_once('lib/calendar/lib/DbCalendarEventList.class.php');
 require_once('lib/vote/VoteDB.class.php');
 require_once('lib/evaluation/classes/db/EvaluationDB.class.php');
@@ -942,7 +943,7 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
         $news = StudipNews::GetNewsByRange($this->auth_user['user_id'], true);
         // Non-private dates.
         if ($GLOBALS["CALENDAR_ENABLE"]) {
-            $dates = new DbCalendarEventList($this->auth_user['user_id'], time(), -1, TRUE);
+            $dates = new DbCalendarEventList(new SingleCalendar($this->auth_user['user_id']), time(), -1, TRUE);
             $dates = $dates->events;
         }
         // Votes

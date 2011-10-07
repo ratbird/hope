@@ -16,8 +16,8 @@
  * @package     calendar
  */
 
-require_once($RELATIVE_PATH_CALENDAR . '/lib/Calendar.class.php');
-require_once($RELATIVE_PATH_CALENDAR . '/lib/SeminarCalendarEvent.class.php');
+require_once($GLOBALS['RELATIVE_PATH_CALENDAR'] . '/lib/Calendar.class.php');
+require_once($GLOBALS['RELATIVE_PATH_CALENDAR'] . '/lib/SeminarCalendarEvent.class.php');
 
 class SingleCalendar extends Calendar
 {

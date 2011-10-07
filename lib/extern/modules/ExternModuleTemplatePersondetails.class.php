@@ -48,8 +48,8 @@ require_once('lib/dates.inc.php');
 require_once('lib/classes/SemesterData.class.php');
 require_once($GLOBALS['RELATIVE_PATH_EXTERN'].'/lib/extern_functions.inc.php');
 if ($GLOBALS["CALENDAR_ENABLE"]) {
-    require_once($GLOBALS["RELATIVE_PATH_CALENDAR"]
-            . "/lib/DbCalendarEventList.class.php");
+    require_once($GLOBALS["RELATIVE_PATH_CALENDAR"] . "/lib/SingleCalendar.class.php");
+    require_once($GLOBALS["RELATIVE_PATH_CALENDAR"] . "/lib/DbCalendarEventList.class.php");
 }
 global $_fullname_sql;
 
@@ -563,7 +563,7 @@ class ExternModuleTemplatePersondetails extends ExternModule {
 
     private function getContentAppointments () {
         if (get_config('CALENDAR_ENABLE')) {
-            $event_list = new DbCalendarEventList($this->user_id);
+            $event_list = new DbCalendarEventList(new SingleCalendar($this->user_id, Calendar::PERMISSION_READABLE));
             $content['APPOINTMENTS']['LIST-START'] = ExternModule::ExtHtmlReady(strftime($this->config->getValue('Main', 'dateformat') . ' %X', $event_list->getStart()));
             $content['APPOINTMENTS']['LIST-END'] = ExternModule::ExtHtmlReady(strftime($this->config->getValue('Main', 'dateformat') . ' %X', $event_list->getEnd()));
             if ($event_list->existEvent()) {

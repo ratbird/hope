@@ -108,28 +108,6 @@ function change_general_view() {
                     </td>
                 </tr>
 
-                <tr  <? $cssSw->switchClass() ?>>
-                    <td  align="right" class="blank" style="border-bottom:1px dotted black;">
-                        <label for="jshover"><?print _("Java-Script Hovereffekte");?></label><br>
-                        <br><div align="left" id="jshover_description" class="setting_info">
-                        <?print _("Mit dieser Funktion k&ouml;nnen Sie durch reines &Uuml;berfahren bestimmter Icons mit dem Mauszeiger (z.B. in den Foren oder im Adressbuch) die entsprechenden Eintr&auml;ge anzeigen lassen. Sie k&ouml;nnen sich so sehr schnell und effizient auch durch gr&ouml;&szlig;ere Informationsmengen arbeiten. Da jedoch die Ladezeiten der Seiten erheblich ansteigen, empfehlen wir diese Einstellung nur für NutzerInnen die mindestens &uuml;ber eine ISDN Verbindung verf&uuml;gen.");?>
-                        </div>
-                    </td>
-                    <td <?=$cssSw->getFullClass()?>>
-                        <?
-                        if ($auth->auth["jscript"]) {
-                            echo '<input type=CHECKBOX name="jshover" id="jshover" aria-describedby="jshover_description" value="1"';
-                            if ($forum["jshover"] == 1) {
-                                echo " checked";
-                            }
-                            echo ">";
-                        } else {
-                            echo "<font size=\"-1\">"._("Sie müssen in Ihrem Browser Javascript aktivieren um dieses Feature nutzen zu können.")."</font>";
-                        }
-                        ?>
-                        </font><br><br>
-                    </td>
-                </tr>
                 <?
                 if (!$perm->have_perm("root")) {
                 ?>

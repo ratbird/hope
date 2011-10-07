@@ -625,7 +625,7 @@ class Course_StudygroupController extends AuthenticatedController {
                              get_fullname(), $sem->name, URLHelper::getlink("dispatch.php/course/studygroup/details/" . $id, array('cid' => NULL)));
                     $subject = _("Sie wurden in eine Studiengruppe eingeladen");
                     $msg->insert_message(addslashes($message), get_username($receiver),'', '', '', '', '', addslashes($subject));
-                    $this->flash['success'] = sprintf(_("Der Nutzer %s wurde in die Studiengruppe eingeladen."), get_fullname($receiver, 'full', true));
+                    $this->flash['success'] = sprintf(_("%s wurde in die Studiengruppe eingeladen."), get_fullname($receiver, 'full', true));
                 }
             }
             elseif ($perm->have_studip_perm('dozent', $id)) {

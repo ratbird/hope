@@ -575,7 +575,7 @@ STUDIP.Title = (function () {
 
         // try to fit the title into a single line
         compress: function () {
-            while (title.height() > reference.height()) {
+            while (title.offset().top != reference.offset().top) {
                 truncate(title);
             }
         },

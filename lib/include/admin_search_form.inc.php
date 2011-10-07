@@ -547,7 +547,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                     printf(_("Zeiten / Räume") . "<br><a href=\"%s\">%s</a>", URLHelper::getLink('?seminar_id=' . $seminar_id), makeButton("bearbeiten"));
                     break;
                 case "admin_admission.php":
-                    printf(_("Zugangsberechtigungen") . "<br><a href=\"%s\">%s</a>", URLHelper::getLink('?seminar_id=' . $seminar_id), makeButton("bearbeiten"));
+                    printf(_("Zugangsberechtigungen") . "<br><a href=\"%s\">%s</a>", URLHelper::getLink('?cid=' . $seminar_id), makeButton("bearbeiten"));
                     break;
                 case "admin_lit_list.php":
                     printf(_("Literatur") . "<br><a href=\"%s\">%s</a>", URLHelper::getLink('?_range_id=' . $seminar_id), makeButton("bearbeiten"));

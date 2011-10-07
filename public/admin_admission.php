@@ -66,14 +66,25 @@ if ($perm->have_perm('admin')) {
     Navigation::activateItem('/course/admin/admission');
 }
 
-//get ID from a open Seminar
-if ($SessSemName[1])
-    $header_object_id = $SessSemName[1];
-else
-    $header_object_id = $seminar_id;
+$db = new DB_Seminar;
+$db2 = new DB_Seminar;
+$db3 = new DB_Seminar;
+$db4 = new DB_Seminar;
+$db6 = new DB_Seminar;
+$cssSw = new cssClassSwitcher;
+$admin_admission_data = unserialize(base64_decode($_REQUEST['admin_admission_data']));
+$admin_admission_data_original = unserialize(base64_decode($_REQUEST['admin_admission_data_original']));
+
+if ($SessSemName[1]) {
+    $seminar_id = $SessSemName[1];
+}
+
+if(!$seminar_id && $admin_admission_data["sem_id"]) {
+    $seminar_id = $admin_admission_data["sem_id"];
+}
 
 //Change header_line if open object
-$header_line = getHeaderLine($header_object_id);
+$header_line = getHeaderLine($seminar_id);
 if ($header_line)
     PageLayout::setTitle($header_line." - ".PageLayout::getTitle());
 
@@ -132,15 +143,6 @@ include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
 include 'lib/include/admin_search_form.inc.php';
 
-$db = new DB_Seminar;
-$db2 = new DB_Seminar;
-$db3 = new DB_Seminar;
-$db4 = new DB_Seminar;
-$db6 = new DB_Seminar;
-$cssSw = new cssClassSwitcher;
-$admin_admission_data = unserialize(base64_decode($_REQUEST['admin_admission_data']));
-$admin_admission_data_original = unserialize(base64_decode($_REQUEST['admin_admission_data_original']));
-
 $messaging = new messaging;
 
 if ($_REQUEST['delete_studg']) {
@@ -183,7 +185,6 @@ function get_snapshot() {
 }
 
 $errormsg = '';
-if ($SessSemName[1]) $seminar_id = $SessSemName[1];
 
 //check, if seminar is grouped
 $group_obj = StudipAdmissionGroup::GetAdmissionGroupBySeminarId($seminar_id);

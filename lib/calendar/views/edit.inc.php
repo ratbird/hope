@@ -472,10 +472,10 @@ else {
             break;
 
         case "WEEKLY":
-			if (!is_array($wdays)) {
-				$wdays = array(strftime('%u', mktime(0, 0, 0, $start_month, $start_day, $start_year)));
+            if (!is_array($wdays)) {
+                $wdays = array(strftime('%u', mktime(0, 0, 0, $start_month, $start_day, $start_year)));
             }
-			$css_switcher->switchClass();
+            $css_switcher->switchClass();
             echo "<tr><td nowrap=\"nowrap\" class=\"" . $css_switcher->getClass() . "\">\n";
             echo "&nbsp; <label>";
             $out_1 = '<input type="text" name="linterval_w" size="3" maxlength="3" value="';

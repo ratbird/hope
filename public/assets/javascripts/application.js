@@ -575,7 +575,7 @@ STUDIP.Title = (function () {
 
         // try to fit the title into a single line
         compress: function () {
-            while (title.offset().top != reference.offset().top) {
+            while (title.offset().top !== reference.offset().top) {
                 truncate(title);
             }
         },
@@ -1196,7 +1196,7 @@ jQuery(function ($) {
                 .hideAjaxNotification()
                 .closest('tr').after(row);
 
-            $(that).data('busy', false)
+            $(that).data('busy', false);
             $('body').trigger('ajaxLoaded');
         });
 
@@ -1900,7 +1900,7 @@ STUDIP.CalendarDialog = {
                     }
                 });
         } else {
-            jQuery('#CalendarDialog').html(content),
+            jQuery('#CalendarDialog').html(content);
             jQuery('#CalendarDialog').dialog('option', 'position', coord);
             jQuery('#CalendarDialog').dialog('option', 'title', title);
         }

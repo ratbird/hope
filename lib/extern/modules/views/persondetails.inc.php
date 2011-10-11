@@ -243,7 +243,7 @@ function termine (&$module, $db, $alias_content, $text_div, $text_div_end) {
             $subheadline_div_end = "";
         }
 
-        $event_list = new DbCalendarEventList(new SingleCalendar($db->f("user_id"), Calendar::PERMISSION_READABLE));
+        $event_list = new DbCalendarEventList(new SingleCalendar($db->f("user_id")));
         if ($event_list->existEvent()) {
             echo "<tr><td width=\"100%\">\n";
             echo "<table" . $module->config->getAttributes("TableParagraph", "table") . ">\n";

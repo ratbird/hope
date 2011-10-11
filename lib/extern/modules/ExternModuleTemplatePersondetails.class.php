@@ -563,7 +563,7 @@ class ExternModuleTemplatePersondetails extends ExternModule {
 
     private function getContentAppointments () {
         if (get_config('CALENDAR_ENABLE')) {
-            $event_list = new DbCalendarEventList(new SingleCalendar($this->user_id, Calendar::PERMISSION_READABLE));
+            $event_list = new DbCalendarEventList(new SingleCalendar($this->user_id));
             $content['APPOINTMENTS']['LIST-START'] = ExternModule::ExtHtmlReady(strftime($this->config->getValue('Main', 'dateformat') . ' %X', $event_list->getStart()));
             $content['APPOINTMENTS']['LIST-END'] = ExternModule::ExtHtmlReady(strftime($this->config->getValue('Main', 'dateformat') . ' %X', $event_list->getEnd()));
             if ($event_list->existEvent()) {

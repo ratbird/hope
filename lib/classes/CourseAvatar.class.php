@@ -105,4 +105,13 @@ class CourseAvatar extends Avatar
         require_once 'lib/classes/Seminar.class.php';
         return Seminar::GetInstance($this->user_id)->name;
     }
+    
+    /**
+     * Return if avatar is visible to the current user.
+     * @return boolean: true if visible
+     */
+    protected function checkAvatarVisibility() {
+        //no special conditions for visibility of course-avatars yet
+        return true;
+    }
 }

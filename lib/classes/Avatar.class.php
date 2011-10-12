@@ -454,18 +454,15 @@ class Avatar {
     }
     
     /**
-     * Return if avatar is visible the current user.
+     * Return if avatar is visible to the current user.
      * Also set the user_id of avatar to nobody if not visible to current user.
+     * @return boolean: true if visible
      */
     protected function checkAvatarVisibility() {
-        $visibility = StudipCacheFactory::getCache()->read("core/avatar/visibility/" + $this->user_id);
-        if ($visibility !== false) {
-            $visibilities = get_local_visibility_by_id($this->user_id, 'homepage');
-            $visibilities = json_decode($visibilities, true);
-            $visibilities || $visibilities = array();
-            $visibility = $visibilities['picture'];
-            StudipCacheFactory::getCache()->write("core/avatar/visibility/" + $this->user_id, $visibility, 60*60);
-        }
+        $visibilities = get_local_visibility_by_id($this->user_id, 'homepage');
+        $visibilities = json_decode($visibilities, true);
+        $visibilities || $visibilities = array();
+        $visibility = $visibilities['picture'];
         $visible = is_element_visible_for_user($GLOBALS['user']->id, $this->user_id, $visibility);
         if (!$visible) {
             $this->user_id = 'nobody';

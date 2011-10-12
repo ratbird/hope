@@ -83,4 +83,13 @@ class InstituteAvatar extends CourseAvatar
                ? $institute->name
                : Avatar::NOBODY;
     }
+    
+    /**
+     * Return if avatar is visible to the current user.
+     * @return boolean: true if visible
+     */
+    protected function checkAvatarVisibility() {
+        //no special conditions for visibility of course-avatars yet
+        return true;
+    }
 }

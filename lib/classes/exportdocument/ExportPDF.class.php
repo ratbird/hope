@@ -124,20 +124,32 @@ class ExportPDF extends TCPDF implements ExportDocument {
     public function save($filename, $folder_id = null)
     {
         global $user;
+        $db = DBManager::get();
         $doc = new StudipDocument();
         $doc['folder_id'] = $folder_id;
-        $doc['seminar_id'] = $db->query(
-            "SELECT seminar_id " .
-            "FROM dokumente " .
-            "WHERE range_id = ".$db->quote($folder_id)." " .
-        "")->fetch(PDO::FETCH_COLUMN, 0);
+        if ($folder_id) {
+            $doc['seminar_id'] = $db->query(
+                "SELECT range_id " .
+                "FROM folder " .
+                "WHERE folder_id = ".$db->quote($folder_id)." " .
+            "")->fetch(PDO::FETCH_COLUMN, 0);
+            $doc['range_id'] = $folder_id;
+        }
         $doc['user_id'] = $user->id;
         $doc['name'] = $filename;
+        $doc['filename'] = $filename.".pdf";
+        $doc['description'] = "";
         $doc['author_host'] = getenv('REMOTE_ADDR');
         $doc['author_name'] = get_fullname($user->id);
         if ($doc->store()) {
-            $doc['filesize'] = filesize(get_upload_file_path($doc->getId()));
-            $doc-store();
+            $content = $this->Output($filename.".pdf", 'S');
+            $path = get_upload_file_path($doc->getId());
+            $file = fopen($path, "w");
+            fwrite($file, $content);
+            fclose($file);
+            $doc['filesize'] = filesize($path);
+            $doc->store();
+            print $doc->getId();
             return $doc;
         }
         return false;

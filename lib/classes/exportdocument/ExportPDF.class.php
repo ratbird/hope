@@ -142,14 +142,10 @@ class ExportPDF extends TCPDF implements ExportDocument {
         $doc['author_host'] = getenv('REMOTE_ADDR');
         $doc['author_name'] = get_fullname($user->id);
         if ($doc->store()) {
-            $content = $this->Output($filename.".pdf", 'S');
             $path = get_upload_file_path($doc->getId());
-            $file = fopen($path, "w");
-            fwrite($file, $content);
-            fclose($file);
+            $this->Output($path, 'F');
             $doc['filesize'] = filesize($path);
             $doc->store();
-            print $doc->getId();
             return $doc;
         }
         return false;

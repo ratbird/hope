@@ -2361,6 +2361,27 @@ class Seminar
         }
         $db = DBManager::get();
         $rangordnung = array_flip(array('user', 'autor', 'tutor', 'dozent'));
+        if ($rangordnung[$status] > $rangordnung['autor'] && SeminarCategories::getByTypeId($this->status)->only_inst_user) {
+            //überprüfe, ob im richtigen Institut:
+            $user_institute_stmt = $db->prepare(
+                "SELECT Institut_id " .
+                "FROM user_inst " .
+                "WHERE user_id = :user_id " .
+            "");
+            $user_institute_stmt->execute(array('user_id' => $user_id));
+            $user_institute = $user_institute_stmt->fetchAll(PDO::FETCH_COLUMN, 0);
+            if (!in_array($this->institut_id, $user_institute) && !count(array_intersect($user_institute, $this->getInstitutes()))) {
+                $this->createError(_("Einzutragender Nutzer stammt nicht einem beteiligten Institut an."));
+                return false;
+            }
+        }
+        if (($status === "autor" || $status === "user") && SeminarCategories::getByTypeId($this->status)->workgroup_mode) {
+            //Nutzer muss Tutor sein, wenn er globalen Status mindestens Tutor hat
+            $global_user_perm = get_global_perm($user_id);
+            if ($global_user_perm === "tutor" || $global_user_perm === "dozent") {
+                $status = "tutor";
+            }
+        }
 
         if (!$force) {
             $old_status = $db->query("SELECT status " .

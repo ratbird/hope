@@ -99,9 +99,9 @@
           <? endif ?>
                 <td colspan="<?= $index % 2 ? 1 : 2 ?>">
                     <label for="<?= $type ?>"><b><?= $available_filtertypes[$type] ?></b></label>
-                    <input type="image" name="remove_filter" class="middle"
+                    <input type="image" name="remove_filter[<?= $type ?>]" class="middle"
                         src="<?= Assets::image_path('icons/16/blue/minus.png') ?>"
-                        title="<?= _('Filter entfernen') ?>" value="<?= $type ?>">
+                        title="<?= _('Filter entfernen') ?>">
                     <br>
 
                     <select name="filter[<?= $type ?>][]" multiple="multiple" size="5">
@@ -163,7 +163,7 @@ jQuery(function ($) {
         );
         event.preventDefault();
     });
-    $('input[name=remove_filter]').click(function(event) {
+    $('input[name^=remove_filter]').click(function(event) {
         return confirm("Wollen Sie diesen Filter wirklich entfernen?".toLocaleString());
     });
 });

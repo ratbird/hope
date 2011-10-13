@@ -177,8 +177,8 @@ class Admin_AutoinsertController extends AuthenticatedController
         $this->filtertype = Request::getArray('filtertype');
         $this->filter = Request::getArray('filter');
 
-        if (Request::submitted('remove_filter')) {
-            $this->filtertype = array_diff($this->filtertype, array(Request::get('remove_filter')));
+        if (count(Request::getArray('remove_filter'))) {
+            $this->filtertype = array_diff($this->filtertype, array_keys(Request::getArray('remove_filter')));
         } elseif (Request::submitted('add_filter')) {
             array_push($this->filtertype, Request::get('add_filtertype'));
         }

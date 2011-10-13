@@ -234,9 +234,12 @@ class AutoInsert
      */
     public static function saveAutoInsertUser($seminar_id, $user_id)
     {
-        $query = "INSERT INTO auto_insert_user (Seminar_id, user_id, mkdate) VALUES (?, ?, UNIX_TIMESTAMP())";
+        $query = "INSERT INTO auto_insert_user (Seminar_id, user_id, mkdate)
+                  SELECT ?, user_id, UNIX_TIMESTAMP() FROM auth_user_md5 WHERE
+                  user_id=? AND perms NOT IN('root','admin')";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($seminar_id, $user_id));
+        return $statement->rowCount();
     }
 
     /**

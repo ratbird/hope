@@ -148,8 +148,7 @@ class Admin_AutoinsertController extends AuthenticatedController
                 foreach ($user_ids as $user_id) {
                     if (!AutoInsert::checkAutoInsertUser(Request::option('sem_id'), $user_id)) {
                         $seminar->addMember($user_id);
-                        AutoInsert::saveAutoInsertUser(Request::option('sem_id'), $user_id);
-                        $real_users++;
+                        $real_users += AutoInsert::saveAutoInsertUser(Request::option('sem_id'), $user_id);
                     }
                 }
 

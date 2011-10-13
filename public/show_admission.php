@@ -440,6 +440,10 @@ if(isset($_REQUEST['group_sem_x']) && (count($_REQUEST['gruppe']) > 1 || isset($
                 $group_obj->setValue('status', 1);
                 $msg[] = array('info', _("Das Losverfahren kann nur mit der Einstellung <b>Eintrag nur in einer Veranstaltung</b> kombiniert werden."));
             }
+            if($group_obj->getUniqueMemberValue('admission_type') == 2 && $group_obj->getUniqueMemberValue('admission_enable_quota') == 0) {
+                $group_obj->setUniqueMemberValue('admission_endtime', -1);
+                $group_obj->setUniqueMemberValue('admission_selection_take_place', 0);
+            }
             if($group_obj->store()){
                 $msg[] = array('msg', sprintf(_("Die Gruppe wurde erstellt / modifiziert.")));
             }
@@ -543,18 +547,18 @@ if(is_object($group_obj)){
         &nbsp;
         <?=_("Eintrag nur in einer Veranstaltung")?>
         </li>
-        <li style="margin-top:5px;">
+        <li style="margin-top:5px;" class="semadmission_toggle_endtime">
         <span style="display:block;float:left;width:200px;"><?=_("Anmeldeverfahren der Gruppe:")?></span>
-        <input style="vertical-align:top" type="radio" onChange="semadmission_toggle_endtime();" id="admission_group_type_2" name="admission_group_type" <?=(!$group_obj->getUniqueMemberValue('admission_type') || $group_obj->getUniqueMemberValue('admission_type') == 2 ? 'checked' : '')?> value="2">
+        <input style="vertical-align:top" type="radio" name="admission_group_type" <?=($group_obj->getUniqueMemberValue('admission_type') != 1? 'checked' : '')?> value="2">
         &nbsp;
         <?=_("chronologische Anmeldung")?>
         &nbsp;
-        <input style="vertical-align:top" type="radio" onChange="semadmission_toggle_endtime();" id="admission_group_type_1" name="admission_group_type" <?=($group_obj->getUniqueMemberValue('admission_type') == 1 ? 'checked' : '')?> value="1">
+        <input style="vertical-align:top" type="radio" name="admission_group_type" <?=($group_obj->getUniqueMemberValue('admission_type') == 1 ? 'checked' : '')?> value="1">
         &nbsp;
         <?=_("Losverfahren")?>
         </li>
         <hr>
-        <li style="margin-top:5px;">
+        <li style="margin-top:5px;" class="semadmission_toggle_endtime semadmission_changeable">
         <span style="display:block;float:left;width:200px;"><?=_("Prozentuale Kontingentierung:")?></span>
         <input style="vertical-align:top" type="checkbox" name="admission_change_enable_quota" value="1">
         &nbsp;
@@ -564,18 +568,18 @@ if(is_object($group_obj)){
         $group_admission_enable_quota = $group_obj->getUniqueMemberValue('admission_enable_quota');
         is_null($group_admission_enable_quota) OR settype($group_admission_enable_quota, 'integer');
         ?>
-        <input style="vertical-align:top" onChange="semadmission_toggle_endtime();" type="radio" id="admission_enable_quota_1" name="admission_enable_quota" <?=($group_admission_enable_quota === 1 ? 'checked' : '')?> value="1">
+        <input style="vertical-align:top" type="radio" name="admission_enable_quota" <?=($group_admission_enable_quota === 1 ? 'checked' : '')?> value="1">
         &nbsp;
         <?=_("aktiviert")?>
         &nbsp;
-        <input style="vertical-align:top" onChange="semadmission_toggle_endtime();" type="radio" id="admission_enable_quota_0" name="admission_enable_quota" <?=($group_admission_enable_quota === 0 ? 'checked' : '')?> value="0">
+        <input style="vertical-align:top" type="radio" name="admission_enable_quota" <?=($group_admission_enable_quota === 0 ? 'checked' : '')?> value="0">
         &nbsp;
         <?=_("deaktiviert")?>
         <?
         echo '&nbsp;(' . _("aktuelle Einstellung:") . '&nbsp;' . (!is_null($group_admission_enable_quota) ? _("identische Einstellung in allen Veranstaltungen") : _("unterschiedliche Einstellung in allen Veranstaltungen") ) . ')';
         ?>
         </li>
-        <li style="margin-top:5px;">
+        <li style="margin-top:5px;" class="semadmission_changeable">
         <span style="display:block;float:left;width:200px;"><?=_("Startdatum für Anmeldungen:")?></span>
         <input style="vertical-align:top" type="checkbox" name="admission_change_starttime" value="1">
         &nbsp;
@@ -594,7 +598,7 @@ if(is_object($group_obj)){
         echo '&nbsp;(' . _("aktuelle Einstellung:") . '&nbsp;' . (!is_null($group_admission_start_date) ? _("identisches Datum in allen Veranstaltungen") : _("unterschiedliches Datum in allen Veranstaltungen") ) . ')';
         ?>
         </li>
-        <li style="margin-top:5px;">
+        <li style="margin-top:5px;" class="semadmission_changeable">
         <span style="display:block;float:left;width:200px;"><?=_("Enddatum für Anmeldungen:")?></span>
         <input style="vertical-align:top" type="checkbox" name="admission_change_endtime_sem" value="1">
         &nbsp;
@@ -615,9 +619,9 @@ if(is_object($group_obj)){
         </li>
         <?
         $no_admission_end = ($group_obj->getUniqueMemberValue('admission_type') != 1 && $group_admission_enable_quota === 0) ? 'disabled="disabled"' : '';
-        $group_admission_end = ($group_admission_end = $group_obj->getUniqueMemberValue('admission_endtime')) || '-1';
+        $group_admission_end = $group_obj->getUniqueMemberValue('admission_endtime') OR $group_admission_end = '-1';
         ?>
-        <li id="admission_endtime" style="margin-top:5px;">
+        <li id="admission_endtime" style="margin-top:5px;" class="semadmission_changeable">
         <span style="display:block;float:left;width:200px;"><?=_("Ende Kontingente / Losdatum:")?></span>
         <input <?=$no_admission_end?> style="vertical-align:top" type="checkbox" <?=($group_admission_end == -1 ? 'checked' : '')?> name="admission_change_endtime" value="1">
         &nbsp;
@@ -632,7 +636,7 @@ if(is_object($group_obj)){
         <?=Termin_Eingabe_javascript(22,0,(!is_null($group_admission_end) && $group_admission_end != -1 ? $group_admission_end : 0));
         echo '&nbsp;(' . _("aktuelle Einstellung:") . '&nbsp;' . (!is_null($group_admission_end) ? _("identisches Datum in allen Veranstaltungen") : _("unterschiedliches Datum in allen Veranstaltungen") ) . ')';
         ?></li>
-        <li style="margin-top:5px;">
+        <li style="margin-top:5px;" class="semadmission_changeable">
         <span style="display:block;float:left;width:200px;"><?=_("max. Teilnehmer:")?></span>
         <input style="vertical-align:top" type="checkbox"  <?=(!is_null($group_obj->getUniqueMemberValue('admission_turnout')) && !$group_obj->getUniqueMemberValue('admission_turnout')  ? 'checked' : '')?> name="admission_change_turnout" value="1">
         &nbsp;
@@ -660,10 +664,17 @@ if(is_object($group_obj)){
         </form>
         <script type="text/javascript">
         // <![CDATA[
-        function semadmission_toggle_endtime(){
-            admission_endtime_needed = $F('admission_group_type_1') == 1 || ($F('admission_group_type_2') == 2 && $F('admission_enable_quota_1') == 1);
-            $('admission_endtime').select('input').collect(function(s){s.disabled = !admission_endtime_needed});
-        }
+        jQuery(jQuery('.semadmission_toggle_endtime input').change(function (){
+                var admission_endtime_needed = jQuery('input[name=admission_group_type]:checked').val() == 1
+                                        || (jQuery('input[name=admission_group_type]:checked').val() == 2
+                                        && jQuery('input[name=admission_enable_quota]:checked').val() == 1);
+                jQuery('#admission_endtime input').attr('disabled', !admission_endtime_needed);
+                })
+        );
+        jQuery(jQuery('li.semadmission_changeable input[type!=checkbox]').change(function (){
+            jQuery(this).prevAll('input:checkbox').attr('checked', true);
+            })
+        );
         // ]]>
         </script>
 

@@ -94,8 +94,7 @@ function semadmission_get_data($seminare_condition){
             }
             if (!isset($last_group)) {
                 $last_group = $db->f('admission_group');
-                $group_obj = new StudipAdmissionGroup($db->f('admission_group'));
-                $groupname = $group_obj->getValue('name');
+                $groupname = DbManager::get()->query("SELECT name FROM admission_group WHERE group_id=" . DbManager::get()->quote($last_group))->fetchColumn();
                 if(!$groupname) $groupname = _("Gruppe") . ++$groupcount;
             }
             $ret[$seminar_id]['groupname'] = $groupname;
@@ -789,7 +788,7 @@ if(is_object($group_obj)){
             }
         }
 
-        $url = getUrlToSeminar($seminar_id);
+        $url = getUrlToSeminar($semdata);
 
         printf ("<td class=\"%s\">
         <a title=\"%s\" href=\"$url\">
@@ -855,26 +854,16 @@ page_close();
  * @param  $seminar_id the id of the seminar
  * @return string the url
  */
-function getUrlToSeminar($seminar_id)
-{
-    if (hasSeminarAnActivatedParticipantsModule($seminar_id)) {
-        return URLHelper::getLink("teilnehmer.php?cid=$seminar_id");
-    }
-    else {
-        return URLHelper::getLink("seminar_main.php?cid=$seminar_id");
-    }
-}
-
-/**
- * Checks if a seminar has an activated participants module.
- * @param  $seminarId the id of the seminar
- * @return bool
- */
-function hasSeminarAnActivatedParticipantsModule($seminarId)
+function getUrlToSeminar($semdata)
 {
     $modules = new Modules();
-    $participantsModuleName = "participants";
-
-    return $modules->checkLocal($participantsModuleName, $seminarId);
+    $activated_modules = $modules->getLocalModules($semdata['Seminar_id'], 'sem', $semdata['modules'], $semdata['status']);
+    if ($activated_modules["participants"]) {
+        return URLHelper::getLink("teilnehmer.php?cid=". $semdata['Seminar_id']);
+    }
+    else {
+        return URLHelper::getLink("seminar_main.php?cid=" . $semdata['Seminar_id']);
+    }
 }
+
 ?>

@@ -2356,8 +2356,8 @@ class Seminar
     public function addMember($user_id, $status = 'autor', $force = false)
     {
         if (in_array(get_global_perm($user_id), array("admin", "root"))) {
-            throw Exception(_("Root und Admin dürfen nicht in Veranstaltungen eingetragen werden."));
-            return;
+            $this->createError(_("Admin und Root dürfen nicht Mitglied einer Veranstaltung sein."));
+            return false;
         }
         $db = DBManager::get();
         $rangordnung = array_flip(array('user', 'autor', 'tutor', 'dozent'));

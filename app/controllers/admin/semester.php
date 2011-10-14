@@ -117,9 +117,9 @@ class Admin_SemesterController extends AuthenticatedController
                     'description' => Request::get('description', $semester->description),
                     'semester_token' => $semester->semester_token,
                     'beginn' => Request::get('beginn') ? $this->getTimeStamp(Request::get('beginn')) : $semester->beginn,
-                    'ende' => Request::get('ende') ? $this->getTimeStamp(Request::get('ende')) : $semester->ende,
+                    'ende' => Request::get('ende') ? $this->getTimeStamp(Request::get('ende'), '23:59:59') : $semester->ende,
                     'vorles_beginn' => Request::get('vorles_beginn') ? $this->getTimeStamp(Request::get('vorles_beginn')) : $semester->vorles_beginn,
-                    'vorles_ende' => Request::get('vorles_ende') ? $this->getTimeStamp(Request::get('vorles_ende')) : $semester->vorles_ende
+                    'vorles_ende' => Request::get('vorles_ende') ? $this->getTimeStamp(Request::get('vorles_ende'), '23:59:59') : $semester->vorles_ende
                 );
                 $semester->setData($data);
                 //check parameters
@@ -146,9 +146,9 @@ class Admin_SemesterController extends AuthenticatedController
                 'name' => Request::get('name'),
                 'description' => Request::get('description'),
                 'beginn' => $this->getTimeStamp(Request::get('beginn')),
-                'ende' => $this->getTimeStamp(Request::get('ende')),
+                'ende' => $this->getTimeStamp(Request::get('ende'), '23:59:59'),
                 'vorles_beginn' => $this->getTimeStamp(Request::get('vorles_beginn')),
-                'vorles_ende' => $this->getTimeStamp(Request::get('vorles_ende')),
+                'vorles_ende' => $this->getTimeStamp(Request::get('vorles_ende'), '23:59:59'),
             );
 
             //check parameters
@@ -187,7 +187,7 @@ class Admin_SemesterController extends AuthenticatedController
                     'name' => Request::get('name'),
                     'description' => Request::get('description'),
                     'beginn' => $this->getTimeStamp(Request::get('beginn')),
-                    'ende' => $this->getTimeStamp(Request::get('ende'))
+                    'ende' => $this->getTimeStamp(Request::get('ende'), '23:59:59')
                 );
                 $this->holiday->setData($holiday);
                 if($holiday['beginn'] == false || $holiday['ende'] == false
@@ -207,7 +207,7 @@ class Admin_SemesterController extends AuthenticatedController
                         $details[] = _("Das Ferienende liegt vor dem Beginn.");
                     }
                     PageLayout::postMessage(MessageBox::error(_("Ihre eingegeben Daten sind ungültig."), $details));
-                    
+
                 } elseif ($this->holiday->store() !== false) {
                     PageLayout::postMessage(MessageBox::success(_("Die Ferien wurden erfolgreich gespeichert.")));
                     $this->redirect('admin/semester');
@@ -221,7 +221,7 @@ class Admin_SemesterController extends AuthenticatedController
                 'name' => Request::get('name'),
                 'description' => Request::get('description'),
                 'beginn' => $this->getTimeStamp(Request::get('beginn')),
-                'ende' => $this->getTimeStamp(Request::get('ende'))
+                'ende' => $this->getTimeStamp(Request::get('ende'), '23:59:59')
             );
             $this->holiday = new SemesterHoliday();
             $this->holiday->setData($holiday);
@@ -299,12 +299,12 @@ class Admin_SemesterController extends AuthenticatedController
      * @param string $date
      * @return timestamp or false
      */
-    private function getTimeStamp($date)
+    private function getTimeStamp($date, $time = '')
     {
         if (!empty($date)) {
             $date_array = explode('.', $date);
             if (checkdate($date_array[1], $date_array[0], $date_array[2])) {
-                return strtotime($date);
+                return strtotime($date . ' ' . $time);
             }
         }
         return false;

@@ -162,18 +162,12 @@ class EvalCommon {
       $html = "";
       
       $html .=
-      "<script type=\"text/javascript\" language=\"JavaScript\">".
-      "document.write('<a href=\"javascript:openEval(\'".$evalID."\');\">" .
+      "<a " .
+          "href=\"". UrlHelper::getLink('show_evaluation.php?evalID=' .$evalID .'&isPreview=' . $isPreview) . "\" " .
+          "target=\"".$evalID."\" " .
+          "onClick=\"openEval(\'".$evalID."\'); return false;\">" .
       (is_object($content) ? str_replace("\n", "", $content->createContent()) : $content) .
-      "</a>');".
-      "</script>\n";
-
-      $html .=
-      "<noscript>".
-      "<a href=\"". UrlHelper::getLink('show_evaluation.php?evalID=' .$evalID 
-        .'&isPreview=' . $isPreview) . "\" target=\"".$evalID."\">" .
-      (is_object($content) ? str_replace("\n", "", $content->createContent()) : $content) .
-      "</a></noscript>";
+      "</a>";
 
       $div = new HTML ("div");
 #      $div->addAttr( "style", "display:inline;" );

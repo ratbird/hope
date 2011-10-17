@@ -618,7 +618,7 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
                 if ($row['folder_id']) {
                     $num_docs = doc_count($row['issue_id'],  $termin->getSeminarId());
                     if ($num_docs) {
-                        $zusatz .= '<a href="' .URLHelper::getLink('seminar_main.php', array('auswahl' => $termin->getSeminarId(), 'redirect_to' => URLHelper::getURL('folder.php', array('cmd' => 'tree', 'open' => $db->f('folder_id')))))
+                        $zusatz .= '<a href="' .URLHelper::getLink('seminar_main.php', array('auswahl' => $termin->getSeminarId(), 'redirect_to' => 'folder.php', 'cmd' => 'tree', 'open' => $row['folder_id']))
                         . '#anker"><img src="' . Assets::image_path('icons/16/blue/files.png') . '" ';
                         $zusatz .= tooltip(sprintf(_("%s Dokument(e) vorhanden"), $num_docs));
                         $zusatz .= ">";

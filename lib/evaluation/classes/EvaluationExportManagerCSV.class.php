@@ -235,7 +235,7 @@ class EvaluationExportManagerCSV extends EvaluationExportManager {
          $surname  = "";
          $email    = "";
          if (!$this->eval->isAnonymous ()) {
-             $data = DBManager::get()->query("SELECT username, Vorname, Nachname, Email"
+             $data = DBManager::get()->query("SELECT username, Vorname, Nachname, Email "
                    . "FROM auth_user_md5 WHERE user_id = "
                    . DBManager::get()->quote($userID))->fetchAll(PDO::FETCH_NUM);
              if (is_array($data[0])) {

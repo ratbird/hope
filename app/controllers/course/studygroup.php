@@ -570,7 +570,7 @@ class Course_StudygroupController extends AuthenticatedController {
 
         $this->lower_bound      = ($this->page - 1) * get_config('ENTRIES_PER_PAGE');
         $this->cmembers         = StudygroupModel::getMembers($id, $this->lower_bound, get_config('ENTRIES_PER_PAGE'));
-
+        usort($this->cmembers, array('StudygroupModel','compare_status'));
         $this->groupname        = $sem->name;
         $this->sem_id           = $id;
         $this->groupdescription = $sem->description;

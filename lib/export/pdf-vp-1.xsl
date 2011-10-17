@@ -43,6 +43,7 @@ MitarbeiterInnen
 			<xsl:for-each select="studip/institut">
 				<fo:page-sequence master-reference="contents">
 					<fo:static-content flow-name="xsl-region-before">
+						<fo:block/>
 					</fo:static-content>
 					<fo:static-content flow-name="xsl-region-after">
 						<fo:block font-family="Helvetica" font-size="10pt" text-align="center">

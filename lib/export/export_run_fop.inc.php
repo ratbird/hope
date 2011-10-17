@@ -130,7 +130,7 @@ else
             $export_error_num ++;
         }
 
-        $xml_printimage = ' <a href="'. GetDownloadLink($xml_file_id, $xml_filename, 2). '">< img class="text-top" src="'.$GLOBALS['ASSETS_URL'].'images/' . $export_icon['xml'] . '"></a>';
+        $xml_printimage = ' <a href="'. GetDownloadLink($xml_file_id, $xml_filename, 2). '"><img class="text-top" src="'.$GLOBALS['ASSETS_URL'].'images/' . $export_icon['xml'] . '"></a>';
         $xml_printlink = ' <a href="'. GetDownloadLink($xml_file_id, $xml_filename, 2) .  '" class="tree"> ' . $xml_filename . '</a>';
         $xml_printdesc = _("XML-Daten");
         $xml_printcontent = _("In dieser Datei sind die Daten als XML-Tags gespeichert. Diese Tags k&ouml;nnen mit einem XSLT-Script verarbeitet werden.") . "<br>";

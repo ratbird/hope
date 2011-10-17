@@ -79,7 +79,7 @@ class CalendarDriver
             case 'EVENTS':
                 $select_cal = '*';
                 $select_semcal = 'ce.*, s.Name';
-                $select_sem = 't.*, s.Name, su.status';
+                $select_sem = 't.*, s.Name, su.status, resource_id';
                 break;
 
             case 'COUNT':
@@ -96,7 +96,7 @@ class CalendarDriver
                     . "AND (start BETWEEN $start AND $end "
                     . "OR (start <= $end AND (expire + end - start) >= $start AND rtype != 'SINGLE') "
                     . "OR ($start BETWEEN start AND end))";
-            if ($exept !== NULL) {
+            if ($except !== NULL) {
                 $except = implode("','", $except);
                 $query .= " AND NOT IN '$except'";
             }
@@ -110,7 +110,7 @@ class CalendarDriver
                 $sem_ids = '';
             }
 
-            $query = "SELECT $select_semcal FROM calendar_events ce 
+            $query = "SELECT $select_semcal FROM calendar_events ce
                 LEFT JOIN seminar_user su ON su.Seminar_id = ce.range_id
                 LEFT JOIN seminare s USING(Seminar_id) WHERE su.user_id = ?
                 AND range_id IN ('$sem_ids') AND su.bind_calendar = 1
@@ -128,7 +128,8 @@ class CalendarDriver
 
             $query = "SELECT $select_sem "
                     . "FROM termine t LEFT JOIN seminar_user su ON su.Seminar_id=t.range_id "
-                    . "LEFT JOIN seminare s USING(Seminar_id) WHERE "
+                    . "LEFT JOIN seminare s USING(Seminar_id) "
+                    . "LEFT JOIN resources_assign ON (assign_user_id = termin_id) WHERE "
                     . "user_id = ? AND range_id IN ('$sem_ids') AND "
                     . "date BETWEEN ? AND ?";
             $db_sem = DBManager::get()->prepare($query);
@@ -231,7 +232,7 @@ class CalendarDriver
                 'SUMMARY' => stripslashes($result['content']),
                 'DESCRIPTION' => stripslashes($result['description']),
                 'LOCATION' => stripslashes($result['raum']),
-                'STUDIP_CATEGORY' => $result['date_typ'] + 1,
+                'STUDIP_CATEGORY' => $result['date_typ'],
                 'CREATED' => $result['mkdate'],
                 'LAST-MODIFIED' => $result['chdate'],
                 'STUDIP_ID' => $result['termin_id'],
@@ -249,6 +250,10 @@ class CalendarDriver
                 $properties['CLASS'] = 'CONFIDENTIAL';
             }
 
+            if (Config::get()->RESOURCES_ENABLE && $result['resource_id']) {
+                $resObj = ResourceObject::Factory($result['resource_id']);
+                $properties['LOCATION'] = $resObj->getName();
+            }
             $this->count();
             return $properties;
         } else {
@@ -301,9 +306,10 @@ class CalendarDriver
             $db_semcal->execute(array($event_id, $this->range_id));
             $this->result['semcal'] = $db_semcal->fetchAll(PDO::FETCH_ASSOC);
         } elseif ($event_type == 'SEMINAR_EVENTS') {
-            $db_sem = DBManager::get()->prepare("SELECT t.*, s.Name "
+            $db_sem = DBManager::get()->prepare("SELECT t.*, s.Name, su.status, resource_id "
                     . "FROM termine t LEFT JOIN seminar_user su ON (su.Seminar_id=t.range_id) "
-                    . "LEFT JOIN seminare s USING(Seminar_id) WHERE "
+                    . "LEFT JOIN seminare s USING(Seminar_id) "
+                    . "LEFT JOIN resources_assign ON (assign_user_id = termin_id) WHERE "
                     . "termin_id = ? AND user_id = ?");
             $db_sem->execute(array($event_id, $this->user_id));
             $this->result['sem'] = $db_sem->fetchAll(PDO::FETCH_ASSOC);

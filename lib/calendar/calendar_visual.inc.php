@@ -392,7 +392,7 @@ function to_string_month_events(&$calendar, $day_timestamp, $max_events = NULL)
                 $ev_type = '';
             }
 
-            $out .= '<br><a class="inday" href="' . URLHelper::getLink('', array('cmd' => 'edit', 'termin_id' => $event->getId(), 'atime' => $day_timestamp, 'evtype' => $evtype)) . '">';
+            $out .= '<br><a class="inday" href="' . URLHelper::getLink('', array('cmd' => 'edit', 'termin_id' => $event->getId(), 'atime' => $day_timestamp, 'evtype' => $ev_type)) . '">';
             $category_style = $event->getCategoryStyle();
             $out .= sprintf("<span style=\"color: %s;\">%s</span></a>", $category_style['color'], $html_title);
             $count++;

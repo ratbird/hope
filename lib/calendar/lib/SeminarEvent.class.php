@@ -52,7 +52,7 @@ class SeminarEvent extends Event
      * After calling this method, the method isModified() returns TRUE.
      *
      * @access public
-     * @param int $category a valid integer representation of a category (see 
+     * @param int $category a valid integer representation of a category (see
      * config.inc.php)
      * @return boolean TRUE if the value of $category is valid, otherwise FALSE
      */
@@ -210,8 +210,7 @@ class SeminarEvent extends Event
 
     function getCategoryStyle($image_size = 'small')
     {
-        global $TERMIN_TYP, $CANONICAL_RELATIVE_PATH_STUDIP;
-        $PERS_TERMIN_KAT;
+        global $TERMIN_TYP, $CANONICAL_RELATIVE_PATH_STUDIP, $PERS_TERMIN_KAT;
 
         $index = $this->getCategory();
         if ($index == 255) {
@@ -222,9 +221,9 @@ class SeminarEvent extends Event
         }
 
         return array('image' => $image_size == 'small' ?
-            Assets::image_path('calendar/category_sem' . ($index - 1) . '_small.jpg') :
-            Assets::image_path('calendar/category_sem' . ($index - 1) . '.jpg'),
-            'color' => $TERMIN_TYP[$index - 1]['color']);
+            Assets::image_path('calendar/category_sem' . ($index) . '_small.jpg') :
+            Assets::image_path('calendar/category_sem' . ($index) . '.jpg'),
+            'color' => $TERMIN_TYP[$index]['color']);
     }
 
     function getEditorId()

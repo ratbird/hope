@@ -832,18 +832,17 @@ if ($view == 'Daten') {
         echo "<td class=\"".$cssSw->getClass()."\" colspan=\"2\" align=\"left\">&nbsp; <font size=\"-1\">*****</font>";
     } else {
         echo '<div style="display:inline;float:right;"> <label>'._("ändern").'? <input type="checkbox" name="update_pw" id="update_pw" onclick="update_pw_fields();"></label></div></td>';
-        echo '<td class="'.$cssSw->getClass().'" nowrap width="20%" align="left">';
+        echo '<td class="'.$cssSw->getClass().' edit_password" nowrap width="20%" align="left">';
         $pw_input = "<label><font size=-1>&nbsp; %s</font><br>&nbsp;"
                     ."<input type=\"password\" size=\"".round($max_col*0.25)."\" id=\"new_passwd_%s\" name=\"new_passwd_%s\"  %s value=\"*****\"></label>";
 
-        echo '<script>document.write(\''.sprintf($pw_input, _("Neues Passwort:"), '1', '1', 'disabled').'\');</script>';
         // if javascript is disabled dont disable the input fields
-        printf('<noscript>'.$pw_input.'</noscript>', _("Neues Passwort:"), '1', '1','');
-        echo "</td><td class=\"".$cssSw->getClass()."\" width=\"55%\" nowrap align=\"left\">";
+        printf($pw_input, _("Neues Passwort:"), '1', '1','');
+        echo "</td><td class=\"".$cssSw->getClass()." edit_password\" width=\"55%\" nowrap align=\"left\">";
 
-        echo '<script>document.write(\''.sprintf($pw_input, _("Passwort Wiederholung:"), '2', '2','disabled').'\');</script>';
         // if javascript is disabled dont disable the input fields
-        printf('<noscript>'.$pw_input.'</noscript>', _("Passwort Wiederholung:"), '2', '2','');
+        printf($pw_input, _("Passwort Wiederholung:"), '2', '2','');
+        echo "<script>jQuery('td.edit_password input[type=password]').attr('disabled', 'disabled');</script>";
     }
     echo "</td></tr>\n";
 

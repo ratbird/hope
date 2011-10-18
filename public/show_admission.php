@@ -664,17 +664,17 @@ if(is_object($group_obj)){
         </form>
         <script type="text/javascript">
         // <![CDATA[
-        jQuery(jQuery('.semadmission_toggle_endtime input').change(function (){
-                var admission_endtime_needed = jQuery('input[name=admission_group_type]:checked').val() == 1
-                                        || (jQuery('input[name=admission_group_type]:checked').val() == 2
-                                        && jQuery('input[name=admission_enable_quota]:checked').val() == 1);
-                jQuery('#admission_endtime input').attr('disabled', !admission_endtime_needed);
+        jQuery(function ($) {
+                $('.semadmission_toggle_endtime input').change(function (){
+                        var admission_endtime_needed = $('input[name=admission_group_type]:checked').val() == 1
+                                                || ($('input[name=admission_group_type]:checked').val() == 2
+                                                && $('input[name=admission_enable_quota]:checked').val() == 1);
+                        $('#admission_endtime input').attr('disabled', !admission_endtime_needed);
+                });
+                $('li.semadmission_changeable input[type!=checkbox]').change(function (){
+                        $(this).prevAll('input:checkbox').attr('checked', true);
                 })
-        );
-        jQuery(jQuery('li.semadmission_changeable input[type!=checkbox]').change(function (){
-            jQuery(this).prevAll('input:checkbox').attr('checked', true);
-            })
-        );
+        });
         // ]]>
         </script>
 

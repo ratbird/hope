@@ -188,7 +188,7 @@ var STUDIP = STUDIP || {};
 STUDIP.URLHelper = {
 
     //the base url for all links
-    base_url: STUDIP.ABSOLUTE_URI_STUDIP,
+    base_url: null,
 
     /**
      * method to extend short URLs like "about.php" to "http://.../about.php"
@@ -1136,6 +1136,7 @@ STUDIP.Browse = {
 jQuery(function () {
     // AJAX Indicator
     STUDIP.ajax_indicator = true;
+    STUDIP.URLHelper.base_url = STUDIP.ABSOLUTE_URI_STUDIP;
 
     jQuery('.add_toolbar').addToolbar(STUDIP.Markup.buttonSet);
 

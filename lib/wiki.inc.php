@@ -1058,9 +1058,10 @@ function wikiEdit($keyword, $wikiData, $user_id, $backpage=NULL)
 function printWikiPage($keyword, $version) {
     global $SessSemName;
     $wikiData=getWikiPage($keyword,$version);
-    echo "<html><head><title>$keyword</title></head>";
-    echo "<body>";
-    echo "<p><em>$SessSemName[header_line]</em></p>";
+    PageLayout::removeStylesheet('style.css');
+    PageLayout::addStylesheet('style_print.css'); // use special stylesheet for printing
+    include ('lib/include/html_head.inc.php'); // Output of html head
+		echo "<p><em>$SessSemName[header_line]</em></p>";
     echo "<h1>$keyword</h1>";
     echo "<p><em>";
     echo sprintf(_("Version %s, letzte Änderung %s von %s."), $wikiData['version'], date("d.m.Y, H:i", $wikiData['chdate']), get_fullname($wikiData['user_id'],'full',1));

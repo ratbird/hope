@@ -113,15 +113,17 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                     </td>
                 </tr>
                 <tr>
-                    <td class="steel1">
-                        &nbsp;
+                    <td class="steel1">&nbsp;
+                        
                     </td>
                 </tr>
                 <tr>
-                    <td class="blank">
-                        &nbsp;
+                    <td class="blank">&nbsp;
+                        
                     </td>
                 </tr>
+                
+                
             </table>
             </form>
             </td>
@@ -291,13 +293,13 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                     }
                     ?>
                     <tr>
-                        <td class="steel1" colspan=5>
-                            &nbsp;
+                        <td class="steel1" colspan=5>&nbsp;
+                            
                         </td>
                     </tr>
                     <tr>
-                        <td class="blank" colspan=5>
-                            &nbsp;
+                        <td class="blank" colspan=5>&nbsp;
+                            
                         </td>
                     </tr>
                     <? if (! empty($message)) : ?>
@@ -392,7 +394,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                 ?>
                 <tr class="steel2">
                     <td colspan="3">
-                        <?= _("Änderungen") ?> <?= makeButton('speichern', 'input') ?>
+                        <!--<?= _("Änderungen") ?> <?= makeButton('speichern', 'input') ?>-->
                     </td>
                     <td colspan="<?=(Request::get('show_rooms_check')=='on')?'4':'3'; ?>" align="right">
                     <input type="hidden" name="change_visible" value="1">
@@ -402,6 +404,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                     ?>
                     </td>
                 </tr>
+                
                 <?
             }
         //more Options for lock changing
@@ -410,7 +413,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
             ?>
             <tr class="steel2">
                 <td colspan="3">
-                    <?= _("Änderungen") ?> <?= makeButton('speichern', 'input') ?>
+                    <?= _("Änderungen") ?> <?= makeButton('speichern', 'input') ?> 
                 </td>
                 <td colspan="4" align="right">
                 <?
@@ -663,7 +666,18 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
             }
             echo "</tr>";
         }
-        ?>
+        
+        //more Options for visibility changing
+            if ($i_page == "admin_visibility.php") {
+                ?>
+                <tr class="steel2">
+                    <td colspan="<?=(Request::get('show_rooms_check')=='on')?'7':'6'; ?>" align="right">
+                    <?= _("Änderungen") ?> <?= makeButton('speichern', 'input') ?>
+                    </td>
+                </tr>
+                
+                <?
+            }?>
         </table>
         </form>
         <?

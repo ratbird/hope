@@ -71,7 +71,6 @@ while($db->next_record()){
         } else {
             $ok = StudipMail::sendMessage($to, $title, $mailmessage['text']);
         }
-        fwrite(STDOUT, date('r') . " " . $db->f('username') . ": " . (int)$ok . "\n");
     }
 }
 ?>

@@ -374,11 +374,6 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                 ?>
                 <tr class="steel2">
                     <td colspan="3">
-                        <?=_("Alle ausgewählten Veranstaltungen")?>
-                        <input type="image" <?=makeButton("archivieren", "src")?> border="0"><br>
-                        <span style="color: red">
-                            <?=_("Achtung: Das Archivieren ist ein Schritt, der <b>nicht</b> rückgängig gemacht werden kann!")?>
-                        </span>
                     </td>
                     <td colspan="<?=(Request::get('show_rooms_check')=='on')?'4':'3'; ?>" align="right">
                     <?
@@ -394,7 +389,6 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                 ?>
                 <tr class="steel2">
                     <td colspan="3">
-                        <!--<?= _("Änderungen") ?> <?= makeButton('speichern', 'input') ?>-->
                     </td>
                     <td colspan="<?=(Request::get('show_rooms_check')=='on')?'4':'3'; ?>" align="right">
                     <input type="hidden" name="change_visible" value="1">
@@ -413,7 +407,6 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
             ?>
             <tr class="steel2">
                 <td colspan="3">
-                    <?= _("Änderungen") ?> <?= makeButton('speichern', 'input') ?> 
                 </td>
                 <td colspan="4" align="right">
                 <?
@@ -443,7 +436,6 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                 ?>
                 <tr class="steel2">
                     <td colspan="3" nowrap>
-                        <?=_("Änderungen")?> <?= makeButton('speichern', 'input') ?>
                     </td>
                     <td colspan="4" align="right">
                     <?
@@ -668,7 +660,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
         }
         
         //more Options for visibility changing
-            if ($i_page == "admin_visibility.php") {
+            if ($i_page == "admin_visibility.php" || $i_page == "admin_aux.php" || $i_page == "admin_lock.php") {
                 ?>
                 <tr class="steel2">
                     <td colspan="<?=(Request::get('show_rooms_check')=='on')?'7':'6'; ?>" align="right">
@@ -677,7 +669,18 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                 </tr>
                 
                 <?
-            }?>
+            }
+            if ($i_page == "archiv_assi.php"){ ?>
+                <tr class="steel2">
+                    <td colspan="<?=(Request::get('show_rooms_check')=='on')?'7':'6'; ?>" align="right">
+                        <?=_("Alle ausgewählten Veranstaltungen")?>
+                        <input type="image" <?=makeButton("archivieren", "src")?> border="0"><br>
+                        <span style="color: red">
+                            <?=_("Achtung: Das Archivieren ist ein Schritt, der <b>nicht</b> rückgängig gemacht werden kann!")?>
+                        </span>
+                    </td>
+                </tr>
+            <? }?>
         </table>
         </form>
         <?

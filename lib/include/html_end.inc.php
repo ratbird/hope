@@ -2,7 +2,7 @@
 <!-- Ende Page -->
     <div id="layout_push"></div>
 </div>
-    <? //include 'templates/footer.php'; ?>
+    <? include 'templates/footer.php'; ?>
 
     <?= SkipLinks::getHTML() ?>
 

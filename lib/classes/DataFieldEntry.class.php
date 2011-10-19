@@ -465,6 +465,14 @@ class DataFieldTextlineEntry extends DataFieldEntry
 
 class DataFieldTextareaEntry extends DataFieldEntry
 {
+    public function getDisplayValue($entities = true)
+    {
+        if ($entities) {
+            return htmlReady($this->getValue(), true, true);
+        }
+
+        return $this->getValue();
+    }
 
     function getHTML($name)
     {

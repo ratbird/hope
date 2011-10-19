@@ -37,6 +37,7 @@ require_once('lib/visual.inc.php');
 require_once ('lib/meine_seminare_func.inc.php');
 
 PageLayout::setHelpKeyword("Basis.VeranstaltungenOrdnen");
+Navigation::activateItem('/browse/my_courses/group');
 
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head
@@ -56,12 +57,6 @@ $no_grouping_allowed = ($forced_grouping == 'not_grouped' || !in_array($forced_g
 if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("admin")) {
 ?>
 <table class="index_box">
-    <tr>
-        <td class="topic">
-            <img src="<?= Assets::image_path('icons/16/blue/group.png')?>" <?= tooltip(_("Gruppe ändern")) ?>>
-            <b><?=_("Gruppenzuordnung")?></b>
-        </td>
-    </tr>
     <tr>
         <td class="blank">
             <p style="margin:20px;">
@@ -92,8 +87,8 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
         <input type="image" <?=makeButton("absenden", "src") ?> border="0" value="absenden">
         </td>
     </tr>
-    <tr><td class="blank" align="right" colspan="9">
-    &nbsp;
+    <tr><td class="blank" align="right" colspan="9">&nbsp;
+    
     </td></tr>
     <tr valign="top" align="center">
     <th width="90%"><?=_("Veranstaltung")?></th>

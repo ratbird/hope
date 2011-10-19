@@ -54,7 +54,7 @@ class BrowseNavigation extends Navigation
         if (is_object($user) && $user->id != 'nobody' && !$perm->have_perm('root')) {
             $navigation = new Navigation(_('Meine Veranstaltungen'));
             $navigation->addSubNavigation('list', new Navigation(_('Übersicht'), 'meine_seminare.php'));
-
+            $navigation->addSubNavigation('group', new Navigation(_('Gruppenzuordnung'), 'gruppe.php'));
             if ($perm->have_perm('admin')) {
                 $navigation->addSubNavigation('schedule', new Navigation(_('Veranstaltungs-Stundenplan'), 'dispatch.php/calendar/schedule'));
             } else {

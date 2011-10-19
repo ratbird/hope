@@ -1061,7 +1061,7 @@ function printWikiPage($keyword, $version) {
     PageLayout::removeStylesheet('style.css');
     PageLayout::addStylesheet('style_print.css'); // use special stylesheet for printing
     include ('lib/include/html_head.inc.php'); // Output of html head
-		echo "<p><em>$SessSemName[header_line]</em></p>";
+    echo "<p><em>$SessSemName[header_line]</em></p>";
     echo "<h1>$keyword</h1>";
     echo "<p><em>";
     echo sprintf(_("Version %s, letzte Änderung %s von %s."), $wikiData['version'], date("d.m.Y, H:i", $wikiData['chdate']), get_fullname($wikiData['user_id'],'full',1));

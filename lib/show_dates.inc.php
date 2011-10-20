@@ -575,8 +575,8 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
 
             $zusatz = '';
             if(strtolower(get_class($termin)) == 'seminarevent') {
-                $zusatz .= '<a href='.URLHelper::getLink("seminar_main.php?auswahl=" . $termin->getSeminarId())
-                                . "><font size=\"-1\">".htmlReady(mila($termin->getSemName(), 22))
+                $zusatz .= '<a href='.URLHelper::getLink("seminar_main.php?auswahl=\"" . $termin->getSeminarId())
+                                . "\"><font size=\"-1\">".htmlReady(mila($termin->getSemName(), 22))
                                 . ' </font></a>';
             }
 

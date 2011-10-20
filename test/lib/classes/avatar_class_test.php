@@ -22,9 +22,15 @@ require_once 'lib/classes/CourseAvatar.class.php';
  * @copyright (c) Authors
  */
 
+require_once 'vendor/simpletest/mock_objects.php';
+
+Mock::generate('stdClass', 'MockPerm', array('have_perm'));
+
 class AvatarTestCase extends UnitTestCase {
 
   function setUp() {
+    $GLOBALS['perm'] = new MockPerm();
+    $GLOBALS['perm']->setReturnValue('have_perm', true);
     $GLOBALS['DYNAMIC_CONTENT_URL'] = "/dynamic";
     $GLOBALS['DYNAMIC_CONTENT_PATH'] = "/dynamic";
     $this->avatar_id = "123456789";

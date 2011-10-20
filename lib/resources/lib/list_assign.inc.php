@@ -63,7 +63,7 @@ function list_restore_assign(&$assEvtLst, $resource_id, $begin, $end, $user_id='
                  . "%s ORDER BY begin ASC", $begin, $end, $end, $begin, $begin,
                  ($day_of_week ? " AND (DAYOFWEEK(FROM_UNIXTIME(begin)) = $day_of_week OR
                  (repeat_interval = 0 AND repeat_end > end AND
-                 IF(DAYOFWEEK(FROM_UNIXTIME(begin)) > DAYOFWEEK(FROM_UNIXTIME(repeat_end)), $day_of_week + 7 BETWEEN DAYOFWEEK(FROM_UNIXTIME(begin)) AND DAYOFWEEK(FROM_UNIXTIME(repeat_end)) + 7, $day_of_week BETWEEN DAYOFWEEK(FROM_UNIXTIME(begin)) AND DAYOFWEEK(FROM_UNIXTIME(repeat_end))))
+                 IF(DAYOFWEEK(FROM_UNIXTIME(begin)) > DAYOFWEEK(FROM_UNIXTIME(repeat_end)), IF($day_of_week < DAYOFWEEK(FROM_UNIXTIME(begin)), $day_of_week + 7, $day_of_week) BETWEEN DAYOFWEEK(FROM_UNIXTIME(begin)) AND DAYOFWEEK(FROM_UNIXTIME(repeat_end)) + 7, $day_of_week BETWEEN DAYOFWEEK(FROM_UNIXTIME(begin)) AND DAYOFWEEK(FROM_UNIXTIME(repeat_end))))
                  OR (repeat_interval > 0 AND repeat_day_of_week = 0))" : "") );
 
     //send the query

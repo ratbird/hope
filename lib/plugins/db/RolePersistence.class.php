@@ -100,11 +100,11 @@ class RolePersistence
      */
     public function deleteRole($role)
     {
-
+        $cache = StudipCacheFactory::getCache();
         $id = $role->getRoleid();
 
         // sweep roles cache
-        StudipCacheFactory::getCache()->expire(self::ROLES_CACHE_KEY);
+        $cache->expire(self::ROLES_CACHE_KEY);
         self::$user_roles = array();
 
         $db = DBManager::get();
@@ -112,6 +112,14 @@ class RolePersistence
         $stmt->execute(array($id));
         if ($stmt->rowCount())
         {
+            $stmt = $db->prepare("SELECT pluginid FROM roles_plugins WHERE roleid=?");
+            $stmt->execute(array($id));
+
+            foreach ($stmt as $row) {
+                $pluginid = $row['pluginid'];
+                $cache->expire(self::ROLES_PLUGINS_CACHE_KEY . $pluginid);
+            }
+
             $stmt = $db->prepare("DELETE FROM roles_user WHERE roleid=?");
             $stmt->execute(array($id));
             $stmt = $db->prepare("DELETE FROM roles_plugins WHERE roleid=?");

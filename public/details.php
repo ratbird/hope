@@ -402,7 +402,7 @@ echo $template_factory->render(
                         // fill data for template
                         foreach ($users as $entry) {
                             $data[] = array(
-                                'name' => $entry['fullname'].($entry['label'] ? " (".htmlReady($entry['label']).")" : ""),
+                                'name' => $entry['fullname'].($entry['label'] ? " (".$entry['label'].")" : ""),
                                 'link' => 'about.php?username=' . $entry['username']
                             );
                         }

@@ -207,6 +207,7 @@ class Admin_UserController extends AuthenticatedController
                 }
 
                 foreach ($user_ids as $i => $user_id) {
+                    $users[$i] = UserModel::getUser($user_id);
                     //preparing delete
                     $umanager = new UserManagement();
                     $umanager->getFromDatabase($user_id);

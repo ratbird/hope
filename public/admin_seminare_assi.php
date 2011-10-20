@@ -1888,7 +1888,7 @@ if (($form == 6) && ($jump_next_x))
                   $next_pos = get_next_position("tutor",$sem_create_data["sem_id"]);
                         $query = "insert into seminar_user SET Seminar_id = '".
                             $sem_create_data["sem_id"]."', user_id = '".
-                            $key."', status = 'tutor', label=".DBManager::get()->quote($sem_create_data["sem_tut_label"][$key])." , gruppe = '$group', mkdate = '".time()."', position = '$next_pos', visible='yes'";
+                            $key."', status = 'tutor', label=".DBManager::get()->quote($sem_create_data["sem_tut_label"][$key], PDO::PARAM_STR)." , gruppe = '$group', mkdate = '".time()."', position = '$next_pos', visible='yes'";
                         $db3->query($query);                 // Tutor eintragen
                             if ($db3->affected_rows() >= 1)
                                 $count_tut++;

@@ -175,16 +175,16 @@ if ($cmd=="news_submit") {
 
 }
 if ($cmd=="new_entry" &&
-    isset($_REQUEST['change_rss_btn_x']) &&
+    Request::submitted('change_rss') &&
     get_config('NEWS_RSS_EXPORT_ENABLE') &&
     $news->get_news_range_perm($news_range_id) > 1){
-        if ($_REQUEST['change_rss'] !== 'on' && StudipNews::GetRssIdFromRangeId($news_range_id)){
-            StudipNews::UnSetRssId($news_range_id);
-            $news->msg .= "info§" . _("Der RSS Export wurde für diesen Bereich ausgeschaltet!") . "§";
-        } elseif($_REQUEST['change_rss'] === 'on') {
+        if (Request::int('enable_rss')) {
             StudipNews::SetRssId($news_range_id);
             $news->msg .= "info§" . _("Der RSS Export wurde für diesen Bereich eingeschaltet!")
-                        . '<br>' . _("Bitte beachten Sie, dass damit die Ankündigungen dieses Bereiches auch von Personen die nicht im Stud.IP angemeldet sind abgerufen werden k&ouml;nnen!") . "§";
+                        . '<br>' . _("Bitte beachten Sie, dass damit die Ankündigungen dieses Bereiches auch von Personen, die nicht im Stud.IP angemeldet sind, abgerufen werden können!") . "§";
+        } else {
+            StudipNews::UnSetRssId($news_range_id);
+            $news->msg .= "info§" . _("Der RSS Export wurde für diesen Bereich ausgeschaltet!") . "§";
         }
         $cmd = '';
 }
@@ -308,10 +308,10 @@ if (!$cmd OR $cmd=="show") {
     }
     if (get_config('NEWS_RSS_EXPORT_ENABLE') && $news->get_news_range_perm($news_range_id) > 1){
         echo Assets::img('icons/16/grey/rss.png', array('class' => 'text-top'));
-        echo "\n".'<label for="">' . _("Die Ankündigungen des gew&auml;hlten Bereiches als RSS-feed zur Verf&uuml;gung stellen") . '</font>&nbsp;';
-        vprintf("\n".'<input type="checkbox" %s border="0" name="change_rss" align="absmiddle">',
-                (StudipNews::GetRssIdFromRangeId($news_range_id) ? 'checked="checked"' : '' ));
-        echo makeButton('uebernehmen', 'input', _("RSS Einstellungen übernehmen"), 'change_rss_btn');
+        echo "\n".'<label>' . _("Die Ankündigungen des gew&auml;hlten Bereiches als RSS-feed zur Verf&uuml;gung stellen:") . '</font>&nbsp;';
+        vprintf("\n".'<input type="checkbox" %s name="enable_rss" value="1"></label>',
+                (StudipNews::GetRssIdFromRangeId($news_range_id) ? 'checked' : '' ));
+        echo makeButton('uebernehmen', 'input', _("RSS Einstellungen übernehmen"), 'change_rss');
         echo "\n<br><br>";
     }
     echo "\n".'<font size="-1" style="vertical-align:middle;">' . _("Eine neue Ankündigung im gew&auml;hlten Bereich erstellen") . '</font>&nbsp;';

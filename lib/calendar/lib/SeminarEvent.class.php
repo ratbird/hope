@@ -35,7 +35,7 @@ class SeminarEvent extends Event
             // get event out of database...
             $this->restore();
         } elseif (!is_null($properties)) {
-            parent::Event($properties, $id, '', $permission);
+            parent::Event($properties, $permission);
             $this->id = $id;
             $this->sem_id = $sem_id;
         }

@@ -529,7 +529,7 @@ td.tree-elbow-end img {
 
 /* dunklerer Standardhintergrund, überall umbenennen! */
 .steelgraulight {
-	background-color: #e7ebf1;
+    background-color: #e7ebf1;
 }
 
 .steelblau_schatten {
@@ -1712,7 +1712,7 @@ div#schedule-settings-dialog-shadow {
 
 /* classes for sortable table headers --------------------------------------- */
 tr.sortable {
-	background-color: #d1d1d1;
+    background-color: #d1d1d1;
 }
 
 tr.sortable th.sortasc {
@@ -1783,20 +1783,20 @@ h3.eval {
 
 /* skiplink-area highlighting -------------------------------------------- */
 #skip_link_navigation {
-	position: fixed;
+    position: fixed;
     left: -600px;
-	top: 20px;
-	z-index: 1000;
-	background-color: #ffffff;
-	border: 2px solid #ff6600;
+    top: 20px;
+    z-index: 1000;
+    background-color: #ffffff;
+    border: 2px solid #ff6600;
     padding: 10px;
-	margin: 0px;
+    margin: 0px;
 }
 
 #skip_link_navigation ul {
-	padding: 0px;
-	margin: 0px;
-	list-style-type: none;
+    padding: 0px;
+    margin: 0px;
+    list-style-type: none;
 }
 
 .skip_target {
@@ -1810,31 +1810,32 @@ h3.eval {
 
 /* error message */
 .error {
-	height:15px;
-	background-color:#FCC;
-	font-size:11px;
-	border:1px solid #FCC;
-	padding:4px 10px;
-	color:#000;
-	display:none;
+    height:15px;
+    background-color:#FCC;
+    font-size:11px;
+    border:1px solid #FCC;
+    padding:4px 10px;
+    color:#000;
+    display:none;
 }
 
 .error p {
-	margin:0;
+    margin:0;
 }
 
 .error div.arrow {
-	border:10px solid;
-	border-color:transparent transparent #FCC transparent;
-	top:-18px;
-	height:0;
-	left:60px;
-	position:absolute;
-	width:0;
+    border:10px solid;
+    border-color:transparent transparent #FCC transparent;
+    top:-18px;
+    height:0;
+    left:60px;
+    position:absolute;
+    width:0;
 }
+
 .setting_info {
-        font-size: 0.9em;
-        font-style: italic;
-        text-align: right;
-        color: #444;
+    font-size: 0.9em;
+    font-style: italic;
+    text-align: right;
+    color: #444;
 }

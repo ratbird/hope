@@ -180,7 +180,7 @@ class StartNavigation extends Navigation
         // calendar / home page
         if (!$perm->have_perm('admin')) {
             
-            $navigation = new Navigation(_('Profil'), 'about.php');
+            $navigation = new Navigation(_('Mein Profil'), 'about.php');
 
             if ($perm->have_perm('autor')) {
                 $navigation->addSubNavigation('settings', new Navigation(_('Einstellungen'), 'edit_about.php?view=allgemein'));

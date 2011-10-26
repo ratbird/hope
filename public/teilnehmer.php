@@ -54,19 +54,15 @@ $db2 = new DB_Seminar;
 $show_user_picture = false;
 /*
 * set the user_visibility of all unkowns to their global visibility
+* set tutor and dozent to visible=yes
 */
+$st = DBManager::get()->prepare("UPDATE seminar_user SET visible = 'yes' WHERE status IN ('tutor', 'dozent') AND Seminar_id = ?");
+$st->execute(array($SessionSeminar));
 
-$db->query("SELECT user_id FROM admission_seminar_user WHERE visible = 'unknown' AND seminar_id = '".$SessSemName[1]."'");
-while ($db->next_record()) {
-    $visible = (get_visibility_by_id($db->f("user_id"))) ? "yes" : "no";
-    $db2->query("UPDATE admission_seminar_user SET visible = '$visible' WHERE user_id = '".$db->f("user_id")."' AND seminar_id = '".$SessSemName[1]."'");
-}
-
-$db->query("SELECT user_id FROM seminar_user WHERE visible = 'unknown' AND Seminar_id = '".$SessSemName[1]."'");
-while ($db->next_record()) {
-    $visible = (get_visibility_by_id($db->f("user_id"))) ? "yes" : "no";
-    $db2->query("UPDATE seminar_user SET visible = '$visible' WHERE user_id = '".$db->f("user_id")."' AND Seminar_id = '".$SessSemName[1]."'");
-}
+$st = DBManager::get()->prepare("UPDATE seminar_user su INNER JOIN auth_user_md5 aum USING(user_id)
+                                 SET su.visible=IF(aum.visible IN('no','never') OR (aum.visible='unknown' AND " . (int)!Config::get()->USER_VISIBILITY_UNKNOWN . "), 'no','yes')
+                                 WHERE Seminar_id = ? AND su.visible='unknown'");
+$st->execute(array($SessionSeminar));
 
 /* ---------------------------------- */
 

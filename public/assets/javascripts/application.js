@@ -1755,8 +1755,8 @@ STUDIP.Forms = {
             ':email'     : 'Bitte geben Sie gültige E-Mail-Adresse ein'.toLocaleString(),
             ':number'    : 'Bitte geben Sie eine Zahl ein'.toLocaleString(),
             ':url'       : 'Bitte geben Sie eine gültige Web-Adresse ein'.toLocaleString(),
-            '[max]'      : 'Bitte geben Sie maximal $1 Zeichen ein'.toLocaleString(),
-            '[min]'      : 'Bitte geben Sie mindestens $1 Zeichen ein'.toLocaleString(),
+            '[max]'      : 'Der maximale Wert darf nicht größer als $1 sein'.toLocaleString(),
+            '[min]'      : 'Der minimale Wert darf nicht kleiner als $1 sein'.toLocaleString(),
             '[required]' : 'Dies ist ein erforderliches Feld'.toLocaleString()
         });
 

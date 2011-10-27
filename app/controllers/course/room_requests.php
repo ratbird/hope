@@ -138,7 +138,7 @@ class Course_RoomRequestsController extends AuthenticatedController
             }
         }
 
-        if ($request->isDirty()) {
+        if (!$request->isNew() && $request->isDirty()) {
             PageLayout::postMessage(MessageBox::info(_("Die Änderungen an der Raumanfrage wurden noch nicht gespeichert!")));
         }
         $room_categories = array_filter(getResourcesCategories(), create_function('$a', 'return $a["is_room"] == 1;'));
@@ -212,7 +212,7 @@ class Course_RoomRequestsController extends AuthenticatedController
                        || $request->resource_id != $old_request->resource_id
                        || $request->getProperties() != $old_request->getProperties()
                        || $request->comment!= $old_request->comment) {
-                       PageLayout::postMessage(MessageBox::info(_("Die Änderungen wurden noch nicht gespeichert!")));
+                       PageLayout::postMessage(MessageBox::info(_("Die Änderungen an der Raumanfrage wurden noch nicht gespeichert!")));
                     }
                 }
             }

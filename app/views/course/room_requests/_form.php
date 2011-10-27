@@ -39,8 +39,8 @@ if ($request_resource_id = $request->getResourceId()) :
         <b><?= htmlReady($resObject->getName()) ?></b>,
         <?= _("verantwortlich:") ?>
         <a href="<?= $resObject->getOwnerLink() ?>"><?= htmlReady($resObject->getOwnerName()) ?></a>
-        <input type="image" src="<?= Assets::image_path('icons/16/blue/refresh.png') ?>" <?= tooltip(_("den ausgewählten Raum löschen")) ?> name="reset_resource_id">
-        <img  src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/grey/info-circle.png"
+        <input style="vertical-align:bottom" type="image" src="<?= Assets::image_path('icons/16/blue/trash.png') ?>" <?= tooltip(_("den ausgewählten Raum löschen")) ?> name="reset_resource_id">
+        <img style="vertical-align:bottom" src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/grey/info-circle.png"
             <?= tooltip(_("Der ausgewählte Raum bietet folgende der wünschbaren Eigenschaften:")
             ." \n".$resObject->getPlainProperties(TRUE), TRUE, TRUE) ?>>
         <input type="hidden" name="selected_room" value="<?= htmlready($request_resource_id)?>">
@@ -66,8 +66,8 @@ if ($request_resource_id = $request->getResourceId()) :
                                 );
                             }
                             print "</select>";
-                            print "&nbsp;<input type=\"IMAGE\" value=\""._("Raumtyp auswählen")."\" name=\"send_room_type\" src=\"" . Assets::image_path('icons/16/blue/accept.png') . "\" ".tooltip(_("Raumtyp auswählen")).">";
-                            print "&nbsp;&nbsp;<input type=\"IMAGE\" src=\"" . Assets::image_path('icons/16/blue/refresh.png') . "\" ".tooltip(_("alle Angaben zurücksetzen"))." name=\"reset_room_type\"><br><br>";
+                            print "&nbsp;<input style=\"vertical-align:bottom\" type=\"IMAGE\" value=\""._("Raumtyp auswählen")."\" name=\"send_room_type\" src=\"" . Assets::image_path('icons/16/blue/accept.png') . "\" ".tooltip(_("Raumtyp auswählen")).">";
+                            print "&nbsp;&nbsp;<input style=\"vertical-align:bottom\" type=\"IMAGE\" src=\"" . Assets::image_path('icons/16/blue/trash.png') . "\" ".tooltip(_("alle Angaben zurücksetzen"))." name=\"reset_room_type\"><br><br>";
                         }
 
                         print _("Folgende Eigenschaften sind wünschbar:")."<br><br>";

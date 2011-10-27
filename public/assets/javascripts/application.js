@@ -504,12 +504,12 @@ STUDIP.Tabs = (function () {
             items = jQuery('li a span', list);
             jQuery(list).data('old_width', jQuery(window).width());
 
-            // strip contents and set titles
+            // strip contents and set text to data-title attributes 
             items
                 .text(function () {
                     return jQuery.trim(jQuery(this).text());
                 })
-                .attr('title', function () {
+                .attr('data-title', function () {
                     return jQuery(this).text();
                 });
 
@@ -532,7 +532,7 @@ STUDIP.Tabs = (function () {
             var new_width = jQuery(window).width();
             if (new_width > jQuery(list).data('old_width')) {
                 items.text(function () {
-                    return jQuery(this).attr('title');
+                    return jQuery(this).attr('data-title');
                 });
             }
             jQuery(list).data('old_width', new_width);

@@ -125,7 +125,7 @@ if (($delete_id) && Request::submitted('delete_really')){
 //Sicherheitsabfrage
 if ($delete_id) {
     $name = DBManager::get()->query("SELECT name FROM archiv WHERE seminar_id= '$delete_id'")->fetchColumn();
-    echo createQuestion(sprintf(_('Wollen Sie die Veranstaltung "%s" wirklich löschen? Sämtliche Daten und die mit der Veranstaltung archivierte Dateisammlung werden unwiderruflich gelöscht!'), htmlReady($name)),
+    echo createQuestion(sprintf(_('Wollen Sie die Veranstaltung "%s" wirklich löschen? Sämtliche Daten und die mit der Veranstaltung archivierte Dateisammlung werden unwiderruflich gelöscht!'), $name),
             array('delete_really' => 'true', 'delete_id' => $delete_id), array('back' => 'true'));
 }
 

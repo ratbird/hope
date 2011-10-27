@@ -79,6 +79,9 @@ $header_line = getHeaderLine($id);
 if ($header_line)
     PageLayout::setTitle($header_line." - ".PageLayout::getTitle());
 
+//save messages from
+$pmessages = PageLayout::getMessages();
+
 //Output starts here
 
 include ('lib/include/html_head.inc.php'); // Output of html head
@@ -175,6 +178,9 @@ if ($perm->have_studip_perm("admin",$sem->getId())) {
 
 // template-like output
 ?>
+<script>
+STUDIP.RoomRequestDialog.reloadUrlOnClose = '<?= UrlHelper::getUrl()?>';
+</script>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
     <tr>
         <td class="blank" width="100%" valign="top" style="padding-left: 8px">
@@ -182,7 +188,8 @@ if ($perm->have_studip_perm("admin",$sem->getId())) {
 
             <?php
                 // show messages
-                if ($messages = $sem->getStackedMessages()) :
+                $messages = $sem->getStackedMessages();
+                if ($messages || $pmessages) :
             ?>
             <tr>
                 <td colspan="9">
@@ -190,6 +197,7 @@ if ($perm->have_studip_perm("admin",$sem->getId())) {
                 foreach ($messages as $type => $message_data) :
                     echo MessageBox::$type( $message_data['title'], $message_data['details'] );
                 endforeach;
+                echo join("\n", $pmessages);
             ?>
                 </td>
             </tr>

@@ -43,6 +43,7 @@ if ($request_resource_id = $request->getResourceId()) :
         <img  src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/grey/info-circle.png"
             <?= tooltip(_("Der ausgewählte Raum bietet folgende der wünschbaren Eigenschaften:")
             ." \n".$resObject->getPlainProperties(TRUE), TRUE, TRUE) ?>>
+        <input type="hidden" name="selected_room" value="<?= htmlready($request_resource_id)?>">
     </td>
 </tr>
 <? endif ?>

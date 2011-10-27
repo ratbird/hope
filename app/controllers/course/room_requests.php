@@ -123,13 +123,17 @@ class Course_RoomRequestsController extends AuthenticatedController
 
         $attributes = self::process_form($request, $admission_turnout);
 
-        if (Request::submitted('save')) {
+        if (Request::submitted('save') || Request::submitted('save_close')) {
             if (!($request->getSettedPropertiesCount() || $request->getResourceId())) {
                 PageLayout::postMessage(MessageBox::error(_("Die Anfrage konnte nicht gespeichert werden, da Sie mindestens einen Raum oder mindestens eine Eigenschaft (z.B. Anzahl der Sitzplätze) angeben müssen!")));
             } else {
                 $request->setClosed(0);
-                if ($request->store()) {
+                $this->request_stored = $request->store();
+                if ($this->request_stored) {
                     PageLayout::postMessage(MessageBox::success(_("Die Raumanfrage und gewünschte Raumeigenschaften wurden gespeichert")));
+                }
+                if (Request::submitted('save_close') && !Request::isXhr()) {
+                    $this->redirect($this->url_for('index/'. $this->course_id));
                 }
             }
         }
@@ -139,7 +143,7 @@ class Course_RoomRequestsController extends AuthenticatedController
         }
         $room_categories = array_filter(getResourcesCategories(), create_function('$a', 'return $a["is_room"] == 1;'));
         if (!$request->getCategoryId() && count($room_categories) == 1) {
-            $request->setCategoryId($room_categories[0]['category_id ']);
+            $request->setCategoryId($room_categories[0]['category_id']);
         }
         $this->search_result = $attributes['search_result'];
         $this->search_by_properties = $attributes['search_by_properties'];
@@ -167,11 +171,10 @@ class Course_RoomRequestsController extends AuthenticatedController
                 $sem_create_data =& $_SESSION['sem_create_data'];
                 if (Request::option('new_room_request_type')) {
                     if ( $sem_create_data['room_requests'][Request::option('new_room_request_type')] instanceof RoomRequest) {
-                        $request = $sem_create_data['room_requests'][Request::option('new_room_request_type')];
+                        $request = clone $sem_create_data['room_requests'][Request::option('new_room_request_type')];
                     } else {
                         $request = new RoomRequest();
                         $request->seminar_id = '-';
-                        $sem_create_data['room_requests'][Request::option('new_room_request_type')] = $request;
                         $request->user_id = $GLOBALS['user']->id;
                         list($new_type, $id) = explode('_', Request::option('new_room_request_type'));
                         if ($new_type == 'date') {
@@ -185,23 +188,46 @@ class Course_RoomRequestsController extends AuthenticatedController
                     $this->search_by_properties = $room_request_form_attributes['search_by_properties'];
                     $this->admission_turnout = $sem_create_data['sem_turnout'];
                     $this->request = $request;
-                    $this->room_categories = array_filter(getResourcesCategories(), create_function('$a', 'return $a["is_room"] == 1;'));
+                    $room_categories = array_filter(getResourcesCategories(), create_function('$a', 'return $a["is_room"] == 1;'));
+                    if (!$request->getCategoryId() && count($room_categories) == 1) {
+                        $request->setCategoryId($room_categories[0]['category_id']);
+                    }
+                    $this->room_categories = $room_categories;
                     $this->new_room_request_type = Request::option('new_room_request_type');
                     $title = _("Verwaltung von Raumanfragen");
-                    if (Request::submitted('save') && ($request->getSettedPropertiesCount() || $request->getResourceId())) {
-                        PageLayout::postMessage(MessageBox::success(_("Die Raumanfrage und gewünschte Raumeigenschaften wurden gespeichert")));
+                    if ((Request::submitted('save') || Request::submitted('save_close'))) {
+                       if ($request->getSettedPropertiesCount() || $request->getResourceId()) {
+                            $sem_create_data['room_requests'][Request::option('new_room_request_type')] = $request;
+                            $this->request_stored = true;
+                            if (Request::submitted('save')) {
+                                PageLayout::postMessage(MessageBox::success(_("Die Raumanfrage und gewünschte Raumeigenschaften wurden gespeichert")));
+                            }
+                        } else {
+                            PageLayout::postMessage(MessageBox::error(_("Die Anfrage kann noch nicht gespeichert werden, da Sie mindestens einen Raum oder mindestens eine Eigenschaft (z.B. Anzahl der Sitzplätze) angeben müssen!")));
+                        }
+                    }
+                    $old_request = $sem_create_data['room_requests'][Request::option('new_room_request_type')];
+                    if (!is_object($old_request)
+                       || $request->category_id != $old_request->category_id
+                       || $request->resource_id != $old_request->resource_id
+                       || $request->getProperties() != $old_request->getProperties()
+                       || $request->comment!= $old_request->comment) {
+                       PageLayout::postMessage(MessageBox::info(_("Die Änderungen wurden noch nicht gespeichert!")));
+                    }
                 }
-                    if (!($request->getSettedPropertiesCount() || $request->getResourceId())) {
-                        PageLayout::postMessage(MessageBox::error(_("Die Anfrage kann noch nicht gespeichert werden, da Sie mindestens einen Raum oder mindestens eine Eigenschaft (z.B. Anzahl der Sitzplätze) angeben müssen!")));
             }
-                }
+            if (Request::submitted('save_close') && isset($this->request_stored)) {
+                return $this->render_json(array('auto_close' => true,
+                                                'auto_reload' => $this->request_stored));
+            } else {
+                $this->render_template('course/room_requests/edit_dialog.php', null);
+                $this->flash->discard();
+                $content = $this->get_response()->body;
+                $this->erase_response();
+                return $this->render_json(array('title' => studip_utf8encode($title),
+                                                'content' => studip_utf8encode($content)
+                                                ));
             }
-
-            $this->render_template('course/room_requests/edit_dialog.php', null);
-            $this->flash->discard();
-            $content = $this->get_response()->body;
-            $this->erase_response();
-            return $this->render_json(array('title' => studip_utf8encode($title), 'content' => studip_utf8encode($content)));
         } else {
             return $this->render_text('');
         }
@@ -213,6 +239,9 @@ class Course_RoomRequestsController extends AuthenticatedController
             $this->response->add_header('Content-Type', 'text/html; charset=windows-1252');
             $sem_create_data =& $_SESSION['sem_create_data'];
             $options = array();
+            if (Request::option('delete_room_request_type')) {
+                unset($sem_create_data['room_requests'][Request::option('delete_room_request_type')]);
+            }
             foreach ($sem_create_data['room_requests_options'] as $one) {
                 if ($sem_create_data['room_requests'][$one['value']] instanceof RoomRequest) {
                     $options[$one['value']]['request'] = $sem_create_data['room_requests'][$one['value']];
@@ -296,7 +325,8 @@ class Course_RoomRequestsController extends AuthenticatedController
             CSRFProtection::verifyUnsafeRequest();
             if (Request::submitted('send_room')) {
                 $request->setResourceId(Request::option('select_room'));
-                Request::set('save', 1);
+            } else {
+                $request->setResourceId(Request::option('selected_room'));
             }
             if (Request::submitted('reset_resource_id')) {
                 $request->setResourceId('');
@@ -308,7 +338,7 @@ class Course_RoomRequestsController extends AuthenticatedController
                 $request->setComment(Request::get('comment'));
             }
 
-            if (Request::option('select_room_type') && !Request::submitted('reset_room_type')) {
+            if (!Request::submitted('reset_room_type')) {
                 $request->setCategoryId(Request::option('select_room_type'));
             }
             //Property Requests

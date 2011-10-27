@@ -1814,6 +1814,7 @@ STUDIP.Messaging = {
 
 STUDIP.RoomRequestDialog = {
     dialog: null,
+    reloadUrlOnClose: null,
     initialize: function (url) {
         if (STUDIP.RoomRequestDialog.dialog === null) {
             jQuery.ajax({
@@ -1827,6 +1828,7 @@ STUDIP.RoomRequestDialog = {
                             title: data.title,
                             draggable: false,
                             modal: true,
+                            resizable: false,
                             width: Math.min(1000, jQuery(window).width() - 64),
                             height: 'auto',
                             maxHeight: jQuery(window).height(),
@@ -1864,10 +1866,17 @@ STUDIP.RoomRequestDialog = {
             data: data,
             success: function (data) {
                 if (STUDIP.RoomRequestDialog.dialog !== null) {
-                    STUDIP.RoomRequestDialog.dialog.dialog('option', 'title', data.title);
-                    jQuery('#RoomRequestDialogbox').html(data.content);
-                    jQuery('#RoomRequestDialogbox').parent().zIndex(zIndex);
-                    STUDIP.RoomRequestDialog.bindevents();
+                    if (data.auto_close === true) {
+                        STUDIP.RoomRequestDialog.dialog.dialog('close');
+                        if (data.auto_reload === true && STUDIP.RoomRequestDialog.reloadUrlOnClose !== null) {
+                            document.location.replace(STUDIP.RoomRequestDialog.reloadUrlOnClose);
+                        }
+                    } else {
+                        STUDIP.RoomRequestDialog.dialog.dialog('option', 'title', data.title);
+                        jQuery('#RoomRequestDialogbox').html(data.content);
+                        jQuery('#RoomRequestDialogbox').parent().zIndex(zIndex);
+                        STUDIP.RoomRequestDialog.bindevents();
+                    }
                 }
             }
         });

@@ -13,9 +13,16 @@
                     <?= Assets::img('icons/16/blue/info.png', array('title' => _('Weitere Informationen einblenden'))) ?>
                 </a>
             <? endif ?>
-                <a onClick="STUDIP.RoomRequestDialog.initialize('<?=URLHelper::getLink('dispatch.php/course/room_requests/edit_dialog/-', array('new_room_request_type' => $key))?>');return false;" href="#">
+                <a onClick="STUDIP.RoomRequestDialog.initialize('<?=URLHelper::getUrl('dispatch.php/course/room_requests/edit_dialog/-', array('new_room_request_type' => $key))?>');return false;" href="#">
                     <?= Assets::img('icons/16/blue/edit.png', array('title' => _('Diese Anfrage bearbeiten'))) ?>
                 </a>
+            <? if ($one['request']) : ?>
+                <a onClick="jQuery('#assi_room_request_with_js').load('<?=UrlHelper::getUrl('dispatch.php/course/room_requests/index_assi/-', array('delete_room_request_type' => $key))?>');return false;" href="#">
+                    <?= Assets::img('icons/16/blue/trash.png', array('title' => _('Diese Anfrage entfernen'))) ?>
+                </a>
+            <? else : ?>
+                <?= Assets::img('blank.gif', array('width' => '16'));?>
+            <? endif ?>
             </div>
         </td>
     </tr>

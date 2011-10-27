@@ -3357,10 +3357,12 @@ if ($level == 4) {
                             if (Request::option('new_room_request_type')) {
                                 $form_attributes = array_merge($form_attributes, $room_request_form_attributes);
                             }
-                            $trails_views = $GLOBALS['STUDIP_BASE_PATH'] . '/app/views';
-                            $factory = new Flexi_TemplateFactory($trails_views);
-                            echo $factory->render('course/room_requests/_form.php', $form_attributes);
-                            echo '<div style="text-align:center">' . makeButton('uebernehmen', 'input', _("Eingaben zur Raumanfrage speichern"),'room_request_save'). '</div>';
+                            if ($form_attributes['request'] instanceof RoomRequest) {
+                                $trails_views = $GLOBALS['STUDIP_BASE_PATH'] . '/app/views';
+                                $factory = new Flexi_TemplateFactory($trails_views);
+                                echo $factory->render('course/room_requests/_form.php', $form_attributes);
+                                echo '<div style="text-align:center">' . makeButton('uebernehmen', 'input', _("Eingaben zur Raumanfrage speichern"),'room_request_save'). '</div>';
+                            }
                             printf('<input type="hidden" name="current_room_request_type" value="%s">', $current_request_type);
                             ?>
                             </noscript>

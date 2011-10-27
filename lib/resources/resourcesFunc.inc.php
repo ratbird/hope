@@ -912,7 +912,7 @@ function showSearchForm($name, $search_string='', $user_only=FALSE, $administrab
 function getResourcesCategories()
 {
     $query = "SELECT * FROM resources_categories ORDER BY name";
-    return DBManager::get()->query($query)->fetchAll();
+    return DBManager::get()->query($query)->fetchAll(PDO::FETCH_ASSOC);
 }
 
 ?>

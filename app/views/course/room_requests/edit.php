@@ -2,8 +2,10 @@
 <form method="POST" name="room_request" action="<?=$this->controller->link_for('edit/' . $course_id, array('request_id' => $request->getId()))?>">
 <?= CSRFProtection::tokenTag() ?>
 <?
-$buttons = '<span>' . makeButton('uebernehmen','input',_("Änderungen speichern"),'save') . '</span>';
+$buttons = '<span>' . makeButton('ok','input',_("Speichern und zurück zur Übersicht"),'save_close') . '</span>';
 $buttons .= '<span style="padding-left:1em"><a href="'.$controller->link_for('index/'.$course_id).'">' . makeButton('abbrechen','img',_("Abbrechen")) . '</a></span>';
+$buttons .= '<span style="padding-left:1em">' . makeButton('uebernehmen','input',_("Änderungen speichern"),'save') . '</span>';
+
 echo $this->render_partial('course/room_requests/_form.php', array('submit' => $buttons));
 echo '</form>';
 $infobox_content = array(
@@ -20,4 +22,10 @@ $infobox_content = array(
         ))
     ),
 );
+if (getGlobalPerms($GLOBALS['user']->id) == 'admin' || ($GLOBALS['perm']->have_perm('admin') && count(getMyRoomRequests(null, null, true, $request->getId())))) {
+    $infobox_content[0]['eintrag'][] = array(
+            'icon' => 'icons/16/black/admin.png',
+            'text' => '<a href="'.UrlHelper::getLink('resources.php', array('view' => 'edit_request', 'single_request' => $request->getId())).'">'._('Raumanfrage auflösen').'</a>'
+        );
+}
 $infobox = array('picture' => 'infobox/board2.jpg', 'content' => $infobox_content);

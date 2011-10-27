@@ -1,8 +1,9 @@
 <?
-$buttons = '<span>' . makeButton('uebernehmen','input',_("Änderungen speichern"),'save') . '</span>';
+$buttons = '<span>' . makeButton('ok','input',_("Speichern und schließen"),'save_close') . '</span>';
 $buttons .= '<span style="padding-left:1em">
              <a href="#" onClick="STUDIP.RoomRequestDialog.dialog.dialog(\'close\');return false;">'
-             . makeButton('abbrechen','img',_("Abbrechen")) . '</a></span>';
+             . makeButton('abbrechen','img',_("Abbrechen und schließen")) . '</a></span>';
+$buttons .= '<span style="padding-left:1em">' . makeButton('uebernehmen','input',_("Änderungen speichern"),'save') . '</span>';
 ?>
 <form method="POST" name="room_request" onSubmit="return false;"
       action="<?=$this->controller->link_for('edit_dialog/' . $course_id,

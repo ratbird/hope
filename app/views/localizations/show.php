@@ -14,8 +14,8 @@ $translations = array(
   , "Bitte geben Sie eine gültige E-Mail-Adresse ein" => _("Bitte geben Sie eine gültige E-Mail-Adresse ein")
   , "Bitte geben Sie eine Zahl ein" => _("Bitte geben Sie eine Zahl ein")
   , "Bitte geben Sie eine gültige Web-Adresse ein" => _("Bitte geben Sie eine gültige Web-Adresse ein")
-  , "Der maximale Wert darf nicht größer als $1 sein" => _("Der maximale Wert darf nicht größer als $1 sein")
-  , "Der minimale Wert darf nicht kleiner als $1 sein" => _("Der minimale Wert darf nicht kleiner als $1 sein")
+  , "Der eingegebene Wert darf nicht größer als $1 sein" => _("Der eingegebene Wert darf nicht größer als $1 sein")
+  , "Der eingegebene Wert darf nicht kleiner als $1 sein" => _("Der eingegebene Wert darf nicht kleiner als $1 sein")
   , "Dies ist ein erforderliches Feld" => _("Dies ist ein erforderliches Feld")
   // add your translations here
 );

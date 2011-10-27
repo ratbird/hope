@@ -527,49 +527,54 @@ function export_teilis($inst_id, $ex_sem_id = "no")
         if ($filter == "status") // Gruppierung nach Statusgruppen / Funktionen
         {
             if ($key1 == "no")
-                $db->query ("SELECT ui.*, aum.*, su.*, FROM_UNIXTIME(su.mkdate) as registration_date, GROUP_CONCAT(studiengaenge.name SEPARATOR ', ') as nutzer_studiengaenge
+                $db->query ("SELECT ui.*, aum.*, su.*, FROM_UNIXTIME(su.mkdate) as registration_date, GROUP_CONCAT(CONCAT_WS(',', studiengaenge.name,abschluss.name) SEPARATOR '; ') as nutzer_studiengaenge
                     FROM seminar_user su
                     LEFT JOIN auth_user_md5 aum USING ( user_id )
                     LEFT JOIN user_info ui USING ( user_id )
                     LEFT JOIN user_studiengang USING(user_id)
                     LEFT JOIN studiengaenge USING(studiengang_id)
+                    LEFT JOIN abschluss ON(user_studiengang.abschluss_id=abschluss.abschluss_id)
                     WHERE seminar_id = '$ex_sem_id' GROUP BY aum.user_id ORDER BY Nachname");
             else
-                $db->query ("SELECT DISTINCT ui.*, aum.*, su.*,FROM_UNIXTIME(su.mkdate) as registration_date, GROUP_CONCAT(studiengaenge.name SEPARATOR ', ') as nutzer_studiengaenge
+                $db->query ("SELECT DISTINCT ui.*, aum.*, su.*,FROM_UNIXTIME(su.mkdate) as registration_date, GROUP_CONCAT(CONCAT_WS(',', studiengaenge.name,abschluss.name) SEPARATOR '; ') as nutzer_studiengaenge
                     FROM statusgruppe_user
                     LEFT JOIN seminar_user su USING (user_id)
                     LEFT JOIN auth_user_md5 aum USING ( user_id )
                     LEFT JOIN user_info ui USING ( user_id )
                     LEFT JOIN user_studiengang USING(user_id)
                     LEFT JOIN studiengaenge USING(studiengang_id)
+                    LEFT JOIN abschluss ON(user_studiengang.abschluss_id=abschluss.abschluss_id)
                     WHERE statusgruppe_id = '$key1' AND seminar_id = '$ex_sem_id' GROUP BY aum.user_id ORDER BY Nachname");
 //
         }
         else // Gruppierung nach Status in der Veranstaltung / Einrichtung
         if ($key1 == 'accepted'){
-            $db->query ("SELECT ui.*, aum.*, asu.comment, asu.studiengang_id as admission_studiengang_id,FROM_UNIXTIME(asu.mkdate) as registration_date , GROUP_CONCAT(studiengaenge.name SEPARATOR ', ') as nutzer_studiengaenge
+            $db->query ("SELECT ui.*, aum.*, asu.comment, asu.studiengang_id as admission_studiengang_id,FROM_UNIXTIME(asu.mkdate) as registration_date , GROUP_CONCAT(CONCAT_WS(',', studiengaenge.name,abschluss.name) SEPARATOR '; ') as nutzer_studiengaenge
                 FROM admission_seminar_user asu
                 LEFT JOIN user_info ui USING(user_id)
                 LEFT JOIN auth_user_md5 aum USING(user_id)
                 LEFT JOIN user_studiengang USING(user_id)
                 LEFT JOIN studiengaenge ON(user_studiengang.studiengang_id=studiengaenge.studiengang_id)
+                LEFT JOIN abschluss ON(user_studiengang.abschluss_id=abschluss.abschluss_id)
                 WHERE seminar_id = '$ex_sem_id' AND asu.status = 'accepted'  GROUP BY aum.user_id ORDER BY Nachname");
         } elseif ($key1 == 'awaiting') {
-            $db->query("SELECT ui.*, aum.*, asu.comment, asu.studiengang_id as admission_studiengang_id, asu.position as admission_position, GROUP_CONCAT(studiengaenge.name SEPARATOR ', ') as nutzer_studiengaenge
+            $db->query("SELECT ui.*, aum.*, asu.comment, asu.studiengang_id as admission_studiengang_id, asu.position as admission_position, GROUP_CONCAT(CONCAT_WS(',', studiengaenge.name,abschluss.name) SEPARATOR '; ') as nutzer_studiengaenge
                         FROM admission_seminar_user asu
                         LEFT JOIN user_info ui USING(user_id)
                         LEFT JOIN auth_user_md5 aum USING(user_id)
                         LEFT JOIN user_studiengang USING(user_id)
                         LEFT JOIN studiengaenge ON(user_studiengang.studiengang_id=studiengaenge.studiengang_id)
+                        LEFT JOIN abschluss ON(user_studiengang.abschluss_id=abschluss.abschluss_id)
                         WHERE asu.seminar_id = '$ex_sem_id' AND asu.status != 'accepted'
                         GROUP BY aum.user_id ORDER BY position");
         } else {
-            $db->query ("SELECT ui.*, aum.*, su.*,FROM_UNIXTIME(su.mkdate) as registration_date, GROUP_CONCAT(studiengaenge.name SEPARATOR ', ') as nutzer_studiengaenge
+            $db->query ("SELECT ui.*, aum.*, su.*,FROM_UNIXTIME(su.mkdate) as registration_date, GROUP_CONCAT(CONCAT_WS(',', studiengaenge.name,abschluss.name) SEPARATOR '; ') as nutzer_studiengaenge
                 FROM seminar_user su
                 LEFT JOIN auth_user_md5 aum USING ( user_id )
                 LEFT JOIN user_info ui USING ( user_id )
                 LEFT JOIN user_studiengang USING(user_id)
                 LEFT JOIN studiengaenge ON(user_studiengang.studiengang_id=studiengaenge.studiengang_id)
+                LEFT JOIN abschluss ON(user_studiengang.abschluss_id=abschluss.abschluss_id)
                 WHERE seminar_id = '$ex_sem_id' AND su.status = '" . $key1 . "'   GROUP BY aum.user_id ORDER BY position, Nachname");
         }
 
@@ -610,12 +615,16 @@ function export_teilis($inst_id, $ex_sem_id = "no")
 
     $data_object .= xml_close_tag( $xml_groupnames_person["group"]);
 
-    if ($filter != "status")
+    if (!in_array($filter, words("status awaiting accepted")))
     {
-        $db->query ("SELECT name, studiengaenge.studiengang_id FROM studiengaenge LEFT JOIN user_studiengang USING(studiengang_id) LEFT JOIN seminar_user USING(user_id) WHERE seminar_id = '$ex_sem_id' ");
+        $db->query ("SELECT CONCAT_WS(',', studiengaenge.name,abschluss.name) as name, count(*) as c
+                    FROM seminar_user INNER JOIN user_studiengang USING(user_id)
+                    LEFT JOIN studiengaenge USING(studiengang_id)
+                    LEFT JOIN abschluss USING(abschluss_id)
+                    WHERE seminar_id = '$ex_sem_id' GROUP BY name");
         while ($db->next_record())
         {
-            $studiengang_count[$db->f("name")] ++;
+            $studiengang_count[$db->f("name")] = $db->f('c');
         }
         if (isset($studiengang_count))
         {

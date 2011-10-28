@@ -641,7 +641,6 @@ function edit_item ($item_id, $type, $name, $description, $protected=0, $url = "
         $url_parts = parse_url($url);
         $the_file_name = basename($url_parts['path']);
     }
-    if ($protected == "on") $protected=1;
 
     if ($type){
         $db->query("UPDATE folder SET  description='$description' " . (strlen($name) ? ", name='$name'" : "" ). " WHERE folder_id ='$item_id'");
@@ -1064,6 +1063,7 @@ function getUploadMetadata($range_id, $refresh = FALSE) {
         $result['protected']    = (int) $protected;
     } else {
         $result['dokument_id'] = $refresh;
+        $result['chdate'] = time();
     }
 
     return $result;
@@ -1388,7 +1388,7 @@ function display_file_body($datei, $folder_id, $open, $change, $move, $upload, $
     if ($change == $datei["dokument_id"]) {     //Aenderungsmodus, Formular aufbauen
         if ($datei["protected"]==1)
             $protect = "checked";
-        $content.= "\n&nbsp;<input type=\"CHECKBOX\" name=\"change_protected\" $protect>&nbsp;"._("geschützter Inhalt")."</br>";
+        $content.= "\n&nbsp;<input type=\"CHECKBOX\" name=\"change_protected\" value=\"1\" $protect>&nbsp;"._("geschützter Inhalt")."</br>";
         $content.= "<br><textarea name=\"change_description\" aria-label=\"Beschreibung des Ordners eingeben\" rows=\"3\" cols=\"40\">".htmlReady($datei["description"])."</textarea><br>";
         $content.= makeButton("uebernehmen", 'input', _("&Auml;nderungen speichern"));
         $content.= "&nbsp;" . makeButton("abbrechen", 'input', _("Abbrechen"), 'cancel');

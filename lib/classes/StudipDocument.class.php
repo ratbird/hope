@@ -255,14 +255,14 @@ class StudipDocument extends SimpleORMap {
     private function safeStore()
     {
         try {
-            $result = (bool) $this->store();
+            $result = $this->store();
         } catch (Exception $e) {
             $result = false;
         }
 
-        if (!$result) {
+        if ($result === false) {
             @unlink(get_upload_file_path($this->getId()));
         }
-        return $result;
+        return $result !== false;
     }
 }

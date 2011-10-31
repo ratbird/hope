@@ -1319,7 +1319,7 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
                     <font size=-1><b><?=_("Warteliste:")?> </b></font><br>
 
                     <? if (!LockRules::Check($seminar_id, 'admission_disable_waitlist')) : ?>
-                        <font size=-1><?=_("Bitte aktivieren Sie diese Einstellung, wenn eine Warteliste erstellt werden soll falls die Anmeldungen die maximale Teilnehmeranzahl überschreiten:")?></font><br>
+                        <font size=-1><?=_("Bitte aktivieren Sie diese Einstellung, wenn eine Warteliste erstellt werden soll, falls die Anmeldungen die maximale Teilnehmeranzahl überschreiten:")?></font><br>
                         <? if ($num_waitlist && !$admin_admission_data["admission_disable_waitlist"]){
                             ?>
                             <font size=-1 color="red"><b><?=_("Achtung:")?></b></font>&nbsp;

@@ -540,6 +540,22 @@ if ($close) {
     unset($folder_system_data["open"][$close]);
     $folder_system_data["open"]['anker'] = $close;
 }
+if (Request::submitted('delete_selected_x')) {
+    $_SESSION['download_ids'][$SessSemName[1]] =  Request::getArray('download_ids');
+    if (count(Request::getArray('download_ids')) > 0) {
+        $question = createQuestion(_('Möchten Sie die ausgewählten Dateien wirklich löschen?'), array('delete' => true));
+    }
+}
+if (Request::get('delete')) {
+    
+    if (is_array($_SESSION['download_ids'][$SessSemName[1]]) && count($_SESSION['download_ids'][$SessSemName[1]]) > 0) {
+        foreach ($_SESSION['download_ids'][$SessSemName[1]] as $id) {
+            delete_document($id);
+        }
+       $_SESSION['download_ids'][$SessSemName[1]] = array(); 
+    }       
+}
+
 
 ///////////////////////////////////////////////////////////
 //Ajax-Funktionen
@@ -1009,8 +1025,10 @@ div.droppable.hover {
             print '<table border=0 cellpadding=0 cellspacing=0 width="100%">';
             print "<tr>" .
                     "<td class=\"blank\"></td><td class=\"blank\"><div align=\"right\">" .
-                        "<a href=\"".URLHelper::getLink("?check_all=TRUE")."\">" . makeButton("alleauswaehlen", 'img', _("alle auswählen")) . "</a>" .
-                        "&nbsp;".makeButton("herunterladen", 'input', _("herunterladen"), 'download_selected')."&nbsp;</div>" .
+                        "<a href=\"".URLHelper::getLink(sprintf("%s",(isset($check_all))?"":"?check_all=TRUE"))."\">" . makeButton((isset($check_all))?"keineauswaehlen":"alleauswaehlen", 'img',(isset($check_all))?  _("keine auswählen"):_("alle auswählen")) . "</a>" .
+                        "&nbsp;".makeButton("herunterladen", 'input', _("herunterladen"), 'download_selected')."&nbsp;".
+                        "<input style=\"vertical-align: middle;\" type=\"IMAGE\" name=\"delete_selected\" border=\"0\" ".makeButton("loeschen", "src").">&nbsp;"
+                    ."</div>" .
                     "</td><td class=\"blank\"></td></tr> <tr><td></td><td class=\"blank\">&nbsp;</td><td class=\"blank\"></td></tr>";
             $dreieck_runter = "dreieck_down.png";
             $dreieck_hoch = "dreieck_up.png";
@@ -1120,7 +1138,7 @@ div.droppable.hover {
             print " &nbsp;</td></tr></table>";
             print "</td><td class=\"blank\">&nbsp;</td></tr>";
 
-            print "<tr><td class=\"blank\"></td><td class=\"blank\"><div align=\"right\"><br><a href=\"".URLHelper::getLink("?check_all=TRUE")."\">".makeButton("alleauswaehlen")."</a>&nbsp;<input style=\"vertical-align: middle;\" type=\"IMAGE\" name=\"download_selected\" border=\"0\" ".makeButton("herunterladen", "src").">&nbsp;</div></td><td class=\"blank\"></td></tr> <tr><td class=\"blank\"></td><td class=\"blank\">&nbsp;</td><td class=\"blank\"></td></tr>";
+            print "<tr><td class=\"blank\"></td><td class=\"blank\"><div align=\"right\"><br><a href=\"".URLHelper::getLink(sprintf("%s",(isset($check_all))?"":"?check_all=TRUE"))."\">" . makeButton((isset($check_all))?"keineauswaehlen":"alleauswaehlen", 'img',(isset($check_all))? _("keine auswählen"):_("alle auswählen")) . "</a>&nbsp;<input style=\"vertical-align: middle;\" type=\"IMAGE\" name=\"download_selected\" border=\"0\" ".makeButton("herunterladen", "src").">&nbsp;<input style=\"vertical-align: middle;\" type=\"IMAGE\" name=\"delete_selected\" border=\"0\" ".makeButton("loeschen", "src").">&nbsp;</div></td><td class=\"blank\"></td></tr> <tr><td class=\"blank\"></td><td class=\"blank\">&nbsp;</td><td class=\"blank\"></td></tr>";
         }
     }
     print "</table></form>";

@@ -1044,7 +1044,7 @@ function getUploadMetadata($range_id, $refresh = FALSE) {
     $protected = Request::int('protected');
     $the_file_name = basename($_FILES['the_file']['name']);
     $the_file_size = $_FILES['the_file']['size'];
-
+    
     $name || ($name = $the_file_name);
 
     $result = array(
@@ -1591,7 +1591,8 @@ function display_file_line ($datei, $folder_id, $open, $change, $move, $upload, 
 
     if ($all) {
       if ((!$upload) && ($datei["url"]=="") && check_protected_download($datei["dokument_id"])) {
-        $box = sprintf ("<input type=\"CHECKBOX\" %s name=\"download_ids[]\" value=\"%s\">",($check_all) ? "checked" : "" , $datei["dokument_id"]);
+ 
+        $box = sprintf ("<input type=\"CHECKBOX\" %s name=\"download_ids[]\" value=\"%s\">",($check_all || in_array($datei["dokument_id"],Request::getArray('download_ids'))) ? "checked" : "" , $datei["dokument_id"]);
         print $box;
       } else {
         echo Assets::img('icons/16/grey/decline.png', array('title' => _("Diese Dateie kann nicht als ZIP-Archiv heruntergeladen werden."), 'style' => 'padding-left:5px;'));
@@ -1958,11 +1959,11 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
         }
 
         if (!empty($dates_title)) {
-            $tmp_titel = sprintf(_("Sitzung am: %s"), implode(', ', $dates_title)) .
-                 ", " . ($tmp_titel ? $tmp_titel : _("ohne Titel"));
+        $tmp_titel = sprintf(_("Sitzung am: %s"), implode(', ', $dates_title)) .
+             ", " . ($tmp_titel ? $tmp_titel : _("ohne Titel"));
         } else {
             $tmp_titel = $tmp_titel ? $tmp_titel : _("ohne Titel");
-        }
+    }
     }
 
     if (($change == $folder_id)

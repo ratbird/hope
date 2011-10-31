@@ -540,19 +540,26 @@ if ($close) {
     unset($folder_system_data["open"][$close]);
     $folder_system_data["open"]['anker'] = $close;
 }
-if (Request::submitted('delete_selected_x')) {
-    $_SESSION['download_ids'][$SessSemName[1]] =  Request::getArray('download_ids');
-    if (count(Request::getArray('download_ids')) > 0) {
-        $question = createQuestion(_('Möchten Sie die ausgewählten Dateien wirklich löschen?'), array('delete' => true));
+if ($rechte && Request::submitted('delete_selected')) {
+    $_SESSION['download_ids'][$SessSemName[1]] = Request::getArray('download_ids');
+    if (count($_SESSION['download_ids'][$SessSemName[1]]) > 0) {
+        $files_to_delete = array_map(create_function('$f', 'return StudipDocument::find($f)->filename;'), $_SESSION['download_ids'][$SessSemName[1]]);
+        $question = createQuestion(_('Möchten Sie die ausgewählten Dateien wirklich löschen?') .
+                                    "\n- ". join("\n- ", $files_to_delete),
+                                    array('delete' => true, 'studipticket' => Seminar_Session::get_ticket()));
     }
 }
-if (Request::get('delete')) {
-    
+
+if ($rechte && Request::get('delete') && Seminar_Session::check_ticket(Request::option('studipticket'))) {
     if (is_array($_SESSION['download_ids'][$SessSemName[1]]) && count($_SESSION['download_ids'][$SessSemName[1]]) > 0) {
+        $deleted = 0;
         foreach ($_SESSION['download_ids'][$SessSemName[1]] as $id) {
-            delete_document($id);
+            $deleted += delete_document($id);
         }
-       $_SESSION['download_ids'][$SessSemName[1]] = array(); 
+        unset($_SESSION['download_ids'][$SessSemName[1]]);
+        if ($deleted) {
+            $msg .= "msg§" . sprintf(_("Es wurden %s Dateien gelöscht."), $deleted) . '§';
+        }
     }       
 }
 
@@ -1026,8 +1033,8 @@ div.droppable.hover {
             print "<tr>" .
                     "<td class=\"blank\"></td><td class=\"blank\"><div align=\"right\">" .
                         "<a href=\"".URLHelper::getLink(sprintf("%s",(isset($check_all))?"":"?check_all=TRUE"))."\">" . makeButton((isset($check_all))?"keineauswaehlen":"alleauswaehlen", 'img',(isset($check_all))?  _("keine auswählen"):_("alle auswählen")) . "</a>" .
-                        "&nbsp;".makeButton("herunterladen", 'input', _("herunterladen"), 'download_selected')."&nbsp;".
-                        "<input style=\"vertical-align: middle;\" type=\"IMAGE\" name=\"delete_selected\" border=\"0\" ".makeButton("loeschen", "src").">&nbsp;"
+                        "&nbsp;".makeButton("herunterladen", 'input', _("ausgewählte Dateien herunterladen"), 'download_selected')."&nbsp;".
+                        ($rechte ? makeButton('loeschen', 'input', _("ausgewählte Dateien löschen"), 'delete_selected') : '')
                     ."</div>" .
                     "</td><td class=\"blank\"></td></tr> <tr><td></td><td class=\"blank\">&nbsp;</td><td class=\"blank\"></td></tr>";
             $dreieck_runter = "dreieck_down.png";
@@ -1137,8 +1144,15 @@ div.droppable.hover {
             print " </td><td class=\"steelgraudunkel\" align=right>";
             print " &nbsp;</td></tr></table>";
             print "</td><td class=\"blank\">&nbsp;</td></tr>";
-
-            print "<tr><td class=\"blank\"></td><td class=\"blank\"><div align=\"right\"><br><a href=\"".URLHelper::getLink(sprintf("%s",(isset($check_all))?"":"?check_all=TRUE"))."\">" . makeButton((isset($check_all))?"keineauswaehlen":"alleauswaehlen", 'img',(isset($check_all))? _("keine auswählen"):_("alle auswählen")) . "</a>&nbsp;<input style=\"vertical-align: middle;\" type=\"IMAGE\" name=\"download_selected\" border=\"0\" ".makeButton("herunterladen", "src").">&nbsp;<input style=\"vertical-align: middle;\" type=\"IMAGE\" name=\"delete_selected\" border=\"0\" ".makeButton("loeschen", "src").">&nbsp;</div></td><td class=\"blank\"></td></tr> <tr><td class=\"blank\"></td><td class=\"blank\">&nbsp;</td><td class=\"blank\"></td></tr>";
+            print "<tr><td class=\"blank\"></td><td class=\"blank\"><div align=\"right\">"
+                  ."<br><a href=\"".URLHelper::getLink(sprintf("%s",(isset($check_all))?"":"?check_all=TRUE"))."\">" 
+                  . makeButton((isset($check_all))?"keineauswaehlen":"alleauswaehlen", 'img',(isset($check_all))? _("keine auswählen"):_("alle auswählen"))
+                  . "</a>&nbsp;"
+                  . makeButton('herunterladen', 'input', _("ausgewählte Dateien herunterladen"), 'download_selected')
+                  . "&nbsp;"
+                  . ($rechte ? makeButton('loeschen', 'input', _("ausgewählte Dateien löschen"), 'delete_selected') : '')
+                  ."&nbsp;</div></td><td class=\"blank\"></td></tr> <tr><td class=\"blank\"></td>"
+                  ."<td class=\"blank\">&nbsp;</td><td class=\"blank\"></td></tr>";
         }
     }
     print "</table></form>";
@@ -1154,4 +1168,5 @@ div.droppable.hover {
 
 <?php
 include ('lib/include/html_end.inc.php');
+
 page_close();

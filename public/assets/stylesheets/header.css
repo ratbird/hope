@@ -21,7 +21,6 @@ div#barBottomContainer {
     border-top-style: solid;
     border-bottom-style: solid;
     width: 100%;
-    min-width: 620px;
     height: 24px;
     margin-bottom: 1.5em;
     position: relative;
@@ -74,9 +73,14 @@ div#barBottomright {
     background-image: -webkit-gradient(linear, left top, right top, color-stop(0, rgba(197,61,61,0)), color-stop(1, #899AB9));
 }
 
+div#barBottomright ul {
+    padding-left: 0;
+}
+
 div#barBottomright ul, #layout_footer ul {
     margin: 0;
 }
+
 
 div#barBottomright li, #layout_footer li {
     display: inline;

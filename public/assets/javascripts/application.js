@@ -542,58 +542,6 @@ STUDIP.Tabs = (function () {
 }());
 
 /* ------------------------------------------------------------------------
- * automatic compression of page title
- * ------------------------------------------------------------------------ */
-STUDIP.Title = (function () {
-
-    var title, reference;
-
-    // truncates an item
-    function truncate(item) {
-        var text = jQuery(item).text(),
-        length = Math.max(text.length - 4, 4);
-        if (length < text.length) {
-            jQuery(item).text(text.substr(0, length) + "\u2026");
-        }
-    }
-
-    return {
-        // initializes, observes resize events and compresses the title
-        initialize: function () {
-            title = jQuery('#barBottommiddle');
-            reference = jQuery('#barBottomright');
-            title.data('old_width', jQuery(window).width());
-
-            // strip contents and set titles
-            title.text(jQuery.trim(title.text()));
-            title.attr('title', title.text());
-
-            jQuery(window).resize(this.resize);
-            this.compress();
-        },
-
-
-        // try to fit the title into a single line
-        compress: function () {
-            while (title.offset().top !== reference.offset().top) {
-                truncate(title);
-            }
-        },
-
-        // event handler called when resizing the browser
-        // TODO (mlunzena): Inline this function!
-        resize: function () {
-            var new_width = jQuery(window).width();
-            if (new_width > jQuery(title).data('old_width')) {
-                title.text(title.attr('title'));
-            }
-            jQuery(title).data('old_width', new_width);
-            STUDIP.Title.compress();
-        }
-    };
-}());
-
-/* ------------------------------------------------------------------------
  * Dialogbox
  * ------------------------------------------------------------------------ */
 
@@ -1142,7 +1090,6 @@ jQuery(function () {
 
     // compress tabs
     STUDIP.Tabs.initialize();
-    STUDIP.Title.initialize();
 
     STUDIP.study_area_selection.initialize();
 

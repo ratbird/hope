@@ -20,10 +20,11 @@ div#barBottomContainer {
     border-color: #1e3e70;
     border-top-style: solid;
     border-bottom-style: solid;
-    float: left;
     width: 100%;
+    min-width: 620px;
     height: 24px;
     margin-bottom: 1.5em;
+    position: relative;
 }
 
 #barBottomLeft, #barBottommiddle, #barBottomright {
@@ -38,12 +39,11 @@ div#barBottomContainer {
 div#barBottomLeft {
     float: left;
     padding-left: 15px;
-    text-align: right;
     white-space: nowrap;
 }
 
 div#barBottommiddle {
-    float: left;
+    overflow: hidden;
     background: url('../images/header/header_bottom_isolator.png');
     background-repeat: no-repeat;
     padding-left: 40px;
@@ -51,9 +51,27 @@ div#barBottommiddle {
 }
 
 div#barBottomright {
-    text-align: right;
-    float: right;
+    position: absolute;
+    top: 0;
+    right: 0;
     white-space: nowrap;
+}
+
+#barBottomright:before {
+  position: absolute;
+  left: -40px;
+  width: 40px;
+  height: 24px;
+  content: " ";
+}
+
+#barBottomright:before {
+    background-image: linear-gradient(left , rgba(137,154,185,0) 0%, #899ab9 100%);
+    background-image: -o-linear-gradient(left , rgba(137,154,185,0) 0%, #899AB9 100%);
+    background-image: -moz-linear-gradient(left , rgba(137,154,185,0) 0%, #899AB9 100%);
+    background-image: -webkit-linear-gradient(left , rgba(137,154,185,0) 0%, #899AB9 100%);
+    background-image: -ms-linear-gradient(left , rgba(137,154,185,0) 0%, #899AB9 100%);
+    background-image: -webkit-gradient(linear, left top, right top, color-stop(0, rgba(197,61,61,0)), color-stop(1, #899AB9));
 }
 
 div#barBottomright ul, #layout_footer ul {
@@ -124,6 +142,15 @@ div#header {
 
 #barBottomContainer.public_course div#barBottommiddle {
     background-image: url('../images/header/header_bottom_isolator_public.png');
+}
+
+#barBottomContainer.public_course #barBottomright:before {
+    background-image: linear-gradient(left , rgba(197,61,61,0) 0%, #C53D3D 100%);
+    background-image: -o-linear-gradient(left , rgba(197,61,61,0) 0%, #C53D3D 100%);
+    background-image: -moz-linear-gradient(left , rgba(197,61,61,0) 0%, #C53D3D 100%);
+    background-image: -webkit-linear-gradient(left , rgba(197,61,61,0) 0%, #C53D3D 100%);
+    background-image: -ms-linear-gradient(left , rgba(197,61,61,0) 0%, #C53D3D 100%);
+    background-image: -webkit-gradient(linear, left top, right top, color-stop(0, rgba(197,61,61,0)), color-stop(1, #C53D3D));
 }
 
 /* --- main navigation ------------------------------------------------------ */

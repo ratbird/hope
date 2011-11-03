@@ -274,12 +274,31 @@ class RoomRequest extends SimpleORMap
         $this->metadate_id=$value;
     }
 
+    /**
+     * Set the property with the passed id to the passed value.
+     * If value is null or false, the state will be reverted;
+     *
+     * @param string $property_id the md5-hash of the property
+     * @param int $value  the value to set for the property
+     *
+     * @return void
+     */
     function setPropertyState($property_id, $value) {
+        $all_properties = $this->getAvailableProperties();
         if ($this->properties[$property_id]['state'] != $value) {
             $this->properties_changed = true;
         }
+
         if ($value) {
-            $this->properties[$property_id] = array("state" => $value);
+            // add the details of the property to the set of chosen properties
+            foreach ($all_properties as $property) {
+                if ($property['property_id'] == $property_id) {
+                    $this->properties[$property_id] = $property;
+                }
+            }
+
+            // set the state to the passed value
+            $this->properties[$property_id]['state'] = $value;
         } else {
             $this->properties[$property_id] = FALSE;
         }

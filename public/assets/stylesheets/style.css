@@ -268,19 +268,6 @@ table.default td {
     padding: 3px;
 }
 
-table.zebra {
-    border-collapse: collapse;
-    width: auto;
-}
-
-table.zebra tr:nth-child(2n):hover {
-    background-color: #CED8F2;
-}
-
-table.zebra tr:nth-child(2n+1):hover {
-    background-color: #B7C2E2;
-}
-
 td.topicwrite {
     border:0px solid #000000;
     background-image: url('../images/fill1write.gif');
@@ -1794,7 +1781,7 @@ h3.eval {
     font-family: Arial, Helvetica, sans-serif;
 }
 
-/* skiplink-area highlighting ---------------------------------------------- */
+/* skiplink-area highlighting -------------------------------------------- */
 #skip_link_navigation {
     position: fixed;
     left: -600px;
@@ -1852,20 +1839,3 @@ h3.eval {
     text-align: right;
     color: #444;
 }
-
-/* room-requests ----------------------------------------------------------- */
-/*
-div.roomlist input[type=radio] {
-    clip: rect(1px, 1px, 1px, 1px);
-    position: absolute;
-}
-
-div.roomlist label {
-    padding-left: 20px;
-}
-
-div.roomlist label.checked {
-    background-image: url('../images/icons/16/blue/accept.png');
-    background-repeat: no-repeat;
-}
-*/

@@ -30,14 +30,13 @@
 			<div style="width: 49%; float: left;">
 	        <? if (is_array($founders) && sizeof($founders) > 0) :
 	            foreach ($founders as $user_id) :?>
-	                <input type="image" name="remove_founder" src="<?= Assets::image_path('icons/16/blue/trash.png') ?>" <?= tooltip("NutzerIn entfernen") ?>>
+	                
 	                <?= htmlReady(get_fullname($user_id, 'full_rev')) ?> (<?= get_username($user_id) ?>)
 	                <input type="hidden" name="founders[]" value="<?= $user_id ?>">
+					<input type="image" name="remove_founder" src="<?= Assets::image_path('icons/16/blue/trash.png') ?>" <?= tooltip("NutzerIn entfernen") ?>>
 	                <br>
 	            <? endforeach; ?>
-	            <br>
 	        <? endif; ?>
-	        &nbsp;
 	        </div>
 		</td>
     <? endif; ?>

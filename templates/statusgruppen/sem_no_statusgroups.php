@@ -16,5 +16,5 @@
     <?= _("Mit dem Feld 'Gruppengröße' haben Sie die Möglichkeit, die Sollstärke für eine Gruppe festzulegen. Dieser Wert wird nur für die Anzeige benutzt - es können auch mehr Personen eingetragen werden.") ?><br>
     <?= _("Wenn Sie Gruppen angelegt haben, können Sie diesen Personen zuordnen. Jeder Gruppe können beliebig viele Personen zugeordnet werden. Jede Person kann beliebig vielen Gruppen zugeordnet werden.") ?><br>
     <br>
-    <?= sprintf(_("Lesen Sie weitere Bedienungshinweise in der %sHilfe%s nach!"), '<a href="' . $help_url . '">', '</a>') ?>
+    <?= sprintf(_("Lesen Sie weitere Bedienungshinweise in der %sHilfe%s nach!"), '<a href="' . $help_url . '" target="_blank">', '</a>') ?>
 </p>

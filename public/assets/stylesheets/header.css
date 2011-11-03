@@ -70,7 +70,7 @@ div#barBottomright {
     background-image: -moz-linear-gradient(left , rgba(137,154,185,0) 0%, #899AB9 100%);
     background-image: -webkit-linear-gradient(left , rgba(137,154,185,0) 0%, #899AB9 100%);
     background-image: -ms-linear-gradient(left , rgba(137,154,185,0) 0%, #899AB9 100%);
-    background-image: -webkit-gradient(linear, left top, right top, color-stop(0, rgba(197,61,61,0)), color-stop(1, #899AB9));
+    background-image: -webkit-gradient(linear, left top, right top, color-stop(0, rgba(137,154,185,0k)), color-stop(1, #899AB9));
 }
 
 div#barBottomright ul {

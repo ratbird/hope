@@ -64,7 +64,7 @@ class PageLayout
         // include jQuery + UI
         self::addStylesheet('jquery-ui-1.8.14.custom.css', array('media' => 'screen, print'));
         self::addStylesheet('jquery-ui-studip-2.2.css', array('media' => 'screen, print'));
-        self::addScript('jquery-1.6.4.min.js');
+        self::addScript('jquery-1.7.min.js');
         self::addScript('jquery-ui-1.8.14.custom.min.js');
         
         // include default CSS

@@ -100,8 +100,7 @@ function callback_cmp_newsarray($a, $b) {
 }
 
 ?>
-<div class="white">
-<table style="padding: 0 0.5%" cellspacing="0" cellpadding="0" border="0" width="100%">
+<table id="layout_table" cellspacing="0" cellpadding="0">
 <?
 
 if ($perm->have_perm("admin"))  {
@@ -324,7 +323,7 @@ if (!$cmd OR $cmd=="show") {
         echo '</p></td></tr>';
     }
 }
-echo "\n</table></div>";
+echo "\n</table>";
 include ('lib/include/html_end.inc.php');
 page_close();
 ?>

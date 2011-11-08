@@ -566,7 +566,8 @@ function my_substr($what, $start, $end)
 {
     $length=$end-$start;
     $what_length = studip_strlen($what);
-    if ($what_length > $length) {
+    // adding 5 because: strlen("[...]") == 5
+    if ($what_length > $length + 5) {
         $what=studip_substr($what, $start, round(($length / 3) * 2))."[...]".studip_substr($what, $what_length - round($length / 3), $what_length);
     }
     return $what;

@@ -36,6 +36,7 @@ require 'lib/phplib/user4.inc';
 require 'lib/phplib/email_validation.inc';
 require 'init_config_arrays.inc.php';
 require 'config_local.inc.php';
+require_once 'lib/phplib_local.inc.php';
 
 require_once 'lib/classes/CSRFProtection.php';
 require 'lib/phplib/page4.inc';

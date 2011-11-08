@@ -621,5 +621,3 @@ $WIKI_PLUGINS = array();
 
 //create the html-version of $UNI_NAME clean
 $UNI_NAME=htmlentities($UNI_NAME_CLEAN, ENT_QUOTES);
-
-require_once 'lib/phplib_local.inc.php';

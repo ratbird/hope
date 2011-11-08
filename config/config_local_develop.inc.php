@@ -510,6 +510,4 @@ $WIKI_PLUGINS=array(
 $UNI_NAME=htmlentities($UNI_NAME_CLEAN, ENT_QUOTES);
 
 
-require_once 'lib/phplib_local.inc.php';
-
 ?>

@@ -111,7 +111,7 @@ function checkdata(){
 </tr>
 <tr>
     <td class="blank" style="padding: 1em;">
-    <b><?=_("Herzlich Willkommen!")?></b>
+    <b><?=_("Herzlich willkommen!")?></b>
     <br>
     <?=_("Bitte f&uuml;llen Sie zur Anmeldung das Formular aus:")?>
     <br><br>

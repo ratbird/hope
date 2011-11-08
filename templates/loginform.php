@@ -58,7 +58,7 @@ $(function () {
 
         <div style="margin-top:20px;">
         <? if  (!$loginerror): ?>
-          <h1 style="margin: 0;"><?=_("Herzlich Willkommen!")?></h1>
+          <h1 style="margin: 0;"><?=_("Herzlich willkommen!")?></h1>
         <?endif;?>
           <? if ($GLOBALS['ENABLE_REQUEST_NEW_PASSWORD_BY_USER'] && in_array('Standard', $GLOBALS['STUDIP_AUTH_PLUGIN'])): ?>
             <a href="<?=UrlHelper::getLink('request_new_password.php?cancel_login=1')?>">

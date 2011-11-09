@@ -473,6 +473,8 @@ function wiki_format ($text, $show_comments) {
     } else {
         $text=preg_replace("#\[comment(=.*)?\](.*)\[/comment\]#msU","",$text);
     }
+    // Signatur (~~~~ in Wiki, expanded to [sig uname time])
+    $text = preg_replace("'\[sig ([\w@.-]+) ([0-9]+)\]'e", "preg_call_format_signature('\\1','\\2')", $text);
     return $text;
 }
 
@@ -572,31 +574,15 @@ function format ($text) {
     $text = preg_replace("'\n?\r\n?'", "\n", $text);
     $pattern = array(
                     "'^--+(\d?)$'me",               // Trennlinie
-//                  "'\[pre\](.+?)\[/pre\]'is",    // praeformatierter Text
-                    "'(^|\n)\!([^!\n].*)'m",              // Ueberschrift 4. Ordnung
-                    "'(^|\n)\!{2}([^!\n].*)'m",           // Ueberschrift 3. Ordnung
-                    "'(^|\n)\!{3}([^!\n].*)'m",           // Ueberschrift 2. Ordnung
-                    "'(^|\n)\!{4}([^!\n].*)'m",           // Ueberschrift 1. Ordnung
                     "'(\n|\A)(([-=]+ .+(\n|\Z))+)'e",    // Listen
-                                        "'(\n|\A)((\\|.+(\n|\Z))+)'e",    // Tabellen
-                    "'\[admin_msg\](.+?)\[/admin_msg\]'s",               // ML-kursiv (für Forum-Edits)
-                    "'\[sig ([\w@.-]+) ([0-9]+)\]'e",   // Signatur (~~~~ in Wiki, expanded to [sig uname time])
+                    "'(\n|\A)((\\|.+(\n|\Z))+)'e",    // Tabellen
                     "'\n\n  (((\n\n)  )*(.+?))(\Z|\n\n(?! ))'se",   // Absatz eingerueckt
-                    "'\n?(</?h[1-4r]>)\n?'"                        // removes newline delimiters
                     );
     $replace = array(
                     "'<hr noshade=\"noshade\" width=\"98%\" size=\"'.('\\1' ? '\\1' : '1').'\" align=\"center\">'",
-//                  "<pre>\\1</pre>",
-                    "\\1<h4 class=\"content\">\\2</h4>",
-                    "\\1<h3 class=\"content\">\\2</h3>",
-                    "\\1<h2 class=\"content\">\\2</h2>",
-                    "\\1<h1 class=\"content\">\\2</h1>",
                     "preg_call_format_list('\\2')",
                     "preg_call_format_table('\\2')",
-                    "<i>\\1</i>",
-                    "preg_call_format_signature('\\1','\\2')",
                     "'<blockquote>'.format(stripslashes('\\1')).'</blockquote>'",
-                    "\\1"
                     );
     $text = preg_replace('#\[pre\](.+?)\[/pre\]#is', '<pre>\\1</pre>', $text); // praeformatierter Text
     $regtxt = '!(((\[[^\]\[\n\f]+\])?(https?|ftp)://[^\s\]<]+)|(\[tex\].*?\[/tex\]))!is';

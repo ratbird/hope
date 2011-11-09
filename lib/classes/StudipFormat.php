@@ -33,6 +33,12 @@ class StudipFormat extends TextFormat
         if (!isset(self::$studip_rules)) {
             self::$studip_rules = array(
 
+                // heading level 1-4
+                'heading' => array(
+                    'start'    => '^(!{1,4})([^\n]+)',
+                    'callback' => 'StudipFormat::markupHeading'
+                ),
+
                 // basic text formatting
                 'bold' => array(
                     'start'    => '\*\*',
@@ -77,6 +83,11 @@ class StudipFormat extends TextFormat
                 'strike' => array(
                     'start'    => '\{-',
                     'end'      => '-\}',
+                    'callback' => 'StudipFormat::markupText'
+                ),
+                'admin_msg' => array(
+                    'start'    => '\[admin_msg\]',
+                    'end'      => '\[\/admin_msg\]',
                     'callback' => 'StudipFormat::markupText'
                 ),
 
@@ -159,6 +170,17 @@ class StudipFormat extends TextFormat
     }
 
     /**
+     * Stud.IP markup for headings
+     */
+    protected static function markupHeading($markup, $matches)
+    {
+        $level = max(1, 5 - strlen($matches[1]));
+        $text = $markup->format($matches[2]);
+
+        return sprintf('<h%d class="content">%s</h%d>', $level, $text, $level);
+    }
+
+    /**
      * Basic text formatting: bold, italics, underline, big, small etc.
      */
     protected static function markupText($markup, $matches, $contents)
@@ -172,7 +194,8 @@ class StudipFormat extends TextFormat
             '--' => 'small',
             '&gt;&gt;' => 'sup',
             '&lt;&lt;' => 'sub',
-            '{-' => 'strike'
+            '{-' => 'strike',
+            '[admin_msg]' => 'i'
         );
 
         $key = $matches[0];

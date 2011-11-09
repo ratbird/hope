@@ -599,7 +599,7 @@ function format ($text) {
                     "'\n?(</?h[1-4r]>)\n?'"                        // removes newline delimiters
                     );
     $replace = array(
-                    "'<hr noshade=\"noshade\" width=\"98%\" size=\"'.('\\1' ? '\\1' : '1').'\" align=\"center\" >'",
+                    "'<hr noshade=\"noshade\" width=\"98%\" size=\"'.('\\1' ? '\\1' : '1').'\" align=\"center\">'",
 //                  "<pre>\\1</pre>",
                     "'\\1<i>'.substr(str_replace('%', ' ', '\\2'), 0, -1).'</i>'",
                     "'\\1<b>'.substr(str_replace('*', ' ', '\\2'), 0, -1).'</b>'",
@@ -609,10 +609,10 @@ function format ($text) {
                     "'\\1<small>'.substr(str_replace('-', ' ', '\\2'), 0, -1).'</small>'",
                     "'\\1<sup>'.substr(str_replace('&gt;', ' ', '\\2'), 0, -1).'</sup>'",
                     "'\\1<sub>'.substr(str_replace('&lt;', ' ', '\\2'), 0, -1).'</sub>'",
-                    "\n<h4 class=\"content\">\\2</h4>",
-                    "\n<h3 class=\"content\">\\2</h3>",
-                    "\n<h2 class=\"content\">\\2</h2>",
-                    "\n<h1 class=\"content\">\\2</h1>",
+                    "\\1<h4 class=\"content\">\\2</h4>",
+                    "\\1<h3 class=\"content\">\\2</h3>",
+                    "\\1<h2 class=\"content\">\\2</h2>",
+                    "\\1<h1 class=\"content\">\\2</h1>",
                     "preg_call_format_list('\\2')",
                     "preg_call_format_table('\\2')",
                     "<i>\\1</i>",
@@ -680,7 +680,7 @@ function preg_call_format_list ($content) {
             else if ($matched_level < $current_level)
                 $level = $matched_level;
 
-            if ($matches[1]{0} == "-")
+            if ($matches[1]{$level-1} == "-")
                 $list_tags[] = "ul";
             else
                 $list_tags[] = "ol";
@@ -735,7 +735,7 @@ function preg_call_format_table($content) {
         $tcode[]=preg_replace("'\|(.+?)(\|\s*\n(?=\|)|\|\Z)'se","'<tr><td style=\"border: thin solid #666666\"><font size=-1>'.preg_replace('/\|/','</font></td><td style=\"border: thin solid #666666\"><font size=-1>','\\1').'</font></td></tr>'", $l);
     }
     $tcode[]="</table>";
-    return implode("",$tcode)."\n";
+    return implode("",$tcode);
 }
 
 /**

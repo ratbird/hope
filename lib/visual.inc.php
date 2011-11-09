@@ -573,29 +573,13 @@ function format ($text) {
     $pattern = array(
                     "'^--+(\d?)$'me",               // Trennlinie
 //                  "'\[pre\](.+?)\[/pre\]'is",    // praeformatierter Text
-                    "'(^|\s)%(?!%)(\S+%)+(?=(\s|$))'e",     // SL-kursiv
-                    "'(^|\s)\*(?!\*)(\S+\*)+(?=(\s|$))'e",  // SL-fett
-                    "'(^|\s)_(?!_)(\S+_)+(?=(\s|$))'e",     // SL-unterstrichen
-                    "'(^|\s)#(?!#)(\S+#)+(?=(\s|$))'e",     // SL-diktengleich
-                    "'(^|\s)\+(?!\+)(\S+\+)+(?=(\s|$))'e",  // SL-groesser
-                    "'(^|\s)-(?!-)(\S+-)+(?=(\s|$))'e",     // SL-kleiner
-                    "'(^|\s)&gt;(?!&gt;)(\S+&gt;)+(?=(\s|$))'ie",  // SL-hochgestellt
-                    "'(^|\s)&lt;(?!&lt;)(\S+&lt;)+(?=(\s|$))'ie",  // SL-tiefgestellt
                     "'(^|\n)\!([^!\n].*)'m",              // Ueberschrift 4. Ordnung
                     "'(^|\n)\!{2}([^!\n].*)'m",           // Ueberschrift 3. Ordnung
                     "'(^|\n)\!{3}([^!\n].*)'m",           // Ueberschrift 2. Ordnung
                     "'(^|\n)\!{4}([^!\n].*)'m",           // Ueberschrift 1. Ordnung
                     "'(\n|\A)(([-=]+ .+(\n|\Z))+)'e",    // Listen
                                         "'(\n|\A)((\\|.+(\n|\Z))+)'e",    // Tabellen
-                    "'%%(.+?)%%'s",               // ML-kursiv
                     "'\[admin_msg\](.+?)\[/admin_msg\]'s",               // ML-kursiv (für Forum-Edits)
-                    "'\*\*(.+?)\*\*'s",           // ML-fett
-                    "'__(.+?)__'s",                     // ML-unterstrichen
-                    "'##(.+?)##'s",                     // ML-diktengleich
-                    "'((--)+|(\+\+)+)(.+?)\\1'se",        // ML-kleiner / ML-groesser
-                    "'&gt;&gt;(.+?)&gt;&gt;'is",     // ML-hochgestellt
-                    "'&lt;&lt;(.+?)&lt;&lt;'is",     // ML-tiefgestellt
-                    "'{-(.+?)-}'s",                  // ML-strike-through
                     "'\[sig ([\w@.-]+) ([0-9]+)\]'e",   // Signatur (~~~~ in Wiki, expanded to [sig uname time])
                     "'\n\n  (((\n\n)  )*(.+?))(\Z|\n\n(?! ))'se",   // Absatz eingerueckt
                     "'\n?(</?h[1-4r]>)\n?'"                        // removes newline delimiters
@@ -603,14 +587,6 @@ function format ($text) {
     $replace = array(
                     "'<hr noshade=\"noshade\" width=\"98%\" size=\"'.('\\1' ? '\\1' : '1').'\" align=\"center\">'",
 //                  "<pre>\\1</pre>",
-                    "'\\1<i>'.substr(str_replace('%', ' ', '\\2'), 0, -1).'</i>'",
-                    "'\\1<b>'.substr(str_replace('*', ' ', '\\2'), 0, -1).'</b>'",
-                    "'\\1<u>'.substr(str_replace('_', ' ', '\\2'), 0, -1).'</u>'",
-                    "'\\1<tt>'.substr(str_replace('#', ' ', '\\2'), 0, -1).'</tt>'",
-                    "'\\1<big>'.substr(str_replace('+', ' ', '\\2'), 0, -1).'</big>'",
-                    "'\\1<small>'.substr(str_replace('-', ' ', '\\2'), 0, -1).'</small>'",
-                    "'\\1<sup>'.substr(str_replace('&gt;', ' ', '\\2'), 0, -1).'</sup>'",
-                    "'\\1<sub>'.substr(str_replace('&lt;', ' ', '\\2'), 0, -1).'</sub>'",
                     "\\1<h4 class=\"content\">\\2</h4>",
                     "\\1<h3 class=\"content\">\\2</h3>",
                     "\\1<h2 class=\"content\">\\2</h2>",
@@ -618,14 +594,6 @@ function format ($text) {
                     "preg_call_format_list('\\2')",
                     "preg_call_format_table('\\2')",
                     "<i>\\1</i>",
-                    "<i>\\1</i>",
-                    "<b>\\1</b>",
-                    "<u>\\1</u>",
-                    "<tt>\\1</tt>",
-                    "preg_call_format_text('\\1', format('\\4'))",
-                    "<sup>\\1</sup>",
-                    "<sub>\\1</sub>",
-                    "<strike>\\1</strike>",
                     "preg_call_format_signature('\\1','\\2')",
                     "'<blockquote>'.format(stripslashes('\\1')).'</blockquote>'",
                     "\\1"
@@ -643,21 +611,6 @@ function format ($text) {
         $text = preg_replace($pattern, $replace, $text);
     }
     return $text;
-}
-
-/**
-* callback function used by format() to generate big and small font
-*
-* @access   private
-* @param    string  string containing a string with quick-format char (++ or --)
-* @param    string  string containing text between quick-format char
-* @return   string
-*/
-function preg_call_format_text($ctxt, $content){
-    $c = strlen($ctxt) / 2;
-    if ($c > 5) $c = 5;
-    $tag = ($ctxt{1} == '+')? 'big':'small';
-    return str_repeat('<'.$tag.'>', $c) . $content. str_repeat('</'.$tag.'>', $c);
 }
 
 /**

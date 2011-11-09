@@ -106,7 +106,7 @@ class VisualFunctionsTest extends UnitTestCase
     public function testIncorrectNesting()
     {
         $input = '** test %% test ** test %%';
-        $expected = '<b> test <i> test </b> test </i>';
+        $expected = '** test <i> test ** test </i>';
         $this->assertEqual(formatReady($input), $expected);
     }
 

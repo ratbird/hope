@@ -31,7 +31,89 @@ class StudipFormat extends TextFormat
     public static function getStudipMarkups()
     {
         if (!isset(self::$studip_rules)) {
-            self::$studip_rules = array();
+            self::$studip_rules = array(
+
+                // basic text formatting
+                'bold' => array(
+                    'start'    => '\*\*',
+                    'end'      => '\*\*',
+                    'callback' => 'StudipFormat::markupText'
+                ),
+                'italics' => array(
+                    'start'    => '%%',
+                    'end'      => '%%',
+                    'callback' => 'StudipFormat::markupText'
+                ),
+                'underline' => array(
+                    'start'    => '__',
+                    'end'      => '__',
+                    'callback' => 'StudipFormat::markupText'
+                ),
+                'verb' => array(
+                    'start'    => '##',
+                    'end'      => '##',
+                    'callback' => 'StudipFormat::markupText'
+                ),
+                'big' => array(
+                    'start'    => '\+\+',
+                    'end'      => '\+\+',
+                    'callback' => 'StudipFormat::markupText'
+                ),
+                'small' => array(
+                    'start'    => '--',
+                    'end'      => '--',
+                    'callback' => 'StudipFormat::markupText'
+                ),
+                'super' => array(
+                    'start'    => '&gt;&gt;',
+                    'end'      => '&gt;&gt;',
+                    'callback' => 'StudipFormat::markupText'
+                ),
+                'sub' => array(
+                    'start'    => '&lt;&lt;',
+                    'end'      => '&lt;&lt;',
+                    'callback' => 'StudipFormat::markupText'
+                ),
+                'strike' => array(
+                    'start'    => '\{-',
+                    'end'      => '-\}',
+                    'callback' => 'StudipFormat::markupText'
+                ),
+
+                // basic text formatting (simple form)
+                'simple_bold' => array(
+                    'start'    => '(?<=\s|^)\*(\S+)\*(?=\s|$)',
+                    'callback' => 'StudipFormat::markupTextSimple'
+                ),
+                'simple_italics' => array(
+                    'start'    => '(?<=\s|^)%(\S+)%(?=\s|$)',
+                    'callback' => 'StudipFormat::markupTextSimple'
+                ),
+                'simple_underline' => array(
+                    'start'    => '(?<=\s|^)_(\S+)_(?=\s|$)',
+                    'callback' => 'StudipFormat::markupTextSimple'
+                ),
+                'simple_verb' => array(
+                    'start'    => '(?<=\s|^)#(\S+)#(?=\s|$)',
+                    'callback' => 'StudipFormat::markupTextSimple'
+                ),
+                'simple_big' => array(
+                    'start'    => '(?<=\s|^)\+(\S+)\+(?=\s|$)',
+                    'callback' => 'StudipFormat::markupTextSimple'
+                ),
+                'simple_small' => array(
+                    'start'    => '(?<=\s|^)-(\S+)-(?=\s|$)',
+                    'callback' => 'StudipFormat::markupTextSimple'
+                ),
+                'simple_super' => array(
+                    'start'    => '(?<=\s|^)&gt;(\S+)&gt;(?=\s|$)',
+                    'callback' => 'StudipFormat::markupTextSimple'
+                ),
+                'simple_sub' => array(
+                    'start'    => '(?<=\s|^)&lt;(\S+)&lt;(?=\s|$)',
+                    'callback' => 'StudipFormat::markupTextSimple'
+                ),
+            );
         }
 
         return self::$studip_rules;
@@ -74,5 +156,49 @@ class StudipFormat extends TextFormat
     public function __construct()
     {
         parent::__construct(self::getStudipMarkups());
+    }
+
+    /**
+     * Basic text formatting: bold, italics, underline, big, small etc.
+     */
+    protected static function markupText($markup, $matches, $contents)
+    {
+        static $tag = array(
+            '**' => 'b',
+            '%%' => 'i',
+            '__' => 'u',
+            '##' => 'tt',
+            '++' => 'big',
+            '--' => 'small',
+            '&gt;&gt;' => 'sup',
+            '&lt;&lt;' => 'sub',
+            '{-' => 'strike'
+        );
+
+        $key = $matches[0];
+
+        return sprintf('<%s>%s</%s>', $tag[$key], $contents, $tag[$key]);
+    }
+
+    /**
+     * Basic text formatting: bold, italics, underline etc. (simple form)
+     */
+    protected static function markupTextSimple($markup, $matches)
+    {
+        static $tag = array(
+            '*' => 'b',
+            '%' => 'i',
+            '_' => 'u',
+            '#' => 'tt',
+            '+' => 'big',
+            '-' => 'small',
+            '>' => 'sup',
+            '<' => 'sub'
+        );
+
+        $key = $matches[0][0];
+        $text = str_replace($key, ' ', $matches[1]);
+
+        return sprintf('<%s>%s</%s>', $tag[$key], $markup->quote($text), $tag[$key]);
     }
 }

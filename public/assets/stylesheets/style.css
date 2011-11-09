@@ -66,6 +66,24 @@ h1.content, h2.content, h3.content {
     color: #24437c;
 }
 
+hr.content {
+    margin: 0em 1em;
+}
+
+table.content {
+    border-collapse: collapse;
+}
+
+table.content td {
+    border: thin solid #666;
+    font-size: smaller;
+    padding: 3px;
+}
+
+p.indent {
+    margin-left: 2em;
+}
+
 h1.topic {
     font-weight: bold;
     font-size: 1.6em;

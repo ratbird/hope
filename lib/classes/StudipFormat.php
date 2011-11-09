@@ -39,6 +39,12 @@ class StudipFormat extends TextFormat
                     'callback' => 'StudipFormat::markupHeading'
                 ),
 
+                // horizontal rule
+                'hrule' => array(
+                    'start'    => '^--+$',
+                    'callback' => 'StudipFormat::markupHorizontalRule'
+                ),
+
                 // basic text formatting
                 'bold' => array(
                     'start'    => '\*\*',
@@ -124,6 +130,29 @@ class StudipFormat extends TextFormat
                     'start'    => '(?<=\s|^)&lt;(\S+)&lt;(?=\s|$)',
                     'callback' => 'StudipFormat::markupTextSimple'
                 ),
+
+                // list and table
+                'list' => array(
+                    'start'    => '(^[=-]+ [^\n]+(?:\n|$))+',
+                    'callback' => 'StudipFormat::markupList'
+                ),
+                'table' => array(
+                    'start'    => '(^\|[^\n]*\|[^\n]*(?:\n|$))+',
+                    'callback' => 'StudipFormat::markupTable'
+                ),
+
+                // block indent
+                'indent' => array(
+                    'start'    => '(^  [^\n]+(?:\n|$))+',
+                    'callback' => 'StudipFormat::markupIndent'
+                ),
+
+                // preformatted text
+                'pre' => array(
+                    'start'    => '\[pre\]',
+                    'end'      => '\[\/pre\]',
+                    'callback' => 'StudipFormat::markupPreformat'
+                ),
             );
         }
 
@@ -181,6 +210,14 @@ class StudipFormat extends TextFormat
     }
 
     /**
+     * Stud.IP markup for horizontal rule
+     */
+    protected static function markupHorizontalRule($markup, $matches)
+    {
+        return '<hr class="content">';
+    }
+
+    /**
      * Basic text formatting: bold, italics, underline, big, small etc.
      */
     protected static function markupText($markup, $matches, $contents)
@@ -223,5 +260,85 @@ class StudipFormat extends TextFormat
         $text = str_replace($key, ' ', $matches[1]);
 
         return sprintf('<%s>%s</%s>', $tag[$key], $markup->quote($text), $tag[$key]);
+    }
+
+    /**
+     * Stud.IP markup for lists (may be nested)
+     */
+    protected static function markupList($markup, $matches)
+    {
+        $rows = explode("\n", rtrim($matches[0]));
+        $indent = 0;
+
+        foreach ($rows as $row) {
+            list($level, $text) = explode(' ', $row, 2);
+            $level = strlen($level);
+
+            if ($indent < $level) {
+                for (; $indent < $level; ++$indent) {
+                    $type = $row[$indent] == '=' ? 'ol' : 'ul';
+                    $result .= sprintf('<%s><li>', $type);
+                    $types[] = $type;
+                }
+            } else {
+                for (; $indent > $level; --$indent) {
+                    $result .= sprintf('</li></%s>', array_pop($types));
+                }
+
+                $result .= '</li><li>';
+            }
+
+            $result .= $markup->format($text);
+        }
+
+        for (; $indent > 0; --$indent) {
+            $result .= sprintf('</li></%s>', array_pop($types));
+        }
+
+        return $result;
+    }
+
+    /**
+     * Stud.IP markup for tables
+     */
+    protected static function markupTable($markup, $matches)
+    {
+        $rows = explode("\n", rtrim($matches[0]));
+        $result = '<table class="content">';
+
+        foreach ($rows as $row) {
+            $cells = explode('|', trim(trim($row), '|'));
+            $result .= '<tr>';
+
+            foreach ($cells as $cell) {
+                $result .= '<td>';
+                $result .= $markup->format($cell);
+                $result .= '</td>';
+            }
+
+            $result .= '</tr>';
+        }
+
+        $result .= '</table>';
+
+        return $result;
+    }
+
+    /**
+     * Stud.IP markup for indented paragraphs
+     */
+    protected static function markupIndent($markup, $matches)
+    {
+        $text = preg_replace('/^  /m', '', $matches[0]);
+
+        return sprintf('<p class="indent">%s</p>', $markup->format($text));
+    }
+
+    /**
+     * Stud.IP markup for preformatted text
+     */
+    protected static function markupPreformat($markup, $matches, $contents)
+    {
+        return sprintf('<pre>%s</pre>', $contents);
     }
 }

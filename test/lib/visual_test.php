@@ -57,7 +57,7 @@ class VisualFunctionsTest extends UnitTestCase
     public function testLine()
     {
         $input = "Test\n--\nTest";
-        $expected = 'Test<br><hr noshade="noshade" width="98%" size="1" align="center"><br>Test';
+        $expected = 'Test<br><hr class="content"><br>Test';
         $this->assertEqual(formatReady($input), $expected);
     }
 
@@ -120,16 +120,16 @@ class VisualFunctionsTest extends UnitTestCase
     public function testTable()
     {
         $input = "|Name|Matrikelnummer|Studiengang|\n|Max Mustermann|55555|Mathe Diplom|\n";
-        $expected = '<table style="border-collapse: collapse" cellpadding=3>'
+        $expected = '<table class="content">'
                    .'<tr>'
-                   .'<td style="border: thin solid #666666"><font size=-1>Name</font></td>'
-                   .'<td style="border: thin solid #666666"><font size=-1>Matrikelnummer</font></td>'
-                   .'<td style="border: thin solid #666666"><font size=-1>Studiengang</font></td>'
+                   .'<td>Name</td>'
+                   .'<td>Matrikelnummer</td>'
+                   .'<td>Studiengang</td>'
                    .'</tr>'
                    .'<tr>'
-                   .'<td style="border: thin solid #666666"><font size=-1>Max Mustermann</font></td>'
-                   .'<td style="border: thin solid #666666"><font size=-1>55555</font></td>'
-                   .'<td style="border: thin solid #666666"><font size=-1>Mathe Diplom</font></td>'
+                   .'<td>Max Mustermann</td>'
+                   .'<td>55555</td>'
+                   .'<td>Mathe Diplom</td>'
                    .'</tr>'
                    .'</table>';
         $this->assertEqual(formatReady($input), $expected);
@@ -151,14 +151,15 @@ class VisualFunctionsTest extends UnitTestCase
 
     public function testIndent()
     {
-        $input = "\n\n  Ebene 1\n\n  Ebene 2\nEbene 2";
-        $expected = '<blockquote>'
-                   .'Ebene 1'
-                   .'<blockquote>'
+        $input = "  Ebene 1\n    Ebene 2\n    Ebene 2\n  Ebene 1\n";
+        $expected = '<p class="indent">'
+                   .'Ebene 1<br>'
+                   .'<p class="indent">'
                    .'Ebene 2<br>'
-                   .'Ebene 2'
-                   .'</blockquote>'
-                   .'</blockquote>';
+                   .'Ebene 2<br>'
+                   .'</p>'
+                   .'Ebene 1<br>'
+                   .'</p>';
         $this->assertEqual(formatReady($input, false), $expected);
     }
 

@@ -368,16 +368,15 @@ function quotes_encode($description,$author)
 // Hilfsfunktion für formatReady
 function format_help($what, $trim = TRUE, $extern = FALSE, $wiki = FALSE, $show_comments="icon") {
     $markup = new StudipFormat();
+    $what = preg_replace("/\r\n?/", "\n", $what);
 
     if (preg_match_all("'\[code\](.+)\[/code\]'isU", $what, $match_code)) {
         $what = htmlReady($what, $trim, FALSE);
         $what = preg_replace("'\[code\].+\[/code\]'isU", 'ü', $what);
         if ($wiki == TRUE)
-            //$what = wiki_format(symbol(smile(FixLinks(format(latex($what, $extern)), FALSE, TRUE, TRUE, $extern), $extern), $extern), $show_comments);
-            $what = wiki_format(symbol(smile(latex($markup->format(FixLinks(format($what), FALSE, FALSE, TRUE, $extern, TRUE)), $extern), $extern), $extern), $show_comments);
+            $what = wiki_format(symbol(smile(latex($markup->format(FixLinks($what, FALSE, FALSE, TRUE, $extern, TRUE)), $extern), $extern), $extern), $show_comments);
         else
-            //$what = symbol(smile(FixLinks(format(latex($what, $extern)), FALSE, TRUE, TRUE, $extern), $extern), $extern);
-            $what = symbol(smile(latex($markup->format(FixLinks(format($what), FALSE, FALSE, TRUE, $extern)), $extern), $extern), $extern);
+            $what = symbol(smile(latex($markup->format(FixLinks($what, FALSE, FALSE, TRUE, $extern)), $extern), $extern), $extern);
         $what = explode('ü', $what);
         $i = 0;
         $all = '';
@@ -394,12 +393,9 @@ function format_help($what, $trim = TRUE, $extern = FALSE, $wiki = FALSE, $show_
     }
     $what = htmlReady($what, $trim, FALSE);
     if ($wiki == TRUE)
-        //return symbol(smile(FixLinks(wiki_format(format(latex($what, $extern)), $show_comments), FALSE, TRUE, TRUE, $extern), $extern), $extern);
-        //return wiki_format(symbol(smile(FixLinks(format(latex($what, $extern)), FALSE, TRUE, TRUE, $extern), $extern), $extern), $show_comments);
-        return wiki_format(symbol(smile(latex($markup->format(FixLinks(format($what), FALSE, FALSE, TRUE, $extern, TRUE)), $extern), $extern), $extern), $show_comments);
+        return wiki_format(symbol(smile(latex($markup->format(FixLinks($what, FALSE, FALSE, TRUE, $extern, TRUE)), $extern), $extern), $extern), $show_comments);
     else
-    //  return symbol(smile(FixLinks(format(latex($what, $extern)), FALSE, TRUE, TRUE, $extern), $extern), $extern);
-        return symbol(smile(latex($markup->format(FixLinks(format($what), FALSE, FALSE, TRUE, $extern)), $extern), $extern), $extern);
+        return symbol(smile(latex($markup->format(FixLinks($what, FALSE, FALSE, TRUE, $extern)), $extern), $extern), $extern);
 }
 
 /**
@@ -561,122 +557,6 @@ function decodeHTML ($string) {
     $string = strtr($string, array_flip(get_html_translation_table(HTML_ENTITIES,ENT_QUOTES)));
     $string = preg_replace("/&#([0-9]+);/me", "chr('\\1')", $string);
     return $string;
-}
-
-/**
-* uses a special syntax to formatting text
-*
-* @access   public
-* @param    string  text to format
-* @return   string
-*/
-function format ($text) {
-    $text = preg_replace("'\n?\r\n?'", "\n", $text);
-    $pattern = array(
-                    "'^--+(\d?)$'me",               // Trennlinie
-                    "'(\n|\A)(([-=]+ .+(\n|\Z))+)'e",    // Listen
-                    "'(\n|\A)((\\|.+(\n|\Z))+)'e",    // Tabellen
-                    "'\n\n  (((\n\n)  )*(.+?))(\Z|\n\n(?! ))'se",   // Absatz eingerueckt
-                    );
-    $replace = array(
-                    "'<hr noshade=\"noshade\" width=\"98%\" size=\"'.('\\1' ? '\\1' : '1').'\" align=\"center\">'",
-                    "preg_call_format_list('\\2')",
-                    "preg_call_format_table('\\2')",
-                    "'<blockquote>'.format(stripslashes('\\1')).'</blockquote>'",
-                    );
-    $text = preg_replace('#\[pre\](.+?)\[/pre\]#is', '<pre>\\1</pre>', $text); // praeformatierter Text
-    $regtxt = '!(((\[[^\]\[\n\f]+\])?(https?|ftp)://[^\s\]<]+)|(\[tex\].*?\[/tex\]))!is';
-    if (preg_match_all($regtxt, $text, $match)) {
-        $text = preg_replace($regtxt, 'ä', $text);
-        $text = preg_replace($pattern, $replace, $text);
-        $i = 0;
-        while (($pos = strpos($text, 'ä'))  !== false){
-            $text = substr($text,0, $pos) . $match[1][$i++] . substr($text, $pos +1);
-        }
-    } else {
-        $text = preg_replace($pattern, $replace, $text);
-    }
-    return $text;
-}
-
-/**
-* callback function used by format() to generate html-lists
-*
-* @access   private
-* @param    string  string containing a list in quick-format-syntax
-* @return   string
-*/
-function preg_call_format_list ($content) {
-    $items = array();
-    $lines = explode("\n", $content);
-    $level = 0;
-    $current_level = 0;
-    for ($i = 0; $i < sizeof($lines); $i++) {
-        $line = $lines[$i];
-        if (preg_match("'^([-=]+) (.*)$'", $line, $matches)) {
-
-            $matched_level = strlen($matches[1]);
-            if ($matched_level > $current_level)
-                $level++;
-            else if ($matched_level < $current_level)
-                $level = $matched_level;
-
-            if ($matches[1]{$level-1} == "-")
-                $list_tags[] = "ul";
-            else
-                $list_tags[] = "ol";
-
-            $items[$i]["level"] = $level;
-            $items[$i]["content"] = $matches[2];
-
-            $current_level = $level;
-        }
-    }
-
-    for ($i = 0;$i < sizeof($items); $i++) {
-        $level_diff = $items[$i]["level"] - $items[$i + 1]["level"];
-
-        if ($i == 0) {
-            $ret .= "<{$list_tags[$i]}>";
-            $stack[] = $list_tags[$i];
-        }
-
-        if ($level_diff > 0) {
-            $ret .= "<li>{$items[$i]['content']}</li></" . array_pop($stack) . ">";
-            for ($j = $items[$i]["level"] - 1; $j > $items[$i + 1]["level"]; $j--)
-                $ret .= "</li></" . array_pop($stack) . ">";
-        }
-        else if ($level_diff < 0) {
-            $ret .= "<li>{$items[$i]['content']}<" . $list_tags[$i + 1] . ">";
-            $stack[] = $list_tags[$i + 1];
-        }
-        else
-            $ret .= "<li>{$items[$i]['content']}";
-
-        if ($level_diff >= 0 && $i < sizeof($items) - 1)
-            $ret .= "</li>";
-        $level = $items[$i]["level"];
-    }
-
-    return $ret;
-}
-
-/**
-* callback function used by format() to generate tables
-*
-* @access   private
-* @param    string  string containing a table in quick-format-syntax
-* @return   string
-*/
-function preg_call_format_table($content) {
-    $lines = explode("\n", $content);
-    $tcode=array();
-    $tcode[]="<table style=\"border-collapse: collapse\" cellpadding=3>";
-    foreach ($lines as $l) {
-        $tcode[]=preg_replace("'\|(.+?)(\|\s*\n(?=\|)|\|\Z)'se","'<tr><td style=\"border: thin solid #666666\"><font size=-1>'.preg_replace('/\|/','</font></td><td style=\"border: thin solid #666666\"><font size=-1>','\\1').'</font></td></tr>'", $l);
-    }
-    $tcode[]="</table>";
-    return implode("",$tcode);
 }
 
 /**
@@ -843,7 +723,7 @@ function preg_call_link ($params, $mod, $img, $extern = FALSE, $wiki = FALSE) {
         if (!in_array($params[5], words('img flash audio video'))) {
             if ($params[3] == '')
                 $params[3] = $params[4];
-            else $params[3] = format($params[3]);
+            else $params[3] = format_help($params[3]);
             $tbr = '<a href="'.idna_link($params[4]).'"'.($intern ? '' : ' target="_blank"').">$link_pic{$params[3]}</a>";
         }
         elseif ($img) {

@@ -92,7 +92,7 @@ $cssSw = new cssClassSwitcher();
         <td class="topic"><b><?=_("Blockveranstaltungstermine anlegen")?></b></td>
     </tr>
     <tr>
-        <th><?=getHeaderLine($seminar_id)?></th>
+        <th><?= htmlReady(getHeaderLine($seminar_id))?></th>
     </tr>
     <? if (!$return['ready'] && ($return['errors'])) :
             foreach($return['errors'] as $error) {

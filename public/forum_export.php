@@ -54,7 +54,7 @@ if ($htmlversion)
 else
     echo "<a href=\"".URLHelper::getLink("?htmlversion=true")."\">" . _("zur HTML-Ansicht") . "</a>";
 
-echo "<h1>" . _("Forum:") . "&nbsp; ".$SessSemName[0]."</h1>";
+echo "<h1>" . _("Forum:") . "&nbsp; ".htmlReady($SessSemName[0])."</h1>";
 echo Export_Topic($SessSemName[1]);
 
 echo "<table width=100% border=0 cellpadding=2 cellspacing=0>";

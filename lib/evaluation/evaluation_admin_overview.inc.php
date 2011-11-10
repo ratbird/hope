@@ -126,13 +126,13 @@ if ( $templates_search ) {
       $foundTd->addAttr ("align", "left");
       $foundTd->addAttr ("colspan", "10");
       $foundTd->addContent (new HTMLempty ("br"));
-      
+
       $b = new HTML ("b");
       $b->addContent(_("Gefundene öffentliche Evaluationsvorlagen:"));
       $foundTd->addContent ($b);
       $foundTr->addContent ($foundTd);
       $foundTable->addContent ($foundTr);
-                 
+
       $foundTable->addContent ($lib->createGroupTitle (array (
                          " ",
                          _("Titel"),
@@ -252,7 +252,7 @@ if ($lib->db->getGlobalPerm() != "autor") {
    $td->addContent ($lib->createShowRangeForm ());
 } else {
    $td->addHTMLContent ("Evaluationen aus dem Bereich \"".
-         $db->getRangename ($rangeID)."\":");
+         htmlReady($db->getRangename ($rangeID))."\":");
    $td->addContent (new HTMLempty ("br"));
 }
 $td->addContent (new HTMLempty ("br"));

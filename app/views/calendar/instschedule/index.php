@@ -59,7 +59,7 @@ foreach (array_reverse($semesters) as $semester) :
     if ($current_semester['semester_id'] == $semester['semester_id']) :
         $semester_chooser .= ' selected="selected"';
     endif;
-    $semester_chooser .= '>'. $semester['name'] .'</option>';
+    $semester_chooser .= '>'. htmlReady($semester['name']) .'</option>';
 endforeach;
 $semester_chooser .= '</select> ';
 $semester_chooser .= '<input type="image" src="'. Assets::image_path('icons/16/blue/accept.png') .'"></form>';
@@ -70,8 +70,8 @@ $infobox['content'][1]['eintrag'][] = array (
 );
 ?>
 <div style="text-align: center; font-weight: bold; font-size: 1.2em">
-    <?= $GLOBALS['SessSemName']['header_line'] ?>  <?= _("im") ?>
-    <?= $current_semester['name'] ?>
+    <?= htmlReady($GLOBALS['SessSemName']['header_line']) ?>  <?= _("im") ?>
+    <?= htmlReady($current_semester['name']) ?>
 </div>
 
 <?= $calendar_view->render() ?>

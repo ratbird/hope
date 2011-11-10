@@ -104,17 +104,14 @@ class SingleDate {
                 $before = $this->toString();
 
                 // if the time-span has been shortened, keep the room-assignment,
-                // otherwise remove it.
+                // otherwise remove it.                
                 if ($this->resource_id) {
                     if ($start >= $this->date && $end <= $this->end_time) {
-                        $this->shrinkAssign();
+                        $this->shrinkAssign($start, $end);
                     } else {
                         $this->killAssign();
                     }
                 }
-
-                $this->date = $start;
-                $this->end_time = $end;
 
                 $after = $this->toString();
                 // logging
@@ -446,16 +443,25 @@ class SingleDate {
         }*/
     }
 
-    private function shrinkAssign() {
+    /**
+     * change the start and the end for this date.
+     * ONLY SAVE WHEN SHRINKING DATES, otherwise unwanted assign-collisions
+     * may happen...
+     * 
+     * @param int $start the start-time to set for the assign
+     * @param int $end the end-time to set for the assign
+     */
+    private function shrinkAssign($start, $end) {
         if ($assign_id = SingleDateDB::getAssignID($this->termin_id)) {
+            var_dump($assign_id);
             $changeAssign = AssignObject::Factory($assign_id);
             $changeAssign->setResourceId($this->resource_id);
 
             $changeAssign->chng_flag = TRUE;
 
-            $changeAssign->setBegin($this->date);
-            $changeAssign->setEnd($this->end_time);
-            $changeAssign->setRepeatEnd($this->end_time);
+            $changeAssign->setBegin($start);
+            $changeAssign->setEnd($end);
+            $changeAssign->setRepeatEnd($end);
             $changeAssign->store();
         }
     }

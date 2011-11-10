@@ -30,7 +30,6 @@ if ($forumsend=="bla"){
     if ($presetview == "theme")
         $presetview = $themeview;
     $forum["neuauf"] = $neuauf;
-    $forum["postingsperside"] = $postingsperside;
     $forum["flatallopen"] = $flatallopen;
     $forum["rateallopen"] = $rateallopen;
     $forum["showimages"] = $showimages;
@@ -99,22 +98,6 @@ if ($forumsend=="bla"){
                 <td <?=$cssSw->getFullClass()?>>
                     <input type="CHECKBOX" name="showimages" id="showimages" value=TRUE<?if($forum["showimages"]==TRUE) echo " checked";?>>
             </td>
-            </tr>
-            <tr <? $cssSw->switchClass() ?>>
-                <td align="right" class="blank" style="border-bottom:1px dotted black;">
-                    <label for="postingsperside"><?echo _("Anzahl der Postings pro Seite im Flatview");?></label>
-                </td>
-                <td <?=$cssSw->getFullClass()?>>
-                    &nbsp;<select name="postingsperside" id="postingsperside">
-                    <?
-                    for ($i=5;$i<55;$i+=5) {
-                        echo "<option value=\"$i\"";
-                        if ($i == $forum["postingsperside"]) echo " selected";
-                        echo ">$i";
-                    }
-                    ?>
-                    </select>
-                </td>
             </tr>
             <tr <? $cssSw->switchClass() ?>>
                 <td align="right" class="blank" style="border-bottom:1px dotted black;">

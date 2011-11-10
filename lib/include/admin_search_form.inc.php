@@ -188,7 +188,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                                 else
                                     echo"<option value=\"".$db->f("Institut_id")."\">".substr($db->f("Name"), 0, 30)."</option>";
                                 if ($db->f("is_fak")) {
-                                    $db2->query("SELECT Institut_id, Name FROM Institute WHERE fakultaets_id='" .$db->f("Institut_id") . "' AND institut_id!='" .$db->f("Institut_id") . "'");
+                                    $db2->query("SELECT Institut_id, Name FROM Institute WHERE fakultaets_id='" .$db->f("Institut_id") . "' AND institut_id!='" .$db->f("Institut_id") . "' ORDER BY Name");
                                     while ($db2->next_record()) {
                                         if ($links_admin_data["srch_inst"] == $db2->f("Institut_id"))
                                             echo"<option selected value=\"".$db2->f("Institut_id")."\">&nbsp;&nbsp;&nbsp;".substr($db2->f("Name"), 0, 30)."</option>";

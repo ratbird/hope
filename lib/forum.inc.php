@@ -1377,8 +1377,8 @@ $forum["openlist"] = $open;
 $forum["zitat"] = $zitat;
 $forum["update"] = $update;
 if (!(int)$forum["postingsperside"])
-    $forum["postingsperside"] = 15;
-$postingsperside = (int)$forum["postingsperside"];
+    $forum["postingsperside"] = get_config('ENTRIES_PER_PAGE');
+$postingsperside = (int) get_config('ENTRIES_PER_PAGE');
 $flatviewstartposting = Request::int('flatviewstartposting', 0);
 $forum["flatviewstartposting"] = $flatviewstartposting;
 

@@ -303,7 +303,7 @@ if (check_ticket($studipticket)) {
     }
 
     if (Request::submitted('change_global_visibility')) {
-        $success = $my_about->change_global_visibility($global_visibility, $online, $chat, $search, $email);
+        $success = $my_about->change_global_visibility($global_visibility, $online, $chat, $search, $email, $foaf_show_identity);
         if ($success) {
             $my_about->msg .= 'msg§'._('Ihre Sichtbarkeitseinstellungen wurden gespeichert.');
         } else {

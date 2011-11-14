@@ -806,7 +806,7 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
      * @param string $email visibility of the email address
      * @return boolean All settings saved?
      */
-    function change_global_visibility($global, $online, $chat, $search, $email) {
+    function change_global_visibility($global, $online, $chat, $search, $email, $foaf_show_identity) {
         $success = false;
         // Globally visible or unknown -> set local visibilities accordingly.
         if ($global != 'no') {
@@ -814,6 +814,7 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
             $chat = $chat ? 1 : 0;
             $search = $search ? 1 : 0;
             $email = $email ? 1 : 0;
+            $foaf_show_identity = $foaf_show_identity ? 1 : 0;
         // Globally invisible -> set all local fields to invisible.
         } else {
             $online = 0;
@@ -821,7 +822,11 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
             $search = 0;
             $email = get_config('DOZENT_ALLOW_HIDE_EMAIL') ? 0 : 1;
             $success1 = $this->change_all_homepage_visibility(VISIBILITY_ME);
+            $foaf_show_identity = 0;
         }
+        $user_cfg = UserConfig::get($this->auth_user["user_id"]);
+        $user_cfg->store("FOAF_SHOW_IDENTITY", $foaf_show_identity);
+        
         $success2 = DBManager::get()->exec("UPDATE auth_user_md5 SET visible='".$global."' WHERE user_id='".$this->auth_user["user_id"]."'");
         $data = DBManager::get()->query("SELECT `user_id` FROM `user_visibility` WHERE `user_id`='".$this->auth_user["user_id"]."'");
         if ($data->fetch()) {

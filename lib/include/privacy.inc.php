@@ -32,7 +32,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
-
+global $FOAF_ENABL;
 $template = $GLOBALS['template_factory']->open('settings/privacy');
 
 if ($perm->have_perm("root"))
@@ -65,6 +65,9 @@ $args['user_id'] = $user_id;
 $args['NOT_HIDEABLE_FIELDS'] = $NOT_HIDEABLE_FIELDS;
 $args['user_perm'] = $perm->get_perm($user_id);
 $args['user_domains'] = UserDomain::getUserDomains();
+
+$args['FOAF_ENABLE'] = $FOAF_ENABLE;
+$args['user_cfg'] = UserConfig::get($user_id);
 
 $template->clear_attributes();
 echo $template->render($args);

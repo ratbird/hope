@@ -107,6 +107,18 @@
                         </td>
                     </tr>
                     <?php } ?>
+                    <? 
+                    if ($FOAF_ENABLE) { 
+                    ?>
+                        <tr>
+                            <td  align="right" class="blank" style="border-bottom:1px dotted black;">
+                                <label for="foaf_show_identity"><?=_("Eigene Identität in Verbindungsketten zwischen Nutzern (\"Friend of a friend\"-Liste) offenlegen")?></label>
+                            </td>
+                            <td class="<?=TextHelper::cycle('steel1', 'steelgraulight')?>">
+                                <input type="checkbox" id="foaf_show_identity" name="foaf_show_identity"<?if ($user_cfg->getValue("FOAF_SHOW_IDENTITY")) echo " checked"; ?> >
+                            </td>
+                        </tr>
+                    <? } ?>
                     <tr>
                         <td class="<?=TextHelper::cycle('steel1', 'steelgraulight')?>" colspan="2">
                             <input type="hidden" name="view" value="privacy">

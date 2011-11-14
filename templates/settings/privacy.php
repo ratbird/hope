@@ -11,22 +11,22 @@
                 <?= CSRFProtection::tokenTag() ?>
                 <table width="70%" align="center"cellpadding="8" cellspacing="0" border="0" id="main_content">
                     <tr>
-                        <th width="50%"><?= _("Option"); ?></th>
-                        <th width="50%"><?= _("Auswahl"); ?></th>
+                        <th width="50%" colspan="<?= $user_domains ? 3 : 2; ?>"><?= _("Option"); ?></th>
+                        <th width="50%" colspan="3"><?= _("Auswahl"); ?></th>
                     </tr>
                     <tr>
-                        <td colspan="2" class="steelgraulight" style="border-bottom: 1px dotted black; border-top: 1px dotted black;" align="center">
+                        <td colspan="<?= $user_domains ? 6 : 5; ?>" class="steelgraulight" style="border-bottom: 1px dotted black; border-top: 1px dotted black;" align="center">
                             <b><?= _('globale Einstellungen'); ?></b>
                         </td>
                     </tr>
                     <tr>
-                        <td width="50%" align="right" class="blank" style="border-bottom:1px dotted black;" width="66%">
+                        <td width="50%" align="right" class="blank" style="border-bottom:1px dotted black;" width="66%" colspan="<?= $user_domains ? 3 : 2; ?>">
                             <label for="global_vis"><?print _("globale Sichtbarkeit");?></label><br>
                             <br><div id="global_vis_description" class="setting_info">
                             <?= _("Sie können wählen, ob Sie für andere NutzerInnen sichtbar sein und alle Kommunikationsfunktionen von Stud.IP nutzen können wollen, oder ob Sie unsichtbar sein möchten und dann nur eingeschränkte Kommunikationsfunktionen nutzen können.");?>
                             </div>
                         </td>
-                        <td width="50%" class="<?=TextHelper::cycle('steel1', 'steelgraulight')?>" width="34%">
+                        <td width="50%" class="<?=TextHelper::cycle('steel1', 'steelgraulight')?>" width="34%" colspan="3">
                             <?php
                             if ($global_visibility != 'always' && $global_visibility != 'never' &&
                                 ($user_perm != 'dozent' || !get_config('DOZENT_ALWAYS_VISIBLE'))) {
@@ -68,7 +68,7 @@
                         !$NOT_HIDEABLE_FIELDS[$user_perm]['email'])) {
                     ?>
                     <tr>
-                        <td align="right" class="blank" style="border-bottom:1px dotted black;">
+                        <td align="right" class="blank" style="border-bottom:1px dotted black;" colspan="<?= $user_domains ? 3 : 2; ?>">
                             <?print _("erweiterte Einstellungen");?><br>
                             <br>
                             <div class="setting_info">
@@ -83,7 +83,7 @@
                             
                             </div>
                         </td>
-                        <td class="<?=TextHelper::cycle('steel1', 'steelgraulight')?>">
+                        <td class="<?=TextHelper::cycle('steel1', 'steelgraulight')?>" colspan="3">
                             <?php if (!$NOT_HIDEABLE_FIELDS[$user_perm]['online']) {?>
                             <label><input type="checkbox" name="online"<?= $online_visibility ? ' checked="checked"' : '' ?>>
                             <?= _('sichtbar in "Wer ist online"'); ?></label>
@@ -106,72 +106,25 @@
                             <?php } ?>
                         </td>
                     </tr>
-                    <?php } ?>
                     <? 
                     if ($FOAF_ENABLE) { 
                     ?>
                         <tr>
-                            <td  align="right" class="blank" style="border-bottom:1px dotted black;">
+                            <td  align="right" class="blank" style="border-bottom:1px dotted black;" colspan="<?= $user_domains ? 3 : 2; ?>">
                                 <label for="foaf_show_identity"><?=_("Eigene Identität in Verbindungsketten zwischen Nutzern (\"Friend of a friend\"-Liste) offenlegen")?></label>
                             </td>
-                            <td class="<?=TextHelper::cycle('steel1', 'steelgraulight')?>">
+                            <td class="<?=TextHelper::cycle('steel1', 'steelgraulight')?>" colspan="3">
                                 <input type="checkbox" id="foaf_show_identity" name="foaf_show_identity"<?if ($user_cfg->getValue("FOAF_SHOW_IDENTITY")) echo " checked"; ?> >
                             </td>
                         </tr>
-                    <? } ?>
-                    <tr>
-                        <td class="<?=TextHelper::cycle('steel1', 'steelgraulight')?>" colspan="2">
-                            <input type="hidden" name="view" value="privacy">
-                            <?= makeButton('uebernehmen', 'input', _('Änderungen speichern'), 'change_global_visibility'); ?>
-                        </td>
-                    </tr>
-                </table>
-            </form>
-            <br/>
-            <form method="post" action="<?= URLHelper::getLink('edit_about.php', array('cmd' => 'change_homepage_visibility', 'studipticket' => get_ticket(), 'username' => Request::get('username'))); ?>">
-                <?= CSRFProtection::tokenTag() ?>
-                <table width="70%" align="center"cellpadding="8" cellspacing="0" border="0">
+                    <? }
+                        }?>
                     <tr>
                         <td colspan="<?= $user_domains ? 6 : 5; ?>" class="steelgraulight" style="border-bottom: 1px dotted black; border-top: 1px dotted black;" align="center">
                             <b><?= _('eigenes Profil'); ?></b>
                         </td>
                     </tr>
-                    <tr>
-                        <td class="steel1" colspan="<?= $user_domains ? 3 : 2; ?>">
-                            <label><?= _('neu hinzugefügte Profil-Elemente sind standardmäßig sichtbar für'); ?>
-                            <select name="default_homepage_visibility">
-                                <option value="">-- <?= _("bitte wählen"); ?> --</option>
-                                <option value="<?= VISIBILITY_ME; ?>"<?php echo ($default_homepage_visibility == VISIBILITY_ME) ? ' selected="selected"' : '' ?>><?= _("nur mich selbst") ?></option>
-                                <option value="<?= VISIBILITY_BUDDIES; ?>"<?php echo ($default_homepage_visibility == VISIBILITY_BUDDIES) ? ' selected="selected"' : '' ?>><?= _("Buddies") ?></option>
-                                <?php if ($user_domains) { ?>
-                                <option value="<?= VISIBILITY_DOMAIN; ?>"<?php echo ($default_homepage_visibility == VISIBILITY_DOMAIN) ? ' selected="selected"' : '' ?>><?= _("meine Nutzerdomäne") ?></option>
-                                <?php } ?>
-                                <option value="<?= VISIBILITY_STUDIP; ?>"<?php echo ($default_homepage_visibility == VISIBILITY_STUDIP) ? ' selected="selected"' : '' ?>><?= _("Stud.IP-intern") ?></option>
-                                <option value="<?= VISIBILITY_EXTERN; ?>"<?php echo ($default_homepage_visibility == VISIBILITY_EXTERN) ? ' selected="selected"' : '' ?>><?= _("externe Seiten") ?></option>
-                            </select></label>
-                        </td>
-                        <td class="steel1" colspan="3">
-                            <?= makeButton('uebernehmen', 'input', _('Änderungen speichern'), 'set_default_homepage_visibility'); ?>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="steel1" colspan="<?= $user_domains ? 3 : 2; ?>">
-                            <label><?= _('alle Sichtbarkeiten setzen auf'); ?>
-                            <select name="all_homepage_visibility">
-                                <option value="">-- <?= _("bitte wählen"); ?> --</option>
-                                <option value="<?= VISIBILITY_ME; ?>"><?= _("nur mich selbst") ?></option>
-                                <option value="<?= VISIBILITY_BUDDIES; ?>"><?= _("Buddies") ?></option>
-                                <?php if ($user_domains) { ?>
-                                <option value="<?= VISIBILITY_DOMAIN; ?>"><?= _("meine Nutzerdomäne") ?></option>
-                                <?php } ?>
-                                <option value="<?= VISIBILITY_STUDIP; ?>"><?= _("Stud.IP-intern") ?></option>
-                                <option value="<?= VISIBILITY_EXTERN; ?>"><?= _("externe Seiten") ?></option>
-                            </select></label>
-                        </td>
-                        <td class="steel1" colspan="3">
-                            <?= makeButton('uebernehmen', 'input', _('Änderungen speichern'), 'set_all_homepage_visibility'); ?>
-                        </td>
-                    </tr>
+                    
                     <tr>
                         <th width="'40%'"><?= _('Profil-Element'); ?></th>
                         <th colspan="<?= $user_domains ? 5 : 4; ?>" align="center"><?= _('sichtbar für'); ?></th>
@@ -218,14 +171,61 @@
                         }
                     ?>
                     <tr class="<?=TextHelper::cycle('steelgraulight', 'steel1')?>">
-                        <td colspan="<?= $user_domains ? 6 : 5; ?>">
+                         <td colspan="<?= $user_domains ? 6 : 5; ?>" align="center">
                             <input type="hidden" name="view" value="privacy">
-                            <?= makeButton('uebernehmen', 'input', _('Änderungen speichern'), 'change_homepage_visibility'); ?>
+                            <?=makeButton('uebernehmen', 'input', _("Änderungen übernehmen"), 'change_global_visibility')?>
                         </td>
                     </tr>
                 </table>
             </form>
+            
             <br><br>
+            <form method="post" action="<?= URLHelper::getLink('edit_about.php', array('cmd' => 'change_global_visibility', 'studipticket' => get_ticket(), 'username' => Request::get('username'))); ?>">
+                <?= CSRFProtection::tokenTag() ?>
+                <table width="70%" align="center"cellpadding="8" cellspacing="0" border="0" id="main_content">
+                    <tr>
+                        <th width="50%" colspan="2"><?= _('Bulk Aktionen auf Profil-Elemente') ?></th>
+                    </tr>
+                    <tr>
+                        <td class="steel1">
+                            <label><?= _('neu hinzugefügte Profil-Elemente sind standardmäßig sichtbar für'); ?>
+                            <select name="default_homepage_visibility">
+                                <option value="">-- <?= _("bitte wählen"); ?> --</option>
+                                <option value="<?= VISIBILITY_ME; ?>"<?php echo ($default_homepage_visibility == VISIBILITY_ME) ? ' selected="selected"' : '' ?>><?= _("nur mich selbst") ?></option>
+                                <option value="<?= VISIBILITY_BUDDIES; ?>"<?php echo ($default_homepage_visibility == VISIBILITY_BUDDIES) ? ' selected="selected"' : '' ?>><?= _("Buddies") ?></option>
+                                <?php if ($user_domains) { ?>
+                                <option value="<?= VISIBILITY_DOMAIN; ?>"<?php echo ($default_homepage_visibility == VISIBILITY_DOMAIN) ? ' selected="selected"' : '' ?>><?= _("meine Nutzerdomäne") ?></option>
+                                <?php } ?>
+                                <option value="<?= VISIBILITY_STUDIP; ?>"<?php echo ($default_homepage_visibility == VISIBILITY_STUDIP) ? ' selected="selected"' : '' ?>><?= _("Stud.IP-intern") ?></option>
+                                <option value="<?= VISIBILITY_EXTERN; ?>"<?php echo ($default_homepage_visibility == VISIBILITY_EXTERN) ? ' selected="selected"' : '' ?>><?= _("externe Seiten") ?></option>
+                            </select></label>
+                        </td>
+                        <td class="steel1">
+                            <?= makeButton('uebernehmen', 'input', _('Änderungen speichern'), 'set_default_homepage_visibility'); ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="steel1">
+                            <label><?= _('alle Sichtbarkeiten setzen auf'); ?>
+                            <select name="all_homepage_visibility">
+                                <option value="">-- <?= _("bitte wählen"); ?> --</option>
+                                <option value="<?= VISIBILITY_ME; ?>"><?= _("nur mich selbst") ?></option>
+                                <option value="<?= VISIBILITY_BUDDIES; ?>"><?= _("Buddies") ?></option>
+                                <?php if ($user_domains) { ?>
+                                <option value="<?= VISIBILITY_DOMAIN; ?>"><?= _("meine Nutzerdomäne") ?></option>
+                                <?php } ?>
+                                <option value="<?= VISIBILITY_STUDIP; ?>"><?= _("Stud.IP-intern") ?></option>
+                                <option value="<?= VISIBILITY_EXTERN; ?>"><?= _("externe Seiten") ?></option>
+                            </select></label>
+                        </td>
+                        <td class="steel1">
+                            <?= makeButton('uebernehmen', 'input', _('Änderungen speichern'), 'set_all_homepage_visibility'); ?>
+                        </td>
+                    </tr>
+                </table>
+                
+                <input type="hidden" name="view" value="privacy">
+            </form>
         </td>
     </tr>
 </table>

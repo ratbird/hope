@@ -303,14 +303,23 @@ if (check_ticket($studipticket)) {
     }
 
     if (Request::submitted('change_global_visibility')) {
-        $success = $my_about->change_global_visibility($global_visibility, $online, $chat, $search, $email, $foaf_show_identity);
-        if ($success) {
+        $success1 = $my_about->change_global_visibility($global_visibility, $online, $chat, $search, $email, $foaf_show_identity);
+        
+        //change_homepage_visibility
+        $data = array();
+        foreach(array_keys($my_about->get_homepage_elements()) as $key) {
+            if (Request::int($key) !== null) $data[$key] = Request::int($key);
+        }
+       
+
+        $success2 = $my_about->change_homepage_visibility($data);
+        if ($success1 || $success2) {
             $my_about->msg .= 'msg§'._('Ihre Sichtbarkeitseinstellungen wurden gespeichert.');
         } else {
             $my_about->msg .= 'error§'._('Ihre Sichtbarkeitseinstellungen wurden nicht gespeichert!');
         }
     }
-
+    
     if (Request::submitted('set_default_homepage_visibility')) {
         if (Request::get('default_homepage_visibility')) {
             $success = $my_about->set_default_homepage_visibility(
@@ -341,18 +350,6 @@ if (check_ticket($studipticket)) {
         }
     }
 
-    if (Request::submitted('change_homepage_visibility')) {
-        $data = array();
-        foreach(array_keys($my_about->get_homepage_elements()) as $key) {
-            if (Request::int($key) !== null) $data[$key] = Request::int($key);
-        }
-        $success = $my_about->change_homepage_visibility($data);
-        if ($success) {
-            $my_about->msg .= 'msg§'._('Die Sichtbarkeit der Profilelemente wurde gespeichert.');
-        } else {
-            $my_about->msg .= 'error§'._('Die Sichtbarkeitseinstellungen der Profilelemente wurden nicht gespeichert!');
-        }
-    }
 
     // Needed for QuickSearch to function without JavaScript.
     if (Request::get('deputy_id_parameter')) {

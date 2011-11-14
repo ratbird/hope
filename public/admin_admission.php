@@ -839,7 +839,7 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
                     }
                     
                     if (($admin_admission_data["admission_type_org"] && $admin_admission_data["admission_type_org"] != 3) && (!$perm->have_perm("admin"))) {
-                    $db->query("SELECT username, ". $_fullname_sql['full'] . "  as fullname FROM user_inst LEFT JOIN auth_user_md5 USING (user_id) LEFT JOIN user_info USING(user_id) WHERE institut_id ='".$admin_admission_data["heimat_inst_id"]."' AND perms = 'admin'");
+                    $db->query("SELECT username, ". $_fullname_sql['full'] . "  as fullname FROM user_inst LEFT JOIN auth_user_md5 USING (user_id) LEFT JOIN user_info USING(user_id) WHERE institut_id ='".$admin_admission_data["heimat_inst_id"]."' AND perms = 'admin' ORDER BY fullname ASC");
                     if  (!$db->num_rows())
                         printf ("<font size=-1>"._("Sie haben ein Anmeldeverfahren aktiviert (%s). Dieser Schritt kann %s nicht %s r&uuml;ckg&auml;ngig gemacht werden! Bei Problemen wenden Sie sich bitte an eine Administratorin oder einen Administrator.")."<br></font>", $admission_type_name, "</font><font size=-1 color=\"red\"><b>", "</b></font><font size=-1>");
                     else

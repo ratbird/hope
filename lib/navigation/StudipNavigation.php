@@ -118,8 +118,6 @@ class StudipNavigation extends Navigation
                 if (get_config('MAIL_NOTIFICATION_ENABLE')) {
                     $navigation->addSubNavigation('notification', new Navigation(_('Benachrichtigung'), 'sem_notification.php'));
                 }
-
-                $navigation->addSubNavigation('login', new Navigation(_('Login'), 'edit_about.php', array('view' => 'Login')));
             }
 
             if (isDefaultDeputyActivated() && $perm->get_perm() == 'dozent') {

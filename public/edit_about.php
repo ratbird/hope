@@ -488,13 +488,6 @@ switch($view) {
         Navigation::activateItem('/profile/sections');
         SkipLinks::addIndex(_("Eigene Kategorien bearbeiten"), 'main_content', 100);
         break;
-    case "Login":
-        PageLayout::setHelpKeyword("Basis.MyStudIPAutoLogin");
-        PageLayout::setTitle(_("Auto-Login einrichten"));
-        Navigation::activateItem('/links/settings/login');
-        PageLayout::setTabNavigation('/links/settings');
-        SkipLinks::addIndex(_("Auto-Login einrichten"), 'main_content', 100);
-        break;
     case "Forum":
         PageLayout::setHelpKeyword("Basis.MyStudIPForum");
         PageLayout::setTitle(_("Einstellungen des Forums anpassen"));
@@ -1466,16 +1459,6 @@ if ($view == 'notification') {
     echo "</td></tr></table>\n";
 }
 
-if ($view == 'Login') {
-    echo '<tr><td id="main_content" colspan="2" class="blank">'."<br><br>\n" ;
-    if ($my_about->check == 'user') {
-        echo _("Eine sichere Variante besteht aus folgendem Link:") . "<br>\n";
-        echo '<div align="center"><b><a href="index.php?again=yes&shortcut=' . $auth->auth['uname'] . '">'. sprintf( _("Stud.IP - Login (%s)"), $auth->auth['uname']) ."</a></b></div><br>\n";
-        echo _("Speichern Sie diesen Link als Bookmark oder Favoriten.") . "<br>\n";
-        echo _("Er f&uuml;hrt Sie direkt zum Login-Bildschirm von Stud.IP mit Ihrem schon eingetragenen Benutzernamen. Sie m&uuml;ssen nur noch Ihr Passwort eingeben.");
-    }
-    echo "<br>\n</td></tr>\n";
-}
 
 if ($view == 'privacy') {
     require_once ('lib/include/privacy.inc.php');

@@ -891,7 +891,7 @@ function show_msgsaveoptionsform()
     global $sms_data, $my_messaging_settings;
 
     if($sms_data["tmpsavesnd"] == 1) {
-        $tmp .= "<input class=\"text-top\" type=\"image\" name=\"rmv_tmpsavesnd_button\" src=\"".Assets::image_path('icons/16/blue/checkbox-checked.png'). "\" ".tooltip(_("Klicken Sie hier um die Nachricht nicht zu speichern."))."> "._("Klicken Sie das Icon um die Nachricht nicht zu speichern.");
+        $tmp .= "<input class=\"text-top\" type=\"image\" name=\"rmv_tmpsavesnd_button\" src=\"".Assets::image_path('icons/16/blue/checkbox-checked.png'). "\" ".tooltip(_("Nachricht speichern."))."> "._("Nachricht speichern.");
         // do we have any personal folders? if, show them here
         if (have_msgfolder("out") == TRUE) {
             // walk throw personal folders
@@ -907,7 +907,7 @@ function show_msgsaveoptionsform()
             $tmp .= "</select>";
         }
     } else {
-        $tmp .= "<input style=\"vertical-align: text-top;\" type=\"image\" name=\"add_tmpsavesnd_button\" src=\"".Assets::image_path('icons/16/blue/checkbox-unchecked.png'). "\" " . tooltip(_("Klicken Sie hier um die Nachricht zu speichern.")).">&nbsp;"._("Klicken Sie das Icon um die Nachricht zu speichern.");
+        $tmp .= "<input style=\"vertical-align: text-top;\" type=\"image\" name=\"add_tmpsavesnd_button\" src=\"".Assets::image_path('icons/16/blue/checkbox-unchecked.png'). "\" " . tooltip(_("Nachricht speichern.")).">&nbsp;"._("Nachricht speichern.");
     }
 
     $tmp = "<font size=\"-1\">".$tmp."</font>";
@@ -919,9 +919,9 @@ function show_msgemailoptionsform()
     global $sms_data, $my_messaging_settings;
 
     if($sms_data["tmpemailsnd"] == 1) {
-        $tmp .= "<input style=\"vertical-align: text-top;\" type=\"image\" name=\"rmv_tmpemailsnd_button\" src=\"".Assets::image_path('icons/16/blue/checkbox-checked.png'). "\" " . tooltip(_("Klicken Sie hier um die Nachricht nicht (auch) als Email zu versenden.")).">&nbsp;"._("Klicken Sie das Icon um die Nachricht nicht (auch) als Email zu versenden.");
+        $tmp .= "<input style=\"vertical-align: text-top;\" type=\"image\" name=\"rmv_tmpemailsnd_button\" src=\"".Assets::image_path('icons/16/blue/checkbox-checked.png'). "\" " . tooltip(_("Nachricht als Email versenden.")).">&nbsp;"._("Nachricht als Email versenden.");
     } else {
-        $tmp .= "<input style=\"vertical-align: text-top;\" type=\"image\" name=\"add_tmpemailsnd_button\" src=\"".Assets::image_path('icons/16/blue/checkbox-unchecked.png'). "\" " . tooltip(_("Klicken Sie hier um die Nachricht (auch) als Email zu versenden.")).">&nbsp;"._("Klicken Sie das Icon um die Nachricht (auch) als Email zu versenden.");
+        $tmp .= "<input style=\"vertical-align: text-top;\" type=\"image\" name=\"add_tmpemailsnd_button\" src=\"".Assets::image_path('icons/16/blue/checkbox-unchecked.png'). "\" " . tooltip(_("Nachricht als Email versenden.")).">&nbsp;"._("Nachricht als Email versenden.");
     }
 
     $tmp = "<font size=\"-1\">".$tmp."</font>";
@@ -933,9 +933,9 @@ function show_msgreadconfirmoptionsform()
     global $sms_data, $my_messaging_settings;
 
     if($sms_data["tmpreadsnd"] == 1) {
-        $tmp .= "<input style=\"vertical-align: text-top;\" type=\"image\" name=\"rmv_tmpreadsnd_button\" src=\"".Assets::image_path('icons/16/blue/checkbox-checked.png'). "\" " . tooltip(_("Klicken Sie hier um für diese Nachricht keine Lesebestätigung anzufordern.")).">&nbsp;"._("Klicken Sie das Icon um keine Lesebestätigung anzufordern.");
+        $tmp .= "<input style=\"vertical-align: text-top;\" type=\"image\" name=\"rmv_tmpreadsnd_button\" src=\"".Assets::image_path('icons/16/blue/checkbox-checked.png'). "\" " . tooltip(_("Lesebestätigung anzufordern.")).">&nbsp;"._("Lesebestätigung anzufordern.");
     } else {
-        $tmp .= "<input style=\"vertical-align: text-top;\" type=\"image\" name=\"add_tmpreadsnd_button\" src=\"".Assets::image_path('icons/16/blue/checkbox-unchecked.png'). "\" " . tooltip(_("Klicken Sie hier um für diese Nachricht eine Lesebestätigung anzufordern.")).">&nbsp;"._("Klicken Sie das Icon um eine Lesebestätigung anzufordern.");
+        $tmp .= "<input style=\"vertical-align: text-top;\" type=\"image\" name=\"add_tmpreadsnd_button\" src=\"".Assets::image_path('icons/16/blue/checkbox-unchecked.png'). "\" " . tooltip(_("Lesebestätigung anzufordern.")).">&nbsp;"._("Lesebestätigung anzufordern.");
     }
 
     $tmp = "<font size=\"-1\">".$tmp."</font>";

@@ -594,7 +594,7 @@ $txt['008'] = _("Lesebestätigung");
                         </tr>
                         <tr>
                             <td valign="top" class="steelgraudunkel">
-                                <font size="-1" color="#FFFFFF"><b><?=$txt['006']?></b></font>
+                                <font size="-1" color="#FFFFFF"><b><?= _('Optionen') ?></b></font>
                             </td>
                         </tr>
                         <tr>
@@ -604,21 +604,11 @@ $txt['008'] = _("Lesebestätigung");
                         </tr>
                         <? if ($GLOBALS["MESSAGING_FORWARD_AS_EMAIL"]) { ?>
                         <tr>
-                            <td valign="top" class="steelgraudunkel">
-                                <font size="-1" color="#FFFFFF"><b><?=$txt['007']?></b></font>
-                            </td>
-                        </tr>
-                        <tr>
                             <td valign="top" class="steelgraulight">
                                 <?=show_msgemailoptionsform()?>
                             </td>
                         </tr>
                         <? } ?>
-                        <tr>
-                            <td valign="top" class="steelgraudunkel">
-                                <font size="-1" color="#FFFFFF"><b><?=$txt['008']?></b></font>
-                            </td>
-                        </tr>
                         <tr>
                             <td valign="top" class="steelgraulight">
                                 <?=show_msgreadconfirmoptionsform()?>

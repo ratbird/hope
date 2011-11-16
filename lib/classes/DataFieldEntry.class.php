@@ -477,7 +477,7 @@ class DataFieldTextareaEntry extends DataFieldEntry
     function getHTML($name)
     {
         $field_name = $name . '[' . $this->structure->getID() . ']';
-        return sprintf('<textarea name="%s" rows="6" cols="58">%s</textarea>', $field_name, $this->getDisplayValue());
+        return sprintf('<textarea name="%s" rows="6" cols="58">%s</textarea>', $field_name, htmlReady($this->getValue()));
     }
 }
 

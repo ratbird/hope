@@ -539,21 +539,6 @@ class Seminar_Auth extends Auth {
             }
         }
         // end of single sign on
-        if (!$auto_user OR !$auto_response OR !$auto_id){
-            return false;
-        }
-        $aktuell = time();
-        $folder = dir($TMP_PATH);
-        while ($entry = $folder->read()){
-            if (!strncmp($entry,"auto_key",8)){
-                if ($aktuell-filemtime("$TMP_PATH/$entry") > 30){
-                    unlink("$TMP_PATH/$entry");
-                }
-            } else {
-                return false;
-            }
-        }
-        // end of single sign on
     }
 
     function auth_loginform() {
@@ -979,7 +964,7 @@ class Seminar_Perm extends Perm {
                     $status = $_SESSION['seminar_change_view_'.$range_id];
                 }
             } else {
-                
+
                 $db->query("SELECT inst_perms FROM user_inst WHERE user_id='$user_id' AND Institut_id='$range_id'");
                 if ($db->next_record()){
                     $status=$db->f("inst_perms");

@@ -35,7 +35,7 @@ class StudipFormat extends TextFormat
 
                 // heading level 1-4
                 'heading' => array(
-                    'start'    => '^(!{1,4})([^\n]+)',
+                    'start'    => '^(!{1,4})([^\n]+)(?:\n|$)',
                     'callback' => 'StudipFormat::markupHeading'
                 ),
 
@@ -43,6 +43,22 @@ class StudipFormat extends TextFormat
                 'hrule' => array(
                     'start'    => '^--+$',
                     'callback' => 'StudipFormat::markupHorizontalRule'
+                ),
+
+                // list and table
+                'list' => array(
+                    'start'    => '(^[=-]+ [^\n]+(?:\n|$))+',
+                    'callback' => 'StudipFormat::markupList'
+                ),
+                'table' => array(
+                    'start'    => '(^\|[^\n]*\|[^\n]*(?:\n|$))+',
+                    'callback' => 'StudipFormat::markupTable'
+                ),
+
+                // block indent
+                'indent' => array(
+                    'start'    => '(^  [^\n]+(?:\n|$))+',
+                    'callback' => 'StudipFormat::markupIndent'
                 ),
 
                 // basic text formatting
@@ -129,22 +145,6 @@ class StudipFormat extends TextFormat
                 'simple_sub' => array(
                     'start'    => '(?<=\s|^)&lt;(\S+)&lt;(?=\s|$)',
                     'callback' => 'StudipFormat::markupTextSimple'
-                ),
-
-                // list and table
-                'list' => array(
-                    'start'    => '(^[=-]+ [^\n]+(?:\n|$))+',
-                    'callback' => 'StudipFormat::markupList'
-                ),
-                'table' => array(
-                    'start'    => '(^\|[^\n]*\|[^\n]*(?:\n|$))+',
-                    'callback' => 'StudipFormat::markupTable'
-                ),
-
-                // block indent
-                'indent' => array(
-                    'start'    => '(^  [^\n]+(?:\n|$))+',
-                    'callback' => 'StudipFormat::markupIndent'
                 ),
 
                 // preformatted text

@@ -14,7 +14,7 @@ html {
 }
 
 /* --- Schrift (Vorgaben: Typ, Größe, Farbe --------------------------------- */
-body, input, textarea, td, th, blockquote, p, form {
+body, input, textarea {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 10pt;
     color: #000000;
@@ -81,7 +81,7 @@ table.content td {
 }
 
 p.indent {
-    margin-left: 2em;
+    margin: 0em 0em 0em 2em;
 }
 
 h1.topic {

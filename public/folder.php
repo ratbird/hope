@@ -439,7 +439,7 @@ if (($SemUserStatus == "autor") || ($rechte)) {
 
     //wurde ein Link aktualisiert?
     if (($cmd=="link_update") && (!Request::submitted("cancel")) && ($folder_system_data["link"])) {
-        if (link_item ($range_id, TRUE, FALSE, FALSE, $link_update)) {
+        if (link_item ($range_id, TRUE, FALSE, FALSE, Request::option('link_update'))) {
             $open = $link_update;
             $close = $folder_system_data["refresh"];
             $folder_system_data["link"]='';
@@ -560,7 +560,7 @@ if ($rechte && Request::get('delete') && Seminar_Session::check_ticket(Request::
         if ($deleted) {
             $msg .= "msg§" . sprintf(_("Es wurden %s Dateien gelöscht."), $deleted) . '§';
         }
-    }       
+    }
 }
 
 
@@ -1145,7 +1145,7 @@ div.droppable.hover {
             print " &nbsp;</td></tr></table>";
             print "</td><td class=\"blank\">&nbsp;</td></tr>";
             print "<tr><td class=\"blank\"></td><td class=\"blank\"><div align=\"right\">"
-                  ."<br><a href=\"".URLHelper::getLink(sprintf("%s",(isset($check_all))?"":"?check_all=TRUE"))."\">" 
+                  ."<br><a href=\"".URLHelper::getLink(sprintf("%s",(isset($check_all))?"":"?check_all=TRUE"))."\">"
                   . makeButton((isset($check_all))?"keineauswaehlen":"alleauswaehlen", 'img',(isset($check_all))? _("keine auswählen"):_("alle auswählen"))
                   . "</a>&nbsp;"
                   . makeButton('herunterladen', 'input', _("ausgewählte Dateien herunterladen"), 'download_selected')

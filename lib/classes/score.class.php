@@ -130,7 +130,7 @@ class Score
             while ($db->next_record()){
                 $this->score_content_cache[$db->f('user_id')]['guestcount'] = $db->f('guestcount');
             }
-			$db->query("SELECT count(u.user_id) as newscount,u.user_id FROM user_info u 
+            $db->query("SELECT count(u.user_id) as newscount,u.user_id FROM user_info u 
                 JOIN news_range nr ON(nr.range_id=u.user_id) 
                 INNER JOIN news n ON nr.news_id=n.news_id 
                 WHERE u.score > 0 AND (" . gmmktime() . "-n.date) <= n.expire

@@ -154,12 +154,12 @@ class Course_StudygroupController extends AuthenticatedController {
                 }
             }
 
-			if(is_array($results_founders)) {
-				$this->flash['success'] = sizeof($results_founders) == 1 ? sprintf(_("Es wurde %s Person gefunden:"),sizeof($results_founders)) : sprintf(_("Es wurden %s Personen gefunden:"),sizeof($results_founders));
-			}
-			else {
-				$this->flash['info'] = _("Es wurden kein Personen gefunden.");
-			}
+            if(is_array($results_founders)) {
+                $this->flash['success'] = sizeof($results_founders) == 1 ? sprintf(_("Es wurde %s Person gefunden:"),sizeof($results_founders)) : sprintf(_("Es wurden %s Personen gefunden:"),sizeof($results_founders));
+            }
+            else {
+                $this->flash['info'] = _("Es wurden kein Personen gefunden.");
+            }
 
             $this->flash['create']                  = true;
             $this->flash['results_choose_founders'] = $results_founders;

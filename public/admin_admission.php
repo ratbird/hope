@@ -829,15 +829,8 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
                 <font size=-1><b><?=_("Anmeldeverfahren:")?></b><br></font>
                 
                 <? 
-                    $admission_type_name = '';
-                    switch($admin_admission_data["admission_type_org"])
-                    {
-                        case 0: $admission_type_name = 'keins'; break;
-                        case 1: $admission_type_name = 'Los'; break;
-                        case 2: $admission_type_name = 'chronolog.'; break;
-                        case 3: $admission_type_name = 'gesperrt'; break;
-                    }
-                    
+                    $admission_type_name = get_admission_description('admission_type', $admin_admission_data["admission_type_org"]);
+
                     if (($admin_admission_data["admission_type_org"] && $admin_admission_data["admission_type_org"] != 3) && (!$perm->have_perm("admin"))) {
                     $db->query("SELECT username, ". $_fullname_sql['full'] . "  as fullname FROM user_inst LEFT JOIN auth_user_md5 USING (user_id) LEFT JOIN user_info USING(user_id) WHERE institut_id ='".$admin_admission_data["heimat_inst_id"]."' AND perms = 'admin' ORDER BY Nachname, Vorname ASC");
                     if  (!$db->num_rows())

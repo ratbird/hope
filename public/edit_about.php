@@ -717,8 +717,6 @@ if ($view != 'Forum'
         ?>
         <tr>
             <td class="blank"></td>
-            
-            <td class="blank"></td>
             <td align="right" valign="top" rowspan="10" width="270">
             <?
                 $template = $GLOBALS['template_factory']->open('infobox/infobox_generic_content');

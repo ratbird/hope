@@ -727,7 +727,7 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
 
     function my_error($msg)
     {
-        echo '<tr><td colspan = "2">';
+        echo '<tr><td>';
         echo MessageBox::error($msg);
         echo '</td></tr>';
     }
@@ -737,7 +737,7 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
 
     function my_msg($msg)
     {
-        echo '<tr><td colspan = "2">';
+        echo '<tr><td>';
         echo MessageBox::success($msg);
         echo '</td></tr>';
     }
@@ -746,7 +746,7 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
 
     function my_info($msg)
     {
-        echo '<tr><td colspan = "2">';
+        echo '<tr><td>';
         echo MessageBox::info($msg);
         echo '</td></tr>';
     }

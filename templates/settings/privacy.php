@@ -4,9 +4,7 @@
 <table width="100%" border="0" cellpadding="0" cellspacing="0" align="center">
     <tr>
         <td class="blank" width="100%" colspan="2" align="center">
-            <p class="info">
-                <b><?= _("Hier können Sie Ihre Sichtbarkeit im System einstellen."); ?></b>
-            </p>
+
             <form method="post" action="<?= URLHelper::getLink('edit_about.php', array('cmd' => 'change_global_visibility', 'studipticket' => get_ticket(), 'username' => Request::get('username'))); ?>">
                 <?= CSRFProtection::tokenTag() ?>
                 <table width="70%" align="center"cellpadding="8" cellspacing="0" border="0" id="main_content">
@@ -77,7 +75,7 @@
                             <?php
                             if (!$NOT_HIDEABLE_FIELDS[$user_perm]['email']) {
                                 echo '<br>';
-                                echo _("Wenn Sie hier Ihre E-Mail-Adresse verstecken, wird stattdessen die E-Mailadresse Ihrer (Standard-)Einrichtung angezeigt.");
+                                echo _("Wenn Sie hier Ihre E-Mail-Adresse verstecken, wird stattdessen die E-Mail-Adresse Ihrer (Standard-)Einrichtung angezeigt.");
                             }
                             ?>
                             
@@ -101,7 +99,7 @@
                             <?php } ?>
                             <?php if (!$NOT_HIDEABLE_FIELDS[$user_perm]['email']) {?>
                             <label><input type="checkbox" name="email"<?= $email_visibility ? ' checked="checked"' : '' ?>>
-                            <?= _('eigene E-Mail-Adresse sichtbar'); ?></label>
+                            <?= _('eigene E-Mail Adresse sichtbar'); ?></label>
                             <br>
                             <?php } ?>
                         </td>

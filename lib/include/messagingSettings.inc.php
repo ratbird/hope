@@ -58,16 +58,6 @@ $email_forward = $db2->f("email_forward");
 
 if ($email_forward == "0") $email_forward = $GLOBALS["MESSAGING_FORWARD_DEFAULT"];
 
-$news_author_id = $db2->f("news_author_id");
-
-if($messaging_cmd=="change_view_insert"){
-    if ($export_news_as_rss){
-        StudipNews::SetRssId($user->id,'user');
-    } else {
-        StudipNews::UnsetRssId($user->id);
-    }
-}
-
 //vorgenommene Anpassungen der Ansicht in Uservariablen schreiben
 if ($messaging_cmd=="change_view_insert" && !$set_msg_default_x && $newmsgset_x) {
         $db2->query("UPDATE user_info SET email_forward = '".$send_as_email."' WHERE user_id = '".$user->id."'");
@@ -148,9 +138,7 @@ function change_messaging_view()
         <tr>
 
             <td class="blank" width="100%" colspan="2" align="center">
-            <p class="info">
-                <b><?= _("Auf dieser Seite k&ouml;nnen Sie die Eigenschaften des Stud.IP-Messagingsystems an Ihre Bed&uuml;rfnisse anpassen.") ?></b>
-            </p>
+
             <form action="<?=$PHP_SELF?>?messaging_cmd=change_view_insert" method="post">
             <?= CSRFProtection::tokenTag() ?>
             <? if ($reset_txt) {
@@ -167,9 +155,7 @@ function change_messaging_view()
                     <th width="50%" align=center><?=_("Option")?></th>
                     <th align=center><?=_("Auswahl")?></th>
                 </tr>
-                <tr>
-                    <td colspan="2" align="center" class="steelgraulight" style="border-bottom:1px dotted black;border-top:1px dotted black;"><b><?=_("Einstellungen des system-internen Nachrichten-Systems")?></b></td>
-                </tr>
+
                 <tr  <? $cssSw->switchClass() ?>>
                     <td  align="right" class="blank" style="border-bottom:1px dotted black;">
                         <label for="opennew"><?print _("Neue Nachrichten immer aufgeklappt");?></label>
@@ -229,7 +215,7 @@ function change_messaging_view()
                 </tr>
                 <tr  <? $cssSw->switchClass() ?>>
                   <td  align="right" class="blank" style="border-bottom:1px dotted black;">
-                    <?print _("Email in folgendem Format versenden");?>
+                    <?print _("E-Mail in folgendem Format versenden");?>
                   </td>
                   <td <?=$cssSw->getFullClass()?>>
                      <label><input type="radio" name="mail_format" value="0" <?= !$user_cfg->getValue('MAIL_AS_HTML') ? 'checked' : '' ?>>&nbsp;<?=_("Text")?></label><br>
@@ -339,25 +325,6 @@ function change_messaging_view()
                         <input type="checkbox" id="start_messenger_at_startup" name="start_messenger_at_startup" <? if ($my_messaging_settings["start_messenger_at_startup"]) echo " checked"; ?> >
                     </td>
                 </tr>
-                <?php
-                if (get_config('NEWS_RSS_EXPORT_ENABLE')){
-                ?>
-                <tr <? $cssSw->resetClass() ?>>
-                    <td colspan="2" align="center" class="steelgraulight" style="border-bottom:1px dotted black;border-top:1px dotted black;">
-                        <b><?=_("Stud.IP-Ankündigungen")?></b>
-                    </td>
-                </tr>
-                <tr <? $cssSw->switchClass() ?>>
-                    <td align="right" class="blank">
-                        <label for="export_news_as_rss"><?=_("Stud.IP-Ankündigungen per RSS-Feed exportieren")?></label>
-                    </td>
-                    <td <?=$cssSw->getFullClass()?>>
-                        <input type="checkbox" id="export_news_as_rss" name="export_news_as_rss" <? if (StudipNews::GetRssIdFromUserId($user->id)) echo " checked"; ?> >
-                    </td>
-                </tr>
-                <?php
-                }
-                ?>
                 <tr <? $cssSw->switchClass() ?>>
                     <td colspan="2" align="center" class="steelgraulight" style="border-bottom:1px dotted black;border-top:1px dotted black;">
                         <b><?=_("Buddies/ Wer ist online?")?></b>

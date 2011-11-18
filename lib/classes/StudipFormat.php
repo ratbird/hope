@@ -23,7 +23,7 @@ class StudipFormat extends TextFormat
 
         // heading level 1-4
         'heading' => array(
-            'start'    => '^(!{1,4})([^\n]+)(?:\n|$)',
+            'start'    => '^(!{1,4})([^\n]+)\n?',
             'callback' => 'StudipFormat::markupHeading'
         ),
 
@@ -35,17 +35,17 @@ class StudipFormat extends TextFormat
 
         // list and table
         'list' => array(
-            'start'    => '(^[=-]+ [^\n]+(?:\n|$))+',
+            'start'    => '(^[=-]+ [^\n]+\n?)+',
             'callback' => 'StudipFormat::markupList'
         ),
         'table' => array(
-            'start'    => '(^\|[^\n]*\|[^\n]*(?:\n|$))+',
+            'start'    => '(^\|[^\n]*\|[^\n]*\n?)+',
             'callback' => 'StudipFormat::markupTable'
         ),
 
         // block indent
         'indent' => array(
-            'start'    => '(^  [^\n]+(?:\n|$))+',
+            'start'    => '(^  [^\n]+\n?)+',
             'callback' => 'StudipFormat::markupIndent'
         ),
 
@@ -135,11 +135,24 @@ class StudipFormat extends TextFormat
             'callback' => 'StudipFormat::markupTextSimple'
         ),
 
-        // preformatted text
+        // preformatted text, quote, nop and code
         'pre' => array(
             'start'    => '\[pre\]',
             'end'      => '\[\/pre\]',
             'callback' => 'StudipFormat::markupPreformat'
+        ),
+        'quote' => array(
+            'start'    => '\[quote(=.*?)?\]',
+            'end'      => '\[\/quote\]',
+            'callback' => 'StudipFormat::markupQuote'
+        ),
+        'nop' => array(
+            'start'    => '\[nop\](.*?)\[\/nop\]',
+            'callback' => 'StudipFormat::markupNoFormat'
+        ),
+        'code' => array(
+            'start'    => '\[code\](.*?)\[\/code\]',
+            'callback' => 'StudipFormat::markupCode'
         ),
     );
 
@@ -308,7 +321,7 @@ class StudipFormat extends TextFormat
 
             foreach ($cells as $cell) {
                 $result .= '<td>';
-                $result .= $markup->format($cell);
+                $result .= $markup->format(trim($cell));
                 $result .= '</td>';
             }
 
@@ -335,6 +348,37 @@ class StudipFormat extends TextFormat
      */
     protected static function markupPreformat($markup, $matches, $contents)
     {
-        return sprintf('<pre>%s</pre>', $contents);
+        return sprintf('<pre>%s</pre>', trim($contents));
+    }
+
+    /**
+     * Stud.IP markup for quoted text
+     */
+    protected static function markupQuote($markup, $matches, $contents)
+    {
+        if (strlen($matches[1]) > 1) {
+            $title = sprintf(_('%s hat geschrieben:'), $markup->format(substr($matches[1], 1)));
+        } else {
+            $title = _('Zitat:');
+        }
+
+        return sprintf('<blockquote class="quote"><b>%s</b><hr>%s</blockquote>',
+                       $title, trim($contents));
+    }
+
+    /**
+     * Stud.IP markup for unformatted text
+     */
+    protected static function markupNoFormat($markup, $matches)
+    {
+        return $markup->quote($matches[1]);
+    }
+
+    /**
+     * Stud.IP markup for (PHP) source code
+     */
+    protected static function markupCode($markup, $matches)
+    {
+        return highlight_string(html_entity_decode(trim($matches[1])), true);
     }
 }

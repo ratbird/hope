@@ -506,7 +506,7 @@ function Export_Kids ($topic_id=0, $level=0) {
             $r_name = htmlReady($r_name);
             $zusatz = htmlReady($r_author)." " . _("am") . " ";
             $zusatz .= date("d.m.Y - H:i", $r_mkdate);
-            $r_description = FixLinks(format(htmlReady($r_description, $trim, FALSE)));
+            $r_description = formatReady($r_description);
             $forum_dumbkid.="<tr><td class=blank><hr><b>".$r_name."</b> " . _("von") . " ".$zusatz."</td></tr><tr><td class=blank>".$r_description."</td></tr>\n";
         }
         $forum_dumbkid.=Export_Kids($r_topic_id, $level+1);
@@ -554,7 +554,7 @@ function Export_Topic ($sem_id) {
             $zusatz = "<b>".$count."</b> / ".date("d.m.Y - H:i", $last);
             $zusatz = htmlReady($author)."&nbsp;/&nbsp; ".$zusatz;
             $name = htmlReady($name);
-            $description = FixLinks(format(htmlReady($description, $trim, FALSE)));
+            $description = formatReady($description);
             $forum_dumb.="<table class=blank width=\"100%\" border=0 cellpadding=5 cellspacing=0><tr><td><h3>".$name."</h3> " . _("von") . " ".$zusatz."</td></tr><tr><td class=blank>".$description. "</td></tr>";
             $forum_dumb.=Export_Kids($r_topic_id, $level);
             $forum_dumb.="</table><br><br>";

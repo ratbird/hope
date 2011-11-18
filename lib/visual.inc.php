@@ -255,8 +255,6 @@ function jsReady ($what = "", $target = "overlib") {
 
     case 'forum' :
         $what = str_replace("\r",'',formatReady($what));
-        if (preg_match('/\[quote/',$what) AND preg_match('/\[\/quote\]/',$what))
-            $what = quotes_decode($what);
         $what = '<p width="100%"class="printcontent">' . $what . '</p>';
         return addslashes(htmlentities($what,ENT_COMPAT));
         break;
@@ -272,74 +270,6 @@ function jsReady ($what = "", $target = "overlib") {
 }
 
 /**
- * Hilfsfunktion, die sich den zu quotenden Text holt, encodiert und zurueckgibt.
- *
- * @param string $description Hilfsfunktion, die sich den zu quotenden Text holt, encodiert und zurueckgibt.
- * @return string
- */
-function quotes_decode($description)
-{
-    $description = " ".$description;
-    $stack = Array();
-    $curr_pos = 1;
-    while ($curr_pos && ($curr_pos < strlen($description)))
-    {
-        $curr_pos = strpos($description, "[", $curr_pos);
-        if ($curr_pos)
-        {
-            $possible_start = substr($description, $curr_pos, 6);
-            $possible_end = substr($description, $curr_pos, 8);
-            if (strcasecmp("[quote", $possible_start) == 0) {
-                array_push($stack, $curr_pos);
-                ++$curr_pos;
-                }
-            else if (strcasecmp("[/quote]", $possible_end) == 0) {
-                if (sizeof($stack) > 0) {
-                    $start_index = array_pop($stack);
-                    $before_start_tag = substr($description, 0, $start_index);
-                    $between_tags = substr($description, $start_index+6, $curr_pos - $start_index-6);
-//                                        echo $between_tags."<hr>";
-                    $after_end_tag = substr($description, $curr_pos + 8);
-                    IF (substr($between_tags,0,1)=="=") { //wir haben einen Namen angegeben
-                        $nameend_pos = strpos($between_tags,"]");
-                        $quote_name = substr($between_tags,1,$nameend_pos-1);
-                        IF (substr($between_tags,$nameend_pos,5)=="]<br>") // ja, hier wurde anstaendig gequotet
-                            $between_tags = substr($between_tags,$nameend_pos+5);
-                        ELSE // da wird gepfuscht, also mal besser Finger weg
-                            $between_tags = substr($between_tags,$nameend_pos+1);
-                        $between_tags = "<b>".sprintf(_("%s hat geschrieben:"),$quote_name)."</b><hr>".$between_tags;
-                        }
-                    ELSE { // kein Name, also nur Zitat
-                        $nameend_pos = strpos($between_tags,"]");
-                        IF (substr($between_tags,$nameend_pos,5)=="]<br>") // ja, hier wurde anstaendig gequotet
-                            $between_tags = "<b>"._("Zitat:")."</b><hr>".substr($between_tags,$nameend_pos+5);
-                        ELSE // da wird gepfuscht, also mal besser Finger weg
-                            $between_tags = "<b>"._("Zitat:")."</b><hr>".substr($between_tags,$nameend_pos+1);
-                        }
-                    $description = $before_start_tag . "<blockquote class=\"quote\">";
-                    $description .= $between_tags . "</blockquote>";
-                    if (substr($after_end_tag,0,4)=="<br>") {
-                        $after_end_tag = substr($after_end_tag,4);
-                    }
-                    $description .= $after_end_tag;
-                    if (sizeof($stack) > 0) {
-                        $curr_pos = array_pop($stack);
-                        array_push($stack, $curr_pos);
-                        ++$curr_pos;
-                        }
-                    else $curr_pos = 1;
-                    }
-                else ++$curr_pos;
-                }
-            else ++$curr_pos;
-        }
-    }
-    $description=preg_replace("/\[quote\007/","[quote",$description);
-    $description=preg_replace("/\[\/quote\007\]/","[/quote]",$description);
-    return substr($description, 1);
-}
-
-/**
  * Funktion um Quotings zu encoden
  *
  * @param string $description der Text der gequotet werden soll, wird zurueckgegeben
@@ -352,15 +282,6 @@ function quotes_encode($description,$author)
         $postmp = strpos($description,"%%[editiert von");
         $description = substr_replace($description," ",$postmp);
     }
-    /* quote reduction deactivated (cf. http://develop.studip.de/trac/ticket/208 )
-    while (preg_match("/\[quote/",$description) AND preg_match("/\[\/quote\]/",$description)){ // da wurde schon mal zitiert...
-        $pos1 =         strpos($description, "[quote");
-        $pos2 =         strpos($description, "[/quote]");
-        if ($pos1 < $pos2)
-            $description = substr($description,0,$pos1)."[...]".substr($description,$pos2+8);
-        else break; // hier hat einer von Hand rumgepfuscht...
-        }
-    */
     $description = "[quote=".$author."]\n".$description."\n[/quote]";
     return $description;
 }
@@ -370,27 +291,6 @@ function format_help($what, $trim = TRUE, $extern = FALSE, $wiki = FALSE, $show_
     $markup = new StudipFormat();
     $what = preg_replace("/\r\n?/", "\n", $what);
 
-    if (preg_match_all("'\[code\](.+)\[/code\]'isU", $what, $match_code)) {
-        $what = htmlReady($what, $trim, FALSE);
-        $what = preg_replace("'\[code\].+\[/code\]'isU", 'ü', $what);
-        if ($wiki == TRUE)
-            $what = wiki_format(symbol(smile(latex($markup->format(FixLinks($what, FALSE, FALSE, TRUE, $extern, TRUE)), $extern), $extern), $extern), $show_comments);
-        else
-            $what = symbol(smile(latex($markup->format(FixLinks($what, FALSE, FALSE, TRUE, $extern)), $extern), $extern), $extern);
-        $what = explode('ü', $what);
-        $i = 0;
-        $all = '';
-        foreach ($what as $w) {
-            if ($match_code[1][$i] == ''){
-                $all .=  $w ;
-            } else {
-                $a = highlight_string( $match_code[1][$i] , TRUE);
-                $all .= $w . (($wiki == TRUE)? "<nowikilink>$a</nowikilink>":$a );
-            }
-            $i++;
-        }
-        return $all;
-    }
     $what = htmlReady($what, $trim, FALSE);
     if ($wiki == TRUE)
         return wiki_format(symbol(smile(latex($markup->format(FixLinks($what, FALSE, FALSE, TRUE, $extern, TRUE)), $extern), $extern), $extern), $show_comments);
@@ -427,17 +327,14 @@ function formatReady ($what, $trim = TRUE, $extern = FALSE, $wiki = FALSE, $show
                 // do nearly nothing within nop-areas
                 // but:
                 // - fix newlines
-                // - replace [quote] by [quote\007 and [/quote] by [/nopquote\007]
                 $a = preg_replace("/\n?\r\n?/", '<br>', htmlReady($matches[1][$i], $trim, FALSE));
-                $a = preg_replace("/\[quote/","[quote\007",$a);
-                $a = preg_replace("/\[\/quote\]/","[/quote\007]",$a);
                 $all .= $w . (($wiki == TRUE)? "<nowikilink>$a</nowikilink>" : $a);
             }
             $i++;
         }
-        return quotes_decode($all);
+        return $all;
     }
-    return quotes_decode(str_replace("\n", '<br>', format_help($what, $trim, $extern, $wiki, $show_comments)));
+    return str_replace("\n", '<br>', format_help($what, $trim, $extern, $wiki, $show_comments));
 }
 
 

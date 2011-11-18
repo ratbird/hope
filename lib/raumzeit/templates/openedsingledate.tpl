@@ -7,8 +7,8 @@
         <a name="<?=$tpl['sd_id']?>"></a>
         <TABLE cellpadding="2" cellspacing="0" border="0" width="100%">
             <TR>
-                <TD style="min-width: 40px;" align="left" valign="top" class="<?=$tpl['class']?>">
-                    <A href="<?= URLHelper::getLink('?cmd=close&open_close_id='. $tpl['sd_id'] .'#'. $tpl['sd_id']) ?>">
+                <TD style="min-width: 40px;white-space:nowrap" align="left" valign="top" class="<?=$tpl['class']?>">
+                    <A name="<?=$tpl['sd_id']?>" href="<?= URLHelper::getLink('?cmd=close&open_close_id='. $tpl['sd_id'] .'#'. $tpl['sd_id']) ?>">
                         <?= Assets::img('icons/16/blue/arr_1down.png') ?>
                     </A>
                     <? if (!$_LOCKED) : ?>
@@ -34,8 +34,8 @@
                   <?=$tpl['room']?>
                 </FONT>
                     <? if ($tpl['ausruf']) { ?>
-                    <A href="javascript:;" onClick="alert('<?=$tpl['ausruf']?>')">
-                        <?= Assets::img($tpl['symbol'], array('alt' => $tpl['ausruf'], 'align' => 'absmiddle'))?>
+                    <A href="javascript:;" onClick="alert('<?=jsReady($tpl['ausruf'], 'inline-single')?>')">
+                        <?= Assets::img($tpl['symbol'], tooltip($tpl['ausruf']))?>
                     </A>
                     <? } ?>
                 </TD>

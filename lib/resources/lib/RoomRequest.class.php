@@ -53,6 +53,24 @@ class RoomRequest extends SimpleORMap
         return SimpleORMap::findBySql(__CLASS__, $where);
     }
 
+    static function findByCourse($seminar_id)
+    {
+        $db = DbManager::get();
+        return array_shift(self::findBySql("termin_id = '' AND metadate_id = '' AND seminar_id = " . $db->quote($seminar_id)));
+    }
+
+    static function findByDate($termin_id)
+    {
+        $db = DbManager::get();
+        return array_shift(self::findBySql("termin_id = " . $db->quote($termin_id)));
+    }
+
+    static function findByCycle($metadate_id)
+    {
+        $db = DbManager::get();
+        return array_shift(self::findBySql("metadate_id = " . $db->quote($metadate_id)));
+    }
+
     static function existsByCourse($seminar_id, $is_open = false)
     {
         $db = DbManager::get();

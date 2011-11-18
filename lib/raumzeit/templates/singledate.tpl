@@ -28,8 +28,8 @@
             <?=$tpl['room']?>
         </FONT>
         <? if ($tpl['ausruf']) { ?>
-            <A href="javascript:;" onClick="alert('<?=$tpl['ausruf']?>')">
-                <?= Assets::img($tpl['symbol'], array('alt' => $tpl['ausruf'], 'align' => 'absmiddle'))?>
+            <A href="javascript:;" onClick="alert('<?=jsReady($tpl['ausruf'], 'inline-single')?>')">
+                <?= Assets::img($tpl['symbol'], tooltip($tpl['ausruf']))?>
             </A>
         <? } ?>
     </TD>

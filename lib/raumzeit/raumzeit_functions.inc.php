@@ -162,8 +162,8 @@ function getTemplateDataForSingleDate($val, $cycle_id = '') {
 
     if ($request = RoomRequest::findByDate($val->getSingleDateID())) {
         $tpl['room_request'] = $request;
-        $tpl['ausruf']  = _("F&uuml;r diesen Termin existiert eine Raumanfrage:");
-        $tpl['ausruf'] .= '\n\n'. $request->getInfo();
+        $tpl['ausruf']  = _("Für diesen Termin existiert eine Raumanfrage:");
+        $tpl['ausruf'] .= "\n\n" . $request->getInfo();
         $request_status = $request->getStatus();
         if ($request_status == 'declined') {
             $tpl['symbol'] = 'icons/16/red/exclaim.png';

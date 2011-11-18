@@ -48,10 +48,6 @@ if ($forumsend=="bla"){
     </tr>
     <tr>
         <td class="blank" width="100%" colspan="2" align="center">
-        <p class="info">
-            <b><?= _("Auf dieser Seite k&ouml;nnen Sie die Bedienung des Stud.IP-Forensystems an Ihre Bed&uuml;rfnisse anpassen.") ?></b>
-        </p>
-
 
         <?
         echo "<form action=\"$PHP_SELF?view=$view\" method=\"POST\">";
@@ -85,6 +81,9 @@ if ($forumsend=="bla"){
                 <td  align="right" class="blank" style="border-bottom:1px dotted black;">
                     <label for="rateallopen">
                     <?print _("Bewertungsbereich bei geöffneten Postings immer anzeigen");?></label>
+                    <div class="setting_info">
+                        <?= _("Die Aktivierung dieser Einstellung blendet ein Kästchen neben den Forenbeiträgen ein, mit dem Sie Beiträge bewerten können.") ?>
+                    </div>
                 </td>
                 <td <?=$cssSw->getFullClass()?>>
                     <input type="CHECKBOX" name="rateallopen" id="rateallopen" value=TRUE<?if($forum["rateallopen"]==TRUE) echo " checked";?>>
@@ -104,9 +103,9 @@ if ($forumsend=="bla"){
                     <?echo _("Sortierung der Themenanzeige");?>
                 </td>
                 <td <?=$cssSw->getFullClass()?> align="left">
-                    <label><input type=radio value="asc" name="sortthemes" <?if ($forum["sortthemes"]=="asc") echo "checked"; echo '> '._("Alter des Ordners - neue unten");?></label><br>
-                    <label><input type=radio value="desc" name="sortthemes" <?if ($forum["sortthemes"]=="desc") echo "checked";echo '> '._("Alter des Ordners - neue oben");?></label><br>
-                    <label><input type=radio value="last" name="sortthemes" <?if ($forum["sortthemes"]=="last") echo "checked";echo '> '._("Alter des neuesten Beitrags - neue oben");?></label><br>
+                    <label><input type=radio value="asc" name="sortthemes" <?if ($forum["sortthemes"]=="asc") echo "checked"; echo '> '._("Erstelldatum des Ordners - neue unten");?></label><br>
+                    <label><input type=radio value="desc" name="sortthemes" <?if ($forum["sortthemes"]=="desc") echo "checked";echo '> '._("Erstelldatum des Ordners - neue oben");?></label><br>
+                    <label><input type=radio value="last" name="sortthemes" <?if ($forum["sortthemes"]=="last") echo "checked";echo '> '._("Datum des neuesten Beitrags - neue oben");?></label><br>
                 </td>
             </tr>
             <tr <? $cssSw->switchClass() ?>>
@@ -120,7 +119,7 @@ if ($forumsend=="bla"){
             </tr>
             <tr <? $cssSw->switchClass() ?>>
                 <td align="right" class="blank" style="border-bottom:1px dotted black;">
-                    <?echo _("Einsprungsseite des Forums");?>
+                    <?echo _("Standardansicht");?>
                 </td>
                 <td <?=$cssSw->getFullClass()?> align="left">
                     <label><input type=radio value="theme" name="presetview" <?if ($forum["presetview"]=="tree" || $forum["presetview"]=="mixed") echo "checked"; echo '> '._("Themenansicht");?></label><br>
@@ -130,7 +129,7 @@ if ($forumsend=="bla"){
             </tr>
             <tr <? $cssSw->switchClass() ?>>
                 <td align="right" class=blank style="border-bottom:1px dotted black;">
-                    <label for="shrink"><?echo _("ForumAutoShrink-Engine aktivieren");?></label>
+                    <label for="shrink"><?echo _("Alte Beiträge standardmäßig zuklappen nach");?></label>
                 </td>
                 <td align="left" <?=$cssSw->getFullClass()?>>
                     &nbsp;<select name="shrink" id="shrink">

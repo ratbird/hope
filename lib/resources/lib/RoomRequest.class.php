@@ -563,7 +563,10 @@ class RoomRequest extends SimpleORMap
                 $requestData[] = _('Die Raumanfrage ist neu.');
             }
             $requestData[] = '';
-
+        } else {
+            $requestData[] = sprintf(_('Erstellt von: %s'), get_fullname($this->user_id));
+            $requestData[] = sprintf(_('Erstellt am: %s'), strftime('%x %H:%M', $this->mkdate));
+            $requestData[] = sprintf(_('Letzte Änderung: %s'), strftime('%x %H:%M', $this->chdate));
         }
         if ($this->resource_id) {
             $resObject = ResourceObject::Factory($this->resource_id);

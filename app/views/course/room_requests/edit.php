@@ -8,6 +8,13 @@ $buttons .= '<span style="padding-left:1em">' . makeButton('uebernehmen','input'
 
 echo $this->render_partial('course/room_requests/_form.php', array('submit' => $buttons));
 echo '</form>';
+if ($request->isNew()) {
+    $info_txt = _("Dies ist eine neue Raumanfrage.");
+} else {
+    $info_txt = '<div>' . sprintf(_('Erstellt von: %s'), get_fullname($request->user_id)) . '</div>';
+    $info_txt .= '<div>' . sprintf(_('Erstellt am: %s'), strftime('%x %H:%M', $request->mkdate)) . '</div>';
+    $info_txt .= '<div>' . sprintf(_('Letzte Änderung: %s'), strftime('%x %H:%M', $request->chdate)) . '</div>';
+}
 $infobox_content = array(
     array(
         'kategorie' => _('Raumanfragen und gewünschte Raumeigenschaften'),
@@ -15,6 +22,10 @@ $infobox_content = array(
     array(
         'icon' => 'icons/16/black/info.png',
         'text' => _("Hier können Sie Angaben zu gewünschten Raumeigenschaften machen.")
+    ),
+    array(
+        'icon' => 'icons/16/black/info.png',
+        'text' => $info_txt
     ),
     array(
             'icon' => 'icons/16/black/minus.png',

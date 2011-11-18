@@ -19,7 +19,129 @@ class StudipFormat extends TextFormat
     /**
      * list of global Stud.IP markup rules
      */
-    private static $studip_rules;
+    private static $studip_rules = array(
+
+        // heading level 1-4
+        'heading' => array(
+            'start'    => '^(!{1,4})([^\n]+)(?:\n|$)',
+            'callback' => 'StudipFormat::markupHeading'
+        ),
+
+        // horizontal rule
+        'hrule' => array(
+            'start'    => '^--+$',
+            'callback' => 'StudipFormat::markupHorizontalRule'
+        ),
+
+        // list and table
+        'list' => array(
+            'start'    => '(^[=-]+ [^\n]+(?:\n|$))+',
+            'callback' => 'StudipFormat::markupList'
+        ),
+        'table' => array(
+            'start'    => '(^\|[^\n]*\|[^\n]*(?:\n|$))+',
+            'callback' => 'StudipFormat::markupTable'
+        ),
+
+        // block indent
+        'indent' => array(
+            'start'    => '(^  [^\n]+(?:\n|$))+',
+            'callback' => 'StudipFormat::markupIndent'
+        ),
+
+        // basic text formatting
+        'bold' => array(
+            'start'    => '\*\*',
+            'end'      => '\*\*',
+            'callback' => 'StudipFormat::markupText'
+        ),
+        'italics' => array(
+            'start'    => '%%',
+            'end'      => '%%',
+            'callback' => 'StudipFormat::markupText'
+        ),
+        'underline' => array(
+            'start'    => '__',
+            'end'      => '__',
+            'callback' => 'StudipFormat::markupText'
+        ),
+        'verb' => array(
+            'start'    => '##',
+            'end'      => '##',
+            'callback' => 'StudipFormat::markupText'
+        ),
+        'big' => array(
+            'start'    => '\+\+',
+            'end'      => '\+\+',
+            'callback' => 'StudipFormat::markupText'
+        ),
+        'small' => array(
+            'start'    => '--',
+            'end'      => '--',
+            'callback' => 'StudipFormat::markupText'
+        ),
+        'super' => array(
+            'start'    => '&gt;&gt;',
+            'end'      => '&gt;&gt;',
+            'callback' => 'StudipFormat::markupText'
+        ),
+        'sub' => array(
+            'start'    => '&lt;&lt;',
+            'end'      => '&lt;&lt;',
+            'callback' => 'StudipFormat::markupText'
+        ),
+        'strike' => array(
+            'start'    => '\{-',
+            'end'      => '-\}',
+            'callback' => 'StudipFormat::markupText'
+        ),
+        'admin_msg' => array(
+            'start'    => '\[admin_msg\]',
+            'end'      => '\[\/admin_msg\]',
+            'callback' => 'StudipFormat::markupText'
+        ),
+
+        // basic text formatting (simple form)
+        'simple_bold' => array(
+            'start'    => '(?<=\s|^)\*(\S+)\*(?=\s|$)',
+            'callback' => 'StudipFormat::markupTextSimple'
+        ),
+        'simple_italics' => array(
+            'start'    => '(?<=\s|^)%(\S+)%(?=\s|$)',
+            'callback' => 'StudipFormat::markupTextSimple'
+        ),
+        'simple_underline' => array(
+            'start'    => '(?<=\s|^)_(\S+)_(?=\s|$)',
+            'callback' => 'StudipFormat::markupTextSimple'
+        ),
+        'simple_verb' => array(
+            'start'    => '(?<=\s|^)#(\S+)#(?=\s|$)',
+            'callback' => 'StudipFormat::markupTextSimple'
+        ),
+        'simple_big' => array(
+            'start'    => '(?<=\s|^)\+(\S+)\+(?=\s|$)',
+            'callback' => 'StudipFormat::markupTextSimple'
+        ),
+        'simple_small' => array(
+            'start'    => '(?<=\s|^)-(\S+)-(?=\s|$)',
+            'callback' => 'StudipFormat::markupTextSimple'
+        ),
+        'simple_super' => array(
+            'start'    => '(?<=\s|^)&gt;(\S+)&gt;(?=\s|$)',
+            'callback' => 'StudipFormat::markupTextSimple'
+        ),
+        'simple_sub' => array(
+            'start'    => '(?<=\s|^)&lt;(\S+)&lt;(?=\s|$)',
+            'callback' => 'StudipFormat::markupTextSimple'
+        ),
+
+        // preformatted text
+        'pre' => array(
+            'start'    => '\[pre\]',
+            'end'      => '\[\/pre\]',
+            'callback' => 'StudipFormat::markupPreformat'
+        ),
+    );
 
     /**
      * Returns the list of global Stud.IP markup rules as an array.
@@ -30,132 +152,6 @@ class StudipFormat extends TextFormat
      */
     public static function getStudipMarkups()
     {
-        if (!isset(self::$studip_rules)) {
-            self::$studip_rules = array(
-
-                // heading level 1-4
-                'heading' => array(
-                    'start'    => '^(!{1,4})([^\n]+)(?:\n|$)',
-                    'callback' => 'StudipFormat::markupHeading'
-                ),
-
-                // horizontal rule
-                'hrule' => array(
-                    'start'    => '^--+$',
-                    'callback' => 'StudipFormat::markupHorizontalRule'
-                ),
-
-                // list and table
-                'list' => array(
-                    'start'    => '(^[=-]+ [^\n]+(?:\n|$))+',
-                    'callback' => 'StudipFormat::markupList'
-                ),
-                'table' => array(
-                    'start'    => '(^\|[^\n]*\|[^\n]*(?:\n|$))+',
-                    'callback' => 'StudipFormat::markupTable'
-                ),
-
-                // block indent
-                'indent' => array(
-                    'start'    => '(^  [^\n]+(?:\n|$))+',
-                    'callback' => 'StudipFormat::markupIndent'
-                ),
-
-                // basic text formatting
-                'bold' => array(
-                    'start'    => '\*\*',
-                    'end'      => '\*\*',
-                    'callback' => 'StudipFormat::markupText'
-                ),
-                'italics' => array(
-                    'start'    => '%%',
-                    'end'      => '%%',
-                    'callback' => 'StudipFormat::markupText'
-                ),
-                'underline' => array(
-                    'start'    => '__',
-                    'end'      => '__',
-                    'callback' => 'StudipFormat::markupText'
-                ),
-                'verb' => array(
-                    'start'    => '##',
-                    'end'      => '##',
-                    'callback' => 'StudipFormat::markupText'
-                ),
-                'big' => array(
-                    'start'    => '\+\+',
-                    'end'      => '\+\+',
-                    'callback' => 'StudipFormat::markupText'
-                ),
-                'small' => array(
-                    'start'    => '--',
-                    'end'      => '--',
-                    'callback' => 'StudipFormat::markupText'
-                ),
-                'super' => array(
-                    'start'    => '&gt;&gt;',
-                    'end'      => '&gt;&gt;',
-                    'callback' => 'StudipFormat::markupText'
-                ),
-                'sub' => array(
-                    'start'    => '&lt;&lt;',
-                    'end'      => '&lt;&lt;',
-                    'callback' => 'StudipFormat::markupText'
-                ),
-                'strike' => array(
-                    'start'    => '\{-',
-                    'end'      => '-\}',
-                    'callback' => 'StudipFormat::markupText'
-                ),
-                'admin_msg' => array(
-                    'start'    => '\[admin_msg\]',
-                    'end'      => '\[\/admin_msg\]',
-                    'callback' => 'StudipFormat::markupText'
-                ),
-
-                // basic text formatting (simple form)
-                'simple_bold' => array(
-                    'start'    => '(?<=\s|^)\*(\S+)\*(?=\s|$)',
-                    'callback' => 'StudipFormat::markupTextSimple'
-                ),
-                'simple_italics' => array(
-                    'start'    => '(?<=\s|^)%(\S+)%(?=\s|$)',
-                    'callback' => 'StudipFormat::markupTextSimple'
-                ),
-                'simple_underline' => array(
-                    'start'    => '(?<=\s|^)_(\S+)_(?=\s|$)',
-                    'callback' => 'StudipFormat::markupTextSimple'
-                ),
-                'simple_verb' => array(
-                    'start'    => '(?<=\s|^)#(\S+)#(?=\s|$)',
-                    'callback' => 'StudipFormat::markupTextSimple'
-                ),
-                'simple_big' => array(
-                    'start'    => '(?<=\s|^)\+(\S+)\+(?=\s|$)',
-                    'callback' => 'StudipFormat::markupTextSimple'
-                ),
-                'simple_small' => array(
-                    'start'    => '(?<=\s|^)-(\S+)-(?=\s|$)',
-                    'callback' => 'StudipFormat::markupTextSimple'
-                ),
-                'simple_super' => array(
-                    'start'    => '(?<=\s|^)&gt;(\S+)&gt;(?=\s|$)',
-                    'callback' => 'StudipFormat::markupTextSimple'
-                ),
-                'simple_sub' => array(
-                    'start'    => '(?<=\s|^)&lt;(\S+)&lt;(?=\s|$)',
-                    'callback' => 'StudipFormat::markupTextSimple'
-                ),
-
-                // preformatted text
-                'pre' => array(
-                    'start'    => '\[pre\]',
-                    'end'      => '\[\/pre\]',
-                    'callback' => 'StudipFormat::markupPreformat'
-                ),
-            );
-        }
-
         return self::$studip_rules;
     }
 

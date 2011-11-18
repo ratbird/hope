@@ -1773,7 +1773,7 @@ STUDIP.RoomRequestDialog = {
                             show: '',
                             hide: 'scale',
                             title: data.title,
-                            draggable: false,
+                            draggable: true,
                             modal: true,
                             resizable: false,
                             width: Math.min(1000, jQuery(window).width() - 64),

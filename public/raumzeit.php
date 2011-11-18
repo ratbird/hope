@@ -116,7 +116,7 @@ foreach ($_REQUEST as $key => $val) {
 
 // what to do with the text-field
 if ($GLOBALS['RESOURCES_ENABLE'] && $resList->numberOfRooms()) {
-    if ( (($_REQUEST['freeRoomText'] != '') && ($_REQUEST['room'] != 'nothing')) || (($_REQUEST['freeRoomText_sd'] != '') && ($_REQUEST['room_sd'] != 'nothing'))) {
+    if ( ($_REQUEST['freeRoomText'] != '' && !in_array($_REQUEST['room'], words('nothing nochange'))) || ($_REQUEST['freeRoomText_sd'] != '' && !in_array($_REQUEST['room_sd'], words('nothing nochange'))) ) {
         $sem->createError("Sie k&ouml;nnen nur eine freie Raumangabe machen, wenn Sie \"keine Buchung, nur Textangabe\" ausw&auml;hlen!");
         unset($_REQUEST['freeRoomText']);
         unset($_REQUEST['room']);

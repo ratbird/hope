@@ -16,7 +16,7 @@
         ."und das Passwort mitzuteilen, mit dem Sie sich am System anmelden können.\n\n"
         ."Sie finden die Startseite des Systems unter folgender URL:\n\n"
         . $GLOBALS['ABSOLUTE_URI_STUDIP'] . "\n\n"
-        ."Wahrscheinlich unterstützt Ihr Mail-Programm ein einfaches Anklicken des Links.\n"
+        ."Wahrscheinlich unterstützt Ihr E-Mail-Programm ein einfaches Anklicken des Links.\n"
         ."Ansonsten müssen Sie Ihren Browser öffnen und den Link komplett in die Zeile\n"
         ."\"Location\" oder \"URL\" kopieren.\n\n"
         ."Um Zugang auf die nichtöffentlichen Bereiche des Systems zu bekommen\n"

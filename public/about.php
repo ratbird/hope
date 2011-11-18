@@ -370,7 +370,7 @@ function open_im() {
                 <br>
 
                 <? if (($email = get_visible_email($user_id)) != '') : ?>
-                    <b>&nbsp;<?= _("E-mail:") ?></b>
+                    <b>&nbsp;<?= _("E-Mail:") ?></b>
                     <a href="mailto:<?= htmlReady($email) ?>"><?= htmlReady($email) ?></a>
                     <br>
                 <? endif ?>

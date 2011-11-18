@@ -14,10 +14,10 @@
         ."Nachname: " . $this->user_data['auth_user_md5.Nachname'] . "\n"
         ."E-Mail-Adresse: " . $this->user_data['auth_user_md5.Email'] . "\n\n"
         ."Ihr Passwort hat sich nicht verändert.\n\n"
-        ."Diese Mail wurde Ihnen zugesandt, um Sie über die Änderungen zu informieren.\n\n"
+        ."Diese E-Mail wurde Ihnen zugesandt, um Sie über die Änderungen zu informieren.\n\n"
         ."Wenn Sie Einwände gegen die Änderungen haben, wenden Sie sich bitte an\n"
         . $this->abuse_email . "\n"
-        ."Sie können einfach auf diese Mail antworten.\n\n"
+        ."Sie können einfach auf diese E-Mail antworten.\n\n"
         ."Hier kommen Sie direkt ins System:\n"
         . $GLOBALS['ABSOLUTE_URI_STUDIP'] . "\n\n";
 

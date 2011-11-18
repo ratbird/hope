@@ -14,12 +14,12 @@
                     </tr>
                     <tr>
                         <td colspan="<?= $user_domains ? 6 : 5; ?>" class="steelgraulight" style="border-bottom: 1px dotted black; border-top: 1px dotted black;" align="center">
-                            <b><?= _('globale Einstellungen'); ?></b>
+                            <b><?= _('Globale Einstellungen'); ?></b>
                         </td>
                     </tr>
                     <tr>
                         <td width="50%" align="right" class="blank" style="border-bottom:1px dotted black;" width="66%" colspan="<?= $user_domains ? 3 : 2; ?>">
-                            <label for="global_vis"><?print _("globale Sichtbarkeit");?></label><br>
+                            <label for="global_vis"><?print _("Globale Sichtbarkeit");?></label><br>
                             <br><div id="global_vis_description" class="setting_info">
                             <?= _("Sie können wählen, ob Sie für andere NutzerInnen sichtbar sein und alle Kommunikationsfunktionen von Stud.IP nutzen können wollen, oder ob Sie unsichtbar sein möchten und dann nur eingeschränkte Kommunikationsfunktionen nutzen können.");?>
                             </div>
@@ -67,7 +67,7 @@
                     ?>
                     <tr>
                         <td align="right" class="blank" style="border-bottom:1px dotted black;" colspan="<?= $user_domains ? 3 : 2; ?>">
-                            <?print _("erweiterte Einstellungen");?><br>
+                            <?print _("Erweiterte Einstellungen");?><br>
                             <br>
                             <div class="setting_info">
                             
@@ -119,7 +119,7 @@
                         }?>
                     <tr>
                         <td colspan="<?= $user_domains ? 6 : 5; ?>" class="steelgraulight" style="border-bottom: 1px dotted black; border-top: 1px dotted black;" align="center">
-                            <b><?= _('eigenes Profil'); ?></b>
+                            <b><?= _('Eigenes Profil'); ?></b>
                         </td>
                     </tr>
                     

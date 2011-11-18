@@ -31,7 +31,7 @@ body {
 
 th {
     border-bottom: 1px solid #aaaaaa;
-    padding: 2px;
+    padding: 4px;
     background-color:#d1d1d1;
     color:#000000;
 }
@@ -517,12 +517,10 @@ td.tree-elbow-end img {
     background: none; background-color: #BBBBBB;
 }
 
-.table_foot {
-    border-top: 1px solid #aaaaaa;
-    padding: 4px;
-    background-color:#d1d1d1;
-    color:#000000;
+.steelgraudunkel {
+    background-image: url('../images/steelgraudunkel.gif');
 }
+
 
 .steelgraulight_shadow {
     background-image: url('../images/steelgraulight_shadow.jpg');

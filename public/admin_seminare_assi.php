@@ -1269,11 +1269,21 @@ if (($form == 3) && ($jump_next_x))
         }
     }
 
-    if (!$errormsg)
-        $level=4;
-    else
+    if (!$errormsg) {
+        if ($empty_fields) {
+            $sem_create_data['dates_are_valid'] = false;
+            $sem_create_data['skip_room_request'] = true;
+            $level = 4;
+        } else {
+            $sem_create_data['dates_are_valid'] = true;
+            $sem_create_data['skip_room_request'] = false;
+            $level = 4;
+        }
+    } else {
         $level=3;
     }
+
+}
 
 if (Request::submitted('room_request_form') && !(Request::submitted('jump_back') || Request::submitted('jump_next'))) {
     $level=4;
@@ -1344,34 +1354,36 @@ if (($form == 4) && ($jump_next_x)) {
 if ($level == 4 && $RESOURCES_ENABLE && $RESOURCES_ALLOW_ROOM_REQUESTS) {
         $sem_create_data['room_requests_options'] = array();
         $sem_create_data['room_requests_options'][] = array('value' => 'course', 'name' => _('alle regelmäßigen und unregelmäßigen Termine der Veranstaltung'));
-        if ($sem_create_data["term_art"] == 0) {
-            foreach ($sem_create_data['metadata_termin']['turnus_data'] as $key => $value) {
-                $cycle = new SeminarCycleDate();
-                $cycle->weekday = $value['day'];
-                $cycle->week_offset = $value['week_offset'];
-                $cycle->cycle = $value['cycle'];
-                $cycle->start_hour = $value['start_stunde'];
-                $cycle->start_minute = $value['start_minute'];
-                $cycle->end_hour = $value['end_stunde'];
-                $cycle->end_minute = $value['end_minute'];
-                $name = _("alle Termine einer regelmäßigen Zeit");
-                $name .= ' (' . $cycle->toString('full') . ')';
-                $sem_create_data['room_requests_options'][] = array('value' => 'cycle_' . $key, 'name' => $name);
-            }
-        } else {
-            for ($i=0; $i < count($sem_create_data['term_tag']); $i++) {
-                $name = _("Einzeltermin der Veranstaltung");
-                $termin = new SingleDate();
-                $new_date = array('start' => 0, 'end' => 0);
-                if (check_and_set_date($sem_create_data['term_tag'][$i], $sem_create_data['term_monat'][$i], $sem_create_data['term_jahr'][$i],
-                    $sem_create_data['term_start_stunde'][$i], $sem_create_data['term_start_minute'][$i], $new_date, 'start') &&
-                    check_and_set_date($sem_create_data['term_tag'][$i], $sem_create_data['term_monat'][$i], $sem_create_data['term_jahr'][$i],
-                    $sem_create_data['term_end_stunde'][$i], $sem_create_data['term_end_minute'][$i], $new_date, 'end'))
-                {
-                    $termin->setTime($new_date['start'], $new_date['end']);
+        if ($sem_create_data["dates_are_valid"]) {
+            if ($sem_create_data["term_art"] == 0) {
+                foreach ($sem_create_data['metadata_termin']['turnus_data'] as $key => $value) {
+                    $cycle = new SeminarCycleDate();
+                    $cycle->weekday = $value['day'];
+                    $cycle->week_offset = $value['week_offset'];
+                    $cycle->cycle = $value['cycle'];
+                    $cycle->start_hour = $value['start_stunde'];
+                    $cycle->start_minute = $value['start_minute'];
+                    $cycle->end_hour = $value['end_stunde'];
+                    $cycle->end_minute = $value['end_minute'];
+                    $name = _("alle Termine einer regelmäßigen Zeit");
+                    $name .= ' (' . $cycle->toString('full') . ')';
+                    $sem_create_data['room_requests_options'][] = array('value' => 'cycle_' . $key, 'name' => $name);
                 }
-                $name .= ' (' . $termin->toString() . ')';
-                $sem_create_data['room_requests_options'][] = array('value' => 'date_' . $i, 'name' => $name);
+            } else {
+                for ($i=0; $i < count($sem_create_data['term_tag']); $i++) {
+                    $name = _("Einzeltermin der Veranstaltung");
+                    $termin = new SingleDate();
+                    $new_date = array('start' => 0, 'end' => 0);
+                    if (check_and_set_date($sem_create_data['term_tag'][$i], $sem_create_data['term_monat'][$i], $sem_create_data['term_jahr'][$i],
+                        $sem_create_data['term_start_stunde'][$i], $sem_create_data['term_start_minute'][$i], $new_date, 'start') &&
+                        check_and_set_date($sem_create_data['term_tag'][$i], $sem_create_data['term_monat'][$i], $sem_create_data['term_jahr'][$i],
+                        $sem_create_data['term_end_stunde'][$i], $sem_create_data['term_end_minute'][$i], $new_date, 'end'))
+                    {
+                        $termin->setTime($new_date['start'], $new_date['end']);
+                    }
+                    $name .= ' (' . $termin->toString() . ')';
+                    $sem_create_data['room_requests_options'][] = array('value' => 'date_' . $i, 'name' => $name);
+                }
             }
         }
        if (!is_array($sem_create_data['room_requests'])) {
@@ -3321,7 +3333,7 @@ if ($level == 4) {
                         </td>
                     </tr>
                     <?
-                    if (($RESOURCES_ALLOW_ROOM_REQUESTS) && ($RESOURCES_ENABLE)) {
+                    if (($RESOURCES_ALLOW_ROOM_REQUESTS) && ($RESOURCES_ENABLE) && $sem_create_data['dates_are_valid']) {
                     ?>
 
                     <tr <? $cssSw->switchClass() ?>>
@@ -3375,6 +3387,8 @@ if ($level == 4) {
                                                                     );
                             </script>
                             <?
+                    } else {
+                        echo "<input type=\"hidden\" name=\"skip_room_request\" value=\"1\">";
                     }
                     if ($RESOURCES_ENABLE && $resList->roomsExist() &&
                         (((is_array($sem_create_data["metadata_termin"]["turnus_data"])) && ($sem_create_data["term_art"] == 0))

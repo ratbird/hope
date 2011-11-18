@@ -204,7 +204,7 @@ STUDIP.RoomRequestDialog.reloadUrlOnClose = '<?= UrlHelper::getUrl()?>';
             <? endif; ?>
 
             <tr>
-                <td colspan="9" class="blue_gradient">
+                <td colspan="9" class="category_divider">
                     <b><?=_("Regelmäßige Zeiten")?></b>
                 </td>
             </tr>
@@ -426,7 +426,7 @@ STUDIP.RoomRequestDialog.reloadUrlOnClose = '<?= UrlHelper::getUrl()?>';
                     <td colspan="9" class="blank">&nbsp;</td>
                 </tr>
                 <tr>
-                    <td colspan="9" class="blue_gradient">
+                    <td colspan="9" class="category_divider">
                         <a name="irregular_dates"></a>
                         <b><?=_("Unregelm&auml;&szlig;ige Termine/Blocktermine")?></b>
                     </td>
@@ -530,7 +530,7 @@ STUDIP.RoomRequestDialog.reloadUrlOnClose = '<?= UrlHelper::getUrl()?>';
 
                 if (!$_LOCKED && $RESOURCES_ENABLE && $RESOURCES_ALLOW_ROOM_REQUESTS) { ?>
                 <tr>
-                    <td colspan="9" class="blue_gradient">
+                    <td colspan="9" class="category_divider">
                         <a name="irregular_dates"></a>
                         <b><?=_("Raum anfordern")?></b>
                     </td>

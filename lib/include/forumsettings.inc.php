@@ -86,7 +86,7 @@ if ($forumsend=="bla"){
                     </div>
                 </td>
                 <td <?=$cssSw->getFullClass()?>>
-                    <input type="CHECKBOX" name="rateallopen" id="rateallopen" value=TRUE<?if($forum["rateallopen"]==TRUE) echo " checked";?>>
+                      <input type="CHECKBOX" name="rateallopen" id="rateallopen" value=TRUE<?if($forum["rateallopen"]==TRUE) echo " checked";?>>
             </td>
             </tr>
             <tr  <? $cssSw->switchClass() ?>>
@@ -95,7 +95,7 @@ if ($forumsend=="bla"){
                     <?print _("Bilder im Bewertungsbereich anzeigen");?></label>
                 </td>
                 <td <?=$cssSw->getFullClass()?>>
-                    <input type="CHECKBOX" name="showimages" id="showimages" value=TRUE<?if($forum["showimages"]==TRUE) echo " checked";?>>
+                    <input type="CHECKBOX" name="showimages" id="showimages" value=TRUE<?if($forum["showimages"]==TRUE) echo " checked"; ?> >
             </td>
             </tr>
             <tr <? $cssSw->switchClass() ?>>

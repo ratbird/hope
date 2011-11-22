@@ -138,7 +138,6 @@ function change_messaging_view()
         <tr>
 
             <td class="blank" width="100%" colspan="2" align="center">
-
             <form action="<?=$PHP_SELF?>?messaging_cmd=change_view_insert" method="post">
             <?= CSRFProtection::tokenTag() ?>
             <? if ($reset_txt) {

@@ -85,6 +85,8 @@ class Admin_DatafieldsController extends AuthenticatedController
         $this->allclasses = DataFieldStructure::getDataClass();
         $this->current_class = $class;
         $this->allclass = array_keys($this->allclasses);
+        $this->edit_id = Request::option('edit_id');
+        
     }
 
     /**
@@ -129,6 +131,7 @@ class Admin_DatafieldsController extends AuthenticatedController
         // set variables for view
         $struct = new DataFieldStructure(compact('datafield_id'));
         $struct->load();
+        $this->allclasses = DataFieldStructure::getDataClass();
         $this->item = $struct;
         $this->datafield_id = $struct->getID();
         $this->type = $struct->getType();

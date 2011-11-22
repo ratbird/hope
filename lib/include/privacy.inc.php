@@ -55,7 +55,7 @@ $args['default_homepage_visibility'] = get_default_homepage_visibility($user_id)
 // Now get elements of user's homepage.
 $homepage_elements_unsorted = $my_about->get_homepage_elements();
 
-// Group elements by category.
+// Group elements by category
 $args['homepage_elements'] = array();
 foreach ($homepage_elements_unsorted as $key => $element) {
     $args['homepage_elements'][$element['category']][$key] = $element;

@@ -1050,7 +1050,7 @@ STUDIP.MultiSelect = {
             jQuery(id).attr('multiple', 'multiple').css('height', '120px');
         }
         jQuery(id).multiselect({
-            sortable: true,
+            sortable: false,
             itemName: itemName,
             draggable: true
         });
@@ -1081,7 +1081,7 @@ STUDIP.Browse = {
  * application wide setup
  * ------------------------------------------------------------------------ */
 
-jQuery(function () {
+jQuery(function () { 
     // AJAX Indicator
     STUDIP.ajax_indicator = true;
     STUDIP.URLHelper.base_url = STUDIP.ABSOLUTE_URI_STUDIP;
@@ -1741,7 +1741,7 @@ STUDIP.Messaging = {
             [0].submit();
             return;
         }
-        if (!jQuery("select#del_receiver [value=" + username + "]").length) {
+        if (!jQuery('select#del_receiver [value="' + username + '"]').length) {
             jQuery("select#del_receiver")
                 .append(jQuery('<option value="' + username + '">' + name + '</option>'))
                 .attr("size", jQuery(this).attr("size") + 1);

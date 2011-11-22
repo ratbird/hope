@@ -52,13 +52,13 @@
                 <a name="item_<?= $val->getID() ?>"></a>
                 <?= htmlReady($val->getName()) ?>
             </td>
-            <td><span>
+            <td>
             <? if (in_array($val->getType(), array('selectbox', 'radio', 'combo'))): ?>
                 <a class="datafield_param_link" href="<?=$controller->url_for('admin/datafields/index/'. $current_class .'?edit_id='. $val->getID())?>">
                     <?= Assets::img('icons/16/blue/edit.png', array('class'=> 'text-top', 'title' => 'Einträge bearbeiten')) ?>
                 </a>
             <? endif; ?>
-                <?= htmlReady($val->getType()) ?></span>
+             <span><?= htmlReady($val->getType()) ?></span>
             <? if (in_array($val->getType(), array('selectbox', 'radio', 'combo'))): ?>
                    <?= $this->render_partial("admin/datafields/_param", array('datafield_id' => $val->getID(), 'typeparam' => $val->getTypeparam(), 'hidden' => $edit_id!=$val->getID() )) ?>
             <? endif; ?>

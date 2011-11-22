@@ -922,4 +922,42 @@ class ShowToolsRequests
         }
         return array("html"=>$html, "status"=>$status);
     }
+
+
+    function showOverlapStatus($overlaps, $events_count, $overlap_events_count) {
+        if (is_array($overlaps)) {
+            foreach ($overlaps as $val) {
+                if ($val["lock"])
+                    $lock_desc.=sprintf(_("%s, %s Uhr bis %s, %s Uhr")."\n", date("d.m.Y", $val["begin"]), date("H:i", $val["begin"]), date("d.m.Y", $val["end"]), date("H:i", $val["end"]));
+            }
+            if ($lock_desc)
+                $lock_desc = _("Sperrzeit(en):\n").$lock_desc;
+
+            if ($overlap_events_count >= round($events_count * ($GLOBALS['RESOURCES_ALLOW_SINGLE_ASSIGN_PERCENTAGE'] / 100))) {
+                if ($overlap_events_count == 1)
+                    if ($overlaps[0]["lock"])
+                        $desc.=sprintf(_("Es besteht eine Belegungssperre zur gewünschten Belegungszeit.")."\n".$lock_desc);
+                    else
+                        $desc.=sprintf(_("Es existieren Überschneidungen zur gewünschten Belegungszeit.")."\n");
+                else
+                    $desc.=sprintf(_("Es existieren Überschneidungen oder Belegungssperren zu mehr als %s%% aller gewünschten Belegungszeiten.")."\n".$lock_desc, $GLOBALS['RESOURCES_ALLOW_SINGLE_ASSIGN_PERCENTAGE']);
+                $html = "<img src=\"" . Assets::image_path('icons/16/red/decline.png') . "\" ".tooltip($desc, TRUE, TRUE).">";
+                $status = 2;
+            } else {
+                $desc.=sprintf(_("Einige der gewünschten Belegungszeiten überschneiden sich mit eingetragenen Belegungen bzw. Sperrzeiten:\n"));
+                foreach ($overlaps as $val) {
+                    if ($val["lock"])
+                        $desc.=sprintf(_("%s, %s Uhr bis %s, %s Uhr (Sperrzeit)")."\n", date("d.m.Y", $val["begin"]), date("H:i", $val["begin"]), date("d.m.Y", $val["end"]), date("H:i", $val["end"]));
+                    else
+                        $desc.=sprintf(_("%s von %s bis %s Uhr")."\n", date("d.m.Y", $val["begin"]), date("H:i", $val["begin"]), date("H:i", $val["end"]));
+                }
+                $html = "<img src=\"" . Assets::image_path('icons/16/grey/exclaim-circle.png') . "\" ".tooltip($desc, TRUE, TRUE).">";
+                $status = 1;
+            }
+        } else {
+            $html = "<img src=\"" . Assets::image_path('icons/16/green/accept.png') . "\" ".tooltip(_("Es existieren keine Überschneidungen"), TRUE, TRUE).">";
+            $status = 0;
+        }
+        return array("html"=>$html, "status"=>$status);
+    }
 }

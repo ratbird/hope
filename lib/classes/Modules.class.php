@@ -46,7 +46,7 @@ class Modules {
                 "schedule" => array("id" => 2, "const" => "", "sem" => TRUE, "inst" => FALSE),
                 "participants" => array("id" => 3, "const" => "", "sem" => TRUE, "inst" => FALSE),
                 "personal" => array("id" => 4, "const" => "", "sem" => FALSE, "inst" => TRUE),
-                "literature" => array("id" => 5, "const" => "", "sem" => TRUE, "inst" => TRUE),
+                "literature" => array("id" => 5, "const" => "LITERATURE_ENABLE", "sem" => TRUE, "inst" => TRUE),
                 "chat" => array("id" => 7, "const" => "CHAT_ENABLE", "sem" => TRUE, "inst" => TRUE),
                 "wiki" => array("id" => 8, "const" => "WIKI_ENABLE", "sem" => TRUE, "inst" => TRUE),
                 "scm" => array("id" => 12, "const" => "SCM_ENABLE", "sem" => TRUE, "inst" => TRUE),

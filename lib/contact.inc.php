@@ -230,7 +230,7 @@ function GetUserInfo($user_id)
     $db->query ("SELECT * FROM user_info WHERE user_id = '$user_id'");
     if ($db->next_record()) {
         if ($db->f("Home")!="")
-            $userinfo[_("Homepage")] = FixLinks(htmlReady($db->f("Home")));
+            $userinfo[_("Homepage")] = formatLinks($db->f("Home"));
         if ($db->f("privatnr")!="")
             $userinfo[_("Tel. (privat)")] = htmlReady($db->f("privatnr"));
         if ($db->f("privatcell")!="")

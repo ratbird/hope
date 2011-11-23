@@ -700,7 +700,7 @@ check_admission();
 if (LockRules::Check($SessSemName[1], 'participants')) {
     $lockdata = LockRules::getObjectRule($SessSemName[1]);
     if ($lockdata['description']) {
-        $msg .= "info§" . fixlinks(htmlReady($lockdata['description']));
+        $msg .= "info§" . formatLinks($lockdata['description']);
     }
 }
 

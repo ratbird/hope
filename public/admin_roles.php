@@ -151,7 +151,7 @@ $open = false;
 
 $lockrule = LockRules::getObjectRule($range_id);
 if ($lockrule->description && LockRules::Check($range_id, 'groups')) {
-    $msgs['info'][] = fixlinks(htmlReady($lockrule->description));
+    $msgs['info'][] = formatLinks($lockrule->description);
 }
 
 // a role_id has been submitted, so open that role automatically

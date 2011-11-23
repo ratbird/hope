@@ -435,7 +435,7 @@ class Admin_UserController extends AuthenticatedController
         $this->userfields = DataFieldEntry::getDataFieldEntries($user_id);
         $this->userdomains = UserDomain::getUserDomainsForUser($user_id);
         if (LockRules::CheckLockRulePermission($user_id) && LockRules::getObjectRule($user_id)->description) {
-            PageLayout::postMessage(MessageBox::info(fixLinks(htmlReady(LockRules::getObjectRule($user_id)->description))));
+            PageLayout::postMessage(MessageBox::info(formatLinks(LockRules::getObjectRule($user_id)->description)));
         }
     }
 

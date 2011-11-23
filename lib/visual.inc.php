@@ -291,7 +291,7 @@ function format_help($what, $trim = TRUE, $extern = FALSE, $wiki = FALSE, $show_
     $markup = new StudipFormat();
     $what = preg_replace("/\r\n?/", "\n", $what);
 
-    $what = htmlReady($what, $trim, FALSE);
+    $what = htmlReady($what, $trim);
     if ($wiki == TRUE)
         return wiki_format(symbol(smile(latex($markup->format(FixLinks($what, FALSE, FALSE, TRUE, $extern, TRUE)), $extern), $extern), $extern), $show_comments);
     else
@@ -311,32 +311,20 @@ function format_help($what, $trim = TRUE, $extern = FALSE, $wiki = FALSE, $show_
 * @return       string
 */
 function formatReady ($what, $trim = TRUE, $extern = FALSE, $wiki = FALSE, $show_comments="icon") {
-
-    if (preg_match_all("'\[nop\](.+)\[/nop\]'isU", $what, $matches)) {
-        // replace protected text by very improbable character (ASCII 007 = BEL = ^G)
-        $what = preg_replace("'\[nop\].+\[/nop\]'isU", "\007", $what);
-        $what = str_replace("\n", '<br>', format_help($what, $trim, $extern, $wiki, $show_comments));
-        // explode nonprotected text on very improbable character
-        $what = explode("\007", $what);
-        $i = 0; $all = '';
-        // treat all nop'd areas
-        foreach ($what as $w) {
-            if ($matches[1][$i] == '') {
-                $all .= $w;
-            } else {
-                // do nearly nothing within nop-areas
-                // but:
-                // - fix newlines
-                $a = preg_replace("/\n?\r\n?/", '<br>', htmlReady($matches[1][$i], $trim, FALSE));
-                $all .= $w . (($wiki == TRUE)? "<nowikilink>$a</nowikilink>" : $a);
-            }
-            $i++;
-        }
-        return $all;
-    }
     return str_replace("\n", '<br>', format_help($what, $trim, $extern, $wiki, $show_comments));
 }
 
+/**
+ * simplified version of formatReady that handles only link formatting
+ *
+ * @param        string $what        what to format
+ * @param        boolean $trim       should the output trimmed?
+ * @param        boolean $extern TRUE if called from external pages ('externe Seiten')
+ */
+function formatLinks($what, $trim = true, $extern = false)
+{
+    return FixLinks(htmlReady($what, $trim), true, true, false, $extern);
+}
 
 /**
 * the special version of formatReady for Wiki-Webs
@@ -451,9 +439,7 @@ function latex($text, $extern = FALSE) {
 * @return   string
 */
 function decodeHTML ($string) {
-    $string = strtr($string, array_flip(get_html_translation_table(HTML_ENTITIES,ENT_QUOTES)));
-    $string = preg_replace("/&#([0-9]+);/me", "chr('\\1')", $string);
-    return $string;
+    return html_entity_decode($string, ENT_QUOTES);
 }
 
 /**

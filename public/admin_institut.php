@@ -368,7 +368,7 @@ include 'lib/include/admin_search_form.inc.php';
 
 $lockrule = LockRules::getObjectRule($i_view);
 if ($lockrule->description && LockRules::CheckLockRulePermission($i_view)) {
-    $msg .= 'info§' . fixlinks(htmlReady($lockrule->description));
+    $msg .= 'info§' . formatLinks($lockrule->description);
 }
 ?>
 <table class="blank" width="100%" cellpadding="2" cellspacing="0">

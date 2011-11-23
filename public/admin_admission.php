@@ -758,7 +758,7 @@ if (($seminar_id) && (!$uebernehmen_x) &&(!$adm_null_x) &&(!$adm_los_x) &&(!$adm
 }
 
 if ($lockdata['description'] && LockRules::CheckLockRulePermission($seminar_id, $lockdata['permission'])){
-    $infomsg .= "info§" . fixlinks(htmlReady($lockdata['description']));
+    $infomsg .= "info§" . formatLinks($lockdata['description']);
 }
 //Beim Umschalten keine Fehlermeldung
  if (($errormsg) && ((!$uebernehmen_x) &&(!$adm_null_x) &&(!$adm_los_x) &&(!$adm_chrono_x) && (!$adm_gesperrt_x) && (!$add_studg_x) && (!$delete_studg)))

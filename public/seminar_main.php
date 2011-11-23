@@ -195,7 +195,7 @@ $quarter_year = 60 * 60 * 24 * 90;
             }
         }
     } else {
-        echo '<b>'._('Beschreibung:').' </b><br>'. FixLinks(htmlReady($sem->description)) .'<br><br>';
+        echo '<b>'._('Beschreibung:').' </b><br>'. formatLinks($sem->description) .'<br><br>';
         echo '<b>'._('Moderiert von:') .'</b> ';
         $all_mods = $sem->getMembers('dozent') + $sem->getMembers('tutor');
         $mods = array();

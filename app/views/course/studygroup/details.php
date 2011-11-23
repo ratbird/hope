@@ -70,4 +70,4 @@ if ($send_from_search_page) {
 <b><?= _("Moderiert von:") ?></b> <?= implode(',', $mods) ?><br>
 <br>
 <b><?= _("Beschreibung:") ?></b><br>
-<?= FixLinks(htmlReady($studygroup->description)) ?>
+<?= formatLinks($studygroup->description) ?>

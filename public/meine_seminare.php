@@ -136,7 +136,7 @@ if(in_array($cmd, words('no_kill suppose_to_kill suppose_to_kill_admission kill 
         if(LockRules::Check($current_seminar->getId(), 'participants')){
             $lockdata = LockRules::getObjectRule($current_seminar->getId());
             $meldung = "error§" . sprintf(_("Sie können das Abonnement der Veranstaltung <b>%s</b> nicht aufheben."), htmlReady($current_seminar->getName()));
-            if($lockdata['description']) $meldung .= '§info§' . fixLinks(htmlReady($lockdata['description']));
+            if($lockdata['description']) $meldung .= '§info§' . formatLinks($lockdata['description']);
         } else {
             if ($current_seminar->admission_type || $current_seminar->admission_prelim == 1) {
                 $meldung = sprintf(_('Wollen Sie das Abonnement der teilnahmebeschränkten Veranstaltung "%s" wirklich aufheben? Sie verlieren damit die Berechtigung für die Veranstaltung und müssen sich ggf. neu anmelden!'), $current_seminar->getName());

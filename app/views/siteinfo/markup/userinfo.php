@@ -6,5 +6,5 @@
 <? else : ?>
     <a href="<?= URLHelper::getLink('about.php',
                                      array('username' => $username))
-              ?>"><?= htmlReady($fullname)?></a>, E-Mail: <?= FixLinks(htmlReady($email))?>
+              ?>"><?= htmlReady($fullname)?></a>, E-Mail: <?= formatLinks($email)?>
 <? endif ?>

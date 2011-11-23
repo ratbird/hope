@@ -783,7 +783,7 @@ if ($view == 'Daten') {
     }
     if (LockRules::CheckLockRulePermission($my_about->auth_user["user_id"]) && LockRules::getObjectRule($my_about->auth_user["user_id"])->description) {
         echo '<tr><td align="left" valign="top" class="blank" style="padding-left:20px;">';
-        echo MessageBox::info(fixLinks(htmlReady(LockRules::getObjectRule($my_about->auth_user["user_id"])->description)));
+        echo MessageBox::info(formatLinks(LockRules::getObjectRule($my_about->auth_user["user_id"])->description));
         echo '</td</tr>';
     }
 
@@ -1201,7 +1201,7 @@ if ($view == 'Karriere') {
     }
     if (LockRules::Check($my_about->auth_user["user_id"], 'institute_data') && LockRules::getObjectRule($my_about->auth_user["user_id"])->description) {
         echo '<tr><td align="left" valign="top" class="blank" style="padding-left:20px;">';
-        echo MessageBox::info(fixLinks(htmlReady(LockRules::getObjectRule($my_about->auth_user["user_id"])->description)));
+        echo MessageBox::info(formatLinks(LockRules::getObjectRule($my_about->auth_user["user_id"])->description));
         echo '</td</tr>';
         $locked = true;
     } else {
@@ -1261,7 +1261,7 @@ if ($view == 'Lebenslauf') {
     SkipLinks::addIndex(_("Private Daten bearbeiten"), 'edit_private');
     if (LockRules::CheckLockRulePermission($my_about->auth_user["user_id"]) && LockRules::getObjectRule($my_about->auth_user["user_id"])->description) {
         echo '<tr><td align="left" valign="top" class="blank" style="padding-left:20px;">';
-        echo MessageBox::info(fixLinks(htmlReady(LockRules::getObjectRule($my_about->auth_user["user_id"])->description)));
+        echo MessageBox::info(formatLinks(LockRules::getObjectRule($my_about->auth_user["user_id"])->description));
         echo '</td</tr>';
     }
     echo "<tr><td class=blank>";

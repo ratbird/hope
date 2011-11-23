@@ -10,7 +10,7 @@
                 <a href="<?= URLHelper::getLink('about.php',
                                                  array('username' => $user['username']))
                           ?>"><?= htmlReady($user['fullname']) ?></a>, E-Mail:
-                <?= FixLinks(htmlReady($user['Email'])) ?>
+                <?= formatLinks($user['Email']) ?>
             </li>
         <? endforeach ?>
     </ul>

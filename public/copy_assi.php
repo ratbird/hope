@@ -63,7 +63,7 @@ if ($SessSemName[1]) {
         $lockdata = LockRules::getObjectRule($SessSemName[1]);
         $msg = 'error§' . _("Die Veranstaltung kann nicht kopiert werden.").'§';
         if ($lockdata['description']){
-            $msg .= "info§" . fixlinks(htmlReady($lockdata['description'])).'§';
+            $msg .= "info§" . formatLinks($lockdata['description']).'§';
         }
         ?>
         <table border=0 align="center" cellspacing=0 cellpadding=0 width="100%">

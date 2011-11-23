@@ -416,7 +416,7 @@ function open_im() {
                 <? if ($db->f("Home") != "" &&
                         is_element_visible_for_user($user->id, $user_id, $visibilities['homepage'])) : ?>
                     <b>&nbsp;<?= _("Homepage:") ?></b>
-                    <?= FixLinks(htmlReady($db->f("Home"))) ?>
+                    <?= formatLinks($db->f("Home")) ?>
                     <br>
                 <? endif ?>
 

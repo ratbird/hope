@@ -541,7 +541,7 @@ if (!isset($details) || isset($set)) {
 }
 $lockrule = LockRules::getObjectRule($inst_id);
 if ($admin_view && $lockrule->description && LockRules::Check($inst_id, 'participants')) {
-    my_info(fixlinks(htmlReady($lockrule->description)),'',3);
+    my_info(formatLinks($lockrule->description),'',3);
 }
 
 ?>

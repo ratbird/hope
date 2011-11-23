@@ -337,7 +337,7 @@ class Course_BasicdataController extends AuthenticatedController
         $this->chstring = $data['chdate'] ? date("d.m.Y, G:i", $data['chdate']) : _("unbekannt");
         $lockdata = LockRules::getObjectRule($this->course_id);
         if ($lockdata['description'] && LockRules::CheckLockRulePermission($this->course_id, $lockdata['permission'])){
-            $this->flash['msg'] = array_merge((array)$this->flash['msg'], array(array("info", fixlinks(htmlReady($lockdata['description'])))));
+            $this->flash['msg'] = array_merge((array)$this->flash['msg'], array(array("info", formatLinks($lockdata['description']))));
         }
         $this->flash->discard(); //schmeißt ab jetzt unnötige Variablen aus der Session.
     }

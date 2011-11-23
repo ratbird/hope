@@ -142,7 +142,7 @@ if (isset($cmd) && ($cmd == 'do_copy') && $perm->have_studip_perm('tutor',$cp_id
         $lockdata = LockRules::getObjectRule($cp_id);
         $errormsg = 'error§' . _("Die Veranstaltung kann nicht kopiert werden.").'§';
         if ($lockdata['description']){
-            $errormsg .= "info§" . fixlinks(htmlReady($lockdata['description'])).'§';
+            $errormsg .= "info§" . formatLinks($lockdata['description']).'§';
         }
         unset($cmd);
         unset($start_level);

@@ -103,7 +103,7 @@ if (LockRules::Check($id, 'room_time')) {
     $_LOCKED = TRUE;
     $data = LockRules::getObjectRule($id);
     $sem->createInfo(_("Diese Seite ist für die Bearbeitung gesperrt. Sie können die Daten einsehen, jedoch nicht verändern.")
-    . ($data['description'] ? '<br>'.fixLinks(htmlReady($data['description'])) : ''));
+    . ($data['description'] ? '<br>'.formatLinks($data['description']) : ''));
 }
 
 

@@ -197,7 +197,7 @@ class ExternModuleLecturedetails extends ExternModule {
             }
 
             if ($visible[++$j] && $this->db->f("Beschreibung"))
-                $data["description"] = FixLinks(htmlReady($this->db->f("Beschreibung")), TRUE, TRUE, FALSE, TRUE);
+                $data["description"] = formatLinks($this->db->f("Beschreibung"), true, true);
 
             if ($visible[++$j])
                 $data["location"] = htmlReady(Seminar::getInstance($this->seminar_id)->getDatesTemplate('dates/seminar_export_location'));
@@ -239,7 +239,7 @@ class ExternModuleLecturedetails extends ExternModule {
             }
 
             if ($visible[++$j] && $this->db->f("Sonstiges"))
-                $data["misc"] = FixLinks(htmlReady($this->db->f("Sonstiges")), TRUE, TRUE, FALSE, TRUE);
+                $data["misc"] = formatLinks($this->db->f("Sonstiges"), true, true);
 
             if ($visible[++$j] && $this->db->f("ects"))
                 $data["ects"] = htmlReady($this->db->f("ects"));

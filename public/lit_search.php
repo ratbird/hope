@@ -248,7 +248,7 @@ for ($i = $_the_search->start_result; $i <= $end_result; ++$i){
         $content .= "<b>" . _("Titel:") ."</b>&nbsp;&nbsp;" . htmlReady($element->getValue("dc_title"),true,true) . "<br>";
         $content .= "<b>" . _("Autor; weitere Beteiligte:") ."</b>&nbsp;&nbsp;" . htmlReady($element->getValue("authors"),true,true) . "<br>";
         $content .= "<b>" . _("Erschienen:") ."</b>&nbsp;&nbsp;" . htmlReady($element->getValue("published"),true,true) . "<br>";
-        $content .= "<b>" . _("Identifikation:") ."</b>&nbsp;&nbsp;" . fixLinks(htmlReady($element->getValue("dc_identifier"),true,true)) . "<br>";
+        $content .= "<b>" . _("Identifikation:") ."</b>&nbsp;&nbsp;" . formatLinks($element->getValue("dc_identifier")) . "<br>";
         $content .= "<b>" . _("Schlagw&ouml;rter:") ."</b>&nbsp;&nbsp;" . htmlReady($element->getValue("dc_subject"),true,true) . "<br>";
         if ($element->getValue("lit_plugin") != "Studip"){
             $content .= "<b>" . _("Externer Link:") ."</b>&nbsp;&nbsp;";

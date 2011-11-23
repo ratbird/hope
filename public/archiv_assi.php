@@ -127,7 +127,7 @@ if ($dec)
 if(LockRules::Check($archiv_assi_data["sems"][$archiv_assi_data["pos"]]["id"], 'seminar_archive')) {
         $lockdata = LockRules::getObjectRule($archiv_assi_data["sems"][$archiv_assi_data["pos"]]["id"]);
         if ($lockdata['description']){
-            $details = fixlinks($lockdata['description']);
+            $details = formatLinks($lockdata['description']);
         } else {
             $details = _("Die Veranstaltung kann nicht archiviert werden.");
         }

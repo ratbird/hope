@@ -566,7 +566,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
             foreach ($range_object->item_data_mapping as $key => $value){
                 if ($range_object->item_data[$key]){
                     $content .= "<b>" . htmlReady($value) . ":</b>&nbsp;";
-                    $content .= fixLinks(htmlReady($range_object->item_data[$key])) . "&nbsp; ";
+                    $content .= formatLinks($range_object->item_data[$key]) . "&nbsp; ";
                 }
             }
             $content .= "&nbsp;";

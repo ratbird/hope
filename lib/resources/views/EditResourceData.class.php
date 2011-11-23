@@ -71,9 +71,9 @@ class EditResourceData {
     //private
     function selectCategories($select_rooms = TRUE) {
         if (!$select_rooms)
-            $this->db->query("SELECT * FROM resources_categories WHERE is_room = 0");
+            $this->db->query("SELECT * FROM resources_categories WHERE is_room = 0 ORDER BY name");
         else
-            $this->db->query("SELECT * FROM resources_categories");
+            $this->db->query("SELECT * FROM resources_categories ORDER BY name");
     }
 
     //private

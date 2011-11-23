@@ -1937,7 +1937,7 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
     if ($document_count > 0)
         print "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/folder-full.png\" border=0>&nbsp;";
     else
-        print "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/folder-full.png\" border=0>&nbsp;";
+        print "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/folder-empty.png\" border=0>&nbsp;";
 
     //Pfeile, wenn Datei bewegt werden soll
     if ($move && ($folder_id != $move) && $folder_tree->isWritable($folder_id, $user->id) && (!$folder_tree->isFolder($move) || ($folder_tree->checkCreateFolder($folder_id, $user->id) && !$folder_tree->isExerciseFolder($folder_id, $user->id)))){

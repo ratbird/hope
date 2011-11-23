@@ -67,7 +67,10 @@ class ToolsNavigation extends Navigation
             $navigation = new Navigation(_('Lernmodule'), 'my_elearning.php');
             $this->addSubNavigation('elearning', $navigation);
         }
-
+		
+		$navigation = new Navigation(_('RSS-Feeds'), 'rss.php', array('view' => 'rss'));
+        $this->addSubNavigation('rss', $navigation);
+		
         // export
         if (get_config('EXPORT_ENABLE') && $perm->have_perm('tutor')) {
             $navigation = new Navigation(_('Export'), 'export.php');

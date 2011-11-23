@@ -43,6 +43,7 @@ function print_rss($username) {
     $cssSw->switchClass();
 
     $db->query(sprintf("SELECT * FROM auth_user_md5 a, rss_feeds r WHERE a.username='%s' AND a.user_id=r.user_id ORDER BY r.priority",$username));
+	echo "<table style='border-collapse: collapse;'>";
     echo "<tr><td id=\"main_content\" align=\"left\" valign=\"top\" class=\"blank\"><p class=\"info\"><br>";
     echo _("Hier können Sie beliebige eigene RSS-Feeds einbinden. Diese RSS-Feeds erscheinen auf Ihrer pers&ouml;nlichen Startseite. Mit den Pfeilsymbolen k&ouml;nnen Sie die Reihenfolge, in der die RSS-Feeds angezeigt werden, ver&auml;ndern.");
     echo "<br>\n";
@@ -88,7 +89,7 @@ function print_rss($username) {
             echo makeButton("loeschen", 'img', _("löschen")) . "</a><br>&nbsp; </div></td></tr>";
             $count++;
     }
-    echo "</form></td></tr></table></td></tr>";
+    echo "</form></td></tr></table></td></tr></table>";
 }
 
 function create_rss() {

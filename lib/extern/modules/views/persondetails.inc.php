@@ -618,7 +618,7 @@ function kontakt ($module, $db, $separate = FALSE) {
                     $out .= $alias_contact[$position] . "</font></td>";
                     $out .= "<td$attr_td>";
                     $out .= "<font$attr_fontcontent>";
-                    $out .= formatLinks($db->f("Home"), true, true);
+                    $out .= formatLinks($db->f("Home"));
                 }
                 break;
             default:

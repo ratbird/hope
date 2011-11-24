@@ -139,6 +139,18 @@ a:hover.toolbar {
     color: #EEEEEE;
 }
 
+a.link-intern {
+    padding-left: 18px;
+    background-image: url('../images/icons/16/blue/link-intern.png');
+    background-repeat: no-repeat;
+}
+
+a.link-extern {
+    padding-left: 18px;
+    background-image: url('../images/icons/16/blue/link-extern.png');
+    background-repeat: no-repeat;
+}
+
 a img { /* Bilder in Links ohne Rand */
     border:0px;
 }

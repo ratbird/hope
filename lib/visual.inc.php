@@ -115,7 +115,7 @@ function get_ampel_write ($mein_status, $admission_status, $write_level, $print=
             break;
     }
 
-    $ampel_status = "<img border=\"0\" src=\"". Assets::image_path($color) . "\"> ". $ampel_state["text"];
+    $ampel_status = "<img src=\"". Assets::image_path($color) . "\"> ". $ampel_state["text"];
 
     if ($print == TRUE) {
         echo $ampel_status;
@@ -286,18 +286,6 @@ function quotes_encode($description,$author)
     return $description;
 }
 
-// Hilfsfunktion für formatReady
-function format_help($what, $trim = TRUE, $extern = FALSE, $wiki = FALSE, $show_comments="icon") {
-    $markup = new StudipFormat();
-    $what = preg_replace("/\r\n?/", "\n", $what);
-
-    $what = htmlReady($what, $trim);
-    if ($wiki == TRUE)
-        return wiki_format(symbol(smile(latex($markup->format(FixLinks($what, FALSE, FALSE, TRUE, $extern, TRUE)), $extern), $extern), $extern), $show_comments);
-    else
-        return symbol(smile(latex($markup->format(FixLinks($what, FALSE, FALSE, TRUE, $extern)), $extern), $extern), $extern);
-}
-
 /**
 * universal and very usable functions to get all the special stud.ip formattings
 *
@@ -311,19 +299,22 @@ function format_help($what, $trim = TRUE, $extern = FALSE, $wiki = FALSE, $show_
 * @return       string
 */
 function formatReady ($what, $trim = TRUE, $extern = FALSE, $wiki = FALSE, $show_comments="icon") {
-    return str_replace("\n", '<br>', format_help($what, $trim, $extern, $wiki, $show_comments));
+    $markup = new StudipFormat();
+    $what = preg_replace("/\r\n?/", "\n", $what);
+
+    $what = FixLinks(htmlReady($what, $trim), FALSE, FALSE, TRUE, false, $wiki);
+    $what = symbol(smile(latex($markup->format($what), false)));
+    return str_replace("\n", '<br>', $what);
 }
 
 /**
  * simplified version of formatReady that handles only link formatting
  *
  * @param        string $what        what to format
- * @param        boolean $trim       should the output trimmed?
- * @param        boolean $extern TRUE if called from external pages ('externe Seiten')
  */
-function formatLinks($what, $trim = true, $extern = false)
+function formatLinks($what)
 {
-    return FixLinks(htmlReady($what, $trim), true, true, false, $extern);
+    return FixLinks(htmlReady($what));
 }
 
 /**
@@ -337,7 +328,7 @@ function formatLinks($what, $trim = true, $extern = false)
 * @return       string
 */
 function wikiReady ($what, $trim = TRUE, $extern = FALSE, $show_comments="icon") {
-    return formatReady ($what, $trim, $extern, TRUE, $show_comments);
+    return wiki_format(formatReady($what, $trim, false, TRUE), $show_comments);
 }
 
 /**
@@ -369,7 +360,7 @@ function format_wiki_comment($comment, $metainfo, $show_comment) {
         $comment = decodehtml($comment);
         $comment = preg_replace("/<.*>/U","",$comment);
         $metainfo = decodeHTML($metainfo);
-        return '<nowikilink><a href="javascript:void(0);" '.tooltip(sprintf("%s %s:\n%s",_("Kommentar von"),$metainfo,$comment),TRUE,TRUE) . "><img src=\"".$GLOBALS['ASSETS_URL']."images/comment.png\" border=0></a></nowikilink>";
+        return '<nowikilink><a href="javascript:void(0);" '.tooltip(sprintf("%s %s:\n%s",_("Kommentar von"),$metainfo,$comment),TRUE,TRUE) . "><img src=\"".$GLOBALS['ASSETS_URL']."images/comment.png\"></a></nowikilink>";
     } else {
         echo "<p>Error: unknown show_comment value in format_wiki_comment: ".$show_comment."</p>";
         die();
@@ -546,9 +537,7 @@ function FixLinks ($data = "", $fix_nl = TRUE, $nl_to_br = TRUE, $img = FALSE, $
     }
     if ($fix_nl)
         $data = preg_replace("/\n?\r\n?/", "\n", $data); // newline fixen
-    if (!$wiki) $wiki = 0;  // schei.. php
     $img = $img ? 'TRUE' : 'FALSE';
-    $extern = $extern ? 'TRUE' : 'FALSE';
     // add protocol type
     $pattern = array("/([ \t\]\n=]|^)www\./i", "/([ \t\]\n]|^)ftp\./i");
     $replace = array("\\1http://www.", "\\1ftp://ftp.");
@@ -562,8 +551,8 @@ function FixLinks ($data = "", $fix_nl = TRUE, $nl_to_br = TRUE, $img = FALSE, $
                     '#(?<=\s|^|\>)(\[([^\n\f]+?)\])?(['.$chars.']+(\.['.$chars.']+)*@(['.$chars.']+(\.['.$chars.']+)+))#ie'
                     );
     $replace = array(
-            "preg_call_link(array('\\1', '\\5', '\\7', '\\12', '\\13', '\\3', '\\9', '\\11'), 'LINK', $img, $extern, $wiki)",
-            "preg_call_link(array('\\2', '\\3'), 'MAIL', false, $extern, $wiki)");
+            "preg_call_link(array('\\1', '\\5', '\\7', '\\12', '\\13', '\\3', '\\9', '\\11'), 'LINK', $img, false, '$wiki')",
+            "preg_call_link(array('\\2', '\\3'), 'MAIL', false, false, '$wiki')");
     $fixed_text = preg_replace($pattern, $replace, $fixed_text);
 
     if ($nl_to_br)
@@ -594,20 +583,12 @@ function preg_call_link ($params, $mod, $img, $extern = FALSE, $wiki = FALSE) {
         list($pu['first_target']) = explode('/',substr($pu['path'],strlen($GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'])));
     }
 
-    if ($extern) {
-        $link_pic = ' ';
-    } elseif ($intern) {
-        $link_pic = Assets::img('icons/16/blue/link-intern.png', array('class' => 'text-top', 'title' =>_('interner Link')))." ";
-    } else {
-        $link_pic = Assets::img('icons/16/blue/link-extern.png', array('class' => 'text-top', 'title' =>_('externer Link')))." ";
-    }
+    $link_class = $intern ? 'link-intern' : 'link-extern';
 
     if ($mod == 'LINK') {
         if (!in_array($params[5], words('img flash audio video'))) {
-            if ($params[3] == '')
-                $params[3] = $params[4];
-            else $params[3] = format_help($params[3]);
-            $tbr = '<a href="'.idna_link($params[4]).'"'.($intern ? '' : ' target="_blank"').">$link_pic{$params[3]}</a>";
+            $link_text = $params[3] != '' ? formatReady($params[3]) : $params[4];
+            $tbr = '<a class="'.$link_class.'" href="'.idna_link($params[4]).'"'.($intern ? '' : ' target="_blank"').">$link_text</a>";
         }
         elseif ($img) {
             $cfg = Config::GetInstance();
@@ -686,10 +667,8 @@ function preg_call_link ($params, $mod, $img, $extern = FALSE, $wiki = FALSE) {
 
     } elseif ($mod == 'MAIL') {
         $mailtolink=preg_replace("/&quot;/","",idna_link($params[1],true));
-        if ($params[0] != '')
-            $tbr = '<a href="mailto:'.$mailtolink. "\">$link_pic{$params[0]}</a>";
-        else
-            $tbr = '<a href="mailto:'.$mailtolink."\">$link_pic{$params[1]}</a>";
+        $link_text = $params[0] != '' ? $params[0] : $params[1];
+        $tbr = '<a class="'.$link_class.'" href="mailto:'.$mailtolink."\">$link_text</a>";
     }
     if ($wiki) $tbr = '<nowikilink>'.$tbr.'</nowikilink>';
     return $tbr;
@@ -744,18 +723,9 @@ function smile ($text = "", $extern = FALSE) {
         return $text;
 
     //smileys in the ":name:" notation
+    $path = $GLOBALS['DYNAMIC_CONTENT_URL'] . '/smile';
     $pattern = "'(\>|^|\s):([_a-zA-Z][_a-z0-9A-Z-]*):(?=$|\<|\s)'m";
-    $replace = "\\1";
-    if (!$extern) {
-        $path = $GLOBALS['DYNAMIC_CONTENT_URL'] . '/smile';
-        $replace .= "<a href=\"{$CANONICAL_RELATIVE_PATH_STUDIP}show_smiley.php\" target=\"_blank\">";
-        $replace .= "<img alt=\"\\2\" title=\"\\2\" border=\"0\" src=\"";
-        $replace .= "$path/\\2.gif\"></a>\\3";
-    } else {
-        $path = $GLOBALS['DYNAMIC_CONTENT_URL'] . '/smile';
-        $replace .= "<img alt=\"\\2\" title=\"\\2\" border=\"0\" src=\"";
-        $replace .= "$path/\\2.gif\">\\3";
-    }
+    $replace = "\\1<img alt=\"\\2\" title=\"\\2\" src=\"$path/\\2.gif\">\\3";
     $text = preg_replace($pattern, $replace, $text);
 
     //smileys in short notation
@@ -764,14 +734,7 @@ function smile ($text = "", $extern = FALSE) {
     reset($SMILE_SHORT);
     while (list($key,$value) = each($SMILE_SHORT)) {
         $patterns[] = "'(\>|^|\s)" . preg_quote($key) . "(?=$|\<|\s)'m";
-        if (!$extern) {
-            $replaces[] = "\\1<a href=\"{$CANONICAL_RELATIVE_PATH_STUDIP}show_smiley.php\" target=\"_blank\">"
-                    . "<img alt=\"$value\" title=\"$value\" border=\"0\" src=\""
-                    . "$path/$value.gif\"></a>\\2";
-        } else {
-            $replaces[] = "\\1<img alt=\"$value\" title=\"$value\" border=\"0\" src=\""
-                    . "$path/$value.gif\">\\2";
-        }
+        $replaces[] = "\\1<img alt=\"$value\" title=\"$value\" src=\"$path/$value.gif\">\\2";
     }
     return preg_replace($patterns, $replaces, $text);
 }
@@ -788,10 +751,9 @@ function smile ($text = "", $extern = FALSE) {
 *
 * @access   public
 * @param        string  the text to convert
-* @param        boolean TRUE if function is called from external pages
 * @return       string  convertet text
 */
-function symbol ($text = "", $extern = FALSE)
+function symbol ($text = "")
 {
     global $SYMBOL_SHORT;
 
@@ -970,10 +932,10 @@ function printcontent ($breite, $write = FALSE, $inhalt, $edit, $printout = TRUE
     $print .= $inhalt;
 
     if ($edit) {
-        $print .= "<br><br><div align=\"center\">$edit</div><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" height=\"6\" border=\"0\">";
+        $print .= "<br><br><div align=\"center\">$edit</div><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" height=\"6\">";
         if ($addon!="")
             if (substr($addon,0,5)=="open:") // es wird der öffnen-Pfeil mit Link ausgegeben
-                $print .= "</td><td valign=\"middle\" class=\"steel1\" nowrap><a href=\"".substr($addon,5)."\"><img src=\"".Assets::image_path('icons/16/blue/arr_1left.png')."\" align=\"middle\" border=\"0\"".tooltip(_("Bewertungsbereich öffnen"))."></a>&nbsp;";
+                $print .= "</td><td valign=\"middle\" class=\"steel1\" nowrap><a href=\"".substr($addon,5)."\"><img src=\"".Assets::image_path('icons/16/blue/arr_1left.png')."\" align=\"middle\"".tooltip(_("Bewertungsbereich öffnen"))."></a>&nbsp;";
             else {              // es wird erweiterter Inhalt ausgegeben
                 $print .= "</td><td class=\"steelblau_schatten\" nowrap>";
                 $print .= "<font size=\"-2\" color=\"#444444\">$addon";
@@ -1084,51 +1046,6 @@ function tooltip2($text, $with_alt = TRUE, $with_popup = FALSE) {
     $ret['title'] = $text;
 
     return $ret;
-}
-
-
-/**
-* Returns a an entry in the top navigation bar
-*
-*
-* @access       public
-* @param        string $icon        Path to the icon
-* @param        string $URL     URL on button
-* @param        string $text        Hovertext under the Button
-* @param        string $tooltip     for Tooltip Window
-* @param        integer $size       Width of the Element
-* @param        string $target      same or new window...
-* @param        string $align
-* @param        string $toolwindow  For a special Toolwindow
-* @accesskey    string          key used for the shortcut
-* @return       string
-*/
-function MakeToolbar ($icon,$URL,$text,$tooltip,$size,$target,$align="center",$toolwindow="FALSE", $accesskey=FALSE) {
-    global $user;
-    if (is_object($user) && !$user->cfg->getValue(null,"ACCESSKEY_ENABLE"))
-        $accesskey = FALSE;
-    if ($accesskey !== FALSE)
-        $accesskey_tooltip = "  [ALT] + ".strtoupper($accesskey);
-    if ($toolwindow == "FALSE") {
-        $tool = tooltip($tooltip.$accesskey_tooltip);
-    } else {
-        $tool = tooltip($tooltip,TRUE,TRUE);
-    }
-
-    if ($target != '')
-        $target = ' target="'.$target.'"';
-    if ($accesskey !== FALSE)
-        $accesskey = ' accesskey="'.$accesskey.'"';
-
-    $toolbar = '<td class="toolbar" align="'.$align.'">';
-
-    $toolbar .= '<img border="0" src="'. $GLOBALS['ASSETS_URL'] . 'images/blank.gif" height="1" width="45"><br>'
-              .'<a class="toolbar" href="'.$URL.'"'.$target.$accesskey.'><img border="0" src="'.$icon.'" '.$tool.'><br>'
-              .'<img border="0" src="'. $GLOBALS['ASSETS_URL'] .'images/blank.gif" height="6" width="'.$size.'"><br>'
-              .'<b><font size="2">'.$text.'</font></b></a><br>'
-              .'<img border="0" src="'. $GLOBALS['ASSETS_URL'] . 'images/blank.gif" height="4" width="30">';
-    $toolbar .= "</td>\n";
-    return $toolbar;
 }
 
 /**

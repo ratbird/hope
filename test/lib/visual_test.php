@@ -10,7 +10,6 @@
  */
 
 require_once 'lib/visual.inc.php';
-require_once 'lib/classes/Assets.class.php';
 require_once 'lib/classes/Config.class.php';
 
 class VisualFunctionsTest extends UnitTestCase
@@ -189,19 +188,14 @@ class VisualFunctionsTest extends UnitTestCase
     public function testLink()
     {
         $input = '[Testlink]https://www.studip.de/';
-        $link_extern = Assets::img('icons/16/blue/link-extern.png',
-            array('class' => 'text-top', 'title' =>_('externer Link')));
-        $expected = '<a href="https://www.studip.de/" target="_blank">' . $link_extern . ' Testlink</a>';
+        $expected = '<a class="link-extern" href="https://www.studip.de/" target="_blank">Testlink</a>';
         $this->assertEqual(formatReady($input), $expected);
     }
 
     public function testMail()
     {
         $input = '[Mail]some.user@example.com';
-        $link_extern = Assets::img('icons/16/blue/link-extern.png',
-            array('class' => 'text-top', 'title' =>_('externer Link')));
-        $expected = '<a href="mailto:some.user@example.com">' . $link_extern . ' Mail</a>';
+        $expected = '<a class="link-extern" href="mailto:some.user@example.com">Mail</a>';
         $this->assertEqual(formatReady($input), $expected);
     }
 }
-

@@ -431,7 +431,7 @@ class ExternModule {
         if ($this->is_raw_output) {
             return $text;
         }
-        return $allow_links ? formatLinks($text, true, true) : htmlReady($text);
+        return $allow_links ? formatLinks($text) : htmlReady($text);
     }
     
     function extFormatReady ($text) {

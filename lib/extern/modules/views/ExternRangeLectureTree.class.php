@@ -126,7 +126,7 @@ class ExternRangeLectureTree {
                     echo "<font" . $this->config->getAttributes("RangeTreeLevelContent", "fontalias") . ">";
                     echo htmlReady($aliases[$position]) . "&nbsp;</font>";
                     echo "<font" . $this->config->getAttributes("RangeTreeLevelContent", "fontdata") . ">";
-                    echo formatLinks($range_object->item_data[$key], true, true) . "&nbsp; </font>";
+                    echo formatLinks($range_object->item_data[$key]) . "&nbsp; </font>";
                 }
             }
             echo "</td></tr></table>\n";

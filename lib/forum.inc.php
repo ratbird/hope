@@ -1376,8 +1376,7 @@ function flatview ($open=0, $show=0, $update="", $name="", $description="",$zita
 $forum["openlist"] = $open;
 $forum["zitat"] = $zitat;
 $forum["update"] = $update;
-if (!(int)$forum["postingsperside"])
-    $forum["postingsperside"] = get_config('ENTRIES_PER_PAGE');
+$forum["postingsperside"] = get_config('ENTRIES_PER_PAGE');
 $postingsperside = (int) get_config('ENTRIES_PER_PAGE');
 $flatviewstartposting = Request::int('flatviewstartposting', 0);
 $forum["flatviewstartposting"] = $flatviewstartposting;

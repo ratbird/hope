@@ -502,7 +502,7 @@ include ('lib/include/html_head.inc.php'); // Output of html head
 //JS Routinen einbinden, wenn benoetigt. Wird in der Funktion gecheckt, ob noetig...
 if ($GLOBALS["ENABLE_EMAIL_ATTACHMENTS"] == true) {
     JS_for_upload();
-    echo "\n<body onUnLoad=\"upload_end()\">";
+    echo "\n<body onUnLoad=\"STUDIP.OldUpload.upload_end()\">";
 }
 
 include ('lib/include/header.php');   // Output of Stud.IP head

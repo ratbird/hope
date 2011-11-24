@@ -72,7 +72,7 @@ if (($expmod != 'exp' && $expmod != 'imp' && $expmod != 'sync') || ($expmod == '
 
     //TODO: 2mal body?, ob das so geht?
     print_js_import();
-    echo "\n<body onUnLoad=\"upload_end()\">";
+    echo "\n<body onUnLoad=\"STUDIP.OldUpload.upload_end()\">";
 
     include('lib/include/header.php');
 }
@@ -264,7 +264,7 @@ if (($expmod != 'exp' && $expmod != 'imp' && $expmod != 'sync') || ($expmod == '
                     . '&nbsp;&nbsp;&nbsp;' . Assets::img('icons/16/grey/info-circle.png', tooltip2($tooltip2, true, true))
                     . "<br><br>" . _("Klicken Sie auf \"Durchsuchen\", um eine Datei auszuwählen.")
                     . "</div>\n<br>&nbsp; &nbsp; <input type=\"file\" name=\"importfile\" size=\"40\">\n";
-            $params['button'] = "<input value=\"Senden\" type=\"image\" " . makeButton('dateihochladen', 'src') . " onClick=\"return upload_start(document.import_form);\" "
+            $params['button'] = "<input value=\"Senden\" type=\"image\" " . makeButton('dateihochladen', 'src') . " onClick=\"return STUDIP.OldUpload.upload_start(document.import_form);\" "
                     . "name=\"create\" border=\"0\">\n";
             $params['expmod'] = 'imp';
             print_cell($params);
@@ -287,7 +287,7 @@ if (($expmod != 'exp' && $expmod != 'imp' && $expmod != 'sync') || ($expmod == '
                     . '&nbsp;&nbsp;&nbsp;' . Assets::img('icons/16/grey/info-circle.png', tooltip2($tooltip2, true, true))
                     . "<br><br>" . _("Klicken Sie auf \"Durchsuchen\", um eine Datei auszuwählen.")
                     . "</div>\n<br>&nbsp; &nbsp; <input type=\"file\" name=\"importfile\" size=\"40\">\n";
-            $params['button'] = "<input value=\"Senden\" type=\"image\" " . makeButton("dateihochladen", "src") . " onClick=\"return upload_start(document.sync_form);\" "
+            $params['button'] = "<input value=\"Senden\" type=\"image\" " . makeButton("dateihochladen", "src") . " onClick=\"return STUDIP.OldUpload.upload_start(document.sync_form);\" "
                     . "name=\"create\" border=\"0\">\n";
             $params['expmod'] = 'sync';
             print_cell($params);

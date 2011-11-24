@@ -20,7 +20,7 @@
                 <div width="100%" class="steelgraudunkel" style="padding : 2px; margin: 10px 0px 10px 0px">
                     <?= _("2. Klicken Sie auf <b>'absenden'</b>, um die Datei hochzuladen.") ?>
                 </div>
-                <input type="image" <?= makeButton("absenden", "src") ?> align="absmiddle" onClick="return upload_start();" name="create" border="0">
+                <input type="image" <?= makeButton("absenden", "src") ?> align="absmiddle" onClick="return STUDIP.OldUpload.upload_start(jQuery(this).closest('form'));" name="create" border="0">
                 &nbsp;<a href="<?= URLHelper::getLink('?cancel_x=true') ?>"><?= makeButton("abbrechen", "img") ?></a>
 
                 <input type="hidden" name="com" value="do_upload_config">

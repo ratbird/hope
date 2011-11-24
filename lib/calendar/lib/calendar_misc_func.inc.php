@@ -70,67 +70,49 @@ function print_js_export()
 }
 
 
-function print_js_import () {   
+function print_js_import () {
+    //displays the templates for upload windows now
+    //for upload code see application.js : STUDIP.OldUpload
     ?>
      <script type="text/javascript">
     
-    var upload=false;
-
     function upload_end()
     {
-    if (upload)
-        {
-        msg_window.close();
-        }
-        return;
+        return STUDIP.OldUpload.upload_end();
     }
 
     function upload_start(form_name)
     {
-    file_name=form_name.importfile.value
-    if (!file_name)
-         {
-         alert("<?=_("Bitte wählen Sie eine Datei aus!")?>");
-         form_name.importfile.focus();
-         return false;
-         }
-
-    if (file_name.charAt(file_name.length-1)=="\"") {
-     ende=file_name.length-1; }
-    else  {
-     ende=file_name.length;  }
-    
-    ext=file_name.substring(file_name.lastIndexOf(".")+1,ende);
-    ext=ext.toLowerCase();
-        
-    if (ext != "ics")
-    {
-      alert("<?=_("Dieser Dateityp ist nicht zugelassen!")?>");
-      form_name.importfile.focus();
-      
-      return false;
-    }
-
-    if (file_name.lastIndexOf("/") > 0)
-    {
-      file_only=file_name.substring(file_name.lastIndexOf("/")+1,ende);
-    }
-    if (file_name.lastIndexOf("\\") > 0)
-    {
-      file_only=file_name.substring(file_name.lastIndexOf("\\")+1,ende);
-    }
-
-    msg_window=window.open("","messagewindow","height=250,width=200,left=20,top=20,scrollbars=no,resizable=no,toolbar=no");
-    msg_window.document.write("<html><head><title>Datei Upload</title></head>");
-    msg_window.document.write('<body bgcolor="#ffffff"><center><p><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/alienupload.gif" width="165" height="125"></p>');
-    msg_window.document.write("<p><font face='arial, helvetica, sans-serif'><b>&nbsp;"+file_only+"</b><br>&nbsp;<?=_("wird hochgeladen.")?><br>&nbsp;<?=_("Bitte haben Sie etwas Geduld!")?><br></font></p></body></html>");
-
-    upload=true;
-
-    return true;
+        return STUDIP.OldUpload.upload_start(form_name);
     }
 
     </script>
+    <div id="upload_window_template" style="display: none">
+        <?= htmlReady(
+            "<html><head><title>Datei Upload</title></head>" .
+            '<body bgcolor="#ffffff"><center><p><img src="'. $GLOBALS['ASSETS_URL'] .'images/alienupload.gif" width="165" height="125"></p>' .
+            "<p><font face='arial, helvetica, sans-serif'><b>&nbsp;:file_only</b><br>&nbsp;"._("wird hochgeladen.") ."<br>&nbsp;" ._("Bitte haben Sie etwas Geduld!"). "<br></font></p></body></html>"
+        ) ?>
+    </div>
+    <div id="upload_error_message_wrong_type" style="display: none;"><?= 
+        _("Dieser Dateityp ist nicht zugelassen!")
+    ?></div>
+    <div id="upload_select_file_message" style="display: none;"><?= 
+        _("Bitte wählen Sie eine Datei aus!")
+    ?></div>
+    <div id="upload_file_types" style="display: none;"><?= 
+        json_encode(
+            $UPLOAD_TYPES[$SessSemName["art_num"]]
+            ? array(
+                'allow' => $UPLOAD_TYPES[$SessSemName["art_num"]]["type"] === "allow" ? 0 : 1,
+                'types' => $UPLOAD_TYPES[$SessSemName["art_num"]]["file_types"]
+            )
+            : array(
+                'allow' => $UPLOAD_TYPES["default"]["type"] === "allow" ? 0 : 1,
+                'types' => $UPLOAD_TYPES["default"]["file_types"]
+            )
+        );
+    ?></div>
 <?
 }
 ?>

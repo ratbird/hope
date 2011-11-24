@@ -73,8 +73,7 @@ function print_js_export()
 function print_js_import () {   
     ?>
      <script type="text/javascript">
-    <!-- Begin
-
+    
     var upload=false;
 
     function upload_end()
@@ -131,7 +130,6 @@ function print_js_import () {
     return true;
     }
 
-    // End -->
     </script>
 <?
 }

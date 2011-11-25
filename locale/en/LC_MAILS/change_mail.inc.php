@@ -10,7 +10,7 @@
         ."Status: " . $this->user_data['auth_user_md5.perms'] . "\n"
         ."Forename: " . $this->user_data['auth_user_md5.Vorname'] . "\n"
         ."Surname: " . $this->user_data['auth_user_md5.Nachname'] . "\n"
-        ."Email address: " . $this->user_data['auth_user_md5.Email'] . "\n\n"
+        ."E-mail-address: " . $this->user_data['auth_user_md5.Email'] . "\n\n"
         ."Your password has not been changed.\n\n"
         ."This mail has been sent to you, to inform you of the changes.\n\n"
         ."If you have objections against these changes, please contact\n"

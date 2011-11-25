@@ -1107,21 +1107,6 @@ function JS_for_upload() {
             )
         );
     ?></div>
-     <SCRIPT LANGUAGE="JavaScript">
-
-    var upload=false;
-
-    function upload_end()
-    {
-    return STUDIP.OldUpload.upload_end();
-    }
-
-    function upload_start(form_name)
-    {
-    return STUDIP.OldUpload.upload_start(form_name);
-    }
-
-    </script>
     <?
     }
 

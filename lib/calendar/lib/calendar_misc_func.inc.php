@@ -74,19 +74,6 @@ function print_js_import () {
     //displays the templates for upload windows now
     //for upload code see application.js : STUDIP.OldUpload
     ?>
-     <script type="text/javascript">
-    
-    function upload_end()
-    {
-        return STUDIP.OldUpload.upload_end();
-    }
-
-    function upload_start(form_name)
-    {
-        return STUDIP.OldUpload.upload_start(form_name);
-    }
-
-    </script>
     <div id="upload_window_template" style="display: none">
         <?= htmlReady(
             "<html><head><title>Datei Upload</title></head>" .

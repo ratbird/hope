@@ -367,6 +367,8 @@ if ($delete_id) {
 //////////////////////////////////////////////////////////////////////////////////
 
 $target = Request::option('target');
+$sem_id = Request::option('sem_id');
+$inst_id = Request::option('inst_id');
 $move_id = Request::option('move_id');
 $parent_id = Request::option('parent_id');
 

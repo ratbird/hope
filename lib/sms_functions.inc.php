@@ -907,7 +907,7 @@ function show_msgsaveoptionsform()
             $tmp .= "</select>";
         }
     } else {
-        $tmp .= "<input style=\"vertical-align: text-top;\" type=\"image\" name=\"add_tmpsavesnd_button\" src=\"".Assets::image_path('icons/16/blue/checkbox-unchecked.png'). "\" " . tooltip(_("Nachricht speichern.")).">&nbsp;"._("Nachricht speichern.");
+        $tmp .= "<input style=\"vertical-align: text-top;\" type=\"image\" name=\"add_tmpsavesnd_button\" src=\"".Assets::image_path('icons/16/blue/checkbox-unchecked.png'). "\" " . tooltip(_("Nachricht speichern")).">&nbsp;"._("Nachricht speichern");
     }
 
     $tmp = "<font size=\"-1\">".$tmp."</font>";
@@ -919,9 +919,9 @@ function show_msgemailoptionsform()
     global $sms_data, $my_messaging_settings;
 
     if($sms_data["tmpemailsnd"] == 1) {
-        $tmp .= "<input style=\"vertical-align: text-top;\" type=\"image\" name=\"rmv_tmpemailsnd_button\" src=\"".Assets::image_path('icons/16/blue/checkbox-checked.png'). "\" " . tooltip(_("Nachricht als Email versenden.")).">&nbsp;"._("Nachricht als Email versenden.");
+        $tmp .= "<input style=\"vertical-align: text-top;\" type=\"image\" name=\"rmv_tmpemailsnd_button\" src=\"".Assets::image_path('icons/16/blue/checkbox-checked.png'). "\" " . tooltip(_("Nachricht als E-Mail versenden")).">&nbsp;"._("Nachricht als E-Mail versenden");
     } else {
-        $tmp .= "<input style=\"vertical-align: text-top;\" type=\"image\" name=\"add_tmpemailsnd_button\" src=\"".Assets::image_path('icons/16/blue/checkbox-unchecked.png'). "\" " . tooltip(_("Nachricht als Email versenden.")).">&nbsp;"._("Nachricht als Email versenden.");
+        $tmp .= "<input style=\"vertical-align: text-top;\" type=\"image\" name=\"add_tmpemailsnd_button\" src=\"".Assets::image_path('icons/16/blue/checkbox-unchecked.png'). "\" " . tooltip(_("Nachricht als E-Mail versenden")).">&nbsp;"._("Nachricht als E-Mail versenden");
     }
 
     $tmp = "<font size=\"-1\">".$tmp."</font>";
@@ -933,9 +933,9 @@ function show_msgreadconfirmoptionsform()
     global $sms_data, $my_messaging_settings;
 
     if($sms_data["tmpreadsnd"] == 1) {
-        $tmp .= "<input style=\"vertical-align: text-top;\" type=\"image\" name=\"rmv_tmpreadsnd_button\" src=\"".Assets::image_path('icons/16/blue/checkbox-checked.png'). "\" " . tooltip(_("Lesebestätigung anzufordern.")).">&nbsp;"._("Lesebestätigung anzufordern.");
+        $tmp .= "<input style=\"vertical-align: text-top;\" type=\"image\" name=\"rmv_tmpreadsnd_button\" src=\"".Assets::image_path('icons/16/blue/checkbox-checked.png'). "\" " . tooltip(_("Lesebestätigung anzufordern")).">&nbsp;"._("Lesebestätigung anfordern");
     } else {
-        $tmp .= "<input style=\"vertical-align: text-top;\" type=\"image\" name=\"add_tmpreadsnd_button\" src=\"".Assets::image_path('icons/16/blue/checkbox-unchecked.png'). "\" " . tooltip(_("Lesebestätigung anzufordern.")).">&nbsp;"._("Lesebestätigung anzufordern.");
+        $tmp .= "<input style=\"vertical-align: text-top;\" type=\"image\" name=\"add_tmpreadsnd_button\" src=\"".Assets::image_path('icons/16/blue/checkbox-unchecked.png'). "\" " . tooltip(_("Lesebestätigung anzufordern")).">&nbsp;"._("Lesebestätigung anfordern");
     }
 
     $tmp = "<font size=\"-1\">".$tmp."</font>";

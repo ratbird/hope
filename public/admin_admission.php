@@ -1205,7 +1205,7 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
                                 <td class="<? echo $cssSw->getClass() ?>" >
                                 <font size=-1>
                                 <?
-                                echo (htmlReady(my_substr($val["name"], 0, 40)));
+                                echo (htmlReady($val["name"]));
                                 ?>
                                 </font>
                                 </td>

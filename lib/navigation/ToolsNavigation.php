@@ -56,6 +56,10 @@ class ToolsNavigation extends Navigation
             $this->addSubNavigation('evaluation', $navigation);
         }
 
+        // rss feeds
+        $navigation = new Navigation(_('RSS-Feeds'), 'edit_about.php', array('view' => 'rss'));
+        $this->addSubNavigation('rss', $navigation);
+
         // literature
         if (get_config('LITERATURE_ENABLE')) {
             $navigation = new Navigation(_('Literatur'), 'admin_lit_list.php', array('_range_id' => 'self'));
@@ -67,10 +71,7 @@ class ToolsNavigation extends Navigation
             $navigation = new Navigation(_('Lernmodule'), 'my_elearning.php');
             $this->addSubNavigation('elearning', $navigation);
         }
-        
-        $navigation = new Navigation(_('RSS-Feeds'), 'edit_about.php', array('view' => 'rss'));
-        $this->addSubNavigation('rss', $navigation); 
-        
+
         // export
         if (get_config('EXPORT_ENABLE') && $perm->have_perm('tutor')) {
             $navigation = new Navigation(_('Export'), 'export.php');

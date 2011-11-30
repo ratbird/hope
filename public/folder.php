@@ -691,7 +691,7 @@ include ('lib/include/header.php');   // Output of Stud.IP head
 //JS Routinen einbinden, wenn benoetigt. Wird in der Funktion gecheckt, ob noetig...
 JS_for_upload();
 //we need this <body> tag, sad but true :)
-echo "\n<body onUnLoad=\"upload_end()\">";
+echo "\n<body onUnLoad=\"STUDIP.OldUpload.upload_end()\">";
 ?>
 <table cellspacing="0" cellpadding="0" border="0" width="100%" id="main_content">
 

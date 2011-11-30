@@ -713,6 +713,7 @@ function form($refresh = FALSE) {
     $c=1;
     $print = "";
     $print.= "\n<form enctype=\"multipart/form-data\" name=\"upload_form\" action=\"" . URLHelper::getLink('#anker') . "\" method=\"post\">";
+    $print.= "\n<input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"".(ini_get('upload_max_filesize')*1048576)."\" />";
     $print.= CSRFProtection::tokenTag();
     if ($folder_system_data['zipupload'])
         $print.="\n<br><br>" . _("Sie haben diesen Ordner zum Upload ausgew&auml;hlt:")
@@ -2391,7 +2392,7 @@ function upload_zip_item() {
     }
     @rmdirr($tmpdirname);
     @unlink($GLOBALS['TMP_PATH'] . '/' . $tmpname);
-    $msg .= "error§" . _("Die Datei konnte nicht entpackt werden.") . "§";
+    $msg .= "error§" . _("Die Datei konnte nicht entpackt werden. Möglicherweise ist sie zu groß.") . "§";
     return false;
 }
 

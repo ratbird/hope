@@ -47,64 +47,43 @@ $list = $checks->getCheckList();
 $problems_found = 0;
 
 foreach ($list as $key=>$val) {
-    if ($val)
+    if ($val){
+        if (($checks->registered_checks[$key]["msg_fak_admin"]) && ($perm->is_fak_admin())) 
+            $msgText = $checks->registered_checks[$key]["msg_fak_admin"]; 
+        else {
+            $msgText = $checks->registered_checks[$key]["msg"];
+            $msgText .= ' <br><i> Aktion: '.formatReady("=)");
+            $msgText .= '&nbsp;<a href="'.($checks->registered_checks[$key]["link_fak_admin"] && $perm->is_fak_admin() ? 
+            $checks->registered_checks[$key]["link_fak_admin"] : $checks->registered_checks[$key]["link"]).'" > '.
+            ($checks->registered_checks[$key]["link_name_fak_admin"] && $perm->is_fak_admin() ? 
+            $checks->registered_checks[$key]["link_name_fak_admin"] : $checks->registered_checks[$key]["link_name"]).' </a></i>';
+        }
+        $problems[$problems_found] = $msgText;
         $problems_found++;
+    }
 }
+
+if ($problems_found > 1)
+    $moreProbs = " (Beachten Sie bitte die angegebene Reihenfolge!)";
 
 if ($problems_found) {
     ?>
     <table width="100%" border=0 cellpadding=0 cellspacing=0>
-    <tr>
-         <td class="blank" colspan=2>
-            <?= MessageBox::info(_("Das Anlegen einer Veranstaltung ist leider zu diesem Zeitpunkt noch nicht möglich, da zunächst die folgenden Voraussetzungen geschaffen werden m&uuml;ssen."), ($problems_found > 1) ? array(_("(Beachten Sie bitte die angegebene Reihenfolge!)")) : array()); ?>
-        </td>
-    </tr>
-    <tr>
-    <td class="blank" colspan=2>
-        <table width="99%" border=0 cellpadding=2 cellspacing=0 align="center">
+        <tr>
+             <td class="blank" colspan=2>
+                <?= MessageBox::info(_("Das Anlegen einer Veranstaltung ist leider zu diesem Zeitpunkt noch nicht möglich, 
+                da zunächst die folgenden Voraussetzungen geschaffen werden m&uuml;ssen.".$moreProbs), $problems); ?>
+            </td>
+        </tr>
         <tr <? $cssSw->switchClass() ?>>
-            <td class="<? echo $cssSw->getClass() ?>" align="center" colspan="4">
+            <td class="<? echo $cssSw->getClass() ?>" align="center" colspan=2>
                 <a href="<?=$PHP_SELF?>"><?=makeButton("aktualisieren")?></a>
             </td>
         </tr>
-        <?
-        $i=0;
-        foreach ($list as $key => $val) {
-            if ($val) {
-                if ($problems_found > 1)
-                    $i++;
-            ?>
-            <tr <? $cssSw->switchClass() ?> rowspan=2>
-                <td class="<? echo $cssSw->getClass() ?>" width="4%" align="right">
-                    &nbsp;
-                </td>
-                <td class="<? echo $cssSw->getClass() ?>"  width="3%" align="left">
-                    <?= Assets::img('icons/16/grey/info-circle.png') ?>
-                </td>
-                <td class="<? echo $cssSw->getClass() ?>"  width="2%" align="center" valign="top">
-                    <font size="-1"><b><?=($i) ? $i."." : ""?></b></font>
-                </td>
-                <td class="<? echo $cssSw->getClass() ?>" width="91%" valign="top">
-                    <font size="-1"><?if (($checks->registered_checks[$key]["msg_fak_admin"]) && ($perm->is_fak_admin())) print $checks->registered_checks[$key]["msg_fak_admin"]; else print $checks->registered_checks[$key]["msg"]; ?></font><br>
-                    <font size="-1">Aktion:&nbsp;<?=formatReady("=)")?>&nbsp;
-                        <a href="<?=(($checks->registered_checks[$key]["link_fak_admin"]) && ($perm->is_fak_admin())) ? $checks->registered_checks[$key]["link_fak_admin"] : $checks->registered_checks[$key]["link"]?>">
-                            <?=(($checks->registered_checks[$key]["link_name_fak_admin"]) && ($perm->is_fak_admin())) ? $checks->registered_checks[$key]["link_name_fak_admin"] : $checks->registered_checks[$key]["link_name"]?>
-                        </a>
-                    </font><br>
-                </td>
-            </tr>
-            <? }
-
-        }
-        ?>
         <tr>
-            <td class="blank" colspan=3>&nbsp;
-            </td>
+            <td class="blank" colspan=2>&nbsp;</td>
         </tr>
     </table>
-</td>
-</tr>
-</table>
 <?php
 include ('lib/include/html_end.inc.php');
 page_close();

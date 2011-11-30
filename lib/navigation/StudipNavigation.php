@@ -111,9 +111,7 @@ class StudipNavigation extends Navigation
             if (get_config('CALENDAR_ENABLE')) {
                 $navigation->addSubNavigation('calendar', new Navigation(_('Terminkalender'), 'edit_about.php', array('view' => 'calendar')));
             }
-
-            $navigation->addSubNavigation('rss', new Navigation(_('RSS-Feeds'), 'edit_about.php', array('view' => 'rss')));
-
+            
             if (!$perm->have_perm('admin')) {
                 if (get_config('MAIL_NOTIFICATION_ENABLE')) {
                     $navigation->addSubNavigation('notification', new Navigation(_('Benachrichtigung'), 'sem_notification.php'));

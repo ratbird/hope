@@ -368,11 +368,16 @@ class CalendarScheduleModel
         $ret = array();
 
         // fetch seminar-entries
-        $stmt = DBManager::get()->prepare("SELECT * FROM seminare as s
-            WHERE Institut_id = ? AND (start_time = ?
-                OR (start_time < ? AND duration_time = -1)
-                OR (start_time + duration_time >= ?))");
-        $stmt->execute(array($institute_id, $semester['beginn'], $semester['beginn'], $semester['beginn']));
+        $visibility_perms = $GLOBALS['perm']->have_perm(get_config('SEM_VISIBILITY_PERM'));
+        $stmt = DBManager::get()->prepare("SELECT * FROM seminare
+            WHERE Institut_id = :institute AND (start_time = :begin
+                OR (start_time < :begin AND duration_time = -1)
+                OR (start_time + duration_time >= :begin AND start_time <= :begin)) "
+                . (!$visibility_perms ? " AND visible='1'" : ""));
+
+        $stmt->bindParam(':begin', $semester['beginn']);
+        $stmt->bindParam(':institute', $institute_id);
+        $stmt->execute();
 
         $seminars = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

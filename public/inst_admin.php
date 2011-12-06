@@ -183,7 +183,7 @@ function table_head ($structure, $css_switcher) {
 
 
 function table_body ($db, $range_id, $structure, $css_switcher) {
-    global $datafields_list, $group_list, $admin_view;
+    global $datafields_list, $group_list, $admin_view, $perm;
 
     $cells = sizeof($structure);
 
@@ -266,15 +266,19 @@ function table_body ($db, $range_id, $structure, $css_switcher) {
             printf("title=\"%s\" border=\"0\" valign=\"baseline\"></a>", _("Nachricht an Benutzer verschicken"));
             echo '</td>';
 
-            if ($admin_view && !LockRules::Check($range_id, 'participants')) {
+            if ($admin_view && !LockRules::Check($range_id, 'participants')   ) {
                 echo '<td '.$css_switcher->getFullClass().' width="1%" nowrap>';
-                if ($db->f('statusgruppe_id')) {    // if we are in a view grouping by statusgroups
+                if($db->f("inst_perms")=="admin" && !$perm->have_perm("root") ){
+                    echo "&nbsp\n</td>\n";
+                }else{
+                  if ($db->f('statusgruppe_id')) {    // if we are in a view grouping by statusgroups
                     echo '&nbsp;<a href="'.URLHelper::getLink('?cmd=removeFromGroup&username='.$db->f('username').'&role_id='. $db->f('statusgruppe_id')).'">';
                 } else {
                     echo '&nbsp;<a href="'.URLHelper::getLink('?cmd=removeFromInstitute&username='.$db->f('username')).'">';
                 }
                 echo Assets::img('icons/16/blue/trash.png', array('class' => 'text-top'));
                 echo "</a>&nbsp\n</td>\n";
+                }
             }
         }
 

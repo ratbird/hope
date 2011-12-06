@@ -340,7 +340,7 @@ class StudipFormat extends TextFormat
     {
         $text = preg_replace('/^  /m', '', $matches[0]);
 
-        return sprintf('<p class="indent">%s</p>', $markup->format($text));
+        return sprintf('<div class="indent">%s</div>', $markup->format($text));
     }
 
     /**

@@ -80,8 +80,8 @@ table.content td {
     padding: 3px;
 }
 
-p.indent {
-    margin: 0em 0em 0em 2em;
+div.indent {
+    margin-left: 2em;
 }
 
 h1.topic {

@@ -151,14 +151,14 @@ class VisualFunctionsTest extends UnitTestCase
     public function testIndent()
     {
         $input = "  Ebene 1\n    Ebene 2\n    Ebene 2\n  Ebene 1\n";
-        $expected = '<p class="indent">'
+        $expected = '<div class="indent">'
                    .'Ebene 1<br>'
-                   .'<p class="indent">'
+                   .'<div class="indent">'
                    .'Ebene 2<br>'
                    .'Ebene 2<br>'
-                   .'</p>'
+                   .'</div>'
                    .'Ebene 1<br>'
-                   .'</p>';
+                   .'</div>';
         $this->assertEqual(formatReady($input, false), $expected);
     }
 

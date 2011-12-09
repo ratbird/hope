@@ -617,14 +617,20 @@ function checknachname(){
 
 function checkemail(){
  var re_email = <?=$validator->email_regular_expression?>;
- var email = document.pers.email.value;
- var checked = true;
+ var email = document.pers.email1.value;
+ var email2 = document.pers.email2.value;
  if (email!='<?=$my_about->auth_user["Email"]?>' && re_email.test(email)==false || email.length==0) {
     alert("<?=_("Die E-Mail-Adresse ist nicht korrekt!")?>");
-     document.pers.email.focus();
-    checked = false;
-    }
- return checked;
+     document.pers.email1.focus();
+     return false;
+ } else {
+     if(email != email2) {
+         alert("<?=_("Die E-Mail-Adressen stimmen nicht überein!")?>");
+         document.pers.email1.focus();
+         return false;
+     }
+ }
+ return true;
 }
 
 function checkdata(){
@@ -638,7 +644,7 @@ function checkdata(){
     checked = false;
  if (document.pers.nachname && !checknachname())
     checked = false;
- if (document.pers.email && !checkemail())
+ if (document.pers.email1 && document.pers.email2 && !checkemail())
     checked = false;
  return checked;
 }

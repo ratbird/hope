@@ -86,7 +86,7 @@ class ExternModuleTemplateLecturedetails extends ExternModule {
                 _("Leistungsnachweis"),
                 _("Bereichseinordnung"),
                 _("Sonstiges"),
-                _("ECTS-Kreditpunkte")
+                _("ECTS-Punkte")
         );
 
         parent::ExternModule($range_id, $module_name, $config_id, $set_config, $global_id);

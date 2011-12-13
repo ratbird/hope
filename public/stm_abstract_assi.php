@@ -106,7 +106,7 @@ class AbstractStmControl{
                                 'aims' =>   array('type' => 'textarea', 'caption' => 'Lernziele', 'info' => 'allgemeine Beschreibung der Lernziele', 'required' => 'true', 'default_value' => $this->abs_stm->getAims()),
                                 'hints' =>  array('type' => 'textarea', 'caption' => 'allgemeine Hinweise', 'info' => 'allgemeine Hinweise zum Modul', 'default_value' => $this->abs_stm->getHints()),
                                 'duration' =>   array('type' => 'text', 'caption' => 'Dauer', 'info' => 'Laenge in Semestern', 'required' => 'true', 'default_value' => $this->abs_stm->getDuration()),
-                                'credits' =>    array('type' => 'text', 'caption' => 'Kreditpunkte', 'info' => 'Anzahl der Leistungspunkte/Kreditpunkte', 'required' => 'true', 'default_value' => $this->abs_stm->getCredits()),
+                                'credits' =>    array('type' => 'text', 'caption' => 'ECTS-Punkte', 'info' => 'Anzahl der Leistungspunkte/Kreditpunkte', 'required' => 'true', 'default_value' => $this->abs_stm->getCredits()),
                                 'workload' =>   array('type' => 'text', 'caption' => 'Arbeitsaufwand', 'info' => 'Studentischer Arbeitsaufwand in Stunden', 'required' => 'true', 'default_value' => $this->abs_stm->getWorkload()),
                                 'turnus' =>     array('type' => 'select', 'default_value' => $this->abs_stm->getTurnus(), 'options' => array(   array('name' =>'kein', 'value' => '0'),
                                                                                                 array('name' =>'Sommersemester', 'value' => '1'),

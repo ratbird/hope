@@ -2305,7 +2305,7 @@ elseif ((!$level) || ($level == 1))
                         <td class="<? echo $cssSw->getClass() ?>" width="60%">
                             &nbsp; <input type="text" name="sem_ects" size=6 maxlength=32 value="<? echo  htmlReady(stripslashes($sem_create_data["sem_ects"])) ?>">
                             <img  src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/grey/info-circle.png"
-                                <? echo tooltip(_("ECTS-Kreditpunkte, die in dieser Veranstaltung erreicht werden können."), TRUE, TRUE) ?>
+                                <? echo tooltip(_("ECTS-Punkte, die in dieser Veranstaltung erreicht werden können."), TRUE, TRUE) ?>
                             >
                         </td>
                     </tr>

@@ -561,7 +561,7 @@ class StmInstanceAssiVisualization{
             echo $table->cell("&nbsp;&nbsp;<b> Titel </b>&nbsp;", array('align' => 'left', 'style' => 'width:12%'));
             echo $table->cell($stm->getTitle(), array('style' => 'width:35%'));
             echo $table->blankCell(array('style' => 'width:2%'));
-            echo $table->cell("&nbsp;&nbsp;<b> Kreditpunkte </b>&nbsp;", array('align' => 'left', 'style' => 'width:12%'));
+            echo $table->cell("&nbsp;&nbsp;<b> ECTS-Punkte </b>&nbsp;", array('align' => 'left', 'style' => 'width:12%'));
             echo $table->cell($stm->getCredits(), array('style' => 'width:35%'));
         echo $table->openRow();
             echo $table->cell("&nbsp;&nbsp;<b> Untertitel </b>&nbsp;", array('align' => 'left', 'style' => 'width:12%'));

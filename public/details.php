@@ -535,7 +535,7 @@ echo $template_factory->render(
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" colspan=4 width="99%" valign="top">
                 <?
-                printf ("<font size=-1><b>" . _("ECTS-Kreditpunkte:") . "</b></font><br><font size=-1>%s</font>",htmlReady($db2->f("ects"), TRUE, TRUE));
+                printf ("<font size=-1><b>" . _("ECTS-Punkte:") . "</b></font><br><font size=-1>%s</font>",htmlReady($db2->f("ects"), TRUE, TRUE));
                 ?>
                 </td>
             </tr>

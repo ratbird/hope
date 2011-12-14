@@ -971,7 +971,8 @@ while (list ($key, $val) = each ($gruppe)) {
     $db->query ("SELECT $tbl.visible, $tbl.mkdate, comment, $tbl.user_id, ". $_fullname_sql['full'] ." AS fullname,
                 username, status, count(topic_id) AS doll,  studiengaenge.name, ".$tbl.".".$tbl2."studiengang_id
                 AS studiengang_id
-                FROM $tbl LEFT JOIN px_topics USING (user_id, Seminar_id)
+                FROM $tbl LEFT JOIN px_topics ON (px_topics.user_id = ".$tbl.".user_id 
+																AND px_topics.Seminar_id = ".$tbl.".Seminar_id AND px_topics.anonymous = 0)
                 LEFT JOIN auth_user_md5 ON (".$tbl.".user_id=auth_user_md5.user_id)
                 LEFT JOIN user_info ON (auth_user_md5.user_id=user_info.user_id)
                 LEFT JOIN studiengaenge ON (".$tbl.".".$tbl2."studiengang_id = studiengaenge.studiengang_id)

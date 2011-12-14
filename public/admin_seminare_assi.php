@@ -1301,10 +1301,11 @@ if (($form == 4) && ($jump_next_x)) {
     }
 
     if (!$requests_ok && (!(get_config('RESOURCES_ALLOW_SEMASSI_SKIP_REQUEST') && $sem_create_data['skip_room_request']))) {
-            $errormsg.="error§"._("Die Anfrage konnte nicht gespeichert werden, da Sie mindestens einen Raumwunsch oder eine gew&uuml;nschte Eigenschaft (z.B. Anzahl der Sitzpl&auml;tze) angeben m&uuml;ssen!") . '§';
+            $errormsg .= "error§" . _("Die Anfrage konnte nicht gespeichert werden, da Sie mindestens einen Raumwunsch oder eine gewünschte Eigenschaft (z.B. Anzahl der Sitzplätze) angeben müssen!");
             if(get_config('RESOURCES_ALLOW_SEMASSI_SKIP_REQUEST')){
-                $errormsg.="info§"._("Wenn Sie keinen Raum ben&ouml;tigen, aktivieren Sie die entsprechende Option. Die freien Angaben zu R&auml;umen werden auch ohne Raumwunsch gespeichert.") . '§';
+                $errormsg .= "<br>"._("Wenn Sie keine Raumanfrage benötigen, aktivieren Sie die entsprechende Option. Die Raumbuchungen und die freien Angaben zu Räumen werden auch ohne Raumanfrage gespeichert.");
             }
+            $errormsg .= '§';
             $dont_anchor = TRUE;
         }
     }
@@ -3344,7 +3345,7 @@ if ($level == 4) {
                             <font size="-1"><b><?=_("Raumw&uuml;nsche"); ?></b><br><br>
                             <?
                             if (get_config('RESOURCES_ALLOW_SEMASSI_SKIP_REQUEST')){
-                                echo _("Es wird <u>kein</u> Raum ben&ouml;tigt") . "&nbsp;&nbsp;";
+                                echo _("<u>Keine</u> Raumanfrage erstellen") . "&nbsp;&nbsp;";
                                 echo "<input type=\"checkbox\" name=\"skip_room_request\" style=\"vertical-align:middle\" value=\"1\" ";
                                 if ($sem_create_data['skip_room_request']) echo " checked ";
                                 echo "><br><br>";

@@ -523,7 +523,7 @@ function open_im() {
                     $vperms = $entry->structure->getViewPerms();
                     $visible = 'all' == $vperms
                                ? _("sichtbar für alle")
-                               : sprintf(_("sichtbar für Sie und alle %s"),
+                               : sprintf(_("sichtbar nur für Sie und alle %s"),
                                          prettyViewPermString($vperms));
                     ?>
 
@@ -628,7 +628,7 @@ foreach ($long_datafields as $entry) {
         $vperms = $entry->structure->getViewPerms();
         $visible = 'all' == $vperms
                    ? _("sichtbar für alle")
-                   : sprintf(_("sichtbar für Sie und alle %s"),
+                   : sprintf(_("sichtbar nur für Sie und alle %s"),
                              prettyViewPermString($vperms));
         echo $layout->render(array('title' => $entry->getName() . "($visible)", 'content_for_layout' => $entry->getDisplayValue()));
     }

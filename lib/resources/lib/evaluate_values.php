@@ -1469,24 +1469,29 @@ if ($save_state_x) {
             //create msgs, grouped multi date mode
             } else { 
                 $i=0;
-                foreach ($result as $key=>$val) {
+                foreach ($result as $key => $val) {
                     if($val["resource_id"]) {
                         $resObj = ResourceObject::Factory($val["resource_id"]);
+                        $zw_msg = '<br>' . sprintf(_("%s, Belegungszeit: %s"), 
+                            $resObj->getFormattedLink($assignObjects[$val['termin_id']]->getBegin()),
+                            $assignObjects[$val['termin_id']]->getFormattedShortInfo());
+
                         if (!$val["overlap_assigns"]) {
-                            $good_msg.="<br>".sprintf(_("%s, Belegungszeit: %s"), $resObj->getFormattedLink( $assignObjects[$result_termin_id[$i]]->getBegin() ), $assignObjects[$result_termin_id[$i]]->getFormattedShortInfo());
+                            $good_msg .= $zw_msg;
                         } else {
-                            $req_added_msg.="<br>".sprintf(_("%s, Belegungszeit: %s"), $resObj->getFormattedLink( $assignObjects[$result_termin_id[$i]]->getBegin() ), $assignObjects[$result_termin_id[$i]]->getFormattedShortInfo());
+                            $req_added_msg .= $zw_msg;
                             $copyReqObj = clone $reqObj;
                             $copyReqObj->copy();
                             $copyReqObj->setTerminId($val["termin_id"]);
                             $copyReqObj->store();
                         }
+
                         $i++;
                     }
                 }
 
             }
-
+            
             //create additional msgs for skipped dates (this ones have got an own request, so the generel request doesn't affect them)
             $skipped_objects = 0;
             if ($skipped_termin_ids) {

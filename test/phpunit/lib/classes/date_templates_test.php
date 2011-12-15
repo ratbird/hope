@@ -251,7 +251,7 @@ function getPresenceTypes()
 
 function renderTemplate($template, $data, $params = array())
 {
-    $GLOBALS['template_factory'] = new Flexi_TemplateFactory(dirname(__FILE__) . '/../../../templates');
+    $GLOBALS['template_factory'] = new Flexi_TemplateFactory(dirname(__FILE__) . '/../../../../templates');
 
     $template = $GLOBALS['template_factory']->open($template); 
     $template->set_attribute('dates', $data);

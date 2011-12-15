@@ -10,26 +10,25 @@
  * the License, or (at your option) any later version.
  */
 
+require_once dirname(__FILE__) . '/../../bootstrap.php';
 require_once 'lib/classes/NotificationCenter.class.php';
-require_once 'vendor/simpletest/mock_objects.php';
 
 interface Observer
 {
     public function update($event, $object, $user_data);
 }
 
-Mock::generate('Observer');
-
-class NotificationCenterTest extends UnitTestCase
+class NotificationCenterTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->observer = new MockObserver();
+        $this->observer = $this->getMock("Observer");
+        $this->subject = new stdClass();
 
         NotificationCenter::addObserver($this->observer, 'update', NULL);
-        NotificationCenter::addObserver($this->observer, 'update', NULL, $this);
+        NotificationCenter::addObserver($this->observer, 'update', NULL, $this->subject);
         NotificationCenter::addObserver($this->observer, 'update', 'foo');
-        NotificationCenter::addObserver($this->observer, 'update', 'foo', $this);
+        NotificationCenter::addObserver($this->observer, 'update', 'foo', $this->subject);
     }
 
     public function tearDown()
@@ -39,152 +38,174 @@ class NotificationCenterTest extends UnitTestCase
 
     public function testAddObserver1()
     {
-        NotificationCenter::postNotification('foo', $this);
-        $this->observer->expectCallCount('update', 4);
+        $this->observer->expects($this->exactly(4))->method('update');
+
+        NotificationCenter::postNotification('foo', $this->subject);
     }
 
     public function testAddObserver2()
     {
-        NotificationCenter::postNotification('bar', $this);
-        $this->observer->expectCallCount('update', 2);
+        $this->observer->expects($this->exactly(2))->method('update');
+
+        NotificationCenter::postNotification('bar', $this->subject);
     }
 
     public function testAddObserver3()
     {
+        $this->observer->expects($this->exactly(2))->method('update');
+
         NotificationCenter::postNotification('foo', 'other');
-        $this->observer->expectCallCount('update', 2);
     }
 
     public function testAddObserver4()
     {
+        $this->observer->expects($this->once())->method('update');
+
         NotificationCenter::postNotification('bar', 'other');
-        $this->observer->expectCallCount('update', 1);
     }
 
     public function testPostNotification()
     {
-        $user_data = array(42);
 
-        NotificationCenter::postNotification('foo', $this, $user_data);
-        $this->observer->expect('update', array('foo', $this, $user_data));
+        $user_data = array(42);
+        $this->observer->expects($this->exactly(4))
+            ->method('update')
+            ->with("foo", $this->subject, $user_data);
+
+        NotificationCenter::postNotification('foo', $this->subject, $user_data);
     }
 
     public function testRemoveOtherObserver()
     {
-        $observer = new MockObserver();
+        $this->observer->expects($this->exactly(4))->method('update');
 
+        $observer = $this->getMock("Observer");
         NotificationCenter::removeObserver($observer);
-        NotificationCenter::postNotification('foo', $this);
-        $this->observer->expectCallCount('update', 4);
+        NotificationCenter::postNotification('foo', $this->subject);
     }
 
     public function testRemoveObserver1()
     {
+        $this->observer->expects($this->never())->method('update');
+
         NotificationCenter::removeObserver($this->observer);
-        NotificationCenter::postNotification('foo', $this);
-        NotificationCenter::postNotification('bar', $this);
+        NotificationCenter::postNotification('foo', $this->subject);
+        NotificationCenter::postNotification('bar', $this->subject);
         NotificationCenter::postNotification('foo', 'other');
         NotificationCenter::postNotification('bar', 'other');
-        $this->observer->expectCallCount('update', 0);
     }
 
     public function testRemoveObserver2a()
     {
+        $this->observer->expects($this->exactly(2))->method('update');
+
         NotificationCenter::removeObserver($this->observer, 'foo');
-        NotificationCenter::postNotification('foo', $this);
-        $this->observer->expectCallCount('update', 2);
+        NotificationCenter::postNotification('foo', $this->subject);
     }
 
     public function testRemoveObserver2b()
     {
+        $this->observer->expects($this->exactly(2))->method('update');
+
         NotificationCenter::removeObserver($this->observer, 'foo');
-        NotificationCenter::postNotification('bar', $this);
-        $this->observer->expectCallCount('update', 2);
+        NotificationCenter::postNotification('bar', $this->subject);
     }
 
     public function testRemoveObserver2c()
     {
+        $this->observer->expects($this->once())->method('update');
+
         NotificationCenter::removeObserver($this->observer, 'foo');
         NotificationCenter::postNotification('foo', 'other');
-        $this->observer->expectCallCount('update', 1);
     }
 
     public function testRemoveObserver2d()
     {
+        $this->observer->expects($this->once())->method('update');
+
         NotificationCenter::removeObserver($this->observer, 'foo');
         NotificationCenter::postNotification('bar', 'other');
-        $this->observer->expectCallCount('update', 1);
     }
 
     public function testRemoveObserver3a()
     {
-        NotificationCenter::removeObserver($this->observer, NULL, $this);
-        NotificationCenter::postNotification('foo', $this);
-        $this->observer->expectCallCount('update', 2);
+        $this->observer->expects($this->exactly(2))->method('update');
+
+        NotificationCenter::removeObserver($this->observer, NULL, $this->subject);
+        NotificationCenter::postNotification('foo', $this->subject);
     }
 
     public function testRemoveObserver3b()
     {
-        NotificationCenter::removeObserver($this->observer, NULL, $this);
-        NotificationCenter::postNotification('bar', $this);
-        $this->observer->expectCallCount('update', 1);
+        $this->observer->expects($this->once())->method('update');
+
+        NotificationCenter::removeObserver($this->observer, NULL, $this->subject);
+        NotificationCenter::postNotification('bar', $this->subject);
     }
 
     public function testRemoveObserver3c()
     {
-        NotificationCenter::removeObserver($this->observer, NULL, $this);
+        $this->observer->expects($this->exactly(2))->method('update');
+
+        NotificationCenter::removeObserver($this->observer, NULL, $this->subject);
         NotificationCenter::postNotification('foo', 'other');
-        $this->observer->expectCallCount('update', 2);
     }
 
     public function testRemoveObserver3d()
     {
-        NotificationCenter::removeObserver($this->observer, NULL, $this);
+        $this->observer->expects($this->once())->method('update');
+
+        NotificationCenter::removeObserver($this->observer, NULL, $this->subject);
         NotificationCenter::postNotification('bar', 'other');
-        $this->observer->expectCallCount('update', 1);
     }
 
     public function testRemoveObserver4a()
     {
-        NotificationCenter::removeObserver($this->observer, 'foo', $this);
-        NotificationCenter::postNotification('foo', $this);
-        $this->observer->expectCallCount('update', 3);
+        $this->observer->expects($this->exactly(3))->method('update');
+
+        NotificationCenter::removeObserver($this->observer, 'foo', $this->subject);
+        NotificationCenter::postNotification('foo', $this->subject);
     }
 
     public function testRemoveObserver4b()
     {
-        NotificationCenter::removeObserver($this->observer, 'foo', $this);
-        NotificationCenter::postNotification('bar', $this);
-        $this->observer->expectCallCount('update', 2);
+        $this->observer->expects($this->exactly(2))->method('update');
+
+        NotificationCenter::removeObserver($this->observer, 'foo', $this->subject);
+        NotificationCenter::postNotification('bar', $this->subject);
     }
 
     public function testRemoveObserver4c()
     {
-        NotificationCenter::removeObserver($this->observer, 'foo', $this);
+        $this->observer->expects($this->exactly(2))->method('update');
+
+        NotificationCenter::removeObserver($this->observer, 'foo', $this->subject);
         NotificationCenter::postNotification('foo', 'other');
-        $this->observer->expectCallCount('update', 2);
     }
 
     public function testRemoveObserver4d()
     {
-        NotificationCenter::removeObserver($this->observer, 'foo', $this);
+        $this->observer->expects($this->once())->method('update');
+
+        NotificationCenter::removeObserver($this->observer, 'foo', $this->subject);
         NotificationCenter::postNotification('bar', 'other');
-        $this->observer->expectCallCount('update', 1);
     }
 
 
     public function testWildCardObserver()
     {
-        // register observer
-        $wildcard = new MockObserver();
-        NotificationCenter::addObserver($wildcard, 'update', NULL);
-
         // prepare fixtures
         $user_data = array(42);
         $subject = new stdClass();
 
+        // register observer
+        $wildcard = $this->getMock("Observer");
+        $wildcard->expects($this->once())->method('update')->with('foo', $subject, $user_data);
+
+        NotificationCenter::addObserver($wildcard, 'update', NULL);
+
+
         // expect notication
-        $wildcard->expect('update', array('foo', $subject, $user_data));
         NotificationCenter::postNotification('foo', $subject, $user_data);
 
         // remove observer

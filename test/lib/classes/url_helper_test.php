@@ -10,9 +10,10 @@
  * the License, or (at your option) any later version.
  */
 
+require_once dirname(__FILE__) . '/../../bootstrap.php';
 require_once 'lib/classes/URLHelper.php';
 
-class URLHelperTest extends UnitTestCase
+class URLHelperTest extends PHPUnit_Framework_TestCase
 {
     public function tearDown ()
     {
@@ -26,26 +27,26 @@ class URLHelperTest extends UnitTestCase
 
     public function testNoLinkParam ()
     {
-        $this->assertEqual(URLHelper::getURL(''), '?');
-        $this->assertEqual(URLHelper::getURL('x'), 'x');
-        $this->assertEqual(URLHelper::getURL('#x'), '?#x');
+        $this->assertEquals(URLHelper::getURL(''), '?');
+        $this->assertEquals(URLHelper::getURL('x'), 'x');
+        $this->assertEquals(URLHelper::getURL('#x'), '?#x');
 
         URLHelper::setBaseURL('/dir/');
 
-        $this->assertEqual(URLHelper::getURL(''), '?');
-        $this->assertEqual(URLHelper::getURL('#x'), '?#x');
-        $this->assertEqual(URLHelper::getURL('?a=b'), '?a=b');
+        $this->assertEquals(URLHelper::getURL(''), '?');
+        $this->assertEquals(URLHelper::getURL('#x'), '?#x');
+        $this->assertEquals(URLHelper::getURL('?a=b'), '?a=b');
     }
 
     public function testAddLinkParam ()
     {
-        $this->assertEqual(URLHelper::getLinkParams(), array());
+        $this->assertEquals(URLHelper::getLinkParams(), array());
 
         URLHelper::addLinkParam('foo', 'bar');
-        $this->assertEqual(URLHelper::getLinkParams(), array('foo' => 'bar'));
+        $this->assertEquals(URLHelper::getLinkParams(), array('foo' => 'bar'));
 
         URLHelper::addLinkParam('answer', 42);
-        $this->assertEqual(URLHelper::getLinkParams(),
+        $this->assertEquals(URLHelper::getLinkParams(),
                            array('foo' => 'bar', 'answer' => '42'));
     }
 
@@ -54,10 +55,10 @@ class URLHelperTest extends UnitTestCase
         $_REQUEST['var'] = 'old';
 
         URLHelper::bindLinkParam('var', $var);
-        $this->assertEqual($var, 'old');
+        $this->assertEquals($var, 'old');
 
         $var = 'new';
-        $this->assertEqual(URLHelper::getURL(''), '?var=new');
+        $this->assertEquals(URLHelper::getURL(''), '?var=new');
     }
 
     public function testRemoveLinkParam ()
@@ -66,7 +67,7 @@ class URLHelperTest extends UnitTestCase
         URLHelper::addLinkParam('answer', 42);
         URLHelper::removeLinkParam('foo');
 
-        $this->assertEqual(URLHelper::getURL(''), '?answer=42');
+        $this->assertEquals(URLHelper::getURL(''), '?answer=42');
     }
 
     public function testGetURL ()
@@ -77,31 +78,31 @@ class URLHelperTest extends UnitTestCase
 
         $url = 'abc?a=b&c=d#top';
         $expected = 'abc?foo=bar&a=b&c=d#top';
-        $this->assertEqual(URLHelper::getURL($url), $expected);
+        $this->assertEquals(URLHelper::getURL($url), $expected);
 
         $url = 'abc#top';
         $params = array('a' => 'b', 'c' => 'd');
         $expected = 'abc?foo=bar&a=b&c=d#top';
-        $this->assertEqual(URLHelper::getURL($url, $params), $expected);
+        $this->assertEquals(URLHelper::getURL($url, $params), $expected);
 
         $url = 'abc?foo=test';
         $expected = 'abc?foo=test';
-        $this->assertEqual(URLHelper::getURL($url), $expected);
+        $this->assertEquals(URLHelper::getURL($url), $expected);
 
         $url = 'abc';
         $params = array('foo' => 'test');
         $expected = 'abc?foo=test';
-        $this->assertEqual(URLHelper::getURL($url, $params), $expected);
+        $this->assertEquals(URLHelper::getURL($url, $params), $expected);
 
         $url = 'abc?baz=on';
         $params = array('baz' => 'off');
         $expected = 'abc?foo=bar&baz=off';
-        $this->assertEqual(URLHelper::getURL($url, $params), $expected);
+        $this->assertEquals(URLHelper::getURL($url, $params), $expected);
 
         $url = 'abc?foo=baz';
         $params = array('foo' => 'test');
         $expected = 'abc?foo=test';
-        $this->assertEqual(URLHelper::getURL($url, $params), $expected);
+        $this->assertEquals(URLHelper::getURL($url, $params), $expected);
     }
 
     public function testGetLink ()
@@ -111,28 +112,28 @@ class URLHelperTest extends UnitTestCase
 
         $url = 'abc?a=%26&c="d#1';
         $expected = 'abc?foo=%26+%3B&amp;bar=%22%27&amp;a=%26&amp;c=%22d#1';
-        $this->assertEqual(URLHelper::getLink($url), $expected);
+        $this->assertEquals(URLHelper::getLink($url), $expected);
     }
 
     public function testSetBaseURL ()
     {
-        $this->assertEqual(URLHelper::getLink('foo/bar'), 'foo/bar');
-        $this->assertEqual(URLHelper::getLink('/foo/bar'), '/foo/bar');
-        $this->assertEqual(URLHelper::getLink('http://www.studip.de/foo/bar'),
+        $this->assertEquals(URLHelper::getLink('foo/bar'), 'foo/bar');
+        $this->assertEquals(URLHelper::getLink('/foo/bar'), '/foo/bar');
+        $this->assertEquals(URLHelper::getLink('http://www.studip.de/foo/bar'),
                            'http://www.studip.de/foo/bar');
 
         URLHelper::setBaseURL('/dir/');
 
-        $this->assertEqual(URLHelper::getLink('foo/bar'), '/dir/foo/bar');
-        $this->assertEqual(URLHelper::getLink('/foo/bar'), '/foo/bar');
-        $this->assertEqual(URLHelper::getLink('http://www.studip.de/foo/bar'),
+        $this->assertEquals(URLHelper::getLink('foo/bar'), '/dir/foo/bar');
+        $this->assertEquals(URLHelper::getLink('/foo/bar'), '/foo/bar');
+        $this->assertEquals(URLHelper::getLink('http://www.studip.de/foo/bar'),
                            'http://www.studip.de/foo/bar');
 
         URLHelper::setBaseURL('http://cnn.com/test/');
 
-        $this->assertEqual(URLHelper::getLink('foo/bar'), 'http://cnn.com/test/foo/bar');
-        $this->assertEqual(URLHelper::getLink('/foo/bar'), 'http://cnn.com/foo/bar');
-        $this->assertEqual(URLHelper::getLink('http://www.studip.de/foo/bar'),
+        $this->assertEquals(URLHelper::getLink('foo/bar'), 'http://cnn.com/test/foo/bar');
+        $this->assertEquals(URLHelper::getLink('/foo/bar'), 'http://cnn.com/foo/bar');
+        $this->assertEquals(URLHelper::getLink('http://www.studip.de/foo/bar'),
                            'http://www.studip.de/foo/bar');
     }
 }

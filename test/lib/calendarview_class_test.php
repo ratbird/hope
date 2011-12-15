@@ -9,12 +9,12 @@
  * the License, or (at your option) any later version.
  */
 
-
+require_once dirname(__FILE__) . '/../bootstrap.php';
 require_once 'lib/calendar/CalendarView.class.php';
 require_once 'lib/classes/PageLayout.php';
 
 
-class CalendarViewCase extends UnitTestCase {
+class CalendarViewCase extends PHPUnit_Framework_TestCase {
 
 
     function setUp() {
@@ -30,14 +30,14 @@ class CalendarViewCase extends UnitTestCase {
     }
 
     function test_constructor() {
-        $this->assertIsA(new CalendarView(), "CalendarView");
+        $this->assertInstanceOf("CalendarView", new CalendarView());
     }
 
     function test_setHeight() {
         $height = 75;
         $cview = new CalendarView();
         $cview->setHeight($height);
-        $this->assertEqual($cview->getHeight(), $height);
+        $this->assertEquals($cview->getHeight(), $height);
     }
 
     function test_setRange() {
@@ -46,8 +46,8 @@ class CalendarViewCase extends UnitTestCase {
         $cview = new CalendarView();
         $cview->setRange($start_hour, $end_hour);
         $result = $cview->getRange();
-        $this->assertEqual($start_hour, $result[0]);
-        $this->assertEqual($end_hour, $result[1]);
+        $this->assertEquals($start_hour, $result[0]);
+        $this->assertEquals($end_hour, $result[1]);
     }
 
     function test_addColumn() {
@@ -59,17 +59,17 @@ class CalendarViewCase extends UnitTestCase {
         $id2 = 4;
         $view->addColumn($title2, "", $id2);
         $columns = $view->getColumns();
-        $this->assertIsA($columns, "array");
-        $this->assertIsA($columns[0], "CalendarColumn");
-        $this->assertEqual($columns[0]->getTitle(), $title1);
-        $this->assertEqual($columns[0]->getId(), $id1);
-        $this->assertIsA($columns[1], "CalendarColumn");
-        $this->assertEqual($columns[1]->getTitle(), $title2);
-        $this->assertEqual($columns[1]->getId(), $id2);
+        $this->assertInternalType("array", $columns);
+        $this->assertInstanceOf("CalendarColumn", $columns[0]);
+        $this->assertEquals($columns[0]->getTitle(), $title1);
+        $this->assertEquals($columns[0]->getId(), $id1);
+        $this->assertInstanceOf("CalendarColumn", $columns[1]);
+        $this->assertEquals($columns[1]->getTitle(), $title2);
+        $this->assertEquals($columns[1]->getId(), $id2);
     }
 
     public function test_negative_addEntry() {
-        $this->expectException("Exception");
+        $this->setExpectedException('InvalidArgumentException');
         $view = new CalendarView();
         $entry = array(
             'title' => "Test Eintrag",
@@ -90,7 +90,7 @@ class CalendarViewCase extends UnitTestCase {
         );
         $view->addEntry($entry);
         $entries = $view->getEntries();
-        $this->assertIsA($entries, "array");
+        $this->assertInternalType("array", $entries);
         $this->assertNotNull($entries['day_'.$id]);
     }
 
@@ -98,7 +98,7 @@ class CalendarViewCase extends UnitTestCase {
         $view = new CalendarView();
         $js_function_object = 'function () { alert("Watch out, Gringo!"); }';
         $view->setInsertFunction($js_function_object);
-        $this->assertEqual($view->getInsertFunction(), $js_function_object);
+        $this->assertEquals($view->getInsertFunction(), $js_function_object);
     }
 
     //Die anderen Methoden muss Till testen.

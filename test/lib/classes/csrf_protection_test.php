@@ -10,9 +10,11 @@
  * the License, or (at your option) any later version.
  */
 
+require_once dirname(__FILE__) . '/../../bootstrap.php';
+require_once 'lib/exceptions/AccessDeniedException.php';
 require_once 'lib/classes/CSRFProtection.php';
 
-class CSRFProtectionTokenTest extends UnitTestCase
+class CSRFProtectionTokenTest extends PHPUnit_Framework_TestCase
 {
     function setUp()
     {
@@ -30,14 +32,14 @@ class CSRFProtectionTokenTest extends UnitTestCase
 
     function testTokenGeneration()
     {
-        $this->assertEqual(sizeof($_SESSION), 0);
+        $this->assertEquals(sizeof($_SESSION), 0);
         CSRFProtection::token();
-        $this->assertEqual(sizeof($_SESSION), 1);
+        $this->assertEquals(sizeof($_SESSION), 1);
     }
 
     function testTokenIdentity()
     {
-        $this->assertEqual(CSRFProtection::token(), CSRFProtection::token());
+        $this->assertEquals(CSRFProtection::token(), CSRFProtection::token());
     }
 
     function testTokenSessionDifference()
@@ -48,13 +50,13 @@ class CSRFProtectionTokenTest extends UnitTestCase
 
         $token2 = CSRFProtection::token();
 
-        $this->assertNotEqual($token1, $token2);
+        $this->assertNotEquals($token1, $token2);
     }
 
     function testTokenIsAString()
     {
         $token = CSRFProtection::token();
-        $this->assertIsA($token, "string");
+        $this->assertInternalType("string", $token);
     }
 
     function testTokenTag()
@@ -64,7 +66,7 @@ class CSRFProtectionTokenTest extends UnitTestCase
     }
 }
 
-class CSRFRequestTest extends UnitTestCase
+class CSRFRequestTest extends PHPUnit_Framework_TestCase
 {
 
     function setUp()
@@ -86,8 +88,8 @@ class CSRFRequestTest extends UnitTestCase
 
     function testInvalidUnsafeRequest()
     {
+        $this->setExpectedException('InvalidSecurityTokenException');
         $_SERVER['REQUEST_METHOD'] = 'POST';
-        $this->expectException('InvalidSecurityTokenException');
         CSRFProtection::verifyUnsafeRequest();
     }
 
@@ -101,7 +103,7 @@ class CSRFRequestTest extends UnitTestCase
     function testSafeRequest()
     {
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $this->expectException('MethodNotAllowedException');
+        $this->setExpectedException('MethodNotAllowedException');
         CSRFProtection::verifyUnsafeRequest();
     }
 
@@ -109,7 +111,7 @@ class CSRFRequestTest extends UnitTestCase
     {
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XmlHttpRequest';
-        $this->expectException('MethodNotAllowedException');
+        $this->setExpectedException('MethodNotAllowedException');
         CSRFProtection::verifyUnsafeRequest();
     }
 

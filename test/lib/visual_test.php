@@ -9,10 +9,11 @@
  * the License, or (at your option) any later version.
  */
 
+require_once dirname(__FILE__) . '/../bootstrap.php';
 require_once 'lib/visual.inc.php';
 require_once 'lib/classes/Config.class.php';
 
-class VisualFunctionsTest extends UnitTestCase
+class VisualFunctionsTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
@@ -26,7 +27,7 @@ class VisualFunctionsTest extends UnitTestCase
     public function testFormatReady()
     {
         $expected = '<b>some code</b>';
-        $this->assertEqual(formatReady('*some*code*'), $expected);
+        $this->assertEquals(formatReady('*some*code*'), $expected);
     }
 
     public function testHtmlReady()
@@ -44,76 +45,76 @@ class VisualFunctionsTest extends UnitTestCase
         );
 
         foreach ($pairs as $string => $expected) {
-          $this->assertEqual(htmlReady($string), $expected);
+          $this->assertEquals(htmlReady($string), $expected);
         }
     }
 
     public function testFormatReadyTicket1255()
     {
-        $this->assertEqual(formatReady("!\nHallo Welt"), "!<br>Hallo Welt");
+        $this->assertEquals(formatReady("!\nHallo Welt"), "!<br>Hallo Welt");
     }
 
     public function testLine()
     {
         $input = "Test\n--\nTest";
         $expected = 'Test<br><hr class="content"><br>Test';
-        $this->assertEqual(formatReady($input), $expected);
+        $this->assertEquals(formatReady($input), $expected);
     }
 
     public function testHeading()
     {
         $input = '!!%%Überschrift%%';
         $expected = '<h3 class="content"><i>&Uuml;berschrift</i></h3>';
-        $this->assertEqual(formatReady($input), $expected);
+        $this->assertEquals(formatReady($input), $expected);
     }
 
     public function testBoldItalics()
     {
         $input = '**some %%code%%**';
         $expected = '<b>some <i>code</i></b>';
-        $this->assertEqual(formatReady($input), $expected);
+        $this->assertEquals(formatReady($input), $expected);
     }
 
     public function testBigSmall()
     {
         $input = '++some --code--++';
         $expected = '<big>some <small>code</small></big>';
-        $this->assertEqual(formatReady($input), $expected);
+        $this->assertEquals(formatReady($input), $expected);
     }
 
     public function testSimpleBoldItalics()
     {
         $input = '*bold*text* %some%italics%';
         $expected = '<b>bold text</b> <i>some italics</i>';
-        $this->assertEqual(formatReady($input), $expected);
+        $this->assertEquals(formatReady($input), $expected);
     }
 
     public function testMissingClose()
     {
         $input = '**missing %%close';
         $expected = $input;
-        $this->assertEqual(formatReady($input), $expected);
+        $this->assertEquals(formatReady($input), $expected);
     }
 
     public function testCloseBeforeOpen()
     {
         $input = 'there is -}no markup{- here';
         $expected = $input;
-        $this->assertEqual(formatReady($input), $expected);
+        $this->assertEquals(formatReady($input), $expected);
     }
 
     public function testIncorrectNesting()
     {
         $input = '** test %% test ** test %%';
         $expected = '** test <i> test ** test </i>';
-        $this->assertEqual(formatReady($input), $expected);
+        $this->assertEquals(formatReady($input), $expected);
     }
 
     public function testImage()
     {
         $input = '[img=Stud.IP-Logo]http://www.studip.de/logo.png';
         $expected = '<img src="http://www.studip.de/logo.png"  alt="Stud.IP-Logo" title="Stud.IP-Logo">';
-        $this->assertEqual(formatReady($input), $expected);
+        $this->assertEquals(formatReady($input), $expected);
     }
 
     public function testTable()
@@ -131,7 +132,7 @@ class VisualFunctionsTest extends UnitTestCase
                    .'<td>Mathe Diplom</td>'
                    .'</tr>'
                    .'</table>';
-        $this->assertEqual(formatReady($input), $expected);
+        $this->assertEquals(formatReady($input), $expected);
     }
 
     public function testList()
@@ -145,7 +146,7 @@ class VisualFunctionsTest extends UnitTestCase
                    .'</ol></li>'
                    .'<li>Schluss</li>'
                    .'</ul>';
-        $this->assertEqual(formatReady($input), $expected);
+        $this->assertEquals(formatReady($input), $expected);
     }
 
     public function testIndent()
@@ -159,21 +160,21 @@ class VisualFunctionsTest extends UnitTestCase
                    .'</div>'
                    .'Ebene 1<br>'
                    .'</div>';
-        $this->assertEqual(formatReady($input, false), $expected);
+        $this->assertEquals(formatReady($input, false), $expected);
     }
 
     public function testNop()
     {
         $input = '[nop]**A**[quote]B[/quote]{-C-}[/nop]';
         $expected = '**A**[quote]B[/quote]{-C-}';
-        $this->assertEqual(formatReady($input), $expected);
+        $this->assertEquals(formatReady($input), $expected);
     }
 
     public function testPre()
     {
         $input = '[pre]**A**{-C-}[/pre]';
         $expected = '<pre><b>A</b><strike>C</strike></pre>';
-        $this->assertEqual(formatReady($input), $expected);
+        $this->assertEquals(formatReady($input), $expected);
     }
 
     public function testQuote()
@@ -182,20 +183,20 @@ class VisualFunctionsTest extends UnitTestCase
         $expected = '<blockquote class="quote">'
                    .'<b><u>Anonymous</u> hat geschrieben:</b><hr>some text'
                    .'</blockquote>';
-        $this->assertEqual(formatReady($input), $expected);
+        $this->assertEquals(formatReady($input), $expected);
     }
 
     public function testLink()
     {
         $input = '[Testlink]https://www.studip.de/';
         $expected = '<a class="link-extern" href="https://www.studip.de/" target="_blank">Testlink</a>';
-        $this->assertEqual(formatReady($input), $expected);
+        $this->assertEquals(formatReady($input), $expected);
     }
 
     public function testMail()
     {
         $input = '[Mail]some.user@example.com';
         $expected = '<a class="link-extern" href="mailto:some.user@example.com">Mail</a>';
-        $this->assertEqual(formatReady($input), $expected);
+        $this->assertEquals(formatReady($input), $expected);
     }
 }

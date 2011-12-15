@@ -9,8 +9,11 @@
  * the License, or (at your option) any later version.
  */
 
-
+require_once dirname(__FILE__) . '/../../bootstrap.php';
+require_once 'lib/phplib/perm.inc';
+require_once 'lib/classes/Avatar.class.php';
 require_once 'lib/classes/CourseAvatar.class.php';
+require_once 'lib/classes/InstituteAvatar.class.php';
 
 /**
  * Testcase for Avatar class.
@@ -21,22 +24,23 @@ require_once 'lib/classes/CourseAvatar.class.php';
  * @author    mlunzena
  * @copyright (c) Authors
  */
+class AvatarTestCase extends PHPUnit_Framework_TestCase {
 
-require_once 'vendor/simpletest/mock_objects.php';
-
-Mock::generate('stdClass', 'MockPerm', array('have_perm'));
-
-class AvatarTestCase extends UnitTestCase {
-
-  function setUp() {
-    $GLOBALS['perm'] = new MockPerm();
-    $GLOBALS['perm']->setReturnValue('have_perm', true);
-    $GLOBALS['DYNAMIC_CONTENT_URL'] = "/dynamic";
-    $GLOBALS['DYNAMIC_CONTENT_PATH'] = "/dynamic";
-    $this->avatar_id = "123456789";
-    $this->avatar = Avatar::getAvatar($this->avatar_id);
-  }
-
+    function setUp()
+    {
+        $stub = $this->getMock('Perm');
+        // Configure the stub.
+        $stub->expects($this->any())
+            ->method('have_perm')
+            ->will($this->returnValue(true));
+        
+        $GLOBALS['perm'] = $stub;
+        $GLOBALS['DYNAMIC_CONTENT_URL'] = "/dynamic";
+        $GLOBALS['DYNAMIC_CONTENT_PATH'] = "/dynamic";
+        $this->avatar_id = "123456789";
+        $this->avatar = Avatar::getAvatar($this->avatar_id);
+    }
+    
   function tearDown() {
     unset($GLOBALS['DYNAMIC_CONTENT_PATH'], $GLOBALS['DYNAMIC_CONTENT_URL']);
   }
@@ -47,27 +51,28 @@ class AvatarTestCase extends UnitTestCase {
 
   function test_avatar_url() {
     $url = $this->avatar->getCustomAvatarUrl(Avatar::NORMAL);
-    $this->assertEqual($url, "/dynamic/user/" . $this->avatar_id . "_normal.png");
+    $this->assertEquals($url, "/dynamic/user/" . $this->avatar_id . "_normal.png");
   }
 
   function test_avatar_path() {
     $path = $this->avatar->getCustomAvatarPath(Avatar::NORMAL);
-    $this->assertEqual($path, "/dynamic/user/" . $this->avatar_id . "_normal.png");
+    $this->assertEquals($path, "/dynamic/user/" . $this->avatar_id . "_normal.png");
   }
 
   function test_nobody_url() {
     $url = Avatar::getNobody()->getUrl(Avatar::NORMAL);
-    $this->assertEqual($url, "/dynamic/user/nobody_normal.png");
+    $this->assertEquals($url, "/dynamic/user/nobody_normal.png");
   }
 
   function test_nobody_path() {
     $path = Avatar::getNobody()->getCustomAvatarPath(Avatar::NORMAL);
-    $this->assertEqual($path, "/dynamic/user/nobody_normal.png");
+    $this->assertEquals($path, "/dynamic/user/nobody_normal.png");
   }
 }
 
 
-class CourseAvatarTestCase extends UnitTestCase {
+class CourseAvatarTestCase extends PHPUnit_Framework_TestCase
+{
 
   function setUp() {
     $this->avatar_id = "123456789";
@@ -106,22 +111,22 @@ class CourseAvatarTestCase extends UnitTestCase {
 
   function test_avatar_url() {
     $url = $this->avatar->getCustomAvatarUrl(Avatar::NORMAL);
-    $this->assertEqual($url, "/dynamic/course/". $this->avatar_id . "_normal.png");
+    $this->assertEquals($url, "/dynamic/course/". $this->avatar_id . "_normal.png");
   }
 
   function test_avatar_path() {
     $path = $this->avatar->getCustomAvatarPath(Avatar::NORMAL);
-    $this->assertEqual($path, "/dynamic/course/". $this->avatar_id . "_normal.png");
+    $this->assertEquals($path, "/dynamic/course/". $this->avatar_id . "_normal.png");
   }
 
   function test_nobody_url() {
     $url = CourseAvatar::getNobody()->getUrl(Avatar::NORMAL);
-    $this->assertEqual($url, "/dynamic/course/nobody_normal.png");
+    $this->assertEquals($url, "/dynamic/course/nobody_normal.png");
   }
 
   function test_nobody_path() {
     $path = CourseAvatar::getNobody()->getCustomAvatarPath(Avatar::NORMAL);
-    $this->assertEqual($path, "/dynamic/course/nobody_normal.png");
+    $this->assertEquals($path, "/dynamic/course/nobody_normal.png");
   }
 }
 

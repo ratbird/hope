@@ -9,18 +9,19 @@
  * the License, or (at your option) any later version.
  */
 
+require_once dirname(__FILE__) . '/../bootstrap.php';
 require_once 'lib/functions.php';
 
-class FunctionsTest extends UnitTestCase {
+class FunctionsTest extends PHPUnit_Framework_TestCase {
 
   function testWords() {
     $string = "one two three";
-    $this->assertEqual(words($string), array('one', 'two', 'three'));
+    $this->assertEquals(words($string), array('one', 'two', 'three'));
   }
 
   function testWordsWithEmptyString() {
     $string = "";
-    $this->assertEqual(words($string), array());
+    $this->assertEquals(words($string), array());
   }
 }
 

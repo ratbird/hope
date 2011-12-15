@@ -10,9 +10,10 @@
  * the License, or (at your option) any later version.
  */
 
+require_once dirname(__FILE__) . '/../../bootstrap.php';
 require_once 'lib/plugins/engine/PluginRepository.class.php';
 
-class PluginRepositoryTest extends UnitTestCase
+class PluginRepositoryTest extends PHPUnit_Framework_TestCase
 {
     public function setUp ()
     {
@@ -26,8 +27,8 @@ class PluginRepositoryTest extends UnitTestCase
     {
         $data = $this->repository->getPlugin('Alija');
 
-        $this->assertIdentical($data['version'], '0.5');
-        $this->assertIdentical($data['url'],
+        $this->assertSame($data['version'], '0.5');
+        $this->assertSame($data['url'],
             'http://plugins.studip.de/uploads/Plugins/alija-0.5.zip');
 
         $this->assertNull($this->repository->getPlugin('Vips'));
@@ -38,13 +39,13 @@ class PluginRepositoryTest extends UnitTestCase
     {
         $plugins = $this->repository->getPlugins();
 
-        $this->assertEqual(count($plugins), 2);
+        $this->assertEquals(count($plugins), 2);
         $this->assertNotNull($plugins['Alija']);
         $this->assertNotNull($plugins['TracTickets']);
 
         $plugins = $this->repository->getPlugins('Ticket');
 
-        $this->assertEqual(count($plugins), 1);
+        $this->assertEquals(count($plugins), 1);
         $this->assertNotNull($plugins['TracTickets']);
     }
 }

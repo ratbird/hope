@@ -12,6 +12,7 @@
  * @category    Stud.IP
  */
 
+require_once dirname(__FILE__) . '/../../bootstrap.php';
 require_once 'lib/classes/TextFormat.php';
 
 function markupLine($markup, $matches)
@@ -186,7 +187,7 @@ function markupMail($markup, $matches)
     return sprintf('<a href="mailto:%s">%s</a>', $markup->quote($matches[2]), $text);
 }
 
-class TextFormatTest extends UnitTestCase
+class TextFormatTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
@@ -234,63 +235,63 @@ class TextFormatTest extends UnitTestCase
     {
         $input = "Test\n--\nTest";
         $expected = "Test\n<hr>\nTest";
-        $this->assertEqual($this->markup->format($input), $expected);
+        $this->assertEquals($this->markup->format($input), $expected);
     }
 
     public function testHeading()
     {
         $input = '!!%%Überschrift%%';
         $expected = '<h3 class="content"><i>Überschrift</i></h3>';
-        $this->assertEqual($this->markup->format($input), $expected);
+        $this->assertEquals($this->markup->format($input), $expected);
     }
 
     public function testBoldItalics()
     {
         $input = '**some %%code%%**';
         $expected = '<b>some <i>code</i></b>';
-        $this->assertEqual($this->markup->format($input), $expected);
+        $this->assertEquals($this->markup->format($input), $expected);
     }
 
     public function testBigSmall()
     {
         $input = '++some --code--++';
         $expected = '<big>some <small>code</small></big>';
-        $this->assertEqual($this->markup->format($input), $expected);
+        $this->assertEquals($this->markup->format($input), $expected);
     }
 
     public function testSimpleBoldItalics()
     {
         $input = '*bold*text* %some%italics%';
         $expected = '<b>bold text</b> <i>some italics</i>';
-        $this->assertEqual($this->markup->format($input), $expected);
+        $this->assertEquals($this->markup->format($input), $expected);
     }
 
     public function testMissingClose()
     {
         $input = '**missing %%close';
         $expected = $input;
-        $this->assertEqual($this->markup->format($input), $expected);
+        $this->assertEquals($this->markup->format($input), $expected);
     }
 
     public function testCloseBeforeOpen()
     {
         $input = 'there is -}no markup{- here';
         $expected = $input;
-        $this->assertEqual($this->markup->format($input), $expected);
+        $this->assertEquals($this->markup->format($input), $expected);
     }
 
     public function testIncorrectNesting()
     {
         $input = '** test %% test ** test %%';
         $expected = '** test <i> test ** test </i>';
-        $this->assertEqual($this->markup->format($input), $expected);
+        $this->assertEquals($this->markup->format($input), $expected);
     }
 
     public function testImage()
     {
         $input = '[img=Stud.IP-Logo]http://www.studip.de/logo.png';
         $expected = '<img src="http://www.studip.de/logo.png" title="Stud.IP-Logo">';
-        $this->assertEqual($this->markup->format($input), $expected);
+        $this->assertEquals($this->markup->format($input), $expected);
     }
 
     public function testTable()
@@ -308,7 +309,7 @@ class TextFormatTest extends UnitTestCase
                    .'<td>Mathe Diplom</td>'
                    .'</tr>'
                    .'</table>';
-        $this->assertEqual($this->markup->format($input), $expected);
+        $this->assertEquals($this->markup->format($input), $expected);
     }
 
     public function testList()
@@ -322,7 +323,7 @@ class TextFormatTest extends UnitTestCase
                    .'</ol></li>'
                    .'<li>Schluss</li>'
                    .'</ul>';
-        $this->assertEqual($this->markup->format($input), $expected);
+        $this->assertEquals($this->markup->format($input), $expected);
     }
 
     public function testIndent()
@@ -336,21 +337,21 @@ class TextFormatTest extends UnitTestCase
                    .'</p>'
                    ."Ebene 1\n"
                    .'</p>';
-        $this->assertEqual($this->markup->format($input), $expected);
+        $this->assertEquals($this->markup->format($input), $expected);
     }
 
     public function testNop()
     {
         $input = '[nop]**A**[quote]B[/quote]{-C-}[/nop]';
         $expected = '**A**[quote]B[/quote]{-C-}';
-        $this->assertEqual($this->markup->format($input), $expected);
+        $this->assertEquals($this->markup->format($input), $expected);
     }
 
     public function testPre()
     {
         $input = '[pre]**A**{-C-}[/pre]';
         $expected = '<pre><b>A</b><strike>C</strike></pre>';
-        $this->assertEqual($this->markup->format($input), $expected);
+        $this->assertEquals($this->markup->format($input), $expected);
     }
 
     public function testQuote()
@@ -359,20 +360,20 @@ class TextFormatTest extends UnitTestCase
         $expected = '<blockquote class="quote">'
                    .'<b><u>Anonymous</u> hat geschrieben:</b><hr>some text'
                    .'</blockquote>';
-        $this->assertEqual($this->markup->format($input), $expected);
+        $this->assertEquals($this->markup->format($input), $expected);
     }
 
     public function testLink()
     {
         $input = '[Testlink]https://www.studip.de/';
         $expected = '<a href="https://www.studip.de/">Testlink</a>';
-        $this->assertEqual($this->markup->format($input), $expected);
+        $this->assertEquals($this->markup->format($input), $expected);
     }
 
     public function testMail()
     {
         $input = '[Mail]some.user@example.com';
         $expected = '<a href="mailto:some.user@example.com">Mail</a>';
-        $this->assertEqual($this->markup->format($input), $expected);
+        $this->assertEquals($this->markup->format($input), $expected);
     }
 }

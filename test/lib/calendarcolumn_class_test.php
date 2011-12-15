@@ -10,11 +10,14 @@
  */
 
 
+require_once dirname(__FILE__) . '/../bootstrap.php';
 require_once 'lib/calendar/CalendarColumn.class.php';
+require_once 'lib/functions.php';
+require_once 'lib/classes/URLHelper.php';
 
 
 
-class CalendarColumnCase extends UnitTestCase {
+class CalendarColumnCase extends PHPUnit_Framework_TestCase {
 
 
     function setUp() {
@@ -30,33 +33,33 @@ class CalendarColumnCase extends UnitTestCase {
     }
 
     function test_create() {
-        $this->assertIsA(CalendarColumn::create(), "CalendarColumn");
+        $this->assertInstanceOf("CalendarColumn", CalendarColumn::create());
     }
 
     function test_get_id() {
         $id = "test_id";
         $column = new CalendarColumn($id);
-        $this->assertEqual($column->getId(), $id);
+        $this->assertEquals($column->getId(), $id);
     }
 
     function test_set_id() {
         $id = "test_id";
         $column = new CalendarColumn("falsche id");
         $column->setId($id);
-        $this->assertEqual($column->getId(), $id);
+        $this->assertEquals($column->getId(), $id);
     }
 
     function test_set_title() {
         $title = "test_title";
         $column = new CalendarColumn();
         $column->setTitle($title);
-        $this->assertEqual($column->getTitle(), $title);
+        $this->assertEquals($column->getTitle(), $title);
     }
 
     function test_set_url() {
         $url = URLHelper::getURL("about.php", array("username" => get_username()));
         $column = CalendarColumn::create()->setURL($url);
-        $this->assertEqual($column->getURL(), $url);
+        $this->assertEquals($column->getURL(), $url);
     }
 
     function test_add_entry() {
@@ -65,15 +68,15 @@ class CalendarColumnCase extends UnitTestCase {
         $entry = array('start' => "1200", 'end' => "1230", 'title' => "test_title_number_2");
         $column->addEntry($entry);
         $entries = $column->getEntries();
-        $this->assertIsA($entries, "array");
-        $this->assertEqual(count($entries), 2);
-        $this->assertNotEqual($entries[0], $entry);
-        $this->assertEqual($entries[1], $entry);
-        $this->assertIsA($entries[1], "array");
+        $this->assertInternalType("array", $entries);
+        $this->assertEquals(count($entries), 2);
+        $this->assertNotEquals($entries[0], $entry);
+        $this->assertEquals($entries[1], $entry);
+        $this->assertInternalType("array", $entries[1]);
     }
 
     function test_wrong_entry() {
-        $this->expectException("Exception");
+        $this->setExpectedException('InvalidArgumentException');
         $entry1 = array('start' => "0800", 'end' => "1000");
         $entry2 = array('start' => "1000", 'title' => "test_title");
         $entry3 = array('end' => "1500", 'title' => "test_title");
@@ -88,7 +91,7 @@ class CalendarColumnCase extends UnitTestCase {
             array('start' => "1200", 'end' => "1400", 'title' => "test_title")
         );
         $column = CalendarColumn::create()->addEntries($entries);
-        $this->assertIsA($column->getEntries(), "array");
+        $this->assertInternalType('array', $column->getEntries());
     }
 
     function test_erase_entries() {
@@ -96,13 +99,11 @@ class CalendarColumnCase extends UnitTestCase {
         $column = CalendarColumn::create()->addEntry($entry);
         $column->eraseEntries();
         $entries = $column->getEntries();
-        $this->assertIsA($entries, "array");
-        $this->assertEqual(count($entries), 0);
+        $this->assertInternalType("array", $entries);
+        $this->assertEquals(count($entries), 0);
     }
 
 
     //Die anderen Methoden muss Till testen.
 
 }
-
-

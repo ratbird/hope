@@ -2,7 +2,7 @@ doc: force_update
 	doxygen tools/Doxyfile
 
 test: force_update
-	php test/all_tests.php
+	phpunit -c test/phpunit.xml
 
 # dummy target to force update of "doc" target
 force_update:

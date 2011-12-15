@@ -122,7 +122,7 @@ class CalendarColumn {
     public function addEntry($entry_array) {
         if (!isset($entry_array['start']) || !isset($entry_array['end'])
                 || !isset($entry_array['title']) ) {
-            throw new Exception('The entry '. print_r($entry_array, true) .' does not follow the specifications!');
+            throw new InvalidArgumentException('The entry '. print_r($entry_array, true) .' does not follow the specifications!');
         } else {
             $this->entries[] = $entry_array;
         }

@@ -161,7 +161,7 @@ class CalendarView
         if (count($this->entries)) {
             $this->entries[count($this->entries)-1]->addEntry($entry_array);
         } else {
-            throw new Exception(_("Es existiert noch keine Spalte in der Ansicht, zu der der Eintrag hinzugefügt werden kann."));
+            throw new InvalidArgumentException(_("Es existiert noch keine Spalte in der Ansicht, zu der der Eintrag hinzugefügt werden kann."));
         }
         return $this;
     }

@@ -109,8 +109,8 @@ class PluginEngine {
      */
     public static function sendMessage($type, $method /* ... */) {
         $args = func_get_args();
-        $args = array_splice($args, 1, 0, array(NULL));
-        return call_user_func_array(array($this, 'sendMessageWithContext'), $args);
+        array_splice($args, 1, 0, array(NULL));
+        return call_user_func_array(array(__CLASS__, 'sendMessageWithContext'), $args);
     }
 
     /**

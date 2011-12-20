@@ -1836,3 +1836,24 @@ function addHiddenFields($variable, $data, $parent = array())
 
     return $ret;
 }
+
+/**
+ * Returns a new array that is a one-dimensional flattening of this
+ * array (recursively). That is, for every element that is an array,
+ * extract its elements into the new array.
+ *
+ * @param array $ary the array to be flattened
+ * @return array the flattened array
+ */
+function array_flatten($ary)
+{
+    $i = 0;
+    while ($i < sizeof($ary)) {
+        if (is_array($ary[$i])) {
+            array_splice($ary, $i, 1, $ary[$i]);
+        } else {
+            $i++;
+        }
+    }
+    return $ary;
+}

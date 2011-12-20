@@ -45,6 +45,11 @@ require_once 'lib/webservices/services/institute_webservice.php';
 
 $AVAILABLE_SERVICES = array('UserService', 'SessionService', 'SeminarService', 'ContentmoduleService', 'LectureTreeService', 'InstituteService');
 
+$AVAILABLE_SERVICES =
+    array_merge($AVAILABLE_SERVICES,
+                array_flatten(PluginEngine::sendMessage("WebServicePlugin",
+                                                        "getWebServices")));
+
 if (!get_config('WEBSERVICES_ENABLE'))
 {
     throw new Exception("Webservices not available");

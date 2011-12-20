@@ -27,6 +27,7 @@ require_once 'core/PortalPlugin.class.php';
 require_once 'core/StandardPlugin.class.php';
 require_once 'core/StudienmodulManagementPlugin.class.php';
 require_once 'core/SystemPlugin.class.php';
+require_once 'core/WebServicePlugin.class.php';
 
 // old navigation classes (deprecated)
 require_once 'core/StudipPluginNavigation.class.php';

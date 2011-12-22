@@ -65,9 +65,9 @@ class Admin_DomainController extends AuthenticatedController
     /**
      * Edit an existing user domain.
      */
-    function edit_action($id)
+    function edit_action()
     {
-        $this->edit_id = $id;
+        $this->edit_id = Request::get('id');
     }
 
     /**
@@ -103,8 +103,9 @@ class Admin_DomainController extends AuthenticatedController
     /**
      * Delete an existing user domain.
      */
-    function delete_action($id)
+    function delete_action()
     {
+        $id = Request::get('id');
         $domain = new UserDomain($id);
 
         if (count($domain->getUsers()) == 0) {

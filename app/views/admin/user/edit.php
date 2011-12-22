@@ -386,7 +386,7 @@
             <?= htmlReady($domain->getName()) ?>
         </td>
         <td align="right">
-            <a href="<?= $controller->url_for('admin/user/delete_userdomain/' . $user['user_id'] . '/' . $domain->getID()) ?>">
+            <a href="<?= $controller->url_for('admin/user/delete_userdomain/' . $user['user_id'] . '?domain_id=' . $domain->getID()) ?>">
                 <?= Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _('Aus dieser Nutzerdomäne austragen'))) ?>
             </a>
         </td>

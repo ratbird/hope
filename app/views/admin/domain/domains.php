@@ -33,11 +33,11 @@
       <?= count($domain->getUsers()) ?>
     </td>
     <td>
-      <a href="<?= $controller->url_for('admin/domain/edit/'.$domain->getID()) ?>">
+      <a href="<?= $controller->url_for('admin/domain/edit?id='.$domain->getID()) ?>">
         <?= Assets::img('icons/16/blue/edit.png', array('title' => _('bearbeiten'))) ?>
       </a>
       <? if (count($domain->getUsers()) == 0): ?>
-        <a href="<?= $controller->url_for('admin/domain/delete/'.$domain->getID()) ?>">
+        <a href="<?= $controller->url_for('admin/domain/delete?id='.$domain->getID()) ?>">
           <?= Assets::img('icons/16/blue/trash.png', array('title' => _('löschen'))) ?>
         </a>
       <? endif ?>

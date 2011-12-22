@@ -369,7 +369,7 @@ class Admin_UserController extends AuthenticatedController
 
             //change userdomain
             if (Request::get('new_userdomain', 'none') != 'none' && $editPerms[0] != 'root') {
-                $domain = new UserDomain(Request::option('new_userdomain'));
+                $domain = new UserDomain(Request::get('new_userdomain'));
                 $domain->addUser($user_id);
                 $details[] = _('Die Nutzerdomäne wurde hinzugefügt.');
             }
@@ -592,7 +592,7 @@ class Admin_UserController extends AuthenticatedController
 
                 //adding userdomain
                 if (Request::get('select_dom_id')) {
-                    $domain = new UserDomain(Request::option('select_dom_id'));
+                    $domain = new UserDomain(Request::get('select_dom_id'));
                     if ($perm->have_perm('root') || in_array($domain, UserDomain::getUserDomainsForUser($auth->auth["uid"]))) {
                         $domain->addUser($user_id);
                         $details[] = sprintf(_("Der Benutzer wurde in Nutzerdomäne \"%s\" eingetragen."), htmlReady($domain->getName()));
@@ -799,10 +799,10 @@ class Admin_UserController extends AuthenticatedController
      * Delete an assignment of an user to an userdomain, without a security-query
      *
      * @param md5 $user_id
-     * @param md5 $domain_id
      */
-    public function delete_userdomain_action($user_id, $domain_id)
+    public function delete_userdomain_action($user_id)
     {
+        $domain_id = Request::get('domain_id');
         $domain = new UserDomain($domain_id);
         $domain->removeUser($user_id);
         PageLayout::postMessage(MessageBox::success(_('Die Zuordnung zur Nutzerdomäne wurde erfolgreich gelöscht.')));

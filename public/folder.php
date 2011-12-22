@@ -733,7 +733,7 @@ if ($question) {
                 echo _("Ausgewählten Ordner in eine andere Veranstaltung, eine andere Einrichtung oder auf die obere Ebene verschieben / kopieren:");
             }
             echo "\n</div></td></tr><tr>";
-            if ($config['FILESYSTEM_MULTICOPY_ENABLE'] && $open_cmd != 'm') {
+            if ($folder_tree->isFolder($folder_system_data["move"])) {
                 echo "\n" . '<td class="blank">&nbsp;</td>';
                 echo "\n" . '<td class="blank" width="60%" style="font-size:80%;">';
                 echo "\n" . '<input type="image" border="0" src="'.$GLOBALS['ASSETS_URL'].'images/icons/16/yellow/arr_2right.png" class="middle" name="move_to_top_folder" ' . tooltip(_("Auf die obere Ebene verschieben / kopieren")) . '>';

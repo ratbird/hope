@@ -751,7 +751,7 @@ if ($question) {
                 echo "\n" . '<option value="'.$id.'">' . htmlReady(my_substr($name,0,70)) . '</option>';
             }
             echo "\n" . '</select>';
-            if ($config['FILESYSTEM_MULTICOPY_ENABLE'] && $open_cmd != 'm') {
+            if ($config['FILESYSTEM_MULTICOPY_ENABLE']) {
                 echo "\n<a href=\"\" onClick=\"STUDIP.MultiSelect.create('#sem_move_id', 'Veranstaltungen'); $(this).hide(); return false\">".Assets::img("icons/16/blue/plus.png", array('title' => _("Mehrere Veranstaltungen auswählen"), "class" => "middle"))."</a>";
             }
             echo "\n</td>";
@@ -768,7 +768,7 @@ if ($question) {
                 echo "\n" . '<option value="'.$id.'">' . htmlReady(my_substr($name,0,70)) . '</option>';
             }
             echo "\n" . '</select>';
-            if ($config['FILESYSTEM_MULTICOPY_ENABLE'] && $open_cmd != 'm') {
+            if ($config['FILESYSTEM_MULTICOPY_ENABLE']) {
                 echo "\n<a href=\"\" onClick=\"STUDIP.MultiSelect.create('#inst_move_id', 'Institute'); $(this).hide(); return false\">".Assets::img("icons/16/blue/plus.png", array('title' => _("Mehrere Einrichtungen auswählen"), "class" => "middle"))."</a>";
             }
             echo "\n</td>";
@@ -1094,7 +1094,7 @@ div.droppable.hover {
             print "<td id=\"folder_1\">";
 
             foreach ($result2 as $datei) {
-                if ($folder_tree->isReadable($datei['range_id'], $user->id)) {
+                if ($folder_tree->isDownloadFolder($datei['range_id'], $user->id)) {
                     display_file_line($datei,
                         $range_id,
                         $folder_system_data["open"],

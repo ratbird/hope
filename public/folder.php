@@ -733,7 +733,7 @@ if ($question) {
                 echo _("Ausgewählten Ordner in eine andere Veranstaltung, eine andere Einrichtung oder auf die obere Ebene verschieben / kopieren:");
             }
             echo "\n</div></td></tr><tr>";
-            if($folder_tree->isFolder($folder_system_data["move"])){
+            if ($config['FILESYSTEM_MULTICOPY_ENABLE'] && $open_cmd != 'm') {
                 echo "\n" . '<td class="blank">&nbsp;</td>';
                 echo "\n" . '<td class="blank" width="60%" style="font-size:80%;">';
                 echo "\n" . '<input type="image" border="0" src="'.$GLOBALS['ASSETS_URL'].'images/icons/16/yellow/arr_2right.png" class="middle" name="move_to_top_folder" ' . tooltip(_("Auf die obere Ebene verschieben / kopieren")) . '>';
@@ -751,7 +751,7 @@ if ($question) {
                 echo "\n" . '<option value="'.$id.'">' . htmlReady(my_substr($name,0,70)) . '</option>';
             }
             echo "\n" . '</select>';
-            if ($config['FILESYSTEM_MULTICOPY_ENABLE']) {
+            if ($config['FILESYSTEM_MULTICOPY_ENABLE'] && $open_cmd != 'm') {
                 echo "\n<a href=\"\" onClick=\"STUDIP.MultiSelect.create('#sem_move_id', 'Veranstaltungen'); $(this).hide(); return false\">".Assets::img("icons/16/blue/plus.png", array('title' => _("Mehrere Veranstaltungen auswählen"), "class" => "middle"))."</a>";
             }
             echo "\n</td>";
@@ -768,7 +768,7 @@ if ($question) {
                 echo "\n" . '<option value="'.$id.'">' . htmlReady(my_substr($name,0,70)) . '</option>';
             }
             echo "\n" . '</select>';
-            if ($config['FILESYSTEM_MULTICOPY_ENABLE']) {
+            if ($config['FILESYSTEM_MULTICOPY_ENABLE'] && $open_cmd != 'm') {
                 echo "\n<a href=\"\" onClick=\"STUDIP.MultiSelect.create('#inst_move_id', 'Institute'); $(this).hide(); return false\">".Assets::img("icons/16/blue/plus.png", array('title' => _("Mehrere Einrichtungen auswählen"), "class" => "middle"))."</a>";
             }
             echo "\n</td>";

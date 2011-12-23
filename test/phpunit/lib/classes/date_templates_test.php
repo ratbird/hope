@@ -65,7 +65,7 @@ class DateTemplatesTests extends PHPUnit_Framework_TestCase
             )
         );
         
-        date_default_timezone_set('Europe/Berlin');
+        date_default_timezone_set(@date_default_timezone_get());
 
     }
 

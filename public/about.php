@@ -706,7 +706,7 @@ if ($perm->get_perm($user_id) == 'dozent'){
             if ($output) $output .= '<br>';
             $output .= "<font size=\"+1\"><b>$sem_name</b></font><br><br>";
             $snap->sortRows("Name");
-            while ($snap->fetchAll()) {
+            while ($snap->nextRow()) {
                 $ver_name = $snap->getField("Name");
                 $sem_number_start = $snap->getField("sem_number");
                 $sem_number_end = $snap->getField("sem_number_end");

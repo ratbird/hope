@@ -219,7 +219,7 @@ if ($perm->is_fak_admin()){
     $sth = $db->prepare("SELECT c.user_id FROM user_inst a LEFT JOIN Institute b ON(a.Institut_id=b.fakultaets_id)  LEFT JOIN user_inst c ON(b.Institut_id=c.Institut_id) WHERE a.user_id=? AND a.inst_perms='admin' AND c.user_id=?");
     $sth->execute(array($user_id,$user->id));
    // $sth->fetchAll(PDO::FETCH_NUM);
-    if ($sth->nextRowset())
+    if ($sth->fetch())
     $admin_darf = TRUE;
 }
 if ($perm->have_perm("root")) {
@@ -234,7 +234,7 @@ $sth = $db->prepare("SELECT user_info.* , auth_user_md5.*, ".
            "LEFT JOIN user_info USING (user_id) ".
            "WHERE auth_user_md5.user_id = ?");
 $sth->execute(array($_fullname_sql['full'],$user_id));
-$sth->nextRowset();
+$sth->fetch();
 
 // generische Datenfelder aufsammeln
 $short_datafields = array();
@@ -443,7 +443,7 @@ function open_im() {
                 $inst_result = $sth->fetch();
                 IF ($sth->rowCount() && is_element_visible_for_user($user->id, $user_id, $visibilities['studying'])) {
                     echo "<br><b>&nbsp;" . _("Wo ich studiere:") . "&nbsp;&nbsp;</b><br>";
-                    while ($sth->nextRowset()) {
+                    while ($sth->fetch()) {
                         echo "&nbsp; &nbsp; &nbsp; &nbsp;<a href=\"". URLHelper::getLink("institut_main.php?auswahl=".$inst_result["Institut_id"]) ."\">".htmlReady($inst_result["Name"])."</a><br>";
                     }
                 }
@@ -462,7 +462,7 @@ function open_im() {
 
                 //schleife weil evtl. mehrere sprechzeiten und institut nicht gesetzt...
 
-                while ($sth->nextRowset()) {
+                while ($sth->fetchAll()) {
                     $institut=$inst_result["Institut_id"];
                     echo "&nbsp; &nbsp; &nbsp; &nbsp;<a href=\"". URLHelper::getLink("institut_main.php?auswahl=".$institut) ."\">".htmlReady($inst_result["Name"])."</a>";
 
@@ -706,7 +706,7 @@ if ($perm->get_perm($user_id) == 'dozent'){
             if ($output) $output .= '<br>';
             $output .= "<font size=\"+1\"><b>$sem_name</b></font><br><br>";
             $snap->sortRows("Name");
-            while ($snap->nextRow()) {
+            while ($snap->fetchAll()) {
                 $ver_name = $snap->getField("Name");
                 $sem_number_start = $snap->getField("sem_number");
                 $sem_number_end = $snap->getField("sem_number_end");

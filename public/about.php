@@ -138,9 +138,7 @@ if (get_config('NEWS_RSS_EXPORT_ENABLE')){
 }
 
 
-$db = new DB_Seminar;
-$db2 = new DB_Seminar;
-$db3 = new DB_Seminar;
+$db = DBManager::get();
 $semester = new SemesterData;
 
 $msging = new messaging;
@@ -169,17 +167,18 @@ if ($_SESSION['sms_msg']) {
 
 // 3 zeilen wegen username statt id zum aufruf...
 // in $user_id steht jetzt die user_id (sic)
-$db->query("SELECT * FROM auth_user_md5  WHERE username ='$username'");
-$db->next_record();
+$sth = $db->prepare("SELECT * FROM auth_user_md5  WHERE username =?");
+$sth->execute(array($username));
+$result = $sth->fetch();
 
 // Help
 PageLayout::setHelpKeyword("Basis.Homepage");
-if($db->f('user_id') == $user->id && !$db->f('locked')){
+if($result['user_id'] == $user->id && !$result['locked']){
     PageLayout::setTitle(_("Mein Profil"));
-    $user_id = $db->f("user_id");
-} elseif ($db->f('user_id') && ($perm->have_perm("root") || (!$db->f('locked') && get_visibility_by_id($db->f("user_id"))))) {
-    PageLayout::setTitle(_("Profil")  . ' - ' . get_fullname($db->f('user_id')));
-    $user_id = $db->f("user_id");
+    $user_id = $result['user_id'];
+} elseif ( $result['user_id'] && ($perm->have_perm("root") || (!$result['locked'] && get_visibility_by_id($result['user_id'])))) {
+    PageLayout::setTitle(_("Profil")  . ' - ' . get_fullname($result['user_id']));
+    $user_id =  $result['user_id'];
 } else {
     PageLayout::setTitle(_("Profil"));
     unset($user_id);
@@ -197,24 +196,30 @@ if ($auth->auth["uid"]==$user_id)
     $GLOBALS['homepage_cache_own'] = time();
 
 //Wenn er noch nicht in user_info eingetragen ist, kommt er ohne Werte rein
-$db->query("SELECT user_id FROM user_info WHERE user_id ='$user_id'");
-if ($db->num_rows()==0) {
-    $db->query("INSERT INTO user_info (user_id) VALUES ('$user_id')");
+    $sth = $db->prepare("SELECT user_id FROM user_info WHERE user_id =?");
+    $sth->execute(array($user_id));
+
+if ($sth->rowCount() == 0) {
+    $sth = $db->prepare("INSERT INTO user_info (user_id) VALUES (?)");
+    $sth->execute(array($user_id));
 }
 
 //Bin ich ein Inst_admin, und ist der user in meinem Inst Tutor oder Dozent?
 $admin_darf = FALSE;
-$db->query("SELECT b.inst_perms FROM user_inst AS a ".
+$sth = $db->prepare("SELECT b.inst_perms FROM user_inst AS a ".
            "LEFT JOIN user_inst AS b USING (Institut_id) ".
-           "WHERE (b.user_id = '$user_id') AND ".
+           "WHERE (b.user_id =  ?) AND ".
            "(b.inst_perms = 'autor' OR b.inst_perms = 'tutor' OR ".
-           "b.inst_perms = 'dozent') AND (a.user_id = '$user->id') AND ".
+           "b.inst_perms = 'dozent') AND (a.user_id = ?) AND ".
            "(a.inst_perms = 'admin')");
-if ($db->num_rows())
+$sth->execute(array($user_id,$user->id));
+if ($sth->rowCount())
     $admin_darf = TRUE;
 if ($perm->is_fak_admin()){
-    $db->query("SELECT c.user_id FROM user_inst a LEFT JOIN Institute b ON(a.Institut_id=b.fakultaets_id)  LEFT JOIN user_inst c ON(b.Institut_id=c.Institut_id) WHERE a.user_id='$user->id' AND a.inst_perms='admin' AND c.user_id='$user_id'");
-    if ($db->next_record())
+    $sth = $db->prepare("SELECT c.user_id FROM user_inst a LEFT JOIN Institute b ON(a.Institut_id=b.fakultaets_id)  LEFT JOIN user_inst c ON(b.Institut_id=c.Institut_id) WHERE a.user_id=? AND a.inst_perms='admin' AND c.user_id=?");
+    $sth->execute(array($user_id,$user->id));
+   // $sth->fetchAll(PDO::FETCH_NUM);
+    if ($sth->nextRowset())
     $admin_darf = TRUE;
 }
 if ($perm->have_perm("root")) {
@@ -223,12 +228,13 @@ if ($perm->have_perm("root")) {
 
 
 //Her mit den Daten...
-$db->query("SELECT user_info.* , auth_user_md5.*,".
-           $_fullname_sql['full'] . " AS fullname ".
+$sth = $db->prepare("SELECT user_info.* , auth_user_md5.*, ".
+           "? AS fullname ".
            "FROM auth_user_md5 ".
            "LEFT JOIN user_info USING (user_id) ".
-           "WHERE auth_user_md5.user_id = '$user_id'");
-$db->next_record();
+           "WHERE auth_user_md5.user_id = ?");
+$sth->execute(array($_fullname_sql['full'],$user_id));
+$sth->nextRowset();
 
 // generische Datenfelder aufsammeln
 $short_datafields = array();
@@ -331,7 +337,7 @@ function open_im() {
                          . Assets::img('icons/16/blue/person.png', array('title' =>_("zu den Kontakten hinzufügen"), 'class' => 'middle'))
                          . " " . _("zu den Kontakten hinzufügen") . " </a>";
                 }
-                echo "<br><a href=\"". URLHelper::getLink("sms_send.php?sms_source_page=about.php&rec_uname=".$db->f("username")) ."\">"
+                echo "<br><a href=\"". URLHelper::getLink("sms_send.php?sms_source_page=about.php&rec_uname=".$result["username"]) ."\">"
                      . Assets::img('icons/16/blue/mail.png', array('title' => _("Nachricht an Nutzer verschicken"), 'class' => 'middle'))
                      . " " . _("Nachricht an Nutzer") . "</a>";
 
@@ -349,10 +355,10 @@ function open_im() {
         </td>
 
         <td class="steel1" width="99%" valign="top" style="padding: 10px;">
-            <h1><?= htmlReady($db->f("fullname")) ?></h1>
-                <? if ($db->f('motto') &&
+            <h1><?= htmlReady($result["fullname"]) ?></h1>
+                <? if ($result['motto'] &&
                         is_element_visible_for_user($user->id, $user_id, $visibilities['motto'])) : ?>
-                    <h3><?= htmlReady($db->f('motto')) ?></h3>
+                    <h3><?= htmlReady($result['motto']) ?></h3>
                 <? endif ?>
 
                 <? if (!get_visibility_by_id($user_id)) : ?>
@@ -375,17 +381,17 @@ function open_im() {
                     <br>
                 <? endif ?>
 
-                <? if ($db->f("privatnr") != "" &&
+                <? if ($result["privatnr"] != "" &&
                         is_element_visible_for_user($user->id, $user_id, $visibilities['private_phone'])) : ?>
                     <b>&nbsp;<?= _("Telefon (privat):") ?></b>
-                    <?= htmlReady($db->f("privatnr")) ?>
+                    <?= htmlReady($result["privatnr"]) ?>
                     <br>
                 <? endif ?>
 
-                <? if ($db->f("privatcell") != "" &&
+                <? if ($result["privatcell"] != "" &&
                         is_element_visible_for_user($user->id, $user_id, $visibilities['private_cell'])) : ?>
                     <b>&nbsp;<?= _("Mobiltelefon:") ?></b>
-                    <?= htmlReady($db->f("privatcell")) ?>
+                    <?= htmlReady($result["privatcell"]) ?>
                     <br>
                 <? endif ?>
 
@@ -406,21 +412,21 @@ function open_im() {
                     <br>
                 <? endif ?>
 
-                <? if ($db->f("privadr") != "" &&
+                <? if ($result["privadr"] != "" &&
                         is_element_visible_for_user($user->id, $user_id, $visibilities['privadr'])) : ?>
                     <b>&nbsp;<?= _("Adresse (privat):") ?></b>
-                    <?= htmlReady($db->f("privadr")) ?>
+                    <?= htmlReady($result["privadr"]) ?>
                     <br>
                 <? endif ?>
 
-                <? if ($db->f("Home") != "" &&
+                <? if ($result["Home"] != "" &&
                         is_element_visible_for_user($user->id, $user_id, $visibilities['homepage'])) : ?>
                     <b>&nbsp;<?= _("Homepage:") ?></b>
-                    <?= formatLinks($db->f("Home")) ?>
+                    <?= FixLinks(htmlReady($result["Home"])) ?>
                     <br>
                 <? endif ?>
 
-                <? if ($perm->have_perm("root") && $db->f('locked')) : ?>
+                <? if ($perm->have_perm("root") && $result['locked']) : ?>
                     <br>
                     <b>
                         <font color="red" size="+1"><?= _("BENUTZER IST GESPERRT!") ?></font>
@@ -431,12 +437,14 @@ function open_im() {
                 <?
                 // Anzeige der Institute an denen (hoffentlich) studiert wird:
 
-                if($db->f('perms') != 'dozent'){
-                $db3->query("SELECT Institute.* FROM user_inst LEFT JOIN Institute  USING (Institut_id) WHERE user_id = '$user_id' AND inst_perms = 'user'");
-                IF ($db3->num_rows() && is_element_visible_for_user($user->id, $user_id, $visibilities['studying'])) {
+                if($result['perms'] != 'dozent'){
+                $sth = $db->prepare("SELECT Institute.* FROM user_inst LEFT JOIN Institute  USING (Institut_id) WHERE user_id = ? AND inst_perms = 'user'");
+                $sth->execute(array($user_id));
+                $inst_result = $sth->fetch();
+                IF ($sth->rowCount() && is_element_visible_for_user($user->id, $user_id, $visibilities['studying'])) {
                     echo "<br><b>&nbsp;" . _("Wo ich studiere:") . "&nbsp;&nbsp;</b><br>";
-                    while ($db3->next_record()) {
-                        echo "&nbsp; &nbsp; &nbsp; &nbsp;<a href=\"". URLHelper::getLink("institut_main.php?auswahl=".$db3->f("Institut_id")) ."\">".htmlReady($db3->f("Name"))."</a><br>";
+                    while ($sth->nextRowset()) {
+                        echo "&nbsp; &nbsp; &nbsp; &nbsp;<a href=\"". URLHelper::getLink("institut_main.php?auswahl=".$inst_result["Institut_id"]) ."\">".htmlReady($inst_result["Name"])."</a><br>";
                     }
                 }
                 }
@@ -444,27 +452,29 @@ function open_im() {
                 // Anzeige der Institute an denen gearbeitet wird
 
                 $query = "SELECT a.*,b.Name FROM user_inst a LEFT JOIN Institute b USING (Institut_id) ";
-                $query .= "WHERE user_id = '$user_id' AND inst_perms != 'user' AND visible = 1 ORDER BY priority ASC";
-                $db3->query($query);
-                IF ($db3->num_rows()) {
+                $query .= "WHERE user_id = ? AND inst_perms != 'user' AND visible = 1 ORDER BY priority ASC";
+                $sth = $db->prepare($query);
+                $sth->execute(array($user_id));
+                $inst_result = $sth->fetch();
+                IF ($sth->rowCount()) {
                     echo "<br><b>&nbsp;" . _("Wo ich arbeite:") . "&nbsp;&nbsp;</b><br>";
                 }
 
                 //schleife weil evtl. mehrere sprechzeiten und institut nicht gesetzt...
 
-                while ($db3->next_record()) {
-                    $institut=$db3->f("Institut_id");
-                    echo "&nbsp; &nbsp; &nbsp; &nbsp;<a href=\"". URLHelper::getLink("institut_main.php?auswahl=".$institut) ."\">".htmlReady($db3->f("Name"))."</a>";
+                while ($sth->nextRowset()) {
+                    $institut=$inst_result["Institut_id"];
+                    echo "&nbsp; &nbsp; &nbsp; &nbsp;<a href=\"". URLHelper::getLink("institut_main.php?auswahl=".$institut) ."\">".htmlReady($inst_result["Name"])."</a>";
 
                     echo "<font size=-1>";
-                    IF ($db3->f("raum")!="")
-                        echo "<b><br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; " . _("Raum:") . " </b>", htmlReady($db3->f("raum"));
-                    IF ($db3->f("sprechzeiten")!="")
-                        echo "<b><br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; " . _("Sprechzeit:") . " </b>", htmlReady($db3->f("sprechzeiten"));
-                    IF ($db3->f("Telefon")!="")
-                        echo "<b><br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; " . _("Telefon:") . " </b>", htmlReady($db3->f("Telefon"));
-                    IF ($db3->f("Fax")!="")
-                        echo "<b><br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; " . _("Fax:") . " </b>", htmlReady($db3->f("Fax"));
+                    IF ($inst_result["raum"]!="")
+                        echo "<b><br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; " . _("Raum:") . " </b>", htmlReady($inst_result["raum"]);
+                    IF ($inst_result["sprechzeiten"]!="")
+                        echo "<b><br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; " . _("Sprechzeit:") . " </b>", htmlReady($inst_result["sprechzeiten"]);
+                    IF ($inst_result["Telefon"]!="")
+                        echo "<b><br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; " . _("Telefon:") . " </b>", htmlReady($inst_result["Telefon"]);
+                    IF ($inst_result["Fax"]!="")
+                        echo "<b><br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; " . _("Fax:") . " </b>", htmlReady($inst_result["Fax"]);
 
                     echo '<table cellspacing="0" cellpadding="0" border="0">';
                     $entries = DataFieldEntry::getDataFieldEntries(array($user_id, $institut));
@@ -616,7 +626,7 @@ $ausgabe_felder = array('lebenslauf' => _("Lebenslauf"),
 
 foreach ($ausgabe_felder as $key => $value) {
     if (is_element_visible_for_user($user->id, $user_id, $visibilities[$key]))
-        echo $layout->render(array('title' => $value, 'content_for_layout' => formatReady($db->f($key))));
+        echo $layout->render(array('title' => $value, 'content_for_layout' => formatReady($result[$key])));
 }
 
 $layout->clear_attributes();

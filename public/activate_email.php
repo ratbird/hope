@@ -59,11 +59,15 @@ include 'lib/include/header.php';
 
 $uid = $_REQUEST['uid'];
 if(isset($_REQUEST['key'])) {
-    $db = new DB_Seminar(sprintf("SELECT validation_key FROM auth_user_md5 WHERE user_id='%s'", $uid));
-    $db->next_record();
-    $key = $db->f('validation_key');
+    
+    $db = DBManager::get();
+    $sth = $db->prepare("SELECT validation_key FROM auth_user_md5 WHERE user_id=?");
+    $sth->execute(array($uid));
+    $result = $sth->fetch();
+    $key = $result['validation_key'];
     if($_REQUEST['key'] == $key) {
-        $db->query(sprintf("UPDATE auth_user_md5 SET validation_key='' WHERE user_id='%s'", $uid));
+        $sth = $db->prepare("UPDATE auth_user_md5 SET validation_key='' WHERE user_id=?");
+        $sth->execute(array($uid));
         unset($_SESSION['half_logged_in']);
         head(PageLayout::getTitle());
         echo _('Ihre E-Mail-Adresse wurde erfolgreich geändert.');

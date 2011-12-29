@@ -44,6 +44,6 @@ class FooterNavigation extends Navigation
         $this->addSubNavigation('blog', new Navigation(_('Blog'), 'http://blog.studip.de/'));
 
         // imprint
-        $this->addSubNavigation('siteinfo', new Navigation(_('Impressum'), 'dispatch.php/siteinfo/show'));
+        $this->addSubNavigation('siteinfo', new Navigation(_('Impressum'), 'dispatch.php/siteinfo/show?cancel_login=1'));
     }
 }

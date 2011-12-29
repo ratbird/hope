@@ -60,8 +60,7 @@ if (isset($_SERVER['SERVER_NAME'])) {
 }
 
 // default ASSETS_URL, customize if required
-//$ASSETS_URL = $ABSOLUTE_URI_STUDIP . 'assets/';
-$ASSETS_URL = "http://develop.studip.de:8080/studip/assets/";
+$ASSETS_URL = $ABSOLUTE_URI_STUDIP . 'assets/';
 
 // construct absolute URL for ASSETS_URL
 if ($ASSETS_URL[0] === '/') {
@@ -86,8 +85,6 @@ $EXTERN_CONFIG_FILE_PATH =  $STUDIP_BASE_PATH . "/data/extern_config/";
 // path and url for dynamically generated static content like smilies..
 $DYNAMIC_CONTENT_PATH = $ABSOLUTE_PATH_STUDIP . "/pictures";
 $DYNAMIC_CONTENT_URL  = $ABSOLUTE_URI_STUDIP . "/pictures";
-$DYNAMIC_CONTENT_PATH = "/srv/www2/htdocs/studip/pictures";
-$DYNAMIC_CONTENT_URL  = "http://develop.studip.de:8080/studip/pictures";
 
 
 //path to the temporary folder
@@ -96,7 +93,7 @@ $TMP_PATH ="/tmp/studip";                                   //the system temp pa
 //paths to the command line tools, used in Stud.IP
 $ZIP_USE_INTERNAL = false;                              //set to true, if command-line zip/unzip is not available
 $ZIP_PATH = "/usr/bin/zip";                             //zip tool
-$ZIP_OPTIONS = "-K";                                    //command line options for zip, e.g. when using SuSE try "-K" to correct long filenames for windows
+$ZIP_OPTIONS = "";                                    //command line options for zip, e.g. when using SuSE try "-K" to correct long filenames for windows
 $UNZIP_PATH = "/usr/bin/unzip";
 
 //latexrender settings
@@ -140,7 +137,7 @@ $CHAT_SERVER_NAME = "ChatShmServer";
 
 $XSLT_ENABLE = TRUE;
 $FOP_ENABLE = TRUE;
-$FOP_SH_CALL = "export JAVA_HOME=/usr/lib/jvm/jre && /usr/local/bin/fop";                       //path to fop
+$FOP_SH_CALL = "export JAVA_HOME=/usr/lib/jvm/jre && /opt/fop-0.20.5/fop.sh";                       //path to fop
 
 $EXTERN_SRI_ENABLE = TRUE;                              //allow the usage of SRI-interface (Stud.IP Remote Include)
 $EXTERN_SRI_ENABLE_BY_ROOT = FALSE;                         //only root allows the usage of SRI-interface for specific institutes

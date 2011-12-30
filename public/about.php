@@ -28,6 +28,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
+
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Default_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $auth->login_if($_REQUEST['again'] && ($auth->auth["uid"] == "nobody"));
 $perm->check("user");
@@ -105,21 +107,14 @@ function isDataFieldArrayEmpty ($array) {
 }
 
 
-unregister_globals();
-
 UrlHelper::bindLinkParam('about_data', $about_data);
 
-$username = $auth->auth["uname"];
-
-if (isset($_REQUEST['username']) && $_REQUEST['username'] !== '') {
-    $username = $_REQUEST['username'];
-}
-
+$current_user = User::findByUsername(Request::get('username', $user->username));
 
 if (get_config('CHAT_ENABLE')){
     include_once $RELATIVE_PATH_CHAT."/chat_func_inc.php";
-    if ($_REQUEST['kill_chat']){
-        chat_kill_chat($_REQUEST['kill_chat']);
+    if (Request::get('kill_chat')){
+        chat_kill_chat(Request::option('kill_chat'));
     }
 }
 
@@ -128,7 +123,7 @@ if (get_config('VOTE_ENABLE')) {
 }
 
 if (get_config('NEWS_RSS_EXPORT_ENABLE')){
-    $news_author_id = StudipNews::GetRssIdFromUserId(get_userid($_REQUEST['username']));
+    $news_author_id = StudipNews::GetRssIdFromUserId($current_user->user_id);
     if ($news_author_id) {
         PageLayout::addHeadElement('link', array('rel'   => 'alternate',
                                                  'type'  => 'application/rss+xml',
@@ -165,562 +160,548 @@ if ($_SESSION['sms_msg']) {
     unset($_SESSION['sms_msg']);
 }
 
-// 3 zeilen wegen username statt id zum aufruf...
-// in $user_id steht jetzt die user_id (sic)
-$sth = $db->prepare("SELECT * FROM auth_user_md5  WHERE username =?");
-$sth->execute(array($username));
-$result = $sth->fetch();
-
 // Help
 PageLayout::setHelpKeyword("Basis.Homepage");
-if($result['user_id'] == $user->id && !$result['locked']){
+if($current_user['user_id'] == $user->id && !$current_user['locked']){
     PageLayout::setTitle(_("Mein Profil"));
-    $user_id = $result['user_id'];
-} elseif ( $result['user_id'] && ($perm->have_perm("root") || (!$result['locked'] && get_visibility_by_id($result['user_id'])))) {
-    PageLayout::setTitle(_("Profil")  . ' - ' . get_fullname($result['user_id']));
-    $user_id =  $result['user_id'];
+} elseif ($current_user['user_id'] && ($perm->have_perm("root") || (!$current_user['locked'] && get_visibility_by_id($current_user['user_id'])))) {
+    PageLayout::setTitle(_("Profil")  . ' - ' . get_fullname($current_user['user_id']));
 } else {
     PageLayout::setTitle(_("Profil"));
-    unset($user_id);
+    unset($current_user);
 }
 # and start the output buffering
 ob_start();
-if ($user_id){
+if (isset($current_user)) {
+    $user_id = $current_user->user_id;
+    $username = $current_user->username;
 
-// count views of Page
-if ($auth->auth["uid"]!=$user_id) {
-    object_add_view($user_id);
-}
+    // count views of Page
+    if ($user_id != $user->id) {
+        object_add_view($user_id);
+    } else {
+        $GLOBALS['homepage_cache_own'] = time();
+    }
 
-if ($auth->auth["uid"]==$user_id)
-    $GLOBALS['homepage_cache_own'] = time();
+    //Wenn er noch nicht in user_info eingetragen ist, kommt er ohne Werte rein
+    if ($current_user->mkdate === null) {
+        $current_user->store();
+    }
 
-//Wenn er noch nicht in user_info eingetragen ist, kommt er ohne Werte rein
-    $sth = $db->prepare("SELECT user_id FROM user_info WHERE user_id =?");
-    $sth->execute(array($user_id));
-
-if ($sth->rowCount() == 0) {
-    $sth = $db->prepare("INSERT INTO user_info (user_id) VALUES (?)");
-    $sth->execute(array($user_id));
-}
-
-//Bin ich ein Inst_admin, und ist der user in meinem Inst Tutor oder Dozent?
-$admin_darf = FALSE;
-$sth = $db->prepare("SELECT b.inst_perms FROM user_inst AS a ".
-           "LEFT JOIN user_inst AS b USING (Institut_id) ".
-           "WHERE (b.user_id =  ?) AND ".
-           "(b.inst_perms = 'autor' OR b.inst_perms = 'tutor' OR ".
-           "b.inst_perms = 'dozent') AND (a.user_id = ?) AND ".
-           "(a.inst_perms = 'admin')");
-$sth->execute(array($user_id,$user->id));
-if ($sth->rowCount())
-    $admin_darf = TRUE;
-if ($perm->is_fak_admin()){
-    $sth = $db->prepare("SELECT c.user_id FROM user_inst a LEFT JOIN Institute b ON(a.Institut_id=b.fakultaets_id)  LEFT JOIN user_inst c ON(b.Institut_id=c.Institut_id) WHERE a.user_id=? AND a.inst_perms='admin' AND c.user_id=?");
-    $sth->execute(array($user_id,$user->id));
-   // $sth->fetchAll(PDO::FETCH_NUM);
-    if ($sth->fetch())
-    $admin_darf = TRUE;
-}
-if ($perm->have_perm("root")) {
-    $admin_darf=TRUE;
-}
-
-
-//Her mit den Daten...
-$sth = $db->prepare("SELECT user_info.* , auth_user_md5.*, ".
-           "? AS fullname ".
-           "FROM auth_user_md5 ".
-           "LEFT JOIN user_info USING (user_id) ".
-           "WHERE auth_user_md5.user_id = ?");
-$sth->execute(array($_fullname_sql['full'],$user_id));
-$sth->fetch();
-
-// generische Datenfelder aufsammeln
-$short_datafields = array();
-$long_datafields  = array();
-foreach (DataFieldEntry::getDataFieldEntries($user_id) as $entry) {
-    if ($entry->structure->accessAllowed($perm, $auth->auth["uid"], $user_id) &&
-        $entry->getDisplayValue()) {
-        if ($entry instanceof DataFieldTextareaEntry) {
-            $long_datafields[] = $entry;
+    //Bin ich ein Inst_admin, und ist der user in meinem Inst Tutor oder Dozent?
+    $admin_darf = FALSE;
+    if ($perm->have_perm("root")) {
+        $admin_darf = TRUE;
+    } elseif ($perm->have_perm("admin")) {
+        $sth = $db->prepare("SELECT b.inst_perms FROM user_inst AS a ".
+                           "LEFT JOIN user_inst AS b USING (Institut_id) ".
+                           "WHERE (b.user_id =  ?) AND ".
+                           "(b.inst_perms = 'autor' OR b.inst_perms = 'tutor' OR ".
+                           "b.inst_perms = 'dozent') AND (a.user_id = ?) AND ".
+                           "(a.inst_perms = 'admin')");
+        $sth->execute(array($user_id,$user->id));
+        if ($sth->fetch()) {
+            $admin_darf = TRUE;
         }
-        else {
-            $short_datafields[] = $entry;
+        if ($perm->is_fak_admin()) {
+            $sth = $db->prepare("SELECT c.user_id FROM user_inst a " .
+                                "LEFT JOIN Institute b ON(a.Institut_id=b.fakultaets_id) " .
+                                "LEFT JOIN user_inst c ON(b.Institut_id=c.Institut_id) " .
+                                "WHERE c.inst_perms <> 'user'" .
+                                "AND c.user_id=? AND a.inst_perms='admin' AND a.user_id=?");
+            $sth->execute(array($user_id,$user->id));
+            if ($sth->fetch()) {
+                $admin_darf = TRUE;
+            }
         }
     }
-}
 
 
 
-$show_tabs = ($user_id == $user->id && $perm->have_perm("autor"))
-             || (isDeputyEditAboutActivated()
-                && isDeputy($user->id, $user_id, true))
-             || $perm->have_perm("root")
-             || $admin_darf;
-
-// FIXME these tabs should not have been added anyway
-if (!$show_tabs) {
-    foreach (Navigation::getItem('/profile') as $key => $nav) {
-        if ($key != 'view') {
-            Navigation::removeItem('/profile/'.$key);
+    // generische Datenfelder aufsammeln
+    $short_datafields = array();
+    $long_datafields  = array();
+    foreach (DataFieldEntry::getDataFieldEntries($user_id, 'user') as $entry) {
+        if ($entry->structure->accessAllowed($perm, $user->id, $user_id) &&
+            $entry->getDisplayValue()) {
+            if ($entry instanceof DataFieldTextareaEntry) {
+                $long_datafields[] = $entry;
+            }
+            else {
+                $short_datafields[] = $entry;
+            }
         }
     }
-}
-
-Navigation::activateItem('/profile/view');
-
-// TODO this can be removed when page output is moved to a template
-URLHelper::addLinkParam('username', $username);
-
-// add skip link
-SkipLinks::addIndex(_("Benutzerprofil"), 'user_profile', 100);
-
-$visibilities = get_local_visibility_by_username($username, 'homepage');
-if (is_array(json_decode($visibilities, true))) {
-    $visibilities = json_decode($visibilities, true);
-} else {
-    $visibilities = array();
-}
-
-?>
-<script language="Javascript">
-function open_im() {
-  fenster = window.open("<?= URLHelper::getURL('studipim.php') ?>",
-                        "im_<?= $GLOBALS['user']->id ?>",
-                        "scrollbars=yes,width=400,height=300",
-                        "resizable=no");
-}
-</script>
-
-<table id="user_profile" width="100%" border="0" cellpadding="1" cellspacing="0">
-    <? if ($msg) : ?>
-        <?= parse_msg($msg) ?>
-    <? endif ?>
-    <tr>
-        <td class="steel1" valign="top">
-            <br>
-            <?php $avatar_user_id = is_element_visible_for_user($user->id, $user_id, $visibilities['picture']) ? $user_id : 'nobody'; ?>
-            <?= Avatar::getAvatar($avatar_user_id)->getImageTag(Avatar::NORMAL) ?>
-
-            <br>
-            <br>
-
-            <font size="-1">&nbsp;<?= _("Besucher dieses Profils:") ?>&nbsp;<?= object_return_views($user_id) ?></font>
-            <br>
-
-            <?
-            // Die Anzeige der Stud.Ip-Punkte
-            $score = new Score(get_userid($username));
 
 
-            if ($score->IsMyScore()) {
-                echo "&nbsp;<a href=\"". URLhelper::getLink("score.php") ."\" " . tooltip(_("Zur Rangliste")) . "><font size=\"-1\">"
-                     . _("Ihre Stud.IP-Punkte:") . " ".$score->ReturnMyScore()."<br>&nbsp;"
-                     . _("Ihr Rang:") . " ".$score->ReturnMyTitle()."</a></font><br>";
+
+    $show_tabs = ($user_id == $user->id && $perm->have_perm("autor"))
+                 || (isDeputyEditAboutActivated()
+                    && isDeputy($user->id, $user_id, true))
+                 || $perm->have_perm("root")
+                 || $admin_darf;
+
+    // FIXME these tabs should not have been added anyway
+    if (!$show_tabs) {
+        foreach (Navigation::getItem('/profile') as $key => $nav) {
+            if ($key != 'view') {
+                Navigation::removeItem('/profile/'.$key);
             }
-            elseif ($score->ReturnPublik()) {
-                $scoretmp = $score->GetScore(get_userid($username));
-                $title = $score->gettitel($scoretmp, $score->GetGender(get_userid($username)));
-                echo "&nbsp;<a href=\"". URLhelper::getLink("score.php") ."\"><font size=\"-1\">"
-                     . _("Stud.IP-Punkte:") . " ".$scoretmp."<br>&nbsp;"
-                     . _("Rang:") . " ".$title."</a></font><br>";
-            }
+        }
+    }
 
-            if ($username==$auth->auth["uname"]) {
-                if ($auth->auth["jscript"]) {
-                    echo "<br><a href='javascript:open_im();'>" . _("Stud.IP Messenger starten") . "</a>";
-                }
-            } else {
-                if (CheckBuddy($username)==FALSE) {
-                    echo "<br><a href=\"". URLHelper::getLink("?cmd=add_user&add_uname=".$username) ."\">"
-                         . Assets::img('icons/16/blue/person.png', array('title' =>_("zu den Kontakten hinzufügen"), 'class' => 'middle'))
-                         . " " . _("zu den Kontakten hinzufügen") . " </a>";
-                }
-                echo "<br><a href=\"". URLHelper::getLink("sms_send.php?sms_source_page=about.php&rec_uname=".$result["username"]) ."\">"
-                     . Assets::img('icons/16/blue/mail.png', array('title' => _("Nachricht an Nutzer verschicken"), 'class' => 'middle'))
-                     . " " . _("Nachricht an Nutzer") . "</a>";
+    Navigation::activateItem('/profile/view');
 
-            }
+    // TODO this can be removed when page output is moved to a template
+    URLHelper::addLinkParam('username', $username);
 
-            // Export dieses Users als Vcard
-            echo "<br><a href=\"". URLHelper::getLink("contact_export.php") ."\">"
-                 . Assets::img('icons/16/blue/vcard.png', array('title' => _("vCard herunterladen"), 'class' => 'middle'))
-                 . " " . _("vCard herunterladen") ."</a>";
+    // add skip link
+    SkipLinks::addIndex(_("Benutzerprofil"), 'user_profile', 100);
 
-            ?>
+    $visibilities = get_local_visibility_by_id($user_id, 'homepage');
+    if (is_array(json_decode($visibilities, true))) {
+        $visibilities = json_decode($visibilities, true);
+    } else {
+        $visibilities = array();
+    }
 
-            <br>
-            <br>
-        </td>
+    ?>
+    <script language="Javascript">
+    function open_im() {
+      fenster = window.open("<?= URLHelper::getURL('studipim.php') ?>",
+                            "im_<?= $GLOBALS['user']->id ?>",
+                            "scrollbars=yes,width=400,height=300",
+                            "resizable=no");
+    }
+    </script>
 
-        <td class="steel1" width="99%" valign="top" style="padding: 10px;">
-            <h1><?= htmlReady($result["fullname"]) ?></h1>
-                <? if ($result['motto'] &&
-                        is_element_visible_for_user($user->id, $user_id, $visibilities['motto'])) : ?>
-                    <h3><?= htmlReady($result['motto']) ?></h3>
-                <? endif ?>
-
-                <? if (!get_visibility_by_id($user_id)) : ?>
-                    <? if ($user_id != $user->id) : ?>
-                        <p>
-                            <font color="red"><?= _("(Dieser Nutzer ist unsichtbar.)") ?></font>
-                        </p>
-                    <? else : ?>
-                        <p>
-                            <font color="red"><?= _("(Sie sind unsichtbar. Deshalb können nur Sie diese Seite sehen.)") ?></font>
-                        </p>
-                    <? endif ?>
-                <? endif ?>
+    <table id="user_profile" width="100%" border="0" cellpadding="1" cellspacing="0">
+        <? if ($msg) : ?>
+            <?= parse_msg($msg) ?>
+        <? endif ?>
+        <tr>
+            <td class="steel1" valign="top">
+                <br>
+                <?php $avatar_user_id = is_element_visible_for_user($user->id, $user_id, $visibilities['picture']) ? $user_id : 'nobody'; ?>
+                <?= Avatar::getAvatar($avatar_user_id)->getImageTag(Avatar::NORMAL) ?>
 
                 <br>
+                <br>
 
-                <? if (($email = get_visible_email($user_id)) != '') : ?>
-                    <b>&nbsp;<?= _("E-Mail:") ?></b>
-                    <a href="mailto:<?= htmlReady($email) ?>"><?= htmlReady($email) ?></a>
-                    <br>
-                <? endif ?>
-
-                <? if ($result["privatnr"] != "" &&
-                        is_element_visible_for_user($user->id, $user_id, $visibilities['private_phone'])) : ?>
-                    <b>&nbsp;<?= _("Telefon (privat):") ?></b>
-                    <?= htmlReady($result["privatnr"]) ?>
-                    <br>
-                <? endif ?>
-
-                <? if ($result["privatcell"] != "" &&
-                        is_element_visible_for_user($user->id, $user_id, $visibilities['private_cell'])) : ?>
-                    <b>&nbsp;<?= _("Mobiltelefon:") ?></b>
-                    <?= htmlReady($result["privatcell"]) ?>
-                    <br>
-                <? endif ?>
-
-                <? if (get_config("ENABLE_SKYPE_INFO") &&
-                       UserConfig::get($user_id)->SKYPE_NAME &&
-                       is_element_visible_for_user($user->id, $user_id, $visibilities['skype_name'])) : ?>
-                    <?php $skype_name = UserConfig::get($user_id)->SKYPE_NAME ?>
-                    <b>&nbsp;<?= _("Skype:") ?></b>
-                    <a href="skype:<?= htmlReady($skype_name) ?>?call">
-                        <? if (UserConfig::get($user_id)->SKYPE_ONLINE_STATUS &&
-                       is_element_visible_for_user($user->id, $user_id, $visibilities['skype_online_status'])) : ?>
-                            <img src="http://mystatus.skype.com/smallicon/<?= htmlReady($skype_name) ?>" style="vertical-align:middle;" width="16" height="16" alt="My status">
-                        <? else : ?>
-                            <?= Assets::img('icon_small_skype.gif', array('style' => 'vertical-align:middle;')) ?>
-                        <? endif ?>
-                        <?= htmlReady($skype_name) ?>
-                    </a>
-                    <br>
-                <? endif ?>
-
-                <? if ($result["privadr"] != "" &&
-                        is_element_visible_for_user($user->id, $user_id, $visibilities['privadr'])) : ?>
-                    <b>&nbsp;<?= _("Adresse (privat):") ?></b>
-                    <?= htmlReady($result["privadr"]) ?>
-                    <br>
-                <? endif ?>
-
-                <? if ($result["Home"] != "" &&
-                        is_element_visible_for_user($user->id, $user_id, $visibilities['homepage'])) : ?>
-                    <b>&nbsp;<?= _("Homepage:") ?></b>
-                    <?= FixLinks(htmlReady($result["Home"])) ?>
-                    <br>
-                <? endif ?>
-
-                <? if ($perm->have_perm("root") && $result['locked']) : ?>
-                    <br>
-                    <b>
-                        <font color="red" size="+1"><?= _("BENUTZER IST GESPERRT!") ?></font>
-                    </b>
-                    <br>
-                <? endif ?>
+                <font size="-1">&nbsp;<?= _("Besucher dieses Profils:") ?>&nbsp;<?= object_return_views($user_id) ?></font>
+                <br>
 
                 <?
-                // Anzeige der Institute an denen (hoffentlich) studiert wird:
+                // Die Anzeige der Stud.Ip-Punkte
+                $score = new Score($user_id);
 
-                if($result['perms'] != 'dozent'){
-                $sth = $db->prepare("SELECT Institute.* FROM user_inst LEFT JOIN Institute  USING (Institut_id) WHERE user_id = ? AND inst_perms = 'user'");
-                $sth->execute(array($user_id));
-                $inst_result = $sth->fetch();
-                IF ($sth->rowCount() && is_element_visible_for_user($user->id, $user_id, $visibilities['studying'])) {
-                    echo "<br><b>&nbsp;" . _("Wo ich studiere:") . "&nbsp;&nbsp;</b><br>";
-                    while ($sth->fetch()) {
-                        echo "&nbsp; &nbsp; &nbsp; &nbsp;<a href=\"". URLHelper::getLink("institut_main.php?auswahl=".$inst_result["Institut_id"]) ."\">".htmlReady($inst_result["Name"])."</a><br>";
+
+                if ($score->IsMyScore()) {
+                    echo "&nbsp;<a href=\"". URLhelper::getLink("score.php") ."\" " . tooltip(_("Zur Rangliste")) . "><font size=\"-1\">"
+                         . _("Ihre Stud.IP-Punkte:") . " ".$score->ReturnMyScore()."<br>&nbsp;"
+                         . _("Ihr Rang:") . " ".$score->ReturnMyTitle()."</a></font><br>";
+                }
+                elseif ($score->ReturnPublik()) {
+                    $scoretmp = $score->GetScore($user_id);
+                    $title = $score->gettitel($scoretmp, $score->GetGender($user_id));
+                    echo "&nbsp;<a href=\"". URLhelper::getLink("score.php") ."\"><font size=\"-1\">"
+                         . _("Stud.IP-Punkte:") . " ".$scoretmp."<br>&nbsp;"
+                         . _("Rang:") . " ".$title."</a></font><br>";
+                }
+
+                if ($username==$auth->auth["uname"]) {
+                    if ($auth->auth["jscript"]) {
+                        echo "<br><a href='javascript:open_im();'>" . _("Stud.IP Messenger starten") . "</a>";
                     }
-                }
-                }
+                } else {
+                    if (CheckBuddy($username)==FALSE) {
+                        echo "<br><a href=\"". URLHelper::getLink("?cmd=add_user&add_uname=".$username) ."\">"
+                             . Assets::img('icons/16/blue/person.png', array('title' =>_("zu den Kontakten hinzufügen"), 'class' => 'middle'))
+                             . " " . _("zu den Kontakten hinzufügen") . " </a>";
+                    }
+                    echo "<br><a href=\"". URLHelper::getLink("sms_send.php?sms_source_page=about.php&rec_uname=".$username) ."\">"
+                         . Assets::img('icons/16/blue/mail.png', array('title' => _("Nachricht an Nutzer verschicken"), 'class' => 'middle'))
+                         . " " . _("Nachricht an Nutzer") . "</a>";
 
-                // Anzeige der Institute an denen gearbeitet wird
-
-                $query = "SELECT a.*,b.Name FROM user_inst a LEFT JOIN Institute b USING (Institut_id) ";
-                $query .= "WHERE user_id = ? AND inst_perms != 'user' AND visible = 1 ORDER BY priority ASC";
-                $sth = $db->prepare($query);
-                $sth->execute(array($user_id));
-                $inst_result = $sth->fetch();
-                IF ($sth->rowCount()) {
-                    echo "<br><b>&nbsp;" . _("Wo ich arbeite:") . "&nbsp;&nbsp;</b><br>";
                 }
 
-                //schleife weil evtl. mehrere sprechzeiten und institut nicht gesetzt...
+                // Export dieses Users als Vcard
+                echo "<br><a href=\"". URLHelper::getLink("contact_export.php") ."\">"
+                     . Assets::img('icons/16/blue/vcard.png', array('title' => _("vCard herunterladen"), 'class' => 'middle'))
+                     . " " . _("vCard herunterladen") ."</a>";
 
-                while ($sth->fetchAll()) {
-                    $institut=$inst_result["Institut_id"];
-                    echo "&nbsp; &nbsp; &nbsp; &nbsp;<a href=\"". URLHelper::getLink("institut_main.php?auswahl=".$institut) ."\">".htmlReady($inst_result["Name"])."</a>";
+                ?>
 
-                    echo "<font size=-1>";
-                    IF ($inst_result["raum"]!="")
-                        echo "<b><br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; " . _("Raum:") . " </b>", htmlReady($inst_result["raum"]);
-                    IF ($inst_result["sprechzeiten"]!="")
-                        echo "<b><br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; " . _("Sprechzeit:") . " </b>", htmlReady($inst_result["sprechzeiten"]);
-                    IF ($inst_result["Telefon"]!="")
-                        echo "<b><br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; " . _("Telefon:") . " </b>", htmlReady($inst_result["Telefon"]);
-                    IF ($inst_result["Fax"]!="")
-                        echo "<b><br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; " . _("Fax:") . " </b>", htmlReady($inst_result["Fax"]);
+                <br>
+                <br>
+            </td>
 
-                    echo '<table cellspacing="0" cellpadding="0" border="0">';
-                    $entries = DataFieldEntry::getDataFieldEntries(array($user_id, $institut));
-                    if (!isDataFieldArrayEmpty($entries)) {
-                        foreach ($entries as $entry) {
-                            $view = DataFieldStructure::permMask($auth->auth['perm']) >= DataFieldStructure::permMask($entry->structure->getViewPerms());
-                            $show_star = false;
-                            if (!$view && ($user_id == $user->id)) {
-                                $view = true;
-                                $show_star = true;
-                            }
+            <td class="steel1" width="99%" valign="top" style="padding: 10px;">
+                <h1><?= htmlReady($current_user->getFullName()) ?></h1>
+                    <? if ($current_user['motto'] &&
+                            is_element_visible_for_user($user->id, $user_id, $visibilities['motto'])) : ?>
+                        <h3><?= htmlReady($current_user['motto']) ?></h3>
+                    <? endif ?>
 
-                            if (trim($entry->getValue()) && $view) {
-                                echo '<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>' . htmlReady($entry->getName()) . ": " .'&nbsp;&nbsp;</td><td>'. $entry->getDisplayValue();
-                                if ($show_star) echo ' *';
+                    <? if (!get_visibility_by_id($user_id)) : ?>
+                        <? if ($user_id != $user->id) : ?>
+                            <p>
+                                <font color="red"><?= _("(Dieser Nutzer ist unsichtbar.)") ?></font>
+                            </p>
+                        <? else : ?>
+                            <p>
+                                <font color="red"><?= _("(Sie sind unsichtbar. Deshalb können nur Sie diese Seite sehen.)") ?></font>
+                            </p>
+                        <? endif ?>
+                    <? endif ?>
+
+                    <br>
+
+                    <? if (($email = get_visible_email($user_id)) != '') : ?>
+                        <b>&nbsp;<?= _("E-Mail:") ?></b>
+                        <a href="mailto:<?= htmlReady($email) ?>"><?= htmlReady($email) ?></a>
+                        <br>
+                    <? endif ?>
+
+                    <? if ($current_user["privatnr"] != "" &&
+                            is_element_visible_for_user($user->id, $user_id, $visibilities['private_phone'])) : ?>
+                        <b>&nbsp;<?= _("Telefon (privat):") ?></b>
+                        <?= htmlReady($current_user["privatnr"]) ?>
+                        <br>
+                    <? endif ?>
+
+                    <? if ($current_user["privatcell"] != "" &&
+                            is_element_visible_for_user($user->id, $user_id, $visibilities['private_cell'])) : ?>
+                        <b>&nbsp;<?= _("Mobiltelefon:") ?></b>
+                        <?= htmlReady($current_user["privatcell"]) ?>
+                        <br>
+                    <? endif ?>
+
+                    <? if (get_config("ENABLE_SKYPE_INFO") &&
+                           UserConfig::get($user_id)->SKYPE_NAME &&
+                           is_element_visible_for_user($user->id, $user_id, $visibilities['skype_name'])) : ?>
+                        <?php $skype_name = UserConfig::get($user_id)->SKYPE_NAME ?>
+                        <b>&nbsp;<?= _("Skype:") ?></b>
+                        <a href="skype:<?= htmlReady($skype_name) ?>?call">
+                            <? if (UserConfig::get($user_id)->SKYPE_ONLINE_STATUS &&
+                           is_element_visible_for_user($user->id, $user_id, $visibilities['skype_online_status'])) : ?>
+                                <img src="http://mystatus.skype.com/smallicon/<?= htmlReady($skype_name) ?>" style="vertical-align:middle;" width="16" height="16" alt="My status">
+                            <? else : ?>
+                                <?= Assets::img('icon_small_skype.gif', array('style' => 'vertical-align:middle;')) ?>
+                            <? endif ?>
+                            <?= htmlReady($skype_name) ?>
+                        </a>
+                        <br>
+                    <? endif ?>
+
+                    <? if ($current_user["privadr"] != "" &&
+                            is_element_visible_for_user($user->id, $user_id, $visibilities['privadr'])) : ?>
+                        <b>&nbsp;<?= _("Adresse (privat):") ?></b>
+                        <?= htmlReady($current_user["privadr"]) ?>
+                        <br>
+                    <? endif ?>
+
+                    <? if ($current_user["Home"] != "" &&
+                            is_element_visible_for_user($user->id, $user_id, $visibilities['homepage'])) : ?>
+                        <b>&nbsp;<?= _("Homepage:") ?></b>
+                        <?= FixLinks(htmlReady($current_user["Home"])) ?>
+                        <br>
+                    <? endif ?>
+
+                    <? if ($perm->have_perm("root") && $current_user['locked']) : ?>
+                        <br>
+                        <b>
+                            <font color="red" size="+1"><?= _("BENUTZER IST GESPERRT!") ?></font>
+                        </b>
+                        <br>
+                    <? endif ?>
+
+                    <?
+                    // Anzeige der Institute an denen (hoffentlich) studiert wird:
+
+                    if($current_user['perms'] != 'dozent') {
+                        $sth = $db->prepare("SELECT Institute.* FROM user_inst LEFT JOIN Institute  USING (Institut_id) WHERE user_id = ? AND inst_perms = 'user'");
+                        $sth->execute(array($user_id));
+                        $inst_results = $sth->fetchAll(PDO::FETCH_ASSOC);
+                        if (count($inst_results) && is_element_visible_for_user($user->id, $user_id, $visibilities['studying'])) {
+                            echo "<br><b>&nbsp;" . _("Wo ich studiere:") . "&nbsp;&nbsp;</b><br>";
+                            foreach ($inst_results as $inst_result) {
+                                echo "&nbsp; &nbsp; &nbsp; &nbsp;<a href=\"". URLHelper::getLink("institut_main.php?auswahl=".$inst_result["Institut_id"]) ."\">".htmlReady($inst_result["Name"])."</a><br>";
                             }
                         }
                     }
 
-                    echo '</table>';
+                    // Anzeige der Institute an denen gearbeitet wird
 
-                    if ($groups = GetAllStatusgruppen($institut, $user_id)) {
-                        $default_entries = DataFieldEntry::getDataFieldEntries(array($user_id, $institut));
-                        $data = get_role_data_recursive($groups, $user_id, $default_entries);
-                        echo '<table cellpadding="0" cellspacing="0" border="0">';
-                        echo $data['standard'];
+                    $query = "SELECT a.*,b.Name FROM user_inst a LEFT JOIN Institute b USING (Institut_id) ";
+                    $query .= "WHERE user_id = ? AND inst_perms != 'user' AND visible = 1 ORDER BY priority ASC";
+                    $sth = $db->prepare($query);
+                    $sth->execute(array($user_id));
+                    $inst_results = $sth->fetchAll(PDO::FETCH_ASSOC);
+                    IF (count($inst_results)) {
+                        echo "<br><b>&nbsp;" . _("Wo ich arbeite:") . "&nbsp;&nbsp;</b><br>";
+                    }
+
+                    //schleife weil evtl. mehrere sprechzeiten und institut nicht gesetzt...
+
+                    foreach ($inst_results as $inst_result) {
+                        $institut = $inst_result["Institut_id"];
+                        echo "&nbsp; &nbsp; &nbsp; &nbsp;<a href=\"". URLHelper::getLink("institut_main.php?auswahl=".$institut) ."\">".htmlReady($inst_result["Name"])."</a>";
+
+                        echo "<font size=-1>";
+                        IF ($inst_result["raum"]!="")
+                            echo "<b><br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; " . _("Raum:") . " </b>", htmlReady($inst_result["raum"]);
+                        IF ($inst_result["sprechzeiten"]!="")
+                            echo "<b><br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; " . _("Sprechzeit:") . " </b>", htmlReady($inst_result["sprechzeiten"]);
+                        IF ($inst_result["Telefon"]!="")
+                            echo "<b><br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; " . _("Telefon:") . " </b>", htmlReady($inst_result["Telefon"]);
+                        IF ($inst_result["Fax"]!="")
+                            echo "<b><br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; " . _("Fax:") . " </b>", htmlReady($inst_result["Fax"]);
+
+                        echo '<table cellspacing="0" cellpadding="0" border="0">';
+                        $entries = DataFieldEntry::getDataFieldEntries(array($user_id, $institut));
+                        if (!isDataFieldArrayEmpty($entries)) {
+                            foreach ($entries as $entry) {
+                                $view = DataFieldStructure::permMask($auth->auth['perm']) >= DataFieldStructure::permMask($entry->structure->getViewPerms());
+                                $show_star = false;
+                                if (!$view && ($user_id == $user->id)) {
+                                    $view = true;
+                                    $show_star = true;
+                                }
+
+                                if (trim($entry->getValue()) && $view) {
+                                    echo '<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>' . htmlReady($entry->getName()) . ": " .'&nbsp;&nbsp;</td><td>'. $entry->getDisplayValue();
+                                    if ($show_star) echo ' *';
+                                }
+                            }
+                        }
+
                         echo '</table>';
-                    } else {
+
+                        if ($groups = GetAllStatusgruppen($institut, $user_id)) {
+                            $default_entries = DataFieldEntry::getDataFieldEntries(array($user_id, $institut));
+                            $data = get_role_data_recursive($groups, $user_id, $default_entries);
+                            echo '<table cellpadding="0" cellspacing="0" border="0">';
+                            echo $data['standard'];
+                            echo '</table>';
+                        } else {
+                            echo '<br>';
+                        }
+
+                        echo "</font>";
                         echo '<br>';
                     }
 
-                    echo "</font>";
-                    echo '<br>';
-                }
+                    if (($user_id == $user->id) && $GLOBALS['has_denoted_fields']) {
+                        echo '<br>';
+                        echo '<font size="-1">';
+                        echo ' * Diese Felder sind nur für Sie und AdministratorInnen sichtbar.<br>';
+                        echo '</font>';
+                    }
 
-                if (($user_id == $user->id) && $GLOBALS['has_denoted_fields']) {
-                    echo '<br>';
-                    echo '<font size="-1">';
-                    echo ' * Diese Felder sind nur für Sie und AdministratorInnen sichtbar.<br>';
-                    echo '</font>';
-                }
+                    if ($score->IsMyScore() || $score->ReturnPublik()) {
+                        echo "<p>";
+                        print_kings($username);
+                    }
 
-                if ($score->IsMyScore() || $score->ReturnPublik()) {
-                    echo "<p>";
-                    print_kings($username);
-                }
-
-                ?>
-
-
-                <br>
-
-                <? foreach ($short_datafields as $entry) : ?>
-
-                    <?
-                    $vperms = $entry->structure->getViewPerms();
-                    $visible = 'all' == $vperms
-                               ? _("sichtbar für alle")
-                               : sprintf(_("sichtbar nur für Sie und alle %s"),
-                                         prettyViewPermString($vperms));
                     ?>
 
-                    &nbsp;<strong><?= htmlReady($entry->getName()) ?>:</strong>
-                    <?= $entry->getDisplayValue() ?>
-                    <span class="minor">(<?= $visible ?>)</span>
+
                     <br>
-                <? endforeach ?>
-        </td>
-</tr>
-</table>
 
-<br>
+                    <? foreach ($short_datafields as $entry) : ?>
 
-<?
+                        <?
+                        $vperms = $entry->structure->getViewPerms();
+                        $visible = 'all' == $vperms
+                                   ? _("sichtbar für alle")
+                                   : sprintf(_("sichtbar nur für Sie und alle %s"),
+                                             prettyViewPermString($vperms));
+                        ?>
 
-// News zur person anzeigen!!!
-$show_admin = ($perm->have_perm("autor") && $auth->auth["uid"] == $user_id) || 
-    (isDeputyEditAboutActivated() && isDeputy($auth->auth["uid"], $user_id, true));
-if (is_element_visible_for_user($user->id, $user_id, $visibilities['news'])) {
-    show_news($user_id, $show_admin, 0, $about_data["nopen"], "100%", 0, $about_data);
-}
+                        &nbsp;<strong><?= htmlReady($entry->getName()) ?>:</strong>
+                        <?= $entry->getDisplayValue() ?>
+                        <span class="minor">(<?= $visible ?>)</span>
+                        <br>
+                    <? endforeach ?>
+            </td>
+    </tr>
+    </table>
 
-// alle persoenlichen Termine anzeigen, aber keine privaten
-if (get_config('CALENDAR_ENABLE')) {
-    $temp_user_perm = get_global_perm($user_id);
-    if ($temp_user_perm != "root" && $temp_user_perm != "admin") {
-        $start_zeit = time();
-        $show_admin = ($perm->have_perm("autor") && 
-            $auth->auth["uid"] == $user_id);
-        if (is_element_visible_for_user($user->id, $user_id, $visibilities['termine']))
-            show_personal_dates($user_id, $start_zeit, -1, FALSE, $show_admin, $about_data["dopen"]);
-    }
-}
+    <br>
 
-// include and show friend-of-a-friend list
-// (direct/indirect connection via buddy list)
-if ($GLOBALS['FOAF_ENABLE']
-    && ($auth->auth['uid']!=$user_id)
-    && UserConfig::get($user_id)->FOAF_SHOW_IDENTITY) {
-        include("lib/classes/FoafDisplay.class.php");
-        $foaf=new FoafDisplay($auth->auth['uid'], $user_id, $username);
-        $foaf->show($_REQUEST['foaf_open']);
-}
+    <?
 
-// include and show votes and tests
-if (get_config('VOTE_ENABLE') && is_element_visible_for_user($user->id, $user_id, $visibilities['votes'])) {
-    show_votes($username, $auth->auth["uid"], $perm, YES);
-}
-
-
-// show Guestbook
-$guest = new Guestbook($user_id,$admin_darf, Request::int('guestpage', 0));
-
-if ($_REQUEST['guestbook'] && $perm->have_perm('autor'))
-    $guest->actionsGuestbook($_REQUEST['guestbook'],$_REQUEST['post'],$_REQUEST['deletepost'],$_REQUEST['studipticket']);
-
-if ($guest->active == TRUE || $guest->rights == TRUE && is_element_visible_for_user($user->id, $user_id, $visibilities['guestbook'])) {
-    $guest->showGuestbook();
-}
-
-// show chat info
-if (get_config('CHAT_ENABLE')) {
-    chat_show_info($user_id);
-}
-
-$layout = $GLOBALS['template_factory']->open('shared/index_box');
-
-// show literature info
-if (get_config('LITERATURE_ENABLE')) {
-    // Ausgabe von Literaturlisten
-    $lit_list = StudipLitList::GetFormattedListsByRange($user_id);
-    if ($user_id == $user->id){
-        $layout->admin_url = 'admin_lit_list.php?_range_id=self';
-        $layout->admin_title = _('Literaturlisten bearbeiten');
+    // News zur person anzeigen!!!
+    $show_admin = ($perm->have_perm("autor") && $auth->auth["uid"] == $user_id) ||
+        (isDeputyEditAboutActivated() && isDeputy($auth->auth["uid"], $user_id, true));
+    if (is_element_visible_for_user($user->id, $user_id, $visibilities['news'])) {
+        show_news($user_id, $show_admin, 0, $about_data["nopen"], "100%", 0, $about_data);
     }
 
-    if (is_element_visible_for_user($user->id, $user_id, $visibilities['literature'])) {
-        echo $layout->render(array('title' => _('Literaturlisten'), 'content_for_layout' => $lit_list));
-        $layout->clear_attributes();
-    }
-}
-
-// Hier werden Lebenslauf, Hobbys, Publikationen und Arbeitsschwerpunkte ausgegeben:
-$ausgabe_felder = array('lebenslauf' => _("Lebenslauf"),
-            'hobby' => _("Hobbys"),
-            'publi' => _("Publikationen"),
-            'schwerp' => _("Arbeitsschwerpunkte")
-            );
-
-foreach ($ausgabe_felder as $key => $value) {
-    if (is_element_visible_for_user($user->id, $user_id, $visibilities[$key]))
-        echo $layout->render(array('title' => $value, 'content_for_layout' => formatReady($result[$key])));
-}
-
-$layout->clear_attributes();
-
-// add the free administrable datafields (these field are system categories -
-// the user is not allowed to change the categories)
-foreach ($long_datafields as $entry) {
-    if (is_element_visible_for_user($user->id, $user_id, $visibilities[$entry->getName()])) {
-        $vperms = $entry->structure->getViewPerms();
-        $visible = 'all' == $vperms
-                   ? _("sichtbar für alle")
-                   : sprintf(_("sichtbar nur für Sie und alle %s"),
-                             prettyViewPermString($vperms));
-        echo $layout->render(array('title' => $entry->getName() . "($visible)", 'content_for_layout' => $entry->getDisplayValue()));
-    }
-}
-
-$layout->clear_attributes();
-
-// Prüfen, ob HomepagePlugins vorhanden sind.
-$homepageplugins = PluginEngine::getPlugins('HomepagePlugin');
-
-foreach ($homepageplugins as $homepageplugin){
-    // hier nun die HomepagePlugins anzeigen
-    $template = $homepageplugin->getHomepageTemplate($user_id);
-
-    if ($template) {
-        echo $template->render(NULL, $layout);
-        $layout->clear_attributes();
-    }
-}
-
-//add the own categories - this ones are self created by the user
-$categories = DBManager::get()->query("SELECT * FROM kategorien WHERE range_id = '$user_id' ORDER BY priority");
-while ($category = $categories->fetch())  {
-    $head=$category["name"];
-    $body=$category["content"];
-    if ($user->id == $user_id) {
-        switch ($visibilities['kat_'.$category['kategorie_id']]) {
-            case VISIBILITY_ME:
-                $vis_text = _("nur für mich sichtbar");
-                break;
-            case VISIBILITY_BUDDIES:
-                $vis_text = _("nur für meine Buddies sichtbar");
-                break;
-            case VISIBILITY_DOMAIN:
-                $vis_text = _("nur für meine Nutzerdomäne sichtbar");
-                break;
-            case VISIBILITY_EXTERN:
-                $vis_text = _("auf externen Seiten sichtbar");
-                break;
-            default:
-            case VISIBILITY_STUDIP:
-                $vis_text = _("für alle Stud.IP-Nutzer sichtbar");
-                break;
+    // alle persoenlichen Termine anzeigen, aber keine privaten
+    if (get_config('CALENDAR_ENABLE')) {
+        if ($current_user['perms'] != "root" && $current_user['perms'] != "admin") {
+            $start_zeit = time();
+            $show_admin = ($perm->have_perm("autor") &&
+                $auth->auth["uid"] == $user_id);
+            if (is_element_visible_for_user($user->id, $user_id, $visibilities['termine']))
+                show_personal_dates($user_id, $start_zeit, -1, FALSE, $show_admin, $about_data["dopen"]);
         }
-        $head .= ' ('.$vis_text.')';
     }
-    // oeffentliche Rubrik oder eigene Homepage
-    if (is_element_visible_for_user($user->id, $user_id, $visibilities['kat_'.$category['kategorie_id']])) {
-        echo $layout->render(array('title' => $head, 'content_for_layout' => formatReady($body)));
-    }
-}
 
-// Anzeige der Seminare
-if ($perm->get_perm($user_id) == 'dozent'){
-    $all_semester = SemesterData::GetSemesterArray();
-    $view = new DbView();
-    $output = '';
-    for ($i = count($all_semester)-1; $i >= 0; --$i){
-        $view->params[0] = $user_id;
-        $view->params[1] = "dozent";
-        $view->params[2] = " HAVING (sem_number <= $i AND (sem_number_end >= $i OR sem_number_end = -1)) ";
-        $snap = new DbSnapshot($view->get_query("view:SEM_USER_GET_SEM"));
-        if ($snap->numRows){
-            $sem_name = $all_semester[$i]['name'];
-            if ($output) $output .= '<br>';
-            $output .= "<font size=\"+1\"><b>$sem_name</b></font><br><br>";
-            $snap->sortRows("Name");
-            while ($snap->nextRow()) {
-                $ver_name = $snap->getField("Name");
-                $sem_number_start = $snap->getField("sem_number");
-                $sem_number_end = $snap->getField("sem_number_end");
-                if ($sem_number_start != $sem_number_end){
-                    $ver_name .= " (" . $all_semester[$sem_number_start]['name'] . " - ";
-                    $ver_name .= (($sem_number_end == -1) ? _("unbegrenzt") : $all_semester[$sem_number_end]['name']) . ")";
+    // include and show friend-of-a-friend list
+    // (direct/indirect connection via buddy list)
+    if ($GLOBALS['FOAF_ENABLE']
+        && ($auth->auth['uid']!=$user_id)
+        && UserConfig::get($user_id)->FOAF_SHOW_IDENTITY) {
+            include("lib/classes/FoafDisplay.class.php");
+            $foaf=new FoafDisplay($auth->auth['uid'], $user_id, $username);
+            $foaf->show($_REQUEST['foaf_open']);
+    }
+
+    // include and show votes and tests
+    if (get_config('VOTE_ENABLE') && is_element_visible_for_user($user->id, $user_id, $visibilities['votes'])) {
+        show_votes($username, $auth->auth["uid"], $perm, YES);
+    }
+
+
+    // show Guestbook
+    $guest = new Guestbook($user_id,$admin_darf, Request::int('guestpage', 0));
+
+    if ($_REQUEST['guestbook'] && $perm->have_perm('autor'))
+        $guest->actionsGuestbook($_REQUEST['guestbook'],$_REQUEST['post'],$_REQUEST['deletepost'],$_REQUEST['studipticket']);
+
+    if ($guest->active == TRUE || $guest->rights == TRUE && is_element_visible_for_user($user->id, $user_id, $visibilities['guestbook'])) {
+        $guest->showGuestbook();
+    }
+
+    // show chat info
+    if (get_config('CHAT_ENABLE')) {
+        chat_show_info($user_id);
+    }
+
+    $layout = $GLOBALS['template_factory']->open('shared/index_box');
+
+    // show literature info
+    if (get_config('LITERATURE_ENABLE')) {
+        // Ausgabe von Literaturlisten
+        $lit_list = StudipLitList::GetFormattedListsByRange($user_id);
+        if ($user_id == $user->id){
+            $layout->admin_url = 'admin_lit_list.php?_range_id=self';
+            $layout->admin_title = _('Literaturlisten bearbeiten');
+        }
+
+        if (is_element_visible_for_user($user->id, $user_id, $visibilities['literature'])) {
+            echo $layout->render(array('title' => _('Literaturlisten'), 'content_for_layout' => $lit_list));
+            $layout->clear_attributes();
+        }
+    }
+
+    // Hier werden Lebenslauf, Hobbys, Publikationen und Arbeitsschwerpunkte ausgegeben:
+    $ausgabe_felder = array('lebenslauf' => _("Lebenslauf"),
+                'hobby' => _("Hobbys"),
+                'publi' => _("Publikationen"),
+                'schwerp' => _("Arbeitsschwerpunkte")
+                );
+
+    foreach ($ausgabe_felder as $key => $value) {
+        if (is_element_visible_for_user($user->id, $user_id, $visibilities[$key]))
+            echo $layout->render(array('title' => $value, 'content_for_layout' => formatReady($current_user[$key])));
+    }
+
+    $layout->clear_attributes();
+
+    // add the free administrable datafields (these field are system categories -
+    // the user is not allowed to change the categories)
+    foreach ($long_datafields as $entry) {
+        if (is_element_visible_for_user($user->id, $user_id, $visibilities[$entry->getName()])) {
+            $vperms = $entry->structure->getViewPerms();
+            $visible = 'all' == $vperms
+                       ? _("sichtbar für alle")
+                       : sprintf(_("sichtbar nur für Sie und alle %s"),
+                                 prettyViewPermString($vperms));
+            echo $layout->render(array('title' => $entry->getName() . "($visible)", 'content_for_layout' => $entry->getDisplayValue()));
+        }
+    }
+
+    $layout->clear_attributes();
+
+    // Prüfen, ob HomepagePlugins vorhanden sind.
+    $homepageplugins = PluginEngine::getPlugins('HomepagePlugin');
+
+    foreach ($homepageplugins as $homepageplugin){
+        // hier nun die HomepagePlugins anzeigen
+        $template = $homepageplugin->getHomepageTemplate($user_id);
+
+        if ($template) {
+            echo $template->render(NULL, $layout);
+            $layout->clear_attributes();
+        }
+    }
+
+    //add the own categories - this ones are self created by the user
+    $categories = DBManager::get()->query("SELECT * FROM kategorien WHERE range_id = '$user_id' ORDER BY priority");
+    while ($category = $categories->fetch())  {
+        $head=$category["name"];
+        $body=$category["content"];
+        if ($user->id == $user_id) {
+            switch ($visibilities['kat_'.$category['kategorie_id']]) {
+                case VISIBILITY_ME:
+                    $vis_text = _("nur für mich sichtbar");
+                    break;
+                case VISIBILITY_BUDDIES:
+                    $vis_text = _("nur für meine Buddies sichtbar");
+                    break;
+                case VISIBILITY_DOMAIN:
+                    $vis_text = _("nur für meine Nutzerdomäne sichtbar");
+                    break;
+                case VISIBILITY_EXTERN:
+                    $vis_text = _("auf externen Seiten sichtbar");
+                    break;
+                default:
+                case VISIBILITY_STUDIP:
+                    $vis_text = _("für alle Stud.IP-Nutzer sichtbar");
+                    break;
+            }
+            $head .= ' ('.$vis_text.')';
+        }
+        // oeffentliche Rubrik oder eigene Homepage
+        if (is_element_visible_for_user($user->id, $user_id, $visibilities['kat_'.$category['kategorie_id']])) {
+            echo $layout->render(array('title' => $head, 'content_for_layout' => formatReady($body)));
+        }
+    }
+
+    // Anzeige der Seminare
+    if ($current_user['perms'] == 'dozent') {
+        $all_semester = SemesterData::GetSemesterArray();
+        $view = new DbView();
+        $output = '';
+        for ($i = count($all_semester)-1; $i >= 0; --$i){
+            $view->params[0] = $user_id;
+            $view->params[1] = "dozent";
+            $view->params[2] = " HAVING (sem_number <= $i AND (sem_number_end >= $i OR sem_number_end = -1)) ";
+            $snap = new DbSnapshot($view->get_query("view:SEM_USER_GET_SEM"));
+            if ($snap->numRows){
+                $sem_name = $all_semester[$i]['name'];
+                if ($output) $output .= '<br>';
+                $output .= "<font size=\"+1\"><b>$sem_name</b></font><br><br>";
+                $snap->sortRows("Name");
+                while ($snap->nextRow()) {
+                    $ver_name = $snap->getField("Name");
+                    $sem_number_start = $snap->getField("sem_number");
+                    $sem_number_end = $snap->getField("sem_number_end");
+                    if ($sem_number_start != $sem_number_end){
+                        $ver_name .= " (" . $all_semester[$sem_number_start]['name'] . " - ";
+                        $ver_name .= (($sem_number_end == -1) ? _("unbegrenzt") : $all_semester[$sem_number_end]['name']) . ")";
+                    }
+                    $output .= '<b><a href="'. URLHelper::getLink("details.php?sem_id=".$snap->getField('Seminar_id')). '">' . htmlReady($ver_name) . '</a></b><br>';
                 }
-                $output .= '<b><a href="'. URLHelper::getLink("details.php?sem_id=".$snap->getField('Seminar_id')). '">' . htmlReady($ver_name) . '</a></b><br>';
             }
         }
-    }
 
-    echo $layout->render(array('title' => _('Veranstaltungen'), 'content_for_layout' => $output));
-}
+        echo $layout->render(array('title' => _('Veranstaltungen'), 'content_for_layout' => $output));
+    }
 } else {
     echo MessageBox::error(_("Dieses Profil ist nicht verfügbar."), array(_("Der Benutzer hat sich unsichtbar geschaltet oder ist im System nicht vorhanden.")));
 }

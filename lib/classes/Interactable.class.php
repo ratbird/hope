@@ -81,6 +81,28 @@ abstract class Interactable
     }
 
     /**
+     * Easy factory method to get an Interactable instance.
+     * All parameters are optional.
+     *
+     * @code
+     * // example using subclass Button
+     *
+     * echo Button::get();
+     * # => <button type="submit" name="ok">ok</button>
+     *
+     * echo Button::get('yes')
+     * # => <button type="submit" name="yes">yes</button>
+     *
+     * echo Button::get('yes', 'aName')
+     * # => <button type="submit" name="aName">yes</button>
+     *
+     * echo Button::get('yes', array('a' => 1, 'b' => 2))
+     * # => <button type="submit" a="1" b="2" name="yes">yes</button>
+     *
+     * echo Button::get('yes', 'aName', array('a' => 1, 'b' => 2)),
+     * # => <button type="submit" a="1" b="2" name="aName">yes</button>
+     * @endcode
+     *
      * @param string $label      the label of the current element
      * @param string $trait      the specific trait of the current element
      * @param array  $attributes the attributes of the button element
@@ -112,15 +134,22 @@ abstract class Interactable
     }
 
     /**
-     * Initialize an interactable element
+     * Initialize an interactable element.
+     * The parameters to get are handed over to enable subclass
+     * specific customization.
      *
      * @param string $label      the label of the current element
      * @param string $trait      the specific trait of the current element
      * @param array  $attributes the attributes of the button element
      */
-    abstract function initialize($label, $trait, $attributes);
+    abstract protected function initialize($label, $trait, $attributes);
 
     /**
+     * Convenience method used for autocompletion hints by your
+     * editor.
+     *
+     * Without this method #__callStatic would do the same.
+     *
      * @param string $label      the label of the current element
      * @param string $trait      the specific trait of the current element
      * @param array  $attributes the attributes of the button element
@@ -130,7 +159,13 @@ abstract class Interactable
         $args = func_num_args() ? func_get_args() : array('übernehmen');
         return self::__callStatic(__FUNCTION__, $args);
     }
+
     /**
+     * Convenience method used for autocompletion hints by your
+     * editor.
+     *
+     * Without this method #__callStatic would do the same.
+     *
      * @param string $label      the label of the current element
      * @param string $trait      the specific trait of the current element
      * @param array  $attributes the attributes of the button element
@@ -140,7 +175,7 @@ abstract class Interactable
         $args = func_num_args() ? func_get_args() : array('abbrechen');
         return self::__callStatic(__FUNCTION__, $args);
     }
-    
+
     /**
      * Hyphenates the passed word.
      *

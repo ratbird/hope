@@ -11,41 +11,25 @@
 
 namespace Studip;
 
-require('Interactable.class.php');
+require 'Interactable.class.php';
 
 /**
- * Represents an HTML button element.
+ * Represents an HTML button element. Class Button inherits from
+ * Interactable and customizes the HTML output.
  */
 class Button extends Interactable
 {
 
     /**
-     * Easy factory method to get a Button instance.
-     * All parameters are optional.
+     * Initialize a Button.
+     * The second parameter is used as @name attribute of the
+     * resulting <button> HTML element.
      *
-     * @code
-     * echo Button::get();
-     * # => <button type="submit" name="ok">ok</button>
-     *
-     * echo Button::get('yes')
-     * # => <button type="submit" name="yes">yes</button>
-     *
-     * echo Button::get('yes', 'aName')
-     * # => <button type="submit" name="aName">yes</button>
-     *
-     * echo Button::get('yes', array('a' => 1, 'b' => 2))
-     * # => <button type="submit" a="1" b="2" name="yes">yes</button>
-     *
-     * echo Button::get('yes', 'aName', array('a' => 1, 'b' => 2)),
-     * # => <button type="submit" a="1" b="2" name="aName">yes</button>
-     * @endcode
-     *
-     * @param string $label      the label of the button
-     * @param string $name       the name attribute of the button element
-     * @param array  $attributes the attributes of the button element
+     * @param string $label       the label of the button element
+     * @param string $name        the @name element of the button element
+     * @param array  $attributes  the attributes of the button element
      */
-
-    function initialize($label, $name, $attributes)
+    protected function initialize($label, $name, $attributes)
     {
         $this->attributes['name'] = $name ?: $this->label;
     }

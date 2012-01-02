@@ -11,7 +11,7 @@
 
 namespace Studip;
 
-require('Interactable.class.php');
+require 'Interactable.class.php';
 
 /**
  * Represents an HTML link element.
@@ -19,42 +19,25 @@ require('Interactable.class.php');
 class LinkButton extends Interactable
 {
     /**
-     * Easy factory method to get a LinkButton instance.
-     * All parameters are optional.
+     * Initialize a Hyperlink used as button.
+     * The second parameter is used as @href attribute of the
+     * resulting <a> HTML element.
      *
-     * @code
-     * echo LinkButton::get();
-     * # => <button type="submit" name="ok">ok</button>
-     *
-     * echo LinkButton::get('yes')
-     * # => <a class="button" href="?">yes</a>
-     *
-     * echo LinkButton::get('example', 'http://www.example.com')
-     * # => <a class="button" href="http://www.example.com">example</a>
-     *
-     * echo LinkButton::get('yes', array('a' => 1, 'b' => 2))
-     * # => <a class="button" a="1" b="2" href="?">yes</a>
-     *
-     * echo Button::get('example', 'http://www.example.com', array('a' => 1, 'b' => 2)),
-     * # => <a class="button" a="1" b="2" href="http://www.example.com">example</a>
-     * @endcode
-     *
-     * @param string $label      the label of the link
-     * @param string $url        the target url for the link
-     * @param array  $attributes the attributes of the link element
+     * @param string $label       the label of the <a> element
+     * @param string $url         the @href element of the <a> element
+     * @param array  $attributes  the attributes of the <a> element
      */
-
-    function initialize($label, $url, $attributes)
+    protected function initialize($label, $url, $attributes)
     {
         $this->attributes['href'] = $url ?: @\URLHelper::getURL();
     }
 
     /**
-     * @return  returns a HTML representation of this button.
+     * @return  returns a HTML representation of this hyperlink.
      */
     function __toString()
     {
-        // add "button" to attribute "class"
+        // add "button" to attribute @class
         @$this->attributes["class"] .= " button";
 
         $attributes = array();
@@ -62,6 +45,7 @@ class LinkButton extends Interactable
         foreach ($this->attributes as $k => $v) {
             $attributes[] = sprintf(' %s="%s"', $k, htmlReady($v));
         }
+
         // TODO: URLHelper...?!
         return sprintf('<a%s>%s</a>',
                        join('', $attributes),

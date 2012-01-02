@@ -67,7 +67,7 @@ abstract class Interactable
             }
 
             # b.) set/append CSS class
-            if (array_key_exists('class', $button->attributes)) {
+            if (array_key_exists('class', $interactable->attributes)) {
                 $interactable->attributes['class'] .= " $class";
             } else {
                 $interactable->attributes['class'] =  $class;
@@ -126,8 +126,8 @@ abstract class Interactable
             list($attributes, $trait) = array($trait, NULL);
         }
 
-        $interactable = new static($label, $attributes);
-
+        $called = get_called_class();
+        $interactable = new $called($label, $attributes);
         $interactable->initialize($label, $trait, $attributes);
 
         return $interactable;

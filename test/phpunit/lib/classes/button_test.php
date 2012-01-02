@@ -17,54 +17,54 @@ use \Studip\Button;
 
 class ButtonTestCase extends PHPUnit_Framework_TestCase
 {
-    function testGet()
+    function testCreate()
     {
-        $this->assertEquals('' . Button::get(), '<button type="submit" name="ok">ok</button>');
+        $this->assertEquals('' . Button::create(), '<button type="submit" name="ok">ok</button>');
     }
 
-    function testGetWithLabel()
+    function testCreateWithLabel()
     {
-        $this->assertEquals('' . Button::get('yes'), '<button type="submit" name="yes">yes</button>');
+        $this->assertEquals('' . Button::create('yes'), '<button type="submit" name="yes">yes</button>');
     }
 
-    function testGetWithLabelAndString()
+    function testCreateWithLabelAndString()
     {
-        $this->assertEquals('' . Button::get('yes', 'aName'), '<button type="submit" name="aName">yes</button>');
+        $this->assertEquals('' . Button::create('yes', 'aName'), '<button type="submit" name="aName">yes</button>');
     }
 
-    function testGetWithLabelAndArray()
+    function testCreateWithLabelAndArray()
     {
-        $this->assertEquals('' . Button::get('yes', array('a' => 1, 'b' => 2)),
+        $this->assertEquals('' . Button::create('yes', array('a' => 1, 'b' => 2)),
                            '<button type="submit" a="1" b="2" name="yes">yes</button>');
     }
 
-    function testGetWithLabelNameAndArray()
+    function testCreateWithLabelNameAndArray()
     {
-        $this->assertEquals('' . Button::get('yes', 'aName', array('a' => 1, 'b' => 2)),
+        $this->assertEquals('' . Button::create('yes', 'aName', array('a' => 1, 'b' => 2)),
                            '<button type="submit" a="1" b="2" name="aName">yes</button>');
     }
 
-    function testGetAccept()
+    function testCreateAccept()
     {
-        $this->assertEquals('' . Button::getAccept(),
+        $this->assertEquals('' . Button::createAccept(),
                            '<button type="submit" class="accept" name="accept">&uuml;bernehmen</button>');
     }
 
-    function testGetCancel()
+    function testCreateCancel()
     {
-        $this->assertEquals('' . Button::getCancel(),
+        $this->assertEquals('' . Button::createCancel(),
                            '<button type="submit" class="cancel" name="cancel">abbrechen</button>');
     }
 
-    function testGetPreOrder()
+    function testCreatePreOrder()
     {
-        $this->assertEquals('' . Button::getPreOrder(),
+        $this->assertEquals('' . Button::createPreOrder(),
                            '<button type="submit" class="pre-order" name="pre-order">ok</button>');
     }
 
-    function testGetWithInsaneArguments()
+    function testCreateWithInsaneArguments()
     {
-        $this->assertEquals('' . Button::get('>ok<', 'm&m', array('mad' => '<S>tu"ff')),
+        $this->assertEquals('' . Button::create('>ok<', 'm&m', array('mad' => '<S>tu"ff')),
                            '<button type="submit" mad="&lt;S&gt;tu&quot;ff" name="m&amp;m">&gt;ok&lt;</button>');
     }
 }

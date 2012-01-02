@@ -11,7 +11,7 @@
 
 namespace Studip;
 
-require 'Interactable.class.php';
+require_once 'Interactable.class.php';
 
 /**
  * Represents an HTML button element. Class Button inherits from

@@ -34,11 +34,11 @@ abstract class Interactable
      * Magic method (triggered when invoking inaccessible methods in a static
      * context) used to dynamically create an interactable element with an
      * additional CSSclass. This works for every static method call matching:
-     * /^get(.+)/ The matched group is used as CSS class for the interactable
-     * element.
+     * /^create(.+)/ The matched group is used as CSS class for the
+     * interactable element.
      *
      * @code
-     * echo Button::getSubmit();
+     * echo Button::createSubmit();
      *
      * # => <button ... class="submit">...
      * @endcode
@@ -47,19 +47,19 @@ abstract class Interactable
      * @param array  $args  enumerated array containing the parameters
      *                      passed to the $name'ed method
      *
-     * @return Interactable returns a Button, if $name =~ /^get/
+     * @return Interactable returns a Button, if $name =~ /^create/
      * @throws              throws a BadMethodCallException if $name does not
      *                      match
      */
     public static function __callStatic($name, $args)
     {
-        # only trigger, if $name =~ /^get/ and at least using $label
-        if (substr($name, 0, 3) === 'get') {
+        # only trigger, if $name =~ /^create/ and at least using $label
+        if (0 === strncasecmp($name, 'create', 6)) {
 
             # instantiate button from arguments
-            $interactable = call_user_func_array(array(get_called_class(), 'get'), $args);
+            $interactable = call_user_func_array(array(get_called_class(), 'create'), $args);
             # but customize with class from $name:
-            $class = self::hyphenate(substr($name, 3));
+            $class = self::hyphenate(substr($name, 6));
 
             # a.) set name unless set
             if (!is_string(@$args[1])) {
@@ -81,25 +81,25 @@ abstract class Interactable
     }
 
     /**
-     * Easy factory method to get an Interactable instance.
+     * Easy factory method to create an Interactable instance.
      * All parameters are optional.
      *
      * @code
      * // example using subclass Button
      *
-     * echo Button::get();
+     * echo Button::create();
      * # => <button type="submit" name="ok">ok</button>
      *
-     * echo Button::get('yes')
+     * echo Button::create('yes')
      * # => <button type="submit" name="yes">yes</button>
      *
-     * echo Button::get('yes', 'aName')
+     * echo Button::create('yes', 'aName')
      * # => <button type="submit" name="aName">yes</button>
      *
-     * echo Button::get('yes', array('a' => 1, 'b' => 2))
+     * echo Button::create('yes', array('a' => 1, 'b' => 2))
      * # => <button type="submit" a="1" b="2" name="yes">yes</button>
      *
-     * echo Button::get('yes', 'aName', array('a' => 1, 'b' => 2)),
+     * echo Button::create('yes', 'aName', array('a' => 1, 'b' => 2)),
      * # => <button type="submit" a="1" b="2" name="aName">yes</button>
      * @endcode
      *
@@ -109,7 +109,7 @@ abstract class Interactable
      *
      * @return returns a Interactable element
      */
-    static function get($label = NULL, $trait = NULL, $attributes = array())
+    static function create($label = NULL, $trait = NULL, $attributes = array())
     {
         $argc = func_num_args();
 
@@ -135,7 +135,7 @@ abstract class Interactable
 
     /**
      * Initialize an interactable element.
-     * The parameters to get are handed over to enable subclass
+     * The parameters to create are handed over to enable subclass
      * specific customization.
      *
      * @param string $label      the label of the current element
@@ -154,7 +154,7 @@ abstract class Interactable
      * @param string $trait      the specific trait of the current element
      * @param array  $attributes the attributes of the button element
      */
-    static function getAccept($label = NULL, $trait = NULL, $attributes = array())
+    static function createAccept($label = NULL, $trait = NULL, $attributes = array())
     {
         $args = func_num_args() ? func_get_args() : array('übernehmen');
         return self::__callStatic(__FUNCTION__, $args);
@@ -170,7 +170,7 @@ abstract class Interactable
      * @param string $trait      the specific trait of the current element
      * @param array  $attributes the attributes of the button element
      */
-    static function getCancel($label = NULL, $trait = NULL, $attributes = array())
+    static function createCancel($label = NULL, $trait = NULL, $attributes = array())
     {
         $args = func_num_args() ? func_get_args() : array('abbrechen');
         return self::__callStatic(__FUNCTION__, $args);

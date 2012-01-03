@@ -113,7 +113,7 @@ function editarea($forumposting) {
     $cols = round($max_col*0.45);
     if ($cols < 28) $cols = 28;
 
-    $zusatz = "<a href=\"".URLHelper::getLink("?open=".$forumposting["rootid"]."#anker")."\">" . makeButton("abbrechen", "img", _("abbrechen")) . "</a>";
+    $zusatz = "<a href=\"".URLHelper::getLink("?#anker", array("open" => Request::get("neuesthema") ? null : $forumposting["rootid"]))."\">" . makeButton("abbrechen", "img", _("abbrechen")) . "</a>";
 
     $help_url = format_help_url("Basis.VerschiedenesFormat");
     $zusatz .= "&nbsp;&nbsp;<a href=\"".URLHelper::getLink("show_smiley.php")."\" target=\"_blank\"><font size=\"-1\">"._("Smileys")."</a>&nbsp;&nbsp;"."<a href=\"".$help_url."\" target=\"_blank\"><font size=\"-1\">"._("Formatierungshilfen")."</a>";

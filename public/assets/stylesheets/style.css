@@ -846,6 +846,7 @@ a.button, button {
     background-image: linear-gradient(top, #f0f4f7 0%, #cddae4 50%, #97abb7 100%);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f0f4f7', endColorstr='#97abb7');
     min-width: 93px;
+    box-sizing: border-box;
     text-align: center;
     vertical-align: middle;
 }

@@ -38,6 +38,7 @@
 
 
 require '../lib/bootstrap.php';
+unregister_globals();
 
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Default_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 

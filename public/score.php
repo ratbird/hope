@@ -21,6 +21,7 @@
 
 
 require '../lib/bootstrap.php';
+unregister_globals();
 
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $perm->check('user');
@@ -42,11 +43,11 @@ Navigation::activateItem('/community/score');
 
 /* --- Actions -------------------------------------------------------------- */
 $score = new Score($user->id);
-if($_REQUEST['cmd']=="write")
+if(Request::option('cmd')=="write")
 {
     $score->PublishScore();
 }
-if($_REQUEST['cmd']=="kill")
+if(Request::option('cmd')=="kill")
 {
     $score->KillScore();
 }
@@ -55,11 +56,7 @@ $stmt=DBManager::get()->query("SELECT COUNT(*) FROM user_info a LEFT JOIN auth_u
 
 $anzahl=$stmt->fetchColumn();
 
-if($_REQUEST['page']){
-    $page=$_REQUEST['page'];
-} else {
-    $page=1;
-}
+$page = Request::int('page', 1);
 
 if($page < 1 || $page > ceil($anzahl/get_config('ENTRIES_PER_PAGE'))) $page = 1;
 

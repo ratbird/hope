@@ -839,12 +839,12 @@ a.button, button {
     -o-border-radius: 2px;
     border-radius: 2px;
     background-image: -webkit-gradient(linear, left top, left bottom, from(#f0f4f7), to(#97abb7));
-    /* Saf4+, Chrome */
     background-image: -webkit-linear-gradient(top, #f0f4f7 0%, #cddae4 50%, #97abb7 100%);
     background-image: -moz-linear-gradient(top, #f0f4f7 0%, #cddae4 50%, #97abb7 100%);
     background-image: -ms-linear-gradient(top, #f0f4f7 0%, #cddae4 50%, #97abb7 100%);
     background-image: -o-linear-gradient(top, #f0f4f7 0%, #cddae4 50%, #97abb7 100%);
     background-image: linear-gradient(top, #f0f4f7 0%, #cddae4 50%, #97abb7 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f0f4f7', endColorstr='#97abb7');
     min-width: 93px;
     text-align: center;
     vertical-align: middle;
@@ -852,12 +852,12 @@ a.button, button {
 
 a.button:hover, button:hover {
     background-image: -webkit-gradient(linear, left top, left bottom, from(white), to(#b5c3cc));
-    /* Saf4+, Chrome */
     background-image: -webkit-linear-gradient(top, white 0%, #eef3f6 50%, #b5c3cc 100%);
     background-image: -moz-linear-gradient(top, white 0%, #eef3f6 50%, #b5c3cc 100%);
     background-image: -ms-linear-gradient(top, white 0%, #eef3f6 50%, #b5c3cc 100%);
     background-image: -o-linear-gradient(top, white 0%, #eef3f6 50%, #b5c3cc 100%);
     background-image: linear-gradient(top, white 0%, #eef3f6 50%, #b5c3cc 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#b5c3cc');
     border-top-color: #f33;
     border-left-color: #f00;
     border-right-color: #f55;
@@ -866,12 +866,12 @@ a.button:hover, button:hover {
 
 a.button:active, button:active {
     background-image: -webkit-gradient(linear, left top, left bottom, from(#cfdce5), to(#7993a2));
-    /* Saf4+, Chrome */
     background-image: -webkit-linear-gradient(top, #cfdce5 0%, #acc1d2 50%, #7993a2 100%);
     background-image: -moz-linear-gradient(top, #cfdce5 0%, #acc1d2 50%, #7993a2 100%);
     background-image: -ms-linear-gradient(top, #cfdce5 0%, #acc1d2 50%, #7993a2 100%);
     background-image: -o-linear-gradient(top, #cfdce5 0%, #acc1d2 50%, #7993a2 100%);
     background-image: linear-gradient(top, #cfdce5 0%, #acc1d2 50%, #7993a2 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#cfdce5', endColorstr='#7993a2');
 }
 
 a.button::-moz-focus-inner, button::-moz-focus-inner {
@@ -884,21 +884,21 @@ button {
 }
 
 .accept, .cancel {
-      padding-right: 25px;
+    padding-right: 25px;
 }
 
 .accept:after, .cancel:after {
-      margin-top: -4px;
-      position: absolute;
-      right: 5px;
+    margin-top: -4px;
+    position: absolute;
+    right: 5px;
 }
 
 .accept:after {
-      content: url(../images/icons/16/green/accept.png);
+    content: url(../images/icons/16/green/accept.png);
 }
 
 .cancel:after {
-      content: url(../images/icons/16/red/decline.png);
+    content: url(../images/icons/16/red/decline.png);
 }
 
 div.selectbox {

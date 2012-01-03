@@ -13,6 +13,8 @@ include_once('lib/classes/QuickSearch.class.php');
 include_once('lib/classes/searchtypes/SQLSearch.class.php');
 include_once('lib/classes/searchtypes/StandardSearch.class.php');
 include_once('lib/classes/searchtypes/PermissionSearch.class.php');
+require_once('lib/classes/LinkButton.class.php');
+require_once('lib/classes/Button.class.php');
 
 /**
  * get_ampel_state is a helper function for get_ampel_write and get_ampel_read.

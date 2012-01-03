@@ -1,5 +1,7 @@
 <?
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
+
 $infobox = array();
 $infobox['picture'] = StudygroupAvatar::getAvatar($sem_id)->getUrl(Avatar::NORMAL);
 
@@ -104,8 +106,8 @@ $infobox['content'] = array(
 <tr>
   <td></td>
   <td>
-      <?=makeButton('uebernehmen2','input',_("Änderungen übernehmen"))?>
-      <a href="<?=URLHelper::getLink('seminar_main.php')?>"> <?=  makeButton('abbrechen', 'img') ?></a>
+      <?= Button::createAccept(_('übernehmen'),_("Änderungen übernehmen")); ?>
+      <?= LinkButton::createCancel(_('abbrechen'), URLHelper::getLink('seminar_main.php')); ?>
   </td>
 </tr>
 

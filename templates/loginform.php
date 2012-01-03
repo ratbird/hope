@@ -1,5 +1,7 @@
 <?
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
+
 ?>
 <script type="text/javascript" language="javascript">
 //<![CDATA[
@@ -46,11 +48,8 @@ $(function () {
 
             <tr>
               <td align="center" colspan="2">
-                <?= makeButton("login", "input", _("Login"), "login")?>
-                &nbsp;
-                <a href="<?=UrlHelper::getLink('index.php?cancel_login=1')?>">
-                  <?=makeButton("abbrechen", "img", _("Abbrechen"))?>
-                </a>
+                <?= Button::createAccept(_('anmelden'), _("Login")); ?>
+                <?= LinkButton::createCancel(_('abrechen'),UrlHelper::getLink('index.php?cancel_login=1')); ?>
               </td>
             </tr>
           </table>

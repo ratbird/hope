@@ -1,3 +1,7 @@
+<?php
+use Studip\Button, Studip\LinkButton;
+?>
+
 <div class="modalshadow">
     <div class="messagebox messagebox_modal">
         <?= formatReady(_("Möchten Sie folgende Inhaltselemente wirklich deaktivieren? Vorhandene Inhalte werden in der Regel dabei gelöscht")
@@ -13,10 +17,8 @@
                 <? endforeach ?>
           
                 <input type="hidden" name="really_deactivate" value="1">
-                <?= makeButton('ja', 'input') ?>
-                <a href="<?= $controller->url_for('course/studygroup/update/'.$sem_id . '?abort_deactivate=1') ?>" style="margin-left: 1em;">
-                   <?= makebutton('nein') ?>
-                </a>
+                <?= Button::createAccept(_('JA!')); ?>
+                <?= LinkButton::createCancel(_('NEIN!'), $controller->url_for('course/studygroup/update/'.$sem_id . '?abort_deactivate=1')); ?>
             </form>
         </div>
     </div>

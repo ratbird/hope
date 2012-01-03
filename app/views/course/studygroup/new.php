@@ -1,5 +1,7 @@
 <?php
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
+
 $infobox = array();
 $infobox['picture'] = 'infobox/studygroup.jpg';
 $infobox['content'] = array(
@@ -96,8 +98,8 @@ $infobox['content'] = array(
 <tr>
   <td></td>
   <td>
-    <?= makebutton("speichern","input") ?>
-    <a href="<?=URLHelper::getLink("dispatch.php/studygroup/browse")?>"> <?=  makeButton('abbrechen', 'img') ?></a>
+    <?= Button::createAccept(_('speichern'),_("Studiengruppe anlegen")); ?>
+    <?= LinkButton::createCancel(_('abbrechen'), URLHelper::getLink("dispatch.php/studygroup/browse")); ?>
   </td>
 </tr>
 

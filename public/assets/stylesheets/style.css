@@ -883,7 +883,7 @@ button {
     overflow: visible;
 }
 
-.accept, .cancel {
+a.accept, a.cancel, button.accept, button.cancel {
     padding-right: 25px;
 }
 
@@ -898,6 +898,7 @@ button {
 }
 
 .cancel:after {
+    margin-top: -2px;
     content: url(../images/icons/16/red/decline.png);
 }
 

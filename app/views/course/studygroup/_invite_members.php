@@ -1,5 +1,6 @@
 <?
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
 ?>
 <h2><?= _("Neue Gruppenmitglieder einladen") ?></h2>
 <form action="<?= $controller->url_for('course/studygroup/edit_members/'.$sem_id.'/add_invites') ?>" method="post">
@@ -10,7 +11,7 @@
                             ->withButton()
                             ->render() ?>
         <? if(isset($this->flash['choose_member_parameter'])) : ?>
-            <input type="image" name="add_member" <?= makebutton('einladen','src')?> style="vertical-align:middle;"><br>
+            <?=Button::create(_("einladen"), 'add_member', array('style' =>'vertical-align:middle;'))?>
         <? endif; ?>
     </div>
 </form>

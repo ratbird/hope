@@ -1,5 +1,6 @@
 <?php
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
 
 /* * * * * * * * * * * * *
  * * * I N F O B O X * * *
@@ -39,7 +40,7 @@ $cssSw = new cssClassSwitcher();
         <?= MessageBox::info( _("Die Studiengruppen sind aktiviert.")) ?>
         <form action="<?= $controller->url_for('course/studygroup/deactivate') ?>" method="post">
         <?= CSRFProtection::tokenTag() ?>
-        <?= makebutton('deaktivieren', 'input') ?>
+        <?= Button::create(_("deaktivieren"), 'deaktivieren') ?>
         </form>
     <? else: ?>
         <?= MessageBox::info(_("Sie können die Studiengruppen nicht deaktivieren, solange noch welche in Stud.IP vorhanden sind!")) ?>
@@ -136,6 +137,6 @@ $cssSw = new cssClassSwitcher();
 </table>
 <p style="text-align: center">
     <br>
-    <input type="image" <?= makebutton('speichern', 'src') ?>>
+    <?= Button::createAccept(_("speichern"), 'speichern') ?>
 </p>
 </form>

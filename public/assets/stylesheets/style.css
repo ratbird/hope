@@ -847,6 +847,7 @@ a.button, button {
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f0f4f7', endColorstr='#97abb7');
     min-width: 93px;
     box-sizing: border-box;
+    -moz-box-sizing: border-box;
     text-align: center;
     vertical-align: middle;
 }

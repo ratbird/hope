@@ -1,5 +1,7 @@
 <?
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
+
 if ($rechte) {
     $text = _('Hier können Sie die TeilnehmerInnen der Studiengruppen verwalten.')
           . ' ' . _('TeilnehmerInnen können je nach Status zu einem Moderator hoch oder runtergestuft werden und aus der Studiengruppe entlassen werden.');
@@ -127,7 +129,7 @@ list-style-position:outside;list-style-type:none;">
     <?=$this->render_partial("course/studygroup/_invite_members", array('inviting_search' => $inviting_search));?>
     <? if (count($accepted) > 0) : ?>
         <h2 style="clear:left; padding-top: 50px;"><?= _("Offene Mitgliedsanträge") ?></h2>
-        <table cellspacing="0" cellpadding="2" border="0" style="max-width: 100%; min-width: 70%">
+        <table cellspacing="0" cellpadding="2" border="0">
             <tr>
                 <th colspan="2" width="70%">
                     <?= _("Name") ?>
@@ -149,13 +151,9 @@ list-style-position:outside;list-style-type:none;">
                         <?= htmlReady($p['fullname']) ?>
                     </a>
                 </td>
-                <td style='padding-left:1em;'>
-                    <a href="<?= $controller->url_for('course/studygroup/edit_members/' . $sem_id . '/accept?user='.$p['username']) ?>">
-                        <?= makebutton('eintragen') ?>
-                    </a>
-                    <a href="<?= $controller->url_for('course/studygroup/edit_members/' . $sem_id . '/deny?user='.$p['username']) ?>">
-                        <?= makebutton('ablehnen') ?>
-                    </a>
+                <td style='padding-left:1em;white-space:nowrap'>
+                    <?= LinkButton::create(_("eintragen"), $controller->url_for('course/studygroup/edit_members/' . $sem_id . '/accept?user='.$p['username'])) ?>
+                    <?= LinkButton::createCancel(_("ablehnen"),$controller->url_for('course/studygroup/edit_members/' . $sem_id . '/deny?user='.$p['username'])) ?>
                 </td>
             </tr>
             <? endforeach ?>

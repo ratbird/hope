@@ -34,8 +34,8 @@ include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
 
-    $db=new DB_Seminar;
-    $db2=new DB_Seminar;
+    $db= DBManager::get();
+
      ?>
 
     <table cellspacing="0" cellpadding="0" border="0" width="100%">
@@ -53,16 +53,21 @@ include ('lib/include/header.php');   // Output of Stud.IP head
             $file[$i] = array('time' => filemtime($GLOBALS['DYNAMIC_CONTENT_PATH'].'/user/'.$entry), 'file' => $entry);
             }
         }
-    rsort ($file);
+        if(count($file)>0){
+            rsort ($file);
+        }
+            
     $i = 5;
     ?><table border="0" cellpadding="0" cellspacing="2" width="100%" align="center"><?
     echo '<tr>';
     for ($i; $i-5 <sizeof($file); $i++)
         {
         $usid = substr($file[$i-5]['file'], 0, strrpos($file[$i-5]['file'], '_'));
-        $db->query("SELECT username FROM auth_user_md5 WHERE user_id='$usid'");
-        $db->next_record();
-        $usame = $db->f('username');
+        $sth = $db->prepare("SELECT username FROM auth_user_md5 WHERE user_id=?");
+        $sth->execute(array($usid));
+        $result = $sth->fetch();
+  
+        $usame = $result['username'];
         echo '<td class="angemeldet" width="25%" align="center" valign="center"><a href="about.php?username='. $usame. '"><img border="0" src="'.$GLOBALS['DYNAMIC_CONTENT_URL'] . '/user/' . $file[$i-5]['file'].'"></a><br>';
         echo '<font size="-1">'.get_fullname($usid,'full',true).'<br>'.date('d.m.Y', $file [$i-5]['time']).'</font></td>'."\n";
         if ((($i % 4) ==0)  && (!$i==0))  echo "</tr><tr>\n";

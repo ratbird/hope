@@ -3,7 +3,9 @@
 ?>
 <div class="modalshadow">
     <div class="messagebox messagebox_modal">
-        <?= formatReady($question) ?>
+        <span id="modalquestion">
+            <?= formatReady($question) ?>
+        </span>
         <div style="margin-top: 1em;">
             <a href="<?= $approvalLink ?>">
                 <?= makebutton('ja') ?>

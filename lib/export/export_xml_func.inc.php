@@ -148,6 +148,7 @@ function xml_footer()
  */
 function xml_escape($string, $utf8encode = true)
 {
+    $string = preg_replace('/[\x00-\x08\x0b\x0c\x0e-\x1f]/', '', $string);
     if ($utf8encode) {
         return htmlspecialchars(studip_utf8encode($string), ENT_QUOTES, 'UTF-8', false);
     } else {

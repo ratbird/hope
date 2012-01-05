@@ -12,6 +12,7 @@
 
 require_once dirname(__FILE__) . '/../../bootstrap.php';
 require_once 'lib/classes/Assets.class.php';
+require_once 'lib/classes/NotificationCenter.class.php';
 require_once 'lib/classes/URLHelper.php';
 require_once 'lib/navigation/Navigation.php';
 
@@ -143,5 +144,37 @@ class NavigationTest extends PHPUnit_Framework_TestCase
         $navigation = new Navigation('test');
         $this->setExpectedException('InvalidArgumentException');
         Navigation::addItem('/test/foo', $navigation);
+    }
+}
+
+class NavigationNotificationTest extends PHPUnit_Framework_TestCase
+{
+
+    public function testNotificationOnActivation ()
+    {
+        $navigation = new Navigation('test');
+        Navigation::addItem('/test', $navigation);
+
+        $observer = $this->getMock("NotificationObserver");
+        $observer->expects($this->once())
+            ->method('update')
+            ->with($this->equalTo('NavigationDidActivateItem'),
+                   $this->equalTo('/test'));
+
+        NotificationCenter::addObserver($observer,
+                                        'update',
+                                        'NavigationDidActivateItem',
+                                        '/test');
+
+        Navigation::activateItem('/test');
+    }
+}
+
+class NotificationObserver {
+
+    function update($event, $subject, $user_data)
+    {
+        # will never run
+        throw new RuntimeException();
     }
 }

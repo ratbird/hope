@@ -54,6 +54,7 @@ class Navigation implements IteratorAggregate
     public static function activateItem($path)
     {
         self::getItem($path)->setActive(true);
+        NotificationCenter::postNotification('NavigationDidActivateItem', $path);
     }
 
     /**

@@ -17,7 +17,7 @@ class Step216AutomatisiertesEintragen extends Migration
                 `seminar_id` char(32) NOT NULL,
                 `status` enum('autor','tutor','dozent') NOT NULL DEFAULT 'autor',
                 PRIMARY KEY  (`seminar_id`,`status`)
-                ) ENGINE=MyISAM ;
+                );
         ");
 
         DBManager::get()->exec("
@@ -26,7 +26,7 @@ class Step216AutomatisiertesEintragen extends Migration
                 `user_id` char(32) NOT NULL,
                 `mkdate` int(10) unsigned NOT NULL DEFAULT '0',
                 PRIMARY KEY  (`seminar_id`,`user_id`)
-                ) ENGINE=MyISAM ;
+                );
         ");
 
         $options[] =

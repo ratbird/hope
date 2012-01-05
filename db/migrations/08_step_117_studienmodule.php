@@ -25,7 +25,7 @@ CREATE TABLE `his_abschl` (
   `refabint` char(2) default NULL,
   `efh` char(4) default NULL,
   PRIMARY KEY  (`abint`)
-) TYPE=MyISAM;
+);
 
 -- --------------------------------------------------------
 
@@ -48,7 +48,7 @@ CREATE TABLE `his_abstgv` (
   `studip_studiengang` varchar(32) NOT NULL default '',
   PRIMARY KEY  (`abschl`,`stg`,`kzfa`,`pversion`),
   KEY `studip_studiengang` (`studip_studiengang`)
-) TYPE=MyISAM;
+);
 
 -- --------------------------------------------------------
 
@@ -65,7 +65,7 @@ CREATE TABLE `his_pvers` (
   `sprache` char(3) default NULL,
   `refpvers` smallint(6) default NULL,
   PRIMARY KEY  (`pvers`)
-) TYPE=MyISAM;
+);
 
 -- --------------------------------------------------------
 
@@ -80,7 +80,7 @@ CREATE TABLE `his_stg` (
   `ltxt` varchar(100) default NULL,
   `fb` char(2) default NULL,
   PRIMARY KEY  (`stg`)
-) TYPE=MyISAM COMMENT='Studienfaecher aus der HIS DB';
+) COMMENT='Studienfaecher aus der HIS DB';
 
 -- --------------------------------------------------------
 
@@ -99,7 +99,7 @@ CREATE TABLE `stm_abstract` (
   `chdate` int(20) default NULL COMMENT 'Datum der letzten Aenderung',
   `homeinst` varchar(32) default NULL,
   PRIMARY KEY  (`stm_abstr_id`)
-) TYPE=MyISAM COMMENT='abstrakte Module';
+) COMMENT='abstrakte Module';
 
 -- --------------------------------------------------------
 
@@ -118,7 +118,7 @@ CREATE TABLE `stm_abstract_assign` (
   `recommed` tinyint(4) default NULL COMMENT 'empfohlener Zpkt.',
   PRIMARY KEY  (`stm_abstr_id`,`abschl`,`stg`,`pversion`),
   KEY `studycourse` (`abschl`,`stg`)
-) TYPE=MyISAM COMMENT='Zuordnung abstrakte Module <-> Studienprogramme';
+) COMMENT='Zuordnung abstrakte Module <-> Studienprogramme';
 
 -- --------------------------------------------------------
 
@@ -138,7 +138,7 @@ CREATE TABLE `stm_abstract_elements` (
   `position` tinyint(4) NOT NULL default '0' COMMENT 'Reihenfolge ',
   PRIMARY KEY  (`element_id`),
   UNIQUE KEY `elem_integr` (`stm_abstr_id`,`elementgroup`,`position`)
-) TYPE=MyISAM COMMENT='Bestandteile eines Abstrakten Moduls (Elemente)';
+) COMMENT='Bestandteile eines Abstrakten Moduls (Elemente)';
 
 -- --------------------------------------------------------
 
@@ -155,7 +155,7 @@ CREATE TABLE `stm_abstract_text` (
   `aims` text NOT NULL COMMENT 'Lernziele',
   `hints` text,
   PRIMARY KEY  (`stm_abstr_id`,`lang_id`)
-) TYPE=MyISAM COMMENT='(mehrsprachige) Texte der abstrakten Module';
+) COMMENT='(mehrsprachige) Texte der abstrakten Module';
 
 -- --------------------------------------------------------
 
@@ -169,7 +169,7 @@ CREATE TABLE `stm_abstract_types` (
   `abbrev` varchar(5) NOT NULL default '' COMMENT 'Abkuerzung',
   `name` varchar(25) NOT NULL default '' COMMENT 'vollstaendige Bezeichnung',
   PRIMARY KEY  (`stm_type_id`,`lang_id`)
-) TYPE=MyISAM COMMENT='Typen abstrakter Module';
+) COMMENT='Typen abstrakter Module';
 
 -- --------------------------------------------------------
 
@@ -183,7 +183,7 @@ CREATE TABLE `stm_element_types` (
   `abbrev` varchar(5) default NULL COMMENT 'Kurzname',
   `name` varchar(50) NOT NULL default '' COMMENT 'Name',
   PRIMARY KEY  (`element_type_id`,`lang_id`)
-) TYPE=MyISAM COMMENT='Typen von möglichen Bestandteilen eines abstrakten Moduls';
+) COMMENT='Typen von möglichen Bestandteilen eines abstrakten Moduls';
 
 -- --------------------------------------------------------
 
@@ -201,7 +201,7 @@ CREATE TABLE `stm_instances` (
   `responsible` varchar(32) default NULL COMMENT 'ID des Modulverantwortlichen Dozenten',
   `complete` tinyint(1) NOT NULL default '0' COMMENT 'Erfassung komplett (0=FALSE)',
   PRIMARY KEY  (`stm_instance_id`)
-) TYPE=MyISAM COMMENT='Instanzen der abstrakten Module';
+) COMMENT='Instanzen der abstrakten Module';
 
 -- --------------------------------------------------------
 
@@ -214,7 +214,7 @@ CREATE TABLE `stm_instances_elements` (
   `element_id` varchar(32) NOT NULL default '' COMMENT 'ID des abstrakten Modulbestandteils',
   `sem_id` varchar(32) NOT NULL default '' COMMENT 'ID der konkreten Veranstaltung',
   PRIMARY KEY  (`stm_instance_id`,`element_id`,`sem_id`)
-) TYPE=MyISAM;
+);
 
 -- --------------------------------------------------------
 
@@ -230,7 +230,7 @@ CREATE TABLE `stm_instances_text` (
   `topics` text NOT NULL COMMENT 'Inhalte',
   `hints` text,
   PRIMARY KEY  (`stm_instance_id`,`lang_id`)
-) TYPE=MyISAM COMMENT='(mehrsprachige) Texte der instanziierten abstrakten Module';
+) COMMENT='(mehrsprachige) Texte der instanziierten abstrakten Module';
 ";
 
     var $sql_down = "DROP TABLE IF EXISTS `his_abschl`, `his_abstgv`, `his_pvers`, `his_stg`, `stm_abstract`, `stm_abstract_assign`, `stm_abstract_elements`, `stm_abstract_text`, `stm_abstract_types`, `stm_element_types`, `stm_instances`, `stm_instances_elements`, `stm_instances_text`;";

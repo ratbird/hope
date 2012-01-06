@@ -22,7 +22,7 @@ class AddScheduleTable extends Migration
                 `user_id` varchar(32) NOT NULL,
                 PRIMARY KEY (`id`),
                 KEY `user_id` (`user_id`)
-                );
+                ) ENGINE=MyISAM;
         ");
 
         DBManager::get()->exec("
@@ -33,7 +33,7 @@ class AddScheduleTable extends Migration
                 `visible` BOOLEAN NOT NULL DEFAULT '1' ,
                 `color` VARCHAR( 7 ) NULL COMMENT 'color, rgb in hex',
                 PRIMARY KEY ( `user_id` , `seminar_id`, `metadate_id` )
-            );
+            ) ENGINE=MyISAM;
         ");
 
         // move old "virtual" entries to new table

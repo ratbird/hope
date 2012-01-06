@@ -13,7 +13,7 @@ class Step116ParticipantView extends DBMigration {
         `seminar_id` varchar(40) NOT NULL default '',
         `active` tinyint(4) default NULL,
         PRIMARY KEY  (`datafield_id`,`seminar_id`)
-      )
+      ) ENGINE=MyISAM
         ");
         
         $this->announce("done.");

@@ -17,7 +17,7 @@ class Step00194Studycourse extends Migration
                           `mkdate` int(20) default NULL,
                           `chdate` int(20) default NULL,
                           PRIMARY KEY  (`abschluss_id`)
-                        )");
+                        ) ENGINE=MyISAM");
         $db->exec("ALTER TABLE `user_studiengang` ADD `semester` TINYINT(2) DEFAULT 0");
         $db->exec("ALTER TABLE `user_studiengang` ADD `abschluss_id` CHAR(32) DEFAULT 0");
         $db->exec("ALTER TABLE `user_studiengang` ADD INDEX ( `studiengang_id` )");

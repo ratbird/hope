@@ -21,7 +21,7 @@ class TerminRelatedPersons extends Migration
                 "`range_id` varchar(32) NOT NULL, " .
                 "`user_id` varchar(32) NOT NULL, " .
                 "PRIMARY KEY (`range_id`,`user_id`) " .
-            ")"
+            ") ENGINE=MyISAM"
         );
     }
 

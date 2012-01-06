@@ -51,7 +51,7 @@ class Step00198Deputies extends Migration
             "`gruppe` TINYINT(4) NOT NULL DEFAULT 0, ".
             "`notification` INT(10) NOT NULL DEFAULT 0, ".
             "`edit_about` TINYINT(1) NOT NULL DEFAULT 0, ".
-            "PRIMARY KEY (`range_id`, `user_id`))");
+            "PRIMARY KEY (`range_id`, `user_id`)) ENGINE=MyISAM");
     }
 
     function down()

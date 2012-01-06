@@ -46,7 +46,7 @@ class Step00202EnhancedSeminarCycle extends Migration
                   `chdate` int(10) unsigned NOT NULL,
                   PRIMARY KEY (`metadate_id`),
                   KEY `seminar_id` (`seminar_id`)
-                );");
+                ) ENGINE=MyISAM;");
 
         $stmt = $db->prepare("INSERT INTO `seminar_cycle_dates`
          (`metadate_id`, `seminar_id`, `start_time`, `end_time`, `weekday`,

@@ -29,7 +29,7 @@ class Step102Datenfeldtypen extends DBMigration {
     $this->db->query("ALTER TABLE `datafields_entries` ADD INDEX `datafield_id_2` (`datafield_id`,`sec_range_id`);");
     $this->db->query("ALTER TABLE `statusgruppe_user` ADD `visible` tinyint(4) NOT NULL default '1';");
     $this->db->query("ALTER TABLE `statusgruppe_user` ADD `inherit` tinyint(4) NOT NULL default '1';");
-    $this->db->query("CREATE TABLE `aux_lock_rules` (`lock_id` varchar( 32 ) NOT NULL default '', `name` varchar( 255 ) NOT NULL default '', `description` text NOT NULL , `attributes` text NOT NULL , `sorting` text NOT NULL , PRIMARY KEY ( `lock_id` ));");
+    $this->db->query("CREATE TABLE `aux_lock_rules` (`lock_id` varchar( 32 ) NOT NULL default '', `name` varchar( 255 ) NOT NULL default '', `description` text NOT NULL , `attributes` text NOT NULL , `sorting` text NOT NULL , PRIMARY KEY ( `lock_id` )) ENGINE=MyISAM;");
     $this->db->query("ALTER TABLE `seminare` ADD `aux_lock_rule` varchar(32) default NULL;");
 
     $this->migrate_datafields();

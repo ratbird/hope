@@ -15,7 +15,7 @@ class StEP00111Admission extends DBMigration {
                           `chdate` int(10) unsigned NOT NULL,
                           `mkdate` int(10) unsigned NOT NULL,
                           PRIMARY KEY  (`group_id`)
-                        )");
+                        ) ENGINE=MyISAM");
         $this->announce(" fill table with existing groups...");
         $this->db->query("INSERT IGNORE INTO admission_group 
                         (group_id, status, chdate,mkdate)

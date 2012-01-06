@@ -13,7 +13,7 @@ class InitMigrations extends DBMigration
               `domain` varchar(255) NOT NULL default '',
               `version` int(11) NOT NULL default '0',
               PRIMARY KEY  (`domain`)
-            );
+            ) ENGINE=MyISAM;
         ");
     }
 }

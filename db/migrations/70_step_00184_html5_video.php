@@ -88,7 +88,7 @@ class Step00184Html5Video extends Migration
                     type varchar(64) NOT NULL,
                     chdate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
                     expires timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-                    PRIMARY KEY (id))");
+                    PRIMARY KEY (id)) ENGINE=MyISAM");
 
         $db->exec("DROP TABLE image_proxy_cache");
 
@@ -110,7 +110,7 @@ class Step00184Html5Video extends Migration
                     error char(15) NOT NULL,
                     chdate timestamp NOT NULL,
                     PRIMARY KEY (id),
-                    KEY chdate (chdate, id))");
+                    KEY chdate (chdate, id)) ENGINE=MyISAM");
 
         $db->exec("DROP TABLE media_cache");
 

@@ -50,7 +50,7 @@ class Step00158Privacy extends Migration
             `email` TINYINT(1) NOT NULL DEFAULT 1,
             `homepage` TEXT NOT NULL DEFAULT '',
             `default_homepage_visibility` INT NOT NULL DEFAULT 0 ,
-            `mkdate` INT(20) NOT NULL DEFAULT 0)");
+            `mkdate` INT(20) NOT NULL DEFAULT 0) ENGINE=MyISAM");
 
         // insert default values
         $db->exec("INSERT INTO `user_visibility` VALUES ('studip', 1, 1, 1, 1, '', 0, ".time().")");

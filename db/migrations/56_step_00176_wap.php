@@ -19,6 +19,6 @@ class Step00176Wap extends Migration
                  ."`user_id` char(32) NOT NULL default '', "
                  ."`session_id` char(32) NOT NULL default '', "
                  ."`creation_time` datetime default NULL, "
-                 ."PRIMARY KEY (`session_id`))");
+                 ."PRIMARY KEY (`session_id`)) ENGINE=MyISAM");
     }
 }

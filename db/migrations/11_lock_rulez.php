@@ -15,7 +15,7 @@ class LockRulez extends DBMigration {
                 `description` text NOT NULL,
                 `attributes` text NOT NULL,
                 PRIMARY KEY  (`lock_id`)
-            )");
+            ) ENGINE=MyISAM");
 
         $this->db->query( "
             ALTER TABLE `seminare` ADD `lock_rule` VARCHAR( 32 ) NULL ; ");

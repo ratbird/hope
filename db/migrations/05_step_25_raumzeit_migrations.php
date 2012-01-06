@@ -31,7 +31,7 @@ class Step25RaumzeitMigrations extends DBMigration
               `chdate` int(10) unsigned NOT NULL default '0',
               PRIMARY KEY  (`issue_id`),
               KEY `seminar_id` (`seminar_id`,`priority`)
-            );
+            ) ENGINE=MyISAM;
         ");
 
         $this->db->query("
@@ -57,7 +57,7 @@ class Step25RaumzeitMigrations extends DBMigration
               PRIMARY KEY  (`termin_id`),
               KEY `range_id` (`range_id`,`date`),
               KEY `metadate_id` (`metadate_id`,`date`)
-            ) PACK_KEYS=1;
+            ) ENGINE=MyISAM PACK_KEYS=1;
         ");
 
         $this->db->query("
@@ -66,7 +66,7 @@ class Step25RaumzeitMigrations extends DBMigration
               `termin_id` varchar(32) NOT NULL default '',
               PRIMARY KEY  (`issue_id`,`termin_id`),
                 KEY `termin_id` (`termin_id`,`issue_id`)
-            );
+            ) ENGINE=MyISAM;
         ");
         $this->db->query("
             ALTER TABLE `termine` DROP INDEX `autor_id`

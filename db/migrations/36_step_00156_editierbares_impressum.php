@@ -25,7 +25,7 @@ class Step00156EditierbaresImpressum extends Migration {
                   `rubric_id` smallint(5) unsigned NOT NULL auto_increment,
                   `position` tinyint(3) unsigned default NULL,
                   `name` varchar(255) NOT NULL,
-                  PRIMARY KEY  (`rubric_id`))");
+                  PRIMARY KEY  (`rubric_id`)) ENGINE=MyISAM");
 
     $this->announce("fill siteinfo_rubrics with default content");
     $db->exec("INSERT INTO `siteinfo_rubrics` (`rubric_id`, `name`)
@@ -40,7 +40,7 @@ class Step00156EditierbaresImpressum extends Migration {
                 `position` tinyint(3) unsigned default NULL,
                 `name` varchar(255) NOT NULL,
                 `content` text NOT NULL,
-                PRIMARY KEY  (`detail_id`))");
+                PRIMARY KEY  (`detail_id`)) ENGINE=MyISAM");
 
     $this->announce("fill siteinfo_details with default content");
     $db->exec("INSERT INTO `siteinfo_details` (`rubric_id`, `name`, `content`) 

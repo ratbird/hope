@@ -8,7 +8,7 @@ class TableTokenClass extends DBMigration {
     function up () {
         $this->announce(" creating table...");
         
-        $this->db->query( " CREATE TABLE IF NOT EXISTS `user_token` (
+        $this->db->query("CREATE TABLE IF NOT EXISTS `user_token` (
                                         `user_id` VARCHAR( 32 ) NOT NULL ,
                                         `token` VARCHAR( 32 ) NOT NULL ,
                                         `expiration` INT NOT NULL ,
@@ -16,7 +16,7 @@ class TableTokenClass extends DBMigration {
                                         INDEX index_expiration (`expiration`),
                                         INDEX index_token (`token`),
                                         INDEX index_user_id (`user_id`)
-                                    );");
+                                    ) ENGINE=MyISAM;");
         
         $this->announce("done.");
         

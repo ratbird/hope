@@ -1678,7 +1678,7 @@ if (($form == 6) && ($jump_next_x))
             if(is_array($sem_create_data["metadata_termin"]["turnus_data"])){
                 foreach ($sem_create_data["metadata_termin"]["turnus_data"] as $key=>$val) {
                     $sem_create_data["metadata_termin"]["turnus_data"][$key]["room"] = stripslashes($sem_create_data["metadata_termin"]["turnus_data"][$key]["room"]);
-                    $sem_create_data["metadata_termin"]["turnus_data"][$key]["desc"] = stripslashes($sem_create_data["metadata_termin"]["turnus_data"][$key]["desc"]);
+                    $sem_create_data["metadata_termin"]["turnus_data"][$key]["description"] = stripslashes($sem_create_data["metadata_termin"]["turnus_data"][$key]["desc"]);
                     $metadate_id = $sem->metadate->addCycle($sem_create_data["metadata_termin"]["turnus_data"][$key]);
                     $temp_rooms[$metadate_id] = $sem_create_data["metadata_termin"]["turnus_data"][$key]["room"];
                     $temp_resources[$metadate_id] = $sem_create_data["metadata_termin"]["turnus_data"][$key]["resource_id"];

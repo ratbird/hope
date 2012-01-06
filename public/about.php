@@ -404,7 +404,7 @@ if (isset($current_user)) {
                     <? if ($current_user["Home"] != "" &&
                             is_element_visible_for_user($user->id, $user_id, $visibilities['homepage'])) : ?>
                         <b>&nbsp;<?= _("Homepage:") ?></b>
-                        <?= FixLinks(htmlReady($current_user["Home"])) ?>
+                        <?= formatLinks($current_user["Home"]) ?>
                         <br>
                     <? endif ?>
 

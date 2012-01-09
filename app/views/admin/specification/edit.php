@@ -64,7 +64,7 @@ use Studip\Button, Studip\LinkButton;
             <? if($rule) : ?>
                 <?= Button::createAccept(_('übernehmen'), 'uebernehmen', array('title' => _('Änderungen übernehmen')))?>
             <? else : ?>
-                <?= Button::create(_('erstellen'),'erstellen' array('title' => _('Neue Regel erstellen'))) ?>
+                <?= Button::create(_('erstellen'),'erstellen', array('title' => _('Neue Regel erstellen'))) ?>
             <? endif ?>
                 <?= LinkButton::createCancel(_('abbrechen'), $controller->url_for('admin/specification'), array('title' => _('Zurück zur Übersicht')))?>
             </td>

@@ -1,5 +1,7 @@
 <?
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
+
 ?>
 <? if ($flash['delete']) : ?>
 <?= $this->render_partial("admin/user/_delete", array('data' => $flash['delete'])) ?>
@@ -104,8 +106,8 @@
     <? endif ?>
     <tr>
         <td colspan="4" align="center">
-            <?= makeButton('suchestarten', 'input', _('Suche starten'), 'search') ?>
-            <?= makeButton('zuruecksetzen', 'input', _("Formular zurücksetzen"), 'reset') ?>
+            <?= Button::create(_('Suche starten'), 'search')?>
+            <?= Button::create(_('zurücksetzen'), 'reset')?>
         </td>
     </tr>
 </table>

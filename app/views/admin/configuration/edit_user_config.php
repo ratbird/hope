@@ -1,5 +1,7 @@
 <?
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
+
 ?>
 <?= (isset($flash['error']))?MessageBox::error($flash['error'], $flash['error_detail']):'' ?>
 <? if (empty($via_ajax)): ?>
@@ -27,8 +29,8 @@
         <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
             <td>&nbsp;</td>
             <td>
-                <?= makeButton('uebernehmen2','input',_('Änderungen übernehmen'),'uebernehmen') ?>
-                <a class="cancel" href="<?=$controller->url_for('admin/configuration/configuration')?>"><?= makebutton('abbrechen', 'img', _('Zurück zur Übersicht'))?></a>
+                <?= Button::createAccept(_('übernehmen'),'uebernehmen', array('title' => _('Änderungen übernehmen')))?>
+                <?= LinkButton::createCancel(_('abbrechen'), $controller->url_for('admin/configuration/configuration'),array('title' => _('Zurück zur Übersicht')))?>
             </td>
         </tr>
     </table>

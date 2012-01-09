@@ -1,5 +1,7 @@
 <?
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
+
 ?>
 <div class="modalshadow">
     <div class="messagebox messagebox_modal">
@@ -8,9 +10,9 @@
             <form action="<?=$action ?>" method="post">
             <?= CSRFProtection::tokenTag() ?>
                 <div style="margin-top: 0.5em;">
-                    <?= makeButton('ja', 'input', _('Sperrebene löschen'), 'kill') ?>
+                    <?= Button::createAccept(_('JA!'), 'kill', array('title' => _('Sperrebene löschen')))?>
                     <span style="margin-left: 1em;">
-                        <?= makeButton('nein', 'input', _('abbrechen'), 'cancel') ?>
+                        <?= Button::createCancel(_('NEIN!'), 'cancel', array('title' => _('abbrechen')))?>
                     </span>
                 </div>
             </form>

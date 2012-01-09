@@ -1,5 +1,7 @@
 <?
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
+
 ?>
 <h3>
     <?= _('Plugin-Details') ?>
@@ -33,9 +35,7 @@
 </table>
 
 <p>
-    <a href="<?= $controller->url_for('admin/plugin') ?>">
-        <?= makeButton('zurueck', 'img', _('zurück zur Plugin-Verwaltung')) ?>
-    </a>
+    <?= LinkButton::create('<< '.  _("zurück"), $controller->url_for('admin/plugin'), array('title' => _('zurück zur Plugin-Verwaltung')))?>
 </p>
 
 <?

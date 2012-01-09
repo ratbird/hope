@@ -1,5 +1,7 @@
 <?
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
+
 ?>
 <? if (isset($error)): ?>
     <?= MessageBox::error($error, $error_detail) ?>
@@ -95,7 +97,7 @@
         </table>
 
         <div style="padding-top: 1em; text-align: center;">
-            <?= makeButton('speichern', 'input', _('Einstellungen speichern'), 'save') ?>
+            <?= Button::createAccept(_('speichern'), 'save', array('title' => _('Einstellungen speichern')))?>
         </div>
     </form>
 <? endif ?>

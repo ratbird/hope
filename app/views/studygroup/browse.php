@@ -1,5 +1,7 @@
 <?php
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
+
 require_once 'lib/classes/StudygroupAvatar.class.php';
 
 
@@ -22,10 +24,8 @@ $link = "dispatch.php/studygroup/browse/%s/".$sort;
     <?= CSRFProtection::tokenTag() ?>
     <div class="search_box" align="center">
         <input name="searchtext" type="text" size="45" style="vertical-align: middle;" value="<?= htmlReady($search) ?>" />
-        <input type="image" <?= makeButton('suchestarten','src')?> style="vertical-align: middle;"/>
-         <a href="<?=URLHelper::getLink('',array('action' => 'deny'))?>">
-            <?= makeButton('zuruecksetzen', 'img', _('Suche zurücksetzen')) ?>
-        </a>
+        <?= Button::create(_('Suche starten'))?>
+        <?= LinkButton::create(_('zurücksetzen'), URLHelper::getLink('',array('action' => 'deny')), array('title' => _('Suche zurücksetzen')))?>
     </div>
 </form>
 <br>

@@ -1,15 +1,15 @@
 <?
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
+
 ?>
 <form action="<?= $controller->url_for('admin/plugin/search') ?>" method="post" style="float: right;">
     <?= CSRFProtection::tokenTag() ?>
     <?= _('Suche nach Plugins:') ?>
     <input name="search" type="text" size="20" value="<?= htmlReady($search) ?>">
-    <?= makeButton('suchen', 'input' , _('Suche starten')) ?>
+    <?= Button::create(_('suchen'), 'suchen', array('title' => _('Suche starten')))?>
     &nbsp;
-    <a href="<?= $controller->url_for('admin/plugin/search') ?>">
-        <?= makeButton('zuruecksetzen', 'img', _('Suche zurücksetzen')) ?>
-    </a>
+    <?= LinkButton::create(_('zurücksetzen'), $controller->url_for('admin/plugin/search'), array('title' => _('Suche zurücksetzen')))?>
 </form>
 
 <h3>
@@ -88,7 +88,7 @@
         <input name="upload_file" type="file" size="40">
         <input type="hidden" name="ticket" value="<?= get_ticket() ?>">
 
-        <?= makeButton('hinzufuegen', 'input' , _('neues Plugin installieren')) ?>
+        <?= Button::create(_('hinzufügen'), 'hinzufuegen', array('title' => _('neues Plugin installieren')))?>
     </form>
 <? endif ?>
 

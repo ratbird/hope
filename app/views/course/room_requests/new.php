@@ -1,3 +1,4 @@
+<? use Studip\Button, Studip\LinkButton; ?>
 <h3><?=_("Raumanfrage erstellen")?></h3>
 <form method="POST" name="new_room_request" action="<?=$this->controller->link_for('edit/' . $course_id)?>">
 <?= CSRFProtection::tokenTag() ?>
@@ -13,7 +14,7 @@
     </select>
 </div>
 <div style="text-align:center;padding:5px;">
-    <?= makeButton('erstellen', 'input')?>
+    <?= Button::create(_('erstellen')) ?>
 </div>
 <? else :?>
     <?= MessageBox::info(_("In dieser Veranstaltung können keine weiteren Raumanfragen gestellt werden.")) ?>

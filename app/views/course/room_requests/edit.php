@@ -2,9 +2,9 @@
 <form method="POST" name="room_request" action="<?=$this->controller->link_for('edit/' . $course_id, array('request_id' => $request->getId()))?>">
 <?= CSRFProtection::tokenTag() ?>
 <?
-$buttons = '<span>' . makeButton('ok','input',_("Speichern und zurück zur Übersicht"),'save_close') . '</span>';
-$buttons .= '<span style="padding-left:1em"><a href="'.$controller->link_for('index/'.$course_id).'">' . makeButton('abbrechen','img',_("Abbrechen")) . '</a></span>';
-$buttons .= '<span style="padding-left:1em">' . makeButton('uebernehmen','input',_("Änderungen speichern"),'save') . '</span>';
+$buttons = '<span>' . Button::createAccept(_('OK'), 'save_close', array('title' => _('Speichern und zurück zur Übersicht'))) . '</span>';
+$buttons .= '<span style="padding-left:1em">' . LinkButton::createCancel(_('abbrechen'), $controller->link_for('index/'.$course_id), array('title' => _('Abbrechen'))) . '</span>';
+$buttons .= '<span style="padding-left:1em">' . Button::create(_('übernehmen'), 'save', array('title' => _('Änderungen speichern'))) . '</span>';
 
 echo $this->render_partial('course/room_requests/_form.php', array('submit' => $buttons));
 echo '</form>';

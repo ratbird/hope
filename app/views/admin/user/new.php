@@ -1,5 +1,7 @@
 <?
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
+
 ?>
 <h2><?= _('Einen neuen Benutzer anlegen') ?></h2>
 
@@ -148,8 +150,8 @@
 <? endif ?>
     <tr>
         <td colspan="2" align="center">
-            <?= makeButton("speichern", "input", _("Einen neuen Benutzer anlegen"), 'speichern') ?>
-            <a href="<?= $controller->url_for('admin/user/?reset') ?>"><?= makeButton("abbrechen", "img", _("abbrechen"), 'abort') ?></a>
+            <?= Button::createAccept(_('speichern'),'speichern', array('title' => _('Einen neuen Benutzer anlegen')))?>
+            <?= LinkButton::createCancel(_('abbrechen'), $controller->url_for('admin/user/?reset'), array('name' => 'abort'))?>
         </td>
     </tr>
 </table>

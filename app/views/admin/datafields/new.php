@@ -1,5 +1,7 @@
 <?
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
+
 ?>
 <?= (isset($flash['error'])) ? MessageBox::error($flash['error'], $flash['error_detail']) : '' ?>
 
@@ -24,7 +26,7 @@
     </tr>
     <tr>
         <td align="center" colspan="2">
-            <?= makeButton('auswaehlen', 'input', _('Datenfeldtyp auswählen')) ?>
+            <?= Button::create(_('auswählen'), 'auswaehlen', array('title' => _('Datenfeld auswählen')))?>
         </td>
     </tr>
 </table>
@@ -118,10 +120,8 @@
         </tr>
         <tr>
             <td colspan="2" align="center">
-                <?= makeButton('anlegen', 'input', _('Neues Datenfeld anlegen'),'anlegen') ?>
-                <a class="cancel" href="<?= $controller->url_for('admin/datafields') ?>">
-                    <?= makebutton('abbrechen', 'img', _('Zurück zur Übersicht')) ?>
-                </a>
+                <?= Button::create(_('anlegen'),'anlegen', array('title' => _('Neues Datenfeld anlegen')))?>
+                <?= LinkButton::createCancel(_('abbrechen'), $controller->url_for('admin/datafields'), array('title' => _('Zurück zur Übersicht')))?>
             </td>
         </tr>
     </table>

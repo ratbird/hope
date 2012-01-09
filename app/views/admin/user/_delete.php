@@ -1,5 +1,7 @@
 <?
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
+
 ?>
 <div class="modalshadow">
     <div class="messagebox messagebox_modal">
@@ -28,9 +30,9 @@
                     <label style="padding-left:0.5em" for="mail"><?= _("Emailbenachrichtigung verschicken?") ?></label>
                 </div>
                 <div style="margin-top: 0.5em;">
-                    <?= makeButton('ja', 'input', _('Benutzer löschen'), 'delete') ?>
+                    <?= Button::createAccept(_('JA!'), 'delete', array('title' => _('Benutzer löschen')))?>
                     <span style="margin-left: 1em;">
-                        <?= makeButton('nein', 'input', _('abbrechen'), 'back') ?>
+                        <?= Button::createCancel(_('NEIN!'), 'back')?>
                     </span>
                 </div>
             </form>

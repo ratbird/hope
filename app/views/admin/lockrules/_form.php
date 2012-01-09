@@ -1,5 +1,7 @@
 <?
-# Lifter010: TODO
+# Lifter010: 
+use Studip\Button, Studip\LinkButton;
+
 ?>
 <form action="<?=$action?>" method="post">
 <?=CSRFProtection::tokenTag();?>
@@ -71,7 +73,7 @@ foreach($lock_config['groups'] as $group => $group_title) {
         ?>
         <tr>
         <td colspan="3" style="text-align:center">
-        <?=makeButton('uebernehmen', 'input', _("Einstellungen übernehmen"), 'ok')?>
+            <?= Button::create(_('übernehmen'), 'ok', array('title' => _('Einstellungen übernehmen')))?>
         </td>
         </tr>
         <?

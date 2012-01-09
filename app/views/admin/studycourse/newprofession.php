@@ -1,5 +1,7 @@
 <?
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
+
 ?>
 <?= (isset($flash['error'])) ? MessageBox::error($flash['error'], $flash['error_detail']) : '' ?>
 <form action="<?= $controller->url_for('admin/studycourse/newprofession/'.Request::get('professionname').'/'.Request::get('description')) ?>" method="post">
@@ -15,7 +17,7 @@
         </tr>
         <tr class="steel2">
             <td></td>
-            <td><?= makeButton('anlegen','input',_('Neues Fach anlegen'),'anlegen') ?></td>
+            <td><?= Button::create(_('anlegen'),'anlegen', array('title' => _('Neues Fach anlegen'))) ?></td>
         </tr>
     </table>
 </form>

@@ -1,5 +1,7 @@
 <?
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
+
 ?>
 <h3><?= _('Anzeige der Log-Events') ?></h3>
 
@@ -63,7 +65,7 @@
     </select>
 
     &nbsp;
-    <?= makeButton('anzeigen', 'input') ?>
+    <?= Button::create(_('anzeigen')) ?>
   </p>
 
   <? if (isset($error_msg)): ?>
@@ -106,10 +108,10 @@
         <input type="hidden" name="start" value="<?= $start ?>">
 
         <? if ($start > 0): ?>
-          <?= makeButton('zurueck', 'input', false, 'back') ?>
+          <?= Button::create('<< '. _("zurück"), 'back') ?>
         <? endif ?>
         <? if ($start + count($log_events) < $num_entries): ?>
-          <?= makeButton('weiter', 'input', false, 'forward') ?>
+          <?= Button::create(_('weiter') . " >>", 'forward') ?>
         <? endif ?>
     <? else: ?>
       <?= _('keine Einträge gefunden') ?>

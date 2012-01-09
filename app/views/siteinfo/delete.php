@@ -1,5 +1,7 @@
 <?
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
+
 ?>
 <div class="white" style="padding: 1ex;">
     <? if (!$execute): ?>
@@ -15,12 +17,8 @@
            $abort_url = 'siteinfo/show/'.$currentrubric;
            $abort_url .= $detail ? "/".$currentdetail : '';
         ?>
-        <a href="<?= $controller->url_for($delete_url) ?>">
-                 <?= makeButton("loeschen", "img") ?>
-        </a>
-        <a href="<?= $controller->url_for($abort_url) ?>">
-                 <?= makeButton("abbrechen", "img") ?>
-        </a>
+        <?= LinkButton::create(_('löschen'), $controller->url_for($delete_url)) ?>
+        <?= LinkButton::createCancel(_('abbrechen'), $controller->url_for($abort_url)) ?>
     </div>
     <div>
         <hr>

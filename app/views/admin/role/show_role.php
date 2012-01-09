@@ -1,5 +1,7 @@
 <?
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
+
 ?>
 <?= $this->render_partial('admin/role/status_message') ?>
 
@@ -17,7 +19,7 @@
             </option>
         <? endforeach ?>
     </select>
-    <?= makeButton('auswaehlen', 'input', _('Rolle auswählen'), 'selectrole') ?>
+    <?= Button::create(_('auswählen'), 'selectrole', array('title' => _('Rolle auswählen')))?>
 </form>
 
 <? if (!empty($role)): ?>

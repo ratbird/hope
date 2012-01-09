@@ -1,5 +1,7 @@
 <?
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
+
 ?>
 <? if (isset($flash['success'])): ?>
     <?= MessageBox::info($flash['success']) ?>
@@ -117,10 +119,8 @@
         <tr class="steel2">
             <td>&nbsp;</td>
             <td>
-                <?= makeButton('uebernehmen2', 'input', _('Änderungen übernehmen'), 'uebernehmen') ?>
-                <a class="cancel" href="<?= $controller->url_for('admin/datafields/index/'.$item->getType().'#'.$item->getType()) ?>">
-                    <?= makebutton('abbrechen', 'img', _('Zurück zur Übersicht')) ?>
-                </a>
+                <?= Button::createAccept(_('übernehmen'),'uebernehmen', array('title' => _('Änderungen übernehmen')))?>
+                <?= LinkButton::createCancel(_('abbrechen'), $controller->url_for('admin/datafields/index/'.$item->getType().'#'.$item->getType()), array('title' => _('Zurück zur Übersicht')))?>
             </td>
         </tr>
     </table>

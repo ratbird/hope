@@ -1,5 +1,7 @@
 <?
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
+
 ?>
 <table class="default">
     <tbody>
@@ -19,7 +21,7 @@
     <tfoot>
         <tr>
             <td colspan="2" align="center">
-                <?= makeButton('suchen', 'input', _('suchen'), 'suchen') ?>
+                <?= Button::create(_('suchen'),'suchen')?>
             </td>
         </tr>
     </tfoot>

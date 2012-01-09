@@ -1,5 +1,7 @@
 <?
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
+
 ?>
 <div class="white" style="padding: 1ex;">
   <? if (isset($error_msg)): ?>
@@ -24,10 +26,8 @@
         <textarea style="width: 90%;height: 15em;" name="content" id="content"><?= htmlReady($content) ?></textarea><br>
         <input type="hidden" name="detail_id" value="<?= $currentdetail?>">
   <? endif ?>
-        <?= makeButton("abschicken", "input") ?>
-        <a href="<?= $controller->url_for('siteinfo/show/'.$currentrubric.'/'.$currentdetail) ?>">
-            <?= makeButton("abbrechen", "img") ?>
-        </a>
+        <?= Button::createAccept(_('abschicken')) ?>
+        <?= LinkButton::createCancel(_('abbrechen'), $controller->url_for('siteinfo/show/'.$currentrubric.'/'.$currentdetail)) ?>
     </form>
   <? if(!$edit_rubric): ?>
     <?= $this->render_partial('siteinfo/help') ?>

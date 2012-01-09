@@ -1,5 +1,7 @@
 <?
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
+
 ?>
 <? if (isset($flash['error'])): ?>
     <?= MessageBox::error($flash['error'], $flash['error_detail']) ?>
@@ -70,7 +72,7 @@
         <tfoot>
             <tr>
                 <td colspan="2" align="center">
-                    <?= makeButton('anlegen', 'input', _('anlegen'), 'anlegen') ?>
+                    <?= Button::create(_('anlegen'),'anlegen')?>
                 </td>
             </tr>
         </tfoot>

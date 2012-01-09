@@ -1,5 +1,7 @@
 <?
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
+
 ?>
 <?= (isset($flash['error']))?MessageBox::error($flash['error'], $flash['error_detail']):'' ?>
 <form action="<?= $controller->url_for('admin/studycourse/edit_profession/'.$edit['studiengang_id']) ?>" method="post">
@@ -16,8 +18,8 @@
         <tr class="steel2">
             <td></td>
             <td>
-                 <?= makeButton('uebernehmen2', 'input', _('Änderungen übernehmen'), 'uebernehmen') ?>
-                <a href="<?=$controller->url_for('admin/studycourse/profession')?>"><?= makebutton('abbrechen', 'img', _('Zurück zur Übersicht')) ?></a>
+                 <?= Button::createAccept(_('übernehmen'),'uebernehmen', array('title' => _('Änderungen übernehmen')))?>
+                 <?= LinkButton::createCancel(_('abbrechen'), $controller->url_for('admin/studycourse/profession'), array('title' => _('Zurück zur Übersicht')))?>
             </td>
         </tr>
     </table>

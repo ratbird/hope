@@ -1,5 +1,7 @@
 <?
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
+
 ?>
 <? if ($flash['delete']) : ?>
 <?= $this->render_partial("admin/user/_delete", array('data' => $flash['delete'])) ?>
@@ -452,8 +454,8 @@
     </tr>
     <tr>
         <td colspan="3" align="center">
-            <?= makeButton("speichern", "input", _("Übernehmen"), 'edit') ?>
-            <a href="<?= $controller->url_for('admin/user/?reset') ?>"><?= makeButton("abbrechen", "img", _("abbrechen"), 'abort') ?></a>
+            <?= Button::createAccept(_('speichern'),'edit')?>
+            <?= LinkButton::createCancel(_('abbrechen'), $controller->url_for('admin/user/?reset'), array('name' => 'abort') )?>
         </td>
     </tr>
 </table>

@@ -1,5 +1,7 @@
 <?
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
+
 ?>
 <?= $this->render_partial('admin/role/status_message') ?>
 
@@ -55,7 +57,7 @@
     <?= CSRFProtection::tokenTag() ?>
     <input type="hidden" name="ticket" value="<?= get_ticket() ?>">
     Name: <input type="text" name="name" size="25" value="">
-    <?= makeButton('anlegen', 'input', _('Rolle anlegen'), 'createrolebtn') ?>
+    <?= Button::create(_('anlegen'), 'createrolebtn', array('title' => _('Rolle anlegen')))?>
 </form>
 
 <?

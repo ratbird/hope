@@ -1,5 +1,6 @@
 <?php
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
 
 /*
  * Copyright (C) 2010 - Rasmus Fuhse <fuhse@data-quest.de>
@@ -308,7 +309,7 @@ $message_types = array('msg' => "success", 'error' => "error", 'info' => "info")
 
 </div>
 <div style="text-align:center; padding: 15px">
-  <? echo makeButton("uebernehmen", "input") ?>
+  <?= Button::create(_('übernehmen')) ?>
   <input id="open_variable" type="hidden" name="open" value="<?= $flash['open'] ?>">
 </div>
 </form>

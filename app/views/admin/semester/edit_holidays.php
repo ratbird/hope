@@ -1,5 +1,7 @@
 <?
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
+
 ?>
 <form method="post" action="<?= $controller->url_for('admin/semester/edit_holidays') ?><?= ($holiday['holiday_id'])? '/'.$holiday['holiday_id'] : '' ?>">
 <?= CSRFProtection::tokenTag() ?>
@@ -48,11 +50,11 @@
     <tr>
         <td colspan="5" align="center">
         <? if (!$is_new) : ?>
-            <?= makeButton("speichern", 'input', _('Die Änderungen speichern')) ?>
+            <?= Button::createAccept(_('speichern'), array('title' => _('Die Änderungen speichern'))) ?>
         <? else : ?>
-            <?= makeButton("anlegen", 'input', _('Neue Ferien anlegen')) ?>
+            <?= Button::create(_('anlegen'), array('title' => _('Neue Ferien anlegen'))) ?>
         <? endif ?>
-            <a href="<?= $controller->url_for('admin/semester') ?>"><?= makeButton("abbrechen") ?></a>
+            <?= LinkButton::createCancel(_('abbrechen'), $controller->url_for('admin/semester')) ?>
         </td>
     </tr>
 </table>

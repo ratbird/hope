@@ -1,5 +1,7 @@
 <?
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
+
 ?>
 <?= $this->render_partial('admin/role/status_message') ?>
 
@@ -12,7 +14,7 @@
     <? if (empty($users)): ?>
         <?= _('Name der Person:') ?>
         <input type="text" name="username" value="<?= htmlReady($username) ?>" style="width: 300px;">
-        <?= makeButton('suchen', 'input', _('Benutzer suchen'), 'search') ?>
+        <?= Button::create(_('suchen'), 'search', array('title' => _('Benutzer suchen')))?>
     <? else: ?>
         <?= _('Benutzer:') ?>
         <select name="usersel" style="min-width: 300px;">
@@ -22,10 +24,8 @@
             </option>
         <? endforeach ?>
         </select>
-        <?= makeButton('auswaehlen', 'input', _('Benutzer auswählen'), 'select') ?>
-        <a href="<?= $controller->url_for('admin/role/assign_role') ?>">
-            <?= makeButton('zuruecksetzen', 'img', _('Suche zurücksetzen')) ?>
-        </a>
+        <?= Button::create(_('auswählen'), 'select', array('title' => _('Benutzer auswählen')))?>
+        <?= LinkButton::create(_('zurücksetzen'), $controller->url_for('admin/role/assign_role'), array('title' => _('Suche zurücksetzen')))?>
     <? endif ?>
 </form>
 

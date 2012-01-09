@@ -1,5 +1,7 @@
 <?
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
+
 ?>
 <? if (isset($error)) : ?>
     <?= MessageBox::error($error) ?>
@@ -31,16 +33,14 @@
     </p>
 
     <p>
-        <?= makeButton('absenden', 'input') ?>
+        <?= Button::createAccept(_('absenden')) ?>
         <span class="quiet">
             <?= _("oder") ?>
             <? if ($this->studygroup_mode) : ?>
-                <a href="<?= URLHelper::getLink('dispatch.php/course/studygroup/edit/' . $course_id) ?>">
+                <?= LinkButton::createCancel(_('abbrechen'), URLHelper::getLink('dispatch.php/course/studygroup/edit/' . $course_id)) ?>
             <? else : ?>
-                <a href="<?= URLHelper::getLink('dispatch.php/course/basicdata/view/' . $course_id) ?>">
+                <?= LinkButton::createCancel(_('abbrechen'), URLHelper::getLink('dispatch.php/course/basicdata/view/' . $course_id)) ?>
             <? endif ?>
-            <?= makeButton('abbrechen') ?>
-            </a>
         </span>
     </p>
 </form>

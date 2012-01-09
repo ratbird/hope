@@ -1,5 +1,7 @@
 <?
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
+
 ?>
 <? if (isset($flash['error'])) : ?>
     <?= MessageBox::error($flash['error'], $flash['error_detail']) ?>
@@ -60,13 +62,11 @@
         <tr>
             <td colspan="3" align="center">
             <? if($rule) : ?>
-                <?= makeButton('uebernehmen2', 'input', _('Änderungen übernehmen'), 'uebernehmen') ?>
+                <?= Button::createAccept(_('übernehmen'), 'uebernehmen', array('title' => _('Änderungen übernehmen')))?>
             <? else : ?>
-                <?= makeButton('erstellen', 'input', _('Neue Regel erstellen'), 'erstellen') ?>
+                <?= Button::create(_('erstellen'),'erstellen' array('title' => _('Neue Regel erstellen'))) ?>
             <? endif ?>
-                <a href="<?=$controller->url_for('admin/specification')?>">
-                    <?= makebutton('abbrechen', 'img', _('Zurück zur Übersicht')) ?>
-                </a>
+                <?= LinkButton::createCancel(_('abbrechen'), $controller->url_for('admin/specification'), array('title' => _('Zurück zur Übersicht')))?>
             </td>
         </tr>
     </table>

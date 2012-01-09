@@ -1,5 +1,7 @@
 <?
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
+
 ?>
 <?= sprintf(ngettext('Es ist ein Update für ein Plugin verfügbar', 'Es sind Updates für %d Plugins verfügbar', $num_updates), $num_updates) ?>
 
@@ -19,6 +21,6 @@
             <? endif ?>
         <? endforeach ?>
     </div>
-
-    <?= makeButton('starten', 'input', _('Updates installieren'), 'update') ?>
-</form>
+    
+    <?= Button::createAccept(_('starten'), 'update', array('title' => _('Updates installieren')))?>
+    </form>

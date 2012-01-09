@@ -1,5 +1,7 @@
 <?
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
+
 ?>
 <h3><?= _('Liste der Nutzerdomänen') ?></h3>
 
@@ -23,10 +25,8 @@
     <? endif ?>
     <tr>
         <td colspan="4" align="center">
-            <?= makebutton('uebernehmen2', 'input', _('Änderungen speichern')) ?>
-            <a href="<?= $controller->url_for('admin/domain') ?>">
-                <?= makeButton("abbrechen", "img", _("abbrechen"), 'abort') ?>
-            </a>
+            <?= Button::createAccept(_('übernehmen'),'uebernehmen', array('title' => _('Änderungen speichern')))?>
+            <?= LinkButton::createCancel(_('abbrechen'), $controller->url_for('admin/domain'), array('title' => _('abrrechen')))?>
         </td>
     </tr>
 </table>

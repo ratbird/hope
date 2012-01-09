@@ -1,3 +1,4 @@
+<? use Studip\Button, Studip\LinkButton; ?>
 <h3><?=_("Testen der Zugriffsregeln")?></h3>
 <form action="<?=$controller->url_for('admin/webservice_access/test')?>" method="post">
 <?=CSRFProtection::tokenTag()?>
@@ -16,9 +17,8 @@
   </tr>
   <tr>
   <td style="text-align:center" colspan="2">
-  <?=makeButton('abschicken', 'input', _("Test starten"), 'ok')?>
-  <a href="<?=$controller->url_for('admin/webservice_access')?>">
-  <?=makeButton('abbrechen', 'img', _("Test abbrechen"), 'cancel')?>
+  <?= Button::createAccept(_('abschicken'), 'ok', array('title' => _('Test starten')))?>
+  <?= LinkButton::createCancel(_('abbrechen'), $controller->url_for('admin/webservice_access'), array('title' => _('Test abbrechen')))?>     
   </a>
   </td>
   </tr>

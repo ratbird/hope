@@ -1,5 +1,7 @@
 <?
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
+
 ?>
 <? if (isset($flash['message'])): ?>
     <?= MessageBox::success($flash['message']) ?>
@@ -28,11 +30,9 @@
         <? endforeach ?>
     </select>
     <p>
-        <?= makeButton('uebernehmen', 'input', _('Einstellungen speichern'), 'save') ?>
+        <?= Button::create(_('übernehmen'),'save', array('title' => _('Einstellungen speichern')))?>
         &nbsp;
-        <a href="<?= $controller->url_for('admin/plugin') ?>">
-            <?= makeButton('zurueck', 'img',  _('Zurück zur Plugin-Verwaltung')) ?>
-        </a>
+        <?= LinkButton::create('<< ' . _("zurück"), $controller->url_for('admin/plugin'), array('title' => _('Zurück zur Plugin-Verwaltung')))?>
     </p>
 </form>
 

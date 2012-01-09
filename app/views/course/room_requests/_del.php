@@ -1,3 +1,4 @@
+<? use Studip\Button, Studip\LinkButton; ?>
 <div class="modalshadow">
     <div class="messagebox messagebox_modal">
         <?= formatReady($question) ?>
@@ -5,9 +6,9 @@
             <form action="<?=$action ?>" method="post">
             <?= CSRFProtection::tokenTag() ?>
                 <div style="margin-top: 0.5em;">
-                    <?= makeButton('ja', 'input', _('Raumanfrage löschen'), 'kill') ?>
+                    <?= Button::createAccept(_('JA!'), 'kill', array('title' => _('Raumanfrage löschen')))?>
                     <span style="margin-left: 1em;">
-                        <?= makeButton('nein', 'input', _('abbrechen'), 'cancel') ?>
+                        <?= Button::createCancel(_('NEIN!'), 'cancel', array('title' => _('Raumanfrage löschen')))?>
                     </span>
                 </div>
             </form>

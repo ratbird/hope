@@ -1,5 +1,7 @@
 <?
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
+
 ?>
 <? if ($noteditable && !$via_ajax) : ?>
 <?= MessageBox::info(_("Das Startdatum kann nur bei Semestern geändert werden, in denen keine Veranstaltungen liegen!")) ?>
@@ -68,11 +70,11 @@
     <tr>
         <td colspan="5" align="center">
         <? if ($semester['semester_id']) : ?>
-            <?= makeButton("speichern", 'input', _('Die Änderungen speichern')) ?>
+            <?= Button::createAccept(_('speichern'), array('title' => _('Die Änderungen speichern')))?>
         <? else : ?>
-            <?= makeButton("anlegen", 'input', _('Neues Semester anlegen')) ?>
+            <?= Button::create(_('anlegen'), array('title' => _('Neues Semester anlegen')))?>
         <? endif ?>
-            <a href="<?= $controller->url_for('admin/semester') ?>"><?= makeButton("abbrechen") ?></a>
+            <?= LinkButton::createCancel(_('abbrechen'), $controller->url_for('admin/semester'))?>
         </td>
     </tr>
 </table>

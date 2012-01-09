@@ -1,3 +1,4 @@
+<? use Studip\Button, Studip\LinkButton; ?>
 <? if (empty($via_ajax)): ?>
 <h2><?= _("Bearbeiten der Einrichtungsdaten") ?></h2>
 <? endif; ?>
@@ -59,10 +60,8 @@
         <tr class="steel2">
             <td>&nbsp;</td>
             <td>
-                <?= makeButton('uebernehmen2','input',_('Änderungen übernehmen'),'uebernehmen') ?>
-                <a class="cancel" href="<?= $controller->url_for('admin/user/edit/'.$user['user_id']) ?>">
-                    <?= makebutton('abbrechen', 'img', _('Zurück zur Übersicht')) ?>
-                </a>
+                <?= Button::createAccept(_('übernehmen'), 'uebernehmen', array('title' => _('Änderungen übernehmen')))?>
+                <?= LinkButton::createCancel(_('abbrechen'), $controller->url_for('admin/user/edit/'.$user['user_id']), array('class' =>'cancel'))?>
             </td>
         </tr>
     </table>

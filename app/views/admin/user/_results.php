@@ -1,5 +1,7 @@
 <?
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
+
 ?>
 <h3><?= sprintf(_("Es wurden %s Personen gefunden"), count($users)) ?></h3>
 
@@ -93,7 +95,7 @@
 
     <tr class="steel2">
         <td colspan="10" align="right">
-            <?= makeButton('loeschen', 'input', _('Alle ausgewählen Benutzer löschen')) ?>
+            <?= Button::create(_('löschen'), array('title' => _('Alle ausgewählten Benutzer löschen')))?>
             <input class="middle" type="checkbox" name="check_all" title="<?= _('Alle Benutzer auswählen') ?>">
         </td>
     </tr>

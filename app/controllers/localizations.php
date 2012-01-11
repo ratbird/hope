@@ -49,10 +49,16 @@ class LocalizationsController extends Trails_Controller {
     {
         $this->set_content_type('application/javascript; charset=UTF-8');
 
-        $expires = time() + 30 * 60 * 60 * 24;
-        $this->response->add_header('Expires', gmdate(DATE_RFC1123, $expires));
-        $this->response->add_header('Cache-Control', 'public');
-        $this->response->add_header('Pragma', 'public');
+        $modified = filemtime(dirname(__FILE__) . '/../views/localizations/show.php');
+        $this->response->add_header('Last-Modified', date("r", $modified));
+
+        if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])) {
+            if (strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) === $modified) {
+                $this->set_status(304, "Not modified.");
+                $this->render_nothing();
+                return;
+            }
+        }
 
         $this->language = $language;
         setLocaleEnv($language, "studip");

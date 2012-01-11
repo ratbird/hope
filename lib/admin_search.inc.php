@@ -2,7 +2,7 @@
 # Lifter001: TODO - in progress (session variables)
 # Lifter002: TODO
 # Lifter007: TODO
-# Lifter003: TODO
+# Lifter003: TEST
 # Lifter010: TODO
 /*
 admin_search_form.inc.php - Suche fuer die Verwaltungsseiten von Stud.IP.
@@ -39,14 +39,11 @@ global  $admin_dates_data,
         $SessSemName,
         $view_mode;
 
-
 if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
 
     require_once 'config.inc.php';
     require_once 'lib/dates.inc.php';
     require_once 'lib/functions.php';
-
-    $db=new DB_Seminar;
 
     $sess->register("links_admin_data");
     $sess->register("sem_create_data");
@@ -223,12 +220,18 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
     //Wenn nur ein Institut verwaltet werden kann, immer dieses waehlen (Auswahl unterdruecken)
     if ((!$SessSemName[1]) && ($list) && ($view_mode=="inst")) {
         if (!$perm->have_perm("root") && !$perm->is_fak_admin($user->id)) {
-            $db->query("SELECT Institute.Institut_id FROM Institute LEFT JOIN user_inst USING(Institut_id) WHERE user_id = '$user->id' AND inst_perms IN ('admin', 'dozent', 'tutor') ORDER BY Name");
+            $query = "SELECT Institute.Institut_id "
+                   . "FROM Institute "
+                   . "LEFT JOIN user_inst USING(Institut_id) "
+                   . "WHERE user_id = ? "
+                   . "  AND inst_perms IN ('admin', 'dozent', 'tutor') "
+                   . "ORDER BY Name";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($user->id));
 
-            if ($db->nf() ==1) {
-                $db->next_record();
+            if ($institute_id = $statement->fetchColumn()) {
                 reset_all_data();
-                openInst($db->f("Institut_id"));
+                openInst($institute_id);
             }
         }
     }

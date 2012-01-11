@@ -885,7 +885,7 @@ button {
     overflow: visible;
 }
 
-.accept:after, .cancel:after {
+.button.accept:after, .button.cancel:after, button.accept:after, button.cancel:after {
     float: right;
     margin: 0 -4px 0 8px;
     content: " ";
@@ -893,12 +893,12 @@ button {
     height: 16px;
 }
 
-.accept:after {
+.button.accept:after, button.accept:after {
     margin-top: -4px;
     background: url(../images/icons/16/green/accept.png) no-repeat;
 }
 
-.cancel:after {
+.button.cancel:after, button.cancel:after {
     margin-top: -2px;
     background: url(../images/icons/16/red/decline.png) no-repeat;
 }

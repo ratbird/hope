@@ -13,11 +13,6 @@
  * @category    Stud.IP
  */
 
-require_once 'lib/classes/squeeze/squeeze.php';
-
-use \Studip\Squeeze\Configuration;
-use \Studip\Squeeze\Packager;
-
 /**
  * The PageLayout class provides utility functions to control the
  * global page layout of Stud.IP. This includes the page title, the
@@ -61,11 +56,6 @@ class PageLayout
     private static $display_header = true;
 
     /**
-     * names of the squeeze packages to include
-     */
-    private static $squeeze_packages = array();
-
-    /**
      * Initialize default page layout. This should only be called once
      * from phplib_local.inc.php. Don't use this otherwise.
      */
@@ -74,12 +64,23 @@ class PageLayout
         // include jQuery + UI
         self::addStylesheet('jquery-ui-1.8.14.custom.css', array('media' => 'screen, print'));
         self::addStylesheet('jquery-ui-studip-2.2.css', array('media' => 'screen, print'));
+        self::addScript('jquery-1.7.min.js');
+        self::addScript('jquery-ui-1.8.14.custom.min.js');
+        
         // include default CSS
         self::addHeadElement('link', array('rel' => 'shortcut icon', 'href' => Assets::image_path('favicon.ico')));
         self::addStylesheet('style.css', array('media' => 'screen, print'));
         self::addStylesheet('header.css', array('media' => 'screen, print'));
 
-        self::setSqueezePackages("base");
+        self::addScript('jquery.metadata.js');
+        self::addScript('jquery.placehold-0.3.js');
+        self::addScript('validator.min.js');
+        // include underscore.js
+        self::addScript('underscore-min.js');
+
+        // include Stud.IP JS
+        self::addScript('l10n.js');
+        self::addScript('application.js');
     }
 
     /**
@@ -282,8 +283,6 @@ class PageLayout
             self::addStylesheet($GLOBALS['_include_stylesheet'], array('media' => 'screen, print'));
         }
 
-        self::includeSqueezePackages();
-
         foreach (self::$head_elements as $element) {
             $result .= '<' . $element['name'];
 
@@ -397,72 +396,5 @@ class PageLayout
         }
 
         return $messages;
-    }
-
-    /**
-     * Return the names of the squeeze packages to use.
-     *
-     * Per default the squeeze package "base" is included.
-     *
-     * @return array  an array containing the names of the packages
-     */
-    public static function getSqueezePackages()
-    {
-        return self::$squeeze_packages;
-    }
-
-    /**
-     * Set the names of the squeeze packages to use
-     *
-     * @code
-     * # use as many arguments as you want
-     * PageLayout::setSqueezePackages("base");
-     * PageLayout::setSqueezePackages("base", "admin");
-     * PageLayout::setSqueezePackages("base", "admin", "upload");
-     * # PageLayout::setSqueezePackages(...);
-     * @endcode
-     *
-     * @param ...
-     *    a variable-length argument list containing the names of the packages
-     */
-    public static function setSqueezePackages($package/*, ...*/)
-    {
-        self::$squeeze_packages = func_get_args();
-    }
-
-    /**
-     * Depending on \Studip\ENV, either includes individual script
-     * elements for each JS file in every package, or a single script
-     * element containing the squeezed source code for every package.
-     */
-    private static function includeSqueezePackages()
-    {
-        global $STUDIP_BASE_PATH;
-
-        $config_path   = "$STUDIP_BASE_PATH/config/assets.yml";
-        $configuration = Configuration::load($config_path);
-        $packager      = new Packager($configuration);
-
-        foreach (self::getSqueezePackages() as $package) {
-            self::includeSqueezePackage($packager, $package);
-        }
-    }
-
-    /**
-     * Include a single squeeze package depending on \Studip\ENV as
-     * individual script elements or as a single one containing the
-     * squeezed source code of all files comprising the package.
-     */
-    private static function includeSqueezePackage($packager, $package)
-    {
-        if (\Studip\ENV === 'development') {
-            foreach ($packager->individualURLs($package) as $src) {
-                self::addHeadElement('script', compact('src'), '');
-            }
-        } else {
-            $src = $packager->packageURL($package);
-            $charset = 'utf-8';
-            self::addHeadElement('script', compact('src', 'charset'), '');
-        }
     }
 }

@@ -86,7 +86,8 @@ class CourseNavigation extends Navigation
 
         // general information
         $navigation = new Navigation(_('Übersicht'));
-        $navigation->setImage('icons/16/%COLOR%/seminar.png');
+        $navigation->setImage('icons/16/white/seminar.png');
+        $navigation->setActiveImage('icons/16/black/seminar.png');
 
         if ($sem_class == 'sem') {
             $navigation->addSubNavigation('info', new Navigation(_('Kurzinfo'), 'seminar_main.php'));
@@ -117,7 +118,8 @@ class CourseNavigation extends Navigation
 
         // admin area
         $navigation = new Navigation(_('Verwaltung'));
-        $navigation->setImage('icons/16/%COLOR%/admin.png');
+        $navigation->setImage('icons/16/white/admin.png');
+        $navigation->setActiveImage('icons/16/black/admin.png');
 
         if ($studygroup_mode) {
             if ($perm->have_studip_perm('dozent', $SessSemName[1])) {
@@ -205,7 +207,8 @@ class CourseNavigation extends Navigation
         // forum
         if ($modules['forum']) {
             $navigation = new Navigation(_('Forum'), 'forum.php?view=reset');
-            $navigation->setImage('icons/16/%COLOR%/forum.png');
+            $navigation->setImage('icons/16/white/forum.png');
+            $navigation->setActiveImage('icons/16/black/forum.png');
 
             $navigation->addSubNavigation('view', new Navigation(_('Themenansicht'), 'forum.php?view='.$forum['themeview']));
 
@@ -228,7 +231,8 @@ class CourseNavigation extends Navigation
         if ($user->id != 'nobody') {
             if ($modules['participants']) {
                 $navigation = new Navigation(_('TeilnehmerInnen'));
-                $navigation->setImage('icons/16/%COLOR%/persons.png');
+                $navigation->setImage('icons/16/white/persons.png');
+                $navigation->setActiveImage('icons/16/black/persons.png');
 
                 if ($studygroup_mode) {
                     $navigation->setURL('dispatch.php/course/studygroup/members/'.$SessSemName[1]);
@@ -250,7 +254,8 @@ class CourseNavigation extends Navigation
                 }
             } else if ($modules['personal']) {
                 $navigation = new Navigation(_('Personal'));
-                $navigation->setImage('icons/16/%COLOR%/persons.png');
+                $navigation->setImage('icons/16/white/persons.png');
+                $navigation->setActiveImage('icons/16/black/persons.png');
                 $navigation->addSubNavigation('view', new Navigation(_('MitarbeiterInnen'), 'institut_members.php'));
 
                 if ($perm->have_studip_perm('tutor', $SessSemName[1]) && $perm->have_perm('admin')) {
@@ -264,7 +269,8 @@ class CourseNavigation extends Navigation
         // files
         if ($modules['documents']) {
             $navigation = new Navigation(_('Dateien'));
-            $navigation->setImage('icons/16/%COLOR%/files.png');
+            $navigation->setImage('icons/16/white/files.png');
+            $navigation->setActiveImage('icons/16/black/files.png');
 
             $navigation->addSubNavigation('tree', new Navigation(_('Ordneransicht'), 'folder.php?cmd=tree'));
             $navigation->addSubNavigation('all', new Navigation(_('Alle Dateien'), 'folder.php?cmd=all'));
@@ -274,7 +280,8 @@ class CourseNavigation extends Navigation
         // schedule
         if ($modules['schedule']) {
             $navigation = new Navigation(_('Ablaufplan'));
-            $navigation->setImage('icons/16/%COLOR%/schedule.png');
+            $navigation->setImage('icons/16/white/schedule.png');
+            $navigation->setActiveImage('icons/16/black/schedule.png');
 
             $navigation->addSubNavigation('all', new Navigation(_('Alle Termine'), 'dates.php?date_type=all'));
             $navigation->addSubNavigation('type1', new Navigation(_('Sitzungstermine'), 'dates.php?date_type=1'));
@@ -291,7 +298,8 @@ class CourseNavigation extends Navigation
         // information page
         if (get_config('SCM_ENABLE') && $modules['scm']) {
             $navigation = new Navigation($scms[0]['tab_name']);
-            $navigation->setImage('icons/16/%COLOR%/infopage.png');
+            $navigation->setImage('icons/16/white/infopage.png');
+            $navigation->setActiveImage('icons/16/black/infopage.png');
 
             foreach ($scms as $scm) {
                 $navigation->addSubNavigation($scm['scm_id'], new Navigation($scm['tab_name'] , 'scm.php?show_scm=' . $scm['scm_id']));
@@ -307,11 +315,10 @@ class CourseNavigation extends Navigation
         // literature
         if (get_config('LITERATURE_ENABLE') && $modules['literature']) {
             $navigation = new Navigation(_('Literatur'));
-            $navigation->setImage('icons/16/%COLOR%/literature.png');
-
+            $navigation->setImage('icons/16/white/literature.png');
+            $navigation->setActiveImage('icons/16/black/literature.png');
 
             $navigation->addSubNavigation('view', new Navigation(_('Literatur'), 'literatur.php?view=literatur_'.$sem_class));
-
             $navigation->addSubNavigation('print', new Navigation(_('Druckansicht'), 'lit_print_view.php?_range_id=' . $SessSemName[1]));
 
             if ($perm->have_studip_perm('tutor', $SessSemName[1])) {
@@ -324,7 +331,8 @@ class CourseNavigation extends Navigation
         // wiki
         if (get_config('WIKI_ENABLE') && $modules['wiki']) {
             $navigation = new Navigation(_('Wiki'));
-            $navigation->setImage('icons/16/%COLOR%/wiki.png');
+            $navigation->setImage('icons/16/white/wiki.png');
+            $navigation->setActiveImage('icons/16/black/wiki.png');
 
             $navigation->addSubNavigation('show', new Navigation(_('WikiWikiWeb'), 'wiki.php?view=show'));
             $navigation->addSubNavigation('listnew', new Navigation(_('Neue Seiten'), 'wiki.php?view=listnew'));
@@ -337,7 +345,8 @@ class CourseNavigation extends Navigation
         if (get_config('RESOURCES_ENABLE')) {
             if (checkAvailableResources($SessSemName[1])) {
                 $navigation = new Navigation(_('Ressourcen'), 'resources.php?view=openobject_main&view_mode=oobj');
-                $navigation->setImage('icons/16/%COLOR%/resources.png');
+                $navigation->setImage('icons/16/white/resources.png');
+                $navigation->setActiveImage('icons/16/black/resources.png');
 
                 $navigation->addSubNavigation('overview', new Navigation(_('Übersicht'), 'resources.php?view=openobject_main'));
                 $navigation->addSubNavigation('group_schedule', new Navigation(_('Übersicht Belegung'), 'resources.php?view=openobject_group_schedule'));
@@ -351,7 +360,8 @@ class CourseNavigation extends Navigation
         // calendar
         if (get_config('CALENDAR_GROUP_ENABLE') && get_config('COURSE_CALENDAR_ENABLE') && $modules['calendar']) {
             $navigation = new Navigation(_('Kalender'), 'calendar.php');
-            $navigation->setImage('icons/16/%COLOR%/schedule.png');
+            $navigation->setImage('icons/16/white/schedule.png');
+            $navigation->setActiveImage('icons/16/black/schedule.png');
 
             $navigation->addSubNavigation('day', new Navigation(_('Tag'), 'calendar.php', array('cmd' => 'showday')));
             $navigation->addSubNavigation('week', new Navigation(_('Woche'), 'calendar.php', array('cmd' => 'showweek')));
@@ -365,7 +375,8 @@ class CourseNavigation extends Navigation
         // content modules
         if (get_config('ELEARNING_INTERFACE_ENABLE') && $modules['elearning_interface'] && $user->id != 'nobody') {
             $navigation = new Navigation(_('Lernmodule'));
-            $navigation->setImage('icons/16/%COLOR%/learnmodule.png');
+            $navigation->setImage('icons/16/white/learnmodule.png');
+            $navigation->setActiveImage('icons/16/black/learnmodule.png');
 
             if (ObjectConnections::isConnected($SessSemName[1])) {
                 $elearning_nav = new Navigation(_('Lernmodule dieser Veranstaltung'), 'elearning_interface.php?view=show&seminar_id=' . $SessSemName[1]);

@@ -44,6 +44,20 @@ class NavigationTest extends PHPUnit_Framework_TestCase
                            array('src' => $assets_img, 'alt' => 'foo'));
     }
 
+    public function testActiveImage ()
+    {
+        $navigation = new Navigation('test', 'foo.php');
+        $navigation->setImage('foo.png');
+        $navigation->setActiveImage('bar.png');
+
+        $this->assertEquals($navigation->getImage(),
+                           array('src' => Assets::url('images/foo.png')));
+
+        $navigation->setActive(true);
+        $this->assertEquals($navigation->getImage(),
+                           array('src' => Assets::url('images/bar.png')));
+    }
+
     public function testURL ()
     {
         $navigation = new Navigation('test', 'foo.php');
@@ -81,7 +95,7 @@ class NavigationTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($navigation->getSubNavigation(),
                            array('a1' => $nav1, 'a2' => $nav2, 'a3' => $nav3));
 
-        $nav4->setActive($nav4);
+        $nav4->setActive(true);
         $this->assertTrue($navigation->isActive());
         $this->assertSame($navigation->activeSubNavigation(), $nav2);
         $this->assertSame($nav2->activeSubNavigation(), $nav4);

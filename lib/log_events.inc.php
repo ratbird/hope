@@ -23,7 +23,7 @@
  */
 function get_log_action_id($db, $action) {
     if ($action == 'LOG_ERROR') {
-        return '9999';
+        return '9999'; // prevent from inf. looping if LOG_ERROR is unknown
     }
 
     $query = "SELECT IF(active=0, -1, action_id) "

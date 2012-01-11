@@ -26,6 +26,11 @@
 // +---------------------------------------------------------------------------+
 
 
+namespace Studip {
+    const ENV = 'development';
+}
+
+namespace {
 //
 require_once('lib/classes/SkipLinks.php');
 require_once('lib/deputies_functions.inc.php');
@@ -1019,4 +1024,4 @@ class Seminar_Perm extends Perm {
 
 require_once 'lib/plugins/plugins.inc.php';
 
-?>
+}

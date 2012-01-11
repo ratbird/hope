@@ -23,5 +23,13 @@ class FunctionsTest extends PHPUnit_Framework_TestCase {
     $string = "";
     $this->assertEquals(words($string), array());
   }
-}
 
+    function testArrayFlatten()
+    {
+        $array = json_decode(
+            '[[1, 2], [3, [4], [[5, 6]]], 7]'
+        );
+
+        $this->assertEquals(range(1, 7), array_flatten($array));
+    }
+}

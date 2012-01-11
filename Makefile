@@ -1,3 +1,6 @@
+squeeze: force_update
+	php cli/squeeze.php
+
 doc: force_update
 	doxygen tools/Doxyfile
 

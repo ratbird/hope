@@ -1050,9 +1050,11 @@ STUDIP.MultiSelect = {
             jQuery(id).attr('multiple', 'multiple').css('height', '120px');
         }
         jQuery(id).multiselect({
-            sortable: false,
-            itemName: itemName,
-            draggable: true
+            'sortable': false,
+            'itemName': itemName,
+            'draggable': true,
+            'dividerLocation': 0.5,
+            'itemName': itemName
         });
     }
 };

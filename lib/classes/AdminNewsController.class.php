@@ -2,7 +2,7 @@
 # Lifter001: TEST
 # Lifter002: TODO
 # Lifter007: TODO
-# Lifter003: TODO
+# Lifter003: TEST
 # Lifter010: TODO
 /**
 * AdminNewsController.class.php
@@ -40,7 +40,6 @@ require_once 'lib/visual.inc.php';
 require_once 'lib/functions.php';
 
 class AdminNewsController {
-    var $db;              //Datenbankverbindung
     var $modus;
     var $msg;          //Nachricht für msg.inc.php
     var $sms=array();          //private Nachricht wegen Admin zugriff
@@ -66,7 +65,6 @@ class AdminNewsController {
             $this->xres=640;
         }
         $this->user_id=$auth->auth["uid"];
-        $this->db = new DB_Seminar;
         $this->full_username = get_fullname(false, 'full', false);
         $this->get_news_perm();
         if ($this->news_perm[$news_range_id]["perm"]>=2 OR $perm->have_perm("root")) {
@@ -126,35 +124,59 @@ class AdminNewsController {
         $news_obj = new StudipNews($news_id);
         if (!$news_obj->isNew()) {
             $this->news_query = $news_obj->toArray();
-            $query="SELECT a.range_id,b.user_id, ". $_fullname_sql['full'] ." AS author,".
-                    " c.Seminar_id, c.Name AS seminar_name, c.start_time ,d.Institut_id,d.Name AS institut_name,".
-                    " IF(d.Institut_id=d.fakultaets_id,'fak','inst') AS inst_type, sd.name AS startsem, ".
-                    " IF(c.duration_time=-1, '"._("unbegrenzt")."', sd2.name) AS endsem ".
-                    " FROM news_range AS a LEFT JOIN auth_user_md5 AS b ON (b.user_id=a.range_id) LEFT JOIN user_info USING(user_id) ".
-                    " LEFT JOIN seminare AS c ON (c.Seminar_id=a.range_id) ".
-                    " LEFT JOIN semester_data sd ON ( c.start_time = sd.beginn ) ".
-                    " LEFT JOIN semester_data sd2 ON ( c.start_time + c.duration_time BETWEEN sd2.beginn AND sd2.ende ) ".
-                    " LEFT JOIN Institute AS d ON (d.Institut_id=a.range_id) ".
-                    " WHERE news_id='$news_id'";
-            $this->db->query($query);
-            while ($this->db->next_record()) {
-                if ($this->db->f("user_id")) {
-                    $this->range_detail[$this->db->f("range_id")]= array("type"=>"pers","name"=>$this->db->f("author"));
+
+            $query = "SELECT a.range_id, b.user_id, {$_fullname_sql['full']} AS author,"
+                   . " c.Seminar_id, c.Name AS seminar_name, c.start_time ,d.Institut_id,d.Name AS institut_name,"
+                   . " IF (d.Institut_id=d.fakultaets_id,'fak','inst') AS inst_type, sd.name AS startsem, "
+                   . " IF (c.duration_time = -1, '"._("unbegrenzt")."', sd2.name) AS endsem "
+                   . "FROM news_range AS a "
+                   . "LEFT JOIN auth_user_md5 AS b ON (b.user_id=a.range_id) "
+                   . "LEFT JOIN user_info USING (user_id) "
+                   . "LEFT JOIN seminare AS c ON (c.Seminar_id=a.range_id) "
+                   . "LEFT JOIN semester_data sd ON (c.start_time = sd.beginn) "
+                   . "LEFT JOIN semester_data sd2 ON (c.start_time + c.duration_time BETWEEN sd2.beginn AND sd2.ende) "
+                   . "LEFT JOIN Institute AS d ON (d.Institut_id=a.range_id) "
+                   . "WHERE news_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($news_id));
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                if ($row['user_id']) {
+                    $this->range_detail[$row['range_id']] = array(
+                        'type' => 'pers',
+                        'name' => $row['author']
+                    );
                 }
-                if ($this->db->f("Seminar_id")) {
-                    $name = $this->db->f("seminar_name")." (".$this->db->f('startsem') . ($this->db->f('startsem') != $this->db->f('endsem') ? " - ".$this->db->f('endsem') : "") . ")";
-                    $this->range_detail[$this->db->f("range_id")]= array("type"=>"sem","name"=>$name,"starttime" => $this->db->f("start_time"), "startsem" => $this->db->f("startsem"));
+                if ($row['Seminar_id']) {
+                    $name = sprintf('%s (%s%s)', $row['seminar_name'], $row['startsem'],
+                                    $row['startsem'] != $row['endsem'] ? ' - '.$row['endsem'] : '');
+
+                    $this->range_detail[$row['range_id']] = array(
+                        'type'      => 'sem',
+                        'name'      => $name,
+                        'starttime' => $row['start_time'],
+                        'startsem'  => $row['startsem']
+                    );
                 }
-                if ($this->db->f("Institut_id")) {
-                    $this->range_detail[$this->db->f("range_id")]= array("type"=>$this->db->f("inst_type"),"name"=>$this->db->f("institut_name"));
+                if ($row['Institut_id']) {
+                    $this->range_detail[$row['range_id']] = array(
+                        'type' => $row['inst_type'],
+                        'name' => $row['institut_name']
+                    );
                 }
             }
-            if ($perm->have_perm("root")) {
-                $this->db->query("SELECT * FROM news_range WHERE news_id='$news_id' AND range_id='studip'");
-                if ($this->db->next_record())
-                    $this->range_detail[$this->db->f("range_id")]= array("type"=>"sys","name"=>"Stud.IP System Ankündigungen");
+
+            if ($perm->have_perm('root')) {
+                $query = "SELECT range_id FROM news_range WHERE news_id = ? AND range_id = 'studip'";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($news_id));
+                if ($range_id = $statement->fetchColumn()) {
+                    $this->range_detail[$range_id]= array(
+                        'type' => 'sys',
+                        'name' => 'Stud.IP System Ankündigungen'
+                    );
                 }
             }
+        }
     }
 
     function show_news($id){
@@ -463,23 +485,46 @@ class AdminNewsController {
         global $_fullname_sql;
         $this->search_result = (array)$this->search_result + (array)search_range($search_str, true);
         if (is_array($this->search_result) && count($this->search_result)){
-            $query="SELECT range_id,COUNT(range_id) AS anzahl FROM news_range WHERE range_id IN ('".implode("','",array_keys($this->search_result))."') GROUP BY range_id";
-            $this->db->query($query);
-            while($this->db->next_record()) {
-                $this->search_result[$this->db->f("range_id")]["anzahl"]=$this->db->f("anzahl");
+            $query = "SELECT range_id, COUNT(range_id) AS anzahl FROM news_range WHERE range_id IN (?) GROUP BY range_id";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(array_keys($this->search_result)));
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                $this->search_result[$row['range_id']]['anzahl'] = $row['anzahl'];
             }
         }
         if (get_config('DEPUTIES_ENABLE')) {
-            $query = "SELECT DISTINCT d.range_id, s.Name, s.status, s.VeranstaltungsNummer, sd.name as sem_name FROM deputies d JOIN seminare s ON (d.range_id = s.Seminar_id) JOIN semester_data sd ON (s.start_time = sd.beginn) WHERE d.user_id = '".$GLOBALS["auth"]->auth["uid"]."'";
-            $this->db->query($query);
-            while ($this->db->next_record()) {
-                $this->search_result[$this->db->f("range_id")] = array("type" => "sem", "name" => $GLOBALS["SEM_TYPE"][$this->db->f("status")]["name"].": ".$this->db->f("Name")." (".$this->db->f("sem_name").") ["._("Vertretung")."]");
+            $query = "SELECT DISTINCT d.range_id, s.Name, s.status, sd.name AS sem_name "
+                   . "FROM deputies d "
+                   . "JOIN seminare s ON (d.range_id = s.Seminar_id) "
+                   . "JOIN semester_data sd ON (s.start_time = sd.beginn) "
+                   . "WHERE d.user_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($GLOBALS['user']->id));
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                $name = sprintf('%s: %s (%s) [%s]',
+                                $GLOBALS['SEM_TYPE'][$row['status']]['name'],
+                                $row['Name'], $row['sem_name'], _('Vertretung'));
+
+                $this->search_result[$row['range_id']] = array(
+                    'type' => 'sem',
+                    'name' => $name
+                );
             }
             if (isDeputyEditAboutActivated()) {
-                $query = "SELECT DISTINCT d.range_id, ".$_fullname_sql['full']." AS name, a.username FROM deputies d JOIN auth_user_md5 a ON (d.range_id = a.user_id) JOIN user_info u ON (a.user_id=u.user_id) WHERE d.user_id = '".$GLOBALS["auth"]->auth["uid"]."'";
-                $this->db->query($query);
-                while ($this->db->next_record()) {
-                    $this->search_result[$this->db->f("range_id")] = array("type" => "user", "name" => $this->db->f("name"), "perm" => 2, "username" => $this->db->f("username"));
+                $query = "SELECT DISTINCT d.range_id, {$_fullname_sql['full']} AS name, a.username "
+                       . "FROM deputies d "
+                       . "JOIN auth_user_md5 a ON (d.range_id = a.user_id) "
+                       . "JOIN user_info u ON (a.user_id=u.user_id) "
+                       . "WHERE d.user_id = ?";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($GLOBALS['user']->id));
+                while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                    $this->search_result[$row['range_id']] = array(
+                        'type'     => 'user',
+                        'name'     => $row['name'],
+                        'perm'     => 2,
+                        "username" => $row['username']
+                    );
                 }
             }
         }
@@ -507,17 +552,17 @@ class AdminNewsController {
 
             case "inst" :
                 $group = _("Einrichtungen");
-                $query = "SELECT Institute.Institut_id AS id,Name AS name FROM user_inst LEFT JOIN Institute ON(user_inst.Institut_id=Institute.Institut_id AND Institute.Institut_id!=fakultaets_id) WHERE NOT ISNULL(Institute.Institut_id) AND user_inst.user_id='".$this->user_id."' AND user_inst.inst_perms='autor' ORDER BY Name";
+                $query = "SELECT Institute.Institut_id AS id,Name AS name FROM user_inst LEFT JOIN Institute ON(user_inst.Institut_id=Institute.Institut_id AND Institute.Institut_id!=fakultaets_id) WHERE NOT ISNULL(Institute.Institut_id) AND user_inst.user_id=? AND user_inst.inst_perms='autor' ORDER BY Name";
                 break;
 
             case "fak" :
                 $group = _("Fakultäten");
-                $query = "SELECT Institute.Institut_id AS id,Name AS name FROM user_inst LEFT JOIN Institute ON(user_inst.Institut_id=Institute.Institut_id AND Institute.Institut_id=fakultaets_id) WHERE NOT ISNULL(Institute.Institut_id) AND user_inst.user_id='".$this->user_id."' AND user_inst.inst_perms='autor' ORDER BY Name";
+                $query = "SELECT Institute.Institut_id AS id,Name AS name FROM user_inst LEFT JOIN Institute ON(user_inst.Institut_id=Institute.Institut_id AND Institute.Institut_id=fakultaets_id) WHERE NOT ISNULL(Institute.Institut_id) AND user_inst.user_id = ? AND user_inst.inst_perms='autor' ORDER BY Name";
                 break;
 
             case "user" :
                 $group = _("Andere Nutzerinnen und Nutzer, deren Vertretung ich bin");
-                $query = "SELECT DISTINCT d.range_id AS id, ".$_fullname_sql['full']." AS name FROM deputies d JOIN auth_user_md5 a ON (d.range_id = a.user_id) JOIN user_info u ON (a.user_id=u.user_id) WHERE d.user_id = '".$this->user_id."'";
+                $query = "SELECT DISTINCT d.range_id AS id, ".$_fullname_sql['full']." AS name FROM deputies d JOIN auth_user_md5 a ON (d.range_id = a.user_id) JOIN user_info u ON (a.user_id=u.user_id) WHERE d.user_id = ?";
                 break;
         }
 
@@ -531,10 +576,11 @@ class AdminNewsController {
                 }
             }
         } else if (isset($query)) {
-            $this->db->query($query);
-            while ($this->db->next_record()) {
-                $ranges[$this->db->f('id')] = array(
-                    'name' => $this->db->f('name'),
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($this->user_id));
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                $ranges[$row['id']] = array(
+                    'name'  => $row['name'],
                     'group' => $group
                 );
             }
@@ -570,65 +616,140 @@ class AdminNewsController {
 
     function get_news_perm() {
         global $auth,$perm,$_fullname_sql;
-        $this->news_perm[$this->user_id]=array("name"=>$this->full_username,"perm"=>3);
-        if ($auth->auth["perm"]=="root"){
-            $this->news_perm["studip"]=array("name"=>"Stud.IP Ankündigungen","perm"=>3);
+
+        $this->news_perm[$this->user_id] = array(
+            'name' => $this->full_username,
+            'perm' => 3
+        );
+
+        if ($auth->auth['perm'] == 'root'){
+            $this->news_perm['studip'] = array(
+                'name' => 'Stud.IP Ankündigungen',
+                'perm' => 3
+            );
         } else {
-            if (in_array($auth->auth["perm"], array("dozent", "tutor", "autor"))){
-                $query="SELECT seminare.Seminar_id AS id,seminar_user.status,Name FROM seminar_user LEFT JOIN seminare USING (Seminar_id) WHERE seminar_user.user_id='".$this->user_id."' AND seminar_user.status IN ('dozent','tutor')";
-                $this->db->query($query);
-                while($this->db->next_record()) {
-                    if ($this->db->f("status")=="tutor") $this->news_perm[$this->db->f("id")]=array("name"=>$this->db->f("Name"),"perm"=>2);
-                    if ($this->db->f("status")=="dozent") $this->news_perm[$this->db->f("id")]=array("name"=>$this->db->f("Name"),"perm"=>2);
+            if (in_array($auth->auth['perm'], array('dozent', 'tutor', 'autor'))) {
+                $query = "SELECT seminare.Seminar_id AS id, seminar_user.status, Name "
+                       . "FROM seminar_user "
+                       . "LEFT JOIN seminare USING (Seminar_id) "
+                       . "WHERE seminar_user.user_id = ? AND seminar_user.status IN ('dozent','tutor')";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($this->user_id));
+                while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                    $this->news_perm[$row['id']] = array(
+                        'name' => $row['Name'],
+                        'perm' => 2
+                    );
                 }
             }
-            if ($auth->auth["perm"]=="admin") {
-                $query="SELECT b.Seminar_id AS id,b.Name from user_inst AS a LEFT JOIN   seminare AS b USING (Institut_id) WHERE a.user_id='$this->user_id' AND a.inst_perms='admin'";
-                $this->db->query($query);
-                while($this->db->next_record()) {
-                    $this->news_perm[$this->db->f("id")]=array("name"=>$this->db->f("Name"),"perm"=>3);
+
+            if ($auth->auth['perm'] == 'admin') {
+                $query = "SELECT b.Seminar_id AS id, b.Name "
+                       . "FROM user_inst AS a "
+                       . "LEFT JOIN seminare AS b USING (Institut_id) "
+                       . "WHERE a.user_id = ? AND a.inst_perms = 'admin'";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($this->user_id));
+                while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                    $this->news_perm[$row['id']] = array(
+                        'name' => $row['Name'],
+                        'perm' => 3
+                    );
                 }
             }
-            $query="SELECT Institute.Institut_id AS id,Name,user_inst.inst_perms AS status  FROM user_inst LEFT JOIN Institute USING (Institut_id) WHERE user_inst.user_id='".$this->user_id."' AND user_inst.inst_perms IN ('admin','dozent','tutor','autor')";
-            $this->db->query($query);
-            while($this->db->next_record()) {
-                if ($this->db->f("status")=="tutor" OR $this->db->f("status")=="autor" OR $this->db->f("status")=="dozent") $this->news_perm[$this->db->f("id")]=array("name"=>$this->db->f("Name"),"perm"=>2);
-                if ($this->db->f("status")=="admin") $this->news_perm[$this->db->f("id")]=array("name"=>$this->db->f("Name"),"perm"=>3);
+
+            $query = "SELECT Institute.Institut_id AS id, Name, user_inst.inst_perms AS status "
+                   . "FROM user_inst "
+                   . "LEFT JOIN Institute USING (Institut_id) "
+                   . "WHERE user_inst.user_id = ? "
+                   . " AND user_inst.inst_perms IN ('admin','dozent','tutor','autor')";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($this->user_id));
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                $this->news_perm[$row['id']] = array(
+                    'name' => $row['Name'],
+                    'perm' => $row['status'] == 'admin' ? 3 : 2
+                );
             }
-            $query = "SELECT b.Institut_id,b.Name,a.inst_perms AS status FROM user_inst a LEFT JOIN Institute b ON(a.Institut_id=b.Institut_id AND b.Institut_id=b.fakultaets_id)
-            WHERE a.user_id='$this->user_id' AND a.inst_perms IN ('admin','autor') AND NOT ISNULL(b.Institut_id)";
-            $this->db->query($query);
-            while($this->db->next_record()) {
-                if ($this->db->f("status")=="autor") $this->news_perm[$this->db->f("id")]=array("name"=>$this->db->f("Name"),"perm"=>1);
-                if ($this->db->f("status")=="admin") $this->news_perm[$this->db->f("id")]=array("name"=>$this->db->f("Name"),"perm"=>3);
+
+            $query = "SELECT b.Institut_id AS id, b.Name, a.inst_perms AS status "
+                   . "FROM user_inst a "
+                   . "LEFT JOIN Institute b ON (a.Institut_id = b.Institut_id AND b.Institut_id = b.fakultaets_id) "
+                   . "WHERE a.user_id = ? "
+                   . " AND a.inst_perms IN ('admin','autor') "
+                   . " AND NOT ISNULL(b.Institut_id)";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($this->user_id));
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                $this->news_perm[$row['id']] = array(
+                    'name' => $row['Name'],
+                    'perm' => $row['status'] == 'admin' ? 3 : 1
+                );
             }
+
             if ($perm->is_fak_admin()){
-                $query = "SELECT d.Seminar_id,d.Name FROM user_inst a LEFT JOIN Institute b ON(a.Institut_id=b.Institut_id AND b.Institut_id=b.fakultaets_id)
-                LEFT JOIN Institute c ON(c.fakultaets_id = b.institut_id AND c.fakultaets_id!=c.institut_id) LEFT JOIN seminare d ON(d.institut_id=c.institut_id)
-                WHERE a.user_id='$this->user_id' AND a.inst_perms='admin' AND NOT ISNULL(b.Institut_id)";
-                $this->db->query($query);
-                while($this->db->next_record()){
-                    $this->news_perm[$this->db->f("Seminar_id")]=array("name"=>$this->db->f("Name"),"perm"=>3);
+                $query = "SELECT d.Seminar_id AS id, d.Name "
+                       . "FROM user_inst a "
+                       . "LEFT JOIN Institute b ON(a.Institut_id = b.Institut_id AND b.Institut_id = b.fakultaets_id) "
+                       . "LEFT JOIN Institute c ON(c.fakultaets_id = b.institut_id AND c.fakultaets_id != c.institut_id) "
+                       . "LEFT JOIN seminare d ON(d.institut_id=c.institut_id) "
+                       . "WHERE a.user_id = ? "
+                       . " AND a.inst_perms='admin' "
+                       . " AND NOT ISNULL(b.Institut_id)";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($this->user_id));
+                while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                    $this->news_perm[$row['id']] = array(
+                        'name' => $row['Name'],
+                        'perm' => 3
+                    );
                 }
-                $query = "SELECT c.Institut_id,c.Name FROM user_inst a LEFT JOIN Institute b ON(a.Institut_id=b.Institut_id AND b.Institut_id=b.fakultaets_id)
-                LEFT JOIN Institute c ON(c.fakultaets_id = b.institut_id AND c.fakultaets_id!=c.institut_id)
-                WHERE a.user_id='$this->user_id' AND a.inst_perms='admin' AND NOT ISNULL(b.Institut_id)";
-                $this->db->query($query);
-                while($this->db->next_record()){
-                    $this->news_perm[$this->db->f("Institut_id")]=array("name"=>$this->db->f("Name"),"perm"=>3);
-                }
+
+                $query = "SELECT c.Institut_id AS id, c.Name "
+                       . "FROM user_inst a "
+                       . "LEFT JOIN Institute b ON (a.Institut_id = b.Institut_id AND b.Institut_id = b.fakultaets_id) "
+                       . "LEFT JOIN Institute c ON (c.fakultaets_id = b.institut_id AND c.fakultaets_id != c.institut_id) "
+                       . "WHERE a.user_id = ? "
+                       . " AND a.inst_perms='admin' "
+                       . " AND NOT ISNULL(b.Institut_id)";
+                   $statement = DBManager::get()->prepare($query);
+                   $statement->execute(array($this->user_id));
+                   while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                       $this->news_perm[$row['id']] = array(
+                           'name' => $row['Name'],
+                           'perm' => 3
+                       );
+                   }
             }
+
             if (get_config('DEPUTIES_ENABLE')) {
-                $query = "SELECT DISTINCT d.range_id, s.Name, s.status, sd.name as sem_name FROM deputies d JOIN seminare s ON (d.range_id = s.Seminar_id) JOIN semester_data sd ON (s.start_time = sd.beginn) WHERE d.user_id = '".$GLOBALS["auth"]->auth["uid"]."'";
-                $this->db->query($query);
-                while ($this->db->next_record()) {
-                    $this->news_perm[$this->db->f("range_id")] = array("name" => $this->db->f("Name"), "perm" => 2);
+                $query = "SELECT DISTINCT d.range_id AS id, s.Name "
+                       . "FROM deputies d "
+                       . "JOIN seminare s ON (d.range_id = s.Seminar_id) "
+                       . "WHERE d.user_id = ?";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($GLOBALS['user']->id));
+                while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                    $this->news_perm[$row['id']] = array(
+                        'name' => $row['Name'],
+                        'perm' => 2
+                    );
                 }
+
                 if (isDeputyEditAboutActivated()) {
-                    $query = "SELECT DISTINCT d.range_id, ".$_fullname_sql['full']." AS name, a.username FROM deputies d JOIN auth_user_md5 a ON (d.range_id = a.user_id) JOIN user_info u ON (a.user_id=u.user_id) WHERE d.user_id = '".$GLOBALS["auth"]->auth["uid"]."'";
-                    $this->db->query($query);
-                    while ($this->db->next_record()) {
-                        $this->news_perm[$this->db->f("range_id")] = array("name" => $this->db->f("name"), "perm" => 2, "username" => $this->db->f("username"));
+                    $query = "SELECT DISTINCT d.range_id AS id, {$_fullname_sql['full']} AS name, a.username "
+                           . "FROM deputies d "
+                           . "JOIN auth_user_md5 a ON (d.range_id = a.user_id) "
+                           . "JOIN user_info u ON (a.user_id=u.user_id) "
+                           . "WHERE d.user_id = '".$GLOBALS["auth"]->auth["uid"]."'";
+                    $statement = DBManager::get()->prepare($query);
+                    $statement->execute(array($GLOBALS['user']->id));
+                    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                        $this->news_perm[$row['id']] = array(
+                            'name' => $row['Name'],
+                            'perm' => 2,
+                            'username' => $row['username']
+                        );
                     }
                 }
             }

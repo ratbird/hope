@@ -1,5 +1,6 @@
 <?
 # Lifter002: TODO
+# Lifter003: TEST
 # Lifter007: TODO
 # Lifter010: TODO
 
@@ -750,14 +751,15 @@ if ($termin_id) {
 }
 
 if (isset($_calendar->event) && ($_calendar->event instanceof SeminarEvent || $_calendar->event instanceof SeminarCalendarEvent || $evtype == 'semcal')) {
-    $db = new DB_Seminar();
-    $query = "SELECT name FROM seminare WHERE Seminar_id='" . $_calendar->event->getSeminarId() . "'";
-    $db->query($query);
-    $db->next_record();
+    $query = "SELECT name FROM seminare WHERE Seminar_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($_calendar->event->getSeminarId()));
+    $name = $statement->fetchColumn();
+
     if ($_calendar->event instanceof SeminarCalendarEvent) {
-        $link_to_seminar = '<a href="' . URLHelper::getLink('seminar_main.php', array('auswahl' => $_calendar->event->getSeminarId(), 'redirect_to' => 'calendar.php&cmd=edit&atime=' . $atime . '&termin_id=' . $_calendar->event->getId())) . '">' . htmlReady($db->f('name')) . '</a>';
+        $link_to_seminar = '<a href="' . URLHelper::getLink('seminar_main.php', array('auswahl' => $_calendar->event->getSeminarId(), 'redirect_to' => 'calendar.php&cmd=edit&atime=' . $atime . '&termin_id=' . $_calendar->event->getId())) . '">' . htmlReady($name) . '</a>';
     } else {
-        $link_to_seminar = '<a href="' . URLHelper::getLink('seminar_main.php', array('auswahl' => $_calendar->event->getSeminarId())) . '">' . htmlReady($db->f('name')) . '</a>';
+        $link_to_seminar = '<a href="' . URLHelper::getLink('seminar_main.php', array('auswahl' => $_calendar->event->getSeminarId())) . '">' . htmlReady($name) . '</a>';
     }
 
     // create infobox entries

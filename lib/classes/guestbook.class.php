@@ -1,7 +1,7 @@
 <?
 # Lifter002: TODO
 # Lifter007: TODO
-# Lifter003: TODO
+# Lifter003: TEST
 # Lifter010: TODO
 /**
  * guestbook.class.php - Guestbook for personal homepages
@@ -57,30 +57,26 @@ class Guestbook
 
     function checkGuestbook()
     {
-        $db=new DB_Seminar;
-        $db->query("SELECT * FROM user_info WHERE user_id = '$this->user_id' AND guestbook = '1'");
-        if ($db->next_record())  // Guestbook is aktive
-            $this->active = TRUE;
-        else
-            $this->active = FALSE;
+        $query = "SELECT 1 FROM user_info WHERE user_id = ? AND guestbook = '1'";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($this->user_id));
+        $this->active = (bool)$statement->fetchColumn();
     }
 
     function numGuestbook()
     {
-        $db=new DB_Seminar;
-        $db->query("SELECT count(*) as count FROM guestbook WHERE range_id = '$this->user_id'");
-        if ($db->next_record())
-            $this->number = $db->f("count");
-        else
-            $this->number = 0;
-        }
+        $query = "SELECT COUNT(*) FROM guestbook WHERE range_id = '$this->user_id'";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($this->user_id));
+        return 0 + $statement->fetchColumn();
+    }
 
     function getRightsGuestbook()
     {
         global  $user;
 
-        if ($this->user_id == $user->id || $this->rights == TRUE || 
-                (isDeputyEditAboutActivated() && 
+        if ($this->user_id == $user->id || $this->rights == TRUE ||
+                (isDeputyEditAboutActivated() &&
                 isDeputy($user->id, $this->user_id, true)))
             $this->rights = TRUE;
         else
@@ -191,17 +187,25 @@ class Guestbook
         global $PHP_SELF;
 
         $i = 0;
-        $db=new DB_Seminar;
         $output = "<table class=\"blank\" width=\"98%%\" border=\"0\" cellpadding=\"5\" cellspacing=\"0\">";
-        $db->query("SELECT * FROM guestbook WHERE range_id = '$this->user_id' ORDER BY mkdate DESC LIMIT $this->guestpage, $this->perpage");
-        while ($db->next_record()) {
+
+        $query = "SELECT user_id, mkdate, content, post_id "
+               . "FROM guestbook "
+               . "WHERE range_id = ? "
+               . "ORDER BY mkdate DESC "
+               . "LIMIT ?, ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->bindParam(2, $this->guestpage, StudipPDO::PARAM_COLUMN);
+        $statement->bindParam(3, $this->perpage, StudipPDO::PARAM_COLUMN);
+        $statement->execute(array($this->user_id));
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
             $position = $this->number - ($this->guestpage+$i);
-            $output .= "<tr><td class=\"steel2\"><b><font size=\"-1\">#$position - <a href=\"$PHP_SELF?username=".get_username($db->f("user_id"))."\">";
-            $output .= sprintf(_("%s hat am %s geschrieben:"), get_fullname($db->f("user_id"),'full',true)."</a>", date("d.m.Y - H:i", $db->f("mkdate")));
+            $output .= "<tr><td class=\"steel2\"><b><font size=\"-1\">#$position - <a href=\"$PHP_SELF?username=".get_username($row['user_id'])."\">";
+            $output .= sprintf(_('%s hat am %s geschrieben:'), get_fullname($row['user_id'], 'full', true)."</a>", date('d.m.Y - H:i', $row['mkdate']));
             $output .= "</font></b></td></tr>"
-                . "<tr><td class=\"steelgraulight\"><font size=\"-1\">".formatready($db->f("content"))."</font><p align=\"right\">";
+                . "<tr><td class=\"steelgraulight\"><font size=\"-1\">".formatready($row['content'])."</font><p align=\"right\">";
             if ($this->rights == TRUE)
-                $addon = "<a href=\"".$PHP_SELF."?guestbook=delete&guestpage=$this->guestpage&deletepost=".$db->f("post_id")."&username=$this->username&studipticket=".get_ticket()."#guest\">" . makeButton("loeschen", "img") . "</a>";
+                $addon = "<a href=\"".$PHP_SELF."?guestbook=delete&guestpage=$this->guestpage&deletepost=".$row['post_id']."&username=$this->username&studipticket=".get_ticket()."#guest\">" . makeButton("loeschen", "img") . "</a>";
             else
                 $addon = "&nbsp;";
 
@@ -284,30 +288,30 @@ class Guestbook
 
     function switchGuestbook()
     {
-        $db=new DB_Seminar;
-        if ($this->active == "TRUE") { // Guestbook is activated
-            $db->query("UPDATE user_info SET guestbook='0' WHERE user_id='$this->user_id'");
-            $tmp = _("Sie haben das Gästebuch deaktiviert. Es ist nun nicht mehr sichtbar.");
-        } else {
-            $db->query("UPDATE user_info SET guestbook='1' WHERE user_id='$this->user_id'");
-            $tmp = _("Sie haben das Gästebuch aktiviert: Besucher können nun schreiben!");
-        }
-        return $tmp;
+        DBManager::get()
+            ->prepare("UPDATE user_info SET guestbook = ? WHERE user_id = ?")
+            ->execute(array((int)!$this->active, $this->user_id));
+
+        return $this->active
+            ? _('Sie haben das Gästebuch deaktiviert. Es ist nun nicht mehr sichtbar.')
+            : _('Sie haben das Gästebuch aktiviert: Besucher können nun schreiben!');
     }
 
     function eraseGuestbook()
     {
-        $db=new DB_Seminar;
-        $db->query("DELETE FROM guestbook WHERE range_id = '$this->user_id'");
-        $tmp = _("Sie haben alle Beiträge des Gästebuchs gelöscht!");
-        return $tmp;
+        DBManager::get()
+            ->prepare("DELETE FROM guestbook WHERE range_id = ?")
+            ->execute(array($this->user_id));
+
+        return _('Sie haben alle Beiträge des Gästebuchs gelöscht!');
     }
 
     function deleteGuestbook($deletepost)
     {
         if ($this->getRangeGuestbook($deletepost)==TRUE) {
-            $db=new DB_Seminar;
-            $db->query("DELETE FROM guestbook WHERE post_id = '$deletepost'");
+            DBManager::get()
+                ->prepare("DELETE FROM guestbook WHERE post_id = ?")
+                ->execute(array($deletepost));
             $tmp = _("Sie haben einen Beitrag im Gästebuch gelöscht!");
         } else {
             $tmp = _("Netter Versuch!");
@@ -317,13 +321,10 @@ class Guestbook
 
     function getRangeGuestbook($post_id)
     {
-        $db=new DB_Seminar;
-        $db->query("SELECT range_id FROM guestbook WHERE post_id = '$post_id'");
-        if ($db->next_record())
-            if ($db->f("range_id")==$this->user_id)
-                return TRUE;
-            else
-                return FALSE;
+        $query = "SELECT range_id FROM guestbook WHERE post_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($post_id));
+        return ($range_id = $statement->fetchColumn()) and $range_id = $this->user_id;
     }
 
     /**
@@ -331,24 +332,28 @@ class Guestbook
      */
     function makeuniqueGuestbook()
     {
-        $hash_secret = "kershfshsshdfgz";
-        $db=new DB_Seminar;
-        $tmp_id=md5(uniqid($hash_secret));
-        $db->query ("SELECT post_id FROM guestbook WHERE post_id = '$tmp_id'");
-        if ($db->next_record())
-            $tmp_id = $this->makeuniqueGuestbook(); //ID gibt es schon, also noch mal
+        $query = "SELECT 1 FROM guestbook WHERE post_id = '$tmp_id'";
+        $statement = DBManager::get()->prepare($query);
+
+        do { // Loop until id is unique
+            $tmp_id = md5(uniqid('kershfshsshdfgz'));
+            $statement->execute(array($tmp_id));
+        } while ($statement->fetchColumn());
+
         return $tmp_id;
     }
 
     function addPostGuestbook($range_id, $content)
     {
-        global $user;
-
-        $now = time();
         $post_id = $this->makeuniqueGuestbook();
-        $user_id = $user->id;
-        $db=new DB_Seminar;
-        $db->query("INSERT INTO guestbook (post_id,range_id,user_id,mkdate,content) values ('$post_id', '$range_id', '$user_id', '$now', '$content')");
+
+        $query = "INSERT INTO guestbook "
+               . "(post_id, range_id, user_id, mkdate, content) "
+               . "VALUES (?, ?, ?, UNIX_TIMESTAMP(), ?)";
+        DBManager::get()
+            ->prepare($query)
+            ->execute(array($post_id, $range_id, $GLOBALS['user']->id, $content));
+
         return $post_id;
     }
 }

@@ -1,6 +1,6 @@
 <?
+# Lifter003: TEST
 # Lifter007: TODO
-# Lifter003: TODO
 # Lifter010: TODO
 /**
  * chat_func_inc.php - Chat Functions
@@ -106,22 +106,37 @@ function chat_get_entry_level($chatid)
 
 function chat_get_name($chatid)
 {
-    $db = new DB_Seminar();
-    if ($chatid != "studip"){
-        $db->query("SELECT Name from seminare WHERE Seminar_id='$chatid'");
-        if (!$db->next_record()){
-            $db->query("SELECT Name from Institute WHERE Institut_id='$chatid'");
-            if (!$db->next_record()){
-                $db->query("SELECT " . $GLOBALS['_fullname_sql']['full'] ." AS Name FROM auth_user_md5 a LEFT JOIN user_info USING (user_id) WHERE a.user_id='$chatid'");
-                if (!$db->next_record()){
-                    return false;
-                }
-            }
-        }
-        return $db->f("Name");
-    } else {
-        return "Stud.IP Global Chat";
+    if ($chatid == 'studip') {
+        return 'Stud.IP Global Chat';
     }
+
+    $db = DBManager::get();
+
+    // Chatting in a seminar
+    $statement = $db->prepare("SELECT Name from seminare WHERE Seminar_id = ?");
+    $statement->execute(array($chatid));
+    if ($name = $statement->fetchColumn()) {
+        return $name;
+    }
+
+    // Chatting in an institute
+    $statement = $db->prepare("SELECT Name from Institute WHERE Institut_id = ?");
+    $statement->execute(array($chatid));
+    if ($name = $statement->fetchColumn()) {
+        return $name;
+    }
+
+    // Chatting with a user
+    $query = "SELECT {$GLOBALS['_fullname_sql']['full']} "
+           . "FROM auth_user_md5 a "
+           . "LEFT JOIN user_info USING (user_id) "
+           . "WHERE a.user_id = ?";
+    $statement->execute(array($chatid));
+    if ($name = $statement->fetchColumn()) {
+        return $name;
+    }
+
+    return false;
 }
 
 function chat_show_info($chatid)

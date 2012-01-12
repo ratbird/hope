@@ -1,7 +1,7 @@
 <?php
 # Lifter002: TODO
 # Lifter007: TODO
-# Lifter003: TODO
+# Lifter003: TEST
 # Lifter010: TODO
 /**
 * AdminModules.class.php
@@ -53,13 +53,9 @@ if (get_config('CALENDAR_ENABLE')) {
 }
 
 class AdminModules extends ModulesNotification {
-    var $db;
-    var $db2;
     
     function AdminModules() {
         parent::ModulesNotification();
-        $this->db = new DB_Seminar;
-        $this->db2 = new DB_Seminar;
         //please add here the special messages for modules you need consistency checks (defined below in this class)
         $this->registered_modules["forum"]["msg_warning"] = _("Wollen Sie wirklich das Forum deaktivieren und damit alle Diskussionbeitr&auml;ge l&ouml;schen?");
         $this->registered_modules["forum"]["msg_pre_warning"] = _("Achtung: Beim Deaktivieren des Forums werden <b>%s</b> Postings ebenfalls gel&ouml;scht!");
@@ -121,27 +117,30 @@ class AdminModules extends ModulesNotification {
     }
     
     function getModuleForumExistingItems($range_id) {
-        $query = sprintf ("SELECT COUNT(topic_id) as items FROM px_topics WHERE Seminar_id = '%s' ", $range_id);
-
-        $this->db->query($query);
-        $this->db->next_record();
-        
-        return $this->db->f("items");
+        $query = "SELECT COUNT(topic_id) FROM px_topics WHERE Seminar_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($range_id));
+        return $statement->fetchColumn();
     }
 
     function moduleForumDeactivate($range_id) {
-        $db = new DB_Seminar;
-        $db2 = new DB_Seminar;
+        $db = DBManager::get();
         
-        $query = sprintf ("SELECT topic_id FROM px_topics WHERE Seminar_id='%s'", $range_id);
-        $db->query($query);
+        // Prepare "delete topic" statement
+        $query = "DELETE FROM px_topics WHERE topic_id = ?";
+        $delete = $db->prepare($query);
+
+        // Prepare "update termine" statement
+        $query = "UPDATE termine SET topic_id = NULL WHERE topic_id = ?";
+        $update = $db->prepare($query);
         
-        while ($db->next_record()) {
-            $query2 = sprintf ("DELETE FROM px_topics WHERE topic_id='%s'", $db->f("topic_id"));
-            $db2->query($query2);
-        
-            $query2 = sprintf ("UPDATE termine SET topic_id = NULL WHERE topic_id='%s'", $db->f("topic_id"));
-            $db2->query($query2);
+        // Load all topic ids for range_id
+        $query = "SELECT topic_id FROM px_topics WHERE Seminar_id = ?";
+        $statement = $db->prepare($query);
+        $statement->execute(array($range_id));        
+        while ($topic_id = $statement->fetchColumn()) {
+            $delete->execute(array($topic_id));
+            $update->execute(array($topic_id));
         }
     }
     
@@ -153,12 +152,10 @@ class AdminModules extends ModulesNotification {
     }   
     
     function getModuleDocumentsExistingItems($range_id) {
-        $query = sprintf ("SELECT COUNT(dokument_id) as items FROM dokumente WHERE seminar_id = '%s' ", $range_id);
-
-        $this->db->query($query);
-        $this->db->next_record();
-        
-        $items = $this->db->f("items"); 
+        $query = "SELECT COUNT(dokument_id) FROM dokumente WHERE seminar_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($range_id));
+        $items = $statement->fetchColumn();
                                     
         $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $range_id));
 
@@ -173,12 +170,19 @@ class AdminModules extends ModulesNotification {
     }
     
     function moduleDocumentsActivate($range_id) {
-        global $user;
-        
-        $db = new DB_Seminar;
-
         //create a default folder
-        $db->query("INSERT INTO folder SET folder_id='".md5(uniqid("sommervogel"))."', range_id='".$range_id."', user_id='".$user->id."', name='"._("Allgemeiner Dateiordner")."', description='"._("Ablage für allgemeine Ordner und Dokumente der Veranstaltung")."', mkdate='".time()."', chdate='".time()."'");
+        $query = "INSERT INTO folder "
+               . "(folder_id, range_id, user_id, name, description, mkdate, chdate) "
+               . "VALUES (?, ?, ?, ?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())";
+        DBManager::get()
+            ->prepare($query)
+            ->execute(array(
+                md5(uniqid('sommervogel')),
+                $range_id,
+                $GLOBALS['user']->id,
+                _('Allgemeiner Dateiordner'),
+                _('Ablage für allgemeine Ordner und Dokumente der Veranstaltung')
+            ));
     }   
 
     function getModuleLiteratureExistingItems($range_id) {
@@ -191,44 +195,54 @@ class AdminModules extends ModulesNotification {
     }
 
     function getModuleWikiExistingItems($range_id) {
-        $query = sprintf ("SELECT COUNT(keyword) as items FROM wiki WHERE range_id = '%s' ", $range_id);
-
-        $this->db->query($query);
-        $this->db->next_record();
-        
-        return $this->db->f("items");
+        $query = "SELECT COUNT(keyword) FROM wiki WHERE range_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($range_id));
+        return $statement->fetchColumn();
     }
 
     function moduleWikiDeactivate($range_id) {
-        $query = sprintf ("DELETE FROM wiki WHERE range_id='%s'", $range_id);
-        $this->db->query($query);
+        DBManager::get()
+            ->prepare("DELETE FROM wiki WHERE range_id = ?")
+            ->execute(array($range_id));
+        
+        DBManager::get()
+            ->prepare("DELETE FROM wiki_links WHERE range_id = ?")
+            ->execute(array($range_id));
 
-        $query = sprintf ("DELETE FROM wiki_links WHERE range_id='%s'", $range_id);
-        $this->db->query($query);
-
-        $query = sprintf ("DELETE FROM wiki_locks WHERE range_id='%s'", $range_id);
-        $this->db->query($query);
+        DBManager::get()
+            ->prepare("DELETE FROM wiki_locks WHERE range_id = ?")
+            ->execute(array($range_id));
     }
 
     function getModuleScmExistingItems($range_id) {
-        $query = sprintf ("SELECT COUNT(scm_id) as items FROM scm WHERE range_id = '%s' ", $range_id);
-
-        $this->db->query($query);
-        $this->db->next_record();
-
-        return $this->db->f("items");
+        $query = "SELECT COUNT(scm_id) FROM scm WHERE range_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($range_id));
+        return $statement->fetchColumn();
     }
 
     function moduleScmDeactivate($range_id) {
-        $query = sprintf ("DELETE FROM scm WHERE range_id='%s'", $range_id);
-        $this->db->query($query);
+        DBManager::get()
+            ->prepare("DELETE FROM scm WHERE range_id = ?")
+            ->execute(array($range_id));
     }
 
     function moduleScmActivate($range_id) {
         global $user, $SCM_PRESET;
 
         //create a default folder
-        $this->db->query("INSERT IGNORE INTO scm SET scm_id='".md5(uniqid("simplecontentmodule"))."', range_id='".$range_id."', user_id='".$user->id."', tab_name='".$SCM_PRESET[1]["name"]."', content='', mkdate='".time()."', chdate='".time()."'");
+        $query = "INSERT IGNORE INTO scm "
+               . "(scm_id, range_id, user_id, tab_name, content, mkdate, chdate) "
+               . "VALUES (?, ?, ?, ?, '', UNIX_TIMESTAMP(), UNIX_TIMESTAMP())";
+        DBManager::get()
+            ->prepare($query)
+            ->execute(array(
+                md5(uniqid('simplecontentmodule')),
+                $range_id,
+                $GLOBALS['user']->id,
+                $GLOBALS['SCM_PRESET'][1]['name']
+            ));
     }
 
     function getModuleElearning_interfaceExistingItems($range_id) {

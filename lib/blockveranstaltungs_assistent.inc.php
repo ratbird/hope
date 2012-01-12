@@ -1,7 +1,7 @@
 <?
 # Lifter002: TODO
 # Lifter007: TODO
-# Lifter003: TODO
+# Lifter003: TEST
 # Lifter010: TODO
 /**
 * blockveranstaltungs_assistent.inc.php - Terminverwaltung von Stud.IP
@@ -201,39 +201,31 @@ function create_block_schedule_dates($seminar_id, $form_data)
     if (!isset($form_data["block_submit_x"]) || $errors != null)
     { // show the form
         return array('ready' => false, 'errors' => $errors);
-    } else
-    {
-        // create data needed for schedule dates
-        $name_common = "";
-        $description_common = "Hier kann zu diesem Termin diskutiert werden";
-        $folder_description = 'Ablage für Ordner und Dokumente zu diesem Termin';
-        $range_id = "$seminar_id";
-        $autor_id = $user->id;
-        $mkdate = $chdate = time();
-        $messages = Array();
-        // step through dates and insert into db
-        $db = new DB_Seminar;
-        foreach($schedule_dates as $date)
-        {
-            $start_time = $date["start_time"];
-            $end_time = $date["end_time"];
-            $name = "Kein Titel";
-            $topic_name = $folder_name = "Sitzung: $name am: ".$date["astext"];
-            $user_id = $GLOBALS["user"]->id;
-            $user_host = $GLOBALS["REMOTE_ADDR"];
-            $user_fullname = get_fullname($user_id);
-            $date_id = md5(uniqid(rand(),true));
-            $topic_id=null;
+    } else {
+        $query = "INSERT INTO termine "
+               . "(termin_id, range_id, autor_id, content, description, date, "
+               . " end_time, mkdate, chdate, date_typ, topic_id, raum) "
+               . "VALUES "
+               . "(?, ?, ?, 'Kein Titel', '', ?, ?, UNIX_TIMESTAMP(), "
+               . " UNIX_TIMESTAMP(), ?, NULL, NULL)";
+        $statement = DBManager::get()->prepare($query);
 
-            $query = "INSERT INTO termine (termin_id, range_id, autor_id, content, description, date, end_time, mkdate, chdate, date_typ, topic_id, raum)"
-                        . " VALUES ('$date_id', '$seminar_id', '$user_id', '$name', '', '$start_time', '$end_time', '$mkdate', '$chdate', {$form_data['art']}, '$topic_id', NULL)";
-            $db->query($query);
+        // step through dates and insert into db
+        $status = array();
+        foreach ($schedule_dates as $date)
+        {
+            $statement->execute(array(
+                md5(uniqid(rand(),true)), // $date_id
+                $seminar_id,
+                $GLOBALS['user']->id,
+                $date['start_time'],
+                $date['end_time'],
+                $form_data['art']
+            ));
             // status messages
-            $status[] = $date["astext"];
+            $status[] = $date['astext'];
         }
         //echo "message".print_r($messages,true)."<br>";
         return array('ready' => true, 'status' => $status);
     }
 }
-
-?>

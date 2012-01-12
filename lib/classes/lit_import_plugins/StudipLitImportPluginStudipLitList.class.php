@@ -1,7 +1,6 @@
 <?php
 # Lifter002: TODO
 # Lifter007: TODO
-# Lifter003: TODO
 # Lifter010: TODO
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
@@ -48,7 +47,6 @@ class StudipLitImportPluginStudipLitList extends StudipLitImportPluginAbstract {
     
     function import($data) {
         global $auth, $_msg, $_lit_search_plugins;
-            $db = new DB_Seminar();
             $msg = &$_msg;
             if ($data) {
 

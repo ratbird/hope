@@ -1,7 +1,6 @@
 <?php
 # Lifter002: TODO
 # Lifter007: TODO
-# Lifter003: TODO
 # Lifter010: TODO
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
@@ -59,7 +58,6 @@ class StudipLitImportPluginEndNote extends StudipLitImportPluginAbstract {
     
     function import($domTree) {
         global $auth, $_msg;
-            $db = new DB_Seminar();
             $msg = &$_msg;
             if ($domTree) {
                     $records = $domTree->get_elements_by_tagname("record");

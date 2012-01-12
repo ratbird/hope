@@ -99,7 +99,7 @@ class Guestbook
 
         // set Anchor
         if ($this->anchor == TRUE)
-            echo "<a name=\"guest\">";
+            echo "<a name=\"guest\"></a>";
 
         echo "\n<table class=\"index_box\" style=\"width: 100%;\">";
         echo "\n<tr valign=\"baseline\"><td class=\"topic\"><img src=\"".Assets::image_path('icons/16/white/guestbook.png')."\"> <b>";

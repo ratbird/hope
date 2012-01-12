@@ -27,6 +27,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
+
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 
 $perm->check('user');
@@ -57,25 +59,27 @@ $show_user_picture = false;
 * set tutor and dozent to visible=yes
 */
 $st = DBManager::get()->prepare("UPDATE seminar_user SET visible = 'yes' WHERE status IN ('tutor', 'dozent') AND Seminar_id = ?");
-$st->execute(array($SessionSeminar));
+$st->execute(array($_SESSION['SessionSeminar']));
 
 $st = DBManager::get()->prepare("UPDATE seminar_user su INNER JOIN auth_user_md5 aum USING(user_id)
                                  SET su.visible=IF(aum.visible IN('no','never') OR (aum.visible='unknown' AND " . (int)!Config::get()->USER_VISIBILITY_UNKNOWN . "), 'no','yes')
                                  WHERE Seminar_id = ? AND su.visible='unknown'");
-$st->execute(array($SessionSeminar));
+$st->execute(array($_SESSION['SessionSeminar']));
 
 /* ---------------------------------- */
+$username = Request::quoted('username');
+$cmd = Request::quoted('cmd');
 
 if ($cmd == "make_me_visible" && !$perm->have_studip_perm('tutor',$SessSemName[1])) {
-    if ($mode == "participant") {
+    if (Request::option('mode') == "participant") {
         $db->query("UPDATE seminar_user SET visible = 'yes' WHERE user_id = '".$auth->auth['uid']."' AND Seminar_id = '".$SessSemName[1]."'");
-    } elseif ($mode == "awaiting") {
+    } elseif (Request::option('mode')  == "awaiting") {
         $db->query("UPDATE admission_seminar_user SET visible = 'yes' WHERE user_id = '".$auth->auth['uid']."' AND seminar_id = '".$SessSemName[1]."'");
     }
 }
 
 if ($cmd == "make_me_invisible" && !$perm->have_studip_perm('tutor',$SessSemName[1])) {
-    if ($mode == "participant") {
+    if (Request::option('mode') == "participant" ) {
         $db->query("UPDATE seminar_user SET visible = 'no' WHERE user_id = '".$auth->auth['uid']."' AND Seminar_id = '".$SessSemName[1]."'");
     } else {
         $db->query("UPDATE admission_seminar_user SET visible = 'no' WHERE user_id = '".$auth->auth['uid']."' AND seminar_id = '".$SessSemName[1]."'");
@@ -103,13 +107,13 @@ $result = $stmt->fetch();
 $subject = ( $result["sn"] == "" ) ? "[".$SessSemName['0']."]" : "[".$result['sn'].": ".$SessSemName['0']."]";
 
 // Send message to multiple user
-if (isset($_REQUEST['do_send_msg_x']) && isset($_REQUEST['send_msg']) && Seminar_Session::check_ticket($studipticket) && !LockRules::Check($id, 'participants')){
+if (Request::submitted('do_send_msg') && Request::intArray('send_msg') && Seminar_Session::check_ticket(Request::option('studipticket')) && !LockRules::Check($id, 'participants')){
         $post = NULL;
         $sms_data = array();
         $send_msg = array_keys($_REQUEST['send_msg']);
         page_close(NULL);
 
-        header('Location: '.URLHelper::getURL('sms_send.php', array('sms_source_page' => 'teilnehmer.php?cid=' . $SessionSeminar, 'subject' => $subject, 'tmpsavesnd' => 1, 'rec_uname' => $send_msg)));
+        header('Location: '.URLHelper::getURL('sms_send.php', array('sms_source_page' => 'teilnehmer.php?cid=' .$_SESSION['SessionSeminar'], 'subject' => $subject, 'tmpsavesnd' => 1, 'rec_uname' => $send_msg)));
         die;
 }
 
@@ -120,12 +124,10 @@ if (isset($_REQUEST['do_send_msg_x']) && isset($_REQUEST['send_msg']) && Seminar
 $messaging=new messaging;
 $cssSw=new cssClassSwitcher;
 
-if ($sms_msg) {
+if ($_SESSION['sms_msg']) {
     $msg = $sms_msg;
-    $sms_msg = '';
-    $sess->unregister('sms_msg');
+    unset($_SESSION['sms_msg']) ;
 }
-
 // Aenderungen nur in dem Seminar, in dem ich gerade bin...
     $id=$SessSemName[1];
 
@@ -173,7 +175,7 @@ function insert_or_remove (array &$array, $value) {
     }
 }
 
-URLHelper::addLinkParam('view_order', $view_order);
+URLHelper::addLinkParam('view_order', Request::option('view_order'));
 
 if (!isset($open_areas)) {
         $open_areas = array();
@@ -189,7 +191,7 @@ if (!isset($open_users)) {
         $open_users = array();
 }
 
-$username = Request::quoted('username');
+
 
 if (($cmd == "moreinfos" || $cmd == "lessinfos") && $rechte) {
     // get user_id if somebody wants more infos about a user
@@ -203,7 +205,7 @@ URLHelper::addLinkParam('open_users', $open_users);
 
 // Aktivitaetsanzeige an_aus
 
-if ($cmd=="showscore") {
+if ($cmd =="showscore") {
     //erst mal sehen, ob er hier wirklich Dozent ist...
     if ($rechte) {
         $db->query("UPDATE seminare SET showscore = '1' WHERE Seminar_id = '$id'");
@@ -211,7 +213,7 @@ if ($cmd=="showscore") {
     }
 }
 
-if ($cmd=="hidescore") {
+if ($cmd =="hidescore") {
     //erst mal sehen, ob er hier wirklich Dozent ist...
     if ($rechte) {
         $db->query("UPDATE seminare SET showscore = '0' WHERE Seminar_id = '$id'");
@@ -219,13 +221,13 @@ if ($cmd=="hidescore") {
     }
 }
 
-if (Seminar_Session::check_ticket($studipticket) && !LockRules::Check($id, 'participants')){
+if (Seminar_Session::check_ticket(Request::option('studipticket')) && !LockRules::Check($id, 'participants')){
     // edit special seminar_info of an user
     if ($cmd == "change_userinfo") {
         //first we have to check if he is really "Dozent" of this seminar
         if ($rechte) {
-            $db->query("UPDATE admission_seminar_user SET comment = '$userinfo' WHERE seminar_id = '$id' AND user_id = '$user_id'");
-            $db->query("UPDATE seminar_user SET comment = '$userinfo' WHERE Seminar_id = '$id' AND user_id = '$user_id'");
+            $db->query("UPDATE admission_seminar_user SET comment = '".Request::quoted('userinfo')."' WHERE seminar_id = '$id' AND user_id = '".Request::quoted('user_id')."'");
+            $db->query("UPDATE seminar_user SET comment = '".Request::quoted('userinfo')."' WHERE Seminar_id = '$id' AND user_id = '".Request::quoted('user_id')."'");
             $msg = "msg§" . _("Die Zusatzinformationen wurden ge&auml;ndert.") . "§";
         }
         $cmd = "moreinfos";
@@ -233,7 +235,7 @@ if (Seminar_Session::check_ticket($studipticket) && !LockRules::Check($id, 'part
 
     // Hier will jemand die Karriereleiter rauf...
 
-    if ( ($cmd == "pleasure" && $username) || (isset($_REQUEST['do_autor_to_tutor_x']) && is_array($_REQUEST['autor_to_tutor'])) ){
+    if ( ($cmd == "pleasure" && $username) || (Request::submitted('do_autor_to_tutor') && is_array($_REQUEST['autor_to_tutor'])) ){
         //erst mal sehen, ob er hier wirklich Dozent ist... Tutoren d&uuml;rfen andere nicht zu Tutoren befoerdern!
         if ($rechte AND $SemUserStatus != "tutor")  {
             $msgs = array();
@@ -261,7 +263,7 @@ if (Seminar_Session::check_ticket($studipticket) && !LockRules::Check($id, 'part
 
     // jemand ist der anspruchsvollen Aufgabe eines Tutors nicht gerecht geworden...
 
-    if ( ($cmd == "pain" && $username) || (isset($_REQUEST['do_tutor_to_autor_x']) && is_array($_REQUEST['tutor_to_autor'])) ){
+    if ( ($cmd == "pain" && $username) || (Request::submitted('do_tutor_to_autor') && is_array($_REQUEST['tutor_to_autor'])) ){
         //erst mal sehen, ob er hier wirklich Dozent ist... Tutoren d&uuml;rfen andere Tutoren nicht rauskicken!
         if ($rechte AND $SemUserStatus != "tutor") {
             $msgs = array();
@@ -294,7 +296,7 @@ if (Seminar_Session::check_ticket($studipticket) && !LockRules::Check($id, 'part
 
     // jemand ist zu bloede, sein Seminar selbst zu abbonieren...
 
-    if ( ($cmd == "schreiben" && $username) || (isset($_REQUEST['do_user_to_autor_x']) && is_array($_REQUEST['user_to_autor'])) ){
+    if ( ($cmd == "schreiben" && $username) || (Request::submitted('do_user_to_autor') && is_array($_REQUEST['user_to_autor'])) ){
         //erst mal sehen, ob er hier wirklich Dozent ist...
         if ($rechte) {
             $msgs = array();
@@ -321,7 +323,7 @@ if (Seminar_Session::check_ticket($studipticket) && !LockRules::Check($id, 'part
 
     // jemand sollte erst mal das Maul halten...
 
-    if ( ($cmd == "lesen" && $username) || (isset($_REQUEST['do_autor_to_user_x']) && is_array($_REQUEST['autor_to_user'])) ){
+    if ( ($cmd == "lesen" && $username) || (Request::submitted('do_autor_to_user') && is_array($_REQUEST['autor_to_user'])) ){
         //erst mal sehen, ob er hier wirklich Dozent ist...
         if ($rechte) {
             $msgs = array();
@@ -349,7 +351,7 @@ if (Seminar_Session::check_ticket($studipticket) && !LockRules::Check($id, 'part
 
     // und tschuess...
 
-    if ( ($cmd == "raus" && $username) || (isset($_REQUEST['do_user_to_null_x']) && is_array($_REQUEST['user_to_null'])) ){
+    if ( ($cmd == "raus" && $username) || (Request::submitted('do_user_to_null') && is_array($_REQUEST['user_to_null'])) ){
         //erst mal sehen, ob er hier wirklich Dozent ist...
         if ($rechte) {
             $msgs = array();
@@ -388,7 +390,7 @@ if (Seminar_Session::check_ticket($studipticket) && !LockRules::Check($id, 'part
     }
 
     //aus der Anmelde- oder Warteliste entfernen
-    if ( ($cmd == "admission_raus" && $username)  || (isset($_REQUEST['do_admission_delete_x']) && is_array($_REQUEST['admission_delete']) ) ) {
+    if ( ($cmd == "admission_raus" && $username)  || (Request::submitted('do_admission_delete') && is_array($_REQUEST['admission_delete']) ) ) {
         //erst mal sehen, ob er hier wirklich Dozent ist...
         if ($rechte) {
             $msgs = array();
@@ -409,7 +411,7 @@ if (Seminar_Session::check_ticket($studipticket) && !LockRules::Check($id, 'part
                 $db->query("DELETE FROM admission_seminar_user WHERE seminar_id = '$id' AND user_id = '$userchange'");
                 if($db->affected_rows()){
                     setTempLanguage($userchange);
-                    if (!$accepted) {
+                    if (!Request::int('accepted')) {
                         $message = sprintf(_("Sie wurden von einem/einer VeranstaltungsleiterIn (%s) oder AdministratorIn von der Warteliste der Veranstaltung **%s** gestrichen und sind damit __nicht__ zugelassen worden."), get_title_for_status('dozent', 1), $SessSemName[0]);
                     } else {
                         $message = sprintf(_("Sie wurden von einem/einer VeranstaltungsleiterIn (%s) oder AdministratorIn aus der Veranstaltung **%s** gestrichen und sind damit __nicht__ zugelassen worden."), get_title_for_status('dozent', 1), $SessSemName[0]);
@@ -423,7 +425,7 @@ if (Seminar_Session::check_ticket($studipticket) && !LockRules::Check($id, 'part
             }
             //Warteliste neu sortieren
             renumber_admission($id);
-            if ($accepted) update_admission($id);
+            if (Request::int('accepted')) update_admission($id);
             $msg = "msg§". sprintf(_("LeserIn %s wurde aus der Anmelde bzw. Warteliste entfernt."), htmlReady(join(', ', $msgs))) . '§';
         } else {
             $msg ="error§" . _("Sie haben leider nicht die notwendige Berechtigung für diese Aktion.") . "§";
@@ -434,7 +436,7 @@ if (Seminar_Session::check_ticket($studipticket) && !LockRules::Check($id, 'part
         $username = key($_REQUEST['admission_rein']);
     }
     //aus der Anmelde- oder Warteliste in die Veranstaltung hochstufen / aus der freien Suche als Tutoren oder Autoren eintragen
-    if ((isset($_REQUEST['do_admission_insert_x']) && is_array($_REQUEST['admission_insert'])) || (($cmd == "admission_rein" || $cmd == "add_user") && $username)){
+    if ((Request::submitted('do_admission_insert') && is_array($_REQUEST['admission_insert'])) || (($cmd ==  "admission_rein" || $cmd == "add_user") && $username)){
         //erst mal sehen, ob er hier wirklich Dozent ist...
         if ($rechte) {
             $msgs = array();
@@ -473,14 +475,14 @@ if (Seminar_Session::check_ticket($studipticket) && !LockRules::Check($id, 'part
                     $status = 'autor';
                 }
 
-                $admission_user = insert_seminar_user($id, $userchange, $status, ($accepted || $_REQUEST['consider_contingent'] ? TRUE : FALSE), $_REQUEST['consider_contingent']);
+                $admission_user = insert_seminar_user($id, $userchange, $status, (Request::int('accepted') || $_REQUEST['consider_contingent'] ? TRUE : FALSE), $_REQUEST['consider_contingent']);
                 //Only if user was on the waiting list
                 if($admission_user){
                     setTempLanguage($userchange);
                     if ($cmd == "add_user") {
                         $message = sprintf(_("Sie wurden vom einem/einer %s oder AdministratorIn als TeilnehmerIn in die Veranstaltung **%s** eingetragen."), get_title_for_status('dozent', 1), $SessSemName[0]);
                     } else {
-                        if (!$accepted) {
+                        if (!Request::int('accepted')) {
                             $message = sprintf(_("Sie wurden vom einem/einer %s oder AdministratorIn aus der Warteliste in die Veranstaltung **%s** aufgenommen und sind damit zugelassen."), get_title_for_status('dozent', 1), $SessSemName[0]);
                         } else {
                             $message = sprintf(_("Sie wurden von einem/einer %s oder AdministratorIn vom Status **vorläufig akzeptiert** zum/r TeilnehmerIn der Veranstaltung **%s** hochgestuft und sind damit zugelassen."), get_title_for_status('dozent', 1), $SessSemName[0]);
@@ -499,7 +501,7 @@ if (Seminar_Session::check_ticket($studipticket) && !LockRules::Check($id, 'part
                 if ($cmd=="add_user") {
                     $msg = "msg§" . sprintf(_("NutzerIn %s wurde in die Veranstaltung mit dem Status <b>%s</b> eingetragen."), htmlReady($fullname), $status) . "§";
                 } else {
-                    if (!$accepted) {
+                    if (!Request::int('accepted')) {
                         $msg = "msg§" . sprintf(_("NutzerIn %s wurde aus der Anmelde bzw. Warteliste mit dem Status <b>%s</b> in die Veranstaltung eingetragen."), htmlReady(join(', ', $msgs)), $status) . "§";
                     } else {
                         $msg = "msg§" . sprintf(_("NutzerIn %s wurde mit dem Status <b>%s</b> endgültig akzeptiert und damit in die Veranstaltung aufgenommen."), htmlReady(join(', ', $msgs)), $status) . "§";
@@ -514,7 +516,7 @@ if (Seminar_Session::check_ticket($studipticket) && !LockRules::Check($id, 'part
     }
 
     // import users from a csv-list
-    if ($_REQUEST['cmd'] == 'csv' && $rechte) {
+    if ($cmd == 'csv' && $rechte) {
         $csv_mult_founds = array();
         $csv_count_insert = 0;
         $csv_count_multiple = 0;
@@ -522,7 +524,7 @@ if (Seminar_Session::check_ticket($studipticket) && !LockRules::Check($id, 'part
         if ($_REQUEST['csv_import_format'] && !in_array($_REQUEST['csv_import_format'], words('realname username'))) {
             //check accessible datafields for ("user" => 1, "autor" => 2, "tutor" => 4, "dozent" => 8)
             foreach(DataFieldStructure::getDataFieldStructures('user', (1|2|4|8), true) as $df) {
-                if ($df->accessAllowed($perm) && in_array($df->getId(), $TEILNEHMER_IMPORT_DATAFIELDS) 
+                if ($df->accessAllowed($perm) && in_array($df->getId(), $TEILNEHMER_IMPORT_DATAFIELDS)
                     && $df->getId() == $_REQUEST['csv_import_format']) {
                     $df_id = $df->getId();
                     break;
@@ -614,11 +616,11 @@ if (Seminar_Session::check_ticket($studipticket) && !LockRules::Check($id, 'part
         }
         $msg = '';
         if (!$csv_count_multiple) {
-            $_REQUEST['cmd'] = '';
+            $cmd = '';
         }
         if (!sizeof($csv_lines) && !sizeof($_REQUEST['selected_users'])) {
             $msg = 'error§' . _("Keine NutzerIn gefunden!") . '§';
-            $_REQUEST['cmd'] = '';
+            $cmd = '';
         } else {
             if ($csv_count_insert) {
                 $msg .=  'msg§' . sprintf(_("%s NutzerInnen als AutorIn in die Veranstaltung eingetragen!"),
@@ -645,10 +647,11 @@ if (Seminar_Session::check_ticket($studipticket) && !LockRules::Check($id, 'part
 
     // so bin auch ich berufen?
 
-    if (isset($add_tutor_x)) {
+    if ( Request::submitted('add_tutor') ) {
         //erst mal sehen, ob er hier wirklich Dozent ist...
         if ($rechte AND $SemUserStatus!="tutor") {
                     // nur wenn wer ausgewaehlt wurde
+            $u_id = Request::option('u_id');
             if ($u_id != "0") {
                 $query = "SELECT DISTINCT b.user_id, username, Vorname, Nachname, inst_perms, perms FROM seminar_inst d LEFT JOIN user_inst a USING(Institut_id) ".
                 "LEFT JOIN auth_user_md5  b USING(user_id) ".
@@ -749,7 +752,7 @@ $anzahl_teilnehmer_kontingent += $db->f('teilnehmer_kontingent');
         <tr>
         <td colspan="2" class="blank" id="change_visibility">
             <?
-            $db3->query("SELECT status, visible FROM seminar_user WHERE user_id = '".$auth->auth['uid']."' AND Seminar_id = '$SessionSeminar'");
+            $db3->query("SELECT status, visible FROM seminar_user WHERE user_id = '".$auth->auth['uid']."' AND Seminar_id = '".$_SESSION['SessionSeminar']."'");
             $visible_mode = "false";
 
             if ($db3->num_rows() > 0) {
@@ -767,7 +770,7 @@ $anzahl_teilnehmer_kontingent += $db->f('teilnehmer_kontingent');
                 }
             }
 
-            $db3->query("SELECT status, visible FROM admission_seminar_user WHERE user_id = '".$auth->auth['uid']."' AND seminar_id = '$SessionSeminar'");
+            $db3->query("SELECT status, visible FROM admission_seminar_user WHERE user_id = '".$auth->auth['uid']."' AND seminar_id = '".$_SESSION['SessionSeminar']."'");
             if ($db3->num_rows() > 0) {
                 if ($db3->f("visible") == "yes") {
                     $iam_visible = true;
@@ -820,7 +823,7 @@ $anzahl_teilnehmer_kontingent += $db->f('teilnehmer_kontingent');
                 <td class="steelkante" valign="middle">
                             <font size="-1"><?=_("Sortierung:")?>&nbsp;</font>
                         </td>
-                        <? if (!isset($view_order) || ($view_order == "abc")) { ?>
+                        <? if (!(Request::option('view_order')) || (Request::option('view_order') == "abc")) { ?>
                         <td nowrap class="steelgraulight_shadow" valign="middle">
                             <?= Assets::img('icons/16/red/arr_1right.png', array('class' => 'text-top')) ?>
                             <font size="-1"><?=_("Alphabetisch")?></font>&nbsp;
@@ -834,7 +837,7 @@ $anzahl_teilnehmer_kontingent += $db->f('teilnehmer_kontingent');
                             &nbsp;
                         <? } ?>
                         </td>
-                        <? if (isset($view_order) && ($view_order == "date")) { ?>
+                        <? if ((Request::option('view_order')) && (Request::option('view_order') == "date")) { ?>
                         <td nowrap class="steelgraulight_shadow" valign="middle">
                             <?= Assets::img('icons/16/red/arr_1right.png', array('class' => 'text-top')) ?>
                             <font size="-1"><?=_("Anmeldedatum")?></font>&nbsp;
@@ -848,7 +851,7 @@ $anzahl_teilnehmer_kontingent += $db->f('teilnehmer_kontingent');
                             &nbsp;
                         <? } ?>
                         </td>
-                        <? if (isset($view_order) && ($view_order == "active")) { ?>
+                        <? if ((Request::option('view_order')) && (Request::option('view_order') == "active")) { ?>
                         <td nowrap class="steelgraulight_shadow" valign="middle">
                             <?= Assets::img('icons/16/red/arr_1right.png', array('class' => 'text-top')) ?>
                             <font size="-1"><?=_("Aktivität")?></font>&nbsp;
@@ -865,7 +868,7 @@ $anzahl_teilnehmer_kontingent += $db->f('teilnehmer_kontingent');
 
                             <td nowrap align="right" class="steelkante" valign="middle"> <?
 
-            $db3->query ("SELECT showscore  FROM seminare WHERE Seminar_id = '$SessionSeminar'");
+            $db3->query ("SELECT showscore  FROM seminare WHERE Seminar_id = '".$_SESSION['SessionSeminar']."'");
             while ($db3->next_record()) {
                 if ($db3->f("showscore") == 1) {
                     if ($rechte) {
@@ -893,7 +896,7 @@ $anzahl_teilnehmer_kontingent += $db->f('teilnehmer_kontingent');
     </tr>
     <tr>
         <td class="blank" width="100%" colspan="2">
-        <a href="<?= URLHelper::getLink('sms_send.php', array('sms_source_page' => 'teilnehmer.php?cid=' . $SessionSeminar, 'course_id' => $SessSemName[1], 'emailrequest' => 1, 'subject' => $subject, 'filter' => 'all')) ?>">
+        <a href="<?= URLHelper::getLink('sms_send.php', array('sms_source_page' => 'teilnehmer.php?cid=' . $_SESSION['SessionSeminar'], 'course_id' => $SessSemName[1], 'emailrequest' => 1, 'subject' => $subject, 'filter' => 'all')) ?>">
         <?= Assets::img('icons/16/blue/move_right/mail.png', array('class' => 'text-top')) ?>
         <?=_("Systemnachricht mit Emailweiterleitung an alle Teilnehmer verschicken")?>
         </a>
@@ -917,21 +920,21 @@ $anzahl_teilnehmer_kontingent += $db->f('teilnehmer_kontingent');
 $studipticket = Seminar_Session::get_ticket();
 
 //Index berechnen
-$db3->query ("SELECT count(dokument_id) AS count_doc FROM dokumente WHERE seminar_id = '$SessionSeminar'");
+$db3->query ("SELECT count(dokument_id) AS count_doc FROM dokumente WHERE seminar_id = '".$_SESSION['SessionSeminar']."'");
 if ($db3->next_record()) {
     $aktivity_index_seminar = $db3->f("count_doc") * 5;
 }
-$db3->query ("SELECT count(topic_id) AS count_post FROM px_topics WHERE Seminar_id = '$SessionSeminar'");
+$db3->query ("SELECT count(topic_id) AS count_post FROM px_topics WHERE Seminar_id = '".$_SESSION['SessionSeminar']."'");
 if ($db3->next_record()) {
     $aktivity_index_seminar += $db3->f("count_post");
 }
-$db3->query ("SELECT count(user_id) AS count_pers FROM seminar_user WHERE Seminar_id = '$SessionSeminar'");
+$db3->query ("SELECT count(user_id) AS count_pers FROM seminar_user WHERE Seminar_id = '".$_SESSION['SessionSeminar']."'");
 if ($db3->next_record() && $db3->f("count_pers")) {
     $aktivity_index_seminar /= $db3->f("count_pers");
 }
 
 //Veranstaltungsdaten holen
-$sem = Seminar::GetInstance($SessionSeminar);
+$sem = Seminar::GetInstance($_SESSION['SessionSeminar']);
 $sem->restoreAdmissionStudiengang();
 if ($rechte) {
     if ($sem->isAdmissionEnabled())
@@ -942,7 +945,7 @@ if ($rechte) {
     $colspan=7;
 if ($showscore==TRUE) $colspan++;
 
-switch ($view_order) {
+switch (Request::option('view_order')) {
     case "date":
         $sortby = "mkdate";
         break;
@@ -971,12 +974,12 @@ while (list ($key, $val) = each ($gruppe)) {
     $db->query ("SELECT $tbl.visible, $tbl.mkdate, comment, $tbl.user_id, ". $_fullname_sql['full'] ." AS fullname,
                 username, status, count(topic_id) AS doll,  studiengaenge.name, ".$tbl.".".$tbl2."studiengang_id
                 AS studiengang_id
-                FROM $tbl LEFT JOIN px_topics ON (px_topics.user_id = ".$tbl.".user_id 
+                FROM $tbl LEFT JOIN px_topics ON (px_topics.user_id = ".$tbl.".user_id
 																AND px_topics.Seminar_id = ".$tbl.".Seminar_id AND px_topics.anonymous = 0)
                 LEFT JOIN auth_user_md5 ON (".$tbl.".user_id=auth_user_md5.user_id)
                 LEFT JOIN user_info ON (auth_user_md5.user_id=user_info.user_id)
                 LEFT JOIN studiengaenge ON (".$tbl.".".$tbl2."studiengang_id = studiengaenge.studiengang_id)
-                WHERE ".$tbl.".Seminar_id = '$SessionSeminar'
+                WHERE ".$tbl.".Seminar_id = '".$_SESSION['SessionSeminar']."' 
                 AND status = '$key' GROUP by ".$tbl.".user_id ORDER BY $sortby");
 
     if($rechte && $key == 'autor'  && $sem->isAdmissionEnabled()){
@@ -1047,9 +1050,9 @@ while (list ($key, $val) = each ($gruppe)) {
         }
 
         if ($key == 'accepted') {
-            $msg_params = array('filter' => 'prelim', 'sms_source_page' => 'teilnehmer.php?cid=' . $SessionSeminar, 'course_id' => $SessSemName[1], 'subject' => $subject);
+            $msg_params = array('filter' => 'prelim', 'sms_source_page' => 'teilnehmer.php?cid=' . $_SESSION['SessionSeminar'], 'course_id' => $SessSemName[1], 'subject' => $subject);
         } else {
-            $msg_params = array('filter' => 'send_sms_to_all', 'who' => $key, 'sms_source_page' => 'teilnehmer.php?cid=' . $SessionSeminar, 'course_id' => $SessSemName[1], 'subject' => $subject);
+            $msg_params = array('filter' => 'send_sms_to_all', 'who' => $key, 'sms_source_page' => 'teilnehmer.php?cid=' . $_SESSION['SessionSeminar'], 'course_id' => $SessSemName[1], 'subject' => $subject);
         }
         echo '<a href="'.URLHelper::getLink('sms_send.php', $msg_params).'">';
         echo Assets::img('icons/16/blue/mail.png', array('title' => sprintf(_('Nachricht an alle %s schicken'), $val), 'align' => 'absmiddle'));
@@ -1136,7 +1139,7 @@ while (list ($key, $val) = each ($gruppe)) {
 
     $Dokumente = 0;
     $UID = $db->f("user_id");
-    $db2->query ("SELECT count(dokument_id) AS doll FROM dokumente WHERE seminar_id = '$SessionSeminar' AND user_id = '$UID' GROUP by seminar_id");
+    $db2->query ("SELECT count(dokument_id) AS doll FROM dokumente WHERE seminar_id = '".$_SESSION['SessionSeminar']."' AND user_id = '$UID' GROUP by seminar_id");
     while ($db2->next_record()) {
         $Dokumente = $db2->f("doll");
     }
@@ -1207,7 +1210,7 @@ if ($db->f('visible') == 'yes' || $i_see_everybody || $db->f('user_id') == $user
     ?>
         <span style="position: relative">
             <a href="<?= URLHelper::getLink('about.php?username='.$db->f("username")) ?>">
-                <? if (!$GLOBALS['perm']->have_studip_perm('tutor', $SessionSeminar)) :
+                <? if (!$GLOBALS['perm']->have_studip_perm('tutor', $_SESSION['SessionSeminar'])) :
                     $last_visitdate = time()+10;
                 endif ?>
                 <? $db->f('mkdate') >= $last_visitdate
@@ -1244,7 +1247,7 @@ if ($db->f('visible') == 'yes' || $i_see_everybody || $db->f('user_id') == $user
             echo chat_get_online_icon($db->f("user_id"),$db->f("username"),$SessSemName[1]) . " ";
         }
 
-        printf ("<a href=\"%s\"><img class=\"text-top\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/mail.png\" %s ></a>", URLHelper::getLink("sms_send.php", array("sms_source_page" => 'teilnehmer.php?cid=' . $SessionSeminar, "subject" => $subject, "rec_uname" => $db->f("username"))), tooltip(_("Nachricht an Benutzer verschicken")));
+        printf ("<a href=\"%s\"><img class=\"text-top\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/mail.png\" %s ></a>", URLHelper::getLink("sms_send.php", array("sms_source_page" => 'teilnehmer.php?cid=' . $_SESSION['SessionSeminar'], "subject" => $subject, "rec_uname" => $db->f("username"))), tooltip(_("Nachricht an Benutzer verschicken")));
 
     if (isset($multiaction[$key]['send'][0]) && $rechte)
     printf("<input class=\"text-top\" type=\"checkbox\" name=\"send_msg[%s]\" value=\"1\"></td>", $username);
@@ -1460,13 +1463,13 @@ echo "</td></tr>\n";  // Auflistung zuende
 // Warteliste
 $awaiting = false;
 if ($rechte) {
-    $db->query ("SELECT admission_seminar_user.user_id, " . $_fullname_sql['full'] . " AS fullname , username, studiengaenge.name, position, admission_seminar_user.studiengang_id, status FROM admission_seminar_user LEFT JOIN auth_user_md5 USING (user_id) LEFT JOIN user_info USING (user_id) LEFT JOIN studiengaenge ON (admission_seminar_user.studiengang_id=studiengaenge.studiengang_id)  WHERE admission_seminar_user.seminar_id = '$SessionSeminar' AND admission_seminar_user.status != 'accepted' ORDER BY position, name");
+    $db->query ("SELECT admission_seminar_user.user_id, " . $_fullname_sql['full'] . " AS fullname , username, studiengaenge.name, position, admission_seminar_user.studiengang_id, status FROM admission_seminar_user LEFT JOIN auth_user_md5 USING (user_id) LEFT JOIN user_info USING (user_id) LEFT JOIN studiengaenge ON (admission_seminar_user.studiengang_id=studiengaenge.studiengang_id)  WHERE admission_seminar_user.seminar_id = '".$_SESSION['SessionSeminar']."' AND admission_seminar_user.status != 'accepted' ORDER BY position, name");
     if ($db->num_rows()) { //Only if Users were found...
         $awaiting = true;
         ?>
         <tr>
         <td class="blank" width="100%" colspan="2">
-        <a href="<?= URLHelper::getLink('sms_send.php', array( 'sms_source_page' => 'teilnehmer.php?cid=' . $SessionSeminar, 'course_id' => $SessSemName[1],  'emailrequest' => 1, 'subject' => $subject, 'filter' => 'waiting')) ?>">
+        <a href="<?= URLHelper::getLink('sms_send.php', array( 'sms_source_page' => 'teilnehmer.php?cid=' . $_SESSION['SessionSeminar'], 'course_id' => $SessSemName[1],  'emailrequest' => 1, 'subject' => $subject, 'filter' => 'waiting')) ?>">
         <?= Assets::img('icons/16/blue/move_right/mail.png', array('class' => 'text-top'))?>
         <?=_("Systemnachricht mit Emailweiterleitung an alle Wartenden verschicken")?>
         </a>
@@ -1502,7 +1505,7 @@ if ($rechte) {
                 printf ("<td width=\"10%%\" align=\"center\" class=\"%s\"><font size=\"-1\">%s</font></td>", $cssSw->getClass(), $db->f("position"));
             printf ("<td width=\"10%%\" align=\"center\" class=\"%s\">&nbsp; </td>", $cssSw->getClass());
 
-            printf ("<td width=\"10%%\" align=\"center\" class=\"%s\"><a href=\"%s\"><img class=\"text-bottom\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/mail.png\" %s></a></td>", $cssSw->getClass(), URLHelper::getLink('sms_send.php', array('sms_source_page' => 'teilnehmer.php?cid=' . $SessionSeminar, 'rec_uname' => $db->f("username"))), tooltip(_("Nachricht an Benutzer verschicken")));
+            printf ("<td width=\"10%%\" align=\"center\" class=\"%s\"><a href=\"%s\"><img class=\"text-bottom\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/mail.png\" %s></a></td>", $cssSw->getClass(), URLHelper::getLink('sms_send.php', array('sms_source_page' => 'teilnehmer.php?cid=' . $_SESSION['SessionSeminar'], 'rec_uname' => $db->f("username"))), tooltip(_("Nachricht an Benutzer verschicken")));
             if(!LockRules::Check($id, 'participants')){
                 printf ("<td width=\"15%%\" align=\"center\" class=\"%s\"><input type=\"image\" name=\"admission_rein[%s]\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/yellow/arr_2up.png\">
                         <input type=\"checkbox\" name=\"admission_insert[%s]\" value=\"1\"></td>", $cssSw->getClass(), $db->f("username"), $db->f("username"));
@@ -1531,7 +1534,7 @@ if ($rechte) {
 if (!LockRules::Check($id, 'participants') && $rechte
         && $SemUserStatus!="tutor"
         && $SEM_CLASS[$SEM_TYPE[$SessSemName["art_num"]]["class"]]["only_inst_user"]
-        && $_REQUEST['cmd'] != 'csv') {
+        && $cmd != 'csv') {
     $query = "SELECT a.user_id, username, " . $_fullname_sql['full_rev'] ." AS fullname, inst_perms, perms FROM seminar_inst d LEFT JOIN user_inst a USING(Institut_id) ".
     "LEFT JOIN auth_user_md5  b USING(user_id) LEFT JOIN user_info USING(user_id) ".
     "LEFT JOIN seminar_user c ON (c.user_id=a.user_id AND c.seminar_id='$SessSemName[1]')  ".
@@ -1568,7 +1571,7 @@ if (!LockRules::Check($id, 'participants') && $rechte
 
 //insert autors via free search form
 if (!LockRules::Check($id, 'participants') && $rechte) {
-    if ($_REQUEST['cmd'] != 'csv') {
+    if ($cmd != 'csv') {
     if ($search_exp) {
         $search_exp = trim($search_exp);
         $query = "SELECT a.user_id, username, " . $_fullname_sql['full_rev'] ." AS fullname, perms FROM auth_user_md5 a ".

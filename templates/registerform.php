@@ -1,6 +1,7 @@
 <?php
 # Lifter005: TODO - form validation
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
     $cfg = Config::GetInstance();
     $email_restriction = $cfg->getValue('EMAIL_DOMAIN_RESTRICTION');
 ?>
@@ -206,8 +207,8 @@ function checkdata(){
 
  <tr>
   <td colspan="3" align=right>
-  <input type="image"  name="submitbtn" <?=makeButton("uebernehmen","src")?> align="absmiddle" border="0" >
-  &nbsp;<a href="index.php?cancel_login=1"><img <?=makeButton("abbrechen","src")?> align="absmiddle" border="0"></a>
+      <?= Button::create(_('übernehmen'))?>
+      <?= LinkButton::createCancel(_('abbrechen'), 'index.php?cancel_login=1')?>
   </td>
  </tr>
 </table>

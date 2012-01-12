@@ -1,5 +1,6 @@
 <?
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
 global $SEM_TYPE;
 ?>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
@@ -40,9 +41,7 @@ global $SEM_TYPE;
                         </select>
 
                         <?= SemesterData::GetSemesterSelector(array('name'=>'select_sem', 'style'=>'vertical-align:middle;'), $_default_sem) ?>
-
-                        <input <?= makeButton("auswaehlen", "src")?> <?= tooltip(_("Einrichtung auswählen")) ?>
-                               type="image" border="0" style="vertical-align:middle;">
+                        <?= Button::create(_('auswählen'), array('title' => _('Einrichtung auswählen')))?>
                     </div>
                 </form>
                 <br>

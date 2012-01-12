@@ -1,5 +1,6 @@
 <?
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
 ?>
 <div align="center">
 <table width="70%" border=0 cellpadding=0 cellspacing=0>
@@ -13,7 +14,7 @@
  <?= CSRFProtection::tokenTag() ?>
  <input name="key">
  <input name="uid" type="hidden" value="<?= $uid ?>">
- <?= makeButton("abschicken","input") ?></form><br><br>
+ <?= Button::createAccept(_('abschicken')) ?></form><br><br>
 </td></tr></table></div><br>
 
 
@@ -30,7 +31,7 @@
 <input type="hidden" name="uid" value="<?= $uid ?>">
 <table><tr><td><?= _('E-Mail:') ?></td><td><input name="email1"></td></tr>
 <tr><td><?= _('Wiederholung:') ?></td><td><input name="email2"></td></tr></table>
-<?= makeButton("abschicken", "input") ?>
+<?= Button::createAccept(_('abschicken'))  ?>
 </form>
 </td></tr></table></div><br>
 

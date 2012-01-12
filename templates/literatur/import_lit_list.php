@@ -1,5 +1,6 @@
 <?
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
 ?>
 <p class="info">
     <form enctype="multipart/form-data" action="<?= URLHelper::getLink('?_range_id='. $_range_id .'&username='. $username) ?>" method="post">
@@ -33,7 +34,7 @@
                 <br>
                 <?= _("2. Klicken Sie auf <b>absenden</b>, um die Datei hochzuladen.") ?><br>
                 <br>
-        <?= makeButton("absenden", "input") ?>
+        <?= Button::createAccept(_('absenden'))?>
             <? endif; ?>
                 <br>
                 <br>

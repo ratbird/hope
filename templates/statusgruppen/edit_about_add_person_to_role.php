@@ -1,5 +1,6 @@
 <?
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
 ?>
 <tr>
     <td class="steelkante">&nbsp;<b><?=_("Person einer Gruppe zuordnen")?></b></td>
@@ -24,7 +25,7 @@
             ?>
             </select>
             <br>
-            <input type="image" <?=makeButton('anzeigen','src')?>>
+            <?= Button::create(_('anzeigen'))?>
             <?
             } else {
                 $data = $admin_insts[$subview_id];
@@ -45,7 +46,7 @@
                 <input type="hidden" name="studipticket" value="<?= get_ticket() ?>">
                 <input type="hidden" name="subview_id" value="<?=$subview_id?>">
                 <input type="hidden" name="cmd" value="addToGroup">
-                <input type="image" <?=makeButton('zuordnen','src')?>>
+                <?= Button::create(_('zuordnen'))?>
             <?
             }
             if ($subview_id && !$groups) :

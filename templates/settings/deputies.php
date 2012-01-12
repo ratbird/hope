@@ -1,5 +1,6 @@
 <?
 # Lifter010: TODO
+use Studip\Buttons, Studip\LinkButton;
 ?>
 <table width="100%" border="0" cellpadding="0" cellspacing="0" align="center">
     <tr>
@@ -75,7 +76,7 @@
                 <?php } ?>
                 <tr class="<?=TextHelper::cycle('steelgraulight', 'steel1')?>">
                     <td colspan="3" align="center">
-                        <?php echo makeButton('uebernehmen', 'input', _('Änderungen speichern'), 'change_deputies'); ?>
+                        <?= Button::create(_('übernehmen'), 'change_deputies', array('title' =>  _('Änderungen speichern')))?>
                     </td>
                 </tr>
                 <?php } else { ?>

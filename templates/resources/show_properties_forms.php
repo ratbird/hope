@@ -1,5 +1,6 @@
 <?
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
 ?>
 <table border="0" celpadding="2" cellspacing="0" width="99%" align="center">
 <form method="post" action="<?= UrlHelper::getLink('?change_object_properties='. $resObject->getId()) ?>">
@@ -30,7 +31,7 @@
                     <? endif;
                 endwhile; ?>
                 </select>
-                <input type="image" name="assign" <?=makeButton("zuweisen", "src")?> value="<?=_("Zuweisen")?>">
+                <?= Button::create(_("zuweisen"), 'assign')?>
             <? else : ?>
                 <b><?=  htmlReady($resObject->getCategoryName()) ?></b>
                 <input type="hidden" name="change_category_id" value="<?= $resObject->getCategoryId() ?>">
@@ -201,9 +202,9 @@
         </td>
         <td class="<?= $cssSw->getClass() ?>" colspan="2" align="center">
             <br>
-            <input type="image" align="absmiddle" <?=makeButton("uebernehmen", "src")?> name="submit" value="<?=_("Zuweisen")?>">
+            <?= Button::create(_('übernehmen'))?>
             <? if ($resObject->isUnchanged()) : ?>
-                <a href="<?= UrlHelper::getLink('?cancel_edit='. $resObject->id) ?>"><?= makeButton("abbrechen", "img") ?></a>
+                <?= LinkButton::createCancel(_('abbrechen'), UrlHelper::getLink('?cancel_edit='. $resObject->id))?>
             <? endif; ?>
             <br>&nbsp;
         </td>

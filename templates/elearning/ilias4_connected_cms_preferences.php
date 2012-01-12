@@ -1,5 +1,7 @@
 <?php
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
+
 if ($messages["error"] != "") {
     echo MessageBox::error($messages["error"]);
 }
@@ -86,6 +88,6 @@ if ($messages["error"] != "") {
         </tr>
     </tbody>
 </table>
-<div style="text-align: center"><?=makeButton('uebernehmen', 'input',_("Einstellungen übernehmen"),'submit')?>
+<div style="text-align: center"><?= Button::create(_('übernehmen'), array('title' =>_("Einstellungen übernehmen")))?>
 </div>
 <div style="margin-top: 2em;"><?=$module_types?></div>

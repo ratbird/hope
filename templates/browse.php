@@ -1,5 +1,7 @@
 <?
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
+
 ?>
 <!-- SEARCHBOX -->
 <form action="<?= URLHelper::getLink() ?>" method="post">
@@ -60,8 +62,8 @@
     </tr>
     <tr class="steel2">
         <td colspan="2" align="center">
-            <?=makeButton('suchen', 'input', 'Suchen', 'send')?>
-            <?=makeButton('zuruecksetzen', 'input', 'zuruecksetzen', 'reset')?>
+            <?= Button::create(_('suchen'), 'send')?>
+            <?= Button::create(_('zurücksetzen'), 'reset')?>
         </td>
     </tr>
 </table>

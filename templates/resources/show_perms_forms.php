@@ -1,5 +1,6 @@
 <?
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
 ?>
 <form method="post" action="<?= UrlHelper::getLink('?change_object_perms='. $resObject->getId()) ?>">
 <?= CSRFProtection::tokenTag() ?>
@@ -156,7 +157,7 @@
             &nbsp;
         </td>
         <td class="<? echo $cssSw->getClass() ?>" colspan=3 align="center">
-            <br><input type="image" <?=makeButton("uebernehmen", "src")?> name="submit" value="<?=_("Zuweisen")?>"><br>&nbsp;
+            <br><?= Button::create(_('übernehmen'), array('title' => _('Zuweisen')))?>
         </td>
     </tr>
 </table>

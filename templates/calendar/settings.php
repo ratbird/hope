@@ -1,4 +1,6 @@
 <?
+use Studip\Button, Studip\LinkButton;
+
 $css_switcher = new cssClassSwitcher();
 $css_switcher->switchClass();
 ?>
@@ -202,7 +204,7 @@ $css_switcher->switchClass();
                         <input type="hidden" name="atime" value="<?= $atime ?>">
                     <? endif ?>
                     <input type="hidden" name="view" value="calendar">
-                    <? echo makeButton("uebernehmen" , "input", _("Änderungen übernehmen")); ?>
+                    <?= Button::create(_('übernehmen'), array('title' => _("Änderungen übernehmen")))?>
                     </td>
                 </tr>
             </table>

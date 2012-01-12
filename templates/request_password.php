@@ -1,5 +1,6 @@
 <?
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
 ?>
 <div class="index_container" style="width: 750px;">
 <?if (sizeof($messages)):?>
@@ -40,9 +41,8 @@
                 </tr>
                 <tr>
                     <td align="center" colspan="2">
-                        <?=makeButton('abschicken', 'input', _("Abschicken"))?>
-                        &nbsp;
-                        <a href="index.php?cancel_login=1"><?=makeButton('abbrechen', 'img', _("Abbrechen"))?></a>
+                        <?= Button::createAccept(_('abschicken'))?>
+                        <?= LinkButton::createCancel(_('abbrechen'), 'index.php?cancel_login=1')?>
                         <br>
                     </td>
                 </tr>

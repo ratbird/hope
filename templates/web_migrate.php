@@ -1,5 +1,6 @@
 <?
 # Lifter010: TODO
+use Studip\Button, Studip\LinkButton;
 ?>
 <?=$this->render_partial('header');?>
 <div align="center">
@@ -64,7 +65,7 @@
               <input type="hidden" name="target" value="<?= $target ?>">
             <? endif ?>
             <div align="center">
-              <?= makeButton('starten', 'input', false, 'start') ?>
+              <?= Button::createAccept(_('starten'), 'start')?>
             </div>
           </form>
         <? endif ?>

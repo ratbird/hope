@@ -18,6 +18,8 @@
  * @package     dates
  */
 
+use Studip\Button, Studip\LinkButton;
+
 class Guestbook
 {
     var $active;    // user has activated the guestbook
@@ -205,7 +207,8 @@ class Guestbook
             $output .= "</font></b></td></tr>"
                 . "<tr><td class=\"steelgraulight\"><font size=\"-1\">".formatready($row['content'])."</font><p align=\"right\">";
             if ($this->rights == TRUE)
-                $addon = "<a href=\"".$PHP_SELF."?guestbook=delete&guestpage=$this->guestpage&deletepost=".$row['post_id']."&username=$this->username&studipticket=".get_ticket()."#guest\">" . makeButton("loeschen", "img") . "</a>";
+                $addon = LinkButton::create(_('löschen'), URLHelper::getURL("?guestbook=delete&guestpage=". $this->guestpage . "&deletepost=" . $row['post_id'] . "&username="
+                            . $this->username . "&studipticket=" . get_ticket() . "#guest"));
             else
                 $addon = "&nbsp;";
 
@@ -238,21 +241,21 @@ class Guestbook
             .$text
             ."<div align=\"center\"><textarea name=\"post\" id=\"post\" style=\"width:70%\" cols=\"". $cols."\"  rows=8 wrap=virtual>"
             ."</textarea>"
-            ."<br><br><input type=image name=create value=\"abschicken\" " . makeButton("abschicken", "src") . " align=\"absmiddle\" border=0>&nbsp;"
+            ."<br><br>" . Button::createAccept(_('abschicken')) . "&nbsp;"
             ."&nbsp;&nbsp;<a href=\"show_smiley.php\" target=\"_blank\"><font size=\"-1\">"._("Smileys")."</a>&nbsp;&nbsp;"."<a href=\"".$help_url."\" target=\"_blank\"><font size=\"-1\">"._("Formatierungshilfen")."</a><br>";
         return $form;
     }
 
     function buttonsGuestbook()
     {
-        global $PHP_SELF;
         $buttons = "";
         if ($this->active == TRUE) {
-            $buttons .= "&nbsp;&nbsp;<a href=\"".$PHP_SELF."?guestbook=switch&username={$this->username}&studipticket=".get_ticket()."#guest\">" . makeButton("deaktivieren", "img") . "</a>";
+            $buttons .= "&nbsp;&nbsp;" . LinkButton::create(_('deaktivieren'), URLHelper::getURL('?guestbook=switch&username=' . $this->username . '&studipticket=' .get_ticket()
+                        . '#guest'));
         } else {
-            $buttons .= "<a href=\"".$PHP_SELF."?guestbook=switch&username=$this->username&studipticket=".get_ticket()."#guest\">" . makeButton("aktivieren", "img") . "</a>";
+            $buttons .= LinkButton::create(_('aktivieren'), URLHelper::getURL('?guestbook=switch&username=' . $this->username. '&studipticket=' . get_ticket() .'#guest'));
         }
-        $buttons .= "&nbsp;&nbsp;<a href=\"".$PHP_SELF."?guestbook=erase&username=$this->username&studipticket=".get_ticket()."#guest\">" . makeButton("alleloeschen", "img") . "</a>";
+        $buttons .= "&nbsp;&nbsp;" . LinkButton::create(_('alle löschen'), URLHelper::getURL('?guestbook=erase&username=' . $this->username . '&studipticket=' . get_ticket() . '#guest'));
         return $buttons;
     }
 
@@ -328,7 +331,7 @@ class Guestbook
     }
 
     /**
-     * aut eine ID die es noch nicht gibt
+     * baut eine ID die es noch nicht gibt
      */
     function makeuniqueGuestbook()
     {

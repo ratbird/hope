@@ -23,6 +23,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+use Studip\Button, Studip\LinkButton;
+
 require '../lib/bootstrap.php';
 
 page_open(array("sess"=> "Seminar_Session", "auth" =>"Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
@@ -118,8 +120,8 @@ if ($perm->have_perm("admin"))  {
 }
 
 if ($cmd == 'news_edit'){
-    if (isset($_REQUEST['news_submit_x'])) $cmd = 'news_submit';
-    if (isset($_REQUEST['news_range_search_x'])){
+    if (isset($_REQUEST['news_submit'])) $cmd = 'news_submit';
+    if (isset($_REQUEST['news_range_search'])){
         $cmd = 'edit';
         $edit_news = $_REQUEST['news_id'];
     }
@@ -243,7 +245,7 @@ if (!$cmd OR $cmd=="show") {
             echo "<tr><td class=\"steel1\">";
             echo "&nbsp; <font size=-1>" . _("Geben Sie einen Suchbegriff ein, um weitere Bereiche zu finden!") . "</font><br><br>";
             echo "&nbsp; <input type=\"TEXT\" style=\"vertical-align:middle;\" name=\"search\" size=\"20\">&nbsp;&nbsp;";
-            echo "<input type=\"IMAGE\" style=\"vertical-align:middle;\" name=\"submit\" " . makeButton("suchestarten","src") . tooltip( _("Suche starten")) ." border=\"0\">";
+            echo Button::create(_('Suche starten'), 'submit', array('style' => 'vertical-align:middle;'));
             echo "</td></tr></form></table>\n";
             echo "</p>";
             echo "</td></tr>";
@@ -262,12 +264,12 @@ if (!$cmd OR $cmd=="show") {
         if ($perm->have_perm("autor")) {   // allow autors, needed for studygroups
             echo "\n<tr><td class=\"blank\"><p class=\"info\">";
             echo _("Sie k&ouml;nnen&nbsp; <b>Pers&ouml;nliche Ankündigungen</b> bearbeiten") . "&nbsp;";
-            echo "<a href=\"". URLHelper::getLink("?range_id=self") ."\">&nbsp; <img style=\"vertical-align:middle;\" " . makeButton("bearbeiten","src") . tooltip(_("Persönliche Ankündigungen bearbeiten")) ." border=\"0\"></a>";
+            echo LinkButton::create(_('bearbeiten'), URLHelper::getURL("?range_id=self"), array('style'=>'vertical-align:middle;', 'title'=>_('Persönliche Ankündigungen bearbeiten')));
         }
         if ($perm->have_perm("root")) {
             $my_cols=4;
             echo "<font size=\"-1\" style=\"vertical-align:middle;\">&nbsp; " . _("<i>oder</i> <b>Systemweite Ankündigungen</b> bearbeiten") . "</font>&nbsp;";
-            echo "<a href=\"". URLHelper::getLink("?range_id=studip") ."\">&nbsp;<img style=\"vertical-align:middle;\" " . makeButton("bearbeiten","src") . tooltip(_("Systemweite Ankündigungen bearbeiten")) ." border=\"0\"></a>";
+            echo LinkButton::create(_('bearbeiten'), URLHelper::getURL("?range_id=studip"),array('style'=>'vertical-align:middle;', 'title'=>_('Systemweite Ankündigungen bearbeiten')));
         }
         if ($news->search_result)
             echo "<br><br><font size=\"-1\" style=\"vertical-align:middle;\">" . _("<i>oder</i> <b>hier</b> einen der gefundenen Bereiche ausw&auml;hlen:") . "&nbsp;</font>";
@@ -315,7 +317,7 @@ if (!$cmd OR $cmd=="show") {
         echo "\n<br><br>";
     }
     echo "\n".'<font size="-1" style="vertical-align:middle;">' . _("Eine neue Ankündigung im gew&auml;hlten Bereich erstellen") . '</font>&nbsp;';
-    echo makeButton('erstellen', 'input', _("Eine neue Ankündigung erstellen"), 'new_entry');
+    echo Button::create(_('erstellen'), 'new_entry', array('title' => _('Eine neue Ankündigung erstellen')));
     echo "</b>\n</p>\n</form>\n</td>\n</tr>\n ";
     if (!$news->show_news($news_range_id)) {
         echo "\n".'<tr><td class="blank"><p class="info">';

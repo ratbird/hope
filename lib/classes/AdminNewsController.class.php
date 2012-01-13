@@ -34,6 +34,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
+use Studip\Button, Studip\LinkButton;
+
 require_once 'lib/classes/StudipNews.class.php';
 require_once 'lib/messaging.inc.php';
 require_once 'lib/visual.inc.php';
@@ -198,7 +200,7 @@ class AdminNewsController {
         echo "<table class=\"blank\" align=\"left\" width=\"".round(0.88*$this->xres)."\" cellspacing=\"0\" cellpadding=\"2\" border=\"0\">";
         echo "\n<tr><td class=\"blank\" colspan=\"4\" align=\"left\" style=\"vertical-align:middle;\"><font size=-1 >" . _("Vorhandene Ankündigungen im gew&auml;hlten Bereich:") . "<br>";
         echo "</td><td class=\"blank\" colspan=\"4\" align=\"right\" style=\"vertical-align:middle;\"><font size=-1 >" . _("Markierte Ankündigungen l&ouml;schen");
-        echo "\n<input type=\"IMAGE\" style=\"vertical-align:middle;\" name=\"kill\" " . makeButton("loeschen","src") . tooltip(_("Markierte Ankündigungen löschen")) . " border=\"0\" >&nbsp;&nbsp;</td></tr>";
+        echo "&nbsp;" . Button::create(_('löschen'), 'kill', array('style' => 'vertical-align:middle;', 'title' => _('Markierte Ankündigungen löschen'))) . "&nbsp;&nbsp;</td></tr>";
         echo "\n<tr><th width=\"15%\">" . _("&Uuml;berschrift") . "</th><th width=\"20%\">" . _("Inhalt") . "</th><th width=\"20%\">"
             . _("Autor") . "</th><th width=\"10%\">" . _("Einstelldatum") . "</th><th width=\"10%\">" . _("Ablaufdatum") . "</th><th width=\"15%\">"
             . _("Bearbeiten") . "</th><th width=\"10%\">" . _("L&ouml;schen") . "</th></tr>";
@@ -210,8 +212,9 @@ class AdminNewsController {
             echo "\n<td class=\"".$cssSw->getClass()."\" width=\"15%\" align=\"center\"><font size=\"-1\">".htmlReady($details["author"])."</font></td>";
             echo "\n<td class=\"".$cssSw->getClass()."\" width=\"10%\" align=\"center\">".strftime("%d.%m.%y", $details["date"])."</td>";
             echo "\n<td class=\"".$cssSw->getClass()."\" width=\"10%\" align=\"center\">".strftime("%d.%m.%y", ($details["date"]+$details["expire"]))."</td>";
-            echo "\n<td class=\"".$cssSw->getClass()."\" width=\"15%\" align=\"center\"><a href=\"".URLHelper::getLink("?cmd=edit&edit_news=$news_id&view_mode=$view_mode")."\"><img "
-                . makeButton("bearbeiten","src") . tooltip(_("Diese Ankündigung bearbeiten")) . " border=\"0\"></a></td>";
+            echo "\n<td class=\"".$cssSw->getClass()."\" width=\"15%\" align=\"center\">"
+                . LinkButton::create(_('bearbeiten'), URLHelper::getLink("?cmd=edit&edit_news=$news_id&view_mode=$view_mode"), array('title' => _('Diese Ankündigung bearbeiten')))
+                . "</td>";
             echo "\n<td class=\"".$cssSw->getClass()."\" width=\"10%\" align=\"center\">";
             if ($this->news_perm[$id]["perm"]==3 OR $auth->auth["perm"]=="root" OR $details["user_id"]==$this->user_id)
                 echo "<input type=\"CHECKBOX\" name=\"kill_news[]\" value=\"$news_id\" " . tooltip(_("Diese Ankündigung zum Löschen vormerken"),false) . ">";
@@ -277,8 +280,7 @@ class AdminNewsController {
         echo "\n<td class=\"steelgraulight\" width=\"30%\">" . _("Geben Sie hier die &Uuml;berschrift und den Inhalt Ihrer Ankündigung ein.")
             . "<br><br>" . _("Im unteren Bereich k&ouml;nnen Sie ausw&auml;hlen, in welchen Bereichen Ihre Ankündigung angezeigt wird.");
         echo "\n<br><br>" . _("Klicken Sie danach hier, um die &Auml;nderungen zu &uuml;bernehmen.") . "<br><br><center>"
-            . "<input type=\"IMAGE\" name=\"news_submit\" " . makeButton("uebernehmen","src") . tooltip(_("Änderungen übernehmen")) ."  border=\"0\" ></center></td></tr>";
-
+            . Button::create(_('übernehmen'), 'news_submit', array('title' => _('Änderungen übernehmen'))) . "</center></td></tr>";
         echo "\n<tr><td class=\"blank\" colspan=\"2\">" . _("Einstelldatum:");
         ?>
         <input type="text" required ="required" id="startdate" name="startdate" maxlength="10" size="10" value="<?= date('d.m.Y', $this->news_query['date'])?>">
@@ -337,8 +339,8 @@ class AdminNewsController {
             echo "<table class=\"blank\" width=\"100%\" cellspacing=\"0\" cellpadding=\"2\" border=\"0\" align=\"center\">";
             echo "\n<tr><td class=\"blank\"><b>" . _("Einen weiteren Bereich hinzuf&uuml;gen:") . "<br></td></tr>";
             echo "\n<tr><td class=\"steel1\"><font size=-1>" . _("Hier k&ouml;nnen Sie weitere Bereiche, auf die Sie Zugriff haben, der Auswahl hinzuf&uuml;gen") . "</font><br>";
-            echo "<br><input style=\"vertical-align:middle;\" type=\"TEXT\"  name=\"search\" size=\"20\">&nbsp; <input type=\"IMAGE\" name=\"news_range_search\""
-                . makeButton("suchestarten","src") . tooltip(_("Suche starten")) . " border=\"0\" style=\"vertical-align:middle;\"></div></td></tr></form></table><br>";
+            echo "<br><input style=\"vertical-align:middle;\" type=\"TEXT\"  name=\"search\" size=\"20\">&nbsp;"
+                . Button::create(_('Suche starten'), 'news_range_search', array('style' => 'vertical-align:middle;')) . "</div></td></tr></form></table><br>";
         }
         echo "</form></table>";
     }

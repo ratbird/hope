@@ -182,7 +182,7 @@ class smiley {
         $query = "UPDATE smiley "
                . "SET smiley_counter = ?, short_counter = ?, chdate = UNIX_TIMESTAMP() "
                . "WHERE smiley_id = ?";
-        $update = DBManager::get()->prepare($query)
+        $update = DBManager::get()->prepare($query);
 
         $anderungen = 0;
         foreach ($smiley_tab as $smiley_name => $smile) {

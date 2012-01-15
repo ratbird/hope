@@ -1,7 +1,7 @@
 <?php
 # Lifter001: DONE
 # Lifter002: TEST - using templates, prepared to be changed into an app (and thus to finally get rid of $msg)
-# Lifter007: TODO - documentation, should be changed into an app
+# Lifter007: TODO - documentation, should be changed into an app, already arranged for split
 # Lifter003: TEST - there's one slightly ugly thing in load_smileys()
 # Lifter010: TODO - smiley names in view admin/list have no labels, needs a different view/workflow
 /*
@@ -31,64 +31,60 @@ require_once 'lib/visual.inc.php';
 require_once 'lib/classes/Table.class.php'; // neccessary -> used in public/admin_smileys.php
 
 class smiley {
+    var $error      = false;
+    var $msg        = '';
+    var $my_smiley  = array(); // user-specific
+    var $smiley_tab = array(); // admin-specific
+
     var $SMILEY_COUNTER;
-    var $error;
     var $short_r;
-    var $msg;
     var $fc;
-    var $smiley_tab;
-    var $my_smiley;
-    var $user_id;
 
     function smiley($admin = false) {
-        $this->msg = '';
-        $this->error = false;
-
-        $this->smiley_tab = array();
-        $this->my_smiley = array();
-        $this->user_id = $GLOBALS['auth']->auth['uid'];
-
         if (!get_config('SMILEYADMIN_ENABLE')) {
-            $this->msg .=  '§error§' . _("Smiley-Modul abgeschaltet.");
+            $this->msg .=  '§error§' . _('Smiley-Modul abgeschaltet.');
             $this->error = true;
-        } else {
-            $this->SMILEY_COUNTER = $GLOBALS['SMILEY_COUNTER'] ?: false;
-
-            // smiley-table empty ?
-            $smileys = DBManager::get()->query("SELECT 1 FROM smiley")->fetchColumn();
-            if ($admin || !$smileys) { // init smiley-short-notation
-                $sa = $GLOBALS['SMILE_SHORT'];
-                $this->short_r = array_flip($sa);
-            }
-            if (!$smileys) { // fill table
-                // read smiley-gif's from harddisc
-                $this->update_smiley_table();
-
-                // test again!!
-                $smileys = DBManager::get()->query("SELECT 1 FROM smiley")->fetchColumn();
-                if ($smileys) {
-                    // search smileys in studip
-                    $this->search_smileys();
-                } else {
-                    $this->msg .= 'error§'. _('Fehler: Keine Smileys auf dem Server gefunden.'). '§';
-                    $this->error = true;
-                }
-            }
-            if (!$this->fc = Request::option('fc')) {
-                $this->fc = DBManager::get()
-                    ->query("SELECT LEFT(smiley_name, 1) FROM smiley ORDER BY smiley_name LIMIT 1")
-                    ->fetchColumn();
-            }
-            if (!$this->fc) {
-                $this->fc = 'a';
-            }
-            URLHelper::bindLinkParam('fc', $this->fc);
+            return;
         }
+        $this->SMILEY_COUNTER = $GLOBALS['SMILEY_COUNTER'] ?: false;
+
+        // smiley-table empty ?
+        $smileys = DBManager::get()->query("SELECT 1 FROM smiley")->fetchColumn();
+        if ($admin || !$smileys) { // init smiley-short-notation
+            $sa = $GLOBALS['SMILE_SHORT'];
+            $this->short_r = array_flip($sa);
+        }
+
+        if (!$smileys) { // fill table
+            // read smiley-gif's from harddisc
+            $this->update_smiley_table();
+
+            // test again!!
+            $smileys = DBManager::get()->query("SELECT 1 FROM smiley")->fetchColumn();
+            if ($smileys) {
+                // search smileys in studip
+                $this->search_smileys();
+            } else {
+                $this->msg .= 'error§'. _('Fehler: Keine Smileys auf dem Server gefunden.'). '§';
+                $this->error = true;
+            }
+        }
+
+        if (!$this->fc = Request::option('fc')) {
+            $this->fc = DBManager::get()
+                ->query("SELECT LEFT(smiley_name, 1) FROM smiley ORDER BY smiley_name LIMIT 1")
+                ->fetchColumn();
+        }
+        if (!$this->fc) {
+            $this->fc = 'a';
+        }
+        URLHelper::bindLinkParam('fc', $this->fc);
     }
 
+// Model
 
-    function load_smileys() {
-        switch ($this->fc) {
+    function load_smileys($fc = null) {
+        switch ($fc ?: $this->fc) {
             case 'all':
                 $where = "ORDER BY smiley_name";
                 break;
@@ -127,26 +123,271 @@ class smiley {
         $del = $search ? 0 : 1;
         $this->smiley_tab = array();
 
-        $statement = DBManager::get()->query("SELECT * FROM smiley ORDER BY smiley_name");
-        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-            $this->smiley_tab[$row['smiley_name']] = array(
-                'id'     => $row['smiley_id'],
-                'width'  => $row['smiley_width'],
-                'height' => $row['smiley_height'],
-                'short'  => $row['short_name'],
-                'count'  => $row['smiley_counter'],
-                'scount' => $row['short_counter'],
-                'fcount' => $row['fav_counter'],
+        $smileys = $this->load_smileys('all');
+        foreach ($smileys as $smiley) {
+            $this->smiley_tab[$smiley['smiley_name']] = array(
+                'id'     => $smiley['smiley_id'],
+                'width'  => $smiley['smiley_width'],
+                'height' => $smiley['smiley_height'],
+                'short'  => $smiley['short_name'],
+                'count'  => $smiley['smiley_counter'],
+                'scount' => $smiley['short_counter'],
+                'fcount' => $smiley['fav_counter'],
                 'update' =>0,
                 'delete' =>$del
             );
             if ($search) {
-                $this->smiley_tab[$row['smiley_name']]['new_count'] = 0;
-                $this->smiley_tab[$row['smiley_name']]['new_scount'] = 0;
+                $this->smiley_tab[$smiley['smiley_name']]['new_count'] = 0;
+                $this->smiley_tab[$smiley['smiley_name']]['new_scount'] = 0;
             }
         }
     }
 
+    function get_info(){
+        $db = DBManager::get();
+
+        $query = "SELECT COUNT(smiley_id) AS c, SUM(smiley_counter + short_counter) AS s "
+               . "FROM smiley "
+               . "WHERE smiley_counter > 0 OR short_counter > 0";
+        $temp = $db->query($query)->fetch(PDO::FETCH_ASSOC);
+
+        $info = array(
+            'count_all'   => $db->query("SELECT COUNT(smiley_id) FROM smiley")->fetchColumn(),
+            'count_used'  => $temp['c'],
+            'sum'         => $temp['s'],
+            'last_change' => $db->query("SELECT chdate FROM smiley")->fetchColumn(),
+        );
+        return $info;
+    }
+
+    function read_favorite(){
+        if ($this->error) {
+            return false;
+        }
+
+        $db = DBManager::get();
+
+        // smiley favorites active?
+        $active = $db->query("SHOW COLUMNS FROM user_info LIKE 'smiley_favorite%'")->fetchColumn();
+        if (!$active) {
+            return false;
+        }
+
+        // reset smiley favorites
+        $this->my_smiley = array();
+
+        // load favorites
+        $query = "SELECT smiley_favorite FROM user_info WHERE user_id = ?";
+        $statement = $db->prepare($query);
+        $statement->execute(array($GLOBALS['user']->id));
+        $sm_list = $statement->fetchColumn();
+
+        if ($sm_list === null) {
+            return false;
+        }
+        $ids = explode(',', $sm_list);
+
+        // load actual smileys
+        $query = "SELECT smiley_id, smiley_name, smiley_width, smiley_height "
+               . "FROM smiley WHERE smiley_id IN (?) ORDER BY smiley_name";
+        $statement = $db->prepare($query);
+        $statement->execute(array($ids));
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $this->my_smiley[$row['smiley_name']] = array(
+                'id'     => $row['smiley_id'],
+                'width'  => $row['smiley_width'],
+                'height' => $row['smiley_height']
+            );
+        }
+
+        return true;
+    }
+
+// View
+
+    function display_msg(){
+
+        if ($this->msg != '') {
+            echo '<table>', parse_msg($this->msg), '</table>';
+        }
+        $this->msg = '';
+    }
+
+    function user_menue($txt) {
+        if ($this->error) {
+            return false;
+        }
+
+        $query = "SELECT DISTINCT LEFT(smiley_name, 1) FROM smiley ORDER BY smiley_name";
+        $db_chars = DBManager::get()
+            ->query($query)
+            ->fetchAll(PDO::FETCH_COLUMN);
+
+        // Create characters array
+        $first_chars = array('all' => _('alle'))
+                     + array_combine((array)$db_chars, (array)$db_chars) // produces array(a => a, b => b, ...)
+                     + array('short' => _('Kürzel'));
+        if ($this->SMILEY_COUNTER) {
+            $first_chars += array('top20' => _('Top20'));
+        }
+
+        $template = $GLOBALS['template_factory']->open('smileys/menu');
+        $template->first_chars    = $first_chars;
+        $template->text           = $txt;
+        $template->fc             = $this->fc;
+        $template->SMILEY_COUNTER = $this->SMILEY_COUNTER;
+        echo $template->render();
+    }
+
+    function user_smiley_list() {
+        if ($this->error) {
+            return false;
+        }
+
+        $smileys = $this->load_smileys();
+        $count = count($smileys);
+        if ($this->fc == 'top20' and $count > 20) {
+            $count = 20;
+        }
+
+        $template = $GLOBALS['template_factory']->open('smileys/list');
+        $template->smileys        = $smileys;
+        $template->count          = $count;
+        $template->SMILEY_COUNTER = $this->SMILEY_COUNTER;
+        $template->user_id        = $GLOBALS['user']->id;
+        echo $template->render();
+    }
+    
+    function show_favorite(){
+        if ($this->error or !$this->read_favorite()) {
+            return false;
+        }
+
+        $index = 0;
+        $favorites = array();
+        foreach ($this->my_smiley as $smile => $data) {
+            $row = floor($index / 10);
+            if (!isset($favorites[$row])) {
+                $favorites[$row] = array(
+                    'index' => array(),
+                    'name'  => array(),
+                    'data'  => array()
+                );
+            }
+
+            $favorites[$row]['index'][]      = $index + 1;
+            $favorites[$row]['name'][]       = $smile;
+            $favorites[$row]['data'][$smile] = $data;
+
+            $index += 1;
+        }
+
+        $template = $GLOBALS['template_factory']->open('smileys/favorites');
+        $template->favorites = $favorites;
+        echo $template->render();
+
+        return true;
+    }    
+
+// View: admin
+
+    function show_upload_form() {
+        if ($this->error) {
+            return false;
+        }
+
+        echo $GLOBALS['template_factory']->render('smileys/admin/upload-form');
+    }
+
+    function show_menue() {
+        if ($this->error) {
+            return false;
+        }
+
+        $query = "SELECT LEFT(smiley_name, 1) AS `char`, COUNT(smiley_name) AS `count` "
+               . "FROM smiley GROUP BY LEFT(smiley_name, 1)";
+        $characters = DBManager::get()
+            ->query($query)
+            ->fetchAll(PDO::FETCH_ASSOC);
+
+        $template = $GLOBALS['template_factory']->open('smileys/admin/menu');
+        $template->fc         = $this->fc;
+        $template->characters = $characters;
+        $template->info       = $this->get_info();
+        echo $template->render();
+    }
+
+    function show_smiley_list() {
+        if ($this->error) {
+            return false;
+        }
+
+        $template = $GLOBALS['template_factory']->open('smileys/admin/list');
+        $template->smileys = $this->load_smileys();
+        echo $template->render();
+    }
+
+// Control
+
+    // cmd: addfav
+    function add_favorite(){
+        if ($this->error or !$this->read_favorite()) {
+            return false;
+        }
+
+        // maxmimum of 20 smileys allowed
+        if (count($this->my_smiley) >= 20) {
+            return false;
+        }
+
+        $smiley_id = Request::int('img', 0);
+
+        // collect ids from favorites
+        $favorites = array();
+        foreach ($this->my_smiley as $value) {
+            if ($value['id'] == $smiley_id) {
+                return false; // already favorite
+            }
+            $favorites[] = $value['id'];
+        }
+        // add selected smiley id
+        $favorites[] = $smiley_id;
+
+        // store favorite list
+        $sm_list = implode(',', $favorites);
+        DBManager::get()
+            ->prepare("UPDATE user_info SET smiley_favorite = ? WHERE user_id = ?")
+            ->execute(array($sm_list, $GLOBALS['user']->id));
+
+        return true;
+    }
+
+    // cmd: delfav
+    function del_favorite(){
+        if ($this->error or !$this->read_favorite()) {
+            return false;
+        }
+
+        $smiley_id = Request::int('img', 0);
+
+        $favorites = array();
+        foreach ($this->my_smiley as $value) {
+            if ($value['id'] != $smiley_id) {
+                $favorites[] = $value['id'];
+            }
+        }
+
+        $sm_list = implode(',', $favorites);
+        DBManager::get()
+            ->prepare("UPDATE user_info SET smiley_favorite = ? WHERE user_id = ?")
+            ->execute(array($sm_list, $GLOBALS['user']->id));
+
+        return true;
+    }
+
+// Control: admin
+
+    // cmd: countsmiley
     function search_smileys() {
         if ($this->error) {
             return false;
@@ -225,6 +466,7 @@ class smiley {
         return true;
     }
 
+    // cmd: updatetable
     function update_smiley_table(){
         if ($this->error) {
             return false;
@@ -310,7 +552,7 @@ class smiley {
                     . ' / ' . sprintf(_('%d Smileys gelöscht'), $c_delete) . '§';
     }
 
-
+    // cmd: upload
     function imaging() {
         if ($this->error) {
             return false;
@@ -386,88 +628,7 @@ class smiley {
         return true;
     }
 
-    function show_upload_form() {
-        if ($this->error) {
-            return false;
-        }
-
-        echo $GLOBALS['template_factory']->render('smileys/admin/upload-form');
-    }
-
-    function show_menue() {
-        if ($this->error) {
-            return false;
-        }
-
-        $query = "SELECT LEFT(smiley_name, 1) AS `char`, COUNT(smiley_name) AS `count` "
-               . "FROM smiley GROUP BY LEFT(smiley_name, 1)";
-        $characters = DBManager::get()
-            ->query($query)
-            ->fetchAll(PDO::FETCH_ASSOC);
-
-        $template = $GLOBALS['template_factory']->open('smileys/admin/menu');
-        $template->fc         = $this->fc;
-        $template->characters = $characters;
-        $template->info       = $this->get_info();
-        echo $template->render();
-    }
-
-    function show_smiley_list() {
-        if ($this->error) {
-            return false;
-        }
-
-        $template = $GLOBALS['template_factory']->open('smileys/admin/list');
-        $template->smileys = $this->load_smileys();
-        echo $template->render();
-    }
-
-    function user_menue($txt) {
-        if ($this->error) {
-            return false;
-        }
-
-        $query = "SELECT DISTINCT LEFT(smiley_name, 1) FROM smiley ORDER BY smiley_name";
-        $db_chars = DBManager::get()
-            ->query($query)
-            ->fetchAll(PDO::FETCH_COLUMN);
-
-        // Create characters array
-        $first_chars = array('all' => _('alle'))
-                     + array_combine((array)$db_chars, (array)$db_chars) // produces array(a => a, b => b, ...)
-                     + array('short' => _('Kürzel'));
-        if ($this->SMILEY_COUNTER) {
-            $first_chars += array('top20' => _('Top20'));
-        }
-
-        $template = $GLOBALS['template_factory']->open('smileys/menu');
-        $template->first_chars    = $first_chars;
-        $template->text           = $txt;
-        $template->fc             = $this->fc;
-        $template->SMILEY_COUNTER = $this->SMILEY_COUNTER;
-        echo $template->render();
-    }
-
-    function user_smiley_list() {
-        if ($this->error) {
-            return false;
-        }
-
-        $smileys = $this->load_smileys();
-        $count = count($smileys);
-        if ($this->fc == 'top20' and $count > 20) {
-            $count = 20;
-        }
-
-        $template = $GLOBALS['template_factory']->open('smileys/list');
-        $template->smileys        = $smileys;
-        $template->count          = $count;
-        $template->SMILEY_COUNTER = $this->SMILEY_COUNTER;
-        $template->user_id        = $this->user_id;
-        echo $template->render();
-    }
-
-
+    // cmd: update
     function process_commands() {
         if ($this->error) {
             return false;
@@ -510,6 +671,7 @@ class smiley {
         }
     }
 
+    // cmd: delete
     function delete_smiley(){
         if ($this->error) {
             return false;
@@ -540,156 +702,4 @@ class smiley {
         return false;
     }
 
-    function display_msg(){
-
-        if ($this->msg != '') {
-            echo '<table>', parse_msg($this->msg), '</table>';
-        }
-        $this->msg = '';
-    }
-
-    function get_info(){
-        $db = DBManager::get();
-
-        $query = "SELECT COUNT(smiley_id) AS c, SUM(smiley_counter + short_counter) AS s "
-               . "FROM smiley "
-               . "WHERE smiley_counter > 0 OR short_counter > 0";
-        $temp = $db->query($query)->fetch(PDO::FETCH_ASSOC);
-
-        $info = array(
-            'count_all'   => $db->query("SELECT COUNT(smiley_id) FROM smiley")->fetchColumn(),
-            'count_used'  => $temp['c'],
-            'sum'         => $temp['s'],
-            'last_change' => $db->query("SELECT chdate FROM smiley")->fetchColumn(),
-        );
-        return $info;
-    }
-
-    function read_favorite(){
-        if ($this->error) {
-            return false;
-        }
-
-        $db = DBManager::get();
-
-        // smiley favorites active?
-        $active = $db->query("SHOW COLUMNS FROM user_info LIKE 'smiley_favorite%'")->fetchColumn();
-        if (!$active) {
-            return false;
-        }
-
-        // reset smiley favorites
-        $this->my_smiley = array();
-
-        // load favorites
-        $query = "SELECT smiley_favorite FROM user_info WHERE user_id = ?";
-        $statement = $db->prepare($query);
-        $statement->execute(array($this->user_id));
-        $sm_list = $statement->fetchColumn();
-
-        if ($sm_list === null) {
-            return false;
-        }
-        $ids = explode(',', $sm_list);
-
-        // load actual smileys
-        $query = "SELECT smiley_id, smiley_name, smiley_width, smiley_height "
-               . "FROM smiley WHERE smiley_id IN (?) ORDER BY smiley_name";
-        $statement = $db->prepare($query);
-        $statement->execute(array($ids));
-        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-            $this->my_smiley[$row['smiley_name']] = array(
-                'id'     => $row['smiley_id'],
-                'width'  => $row['smiley_width'],
-                'height' => $row['smiley_height']
-            );
-        }
-
-        return true;
-    }
-
-    function show_favorite(){
-        if ($this->error or !$this->read_favorite()) {
-            return false;
-        }
-
-        $index = 0;
-        $favorites = array();
-        foreach ($this->my_smiley as $smile => $data) {
-            $row = floor($index / 10);
-            if (!isset($favorites[$row])) {
-                $favorites[$row] = array(
-                    'index' => array(),
-                    'name'  => array(),
-                    'data'  => array()
-                );
-            }
-
-            $favorites[$row]['index'][]      = $index + 1;
-            $favorites[$row]['name'][]       = $smile;
-            $favorites[$row]['data'][$smile] = $data;
-
-            $index += 1;
-        }
-
-        $template = $GLOBALS['template_factory']->open('smileys/favorites');
-        $template->favorites = $favorites;
-        echo $template->render();
-
-        return true;
-    }
-
-    function del_favorite(){
-        if ($this->error or !$this->read_favorite()) {
-            return false;
-        }
-
-        $smiley_id = Request::int('img', 0);
-
-        $favorites = array();
-        foreach ($this->my_smiley as $value) {
-            if ($value['id'] != $smiley_id) {
-                $favorites[] = $value['id'];
-            }
-        }
-
-        $sm_list = implode(',', $favorites);
-        DBManager::get()
-            ->prepare("UPDATE user_info SET smiley_favorite = ? WHERE user_id = ?")
-            ->execute(array($sm_list, $this->user_id));
-
-        return true;
-    }
-
-    function add_favorite(){
-        if ($this->error or !$this->read_favorite()) {
-            return false;
-        }
-
-        // maxmimum of 20 smileys allowed
-        if (count($this->my_smiley) >= 20) {
-            return false;
-        }
-
-        $smiley_id = Request::int('img', 0);
-
-        // collect ids from favorites
-        $favorites = array();
-        foreach ($this->my_smiley as $value) {
-            if ($value['id'] == $smiley_id) {
-                return false; // already favorite
-            }
-            $favorites[] = $value['id'];
-        }
-        // add selected smiley id
-        $favorites[] = $smiley_id;
-
-        // store favorite list
-        $sm_list = implode(',', $favorites);
-        DBManager::get()
-            ->prepare("UPDATE user_info SET smiley_favorite = ? WHERE user_id = ?")
-            ->execute(array($sm_list, $this->user_id));
-
-        return true;
-    }
 }

@@ -1,9 +1,9 @@
 <?php
-# Lifter001: TEST
-# Lifter002: TODO
-# Lifter007: TODO - large areas remained untouched for lifter002 to fix
-# Lifter003: TODO - $this->where still seems a bit odd
-# Lifter010: TODO
+# Lifter001: DONE
+# Lifter002: TEST - using templates, prepared to be changed into an app (and thus to finally get rid of $msg)
+# Lifter007: TODO - documentation, should be changed into an app
+# Lifter003: TEST - there's one slightly ugly thing in load_smileys()
+# Lifter010: TODO - smiley names in view admin/list have no labels, needs a different view/workflow
 /*
 smiley.class.php - Smiley-Verwaltung von Stud.IP.
 Copyright (C) 2004 Tobias Thelen <tthelen@uos.de>
@@ -28,9 +28,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 require_once 'config.inc.php';
 require_once 'lib/msg.inc.php'; //Funktionen fuer Nachrichtenmeldungen
 require_once 'lib/visual.inc.php';
-require_once 'lib/classes/Table.class.php';
-require_once 'lib/classes/ZebraTable.class.php';
-
+require_once 'lib/classes/Table.class.php'; // neccessary -> used in public/admin_smileys.php
 
 class smiley {
     var $SMILEY_COUNTER;
@@ -38,7 +36,6 @@ class smiley {
     var $short_r;
     var $msg;
     var $fc;
-    var $where;
     var $smiley_tab;
     var $my_smiley;
     var $user_id;
@@ -46,7 +43,6 @@ class smiley {
     function smiley($admin = false) {
         $this->msg = '';
         $this->error = false;
-        $this->where = '';
 
         $this->smiley_tab = array();
         $this->my_smiley = array();
@@ -86,7 +82,41 @@ class smiley {
             if (!$this->fc) {
                 $this->fc = 'a';
             }
+            URLHelper::bindLinkParam('fc', $this->fc);
         }
+    }
+
+
+    function load_smileys() {
+        switch ($this->fc) {
+            case 'all':
+                $where = "ORDER BY smiley_name";
+                break;
+            case 'top20':
+                $where = "WHERE smiley_counter > 0 OR short_counter > 0 "
+                       . "ORDER BY smiley_counter + short_counter DESC, smiley_name ASC "
+                       . "LIMIT 20";
+                break;
+            case 'used':
+                $where = "WHERE smiley_counter > 0 OR short_counter > 0 "
+                       . "ORDER BY smiley_counter + short_counter DESC, smiley_name ASC";
+                break;
+            case 'none':
+                $where = "WHERE smiley_counter=0 AND short_counter=0 "
+                       . "ORDER BY smiley_name";
+                break;
+            case 'short':
+                $where = "WHERE short_name != '' "
+                       . "ORDER BY smiley_name";
+                break;
+            default:
+                $where = "WHERE smiley_name LIKE '" . $this->fc{0} . "%' "
+                       . "ORDER BY smiley_name";
+                break;
+        }
+        return DBManager::get()
+            ->query("SELECT * FROM smiley " . $where)
+            ->fetchAll(PDO::FETCH_ASSOC);
     }
 
     function fill_smiley_array($search) {
@@ -349,8 +379,9 @@ class smiley {
                    $smiley_name, $img[0], $img[1]
                 ));
         }
-        chmod($newfile, 0666 & ~umask());       // set permissions for uploaded file
-        $this->fc = $smiley_name{0};
+        chmod($newfile, 0666 & ~umask()); // set permissions for uploaded file
+
+        $this->fc = $smiley_name{0}; // TODO should be a proper redirect anyways
 
         return true;
     }
@@ -359,170 +390,62 @@ class smiley {
         if ($this->error) {
             return false;
         }
-        echo '<form enctype="multipart/form-data" action="'.URLHelper::getLink('').'" method="POST">';
-        echo CSRFProtection::tokenTag();
-        echo '<input type="hidden" name="cmd" value="upload">';
-        echo '<input type="hidden" name="fc" value="',$this->fc,'">';
-        $table=new ZebraTable(array('bgcolor'=>'#eeeeee', 'align'=>'center', 'padding'=>2));
-        echo $table->headerRow(array('<b>' . _("Neues Smiley hochladen") . '</b>',''));
-        echo $table->row(array(_("existierende Datei überschreiben:"),' <input type="checkbox" name="replace" value="1">'));
-        echo $table->row(array(_("1. Bilddatei auswählen:"),' <input name="imgfile" type="file" cols=45>'));
-        echo $table->row(array(_("2. Bilddatei hochladen:"),' <input type="image" ' . makeButton('absenden', 'src') . ' border=0 value="absenden">'));
-        echo $table->close(), '&nbsp;<br>';
-        echo '</form>';
+
+        echo $GLOBALS['template_factory']->render('smileys/admin/upload-form');
     }
 
-    function show_menue(){
-        if ($this->error) return false;
-        $style = 'smiley_redborder';
-        $style2 = 'blank';
-        if ($this->fc == 'all') {
-            $this->where = 'ORDER BY smiley_name';
-        } elseif ($this->fc == 'top20') {
-            $this->where = 'WHERE smiley_counter > 0 OR short_counter > 0 ORDER BY smiley_counter+short_counter DESC, smiley_name ASC LIMIT 20';
-        } elseif ($this->fc == 'used') {
-            $this->where = 'WHERE smiley_counter > 0 OR short_counter > 0 ORDER BY smiley_counter+short_counter DESC, smiley_name ASC';
-        } elseif ($this->fc == 'none') {
-            $this->where = 'WHERE smiley_counter=0 AND short_counter=0 ORDER BY smiley_name';
-        } elseif ($this->fc == 'short') {
-            $this->where = "WHERE short_name != '' ORDER BY smiley_name";
-        } else {
-            $this->fc = $this->fc{0};
-            $this->where = "WHERE smiley_name LIKE '".$this->fc."%' ORDER BY smiley_name";
+    function show_menue() {
+        if ($this->error) {
+            return false;
         }
-        echo '<table width="80%"><tr><td valign=top>';
 
-        $table=new ZebraTable(array('bgcolor'=>'#eeeeee', 'align'=>'center', 'padding'=>'2'));
-
-        echo $table->open();
-        echo $table->openHeaderRow(), $table->cell('<b>' . _("Auswahl") . '</b>', array('align'=>'center', 'colspan'=>2)), $table->closeRow();
-        echo $table->openHeaderRow();
-        echo $table->cell('<b>' . _("1. Zeichen") . '</b>', array('align'=>'center'));
-        echo $table->cell( _("Anzahl") , array('align'=>'right'));
-        echo $table->closeRow();
-
-        $query = "SELECT COUNT(smiley_name) AS c, LEFT(smiley_name, 1) AS firstchar "
+        $query = "SELECT LEFT(smiley_name, 1) AS `char`, COUNT(smiley_name) AS `count` "
                . "FROM smiley GROUP BY LEFT(smiley_name, 1)";
-        $statement = DBManager::get()->query($query);
-        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-            echo $table->openRow();
-            echo $table->cell('<a href="'.URLHelper::getLink('?fc='.$row['firstchar']).'">'.$row['firstchar'].'</a>', array('align'=>'center', 'class'=>($this->fc == $row['firstchar'])? $style:$style2));
-            echo $table->cell('('.$row['c'].')', array('align'=>'right', 'style'=>'font-size:9pt;'));
-            echo $table->closeRow();
-        }
-        echo $table->close();
+        $characters = DBManager::get()
+            ->query($query)
+            ->fetchAll(PDO::FETCH_ASSOC);
 
-        echo '</td><td valign="top">';
-
-        echo $table->open();
-        echo $table->openHeaderRow(), $table->cell('<b>' . _("Auswahl") . '</b>', array('align'=>'center', 'colspan'=>2)), $table->closeRow();
-        echo $table->openRow(), $table->cell('<a href="'.URLHelper::getLink('?fc=all').'">'._("alle").'</a>', array('align'=>'center', 'colspan'=>2, 'class'=>($this->fc == 'all')? $style:$style2)), $table->closeRow();
-        echo $table->openRow(), $table->cell('<a href="'.URLHelper::getLink('?fc=top20').'">'._("Top 20").'</a>', array('align'=>'center', 'colspan'=>2, 'class'=>($this->fc == 'top20')? $style:$style2)), $table->closeRow();
-        echo $table->openRow(), $table->cell('<a href="'.URLHelper::getLink('?fc=used').'">'._("benutzte").'</a>', array('align'=>'center', 'colspan'=>2, 'class'=>($this->fc == 'used')? $style:$style2)), $table->closeRow();
-        echo $table->openRow(), $table->cell('<a href="'.URLHelper::getLink('?fc=none').'">'._("nicht benutzte").'</a>', array('align'=>'center', 'colspan'=>2, 'class'=>($this->fc == 'none')? $style:$style2)), $table->closeRow();
-        echo $table->openRow(), $table->cell('<a href="'.URLHelper::getLink('?fc=short').'">'._("nur mit Kürzel").'</a>', array('align'=>'center', 'colspan'=>2, 'class'=>($this->fc == 'short')? $style:$style2)), $table->closeRow();
-        echo '<tr><td colspan="2" class="blank">&nbsp;</td></tr>', "\n";
-
-        echo $table->openHeaderRow(), $table->cell('<b>' . _("Aktionen") . '</b>', array('align'=>'center', 'colspan'=>2)), $table->closeRow();
-        echo $table->openRow(), $table->cell('<a href="'.URLHelper::getLink('?cmd=updatetable&fc='.$this->fc).'">'._("Tabelle aktualisieren").'</a>', array('align'=>'center', 'colspan'=>2)), $table->closeRow();
-        echo $table->openRow(), $table->cell('<a href="'.URLHelper::getLink('?cmd=countsmiley&fc='.$this->fc).'">'._("Smileys zählen").'</a>', array('align'=>'center', 'colspan'=>2)), $table->closeRow();
-        echo $table->openRow(), $table->cell('<a href="'.URLHelper::getLink('show_smiley.php').'" target="_smileys">'._("Smiley-Übersicht öffnen").'</a>', array('align'=>'center', 'colspan'=>2)),  $table->closeRow();
-        echo '<tr><td colspan="2" class="blank">&nbsp;</td></tr>', "\n";
-
-        $info = $this->get_info();
-        echo $table->openHeaderRow(), $table->cell('<b>' . _("Smileys") . '</b>', array('align'=>'center', 'colspan'=>2)), $table->closeRow();
-        echo $table->openRow(), $table->cell(_("vorhanden:"), array('align'=>'left')), $table->cell($info['count_all'], array('align'=>'right')), $table->closeRow();
-        echo $table->openRow(), $table->cell(_("davon benutzt:"), array('align'=>'left')), $table->cell($info['count_used'], array('align'=>'right')), $table->closeRow();
-        echo $table->openRow(), $table->cell(_("insgesamt benutzt:"), array('align'=>'left')), $table->cell($info['sum'], array('align'=>'right')), $table->closeRow();
-        echo $table->openRow(), $table->cell(_("letzte Änderung:"), array('align'=>'left', 'colspan'=>2)), $table->closeRow();
-        echo $table->openRow(), $table->cell(strftime('%d.%m.%Y %H:%M:%S',$info['last_change']), array('align'=>'center', 'colspan'=>2)), $table->closeRow();
-        echo $table->close();
-
-        echo '</td></tr></table>';
+        $template = $GLOBALS['template_factory']->open('smileys/admin/menu');
+        $template->fc         = $this->fc;
+        $template->characters = $characters;
+        $template->info       = $this->get_info();
+        echo $template->render();
     }
 
     function show_smiley_list() {
         if ($this->error) {
             return false;
         }
-        echo '<form action="'.URLHelper::getLink('').'" method="POST">', "\n";
-        echo CSRFProtection::tokenTag();
-        echo '<input type="hidden" name="cmd" value="update">';
-        echo '<input type="hidden" name="fc" value="',$this->fc,'">';
-        $table = new ZebraTable(array('bgcolor'=>'#eeeeee', 'align'=>'center', 'padding'=>'2'));
-        echo $table->open();
-        echo $table->openHeaderRow();
-        echo $table->cell('<b>' . _("Nr.") . '</b>', array('align'=>'center'));
-        echo $table->cell('<b>' . _("Smiley") . '</b>', array('align'=>'center'));
-        echo $table->cell('<b>' . _("Smileyname") . '</b>', array('align'=>'center'));
-        echo $table->cell('&nbsp;&nbsp;&Sigma;&nbsp;&nbsp;', array('align'=>'center'));
-        echo $table->cell('<b>' . _("Kürzel") . '</b>', array('align'=>'center'));
-        echo $table->cell('&nbsp;&nbsp;&Sigma;&nbsp;&nbsp;', array('align'=>'center'));
-        echo $table->cell('<b>' . _("Löschen") . '</b>', array('align'=>'center'));
-        echo $table->closeRow();
 
-        $count=0;
-
-        $statement = DBManager::get()->query("SELECT * FROM smiley ".$this->where);
-        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-            $smile_name = $row['smiley_name'];
-            $count++;
-            $urlname=urlencode($smile_name);
-            echo $table->openRow();
-            echo $table->cell($count.'&nbsp;', array('align'=>'right'));
-            echo $table->cell('<img src="' . $GLOBALS['DYNAMIC_CONTENT_URL'] . '/smile/' . $urlname . '.gif" alt="' . $smile_name . '" title="' . $smile_name . '" width="'.$row['smiley_width'].'" height="'.$row['smiley_height'].'">', array('align' => 'center'));
-            echo $table->cell('<input name="rename_'.$urlname.'" value="'.$smile_name.'" size=20>');
-            echo $table->cell($row['smiley_counter'], array('align'=>'center'));
-            //echo $table->cell('<input readonly name="short_'.$urlname.'.gif" value="'.$db->f('short').'" size="5">');
-            echo $table->cell($row['short_name'], array('align'=>'center'));
-            echo $table->cell($row['short_name'] ? $row['short_counter'] : '-', array('align'=>'center'));
-            echo $table->cell('<a href="'.URLHelper::getLink('?cmd=delete&img='.$row['smiley_id'].(($this->fc != '')?'&fc='.$this->fc:'')).'" alt="delete" title="'.sprintf(_("Smiley %s löschen"),$smile_name).'">'. Assets::img('icons/16/blue/trash.png', array('class' => 'text-top')) . '</a>', array('align'=>'center'));
-            echo $table->closeRow();
-        }
-        echo $table->openRow();
-        if ($count == 0) {
-            print $table->cell('<h4>' . _("Keine Smileys vorhanden.") . '</h4>', array('colspan'=>7, 'class'=>'blank'));
-        } else {
-            echo $table->cell('<input type=image '.makeButton('absenden','src').'>', array('colspan'=>7, 'align'=>'center'));
-        }
-        echo $table->closeRow();
-        echo $table->close();
+        $template = $GLOBALS['template_factory']->open('smileys/admin/list');
+        $template->smileys = $this->load_smileys();
+        echo $template->render();
     }
 
     function user_menue($txt) {
         if ($this->error) {
             return false;
         }
-        $style = ' class="smiley_redborder"';
-        switch ($this->fc) {
-            case 'all':
-                $this->where = 'ORDER BY smiley_name';
-                break;
-            case 'top20':
-                $this->where = 'WHERE smiley_counter > 0 OR short_counter > 0 ORDER BY smiley_counter+short_counter DESC, smiley_name ASC LIMIT 20';
-                break;
-            case 'short':
-                $this->where = "WHERE short_name != '' ORDER BY smiley_name";
-                break;
-            default:
-                $this->fc = $this->fc{0};
-                $this->where = "WHERE smiley_name LIKE '".$this->fc."%' ORDER BY smiley_name";
+
+        $query = "SELECT DISTINCT LEFT(smiley_name, 1) FROM smiley ORDER BY smiley_name";
+        $db_chars = DBManager::get()
+            ->query($query)
+            ->fetchAll(PDO::FETCH_COLUMN);
+
+        // Create characters array
+        $first_chars = array('all' => _('alle'))
+                     + array_combine((array)$db_chars, (array)$db_chars) // produces array(a => a, b => b, ...)
+                     + array('short' => _('Kürzel'));
+        if ($this->SMILEY_COUNTER) {
+            $first_chars += array('top20' => _('Top20'));
         }
 
-        echo '<table align="center"><tr><td class="smiley_th">',$txt,'</td>';
-        echo '<td align="center"',(($this->fc == 'all')? $style:''),'>&nbsp;<a href="'.URLHelper::getLink('?fc=all').'">',_("alle"),'</a>&nbsp;</td>',"\n";
-
-        $query = "SELECT LEFT(smiley_name, 1) FROM smiley GROUP BY LEFT(smiley_name, 1)";
-        $statement = DBManager::get()->query($query);
-        while ($fc = $statement->fetchColumn()) {
-            echo '<td align="center"',(($this->fc == $fc) ? $style : ''),'>&nbsp;<a href="', URLHelper::getLink('?fc='.$fc).'">', $fc,'</a>&nbsp;</td>',"\n";
-        }
-
-        echo '<td align="center"',(($this->fc == 'short')? $style:''),'>&nbsp;<a href="', URLHelper::getLink('?fc=short').'">',_("Kürzel"),'</a>&nbsp;</td>',"\n";
-        if($this->SMILEY_COUNTER) echo '<td align="center"',(($this->fc == 'top20')? $style:''),'>&nbsp;<a href="', URLHelper::getLink('?fc=top20'), '">',_("Top 20"),'</a>&nbsp;</td>',"\n";
-        if ($GLOBALS['auth']->auth['jscript'])
-            echo '<td class="smiley_th">&nbsp;<a href="javascript:void(0);" onclick="window.close();">' , _("Fenster schließen"),'</a>&nbsp;</td>';
-        echo '</tr></table>';
+        $template = $GLOBALS['template_factory']->open('smileys/menu');
+        $template->first_chars    = $first_chars;
+        $template->text           = $txt;
+        $template->fc             = $this->fc;
+        $template->SMILEY_COUNTER = $this->SMILEY_COUNTER;
+        echo $template->render();
     }
 
     function user_smiley_list() {
@@ -530,63 +453,18 @@ class smiley {
             return false;
         }
 
-        echo '<table align="center" width="100%"><tr><td valign="top" align="center">';
-        $tabstart = '<table cellspacing="2" cellpadding="2" class="blank" bgcolor="#94a6bc">'. "\n";
-        $tabstart .= '<tr><td class="smiley_th">' .  _("Bild") . '</td><td class="smiley_th">' .  _("Schreibweise") . '</td><td class="smiley_th">' . _("Kürzel") . '</td>';
-        if ($this->SMILEY_COUNTER) {
-            $tabstart .= '<td class="smiley_th"> &Sigma; </td>';
-        }
-        $tabstart .= "</tr>\n";
-        echo $tabstart;
-
-        $count = DBManager::get()
-            ->query("SELECT COUNT(*) FROM smiley " . $this->where)
-            ->fetchColumn();
-        if ($this->fc == 'top20' && $count > 20) {
+        $smileys = $this->load_smileys();
+        $count = count($smileys);
+        if ($this->fc == 'top20' and $count > 20) {
             $count = 20;
         }
-        $count3 = ($count < 3) ? 1 : $count / 3;
 
-        $c = 0;
-        $statement = DBManager::get()->query("SELECT * FROM smiley " . $this->where);
-        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-            if ($c >= $count3) {
-                echo '</table>';
-                echo '</td><td valign="top" align="center">';
-                echo $tabstart;
-                $c = 0;
-            }
-            $c++;
-            $smile_name = $row['smiley_name'];
-            $urlname = urlencode($smile_name);
-            echo '<tr>';
-            echo '<td align="center" class="blank">';
-            if ($this->user_id != 'nobody') {
-                $sid = $row['smiley_id'];
-                echo '<a href="'.URLHelper::getLink('?cmd=addfav&fc='.$this->fc.'&img='.$sid.'#anker'.$sid).'" name="anker',$sid,'">';
-                $tooltiptxt = sprintf(_("%s zu meinen Favoriten hinzufügen"),$smile_name);
-            } else {
-                $tooltiptxt = $smile_name;
-            }
-            printf('<img src="%s/smile/%s.gif" %s width="%u" height="%u" border="0">',
-                   $GLOBALS['DYNAMIC_CONTENT_URL'], $urlname, tooltip($tooltiptxt),
-                   $row['smiley_width'], $row['smiley_height']);
-            if ($this->user_id != 'nobody') {
-                echo '</a>';
-            }
-            echo '</td><td align="center" class="blank"> :'.$smile_name.': </td>';
-            echo '<td align="center" class="blank">' . $row['short_name'] . '</td>';
-            if ($this->SMILEY_COUNTER) {
-                $counter = $row['smiley_counter'] + $row['short_counter'];
-                echo '<td align="center" class="blank">' . $counter . '</td>';
-            }
-            echo "</tr>\n";
-        }
-        if (!$count) {
-            echo '<tr><td align="center" colspan="3"><h4>' . _("Keine Smileys vorhanden.") . '</h4></td></tr>';
-        }
-        echo '</table>', "\n";
-        echo '</td></tr></table>', "\n";
+        $template = $GLOBALS['template_factory']->open('smileys/list');
+        $template->smileys        = $smileys;
+        $template->count          = $count;
+        $template->SMILEY_COUNTER = $this->SMILEY_COUNTER;
+        $template->user_id        = $this->user_id;
+        echo $template->render();
     }
 
 
@@ -735,31 +613,29 @@ class smiley {
             return false;
         }
 
-        $zeile[0][1] = $zeile[0][2] = $zeile[0][3] = '';
-        $zeile[1][1] = $zeile[1][2] = $zeile[1][3] = '';
-        $c = 1;
-        foreach ($this->my_smiley as $smile => $value) {
-            $i = ($c <= 10) ? 0:1;
-            $zeile[$i][1] .= '<td class="smiley_th">'.$c++.'</td>';
-            $zeile[$i][2] .= '<td class="blank"><a href="'.URLHelper::getLink('?cmd=delfav&fc='.$this->fc.'&img='.$value['id']).'">';
-            $zeile[$i][2] .= '<img src="' . $GLOBALS['DYNAMIC_CONTENT_URL'] . '/smile/' . $smile . '.gif" ' . tooltip(sprintf(_("%s  entfernen"),$smile)) . ' width="'. $value['width']. '" height="'. $value['height']. '" border="0"></a></td>'."\n";
-            $zeile[$i][3] .= '<td class="blank">&nbsp;:'.$smile.':&nbsp;</td>'."\n";
-        }
-        echo '<table width="100%" class="blank" border="0" cellpadding="0" cellspacing="0" >', "\n";
-        echo '<tr><td class="topic"><b>&nbsp;' . _("meine Smiley-Favoriten") . '</b></td></tr>', "\n";
-        echo '<tr><td class="blank"><blockquote>&nbsp;<br>' , _("Klicken Sie auf ein Smiley um es zu Ihren Favoriten hinzuzufügen. Wenn Sie auf einen Favoriten klicken, wird er wieder entfernt.") ,'<br>',_('Sie können maximal 20 Smileys aussuchen.'), '<br>&nbsp;</blockquote></td></tr>', "\n";
-        //echo '</table>', "\n";
-        echo '<tr><td class="blank">';
-        echo '<table align=center><tr><td align=left>', "\n";
-        for ($i = 0; $i <= count($zeile); $i++) {
-            if ($zeile[$i][1]) {
-                echo '<table bgcolor="#94a6bc"><tr align=center><td class="smiley_th">',_("Favoriten"),'</td>', $zeile[$i][1], '</tr>';
-                echo '<tr align="center"><td class="smiley_th">',_("Smiley"),'</td>', $zeile[$i][2], '</tr>';
-                echo '<tr align="center"><td class="smiley_th">',_("Schreibweise"),'</td>', $zeile[$i][3], '</tr></table>';
+        $index = 0;
+        $favorites = array();
+        foreach ($this->my_smiley as $smile => $data) {
+            $row = floor($index / 10);
+            if (!isset($favorites[$row])) {
+                $favorites[$row] = array(
+                    'index' => array(),
+                    'name'  => array(),
+                    'data'  => array()
+                );
             }
+
+            $favorites[$row]['index'][]      = $index + 1;
+            $favorites[$row]['name'][]       = $smile;
+            $favorites[$row]['data'][$smile] = $data;
+
+            $index += 1;
         }
-        echo '</td></tr></table>&nbsp;<br>';
-        echo '</td></tr></table>';
+
+        $template = $GLOBALS['template_factory']->open('smileys/favorites');
+        $template->favorites = $favorites;
+        echo $template->render();
+
         return true;
     }
 

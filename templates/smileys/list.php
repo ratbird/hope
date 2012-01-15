@@ -29,12 +29,12 @@
                            name="anker<?= $item['smiley_id'] ?>">
                             <img src="<?= $GLOBALS['DYNAMIC_CONTENT_URL'] ?>/smile/<?= urlencode($item['smiley_name']) ?>.gif"
                                  <?= tooltip(sprintf(_('%s zu meinen Favoriten hinzufügen'), $item['smiley_name'])) ?>
-                                 width="<?= $item['width'] ?>" height="<?= $item['height'] ?>">
+                                 width="<?= $item['smiley_width'] ?>" height="<?= $item['smiley_height'] ?>">
                         </a>
                     <? else: ?>
                         <img src="<?= $GLOBALS['DYNAMIC_CONTENT_URL'] ?>/smile/<?= urlencode($item['smiley_name']) ?>.gif"
                              <?= tooltip($item['smiley_name']) ?>
-                             width="<?= $item['width'] ?>" height="<?= $item['height'] ?>">
+                             width="<?= $item['smiley_width'] ?>" height="<?= $item['smiley_height'] ?>">
                     <? endif; ?>
                     </td>
                     <td><?= sprintf(':%s:', $item['smiley_name']) ?></td>

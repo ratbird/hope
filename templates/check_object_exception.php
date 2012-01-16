@@ -1,9 +1,7 @@
-<?
-# Lifter010: TODO
-?>
 <?php
+# Lifter010: DONE - no form elements in this page
+
 require_once 'lib/classes/MessageBox.class.php';
-require_once 'lib/visual.inc.php';
 
 include 'lib/include/html_head.inc.php';
 
@@ -26,7 +24,7 @@ $current_page = _('Kein Objekt gewählt')
         </div>
     <? endif ?>
     <p>
-      <?= _("Zurück zur") ?> <a href="<?= URLHelper::getLink('index.php') ?>"><?= _("Startseite") ?></a>
+      <?= _('Zurück zur') ?> <a href="<?= URLHelper::getLink('index.php') ?>"><?= _('Startseite') ?></a>
     </p>
 </div>
 

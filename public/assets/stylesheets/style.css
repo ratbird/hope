@@ -234,11 +234,6 @@ a.printhead {
     height: 24px;
 }
 
-/* adds shadow to page elements (general and on index page) */
-#layout_container, .index_box {
-	box-shadow: 3px 3px 6px rgb(255, 255, 255, 0.2);
-}
-
 /* --- Infobox -------------------------------------------------------------- */
 table.infobox td {
     background-color: #dee2e8;

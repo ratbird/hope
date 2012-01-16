@@ -53,12 +53,18 @@ class SqueezePackagerTest extends \PHPUnit_Framework_TestCase
 
         $this->rmTmpDir();
         $this->output_directory = $this->getTmpDir();
+
+        $this->STUDIP_BASE_PATH = $GLOBALS['STUDIP_BASE_PATH'];
+        $GLOBALS['STUDIP_BASE_PATH'] =
+            realpath(dirname(__FILE__) . '/../../../../../');
     }
 
     function tearDown()
     {
         \Assets::set_assets_url($this->original_assets_url);
         $this->rmTmpDir();
+
+        $GLOBALS['STUDIP_BASE_PATH'] = $this->STUDIP_BASE_PATH;
     }
 
     function testIndividualUrls()

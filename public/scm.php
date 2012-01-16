@@ -24,7 +24,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-
+use Studip\Button, Studip\LinkButton;
 require '../lib/bootstrap.php';
 
 unregister_globals();
@@ -175,11 +175,11 @@ function scm_show_content($range_id, $msg, $scm_id) {
         echo $printcontent_table->open();
         if ($rechte) {
             if(StudipScmEntry::GetNumSCMEntriesForRange($range_id) > 1){
-                $edit .= "<a href=\"".URLHelper::getLink("?i_view=first_position&show_scm=$scm_id")."\">".makeButton("nachvorne", 'img', _("Diese Seite an die erste Position setzen"))."</a>&nbsp;";
+                $edit .= LinkButton::create(_('nach vorne'), URLHelper::getURL("?i_view=first_position&show_scm=$scm_id"), array('title' => _("Diese Seite an die erste Position setzen"))) . "&nbsp;";
             }
-            $edit .= "<a href=\"".URLHelper::getLink("?i_view=edit&show_scm=$scm_id")."\">".makeButton("bearbeiten")."</a>";
+            $edit .= LinkButton::create(_('bearbeiten'), URLHelper::getURL("?i_view=edit&show_scm=$scm_id"));
             if(StudipScmEntry::GetNumSCMEntriesForRange($range_id) > 1){
-                $edit .= "&nbsp;<a href=\"".URLHelper::getLink("?i_view=kill&show_scm=$scm_id")."\">".makeButton("loeschen")."</a>";
+                $edit .= "&nbsp;". LinkButton::create(_('löschen'), URLHelper::getURL("?i_view=kill&show_scm=$scm_id"));
             }
         } else {
             $edit = "&nbsp;";
@@ -244,8 +244,8 @@ function scm_edit_content($range_id, $scm_id) {
     $content.= "<input type=\"HIDDEN\" name=\"show_scm\" value=\"$scm_id\">";
     $content.= "<input type=\"HIDDEN\" name=\"i_view\" value=\"change\">";
 
-    $edit="<input style=\"vertical-align: middle;\" type=\"image\" name=\"send_scm\" value=\"&auml;nderungen vornehmen\" border=0 " . makeButton("uebernehmen", "src") . ">";
-    $edit.="&nbsp;<a href=\"".URLHelper::getLink('')."\">". makeButton("abbrechen") . "</a>";
+    $edit = Button::create(_('übernehmen'), 'send_scm', array('title' => _('Änderungen vornehmen')));   
+    $edit.="&nbsp;" . LinkButton::createCancel(_('abbrechen'));
     $edit .= "<font size=\"-1\">&nbsp;&nbsp;<a href=\"".URLHelper::getLink("show_smiley.php")."\" target=\"_blank\">";
 
     $help_url = format_help_url("Basis.VerschiedenesFormat");

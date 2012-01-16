@@ -11,19 +11,30 @@
  * the License, or (at your option) any later version.
  */
 
-namespace Studip\Squeeze;
+namespace {
+    // emulate #ctype_digit, unless it exists
+    // yaml lib needs it
+    if (!function_exists('ctype_digit')) {
+        function ctype_digit($text) {
+            return preg_match('/^\d+$/', $text);
+        }
+    }
+}
 
-require 'Compressor.php';
-require 'Configuration.php';
-require 'Exception.php';
-require 'Packager.php';
+namespace Studip\Squeeze {
 
-function packageAll($configFile = NULL, $outputDir = NULL)
-{
-    global $STUDIP_BASE_PATH;
-    $configFile = $configFile ?: "$STUDIP_BASE_PATH/config/assets.yml";
-    $configuration = Configuration::load($configFile);
-    $packager = new Packager($configuration);
+    require 'Compressor.php';
+    require 'Configuration.php';
+    require 'Exception.php';
+    require 'Packager.php';
 
-    $packager->cacheAll($outputDir);
+    function packageAll($configFile = NULL, $outputDir = NULL)
+    {
+        global $STUDIP_BASE_PATH;
+        $configFile = $configFile ?: "$STUDIP_BASE_PATH/config/assets.yml";
+        $configuration = Configuration::load($configFile);
+        $packager = new Packager($configuration);
+
+        $packager->cacheAll($outputDir);
+    }
 }

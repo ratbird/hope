@@ -10,7 +10,7 @@
                 <li>
                 <a
                 <? if (is_internal_url($url = $nav->getURL())) : ?>
-                    href="<?= URLHelper::getLink($url, $link_params) ?>"
+                    href="<?= URLHelper::getLink($url, $header_template->link_params) ?>"
                 <? else : ?>
                     href="<?= htmlspecialchars($url) ?>" target="_blank"
                 <? endif ?>

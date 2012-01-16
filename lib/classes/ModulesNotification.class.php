@@ -162,7 +162,7 @@ class ModulesNotification extends Modules {
             $statement = DBManager::get()->prepare($query);
             $statement->execute(array($user_id));
                    
-            while ($row = $statment->fetch(PDO::FETCH_ASSOC)) {
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
                 $settings[$row['range_id']] = $row['notification'];
             }
         }

@@ -282,9 +282,9 @@ class PageLayout
             self::addStylesheet($GLOBALS['_include_stylesheet'], array('media' => 'screen, print'));
         }
 
-        self::includeSqueezePackages();
+        $head_elements = array_merge(self::includeSqueezePackages(), self::$head_elements);
 
-        foreach (self::$head_elements as $element) {
+        foreach ($head_elements as $element) {
             $result .= '<' . $element['name'];
 
             foreach ($element['attributes'] as $key => $value) {
@@ -443,26 +443,39 @@ class PageLayout
         $configuration = Configuration::load($config_path);
         $packager      = new Packager($configuration);
 
+        $elements = array();
         foreach (self::getSqueezePackages() as $package) {
-            self::includeSqueezePackage($packager, $package);
+            $elements += self::includeSqueezePackage($packager, $package);
         }
+
+        return $elements;
     }
 
     /**
      * Include a single squeeze package depending on \Studip\ENV as
      * individual script elements or as a single one containing the
      * squeezed source code of all files comprising the package.
+     *
+     * @return an array containing PageLayout style HTML elements
      */
     private static function includeSqueezePackage($packager, $package)
     {
+        $elements = array();
         if (\Studip\ENV === 'development') {
             foreach ($packager->individualURLs($package) as $src) {
-                self::addHeadElement('script', compact('src'), '');
+                $elements[] = array(
+                    'name'       => 'script',
+                    'attributes' => compact('src'),
+                    'content'    => '');
             }
         } else {
             $src = $packager->packageURL($package);
             $charset = 'utf-8';
-            self::addHeadElement('script', compact('src', 'charset'), '');
+                $elements[] = array(
+                    'name'       => 'script',
+                    'attributes' => compact('src', 'charset'),
+                    'content'    => '');
         }
+        return $elements;
     }
 }

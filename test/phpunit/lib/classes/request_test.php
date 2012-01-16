@@ -156,6 +156,12 @@ class RequestTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(Request::submitted('s'));
         $this->assertTrue(Request::submitted('v1'));
     }
+
+    public function testSubmittedSome ()
+    {
+        $this->assertFalse(Request::submittedSome('null', 'null'));
+        $this->assertTrue(Request::submittedSome('null', 's', 'v'));
+    }
 }
 
 class RequestMethodTest extends PHPUnit_Framework_TestCase

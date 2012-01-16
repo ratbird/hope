@@ -350,6 +350,25 @@ class Request implements ArrayAccess, IteratorAggregate
     }
 
     /**
+     * Check whether one of the form submit buttons has been
+     * pressed. This works for both image and text submit buttons.
+     *
+     * @param string ...
+     *                 a variable argument list of submit button names
+     *
+     * @returns boolean  true if any button has been submitted, else false
+     */
+    public static function submittedSome ($param/*, ... */)
+    {
+        foreach(func_get_args() as $button) {
+            if (self::submitted($button)) {
+                return TRUE;
+            }
+        }
+        return FALSE;
+    }
+
+    /**
      * Quote a given string or array using addslashes(). If the parameter
      * is an array, the quoting is applied recursively.
      *

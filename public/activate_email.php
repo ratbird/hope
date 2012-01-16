@@ -5,6 +5,8 @@
 
 require '../lib/bootstrap.php';
 
+use Studip\Button, Studip\LinkButton;
+
 $_GET['cancel_login'] = 1;
 page_open(array('sess' => 'Seminar_Session', 'auth' => 'Seminar_Default_Auth', 'perm' => 'Seminar_Perm', 'user' => 'Seminar_User'));
 
@@ -34,7 +36,7 @@ function reenter_mail() {
         .'<input type="hidden" name="uid" value="'. htmlReady($_REQUEST['uid']) .'">'
         .'<table><tr><td>'. _('E-Mail:') .'</td><td><input type="text" name="email1"></td></tr>'
         .'<tr><td>'. _('Wiederholung:') . '</td><td><input type="text" name="email2"></td></tr></table>'
-        .makeButton("abschicken", "input"). '</form>';
+        .Button::createAccept(). '</form>';
 }
 
 function mail_explain() {
@@ -42,7 +44,7 @@ function mail_explain() {
     echo '<br><form action="activate_email.php" method="post">'
         . CSRFProtection::tokenTag()
         .'<input type="text" name="key"><input name="uid" type="hidden" value="'.htmlReady($_REQUEST['uid']).'"><br>'
-        .makeButton("abschicken","input"). '</form><br><br>';
+        .Button::createAccept(). '</form><br><br>';
 
 }
 

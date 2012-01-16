@@ -178,7 +178,7 @@ class ModulesNotification extends Modules {
 
         $my_sem = array();
 
-        $query = "SELECT s.Seminar_id, s.Name, s.chdate, s.start_time, s.modules, IFNULL(visitdate, 0) AS visitdate ".
+        $query = "SELECT s.Seminar_id, s.Name, s.chdate, s.start_time, s.modules, IFNULL(visitdate, 0) AS visitdate "
                . "FROM seminar_user su "
                . "LEFT JOIN seminare s USING (Seminar_id) "
                . "LEFT JOIN object_user_visits ouv ON (ouv.object_id = su.Seminar_id AND ouv.user_id = ? AND ouv.type = 'sem') "

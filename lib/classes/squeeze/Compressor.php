@@ -103,7 +103,7 @@ class Compressor
     function pathToJar()
     {
         global $STUDIP_BASE_PATH;
-        return "$STUDIP_BASE_PATH/vendor/yuicompressor/yuicompressor-2.4.6.jar";
+        return "$STUDIP_BASE_PATH/vendor/yuicompressor/yuicompressor-2.4.7.jar";
     }
 
     function procOpen($command, $stdin)

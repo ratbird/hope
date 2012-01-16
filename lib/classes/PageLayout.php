@@ -430,6 +430,21 @@ class PageLayout
         self::$squeeze_packages = func_get_args();
     }
 
+
+    /**
+     * Add a squeeze package to the list of squeeze packages to use
+     *
+     * @code
+     * PageLayout::addSqueezePackage("admin");
+     * @endcode
+     *
+     * @param string $package  the name of the package
+     */
+    public static function addSqueezePackage($package)
+    {
+        self::$squeeze_packages[] = $package;
+    }
+
     /**
      * Depending on \Studip\ENV, either includes individual script
      * elements for each JS file in every package, or a single script

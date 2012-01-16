@@ -1,8 +1,8 @@
 <?php
-# Lifter002: TODO
+# Lifter002: DONE - no html output in this file
 # Lifter007: TODO
-# Lifter003: TODO
-# Lifter010: TODO
+# Lifter003: TEST
+# Lifter010: DONE - no html output in this file
 /**
 * ModulesNotification.class.php
 *
@@ -111,17 +111,22 @@ class ModulesNotification extends Modules {
             reset($m_array);
             $range = get_object_type(key($m_array));
         }
+
+        $query = "UPDATE seminar_user SET notification = ? WHERE Seminar_id = ? AND user_id = ?";
+        $update_seminar_user = DBManager::get()->prepare($query);
+        
+        $query = "UPDATE deputies SET notification = ? WHERE range_id = ? AND user_id = ?";
+        $update_deputies = DBManager::get()->prepare($query);
+        
         foreach ($m_array as $range_id => $value) {
             $sum = array_sum($value);
             if ($sum > 0xffffffff) {
                 return FALSE;
             }
             if ($range == 'sem') {
-                $updated = $this->db->query("UPDATE seminar_user SET notification = $sum
-                        WHERE Seminar_id = '$range_id' AND user_id = '$user_id'");
-                if (get_config('DEPUTIES_ENABLE') && !$updated) {
-                    $this->db->query("UPDATE deputies SET notification = $sum
-                        WHERE range_id = '$range_id' AND user_id = '$user_id'");
+                $update_seminar_user->execute(array($sum, $range_id, $user_id));
+                if (get_config('DEPUTIES_ENABLE') && !$update_seminar_user->rowCount()) {
+                    $update_deputies->execute(array($sum, $range_id, $user_id));
                 }
             } else {
                 return FALSE;
@@ -136,22 +141,29 @@ class ModulesNotification extends Modules {
         if (is_null($user_id)) {
             $user_id = $GLOBALS['user']->id;
         }
-        if ($range == 'sem') {
-            $this->db->query("SELECT Seminar_id, notification FROM seminar_user
-                    WHERE user_id = '$user_id'");
-        } else {
-            return FALSE;
-        }
+        if ($range != 'sem') {
+            return false;
+        }        
+
         $settings = array();
-        while ($this->db->next_record()) {
-            $settings[$this->db->f('Seminar_id')] = $this->db->f('notification');
+
+        $query = "SELECT Seminar_id, notification FROM seminar_user WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($user_id));
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $settings[$row['Seminar_id']] = $row['notification'];
         }
-        if ($range == 'sem' && get_config('DEPUTIES_ENABLE')) {
-            $this->db->query("SELECT d.range_id, d.notification
-                FROM deputies d JOIN seminare s ON (d.range_id=s.Seminar_id)
-                WHERE d.user_id = '$user_id'");
-            while ($this->db->next_record()) {
-                $settings[$this->db->f('range_id')] = $this->db->f('notification');
+        
+        if (get_config('DEPUTIES_ENABLE')) {
+            $query = "SELECT d.range_id, d.notification "
+                   . "FROM deputies d "
+                   . "JOIN seminare s ON (d.range_id=s.Seminar_id) "
+                   . "WHERE d.user_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($user_id));
+                   
+            while ($row = $statment->fetch(PDO::FETCH_ASSOC)) {
+                $settings[$row['range_id']] = $row['notification'];
             }
         }
         return $settings;
@@ -164,30 +176,30 @@ class ModulesNotification extends Modules {
             $user_id = $GLOBALS['user']->id;
         }
 
-        $this->db->query("SELECT s.Seminar_id, s.Name, s.chdate,
-                s.start_time, s.modules, IFNULL(visitdate, 0) as visitdate
-                FROM seminar_user su LEFT JOIN seminare s USING (Seminar_id)
-                LEFT JOIN object_user_visits ouv
-                ON (ouv.object_id = su.Seminar_id AND ouv.user_id = '$user_id'
-                AND ouv.type='sem')
-                WHERE su.user_id = '$user_id' AND su.status != 'user'");
-
         $my_sem = array();
-        while ($this->db->next_record()){
-            $seminar_id = $this->db->f('Seminar_id');
-            $modulesInt = $this->db->f('modules');
+
+        $query = "SELECT s.Seminar_id, s.Name, s.chdate, s.start_time, s.modules, IFNULL(visitdate, 0) AS visitdate ".
+               . "FROM seminar_user su "
+               . "LEFT JOIN seminare s USING (Seminar_id) "
+               . "LEFT JOIN object_user_visits ouv ON (ouv.object_id = su.Seminar_id AND ouv.user_id = ? AND ouv.type = 'sem') "
+               . "WHERE su.user_id = ? AND su.status != 'user'";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($user_id, $user_id));
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $seminar_id = $row['Seminar_id'];
+            $modulesInt = $row['modules'];
             if( $modulesInt === null ){
                 $modulesInt = $this->getDefaultBinValue( $seminar_id , "sem" );
             }
             $modules = $this->generateModulesArrayFromModulesInteger( $modulesInt );
             $my_sem[$seminar_id] = array(
-                    'name' => $this->db->f('Name'),
-                    'chdate' => $this->db->f('chdate'),
-                    'start_time' => $this->db->f('start_time'),
-                    'modules' => $modules,
+                    'name'       => $row['Name'],
+                    'chdate'     => $row['chdate'],
+                    'start_time' => $row['start_time'],
+                    'modules'    => $modules,
                     'modulesInt' => $modulesInt,
-                    'visitdate' => $this->db->f('visitdate'),
-                    'obj_type' => 'sem'
+                    'visitdate'  => $row['visitdate'],
+                    'obj_type'   => 'sem'
                     );
 
             unset( $seminar_id );

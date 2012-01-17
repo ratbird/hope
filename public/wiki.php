@@ -33,6 +33,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
+
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Default_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $auth->login_if($again && ($auth->auth["uid"] == "nobody"));
 
@@ -53,8 +55,10 @@ if (is_array($WIKI_PLUGINS)) {
         require_once('lib/'.$plugin);
     }
 }
-
-
+$view=Request::get('view');
+$keyword=Request::option('keyword');
+$version=Request::int('version');
+$cmd=Request::option('cmd');
 if ($view=="wikiprint") {
     printWikiPage($keyword, $version);
     page_close();
@@ -76,7 +80,7 @@ PageLayout::setHelpKeyword("Basis.Wiki"); // Hilfeseite im Hilfewiki
 PageLayout::setTitle($SessSemName["header_line"]. " - " . _("Wiki"));
 
 if (in_array(Request::get('view'), words('listnew listall export'))) {
-    Navigation::activateItem('/course/wiki/' . Request::get('view'));
+    Navigation::activateItem('/course/wiki/'.$view);
 } else {
     Navigation::activateItem('/course/wiki/show');
 }
@@ -85,9 +89,9 @@ if (in_array(Request::get('view'), words('listnew listall export'))) {
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
 
-if ($wiki_comments=="all") {         // show all comments
+if (Request::option('wiki_comments')=="all") {         // show all comments
     $show_wiki_comments="all";
-} elseif ($wiki_comments=="none") {  // don't show comments
+} elseif (Request::option('wiki_comments')=="none") {  // don't show comments
     $show_wiki_comments="none";
 } else {                             // show comments as icons
     $show_wiki_comments="icon";
@@ -118,21 +122,21 @@ if ($view=="listall") {
     // list all pages, default sorting = alphabetically
     //
     SkipLinks::addIndex(_("Alle Seiten"), 'main_content', 100);
-    listPages("all", $sortby);
+    listPages("all", Request::option('sortby'));
 
 } else if ($view=="listnew") {
     //
     // list new pages, default sorting = newest first
     //
     SkipLinks::addIndex(_("Neue Seiten"), 'main_content', 100);
-    listPages("new", $sortby);
+    listPages("new", Request::option('sortby'));
 
 } else if ($view=="diff") {
     //
     // show one large diff-file containing all changes
     //
     SkipLinks::addIndex(_("Seite mit Änderungen"), 'main_content', 100);
-    showDiffs($keyword, $versionssince);
+    showDiffs($keyword, Request::option('versionssince'));
 
 } else if ($view=="combodiff") {
     //
@@ -140,13 +144,6 @@ if ($view=="listall") {
     //
     SkipLinks::addIndex(_("Seite mit Änderungen"), 'main_content', 100);
     showComboDiff($keyword);
-
-} else if ($view=="diffselect") {
-    //
-    // show only last changes in a diff
-    //
-    SkipLinks::addIndex(_("Seite mit Änderungen"), 'main_content', 100);
-    showDiffs($keyword, $diffmode);
 
 } else if ($view=="export") {
     //
@@ -202,7 +199,7 @@ if ($view=="listall") {
     }
     // set lock
     setWikiLock($db, $user->id, $SessSemName[1], $keyword);
-    wikiEdit($keyword, NULL, $user->id, $lastpage);
+    wikiEdit($keyword, NULL, $user->id, Request::quoted('lastpage'));
 
 } else {
     // Default action: Display WikiPage (+ logic for submission)
@@ -213,11 +210,11 @@ if ($view=="listall") {
     releaseLocks($keyword); // kill old locks
     $special="";
 
-    if ($submit) {
+    if (Request::submitted('submit')) {
         //
         // Page was edited and submitted
         //
-        $special=submitWikiPage($keyword, $version, $body, $user->id, $SessSemName[1]);
+        $special=submitWikiPage($keyword, $version, Request::quoted('body'), $user->id, $SessSemName[1]);
         $version=""; // $version="" means: get latest
 
     } else if ($cmd == "abortedit") { // Editieren abgebrochen
@@ -225,8 +222,8 @@ if ($view=="listall") {
         // Editing page was aborted
         //
         releasePageLocks($keyword); // kill lock (set when starting to edit)
-        if ($lastpage) { // if editing new page was aborted, display last page again
-            $keyword=$lastpage;
+        if (Request::quoted('lastpage')) { // if editing new page was aborted, display last page again
+            $keyword=Request::quoted('lastpage');
         }
 
     } else if ($cmd == "delete") {

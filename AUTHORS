@@ -3,24 +3,23 @@ The Stud.IP CoreGroup
 ----------------------------------------------------------------------------
 
 Marco Bohnsack      <bohnsack@data-quest.de>
-Rasmus Fuhse        <fuhse@data-quest.de>   
+Rasmus Fuhse        <fuhse@data-quest.de>
 Till Glöggler       <tgloeggl@uos.de>
 Thomas Hackl        <thomas.hackl@uni-passau.de>
 Cornelis Kater      <kater@elsa.uni-hannover.de>
 André Klaßen        <aklassen@uos.de>
-Hartje Kriete       <kriete@math.uni-goettingen.de>
-Carola Kruse        <carola.kruse@tu-braunschweig.de>
+Arne Koesling       <koesling@elsa.uni-hannover.de>
 Jan Kulmann         <jankul@zmml.uni-bremen.de>
 Elmar Ludwig        <elmar.ludwig@uos.de>
-Marcus Luzenauer    <marcus.lunzenauer@elanag.com>
+Marcus Lunzenauer   <marcus.lunzenauer@elanag.com>
 Nico Müller         <nico.mueller@uni-oldenburg.de>
 André Noack         <noack@data-quest.de>
 Frank Ollermann     <frank.ollermann@uni-osnabrueck.de>
 Michael Riehemann   <michael.riehemann@uni-oldenburg.de>
-Jörg Röpke          <roepke@uni-trier.de>
+Cornelia Roser      <roser@hawk-hhg.de>
 Stefan Suchi        <suchi@data-quest.de>
-Tobias Thelen       <tobias.thelen@uos.de>
 Peter Thienel       <thienel@data-quest.de>
+Jan-Hendrik Willms  <tleilax@gmail.com>
 
 ----------------------------------------------------------------------------
 Credits and Comments
@@ -89,8 +88,18 @@ Administration of times and room information
 Jens Schmelzer      <jens.schmelzer@fh-jena.de>
 Smiley administration, calendar pop-up, lots of security related bugfixes
 
+Jörg Röpke          <roepke@uni-trier.de>
+
+Tobias Thelen       <tobias.thelen@uos.de>
+Stud.IP help, event logging, wiki enhancements
+
+Hartje Kriete       <kriete@math.uni-goettingen.de>
+English translation
+
+Carola Kruse        <carola.kruse@tu-braunschweig.de>
+
 ----------------------------------------------------------------------------
 Any others whose names we probably forgot to add (email us and we'll put you
 in here)
 
-- The StudIP Core Group <info@studip.de> 2010
+- The StudIP Core Group <info@studip.de> 2012

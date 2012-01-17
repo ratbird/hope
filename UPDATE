@@ -9,7 +9,7 @@ Eingesetzt werden kann dieser ab einem Wechsel von Stud.IP 1.5.0-2 zu 1.6.0-1:
 - Datenbankaktualisierungen entweder über die Webschnittstelle:
   http://mein.server.de/studip/web_migrate.php
 - ODER über die Komandozeile:
-  studip-2.0/cli/migrate.php
+  studip-2.2/cli/migrate.php
   vornehmen.
 
-- The StudIP Core Group <info@studip.de> 2010
+- The StudIP Core Group <info@studip.de> 2012

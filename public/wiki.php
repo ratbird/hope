@@ -56,7 +56,7 @@ if (is_array($WIKI_PLUGINS)) {
     }
 }
 $view=Request::get('view');
-$keyword=Request::option('keyword');
+$keyword=Request::quoted('keyword');
 $version=Request::int('version');
 $cmd=Request::option('cmd');
 if ($view=="wikiprint") {
@@ -64,7 +64,7 @@ if ($view=="wikiprint") {
     page_close();
     die();
 } elseif ($view=="wikiprintall") {
-    printAllWikiPages($SessSemName[1], $SessSemName[header_line]);
+    printAllWikiPages($SessSemName[1], $SessSemName['header_line']);
     page_close();
     die();
 } elseif ($view=="export_pdf") {

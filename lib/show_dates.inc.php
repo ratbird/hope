@@ -15,12 +15,14 @@
  * @author      André Noack <anoack@mcis.de>
  * @author      Cornelis Kater <ckater@gwdg.de>
  * @author      Stefan Suchi <suchi@gmx.de>
- # @author      Peter Thienel <thienel@data-quest.de>
+ * @author      Peter Thienel <thienel@data-quest.de>
  * @author      Michael Riehemann <michael.riehemann@uni-oldenburg.de>
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @package     dates
  */
+
+use Studip\Button, Studip\LinkButton;
 
 require_once 'lib/visual.inc.php';
 require_once 'lib/dates.inc.php';
@@ -309,8 +311,7 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
                 $content .= "<br>";
 
                 if ($show_admin)
-                    $content .= "<br><div align=\"center\"><a href=\"".URLHelper::getLink("raumzeit.php?cmd=open&open_close_id=".$db->f("termin_id")."#".$db->f("termin_id"))."\">" . makeButton("bearbeiten", "img") . "</a></div>";
-
+                    $content .= "<br><div align=\"center\"> ". LinkButton::create(_('bearbeiten'), URLHelper::getLink("raumzeit.php?cmd=open&open_close_id=".$db->f("termin_id")."#".$db->f("termin_id"))) . "</div>";
                 echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr>";
                 printcontent(0,0, $content, $edit);
                 echo "</tr></table> ";
@@ -488,8 +489,8 @@ function show_personal_dates ($range_id, $date_start, $date_end, $show_docs = FA
                 $content .= '<br>' . htmlReady($termin->toStringRecurrence());
 
                 if ($show_admin) {
-                    $content .= '<div align="center"><a href="'.URLHelper::getURL('calendar.php', array('cmd' => 'edit', 'termin_id' => $termin->getId(), 'atime' => $termin->getStart(), 'source_page' => URLHelper::getURL('about.php')))
-                                . '">' . makeButton('bearbeiten', 'img') . '</a></div>';
+                    $content .= '<div align="center">' . LinkButton::create(_('bearbeiten'), URLHelper::getURL('calendar.php', array('cmd' => 'edit', 'termin_id' => $termin->getId(), 'atime' => $termin->getStart(), 'source_page' => URLHelper::getURL('about.php'))))
+                             . '</div>';
                 }
 
                 echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr>";
@@ -697,12 +698,10 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
                 if ($have_write_permission) {
                     // Seminar appointment
                     if (strtolower(get_class($termin)) == 'seminarevent') {
-                        $edit = '<a href="' . URLHelper::getLink('raumzeit.php', array('cid' => $termin->getSeminarId(), 'cmd' => 'open', 'open_close_id' => $termin->getId())) . '#' . $termin->getId() . '">'
-                                    . makeButton("bearbeiten", "img") . '</a>';
+                        $edit = LinkButton::create(_('bearbeiten'), URLHelper::getLink('raumzeit.php', array('cid' => $termin->getSeminarId(), 'cmd' => 'open', 'open_close_id' => $termin->getId())) . '#' . $termin->getId());
                     } else {
                         // Personal appointment
-                        $edit = '<a href="'.URLHelper::getLink('calendar.php', array('cmd' => 'edit', 'termin_id' => $termin->getId(), 'atime' => $termin->getStart(), 'source_page' => URLHelper::getURL()))
-                                . '">' . makeButton("bearbeiten", "img") . '</a>';
+                        $edit = LinkButton::create(_('bearbeiten'), URLHelper::getLink('calendar.php', array('cmd' => 'edit', 'termin_id' => $termin->getId(), 'atime' => $termin->getStart(), 'source_page' => URLHelper::getURL())));                                    
                     }
                 } else {
                     $content .= "<br>";

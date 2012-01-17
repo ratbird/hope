@@ -932,7 +932,7 @@ jQuery('.messagebox .messagebox_buttons a').live('click', function () {
     if (jQuery(this).is('.details')) {
         jQuery(this).closest('.messagebox').toggleClass('details_hidden');
     } else if (jQuery(this).is('.close')) {
-        jQuery(this).closest('.messagebox').fadeOut(function () {
+        jQuery(this).closest('.messagebox').hide('blind', 'fast', function () {
             jQuery(this).remove();
         });
     }

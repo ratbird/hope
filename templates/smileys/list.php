@@ -1,5 +1,20 @@
 <?php
 # Lifter007: TODO - long lines
+
+// divide smiley array in equal chunks, spillover from left to right
+$columns   = 3;
+$count     = count($smileys);
+$max       = floor($count / $columns);
+$spillover = $count % $columns;
+
+$data = array();
+for ($i = 0; $i < $columns; $i++) {
+    $num = $max + (int)($spillover > 0);
+
+    $data[] = array_splice($smileys, 0, $num);
+
+    $spillover -= 1;
+}
 ?>
 <table align="center" width="100%">
     <tr>
@@ -8,7 +23,7 @@
             <h4><?= _('Keine Smileys vorhanden.') ?></h4>
         </td>
 <? else: ?>
-    <? for ($i = 0, $max = ceil($count / 3); $i < 3; $i++): ?>
+    <? foreach ($data as $items): ?>
         <td valign="top" align="center">
             <table cellpadding="2" cellspacing="2" class="blank">
                 <tr>
@@ -20,7 +35,7 @@
                 <? endif; ?>
                 </tr>
 
-            <? foreach (array_slice($smileys, $i * $max, $max) as $item): ?>
+            <? foreach ($items as $item): ?>
                 <? $id = $item['smiley_id']; ?>
                 <tr align="center">
                     <td>
@@ -49,7 +64,7 @@
             </table>
 
         </td>
-    <? endfor; ?>
+    <? endforeach; ?>
 <? endif; ?>
     </tr>
 </table>

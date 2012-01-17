@@ -57,7 +57,7 @@
         <tfoot>
             <tr>
                 <td colspan="7" align="center">
-                    <?= Button::create('absenden') ?>
+                    <?= Button::createAccept('absenden') ?>
                 </td>
             </tr>
         </tfoot>

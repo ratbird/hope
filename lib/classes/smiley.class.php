@@ -252,7 +252,6 @@ class smiley {
 
         $template = $GLOBALS['template_factory']->open('smileys/list');
         $template->smileys        = $smileys;
-        $template->count          = $count;
         $template->SMILEY_COUNTER = $this->SMILEY_COUNTER;
         $template->user_id        = $GLOBALS['user']->id;
         echo $template->render();

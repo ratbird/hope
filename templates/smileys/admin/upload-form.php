@@ -29,7 +29,7 @@ use Studip\Button, Studip\LinkButton;
             </tr>
             <tr class="steelgraulight">
                 <td><?= _('2. Bilddatei hochladen:') ?></td>
-                <td><?= Button::create('absenden') ?></td>
+                <td><?= Button::createAccept('absenden') ?></td>
             </tr>
         </tbody>
     </table>

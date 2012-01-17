@@ -316,6 +316,10 @@ class Config implements ArrayAccess, Countable, IteratorAggregate
         $entry->setId(md5($field));
         $entry->field = $field;
         $entry->is_default = 1;
+        $entry->comment = '';
+        if (!isset($data['value'])) {
+            $entry->value = '';
+        }
         if(!$entry->type) {
             $entry->type = 'string';
         }

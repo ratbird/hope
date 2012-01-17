@@ -16,7 +16,7 @@ if (Studip\ENV == 'development') {
 
     do {
         $details[] = 'Type: ' . get_class($exception);
-        $details[] = 'Message: '.htmlentities($exception->getMessage());
+        $details[] = 'Message: ' . htmlentities($exception->getMessage());
         $details[] = 'Code: ' . $exception->getCode();
 
         $trace = sprintf("#$ %s(%u)\n", $exception->getFile(), $exception->getLine())

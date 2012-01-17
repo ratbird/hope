@@ -112,7 +112,7 @@ function show_banner_list($table) {
         print $table->row(array(_("Anzeigezeitraum"), ($db->f("startdate") ? date("d.m.Y, H:i",$db->f("startdate")) : _("sofort")) . " " . _("bis") . " " . ($db->f("enddate") ? date("d.m.Y, H:i",$db->f("enddate")) : _("unbegrenzt"))),"",0);
         print $table->row(array(_("Views"), $db->f("views")),"",0);
         print $table->row(array(_("Priorität (Wahrscheinlichkeit)"), $db->f("priority") . " (" . view_probability($db->f("priority")) . ")"),"",0);
-        print $table->row(array("", "<a href=\"$PHP_SELF?cmd=editdb&ad_id=".$db->f("ad_id")."\"><img " . makeButton("bearbeiten","src") . "></a> <a href=\"$PHP_SELF?cmd=delete&ad_id=".$db->f("ad_id")."\"><img " . makeButton("loeschen","src") . "\" border=0></a>"),"",0);
+        print $table->row(array("", LinkButton::create(_('bearbeiten'), $PHP_SELF.'?cmd=editdb&ad_id='.$db->f("ad_id")).' '.LinkButton::create(_('löschen'), $PHP_SELF.'?cmd=delete&ad_id='.$db->f("ad_id"))),"",0);
         print $table->row(array("&nbsp;","&nbsp"),array("class"=>"blank", "bgcolor"=>"white"),0);
     }
     if ($count==0) {
@@ -236,7 +236,7 @@ function edit_banner_pic($banner_data) {
     print "<form enctype=\"multipart/form-data\" action=\"$PHP_SELF?cmd=upload&view=edit\" method=\"POST\">";
     echo CSRFProtection::tokenTag();
     print $table->row(array(_("1. Bilddatei auswählen:")." <input name=\"imgfile\" type=\"file\" cols=45>"),"",0);
-    print $table->row(array(_("2. Bilddatei hochladen:")." <input type=\"IMAGE\" " . makeButton("absenden", "src") . " border=0 value=\"absenden\">"),"",0);
+    print $table->row(array(_("2. Bilddatei hochladen:").Button::createAccept(_('absenden'))),"",0);
     print "</form>";
     echo $table->close();
 
@@ -309,7 +309,7 @@ function edit_banner_data($banner_data) {
     $prio_selector .= "</select>";
     print $table->row(array("Priorität:", $prio_selector),0);
 
-    print $table->row(array("", "<input type=\"IMAGE\" " . makeButton("absenden", "src") . " border=0 value=\"absenden\"> <a href=\"admin_banner_ads.php\"><img " . makeButton("abbrechen", "src") . " border=0></a>"),0);
+    print $table->row(array("", Button::create(_('absenden')).' '.LinkButton::create(_('abbrechen'))),0);
 
     print "</form>";
     $table->close();

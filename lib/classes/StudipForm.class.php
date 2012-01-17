@@ -358,16 +358,11 @@ class StudipForm {
     }
 
     function getFormButton($name, $attributes = false){
-        $ret = "\n<input type=\"image\" name=\"{$this->form_name}_{$name}\" ";
-        if (!$this->form_buttons[$name]['is_picture']){
-            $ret .= makeButton($this->form_buttons[$name]['type'],"src");
+        if ($attributes) {
+            return Button::create($this->form_buttons[$name]['type'], $attributes);
         } else {
-            $ret .= ' src="'.$GLOBALS['ASSETS_URL'].'images/' . $this->form_buttons[$name]['type'] . '" ';
+            return Button::create($this->form_buttons[$name]['type']);
         }
-        $ret .= tooltip($this->form_buttons[$name]['info'], true);
-        $ret .= $this->getAttributes($attributes);
-        $ret .= " border=\"0\">";
-        return $ret;
     }
 
     function getFormFieldCaption($name, $attributes = false){

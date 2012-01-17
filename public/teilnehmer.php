@@ -23,7 +23,7 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-
+use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
 
@@ -1405,7 +1405,7 @@ if ($db->f('visible') == 'yes' || $i_see_everybody || $db->f('user_id') == $user
                         <textarea name="userinfo" rows="3" cols="50"><?= $db->f("comment") ?></textarea>
                         <br>
                         <font size="-1"><?= _("&Auml;nderungen") ?></font>
-                        <input type="image" <?= makeButton("uebernehmen", "src") ?>>
+                        <?= Button::create(_('übernehmen')) ?>
                         <input type="hidden" name="user_id" value="<?=$db->f("user_id")?>">
                         <input type="hidden" name="cmd" value="change_userinfo">
                         <input type="hidden" name="username" value="<?= $db->f("username") ?>">
@@ -1427,19 +1427,19 @@ if($key != 'dozent' && $rechte && !$info_is_open) {
     echo '<tr><td class="blank" colspan="'.($showscore ? 7 : 6).'">&nbsp;</td>';
 
     if (isset($multiaction[$key]['send'][0]))
-        echo '<td class="blank" align="center">' . makeButton('neuenachricht','input', $multiaction[$key]['send'][1],'do_' . $multiaction[$key]['send'][0]) . '</td>';
-    else
+        echo '<td class="blank" align="center">' . Button::create(_('neue Nachricht'),'do_' . $multiaction[$key]['send'][0],array('title'=> $multiaction[$key]['send'][1])) . '</td>';
+   else
         echo '<td class="blank">&nbsp;</td>';
 
 
     if (!LockRules::Check($id, 'participants')) {
         if (isset($multiaction[$key]['insert'][0]) && !($key == 'autor' && !$tutor_count)) {
-            echo '<td class="blank" align="center">' . makeButton('eintragen','input', $multiaction[$key]['insert'][1],'do_' . $multiaction[$key]['insert'][0]) . '</td>';
+           echo '<td class="blank" align="center">' . Button::create(_('eintragen'),  'do_' . $multiaction[$key]['insert'][0],array('title'=> $multiaction[$key]['insert'][1])) . '</td>';
         } else {
             echo '<td class="blank">&nbsp;</td>';
         }
 
-        echo '<td class="blank" align="center">' . makeButton('entfernen','input', $multiaction[$key]['delete'][1],'do_' . $multiaction[$key]['delete'][0]) . '</td>';
+        echo '<td class="blank" align="center">' . Button::create(_('entfernen'),'do_' . $multiaction[$key]['delete'][0],array('title'=>$multiaction[$key]['delete'][1])) . '</td>';
 
         if ($sem->isAdmissionEnabled()) {
             echo '<td class="blank">&nbsp;</td>';
@@ -1520,8 +1520,8 @@ if ($rechte) {
             echo '<label for="kontingent">'._("Kontingent berücksichtigen:");
             echo '<input id="kontingent" type="checkbox" checked name="consider_contingent" value="1" style="vertical-align:middle"></label>';
             echo '&nbsp;</font></td>';
-            echo '<td class="blank" align="center">' . makeButton('eintragen','input',_("Ausgewählte Nutzer aus der Warteliste in die Veranstaltung eintragen"),'do_admission_insert') . '</td>';
-            echo '<td class="blank" align="center">' . makeButton('entfernen','input',_("Ausgewählte Nutzer aus der Warteliste entfernen"),'do_admission_delete') . '</td>';
+            echo '<td class="blank" align="center">' . Button::create(_('eintragen'),'do_admission_insert',array('title'=>_("Ausgewählte Nutzer aus der Warteliste in die Veranstaltung eintragen"))) . '</td>';
+            echo '<td class="blank" align="center">' . Button::create(_('entfernen'),'do_admission_delete',array('title'=>_("Ausgewählte Nutzer aus der Warteliste entfernen"))) . '</td>';
             echo '<td class="blank">&nbsp;</td></tr>';
         }
         echo '</table>';
@@ -1563,8 +1563,9 @@ if (!LockRules::Check($id, 'participants') && $rechte
         ?>
         </select></td>
         <td class="steel1" width="20%" align="center"><font size=-1><?= sprintf(_("als %s"), get_title_for_status('tutor', 1)) ?></font><br>
-        <input type="image" name="add_tutor" <?=makeButton("eintragen", "src")?> border="0" value="<?= sprintf(_("als %s berufen"), get_title_for_status('tutor', 1)) ?>"></td>
-    </tr></form></table>
+                 <?= Button::create(_('eintragen'),'add_tutor' ,array('value'=> sprintf(_("als %s berufen"), get_title_for_status('tutor', 1)) )) ?></td>
+
+          </tr></form></table>
 <?
 
 } // Ende der Berufung
@@ -1623,7 +1624,7 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
                 printf(_("als %s"), get_title_for_status('autor', 1));
             }
             ?></font><br>
-            <input type="image" name="add_user" <?=makeButton("eintragen", "src")?> align="absmiddle" border=0 value="<?= sprintf(_("als %s berufen"), get_title_for_status('autor', 1)) ?>">&nbsp;<a href="<?= URLHelper::getLink() ?>"><?=makeButton("neuesuche")?></a></td>
+               <?= Button::create(_('eintragen'),'add_user',array('value'=> sprintf(_("als %s berufen"), get_title_for_status('autor', 1)))) ?>&nbsp;<?= LinkButton::create(_('neuesuche'),URLHelper::getLink()) ?></td>
 
         </tr>
     </table>
@@ -1674,7 +1675,9 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
             <? endif ?>
         </td>
         <td class="steel1" width="20%" align="center">
-        <input type="image" name="add_user" <?=makeButton("eintragen", "src")?> border=0 value=" <?=_("eintragen")?> "></td>
+             <?= Button::create(_('eintragen'),'add_user',array('value'=>_("eintragen"))) ?>  </td>
+
+       
     </tr></table></form></tr>
     <?
 }
@@ -1732,12 +1735,10 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
             echo '</select></label></font>';
         }
         echo "</td>\n";
-        echo "<td width=\"20%\" class=\"steel1\" align=\"center\"><input type=\"image\" name=\"submit\" ";
-        echo makeButton('eintragen', 'src') . " border=\"0\">";
+        echo "<td width=\"20%\" class=\"steel1\" align=\"center\"> ";
+        echo Button::create(_('eintragen'),'submit') ;
         if (sizeof($csv_not_found)) {
-            echo "<br><br><a href=\"".URLHelper::getLink()."\">";
-            echo "<img border=\"0\" " . makeButton('loeschen', 'src');
-            echo "></a>";
+           echo "<img border=\"0\" " . LinkButton::create(_('löschen'),URLHelper::getLink());
         }
         echo "\n</td></tr>\n";
     } else {
@@ -1783,10 +1784,9 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
                 }
                 echo '</select></label></font>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ';
             }
-            echo makeButton('eintragen', 'input');
+            echo  Button::create(_('eintragen'));
             echo '&nbsp; &nbsp; ';
-            echo "<a href=\"".URLHelper::getLink()."\">";
-            echo makeButton('abbrechen', 'img') . '</a>';
+            echo  LinkButton::create(_('abbrechen'),URLHelper::getLink());
             echo "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </td></tr>\n";
 
         if (sizeof($csv_not_found)) {

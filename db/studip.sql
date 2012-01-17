@@ -1209,7 +1209,7 @@ CREATE TABLE IF NOT EXISTS `plugins` (
   `navigationpos` int(10) unsigned NOT NULL DEFAULT '0',
   `dependentonid` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`pluginid`)
-) ENGINE=MyISAM AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -1491,7 +1491,7 @@ CREATE TABLE IF NOT EXISTS `resources_temporary_events` (
   PRIMARY KEY (`event_id`),
   KEY `resource_id` (`resource_id`),
   KEY `assign_object_id` (`assign_id`)
-) TYPE=MEMORY;
+) ENGINE=MEMORY;
 
 -- --------------------------------------------------------
 
@@ -1519,7 +1519,7 @@ CREATE TABLE IF NOT EXISTS `roles` (
   `rolename` varchar(80) NOT NULL DEFAULT '',
   `system` enum('y','n') NOT NULL DEFAULT 'n',
   PRIMARY KEY (`roleid`)
-) ENGINE=MyISAM  AUTO_INCREMENT=8 ;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -1599,7 +1599,7 @@ CREATE TABLE IF NOT EXISTS `schedule` (
   `user_id` varchar(32) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -1880,7 +1880,7 @@ CREATE TABLE IF NOT EXISTS `siteinfo_details` (
   `name` varchar(255) NOT NULL,
   `content` text NOT NULL,
   PRIMARY KEY (`detail_id`)
-) ENGINE=MyISAM  AUTO_INCREMENT=7 ;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -1894,7 +1894,7 @@ CREATE TABLE IF NOT EXISTS `siteinfo_rubrics` (
   `position` tinyint(3) unsigned DEFAULT NULL,
   `name` varchar(255) NOT NULL,
   PRIMARY KEY (`rubric_id`)
-) ENGINE=MyISAM  AUTO_INCREMENT=3 ;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -1917,7 +1917,7 @@ CREATE TABLE IF NOT EXISTS `smiley` (
   PRIMARY KEY (`smiley_id`),
   UNIQUE KEY `name` (`smiley_name`),
   KEY `short` (`short_name`)
-) ENGINE=MyISAM AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -2491,7 +2491,7 @@ CREATE TABLE IF NOT EXISTS `webservice_access_rules` (
   `type` enum('allow','deny') NOT NULL DEFAULT 'allow',
   `id` int(11) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 

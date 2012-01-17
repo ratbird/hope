@@ -21,6 +21,8 @@
  * @package     news
  */
 
+use Studip\Button, Studip\LinkButton;
+
 require_once 'lib/functions.php';
 require_once ('lib/visual.inc.php');
 require_once ('lib/language.inc.php');
@@ -406,10 +408,10 @@ function show_news_item_content($news_item, $cmd_data, $show_admin, $admin_link)
       $content.="<br>";
 
     if ($auth->auth["uid"] == $news_item['user_id'] || $show_admin) {
-        $edit="<a href=\"".URLHelper::getLink("admin_news.php?cmd=edit&edit_news=".$id."&$admin_link")."\">" . makeButton("bearbeiten") . "</a>";
-        $edit.=" <a href=\"".URLHelper::getLink("?touch_news=".$id."#anker")."\">" . makeButton("aktualisieren") . "</a>";
+        $edit= LinkButton::create(_('bearbeiten'), URLHelper::getURL("admin_news.php?cmd=edit&edit_news=".$id."&$admin_link"));
+        $edit.= LinkButton::create(_('aktualisieren'), URLHelper::getURL("?touch_news=".$id."#anker"));
         if ($auth->auth["uid"] == $news_item['user_id'] || $GLOBALS['perm']->have_perm('admin')) {
-            $edit.=" <a href=\"".URLHelper::getLink("admin_news.php?cmd=kill&kill_news=".$id."&$admin_link")."\">" . makeButton("loeschen") . "</a>";
+            $edit.= LinkButton::create(_('löschen'), URLHelper::getURL("admin_news.php?cmd=kill&kill_news=".$id."&$admin_link"));
         }
     }
 
@@ -460,7 +462,7 @@ function show_news_item_content($news_item, $cmd_data, $show_admin, $admin_link)
             $formular.="<div align=\"center\">";
             $formular.="<textarea name=\"comment_content\" style=\"width:70%\" rows=8 cols=38 wrap=virtual></textarea>";
             $formular.="<br><br>";
-            $formular.="<input type=\"image\" ".makeButton("absenden","src").">";
+            $formular.=Button::createAccept(_('absenden'));
 
             $help_url = format_help_url("Basis.VerschiedenesFormat");
             $formular.="   <a href=\"".URLHelper::getLink("show_smiley.php")."\" target=\"_blank\"><font size=\"-1\">"._("Smileys")."</a>  <a href=\"".$help_url."\" target=\"_blank\"><font size=\"-1\">"._("Formatierungshilfen")."</a><br><br>";

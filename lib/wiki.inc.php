@@ -5,7 +5,7 @@
 # Lifter007: TODO
 # Lifter003: TODO
 # Lifter010: TODO
-
+use Studip\Button, Studip\LinkButton;
 // wiki regex pattern
 // IMPORTANT: Wiki Keyword has to be in 2nd paranthesed pattern!!
 // Make sure to change routines below if this changes
@@ -527,10 +527,10 @@ function showDeleteDialog($keyword, $version) {
         $msg .= _("Diese Version ist die derzeit einzige. Nach dem Löschen ist die Seite komplet gelöscht.") . "<br>";
     }
     //TODO: modaler dialog benutzen
-    $msg.="<a href=\"".URLHelper::getLink("?cmd=really_delete&keyword=".urlencode($keyword)."&version=$version&dellatest=$islatest")."\">" . makeButton("ja2", "img", _("Ja")) . "</a>&nbsp; \n";
+    $msg.="<a href=\"".URLHelper::getLink("?cmd=really_delete&keyword=".urlencode($keyword)."&version=$version&dellatest=$islatest")."\">" . Button::createAccept(_('Ja!')) . "</a>&nbsp; \n";
     $lnk = "?keyword=".urlencode($keyword); // what to do when delete is aborted
     if (!$islatest) $lnk .= "&version=$version";
-    $msg.="<a href=\"".URLHelper::getLink($lnk)."\">" . makeButton("nein", "img", _("Nein")) . "</a>\n";
+    $msg.="<a href=\"".URLHelper::getLink($lnk)."\">" . Button::createCancel(_('NEIN!')) . "</a>\n";
     $msg.='<p>'. sprintf(_("Um alle Versionen einer Seite auf einmal zu löschen, klicken Sie %shier%s."),'<a href="'.URLHelper::getLink('?cmd=delete_all&keyword='.urlencode($keyword)).'">','</a>');
     parse_msg($msg, '§', 'blank', '1', FALSE);
     end_blank_table();
@@ -569,10 +569,10 @@ function showDeleteAllDialog($keyword) {
         }
     }
     //TODO: modaler dialog benutzen
-    $msg.="<a href=\"".URLHelper::getLink("?cmd=really_delete_all&keyword=".urlencode($keyword))."\">" . makeButton("ja2", "img", _("Ja")) . "</a>&nbsp; \n";
+    $msg.="<a href=\"".URLHelper::getLink("?cmd=really_delete_all&keyword=".urlencode($keyword))."\">" .Button::createAccept(_('Ja!')) . "</a>&nbsp; \n";
     $lnk = "?keyword=".urlencode($keyword); // what to do when delete is aborted
     if (!$islatest) $lnk .= "&version=$version";
-    $msg.="<a href=\"".URLHelper::getLink($lnk)."\">" . makeButton("nein", "img", _("Nein")) . "</a>\n";
+    $msg.="<a href=\"".URLHelper::getLink($lnk)."\">" . Button::createCancel(_('NEIN!')) . "</a>\n";
     parse_msg($msg, '§', 'blank', '1', FALSE);
     end_blank_table();
 }
@@ -1037,7 +1037,7 @@ function wikiEdit($keyword, $wikiData, $user_id, $backpage=NULL)
     $cont .= "<input type=\"hidden\" name=\"version\" value=\"$version\">";
     $cont .= "<input type=\"hidden\" name=\"submit\" value=\"true\">";
     $cont .= "<input type=\"hidden\" name=\"cmd\" value=\"show\">";
-    $cont .= '<br><br>' . makeButton('abschicken', 'input', _("speichern")) . "&nbsp;<a href=\"".URLHelper::getLink("?cmd=abortedit&keyword=".urlencode($keyword).$lastpage)."\">" . makeButton('abbrechen', 'img', _("abbrechen")) . '</a>';
+    $cont .= '<br><br>' . Button::createAccept(_('abschicken') ) . "&nbsp;". LinkButton::createCancel(_('abbrechen'),URLHelper::getURL("?cmd=abortedit&keyword=".urlencode($keyword).$lastpage)) ;
     $cont .= "</form>\n";
     printcontent(0,0,$cont,"");
     $infobox = array ();
@@ -1098,7 +1098,7 @@ function exportWiki() {
     $infobox = array ();
     $infobox[] = array("kategorie" => _("Information"), "eintrag" => array(array('icon' => "icons/16/black/info.png", "text"=>_("Die Wiki-Seiten werden als eine zusammenhängende HTML-Datei ohne Links exportiert."))));
     print "</tr><tr align=center><td>";
-    print "<a id=\"wiki_export\" href=\"".URLHelper::getLink("?view=wikiprintall")."\" target=\"_blank\">" . makebutton("weiter","img", _("Seiten exportieren")) . '</a></td></tr>';
+    print LinkButton::create( _('weiter'). ' >>' , URLHelper::getURL("?view=wikiprintall"), array('id'=>'wiki_export','title'=>_('Seiten exportieren'),'target'=>'_blank' )) . '</td></tr>';
     end_blank_table();
     echo "</td>"; // end of content area
     showPageFrameEnd($infobox);
@@ -1221,7 +1221,7 @@ function getSearchbox($preselection, $keyword)
     $search_text .= '<input type="hidden" name="view" value="search">';
     $search_text .= '<input type="hidden" name="keyword" value="' . htmlReady($keyword) . '">';
     $search_text .= '<input type="text" size="10" name="searchfor" value="' . htmlReady($preselection) . '">';
-    $search_text .= "&nbsp;" . makeButton("suchen", "input", _("suchen"));
+    $search_text .= "&nbsp;" . Button::create(_('suchen'));
     $search_text .= "<br>";
     $search_text .= '<input type="checkbox" name="searchcurrentversions" checked>&nbsp;' . _("Nur in aktuellen Versionen");
     $search_text .= "</form>";
@@ -1473,10 +1473,10 @@ function showWikiPage($keyword, $version, $special="", $show_comments="icon", $h
         } else {
             $edit="";
             if ($perm->have_studip_perm("autor", $SessSemName[1])) {
-                $edit.="<a href=\"".URLHelper::getLink("?keyword=".urlencode($keyword)."&view=edit")."\">" . makeButton('bearbeiten', 'img', _("Seite bearbeiten")) . '</a>';
+                $edit.=LinkButton::create(_('bearbeiten'), URLHelper::getURL("?keyword=".urlencode($keyword)."&view=edit"),array('title'=>_('Seite bearbeiten')));
             }
             if ($perm->have_studip_perm("tutor", $SessSemName[1])) {
-                $edit.="&nbsp;<a href=\"".URLHelper::getLink("?keyword=".urlencode($keyword)."&cmd=delete&version=latest")."\">" . makeButton('loeschen', 'img', _("Seite löschen")) . '</a>';
+                $edit.=LinkButton::create(_('löschen'),URLHelper::getURL("?keyword=".urlencode($keyword)."&cmd=delete&version=latest"),array('title'=> _('Seite löschen')) );
             }
         }
         $edit .= "<br>&nbsp;";

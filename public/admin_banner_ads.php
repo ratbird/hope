@@ -309,7 +309,7 @@ function edit_banner_data($banner_data) {
     $prio_selector .= "</select>";
     print $table->row(array("Priorität:", $prio_selector),0);
 
-    print $table->row(array("", Button::create(_('absenden')).' '.LinkButton::create(_('abbrechen'))),0);
+    print $table->row(array("", Button::create(_('absenden')).' '.LinkButton::createCancel(_('abbrechen'))),0);
 
     print "</form>";
     $table->close();

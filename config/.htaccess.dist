@@ -18,7 +18,20 @@ php_flag magic_quotes_gpc On
 #PHP Konstanten sind hier nicht verfügbar
 # 6135 = E_ALL & ~E_NOTICE PHP 5.2.x
 # 22519 = E_ALL & ~(E_NOTICE|E_DEPRECATED) PHP 5.3.x
-php_value error_reporting 6135
-#Wenn die suhosin extension benutzt wird, sind diese beiden Optionen notwendig
+php_value error_reporting 22519
+#Wenn die suhosin extension benutzt wird, sind diese Optionen notwendig
 #php_value suhosin.cookie.plainlist Seminar_Session
 #php_flag suhosin.session.encrypt Off
+#php_value suhosin.post.max_array_depth 200
+#php_value suhosin.post.max_array_index_length 128
+#php_value suhosin.post.max_name_length 128
+#php_value suhosin.post.max_totalname_length 512
+#php_value suhosin.post.max_value_length 10000000
+#php_value suhosin.post.max_vars 10000
+#php_value suhosin.request.max_array_depth 200
+#php_value suhosin.request.max_array_index_length 128
+#php_value suhosin.request.max_totalname_length 512
+#php_value suhosin.request.max_value_length 10000000
+#php_value suhosin.request.max_vars 10000
+#php_value suhosin.request.max_varname_length 128
+

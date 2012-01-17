@@ -4,7 +4,7 @@
 you find here the basic system settings. You shouldn't have to touch much of them...
 please note the CONFIG.INC.PHP for the indivual settings of your installation!*/
 
-$UNI_NAME_CLEAN = 'Stud.IP 2.1';                           //the clean-name of your master-faculty (e.g. University of Göttingen), without html-entities (used for mail-system)
+$UNI_NAME_CLEAN = 'Stud.IP 2.2';                           //the clean-name of your master-faculty (e.g. University of Göttingen), without html-entities (used for mail-system)
 $STUDIP_INSTALLATION_ID='demo-installation';      //unique identifier for installation
 $AUTH_LIFETIME = 60;                                    //the length of a session in minutes, zero means unlimited lifetime
 
@@ -621,3 +621,5 @@ $WIKI_PLUGINS = array();
 
 //create the html-version of $UNI_NAME clean
 $UNI_NAME=htmlentities($UNI_NAME_CLEAN, ENT_QUOTES);
+
+require_once 'lib/phplib_local.inc.php';

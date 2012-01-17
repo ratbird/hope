@@ -92,5 +92,5 @@ REPLACE INTO `resources_objects_properties` (`resource_id`, `property_id`, `stat
 -- Daten für Tabelle `resources_requests`
 --
 
-REPLACE INTO `resources_requests` (`request_id`, `seminar_id`, `termin_id`, `user_id`, `resource_id`, `category_id`, `comment`, `reply_comment`, `closed`, `mkdate`, `chdate`) VALUES('8946fe0dfaa926aa0a151afc75349a92', '834499e2b8a2cd71637890e5de31cba3', '67f1c5cc5a38779c1f09ab60699452d7', '76ed43ef286fb55cf9e41beadb484a9f', '51ad4b7100d3a8a1db61c7b099f052a6', '5a72dfe3f0c0295a8fe4e12c86d4c8f4', '', '', 0, 1268739690, 1293119975);
+REPLACE INTO `resources_requests` (`request_id`, `seminar_id`, `termin_id`, `metadate_id`, `user_id`, `resource_id`, `category_id`, `comment`, `reply_comment`, `closed`, `mkdate`, `chdate`) VALUES('49841e651e23fe3cb41541381d1117d6', '834499e2b8a2cd71637890e5de31cba3', '67f1c5cc5a38779c1f09ab60699452d7', '', '76ed43ef286fb55cf9e41beadb484a9f', '', '5a72dfe3f0c0295a8fe4e12c86d4c8f4', '', NULL, 0, 1326810659, 1326810659);
 

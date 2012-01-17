@@ -10,7 +10,7 @@
 // wikiMarkup patterns are replaced
 // args to wikiMarkup are passed to preg_replace
 //
-
+use Studip\Button, Studip\LinkButton;
 require_once 'lib/forum.inc.php';
 
 wikiMarkup('/\\(:biestform:\\)/e',"wiki_biestform('biest')", 'autor');

@@ -1,3 +1,26 @@
+__17.01.2012 v 2.2__
+- Raumanfragen für einzelne regelmäßige Zeiten
+- Adminseiten um Möglichkeit zum Blättern durch Veranstaltungen erweitern
+- Labels für Dozenten und Tutoren einer Veranstaltung
+- Mehrsprachige u. mehrere Veranstalltungstitel
+- Verwendung von underscore.js
+- Teilnehmeransicht in Veranstaltungen für Dozent/-innen
+- Erweiterung des Kalenders um optionale Gruppenkalender-Funktionen
+
+__23.07.2011 v 2.1__
+- Sperregeln erweitern auf Einrichtungen und Nutzer
+- Anpassung der Kopfzeile an überarbeitetes Rahmendesign
+- Zuordnung von Lehrpersonen zu Terminen
+- Erweiterte Zugriffsregeln für Webservices
+- PDF-Export von Wiki-Seiten
+- Barrierefreies Stud.IP: Skiplinks, Landmarks und verbesserte Tab-Navigation
+- Automatisches Eintragen und Informieren von Nutzern
+- Umstellung und Erweiterung der Benutzerverwaltung
+- Barrierefreies dynamisches Validieren von Formularfeldern in Stud.IP
+- Schutz vor CSRF über Sicherheitstoken
+- Icons für Reiter
+- Teilnehmer-Icon auf "Meine Seminare"
+
 __06.01.2011 v 2.0__
 - Anzeige-API für Zeiten & Räume von Veranstaltungen
 - Dateien eines Nutzers nicht löschen, wenn der Nutzer gelöscht wird

@@ -87,7 +87,7 @@ $UNI_URL = "http://www.studip.de";
 $UNI_LOGIN_ADD='';
 $UNI_LOGOUT_ADD=sprintf(_("Und hier geht's zur %sStud.IP Portalseite%s&nbsp;"), "<a href=\"http://www.studip.de\"><b>", "</b></a>");
 $UNI_CONTACT = "<please insert your general contact mail-adress here>";
-$UNI_INFO = "Stud.IP 2.1 - Studienbegleitender Internetsupport von Präsenzlehre";
+$UNI_INFO = "Stud.IP 2.2 - Studienbegleitender Internetsupport von Präsenzlehre";
 
 
 /*

@@ -57,31 +57,33 @@ function pruefe_name(){
 // Freies Seminar mit Schreibrecht fuer Nobody?
 
 if ($user->id == "nobody"){
-    $db=new DB_Seminar;
-    $db->query("SELECT Seminar_id FROM seminare WHERE Seminar_id='$SessSemName[1]' AND Schreibzugriff=0");
-    if ($db->num_rows())
-        $pass=TRUE;
-    else $pass=FALSE;
+    $query = "SELECT 1 FROM seminare WHERE Seminar_id = ? AND Schreibzugriff = 0";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($GLOBALS['SessSemName'][1]));
+    $pass = $statement->fetchColumn() > 0;
 }
 
 if (!(have_sem_write_perm()) OR $pass==TRUE) {
     if (!isset($Create)) {  // $Create != "abschicken"
         if (isset($topic_id)) {
-            $db=new DB_Seminar;
-            $db->query("SELECT * FROM px_topics WHERE topic_id='$topic_id' AND Seminar_id ='$SessSemName[1]'");
-            if (!$db->num_rows()) { // wir sind NICHT im richtigen Seminar!
+            $query = "SELECT name, description, anonymous FROM px_topics WHERE topic_id = ? AND Seminar_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($topic_id, $GLOBALS['SessSemName'][1]));
+            $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+            if (empty($rows)) { // wir sind NICHT im richtigen Seminar!
                 include ('lib/include/html_end.inc.php');
                 page_close();
                 die;
             }
-            while ($db->next_record()) {
-                $name = $db->f("name");
+            foreach ($rows as $row) {
+                $name = $row['name'];
                 echo"<td class=steel2 colspan=2>&nbsp; &nbsp; <b><font size=2>".htmlReady($name)."</font></b></td>";
                 echo "\n</tr><tr>";
                 // $parent_description = formatReady($db->f("description"));
-                $parent_description = $db->f("description");
+                $parent_description = $row['description'];
                 if (preg_match("/<admin_msg/",$parent_description))
-                    $parent_description = forum_parse_edit($parent_description, $db->f("anonymous"));
+                    $parent_description = forum_parse_edit($parent_description, $row['anonymous']);
                 $parent_description = formatReady($parent_description);
                 printcontent ("100%","",$parent_description,"");
                 echo "\n</tr>";
@@ -118,7 +120,6 @@ if (!(have_sem_write_perm()) OR $pass==TRUE) {
         }
         print ("\" size=60>");
         print ("<input type=\"hidden\" name=\"author\" value = \"");
-        $db=new DB_Seminar;
         $tmp = $auth->auth["uname"];
         echo htmlReady(get_fullname());
         print ("\" size=\"20\"><br><br>");
@@ -141,9 +142,10 @@ if (!(have_sem_write_perm()) OR $pass==TRUE) {
         
     } else {
         if ($parent_id) {
-            $db=new DB_Seminar;
-            $db->query("SELECT * FROM px_topics WHERE topic_id='$parent_id' AND Seminar_id ='$SessSemName[1]'");
-            if (!$db->num_rows()) { // wir sind NICHT im richtigen Seminar!
+            $query = "SELECT 1 FROM px_topics WHERE topic_id = ? AND Seminar_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($parent_id, $GLOBALS['SessSemName'][1]));
+            if (!$statement->fetchColumn()) { // wir sind NICHT im richtigen Seminar!
                 include ('lib/include/html_end.inc.php');
                 page_close();
                 die;

@@ -549,7 +549,7 @@ td.tree-elbow-end img {
 
 /* dunkelster Standardhintergrund blau, überall umbenennen! */
 .steel2 {
-    background-color: #cdd7e9; 
+    background-color: #cdd7e9;
 }
 
 /* hellerer Standardhintergrund, überall umbenennen! */
@@ -850,6 +850,7 @@ a.button, button {
     -moz-box-sizing: border-box;
     text-align: center;
     vertical-align: middle;
+    white-space: nowrap;
 }
 
 a.button:hover, button:hover {

@@ -100,14 +100,11 @@ function wiki_biestform($template_name) {
 // get list of biest entries
 //
 function wiki_get_biestpagelist($template) {
-    global $SessSemName;
-    $list=array();
-    $db=new DB_Seminar();
-    $query="SELECT DISTINCT keyword FROM wiki WHERE range_id='$SessSemName[1]' AND keyword LIKE '".$template['prefix']."%'";
-    $db->query($query);
-    while ($db->next_record()) {
-        $list[]=$db->f('keyword');
-    }
+    $query = "SELECT DISTINCT keyword FROM wiki WHERE range_id = ? AND keyword LIKE CONCAT(?, '%')";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($GLOBALS['SessSemName'][1], $template['prefix']));
+    $list = $statement->fetchAll(PDO::FETCH_COLUMN);
+
     return $list;
 }
  
@@ -131,10 +128,14 @@ function wiki_newbiest($template_name) {
 // print "<p>evaling: <pre>"."\$text=".$template['template'].";"."</pre>";
     eval("\$text=\"".$template['template']."\";");
 // print "<p>Generierter Text:<br>$text"; // debug
-    $db=new DB_Seminar();
     $userid=$auth->auth['uid'];
-    $query="INSERT INTO wiki SET range_id='$SessSemName[1]', keyword='$pagename', body='".$text."', user_id='$userid', chdate='".time()."', version='1'";
-    $db->query($query);
+
+    $query = "INSERT INTO wiki (range_id, keyword, body, user_id, chdate, version)"
+           . "VALUES (?, ?, ?, ?, UNIX_TIMESTAMP(), '1')";
+    DBManager::get()
+        ->prepare($query)
+        ->execute(array($GLOBALS['SessSemName'][1], $pagename, $text, $userid));
+
     $wiki_plugin_messages[]="msg§".sprintf(_("Ein neuer Eintrag wurde angelegt. Sie können ihn nun weiter bearbeiten oder %szurück zur Ausgangsseite%s gehen."),"<a href=\"".URLHelper::getLink("?keyword=$keyword")."\">",'</a>'); if ($biest_create_topic){
         if(CreateTopic($pagename . ': ' . $biest_zusammenfassung, get_fullname($userid), $biest_beschreibung, 0, 0, $SessSemName[1],$userid)){
             $wiki_plugin_messages[]="msg§"._("Ein neues Thema im Forum wurde angelegt.");

@@ -30,7 +30,6 @@ if ($forumsend=="bla"){
     if ($presetview == "theme")
         $presetview = $themeview;
     $forum["neuauf"] = $neuauf;
-    $forum["flatallopen"] = $flatallopen;
     $forum["rateallopen"] = $rateallopen;
     $forum["showimages"] = $showimages;
     $forum["sortthemes"] = $sortthemes;
@@ -66,16 +65,6 @@ if ($forumsend=="bla"){
                 <td <?=$cssSw->getFullClass()?>>
                     <input type="CHECKBOX" name="neuauf" id="neuauf" value="1"<?IF($forum["neuauf"]==1) echo " checked";?>>
                 </td>
-            </tr>
-
-            <tr  <? $cssSw->switchClass() ?>>
-                <td  align="right" class="blank" style="border-bottom:1px dotted black;">
-                    <label for="flatallopen">
-                    <?print _("Alle Beiträge im Flatview immer aufgeklappt");?></label>
-                </td>
-                <td <?=$cssSw->getFullClass()?>>
-                    <input type="CHECKBOX" name="flatallopen" id="flatallopen" value=TRUE<?if($forum["flatallopen"]==TRUE) echo " checked";?>>
-            </td>
             </tr>
             <tr  <? $cssSw->switchClass() ?>>
                 <td  align="right" class="blank" style="border-bottom:1px dotted black;">

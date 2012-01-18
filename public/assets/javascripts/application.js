@@ -1911,7 +1911,7 @@ STUDIP.OldUpload = {
         }
         
         var permission = jQuery.parseJSON(jQuery("#upload_file_types").html());
-        if ((permission.allow && jQuery.inArray(ext, permission.types) === -1) || (!permission.allow && jQuery.inArray(ext, permission.types) !== -1)) {
+        if ((permission.allow && jQuery.inArray(ext, permission.types) !== -1) || (!permission.allow && jQuery.inArray(ext, permission.types) === -1)) {
             alert(jQuery("#upload_error_message_wrong_type").text());
             jQuery(form_name).find("input[type=file]").focus();
             return false;

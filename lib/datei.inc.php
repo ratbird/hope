@@ -1099,11 +1099,11 @@ function JS_for_upload() {
         json_encode(
             $GLOBALS['UPLOAD_TYPES'][$GLOBALS['SessSemName']["art_num"]]
             ? array(
-                'allow' => $GLOBALS['UPLOAD_TYPES'][$GLOBALS['SessSemName']["art_num"]]["type"] === "allow" ? 0 : 1,
+                'allow' => $GLOBALS['UPLOAD_TYPES'][$GLOBALS['SessSemName']["art_num"]]["type"] === "allow" ? 1 : 0,
                 'types' => $GLOBALS['UPLOAD_TYPES'][$GLOBALS['SessSemName']["art_num"]]["file_types"]
             )
             : array(
-                'allow' => $GLOBALS['UPLOAD_TYPES']["default"]["type"] === "allow" ? 0 : 1,
+                'allow' => $GLOBALS['UPLOAD_TYPES']["default"]["type"] === "allow" ? 1 : 0,
                 'types' => $GLOBALS['UPLOAD_TYPES']["default"]["file_types"]
             )
         );

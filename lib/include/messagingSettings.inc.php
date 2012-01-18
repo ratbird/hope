@@ -302,15 +302,6 @@ function change_messaging_view()
                     </td>
                 </tr>
 
-                <tr  <? $cssSw->switchClass() ?>>
-                    <td  align="right" class="blank">
-                        <label for="show_sndpicture"><?print _("Bild des Absenders in Nachricht anzeigen");?></label>
-                    </td>
-                    <td <?=$cssSw->getFullClass()?>>
-                        <input type="checkbox" value="1" id="show_sndpicture" name="show_sndpicture"<? if ($my_messaging_settings["show_sndpicture"] == "1") echo " checked"; ?>>
-                    </td>
-                </tr>
-
                 <tr <? $cssSw->resetClass() ?>>
                     <td colspan="2" align="center" class="steelgraulight" style="border-bottom:1px dotted black;border-top:1px dotted black;">
                         <b><?=_("Stud.IP-Messenger")?></b>

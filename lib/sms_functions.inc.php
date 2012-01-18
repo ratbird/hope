@@ -429,14 +429,12 @@ function print_rec_message($prm) {
             }
         }
 
-        if ($my_messaging_settings['show_sndpicture'] == 1) {
-            $tmp_snd_id = get_userid($prm['uname_snd']);
-            if ($prm['user_id_snd'] != '____%system%____') {
-                $content = "<table width=\"100%\" cellpadding=0 cellmargin=0><tr><td valign=\"top\" width=\"99%\"><font size=\"-1\">".$content."</font><td>";
-                $content .= "<td align=\"right\" style=\"border-left: 1px dotted black;\">&nbsp;";
-                $content .= Avatar::getAvatar($tmp_snd_id)->getImageTag(Avatar::MEDIUM);
-                $content .= "&nbsp;</td></tr></table>";
-            }
+        $tmp_snd_id = get_userid($prm['uname_snd']);
+        if ($prm['user_id_snd'] != '____%system%____') {
+            $content = "<table width=\"100%\" cellpadding=0 cellmargin=0><tr><td valign=\"top\" width=\"99%\"><font size=\"-1\">".$content."</font><td>";
+            $content .= "<td align=\"right\" style=\"border-left: 1px dotted black;\">&nbsp;";
+            $content .= Avatar::getAvatar($tmp_snd_id)->getImageTag(Avatar::MEDIUM);
+            $content .= "&nbsp;</td></tr></table>";
         }
 
         // mk buttons

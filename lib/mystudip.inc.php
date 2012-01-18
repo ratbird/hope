@@ -169,24 +169,6 @@ function change_general_view() {
                         </font><br><br>
                     </td>
                 </tr>
-                <tr  <? $cssSw->switchClass() ?>>
-                    <td  align="right" class="blank" style="border-bottom:1px dotted black;">
-                        <label for="showsem_enable"><?print _("Semesteranzeige auf &raquo;Meine Veranstaltungen&laquo;");?></label><br>
-                        <br><div id="showsem_enable_description" class="setting_info">
-                        <?print _("Mit dieser Einstellung k&ouml;nnen Sie auf der Seite &raquo;Meine Veranstaltungen&laquo; die Einblendung des Start- und Endsemesters hinter jeder Veranstaltung aktivieren.");?>
-                        </div>
-                    </td>
-                    <td <?=$cssSw->getFullClass()?>>
-                        <?
-                        echo "<input type=\"CHECKBOX\" name=\"showsem_enable\" id=\"showsem_enable\" aria-describedby=\"showsem_enable_description\" value=\"1\"";
-                        IF ($user->cfg->getValue("SHOWSEM_ENABLE")) {
-                            echo " checked";
-                        }
-                        echo ">";
-                        ?>
-                        </font><br><br>
-                    </td>
-                </tr>
                 <tr <? $cssSw->switchClass() ?>>
                     <td <?=$cssSw->getFullClass()?> colspan=2 align="center">
                         <?=makeButton("uebernehmen", "input", _("Änderungen übernehmen")) ?>&nbsp;

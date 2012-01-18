@@ -298,7 +298,7 @@ if (check_ticket($studipticket)) {
         $forum["jshover"] = Request::int('jshover');
         $my_studip_settings["startpage_redirect"] = Request::int('personal_startpage');
         UserConfig::get($user->id)->store('ACCESSKEY_ENABLE', Request::int('accesskey_enable'));
-        UserConfig::get($user->id)->store('SHOWSEM_ENABLE', Request::int('showsem_enable'));
+        UserConfig::get($user->id)->store('SHOWSEM_ENABLE', 1);
         UserConfig::get($user->id)->store('SKIPLINKS_ENABLE', Request::int('skiplinks_enable'));
     }
 

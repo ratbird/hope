@@ -904,6 +904,10 @@ button {
     background: url(../images/icons/16/red/decline.png) no-repeat;
 }
 
+.button.accept, .button.cancel, button.accept, button.cancel {
+    white-space: normal;
+}
+
 div.selectbox {
     background-color:#FFFFFF;
     border: 1px solid;

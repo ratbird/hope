@@ -89,9 +89,7 @@ function change_general_view() {
         <tr>
 
             <td class="blank" width="100%" align="center">
-            <p class="info">
-                <b><?= _("Hier k&ouml;nnen Sie die Ansicht von Stud.IP nach Ihren Vorstellungen anpassen.")?></b>
-            </p>
+            
             <form method="POST" action="<? echo $PHP_SELF ?>?cmd=change_general&studipticket=<?=get_ticket()?>">
             <?= CSRFProtection::tokenTag() ?>
             <table width="70%" align="center" cellpadding=8 cellspacing=0 border=0 id="main_content">
@@ -113,9 +111,9 @@ function change_general_view() {
                 ?>
                 <tr  <? $cssSw->switchClass() ?>>
                     <td  align="right" class="blank" style="border-bottom:1px dotted black;">
-                        <label for="personal_startpage"><?print _("pers&ouml;nliche Startseite");?></label><br>
+                        <label for="personal_startpage"><?print _("Pers&ouml;nliche Startseite");?></label><br>
                         <br><div id="personal_startpage_description" class="setting_info">
-                        <?print _("Sie k&ouml;nnen hier einstellen, welcher Systembereich automatisch nach dem Login oder Autologin aufgerufen wird. Wenn Sie zum Beispiel regelm&auml;&szlig;ig die Seite &raquo;Meine Veranstaltungen&laquo;. nach dem Login aufrufen, so k&ouml;nnen Sie dies hier direkt einstellen.");?></font><br><br>
+                        <?print _("Sie k&ouml;nnen hier einstellen, welche Seite standardm&auml;ßig nach dem Einloggen angezeigt wird. Wenn Sie zum Beispiel regelm&auml;&szlig;ig die Seite &raquo;Meine Veranstaltungen&laquo;. nach dem Login aufrufen, so k&ouml;nnen Sie dies hier direkt einstellen.");?></font><br><br>
                         </div>
                     </td>
                     <td <?=$cssSw->getFullClass()?>>
@@ -155,7 +153,10 @@ function change_general_view() {
                     <td  align="right" class="blank" style="border-bottom:1px dotted black;">
                         <label for="accesskey_enable"><?print _("Tastenkombinationen f&uuml;r Hauptfunktionen");?></label><br>
                         <br><div id="accesskey_enable_description" class="setting_info">
-                        <?print _("Mit dieser Einstellung k&ouml;nnen Sie f&uuml;r die meisten in der Kopfzeile erreichbaren Hauptfunktionen eine Bedienung &uuml;ber Tastenkombinationen aktivieren. <br>Die Tastenkombination wird im Tooltip des jeweiligen Icons angezeigt.");?>
+                        <? print _("Mit dieser Einstellung k&ouml;nnen Sie f&uuml;r die meisten in der Kopfzeile erreichbaren Hauptfunktionen eine Bedienung "
+                        . "&uuml;ber Tastenkombinationen aktivieren. <br>Die Tastenkombination wird im Tooltip des jeweiligen Icons angezeigt. "
+                        . "Diese kann für jeden Browser und jedes Betriebssystem unterschiedlich sein (siehe "
+																							 . URLHelper::getLink('http://en.wikipedia.org/wiki/Accesskey', NULL)); ?>
                         </div>
                     </td>
                     <td <?=$cssSw->getFullClass()?>>

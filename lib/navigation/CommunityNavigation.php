@@ -26,8 +26,8 @@ class CommunityNavigation extends Navigation
         parent::__construct(_('Community'));
 
         $onlinetip = _('Nur Sie sind online');
-        $active_time = $my_messaging_settings['active_time'];
-        $user_count = get_users_online_count($active_time ? $active_time : 5);
+        $active_time = 5;
+        $user_count = get_users_online_count($active_time);
 
         if ($user_count) {
 

@@ -71,7 +71,6 @@ if ($messaging_cmd=="change_view_insert" && !$set_msg_default_x && $newmsgset_x)
     $my_messaging_settings["show_only_buddys"] = $show_only_buddys;
     $my_messaging_settings["delete_messages_after_logout"] = $delete_messages_after_logout;
     $my_messaging_settings["start_messenger_at_startup"] = $start_messenger_at_startup;
-    $my_messaging_settings["active_time"] = $active_time;
     $my_messaging_settings["sms_sig"] = $sms_sig;
     $my_messaging_settings["timefilter"] = $timefilter;
     $my_messaging_settings["openall"] = $openall;
@@ -340,24 +339,6 @@ function change_messaging_view()
                     </td>
                 </tr>
                 <? } ?>
-                <tr <? $cssSw->switchClass() ?>>
-                    <td  align="right" class="blank" style="border-bottom:1px dotted black;">
-                        <label for="active_time"><?=_("Dauer bis inaktiv:")?></label>
-                    </td>
-                    <td <?=$cssSw->getFullClass()?>>
-                        <select name="active_time" id="active_time"> <?
-                        for ($i=0; $i<=15; $i=$i+5) {
-                            if ($i) {
-                                if ($my_messaging_settings["active_time"] == $i) {
-                                    echo "<option selected>$i</option>";
-                                } else {
-                                    echo "<option>$i</option>";
-                                }
-                            }
-                        } ?>
-                                    </select>
-                    </td>
-                </tr>
                 <tr  <? $cssSw->switchClass() ?>>
                     <td  align="right" class="blank" style="border-bottom:1px dotted black;">
                         <label for="online_format"><?print _("Formatierung der Namen auf &raquo;Wer ist Online?&laquo;");?></label>

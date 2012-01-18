@@ -24,7 +24,6 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-use Studip\Button, Studip\LinkButton;
 
 require_once('lib/visual.inc.php');
 require_once 'lib/functions.php';
@@ -359,11 +358,16 @@ class StudipForm {
     }
 
     function getFormButton($name, $attributes = false){
-        if ($attributes) {
-            return Button::create($this->form_buttons[$name]['type'], $attributes);
+        $ret = "\n<input type=\"image\" name=\"{$this->form_name}_{$name}\" ";
+        if (!$this->form_buttons[$name]['is_picture']){
+            $ret .= makeButton($this->form_buttons[$name]['type'],"src");
         } else {
-            return Button::create($this->form_buttons[$name]['type']);
+            $ret .= ' src="'.$GLOBALS['ASSETS_URL'].'images/' . $this->form_buttons[$name]['type'] . '" ';
         }
+        $ret .= tooltip($this->form_buttons[$name]['info'], true);
+        $ret .= $this->getAttributes($attributes);
+        $ret .= " border=\"0\">";
+        return $ret;
     }
 
     function getFormFieldCaption($name, $attributes = false){

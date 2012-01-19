@@ -358,16 +358,17 @@ class StudipForm {
         return $ret;
     }
 
-    function getFormButton($name, $attributes = false){
-        $ret = "\n<input type=\"image\" name=\"{$this->form_name}_{$name}\" ";
+    function getFormButton($name, $attributes = array()){
+
         if (!$this->form_buttons[$name]['is_picture']){
-            $ret .= makeButton($this->form_buttons[$name]['type'],"src");
+            $ret = Button::create($this->form_buttons[$name]['info'], $this->form_name . "_" . $name, $attributes);
         } else {
+            $ret = "\n<input type=\"image\" name=\"{$this->form_name}_{$name}\" ";
             $ret .= ' src="'.$GLOBALS['ASSETS_URL'].'images/' . $this->form_buttons[$name]['type'] . '" ';
+            $ret .= tooltip($this->form_buttons[$name]['info'], true);
+            $ret .= $this->getAttributes($attributes);
+            $ret .= " border=\"0\">";
         }
-        $ret .= tooltip($this->form_buttons[$name]['info'], true);
-        $ret .= $this->getAttributes($attributes);
-        $ret .= " border=\"0\">";
         return $ret;
     }
 

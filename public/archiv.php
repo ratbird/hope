@@ -23,6 +23,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
 
@@ -347,7 +348,7 @@ include('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
                             </td>
                             <td class="<? echo $cssSw->getClass() ?>" width="90%">
                                 <center>
-                                    <input type="image" border=0 <?=makeButton("suchestarten", "src")?> value="<?=_("Suche starten")?>">
+                                <?= Button::create(_("Suche starten")) ?>
                                 </center>
                             </td>
                         </tr>

@@ -23,6 +23,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+use Studip\Button, Studip\LinkButton;
 
 /**
 * Close the actual window if PHPLib shows login screen
@@ -200,10 +201,11 @@ if ($auth->auth["uid"] != "nobody"){
         } else {
             echo"\n<tr><td class='blank' colspan='2' valign='middle'><font size=-1>"
             . sprintf(_("Nachricht von: <b>%s</b>"),get_fullname_from_uname($msg_snd,'full',true)) ."<hr>".formatReady($msg_text)."</font></td></tr>";
-            echo"\n<tr><td class='blank' colspan='2' valign='middle' align='center'><font size=-1>"
-            . "<a href='$PHP_SELF?cmd=write&msg_id=$msg_id'><img " . makeButton("antworten","src") . tooltip(_("Diese Nachricht direkt beantworten")) . " border=0></a>"
-            . "&nbsp;<a href='$PHP_SELF?cmd=write&msg_id=$msg_id&quote=1'><img " . makeButton("zitieren","src") . tooltip(_("Diese Nachricht direkt beantworten")) . " border=0></a>"
-            . "&nbsp;<a href='$PHP_SELF?cmd=cancel'><img " . makeButton("abbrechen","src") . tooltip(_("Vorgang abbrechen")) . " border=0></a></td></tr>";
+            echo"\n<tr><td class='blank' colspan='2' valign='middle' align='center'><font size=-1>";
+
+            echo LinkButton::create(_("antworten"), "?cmd=write&msg_id=$msg_id");
+            echo LinkButton::create(_("zitieren"), "?cmd=write&msg_id=$msg_id&quote=1");
+            echo LinkButton::createCancel(_("abbrechen"), "?cmd=cancel");
         }
     }
     
@@ -237,9 +239,10 @@ if ($auth->auth["uid"] != "nobody"){
             echo "<textarea  style=\"width: 100%\" name='nu_msg' rows='4' cols='44' wrap='virtual'>".htmlready($msg_text)."</textarea></font><br>";
             echo "<font size=-1><a target=\"_blank\" href=\"show_smiley.php\">" . _("Smileys</a> k&ouml;nnen verwendet werden") . " </font>\n</td></tr>";
             echo "\n<tr><td class='blank' colspan='2' valign='middle' align='center'><font size=-1>&nbsp;";
-            echo "<input type='IMAGE' name='none' "
-                . makeButton("absenden","src") . tooltip(_("Nachricht versenden")) . " border=0 value='senden'>&nbsp;<a href=\"$PHP_SELF?cmd=cancel\"><img "
-                . makeButton("abbrechen","src") . tooltip(_("Vorgang abbrechen")) . " border=0></a></form></font></td></tr>";
+            echo '<div class="button-group">';
+            echo Button::createAccept(_("absenden")), LinkButton::createCancel(_("abbrechen"), "?cmd=cancel"); 
+            echo '</div>';
+            echo "</form></font></td></tr>";
         
             echo "\n<script language=\"JavaScript\">\n<!--\ndocument.eingabe.nu_msg.focus();\n//-->\n</script>";
         }

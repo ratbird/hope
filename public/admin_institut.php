@@ -23,6 +23,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
 
@@ -75,14 +76,21 @@ $db2 = new DB_Seminar;
 $cssSw = new cssClassSwitcher;
 $Modules = new Modules;
 
-// Check if there was a submission
-while ( is_array($_REQUEST)
-     && list($key, $val) = each($_REQUEST)) {
 
-  switch ($key) {
+//needed to build this to not break following switch strucure
+$test_tasks = array('create', 'i_edit', 'i_kill', 'i_trykill');
+$submitted_task = '';
+foreach($test_tasks as $val) {
+    if(Request::submitted($val)) {
+        $submitted_task = $val;
+    }
+}
+
+// Check if there was a submission
+switch ($submitted_task) {
 
     // Create a new Institut
-    case "create_x":
+    case "create":
         if (!$perm->have_perm("root") && !($perm->is_fak_admin() && get_config('INST_FAK_ADMIN_PERMS') != 'none'))  {
             $msg = "error§<b>" . _("Sie haben nicht die Berechtigung, um neue Einrichtungen zu erstellen!") . "</b>";
             break;
@@ -146,7 +154,7 @@ while ( is_array($_REQUEST)
       break;
 
     //change institut's data
-    case "i_edit_x":
+    case "i_edit":
 
         if (!$perm->have_studip_perm("admin",$i_id)){
             $msg = "error§<b>" . _("Sie haben nicht die Berechtigung diese Einrichtungen zu ver&auml;ndern!") . "</b>";
@@ -188,7 +196,7 @@ while ( is_array($_REQUEST)
         break;
 
     // Delete the Institut
-    case "i_kill_x":
+    case "i_kill":
         if (!check_ticket($_GET['studipticket']))
         {
             $msg="error§<b>" . _("Ihr Ticket ist abgelaufen. Versuchen Sie die letzte Aktion erneut.") . "</b>";
@@ -330,10 +338,10 @@ while ( is_array($_REQUEST)
         // We deleted that intitute, so we have to unset the selection
         closeObject();
         break;
-    case 'i_trykill_x':
+    case 'i_trykill':
         $message = _("Sind Sie sicher, dass Sie diese Einrichtung löschen wollen?");
         $post['i_id'] = Request::option('i_id');
-        $post['i_kill_x'] = 1;
+        $post['i_kill'] = 1;
         $post['Name'] = Request::get('Name');
         $post['studipticket'] = get_ticket();
         echo createQuestion($message, $post);
@@ -341,8 +349,8 @@ while ( is_array($_REQUEST)
 
     default:
 
-    }
 }
+
 
 //workaround
 if ($i_view == "new")
@@ -548,15 +556,13 @@ if ($perm->have_studip_perm("admin",$i_view) || $i_view == "new") {
     if ($i_view != "new" && isset($i_id)) {
         ?>
         <input type="hidden" name="i_id" value="<?= $i_id ?>">
-        <input type="image" name="i_edit" <?=makeButton("uebernehmen", "src")?> border=0 value=" Ver&auml;ndern ">
         <?
+        echo Button::create(_('übernehmen'), 'i_edit');
         if ($db->f("number") < 1 && !$_num_inst && ($perm->have_perm("root") || ($perm->is_fak_admin() && get_config('INST_FAK_ADMIN_PERMS') == 'all'))) {
-            ?>
-            &nbsp;<input type="image" name="i_trykill" <?=makeButton("loeschen", "src")?> border=0 value="L&ouml;schen">
-            <?
+            echo '&nbsp;'.Button::create(_('löschen'), 'i_trykill');
         }
     } else {
-        echo "<input type=\"IMAGE\" name=\"create\" " . makeButton("anlegen", "src") . " border=0 value=\"Anlegen\">";
+        echo Button::create(_('anlegen'), 'create');
     }
     ?>
         <input type="hidden" name="i_view" value="<? printf ("%s", ($i_view=="new") ? "create" : $i_view);  ?>">

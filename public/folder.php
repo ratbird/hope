@@ -25,6 +25,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
 unregister_globals();
@@ -117,7 +118,7 @@ if ($_REQUEST['zipnewest']) {
     }
 }
 
-if (Request::submitted('download_selected_x')) {
+if (Request::submitted('download_selected')) {
     $download_ids = Request::getArray('download_ids');
     if (count($download_ids)  > 0) {
         $zip_file_id = createSelectedZip($download_ids, true, true);
@@ -451,9 +452,9 @@ if (($SemUserStatus == "autor") || ($rechte)) {
         }
     }
     //verschieben / kopieren in andere Veranstaltung
-    if ($rechte && ($_POST['move_to_sem_x'] || $_POST['move_to_inst_x'] || $_POST['move_to_top_folder_x'])){
-        if(!$_POST['move_to_top_folder_x']){
-            $new_sem_id = $_POST['move_to_sem_x'] ? Request::getArray('sem_move_id') : Request::getArray('inst_move_id');
+    if ($rechte && Request::submittedSome('move_to_sem', 'move_to_inst', 'move_to_top_folder')){
+        if (!Request::submitted('move_to_top_folder')){
+            $new_sem_id = Request::submitted('move_to_sem') ? Request::getArray('sem_move_id') : Request::getArray('inst_move_id');
         } else {
             $new_sem_id = array($SessSemName[1]);
         }
@@ -472,7 +473,7 @@ if (($SemUserStatus == "autor") || ($rechte)) {
                     if (!$done){
                         $msg .= "error§" . _("Kopieren konnte nicht durchgeführt werden. Eventuell wurde im Ziel der Allgemeine Dateiordner nicht angelegt.") . "§";
                     } else {
-                        $s_name = get_object_name($sid, $_POST['move_to_sem_x'] ? "sem" : "inst");
+                        $s_name = get_object_name($sid, Request::submitted('move_to_sem') ? "sem" : "inst");
                         $msg .= "msg§" . $s_name['name'] . ": " . sprintf(_("%s Ordner, %s Datei(en) wurden kopiert."), $done[0], $done[1]) . '§';
                     }
                 }
@@ -721,7 +722,7 @@ if ($question) {
             }
             asort($my_sem, SORT_STRING);
             asort($my_inst, SORT_STRING);
-            $button_name = ($folder_system_data["mode"] == 'move' ? 'verschieben' : 'kopieren');
+            $button_name = $folder_system_data["mode"] == 'move' ? _('verschieben') : _('kopieren');
             echo '<form action="'.URLHelper::getLink('').'" method="post">';
             echo CSRFProtection::tokenTag();
             echo "\n" . '<tr><td class="blank" colspan="3" width="100%" style="font-size:80%;">';
@@ -738,7 +739,8 @@ if ($question) {
                 echo "\n" . '<td class="blank" width="60%" style="font-size:80%;">';
                 echo "\n" . '<input type="image" border="0" src="'.$GLOBALS['ASSETS_URL'].'images/icons/16/yellow/arr_2right.png" class="middle" name="move_to_top_folder" ' . tooltip(_("Auf die obere Ebene verschieben / kopieren")) . '>';
                 echo '&nbsp;' . _("Auf die obere Ebene verschieben / kopieren") . '</td>';
-                echo "\n" . '<td class="blank">' . makeButton($button_name, 'input', _("Auf die obere Ebene verschieben / kopieren"), "move_to_top_folder");
+                echo "\n" . '<td class="blank">';
+                echo Button::create($button_name, "move_to_top_folder");
                 echo "\n</td></tr><tr>";
             }
             echo "\n" .'<td class="blank" width="20%" style="font-size:80%;">';
@@ -755,8 +757,8 @@ if ($question) {
                 echo "\n<a href=\"\" onClick=\"STUDIP.MultiSelect.create('#sem_move_id', 'Veranstaltungen'); $(this).hide(); return false\">".Assets::img("icons/16/blue/plus.png", array('title' => _("Mehrere Veranstaltungen auswählen"), "class" => "middle"))."</a>";
             }
             echo "\n</td>";
-            echo "\n" . '<td class="blank">' . makeButton($button_name, 'input', _("In diese Veranstaltung verschieben / kopieren"), "move_to_sem");
-
+            echo "\n" . '<td class="blank">';
+            echo Button::create($button_name, "move_to_sem");
             echo "\n</td></tr><tr>";
             echo "\n" .'<td class="blank" width="20%"  style="font-size:80%;">';
             echo "\n" . '<div style="margin-left:25px;">';
@@ -772,11 +774,11 @@ if ($question) {
                 echo "\n<a href=\"\" onClick=\"STUDIP.MultiSelect.create('#inst_move_id', 'Institute'); $(this).hide(); return false\">".Assets::img("icons/16/blue/plus.png", array('title' => _("Mehrere Einrichtungen auswählen"), "class" => "middle"))."</a>";
             }
             echo "\n</td>";
-            echo "\n" . '<td class="blank">' . makeButton($button_name, 'input', _("In diese Einrichtung verschieben / kopieren"), 'move_to_inst');
-
+            echo "\n" . '<td class="blank">';
+            echo Button::create($button_name, "move_to_inst");
             echo "\n</td></tr><tr>";
             echo "\n" . '<td class="blank" align="center" colspan="3" width="100%" >';
-            echo "\n" . makeButton("abbrechen", "input", _("Verschieben / Kopieren abbrechen"), 'cancel');
+            echo Button::createCancel(_("Verschieben / Kopieren abbrechen"), 'cancel');
             echo "\n" . '</td></tr></form>';
 
 
@@ -839,7 +841,7 @@ if ($question) {
                         <? echo $select ?>
                     </select>
                     <input type="text" name="top_folder_name" size="50" aria-label="<?= _("Name für neuen Ordner eingeben") ?>">
-                    <?= makeButton("neuerordner", 'input', _("Neuer Ordner"), 'anlegen') ?>
+                    <?= Button::create(_("neuer Ordner"), "anlegen") ?>
                 </form>
                 <?
                 }
@@ -848,7 +850,7 @@ if ($question) {
         echo "\n" . '<td class="blank" align="center" colspan="3" width="100%" >';
         echo "\n" . '<span style="margin:25px;font-weight:bold;">';
         echo "\n" . ($folder_system_data["mode"] == 'move' ? _("Verschiebemodus") : _("Kopiermodus")) . "</span>";
-        echo "\n" . '<a href="'.URLHelper::getLink('?cmd=tree').'">'. makeButton("abbrechen", "img", _("Verschieben / Kopieren abbrechen")) . '</a>';
+        echo LinkButton::create(_("abbrechen"), URLHelper::getURL('?cmd=tree'));
         echo "\n" . '</td></tr>';
     }
 
@@ -880,7 +882,7 @@ if ($question) {
         print _("Es gibt ");
         print "<b>".(count($result)>1 ? count($result) : _("eine"))."</b>";
         print _(" neue/geänderte Dateie(n). Jetzt ");
-        print " <a href=\"".URLHelper::getLink("?zipnewest=".$lastvisit)."\">" . makeButton("herunterladen", 'img', _("herunterladen")) . "</a>";
+        echo LinkButton::create(_("herunterladen"), URLHelper::getURL("?zipnewest=".$lastvisit));
         print "</p>";
     }
 
@@ -1030,13 +1032,15 @@ div.droppable.hover {
         if (count($result2)) {
 
             print '<table border=0 cellpadding=0 cellspacing=0 width="100%">';
-            print "<tr>" .
-                    "<td class=\"blank\"></td><td class=\"blank\"><div align=\"right\">" .
-                        "<a href=\"".URLHelper::getLink(sprintf("%s",(isset($check_all))?"":"?check_all=TRUE"))."\">" . makeButton((isset($check_all))?"keineauswaehlen":"alleauswaehlen", 'img',(isset($check_all))?  _("keine auswählen"):_("alle auswählen")) . "</a>" .
-                        "&nbsp;".makeButton("herunterladen", 'input', _("ausgewählte Dateien herunterladen"), 'download_selected')."&nbsp;".
-                        ($rechte ? makeButton('loeschen', 'input', _("ausgewählte Dateien löschen"), 'delete_selected') : '')
-                    ."</div>" .
-                    "</td><td class=\"blank\"></td></tr> <tr><td></td><td class=\"blank\">&nbsp;</td><td class=\"blank\"></td></tr>";
+            print "<tr><td class=\"blank\"></td><td class=\"blank\"><div align=\"right\">";
+            echo LinkButton::create(isset($check_all) ? _("keine auswählen") :_("alle auswählen"),
+                                    URLHelper::getURL(isset($check_all) ? "" : "?check_all=TRUE"));
+            echo Button::create(_("herunterladen"), "download_selected");
+            if ($rechte) {
+                echo Button::create(_("löschen"), "delete_selected");
+            }
+            echo "</div>" .
+                "</td><td class=\"blank\"></td></tr> <tr><td></td><td class=\"blank\">&nbsp;</td><td class=\"blank\"></td></tr>";
             $dreieck_runter = "dreieck_down.png";
             $dreieck_hoch = "dreieck_up.png";
             print "<tr><td></td><td><table border=0 cellpadding=0 cellspacing=0 width=\"100%\">" .
@@ -1144,15 +1148,15 @@ div.droppable.hover {
             print " </td><td class=\"steelgraudunkel\" align=right>";
             print " &nbsp;</td></tr></table>";
             print "</td><td class=\"blank\">&nbsp;</td></tr>";
-            print "<tr><td class=\"blank\"></td><td class=\"blank\"><div align=\"right\">"
-                  ."<br><a href=\"".URLHelper::getLink(sprintf("%s",(isset($check_all))?"":"?check_all=TRUE"))."\">"
-                  . makeButton((isset($check_all))?"keineauswaehlen":"alleauswaehlen", 'img',(isset($check_all))? _("keine auswählen"):_("alle auswählen"))
-                  . "</a>&nbsp;"
-                  . makeButton('herunterladen', 'input', _("ausgewählte Dateien herunterladen"), 'download_selected')
-                  . "&nbsp;"
-                  . ($rechte ? makeButton('loeschen', 'input', _("ausgewählte Dateien löschen"), 'delete_selected') : '')
-                  ."&nbsp;</div></td><td class=\"blank\"></td></tr> <tr><td class=\"blank\"></td>"
-                  ."<td class=\"blank\">&nbsp;</td><td class=\"blank\"></td></tr>";
+            print "<tr><td class=\"blank\"></td><td class=\"blank\"><div align=\"right\"><br>";
+            echo LinkButton::create(isset($check_all) ? _("keine auswählen") : _("alle auswählen"),
+                                    URLHelper::getURL(isset($check_all) ? "" : "?check_all=TRUE"));
+            echo Button::create(_("herunterladen"), "download_selected");
+            if ($rechte) {
+                echo Button::create(_("löschen"), "delete_selected");
+            }
+            echo "</div></td><td class=\"blank\"></td></tr> <tr><td class=\"blank\"></td>"
+                ."<td class=\"blank\">&nbsp;</td><td class=\"blank\"></td></tr>";
         }
     }
     print "</table></form>";

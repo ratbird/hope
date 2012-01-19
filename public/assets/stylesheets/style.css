@@ -861,10 +861,6 @@ a.button:hover, button:hover {
     background-image: -o-linear-gradient(top, white 0%, #eef3f6 50%, #b5c3cc 100%);
     background-image: linear-gradient(top, white 0%, #eef3f6 50%, #b5c3cc 100%);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#b5c3cc');
-    border-top-color: #f33;
-    border-left-color: #f00;
-    border-right-color: #f55;
-    border-bottom-color: #f55;
 }
 
 a.button:active, button:active {

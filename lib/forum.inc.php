@@ -35,6 +35,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
+use Studip\Button, Studip\LinkButton;
+
 require_once 'lib/classes/Avatar.class.php';
 require_once 'lib/classes/Modules.class.php';
 
@@ -113,7 +115,12 @@ function editarea($forumposting) {
     $cols = round($max_col*0.45);
     if ($cols < 28) $cols = 28;
 
-    $zusatz = "<a href=\"".URLHelper::getLink("?#anker", array("open" => Request::get("neuesthema") ? null : $forumposting["rootid"]))."\">" . makeButton("abbrechen", "img", _("abbrechen")) . "</a>";
+    $url = URLHelper::getURL("?#anker",
+                             array("open" =>
+                                   Request::get("neuesthema")
+                                   ? null
+                                   : $forumposting["rootid"]));
+    $zusatz = LinkButton::createCancel(_("abbrechen"), $url);
 
     $help_url = format_help_url("Basis.VerschiedenesFormat");
     $zusatz .= "&nbsp;&nbsp;<a href=\"".URLHelper::getLink("show_smiley.php")."\" target=\"_blank\"><font size=\"-1\">"._("Smileys")."</a>&nbsp;&nbsp;"."<a href=\"".$help_url."\" target=\"_blank\"><font size=\"-1\">"._("Formatierungshilfen")."</a>";
@@ -153,9 +160,10 @@ function editarea($forumposting) {
             $description .= '<input type="hidden" name="anonymous" value="1">';
         }
     }
-    $description .= "<br><br><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"160\" height=\"1\">" . makeButton('abschicken', 'input', _("abschicken"), 'create') . "&nbsp;"
-        .$zusatz
-        ."</div>";
+    $description .= "<br><br><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"160\" height=\"1\">";
+    $description .= Button::createAccept(_("abschicken"), "abschicken");
+
+    $description .= $zusatz ."</div>";
     return $description;
 }
 
@@ -596,34 +604,105 @@ function forum_get_buttons ($forumposting) {
     global $rechte, $forum, $user;
 
     $view = Request::option('view');
-    if (!(have_sem_write_perm())) { // nur mit Rechten...
-        if ($view=="search") $tmp = "&view=tree";
-        if ($view=="mixed") $tmp = "&open=".$forumposting["id"]."&view=flatfolder";
-            $edit = "&nbsp;<a href=\"".URLHelper::getLink("?answer_id=".$forumposting["id"]."&flatviewstartposting=0&shrinkopen=".$forumposting["rootid"]."&sort=age".$tmp."#anker")."\">" . makeButton("antworten", "img", _("antworten")) . "</a>";
-            $edit .= "&nbsp;<a href=\"".URLHelper::getLink("?answer_id=".$forumposting["id"]."&zitat=1&flatviewstartposting=0&shrinkopen=".$forumposting["rootid"]."&sort=age".$tmp."#anker")."\">" . makeButton("zitieren", "img", _("zitieren")) . "</a>";
-            if ($forumposting["lonely"]==TRUE && ($rechte || $forumposting["perms"]=="write")) // ich darf bearbeiten
-                $edit .= "&nbsp;<a href=\"".URLHelper::getLink("?edit_id=".$forumposting["id"]."&view=".$forum["view"]."&flatviewstartposting=".$forum["flatviewstartposting"]."#anker")."\">"
-                . makeButton("bearbeiten", "img", _("bearbeiten")) . "</a>";
-            if ($rechte || ($forumposting["lonely"]==TRUE && $forumposting["perms"]=="write")) // ich darf löschen
-                $edit .= "&nbsp;<a href=\"".URLHelper::getLink("?delete_id=".$forumposting["id"]."&view=".$forum["view"]."&flatviewstartposting=".$forum["flatviewstartposting"])."\">"
-                . makeButton("loeschen", "img", _("löschen")) . "</a>";
-            if ($rechte){  // ich darf verschieben
-                $edit .= "&nbsp;<a href=\"".URLHelper::getLink("?cmd=move&topic_id=".$forumposting["id"]."&view=tree")."\">"
-                . makeButton("verschieben", "img", _("verschieben")) . "</a>";
-            }
+    if (!(have_sem_write_perm())) {  // nur mit Rechten...
+        $edit = forum_get_buttons_authorized($forumposting);
     } elseif ($user->id == "nobody") {  // darf Nobody hier schreiben?
-        $db=new DB_Seminar;
-        $db->query("SELECT Seminar_id FROM seminare WHERE Seminar_id='{$_SESSION['SessionSeminar']}' AND Schreibzugriff=0");
-        if ($db->num_rows())  {
-            $edit = "&nbsp;<a href=\"".URLHelper::getLink("?answer_id=".$forumposting["id"]."&flatviewstartposting=0#anker")."\">" . makeButton("antworten", "img", _("antworten")) . "</a>";
-            $edit .= "&nbsp;<a href=\"".URLHelper::getLink("?answer_id=".$forumposting["id"]."&zitat=1&flatviewstartposting=0#anker")."\">" . makeButton("zitieren", "img", _("zitieren")) . "</a>";
-        } else
-            $edit=""; // war kein nobody Seminar
+        $edit = forum_get_buttons_nobody($forumposting);
     } else { // nix mit Rechten
         $edit = "";
     }
     return $edit;
 }
+
+
+function forum_get_buttons_authorized($forumposting)
+{
+    global $rechte, $forum;
+
+    $view = Request::option('view');
+
+    $tmp = array();
+    if ($view == "search") {
+        $tmp = array("view" => "tree");
+    } else if ($view == "mixed") {
+        $tmp = array("open" => $forumposting["id"], "view" => "flatfolder");
+    }
+
+    $edit = "";
+
+    $attributes = $tmp + array(
+        "answer_id"            => $forumposting["id"],
+        "flatviewstartposting" => 0,
+        "shrinkopen"           => $forumposting["rootid"],
+        "sort"                 => "age");
+    $edit .= LinkButton::create(_("antworten"), URLHelper::getURL("#anker", $attributes));
+
+    $attributes = $tmp + array(
+        "answer_id" => $forumposting["id"],
+        "zitat" => 1,
+        "flatviewstartposting" => 0,
+        "shrinkopen" => $forumposting["rootid"],
+        "sort" => "age");
+    $edit .= LinkButton::create(_("zitieren"), URLHelper::getURL("#anker", $attributes));
+
+    // ich darf bearbeiten
+    if ($forumposting["lonely"] && ($rechte || $forumposting["perms"] == "write")) {
+        $attributes = array(
+            "edit_id"              => $forumposting["id"],
+            "view"                 => $forum["view"],
+            "flatviewstartposting" => $forum["flatviewstartposting"]
+        );
+        $edit .= LinkButton::create(_("bearbeiten"), URLHelper::getURL("#anker", $attributes));
+    }
+
+    // ich darf löschen
+    if ($rechte || ($forumposting["lonely"] && $forumposting["perms"] == "write")) {
+        $attributes = array(
+            "delete_id"            => $forumposting["id"],
+            "view"                 => $forum["view"],
+            "flatviewstartposting" => $forum["flatviewstartposting"]
+        );
+        $edit .= LinkButton::create(_("löschen"), URLHelper::getURL("", $attributes));
+    }
+
+    // ich darf verschieben
+    if ($rechte) {
+        $attributes = array(
+            "cmd"      => "move",
+            "topic_id" => $forumposting["id"],
+            "view"     => "tree"
+        );
+        $edit .= LinkButton::create(_("verschieben"), URLHelper::getURL("", $attributes));
+    }
+
+    return $edit;
+}
+
+
+function forum_get_buttons_nobody($forumposting)
+{
+    $edit = '';
+    $db = new DB_Seminar();
+    $db->query("SELECT Seminar_id FROM seminare WHERE Seminar_id='{$_SESSION['SessionSeminar']}' AND Schreibzugriff=0");
+    if ($db->num_rows()) {
+
+        $attributes = array(
+            "answer_id"            => $forumposting["id"],
+            "flatviewstartposting" => 0
+        );
+        $edit .= LinkButton::create(_("antworten"), URLHelper::getURL("#anker", $attributes));
+
+        $attributes = array(
+            "answer_id" => $forumposting["id"],
+            "zitat" => 1,
+            "flatviewstartposting" => 0
+        );
+        $edit .= LinkButton::create(_("zitieren"), URLHelper::getURL("#anker", $attributes));
+    }
+
+    return $edit;
+}
+
 
 /**
 * Debug Code for var-output
@@ -1331,7 +1410,7 @@ function printposting ($forumposting) {
                     $addon .= "<br><br>";
                     $addon .= "<input type=hidden name=open value='".$forumposting["id"]."'>";
                     $addon .= "<input type=hidden name=flatviewstartposting value='".$forum["flatviewstartposting"]."'>";
-                    $addon .= "<input type=image name=sidebar value='".$forumposting["id"]."' " . makeButton("bewerten", "src", _("bewerten")) . " align=\"absmiddle\" border=0>";
+                    $addon .= Button::create(_("bewerten"), "sidebar", array('value' => $forumposting["id"]));
                 } else {
                     $addon .= "<font size=\"-1\">&nbsp;&nbsp;". sprintf(_("Sie haben diesen%sBeitrag bewertet."),'&nbsp;<br>&nbsp;&nbsp;');
                 }
@@ -1507,7 +1586,8 @@ if ($forum['view']=='flatfolder') {
     echo '<table cellpadding="0" cellspacing="0" border="0" width="100%">';
     echo '<tr>';
     echo '<td class="blank" align="center" style="padding-top:12px; padding-bottom:5px;">';
-    echo "Zu diesem Thema &nbsp;<a href=\"".URLHelper::getLink("?answer_id=".$folder_id."&flatviewstartposting=0&sort=age#anker")."\">" . makeButton("antworten", "img", _("antworten")) . "</a>";
+    echo _("Zu diesem Thema") . " ";
+    echo LinkButton::create(_("antworten"), URLHelper::getURL("?answer_id=".$folder_id."&flatviewstartposting=0&sort=age#anker"));
     echo '</td>';
     echo '</tr>';
     echo '</table>';
@@ -1868,7 +1948,9 @@ $searchfield = "
         <tr>
             <td class=\"steelgraulight\" colspan=\"2\" align=\"center\">
                 <input type=\"hidden\" name=\"view\" value=\"search\">
-                <br>".makeButton("suchestarten", "input", _("Suche starten"))."<br><br>
+                <br>
+                ".Button::create(_("Suche starten"))."
+                <br><br>
             </td>
         </tr>
     </table>
@@ -1986,7 +2068,7 @@ function forum_move_navi ($topic_id) {
                 </td>
                 <td class="steel1" width="80%">
                 <br>
-                <? echo "<a href=\"".URLHelper::getLink('')."\">".makeButton("abbrechen", "img", _("abbrechen"))."</a>";?>
+                <?= LinkButton::createCancel() ?>
                 </td>
             </tr>
         </table></td></tr>

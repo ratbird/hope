@@ -22,6 +22,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA   02111-1307, USA.
 */
 
+use Studip\Button, Studip\LinkButton;
+
 require '../lib/bootstrap.php';
 
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Default_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
@@ -50,9 +52,10 @@ if ($send_from_search) $back_msg =_("Zur&uuml;ck zur letzten Auswahl");
 $stm_obj = new StudipStmInstance($_REQUEST['stm_instance_id']);
 if (!$stm_obj->isNew()){
     if ($_REQUEST['cmd'] == 'do_enter'
-    && $stm_obj->isAllowedToEnter($GLOBALS['user']->id)
-    && !$stm_obj->isParticipant($GLOBALS['user']->id)
-    && isset($_REQUEST['ok_x'])){
+        && $stm_obj->isAllowedToEnter($GLOBALS['user']->id)
+        && !$stm_obj->isParticipant($GLOBALS['user']->id)
+        && Request::submitted('ok')) {
+
         if (isset($_REQUEST['elgroup']) && is_array($stm_obj->el_struct[$_REQUEST['elgroup']])){
             $added = $stm_obj->addParticipant($GLOBALS['user']->id, $_REQUEST['elgroup'], $_REQUEST['sem_el']);
         }
@@ -110,9 +113,10 @@ if (!$stm_obj->isNew()){
         }?>
         </table>
         <br>
-        <?=makeButton('uebernehmen','input',_("Auswahl übernehmen"),'ok')?>
-        &nbsp;&nbsp;
-        <?=makeButton('abbrechen','input',_("Aktion abbrechen"),'cancel')?>
+        <div class="button-group">
+        <?= Button::createAccept(_('übernehmen'), 'ok')?>
+        <?= Button::createCancel(_('abbrechen'), 'cancel')?>
+        </div>
         </form>
         </div></td></tr>
         <?

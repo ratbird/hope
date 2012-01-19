@@ -1,7 +1,7 @@
 <?php
 # Lifter002: TODO
 # Lifter007: TODO
-# Lifter003: TODO
+# Lifter003: TEST
 # Lifter010: TODO
 /*
 admin_banner_ads.php - Werbebanner-Verwaltung von Stud.IP.
@@ -43,8 +43,6 @@ require_once('lib/classes/Table.class.php');
 require_once('lib/classes/ZebraTable.class.php');
 
 // Get a database connection
-$db = new DB_Seminar;
-$db2 = new DB_Seminar;
 
 function imaging($img, $img_size, $img_name)
 {
@@ -88,42 +86,39 @@ function view_probability($prio) {
     if ($prio==0) return "--";
 
     if (!$computed) {
-        $db=new DB_Seminar;
-        $q="SELECT priority FROM banner_ads WHERE priority>0";
-        $result=$db->query($q);
-        $sum=0;
-        while ($db->next_record($result)) {
-            $sum += pow(2,$db->f("priority"));
-        }
+        $sum = DBManager::get()
+            ->query("SELECT SUM(POW(2, priority)) FROM banner_ads WHERE priority > 0")
+            ->fetchColumn();
         $computed=1;
     }
     return "1/" . (1/(pow(2,$prio)/$sum));
 }
 
 function show_banner_list($table) {
-    global $db;
-    $q="SELECT * FROM banner_ads ORDER BY priority DESC";
-    $result = $db->query($q);
-    $count=0;
-    while ($db->next_record($result)) {
-        $count++;
-        print $table->row(array(_("Banner"),"<img src=\"".$GLOBALS['DYNAMIC_CONTENT_URL']."/banner/".$db->f("banner_path")."\" alt=\"".$db->f("alttext")."\">"),"",1);
-        print $table->row(array(_("Beschreibung"),$db->f("description")),"",0);
-        print $table->row(array(_("Ziel"),"(".$db->f("target_type").") " . $db->f("target")),"",0);
-        print $table->row(array(_("Anzeigezeitraum"), ($db->f("startdate") ? date("d.m.Y, H:i",$db->f("startdate")) : _("sofort")) . " " . _("bis") . " " . ($db->f("enddate") ? date("d.m.Y, H:i",$db->f("enddate")) : _("unbegrenzt"))),"",0);
-        print $table->row(array(_("Views"), $db->f("views")),"",0);
-        print $table->row(array(_("Priorität (Wahrscheinlichkeit)"), $db->f("priority") . " (" . view_probability($db->f("priority")) . ")"),"",0);
-        print $table->row(array("", LinkButton::create(_('bearbeiten'), $PHP_SELF.'?cmd=editdb&ad_id='.$db->f("ad_id")).' '.LinkButton::create(_('löschen'), $PHP_SELF.'?cmd=delete&ad_id='.$db->f("ad_id"))),"",0);
+    $query = "SELECT ad_id, banner_path, alttext, description, target_type, "
+           . "  target, startdate, enddate, views, priority "
+           . "FROM banner_ads ORDER BY priority DESC";
+    $banners = DBManager::get()
+        ->query($query)
+        ->fetchAll(PDO::FETCH_ASSOC);
+    
+    foreach ($banners as $banner) {
+        print $table->row(array(_("Banner"),"<img src=\"".$GLOBALS['DYNAMIC_CONTENT_URL']."/banner/".$banner['banner_path']."\" alt=\"".$banner['alttext']."\">"),"",1);
+        print $table->row(array(_("Beschreibung"),$banner['description']),"",0);
+        print $table->row(array(_("Ziel"),"(".$banner['target_type'].") " . $banner['target']),"",0);
+        print $table->row(array(_("Anzeigezeitraum"), ($banner['startdate'] ? date("d.m.Y, H:i",$banner['startdate']) : _("sofort")) . " " . _("bis") . " " . ($banner['enddate'] ? date("d.m.Y, H:i", $banner['enddate']) : _("unbegrenzt"))),"",0);
+        print $table->row(array(_("Views"), $banner['views']),"",0);
+        print $table->row(array(_("Priorität (Wahrscheinlichkeit)"), $banner['priority'] . " (" . view_probability($banner['priority']) . ")"),"",0);
+        print $table->row(array("", LinkButton::create(_('bearbeiten'), $PHP_SELF.'?cmd=editdb&ad_id='.$banner['ad_id']).' '.LinkButton::create(_('löschen'), $PHP_SELF.'?cmd=delete&ad_id='.$banner['ad_id'])),"",0);
         print $table->row(array("&nbsp;","&nbsp"),array("class"=>"blank", "bgcolor"=>"white"),0);
     }
-    if ($count==0) {
+    if (empty($banners)) {
         print $table->row(array("<h4>" . _("Keine Banner vorhanden.") . "</h4>"), array("colspan"=>2, "class"=>"blank"));
     }
 }
 
 function check_data(&$banner_data) {
     $msg = '';
-    $db = new DB_Seminar;
 
     function valid_date($h,$m,$d,$mo,$y) {
         if (($h==_("hh") && $m==_("mm") && $d==_("tt") && $mo==_("mm") && $y==_("jjjj"))|| ($h+$m+$d+$mo+$y == 0)) {
@@ -156,23 +151,26 @@ function check_data(&$banner_data) {
              if (!preg_match('/^(https?)|(ftp):\\/\\//i', $banner_data['target'])) $msg .= "error§" . _("Das Verweisziel muss eine gültige URL sein (incl. http://).") . "§";
             break;
         case 'inst':
-            $q = "SELECT * FROM Institute WHERE Institut_id='" . $banner_data['target'] . "'";
-            $db->query($q);
-            if (!$db->next_record()) {
+            $query = "SELECT 1 FROM Institute WHERE Institut_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($banner_data['target']));            
+            if (!$statement->fetchColumn()) {
                 $msg .= "error§" . _("Die angegebene Einrichtung existiert nicht. Bitte geben Sie eine gültige Einrichtungs-ID ein.") .'§';
             }
             break;
         case 'user':
-            $q = "SELECT * FROM auth_user_md5 WHERE username='" . $banner_data['target'] . "'";
-            $db->query($q);
-            if (!$db->next_record()) {
+            $query = "SELECT 1 FROM auth_user_md5 WHERE username = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($banner_data['target']));            
+            if (!$statement->fetchColumn()) {
                 $msg .= "error§" . _("Der angegebene Benutzername existiert nicht.") ."§";
             }
             break;
         case 'seminar':
-            $q = "SELECT * FROM seminare WHERE Seminar_id='" . $banner_data["target"] . "'";
-            $db->query($q);
-            if (!$db->next_record()) {
+            $query = "SELECT 1 FROM seminare WHERE Seminar_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($banner_data['target']));            
+            if (!$statement->fetchColumn()) {
                 $msg .= "error§" . _("Die angegebene Veranstaltung existiert nicht. Bitte geben Sie eine gültige Veranstaltungs-ID ein.") . "§";
             }
             break;
@@ -187,31 +185,32 @@ function check_data(&$banner_data) {
 }
 
 function write_data_to_db($banner_data) {
-    global $db;
+    if (!$banner_data['ad_id']) {
+        $banner_data['ad_id'] = md5($banner_data['banner_path'] + time());
+    }
 
-    if ($banner_data["ad_id"]) {
-        $q = "UPDATE banner_ads SET ";
-    } else {
-        $md5hash=md5($banner_data["banner_path"]+time());
-        $q = "INSERT INTO banner_ads SET ";
-        $q .= "ad_id = '$md5hash', ";
-        $q .= "clicks = '0', ";
-        $q .= "views = '0', ";
-        $q .= "mkdate = '". time() ."', ";
-    }
-    $q .= "banner_path = '$banner_data[banner_path]', ";
-    $q .= "description = '$banner_data[description]', ";
-    $q .= "alttext = '$banner_data[alttext]', ";
-    $q .= "target_type = '$banner_data[target_type]', ";
-    $q .= "target = '$banner_data[target]', ";
-    $q .= "startdate = '$banner_data[startdate]', ";
-    $q .= "enddate = '$banner_data[enddate]', ";
-    $q .= "priority = '$banner_data[priority]', ";
-    $q .= "chdate = '". time() ."' ";
-    if ($banner_data["ad_id"]) {
-        $q .= "WHERE ad_id='". $banner_data["ad_id"] . "'";
-    }
-    $db->query($q);
+    $query = "INSERT INTO banner_ads "
+           . "(ad_id, clicks, views, mkdate, banner_path, description, alttext,"
+           . " target_type, target, startdate, enddate, priority, chdate) "
+           . "VALUES (?, 0, 0, UNIX_TIMESTAMP(), ?, ?, ?, ?, ?, ?, ?, ?, UNIX_TIMESTAMP()) "
+           . "ON DUPLICATE KEY UPDATE banner_path = VALUES(banner_path), "
+           . "   description = VALUES(description), alttext = VALUES(alttext), "
+           . "   target_type = VALUES(target_type), target = VALUES(target), "
+           . "   startdate = VALUES(startdate), enddate = VALUES(enddate), "
+           . "   priority = VALUES(priority), chdate = VALUES(chdate)";
+    DBManager::get()
+        ->prepare($query)
+        ->execute(array(
+            $banner_data['ad_id'],
+            $banner_data['banner_path'],
+            $banner_data['description'],
+            $banner_data['alttext'],
+            $banner_data['target_type'],
+            $banner_data['target'],
+            $banner_data['startdate'],
+            $banner_data['enddate'],
+            $banner_data['priority'],
+        ));
 }
 
 function edit_banner_pic($banner_data) {
@@ -310,7 +309,7 @@ function edit_banner_data($banner_data) {
     $prio_selector .= "</select>";
     print $table->row(array("Priorität:", $prio_selector),0);
 
-    print $table->row(array("", Button::create(_('absenden')).' '.LinkButton::createCancel(_('abbrechen'))),0);
+    print $table->row(array("", Button::createAccept(_('absenden')).' '.LinkButton::createCancel(_('abbrechen'))),0);
 
     print "</form>";
     $table->close();
@@ -352,58 +351,56 @@ if ($cmd=="upload") {
     if ($banner_path != '' ) $banner_data["banner_path"] = $banner_path;
     $i_view="edit";
 } elseif ($cmd=="delete") {
-    $q="DELETE FROM banner_ads WHERE ad_id='".$ad_id."'";
-    $db->query($q);
+    DBManager::get()
+        ->prepare("DELETE FROM banner_ads WHERE ad_id = ?")
+        ->execute(array($ad_id));
     parse_msg("msg§". _("Banner gelöscht"));
     $i_view="list";
 } elseif ($cmd=="editdb") {
-    $q="SELECT * FROM banner_ads WHERE ad_id='" . $ad_id . "'";
-    $result = $db->query($q);
-    if ($db->next_record($result)) {
-        $banner_data["ad_id"]=$db->f("ad_id");
-        $banner_data["target"]=$db->f("target");
-        $banner_data["target_type"]=$db->f("target_type");
-        $banner_data["description"]=$db->f("description");
-        $banner_data["alttext"]=$db->f("alttext");
-        $banner_data["banner_path"]=$db->f("banner_path");
-        $starttime=$db->f("startdate");
-        $banner_data["start_minute"] = ($starttime == 0)? _("mm"):date("i", $starttime);
-        $banner_data["start_hour"]   = ($starttime == 0)? _("hh"):date("H", $starttime);
-        $banner_data["start_day"]    = ($starttime == 0)? _("tt"):date("d", $starttime);
-        $banner_data["start_month"]  = ($starttime == 0)? _("mm"):date("m", $starttime);
-        $banner_data["start_year"]   = ($starttime == 0)? _("jjjj"):date("Y", $starttime);
-        $endtime = $db->f("enddate");
-        $banner_data["end_minute"] = ($endtime == 0)? _("mm"):date("i", $endtime);
-        $banner_data["end_hour"]   = ($endtime == 0)? _("hh"):date("H", $endtime);
-        $banner_data["end_day"]    = ($endtime == 0)? _("tt"):date("d", $endtime);
-        $banner_data["end_month"]  = ($endtime == 0)? _("mm"):date("m", $endtime);
-        $banner_data["end_year"]   = ($endtime == 0)? _("jjjj"):date("Y", $endtime);
-        $banner_data["priority"]= $db->f("priority");
+    $query = "SELECT ad_id, target, target_type, description, alttext, banner_path, priority, startdate, enddate "
+           . "FROM banner_ads WHERE ad_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($ad_id));
+    $banner_data = $statement->fetch(PDO::FETCH_ASSOC);
+    if ($banner_data) {
+        $starttime = $banner_data['startdate'];
+        $banner_data['start_minute'] = ($starttime == 0) ? _('mm') : date('i', $starttime);
+        $banner_data['start_hour']   = ($starttime == 0) ? _('hh') : date('H', $starttime);
+        $banner_data['start_day']    = ($starttime == 0) ? _('tt') : date('d', $starttime);
+        $banner_data['start_month']  = ($starttime == 0) ? _('mm') : date('m', $starttime);
+        $banner_data['start_year']   = ($starttime == 0) ? _('jjjj') : date('Y', $starttime);
+        unset($banner_data['startdate']);
+        
+        $endtime = $banner_data['enddate'];
+        $banner_data['end_minute'] = ($endtime == 0) ? _('mm') : date('i', $endtime);
+        $banner_data['end_hour']   = ($endtime == 0) ? _('hh') : date('H', $endtime);
+        $banner_data['end_day']    = ($endtime == 0) ? _('tt') : date('d', $endtime);
+        $banner_data['end_month']  = ($endtime == 0) ? _('mm') : date('m', $endtime);
+        $banner_data['end_year']   = ($endtime == 0) ? _('jjjj') : date('Y', $endtime);
+        unset($banner_data['enddate']);
 
-        $i_view="edit";
+        $i_view = "edit";
     } else {
         parse_msg("error§" . _("Ungültige Banner-ID"));
     }
-} elseif ($cmd=="edit") {
-    if ($ad_id) {
-        $banner_data["ad_id"]=$ad_id;
-    }
-    $banner_data["target"]=$target;
-    $banner_data["target_type"]=$target_type;
-    $banner_data["description"]=$description;
-    $banner_data["alttext"]=$alttext;
-    $banner_data["banner_path"]=$banner_path;
-    $banner_data["start_minute"]=$start_minute;
-    $banner_data["start_hour"]=$start_hour;
-    $banner_data["start_day"]=$start_day;
-    $banner_data["start_month"]=$start_month;
-    $banner_data["start_year"]=$start_year;
-    $banner_data["end_minute"]=$end_minute;
-    $banner_data["end_hour"]=$end_hour;
-    $banner_data["end_day"]=$end_day;
-    $banner_data["end_month"]=$end_month;
-    $banner_data["end_year"]=$end_year;
-    $banner_data["priority"]=$priority;
+} elseif ($cmd == 'edit') {
+    $banner_data['ad_id']        = Request::option('ad_id', null);
+    $banner_data['target']       = Request::get('target');
+    $banner_data['target_type']  = Request::option('target_type');
+    $banner_data['description']  = Request::get('description');
+    $banner_data['alttext']      = Request::get('alttext');
+    $banner_data['banner_path']  = Request::get('banner_path');
+    $banner_data['start_minute'] = Request::option('start_minute');
+    $banner_data['start_hour']   = Request::option('start_hour');
+    $banner_data['start_day']    = Request::option('start_day');
+    $banner_data['start_month']  = Request::option('start_month');
+    $banner_data['start_year']   = Request::option('start_year');
+    $banner_data['end_minute']   = Request::option('end_minute');
+    $banner_data['end_hour']     = Request::option('end_hour');
+    $banner_data['end_day']      = Request::option('end_day');
+    $banner_data['end_month']    = Request::option('end_month');
+    $banner_data['end_year']     = Request::option('end_year');
+    $banner_data['priority']     = Request::int('priority');
     $msg=check_data($banner_data);
     if ($msg) {
         parse_msg($msg);

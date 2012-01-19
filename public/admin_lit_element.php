@@ -25,6 +25,7 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
+use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
 
@@ -113,12 +114,10 @@ if ($_the_form->IsClicked("delete") && $_catalog_id != "new_entry" && $_the_elem
         $_msg = "info§" . sprintf(_("Sie k&ouml;nnen diesen Eintrag nicht l&ouml;schen, da er noch in %s Literaturlisten referenziert wird."),$_the_element->reference_count) ."§";
     } else {
         $_msg = "info§" . _("Wollen Sie diesen Eintrag wirklich l&ouml;schen?") . "<br>"
-                . "<a href=\"" . $PHP_SELF . "?cmd=delete_element&_catalog_id=" . $_catalog_id . "\">"
-                . "<img " .makeButton("ja2","src") . tooltip(_("löschen"))
-                . " border=\"0\"></a>&nbsp;"
-                . "<a href=\"" . $PHP_SELF . "?_catalog_id=" . $_catalog_id  . "\">"
-                . "<img " .makeButton("nein","src") . tooltip(_("abbrechen"))
-                . " border=\"0\"></a>§";
+                .LinkButton::createAccept(_('ja'), $PHP_SELF . "?cmd=delete_element&_catalog_id=" . $_catalog_id, _('löschen') )
+                . "&nbsp;"
+                .LinkButton::createCancel(_('abbrechen'), $PHP_SELF . "?_catalog_id=" . $_catalog_id, _('abbrechen'))
+                . "§";
     }
 }
 
@@ -204,22 +203,17 @@ echo "<tr><td " . $class_changer->getFullClass() . " align=\"left\" width=\"40%\
 echo "<td " . $class_changer->getFullClass() . " align=\"center\">";
 if ($_the_element->isChangeable()){
     echo $_the_form->getFormButton("send") .  $_the_form->getFormButton("delete") . $_the_form->getFormButton("reset");
-    echo "<a href=\"$PHP_SELF?cmd=clone_entry&_catalog_id=$_catalog_id\"><img border=\"0\" "
-    . makeButton('kopieerstellen','src') . tooltip(_("Eine Kopie dieses Eintrages anlegen")) ."></a>";
+    echo LinkButton::create(_('Kopie erstellen'), $PHP_SELF.'?cmd=clone_entry&_catalog_id='.$_catalog_id, _('Eine Kopie dieses Eintrages anlegen'));
 }
 echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\"  height=\"28\" width=\"15\" border=\"0\">";
-echo "<a href=\"$PHP_SELF?cmd=new_entry\"><img border=\"0\" "
-    . makeButton('neuanlegen','src') . tooltip(_("Neuen Eintrag anlegen")) ."></a>";
+echo LinkButton::create(_('neu anlegen'), $PHP_SELF.'?cmd=new_entry', _("Neuen Eintrag anlegen"));
 if ($_catalog_id != "new_entry"){
     echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\"  height=\"28\" width=\"15\" border=\"0\">";
-    echo "<a href=\"$PHP_SELF?cmd=check_entry&_catalog_id=$_catalog_id\">"
-    . "<img " .makeButton("verfuegbarkeit","src") . tooltip(_("Verfügbarkeit überprüfen"))
-    . " border=\"0\"></a>";
+    echo LinkButton::create(_('Verfügbarkeit'), $PHP_SELF.'?cmd=check_entry&_catalog_id='.$_catalog_id, _("Verfügbarkeit überprüfen"));
 }
 if ($_catalog_id != "new_entry" && !$_the_clipboard->isInClipboard($_catalog_id)){
     echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\"  height=\"28\" width=\"15\" border=\"0\">";
-    echo "<a href=\"$PHP_SELF?cmd=in_clipboard&_catalog_id=$_catalog_id\"><img border=\"0\" "
-        . makeButton('merkliste','src') . tooltip(_("Eintrag in Merkliste aufnehmen")) ."></a>";
+    echo LinkButton::create(_('Merkliste'), $PHP_SELF.'?cmd=in_clipboard&_catalog_id='.$_catalog_id, _("Eintrag in Merkliste aufnehmen"));
 }
 echo "</td></tr>";
 echo '<p style="font-size:-1">';
@@ -260,22 +254,17 @@ echo "<td " . $class_changer->getFullClass() . " align=\"center\">";
 if ($_the_element->isChangeable()){
     echo $_the_form->getFormButton("send") .  $_the_form->getFormButton("delete") . $_the_form->getFormButton("reset");
 } elseif ($_catalog_id != "new_entry") {
-    echo "<a href=\"$PHP_SELF?cmd=clone_entry&_catalog_id=$_catalog_id\"><img border=\"0\" "
-    . makeButton('kopieerstellen','src') . tooltip(_("Eine Kopie dieses Eintrages anlegen")) ."></a>";
+    echo LinkButton::create(_('Kopie erstellen'), $PHP_SELF.'?cmd=clone_entry&_catalog_id='.$_catalog_id, _("Eine Kopie dieses Eintrages anlegen"));
 }
 echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\"  height=\"28\" width=\"15\" border=\"0\">";
-echo "<a href=\"$PHP_SELF?cmd=new_entry\"><img border=\"0\" "
-    . makeButton('neuanlegen','src') . tooltip(_("Neuen Eintrag anlegen")) ."></a>";
+echo LinkButton::create(_('neu anlegen'), $PHP_SELF.'?cmd=new_entry', _("Neuen Eintrag anlegen"));
 if ($_catalog_id != "new_entry"){
     echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\"  height=\"28\" width=\"15\" border=\"0\">";
-    echo "<a href=\"$PHP_SELF?cmd=check_entry&_catalog_id=$_catalog_id\">"
-    . "<img " .makeButton("verfuegbarkeit","src") . tooltip(_("Verfügbarkeit überprüfen"))
-    . " border=\"0\"></a>";
+    echo LinkButton::create(_('Verfügbarkeit'), $PHP_SELF.'?cmd=check_entry&_catalog_id='.$_catalog_id, _("Verfügbarkeit überprüfen"));
 }
 if ($_catalog_id != "new_entry" && !$_the_clipboard->isInClipboard($_catalog_id)){
     echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\"  height=\"28\" width=\"15\" border=\"0\">";
-    echo "<a href=\"$PHP_SELF?cmd=in_clipboard&_catalog_id=$_catalog_id\"><img border=\"0\" "
-        . makeButton('merkliste','src') . tooltip(_("Eintrag in Merkliste aufnehmen")) ."></a>";
+    echo LinkButton::create(_('Merkliste'), $PHP_SELF.'?cmd=in_clipboard&_catalog_id='.$_catalog_id, _("Eintrag in Merkliste aufnehmen"));
 }
 echo "</td></tr>";
 ?>

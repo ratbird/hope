@@ -38,7 +38,7 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-
+use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
 
@@ -254,8 +254,15 @@ if (isset($seminar_id)) {
 // end new stuff
 
 //wenn wir frisch reinkommen, werden benoetigte Daten eingelesen
-if (($seminar_id) && (!$uebernehmen_x) &&(!$adm_null_x) &&(!$adm_los_x) &&(!$adm_chrono_x) && (!$add_studg_x) && (!$delete_studg) && (!$adm_gesperrt_x)
-    && !$toggle_admission_quota_x && !$delete_domain && !$add_domain && !$add_domain_x) {
+if ($seminar_id
+    && !Request::submittedSome(
+        "uebernehmen",
+        "adm_null", "adm_los", "adm_chrono", "adm_gesperrt",
+        "add_studg", "toggle_admission_quota")
+    && !$delete_studg
+    && !$delete_domain
+    && !$add_domain) {
+
     $db->query("SELECT * FROM seminare WHERE Seminar_id = '$seminar_id' ");
     $db->next_record();
     $admin_admission_data='';
@@ -297,7 +304,7 @@ if (($seminar_id) && (!$uebernehmen_x) &&(!$adm_null_x) &&(!$adm_los_x) &&(!$adm
         $admin_admission_data["studg"][$db->f("studiengang_id")] = array("name"=>$name, "ratio"=>$db->f("quota"), 'count' => $db->f('count'));
     }
     $admin_admission_data["original"]=get_snapshot();
-    if($reset_admission_time_x){
+    if (Request::submitted("reset_admission_time")){
         $admin_admission_data["sem_admission_end_date"]=-1;
         $admin_admission_data["sem_admission_start_date"]=-1;
     }
@@ -330,7 +337,7 @@ if (($seminar_id) && (!$uebernehmen_x) &&(!$adm_null_x) &&(!$adm_los_x) &&(!$adm
     }
 
     //Umschalter zwischen den Typen
-    if ($adm_null_x || $adm_los_x || $adm_chrono_x || $adm_gesperrt_x){
+    if (Request::submittedSome("adm_null", "adm_los", "adm_chrono", "adm_gesperrt")) {
         if ($is_grouped){
             $errormsg = $errormsg."error§"._("Gruppierte Veranstaltungen m&uuml;ssen ein einheitliches Anmeldeverfahren haben! Bei gruppierten Veranstaltungen können Sie das Anmeldeverfahren an dieser Stelle nicht mehr ändern.")."§";
         } else {
@@ -338,18 +345,20 @@ if (($seminar_id) && (!$uebernehmen_x) &&(!$adm_null_x) &&(!$adm_los_x) &&(!$adm
             $admin_admission_data["sem_admission_start_date"]=-1;
             $admin_admission_data["admission_endtime"]=-1;
             $admin_admission_data["admission_selection_take_place"] = 0;
-            if($adm_null_x){
+
+            if (Request::submitted("adm_null")) {
                 $admin_admission_data["admission_type"]=0;
             }
-            if ($adm_los_x){
+            
+            if (Request::submitted("adm_los")) {
                 $admin_admission_data["admission_type"]=1;
                 if(!is_array($admin_admission_data["studg"]) || !count($admin_admission_data["studg"])) $admin_admission_data["studg"]['all'] = array('name' => _("Alle Studiengänge"), 'ratio' => 100);
             }
-            if ($adm_chrono_x){
+            if (Request::submitted("adm_chrono")) {
                 $admin_admission_data["admission_type"]=2;
                 if(!is_array($admin_admission_data["studg"]) || !count($admin_admission_data["studg"])) $admin_admission_data["studg"]['all'] = array('name' => _("Alle Studiengänge"), 'ratio' => 100);
             }
-            if ($adm_gesperrt_x){
+            if (Request::submitted("adm_gesperrt")) {
                 $admin_admission_data["admission_type"] = 3;
             }
         }
@@ -368,7 +377,10 @@ if (($seminar_id) && (!$uebernehmen_x) &&(!$adm_null_x) &&(!$adm_los_x) &&(!$adm
     $admin_admission_data["admission_prelim_txt"]=$admission_prelim_txt;
   }
 
-    if(isset($_REQUEST['uebernehmen_x']) && isset($_REQUEST["admission_waitlist"])) $admin_admission_data["admission_disable_waitlist"] = (int)(!$_REQUEST["admission_waitlist"]);
+  if (Request::submitted('uebernehmen') && isset($_REQUEST["admission_waitlist"])) {
+      $admin_admission_data["admission_disable_waitlist"] = (int)(!$_REQUEST["admission_waitlist"]);
+  }
+
 
   if (!$admin_admission_data["admission_type"]) {
     if (isset($read_level))
@@ -381,7 +393,7 @@ if (($seminar_id) && (!$uebernehmen_x) &&(!$adm_null_x) &&(!$adm_los_x) &&(!$adm
     } elseif (!$delete_studg) {
 
 
-        if(isset($_REQUEST['toggle_admission_quota_x'])){
+      if (Request::submitted('toggle_admission_quota')){
             $admin_admission_data["admission_enable_quota"] = (int)($_REQUEST["admission_enable_quota"]);
             if(!$admin_admission_data["admission_enable_quota"]){
                 $admin_admission_data["admission_endtime"] = -1;
@@ -417,7 +429,7 @@ if (($seminar_id) && (!$uebernehmen_x) &&(!$adm_null_x) &&(!$adm_los_x) &&(!$adm
     }
 
     //Studiengang hinzufuegen
-    if ($add_studg_x) {
+    if (Request::submitted("add_studg")) {
         if ($add_studg && $add_studg != 'all') {
             $db->query("SELECT name FROM studiengaenge WHERE studiengang_id='".$add_studg."' ");
             $db->next_record();
@@ -459,9 +471,9 @@ if (($seminar_id) && (!$uebernehmen_x) &&(!$adm_null_x) &&(!$adm_los_x) &&(!$adm
         }
 
     //Checks bei Anmeldeverfahren
-    } elseif ((!$adm_chrono_x) && (!$adm_los_x) && (!$adm_gesperrt_x))  {
+    } elseif (!Request::submittedSome("adm_chrono", "adm_los", "adm_gesperrt"))  {
         //max. Teilnehmerzahl checken
-        if (($uebernehmen_x) && ($admin_admission_data["admission_type"] > 0) && ($admin_admission_data["admission_type"] < 3)) {
+        if (Request::submitted('uebernehmen') && ($admin_admission_data["admission_type"] > 0) && ($admin_admission_data["admission_type"] < 3)) {
             if ($admin_admission_data["admission_turnout"] < 1) {
                 $errormsg=$errormsg."error§"._("Wenn Sie die Teilnahmebeschr&auml;nkung benutzen wollen, m&uuml;ssen Sie wenigstens einen Teilnehmer zulassen.")."§";
                 $admin_admission_data["admission_turnout"] =1;
@@ -478,7 +490,7 @@ if (($seminar_id) && (!$uebernehmen_x) &&(!$adm_null_x) &&(!$adm_los_x) &&(!$adm
         }
 
         //Prozentangabe checken/berechnen wenn neueer Studiengang, einer geloescht oder Seite abgeschickt
-        if (($add_studg_x) || ($delete_studg) || ($uebernehmen_x) || $toggle_admission_quota_x) {
+        if (Request::submittedSome("add_studg", "uebernehmen", "toggle_admission_quota") || $delete_studg) {
             if ($admin_admission_data["admission_type"] && $admin_admission_data["admission_enable_quota"]) {
                 if ((!$admin_admission_data["admission_ratios_changed"]) && (!$add_ratio) && (!$admin_admission_data["admission_type_org"])) {//User hat nichts veraendert oder neuen Studiengang mit Wert geschickt, wir koennen automatisch rechnen
                     if (is_array($admin_admission_data["studg"])){
@@ -505,7 +517,7 @@ if (($seminar_id) && (!$uebernehmen_x) &&(!$adm_null_x) &&(!$adm_los_x) &&(!$adm
         }
 
         //Ende der Anmeldung checken
-        if ($uebernehmen_x && (!$admin_admission_data["admission_type_org"] || $perm->have_perm("admin")) )
+        if (Request::submitted("uebernehmen") && (!$admin_admission_data["admission_type_org"] || $perm->have_perm("admin")) )
             if (($admin_admission_data["admission_type"]) && ($admin_admission_data["admission_endtime"]) && ($admin_admission_data["admission_type"]!=3)) {
                 if ($admin_admission_data["admission_type"] == 1)
                     $end_date_name=_("Losdatum");
@@ -550,7 +562,7 @@ if (($seminar_id) && (!$uebernehmen_x) &&(!$adm_null_x) &&(!$adm_los_x) &&(!$adm
 
 
     //Daten speichern
-    if (($uebernehmen_x) && (!$errormsg)) {
+    if (Request::submitted("uebernehmen") && (!$errormsg)) {
 
     if (!LockRules::Check($seminar_id, 'admission_disable_waitlist') || $perm->have_perm('admin'))
         {
@@ -761,7 +773,7 @@ if ($lockdata['description'] && LockRules::CheckLockRulePermission($seminar_id, 
     $infomsg .= "info§" . formatLinks($lockdata['description']);
 }
 //Beim Umschalten keine Fehlermeldung
- if (($errormsg) && ((!$uebernehmen_x) &&(!$adm_null_x) &&(!$adm_los_x) &&(!$adm_chrono_x) && (!$adm_gesperrt_x) && (!$add_studg_x) && (!$delete_studg)))
+if ($errormsg && !Request::submittedSome("uebernehmen", "adm_null", "adm_los", "adm_chrono", "adm_gesperrt", "add_studg") && !$delete_studg)
     $errormsg='';
 
 //check, ob Warteliste gefüllt.
@@ -815,7 +827,7 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
         <table width="99%" border="0" cellpadding="2" cellspacing="0" align="center">
         <tr <? $cssSw->switchClass() ?>>
             <td class="<? echo $cssSw->getClass() ?>" align="center" colspan="3">
-                <input type="image" name="uebernehmen" <?=makeButton("uebernehmen", "src")?> value="uebernehmen">
+                <?= Button::createAccept(_("übernehmen"), "uebernehmen") ?>
                 <?if ($admin_admission_data["original"] != get_snapshot()) { ?>
                 <?= MessageBox::info(_("Diese Daten sind noch nicht gespeichert.")) ?>
                 <? } ?>
@@ -843,11 +855,15 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
                     }
                 } else { ?>
           <? if (LockRules::Check($seminar_id, 'admission_type')) : ?>
-                <br><? if  ($admin_admission_data["admission_type"] == 0) print makeButton ("keins2", "img");  else print makeButton ("keins", "img") ?> &nbsp;
-                        <? if  ($admin_admission_data["admission_type"] == 1) print makeButton ("los2", "img");  else print makeButton ("los", "img") ?> &nbsp;
-                        <? if  ($admin_admission_data["admission_type"] == 2) print makeButton ("chronolog2", "img");  else print makeButton ("chronolog", "img") ?> &nbsp;
-                        <? if  ($admin_admission_data["admission_type"] == 3) print makeButton ("gesperrt2", "img");  else print makeButton ("gesperrt", "img") ?>
-            <br>&nbsp;&nbsp;<?= $lock_text ?>
+                <br>
+                <? foreach(array(_("keins"), _("los"), _("chronologisch"), _("gesperrt")) as $type => $value) { ?>
+                    <? if  ($admin_admission_data["admission_type"] == $type) { ?> 
+                        <?= Button::createAccept($value, array("disabled" => "disabled")) ?>
+                    <? } else { ?>
+                        <?= Button::create($value, array("disabled" => "disabled")) ?>
+                    <? } ?>
+                <? } ?>
+               <br>&nbsp;&nbsp;<?= $lock_text ?>
           <? elseif(is_object($group_obj)) :
                         ?>
                         <font size="-1">
@@ -867,11 +883,15 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
                         <?
                     else : ?>
                         <font size=-1><?=_("Sie k&ouml;nnen hier eine Teilnahmebeschr&auml;nkung per Anmeldeverfahren festlegen. Sie k&ouml;nnen per Losverfahren beschr&auml;nken oder Anmeldungen in der Reihenfolge ihres Eintreffens (chronologische Anmeldung) zulassen. Wenn Sie eine Veranstaltung sperren, kann sich niemand zu dieser Veranstaltung anmelden. Bestehende Teilnehmer- und Wartelisteneintr&auml;ge bleiben bei einem Wechsel von <b>keins</b> auf <b>gesperrt</b> unber&uuml;hrt.")?><br></font>
-                        <br><input type="image" name="adm_null" <? if  ($admin_admission_data["admission_type"] == 0) print makeButton ("keins2", "src");  else print makeButton ("keins", "src") ?> border=0 value="keins">&nbsp;
-                        <input type="image" name="adm_los" <? if  ($admin_admission_data["admission_type"] == 1) print makeButton ("los2", "src");  else print makeButton ("los", "src") ?> border=0 value="los">&nbsp;
-                        <input type="image" name="adm_chrono" <? if  ($admin_admission_data["admission_type"] == 2) print makeButton ("chronolog2", "src");  else print makeButton ("chronolog", "src") ?>border=0 value="chronolog">
-                        <input type="image" name="adm_gesperrt" <? if  ($admin_admission_data["admission_type"] == 3) print makeButton ("gesperrt2", "src");  else print makeButton ("gesperrt", "src") ?>border=0 value="gesperrt">
-          <? endif; ?>
+                        <br>
+                        <div class="button-group">
+                          <?= Button::create(_("keins"), "adm_null", array("class" => ($admin_admission_data["admission_type"] == 0 ? "accept" : "" ))) ?>
+                          <?= Button::create(_("Los"), "adm_los", array("class" => ($admin_admission_data["admission_type"] == 1 ? "accept" : "" ))) ?>
+                          <?= Button::create(_("chronologisch"), "adm_chrono", array("class" => ($admin_admission_data["admission_type"] == 2 ? "accept" : "" ))) ?>
+                          <?= Button::create(_("gesperrt"), "adm_gesperrt", array("class" => ($admin_admission_data["admission_type"] == 3 ? "accept" : "" ))) ?>
+                        </div>
+                <? endif; ?>
+
                 <input type="hidden" name="adm_type_old" value="<? echo $admin_admission_data["admission_type"] ?>"><br>
 
                 <? } ?>
@@ -934,7 +954,8 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
               <?=Termin_Eingabe_javascript(21,0,($admin_admission_data["sem_admission_end_date"] != -1 ? $admin_admission_data["sem_admission_end_date"] : 0));?>
                     </td>
                     <td class="<? echo $cssSw->getClass() ?>" >
-                        <?=makeButton('loeschen', 'input' , _("Start- und Enddatum zurücksetzen"), 'reset_admission_time')?>
+                      <?= Button::create(_("löschen"), "reset_admission_time",
+                                         array("title" => _("Start- und Enddatum zurücksetzen"))) ?>
             <? else: ?>
               <font size=-1>&nbsp;
                   <input disabled readonly type="text" name="adm_e_tag" size=2 maxlength=2 value="<? if ($admin_admission_data["sem_admission_end_date"]<>-1) echo date("d",$admin_admission_data["sem_admission_end_date"]); else echo _("tt") ?>">.
@@ -1172,7 +1193,7 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
                                 <font size=-1><?=_("Prozentuale Kontingentierung aktivieren.")?></font>
                             </td>
                             <td>
-                            <?=makeButton('ok','input',_("Kontingentierung aktivieren/deaktivieren"), 'toggle_admission_quota')?>
+                              <?= Button::createAccept(_("OK"), "toggle_admission_quota", array("title" => "Kontingentierung aktivieren/deaktivieren")) ?>
                             </td>
                         <?} else {?>
                             <td class="<? echo $cssSw->getClass() ?>" colspan="3">
@@ -1222,7 +1243,7 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
                                     } else {
                                         printf ("<input type=\"HIDDEN\" name=\"studg_ratio_old[]\" value=\"%s\">", $val["ratio"]);
                                         printf ("<input type=\"TEXT\" name=\"studg_ratio[]\" size=5 maxlength=5 value=\"%s\"><font size=-1> %% (%s Teilnehmer)</font>", $val["ratio"], $num_stg[$key]);
-                                        echo '<input type="image" name="delete_studg['. $key .']" src="'. Assets::image_path('icons/16/blue/trash.png') .'" '. tooltip(_("Den Studiengang aus der Liste löschen")) .'>';
+                                        echo Button::createCancel(_("löschen"), "delete_studg[$key]", array("title" => _("Den Studiengang aus der Liste löschen")));
                                     }
                                 } elseif (!LockRules::Check($seminar_id, 'admission_studiengang') && (!($admin_admission_data["admission_type_org"] && !$perm->have_perm("admin")))) {
                                     if ($val['count'] == 0) {
@@ -1268,7 +1289,7 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
                                 }?>
                                 </td>
                                 <td class="<? echo $cssSw->getClass() ?>">
-                                    <?=makeButton("hinzufuegen", "input", _("Ausgewählten Studiengang hinzufügen"), 'add_studg')?>
+                                  <?= Button::create("hinzufügen", array("title" => _("Ausgewählten Studiengang hinzufügen"))) ?>
                                 </td>
 
                             </tr>
@@ -1430,7 +1451,7 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
                             </td>
 
                             <td class="<? echo $cssSw->getClass() ?>">
-                                <?=makeButton("hinzufuegen", "input", _("Ausgewählte Nutzerdomäne hinzufügen"), 'add_domain')?>
+                              <?= Button::create(_("hinzufügen")) ?>
                             </td>
 
                         </tr>
@@ -1444,7 +1465,7 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
         <!-- Hier gehts normal weiter -->
         <tr>
             <td class="steel2" align="center" colspan="3">
-                <input type="image" name="uebernehmen" <?=makeButton("uebernehmen", "src")?> value="uebernehmen">
+                <?= Button::createAccept(_("übernehmen"), "uebernehmen") ?>
             </td>
         </tr>
     </table>

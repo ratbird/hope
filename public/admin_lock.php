@@ -100,7 +100,7 @@ if (isset($SessSemName[1]) && isset($selected)) {
         }
         $form   .=  "</select>";
         $form   .=  "<input type=\"hidden\" name=\"lock_all\" value=\"-1\">";
-        $form   .=  makeButton("zuweisen", "input");
+        $form   .=  Button::create(_('zuweisen'));
         $form   .=  "</form>";
     }
     echo $zt->row(array(htmlReady($seminar_row["Veranstaltungsnummer"]),

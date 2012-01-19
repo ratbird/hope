@@ -26,6 +26,7 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
+use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
 
@@ -140,9 +141,9 @@ if ($the_tree->mode == "MoveItem" || $the_tree->mode == "CopyItem"){
     $_msg .= "info§" . sprintf($text ,
                                 '<img src="'. Assets::image_path('icons/16/yellow/arr_2right.png') .'" '. tooltip(_('Einfügesymbol')) . '>',
                                 htmlReady($the_tree->tree->tree_data[$the_tree->move_item_id]['name']),
-                                "<div align=\"right\"><a href=\"" . $the_tree->getSelf("cmd=Cancel&item_id=$the_tree->move_item_id") . "\">"
-                                . "<img " .makeButton("abbrechen","src") . tooltip(_("Verschieben / Kopieren abbrechen"))
-                                . " border=\"0\" align=\"top\"></a></div>");
+                                "<div align=\"right\">"
+                                .LinkButton::createCancel(_('abbrechen'), $the_tree->getSelf("cmd=Cancel&item_id=$the_tree->move_item_id"), array('title' => _("Verschieben / Kopieren abbrechen")))
+                                ."</div>");
 }
 
 
@@ -252,7 +253,7 @@ $the_tree->showSemTree();
     <option value="del"><?=_("Aus Merkliste l&ouml;schen")?></option>
     </select>
     <div align="right">
-    <input border="0" type="image" <?=makeButton("ok","src") . tooltip(_("Gewählte Aktion starten"))?> >
+    <?= Button::create(_('OK'), array('title' => _("Gewählte Aktion starten"))); ?>
     </div>
     </form>
 </td></tr>

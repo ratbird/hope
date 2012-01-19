@@ -4,6 +4,8 @@
 # Lifter003: TODO
 # Lifter010: TODO
 
+use Studip\Button, Studip\LinkButton;
+
 require '../lib/bootstrap.php';
 
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
@@ -268,7 +270,7 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
                     ?>
                 </select>
                 </font>&nbsp;
-                <input type="image" <?=makeButton("auswaehlen", "src")?> border=0 align="absmiddle" value="bearbeiten">
+                <?= Button::create(_('auswählen')) ?>
                 </td>
             </tr>
             <tr>
@@ -290,9 +292,9 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
                     }
                     ?>
                 </select>
-                    <input style="vertical-align:middle" type="image" <?=makeButton('verfuegbarkeit','src') . ' ' . tooltip(_("Alle markierten Einträge im ausgewählten Katalog suchen"))?> border="0">
+                    <?= Button::create(_('Verfügbarkeit'), array('title' => _("Alle markierten Einträge im ausgewählten Katalog suchen"), 'style' => "vertical-align:middle")) ?>
                     &nbsp;&nbsp;&nbsp;
-                    <a href="<?=$PHP_SELF?>?cmd=markall"><img style="vertical-align:middle" <?=makeButton('alleauswaehlen','src') . ' ' . tooltip(_("Alle Einträge markieren"))?> border="0"></a>
+                    <?= LinkButton::create(_('auswählen'), $PHP_SELF.'?cmd=markal', array('title' => _("Alle Einträge markieren")) ?>
                     <br>&nbsp;
                 </td>
             </tr>
@@ -402,12 +404,10 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
                     $content = "";
                     $estimated_p = 0;
                     $participants = 0;
-                    $edit .= "<a href=\"$PHP_SELF?_catalog_id=" . $element->getValue("catalog_id") . "#anker\">"
-                    . "<img " .makeButton("verfuegbarkeit","src") . tooltip(_("Verfügbarkeit überprüfen"))
-                    . " border=\"0\"></a>&nbsp;";
-                    $edit .= "<a href=\"admin_lit_element.php?_catalog_id=" . $element->getValue("catalog_id") . "\">"
-                    . "<img " .makeButton("details","src") . tooltip(_("Detailansicht dieses Eintrages ansehen."))
-                    . " border=\"0\"></a>&nbsp;";
+                    $edit .= LinkButton::create(_('Verfügbarkeit'), $PHP_SELF.'?_catalog_id=' . $element->getValue('catalog_id') . '#anker', array('title' => _("Verfügbarkeit überprüfen")));
+                    $edit .= "&nbsp;";
+                    $edit .= LinkButton::create(_('Details'), 'admin_lit_element.php?_catalog_id=' . $element->getValue('catalog_id'), array('title' => _("Detailansicht dieses Eintrages ansehen.")));
+                    $edit .= "&nbsp;";
                     echo "\n<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\">";
                     $content .= "<b>" . _("Titel:") ."</b>&nbsp;&nbsp;" . htmlReady($element->getValue("dc_title"),true,true) . "<br>";
                     $content .= "<b>" . _("Autor; weitere Beteiligte:") ."</b>&nbsp;&nbsp;" . htmlReady($element->getValue("authors"),true,true) . "<br>";

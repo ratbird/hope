@@ -52,11 +52,11 @@ if ($ELEARNING_INTERFACE_ENABLE)
     {
         $connected_cms[$cms_select] = new ConnectedCMS();
         $connection_status = $connected_cms[$cms_select]->getConnectionStatus($cms_select);
-        if (isset($activate_x))
+        if (Request::submitted('activate'))
         {
             ELearningUtils::setConfigValue("ACTIVE", "1", $cms_select);
         }
-        if (isset($deactivate_x))
+        if (Request::submitted('deactivate'))
         {
             ELearningUtils::setConfigValue("ACTIVE", "0", $cms_select);
         }
@@ -148,7 +148,7 @@ if ($ELEARNING_INTERFACE_ENABLE)
             echo "<br><br>\n<center>";
             echo _("Hier k&ouml;nnen Sie die Schnittstelle deaktivieren.");
             echo "<br><br>\n";
-            echo "<input type=\"IMAGE\" " . makeButton("deaktivieren", "src") . " border=0 value=\"" . _("Deaktivieren") . "\" name=\"deactivate\"></center>";
+            echo Button::create(_('deaktivieren'), 'deactivate')."</center>";
         }
         else
         {
@@ -161,7 +161,7 @@ if ($ELEARNING_INTERFACE_ENABLE)
                 $status_info = "not active";
                 echo _("Hier k&ouml;nnen Sie die Schnittstelle aktivieren.");
                 echo "<br><br>\n";
-                echo "<input type=\"IMAGE\" " . makeButton("aktivieren", "src") . " border=0 value=\"" . _("Aktivieren") . "\" name=\"activate\"></center>";
+                echo Button::create(_('aktivieren'), 'activate')."</center>";
             }
         }
         echo "<input type=\"HIDDEN\" name=\"cms_select\" value=\"" . $cms_select . "\">\n";

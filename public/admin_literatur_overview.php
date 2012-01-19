@@ -294,7 +294,7 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
                 </select>
                     <?= Button::create(_('Verfügbarkeit'), array('title' => _("Alle markierten Einträge im ausgewählten Katalog suchen"), 'style' => "vertical-align:middle")) ?>
                     &nbsp;&nbsp;&nbsp;
-                    <?= LinkButton::create(_('auswählen'), $PHP_SELF.'?cmd=markal', array('title' => _("Alle Einträge markieren")) ?>
+                    <?= LinkButton::create(_('auswählen'), $PHP_SELF.'?cmd=markal', array('title' => _("Alle Einträge markieren"))) ?>
                     <br>&nbsp;
                 </td>
             </tr>

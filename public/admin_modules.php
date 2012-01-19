@@ -36,6 +36,8 @@
 // +---------------------------------------------------------------------------+
 
 
+use Studip\Button, Studip\LinkButton; 
+
 require '../lib/bootstrap.php';
 
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
@@ -109,9 +111,9 @@ if ($perm->have_studip_perm("tutor", $admin_modules_data["range_id"])) {
         }
     }
 
-    if (($uebernehmen_x) || ($retry)) {
+    if ((Request::submitted('uebernehmen')) || ($retry)) {
         $msg='';
-        if ($uebernehmen_x){
+        if (Request::submitted('uebernehmen')){
             foreach ($amodules->registered_modules as $key => $val) {
                 //after sending, set all "conflicts" to TRUE (we check them later)
                 $admin_modules_data["conflicts"][$key] = TRUE;
@@ -154,8 +156,11 @@ if ($perm->have_studip_perm("tutor", $admin_modules_data["range_id"])) {
                     ($admin_modules_data["conflicts"][$key])) {
 
                     $msg.="info§".$amodules->registered_modules[$key]["msg_warning"];
-                    $msg.="<br><a href=\"". URLHelper::getLink("?delete_$key=TRUE&retry=TRUE") ."\">" . makeButton("ja2", "img") . "</a>&nbsp; \n";
-                    $msg.="<a href=\"". URLHelper::getLink("?cancel_$key=TRUE&retry=TRUE") ."\">" . makeButton("nein", "img") . "</a>\n§";
+                    $msg.="<br>";
+                    $msg.=LinkButton::createAccept(_('ja'), URLHelper::getLink("?delete_$key=TRUE&retry=TRUE"));
+                    $msg.="&nbsp; \n";
+                    $msg.=LinkButton::createAccept(_('NEIN!'), URLHelper::getLink("?cancel_$key=TRUE&retry=TRUE"));
+                    $msg.="\n§";
                 } else
                     unset($admin_modules_data["conflicts"][$key]);
             } else
@@ -217,7 +222,7 @@ if ($perm->have_studip_perm("tutor", $admin_modules_data["range_id"])) {
 }
 
 //wenn wir frisch reinkommen, werden benoetigte Daten eingelesen
-if (($range_id) && (!$default_x) && (!$uebernehmen_x) && (!$resolve_conflicts)) {
+if (($range_id) && (!$default_x) && (!Request::submitted('uebernehmen')) && (!$resolve_conflicts)) {
     $admin_modules_data["modules_list"] = $amodules->getLocalModules($range_id);
     $admin_modules_data["orig_bin"] = $amodules->getBin($range_id);
     $admin_modules_data["changed_bin"] = $amodules->getBin($range_id);
@@ -269,7 +274,7 @@ if ($admin_modules_data["range_id"])
         <table width="100%" border="0" cellpadding="2" cellspacing="0">
         <tr><? $cssSw->switchClass() ?>
             <td class="<?= $cssSw->getClass() ?>" align="center" colspan="3">
-                <input type="image" name="uebernehmen" <?=makeButton("uebernehmen", "src")?> border=0 value="uebernehmen">
+                <?= Button::create(_('übernehmen'), 'uebernehmen') ?>
                 <?
                 /*
                 &nbsp;<input type="image" name="default" <?=makeButton("zuruecksetzen", "src")?> border=0 value="uebernehmen">

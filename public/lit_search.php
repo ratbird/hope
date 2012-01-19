@@ -25,6 +25,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
+use Studip\Button, Studip\LinkButton;
+
 require '../lib/bootstrap.php';
 
 require_once ('lib/visual.inc.php');
@@ -237,12 +239,11 @@ for ($i = $_the_search->start_result; $i <= $end_result; ++$i){
               htmlReady(my_substr($element->getShortName(),0,85)),$addon);
         echo "\n</tr></table>";
         $content = "";
-        $link=URLHelper::getLink('admin_lit_element.php',array('_catalog_id'=>$element->getValue("catalog_id")));
-        $edit = "<a href=\"$link\"><img " . makeButton("details","src") . tooltip(_("Detailansicht dieses Eintrages ansehen.")) . " border=\"0\"></a>&nbsp;";
-        $link=URLHelper::getLink('',array("cmd"=>"add_to_clipboard","catalog_id"=>$element->getValue("catalog_id")));
+        $link=URLHelper::getURL('admin_lit_element.php',array('_catalog_id'=>$element->getValue("catalog_id")));
+        $edit = LinkButton::create(_("Details"), $link);
+        $link=URLHelper::getURL('',array("cmd"=>"add_to_clipboard","catalog_id"=>$element->getValue("catalog_id")));
         if (!$_the_clipboard->isInClipboard($element->getValue("catalog_id"))){
-            $edit .= "&nbsp;<a href=\"$link\"><img " . makeButton("merkliste","src") . " border=\"0\" " .
-                tooltip(_("Eintrag in Merkliste aufnehmen")) . "></a>";
+            $edit .= LinkButton::create(_("in Merkliste >"), $link);
         }
         echo "\n<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\">";
         $content .= "<b>" . _("Titel:") ."</b>&nbsp;&nbsp;" . htmlReady($element->getValue("dc_title"),true,true) . "<br>";

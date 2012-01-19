@@ -24,6 +24,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+use Studip\Button, Studip\LinkButton;
 
 
 
@@ -67,7 +68,7 @@ if ($RESOURCES_ENABLE) {
 }
 
 //cancel
-if ($cancel_x) {
+if (Request::submitted('cancel')) {
     header ("Location: " . UrlHelper::getUrl('dispatch.php/course/basicdata/view/' . $SessSemName[1]));
 }
 
@@ -699,7 +700,7 @@ if ($form == 4) {
 
 if ($form == 5) {
 
-    if(isset($_REQUEST['toggle_admission_quota_x'])){
+    if(Request::submitted('toggle_admission_quota')){
         $sem_create_data["admission_enable_quota"] = (int)($_REQUEST["admission_enable_quota"]);
         if(!$sem_create_data["admission_enable_quota"]){
             $sem_create_data["sem_admission_date"] = -1;
@@ -797,7 +798,7 @@ if ($form == 8)
 }
 
 //jump-logic
-if ($jump_back_x) {
+if (Request::submitted('jump_back')) {
     if ($form > 1) {
         // if we have chosen to not enter dates, skip room-requests
         if ($form == 5) {
@@ -816,23 +817,23 @@ if ($jump_back_x) {
 }
 
 //not pressed any button? Send user to next page and checks...
-if (!$jump_back_x
-    && !$jump_next_x
+if (!Request::submitted('jump_back')
+    && !Request::submitted('jump_next')
     && !$add_doz
     && !$add_dep
     && !$add_tut
     && !$delete_doz
     && !$delete_dep
     && !$delete_tut
-    && !$add_turnus_field_x
+    && !Request::submitted('add_turnus_field')
     && !$delete_turnus_field_x
     && !$send_doz_x
     && !$send_tut_x
     && !$send_dep_x
     && !$reset_search_x
-    && !$add_term_field_x
+    && !Request::submitted('add_term_field')
     && !$delete_term_field_x
-    && !$add_studg_x
+    && !Request::submitted('add_studg')
     && !$delete_studg_x
     && !$search_doz_x
     && !$search_dep_x
@@ -846,13 +847,13 @@ if (!$jump_back_x
     && !$reset_resource_id_x
     && !Request::submitted('room_request_choose')
     && !Request::submitted('room_request_save')
-    && !$reset_admission_time_x
-    && !$toggle_admission_quota_x) {
-    $jump_next_x=TRUE;
+    && !Request::submitted('reset_admission_time')
+    && !Request::submitted('toggle_admission_quota')) {
+    Request::set('jump_next', true);
 }
 
 //Check auf korrekte Eingabe und Sprung in naechste Level, hier auf Schritt 2
-if (($form == 1) && ($jump_next_x))
+if (($form == 1) && (Request::submitted('jump_next')))
     {
     if (($sem_create_data["sem_duration_time"]<0) && ($sem_create_data["sem_duration_time"] != -1))
         {
@@ -1041,7 +1042,7 @@ if (isset($_REQUEST['delete_domain'])) {
 
 if ($search_doz_x || $search_dep_x ||$search_tut_x || $reset_search_x ||
     $sem_bereich_do_search_x ||
-        isset($_REQUEST['add_domain_x']) || isset($_REQUEST['delete_domain']) ||
+        Request::submitted('add_domain') || isset($_REQUEST['delete_domain']) ||
     $study_areas['add'] || $study_areas['remove'] ||
     $study_areas['showall_button'] || $study_areas['search_button'] ||
     $study_areas['search_key'] || $study_areas['selected'] ||
@@ -1051,7 +1052,7 @@ if ($search_doz_x || $search_dep_x ||$search_tut_x || $reset_search_x ||
 
 }
 
-elseif (($form == 2) && ($jump_next_x)) //wenn alles stimmt, Checks und Sprung auf Schritt 3
+elseif (($form == 2) && (Request::submitted('jump_next'))) //wenn alles stimmt, Checks und Sprung auf Schritt 3
     {
     if (is_array($sem_create_data['sem_tut']))
         foreach ($sem_create_data['sem_tut'] as $key=>$val){
@@ -1106,12 +1107,12 @@ elseif (($form == 2) && ($jump_next_x)) //wenn alles stimmt, Checks und Sprung a
     }
 
 //Felder fuer Standardtermine oder Blocktermine, Studiengaenge hinzufuegen/loeschen
-if ($add_turnus_field_x)
+if (Request::submitted('add_turnus_field'))
     {
     $sem_create_data["turnus_count"]++;
     $level=3;
     }
-if ($add_term_field_x)
+if (Request::submitted('add_term_field'))
     {
     $sem_create_data["term_count"]++;
     $level=3;
@@ -1173,7 +1174,7 @@ if ($delete_term_field)
 
 
 //Termin-Metaddaten-Check, wenn alles stimmt, Sprung auf Schritt 4
-if (($form == 3) && ($jump_next_x))
+if (($form == 3) && (Request::submitted('jump_next')))
     {
     if ($sem_create_data["term_art"]==0)
         {
@@ -1289,7 +1290,7 @@ if (Request::submitted('room_request_form') && !(Request::submitted('jump_back')
     $level=4;
 }
 
-if (($form == 4) && ($jump_next_x)) {
+if (($form == 4) && (Request::submitted('jump_next'))) {
     //checks for room-request
     $requests_ok = false;
     if (is_array($sem_create_data['room_requests'])) {
@@ -1397,7 +1398,7 @@ if ($level == 4 && $RESOURCES_ENABLE && $RESOURCES_ALLOW_ROOM_REQUESTS) {
 }
 
 //Neuen Studiengang zur Begrenzung aufnehmen
-if ($add_studg_x) {
+if (Request::submitted('add_studg')) {
     if ($sem_add_studg && $sem_add_studg != 'all') {
         $db->query("SELECT name FROM studiengaenge WHERE studiengang_id='".$sem_add_studg."' ");
         $db->next_record();
@@ -1408,13 +1409,13 @@ if ($add_studg_x) {
     $level=5;
 }
 
-if(isset($_REQUEST['reset_admission_time_x'])) {
+if(Request::submitted('reset_admission_time')) {
     $sem_create_data["sem_admission_end_date"] = -1;
     $sem_create_data["sem_admission_start_date"] = -1;
     $level = 5;
 }
 
-if(isset($_REQUEST['toggle_admission_quota_x'])) {
+if(Request::submitted('toggle_admission_quota')) {
     $level = 5;
 }
 //Studiengang zur Begrenzung loeschen
@@ -1427,9 +1428,9 @@ if ($sem_delete_studg) {
 }
 
 //Prozentangabe checken/berechnen wenn neuer Studiengang, einer geloescht oder Seite abgeschickt
-if ((($form == 5) && ($jump_next_x)) || ($add_studg_x) || ($sem_delete_studg) || $toggle_admission_quota_x) {
+if ((($form == 5) && (Request::submitted('jump_next'))) || (Request::submitted('add_studg')) || ($sem_delete_studg) || Request::submitted('toggle_admission_quota')) {
     if ($sem_create_data["sem_admission"] && $sem_create_data["sem_admission"] != 3 && $sem_create_data["admission_enable_quota"]) {
-        if (!$sem_create_data["sem_admission_ratios_changed"] && (($add_studg_x && !$sem_add_ratio && $sem_add_studg) || $sem_delete_studg || $toggle_admission_quota_x)) {//User hat nichts veraendert und neuen Studiengang ohne Wert geschickt oder studiengang gelöscht, wir versuchen automatisch zu rechnen
+        if (!$sem_create_data["sem_admission_ratios_changed"] && ((Request::submitted('add_studg') && !$sem_add_ratio && $sem_add_studg) || $sem_delete_studg || Request::submitted('toggle_admission_quota'))) {//User hat nichts veraendert und neuen Studiengang ohne Wert geschickt oder studiengang gelöscht, wir versuchen automatisch zu rechnen
             if (is_array($sem_create_data["sem_studg"])){
                 $ratio = round(100 / (sizeof ($sem_create_data["sem_studg"]) ));
                 foreach ($sem_create_data["sem_studg"] as $key=>$val){
@@ -1447,7 +1448,7 @@ if ((($form == 5) && ($jump_next_x)) || ($add_studg_x) || ($sem_delete_studg) ||
                 foreach ($sem_create_data["sem_studg"] as $key => $val){
                     $cnt += $val["ratio"];
                 }
-                if ($cnt <= 100 && $sem_create_data["sem_admission_ratios_changed"] && $add_studg_x && $sem_add_studg && !$sem_add_ratio){
+                if ($cnt <= 100 && $sem_create_data["sem_admission_ratios_changed"] && Request::submitted('add_studg') && $sem_add_studg && !$sem_add_ratio){
                     $sem_create_data["sem_studg"][$key]["ratio"] = (100 - $cnt + $val["ratio"]);
                     $cnt = 100;
                 }
@@ -1468,7 +1469,7 @@ if ((($form == 5) && ($jump_next_x)) || ($add_studg_x) || ($sem_delete_studg) ||
 }
 
 //wenn alles stimmt, Sprung auf Schritt 5 (Anlegen)
-if (($form == 5) && ($jump_next_x))
+if (($form == 5) && (Request::submitted('jump_next')))
     {
     if (($sem_create_data["sem_sec_lese"] ==2) ||  ($sem_create_data["sem_sec_schreib"] ==2))
         {
@@ -1573,7 +1574,7 @@ if (($form == 5) && ($jump_next_x))
     }
 
 //OK, nun wird es ernst, wir legen das Seminar an.
-if (($form == 6) && ($jump_next_x))
+if (($form == 6) && (Request::submitted('jump_next')))
     {
     $run = TRUE;
 
@@ -2020,7 +2021,7 @@ if (($form == 6) && ($jump_next_x))
 }
 
 //Nur der Form halber... es geht weiter zur SCM-Seite
-if (($form == 7) && ($jump_next_x)) {
+if (($form == 7) && (Request::submitted('jump_next'))) {
     if (!$sem_create_data["modules_list"]["scm"] && !$sem_create_data["modules_list"]["schedule"]) {
         header ('Location: ' . UrlHelper::getUrl('dispatch.php/course/basicdata/view/'.$sem_create_data["sem_id"]));
         die;
@@ -2032,7 +2033,7 @@ if (($form == 7) && ($jump_next_x)) {
 }
 
 //Eintragen der Simple-Content Daten
-if (($form == 8) && ($jump_next_x)) {
+if (($form == 8) && (Request::submitted('jump_next'))) {
     if ($sem_create_data["sem_scm_content"]) { //BIEST00072
         //if content is created, we enable the module again (it was turned off above)
         $Modules->writeStatus("scm", $sem_create_data["sem_id"], TRUE);
@@ -2224,7 +2225,7 @@ elseif ((!$level) || ($level == 1))
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
-                            &nbsp; <input type="image" <?=makeButton("weiter", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
+                            &nbsp; <?= Button::create(_('weiter >>'), 'jump_next') ?>
                         </td>
                     </tr>
                     <tr <? $cssSw->switchClass() ?>>
@@ -2540,7 +2541,7 @@ elseif ((!$level) || ($level == 1))
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
-                            &nbsp; <input type="image" <?=makeButton("weiter", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
+                            &nbsp; <?= Button::create(_('weiter >>'), 'jump_next') ?>
                         </td>
                     </tr>
                 </table>
@@ -2591,7 +2592,7 @@ if ($level == 2)
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
-                            &nbsp; <input type="image" <?=makeButton("zurueck", "src"); ?> border=0 value="<?=_("<< zur&uuml;ck");?>" name="jump_back">&nbsp;<input type="image" <?=makeButton("weiter", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
+                            &nbsp; <?= Button::create(_('<< zurück'), 'jump_back') .'&nbsp;'. Button::create(_('weiter >>'), 'jump_next') ?>
                         </td>
                     </tr>
                     <tr <? $cssSw->switchClass() ?>>
@@ -2938,7 +2939,7 @@ if ($level == 2)
                                     </td>
                                 </tr>
                                     <?
-                                    if (isset($_REQUEST['add_domain_x']) && $_REQUEST['sem_domain'] !== '' &&
+                                    if (Request::submitted('add_domain') && $_REQUEST['sem_domain'] !== '' &&
                                         !in_array($_REQUEST['sem_domain'], $sem_create_data["sem_domain"])) {
                                         $sem_create_data["sem_domain"][]= $_REQUEST['sem_domain'];
                                     }
@@ -2980,7 +2981,7 @@ if ($level == 2)
                                         </td>
 
                                         <td class="<? echo $cssSw->getClass() ?>">
-                                            <?=makeButton("hinzufuegen", "input", _("Ausgewählte Nutzerdomäne hinzufügen"), 'add_domain')?>
+                                            <?= Button::create(_('hinzufügen'), 'add_domain', array('title' => _("Ausgewählte Nutzerdomäne hinzufügen"))) ?>
                                             <img  src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/grey/info-circle.png"
                                                 <? // TODO: Find appropriate Infotext
                                                 echo tooltip(_("Bitte markieren Sie hier alle Nutzerdomänen, für die die Veranstaltung angeboten wird."), TRUE, TRUE) ?>
@@ -3000,7 +3001,7 @@ if ($level == 2)
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
-                            &nbsp; <input type="image" <?=makeButton("zurueck", "src"); ?> border=0 value="<?=_("<< zur&uuml;ck");?>" name="jump_back">&nbsp;<input type="image"  <?=makeButton("weiter", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
+                            &nbsp; <?= Button::create(_('<< zurück'), 'jump_back') ?>&nbsp;<?= Button::create(_('weiter >>'), 'jump_next') ?>
                         </td>
                     </tr>
                 </table>
@@ -3058,7 +3059,7 @@ if ($level == 3) {
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
-                            &nbsp; <input type="image" <?=makeButton("zurueck", "src"); ?> border=0 value="<?=_("<< zur&uuml;ck");?>" name="jump_back">&nbsp;<input type="image" <?=makeButton("weiter", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
+                            &nbsp; <?= Button::create(_('<< zurück'), 'jump_back') ?>&nbsp;<?= Button::create(_('weiter >>'), 'jump_next') ?>
                         </td>
                     </tr>
                     <?
@@ -3168,7 +3169,7 @@ if ($level == 3) {
 
                                     }
                                     ?>
-                                    <br>&nbsp; <input type="image" name="add_turnus_field" <?=makeButton("feldhinzufuegen", "src"); ?> border=0 value="Feld hinzuf&uuml;gen">&nbsp;
+                                    <br>&nbsp; <?= Button::create(_('Feld hinzufügen'), 'add_turnus_field') ?>
                                     <img  src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/grey/info-circle.png"
                                         <? echo tooltip(_("Wenn es sich um eine regelmäßige Veranstaltung handelt, so können Sie hier genau angeben, an welchen Tagen, zu welchen Zeiten und in welchem Raum die Veranstaltung stattfindet. Wenn Sie noch keine Zeiten wissen, dann klicken Sie auf »keine Zeiten speichern«."), TRUE, TRUE) ?>
                                     >
@@ -3230,7 +3231,7 @@ if ($level == 3) {
                                         echo  Termin_Eingabe_javascript (5, $i, 0, $ss, $sm, $es, $em);
                                         }
                                         ?>
-                                        <br>&nbsp; <input type="image" name="add_term_field" <?=makeButton("feldhinzufuegen", "src"); ?> border=0 value="Feld hinzuf&uuml;gen">&nbsp;
+                                        <br>&nbsp; <?= Button::create(_('Feld hinzufügen'), 'add_term_field') ?>
                                         <img  src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/grey/info-circle.png"
                                             <? echo tooltip(_("In diesem Feldern können Sie alle Veranstaltungstermine eingeben. Wenn die Termine noch nicht feststehen, lassen Sie die Felder einfach frei."), TRUE, TRUE) ?>
                                         >
@@ -3274,7 +3275,7 @@ if ($level == 3) {
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
-                            &nbsp; <input type="image" <?=makeButton("zurueck", "src"); ?> border=0 value="<?=_("<< zur&uuml;ck");?>" name="jump_back">&nbsp;<input type="image" <?=makeButton("weiter", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
+                            &nbsp; <?= Button::create(_('<< zurück'), 'jump_back') ?>&nbsp;<?= Button::create(_('weiter >>'), 'jump_next') ?>
                         </td>
                     </tr>
                 </table>
@@ -3330,7 +3331,7 @@ if ($level == 4) {
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="96%" align="center" colspan=3>
-                            &nbsp; <input type="image" <?=makeButton("zurueck", "src"); ?> border=0 value="<?=_("<< zur&uuml;ck");?>" name="jump_back">&nbsp;<input type="image" <?=makeButton("weiter", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
+                            &nbsp; <?= Button::create(_('<< zurück'), 'jump_back') ?>&nbsp;<?= Button::create(_('weiter >>'), 'jump_next') ?>
                         </td>
                     </tr>
                     <?
@@ -3360,8 +3361,9 @@ if ($level == 4) {
                             </option>
                             <? endforeach ?>
                             </select>
-                            <?= makeButton('auswaehlen', 'input', _("einen anderen Anfragetyp bearbeiten"), 'room_request_choose')?>
                             <?
+                            echo Button::create(_('auswählen'), 'room_request_choose', array('title' => _("einen anderen Anfragetyp bearbeiten")));
+                            
                             $current_request_type = Request::option('new_room_request_type', 'course');
                             $form_attributes = array('admission_turnout' => $sem_create_data['sem_turnout'],
                                                      'request' => $sem_create_data['room_requests'][$current_request_type],
@@ -3374,7 +3376,7 @@ if ($level == 4) {
                                 $trails_views = $GLOBALS['STUDIP_BASE_PATH'] . '/app/views';
                                 $factory = new Flexi_TemplateFactory($trails_views);
                                 echo $factory->render('course/room_requests/_form.php', $form_attributes);
-                                echo '<div style="text-align:center">' . makeButton('uebernehmen', 'input', _("Eingaben zur Raumanfrage speichern"),'room_request_save'). '</div>';
+                                echo '<div style="text-align:center">' . Button::create(_('übernehmen'), 'room_request_save', array('title' => _("Eingaben zur Raumanfrage speichern"))) .  '</div>';
                             }
                             printf('<input type="hidden" name="current_room_request_type" value="%s">', $current_request_type);
                             ?>
@@ -3551,7 +3553,7 @@ if ($level == 4) {
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="96%" align="center" colspan=3>
-                            &nbsp; <input type="image" <?=makeButton("zurueck", "src"); ?> border=0 value="<?=_("<< zur&uuml;ck");?>" name="jump_back">&nbsp;<input type="image" <?=makeButton("weiter", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
+                            &nbsp; <?= Button::create(_('<< zurück'), 'jump_back') ?>&nbsp;<?= Button::create(_('weiter >>'), 'jump_next') ?>
                         </td>
                     </tr>
                 </table>
@@ -3599,7 +3601,7 @@ if ($level == 5)
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
-                            &nbsp; <input type="image" <?=makeButton("zurueck", "src"); ?> border=0 value="<?=_("<< zur&uuml;ck");?>" name="jump_back">&nbsp;<input type="image" <?=makeButton("weiter", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
+                            &nbsp; <?= Button::create(_('<< zurück'), 'jump_back') ?>&nbsp;<?= Button::create(_('weiter >>'), 'jump_next') ?>
                         </td>
                     </tr>
                     <? if ($sem_create_data["sem_admission"] != 3) { ?>
@@ -3648,7 +3650,7 @@ if ($level == 5)
                                         >
                                     </td>
                                     <td class="<? echo $cssSw->getClass() ?>" >
-                                    <?=makeButton('loeschen', 'input' , _("Start- und Enddatum zurücksetzen"), 'reset_admission_time')?>
+                                    <?=  Button::create(_('löschen'), 'reset_admission_time', array('title' => _("Start- und Enddatum zurücksetzen")))?>
                                     </td>
                                 </tr>
                             </table>
@@ -3714,7 +3716,7 @@ if ($level == 5)
                                     <input style="vertical-align:middle;" type="checkbox" name="admission_enable_quota" <?=($sem_create_data["admission_enable_quota"] ? 'checked' : '')?> value="1">
                                     <font size=-1><?=_("Prozentuale Kontingentierung aktivieren.")."</font>"?>
                                     &nbsp;&nbsp;
-                                    <?=makeButton('ok','input',_("Kontingentierung aktivieren/deaktivieren"), 'toggle_admission_quota')?>
+                                    <?= Button::createAccept(_('OK!'), 'toggle_admission_quota', array('title' => _("Kontingentierung aktivieren/deaktivieren"))) ?>
                                     </td>
                                     </tr>
                                     <tr>
@@ -3814,7 +3816,7 @@ if ($level == 5)
                                         <?} else echo '&nbsp;';?>
                                         </td>
                                         <td class="<? echo $cssSw->getClass() ?>" width="25%">
-                                            <input type="image" <?=makeButton("hinzufuegen", "src"); ?> name="add_studg" border=0>&nbsp;
+                                            <?= Button::create(_('hinzufügen'), 'add_studg') ?>&nbsp;
                                             <img  src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/grey/info-circle.png"
                                                 <? echo tooltip(_("Bitte geben Sie hier ein, für welche Studiengänge die Veranstaltung mit welchen Kontingenten beschränkt sein soll und bis wann eine Anmeldung über das Stud.IP Anmeldeverfahren möglich ist."), TRUE, TRUE) ?>
                                             >
@@ -3970,7 +3972,7 @@ if ($level == 5)
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
-                            &nbsp; <input type="image" <?=makeButton("zurueck", "src"); ?> border=0 value="<?=_("<< zur&uuml;ck");?>" name="jump_back">&nbsp;<input type="image" <?=makeButton("weiter", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
+                            &nbsp; <?= Button::create(_('<< zurück'), 'jump_back') ?>&nbsp;<?= Button::create(_('weiter >>'), 'jump_next') ?>
                         </td>
                     </tr>
                 </table>
@@ -4001,7 +4003,7 @@ if ($level == 6)
                 <form method="POST" action="<? echo URLHelper::getLink() ?>">
                     <?= CSRFProtection::tokenTag() ?>
                     <input type="hidden" name="form" value=6>
-                    <input type="image" <?=makeButton("zurueck", "src"); ?> border=0 value="<?=_("<< zur&uuml;ck");?> >>" name="jump_back">&nbsp;<input type="image" <?=makeButton("anlegen", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
+                    <?= Button::create(_('<< zurück'), 'jump_back') ?>&nbsp;<?= Button::create(_('weiter >>'), 'jump_next') ?>
                 </form>
                 </div>
             </td>
@@ -4036,7 +4038,7 @@ if ($level == 7)
                     <form method="POST" action="<? echo URLHelper::getLink() ?>">
                         <?= CSRFProtection::tokenTag() ?>
                         <input type="hidden" name="form" value=7>
-                        <input type="image" <?=makeButton("zurueck", "src"); ?> border=0 value="<?=_("<< zur&uuml;ck");?>" name="jump_back">
+                        <?= Button::create(_('<< zurück'), 'jump_back') ?>
                     </form>
                     </div>
                 </td>
@@ -4066,11 +4068,11 @@ if ($level == 7)
                     <form method="POST" action="<? echo URLHelper::getLink() ?>">
                         <?= CSRFProtection::tokenTag() ?>
                         <input type="hidden" name="form" value=7>
-                        <input type="image" <?=makeButton("abbrechen", "src"); ?> border=0 value="<?=_("abbrechen");?>" name="cancel">
                         <?
+                        echo Button::createCancel(_('abbrechen'), 'cancel');
                         if (($sem_create_data["modules_list"]["schedule"]) || ($sem_create_data["modules_list"]["scm"])) {
                             ?>
-                            &nbsp;<input type="image" <?=makeButton("weiter", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
+                            &nbsp;<?= Button::create(_('weiter >>'), 'jump_next') ?>
                             <?
                         }
                         ?>
@@ -4116,7 +4118,7 @@ if ($level == 7)
                         <?
                         if (($sem_create_data["modules_list"]["schedule"]) || ($sem_create_data["modules_list"]["scm"])) {
                             ?>
-                            <input type="image" <?=makeButton("weiter", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
+                            <?= Button::create(_('weiter >>'), 'jump_next') ?>
                             <?
                         }
                         ?>
@@ -4255,15 +4257,15 @@ if ($level == 8)
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
-                            <input type="image"<?=makeButton("abbrechen", "src"); ?> border=0 value="<?=_("abbrechen");?>" name="cancel">
                             <?
+                            echo Button::createCancel(_('abbrechen'), 'cancel');
                             if ($sem_create_data["modules_list"]["schedule"]) {
                                 ?>
-                                &nbsp;<input type="image"<?=makeButton("weiter", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
+                                &nbsp;<?= Button::create(_('weiter >>'), 'jump_next') ?>
                                 <?
                             } else {
                                 ?>
-                                &nbsp;<input type="image"<?=makeButton("uebernehmen", "src"); ?> border=0 value="<?=_("uebernehmen");?>" name="jump_next">
+                                &nbsp;<?= Button::create(_('übernehmen'), 'jump_next') ?>
                                 <?
                             }
                             ?>
@@ -4313,15 +4315,15 @@ if ($level == 8)
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
-                            <input type="image"<?=makeButton("abbrechen", "src"); ?> border=0 value="<?=_("abbrechen");?>" name="cancel">
                             <?
+                            echo Button::createCancel(_('abbrechen'), 'cancel');
                             if ($sem_create_data["modules_list"]["schedule"]) {
                                 ?>
-                                &nbsp;<input type="image"<?=makeButton("weiter", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
+                                &nbsp;<?= Button::create(_('weiter >>'), 'jump_next') ?>
                                 <?
                             } else {
                                 ?>
-                                &nbsp;<input type="image"<?=makeButton("uebernehmen", "src"); ?> border=0 value="<?=_("uebernehmen");?>" name="jump_next">
+                                &nbsp;<?= Button::create(_('übernehmen'), 'jump_next') ?>
                                 <?
                             }
                             ?>

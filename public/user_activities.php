@@ -22,6 +22,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA   02111-1307, USA.
 */
 
+use Studip\Button, Studip\LinkButton;
 
 
 require '../lib/bootstrap.php';
@@ -39,7 +40,7 @@ function show_posts_guestbook($user_id,$range_id) {
         $output .= sprintf(_("%s hat am %s geschrieben:"), htmlReady(get_fullname($db->f("user_id")))."</a>", date("d.m.Y - H:i", $db->f("mkdate")));
         $output .= "</font></b></td></tr>"
         . "<tr><td class=\"steelgraulight\"><font size=\"-1\">".formatready($db->f("content"))."</font><p align=\"right\">";
-        $output .= "<a href=\"".$PHP_SELF."?deletepost=".$db->f("post_id")."&ticket=".get_ticket()."\">" . makeButton("loeschen", "img") . "</a>";
+        $output .= LinkButton::create(_("löschen"), "?deletepost=".$db->f("post_id")."&ticket=".get_ticket());
         $output .= "</p></td></tr>"
         . "<tr><td class=\"steel1\">&nbsp;</td></tr>";
     }
@@ -97,11 +98,12 @@ function show_documents($documents, $open = null){
                 $content.=  "&nbsp; " . sprintf(_("<b>Dateiname:</b> %s "),$db->f("filename"));
                 $content.= "\n";
                 //Editbereich ertstellen
-                $edit='';
-                $edit= '&nbsp;<a href="' . GetDownloadLink( $db->f('dokument_id'), $db->f('filename'), $type, 'force') .'">' . makeButton('herunterladen', 'img') . '</a>';
+
+                $edit = LinkButton::create(_("herunterladen"), GetDownloadLink( $db->f('dokument_id'), $db->f('filename'), $type, 'force'));
+
                 $fext = getFileExtension(strtolower($db->f('filename')));
                 if (($type != '6') && ($fext != 'zip') && ($fext != 'tgz') && ($fext != 'gz') && ($fext != 'bz2')) {
-                    $edit.= '&nbsp;<a href="'. GetDownloadLink( $db->f('dokument_id'), $db->f('filename'), $type, 'zip') . '">' . makeButton('alsziparchiv', 'img') . '</a>';
+                    $edit .= LinkButton::create(_("als ZIP herunterladen"), GetDownloadLink($db->f('dokument_id'), $db->f('filename'), $type, 'zip'));
                 }
                 if ($db->f("protected")) {
                     $content = "<br>" . MessageBox::info(_("Diese Datei ist urheberrechtlich geschützt."), array(_("Sie darf nur im Rahmen dieser Veranstaltung verwendet werden, jede weitere Verbreitung ist strafbar!")));
@@ -274,8 +276,8 @@ $pic_path = $GLOBALS['ASSETS_URL'] . 'images';
     <div style="margin-left:20px;" align="left">
     <?=_("Alle Dateien dieses Nutzers als Zip")?>
     &nbsp;
-    <a href="<?=$PHP_SELF?>?download_as_zip=all">
-    <?=makeButton('herunterladen','img',_("Alle Dateien dieses Nutzers als Zip herunterladen"))?>
+    <a href="<?=$PHP_SELF?>">
+    <?= LinkButton::create(_("herunterladen"), "?download_as_zip=all") ?>
     </a>
     </div>
     <br>
@@ -310,9 +312,9 @@ $pic_path = $GLOBALS['ASSETS_URL'] . 'images';
                         . '&redirect_to=folder.php&cmd=all"><img src="'.Assets::image_path('icons/16/blue/files.png').'" align="absmiddle">'
                         .getHeaderLine($db->f('Seminar_id')).'</a></b>
                         <br>'._("Status in der Veranstaltung:").'&nbsp;<b>'.$db->f('status').'</b></div>';
-            $content .= '<div style="margin-bottom:10px;" align="center"><a href="'.$PHP_SELF.'?download_as_zip='.$db->f('Seminar_id').'">'
-                        . makeButton('herunterladen','img',_("Alle Dateien dieser Veranstaltung als Zip herunterladen"))
-                        . '</a>&nbsp;</div>';
+            $content .= '<div style="margin-bottom:10px;" align="center"><a href="'.$PHP_SELF.'?download_as_zip='.$db->f('Seminar_id').'">';
+            $content .= Button::create(_('herunterladen'));
+            $content .= '</a>&nbsp;</div>';
             $content .= show_documents(get_user_documents($user_id,$db->f('Seminar_id')) ,  $_user_activities['open']);
 
             printcontent(0,0,$content, $edit);
@@ -346,9 +348,9 @@ $pic_path = $GLOBALS['ASSETS_URL'] . 'images';
                         . '&redirect_to=folder.php&cmd=all"><img src="'.Assets::image_path('icons/16/blue/files.png').'" align="absmiddle" hspace="4" >'
                         .getHeaderLine($db->f('Institut_id')).'</a></b>
                         <br>'._("Status in der Einrichtung:").'&nbsp;<b>'.$db->f('status').'</b></div>';
-            $content .= '<div style="margin-bottom:10px;" align="center"><a href="'.$PHP_SELF.'?download_as_zip='.$db->f('Institut_id').'">'
-                        . makeButton('herunterladen','img',_("Alle Dateien dieser Einrichtung als Zip herunterladen"))
-                        . '</a>&nbsp;</div>';
+            $content .= '<div style="margin-bottom:10px;" align="center"><a href="'.$PHP_SELF.'?download_as_zip='.$db->f('Institut_id').'">';
+            $content .= Button::create(_('herunterladen'));
+            $content .= '</a>&nbsp;</div>';
             $content .= show_documents(get_user_documents($user_id,$db->f('Institut_id')) ,  $_user_activities['open']);
 
             printcontent(0,0,$content, $edit);

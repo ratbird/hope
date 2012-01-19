@@ -343,4 +343,25 @@ class StudipPDOStatement implements IteratorAggregate
 
         return $this->db->quote($this->params[$key]['value'], $this->params[$key]['type']);
     }
+
+    /**
+     * Returns the result set rows as a grouped associative array. The first field
+     * of each row is used as the array's keys.
+     *
+     * @param int   $fetch_style    Either PDO::FETCH_ASSOC or PDO::FETCH_COLUMN
+     * @param mixed $fetch_argument Unused for FETCH_ASSOC, field index to fetch
+     *                              for FETCH_COLUMN
+     */
+    public function fetchGrouped($fetch_style = PDO::FETCH_ASSOC, $fetch_argument = 0) {
+        if (!($fetch_style & (PDO::FETCH_ASSOC | PDO::FETCH_COLUMN))) {
+            throw new PDOException('Fetch style not supported, try FETCH_ASSOC or FETCH_COLUMN');
+        }
+
+        $fetch_style |= PDO::FETCH_GROUP;
+        $rows = ($fetch_style & PDO::FETCH_ASSOC)
+            ? $this->fetchAll($fetch_style)
+            : $this->fetchAll($fetch_style, $fetch_argument);
+
+        return array_map('reset', $rows);
+    }
 }

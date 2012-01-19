@@ -24,6 +24,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+use Studip\Button, Studip\LinkButton;
+
 require '../lib/bootstrap.php';
 
 unregister_globals();
@@ -104,7 +106,7 @@ STUDIP.Forum.rate_template = function (id) {
 <?php endforeach?>
 <span style="color:#990000;font-weight:bold;">5</span>\
 <br>\
-\<?=makebutton('bewerten','input',_("Bewertung abgeben"),'sidebar')?>\
+\<?= Button::create(_("bewerten"), "sidebar") ?> \
 </form>\
 </div>\
 ', "center");
@@ -338,8 +340,10 @@ if ($delete_id) {
             $msg="info§" . sprintf(_("Wollen Sie %s %s von %s wirklich löschen?"), $tmp_label, "<b>".htmlReady($db->f("name"))."</b>", "<b>".($forumposting["anonymous"] ? _("anonym") : htmlReady($db->f("author")))."</b>") . "<br>\n";
             if ($count)
                 $msg.= sprintf(_("Alle %s Antworten auf diesen Beitrag werden ebenfalls gelöscht!"), $count) . "<br>\n<br>\n";
-            $msg.="<a href=\"".URLHelper::getLink("?really_kill=$delete_id&view=$view#anker")."\">" . makeButton("ja2", "img") . "</a>&nbsp; \n";
-            $msg.="<a href=\"".URLHelper::getLink("?topic_id=$root&open=$delete_id&view=$view#anker")."\">" . makeButton("nein", "img") . "</a>\n";
+
+            $msg .= LinkButton::createAccept(_("ja"), URLHelper::getURL("?really_kill=$delete_id&view=$view#anker"));
+            $msg .= LinkButton::createCancel(_("nein"), URLHelper::getLink("?topic_id=$root&open=$delete_id&view=$view#anker"));
+
             parse_msg($msg, '§', 'blank', '1', FALSE);
             echo "</table>";
 

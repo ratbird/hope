@@ -22,6 +22,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
 
@@ -84,7 +85,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
         </select>
         </td>
         <td class="blank" align="center" colspan="8">
-        <input type="image" <?=makeButton("absenden", "src") ?> border="0" value="absenden">
+            <?= Button::createAccept() ?>
         </td>
     </tr>
     <tr><td class="blank" align="right" colspan="9">&nbsp;
@@ -186,7 +187,9 @@ FOR ($i=0; $i<9; $i++)
             }
         }
     }
-    ECHO "<tr><td class=\"blank\">&nbsp; </td><td class=\"blank\" align=center colspan=8><br><input type=\"IMAGE\" " . makeButton("absenden", "src") . " border=0 value=absenden><input type=hidden name=gruppesent value=1><br>&nbsp; </td></tr>";
+    ECHO "<tr><td class=\"blank\">&nbsp; </td><td class=\"blank\" align=center colspan=8><br>";
+    echo Button::createAccept();
+    echo "<input type=hidden name=gruppesent value=1><br>&nbsp; </td></tr>";
     echo "</table></form></td></tr></table>";
 }
 

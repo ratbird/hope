@@ -5,6 +5,8 @@
 # Lifter003: TEST
 # Lifter010: TODO
 
+use Studip\Button, Studip\LinkButton;
+
 require '../lib/bootstrap.php';
 
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
@@ -89,7 +91,7 @@ if (!(have_sem_write_perm()) OR $pass==TRUE) {
                 echo "\n</tr>";
                 echo "  <tr>";
                 echo "      <td colspan=2 class=steel1 align=center>";
-                echo "          <a href=\"".URLHelper::getLink("?write=1&root_id=$root_id&topic_id=$topic_id&quote=TRUE")."\">" . makeButton("zitieren", "img") . "</a>";
+                echo LinkButton::create(_("zitieren"), URLHelper::getURL("?write=1&root_id=$root_id&topic_id=$topic_id&quote=TRUE"));
                 echo "      </td>";
                 echo "  </tr>";
                 echo "<tr><td colspan=2 class=steel>&nbsp; </td></tr><tr><td colspan=2 class=steel1><blockquote>";
@@ -135,7 +137,7 @@ if (!(have_sem_write_perm()) OR $pass==TRUE) {
             echo "\n";
         }
         echo "</textarea><br><br>";
-        echo makeButton("abschicken", "input");
+        echo Button::createAccept();
         $help_url = format_help_url("Basis.VerschiedenesFormat");
         echo "&nbsp;&nbsp;<a href=\"".URLHelper::getLink("show_smiley.php")."\" target=\"_blank\"><font size=\"-1\">"._("Smileys")."</a>&nbsp;&nbsp;"."<a href=\"".$help_url."\" target=\"_blank\"><font size=\"-1\">"._("Formatierungshilfen")."</a>";
         echo "</form>";

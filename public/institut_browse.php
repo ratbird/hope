@@ -26,6 +26,7 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
+use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
 
@@ -110,7 +111,7 @@ $such_form = "<form action=\"".URLHelper::getLink("?cmd=suche")."\" method=\"pos
             . "<input type=\"text\" name=\"search_user\" style=\"width:95%;\"><br>"
             . _("Einrichtung dieser Veranstaltung:") . "<br>"
             . "<input type=\"text\" name=\"search_sem\" style=\"width:95%;\">"
-            . "<div align=\"right\" style=\"width:95%;\"><input type=\"image\" border=\"0\" " . makeButton("suchestarten","src") . tooltip(_("Suche starten")) . " vspace=\"3\" >"
+            . "<div align=\"right\" style=\"width:95%;\">". Button::create(_('Suche starten'), array('title' => _("Suche starten")))
             . "</div></form>";
 $infobox[1]["kategorie"] = _("Suchen:");
 $infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/search.png" ,

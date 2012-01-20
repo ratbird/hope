@@ -38,6 +38,7 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
+use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
 
@@ -395,12 +396,13 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
     }
     echo '<tr><td class="blank" align="center" colspan="';
     echo (sizeof($enabled_modules) + 3) . '"><br>';
-    echo makeButton("uebernehmen", "input", _("Änderungen übernehmen"));
+    echo Button::createAccept(_('übernehmen'), array('title' => _("Änderungen übernehmen")));
     if ($_REQUEST['view'] != 'notification') {
         echo "&nbsp; <a href=\"$PHP_SELF\">";
     } else {
         echo "&nbsp; <a href=\"$PHP_SELF?view=notification\">";
     }
+    echo Button::create(_('zurücksetzen', array('title' => _("zurücksetzen"))));
     echo makeButton('zuruecksetzen', 'img', _("zurücksetzen"));
     echo '<input type="hidden" name="cmd" value="set_sem_notification"><br>&nbsp; </td></tr></form>';
     echo "</table>\n";

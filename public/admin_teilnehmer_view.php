@@ -23,6 +23,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
 
@@ -113,7 +114,7 @@ foreach ($SEM_CLASS as $key => $val) {
     echo "<input type=\"hidden\" name=\"cmd\" value=\"change\">";
     echo $table->openRow();
     echo $table->cell("&nbsp;",array("colspan" => "2"));
-    echo $table->cell("<input type=\"image\" ".makeButton("zuweisen", "src").">");
+    echo $table->cell(Button::create(_('zuweisen')));
     echo $table->closeRow();
     echo $table->blankRow(array("colspan" => "3"));
 }

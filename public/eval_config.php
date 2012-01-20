@@ -32,7 +32,7 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-
+use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
 
@@ -271,8 +271,8 @@ if (isset($eval_id) && $can_change) {
     echo "    <td class=\"steel1\" colspan=\"4\">&nbsp;</td>\n";
     echo "  </tr>\n";
     echo "  <tr>\n";
-    echo "    <td class=\"steel1\" colspan=\"2\" align=\"LEFT\"><a href=\"eval_summary.php?eval_id=".$eval_id."\">".makeButton("zurueck", "img")."</a></td>\n";
-    echo "    <td class=\"steel1\" colspan=\"2\" align=\"RIGHT\"><a href=\"javascript:save();\">".makeButton("speichern", "img")."</a>&nbsp;<a href=\"javascript:document.temp.reset();\">".makeButton("zuruecksetzen", "img")."</a></td>\n";
+    echo "    <td class=\"steel1\" colspan=\"2\" align=\"LEFT\">".LinkButton::create(_('<< zurück'), 'eval_summary.php?eval_id='.$eval_id)."</td>\n";
+    echo "    <td class=\"steel1\" colspan=\"2\" align=\"RIGHT\">".LinkButton::create(_('speichern'), 'javascript:save();')."&nbsp;".LinkButton::create(_('zurücksetzen'), 'javascript:document.temp.reset();')."</td>\n";
     echo "  </tr>\n";
     echo "  <tr>\n";
     echo "    <td class=\"blank\" colspan=\"4\">&nbsp;</td>\n";

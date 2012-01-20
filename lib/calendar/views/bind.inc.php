@@ -19,6 +19,9 @@
  * @package     calendar
  */
 //TODO: templates
+
+use Studip\Button, Studip\LinkButton;
+
 include('lib/include/html_head.inc.php');
 include('lib/include/header.php');
 
@@ -112,7 +115,7 @@ foreach ($result as $row) {
 
 echo "<tr><td class=\"blank\">&nbsp;</td></tr>\n";
 echo "<tr><td class=\"blank\" colspan=\"6\" align=\"center\">";
-echo "&nbsp;<input type=\"image\" " . makeButton("auswaehlen", "src") . " border=\"0\"></td></tr>\n";
+echo Button::create(_('auswählen'));
 
 // Dummy-Wert damit $sem auch ohne ausgewaehlte Seminare ausgewertet wird
 echo "\n<input type=\"hidden\" name=\"sem[1]\" value=\"FALSE\">\n";

@@ -19,6 +19,9 @@
  */
 
 //TODO: templates
+
+use Studip\Button, Studip\LinkButton;
+
 include('lib/include/html_head.inc.php');
 include('lib/include/header.php');
 
@@ -43,8 +46,9 @@ if (!$termin_id && !$_calendar->havePermission(Calendar::PERMISSION_WRITABLE)) {
     }
     my_error($error_message, 'blank', 2, TRUE);
     echo "<tr><td class=\"blank\" width=\"15%\">&nbsp;</td>";
-    echo '<td class="blank" width="85%"><a href="' . URLHelper::getLink('', array('cmd' => $calendar_sess_control_data['view_prv'], 'atime' => $atime)) . '">';
-    echo makeButton("zurueck") . "</a></td></tr>\n";
+    echo '<td class="blank" width="85%">';
+    echo LinkButton::create(_('<< zurück'), URLHelper::getLink('', array('cmd' => $calendar_sess_control_data['view_prv'], 'atime' => $atime)));
+    echo "</td></tr>\n";
     echo "</table><br />&nbsp;<br /></td></tr></table>\n";
     page_close();
     exit;
@@ -73,7 +77,7 @@ $css_switcher->switchClass();
 
 ########################################################################################
 
-if (!$set_recur_x) {
+if (!Request::submitted('set_recur')) {
     if (isset($_calendar->event) && ($_calendar->event instanceof SeminarEvent
             || $_calendar->event instanceof SeminarCalendarEvent)) {
         echo "<tr>\n<td class=\"" . $css_switcher->getClass() . "\" width=\"100%\">\n";
@@ -338,13 +342,11 @@ if (!$set_recur_x) {
 //      if ($_calendar->havePermission(Calendar::PERMISSION_WRITABLE)
         //      && $_calendar->event->getPermission() == CALENDAR_EVENT_PERM_PUBLIC) {
         if ($_calendar->event->havePermission(Event::PERMISSION_WRITABLE) && !($_calendar->event instanceof SeminarCalendarEvent)) {
-            echo "<input style=\"vertical-align: middle;\" type=\"image\" ";
-            echo makeButton("bearbeiten", "src") . " name=\"set_recur\" border=\"0\">\n";
+            echo Button::create(_('bearbeiten'), 'set_recur');
         }
         //  elseif ($_calendar->event->getRepeat('rtype') != 'SINGLE') {
         else {
-            echo "<input style=\"vertical-align: middle;\" type=\"image\" ";
-            echo makeButton("details", "src") . " name=\"set_recur\" border=\"0\">\n";
+            echo Button::create(_('Details'), 'set_recur');
         }
 
         echo "</td>\n</tr>\n";
@@ -362,29 +364,29 @@ else {
             if ($_calendar->event->havePermission(Event::PERMISSION_WRITABLE) && $evtype != 'semcal') {
 
                 if ($mod == "SINGLE")
-                    echo "<input type=\"image\" name=\"mod_s\" " . makeButton("keine2", "src") . " border=\"0\">\n";
+                    echo Button::createCancel(_('keine'), 'mod_s');
                 else
-                    echo "<input type=\"image\" name=\"mod_s\" " . makeButton("keine", "src") . " border=\"0\">\n";
+                    echo Button::create(_('keine'), 'mod_s');
                 echo " ";
                 if ($mod == "DAILY")
-                    echo "<input type=\"image\" name=\"mod_d\" " . makeButton("taeglich2", "src") . " border=\"0\">\n";
+                    echo Button::createAccept(_('täglich'), 'mod_d');
                 else
-                    echo "<input type=\"image\" name=\"mod_d\" " . makeButton("taeglich", "src") . " border=\"0\">\n";
+                    echo Button::create(_('täglich'), 'mod_d');
                 echo " ";
                 if ($mod == "WEEKLY")
-                    echo "<input type=\"image\" name=\"mod_w\" " . makeButton("woechentlich2", "src") . " border=\"0\">\n";
+                    echo Button::createAccept(_('wöchentlich'), 'mod_w');
                 else
-                    echo "<input type=\"image\" name=\"mod_w\" " . makeButton("woechentlich", "src") . " border=\"0\">\n";
+                    echo Button::create(_('wöchentlich'), 'mod_w');
                 echo " ";
                 if ($mod == "MONTHLY")
-                    echo "<input type=\"image\" name=\"mod_m\" " . makeButton("monatlich2", "src") . " border=\"0\">\n";
+                    echo Button::createAccept(_('monatlich'), 'mod_m');
                 else
-                    echo "<input type=\"image\" name=\"mod_m\" " . makeButton("monatlich", "src") . " border=\"0\">\n";
+                    echo Button::create(_('monatlich'), 'mod_m');
                 echo " ";
                 if ($mod == "YEARLY")
-                    echo "<input type=\"image\" name=\"mod_y\" " . makeButton("jaehrlich2", "src") . " border=\"0\">\n";
+                    echo Button::createAccept(_('jährlich'), 'mod_y');
                 else
-                    echo "<input type=\"image\" name=\"mod_y\" " . makeButton("jaehrlich", "src") . " border=\"0\">\n";
+                    echo Button::create(_('jährlich'), 'mod_y');
             } else {
 
                 if ($mod == "SINGLE")
@@ -809,15 +811,15 @@ if (isset($_calendar->event) && ($_calendar->event instanceof SeminarEvent || $_
     echo "<input type=\"hidden\" name=\"mod_prv\" value=\"$mod\">\n";
     echo "<input type=\"hidden\" name=\"mod\" value=\"$mod\">\n";
     echo "<input type=\"hidden\" name=\"termin_id\" value=\"$termin_id\">\n";
-    if ($set_recur_x) {
+    if (Request::submitted('set_recur')) {
         echo "<input type=\"hidden\" name=\"evtype\" value=\"$evtype\">\n";
-        echo "<input type=\"image\" " . makeButton("zurueck", "src") . " name=\"back_recur\" border=\"0\">\n";
+        echo Button::create(_('<< zurück'), 'back_recur');
         echo "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ";
-        echo "<input type=\"hidden\" name=\"set_recur_x\" value=\"1\">\n";
+        echo "<input type=\"hidden\" name=\"set_recur\" value=\"1\">\n";
         echo '<input type="hidden" name="wholeday" value="' . Request::get('wholeday') . "\">\n";
     }
 
-    echo "<input type=\"image\" " . makeButton("zurueck", "src") . " border=\"0\" name=\"cancel\">\n";
+    echo Button::create(_('<< zurück'), 'cancel');
 } else {
     $css_switcher->switchClass();
     echo "<tr><td class=\"" . $css_switcher->getClass() . "\" align=\"center\" nowrap=\"nowrap\">\n";
@@ -826,10 +828,10 @@ if (isset($_calendar->event) && ($_calendar->event instanceof SeminarEvent || $_
     echo "<input type=\"hidden\" name=\"mod_prv\" value=\"$mod\">\n";
     echo "<input type=\"hidden\" name=\"mod\" value=\"$mod\">\n";
     echo "<input type=\"hidden\" name=\"termin_id\" value=\"$termin_id\">\n";
-    if ($set_recur_x) {
-        echo "<input type=\"image\" " . makeButton("zurueck", "src") . " name=\"back_recur\" border=\"0\">\n";
+    if (Request::submitted('set_recur')) {
+        echo Button::create(_('<< zurück'), 'back_recur');
         echo "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ";
-        echo "<input type=\"hidden\" name=\"set_recur_x\" value=\"1\">\n";
+        echo "<input type=\"hidden\" name=\"set_recur\" value=\"1\">\n";
         echo '<input type="hidden" name="wholeday" value="' . Request::get('wholeday') . "\">\n";
     }
 //  if ($_calendar->havePermission(Calendar::PERMISSION_WRITABLE)
@@ -837,16 +839,16 @@ if (isset($_calendar->event) && ($_calendar->event instanceof SeminarEvent || $_
     if ($_calendar->event->havePermission(Event::PERMISSION_WRITABLE) && $evtype != 'semcal') {
         if ($atime && strtolower(get_class($_calendar->event)) == 'calendarevent') {
             if ($count_events < $CALENDAR_MAX_EVENTS) {
-                echo "<input type=\"image\" " . makeButton("terminspeichern", "src") . " name=\"store\" border=\"0\">\n";
+                echo Button::create(_('Termin speichern'), 'store');
             }
         } else {
             echo "<input type=\"hidden\" name=\"termin_id\" value=\"$termin_id\">\n";
-            echo "<input type=\"image\" " . makeButton("terminaendern", "src") . " border=\"0\" name=\"change\">&nbsp; &nbsp;";
-            echo "<input type=\"image\" " . makeButton("loeschen", "src") . " border=\"0\" name=\"del\">\n";
+            echo Button::create(_('Termin ändern'), 'change');
+            echo Button::create(_('löschen'), 'del');
         }
-        echo "<input type=\"image\" " . makeButton("abbrechen", "src") . " border=\"0\" name=\"cancel\">\n";
-    } elseif (!$set_recur_x || $evtype == 'semcal') {
-        echo "<input type=\"image\" " . makeButton("zurueck", "src") . " border=\"0\" name=\"cancel\">\n";
+        echo Button::createCancel(_('abbrechen'), 'cancel').">\n";
+    } elseif (!Request::submitted('set_recur') || $evtype == 'semcal') {
+        echo Button::create(_('<< zurück'), 'cancel')."\n";
     }
 
     // create infobox entries

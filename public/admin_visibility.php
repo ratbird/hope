@@ -23,6 +23,7 @@
 * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
 
@@ -137,7 +138,7 @@ if ($SessSemName[1] && (!$change_visible)) {
             $form   .=  ">";
             $form   .=  "<input type=\"hidden\" name=\"all_sem[]\" value=".$SessSemName[1].">";
             $form   .=  "<input type=\"hidden\" name=\"change_visible\" value=\"1\">";
-            $form   .=  "<input type=\"image\" ".makeButton("zuweisen","src")." border=0 align=\"absmiddle\">";
+            $form   .=  Button::create(_('zuweisen'));
             $form   .=  "</form>";
         } else {
             $form = $db->f('visible') ? _("sichtbar") : _("versteckt");

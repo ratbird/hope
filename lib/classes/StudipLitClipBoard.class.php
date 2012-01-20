@@ -6,8 +6,8 @@
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
 // StudipLitClipBoard.class.php
-// Class to 
-// 
+// Class to
+//
 // Copyright (c) 2003 André Noack <noack@data-quest.de>
 // +---------------------------------------------------------------------------+
 // This program is free software; you can redistribute it and/or
@@ -32,21 +32,21 @@ DbView::addView('literatur');
 /**
 *
 *
-* 
 *
-* @access   public  
+*
+* @access   public
 * @author   André Noack <noack@data-quest.de>
-* @package  
+* @package
 **/
 class StudipLitClipBoard {
-    
+
     var $dbv;
     var $elements = null;
     var $form_obj = null;
     var $form_name = "lit_clipboard_form";
     var $msg;
-    
-    
+
+
     function GetInstance(){
         static $instance;
         if (!is_object($instance[0])){
@@ -54,7 +54,7 @@ class StudipLitClipBoard {
         }
         return $instance[0];
     }
-    
+
     function StudipLitClipBoard(){
         $this->dbv = new DbView();
         if (!$GLOBALS['sess']->is_registered("_lit_clipboard_elements")){
@@ -62,7 +62,7 @@ class StudipLitClipBoard {
             }
         $this->elements =& $GLOBALS["_lit_clipboard_elements"];
     }
-    
+
     function insertElement($id_to_insert){
         if (!is_array($id_to_insert)){
             $id_to_insert = array($id_to_insert);
@@ -82,7 +82,7 @@ class StudipLitClipBoard {
         $this->setDefaultValue();
         return $inserted;
     }
-    
+
     function deleteElement($id_to_delete){
         if (!is_array($id_to_delete)){
             $id_to_delete = array($id_to_delete);
@@ -102,15 +102,15 @@ class StudipLitClipBoard {
         $this->setDefaultValue();
         return $deleted;
     }
-    
+
     function getNumElements(){
         return (is_array($this->elements)) ? count($this->elements) : 0;
     }
-    
+
     function isInClipboard($catalog_id){
         return isset($this->elements[$catalog_id]);
     }
-    
+
     function getElements(){
         $returned_elements = null;
         if (is_array($this->elements)){
@@ -124,7 +124,7 @@ class StudipLitClipBoard {
         }
         return $returned_elements;
     }
-    
+
     function &getFormObject(){
         if (!is_object($this->form_obj)){
             $this->setFormObject();
@@ -132,7 +132,7 @@ class StudipLitClipBoard {
         $this->setDefaultValue();
         return $this->form_obj;
     }
-    
+
     function setDefaultValue(){
         if ($this->getNumElements() == 1 && is_object($this->form_obj)){
             reset($this->elements);
@@ -141,12 +141,12 @@ class StudipLitClipBoard {
         }
         return false;
     }
-        
+
     function setFormObject(){
         $form_name = $this->form_name;
         $form_fields['clip_content'] = array('type' => 'select', 'multiple' => true, 'options_callback' => array($this, "getClipOptions"));
         $form_fields['clip_cmd'] = array('type' => 'select', 'options' => array(array('name' => _("Aus Merkliste löschen"), 'value' => 'del')));
-        $form_buttons['clip_ok'] = array('type' => 'ok', 'info' => _("Gewählte Aktion starten"));
+        $form_buttons['clip_ok'] = array('type' => 'accept', 'caption' => _('OK'), 'info' => _("Gewählte Aktion starten"));
         if (!is_object($this->form_obj)){
             $this->form_obj = new StudipForm($form_fields, $form_buttons, $form_name, false);
         } else {
@@ -154,7 +154,7 @@ class StudipLitClipBoard {
         }
         return true;
     }
-    
+
     function getClipOptions($caller, $name){
         $options = array();
         $cols = 40;
@@ -168,7 +168,7 @@ class StudipLitClipBoard {
         }
         return $options;
     }
-    
+
     function doClipCmd(){
         $this->getFormObject();
         switch ($this->form_obj->getFormFieldValue("clip_cmd")){

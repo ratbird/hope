@@ -149,7 +149,7 @@ class ClipBoard {
         return $returned_elements;
     }
 
-    function &getFormObject(){
+    function getFormObject(){
         if (!is_object($this->form_obj)){
             $this->setFormObject();
         }
@@ -170,7 +170,7 @@ class ClipBoard {
         $form_name = $this->form_name;
         $form_fields['clip_content'] = array('type' => 'select', 'multiple' => true, 'options_callback' => array($this, "getClipOptions"));
         $form_fields['clip_cmd'] = array('type' => 'select', 'options' => array(array('name' => _("Aus Merkliste löschen"), 'value' => 'del')));
-        $form_buttons['clip_ok'] = array('type' => 'ok', 'info' => _("Gewählte Aktion starten"));
+        $form_buttons['clip_ok'] = array('type' => 'accept', 'caption' => _('OK'), 'info' => _("Gewählte Aktion starten"));
         if (!is_object($this->form_obj)){
             $this->form_obj = new StudipForm($form_fields, $form_buttons, $form_name, false);
         } else {

@@ -24,7 +24,7 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-use Studip\Button, Studip\LinkButton; 
+use Studip\Button, Studip\LinkButton;
 
 require_once('lib/visual.inc.php');
 require_once 'lib/functions.php';
@@ -56,11 +56,11 @@ class StudipForm {
     var $value_changed = array();
 
 
-    function TimestampToSQLDate($tstamp){
+    static function TimestampToSQLDate($tstamp){
         return date("Y-m-d", $tstamp);
     }
 
-    function SQLDateToTimestamp($sqldate){
+    static function SQLDateToTimestamp($sqldate){
         $date_values = explode("-", $sqldate); //YYYY-MM-DD
         if (checkdate((int)$date_values[1],(int)$date_values[2],(int)$date_values[0])){
             return mktime(12,0,0,$date_values[1],$date_values[2],$date_values[0], 0);
@@ -69,30 +69,35 @@ class StudipForm {
         }
     }
 
-    function StudipForm($form_fields, $form_buttons, $form_name = "studipform", $persistent_values = true){
-        global $sess;
+    static function _GetRawFieldValue($field_name, $form_name) {
+        return Request::get($form_name. '_' . $field_name);
+    }
+
+    static function _IsSended($form_name){
+        return Request::get($form_name . "_" . md5("is_sended")) !== null;
+    }
+
+    static function _IsClicked($button, $form_name){
+        return Request::submitted($form_name . "_" . $button);
+    }
+
+    function __construct($form_fields, $form_buttons, $form_name = "studipform", $persistent_values = true) {
 
         $this->form_name = $form_name;
         $this->persistent_values = $persistent_values;
         $this->form_fields = $form_fields;
         $this->form_buttons = $form_buttons;
-
-        if ($this->persistent_values && is_object($sess)){
-            if (!$sess->is_registered("_" . $this->form_name . "_values")){
-                $sess->register("_" . $this->form_name . "_values");
-            }
-            $this->form_values =& $GLOBALS["_" . $this->form_name . "_values"];
+        if ($this->persistent_values){
+            $this->form_values =& $_SESSION["_p_values"]["_" . $this->form_name . "_values"];
         }
         if ($this->isSended()){
             foreach ($this->form_fields as $name => $foo){
                 if (!$foo['disabled']){
-                    if (isset($_REQUEST[$this->form_name . "_" . $name])){
-                        if (is_array($_REQUEST[$this->form_name . "_" . $name])){
-                            foreach ($_REQUEST[$this->form_name . "_" . $name] as $key => $value){
-                                $new_form_values[$name][$key] = trim(stripslashes($value));
-                            }
-                        } else {
-                            $new_form_values[$name] = trim(stripslashes($_REQUEST[$this->form_name . "_" . $name]));
+                    if ( ($field_value = Request::get($this->form_name . "_" . $name)) !== null) {
+                            $new_form_values[$name] = trim($field_value);
+                    } elseif ( is_array($field_value = Request::getArray($this->form_name . "_" . $name))) {
+                        foreach ($field_value as $key => $value){
+                            $new_form_values[$name][$key] = trim($value);
                         }
                     } else {
                         $new_form_values[$name] = null;
@@ -111,14 +116,12 @@ class StudipForm {
                         }
                     }
                     if ($value['type'] == 'date'){
-                        $new_form_values[$name] = trim(stripslashes($_REQUEST[$this->form_name . "_" . $name . "_year"])) . "-"
-                                                . trim(stripslashes($_REQUEST[$this->form_name . "_" . $name . "_month"])) . "-"
-                                                . trim(stripslashes($_REQUEST[$this->form_name . "_" . $name . "_day"]));
+                        $new_form_values[$name] = Request::int($this->form_name . "_" . $name . "_year") . "-"
+                                                . sprintf('%02s', Request::int($this->form_name . "_" . $name . "_month")) . "-"
+                                                . sprintf('%02s', Request::int($this->form_name . "_" . $name . "_day"));
                     }
                     if ($value['type'] == 'checkbox'){
-                        if (!isset($_REQUEST[$this->form_name . "_" . $name])){
-                            $new_form_values[$name] = 0;
-                        }
+                        $new_form_values[$name] = Request::int($this->form_name . "_" . $name, 0);
                     }
                     if ( (isset($this->form_values[$name]) && $this->form_values[$name] != $new_form_values[$name])
                         || (!isset($this->form_values[$name]) && $new_form_values[$name] != $this->form_fields[$name]['default_value']) ){
@@ -169,6 +172,14 @@ class StudipForm {
             $attributes['disabled'] = 'disabled';
         }
 
+        if ($this->form_fields[$name]['required']){
+            $attributes['required'] = 'required';
+        }
+
+        if (!isset($attributes['id'])) {
+            $attributes['id'] = $this->form_name . '_' . $name;
+        }
+
         if($this->form_fields[$name]['type']){
             $method = "getFormField" . $this->form_fields[$name]['type'];
             return $this->$method($name,$attributes,$default,$subtype);
@@ -209,18 +220,23 @@ class StudipForm {
         if($subtype !== false){
             return $this->getOneRadio($name, $attributes, ($default == $options[$subtype]['value']), $subtype);
         } else {
+            $ret = '<fieldset id="' . $attributes['id'] .'" style="border:none;padding:0px;display:inline">';
             for ($i = 0; $i < count($options); ++$i){
                 $ret .= $this->getOneRadio($name, $attributes, ($default == $options[$i]['value']), $i);
                 $ret .= "\n" . $this->form_fields[$name]['separator'];
             }
+            $ret .= '</fieldset>';
         }
         return $ret;
     }
 
     function getOneRadio($name, $attributes, $default, $subtype){
+        $attributes['id'] = $this->form_name . '_' . $name . '_' . $subtype;
         $ret = "\n<input type=\"radio\" name=\"{$this->form_name}_{$name}\" value=\"{$this->form_fields[$name]['options'][$subtype]['value']}\"" . (($default) ? " checked " : "");
         $ret .= $this->getAttributes($attributes);
         $ret .= ">";
+        $attributes['for'] = $attributes['id'];
+        unset($attributes['id']);
         $ret .= $this->getFormFieldCaption($this->form_fields[$name]['options'][$subtype]['name'], $attributes);
         return $ret;
     }
@@ -236,7 +252,9 @@ class StudipForm {
 
     function getFormFieldDate($name, $attributes, $default){
         $date_values = explode("-", $default); //YYYY-MM-DD
-        $ret = $this->getFormFieldText($name . "_day", array_merge(array('size'=>2,'maxlength'=>2), (array)$attributes), $date_values[2]);
+        $ret = '<fieldset id="' . $attributes['id'] .'" style="border:none;padding:0px;display:inline">';
+        unset($attributes['id']);
+        $ret .= $this->getFormFieldText($name . "_day", array_merge(array('size'=>2,'maxlength'=>2), (array)$attributes), $date_values[2]);
         $ret .= "\n" . $this->form_fields[$name]['separator'];
         $ret .= $this->getFormFieldText($name . "_month", array_merge(array('size'=>2,'maxlength'=>2), (array)$attributes), $date_values[1]);
         $ret .= "\n" . $this->form_fields[$name]['separator'];
@@ -249,14 +267,15 @@ class StudipForm {
             }
             $ret .= "&nbsp; <img align=\"absmiddle\" src=\"".Assets::image_path('popupcalendar.png')."\" ";
             $ret .= "onClick=\"window.open('";
-            $ret .= URLHelper::getLink("termin_eingabe_dispatch.php", 
-                 array("form_name" => $this->form_name, 
-                       "element_switch" => $this->form_name."_".$name, 
-                       "imt" => $atime, 
+            $ret .= URLHelper::getLink("termin_eingabe_dispatch.php",
+                 array("form_name" => $this->form_name,
+                       "element_switch" => $this->form_name."_".$name,
+                       "imt" => $atime,
                        "atime" => $atime));
             $ret .= "', 'InsertDate', ";
             $ret .= "'dependent=yes, width=210, height=210, left=500, top=150')\">";
         }
+        $ret .= '</fieldset>';
         return $ret;
     }
 
@@ -274,7 +293,7 @@ class StudipForm {
         }
         if (is_array($this->form_fields[$name]['options'])){
             $options = $this->form_fields[$name]['options'];
-        } else if ($this->form_fields[$name]['options_callback']){ 
+        } else if ($this->form_fields[$name]['options_callback']){
             $options = call_user_func($this->form_fields[$name]['options_callback'],$this,$name);
         }
         for ($i = 0; $i < count($options); ++$i){
@@ -297,7 +316,8 @@ class StudipForm {
 
     function getFormFieldSelectBox($name, $attributes, $default){
         $box_attributes = $this->form_fields[$name]['box_attributes'] ? $this->form_fields[$name]['box_attributes'] : array();
-        $ret = "\n<div class=\"selectbox\" ".$this->getAttributes($box_attributes)." >";
+        $ret = "\n<fieldset id=\"{$attributes['id']}\" class=\"selectbox\" ".$this->getAttributes($box_attributes)." >";
+        unset($attributes['id']);
         if ($this->form_fields[$name]['multiple']) {
             $element = 'checkbox';
             $element_name = $this->form_name . '_' . $name . '[]';
@@ -333,12 +353,13 @@ class StudipForm {
             $ret .= htmlReady($options_name) . "</label>";
             $ret .= "\n</div>";
         }
-        $ret .= "\n</div>";
+        $ret .= "\n</fieldset>";
         return $ret;
     }
 
     function getFormFieldCombo($name, $attributes, $default , $subtype = false){
-        $ret = "";
+        $ret = '<fieldset id="' . $attributes['id'] .'" style="border:none;padding:0px;display:inline">';
+        unset($attributes['id']);
         $combo_text_name = $this->form_fields[$name]['text'];
         $combo_select_name = $this->form_fields[$name]['select'];
         $select_attributes = array('onChange' => "document.{$this->form_name}.{$this->form_name}_{$combo_text_name}.value="
@@ -355,28 +376,41 @@ class StudipForm {
         } else {
                 $ret .= $this->getFormFieldSelect($combo_select_name, $select_attributes, $default);
         }
+        $ret .= "</fieldset>";
         return $ret;
     }
 
     function getFormButton($name, $attributes = array()){
 
-        if (!$this->form_buttons[$name]['is_picture']){
-            $ret = Button::create($this->form_buttons[$name]['info'], $this->form_name . "_" . $name, $attributes);
+        if (!$this->form_buttons[$name]['is_picture']) {
+            if (isset($this->form_buttons[$name]['info']) && !isset($attributes['title'])) {
+                $attributes['title'] = $this->form_buttons[$name]['info'];
+            }
+            $caption = $this->form_buttons[$name]['caption'] ? $this->form_buttons[$name]['caption'] : $this->form_buttons[$name]['type'];
+            if (in_array($this->form_buttons[$name]['type'], words('cancel accept'))) {
+                $create = 'create' . $this->form_buttons[$name]['type'];
+            } else {
+                $create = 'create';
+            }
+            $ret = Button::$create($caption, $this->form_name . "_" . $name, $attributes);
         } else {
             $ret = "\n<input type=\"image\" name=\"{$this->form_name}_{$name}\" ";
             $ret .= ' src="'.$GLOBALS['ASSETS_URL'].'images/' . $this->form_buttons[$name]['type'] . '" ';
             $ret .= tooltip($this->form_buttons[$name]['info'], true);
             $ret .= $this->getAttributes($attributes);
-            $ret .= " border=\"0\">";
+            $ret .= ">";
         }
         return $ret;
     }
 
     function getFormFieldCaption($name, $attributes = false){
-        if (isset($this->form_fields[$name]['caption'])){
+        if (!isset($attributes['for'])) {
+            $attributes['for'] = $this->form_name . '_' . $name;
+        }
+        if (isset($this->form_fields[$name]['caption'])) {
             $name = $this->form_fields[$name]['caption'];
         }
-        return "\n<span " . $this->getAttributes($attributes) . ">" . htmlReady($name) . "</span>";
+        return "\n<label " . $this->getAttributes($attributes) . ">" . htmlReady($name) . "</label>";
     }
 
     function getFormFieldInfo($name){
@@ -386,7 +420,7 @@ class StudipForm {
 
     function getFormStart($action = false, $attributes = false){
         if (!$action){
-            $action = $GLOBALS['PHP_SELF'];
+            $action = UrlHelper::getLink();
         }
         $ret = "\n<form action=\"$action\" method=\"post\" name=\"{$this->form_name}\" " . $this->getAttributes($attributes) . ">";
         $ret .= CSRFProtection::tokenTag();
@@ -439,25 +473,16 @@ class StudipForm {
         return isset($this->value_changed[$name]);
     }
 
-    function GetRawFieldValue($field_name, $form_name = false){
-        if ($form_name === false){
-            $form_name = $this->form_name;
-        }
-        return ($_REQUEST[$form_name. '_' . $field_name] ? $_REQUEST[$form_name. '_' . $field_name] : $GLOBALS["_" . $form_name . "_values"][$field_name]);
+    function getRawFieldValue($field_name) {
+        return self::_GetRawFieldValue($field_name, $this->form_name);
     }
 
-    function IsSended($form_name = false){
-        if ($form_name === false){
-            $form_name = $this->form_name;
-        }
-        return isset($_REQUEST[$form_name . "_" . md5("is_sended")]);
+    function isSended() {
+        return self::_IsSended($this->form_name);
     }
 
-    function IsClicked($button, $form_name = false){
-        if ($form_name === false){
-            $form_name = $this->form_name;
-        }
-        return isset($_REQUEST[$form_name . "_" . $button . "_x"]);
+    function isClicked($button) {
+        return self::_IsClicked($button, $this->form_name);
     }
 
     function getClickedKillButton(){
@@ -480,13 +505,13 @@ class StudipForm {
         }
         return $ret;
     }
-    
+
     function getFormFieldRequired($name){
         if ($this->form_fields[$name]['required'])
-            return "\n<font color=\"red\"><b>*</b></font>";
+            return "\n" . '<span style="color: red; font-weigth: bold">*</span>';
         else return "";
     }
-    
+
 
 }
 

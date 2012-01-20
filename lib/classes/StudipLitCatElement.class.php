@@ -7,7 +7,7 @@
 // This file is part of Stud.IP
 // StudipLitCatElement.class.php
 // Class to build search formular and execute search
-// 
+//
 // Copyright (c) 2003 André Noack <noack@data-quest.de>
 // +---------------------------------------------------------------------------+
 // This program is free software; you can redistribute it and/or
@@ -34,14 +34,14 @@ DbView::addView('literatur');
 /**
 *
 *
-* 
 *
-* @access   public  
+*
+* @access   public
 * @author   André Noack <noack@data-quest.de>
-* @package  
+* @package
 **/
 class StudipLitCatElement {
-    
+
     var $fields = array();
     var $dbv;
     var $form_obj = null;
@@ -49,7 +49,7 @@ class StudipLitCatElement {
     var $init_form;
     var $classname = "StudipLitCatElement";
     var $persistent_slots = array("fields");
-    
+
     function StudipLitCatElement($catalog_id = false, $with_form = false){
         $this->dbv = new DbView();
         $this->init_form = $with_form;
@@ -58,7 +58,7 @@ class StudipLitCatElement {
             $this->getElementData($catalog_id);
         }
     }
-    
+
     function initFields(){
         $this->fields = array(
                         'dc_title'  =>  array(  'caption'   => _("Titel"),
@@ -142,7 +142,7 @@ class StudipLitCatElement {
                         'chdate'    =>  array(  'type'  =>  'int'),
                         );
     }
-    
+
     function getElementData($catalog_id = false){
         if (!$catalog_id){
             $catalog_id = $this->fields['catalog_id']['value'];
@@ -175,14 +175,14 @@ class StudipLitCatElement {
         }
         return ($catalog_id != "new_entry");
     }
-    
+
     function &getFormObject(){
         if (!is_object($this->form_obj)){
             $this->setFormObject();
         }
         return $this->form_obj;
     }
-    
+
     function setFormObject(){
         $form_fields = array();
         $form_name = $this->form_name;
@@ -214,9 +214,9 @@ class StudipLitCatElement {
             }
         }
         $form_fields['catalog_id'] = array('type' => 'hidden', 'default_value' => $this->fields['catalog_id']['value']);
-        $form_buttons = array('send' => array('type' => 'speichern', 'info' => _("Änderungen speichern")),
-                            'reset' => array('type' => 'zuruecksetzen', 'info' => _("Änderungen zurücksetzen")),
-                            'delete' => array('type' => 'loeschen', 'info' => _("Eintrag löschen"))
+        $form_buttons = array('send' => array('type' => 'accept', 'caption' => _('speichern'), 'info' => _("Änderungen speichern")),
+                            'reset' => array('caption' => _('zurücksetzen'), 'info' => _("Änderungen zurücksetzen")),
+                            'delete' => array('caption' => _('löschen'), 'info' => _("Eintrag löschen"))
                     );
         if (!is_object($this->form_obj)){
             $this->form_obj = new StudipForm($form_fields, $form_buttons, $form_name);
@@ -228,7 +228,7 @@ class StudipLitCatElement {
         }
         return true;
     }
-    
+
     function setValuesFromForm(){
         $this->getFormObject();
         if (is_array($this->form_obj->form_values)){
@@ -239,7 +239,7 @@ class StudipLitCatElement {
             }
         }
     }
-    
+
     function getValues(){
         $ret = array();
         foreach ($this->fields as $name => $value){
@@ -247,7 +247,7 @@ class StudipLitCatElement {
         }
         return $ret;
     }
-    
+
     function setValues($fields){
         if (is_array($fields)){
             foreach ($fields as $name => $value){
@@ -258,7 +258,7 @@ class StudipLitCatElement {
             return false;
         }
     }
-    
+
     function insertData(){
         if ($this->isNewEntry()){
             $this->fields['catalog_id']['value'] = md5(uniqid("litblablubb",1));
@@ -296,7 +296,7 @@ class StudipLitCatElement {
         }
         return $rs->affected_rows();
     }
-    
+
     function deleteElement(){
         $this->dbv->params[0] = $this->getValue("catalog_id");
         $rs = $this->dbv->get_query("view:LIT_DEL_ELEMENT");
@@ -310,7 +310,7 @@ class StudipLitCatElement {
             return false;
         }
     }
-    
+
     function checkElement(){
         if ($this->getValue('user_id') == 'studip' && $this->getValue('accession_number')){
             $this->dbv->params[0] = $this->getValue('accession_number');
@@ -324,7 +324,7 @@ class StudipLitCatElement {
             return false;
         }
     }
-    
+
     function checkValues(){
         $missing_fields = false;
         foreach($this->fields as $name => $detail){
@@ -342,7 +342,7 @@ class StudipLitCatElement {
         }
         return is_array($missing_fields) ? false : true;
     }
-    
+
     function checkDate($date){
         $date =  explode('-', $date);
         $date[1] = ($date[1] < 1 || $date[1] > 12) ? 1 : $date[1];
@@ -353,7 +353,7 @@ class StudipLitCatElement {
             return join('-' , $date);
         }
     }
-    
+
     function getValue($name){
         if ($this->fields[$name]){
             return trim($this->fields[$name]['value']);
@@ -392,7 +392,7 @@ class StudipLitCatElement {
         return $ret;
         }
     }
-    
+
     function setValue($name, $value){
         if (isset($this->fields[$name])){
             $this->fields[$name]['value'] = $value;
@@ -401,15 +401,15 @@ class StudipLitCatElement {
             return false;
         }
     }
-    
+
     function isChangeable(){
         return ($GLOBALS['auth']->auth['uid'] == $this->getValue("user_id") || $GLOBALS['auth']->auth['perm'] == "root");
     }
-    
+
     function isNewEntry(){
         return (!$this->fields['catalog_id']['value'] || $this->fields['catalog_id']['value'] == 'new_entry');
     }
-    
+
     function getShortName(){
         $autor = preg_split ("/[\s,]+/", $this->getValue("dc_creator"),-1,PREG_SPLIT_NO_EMPTY);
         $autor = $autor[0];
@@ -417,14 +417,14 @@ class StudipLitCatElement {
         $year = $year[0];
         return $autor . "(" . $year . ")-" . $this->getValue("dc_title");
     }
-    
+
     function CloneElement($catalog_id){
         $clone = new StudipLitCatElement($catalog_id);
         $clone->getElementData('new_entry');
         $clone->insertData();
         return ($clone->getValue('catalog_id') == $catalog_id ? false : $clone->getValue('catalog_id'));
     }
-    
+
     function &GetClonedElement($catalog_id){
         $clone = new StudipLitCatElement($catalog_id);
         $clone->getElementData('new_entry');

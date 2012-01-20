@@ -55,7 +55,7 @@ $_attributes['button'] = array('style' => 'vertical-align:middle;');
 
 $_the_search = new StudipLitSearch();
 $_the_clipboard = StudipLitClipBoard::GetInstance();
-$_the_clip_form =& $_the_clipboard->getFormObject();
+$_the_clip_form = $_the_clipboard->getFormObject();
 
 if ($_REQUEST['change_start_result']){
     $_the_search->start_result = $_REQUEST['change_start_result'];

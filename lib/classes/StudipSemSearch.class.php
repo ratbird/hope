@@ -7,7 +7,7 @@
 // This file is part of Stud.IP
 // StudipSemSearchForm.class.php
 // Class to build search formular and execute search
-// 
+//
 // Copyright (c) 2003 André Noack <noack@data-quest.de>
 // +---------------------------------------------------------------------------+
 // This program is free software; you can redistribute it and/or
@@ -36,48 +36,48 @@ require_once 'lib/functions.php';
 /**
 * Class to build search formular and execute search
 *
-* 
 *
-* @access   public  
+*
+* @access   public
 * @author   André Noack <noack@data-quest.de>
 * @package  DBTools
 **/
 class StudipSemSearch {
-    
+
     var $form;
-    
+
     var $search_result;
-    
+
     var $form_name;
-    
+
     var $num_sem;
-    
+
     var $sem_tree;
-    
+
     var $range_tree;
-    
+
     var $search_done = false;
-    
+
     var $found_rows = false;
-    
+
     var $search_button_clicked = false;
-    
+
     var $new_search_button_clicked = false;
-    
+
     var $sem_change_button_clicked = false;
-    
+
     var $override_sem = false;
-    
+
     var $attributes_default = array('style' => 'width:100%;');
-    
+
     var $search_scopes = array();
     var $search_ranges = array();
     var $search_sem_class = 'all';
-    
+
     var $visible_only = false;
-    
+
     function StudipSemSearch($form_name = "search_sem", $auto_search = true, $visible_only = false, $sem_class = 'all'){
-        
+
         $search_fields = array('title' => array('type' => 'text'),
                                 'sub_title' => array('type' => 'text'),
                                 'number' => array('type' => 'text'),
@@ -96,9 +96,9 @@ class StudipSemSearch {
                                                     'options_callback' => array($this, 'getSelectOptions')
                                                     )
                                 );
-        $search_buttons = array('do_search' => array('type' => 'suchestarten', 'info' => _("Suche starten")),
-                                'sem_change' => array('type' => 'auswaehlen', 'info' => _("anderes Semester auswählen")),
-                                'new_search' => array('type' => 'neuesuche', 'info' =>_("Neue Suche starten")));
+        $search_buttons = array('do_search' => array('caption' => _("Suche starten"), 'info' => _("Suche starten")),
+                                'sem_change' => array('caption' => _('auswählen'), 'info' => _("anderes Semester auswählen")),
+                                'new_search' => array('caption' => _('neue Suche'), 'info' =>_("Neue Suche starten")));
         $this->form = new StudipForm($search_fields, $search_buttons, $form_name , false);
         $this->form_name = $form_name;
         $this->sem_dates = SemesterData::GetSemesterArray();
@@ -112,19 +112,19 @@ class StudipSemSearch {
                 $this->search_done = true;
             }
         }
-        
+
         $this->new_search_button_clicked = $this->form->isClicked('new_search');
         $this->sem_change_button_clicked = $this->form->isClicked('do_search');
-        
+
     }
-    
+
     function getSearchField($name,$attributes = false,$default = false){
         if (!$attributes){
             $attributes = $this->attributes_default;
         }
         return $this->form->getFormField($name,$attributes,$default);
     }
-    
+
     function getSelectOptions($caller, $name){
         $options = array();
         if ($name == "combination"){
@@ -171,22 +171,22 @@ class StudipSemSearch {
         }
         return $options;
     }
-    
+
     function getFormStart($action = ""){
         return $this->form->getFormStart($action);
     }
-    
+
     function getFormEnd(){
         if ($this->search_sem_class != 'all'){
             $ret = $this->form->getHiddenField('category',$this->search_sem_class);
         }
         return $ret . $this->form->getFormEnd();
     }
-    
+
     function getHiddenField($name, $value = false){
         return  $this->form->getHiddenField($name, $value);
     }
-    
+
     function getSearchButton($attributes = false, $tooltip = false){
         return $this->form->getFormButton('do_search', $attributes);
     }
@@ -196,7 +196,7 @@ class StudipSemSearch {
     function getSemChangeButton($attributes = false, $tooltip = false){
         return $this->form->getFormButton('sem_change', $attributes);
     }
-        
+
     function doSearch(){
         $search_helper = new StudipSemSearchHelper($this->form, $this->visible_only);
         $this->found_rows = $search_helper->doSearch();

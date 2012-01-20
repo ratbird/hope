@@ -77,7 +77,7 @@ abstract class Interactable
         }
 
         # otherwise bail out
-        throw new BadMethodCallException();
+        throw new \BadMethodCallException();
     }
 
     /**

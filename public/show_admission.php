@@ -334,7 +334,7 @@ if(Request::submitted('admissiongroupdelete') && isset($_REQUEST['group_id'])){
                             . Button::createCancel(_('NEIN!'), array('title' => _('abbrechen')))
                             . '</div></form>');
 }
-if(isset($_REQUEST['group_sem_x']) && (count($_REQUEST['gruppe']) > 1 || isset($_REQUEST['group_id'])) && !Request::submitted('admissiongroupcancel')){
+if(Request::submitted('group_sem') && (count($_REQUEST['gruppe']) > 1 || isset($_REQUEST['group_id'])) && !Request::submitted('admissiongroupcancel')){
     if(isset($_REQUEST['group_id'])){
             $group_obj = new StudipAdmissionGroup($_REQUEST['group_id']);
     } else {
@@ -655,7 +655,7 @@ if(is_object($group_obj)){
         &nbsp;
         <?= Button::create(_('löschen'), 'admissiongroupdelete', array('title' => _("Gruppe auflösen"))) ?>
         &nbsp;
-        <?= Button::creaCancel(_('abbrechen'), 'admissiongroupcancel', array('title' => _("Eingabe abbrechen"))) ?>
+        <?= Button::createCancel(_('abbrechen'), 'admissiongroupcancel', array('title' => _("Eingabe abbrechen"))) ?>
         </span>
         </li>
         </ul>

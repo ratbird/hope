@@ -23,6 +23,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
 
@@ -454,7 +455,7 @@ if (!isset($details) || isset($set)) {
 
     // Jemand soll ans Institut...
     //if (isset($berufen_x) && $ins_id != "" && ($perm->have_perm("root") || (!$SessSemName["is_fak"] && $perm->have_studip_perm("admin",$SessSemName["fak"])))) {
-    if (isset($berufen_x) && $ins_id != "" && $u_id != "") {
+    if (Request::submitted('berufen') && $ins_id != "" && $u_id != "") {
         $db->query("SELECT *  FROM user_inst WHERE Institut_id = '$ins_id' AND user_id = '$u_id'");
         if (($db->next_record()) && ($db->f("inst_perms") != "user")) {
             // der Admin hat Tomaten auf den Augen, der Mitarbeiter sitzt schon im Institut
@@ -637,7 +638,7 @@ if ($inst_id != "" && $inst_id !="0") {
                             <b><?=_("Folgende nur bei Zuordnung eines Admins:")?></b><br>
                             <input type="checkbox" id="enable_mail_admin" name="enable_mail_admin" value="admin"><label for="enable_mail_admin" ><?=_("Admins der Einrichtung benachrichtigen")?></label><br>
                             <input type="checkbox" id="enable_mail_dozent" name="enable_mail_dozent" value="dozent"><label for="enable_mail_dozent" ><?=_("Dozenten der Einrichtung benachrichtigen")?></label><br>
-                            <input type="image" name="berufen" <?=makeButton("hinzufuegen", "src")?> border=0 value="<?=_("berufen")?>">
+                            <?= Button::create(_('hinzufügen'), 'berufen') ?>
                             </td>
                         </tr>
                     </table>
@@ -884,7 +885,7 @@ if ($perm->have_perm("admin")) {
     printf("<option %svalue=\"liste\">%s</option>\n",
         ($show == "liste" ? "selected " : ""), _("keine"));
     echo "</select>\n";
-    echo "<input type=\"image\" border=\"0\" " . makeButton("uebernehmen", "src") . "style=vertical-align:middle>";
+    echo Button::create(_('übernehmen'));
 }
 else {
     if ($show == "funktion") {
@@ -902,15 +903,12 @@ printf("<font size=\"-1\">" . _("<b>%s</b> MitarbeiterInnen gefunden") . "</font
 echo "</td><td class=\"steel1\" width=\"10%\">\n";
 
 if ($extend == "yes") {
-    echo '<a href="'.URLHelper::getLink('?extend=no').'">';
-    echo makeButton("normaleansicht", "img");
+    echo LinkButton::create(_('normale Ansicht'), URLHelper::getLink('?extend=no'));
 }
 else {
-    echo '<a href="'.URLHelper::getLink('?extend=yes').'">';
-    echo makeButton("erweiterteansicht", "img");
+    echo LinkButton::create(_('erweiterte Ansicht'), URLHelper::getLink('?extend=yes'));
 }
 
-echo "</a>\n";
 echo "</td></tr></table>\n";
 
 if ($perm->have_perm("admin")) {

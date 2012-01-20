@@ -24,6 +24,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+use Studip\Button, Studip\LinkButton;
+
 require '../lib/bootstrap.php';
 
 ob_start();
@@ -283,7 +285,7 @@ if(!isset($_SESSION['show_admission']['check_admission'])){
     $_SESSION['show_admission']['check_admission'] = true;
 }
 
-if(isset($_REQUEST['choose_institut_x'])){
+if(Request::submitted('choose_institut')){
     if(isset($_REQUEST['select_sem'])){
         $_SESSION['_default_sem'] = $_REQUEST['select_sem'];
     }
@@ -320,19 +322,19 @@ if (!is_array($_my_inst)){
         $_SESSION['show_admission']['institut_id'] = ($_my_inst[$_REQUEST['institut_id']]) ? $_REQUEST['institut_id'] : $_my_inst_arr[0];
     }
 }
-if(isset($_REQUEST['admissiongroupdelete_x']) && isset($_REQUEST['group_id'])){
+if(Request::submitted('admissiongroupdelete') && isset($_REQUEST['group_id'])){
     $msg[] = array('info', _("Wollen Sie die Gruppierung f&uuml;r die ausgew&auml;hlte Gruppe aufl&ouml;sen?")
                             . '<br>' . _("Beachten Sie, dass f&uuml;r bereits eingetragene / auf der Warteliste stehende TeilnehmerInnen keine &Auml;nderungen vorgenommen werden.")
                             . '<form action="'.URLHelper::getLink().'" method="post">'
                             . CSRFProtection::tokenTag()
                             . '<input type="hidden" name="group_sem_x" value="1"><div style="padding:3px;">'
                             . '<input type="hidden" name="group_id" value="'.$_REQUEST['group_id'].'">'
-                            . makeButton('ja', 'input', _("Gruppe auflösen"), 'admissiongroupreallydelete')
+                            . Button::createAccept(_('JA!'), 'admissiongroupreallydelete', array('title' => _("Gruppe auflösen")))
                             . '&nbsp;'
-                            . makeButton('nein', 'input', _("abbrechen"))
+                            . Button::createCancel(_('NEIN!'), array('title' => _('abbrechen')))
                             . '</div></form>');
 }
-if(isset($_REQUEST['group_sem_x']) && (count($_REQUEST['gruppe']) > 1 || isset($_REQUEST['group_id'])) && !isset($_REQUEST['admissiongroupcancel_x'])){
+if(isset($_REQUEST['group_sem_x']) && (count($_REQUEST['gruppe']) > 1 || isset($_REQUEST['group_id'])) && !Request::submitted('admissiongroupcancel')){
     if(isset($_REQUEST['group_id'])){
             $group_obj = new StudipAdmissionGroup($_REQUEST['group_id']);
     } else {
@@ -341,7 +343,7 @@ if(isset($_REQUEST['group_sem_x']) && (count($_REQUEST['gruppe']) > 1 || isset($
             $group_obj->addMember($sid);
         }
     }
-    if(isset($_REQUEST['admissiongroupchange_x'])){
+    if(Request::submitted('admissiongroupchange')){
         $group_obj->setValue('name', trim(stripslashes($_REQUEST['admission_group_name'])));
         $group_obj->setValue('status', (int)$_REQUEST['admission_group_status']);
         $group_obj->setUniqueMemberValue('admission_type', (int)$_REQUEST['admission_group_type']);
@@ -460,7 +462,7 @@ if(isset($_REQUEST['group_sem_x']) && (count($_REQUEST['gruppe']) > 1 || isset($
             }
         }
     }
-    if($_REQUEST['admissiongroupreallydelete_x']){
+    if(Request::submitted('admissiongroupreallydelete')){
         if($group_obj->delete()){
             $msg[] = array('msg', sprintf(_("Die Gruppe wurde aufgelöst.")));
             unset($group_obj);
@@ -649,11 +651,11 @@ if(is_object($group_obj)){
         </li>
         <li style="margin-top:5px;">
         <span style="padding-left:200px;">
-        <?=makeButton('uebernehmen', 'input', _("Einstellungen übernehmen"), 'admissiongroupchange')?>
+        <?= Button::create(_('übernehmen'), 'admissiongroupchange', array('title' => _("Einstellungen übernehmen"))) ?>
         &nbsp;
-        <?=makeButton('loeschen', 'input', _("Gruppe auflösen"), 'admissiongroupdelete')?>
+        <?= Button::create(_('löschen'), 'admissiongroupdelete', array('title' => _("Gruppe auflösen"))) ?>
         &nbsp;
-        <?=makeButton('abbrechen', 'input', _("Eingabe abbrechen"), 'admissiongroupcancel')?>
+        <?= Button::creaCancel(_('abbrechen'), 'admissiongroupcancel', array('title' => _("Eingabe abbrechen"))) ?>
         </span>
         </li>
         </ul>
@@ -713,7 +715,7 @@ if(is_object($group_obj)){
                 ?>
                     </select>&nbsp;
                     <?=SemesterData::GetSemesterSelector(array('name'=>'select_sem', 'style'=>'vertical-align:middle;'), $_SESSION['_default_sem'])?>
-                    <?=makeButton("auswaehlen","input",_("Einrichtung auswählen"), "choose_institut")?>
+                    <?= Button::create(_('auswählen'), 'choose_institut', array('title' => _("Einrichtung auswählen"))) ?>
                 </div>
                 <div style="margin:10px;">
                 <b><?=_("Angezeigte Veranstaltungen einschränken:")?></b>
@@ -844,7 +846,7 @@ if(is_object($group_obj)){
 
     if (count($data) && $ALLOW_GROUPING_SEMINARS) {
         echo '<tr><td align="left" colspan="2">'. "\n";
-        echo makeButton("gruppieren", 'input', _("Markierte Veranstaltungen gruppieren"), 'group_sem');
+        echo Button::create(_('gruppieren'), 'group_sem', array('title' => _("Markierte Veranstaltungen gruppieren")));
         echo "</form>\n";
         echo "</td></tr>\n";
     }

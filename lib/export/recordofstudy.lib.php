@@ -28,6 +28,9 @@
  * @param   string $semester    the current semester (edit-mode) (optional)
  *
  */
+
+use Studip\Button, Studip\LinkButton;
+
 function printSiteTitle($semester = NULL){
     $html = "<table border=0 class=blank align=center cellspacing=0 cellpadding=0 width=\"100%\">\n"
           . "   <tr valign=top align=center>\n"
@@ -67,7 +70,7 @@ function printSelectSemester($infobox,$semestersAR){
         $html .= "        <option value=\"".$semester["id"]."\">".$semester["name"]."</option>\n";
     }
     $html .="       </select>\n"
-          . createButton("auswaehlen",_("Semester und Kriterium auswählen."),"semester_selected")
+          . Button::create(_('auswähhlen'), 'semester_selected', _("Semester und Kriterium auswählen."))
           . "       <br><br>&nbsp;<select name=\"onlyseminars\" style=\"vertical-align:middle;\">\n"
           . "        <option value=\"1\" selected>"._("nur Lehrveranstaltungen")."</option>\n"
           . "        <option value=\"0\">"._("alle Veranstaltungen")."</option>\n"
@@ -183,7 +186,7 @@ function printRecordOfStudies($infobox, $basicdata, $seminare, $notice = NULL){
 
     $html .="       <tr>\n"
           . "        <td colspan=\"4\"><font size=\"-1\"><br><table width=\"100%\"><tr><td align=\"left\">\n"
-          . createButton("hinzufuegen",_("Neue Veranstaltung hinzufügen."),"add_seminars")
+          . Button::create(_('hinzufügen'), 'add_seminars', array('title' => _('Neue Veranstaltung hinzufügen.')))
           . "         <select style=\"vertical-align:middle;\" name=\"newseminarfields\" size=1>\n";
     for( $i=1; $i<=10; $i++ )
         $html .= "        <option value=\"$i\">$i</option>\n";
@@ -193,7 +196,7 @@ function printRecordOfStudies($infobox, $basicdata, $seminare, $notice = NULL){
 
     // only show delete-button if there are any seminars
     if(!empty($seminare))
-        $html .= _("Markierte Veranstaltung(en) löschen")."\n" . createButton("loeschen",_("Markierte Veranstaltung(en) löschen."),"delete_seminars");
+        $html .= _("Markierte Veranstaltung(en) löschen")."\n" . Button::create(_('löschen'), 'delete_seminars', array('title' => _("Markierte Veranstaltung(en) löschen.")));
     $html .="        </font></td></tr></table>\n"
           . "       </tr>\n"
           . "      </table>\n"
@@ -204,8 +207,8 @@ function printRecordOfStudies($infobox, $basicdata, $seminare, $notice = NULL){
     echo $html;
     print_infobox($infobox, "infobox/folders.jpg");
     $html = "      <br>\n"
-          . createButton("zurueck",_("Abbrechen und ein anderes Semester auswählen."),"select_new_semester")
-          . createButton("weiter",_("Weiter zum Download Ihrer Veranstaltungsübersicht."),"create_pdf")
+          . Button::create(_('<< zurück'), 'select_new_semester', array('title' => _("Abbrechen und ein anderes Semester auswählen.")))
+          . Button::create(_('weiter >>'), 'create_pdf', array('title' => _("Weiter zum Download Ihrer Veranstaltungsübersicht.")))
           . "     <br><br></td>\n"
           . "    </tr>\n"
           . "   </table>\n"
@@ -321,20 +324,4 @@ function createSeminarHeadTD($text, $align = "left"){
     return $html;
 }
 
-/**
- * creates an image-button
- *
- *
- * @access  private
- * @param   string $button  the button name (send to makeButton())
- * @param   string $title   the label
- * @param   string $button  the button name (optional)
- * @param   string $align   the button value (optional)
- * @returns string          the button
- */
-function createButton($button, $title, $name = NULL, $value = NULL){
-    $html = "      <input type=\"image\" name=\"".$name."\" value=\"".$value."\" style=\"vertical-align:middle;\""
-          .        makeButton($button,"src") ." alt=\"".$title."\" title=\"".$title."\" border=0>\n";
-    return $html;
-}
 ?>

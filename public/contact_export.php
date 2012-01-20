@@ -10,6 +10,7 @@
  * @copyright   2003 Stud.IP-Project
  */
 
+use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
 
@@ -30,7 +31,7 @@ include ('lib/seminar_open.php');
 /*                                                                            *
 /* ************************************************************************* */
 // if you wanna export a vCard no html-header should be send to the browser
-if (!( (isset($_POST["export_vcard_x"]))
+if (!( (Request::submitted('export_vcard'))
     || (isset($_GET["contactid"]))
     || (isset($_GET["username"]))
     || (isset($_GET["groupid"])) )){
@@ -49,7 +50,7 @@ if (!( (isset($_POST["export_vcard_x"]))
 /* identify the current site-mode                                             *
 /*                                                                            *
 /* ************************************************************************* */
-if (isset($_POST["export_vcard_x"]))
+if (Request::submitted('export_vcard'))
     $mode = "export_vcard";
 elseif (isset($_GET["contactid"]))
     $mode = "ext_export";
@@ -162,7 +163,7 @@ function printSelectGroup($infobox, $groups)
         $html .= "        <option value=\"".$groups[$i]["id"]."\">".$groups[$i]["name"]."</option>\n";
     }
     $html .="       </select>\n"
-        . createButton("export",_("Diese Gruppe nun exportieren"),"export_vcard")
+        . Button::create(_('export'), 'export_vcard', array('title' => _("Diese Gruppe nun exportieren")))
         . "      </form>\n"
         . "   </font></td>\n"
         . "   <td align=\"right\" width=\"270\" valign=\"top\">\n";
@@ -180,23 +181,6 @@ function printSelectGroup($infobox, $groups)
     page_close();
 }
 
-/**
- * creates an image-button
- *
- *
- * @access  private
- * @param   string $button  the button name (send to makeButton())
- * @param   string $title   the label
- * @param   string $button  the button name (optional)
- * @param   string $align   the button value (optional)
- * @returns string          the button
- */
-function createButton($button, $title, $name = NULL, $value = NULL){
-    global $PHP_SELF;
-    $html = "      <input type=\"image\" action=\"".$PHP_SELF."\" name=\"".$name."\" value=\"".$value."\" style=\"vertical-align:middle;\""
-          .        makeButton($button,"src") ." alt=\"".$title."\" title=\"".$title."\" border=0>\n";
-    return $html;
-}
 
 /* ************************************************************************** *
 /* db-requests                                                                *

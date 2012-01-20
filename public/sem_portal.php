@@ -36,6 +36,7 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
+use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
 
@@ -197,14 +198,14 @@ ob_end_flush();
         echo "</td></tr><tr><td class=\"blank\" align=\"left\">";
         if ($sem_portal["bereich"] != "mod"){
                 if ($sem_browse_data['cmd'] == "xts"){
-                    echo "<a href=\"$PHP_SELF?cmd=qs&level=f\">" . makeButton('schnellsuche', 'img', _("Zur Schnellsuche zurückgehen")) . '</a>';
+                    echo LinkButton::create(_('Schnellsuche'), $PHP_SELF.'?cmd=qs&level=f', array('title' => _("Zur Schnellsuche zurückgehen")));
                 } else {
-                    echo "<a href=\"$PHP_SELF?cmd=xts&level=f\">" . makeButton('erweitertesuche', 'img', _("Erweitertes Suchformular aufrufen")) . '</a>';
+                    echo LinkButton::create(_('erweiterte Suche'), $PHP_SELF.'?cmd=xts&level=f', array('title' => _("Erweitertes Suchformular aufrufen")));
                 }
         }
         echo "</td>\n";
         echo "<td class=\"blank\" align=\"right\">";
-        echo "<a href=\"$PHP_SELF?reset_all=1\">" . makeButton('zuruecksetzen', 'img', _("zurücksetzen")) . '</a>';
+        echo LinkButton::create(_('zurücksetzen'), $PHP_SELF.'?reset_all=1', array('title' => _("zurücksetzen")));
         echo "</td></tr>\n";
 
 

@@ -47,7 +47,7 @@ if (!$termin_id && !$_calendar->havePermission(Calendar::PERMISSION_WRITABLE)) {
     my_error($error_message, 'blank', 2, TRUE);
     echo "<tr><td class=\"blank\" width=\"15%\">&nbsp;</td>";
     echo '<td class="blank" width="85%">';
-    echo LinkButton::create(_('<< zurück'), URLHelper::getLink('', array('cmd' => $calendar_sess_control_data['view_prv'], 'atime' => $atime)));
+    echo LinkButton::create(_('<< zurück'), URLHelper::getLink('', array('cmd' => $_SESSION['calendar_sess_control_data']['view_prv'], 'atime' => $atime)));
     echo "</td></tr>\n";
     echo "</table><br />&nbsp;<br /></td></tr></table>\n";
     page_close();
@@ -77,7 +77,7 @@ $css_switcher->switchClass();
 
 ########################################################################################
 
-if (!Request::submitted('set_recur')) {
+if (!$set_recur_x) {
     if (isset($_calendar->event) && ($_calendar->event instanceof SeminarEvent
             || $_calendar->event instanceof SeminarCalendarEvent)) {
         echo "<tr>\n<td class=\"" . $css_switcher->getClass() . "\" width=\"100%\">\n";
@@ -811,7 +811,7 @@ if (isset($_calendar->event) && ($_calendar->event instanceof SeminarEvent || $_
     echo "<input type=\"hidden\" name=\"mod_prv\" value=\"$mod\">\n";
     echo "<input type=\"hidden\" name=\"mod\" value=\"$mod\">\n";
     echo "<input type=\"hidden\" name=\"termin_id\" value=\"$termin_id\">\n";
-    if (Request::submitted('set_recur')) {
+    if ($set_recur_x) {
         echo "<input type=\"hidden\" name=\"evtype\" value=\"$evtype\">\n";
         echo Button::create(_('<< zurück'), 'back_recur');
         echo "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ";
@@ -828,7 +828,7 @@ if (isset($_calendar->event) && ($_calendar->event instanceof SeminarEvent || $_
     echo "<input type=\"hidden\" name=\"mod_prv\" value=\"$mod\">\n";
     echo "<input type=\"hidden\" name=\"mod\" value=\"$mod\">\n";
     echo "<input type=\"hidden\" name=\"termin_id\" value=\"$termin_id\">\n";
-    if (Request::submitted('set_recur')) {
+    if ($set_recur_x) {
         echo Button::create(_('<< zurück'), 'back_recur');
         echo "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ";
         echo "<input type=\"hidden\" name=\"set_recur\" value=\"1\">\n";
@@ -846,8 +846,8 @@ if (isset($_calendar->event) && ($_calendar->event instanceof SeminarEvent || $_
             echo Button::create(_('Termin ändern'), 'change');
             echo Button::create(_('löschen'), 'del');
         }
-        echo Button::createCancel(_('abbrechen'), 'cancel').">\n";
-    } elseif (!Request::submitted('set_recur') || $evtype == 'semcal') {
+        echo Button::createCancel(_('abbrechen'), 'cancel')."\n";
+      } elseif (!$set_recur_x || $evtype == 'semcal') {
         echo Button::create(_('<< zurück'), 'cancel')."\n";
     }
 

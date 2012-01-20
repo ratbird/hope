@@ -42,6 +42,7 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
+use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
 require_once 'app/models/studygroup.php';
@@ -85,10 +86,10 @@ function temporaly_accepted($sem_name, $user_id, $sem_id, $ask = "TRUE", $studie
             echo _("Bemerkungen zu Teilnahmevoraussetzungen:");
             echo '<br><textarea name="comment" cols="50" rows="5"></textarea><br><br>';
         }
-        printf("<input %s %s type=\"image\" border=\"0\" style=\"vertical-align:middle;\">\n", makeButton("eintragen","src"),tooltip(_("In diese Veranstaltung eintragen")));
+        print(Button::create(_('eintragen'), array('title' => _("In diese Veranstaltung eintragen"))));
         print("<input type=\"hidden\" name=\"ask\" value=\"FALSE\">\n");
         printf ("<input type=\"HIDDEN\" name=\"sem_verify_suggest_studg\" value=\"%s\">\n", $studiengang_id);
-        printf("<a href=\"details.php?sem_id=%s\"><img %s %s type=\"image\" border=\"0\" style=\"vertical-align:middle;\"></a>\n",$sem_id,makeButton("abbrechen","src"),tooltip(_("Nicht in diese Veranstaltung eintragen")));
+        print(LinkButton::createCancel(_('abbrechen'), 'details.php?sem_id='.$sem_id, array('title' => _("Nicht in diese Veranstaltung eintragen"))));
         print("</form>");
         print("</td></tr><tr><td class=\"blank\" colspan=2>&nbsp;</td></tr></table>");
         page_close();
@@ -530,7 +531,7 @@ $db6=new DB_Seminar;
                         <?= CSRFProtection::tokenTag() ?>
                         &nbsp; &nbsp; <input type="PASSWORD" name="pass" size="12">
                         <input type="hidden" name="id" value="<? echo $id;?>">
-                        <input type="image" <?=makeButton("abschicken", "src")?> border="0" value="<?=_("abschicken") ?>">
+                        <?= Button::createAccept(_('abschicken')) ?>
                         </form>
                         </td></tr>
                         <?
@@ -664,7 +665,7 @@ $db6=new DB_Seminar;
                                         printf ("&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<font size=-1 color=\"#888888\">"._("Kontingent f&uuml;r %s (%s Pl&auml;tze insgesamt / %s belegt)")."</font><br>", htmlReady($studiengang['name']), $studiengang['num_total'], $studiengang['num_occupied']);
                                     }
                                    ?>
-                            <br>&nbsp; &nbsp; <input type="image" <?=makeButton("ok", "src")?> border=0 value="abschicken">
+                            <br>&nbsp; &nbsp; <?= Button::createAccept(_('OK')) ?>
                             </form>
                             </td></tr>
                             <?
@@ -805,7 +806,7 @@ $db6=new DB_Seminar;
                     <?= CSRFProtection::tokenTag() ?>
                     &nbsp; &nbsp; <input type="PASSWORD" name="pass" size="12">
                     <input type="hidden" name="id" value="<? echo $id;?>">
-                    <input type="image" <?=makeButton("abschicken", "src")?> border="0" value="<?=_("abschicken") ?>">
+                    <?= Button::createAccept(_('abschicken')) ?>
                     </form>
                     </td></tr>
                     <?
@@ -851,7 +852,7 @@ $db6=new DB_Seminar;
                         </td>
                     </tr>
                     <tr><td class="blank" colspan="3" align="center">
-                    <input type="image" <?=makeButton("ok", "src")?> border="0" value="<?=_("abschicken") ?>"><br>&nbsp;
+                    <?= Button::createAccept(_('OK')) ?><br>&nbsp;
                     </td></tr></table>
                     </form>
                     <?

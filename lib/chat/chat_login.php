@@ -36,6 +36,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
+use Studip\Button, Studip\LinkButton;
+
 /**
 * Close the actual window if PHPLib shows login screen
 * @const CLOSE_ON_LOGIN_SCREEN
@@ -88,8 +90,8 @@ if ($chat_entry_level != "admin" && $chatServer->isActiveChat($chatid) && ($chat
             . CSRFProtection::tokenTag()
             . "<b>" ._("Passwort erforderlich")
             . "</b><br><font size=\"-1\" color=\"black\">" . _("Um an diesem Chat teilnehmen zu k&ouml;nnen, m&uuml;ssen Sie das Passwort eingeben.")
-            . "<br><input type=\"password\" style=\"vertical-align:middle;\" name=\"chat_password\">&nbsp;&nbsp;<input style=\"vertical-align:middle;\" type=\"image\" name=\"submit\""
-            . makeButton("absenden","src") . " border=\"0\" value=\"senden\"></font></form>§";
+            . "<br><input type=\"password\" style=\"vertical-align:middle;\" name=\"chat_password\">&nbsp;&nbsp;"
+            . Button::createAccept(_('absenden'), 'submit')."</font></form>§";
             }
 }
 if (!$chat_entry_check && !$chat_entry_level){

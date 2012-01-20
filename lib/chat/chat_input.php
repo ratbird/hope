@@ -36,6 +36,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
+use Studip\Button, Studip\LinkButton;
+
 /**
 * Close the actual window if PHPLib shows login screen
 * @const CLOSE_ON_LOGIN_SCREEN
@@ -178,11 +180,10 @@ if ($chatInput) {
                         </select>
                     </td>
                     <td align="center" valign="middle">
-                        <input type="image" name="Submit"
-                            <?=makeButton("absenden","src") . tooltip(_("Nachricht senden"))?> border="0" value="senden">
+                        <?= Button::createAccept(_('absenden'), array('title' => _("Nachricht senden"))) ?>
                     </td>
                     <td align="right" valign="middle">
-                        <a href="javascript:doQuit();"><img <?=tooltip(_("Chat verlassen")) . makeButton("chatbeenden","src")?> border="0"></a>
+                        <?= LinkButton::create(_('Chat beenden'), 'javascript:doQuit();', array('title' => _("Chat verlassen"))) ?>
                     </td>
                 </tr>
             </table>

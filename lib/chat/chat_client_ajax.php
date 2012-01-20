@@ -34,6 +34,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
+use Studip\Button, Studip\LinkButton;
+
 include 'sajax_chat_functions.php';
 ?>
 <html>
@@ -204,8 +206,7 @@ echo "\n<b>" . sprintf(_("Hallo %s,<br> willkommen im Raum: %s"),htmlReady($chat
                     <td align="left" valign="middle" id="color_chooser">
                     </td>
                     <td align="center" valign="middle">
-                        <input type="image" name="Submit"
-                            <?=makeButton("absenden","src") . tooltip(_("Nachricht senden"))?> border="0" value="senden">
+                        <?= Button::createAccept(_('absenden'), array('title' => _("Nachricht senden"))) ?>
                     </td>
                     <td align="right" valign="middle">
                         <a href="javascript:doQuit();"><img <?=tooltip(_("Chat verlassen")) . makeButton("chatbeenden","src")?> border="0"></a>

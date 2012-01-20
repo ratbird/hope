@@ -49,6 +49,26 @@ class CalendarWriteriCalendar extends CalendarWriter
         }
         $header .= "METHOD:PUBLISH" . $this->newline;
 
+        // time zone definition CET/CEST
+        $header .= 'CALSCALE:GREGORIAN' . $this->newline
+                   . 'BEGIN:VTIMEZONE' . $this->newline
+                   . 'TZID:Europe/Berlin' . $this->newline
+                   . 'BEGIN:DAYLIGHT' . $this->newline
+                   . 'TZOFFSETFROM:+0100' . $this->newline
+                   . 'TZOFFSETTO:+0200' . $this->newline
+                   . 'TZNAME:CEST' . $this->newline
+                   . 'DTSTART:19700329T020000' . $this->newline
+                   . 'RRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3' . $this->newline
+                   . 'END:DAYLIGHT' . $this->newline
+                   . 'BEGIN:STANDARD' . $this->newline
+                   . 'TZOFFSETFROM:+0200' . $this->newline
+                   . 'TZOFFSETTO:+0100' . $this->newline
+                   . 'TZNAME:CET' . $this->newline
+                   . 'DTSTART:19701025T030000' . $this->newline
+                   . 'RRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10' . $this->newline
+                   . 'END:STANDARD' . $this->newline
+                   . 'END:VTIMEZONE' . $this->newline;
+
         return $header;
     }
 
@@ -117,11 +137,11 @@ class CalendarWriteriCalendar extends CalendarWriter
                 case 'LAST-MODIFIED':
                 case 'CREATED':
                 case 'COMPLETED':
-                    $value = $this->_exportDateTime($value);
+                    $value = $this->_exportDateTime($value, true);
                     break;
 
                 case 'DTSTAMP':
-                    $value = $this->_exportDateTime(time());
+                    $value = $this->_exportDateTime(time(), true);
                     break;
 
                 case 'DTEND':
@@ -138,9 +158,11 @@ class CalendarWriteriCalendar extends CalendarWriter
                             $value = $this->_exportDate($value);
                         } else {
                             $value = $this->_exportDateTime($value);
+                            $params_str = ';TZID=Europe/Berlin';
                         }
                     } else {
                         $value = $this->_exportDateTime($value);
+                        $params_str = ';TZID=Europe/Berlin';
                     }
                     break;
 
@@ -299,15 +321,17 @@ class CalendarWriteriCalendar extends CalendarWriter
      * @param int $value Unix timestamp
      * @return String Date and time (UTC) iCalendar formatted
      */
-    function _exportDateTime($value)
+    function _exportDateTime($value, $utc = false)
     {
 
 //      $TZOffset  = 3600 * substr(date('O', $value), 0, 3);
 //      $TZOffset += 60 * substr(date('O', $value), 3, 2);
         //transform local time in UTC
-        $value -= date('Z', $value);
+        if ($utc) {
+            $value -= date('Z', $value);
+        }
 
-        return $this->_exportDate($value) . 'T' . $this->_exportTime($value);
+        return $this->_exportDate($value) . 'T' . $this->_exportTime($value, $utc);
     }
 
     /**
@@ -316,10 +340,12 @@ class CalendarWriteriCalendar extends CalendarWriter
      * @param int $value Unix timestamp
      * @return String Time (UTC) iCalendar formatted
      */
-    function _exportTime($value)
+    function _exportTime($value, $utc = false)
     {
         $time = date("His", $value);
-        $time .= 'Z';
+        if ($utc) {
+            $time .= 'Z';
+        }
 
         return $time;
     }
@@ -402,7 +428,7 @@ class CalendarWriteriCalendar extends CalendarWriter
                     case 'expire':
                         // end of unix epoche (this is also the end of Stud.IP epoche ;-) )
                         if ($r_value < Calendar::CALENDAR_END)
-                            $rrule[] = 'UNTIL=' . $this->_exportDateTime($r_value);
+                            $rrule[] = 'UNTIL=' . $this->_exportDateTime($r_value, true);
                         break;
                     case 'linterval':
                         $rrule[] = 'INTERVAL=' . $r_value;

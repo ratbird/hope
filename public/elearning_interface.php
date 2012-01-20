@@ -24,6 +24,7 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
+use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
 
@@ -87,7 +88,7 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
     $sess->register("elearning_open_close");
 
     // ggf. neuen Ilias4-Kurs anlegen
-    if (isset($_REQUEST["create_course_x"]) AND $rechte) {
+    if (Request::submitted('create_course') AND $rechte) {
         ELearningUtils::loadClass($_REQUEST["cms_select"]);
         if ((method_exists($connected_cms[$_REQUEST["cms_select"]], "createCourse")))
             if ($connected_cms[$_REQUEST["cms_select"]]->createCourse($SessSemName[1]))
@@ -95,7 +96,7 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
     }
 
 // ggf. bestehenden Ilias4-Kurs zuordnen
-    if (isset($_REQUEST["connect_course_sem_id"])) {
+    if (Request::submitted('connect_course')) {
         if ((ObjectConnections::getConnectionModuleId($_REQUEST["connect_course_sem_id"], "crs", $_REQUEST["cms_select"])) AND ($perm->have_studip_perm("dozent", $_REQUEST["connect_course_sem_id"]))) {
             ObjectConnections::setConnection($SessSemName[1], ObjectConnections::getConnectionModuleId($_REQUEST["connect_course_sem_id"], "crs", $_REQUEST["cms_select"]), "crs", $_REQUEST["cms_select"]);
             $messages["info"] .= "Zuordnung wurde gespeichert.<br>";
@@ -322,7 +323,7 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
                 echo "<input type=\"HIDDEN\" name=\"anker_target\" value=\"search\">\n";
                 echo "<input type=\"HIDDEN\" name=\"view\" value=\"" . $view . "\">\n";
                 echo "<input type=\"HIDDEN\" name=\"cms_select\" value=\"" . $cms_select . "\">\n";
-                echo  "<input type=\"IMAGE\"" . makeButton("anlegen", "src") . " name=\"create_course\" style=\"vertical-align:middle\">\n";
+                echo Button::create(_('anlegen'), 'create_course');
                 echo "<br><br>\n";
                 echo "</div>";
                 echo "</form>";
@@ -341,7 +342,7 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
                     echo "<input type=\"HIDDEN\" name=\"anker_target\" value=\"search\">\n";
                     echo "<input type=\"HIDDEN\" name=\"view\" value=\"" . $view . "\">\n";
                     echo "<input type=\"HIDDEN\" name=\"cms_select\" value=\"" . $cms_select . "\">\n";
-                    echo  "<input type=\"IMAGE\"" . makeButton("auswaehlen", "src") . " name=\"connect_course\" style=\"vertical-align:middle\">\n";
+                    echo  Button::create(_('auswählen'), 'connect_course');
                     echo "<br>\n";
                     echo "</div>";
                     echo "</form>";

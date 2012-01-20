@@ -127,10 +127,10 @@ function chat_get_name($chatid)
     }
 
     // Chatting with a user
-    $query = "SELECT {$GLOBALS['_fullname_sql']['full']} "
+    $statement = $db->prepare("SELECT {$GLOBALS['_fullname_sql']['full']} "
            . "FROM auth_user_md5 a "
            . "LEFT JOIN user_info USING (user_id) "
-           . "WHERE a.user_id = ?";
+           . "WHERE a.user_id = ?");
     $statement->execute(array($chatid));
     if ($name = $statement->fetchColumn()) {
         return $name;

@@ -155,10 +155,14 @@ class StudipPDO extends PDO
         $this->verify($statement);
 
         if (isset($mode)) {
-            return parent::query($statement, $mode, $arg1, $arg2);
+            $stmt = parent::query($statement, $mode, $arg1, $arg2);
+        } else {
+            $stmt = parent::query($statement);
         }
-
-        return parent::query($statement);
+        
+        $studip_stmt = new StudipPDOStatement($this, $statement, array());
+        $studip_stmt->setStatement($stmt);
+        return $studip_stmt;
     }
 
     /**
@@ -213,6 +217,14 @@ class StudipPDOStatement implements IteratorAggregate
         $this->query = $query;
         $this->options = $options;
         $this->params = array();
+    }
+
+    /**
+     * Injects a PDOStatement
+     */
+    public function setStatement(PDOStatement $statement)
+    {
+        $this->stmt = $statement;
     }
 
     /**

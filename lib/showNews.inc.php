@@ -465,7 +465,7 @@ function show_news_item_content($news_item, $cmd_data, $show_admin, $admin_link)
             $formular.=Button::createAccept(_('absenden'));
 
             $help_url = format_help_url("Basis.VerschiedenesFormat");
-            $formular.="   <a href=\"".URLHelper::getLink("show_smiley.php")."\" target=\"_blank\"><font size=\"-1\">"._("Smileys")."</a>  <a href=\"".$help_url."\" target=\"_blank\"><font size=\"-1\">"._("Formatierungshilfen")."</a><br><br>";
+            $formular.="   <a href=\"".URLHelper::getLink('dispatch.php/smileys')."\" target=\"_blank\"><font size=\"-1\">"._("Smileys")."</a>  <a href=\"".$help_url."\" target=\"_blank\"><font size=\"-1\">"._("Formatierungshilfen")."</a><br><br>";
             $formular.="</div></form><p> </p>";
             $content.=$formular;
         } else {

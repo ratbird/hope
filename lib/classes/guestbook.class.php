@@ -242,7 +242,7 @@ class Guestbook
             ."<div align=\"center\"><textarea name=\"post\" id=\"post\" style=\"width:70%\" cols=\"". $cols."\"  rows=8 wrap=virtual>"
             ."</textarea>"
             ."<br><br>" . Button::createAccept(_('abschicken')) . "&nbsp;"
-            ."&nbsp;&nbsp;<a href=\"show_smiley.php\" target=\"_blank\"><font size=\"-1\">"._("Smileys")."</a>&nbsp;&nbsp;"."<a href=\"".$help_url."\" target=\"_blank\"><font size=\"-1\">"._("Formatierungshilfen")."</a><br>";
+            ."&nbsp;&nbsp;<a href=\"" . URLHelper::getLink('dispatch.php/smileys') . "\" target=\"_blank\"><font size=\"-1\">"._("Smileys")."</a>&nbsp;&nbsp;"."<a href=\"".$help_url."\" target=\"_blank\"><font size=\"-1\">"._("Formatierungshilfen")."</a><br>";
         return $form;
     }
 

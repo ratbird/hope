@@ -246,7 +246,7 @@ function scm_edit_content($range_id, $scm_id) {
 
     $edit = Button::create(_('übernehmen'), 'send_scm', array('title' => _('Änderungen vornehmen')));   
     $edit.="&nbsp;" . LinkButton::createCancel(_('abbrechen'));
-    $edit .= "<font size=\"-1\">&nbsp;&nbsp;<a href=\"".URLHelper::getLink("show_smiley.php")."\" target=\"_blank\">";
+    $edit .= "<font size=\"-1\">&nbsp;&nbsp;<a href=\"".URLHelper::getLink('dispatch.php/smileys')."\" target=\"_blank\">";
 
     $help_url = format_help_url("Basis.VerschiedenesFormat");
     $edit .= "Smileys</a>&nbsp;&nbsp;<a href=\"".$help_url."\" ";

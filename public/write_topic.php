@@ -139,7 +139,7 @@ if (!(have_sem_write_perm()) OR $pass==TRUE) {
         echo "</textarea><br><br>";
         echo Button::createAccept();
         $help_url = format_help_url("Basis.VerschiedenesFormat");
-        echo "&nbsp;&nbsp;<a href=\"".URLHelper::getLink("show_smiley.php")."\" target=\"_blank\"><font size=\"-1\">"._("Smileys")."</a>&nbsp;&nbsp;"."<a href=\"".$help_url."\" target=\"_blank\"><font size=\"-1\">"._("Formatierungshilfen")."</a>";
+        echo "&nbsp;&nbsp;<a href=\"" . URLHelper::getURL('dispatch.php/smileys') . "\" target=\"_blank\"><font size=\"-1\">"._("Smileys")."</a>&nbsp;&nbsp;"."<a href=\"".$help_url."\" target=\"_blank\"><font size=\"-1\">"._("Formatierungshilfen")."</a>";
         echo "</form>";
         
     } else {

@@ -173,7 +173,7 @@ class AdminNavigation extends Navigation
             $navigation->addSubNavigation('studycourse', new Navigation(_('Studiengänge'), 'dispatch.php/admin/studycourse/profession'));
 
             if (get_config('SMILEYADMIN_ENABLE')) {
-                $navigation->addSubNavigation('smileys', new Navigation(_('Smileys'), 'admin_smileys.php'));
+                $navigation->addSubNavigation('smileys', new Navigation(_('Smileys'), 'dispatch.php/admin/smileys'));
             }
 
             if (get_config('STM_ENABLE')) {

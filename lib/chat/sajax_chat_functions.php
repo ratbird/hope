@@ -119,7 +119,7 @@ function get_chat_status($chatid){
             <a href="javascript:printhelp();">
             <?= Assets::img('icons/16/white/info.png', array('class' => 'text-top', 'title' => _("Chat Kommandos einblenden"))) ?>
             </a>
-            <a href="<?=$CANONICAL_RELATIVE_PATH_STUDIP?>show_smiley.php" target="_blank">
+            <a href="<?= URLHelper::getLink('dispatch.php/smileys') ?>" target="_blank">
             <?= Assets::img('icons/16/white/smiley.png', array('class' => 'text-top', 'title' => _("Alle verfügbaren Smileys anzeigen"))) ?>
             </a></td>
         </tr>

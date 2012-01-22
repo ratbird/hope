@@ -102,7 +102,7 @@ function print_freie($username) {
             echo makeButton("loeschen", 'img', _("löschen")) . '</a>';
 
             // show help links
-            echo '<a style="margin-left: 15px" href="'. URLHelper::getLink("show_smiley.php") .'" target="_blank">'. _("Smileys") .'</a>', "\n";
+            echo '<a style="margin-left: 15px" href="'. URLHelper::getLink('dispatch.php/smileys') .'" target="_blank">'. _("Smileys") .'</a>', "\n";
             echo '<a style="margin-left: 10px" href="'. format_help_url("Basis.VerschiedenesFormat") .'" target="_blank">'. _("Formatierungshilfen") .'</a>', "\n";
 
             echo '<br>', "\n", '&nbsp; </p></td></tr>', "\n";

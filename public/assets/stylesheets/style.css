@@ -814,7 +814,7 @@ td.indexpage {
 
 /* Buttons */
 
-a.button, button {
+a.button, button.button {
     display: inline-block;
     position: relative;
     margin: 0.7em 0.5em 0.7em 0;
@@ -853,7 +853,7 @@ a.button, button {
     white-space: nowrap;
 }
 
-a.button:hover, button:hover {
+a.button:hover, button.button:hover {
     background-image: -webkit-gradient(linear, left top, left bottom, from(white), to(#b5c3cc));
     background-image: -webkit-linear-gradient(top, white 0%, #eef3f6 50%, #b5c3cc 100%);
     background-image: -moz-linear-gradient(top, white 0%, #eef3f6 50%, #b5c3cc 100%);
@@ -863,7 +863,7 @@ a.button:hover, button:hover {
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#b5c3cc');
 }
 
-a.button:active, button:active {
+a.button:active, button.button:active {
     background-image: -webkit-gradient(linear, left top, left bottom, from(#cfdce5), to(#7993a2));
     background-image: -webkit-linear-gradient(top, #cfdce5 0%, #acc1d2 50%, #7993a2 100%);
     background-image: -moz-linear-gradient(top, #cfdce5 0%, #acc1d2 50%, #7993a2 100%);
@@ -873,16 +873,16 @@ a.button:active, button:active {
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#cfdce5', endColorstr='#7993a2');
 }
 
-a.button::-moz-focus-inner, button::-moz-focus-inner {
+a.button::-moz-focus-inner, button.button::-moz-focus-inner {
     border: 0;
 }
 
-button {
+button.button {
     width: auto;
     overflow: visible;
 }
 
-.button.accept:after, .button.cancel:after, button.accept:after, button.cancel:after {
+.button.accept:after, .button.cancel:after {
     float: right;
     margin: 0 -4px 0 8px;
     content: " ";
@@ -890,17 +890,17 @@ button {
     height: 16px;
 }
 
-.button.accept:after, button.accept:after {
+.button.accept:after {
     margin-top: -4px;
     background: url(../images/icons/16/green/accept.png) no-repeat;
 }
 
-.button.cancel:after, button.cancel:after {
+.button.cancel:after {
     margin-top: -2px;
     background: url(../images/icons/16/red/decline.png) no-repeat;
 }
 
-.button.accept, .button.cancel, button.accept, button.cancel {
+.button.accept, .button.cancel {
     white-space: normal;
 }
 

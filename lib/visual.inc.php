@@ -15,6 +15,7 @@ include_once('lib/classes/searchtypes/StandardSearch.class.php');
 include_once('lib/classes/searchtypes/PermissionSearch.class.php');
 require_once('lib/classes/LinkButton.class.php');
 require_once('lib/classes/Button.class.php');
+require_once 'lib/classes/SmileyFormat.php';
 
 /**
  * get_ampel_state is a helper function for get_ampel_write and get_ampel_read.
@@ -706,39 +707,18 @@ function idna_link($link, $mail = false){
 
 
 /**
-* create smileys
-*
-* This functions converts the smileys codes (":name:") notation an the shorts,
-* located in the config.inc into the assigned pictures.
-* On every smiley a link to show_smiley.php overview is given (only if $extern
-* is FALSE). A tooltip which shows the smiley code is given, too.
-*
-* @access   public
-* @param        string  the text to convert
-* @param        boolean TRUE if function is called from external pages
-* @return       string  convertet text
-*/
-function smile ($text = "", $extern = FALSE) {
-    global $SMILE_SHORT, $CANONICAL_RELATIVE_PATH_STUDIP;
-
-    if(empty($text))
-        return $text;
-
-    //smileys in the ":name:" notation
-    $path = $GLOBALS['DYNAMIC_CONTENT_URL'] . '/smile';
-    $pattern = "'(\>|^|\s):([_a-zA-Z][_a-z0-9A-Z-]*):(?=$|\<|\s)'m";
-    $replace = "\\1<img alt=\"\\2\" title=\"\\2\" src=\"$path/\\2.gif\">\\3";
-    $text = preg_replace($pattern, $replace, $text);
-
-    //smileys in short notation
-    $patterns = array();
-    $replaces = array();
-    reset($SMILE_SHORT);
-    while (list($key,$value) = each($SMILE_SHORT)) {
-        $patterns[] = "'(\>|^|\s)" . preg_quote($key) . "(?=$|\<|\s)'m";
-        $replaces[] = "\\1<img alt=\"$value\" title=\"$value\" src=\"$path/$value.gif\">\\2";
-    }
-    return preg_replace($patterns, $replaces, $text);
+ * Create smileys
+ *
+ * This functions converts the smiley codes notation (:name:) as well as the
+ * available short notation.
+ *
+ * @access public
+ * @param  string $text The text to convert
+ * @return string Converted text
+ */
+function smile($text = '') {
+    $markup = new SmileyFormat();
+    return $markup->format($text);
 }
 
 

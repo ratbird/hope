@@ -1,0 +1,55 @@
+/* Smiley popup */
+.smiley-popup #header {
+  background: inherit;
+  height: 3em; }
+.smiley-popup #barTopFont {
+  font-size: 1.5em;
+  left: 15px;
+  position: relative;
+  top: 15px; }
+.smiley-popup #barTopStudip {
+  right: 15px;
+  top: 15px; }
+.smiley-popup #tabs li a {
+  padding-left: 0.6em;
+  padding-right: 0.6em; }
+.smiley-popup a:active, .smiley-popup a:focus {
+  outline: none; }
+
+.smiley-toggle {
+  background: url(../images/icons/16/blue/checkbox-unchecked.png) center no-repeat;
+  display: inline-block;
+  height: 16px;
+  text-indent: -9999px;
+  width: 16px; }
+  .smiley-toggle.favorite {
+    background-image: url(../images/icons/16/blue/checkbox-checked.png); }
+  .smiley-toggle.ajax {
+    background-image: url(../images/ajax_indicator_small.gif); }
+
+/* Smiley administration */
+.smiley-admin .separator {
+  border-left: 1px solid #aaaaaa; }
+.smiley-admin tbody tr a, .smiley-admin tbody tr [type=checkbox] {
+  visibility: hidden; }
+.smiley-admin tbody tr input:checked {
+  visibility: visible; }
+.smiley-admin tbody tr:hover a, .smiley-admin tbody tr:hover [type=checkbox] {
+  visibility: visible; }
+.smiley-admin a:active, .smiley-admin a:focus {
+  outline: none; }
+
+.smiley-select option.single {
+  font-family: monospace; }
+
+.smiley-statistics {
+  margin: 0;
+  padding: 0; }
+  .smiley-statistics dt {
+    clear: left;
+    float: left;
+    padding-right: 0.5em; }
+  .smiley-statistics dd {
+    font-weight: 700;
+    margin: 0;
+    text-align: right; }

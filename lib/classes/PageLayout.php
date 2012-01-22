@@ -78,6 +78,7 @@ class PageLayout
         self::addHeadElement('link', array('rel' => 'shortcut icon', 'href' => Assets::image_path('favicon.ico')));
         self::addStylesheet('style.css', array('media' => 'screen, print'));
         self::addStylesheet('header.css', array('media' => 'screen, print'));
+        self::addStylesheet('smiley.css', array('media' => 'screen, print'));
 
         self::setSqueezePackages("base");
     }

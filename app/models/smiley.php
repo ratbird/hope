@@ -306,10 +306,9 @@ class Smiley
     {
         $query = "SELECT LEFT(smiley_name, 1), COUNT(smiley_name) "
                . "FROM smiley GROUP BY LEFT(smiley_name, 1)";
-        // TODO workaround since query does not return a StudipPDOStatement
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array());
-        return $statement->fetchGrouped(PDO::FETCH_COLUMN);
+        return DBManager::get()
+            ->query($query)
+            ->fetchGrouped(PDO::FETCH_COLUMN);
     }
 
     /**
@@ -321,10 +320,9 @@ class Smiley
     static function getShort()
     {
         $query = "SELECT short_name, smiley_name FROM smiley WHERE short_name != ''";
-        // TODO workaround since query does not return a StudipPDOStatement
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array());
-        return $statement->fetchGrouped(PDO::FETCH_COLUMN);
+        return DBManager::get()
+            ->query($query)
+            ->fetchGrouped(PDO::FETCH_COLUMN);
     }
 
     /**

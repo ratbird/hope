@@ -782,20 +782,6 @@ td.tddaterowpx {
     font-size:8pt;
 }
 
-td.smiley_th {
-    border:0px solid #000000;
-    background:#B5B5B5 url('../images/steelgraudunkel.gif');
-    color:#FFFFFF;
-    font-family:Arial,Helvetica, sans-serif;
-    font-weight: bold;
-    text-align: center;
-    background-color:#B5B5B5;
-}
-
-td.smiley_redborder {
-    border:1px solid #D00000;
-}
-
 table.logintable {
     background-image: url('../images/login.jpg');
 }

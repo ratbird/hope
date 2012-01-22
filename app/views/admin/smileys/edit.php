@@ -20,7 +20,7 @@
                     <label for="name"><?= _('Name')?></label>
                 </td>
                 <td>
-                    <input type="text" name="name" id="name" required pattern="[A-Za-z0-9-_]"
+                    <input type="text" name="name" id="name" required pattern="[A-Za-z0-9-_]+"
                            value="<?= Request::option('name', $smiley->name) ?>">
                     <br>
                     <small><?= _('Erlaubte Zeichen:') ?> a-z 0-9 &ndash; _</small>

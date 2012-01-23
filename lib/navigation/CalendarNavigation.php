@@ -20,20 +20,15 @@ class CalendarNavigation extends Navigation
      */
     public function __construct()
     {
-        if (get_config('CALENDAR_ENABLE') || get_config('SCHEDULE_ENABLE')) {
-            parent::__construct(_('Planer'));
+        parent::__construct(_('Planer'));
 
-            if (get_config('CALENDAR_ENABLE')) {
-                $planerurl  = 'calendar.php?caluser=self';
-                $planerinfo = _('Termine und Kontakte');
-            } else {
-                $planerurl  = 'dispatch.php/calendar/schedule';
-                $planerinfo = _('Stundenplan und Kontakte');
-            }
-
-            $this->setURL($planerurl);
-            $this->setImage('header/schedule.png', array('title' => $planerinfo));
+        if (get_config('CALENDAR_ENABLE')) {
+            $planerinfo = _('Termine');
+        } else {
+            $planerinfo = _('Stundenplan');
         }
+
+        $this->setImage('header/schedule.png', array('title' => $planerinfo));
     }
 
     /**
@@ -48,7 +43,7 @@ class CalendarNavigation extends Navigation
 
         // calendar
         if (get_config('CALENDAR_ENABLE')) {
-            $navigation = new Navigation(_('Terminkalender'), 'calendar.php');
+            $navigation = new Navigation(_('Terminkalender'), 'calendar.php', array('caluser' => 'self'));
             $navigation->addSubNavigation('day', new Navigation(_('Tag'), 'calendar.php', array('cmd' => 'showday')));
             $navigation->addSubNavigation('week', new Navigation(_('Woche'), 'calendar.php', array('cmd' => 'showweek')));
             $navigation->addSubNavigation('month', new Navigation(_('Monat'), 'calendar.php', array('cmd' => 'showmonth')));

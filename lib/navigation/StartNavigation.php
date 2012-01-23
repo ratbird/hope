@@ -179,7 +179,6 @@ class StartNavigation extends Navigation
 
         // calendar / home page
         if (!$perm->have_perm('admin')) {
-            
             $navigation = new Navigation(_('Mein Profil'), 'about.php');
 
             if ($perm->have_perm('autor')) {
@@ -187,13 +186,17 @@ class StartNavigation extends Navigation
             }
 
             $this->addSubNavigation('profile', $navigation);
+
             $navigation = new Navigation(_('Mein Planer'));
 
             if (get_config('CALENDAR_ENABLE')) {
                 $navigation->addSubNavigation('calendar', new Navigation(_('Terminkalender'), 'calendar.php'));
             }
 
-            $navigation->addSubNavigation('schedule', new Navigation(_('Stundenplan'), 'dispatch.php/calendar/schedule'));
+            if (get_config('SCHEDULE_ENABLE')) {
+                $navigation->addSubNavigation('schedule', new Navigation(_('Stundenplan'), 'dispatch.php/calendar/schedule'));
+            }
+
             $this->addSubNavigation('planner', $navigation);
         }
 

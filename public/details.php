@@ -142,7 +142,7 @@ if ($sem_id) {
         $db->query("SELECT * FROM seminar_user WHERE Seminar_id = '$sem_id' AND user_id = '".$auth->auth['uid']."'");
         $sem_user = $db->num_rows();
 
-        if (!$sem_user && !$sem_user_schedule) {
+        if (!$sem_user && !$sem_user_schedule && get_config('SCHEDULE_ENABLE')) {
             $plan_msg = "<a href=\"".URLHelper::getLink("dispatch.php/calendar/schedule/addvirtual/$sem_id")."\">"._("Nur im Stundenplan vormerken")."</a>";
         }
 

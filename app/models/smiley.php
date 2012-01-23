@@ -1,5 +1,6 @@
 <?php
 require_once 'lib/classes/SmileyFormat.php';
+require_once 'lib/classes/DBManager.class.php'; // Neccessary for unit tesing
 
 /**
  * smiley.php - model class for a smiley

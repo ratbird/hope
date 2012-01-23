@@ -14,7 +14,7 @@ require_once 'app/models/smiley.php';
  */
 class SmileyFormat extends TextFormat
 {
-    const REGEXP = '(?:\>|^|\s):([_a-zA-Z][_a-z0-9A-Z-]*):(?=$|\<|\s)';
+    const REGEXP = '(\>|^|\s):([_a-zA-Z][_a-z0-9A-Z-]*):(?=$|\<|\s)';
     
     function __construct()
     {
@@ -30,7 +30,7 @@ class SmileyFormat extends TextFormat
         $needles = array_keys(Smiley::getShort());
         $needles = array_map('preg_quote', $needles);
         $rules['smileys_short'] = array(
-            'start'    => '(?:>|^|\s)(' . implode('|', $needles) . ')(?=$|<|\s)',
+            'start'    => '(>|^|\s)(' . implode('|', $needles) . ')(?=$|<|\s)',
             'callback' => 'SmileyFormat::short'
         );
 
@@ -42,8 +42,7 @@ class SmileyFormat extends TextFormat
      */
     static function smiley($markup, $matches)
     {
-        $smiley = Smiley::getByName($matches[1]);
-        return $smiley->id ? $smiley->getImageTag() : ':'.$matches[1].':';
+        return $matches[1] . Smiley::img($matches[2]) . $matches[3];
     }
 
     /**
@@ -51,7 +50,10 @@ class SmileyFormat extends TextFormat
      */
     static function short($markup, $matches)
     {
-        $smiley = Smiley::getByShort($matches[1]);
-        return $smiley->id ? $smiley->getImageTag() : $matches[1];
+        $smileys = Smiley::getShort();
+        $name    = $smileys[$matches[2]];
+        return isset($name)
+            ? $matches[1] . Smiley::img($name) . $matches[3]
+            : $matches[0];
     }
 }

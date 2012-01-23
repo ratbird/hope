@@ -1,6 +1,5 @@
 <?php
 require_once 'lib/classes/SmileyFormat.php';
-require_once 'lib/classes/DBManager.class.php'; // Neccessary for unit tesing
 
 /**
  * smiley.php - model class for a smiley
@@ -63,12 +62,27 @@ class Smiley
      * @param  mixed  $tooltip Tooltip to display for this smiley, defaults to
      *                         smiley's name
      * @return String HTML image tag
+     * @see    Smiley::img
      */
     function getImageTag($tooltip = null)
     {
-        return sprintf('<img src="%s" alt="%s" title="%s" width="%u" height="%u">',
-                       $this->getURL(), htmlReady($this->name), htmlReady($tooltip ?: $this->name),
-                       $this->width, $this->height);
+        return self::img($this->name, $tooltip, $this->width, $this->height);
+    }
+    
+    /**
+     * Returns the HTML image tag of any smiley.
+     * 
+     * @param  String $name    Name of the smiley
+     * @param  mixed  $tooltip Tooltip to display for this smiley, defaults to
+     *                         smiley's name
+     * @param  mixed  $width   Width of the smiley
+     * @param  mixed  $height  Height of the smiley
+     * @return String HTML image tag
+     */
+    public function img($name, $tooltip = null, $width = null, $height = null) {
+        return sprintf('<img src="%s" alt="%s" title="%s" width="%s" height="%s">',
+                       self::getURL($name), htmlReady($name), htmlReady($tooltip ?: $name),
+                       $width, $height);
     }
 
     /**
@@ -131,13 +145,10 @@ class Smiley
      */
     static function getByShort($short)
     {
-        $query = "SELECT smiley_id AS id, smiley_name AS name, smiley_width AS width, smiley_height AS height, "
-               . " short_name AS short, smiley_counter AS `count`, short_counter AS short_count, "
-               . " fav_counter AS fav_count, mkdate, chdate "
-               . " FROM smiley WHERE short_name = ? AND short_name != ''";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($short));
-        return $statement->fetchObject('Smiley') ?: new self;
+        $smileys = self::getShort();
+        $name   = $smileys[$short];
+
+        return isset($name) ? self::getByName($name) : new self;
     }
 
     /**
@@ -320,10 +331,14 @@ class Smiley
      */
     static function getShort()
     {
-        $query = "SELECT short_name, smiley_name FROM smiley WHERE short_name != ''";
-        return DBManager::get()
-            ->query($query)
-            ->fetchGrouped(PDO::FETCH_COLUMN);
+        if (class_exists('DBManager')) {
+            $query = "SELECT short_name, smiley_name FROM smiley WHERE short_name != ''";
+            $short = DBManager::get()->query($query)->fetchGrouped(PDO::FETCH_COLUMN);
+        } else { // Unit test
+            $short = $GLOBALS['SMILE_SHORT'];
+        }
+
+        return $short;
     }
 
     /**
@@ -386,8 +401,8 @@ class Smiley
             while ($txt = $statement->fetchColumn()) {
                 // extract all smileys
                 if (preg_match_all(SmileyFormat::REGEXP, $txt, $matches)) {
-                    for ($k = 0; $k < count($matches[1]); $k++) {
-                        $name = $matches[1][$k];
+                    for ($k = 0; $k < count($matches[2]); $k++) {
+                        $name = $matches[2][$k];
                         if (!isset($usage[$name])) {
                             $usage[$name] = array('count' => 0, 'short_count' => 0, 'favorites' => 0);
                         }

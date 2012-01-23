@@ -148,49 +148,6 @@ $SOAP_USE_PHP5 = TRUE;
 
 $WEBSERVICES_ENABLE = TRUE;
 
-$ELEARNING_INTERFACE_MODULES["ilias40x"] = array(
-    "name" => "ILIAS 4.0.X develop",
-    "ABSOLUTE_PATH_ELEARNINGMODULES" => "http://develop.studip.de/ilias_4_0_x/",
-    "ABSOLUTE_PATH_SOAP" => "http://localhost/ilias_4_0_x/webservice/soap/server.php?wsdl",
-    "CLASS_PREFIX" => "Ilias4",
-    "auth_necessary" => true,
-    "USER_PREFIX" => "studip_",
-    "USER_AUTO_CREATE" => true,
-    "target_file" => "studip_referrer.php",
-    "logo_file" => "assets/images/logos/ilias_logo.png",
-    "soap_data" => array(
-        "username" => "soap_admin",
-        "password" => "soapsucks",
-        "client" => "hrm-test"),
-    "types" => array(
-                   "htlm" => array("name" => "HTML-Lerneinheit", "icon" => "assets/images/icons/16/grey/learnmodule.png"),
-                   "sahs" => array("name" => "SCORM/AICC-Lerneinheit", "icon" => "assets/images/icons/16/grey/learnmodule.png"),
-                   "lm" => array("name" => "ILIAS-Lerneinheit", "icon" => "assets/images/icons/16/grey/learnmodule.png"),
-                   "glo" => array("name" => "ILIAS-Glossar", "icon" => "assets/images/icons/16/grey/learnmodule.png"),
-                   "tst" => array("name" => "ILIAS-Test", "icon" => "assets/images/icons/16/grey/learnmodule.png"),
-                   "svy" => array("name" => "ILIAS-Umfrage", "icon" => "assets/images/icons/16/grey/learnmodule.png"),
-                   "exc" => array("name" => "ILIAS-&Uuml;bung", "icon" => "assets/images/icons/16/grey/learnmodule.png"),
-                   "dbk" => array("name" => "ILIAS Digilib Book", "icon" => "assets/images/icons/16/grey/learnmodule.png")
-                   ),
-    "global_roles" => array(4,5,14), // put here the ilias role-ids for User, Guest and Anonymous
-    "roles" =>  array(
-        "autor" => "4",
-        "tutor" => "4",
-        "dozent" => "4",
-        "admin" => "4",
-        "root" => "2"
-        ),
-    "crs_roles" =>  array(
-        "autor" => "member",
-        "tutor" => "tutor",
-        "dozent" => "admin",
-        "admin" => "admin",
-        "root" => "admin"
-    )
-);
-
-
-
 $PLUGINS_UPLOAD_ENABLE = TRUE;                  //Upload of Plugins is enabled
                                                 //if disabled for security reasons, uploads have to go into $NEW_PLUGINS_PATH
 $NEW_PLUGINS_PATH = "";                             //The place from which new plugins should be loaded

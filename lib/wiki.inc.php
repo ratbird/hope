@@ -97,7 +97,7 @@ function submitWikiPage($keyword, $version, $body, $user_id, $range_id) {
     $message="";
     $db=new DB_Seminar;
     // write changes to db, show new page
-    $latestVersion=getWikiPage($keyword,"");
+    $latestVersion=getWikiPage($keyword,false);
     if ($latestVersion) {
         $date=time();
         $lastchange = $date - $latestVersion[chdate];
@@ -112,7 +112,7 @@ function submitWikiPage($keyword, $version, $body, $user_id, $range_id) {
     //TODO: Die $message Texte klingen fürchterlich. Halbsätze, Denglisch usw...
     if ($latestVersion && ($latestVersion['body'] == $body)) {
         $message="info§" . _("Keine Änderung vorgenommen.");
-    } else if ($latestVersion && ($version!="") && ($lastchange < 30*60) && ($user_id == $latestVersion[user_id])) {
+    } else if ($latestVersion && ($version !== null) && ($lastchange < 30*60) && ($user_id == $latestVersion['user_id'])) {
         // if same author changes again within 30 minutes,
         // no new verison is created
         NotificationCenter::postNotification('WikiPageWillUpdate', array($range_id, $keyword));
@@ -121,7 +121,7 @@ function submitWikiPage($keyword, $version, $body, $user_id, $range_id) {
         begin_blank_table();
         $message="msg§" . _("Update ok, keine neue Version, da erneute Änderung innerhalb 30 Minuten.");
     } else {
-        if ($version=="") {
+        if ($version === null) {
             $version=0;
         } else {
             $version=$latestVersion['version']+1;

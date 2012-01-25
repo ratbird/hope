@@ -213,7 +213,7 @@ class AdminNewsController {
             echo "\n<td class=\"".$cssSw->getClass()."\" width=\"10%\" align=\"center\">".strftime("%d.%m.%y", $details["date"])."</td>";
             echo "\n<td class=\"".$cssSw->getClass()."\" width=\"10%\" align=\"center\">".strftime("%d.%m.%y", ($details["date"]+$details["expire"]))."</td>";
             echo "\n<td class=\"".$cssSw->getClass()."\" width=\"15%\" align=\"center\">"
-                . LinkButton::create(_('bearbeiten'), URLHelper::getLink("?cmd=edit&edit_news=$news_id&view_mode=$view_mode"), array('title' => _('Diese Ankündigung bearbeiten')))
+                . LinkButton::create(_('bearbeiten'), URLHelper::getUrl("", array('cmd' => 'edit', 'edit_news' => $news_id, 'view_mode' => $view_mode, 'title' => _('Diese Ankündigung bearbeiten'))))
                 . "</td>";
             echo "\n<td class=\"".$cssSw->getClass()."\" width=\"10%\" align=\"center\">";
             if ($this->news_perm[$id]["perm"]==3 OR $auth->auth["perm"]=="root" OR $details["user_id"]==$this->user_id)

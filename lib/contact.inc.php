@@ -33,6 +33,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
+use Studip\Button, Studip\LinkButton;
+
 require_once('lib/classes/Avatar.class.php');
 if (Config::get()->getValue('CALENDAR_GROUP_ENABLE')) {
     require_once('lib/calendar/lib/Calendar.class.php');
@@ -508,7 +510,9 @@ function ShowEditContact ($contact_id)
                     . "\n"
                     . '</td></tr>';
         $css_switcher->switchClass();
-        $output .= '<tr><td valign="middle" colspan="3" class="' . $css_switcher->getClass() . '" align="center"><a href="' . URLHelper::getLink('#anker', array('open' => $contact_id)) . '">' . makeButton('zurueck', 'img', _("zurück zur Übersicht")) . '</a>&nbsp; ' . makeButton('uebernehmen', 'input', _("übernehmen")) . '</form></td></tr>';
+        $output .= '<tr><td valign="middle" colspan="3" class="' . $css_switcher->getClass() 
+                . '" align="center">' . LinkButton::create('<< ' . _('zurück'),  URLHelper::getLink('#anker', array('open' => $contact_id)), array('title' => _('zurück zur Übersicht'))) 
+                . '&nbsp; ' . Button::create(_('übernehmen')) . '</form></td></tr>';
         $output .= '</table>';
     } else {
         $output = _("Fehler!");

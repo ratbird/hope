@@ -17,6 +17,8 @@
  * @package     message
  */
 
+use Studip\Button, Studip\LinkButton;
+
 require_once ('lib/language.inc.php');
 require_once ('config.inc.php');
 require_once 'lib/functions.php';
@@ -59,7 +61,8 @@ $email_forward = $db2->f("email_forward");
 if ($email_forward == "0") $email_forward = $GLOBALS["MESSAGING_FORWARD_DEFAULT"];
 
 //vorgenommene Anpassungen der Ansicht in Uservariablen schreiben
-if ($messaging_cmd=="change_view_insert" && !$set_msg_default_x && $newmsgset_x) {
+
+if ($messaging_cmd=="change_view_insert" && !$set_msg_default_x && Request::submitted('newmsgset')) {
         $db2->query("UPDATE user_info SET email_forward = '".$send_as_email."' WHERE user_id = '".$user->id."'");
         $email_forward = $send_as_email;
 
@@ -101,7 +104,7 @@ if ($messaging_cmd=="change_view_insert" && !$set_msg_default_x && $newmsgset_x)
             $db3->query($query);
         }
     }
-} else if ($messaging_cmd=="change_view_insert" && $set_msg_default_x) {
+} else if ($messaging_cmd=="change_view_insert" && Request::submitted('set_msg_default')) {
     $reset_txt = "<font size=\"-1\">"._("Durch das Zurücksetzen werden die persönliche Messaging-Einstellungen auf die Startwerte zurückgesetzt <b>und</b> die persönlichen Nachrichten-Ordner gelöscht. <b>Nachrichten werden nicht entfernt.</b>")."</font><br>";
 }
 
@@ -145,8 +148,8 @@ function change_messaging_view()
                 echo $reset_txt; ?>
                 <br><div align="center">
                 <?=_("Möchten Sie fortfahren?")?>
-                <a href="<?=$PHP_SELF?>?messaging_cmd=reset_msg_settings&change_view=TRUE"><?=makeButton("ja2", "img")?></a>&nbsp;
-                <a href="<?=$PHP_SELF?>?change_view=TRUE"><?=makeButton("nein", "img")?></a><div>
+                <?=LinkButton::createAccept(_("JA!"), URLHelper::getURL('', array('messaging_cmd' => 'reset_msg_settings', 'change_view' => TRUE, 'view' =>'Messaging')))?>&nbsp;
+                <?=LinkButton::createCancel(_("NEIN!"), URLHelper::getURL('', array('view' =>'Messaging')))?><div>
                 </td></tr></table><br><?
             } ?>
             <table width="70%" align="center"cellpadding=8 cellspacing=0 border=0  id="main_content">
@@ -320,16 +323,6 @@ function change_messaging_view()
                         <b><?=_("Buddies/ Wer ist online?")?></b>
                     </td>
                 </tr>
-                <? if (GetNumberOfBuddies()) { ?>
-                <tr <? $cssSw->switchClass() ?>>
-                    <td  align="right" class="blank" style="border-bottom:1px dotted black;">
-                        <label for="show_only_buddys"><?=_("Nur Buddies in der &Uuml;bersicht der aktiven Benutzer anzeigen")?></label>
-                    </td>
-                    <td <?=$cssSw->getFullClass()?>>
-                        <input type="checkbox" id="show_only_buddys" name="show_only_buddys"<? if ($my_messaging_settings["show_only_buddys"]) echo " checked"; ?> >
-                    </td>
-                </tr>
-                <? } ?>
                 <tr  <? $cssSw->switchClass() ?>>
                     <td  align="right" class="blank" style="border-bottom:1px dotted black;">
                         <label for="online_format"><?print _("Formatierung der Namen auf &raquo;Wer ist Online?&laquo;");?></label>
@@ -350,9 +343,9 @@ function change_messaging_view()
                 <tr <? $cssSw->switchClass() ?>>
                     <td  <?=$cssSw->getFullClass()?> colspan="2" align="center">
                         <input type="hidden" name="view" value="Messaging">
-                        <?=makeButton('uebernehmen', 'input', _("Änderungen übernehmen"), 'newmsgset')?>
+                        <?=Button::create(_('übernehmen'), 'newmsgset', array('title' => _("Änderungen übernehmen")))?>
                         &nbsp;
-                        <?=makeButton('zuruecksetzen', 'input', _("Einstellungen zurücksetzen"), 'set_msg_default')?>
+                        <?=Button::create(_('zurücksetzen'), 'set_msg_default', array('title' => _("Einstellungen zurücksetzen")))?>
                         </form>
                     </td>
                 </tr>

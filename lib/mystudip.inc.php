@@ -45,6 +45,9 @@
 * @access   public
 * @param        string  pre-selected language (in "de_DE" style)
 */
+
+use Studip\Button, Studip\LinkButton;
+
 function select_language($selected_language = "") {
     global $INSTALLED_LANGUAGES, $DEFAULT_LANGUAGE;
 
@@ -172,7 +175,7 @@ function change_general_view() {
                 </tr>
                 <tr <? $cssSw->switchClass() ?>>
                     <td <?=$cssSw->getFullClass()?> colspan=2 align="center">
-                        <?=makeButton("uebernehmen", "input", _("Änderungen übernehmen")) ?>&nbsp;
+                        <?=Button::create(_("übernehmen"), array('title' => _("Änderungen übernehmen"))) ?>&nbsp;
                         <input type="hidden" name="view" value="allgemein">
                     </td>
                 </tr>

@@ -70,6 +70,7 @@ $GLOBALS['template_factory'] =
 
 // set default exception handler
 function studip_default_exception_handler($exception) {
+    require_once('lib/visual.inc.php');
 
     if ($exception instanceof AccessDeniedException) {
         $status = 403;

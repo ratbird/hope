@@ -700,7 +700,7 @@ class SemBrowse {
             } else {
                 $the_tree = $this->sem_tree->tree;
             }
-            if ($this->sem_browse_data['level'] == "vv" || $this->sem_browse_data['level'] == "sbb"){
+            if ($this->sem_browse_data['start_item_id'] != 'root' && ($this->sem_browse_data['level'] == "vv" || $this->sem_browse_data['level'] == "sbb")){
                 $allowed_ranges = $the_tree->getKidsKids($this->sem_browse_data['start_item_id']);
                 $allowed_ranges[] = $this->sem_browse_data['start_item_id'];
                 $sem_tree_query = " AND sem_tree_id IN('" . join("','", $allowed_ranges) . "') ";

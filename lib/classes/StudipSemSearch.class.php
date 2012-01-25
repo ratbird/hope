@@ -99,13 +99,17 @@ class StudipSemSearch {
         $search_buttons = array('do_search' => array('caption' => _("Suche starten"), 'info' => _("Suche starten")),
                                 'sem_change' => array('caption' => _('auswählen'), 'info' => _("anderes Semester auswählen")),
                                 'new_search' => array('caption' => _('neue Suche'), 'info' =>_("Neue Suche starten")));
+        //workaround: Qicksearch ändert den Namen des Eingabefeldes
+        if (Request::get("search_sem_quick_search_parameter")) {
+            Request::set('search_sem_quick_search', Request::get("search_sem_quick_search_parameter"));
+        }
         $this->form = new StudipForm($search_fields, $search_buttons, $form_name , false);
         $this->form_name = $form_name;
         $this->sem_dates = SemesterData::GetSemesterArray();
         $this->visible_only = $visible_only;
         $this->search_sem_class = $sem_class;
 
-        if($this->form->isClicked('do_search') || ($this->form->isSended() && !$this->form->GetRawFieldValue('sem_change_x'))){
+        if($this->form->isClicked('do_search') || ($this->form->isSended() && !$this->form->isClicked('sem_change'))){
             $this->search_button_clicked = true;
             if ($auto_search){
                 $this->doSearch();

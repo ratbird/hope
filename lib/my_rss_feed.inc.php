@@ -31,6 +31,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
+use Studip\Button, Studip\LinkButton;
+
 require_once "lib/classes/RSSFeed.class.php";
 
 function print_rss($username) {
@@ -54,7 +56,8 @@ function print_rss($username) {
     echo CSRFProtection::tokenTag();
     if (!$db->num_rows())
         echo "<tr><td class=\"".$cssSw->getClass()."\"><b><p class=\"info\">" . _("Es existieren zur Zeit keine eigenen RSS-Feeds.") . "</p></b></td></tr>\n";
-    echo "<tr><td class=\"".$cssSw->getClass()."\"><p class=\"info\">" . _("RSS-Feed") . "&nbsp; <a href='$PHP_SELF?rss=create_rss&view=$view&username=$username&show_rss_bsp=$show_rss_bsp'>" . makeButton("neuanlegen", 'img', _("Neu anlegen")) . "</a></p></td></tr>";
+    echo "<tr><td class=\"".$cssSw->getClass()."\"><p class=\"info\">" . _("RSS-Feed") . "&nbsp; " . LinkButton::create(_("neuanlegen"), 
+				URLHelper::getURL('', array('rss' => 'create_rss', 'view' => $view, 'username' => $username, 'show_rss_bsp' => $show_rss_bsp))) . "</a></p></td></tr>";
     $count = 0;
     while ($db->next_record() ){
 
@@ -83,9 +86,8 @@ function print_rss($username) {
             echo "&nbsp; &nbsp; &nbsp; <label><input type=checkbox name='rss_secret[$count]' value='1'";
             IF ($db->f("hidden")=='1') echo " checked";
             echo ">" . _("unsichtbar") . "</label>&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;";
-            echo "<br><br>" . makeButton("uebernehmen", "input", _("verändern"));
-            echo "&nbsp;<a href='$PHP_SELF?rss=delete_rss&rss_id=$id&view=$view&username=$username&show_rss_bsp=$show_rss_bsp'>";
-            echo makeButton("loeschen", 'img', _("löschen")) . "</a><br>&nbsp; </div></td></tr>";
+            echo "<br><br>" . Button::create(_("übernehmen"), array('title' => _("verändern")));
+            echo LinkButton::create(_("löschen"), URLHelper::getURL('', array('rss' => 'delete_rss', 'rss_id' => $id, 'view' => $view, 'username' => $username, 'show_rss_bsp' => $show_rss_bsp))) . "<br>&nbsp; </div></td></tr>";
             $count++;
     }
     echo "</form></td></tr></table></td></tr>";

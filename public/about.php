@@ -69,7 +69,7 @@ function print_kings($username) {
 
     $result = '';
     foreach ($is_king as $type => $text) {
-        $alt =
+        $type = str_replace('_', '-', $type);
         $result .= Assets::img("crowns/crown-$type.png", array(
             'alt'   => $text,
             'title' => $text

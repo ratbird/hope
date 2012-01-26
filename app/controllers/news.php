@@ -70,7 +70,6 @@ class NewsController extends StudipController
             return $this->render_nothing();
         }
         $newscontent = $news->toArray();
-        $newscontent['open'] = $open;
 
         // use the same logic here as in show_news_item()
         if ($newscontent['user_id'] != $GLOBALS['auth']->auth['uid']) {
@@ -78,6 +77,10 @@ class NewsController extends StudipController
         }
 
         object_set_visit($id, "news");
+        if ($GLOBALS['user']->id == 'nobody') {
+            $newscontent['allow_comments'] = 0;
+        }
+        $this->news = $newscontent;
         $this->content = show_news_item_content($newscontent,
                                                 array(),
                                                 $show_admin,
@@ -104,7 +107,7 @@ class NewsController extends StudipController
 
             $object_type = 'studip' === $range
             ? 'studip'
-            : get_object_type($range);
+            : get_object_type($range, words('sem inst fak user'));
 
             if ('studip' === $object_type) {
                 $permitted = TRUE;

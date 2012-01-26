@@ -461,87 +461,6 @@ STUDIP.Markup = {
 };
 
 /* ------------------------------------------------------------------------
- * automatic compression of tabs
- * ------------------------------------------------------------------------ */
-STUDIP.Tabs = (function () {
-
-    var list, items;
-
-    // check heights of list and items to check for wrapping
-    function needs_compression() {
-        return jQuery(list).height() > jQuery('li:first', list).height() + 1;
-    }
-
-    // returns the largest feasible item
-    function findCompressable() {
-        var largest = _.max(items, function (item) {
-            return jQuery(item).text().length;
-        });
-
-        return largest && jQuery(largest).text().length > 5 ? largest : null;
-    }
-
-    // truncates an item
-    function truncate(item) {
-        var text = jQuery(item).text();
-        if (text.charAt(text.length - 1) === "\u2026") {
-            text = text.substr(0, text.length - 1);
-        }
-        text = text.replace("\u2026", "");
-        var length = Math.max(text.length - 1, 4);
-        if (length < text.length) {
-            jQuery(item).text(text.substr(0, length) + "\u2026");
-        }
-    }
-
-    return {
-        // initializes, observes resize events and compresses the tabs
-        initialize: function () {
-            list = jQuery('#tabs');
-            if (list.length === 0) {
-                return;
-            }
-            items = jQuery('li a span', list);
-            jQuery(list).data('old_width', jQuery(window).width());
-
-            // strip contents and set text to data-title attributes 
-            items
-                .text(function () {
-                    return jQuery.trim(jQuery(this).text());
-                })
-                .attr('data-title', function () {
-                    return jQuery(this).text();
-                });
-
-            jQuery(window).resize(this.resize);
-            this.compress();
-        },
-
-
-        // try to fit all the tabs into a single line
-        compress: function () {
-            var item;
-            while (needs_compression() && (item = findCompressable())) {
-                truncate(item);
-            }
-        },
-
-        // event handler called when resizing the browser
-        // TODO (mlunzena): Inline this function!
-        resize: function () {
-            var new_width = jQuery(window).width();
-            if (new_width > jQuery(list).data('old_width')) {
-                items.text(function () {
-                    return jQuery(this).attr('data-title');
-                });
-            }
-            jQuery(list).data('old_width', new_width);
-            STUDIP.Tabs.compress();
-        }
-    };
-}());
-
-/* ------------------------------------------------------------------------
  * Dialogbox
  * ------------------------------------------------------------------------ */
 
@@ -1089,9 +1008,6 @@ jQuery(function () {
     STUDIP.URLHelper.base_url = STUDIP.ABSOLUTE_URI_STUDIP;
 
     jQuery('.add_toolbar').addToolbar(STUDIP.Markup.buttonSet);
-
-    // compress tabs
-    STUDIP.Tabs.initialize();
 
     STUDIP.study_area_selection.initialize();
 

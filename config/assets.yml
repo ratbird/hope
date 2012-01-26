@@ -13,3 +13,4 @@ javascripts:
     - javascripts/l10n.js
     - javascripts/application.js
     - javascripts/smiley.js
+    - javascripts/tabs.js

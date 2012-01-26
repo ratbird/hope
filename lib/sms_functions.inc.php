@@ -889,7 +889,7 @@ function show_msgsaveoptionsform()
     global $sms_data, $my_messaging_settings;
 
     if($sms_data["tmpsavesnd"] == 1) {
-        $tmp .= "<input class=\"text-top\" type=\"image\" name=\"rmv_tmpsavesnd_button\" src=\"".Assets::image_path('icons/16/blue/checkbox-checked.png'). "\" ".tooltip(_("Nachricht speichern."))."> "._("Nachricht speichern.");
+        $tmp .= "<input class=\"text-top\" type=\"image\" name=\"rmv_tmpsavesnd_button\" src=\"".Assets::image_path('icons/16/blue/checkbox-checked.png'). "\" ".tooltip(_("Nachricht speichern"))."> "._("Nachricht speichern");
         // do we have any personal folders? if, show them here
         if (have_msgfolder("out") == TRUE) {
             // walk throw personal folders

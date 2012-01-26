@@ -37,6 +37,7 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
+use Studip\Button, Studip\LinkButton;
 
 include('lib/seminar_open.php'); // initialise Stud.IP-Session
 require_once('config.inc.php');         //wir brauchen die Seminar-Typen
@@ -152,10 +153,10 @@ if ($_REQUEST['com'] == 'delete_sec') {
     $config = ExternConfig::GetConfigurationMetaData($range_id, $config_id);
 
     $message = sprintf(_("Wollen Sie die Konfiguration <b>&quot;%s&quot;</b> des Moduls <b>%s</b> wirklich l&ouml;schen?"), $config["name"], $GLOBALS["EXTERN_MODULE_TYPES"][$config["type"]]["name"]);
-    $message .= '<br><br><a href="' . URLHelper::getLink('?com=delete&config_id='.$config_id) . '">';
-    $message .= makeButton("ja2") . "</a>&nbsp; &nbsp;";
-    $message .= '<a href="' . URLHelper::getLink('?list=TRUE&view=extern_inst') . '">';
-    $message .= makeButton("nein") . "</a>";
+    $message .= '<br><br>';
+    $message .= LinkButton::createAccept("JA", URLHelper::getURL('?com=delete&config_id='.$config_id));
+    $message .= LinkButton::createCancel("NEIN", URLHelper::getURL('?list=TRUE&view=extern_inst'));
+
     my_info($message, "blank", 1);
     print_footer();
     page_close();
@@ -228,9 +229,11 @@ if ($EXTERN_SRI_ENABLE_BY_ROOT && $perm->have_perm('root')) {
     if (sri_is_enabled($range_id)) {
         echo ' checked="checked"';
     }
-    echo '> &nbsp;<input type="image" border="0" align="absmiddle" ';
-    echo makeButton('uebernehmen', 'src');
-    echo "></font></blockquote></form>\n</td></tr>\n";
+    echo '>';
+
+    echo Button::createAccept();
+
+    echo "</font></blockquote></form>\n</td></tr>\n";
 } else {
     echo "<tr><td class=\"blank\">&nbsp;</td></tr>\n";
 }
@@ -261,8 +264,8 @@ if (isset($configurations[$EXTERN_MODULE_TYPES[0]["module"]])) {
 
 if ($_REQUEST['com'] != 'copychoose') {
     echo "<blockquote><font size=\"2\">";
-    echo _("Neue globale Konfiguration anlegen.");
-    echo '&nbsp; <a href="' . URLHelper::getLink('?com=new&mod=Global') . '">' . makeButton("neuanlegen") . "</a>\n";
+    echo _("Neue globale Konfiguration anlegen.") . " ";
+    echo LinkButton::create(_("neu anlegen"), URLHelper::getURL('?com=new&mod=Global'));
     echo "</blockquote>";
 }
 
@@ -272,8 +275,8 @@ if ($choose_module_form != '') {
         echo CSRFProtection::tokenTag();
         echo "<blockquote><font size=\"2\">";
         $choose_module_form = "<select name=\"mod\">\n$choose_module_form</select>\n";
-        printf(_("Neue Konfiguration f&uuml;r Modul %s anlegen."), $choose_module_form);
-        echo "&nbsp; <input type=\"image\" " . makeButton("neuanlegen", "src") . " border=\"0\" align=\"absmiddle\">";
+        printf(_("Neue Konfiguration f&uuml;r Modul %s anlegen.") . " ", $choose_module_form);
+        echo Button::create(_("neu anlegen"));
         echo "</font></blockquote>\n";
         echo "</form>\n";
 
@@ -288,7 +291,7 @@ if ($choose_module_form != '') {
             }
             $choose_institute_copy .= "</select>\n";
             printf(_("Konfiguration aus Einrichtung %s kopieren."), $choose_institute_copy);
-            echo "&nbsp; <input type=\"image\" " . makeButton("weiter", "src") . " border=\"0\" align=\"absmiddle\">";
+            echo Button::create(_("weiter") . " >>");
             echo "</font></blockquote>\n";
             echo "</form>\n";
         }
@@ -314,8 +317,8 @@ if ($choose_module_form != '') {
             echo CSRFProtection::tokenTag();
             echo "<blockquote><font size=\"2\">";
             printf(_("Konfiguration %s aus Einrichtung kopieren."), $choose_module_select . '</select>');
-            echo "&nbsp; <input type=\"image\" " . makeButton('kopieren', 'src') . " border=\"0\" align=\"absmiddle\">&nbsp; &nbsp";
-            echo '<a href="' . URLHelper::getLink('?list=TRUE&view=extern_inst') . '">' . makeButton('zurueck', 'img') . '</a>';
+            echo Button::create(_("kopieren"));
+            echo LinkButton::create("<< " . _("zurück"), URLHelper::getURL('?list=TRUE&view=extern_inst'));
             echo "</font></blockquote>\n";
             echo "<input type=\"hidden\" name=\"copyinstid\" value=\"" . htmlReady($_REQUEST['copychooseinst']) . "\">\n";
             echo "</form>\n";
@@ -411,10 +414,8 @@ if (!$have_config) {
                 echo  Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _("Konfiguration löschen"))) . "</a>\n</td>\n";
                 echo "<td" . $css_switcher_2->getFullClass() . " align=\"right\" width=\"20%\" ";
                 echo ">\n";
-                echo '<a href="' . URLHelper::getLink('?com=edit&mod=' . $module_type['module'] . '&config_id=' . $configuration['id']) . '"><img ';
-                echo makeButton("bearbeiten", "src") . " class='middle'";
-                $tooltip = _("Konfiguration bearbeiten");
-                echo tooltip($tooltip) . " ></a>\n</td></tr>\n";
+                echo LinkButton::create(_("Konfiguration bearbeiten"), URLHelper::getURL('?com=edit&mod=' . $module_type['module'] . '&config_id=' . $configuration['id']));
+                echo "</td></tr>\n";
 
                 if ($_REQUEST['com'] == 'upload_config' && $_REQUEST['config_id'] == $configuration['id']) {
                     $template = $GLOBALS['template_factory']->open('extern/upload_form');

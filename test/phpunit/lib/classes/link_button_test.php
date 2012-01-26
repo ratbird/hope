@@ -25,47 +25,47 @@ class LinkButtonTestCase extends PHPUnit_Framework_TestCase
 
     function testCreateWithLabel()
     {
-        $this->assertEquals('' . LinkButton::create('yes'), '<a class="button" href="?">yes</a>');
+        $this->assertEquals('' . LinkButton::create('yes'), '<a class="button" href="?" tabindex="0">yes</a>');
     }
 
     function testCreateWithLabelAndUrl()
     {
-        $this->assertEquals('' . LinkButton::create('yes', 'http://example.net'), '<a class="button" href="http://example.net">yes</a>');
+        $this->assertEquals('' . LinkButton::create('yes', 'http://example.net'), '<a class="button" href="http://example.net" tabindex="0">yes</a>');
     }
 
     function testCreateWithLabelAndArray()
     {
         $this->assertEquals('' . LinkButton::create('yes', array('a' => 1, 'b' => 2)),
-                            '<a a="1" b="2" class="button" href="?">yes</a>');
+                            '<a a="1" b="2" class="button" href="?" tabindex="0">yes</a>');
     }
 
     function testCreateWithLabelUrlAndArray()
     {
         $this->assertEquals('' . LinkButton::create('yes', 'http://example.net', array('a' => 1, 'b' => 2)),
-                            '<a a="1" b="2" class="button" href="http://example.net">yes</a>');
+                            '<a a="1" b="2" class="button" href="http://example.net" tabindex="0">yes</a>');
     }
 
     function testCreateAccept()
     {
         $this->assertEquals('' . LinkButton::createAccept(),
-                            '<a class="accept button" href="?" name="accept">&uuml;bernehmen</a>');
+                            '<a class="accept button" href="?" name="accept" tabindex="0">&uuml;bernehmen</a>');
     }
 
     function testCreateCancel()
     {
         $this->assertEquals('' . LinkButton::createCancel(),
-                            '<a class="cancel button" href="?" name="cancel">abbrechen</a>');
+                            '<a class="cancel button" href="?" name="cancel" tabindex="0">abbrechen</a>');
     }
 
     function testCreatePreOrder()
     {
         $this->assertEquals('' . LinkButton::createPreOrder(),
-                            '<a class="pre-order button" href="?" name="pre-order">ok</a>');
+                            '<a class="pre-order button" href="?" name="pre-order" tabindex="0">ok</a>');
     }
 
     function testCreateWithInsaneArguments()
     {
         $this->assertEquals('' . LinkButton::create('>ok<', 'http://example.net?m=&m=', array('mad' => '<S>tu"ff')),
-                            '<a class="button" href="http://example.net?m=&amp;m=" mad="&lt;S&gt;tu&quot;ff">&gt;ok&lt;</a>');
+                            '<a class="button" href="http://example.net?m=&amp;m=" mad="&lt;S&gt;tu&quot;ff" tabindex="0">&gt;ok&lt;</a>');
     }
 }

@@ -37,6 +37,7 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
+use Studip\Button, Studip\LinkButton;
 
 require_once($RELATIVE_PATH_EXTERN.'/lib/ExternModule.class.php');
 require_once($RELATIVE_PATH_EXTERN.'/lib/ExternConfig.class.php');
@@ -62,9 +63,8 @@ if ($_REQUEST['com'] == 'new') {
                         , $GLOBALS['EXTERN_MAX_CONFIGURATIONS']);
                 my_error($message, "blank", 1);
                 echo "<tr><td class=\"blank\" align=\"center\">\n";
-                echo '<a href="' . URLHelper::getLink('?list=TRUE') . '">';
-                echo makeButton("zurueck");
-                echo "</a>\n</td></tr>\n</table>\n";
+                echo LinkButton::create("<< " . _("zurück"), URLHelper::getURL('?list=TRUE'));
+                echo "</td></tr>\n</table>\n";
                 print_footer();
                 page_close();
                 exit;
@@ -151,9 +151,10 @@ echo "</td></tr>\n";
 if (!$edit_open[$edit]) {
     echo "<tr><td class=\"blank\">&nbsp;</td></tr>\n";
     echo "<tr><td class=\"blank\" align=\"center\">";
-    echo '<a href="' . URLHelper::getLink('?list=TRUE') . '">';
-    echo "<img " . makeButton("zurueck", "src");
-    echo " border=\"0\" align=\"absmiddle\"></a>\n</td></tr>\n";
+
+    echo LinkButton::create("<< " . _("zurück"), URLHelper::getURL('?list=TRUE'));
+
+    echo "</td></tr>\n";
 }
 echo "</table></td></tr></table>\n</td>\n<td width=\"10%\" class=\"blank\" valign=\"top\">\n";
 echo "<table class=\"blank\" border=\"0\" width=\"100%\" ";
@@ -165,13 +166,20 @@ $info_edit_element = _("Um die Werte eines einzelnen Elements zu &auml;ndern, kl
 if ($module->getType() != 0) {
     $info_preview = _("Um eine Vorschau der Seite zu erhalten, klicken Sie bitte hier:");
     $info_preview .= "<br>&nbsp;<div align=\"center\">";
-    $info_preview .= '<a target="_blank" href="' . $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'] . 'extern.php';
-    $info_preview .= "?module=" . $module->getName() . "&range_id=" . $module->config->range_id;
-    $info_preview .= "&preview=1&config_id=" . $module->config->getId();
-    if ($global_config = ExternConfig::GetGlobalConfiguration($module->config->range_id))
-        $info_preview .= "&global_id=$global_config";
-    $info_preview .= "\">";
-    $info_preview .= makeButton("vorschau") . "</a></div><br>";
+
+    $url = sprintf("%sextern.php?module=%s&range_id=%s&preview=1&config_id=%s",
+                   $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'],
+                   $module->getName(),
+                   $module->config->range_id,
+                   $module->config->getId()
+    );
+    if ($global_config = ExternConfig::GetGlobalConfiguration($module->config->range_id)) {
+        $url .= "&global_id=$global_config";
+    }
+
+    $info_preview .= LinkButton::create(_("Vorschau"), $url, array("target" => "_blank"));
+    $info_preview .= "</div><br>";
+
     $info_preview .= _("Die Vorschau wird in einem neuen Fenster ge&ouml;ffnet.") . "<br>";
     $info_preview .= _("Es werden eventuell nicht alle Einstellungen in der Vorschau angezeigt.");
 

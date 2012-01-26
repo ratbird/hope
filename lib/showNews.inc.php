@@ -216,6 +216,7 @@ function show_rss_news($range_id, $type)
 {
     $RssTimeFmt = '%Y-%m-%dT%H:%MZ';
     $last_changed = 0;
+    $item_url_fmt = "%s&nopen=%s";
     switch ($type){
         case 'user':
             $studip_url = $GLOBALS['ABSOLUTE_URI_STUDIP'] . "about.php?again=yes&username=" . get_username($range_id);
@@ -238,6 +239,7 @@ function show_rss_news($range_id, $type)
         break;
         case 'global':
             $studip_url = $GLOBALS['ABSOLUTE_URI_STUDIP'] . "index.php?again=yes";
+            $item_url_fmt = $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'dispatch.php/news/get_news/%2$s';
             $title = 'Stud.IP - ' . $GLOBALS['UNI_NAME_CLEAN'];
             $RssChannelDesc = _("Allgemeine Neuigkeiten") . ' ' . $title;
         break;
@@ -248,7 +250,7 @@ function show_rss_news($range_id, $type)
         list ($body,$admin_msg) = explode("<admin_msg>",$details["body"]);
         $items .= "<item>
         <title>".htmlspecialchars(studip_utf8encode($details["topic"]))."</title>
-        <link>".htmlspecialchars(studip_utf8encode($studip_url . "&nopen=$news_id#anker"))."</link>";
+        <link>".htmlspecialchars(studip_utf8encode(sprintf($item_url_fmt, $studip_url, $news_id)))."</link>";
         $items .= "<description>"."<![CDATA[".studip_utf8encode(formatready($body,1,1))."]]>"."</description>
         <dc:contributor>"."<![CDATA[".studip_utf8encode($details['author'])."]]>"."</dc:contributor>
         <dc:date>".gmstrftime($RssTimeFmt,($details['date'] > $details['chdate'] ? $details['date'] : $details['chdate']))."</dc:date>

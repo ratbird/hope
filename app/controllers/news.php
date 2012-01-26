@@ -78,12 +78,11 @@ class NewsController extends StudipController
         }
 
         object_set_visit($id, "news");
-        $content = show_news_item_content($newscontent,
-                                          array(),
-                                          $show_admin,
-                                          Request::get('admin_link')
-                                          );
-        $this->render_text(studip_utf8encode($content));
+        $this->content = show_news_item_content($newscontent,
+                                                array(),
+                                                $show_admin,
+                                                Request::get('admin_link')
+        );
     }
 
     /**

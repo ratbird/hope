@@ -863,6 +863,10 @@ a.button::-moz-focus-inner, button.button::-moz-focus-inner {
     border: 0;
 }
 
+a.button:focus, button.button:focus {
+    outline: dotted 1px black;
+}
+
 button.button {
     width: auto;
     overflow: visible;

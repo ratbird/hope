@@ -37,6 +37,7 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
+use Studip\Button, Studip\LinkButton;
 
 require_once('lib/visual.inc.php');
 require_once('lib/classes/cssClassSwitcher.inc.php');
@@ -180,11 +181,9 @@ class ExternEdit {
 
         $out = "<tr><td align=\"center\" colspan=\"2\" nowrap=\"nowrap\"";
         $out .= $this->css->getFullClass() . ">&nbsp;";
-        $out .= "<input type=\"image\" name=\"submit\" ";
-        $out .= makeButton("uebernehmen", "src") . ">&nbsp; &nbsp; &nbsp;";
-        $out .= '<a href="' . URLHelper::getLink('?list=TRUE') . '">';
-        $out .= "<img " . makeButton("abbrechen", "src");
-        $out .= " border=\"0\" valign=\"absmiddle\"></a>\n";
+        $out .= Button::createAccept(_("übernehmen"), "submit"); 
+        $out .= "&nbsp; &nbsp; &nbsp;";
+        $out .= LinkButton::createCancel(_("abbrechen"), URLHelper::getURL('?list=TRUE'));
         $out .= "<input type=\"hidden\" name=\"config_id\" value=\"$config_id\">";
         $out .= "<input type=\"hidden\" name=\"mod\" value=\"$module_name\">";
         if ($element_name) {

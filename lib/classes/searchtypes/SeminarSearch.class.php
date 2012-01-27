@@ -23,7 +23,7 @@ class SeminarSearch extends SearchType
     private $styles = array(
                     'name' => 'Name',
                     'number-name' => "TRIM(CONCAT_WS(' ', VeranstaltungsNummer, Name))",
-                    'number-name-lecturer' => "CONCAT_WS(' ', TRIM(CONCAT_WS(' ', VeranstaltungsNummer, Name)), CONCAT('(', GROUP_CONCAT(Nachname ORDER BY Nachname SEPARATOR ', '),')'))"
+                    'number-name-lecturer' => "CONCAT_WS(' ', TRIM(CONCAT_WS(' ', VeranstaltungsNummer, Name)), CONCAT('(', GROUP_CONCAT(Nachname ORDER BY position,Nachname SEPARATOR ', '),')'))"
                     );
     private $resultstyle;
 

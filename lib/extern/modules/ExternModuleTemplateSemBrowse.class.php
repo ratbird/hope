@@ -518,6 +518,7 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
         //  $this->sem_tree = new StudipSemTreeViewSimple($this->getRootStartItemId(), $this->sem_number, $sem_status, true);
         }
         $sem_ids = $this->sem_tree->getSemIds($item_id, $with_kids);
+
         if (is_array($sem_ids)){
             $this->sem_browse_data['search_result'] = array_flip($sem_ids);
         } else {
@@ -620,13 +621,9 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
     }
 
     function getContentTree () {
-        $tree_args = array(
-            'sem_status' => (is_array($this->sem_browse_data['sem_status'])) ? $this->sem_browse_data['sem_status'] : false,
-            'visible_only' => true
-        );
-        if (is_array($this->sem_number)) {
-            $tree_args['sem_number'] = $this->sem_number;
-        }
+        $tree_args['sem_status'] = (is_array($this->sem_browse_data['sem_status'])) ? $this->sem_browse_data['sem_status'] : false;
+        $tree_args['sem_number'] = $this->sem_number;
+        $tree_args['visible_only'] = true;
         if ($this->config->getValue('Main', 'mode') == 'show_sem_range') {
             $tree = TreeAbstract::GetInstance('StudipSemTree', $tree_args);
         } else {
@@ -849,7 +846,7 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
                             // generic data fields
                             $generic_datafields = $this->config->getValue('TemplateResult', 'genericdatafields');
                             if (is_array($generic_datafields)) {
-                                $localEntries = DataFieldEntry::getDataFieldEntries($seminar_id, 'sem');
+                                $localEntries = DataFieldEntry::getDataFieldEntries($seminar_id, 'sem', $SEM_TYPE[key($sem_data[$seminar_id]['status'])]['class']);
                                 $m = 1;
                                 foreach ($generic_datafields as $datafield) {
                                     if (isset($localEntries[$datafield]) && is_object($localEntries[$datafield])) {
@@ -1083,7 +1080,7 @@ function getResultSearch ($level_id = null) {
         if ($this->sem_browse_data['group_by'] == 1
             || (sizeof($this->config->getValue('SelectSubjectAreas', 'subjectareasselected'))
             && !($this->config->getValue('SelectSubjectAreas', 'selectallsubjectareas') || $this->sem_browse_data['start_item_id'] == 'root'))) {
-            if ($this->config->getValue('Main', 'mode') == 'show_sem_range') {
+            if ($this->config->getValue('Main', 'mode') == 'show_sem_range' && $this->sem_browse_data['start_item_id'] != 'root') {
                 $allowed_ranges = array();
                 if (is_null($level_id)) {
                     if (!is_object($this->sem_tree)){
@@ -1235,7 +1232,7 @@ function getResultSearch ($level_id = null) {
 
         foreach ($group_by_data as $group_field => $sem_ids) {
             foreach ($sem_ids['Seminar_id'] as $seminar_id => $foo) {
-                if ($sortby_field) {
+                if ($orderby_field) {
                     $name = strtolower(key($sem_data[$seminar_id][$orderby_field]));
                 } else {
                     $name = strtolower(key($sem_data[$seminar_id]["VeranstaltungsNummer"]));
@@ -1283,7 +1280,7 @@ function getResultSearch ($level_id = null) {
         if ($this->sem_browse_data['group_by'] == 1
             || (sizeof($this->config->getValue('SelectSubjectAreas', 'subjectareasselected'))
             && !($this->config->getValue('SelectSubjectAreas', 'selectallsubjectareas') || $this->sem_browse_data['start_item_id'] == 'root'))) {
-            if ($this->config->getValue('Main', 'mode') == 'show_sem_range') {
+            if ($this->config->getValue('Main', 'mode') == 'show_sem_range' &&  $this->sem_browse_data['start_item_id'] != 'root') {
                 $allowed_ranges = array();
                 if (is_null($level_id)) {
                     if (!is_object($this->sem_tree)){
@@ -1413,7 +1410,7 @@ function getResultSearch ($level_id = null) {
 
         foreach ($group_by_data as $group_field => $sem_ids) {
             foreach ($sem_ids['Seminar_id'] as $seminar_id => $foo) {
-                if ($sortby_field) {
+                if ($orderby_field) {
                     $name = strtolower(key($sem_data[$seminar_id][$orderby_field]));
                 } else {
                     $name = strtolower(key($sem_data[$seminar_id]["VeranstaltungsNummer"]));
@@ -1481,9 +1478,7 @@ function getResultSearch ($level_id = null) {
             $language = "de_DE";
         init_i18n($language);
 
-        ob_start();
         echo $this->elements['TemplateMain']->toString(array('content' => $this->getContent(), 'subpart' => 'LECTURES'));
-        ob_end_flush();
 
     }
 

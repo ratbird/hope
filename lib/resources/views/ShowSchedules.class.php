@@ -190,23 +190,17 @@ class ShowSchedules {
                     $num = 1;
                     while ($event = $assign_events->nextEvent()) {
                         $add_info = '';
-                        if (in_array($event->getOwnerType(), array('sem','date'))){
-                            $sem_doz_names = array();
-                            if ($event->getOwnerType() == 'sem'){
-                                $sem_obj = Seminar::GetInstance($event->getAssignUserId());
-                            } else {
+                        if ($event->getOwnerType() == 'date') {
                                 $sem_obj = Seminar::GetInstance(Seminar::GetSemIdByDateId($event->getAssignUserId()));
-                            }
-                            foreach($sem_obj->getMembers('dozent') as $dozent){
-                                $sem_doz_names[] = $dozent['Nachname'];
-                                if (++$c > 2) break;
-                            }
-                            $add_info = ', (' . join(', ' , $sem_doz_names) . ')';
+                                $date = new SingleDate($event->getAssignUserId());
+                                $dozenten = array_intersect_key($sem_obj->getMembers('dozent'), array_flip($date->getRelatedPersons()));
+                                $sem_doz_names = array_map(create_function('$a', 'return $a["Nachname"];'), array_slice($dozenten,0,3, true));
+                                $add_info = '(' . join(', ' , $sem_doz_names) . ')';
                         }
                         if (!$print_view){
                             echo "<a href=\"$PHP_SELF?quick_view=".$view."&quick_view_mode=".$quick_view_mode."&edit_assign_object=".$event->getAssignId()."\">".makeButton("eigenschaften")."</a><font size=-1>";
                         } else {
-                         echo '<font size=-1>' . sprintf("%02d" , $num++) . '.';
+                            echo '<font size=-1>' . sprintf("%02d" , $num++) . '.';
                         }
                         printf ("&nbsp;"
                                 ._("Belegung ist von <b>%s</b> bis <b>%s</b>, belegt von <b>%s</b>")
@@ -273,17 +267,11 @@ class ShowSchedules {
         while ($event=$assign_events->nextEvent()) {
             $repeat_mode = $event->getRepeatMode(TRUE);
             $add_info = '';
-            if (in_array($event->getOwnerType(), array('sem','date'))){
-                $sem_doz_names = array();
-                if ($event->getOwnerType() == 'sem'){
-                    $sem_obj = Seminar::GetInstance($event->getAssignUserId());
-                } else {
-                    $sem_obj = Seminar::GetInstance(Seminar::GetSemIdByDateId($event->getAssignUserId()));
-                }
-                foreach($sem_obj->getMembers('dozent') as $dozent){
-                    $sem_doz_names[] = $dozent['Nachname'];
-                    if (++$c > 2) break;
-                }
+            if ($event->getOwnerType() == 'date') {
+                $sem_obj = Seminar::GetInstance(Seminar::GetSemIdByDateId($event->getAssignUserId()));
+                $date = new SingleDate($event->getAssignUserId());
+                $dozenten = array_intersect_key($sem_obj->getMembers('dozent'), array_flip($date->getRelatedPersons()));
+                $sem_doz_names = array_map(create_function('$a', 'return $a["Nachname"];'), array_slice($dozenten,0,3, true));
                 $add_info = '(' . join(', ' , $sem_doz_names) . ')';
             }
             $schedule->addEvent($event->getName(get_config('RESOURCES_SCHEDULE_EXPLAIN_USER_NAME')), $event->getBegin(), $event->getEnd(),

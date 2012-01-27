@@ -259,37 +259,40 @@ function isFiltered($filter, $mode) {
 }
 
 function createNormalizedAssigns($resource_id, $begin, $end, $explain_user_name = false, $day_of_week = false){
-    $db = new DB_Seminar();
+    $db = DbManager::get();
     $a_obj = new AssignObject(null);
     $events = array();
     if ($day_of_week){
         $day_of_week = (++$day_of_week == 8 ? 1 : $day_of_week);
     }
     $query.= "SELECT assign_id FROM resources_assign WHERE ";
-    $query.= sprintf("resources_assign.resource_id = '%s' AND ", $resource_id);
-    $query .= sprintf("(begin BETWEEN %s AND %s OR (begin <= %s AND (repeat_end > %s OR end > %s)))"
-                 . " %s ORDER BY begin ASC", $begin, $end, $end, $begin, $begin,
-                 ($day_of_week ? " AND DAYOFWEEK(FROM_UNIXTIME(begin)) = $day_of_week " : "") );
-    $db->query($query);
-    while($db->next_record()){
-        if($a_obj->restore($db->f(0))){
+    $query.= "resources_assign.resource_id = :resource_id AND ";
+    $query .= "(begin BETWEEN :begin AND :end OR (begin <= :end AND (repeat_end > :begin OR end > :begin)))";
+    $query .= sprintf( " %s ORDER BY begin ASC",
+                 ($day_of_week ? " AND DAYOFWEEK(FROM_UNIXTIME(begin)) = :day_of_week " : "") );
+    $st = $db->prepare($query);
+    $st->execute(array(':resource_id' =>  $resource_id, ':begin' => $begin, ':end' => $end, ':day_of_week' => $day_of_week));
+    while($assign_id = $st->fetchColumn()){
+        if($a_obj->restore($assign_id)) {
             $seminar_id = $sem_doz_names = false;
             unset($sem_obj);
             $repmode = $a_obj->getRepeatMode();
             if ($repmode == 'na' && $a_obj->getAssignUserId()
-            && ($seminar_id = isMetadateCorrespondingDate($a_obj->getAssignUserId())) ){
+            && ($metadate = SeminarCycleDate::findByTermin($a_obj->getAssignUserId())) ){
                 $repmode = 'meta';
+                $seminar_id = $metadate->seminar_id;
                 $sem_obj = Seminar::GetInstance($seminar_id);
-            }
-            if ($a_obj->getOwnerType() == 'sem'){
-                $seminar_id = $a_obj->getAssignUserId();
-                $sem_obj = Seminar::GetInstance($seminar_id);
-            }
-            if ($seminar_id){
-                foreach($sem_obj->getMembers('dozent') as $dozent){
-                    $sem_doz_names[] = $dozent['Nachname'];
-                    if (++$c > 2) break;
+                $r_dozenten = $db->query("SELECT trp.user_id FROM seminar_cycle_dates scd
+                                        INNER JOIN termine t USING(metadate_id)
+                                        INNER JOIN termin_related_persons trp ON trp.range_id = t.termin_id 
+                                        WHERE scd.metadate_id=" . $db->quote($metadate->getId()))
+                            ->fetchAll(PDO::FETCH_COLUMN);
+                if (count($r_dozenten)) {
+                    $dozenten = array_intersect_key($sem_obj->getMembers('dozent'), array_flip($r_dozenten));
+                } else {
+                    $dozenten = $sem_obj->getMembers('dozent');
                 }
+                $sem_doz_names = array_map(create_function('$a', 'return $a["Nachname"];'), array_slice($dozenten,0,3, true));
                 $sem_doz_names = join(', ' , $sem_doz_names);
             }
             if($repmode == 'meta'){
@@ -301,7 +304,7 @@ function createNormalizedAssigns($resource_id, $begin, $end, $explain_user_name 
                                                 'assign_user_id' => $a_obj->getAssignUserId(),
                                                 'repeat_mode' => $repmode,
                                                 'is_meta' => 1,
-                                                'repeat_interval' => $sem_obj->cycle,
+                                                'repeat_interval' => $metadate->cycle + 1,
                                                 'seminar_id' => $seminar_id,
                                                 'name' => $a_obj->getUserName(false,$explain_user_name),
                                                 'sem_doz_names' => $sem_doz_names

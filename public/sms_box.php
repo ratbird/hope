@@ -410,7 +410,7 @@ $query_time = $query_time_sort;
             $content_content = "<div align=\"center\">
                 <form action=\"".$PHP_SELF."\" method=\"post\" style=\"display: inline\">" .
                 CSRFProtection::tokenTag() .
-                "<input type=\"hidden\" name=\"cmd\" value=\"select_all\">"
+                "<div class=\"button-group\"><input type=\"hidden\" name=\"cmd\" value=\"select_all\">"
                 . Button::create(_('alle auswählen'), 'select', array('align' => 'absmiddle')) .    
                 "</form>
                 <form action=\"".$PHP_SELF."\" method=\"post\" style=\"display: inline\">".
@@ -419,7 +419,7 @@ $query_time = $query_time_sort;
                 if (have_msgfolder($sms_data['view']) == TRUE) {                    
                     $content_content .= Button::create(_('verschieben'), 'move_selected_button', array('align' => 'absmiddle'));
                 }
-                $content_content .= "<br></div>";
+                $content_content .= "</div><br></div>";
             if (folder_openclose($sms_show['folder'][$sms_data['view']], "all") == "open") {
                 echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"99%\" align=\"center\"><tr>";
                 if ($count_timefilter != "0") {

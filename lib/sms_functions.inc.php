@@ -32,6 +32,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+use Studip\Button, Studip\LinkButton;
+
 require_once 'lib/classes/Avatar.class.php';
 
 /**
@@ -268,9 +270,11 @@ function print_snd_message($psm) {
         }
 
         // buttons
-        $edit = "&nbsp;<a href=\"".$PHP_SELF."?cmd=delete_selected&sel_sms[1]=".$psm['message_id']."\" ".tooltip(_("Diese Nachricht löschen.")).">".makeButton("loeschen", "img")."</a>&nbsp;";
+        
+        $edit = LinkButton::create(_('löschen'), URLHelper::getURL("?cmd=delete_selected", array('sel_sms[1]' => $psm['message_id'])), array('title' => _('Diese Nachricht löschen.')));
         if (have_msgfolder($sms_data['view']) == TRUE) {
-            $edit .= " <a href=\"".$PHP_SELF."?move_to_folder[1]=".$psm['message_id']."\" ".tooltip(_("Diese Nachricht in einen frei wählbaren Ordner verschieben.")).">".makeButton("verschieben", "img")."</a><br><br>";
+            $edit .= LinkButton::create(_('verschieben'), URLHelper::getURL('', array('move_to_folder[1]' => $psm['message_id'])), array('title' => _('Diese Nachricht in einen frei wählbaren Ordner verschieben.')))
+                  . "<br><br>";
         }
     }
 
@@ -438,15 +442,16 @@ function print_rec_message($prm) {
         }
 
         // mk buttons
-        $edit = "";
+        $edit = '<div class="button-group">';
         if ($prm['user_id_snd'] != "____%system%____") {
-            $edit .= "<a href=\"sms_send.php?cmd=write&answer_to=".$prm['message_id']."\">".makeButton("antworten", "img")."</a>";
-            $edit .= "&nbsp;<a href=\"sms_send.php?cmd=write&quote=".$prm['message_id']."&answer_to=".$prm['message_id']."\">".makeButton("zitieren", "img")."</a>";
+            $edit .= LinkButton::create(_('antworten'), URLHelper::getURL('sms_send.php', array('cmd'=> 'write', 'answer_to' => $prm['message_id'])));
+            $edit .= LinkButton::create(_('zitieren'), URLHelper::getURL('sms_send.php', array('cmd' => 'write', 'quote' => $prm['message_id'], 'answer_to' => $prm['message_id'])));
         }
-        $edit.= "&nbsp;<a href=\"".$PHP_SELF."?cmd=delete_selected&sel_sms[1]=".$prm['message_id']."\">".makeButton("loeschen", "img")."</a>";
+        $edit.= LinkButton::create(_('löschen'), URLHelper::getURL('', array('cmd' => 'delete_selected', "sel_sms[1]" => $prm['message_id'])));
         if (have_msgfolder($sms_data['view']) == TRUE) {
-            $edit .= "&nbsp;<a href=\"".$PHP_SELF."?move_to_folder[1]=".$prm['message_id']."\" ".tooltip(_("Diese Nachricht in einen frei wählbaren Ordner verschieben.")).">".makeButton("verschieben", "img")."</a><br><br>";
+            $edit .= LinkButton::create(_('verschieben'), URLHelper::getURL('', array('move_to_folder[1]'=> $prm['message_id'])), array('title' => _('Diese Nachricht in einen frei wählbaren Ordner verschieben.')));
         }
+        $edit .= '</div>';
     }
     // (hover) icon
     $message_hovericon['titel'] = $prm['message_subject'];
@@ -826,12 +831,14 @@ function show_msgform() {
     $tmp .= "<div align=\"center\"><textarea name=\"message\" style=\"width: 99%\" cols=80 rows=10 wrap=\"virtual\">\n";
     if ($quote) { $tmp .= quotes_encode(htmlReady($tmp_sms_content), get_fullname_from_uname($quote_username)); }
     if ($message) { $tmp .= htmlReady(stripslashes($message)); }
-    $tmp .= "</textarea>\n<br><br>";
+    $tmp .= '</textarea><br><br><div class="button-group">';
     // send/ break-button
-    if (sizeof($sms_data["p_rec"]) > "0") { $tmp .= "<input type=\"image\" ".makeButton("abschicken", "src")." name=\"cmd_insert\">"; }
-    $tmp .= "&nbsp;<a href=\"sms_box.php\">".makeButton("abbrechen", "img")."</a>&nbsp;";
-    $tmp .= "<input type=\"image\" ".makeButton("vorschau", "src")." name=\"cmd\">";
-    $tmp .= "<br><br>";
+    if (sizeof($sms_data["p_rec"]) > "0") { 
+        $tmp .= Button::createAccept(_('abschicken'), 'cmd_insert');
+    }
+    $tmp .= LinkButton::createCancel(_('abbrechen'), URLHelper::getURL('sms_box.php'));
+    $tmp .= Button::create(_('vorschau'), 'cmd');
+    $tmp .= "</div><br><br>";
     $tmp .= "</div>";
     return $tmp;
 
@@ -1004,7 +1011,7 @@ function show_attachmentform()
     $print.="\n<div>";
     $print.="\n<input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"$max_filesize\">";
     $print.= "<input name=\"the_file\" type=\"file\" size=\"40\">";
-    $print.= '&nbsp;<input type="image" class="button" ' .makeButton('hinzufuegen', 'src'). ' onClick="return STUDIP.OldUpload.upload_start(jQuery(this).closest('."'form'".'));" name="upload">';
+    $print.= LinkButton::create(_('hinzufügen'), array('name' => 'upload', 'onClick' => 'return STUDIP.OldUpload.upload_start(jQuery(this).closest('."'form'".'));'));
     $print.= "\n<input type=\"hidden\" name=\"attachment_message_id\" value=\"".htmlready($attachment_message_id)."\">";
     $print.= "</div>";
 

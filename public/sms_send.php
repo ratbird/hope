@@ -145,7 +145,7 @@ if ($add_tmpreadsnd_button_x) $sms_data["tmpreadsnd"] = 1;
 if (($cmd == "write_chatinv") && (!is_array($admin_chats))) $cmd='';
 
 // send message
-if ($cmd_insert_x) {
+if (Request::submitted('cmd_insert')) {
 
     $count = 0;
 

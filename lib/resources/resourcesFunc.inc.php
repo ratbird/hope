@@ -380,9 +380,9 @@ function getMyRoomRequests($user_id = '', $semester_id = null, $only_not_closed 
         $criteria = ' 1 ';
     }
     if($single_request){
-        $criteria .= " AND rr.request_id='$single_request' ";
+        $criteria .= " AND rr.request_id= " . $db->quote($single_request);
     } elseif ($semester_id){
-        $semester = SemesterData::GetInstance()->getSemesterData($semester_id);
+        $semester = Semester::find($semester_id);
         $sem_criteria = ' BETWEEN ' . (int)$semester['beginn'] . ' AND ' . (int)$semester['ende'];
     }
     $query  = "SELECT request_id, closed, rr.resource_id "
@@ -390,7 +390,7 @@ function getMyRoomRequests($user_id = '', $semester_id = null, $only_not_closed 
             . "WHERE %s ";
     $query1 = "SELECT request_id FROM resources_requests rr "
             . "INNER JOIN termine tt ON (tt.termin_id = rr.termin_id "
-            . "AND tt.date > UNIX_TIMESTAMP() " 
+            . "AND tt.date > UNIX_TIMESTAMP() "
             . ($sem_criteria ? ' AND tt.date ' . $sem_criteria : '').") "
             . "WHERE rr.termin_id <> ''  AND %s";
     $query2 = "SELECT DISTINCT request_id FROM resources_requests rr "

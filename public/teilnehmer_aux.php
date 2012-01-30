@@ -22,10 +22,10 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-
+use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
-
+unregister_globals();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 
 include "lib/seminar_open.php"; //hier werden die sessions initialisiert
@@ -215,7 +215,7 @@ function aux_html() {
     $cell = '<form action="'.URLHelper::getLink().'" method="post">';
     $cell .= CSRFProtection::tokenTag();
     $cell .= '<select name="display_type"><option value="rtf">RTF</option><option value="csv">Excel kompatibel</option></select>';
-    $cell .= '&nbsp;&nbsp;&nbsp;' . makebutton('export', 'input', _("Zusatzangaben exportieren")) . '</form>';
+    $cell .= '&nbsp;&nbsp;&nbsp;' . Button::create(_('Export')) . '</form>';
     echo $zt->cell($cell, array('colspan' => '20', 'class' => 'blank'));
     echo $zt->closeRow();
 
@@ -320,7 +320,7 @@ function aux_enter_data() {
     }
 
     echo $zt->openRow();
-    echo $zt->cell('<br>' . makebutton('uebernehmen', 'input', _("Zusatzangaben übernehmen")) . '<br><br>', array('colspan' => '20', 'align' => 'center'));
+    echo $zt->cell('<br>' . Button::create(_('übernehmen')) . '<br><br>', array('colspan' => '20', 'align' => 'center'));
     echo $zt->close();
     echo '</form>';
 }

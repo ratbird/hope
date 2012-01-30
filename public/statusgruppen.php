@@ -25,7 +25,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 
 require '../lib/bootstrap.php';
-
+unregister_globals();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", 'user' => "Seminar_User"));
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
@@ -249,13 +249,13 @@ function PrintNonMembers ($range_id)
 
 // Command-Parsing
 
-if ($assign)
-    if (GetRangeOfStatusgruppe($assign)==$SessSemName[1] && CheckAssignRights($assign, $user->id, $SessSemName[1]))
-        InsertPersonStatusgruppe($user->id, $assign);
+if (Request::option('assign'))
+    if (GetRangeOfStatusgruppe(Request::option('assign'))==$SessSemName[1] && CheckAssignRights(Request::option('assign'), $user->id, $SessSemName[1]))
+        InsertPersonStatusgruppe($user->id, Request::option('assign'));
 
-if ($delete_id)
-    if (GetRangeOfStatusgruppe($delete_id)==$SessSemName[1] && CheckUserStatusgruppe($delete_id, $user->id))
-        RemovePersonStatusgruppe($user->username, $delete_id);
+if (Request::option('delete_id'))
+    if (GetRangeOfStatusgruppe(Request::option('delete_id'))==$SessSemName[1] && CheckUserStatusgruppe(Request::option('delete_id'), $user->id))
+        RemovePersonStatusgruppe($user->username, Request::option('delete_id'));
 
 // Beginn Darstellungsteil
 
@@ -266,10 +266,9 @@ if ($delete_id)
         <td class="blank" valign="top"><br>
         <table cellspacing="0" cellpadding="0" border="0" width="100%">
     <?
-    if ($sms_msg){
+    if ($_SESSION['sms_msg']) {
         parse_msg ($sms_msg);
-        $sms_msg = '';
-        $sess->unregister('sms_msg');
+        unset($_SESSION['sms_msg']) ;
     }
     ?>
     <tr valign="top">
@@ -288,7 +287,7 @@ if ($delete_id)
                 $Memberstatus = _("Niemand ist einer Funktion / Gruppe zugeordnet.");
             }
 
-            if (($EXPORT_ENABLE) AND ($perm->have_studip_perm("tutor", $SessSemName[1])))
+            if ((get_config('EXPORT_ENABLE') ) AND ($perm->have_studip_perm("tutor", $SessSemName[1])))
             {
                 include_once($PATH_EXPORT . "/export_linking_func.inc.php");
                 echo "<br><b>&nbsp;<font size=\"-1\">" . export_link($SessSemName[1], "person", $SessSemName[0], "rtf", "rtf-gruppen", "status") . "</font></b>";

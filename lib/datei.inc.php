@@ -25,6 +25,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+use Studip\Button, Studip\LinkButton;
+
 require_once('vendor/idna_convert/idna_convert.class.php');
 require_once('lib/classes/StudipDocument.class.php');
 require_once('lib/classes/StudipDocumentTree.class.php');
@@ -807,8 +809,14 @@ function form($refresh = FALSE) {
         $print.= "\n<tr><td class=\"steelgraudunkel\" colspan=2 ><font size=-1>" . _("3. Klicken Sie auf <b>'absenden'</b>, um die Datei hochzuladen und damit die alte Version zu &uuml;berschreiben.") . "</font></td></tr>";
     }
     $print.= "\n<tr><td class=\"steel1\" colspan=2 align=\"center\" valign=\"center\">";
-    $print.= "\n<input type=\"image\" " . makeButton("absenden", "src") . tooltip(_("absenden")) . " value=\"Senden\" align=\"absmiddle\" onClick=\"return STUDIP.OldUpload.upload_start(jQuery(this).closest('form'));\" name=\"create\" border=\"0\">";
-    $print.="&nbsp;<a href=\"".URLHelper::getLink("?cancel_x=true#anker")."\">" . makeButton("abbrechen", "img", _("abbrechen")) . "</a></td></tr>";
+
+    $print .= '<div class="button-group">';
+    $print .= Button::createAccept(_("absenden"), "create", array('onClick' => 'return STUDIP.OldUpload.upload_start(jQuery(this).closest("form"));'));
+    $print .= LinkButton::createCancel(_("abbrechen"), URLHelper::getURL("?cancel_x=true#anker"));
+    $print .= '</div>';
+
+    $print.="</td></tr>";
+
     $print.= "\n<input type=\"hidden\" name=\"cmd\" value=\"upload\">";
     $print.= "\n<input type=\"hidden\" name=\"upload_seminar_id\" value=\"".$SessSemName[1]."\">";
     $print.= "\n</table></form><br></center>";
@@ -1279,8 +1287,13 @@ function link_form ($range_id, $updating=FALSE) {
     } else
         $print.= "\n<tr><td class=\"steelgraudunkel\"colspan=2 ><font size=-1>" . _("2. Klicken Sie auf <b>'absenden'</b>, um die Datei hochzuladen und damit die alte Version zu &uuml;berschreiben.") . "</font></td></tr>";
     $print.= "\n<tr><td class=\"steel1\" colspan=2 align=\"center\" valign=\"center\">";
-    $print.= "\n" . makeButton("absenden", 'input', _("absenden"), 'create');
-    $print.="&nbsp;<a href=\"".URLHelper::getLink("?cancel_x=true#anker")."\">" . makeButton("abbrechen", 'img', _("abbrechen")) . "</a></td></tr>";
+
+    $print .= '<div class="button-group">';
+    $print .= Button::createAccept(_("absenden"), "create");
+    $print .= LinkButton::createCancel(_("abbrechen"), URLHelper::getURL("?cancel_x=true#anker"));
+    $print .= '</div>';
+
+    $print .="</td></tr>";
     $print.= "\n<input type=\"hidden\" name=\"upload_seminar_id\" value=\"".$SessSemName[1]."\">";
     if ($updating == TRUE) {
         $print.= "\n<input type=\"hidden\" name=\"cmd\" value=\"link_update\">";
@@ -1313,8 +1326,12 @@ function display_file_body($datei, $folder_id, $open, $change, $move, $upload, $
             $protect = "checked";
         $content.= "\n&nbsp;<input type=\"CHECKBOX\" name=\"change_protected\" value=\"1\" $protect>&nbsp;"._("geschützter Inhalt")."</br>";
         $content.= "<br><textarea name=\"change_description\" aria-label=\"Beschreibung des Ordners eingeben\" rows=\"3\" cols=\"40\">".htmlReady($datei["description"])."</textarea><br>";
-        $content.= makeButton("uebernehmen", 'input', _("&Auml;nderungen speichern"));
-        $content.= "&nbsp;" . makeButton("abbrechen", 'input', _("Abbrechen"), 'cancel');
+
+        $content .= '<div class="button-group">';
+        $content .= Button::createAccept(_("übernehmen"));
+        $content .= Button::createCancel(_("abbrechen"), "cancel");
+        $content .= '</div>';
+
         $content.= "<input type=\"hidden\" name=\"open\" value=\"".htmlReady($datei["dokument_id"])."_sc_\">";
         $content.= "<input type=\"hidden\" name=\"type\" value=\"0\">";
     } else {
@@ -1354,29 +1371,48 @@ function display_file_body($datei, $folder_id, $open, $change, $move, $upload, $
 
     //Editbereich ertstellen
     $edit='';
+
     if (($change != $datei["dokument_id"]) && ($upload != $datei["dokument_id"]) && $filelink != $datei["dokument_id"]) {
+
+        $edit .= '<div class="button-group">';
+
+        # Knöpfe: herunterladen/ZIP
         if (check_protected_download($datei['dokument_id'])) {
-            $edit= '&nbsp;<a href="' . GetDownloadLink( $datei['dokument_id'], $datei['filename'], $type, 'force') .'" class="extern">' . makeButton('herunterladen', 'img', _("herunterladen")) . '</a>';
+
+            $edit .= LinkButton::createExtern(_("herunterladen"), GetDownloadLink( $datei['dokument_id'], $datei['filename'], $type, 'force'));
 
             $fext = getFileExtension(strtolower($datei['filename']));
             if (($type != '6') && ($fext != 'zip') && ($fext != 'tgz') && ($fext != 'gz') && ($fext != 'bz2')) {
-                $edit.= '&nbsp;<a href="'. GetDownloadLink( $datei['dokument_id'], $datei['filename'], $type, 'zip') . '" class="extern">' . makeButton('alsziparchiv', 'img', _("als ZIP-Archiv herunterladen")) . '</a>';
+                $edit .= LinkButton::createExtern(_("als ZIP-Archiv"), GetDownloadLink( $datei['dokument_id'], $datei['filename'], $type, 'zip'));
             }
         }
+
         if (($rechte) || ($datei["user_id"] == $user->id && $folder_tree->isWritable($datei["range_id"], $user->id))) {
+            # Knöpfe: bearbeiten/aktualisieren
             if ($type!=6) {
-              $edit.= "&nbsp;&nbsp;&nbsp;<a href=\"".URLHelper::getLink("?open=".$datei["dokument_id"]."_c_#anker")."\">" . makeButton("bearbeiten", "img", _("bearbeiten")) . "</a>";
-              $edit.= "&nbsp;<a href=\"".URLHelper::getLink("?open=".$datei["dokument_id"]."_rfu_#anker")."\">" . makeButton("aktualisieren", "img", _("aktualisieren")) . "</a>";
+                $edit .= LinkButton::create(_("bearbeiten"),
+                                            URLHelper::getURL("?open=".$datei["dokument_id"]."_c_#anker"));
+                $edit .= LinkButton::create(_("aktualisieren"),
+                                            URLHelper::getURL("?open=".$datei["dokument_id"]."_rfu_#anker"));
             } else {
                 //wenn Datei ein Link ist:
-                $edit.= "&nbsp;&nbsp;&nbsp;<a href=\"".URLHelper::getLink("?open=".$datei["dokument_id"]."_led_#anker")."\">" . makeButton("bearbeiten", "img", _("bearbeiten")) . "</a>";
+                $edit .= LinkButton::create(_("bearbeiten"),
+                                            URLHelper::getURL("?open=".$datei["dokument_id"]."_led_#anker"));
             }
+
+            # Knöpfe: verschieben/kopieren
             if (!$all){
-                $edit.= "&nbsp;<a href=\"".URLHelper::getLink("?open=".$datei["dokument_id"]."_m_#anker")."\">" . makeButton("verschieben", "img", _("verschieben")) . "</a>";
-                $edit.= "&nbsp;<a href=\"".URLHelper::getLink("?open=".$datei["dokument_id"]."_co_#anker")."\">" . makeButton("kopieren", "img", _("kopieren")) . "</a>";
+                $edit .= LinkButton::create(_("verschieben"),
+                                            URLHelper::getURL("?open=".$datei["dokument_id"]."_m_#anker"));
+                $edit .= LinkButton::create(_("kopieren"),
+                                            URLHelper::getURL("?open=".$datei["dokument_id"]."_co_#anker"));
             }
-            $edit.= "&nbsp;<a href=\"".URLHelper::getLink("?open=".$datei["dokument_id"]."_fd_")."\">" . makeButton("loeschen", "img", _("löschen")) . "</a>";
+
+            # Knopf: löschen
+            $edit .= LinkButton::create(_("löschen"),
+                                        URLHelper::getURL("?open=".$datei["dokument_id"]."_fd_#anker"));
         }
+        $edit .= '</div>';
     }
 
     //Dokument_Body ausgeben; dies ist auch der Bereich, der über Ajax abgerufen werden wird
@@ -1619,8 +1655,12 @@ function display_folder_body($folder_id, $open, $change, $move, $upload, $refres
         }
         $content .= chr(10) . '</font></td></tr>';
         $content .= chr(10) . '<tr><td colspan="2">';
-        $content.="\n" . makeButton("uebernehmen", 'input', _("&Auml;nderungen speichern")) . "&nbsp;";
-        $content.="\n" . makeButton("abbrechen", 'input', _("Abbrechen"), 'cancel');
+
+        $content .= '<div class="button-group">';
+        $content .= Button::createAccept(_("übernehmen"));
+        $content .= Button::createCancel(_("abbrechen"), "cancel");
+        $content .= '</div>';
+
         $content.= "\n<input type=\"hidden\" name=\"open\" value=\"".$folder_id."_sc_\">";
         $content.="\n<input type=\"hidden\" name=\"type\" value=\"1\">";
         $content .= chr(10) . '</td></tr></table>';
@@ -1645,42 +1685,84 @@ function display_folder_body($folder_id, $open, $change, $move, $upload, $refres
     //Editbereich erstellen
     if (($change != $folder_id) && ($upload != $folder_id) && ($filelink != $folder_id)) {
         if ($perm->have_studip_perm('autor', $SessionSeminar) && $folder_tree->isWritable($folder_id, $user->id))
-            $edit= "<a href=\"".URLHelper::getLink("?open=".$folder_id."_u_&rand=".rand()."#anker")."\">" . makeButton("dateihochladen", "img", _("Datei hochladen")) . "</a>";
-        if ($rechte)
-            $edit.= "&nbsp;<a href=\"".URLHelper::getLink("?open=".$folder_id."_l_&rand=".rand()."#anker")."\">" . makeButton("link", "img", _("Datei verlinken")) . "</a>";
-        if ($document_count && $folder_tree->isReadable($folder_id, $user->id))
-            $edit.= "&nbsp;&nbsp;&nbsp;<a href=\"".URLHelper::getLink("?folderzip=".$folder_id)."\">" . makeButton("ordneralszip", "img", _("Ordner als ZIP")) . "</a>";
-        if ($perm->have_studip_perm('autor', $SessionSeminar) && $folder_tree->checkCreateFolder($folder_id, $user->id)) {
-            if ($folder_tree->isWritable($folder_id, $user->id) && !$folder_tree->isExerciseFolder($folder_id, $user->id)) {
-                $edit.= "&nbsp;&nbsp;&nbsp;<a href=\"".URLHelper::getLink("?open=".$folder_id."_n_#anker")."\">" . makeButton("neuerordner", "img", _("Ordner anlegen")) . "</a>";
-            if ($rechte && get_config('ZIP_UPLOAD_ENABLE')) {
-                $edit .= "&nbsp;&nbsp;&nbsp;<a href=\"".URLHelper::getLink("?open=".$folder_id."_z_&rand="
-                    . rand()."#anker")."\">" . makeButton("ziphochladen", "img", _("als ZIP hochladen")) . "</a>";
+            # Knopf: hochladen
+            $edit .= LinkButton::create(_("hochladen"), URLHelper::getURL("?open=".$folder_id."_u_&rand=".rand()."#anker"));
+
+            # Knopf: Datei verlinken
+            if ($rechte) {
+                $edit .= LinkButton::create(_("Datei verlinken"), URLHelper::getURL("?open=".$folder_id."_l_&rand=".rand()."#anker"));
+            }
+
+            # Knopf: Ordner als ZIP
+            if ($document_count && $folder_tree->isReadable($folder_id, $user->id)) {
+                $edit .= LinkButton::create(_("Ordner als ZIP"), URLHelper::getURL("?folderzip=".$folder_id));
+            }
+
+            if ($perm->have_studip_perm('autor', $SessionSeminar) && $folder_tree->checkCreateFolder($folder_id, $user->id)) {
+                if ($folder_tree->isWritable($folder_id, $user->id) && !$folder_tree->isExerciseFolder($folder_id, $user->id)) {
+
+                    # Knopf: neuer Ordner
+                    $edit .= LinkButton::create(_("neuer Ordner"), URLHelper::getURL("?open=".$folder_id."_n_#anker"));
+
+                    # Knopf: ZIP hochladen
+                    if ($rechte && get_config('ZIP_UPLOAD_ENABLE')) {
+                        $edit .= LinkButton::create(_("ZIP hochladen"), URLHelper::getURL("?open=".$folder_id."_z_&rand=".rand()."#anker"));
+                    }
+                }
+
+                # Knopf: löschen
+                if ($rechte
+                    ||
+                    (
+                        !$document_count
+                        && $level !=0
+                        && (
+                            $folder_tree->isWritable($folder_id, $user->id)
+                            && $folder_tree->isWritable($folder_tree->getValue($folder_id, 'parent_id'), $user->id)
+                            && !$folder_tree->isExerciseFolder($folder_id, $user->id)
+                        )
+                    )
+                ) {
+                    $edit .= LinkButton::create(_("löschen"), URLHelper::getURL("?open=".$folder_id."_d_"));
+                }
+
+                # Knopf: bearbeiten
+                if ($folder_tree->isWritable($folder_id, $user->id) && !$folder_tree->isExerciseFolder($folder_id, $user->id)) {
+                    $edit .= LinkButton::create(_("bearbeiten"), URLHelper::getURL("?open=".$folder_id."_c_#anker"));
+                }
+
+                # verschieben
+                if (
+                    ($rechte && $result['range_id'] != $SessSemName[1])
+                    ||
+                    (
+                        $level !=0
+                        && (
+                            $folder_tree->isWritable($folder_id, $user->id) 
+                            && $folder_tree->isWritable($folder_tree->getValue($folder_id, 'parent_id'), $user->id)
+                            && !$folder_tree->isExerciseFolder($folder_id, $user->id)
+                        )
+                    )
+                ) {
+                    $edit.= LinkButton::create(_("verschieben"), URLHelper::getURL("?open=".$folder_id."_m_#anker"));
+                }
+
+                # Knopf: kopieren
+                if ($rechte
+                    ||
+                    (
+                        $level !=0
+                        && !$folder_tree->isExerciseFolder($folder_id, $user->id)
+                    )
+                ) {
+                    $edit.= LinkButton::create(_("kopieren"), URLHelper::getURL("?open=".$folder_id."_co_#anker"));
                 }
             }
-            if ($rechte ||
-                (!$document_count && $level !=0 &&
-                    ($folder_tree->isWritable($folder_id, $user->id) &&
-                    $folder_tree->isWritable($folder_tree->getValue($folder_id, 'parent_id'), $user->id) &&
-                        !$folder_tree->isExerciseFolder($folder_id, $user->id))
-                )
-                    ) $edit.= " <a href=\"".URLHelper::getLink("?open=".$folder_id."_d_")."\">" . makeButton("loeschen", "img", _("löschen")) . "</a>";
-            if ($folder_tree->isWritable($folder_id, $user->id) && !$folder_tree->isExerciseFolder($folder_id, $user->id))
-                $edit.= " <a href=\"".URLHelper::getLink("?open=".$folder_id."_c_#anker")."\">" . makeButton("bearbeiten", "img", _("bearbeiten")) . "</a>";
-            if (($rechte && $result['range_id'] != $SessSemName[1]) ||
-                ($level !=0 &&
-                    ($folder_tree->isWritable($folder_id, $user->id) &&
-                    $folder_tree->isWritable($folder_tree->getValue($folder_id, 'parent_id'), $user->id) &&
-                    !$folder_tree->isExerciseFolder($folder_id, $user->id))
-                    )
-                ) $edit.= " <a href=\"".URLHelper::getLink("?open=".$folder_id."_m_#anker")."\">" . makeButton("verschieben", "img", _("verschieben")) . "</a>";
-            if ($rechte || ($level !=0 && !$folder_tree->isExerciseFolder($folder_id, $user->id))) {
-                $edit.= " <a href=\"".URLHelper::getLink("?open=".$folder_id."_co_#anker")."\">" . makeButton("kopieren", "img", _("kopieren")) . "</a>";
+
+            # Knopf: sortieren
+            if ($rechte) {
+                $edit .= LinkButton::create(_("sortieren"), URLHelper::getURL("?open=".$folder_id."_az_#anker"));
             }
-        }
-        if ($rechte) {
-            $edit .= " <a href=\"".URLHelper::getLink("?open=".$folder_id."_az_#anker")."\"".tooltip("Dateien alphabetisch sortieren").">" . makeButton("sortieren", "img", _("sortieren")) . "</a>";
-        }
     }
 
     if (!$edit) $edit = '&nbsp;';

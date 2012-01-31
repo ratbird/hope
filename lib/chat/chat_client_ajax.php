@@ -206,10 +206,10 @@ echo "\n<b>" . sprintf(_("Hallo %s,<br> willkommen im Raum: %s"),htmlReady($chat
                     <td align="left" valign="middle" id="color_chooser">
                     </td>
                     <td align="center" valign="middle">
-                        <?= Button::createAccept(_('absenden'), array('title' => _("Nachricht senden"))) ?>
+                        <?= Button::create(_('absenden'), array('title' => _("Nachricht senden"))) ?>
                     </td>
                     <td align="right" valign="middle">
-                        <a href="javascript:doQuit();"><img <?=tooltip(_("Chat verlassen")) . makeButton("chatbeenden","src")?> border="0"></a>
+                        <?= LinkButton::create(_("Chat verlassen"), 'javascript:doQuit();') ?>
                     </td>
                 </tr>
             </table>

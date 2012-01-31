@@ -26,7 +26,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
-
+unregister_globals();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", 'user' => "Seminar_User"));
 $perm->check("admin");
 
@@ -40,9 +40,9 @@ include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
 ## Set this to something, just something different...
   $hash_secret = "hgeisgczwgebt";
-
+$i_view = Request::option('i_view');
 ## If is set 'cancel', we leave the adminstration form...
-if (isset($cancel)) unset ($i_view);
+if (Request::option('cancel')) unset ($i_view);
 
 require_once('lib/msg.inc.php'); //Funktionen f&uuml;r Nachrichtenmeldungen
 require_once('lib/visual.inc.php');
@@ -96,21 +96,21 @@ switch ($submitted_task) {
             break;
         }
         // Do we have all necessary data?
-        if (empty($Name)) {
+        if (!Request::quoted('Name')) {
             $msg="error§<b>" . _("Bitte geben Sie eine Bezeichnung f&uuml;r die Einrichtung ein!") . "</b>";
             $i_view="new";
             break;
         }
-
+        $Fakultaet = Request::option('Fakultaet');
         // Does the Institut already exist?
         // NOTE: This should be a transaction, but it is not...
-        $sql = "SELECT * FROM Institute WHERE Name='$Name'";
+        $sql = "SELECT * FROM Institute WHERE Name='".Request::quoted('Name')."'";
         if ($Fakultaet){
            $sql .= " AND fakultaets_id='$Fakultaet'";
         }
         $db->query($sql);
         if ($db->nf()>0) {
-            $msg="error§<b>" . sprintf(_("Die Einrichtung \"%s\" existiert bereits!"), htmlReady(stripslashes($Name)));
+            $msg="error§<b>" . sprintf(_("Die Einrichtung \"%s\" existiert bereits!"), htmlReady(Request::get('Name')));
             break;
         }
 
@@ -125,7 +125,7 @@ switch ($submitted_task) {
             }
         }
 
-        $query = "insert into Institute (Institut_id,Name,fakultaets_id,Strasse,Plz,url,telefon,email,fax,type,lit_plugin_name,lock_rule,mkdate,chdate) values('$i_id','$Name','$Fakultaet','$strasse','$plz', '$home', '$telefon', '$email', '$fax', '$type','$lit_plugin_name','$lock_rule', '".time()."', '".time()."')";
+        $query = "insert into Institute (Institut_id,Name,fakultaets_id,Strasse,Plz,url,telefon,email,fax,type,lit_plugin_name,lock_rule,mkdate,chdate) values('$i_id','".Request::quoted('Name')."','$Fakultaet','".Request::option('Strasse')."','".Request::option('plz')."', '".Request::option('home')."', '".Request::option('telefon')."', '".Request::option('email')."', '".Request::option('fax')."', '".Request::option('type')."','".Request::option('lit_plugin_name')."','".Request::option('lock_rule')."', '".time()."', '".time()."')";
 
         $db->query($query);
 
@@ -144,7 +144,7 @@ switch ($submitted_task) {
         CreateTopic(_("Allgemeine Diskussionen"), " ", _("Hier ist Raum für allgemeine Diskussionen"), 0, 0, $i_id, 0);
         $db->query("INSERT INTO folder SET folder_id='".md5(uniqid(rand()))."', range_id='".$i_id."', name='" . _("Allgemeiner Dateiordner") . "', description='" . _("Ablage für allgemeine Ordner und Dokumente der Einrichtung") . "', mkdate='".time()."', chdate='".time()."'");
 
-        $msg="msg§" . sprintf(_("Die Einrichtung \"%s\" wurde erfolgreich angelegt."), htmlReady(stripslashes($Name)));
+        $msg="msg§" . sprintf(_("Die Einrichtung \"%s\" wurde erfolgreich angelegt."), htmlReady(Request::get('Name')));
 
         $i_view = $i_id;
 
@@ -156,30 +156,30 @@ switch ($submitted_task) {
     //change institut's data
     case "i_edit":
 
-        if (!$perm->have_studip_perm("admin",$i_id)){
+        if (!$perm->have_studip_perm("admin",Request::option('i_id'))){
             $msg = "error§<b>" . _("Sie haben nicht die Berechtigung diese Einrichtungen zu ver&auml;ndern!") . "</b>";
             break;
         }
 
         //do we have all necessary data?
-        if (empty($Name)) {
-            $msg="error§<b>" . _("Bitte geben Sie eine Bezeichnung f&uuml;r die Einrichtung ein!") . "</b>";
+        if (!(Request::quoted('Name'))) {
+            $msg="error§<b>" . _("Bitte geben Sie einen Namen f&uuml;r die Einrichtung ein!") . "</b>";
             break;
         }
 
         //update Institut information.
-        $query = "UPDATE Institute SET Name='$Name', fakultaets_id='$Fakultaet', Strasse='$strasse', Plz='$plz', url='$home', telefon='$telefon', fax='$fax', email='$email', type='$type', lit_plugin_name='$lit_plugin_name',lock_rule='$lock_rule' ,chdate=".time()." where Institut_id = '$i_id'";
+        $query = "UPDATE Institute SET Name='".Request::quoted('Name')."', fakultaets_id='".Request::quoted('Fakultaet')."', Strasse='".Request::quoted('strasse')."', Plz='".Request::quoted('plz')."', url='".Request::quoted('home')."', telefon='".Request::quoted('telefon')."', fax='".Request::quoted('fax')."', email='".Request::quoted('email')."', type='".Request::quoted('type')."', lit_plugin_name='".Request::quoted('lit_plugin_name')."',lock_rule='".Request::quoted('lock_rule')."' ,chdate=".time()." where Institut_id = '".Request::option('i_id')."'";
         $db->query($query);
         if ($db->affected_rows() == 0) {
             $msg="error§<b>" . _("Datenbankoperation gescheitert:") . " " . $query . "</b>";
             break;
         } else {
-            $msg="msg§" . sprintf(_("Die Änderung der Einrichtung \"%s\" wurde erfolgreich gespeichert." . '§'), htmlReady(stripslashes($Name)));
+            $msg="msg§" . sprintf(_("Die Änderung der Einrichtung \"%s\" wurde erfolgreich gespeichert." . '§'), htmlReady(Request::get('Name')));
         }
         // update additional datafields
         if (is_array($_REQUEST['datafields'])) {
             $invalidEntries = array();
-            foreach (DataFieldEntry::getDataFieldEntries($i_id, 'inst') as $entry) {
+            foreach (DataFieldEntry::getDataFieldEntries(Request::option('i_id'), 'inst') as $entry) {
                 if(isset($_REQUEST['datafields'][$entry->getId()])){
                     $entry->setValueFromSubmit($_REQUEST['datafields'][$entry->getId()]);
                     if ($entry->isValid())
@@ -191,7 +191,7 @@ switch ($submitted_task) {
             if (count($invalidEntries)  > 0)
                 $msg='error§<b>' . _('ung&uuml;ltige Eingaben (s.u.) wurden nicht gespeichert') .'</b>§';
             else
-                $msg="msg§<b>" . sprintf(_("Die Daten der Einrichtung \"%s\" wurden ver&auml;ndert."), htmlReady(stripslashes($Name))) . "</b>§";
+                $msg="msg§<b>" . sprintf(_("Die Daten der Einrichtung \"%s\" wurden ver&auml;ndert."),htmlReady(Request::get('Name'))) . "</b>§";
         }
         break;
 
@@ -208,6 +208,7 @@ switch ($submitted_task) {
             $msg="error§<b>" . _("Sie haben nicht die Berechtigung Fakult&auml;ten zu l&ouml;schen!") . "</b>";
             break;
         }
+        $i_id=Request::option('i_id');
         // Institut in use?
         $db->query("SELECT * FROM seminare WHERE Institut_id = '$i_id'");
         if ($db->next_record()) {
@@ -293,13 +294,13 @@ switch ($submitted_task) {
 
 
         // kill all the ressources that are assigned to the Veranstaltung (and all the linked or subordinated stuff!)
-        if ($RESOURCES_ENABLE) {
+        if (get_config('RESOURCES_ENABLE')) {
             $killAssign = new DeleteResourcesUser($i_id);
             $killAssign->delete();
         }
 
         // delete all configuration files for the "extern modules"
-        if ($EXTERN_ENABLE) {
+        if (get_config('EXTERN_ENABLE')) {
             $counts = ExternConfig::DeleteAllConfigurations($i_id);
             if ($counts) {
                 $msg .= "msg§" . sprintf(_("%s Konfigurationsdateien f&uuml;r externe Seiten gel&ouml;scht."), $counts);
@@ -330,9 +331,9 @@ switch ($submitted_task) {
             break;
         } else {
 
-            $msg.="msg§" . sprintf(_("Die Einrichtung \"%s\" wurde gel&ouml;scht!"), htmlReady(stripslashes($Name))) . "§";
+            $msg.="msg§" . sprintf(_("Die Einrichtung \"%s\" wurde gel&ouml;scht!"), htmlReady(Request::get('Name'))) . "§";
             $i_view="delete";
-            log_event("INST_DEL",$i_id,NULL,$Name); // logging - put institute's name in info - it's no longer derivable from id afterwards
+            log_event("INST_DEL",$i_id,NULL,Request::quoted('Name')); // logging - put institute's name in info - it's no longer derivable from id afterwards
         }
 
         // We deleted that intitute, so we have to unset the selection
@@ -350,8 +351,6 @@ switch ($submitted_task) {
     default:
 
 }
-
-
 //workaround
 if ($i_view == "new")
     closeObject();
@@ -361,7 +360,7 @@ require_once 'lib/admin_search.inc.php';
 PageLayout::setTitle(_("Verwaltung der Grunddaten"));
 
 Navigation::activateItem('/admin/institute/details');
-
+//$i_view=Request::option('i_view');
 //get ID from a open Institut
 if ($SessSemName[1])
     $i_view=$SessSemName[1];
@@ -448,16 +447,16 @@ if ($perm->have_studip_perm("admin",$i_view) || $i_view == "new") {
         <select style="width: 98%" name="type">
         <?
         $i=0;
-        foreach ($INST_TYPE as $a) {
+        foreach ($GLOBALS['INST_TYPE'] as $a) {
             $i++;
             if ($i==$db->f("type"))
-                echo "<option selected value=\"$i\">".htmlready($INST_TYPE[$i]["name"])."</option>";
+                echo "<option selected value=\"$i\">".htmlready($GLOBALS['INST_TYPE'][$i]["name"])."</option>";
             else
-                echo "<option value=\"$i\">".htmlready($INST_TYPE[$i]["name"])."</option>";
+                echo "<option value=\"$i\">".htmlready($GLOBALS['INST_TYPE'][$i]["name"])."</option>";
         }
         ?></select>
         <? else :?>
-            <?=htmlReady($INST_TYPE[$db->f("type")]["name"])?><input type="hidden" name="type" value="<?=(int)$db->f('type') ?>">
+            <?=htmlReady($GLOBALS['INST_TYPE'][$db->f("type")]["name"])?><input type="hidden" name="type" value="<?=(int)$db->f('type') ?>">
         <? endif;?>
         </td>
     </tr>
@@ -541,6 +540,7 @@ if ($perm->have_studip_perm("admin",$i_view) || $i_view == "new") {
                     }
                     else
                         print $entry->getDisplayValue();
+                        
                     ?>
                 </td>
             </tr>

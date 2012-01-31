@@ -52,8 +52,17 @@ class NotificationCenter
             $event = '';
         }
 
+        if ($object) {
+            $predicate = is_callable($object)
+                ? $object
+                : function ($other) use ($object) {
+                    return $object === $other;
+                  };
+        }
+
         self::$observers[$event][] =
-            array('object' => $object, 'observer' => array($observer, $method));
+            array('predicate' => $predicate ?: NULL,
+                  'observer'  => array($observer, $method));
     }
 
     /**
@@ -77,7 +86,9 @@ class NotificationCenter
 
         foreach ($events as $event) {
             foreach (self::$observers[$event] as $index => $list) {
-                if ($object === NULL || $object === $list['object']) {
+                if ($object === NULL
+                    || $list['predicate'] && $list['predicate']($object)) {
+
                     if ($list['observer'][0] === $observer) {
                         unset(self::$observers[$event][$index]);
                     }
@@ -102,7 +113,7 @@ class NotificationCenter
         foreach (array('', $event) as $e) {
             if (isset(self::$observers[$e])) {
                 foreach (self::$observers[$e] as $list) {
-                    if ($list['object'] === NULL || $list['object'] === $object) {
+                    if (!$list['predicate'] || $list['predicate']($object)) {
                         call_user_func($list['observer'], $event, $object, $user_data);
                     }
                 }

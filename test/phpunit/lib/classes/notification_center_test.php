@@ -18,6 +18,22 @@ interface Observer
     public function update($event, $object, $user_data);
 }
 
+# sample predicate (implemented as a Callable class)
+# using #soundex for comparisons
+# @see http://php.net/language.oop5.magic
+class NotificationCenterTestSoundexPredicate
+{
+    public function __construct($goldStandard)
+    {
+        $this->goldStandard = $goldStandard;
+    }
+
+    public function __invoke($arg)
+    {
+        return soundex($this->goldStandard) === soundex($arg);
+    }
+}
+
 class NotificationCenterTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
@@ -211,4 +227,40 @@ class NotificationCenterTest extends PHPUnit_Framework_TestCase
         // remove observer
         NotificationCenter::removeObserver($wildcard);
     }
+
+    function assertMatchingNotification($matcher, $subject)
+    {
+        // register observer
+        $observer = $this->getMock("Observer");
+        NotificationCenter::addObserver($observer, 'update',
+                                        'SomeNotification', $matcher);
+
+        // expect notication
+        $observer->expects($this->once())->method('update')->with('SomeNotification', $subject);
+
+        // fire!
+        NotificationCenter::postNotification('SomeNotification', $subject);
+
+        // remove observer
+        NotificationCenter::removeObserver($observer);
+    }
+
+    public function testCustomPredicateWithAnonFunc()
+    {
+        $matcher = function ($subject) {
+                return preg_match('@^/road/to@', $subject);
+        };
+        $subject = "/road/to/nowhere";
+
+        $this->assertMatchingNotification($matcher, $subject);
+    }
+
+    public function testCustomPredicateWithCallable()
+    {
+        $matcher = new NotificationCenterTestSoundexPredicate("leopard");
+        $subject = "lab hurt";
+
+        $this->assertMatchingNotification($matcher, $subject);
+    }
+
 }

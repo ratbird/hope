@@ -32,7 +32,7 @@ global  $auth, $perm, $user;
 global  $_fullname_sql,
         $i_page,
         $links_admin_data,
-    $list,
+        $list,
         $msg,
         $SessSemName,
         $view_mode;
@@ -59,7 +59,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
     $all_aux_rules=$aux_rules->getAllLockRules();
 
     //Einheitliches Auswahlmenu fuer Einrichtungen
-    if (((!$SessSemName[1]) || ($SessSemName["class"] == "sem")) && ($list) && ($view_mode == "inst")) {
+    if (((!$SessSemName[1]) || ($SessSemName["class"] == "sem")) && Request::option('list') && ($view_mode == "inst")) {
         //Save data back to database and start a connection  - so we avoid some problems with large search results and data is writing back to db too late
         page_close();
 
@@ -136,7 +136,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
     }
 
     //Einheitliches Seminarauswahlmenu, wenn kein Seminar gewaehlt ist
-    if (((!$SessSemName[1]) || ($SessSemName["class"] == "inst")) && ($list) && ($view_mode == "sem")) {
+    if (((!$SessSemName[1]) || ($SessSemName["class"] == "inst")) && Request::option('list') && ($view_mode == "sem")) {
         //Save data back to database and start a connection  - so we avoid some problems with large search results and data is writing back to db too late
         page_close();
 
@@ -165,7 +165,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                     <tr>
                         <td class="steel1">
                             <?=_("Semester:")?><br>
-                            <?=SemesterData::GetSemesterSelector(array('name'=>'srch_sem'), $links_admin_data["srch_sem"])?>
+                            <?=SemesterData::GetSemesterSelector(array('name'=>'srch_sem'), $_SESSION['links_admin_data']['srch_sem'])?>
                         </td>
 
                         <td class="steel1">
@@ -183,14 +183,14 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                             <?
                             while ($db->next_record()) {
                                 $my_inst[]=$db->f("Institut_id");
-                                if ($links_admin_data["srch_inst"] == $db->f("Institut_id"))
+                                if ($_SESSION['links_admin_data']['srch_inst'] == $db->f("Institut_id"))
                                     echo"<option selected value=\"".$db->f("Institut_id")."\">".substr($db->f("Name"), 0, 30)."</option>";
                                 else
                                     echo"<option value=\"".$db->f("Institut_id")."\">".substr($db->f("Name"), 0, 30)."</option>";
                                 if ($db->f("is_fak")) {
                                     $db2->query("SELECT Institut_id, Name FROM Institute WHERE fakultaets_id='" .$db->f("Institut_id") . "' AND institut_id!='" .$db->f("Institut_id") . "' ORDER BY Name");
                                     while ($db2->next_record()) {
-                                        if ($links_admin_data["srch_inst"] == $db2->f("Institut_id"))
+                                        if ($_SESSION['links_admin_data']['srch_inst'] == $db2->f("Institut_id"))
                                             echo"<option selected value=\"".$db2->f("Institut_id")."\">&nbsp;&nbsp;&nbsp;".substr($db2->f("Name"), 0, 30)."</option>";
                                         else
                                             echo"<option value=\"".$db2->f("Institut_id")."\">&nbsp;&nbsp;&nbsp;".substr($db2->f("Name"), 0, 30)."</option>";
@@ -218,7 +218,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                                 $db->query($query);
                                 if ($db->num_rows()) {
                                     while ($db->next_record()) {
-                                        if ($links_admin_data["srch_doz"] == $db->f("user_id"))
+                                        if ($_SESSION['links_admin_data']['srch_doz'] == $db->f("user_id"))
                                             echo"<option selected value=\"".$db->f("user_id")."\">".htmlReady(my_substr($db->f("fullname"),0,35))."</option>";
                                         else
                                             echo"<option value=\"".$db->f("user_id")."\">".htmlReady(my_substr($db->f("fullname"),0,35))."</option>";
@@ -238,7 +238,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                                 <option value="0"><?=_("alle")?></option>
                                 <?
                                 while ($db->next_record()) {
-                                    if ($links_admin_data["srch_fak"] == $db->f("Institut_id"))
+                                    if ($_SESSION['links_admin_data']['srch_fak'] == $db->f("Institut_id"))
                                         echo"<option selected value=\"".$db->f("Institut_id")."\">".substr($db->f("Name"), 0, 30)."</option>";
                                     else
                                         echo"<option value=\"".$db->f("Institut_id")."\">".substr($db->f("Name"), 0, 30)."</option>";
@@ -251,17 +251,17 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                         </td>
                         <td class="steel1">
                             <?=_("freie Suche:")?><br>
-                            <input type="text" name="srch_exp" maxlength=255 size=20 value="<? echo htmlReady($links_admin_data["srch_exp"]) ?>">
+                            <input type="text" name="srch_exp" maxlength=255 size=20 value="<? echo htmlReady($_SESSION['links_admin_data']['srch_exp']) ?>">
                             <input type="hidden" name="srch_send" value="TRUE">
                         </td>
                         <td class="steel1" valign="bottom" width="20%" nowrap="nowrap">
                             <?
                             echo makeButton('anzeigen', 'input', _("Anzeigen"), 'anzeigen');
-                            if ($links_admin_data["srch_on"]){
+                            if ($_SESSION['links_admin_data']['srch_on']){
                                 echo '&nbsp;' . makeButton('zuruecksetzen','input', _("zurücksetzen"),'links_admin_reset_search');
                             }
                             ?>
-                            <input type="hidden" name="view" value="<? echo htmlReady($links_admin_data["view"])?>">
+                            <input type="hidden" name="view" value="<? echo htmlReady($_SESSION['links_admin_data']['view'])?>">
                         </td>
                     </tr>
                 <tr>
@@ -280,15 +280,15 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                         <tr>
                             <td class="steel1" colspan=6>
                                 <br>
-                                <input type="CHECKBOX" name="select_old" <? if ($links_admin_data["select_old"]) echo ' checked' ?>>&nbsp;<?=_("keine zukünftigen Veranstaltungen anzeigen - Beginn des (letzten) Veranstaltungssemesters ist verstrichen")?><br>
-                                <!-- <input type="CHECKBOX" name="select_inactive" <? if ($links_admin_data["select_inactive"]) echo ' checked' ?>>&nbsp;<?=_("nur inaktive Veranstaltungen auswählen (letzte Aktion vor mehr als sechs Monaten)")?> -->
+                                <input type="CHECKBOX" name="select_old" <? if ($_SESSION['links_admin_data']['select_old']) echo ' checked' ?>>&nbsp;<?=_("keine zukünftigen Veranstaltungen anzeigen - Beginn des (letzten) Veranstaltungssemesters ist verstrichen")?><br>
+                                <!-- <input type="CHECKBOX" name="select_inactive" <? if ($_SESSION['links_admin_data']['select_inactive']) echo ' checked' ?>>&nbsp;<?=_("nur inaktive Veranstaltungen auswählen (letzte Aktion vor mehr als sechs Monaten)")?> -->
                             </td>
                         </tr>
                         <?
                     } else {
                         ?>
-                        <input type="hidden" name="select_old" value="<? if ($links_admin_data["select_old"]) echo "TRUE" ?> ">
-                        <input type="hidden" name="select_inactive" value="<? if ($links_admin_data["select_inactive"]) echo "TRUE" ?>">
+                        <input type="hidden" name="select_old" value="<? if ($_SESSION['links_admin_data']['select_old']) echo "TRUE" ?> ">
+                        <input type="hidden" name="select_inactive" value="<? if ($_SESSION['links_admin_data']['select_inactive']) echo "TRUE" ?>">
                         <?
                     }
                     ?>
@@ -315,7 +315,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
         }
 
     // display Seminar-List
-    if ($links_admin_data["srch_on"] || $auth->auth["perm"] =="tutor" || $auth->auth["perm"] == "dozent") {
+    if ($_SESSION['links_admin_data']['srch_on'] || $auth->auth["perm"] =="tutor" || $auth->auth["perm"] == "dozent") {
 
         //Suchresultate abholen:
         $results = AdminList::getInstance()->getSearchResults();
@@ -471,7 +471,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
             } else {
                 $sem = new Seminar($result['Seminar_id']);
                 $_room = $sem->getDatesHTML(array(
-                    'semester_id' => $links_admin_data['search_sem'],
+                    'semester_id' => $_SESSION['links_admin_data']['search_sem'],
                     'show_room'   => true
                 ));
                 $_room = $_room ? $_room : "nicht angegeben";

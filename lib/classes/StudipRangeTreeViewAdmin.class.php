@@ -25,6 +25,9 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
+
+use Studip\Button, Studip\LinkButton;
+
 require_once("lib/classes/StudipRangeTree.class.php");
 require_once("lib/classes/TreeView.class.php");
 require_once("lib/classes/RangeTreeObject.class.php");
@@ -306,12 +309,10 @@ class StudipRangeTreeViewAdmin extends TreeView{
             $this->msg[$item_id] = "info§" ._("Sie beabsichtigen dieses Element, inklusive aller Unterelemente, zu l&ouml;schen. ")
                         . sprintf(_("Es werden insgesamt %s Elemente gel&ouml;scht!"),count($this->tree->getKidsKids($item_id))+1)
                         . "<br>" . _("Wollen Sie diese Elemente wirklich l&ouml;schen?") . "<br>"
-                        . "<a href=\"" . $this->getSelf("cmd=DeleteItem&item_id=$item_id") . "\">"
-                        . "<img " .makeButton("ja2","src") . tooltip(_("löschen"))
-                        . " border=\"0\"></a>&nbsp;"
-                        . "<a href=\"" . $this->getSelf("cmd=Cancel&item_id=$item_id") . "\">"
-                        . "<img " .makeButton("nein","src") . tooltip(_("abbrechen"))
-                        . " border=\"0\"></a>";
+                        . '<div class="button-group">'
+                        . LinkButton::createAccept(_("JA"), $this->getSelf("cmd=DeleteItem&item_id=$item_id"))
+                        . LinkButton::createCancel(_("NEIN"), $this->getSelf("cmd=Cancel&item_id=$item_id"))
+                        . "</div>";
         }
         return false;
     }
@@ -512,29 +513,29 @@ class StudipRangeTreeViewAdmin extends TreeView{
         $content = "\n<table width=\"90%\" cellpadding=\"2\" cellspacing=\"2\" align=\"center\" style=\"font-size:10pt\">";
         $content .= $this->getItemMessage($item_id);
         $content .= "\n<tr><td align=\"center\">";
-        if ($this->isItemAdmin($item_id)){
-            $content .= "<a href=\"" . $this->getSelf("cmd=NewItem&item_id=$item_id") . "\">"
-                        . "<img " .makeButton("neuesobjekt","src") . tooltip(_("Innerhalb dieser Ebene ein neues Element einfügen"))
-                        . " border=\"0\"></a>&nbsp;";
-        }
-        if ($this->isParentAdmin($item_id) && $item_id !=$this->start_item_id && $item_id != "root"){
-            $content .= "<a href=\"" . $this->getSelf("cmd=EditItem&item_id=$item_id") . "\">"
-            . "<img " .makeButton("bearbeiten","src") . tooltip(_("Dieses Element bearbeiten"))
-            . " border=\"0\"></a>&nbsp;";
 
-            $content .= "<a href=\"" . $this->getSelf("cmd=AssertDeleteItem&item_id=$item_id") . "\">"
-            . "<img " .makeButton("loeschen","src") . tooltip(_("Dieses Element löschen"))
-            . " border=\"0\"></a>&nbsp;";
+        if ($this->isItemAdmin($item_id)){
+            $content .= LinkButton::create(_("neues Objekt"),
+                                           $this->getSelf("cmd=NewItem&item_id=$item_id"),
+                                           array('title' => _("Innerhalb dieser Ebene ein neues Element einfügen")));
+        }
+
+        if ($this->isParentAdmin($item_id) && $item_id !=$this->start_item_id && $item_id != "root"){
+            $content .= LinkButton::create(_("bearbeiten"),
+                                           $this->getSelf("cmd=EditItem&item_id=$item_id"));
+
+            $content .= LinkButton::create(_("löschen"),
+                                           $this->getSelf("cmd=AssertDeleteItem&item_id=$item_id"));
+
             if ($this->move_item_id == $item_id && $this->mode == "MoveItem"){
-                $content .= "<a href=\"" . $this->getSelf("cmd=Cancel&item_id=$item_id") . "\">"
-                                        . "<img " .makeButton("abbrechen","src") . tooltip(_("Verschieben abbrechen"))
-                                        . " border=\"0\"></a>&nbsp;";
+                $content .= LinkButton::create(_("abbrechen"),
+                                               $this->getSelf("cmd=Cancel&item_id=$item_id"));
             } else {
-                $content .= "<a href=\"" . $this->getSelf("cmd=MoveItem&item_id=$item_id") . "\">"
-            . "<img " .makeButton("verschieben","src") . tooltip(_("Dieses Element in eine andere Ebene verschieben"))
-            . " border=\"0\"></a>&nbsp;";
+                $content .= LinkButton::create(_("verschieben"),
+                                               $this->getSelf("cmd=MoveItem&item_id=$item_id"));
             }
         }
+
         $content .= "</td></tr></table>";
         $content .= "\n<table width=\"90%\" cellpadding=\"2\" cellspacing=\"2\" align=\"center\" style=\"font-size:10pt\">";
         if ($item_id == "root"){
@@ -549,7 +550,9 @@ class StudipRangeTreeViewAdmin extends TreeView{
                 while($rs->next_record()){
                     $content .= "\n<option value=\"" . $rs->f("Institut_id") . "\">" . htmlReady(my_substr($rs->f("Name") . '('.$rs->f('num').')',0,60)) . "</option>";
                 }
-                $content .= "</select>&nbsp;<input border=\"0\" type=\"image\" style=\"vertical-align:middle;\" " .makeButton("eintragen","src") . tooltip(_("Fakultät einfügen")) . "></form>";
+                $content .= "</select>"
+                    . Button::create(_("Fakultät einfügen"))
+                    ."</form>";
                 $content .= " </td></tr>";
             }
             $content .= "\n<tr><td class=\"topic\" align=\"left\">" . htmlReady($this->tree->root_name) ." </td></tr>";
@@ -578,11 +581,14 @@ class StudipRangeTreeViewAdmin extends TreeView{
         }
         $content .= "\n<div class=\"blank\" align=\"left\" style=\"font-size:10pt\"><b>" . _("Mitarbeiter:") . "</b> " . $range_object->getNumStaff() . "</b></div>";
         if ($this->isItemAdmin($item_id) && $range_object->item_data['studip_object']){
-            $content .= "\n<div class=\"blank\" align=\"center\" style=\"font-size:10pt\"><a href=\""
-                    . "admin_institut.php?admin_inst_id=" . $range_object->item_data['studip_object_id']
-                    . "\"><img " . makeButton("bearbeiten","src") . tooltip(_("Grunddaten in Stud.IP bearbeiten")) . " border=\"0\"></a></div>";
+            $content .= "\n<div class=\"blank\" align=\"center\" style=\"font-size:10pt\">";
+
+            $content .= LinkButton::create(_("Grunddaten in Stud.IP bearbeiten"), "admin_institut.php?admin_inst_id=" . $range_object->item_data['studip_object_id']);
+            $content .= "</div>";
         }
+
         $content .= "</td></tr><tr><td>&nbsp;</td></tr>";
+
         if ($this->mode == "NewCat" && ($this->edit_cat_item_id == $item_id)){
             $categories =& $this->edit_cat_snap;
         } else {
@@ -639,12 +645,12 @@ class StudipRangeTreeViewAdmin extends TreeView{
         $content .= "\n<tr><td colspan=\"2\" class=\"steelgraudunkel\" ><b>". _("Element bearbeiten") . "</b></td></tr>";
         $content .= "\n<tr><td class=\"steel1\" width=\"60%\">". _("Name des Elements:") . "&nbsp;"
                 . "<input type=\"TEXT\" name=\"edit_name\" size=\"50\" value=\"" . htmlReady($this->tree->tree_data[$this->edit_item_id]['name'])
-                . "\"></td><td class=\"steel1\" align=\"left\"><input type=\"image\" "
-                . makeButton("absenden","src") . tooltip("Einstellungen übernehmen") . " border=\"0\">"
-                . "&nbsp;<a href=\"" . $this->getSelf("cmd=Cancel&item_id="
-                . (($this->mode == "NewItem") ? $this->tree->tree_data[$this->edit_item_id]['parent_id'] : $this->edit_item_id) ) . "\">"
-                . "<img " .makeButton("abbrechen","src") . tooltip(_("Aktion abbrechen"))
-                . " border=\"0\"></a></td></tr>";
+                . "\"></td><td class=\"steel1\" align=\"left\">";
+
+        $content .= Button::createAccept(_("absenden"));
+        $content .= LinkButton::createCancel(_("abbrechen"), $this->getSelf("cmd=Cancel&item_id=" . (($this->mode == "NewItem") ? $this->tree->tree_data[$this->edit_item_id]['parent_id'] : $this->edit_item_id)));
+
+        $content .= "</td></tr>";
         $content .= "\n<tr><td colspan=\"2\" class=\"steelgraudunkel\"><b>". _("Element mit einer Stud.IP-Einrichtung verlinken") . "</b></td></tr>";
         $content .= "\n<tr><td colspan=\"2\" class=\"steel1\">" . _("Stud.IP-Einrichtung:") . "&nbsp;";
         $content .= "\n<select name=\"edit_studip_object\" onChange=\"document.item_form.edit_name.value=document.item_form.edit_studip_object.options[document.item_form.edit_studip_object.selectedIndex].text;\">";
@@ -665,18 +671,22 @@ class StudipRangeTreeViewAdmin extends TreeView{
         $content .= "\n<form name=\"link_form\" action=\"" . $this->getSelf("cmd=SearchStudIP&item_id={$this->edit_item_id}") . "\" method=\"POST\"><tr><td class=\"steel1\">" . _("Stud.IP-Einrichtung suchen:") . "&nbsp;";
         $content .= CSRFProtection::tokenTag();
         $content .= "\n<input type=\"HIDDEN\" name=\"parent_id\" value=\"{$this->tree->tree_data[$this->edit_item_id]['parent_id']}\">";
-        $content .= "\n<input type=\"TEXT\" name=\"edit_search\" size=\"30\"></td><td class=\"steel1\" align=\"left\"><input type=\"image\" "
-                . makeButton("suchen","src") . tooltip("Einrichtung suchen") . " border=\"0\"></td></tr>";
+        $content .= "\n<input type=\"TEXT\" name=\"edit_search\" size=\"30\"></td><td class=\"steel1\" align=\"left\">";
+
+        $content .= Button::create(_("suchen"));
+
+        $content .= "</td></tr>";
         $content .= "\n</table>";
 
         return $content;
     }
 
     function getEditCatContent($item_id, $cat_snap){
-        $content = "\n<table width=\"100%\" cellspacing=\"0\" border=\"0\" style=\"font-size:10pt\"><tr><td class=\"blank\" colspan=\"2\">" . _("Neues Datenfeld anlegen") . "&nbsp;&nbsp;"
-                . "<a href=\"" . $this->getSelf("cmd=NewCat&item_id=$item_id") . "\">"
-                . "<img " .makeButton("neuanlegen","src") . tooltip(_("Neues Datenfeld anlegen"))
-                . " border=\"0\" align=\"absmiddle\"></a></td></tr>";
+        $content = "\n<table width=\"100%\" cellspacing=\"0\" border=\"0\" style=\"font-size:10pt\"><tr><td class=\"blank\" colspan=\"2\">" . _("Neues Datenfeld anlegen") . "&nbsp;&nbsp;";
+
+        $content .= LinkButton::create(_("Neues Datenfeld anlegen"), $this->getSelf("cmd=NewCat&item_id=$item_id"));
+
+        $content .= "</td></tr>";
         $content .= "\n<tr><td colspan=\"2\" class=\"blank\">&nbsp;</td></tr>";
         if ($cat_snap->numRows){
             $content .= "\n<form name=\"cat_form_$item_id\" action=\"" . $this->getSelf("cmd=UpdateCat&item_id=$item_id") . "\" method=\"POST\">";
@@ -700,11 +710,10 @@ class StudipRangeTreeViewAdmin extends TreeView{
                 $content .= "\n<tr><td class=\"blank\" colspan=\"2\"><textarea style=\"width:100%;font-size:8pt;border:0px;\" cols=\"60\" rows=\"2\" name=\"cat_content["
                         . htmlReady($cat_snap->getField("kategorie_id")) . "]\" wrap=\"virtual\">"
                         . htmlReady($cat_snap->getField("content")) . "</textarea></td></tr>";
-                $content .= "<tr><td class=\"blank\" colspan=\"2\"><input type=\"IMAGE\"" .makeButton("uebernehmen","src") . tooltip(_("Änderungen übernehmen"))
-                        . " name=\"uebernehmen\" border=\"0\">&nbsp;"
-                        . "<a href=\"" . $this->getSelf("cmd=DeleteCat&item_id=$item_id&cat_id=" . $cat_snap->getField("kategorie_id"))
-                        . "\"><img " .makeButton("loeschen","src") . tooltip(_("Datenfeld löschen"))
-                        . " border=\"0\"></a></td></tr>";
+                $content .= "<tr><td class=\"blank\" colspan=\"2\">";
+                $content .= Button::create(_("übernehmen"), 'übernehmen');
+                $content .= LinkButton::create(_("Datenfeld löschen"), $this->getSelf("cmd=DeleteCat&item_id=$item_id&cat_id=" . $cat_snap->getField("kategorie_id")));
+                $content .= "</td></tr>";
                 $content .= "\n<tr><td colspan=\"2\" class=\"blank\">&nbsp;</td></tr>";
             }
         $content .= "</form>";

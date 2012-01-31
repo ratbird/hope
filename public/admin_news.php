@@ -313,7 +313,7 @@ if (!$cmd OR $cmd=="show") {
         echo "\n".'<label>' . _("Die Ankündigungen des gew&auml;hlten Bereiches als RSS-feed zur Verf&uuml;gung stellen:") . '</font>&nbsp;';
         vprintf("\n".'<input type="checkbox" %s name="enable_rss" value="1"></label>',
                 (StudipNews::GetRssIdFromRangeId($news_range_id) ? 'checked' : '' ));
-        echo makeButton('uebernehmen', 'input', _("RSS Einstellungen übernehmen"), 'change_rss');
+        echo Button::create(_("RSS Einstellungen übernehmen"), 'change_rss');
         echo "\n<br><br>";
     }
     echo "\n".'<font size="-1" style="vertical-align:middle;">' . _("Eine neue Ankündigung im gew&auml;hlten Bereich erstellen") . '</font>&nbsp;';

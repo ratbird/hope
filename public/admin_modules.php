@@ -275,11 +275,6 @@ if ($admin_modules_data["range_id"])
         <tr><? $cssSw->switchClass() ?>
             <td class="<?= $cssSw->getClass() ?>" align="center" colspan="3">
                 <?= Button::create(_('übernehmen'), 'uebernehmen') ?>
-                <?
-                /*
-                &nbsp;<input type="image" name="default" <?=makeButton("zuruecksetzen", "src")?> border=0 value="uebernehmen">
-                */
-                ?>
                 <? if ($admin_modules_data["orig_bin"] != $admin_modules_data["changed_bin"]) {?>
                     <?= MessageBox::info(_("Diese Daten sind noch nicht gespeichert.")) ?>
                 <? } ?>

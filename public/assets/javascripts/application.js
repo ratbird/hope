@@ -1840,3 +1840,24 @@ STUDIP.OldUpload = {
         return true;
     }
 };
+
+jQuery(function ($) {
+    $('.bookable_rooms_action').bind('click', function (event) {
+        var select = $(this).next('select')[0];
+        if (select !== null && select !== undefined) {
+            $.ajax({
+                url: STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/resources/helpers/bookable_rooms',
+                data: {
+                    rooms: _.pluck(select.options, 'value'),
+                    selected_dates : _.pluck($('input[name="singledate[]"]:checked'), 'value')
+                },
+                success: function (result) {
+                  if ($.isArray(result)) {
+                      _.each(result, function (v) {$(select).children('option[value=' + v + ']').remove();});
+                  }
+                }
+              });
+        }
+    });
+    $('.bookable_rooms_action').show();
+});

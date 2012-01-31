@@ -69,6 +69,7 @@
                     $resList->reset();
                     echo _("Raum:");
             ?>
+            <?= Assets::img('icons/16/blue/room_clear.png', array('class' => 'bookable_rooms_action', 'title' => _("Nur buchbare Räume anzeigen"))) ?>
             <SELECT name="room">
                 <OPTION value="nochange" selected><?=_("keine &Auml;nderung")?></option>
                 <OPTION value="retreat"><?=_("Raumbuchung aufheben")?></option>

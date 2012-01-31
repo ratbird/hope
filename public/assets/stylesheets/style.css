@@ -1983,3 +1983,7 @@ h3.eval {
     text-align: right;
     color: #444;
 }
+
+img.bookable_rooms_action {
+    display: none;
+}

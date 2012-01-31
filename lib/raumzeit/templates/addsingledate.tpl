@@ -39,6 +39,7 @@
                     <FONT size="-1">
                     <? if ($GLOBALS['RESOURCES_ENABLE']) { ?>
                     <?=_("Raum:")?>
+                    <?= Assets::img('icons/16/blue/room_clear.png', array('class' => 'bookable_rooms_action', 'title' => _("Nur buchbare Räume anzeigen"))) ?>
                     <SELECT name="room">
                         <OPTION value="nothing"><?=_("KEINEN Raum buchen")?></option>
                         <?

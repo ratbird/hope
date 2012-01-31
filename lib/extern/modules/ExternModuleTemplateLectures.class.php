@@ -454,7 +454,7 @@ class ExternSemBrowseTemplate extends SemBrowse {
                         $content['LECTURES']['GROUP'][$i]['LECTURE'][$j]['SEMESTER'] = $sem_semester;
 
                         // create turnus field
-                        $sem_turnus = Seminar::getInstance($seminar_id)->getDatesExport();
+                        $sem_turnus = Seminar::getInstance($seminar_id)->getDatesExport(array('show_room' => true));
 
                         // shorten, if string too long
                         if (strlen($sem_turnus) > 70) {

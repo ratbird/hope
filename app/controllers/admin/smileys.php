@@ -256,30 +256,10 @@ class Admin_SmileysController extends AuthenticatedController
      * @param String $view Currently viewed group
      */
     private function addInfobox($view)
-    {        
-        $actions = array();
-        $actions[] = array(
-            'text' => sprintf('<a href="%s">%s</a>',
-                              $this->url_for('admin/smileys/upload', $view), _('Neues Smiley hochladen')),
-            'icon' => 'icons/16/black/plus.png'
-        );
-        $actions[] = array(
-            'text' => sprintf('<a href="%s">%s</a>',
-                              $this->url_for('admin/smileys/count', $view), _('Smileys zählen')),
-            'icon' => 'icons/16/black/code.png'
-        );
-        $actions[] = array(
-            'text' => sprintf('<a href="%s">%s</a>',
-                              $this->url_for('admin/smileys/refresh', $view), _('Tabelle aktualisieren')),
-            'icon' => 'icons/16/black/refresh.png'
-        );
-        $actions[] = array(
-            'text' => sprintf('<a href="%s" target="_smileys">%s</a>',
-                              URLHelper::getURL('dispatch.php/smileys', array('view' => null)),
-                              _('Smiley-Übersicht öffnen')),
-            'icon' => 'icons/16/black/smiley.png'
-        );
+    {
+        $this->setInfoboxImage('infobox/administration.jpg');
 
+        // Render items
         $factory = new Flexi_TemplateFactory($this->dispatcher->trails_root . '/views/admin/smileys/');
 
         $filter = $factory->render('selector', array(
@@ -288,33 +268,32 @@ class Admin_SmileysController extends AuthenticatedController
             'view'       => $view,
         ));
         $statistics = $factory->render('statistics', Smiley::getStatistics());
+        
+        // :Filters
+        $this->addToInfobox(_('Filter'), $filter, 'icons/16/black/search.png');
 
-        $this->infobox = array(
-            'picture' => 'infobox/administration.jpg',
-            'content' => array(
-                array(
-                    'kategorie' => _('Filter'),
-                    'eintrag'   => array(
-                        array(
-                            'text' => $filter,
-                            'icon' => 'icons/16/black/search.png'
-                        )
-                    )
-                ),
-                array(
-                    'kategorie' => _('Aktionen'),
-                    'eintrag'   => $actions
-                ),
-                array(
-                    'kategorie' => _('Statistiken'),
-                    'eintrag'   => array(
-                        array(
-                            'text' => $statistics,
-                            'icon' => 'icons/16/black/stat.png'
-                        )
-                    )
-                )
-            )
-        );        
+        // :Actions
+        $upload = sprintf('<a href="%s">%s</a>',
+                          $this->url_for('admin/smileys/upload', $view),
+                          _('Neues Smiley hochladen'));
+        $this->addToInfobox(_('Aktionen'), $upload, 'icons/16/black/plus.png');
+
+        $count = sprintf('<a href="%s">%s</a>',
+                         $this->url_for('admin/smileys/count', $view),
+                         _('Smileys zählen'));
+        $this->addToInfobox(_('Aktionen'), $count, 'icons/16/black/code.png');
+
+        $refresh = sprintf('<a href="%s">%s</a>',
+                           $this->url_for('admin/smileys/refresh', $view),
+                           _('Tabelle aktualisieren'));
+        $this->addToInfobox(_('Aktionen'), $refresh, 'icons/16/black/refresh.png');
+
+        $open = sprintf('<a href="%s" target="_smileys">%s</a>',
+                        URLHelper::getURL('dispatch.php/smileys', array('view' => null)),
+                         _('Smiley-Übersicht öffnen'));
+        $this->addToInfobox(_('Aktionen'), $open, 'icons/16/black/smiley.png');
+
+        // :Statistics
+        $this->addToInfobox(_('Statistiken'), $statistics, 'icons/16/black/stat.png');
     }
 }

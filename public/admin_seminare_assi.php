@@ -2484,7 +2484,7 @@ elseif ((!$level) || ($level == 1))
                                 echo "<select name=\"sem_inst_id\">";
                                 while ($db->next_record()) {
                                     printf ("<option %s style=\"%s\" value=%s>%s</option>", $db->f("Institut_id") == $sem_create_data["sem_inst_id"] ? "selected" : "",
-                                        ($db->f("is_fak")) ? "font-weight:bold;" : "",$db->f("Institut_id"), my_substr($db->f("Name"),0,60));
+                                        ($db->f("is_fak")) ? "font-weight:bold;" : "",$db->f("Institut_id"), htmlReady(my_substr($db->f("Name"),0,60)));
                                     if ($db->f("is_fak") && $db->f("inst_perms") == "admin"){
                                         $db2->query("SELECT a.Institut_id, a.Name FROM Institute a
                                             WHERE fakultaets_id='" . $db->f("Institut_id") . "' AND a.Institut_id!='" .$db->f("Institut_id") . "' ORDER BY Name");
@@ -3363,7 +3363,7 @@ if ($level == 4) {
                             </select>
                             <?
                             echo Button::create(_('auswählen'), 'room_request_choose', array('title' => _("einen anderen Anfragetyp bearbeiten")));
-                            
+
                             $current_request_type = Request::option('new_room_request_type', 'course');
                             $form_attributes = array('admission_turnout' => $sem_create_data['sem_turnout'],
                                                      'request' => $sem_create_data['room_requests'][$current_request_type],

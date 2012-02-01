@@ -675,9 +675,15 @@ if (isset($current_user)) {
     // Anzeige der Seminare
     if ($current_user['perms'] == 'dozent') {
         $all_semester = SemesterData::GetSemesterArray();
+        $current_semester_index = SemesterData::GetInstance()->GetSemesterIndexById(Semester::findCurrent()->semester_id);
+        if ($current_semester_index && isset($all_semester[$current_semester_index + 1])) {
+            $start_semester_index = $current_semester_index + 1;
+        } else {
+            $start_semester_index = count($all_semester) - 1;
+        }
         $view = new DbView();
         $output = '';
-        for ($i = count($all_semester)-1; $i >= 0; --$i){
+        for ($i = $start_semester_index; $i > $start_semester_index - 3; --$i){
             $view->params[0] = $user_id;
             $view->params[1] = "dozent";
             $view->params[2] = " HAVING (sem_number <= $i AND (sem_number_end >= $i OR sem_number_end = -1)) ";

@@ -1,9 +1,9 @@
 <?php
 # Lifter001: TEST
-# Lifter002: TODO
-# Lifter007: TODO
-# Lifter003: TODO
-# Lifter010: TODO
+# Lifter002: TEST
+# Lifter007: TEST
+# Lifter003: TEST
+# Lifter010: TEST
 /*
 show_bereich.php - Anzeige von Veranstaltungen eines Bereiches oder Institutes
 Copyright (C) 2000 Cornelis Kater <ckater@gwdg.de>
@@ -25,149 +25,157 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
+
 ob_start();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
-// -- here you have to put initialisations for the current page
 require_once('lib/visual.inc.php');
 require_once 'lib/classes/SemBrowse.class.php';
+require_once 'lib/classes/Institute.class.php';
+require_once 'lib/export/export_linking_func.inc.php';
 
+$intro_text = $head_text = '';
 
-    $db=new DB_Seminar;
-    $intro_text = $head_text = '';
-    if ($id){
-        URLHelper::bindLinkParam('id',$id);
-        URLHelper::bindLinkParam('level',$level);
+$level = Request::option('level');
+$id = Request::option('id');
+
+if ($id) {
+    URLHelper::bindLinkParam('id',$id);
+    URLHelper::bindLinkParam('level',$level);
+}
+
+$group_by = Request::int('group_by', 0);
+
+if (Request::option('select_sem') !== null && Request::option('select_sem') !== '0') {
+    $_SESSION['_default_sem'] = Request::option('select_sem');
+}
+$show_semester = Request::option('select_sem') !== null ? Request::option('select_sem') : $_SESSION['_default_sem'];
+$sem_browse_obj = new SemBrowse(array('group_by' => 0));
+$sem_browse_obj->sem_browse_data['default_sem'] = "all";
+$sem_browse_obj->sem_number = false;
+$sem_browse_obj->target_url = "details.php";  //teilt der nachfolgenden Include mit, wo sie die Leute hinschicken soll
+$sem_browse_obj->target_id = "sem_id";        //teilt der nachfolgenden Include mit, wie die id die &uuml;bergeben wird, bezeichnet werden soll
+$sem_browse_obj->sem_browse_data['level'] = $level;
+if ($show_semester) {
+    $sem_number = SemesterData::GetSemesterIndexById($show_semester);
+    $sem_browse_obj->sem_browse_data['default_sem'] = $sem_number;
+    $sem_browse_obj->sem_number[0] = $sem_number;
+}
+
+switch ($level) {
+case "sbb":
+    $the_tree = TreeAbstract::GetInstance("StudipSemTree", array('visible_only' => !$GLOBALS['perm']->have_perm(get_config('SEM_VISIBILITY_PERM'))));
+    $bereich_typ = _("Studienbereich");
+    $head_text = _("Übersicht aller Veranstaltungen eines Studienbereichs");
+    $intro_text = sprintf(_("Alle Veranstaltungen, die dem Studienbereich: <br><b>%s</b><br> zugeordnet wurden."),
+        htmlReady($the_tree->getShortPath($id)));
+    $excel_text = strip_tags(DecodeHtml($intro_text));
+    $sem_ids = $the_tree->getSemIds($id, false);
+    if (is_array($sem_ids)) {
+        $sem_browse_obj->sem_browse_data['search_result'] = array_flip($sem_ids);
+    } else {
+        $sem_browse_obj->sem_browse_data['search_result'] = array();
     }
-
-    $level = Request::option('level');
-    $id = Request::option('id');
-
-    $group_by = Request::int('group_by', 0);
-
-    $sem_browse_obj = new SemBrowse(array('group_by' => 0));
-    $sem_browse_obj->sem_browse_data['default_sem'] = "all";
-    $sem_browse_obj->sem_number = false;
-    $sem_browse_obj->target_url="details.php";  //teilt der nachfolgenden Include mit, wo sie die Leute hinschicken soll
-    $sem_browse_obj->target_id="sem_id";        //teilt der nachfolgenden Include mit, wie die id die &uuml;bergeben wird, bezeichnet werden soll
-    $sem_browse_obj->sem_browse_data['level'] = $level;
-    switch ($level) {
-        case "sbb":
-            $the_tree = TreeAbstract::GetInstance("StudipSemTree", array('visible_only' => !$GLOBALS['perm']->have_perm(get_config('SEM_VISIBILITY_PERM'))));
-            $bereich_typ = _("Studienbereich");
-            $head_text = _("Übersicht aller Veranstaltungen eines Studienbereichs");
-            $intro_text = sprintf(_("Alle Veranstaltungen, die dem Studienbereich: <br><b>%s</b><br> zugeordnet wurden."),
-                            htmlReady($the_tree->getShortPath($id)));
-            $sem_ids = $the_tree->getSemIds($id, false);
-            if (is_array($sem_ids)){
-                $sem_browse_obj->sem_browse_data['search_result'] = array_flip($sem_ids);
-            } else {
-                $sem_browse_obj->sem_browse_data['search_result'] = array();
-            }
-            $sem_browse_obj->show_result = true;
-            $sem_browse_obj->sem_browse_data['sset'] = false;
-            $sem_browse_obj->sem_browse_data['start_item_id'] = $id;
-            break;
-        case "s":
-            $bereich_typ=_("Einrichtung");
-            $db->query("SELECT Name FROM Institute WHERE Institut_id='".$id."'");
-            $db->next_record();
-            $head_text = _("Übersicht aller Veranstaltungen einer Einrichtung");
-            $intro_text = sprintf(_("Alle Veranstaltungen der Einrichtung <b>%s</b>"), htmlReady($db->f("Name")));
-            $db->query("SELECT seminar_inst.seminar_id FROM seminar_inst
-            LEFT JOIN seminare ON (seminar_inst.seminar_id=seminare.Seminar_id)
-            WHERE seminar_inst.Institut_id='".$id."'" . (!$GLOBALS['perm']->have_perm(get_config('SEM_VISIBILITY_PERM')) ? " AND seminare.visible='1'" : ""));
-
-            $sem_browse_obj->sem_browse_data['search_result'] = array();
-            while ($db->next_record()){
-                $sem_browse_obj->sem_browse_data['search_result'][$db->f("seminar_id")] = true;
-            }
-            $sem_browse_obj->show_result = true;
-            break;
-    }
+    $sem_browse_obj->show_result = true;
+    $sem_browse_obj->sem_browse_data['sset'] = false;
+    $sem_browse_obj->sem_browse_data['start_item_id'] = $id;
+    break;
+case "s":
+    $db = DbManager::get();
+    $bereich_typ=_("Einrichtung");
+    $head_text = _("Übersicht aller Veranstaltungen einer Einrichtung");
+    $intro_text = sprintf(_("Alle Veranstaltungen der Einrichtung: <b>%s</b>"), htmlReady(Institute::find($id)->name));
+    $excel_text = strip_tags(DecodeHtml($intro_text));
+    $query = "SELECT seminar_inst.seminar_id FROM seminar_inst "
+              ."LEFT JOIN seminare s ON (seminar_inst.seminar_id=s.Seminar_id) "
+              . ($show_semester ? "
+                  INNER JOIN semester_data sd ON((s.start_time <= sd.beginn
+                  AND sd.beginn <= ( s.start_time + s.duration_time )
+                  OR (s.start_time <= sd.beginn AND s.duration_time = -1))
+                  AND semester_id = " . $db->quote($show_semester) . ")"
+                  : "")
+              . " WHERE seminar_inst.Institut_id=".$db->quote($id)
+              . (!$GLOBALS['perm']->have_perm(get_config('SEM_VISIBILITY_PERM')) ? " AND s.visible=1" : "");
+    $sem_browse_obj->sem_browse_data['search_result'] = array_flip($db->query($query)->fetchAll(PDO::FETCH_COLUMN));
+    $sem_browse_obj->show_result = true;
+    break;
+}
 
 if (isset($_REQUEST['send_excel'])){
-    $tmpfile = basename($sem_browse_obj->create_result_xls());
+    $tmpfile = basename($sem_browse_obj->create_result_xls($excel_text));
     if($tmpfile){
         header('Location: ' . getDownloadLink( $tmpfile, _("Veranstaltungsübersicht.xls"), 4));
         page_close();
         die;
     }
 }
-ob_end_flush();
-// Start of Output
+
 PageLayout::setHelpKeyword("Basis.Informationsseite");
 PageLayout::setTitle(($level == "s" ? $SessSemName["header_line"]." - " : "").$head_text);
-if (($SessSemName[1]) && ($SessSemName["class"] == "inst")) {
+if ($level == "s" && $SessSemName[1] && $SessSemName["class"] == "inst") {
     Navigation::activateItem('/course/main/courses');
 }
 
-include ('lib/include/html_head.inc.php'); // Output of html head
-include ('lib/include/header.php');   // Output of Stud.IP head
-
-?>
-<body>
-<table width="100%" border=0 cellpadding=2 cellspacing=0>
-<tr>
-    <td class="blank" valign="top"><br>&nbsp;<font size="-1"><? echo $intro_text ?></font><br><br>
-<?
-$sem_browse_obj->print_result();
-?>
-</td><td class="blank" width="270" align="right" valign="top">
-<?
 $group_by_links = "";
 for ($i = 0; $i < count($sem_browse_obj->group_by_fields); ++$i){
+    $group_by_links .= '<div ';
     if($group_by != $i){
-        $group_by_links .= "<a href=\"".URLHelper::getLink("",array('group_by'=>$i))."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"10\" height=\"20\" border=\"0\">";
+        $group_by_links .=  ' style="padding-left:20px"><a href="'.URLHelper::getLink("",array('group_by'=> $i)).'">';
     } else {
-        $group_by_links .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/red/arr_1right.png\" border=\"0\" align=\"bottom\">";
+        $group_by_links .= ' style="padding-left:20px;background: url(\''.$GLOBALS['ASSETS_URL'].'images/icons/16/red/arr_1right.png' . '\') no-repeat">';
     }
-    $group_by_links .= "&nbsp;" . $sem_browse_obj->group_by_fields[$i]['name'];
+    $group_by_links .= htmlReady($sem_browse_obj->group_by_fields[$i]['name']);
     if($group_by != $i){
         $group_by_links .= "</a>";
     }
-    $group_by_links .= "<br>";
+    $group_by_links .= "</div>";
 }
 $infobox = array();
-$infobox[] =    array(  "kategorie" => _("Anzeige gruppieren:"),
-                        "eintrag" => array(array(   "icon" => "blank.gif",
-                                                    "text" => $group_by_links))
-                );
-if (($EXPORT_ENABLE) AND ($level == "s") AND ($perm->have_perm("tutor")))
-{
-    include_once($PATH_EXPORT . "/export_linking_func.inc.php");
-    $infobox[] =    array(  "kategorie" => _("Daten ausgeben:"),
-                            "eintrag" => array(array(   "icon" => "icons/16/black/download.png",
-                                                        "text" => export_link($SessSemName[1], "veranstaltung", $SessSemName[0])),
-                                                array( 'icon' => 'icons/16/black/file-xls.png',
-                                                        "text" => '<a href="' . UrlHelper::getLink('?send_excel=1&group_by='.(int)$group_by) . '">'._("Download als Excel Tabelle").'</a>')
+$infobox[] = array("kategorie" => _("Anzeige gruppieren:"),
+    "eintrag" => array(array(
+        "text" => $group_by_links))
+    );
+if (get_config('EXPORT_ENABLE') && $perm->have_perm("tutor")) {
+    if ($level == "s") {
+        $infobox[] =    array(  "kategorie" => _("Daten ausgeben:"),
+            "eintrag" => array(array(   "icon" => "icons/16/black/download.png",
+                "text" => export_link($SessSemName[1], "veranstaltung", $SessSemName[0])),
+                array( 'icon' => 'icons/16/black/file-xls.png',
+                    "text" => '<a href="' . UrlHelper::getLink('?send_excel=1&group_by='.(int)$group_by) . '">'._("Download als Excel Tabelle").'</a>')
+                )
+            );
+    }
+    if ($level == "sbb") {
 
-                                                        )
-                    );
+        $infobox[] =    array(  "kategorie" => _("Daten ausgeben:"),
+            "eintrag" => array(array(   "icon" => "icons/16/black/download.png",
+                "text" => export_link($id, "veranstaltung", $id)),
+                array( 'icon' => 'icons/16/black/file-xls.png',
+                    "text" => '<a href="' . UrlHelper::getLink('?send_excel=1&group_by='.(int)$group_by) . '">'._("Download als Excel Tabelle").'</a>')
+                )
+            );
+    }
 }
-if (($EXPORT_ENABLE) AND ($level == "sbb") AND ($perm->have_perm("tutor")))
-{
-    include_once($PATH_EXPORT . "/export_linking_func.inc.php");
-    $infobox[] =    array(  "kategorie" => _("Daten ausgeben:"),
-                            "eintrag" => array(array(   "icon" => "icons/16/black/download.png",
-                                                        "text" => export_link($id, "veranstaltung", $id)),
-                                                array( 'icon' => 'icons/16/black/file-xls.png',
-                                                        "text" => '<a href="' . UrlHelper::getLink('?send_excel=1&group_by='.(int)$group_by) . '">'._("Download als Excel Tabelle").'</a>')
 
-                                                        )
-                    );
-}
-print_infobox($infobox, "infobox/board1.jpg");
 ?>
-</tr>
-<tr>
-    <td class="blank" colspan="2">&nbsp;
-    </td>
-</tr>
-</table>
+<div><?= $intro_text ?></div>
+<div style="text-align:right">
+    <form method="post" name="sem_form">
+    <?= _("Semester:") ?>
+    <?= SemesterData::GetSemesterSelector(array('name'=>'select_sem'), $show_semester) ?>
+    <?= \Studip\Button::create(_("Auswählen"), 'choose_sem', array('title' => _("anderes Semester auswählen"))); ?>
+    </form>
+</div>
+<?= $sem_browse_obj->print_result(); ?>
 
-<?
-include ('lib/include/html_end.inc.php');
+<?php
+$layout = $GLOBALS['template_factory']->open('layouts/base.php');
+
+$layout->infobox = array('content' => $infobox, 'picture' => "infobox/board1.jpg");
+$layout->content_for_layout = ob_get_clean();
+
+echo $layout->render();
 page_close();

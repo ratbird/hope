@@ -530,7 +530,7 @@ class SemBrowse {
     ob_end_flush();
     }
 
-    function create_result_xls(){
+    function create_result_xls($headline = '') {
         require_once "vendor/write_excel/OLEwriter.php";
         require_once "vendor/write_excel/BIFFwriter.php";
         require_once "vendor/write_excel/Worksheet.php";
@@ -538,6 +538,7 @@ class SemBrowse {
 
         global $_fullname_sql,$PHP_SELF,$SEM_TYPE,$SEM_CLASS,$TMP_PATH;
 
+        if(!$headline) $headline = _("Stud.IP Veranstaltungen") . ' - ' . $GLOBALS['UNI_NAME_CLEAN'];
         if (is_array($this->sem_browse_data['search_result']) && count($this->sem_browse_data['search_result'])) {
             if (!is_object($this->sem_tree)){
                 $the_tree = TreeAbstract::GetInstance("StudipSemTree", false);
@@ -585,7 +586,7 @@ class SemBrowse {
             // Creating the first worksheet
             $worksheet1 = $workbook->addworksheet(_("Veranstaltungen"));
             $worksheet1->set_row(0, 20);
-            $worksheet1->write_string(0, 0, _("Stud.IP Veranstaltungen") . ' - ' . $GLOBALS['UNI_NAME_CLEAN'] ,$head_format);
+            $worksheet1->write_string(0, 0, $headline ,$head_format);
             $worksheet1->set_row(1, 20);
             $worksheet1->write_string(1, 0, sprintf(_(" %s Veranstaltungen gefunden %s, Gruppierung: %s"),count($sem_data),
                 (($this->sem_browse_data['sset']) ? _("(Suchergebnis)") : ""),
@@ -741,10 +742,15 @@ class SemBrowse {
                 if ($sem_number_end != -1 && ($detail['sem_number'][$sem_number_end] && count($detail['sem_number']) == 1)){
                     continue;
                 } else {
+                    $current_semester_index = SemesterData::GetInstance()->GetSemesterIndexById(Semester::findCurrent()->semester_id);
                     foreach ($detail['Seminar_id'] as $seminar_id => $foo){
                         $start_sem = key($sem_data[$seminar_id]["sem_number"]);
-                        if ($sem_number_end == -1){
-                            $sem_number_end = count($this->search_obj->sem_dates)-1;
+                        if ($sem_number_end == -1) {
+                            if ($this->sem_number === false) {
+                                $sem_number_end = $current_semester_index && isset($this->search_obj->sem_dates[$current_semester_index + 1]) ? $current_semester_index + 1 : count($this->search_obj->sem_dates)-1;
+                            } else {
+                                $sem_number_end = $this->sem_number[0];
+                            }
                         }
                         for ($i = $start_sem; $i <= $sem_number_end; ++$i){
                             if ($this->sem_number === false || (is_array($this->sem_number) && in_array($i,$this->sem_number))){

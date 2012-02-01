@@ -160,6 +160,11 @@ $xslt_files["csv-warteliste"]["desc"] = _("Modul zur Ausgabe von Personendaten a
 $xslt_files["csv-warteliste"]["file"] = "csv-t-2.xsl";
 $xslt_files["csv-warteliste"]["csv"] = true;
 
+$xslt_files["csv-gruppen"]["name"] = _("Liste der TeilnehmerInnen mit Gruppen");
+$xslt_files["csv-gruppen"]["desc"] = _("Modul zur Ausgabe von Personendaten mit Gruppenzugehörigkeit als CSV-Datei. Es werden die Grunddaten der TeilnehmerInnen einer einzelnen Veranstaltung in eine Tabelle geschrieben. Es werden auch die Kontingente und Studieng&auml;nge ausgegeben. Die Ausgabe-Datei kann in Excel bearbeitet werden.");
+$xslt_files["csv-gruppen"]["file"] = "csv-t-3.xsl";
+$xslt_files["csv-gruppen"]["csv"] = true;
+
 $xslt_files["csv-person"]["name"] = _("Standardmodul");
 $xslt_files["csv-person"]["desc"] = _("Standardmodul zur Ausgabe von Personendaten als CSV-Datei. Die Ausgabe-Datei kann in Excel oder OpenOffice angezeigt werden.");
 $xslt_files["csv-person"]["file"] = "csv-p-1.xsl";

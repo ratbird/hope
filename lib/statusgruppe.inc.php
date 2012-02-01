@@ -521,26 +521,21 @@ function GetRangeOfStatusgruppe ($statusgruppe_id) {
 * get all statusgruppen for one user and one range
 *
 * @access   public
-* @param    string  $range_id
+* @param    string  $course_id
 * @param    string  $user_id
-* @return   array   (structure statusgruppe_id => array(name, inherit, visible))
+* @return   array   ( statusgruppe_id => name)
 */
-/*
-function GetSingleStatusgruppe ($range_id, $user_id) {
-    $db = new DB_Seminar();
-    $db->query("SELECT a.statusgruppe_id, a.name, b.inherit, b.visible FROM statusgruppen a
-            LEFT JOIN statusgruppe_user b USING(statusgruppe_id) WHERE user_id='$user_id' AND a.statusgruppe_id='$range_id'");
-    while ($db->next_record()) {
-        $ret[$db->f("statusgruppe_id")] = array (
-                'name' => $db->f("name"),
-                'inherit' => $db->f('inherit') == 1,
-                'visible' => $db->f('visible') == 1,
-                );
+function GetGroupsByCourseAndUser($course_id, $user_id) {
+    $ret = array();
+    $st = DbManager::get()->prepare("SELECT a.statusgruppe_id, a.name
+                                     FROM statusgruppen a
+                                     INNER JOIN statusgruppe_user b USING(statusgruppe_id)
+                                     WHERE user_id = ? AND a.range_id = ? ORDER BY a.position ASC");
+    if ($st->execute(array($user_id,$course_id))) {
+        $ret = array_map('array_shift', $st->fetchAll(PDO::FETCH_COLUMN|PDO::FETCH_GROUP));
     }
-    return (is_array($ret)) ? $ret : FALSE;
+    return $ret;
 }
-*/
-
 
 function getOptionsOfStGroups ($userID) {
     $db = new DB_Seminar();

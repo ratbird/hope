@@ -241,9 +241,6 @@ class messaging
             $db4->query("SELECT Email FROM auth_user_md5 WHERE user_id = '$user->id'");
             $db4->next_record();
             $reply_to = $db4->f("Email");
-        } else {
-            $snd_fullname = 'Stud.IP - ' . $GLOBALS['UNI_NAME_CLEAN'];
-            $reply_to = $GLOBALS["UNI_CONTACT"];
         }
 
         $template = $GLOBALS['template_factory']->open('mail/text');
@@ -263,10 +260,12 @@ class messaging
         $mail = new StudipMail();
         $mail->setSubject($title)
              ->addRecipient($to, $rec_fullname)
-             ->setSenderEmail($reply_to)
-             ->setSenderName($snd_fullname)
              ->setReplyToEmail('')
              ->setBodyText($mailmessage);
+        if (strlen($reply_to)) {
+            $mail->setSenderEmail($reply_to)
+                 ->setSenderName($snd_fullname);
+        }
         $user_cfg = UserConfig::get($rec_user_id);
         if ($user_cfg->getValue('MAIL_AS_HTML')) {
             $mail->setBodyHtml($mailhtml);

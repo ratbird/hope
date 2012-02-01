@@ -77,11 +77,11 @@ class StudipMail
     public static function setDefaultTransporter(email_message_class $transporter) {
         self::$transporter = $transporter;
     }
-    
+
     /**
      * gets the default transporter used in StudipMail::send()
-     *  
-     * @return email_message_class 
+     *
+     * @return email_message_class
      */
     public static function getDefaultTransporter() {
         return self::$transporter;
@@ -89,7 +89,7 @@ class StudipMail
 
     /**
      * convenience method for sending a qick, text based email message
-     * 
+     *
      * @param string $recipient
      * @param string $subject
      * @param string $text
@@ -106,7 +106,7 @@ class StudipMail
     /**
      * convenience method for sending a qick, text based email message
      * to the configured abuse adress
-     * 
+     *
      * @param string $subject
      * @param string $text
      * @return bool
@@ -122,14 +122,14 @@ class StudipMail
     }
 
     /**
-     * sets some default values for sender and reply to from 
+     * sets some default values for sender and reply to from
      * configuration settings. The return path is always set to MAIL_ABUSE
-     * 
+     *
      */
     function __construct() {
         $mail_localhost = ($GLOBALS['MAIL_LOCALHOST'] == "") ? $_SERVER["SERVER_NAME"] : $GLOBALS['MAIL_LOCALHOST'];
         $this->setSenderEmail($GLOBALS['MAIL_ENV_FROM'] == "" ? "wwwrun@" . $mail_localhost : $GLOBALS['MAIL_ENV_FROM']);
-        $this->setSenderName($GLOBALS['MAIL_FROM'] == "" ? "Stud.IP" : $GLOBALS['MAIL_FROM']);
+        $this->setSenderName($GLOBALS['MAIL_FROM'] == "" ? 'Stud.IP - ' . $GLOBALS['UNI_NAME_CLEAN'] : $GLOBALS['MAIL_FROM']);
         $this->setReplyToEmail($GLOBALS['MAIL_ABUSE'] == "" ? "abuse@" . $mail_localhost : $GLOBALS['MAIL_ABUSE']);
     }
 
@@ -357,8 +357,8 @@ class StudipMail
 
     /**
      * send the mail using the given transporter object, or the
-     * set default transporter 
-     * 
+     * set default transporter
+     *
      * @param email_message_class $transporter
      * @return bool
      */

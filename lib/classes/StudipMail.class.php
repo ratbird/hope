@@ -344,6 +344,18 @@ class StudipMail
     }
 
     /**
+     * quotes the given string if it contains any characters
+     * reserved for special interpretation in RFC 2822.
+     */
+    protected static function quoteString($string) {
+        // list of reserved characters in RFC 2822
+        if (strcspn($string, '()<>[]:;@\\,.') < strlen($string)) {
+            $string = '"' . addcslashes($string, "\r\"\\") . '"';
+        }
+        return $string;
+    }
+
+    /**
      * send the mail using the given transporter object, or the
      * set default transporter 
      * 
@@ -358,12 +370,12 @@ class StudipMail
             throw new Exception('no mail transport defined');
         }
         $transporter->ResetMessage();
-        $transporter->SetEncodedEmailHeader("From", $this->getSenderEmail(), $this->getSenderName());
+        $transporter->SetEncodedEmailHeader("From", $this->getSenderEmail(), self::quoteString($this->getSenderName()));
         if($this->getReplyToEmail()){
-            $transporter->SetEncodedEmailHeader("Reply-To", $this->getReplyToEmail(), $this->getReplyToName());
+            $transporter->SetEncodedEmailHeader("Reply-To", $this->getReplyToEmail(), self::quoteString($this->getReplyToName()));
         }
         foreach($this->getRecipients() as $recipient) {
-            $recipients_by_type[$recipient['type']][ $recipient['mail']] = $recipient['name'];
+            $recipients_by_type[$recipient['type']][$recipient['mail']] = self::quoteString($recipient['name']);
         }
         foreach($recipients_by_type as $type => $recipients){
             $transporter->SetMultipleEncodedEmailHeader($type, $recipients);

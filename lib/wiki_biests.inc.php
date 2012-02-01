@@ -113,7 +113,7 @@ function wiki_get_biestpagelist($template) {
 //
 function wiki_newbiest($template_name) {
     global $SessSemName, $auth;
-    global $keyword, $view, $wiki_plugin_messages;
+    global $keyword, $view;
     global $biest_templates;
     $template=$biest_templates[$template_name];
     extract($_POST,EXTR_SKIP); // locally set post-vars for template
@@ -136,9 +136,12 @@ function wiki_newbiest($template_name) {
         ->prepare($query)
         ->execute(array($GLOBALS['SessSemName'][1], $pagename, $text, $userid));
 
-    $wiki_plugin_messages[]="msg§".sprintf(_("Ein neuer Eintrag wurde angelegt. Sie können ihn nun weiter bearbeiten oder %szurück zur Ausgangsseite%s gehen."),"<a href=\"".URLHelper::getLink("?keyword=$keyword")."\">",'</a>'); if ($biest_create_topic){
+    $message = MessageBox::success(sprintf(_('Ein neuer Eintrag wurde angelegt. Sie können ihn nun weiter bearbeiten oder %szurück zur Ausgangsseite%s gehen.'),'<a href="'.URLHelper::getLink("?keyword=$keyword").'">','</a>'));
+    PageLayout::postMessage($message);
+    if ($biest_create_topic){
         if(CreateTopic($pagename . ': ' . $biest_zusammenfassung, get_fullname($userid), $biest_beschreibung, 0, 0, $SessSemName[1],$userid)){
-            $wiki_plugin_messages[]="msg§"._("Ein neues Thema im Forum wurde angelegt.");
+            $message = MessageBox::success(_('Ein neues Thema im Forum wurde angelegt.'));
+            PageLayout::postMessage($message);
         }
     }
     $view='show';

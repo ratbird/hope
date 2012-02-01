@@ -93,8 +93,7 @@ function completeWikiSignatures($body)
 **/
 function submitWikiPage($keyword, $version, $body, $user_id, $range_id) {
 
-    releasePageLocks($keyword); // kill lock that was set when starting to edit
-    $message="";
+    releasePageLocks($keyword, $user_id); // kill lock that was set when starting to edit
     $db=new DB_Seminar;
     // write changes to db, show new page
     $latestVersion=getWikiPage($keyword,false);
@@ -111,15 +110,13 @@ function submitWikiPage($keyword, $version, $body, $user_id, $range_id) {
 
     //TODO: Die $message Texte klingen fürchterlich. Halbsätze, Denglisch usw...
     if ($latestVersion && ($latestVersion['body'] == $body)) {
-        $message="info§" . _("Keine Änderung vorgenommen.");
+        $message = MessageBox::info(_('Keine Änderung vorgenommen.'));
     } else if ($latestVersion && ($version !== null) && ($lastchange < 30*60) && ($user_id == $latestVersion['user_id'])) {
-        // if same author changes again within 30 minutes,
-        // no new verison is created
+        // if same author changes again within 30 minutes, no new verison is created
         NotificationCenter::postNotification('WikiPageWillUpdate', array($range_id, $keyword));
         $result=$db->query("UPDATE wiki SET body='$body', chdate='$date' WHERE keyword='$keyword' AND range_id='$range_id' AND version='$version'");
         NotificationCenter::postNotification('WikiPageDidUpdate', array($range_id, $keyword));
-        begin_blank_table();
-        $message="msg§" . _("Update ok, keine neue Version, da erneute Änderung innerhalb 30 Minuten.");
+        $message = MessageBox::success(_('Update ok, keine neue Version, da erneute Änderung innerhalb 30 Minuten.'));
     } else {
         if ($version === null) {
             $version=0;
@@ -130,11 +127,11 @@ function submitWikiPage($keyword, $version, $body, $user_id, $range_id) {
         NotificationCenter::postNotification('WikiPageWillCreate', array($range_id, $keyword));
         $result=$db->query("INSERT INTO wiki (range_id, user_id, keyword, body, chdate, version) VALUES ('$range_id', '$user_id', '$keyword','$body','$date','$version')");
         NotificationCenter::postNotification('WikiPageDidCreate', array($range_id, $keyword));
-        $message="msg§" . _("Update ok, neue Version angelegt.");
+        $message = MessageBox::success(_('Update ok, neue Version angelegt.'));
     }
 
     refreshBacklinks($keyword, $body);
-    return $message;
+    PageLayout::postMessage($message);
 }
 
 /**
@@ -261,10 +258,11 @@ function isKeyword($str, $page, $format="wiki", $sem_id=NULL, $alt_str=NULL){
 * or NULL if no locks set.
 *
 * @param    string  WikiPage keyword
+* @param    string  user_id  Internal user id
 *
 **/
-function getLock($keyword) {
-    global $SessSemName, $user_id;
+function getLock($keyword, $user_id) {
+    global $SessSemName;
     $db=new DB_seminar;
     $result=$db->query("SELECT user_id, chdate FROM wiki_locks WHERE range_id='$SessSemName[1]' AND keyword='$keyword' AND user_id != '$user_id' ORDER BY chdate DESC");
 
@@ -321,10 +319,11 @@ function releaseLocks($keyword) {
 * Release locks for current wiki page and current user
 *
 * @param    string  keyword WikiPage name
+* @param    string  user_id Internal user id
 *
 **/
-function releasePageLocks($keyword) {
-    global $SessSemName, $user_id;
+function releasePageLocks($keyword, $user_id) {
+    global $SessSemName;
     $db=new DB_seminar;
     $db->query("DELETE FROM wiki_locks WHERE range_id='$SessSemName[1]' AND keyword='$keyword' AND user_id='$user_id'");
 }
@@ -491,13 +490,7 @@ function getZusatz($wikiData) {
 function showDeleteDialog($keyword, $version) {
     global $perm, $SessSemName;
     if (!$perm->have_studip_perm("tutor", $SessSemName[1])) {
-        begin_blank_table();
-        parse_msg("error§" . _("Sie haben keine Berechtigung, Seiten zu löschen."));
-        end_blank_table();
-        echo '</td></tr></table>';
-        include ('lib/include/html_end.inc.php');
-        page_close();
-        die;
+        throw new AccessDeniedException(_('Sie haben keine Berechtigung, Seiten zu löschen.'));
     }
     $islatest=0; // will another version become latest version?
     $willvanish=0; // will the page be deleted entirely?
@@ -511,16 +504,9 @@ function showDeleteDialog($keyword, $version) {
     }
 
     if (!$islatest) {
-        begin_blank_table();
-        parse_msg("error§" . _("Die Version, die Sie löschen wollen, ist nicht die Aktuellste. Überprüfen Sie, ob inzwischen eine aktuellere Version erstellt wurde."));
-        end_blank_table();
-        echo '</td></tr></table>';
-        include ('lib/include/html_end.inc.php');
-        page_close();
-        die;
+        throw new InvalidArgumentException(_('Die Version, die Sie löschen wollen, ist nicht die Aktuellste. Überprüfen Sie, ob inzwischen eine aktuellere Version erstellt wurde.'));
     }
-    begin_blank_table();
-    $msg="info§" . sprintf(_("Wollen Sie die untenstehende Version %s der Seite %s wirklich löschen?"), "<b>".$version."</b>", "<b>".$keyword."</b>") . "<br>\n";
+    $msg= sprintf(_("Wollen Sie die untenstehende Version %s der Seite %s wirklich löschen?"), "<b>".$version."</b>", "<b>".$keyword."</b>") . "<br>\n";
     if (!$willvanish) {
         $msg .= _("Diese Version ist derzeit aktuell. Nach dem Löschen wird die nächstältere Version aktuell.") . "<br>";
     } else {
@@ -532,8 +518,7 @@ function showDeleteDialog($keyword, $version) {
     if (!$islatest) $lnk .= "&version=$version";
     $msg.="<a href=\"".URLHelper::getLink($lnk)."\">" . Button::createCancel(_('NEIN!')) . "</a>\n";
     $msg.='<p>'. sprintf(_("Um alle Versionen einer Seite auf einmal zu löschen, klicken Sie %shier%s."),'<a href="'.URLHelper::getLink('?cmd=delete_all&keyword='.urlencode($keyword)).'">','</a>');
-    parse_msg($msg, '§', 'blank', '1', FALSE);
-    end_blank_table();
+    PageLayout::postMessage(MessageBox::info($msg));
     return $version;
 }
 
@@ -546,16 +531,9 @@ function showDeleteDialog($keyword, $version) {
 function showDeleteAllDialog($keyword) {
     global $perm, $SessSemName;
     if (!$perm->have_studip_perm("tutor", $SessSemName[1])) {
-        begin_blank_table();
-        parse_msg("error§" . _("Sie haben keine Berechtigung, Seiten zu löschen."));
-        end_blank_table();
-        echo '</td></tr></table>';
-        include ('lib/include/html_end.inc.php');
-        page_close();
-        die;
+        throw new AccessDeniedException(_('Sie haben keine Berechtigung, Seiten zu löschen.'));
     }
-    begin_blank_table();
-    $msg="info§" . sprintf(_("Wollen Sie die Seite %s wirklich vollständig - mit allen Versionen - löschen?"), "<b>".$keyword."</b>") . "<br>\n";
+    $msg= sprintf(_("Wollen Sie die Seite %s wirklich vollständig - mit allen Versionen - löschen?"), "<b>".$keyword."</b>") . "<br>\n";
     if ($keyword=="WikiWikiWeb") {
         $msg .= "<p>" . _("Sie sind im Begriff die Startseite zu löschen, die dann durch einen leeren Text ersetzt wird. Damit wären auch alle anderen Seiten nicht mehr direkt erreichbar.") . "</p>";
     } else {
@@ -573,8 +551,7 @@ function showDeleteAllDialog($keyword) {
     $lnk = "?keyword=".urlencode($keyword); // what to do when delete is aborted
     if (!$islatest) $lnk .= "&version=$version";
     $msg.="<a href=\"".URLHelper::getLink($lnk)."\">" . Button::createCancel(_('NEIN!')) . "</a>\n";
-    parse_msg($msg, '§', 'blank', '1', FALSE);
-    end_blank_table();
+    PageLayout::postMessage(MessageBox::info($msg));
 }
 
 
@@ -592,23 +569,11 @@ function showDeleteAllDialog($keyword) {
 function deleteWikiPage($keyword, $version, $range_id) {
     global $perm, $SessSemName, $dellatest;
     if (!$perm->have_studip_perm("tutor", $SessSemName[1])) {
-        begin_blank_table();
-        parse_msg("error§" . _("Sie haben keine Berechtigung, Seiten zu löschen."));
-        end_blank_table();
-        echo '</td></tr></table>';
-        include ('lib/include/html_end.inc.php');
-        page_close();
-        die;
+        throw new AccessDeniedException(_('Sie haben keine Berechtigung, Seiten zu löschen.'));
     }
     $lv=getLatestVersion($keyword, $SessSemName[1]);
     if ($lv["version"] != $version) {
-        begin_blank_table();
-        parse_msg("error§" . _("Die Version, die Sie löschen wollen, ist nicht die aktuellste. Überprüfen Sie, ob inzwischen eine aktuellere Version erstellt wurde."));
-        end_blank_table();
-        echo '</td></tr></table>';
-        include ('lib/include/html_end.inc.php');
-        page_close();
-        die;
+        throw new InvalidArgumentException(_('Die Version, die Sie löschen wollen, ist nicht die aktuellste. Überprüfen Sie, ob inzwischen eine aktuellere Version erstellt wurde.'));
     }
     $q="DELETE FROM wiki WHERE keyword='$keyword' AND version='$version' AND range_id='$range_id'";
     $db=new DB_Seminar;
@@ -622,9 +587,8 @@ function deleteWikiPage($keyword, $version, $range_id) {
         $newkeyword = $keyword;
         $addmsg = "";
     }
-    begin_blank_table();
-    parse_msg("info§" . sprintf(_("Version %s der Seite %s gelöscht."), $version, '<b>'.$keyword.'</b>') . $addmsg);
-    end_blank_table();
+    $message = MessageBox::info(sprintf(_('Version %s der Seite %s gelöscht.'), $version, '<b>'.$keyword.'</b>') . $addmsg);
+    PageLayout::postMessage($message);
     if ($dellatest) {
         $lv=getLatestVersion($keyword, $SessSemName[1]);
         if ($lv) {
@@ -647,20 +611,13 @@ function deleteWikiPage($keyword, $version, $range_id) {
 function deleteAllWikiPage($keyword, $range_id) {
     global $perm, $SessSemName;
     if (!$perm->have_studip_perm("tutor", $SessSemName[1])) {
-        begin_blank_table();
-        parse_msg("error§" . _("Sie haben keine Berechtigung, Seiten zu löschen."));
-        end_blank_table();
-        echo '</td></tr></table>';
-        include ('lib/include/html_end.inc.php');
-        page_close();
-        die;
+        throw new AccessDeniedException(_('Sie haben keine Berechtigung, Seiten zu löschen.'));
     }
     $q="DELETE FROM wiki WHERE keyword='$keyword' AND range_id='$range_id'";
     $db=new DB_Seminar;
     $db->query($q);
-    begin_blank_table();
-    parse_msg("info§" . sprintf(_("Die Seite %s wurde mit allen Versionen gelöscht."), '<b>'.$keyword.'</b>'));
-    end_blank_table();
+    $message = MessageBox::info(sprintf(_('Die Seite %s wurde mit allen Versionen gelöscht.'), '<b>'.$keyword.'</b>'));
+    PageLayout::postMessage($message);
     refreshBacklinks($keyword, "");
     return "WikiWikiWeb";
 }
@@ -674,7 +631,7 @@ function deleteAllWikiPage($keyword, $range_id) {
 * @param  sortby  string  Different sortings of entries.
 **/
 function listPages($mode, $sortby=NULL) {
-    global $SessSemName, $user_id;
+    global $SessSemName;
 
     $db=new DB_Seminar;
     $db2=new DB_Seminar;
@@ -689,8 +646,7 @@ function listPages($mode, $sortby=NULL) {
         $sort = "ORDER by lastchange"; // default sort order for "new pages"
         $nopages = _("Seit Ihrem letzten Login gab es keine Änderungen.");
     } else {
-        parse_msg("error§" . _("Fehler! Falscher Anzeigemodus:") . $mode);
-        return 0;
+        throw new InvalidArgumentException(_('Fehler! Falscher Anzeigemodus:') . $mode);
     }
 
     $titlesortlink = "title";
@@ -732,55 +688,50 @@ function listPages($mode, $sortby=NULL) {
     }
     $result=$db->query($q);
 
-    // quit if no pages found
-    if ($db->affected_rows() == 0) {
-        begin_blank_table();
-        parse_msg ("info\xa7" . $nopages);
-        echo '</table></td></tr></table>';
-        include ('lib/include/html_end.inc.php');
-        page_close();
-        die;
-    }
-
     // show pages
     begin_blank_table();
-    echo "<tr><td class=\"blank\" colspan=\"2\">&nbsp;</td></tr>\n";
-    echo "<tr><td class=\"blank\" colspan=\"2\">";
-    echo "<table id=\"main_content\" role=\"main\" width=\"99%\" border=\"0\"  cellpadding=\"2\" cellspacing=\"0\" align=\"center\">";
-    echo "<tr height=28>";
-    $s = "<td class=\"steel\" width=\"%d%%\" align=\"%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"1\" height=\"20\">%s</td>";
-    printf($s, 3, "left", "&nbsp;");
-    printf($s, 39,"left",  "<font size=-1><b><a href=\"".URLHelper::getLink("$selfurl&sortby=$titlesortlink")."\">"._("Titel")."</a></b></font>");
-    printf($s, 10,"center",  "<font size=-1><b><a href=\"".URLHelper::getLink("$selfurl&sortby=$versionsortlink")."\">"._("Änderungen")."</a></b></font>");
-    printf($s, 15,"left",  "<font size=-1><b><a href=\"".URLHelper::getLink("$selfurl&sortby=$changesortlink")."\">"._("Letzte Änderung")."</a></b></font>");
-    printf($s, 25,"left",  "<font size=-1><b>"._("von")."</b></font>");
-    echo "</tr>";
 
-    $c=1;
-    while ($db->next_record()) {
+    if ($db->affected_rows() == 0) {
+        PageLayout::postMessage(MessageBox::info($nopages));
+    } else {
+        echo "<tr><td class=\"blank\" colspan=\"2\">&nbsp;</td></tr>\n";
+        echo "<tr><td class=\"blank\" colspan=\"2\">";
+        echo "<table id=\"main_content\" role=\"main\" width=\"99%\" border=\"0\"  cellpadding=\"2\" cellspacing=\"0\" align=\"center\">";
+        echo "<tr height=28>";
+        $s = "<td class=\"steel\" width=\"%d%%\" align=\"%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"1\" height=\"20\">%s</td>";
+        printf($s, 3, "left", "&nbsp;");
+        printf($s, 39,"left",  "<font size=-1><b><a href=\"".URLHelper::getLink("$selfurl&sortby=$titlesortlink")."\">"._("Titel")."</a></b></font>");
+        printf($s, 10,"center",  "<font size=-1><b><a href=\"".URLHelper::getLink("$selfurl&sortby=$versionsortlink")."\">"._("Änderungen")."</a></b></font>");
+        printf($s, 15,"left",  "<font size=-1><b><a href=\"".URLHelper::getLink("$selfurl&sortby=$changesortlink")."\">"._("Letzte Änderung")."</a></b></font>");
+        printf($s, 25,"left",  "<font size=-1><b>"._("von")."</b></font>");
+        echo "</tr>";
 
-        $class = ($c++ % 2) ? "steel1" : "steelgraulight";
+        $c=1;
+        while ($db->next_record()) {
 
-        $keyword=$db->f("keyword");
-        $lastchange=$db->f("lastchange");
-        $db2->query("SELECT user_id, version FROM wiki WHERE range_id='$SessSemName[1]' AND keyword='$keyword' AND chdate='$lastchange'");
-        $db2->next_record();
-        $userid=$db2->f("user_id");
+            $class = ($c++ % 2) ? "steel1" : "steelgraulight";
 
-        $tdheadleft="<td class=\"$class\" align=\"left\"><font size=\"-1\">";
-        $tdheadcenter="<td class=\"$class\" align=\"center\"><font size=\"-1\">";
-        $tdtail="</font></td>";
-        print("<tr>".$tdheadleft."&nbsp;"."$tdtail");
-        print($tdheadleft."<a href=\"".URLHelper::getLink("?keyword=" . urlencode($keyword) . "")."\">");
-        print(htmlReady($keyword) ."</a>");
-        print($tdtail);
-        print($tdheadcenter.$db2->f("version").$tdtail);
-        print($tdheadleft.date("d.m.Y, H:i", $lastchange));
-        if ($mode=="new" && $db2->f("version")>1) {
-            print("&nbsp;(<a href=\"".URLHelper::getLink("?view=diff&keyword=".urlencode($keyword)."&versionssince=$lastlogindate")."\">"._("Änderungen")."</a>)");
+            $keyword=$db->f("keyword");
+            $lastchange=$db->f("lastchange");
+            $db2->query("SELECT user_id, version FROM wiki WHERE range_id='$SessSemName[1]' AND keyword='$keyword' AND chdate='$lastchange'");
+            $db2->next_record();
+            $userid=$db2->f("user_id");
+
+            $tdheadleft="<td class=\"$class\" align=\"left\"><font size=\"-1\">";
+            $tdheadcenter="<td class=\"$class\" align=\"center\"><font size=\"-1\">";
+            $tdtail="</font></td>";
+            print("<tr>".$tdheadleft."&nbsp;"."$tdtail");
+            print($tdheadleft."<a href=\"".URLHelper::getLink("?keyword=" . urlencode($keyword) . "")."\">");
+            print(htmlReady($keyword) ."</a>");
+            print($tdtail);
+            print($tdheadcenter.$db2->f("version").$tdtail);
+            print($tdheadleft.date("d.m.Y, H:i", $lastchange));
+            if ($mode=="new" && $db2->f("version")>1) {
+                print("&nbsp;(<a href=\"".URLHelper::getLink("?view=diff&keyword=".urlencode($keyword)."&versionssince=$lastlogindate")."\">"._("Änderungen")."</a>)");
+            }
+            print($tdtail);
+            print($tdheadleft.get_fullname($userid,'full',TRUE).$tdtail."</tr>");
         }
-        print($tdtail);
-        print($tdheadleft.get_fullname($userid,'full',TRUE).$tdtail."</tr>");
     }
     echo "</table><p>&nbsp;</p>";
     end_blank_table();
@@ -795,7 +746,7 @@ function listPages($mode, $sortby=NULL) {
 * @param keyword bool if localsearch is set, only one page (all versions) is searched
 **/
 function searchWiki($searchfor, $searchcurrentversions, $keyword, $localsearch) {
-    global $SessSemName, $user_id;
+    global $SessSemName;
     $range_id=$SessSemName[1];
 
     $db=new DB_Seminar;
@@ -821,36 +772,21 @@ function searchWiki($searchfor, $searchcurrentversions, $keyword, $localsearch) 
         $result=$db->query($q); //result wird nie benutzt... wofür?
     }
 
-    showPageFrameStart();
-    begin_blank_table();
-    echo "<tr><td>";
-    begin_blank_table();
-
     // quit if no pages found / search string was invalid
     if ($invalid_searchstring || $db->affected_rows() == 0) {
         if ($invalid_searchstring) {
-            $msg="error\xa7" . _("Suchbegriff zu kurz. Geben Sie mindestens drei Zeichen ein.");
+            $message = MessageBox::error(_('Suchbegriff zu kurz. Geben Sie mindestens drei Zeichen ein.'));
         } else {
-            $tmplt=_("Die Suche nach &raquo;%s&laquo; lieferte keine Treffer.");
-            $msg="info\xa7" . sprintf($tmplt, htmlReady($searchfor));
+            $message = MessageBox::info(sprintf(_("Die Suche nach &raquo;%s&laquo; lieferte keine Treffer."), htmlReady($searchfor)));
         }
-        if ($keyword) {
-            return showWikiPage($keyword, NULL, $msg);
-        } else {
-            parse_msg($msg);
-            end_blank_table();
-            $infobox = array ();
-            $infobox[] = getSearchBox($searchfor, $keyword);
-            end_blank_table();
-            echo "</td>"; // end of content area
-            showPageFrameEnd($infobox);
-            return;
-        }
+        PageLayout::postMessage($message);
+        showWikiPage($keyword, NULL);
+        return;
     }
 
+    showPageFrameStart();
+
     // show hits
-    echo "<tr><td class=\"blank\" colspan=\"2\">&nbsp;</td></tr>\n";
-    echo "<tr><td class=\"blank\" colspan=\"2\">";
     echo "<table width=\"99%\" border=\"0\"  cellpadding=\"2\" cellspacing=\"0\" align=\"center\">";
     echo "<tr><td colspan=3><font size=+1>"._("Treffer für Suche nach")."&nbsp;&raquo;".htmlReady($searchfor)."&laquo;";
     if ($localsearch) {
@@ -963,25 +899,10 @@ function searchWiki($searchfor, $searchcurrentversions, $keyword, $localsearch) 
     }
 
     echo "</table><p>&nbsp;</p>";
-    end_blank_table();
-    $infobox = array ();
-    $infobox[] = getSearchBox($searchfor, $keyword);
-    end_blank_table();
-    echo "</td>"; // end of content area
+    $infobox = array(getSearchBox($searchfor, $keyword));
     showPageFrameEnd($infobox);
 }
 
-
-/**
-* Print a wiki header (css class: topic) including seminar name.
-*
-**/
-function wikiSeminarHeader() {
-
-    echo "\n<table width=\"100%\" class=\"blank\" border=0 cellpadding=0 cellspacing=0>\n";
-    echo "<tr><td class=\"blank\" colspan=2>&nbsp; </td></tr>\n";
-    echo "</table>";
-}
 
 /**
 * Print a wiki page header including printhead-bar with page name and
@@ -1020,13 +941,15 @@ function wikiEdit($keyword, $wikiData, $user_id, $backpage=NULL)
         $lastpage = "";
     }
     releaseLocks($keyword); // kill old locks
-    $locks=getLock($keyword);
+    $locks=getLock($keyword, $user_id);
     $cont="";
     if ($locks && $lock["user_id"]!=$user_id) {
-        echo Messagebox::info(sprintf(_("Die Seite wird eventuell von %s bearbeitet."), $locks), array(_("Wenn Sie die Seite trotzdem &auml;ndern, kann ein Versionskonflikt entstehen."), _("Es werden dann beide Versionen eingetragen und m&uuml;ssen von Hand zusammengef&uuml;hrt werden."),  _("Klicken Sie auf Abbrechen, um zurückzukehren.")));
+        $message = MessageBox::info(sprintf(_("Die Seite wird eventuell von %s bearbeitet."), $locks), array(_("Wenn Sie die Seite trotzdem &auml;ndern, kann ein Versionskonflikt entstehen."), _("Es werden dann beide Versionen eingetragen und m&uuml;ssen von Hand zusammengef&uuml;hrt werden."),  _("Klicken Sie auf Abbrechen, um zurückzukehren.")));
+        PageLayout::postMessage($message);
     }
     if ($keyword=='toc') {
-        echo Messagebox::info(_("Sie bearbeiten die QuickLinks."), array(_("Verwenden Sie Aufzählungszeichen (-, --, ---), um Verweise auf Seiten hinzuzufügen.")));
+        $message = MessageBox::info(_("Sie bearbeiten die QuickLinks."), array(_("Verwenden Sie Aufzählungszeichen (-, --, ---), um Verweise auf Seiten hinzuzufügen.")));
+        PageLayout::postMessage($message);
         if (!$body) { $body=_("- WikiWikiWeb\n- BeispielSeite\n-- UnterSeite1\n-- UnterSeite2"); }
     }
 
@@ -1037,7 +960,7 @@ function wikiEdit($keyword, $wikiData, $user_id, $backpage=NULL)
     $cont .= "<input type=\"hidden\" name=\"version\" value=\"$version\">";
     $cont .= "<input type=\"hidden\" name=\"submit\" value=\"true\">";
     $cont .= "<input type=\"hidden\" name=\"cmd\" value=\"show\">";
-    $cont .= '<br><br>' . Button::createAccept(_('abschicken') ) . "&nbsp;". LinkButton::createCancel(_('abbrechen'),URLHelper::getURL("?cmd=abortedit&keyword=".urlencode($keyword).$lastpage)) ;
+    $cont .= '<br><br>' . Button::createAccept(_('abschicken')) . "&nbsp;" . LinkButton::createCancel(_('abbrechen'),URLHelper::getURL("?cmd=abortedit&keyword=".urlencode($keyword).$lastpage));
     $cont .= "</form>\n";
     printcontent(0,0,$cont,"");
     $infobox = array ();
@@ -1093,14 +1016,13 @@ function exportWikiPagePDF($keyword, $version) {
 **/
 function exportWiki() {
     showPageFrameStart();
-    begin_blank_table();
-    parse_msg("info§"._("Alle Wiki-Seiten werden als große HTML-Datei zusammengefügt und in einem neuen Fenster angezeigt. Von dort aus können Sie die Datei abspeichern."));
-    $infobox = array ();
+    $message = MessageBox::info(_('Alle Wiki-Seiten werden als große HTML-Datei zusammengefügt und in einem neuen Fenster angezeigt. Von dort aus können Sie die Datei abspeichern.'));
+    PageLayout::postMessage($message);
+    $infobox = array();
     $infobox[] = array("kategorie" => _("Information"), "eintrag" => array(array('icon' => "icons/16/black/info.png", "text"=>_("Die Wiki-Seiten werden als eine zusammenhängende HTML-Datei ohne Links exportiert."))));
-    print "</tr><tr align=center><td>";
-    print LinkButton::create( _('weiter'). ' >>' , URLHelper::getURL("?view=wikiprintall"), array('id'=>'wiki_export','title'=>_('Seiten exportieren'),'target'=>'_blank' )) . '</td></tr>';
-    end_blank_table();
-    echo "</td>"; // end of content area
+    print '<div style="text-align: center;">';
+    print LinkButton::create( _('weiter'). ' >>' , URLHelper::getURL("?view=wikiprintall"), array('id'=>'wiki_export','title'=>_('Seiten exportieren'),'target'=>'_blank' ));
+    echo '</div>'; // end of content area
     showPageFrameEnd($infobox);
 }
 
@@ -1184,8 +1106,7 @@ function getAllWikiPages($range_id, $header, $fullhtml=TRUE) {
 *
 **/
 function showPageFrameStart() {
-    print "<table width=\"100%\" class=\"blank\" cellpadding=0 cellspacing=0>";
-    print "<tr class=\"blank\"><td class=\"blank\" nowrap width=\"1%\">&nbsp;</td><td id=\"main_content\" role=\"main\" class=\"blank\" valign=\"top\">";
+    echo '<div id="main_content" role="main">';
 }
 
 /**
@@ -1198,12 +1119,8 @@ function showPageFrameStart() {
 **/
 function showPageFrameEnd($infobox)
 {
-    // start of infobox area
-    echo "<td class=\"blank\" width=\"270\" align=\"right\" valign=\"top\">";
-    print_infobox ($infobox, "infobox/wiki.jpg");
-    echo "<br></td></tr>";
-    echo "</table>"; // end infoframe (content+box)
-    echo "</td></tr></table>"; // end page box
+    $GLOBALS['infobox'] = $infobox;
+    echo '</div>';
 }
 
 /**
@@ -1431,7 +1348,7 @@ function get_toc_content() {
 *
 * @param    string  WikiPage name
 * @param    string  WikiPage version
-* @param    string  ID of special dialog to be printed (delete, delete_all) or message string for parse_msg to display
+* @param    string  ID of special dialog to be printed (delete, delete_all)
 * @param    string  Comment show mode (all, none, icon)
 *
 **/
@@ -1446,10 +1363,6 @@ function showWikiPage($keyword, $version, $special="", $show_comments="icon", $h
         $version=showDeleteDialog($keyword, $version);
     } else if ($special == "delete_all") {
         showDeleteAllDialog($keyword);
-    } else if ($special) {
-        begin_blank_table();
-        parse_msg($special);
-        end_blank_table();
     }
 
     $wikiData = getWikiPage($keyword, $version);
@@ -1557,13 +1470,7 @@ function showDiffs($keyword, $versions_since) {
     $q .= "ORDER BY version DESC";
     $result = $db->query($q);
     if ($db->affected_rows() == 0) {
-        begin_blank_table();
-        parse_msg ("info§" . _("Es gibt keine zu vergleichenden Versionen."));
-        end_blank_table();
-        echo '</td></tr></table>';
-        include ('lib/include/html_end.inc.php');
-        page_close();
-        die;
+        throw new InvalidArgumentException(_('Es gibt keine zu vergleichenden Versionen.'));
     }
 
     showPageFrameStart();

@@ -45,20 +45,22 @@ require_once 'lib/wiki.inc.php';
 require_once 'lib/functions.php';
 require_once 'lib/visual.inc.php';
 
+$db = new DB_Seminar();
+
 // -- Load Wiki Plugins -------------------
 // $WIKI_PLUGINS is defined in local.inc
 //
-$wiki_plugin_messages=array();
-
 if (is_array($WIKI_PLUGINS)) {
     foreach ($WIKI_PLUGINS as $plugin) {
         require_once('lib/'.$plugin);
     }
 }
-$view=Request::get('view');
-$keyword=Request::quoted('keyword');
-$version=Request::int('version');
-$cmd=Request::option('cmd');
+
+$view = Request::get('view');
+$keyword = Request::quoted('keyword');
+$version = Request::int('version');
+$cmd = Request::option('cmd');
+
 if ($view=="wikiprint") {
     printWikiPage($keyword, $version);
     page_close();
@@ -85,10 +87,6 @@ if (in_array(Request::get('view'), words('listnew listall export'))) {
     Navigation::activateItem('/course/wiki/show');
 }
 
-// Start of Output
-include ('lib/include/html_head.inc.php'); // Output of html head
-include ('lib/include/header.php');   // Output of Stud.IP head
-
 if (Request::option('wiki_comments')=="all") {         // show all comments
     $show_wiki_comments="all";
 } elseif (Request::option('wiki_comments')=="none") {  // don't show comments
@@ -99,23 +97,9 @@ if (Request::option('wiki_comments')=="all") {         // show all comments
 
 URLHelper::addLinkParam('wiki_comments', $show_wiki_comments);
 
-
-// echo "<table width=\"100%\" border=0 cellpadding=0 cellspacing=0>\n";
-
-$db = new DB_Seminar();
-$user_id=$auth->auth['uid'];
-
-wikiSeminarHeader();
+ob_start();
 
 // ---------- Start of main WikiLogic
-
-if (is_array($wiki_plugin_messages)) { // print ay messages produced by plugins
-    foreach ($wiki_plugin_messages as $msg) {
-        begin_blank_table();
-        parse_msg($msg);
-        end_blank_table();
-    }
-}
 
 if ($view=="listall") {
     //
@@ -160,22 +144,12 @@ if ($view=="listall") {
     // show page for editing
     //
     if (!$perm->have_studip_perm("autor", $SessSemName[1])) {
-        begin_blank_table();
-        parse_msg("error§" . _("Sie haben keine Berechtigung, Seiten zu editieren!"));
-        end_blank_table();
-        echo '</td></tr></table>';
-        include ('lib/include/html_end.inc.php');
-        die;
+        throw new AccessDeniedException(_('Sie haben keine Berechtigung, Seiten zu editieren!'));
     }
 
     // prevent malformed urls: keword must be set
     if (!$keyword) {
-        begin_blank_table();
-        parse_msg("error§" . _("Es wurde keine zu editierende Seite übergeben!"));
-        end_blank_table();
-        echo '</td></tr></table>';
-        include ('lib/include/html_end.inc.php');
-        die;
+        throw new InvalidArgumentException(_('Es wurde keine zu editierende Seite übergeben!'));
     }
     SkipLinks::addIndex(_("Seite bearbeiten"), 'main_content', 100);
 
@@ -190,12 +164,7 @@ if ($view=="listall") {
 } else if ($view=='editnew') { // edit a new page
 
     if (!$perm->have_studip_perm("autor", $SessSemName[1])) {
-        begin_blank_table();
-        parse_msg("error§" . _("Sie haben keine Berechtigung, Seiten zu editieren!"));
-        end_blank_table();
-        echo '</td></tr></table>';
-        include ('lib/include/html_end.inc.php');
-        die;
+        throw new AccessDeniedException(_('Sie haben keine Berechtigung, Seiten zu editieren!'));
     }
     // set lock
     setWikiLock($db, $user->id, $SessSemName[1], $keyword);
@@ -214,14 +183,14 @@ if ($view=="listall") {
         //
         // Page was edited and submitted
         //
-        $special=submitWikiPage($keyword, $version, Request::quoted('body'), $user->id, $SessSemName[1]);
+        submitWikiPage($keyword, $version, Request::quoted('body'), $user->id, $SessSemName[1]);
         $version=""; // $version="" means: get latest
 
     } else if ($cmd == "abortedit") { // Editieren abgebrochen
         //
         // Editing page was aborted
         //
-        releasePageLocks($keyword); // kill lock (set when starting to edit)
+        releasePageLocks($keyword, $user->id); // kill lock (set when starting to edit)
         if (Request::quoted('lastpage')) { // if editing new page was aborted, display last page again
             $keyword=Request::quoted('lastpage');
         }
@@ -262,7 +231,21 @@ if ($view=="listall") {
 
 } // end default action
 
-include 'lib/include/html_end.inc.php';
+if ($infobox) {
+    $layout = $GLOBALS['template_factory']->open('layouts/base');
+    $layout->infobox = array('picture' => 'infobox/wiki.jpg', 'content' => $infobox);
+} else {
+    $layout = $GLOBALS['template_factory']->open('layouts/base_without_infobox');
+}
+
+$layout->content_for_layout = ob_get_clean();
+
+if (in_array($cmd, words('show abortedit really_delete really_delete_all'))) {
+    // redirect to normal view to avoid duplicate edits on reload or back/forward
+    header('Location: ' . URLHelper::getURL('', compact('keyword')));
+} else {
+    echo $layout->render();
+}
 
 // Save data back to database.
 page_close()

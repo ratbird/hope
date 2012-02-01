@@ -1011,7 +1011,7 @@ function show_attachmentform()
     $print.="\n<div>";
     $print.="\n<input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"$max_filesize\">";
     $print.= "<input name=\"the_file\" type=\"file\" size=\"40\">";
-    $print.= LinkButton::create(_('hinzufügen'), array('name' => 'upload', 'onClick' => 'return STUDIP.OldUpload.upload_start(jQuery(this).closest('."'form'".'));'));
+    $print.= Button::create(_('hinzufügen'), 'upload', array('onClick' => 'return STUDIP.OldUpload.upload_start(jQuery(this).closest('."'form'".'));'));
     $print.= "\n<input type=\"hidden\" name=\"attachment_message_id\" value=\"".htmlready($attachment_message_id)."\">";
     $print.= "</div>";
 

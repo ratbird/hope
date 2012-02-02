@@ -36,6 +36,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
+use Studip\Button, Studip\LinkButton;
+
 if (version_compare(PHP_VERSION,'5','>=') && extension_loaded('xsl')) require_once('vendor/php4-to-php5/xslt-php4-to-php5.php');
 
 if (($o_mode != "direct") AND ($o_mode != "passthrough"))
@@ -145,10 +147,9 @@ else
         $export_weiter_button .= "<input type=\"hidden\" name=\"xml_file_id\" value=\"" . htmlReady($xml_file_id) . "\">";
         $export_weiter_button .= "<input type=\"hidden\" name=\"xslt_filename\" value=\"" . htmlReady($xslt_filename) . "\">";
         if (isset($jump))
-            $export_weiter_button .= '<center><a href="'. URLHelper::getLink("seminar_main.php?auswahl=$range_id&redirect_to=$jump") . '">'
-                                  .  makeButton("zurueck", "img") . "</a><br>";
+            $export_weiter_button .= '<center>' . LinkButton::create('<< ' . _('zurück'), URLHelper::getLink("seminar_main.php?auswahl=$range_id&redirect_to=$jump")) . "<br>";
         else
-            $export_weiter_button .= "<center><input type=\"IMAGE\" " . makeButton("zurueck", "src") . " name=\"back\" value=\"". _("Zur&uuml;ck")."\"><br>";
+            $export_weiter_button .= "<center>" . Button::create('<< ' . _('zurück'), 'back') . "<br>";
         $export_weiter_button .= "</center></form>";
 
         if ($xslt_process) {

@@ -36,6 +36,7 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
+use Studip\Button, Studip\LinkButton;
 
 require_once ("config.inc.php");   // Stud.IP - Konfigurationsdatei
 require_once ("$PATH_EXPORT/export_xslt_vars.inc.php");   // XSLT-Variablen
@@ -122,7 +123,7 @@ $export_pagecontent .= "<input type=\"hidden\" name=\"xslt_filename\" value=\"" 
 $export_pagecontent .= "<input type=\"hidden\" name=\"choose\" value=\"" . htmlReady($choose) . "\">";
 $export_pagecontent .= "<input type=\"hidden\" name=\"format\" value=\"" . htmlReady($format) . "\">";
 
-$export_weiter_button = "<center><input type=\"IMAGE\"" . makeButton("weiter", "src") . " name=\"\"></center></form>";
+$export_weiter_button = "<center>" . Button::create(_('weiter') . ' >>' ) . "</center></form>";
 
 $infobox = array(
     array(

@@ -37,6 +37,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
+use Studip\Button, Studip\LinkButton;
+
 $perm->check("tutor");
 
 require_once ($PATH_EXPORT.'/export_xslt_vars.inc.php');   // Liste der XSLT-Skripts
@@ -148,8 +150,8 @@ elseif (!isset($page) or ($page == 0)) // Seite 1 : Auswahl des Dateiformats
     $export_pagecontent .= "<input type=\"hidden\" name=\"choose\" value=\"" . htmlReady($choose) . "\">";
     $export_pagecontent .= "<input type=\"hidden\" name=\"xml_file_id\" value=\"" . htmlReady($xml_file_id) . "\">";
 
-    $export_weiter_button = "<br><center><input type=\"IMAGE\" " . makeButton("zurueck", "src") . " value=\"" . _("Zur&uuml;ck") . "\" name=\"back\">&nbsp;";
-    $export_weiter_button .= "<input type=\"IMAGE\" " . makeButton("weiter", "src") . " name=\"next\">";
+    $export_weiter_button = '<br><center><div class="button-group">' . Button::create('<< ' . _('zurück'), 'back' ) . "&nbsp;";
+    $export_weiter_button .= Button::create(_('weiter') . ' >>', 'next' ) . "</div>";
 
     $export_weiter_button .= "</center></form>";
 
@@ -218,11 +220,13 @@ elseif ($page == 1) // Seite 2 : Auswahl des XSLT-Scripts
     $export_pagecontent .= "<input type=\"hidden\" name=\"xml_file_id\" value=\"" . htmlReady($xml_file_id) . "\">";
     $export_pagecontent .= "<input type=\"hidden\" name=\"xslt_filename\" value=\"" . htmlReady($xslt_filename) . "\">";
 
-    $export_weiter_button = "<center><input type=\"IMAGE\" " . makeButton("zurueck", "src") . " value=\"" . _("Zur&uuml;ck") . "\" name=\"back\">&nbsp;";
-    $export_weiter_button .= "<input type=\"IMAGE\" " . makeButton("weiter", "src") . " name=\"next\"";
-    if ($skip_page_3 AND $XSLT_ENABLE)
-        $export_weiter_button .=  " onClick=\"return export_start();\"";
-    $export_weiter_button .=  "></center></form>";
+    $export_weiter_button = '<br><center><div class="button-group">' . Button::create('<< ' . _('zurück'), 'back' ) . "&nbsp;";
+    $button_params = array();
+    if ($skip_page_3 AND $XSLT_ENABLE) {
+        $button_params['onClick'] = 'return export_start();';
+    }
+    $export_weiter_button .= Button::create(_('weiter') . ' >>', 'next', $button_params);    
+    $export_weiter_button .=  "</div></center></form>";
 
 
     $infobox = array    (
@@ -274,11 +278,11 @@ elseif ($page == 2)  // Seite 3 : Download der Dateien
     $export_pagecontent .= "<input type=\"hidden\" name=\"xml_file_id\" value=\"" . htmlReady($xml_file_id) . "\">";
     $export_pagecontent .= "<input type=\"hidden\" name=\"xslt_filename\" value=\"" . htmlReady($xslt_filename) . "\">";
 
-    $export_weiter_button = "<center><input type=\"IMAGE\" " . makeButton("zurueck", "src") . " value=\"" . _("Zur&uuml;ck") . "\" name=\"back\">&nbsp;";
+    $export_weiter_button = "<center>" . Button::create('<< ' . _('zurück'), 'back') . "&nbsp;";
     if ($XSLT_ENABLE)
     {
         $export_pagecontent .= _("Um die Daten mit dem installierten XSLT-Prozessor in das gew&uuml;nschte Format zu bringen, klicken Sie bitte auf 'weiter'") . "<br><br>";
-        $export_weiter_button .= "<input type=\"IMAGE\" " . makeButton("weiter", "src") . " onClick=\"return export_start();\" name=\"next\">";
+        $export_weiter_button .= LinkButton::create(_('weiter') . ' >>', '#', array('onClick' => 'return export_start();', 'name' => 'next'));
     } else {
         $export_pagecontent .= "<br><br><br>";
     }

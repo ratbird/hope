@@ -31,6 +31,7 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
+use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
 
@@ -195,8 +196,8 @@ $cssSw = new cssClassSwitcher();
                     <?$cssSw->switchClass()?>
                     <tr>
                         <td class="<?=$cssSw->getClass()?>" colspan="2" align="center">
-                            <input type="image" name="block_submit" align="absmiddle" <?=makebutton('erstellen', 'src')?>>
-                            <a href="javascript:window.close()"><?=makebutton('schliessen')?></a>
+                            <?= Button::create(_('erstellen'), 'block_submit') ?>
+                            <?= LinkButton::create(_('schliessen'), 'javascript:window.close()') ?>
                         </td>
                     </tr>
                 </table>

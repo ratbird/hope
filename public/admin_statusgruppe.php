@@ -22,7 +22,7 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-
+use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
 unregister_globals();
@@ -278,9 +278,10 @@ if ($_REQUEST['cmd'] == 'deleteRole') {
         $statusgruppe->delete();
     } else {
         $msgs['info'][] = sprintf(_("Sind Sie sicher, dass Sie die Gruppe %s löschen möchten?"), '<b>'. htmlReady($statusgruppe->getName()) .'</b>')
-            . '<br><a href="'. URLHelper::getLink('?cmd=deleteRole&really=true&role_id='. $_REQUEST['role_id']) .'">'. makebutton('ja') .'</a>'
+            . '<br>'
+            . LinkButton::createAccept(_('JA!'), URLHelper::getURL('', array('cmd' => 'deleteRole', 'really' => 'true', 'role_id' => Request::get('role_id'))))
             . '&nbsp;&nbsp;&nbsp;&nbsp;'
-            . '<a href="'. URLHelper::getLink('') .'">'. makebutton('nein') .'</a>';
+            . LinkButton::createCancel(_('NEIN!'), URLHelper::getURL(''));
     }
 }
 

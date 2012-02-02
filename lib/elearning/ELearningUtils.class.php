@@ -11,6 +11,9 @@
 * @author   Arne Schröder <schroeder@data-quest.de>
 * @package  ELearning-Interface
 */
+
+use Studip\Button, Studip\LinkButton;
+
 class ELearningUtils
 {
     /**
@@ -135,7 +138,7 @@ class ELearningUtils
         }
         $output .=  "</select>";
         $output .=  "&nbsp;&nbsp;";
-        $output .=  "<input type=\"IMAGE\"" . makeButton("auswaehlen", "src") . " name=\"\" style=\"vertical-align:middle\">\n";
+        $output .=  Button::create(_('auswählen'));
         $output .= "<br>\n";
         $output .= "<br>\n";
         $output .= "</font>";
@@ -206,7 +209,7 @@ class ELearningUtils
         $output .= "<input name=\"search_key\" size=\"30\" style=\"vertical-align:middle;font-size:9pt;\" value=\"" . $search_key . "\">\n";
 
         $output .=  "&nbsp;";
-        $output .=  "<input type=\"IMAGE\"" . makeButton("suchen", "src") . " name=\"\" style=\"vertical-align:middle\">\n";
+        $output .=  Button::create(_('suchen'));
         $output .= "<br>\n";
         $output .= "<br>\n";
         $output .= "</font>";
@@ -247,7 +250,7 @@ class ELearningUtils
 //      $output .= "&nbsp;</td><td align=\"left\">";
         $output .= "</td><td align=\"right\" valign=\"middle\">";
         if (sizeof($ELEARNING_INTERFACE_MODULES[$cms]["types"]) > 1)
-            $output .=  "<input type=\"IMAGE\"" . makeButton("auswaehlen", "src") . " name=\"choose\" value=\"" . _("Ausw&auml;hlen") . "\" style=\"vertical-align:middle;\">";
+            $output .=  Button::create(_('auswählen'), 'choose');
         $output .= $link;
         $output .= "</td></tr>";
         $output .= "</table>";
@@ -279,9 +282,9 @@ class ELearningUtils
         $output .= "<input type=\"HIDDEN\" name=\"new_account_step\" value=\"1\">\n";
         $output .= "<input type=\"HIDDEN\" name=\"new_account_cms\" value=\"" . $my_account_cms . "\">\n";
         if ($connected_cms[$my_account_cms]->user->isConnected())
-            $output .=  "<input type=\"IMAGE\"" . makeButton("edit", "src") . " name=\"change\" value=\"" . _("Bearbeiten") . "\">";
+            $output .=  Button::create(_('bearbeiten'), 'change');
         else
-            $output .=  "<input type=\"IMAGE\"" . makeButton("erstellen", "src") . " name=\"create\" value=\"" . _("Erstellen") . "\">";
+            $output .=  Button::create(_('erstellen'), 'create');
         $output .= "</td></tr>";
         $output .= "</table>";
         $output .=  "</form>\n";
@@ -308,19 +311,19 @@ class ELearningUtils
 //      print_r($_POST);
 
         //Password was sent, but is to short
-        if (isset($ext_password_2) AND ! ($_REQUEST['go_back_x'] != "") AND ($_REQUEST['next_x'] != "") AND (strlen($ext_password_2) < 6))
+        if (isset($ext_password_2) AND ! Request::submitted('go_back') AND Request::submitted('next') AND (strlen($ext_password_2) < 6))
         {
             $messages["error"] .= _("Das Passwort muss mindestens 6 Zeichen lang sein!");
             $new_account_step--;
         }
-        elseif (isset($ext_password_2) AND ! ($_REQUEST['go_back_x'] != "") AND ($_REQUEST['next_x'] != "") AND ($ext_password != $ext_password_2))
+        elseif (isset($ext_password_2) AND ! Request::submitted('go_back')  AND Request::submitted('next') AND ($ext_password != $ext_password_2))
         {
             $messages["error"] .= _("Das Passwort entspricht nicht der Passwort-Wiederholung!");
             $new_account_step--;
         }
 
         // Benutzername was sent
-        if (($ext_username != "") AND ! ($_REQUEST['go_back_x'] != "") AND ($_REQUEST['assign_x'] != ""))
+        if (($ext_username != "") AND ! Request::submitted('go_back') AND Request::submitted('assign'))
         {
             $caching_status = $connected_cms[$new_account_cms]->soap_client->getCachingStatus();
             $connected_cms[$new_account_cms]->soap_client->setCachingStatus(false);
@@ -351,9 +354,9 @@ class ELearningUtils
             $connected_cms[$new_account_cms]->soap_client->setCachingStatus($caching_status);
         }
 
-        if ($_REQUEST['start_x'] != "")
+        if (Request::submitted('start'))
             $new_account_step = 1;
-        if ($_REQUEST['go_back_x'] != "")
+        if (Request::submitted('go_back'))
         {
             $new_account_step--;
             if ($new_account_step < 1)
@@ -362,10 +365,10 @@ class ELearningUtils
                 return false;
             }
         }
-        elseif (($_REQUEST['next_x'] != "") OR ($_REQUEST['assign_x'] != ""))
+        elseif (Request::submitted('next') OR Request::submitted('assign'))
             $new_account_step++;
 
-        if (($new_account_step == 2) AND ($_REQUEST['assign_x'] != ""))
+        if (($new_account_step == 2) AND Request::submitted('assign'))
         {
             // Assign existing Account
             $output .= "<a name='anker'></a>";
@@ -395,10 +398,10 @@ class ELearningUtils
             $output .= "</td><td class=\"steel1\" align=\"left\" valign=\"middle\">";
             $output .= "" . "<input name=\"ext_password\" type=\"PASSWORD\" size=\"30\" style=\"vertical-align:middle;font-size:9pt;\" value=\"" ."\">";
             $output .= "</td></tr><tr><td class=\"steel1\">&nbsp;</td><td class=\"steel1\" align=\"left\" valign=\"middle\">";
-            $output .=  "<br>&nbsp;<input type=\"IMAGE\"" . makeButton("bestaetigen", "src") . " name=\"next\" value=\"" . _("Best&auml;tigen") . "\"><br>";
+            $output .=  "<br>&nbsp;". Button::createAccept(_('bestätigen'), 'next') . "<br>";
             $output .= "</td></tr>";
             $output .=  "<tr><td align=\"center\" valign=\"middle\" colspan=\"2\"><br>";
-            $output .= "<input type=\"HIDDEN\" name=\"assign_x\" value=\"1\">\n";
+            $output .= "<input type=\"HIDDEN\" name=\"assign\" value=\"1\">\n";
             $output .= "<input type=\"HIDDEN\" name=\"new_account_step\" value=\"" . $new_account_step . "\">\n";
             $output .= "<input type=\"HIDDEN\" name=\"view\" value=\"" . $view . "\">\n";
             $output .= "<input type=\"HIDDEN\" name=\"ref_id\" value=\"" . $ref_id . "\">\n";
@@ -406,14 +409,14 @@ class ELearningUtils
             $output .= "<input type=\"HIDDEN\" name=\"new_account_cms\" value=\"" . $new_account_cms . "\">\n";
             $output .= "<input type=\"HIDDEN\" name=\"cms_select\" value=\"" . $cms_select . "\">\n";
             $output .= "<input type=\"HIDDEN\" name=\"search_key\" value=\"" . $search_key . "\">\n";
-            $output .=  "<input type=\"IMAGE\"" . makeButton("zurueck", "src") . " name=\"go_back\" value=\"" . _("Zur&uuml;ck") . "\"><br>\n";
+            $output .=  Button::create('<< ' . _('zurück'), 'go_back');
             $output .= "</td></tr>";
             $output .=  "</table>\n";
             $output .=  "</form>\n";
 
 //          getLoginForm();
         }
-        elseif (($new_account_step == 2) AND ($_REQUEST['next_x'] != ""))
+        elseif (($new_account_step == 2) AND Request::submitted('next'))
         {
             // Create new Account: ask for new password
             $output .= "<a name='anker'></a>";
@@ -443,7 +446,7 @@ class ELearningUtils
             $output .= "</td><td class=\"steel1\" align=\"left\" valign=\"middle\">";
             $output .= "" . "&nbsp;<input name=\"ext_password_2\" type=\"PASSWORD\" size=\"30\" style=\"vertical-align:middle;font-size:9pt;\" value=\"" ."\">";
             $output .= "</td></tr><tr><td class=\"steel1\">&nbsp;</td><td class=\"steel1\" align=\"left\" valign=\"middle\">";
-            $output .=  "<br>&nbsp;<input type=\"IMAGE\"" . makeButton("bestaetigen", "src") . " name=\"next\" value=\"" . _("Best&auml;tigen") . "\"><br>";
+            $output .=  "<br>&nbsp;" . Button::createAccept(_('bestätigen'), 'next') ."<br>";
             $output .= "</td></tr>";
             $output .=  "<tr><td align=\"center\" valign=\"middle\" colspan=\"2\"><br>";
             $output .= "<input type=\"HIDDEN\" name=\"next\" value=\"" . true . "\">\n";
@@ -454,13 +457,13 @@ class ELearningUtils
             $output .= "<input type=\"HIDDEN\" name=\"new_account_cms\" value=\"" . $new_account_cms . "\">\n";
             $output .= "<input type=\"HIDDEN\" name=\"cms_select\" value=\"" . $cms_select . "\">\n";
             $output .= "<input type=\"HIDDEN\" name=\"search_key\" value=\"" . $search_key . "\">\n";
-            $output .=  "<input type=\"IMAGE\"" . makeButton("zurueck", "src") . " name=\"go_back\" value=\"" . _("Zur&uuml;ck") . "\"><br>\n";
+            $output .=  Button::create('<< ' . _('zurück'), 'go_back');
             $output .= "</td></tr>";
             $output .=  "</table>\n";
             $output .=  "</form>\n";
 
         }
-        elseif (($new_account_step == 3) AND ($_REQUEST['next_x'] != ""))
+        elseif (($new_account_step == 3) AND Request::submitted('next'))
         {
             $output .= "<a name='anker'></a>";
             // Create new Account
@@ -490,7 +493,7 @@ class ELearningUtils
             $output .= "<table border=\"0\" cellspacing=0 cellpadding=6 width = \"99%\">";
             $output .= "<tr><td>\n";
             $output .= "<font size=\"-1\">";
-            if ($_REQUEST['start_x'] != "")
+            if (Request::submitted('start'))
                 $messages["info"] = sprintf(_("Sie versuchen zum erstem Mal ein Lernmodul des angebundenen Systems %s zu starten. Bevor Sie das Modul nutzen k&ouml;nnen, muss Ihrem Stud.IP-Benutzeraccount ein Account im angebundenen System zugeordnet werden."), $connected_cms[$new_account_cms]->getName()) . "<br><br>\n\n";
             if ($connected_cms[$new_account_cms]->user->isConnected())
             {
@@ -509,10 +512,10 @@ class ELearningUtils
             $output .= "<input type=\"HIDDEN\" name=\"search_key\" value=\"" . $search_key . "\">\n";
 
             $output .=  "<center>";
-            $output .=  "<input type=\"IMAGE\"" . makeButton("zurueck", "src") . " name=\"go_back\" value=\"" . _("Zur&uuml;ck") . "\">";
-            $output .=  "&nbsp;<input type=\"IMAGE\"" . makeButton("zuordnen", "src") . " name=\"assign\" value=\"" . _("Bestehenden Account zuordnen") . "\">";
+            $output .=  Button::create('<< ' . _('zurück'), 'go_back');
+            $output .=  Button::create(_('zuordnen'), 'assign', array('title' => _('Bestehenden Account zuordnen')));
             if (! $connected_cms[$new_account_cms]->user->isConnected())
-                $output .=  "&nbsp;<input type=\"IMAGE\"" . makeButton("weiter", "src") . " name=\"next\" value=\"" . _("Weiter") . "\">";
+                $output .=  Button::create(_('weiter') . ' >>', 'next');
             $output .=  "</center>\n";
             $output .= "</font>";
             $output .= "</td></tr>";
@@ -685,7 +688,7 @@ class ELearningUtils
                     ELearningUtils::loadClass($system_type);
                     $course_output[] = "<a href=\"" . $connected_cms[$system_type]->link->cms_link . "?" . "client_id=" . $connected_cms[$system_type]->getClientId() . "&cms_select=" . $system_type . "&ref_id=" . $crs_id . "&type=crs&target=start\" target=\"_blank\">".sprintf(_("Kurs in %s"), $connected_cms[$system_type]->getName())."</a>";
                     // gegebenenfalls zugeordnete Module aktualisieren
-                    if ($_REQUEST["update_x"]) {
+                    if (Request::submitted('update')) {
                         if ((method_exists($connected_cms[$system_type], "updateConnections"))) {
                             $connected_cms[$system_type]->updateConnections( $crs_id );
                         }
@@ -705,7 +708,7 @@ class ELearningUtils
             $output["update"] .= CSRFProtection::tokenTag();
             $output["update"] .= "<input type=\"HIDDEN\" name=\"view\" value=\"" . $view . "\">\n";
             $output["update"] .= "<input type=\"HIDDEN\" name=\"cms_select\" value=\"" . $cms_select . "\">\n";
-            $output["update"] .= "<input type=\"IMAGE\" " . makeButton("aktualisieren", "src") . " border=0 value=\"1\" name=\"update\">";
+            $output["update"] .= Button::create(_('aktualisieren'), 'update');
             $output["update"] .= "</form>";
         }
 
@@ -738,19 +741,20 @@ class ELearningUtils
         while ($row = $rs->fetch())
             $cmsystems[$row["system_type"]]["modules"] = $row['c'];
 
-        if (isset($_REQUEST['delete_x'])) {
+        if (Request::submitted('delete')) {
             $messages["info"] .= "<form method=\"POST\" action=\"" . UrlHelper::getLink() . "\">";
             $messages["info"] .= CSRFProtection::tokenTag();
             $messages["info"] .= "<table>";
             $messages["info"] .= "<tr><td>&nbsp;</td></tr>";
             $messages["info"] .= "<tr><td>" . sprintf(_("Durch das L&ouml;schen der Daten zum System mit dem Index \"%s\" werden %s Konfigurationseintr&auml;ge und Verkn&uuml;pfungen von Stud.IP-Veranstaltungen und -User-Accounts unwiederbringlich aus der Stud.IP-Datenbank entfernt. Wollen Sie diese Daten jetzt l&ouml;schen?"), $_REQUEST['delete_cms'], $cmsystems[$_REQUEST['delete_cms']]["accounts"]+$cmsystems[$_REQUEST['delete_cms']]["modules"]+$cmsystems[$_REQUEST['delete_cms']]["config"] ) . "</td></tr>";
-            $messages["info"] .= "<tr><td align=\"center\"><input type=\"hidden\" name=\"delete_cms\" value=\"".$_REQUEST['delete_cms']."\"><input type=\"IMAGE\" " . makeButton("alleloeschen", "src") . " border=0 value=\"" . _("alle l&ouml;schen") . "\" name=\"confirm_delete\">&nbsp;<input type=\"IMAGE\" " . makeButton("abbrechen", "src") . " border=0 value=\"" . _("abbrechen") . "\" name=\"abbruch\"></td></tr>";
+            $messages["info"] .= "<tr><td align=\"center\"><input type=\"hidden\" name=\"delete_cms\" value=\"".$_REQUEST['delete_cms']."\">";
+            $messages["info"] .= '<div class="button-group">' . Button::create(_('alle löschen'), 'confirm_delete') . Button::createCancel(_('abbrechen'), 'abbruch') . '<div></td></tr>';
             $messages["info"] .= "<tr><td align=\"center\"></td></tr>";
             $messages["info"] .= "</table>";
             $messages["info"] .= "</form>";
         }
 
-        if (isset($_REQUEST['confirm_delete_x'])) {
+        if (Request::submitted('confirm_delete')) {
             unset($cmsystems[$_REQUEST['delete_cms']]);
 //          deleteCMSData($_REQUEST['delete_cms']);
             $messages["info"] .= _("Daten wurden gel&ouml;scht.");
@@ -796,7 +800,7 @@ class ELearningUtils
                 if ($data["config"])
                     $output .= "<tr><td colspan=\"2\">". sprintf(_("%s Eintr&auml;ge in der config-Tabelle der Stud.IP-Datenbank."), $data["config"]) . "</td></tr>";
                 $output .= "<tr><td colspan=\"2\">&nbsp;</td></tr>";
-                $output .= "<tr><td align=\"center\" colspan=\"2\"><input type=\"hidden\" name=\"delete_cms\" value=\"".$cms_type."\"><input type=\"IMAGE\" " . makeButton("loeschen", "src") . " border=0 value=\"" . $cms_type . "\" name=\"delete\"></td></tr>";
+                $output .= "<tr><td align=\"center\" colspan=\"2\"><input type=\"hidden\" name=\"delete_cms\" value=\"".$cms_type."\">" . Button::create(_('löschen'), 'delete') . "</td></tr>";
                 $output .= "<tr><td colspan=\"2\">&nbsp;</td></tr>";
                 $output .= "</table>";
                 $output .= "</form>";

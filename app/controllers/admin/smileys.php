@@ -47,14 +47,14 @@ class Admin_SmileysController extends AuthenticatedController
      * Administrtion view for smileys
      */
     function index_action()
-    {        
+    {
         $this->view              = Request::option('view', Smiley::getFirstUsedCharacter() ?: 'a');
         $this->smileys           = Smiley::getGrouped($this->view);
         $this->favorites_enabled = SmileyFavorites::isEnabled();
 
         $this->addInfobox($this->view);
     }
-    
+
     /**
      * Displays edit form and performs according actions upon submit
      *
@@ -67,7 +67,7 @@ class Admin_SmileysController extends AuthenticatedController
 
         if (Request::submitted('edit')) {
             $success = true;
-            
+
             $name = Request::get('name', $smiley->name);
             if ($smiley->name != $name) { // rename smiley
                 if (Smiley::getByName($name)->id) {
@@ -128,10 +128,10 @@ class Admin_SmileysController extends AuthenticatedController
             $message = sprintf( _('Smiley "%s" erfolgreich gelöscht.'), $name);
         }
         PageLayout::postMessage(Messagebox::success($message));
-        
+
         $this->redirect('admin/smileys?view=' . $view);
     }
-    
+
     /**
      * Counts all smiley occurences systemwide and updates the smileys' counters
      *
@@ -143,9 +143,9 @@ class Admin_SmileysController extends AuthenticatedController
         $message  = sprintf(_('%d Zählerstände aktualisiert'), $updated);
         $msg = $updated > 0
             ? Messagebox::success($message)
-            : Messagebox::info($message);        
+            : Messagebox::info($message);
         PageLayout::postMessage($msg);
-        
+
         $this->redirect('admin/smileys?view=' . $view);
     }
 
@@ -179,12 +179,12 @@ class Admin_SmileysController extends AuthenticatedController
      *
      * @param String $view View to return to if canceled
      */
-    function upload_action($view) {        
+    function upload_action($view) {
         if (!Request::submitted('upload')) {
             $this->view = $view;
             return;
         }
-        
+
         // File submitted?
         $upload = $_FILES['smiley_file'];
         if (empty($upload) or empty($upload['name'])) {
@@ -192,7 +192,7 @@ class Admin_SmileysController extends AuthenticatedController
             PageLayout::postMessage(Messagebox::error($error));
             return;
         }
-        
+
         // Error upon upload?
         if ($upload['error']) {
             $error = _('Es gab einen Fehler beim Upload. Bitte versuchen Sie es erneut.');
@@ -233,7 +233,7 @@ class Admin_SmileysController extends AuthenticatedController
             PageLayout::postMessage(Messagebox::error($error));
             return;
         }
-        
+
         // set permissions for uploaded file
         chmod($destination, 0666 & ~umask());
 
@@ -249,7 +249,7 @@ class Admin_SmileysController extends AuthenticatedController
         // Return to index and display the view the uploaded smiley is in
         $this->redirect('admin/smileys?view=' . $smiley_file{0});
     }
-    
+
     /**
      * Extends this controller with neccessary infobox
      *
@@ -268,7 +268,7 @@ class Admin_SmileysController extends AuthenticatedController
             'view'       => $view,
         ));
         $statistics = $factory->render('statistics', Smiley::getStatistics());
-        
+
         // :Filters
         $this->addToInfobox(_('Filter'), $filter, 'icons/16/black/search.png');
 

@@ -2,8 +2,8 @@
 use Studip\Button;
 
 // divide smiley array in equal chunks, spillover from left to right
-$columns   = 3;
 $count     = count($smileys);
+$columns   = min(3, ceil($count / 5));
 
 $max       = floor($count / $columns);
 $spillover = $count % $columns;
@@ -74,6 +74,7 @@ $data = array_filter($data);
         <div class="clear"></div>
 
         <div id="layout_container">
+            <?= implode(PageLayout::getMessages()) ?>
         <? if (!$count): ?>
             <strong>
                 <?= $view == 'favorites'
@@ -85,7 +86,7 @@ $data = array_filter($data);
                 <tr>
                 <? foreach ($data as $smileys): ?>
                     <td valign="top" align="center">
-                        <table class="default">
+                        <table class="smiley-column default">
                             <thead>
                                 <tr>
                                     <th><?= _('Bild') ?></th>

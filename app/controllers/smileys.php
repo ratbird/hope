@@ -68,13 +68,28 @@ class SmileysController extends AuthenticatedController
      * @param String $view  View to return to
      */
     function favor_action($id, $view) {
-        $favorites = new SmileyFavorites($GLOBALS['user']->id);
-        $state = $favorites->toggle($id);
+        try {
+            $favorites = new SmileyFavorites($GLOBALS['user']->id);
+            $state = $favorites->toggle($id); 
+            
+            $message = $state
+                     ? _('Der Smiley wurde zu Ihren Favoriten hinzugefügt.')
+                     : _('Der Smiley gehört nicht mehr zu Ihren Favoriten.');
+            $msg_box = MessageBox::success($message);
+        } catch (OutOfBoundsException $e) {
+            $state = $favorites->contain($id);
+            $message = _('Maximale Favoritenzahl erreicht. Vielleicht sollten Sie mal ausmisten? :)');
+            $msg_box = Messagebox::error($message);
+        }
 
         if (Request::isXhr()) {
             $this->response->add_header('Content-Type', 'application/json');
-            $this->render_text(json_encode($state));
+            $this->render_text(json_encode(array(
+                'state'   => $state,
+                'message' => utf8_encode($msg_box),
+            )));
         } else {
+            PageLayout::postMessage($msg_box);
             $this->redirect('smileys/index/' . $view . '#smiley' . $id);
         }
     }

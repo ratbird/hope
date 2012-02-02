@@ -1,5 +1,8 @@
 <?
 # Lifter010: TODO
+
+use Studip\Button, Studip\LinkButton;
+
 ?>
 <? if (isset($flash['error'])): ?>
     <?= MessageBox::error($flash['error'], $flash['error_detail']) ?>
@@ -91,7 +94,10 @@
 <? endif;?>
     <tr>
         <td>
-            <a href="<?=$controller->url_for('admin/configuration/configuration')?>"><?= makebutton('abbrechen', 'img', _('Zurück zur Übersicht'))?></a>
+            <?= LinkButton::createCancel(
+                    _('abbrechen'),
+                    $controller->url_for('admin/configuration/configuration')
+                    array('title' => _('Zurück zur Übersicht'))) ?>
         </td>
     </tr>
 </table>

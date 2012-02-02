@@ -1,5 +1,8 @@
 <?
 # Lifter010: TODO
+
+use Studip\Button, Studip\LinkButton;
+
 foreach ($show_entry['seminars'] as $sem_id) {
     $seminars[] = Seminar::getInstance($sem_id);
 }
@@ -30,13 +33,23 @@ foreach ($show_entry['seminars'] as $sem_id) {
                             <? $cycle_id = CalendarScheduleModel::getSeminarCycleId($seminar, $show_entry['start'], $show_entry['end']) ?>
                             <? $visible = CalendarScheduleModel::isSeminarVisible($seminar->getId(), $cycle_id) ?>
 
-                            <a id="<?= $seminar->getId() ?>_<?= $cycle_id ?>_hide" href="<?= $controller->url_for('calendar/schedule/adminbind/'. $seminar->getId() .'/'. $cycle_id .'/0') ?>" onClick="STUDIP.Schedule.instSemUnbind('<?= $seminar->getId() ?>', '<?= $cycle_id ?>'); return false;" <?= $visible ? '' : 'style="display: none"' ?>>
-                                <?= makebutton('ausblenden') ?>
-                            </a>
+                            <?= LinkButton::create(
+                                    _('ausblenden'),
+                                    $controller->url_for('calendar/schedule/adminbind/'. $seminar->getId() .'/'. $cycle_id .'/0'),
+                                    array(
+                                        'id'      => $seminar->getId() . '_' . $cycle_id . '_hide',
+                                        'onclick' => "STUDIP.Schedule.instSemUnbind('" .$seminar->getId() . "','" . $cycle_id "'); return false;",
+                                        'style'   => ($visible ? '' : 'display: none')
+                                    )) ?>
 
-                            <a id="<?= $seminar->getId() ?>_<?= $cycle_id ?>_show" href="<?= $controller->url_for('calendar/schedule/adminbind/'. $seminar->getId() .'/'. $cycle_id .'/1') ?>" onClick="STUDIP.Schedule.instSemBind('<?= $seminar->getId() ?>', '<?= $cycle_id ?>'); return false;" <?= $visible ? 'style="display: none"' : '' ?>>
-                                <?= makebutton('einblenden') ?>
-                            </a>
+                            <?= LinkButton::create(
+                                    _('einblenden'),
+                                    $controller->url_for('calendar/schedule/adminbind/'. $seminar->getId() .'/'. $cycle_id .'/1'),
+                                    array(
+                                        'id'      => $seminar->getId() . '_' . $cycle_id . '_show',
+                                        'onclick' => "STUDIP.Schedule.instSemBind('" .$seminar->getId() . "','" . $cycle_id "'); return false;",
+                                        'style'   => ($visible ?  'display: none' : '')
+                                    )) ?>
                         </td>
                     </tr>
                 <? endforeach ?>
@@ -45,9 +58,10 @@ foreach ($show_entry['seminars'] as $sem_id) {
         <br>
 
         <div style="text-align: center">
-            <a href="<?= $controller->url_for('calendar/schedule') ?>" onClick="return STUDIP.Schedule.hideInstOverlay('#edit_inst_entry')">
-                <?= makebutton('schliessen') ?>
-            </a>
+            <?= LinkButton::createCancel(
+                    _('schliessen'), 
+                    $controller->url_for('calendar/schedule'),
+                    array('onclick' => 'return STUDIP.Schedule.hideInstOverlay("#edit_inst_entry")')) ?>
         </div>
     </form>
 </div>

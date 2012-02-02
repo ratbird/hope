@@ -1,5 +1,8 @@
 <?
 # Lifter010: TODO
+
+use Studip\Button, Studip\LinkButton;
+
 ?>
 <div id="schedule_new_entry" style="display: none;">
     <div id="new_entry_drag" class="window_heading">
@@ -22,11 +25,12 @@
 
         <br>
         <div style="text-align: center">
-            <input type="image" <?= makebutton('speichern', 'src') ?>>
+            <?= Button::createAccept(_('speichern'))?>
+            <?= LinkButton::createCancel(_('abbrechen'), '#', array('onclick' => 'STUDIP.Schedule.cancelNewEntry();')) ?>
+
             <input type="hidden" id="new_entry_start_hour" name="start_hour" value="">
             <input type="hidden" id="new_entry_end_hour" name="end_hour" value="">
             <input type="hidden" id="new_entry_day" name="day" value="">
-            <span onClick="STUDIP.Schedule.cancelNewEntry();"><?= makebutton('abbrechen') ?></span>
         </div>
 
     </form>

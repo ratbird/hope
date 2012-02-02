@@ -1,5 +1,8 @@
 <?
 # Lifter010: TODO
+
+use Studip\Button, Studip\LinkButton;
+
 ?>
 <h2><?= _('Benutzermigration') ?></h2>
 
@@ -43,7 +46,7 @@
     </tr>
     <tr>
         <td colspan="2" align="center">
-            <?= makebutton('umwandeln', 'input', _('Den ersten Benutzer in den zweiten Benutzer migrieren')) ?>
+            <?= Button::create(_('umwandeln'), array('title' => _('Den ersten Benutzer in den zweiten Benutzer migrieren')) ?>
         </td>
     </tr>
 </table>

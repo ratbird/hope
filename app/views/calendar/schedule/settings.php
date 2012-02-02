@@ -1,5 +1,8 @@
 <?
 # Lifter010: TODO
+
+use Studip\Button, Studip\LinkButton;
+
 ?>
 <div id="schedule-settings-dialog-shadow"></div>
 <div id="schedule_settings" class="edit_entry">
@@ -62,10 +65,11 @@
 
         <div style="text-align: center; clear: both">
             <br>
-            <input type="image" <?= makebutton('speichern', 'src') ?>>
-            <a href="<?= $controller->url_for('calendar/schedule') ?>" onClick="jQuery('#schedule_settings').remove();jQuery('#schedule-settings-dialog-shadow').remove(); return false">
-                <?= makebutton('abbrechen') ?>
-            </a>
+            <?= Button::createSuccess(_('speichern')) ?>
+            <?= LinkButton::createCancel(
+                    _('abbrechen'),
+                    $controller->url_for('calendar/schedule'),  
+                    array('onclick' => 'jQuery("#schedule_settings,#schedule-settings-dialog-shadow").remove(); return false')) ?>
         </div>
     </form>
 </div>

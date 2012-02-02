@@ -1,5 +1,8 @@
 <?
 # Lifter010: TODO
+
+use Studip\Button, Studip\LinkButton;
+
 ?>
 <div id="edit_entry" class="schedule_edit_entry" <?= $show_entry ? '' : 'style="display: none"' ?>>
     <div id="edit_entry_drag" class="window_heading">Termindetails bearbeiten</div>
@@ -44,16 +47,22 @@
         <textarea name="entry_content" style="width: 98%" rows="7"><?= htmlReady($show_entry['content']) ?></textarea>
         <br>
         <div style="text-align: center">
-            <input type="image" <?= makebutton('speichern', 'src') ?> style="margin-right: 20px;">
+            <?= Button::createAccept(_('speichern'), array('style' => 'margin-right: 20px')) ?>
 
             <? if ($show_entry['id']) : ?>
-            <a href="<?= $controller->url_for('calendar/schedule/delete/'. $show_entry['id']) ?>" style="margin-right: 20px;"><?= makebutton('loeschen') ?></a>
+                <?= LinkButton::create(
+                        _('löschen'),
+                        $controller->url_for('calendar/schedule/delete/'. $show_entry['id']),
+                        array('style' => 'margin-right: 20px')) ?>
             <? endif ?>
 
             <? if ($show_entry) : ?>
-            <a href="<?= $controller->url_for('calendar/schedule') ?>" onClick="STUDIP.Schedule.cancelNewEntry(); STUDIP.Calendar.click_in_progress = false;return false;"><?= makebutton('abbrechen') ?></a>
+                <?= LinkButton::createCancel(
+                        _('abbrechen'),
+                        $controller->url_for('calendar/schedule'),
+                        array('onclick' => 'STUDIP.Schedule.cancelNewEntry(); STUDIP.Calendar.click_in_progress = false;return false;')) ?>
             <? else: ?>
-            <a href="javascript:STUDIP.Schedule.cancelNewEntry()"><?= makebutton('abbrechen') ?></a>
+                <?= LinkButton::createCancel(_('abbrechen'), 'javascript:STUDIP.Schedule.cancelNewEntry()') ?>
             <? endif ?>
         </div>
     </form>

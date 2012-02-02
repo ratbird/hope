@@ -1,6 +1,8 @@
 <?
 # Lifter010: TODO
 
+use Studip\Button, Studip\LinkButton;
+
 if (!$show_entry) return;
 
 foreach ($show_entry['seminars'] as $sem_id) {
@@ -35,9 +37,9 @@ foreach ($show_entry['seminars'] as $sem_id) {
         <br>
 
         <div style="text-align: center">
-            <a href="<?= $controller->url_for('calendar/schedule') ?>" onClick="return STUDIP.Schedule.hideInstOverlay('#edit_inst_entry')">
-                <?= makebutton('schliessen') ?>
-            </a>
+            <?= LinkButton::createCancel(_('schliessen'),
+                                         $controller->url_for('calendar/schedule'),
+                                         array('onclick' => 'return STUDIP.Schedule.hideInstOverlay("#edit_inst_entry")')) ?>
         </div>
     </form>
 </div>

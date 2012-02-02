@@ -1,5 +1,8 @@
 <?
 # Lifter010: TODO
+
+use Studip\Button, Studip\LinkButton;
+
 ?>
 <? if (isset($flash['error'])): ?>
     <?= MessageBox::error($flash['error'], $flash['error_detail']) ?>
@@ -127,7 +130,7 @@
         <tfoot>
             <tr>
                 <td colspan="3">
-                    <?= makebutton('eintragen', 'input', false, 'submit') ?>
+                    <?= Button::create(_('eintragen'), 'submit') ?>
                     <input type="image" name="preview" title="<?= _('Vorschau') ?>"
                         style="vertical-align: middle;"
                         src="<?= Assets::image_path('icons/16/blue/question-circle.png') ?>">

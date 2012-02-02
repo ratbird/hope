@@ -15,6 +15,9 @@
  * the License, or (at your option) any later version.
  */
 
+
+use Studip\Button, Studip\LinkButton;
+
 require_once("ConnectedLink.class.php");
 
 global $ABSOLUTE_PATH_STUDIP;
@@ -84,7 +87,7 @@ class PmWikiConnectedLink extends ConnectedLink
             <input type='hidden'    name='_range_id'        value='<?= $range_id ?>'>
             <input type='hidden'    name='_server'          value='<?= $GLOBALS['STUDIP_INSTALLATION_ID'] ?>'>
             <input type='hidden'    name='_context'         value='<?= $context ?>'>
-            <input type='image'     alt='starten'                        <?= makeButton("starten", "src")?>>
+            <?= Button::createAccept(_('starten')) ?>
 
         </form>
 
@@ -120,13 +123,11 @@ class PmWikiConnectedLink extends ConnectedLink
 
             <?php if ($connected_cms[$this->cms_type]->content_module[$current_module]->isConnected()) : ?>
 
-                &nbsp;<input type="image" <?= makeButton("entfernen", "src") ?> border=0
-                                    value="<?= _("Entfernen") ?>" name="remove">
+                &nbsp;<?= Button::create(_('entfernen'), 'remove') ?>
 
             <?php else :?>
 
-                &nbsp;<input type="image" <?= makeButton("hinzufuegen", "src") ?> border=0
-                                    value="<?= _("Hinzuf&uuml;gen") ?>" name="add"><br>
+                &nbsp;<?= Button::create(_('hinzufügen'), 'add') ?>
 
             <?php endif ; ?>
 

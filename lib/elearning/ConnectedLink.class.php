@@ -14,6 +14,9 @@
 * @module       ConnectedLink
 * @package  ELearning-Interface
 */
+
+use Studip\Button, Studip\LinkButton;
+
 class ConnectedLink
 {
     var $cms_type;
@@ -53,7 +56,7 @@ class ConnectedLink
         $output .= "<input type=\"HIDDEN\" name=\"cms_select\" value=\"" . $cms_select . "\">\n";
         $output .= "<input type=\"HIDDEN\" name=\"new_account_cms\" value=\"" . $this->cms_type . "\">\n";
         $output .= "<input type=\"HIDDEN\" name=\"new_account_step\" value=\"0\">\n";
-        $output .= "<input type=\"IMAGE\" " . makeButton("starten", "src") . " border=0 value=\"" . _("Starten") . "\" name=\"start\">";
+        $output .= Button::createAccept(_('starten'), 'start');
         $output .= "</form>";
         return $output;
     }
@@ -91,9 +94,9 @@ class ConnectedLink
         $output .= "<input type=\"HIDDEN\" name=\"module_system_type\" value=\"" . $this->cms_type . "\">\n";
 
         if ($connected_cms[$this->cms_type]->content_module[$current_module]->isConnected())
-            $output .= "&nbsp;<input type=\"IMAGE\" " . makeButton("entfernen", "src") . " border=0 value=\"" . _("Entfernen") . "\" name=\"remove\">";
+            $output .= "&nbsp;" . Button::create(_('entfernen'), 'remove');
         else
-            $output .= "&nbsp;<input type=\"IMAGE\" " . makeButton("hinzufuegen", "src") . " border=0 value=\"" . _("Hinzuf&uuml;gen") . "\" name=\"add\">";
+            $output .= "&nbsp;" . Button::create(_('hinzufügen'), 'add');
         $output .= "</form>";
 
         return $output;

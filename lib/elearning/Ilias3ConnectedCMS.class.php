@@ -3,6 +3,9 @@
 # Lifter007: TODO
 # Lifter003: TODO
 # Lifter010: TODO
+
+use Studip\Button, Studip\LinkButton;
+
 require_once "ConnectedCMS.class.php";
 
 /**
@@ -208,7 +211,7 @@ class Ilias3ConnectedCMS extends ConnectedCMS
 
         echo "</td></tr>";
         echo "</table>";
-        echo "<center><input type=\"IMAGE\" " . makeButton("uebernehmen", "src") . " border=0 value=\"" . _("Abschicken") . "\" name=\"submit\"></center><br>";
+        echo "<center>" . Buttton::create(_('übernehmen'), 'submit') . "</center><br>";
         echo "<br>\n";
 
         parent::getPreferences();

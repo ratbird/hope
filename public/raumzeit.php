@@ -561,11 +561,11 @@ STUDIP.RoomRequestDialog.reloadUrlOnClose = '<?= UrlHelper::getUrl()?>';
                         <?= _("Raumanfrage") ?>
                             <? if ($request_status && $request_status == 'open') {
                             ?>
-                                <?= Linkbutton::create(_('bearbeiten'), URLHelper::getURL('dispatch.php/course/room_requests/edit/' . $sem->getId(), array('request_id' => RoomRequest::existsByCourse($id))), array('onclick' => 'STUDIP.RoomRequestDialog.initialize(this.href.replace("edit","edit_dialog"));return false;')) ?>
+                                <?= Linkbutton::create(_('bearbeiten'), URLHelper::getURL('dispatch.php/course/room_requests/edit/' . $sem->getId(), array('request_id' => RoomRequest::existsByCourse($id))), array('onclick' => "STUDIP.RoomRequestDialog.initialize(this.href.replace('edit','edit_dialog'));return false;")) ?>
                             <?
                             } else {
                             ?>
-                                <?= Linkbutton::create(_('erstellen'), URLHelper::getURL('dispatch.php/course/room_requests/edit/' . $sem->getId(), array('new_room_request_type' => 'course')), array('onclick' => 'STUDIP.RoomRequestDialog.initialize(this.href.replace("edit","edit_dialog"));return false;')) ?>
+                                <?= Linkbutton::create(_('erstellen'), URLHelper::getURL('dispatch.php/course/room_requests/edit/' . $sem->getId(), array('new_room_request_type' => 'course')), array('onclick' => "STUDIP.RoomRequestDialog.initialize(this.href.replace('edit','edit_dialog'));return false;")) ?>
                             <?
                             } ?>
                         <? if ($request_status && $request_status == 'open') { ?>

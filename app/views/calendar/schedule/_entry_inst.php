@@ -38,7 +38,7 @@ foreach ($show_entry['seminars'] as $sem_id) {
                                     $controller->url_for('calendar/schedule/adminbind/'. $seminar->getId() .'/'. $cycle_id .'/0'),
                                     array(
                                         'id'      => $seminar->getId() . '_' . $cycle_id . '_hide',
-                                        'onclick' => "STUDIP.Schedule.instSemUnbind('" .$seminar->getId() . "','" . $cycle_id "'); return false;",
+                                        'onclick' => "STUDIP.Schedule.instSemUnbind('" . $seminar->getId() . "','" . $cycle_id "'); return false;",
                                         'style'   => ($visible ? '' : 'display: none')
                                     )) ?>
 
@@ -47,7 +47,7 @@ foreach ($show_entry['seminars'] as $sem_id) {
                                     $controller->url_for('calendar/schedule/adminbind/'. $seminar->getId() .'/'. $cycle_id .'/1'),
                                     array(
                                         'id'      => $seminar->getId() . '_' . $cycle_id . '_show',
-                                        'onclick' => "STUDIP.Schedule.instSemBind('" .$seminar->getId() . "','" . $cycle_id "'); return false;",
+                                        'onclick' => "STUDIP.Schedule.instSemBind('" . $seminar->getId() . "','" . $cycle_id "'); return false;",
                                         'style'   => ($visible ?  'display: none' : '')
                                     )) ?>
                         </td>
@@ -61,7 +61,7 @@ foreach ($show_entry['seminars'] as $sem_id) {
             <?= LinkButton::createCancel(
                     _('schliessen'), 
                     $controller->url_for('calendar/schedule'),
-                    array('onclick' => 'return STUDIP.Schedule.hideInstOverlay("#edit_inst_entry")')) ?>
+                    array('onclick' => "return STUDIP.Schedule.hideInstOverlay('#edit_inst_entry')")) ?>
         </div>
     </form>
 </div>

@@ -39,7 +39,7 @@ foreach ($show_entry['seminars'] as $sem_id) {
         <div style="text-align: center">
             <?= LinkButton::createCancel(_('schliessen'),
                                          $controller->url_for('calendar/schedule'),
-                                         array('onclick' => 'return STUDIP.Schedule.hideInstOverlay("#edit_inst_entry")')) ?>
+                                         array('onclick' => "return STUDIP.Schedule.hideInstOverlay('#edit_inst_entry')")) ?>
         </div>
     </form>
 </div>

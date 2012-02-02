@@ -9,7 +9,7 @@
         </span>
         <div style="margin-top: 1em;">
             <?= LinkButton::createAccept(_('JA!'), $approvalLink) ?>
-            <?= LinkButton::createCancel(_('NEIN!'), $approvalLink) ?>
+            <?= LinkButton::createCancel(_('NEIN!'), $disapprovalLink) ?>
         </div>
     </div>
 </div>

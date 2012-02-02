@@ -1,5 +1,6 @@
 <?
 # Lifter010: TODO
+    use Studip\Button;
 ?>
 <form action="<?= URLHelper::getLink() ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
@@ -48,9 +49,9 @@
 
     <input type="hidden" name="cmd" value="<?= ($edit_role) ? 'doEditRole' : 'addRole' ?>">
     <? if ($edit_role) :?>
-    <?= makebutton('speichern', 'input') ?>
+    <?= Button::createAccept(_('speichern'), 'speichern'); ?>
     <? else: ?>
-    <?= makebutton('eintragen', 'input') ?>
+    <?= Button::create(_('eintragen'), 'eintragen'); ?>
     <? endif; ?>
 
     <input type="hidden" name="role_id" value="<?= $role_data['id'] ?>">

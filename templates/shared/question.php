@@ -1,5 +1,6 @@
 <?
 # Lifter010: TODO
+    use Studip\LinkButton;
 ?>
 <div class="modalshadow">
     <div class="messagebox messagebox_modal">
@@ -7,12 +8,8 @@
             <?= formatReady($question) ?>
         </span>
         <div style="margin-top: 1em;">
-            <a href="<?= $approvalLink ?>">
-                <?= makebutton('ja') ?>
-            </a>
-            <a href="<?= $disapprovalLink ?>" style="margin-left: 1em;">
-                <?= makebutton('nein') ?>
-            </a>
+            <?= LinkButton::createAccept(_('JA!'), $approvalLink) ?>
+            <?= LinkButton::createCancel(_('NEIN!'), $approvalLink) ?>
         </div>
     </div>
 </div>

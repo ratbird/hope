@@ -1,5 +1,6 @@
 <?
 # Lifter010: TODO
+    use Studip\Button, Studip\LinkButton;
 ?>
 <?
     $cssSw = new cssClassSwitcher();
@@ -74,10 +75,9 @@
                 <tr>
                     <td class="steel1" align="right" colspan="2">
                         <br>
-                        <a href="<?= URLHelper::getLink('?role_id='. $role->getId(). '#'. $role->getId()) ?>">
-                            <?= makebutton('zurueck') ?>
-                        </a>
-                        <input type="image" <?= makebutton('speichern', 'src') ?> align="absbottom">
+                        
+                        <?= LinkButton::create('<< ' . _('zurück'), URLHelper::getURL('', array('role_id' => $role->getId())) . '#' . $role->getId()) ?>
+                        <?= Button::createAccept(_('speichern'), 'speichern') ?>
                     </td>
                 </tr>
             </table>

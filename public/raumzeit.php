@@ -23,7 +23,7 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-
+use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
 
@@ -255,7 +255,7 @@ STUDIP.RoomRequestDialog.reloadUrlOnClose = '<?= UrlHelper::getUrl()?>';
                                 <option value="-1"<?=($sem->getEndSemester() == -1) ? 'selected' : ''?>><?=_("unbegrenzt")?></option>
                         </select>
 
-                        <input type="image" <?=makebutton('uebernehmen', 'src')?> align="absmiddle">
+                        <?= Button::create(_('übernehmen'), 'uebernehmen') ?>
                         <input type="hidden" name="cmd" value="selectSemester">
                         <? } else {
                             switch ($sem->getEndSemester()) {
@@ -416,9 +416,7 @@ STUDIP.RoomRequestDialog.reloadUrlOnClose = '<?= UrlHelper::getUrl()?>';
                     <td class="blank" colspan="9">
                         <br>
                         <?=_("Regelmäßigen Zeiteintrag")?>
-                        <a href="<?= URLHelper::getLink('?cmd=addCycle#newCycle') ?>">
-                            <?= makebutton('hinzufuegen') ?>
-                        </a>
+                        <?= LinkButton::create(_('hinzufügen'), URLHelper::getURL('', array('cmd' => 'addCycle')) . '#newCycle') ?>
                     </td>
                 </tr>
                 <? } ?>
@@ -515,10 +513,8 @@ STUDIP.RoomRequestDialog.reloadUrlOnClose = '<?= UrlHelper::getUrl()?>';
                         </script>
 
                         <?= sprintf (_('Einen neuen Termin %s oder mehrere Termine mit dem Blockveranstaltungsassistenten %s'),
-                            '<a href="'. URLHelper::getLink('?cmd=createNewSingleDate#newSingleDate') .'">'
-                            . makebutton('erstellen') . '</a>',
-                            '<a href="javascript:STUDIP.BlockAssi.block_fenster()">'
-                            . makebutton("anlegen") . '</a>'); ?>
+                            LinkButton::create(_('erstellen'), URLHelper::getURL('', array('cmd' => 'createNewSingleDate')) . '#newSingleDate'),
+                            LinkButton::create(_('anlegen'), 'javascript:STUDIP.BlockAssi.block_fenster()')); ?>
                     </td>
                 </tr>
                 <? } ?>
@@ -565,21 +561,16 @@ STUDIP.RoomRequestDialog.reloadUrlOnClose = '<?= UrlHelper::getUrl()?>';
                         <?= _("Raumanfrage") ?>
                             <? if ($request_status && $request_status == 'open') {
                             ?>
-                            <a onClick="STUDIP.RoomRequestDialog.initialize(this.href.replace('edit','edit_dialog'));return false;" href="<?= URLHelper::getLink('dispatch.php/course/room_requests/edit/' . $sem->getId(), array('request_id' => RoomRequest::existsByCourse($id))) ?>">
-                                <?= makebutton('bearbeiten') ?>
+                                <?= Linkbutton::create(_('bearbeiten'), URLHelper::getURL('dispatch.php/course/room_requests/edit/' . $sem->getId(), array('request_id' => RoomRequest::existsByCourse($id))), array('onclick' => 'STUDIP.RoomRequestDialog.initialize(this.href.replace("edit","edit_dialog"));return false;')) ?>
                             <?
                             } else {
                             ?>
-                                <a onClick="STUDIP.RoomRequestDialog.initialize(this.href.replace('edit','edit_dialog'));return false;" href="<?= URLHelper::getLink('dispatch.php/course/room_requests/edit/' . $sem->getId(), array('new_room_request_type' => 'course')) ?>">
-                                <?= makebutton('erstellen') ?>
+                                <?= Linkbutton::create(_('erstellen'), URLHelper::getURL('dispatch.php/course/room_requests/edit/' . $sem->getId(), array('new_room_request_type' => 'course')), array('onclick' => 'STUDIP.RoomRequestDialog.initialize(this.href.replace("edit","edit_dialog"));return false;')) ?>
                             <?
                             } ?>
-                        </a>
                         <? if ($request_status && $request_status == 'open') { ?>
                         <?= _('oder') ?>
-                        <a href="<?= URLHelper::getLink('?cmd=removeSeminarRequest') ?>">
-                            <?= makebutton('zurueckziehen') ?>
-                        </a>
+                        <?= LinkButton::create(_('zurückziehen'), URLHelper::getURL('', array('cmd' => 'removeSeminarRequest'))) ?>
                         <? } ?>
                     </td>
                 </tr>

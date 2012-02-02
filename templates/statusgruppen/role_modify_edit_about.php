@@ -1,5 +1,6 @@
 <?
 # Lifter010: TODO
+    use Studip\Button, Studip\LinkButton;
 ?>
 <?
 $cssSw = new CSSClassSwitcher();
@@ -14,13 +15,9 @@ $style = "style=\"background-image: url('". Assets::image_path('forumstrich.gif'
         <center>
         <br>
         <? if ($GLOBALS['perm']->have_studip_perm('admin', $inst_id) && !$locked) : ?>
-        <a href="<?= URLHelper::getLink('?view=Karriere&username='. $username .'&cmd=removeFromGroup&role_id='. $role_id .'&studipticket='. get_ticket()) ?>">
-            <?= makebutton('loeschen') ?>
-        </a>
+            <?= LinkButton::create(_('löschen'), URLHelper::getURL('?view=Karriere&username='. $username .'&cmd=removeFromGroup&role_id='. $role_id .'&studipticket='. get_ticket())) ?>">
             &nbsp;&nbsp;&nbsp;
-            <a href="admin_roles.php?admin_inst_id=<?=$inst_id?>&open=<?=$role_id?>#<?= $role_id ?>">
-             <?= makebutton('zurfunktion'); ?>
-            </a>
+            <?= LinkButton::create(_('zur Funktion'), URLHelper::getURL('admin_roles.php', array('admin_inst_id' => $inst_id, 'open' => $role_id)) . '#' . $role_id) ?>">
             <br><br>
         <? endif; ?>
             <input type="hidden" name="cmd" value="special_edit">
@@ -127,7 +124,7 @@ $style = "style=\"background-image: url('". Assets::image_path('forumstrich.gif'
             </table>
         <br>
         <? if (!$locked) :?>
-            <input type="image" <?=makeButton('speichern', 'src')?> value="<?=_("Änderungen speichern")?>" align="absbottom">
+            <?= Button::createAccept(_('Änderungen speichern'), 'speichern') ?>
         <? endif;?>
         <br>
         <br>

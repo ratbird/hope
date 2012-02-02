@@ -1,5 +1,6 @@
 <?
 # Lifter010: TODO
+    use Studip\Button, Studip\LinkButton;
 ?>
 <?
     $cssSw = new cssClassSwitcher();
@@ -113,11 +114,10 @@
             <tr>
                 <td class="blank" align="right" colspan="2">
                     <br>
-                    <input type="image" <?= makebutton('speichern', 'src') ?> align="absbottom">
+                    
+                    <?= Button::createAccept(_('speichern'), 'speichern') ?>
                     &nbsp;
-                    <a href="<?= URLHelper::getLink('?range_id='. $range_id) ?>">
-                        <?= makebutton('abbrechen') ?>
-                    </a>
+                    <?= LinkButton::createCancel(_('abbrechen'), URLHelper::getURL('', compact('range_id'))) ?>
                 </td>
             </tr>
         </table>

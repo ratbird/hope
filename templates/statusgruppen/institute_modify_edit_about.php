@@ -1,5 +1,6 @@
 <?
 # Lifter010: TODO
+    use Studip\Button, Studip\LinkButton;
 ?>
 <?
 $cssSw = new CSSClassSwitcher();
@@ -14,14 +15,10 @@ $style = "style=\"background-image: url('". Assets::image_path('forumstrich') ."
         <center>
         <br>
         <? if ($GLOBALS['perm']->have_studip_perm('admin', $inst_id)) : ?>
-            <a href="inst_admin.php?admin_inst_id=<?= $inst_id ?>&list=true">
-                <?= makebutton('zureinrichtung'); ?>
-            </a>
+            <?= LinkButton::create(_('zur Einrichtung'), URLHelper::getURL('inst_admin.php', array('admin_inst_id' => $inst_id, 'list' => 'true'))) ?>
             <br><br>
         <? else: ?>
-            <a href="institut_main.php?auswahl=<?= $inst_id ?>">
-                <?= makebutton('zureinrichtung'); ?>
-            </a>
+            <?= LinkButton::create(_('zur Einrichtung'), URLHelper::getURL('institut_main.php', array('auswahl' => $inst_id))) ?>
             <br><br>
         <? endif; ?>
         <form action="<?= URLHelper::getLink('#'. $inst_id) ?>" method="POST">
@@ -125,7 +122,7 @@ $style = "style=\"background-image: url('". Assets::image_path('forumstrich') ."
             </table>
 
             <br>
-            <input type="image" <?=makeButton('speichern', 'src')?> value="<?=_("Änderungen speichern")?>" align="absbottom">
+            <?= Button::createAccept(_('Änderungen speichern'), 'speichern') ?>
             <br>
         </form>
         <br>

@@ -1,5 +1,6 @@
 <?
 # Lifter010: TODO
+    use Studip\Button, Studip\LinkButton;
 ?>
 <?
     $cssSw = new CSSClassSwitcher();
@@ -43,12 +44,8 @@
             <!-- Buttonbar -->
             <br>
             <div style="text-align: center;">
-                <a href="<?= URLHelper::getLink('?view=editRole&role_id='. $role_id .'#'. $role_id) ?>">
-                    <?= makebutton('bearbeiten') ?>
-                </a>
-                <a href="<?= URLHelper::getLink('?cmd=deleteRole&role_id='. $role_id) ?>">
-                    <?= makebutton('loeschen') ?>
-                </a>
+                <?= LinkButton::create(_('bearbeiten'), URLHelper::getURL('', array('view' => 'editRole', 'role_id' => $role_id)) . '#' . $role_id) ?>
+                <?= LinkButton::create(_('loeschen'), URLHelper::getURL('', array('cmd' => 'deleteRole', 'role_id' => $role_id))) ?>
             </div>
             <br>
 

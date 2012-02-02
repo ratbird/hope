@@ -1,5 +1,6 @@
 <?
 # Lifter010: TODO
+    use Studip\Button;
 ?>
 <? $search_exp = $GLOBALS['search_exp']; ?>
 <form action="<?= URLHelper::getLink("#$anker") ?>" method="post" style="display: inline">
@@ -23,7 +24,7 @@
     </a>
     <br><br>
     <input type="hidden" name="cmd" value="addPersonsToRoleSearch">
-    <input type="image" <?=makebutton('eintragen', 'src')?>>
+    <?= Button::create(_('eintragen'), 'eintragen') ?>
     <br>
         <? else : // no users there ?>
     <?= _("kein Treffer") ?>

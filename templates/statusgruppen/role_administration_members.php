@@ -1,5 +1,6 @@
 <?
 # Lifter010: TODO
+    use Studip\Button;
 ?>
 <form action="<?= URLHelper::getLink('') ?>" method="post" style="display: inline;">
     <?= CSRFProtection::tokenTag() ?>
@@ -17,6 +18,6 @@
     <input type="hidden" name="cmd" value="addPersonsToRoleDirect">
     <? endif; ?>
     <input type="hidden" name="role_id" value="<?= $role_id ?>">
-    <input type="image" <?= makebutton('eintragen', 'src') ?>>
+    <?= Button::create(_('eintragen'), 'eintragen') ?>
     <input type="hidden" name="range_id" value="<?= $range_id ?>">
 </form>

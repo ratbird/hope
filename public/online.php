@@ -164,18 +164,38 @@ ob_start();
     $different_groups=FALSE;
 
     $owner_id = $user->id;
-    $db=new DB_Seminar;
-    $db2=new DB_Seminar;
 
-        foreach($filtered_buddies as $username=>$value) { //alle durchgehen die online sind
-            $user_id = $value["userid"];
-                    $db2->query ("SELECT statusgruppen.position, name, statusgruppen.statusgruppe_id FROM statusgruppen LEFT JOIN statusgruppe_user USING(statusgruppe_id) WHERE range_id = '$owner_id' AND user_id = '$user_id' ORDER BY statusgruppen.position ASC LIMIT 1");
-                    if ($db2->next_record()) { // er ist auch einer Gruppe zugeordnet
-                        $group_buddies[]=array($db2->f("position"), $db2->f("name"), $filtered_buddies[$username]["name"],$filtered_buddies[$username]["last_action"],$username,$db2->f("statusgruppe_id"),$user_id);
-                    } else {    // buddy, aber keine Gruppe
-                        $non_group_buddies[]=array($filtered_buddies[$username]["name"],$filtered_buddies[$username]["last_action"],$username,$user_id);
-                    }
+    foreach ($filtered_buddies as $username => $value) { //alle durchgehen die online sind
+        $user_id = $value['userid'];
+        
+        $query = "SELECT statusgruppen.position, name, statusgruppen.statusgruppe_id "
+               . "FROM statusgruppen "
+               .   "LEFT JOIN statusgruppe_user USING (statusgruppe_id) "
+               . "WHERE range_id = ? AND user_id = ? "
+               . "ORDER BY statusgruppen.position ASC "
+               . "LIMIT 1";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($owner_id, $user_id));
+
+        if ($row = $statement->fetch(PDO::FETCH_ASSOC)) { // er ist auch einer Gruppe zugeordnet
+            $group_buddies[] = array(
+                $row['position'],
+                $row['name'],
+                $filtered_buddies[$username]['name'],
+                $filtered_buddies[$username]['last_action'],
+                $username,
+                $row['statusgruppe_id'],
+                $user_id
+            );
+        } else { // buddy, aber keine Gruppe
+            $non_group_buddies[] = array(
+                $filtered_buddies[$username]['name'],
+                $filtered_buddies[$username]['last_action'],
+                $username,
+                $user_id
+            );
         }
+    }
 
     foreach($other_users as $username=>$value) {
         $user_id = $value["userid"];

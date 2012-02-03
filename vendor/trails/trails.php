@@ -24,8 +24,7 @@
 /**
  * The version of the trails library.
  */
-define('TRAILS_VERSION', '0.6.5');
-
+define('TRAILS_VERSION', '0.6.6');
 
 
 
@@ -536,7 +535,10 @@ class Trails_Controller {
    */
   function perform($unconsumed) {
 
-    list($action, $args) = $this->extract_action_and_args($unconsumed);
+    list($action, $args, $format) = $this->extract_action_and_args($unconsumed);
+
+    # set format
+    $this->format = isset($format) ? $format : 'html';
 
     # call before filter
     $before_filter_result = $this->before_filter($action, $args);
@@ -578,12 +580,19 @@ class Trails_Controller {
   function extract_action_and_args($string) {
 
     if ('' === $string) {
-      return array('index', array());
+      return array('index', array(), NULL);
     }
 
-    $args = explode('/', $string);
+    $matched = preg_match('/^(?P<path>\w+(?:\/\w+)*)(?:\.(?P<format>\w+))?$/',
+                          $string, $matches);
+
+    if (!$matched) {
+      throw new Trails_Exception(400, "Bad Request");
+    }
+
+    $args = explode('/', $matches['path']);
     $action = array_shift($args);
-    return array($action, $args);
+    return array($action, $args, @$matches['format']);
   }
 
 
@@ -859,8 +868,11 @@ class Trails_Controller {
   function rescue($exception) {
     return $this->dispatcher->trails_error($exception);
   }
-}
 
+  function respond_to($ext) {
+    return $this->format === $ext;
+  }
+}
 
 
 /**

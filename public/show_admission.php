@@ -651,11 +651,11 @@ if(is_object($group_obj)){
         </li>
         <li style="margin-top:5px;">
         <span style="padding-left:200px;">
-        <?= Button::create(_('übernehmen'), 'admissiongroupchange', array('title' => _("Einstellungen übernehmen"))) ?>
+        <?= Button::create(_('Übernehmen'), 'admissiongroupchange', array('title' => _("Einstellungen übernehmen"))) ?>
         &nbsp;
-        <?= Button::create(_('löschen'), 'admissiongroupdelete', array('title' => _("Gruppe auflösen"))) ?>
+        <?= Button::create(_('Löschen'), 'admissiongroupdelete', array('title' => _("Gruppe auflösen"))) ?>
         &nbsp;
-        <?= Button::createCancel(_('abbrechen'), 'admissiongroupcancel', array('title' => _("Eingabe abbrechen"))) ?>
+        <?= Button::createCancel(_('Abbrechen'), 'admissiongroupcancel', array('title' => _("Eingabe abbrechen"))) ?>
         </span>
         </li>
         </ul>
@@ -715,7 +715,7 @@ if(is_object($group_obj)){
                 ?>
                     </select>&nbsp;
                     <?=SemesterData::GetSemesterSelector(array('name'=>'select_sem', 'style'=>'vertical-align:middle;'), $_SESSION['_default_sem'])?>
-                    <?= Button::create(_('auswählen'), 'choose_institut', array('title' => _("Einrichtung auswählen"))) ?>
+                    <?= Button::create(_('Auswählen'), 'choose_institut', array('title' => _("Einrichtung auswählen"))) ?>
                 </div>
                 <div style="margin:10px;">
                 <b><?=_("Angezeigte Veranstaltungen einschränken:")?></b>
@@ -846,7 +846,7 @@ if(is_object($group_obj)){
 
     if (count($data) && $ALLOW_GROUPING_SEMINARS) {
         echo '<tr><td align="left" colspan="2">'. "\n";
-        echo Button::create(_('gruppieren'), 'group_sem', array('title' => _("Markierte Veranstaltungen gruppieren")));
+        echo Button::create(_('Gruppieren'), 'group_sem', array('title' => _("Markierte Veranstaltungen gruppieren")));
         echo "</form>\n";
         echo "</td></tr>\n";
     }

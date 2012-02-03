@@ -841,7 +841,7 @@ if ($question) {
                         <? echo $select ?>
                     </select>
                     <input type="text" name="top_folder_name" size="50" aria-label="<?= _("Name für neuen Ordner eingeben") ?>">
-                    <?= Button::create(_("neuer Ordner"), "anlegen") ?>
+                    <?= Button::create(_("Neuer Ordner"), "anlegen") ?>
                 </form>
                 <?
                 }
@@ -850,7 +850,7 @@ if ($question) {
         echo "\n" . '<td class="blank" align="center" colspan="3" width="100%" >';
         echo "\n" . '<span style="margin:25px;font-weight:bold;">';
         echo "\n" . ($folder_system_data["mode"] == 'move' ? _("Verschiebemodus") : _("Kopiermodus")) . "</span>";
-        echo LinkButton::create(_("abbrechen"), URLHelper::getURL('?cmd=tree'));
+        echo LinkButton::create(_("Abbrechen"), URLHelper::getURL('?cmd=tree'));
         echo "\n" . '</td></tr>';
     }
 
@@ -882,7 +882,7 @@ if ($question) {
         print _("Es gibt ");
         print "<b>".(count($result)>1 ? count($result) : _("eine"))."</b>";
         print _(" neue/geänderte Dateie(n). Jetzt ");
-        echo LinkButton::create(_("herunterladen"), URLHelper::getURL("?zipnewest=".$lastvisit));
+        echo LinkButton::create(_("Herunterladen"), URLHelper::getURL("?zipnewest=".$lastvisit));
         print "</p>";
     }
 
@@ -1035,9 +1035,9 @@ div.droppable.hover {
             print "<tr><td class=\"blank\"></td><td class=\"blank\"><div align=\"right\">";
             echo LinkButton::create(isset($check_all) ? _("keine auswählen") :_("alle auswählen"),
                                     URLHelper::getURL(isset($check_all) ? "" : "?check_all=TRUE"));
-            echo Button::create(_("herunterladen"), "download_selected");
+            echo Button::create(_("Herunterladen"), "download_selected");
             if ($rechte) {
-                echo Button::create(_("löschen"), "delete_selected");
+                echo Button::create(_("Löschen"), "delete_selected");
             }
             echo "</div>" .
                 "</td><td class=\"blank\"></td></tr> <tr><td></td><td class=\"blank\">&nbsp;</td><td class=\"blank\"></td></tr>";
@@ -1151,9 +1151,9 @@ div.droppable.hover {
             print "<tr><td class=\"blank\"></td><td class=\"blank\"><div align=\"right\"><br>";
             echo LinkButton::create(isset($check_all) ? _("keine auswählen") : _("alle auswählen"),
                                     URLHelper::getURL(isset($check_all) ? "" : "?check_all=TRUE"));
-            echo Button::create(_("herunterladen"), "download_selected");
+            echo Button::create(_("Herunterladen"), "download_selected");
             if ($rechte) {
-                echo Button::create(_("löschen"), "delete_selected");
+                echo Button::create(_("Löschen"), "delete_selected");
             }
             echo "</div></td><td class=\"blank\"></td></tr> <tr><td class=\"blank\"></td>"
                 ."<td class=\"blank\">&nbsp;</td><td class=\"blank\"></td></tr>";

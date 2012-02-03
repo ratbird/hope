@@ -56,7 +56,7 @@ function print_rss($username) {
     echo CSRFProtection::tokenTag();
     if (!$db->num_rows())
         echo "<tr><td class=\"".$cssSw->getClass()."\"><b><p class=\"info\">" . _("Es existieren zur Zeit keine eigenen RSS-Feeds.") . "</p></b></td></tr>\n";
-    echo "<tr><td class=\"".$cssSw->getClass()."\"><p class=\"info\">" . _("RSS-Feed") . "&nbsp; " . LinkButton::create(_("neuanlegen"), 
+    echo "<tr><td class=\"".$cssSw->getClass()."\"><p class=\"info\">" . _("RSS-Feed") . "&nbsp; " . LinkButton::create(_("Neuanlegen"), 
 				URLHelper::getURL('', array('rss' => 'create_rss', 'view' => $view, 'username' => $username, 'show_rss_bsp' => $show_rss_bsp))) . "</a></p></td></tr>";
     $count = 0;
     while ($db->next_record() ){
@@ -86,8 +86,8 @@ function print_rss($username) {
             echo "&nbsp; &nbsp; &nbsp; <label><input type=checkbox name='rss_secret[$count]' value='1'";
             IF ($db->f("hidden")=='1') echo " checked";
             echo ">" . _("unsichtbar") . "</label>&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;";
-            echo "<br><br>" . Button::create(_("übernehmen"), array('title' => _("verändern")));
-            echo LinkButton::create(_("löschen"), URLHelper::getURL('', array('rss' => 'delete_rss', 'rss_id' => $id, 'view' => $view, 'username' => $username, 'show_rss_bsp' => $show_rss_bsp))) . "<br>&nbsp; </div></td></tr>";
+            echo "<br><br>" . Button::create(_("Übernehmen"), array('title' => _("verändern")));
+            echo LinkButton::create(_("Löschen"), URLHelper::getURL('', array('rss' => 'delete_rss', 'rss_id' => $id, 'view' => $view, 'username' => $username, 'show_rss_bsp' => $show_rss_bsp))) . "<br>&nbsp; </div></td></tr>";
             $count++;
     }
     echo "</form></td></tr></table></td></tr>";

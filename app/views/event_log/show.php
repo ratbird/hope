@@ -65,7 +65,7 @@ use Studip\Button, Studip\LinkButton;
     </select>
 
     &nbsp;
-    <?= Button::create(_('anzeigen')) ?>
+    <?= Button::create(_('Anzeigen')) ?>
   </p>
 
   <? if (isset($error_msg)): ?>
@@ -108,10 +108,10 @@ use Studip\Button, Studip\LinkButton;
         <input type="hidden" name="start" value="<?= $start ?>">
 
         <? if ($start > 0): ?>
-          <?= Button::create('<< '. _("zurück"), 'back') ?>
+          <?= Button::create('<< '. _("Zurück"), 'back') ?>
         <? endif ?>
         <? if ($start + count($log_events) < $num_entries): ?>
-          <?= Button::create(_('weiter') . " >>", 'forward') ?>
+          <?= Button::create(_('Weiter') . " >>", 'forward') ?>
         <? endif ?>
     <? else: ?>
       <?= _('keine Einträge gefunden') ?>

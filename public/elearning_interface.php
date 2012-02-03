@@ -323,7 +323,7 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
                 echo "<input type=\"HIDDEN\" name=\"anker_target\" value=\"search\">\n";
                 echo "<input type=\"HIDDEN\" name=\"view\" value=\"" . $view . "\">\n";
                 echo "<input type=\"HIDDEN\" name=\"cms_select\" value=\"" . $cms_select . "\">\n";
-                echo Button::create(_('anlegen'), 'create_course');
+                echo Button::create(_('Anlegen'), 'create_course');
                 echo "<br><br>\n";
                 echo "</div>";
                 echo "</form>";
@@ -342,7 +342,7 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
                     echo "<input type=\"HIDDEN\" name=\"anker_target\" value=\"search\">\n";
                     echo "<input type=\"HIDDEN\" name=\"view\" value=\"" . $view . "\">\n";
                     echo "<input type=\"HIDDEN\" name=\"cms_select\" value=\"" . $cms_select . "\">\n";
-                    echo  Button::create(_('auswählen'), 'connect_course');
+                    echo  Button::create(_('Auswählen'), 'connect_course');
                     echo "<br>\n";
                     echo "</div>";
                     echo "</form>";

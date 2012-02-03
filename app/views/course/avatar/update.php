@@ -33,13 +33,13 @@ use Studip\Button, Studip\LinkButton;
     </p>
 
     <p>
-        <?= Button::createAccept(_('absenden')) ?>
+        <?= Button::createAccept(_('Absenden')) ?>
         <span class="quiet">
             <?= _("oder") ?>
             <? if ($this->studygroup_mode) : ?>
-                <?= LinkButton::createCancel(_('abbrechen'), URLHelper::getLink('dispatch.php/course/studygroup/edit/' . $course_id)) ?>
+                <?= LinkButton::createCancel(_('Abbrechen'), URLHelper::getLink('dispatch.php/course/studygroup/edit/' . $course_id)) ?>
             <? else : ?>
-                <?= LinkButton::createCancel(_('abbrechen'), URLHelper::getLink('dispatch.php/course/basicdata/view/' . $course_id)) ?>
+                <?= LinkButton::createCancel(_('Abbrechen'), URLHelper::getLink('dispatch.php/course/basicdata/view/' . $course_id)) ?>
             <? endif ?>
         </span>
     </p>

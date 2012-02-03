@@ -207,8 +207,8 @@ function checkdata(){
 
  <tr>
   <td colspan="3" align=right>
-      <?= Button::create(_('übernehmen'))?>
-      <?= LinkButton::createCancel(_('abbrechen'), 'index.php?cancel_login=1')?>
+      <?= Button::create(_('Übernehmen'))?>
+      <?= LinkButton::createCancel(_('Abbrechen'), 'index.php?cancel_login=1')?>
   </td>
  </tr>
 </table>

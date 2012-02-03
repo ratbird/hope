@@ -343,9 +343,9 @@ function change_messaging_view()
                 <tr <? $cssSw->switchClass() ?>>
                     <td  <?=$cssSw->getFullClass()?> colspan="2" align="center">
                         <input type="hidden" name="view" value="Messaging">
-                        <?=Button::create(_('übernehmen'), 'newmsgset', array('title' => _("Änderungen übernehmen")))?>
+                        <?=Button::create(_('Übernehmen'), 'newmsgset', array('title' => _("Änderungen übernehmen")))?>
                         &nbsp;
-                        <?=Button::create(_('zurücksetzen'), 'set_msg_default', array('title' => _("Einstellungen zurücksetzen")))?>
+                        <?=Button::create(_('Zurücksetzen'), 'set_msg_default', array('title' => _("Einstellungen zurücksetzen")))?>
                         </form>
                     </td>
                 </tr>

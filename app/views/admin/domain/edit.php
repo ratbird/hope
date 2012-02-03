@@ -25,8 +25,8 @@ use Studip\Button, Studip\LinkButton;
     <? endif ?>
     <tr>
         <td colspan="4" align="center">
-            <?= Button::createAccept(_('übernehmen'),'uebernehmen', array('title' => _('Änderungen speichern')))?>
-            <?= LinkButton::createCancel(_('abbrechen'), $controller->url_for('admin/domain'), array('title' => _('abrrechen')))?>
+            <?= Button::createAccept(_('Übernehmen'),'uebernehmen', array('title' => _('Änderungen speichern')))?>
+            <?= LinkButton::createCancel(_('Abbrechen'), $controller->url_for('admin/domain'), array('title' => _('abrrechen')))?>
         </td>
     </tr>
 </table>

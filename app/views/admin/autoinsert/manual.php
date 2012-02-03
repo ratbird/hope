@@ -130,7 +130,7 @@ use Studip\Button, Studip\LinkButton;
         <tfoot>
             <tr>
                 <td colspan="3">
-                    <?= Button::create(_('eintragen'), 'submit') ?>
+                    <?= Button::create(_('Eintragen'), 'submit') ?>
                     <input type="image" name="preview" title="<?= _('Vorschau') ?>"
                         style="vertical-align: middle;"
                         src="<?= Assets::image_path('icons/16/blue/question-circle.png') ?>">

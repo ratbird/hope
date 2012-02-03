@@ -65,7 +65,7 @@ use Studip\Button, Studip\LinkButton;
               <input type="hidden" name="target" value="<?= $target ?>">
             <? endif ?>
             <div align="center">
-              <?= Button::createAccept(_('starten'), 'start')?>
+              <?= Button::createAccept(_('Starten'), 'start')?>
             </div>
           </form>
         <? endif ?>

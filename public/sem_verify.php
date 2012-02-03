@@ -94,10 +94,10 @@ function temporaly_accepted($sem_name, $user_id, $sem_id, $ask = "TRUE", $studie
             echo _("Bemerkungen zu Teilnahmevoraussetzungen:");
             echo '<br><textarea name="comment" cols="50" rows="5"></textarea><br><br>';
         }
-        print(Button::create(_('eintragen'), array('title' => _("In diese Veranstaltung eintragen"))));
+        print(Button::create(_('Eintragen'), array('title' => _("In diese Veranstaltung eintragen"))));
         print("<input type=\"hidden\" name=\"ask\" value=\"FALSE\">\n");
         printf ("<input type=\"HIDDEN\" name=\"sem_verify_suggest_studg\" value=\"%s\">\n", $studiengang_id);
-        print(LinkButton::createCancel(_('abbrechen'), 'details.php?sem_id='.$sem_id, array('title' => _("Nicht in diese Veranstaltung eintragen"))));
+        print(LinkButton::createCancel(_('Abbrechen'), 'details.php?sem_id='.$sem_id, array('title' => _("Nicht in diese Veranstaltung eintragen"))));
         print("</form>");
         print("</td></tr><tr><td class=\"blank\" colspan=2>&nbsp;</td></tr></table>");
         page_close();
@@ -539,7 +539,7 @@ $db6=new DB_Seminar;
                         <?= CSRFProtection::tokenTag() ?>
                         &nbsp; &nbsp; <input type="PASSWORD" name="pass" size="12">
                         <input type="hidden" name="id" value="<? echo $id;?>">
-                        <?= Button::createAccept(_('abschicken')) ?>
+                        <?= Button::createAccept(_('Abschicken')) ?>
                         </form>
                         </td></tr>
                         <?
@@ -814,7 +814,7 @@ $db6=new DB_Seminar;
                     <?= CSRFProtection::tokenTag() ?>
                     &nbsp; &nbsp; <input type="PASSWORD" name="pass" size="12">
                     <input type="hidden" name="id" value="<? echo $id;?>">
-                    <?= Button::createAccept(_('abschicken')) ?>
+                    <?= Button::createAccept(_('Abschicken')) ?>
                     </form>
                     </td></tr>
                     <?

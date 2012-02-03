@@ -26,7 +26,7 @@ use Studip\Button, Studip\LinkButton;
     </tr>
     <tr>
         <td align="center" colspan="2">
-            <?= Button::create(_('auswählen'), 'auswaehlen', array('title' => _('Datenfeld auswählen')))?>
+            <?= Button::create(_('Auswählen'), 'auswaehlen', array('title' => _('Datenfeld auswählen')))?>
         </td>
     </tr>
 </table>
@@ -120,8 +120,8 @@ use Studip\Button, Studip\LinkButton;
         </tr>
         <tr>
             <td colspan="2" align="center">
-                <?= Button::create(_('anlegen'),'anlegen', array('title' => _('Neues Datenfeld anlegen')))?>
-                <?= LinkButton::createCancel(_('abbrechen'), $controller->url_for('admin/datafields'), array('title' => _('Zurück zur Übersicht')))?>
+                <?= Button::create(_('Anlegen'),'anlegen', array('title' => _('Neues Datenfeld anlegen')))?>
+                <?= LinkButton::createCancel(_('Abbrechen'), $controller->url_for('admin/datafields'), array('title' => _('Zurück zur Übersicht')))?>
             </td>
         </tr>
     </table>

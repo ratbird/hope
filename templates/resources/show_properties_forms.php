@@ -31,7 +31,7 @@ use Studip\Button, Studip\LinkButton;
                     <? endif;
                 endwhile; ?>
                 </select>
-                <?= Button::create(_("zuweisen"), 'assign')?>
+                <?= Button::create(_("Zuweisen"), 'assign')?>
             <? else : ?>
                 <b><?=  htmlReady($resObject->getCategoryName()) ?></b>
                 <input type="hidden" name="change_category_id" value="<?= $resObject->getCategoryId() ?>">
@@ -202,9 +202,9 @@ use Studip\Button, Studip\LinkButton;
         </td>
         <td class="<?= $cssSw->getClass() ?>" colspan="2" align="center">
             <br>
-            <?= Button::create(_('übernehmen'))?>
+            <?= Button::create(_('Übernehmen'))?>
             <? if ($resObject->isUnchanged()) : ?>
-                <?= LinkButton::createCancel(_('abbrechen'), UrlHelper::getLink('?cancel_edit='. $resObject->id))?>
+                <?= LinkButton::createCancel(_('Abbrechen'), UrlHelper::getLink('?cancel_edit='. $resObject->id))?>
             <? endif; ?>
             <br>&nbsp;
         </td>

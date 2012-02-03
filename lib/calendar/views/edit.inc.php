@@ -47,7 +47,7 @@ if (!$termin_id && !$_calendar->havePermission(Calendar::PERMISSION_WRITABLE)) {
     my_error($error_message, 'blank', 2, TRUE);
     echo "<tr><td class=\"blank\" width=\"15%\">&nbsp;</td>";
     echo '<td class="blank" width="85%">';
-    echo LinkButton::create(_('<< zurück'), URLHelper::getLink('', array('cmd' => $_SESSION['calendar_sess_control_data']['view_prv'], 'atime' => $atime)));
+    echo LinkButton::create(_('<< Zurück'), URLHelper::getLink('', array('cmd' => $_SESSION['calendar_sess_control_data']['view_prv'], 'atime' => $atime)));
     echo "</td></tr>\n";
     echo "</table><br />&nbsp;<br /></td></tr></table>\n";
     page_close();
@@ -342,7 +342,7 @@ if (!$set_recur_x) {
 //      if ($_calendar->havePermission(Calendar::PERMISSION_WRITABLE)
         //      && $_calendar->event->getPermission() == CALENDAR_EVENT_PERM_PUBLIC) {
         if ($_calendar->event->havePermission(Event::PERMISSION_WRITABLE) && !($_calendar->event instanceof SeminarCalendarEvent)) {
-            echo Button::create(_('bearbeiten'), 'set_recur');
+            echo Button::create(_('Bearbeiten'), 'set_recur');
         }
         //  elseif ($_calendar->event->getRepeat('rtype') != 'SINGLE') {
         else {
@@ -364,29 +364,29 @@ else {
             if ($_calendar->event->havePermission(Event::PERMISSION_WRITABLE) && $evtype != 'semcal') {
 
                 if ($mod == "SINGLE")
-                    echo Button::createCancel(_('keine'), 'mod_s');
+                    echo Button::createCancel(_('Keine'), 'mod_s');
                 else
-                    echo Button::create(_('keine'), 'mod_s');
+                    echo Button::create(_('Keine'), 'mod_s');
                 echo " ";
                 if ($mod == "DAILY")
-                    echo Button::createAccept(_('täglich'), 'mod_d');
+                    echo Button::createAccept(_('Täglich'), 'mod_d');
                 else
-                    echo Button::create(_('täglich'), 'mod_d');
+                    echo Button::create(_('Täglich'), 'mod_d');
                 echo " ";
                 if ($mod == "WEEKLY")
-                    echo Button::createAccept(_('wöchentlich'), 'mod_w');
+                    echo Button::createAccept(_('Wöchentlich'), 'mod_w');
                 else
-                    echo Button::create(_('wöchentlich'), 'mod_w');
+                    echo Button::create(_('Wöchentlich'), 'mod_w');
                 echo " ";
                 if ($mod == "MONTHLY")
-                    echo Button::createAccept(_('monatlich'), 'mod_m');
+                    echo Button::createAccept(_('Monatlich'), 'mod_m');
                 else
-                    echo Button::create(_('monatlich'), 'mod_m');
+                    echo Button::create(_('Monatlich'), 'mod_m');
                 echo " ";
                 if ($mod == "YEARLY")
-                    echo Button::createAccept(_('jährlich'), 'mod_y');
+                    echo Button::createAccept(_('Jährlich'), 'mod_y');
                 else
-                    echo Button::create(_('jährlich'), 'mod_y');
+                    echo Button::create(_('Jährlich'), 'mod_y');
             } else {
 
                 if ($mod == "SINGLE")
@@ -813,13 +813,13 @@ if (isset($_calendar->event) && ($_calendar->event instanceof SeminarEvent || $_
     echo "<input type=\"hidden\" name=\"termin_id\" value=\"$termin_id\">\n";
     if ($set_recur_x) {
         echo "<input type=\"hidden\" name=\"evtype\" value=\"$evtype\">\n";
-        echo Button::create(_('<< zurück'), 'back_recur');
+        echo Button::create(_('<< Zurück'), 'back_recur');
         echo "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ";
         echo "<input type=\"hidden\" name=\"set_recur\" value=\"1\">\n";
         echo '<input type="hidden" name="wholeday" value="' . Request::get('wholeday') . "\">\n";
     }
 
-    echo Button::create(_('<< zurück'), 'cancel');
+    echo Button::create(_('<< Zurück'), 'cancel');
 } else {
     $css_switcher->switchClass();
     echo "<tr><td class=\"" . $css_switcher->getClass() . "\" align=\"center\" nowrap=\"nowrap\">\n";
@@ -829,7 +829,7 @@ if (isset($_calendar->event) && ($_calendar->event instanceof SeminarEvent || $_
     echo "<input type=\"hidden\" name=\"mod\" value=\"$mod\">\n";
     echo "<input type=\"hidden\" name=\"termin_id\" value=\"$termin_id\">\n";
     if ($set_recur_x) {
-        echo Button::create(_('<< zurück'), 'back_recur');
+        echo Button::create(_('<< Zurück'), 'back_recur');
         echo "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ";
         echo "<input type=\"hidden\" name=\"set_recur\" value=\"1\">\n";
         echo '<input type="hidden" name="wholeday" value="' . Request::get('wholeday') . "\">\n";
@@ -844,11 +844,11 @@ if (isset($_calendar->event) && ($_calendar->event instanceof SeminarEvent || $_
         } else {
             echo "<input type=\"hidden\" name=\"termin_id\" value=\"$termin_id\">\n";
             echo Button::create(_('Termin ändern'), 'change');
-            echo Button::create(_('löschen'), 'del');
+            echo Button::create(_('Löschen'), 'del');
         }
-        echo Button::createCancel(_('abbrechen'), 'cancel')."\n";
+        echo Button::createCancel(_('Abbrechen'), 'cancel')."\n";
       } elseif (!$set_recur_x || $evtype == 'semcal') {
-        echo Button::create(_('<< zurück'), 'cancel')."\n";
+        echo Button::create(_('<< Zurück'), 'cancel')."\n";
     }
 
     // create infobox entries

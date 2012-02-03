@@ -120,7 +120,7 @@ function editarea($forumposting) {
                                    Request::get("neuesthema")
                                    ? null
                                    : $forumposting["rootid"]));
-    $zusatz = LinkButton::createCancel(_("abbrechen"), $url);
+    $zusatz = LinkButton::createCancel(_("Abbrechen"), $url);
 
     $help_url = format_help_url("Basis.VerschiedenesFormat");
     $zusatz .= "&nbsp;&nbsp;<a href=\"".URLHelper::getLink('dispatch.php/smileys')."\" target=\"_blank\"><font size=\"-1\">"._("Smileys")."</a>&nbsp;&nbsp;"."<a href=\"".$help_url."\" target=\"_blank\"><font size=\"-1\">"._("Formatierungshilfen")."</a>";
@@ -161,7 +161,7 @@ function editarea($forumposting) {
         }
     }
     $description .= "<br><br><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"160\" height=\"1\">";
-    $description .= Button::createAccept(_("abschicken"), "abschicken");
+    $description .= Button::createAccept(_("Abschicken"), "abschicken");
 
     $description .= $zusatz ."</div>";
     return $description;
@@ -635,7 +635,7 @@ function forum_get_buttons_authorized($forumposting)
         "flatviewstartposting" => 0,
         "shrinkopen"           => $forumposting["rootid"],
         "sort"                 => "age");
-    $edit .= LinkButton::create(_("antworten"), URLHelper::getURL("#anker", $attributes));
+    $edit .= LinkButton::create(_("Antworten"), URLHelper::getURL("#anker", $attributes));
 
     $attributes = $tmp + array(
         "answer_id" => $forumposting["id"],
@@ -643,7 +643,7 @@ function forum_get_buttons_authorized($forumposting)
         "flatviewstartposting" => 0,
         "shrinkopen" => $forumposting["rootid"],
         "sort" => "age");
-    $edit .= LinkButton::create(_("zitieren"), URLHelper::getURL("#anker", $attributes));
+    $edit .= LinkButton::create(_("Zitieren"), URLHelper::getURL("#anker", $attributes));
 
     // ich darf bearbeiten
     if ($forumposting["lonely"] && ($rechte || $forumposting["perms"] == "write")) {
@@ -652,7 +652,7 @@ function forum_get_buttons_authorized($forumposting)
             "view"                 => $forum["view"],
             "flatviewstartposting" => $forum["flatviewstartposting"]
         );
-        $edit .= LinkButton::create(_("bearbeiten"), URLHelper::getURL("#anker", $attributes));
+        $edit .= LinkButton::create(_("Bearbeiten"), URLHelper::getURL("#anker", $attributes));
     }
 
     // ich darf löschen
@@ -662,7 +662,7 @@ function forum_get_buttons_authorized($forumposting)
             "view"                 => $forum["view"],
             "flatviewstartposting" => $forum["flatviewstartposting"]
         );
-        $edit .= LinkButton::create(_("löschen"), URLHelper::getURL("", $attributes));
+        $edit .= LinkButton::create(_("Löschen"), URLHelper::getURL("", $attributes));
     }
 
     // ich darf verschieben
@@ -672,7 +672,7 @@ function forum_get_buttons_authorized($forumposting)
             "topic_id" => $forumposting["id"],
             "view"     => "tree"
         );
-        $edit .= LinkButton::create(_("verschieben"), URLHelper::getURL("", $attributes));
+        $edit .= LinkButton::create(_("Verschieben"), URLHelper::getURL("", $attributes));
     }
 
     return $edit;
@@ -690,14 +690,14 @@ function forum_get_buttons_nobody($forumposting)
             "answer_id"            => $forumposting["id"],
             "flatviewstartposting" => 0
         );
-        $edit .= LinkButton::create(_("antworten"), URLHelper::getURL("#anker", $attributes));
+        $edit .= LinkButton::create(_("Antworten"), URLHelper::getURL("#anker", $attributes));
 
         $attributes = array(
             "answer_id" => $forumposting["id"],
             "zitat" => 1,
             "flatviewstartposting" => 0
         );
-        $edit .= LinkButton::create(_("zitieren"), URLHelper::getURL("#anker", $attributes));
+        $edit .= LinkButton::create(_("Zitieren"), URLHelper::getURL("#anker", $attributes));
     }
 
     return $edit;
@@ -1410,7 +1410,7 @@ function printposting ($forumposting) {
                     $addon .= "<br><br>";
                     $addon .= "<input type=hidden name=open value='".$forumposting["id"]."'>";
                     $addon .= "<input type=hidden name=flatviewstartposting value='".$forum["flatviewstartposting"]."'>";
-                    $addon .= Button::create(_("bewerten"), "sidebar", array('value' => $forumposting["id"]));
+                    $addon .= Button::create(_("Bewerten"), "sidebar", array('value' => $forumposting["id"]));
                 } else {
                     $addon .= "<font size=\"-1\">&nbsp;&nbsp;". sprintf(_("Sie haben diesen%sBeitrag bewertet."),'&nbsp;<br>&nbsp;&nbsp;');
                 }
@@ -1587,7 +1587,7 @@ if ($forum['view']=='flatfolder') {
     echo '<tr>';
     echo '<td class="blank" align="center" style="padding-top:12px; padding-bottom:5px;">';
     echo _("Zu diesem Thema") . " ";
-    echo LinkButton::create(_("antworten"), URLHelper::getURL("?answer_id=".$folder_id."&flatviewstartposting=0&sort=age#anker"));
+    echo LinkButton::create(_("Antworten"), URLHelper::getURL("?answer_id=".$folder_id."&flatviewstartposting=0&sort=age#anker"));
     echo '</td>';
     echo '</tr>';
     echo '</table>';

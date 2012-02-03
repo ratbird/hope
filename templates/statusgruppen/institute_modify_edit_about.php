@@ -15,10 +15,10 @@ $style = "style=\"background-image: url('". Assets::image_path('forumstrich') ."
         <center>
         <br>
         <? if ($GLOBALS['perm']->have_studip_perm('admin', $inst_id)) : ?>
-            <?= LinkButton::create(_('zur Einrichtung'), URLHelper::getURL('inst_admin.php', array('admin_inst_id' => $inst_id, 'list' => 'true'))) ?>
+            <?= LinkButton::create(_('Zur Einrichtung'), URLHelper::getURL('inst_admin.php', array('admin_inst_id' => $inst_id, 'list' => 'true'))) ?>
             <br><br>
         <? else: ?>
-            <?= LinkButton::create(_('zur Einrichtung'), URLHelper::getURL('institut_main.php', array('auswahl' => $inst_id))) ?>
+            <?= LinkButton::create(_('Zur Einrichtung'), URLHelper::getURL('institut_main.php', array('auswahl' => $inst_id))) ?>
             <br><br>
         <? endif; ?>
         <form action="<?= URLHelper::getLink('#'. $inst_id) ?>" method="POST">

@@ -87,7 +87,7 @@ class Ilias4ConnectedLink extends Ilias3ConnectedLink
         $output .= "<input type=\"HIDDEN\" name=\"module_system_type\" value=\"" . $this->cms_type . "\">\n";
 
         if ($connected_cms[$this->cms_type]->content_module[$current_module]->isConnected()) {
-            $output .= "&nbsp;" . Button::create(_('entfernen'), 'remove');
+            $output .= "&nbsp;" . Button::create(_('Entfernen'), 'remove');
         } elseif ($connected_cms[$this->cms_type]->content_module[$current_module]->isAllowed(OPERATION_WRITE)) {
             $output .= "<div align=\"left\">";
             if ($connected_cms[$this->cms_type]->content_module[$current_module]->isAllowed(OPERATION_COPY) AND (! in_array($connected_cms[$this->cms_type]->content_module[$current_module]->module_type, array("lm", "htlm", "sahs", "cat", "crs", "dbk")))) {
@@ -102,9 +102,9 @@ class Ilias4ConnectedLink extends Ilias3ConnectedLink
             $output .= _("Mit Schreibrechten f&uuml;r alle DozentInnen und TutorInnen dieser Veranstaltung") . "&nbsp;<img  src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/info-circle.png\" " . tooltip(_("DozentInnen und TutorInnen haben Schreibzugriff für Inhalte und Struktur des Lernmoduls. TutorInnen und DozentInnen können die Verknüpfung zur Veranstaltung wieder löschen."), TRUE, TRUE) . ">" . "<br>";
             $output .= "<input type=\"RADIO\" name=\"write_permission\" value=\"autor\">";
             $output .= _("Mit Schreibrechten f&uuml;r alle TeilnehmerInnen dieser Veranstaltung") . "&nbsp;<img  src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/info-circle.png\" " . tooltip(_("DozentInnen, TutorInnen und TeilnehmerInnen haben Schreibzugriff für Inhalte und Struktur des Lernmoduls. TutorInnen und DozentInnen können die Verknüpfung zur Veranstaltung wieder löschen."), TRUE, TRUE) . ">" . "</div>";
-            $output .= "</div><br>" . Button::create(_('hinzufügen'), 'add') . "<br>";
+            $output .= "</div><br>" . Button::create(_('Hinzufügen'), 'add') . "<br>";
         } else {
-            $output .= "&nbsp;" . Button::create(_('hinzufügen'), 'add');
+            $output .= "&nbsp;" . Button::create(_('Hinzufügen'), 'add');
         }
         $output .= "</form>";
 

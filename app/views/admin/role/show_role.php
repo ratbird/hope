@@ -19,7 +19,7 @@ use Studip\Button, Studip\LinkButton;
             </option>
         <? endforeach ?>
     </select>
-    <?= Button::create(_('auswählen'), 'selectrole', array('title' => _('Rolle auswählen')))?>
+    <?= Button::create(_('Auswählen'), 'selectrole', array('title' => _('Rolle auswählen')))?>
 </form>
 
 <? if (!empty($role)): ?>

@@ -265,7 +265,7 @@ if (isset($configurations[$EXTERN_MODULE_TYPES[0]["module"]])) {
 if ($_REQUEST['com'] != 'copychoose') {
     echo "<blockquote><font size=\"2\">";
     echo _("Neue globale Konfiguration anlegen.") . " ";
-    echo LinkButton::create(_("neu anlegen"), URLHelper::getURL('?com=new&mod=Global'));
+    echo LinkButton::create(_("Neu anlegen"), URLHelper::getURL('?com=new&mod=Global'));
     echo "</blockquote>";
 }
 
@@ -276,7 +276,7 @@ if ($choose_module_form != '') {
         echo "<blockquote><font size=\"2\">";
         $choose_module_form = "<select name=\"mod\">\n$choose_module_form</select>\n";
         printf(_("Neue Konfiguration f&uuml;r Modul %s anlegen.") . " ", $choose_module_form);
-        echo Button::create(_("neu anlegen"));
+        echo Button::create(_("Neu anlegen"));
         echo "</font></blockquote>\n";
         echo "</form>\n";
 
@@ -291,7 +291,7 @@ if ($choose_module_form != '') {
             }
             $choose_institute_copy .= "</select>\n";
             printf(_("Konfiguration aus Einrichtung %s kopieren."), $choose_institute_copy);
-            echo Button::create(_("weiter") . " >>");
+            echo Button::create(_("Weiter") . " >>");
             echo "</font></blockquote>\n";
             echo "</form>\n";
         }
@@ -317,8 +317,8 @@ if ($choose_module_form != '') {
             echo CSRFProtection::tokenTag();
             echo "<blockquote><font size=\"2\">";
             printf(_("Konfiguration %s aus Einrichtung kopieren."), $choose_module_select . '</select>');
-            echo Button::create(_("kopieren"));
-            echo LinkButton::create("<< " . _("zurück"), URLHelper::getURL('?list=TRUE&view=extern_inst'));
+            echo Button::create(_("Kopieren"));
+            echo LinkButton::create("<< " . _("Zurück"), URLHelper::getURL('?list=TRUE&view=extern_inst'));
             echo "</font></blockquote>\n";
             echo "<input type=\"hidden\" name=\"copyinstid\" value=\"" . htmlReady($_REQUEST['copychooseinst']) . "\">\n";
             echo "</form>\n";

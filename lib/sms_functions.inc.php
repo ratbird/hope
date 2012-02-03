@@ -271,9 +271,9 @@ function print_snd_message($psm) {
 
         // buttons
         
-        $edit = LinkButton::create(_('löschen'), URLHelper::getURL("?cmd=delete_selected", array('sel_sms[1]' => $psm['message_id'])), array('title' => _('Diese Nachricht löschen.')));
+        $edit = LinkButton::create(_('Löschen'), URLHelper::getURL("?cmd=delete_selected", array('sel_sms[1]' => $psm['message_id'])), array('title' => _('Diese Nachricht löschen.')));
         if (have_msgfolder($sms_data['view']) == TRUE) {
-            $edit .= LinkButton::create(_('verschieben'), URLHelper::getURL('', array('move_to_folder[1]' => $psm['message_id'])), array('title' => _('Diese Nachricht in einen frei wählbaren Ordner verschieben.')))
+            $edit .= LinkButton::create(_('Verschieben'), URLHelper::getURL('', array('move_to_folder[1]' => $psm['message_id'])), array('title' => _('Diese Nachricht in einen frei wählbaren Ordner verschieben.')))
                   . "<br><br>";
         }
     }
@@ -444,12 +444,12 @@ function print_rec_message($prm) {
         // mk buttons
         $edit = '<div class="button-group">';
         if ($prm['user_id_snd'] != "____%system%____") {
-            $edit .= LinkButton::create(_('antworten'), URLHelper::getURL('sms_send.php', array('cmd'=> 'write', 'answer_to' => $prm['message_id'])));
-            $edit .= LinkButton::create(_('zitieren'), URLHelper::getURL('sms_send.php', array('cmd' => 'write', 'quote' => $prm['message_id'], 'answer_to' => $prm['message_id'])));
+            $edit .= LinkButton::create(_('Antworten'), URLHelper::getURL('sms_send.php', array('cmd'=> 'write', 'answer_to' => $prm['message_id'])));
+            $edit .= LinkButton::create(_('Zitieren'), URLHelper::getURL('sms_send.php', array('cmd' => 'write', 'quote' => $prm['message_id'], 'answer_to' => $prm['message_id'])));
         }
-        $edit.= LinkButton::create(_('löschen'), URLHelper::getURL('', array('cmd' => 'delete_selected', "sel_sms[1]" => $prm['message_id'])));
+        $edit.= LinkButton::create(_('Löschen'), URLHelper::getURL('', array('cmd' => 'delete_selected', "sel_sms[1]" => $prm['message_id'])));
         if (have_msgfolder($sms_data['view']) == TRUE) {
-            $edit .= LinkButton::create(_('verschieben'), URLHelper::getURL('', array('move_to_folder[1]'=> $prm['message_id'])), array('title' => _('Diese Nachricht in einen frei wählbaren Ordner verschieben.')));
+            $edit .= LinkButton::create(_('Verschieben'), URLHelper::getURL('', array('move_to_folder[1]'=> $prm['message_id'])), array('title' => _('Diese Nachricht in einen frei wählbaren Ordner verschieben.')));
         }
         $edit .= '</div>';
     }
@@ -834,10 +834,10 @@ function show_msgform() {
     $tmp .= '</textarea><br><br><div class="button-group">';
     // send/ break-button
     if (sizeof($sms_data["p_rec"]) > "0") { 
-        $tmp .= Button::createAccept(_('abschicken'), 'cmd_insert');
+        $tmp .= Button::createAccept(_('Abschicken'), 'cmd_insert');
     }
-    $tmp .= LinkButton::createCancel(_('abbrechen'), URLHelper::getURL('sms_box.php'));
-    $tmp .= Button::create(_('vorschau'), 'cmd');
+    $tmp .= LinkButton::createCancel(_('Abbrechen'), URLHelper::getURL('sms_box.php'));
+    $tmp .= Button::create(_('Vorschau'), 'cmd');
     $tmp .= "</div><br><br>";
     $tmp .= "</div>";
     return $tmp;
@@ -1011,7 +1011,7 @@ function show_attachmentform()
     $print.="\n<div>";
     $print.="\n<input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"$max_filesize\">";
     $print.= "<input name=\"the_file\" type=\"file\" size=\"40\">";
-    $print.= Button::create(_('hinzufügen'), 'upload', array('onClick' => 'return STUDIP.OldUpload.upload_start(jQuery(this).closest('."'form'".'));'));
+    $print.= Button::create(_('Hinzufügen'), 'upload', array('onClick' => 'return STUDIP.OldUpload.upload_start(jQuery(this).closest('."'form'".'));'));
     $print.= "\n<input type=\"hidden\" name=\"attachment_message_id\" value=\"".htmlready($attachment_message_id)."\">";
     $print.= "</div>";
 

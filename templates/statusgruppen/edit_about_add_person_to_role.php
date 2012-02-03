@@ -25,7 +25,7 @@ use Studip\Button, Studip\LinkButton;
             ?>
             </select>
             <br>
-            <?= Button::create(_('anzeigen'))?>
+            <?= Button::create(_('Anzeigen'))?>
             <?
             } else {
                 $data = $admin_insts[$subview_id];
@@ -46,7 +46,7 @@ use Studip\Button, Studip\LinkButton;
                 <input type="hidden" name="studipticket" value="<?= get_ticket() ?>">
                 <input type="hidden" name="subview_id" value="<?=$subview_id?>">
                 <input type="hidden" name="cmd" value="addToGroup">
-                <?= Button::create(_('zuordnen'))?>
+                <?= Button::create(_('Zuordnen'))?>
             <?
             }
             if ($subview_id && !$groups) :

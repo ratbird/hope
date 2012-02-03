@@ -1405,7 +1405,7 @@ if ($db->f('visible') == 'yes' || $i_see_everybody || $db->f('user_id') == $user
                         <textarea name="userinfo" rows="3" cols="50"><?= $db->f("comment") ?></textarea>
                         <br>
                         <font size="-1"><?= _("&Auml;nderungen") ?></font>
-                        <?= Button::create(_('übernehmen')) ?>
+                        <?= Button::create(_('Übernehmen')) ?>
                         <input type="hidden" name="user_id" value="<?=$db->f("user_id")?>">
                         <input type="hidden" name="cmd" value="change_userinfo">
                         <input type="hidden" name="username" value="<?= $db->f("username") ?>">
@@ -1427,19 +1427,19 @@ if($key != 'dozent' && $rechte && !$info_is_open) {
     echo '<tr><td class="blank" colspan="'.($showscore ? 7 : 6).'">&nbsp;</td>';
 
     if (isset($multiaction[$key]['send'][0]))
-        echo '<td class="blank" align="center">' . Button::create(_('neue Nachricht'),'do_' . $multiaction[$key]['send'][0],array('title'=> $multiaction[$key]['send'][1])) . '</td>';
+        echo '<td class="blank" align="center">' . Button::create(_('Neue Nachricht'),'do_' . $multiaction[$key]['send'][0],array('title'=> $multiaction[$key]['send'][1])) . '</td>';
    else
         echo '<td class="blank">&nbsp;</td>';
 
 
     if (!LockRules::Check($id, 'participants')) {
         if (isset($multiaction[$key]['insert'][0]) && !($key == 'autor' && !$tutor_count)) {
-           echo '<td class="blank" align="center">' . Button::create(_('eintragen'),  'do_' . $multiaction[$key]['insert'][0],array('title'=> $multiaction[$key]['insert'][1])) . '</td>';
+           echo '<td class="blank" align="center">' . Button::create(_('Eintragen'),  'do_' . $multiaction[$key]['insert'][0],array('title'=> $multiaction[$key]['insert'][1])) . '</td>';
         } else {
             echo '<td class="blank">&nbsp;</td>';
         }
 
-        echo '<td class="blank" align="center">' . Button::create(_('entfernen'),'do_' . $multiaction[$key]['delete'][0],array('title'=>$multiaction[$key]['delete'][1])) . '</td>';
+        echo '<td class="blank" align="center">' . Button::create(_('Entfernen'),'do_' . $multiaction[$key]['delete'][0],array('title'=>$multiaction[$key]['delete'][1])) . '</td>';
 
         if ($sem->isAdmissionEnabled()) {
             echo '<td class="blank">&nbsp;</td>';
@@ -1520,8 +1520,8 @@ if ($rechte) {
             echo '<label for="kontingent">'._("Kontingent berücksichtigen:");
             echo '<input id="kontingent" type="checkbox" checked name="consider_contingent" value="1" style="vertical-align:middle"></label>';
             echo '&nbsp;</font></td>';
-            echo '<td class="blank" align="center">' . Button::create(_('eintragen'),'do_admission_insert',array('title'=>_("Ausgewählte Nutzer aus der Warteliste in die Veranstaltung eintragen"))) . '</td>';
-            echo '<td class="blank" align="center">' . Button::create(_('entfernen'),'do_admission_delete',array('title'=>_("Ausgewählte Nutzer aus der Warteliste entfernen"))) . '</td>';
+            echo '<td class="blank" align="center">' . Button::create(_('Eintragen'),'do_admission_insert',array('title'=>_("Ausgewählte Nutzer aus der Warteliste in die Veranstaltung eintragen"))) . '</td>';
+            echo '<td class="blank" align="center">' . Button::create(_('Entfernen'),'do_admission_delete',array('title'=>_("Ausgewählte Nutzer aus der Warteliste entfernen"))) . '</td>';
             echo '<td class="blank">&nbsp;</td></tr>';
         }
         echo '</table>';
@@ -1563,7 +1563,7 @@ if (!LockRules::Check($id, 'participants') && $rechte
         ?>
         </select></td>
         <td class="steel1" width="20%" align="center"><font size=-1><?= sprintf(_("als %s"), get_title_for_status('tutor', 1)) ?></font><br>
-                 <?= Button::create(_('eintragen'),'add_tutor' ,array('value'=> sprintf(_("als %s berufen"), get_title_for_status('tutor', 1)) )) ?></td>
+                 <?= Button::create(_('Eintragen'),'add_tutor' ,array('value'=> sprintf(_("als %s berufen"), get_title_for_status('tutor', 1)) )) ?></td>
 
           </tr></form></table>
 <?
@@ -1624,7 +1624,7 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
                 printf(_("als %s"), get_title_for_status('autor', 1));
             }
             ?></font><br>
-               <?= Button::create(_('eintragen'),'add_user',array('value'=> sprintf(_("als %s berufen"), get_title_for_status('autor', 1)))) ?>&nbsp;<?= LinkButton::create(_('neuesuche'),URLHelper::getLink()) ?></td>
+               <?= Button::create(_('Eintragen'),'add_user',array('value'=> sprintf(_("als %s berufen"), get_title_for_status('autor', 1)))) ?>&nbsp;<?= LinkButton::create(_('Neuesuche'),URLHelper::getLink()) ?></td>
 
         </tr>
     </table>
@@ -1675,7 +1675,7 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
             <? endif ?>
         </td>
         <td class="steel1" width="20%" align="center">
-             <?= Button::create(_('eintragen'),'add_user',array('value'=>_("eintragen"))) ?>  </td>
+             <?= Button::create(_('Eintragen'),'add_user',array('value'=>_("eintragen"))) ?>  </td>
 
        
     </tr></table></form></tr>
@@ -1736,9 +1736,9 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
         }
         echo "</td>\n";
         echo "<td width=\"20%\" class=\"steel1\" align=\"center\"> ";
-        echo Button::create(_('eintragen'),'submit') ;
+        echo Button::create(_('Eintragen'),'submit') ;
         if (sizeof($csv_not_found)) {
-           echo "<img border=\"0\" " . LinkButton::create(_('löschen'),URLHelper::getLink());
+           echo "<img border=\"0\" " . LinkButton::create(_('Löschen'),URLHelper::getLink());
         }
         echo "\n</td></tr>\n";
     } else {
@@ -1784,9 +1784,9 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
                 }
                 echo '</select></label></font>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ';
             }
-            echo  Button::create(_('eintragen'));
+            echo  Button::create(_('Eintragen'));
             echo '&nbsp; &nbsp; ';
-            echo  LinkButton::create(_('abbrechen'),URLHelper::getLink());
+            echo  LinkButton::create(_('Abbrechen'),URLHelper::getLink());
             echo "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </td></tr>\n";
 
         if (sizeof($csv_not_found)) {

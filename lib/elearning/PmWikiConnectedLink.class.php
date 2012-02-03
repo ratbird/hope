@@ -87,7 +87,7 @@ class PmWikiConnectedLink extends ConnectedLink
             <input type='hidden'    name='_range_id'        value='<?= $range_id ?>'>
             <input type='hidden'    name='_server'          value='<?= $GLOBALS['STUDIP_INSTALLATION_ID'] ?>'>
             <input type='hidden'    name='_context'         value='<?= $context ?>'>
-            <?= Button::createAccept(_('starten')) ?>
+            <?= Button::createAccept(_('Starten')) ?>
 
         </form>
 
@@ -123,11 +123,11 @@ class PmWikiConnectedLink extends ConnectedLink
 
             <?php if ($connected_cms[$this->cms_type]->content_module[$current_module]->isConnected()) : ?>
 
-                &nbsp;<?= Button::create(_('entfernen'), 'remove') ?>
+                &nbsp;<?= Button::create(_('Entfernen'), 'remove') ?>
 
             <?php else :?>
 
-                &nbsp;<?= Button::create(_('hinzufügen'), 'add') ?>
+                &nbsp;<?= Button::create(_('Hinzufügen'), 'add') ?>
 
             <?php endif ; ?>
 

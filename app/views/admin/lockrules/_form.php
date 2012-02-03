@@ -73,7 +73,7 @@ foreach($lock_config['groups'] as $group => $group_title) {
         ?>
         <tr>
         <td colspan="3" style="text-align:center">
-            <?= Button::create(_('übernehmen'), 'ok', array('title' => _('Einstellungen übernehmen')))?>
+            <?= Button::create(_('Übernehmen'), 'ok', array('title' => _('Einstellungen übernehmen')))?>
         </td>
         </tr>
         <?

@@ -56,7 +56,7 @@ class ConnectedLink
         $output .= "<input type=\"HIDDEN\" name=\"cms_select\" value=\"" . $cms_select . "\">\n";
         $output .= "<input type=\"HIDDEN\" name=\"new_account_cms\" value=\"" . $this->cms_type . "\">\n";
         $output .= "<input type=\"HIDDEN\" name=\"new_account_step\" value=\"0\">\n";
-        $output .= Button::createAccept(_('starten'), 'start');
+        $output .= Button::createAccept(_('Starten'), 'start');
         $output .= "</form>";
         return $output;
     }
@@ -94,9 +94,9 @@ class ConnectedLink
         $output .= "<input type=\"HIDDEN\" name=\"module_system_type\" value=\"" . $this->cms_type . "\">\n";
 
         if ($connected_cms[$this->cms_type]->content_module[$current_module]->isConnected())
-            $output .= "&nbsp;" . Button::create(_('entfernen'), 'remove');
+            $output .= "&nbsp;" . Button::create(_('Entfernen'), 'remove');
         else
-            $output .= "&nbsp;" . Button::create(_('hinzufügen'), 'add');
+            $output .= "&nbsp;" . Button::create(_('Hinzufügen'), 'add');
         $output .= "</form>";
 
         return $output;

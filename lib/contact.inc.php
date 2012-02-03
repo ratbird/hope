@@ -536,8 +536,8 @@ function ShowEditContact ($contact_id)
                     . '</td></tr>';
         $css_switcher->switchClass();
         $output .= '<tr><td valign="middle" colspan="3" class="' . $css_switcher->getClass() 
-                . '" align="center">' . LinkButton::create('<< ' . _('zurück'),  URLHelper::getLink('#anker', array('open' => $contact_id)), array('title' => _('zurück zur Übersicht'))) 
-                . '&nbsp; ' . Button::create(_('übernehmen')) . '</form></td></tr>';
+                . '" align="center">' . LinkButton::create('<< ' . _('Zurück'),  URLHelper::getLink('#anker', array('open' => $contact_id)), array('title' => _('zurück zur Übersicht'))) 
+                . '&nbsp; ' . Button::create(_('Übernehmen')) . '</form></td></tr>';
         $output .= '</table>';
     } else {
         $output = _("Fehler!");

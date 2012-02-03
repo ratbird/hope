@@ -157,7 +157,7 @@ use Studip\Button, Studip\LinkButton;
             &nbsp;
         </td>
         <td class="<? echo $cssSw->getClass() ?>" colspan=3 align="center">
-            <br><?= Button::create(_('übernehmen'), array('title' => _('Zuweisen')))?>
+            <br><?= Button::create(_('Übernehmen'), array('title' => _('Zuweisen')))?>
         </td>
     </tr>
 </table>

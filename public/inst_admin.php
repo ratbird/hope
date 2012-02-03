@@ -638,7 +638,7 @@ if ($inst_id != "" && $inst_id !="0") {
                             <b><?=_("Folgende nur bei Zuordnung eines Admins:")?></b><br>
                             <input type="checkbox" id="enable_mail_admin" name="enable_mail_admin" value="admin"><label for="enable_mail_admin" ><?=_("Admins der Einrichtung benachrichtigen")?></label><br>
                             <input type="checkbox" id="enable_mail_dozent" name="enable_mail_dozent" value="dozent"><label for="enable_mail_dozent" ><?=_("Dozenten der Einrichtung benachrichtigen")?></label><br>
-                            <?= Button::create(_('hinzufügen'), 'berufen') ?>
+                            <?= Button::create(_('Hinzufügen'), 'berufen') ?>
                             </td>
                         </tr>
                     </table>
@@ -885,7 +885,7 @@ if ($perm->have_perm("admin")) {
     printf("<option %svalue=\"liste\">%s</option>\n",
         ($show == "liste" ? "selected " : ""), _("keine"));
     echo "</select>\n";
-    echo Button::create(_('übernehmen'));
+    echo Button::create(_('Übernehmen'));
 }
 else {
     if ($show == "funktion") {
@@ -903,10 +903,10 @@ printf("<font size=\"-1\">" . _("<b>%s</b> MitarbeiterInnen gefunden") . "</font
 echo "</td><td class=\"steel1\" width=\"10%\">\n";
 
 if ($extend == "yes") {
-    echo LinkButton::create(_('normale Ansicht'), URLHelper::getLink('?extend=no'));
+    echo LinkButton::create(_('Normale Ansicht'), URLHelper::getLink('?extend=no'));
 }
 else {
-    echo LinkButton::create(_('erweiterte Ansicht'), URLHelper::getLink('?extend=yes'));
+    echo LinkButton::create(_('Erweiterte Ansicht'), URLHelper::getLink('?extend=yes'));
 }
 
 echo "</td></tr></table>\n";

@@ -396,13 +396,13 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
     }
     echo '<tr><td class="blank" align="center" colspan="';
     echo (sizeof($enabled_modules) + 3) . '"><br>';
-    echo Button::create(_('übernehmen'), array('title' => _("Änderungen übernehmen")));
+    echo Button::create(_('Übernehmen'), array('title' => _("Änderungen übernehmen")));
     if ($_REQUEST['view'] != 'notification') {
         echo "&nbsp; <a href=\"$PHP_SELF\">";
     } else {
         echo "&nbsp; <a href=\"$PHP_SELF?view=notification\">";
     }
-    echo Button::create(_('zurücksetzen', array('title' => _("zurücksetzen"))));
+    echo Button::create(_('Zurücksetzen', array('title' => _("zurücksetzen"))));
     echo '<input type="hidden" name="cmd" value="set_sem_notification"><br>&nbsp; </td></tr></form>';
     echo "</table>\n";
 }

@@ -26,8 +26,8 @@ use Studip\Button, Studip\LinkButton;
         <textarea style="width: 90%;height: 15em;" name="content" id="content"><?= htmlReady($content) ?></textarea><br>
         <input type="hidden" name="detail_id" value="<?= $currentdetail?>">
   <? endif ?>
-        <?= Button::createAccept(_('abschicken')) ?>
-        <?= LinkButton::createCancel(_('abbrechen'), $controller->url_for('siteinfo/show/'.$currentrubric.'/'.$currentdetail)) ?>
+        <?= Button::createAccept(_('Abschicken')) ?>
+        <?= LinkButton::createCancel(_('Abbrechen'), $controller->url_for('siteinfo/show/'.$currentrubric.'/'.$currentdetail)) ?>
     </form>
   <? if(!$edit_rubric): ?>
     <?= $this->render_partial('siteinfo/help') ?>

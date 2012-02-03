@@ -56,7 +56,7 @@ class Ilias3ConnectedLink extends ConnectedLink
                 if ($connected_cms[$this->cms_type]->content_module[$current_module]->isAllowed(OPERATION_READ))
                 {
                     
-                    $output .= LinkButton::create(_('starten'), URLHelper::geURL($this->cms_link . "?"
+                    $output .= LinkButton::create(_('Starten'), URLHelper::geURL($this->cms_link . "?"
                         . "client_id=" . $connected_cms[$this->cms_type]->getClientId()
                         . "&cms_select=" . $this->cms_type
 //                      . "&sess_id=" . $connected_cms[$this->cms_type]->user->getSessionId()
@@ -68,7 +68,7 @@ class Ilias3ConnectedLink extends ConnectedLink
                 }
                 if ($connected_cms[$this->cms_type]->content_module[$current_module]->isAllowed(OPERATION_WRITE))
                 {
-                    $output .= LinkButton::create(_('bearbeiten'), URLHelper::geURL($this->cms_link . "?"
+                    $output .= LinkButton::create(_('Bearbeiten'), URLHelper::geURL($this->cms_link . "?"
                         . "client_id=" . $connected_cms[$this->cms_type]->getClientId()
                         . "&cms_select=" . $this->cms_type
 //                      . "&sess_id=" . $connected_cms[$this->cms_type]->user->getSessionId()
@@ -106,17 +106,17 @@ class Ilias3ConnectedLink extends ConnectedLink
         $output .= "<input type=\"HIDDEN\" name=\"module_system_type\" value=\"" . $this->cms_type . "\">\n";
 
         if ($connected_cms[$this->cms_type]->content_module[$current_module]->isConnected())
-            $output .= "&nbsp;" . Button::create(_('entfernen'), 'remove');
+            $output .= "&nbsp;" . Button::create(_('Entfernen'), 'remove');
         elseif ($connected_cms[$this->cms_type]->content_module[$current_module]->isAllowed(OPERATION_WRITE))
         {   
             $output .= "<div align=\"left\"><input type=\"CHECKBOX\" value=\"1\" name=\"write_permission\" style=\"vertical-align:middle\">";
             $output .= _("Mit Schreibrechten f&uuml;r alle Dozenten/Tutoren dieser Veranstaltung") . "<br>";
             $output .= "<input type=\"CHECKBOX\" value=\"1\" style=\"vertical-align:middle\" name=\"write_permission_autor\">";
             $output .= _("Mit Schreibrechten f&uuml;r alle Teilnehmer dieser Veranstaltung") . "</div>";
-            $output .=  Button::create(_('hinzufügen'), 'add') . "<br>";
+            $output .=  Button::create(_('Hinzufügen'), 'add') . "<br>";
         }
         else
-            $output .= "&nbsp;" . Button::create(_('hinzufügen'), 'add');
+            $output .= "&nbsp;" . Button::create(_('Hinzufügen'), 'add');
         $output .= "</form>";
 
         return $output;
@@ -145,7 +145,7 @@ class Ilias3ConnectedLink extends ConnectedLink
                 if ($connected_cms[$this->cms_type]->user->category == false)
                     return $output;
             }
-            $output = "&nbsp;" . LinkButton::create(_('neu anlegen'), URLHelper::getURL($this->cms_link . "?"
+            $output = "&nbsp;" . LinkButton::create(_('Neu anlegen'), URLHelper::getURL($this->cms_link . "?"
                 . "client_id=" . $connected_cms[$this->cms_type]->getClientId()
                 . "&cms_select=" . $this->cms_type
 //              . "&sess_id=" . $connected_cms[$this->cms_type]->user->getSessionId()

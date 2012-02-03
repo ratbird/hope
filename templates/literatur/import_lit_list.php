@@ -34,7 +34,7 @@ use Studip\Button, Studip\LinkButton;
                 <br>
                 <?= _("2. Klicken Sie auf <b>absenden</b>, um die Datei hochzuladen.") ?><br>
                 <br>
-        <?= Button::createAccept(_('absenden'))?>
+        <?= Button::createAccept(_('Absenden'))?>
             <? endif; ?>
                 <br>
                 <br>

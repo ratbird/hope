@@ -436,9 +436,9 @@ if (($archiv_assi_data["sems"]) && (sizeof($archiv_assi_data["sem_check"]) > 0))
                         $inc_possible = TRUE;
                 }
                 if ($inc_possible) {
-                    printf("&nbsp;<a href=\"%s\">%s</a>", URLHelper::getLink("?dec=TRUE"), Button::create(_('<< vorherige')));
+                    printf("&nbsp;<a href=\"%s\">%s</a>", URLHelper::getLink("?dec=TRUE"), Button::create(_('<< Vorherige')));
                 }
-                printf("&nbsp;<a href=\"%s\">%s</a>", URLHelper::getLink("?archive_kill=TRUE"), Button::create(_('archivieren')));
+                printf("&nbsp;<a href=\"%s\">%s</a>", URLHelper::getLink("?archive_kill=TRUE"), Button::create(_('Archivieren')));
                 if (!$links_admin_data["sem_id"]) {
                     echo '&nbsp;<a href="';
 
@@ -450,7 +450,7 @@ if (($archiv_assi_data["sems"]) && (sizeof($archiv_assi_data["sem_check"]) > 0))
                         echo URLHelper::getLink('dispatch.php/course/management');
                     }
 
-                    echo '">' . Button::createCancel(_('abbrechen')) . '</a>';
+                    echo '">' . Button::createCancel(_('Abbrechen')) . '</a>';
                 }
                 // can we inc?
                 if ($archiv_assi_data["pos"] < sizeof($archiv_assi_data["sems"])-1) {
@@ -461,7 +461,7 @@ if (($archiv_assi_data["sems"]) && (sizeof($archiv_assi_data["sem_check"]) > 0))
                         $dec_possible = TRUE;
                 }
                 if ($dec_possible) {
-                    printf("&nbsp;<a href=\"%s\">%s</a>", URLHelper::getLink("?inc=TRUE"), Button::create(_('nächster >>')));
+                    printf("&nbsp;<a href=\"%s\">%s</a>", URLHelper::getLink("?inc=TRUE"), Button::create(_('Nächster >>')));
                 }
                 if (sizeof($archiv_assi_data["sems"]) > 1)
                     printf ("<br><font size=\"-1\">" . _("noch <b>%s</b> von <b>%s</b> Veranstaltungen zum Archivieren ausgew&auml;hlt.") . "</font>", sizeof($archiv_assi_data["sem_check"]), sizeof($archiv_assi_data["sems"]));

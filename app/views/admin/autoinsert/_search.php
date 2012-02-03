@@ -21,7 +21,7 @@ use Studip\Button, Studip\LinkButton;
     <tfoot>
         <tr>
             <td colspan="2" align="center">
-                <?= Button::create(_('suchen'),'suchen')?>
+                <?= Button::create(_('Suchen'),'suchen')?>
             </td>
         </tr>
     </tfoot>

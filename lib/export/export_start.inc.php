@@ -123,7 +123,7 @@ $export_pagecontent .= "<input type=\"hidden\" name=\"xslt_filename\" value=\"" 
 $export_pagecontent .= "<input type=\"hidden\" name=\"choose\" value=\"" . htmlReady($choose) . "\">";
 $export_pagecontent .= "<input type=\"hidden\" name=\"format\" value=\"" . htmlReady($format) . "\">";
 
-$export_weiter_button = "<center>" . Button::create(_('weiter') . ' >>' ) . "</center></form>";
+$export_weiter_button = "<center>" . Button::create(_('Weiter') . ' >>' ) . "</center></form>";
 
 $infobox = array(
     array(

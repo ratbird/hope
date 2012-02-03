@@ -62,8 +62,8 @@ use Studip\Button, Studip\LinkButton;
     </tr>
     <tr class="steel2">
         <td colspan="2" align="center">
-            <?= Button::create(_('suchen'), 'send')?>
-            <?= Button::create(_('zurücksetzen'), 'reset')?>
+            <?= Button::create(_('Suchen'), 'send')?>
+            <?= Button::create(_('Zurücksetzen'), 'reset')?>
         </td>
     </tr>
 </table>

@@ -82,8 +82,8 @@ use Studip\Button, Studip\LinkButton;
         <tr class="steel2">
             <td>&nbsp;</td>
             <td>
-                <?= Button::createAccept(_('übernehmen'),'uebernehmen', array('title' => _('Änderungen übernehmen')))?>
-                <?= LinkButton::createCancel(_('abbrechen'), $controller->url_for('admin/configuration/configuration'), array('title' => _('Zurück zur Übersicht')))?>
+                <?= Button::createAccept(_('Übernehmen'),'uebernehmen', array('title' => _('Änderungen übernehmen')))?>
+                <?= LinkButton::createCancel(_('Abbrechen'), $controller->url_for('admin/configuration/configuration'), array('title' => _('Zurück zur Übersicht')))?>
             </td>
         </tr>
     </table>

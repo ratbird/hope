@@ -107,7 +107,7 @@ use Studip\Button, Studip\LinkButton;
     <tr>
         <td colspan="4" align="center">
             <?= Button::create(_('Suche starten'), 'search')?>
-            <?= Button::create(_('zurücksetzen'), 'reset')?>
+            <?= Button::create(_('Zurücksetzen'), 'reset')?>
         </td>
     </tr>
 </table>

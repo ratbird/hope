@@ -24,8 +24,8 @@ use Studip\Button, Studip\LinkButton;
         <label for="content"><?= _('Seiteninhalt')?></label><br>
         <textarea style="width: 90%;height: 15em;" name="content" id="content"></textarea><br>
   <? endif ?>
-        <?= Button::createAccept(_('abschicken')) ?>
-        <?= LinkButton::createCancel(_('abbrechen'), $controller->url_for('siteinfo/show/'.$currentrubric)) ?>
+        <?= Button::createAccept(_('Abschicken')) ?>
+        <?= LinkButton::createCancel(_('Abbrechen'), $controller->url_for('siteinfo/show/'.$currentrubric)) ?>
     </form>
   <? if(!$edit_rubric): ?>
     <?= $this->render_partial('siteinfo/help') ?>

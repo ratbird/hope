@@ -49,9 +49,9 @@
 
     <input type="hidden" name="cmd" value="<?= ($edit_role) ? 'doEditRole' : 'addRole' ?>">
     <? if ($edit_role) :?>
-    <?= Button::createAccept(_('speichern'), 'speichern'); ?>
+    <?= Button::createAccept(_('Speichern'), 'speichern'); ?>
     <? else: ?>
-    <?= Button::create(_('eintragen'), 'eintragen'); ?>
+    <?= Button::create(_('Eintragen'), 'eintragen'); ?>
     <? endif; ?>
 
     <input type="hidden" name="role_id" value="<?= $role_data['id'] ?>">

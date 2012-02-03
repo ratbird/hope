@@ -54,7 +54,7 @@ header('Location: '.$controller->url_for('course/change_view/set?cid='.Request::
                 <option value="user">user</option>
             </select>
             <input type="hidden" name="cid" value="<?= Request::get('cid'); ?>"/>
-            <?= Button::create(_('übernehmen'), 'set_seminar_view', array('title' => _('Ansicht der Veranstaltung zurücksetzen'))) ?>
+            <?= Button::create(_('Übernehmen'), 'set_seminar_view', array('title' => _('Ansicht der Veranstaltung zurücksetzen'))) ?>
             <br/>
             <?= _('Wenn Sie hier eine Berechtigungsstufe auswählen, werden Sie '.
                 'die Veranstaltung genauso sehen, wie es eine/e Teilnehmer/-in '.
@@ -65,7 +65,7 @@ header('Location: '.$controller->url_for('course/change_view/set?cid='.Request::
         <?php } else { ?>
             <?= _('Veranstaltung wieder auf die normale Ansicht für Dozent/-innen zurücksetzen:') ?>
             <input type="hidden" name="cid" value="<?= Request::get('cid'); ?>"/>
-            <?= Button::create(_('übernehmen'), 'set_seminar_view') ?>
+            <?= Button::create(_('Übernehmen'), 'set_seminar_view') ?>
             <br/><br/>
             <?= _('Durch Klick auf "übernehmen" sehen Sie die Veranstaltung wieder als Dozent/-in.'); ?>
         <?php } ?>

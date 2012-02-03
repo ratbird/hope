@@ -7,9 +7,9 @@ use Studip\Button, Studip\LinkButton;
     <?= CSRFProtection::tokenTag() ?>
     <?= _('Suche nach Plugins:') ?>
     <input name="search" type="text" size="20" value="<?= htmlReady($search) ?>">
-    <?= Button::create(_('suchen'), 'suchen', array('title' => _('Suche starten')))?>
+    <?= Button::create(_('Suchen'), 'suchen', array('title' => _('Suche starten')))?>
     &nbsp;
-    <?= LinkButton::create(_('zurücksetzen'), $controller->url_for('admin/plugin/search'), array('title' => _('Suche zurücksetzen')))?>
+    <?= LinkButton::create(_('Zurücksetzen'), $controller->url_for('admin/plugin/search'), array('title' => _('Suche zurücksetzen')))?>
 </form>
 
 <h3>
@@ -88,7 +88,7 @@ use Studip\Button, Studip\LinkButton;
         <input name="upload_file" type="file" size="40">
         <input type="hidden" name="ticket" value="<?= get_ticket() ?>">
 
-        <?= Button::create(_('hinzufügen'), 'hinzufuegen', array('title' => _('neues Plugin installieren')))?>
+        <?= Button::create(_('Hinzufügen'), 'hinzufuegen', array('title' => _('neues Plugin installieren')))?>
     </form>
 <? endif ?>
 

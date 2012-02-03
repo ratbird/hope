@@ -243,7 +243,7 @@ for ($i = $_the_search->start_result; $i <= $end_result; ++$i){
         $edit = LinkButton::create(_("Details"), $link);
         $link=URLHelper::getURL('',array("cmd"=>"add_to_clipboard","catalog_id"=>$element->getValue("catalog_id")));
         if (!$_the_clipboard->isInClipboard($element->getValue("catalog_id"))){
-            $edit .= LinkButton::create(_("in Merkliste >"), $link);
+            $edit .= LinkButton::create(_("In Merkliste >"), $link);
         }
         echo "\n<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\">";
         $content .= "<b>" . _("Titel:") ."</b>&nbsp;&nbsp;" . htmlReady($element->getValue("dc_title"),true,true) . "<br>";

@@ -320,7 +320,7 @@ function aux_enter_data() {
     }
 
     echo $zt->openRow();
-    echo $zt->cell('<br>' . Button::create(_('übernehmen')) . '<br><br>', array('colspan' => '20', 'align' => 'center'));
+    echo $zt->cell('<br>' . Button::create(_('Übernehmen')) . '<br><br>', array('colspan' => '20', 'align' => 'center'));
     echo $zt->close();
     echo '</form>';
 }

@@ -15,9 +15,9 @@ $style = "style=\"background-image: url('". Assets::image_path('forumstrich.gif'
         <center>
         <br>
         <? if ($GLOBALS['perm']->have_studip_perm('admin', $inst_id) && !$locked) : ?>
-            <?= LinkButton::create(_('löschen'), URLHelper::getURL('?view=Karriere&username='. $username .'&cmd=removeFromGroup&role_id='. $role_id .'&studipticket='. get_ticket())) ?>">
+            <?= LinkButton::create(_('Löschen'), URLHelper::getURL('?view=Karriere&username='. $username .'&cmd=removeFromGroup&role_id='. $role_id .'&studipticket='. get_ticket())) ?>">
             &nbsp;&nbsp;&nbsp;
-            <?= LinkButton::create(_('zur Funktion'), URLHelper::getURL('admin_roles.php', array('admin_inst_id' => $inst_id, 'open' => $role_id)) . '#' . $role_id) ?>">
+            <?= LinkButton::create(_('Zur Funktion'), URLHelper::getURL('admin_roles.php', array('admin_inst_id' => $inst_id, 'open' => $role_id)) . '#' . $role_id) ?>">
             <br><br>
         <? endif; ?>
             <input type="hidden" name="cmd" value="special_edit">

@@ -40,7 +40,7 @@ $cssSw = new cssClassSwitcher();
         <?= MessageBox::info( _("Die Studiengruppen sind aktiviert.")) ?>
         <form action="<?= $controller->url_for('course/studygroup/deactivate') ?>" method="post">
         <?= CSRFProtection::tokenTag() ?>
-        <?= Button::create(_("deaktivieren"), 'deaktivieren') ?>
+        <?= Button::create(_("Deaktivieren"), 'deaktivieren') ?>
         </form>
     <? else: ?>
         <?= MessageBox::info(_("Sie können die Studiengruppen nicht deaktivieren, solange noch welche in Stud.IP vorhanden sind!")) ?>
@@ -137,6 +137,6 @@ $cssSw = new cssClassSwitcher();
 </table>
 <p style="text-align: center">
     <br>
-    <?= Button::createAccept(_("speichern"), 'speichern') ?>
+    <?= Button::createAccept(_("Speichern"), 'speichern') ?>
 </p>
 </form>

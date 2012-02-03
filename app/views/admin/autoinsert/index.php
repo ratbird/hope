@@ -72,7 +72,7 @@ use Studip\Button, Studip\LinkButton;
         <tfoot>
             <tr>
                 <td colspan="2" align="center">
-                    <?= Button::create(_('anlegen'),'anlegen')?>
+                    <?= Button::create(_('Anlegen'),'anlegen')?>
                 </td>
             </tr>
         </tfoot>

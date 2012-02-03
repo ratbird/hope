@@ -344,9 +344,9 @@ $query_time = $query_time_sort;
             <tr>
                 <td class="blank" align="right" valign="bottom">&nbsp; <?
                     if ($cmd != "admin_folder" && !$sms_data['tmp']['move_to_folder']) {
-                        echo LinkButton::create(_('neuer Ordner'), URLHelper::getURL("?cmd=admin_folder&cmd_2=new"));
+                        echo LinkButton::create(_('Neuer Ordner'), URLHelper::getURL("?cmd=admin_folder&cmd_2=new"));
                     } else {
-                        echo LinkButton::createCancel(_('abbrechen'), URLHelper::getURL("?cmd="));
+                        echo LinkButton::createCancel(_('Abbrechen'), URLHelper::getURL("?cmd="));
                     }
                     ?>
                 </td>
@@ -377,8 +377,8 @@ $query_time = $query_time_sort;
             printhead(0, 0, FALSE, "open", FALSE, ' ' . Assets::img('icons/16/blue/add/folder-empty.png', array('class' => 'text-top')) . ' ', $titel, FALSE);
             echo "</tr></table> ";
             $content_content = $tmp[1]."<div align=\"center\">".$tmp[4];
-            $content_content .= Button::create(_('übernehmen'), $tmp[2], array('align' => 'absmiddle'));
-            $content_content .= Button::createCancel(_('abbrechen'), '', array('align' => 'absmiddle'));
+            $content_content .= Button::create(_('Übernehmen'), $tmp[2], array('align' => 'absmiddle'));
+            $content_content .= Button::createCancel(_('Abbrechen'), '', array('align' => 'absmiddle'));
             $content_content .= " <div>";
             
             echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"99%\" align=\"center\"><tr>";
@@ -411,13 +411,13 @@ $query_time = $query_time_sort;
                 <form action=\"".$PHP_SELF."\" method=\"post\" style=\"display: inline\">" .
                 CSRFProtection::tokenTag() .
                 "<div class=\"button-group\"><input type=\"hidden\" name=\"cmd\" value=\"select_all\">"
-                . Button::create(_('alle auswählen'), 'select', array('align' => 'absmiddle')) .    
+                . Button::create(_('Alle auswählen'), 'select', array('align' => 'absmiddle')) .    
                 "</form>
                 <form action=\"".$PHP_SELF."\" method=\"post\" style=\"display: inline\">".
                 CSRFProtection::tokenTag() .
-                Button::create(_('löschen'), 'delete_selected_button', array('align' => 'absmiddle'));
+                Button::create(_('Löschen'), 'delete_selected_button', array('align' => 'absmiddle'));
                 if (have_msgfolder($sms_data['view']) == TRUE) {                    
-                    $content_content .= Button::create(_('verschieben'), 'move_selected_button', array('align' => 'absmiddle'));
+                    $content_content .= Button::create(_('Verschieben'), 'move_selected_button', array('align' => 'absmiddle'));
                 }
                 $content_content .= "</div><br></div>";
             if (folder_openclose($sms_show['folder'][$sms_data['view']], "all") == "open") {
@@ -469,13 +469,13 @@ $query_time = $query_time_sort;
                                 <form action=\"".$PHP_SELF."\" method=\"post\" style=\"display: inline\">".
                                     CSRFProtection::tokenTag() .
                                     "<input type=\"hidden\" name=\"delete_folder\" value=\"".$x."\">"
-                                      . Button::create(_('löschen'), 'delete_folder_button', array('align' => 'absmiddle')) .
+                                      . Button::create(_('Löschen'), 'delete_folder_button', array('align' => 'absmiddle')) .
                                 "</form>
                                 <form action=\"".$PHP_SELF."\" method=\"post\" style=\"display: inline\">".
                                     CSRFProtection::tokenTag() .
                                     "<input type=\"hidden\" name=\"cmd\" value=\"admin_folder\">
                                     <input type=\"hidden\" name=\"ren_folder\" value=\"".$x."\">"
-                                    . Button::create(_('umbenennen'), 'x', array('align' => 'absmiddle')) .
+                                    . Button::create(_('Umbenennen'), 'x', array('align' => 'absmiddle')) .
                                 "</form>";
                             if ($count_timefilter != "0") {
                                 $content_content .= "
@@ -483,12 +483,12 @@ $query_time = $query_time_sort;
                                     <form action=\"".$PHP_SELF."\" method=\"post\" style=\"display: inline\">".
                                         CSRFProtection::tokenTag() .
                                         "<input type=\"hidden\" name=\"cmd\" value=\"select_all\">"
-                                        . Button::create(_('alle auswählen'), 'select', array('align' => 'absmiddle')) .
+                                        . Button::create(_('Alle auswählen'), 'select', array('align' => 'absmiddle')) .
                                         "</form>
                                         <form action=\"".$PHP_SELF."\" method=\"post\" style=\"display: inline\">".
                                         CSRFProtection::tokenTag()
-                                        . Button::create(_('löschen'), 'delete_selected_button', array('align' => 'absmiddle'))
-                                        . Button::create(_('verschieben'), 'move_selected_button', array('align' => 'absmiddle'))
+                                        . Button::create(_('Löschen'), 'delete_selected_button', array('align' => 'absmiddle'))
+                                        . Button::create(_('Verschieben'), 'move_selected_button', array('align' => 'absmiddle'))
                                         . "<br>";
                             }
                             $content_content .= "</div>";

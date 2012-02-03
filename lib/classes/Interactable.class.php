@@ -90,16 +90,16 @@ abstract class Interactable
      * echo Button::create();
      * # => <button type="submit" name="ok">ok</button>
      *
-     * echo Button::create('yes')
+     * echo Button::create('Yes')
      * # => <button type="submit" name="yes">yes</button>
      *
-     * echo Button::create('yes', 'aName')
+     * echo Button::create('Yes', 'aName')
      * # => <button type="submit" name="aName">yes</button>
      *
-     * echo Button::create('yes', array('a' => 1, 'b' => 2))
+     * echo Button::create('Yes', array('a' => 1, 'b' => 2))
      * # => <button type="submit" a="1" b="2" name="yes">yes</button>
      *
-     * echo Button::create('yes', 'aName', array('a' => 1, 'b' => 2)),
+     * echo Button::create('Yes', 'aName', array('a' => 1, 'b' => 2)),
      * # => <button type="submit" a="1" b="2" name="aName">yes</button>
      * @endcode
      *

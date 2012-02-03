@@ -14,7 +14,7 @@
     </select>
 </div>
 <div style="text-align:center;padding:5px;">
-    <?= Button::create(_('erstellen')) ?>
+    <?= Button::create(_('Erstellen')) ?>
 </div>
 <? else :?>
     <?= MessageBox::info(_("In dieser Veranstaltung können keine weiteren Raumanfragen gestellt werden.")) ?>

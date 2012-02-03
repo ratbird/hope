@@ -35,7 +35,7 @@ use Studip\Button, Studip\LinkButton;
 </table>
 
 <p>
-    <?= LinkButton::create('<< '.  _("zurück"), $controller->url_for('admin/plugin'), array('title' => _('zurück zur Plugin-Verwaltung')))?>
+    <?= LinkButton::create('<< '.  _("Zurück"), $controller->url_for('admin/plugin'), array('title' => _('zurück zur Plugin-Verwaltung')))?>
 </p>
 
 <?

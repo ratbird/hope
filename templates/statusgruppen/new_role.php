@@ -115,9 +115,9 @@
                 <td class="blank" align="right" colspan="2">
                     <br>
                     
-                    <?= Button::createAccept(_('speichern'), 'speichern') ?>
+                    <?= Button::createAccept(_('Speichern'), 'speichern') ?>
                     &nbsp;
-                    <?= LinkButton::createCancel(_('abbrechen'), URLHelper::getURL('', compact('range_id'))) ?>
+                    <?= LinkButton::createCancel(_('Abbrechen'), URLHelper::getURL('', compact('range_id'))) ?>
                 </td>
             </tr>
         </table>

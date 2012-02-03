@@ -557,12 +557,12 @@ if ($perm->have_studip_perm("admin",$i_view) || $i_view == "new") {
         ?>
         <input type="hidden" name="i_id" value="<?= $i_id ?>">
         <?
-        echo Button::create(_('übernehmen'), 'i_edit');
+        echo Button::create(_('Übernehmen'), 'i_edit');
         if ($db->f("number") < 1 && !$_num_inst && ($perm->have_perm("root") || ($perm->is_fak_admin() && get_config('INST_FAK_ADMIN_PERMS') == 'all'))) {
-            echo '&nbsp;'.Button::create(_('löschen'), 'i_trykill');
+            echo '&nbsp;'.Button::create(_('Löschen'), 'i_trykill');
         }
     } else {
-        echo Button::create(_('anlegen'), 'create');
+        echo Button::create(_('Anlegen'), 'create');
     }
     ?>
         <input type="hidden" name="i_view" value="<? printf ("%s", ($i_view=="new") ? "create" : $i_view);  ?>">

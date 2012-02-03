@@ -14,7 +14,7 @@ use Studip\Button, Studip\LinkButton;
  <?= CSRFProtection::tokenTag() ?>
  <input name="key">
  <input name="uid" type="hidden" value="<?= $uid ?>">
- <?= Button::createAccept(_('abschicken')) ?></form><br><br>
+ <?= Button::createAccept(_('Abschicken')) ?></form><br><br>
 </td></tr></table></div><br>
 
 
@@ -31,7 +31,7 @@ use Studip\Button, Studip\LinkButton;
 <input type="hidden" name="uid" value="<?= $uid ?>">
 <table><tr><td><?= _('E-Mail:') ?></td><td><input name="email1"></td></tr>
 <tr><td><?= _('Wiederholung:') ?></td><td><input name="email2"></td></tr></table>
-<?= Button::createAccept(_('abschicken'))  ?>
+<?= Button::createAccept(_('Abschicken'))  ?>
 </form>
 </td></tr></table></div><br>
 

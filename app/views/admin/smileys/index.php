@@ -72,7 +72,7 @@
             <tr>
                 <td>&nbsp;</td>
                 <td colspan="<?= $favorites_enabled ? 7 : 6 ?>">
-                    <?= Studip\Button::createCancel('markierte löschen', 'bulk-delete') ?>
+                    <?= Studip\Button::createCancel('Markierte löschen', 'bulk-delete') ?>
                 </td>
             </tr>
         </tfoot>

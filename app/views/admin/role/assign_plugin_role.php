@@ -19,7 +19,7 @@ use Studip\Button, Studip\LinkButton;
         <? endforeach ?>
     </select>
 
-    <?= Button::create(_('auswählen'), 'select', array('title' => _('Plugin auswählen')))?>
+    <?= Button::create(_('Auswählen'), 'select', array('title' => _('Plugin auswählen')))?>
 </form>
 
 <? if ($pluginid): ?>

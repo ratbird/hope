@@ -114,8 +114,8 @@ if (!$stm_obj->isNew()){
         </table>
         <br>
         <div class="button-group">
-        <?= Button::createAccept(_('übernehmen'), 'ok')?>
-        <?= Button::createCancel(_('abbrechen'), 'cancel')?>
+        <?= Button::createAccept(_('Übernehmen'), 'ok')?>
+        <?= Button::createCancel(_('Abbrechen'), 'cancel')?>
         </div>
         </form>
         </div></td></tr>

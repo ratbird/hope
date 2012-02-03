@@ -114,7 +114,7 @@ foreach ($SEM_CLASS as $key => $val) {
     echo "<input type=\"hidden\" name=\"cmd\" value=\"change\">";
     echo $table->openRow();
     echo $table->cell("&nbsp;",array("colspan" => "2"));
-    echo $table->cell(Button::create(_('zuweisen')));
+    echo $table->cell(Button::create(_('Zuweisen')));
     echo $table->closeRow();
     echo $table->blankRow(array("colspan" => "3"));
 }

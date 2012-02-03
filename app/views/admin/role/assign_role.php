@@ -14,7 +14,7 @@ use Studip\Button, Studip\LinkButton;
     <? if (empty($users)): ?>
         <?= _('Name der Person:') ?>
         <input type="text" name="username" value="<?= htmlReady($username) ?>" style="width: 300px;">
-        <?= Button::create(_('suchen'), 'search', array('title' => _('Benutzer suchen')))?>
+        <?= Button::create(_('Suchen'), 'search', array('title' => _('Benutzer suchen')))?>
     <? else: ?>
         <?= _('Benutzer:') ?>
         <select name="usersel" style="min-width: 300px;">
@@ -24,8 +24,8 @@ use Studip\Button, Studip\LinkButton;
             </option>
         <? endforeach ?>
         </select>
-        <?= Button::create(_('auswählen'), 'select', array('title' => _('Benutzer auswählen')))?>
-        <?= LinkButton::create(_('zurücksetzen'), $controller->url_for('admin/role/assign_role'), array('title' => _('Suche zurücksetzen')))?>
+        <?= Button::create(_('Auswählen'), 'select', array('title' => _('Benutzer auswählen')))?>
+        <?= LinkButton::create(_('Zurücksetzen'), $controller->url_for('admin/role/assign_role'), array('title' => _('Suche zurücksetzen')))?>
     <? endif ?>
 </form>
 

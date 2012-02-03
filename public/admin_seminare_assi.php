@@ -2225,7 +2225,7 @@ elseif ((!$level) || ($level == 1))
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
-                            &nbsp; <?= Button::create(_('weiter >>'), 'jump_next') ?>
+                            &nbsp; <?= Button::create(_('Weiter >>'), 'jump_next') ?>
                         </td>
                     </tr>
                     <tr <? $cssSw->switchClass() ?>>
@@ -2541,7 +2541,7 @@ elseif ((!$level) || ($level == 1))
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
-                            &nbsp; <?= Button::create(_('weiter >>'), 'jump_next') ?>
+                            &nbsp; <?= Button::create(_('Weiter >>'), 'jump_next') ?>
                         </td>
                     </tr>
                 </table>
@@ -2592,7 +2592,7 @@ if ($level == 2)
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
-                            &nbsp; <?= Button::create(_('<< zurück'), 'jump_back') .'&nbsp;'. Button::create(_('weiter >>'), 'jump_next') ?>
+                            &nbsp; <?= Button::create(_('<< Zurück'), 'jump_back') .'&nbsp;'. Button::create(_('Weiter >>'), 'jump_next') ?>
                         </td>
                     </tr>
                     <tr <? $cssSw->switchClass() ?>>
@@ -2981,7 +2981,7 @@ if ($level == 2)
                                         </td>
 
                                         <td class="<? echo $cssSw->getClass() ?>">
-                                            <?= Button::create(_('hinzufügen'), 'add_domain', array('title' => _("Ausgewählte Nutzerdomäne hinzufügen"))) ?>
+                                            <?= Button::create(_('Hinzufügen'), 'add_domain', array('title' => _("Ausgewählte Nutzerdomäne hinzufügen"))) ?>
                                             <img  src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/grey/info-circle.png"
                                                 <? // TODO: Find appropriate Infotext
                                                 echo tooltip(_("Bitte markieren Sie hier alle Nutzerdomänen, für die die Veranstaltung angeboten wird."), TRUE, TRUE) ?>
@@ -3001,7 +3001,7 @@ if ($level == 2)
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
-                            &nbsp; <?= Button::create(_('<< zurück'), 'jump_back') ?>&nbsp;<?= Button::create(_('weiter >>'), 'jump_next') ?>
+                            &nbsp; <?= Button::create(_('<< Zurück'), 'jump_back') ?>&nbsp;<?= Button::create(_('Weiter >>'), 'jump_next') ?>
                         </td>
                     </tr>
                 </table>
@@ -3059,7 +3059,7 @@ if ($level == 3) {
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
-                            &nbsp; <?= Button::create(_('<< zurück'), 'jump_back') ?>&nbsp;<?= Button::create(_('weiter >>'), 'jump_next') ?>
+                            &nbsp; <?= Button::create(_('<< Zurück'), 'jump_back') ?>&nbsp;<?= Button::create(_('Weiter >>'), 'jump_next') ?>
                         </td>
                     </tr>
                     <?
@@ -3275,7 +3275,7 @@ if ($level == 3) {
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
-                            &nbsp; <?= Button::create(_('<< zurück'), 'jump_back') ?>&nbsp;<?= Button::create(_('weiter >>'), 'jump_next') ?>
+                            &nbsp; <?= Button::create(_('<< Zurück'), 'jump_back') ?>&nbsp;<?= Button::create(_('Weiter >>'), 'jump_next') ?>
                         </td>
                     </tr>
                 </table>
@@ -3331,7 +3331,7 @@ if ($level == 4) {
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="96%" align="center" colspan=3>
-                            &nbsp; <?= Button::create(_('<< zurück'), 'jump_back') ?>&nbsp;<?= Button::create(_('weiter >>'), 'jump_next') ?>
+                            &nbsp; <?= Button::create(_('<< Zurück'), 'jump_back') ?>&nbsp;<?= Button::create(_('Weiter >>'), 'jump_next') ?>
                         </td>
                     </tr>
                     <?
@@ -3362,7 +3362,7 @@ if ($level == 4) {
                             <? endforeach ?>
                             </select>
                             <?
-                            echo Button::create(_('auswählen'), 'room_request_choose', array('title' => _("einen anderen Anfragetyp bearbeiten")));
+                            echo Button::create(_('Auswählen'), 'room_request_choose', array('title' => _("einen anderen Anfragetyp bearbeiten")));
 
                             $current_request_type = Request::option('new_room_request_type', 'course');
                             $form_attributes = array('admission_turnout' => $sem_create_data['sem_turnout'],
@@ -3376,7 +3376,7 @@ if ($level == 4) {
                                 $trails_views = $GLOBALS['STUDIP_BASE_PATH'] . '/app/views';
                                 $factory = new Flexi_TemplateFactory($trails_views);
                                 echo $factory->render('course/room_requests/_form.php', $form_attributes);
-                                echo '<div style="text-align:center">' . Button::create(_('übernehmen'), 'room_request_save', array('title' => _("Eingaben zur Raumanfrage speichern"))) .  '</div>';
+                                echo '<div style="text-align:center">' . Button::create(_('Übernehmen'), 'room_request_save', array('title' => _("Eingaben zur Raumanfrage speichern"))) .  '</div>';
                             }
                             printf('<input type="hidden" name="current_room_request_type" value="%s">', $current_request_type);
                             ?>
@@ -3553,7 +3553,7 @@ if ($level == 4) {
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="96%" align="center" colspan=3>
-                            &nbsp; <?= Button::create(_('<< zurück'), 'jump_back') ?>&nbsp;<?= Button::create(_('weiter >>'), 'jump_next') ?>
+                            &nbsp; <?= Button::create(_('<< Zurück'), 'jump_back') ?>&nbsp;<?= Button::create(_('Weiter >>'), 'jump_next') ?>
                         </td>
                     </tr>
                 </table>
@@ -3601,7 +3601,7 @@ if ($level == 5)
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
-                            &nbsp; <?= Button::create(_('<< zurück'), 'jump_back') ?>&nbsp;<?= Button::create(_('weiter >>'), 'jump_next') ?>
+                            &nbsp; <?= Button::create(_('<< Zurück'), 'jump_back') ?>&nbsp;<?= Button::create(_('Weiter >>'), 'jump_next') ?>
                         </td>
                     </tr>
                     <? if ($sem_create_data["sem_admission"] != 3) { ?>
@@ -3650,7 +3650,7 @@ if ($level == 5)
                                         >
                                     </td>
                                     <td class="<? echo $cssSw->getClass() ?>" >
-                                    <?=  Button::create(_('löschen'), 'reset_admission_time', array('title' => _("Start- und Enddatum zurücksetzen")))?>
+                                    <?=  Button::create(_('Löschen'), 'reset_admission_time', array('title' => _("Start- und Enddatum zurücksetzen")))?>
                                     </td>
                                 </tr>
                             </table>
@@ -3816,7 +3816,7 @@ if ($level == 5)
                                         <?} else echo '&nbsp;';?>
                                         </td>
                                         <td class="<? echo $cssSw->getClass() ?>" width="25%">
-                                            <?= Button::create(_('hinzufügen'), 'add_studg') ?>&nbsp;
+                                            <?= Button::create(_('Hinzufügen'), 'add_studg') ?>&nbsp;
                                             <img  src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/grey/info-circle.png"
                                                 <? echo tooltip(_("Bitte geben Sie hier ein, für welche Studiengänge die Veranstaltung mit welchen Kontingenten beschränkt sein soll und bis wann eine Anmeldung über das Stud.IP Anmeldeverfahren möglich ist."), TRUE, TRUE) ?>
                                             >
@@ -3972,7 +3972,7 @@ if ($level == 5)
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
-                            &nbsp; <?= Button::create(_('<< zurück'), 'jump_back') ?>&nbsp;<?= Button::create(_('weiter >>'), 'jump_next') ?>
+                            &nbsp; <?= Button::create(_('<< Zurück'), 'jump_back') ?>&nbsp;<?= Button::create(_('Weiter >>'), 'jump_next') ?>
                         </td>
                     </tr>
                 </table>
@@ -4003,7 +4003,7 @@ if ($level == 6)
                 <form method="POST" action="<? echo URLHelper::getLink() ?>">
                     <?= CSRFProtection::tokenTag() ?>
                     <input type="hidden" name="form" value=6>
-                    <?= Button::create(_('<< zurück'), 'jump_back') ?>&nbsp;<?= Button::create(_('weiter >>'), 'jump_next') ?>
+                    <?= Button::create(_('<< Zurück'), 'jump_back') ?>&nbsp;<?= Button::create(_('Weiter >>'), 'jump_next') ?>
                 </form>
                 </div>
             </td>
@@ -4038,7 +4038,7 @@ if ($level == 7)
                     <form method="POST" action="<? echo URLHelper::getLink() ?>">
                         <?= CSRFProtection::tokenTag() ?>
                         <input type="hidden" name="form" value=7>
-                        <?= Button::create(_('<< zurück'), 'jump_back') ?>
+                        <?= Button::create(_('<< Zurück'), 'jump_back') ?>
                     </form>
                     </div>
                 </td>
@@ -4069,10 +4069,10 @@ if ($level == 7)
                         <?= CSRFProtection::tokenTag() ?>
                         <input type="hidden" name="form" value=7>
                         <?
-                        echo Button::createCancel(_('abbrechen'), 'cancel');
+                        echo Button::createCancel(_('Abbrechen'), 'cancel');
                         if (($sem_create_data["modules_list"]["schedule"]) || ($sem_create_data["modules_list"]["scm"])) {
                             ?>
-                            &nbsp;<?= Button::create(_('weiter >>'), 'jump_next') ?>
+                            &nbsp;<?= Button::create(_('Weiter >>'), 'jump_next') ?>
                             <?
                         }
                         ?>
@@ -4118,7 +4118,7 @@ if ($level == 7)
                         <?
                         if (($sem_create_data["modules_list"]["schedule"]) || ($sem_create_data["modules_list"]["scm"])) {
                             ?>
-                            <?= Button::create(_('weiter >>'), 'jump_next') ?>
+                            <?= Button::create(_('Weiter >>'), 'jump_next') ?>
                             <?
                         }
                         ?>
@@ -4258,14 +4258,14 @@ if ($level == 8)
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
                             <?
-                            echo Button::createCancel(_('abbrechen'), 'cancel');
+                            echo Button::createCancel(_('Abbrechen'), 'cancel');
                             if ($sem_create_data["modules_list"]["schedule"]) {
                                 ?>
-                                &nbsp;<?= Button::create(_('weiter >>'), 'jump_next') ?>
+                                &nbsp;<?= Button::create(_('Weiter >>'), 'jump_next') ?>
                                 <?
                             } else {
                                 ?>
-                                &nbsp;<?= Button::create(_('übernehmen'), 'jump_next') ?>
+                                &nbsp;<?= Button::create(_('Übernehmen'), 'jump_next') ?>
                                 <?
                             }
                             ?>
@@ -4316,14 +4316,14 @@ if ($level == 8)
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
                             <?
-                            echo Button::createCancel(_('abbrechen'), 'cancel');
+                            echo Button::createCancel(_('Abbrechen'), 'cancel');
                             if ($sem_create_data["modules_list"]["schedule"]) {
                                 ?>
-                                &nbsp;<?= Button::create(_('weiter >>'), 'jump_next') ?>
+                                &nbsp;<?= Button::create(_('Weiter >>'), 'jump_next') ?>
                                 <?
                             } else {
                                 ?>
-                                &nbsp;<?= Button::create(_('übernehmen'), 'jump_next') ?>
+                                &nbsp;<?= Button::create(_('Übernehmen'), 'jump_next') ?>
                                 <?
                             }
                             ?>

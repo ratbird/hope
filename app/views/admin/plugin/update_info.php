@@ -22,5 +22,5 @@ use Studip\Button, Studip\LinkButton;
         <? endforeach ?>
     </div>
     
-    <?= Button::createAccept(_('starten'), 'update', array('title' => _('Updates installieren')))?>
+    <?= Button::createAccept(_('Starten'), 'update', array('title' => _('Updates installieren')))?>
     </form>

@@ -49,10 +49,10 @@ $sem = Seminar::getInstance($show_entry['id']);
         <br>
 
         <div style="text-align: center">
-            <?= Button::createAccept(_('speichern'), array('style' => 'margin-right: 20px')) ?>
+            <?= Button::createAccept(_('Speichern'), array('style' => 'margin-right: 20px')) ?>
 
             <? if (!$show_entry['visible']) : ?>
-                <?= LinkButton::create(_('einblenden'),
+                <?= LinkButton::create(_('Einblenden'),
                                        $controller->url_for('calendar/schedule/bind/'. $show_entry['id'] .'/'. $show_entry['cycle_id'] .'/'. '?show_hidden=1'), 
                                        array('style' => 'margin-right: 20px')) ?>
             <? else : ?>
@@ -61,7 +61,7 @@ $sem = Seminar::getInstance($show_entry['id']);
                                        array('style' => 'margin-right: 20px')) ?>
             <? endif ?>
 
-            <?= LinkButton::createCancel(_('abbrechen'),
+            <?= LinkButton::createCancel(_('Abbrechen'),
                                          $controller->url_for('calendar/schedule'),
                                          array('onclick' => "jQuery('#edit_sem_entry').fadeOut('fast'); STUDIP.Calendar.click_in_progress = false; return false")) ?>
         </div>

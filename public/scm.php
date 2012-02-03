@@ -175,11 +175,11 @@ function scm_show_content($range_id, $msg, $scm_id) {
         echo $printcontent_table->open();
         if ($rechte) {
             if(StudipScmEntry::GetNumSCMEntriesForRange($range_id) > 1){
-                $edit .= LinkButton::create(_('nach vorne'), URLHelper::getURL("?i_view=first_position&show_scm=$scm_id"), array('title' => _("Diese Seite an die erste Position setzen"))) . "&nbsp;";
+                $edit .= LinkButton::create(_('Nach vorne'), URLHelper::getURL("?i_view=first_position&show_scm=$scm_id"), array('title' => _("Diese Seite an die erste Position setzen"))) . "&nbsp;";
             }
-            $edit .= LinkButton::create(_('bearbeiten'), URLHelper::getURL("?i_view=edit&show_scm=$scm_id"));
+            $edit .= LinkButton::create(_('Bearbeiten'), URLHelper::getURL("?i_view=edit&show_scm=$scm_id"));
             if(StudipScmEntry::GetNumSCMEntriesForRange($range_id) > 1){
-                $edit .= "&nbsp;". LinkButton::create(_('löschen'), URLHelper::getURL("?i_view=kill&show_scm=$scm_id"));
+                $edit .= "&nbsp;". LinkButton::create(_('Löschen'), URLHelper::getURL("?i_view=kill&show_scm=$scm_id"));
             }
         } else {
             $edit = "&nbsp;";
@@ -244,8 +244,8 @@ function scm_edit_content($range_id, $scm_id) {
     $content.= "<input type=\"HIDDEN\" name=\"show_scm\" value=\"$scm_id\">";
     $content.= "<input type=\"HIDDEN\" name=\"i_view\" value=\"change\">";
 
-    $edit = Button::create(_('übernehmen'), 'send_scm', array('title' => _('Änderungen vornehmen')));   
-    $edit.="&nbsp;" . LinkButton::createCancel(_('abbrechen'));
+    $edit = Button::create(_('Übernehmen'), 'send_scm', array('title' => _('Änderungen vornehmen')));   
+    $edit.="&nbsp;" . LinkButton::createCancel(_('Abbrechen'));
     $edit .= "<font size=\"-1\">&nbsp;&nbsp;<a href=\"".URLHelper::getLink('dispatch.php/smileys')."\" target=\"_blank\">";
 
     $help_url = format_help_url("Basis.VerschiedenesFormat");

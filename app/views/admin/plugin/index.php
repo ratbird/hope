@@ -97,7 +97,7 @@ use Studip\Button, Studip\LinkButton;
         </table>
 
         <div style="padding-top: 1em; text-align: center;">
-            <?= Button::createAccept(_('speichern'), 'save', array('title' => _('Einstellungen speichern')))?>
+            <?= Button::createAccept(_('Speichern'), 'save', array('title' => _('Einstellungen speichern')))?>
         </div>
     </form>
 <? endif ?>

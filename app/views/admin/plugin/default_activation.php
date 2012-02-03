@@ -30,9 +30,9 @@ use Studip\Button, Studip\LinkButton;
         <? endforeach ?>
     </select>
     <p>
-        <?= Button::create(_('übernehmen'),'save', array('title' => _('Einstellungen speichern')))?>
+        <?= Button::create(_('Übernehmen'),'save', array('title' => _('Einstellungen speichern')))?>
         &nbsp;
-        <?= LinkButton::create('<< ' . _("zurück"), $controller->url_for('admin/plugin'), array('title' => _('Zurück zur Plugin-Verwaltung')))?>
+        <?= LinkButton::create('<< ' . _("Zurück"), $controller->url_for('admin/plugin'), array('title' => _('Zurück zur Plugin-Verwaltung')))?>
     </p>
 </form>
 

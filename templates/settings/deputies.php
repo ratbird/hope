@@ -76,7 +76,7 @@ use Studip\Buttons, Studip\LinkButton;
                 <?php } ?>
                 <tr class="<?=TextHelper::cycle('steelgraulight', 'steel1')?>">
                     <td colspan="3" align="center">
-                        <?= Button::create(_('übernehmen'), 'change_deputies', array('title' =>  _('Änderungen speichern')))?>
+                        <?= Button::create(_('Übernehmen'), 'change_deputies', array('title' =>  _('Änderungen speichern')))?>
                     </td>
                 </tr>
                 <?php } else { ?>

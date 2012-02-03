@@ -132,7 +132,7 @@ if (($o_mode == "file") OR ($o_mode == "choose"))
         $xml_export_text = _("Es wurden keine Daten gefunden!");
         $export_error = _("Es wurden keine Daten gefunden! Die &uuml;bergebene ID ist mit keinen Veranstaltungs- / Personendaten verbunden.");
         $export_pagecontent .= "<br><br><br><center>" 
-                            . LinkButton::create('<< ' .  _('zurück'), URLHelper::getLink("?range_id=$range_id&ex_type=$ex_type&ex_sem=$ex_sem&o_mode=start"))  
+                            . LinkButton::create('<< ' .  _('Zurück'), URLHelper::getLink("?range_id=$range_id&ex_type=$ex_type&ex_sem=$ex_sem&o_mode=start"))  
                             . "</center>";
         $export_error_num ++;
 
@@ -158,7 +158,7 @@ if (($o_mode == "file") OR ($o_mode == "choose"))
         $export_pagecontent .= "<input type=\"hidden\" name=\"range_id\" value=\"" . htmlReady($range_id) . "\">";
         $export_pagecontent .= "<input type=\"hidden\" name=\"xslt_filename\" value=\"" . htmlReady($xslt_filename) . "\">";
 
-        $export_weiter_button = "<br><br><center>" . Button::create('<< ' . _('zurück'), 'back') . "</center></form>";
+        $export_weiter_button = "<br><br><center>" . Button::create('<< ' . _('Zurück'), 'back') . "</center></form>";
         $xml_printimage = '<a href="'. GetDownloadLink($xml_file_id, $xml_filename, 2) .  '"><img src="'.$GLOBALS['ASSETS_URL'].'images/' . $export_icon['xml'] . '" border=0></a>';
         $xml_printlink = '<a href="'. GetDownloadLink($xml_file_id, $xml_filename, 2). '" class="tree">' . htmlReady($xml_filename) . '</a>';
         $xml_printdesc = _("XML-Daten");

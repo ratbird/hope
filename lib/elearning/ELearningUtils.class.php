@@ -138,7 +138,7 @@ class ELearningUtils
         }
         $output .=  "</select>";
         $output .=  "&nbsp;&nbsp;";
-        $output .=  Button::create(_('auswählen'));
+        $output .=  Button::create(_('Auswählen'));
         $output .= "<br>\n";
         $output .= "<br>\n";
         $output .= "</font>";
@@ -209,7 +209,7 @@ class ELearningUtils
         $output .= "<input name=\"search_key\" size=\"30\" style=\"vertical-align:middle;font-size:9pt;\" value=\"" . $search_key . "\">\n";
 
         $output .=  "&nbsp;";
-        $output .=  Button::create(_('suchen'));
+        $output .=  Button::create(_('Suchen'));
         $output .= "<br>\n";
         $output .= "<br>\n";
         $output .= "</font>";
@@ -250,7 +250,7 @@ class ELearningUtils
 //      $output .= "&nbsp;</td><td align=\"left\">";
         $output .= "</td><td align=\"right\" valign=\"middle\">";
         if (sizeof($ELEARNING_INTERFACE_MODULES[$cms]["types"]) > 1)
-            $output .=  Button::create(_('auswählen'), 'choose');
+            $output .=  Button::create(_('Auswählen'), 'choose');
         $output .= $link;
         $output .= "</td></tr>";
         $output .= "</table>";
@@ -282,9 +282,9 @@ class ELearningUtils
         $output .= "<input type=\"HIDDEN\" name=\"new_account_step\" value=\"1\">\n";
         $output .= "<input type=\"HIDDEN\" name=\"new_account_cms\" value=\"" . $my_account_cms . "\">\n";
         if ($connected_cms[$my_account_cms]->user->isConnected())
-            $output .=  Button::create(_('bearbeiten'), 'change');
+            $output .=  Button::create(_('Bearbeiten'), 'change');
         else
-            $output .=  Button::create(_('erstellen'), 'create');
+            $output .=  Button::create(_('Erstellen'), 'create');
         $output .= "</td></tr>";
         $output .= "</table>";
         $output .=  "</form>\n";
@@ -398,7 +398,7 @@ class ELearningUtils
             $output .= "</td><td class=\"steel1\" align=\"left\" valign=\"middle\">";
             $output .= "" . "<input name=\"ext_password\" type=\"PASSWORD\" size=\"30\" style=\"vertical-align:middle;font-size:9pt;\" value=\"" ."\">";
             $output .= "</td></tr><tr><td class=\"steel1\">&nbsp;</td><td class=\"steel1\" align=\"left\" valign=\"middle\">";
-            $output .=  "<br>&nbsp;". Button::createAccept(_('bestätigen'), 'next') . "<br>";
+            $output .=  "<br>&nbsp;". Button::createAccept(_('Bestätigen'), 'next') . "<br>";
             $output .= "</td></tr>";
             $output .=  "<tr><td align=\"center\" valign=\"middle\" colspan=\"2\"><br>";
             $output .= "<input type=\"HIDDEN\" name=\"assign\" value=\"1\">\n";
@@ -409,7 +409,7 @@ class ELearningUtils
             $output .= "<input type=\"HIDDEN\" name=\"new_account_cms\" value=\"" . $new_account_cms . "\">\n";
             $output .= "<input type=\"HIDDEN\" name=\"cms_select\" value=\"" . $cms_select . "\">\n";
             $output .= "<input type=\"HIDDEN\" name=\"search_key\" value=\"" . $search_key . "\">\n";
-            $output .=  Button::create('<< ' . _('zurück'), 'go_back');
+            $output .=  Button::create('<< ' . _('Zurück'), 'go_back');
             $output .= "</td></tr>";
             $output .=  "</table>\n";
             $output .=  "</form>\n";
@@ -446,7 +446,7 @@ class ELearningUtils
             $output .= "</td><td class=\"steel1\" align=\"left\" valign=\"middle\">";
             $output .= "" . "&nbsp;<input name=\"ext_password_2\" type=\"PASSWORD\" size=\"30\" style=\"vertical-align:middle;font-size:9pt;\" value=\"" ."\">";
             $output .= "</td></tr><tr><td class=\"steel1\">&nbsp;</td><td class=\"steel1\" align=\"left\" valign=\"middle\">";
-            $output .=  "<br>&nbsp;" . Button::createAccept(_('bestätigen'), 'next') ."<br>";
+            $output .=  "<br>&nbsp;" . Button::createAccept(_('Bestätigen'), 'next') ."<br>";
             $output .= "</td></tr>";
             $output .=  "<tr><td align=\"center\" valign=\"middle\" colspan=\"2\"><br>";
             $output .= "<input type=\"HIDDEN\" name=\"next\" value=\"" . true . "\">\n";
@@ -457,7 +457,7 @@ class ELearningUtils
             $output .= "<input type=\"HIDDEN\" name=\"new_account_cms\" value=\"" . $new_account_cms . "\">\n";
             $output .= "<input type=\"HIDDEN\" name=\"cms_select\" value=\"" . $cms_select . "\">\n";
             $output .= "<input type=\"HIDDEN\" name=\"search_key\" value=\"" . $search_key . "\">\n";
-            $output .=  Button::create('<< ' . _('zurück'), 'go_back');
+            $output .=  Button::create('<< ' . _('Zurück'), 'go_back');
             $output .= "</td></tr>";
             $output .=  "</table>\n";
             $output .=  "</form>\n";
@@ -512,10 +512,10 @@ class ELearningUtils
             $output .= "<input type=\"HIDDEN\" name=\"search_key\" value=\"" . $search_key . "\">\n";
 
             $output .=  "<center>";
-            $output .=  Button::create('<< ' . _('zurück'), 'go_back');
-            $output .=  Button::create(_('zuordnen'), 'assign', array('title' => _('Bestehenden Account zuordnen')));
+            $output .=  Button::create('<< ' . _('Zurück'), 'go_back');
+            $output .=  Button::create(_('Zuordnen'), 'assign', array('title' => _('Bestehenden Account zuordnen')));
             if (! $connected_cms[$new_account_cms]->user->isConnected())
-                $output .=  Button::create(_('weiter') . ' >>', 'next');
+                $output .=  Button::create(_('Weiter') . ' >>', 'next');
             $output .=  "</center>\n";
             $output .= "</font>";
             $output .= "</td></tr>";
@@ -708,7 +708,7 @@ class ELearningUtils
             $output["update"] .= CSRFProtection::tokenTag();
             $output["update"] .= "<input type=\"HIDDEN\" name=\"view\" value=\"" . $view . "\">\n";
             $output["update"] .= "<input type=\"HIDDEN\" name=\"cms_select\" value=\"" . $cms_select . "\">\n";
-            $output["update"] .= Button::create(_('aktualisieren'), 'update');
+            $output["update"] .= Button::create(_('Aktualisieren'), 'update');
             $output["update"] .= "</form>";
         }
 
@@ -748,7 +748,7 @@ class ELearningUtils
             $messages["info"] .= "<tr><td>&nbsp;</td></tr>";
             $messages["info"] .= "<tr><td>" . sprintf(_("Durch das L&ouml;schen der Daten zum System mit dem Index \"%s\" werden %s Konfigurationseintr&auml;ge und Verkn&uuml;pfungen von Stud.IP-Veranstaltungen und -User-Accounts unwiederbringlich aus der Stud.IP-Datenbank entfernt. Wollen Sie diese Daten jetzt l&ouml;schen?"), $_REQUEST['delete_cms'], $cmsystems[$_REQUEST['delete_cms']]["accounts"]+$cmsystems[$_REQUEST['delete_cms']]["modules"]+$cmsystems[$_REQUEST['delete_cms']]["config"] ) . "</td></tr>";
             $messages["info"] .= "<tr><td align=\"center\"><input type=\"hidden\" name=\"delete_cms\" value=\"".$_REQUEST['delete_cms']."\">";
-            $messages["info"] .= '<div class="button-group">' . Button::create(_('alle löschen'), 'confirm_delete') . Button::createCancel(_('abbrechen'), 'abbruch') . '<div></td></tr>';
+            $messages["info"] .= '<div class="button-group">' . Button::create(_('Alle löschen'), 'confirm_delete') . Button::createCancel(_('Abbrechen'), 'abbruch') . '<div></td></tr>';
             $messages["info"] .= "<tr><td align=\"center\"></td></tr>";
             $messages["info"] .= "</table>";
             $messages["info"] .= "</form>";
@@ -800,7 +800,7 @@ class ELearningUtils
                 if ($data["config"])
                     $output .= "<tr><td colspan=\"2\">". sprintf(_("%s Eintr&auml;ge in der config-Tabelle der Stud.IP-Datenbank."), $data["config"]) . "</td></tr>";
                 $output .= "<tr><td colspan=\"2\">&nbsp;</td></tr>";
-                $output .= "<tr><td align=\"center\" colspan=\"2\"><input type=\"hidden\" name=\"delete_cms\" value=\"".$cms_type."\">" . Button::create(_('löschen'), 'delete') . "</td></tr>";
+                $output .= "<tr><td align=\"center\" colspan=\"2\"><input type=\"hidden\" name=\"delete_cms\" value=\"".$cms_type."\">" . Button::create(_('Löschen'), 'delete') . "</td></tr>";
                 $output .= "<tr><td colspan=\"2\">&nbsp;</td></tr>";
                 $output .= "</table>";
                 $output .= "</form>";

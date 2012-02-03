@@ -181,9 +181,9 @@ class ExternEdit {
 
         $out = "<tr><td align=\"center\" colspan=\"2\" nowrap=\"nowrap\"";
         $out .= $this->css->getFullClass() . ">&nbsp;";
-        $out .= Button::createAccept(_("übernehmen"), "submit"); 
+        $out .= Button::createAccept(_("Übernehmen"), "submit"); 
         $out .= "&nbsp; &nbsp; &nbsp;";
-        $out .= LinkButton::createCancel(_("abbrechen"), URLHelper::getURL('?list=TRUE'));
+        $out .= LinkButton::createCancel(_("Abbrechen"), URLHelper::getURL('?list=TRUE'));
         $out .= "<input type=\"hidden\" name=\"config_id\" value=\"$config_id\">";
         $out .= "<input type=\"hidden\" name=\"mod\" value=\"$module_name\">";
         if ($element_name) {

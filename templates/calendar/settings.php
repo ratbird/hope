@@ -204,7 +204,7 @@ $css_switcher->switchClass();
                         <input type="hidden" name="atime" value="<?= $atime ?>">
                     <? endif ?>
                     <input type="hidden" name="view" value="calendar">
-                    <?= Button::create(_('übernehmen'), array('title' => _("Änderungen übernehmen")))?>
+                    <?= Button::create(_('Übernehmen'), array('title' => _("Änderungen übernehmen")))?>
                     </td>
                 </tr>
             </table>

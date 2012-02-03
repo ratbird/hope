@@ -3,8 +3,8 @@
 <?= CSRFProtection::tokenTag() ?>
 <?
 $buttons = '<span>' . Button::createAccept(_('OK'), 'save_close', array('title' => _('Speichern und zurück zur Übersicht'))) . '</span>';
-$buttons .= '<span style="padding-left:1em">' . LinkButton::createCancel(_('abbrechen'), $controller->link_for('index/'.$course_id), array('title' => _('Abbrechen'))) . '</span>';
-$buttons .= '<span style="padding-left:1em">' . Button::create(_('übernehmen'), 'save', array('title' => _('Änderungen speichern'))) . '</span>';
+$buttons .= '<span style="padding-left:1em">' . LinkButton::createCancel(_('Abbrechen'), $controller->link_for('index/'.$course_id), array('title' => _('Abbrechen'))) . '</span>';
+$buttons .= '<span style="padding-left:1em">' . Button::create(_('Übernehmen'), 'save', array('title' => _('Änderungen speichern'))) . '</span>';
 
 echo $this->render_partial('course/room_requests/_form.php', array('submit' => $buttons));
 echo '</form>';

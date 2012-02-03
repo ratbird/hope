@@ -46,7 +46,7 @@ $lifters_templates['lifters'] = array(
 <tr><td>Foren-Thema erzeugen:</td>
 <td><input type="checkbox" name="lifters_create_topic" value="1" checked></td></tr>
 
-<tr><td>&nbsp;</td><td> '.Button::create(_('eintragen')). '</td></tr>
+<tr><td>&nbsp;</td><td> '.Button::create(_('Eintragen')). '</td></tr>
 </table>',
     // template is evaluated alter to form default text
     // important: make sure that variables evaluate at the right time

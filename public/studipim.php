@@ -203,9 +203,9 @@ if ($auth->auth["uid"] != "nobody"){
             . sprintf(_("Nachricht von: <b>%s</b>"),get_fullname_from_uname($msg_snd,'full',true)) ."<hr>".formatReady($msg_text)."</font></td></tr>";
             echo"\n<tr><td class='blank' colspan='2' valign='middle' align='center'><font size=-1>";
 
-            echo LinkButton::create(_("antworten"), "?cmd=write&msg_id=$msg_id");
-            echo LinkButton::create(_("zitieren"), "?cmd=write&msg_id=$msg_id&quote=1");
-            echo LinkButton::createCancel(_("abbrechen"), "?cmd=cancel");
+            echo LinkButton::create(_("Antworten"), "?cmd=write&msg_id=$msg_id");
+            echo LinkButton::create(_("Zitieren"), "?cmd=write&msg_id=$msg_id&quote=1");
+            echo LinkButton::createCancel(_("Abbrechen"), "?cmd=cancel");
         }
     }
     
@@ -240,7 +240,7 @@ if ($auth->auth["uid"] != "nobody"){
             echo "<font size=-1><a target=\"_blank\" href=\"" . URLHelper::getLink('dispatch.php/smileys') . "\">" . _("Smileys</a> k&ouml;nnen verwendet werden") . " </font>\n</td></tr>";
             echo "\n<tr><td class='blank' colspan='2' valign='middle' align='center'><font size=-1>&nbsp;";
             echo '<div class="button-group">';
-            echo Button::createAccept(_("absenden")), LinkButton::createCancel(_("abbrechen"), "?cmd=cancel"); 
+            echo Button::createAccept(_("Absenden")), LinkButton::createCancel(_("Abbrechen"), "?cmd=cancel"); 
             echo '</div>';
             echo "</form></font></td></tr>";
         

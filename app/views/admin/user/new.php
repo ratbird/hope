@@ -150,8 +150,8 @@ use Studip\Button, Studip\LinkButton;
 <? endif ?>
     <tr>
         <td colspan="2" align="center">
-            <?= Button::createAccept(_('speichern'),'speichern', array('title' => _('Einen neuen Benutzer anlegen')))?>
-            <?= LinkButton::createCancel(_('abbrechen'), $controller->url_for('admin/user/?reset'), array('name' => 'abort'))?>
+            <?= Button::createAccept(_('Speichern'),'speichern', array('title' => _('Einen neuen Benutzer anlegen')))?>
+            <?= LinkButton::createCancel(_('Abbrechen'), $controller->url_for('admin/user/?reset'), array('name' => 'abort'))?>
         </td>
     </tr>
 </table>

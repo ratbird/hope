@@ -114,9 +114,9 @@ if ($_the_form->IsClicked("delete") && $_catalog_id != "new_entry" && $_the_elem
         $_msg = "info§" . sprintf(_("Sie k&ouml;nnen diesen Eintrag nicht l&ouml;schen, da er noch in %s Literaturlisten referenziert wird."),$_the_element->reference_count) ."§";
     } else {
         $_msg = "info§" . _("Wollen Sie diesen Eintrag wirklich l&ouml;schen?") . "<br>"
-                .LinkButton::createAccept(_('ja'), $PHP_SELF . "?cmd=delete_element&_catalog_id=" . $_catalog_id, array('title' =>  _('löschen')))
+                .LinkButton::createAccept(_('Ja'), $PHP_SELF . "?cmd=delete_element&_catalog_id=" . $_catalog_id, array('title' =>  _('löschen')))
                 . "&nbsp;"
-                .LinkButton::createCancel(_('abbrechen'), $PHP_SELF . "?_catalog_id=" . $_catalog_id, array('title' =>  _('abbrechen')))
+                .LinkButton::createCancel(_('Abbrechen'), $PHP_SELF . "?_catalog_id=" . $_catalog_id, array('title' =>  _('abbrechen')))
                 . "§";
     }
 }
@@ -206,7 +206,7 @@ if ($_the_element->isChangeable()){
     echo LinkButton::create(_('Kopie erstellen'), $PHP_SELF.'?cmd=clone_entry&_catalog_id='.$_catalog_id, array('title' => _('Eine Kopie dieses Eintrages anlegen')));
 }
 echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\"  height=\"28\" width=\"15\" border=\"0\">";
-echo LinkButton::create(_('neu anlegen'), $PHP_SELF.'?cmd=new_entry', array('title' => _("Neuen Eintrag anlegen")));
+echo LinkButton::create(_('Neu anlegen'), $PHP_SELF.'?cmd=new_entry', array('title' => _("Neuen Eintrag anlegen")));
 if ($_catalog_id != "new_entry"){
     echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\"  height=\"28\" width=\"15\" border=\"0\">";
     echo LinkButton::create(_('Verfügbarkeit'), $PHP_SELF.'?cmd=check_entry&_catalog_id='.$_catalog_id, array('title' => _("Verfügbarkeit überprüfen")));
@@ -257,7 +257,7 @@ if ($_the_element->isChangeable()){
     echo LinkButton::create(_('Kopie erstellen'), $PHP_SELF.'?cmd=clone_entry&_catalog_id='.$_catalog_id, array('title' => _("Eine Kopie dieses Eintrages anlegen")));
 }
 echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\"  height=\"28\" width=\"15\" border=\"0\">";
-echo LinkButton::create(_('neu anlegen'), $PHP_SELF.'?cmd=new_entry', array('title' =>  _("Neuen Eintrag anlegen")));
+echo LinkButton::create(_('Neu anlegen'), $PHP_SELF.'?cmd=new_entry', array('title' =>  _("Neuen Eintrag anlegen")));
 if ($_catalog_id != "new_entry"){
     echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\"  height=\"28\" width=\"15\" border=\"0\">";
     echo LinkButton::create(_('Verfügbarkeit'), $PHP_SELF.'?cmd=check_entry&_catalog_id='.$_catalog_id, array('title' =>  _("Verfügbarkeit überprüfen")));

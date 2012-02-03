@@ -11,7 +11,7 @@ use Studip\Button, Studip\LinkButton;
                             ->withButton()
                             ->render() ?>
         <? if(isset($this->flash['choose_member_parameter'])) : ?>
-            <?=Button::create(_("einladen"), 'add_member', array('style' =>'vertical-align:middle;'))?>
+            <?=Button::create(_("Einladen"), 'add_member', array('style' =>'vertical-align:middle;'))?>
         <? endif; ?>
     </div>
 </form>

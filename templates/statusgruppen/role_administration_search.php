@@ -24,7 +24,7 @@
     </a>
     <br><br>
     <input type="hidden" name="cmd" value="addPersonsToRoleSearch">
-    <?= Button::create(_('eintragen'), 'eintragen') ?>
+    <?= Button::create(_('Eintragen'), 'eintragen') ?>
     <br>
         <? else : // no users there ?>
     <?= _("kein Treffer") ?>

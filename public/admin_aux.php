@@ -114,7 +114,7 @@ if (isset($SessSemName[1]) && isset($selected)) {
     }
     $form   .=  "</select>";
     $form   .=  "<input type=\"hidden\" name=\"aux_all\" value=\"-1\">";
-    $form   .=  Button::create(_('zuweisen'));
+    $form   .=  Button::create(_('Zuweisen'));
     $form   .=  "</form>";
     echo $zt->row(array(htmlReady($db7->f("Veranstaltungsnummer")), htmlReady($db7->f("Name")), $form));
 

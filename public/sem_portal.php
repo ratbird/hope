@@ -197,12 +197,12 @@ ob_end_flush();
                 if ($sem_browse_data['cmd'] == "xts"){
                     echo LinkButton::create(_('Schnellsuche'), $PHP_SELF.'?cmd=qs&level=f', array('title' => _("Zur Schnellsuche zurückgehen")));
                 } else {
-                    echo LinkButton::create(_('erweiterte Suche'), $PHP_SELF.'?cmd=xts&level=f', array('title' => _("Erweitertes Suchformular aufrufen")));
+                    echo LinkButton::create(_('Erweiterte Suche'), $PHP_SELF.'?cmd=xts&level=f', array('title' => _("Erweitertes Suchformular aufrufen")));
                 }
         }
         echo "</td>\n";
         echo "<td class=\"blank\" align=\"right\">";
-        echo LinkButton::create(_('zurücksetzen'), $PHP_SELF.'?reset_all=1', array('title' => _("zurücksetzen")));
+        echo LinkButton::create(_('Zurücksetzen'), $PHP_SELF.'?reset_all=1', array('title' => _("zurücksetzen")));
         echo "</td></tr>\n";
 
 

@@ -91,7 +91,7 @@ if ($chat_entry_level != "admin" && $chatServer->isActiveChat($chatid) && ($chat
             . "<b>" ._("Passwort erforderlich")
             . "</b><br><font size=\"-1\" color=\"black\">" . _("Um an diesem Chat teilnehmen zu k&ouml;nnen, m&uuml;ssen Sie das Passwort eingeben.")
             . "<br><input type=\"password\" style=\"vertical-align:middle;\" name=\"chat_password\">&nbsp;&nbsp;"
-            . Button::createAccept(_('absenden'), 'submit')."</font></form>§";
+            . Button::createAccept(_('Absenden'), 'submit')."</font></form>§";
             }
 }
 if (!$chat_entry_check && !$chat_entry_level){

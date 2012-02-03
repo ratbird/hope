@@ -960,7 +960,7 @@ function wikiEdit($keyword, $wikiData, $user_id, $backpage=NULL)
     $cont .= "<input type=\"hidden\" name=\"version\" value=\"$version\">";
     $cont .= "<input type=\"hidden\" name=\"submit\" value=\"true\">";
     $cont .= "<input type=\"hidden\" name=\"cmd\" value=\"show\">";
-    $cont .= '<br><br>' . Button::createAccept(_('abschicken')) . "&nbsp;" . LinkButton::createCancel(_('abbrechen'),URLHelper::getURL("?cmd=abortedit&keyword=".urlencode($keyword).$lastpage));
+    $cont .= '<br><br>' . Button::createAccept(_('Abschicken')) . "&nbsp;" . LinkButton::createCancel(_('Abbrechen'),URLHelper::getURL("?cmd=abortedit&keyword=".urlencode($keyword).$lastpage));
     $cont .= "</form>\n";
     printcontent(0,0,$cont,"");
     $infobox = array ();
@@ -1021,7 +1021,7 @@ function exportWiki() {
     $infobox = array();
     $infobox[] = array("kategorie" => _("Information"), "eintrag" => array(array('icon' => "icons/16/black/info.png", "text"=>_("Die Wiki-Seiten werden als eine zusammenhängende HTML-Datei ohne Links exportiert."))));
     print '<div style="text-align: center;">';
-    print LinkButton::create( _('weiter'). ' >>' , URLHelper::getURL("?view=wikiprintall"), array('id'=>'wiki_export','title'=>_('Seiten exportieren'),'target'=>'_blank' ));
+    print LinkButton::create( _('Weiter'). ' >>' , URLHelper::getURL("?view=wikiprintall"), array('id'=>'wiki_export','title'=>_('Seiten exportieren'),'target'=>'_blank' ));
     echo '</div>'; // end of content area
     showPageFrameEnd($infobox);
 }
@@ -1138,7 +1138,7 @@ function getSearchbox($preselection, $keyword)
     $search_text .= '<input type="hidden" name="view" value="search">';
     $search_text .= '<input type="hidden" name="keyword" value="' . htmlReady($keyword) . '">';
     $search_text .= '<input type="text" size="10" name="searchfor" value="' . htmlReady($preselection) . '">';
-    $search_text .= "&nbsp;" . Button::create(_('suchen'));
+    $search_text .= "&nbsp;" . Button::create(_('Suchen'));
     $search_text .= "<br>";
     $search_text .= '<input type="checkbox" name="searchcurrentversions" checked>&nbsp;' . _("Nur in aktuellen Versionen");
     $search_text .= "</form>";
@@ -1386,10 +1386,10 @@ function showWikiPage($keyword, $version, $special="", $show_comments="icon", $h
         } else {
             $edit="";
             if ($perm->have_studip_perm("autor", $SessSemName[1])) {
-                $edit.=LinkButton::create(_('bearbeiten'), URLHelper::getURL("?keyword=".urlencode($keyword)."&view=edit"),array('title'=>_('Seite bearbeiten')));
+                $edit.=LinkButton::create(_('Bearbeiten'), URLHelper::getURL("?keyword=".urlencode($keyword)."&view=edit"),array('title'=>_('Seite bearbeiten')));
             }
             if ($perm->have_studip_perm("tutor", $SessSemName[1])) {
-                $edit.=LinkButton::create(_('löschen'),URLHelper::getURL("?keyword=".urlencode($keyword)."&cmd=delete&version=latest"),array('title'=> _('Seite löschen')) );
+                $edit.=LinkButton::create(_('Löschen'),URLHelper::getURL("?keyword=".urlencode($keyword)."&cmd=delete&version=latest"),array('title'=> _('Seite löschen')) );
             }
         }
         $edit .= "<br>&nbsp;";

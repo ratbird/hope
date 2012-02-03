@@ -41,8 +41,8 @@ use Studip\Button, Studip\LinkButton;
                 </tr>
                 <tr>
                     <td align="center" colspan="2">
-                        <?= Button::createAccept(_('abschicken'))?>
-                        <?= LinkButton::createCancel(_('abbrechen'), 'index.php?cancel_login=1')?>
+                        <?= Button::createAccept(_('Abschicken'))?>
+                        <?= LinkButton::createCancel(_('Abbrechen'), 'index.php?cancel_login=1')?>
                         <br>
                     </td>
                 </tr>

@@ -76,8 +76,8 @@
                     <td class="steel1" align="right" colspan="2">
                         <br>
                         
-                        <?= LinkButton::create('<< ' . _('zurück'), URLHelper::getURL('', array('role_id' => $role->getId())) . '#' . $role->getId()) ?>
-                        <?= Button::createAccept(_('speichern'), 'speichern') ?>
+                        <?= LinkButton::create('<< ' . _('Zurück'), URLHelper::getURL('', array('role_id' => $role->getId())) . '#' . $role->getId()) ?>
+                        <?= Button::createAccept(_('Speichern'), 'speichern') ?>
                     </td>
                 </tr>
             </table>

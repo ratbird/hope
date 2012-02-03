@@ -17,8 +17,8 @@ use Studip\Button, Studip\LinkButton;
            $abort_url = 'siteinfo/show/'.$currentrubric;
            $abort_url .= $detail ? "/".$currentdetail : '';
         ?>
-        <?= LinkButton::create(_('löschen'), $controller->url_for($delete_url)) ?>
-        <?= LinkButton::createCancel(_('abbrechen'), $controller->url_for($abort_url)) ?>
+        <?= LinkButton::create(_('Löschen'), $controller->url_for($delete_url)) ?>
+        <?= LinkButton::createCancel(_('Abbrechen'), $controller->url_for($abort_url)) ?>
     </div>
     <div>
         <hr>

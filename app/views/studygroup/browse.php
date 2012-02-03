@@ -25,7 +25,7 @@ $link = "dispatch.php/studygroup/browse/%s/".$sort;
     <div class="search_box" align="center">
         <input name="searchtext" type="text" size="45" style="vertical-align: middle;" value="<?= htmlReady($search) ?>" />
         <?= Button::create(_('Suche starten'))?>
-        <?= LinkButton::create(_('zurücksetzen'), URLHelper::getLink('',array('action' => 'deny')), array('title' => _('Suche zurücksetzen')))?>
+        <?= LinkButton::create(_('Zurücksetzen'), URLHelper::getLink('',array('action' => 'deny')), array('title' => _('Suche zurücksetzen')))?>
     </div>
 </form>
 <br>

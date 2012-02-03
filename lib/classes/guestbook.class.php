@@ -207,7 +207,7 @@ class Guestbook
             $output .= "</font></b></td></tr>"
                 . "<tr><td class=\"steelgraulight\"><font size=\"-1\">".formatready($row['content'])."</font><p align=\"right\">";
             if ($this->rights == TRUE)
-                $addon = LinkButton::create(_('löschen'), URLHelper::getURL("?guestbook=delete&guestpage=". $this->guestpage . "&deletepost=" . $row['post_id'] . "&username="
+                $addon = LinkButton::create(_('Löschen'), URLHelper::getURL("?guestbook=delete&guestpage=". $this->guestpage . "&deletepost=" . $row['post_id'] . "&username="
                             . $this->username . "&studipticket=" . get_ticket() . "#guest"));
             else
                 $addon = "&nbsp;";
@@ -241,7 +241,7 @@ class Guestbook
             .$text
             ."<div align=\"center\"><textarea name=\"post\" id=\"post\" style=\"width:70%\" cols=\"". $cols."\"  rows=8 wrap=virtual>"
             ."</textarea>"
-            ."<br><br>" . Button::createAccept(_('abschicken')) . "&nbsp;"
+            ."<br><br>" . Button::createAccept(_('Abschicken')) . "&nbsp;"
             ."&nbsp;&nbsp;<a href=\"" . URLHelper::getLink('dispatch.php/smileys') . "\" target=\"_blank\"><font size=\"-1\">"._("Smileys")."</a>&nbsp;&nbsp;"."<a href=\"".$help_url."\" target=\"_blank\"><font size=\"-1\">"._("Formatierungshilfen")."</a><br>";
         return $form;
     }
@@ -250,12 +250,12 @@ class Guestbook
     {
         $buttons = "";
         if ($this->active == TRUE) {
-            $buttons .= "&nbsp;&nbsp;" . LinkButton::create(_('deaktivieren'), URLHelper::getURL('?guestbook=switch&username=' . $this->username . '&studipticket=' .get_ticket()
+            $buttons .= "&nbsp;&nbsp;" . LinkButton::create(_('Deaktivieren'), URLHelper::getURL('?guestbook=switch&username=' . $this->username . '&studipticket=' .get_ticket()
                         . '#guest'));
         } else {
-            $buttons .= LinkButton::create(_('aktivieren'), URLHelper::getURL('?guestbook=switch&username=' . $this->username. '&studipticket=' . get_ticket() .'#guest'));
+            $buttons .= LinkButton::create(_('Aktivieren'), URLHelper::getURL('?guestbook=switch&username=' . $this->username. '&studipticket=' . get_ticket() .'#guest'));
         }
-        $buttons .= "&nbsp;&nbsp;" . LinkButton::create(_('alle löschen'), URLHelper::getURL('?guestbook=erase&username=' . $this->username . '&studipticket=' . get_ticket() . '#guest'));
+        $buttons .= "&nbsp;&nbsp;" . LinkButton::create(_('Alle löschen'), URLHelper::getURL('?guestbook=erase&username=' . $this->username . '&studipticket=' . get_ticket() . '#guest'));
         return $buttons;
     }
 

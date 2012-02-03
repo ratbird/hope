@@ -309,7 +309,7 @@ $message_types = array('msg' => "success", 'error' => "error", 'info' => "info")
 
 </div>
 <div style="text-align:center; padding: 15px">
-  <?= Button::create(_('übernehmen')) ?>
+  <?= Button::create(_('Übernehmen')) ?>
   <input id="open_variable" type="hidden" name="open" value="<?= $flash['open'] ?>">
 </div>
 </form>

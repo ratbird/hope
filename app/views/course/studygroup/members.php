@@ -152,8 +152,8 @@ list-style-position:outside;list-style-type:none;">
                     </a>
                 </td>
                 <td style='padding-left:1em;white-space:nowrap'>
-                    <?= LinkButton::create(_("eintragen"), $controller->url_for('course/studygroup/edit_members/' . $sem_id . '/accept?user='.$p['username'])) ?>
-                    <?= LinkButton::createCancel(_("ablehnen"),$controller->url_for('course/studygroup/edit_members/' . $sem_id . '/deny?user='.$p['username'])) ?>
+                    <?= LinkButton::create(_("Eintragen"), $controller->url_for('course/studygroup/edit_members/' . $sem_id . '/accept?user='.$p['username'])) ?>
+                    <?= LinkButton::createCancel(_("Ablehnen"),$controller->url_for('course/studygroup/edit_members/' . $sem_id . '/deny?user='.$p['username'])) ?>
                 </td>
             </tr>
             <? endforeach ?>

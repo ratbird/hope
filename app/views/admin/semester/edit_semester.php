@@ -70,11 +70,11 @@ use Studip\Button, Studip\LinkButton;
     <tr>
         <td colspan="5" align="center">
         <? if ($semester['semester_id']) : ?>
-            <?= Button::createAccept(_('speichern'), array('title' => _('Die Änderungen speichern')))?>
+            <?= Button::createAccept(_('Speichern'), array('title' => _('Die Änderungen speichern')))?>
         <? else : ?>
-            <?= Button::create(_('anlegen'), array('title' => _('Neues Semester anlegen')))?>
+            <?= Button::create(_('Anlegen'), array('title' => _('Neues Semester anlegen')))?>
         <? endif ?>
-            <?= LinkButton::createCancel(_('abbrechen'), $controller->url_for('admin/semester'))?>
+            <?= LinkButton::createCancel(_('Abbrechen'), $controller->url_for('admin/semester'))?>
         </td>
     </tr>
 </table>

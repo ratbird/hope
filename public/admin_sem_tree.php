@@ -142,7 +142,7 @@ if ($the_tree->mode == "MoveItem" || $the_tree->mode == "CopyItem"){
                                 '<img src="'. Assets::image_path('icons/16/yellow/arr_2right.png') .'" '. tooltip(_('Einfügesymbol')) . '>',
                                 htmlReady($the_tree->tree->tree_data[$the_tree->move_item_id]['name']),
                                 "<div align=\"right\">"
-                                .LinkButton::createCancel(_('abbrechen'), $the_tree->getSelf("cmd=Cancel&item_id=$the_tree->move_item_id"), array('title' => _("Verschieben / Kopieren abbrechen")))
+                                .LinkButton::createCancel(_('Abbrechen'), $the_tree->getSelf("cmd=Cancel&item_id=$the_tree->move_item_id"), array('title' => _("Verschieben / Kopieren abbrechen")))
                                 ."</div>");
 }
 

@@ -157,7 +157,7 @@ if ($perm->have_studip_perm("tutor", $admin_modules_data["range_id"])) {
 
                     $msg.="info§".$amodules->registered_modules[$key]["msg_warning"];
                     $msg.="<br>";
-                    $msg.=LinkButton::createAccept(_('ja'), URLHelper::getLink("?delete_$key=TRUE&retry=TRUE"));
+                    $msg.=LinkButton::createAccept(_('Ja'), URLHelper::getLink("?delete_$key=TRUE&retry=TRUE"));
                     $msg.="&nbsp; \n";
                     $msg.=LinkButton::createAccept(_('NEIN!'), URLHelper::getLink("?cancel_$key=TRUE&retry=TRUE"));
                     $msg.="\n§";
@@ -274,7 +274,7 @@ if ($admin_modules_data["range_id"])
         <table width="100%" border="0" cellpadding="2" cellspacing="0">
         <tr><? $cssSw->switchClass() ?>
             <td class="<?= $cssSw->getClass() ?>" align="center" colspan="3">
-                <?= Button::create(_('übernehmen'), 'uebernehmen') ?>
+                <?= Button::create(_('Übernehmen'), 'uebernehmen') ?>
                 <? if ($admin_modules_data["orig_bin"] != $admin_modules_data["changed_bin"]) {?>
                     <?= MessageBox::info(_("Diese Daten sind noch nicht gespeichert.")) ?>
                 <? } ?>

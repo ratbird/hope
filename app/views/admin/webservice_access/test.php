@@ -17,8 +17,8 @@
   </tr>
   <tr>
   <td style="text-align:center" colspan="2">
-  <?= Button::createAccept(_('abschicken'), 'ok', array('title' => _('Test starten')))?>
-  <?= LinkButton::createCancel(_('abbrechen'), $controller->url_for('admin/webservice_access'), array('title' => _('Test abbrechen')))?>     
+  <?= Button::createAccept(_('Abschicken'), 'ok', array('title' => _('Test starten')))?>
+  <?= LinkButton::createCancel(_('Abbrechen'), $controller->url_for('admin/webservice_access'), array('title' => _('Test abbrechen')))?>     
   </a>
   </td>
   </tr>

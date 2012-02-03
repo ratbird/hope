@@ -17,7 +17,7 @@ use Studip\Button, Studip\LinkButton;
         </tr>
         <tr class="steel2">
             <td></td>
-            <td><?= Button::create(_('anlegen'),'anlegen', array('title' => _('Neues Fach anlegen'))) ?></td>
+            <td><?= Button::create(_('Anlegen'),'anlegen', array('title' => _('Neues Fach anlegen'))) ?></td>
         </tr>
     </table>
 </form>

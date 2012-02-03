@@ -138,7 +138,7 @@ if ($SessSemName[1] && (!$change_visible)) {
             $form   .=  ">";
             $form   .=  "<input type=\"hidden\" name=\"all_sem[]\" value=".$SessSemName[1].">";
             $form   .=  "<input type=\"hidden\" name=\"change_visible\" value=\"1\">";
-            $form   .=  Button::create(_('zuweisen'));
+            $form   .=  Button::create(_('Zuweisen'));
             $form   .=  "</form>";
         } else {
             $form = $db->f('visible') ? _("sichtbar") : _("versteckt");

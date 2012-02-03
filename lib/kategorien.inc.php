@@ -50,7 +50,7 @@ function print_freie($username) {
     if (!$db->num_rows())
         echo '<tr><td class="'.$cssSw->getClass().'"><font size="-1"><b><p class="info">' . _("Es existieren zur Zeit keine eigenen Kategorien.") . "</p></b></font></td></tr>\n";
     echo '<tr><td class="'.$cssSw->getClass().'"> <p class="info">' . _("Kategorie") . '&nbsp;' . 
-				LinkButton::create(_('neuanlegen'), URLHelper::getURL('', array('freie' => 'create_freie', 'view' => $view, 'username' => $username)), 
+				LinkButton::create(_('Neuanlegen'), URLHelper::getURL('', array('freie' => 'create_freie', 'view' => $view, 'username' => $username)), 
 				array('title' => _('Kategorie anlegen'))) . "</p></td></tr>\n";
     $count = 0;
     $hidden_count = 0;
@@ -101,8 +101,8 @@ function print_freie($username) {
             $cols = ($auth->auth["jscript"])? ceil($auth->auth["xres"]/13):50;
             echo '<tr><td class="'.$cssSw->getClass(). '"><p class="info">';
             echo '<textarea aria-label="' . _("Inhalt der Kategorie:") . '" name="freie_content[]" style="width: 90%" cols="' . $cols . '" rows="7" wrap="virtual">' . htmlReady($db->f('content')) . '</textarea>';
-            echo '<br><br>' . Button::create(_('übernehmen'));
-            echo LinkButton::create(_('löschen'), URLHelper::getURL('', array('freie' => 'verify_delete_freie', 'freie_id' => $id, 'view' => $view, 'username' => $username))) ;
+            echo '<br><br>' . Button::create(_('Übernehmen'));
+            echo LinkButton::create(_('Löschen'), URLHelper::getURL('', array('freie' => 'verify_delete_freie', 'freie_id' => $id, 'view' => $view, 'username' => $username))) ;
 
             // show help links
             echo '<a style="margin-left: 15px" href="'. URLHelper::getLink('dispatch.php/smileys') .'" target="_blank">'. _("Smileys") .'</a>', "\n";

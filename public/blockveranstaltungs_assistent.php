@@ -196,8 +196,8 @@ $cssSw = new cssClassSwitcher();
                     <?$cssSw->switchClass()?>
                     <tr>
                         <td class="<?=$cssSw->getClass()?>" colspan="2" align="center">
-                            <?= Button::create(_('erstellen'), 'block_submit') ?>
-                            <?= LinkButton::create(_('schliessen'), 'javascript:window.close()') ?>
+                            <?= Button::create(_('Erstellen'), 'block_submit') ?>
+                            <?= LinkButton::create(_('Schliessen'), 'javascript:window.close()') ?>
                         </td>
                     </tr>
                 </table>

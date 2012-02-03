@@ -255,7 +255,7 @@ STUDIP.RoomRequestDialog.reloadUrlOnClose = '<?= UrlHelper::getUrl()?>';
                                 <option value="-1"<?=($sem->getEndSemester() == -1) ? 'selected' : ''?>><?=_("unbegrenzt")?></option>
                         </select>
 
-                        <?= Button::create(_('übernehmen'), 'uebernehmen') ?>
+                        <?= Button::create(_('Übernehmen'), 'uebernehmen') ?>
                         <input type="hidden" name="cmd" value="selectSemester">
                         <? } else {
                             switch ($sem->getEndSemester()) {
@@ -416,7 +416,7 @@ STUDIP.RoomRequestDialog.reloadUrlOnClose = '<?= UrlHelper::getUrl()?>';
                     <td class="blank" colspan="9">
                         <br>
                         <?=_("Regelmäßigen Zeiteintrag")?>
-                        <?= LinkButton::create(_('hinzufügen'), URLHelper::getURL('', array('cmd' => 'addCycle')) . '#newCycle') ?>
+                        <?= LinkButton::create(_('Hinzufügen'), URLHelper::getURL('', array('cmd' => 'addCycle')) . '#newCycle') ?>
                     </td>
                 </tr>
                 <? } ?>
@@ -513,8 +513,8 @@ STUDIP.RoomRequestDialog.reloadUrlOnClose = '<?= UrlHelper::getUrl()?>';
                         </script>
 
                         <?= sprintf (_('Einen neuen Termin %s oder mehrere Termine mit dem Blockveranstaltungsassistenten %s'),
-                            LinkButton::create(_('erstellen'), URLHelper::getURL('', array('cmd' => 'createNewSingleDate')) . '#newSingleDate'),
-                            LinkButton::create(_('anlegen'), 'javascript:STUDIP.BlockAssi.block_fenster()')); ?>
+                            LinkButton::create(_('Erstellen'), URLHelper::getURL('', array('cmd' => 'createNewSingleDate')) . '#newSingleDate'),
+                            LinkButton::create(_('Anlegen'), 'javascript:STUDIP.BlockAssi.block_fenster()')); ?>
                     </td>
                 </tr>
                 <? } ?>
@@ -561,16 +561,16 @@ STUDIP.RoomRequestDialog.reloadUrlOnClose = '<?= UrlHelper::getUrl()?>';
                         <?= _("Raumanfrage") ?>
                             <? if ($request_status && $request_status == 'open') {
                             ?>
-                                <?= Linkbutton::create(_('bearbeiten'), URLHelper::getURL('dispatch.php/course/room_requests/edit/' . $sem->getId(), array('request_id' => RoomRequest::existsByCourse($id))), array('onclick' => "STUDIP.RoomRequestDialog.initialize(this.href.replace('edit','edit_dialog'));return false;")) ?>
+                                <?= Linkbutton::create(_('Bearbeiten'), URLHelper::getURL('dispatch.php/course/room_requests/edit/' . $sem->getId(), array('request_id' => RoomRequest::existsByCourse($id))), array('onclick' => "STUDIP.RoomRequestDialog.initialize(this.href.replace('edit','edit_dialog'));return false;")) ?>
                             <?
                             } else {
                             ?>
-                                <?= Linkbutton::create(_('erstellen'), URLHelper::getURL('dispatch.php/course/room_requests/edit/' . $sem->getId(), array('new_room_request_type' => 'course')), array('onclick' => "STUDIP.RoomRequestDialog.initialize(this.href.replace('edit','edit_dialog'));return false;")) ?>
+                                <?= Linkbutton::create(_('Erstellen'), URLHelper::getURL('dispatch.php/course/room_requests/edit/' . $sem->getId(), array('new_room_request_type' => 'course')), array('onclick' => "STUDIP.RoomRequestDialog.initialize(this.href.replace('edit','edit_dialog'));return false;")) ?>
                             <?
                             } ?>
                         <? if ($request_status && $request_status == 'open') { ?>
                         <?= _('oder') ?>
-                        <?= LinkButton::create(_('zurückziehen'), URLHelper::getURL('', array('cmd' => 'removeSeminarRequest'))) ?>
+                        <?= LinkButton::create(_('Zurückziehen'), URLHelper::getURL('', array('cmd' => 'removeSeminarRequest'))) ?>
                         <? } ?>
                     </td>
                 </tr>

@@ -149,7 +149,7 @@ if ($ELEARNING_INTERFACE_ENABLE)
             echo "<br><br>\n<center>";
             echo _("Hier k&ouml;nnen Sie die Schnittstelle deaktivieren.");
             echo "<br><br>\n";
-            echo Button::create(_('deaktivieren'), 'deactivate')."</center>";
+            echo Button::create(_('Deaktivieren'), 'deactivate')."</center>";
         }
         else
         {
@@ -162,7 +162,7 @@ if ($ELEARNING_INTERFACE_ENABLE)
                 $status_info = "not active";
                 echo _("Hier k&ouml;nnen Sie die Schnittstelle aktivieren.");
                 echo "<br><br>\n";
-                echo Button::create(_('aktivieren'), 'activate')."</center>";
+                echo Button::create(_('Aktivieren'), 'activate')."</center>";
             }
         }
         echo "<input type=\"HIDDEN\" name=\"cms_select\" value=\"" . $cms_select . "\">\n";

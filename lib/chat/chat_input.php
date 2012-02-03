@@ -180,7 +180,7 @@ if ($chatInput) {
                         </select>
                     </td>
                     <td align="center" valign="middle">
-                        <?= Button::createAccept(_('absenden'), array('title' => _("Nachricht senden"))) ?>
+                        <?= Button::createAccept(_('Absenden'), array('title' => _("Nachricht senden"))) ?>
                     </td>
                     <td align="right" valign="middle">
                         <?= LinkButton::create(_('Chat beenden'), 'javascript:doQuit();', array('title' => _("Chat verlassen"))) ?>

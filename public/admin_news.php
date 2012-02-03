@@ -264,12 +264,12 @@ if (!$cmd OR $cmd=="show") {
         if ($perm->have_perm("autor")) {   // allow autors, needed for studygroups
             echo "\n<tr><td class=\"blank\"><p class=\"info\">";
             echo _("Sie k&ouml;nnen&nbsp; <b>Pers&ouml;nliche Ankündigungen</b> bearbeiten") . "&nbsp;";
-            echo LinkButton::create(_('bearbeiten'), URLHelper::getURL("?range_id=self"), array('style'=>'vertical-align:middle;', 'title'=>_('Persönliche Ankündigungen bearbeiten')));
+            echo LinkButton::create(_('Bearbeiten'), URLHelper::getURL("?range_id=self"), array('style'=>'vertical-align:middle;', 'title'=>_('Persönliche Ankündigungen bearbeiten')));
         }
         if ($perm->have_perm("root")) {
             $my_cols=4;
             echo "<font size=\"-1\" style=\"vertical-align:middle;\">&nbsp; " . _("<i>oder</i> <b>Systemweite Ankündigungen</b> bearbeiten") . "</font>&nbsp;";
-            echo LinkButton::create(_('bearbeiten'), URLHelper::getURL("?range_id=studip"),array('style'=>'vertical-align:middle;', 'title'=>_('Systemweite Ankündigungen bearbeiten')));
+            echo LinkButton::create(_('Bearbeiten'), URLHelper::getURL("?range_id=studip"),array('style'=>'vertical-align:middle;', 'title'=>_('Systemweite Ankündigungen bearbeiten')));
         }
         if ($news->search_result)
             echo "<br><br><font size=\"-1\" style=\"vertical-align:middle;\">" . _("<i>oder</i> <b>hier</b> einen der gefundenen Bereiche ausw&auml;hlen:") . "&nbsp;</font>";
@@ -317,7 +317,7 @@ if (!$cmd OR $cmd=="show") {
         echo "\n<br><br>";
     }
     echo "\n".'<font size="-1" style="vertical-align:middle;">' . _("Eine neue Ankündigung im gew&auml;hlten Bereich erstellen") . '</font>&nbsp;';
-    echo Button::create(_('erstellen'), 'new_entry', array('title' => _('Eine neue Ankündigung erstellen')));
+    echo Button::create(_('Erstellen'), 'new_entry', array('title' => _('Eine neue Ankündigung erstellen')));
     echo "</b>\n</p>\n</form>\n</td>\n</tr>\n ";
     if (!$news->show_news($news_range_id)) {
         echo "\n".'<tr><td class="blank"><p class="info">';

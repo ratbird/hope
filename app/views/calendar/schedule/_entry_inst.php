@@ -34,7 +34,7 @@ foreach ($show_entry['seminars'] as $sem_id) {
                             <? $visible = CalendarScheduleModel::isSeminarVisible($seminar->getId(), $cycle_id) ?>
 
                             <?= LinkButton::create(
-                                    _('ausblenden'),
+                                    _('Ausblenden'),
                                     $controller->url_for('calendar/schedule/adminbind/'. $seminar->getId() .'/'. $cycle_id .'/0'),
                                     array(
                                         'id'      => $seminar->getId() . '_' . $cycle_id . '_hide',
@@ -43,7 +43,7 @@ foreach ($show_entry['seminars'] as $sem_id) {
                                     )) ?>
 
                             <?= LinkButton::create(
-                                    _('einblenden'),
+                                    _('Einblenden'),
                                     $controller->url_for('calendar/schedule/adminbind/'. $seminar->getId() .'/'. $cycle_id .'/1'),
                                     array(
                                         'id'      => $seminar->getId() . '_' . $cycle_id . '_show',
@@ -59,7 +59,7 @@ foreach ($show_entry['seminars'] as $sem_id) {
 
         <div style="text-align: center">
             <?= LinkButton::createCancel(
-                    _('schliessen'), 
+                    _('Schliessen'), 
                     $controller->url_for('calendar/schedule'),
                     array('onclick' => "return STUDIP.Schedule.hideInstOverlay('#edit_inst_entry')")) ?>
         </div>

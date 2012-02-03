@@ -44,8 +44,8 @@
             <!-- Buttonbar -->
             <br>
             <div style="text-align: center;">
-                <?= LinkButton::create(_('bearbeiten'), URLHelper::getURL('', array('view' => 'editRole', 'role_id' => $role_id)) . '#' . $role_id) ?>
-                <?= LinkButton::create(_('loeschen'), URLHelper::getURL('', array('cmd' => 'deleteRole', 'role_id' => $role_id))) ?>
+                <?= LinkButton::create(_('Bearbeiten'), URLHelper::getURL('', array('view' => 'editRole', 'role_id' => $role_id)) . '#' . $role_id) ?>
+                <?= LinkButton::create(_('Loeschen'), URLHelper::getURL('', array('cmd' => 'deleteRole', 'role_id' => $role_id))) ?>
             </div>
             <br>
 

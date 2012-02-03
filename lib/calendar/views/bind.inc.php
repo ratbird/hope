@@ -115,7 +115,7 @@ foreach ($result as $row) {
 
 echo "<tr><td class=\"blank\">&nbsp;</td></tr>\n";
 echo "<tr><td class=\"blank\" colspan=\"6\" align=\"center\">";
-echo Button::create(_('auswählen'));
+echo Button::create(_('Auswählen'));
 
 // Dummy-Wert damit $sem auch ohne ausgewaehlte Seminare ausgewertet wird
 echo "\n<input type=\"hidden\" name=\"sem[1]\" value=\"FALSE\">\n";

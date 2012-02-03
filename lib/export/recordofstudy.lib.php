@@ -70,7 +70,7 @@ function printSelectSemester($infobox,$semestersAR){
         $html .= "        <option value=\"".$semester["id"]."\">".$semester["name"]."</option>\n";
     }
     $html .="       </select>\n"
-          . Button::create(_('auswähhlen'), 'semester_selected', _("Semester und Kriterium auswählen."))
+          . Button::create(_('Auswähhlen'), 'semester_selected', _("Semester und Kriterium auswählen."))
           . "       <br><br>&nbsp;<select name=\"onlyseminars\" style=\"vertical-align:middle;\">\n"
           . "        <option value=\"1\" selected>"._("nur Lehrveranstaltungen")."</option>\n"
           . "        <option value=\"0\">"._("alle Veranstaltungen")."</option>\n"
@@ -186,7 +186,7 @@ function printRecordOfStudies($infobox, $basicdata, $seminare, $notice = NULL){
 
     $html .="       <tr>\n"
           . "        <td colspan=\"4\"><font size=\"-1\"><br><table width=\"100%\"><tr><td align=\"left\">\n"
-          . Button::create(_('hinzufügen'), 'add_seminars', array('title' => _('Neue Veranstaltung hinzufügen.')))
+          . Button::create(_('Hinzufügen'), 'add_seminars', array('title' => _('Neue Veranstaltung hinzufügen.')))
           . "         <select style=\"vertical-align:middle;\" name=\"newseminarfields\" size=1>\n";
     for( $i=1; $i<=10; $i++ )
         $html .= "        <option value=\"$i\">$i</option>\n";
@@ -196,7 +196,7 @@ function printRecordOfStudies($infobox, $basicdata, $seminare, $notice = NULL){
 
     // only show delete-button if there are any seminars
     if(!empty($seminare))
-        $html .= _("Markierte Veranstaltung(en) löschen")."\n" . Button::create(_('löschen'), 'delete_seminars', array('title' => _("Markierte Veranstaltung(en) löschen.")));
+        $html .= _("Markierte Veranstaltung(en) löschen")."\n" . Button::create(_('Löschen'), 'delete_seminars', array('title' => _("Markierte Veranstaltung(en) löschen.")));
     $html .="        </font></td></tr></table>\n"
           . "       </tr>\n"
           . "      </table>\n"
@@ -207,8 +207,8 @@ function printRecordOfStudies($infobox, $basicdata, $seminare, $notice = NULL){
     echo $html;
     print_infobox($infobox, "infobox/folders.jpg");
     $html = "      <br>\n"
-          . Button::create(_('<< zurück'), 'select_new_semester', array('title' => _("Abbrechen und ein anderes Semester auswählen.")))
-          . Button::create(_('weiter >>'), 'create_pdf', array('title' => _("Weiter zum Download Ihrer Veranstaltungsübersicht.")))
+          . Button::create(_('<< Zurück'), 'select_new_semester', array('title' => _("Abbrechen und ein anderes Semester auswählen.")))
+          . Button::create(_('Weiter >>'), 'create_pdf', array('title' => _("Weiter zum Download Ihrer Veranstaltungsübersicht.")))
           . "     <br><br></td>\n"
           . "    </tr>\n"
           . "   </table>\n"

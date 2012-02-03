@@ -65,9 +65,9 @@ use Studip\Button, Studip\LinkButton;
 
         <div style="text-align: center; clear: both">
             <br>
-            <?= Button::createSuccess(_('speichern')) ?>
+            <?= Button::createSuccess(_('Speichern')) ?>
             <?= LinkButton::createCancel(
-                    _('abbrechen'),
+                    _('Abbrechen'),
                     $controller->url_for('calendar/schedule'),  
                     array('onclick' => "jQuery('#schedule_settings,#schedule-settings-dialog-shadow').remove(); return false")) ?>
         </div>

@@ -147,9 +147,9 @@ else
         $export_weiter_button .= "<input type=\"hidden\" name=\"xml_file_id\" value=\"" . htmlReady($xml_file_id) . "\">";
         $export_weiter_button .= "<input type=\"hidden\" name=\"xslt_filename\" value=\"" . htmlReady($xslt_filename) . "\">";
         if (isset($jump))
-            $export_weiter_button .= '<center>' . LinkButton::create('<< ' . _('zurück'), URLHelper::getLink("seminar_main.php?auswahl=$range_id&redirect_to=$jump")) . "<br>";
+            $export_weiter_button .= '<center>' . LinkButton::create('<< ' . _('Zurück'), URLHelper::getLink("seminar_main.php?auswahl=$range_id&redirect_to=$jump")) . "<br>";
         else
-            $export_weiter_button .= "<center>" . Button::create('<< ' . _('zurück'), 'back') . "<br>";
+            $export_weiter_button .= "<center>" . Button::create('<< ' . _('Zurück'), 'back') . "<br>";
         $export_weiter_button .= "</center></form>";
 
         if ($xslt_process) {

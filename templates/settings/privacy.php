@@ -172,7 +172,7 @@ use Studip\Button, Studip\LinkButton;
                     <tr class="<?=TextHelper::cycle('steelgraulight', 'steel1')?>">
                          <td colspan="<?= $user_domains ? 6 : 5; ?>" align="center">
                             <input type="hidden" name="view" value="privacy">
-                            <?= Button::create(_('übernehmen'), 'change_global_visibility', array('title' =>  _('Änderungen speichern')))?>
+                            <?= Button::create(_('Übernehmen'), 'change_global_visibility', array('title' =>  _('Änderungen speichern')))?>
                         </td>
                     </tr>
                 </table>
@@ -200,7 +200,7 @@ use Studip\Button, Studip\LinkButton;
                             </select></label>
                         </td>
                         <td class="steel1">
-                            <?= Button::create(_('übernehmen'), 'set_default_homepage_visibility', array('title' =>  _('Änderungen speichern')))?>
+                            <?= Button::create(_('Übernehmen'), 'set_default_homepage_visibility', array('title' =>  _('Änderungen speichern')))?>
                         </td>
                     </tr>
                     <tr>

@@ -410,10 +410,10 @@ function show_news_item_content($news_item, $cmd_data, $show_admin, $admin_link)
       $content.="<br>";
 
     if ($auth->auth["uid"] == $news_item['user_id'] || $show_admin) {
-        $edit= LinkButton::create(_('bearbeiten'), URLHelper::getURL("admin_news.php?cmd=edit&edit_news=".$id."&$admin_link"));
-        $edit.= LinkButton::create(_('aktualisieren'), URLHelper::getURL("?touch_news=".$id."#anker"));
+        $edit= LinkButton::create(_('Bearbeiten'), URLHelper::getURL("admin_news.php?cmd=edit&edit_news=".$id."&$admin_link"));
+        $edit.= LinkButton::create(_('Aktualisieren'), URLHelper::getURL("?touch_news=".$id."#anker"));
         if ($auth->auth["uid"] == $news_item['user_id'] || $GLOBALS['perm']->have_perm('admin')) {
-            $edit.= LinkButton::create(_('löschen'), URLHelper::getURL("admin_news.php?cmd=kill&kill_news=".$id."&$admin_link"));
+            $edit.= LinkButton::create(_('Löschen'), URLHelper::getURL("admin_news.php?cmd=kill&kill_news=".$id."&$admin_link"));
         }
     }
 
@@ -464,7 +464,7 @@ function show_news_item_content($news_item, $cmd_data, $show_admin, $admin_link)
             $formular.="<div align=\"center\">";
             $formular.="<textarea name=\"comment_content\" style=\"width:70%\" rows=8 cols=38 wrap=virtual></textarea>";
             $formular.="<br><br>";
-            $formular.=Button::createAccept(_('absenden'));
+            $formular.=Button::createAccept(_('Absenden'));
 
             $help_url = format_help_url("Basis.VerschiedenesFormat");
             $formular.="   <a href=\"".URLHelper::getLink('dispatch.php/smileys')."\" target=\"_blank\"><font size=\"-1\">"._("Smileys")."</a>  <a href=\"".$help_url."\" target=\"_blank\"><font size=\"-1\">"._("Formatierungshilfen")."</a><br><br>";

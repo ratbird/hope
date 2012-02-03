@@ -57,7 +57,7 @@ use Studip\Button, Studip\LinkButton;
     <?= CSRFProtection::tokenTag() ?>
     <input type="hidden" name="ticket" value="<?= get_ticket() ?>">
     Name: <input type="text" name="name" size="25" value="">
-    <?= Button::create(_('anlegen'), 'createrolebtn', array('title' => _('Rolle anlegen')))?>
+    <?= Button::create(_('Anlegen'), 'createrolebtn', array('title' => _('Rolle anlegen')))?>
 </form>
 
 <?

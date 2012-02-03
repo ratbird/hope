@@ -91,7 +91,7 @@ if (!(have_sem_write_perm()) OR $pass==TRUE) {
                 echo "\n</tr>";
                 echo "  <tr>";
                 echo "      <td colspan=2 class=steel1 align=center>";
-                echo LinkButton::create(_("zitieren"), URLHelper::getURL("?write=1&root_id=$root_id&topic_id=$topic_id&quote=TRUE"));
+                echo LinkButton::create(_("Zitieren"), URLHelper::getURL("?write=1&root_id=$root_id&topic_id=$topic_id&quote=TRUE"));
                 echo "      </td>";
                 echo "  </tr>";
                 echo "<tr><td colspan=2 class=steel>&nbsp; </td></tr><tr><td colspan=2 class=steel1><blockquote>";

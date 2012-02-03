@@ -63,7 +63,7 @@ if ($_REQUEST['com'] == 'new') {
                         , $GLOBALS['EXTERN_MAX_CONFIGURATIONS']);
                 my_error($message, "blank", 1);
                 echo "<tr><td class=\"blank\" align=\"center\">\n";
-                echo LinkButton::create("<< " . _("zurück"), URLHelper::getURL('?list=TRUE'));
+                echo LinkButton::create("<< " . _("Zurück"), URLHelper::getURL('?list=TRUE'));
                 echo "</td></tr>\n</table>\n";
                 print_footer();
                 page_close();
@@ -152,7 +152,7 @@ if (!$edit_open[$edit]) {
     echo "<tr><td class=\"blank\">&nbsp;</td></tr>\n";
     echo "<tr><td class=\"blank\" align=\"center\">";
 
-    echo LinkButton::create("<< " . _("zurück"), URLHelper::getURL('?list=TRUE'));
+    echo LinkButton::create("<< " . _("Zurück"), URLHelper::getURL('?list=TRUE'));
 
     echo "</td></tr>\n";
 }

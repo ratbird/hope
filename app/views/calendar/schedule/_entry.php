@@ -25,8 +25,8 @@ use Studip\Button, Studip\LinkButton;
 
         <br>
         <div style="text-align: center">
-            <?= Button::createAccept(_('speichern'))?>
-            <?= LinkButton::createCancel(_('abbrechen'), '#', array('onclick' => 'STUDIP.Schedule.cancelNewEntry();')) ?>
+            <?= Button::createAccept(_('Speichern'))?>
+            <?= LinkButton::createCancel(_('Abbrechen'), '#', array('onclick' => 'STUDIP.Schedule.cancelNewEntry();')) ?>
 
             <input type="hidden" id="new_entry_start_hour" name="start_hour" value="">
             <input type="hidden" id="new_entry_end_hour" name="end_hour" value="">

@@ -41,7 +41,7 @@ global $SEM_TYPE;
                         </select>
 
                         <?= SemesterData::GetSemesterSelector(array('name'=>'select_sem', 'style'=>'vertical-align:middle;'), $_default_sem) ?>
-                        <?= Button::create(_('auswählen'), array('title' => _('Einrichtung auswählen')))?>
+                        <?= Button::create(_('Auswählen'), array('title' => _('Einrichtung auswählen')))?>
                     </div>
                 </form>
                 <br>

@@ -106,7 +106,7 @@ STUDIP.Forum.rate_template = function (id) {
 <?php endforeach?>
 <span style="color:#990000;font-weight:bold;">5</span>\
 <br>\
-\<?= Button::create(_("bewerten"), "sidebar") ?> \
+\<?= Button::create(_("Bewerten"), "sidebar") ?> \
 </form>\
 </div>\
 ', "center");
@@ -341,8 +341,8 @@ if ($delete_id) {
             if ($count)
                 $msg.= sprintf(_("Alle %s Antworten auf diesen Beitrag werden ebenfalls gelöscht!"), $count) . "<br>\n<br>\n";
 
-            $msg .= LinkButton::createAccept(_("ja"), URLHelper::getURL("?really_kill=$delete_id&view=$view#anker"));
-            $msg .= LinkButton::createCancel(_("nein"), URLHelper::getLink("?topic_id=$root&open=$delete_id&view=$view#anker"));
+            $msg .= LinkButton::createAccept(_("Ja"), URLHelper::getURL("?really_kill=$delete_id&view=$view#anker"));
+            $msg .= LinkButton::createCancel(_("Nein"), URLHelper::getLink("?topic_id=$root&open=$delete_id&view=$view#anker"));
 
             parse_msg($msg, '§', 'blank', '1', FALSE);
             echo "</table>";

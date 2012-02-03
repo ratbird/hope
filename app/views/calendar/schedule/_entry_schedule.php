@@ -47,22 +47,22 @@ use Studip\Button, Studip\LinkButton;
         <textarea name="entry_content" style="width: 98%" rows="7"><?= htmlReady($show_entry['content']) ?></textarea>
         <br>
         <div style="text-align: center">
-            <?= Button::createAccept(_('speichern'), array('style' => 'margin-right: 20px')) ?>
+            <?= Button::createAccept(_('Speichern'), array('style' => 'margin-right: 20px')) ?>
 
             <? if ($show_entry['id']) : ?>
                 <?= LinkButton::create(
-                        _('löschen'),
+                        _('Löschen'),
                         $controller->url_for('calendar/schedule/delete/'. $show_entry['id']),
                         array('style' => 'margin-right: 20px')) ?>
             <? endif ?>
 
             <? if ($show_entry) : ?>
                 <?= LinkButton::createCancel(
-                        _('abbrechen'),
+                        _('Abbrechen'),
                         $controller->url_for('calendar/schedule'),
                         array('onclick' => 'STUDIP.Schedule.cancelNewEntry(); STUDIP.Calendar.click_in_progress = false;return false;')) ?>
             <? else: ?>
-                <?= LinkButton::createCancel(_('abbrechen'), 'javascript:STUDIP.Schedule.cancelNewEntry()') ?>
+                <?= LinkButton::createCancel(_('Abbrechen'), 'javascript:STUDIP.Schedule.cancelNewEntry()') ?>
             <? endif ?>
         </div>
     </form>

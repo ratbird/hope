@@ -271,8 +271,8 @@ if (isset($eval_id) && $can_change) {
     echo "    <td class=\"steel1\" colspan=\"4\">&nbsp;</td>\n";
     echo "  </tr>\n";
     echo "  <tr>\n";
-    echo "    <td class=\"steel1\" colspan=\"2\" align=\"LEFT\">".LinkButton::create(_('<< zurück'), 'eval_summary.php?eval_id='.$eval_id)."</td>\n";
-    echo "    <td class=\"steel1\" colspan=\"2\" align=\"RIGHT\">".LinkButton::create(_('speichern'), 'javascript:save();')."&nbsp;".LinkButton::create(_('zurücksetzen'), 'javascript:document.temp.reset();')."</td>\n";
+    echo "    <td class=\"steel1\" colspan=\"2\" align=\"LEFT\">".LinkButton::create(_('<< Zurück'), 'eval_summary.php?eval_id='.$eval_id)."</td>\n";
+    echo "    <td class=\"steel1\" colspan=\"2\" align=\"RIGHT\">".LinkButton::create(_('Speichern'), 'javascript:save();')."&nbsp;".LinkButton::create(_('Zurücksetzen'), 'javascript:document.temp.reset();')."</td>\n";
     echo "  </tr>\n";
     echo "  <tr>\n";
     echo "    <td class=\"blank\" colspan=\"4\">&nbsp;</td>\n";

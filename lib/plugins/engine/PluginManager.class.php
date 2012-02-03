@@ -86,8 +86,20 @@ class PluginManager
         }
     }
 
+     /**
+      * @addtogroup notifications
+      *
+      * Enabling or disabling a plugin triggers a PluginDidEnable or
+      * respectively PluginDidDisable notification. The plugin's ID
+      * is transmitted as subject of the notification.
+      */
+
     /**
      * Set the enabled/disabled status of the given plugin.
+     *
+     * Triggers a PluginDidEnable or respectively PluginDidDisable
+     * notification. The plugin's ID is transmitted as subject of the
+     * notification.
      *
      * @param $id        id of the plugin
      * @param $enabled   plugin status (true or false)
@@ -101,7 +113,12 @@ class PluginManager
         if ($info && $info['enabled'] != $enabled) {
             $db->exec("UPDATE plugins SET enabled = '$state' WHERE pluginid = '$id'");
             $this->plugins[$id]['enabled'] = (boolean) $enabled;
+
+            NotificationCenter::postNotification(
+                $enabled ? 'PluginDidEnable' : 'PluginDidDisable',
+                $id);
         }
+
     }
 
     /**

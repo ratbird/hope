@@ -71,17 +71,36 @@ function MakeUniqueUserinfoID ()
 }
 
 /**
- * Toggles the buddy-flag for the passed contact
+ * @addtogroup notifications
+ *
+ * Adding a buddy triggers a BuddyDidAdd notification. The contact_id
+ * of the new buddy is transmitted as subject of the notification.
+ */
+
+/**
+ * Toggles the buddy-flag for the passed contact.
+ *
+ * When adding a buddy this way, triggers a BuddyDidAdd notification
+ * using the contact_id as subject.
  *
  * @param  string  $contact_id the md5-hash of the contact (not the user_id!)
  * @return bool
  */
 function ChangeBuddy($contact_id)
 {
-    $stmt = DBManager::get()->prepare('UPDATE contact '
-          . 'SET buddy = IF(buddy = 1, 0, 1) '
-          . 'WHERE contact_id = ?');
-    return $stmt->execute(array($contact_id));
+    $db = DBManager::get();
+    $stmt = $db->prepare("SELECT buddy FROM contact WHERE contact_id = ?");
+    $stmt->execute(array($contact_id));
+    $buddy = $stmt->fetchColumn();
+
+    $stmt = $db->prepare('UPDATE contact SET buddy = ? WHERE contact_id = ?');
+    $result = $stmt->execute(array($buddy ? 0 : 1, $contact_id));
+
+    if (!$buddy) {
+        NotificationCenter::postNotification('BuddyDidAdd', $contact_id);
+    }
+
+    return $result;
 }
 
 function RemoveBuddy($username)
@@ -164,9 +183,12 @@ function GetSizeOfBookByLetter()
         $ret[$db->f('first_letter')] = $db->f('anzahl');
     }
     return $ret;
- }
+}
 
-
+/**
+ * When adding a buddy this way, triggers a BuddyDidAdd notification
+ * using the new contact_id as subject.
+ */
 function AddBuddy($username)
 { global $user;
 
@@ -177,7 +199,10 @@ function AddBuddy($username)
     $db->query ("SELECT contact_id FROM contact WHERE owner_id = '$owner_id' AND user_id = '$user_id'");
     if ($db->next_record()) {
         $contact_id = $db->f("contact_id")  ;
-        $db2->query("UPDATE contact SET buddy='1' WHERE contact_id = '$contact_id'");
+        $affected = $db2->query("UPDATE contact SET buddy='1' WHERE contact_id = '$contact_id'");
+        if ($affected) {
+            NotificationCenter::postNotification('BuddyDidAdd', $contact_id);
+        }
     }
 }
 

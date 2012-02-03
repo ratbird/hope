@@ -22,6 +22,7 @@ require_once($RELATIVE_PATH_CALENDAR . '/lib/sync/CalendarParserICalendar.class.
 require_once($RELATIVE_PATH_CALENDAR . '/lib/sync/CalendarExportFile.class.php');
 require_once($RELATIVE_PATH_CALENDAR . '/lib/sync/CalendarWriterICalendar.class.php');
 require_once($RELATIVE_PATH_CALENDAR . '/lib/sync/CalendarSynchronizer.class.php');
+require_once('app/models/ical_export.php');
 require_once('lib/msg.inc.php');
 
 if ($experiod != 'period') {
@@ -95,6 +96,34 @@ if (($expmod != 'exp' && $expmod != 'imp' && $expmod != 'sync') || ($expmod == '
 
     echo "<tr valign=\"top\">\n";
     echo "<td width=\"99%\" nowrap class=\"blank\">\n";
+
+    if (Request::get('delid') && check_ticket(Request::get('ticket'))) {
+        IcalExport::deleteKey($GLOBALS['user']->id);
+        echo MessageBox::success(_("Die Adresse, unter der Ihre Termine abrufbar sind, wurde gelöscht!"));
+    }
+    if (Request::get('newid') && check_ticket(Request::get('ticket'))) {
+        $short_id = IcalExport::setKey($GLOBALS['user']->id);
+        echo MessageBox::success(_("Eine Adresse, unter der Ihre Termine abrufbar sind, wurde erstellt."));
+    } else {
+        $short_id = IcalExport::getKeyByUser($GLOBALS['user']->id);
+    }
+
+    if (Request::submitted('submit_email')) {
+    $email_reg_exp = '/^([-.0-9=?A-Z_a-z{|}~])+@([-.0-9=?A-Z_a-z{|}~])+\.[a-zA-Z]{2,6}$/i';
+    if (preg_match($email_reg_exp, Request::get('email')) !== 0) {
+        $subject = '[' . get_config('UNI_NAME_CLEAN') . ']' . _("Exportadresse für Ihre Termine");
+        $text .= _("Diese Email wurde vom Stud.IP-System verschickt. Sie können
+auf diese Nachricht nicht antworten.") . "\n\n";
+        $text .= _("Über diese Adresse erreichen Sie den Export für Ihre Termine:") . "\n\n";
+        $text .= URLHelper::getLink($GLOBALS['ABSOLUTE_URI_STUDIP'].'ical.php/' . IcalExport::getKeyByUser($GLOBALS['user']->id));
+        StudipMail::sendMessage(Request::get('email'), $subject, $text);
+        echo MessageBox::success(_("Die Adresse wurde verschickt!"));
+    } else {
+        echo MessageBox::error(_("Bitte geben Sie eine gültige Email-Adresse an."));
+    }
+
+}
+
     echo "<table align=\"center\" width=\"100%\" class=\"blank\" border=\"0\" cellpadding=\"5\" cellspacing=0>\n";
 
     if ($expmod == 'syncrec') {
@@ -292,6 +321,41 @@ if (($expmod != 'exp' && $expmod != 'imp' && $expmod != 'sync') || ($expmod == '
             $params['expmod'] = 'sync';
             print_cell($params);
         }
+        // add skip link
+        SkipLinks::addIndex(_("Ihre Termine in externen Kalendern anzeigen"), 'calendar_include');
+
+        echo "<tr><th align=\"left\">\n";
+        echo _("Einbinden Ihrer Termine in externe Kalender")."</th></tr>\n";
+        echo "<tr><td class=\"steel1\" id=\"calendar_include\">\n";
+        if ($short_id) {
+            echo _("Die folgende Adresse können Sie in externe Terminkalenderanwendungen eintragen, um Ihre Termine dort anzuzeigen:");
+            $url = URLHelper::getLink($GLOBALS['ABSOLUTE_URI_STUDIP'] . 'dispatch.php/ical/index/' . $short_id);
+
+            echo '<p style="font-weight: bold;"><a href="' . $url . '" target="_blank">' . htmlReady($url) . '</a></p>';
+            echo '<p>';
+            printf(_("%sNeue Adresse generieren.%s (Achtung: Die alte Adresse wird damit ungültig!)"), '<a href="' . URLHelper::getLink('', array('cmd' => 'export', 'newid' => '1', 'ticket' => get_ticket())) . '">', '</a>');
+            echo '</p><p>';
+            printf(_("%sAdresse löschen.%s (Ein Zugriff auf Ihre Termine über diese Adresse ist dann nicht mehr möglich!)"), '<a href="' . URLHelper::getLink('', array('cmd' => 'export', 'delid' => '1', 'ticket' => get_ticket())) . '">', '</a>');
+            echo '</p>';
+            echo '<form action="' . URLHelper::getLink('') . '" method="post">';
+            echo CSRFProtection::tokenTag();
+            echo '<p>' . _("Verschicken Sie die Export-Andresse als Email:");
+            $stmt = DBManager::get()->prepare('SELECT email FROM auth_user_md5 WHERE user_id = ?');
+            $stmt->execute(array($GLOBALS['user']->id));
+            $cal_email = $stmt->fetch(PDO::FETCH_ASSOC);
+            echo ' <input type="email" name="email" value="' . ($cal_email ? htmlReady($cal_email['email']) : '') . '" required="required"></input>';
+            echo '<input type="hidden" name="cmd" value="export"></input>';
+            echo makeButton('abschicken', 'input', _("abschicken"), 'submit_email');
+            echo '</p></form>';
+        } else {
+            echo '<p>';
+            echo _("Sie können sich eine Adresse generieren lassen, mit der Sie Termine aus Ihrem Stud.IP-Terminkalender in externen Terminkalendern einbinden können.");
+            echo '</p><p>';
+            echo '<a href="' . URLHelper::getLink('', array('cmd' => 'export', 'newid' => '1', 'ticket' => get_ticket())) . '">';
+            echo _("Adresse generieren!");
+            echo '</a></p>';
+        }
+        echo "</td></tr>\n";
 
         if ($expmod == 'impdone') {
             if ($calendar_sess_export['count_import']) {
@@ -455,6 +519,11 @@ if (($expmod != 'exp' && $expmod != 'imp' && $expmod != 'sync') || ($expmod == '
     exit;
 }
 
+/**
+ * Prints a table row and inserts the values given by the params array.
+ *
+ * @param Array $params Array with values to insert in the table row.
+ */
 function print_cell($params)
 {
 
@@ -462,9 +531,9 @@ function print_cell($params)
     echo $params['form'];
     echo '<div>';
     echo $params['content'];
-    echo "<div style=\"text-align:center; vertical-align:center;\">\n";
+    echo "<div style=\"text-align:center; vertical-align:middle;\">\n";
     echo "&nbsp;\n";
-    echo "<div style=\"text-align:center; vertical-align:center;\">\n";
+    echo "<div style=\"text-align:center; vertical-align:middle;\">\n";
     echo $params['button'];
     echo "<input type=\"hidden\" name=\"expmod\" value=\"{$params['expmod']}\">\n";
     echo "</div>\n</form>\n</td></tr>\n";

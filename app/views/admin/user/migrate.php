@@ -46,7 +46,7 @@ use Studip\Button, Studip\LinkButton;
     </tr>
     <tr>
         <td colspan="2" align="center">
-            <?= Button::create(_('umwandeln'), array('title' => _('Den ersten Benutzer in den zweiten Benutzer migrieren')) ?>
+            <?= Button::create(_('umwandeln'), array('title' => _('Den ersten Benutzer in den zweiten Benutzer migrieren'))) ?>
         </td>
     </tr>
 </table>

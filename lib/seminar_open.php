@@ -22,6 +22,14 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
+
+/**
+ * @addtogroup notifications
+ *
+ * Logging in triggers a UserDidLogin notification. The user's ID is
+ * transmitted as subject of the notification.
+ */
+
 require_once 'lib/classes/SemesterData.class.php';
 require_once 'lib/functions.php';
 
@@ -197,6 +205,8 @@ if ($auth->is_authenticated() && is_object($user) && $user->id != "nobody") {
             $user->register("calendar_user_control_data");
             check_calendar_default();
         }
+
+        NotificationCenter::postNotification('UserDidLogin', $user->id);
 
         //redirect user to another page if he want to
         if (($my_studip_settings["startpage_redirect"]) && ($i_page == "index.php") && (!$perm->have_perm("root"))){

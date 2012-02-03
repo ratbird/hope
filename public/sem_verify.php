@@ -22,6 +22,14 @@
 * @package      studip_core
 */
 
+/**
+ * @addtogroup notifications
+ *
+ * Enrolling in a course triggers a CourseDidEnroll
+ * notification. The course's ID is transmitted as
+ * subject of the notification.
+ */
+
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
 // sem_verify.php
@@ -893,6 +901,8 @@ $db6=new DB_Seminar;
             if (!seminar_preliminary($id,$user->id)) {
 
                 insert_seminar_user($id, $GLOBALS['user']->id, $InsertStatus);
+
+                NotificationCenter::postNotification('CourseDidEnroll', $id);
 
                 parse_msg (sprintf("msg§"._("Sie wurden mit dem Status <b>%s</b> in die Veranstaltung <b>%s</b> eingetragen."), $InsertStatus, $SeminarName));
                 echo"<tr><td class=\"blank\" colspan=2><a href=\"seminar_main.php?auswahl=$id\">&nbsp; &nbsp; "._("Hier kommen Sie zu der Veranstaltung")."</a>";

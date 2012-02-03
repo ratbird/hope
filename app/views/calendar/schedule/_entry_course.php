@@ -56,7 +56,7 @@ $sem = Seminar::getInstance($show_entry['id']);
                                        $controller->url_for('calendar/schedule/bind/'. $show_entry['id'] .'/'. $show_entry['cycle_id'] .'/'. '?show_hidden=1'), 
                                        array('style' => 'margin-right: 20px')) ?>
             <? else : ?>
-                <?= LinkButton::create($show_entry['type'] == 'virtual' ? _('löschen') : _('ausblenden'),
+                <?= LinkButton::create($show_entry['type'] == 'virtual' ? _('Löschen') : _('Ausblenden'),
                                        $controller->url_for('calendar/schedule/unbind/'. $show_entry['id'] .'/'. $show_entry['cycle_id']),
                                        array('style' => 'margin-right: 20px')) ?>
             <? endif ?>

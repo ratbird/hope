@@ -96,7 +96,7 @@ use Studip\Button, Studip\LinkButton;
         <td>
             <?= LinkButton::createCancel(
                     _('abbrechen'),
-                    $controller->url_for('admin/configuration/configuration')
+                    $controller->url_for('admin/configuration/configuration'),
                     array('title' => _('Zurück zur Übersicht'))) ?>
         </td>
     </tr>

@@ -1033,7 +1033,7 @@ div.droppable.hover {
 
             print '<table border=0 cellpadding=0 cellspacing=0 width="100%">';
             print "<tr><td class=\"blank\"></td><td class=\"blank\"><div align=\"right\">";
-            echo LinkButton::create(isset($check_all) ? _("keine auswählen") :_("alle auswählen"),
+            echo LinkButton::create(isset($check_all) ? _("Keine auswählen") :_("Alle auswählen"),
                                     URLHelper::getURL(isset($check_all) ? "" : "?check_all=TRUE"));
             echo Button::create(_("Herunterladen"), "download_selected");
             if ($rechte) {
@@ -1149,7 +1149,7 @@ div.droppable.hover {
             print " &nbsp;</td></tr></table>";
             print "</td><td class=\"blank\">&nbsp;</td></tr>";
             print "<tr><td class=\"blank\"></td><td class=\"blank\"><div align=\"right\"><br>";
-            echo LinkButton::create(isset($check_all) ? _("keine auswählen") : _("alle auswählen"),
+            echo LinkButton::create(isset($check_all) ? _("Keine auswählen") : _("Alle auswählen"),
                                     URLHelper::getURL(isset($check_all) ? "" : "?check_all=TRUE"));
             echo Button::create(_("Herunterladen"), "download_selected");
             if ($rechte) {

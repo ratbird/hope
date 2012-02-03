@@ -33,17 +33,25 @@ class CalendarDriver
     private $user_id;
     private $permission;
     private $result;
+    private $perm;
 
     public function __construct($range_id, $permission = NULL)
     {
+        global $user;
+
         $this->sem_events = false;
         $this->object_type = 'cal';
-        $this->user_id = $GLOBALS['auth']->auth['uid'];
+        $this->user_id = $user->id;
         $this->range_id = $range_id;
         if (is_null($permission)) {
             $permission = Calendar::PERMISSION_OWN;
         }
         $this->permission = $permission;
+        if (is_object($GLOBALS['perm'])) {
+            $this->perm =& $GLOBALS['perm'];
+        } else {
+            $this->perm = new Seminar_Perm();
+        }
     }
 
     function &getInstance($range_id = NULL, $permission = NULL)
@@ -195,7 +203,7 @@ class CalendarDriver
                 'STUDIP_ID' => $result['event_id'],
                 'SEMNAME' => stripslashes($result['Name']),
                 'SEM_ID' => $result['range_id'],
-                'CLASS' => 'PRIVATE',
+                'CLASS' => 'CONFIDENTIAL',
                 'CATEGORIES' => stripslashes($result['categories']),
                 'UID' => SeminarEvent::createUid($result['event_id']),
                 'RRULE' => array(
@@ -216,10 +224,8 @@ class CalendarDriver
                 'EVENT_TYPE' => 'semcal',
                 'STUDIP_AUTHOR_ID' => $result['autor_id']);
 
-            if ($GLOBALS['perm']->have_studip_perm('autor', $properties['SEM_ID'], $GLOBALS['user']->id)) {
+            if ($this->perm->have_studip_perm('autor', $properties['SEM_ID'], $this->user_id)) {
                 $properties['CLASS'] = 'PRIVATE';
-            } else {
-                $properties['CLASS'] = 'CONFIDENTIAL';
             }
 
             $this->count();
@@ -238,16 +244,14 @@ class CalendarDriver
                 'STUDIP_ID' => $result['termin_id'],
                 'SEM_ID' => $result['range_id'],
                 'SEMNAME' => stripslashes($result['Name']),
-                'CLASS' => 'PRIVATE',
+                'CLASS' => 'CONFIDENTIAL',
                 'UID' => SeminarEvent::createUid($result['termin_id']),
                 'RRULE' => SeminarEvent::createRepeat(),
                 'EVENT_TYPE' => 'sem',
                 'DTSTAMP' => time());
 
-            if ($GLOBALS['perm']->have_studip_perm('autor', $properties['SEM_ID'], $GLOBALS['user']->id)) {
+            if ($this->perm->have_studip_perm('autor', $properties['SEM_ID'], $this->user_id)) {
                 $properties['CLASS'] = 'PRIVATE';
-            } else {
-                $properties['CLASS'] = 'CONFIDENTIAL';
             }
 
             if (Config::get()->RESOURCES_ENABLE && $result['resource_id']) {

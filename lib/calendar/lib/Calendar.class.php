@@ -386,7 +386,18 @@ class Calendar
         return true;
     }
 
-    function getBindSeminare($user_id = NULL, $all = NULL, $names = false)
+    /**
+     * Returns all ids of seminars the given user wants to include in his
+     * calendar. If the parameter all is true, it returns all seminars
+     * of the user.
+     *
+     * @param type $user_id the id of the user
+     * @param type $all if true, all users seminars are included
+     * @param type $names if true, the names of the seminars are included in the
+     * returned array
+     * @return mixed
+     */
+    public static function getBindSeminare($user_id = NULL, $all = NULL, $names = false)
     {
         if (is_null($user_id)) {
             $user_id = $GLOBALS['user']->id;

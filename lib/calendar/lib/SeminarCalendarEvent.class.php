@@ -27,11 +27,11 @@ class SeminarCalendarEvent extends CalendarEvent
 
     function SeminarCalendarEvent($properties = NULL, $id = '', $sem_id = '', $permission = NULL)
     {
-        global $auth;
+        global $user;
 
         if ($id && is_null($properties)) {
             $this->id = $id;
-            $this->driver = CalendarDriver::getInstance($auth->auth['uid']);
+            $this->driver = CalendarDriver::getInstance($user->id);
             // get event out of database...
             $this->restore();
         } elseif (!is_null($properties)) {
@@ -60,7 +60,7 @@ class SeminarCalendarEvent extends CalendarEvent
 
     function restore($id = '')
     {
-        global $auth;
+        global $user;
 
         if ($id == '')
             $id = $this->id;
@@ -68,7 +68,7 @@ class SeminarCalendarEvent extends CalendarEvent
             $this->id = $id;
 
         if (!is_object($this->driver)) {
-            $this->driver = CalendarDriver::getInstance($auth->auth['uid']);
+            $this->driver = CalendarDriver::getInstance($user->id);
         }
 
         $this->driver->openDatabaseGetSingleObject($id, 'SEMINAR_CALENDAR_EVENTS');
@@ -105,18 +105,23 @@ class SeminarCalendarEvent extends CalendarEvent
 
     function getPermission()
     {
-        switch ($GLOBALS['perm']->get_studip_perm($this->sem_id)) {
-            case 'user' :
-            case 'autor' :
-                return Event::PERMISSION_READABLE;
-            case 'tutor' :
-            case 'dozent' :
-            case 'admin' :
-            case 'root' :
-                return Event::PERMISSION_WRITABLE;
-            default :
-                return Event::PERMISSION_FORBIDDEN;
+        global $perm;
+
+        if (is_object($perm)) {
+            switch ($perm->get_studip_perm($this->sem_id)) {
+                case 'user' :
+                case 'autor' :
+                    return Event::PERMISSION_READABLE;
+                case 'tutor' :
+                case 'dozent' :
+                case 'admin' :
+                case 'root' :
+                    return Event::PERMISSION_WRITABLE;
+                default :
+                    return Event::PERMISSION_FORBIDDEN;
+            }
         }
+        return Event::PERMISSION_FORBIDDEN;
     }
 
     function havePermission($permission)

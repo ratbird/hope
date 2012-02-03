@@ -11,6 +11,10 @@
  * the License, or (at your option) any later version.
  */
 
+// ########################################################################
+//  MODULE DEFINITION
+/** @defgroup notifications Notifications */
+
 /**
  * Special Exception that can be thrown to veto an announced change.
  * Only some types of events support this (see documentation).

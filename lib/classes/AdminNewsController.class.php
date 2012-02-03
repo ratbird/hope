@@ -345,6 +345,12 @@ class AdminNewsController {
         echo "</form></table>";
     }
 
+    /**
+     * @addtogroup notifications
+     *
+     * Creating a news triggers a NewsDidCreate notification. The news's ID is
+     * transmitted as subject of the notification.
+     */
 
     function update_news($news_id,$author,$topic,$body,$user_id,$date,$expire,$add_range, $allow_comments) {
         global $auth;
@@ -367,6 +373,7 @@ class AdminNewsController {
                     if ($news_obj->store()){
                         $this->msg .= "msg§" . _("Ihre neue Ankündigung wurde gespeichert!") . "§";
                     }
+                    NotificationCenter::postNotification('NewsDidCreate', $news_obj->getId());
                 } else {
                     if ($this->news_query["topic"]!=stripslashes($topic)
                     OR $this->news_query["body"]!=stripslashes($body)

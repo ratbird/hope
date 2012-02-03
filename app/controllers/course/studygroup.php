@@ -112,7 +112,18 @@ class Course_StudygroupController extends AuthenticatedController {
     }
 
     /**
+     * @addtogroup notifications
+     *
+     * Creating a new studygroup triggers a StudygroupDidCreate
+     * notification. The ID of the studygroup is transmitted as
+     * subject of the notification.
+     */
+
+    /**
      * creates a new studygroup with respect to given form data
+     *
+     * Triggers a StudygroupDidCreate notification using the ID of the
+     * new studygroup as subject.
      *
      * @return void
      */
@@ -315,6 +326,8 @@ class Course_StudygroupController extends AuthenticatedController {
                         $plugin_manager->setPluginActivated($plugin_id, $sem->id, false);
                     }
                 }
+
+                NotificationCenter::postNotification('StudygroupDidCreate', $sem->id);
 
                 // the work is done. let's visit the brand new studygroup.
                 $this->redirect(URLHelper::getURL('seminar_main.php?auswahl=' . $sem->id));

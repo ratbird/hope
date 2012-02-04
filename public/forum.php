@@ -452,12 +452,20 @@ if ($update) {
         $user_id = $auth->auth['uid'];
         $author = $user_id == 'nobody' ? Request::get('nobodysname') : get_fullname();
         NotificationCenter::postNotification('PostingWillCreate', $update);
+
+        // apply replace-before-save transformations
+        $description = transformBeforeSave($description);
+
         $update = CreateTopic($titel, $author, $description, $parent_id, $root_id, 0, $user_id, true, Request::int('anonymous'));
         NotificationCenter::postNotification('PostingDidCreate', $update);
     } else {
         if (!ForumFreshPosting($update)) // editiert von nur dranhängen wenn nicht frisch erstellt
             $description = forum_append_edit($description);
         NotificationCenter::postNotification('PostingWillUpdate', $update);
+
+        // apply replace-before-save transformations
+        $description = transformBeforeSave($description);
+
         UpdateTopic($titel, $update, $description, Request::int('anonymous'));
         NotificationCenter::postNotification('PostingDidUpdate', $update);
     }

@@ -114,6 +114,10 @@ function submitWikiPage($keyword, $version, $body, $user_id, $range_id) {
     } else if ($latestVersion && ($version !== null) && ($lastchange < 30*60) && ($user_id == $latestVersion['user_id'])) {
         // if same author changes again within 30 minutes, no new verison is created
         NotificationCenter::postNotification('WikiPageWillUpdate', array($range_id, $keyword));
+
+        // apply replace-before-save transformations
+        $body = transformBeforeSave($body);
+
         $result=$db->query("UPDATE wiki SET body='$body', chdate='$date' WHERE keyword='$keyword' AND range_id='$range_id' AND version='$version'");
         NotificationCenter::postNotification('WikiPageDidUpdate', array($range_id, $keyword));
         $message = MessageBox::success(_('Update ok, keine neue Version, da erneute Änderung innerhalb 30 Minuten.'));
@@ -125,6 +129,10 @@ function submitWikiPage($keyword, $version, $body, $user_id, $range_id) {
         }
         $date=time();
         NotificationCenter::postNotification('WikiPageWillCreate', array($range_id, $keyword));
+
+        // apply replace-before-save transformations
+        $body = transformBeforeSave($body);
+
         $result=$db->query("INSERT INTO wiki (range_id, user_id, keyword, body, chdate, version) VALUES ('$range_id', '$user_id', '$keyword','$body','$date','$version')");
         NotificationCenter::postNotification('WikiPageDidCreate', array($range_id, $keyword));
         $message = MessageBox::success(_('Update ok, neue Version angelegt.'));

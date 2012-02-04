@@ -456,7 +456,8 @@ STUDIP.Markup = {
         {"name": "strikethrough", "label": "<del>u</del>",       open: "{-",     close: "-}"},
         {"name": "code",          "label": "code",               open: "[code]", close: "[/code]"},
         {"name": "larger",        "label": "A+",                 open: "++",     close: "++"},
-        {"name": "smaller",       "label": "A-",                 open: "--",     close: "--"}
+        {"name": "smaller",       "label": "A-",                 open: "--",     close: "--"},
+        {"name": "signature",     "label": "signature",          open: "--~~~",  close: ""}
     ]
 };
 

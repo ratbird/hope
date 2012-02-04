@@ -7,6 +7,7 @@
 
 require_once('config.inc.php');
 require_once 'lib/classes/StudipFormat.php';
+require_once 'lib/classes/StudipTransformFormat.php';
 require_once('lib/classes/cssClassSwitcher.inc.php');
 include_once('vendor/idna_convert/idna_convert.class.php');
 include_once('lib/classes/QuickSearch.class.php');
@@ -370,6 +371,20 @@ function format_wiki_comment($comment, $metainfo, $show_comment) {
     }
 }
 
+/**
+ * Transform the argument using the replace-before-save rules defined
+ * by StudipTransformFormat.
+ *
+ * @param string $what the original string
+ *
+ * @return the result of applying the replace-before-save
+ * transformations to the argument of the function
+ */
+function transformBeforeSave($what)
+{
+    $markup = new StudipTransformFormat();
+    return $markup->format($what);
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 

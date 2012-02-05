@@ -101,4 +101,26 @@ abstract class StudIPPlugin {
 
         call_user_func_array(array($this, $action), $args);
     }
+
+    /**
+     * Callback function called after enabling a plugin.
+     * The plugin's ID is transmitted for convenience.
+     *
+     * @param $pluginId string The ID of the plugin just enabled.
+     */
+    public static function onEnable($pluginId)
+    {
+        # implement this in your own plugin
+    }
+
+    /**
+     * Callback function called after disabling a plugin.
+     * The plugin's ID is transmitted for convenience.
+     *
+     * @param $pluginId string The ID of the plugin just disabled.
+     */
+    public static function onDisable($pluginId)
+    {
+        # implement this in your own plugin
+    }
 }

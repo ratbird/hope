@@ -114,6 +114,12 @@ class PluginManager
             $db->exec("UPDATE plugins SET enabled = '$state' WHERE pluginid = '$id'");
             $this->plugins[$id]['enabled'] = (boolean) $enabled;
 
+            // call #onEnable or #onDisable
+            $plugin_class = $this->loadPluginById($id);
+            if ($plugin_class) {
+                $plugin_class->getMethod("on" .  ($enabled ? "En" : "Dis") . "able")->invoke(NULL, $id);
+            }
+
             NotificationCenter::postNotification(
                 $enabled ? 'PluginDidEnable' : 'PluginDidDisable',
                 $id);
@@ -240,6 +246,27 @@ class PluginManager
         require_once $pluginfile;
 
         return new ReflectionClass($class);
+    }
+
+    /**
+     * Load a plugin class from the given plugin ID and
+     * return the ReflectionClass instance for the plugin.
+     *
+     * @param $id string  the plugin's ID
+     * @return a ReflectionClass instance of the plugin
+     */
+    private function loadPluginById ($id)
+    {
+        $plugin_info = $this->getPluginInfoById($id);
+        if (isset($plugin_info)) {
+
+            $class = $plugin_info['class'];
+            $path  = $plugin_info['path'];
+
+            return $this->loadPlugin($class, $path);
+        }
+
+        return NULL;
     }
 
     /**

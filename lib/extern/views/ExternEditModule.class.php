@@ -16,6 +16,8 @@
 * @package  studip_extern
 */
 
+use Studip\Button, Studip\LinkButton;
+
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
 // ExternEditModule.class.php
@@ -552,7 +554,7 @@ class ExternEditModule extends ExternEditHtml {
             $out .= '<tr' . $this->css->getFullClass() . ">\n";
             $out .= "<td colspan=\"2\">&nbsp;</td></tr>\n";
             $out .= '<tr' . $this->css->getFullClass() . ">\n";
-            $out .= '<td colspan="2" align="center">' . makeButton('aktualisieren', 'input'). "</td></tr>\n";
+            $out .= '<td colspan="2" align="center">' . Button::create(_('Aktualisieren')). "</td></tr>\n";
         }
         $out .= "</table></td></tr>\n";
         

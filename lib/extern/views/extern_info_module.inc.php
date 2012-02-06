@@ -16,6 +16,8 @@
 * @package  studip_extern
 */
 
+use Studip\Button, Studip\LinkButton;
+
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
 // extern_info_module.inc.php
@@ -108,7 +110,7 @@ $css_switcher->resetClass();
 $css_switcher->switchClass();
 
 echo "<tr><td" . $css_switcher->getFullClass() . " align=\"center\">&nbsp;<br>\n";
-echo '<a href="' . URLHelper::getLink('?list=TRUE') . '">' . makeButton("zurueck");
+echo LinkButton::create('<<  ' . _('Zurück'), URLHelper::getLink('?list=TRUE'));
 echo "</a><br>&nbsp;</td></tr>\n";
 
 ?>

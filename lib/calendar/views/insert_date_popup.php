@@ -19,6 +19,9 @@
  * @category    Stud.IP
  * @package     calendar
  */
+
+use Studip\Button, Studip\LinkButton;
+
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 require_once ('config.inc.php');
@@ -343,7 +346,7 @@ if ($mcount > 3) {
     $atimex = getdate($imt);
     $i = 0;
     if (!$kalender && $preset_error != '') {
-        parse_window('info§' . $preset_error, '§', '', '<div align="center"><a href="javascript:window.close();">' . makeButton('schliessen', 'img') . '</a></div>');
+        parse_window('info§' . $preset_error, '§', '', '<div align="center">'. LinkButton::createCancel(_('schließen'), 'javascript:window.close();') .'</div>');
     } else {
         echo '<table class="blank" border=0 align="center"><tr valign=top>', "\n";
         while ($kalender && ($i < $mcount)) {
@@ -388,7 +391,7 @@ if ($mcount > 3) {
         // navigation arrows
 
         echo '<tr>';
-        $zeiten_buttons = '<a href="javascript:insert_time' . $function_addition . '();">' . makeButton('uebernehmen', 'img') . '</a> &nbsp; <a href="javascript:window.close();">' . makeButton('abbrechen', 'img') . '</a>';
+        $zeiten_buttons = LinkButton::create(_('übernehmen'), 'javascript:insert_time' . $function_addition).' &nbsp; '. LinkButton::createCancel(_('abbrechen'), 'javascript:window.close();');
         if ($kalender) {
             echo '<td class="blank">&nbsp;<a href="';
             echo URLHelper::getLink('', array('imt' => mktime(0, 0, 0, $atimex['mon'] - $mcount, 10, $atimex['year']), 'form_name' => ($form_name ? $form_name : ''), 'submit' => ($submit ? '1' : ''), 'mcount' =>  $mcount, 'element_switch' => $element_switch, 'c' => $c, 'atime' => $atime)) . $q . '">';

@@ -26,6 +26,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
+use Studip\Button, Studip\LinkButton;
+
 require_once('lib/classes/TreeView.class.php');
 require_once('lib/classes/StudipLitList.class.php');
 require_once('lib/classes/StudipLitClipBoard.class.php');
@@ -409,7 +411,7 @@ class StudipLitListViewAdmin extends TreeView
             }
         }
         $content .= "\n</select>&nbsp;&nbsp;" .
-                makeButton("kopieerstellen", "input", _("Eine Kopie der ausgewählten Liste erstellen")) .
+                Button::create(_('Kopie erstellen'), array('title' => _('Eine Kopie der ausgewähkten Liste erstellen'))) .
                 "</form></td></tr>";
 
         return $content;
@@ -479,73 +481,82 @@ class StudipLitListViewAdmin extends TreeView
     }
 
     function getNewLiteratureButton($item_id){
-        $content .= "<a href=\"" . $this->getSelf("cmd=NewItem&item_id=$item_id") . "\">";
-        $content .= "<img " . makeButton("neueliteraturliste", "src") . tooltip(_("Eine neue Literaturliste anlegen."));
-        $content .= " border=\"0\"></a>&nbsp;";
+        $content = LinkButton::create(_('neue Literaturliste'), 
+                    $this->getSelf('cmd=NewItem&item_id='.$item_id), 
+                    array('title' => _('Eine neue Literaturliste anlegen')));
+        $content .= "&nbsp;";
 
         return $content;
     }
 
     function getEditFormatingButton($item_id){
-        $content .= "<a href=\"" . $this->getSelf("cmd=EditItem&item_id=$item_id") . "\">";
-        $content .= "<img " . makeButton("bearbeiten", "src") . tooltip(_("Dieses Element bearbeiten"));
-        $content .= " border=\"0\"></a>&nbsp;";
+        $content = LinkButton::create(_('bearbeiten'), 
+                    $this->getSelf('cmd=EditItem&item_id='.$item_id), 
+                    array('title' => _("Dieses Element bearbeiten")));
+        $content .= "&nbsp;";
 
         return $content;
     }
 
     function getEditLiteratureEntryButton($item_id){
-        $content .= "<a href=\"" . $this->getSelf("cmd=EditItem&item_id=$item_id") . "\">";
-        $content .= "<img " . makeButton("anmerkung", "src") . tooltip(_("Dieses Element bearbeiten"));
-        $content .= " border=\"0\"></a>&nbsp;";
+        $content = LinkButton::create(_('Anmerkung'), 
+                    $this->getSelf('cmd=EditItem&item_id='. $item_id),
+                    array('title' => _('Dieses Element bearbeiten')));
+        $content .= "&nbsp;";
 
         return $content;
     }
 
     function getDetailsButton($item_id){
-        $content .= "<a href=\"admin_lit_element.php?_catalog_id={$this->tree->tree_data[$item_id]['catalog_id']}\">";
-        $content .= "<img " . makeButton("details", "src") . tooltip(_("Detailansicht dieses Eintrages ansehen."));
-        $content .= " border=\"0\"></a>&nbsp;";
+        $content = LinkButton::create(_('Details'),
+                    'admin_lit_element.php?_catalog_id='.$this->tree->tree_data[$item_id]['catalog_id'],
+                    array('title' => _('Detailansicht dieses Eintrages ansehen.')));
+        $content .= "&nbsp;";
 
         return $content;
     }
 
     function getCopyListButton($item_id){
-        $content .= "<a href=\"" . $this->getSelf("cmd=CopyList&item_id=$item_id") . "\">";
-        $content .= "<img " . makeButton("kopieerstellen", "src") . tooltip(_("Eine Kopie dieser Liste erstellen"));
-        $content .= " border=\"0\"></a>&nbsp;";
+        $content = LinkButton::create(_('Kopie erstellen'),
+                    $this->getSelf('cmd=CopyList&item_0id='.$item_id),
+                    array('title' => _('Eine Kopie dieser Liste erstellen')));
+        $content .= "&nbsp;";
 
         return $content;
     }
 
     function getSortButton($item_id){
-        $content .= "<a href=\"" . $this->getSelf("cmd=SortKids&item_id=$item_id") . "\">";
-        $content .= "<img " . makeButton("sortieren", "src") . tooltip(_("Elemente dieser Liste alphabetisch sortieren"));
-        $content .= " border=\"0\"></a>&nbsp;";
+        $content = LinkButton::create(_('sortieren'),
+                    $this->getSelf('cmd=SortKids&item_id='.$item_id),
+                    array('title' => _('Elemente dieser Liste alphabetisch sortieren')));
+        $content .= "&nbsp;";
 
         return $content;
     }
 
     function getExportButton($item_id){
-        $content .= '<a href="' . GetDownloadLink('', $this->tree->tree_data[$item_id]['name'] . '.txt', 5, 'force', $this->tree->range_id, $item_id) . '">';
-        $content .= "<img " . makeButton("export", "src") . tooltip(_("Export der Liste in EndNote kompatiblem Format"));
-        $content .= " border=\"0\"></a>&nbsp;";
+        $content = LinkButton::create(_('Export'),
+                    GetDownloadLink('', $this->tree->tree_data[$item_id]['name'] . '.txt', 5, 'force', $this->tree->range_id, $item_id),
+                    array('title' => _('Export der Liste in EndNote kompatiblem Forma')));
+        $content .= '&nbsp;';
 
         return $content;
     }
 
     function getDeleteButton($item_id, $cmd){
-        $content .= "<a href=\"" . $this->getSelf("cmd=$cmd&item_id=$item_id") . "\">";
-        $content .= "<img " . makeButton("loeschen", "src") . tooltip(_("Dieses Element löschen"));
-        $content .= " border=\"0\"></a>&nbsp;";
+        $content = LinkButton::create(_('Löschen'), 
+                    $this->getSelf('cmd='.$cmd.'&item_id='.$item_id), 
+                    array('title' => _('Dieses Element löschen')));
+        $content .= '&nbsp;';
 
         return $content;
     }
 
     function getToClipboardButton($item_id){
-        $content .= "<a href=\"" . $this->getSelf("cmd=InClipboard&item_id=$item_id") . "\">";
-        $content .= "<img " . makeButton("merkliste", "src") . " border=\"0\" ";
-        $content .= tooltip(_("Eintrag in Merkliste aufnehmen")) . "></a>";
+         $content = LinkButton::create(_('Merkliste'), 
+                    $this->getSelf('cmd=InClipboard&item_id='.$item_id), 
+                    array('title' => _('Eintrag in Merkliste aufnehmen')));
+        $content .= '&nbsp;';
 
         return $content;
     }
@@ -651,11 +662,13 @@ class StudipLitListViewAdmin extends TreeView
 
         }
         $content .= "<tr><td class=\"steel1\">&nbsp;</td></tr><tr><td class=\"steel1\" align=\"center\">" .
-                makeButton("speichern","input", _("Einstellungen speichern")) .
-                "&nbsp;<a href=\"" . $this->getSelf("cmd=Cancel&item_id=" .
-                $this->edit_item_id) . "\">" .
-                "<img " .makeButton("abbrechen","src") . tooltip(_("Aktion abbrechen")) .
-                " border=\"0\"></a></td></tr>";
+                Button::createAccept(_('Speichern'), 
+                        array('title' => _("Einstellungen speichern"))) .
+                "&nbsp;" .
+                LinkButton::createCancel(_('Abbrechen'), 
+                        $this->getSelf("cmd=Cancel&item_id=".$this->edit_item_id),
+                        array('Aktion abbrechen' => _('Aktion abbrechen'))) .
+                '</td></tr>';
         $content .= "\n</form>";
 
         return $content;

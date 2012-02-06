@@ -389,30 +389,30 @@ else {
                     echo Button::create(_('Jährlich'), 'mod_y');
             } else {
 
-                if ($mod == "SINGLE")
-                    echo "<img " . makeButton("keine2", "src") . " border=\"0\">\n";
+               if ($mod == "SINGLE")
+                    echo Button::createCancel(_('Keine'), '', array('disabled', 'disabled'));
                 else
-                    echo "<img " . makeButton("keine", "src") . " border=\"0\">\n";
+                    echo Button::create(_('Keine'), '', array('disabled', 'disabled'));
                 echo " ";
                 if ($mod == "DAILY")
-                    echo "<img " . makeButton("taeglich2", "src") . " border=\"0\">\n";
+                    echo Button::createAccept(_('Täglich'), '', array('disabled', 'disabled'));
                 else
-                    echo "<img " . makeButton("taeglich", "src") . " border=\"0\">\n";
+                    echo Button::create(_('Täglich'), '', array('disabled', 'disabled'));
                 echo " ";
                 if ($mod == "WEEKLY")
-                    echo "<img " . makeButton("woechentlich2", "src") . " border=\"0\">\n";
+                    echo Button::createAccept(_('Wöchentlich'), '', array('disabled', 'disabled'));
                 else
-                    echo "<img " . makeButton("woechentlich", "src") . " border=\"0\">\n";
+                    echo Button::create(_('Wöchentlich'), '', array('disabled', 'disabled'));
                 echo " ";
                 if ($mod == "MONTHLY")
-                    echo "<img " . makeButton("monatlich2", "src") . " border=\"0\">\n";
+                    echo Button::createAccept(_('Monatlich'), '', array('disabled', 'disabled'));
                 else
-                    echo "<img " . makeButton("monatlich", "src") . " border=\"0\">\n";
+                    echo Button::create(_('Monatlich'), '', array('disabled', 'disabled'));
                 echo " ";
                 if ($mod == "YEARLY")
-                    echo "<img " . makeButton("jaehrlich2", "src") . " border=\"0\">\n";
+                    echo Button::createAccept(_('Jährlich'), '', array('disabled', 'disabled'));
                 else
-                    echo "<img " . makeButton("jaehrlich", "src") . " border=\"0\">\n";
+                    echo Button::create(_('Jährlich'), '', array('disabled', 'disabled'));
             }
 
             echo "</td></tr>\n";

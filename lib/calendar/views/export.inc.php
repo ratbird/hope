@@ -17,6 +17,8 @@
  * @package     calendar
  */
 
+use Studip\Button, Studip\LinkButton;
+
 require_once($RELATIVE_PATH_CALENDAR . '/lib/sync/CalendarImportFile.class.php');
 require_once($RELATIVE_PATH_CALENDAR . '/lib/sync/CalendarParserICalendar.class.php');
 require_once($RELATIVE_PATH_CALENDAR . '/lib/sync/CalendarExportFile.class.php');
@@ -151,11 +153,11 @@ auf diese Nachricht nicht antworten.") . "\n\n";
             $send_sync = GetDownloadLink($tmpfile, $file, 2, 'force');
             $params['content'] = _("Klicken Sie auf den Button, um die Datei mit den synchronisierten Kalenderdaten herunterzuladen.")
                     . _("Die Daten liegen ebenfalls in einer iCalendar-Datei vor, die Sie in Ihren lokalen Terminkalender (z.B. MS Outlook) importieren können.");
-            $params['button'] = "<input type=\"image\" " . makeButton("herunterladen", "src") . " border=\"0\">";
+            $params['button'] = Button::create(_('herunterladen'));
         } else {
             $send_sync = URLHelper::getLink('', array('cmd' => 'export', 'atime' => $atime));
             $params['content'] = $info['export'];
-            $params['button'] = "<input type=\"image\" " . makeButton("zurueck", "src") . " border=\"0\">";
+            $params['button'] = Button::create(_('<< zurück'));
         }
         $params['form'] = "<form action=\"$send_sync\" method=\"post\">\n";
         $params['form'] .= CSRFProtection::tokenTag();
@@ -268,7 +270,7 @@ auf diese Nachricht nicht antworten.") . "\n\n";
                 . "\" onClick=\"window.open('" . UrlHelper::getLink("termin_eingabe_dispatch.php?element_switch=55${atimetxt}")
                 . "', 'InsertDate', 'dependent=yes, width=210, height=210, left=500, top=150')\">";
         $params['content'] .= ">\n&nbsp;" . sprintf(_("Nur Termine vom:%sbis zum:%s"), $text_exstart, $text_exend);
-        $params['button'] = "<input type=\"image\" " . makeButton("export", "src") . " border=\"0\">";
+        $params['button'] = Button::create(_('export'));
         $params['expmod'] = "exp";
         print_cell($params);
 
@@ -293,8 +295,7 @@ auf diese Nachricht nicht antworten.") . "\n\n";
                     . '&nbsp;&nbsp;&nbsp;' . Assets::img('icons/16/grey/info-circle.png', tooltip2($tooltip2, true, true))
                     . "<br><br>" . _("Klicken Sie auf \"Durchsuchen\", um eine Datei auszuwählen.")
                     . "</div>\n<br>&nbsp; &nbsp; <input type=\"file\" name=\"importfile\" size=\"40\">\n";
-            $params['button'] = "<input value=\"Senden\" type=\"image\" " . makeButton('dateihochladen', 'src') . " onClick=\"return STUDIP.OldUpload.upload_start(document.import_form);\" "
-                    . "name=\"create\" border=\"0\">\n";
+            $params['button'] = Button::create(_('Datei hochladen'), 'create', array('onclick' => 'onClick=\"return STUDIP.OldUpload.upload_start(document.import_form);'));
             $params['expmod'] = 'imp';
             print_cell($params);
 
@@ -315,9 +316,8 @@ auf diese Nachricht nicht antworten.") . "\n\n";
                     . _("Termine aus abonnierten Veranstaltungen importieren.")
                     . '&nbsp;&nbsp;&nbsp;' . Assets::img('icons/16/grey/info-circle.png', tooltip2($tooltip2, true, true))
                     . "<br><br>" . _("Klicken Sie auf \"Durchsuchen\", um eine Datei auszuwählen.")
-                    . "</div>\n<br>&nbsp; &nbsp; <input type=\"file\" name=\"importfile\" size=\"40\">\n";
-            $params['button'] = "<input value=\"Senden\" type=\"image\" " . makeButton("dateihochladen", "src") . " onClick=\"return STUDIP.OldUpload.upload_start(document.sync_form);\" "
-                    . "name=\"create\" border=\"0\">\n";
+                    . "</div>\n<br>&nbsp; &nbsp; <input type=\"file\" name=\"importfile\" size=\"40\">\n"; 
+            $params['button'] = Button::create(_('Senden'), 'create', array('onclick' => 'onClick=\"return STUDIP.OldUpload.upload_start(document.sync_form);'));
             $params['expmod'] = 'sync';
             print_cell($params);
         }
@@ -345,7 +345,7 @@ auf diese Nachricht nicht antworten.") . "\n\n";
             $cal_email = $stmt->fetch(PDO::FETCH_ASSOC);
             echo ' <input type="email" name="email" value="' . ($cal_email ? htmlReady($cal_email['email']) : '') . '" required="required"></input>';
             echo '<input type="hidden" name="cmd" value="export"></input>';
-            echo makeButton('abschicken', 'input', _("abschicken"), 'submit_email');
+            echo Button::create(_('Abschicken'), 'submit_email', array('title' => _('Abschicken')));
             echo '</p></form>';
         } else {
             echo '<p>';

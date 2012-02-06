@@ -184,7 +184,7 @@ if( !isset( $answers ) ) {
 }
 
 if( empty( $answers ) ) {
-    if( !isset( $addAnswersButton_x ) && !isset( $saveButton_x ) && !isset( $deleteAnswersButton_x ) ) {
+    if( !Request::submittedSome('addAnswersButton', 'saveButton', 'deleteAnswersButton')) {
     for( $i=0; $i<5; $i++ )
         $answers[$i] = makeNewAnswer();
     } else
@@ -227,7 +227,7 @@ if( !isset( $rangeID ) )  $rangeID = $vote->getRangeID();
 if( $pageMode != MODE_RESTRICTED ) {
 
     /**** Command: add Answers ****/
-    if( isset( $addAnswersButton_x ) ) {
+    if(Request::submitted('addAnswersButton')) {
     for( $i=0; $i<$newAnswerFields; $i++ )
         array_push( $answers, makeNewAnswer() );
     }
@@ -245,7 +245,7 @@ if( $pageMode != MODE_RESTRICTED ) {
     }
 
     /**** Command: delete Answers ****/
-    elseif( isset( $deleteAnswersButton_x ) ) {
+    elseif(Request::submitted('deleteAnswersButton')) {
     for( $i=0; $i<count($answers); $i++ ) {
         if( $deleteAnswers[$i] == "on" ) {
         deleteAnswer( $i, $answers, $deleteAnswers );
@@ -258,7 +258,7 @@ if( $pageMode != MODE_RESTRICTED ) {
 
 /**** Command: SAVE VOTE ****/
 /* -------------------------------------------------------- */
-if( isset( $saveButton_x ) ) {
+if(Request::submitted('saveButton')) {
     $vote->errorArray = array();
 
     // special case: creator wants to modify things in a running vote,
@@ -374,7 +374,7 @@ if( isset( $saveButton_x ) ) {
 }
 
 /**** Command: cancel ****/
-elseif( isset( $cancelButton_x ) ) {
+elseif(Request::submitted('cancelButton')) {
 
     // clear outbut buffer, as we are leaving the edit page.
     ob_end_clean();

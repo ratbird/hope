@@ -16,6 +16,9 @@
  * @modulegroup vote_modules
  *
  */
+ 
+
+use Studip\Button, Studip\LinkButton;
 
 // +--------------------------------------------------------------------------+
 // This file is part of Stud.IP
@@ -357,10 +360,8 @@ function printAnswerFields ( $answers ) {
     // buttons for adding/deleting answers
     if( $pageMode != MODE_RESTRICTED ) {
     $html .= "<table border=0 cellpadding=0 cellspacing=0 width=\"100%\">";
-    $html .= "<tr><td align=left>";
-    $html .= "<input type=image style=\"vertical-align:middle;\" name=\"addAnswersButton\" "
-        . makeButton("hinzufuegen","src") . tooltip(_("Antwortfelder hinzufügen"))
-        . " border=0> ";
+    $html .= "<tr><td align=left>";    
+    $html .= Button::create(_('Hinzufügen'), 'addAnswersButton' ,array('title' => _('Antwortfelder hinzufügen')));
     $html .= "<select style=\"vertical-align:middle;\" name=\"newAnswerFields\" size=1>";
     for( $i=1; $i<=10; $i++ )
         $html .= "<option value=\"$i\">$i</option>";
@@ -372,9 +373,9 @@ function printAnswerFields ( $answers ) {
         . _("Alle Antworten zum L&ouml;schen (de)markieren")."\">". _("Alle markieren") . "</a>)&nbsp;";
 
     $html .= _("Markierte Antworten")
-        . "</font> <input type=image style=\"vertical-align:middle;\" name=\"deleteAnswersButton\" "
-        . makeButton("loeschen","src") . tooltip(_("Markierte Antworten löschen"))
-        . " border=0>\n";
+        . "</font>"
+        . Button::create(_('Löschen'), 'deleteAnswersButton', array('title' => _('Markierte Antworten löschen')))
+        ."\n";
 
     $html .= "</td>\n";
     $html .= "</tr></table>\n";
@@ -470,13 +471,10 @@ function printRightRegion ( ) {
     echo "<td width=\"270\" align=\"center\" valign=\"top\">\n";
     print_infobox($infobox, "infobox/voting.jpg");
 
-    echo "<br><input type=image style=\"vertical-align:middle;\" name=\"saveButton\""
-//  . " onClick=\"finishInputs();\" "
-    . makeButton("speichern","src") . tooltip(_("Alle Änderungen speichern und zurück!"))
-    . " border=0>"
-    . "&nbsp;<input type=image style=\"vertical-align:middle;\" name=\"cancelButton\" "
-    . makeButton("abbrechen","src") . tooltip(_("Alle Änderungen verwerfen und zurück!"))
-    . " border=0>";
+    echo '<div class="button-group">';
+    echo Button::createAccept(_('Speichern'), 'saveButton', array('title' => _('Alle Änderungen speichern und zurück!')));
+    echo Button::createCancel(_('Abbrechen'), 'cancelButton', array('title' => _('Alle Änderungen verwerfen und zurück!')));
+    echo '<div>';
     echo "</td></tr>";
     echo "</table>";
 }

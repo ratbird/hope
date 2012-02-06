@@ -1083,8 +1083,8 @@ function TransformInternalLinks($str){
 function createQuestion($question, $approveParams, $disapproveParams = array(), $baseUrl = '?') {
     $template = $GLOBALS['template_factory']->open('shared/question');
 
-    $template->set_attribute('approvalLink', URLHelper::getLink($baseUrl, $approveParams ));
-    $template->set_attribute('disapprovalLink', URLHelper::getLink($baseUrl, $disapproveParams ));
+    $template->set_attribute('approvalLink', URLHelper::getURL($baseUrl, $approveParams ));
+    $template->set_attribute('disapprovalLink', URLHelper::getURL($baseUrl, $disapproveParams ));
     $template->set_attribute('question', $question);
 
     return $template->render();

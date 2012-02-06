@@ -208,41 +208,13 @@ class about extends messaging {
 
 
     function about($username,$msg) {  // Konstruktor, prüft die Rechte
-        global $user,$perm,$auth;
+        global $perm;
 
         $this->db = new DB_Seminar;
         $this->get_auth_user($username);
         $this->dataFieldEntries = DataFieldEntry::getDataFieldEntries($this->auth_user["user_id"]);
+        $this->check = $perm->get_profile_perm($this->auth_user['user_id']);
         $this->msg = $msg; //Meldungen restaurieren
-
-        // der user selbst natürlich auch
-        if ($auth->auth["uname"] == $username AND $perm->have_perm("autor"))
-            $this->check="user";
-        // Vertretungen dürfen auch, wenn das freigegeben ist
-        else if (isDeputyEditAboutActivated() && isDeputy($user->id, get_userid($username), true))
-            $this->check='user';
-        //bei admins schauen wir mal
-        elseif ($auth->auth["perm"]=="admin") {
-            $this->db->query("SELECT a.user_id FROM user_inst AS a LEFT JOIN user_inst AS b USING (Institut_id) WHERE (b.inst_perms='admin' AND b.user_id='$user->id') AND (a.user_id='".$this->auth_user["user_id"]."' AND a.inst_perms IN ('dozent','tutor','autor'))");
-            if ($this->db->num_rows())
-                $this->check="admin";
-
-            if ($perm->is_fak_admin()){
-                $this->db->query("SELECT c.user_id FROM user_inst a LEFT JOIN Institute b ON(a.Institut_id=b.fakultaets_id)  LEFT JOIN user_inst c ON(b.Institut_id=c.Institut_id) WHERE a.user_id='$user->id' AND a.inst_perms='admin' AND c.user_id='".$this->auth_user["user_id"]."'");
-                if ($this->db->next_record())
-                    $this->check="admin";
-            }
-        }
-        //root darf mal wieder alles
-        elseif ($auth->auth["perm"]=="root")
-            $this->check="admin";
-        else
-            $this->check="";
-        //hier ist wohl was falschgelaufen...
-        if ($this->auth_user["username"]=="")
-            $this->check="";
-
-        return;
     }
 
 
@@ -964,7 +936,7 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
         $lit_list = StudipLitList::GetFormattedListsByRange($this->auth_user['user_id']);
         // Free datafields
         $data_fields = DataFieldEntry::getDataFieldEntries($this->auth_user['user_id']);
-        $guestbook = new Guestbook($this->auth_user['user_id'], true, 1);
+        $guestbook = new Guestbook($this->auth_user['user_id'], 1);
         $guestbook = $guestbook->checkGuestbook();
         // Homepage plugins
         //$homepageplugins = PluginEngine::getPlugins('HomepagePlugin');

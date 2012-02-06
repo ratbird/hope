@@ -998,6 +998,76 @@ class Seminar_Perm extends Perm {
         }
     }
 
+    function get_profile_perm($range_id, $user_id = false) {
+
+        if (!$user_id) {
+            $user_id = $GLOBALS['user']->id;
+        }
+
+        if (!isset($this->studip_perms[$range_id][$user_id])) {
+            $this->studip_perms[$range_id][$user_id] = $this->get_uncached_profile_perm($range_id, $user_id);
+        }
+        return $this->studip_perms[$range_id][$user_id];
+    }
+
+    function get_uncached_profile_perm($range_id, $user_id) {
+
+        $status = false;
+
+        if ($range_id == $user_id && $this->have_perm('autor', $user_id)) {
+            // user on his own profile
+            $status = 'user';
+        } else if (isDeputyEditAboutActivated() && isDeputy($user_id, $range_id, true)) {
+            // user is an assigned deputy
+            $status = 'user';
+        } else if ($this->have_perm('root', $user_id)) {
+            // respect root's authority
+            $status = 'admin';
+        } else if ($this->have_perm('admin', $user_id)) {
+            // institute admin may have permission
+            $db = DBManager::get();
+            $stmt = $db->prepare("SELECT a.inst_perms FROM user_inst AS a " .
+                                 "LEFT JOIN user_inst AS b USING (Institut_id) " .
+                                 "WHERE a.user_id = ? AND a.inst_perms = 'admin' " .
+                                 "  AND b.user_id = ? AND b.inst_perms IN ('autor', 'tutor', 'dozent')");
+            $stmt->execute(array($user_id, $range_id));
+
+            if ($stmt->fetchColumn()) {
+                $status = 'admin';
+            } else if ($this->is_fak_admin($user_id)) {
+                $stmt = $db->prepare("SELECT a.inst_perms FROM user_inst a " .
+                                     "LEFT JOIN Institute i ON a.Institut_id = i.fakultaets_id " .
+                                     "LEFT JOIN user_inst b ON b.Institut_id = i.Institut_id " .
+                                     "WHERE a.user_id = ? AND a.inst_perms = 'admin' " .
+                                     "  AND b.user_id = ? AND b.inst_perms != 'user'");
+                $stmt->execute(array($user_id, $range_id));
+
+                if ($stmt->fetchColumn()) {
+                    $status = 'admin';
+                }
+            }
+        }
+
+        return $status;
+    }
+
+    function have_profile_perm($perm, $range_id, $user_id = false) {
+
+        $pageperm = explode(",", $perm);
+        $userperm = explode(",", $this->get_profile_perm($range_id, $user_id));
+
+        list ($ok0, $pagebits) = $this->permsum($pageperm);
+        list ($ok1, $userbits) = $this->permsum($userperm);
+
+        $has_all = (($userbits & $pagebits) == $pagebits);
+
+        if (!($has_all && $ok0 && $ok1) ) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     function is_fak_admin($user_id = false){
         global $user;
         if (!$user_id) $user_id = $user->id;

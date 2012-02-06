@@ -188,36 +188,6 @@ if (isset($current_user)) {
         $current_user->store();
     }
 
-    //Bin ich ein Inst_admin, und ist der user in meinem Inst Tutor oder Dozent?
-    $admin_darf = FALSE;
-    if ($perm->have_perm("root")) {
-        $admin_darf = TRUE;
-    } elseif ($perm->have_perm("admin")) {
-        $sth = $db->prepare("SELECT b.inst_perms FROM user_inst AS a ".
-                           "LEFT JOIN user_inst AS b USING (Institut_id) ".
-                           "WHERE (b.user_id =  ?) AND ".
-                           "(b.inst_perms = 'autor' OR b.inst_perms = 'tutor' OR ".
-                           "b.inst_perms = 'dozent') AND (a.user_id = ?) AND ".
-                           "(a.inst_perms = 'admin')");
-        $sth->execute(array($user_id,$user->id));
-        if ($sth->fetch()) {
-            $admin_darf = TRUE;
-        }
-        if ($perm->is_fak_admin()) {
-            $sth = $db->prepare("SELECT c.user_id FROM user_inst a " .
-                                "LEFT JOIN Institute b ON(a.Institut_id=b.fakultaets_id) " .
-                                "LEFT JOIN user_inst c ON(b.Institut_id=c.Institut_id) " .
-                                "WHERE c.inst_perms <> 'user'" .
-                                "AND c.user_id=? AND a.inst_perms='admin' AND a.user_id=?");
-            $sth->execute(array($user_id,$user->id));
-            if ($sth->fetch()) {
-                $admin_darf = TRUE;
-            }
-        }
-    }
-
-
-
     // generische Datenfelder aufsammeln
     $short_datafields = array();
     $long_datafields  = array();
@@ -229,23 +199,6 @@ if (isset($current_user)) {
             }
             else {
                 $short_datafields[] = $entry;
-            }
-        }
-    }
-
-
-
-    $show_tabs = ($user_id == $user->id && $perm->have_perm("autor"))
-                 || (isDeputyEditAboutActivated()
-                    && isDeputy($user->id, $user_id, true))
-                 || $perm->have_perm("root")
-                 || $admin_darf;
-
-    // FIXME these tabs should not have been added anyway
-    if (!$show_tabs) {
-        foreach (Navigation::getItem('/profile') as $key => $nav) {
-            if ($key != 'view') {
-                Navigation::removeItem('/profile/'.$key);
             }
         }
     }
@@ -567,7 +520,7 @@ if (isset($current_user)) {
 
 
     // show Guestbook
-    $guest = new Guestbook($user_id,$admin_darf, Request::int('guestpage', 0));
+    $guest = new Guestbook($user_id, Request::int('guestpage', 0));
 
     if ($_REQUEST['guestbook'] && $perm->have_perm('autor'))
         $guest->actionsGuestbook($_REQUEST['guestbook'],$_REQUEST['post'],$_REQUEST['deletepost'],$_REQUEST['studipticket']);

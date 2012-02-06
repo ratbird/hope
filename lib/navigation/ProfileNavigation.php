@@ -76,7 +76,7 @@ class ProfileNavigation extends Navigation
      */
     public function initSubNavigation()
     {
-        global $auth;
+        global $auth, $perm;
 
         parent::initSubNavigation();
 
@@ -92,33 +92,35 @@ class ProfileNavigation extends Navigation
         $navigation = new Navigation(_('Profil'), 'about.php');
         $this->addSubNavigation('view', $navigation);
 
-        // avatar
-        $navigation = new Navigation(_('Bild'), 'edit_about.php', array('view' => 'Bild'));
-        $this->addSubNavigation('avatar', $navigation);
+        if ($perm->have_profile_perm('user', $my_about->auth_user['user_id'])) {
+            // avatar
+            $navigation = new Navigation(_('Bild'), 'edit_about.php', array('view' => 'Bild'));
+            $this->addSubNavigation('avatar', $navigation);
 
-        // profile data
-        $navigation = new Navigation(_('Nutzerdaten'));
-        $navigation->addSubNavigation('profile', new Navigation(_('Grunddaten'), 'edit_about.php', array('view' => 'Daten')));
-        $navigation->addSubNavigation('private', new Navigation(_('Weitere Daten'), 'edit_about.php', array('view' => 'Lebenslauf')));
+            // profile data
+            $navigation = new Navigation(_('Nutzerdaten'));
+            $navigation->addSubNavigation('profile', new Navigation(_('Grunddaten'), 'edit_about.php', array('view' => 'Daten')));
+            $navigation->addSubNavigation('private', new Navigation(_('Weitere Daten'), 'edit_about.php', array('view' => 'Lebenslauf')));
 
-        if ($my_about->auth_user['perms'] != 'admin' && $my_about->auth_user['perms'] != 'root') {
-            $navigation->addSubNavigation('study_data', new Navigation(_('Studiendaten'), 'edit_about.php', array('view' => 'Studium')));
-        }
-
-        if ($my_about->auth_user['perms'] != 'root') {
-            if (count(UserDomain::getUserDomains())) {
-                $navigation->addSubNavigation('user_domains', new Navigation(_('Nutzerdomänen'), 'edit_about.php', array('view' => 'userdomains')));
+            if ($my_about->auth_user['perms'] != 'admin' && $my_about->auth_user['perms'] != 'root') {
+                $navigation->addSubNavigation('study_data', new Navigation(_('Studiendaten'), 'edit_about.php', array('view' => 'Studium')));
             }
 
-            if ($my_about->special_user) {
-                $navigation->addSubNavigation('inst_data', new Navigation(_('Einrichtungsdaten'), 'edit_about.php', array('view' => 'Karriere')));
+            if ($my_about->auth_user['perms'] != 'root') {
+                if (count(UserDomain::getUserDomains())) {
+                    $navigation->addSubNavigation('user_domains', new Navigation(_('Nutzerdomänen'), 'edit_about.php', array('view' => 'userdomains')));
+                }
+
+                if ($my_about->special_user) {
+                    $navigation->addSubNavigation('inst_data', new Navigation(_('Einrichtungsdaten'), 'edit_about.php', array('view' => 'Karriere')));
+                }
             }
+
+            $this->addSubNavigation('edit', $navigation);
+
+            // user defined sections
+            $navigation = new Navigation(_('Kategorien'), 'edit_about.php', array('view' => 'Sonstiges'));
+            $this->addSubNavigation('sections', $navigation);
         }
-
-        $this->addSubNavigation('edit', $navigation);
-
-        // user defined sections
-        $navigation = new Navigation(_('Kategorien'), 'edit_about.php', array('view' => 'Sonstiges'));
-        $this->addSubNavigation('sections', $navigation);
     }
 }

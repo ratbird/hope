@@ -54,6 +54,8 @@ class AbstractStudIPHomepagePlugin extends AbstractStudIPLegacyPlugin implements
     {
         parent::setNavigation($navigation);
 
+        $user_id = $this->requesteduser->getUserid();
+
         // prepend copy of navigation to its sub navigation
         $item_names = array_keys($navigation->getSubNavigation());
         $navigation_copy = clone $navigation;
@@ -62,7 +64,7 @@ class AbstractStudIPHomepagePlugin extends AbstractStudIPLegacyPlugin implements
         $navigation->insertSubNavigation('self', $navigation_copy, $item_names[0]);
         $navigation->setTitle($this->getDisplayTitle());
 
-        if (Navigation::hasItem('/profile')) {
+        if (Navigation::hasItem('/profile') && $GLOBALS['perm']->have_profile_perm('user', $user_id)) {
             Navigation::addItem('/profile/' . $this->getPluginclassname(), $navigation);
         }
     }

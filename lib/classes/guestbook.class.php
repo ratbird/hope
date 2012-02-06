@@ -38,17 +38,15 @@ class Guestbook
      * Konstruktor
      *
      * @param $user_id
-     * @param $rights
      * @param $guestpage
      */
-    function Guestbook($user_id, $rights, $guestpage)
+    function Guestbook($user_id, $guestpage)
     {
         $this->user_id = $user_id;
         $this->username = get_username($user_id);
         $this->checkGuestbook();
         $this->numGuestbook();
-        $this->rights = $rights;
-        $this->getRightsGuestbook();
+        $this->rights = $GLOBALS['perm']->have_profile_perm('user', $user_id);
         $this->msg_guest = "";
         $this->anchor = FALSE;
         $this->openclose = "close";
@@ -71,18 +69,6 @@ class Guestbook
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($this->user_id));
         return 0 + $statement->fetchColumn();
-    }
-
-    function getRightsGuestbook()
-    {
-        global  $user;
-
-        if ($this->user_id == $user->id || $this->rights == TRUE ||
-                (isDeputyEditAboutActivated() &&
-                isDeputy($user->id, $this->user_id, true)))
-            $this->rights = TRUE;
-        else
-            $this->rights = FALSE;
     }
 
     function showGuestbook()

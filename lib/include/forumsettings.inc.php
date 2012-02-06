@@ -24,6 +24,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 //Standard herstellen
 
+use Studip\Button, Studip\LinkButton;
+
 $cssSw=new cssClassSwitcher;
 
 if ($forumsend=="bla"){
@@ -138,7 +140,7 @@ if ($forumsend=="bla"){
             <tr <? $cssSw->switchClass() ?>>
                 <input type="hidden" name="forumsend" value="bla">
                 <td  <?=$cssSw->getFullClass()?> colspan=2 align="middle">
-                    <?=makeButton("uebernehmen", "input", _("Änderungen übernehmen")) ?>&nbsp;
+                    <?= Button::create(_('Übernehmen'), array('title' => _('Änderungen übernehmen')))?>&nbsp;
                 </td>
             </tr>
             </form>

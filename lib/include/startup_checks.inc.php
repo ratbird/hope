@@ -36,6 +36,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
+use Studip\Button, Studip\LinkButton;
+
 $perm->check("dozent");
 
 require_once('lib/msg.inc.php');    //Ausgaben
@@ -77,6 +79,7 @@ if ($problems_found) {
         </tr>
         <tr <? $cssSw->switchClass() ?>>
             <td class="<? echo $cssSw->getClass() ?>" align="center" colspan=2>
+                <?= LinkButton::create(_('Aktualisieren'), URLHelper::getURL(''))?>
                 <a href="<?=$PHP_SELF?>"><?=makeButton("aktualisieren")?></a>
             </td>
         </tr>

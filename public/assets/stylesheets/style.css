@@ -1355,7 +1355,7 @@ div.overdiv div.content {
 /* --- Modaler Dialog ------------------------------------------------------- */
 div.modalshadow {
     background-image: url('../images/background-transparent.png');
-    position: absolute;
+    position: fixed;
     max-width: 50%;
     left: 25%;
     top: 40%;

@@ -22,6 +22,7 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +--------------------------------------------------------------------------+
 
+use Studip\Button, Studip\LinkButton;
 
 # Include all required files ================================================ #
 require_once("lib/evaluation/evaluation.config.php");
@@ -354,9 +355,9 @@ function showEvalTree(){
     $font->addHTMLContent ("<br><br>"
         . _("Oder wollen Sie die Aktion abbrechen?")
         . " "
-        . $this->createLinkButton("abbrechen",
-            _("abbrechen"),
-            "abbort_move=1"));
+        . LinkButton::createCancel(_('Abbrechen'),
+                $this->getSelf('abbort_move=1'),
+                array('title' => _('abbrechen'))));
 
     $td->addContent ($font);
     $tr->addContent ($td);
@@ -1373,13 +1374,13 @@ function execCommandAssertDeleteItem(){
     }
 
     $this->msg[$this->itemID] .= "<br><br>"
-        . $this->createLinkButton("ja2",
-            _("löschen"),
-            "cmd[DeleteItem]=1")
+        . LinkButton::createAccept(_('JA!'),
+                $this->getSelf('cmd[DeleteItem]=1'),
+                array('title' => _('Löschen')))
         . "&nbsp;"
-        . $this->createLinkButton("nein",
-            _("abbrechen"),
-            "cmd[Cancel]=1")
+        . LinkButton::createCancel(_('NEIN!'),
+                $this->getSelf('cmd[Cancel]=1'),
+                array('title' => _('Abbrechen')))
         . "\n";
 
     return false;
@@ -2102,10 +2103,9 @@ function createButtonbar ( $show = ARRANGMENT_BLOCK ){
 
     // the update-button
     $buttons = "&nbsp;"
-        . $this->createButton(
-            "uebernehmen",
-            _("Die Veränderungen innerhalb des Blockes speichern."),
-            "cmd[UpdateItem]");
+        . Button::create(_('Übernehmen'),
+                'cmd[UpdateItem]',
+                array('title' => _('Die Veränderungen innerhalb des Blockes speichern.')));
 
     $infotext .= "\n"
         . _("- die Veränderungen dieses Blocks speichern.");
@@ -2113,10 +2113,9 @@ function createButtonbar ( $show = ARRANGMENT_BLOCK ){
     // the new group-button
    if ($show == "both" || $show == ARRANGMENT_BLOCK || $show == ROOT_BLOCK){
     $buttons .= $seperator
-        . $this->createButton(
-            "erstellen-group",
-            _("Einen neuen Gruppierungsblock erstellen."),
-            "cmd[AddGroup]");
+        . Button::create(_('Erstellen'),
+                'cmd[AddGroup]',
+                array( 'title' => _('Einen neuen Gruppierungsblock erstellen.')));
     $infotext .= "\n"
         . _("- einen neuen Gruppierungsblock innerhalb dieses Blockes erstellen, in welchem Sie weitere Gruppierungs- oder Fragenblöcke anlegen können.");
    }
@@ -2126,9 +2125,9 @@ function createButtonbar ( $show = ARRANGMENT_BLOCK ){
 
     $buttons .=  $seperator
         . $this->createTemplateSelection()
-        . $this->createButton("erstellen-qgroup",
-            _("Einen neuen Fragenblock mit der ausgewählten Antwortenvorlage erstellen."),
-            "cmd[AddQGroup]");
+        . Button::create(_('Erstellen'),
+                'cmd[AddQGroup]',
+                array( 'title' => _('Einen neuen Fragenblock mit der ausgewählten Antwortenvorlage erstellen.')));
     $infotext .= "\n"
         . _("- einen neuen Fragenblock innherhalb dieses Blockes erstellen. Geben Sie dazu bitte eine Antwortenvorlage an, welche für alle Fragen des neuen Fragenblockes verwendet wird.");
    }
@@ -2158,9 +2157,9 @@ function createButtonbar ( $show = ARRANGMENT_BLOCK ){
     $button->addString (Tooltip (_("Diesen Block verschieben.")));
 
     $buttons .= $seperator
-        . $this->createButton("verschieben",
-            _("Diesen Block verschieben."),
-            "create_moveItemID");
+        . Button::create(_('verschieben'),
+                'create_moveItemID',
+                array('title' => _('Diesen Block verschieben.')));
 #       . $a->createContent ();
     $infotext .= "\n"
         . _("- diesen Block zum Verschieben markieren.");
@@ -2182,9 +2181,9 @@ function createButtonbar ( $show = ARRANGMENT_BLOCK ){
     $buttons .= ($movebutton)
         ? "&nbsp;"
         : $seperator;
-    $buttons .=  $this->createButton("loeschen",
-            _("Diesen Block (und alle seine Unterblöcke) löschen.."),
-            "cmd[AssertDeleteItem]");
+    $buttons .=  Button::create(_('Löschen'),
+            'cmd[AssertDeleteItem]',
+            array('title' => _('Diesen Block (und alle seine Unterblöcke) löschen..')));
 #   $buttons .= $button->createContent ();
 
     $infotext .= "\n"
@@ -2202,22 +2201,13 @@ function createButtonbar ( $show = ARRANGMENT_BLOCK ){
         $child->getTitle(QOUTED) == FIRST_ARRANGMENT_BLOCK_TITLE &&
         $child->getChildren() == NULL &&
         $child->getText == ""){
-
-        $a = new HTML ("a");
-        $a->addAttr("href", UrlHelper::getLink(EVAL_FILE_ADMIN. "?evalID="
-            . $this->tree->eval->getObjectID() . "&abort_creation_button_x=1"));
-
-        $img = new HTMLempty ("img");
-        $img->addAttr ("border","0");
-        $img->addAttr ("style","vertical-align:middle;");
-        $img->addString (makeButton("abbrechen","src"));
-        $img->addAttr ("style","vertical-align:middle;");
-        $img->addString (tooltip (_("Erstellung einer Evaluation abbrechen")));
-
-        $a->addContent ($img);
-
+        
+        $a_content = LinkButton::createCancel(_('Abbrechen'), 
+                UrlHelper::getLink(EVAL_FILE_ADMIN. "?evalID=").$this->tree->eval->getObjectID()."&abort_creation_button_x=1",
+                array('title' => _("Erstellung einer Evaluation abbrechen")));
+       
         $buttons .= $seperator
-            . $a->createContent ();
+            . $a_content;
     $infotext .= "\n"
         . _("Die Erstellung dieser Evaluation abbrechen.");
    }
@@ -2278,16 +2268,16 @@ function createFormNew($show = ARRANGMENT_BLOCK){
 
     $group_selection = _("Gruppierungsblock")
         . "&nbsp;"
-        . $this->createButton(
-            "erstellen",
-            _("Einen neuen Gruppierungsblock erstellen"),
-            "cmd[AddGroup]");
+        . Button::create(_('Erstellen'),
+                'cmd[AddGroup]',
+                array('title' => _('Einen neuen Gruppierungsblock erstellen')));
 
     $qgroup_selection = _("Fragenblock mit")
         . "&nbsp;"
         . $this->createTemplateSelection()
-        . $this->createButton("erstellen",_("Einen neuen Fragenblock erstellen"),
-                "cmd[AddQGroup]");
+        . Button::create(_('Erstellen'),
+                'cmd[AddQGroup]',
+                array('title' => _('Einen neuen Fragenblock erstellen')));
 
     $seperator = "&nbsp;|&nbsp;";
 
@@ -2321,21 +2311,12 @@ function createFormNew($show = ARRANGMENT_BLOCK){
 
 
         $cancel = $seperator ."&nbsp;";
-
-        $a = new HTML ("a");
-        $a->addAttr("href", UrlHelper::getLink(EVAL_FILE_ADMIN . "?evalID="
-            . $this->tree->eval->getObjectID() . "&abort_creation_button_x=1"));
-
-        $img = new HTMLempty ("img");
-        $img->addAttr ("border","0");
-        $img->addAttr ("style","vertical-align:middle;");
-        $img->addString (makeButton("abbrechen","src"));
-        $img->addAttr ("style","vertical-align:middle;");
-        $img->addString (tooltip(_("Erstellung einer Evaluation abbrechen")));
-
-        $a->addContent ($img);
-
-        $cancel .= $a->createContent ();
+        
+        $a_content = LinkButton::createCancel(_('Abbrechen'), 
+                UrlHelper::getLink(EVAL_FILE_ADMIN . "?evalID=".$this->tree->eval->getObjectID()."&abort_creation_button_x=1"),
+                array('title' => _("Erstellung einer Evaluation abbrechen")));
+        
+        $cancel .= $a_content;
 
         $td->addHTMLContent ($cancel);
 
@@ -2452,14 +2433,15 @@ function createUpdateButton ( $mode = NULL ){
         ." <tr>\n"
         . "  <td align=center>\n"
 //      . "   <input type=hidden name=\"cmd\" value=\"UpdateItem\">\n"
-        . $this->createButton("uebernehmen",_("Änderungen übernehmen."),
-            "cmd[UpdateItem]");
+        . Button::create(_('Übernehmen'),
+                'cmd[UpdateItem]',
+                array('title' => _('Änderungen übernehmen.')));
 
     if($mode == NULL){
         $button .= "&nbsp;&nbsp;|&nbsp;&nbsp;"._("Diesen Block")."&nbsp;"
-            . $this->createButton("loeschen",
-            _("Diesen Block und alle seine Unterblöcke löschen."),
-            "cmd[AssertDeleteItem]");
+            . Button::create(_('Löschen'),
+                    'cmd[AssertDeleteItem]',
+                    array('title', _('Diesen Block und alle seine Unterblöcke löschen.')));
     }
 
     $button .= "  </td>\n"
@@ -2630,10 +2612,9 @@ function createQuestionFeatures(){
     $td->addAttr ("nowrap","nowrap");
     $td->addHTMLContent ($this->createTemplateSelection($templateID));
     $td->addContent (" ");
-    $td->addHTMLContent ($this->createButton("zuweisen",
-        _("Eine andere Antwortenvorlage für diesen Fragenblock auswählen"),
-        "cmd[ChangeTemplate]"));
-
+    $td->addHTMLContent (Button::create(_('Zuweisen'),
+            'cmd[ChangeTemplate]',
+            array('title' => _('Eine andere Antwortenvorlage für diesen Fragenblock auswählen'))));
     $tr->addContent ($td);
     $table->addContent ($tr);
 
@@ -2971,10 +2952,10 @@ function createQuestionForm(){
     $td2->addContent (_("Frage/en"));
     $td2->addContent (" ");
     $td2->addHTMLContent (
-        $this->createButton(
-            "hinzufuegen",
-            _("Fragen hinzufügen"),
-            "cmd[AddQuestions]"));
+        Button::create(_('Hinzufügen'),
+                'cmd[AddQuestions]',
+                array('title' => _('Fragen hinzufügen')))
+            );
 
     $tr2->addContent($td2);
 
@@ -2987,10 +2968,10 @@ function createQuestionForm(){
 
     $td2->addContent ($font);
     $td2->addHTMLContent (
-        $this->createButton(
-            "loeschen",
-            _("Markierte Fragen löschen"),
-            "cmd[DeleteQuestions]"));
+        Button::create(_('Löschen'),
+                'cmd[DeleteQuestions]',
+                array('title' => _('Markierte Fragen löschen')))
+        );
 
     $tr2->addContent ($td2);
     $table2->addContent ($tr2);
@@ -3009,47 +2990,6 @@ function createQuestionForm(){
 # additional HTML functions                                                    #
 #                                                                              #
 ################################################################################
-
-/**
-* creates an input-button
-*
-* @access   private
-* @param    string  $name the name (and button-image)
-* @param    string  $alt the alt-text (optional)
-* @param    string  $value the value (optional)
-* @return   string the button
-*/
-function createButton($name, $alt = "", $value = ""){
-
-    $button = new HTMLempty ("input");
-    $button->addAttr ("type", "image");
-    $button->addAttr ("name", $value);
-    $button->addAttr ("style", "vertical-align:middle;");
-    $button->addAttr ("border", "0");
-    $button->addString (makeButton ($name, "src"));
-    $button->addAttr ("title", $alt);
-    $button->addAttr ("alt", $alt);
-
-    return $button->createContent ();
-}
-
-
-/**
-* creates a link-button
-*
-* @access  private
-* @param   string  $name   the name (and button-image)
-* @param   string  $alt    the alt-text (optional)
-* @param   string  $value  the value (optional)
-* @return  string          the button (html)
-*/
-function createLinkButton ( $name, $alt = "", $value = "" ){
-    $button = "<a href=\"" . $this->getSelf($value) . "\">"
-        . "<img " .makeButton($name,"src") . tooltip($alt)
-        . " border=\"0\" style=\"vertical-align:middle\"></a>";
-    return $button;
-}
-
 
 /**
 * creates a link-image

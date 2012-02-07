@@ -2,6 +2,7 @@
 # Lifter010: TODO
     use Studip\LinkButton;
 ?>
+<div class="modaloverlay"></div>
 <div class="modalshadow">
     <div class="messagebox messagebox_modal">
         <span id="modalquestion">

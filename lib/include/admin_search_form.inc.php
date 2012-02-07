@@ -110,8 +110,8 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                             }
                         }
                         ?>
-                    </select><?
-                    Button::create(_('Einrichtung auswählen')); ?>">
+                    </select>
+                    <?= Button::create(_('Einrichtung auswählen')) ?>
                     </td>
                 </tr>
                 <tr>

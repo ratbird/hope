@@ -80,7 +80,6 @@ if ($problems_found) {
         <tr <? $cssSw->switchClass() ?>>
             <td class="<? echo $cssSw->getClass() ?>" align="center" colspan=2>
                 <?= LinkButton::create(_('Aktualisieren'), URLHelper::getURL(''))?>
-                <a href="<?=$PHP_SELF?>"><?=makeButton("aktualisieren")?></a>
             </td>
         </tr>
         <tr>

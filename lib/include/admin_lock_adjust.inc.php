@@ -10,6 +10,7 @@
  * the License, or (at your option) any later version.
  */
 
+use Studip\Button, Studip\LinkButton;
 
 require_once("lib/classes/DataFieldStructure.class.php");
 require_once("lib/classes/LockRules.class.php");
@@ -48,13 +49,11 @@ function show_content() {
     $data .= $zt->closeRow();
     $all_lock_data = show_lock_rules();
     if (is_array($all_lock_data)) {
-        for ($i=0;$i<count($all_lock_data);$i++) {
+        for ($i=0; $i < count($all_lock_data); $i++) {
             $data .= $zt->row(array(htmlReady($all_lock_data[$i]["name"]),
-                            htmlReady($all_lock_data[$i]["description"]),
-                            "<a href=\"".URLHelper::getLink("?action=edit&lock_id=".$all_lock_data[$i]["lock_id"])."\">
-                            <img ".makeButton("bearbeiten","src")." border=0></a>",
-                            "<a href=\"".URLHelper::getLink("?action=confirm_delete&lock_id=".$all_lock_data[$i]["lock_id"])."\">
-                            <img ".makeButton("loeschen","src")." border=0></a>"));
+                        htmlReady($all_lock_data[$i]["description"]),
+                        LinkButton::create(_("Bearbeiten"), URLHelper::getURL('', array('action' => 'edit', 'lock_id' => $all_lock_data[$i]["lock_id"]))),
+                        LinkButton::create(_("Löschen"), URLHelper::getLink('', array('action' => 'confirm_delete', 'lock_id' => $all_lock_data[$i]["lock_id"])))));
         }
     }
     $data .= $zt->close();
@@ -151,12 +150,12 @@ function show_lock_rule_form($lockdata="",$edit=0) {
         $form .= "<input type=\"hidden\" name=\"action\" value=\"confirm_edit\">";
         $form .= $zt->openRow();
         $form .= $zt->cell("&nbsp;",array("colspan" => "1"));
-        $form .= $zt->cell("<input type=\"IMAGE\" ".makeButton("uebernehmen", "src").">",array("colspan"=>"3","align"=>"center"));
+        $form .= $zt->cell(Button::create(_("Übernehmen")), array("colspan"=>"3","align"=>"center"));
     } else {
         $form .= "<input type=\"hidden\" name=\"action\" value=\"insert\">";
         $form .= $zt->openRow();
         $form .= $zt->cell("&nbsp;",array("colspan" => "1"));
-        $form .= $zt->cell("<input type=\"IMAGE\" ".makeButton("anlegen", "src").">",array("colspan"=>"3","align"=>"center"));
+        $form .= $zt->cell(Button::create(_("Anlegen")), array("colspan"=>"3","align"=>"center"));
     }
     $form .= $zt->closeRow();
     $form .= $zt->headerRow(array("&nbsp;<b>"._("Personen und Einordnung")."</b>", "<b>"._("gesperrt")."</b>", "<b>"._("nicht gesperrt")."</b>"));
@@ -196,12 +195,12 @@ function show_lock_rule_form($lockdata="",$edit=0) {
         $form .= "<input type=\"hidden\" name=\"action\" value=\"confirm_edit\">";
         $form .= $zt->openRow();
         $form .= $zt->cell("&nbsp;",array("colspan" => "1"));
-        $form .= $zt->cell("<input type=\"IMAGE\" ".makeButton("uebernehmen", "src").">",array("colspan"=>"3","align"=>"center"));
+        $form .= $zt->cell(Button::create(_("Übernehmen")), array("colspan"=>"3","align"=>"center"));
     } else {
         $form .= "<input type=\"hidden\" name=\"action\" value=\"insert\">";
         $form .= $zt->openRow();
         $form .= $zt->cell("&nbsp;",array("colspan" => "1"));
-        $form .= $zt->cell("<input type=\"IMAGE\" ".makeButton("anlegen", "src").">",array("colspan"=>"3","align"=>"center"));
+        $form .= $zt->cell(Button::create(_("Anlegen")), array("colspan"=>"3","align"=>"center"));
     }
     $form .= $zt->closeRow();
     $form .= $zt->headerRow(array("&nbsp;<b>"._("weitere Daten")."</b>", "<b>"._("gesperrt")."</b>", "<b>"._("nicht gesperrt")."</b>"));
@@ -247,12 +246,12 @@ function show_lock_rule_form($lockdata="",$edit=0) {
         $form .= "<input type=\"hidden\" name=\"action\" value=\"confirm_edit\">";
         $form .= $zt->openRow();
         $form .= $zt->cell("&nbsp;",array("colspan" => "1"));
-        $form .= $zt->cell("<input type=\"IMAGE\" ".makeButton("uebernehmen", "src").">",array("colspan"=>"3","align"=>"center"));
+        $form .= $zt->cell(Button::create(_("Übernehmen")), array("colspan"=>"3","align"=>"center"));
     } else {
         $form .= "<input type=\"hidden\" name=\"action\" value=\"insert\">";
         $form .= $zt->openRow();
         $form .= $zt->cell("&nbsp;",array("colspan" => "1"));
-        $form .= $zt->cell("<input type=\"IMAGE\" ".makeButton("anlegen", "src").">",array("colspan"=>"3","align"=>"center"));
+        $form .= $zt->cell(Button::create(_("Anlegen")), array("colspan"=>"3","align"=>"center"));
     }
     $form .= $zt->closeRow();
     
@@ -268,12 +267,12 @@ function show_lock_rule_form($lockdata="",$edit=0) {
         $form .= "<input type=\"hidden\" name=\"action\" value=\"confirm_edit\">";
         $form .= $zt->openRow();
         $form .= $zt->cell("&nbsp;",array("colspan" => "1"));
-        $form .= $zt->cell("<input type=\"IMAGE\" ".makeButton("uebernehmen", "src").">",array("colspan"=>"3","align"=>"center"));
+        $form .= $zt->cell(Button::create(_("Übernehmen")),array("colspan"=>"3","align"=>"center"));
     } else {
         $form .= "<input type=\"hidden\" name=\"action\" value=\"insert\">";
         $form .= $zt->openRow();
         $form .= $zt->cell("&nbsp;",array("colspan" => "1"));
-        $form .= $zt->cell("<input type=\"IMAGE\" ".makeButton("anlegen", "src").">",array("colspan"=>"3","align"=>"center"));
+        $form .= $zt->cell(Button::create(_("Anlegen")),array("colspan"=>"3","align"=>"center"));
     }
     $form .= $zt->closeRow();
     $form .= $zt->headerRow(array("&nbsp;<b>"._("Zugangsberechtigungen")."</b>", "<b>"._("gesperrt")."</b>", "<b>"._("nicht gesperrt")."</b>"));
@@ -348,12 +347,12 @@ function show_lock_rule_form($lockdata="",$edit=0) {
         $form .= "<input type=\"hidden\" name=\"action\" value=\"confirm_edit\">";
         $form .= $zt->openRow();
         $form .= $zt->cell("&nbsp;",array("colspan" => "1"));
-        $form .= $zt->cell("<input type=\"IMAGE\" ".makeButton("uebernehmen", "src").">",array("colspan"=>"3","align"=>"center"));
+        $form .= $zt->cell(Button::create(_("Übernehmen")).">", array("colspan"=>"3","align"=>"center"));
     } else {
         $form .= "<input type=\"hidden\" name=\"action\" value=\"insert\">";
         $form .= $zt->openRow();
         $form .= $zt->cell("&nbsp;",array("colspan" => "1"));
-        $form .= $zt->cell("<input type=\"IMAGE\" ".makeButton("anlegen", "src").">",array("colspan"=>"3","align"=>"center"));
+        $form .= $zt->cell(Button::create(_("Anlegen")), array("colspan"=>"3","align"=>"center"));
     }
     $form .= $zt->closeRow();
     $form .= $zt->headerRow(array("&nbsp;<b>"._("Spezielle Aktionen")."</b>", "<b>"._("gesperrt")."</b>", "<b>"._("nicht gesperrt")."</b>"));
@@ -379,11 +378,13 @@ function show_lock_rule_form($lockdata="",$edit=0) {
     if ($edit) {
         $form .= "<input type=\"hidden\" name=\"action\" value=\"confirm_edit\">";
         $form .= $zt->openRow();
-        $form .= $zt->cell("<input type=\"IMAGE\" ".makeButton("uebernehmen", "src").">&nbsp;<a href=\"".URLHelper::getLink()."\"><img ".makeButton("abbrechen","src")." border=0></a>",array("colspan"=>"3","align"=>"center"));
+        $form .= $zt->cell(Button::create(_("Übernehmen")) . "&nbsp;" . LinkButton::create(_("Abbrechen"), 
+		         URLHelper::getLink()), array("colspan"=>"3","align"=>"center"));
     } else {
         $form .= "<input type=\"hidden\" name=\"action\" value=\"insert\">";
         $form .= $zt->openRow();
-        $form .= $zt->cell("<input type=\"IMAGE\" ".makeButton("anlegen", "src").">&nbsp;<a href=\"".URLHelper::getLink()."\"><img ".makeButton("abbrechen","src")." border=0></a>",array("colspan"=>"3","align"=>"center"));
+        $form .= $zt->cell(Button::create(_("Anlegen")) . "&nbsp;" . LinkButton::create(_("Abbrechen"), 
+		         URLHelper::getLink()), array("colspan"=>"3","align"=>"center"));
     }
     $form .= "</form>";
     $form .= $zt->close();

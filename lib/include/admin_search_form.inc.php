@@ -23,6 +23,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+use Studip\Button, Studip\LinkButton;
+
 # necessary if you want to include admin_search_form.inc.php in function/method scope
 global  $SEM_CLASS,
         $SEM_TYPE;
@@ -108,8 +110,8 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                             }
                         }
                         ?>
-                    </select>
-                    <input type="image" <?=makeButton("auswaehlen", "src")?> border=0 align="absmiddle" value="bearbeiten" title="<?= _('Einrichtung auswählen') ?>">
+                    </select><?
+                    Button::create(_('Einrichtung auswählen')); ?>">
                     </td>
                 </tr>
                 <tr>
@@ -256,9 +258,9 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                         </td>
                         <td class="steel1" valign="bottom" width="20%" nowrap="nowrap">
                             <?
-                            echo makeButton('anzeigen', 'input', _("Anzeigen"), 'anzeigen');
+                            Button::create(_("Anzeigen"), 'anzeigen');
                             if ($_SESSION['links_admin_data']['srch_on']){
-                                echo '&nbsp;' . makeButton('zuruecksetzen','input', _("zurücksetzen"),'links_admin_reset_search');
+                                echo '&nbsp;' . Button::create(_("Zurücksetzen"), 'links_admin_reset_search');
                             }
                             ?>
                             <input type="hidden" name="view" value="<? echo htmlReady($_SESSION['links_admin_data']['view'])?>">
@@ -377,8 +379,10 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                     </td>
                     <td colspan="<?=(Request::get('show_rooms_check')=='on')?'4':'3'; ?>" align="right">
                     <?
-                        printf("<a href=\"%s\">%s</a>", URLHelper::getLink('?select_all=TRUE&list=TRUE&show_rooms_check='.Request::get('show_rooms_check')), makeButton("alleauswaehlen"));
-                        printf(" <a href=\"%s\">%s</a>", URLHelper::getLink('?select_none=TRUE&list=TRUE&show_rooms_check='.Request::get('show_rooms_check')), makeButton("keineauswaehlen"));
+                        echo LinkButton::create(_("Alle auswählen"), 
+						     URLHelper::getLink('', array('select_all' => TRUE, 'ist' => TRUE, 'show_rooms_check' => Request::get('show_rooms_check'))));
+                        echo LinkButton::create(_('Keine auswählen'), 
+						     URLHelper::getLink('', array('select_none' => TRUE, 'list' => TRUE, 'show_rooms_check' => Request::get('show_rooms_check'))));
                     ?>
                     </td>
                 </tr>
@@ -393,8 +397,8 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                     <td colspan="<?=(Request::get('show_rooms_check')=='on')?'4':'3'; ?>" align="right">
                     <input type="hidden" name="change_visible" value="1">
                     <?
-                        printf("<a href=\"%s\">%s</a>", URLHelper::getLink('?select_all=TRUE&list=TRUE'), makeButton("alleauswaehlen"));
-                        printf(" <a href=\"%s\">%s</a>", URLHelper::getLink('?select_none=TRUE&list=TRUE'), makeButton("keineauswaehlen"));
+                        echo LinkButton::create(_("Alle auswählen"), URLHelper::getLink('', array('select_all' => TRUE, 'list' => TRUE)));
+                        echo LinkButton::create(_("Keine auswaehlen"), URLHelper::getLink('', array('select_none' => TRUE, 'list' => TRUE)));
                     ?>
                     </td>
                 </tr>
@@ -424,7 +428,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                     // ab hier die verschiedenen Sperrlevel für alle Veranstaltungen
                     echo '</select> ';
                     echo _("als Vorauswahl");
-                    echo ' '.makeButton('zuweisen', 'input', false, 'general_lock');
+                    echo ' ' . Button::create(_('Zuweisen'), 'general_lock');
                 ?>&nbsp;
                 </td>
             </tr>
@@ -452,7 +456,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                         // ab hier die verschiedenen Zusatzangaben für alle Veranstaltungen
                         echo '</select> ';
                         echo _("als Vorauswahl");
-                        echo ' '.makeButton('zuweisen', 'input', false, 'aux_rule');
+                        echo ' ' . Button::create(_('Zuweisen'), 'aux_rule');
                     ?>&nbsp;
                     </td>
                 </tr>
@@ -533,40 +537,44 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
             //Kommandos fuer die jeweilgen Seiten
             switch ($i_page) {
                 case "adminarea_start.php":
-                    printf(_("Veranstaltung") . "<br><a href=\"%s\">%s</a>", URLHelper::getLink('?select_sem_id=' . $seminar_id), makeButton("auswaehlen"));
+                    printf(_("Veranstaltung") . "<br>%s", LinkButton::create(_('Auswaehlen'), URLHelper::getLink('', array('select_sem_id' => $seminar_id))));
                     break;
                 case "themen.php":
-                    printf(_("Ablaufplan") . "<br><a href=\"%s\">%s</a>", URLHelper::getLink('?seminar_id=' . $seminar_id), makeButton("bearbeiten"));
+                    printf(_("Ablaufplan") . "<br>%s", LinkButton::create(_('Bearbeiten'), URLHelper::getLink('', array('seminar_id' => $seminar_id))));
                     break;
                 case "raumzeit.php":
-                    printf(_("Zeiten / Räume") . "<br><a href=\"%s\">%s</a>", URLHelper::getLink('?seminar_id=' . $seminar_id), makeButton("bearbeiten"));
+                    printf(_("Zeiten / Räume") . "<br>%s", LinkButton::create(_('Bearbeiten'), URLHelper::getLink('', array('seminar_id' => $seminar_id))));
                     break;
                 case "admin_admission.php":
-                    printf(_("Zugangsberechtigungen") . "<br><a href=\"%s\">%s</a>", URLHelper::getLink('?seminar_id=' . $seminar_id), makeButton("bearbeiten"));
-                    break;
+                    printf(_("Zugangsberechtigungen") . "<br>%s", LinkButton::create(_('Bearbeiten'), URLHelper::getLink('', array('seminar_id' => $seminar_id))));                    break;
                 case "admin_lit_list.php":
-                    printf(_("Literatur") . "<br><a href=\"%s\">%s</a>", URLHelper::getLink('?_range_id=' . $seminar_id), makeButton("bearbeiten"));
+                    printf(_("Literatur") . "<br>%s", LinkButton::create(_('Bearbeiten'), URLHelper::getLink('', array('_range_id'=> $seminar_id))));
                     break;
                 case "admin_statusgruppe.php":
-                    printf(_("Funktionen / Gruppen") . "<br><a href=\"%s\">%s</a>", URLHelper::getLink('?ebene=sem&range_id=' . $seminar_id), makeButton("bearbeiten"));
+                    printf(_("Funktionen / Gruppen") . "<br>%s", LinkButton::create(_('Bearbeiten'), 
+					URLHelper::getLink('', array('ebene' => 'sem', 'range_id' => $seminar_id))));
                     break;
                 case "admin_roles.php":
-                    printf(_("Funktionen / Gruppen") . "<br><a href=\"%s\">%s</a>", URLHelper::getLink('?ebene=sem&range_id=' . $seminar_id), makeButton("bearbeiten"));
+                    printf(_("Funktionen / Gruppen") . "<br>%s", LinkButton::create(_('Bearbeiten'), 
+					URLHelper::getLink('', array('ebene' => 'sem', 'range_id'=> $seminar_id))));
                     break;
                 case "admin_modules.php":
-                    printf(_("Module") . "<br><a href=\"%s\">%s</a>", URLHelper::getLink('?range_id=' . $seminar_id), makeButton("bearbeiten"));
+                    printf(_("Module") . "<br>%s", LinkButton::create(_('Bearbeiten'), URLHelper::getLink('', array('range_id' => $seminar_id))));
                     break;
                 case "admin_news.php":
-                    printf(_("Ankündigungen") . "<br><a href=\"%s\">%s</a>", URLHelper::getLink('?range_id=' . $seminar_id), makeButton("bearbeiten"));
+                    printf(_("Ankündigungen") . "<br>%s", LinkButton::create(_('Bearbeiten'), URLHelper::getLink('', array('range_id' => $seminar_id))));
                     break;
                 case 'admin_vote.php':
-                    printf(_("Umfragen und Tests") . "<br><a href=\"%s\">%s</a>", URLHelper::getLink('?view=vote_sem&showrangeID=' . $seminar_id), makeButton("bearbeiten"));
+                    printf(_("Umfragen und Tests") . "<br>%s", LinkButton::create(_('Bearbeiten'), 
+					URLHelper::getLink('', array('view' => 'vote_sem', 'showrangeID' => $seminar_id))));
                     break;
                 case 'admin_evaluation.php':
-                    printf(_("Evaluationen") . "<br><a href=\"%s\">%s</a>", URLHelper::getLink('?view=eval_sem&rangeID=' . $seminar_id), makeButton("bearbeiten"));
+                    printf(_("Evaluationen") . "<br>%s", LinkButton::create(_('Bearbeiten'), 
+					URLHelper::getLink('', array('view' => 'eval_sem', 'rangeID' => $seminar_id))));
                     break;
                 case "copy_assi.php":
-                    printf(_("Veranstaltung") . "<br><a href=\"%s\">%s</a>", URLHelper::getLink('admin_seminare_assi.php?cmd=do_copy&start_level=TRUE&class=1&cp_id=' . $seminar_id), makeButton("kopieren"));
+                    printf(_("Veranstaltung") . "<br>%s", LinkButton::create(_('Kopieren'), 
+					URLHelper::getLink('admin_seminare_assi.php', array('cmd' => 'do_copy', 'start_level' => TRUE, 'class' => '1', 'cp_id' => $seminar_id))));
                     break;
                 case "admin_lock.php":
                     $rule = LockRules::getObjectRule($seminar_id);
@@ -644,15 +652,15 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                     if ($this instanceof Course_StudyAreasController){
                         printf(_("Studienbereiche") . '<br><a href="%s">%s</a>',
                             $this->url_for('course/study_areas/show/' . $seminar_id),
-                            makeButton("bearbeiten"));
+                            Button::create(_("Bearbeiten")));
                     } elseif ($this instanceof Course_BasicdataController){
                         printf(_("Veranstaltung") . '<br><a href="%s">%s</a>',
                             $this->url_for('course/basicdata/view/' . $seminar_id),
-                            makeButton("bearbeiten"));
+                            Button::create(_("Bearbeiten")));
                     } elseif ($this instanceof Course_RoomRequestsController){
                         printf(_("Raumanfragen") . '<br><a href="%s">%s</a>',
                             $this->url_for('index/' . $seminar_id),
-                            makeButton("bearbeiten"));
+                            Button::create(_("Bearbeiten")));
                     }
                     break;
             }
@@ -664,7 +672,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                 ?>
                 <tr class="steel2">
                     <td colspan="<?=(Request::get('show_rooms_check')=='on')?'7':'6'; ?>" align="right">
-                    <?= _("Änderungen") ?> <?= makeButton('speichern', 'input') ?>
+                    <?= _("Änderungen") ?> <?= Button::createAccept(_('Speichern')) ?>
                     </td>
                 </tr>
                 
@@ -674,7 +682,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                 <tr class="steel2">
                     <td colspan="<?=(Request::get('show_rooms_check')=='on')?'7':'6'; ?>" align="right">
                         <?=_("Alle ausgewählten Veranstaltungen")?>
-                        <input type="image" <?=makeButton("archivieren", "src")?> border="0"><br>
+                        <input type="image" <?=Button::create(_("Archivieren"))?> border="0"><br>
                         <span style="color: red">
                             <?=_("Achtung: Das Archivieren ist ein Schritt, der <b>nicht</b> rückgängig gemacht werden kann!")?>
                         </span>

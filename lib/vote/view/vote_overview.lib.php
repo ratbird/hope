@@ -14,6 +14,9 @@
  * @package     vote
  * @modulegroup vote_modules
  */
+ 
+use Studip\Button, Studip\LinkButton;
+
 include_once("lib/vote/view/vote_show.lib.php");
 
 /**
@@ -609,14 +612,15 @@ function makeTableDataCellForm( $displayclass = "steel1",
     if (!empty($hidden4_name)) $link .="&".$hidden4_name."=".$hidden4_value;
 
     if ($hidden2_value != "change_visibility"){
-        $button = makeButton($button_name, 'img', decodeHTML($button_tooltip));
+        $button = LinkButton::create(decodeHTML($button_tooltip), URLHelper::getLink($link), array('title' => decodeHTML($button_tooltip)));
     }
     else{
-        $button = "<img src=\"" . Assets::image_path('icons/16/blue/visibility-' . $button_name . '.png') . "\" alt=\"".$button_name."\" title=\"".$button_tooltip."\" class=\"middle\">";
+        $button .= "<a href=\"".URLHelper::getLink($link)."\">";
+        $button .= "<img src=\"" . Assets::image_path('icons/16/blue/visibility-' . $button_name . '.png') . "\" alt=\"".$button_name."\" title=\"".$button_tooltip."\" class=\"middle\"></a>";
     }
 
     $html.="     <td class=$displayclass width=\"93\" align=\"center\" style=\"vertical-align:middle;\">\n"
-         . "      <font size=\"-1\"><a href=\"".URLHelper::getLink($link)."\">$button</a></font>\n"
+         . "      <font size=\"-1\">". $button . "</font>\n"
          . "     </td>\n";
     return $html;
 }
@@ -669,11 +673,10 @@ function makeNewVoteSelectForm($action){
         $html .= "<font size=\"-1\">".$range[0][1]."</font>\n"
               . "      <input type=\"hidden\" name=\"rangeID\" value=\"".$range[0][0]."\">\n";
     }
-
-    $html .="      <input type=image name=new style=\"vertical-align:middle;\""
-          .         makeButton($label["selections_button"],"src") ." alt=\"".$label["selections_tooltip"]."\" title=\"".$label["selections_tooltip"]."\" border=0>\n"
-          . "     <br>&nbsp;</form>\n"
-          . "   </td>\n";
+          
+    $html   .=      Button::create(decodeHTML($label["selections_tooltip"]), 'new', array('title' => decodeHTML($label["selections_tooltip"])))
+            . "     <br>&nbsp;</form>\n"
+            . "   </td>\n";
     reset($range);
     return $html;
 }
@@ -713,8 +716,7 @@ function makeDisplaySelectForm($action){
     }
     $html .="      </select>\n";
 
-    $html .="      <input type=image name=new style=\"vertical-align:middle;\" border=\"0\" "
-          .         makeButton($label["selections_selectrange_button"],"src") . " title=\"".$label["selections_selectrange_tooltip"]."\" alt=\"".$label["selections_selectrange_tooltip"]."\">\n"
+    $html .=       Button::create(decodeHTML($label["selections_selectrange_tooltip"]), 'new', array('title' => decodeHTML($label["selections_selectrange_tooltip"])))
           . "      <br></font></form>\n"
           . "     </td>\n";
     reset($range);
@@ -735,8 +737,7 @@ function makeSearchForm(){
           . "        ".$label["search_text"]."\n"
           . "        <input type=\"text\" name=\"searchRange\"  value=\"". htmlReady($searchRange) ."\" size=\"30\" style=\"vertical-align:middle;\">"
           . "        <input type=\"hidden\" name=\"voteaction\" value=\"search\">"
-          . "        <input type=\"image\" style=\"vertical-align:middle;\" border=\"0\" "
-          .         makeButton($label["search_button"],"src") . " title=\"".$label["search_tooltip"]."\" alt=\"".$label["search_tooltip"]."\">\n"
+          .          Button::create(decodeHTML($label["search_tooltip"]), array('title' => decodeHTML($label["search_tooltip"])))
           . "     <br>&nbsp;</font></form>\n"
           . "     </td>\n";
     return $html;

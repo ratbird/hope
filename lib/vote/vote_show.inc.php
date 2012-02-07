@@ -259,10 +259,10 @@ function show_votes ($rangeID, $userID, $perm, $isHomepage = NO) {
       $openID = $_REQUEST["voteopenID"];
       $open = (($openID == $voteID) || $_GET["openAllVotes"]) && (!$_GET["closeVotes"]);
 
-      $voted = isset( $_POST["voteButton_x"] );
-      $changeAnswer = isset( $_POST["changeAnswerButton_x"] );
+      $voted = Request::submitted('voteButton');
+      $changeAnswer = Request::submitted('changeAnswerButton');
       $answerChanged = $_POST["answerChanged"];
-      $previewResults = isset( $_POST["previewButton_x"] );
+      $previewResults = Request::submitted('previewButton');
       if ( !$previewResults ) $previewResults = $_GET["previewResults"];
       $previewResults = $previewResults &&
       ($vote->getResultvisibility() == VOTE_RESULTS_ALWAYS || $haveFullPerm);

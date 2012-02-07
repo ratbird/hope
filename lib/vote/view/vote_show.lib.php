@@ -16,6 +16,7 @@
  * @modulegroup vote_modules
  */
 
+use Studip\Button, Studip\LinkButton;
 
 # Include all required files ================================================ #
 require_once ("lib/vote/view/visual.inc.php");
@@ -58,7 +59,7 @@ function createFormHeader(&$vote)
       " <input type=\"hidden\" name=\"voteopenID\" ".
       "value=\"".$vote->getObjectID (). "\">\n".
       " <input type=\"hidden\" name=\"answerChanged\" ".
-      "value=\"".(isset($_POST["changeAnswerButton_x"]) ||
+      "value=\"".(Request::submitted('changeAnswerButton') ||
           (isset($_POST["answerChanged"]) && !isset($_POST["answer"]))
           ? YES : NO). "\">\n";
    $html .= CSRFProtection::tokenTag();
@@ -79,7 +80,7 @@ function createFormFooter (&$vote, $userID, $perm, $rangeID) {
    $haveFullPerm = $perm->have_studip_perm ("tutor", $vote->getRangeID()) ||
        $userID == $vote->getAuthorID ();
 
-   $isPreview = ($_GET["previewResults"] || $_POST["previewButton_x"]) &&
+   $isPreview = ($_GET["previewResults"] || Request::submitted('previewButton')) &&
        ($vote->getResultvisibility() == VOTE_RESULTS_ALWAYS || $haveFullPerm);
 
    $isAssociated = $vote->voteDB->isAssociated ($vote->getObjectID(), $userID);
@@ -90,7 +91,7 @@ function createFormFooter (&$vote, $userID, $perm, $rangeID) {
 
    $sortAnswers = $_GET["sortAnswers"] && $vote->getObjectID() == $_GET["voteopenID"];
 
-   $changeAnswer = isset ($_POST["changeAnswerButton_x"]) ||
+   $changeAnswer = Request::submitted('changeAnswerButton') ||
        ($_POST["answerChanged"] && !isset($_POST["answer"]));
 
    $link = "?voteopenID=".$vote->getObjectID();
@@ -112,12 +113,7 @@ function createFormFooter (&$vote, $userID, $perm, $rangeID) {
    /* Submitbutton --------------------------------------------------------- */
    if ( ! ($isAssociated || $isPreview || $isStopped)
     || ($changeAnswer && !$isPreview)) {
-      $html .=
-     "<input type=\"image\" " .
-     "name=\"voteButton\" border=\"0\" " .
-     makeButton ("abschicken", "src") .
-     tooltip(_("Geben Sie hier Ihre Stimme ab!")) .
-     ">";
+      $html .= Button::createAccept(_('Abschicken'),'voteButton', array('title' => _('Geben Sie hier Ihre Stimme ab!')));
    }
    /* ---------------------------------------------------------------------- */
 
@@ -126,12 +122,7 @@ function createFormFooter (&$vote, $userID, $perm, $rangeID) {
      || ($changeAnswer && !$isPreview)) &&
     ($vote->getResultvisibility() == VOTE_RESULTS_ALWAYS || $haveFullPerm)
     ) {
-      $html .=
-     "&nbsp;<input type=\"image\" " .
-     "name=\"previewButton\" border=\"0\" " .
-     makeButton ("ergebnisse", "src") .
-     tooltip(_("Hier können Sie sich die Ergebnisse im Voraus ansehen.")) .
-     ">";
+      $html .= Button::create(_('Ergebnisse'), 'previewButton', array('title' => _('Hier können Sie sich die Ergebnisse im Voraus ansehen.')));
    }
    /* ---------------------------------------------------------------------- */
 
@@ -139,27 +130,17 @@ function createFormFooter (&$vote, $userID, $perm, $rangeID) {
    if ($vote->isChangeable() &&
        $isAssociated &&
        ! $vote->isStopped() &&
-       ! $_POST["changeAnswerButton_x"] &&
+       ! Request::submitted('changeAnswerButton') &&
        ! $vote->isError()
        ) {
-      $html .=
-     "&nbsp;<input type=\"image\" " .
-     "name=\"changeAnswerButton\" border=\"0\" " .
-     makeButton ("antwortaendern", "src") .
-     tooltip(_("Hier können Sie Ihre Antwort nochmal ändern.")) .
-     ">";
+      $html .= Button::create(_('Antwort ändern'), 'changeAnswerButton', array('title' => _('Hier können Sie Ihre Antwort nochmal ändern.')));       
 #      $html_extra = "<br>";
    }
    /* ---------------------------------------------------------------------- */
 
    /* Backbutton ----------------------------------------------------------- */
    elseif ($isPreview) {
-      $html .=
-     "&nbsp;<input type=\"image\" " .
-     "name=\"escapePreviewButton\" border=\"0\" " .
-     makeButton ("zurueck", "src") .
-     tooltip(_("Zurück zum Abstimmen.")) .
-     ">";
+      $html .= Button::create('<< ' . _('Zurück'), 'escapePreviewButton', array('title' => _('Zurück zum Abstimmen.'))); 
 #      $html_extra = "<br>";
    }
    /* ---------------------------------------------------------------------- */
@@ -177,16 +158,9 @@ function createFormFooter (&$vote, $userID, $perm, $rangeID) {
 
       $link_sort .= ($vote->isStopped()) ? "#stoppedvotes" : "#openvote";
 
-      $html .=
-     "&nbsp;".
-     "<a href=\"".URLHelper::getLink($link_sort)."\">".
-     "<img ".
-     makeButton ( ($sortAnswers ? "nichtsortieren" : "sortieren"), "src").
-     tooltip ( ($sortAnswers
-            ? _("Antworten wieder in Ihrer ursprünglichen Reihenfolge darstellen.")
-            : _("Antworten nach Stimmenanzahl sortieren."))
-           ).
-     " border=\"0\"></a>";
+      $html .= LinkButton::create(($sortAnswers ? _('Nicht sortieren') : _('Sortieren')), URLHelper::getLink($link_sort), array('title' => ($sortAnswers
+              ? _('Antworten wieder in Ihrer ursprünglichen Reihenfolge darstellen.')
+              : _('Antworten nach Stimmenanzahl sortieren.'))));
    }
    /* ---------------------------------------------------------------------- */
 
@@ -212,17 +186,9 @@ function createFormFooter (&$vote, $userID, $perm, $rangeID) {
 
        if( $_GET["revealNames"] &&
        $GLOBALS["voteopenID"] == $vote->getObjectID ())
-       $html .= "&nbsp;<a href=\"".URLHelper::getLink($link_reveal)."\">".
-           "<img ".
-           makeButton ("normaleansicht", "src").
-           tooltip(_("Zurück zur normalen Ansicht.")).
-          " border=\"0\"></a>";
+       $html .= LinkButton::create(_('Normale Ansicht'),URLHelper::getLink($link_reveal), array('title' => _('Zurück zur normalen Ansicht.')));
        else
-       $html .= "&nbsp;<a href=\"".URLHelper::getLink($link_reveal)."\">".
-           "<img ".
-          makeButton ("namenzeigen", "src").
-          tooltip(_("Zeigen, wer welche Antwort gewählt hat.")).
-          " border=\"0\"></a>";
+       $html .= LinkButton::create(_('Namen zeigen'),URLHelper::getLink($link_reveal), array('title' => _('Zeigen, wer welche Antwort gewählt hat.')));
    }
    /* ---------------------------------------------------------------------- */
 
@@ -234,42 +200,26 @@ function createFormFooter (&$vote, $userID, $perm, $rangeID) {
    */
    if ($haveFullPerm) {
       if (!$vote->isStopped())
-     $html .=
-        "&nbsp;".
-        "<a href=\"".URLHelper::getLink(VOTE_FILE_ADMIN."?page=edit&type=".
-        $vote->x_instanceof().
-        "&voteID=".$vote->getObjectID ())."\">".
-         "<img ".
-        makeButton ("bearbeiten", "src").
-        tooltip( $vote->x_instanceof() == INSTANCEOF_TEST
-             ? _("Diesen Test bearbeiten.")
-             : _("Diese Umfrage bearbeiten.") ).
-        " border=\"0\"></a>";
+     $html .= LinkButton::create(_('Bearbeiten'), URLHelper::getLink(VOTE_FILE_ADMIN
+                                    . "?page=edit&type=" . $vote->x_instanceof() 
+                                    . "&voteID=".$vote->getObjectID()), 
+                                    array('title' => ( $vote->x_instanceof() == INSTANCEOF_TEST
+                                            ? _('Diesen Test bearbeiten.')
+                                            : _('Diese Umfrage bearbeiten.'))));
       if (!$vote->isStopped())
-      $html .=
-     "&nbsp;".
-     "<a href=\"".URLHelper::getLink(VOTE_FILE_ADMIN."?page=overview&voteID=".
-     $vote->getObjectID ().
-     "&voteaction=stop&referer=1&showrangeID=".$vote->getRangeID())."\">" .
-     "<img  ".
-     makeButton ("stop", "src").
-     tooltip( $vote->x_instanceof() == INSTANCEOF_TEST
-          ? _("Diesen Test stoppen.")
-          : _("Diese Umfrage stoppen.") ).
-     " border=\"0\"></a>";
+      $html .= LinkButton::createCancel(_('Stop'), URLHelper::getLink(VOTE_FILE_ADMIN
+                                    . "?page=overview&voteID=" . $vote->getObjectID ()
+                                    . "&voteaction=stop&referer=1&showrangeID=".$vote->getRangeID()),
+                                    array('title' => ($vote->x_instanceof() == INSTANCEOF_TEST
+                                            ? _("Diesen Test stoppen.")
+                                            : _("Diese Umfrage stoppen."))));
 
-      $html .=
-     "&nbsp;".
-     "<a href=\"".URLHelper::getLink(VOTE_FILE_ADMIN."?page=overview&voteID=".
-     $vote->getObjectID ().
-     "&voteaction=delete_request&referer=1&showrangeID=".$vote->getRangeID())."\">" .
-     "<img  ".
-     makeButton ("loeschen", "src").
-     tooltip( $vote->x_instanceof() == INSTANCEOF_TEST
-          ? _("Diesen Test löschen.")
-          : _("Diese Umfrage löschen.") ).
-     " border=\"0\"></a>";
-
+      $html .= LinkButton::create(_('Löschen'), URLHelper::getLink(VOTE_FILE_ADMIN."?page=overview&voteID="
+                                    . $vote->getObjectID () . "&voteaction=delete_request&referer=1&showrangeID="
+                                    . $vote->getRangeID()),
+                                    array('title' => ($vote->x_instanceof() == INSTANCEOF_TEST 
+                                            ? _('Diesen Test löschen.') 
+                                            : _('Diese Umfrage löschen.'))));    
       $html .= "<br>";
    }
    /* ---------------------------------------------------------------------- */

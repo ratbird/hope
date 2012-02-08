@@ -23,6 +23,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+use Studip\Button, Studip\LinkButton;
 
 // -- here you have to put initialisations for the current page
 $sess->register('issue_open');
@@ -248,7 +249,7 @@ $themen =& $sem->getIssues(true);   // read again, so we have the actual sort or
                             </select>
                             <?=("neue Themen")?>
                         </font>
-                        <input type="image" <?=makebutton('anlegen', 'src')?> align="absmiddle" name="addIssue">
+                        <?= Button::create(_('Anlegen'), 'addIssue') ?>
                     </td>
                 </tr>
                 <tr>
@@ -328,10 +329,8 @@ $themen =& $sem->getIssues(true);   // read again, so we have the actual sort or
                 <tr>
                     <td class="blank" colspan="3" align="center">
                         <input type="hidden" name="allOpen" value="1">
-                        <input type="image" <?=makebutton('allesuebernehmen', 'src')?> name="saveAll">&nbsp;
-                        <a href="<?= URLHelper::getLink() ?>">
-                            <IMG <?=makebutton('abbrechen', 'src')?> border="0">
-                        </a>
+                        <?= Button::create(_('Alles übernehmen'), 'saveAll') ?>
+                        <?= LinkButton::createCancel(_('Abbrechen'), URLHelper::getURL()) ?>
                     </td>
                 </tr>
                 <?
@@ -523,7 +522,7 @@ $themen =& $sem->getIssues(true);   // read again, so we have the actual sort or
                         <td class="steel1" colspan="3">
                             &nbsp;
                             <font size="-1"><?=_("ausgewählte Themen freien Terminen")?></font>&nbsp;
-                            <input type="image" <?=makebutton('zuordnen', 'src')?> align="absMiddle" border="0" name="chronoAutoAssign">
+                            <?= Button::create(_('Zuordnen'), 'chronoAutoAssign') ?>
                         </td>
                     </tr>
                     <?

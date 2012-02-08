@@ -379,12 +379,12 @@ function show_lock_rule_form($lockdata="",$edit=0) {
         $form .= "<input type=\"hidden\" name=\"action\" value=\"confirm_edit\">";
         $form .= $zt->openRow();
         $form .= $zt->cell(Button::create(_("Übernehmen")) . "&nbsp;" . LinkButton::create(_("Abbrechen"), 
-		         URLHelper::getLink()), array("colspan"=>"3","align"=>"center"));
+                 URLHelper::getLink()), array("colspan"=>"3","align"=>"center"));
     } else {
         $form .= "<input type=\"hidden\" name=\"action\" value=\"insert\">";
         $form .= $zt->openRow();
         $form .= $zt->cell(Button::create(_("Anlegen")) . "&nbsp;" . LinkButton::create(_("Abbrechen"), 
-		         URLHelper::getLink()), array("colspan"=>"3","align"=>"center"));
+                 URLHelper::getLink()), array("colspan"=>"3","align"=>"center"));
     }
     $form .= "</form>";
     $form .= $zt->close();

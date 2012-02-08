@@ -57,7 +57,7 @@ function print_rss($username) {
     if (!$db->num_rows())
         echo "<tr><td class=\"".$cssSw->getClass()."\"><b><p class=\"info\">" . _("Es existieren zur Zeit keine eigenen RSS-Feeds.") . "</p></b></td></tr>\n";
     echo "<tr><td class=\"".$cssSw->getClass()."\"><p class=\"info\">" . _("RSS-Feed") . "&nbsp; " . LinkButton::create(_("Neuanlegen"), 
-				URLHelper::getURL('', array('rss' => 'create_rss', 'view' => $view, 'username' => $username, 'show_rss_bsp' => $show_rss_bsp))) . "</a></p></td></tr>";
+                URLHelper::getURL('', array('rss' => 'create_rss', 'view' => $view, 'username' => $username, 'show_rss_bsp' => $show_rss_bsp))) . "</a></p></td></tr>";
     $count = 0;
     while ($db->next_record() ){
 

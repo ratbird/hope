@@ -50,8 +50,8 @@ function print_freie($username) {
     if (!$db->num_rows())
         echo '<tr><td class="'.$cssSw->getClass().'"><font size="-1"><b><p class="info">' . _("Es existieren zur Zeit keine eigenen Kategorien.") . "</p></b></font></td></tr>\n";
     echo '<tr><td class="'.$cssSw->getClass().'"> <p class="info">' . _("Kategorie") . '&nbsp;' . 
-				LinkButton::create(_('Neuanlegen'), URLHelper::getURL('', array('freie' => 'create_freie', 'view' => $view, 'username' => $username)), 
-				array('title' => _('Kategorie anlegen'))) . "</p></td></tr>\n";
+                LinkButton::create(_('Neuanlegen'), URLHelper::getURL('', array('freie' => 'create_freie', 'view' => $view, 'username' => $username)), 
+                array('title' => _('Kategorie anlegen'))) . "</p></td></tr>\n";
     $count = 0;
     $hidden_count = 0;
     while ($db->next_record() ){

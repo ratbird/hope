@@ -376,10 +376,10 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                 <tr class="steel2">
                     <td colspan="3">
                     </td>
-                    <td colspan="<?=((Request::get('show_rooms_check')=='on')?'4':'3'); ?>" align="right">
+                    <td colspan="<?=((Request::get('show_rooms_check')=='on')?'4':'3') ?>" align="right">
                     <?
                         echo LinkButton::create(_("Alle auswählen"), 
-                             URLHelper::getURL('', array('select_all' => TRUE, 'ist' => TRUE, 'show_rooms_check' => Request::get('show_rooms_check'))));
+                             URLHelper::getURL('', array('select_all' => TRUE, 'list' => TRUE, 'show_rooms_check' => Request::get('show_rooms_check'))));
                         echo LinkButton::create(_('Keine auswählen'), 
                              URLHelper::getURL('', array('select_none' => TRUE, 'list' => TRUE, 'show_rooms_check' => Request::get('show_rooms_check'))));
                     ?>
@@ -393,7 +393,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                 <tr class="steel2">
                     <td colspan="3">
                     </td>
-                    <td colspan="<?= (( Request::get('show_rooms_check')=='on') ? '4':'3'); ?>" align="right">
+                    <td colspan="<?= (( Request::get('show_rooms_check')=='on') ? '4':'3') ?>" align="right">
                     <input type="hidden" name="change_visible" value="1">
                     <?
                         echo LinkButton::create(_("Alle auswählen"), URLHelper::getURL('', array('select_all' => TRUE, 'list' => TRUE, 'show_rooms_check' => Request::get('show_rooms_check'))));

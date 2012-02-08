@@ -342,7 +342,7 @@ if ($delete_id) {
                 $msg.= sprintf(_("Alle %s Antworten auf diesen Beitrag werden ebenfalls gelöscht!"), $count) . "<br>\n<br>\n";
 
             $msg .= LinkButton::createAccept(_("Ja"), URLHelper::getURL("?really_kill=$delete_id&view=$view#anker"));
-            $msg .= LinkButton::createCancel(_("Nein"), URLHelper::getLink("?topic_id=$root&open=$delete_id&view=$view#anker"));
+            $msg .= LinkButton::createCancel(_("Nein"), URLHelper::getURL("?topic_id=$root&open=$delete_id&view=$view#anker"));
 
             parse_msg($msg, '§', 'blank', '1', FALSE);
             echo "</table>";

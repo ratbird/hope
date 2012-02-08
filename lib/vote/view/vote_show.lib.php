@@ -158,7 +158,7 @@ function createFormFooter (&$vote, $userID, $perm, $rangeID) {
 
       $link_sort .= ($vote->isStopped()) ? "#stoppedvotes" : "#openvote";
 
-      $html .= LinkButton::create(($sortAnswers ? _('Nicht sortieren') : _('Sortieren')), URLHelper::getLink($link_sort), array('title' => ($sortAnswers
+      $html .= LinkButton::create(($sortAnswers ? _('Nicht sortieren') : _('Sortieren')), URLHelper::getURL($link_sort), array('title' => ($sortAnswers
               ? _('Antworten wieder in Ihrer ursprünglichen Reihenfolge darstellen.')
               : _('Antworten nach Stimmenanzahl sortieren.'))));
    }
@@ -186,9 +186,9 @@ function createFormFooter (&$vote, $userID, $perm, $rangeID) {
 
        if( $_GET["revealNames"] &&
        $GLOBALS["voteopenID"] == $vote->getObjectID ())
-       $html .= LinkButton::create(_('Normale Ansicht'),URLHelper::getLink($link_reveal), array('title' => _('Zurück zur normalen Ansicht.')));
+       $html .= LinkButton::create(_('Normale Ansicht'),URLHelper::getURL($link_reveal), array('title' => _('Zurück zur normalen Ansicht.')));
        else
-       $html .= LinkButton::create(_('Namen zeigen'),URLHelper::getLink($link_reveal), array('title' => _('Zeigen, wer welche Antwort gewählt hat.')));
+       $html .= LinkButton::create(_('Namen zeigen'),URLHelper::getURL($link_reveal), array('title' => _('Zeigen, wer welche Antwort gewählt hat.')));
    }
    /* ---------------------------------------------------------------------- */
 
@@ -200,21 +200,21 @@ function createFormFooter (&$vote, $userID, $perm, $rangeID) {
    */
    if ($haveFullPerm) {
       if (!$vote->isStopped())
-     $html .= LinkButton::create(_('Bearbeiten'), URLHelper::getLink(VOTE_FILE_ADMIN
+     $html .= LinkButton::create(_('Bearbeiten'), URLHelper::getURL(VOTE_FILE_ADMIN
                                     . "?page=edit&type=" . $vote->x_instanceof() 
                                     . "&voteID=".$vote->getObjectID()), 
                                     array('title' => ( $vote->x_instanceof() == INSTANCEOF_TEST
                                             ? _('Diesen Test bearbeiten.')
                                             : _('Diese Umfrage bearbeiten.'))));
       if (!$vote->isStopped())
-      $html .= LinkButton::createCancel(_('Stop'), URLHelper::getLink(VOTE_FILE_ADMIN
+      $html .= LinkButton::createCancel(_('Stop'), URLHelper::getURL(VOTE_FILE_ADMIN
                                     . "?page=overview&voteID=" . $vote->getObjectID ()
                                     . "&voteaction=stop&referer=1&showrangeID=".$vote->getRangeID()),
                                     array('title' => ($vote->x_instanceof() == INSTANCEOF_TEST
                                             ? _("Diesen Test stoppen.")
                                             : _("Diese Umfrage stoppen."))));
 
-      $html .= LinkButton::create(_('Löschen'), URLHelper::getLink(VOTE_FILE_ADMIN."?page=overview&voteID="
+      $html .= LinkButton::create(_('Löschen'), URLHelper::getURL(VOTE_FILE_ADMIN."?page=overview&voteID="
                                     . $vote->getObjectID () . "&voteaction=delete_request&referer=1&showrangeID="
                                     . $vote->getRangeID()),
                                     array('title' => ($vote->x_instanceof() == INSTANCEOF_TEST 

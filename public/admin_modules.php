@@ -157,9 +157,9 @@ if ($perm->have_studip_perm("tutor", $admin_modules_data["range_id"])) {
 
                     $msg.="info§".$amodules->registered_modules[$key]["msg_warning"];
                     $msg.="<br>";
-                    $msg.=LinkButton::createAccept(_('Ja'), URLHelper::getLink("?delete_$key=TRUE&retry=TRUE"));
+                    $msg.=LinkButton::createAccept(_('Ja'), URLHelper::getURL("?delete_$key=TRUE&retry=TRUE"));
                     $msg.="&nbsp; \n";
-                    $msg.=LinkButton::createAccept(_('NEIN!'), URLHelper::getLink("?cancel_$key=TRUE&retry=TRUE"));
+                    $msg.=LinkButton::createCancel(_('NEIN!'), URLHelper::getURL("?cancel_$key=TRUE&retry=TRUE"));
                     $msg.="\n§";
                 } else
                     unset($admin_modules_data["conflicts"][$key]);

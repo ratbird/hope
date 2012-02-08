@@ -1624,7 +1624,7 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
                 printf(_("als %s"), get_title_for_status('autor', 1));
             }
             ?></font><br>
-               <?= Button::create(_('Eintragen'),'add_user',array('value'=> sprintf(_("als %s berufen"), get_title_for_status('autor', 1)))) ?>&nbsp;<?= LinkButton::create(_('Neuesuche'),URLHelper::getLink()) ?></td>
+               <?= Button::create(_('Eintragen'),'add_user',array('value'=> sprintf(_("als %s berufen"), get_title_for_status('autor', 1)))) ?>&nbsp;<?= LinkButton::create(_('Neuesuche'),URLHelper::getURL()) ?></td>
 
         </tr>
     </table>
@@ -1738,7 +1738,7 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
         echo "<td width=\"20%\" class=\"steel1\" align=\"center\"> ";
         echo Button::create(_('Eintragen'),'submit') ;
         if (sizeof($csv_not_found)) {
-           echo "<img border=\"0\" " . LinkButton::create(_('Löschen'),URLHelper::getLink());
+           echo "<img border=\"0\" " . LinkButton::create(_('Löschen'),URLHelper::getURL());
         }
         echo "\n</td></tr>\n";
     } else {
@@ -1786,7 +1786,7 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
             }
             echo  Button::create(_('Eintragen'));
             echo '&nbsp; &nbsp; ';
-            echo  LinkButton::create(_('Abbrechen'),URLHelper::getLink());
+            echo  LinkButton::create(_('Abbrechen'),URLHelper::getURL());
             echo "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </td></tr>\n";
 
         if (sizeof($csv_not_found)) {

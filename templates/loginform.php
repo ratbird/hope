@@ -49,7 +49,7 @@ $(function () {
             <tr>
               <td align="center" colspan="2">
                 <?= Button::createAccept(_('Anmelden'), _("Login")); ?>
-                <?= LinkButton::createCancel(_('Abbrechen'),UrlHelper::getLink('index.php?cancel_login=1')); ?>
+                <?= LinkButton::createCancel(_('Abbrechen'),UrlHelper::getURL('index.php?cancel_login=1')); ?>
               </td>
             </tr>
           </table>

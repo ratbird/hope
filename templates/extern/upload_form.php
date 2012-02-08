@@ -23,7 +23,7 @@ use Studip\Button, Studip\LinkButton;
                     <?= _("2. Klicken Sie auf <b>'absenden'</b>, um die Datei hochzuladen.") ?>
                 </div>
                 <?= Button::createAccept(_('Absenden'), array('onClick' => 'return STUDIP.OldUpload.upload_start(jQuery(this).closest(\'form\'))'))?>
-                &nbsp;<?= LinkButton::createCancel(_('Abbrechen'), URLHelper::getLink('?cancel_x=true'))?>
+                &nbsp;<?= LinkButton::createCancel(_('Abbrechen'), URLHelper::getURL('?cancel_x=true'))?>
 
                 <input type="hidden" name="com" value="do_upload_config">
                 <input type="hidden" name="check_module" value="<?= $module ?>">

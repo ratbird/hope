@@ -903,10 +903,10 @@ printf("<font size=\"-1\">" . _("<b>%s</b> MitarbeiterInnen gefunden") . "</font
 echo "</td><td class=\"steel1\" width=\"10%\">\n";
 
 if ($extend == "yes") {
-    echo LinkButton::create(_('Normale Ansicht'), URLHelper::getLink('?extend=no'));
+    echo LinkButton::create(_('Normale Ansicht'), URLHelper::getURL('?extend=no'));
 }
 else {
-    echo LinkButton::create(_('Erweiterte Ansicht'), URLHelper::getLink('?extend=yes'));
+    echo LinkButton::create(_('Erweiterte Ansicht'), URLHelper::getURL('?extend=yes'));
 }
 
 echo "</td></tr></table>\n";

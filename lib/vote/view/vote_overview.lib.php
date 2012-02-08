@@ -605,14 +605,15 @@ function makeTableDataCellForm( $displayclass = "steel1",
                                 $hidden3_value= NULL,
                                 $hidden4_name = NULL,
                                 $hidden4_value= NULL){
-    $link = VOTE_FILE_ADMIN."?page=".$action;
-    if (!empty($hidden1_name)) $link .="&".$hidden1_name."=".$hidden1_value;
-    if (!empty($hidden2_name)) $link .="&".$hidden2_name."=".$hidden2_value;
-    if (!empty($hidden3_name)) $link .="&".$hidden3_name."=".$hidden3_value;
-    if (!empty($hidden4_name)) $link .="&".$hidden4_name."=".$hidden4_value;
+    $linkparams = array();
+    $linkparams['page'] = $action;
+    if (!empty($hidden1_name)) $linkparams[$hidden1_name] = $hidden1_value;
+    if (!empty($hidden2_name)) $linkparams[$hidden2_name] = $hidden2_value;
+    if (!empty($hidden3_name)) $linkparams[$hidden3_name] = $hidden3_value;
+    if (!empty($hidden4_name)) $linkparams[$hidden4_name] = $hidden4_value;
 
     if ($hidden2_value != "change_visibility"){
-        $button = LinkButton::create(decodeHTML($button_tooltip), URLHelper::getLink($link), array('title' => decodeHTML($button_tooltip)));
+        $button = LinkButton::create(decodeHTML($button_tooltip), URLHelper::getURL(VOTE_FILE_ADMIN, $linkparams), array('title' => decodeHTML($button_tooltip)));
     }
     else{
         $button .= "<a href=\"".URLHelper::getLink($link)."\">";

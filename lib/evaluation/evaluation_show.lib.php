@@ -32,6 +32,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
+use Studip\Button, Studip\LinkButton;
+
 class EvalShow
 {
 
@@ -393,62 +395,44 @@ class EvalShow
    }
 
    function createEditButton ($eval) {
-         $button = new HTML ( "a" );
-         $button->addAttr ("href", UrlHelper::getLink(EVAL_FILE_ADMIN."?page=edit&evalID=".$eval->getObjectID ()));
-         $img = new HTMpty( "img" );
-         $img->stri( makeButton( "bearbeiten", "src" ).tooltip(_("Evaluation bearbeiten.")) );
-         $img->addAttr( "border", "0" );
-         $button->addContent ( $img );
+         $button = LinkButton::create(_('Bearbeiten'), 
+                 UrlHelper::getLink(EVAL_FILE_ADMIN."?page=edit&evalID=".$eval->getObjectID ()),
+                 array('title' => _('Evaluation bearbeiten.')));
          return $button;
    }
 
    function createOverviewButton ($rangeID, $evalID) {
-         $button = new HTML ( "a" );
-         $button->addAttr ("href", UrlHelper::getLink(EVAL_FILE_ADMIN."?rangeID=".$rangeID."&openID=".$evalID."#open"));
-         $img = new HTMpty( "img" );
-         $img->stri( makeButton( "bearbeiten", "src" ).tooltip(_("Evaluationsverwaltung.")) );
-         $img->addAttr( "border", "0" );
-         $button->addContent ( $img );
+         $button = LinkButton::create(_('Bearbeiten'), 
+                 UrlHelper::getLink(EVAL_FILE_ADMIN."?rangeID=".$rangeID."&openID=".$evalID."#open"),
+                 array('title' => _('Evaluationsverwaltung.')));
          return $button;
    }
 
    function createDeleteButton ($eval) {
-         $button = new HTML ( "a" );
-         $button->addAttr ("href", UrlHelper::getLink(EVAL_FILE_ADMIN."?evalAction=delete_request&evalID=".$eval->getObjectID ()));
-         $img = new HTMpty( "img" );
-         $img->stri( makeButton( "loeschen", "src" ).tooltip(_("Evaluation löschen.")) );
-         $img->addAttr( "border", "0" );
-         $button->addContent ( $img );
+         $button = LinkButton::create(_('Löschen'), 
+                 UrlHelper::getLink(EVAL_FILE_ADMIN."?evalAction=delete_request&evalID=".$eval->getObjectID ()),
+                 array('title' => _('Evaluation löschen.')));
          return $button;
    }
 
    function createStopButton ($eval) {
-         $button = new HTML ( "a" );
-         $button->addAttr ("href", UrlHelper::getLink(EVAL_FILE_ADMIN."?evalAction=stop&evalID=".$eval->getObjectID ()));
-         $img = new HTMpty( "img" );
-         $img->stri( makeButton( "stop", "src" ).tooltip(_("Evaluation stoppen.")) );
-         $img->addAttr( "border", "0" );
-         $button->addContent ( $img );
+         $button = LinkButton::createCancel(_('Stop'), 
+                 UrlHelper::getLink(EVAL_FILE_ADMIN."?evalAction=stop&evalID=".$eval->getObjectID ()),
+                 array('title' => _('Evaluation stoppen.')));
          return $button;
    }
 
    function createContinueButton ($eval) {
-         $button = new HTML ( "a" );
-         $button->addAttr ("href", UrlHelper::getLink(EVAL_FILE_ADMIN."?evalAction=continue&evalID=".$eval->getObjectID ()));
-         $img = new HTMpty( "img" );
-         $img->stri( makeButton( "fortsetzen", "src" ).tooltip(_("Evaluation fortsetzen.")) );
-         $img->addAttr( "border", "0" );
-         $button->addContent ( $img );
+         $button = LinkButton::create(_('Fortsetzen'), 
+                 UrlHelper::getLink(EVAL_FILE_ADMIN."?evalAction=continue&evalID=".$eval->getObjectID ()),
+                 array('title' => _('Evaluation fortsetzen')));
          return $button;
    }
 
    function createExportButton ($eval) {
-         $button = new HTML ( "a" );
-         $button->addAttr ("href", UrlHelper::getLink(EVAL_FILE_ADMIN."?evalAction=export_request&evalID=".$eval->getObjectID ()));
-         $img = new HTMpty( "img" );
-         $img->stri( makeButton( "export", "src" ).tooltip(_("Evaluation exportieren.")) );
-         $img->addAttr( "border", "0" );
-         $button->addContent ( $img );
+         $button = LinkButton::create(_('Export'), 
+                 UrlHelper::getLink(EVAL_FILE_ADMIN."?evalAction=export_request&evalID=".$eval->getObjectID ()),
+                 array('title' => _('Evaluation exportieren.')));
          return $button;
    }
 

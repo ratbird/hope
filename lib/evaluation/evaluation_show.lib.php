@@ -301,23 +301,18 @@ class EvalShow
 
       /* vote button */
       if( ! $voted ) {
-         $button = new HTMpty( "input" );
-         $button->attr( "type", "image" );
-         $button->attr( "name", "voteButton" );
-         $button->stri( makeButton( "abschicken", "src" ).
-            tooltip(_("Senden Sie Ihre Antworten hiermit ab.")) );
-         $button->attr( "border", "0" );
+          $button = Button::createAccept(_('Abschicken'),
+                'voteButton',
+                array('title' => _('Senden Sie Ihre Antworten hiermit ab.')));
          $td->cont( $button );
       }
 
       /* close button */
       if( $auth->auth["jscript"] ) {
-         $button = new HTM( "a" );
-         $button->attr( "href", "javascript:window.close()" );
-         $img = new HTMpty( "img" );
-         $img->stri( makeButton( "schliessen", "src" ).
-            tooltip(_("Schließt dieses Fenster.")) );
-         $img->attr( "border", "0" );
+          $button = LinkButton::create(_('Schließen'),
+                UrlHelper::getLink('javascript:window.close()'),
+                array('title' => _('Schließt dieses Fenster.')));
+         
          $button->cont( $img );
       } else {
          $button = new HTM( "p" );
@@ -327,17 +322,10 @@ class EvalShow
 
       /* reload button */
       if( $isPreview ) {
-         $button = new HTM( "a" );
-#         $button->attr( "href", "javascript:location.reload()" );
-         $button->attr( "href", UrlHelper::getLink('show_evaluation.php?evalID=' .
-            $eval->getObjectID() . '&isPreview=1'));
-
-         $img = new HTMpty( "img" );
-         $img->stri( makeButton( "aktualisieren", "src" ).
-            tooltip(_("Vorschau aktualisieren.")) );
-         $img->attr( "border", "0" );
-         $button->cont( $img );
-     $td->cont( $button );
+         $button = LinkButton::create(_('Aktualisieren'),
+                UrlHelper::getLink('show_evaluation.php?evalID='.$eval->getObjectID().'&isPreview=1'),
+                array('title' => _('Vorschau aktualisieren.')));
+         $td->cont( $button );
       }
 
       $td->cont( $br );
@@ -349,11 +337,13 @@ class EvalShow
   }
 
    function createVoteButton ($eval) {
-
-      $img = new HTMpty( "img" );
-      $img->stri( makeButton( "anzeigen", "src" ).tooltip(_("Evaluation anzeigen.")) );
-      $img->addAttr( "border", "0" );
-      return EvalCommon::createEvalShowLink ($eval->getObjectID(), $img);
+      $button = LinkButton::create(_('Anzeigen'),
+              UrlHelper::getLink('show_evaluation.php?evalID=' .$eval->getObjectID().'&isPreview=' . NO),
+              array('title' => _('Evaluation anzeigen.'),
+                  'onClick' => 'openEval(\''.$eval->getObjectID().'\'); return false;'));
+      $div = new HTML ("div");
+      $div->addHTMLContent( $button );
+      return $div;
 
       // keine Ahnung warum das hier nicht funktioniert, bekomme eine JS-Fehlermeldung :(
 

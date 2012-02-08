@@ -339,7 +339,7 @@ class EvaluationTreeShowUser {
     $hasResidual = NO;
     $leftOutStyle = ( $group->isMandatory() &&
 #             (is_array($_POST["answers"]) || is_array($_POST["freetexts"])) &&
-              isset($_POST["voteButton_x"]) &&
+              Request::submitted('voteButton') &&
               is_array( $GLOBALS["mandatories"] ) &&
               in_array( $question->getObjectID(), $GLOBALS["mandatories"] ) )
         ? "background-image:url(".Assets::image_path("steelgroup1.gif")."); border-left:3px solid red; border-right:3px solid red;"

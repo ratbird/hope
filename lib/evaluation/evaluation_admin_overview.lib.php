@@ -22,6 +22,7 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +--------------------------------------------------------------------------+
 
+use Studip\Button, Studip\LinkButton;
 
 # Include all required files ================================================ #
 require_once('lib/evaluation/evaluation.config.php');
@@ -239,10 +240,15 @@ class EvalOverview {
      $titleLink = $eval->getTitle () ? $eval->getTitle () : " ";
      $content[0] = $eval->getFullname () ? $eval->getFullname () : " ";
      $content[1] = $eval->getChangedate() == NULL ? " " : date ("d.m.Y", $eval->getChangedate());
-     $content[4] = EvalCommon::createEvalShowLink( $evalID, "<img border=0 align=middle ".
-                     makeButton( "vorschau", "src" ).
-                     tooltip(_("Vorschau dieser öffentlichen Evaluationsvorlage")).">",
-                     YES );
+     
+     $button = LinkButton::create(_('Vorschau'),
+              UrlHelper::getLink('show_evaluation.php?evalID=' .$evalID.'&isPreview=' . YES),
+              array('title' => _('Vorschau dieser öffentlichen Evaluationsvorlage.'),
+                  'onClick' => 'openEval(\''.$evalID.'\'); return false;'));
+     $div = new HTML ("div");
+     $div->addHTMLContent( $button );
+     $content[4] = $div;
+     
      $content[2] = $eval->isAnonymous()
          ? EvalCommon::createImage( EVAL_PIC_YES, _("ja") )
          : EvalCommon::createImage( EVAL_PIC_NO, _("nein") );

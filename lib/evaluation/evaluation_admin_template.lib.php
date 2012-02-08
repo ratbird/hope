@@ -33,6 +33,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +--------------------------------------------------------------------------+
 
+use Studip\Button, Studip\LinkButton;
+
 class EvalTemplateGUI {
 
   /* Define functions ------------------------------------------------------ */
@@ -745,31 +747,19 @@ class EvalTemplateGUI {
        $input->attr( "name", "cmd" );
        $input->attr( "value", "QuestionAnswersCreated");
        $form->cont( $input );
-
-       $input = new HTMpty( "input" );
-       $input->attr( "type", "image" );
-       $input->attr( "name", "template_save2_button" );
-       $input->stri( makeButton( "uebernehmen", "src" ) );
-       $input->attr( "border", "0" );
-       $input->attr( "style", "vertical-align:middle; " );
+       
+       $input = Button::create(_('Übernehmen'),
+                'template_save2_button');
     }
     else{
-       $input = new HTMpty( "input" );
-       $input->attr( "type", "image" );
-       $input->attr( "name", "template_save_button" );
-       $input->stri( makeButton( "uebernehmen", "src" ) );
-       $input->attr( "border", "0" );
-       $input->attr( "style", "vertical-align:middle; " );
+        $input = Button::create(_('Übernehmen'),
+                'template_save_button');
     }
 
     if( !strstr($this->command, "create") ) {
        $showDelete = YES;
-       $input2 = new HTMpty( "input" );
-       $input2->attr( "type", "image" );
-       $input2->attr( "name", "template_delete_button" );
-       $input2->stri( makeButton( "loeschen", "src" ) );
-       $input2->attr( "border", "0" );
-       $input2->attr( "style", "vertical-align:middle; " );
+       $input2 = Button::createAccept(_('Löschen'),
+                'template_delete_button');
     }
 
     $table = new HTM( "table" );
@@ -898,12 +888,8 @@ class EvalTemplateGUI {
     $form->cont( $this->BR );
 
     /* uebernehmen / loeschen Button ---------------------------- */
-    $input = new HTMpty( "input" );
-    $input->attr( "type", "image" );
-    $input->attr( "name", "template_savefree_button" );
-    $input->stri( makeButton( "uebernehmen", "src" ) );
-    $input->attr( "border", "0" );
-    $input->attr( "style", "vertical-align:middle; " );
+    $input = Button::create(_('Übernehmen'),
+                'template_savefree_button');
     $odb = new EvaluationObjectDB();
     //if($odb->getGlobalPerm()=="root"){
     //  $myuserid = 0;
@@ -914,13 +900,9 @@ class EvalTemplateGUI {
     //if($question->getParentID()==$myuserid){
     //   $loesch=1;
     if( !strstr($this->command, "create") ) {
-   $showDelete = YES;
-   $input2 = new HTMpty( "input" );
-   $input2->attr( "type", "image" );
-   $input2->attr( "name", "template_delete_button" );
-   $input2->stri( makeButton( "loeschen", "src" ) );
-   $input2->attr( "border", "0" );
-   $input2->attr( "style", "vertical-align:middle; " );
+        $showDelete = YES;
+        $input2 = Button::createAccept(_('Löschen'),
+                'template_delete_button');
     }
 
     $table = new HTM( "table" );

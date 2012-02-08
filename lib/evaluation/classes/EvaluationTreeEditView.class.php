@@ -204,7 +204,7 @@ function EvaluationTreeEditView ( $itemID = ROOT_BLOCK, $evalID = NULL ){
     }
 
     # handling the moveItemID =============================================== #
-    if ( $_REQUEST["create_moveItemID_x"] )
+    if ( Request::submitted('create_moveItemID') )
         $this->moveItemID = $_REQUEST["itemID"];
     elseif ( $_REQUEST["moveItemID"] )
         $this->moveItemID = $_REQUEST["moveItemID"];
@@ -2730,7 +2730,7 @@ function createQuestionForm(){
     if ( preg_match( "/(.*)_#(.*)/", $command[1], $command_parts ) )
         $questionID = $command_parts[2];
     else
-        $questionID = isset($_REQUEST["template_save2_button_x"]) ? "" : $_REQUEST["template_id"];
+        $questionID = Request::submitted('template_save2_button_x') ? "" : $_REQUEST["template_id"];
 
     if ($question->getObjectID() == $questionID)
         $tr2->addAttr ("class", "eval_highlight");

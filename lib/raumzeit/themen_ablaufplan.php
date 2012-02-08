@@ -23,6 +23,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+use Studip\Button, Studip\LinkButton;
+
 // -- here you have to put initialisations for the current page
 define('SELECTED', ' checked');
 define('NOT_SELECTED', '');
@@ -184,10 +186,9 @@ $termine = getAllSortedSingleDates($sem);
                 <tr>
                     <td class="steelgraulight" colspan="6" align="center" height="30" valign="middle">
                         <input type="hidden" name="allOpen" value="TRUE">
-                        <input type="image" <?=makebutton('allesuebernehmen', 'src')?> name="editAll" align="absmiddle">&nbsp;&nbsp;&nbsp;
-                        <a href="<?= URLHelper::getLink("?cmd=closeAll") ?>">
-                            <img <?=makebutton('abbrechen', 'src')?> border="0" align="absmiddle">
-                        </a>
+                        <?= Button::create(_('Alles übernehmen'), 'editAll') ?>
+                        &nbsp;&nbsp;&nbsp;
+                        <?= LinkButton::createCancel(_('Abbrechen'), URLHelper::getURL('', array('cmd' => 'closeAll'))) ?>
                     </td>
                 </tr>
 
@@ -277,10 +278,9 @@ $termine = getAllSortedSingleDates($sem);
                 <tr>
                     <td class="steelgraulight" colspan="6" align="center" height="30" valign="middle">
                         <input type="hidden" name="allOpen" value="TRUE">
-                        <input type="image" <?=makebutton('allesuebernehmen', 'src')?> name="editAll" align="absmiddle">&nbsp;&nbsp;&nbsp;
-                        <a href="<?= URLHelper::getLink("?cmd=closeAll") ?>">
-                            <IMG <?=makebutton('abbrechen', 'src')?> border="0" align="absmiddle">
-                        </a>
+                        <?= Button::create(_('Alles übernehmen'), 'editAll') ?>
+                        &nbsp;&nbsp;&nbsp;
+                        <?= LinkButton::createCancel(_('Abbrechen'), URLHelper::getURL('', array('cmd' => 'closeAll'))) ?>
                     </td>
                 </tr>
             <? } ?>

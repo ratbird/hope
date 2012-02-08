@@ -1,5 +1,7 @@
 <?
 # Lifter010: TODO
+
+use Studip\Button, Studip\LinkButton;
 ?>
 <? if (!$_LOCKED) { ?>
 <TABLE cellpadding="1" cellspacing="0" border="0" width="<?=$tpl['width']?>">
@@ -16,7 +18,7 @@
                 <OPTION value="deleteAll"><?=_("alle l&ouml;schen")?></OPTION>
                 <OPTION value="chooseEvery2nd"><?=_("jeden 2. ausw&auml;hlen")?></OPTION>
             </SELECT>
-            <INPUT type="image" <?=makebutton('ok', 'src')?> name="checkboxAction" align="absmiddle">
+            <?= Button::createAccept(_('Ok'), 'checkboxAction') ?>
         </TD>
     </TR>
     <TR>
@@ -44,7 +46,7 @@
                 <option value="<?= htmlReady($dozent['user_id']) ?>"><?= htmlReady($dozent['Vorname']." ".$dozent['Nachname']) ?></option>
                 <? endforeach ?>
             </select>
-            <input type="image" <?=makebutton('uebernehmen', 'src')?> name="related_persons_action_do" align="absmiddle">
+            <?= Button::create(_('Übernehmen'), 'related_persons_action_do') ?>
             <br>
         </TD>
     </TR>
@@ -80,12 +82,12 @@
                     }
                 ?>
             </SELECT>
-            <INPUT type="image" <?=makebutton('buchen', 'src')?> name="bookRoom" align="absmiddle"><BR/>
+            <?= Button::create(_('Buchen'), 'bookRoom') ?>
             <? endif; ?>
             <?=_("freie Ortsangabe")?>:
             <INPUT type="text" name="freeRoomText" size="50" maxlength="255">
             <?=$GLOBALS['RESOURCES_ENABLE']? _("(f&uuml;hrt <em>nicht</em> zu einer Raumbuchung)") : ''?>
-            <INPUT type="image" <?=makebutton('uebernehmen', 'src')?> name="freeText" align="absmiddle"><BR/>
+            <?= Button::create(_('Übernehmen'), 'freeText') ?>
             </FONT>
         </TD>
     </TR>

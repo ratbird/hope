@@ -1,5 +1,7 @@
 <?
 # Lifter010: TODO
+
+use Studip\Button, Studip\LinkButton;
 ?>
 <TR>
     <TD class="steelgraulight" colspan="3">
@@ -14,7 +16,7 @@
 <TR>
     <TD class="steel1" colspan="3">
         <?=_("ausgewählte Themen freien Terminen")?>
-        <INPUT type="image" <?=makebutton('zuordnen', 'src')?> align="absMiddle" name="autoAssign_<?=$tpl['md_id']?>">
+        <?= Button::create(_('Zuordnen'), 'autoAssign_' . $tpl['md_id']) ?>
     </TD>
 </TR>
 <?

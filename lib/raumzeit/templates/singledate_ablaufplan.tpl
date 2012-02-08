@@ -1,5 +1,7 @@
 <?
 # Lifter010: TODO
+
+use Studip\Button, Studip\LinkButton;
 ?>
 <TR style="height: 1.8em">
     <TD width="1%" align="right" valign="bottom" class="<?=$tpl['class']?>" nowrap="nowrap">
@@ -85,10 +87,8 @@
                     <INPUT type="hidden" name="issue_id" value="<?=$tpl['issue_id']?>">
                     <? } ?>
                     <INPUT type="hidden" name="singledate_id" value="<?=$tpl['sd_id']?>">
-                    <INPUT type="image" <?=makebutton('uebernehmen', 'src')?> align="absmiddle" name="<?=$tpl['submit_name']?>">
-                    <A href="<?= URLHelper::getLink('?cmd=close&open_close_id='. $tpl['sd_id'])?>">
-                        <IMG <?=makebutton('abbrechen', 'src')?> border="0" align="absmiddle">
-                    </A>
+                    <?= Button::create(_('Übernehmen'), $tpl['submit_name']) ?>
+                    <?= LinkButton::createCancel(_('Abbrechen'), URLHelper::getURL('', array('cmd' => 'close', 'open_close_id' => $tpl['sd_id']))) ?>
                     <? } ?>
                 </TD>
             </TR>

@@ -1,5 +1,7 @@
 <?
 # Lifter010: TODO
+
+use Studip\Button, Studip\LinkButton;
 ?>
 <?
 define('SELECTED', ' checked');
@@ -61,10 +63,8 @@ if ($GLOBALS['RESOURCES_ENABLE'] && $GLOBALS['RESOURCES_ENABLE_BOOKINGSTATUS_COL
                 <TD colspan="9" class="steel1" align="center">
                     <BR/>
                     <INPUT type="hidden" name="cmd" value="doAddCycle">
-                    <INPUT type="image" <?=makebutton('uebernehmen', 'src')?>>
-                    <a href="<?= URLHelper::getLink() ?>">
-                        <IMG <?=makebutton('abbrechen', 'src')?> border="0">
-                    </A>
+                    <?= Button::create(_('Übernehmen')) ?>
+                    <?= LinkButton::createCancel(_('Abbrechen'), URLHelper::getURL()) ?>
                 </TD>
             </TR>
         </TABLE>

@@ -87,7 +87,7 @@ $evalDB = new EvaluationDB();
 $isPreview = $_REQUEST["isPreview"] ? YES : NO;
 
 $votedEarlier = $eval->hasVoted( $auth->auth["uid"] ) && $isPreview == NO;
-$votedNow = isset( $_POST["voteButton_x"] ) && $votedEarlier == NO;
+$votedNow = Request::submitted('voteButton') && $votedEarlier == NO;
 
 if ( $eval->isAnonymous() )
    $userID = StudipObject::createNewID ();

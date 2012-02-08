@@ -67,7 +67,7 @@ if ($EXPORT_ENABLE)
     $ex_sem_class = Request::intArray('ex_sem_class');
     
     // Zurueckbutton benutzt?
-    if (isset($back_x))
+    if (isset($back))
     {
         if ($o_mode == "choose")
         {

@@ -53,7 +53,7 @@ function show_content() {
             $data .= $zt->row(array(htmlReady($all_lock_data[$i]["name"]),
                         htmlReady($all_lock_data[$i]["description"]),
                         LinkButton::create(_("Bearbeiten"), URLHelper::getURL('', array('action' => 'edit', 'lock_id' => $all_lock_data[$i]["lock_id"]))),
-                        LinkButton::create(_("Löschen"), URLHelper::getLink('', array('action' => 'confirm_delete', 'lock_id' => $all_lock_data[$i]["lock_id"])))));
+                        LinkButton::create(_("Löschen"), URLHelper::getURL('', array('action' => 'confirm_delete', 'lock_id' => $all_lock_data[$i]["lock_id"])))));
         }
     }
     $data .= $zt->close();

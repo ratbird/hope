@@ -376,12 +376,12 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                 <tr class="steel2">
                     <td colspan="3">
                     </td>
-                    <td colspan="<?=(Request::get('show_rooms_check')=='on')?'4':'3'; ?>" align="right">
+                    <td colspan="<?=((Request::get('show_rooms_check')=='on')?'4':'3'); ?>" align="right">
                     <?
                         echo LinkButton::create(_("Alle auswählen"), 
-                             URLHelper::getLink('', array('select_all' => TRUE, 'ist' => TRUE, 'show_rooms_check' => Request::get('show_rooms_check'))));
+                             URLHelper::getURL('', array('select_all' => TRUE, 'ist' => TRUE, 'show_rooms_check' => Request::get('show_rooms_check'))));
                         echo LinkButton::create(_('Keine auswählen'), 
-                             URLHelper::getLink('', array('select_none' => TRUE, 'list' => TRUE, 'show_rooms_check' => Request::get('show_rooms_check'))));
+                             URLHelper::getURL('', array('select_none' => TRUE, 'list' => TRUE, 'show_rooms_check' => Request::get('show_rooms_check'))));
                     ?>
                     </td>
                 </tr>
@@ -393,11 +393,11 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                 <tr class="steel2">
                     <td colspan="3">
                     </td>
-                    <td colspan="<?=(Request::get('show_rooms_check')=='on')?'4':'3'; ?>" align="right">
+                    <td colspan="<?= (( Request::get('show_rooms_check')=='on') ? '4':'3'); ?>" align="right">
                     <input type="hidden" name="change_visible" value="1">
                     <?
-                        echo LinkButton::create(_("Alle auswählen"), URLHelper::getLink('', array('select_all' => TRUE, 'list' => TRUE)));
-                        echo LinkButton::create(_("Keine auswaehlen"), URLHelper::getLink('', array('select_none' => TRUE, 'list' => TRUE)));
+                        echo LinkButton::create(_("Alle auswählen"), URLHelper::getURL('', array('select_all' => TRUE, 'list' => TRUE, 'show_rooms_check' => Request::get('show_rooms_check'))));
+                        echo LinkButton::create(_("Keine auswählen"), URLHelper::getURL('', array('select_none' => TRUE, 'list' => TRUE, 'show_rooms_check' => Request::get('show_rooms_check'))));
                     ?>
                     </td>
                 </tr>
@@ -536,44 +536,44 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
             //Kommandos fuer die jeweilgen Seiten
             switch ($i_page) {
                 case "adminarea_start.php":
-                    printf(_("Veranstaltung") . "<br>%s", LinkButton::create(_('Auswaehlen'), URLHelper::getLink('', array('select_sem_id' => $seminar_id))));
+                    printf(_("Veranstaltung") . "<br>%s", LinkButton::create(_('Auswählen'), URLHelper::getURL('', array('select_sem_id' => $seminar_id))));
                     break;
                 case "themen.php":
-                    printf(_("Ablaufplan") . "<br>%s", LinkButton::create(_('Bearbeiten'), URLHelper::getLink('', array('seminar_id' => $seminar_id))));
+                    printf(_("Ablaufplan") . "<br>%s", LinkButton::create(_('Bearbeiten'), URLHelper::getURL('', array('seminar_id' => $seminar_id))));
                     break;
                 case "raumzeit.php":
-                    printf(_("Zeiten / Räume") . "<br>%s", LinkButton::create(_('Bearbeiten'), URLHelper::getLink('', array('seminar_id' => $seminar_id))));
+                    printf(_("Zeiten / Räume") . "<br>%s", LinkButton::create(_('Bearbeiten'), URLHelper::getURL('', array('seminar_id' => $seminar_id))));
                     break;
                 case "admin_admission.php":
                     printf(_("Zugangsberechtigungen") . "<br>%s", LinkButton::create(_('Bearbeiten'), URLHelper::getLink('', array('seminar_id' => $seminar_id))));                    break;
                 case "admin_lit_list.php":
-                    printf(_("Literatur") . "<br>%s", LinkButton::create(_('Bearbeiten'), URLHelper::getLink('', array('_range_id'=> $seminar_id))));
+                    printf(_("Literatur") . "<br>%s", LinkButton::create(_('Bearbeiten'), URLHelper::getURL('', array('_range_id'=> $seminar_id))));
                     break;
                 case "admin_statusgruppe.php":
                     printf(_("Funktionen / Gruppen") . "<br>%s", LinkButton::create(_('Bearbeiten'), 
-                    URLHelper::getLink('', array('ebene' => 'sem', 'range_id' => $seminar_id))));
+                    URLHelper::getURL('', array('ebene' => 'sem', 'range_id' => $seminar_id))));
                     break;
                 case "admin_roles.php":
                     printf(_("Funktionen / Gruppen") . "<br>%s", LinkButton::create(_('Bearbeiten'), 
-                    URLHelper::getLink('', array('ebene' => 'sem', 'range_id'=> $seminar_id))));
+                    URLHelper::getURL('', array('ebene' => 'sem', 'range_id'=> $seminar_id))));
                     break;
                 case "admin_modules.php":
-                    printf(_("Module") . "<br>%s", LinkButton::create(_('Bearbeiten'), URLHelper::getLink('', array('range_id' => $seminar_id))));
+                    printf(_("Module") . "<br>%s", LinkButton::create(_('Bearbeiten'), URLHelper::getURL('', array('range_id' => $seminar_id))));
                     break;
                 case "admin_news.php":
-                    printf(_("Ankündigungen") . "<br>%s", LinkButton::create(_('Bearbeiten'), URLHelper::getLink('', array('range_id' => $seminar_id))));
+                    printf(_("Ankündigungen") . "<br>%s", LinkButton::create(_('Bearbeiten'), URLHelper::getURl('', array('range_id' => $seminar_id))));
                     break;
                 case 'admin_vote.php':
                     printf(_("Umfragen und Tests") . "<br>%s", LinkButton::create(_('Bearbeiten'), 
-                    URLHelper::getLink('', array('view' => 'vote_sem', 'showrangeID' => $seminar_id))));
+                    URLHelper::getURL('', array('view' => 'vote_sem', 'showrangeID' => $seminar_id))));
                     break;
                 case 'admin_evaluation.php':
                     printf(_("Evaluationen") . "<br>%s", LinkButton::create(_('Bearbeiten'), 
-                    URLHelper::getLink('', array('view' => 'eval_sem', 'rangeID' => $seminar_id))));
+                    URLHelper::getURL('', array('view' => 'eval_sem', 'rangeID' => $seminar_id))));
                     break;
                 case "copy_assi.php":
                     printf(_("Veranstaltung") . "<br>%s", LinkButton::create(_('Kopieren'), 
-                    URLHelper::getLink('admin_seminare_assi.php', array('cmd' => 'do_copy', 'start_level' => TRUE, 'class' => '1', 'cp_id' => $seminar_id))));
+                    URLHelper::getURL('admin_seminare_assi.php', array('cmd' => 'do_copy', 'start_level' => TRUE, 'class' => '1', 'cp_id' => $seminar_id))));
                     break;
                 case "admin_lock.php":
                     $rule = LockRules::getObjectRule($seminar_id);
@@ -681,7 +681,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                 <tr class="steel2">
                     <td colspan="<?=(Request::get('show_rooms_check')=='on')?'7':'6'; ?>" align="right">
                         <?=_("Alle ausgewählten Veranstaltungen")?>
-                        <input type="image" <?=Button::create(_("Archivieren"))?> border="0"><br>
+                        <?=Button::create(_("Archivieren"))?><br>
                         <span style="color: red">
                             <?=_("Achtung: Das Archivieren ist ein Schritt, der <b>nicht</b> rückgängig gemacht werden kann!")?>
                         </span>

@@ -126,10 +126,10 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
         $userConfig->store('LINKS_ADMIN', $links_admin_data["sortby"]);
     }
 
-    if (!$_REQUEST['srch_send']) {
+    if (!Request::submitted('srch_send')) {
         $_REQUEST['show_rooms_check']=$userConfig->getValue('LINKS_ADMIN_SHOW_ROOMS');
     } else {
-        if (!isset($_REQUEST['show_rooms_check'])) {
+        if (!Request::submitted('show_rooms_check')) {
             $_REQUEST['show_rooms_check']="off";
         }
         $userConfig->store('LINKS_ADMIN_SHOW_ROOMS', $_REQUEST['show_rooms_check']);
@@ -151,7 +151,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
         $list = true;
     }
 
-    if(isset($_REQUEST['links_admin_reset_search_x'])){
+    if(Request::submitted('links_admin_reset_search')){
         reset_all_data(true);
         $view_mode = 'sem';
         $list = true;

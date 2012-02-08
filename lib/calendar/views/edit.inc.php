@@ -47,7 +47,7 @@ if (!$termin_id && !$_calendar->havePermission(Calendar::PERMISSION_WRITABLE)) {
     my_error($error_message, 'blank', 2, TRUE);
     echo "<tr><td class=\"blank\" width=\"15%\">&nbsp;</td>";
     echo '<td class="blank" width="85%">';
-    echo LinkButton::create(_('<< Zurück'), URLHelper::getLink('', array('cmd' => $_SESSION['calendar_sess_control_data']['view_prv'], 'atime' => $atime)));
+    echo LinkButton::create('<< ' . _('Zurück'), URLHelper::getURL('', array('cmd' => $_SESSION['calendar_sess_control_data']['view_prv'], 'atime' => $atime)));
     echo "</td></tr>\n";
     echo "</table><br />&nbsp;<br /></td></tr></table>\n";
     page_close();

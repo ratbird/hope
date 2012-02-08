@@ -311,7 +311,7 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
                 $content .= "<br>";
 
                 if ($show_admin)
-                    $content .= "<br><div align=\"center\"> ". LinkButton::create(_('Bearbeiten'), URLHelper::getLink("raumzeit.php?cmd=open&open_close_id=".$db->f("termin_id")."#".$db->f("termin_id"))) . "</div>";
+                    $content .= "<br><div align=\"center\"> ". LinkButton::create(_('Bearbeiten'), URLHelper::getURL("raumzeit.php", array('cmd' => 'open','open_close_id' => $db->f("termin_id") . '#' . $db->f("termin_id")))) . "</div>";
                 echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr>";
                 printcontent(0,0, $content, $edit);
                 echo "</tr></table> ";
@@ -698,10 +698,10 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
                 if ($have_write_permission) {
                     // Seminar appointment
                     if (strtolower(get_class($termin)) == 'seminarevent') {
-                        $edit = LinkButton::create(_('Bearbeiten'), URLHelper::getLink('raumzeit.php', array('cid' => $termin->getSeminarId(), 'cmd' => 'open', 'open_close_id' => $termin->getId())) . '#' . $termin->getId());
+                        $edit = LinkButton::create(_('Bearbeiten'), URLHelper::getURL('raumzeit.php', array('cid' => $termin->getSeminarId(), 'cmd' => 'open', 'open_close_id' => $termin->getId())) . '#' . $termin->getId());
                     } else {
                         // Personal appointment
-                        $edit = LinkButton::create(_('Bearbeiten'), URLHelper::getLink('calendar.php', array('cmd' => 'edit', 'termin_id' => $termin->getId(), 'atime' => $termin->getStart(), 'source_page' => URLHelper::getURL())));                                    
+                        $edit = LinkButton::create(_('Bearbeiten'), URLHelper::getURL('calendar.php', array('cmd' => 'edit', 'termin_id' => $termin->getId(), 'atime' => $termin->getStart(), 'source_page' => URLHelper::getURL())));                                    
                     }
                 } else {
                     $content .= "<br>";

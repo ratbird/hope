@@ -107,7 +107,7 @@ $infobox['content'] = array(
   <td></td>
   <td>
       <?= Button::createAccept(_('Übernehmen'),_("Änderungen übernehmen")); ?>
-      <?= LinkButton::createCancel(_('Abbrechen'), URLHelper::getLink('seminar_main.php')); ?>
+      <?= LinkButton::createCancel(_('Abbrechen'), URLHelper::getURL('seminar_main.php')); ?>
   </td>
 </tr>
 

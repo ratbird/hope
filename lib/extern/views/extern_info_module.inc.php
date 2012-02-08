@@ -110,7 +110,7 @@ $css_switcher->resetClass();
 $css_switcher->switchClass();
 
 echo "<tr><td" . $css_switcher->getFullClass() . " align=\"center\">&nbsp;<br>\n";
-echo LinkButton::create('<<  ' . _('Zurück'), URLHelper::getLink('?list=TRUE'));
+echo LinkButton::create('<<  ' . _('Zurück'), URLHelper::getURL('', array('list' => TRUE)));
 echo "</a><br>&nbsp;</td></tr>\n";
 
 ?>

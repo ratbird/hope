@@ -218,7 +218,7 @@ use Studip\Button, Studip\LinkButton;
                             </select></label>
                         </td>
                         <td class="steel1">
-                            <?= makeButton('uebernehmen', 'input', _('Änderungen speichern'), 'set_all_homepage_visibility'); ?>
+                            <?= Button::create(_('Übernehmen'), 'set_all_homepage_visibility', array('title' => _('Änderungen speichern'))) ?>
                         </td>
                     </tr>
                 </table>

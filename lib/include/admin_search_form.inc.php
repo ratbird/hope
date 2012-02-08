@@ -38,8 +38,7 @@ global  $_fullname_sql,
         $msg,
         $SessSemName,
         $view_mode;
-
-
+      
 if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
 
     require_once 'config.inc.php';
@@ -61,7 +60,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
     $all_aux_rules=$aux_rules->getAllLockRules();
 
     //Einheitliches Auswahlmenu fuer Einrichtungen
-    if (((!$SessSemName[1]) || ($SessSemName["class"] == "sem")) && Request::option('list') && ($view_mode == "inst")) {
+    if (((!$SessSemName[1]) || ($SessSemName["class"] == "sem")) && $list && ($view_mode == "inst")) {
         //Save data back to database and start a connection  - so we avoid some problems with large search results and data is writing back to db too late
         page_close();
 
@@ -138,7 +137,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
     }
 
     //Einheitliches Seminarauswahlmenu, wenn kein Seminar gewaehlt ist
-    if (((!$SessSemName[1]) || ($SessSemName["class"] == "inst")) && Request::option('list') && ($view_mode == "sem")) {
+    if (((!$SessSemName[1]) || ($SessSemName["class"] == "inst")) && $list && ($view_mode == "sem")) {
         //Save data back to database and start a connection  - so we avoid some problems with large search results and data is writing back to db too late
         page_close();
 

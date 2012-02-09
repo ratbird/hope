@@ -37,7 +37,7 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-use Studip\Button;
+use Studip\Button, Studip\LinkButton;
 
 require_once ('lib/classes/cssClassSwitcher.inc.php');
 require_once ($RELATIVE_PATH_RESOURCES.'/lib/RoomRequest.class.php');
@@ -250,9 +250,7 @@ class ShowToolsRequests
                 <td class="<? echo $cssSw->getClass() ?>" width="4%">&nbsp;
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" align="center">
-                    <?
-                    print "<input type=\"IMAGE\" name=\"start_multiple_mode\" ".makeButton("starten", "src").">";
-                    ?>
+                    <?= Button::createAccept(_('Starten'), 'start_multiple_mode') ?>
             </td>
             </tr>
             <?
@@ -291,12 +289,13 @@ class ShowToolsRequests
             echo chr(10) . '</script>';
             echo chr(10) . '<form name="list_requests_form" method="post" action="'.$GLOBALS['PHP_SELF'].'">';
             echo CSRFProtection::tokenTag();
-            echo chr(10) . '<div align="right">
-                <a href="#" onClick="auswahl_umkehr();return false;">'
-                . makeButton('auswahlumkehr', 'img', _("Auswahl umkehren"))
-                . '</a>&nbsp;&nbsp;'
-                . makeButton('loeschen', 'input', _("Ausgewählte Anfragen löschen"), 'do_delete_requests')
-                . '&nbsp;</div><br>';
+            ?>
+            <div align="right" style="padding-right: 5px">
+                <?= LinkButton::create(_('Auswahl umkehren'), 'javascript:auswahl_umkehr();') ?>
+                <?= Button::create('Löschen', 'do_delete_requests', array(title => _('Ausgewählte Anfragen löschen'))) ?>
+            </div>
+            <br>
+            <?
         }
         $i = 0;
         $zt = new ZebraTable(array('width' => '99%', 'padding' => '1', 'align' => 'center'));
@@ -542,7 +541,7 @@ class ShowToolsRequests
                         </font>
                         </td>
                         <td colspan="2"><font size="-1">
-                        <input type="image" name="request_tool_group" align="middle" <?=makeButton("auswaehlen", "src") ?> border=0 ><br>
+                        <?= Button::create(_('Auswählen'), 'request_tool_group') ?><br>
                         </font>
                         </td>
                         </tr>
@@ -832,6 +831,7 @@ class ShowToolsRequests
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" colspan="2" width="96%" valign="top" align="center">
+                    <div class="button-group">
                 <?
                 // can we dec?
                 if ($resources_data["requests_working_pos"] > 0) {
@@ -842,15 +842,20 @@ class ShowToolsRequests
                     if ((sizeof($resources_data["requests_open"]) > 1) && (($resources_data["requests_open"][$resources_data["requests_working_on"][$resources_data["requests_working_pos"] + $d]["request_id"]]) || (!$resources_data["skip_closed_requests"])))
                         $inc_possible = TRUE;
                 }
+                
+                
                 if ($inc_possible) {
-                    print("&nbsp;<input type=\"IMAGE\" name=\"dec_request\" ".makeButton("zurueck", "src")." border=\"0\">");
+                    echo Button::create('<< ' . _('Zurück'), 'dec_request');
                 }
-                print("&nbsp;<input type=\"IMAGE\" name=\"cancel_edit_request\" ".makeButton("abbrechen", "src")." border=\"0\">");
-                print("&nbsp;<input type=\"IMAGE\" name=\"delete_request\" ".makeButton("loeschen","src")." border=\"0\">");
+                
+                
+                echo Button::createCancel(_('Abbrechen'), 'cancel_edit_request');
+                echo Button::create(_('Löschen'), 'delete_request');
+                
                 if ((($reqObj->getResourceId()) || (sizeof($matching_rooms)) || (sizeof($clipped_rooms)) || (sizeof($grouped_rooms))) &&
                     ((is_array($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["groups"])) || ($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["assign_objects"]))) {
-                    print("&nbsp;<input type=\"IMAGE\" name=\"save_state\" ".makeButton("speichern", "src")." border=\"0\">");
-                    print("&nbsp;<input type=\"IMAGE\" name=\"suppose_decline_request\" ".makeButton("ablehnen", "src")." border=\"0\">");
+                    echo Button::createAccept(_('Speichern'), 'save_state');
+                    echo Button::createCancel(_('Ablehnen'), 'suppose_decline_request');
                 }
 
                 // can we inc?
@@ -864,8 +869,12 @@ class ShowToolsRequests
                 }
 
                 if ($dec_possible) {
-                    print("&nbsp;<input type=\"IMAGE\" name=\"inc_request\" ".makeButton("weiter", "src")." border=\"0\">");
+                    echo Button::create(_('Weiter') . ' >>', 'inc_request');
                 }
+                ?>
+                    </div>
+                
+                <?
                 if (sizeof($resources_data["requests_open"]) > 1)
                     printf ("<br><font size=\"-1\">" . _("<b>%s</b> von <b>%s</b> Anfragen in der Bearbeitung wurden noch nicht aufgel&ouml;st.") . "</font>", sizeof($resources_data["requests_open"]), sizeof($resources_data["requests_working_on"]));
                     printf ("<br><font size=\"-1\">" . _("Aktueller Request: ")."<b>%s</b></font>", $resources_data["requests_working_pos"]+1);

@@ -1236,7 +1236,7 @@ switch ($skip_closed_requests) {
 }
 
 //cancel an edit request session
-if ($cancel_edit_request_x) {
+if (Request::submitted('cancel_edit_request')) {
     if (sizeof($resources_data["requests_open"]) < sizeof ($resources_data["requests_working_on"])) {
         foreach ($resources_data["requests_working_on"] as $val) {
             $request_ids[] = $val["request_id"];
@@ -1249,7 +1249,7 @@ if ($cancel_edit_request_x) {
 
         if ($db->nf()) {
             $msg->addMsg(40, array($PHP_SELF, $PHP_SELF));
-            $save_state_x = FALSE;
+            Request::set('save_state', 1);
         }
     }
     $resources_data["view"] = "requests_start";
@@ -1257,7 +1257,7 @@ if ($cancel_edit_request_x) {
 }
 
 //we start a new room-planning-session
-if (($start_multiple_mode_x) || ($single_request)) {
+if (Request::submitted('start_multiple_mode') || ($single_request)) {
     unset($resources_data["requests_working_on"]);
     unset($resources_data["requests_open"]);
 
@@ -1366,7 +1366,7 @@ if (is_array($selected_resource_id)) {
 }
 
 // save the assigments in db
-if ($save_state_x) {
+if (Request::submitted('save_state')) {
     require_once ($RELATIVE_PATH_RESOURCES."/lib/RoomRequest.class.php");
     require_once ($RELATIVE_PATH_RESOURCES."/lib/VeranstaltungResourcesAssign.class.php");
     require_once ("lib/classes/Seminar.class.php");
@@ -1539,7 +1539,7 @@ if ($save_state_x) {
             $resources_data["view"] = "requests_start";
             $view = "requests_start";
             //$msg->addMsg(36, array($PHP_SELF, $PHP_SELF));
-            $save_state_x = FALSE;
+            Request::set('save_state', 1);
         } else  {
             if ($resources_data["requests_working_pos"] == sizeof($resources_data["requests_working_on"])-1) {
                 $auto_dec = TRUE;
@@ -1550,7 +1550,7 @@ if ($save_state_x) {
     }
 }
 
-if (isset($_REQUEST['do_delete_requests_x']) && get_config('RESOURCES_ALLOW_DELETE_REQUESTS') && getGlobalPerms($GLOBALS['user']->id) == 'admin'){
+if (Request::submitted('do_delete_requests') && get_config('RESOURCES_ALLOW_DELETE_REQUESTS') && getGlobalPerms($GLOBALS['user']->id) == 'admin'){
     if (is_array($_REQUEST['requests_marked_to_kill'])){
         foreach($_REQUEST['requests_marked_to_kill'] as $rid){
             $req_obj = new RoomRequest($rid);
@@ -1569,7 +1569,7 @@ if (isset($_REQUEST['do_delete_requests_x']) && get_config('RESOURCES_ALLOW_DELE
     }
 }
 
-if ($suppose_decline_request_x) {
+if (Request::submitted('suppose_decline_request')) {
     $msg->addMsg(43, array($PHP_SELF, $PHP_SELF));
     $view = "edit_request";
 }
@@ -1598,7 +1598,7 @@ if ($decline_request) {
         }
     }
 }
-if ($delete_request_x || $_REQUEST['approveDelete']) {
+if (Request::submitted('delete_request') || $_REQUEST['approveDelete']) {
         if(!$_REQUEST['approveDelete']){
             $approval=array('approveDelete' => TRUE);
             echo createQuestion(_("Wollen Sie diese Raumanfrage wirklich löschen?"), $approval);
@@ -1627,7 +1627,7 @@ if ($delete_request_x || $_REQUEST['approveDelete']) {
 }
 
 // inc if we have requests left in the upper
-if (($inc_request_x) || ($auto_inc))
+if (Request::submitted('inc_request') || $auto_inc)
     if ($resources_data["requests_working_pos"] < sizeof($resources_data["requests_working_on"])-1) {
         $i = 1;
         if ($resources_data["skip_closed_requests"])
@@ -1636,11 +1636,11 @@ if (($inc_request_x) || ($auto_inc))
         if ((sizeof($resources_data["requests_open"]) >= 1) && (($resources_data["requests_open"][$resources_data["requests_working_on"][$resources_data["requests_working_pos"] + $i]["request_id"]]) || (!$resources_data["skip_closed_requests"]))){
             $resources_data["requests_working_pos"] = $resources_data["requests_working_pos"] + $i;
         } elseif ($auto_inc)
-            $dec_request_x = TRUE; //we cannot inc - so we are at the end and want to find an request below, so try do dec.
+            Request::set('dec_request', 1); //we cannot inc - so we are at the end and want to find an request below, so try do dec.
     }
 
 // dec if we have requests left in the lower
-if (($dec_request_x) || ($auto_dec))
+if ((Request::submitted('dec_request')) || ($auto_dec))
     if ($resources_data["requests_working_pos"] > 0) {
         $d = -1;
         if ($resources_data["skip_closed_requests"])
@@ -1681,7 +1681,7 @@ if ($matching_rooms_limit_submit_x) {
     $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["reload"] = TRUE;
 }
 
-if (isset($_REQUEST['request_tool_group_x'])){
+if (Request::submitted('request_tool_group')) {
     if ($_REQUEST['request_tool_choose_group'] == '-'){
         $resources_data['actual_room_group'] = null;
     } else {
@@ -1692,7 +1692,9 @@ if (isset($_REQUEST['request_tool_group_x'])){
 
 
 //create the (overlap)data for all resources that should checked for a request
-if (($inc_request_x) || ($dec_request_x) || ($new_session_started) || ($marked_clip_ids) || ($save_state_x) || $auto_inc || $auto_dec || $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["reload"]) {
+if (Request::submitted('inc_request') || Request::submitted('dec_request') 
+    || $new_session_started || $marked_clip_ids || Request::submitted('save_state') || $auto_inc 
+    || $auto_dec || $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["reload"]) {
     require_once ($RELATIVE_PATH_RESOURCES."/lib/RoomRequest.class.php");
     require_once ($RELATIVE_PATH_RESOURCES."/lib/CheckMultipleOverlaps.class.php");
     require_once ($RELATIVE_PATH_RESOURCES."/lib/VeranstaltungResourcesAssign.class.php");

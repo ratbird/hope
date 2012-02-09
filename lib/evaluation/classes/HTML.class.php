@@ -63,7 +63,7 @@ class HTML extends HTMLempty {
   function addHTMLContent ($_content) {
     if (is_object($_content)) {
       $classname = strtolower(get_class($_content));
-      $valid_classes = array ('htmlempty', 'html', 'htm', 'htmpty');
+      $valid_classes = array ('htmlempty', 'html', 'htm', 'htmpty', 'studip\button', 'studip\linkbutton');
       if (in_array ($classname, $valid_classes)) {
     $this->_content[] = $_content;
       } else {
@@ -147,7 +147,13 @@ echo "Fehler in HTML.class.php: Es fehlt ein addHTMLContent-Element für ein Elem
         // der aktuelle Content ist ein Object
         // also ein HTML-Element. Also geben
         // wir es aus
-        $output .= $content->createContent ($indent + 4);
+        $classname = strtolower(get_class($content));
+        $valid_classes = array ('studip\button', 'studip\linkbutton');
+        if(in_array($classname, $valid_classes)) {
+            $output .= $content;
+        } else {
+            $output .= $content->createContent ($indent + 4);
+        }
         // Rekursion lässt grüßen ...                
     } else {
         // Content ist ein String. Jeden Zeile

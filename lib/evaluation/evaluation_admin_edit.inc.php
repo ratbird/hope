@@ -79,7 +79,7 @@ $debug = "<pre class=\"steelgroup6\" style=\"font-size:10pt\">"
 
 global $user;
 
-if ($_REQUEST["newButton_x"]){
+if (Request::submitted('newButton')){
     $debug .= "neue Eval!<br>"; 
     // create the first group
     $group = new EvaluationGroup();
@@ -154,7 +154,7 @@ $sess->register("evalID");
 if (isset($_REQUEST['itemID'])) {
     $itemID = $_REQUEST['itemID'];
     $sess->register("itemID");
-} elseif ($_REQUEST["newButton_x"]) {
+} elseif (Request::submitted('newButton')) {
     $itemID = "root";
 }else {
     # $itemID = "root";
@@ -263,7 +263,7 @@ $EditTree = new EvaluationTreeEditView($itemID, $evalID);
 
 # Send messages to the tree ================================================ #
 
-if ( $_REQUEST["newButton_x"] ) {
+if ( Request::submitted('newButton') ) {
     $EditTree->msg["root"] = "msg§"
         . _("Erstellen Sie nun eine Evaluation.<br> Der erste Gruppierungsblock ist bereits angelegt worden. Wenn Sie ihn öffnen, können Sie dort weitere Gruppierungsblöcke oder Fragenblöcke anlegen.");
 }

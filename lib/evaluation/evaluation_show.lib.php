@@ -386,7 +386,7 @@ class EvalShow
 
    function createEditButton ($eval) {
          $button = LinkButton::create(_('Bearbeiten'), 
-                 UrlHelper::getLink(EVAL_FILE_ADMIN."?page=edit&evalID=".$eval->getObjectID ()),
+                 UrlHelper::getURL(EVAL_FILE_ADMIN."?page=edit&evalID=".$eval->getObjectID()),
                  array('title' => _('Evaluation bearbeiten.')));
          return $button;
    }

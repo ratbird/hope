@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Standard-Stylesheet fï¿½r Stud.IP im Safire-Design
+  Standard-Stylesheet für Stud.IP im Safire-Design
   Infos:
   - Vererbung beachten und doppelte Eigenschaften vermeiden
   - Farben nur in hex (#666666)
@@ -13,7 +13,7 @@ html {
     overflow-y: scroll;
 }
 
-/* --- Schrift (Vorgaben: Typ, Grï¿½ï¿½e, Farbe --------------------------------- */
+/* --- Schrift (Vorgaben: Typ, Größe, Farbe --------------------------------- */
 body, input, textarea {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 10pt;
@@ -61,7 +61,7 @@ input.placeholder {
     color: rgba(0, 0, 0, 0.7);
 }
 
-/* --- ï¿½berschriften -------------------------------------------------------- */
+/* --- Überschriften -------------------------------------------------------- */
 h1.content, h2.content, h3.content {
     color: #24437c;
 }
@@ -267,7 +267,7 @@ img.preview, video.preview, audio.preview {
 }
 
 /* --- Tabellen ------------------------------------------------------------- */
-/* //TODO: optimieren und aufrï¿½umen */
+/* //TODO: optimieren und aufräumen */
 td.reiterunten {
     background-image: url('../images/reiter3.jpg');
 }
@@ -447,7 +447,7 @@ td.tree-elbow-end img {
 }
 
 /* --- Sonstige ------------------------------------------------------------- */
-/** //TODO: aufrï¿½umen und optmieren... */
+/** //TODO: aufräumen und optmieren... */
 .gruppe0 {
     background: none;
     background-color: #FFFFFF;
@@ -547,17 +547,17 @@ td.tree-elbow-end img {
     background-image: url('../images/steelkante2.jpg');
 }
 
-/* dunkelster Standardhintergrund blau, ï¿½berall umbenennen! */
+/* dunkelster Standardhintergrund blau, überall umbenennen! */
 .steel2 {
     background-color: #cdd7e9;
 }
 
-/* hellerer Standardhintergrund, ï¿½berall umbenennen! */
+/* hellerer Standardhintergrund, überall umbenennen! */
 .steel1 {
     background-color: #f3f5f8;
 }
 
-/* dunklerer Standardhintergrund, ï¿½berall umbenennen! */
+/* dunklerer Standardhintergrund, überall umbenennen! */
 .steelgraulight {
     background-color: #e7ebf1;
 }

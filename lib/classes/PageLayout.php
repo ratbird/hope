@@ -461,9 +461,8 @@ class PageLayout
 
         $elements = array();
         foreach (self::getSqueezePackages() as $package) {
-            $elements += self::includeSqueezePackage($packager, $package);
+            $elements = array_merge($elements, self::includeSqueezePackage($packager, $package));
         }
-
         return $elements;
     }
 

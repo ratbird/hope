@@ -212,7 +212,7 @@ class about extends messaging {
 
         $this->db = new DB_Seminar;
         $this->get_auth_user($username);
-        $this->dataFieldEntries = DataFieldEntry::getDataFieldEntries($this->auth_user["user_id"]);
+        $this->dataFieldEntries = DataFieldEntry::getDataFieldEntries($this->auth_user["user_id"], 'user');
         $this->check = $perm->get_profile_perm($this->auth_user['user_id']);
         $this->msg = $msg; //Meldungen restaurieren
     }
@@ -798,7 +798,7 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
         }
         $user_cfg = UserConfig::get($this->auth_user["user_id"]);
         $user_cfg->store("FOAF_SHOW_IDENTITY", $foaf_show_identity);
-        
+
         $success2 = DBManager::get()->exec("UPDATE auth_user_md5 SET visible='".$global."' WHERE user_id='".$this->auth_user["user_id"]."'");
         $data = DBManager::get()->query("SELECT `user_id` FROM `user_visibility` WHERE `user_id`='".$this->auth_user["user_id"]."'");
         if ($data->fetch()) {

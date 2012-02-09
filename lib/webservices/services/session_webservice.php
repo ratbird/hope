@@ -24,7 +24,7 @@ class SessionService extends AccessControlledService
     {
     $this->add_api_method('is_session_valid',
                           array('string', 'string'),
-                          bool,
+                          'bool',
                           'checks if session-id is valid');
 
     $this->add_api_method('get_session_username',

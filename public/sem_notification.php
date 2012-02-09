@@ -402,7 +402,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
     } else {
         echo "&nbsp; <a href=\"$PHP_SELF?view=notification\">";
     }
-    echo Button::create(_('Zurücksetzen', array('title' => _("zurücksetzen"))));
+    echo Button::create(_('Zurücksetzen'), array('title' => _('zurücksetzen')));
     echo '<input type="hidden" name="cmd" value="set_sem_notification"><br>&nbsp; </td></tr></form>';
     echo "</table>\n";
 }

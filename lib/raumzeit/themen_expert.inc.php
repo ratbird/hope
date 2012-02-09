@@ -17,10 +17,12 @@ function themen_changeChronoGroupedFilter() {
 function themen_chronoAutoAssign() {
     global $sem;
 
+    $themen = Request::getArray('themen');
+
     $termine = getAllSortedSingleDates($sem);
     foreach ($termine as $singledate_id => $singledate) {
         if (!$singledate->isExTermin() && !$singledate->getIssueIDs()) {
-            if ($data = array_shift($_REQUEST['themen'])) {
+            if ($data = array_shift($themen)) {
                 $singledate->addIssueID($data);
                 $singledate->store();
             } else {
@@ -162,7 +164,7 @@ function themen_saveAll() {
 function themen_checkboxAction() {
     global $sem, $choosen;
 
-    switch ($_REQUEST['checkboxAction']) {
+    switch (Request::option('checkboxActionCmd')) {
         case 'chooseAll':
             break;
 
@@ -188,13 +190,11 @@ function themen_checkboxAction() {
             break;
 
         case 'deleteAll':
-            if ($_REQUEST['approveDeleteAll'] != TRUE) {    // security-question
-                $msg = _("Sind Sie sicher, dass Sie alle Themen löschen möchten?");
-                $msg .= "<br><a href=\"{$GLOBALS['PHP_SELF']}?cmd=checkboxAction&checkboxAction=deleteAll&approveDeleteAll=TRUE\">";
-                $msg .= '<img '.makebutton('ja2', 'src').' border="0"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-                $msg .= "<a href=\"{$GLOBALS['PHP_SELF']}\">";
-                $msg .= '<img '.makebutton('nein', 'src').' border="0"></a>';
-                $sem->createInfo($msg);         // create an info
+            if (!Request::option('approveDeleteAll')) {    // security-question
+                echo createQuestion(
+                    _('Sind Sie sicher, dass Sie alle Themen löschen möchten?'),
+                    array('cmd' => 'checkboxAction', 'checkboxActionCmd' => 'deleteAll', 'approveDeleteAll' => '1')
+                );
             } else {                                            // deletion approved, so we do the job
                 $msg = _("Alle Themen wurden gelöscht.");
                 $sem->createMessage($msg);  // create a message

@@ -72,8 +72,8 @@ function getTemplateDataForSingleDate($val, $cycle_id = '') {
    * je nachdem, welche Auswahlart aktiviert wurde */
     $tpl['checked'] = '';
 
-    if ($_REQUEST['cycle_id'] == $cycle_id) {
-        switch ($_REQUEST['checkboxAction']) {
+    if (Request::option('cycle_id') == $cycle_id) {
+        switch (Request::option('checkboxActionCmd')) {
             case 'chooseAll':
                 $tpl['checked'] = 'checked';
                 break;

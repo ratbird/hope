@@ -1421,6 +1421,13 @@ class Seminar
     {
         global $_LOCKED, $cmd;
 
+        // workaround for multiple submit-buttons with new Button-API
+        foreach ($this->commands as $r_cmd => $func) {
+            if (Request::submitted($r_cmd)) {
+                $cmd = $r_cmd;
+            }
+        }
+        
         if (!isset($cmd) && isset($_REQUEST['cmd'])) $cmd = $_REQUEST['cmd'];
         if (!isset($cmd)) return FALSE;
 

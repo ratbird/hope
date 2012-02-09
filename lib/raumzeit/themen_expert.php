@@ -73,7 +73,7 @@ foreach ($_REQUEST as $key => $val) {
         $submitter_id = $keys[0];
     }
 
-    if ( (strlen($key) == 45) && ($key[44] == 'x') ) {
+    if ( (strlen($key) == 43) && ($key[10] == '_') ) {
         $keys = explode('_', $key);
         $submitter_id = $keys[0];
         $cycle_id = $keys[1];
@@ -102,30 +102,6 @@ foreach ($_REQUEST as $key => $val) {
             $changeFile[$keys[1]] = $val;
         }
     }
-}
-
-if (isset($_REQUEST['doAddIssue_x'])) {
-    $cmd = 'doAddIssue';
-}
-
-if (isset($_REQUEST['changeIssue_x'])) {
-    $cmd = 'changeIssue';
-}
-
-if (isset($_REQUEST['addIssue_x'])) {
-    $cmd = 'addIssue';
-}
-
-if (isset($_REQUEST['saveAll_x'])) {
-    $cmd = 'saveAll';
-}
-
-if (isset($_REQUEST['checkboxAction_x'])) {
-    $cmd = 'checkboxAction';
-}
-
-if (isset($_REQUEST['chronoAutoAssign_x'])) {
-    $cmd = 'chronoAutoAssign';
 }
 
 if (isset($submitter_id)) {
@@ -277,20 +253,18 @@ $themen =& $sem->getIssues(true);   // read again, so we have the actual sort or
                 $max = sizeof($themen);
                 $max--;
                 if (is_array($themen))  foreach ($themen as $themen_id => $thema) {
-                    if (isset($_REQUEST['checkboxAction'])) {
-                        switch ($_REQUEST['checkboxAction']) {
-                            case 'chooseAll':
-                                $tpl['selected'] = SELECTED;
-                                break;
+                    switch (Request::option('checkboxActionCmd')) {
+                        case 'chooseAll':
+                            $tpl['selected'] = SELECTED;
+                            break;
 
-                            case 'invert':
-                                if ($choosen[$themen_id] == TRUE) {
-                                    $tpl['selected'] = NOT_SELECTED;
-                                } else {
-                                    $tpl['selected'] = SELECTED;
-                                }
-                                break;
-                        }
+                        case 'invert':
+                            if ($choosen[$themen_id] == TRUE) {
+                                $tpl['selected'] = NOT_SELECTED;
+                            } else {
+                                $tpl['selected'] = SELECTED;
+                            }
+                            break;
                     }
 
                     $tpl['theme_title'] = htmlReady($thema->getTitle());

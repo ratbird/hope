@@ -70,13 +70,6 @@ if (isset($_REQUEST['cmd'])) {
     $cmd = $_REQUEST['cmd'];
 }
 
-// Workaround for multiple submit buttons
-foreach ($_REQUEST as $key => $val) {
-    if ( ($key[strlen($key)-2] == '_') && ($key[strlen($key)-1] == 'x') ) {
-        $cmd = substr($key, 0, (strlen($key) - 2));
-    }
-}
-
 // if all entries are opened, we parse the submitted results into appropriate arrays
 foreach ($_REQUEST as $key => $val) {
     if ($_REQUEST['allOpen']) {
@@ -106,7 +99,6 @@ $sem->registerCommand('closeAll', 'themen_closeAll');
 $sem->registerCommand('editAll', 'themen_saveAll');
 $sem->registerCommand('editIssue', 'themen_changeIssue');
 $sem->registerCommand('addIssue', 'themen_doAddIssue');
-//$sem->registerCommand('checkboxAction', 'themen_checkboxAction');
 $sem->processCommands();
 
 // add status-message if there are dates which are not covered by the choosable semesters

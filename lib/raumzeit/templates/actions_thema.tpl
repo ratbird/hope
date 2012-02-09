@@ -3,7 +3,7 @@
 
 use Studip\Button, Studip\LinkButton;
 ?>
-<SELECT name="checkboxAction">
+<SELECT name="checkboxActionCmd">
     <OPTION value="noSelection">-- <?=_("Aktion ausw&auml;hlen")?> --</OPTION>
     <OPTION value="chooseAll"><?=_("alle ausw&auml;hlen")?></OPTION>
     <OPTION value="chooseNone"><?=_("Auswahl aufheben")?></OPTION>

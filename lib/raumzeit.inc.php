@@ -89,7 +89,8 @@ function raumzeit_undelete_singledate() {
 
 function raumzeit_checkboxAction() {
     global $sem, $choosen;
-    switch ($_REQUEST['checkboxAction']) {
+
+    switch (Request::option('checkboxActionCmd')) {
         case 'chooseAll':
             break;
 
@@ -97,8 +98,8 @@ function raumzeit_checkboxAction() {
             break;
 
         case 'invert':
-            foreach ($_REQUEST['singledate'] as $val) {
-                $choosen[$val] = TRUE;
+            foreach (Request::getArray('singledate') as $singledate_id) {
+                $choosen[$singledate_id] = TRUE;
             }
             break;
 

@@ -107,13 +107,6 @@ if (LockRules::Check($id, 'room_time')) {
 }
 
 
-// Workaround for multiple submit buttons
-foreach ($_REQUEST as $key => $val) {
-    if ( ($key[strlen($key)-2] == '_') && ($key[strlen($key)-1] == 'x') ) {
-        $cmd = substr($key, 0, (strlen($key) - 2));
-    }
-}
-
 // what to do with the text-field
 if ($GLOBALS['RESOURCES_ENABLE'] && $resList->numberOfRooms()) {
     if ( ($_REQUEST['freeRoomText'] != '' && !in_array($_REQUEST['room'], words('nothing nochange'))) || ($_REQUEST['freeRoomText_sd'] != '' && !in_array($_REQUEST['room_sd'], words('nothing nochange'))) ) {

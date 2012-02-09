@@ -8,7 +8,7 @@ use Studip\Button, Studip\LinkButton;
     <TR>
         <TD class="steel1" colspan="2">
             &nbsp;&nbsp;&nbsp;
-            <SELECT name="checkboxAction">
+            <SELECT name="checkboxActionCmd">
                 <OPTION value="noSelection">-- <?=_("Aktion ausw&auml;hlen")?> --</OPTION>
                 <OPTION value="chooseAll"><?=_("alle ausw&auml;hlen")?></OPTION>
                 <OPTION value="chooseNone"><?=_("Auswahl aufheben")?></OPTION>

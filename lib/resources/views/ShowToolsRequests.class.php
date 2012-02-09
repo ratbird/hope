@@ -37,6 +37,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
+use Studip\Button;
+
 require_once ('lib/classes/cssClassSwitcher.inc.php');
 require_once ($RELATIVE_PATH_RESOURCES.'/lib/RoomRequest.class.php');
 require_once ($RELATIVE_PATH_RESOURCES.'/lib/RoomGroups.class.php');
@@ -164,7 +166,7 @@ class ShowToolsRequests
                 <tr>
                 <td>
                 <?=SemesterData::GetSemesterSelector(array('name' => 'tools_requests_sem_choose', 'onChange' => 'document.tools_requests_form.submit()'), $this->semester_id, 'semester_id',false)?>
-                <?=makeButton("auswaehlen",'input',_("Semester auswählen"),'tools_requests_sem_choose_button')?>
+                <?= Button::create(_("Semester auswählen"), 'tools_requests_sem_choose_button') ?>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" style="padding-left:10px">
                 <b><?=_("Status:")?></b>

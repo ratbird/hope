@@ -436,7 +436,7 @@ if( !$command || $command == "back" ) {
     $form->attr( "action", UrlHelper::getLink("?page=edit"));
     $form->attr( "method", "post" );
     $form->html(CSRFProtection::tokenTag());
-    $form->cont( EvalCommon::createSubmitButton( "zurueck2", _("Zurück zur Auswahl"), "template_back_button" ) );
+    $form->cont( Button::create(_('zurück'), 'template_back_button', array('title' => _('Zurück zur Auswahl'))) );
     $td->cont( $form );
 
     /* on the fly info message -------------------------------------------- */

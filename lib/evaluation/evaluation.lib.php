@@ -113,25 +113,6 @@ class EvalCommon {
   }
 
   /**
-   * Creates this funny Stud.IP-Submitbutton
-   * @param  string  $text   The text on the button
-   * @param  string  $title  The informationtext
-   */
-  function createSubmitButton ($text, $title, $name = "newButton") {
-    $submitButton = new HTMLempty ("input");
-    $submitButton->addAttr ("style", "vertical-align:middle;");
-#    $submitButton->addAttr ("align", "middle");
-    $submitButton->addAttr ("type", "image");
-    $submitButton->addAttr ("name", $name);
-    $submitButton->addAttr ("border", "0");
-    $submitButton->addString (makeButton ($text, "src"));
-    $submitButton->addAttr ("alt", $title);
-    $submitButton->addAttr ("title", $title);
-    
-    return $submitButton;
-  }
-
-  /**
    * Creates the Javascript function, which will open an evaluation popup
    */
   function createEvalShowJS( $isPreview = NO, $as_object = YES ) {

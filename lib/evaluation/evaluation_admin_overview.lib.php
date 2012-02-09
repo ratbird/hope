@@ -279,18 +279,13 @@ class EvalOverview {
      $shareButton->addAttr ("title", $isShared ? _("Die Freigabe für diese Evaluationsvorlage entziehen") : _("Diese Evaluationsvorlage öffentlich freigeben"));
 
      $content[0] = $shareButton;
-     $content[3] = EvalCommon::createSubmitButton ("kopieerstellen",
-                     _("Evaluationsvorlage kopieren"), "copy_own_template_button");
+     $content[3] = Button::create(_('kopie erstellen'), 'copy_own_template_button', array('title' => _('Evaluationsvorlage kopieren')));
 
-     $content[4] = new HTML( "a" );
-     $content[4]->addAttr("href", UrlHelper::getLink("admin_evaluation.php?page=edit&evalID=" . $evalID));
-       $img = new HTMLEmpty( "img" );
-       $img->addString( makeButton( "bearbeiten", "src" ).tooltip(_("Evaluation bearbeiten")) );
-       $img->addAttr( "border", "0" );
-       $img->addAttr( "align", "middle" );
-     $content[4]->addContent( $img );
+     $content[4] = LinkButton::create(_('Bearbeiten'),
+             UrlHelper::getLink("admin_evaluation.php?page=edit&evalID=" . $evalID),
+             array('title' => _('Evaluation bearbeiten')));
 
-     $content[5] = EvalCommon::createSubmitButton ("loeschen", _("Evaluation löschen"), "delete_request_button");
+     $content[5] = Button::create(_('Löschen'), 'delete_request_button', array('title' => _('Evaluation löschen')));
      break;
 
       case EVAL_STATE_NEW:
@@ -299,17 +294,13 @@ class EvalOverview {
      $content[0] = $eval->getFullname () ? $eval->getFullname () : " ";
      $content[1] = $startDate;
     if (!$no_buttons){
-     $content[2] = EvalCommon::createSubmitButton ("starten", _("Evaluation starten"), "start_button");
+     $content[2] = Button::create(_('Start'), 'start_button', array('title' => _('Evaluation starten')));
 
-     $content[4] = new HTML( "a" );
-     $content[4]->addAttr("href", UrlHelper::getLink("admin_evaluation.php?page=edit&evalID=" . $evalID));
-       $img = new HTMLEmpty( "img" );
-       $img->addString( makeButton( "bearbeiten", "src" ).tooltip(_("Evaluation bearbeiten")) );
-       $img->addAttr( "border", "0" );
-       $img->addAttr( "align", "middle" );
-     $content[4]->addContent( $img );
+     $content[4] = LinkButton::create(_('Bearbeiten'),
+             UrlHelper::getLink("admin_evaluation.php?page=edit&evalID=" . $evalID),
+             array('title' => _('Evaluation bearbeiten')));
 
-     $content[5] = EvalCommon::createSubmitButton ("loeschen", _("Evaluation löschen"), "delete_request_button");
+     $content[5] = Button::create(_('Löschen'), 'delete_request_button', array('title' => _('Evaluation löschen')));
     }
      break;
 
@@ -319,21 +310,17 @@ class EvalOverview {
      $content[0] = $eval->getFullname () ? $eval->getFullname () : " ";
      $content[1] = $stopDate;
     if (!$no_buttons){
-     $content[2] = EvalCommon::createSubmitButton ("stop", _("Evaluation stoppen"), "stop_button");
+     $content[2] = Button::createCancel(_('Stop'), 'stop_button', array('title' => _('Evaluation stoppen')));;
    // Kann hier noch optimiert werden, da hasVoted () immer einen DB-Aufruf startet
      $content[3] = ($eval->hasVoted())
-        ? EvalCommon::createSubmitButton ("zuruecksetzen", _("Evaluation zurücksetzen"), "restart_request_button")
-      : EvalCommon::createSubmitButton ("zuruecksetzen", _("Evaluation zurücksetzen"), "restart_confirmed_button");
-     $content[4] = EvalCommon::createSubmitButton ("export", _("Evaluation exportieren"), "export_request_button");
-     $content[5] = EvalCommon::createSubmitButton ("loeschen", _("Evaluation löschen"), "delete_request_button");
+        ? Button::create(_('Zurücksetzen'), 'restart_request_button', array('title' => _('Evaluation zurücksetzen')))
+      : Button::create(_('Zurücksetzen'), 'restart_confirmed_button', array('title' => _('Evaluation zurücksetzen')));
+     $content[4] = Button::create(_('Export'), 'export_request_button', array('title' => _('Evaluation exportieren')));
+     $content[5] = Button::create(_('Löschen'), 'delete_request_button', array('title' => _('Evaluation löschen')));
      //$content[6] = EvalCommon::createSubmitButton ("auswertung", _("Auswertung"), "export_gfx_request_button");
-     $content[6] = new HTML( "a" );
-     $content[6]->addAttr("href", UrlHelper::getLink("eval_summary.php?eval_id=" . $evalID));
-       $img = new HTMLEmpty( "img" );
-       $img->addString( makeButton( "auswertung", "src" ).tooltip(_("Auswertung")) );
-       $img->addAttr( "border", "0" );
-       $img->addAttr( "align", "middle" );
-     $content[6]->addContent( $img );
+     $content[6] = LinkButton::create(_('Auswertung'),
+             UrlHelper::getLink("eval_summary.php?eval_id=" . $evalID),
+             array('title' => _('Auswertung')));
     }
      break;
 
@@ -343,20 +330,16 @@ class EvalOverview {
      $content[0] = $eval->getFullname () ? $eval->getFullname () : " ";
      //$content[1] = $eval->isVisible() ? "yes" : "no";
     if (!$no_buttons){
-     $content[2] = EvalCommon::createSubmitButton ("fortsetzen", _("Evaluation fortsetzen"), "continue_button");
+     $content[2] = Button::create(_('Fortsetzen'), 'continue_button', array('title' => _('Evaluation fortsetzen')));
      $content[3] = ($eval->hasVoted())
-        ? EvalCommon::createSubmitButton ("zuruecksetzen", _("Evaluation zurücksetzen"), "restart_request_button")
-      : EvalCommon::createSubmitButton ("zuruecksetzen", _("Evaluation zurücksetzen"), "restart_confirmed_button");
-     $content[4] = EvalCommon::createSubmitButton ("export", _("Evaluation exportieren"), "export_request_button");
-     $content[5] = EvalCommon::createSubmitButton ("loeschen", _("Evaluation löschen"), "delete_request_button");
+        ? Button::create(_('Zurücksetzen'), 'restart_request_button', array('title' => _('Evaluation zurücksetzen')))
+      : Button::create(_('Zurücksetzen'), 'restart_confirmed_button', array('title' => _('Evaluation zurücksetzen')));
+     $content[4] = Button::create(_('Export'), 'export_request_button', array('title' => _('Evaluation exportieren')));
+     $content[5] = Button::create(_('Löschen'), 'delete_request_button', array('title' => _('Evaluation löschen')));
      //$content[6] = EvalCommon::createSubmitButton ("auswertung", _("Auswertung"), "export_gfx_request_button");
-     $content[6] = new HTML( "a" );
-     $content[6]->addAttr( "href", UrlHelper::getLink("eval_summary.php?eval_id=" . $evalID));
-       $img = new HTMLEmpty( "img" );
-       $img->addString( makeButton( "auswertung", "src" ).tooltip(_("Auswertung")) );
-       $img->addAttr( "border", "0" );
-       $img->addAttr( "align", "middle" );
-     $content[6]->addContent( $img );
+     $content[6] = LinkButton::create(_('Auswertung'),
+             UrlHelper::getLink("eval_summary.php?eval_id=" . $evalID),
+             array('title' => _('Auswertung')));
     }
      break;
       }
@@ -576,7 +559,7 @@ class EvalOverview {
 
          $td2->addContent( new HTMLEmpty( "br" ) );
 
-         $saveButton = EvalCommon::createSubmitButton( "uebernehmen", _("Einstellungen speichern"), "save_button" );
+         $saveButton = Button::create(_('Übernehmen'), 'save_button', array('title' => _('Einstellungen speichern')));
          $td2->addContent ($saveButton);
       } else {
          $td2->addHTMLContent( $this->createRuntimeSettings( $eval, $state,
@@ -586,7 +569,7 @@ class EvalOverview {
          $number % 2 ? "steel_with_graulight_bg" : "steel_with_steel1_bg" ) );
          $td2->addContent( new HTMLEmpty( "br" ) );
 
-         $saveButton = EvalCommon::createSubmitButton( "uebernehmen", _("Einstellungen speichern"), "save_button" );
+         $saveButton = Button::create(_('Übernehmen'), 'save_button', array('title' => _('Einstellungen speichern')));
 
          $td2->addContent ($saveButton);
       }
@@ -796,7 +779,7 @@ class EvalOverview {
     /* --------------------------------------------------------------------- */
 
 #$form->addContent ($select);
-    $form->addContent (EvalCommon::createSubmitButton ("erstellen", _("Neue Evaluation erstellen")));
+    $form->addContent (Button::create(_('Erstellen'), array('title' => _('Neue Evaluation erstellen'))));
     $input = new  HTMLempty ("input");
     $input->addAttr ("type","hidden");
     $input->addAttr ("name","rangeID");
@@ -850,7 +833,7 @@ class EvalOverview {
 
     $form->addContent ($select);
     $form->addContent (" ");
-    $form->addContent (EvalCommon::createSubmitButton ("anzeigen", _("Evaluationen aus gewähltem Bereich anzeigen")));
+    $form->addContent (Button::create(_('Anzeigen'), array('title' => _('Evaluationen aus gewähltem Bereich anzeigen'))));
     $form->addContent (new HTMLempty ("br"));
     $form->addContent (new HTMLempty ("br"));
 
@@ -862,7 +845,7 @@ class EvalOverview {
    $input->addAttr ("name", "search");
    $input->addAttr ("size", "30");
    $form->addContent ($input);
-   $form->addContent (EvalCommon::createSubmitButton ("suchen", _("Weitere Bereiche suchen"), "search_showrange_button"));
+   $form->addContent (Button::create(_('Suchen'), 'search_showrange_button', array('title' => _('Weitere Bereiche suchen'))));
    $form->addContent (new HTMLempty ("br"));
    $form->addContent (new HTMLempty ("br"));
     }
@@ -889,7 +872,7 @@ class EvalOverview {
 
     $form->addContent ($input);
 
-    $form->addContent (EvalCommon::createSubmitButton ("suchen", _("Öffentliche Vorlage suchen"), "search_template_button"));
+    $form->addContent (Button::create(_('Suchen'), 'search_template_button', array('title' => _('Öffentliche Vorlage suchen'))));
     $form->addContent (new HTMLempty ("br"));
     $form->addContent (new HTMLempty ("br"));
 
@@ -1718,26 +1701,17 @@ class EvalOverview {
       }
 
       if ($mode == "unlink_delete_request") {
-     $value1 = "delete_confirmed";
-     $value2 = "unlink_delete_aborted";
-     $value3 = "unlink_and_move";
-
-     $html .="<a href=\"". UrlHelper::getLink('admin_evaluation.php?evalAction=' . $value1
-        .'&evalID=' . $evalID . '&rangeID=' . $showrangeID);
-
-     $html .="\" title=\"".$label["delete"]."\"><img ".makeButton("loeschen", "src")." alt=\"".$label["delete"]."\" title=\"".$label["delete"]."\" border=\"0\" align=\"middle\"></a>\n";
-
-     $html .= "<a href=\"". UrlHelper::getLink('admin_evaluation.php?evalAction=' . $value3
-        .'&evalID=' . $evalID . '&rangeID=' . $showrangeID);
-
-     $html .="\" title=\"".$label["template"]."\"><img ".makeButton("verschieben", "src")." alt=\"".$label["template"]."\" title=\"".$label["template"]."\" border=\"0\" align=\"middle\"></a>\n";
-
-     $html .="<a href=\"". UrlHelper::getLink('admin_evaluation.php?evalAction=' . $value2
-        .'&evalID=' . $evalID . '&rangeID=' . $showrangeID);
-     if ($referer) $html .= "&referer=".$referer;
-     $html .="\" title=\"".$label["cancel"]."\"><img ".makeButton("abbrechen", "src")." alt=\"".$label["cancel"]."\" title=\"".$label["cancel"]."\" border=\"0\" align=\"middle\"></a>\n";
-     $html .= "<br><br>";
-      }
+          $add_cancel = !$referer ?: "&referer=" . $referer;
+          $links = array(
+              UrlHelper::getLink('admin_evaluation.php?evalAction=delete_confirmed&evalID=' . $evalID . '&rangeID=' . $showrangeID),
+              UrlHelper::getLink('admin_evaluation.php?evalAction=unlink_delete_aborted&evalID=' . $evalID . '&rangeID=' . $showrangeID),
+              UrlHelper::getLink('admin_evaluation.php?evalAction=unlink_and_move&evalID=' . $evalID . '&rangeID=' . $showrangeID.$add_cancel)
+          );
+          $html .= LinkButton::create(_('Löschen'), $links[0], array('title' => $label["delete"]))."\n";
+          $html .= LinkButton::create(_('Verschieben'), $links[1], array('title' => $label["template"]))."\n";
+          $html .= LinkButton::createCancel(_('Abbrechen'), $links[2], array('title' => $label["cancel"]))."\n";
+          $html .= "<br><br>";
+        }
 
       $html .="    </td>\n"
      . "   </tr>\n";
@@ -2318,9 +2292,7 @@ class EvalOverview {
    $input->addAttr ("value","".$_REQUEST["search"]."");
     $td->addContent ($input);
 
-    $td->addContent (EvalCommon::createSubmitButton ("suchen",
-        _("Bereiche suchen"),"search_range_button"));
-
+    $td->addContent (Button::create(_('Suchen'), 'search_range_button', array('title' => _('Bereiche suchen'))));
     $tr->addContent ($td);
 
     $table->addContent ($tr);

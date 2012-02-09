@@ -35,6 +35,7 @@ class Admin_SmileysController extends AuthenticatedController
 
         //pagelayout
         PageLayout::setTitle(_('Verwaltung der Smileys'));
+        PageLayout::addSqueezePackage('smileys');
 
         // Remove layout and add charset for ajax requests
         if (Request::isXhr()) {

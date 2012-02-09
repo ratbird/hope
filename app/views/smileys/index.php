@@ -16,23 +16,15 @@ for ($i = 0; $i < $columns; $i++) {
 
     $spillover -= 1;
 }
-$data = array_filter($data);    
+$data = array_filter($data);
 ?>
 <html>
 <head>
-    <title><?= _('Smiley-Übersicht') ?> (<?= $statistics['count_all'] ?>)</title>
-<? // TODO Replace with PageLayout functionality? ?>
-    <?= Assets::stylesheet('style.css') ?>
-    <?= Assets::stylesheet('header.css') ?>
-    <?= Assets::stylesheet('smiley.css') ?>
-    <?= Assets::script('jquery-1.7.js') ?>
-    <?= Assets::script('jquery-ui-1.8.14.custom.min.js') ?>
-    <?= Assets::script('jquery.metadata.js') ?>
-    <?= Assets::script('jquery.placehold-0.3.js') ?>
-    <?= Assets::script('validator.min.js') ?>
-    <?= Assets::script('application.js') ?>
-    <?= Assets::script('smiley.js') ?>
-    
+    <title>
+      <?= htmlReady(PageLayout::getTitle() . ' - ' . $GLOBALS['UNI_NAME_CLEAN']) ?>
+    </title>
+    <?= PageLayout::getHeadElements() ?>
+
 </head>
 <body class="smiley-popup">
     <div id="header">

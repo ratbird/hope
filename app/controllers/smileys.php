@@ -27,6 +27,9 @@ class SmileysController extends AuthenticatedController
     {
         parent::before_filter($action, $args);
 
+        PageLayout::setTitle(_('Smiley-Übersicht'));
+        PageLayout::addSqueezePackage('smileys');
+
         $this->set_layout(null);
     }
 
@@ -50,7 +53,7 @@ class SmileysController extends AuthenticatedController
         }
 
         $this->view = $view ?: $default;
-        
+
         // Redirect to index if favorites is selected but user is not logged in
         if (!$this->favorites_activated and $this->view == 'favorites') {
             $this->redirect('smileys');
@@ -70,8 +73,8 @@ class SmileysController extends AuthenticatedController
     function favor_action($id, $view) {
         try {
             $favorites = new SmileyFavorites($GLOBALS['user']->id);
-            $state = $favorites->toggle($id); 
-            
+            $state = $favorites->toggle($id);
+
             $message = $state
                      ? _('Der Smiley wurde zu Ihren Favoriten hinzugefügt.')
                      : _('Der Smiley gehört nicht mehr zu Ihren Favoriten.');

@@ -120,6 +120,10 @@ class StudipForm {
                                                 . sprintf('%02s', Request::int($this->form_name . "_" . $name . "_month")) . "-"
                                                 . sprintf('%02s', Request::int($this->form_name . "_" . $name . "_day"));
                     }
+                    if ($value['type'] == 'time'){
+                        $new_form_values[$name] = sprintf('%02s', Request::int($this->form_name . "_" . $name . "_hours")) . ":"
+                                                . sprintf('%02s', Request::int($this->form_name . "_" . $name . "_minutes"));
+                    }
                     if ($value['type'] == 'checkbox'){
                         $new_form_values[$name] = Request::int($this->form_name . "_" . $name, 0);
                     }
@@ -279,6 +283,17 @@ class StudipForm {
         return $ret;
     }
 
+    function getFormFieldTime($name, $attributes, $default) {
+        $date_values = explode(":", $default); //hh:mm
+        $ret = '<fieldset id="' . $attributes['id'] .'" style="border:none;padding:0px;display:inline">';
+        unset($attributes['id']);
+        $ret .= $this->getFormFieldText($name . "_hours", array_merge(array('size'=>2,'maxlength'=>2), (array)$attributes), $date_values[0]);
+        $ret .= "\n" . $this->form_fields[$name]['separator'];
+        $ret .= $this->getFormFieldText($name . "_minutes", array_merge(array('size'=>2,'maxlength'=>2), (array)$attributes), $date_values[1]);
+        $ret .= '</fieldset>';
+        return $ret;
+    }
+
     function getFormFieldSelect($name, $attributes, $default){
         $ret = "\n<select name=\"{$this->form_name}_{$name}";
         if ($this->form_fields[$name]['multiple']){
@@ -381,7 +396,9 @@ class StudipForm {
     }
 
     function getFormButton($name, $attributes = array()){
-
+        if (is_array($this->form_buttons[$name]['attributes'])) {
+            $attributes = array_merge((array)$attributes, (array)$this->form_buttons[$name]['attributes']);
+        }
         if (!$this->form_buttons[$name]['is_picture']) {
             if (isset($this->form_buttons[$name]['info']) && !isset($attributes['title'])) {
                 $attributes['title'] = $this->form_buttons[$name]['info'];

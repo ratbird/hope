@@ -62,6 +62,7 @@ if ($RESOURCES_ENABLE) {
     $resList = new ResourcesUserRoomsList($user->id, TRUE, FALSE, TRUE);
 }
 
+PageLayout::addSqueezePackage('raumzeit');
 PageLayout::setTitle(_("Verwaltung von Zeiten und Raumangaben"));
 
 if ($perm->have_perm('admin')) {
@@ -172,7 +173,10 @@ if ($perm->have_studip_perm("admin",$sem->getId())) {
 // template-like output
 ?>
 <script>
-STUDIP.RoomRequestDialog.reloadUrlOnClose = '<?= UrlHelper::getUrl()?>';
+jQuery(function () {
+    STUDIP.RoomRequestDialog.reloadUrlOnClose = '<?= UrlHelper::getUrl()?>';
+    STUDIP.BlockAppointmentsDialog.reloadUrlOnClose = '<?= UrlHelper::getUrl()?>';
+});
 </script>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
     <tr>
@@ -494,20 +498,9 @@ STUDIP.RoomRequestDialog.reloadUrlOnClose = '<?= UrlHelper::getUrl()?>';
                 </tr>
                 <tr>
                     <td colspan="9" class="blank">
-                        <script type ="text/javascript">
-                            STUDIP.BlockAssi = {
-                                block_fenster: function () {
-                                    var f1 = window.open("<?= UrlHelper::getUrl('blockveranstaltungs_assistent.php')?>",
-                                                     "Zweitfenster",
-                                                     "width=550,height=600,toolbar=no, menubar=no, scrollbars=yes");
-                                    f1.focus();
-                                }
-                            };
-                        </script>
-
-                        <?= sprintf (_('Einen neuen Termin %s oder mehrere Termine mit dem Blockveranstaltungsassistenten %s'),
+                                               <?= sprintf (_('Einen neuen Termin %s oder mehrere Termine mit dem Blockveranstaltungsassistenten %s'),
                             LinkButton::create(_('Erstellen'), URLHelper::getURL('', array('cmd' => 'createNewSingleDate')) . '#newSingleDate'),
-                            LinkButton::create(_('Anlegen'), 'javascript:STUDIP.BlockAssi.block_fenster()')); ?>
+                            LinkButton::create(_('Anlegen'), 'javascript:STUDIP.BlockAppointmentsDialog.initialize("'.UrlHelper::getURL('dispatch.php/course/block_appointments').'")')); ?>
                     </td>
                 </tr>
                 <? } ?>

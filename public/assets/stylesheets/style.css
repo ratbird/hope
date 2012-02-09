@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Standard-Stylesheet für Stud.IP im Safire-Design
+  Standard-Stylesheet fï¿½r Stud.IP im Safire-Design
   Infos:
   - Vererbung beachten und doppelte Eigenschaften vermeiden
   - Farben nur in hex (#666666)
@@ -13,7 +13,7 @@ html {
     overflow-y: scroll;
 }
 
-/* --- Schrift (Vorgaben: Typ, Größe, Farbe --------------------------------- */
+/* --- Schrift (Vorgaben: Typ, Grï¿½ï¿½e, Farbe --------------------------------- */
 body, input, textarea {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 10pt;
@@ -61,7 +61,7 @@ input.placeholder {
     color: rgba(0, 0, 0, 0.7);
 }
 
-/* --- Überschriften -------------------------------------------------------- */
+/* --- ï¿½berschriften -------------------------------------------------------- */
 h1.content, h2.content, h3.content {
     color: #24437c;
 }
@@ -267,7 +267,7 @@ img.preview, video.preview, audio.preview {
 }
 
 /* --- Tabellen ------------------------------------------------------------- */
-/* //TODO: optimieren und aufräumen */
+/* //TODO: optimieren und aufrï¿½umen */
 td.reiterunten {
     background-image: url('../images/reiter3.jpg');
 }
@@ -447,7 +447,7 @@ td.tree-elbow-end img {
 }
 
 /* --- Sonstige ------------------------------------------------------------- */
-/** //TODO: aufräumen und optmieren... */
+/** //TODO: aufrï¿½umen und optmieren... */
 .gruppe0 {
     background: none;
     background-color: #FFFFFF;
@@ -547,17 +547,17 @@ td.tree-elbow-end img {
     background-image: url('../images/steelkante2.jpg');
 }
 
-/* dunkelster Standardhintergrund blau, überall umbenennen! */
+/* dunkelster Standardhintergrund blau, ï¿½berall umbenennen! */
 .steel2 {
     background-color: #cdd7e9;
 }
 
-/* hellerer Standardhintergrund, überall umbenennen! */
+/* hellerer Standardhintergrund, ï¿½berall umbenennen! */
 .steel1 {
     background-color: #f3f5f8;
 }
 
-/* dunklerer Standardhintergrund, überall umbenennen! */
+/* dunklerer Standardhintergrund, ï¿½berall umbenennen! */
 .steelgraulight {
     background-color: #e7ebf1;
 }
@@ -942,13 +942,12 @@ button.button {
     border-bottom-left-radius: 0;
 }
 
-div.selectbox {
+fieldset.selectbox {
     background-color:#FFFFFF;
     border: 1px solid;
     padding: 5px;
     margin: 5px;
-    height: 200px;
-    width: 550px;
+    max-height: 200px;
     overflow: auto;
 }
 

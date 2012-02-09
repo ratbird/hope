@@ -1709,7 +1709,7 @@ STUDIP.RoomRequestDialog = {
         }
     },
     bindevents: function () {
-        jQuery('form[name=room_request] button').bind('click dblclick', function () {
+        jQuery('form[name=room_request]').find('button, input[type=image]').bind('click dblclick', function () {
             var button_clicked = this.name;
             var form = jQuery('form[name=room_request]')[0];
             STUDIP.RoomRequestDialog.submit(form, button_clicked);
@@ -1841,24 +1841,3 @@ STUDIP.OldUpload = {
         return true;
     }
 };
-
-jQuery(function ($) {
-    $('.bookable_rooms_action').bind('click', function (event) {
-        var select = $(this).next('select')[0];
-        if (select !== null && select !== undefined) {
-            $.ajax({
-                url: STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/resources/helpers/bookable_rooms',
-                data: {
-                    rooms: _.pluck(select.options, 'value'),
-                    selected_dates : _.pluck($('input[name="singledate[]"]:checked'), 'value')
-                },
-                success: function (result) {
-                  if ($.isArray(result)) {
-                      _.each(result, function (v) {$(select).children('option[value=' + v + ']').remove();});
-                  }
-                }
-              });
-        }
-    });
-    $('.bookable_rooms_action').show();
-});

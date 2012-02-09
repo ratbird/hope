@@ -14,3 +14,6 @@ javascripts:
     - javascripts/application.js
     - javascripts/smiley.js
     - javascripts/tabs.js
+
+  raumzeit:
+    - javascripts/raumzeit.js

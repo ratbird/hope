@@ -98,7 +98,7 @@ $infobox['content'] = array(
 <tr>
   <td></td>
   <td>
-    <?= Button::createAccept(_('Speichern'),_("Studiengruppe anlegen")); ?>
+    <?= Button::createAccept(_('Speichern'), array('title' => _("Studiengruppe anlegen"))); ?>
     <?= LinkButton::createCancel(_('Abbrechen'), URLHelper::getURL("dispatch.php/studygroup/browse")); ?>
   </td>
 </tr>

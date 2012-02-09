@@ -22,6 +22,10 @@ class StudipTransformFormat extends TextFormat
             'start'    => '(?<!~)~~~(?!~)',
             'callback' => 'StudipTransformFormat::markupSignature'
         )
+        ,'nop' => array(
+            'start'    => '\[nop\](.*?)\[\/nop\]',
+            'callback' => 'StudipTransformFormat::markupNoFormat'
+        )
     );
 
     /**
@@ -81,5 +85,13 @@ class StudipTransformFormat extends TextFormat
     protected static function markupSignature($markup, $matches)
     {
         return get_fullname();
+    }
+
+    /**
+     * Stud.IP markup for unformatted text
+     */
+    protected static function markupNoFormat($markup, $matches)
+    {
+        return '[nop]' . $markup->quote($matches[1]) . '[/nop]';
     }
 }

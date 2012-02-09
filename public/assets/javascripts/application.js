@@ -1709,7 +1709,7 @@ STUDIP.RoomRequestDialog = {
         }
     },
     bindevents: function () {
-        jQuery('form[name=room_request] input[type=image]').bind('click dblclick', function () {
+        jQuery('form[name=room_request] button').bind('click dblclick', function () {
             var button_clicked = this.name;
             var form = jQuery('form[name=room_request]')[0];
             STUDIP.RoomRequestDialog.submit(form, button_clicked);

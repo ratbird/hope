@@ -25,7 +25,7 @@ $element_id = md5(uniqid());
 ?>
 
 <? if ($show || $show_hidden) : ?>
-<div id="schedule_entry_<?= $element_id ?>_<?= $entry[0]['start'] .'/'. $entry[0]['end'] .'/'. implode(',', $ids) ?>" class="schedule_entry <?= !$show ? 'invisible_entry' : '' ?>" 
+<div id="schedule_entry_<?= $element_id ?>_<?= $entry[0]['start'] .'/'. $entry[0]['end'] .'/'. implode(',', $ids) ?>" class="schedule_entry <?= !$show ? 'invisible_entry' : '' ?>"
     style="top: <?= $top ?>px; height: <?= $height ?>px; width: <?= $width ?>%<?= ($col > 0) ? ';left:'. ($col * $width) .'%' : '' ?>"
     title="<?= htmlReady(implode(', ', $title)) ?>">
 
@@ -37,7 +37,8 @@ $element_id = md5(uniqid());
         border: 1px solid <?= $entry[0]['color'] ?>;
         background-image: url('<?= Assets::url('images/calendar/category'. $cat .'.jpg') ?>')">
         <dt style="background-color: <?= $entry[0]['color'] ?>">
-            <?= $entry[0]['start_formatted'] ?> - <?= $entry[0]['end_formatted'] ?>, <b><?= htmlReady(implode(', ', $heading)) ?></b>
+            <?= $entry[0]['start_formatted'] ?> - <?= $entry[0]['end_formatted'] ?>
+            <?= (count($heading) ? ', <b>' . htmlReady(implode(', ', $heading)) . '</b>' : '') ?>
         </dt>
         <dd>
             <? foreach ($entry as $element) :

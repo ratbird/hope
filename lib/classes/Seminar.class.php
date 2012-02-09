@@ -129,7 +129,7 @@ class Seminar
     function restoreMembers($status = 'dozent')
     {
         $this->members[$status] = array();
-        $this->db->query("SELECT su.user_id,username,Vorname,Nachname,
+        $this->db->query("SELECT su.user_id,username,Vorname,Nachname,Email,
                         ".$GLOBALS['_fullname_sql']['full']." as fullname,
                         admission_studiengang_id, su.status, su.label
                         FROM seminar_user su INNER JOIN auth_user_md5 USING(user_id)
@@ -152,9 +152,9 @@ class Seminar
     function restoreAdmissionMembers($status = 'awaiting')
     {
         $this->admission_members[$status] = array();
-        $this->db->query("SELECT su.user_id,username,Vorname,Nachname,
+        $this->db->query("SELECT su.user_id,username,Vorname,Nachname,Email,
                         ".$GLOBALS['_fullname_sql']['full']." as fullname,
-                        studiengang_id
+                        studiengang_id, su.status
                         FROM admission_seminar_user su INNER JOIN auth_user_md5 USING(user_id)
                         LEFT JOIN user_info USING(user_id)
                         WHERE status='$status' AND su.seminar_id='".$this->getId()."' ORDER BY su.position, Nachname");

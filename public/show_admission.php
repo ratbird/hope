@@ -492,6 +492,55 @@ if ($_REQUEST['cmd'] == 'send_excel_sheet'){
         die;
     }
 }
+if (in_array(Request::get('cmd') , words('download_all_members download_multi_members')) && $group_obj = StudipAdmissionGroup::find(Request::option('group_id'))) {
+    $liste = array();
+    $multi_members = $all_participants = array();
+    foreach($group_obj->members as $member){
+        $participants = $member->getMembers('user') + $member->getMembers('autor') + $member->getAdmissionMembers('awaiting') +  $member->getAdmissionMembers('accepted') + $member->getAdmissionMembers('claiming');
+        $all_participants += $participants;
+        foreach (array_keys($participants) as $one) {
+            $multi_members[$one][] = $member->getName() . ($member->getNumber() ? ' '. $member->getNumber() : '');
+        }
+        foreach($participants as $user_id => $part) {
+            $liste[] = array($part['username'], $part['Vorname'], $part['Nachname'], $part['Email'], $member->getName() . ($member->getNumber() ? ' '. $member->getNumber() : ''), $part['status']);
+        }
+    }
+    if (Request::get('cmd') == 'download_all_members') {
+        $caption = array(_("Nutzername"), _("Vorname"), _("Nachname"), _("Email"), _("Veranstaltung"), _("Status"));
+        if (count($liste)) {
+            $tmpfile = $GLOBALS['TMP_PATH'] . '/' . md5(uniqid('write_excel',1));
+            array_to_csv($liste, $tmpfile, $caption);
+            header('Location: ' . getDownloadLink( basename($tmpfile), _("Gruppenteilnehmerliste.csv"), 4));
+            page_close();
+            die;
+        }
+    } else {
+        $liste = array();
+        $multi_members = array_filter($multi_members, create_function('$a', 'return count($a) > 1;'));
+        $c = 0;
+        $max_count = array();
+        foreach($multi_members as $user_id => $courses) {
+            $member = $all_participants[$user_id];
+            $liste[$c] = array($member['username'], $member['Vorname'], $member['Nachname'], $member['Email']);
+            foreach ($courses as  $one) {
+                $liste[$c][] = $one;
+            }
+            $max_count[] = count($courses);
+            $c++;
+        }
+        $caption = array(_("Nutzername"), _("Vorname"), _("Nachname"), _("Email"));
+        foreach(range(1,max($max_count)) as $num) {
+            $caption[] = _("Veranstaltung") . ' ' . $num;
+        }
+        if (count($liste)) {
+            $tmpfile = $GLOBALS['TMP_PATH'] . '/' . md5(uniqid('write_excel',1));
+            array_to_csv($liste, $tmpfile, $caption);
+            header('Location: ' . getDownloadLink( basename($tmpfile), _("Gruppenmehrfacheinträge.csv"), 4));
+            page_close();
+            die;
+        }
+    }
+}
 
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head
@@ -520,19 +569,33 @@ if(is_object($group_obj)){
         <ol>
         <?
         $distinct_members = array();
+        $multi_members = array();
         foreach($group_obj->members as $member){
-            $distinct_members += $member->getMembers('autor') + $member->getAdmissionMembers('awaiting') +  $member->getAdmissionMembers('accepted') + $member->getAdmissionMembers('claiming');?>
-            <li>
+            $all_members = $member->getMembers('user') + $member->getMembers('autor') + $member->getAdmissionMembers('awaiting') +  $member->getAdmissionMembers('accepted') + $member->getAdmissionMembers('claiming');
+            foreach (array_keys($all_members) as $one) {
+                $multi_members[$one]++;
+            }
+            $distinct_members = array_merge($distinct_members,array_keys($all_members));
+            ?><li>
                 <?= $member->getNumber() ? htmlReady('('. $member->getNumber() .')') : '' ?>
                 <?= htmlReady($member->getName() .' - ('. $member->getStartSemesterName() .')')?>
             </li>
             <input type="hidden" name="gruppe[]" value="<?=$member->getId();?>">
-        <?}?>
+        <?}
+        $multi_members = array_filter($multi_members, create_function('$a', 'return $a > 1;'));
+        ?>
         </ol>
         <ul style="list-style: none; margin:0px;padding:0px;">
         <? if(count($distinct_members)  > 0 ) :?>
         <li style="margin-top:5px;">
         <span style="display:block;float:left;width:200px;"><?=_("Anzahl aller Anmeldungen:")?></span><?=count($distinct_members)?>
+        <a href="<?php echo UrlHelper::getLink('', array('group_id' => $group_obj->getId(), 'cmd' => 'download_all_members'))?>" title="<?php echo _("Download")?>"><?php echo Assets::img('icons/16/blue/file-xls.png', array('style' => 'vertical-align:bottom'))?></a>
+        </li>
+        <? endif;?>
+        <? if(count($multi_members)  > 0 ) :?>
+        <li style="margin-top:5px;">
+        <span style="display:block;float:left;width:200px;"><?=_("Mehrfachanmeldungen:")?></span><?=count($multi_members)?>
+        <a href="<?php echo UrlHelper::getLink('', array('group_id' => $group_obj->getId(), 'cmd' => 'download_multi_members'))?>" title="<?php echo _("Download")?>"><?php echo Assets::img('icons/16/blue/file-xls.png', array('style' => 'vertical-align:bottom'))?></a>
         </li>
         <? endif;?>
         <li style="margin-top:5px;">

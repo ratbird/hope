@@ -378,7 +378,7 @@ $query_time = $query_time_sort;
             echo "</tr></table> ";
             $content_content = $tmp[1]."<div align=\"center\">".$tmp[4];
             $content_content .= Button::create(_('Übernehmen'), $tmp[2], array('align' => 'absmiddle'));
-            $content_content .= Button::createCancel(_('Abbrechen'), '', array('align' => 'absmiddle'));
+            $content_content .= Button::createCancel(_('Abbrechen'), 'a', array('align' => 'absmiddle'));
             $content_content .= " <div>";
             
             echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"99%\" align=\"center\"><tr>";

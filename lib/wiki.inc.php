@@ -521,10 +521,10 @@ function showDeleteDialog($keyword, $version) {
         $msg .= _("Diese Version ist die derzeit einzige. Nach dem Löschen ist die Seite komplet gelöscht.") . "<br>";
     }
     //TODO: modaler dialog benutzen
-    $msg.="<a href=\"".URLHelper::getLink("?cmd=really_delete&keyword=".urlencode($keyword)."&version=$version&dellatest=$islatest")."\">" . Button::createAccept(_('Ja!')) . "</a>&nbsp; \n";
+    $msg.=LinkButton::create(_('Ja!'), URLHelper::getURL("?cmd=really_delete&keyword=".urlencode($keyword)."&version=$version&dellatest=$islatest"));
     $lnk = "?keyword=".urlencode($keyword); // what to do when delete is aborted
     if (!$islatest) $lnk .= "&version=$version";
-    $msg.="<a href=\"".URLHelper::getLink($lnk)."\">" . Button::createCancel(_('NEIN!')) . "</a>\n";
+    $msg .= LinkButton::create(_("NEIN!"), URLHelper::getLink($lnk));
     $msg.='<p>'. sprintf(_("Um alle Versionen einer Seite auf einmal zu löschen, klicken Sie %shier%s."),'<a href="'.URLHelper::getLink('?cmd=delete_all&keyword='.urlencode($keyword)).'">','</a>');
     PageLayout::postMessage(MessageBox::info($msg));
     return $version;

@@ -26,6 +26,14 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
+/**
+ * @addtogroup notifications
+ *
+ * Uploading a new avatar triggers a AvatarDidUpload notification. The
+ * user's ID is transmitted as subject of the notification.
+ */
+
+
 use Studip\Button, Studip\LinkButton;
 require '../lib/bootstrap.php';
 
@@ -183,6 +191,9 @@ if (check_ticket($studipticket)) {
     if ($cmd == "copy") {
         try {
             Avatar::getAvatar($my_about->auth_user["user_id"])->createFromUpload('imgfile');
+
+            NotificationCenter::postNotification('AvatarDidUpload', $my_about->auth_user["user_id"]);
+
             $my_about->msg .= "msg§" . _("Die Bilddatei wurde erfolgreich hochgeladen. Eventuell sehen Sie das neue Bild erst, nachdem Sie diese Seite neu geladen haben (in den meisten Browsern F5 dr&uuml;cken).") . '§';
         } catch (Exception $e) {
             $my_about->msg = 'error§' . $e->getMessage() . '§';

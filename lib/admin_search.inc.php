@@ -127,10 +127,10 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
     }
 
     if (!Request::submitted('srch_send')) {
-        $_REQUEST['show_rooms_check']=$userConfig->getValue('LINKS_ADMIN_SHOW_ROOMS');
+        Request::set('show_rooms_check', $userConfig->getValue('LINKS_ADMIN_SHOW_ROOMS'));
     } else {
         if (!Request::submitted('show_rooms_check')) {
-            $_REQUEST['show_rooms_check']="off";
+            Request::set('show_rooms_check', 'off');
         }
         $userConfig->store('LINKS_ADMIN_SHOW_ROOMS', $_REQUEST['show_rooms_check']);
     }

@@ -508,7 +508,7 @@ class StudipSemTreeViewAdmin extends TreeView {
             } else {
                 $content .= LinkButton::create(_('Verschieben'), 
                         $this->getSelf('cmd=MoveItem&item_id='.$item_id),
-                        _('Dieses Element in eine andere Ebene verschieben')) . '&nbsp;';
+                        array('title' => _('Dieses Element in eine andere Ebene verschieben'))) . '&nbsp;';
                 $content .= LinkButton::create(_('Kopieren'),
                         $this->getSelf('cmd=CopyItem&item_id='.$item_id),
                         array('title' => _('Dieses Element in eine andere Ebene kopieren')));
@@ -525,7 +525,7 @@ class StudipSemTreeViewAdmin extends TreeView {
             while($rs->next_record()){
                 $content .= "\n<option value=\"" . $rs->f("Institut_id") . "\">" . htmlReady(my_substr($rs->f("Name"),0,50)) . "</option>";
             }
-            $content .= "</select>&nbsp;" . Button::create(_('Eintragen'), _("Fakultät einfügen"), array('title' => _("Fakultät einfügen"))) . "</form></p>";
+            $content .= "</select>&nbsp;" . Button::create(_('Eintragen'), array('title' => _("Fakultät einfügen"))) . "</form></p>";
         }
         $content .= "</td></tr></table>";
 
@@ -651,7 +651,7 @@ class StudipSemTreeViewAdmin extends TreeView {
             }
         }
         $content .= "<tr><td class=\"steel1\" colspan=\"2\">"
-            . LinkButton::create(_('Auswählen'), _('Auswahl umkeheren'), array('onClick' => 'invert_selection(\'$form_name\');return false;'))
+            . LinkButton::create(_('Auswählen'), array('title' => _('Auswahl umkeheren'), 'onClick' => 'invert_selection(\'$form_name\');return false;'))
             . "</td><td class=\"steel1\" align=\"right\">
         <select name=\"sem_aktion\" style=\"font-size:8pt;vertical-align:bottom;\" " . tooltip(_("Aktion auswählen"),true) . ">
         <option value=\"mark\">" . _("in Merkliste &uuml;bernehmen") . "</option>";

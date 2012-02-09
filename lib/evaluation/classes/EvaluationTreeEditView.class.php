@@ -507,7 +507,7 @@ function getEvalPath(){
 
 
     $path .= "<a class=\"tree\" href=\""
-        . $this->getSelf("itemID=root")
+        . URLHelper::getLink($this->getSelf("itemID=root"))
         . "\">"
 #       . "<img src=\"".Assets::image_path("icons/16/red/arr_1right.png")."\" "
 #       . "width=\"10\" hight=\"20\">"
@@ -516,8 +516,7 @@ function getEvalPath(){
         . "</a>";
     }
     $path .=  "<a class=\"tree\" href=\""
-        . $this->getSelf("itemID=" . ROOT_BLOCK
-            ,false)
+        . URLHelper::getLink($this->getSelf("itemID=" . ROOT_BLOCK, false))
         . "\">"
         . htmlready( my_substr (
             $this->tree->tree_data[ROOT_BLOCK]["name"],0,60))
@@ -530,8 +529,7 @@ function getEvalPath(){
            if ($parents[$i] != ROOT_BLOCK)
             $path .= "&nbsp;&gt;&nbsp;"
                 . "<a class=\"tree\" href=\""
-                . $this->getSelf("itemID={$parents[$i]}"
-                    ,false)
+                . URLHelper::getLink($this->getSelf("itemID={$parents[$i]}", false))
                 . "\">"
                 . htmlready( my_substr (
                     $this->tree->tree_data[$parents[$i]]["name"],0,60))
@@ -567,7 +565,7 @@ function getItemHeadPics ( $itemID ){
    } else {
 
     $a = new HTML ("a");
-    $a->addAttr ("href",$this->getSelf("itemID={$itemID}"));
+    $a->addAttr ("href",URLHelper::getLink($this->getSelf("itemID={$itemID}")));
 
     $img = new HTMLempty ("img");
     $img->addAttr ("src",EVAL_PIC_TREE_ARROW);
@@ -675,7 +673,7 @@ function getItemContent($itemID){
     }
 
 
-    $content .= "<form action=\"".$this->getSelf("item_id={$itemID}",1)
+    $content .= "<form action=\"".URLHelper::getLink($this->getSelf("item_id={$itemID}",1))
             . "\" method=\"POST\" style=\"display:inline;\">\n";
     $content .= CSRFProtection::tokenTag();
 
@@ -994,7 +992,7 @@ function getItemHead($itemID){
         }
 
         $head = "&nbsp;<a class=\"tree\" href=\""
-            . $this->getSelf("itemID={$itemID}",false) . "\"" . tooltip(_("Diesen Block öffnen"),true) . ">";
+            . URLHelper::getLink($this->getSelf("itemID={$itemID}",false)) . "\"" . tooltip(_("Diesen Block öffnen"),true) . ">";
 
         if ($this->tree->tree_data[$itemID]['name'] == "" && $mode == QUESTION_BLOCK)
             $head .= NO_QUESTION_GROUP_TITLE;
@@ -2137,7 +2135,7 @@ function createButtonbar ( $show = ARRANGMENT_BLOCK ){
 
     $a = new HTML ("a");
     $a->addAttr ("href",
-        $this->getSelf ("&moveItemID=" . $this->itemID));
+        URLHelper::getLink($this->getSelf ("&moveItemID=" . $this->itemID)));
 
     $img = new HTMLempty ("img");
     $img->addAttr ("border","0");
@@ -3011,7 +3009,7 @@ function createLinkImage( $pic,
                           $self = true){
 
     $a = new HTML ("a");
-    $a->addAttr ("href",$this->getSelf($value));
+    $a->addAttr ("href",URLHelper::getLink($this->getSelf($value)));
 
     $img = new HTMLempty ("img");
     $img->addAttr ("src",$pic);

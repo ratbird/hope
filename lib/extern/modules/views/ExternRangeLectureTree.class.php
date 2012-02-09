@@ -77,7 +77,7 @@ class ExternRangeLectureTree {
         for ($i = 0; $i < $num_kids; ++$i){
             $num_entries = $this->tree->getNumEntries($kids[$i],true);
             echo "<tr>\n<td$attributes_td>";
-            echo "<a href=\"" .$this->getSelf("{$this->param}start_item_id={$kids[$i]}", false);
+            echo "<a href=\"" .URLHelper::getLink($this->getSelf("{$this->param}start_item_id={$kids[$i]}", false));
             echo "\"$attributes_a><font$attributes_font>";
             echo htmlReady($this->tree->tree_data[$kids[$i]]['name']);
             echo "&nbsp;($num_entries)";
@@ -93,11 +93,11 @@ class ExternRangeLectureTree {
             echo $this->config->getAttributes("TreeBackLink", "table") . ">\n";
             echo "<tr><td" . $this->config->getAttributes("TreeBackLink", "td") . ">";
             if ($image = $this->config->getValue("TreeBackLink", "image")) {
-                echo "<a href=\"" .$this->getSelf("{$this->param}start_item_id={$this->tree->tree_data[$item_id]['parent_id']}", false) . "\">";
+                echo "<a href=\"" .URLHelper::getLink($this->getSelf("{$this->param}start_item_id={$this->tree->tree_data[$item_id]['parent_id']}", false)) . "\">";
                 echo "<img src=\"$image\" border=\"0\"></a>&nbsp;";
             }
             if ($link_text = $this->config->getValue("TreeBackLink", "linktext")) {
-                echo "<a href=\"" .$this->getSelf("{$this->param}start_item_id={$this->tree->tree_data[$item_id]['parent_id']}", false) . "\">";
+                echo "<a href=\"" .URLHelper::getLink($this->getSelf("{$this->param}start_item_id={$this->tree->tree_data[$item_id]['parent_id']}", false)) . "\">";
                 echo "<font" . $this->config->getAttributes("TreeBackLink", "font");
                 echo ">" . htmlReady($link_text) . "</font></a>";
             }
@@ -146,7 +146,7 @@ class ExternRangeLectureTree {
             $parents = array_diff($parents, $parents_root);
             while ($parent = array_pop($parents)) {
                 $ret .= $delimiter;
-                $ret .= "<a href=\"" . $this->getSelf("{$this->param}start_item_id=".$parent,false);
+                $ret .= "<a href=\"" . URLHelper::getLink($this->getSelf("{$this->param}start_item_id=".$parent,false));
                 $ret .= "\"$attributes_a>" . htmlReady($this->tree->tree_data[$parent]["name"]) . "</a>";
             }
         }

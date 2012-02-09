@@ -170,7 +170,7 @@ $the_tree->showSemTree();
     <?
     $search_obj->attributes_default = array('style' => 'width:100%;font-size:10pt;');
     $search_obj->search_fields['type']['size'] = 30 ;
-    echo $search_obj->getFormStart($the_tree->getSelf());
+    echo $search_obj->getFormStart(URLHelper::getLink($the_tree->getSelf()));
     ?>
     <table border="0" width="100%" style="font-size:10pt">
     <tr>
@@ -211,7 +211,7 @@ $the_tree->showSemTree();
     <p>
     <b><?=_("Merkliste:")?></b>
     </p>
-    <form action="<?=$the_tree->getSelf("cmd=MarkList")?>" method="post">
+    <form action="<?=URLHelper::getLink($the_tree->getSelf("cmd=MarkList"))?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
     <select multiple size="20" name="sem_mark_list[]" style="font-size:8pt;width:100%">
     <?

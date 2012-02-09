@@ -443,7 +443,7 @@ class StudipSemTreeViewAdmin extends TreeView {
         //$ret = "<a href=\"" . parent::getSelf("start_item_id=root") . "\">" .htmlReady($this->tree->root_name) . "</a>";
         if ($parents = $this->tree->getParents($this->start_item_id)){
             for($i = count($parents)-1; $i >= 0; --$i){
-                $ret .= " &gt; <a class=\"tree\" href=\"" . $this->getSelf("start_item_id={$parents[$i]}&open_item={$parents[$i]}",false)
+                $ret .= " &gt; <a class=\"tree\" href=\"" . URLHelper::getLink($this->getSelf("start_item_id={$parents[$i]}&open_item={$parents[$i]}",false))
                 . "\">" .htmlReady($this->tree->tree_data[$parents[$i]]["name"]) . "</a>";
             }
         }
@@ -518,7 +518,7 @@ class StudipSemTreeViewAdmin extends TreeView {
         if ($item_id == 'root' && $this->isItemAdmin($item_id)){
             $view = new DbView();
             $rs = $view->get_query("view:SEM_TREE_GET_LONELY_FAK");
-            $content .= "\n<p><form action=\"" . $this->getSelf("cmd=InsertFak") . "\" method=\"post\">"
+            $content .= "\n<p><form action=\"" . URLHelper::getLink($this->getSelf("cmd=InsertFak")) . "\" method=\"post\">"
                 . CSRFProtection::tokenTag()
                 . _("Stud.IP Fakult&auml;t einf&uuml;gen:")
                 . "&nbsp;\n<select style=\"width:200px;vertical-align:middle;\" name=\"insert_fak\">";
@@ -568,7 +568,7 @@ class StudipSemTreeViewAdmin extends TreeView {
 
     function getSemDetails($snap, $item_id, $lonely_sem = false){
         $form_name = DbView::get_uniqid();
-        $content = "<form name=\"$form_name\" action=\"" . $this->getSelf("cmd=MarkSem") ."\" method=\"post\">
+        $content = "<form name=\"$form_name\" action=\"" . URLHelper::getLink($this->getSelf("cmd=MarkSem")) ."\" method=\"post\">
         <input type=\"hidden\" name=\"item_id\" value=\"$item_id\">";
         $content .= CSRFProtection::tokenTag();
         $group_by_data = $snap->getGroupedResult("sem_number", "seminar_id");
@@ -626,7 +626,7 @@ class StudipSemTreeViewAdmin extends TreeView {
                     }
                     $content .= "<tr><td class=\"steel1\" width=\"1%\"><input type=\"checkbox\" name=\"marked_sem[]\" value=\"$seminar_id\" style=\"vertical-align:middle\">
                     </td><td class=\"steel1\" style=\"font-size:10pt;\"><a href=\"details.php?sem_id=". $seminar_id
-                    ."&send_from_search=true&send_from_search_page=" . rawurlencode($this->getSelf()) . "\">" . htmlReady($sem_name) . "</a>
+                    ."&send_from_search=true&send_from_search_page=" . rawurlencode(URLHelper::getLink($this->getSelf())) . "\">" . htmlReady($sem_name) . "</a>
                     </td><td class=\"steel1\" align=\"right\" style=\"font-size:10pt;\">(";
                     $doz_name = array_keys($sem_data[$seminar_id]['doz_name']);
                     $doz_uname = array_keys($sem_data[$seminar_id]['doz_uname']);
@@ -636,7 +636,7 @@ class StudipSemTreeViewAdmin extends TreeView {
                         foreach ($doz_name as $index => $value){
                             if ($i == 4){
                                 $content .= "... <a href=\"details.php?sem_id=". $seminar_id
-                                ."&send_from_search=true&send_from_search_page=" . rawurlencode($this->getSelf()) . "\">("._("mehr").")</a>";
+                                ."&send_from_search=true&send_from_search_page=" . rawurlencode(URLHelper::getLink($this->getSelf())) . "\">("._("mehr").")</a>";
                                 break;
                             }
                             $content .= "<a href=\"about.php?username=" . $doz_uname[$index] ."\">" . htmlReady($value) . "</a>";
@@ -665,7 +665,7 @@ class StudipSemTreeViewAdmin extends TreeView {
     }
 
     function getEditItemContent(){
-        $content = "\n<form name=\"item_form\" action=\"" . $this->getSelf("cmd=InsertItem&item_id={$this->edit_item_id}") . "\" method=\"POST\">";
+        $content = "\n<form name=\"item_form\" action=\"" . URLHelper::getLink($this->getSelf("cmd=InsertItem&item_id={$this->edit_item_id}")) . "\" method=\"POST\">";
         $content .= CSRFProtection::tokenTag();
         $content .= "\n<input type=\"HIDDEN\" name=\"parent_id\" value=\"{$this->tree->tree_data[$this->edit_item_id]['parent_id']}\">";
         $content .= "\n<table width=\"90%\" border =\"0\" style=\"border-style: solid; border-color: #000000;  border-width: 1px;font-size: 10pt;\" cellpadding=\"2\" cellspacing=\"2\" align=\"center\">";
@@ -741,7 +741,7 @@ class StudipSemTreeViewAdmin extends TreeView {
         if (($this->mode == "MoveItem" || $this->mode == "CopyItem") && ($this->isItemAdmin($item_id) || $this->isParentAdmin($item_id))
         && ($this->move_item_id != $item_id) && ($this->tree->tree_data[$this->move_item_id]['parent_id'] != $item_id)
         && !$this->tree->isChildOf($this->move_item_id,$item_id)){
-            $head .= "<a href=\"" . $this->getSelf("cmd=Do" . $this->mode . "&item_id=$item_id") . "\">"
+            $head .= "<a href=\"" . URLHelper::getLink($this->getSelf("cmd=Do" . $this->mode . "&item_id=$item_id")) . "\">"
             . "<img src=\"".Assets::image_path('icons/16/yellow/arr_2right.png').'" ' .tooltip(_("An dieser Stelle einfügen")) . "></a>&nbsp;";
         }
         $head .= parent::getItemHead($item_id);
@@ -751,12 +751,12 @@ class StudipSemTreeViewAdmin extends TreeView {
         if ($item_id != $this->start_item_id && $this->isParentAdmin($item_id) && $item_id != $this->edit_item_id){
             $head .= "</td><td nowrap align=\"right\" valign=\"bottom\" class=\"printhead\">";
             if (!$this->tree->isFirstKid($item_id)){
-                $head .= "<a href=\"". $this->getSelf("cmd=OrderItem&direction=up&item_id=$item_id") .
+                $head .= "<a href=\"". URLHelper::getLink($this->getSelf("cmd=OrderItem&direction=up&item_id=$item_id")) .
                 "\">" .  Assets::img('icons/16/yellow/arr_2up.png', array('class' => 'text-top', 'title' => _("Element nach oben"))) .
                 "</a>";
             }
             if (!$this->tree->isLastKid($item_id)){
-                $head .= "<a href=\"". $this->getSelf("cmd=OrderItem&direction=down&item_id=$item_id") .
+                $head .= "<a href=\"". URLHelper::getLink($this->getSelf("cmd=OrderItem&direction=down&item_id=$item_id")) .
                 "\">" . Assets::img('icons/16/yellow/arr_2down.png', array('class' => 'text-top', 'title' => _("Element nach unten"))) .
                 "</a>";
             }

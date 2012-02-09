@@ -223,7 +223,7 @@ print_infobox ($infobox, "infobox/literaturelist.jpg");
 <table width="250" align="center">
 <tr>
     <td class="blank" align="center" valign="top">
-    <?=$_the_clip_form->getFormStart($_the_treeview->getSelf());?>
+    <?=$_the_clip_form->getFormStart(URLHelper::getLink($_the_treeview->getSelf()));?>
     <b><?=_("Merkliste:")?></b>
     <br>
     <?=$_the_clip_form->getFormField("clip_content", array_merge(array('size' => $_the_clipboard->getNumElements()),(array) $_attributes['lit_select']))?>

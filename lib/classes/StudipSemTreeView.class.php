@@ -104,7 +104,7 @@ class StudipSemTreeView extends TreeView {
         //$ret = "<a href=\"" . parent::getSelf("start_item_id=root") . "\">" .htmlReady($this->tree->root_name) . "</a>";
         if ($parents = $this->tree->getParents($this->start_item_id)){
             for($i = count($parents)-1; $i >= 0; --$i){
-                $ret .= " &gt; <a class=\"tree\" href=\"" . $this->getSelf("start_item_id={$parents[$i]}&open_item={$parents[$i]}",false)
+                $ret .= " &gt; <a class=\"tree\" href=\"" . URLHelper::getLink($this->getSelf("start_item_id={$parents[$i]}&open_item={$parents[$i]}",false))
                     . "\">" .htmlReady($this->tree->tree_data[$parents[$i]]["name"]) . "</a>";
             }
         }
@@ -121,8 +121,8 @@ class StudipSemTreeView extends TreeView {
     function getItemHeadPics($item_id){
         $head = "";
         $head .= "<a href=\"";
-        $head .= ($this->open_items[$item_id])? $this->getSelf("close_item={$item_id}") . "\"" . tooltip(_("Dieses Element schließen"),true) . ">"
-                                            : $this->getSelf("open_item={$item_id}") . "\"" . tooltip(_("Dieses Element öffnen"),true) . ">";
+        $head .= ($this->open_items[$item_id])? URLHelper::getLink($this->getSelf("close_item={$item_id}")) . "\"" . tooltip(_("Dieses Element schließen"),true) . ">"
+                                            : URLHelper::getLink($this->getSelf("open_item={$item_id}")) . "\"" . tooltip(_("Dieses Element öffnen"),true) . ">";
         $head .= "<img class=\"text-top\" src=\"".$GLOBALS['ASSETS_URL']."images/";
         $head .= ($this->open_items[$item_id]) ? "icons/16/blue/arr_1down.png" : "icons/16/blue/arr_1right.png";
         $head .= "\">";
@@ -155,7 +155,7 @@ class StudipSemTreeView extends TreeView {
             $content .= formatReady($this->tree->tree_data[$item_id]['info']) . "</td></tr>";
         }
         $content .= "<tr><td colspan=\"2\" class=\"steel1\">" . sprintf(_("Alle Veranstaltungen innerhalb dieses Bereiches in der %s&Uuml;bersicht%s"),
-                "<a href=\"" . $this->getSelf("cmd=show_sem_range&item_id=$item_id") ."\">","</a>") . "</td></tr>";
+                "<a href=\"" . URLHelper::getLink($this->getSelf("cmd=show_sem_range&item_id=$item_id")) ."\">","</a>") . "</td></tr>";
         $content .= "<tr><td colspan=\"2\">&nbsp;</td></tr>";
         if ($this->tree->getNumEntries($item_id) - $this->tree->tree_data[$item_id]['lonely_sem']){
             $content .= "<tr><td class=\"steel1\" align=\"left\" colspan=\"2\"><b>" . _("Eintr&auml;ge auf dieser Ebene:");
@@ -190,7 +190,7 @@ class StudipSemTreeView extends TreeView {
                 $sem_name .= (($sem_number_end == -1) ? _("unbegrenzt") : $this->tree->sem_dates[$sem_number_end]['name']) . ")";
             }
             $content .= "<tr><td class=\"steel1\"><a href=\"details.php?sem_id=". $seminar_id
-            ."&send_from_search=true&send_from_search_page=" . rawurlencode($this->getSelf()) . "\">" . htmlReady($sem_name) . "</a>
+            ."&send_from_search=true&send_from_search_page=" . rawurlencode(URLHelper::getLink($this->getSelf())) . "\">" . htmlReady($sem_name) . "</a>
             </td><td class=\"steel1\" align=\"right\">(";
             for ($i = 0; $i < count($data["doz_name"]); ++$i){
                 $content .= "<a href=\"about.php?username=" . key($data["doz_uname"]) ."\">" . htmlReady(key($data["doz_name"])) . "</a>";

@@ -312,7 +312,7 @@ class TreeView {
         $head .= "\n<td  class=\"printhead\" nowrap align=\"left\" valign=\"bottom\">";
         if ($this->tree->hasKids($item_id)){
             $head .= "<a href=\"";
-            $head .= ($this->open_ranges[$item_id]) ? $this->getSelf("close_range={$item_id}") : $this->getSelf("open_range={$item_id}");
+            $head .= ($this->open_ranges[$item_id]) ? URLHelper::getLink($this->getSelf("close_range={$item_id}")) : URLHelper::getLink($this->getSelf("open_range={$item_id}"));
             $head .= "\"><img class=\"text-top\" src=\"".$GLOBALS['ASSETS_URL']."images/";
             $head .= ($this->open_ranges[$item_id]) ? "icons/16/blue/folder-full.png" : "icons/16/blue/folder-full.png";
             $head .= "\" ";
@@ -336,8 +336,8 @@ class TreeView {
             $head = "<td class=\"printhead\" nowrap align=\"left\" valign=\"bottom\">";
         }
         $head .= "<a href=\"";
-        $head .= ($this->open_items[$item_id])? $this->getSelf("close_item={$item_id}") . "\"" . tooltip(_("Dieses Element schließen"),true) . ">"
-                                            : $this->getSelf("open_item={$item_id}") . "\"" . tooltip(_("Dieses Element öffnen"),true) . ">";
+        $head .= ($this->open_items[$item_id])? URLHelper::getLink($this->getSelf("close_item={$item_id}")) . "\"" . tooltip(_("Dieses Element schließen"),true) . ">"
+                                            : URLHelper::getLink($this->getSelf("open_item={$item_id}")) . "\"" . tooltip(_("Dieses Element öffnen"),true) . ">";
         $head .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/";
         $head .= ($this->open_items[$item_id]) ? $this->pic_open : $this->pic_close;
         $head .= "\">";
@@ -357,8 +357,8 @@ class TreeView {
     function getItemHead($item_id){
         $head = "";
         $head .= "&nbsp;<a class=\"tree\" href=\"";
-        $head .= ($this->open_items[$item_id])? $this->getSelf("close_item={$item_id}") . "\"" . tooltip(_("Dieses Element schließen"),true) . "><b>"
-                                            : $this->getSelf("open_item={$item_id}") . "\"" . tooltip(_("Dieses Element öffnen"),true) . ">";
+        $head .= ($this->open_items[$item_id])? URLHelper::getLink($this->getSelf("close_item={$item_id}")) . "\"" . tooltip(_("Dieses Element schließen"),true) . "><b>"
+                                            : URLHelper::getLink($this->getSelf("open_item={$item_id}")) . "\"" . tooltip(_("Dieses Element öffnen"),true) . ">";
         $head .= htmlReady(my_substr($this->tree->tree_data[$item_id]['name'],0,$this->max_cols));
         $head .= ($this->open_items[$item_id]) ? "</b></a>" : "</a>";
         return $head;
@@ -413,7 +413,7 @@ class TreeView {
     * @return   string
     */
     function getSelf($param = ""){
-        return URLHelper::getLink("?" . $param . "#anchor");
+        return "?" . $param . "#anchor";
     }
 }
 //test

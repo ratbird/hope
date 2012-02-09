@@ -73,7 +73,7 @@ class StudipSemRangeTreeViewSimple {
         echo "</div></td>";
         echo "<td nowrap class=\"steelgraulight\" align=\"right\" valign=\"bottom\" style=\"font-size:10pt;\">";
         if ($this->start_item_id != "root"){
-            echo "\n<a href=\"" .$this->getSelf("start_item_id={$this->tree->tree_data[$this->start_item_id]['parent_id']}", false) . "\">".
+            echo "\n<a href=\"" .URLHelper::getLink($this->getSelf("start_item_id={$this->tree->tree_data[$this->start_item_id]['parent_id']}", false)) . "\">".
             Assets::img('icons/16/blue/arr_2left.png', array('class' => 'text-top', 'title' =>_('eine Ebene zur&uuml;ck'))). "</a>";
         } else {
             echo "&nbsp;";
@@ -92,7 +92,7 @@ class StudipSemRangeTreeViewSimple {
         echo "\n<table width=\"95%\" border=\"0\" cellpadding=\"0\" cellspacing=\"10\"><tr>\n<td class=\"steel1\" width=\"50%\" align=\"left\" valign=\"top\"><ul class=\"semtree\">";
         for ($i = 0; $i < $num_kids; ++$i){
             $num_entries = $this->tree->getNumEntries($kids[$i],true);
-            echo "<li><a " . tooltip(sprintf(_("%s Einträge in allen Unterebenen vorhanden"), $num_entries)) . " href=\"" .$this->getSelf("start_item_id={$kids[$i]}", false) . "\">";
+            echo "<li><a " . tooltip(sprintf(_("%s Einträge in allen Unterebenen vorhanden"), $num_entries)) . " href=\"" .URLHelper::getLink($this->getSelf("start_item_id={$kids[$i]}", false)) . "\">";
             echo htmlReady($this->tree->tree_data[$kids[$i]]['name']);
             echo " ($num_entries)";
             echo "</a></li>";
@@ -131,7 +131,7 @@ class StudipSemRangeTreeViewSimple {
         if ($item_id != "root"){
             if ($this->tree->hasKids($item_id) && ($num_entries = $this->tree->getNumEntries($this->start_item_id,true))){
                 if ($this->show_entries != "sublevels"){
-                    echo "<a " . tooltip(_("alle Einträge in allen Unterebenen anzeigen")) ." href=\"" . $this->getSelf("cmd=show_sem_range_tree&item_id={$this->start_item_id}_withkids") ."\">";
+                    echo "<a " . tooltip(_("alle Einträge in allen Unterebenen anzeigen")) ." href=\"" . URLHelper::getLink($this->getSelf("cmd=show_sem_range_tree&item_id={$this->start_item_id}_withkids")) ."\">";
                     echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/arr_1right.png\" border=\"0\">&nbsp;";
                 } else {
                     echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/arr_1down.png\" border=\"0\">&nbsp;";
@@ -144,7 +144,7 @@ class StudipSemRangeTreeViewSimple {
             }
             if ($num_entries = $this->tree->getNumEntries($item_id)){
                 if ($this->show_entries != "level"){
-                    echo "<a " . tooltip(_("alle Einträge auf dieser Ebene anzeigen")) ." href=\"" . $this->getSelf("cmd=show_sem_range_tree&item_id=$item_id") ."\">";
+                    echo "<a " . tooltip(_("alle Einträge auf dieser Ebene anzeigen")) ." href=\"" . URLHelper::getLink($this->getSelf("cmd=show_sem_range_tree&item_id=$item_id")) ."\">";
                     echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/red/arr_1right.png\" border=\"0\">&nbsp;";
                 } else {
                     echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/red/arr_1down.png\" border=\"0\">&nbsp;";
@@ -164,14 +164,14 @@ class StudipSemRangeTreeViewSimple {
 
         if ($parents = $this->tree->getParents($this->start_item_id)){
             for($i = count($parents)-1; $i >= 0; --$i){
-                $ret .= "&nbsp;&gt;&nbsp;<a href=\"" . $this->getSelf("start_item_id={$parents[$i]}",false)
+                $ret .= "&nbsp;&gt;&nbsp;<a href=\"" . URLHelper::getLink($this->getSelf("start_item_id={$parents[$i]}",false))
                     . "\">" .htmlReady($this->tree->tree_data[$parents[$i]]["name"]) . "</a>";
             }
         }
         if ($this->start_item_id == "root") {
-            $ret = "&nbsp;&gt;&nbsp;<a href=\"" . $this->getSelf("start_item_id=root",false) . "\">" .htmlReady($this->tree->root_name) . "</a>";
+            $ret = "&nbsp;&gt;&nbsp;<a href=\"" . URLHelper::getLink($this->getSelf("start_item_id=root",false)) . "\">" .htmlReady($this->tree->root_name) . "</a>";
         } else {
-            $ret .= "&nbsp;&gt;&nbsp;<a href=\"" . $this->getSelf("start_item_id={$this->start_item_id}",false) . "\">" . htmlReady($this->tree->tree_data[$this->start_item_id]["name"]) . "</a>";
+            $ret .= "&nbsp;&gt;&nbsp;<a href=\"" . URLHelper::getLink($this->getSelf("start_item_id={$this->start_item_id}",false)) . "\">" . htmlReady($this->tree->tree_data[$this->start_item_id]["name"]) . "</a>";
 
         }
         $ret .= "&nbsp;<a href=\"#\" " . tooltip(kill_format($this->getTooltip($this->start_item_id)),false,true) . "><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/info-circle.png\" border=\"0\" align=\"absmiddle\"></a>";

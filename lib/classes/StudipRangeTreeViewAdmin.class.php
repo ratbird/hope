@@ -543,7 +543,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
                 $view = new DbView();
                 $rs = $view->get_query("SELECT i1.Name,i1.Institut_id,COUNT(i2.Institut_id) as num FROM Institute i1 LEFT JOIN Institute i2 ON i1.Institut_id = i2.fakultaets_id AND i2.fakultaets_id<>i2.Institut_id WHERE i1.fakultaets_id=i1.Institut_id GROUP BY i1.Institut_id ORDER BY Name");
                 $content .= "\n<tr><td align=\"center\">";
-                $content .= "\n<form action=\"" . $this->getSelf("cmd=InsertFak") . "\" method=\"post\">"
+                $content .= "\n<form action=\"" . URLHelper::getLink($this->getSelf("cmd=InsertFak")) . "\" method=\"post\">"
                     .  CSRFProtection::tokenTag()
                     . _("Stud.IP Fakult&auml;t einf&uuml;gen:")
                     . "&nbsp;\n<select style=\"width:300px;vertical-align:middle;\" name=\"insert_fak\">";
@@ -615,19 +615,19 @@ class StudipRangeTreeViewAdmin extends TreeView{
         if ($this->mode == "MoveItem" && ($this->isItemAdmin($item_id) || $this->isParentAdmin($item_id))
             && ($this->move_item_id != $item_id) && ($this->tree->tree_data[$this->move_item_id]['parent_id'] != $item_id)
             && !$this->tree->isChildOf($this->move_item_id,$item_id)){
-            $head .= "<a href=\"" . $this->getSelf("cmd=DoMoveItem&item_id=$item_id") . "\">"
+            $head .= "<a href=\"" . URLHelper::getLink($this->getSelf("cmd=DoMoveItem&item_id=$item_id")) . "\">"
             . "<img src=\"".Assets::image_path('icons/16/yellow/arr_2right.png')."\" " .tooltip(_("An dieser Stelle einfügen")) . "></a>&nbsp;";
         }
         $head .= parent::getItemHead($item_id);
         if ($item_id != $this->start_item_id && $this->isParentAdmin($item_id) && $item_id != $this->edit_item_id){
             $head .= "</td><td nowrap align=\"right\" valign=\"bottom\" class=\"printhead\">";
             if (!$this->tree->isFirstKid($item_id)){
-                $head .= "<a href=\"". $this->getSelf("cmd=OrderItem&direction=up&item_id=$item_id") .
+                $head .= "<a href=\"". URLHelper::getLink($this->getSelf("cmd=OrderItem&direction=up&item_id=$item_id")) .
                 "\">" . Assets::img('icons/16/yellow/arr_2up.png', array('class' => 'text-top', 'title' => _("Element nach oben verschieben"))) . " ".
                 "</a>";
             }
             if (!$this->tree->isLastKid($item_id)){
-                $head .= "<a href=\"". $this->getSelf("cmd=OrderItem&direction=down&item_id=$item_id") .
+                $head .= "<a href=\"". URLHelper::getLink($this->getSelf("cmd=OrderItem&direction=down&item_id=$item_id")) .
                 "\">" . Assets::img('icons/16/yellow/arr_2down.png', array('class' => 'text-top', 'title' => _("Element nach unten verschieben"))) . " ".
                 "</a>";
             }
@@ -637,7 +637,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
     }
 
     function getEditItemContent(){
-        $content = "\n<form name=\"item_form\" action=\"" . $this->getSelf("cmd=InsertItem&item_id={$this->edit_item_id}") . "\" method=\"POST\">";
+        $content = "\n<form name=\"item_form\" action=\"" . URLHelper::getLink($this->getSelf("cmd=InsertItem&item_id={$this->edit_item_id}")) . "\" method=\"POST\">";
         $content .= CSRFProtection::tokenTag();
         $content .= "\n<input type=\"HIDDEN\" name=\"parent_id\" value=\"{$this->tree->tree_data[$this->edit_item_id]['parent_id']}\">";
         $content .= "\n<table width=\"90%\" border =\"0\" style=\"border-style: solid; border-color: #000000;  border-width: 1px;font-size: 10pt;\" cellpadding=\"2\" cellspacing=\"2\" align=\"center\">";
@@ -648,7 +648,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
                 . "\"></td><td class=\"steel1\" align=\"left\">";
 
         $content .= Button::createAccept(_("Absenden"));
-        $content .= LinkButton::createCancel(_("Abbrechen"), $this->getSelf("cmd=Cancel&item_id=" . (($this->mode == "NewItem") ? $this->tree->tree_data[$this->edit_item_id]['parent_id'] : $this->edit_item_id)));
+        $content .= LinkButton::createCancel(_("Abbrechen"), $this->getSelf("cmd=Cancel&item_id=" . ($this->mode == "NewItem" ? $this->tree->tree_data[$this->edit_item_id]['parent_id'] : $this->edit_item_id)));
 
         $content .= "</td></tr>";
         $content .= "\n<tr><td colspan=\"2\" class=\"steelgraudunkel\"><b>". _("Element mit einer Stud.IP-Einrichtung verlinken") . "</b></td></tr>";
@@ -668,7 +668,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
             }
         }
         $content .= "</select></td></tr></form>";
-        $content .= "\n<form name=\"link_form\" action=\"" . $this->getSelf("cmd=SearchStudIP&item_id={$this->edit_item_id}") . "\" method=\"POST\"><tr><td class=\"steel1\">" . _("Stud.IP-Einrichtung suchen:") . "&nbsp;";
+        $content .= "\n<form name=\"link_form\" action=\"" . URLHelper::getLink($this->getSelf("cmd=SearchStudIP&item_id={$this->edit_item_id}")) . "\" method=\"POST\"><tr><td class=\"steel1\">" . _("Stud.IP-Einrichtung suchen:") . "&nbsp;";
         $content .= CSRFProtection::tokenTag();
         $content .= "\n<input type=\"HIDDEN\" name=\"parent_id\" value=\"{$this->tree->tree_data[$this->edit_item_id]['parent_id']}\">";
         $content .= "\n<input type=\"TEXT\" name=\"edit_search\" size=\"30\"></td><td class=\"steel1\" align=\"left\">";
@@ -689,7 +689,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
         $content .= "</td></tr>";
         $content .= "\n<tr><td colspan=\"2\" class=\"blank\">&nbsp;</td></tr>";
         if ($cat_snap->numRows){
-            $content .= "\n<form name=\"cat_form_$item_id\" action=\"" . $this->getSelf("cmd=UpdateCat&item_id=$item_id") . "\" method=\"POST\">";
+            $content .= "\n<form name=\"cat_form_$item_id\" action=\"" . URLHelper::getLink($this->getSelf("cmd=UpdateCat&item_id=$item_id")) . "\" method=\"POST\">";
             $content .= CSRFProtection::tokenTag();
             while($cat_snap->nextRow()){
                 $content .= "\n<tr><td class=\"topic\"><input type=\"TEXT\" style=\"width:90%;font-size:8pt;border:0px\" size=\"30\"  name=\"cat_name[". $cat_snap->getField("kategorie_id")
@@ -697,12 +697,12 @@ class StudipRangeTreeViewAdmin extends TreeView{
                         . $cat_snap->getField("kategorie_id"). "]\" value=\"" . htmlReady($cat_snap->getField("priority")) . "\"></td>"
                         . "<td class=\"topic\" width=\"10%\" align=\"right\">";
                 if ($cat_snap->pos && $cat_snap->getField("kategorie_id") != "new_entry"){
-                    $content .= "<a href=\"". $this->getSelf("cmd=OrderCat&direction=up&item_id=$item_id&cat_id=" . $cat_snap->getField("kategorie_id"))
+                    $content .= "<a href=\"". URLHelper::getLink($this->getSelf("cmd=OrderCat&direction=up&item_id=$item_id&cat_id=" . $cat_snap->getField("kategorie_id")))
                             . "\">" . Assets::img('icons/16/yellow/arr_2up.png', array('class' => 'text-top', 'title' => _("Datenfeld nach oben"))) .
                             "</a>";
                 }
                 if ($cat_snap->pos != $cat_snap->numRows-1 && $cat_snap->getField("kategorie_id") != "new_entry"){
-                    $content .= "<a href=\"". $this->getSelf("cmd=OrderCat&direction=down&item_id=$item_id&cat_id=" . $cat_snap->getField("kategorie_id"))
+                    $content .= "<a href=\"". URLHelper::getLink($this->getSelf("cmd=OrderCat&direction=down&item_id=$item_id&cat_id=" . $cat_snap->getField("kategorie_id")))
                             . "\">" . Assets::img('icons/16/yellow/arr_2down.png', array('class' => 'text-top', 'title' => _("Datenfeld nach unten"))) .
                             "</a>";
                 }

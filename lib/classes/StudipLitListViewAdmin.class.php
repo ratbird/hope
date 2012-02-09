@@ -401,7 +401,7 @@ class StudipLitListViewAdmin extends TreeView
         $user_lists = $this->tree->GetListsByRange($GLOBALS['auth']->auth['uid']);
 
         $content .= "\n<tr><td class=\"steel1\" align=\"left\">";
-        $content .= "\n<form name=\"userlist_form\" action=\"" . $this->getSelf("cmd=CopyUserList") . "\" method=\"POST\">";
+        $content .= "\n<form name=\"userlist_form\" action=\"" . URLHelper::getLink($this->getSelf("cmd=CopyUserList")) . "\" method=\"POST\">";
         $content .= CSRFProtection::tokenTag();
         $content .= "<b>" . _("Pers&ouml;nliche Literaturlisten:")
                 . "</b><br><br>\n<select name=\"user_list\" style=\"vertical-align:middle;width:70%;\">";
@@ -576,12 +576,12 @@ class StudipLitListViewAdmin extends TreeView
         if ($item_id != $this->start_item_id && $item_id != $this->edit_item_id){
             $head .= "</td><td align=\"right\" valign=\"bottom\" nowrap class=\"printhead\">";
             if (!$this->tree->isFirstKid($item_id)){
-                $head .= " <a href=\"". $this->getSelf("cmd=OrderItem&direction=up&item_id=$item_id") .
+                $head .= " <a href=\"". URLHelper::getLink($this->getSelf("cmd=OrderItem&direction=up&item_id=$item_id")) .
                 "\"><img src=\"" . Assets::image_path('icons/16/yellow/arr_2up.png') . "\" " .
                 tooltip(_("Element nach oben verschieben")) ."></a>";
             }
             if (!$this->tree->isLastKid($item_id)){
-                $head .= " <a href=\"". $this->getSelf("cmd=OrderItem&direction=down&item_id=$item_id") .
+                $head .= " <a href=\"". URLHelper::getLink($this->getSelf("cmd=OrderItem&direction=down&item_id=$item_id")) .
                 "\"><img src=\"" . Assets::image_path('icons/16/yellow/arr_2down.png') . "\" " .
                 tooltip(_("Element nach unten verschieben")) . "></a>";
             }
@@ -589,11 +589,11 @@ class StudipLitListViewAdmin extends TreeView
                 $head .= ($this->clip_board->isInClipboard($this->tree->tree_data[$item_id]["catalog_id"]))
                         ? "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/red/exclaim.png\" " .
                         tooltip(_("Dieser Eintrag ist bereits in Ihrer Merkliste")) . ">"
-                        :"<a href=\"". $this->getSelf("cmd=InClipboard&item_id=$item_id") .
+                        :"<a href=\"". URLHelper::getLink($this->getSelf("cmd=InClipboard&item_id=$item_id")) .
                         "\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/exclaim.png\" " .
                         tooltip(_("Eintrag in Merkliste aufnehmen")) . "></a>";
             } else {
-                $head .= " <a href=\"". $this->getSelf("cmd=InClipboard&item_id=$item_id") .
+                $head .= " <a href=\"". URLHelper::getLink($this->getSelf("cmd=InClipboard&item_id=$item_id")) .
                 "\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/exclaim.png\" " .
                 tooltip(_("Komplette Liste in Merkliste aufnehmen")) . "></a>";
             }
@@ -609,7 +609,7 @@ class StudipLitListViewAdmin extends TreeView
         if (!$this->tree->isElement($item_id)){
             if ($this->tree->hasKids($item_id)){
                 $head .= "<a href=\"";
-                $head .= ($this->open_ranges[$item_id]) ? $this->getSelf("close_range={$item_id}") : $this->getSelf("open_range={$item_id}");
+                $head .= ($this->open_ranges[$item_id]) ? URLHelper::getLink($this->getSelf("close_range={$item_id}")) : URLHelper::getLink($this->getSelf("open_range={$item_id}"));
                 $head .= "\"> <img src=\"".$GLOBALS['ASSETS_URL']."images/";
                 $head .= ($this->open_ranges[$item_id]) ? "icons/16/blue/folder-full.png" : "icons/16/blue/folder-full.png";
                 $head .= "\" ";
@@ -621,7 +621,7 @@ class StudipLitListViewAdmin extends TreeView
                 $head .= "\" " . tooltip(_("Dieses Element hat keine Unterelemente")) . ">";
             }
             if ($item_id != "root"){
-                $head .= " <a href=\"" . $this->getSelf("cmd=ToggleVisibility&item_id={$item_id}") . "\"><img src=\"".$GLOBALS['ASSETS_URL']."images/";
+                $head .= " <a href=\"" . URLHelper::getLink($this->getSelf("cmd=ToggleVisibility&item_id={$item_id}")) . "\"><img src=\"".$GLOBALS['ASSETS_URL']."images/";
                 $head .= ($this->tree->tree_data[$item_id]['visibility']) ? "icons/16/blue/visibility-visible.png" : "icons/16/blue/visibility-invisible.png";
                 $head .= "\" " . tooltip(_("Sichtbarkeit ändern")) . "></a>";
             }
@@ -632,7 +632,7 @@ class StudipLitListViewAdmin extends TreeView
     }
 
     function getEditItemContent(){
-        $content .= "\n<form name=\"item_form\" action=\"" . $this->getSelf("cmd=InsertItem&item_id={$this->edit_item_id}") . "\" method=\"POST\">";
+        $content .= "\n<form name=\"item_form\" action=\"" . URLHelper::getLink($this->getSelf("cmd=InsertItem&item_id={$this->edit_item_id}")) . "\" method=\"POST\">";
         $content .= CSRFProtection::tokenTag();
         $content .= "\n<input type=\"HIDDEN\" name=\"parent_id\" value=\"{$this->tree->tree_data[$this->edit_item_id]['parent_id']}\">";
         if ($this->tree->isElement($this->edit_item_id)){

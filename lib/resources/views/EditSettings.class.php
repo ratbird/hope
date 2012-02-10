@@ -36,6 +36,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
+use Studip\Button, Studip\LinkButton;
+
 require_once ($RELATIVE_PATH_RESOURCES."/lib/ResourceObject.class.php");
 require_once ('lib/classes/cssClassSwitcher.inc.php');
 
@@ -222,9 +224,11 @@ class EditSettings {
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" colspan=2 align="left">
                     <font size=-1><input type="text" name="add_type" size=50 maxlength=255 value="<<?=_("bitte geben Sie hier den Namen ein")?>>"></font>
-                    &nbsp; <font size=-1><input type="image" name="_add_type" <?=makeButton("anlegen", "src")?> border=0>
-                    <br><input type="CHECKBOX" name="resource_is_room">&nbsp;Ressourcen-Typ wird als Raum behandelt</font>
-
+                    <font size=-1>
+                    <?= Button::create(_("Anlegen"), "_add_type") ?>
+                    <br>
+                    <input type="CHECKBOX" name="resource_is_room">&nbsp;<?= _("Ressourcen-Typ wird als Raum behandelt") ?>
+                    </font>
 
                 </td>
             </tr>
@@ -348,14 +352,14 @@ class EditSettings {
                                 </select>
                             </td>
                                 <td class="<? echo $cssSw->getClass() ?>" width="67%" colspan=2>
-                                    <input type="image" <?=makeButton("zuweisen", "src") ?> name="change_category_add_property<?=$this->db->f("category_id")?>" border=0>&nbsp;
-                                    <input type="image" name="change_types" <?=makeButton("uebernehmen", "src")?> border="0"><br>
+                                    <?= Button::create(_("Zuweisen"), "change_category_add_property" . $this->db->f("category_id")) ?>
+                                    <?= Button::create(_("Übernehmen"), "change_types") ?>
                             </td>
                             <?
                             } else {
                             ?>
                             <td class="<? echo $cssSw->getClass() ?>" width="100%" colspan=3>
-                                    <input type="image" <?=makeButton("zuweisen", "src") ?> name="change_category_add_property<?=$this->db->f("category_id")?>" border=0>&nbsp;
+                                    <?= Button::create(_("Zuweisen"), "change_category_add_property" . $this->db->f("category_id")) ?>
                             </td>
                             <?
                             }
@@ -368,11 +372,13 @@ class EditSettings {
                         diesen Typ<br>
                         <?
                         if (($depRes==0) && (!$this->db->f("system"))) {
-                        ?>
-                        <a href="<? echo $PHP_SELF ?>?delete_type=<? echo $this->db->f("category_id") ?>">
-                        <?=makeButton ("loeschen", "img");
+                            echo LinkButton::create(_("Löschen"),
+                                                    URLHelper::getURL("?delete_type=" .$this->db->f("category_id")));
                         } else {
-                            print "<img ".makeButton ("n_loeschen", "src")." border=\"0\" ".tooltip(_("Dieser Typ kann nicht gelöscht werden, da er von Ressourcen verwendet wird!")).">";
+                            echo Button::create(_("Löschen"),
+                                                array(
+                                                    'disabled' => 'disabled',
+                                                    'title' => _("Dieser Typ kann nicht gelöscht werden, da er von Ressourcen verwendet wird!")));
                         } ?>
                     </font><br>
                 </td>
@@ -419,7 +425,7 @@ class EditSettings {
                         <font size=-1><option value="text"><?=_("mehrzeiligesTextfeld")?></option></font>
                         <font size=-1><option value="select"><?=_("Auswahlfeld")?></option></font>
                     </select>
-                    &nbsp;<font size=-1><input type="image" name="_add_property" <?=makeButton("anlegen", "src")?> border=0></font>
+                    <?= Button::create(_("Anlegen"), "_add_property") ?>
                 </td>
             </tr>
             </form>
@@ -486,7 +492,7 @@ class EditSettings {
                             ?>
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="50%" valign="bottom">&nbsp;
-                            <input type="image" name="_send_property_type" <?=makeButton("uebernehmen", "src") ?> border=0>
+                        <?= Button::create(_("Übernehmen"), "_send_property_type") ?>
                         </td>
                     </tr>
                     </table>
@@ -496,11 +502,9 @@ class EditSettings {
                         <?=_("diese Eigenschaft")?><br>
                         <?
                         if (($depTyp==0) && (!$this->db->f("system"))) {
-                        ?>
-                        <a href="<? echo $PHP_SELF ?>?delete_property=<? echo $this->db2->f("property_id") ?>">
-                        <?=makeButton("loeschen", "img");
+                            echo LinkButton::create(_("Löschen"), URLHelper::getURL("?delete_property=" . $this->db2->f("property_id")));
                         } else {
-                            print makeButton("n_loeschen", "img");
+                            echo LinkButton::create(_("Löschen"), array("disabled" => "disabled"));
                         } ?>
                     </font><br>
                 </td>
@@ -756,7 +760,7 @@ class EditSettings {
             </tr>
             <tr>
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" colspan="2" align="middle">&nbsp;
-                    <input type="image" name="_send_settings" <?=makeButton("uebernehmen", "src") ?> border=0>
+                    <?= Button::create(_("Übernehmen"), "_send_settings") ?>
                 </td>
             </tr>
         </form>

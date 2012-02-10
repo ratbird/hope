@@ -3,9 +3,6 @@
 # Lifter007: TODO
 # Lifter003: TODO
 # Lifter010: TODO
-
-use Studip\Button, Studip\LinkButton;
-
 /**
 * ShowThread.class.php
 *
@@ -38,6 +35,9 @@ use Studip\Button, Studip\LinkButton;
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
+
+use Studip\Button,
+    Studip\LinkButton;
 
 require_once ($RELATIVE_PATH_RESOURCES."/views/ShowTreeRow.class.php");
 require_once ($RELATIVE_PATH_RESOURCES."/lib/ResourceObject.class.php");
@@ -112,8 +112,12 @@ class ShowThread extends ShowTreeRow {
                 $zusatz=sprintf (_("verantwortlich:") . " <a href=\"%s\"><font color=\"#333399\">%s</font></a>", $resObject->getOwnerLink(), htmlReady($resObject->getOwnerName()));
             else
                 $zusatz=sprintf (_("verantwortlich:") . " %s", htmlReady($resObject->getOwnerName()));
-            $new=TRUE;
-            if ($open=="open") {
+
+            $new = true;
+            
+            $edit .= '<div style="text-align: center"><div class="button-group">';
+
+            if ($open == 'open') {
                 //load the perms
                 if (($ActualObjectPerms) && ($ActualObjectPerms->getId() == $resObject->getId())) {
                     $perms = $ActualObjectPerms->getUserPerm();
@@ -161,6 +165,8 @@ class ShowThread extends ShowTreeRow {
                     $edit .= LinkButton::create(_('Löschen'), '?kill_object=' . $resObject->id);
                 }
             }
+            
+            $edit .= '</div></div>';
 
             //Daten an Ausgabemodul senden (aus resourcesVisual)
             $this->showRow($icon, $link, $titel, $zusatz, $level, $lines, $weitere, $new, $open, $content, $edit);

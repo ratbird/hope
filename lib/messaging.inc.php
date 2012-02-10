@@ -335,12 +335,9 @@ class messaging
         $db3 = new DB_Seminar;
         $db4 = new DB_Seminar;
         $db5 = new DB_Seminar;
-
-        //ja ich weiss, das ist übel. Aber die zentrale Methode eines überall
-        //benutzten Objektes über globale Variablen die nur auf einer
-        //Seite sicher zur Verfügung stehen zu steuern ist ein echter php-no-brainer
-        if (basename($GLOBALS['PHP_SELF']) == 'sms_send.php'){
-            $sms_data = $GLOBALS['sms_data'];
+        $url = URLHelper::getURL();
+       if ( strpos($url,'sms_send.php')>= 0) {
+            $sms_data = $_SESSION['sms_data'];
         } else {
             $sms_data["tmpsavesnd"] = $my_messaging_settings["save_snd"];
             $sms_data["sig"] = $my_messaging_settings["addsignature"];

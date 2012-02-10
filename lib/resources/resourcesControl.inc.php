@@ -702,7 +702,7 @@ if ($view == "view_requests_schedule") {
             $ViewSchedules->showScheduleGraphical($schedule_start_time, $schedule_end_time);
     } else {
         echo "</td></tr>";
-        $msg->displayMsg(15);
+        $msg->displayMsg(49);
     }
 }
 

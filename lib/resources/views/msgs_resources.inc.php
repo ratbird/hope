@@ -90,10 +90,10 @@ $this->msg[14] = array (
         "msg"=> _("Sie haben keine Ebene ausgew&auml;hlt. Daher kann keine Liste erzeugt werden.")." <br>"._("Benutzen Sie die Suchfunktion oder w&auml;hlen Sie unter &raquo;&Uuml;bersicht&laquo; einen Ebene bzw. Ressource in der Hierarchie aus."));
 $this->msg[15] = array (
         "mode" => "info",
-        "msg"=> _("Sie haben keine Objekt zum Bearbeiten ausgew&auml;hlt.")." <br>"._("Bitte w&auml;hlen Sie zun&auml;chst ein Objekt aus."));
+        "msg"=> _("Sie haben kein Objekt zum Bearbeiten ausgew&auml;hlt.")." <br>"._("Bitte w&auml;hlen Sie zun&auml;chst ein Objekt aus."));
 $this->msg[16] = array (
         "mode" => "info",
-        "msg"=> _("Sie haben keine Objekt zum Anzeigen ausgew&auml;hlt.")." <br>"._("Bitte w&auml;hlen Sie zun&auml;chst ein Objekt aus."));
+        "msg"=> _("Sie haben kein Objekt zum Anzeigen ausgew&auml;hlt.")." <br>"._("Bitte w&auml;hlen Sie zun&auml;chst ein Objekt aus."));
 $this->msg[17] = array (
         "mode" => "error",
         "msg"=> _("Bitte geben Sie g&uuml;ltige Werte f&uuml;r Datum, Beginn und Ende der Belegung an!"));
@@ -210,5 +210,8 @@ $this->msg[47] = array (
 $this->msg[48] = array (
         "mode" => "error",
         "msg"=> _("Die Belegung konnte nicht in die Ressource &raquo;%s&laquo; kopiert werden, da sie sich mit einer anderen Belegung &uuml;berschneidet:") . "<br><font size=\"-1\" color=\"black\">%s</font>");
-
+$this->msg[49] = array(
+    'mode' => 'info',
+    'msg'  => _('Sie können den Anfragenplan nur anzeigen, wenn Sie Anfragen für einen bestimmten Raum auflösen.')
+);
 ?>

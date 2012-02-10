@@ -170,7 +170,7 @@ class FoafDisplay {
         // es da nicht ein Step, dass anstelle von Globals eine Assets-Klasse benutzt werden soll?
 
         // kopfzeile
-        echo '<a name="foaf">';
+        echo '<a name="foaf"></a>';
         echo "\n<table border=\"0\" cellpadding=\"2\" cellspacing=\"0\" width=\"100%\" align=\"center\">";
         echo "\n<tr>\n<td class=\"topic\"><img src=\"".Assets::image_path('icons/16/white/guestbook.png')."\" align=\"texttop\"><b>";
         echo sprintf(_("Verbindung zu %s"),htmlReady(get_fullname($this->target_id)));

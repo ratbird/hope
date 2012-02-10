@@ -36,6 +36,9 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
+use Studip\Button,
+    Studip\LinkButton;
+
 require_once ($RELATIVE_PATH_RESOURCES."/views/ShowTreeRow.class.php");
 require_once ($RELATIVE_PATH_RESOURCES."/lib/ResourceObject.class.php");
 require_once ($RELATIVE_PATH_RESOURCES."/lib/ResourceObjectPerms.class.php");
@@ -154,49 +157,49 @@ class ShowList extends ShowTreeRow{
                     $zusatz .= " <a href=\"".$PHP_SELF."?clip_in=".$resObject->getId().$link_add."\"><img class=\"text-top\" src=\"".Assets::image_path('icons/16/blue/add/resources.png')."\" ".tooltip(_("In Merkliste aufnehmen"))."></a>";
 
             $new=TRUE;
-            if ($open=="open") {
-                //load the perms
-                /*
-                if (($ActualObjectPerms) && ($ActualObjectPerms->getId() == $resObject->getId()))
-                    $perms = $ActualObjectPerms->getUserPerm();
-                else {
-                    $ThisObjectPerms = ResourceObjectPerms::Factory($resObject->getId());
-                    $perms = $ThisObjectPerms->getUserPerm();
-                }
-                */
-                if ($edit_structure_object==$resObject->id) {
-                    $content= "<br><textarea name=\"change_description\" rows=3 cols=40>".htmlReady($resObject->getDescription())."</textarea><br>";
-                    $content.= "<input type=\"image\" name=\"send\" align=\"absmiddle\" ".makeButton("uebernehmen", "src")." value=\""._("&Auml;nderungen speichern")."\">";
-                    $content.= "&nbsp;<a href=\"$PHP_SELF?cancel_edit=$resObject->id\">".makeButton("abbrechen", "img")."</a>";
-                    $content.= "<input type=\"hidden\" name=\"change_structure_object\" value=\"".$resObject->getId()."\">";
-                    $open="open";
-                } else {
-                    $content=htmlReady($resObject->getDescription());
-                }
-                if (($admin_buttons) && ($simple_perms == "admin")) {
-                    $edit.= "<a href=\"$PHP_SELF?create_object=$resObject->id\">".makeButton("neuesobjekt")."</a>";
+            
+            $edit .= '<div style="text-align: center"><div class="button-group">';
+            
+            if ($open == 'open') {
+                // check if the edit buttons for admins shell be shown
+                if ($admin_buttons && ($simple_perms == "admin")) {
+                    $edit .= LinkButton::create(_('Neues Objekt'), URLHelper::getURL('?create_object=' . $resObject->id));
                     if ($resObject->isDeletable()) {
-                        $edit= "&nbsp;<a href=\"$PHP_SELF?kill_object=$resObject->id\">".makeButton("loeschen")."</a>";
+                        $edit .= LinkButton::create(_('Löschen'), URLHelper::getURL('?kill_object=' . $resObject->id));
                     }
-                    $edit.= "&nbsp;&nbsp;&nbsp;&nbsp;";
                 }
-                if ($view_mode == "oobj"){
-                    if ($resObject->getCategoryId())
-                            $edit.= "<a href=\"$PHP_SELF?show_object=$resObject->id&view=openobject_schedule\">".makeButton("belegung")."</a>&nbsp;";
-                    $edit.= "<a href=\"$PHP_SELF?show_object=$resObject->id&view=openobject_details\">".makeButton("eigenschaften")."</a>";
+                
+       
+                if ($resObject->getCategoryId()) {
+                    if ($view_mode == 'no_nav') {
+                        $edit .= LinkButton::create(_('Belegung'), URLHelper::getURL('?show_object=' . $resObject->id
+                            . '&quick_view=view_schedule&quick_view_mode=' . $view_mode));
+                    } else {
+                        $edit .= LinkButton::create(_('Belegung'), URLHelper::getURL('?show_object=' . $resObject->id
+                            . '&view=view_schedule'));
+                    }
+                }
+
+                if ($view_mode == 'no_nav') {
+                    $edit .= LinkButton::create(_('Eigenschaften'), URLHelper::getURL('?show_object=' . $resObject->id
+                        . '&quick_view=view_details&quick_view_mode=' . $view_mode));
                 } else {
-                    if ($resObject->getCategoryId())
-                            $edit.= sprintf ("<a href=\"%s?show_object=%s&%sview=view_schedule%s\">".makeButton("belegung")."</a>&nbsp;", $PHP_SELF, $resObject->id, ($view_mode == "no_nav") ? "quick_" : "", ($view_mode == "no_nav") ? "&quick_view_mode=$view_mode" : "");
-                    $edit.= sprintf ("<a href=\"%s?show_object=%s&%sview=view_details%s\">".makeButton("eigenschaften")."</a>", $PHP_SELF, $resObject->id, ($view_mode == "no_nav") ? "quick_" : "", ($view_mode == "no_nav") ? "&quick_view_mode=$view_mode" : "");
+                    $edit .= LinkButton::create(_('Eigenschaften'), URLHelper::getURL('?show_object=' . $resObject->id
+                        . '&view=view_details'));
                 }
 
                 //clipboard in/out
                 if (is_object($clipObj) && $simple_perms && $resObject->getCategoryId())
-                    if ($clipObj->isInClipboard($resObject->getId()))
-                        $edit .= "&nbsp;<a href=\"".$PHP_SELF."?clip_out=".$resObject->getId().$link_add."\"><img ".makeButton("merkliste", "src")." border=\"0\" ".tooltip(_("Aus der Merkliste entfernen"))." align=\"absmiddle\"/></a>";
-                    else
-                        $edit .= "&nbsp;<a href=\"".$PHP_SELF."?clip_in=".$resObject->getId().$link_add."\"><img ".makeButton("merkliste", "src")." border=\"0\" ".tooltip(_("In Merkliste aufnehmen"))." align=\"absmiddle\"/></a>";
+                    if ($clipObj->isInClipboard($resObject->getId())) {
+                        $edit .= LinkButton::create(_('Aus Merkliste entfernen'), 
+                            URLHelper::getURL('?clip_out=' .$resObject->getId() . $link_add));
+                    } else {
+                        $edit .= LinkButton::create(_('In Merkliste aufnehmen') . ' >', 
+                            URLHelper::getURL('?clip_in=' .$resObject->getId() . $link_add));
+                    }
             }
+            $edit .= '</div></div>';
+            
             //Daten an Ausgabemodul senden
             $this->showRow($icon, $link, $titel, $zusatz, 0, 0, 0, $new, $open, $content, $edit);
         }

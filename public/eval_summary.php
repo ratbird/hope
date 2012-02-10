@@ -20,6 +20,8 @@
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
+
 require_once 'lib/visual.inc.php';
 require_once "vendor/phplot/phplot.php";
 require_once 'lib/msg.inc.php';
@@ -32,9 +34,20 @@ require_once EVAL_FILE_EVAL;
 require_once EVAL_FILE_OBJECTDB;
 require_once 'lib/export/export_tmp_gc.inc.php';
 
+ob_start();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
+
+$eval_id = Request::option('eval_id');
+/*
+    1 = normale HTML-Ansicht in Stud.IP
+    2 = Druckansicht, ohne HTML-Elemente
+*/
+$ausgabeformat = Request::int('ausgabeformat', 1);
+$cmd = Request::option('cmd');
+$evalgroup_id = Request::option('evalgroup_id');
+$group_type = Request::option('group_type');
 
 // Überprüfen, ob die Evaluation existiert oder der Benutzer genügend Rechte hat
 $eval = new Evaluation($eval_id);
@@ -42,10 +55,6 @@ $eval->check();
 if (EvaluationObjectDB::getEvalUserRangesWithNoPermission($eval) == YES || count($eval->errorArray) > 0) {
     throw new Exception(_("Diese Evaluation ist nicht vorhanden oder Sie haben nicht ausreichend Rechte!"));
 }
-
-PageLayout::setHelpKeyword("Basis.Evaluationen");
-Navigation::activateItem('/tools/evaluation');
-PageLayout::setTitle(_("Evaluations-Auswertung"));
 
 // Gehoert die benutzende Person zum Seminar-Stab (Dozenten, Tutoren) oder ist es ein ROOT?
 $staff_member = $perm->have_studip_perm("tutor", $SessSemName[1]);
@@ -58,18 +67,6 @@ $question_type = "";
 $tmp_path_export = $GLOBALS['TMP_PATH']. '/export/';
 export_tmp_gc();
 
-/*
-    1 = normale HTML-Ansicht in Stud.IP
-    2 = Druckansicht, ohne HTML-Elemente
-*/
-if (!isset($ausgabeformat)) {
-    $ausgabeformat = 1;
-}
-
-if ($ausgabeformat==1) {
-    include ('lib/include/html_head.inc.php'); // Output of html head
-    include ('lib/include/header.php');    //hier wird der "Kopf" nachgeladen
-}
 
 if (isset($cmd)) {
     if ($cmd=="change_group_type" && isset($evalgroup_id) && isset($group_type)) {
@@ -514,5 +511,18 @@ if ($db->next_record()) {
   echo "</table>\n";
 }
 
-include ('lib/include/html_end.inc.php');
+
+PageLayout::setHelpKeyword("Basis.Evaluationen");
+Navigation::activateItem('/tools/evaluation');
+PageLayout::setTitle(_("Evaluations-Auswertung"));
+
+if ($ausgabeformat == 2) {
+    PageLayout::removeStylesheet('style.css');
+    PageLayout::addStylesheet('style_print.css');
+}
+$layout = $GLOBALS['template_factory']->open('layouts/base_without_infobox');
+
+$layout->content_for_layout = ob_get_clean();
+
+echo $layout->render();
 page_close();

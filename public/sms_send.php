@@ -22,9 +22,11 @@
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $perm->check("user");
-
+$_SESSION['sms_data'] = $sms_data;
+$sms_show = $_SESSION['sms_show'];
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
 // -- here you have to put initialisations for the current page
@@ -48,13 +50,13 @@ if (get_config('CHAT_ENABLE')) {
     $admin_chats = $chatServer->getAdminChats($auth->auth['uid']);
 }
 
-$sess->register("sms_data");
+//$sess->register("sms_data");
 $msging=new messaging;
 
 $db=new DB_Seminar;
 
 check_messaging_default();
-
+$cmd = Request::option('cmd');
 # ACTION
 ###########################################################
 // start new message
@@ -69,6 +71,10 @@ if ($cmd == 'new') {
 }
 
 // write a chat-invitation, so predefine the messagesubject
+   $messagesubject = Request::get('messagesubject');
+   $message = Request::get('message');
+   $quote = Request::option('quote');
+   $signature = Request::get('signature');
 if ($cmd == "write_chatinv" && !isset($messagesubject)) $messagesubject = _("Chateinladung");
 
 //wurde eine Datei hochgeladen?
@@ -113,12 +119,12 @@ if($GLOBALS["ENABLE_EMAIL_ATTACHMENTS"]){
 }
 
 // where do we save the message?
-if($tmp_save_snd_folder) {
+if(Request::get('tmp_save_snd_folder')) {
 
-    if($tmp_save_snd_folder == "dummy") {
+    if(Request::get('tmp_save_snd_folder') == "dummy") {
         unset($sms_data["tmp_save_snd_folder"]);
     } else {
-        $sms_data["tmp_save_snd_folder"] = $tmp_save_snd_folder;
+        $sms_data["tmp_save_snd_folder"] = Request::get('tmp_save_snd_folder');
     }
 
 }
@@ -126,19 +132,19 @@ if($tmp_save_snd_folder) {
 // do we like save the transmitted sms?
 if(!$sms_data["tmpsavesnd"]) {
     $sms_data["tmpsavesnd"] = $my_messaging_settings["save_snd"];
-} else if($add_tmpsavesnd_button_x) {
+} else if(Request::submitted('add_tmpsavesnd_button')) {
     $sms_data["tmpsavesnd"] = 1;
-} else if($rmv_tmpsavesnd_button_x) {
+} else if(Request::submitted('rmv_tmpsavesnd_button_x')) {
     $sms_data["tmpsavesnd"] = 2;
 }
 
 // email-forwarding?
-if ($rmv_tmpemailsnd_button_x) $sms_data['tmpemailsnd'] = "";
-if ($add_tmpemailsnd_button_x) $sms_data['tmpemailsnd'] = 1;
+if (Request::submitted('rmv_tmpemailsnd_button_x')) $sms_data['tmpemailsnd'] = "";
+if (Request::submitted('add_tmpemailsnd_button_x')) $sms_data['tmpemailsnd'] = 1;
 
 //reading-confirmation?
-if ($rmv_tmpreadsnd_button_x) $sms_data["tmpreadsnd"] = "";
-if ($add_tmpreadsnd_button_x) $sms_data["tmpreadsnd"] = 1;
+if (Request::submitted('rmv_tmpreadsnd_button_x')) $sms_data["tmpreadsnd"] = "";
+if (Request::submitted('add_tmpreadsnd_button_x')) $sms_data["tmpreadsnd"] = 1;
 
 
 // check if active chat avaiable
@@ -148,12 +154,11 @@ if (($cmd == "write_chatinv") && (!is_array($admin_chats))) $cmd='';
 if (Request::submitted('cmd_insert')) {
 
     $count = 0;
-
     if (!empty($sms_data["p_rec"])) {
         $time = date("U");
         $tmp_message_id = md5(uniqid("321losgehtes"));
-        if ($chat_id) {
-            $count = $msging->insert_chatinv($message, $sms_data["p_rec"], $chat_id);
+        if (Request::option('chat_id')) {
+            $count = $msging->insert_chatinv($message, $sms_data["p_rec"], Request::option('chat_id'));
         } else {
             $msging->provisonal_attachment_id = Request::option('attachment_message_id');
             $count = $msging->insert_message($message, $sms_data["p_rec"], FALSE, $time, $tmp_message_id, FALSE, $signature, $messagesubject);
@@ -180,6 +185,7 @@ if (Request::submitted('cmd_insert')) {
         $msg = "error§" . _("Ihre Nachricht konnte nicht gesendet werden.");
     }
 
+    $sms_source_page = Request::option('sms_source_page');
     if (!preg_match('/^([a-zA-Z0-9_-]+\.php)([a-zA-Z0-9_?&=-]*)$/',$sms_source_page)) $sms_source_page = '';
     if ($sms_source_page) {
         $sess->register('sms_msg');
@@ -211,11 +217,11 @@ if ($_GET['answer_to']) {
     $db->query ($query);
     while ($db->next_record()) {
         if($quote) $quote_username = $db->f("rec_uname");
-        $sms_data["p_rec"] = array($db->f("rec_uname"));
+             $sms_data["p_rec"] = array($db->f("rec_uname"));
     }
     $sms_data["sig"] = $my_messaging_settings["addsignature"];
 }
-
+$rec_uname=Request::quoted('rec_uname');
 if (isset($rec_uname)) {
     if (!get_visibility_by_username($rec_uname)) {
         if ($perm->get_perm() == "dozent") {
@@ -234,7 +240,7 @@ if (isset($rec_uname)) {
     }
 }
 
-if ($msgid) {
+if (Request::option('msgid')) {
     $dbv = new DB_Seminar;
     $dbv->query("SELECT auth_user_md5.username FROM auth_user_md5, message_user WHERE message_user.message_id = '$msgid' AND message_user.user_id = auth_user_md5.user_id AND snd_rec = 'snd'");
     $dbv->next_record();
@@ -252,10 +258,6 @@ if (Request::get('sp_id') && $perm->have_perm("root")) {
     }
 
     // predefine subject
-    if(Request::get('subject')) {
-        $messagesubject = Request::quoted('subject');
-    }
-
     $query = sprintf("SELECT DISTINCT auth_user_md5.username FROM user_studiengang LEFT JOIN auth_user_md5 USING (user_id) WHERE studiengang_id = '%s' ", Request::option('sp_id'));
     $add_group_members = $db->query($query)->fetchAll(PDO::FETCH_COLUMN);
 
@@ -330,15 +332,15 @@ if (Request::get('prof_id') && Request::get('deg_id') && $perm->have_perm("root"
 }
 
 // if send message at group (adressbook or groups in courses)
-if ($group_id) {
+if (Request::option('group_id')) {
 
     // be sure to send it as email
     if($emailrequest == 1) $sms_data['tmpemailsnd'] = 1;
 
     // predefine subject
-    if($subject) $messagesubject = $subject;
+    if(Request::get('subject')) $messagesubject = Request::quoted('subject');
 
-    $query = sprintf("SELECT statusgruppe_user.user_id, username FROM statusgruppe_user LEFT JOIN auth_user_md5 USING (user_id) WHERE statusgruppe_id = '%s' ", $group_id);
+    $query = sprintf("SELECT statusgruppe_user.user_id, username FROM statusgruppe_user LEFT JOIN auth_user_md5 USING (user_id) WHERE statusgruppe_id = '%s' ", Request::option('group_id'));
     $db->query($query);
     while ($db->next_record()) {
         $add_group_members[] = $db->f("username");
@@ -364,7 +366,7 @@ if (isset($_REQUEST['rec_uname'])  || isset($_REQUEST['filter']))
     unset($sms_data['tmp_save_snd_folder']);
     unset($sms_data['tmpreadsnd']);
     unset($sms_data['tmpemailsnd']);
-    $messagesubject = Request::quoted('subject');
+    
     $course_id = Request::option('course_id');
     $cid = Request::option('cid');
 
@@ -414,15 +416,16 @@ if (isset($_REQUEST['rec_uname'])  || isset($_REQUEST['filter']))
 }
 
 // if send message at inst, only for admins
-if ($inst_id && $perm->have_studip_perm('admin', $inst_id)) {
+if (Request::option('inst_id') && $perm->have_studip_perm('admin', Request::option('inst_id'))) {
 
     // be sure to send it as email
-    if($emailrequest == 1) $sms_data['tmpemailsnd'] = 1;
+    if(Request::int('emailrequest') == 1) $sms_data['tmpemailsnd'] = 1;
 
     // predefine subject
-    if($subject) $messagesubject = $subject;
+
+    if(Request::quoted('subject')) $messagesubject = Request::quoted('subject');
     $db = new DB_Seminar;
-    $db->query ("SELECT username FROM user_inst LEFT JOIN auth_user_md5 USING(user_id) WHERE inst_perms!='user' AND Institut_id = '".$inst_id."'");
+    $db->query ("SELECT username FROM user_inst LEFT JOIN auth_user_md5 USING(user_id) WHERE inst_perms!='user' AND Institut_id = '".Request::option('inst_id')."'");
     while ($db->next_record()) {
         $add_course_members[] = $db->f("username");
     }
@@ -438,19 +441,20 @@ if ($inst_id && $perm->have_studip_perm('admin', $inst_id)) {
 // attach signature
 if (!isset($sms_data["sig"])) {
     $sms_data["sig"] = $my_messaging_settings["addsignature"];
-} else if ($add_sig_button_x) {
+} else if (Request::submitted('add_sig_button_x')) {
     $sms_data["sig"] = "1";
-} else if ($rmv_sig_button_x) {
+} else if (Request::submitted('rmv_sig_button_x')) {
     $sms_data["sig"] = "0";
+}
+// add a reciever from adress-members
+if (Request::submitted('add_receiver_button_x') && Request::getArray('add_receiver')) {
+    $sms_data["p_rec"] = array_add_value(Request::getArray('add_receiver'), $sms_data["p_rec"]);
+
 }
 
 
-// add a reciever from adress-members
-if ($add_receiver_button_x && !empty($add_receiver)) { $sms_data["p_rec"] = array_add_value($add_receiver, $sms_data["p_rec"]); }
-
-
 // add all reciever from adress-members
-if ($add_allreceiver_button_x) {
+if (Request::submitted('add_allreceiver_button_x')) {
 
     $query_for_adresses = "SELECT contact.user_id, username, ".$_fullname_sql['full_rev']." AS fullname     FROM contact LEFT JOIN auth_user_md5 USING(user_id) LEFT JOIN user_info USING (user_id) WHERE owner_id = '".$user->id."' ORDER BY Nachname ASC";
     $db->query($query_for_adresses);
@@ -469,18 +473,18 @@ if ($add_allreceiver_button_x) {
 
 
 // add receiver from freesearch
-if ($add_freesearch_x && Request::get("adressee")) {
-    $sms_data["p_rec"] = array_add_value(array(Request::quoted("adressee")), $sms_data["p_rec"]);
+if (Request::submitted('add_freesearch_x') && Request::get("adressee")) {
+    $sms_data["p_rec"] = array_add_value(array(Request::get("adressee")), $sms_data["p_rec"]);
 }
 
 
 // remove all from receiverlist
-if ($del_allreceiver_button_x) { unset($sms_data["p_rec"]); }
+if (Request::submitted('del_allreceiver_button_x')) { unset($sms_data["p_rec"]); }
 
 
 // aus empfaengerliste loeschen
-if ($del_receiver_button_x && !empty($del_receiver)) {
-    foreach ($del_receiver as $a) {
+if (Request::submitted('del_receiver_button_x') && Request::optionArray('del_receiver')) {
+    foreach (Request::optionArray('del_receiver') as $a) {
         $sms_data["p_rec"] = array_delete_value($sms_data["p_rec"], $a);
     }
 }
@@ -530,7 +534,7 @@ $txt['008'] = _("Lesebestätigung");
         echo '</table>';
     }
 
-    echo '<form enctype="multipart/form-data" name="upload_form" action="'.$PHP_SELF.'" method="post">';
+    echo '<form enctype="multipart/form-data" name="upload_form" action="'.URLHelper::getURL().'" method="post">';
     echo CSRFProtection::tokenTag();
     if($_REQUEST['answer_to']) {
          echo '<input type="hidden" name="answer_to" value="'. htmlReady($_REQUEST['answer_to']). '">';
@@ -540,7 +544,7 @@ $txt['008'] = _("Lesebestätigung");
 
     // we like to quote something
     if ($quote) {
-        $db->query ("SELECT subject, message FROM message WHERE message_id = '$quote' ");
+        $db->query ("SELECT subject, message FROM message WHERE message_id = '".Request::option('quote')."'");
         $db->next_record();
         $tmp_subject = addslashes($db->f("subject"));
         if(substr($tmp_subject, 0, 3) != "RE:") {

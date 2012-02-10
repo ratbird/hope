@@ -323,7 +323,7 @@ class EvalShow
       /* reload button */
       if( $isPreview ) {
          $button = LinkButton::create(_('Aktualisieren'),
-                UrlHelper::getURLk('show_evaluation.php?evalID='.$eval->getObjectID().'&isPreview=1'),
+                UrlHelper::getURL('show_evaluation.php?evalID='.$eval->getObjectID().'&isPreview=1'),
                 array('title' => _('Vorschau aktualisieren.')));
          $td->cont( $button );
       }
@@ -400,7 +400,7 @@ class EvalShow
 
    function createDeleteButton ($eval) {
          $button = LinkButton::create(_('Löschen'), 
-                 UrlHelper::getURLk(EVAL_FILE_ADMIN."?evalAction=delete_request&evalID=".$eval->getObjectID ()),
+                 UrlHelper::getURL(EVAL_FILE_ADMIN."?evalAction=delete_request&evalID=".$eval->getObjectID ()),
                  array('title' => _('Evaluation löschen.')));
          return $button;
    }

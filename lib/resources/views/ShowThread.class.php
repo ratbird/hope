@@ -3,6 +3,9 @@
 # Lifter007: TODO
 # Lifter003: TODO
 # Lifter010: TODO
+
+use Studip\Button, Studip\LinkButton;
+
 /**
 * ShowThread.class.php
 *
@@ -121,8 +124,8 @@ class ShowThread extends ShowTreeRow {
 
                 if ($edit_structure_object==$resObject->id) {
                     $content.= "<br><textarea name=\"change_description\" rows=3 cols=40>".htmlReady($resObject->getDescription())."</textarea><br>";
-                    $content.= "<input type=\"image\" name=\"send\" align=\"absmiddle\" ".makeButton("uebernehmen", "src")." border=0 value=\""._("&Auml;nderungen speichern")."\">";
-                    $content.= "&nbsp;<a href=\"$PHP_SELF?cancel_edit=$resObject->id\">".makeButton("abbrechen", "img")."</a>";
+                    $content .= Button::create(_('Übernehmen'), 'send', array('value' => _('Änderungen speichern')));
+                    $content .= LinkButton::createCancel(_('Abbrechen'), URLHelper::getURL('?cancel_edit=' . $resObject->id));
                     $content.= "<input type=\"hidden\" name=\"change_structure_object\" value=\"".$resObject->getId()."\">";
                     $open="open";
                 } else {
@@ -131,29 +134,32 @@ class ShowThread extends ShowTreeRow {
                 if ($resources_data["move_object"] == $resObject->id)
                     $content.= sprintf ("<br>"._("Dieses Objekt wurde zum Verschieben markiert. Bitte w&auml;hlen Sie das Einf&uuml;gen-Symbol %s, um es in die gew&uuml;nschte Ebene zu verschieben."), "<img src=\"".Assets::image_path('icons/16/yellow/arr_2right.png')."\" alt=\""._("Klicken Sie auf dieses Symbol, um dieses Objekt in eine andere Ebene zu verschieben")."\">");
 
-                if ($resObject->getCategoryId())
-                    $edit.= "<a href=\"$PHP_SELF?show_object=$resObject->id&view=view_schedule\">".makeButton("belegung")."</a>&nbsp;";
-                $edit.= "<a href=\"$PHP_SELF?show_object=$resObject->id&view=view_details\">".makeButton("eigenschaften")."</a>";
-
+                if ($resObject->getCategoryId()) {
+                    $edit .= LinkButton::create(_('Belegung'), URLHelper::getURL('?view=view_schedule&show_object=' . $resObject->id));
+                }
+                $edit .= LinkButton::create(_('Eigenschaften'), URLHelper::getURL('?view=view_details&show_object=' . $resObject->id));
 
                 if ($perms == "admin") {
-                    $edit.= "&nbsp;&nbsp;&nbsp;&nbsp;";
-                    $edit.= "<a href=\"$PHP_SELF?create_object=$resObject->id\">".makeButton("neuesobjekt", "img")."</a>";
-                    $edit.= "&nbsp;<a href=\"$PHP_SELF?create_hierachie_level=$resObject->id\">".makeButton("neueebene", "img")."</a>";
+                    $edit .= "&nbsp;&nbsp;&nbsp;&nbsp;";
+                    $edit .= LinkButton::create(_('Neues Objekt'), URLHelper::getURL('?create_object=' . $resObject->id));
+                    $edit .= LinkButton::create(_('Neue Ebene'), URLHelper::getURL('?create_hierachie_level=' . $resObject->id));
                 }
 
                 $edit.= "&nbsp;&nbsp;&nbsp;&nbsp;";
 
-                if ($weitere)
-                    $edit.= "<a href=\"$PHP_SELF?open_list=$resObject->id\">".makeButton("listeoeffnen", "img")."</a>";
+                if ($weitere) {
+                    $edit .= LinkButton::create(_('Liste öffnen'), URLHelper::getURL('?open_list=' . $resObject->id));
+                }
 
-                if ($resources_data["move_object"] == $resObject->id)
-                    $edit.= "&nbsp;<a href=\"$PHP_SELF?cancel_move=TRUE\">".makeButton("abbrechen", "img")."</a>";
-                elseif ($perms == "admin")
-                    $edit.= "&nbsp;<a href=\"$PHP_SELF?pre_move_object=$resObject->id\">".makeButton("verschieben", "img")."</a>";
+                if ($resources_data["move_object"] == $resObject->id) {
+                    $edit .= LinkButton::createCancel(_('Abbrechen'), URLHelper::getURL('?cancel_move=TRUE'));
+                } else if ($perms == "admin") {
+                    $edit .= LinkButton::create(_('Verschieben'), URLHelper::getURL('?pre_move_object=' . $resObject->id));
+                }
 
-                if ((!$weitere) && ($perms == "admin") && ($resObject->isDeletable()))
-                    $edit.= "&nbsp;<a href=\"$PHP_SELF?kill_object=$resObject->id\">".makeButton("loeschen", "img")."</a>";
+                if (!$weitere && $perms == "admin" && $resObject->isDeletable()) {
+                    $edit .= LinkButton::create(_('Löschen'), '?kill_object=' . $resObject->id);
+                }
             }
 
             //Daten an Ausgabemodul senden (aus resourcesVisual)

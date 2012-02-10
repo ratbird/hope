@@ -1057,7 +1057,7 @@ if ($view == "view_schedule" || $view == "openobject_schedule") {
         $resources_data["schedule_length_unit"] = $schedule_length_unit;
         $resources_data["schedule_week_offset"] = 0;
         $resources_data["schedule_start_time"] = mktime (0,0,0,$schedule_begin_month, $schedule_begin_day, $schedule_begin_year);
-        if (($start_list_x) || (($jump_x) && ($resources_data["schedule_mode"] == "list"))){
+        if (Request::submitted('start_list') || (Request::submitted('jump') && ($resources_data["schedule_mode"] == "list"))) {
             $resources_data["schedule_mode"] = "list";
             if ($resources_data["schedule_start_time"] < 1)
                 $resources_data["schedule_start_time"] = mktime (0, 0, 0, date("n", time()), date("j", time()), date("Y", time()));
@@ -1077,7 +1077,7 @@ if ($view == "view_schedule" || $view == "openobject_schedule") {
             }
             if ($resources_data["schedule_end_time"]  < 1)
                 $resources_data["schedule_end_time"] = mktime (23, 59, 59, date("n", time()), date("j", time())+1, date("Y", time()));
-        } elseif (($start_graphical_x) || (!$resources_data["schedule_mode"]) || (($jump_x) && ($resources_data["schedule_mode"] == "graphical"))) {
+        } elseif (Request::submitted('start_graphical') || (!$resources_data["schedule_mode"]) || (Request::submitted('jump') && ($resources_data["schedule_mode"] == "graphical"))) {
             $resources_data["schedule_end_time"] = $resources_data["schedule_start_time"] + (7 * 24 * 60 * 60) + 59;
             $resources_data["schedule_mode"] = "graphical";
         }
@@ -2007,9 +2007,9 @@ if ($view == "view_sem_schedule" || $view == "view_group_schedule" || $view == "
         if (isset($_REQUEST['sem_schedule_choose'])){
             $resources_data['sem_schedule_semester_id'] = $_REQUEST['sem_schedule_choose'];
         }
-        if (Request::submitted('sem_schedule_start_list') || ($jump_x && ($resources_data["schedule_mode"] == "list"))){
+        if (Request::submitted('sem_schedule_start_list') || (Request::submitted('jump') && ($resources_data["schedule_mode"] == "list"))){
             $resources_data["schedule_mode"] = "list";
-        } elseif (Request::submitted('sem_schedule_start_graphical') || (!$resources_data["schedule_mode"]) || ($jump_x && ($resources_data["schedule_mode"] == "graphical"))) {
+        } elseif (Request::submitted('sem_schedule_start_graphical') || (!$resources_data["schedule_mode"]) || (Request::submitted('jump') && ($resources_data["schedule_mode"] == "graphical"))) {
             $resources_data["schedule_mode"] = "graphical";
         }
 

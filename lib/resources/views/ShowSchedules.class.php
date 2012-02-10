@@ -36,6 +36,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
+use Studip\Button;
+
 require_once ($GLOBALS['RELATIVE_PATH_RESOURCES'].'/lib/AssignEventList.class.php');
 require_once ($GLOBALS['RELATIVE_PATH_RESOURCES'].'/views/ScheduleWeek.class.php');
 require_once ('lib/classes/cssClassSwitcher.inc.php');
@@ -119,11 +121,11 @@ class ShowSchedules {
                 <td class="<? echo $cssSw->getClass() ?>" width="4%" rowspan="2">&nbsp;
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="30%" rowspan="2" valign="top"><font size=-1>
-                    <font size=-1>Beginn:&nbsp;
+                    <font size=-1>Beginn:
                     <input type="text" name="schedule_begin_day" size=2 maxlength=2 value="<? if (!$start_time) echo date("d",time()); else echo date("d",$start_time); ?>">.
                     <input type="text" name="schedule_begin_month" size=2 maxlength=2 value="<? if (!$start_time) echo date("m",time()); else echo date("m",$start_time); ?>">.
                     <input type="text" name="schedule_begin_year" size=4 maxlength=4 value="<? if (!$start_time) echo date("Y",time()); else echo date("Y",$start_time); ?>"><br>
-                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; <input type="image" name="jump" border="0"<? echo makeButton("auswaehlen", "src") ?>><br>
+                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;<?= Button::create(_('Auswählen'), 'jump') ?>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="66%" valign="top"><font size=-1>
                     <input type="text" name="schedule_length_factor" size=2 maxlength=2 / value="<? if (!$this->length_factor) echo "1"; else echo $this->length_factor; ?>">
@@ -133,14 +135,13 @@ class ShowSchedules {
                         <option <? if ($this->length_unit  == "m") echo "selected" ?> value="m"><?=_("Monat(e)")?></option>
                         <option <? if ($this->length_unit  == "y") echo "selected" ?> value="y"><?=_("Jahre(e)")?></option>
                     </select>
-                    &nbsp;<?=_("als Liste ausgeben")?>
-                    &nbsp; <input type="image" name="start_list" <?=makeButton("ausgeben", "src") ?> border=0 vallue="<?=_("ausgeben")?>"><br>
+                    <?= Button::create(_('Als Liste ausgeben'), 'start_list') ?>
                 </td>
             </tr>
             <tr>
-                    <td class="<? echo $cssSw->getClass() ?>" width="66%" valign="top"><font size=-1>
-                    <?=_("<i>oder</i> eine Woche grafisch ausgeben")?>
-                    &nbsp; <input type="image" name="start_graphical" <?=makeButton("ausgeben", "src") ?> border=0 vallue="<?=_("ausgeben")?>"><br>&nbsp;
+                <td class="<? echo $cssSw->getClass() ?>" width="66%" valign="top">
+                    <i>oder</i>
+                    <?= Button::create(_('Eine Woche grafisch ausgeben'), 'start_graphical') ?>
                 </td>
             </tr>
         </table>

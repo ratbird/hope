@@ -1981,7 +1981,7 @@ if ($view == "view_sem_schedule" || $view == "view_group_schedule" || $view == "
         }
     }
     if($view == "view_group_schedule_daily" || $view == 'openobject_group_schedule'){
-        if(isset($_REQUEST['jump_x'])){
+        if(Request::submitted('jump')) {
             $resources_data["schedule_start_time"] = mktime (0, 0, 0, (int)$_REQUEST['schedule_begin_month'], (int)$_REQUEST['schedule_begin_day'], (int)$_REQUEST['schedule_begin_year']);
         }
         if(!$resources_data["schedule_start_time"]) $resources_data["schedule_start_time"] = strtotime('today');

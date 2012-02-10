@@ -32,6 +32,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
+use Studip\Button;
+
 require_once ($GLOBALS['RELATIVE_PATH_RESOURCES']."/views/ShowSemSchedules.class.php");
 require_once ($GLOBALS['RELATIVE_PATH_RESOURCES']."/views/SemGroupScheduleDayOfWeek.class.php");
 
@@ -70,38 +72,25 @@ class ShowGroupSchedulesDaily extends ShowSemSchedules {
                 <td class="<? echo $cssSw->getClass() ?>" width="4%" rowspan="2">&nbsp;
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="40%" valign="top">
-                <font size="-1">
-                <input type="text" name="schedule_begin_day" size=2 maxlength=2 value="<?echo date("d",$start_time); ?>">.
-                <input type="text" name="schedule_begin_month" size=2 maxlength=2 value="<?echo date("m",$start_time); ?>">.
-                <input type="text" name="schedule_begin_year" size=4 maxlength=4 value="<?echo date("Y",$start_time); ?>"><br>
-                <input type="image" name="jump" align="absbottom" border="0"<? echo makeButton("auswaehlen", "src") ?>><br>
-                </font>
+                    <input type="text" name="schedule_begin_day" size=2 maxlength=2 value="<?echo date("d",$start_time); ?>">.
+                    <input type="text" name="schedule_begin_month" size=2 maxlength=2 value="<?echo date("m",$start_time); ?>">.
+                    <input type="text" name="schedule_begin_year" size=4 maxlength=4 value="<?echo date("Y",$start_time); ?>">
+                    <?= Button::create(_('Auswählen'), 'jump') ?><br>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="60%" valign="top">
-                <?=($view_mode == 'oobj' ? _("Eine Ressourcengruppe ausw&auml;hlen") : _("Eine Raumgruppe ausw&auml;hlen"))?>
-                </td>
-                <td class="<? echo $cssSw->getClass() ?>">&nbsp;</td>
-            </tr>
-            <tr>
-            <td class="<? echo $cssSw->getClass() ?>" width="40%" valign="top">
-                &nbsp;
-                </td>
-                    <td class="<? echo $cssSw->getClass() ?>" width="60%" valign="top"><font size="-1">
+                    <?= ($view_mode == 'oobj' ? _("Eine Ressourcengruppe ausw&auml;hlen") : _("Eine Raumgruppe ausw&auml;hlen")) ?>:<br>
                     <select name="group_schedule_choose_group" onChange="document.schedule_form.submit()">
-                    <?
-                    foreach($this->resources_groups->getAvailableGroups() as $gid){
+                    <? foreach($this->resources_groups->getAvailableGroups() as $gid) :
                         echo '<option value="'.$gid.'" '
                             . ($this->group_id == $gid ? 'selected' : '') . '>'
                             .htmlReady(my_substr($this->resources_groups->getGroupName($gid),0,80))
                             .' ('.$this->resources_groups->getGroupCount($gid).')</option>';
-                    }
-                    ?>
+                    endforeach ?>
                     </select>
-                </font>
+                    <?= Button::create(_('Auswählen')) ?>
                 </td>
-                <td class="<? echo $cssSw->getClass() ?>" valign="middle"><font size="-1">
-                    <input type="image" name="group_schedule_start" align="middle" <?=makeButton("auswaehlen", "src") ?> border=0 ><br>
-                </font>
+                <td class="<? echo $cssSw->getClass() ?>" valign="middle">
+                    
                 </td>
             </tr>
             <tr>

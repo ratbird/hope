@@ -34,6 +34,9 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
+use Studip\Button,
+    Studip\LinkButton;
+
 require_once ($GLOBALS['RELATIVE_PATH_RESOURCES']."/views/ShowSemSchedules.class.php");
 require_once ($GLOBALS['RELATIVE_PATH_RESOURCES']."/views/SemGroupScheduleDayOfWeek.class.php");
 
@@ -71,30 +74,15 @@ class ShowGroupSchedules extends ShowSemSchedules {
                 <td class="<? echo $cssSw->getClass() ?>" width="4%" rowspan="2">&nbsp;
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="40%" valign="top">
-                <font size="-1">
-                <?=SemesterData::GetSemesterSelector(array('name' => 'sem_schedule_choose', 'onChange' => 'document.schedule_form.submit()'), $this->semester['semester_id'],'semester_id',false)?>
-                <input type="image" name="jump" align="absbottom" border="0"<? echo makeButton("auswaehlen", "src") ?>><br>
-                </font>
+                    <?= SemesterData::GetSemesterSelector(array('name' => 'sem_schedule_choose', 'onChange' => 'document.schedule_form.submit()'), $this->semester['semester_id'],'semester_id',false)?>
+                    <?= Button::create(_('Auswählen'), 'jump') ?><br>
+                    <input type="radio" onChange="document.schedule_form.submit()" style="vertical-align:bottom" <?=($this->timespan == 'course_time' ? 'checked' : '')?> name="sem_time_choose" value="course_time">
+                    <?=_("Vorlesungszeit")?>
+                    <input type="radio" onChange="document.schedule_form.submit()" style="vertical-align:bottom" <?=($this->timespan == 'sem_time' ? 'checked' : '')?> name="sem_time_choose" value="sem_time">
+                    <?=_("vorlesungsfreie Zeit")?>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="60%" valign="top">
-                <font size="-1">
-                <?=_("Eine Raumgruppe ausw&auml;hlen")?>
-                </font>
-                </td>
-                <td class="<? echo $cssSw->getClass() ?>"><font size="-1">
-                    &nbsp;</font>
-                </td>
-            </tr>
-            <tr>
-            <td class="<? echo $cssSw->getClass() ?>" width="40%" valign="middle">
-                <font size="-1">
-                <input type="radio" onChange="document.schedule_form.submit()" style="vertical-align:bottom" <?=($this->timespan == 'course_time' ? 'checked' : '')?> name="sem_time_choose" value="course_time">
-                <?=_("Vorlesungszeit")?>
-                <input type="radio" onChange="document.schedule_form.submit()" style="vertical-align:bottom" <?=($this->timespan == 'sem_time' ? 'checked' : '')?> name="sem_time_choose" value="sem_time">
-                <?=_("vorlesungsfreie Zeit")?>
-                </font>
-                </td>
-                    <td class="<? echo $cssSw->getClass() ?>" width="60%" valign="middle"><font size="-1">
+                    <?=_("Eine Raumgruppe ausw&auml;hlen")?>:<br>
                     <select name="group_schedule_choose_group" onChange="document.schedule_form.submit()">
                     <?
                     $room_group = RoomGroups::GetInstance();
@@ -106,12 +94,12 @@ class ShowGroupSchedules extends ShowSemSchedules {
                     }
                     ?>
                     </select>
+                    <?= Button::create(_('Auswählen')) ?>
                 </font>
                 </td>
-                <td class="<? echo $cssSw->getClass() ?>" valign="middle"><font size="-1">
-                    <input type="image" name="group_schedule_start" align="middle" <?=makeButton("auswaehlen", "src") ?> border=0 ><br>
-                </font>
-                </td>
+                <td class="<? echo $cssSw->getClass() ?>" valign="middle">
+                    
+                </td>                    
             </tr>
             <tr>
                 <td class="<? echo $cssSw->getClass() ?>" colspan="4"><font size="-1">&nbsp;</font>
@@ -310,7 +298,9 @@ class ShowGroupSchedules extends ShowSemSchedules {
                 <?php
                 $num = 1;
                 foreach($single_assigns as $event) {
-                    echo "<a href=\"$PHP_SELF?show_object=".$event->getResourceId()."&quick_view=".$view."&quick_view_mode=".$quick_view_mode."&edit_assign_object=".$event->getAssignId()."\">".makeButton("eigenschaften")."</a>";
+                    echo LinkButton::create(_('Eigenschaften'), URLHelper::getURL('?show_object='
+                        . $event->getResourceId() . '&quick_view=' . $view . '&quick_view_mode=' 
+                        . $quick_view_mode . '&edit_assign_object=' . $event->getAssignId()));
                     printf ("&nbsp; <font size=-1>"._("%s ist von <b>%s</b> bis <b>%s</b>, belegt von <b>%s</b>")."</font><br>",'EB'.$num++.': ' . htmlReady(getResourceObjectName($event->getResourceId())), strftime("%A, %d.%m.%Y %H:%M", $event->getBegin()), strftime("%A, %d.%m.%Y %H:%M", $event->getEnd()), $event->getName());
                 }
                 ?>

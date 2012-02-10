@@ -34,6 +34,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
+use Studip\Button;
+
 require_once ($GLOBALS['RELATIVE_PATH_RESOURCES'].'/views/ScheduleWeekRequests.class.php');
 require_once ($GLOBALS['RELATIVE_PATH_RESOURCES'].'/views/ShowSchedules.class.php');
 require_once ($GLOBALS['RELATIVE_PATH_RESOURCES'].'/lib/VeranstaltungResourcesAssign.class.php');
@@ -83,11 +85,11 @@ class ShowSchedulesRequests extends ShowSchedules{
                 <td class="<? echo $cssSw->getClass() ?>" width="4%" rowspan="2">&nbsp;
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="30%" rowspan="2" valign="top"><font size=-1>
-                    <font size=-1>Beginn:&nbsp;
+                    <font size=-1>Beginn:
                     <input type="text" name="schedule_begin_day" size=2 maxlength=2 value="<? if (!$start_time) echo date("d",time()); else echo date("d",$start_time); ?>">.
                     <input type="text" name="schedule_begin_month" size=2 maxlength=2 value="<? if (!$start_time) echo date("m",time()); else echo date("m",$start_time); ?>">.
                     <input type="text" name="schedule_begin_year" size=4 maxlength=4 value="<? if (!$start_time) echo date("Y",time()); else echo date("Y",$start_time); ?>"><br>
-                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; <input type="image" name="jump" border="0"<? echo makeButton("auswaehlen", "src") ?>><br>
+                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;<?= Button::create(_('Auswählen'), 'jump') ?>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>">
                 &nbsp;

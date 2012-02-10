@@ -2007,9 +2007,9 @@ if ($view == "view_sem_schedule" || $view == "view_group_schedule" || $view == "
         if (isset($_REQUEST['sem_schedule_choose'])){
             $resources_data['sem_schedule_semester_id'] = $_REQUEST['sem_schedule_choose'];
         }
-        if (($sem_schedule_start_list_x) || (($jump_x) && ($resources_data["schedule_mode"] == "list"))){
+        if (Request::submitted('sem_schedule_start_list') || ($jump_x && ($resources_data["schedule_mode"] == "list"))){
             $resources_data["schedule_mode"] = "list";
-        } elseif (($sem_schedule_start_graphical_x) || (!$resources_data["schedule_mode"]) || (($jump_x) && ($resources_data["schedule_mode"] == "graphical"))) {
+        } elseif (Request::submitted('sem_schedule_start_graphical') || (!$resources_data["schedule_mode"]) || ($jump_x && ($resources_data["schedule_mode"] == "graphical"))) {
             $resources_data["schedule_mode"] = "graphical";
         }
 

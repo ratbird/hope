@@ -1,3 +1,4 @@
+<? use Studip\Button, Studip\LinkButton; ?> 
 <h3><?=sprintf(_("Raumanfrage \"%s\" bearbeiten"), htmlready($request->getTypeExplained()))?></h3>
 <form method="POST" name="room_request" action="<?=$this->controller->link_for('edit/' . $course_id, array('request_id' => $request->getId()))?>">
 <?= CSRFProtection::tokenTag() ?>

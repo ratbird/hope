@@ -34,6 +34,9 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
+use Studip\Button,
+    Studip\LinkButton;
+
 require_once ($GLOBALS['RELATIVE_PATH_RESOURCES']."/views/ShowSchedules.class.php");
 require_once ($GLOBALS['RELATIVE_PATH_RESOURCES']."/views/SemScheduleWeek.class.php");
 
@@ -91,17 +94,16 @@ class ShowSemSchedules extends ShowSchedules {
                 <td class="<? echo $cssSw->getClass() ?>" width="40%" valign="top">
                 <font size="-1">
                 <?=SemesterData::GetSemesterSelector(array('name' => 'sem_schedule_choose', 'onChange' => 'document.schedule_form.submit()'), $this->semester['semester_id'],'semester_id',false)?>
-                <input type="image" name="jump" align="absbottom" border="0"<? echo makeButton("auswaehlen", "src") ?>><br>
+                <?= Button::create(_('Auswählen'), 'jump') ?><br>
                 </font>
                 </td>
-                <td class="<? echo $cssSw->getClass() ?>" width="30%" valign="top">
+                <td class="<? echo $cssSw->getClass() ?>" width="30%" valign="middle">
                 <font size="-1">
                 <?=_("Ein Semester als Liste ausgeben")?>
                 </font>
                 </td>
-                <td class="<? echo $cssSw->getClass() ?>"><font size="-1">
-                    &nbsp; <input type="image" name="sem_schedule_start_list" align="absbottom" <?=makeButton("ausgeben", "src") ?> border=0 vallue="<?=_("ausgeben")?>"><br>
-                </font>
+                <td class="<? echo $cssSw->getClass() ?>">
+                    <?= Button::create(_('Ausgeben'), 'sem_schedule_start_list') ?><br>
                 </td>
             </tr>
             <tr>
@@ -113,13 +115,12 @@ class ShowSemSchedules extends ShowSchedules {
                 <?=_("vorlesungsfreie Zeit")?>
                 </font>
                 </td>
-                    <td class="<? echo $cssSw->getClass() ?>" width="30%" valign="top"><font size="-1">
+                <td class="<? echo $cssSw->getClass() ?>" width="30%" valign="middle"><font size="-1">
                     <?=_("<i>oder</i> ein Semester grafisch ausgeben")?>
                 </font>
                 </td>
-                <td class="<? echo $cssSw->getClass() ?>"><font size="-1">
-                    &nbsp; <input type="image" name="sem_schedule_start_graphical" align="absbottom" <?=makeButton("ausgeben", "src") ?> border=0 vallue="<?=_("ausgeben")?>"><br>
-                </font>
+                <td class="<? echo $cssSw->getClass() ?>">
+                    <?= Button::create(_('Ausgeben'), 'sem_schedule_start_graphical') ?><br>
                 </td>
             </tr>
             <tr>
@@ -300,7 +301,8 @@ class ShowSemSchedules extends ShowSchedules {
                 reset($assign_events->events);
                 $num = 1;
                 while($event = $assign_events->nextEvent()) {
-                    echo "<a href=\"$PHP_SELF?quick_view=".$view."&quick_view_mode=".$view_mode."&edit_assign_object=".$event->getAssignId()."\">".makeButton("eigenschaften")."</a>";
+                    echo LinkButton::create(_('Eigenschaften'), URLHelper::getURL('?quick_view=' 
+                        . $view . '&quick_view_mode=' . $view_mode . '&edit_assign_object=' . $event->getAssignId()));
                     printf ("&nbsp; <font size=-1>"._("%s ist von <b>%s</b> bis <b>%s</b>, belegt von <b>%s</b>")."</font><br>",'EB'.$num++, strftime("%A, %d.%m.%Y %H:%M", $event->getBegin()), strftime("%A, %d.%m.%Y %H:%M", $event->getEnd()), $event->getName());
                 }
                 ?>

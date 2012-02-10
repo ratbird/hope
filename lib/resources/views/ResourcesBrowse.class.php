@@ -36,6 +36,9 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
+use Studip\Button,
+    Studip\LinkButton;
+
 require_once ($RELATIVE_PATH_RESOURCES."/lib/ResourcesUserRoots.class.php");
 require_once ($RELATIVE_PATH_RESOURCES."/views/ShowList.class.php");
 
@@ -106,11 +109,8 @@ class ResourcesBrowse {
                     <?}?>
                     </select>
                 <input name="search_exp" type="text" style="vertical-align: middle;" size=35 maxlength=255 value="<? echo htmlReady(stripslashes($this->searchArray["search_exp"])); ?>">
-                <input type="image" align="absmiddle"  <? echo makeButton ("suchestarten", "src") ?> name="start_search" border=0 value="<?=_("Suche starten")?>">
-                &nbsp;
-                <a href="<?= URLHelper::getLink('?view=search&quick_view_mode=' . $GLOBALS['view_mode'] . '&reset=TRUE') ?>">
-                    <?=makeButton("neuesuche")?>
-                </a>
+                <?= Button::create(_('Suche starten'), 'start_search') ?>
+                <?= LinkButton::create(_('Neue Suche'), URLHelper::getURL('?view=search&quick_view_mode=' . $GLOBALS['view_mode'] . '&reset=TRUE')) ?>
             </td>
         </tr>
         <?

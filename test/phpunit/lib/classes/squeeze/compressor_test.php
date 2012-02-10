@@ -45,13 +45,6 @@ class SqueezeCompressorTest extends \PHPUnit_Framework_TestCase
         $GLOBALS['STUDIP_BASE_PATH'] = $this->STUDIP_BASE_PATH;
     }
 
-    function testAutomaticJavaCheck()
-    {
-        $this->assertFalse(Compressor::hasCheckedJava());
-        $compressor = new Compressor(new Configuration());
-        $this->assertTrue(Compressor::hasCheckedJava());
-    }
-
     /**
      * @dataProvider javaCompatibility
      */
@@ -61,9 +54,7 @@ class SqueezeCompressorTest extends \PHPUnit_Framework_TestCase
         $conf['compressor_options'] = array("java" => "echo $version");
 
         $compressor = new Compressor($conf);
-        Compressor::$checkedJava = NULL;
-        $this->assertEquals($compatible, $compressor->checkJava());
-        Compressor::$checkedJava = NULL;
+        $this->assertEquals($compatible, $compressor->hasJava());
     }
 
     function javaCompatibility()

@@ -17,52 +17,15 @@ class Compressor
 
     const PATH_TO_JAVA = "java";
 
-    static $checkedJava = NULL;
-
     function __construct($configuration)
     {
         $this->configuration = $configuration;
-        if (!$this->checkJava()) {
-            $this->configuration['compress'] = FALSE;
-        }
-    }
-
-    function hasCheckedJava()
-    {
-        return self::$checkedJava !== NULL;
-    }
-
-    function checkJava()
-    {
-        # use memoized result
-        if (self::hasCheckedJava()) {
-            return self::$checkedJava;
-        }
-
-        $compatible = $this->getJavaCompatibility($this->pathToJava());
-
-        # memoize result
-        self::$checkedJava = $compatible;
-
-        return $compatible;
-    }
-
-    function getJavaCompatibility($java)
-    {
-        exec("$java -version 2>&1", $output, $status);
-        if ($status === 0) {
-            $matched = preg_match('/\d+\.\d+/', $output[0], $matches);
-            if ($matched === 1) {
-                return version_compare('1.4', $matches[0], '<=');
-            }
-        }
-        return FALSE;
     }
 
     function compress($paths)
     {
         $js = $this->concatenateAssets($paths);
-        if ($this->configuration['compress']) {
+        if ($this->shouldCompress() && $this->hasJava()) {
             $js = $this->callCompressor($js);
         }
 
@@ -85,6 +48,28 @@ class Compressor
         }
 
         return $content;
+    }
+
+    function shouldCompress()
+    {
+        return $this->configuration['compress'];
+    }
+
+    function hasJava()
+    {
+        return $this->getJavaCompatibility($this->pathToJava());
+    }
+
+    function getJavaCompatibility($java)
+    {
+        exec("$java -version 2>&1", $output, $status);
+        if ($status === 0) {
+            $matched = preg_match('/\d+\.\d+/', $output[0], $matches);
+            if ($matched === 1) {
+                return version_compare('1.4', $matches[0], '<=');
+            }
+        }
+        return FALSE;
     }
 
     function callCompressor($js)

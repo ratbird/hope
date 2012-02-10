@@ -47,8 +47,8 @@
         <tfoot>
             <tr>
                 <td colspan="2">
-                    <?= Button::createAccept('Speichern', 'edit') ?>
-                    <?= LinkButton::createCancel('Abbrechen', $controller->url_for('admin/smileys?view=' . $view))?>
+                    <?= Button::createAccept(_('Speichern'), 'edit') ?>
+                    <?= LinkButton::createCancel(_('Abbrechen'), $controller->url_for('admin/smileys?view=' . $view))?>
                 </td>
             </tr>
         </tfoot>

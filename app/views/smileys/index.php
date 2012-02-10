@@ -35,14 +35,14 @@ $data = array_filter($data);
     </div>
     <? if ($GLOBALS['auth']->auth['jscript']): ?>
     <div id="barTopStudip">
-        <?= Button::create('Fenster schliessen', array('onclick' => 'window.close()')) ?>
+        <?= Button::create(_('Fenster schliessen'), array('onclick' => 'window.close()')) ?>
     </div>
     <? endif; ?>
     <div id="layout_page">
         <ul id="tabs" role="navigation">
         <? if ($favorites_activated): ?>
             <li <?= $view == 'favorites' ? 'class="current"' : '' ?>>
-                <a href="<?= $controller->url_for('smileys/index/favorites') ?>">
+                <a h ref="<?= $controller->url_for('smileys/index/favorites') ?>">
                     <?= Assets::img('icons/16/black/smiley.png', array('class' => 'text-top')) ?>
                     <?= _('Favoriten') ?>
                 </a>

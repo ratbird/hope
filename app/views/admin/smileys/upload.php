@@ -31,8 +31,8 @@
         <tfoot>
             <tr>
                 <td colspan="2" align="center">
-                    <?= Button::createAccept('Hochladen', 'upload') ?>
-                    <?= LinkButton::createCancel('Abbrechen', $controller->url_for('admin/smileys?view=' . $view))?>
+                    <?= Button::createAccept(_('Hochladen'), 'upload') ?>
+                    <?= LinkButton::createCancel(_('Abbrechen'), $controller->url_for('admin/smileys?view=' . $view))?>
                 </td>
             </tr>
         </tfoot>

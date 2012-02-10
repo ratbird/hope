@@ -95,7 +95,7 @@ function init_i18n($_language) {
 * Decides, which button (folder)
 * is used for international buttons.
 *
-* @deprecated   2.3 2012/02/10
+* @deprecated   2.3  - 2012/02/10
 * @access       public
 * @param        string  the (german) button name
 * @param        string  if mode = img, the functions return the full tag, if mode = src, it return only the src-part , if mode = input returns full input tag

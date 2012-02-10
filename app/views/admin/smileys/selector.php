@@ -27,5 +27,5 @@ $groups = array(
         <? endforeach; ?>
         </optgroup>
     </select>
-    <noscript><?= Button::create('Anzeigen') ?></noscript>
+    <noscript><?= Button::create(_('Anzeigen')) ?></noscript>
 </form>

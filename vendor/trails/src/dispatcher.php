@@ -116,18 +116,10 @@ class Trails_Dispatcher {
 
     try {
 
-      if ('' === $uri) {
-        if (!$this->file_exists($this->default_controller . '.php')) {
-          throw new Trails_MissingFile(
-            "Default controller '{$this->default_controller}' not found'");
-        }
-        $controller_path = $this->default_controller;
-        $unconsumed = $uri;
-      }
-
-      else {
-        list($controller_path, $unconsumed) = $this->parse($uri);
-      }
+      list($controller_path, $unconsumed) =
+          '' === $uri
+          ? $this->default_route()
+            : $this->parse($uri);
 
       $controller = $this->load_controller($controller_path);
 
@@ -141,6 +133,21 @@ class Trails_Dispatcher {
 
     return $response;
   }
+
+
+  /**
+   *
+   * @return array  an array containing the default controller and an
+   *                empty unconsumed route
+   */
+  function default_route() {
+      if (!$this->file_exists($this->default_controller . '.php')) {
+          throw new Trails_MissingFile(
+              "Default controller '{$this->default_controller}' not found'");
+      }
+      return array($this->default_controller, '');
+  }
+
 
   function trails_error($exception) {
     ob_clean();
@@ -259,4 +266,3 @@ class Trails_Dispatcher {
     throw new Trails_Exception(500, $string);
   }
 }
-

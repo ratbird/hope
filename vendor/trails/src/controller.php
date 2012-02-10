@@ -81,21 +81,18 @@ class Trails_Controller {
 
     list($action, $args, $format) = $this->extract_action_and_args($unconsumed);
 
-    # set format
     $this->format = isset($format) ? $format : 'html';
 
-    # call before filter
     $before_filter_result = $this->before_filter($action, $args);
 
     # send action to controller
     # TODO (mlunzena) shouldn't the after filter be triggered too?
     if (!(FALSE === $before_filter_result || $this->performed)) {
 
-      $mapped_action = $this->map_action($action);
+      $callable = $this->map_action($action);
 
-      # is action callable?
-      if (method_exists($this, $mapped_action)) {
-        call_user_func_array(array(&$this, $mapped_action), $args);
+      if (is_callable($callable)) {
+        call_user_func_array($callable, $args);
       }
       else {
         $this->does_not_understand($action, $args);
@@ -105,7 +102,6 @@ class Trails_Controller {
         $this->render_action($action);
       }
 
-      # call after filter
       $this->after_filter($action, $args);
     }
 
@@ -124,7 +120,7 @@ class Trails_Controller {
   function extract_action_and_args($string) {
 
     if ('' === $string) {
-      return array('index', array(), NULL);
+      return $this->default_action_and_args();
     }
 
     // find optional file extension
@@ -139,6 +135,15 @@ class Trails_Controller {
     return array($action, $args, $format);
   }
 
+  /**
+   * Return the default action and arguments
+   *
+   * @return an array containing the action, an array of args and the format
+   *
+   */
+  function default_action_and_args() {
+    return array('index', array(), NULL);
+  }
 
   /**
    * Maps the action to an actual method name.
@@ -148,7 +153,7 @@ class Trails_Controller {
    * @return string  the mapped method name
    */
   function map_action($action) {
-    return $action . '_action';
+    return array(&$this, $action . '_action');
   }
 
 
@@ -254,11 +259,16 @@ class Trails_Controller {
    * @return void
    */
   function render_action($action) {
+    $this->render_template($this->get_default_template($action), $this->layout);
+  }
+
+
+  function get_default_template($action)
+  {
     $class = get_class($this);
     $controller_name =
       Trails_Inflector::underscore(substr($class, 0, -10));
-
-    $this->render_template($controller_name.'/'.$action, $this->layout);
+    return $controller_name.'/'.$action;
   }
 
 
@@ -273,9 +283,7 @@ class Trails_Controller {
   function render_template($template_name, $layout = NULL) {
 
     # open template
-    $factory = new Flexi_TemplateFactory($this->dispatcher->trails_root .
-                                         '/views/');
-
+    $factory = $this->get_template_factory();
     $template = $factory->open($template_name);
 
     # template requires setup ?
@@ -292,6 +300,17 @@ class Trails_Controller {
     }
 
     $this->render_text($template->render());
+  }
+
+
+  /**
+   * Create and return a template factory for this controller.
+   *
+   * @return a Flexi_TemplateFactory
+   */
+  function get_template_factory() {
+    return new Flexi_TemplateFactory($this->dispatcher->trails_root .
+                                     '/views/');
   }
 
 

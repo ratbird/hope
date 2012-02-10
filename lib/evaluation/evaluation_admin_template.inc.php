@@ -33,6 +33,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +--------------------------------------------------------------------------+
 
+use Studip\Button, Studip\LinkButton;
+
 # Include all required files ================================================ #
 require_once ("lib/evaluation/evaluation.config.php");
 require_once ("lib/evaluation/classes/db/EvaluationQuestionDB.class.php");

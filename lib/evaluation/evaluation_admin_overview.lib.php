@@ -310,7 +310,7 @@ class EvalOverview {
                     $content[4] = Button::create(_('Export'), 'export_request_button', array('title' => _('Evaluation exportieren')));
                     $content[5] = Button::create(_('Löschen'), 'delete_request_button', array('title' => _('Evaluation löschen')));
                     //$content[6] = EvalCommon::createSubmitButton ("auswertung", _("Auswertung"), "export_gfx_request_button");
-                    $content[6] = LinkButton::create(_('Auswertung'), UrlHelper::getLink("eval_summary.php?eval_id=" . $evalID), array('title' => _('Auswertung')));
+                    $content[6] = LinkButton::create(_('Auswertung'), UrlHelper::getURL("eval_summary.php?eval_id=" . $evalID), array('title' => _('Auswertung')));
                 }
                 break;
         }

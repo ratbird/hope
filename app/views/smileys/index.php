@@ -42,7 +42,7 @@ $data = array_filter($data);
         <ul id="tabs" role="navigation">
         <? if ($favorites_activated): ?>
             <li <?= $view == 'favorites' ? 'class="current"' : '' ?>>
-                <a h ref="<?= $controller->url_for('smileys/index/favorites') ?>">
+                <a href="<?= $controller->url_for('smileys/index/favorites') ?>">
                     <?= Assets::img('icons/16/black/smiley.png', array('class' => 'text-top')) ?>
                     <?= _('Favoriten') ?>
                 </a>

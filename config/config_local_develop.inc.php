@@ -137,7 +137,7 @@ $CHAT_SERVER_NAME = "ChatShmServer";
 
 $XSLT_ENABLE = TRUE;
 $FOP_ENABLE = TRUE;
-$FOP_SH_CALL = "export JAVA_HOME=/usr/lib/jvm/jre && /opt/fop-0.20.5/fop.sh";                       //path to fop
+$FOP_SH_CALL = "JAVACMD=/usr/bin/java /opt/fop-0.20.5/fop.sh";                       //path to fop
 
 $EXTERN_SRI_ENABLE = TRUE;                              //allow the usage of SRI-interface (Stud.IP Remote Include)
 $EXTERN_SRI_ENABLE_BY_ROOT = FALSE;                         //only root allows the usage of SRI-interface for specific institutes

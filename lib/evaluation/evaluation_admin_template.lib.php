@@ -1095,7 +1095,7 @@ class EvalTemplateGUI {
    */
   function getPageCommand() {
       foreach( $_REQUEST as $key => $value ) {
-    if( preg_match( "/template_(.*)_button_x/", $key, $command ) )
+    if( preg_match( "/template_(.*)_button(_x)?/", $key, $command ) )
          break;
       }
 

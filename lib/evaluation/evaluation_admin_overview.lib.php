@@ -2366,7 +2366,7 @@ class EvalOverview {
             return $_REQUEST["evalAction"];
 
         foreach ($_REQUEST as $key => $value) {
-            if (preg_match("/(.*)_button_x/", $key, $command))
+            if (preg_match("/(.*)_button(_x)?/", $key, $command))
                 break;
         }
         return $command[1];

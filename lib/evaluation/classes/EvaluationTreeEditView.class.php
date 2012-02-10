@@ -1166,7 +1166,7 @@ function parseCommand(){
     } else {
         # extract the command from the template-site ========================= #
         foreach( $_REQUEST as $key => $value ) {
-            if( preg_match( "/template_(.*)_#(.*)_button_x/", $key, $command ) ){
+            if( preg_match( "/template_(.*)_#(.*)_button(_x)?/", $key, $command ) ){
                 $found = 1;
                 break;
             }
@@ -1174,7 +1174,7 @@ function parseCommand(){
 
        if (!$found){
         foreach( $_REQUEST as $key => $value ) {
-            if( preg_match( "/cmd_(.*)_#(.*)_§(.*)_button_x/", $key, $command ) )
+            if( preg_match( "/cmd_(.*)_#(.*)_§(.*)_button(_x)?/", $key, $command ) )
                 break;
         }
        }
@@ -1707,7 +1707,7 @@ function execCommandQuestionAnswersCreate(){
 
      // extract the questionID from the command
      foreach( $_REQUEST as $key => $value ) {
-         if( preg_match( "/template_(.*)_button_x/", $key, $command ) )
+         if( preg_match( "/template_(.*)_button(_x)?/", $key, $command ) )
              break;
          }
       if ( preg_match( "/(.*)_#(.*)/", $command[1], $command_parts ) )
@@ -1757,7 +1757,7 @@ function execCommandMoveQuestionUp(){
     $this->execCommandUpdateItem();
 
     foreach( $_REQUEST as $key => $value ) {
-        if( preg_match( "/cmd_(.*)_#(.*)_§(.*)_button_x/", $key, $command ) )
+        if( preg_match( "/cmd_(.*)_#(.*)_§(.*)_button(_x)?/", $key, $command ) )
             break;
     }
 
@@ -1789,7 +1789,7 @@ function execCommandMoveQuestionDown(){
     $this->execCommandUpdateItem();
 
     foreach( $_REQUEST as $key => $value ) {
-        if( preg_match( "/cmd_(.*)_#(.*)_§(.*)_button_x/", $key, $command ) )
+        if( preg_match( "/cmd_(.*)_#(.*)_§(.*)_button(_x)?/", $key, $command ) )
             break;
     }
 
@@ -2722,7 +2722,7 @@ function createQuestionForm(){
     // brrr :)
     // extract the questionID from the command
     foreach( $_REQUEST as $key => $value ) {
-        if( preg_match( "/template_(.*)_button_x/", $key, $command ) )
+        if( preg_match( "/template_(.*)_button(_x)?/", $key, $command ) )
         break;
     }
     if ( preg_match( "/(.*)_#(.*)/", $command[1], $command_parts ) )

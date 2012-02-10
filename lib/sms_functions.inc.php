@@ -183,7 +183,7 @@ function folder_openclose($folder, $x) {
 
 // print_snd_message
 function print_snd_message($psm) {
-    global $n, $LastLogin, $my_messaging_settings, $cmd, $PHP_SELF, $msging, $cmd_show, $sms_data, $_fullname_sql, $user;
+    global $n, $LastLogin, $my_messaging_settings, $PHP_SELF, $msging, $sms_data, $user, $_fullname_sql, $cmd_show, $cmd;
 
     $db = DBManager::get();
 
@@ -270,7 +270,7 @@ function print_snd_message($psm) {
         }
 
         // buttons
-        
+
         $edit = LinkButton::create(_('Löschen'), URLHelper::getURL("?cmd=delete_selected", array('sel_sms[1]' => $psm['message_id'])), array('title' => _('Diese Nachricht löschen.')));
         if (have_msgfolder($sms_data['view']) == TRUE) {
             $edit .= LinkButton::create(_('Verschieben'), URLHelper::getURL('', array('move_to_folder[1]' => $psm['message_id'])), array('title' => _('Diese Nachricht in einen frei wählbaren Ordner verschieben.')))
@@ -328,7 +328,8 @@ function print_snd_message($psm) {
 
 // print_rec_message
 function print_rec_message($prm) {
-    global $n, $LastLogin, $my_messaging_settings, $cmd, $PHP_SELF, $msging, $cmd_show, $sms_show, $sms_data, $user;
+    global $n, $LastLogin, $my_messaging_settings, $PHP_SELF, $msging, $sms_show, $sms_data, $user, $cmd_show, $cmd;
+
     // build
     if ($prm['readed'] != "1" && $my_messaging_settings["opennew"] == "1") { // open if unread
         $open = "open";
@@ -490,7 +491,8 @@ function print_rec_message($prm) {
 }
 
 function print_messages() {
-    global $user, $my_messaging_settings, $PHP_SELF ,$sms_data, $sms_show, $query_showfolder, $query_time_sort, $query_movetofolder, $query_time, $_fullname_sql, $srch_result, $no_message_text, $n, $count, $count_timefilter;
+    global $user,$_fullname_sql, $my_messaging_settings, $PHP_SELF ,$sms_data, $sms_show, $query_showfolder, $query_time_sort, $query_movetofolder, $query_time, $srch_result, $no_message_text, $n, $count, $count_timefilter, $cmd, $cmd_show;
+    
     $db = new DB_Seminar();
     $db2 = new DB_Seminar();
     if ($query_time) $count = $count_timefilter;
@@ -576,9 +578,7 @@ function print_messages() {
 }
 
 function ajax_show_body($mid)   {
-    global  $my_messaging_settings, $user, $n, $count, $PHP_SELF, $sms_data, $query_time, $query_movetofolder,$sms_show, $query_time_sort, $_fullname_sql, $srch_result, $no_message_text, $count_timefilter;
-
-
+    global  $my_messaging_settings, $_fullname_sql, $user, $n, $count, $PHP_SELF, $sms_data, $query_time, $query_movetofolder,$sms_show, $query_time_sort, $srch_result, $no_message_text, $count_timefilter;
     $db = DBManager::get();
     if ($query_time) $count = $count_timefilter;
     $n = 0;
@@ -735,7 +735,7 @@ function show_precform() {
 
 function show_addrform() {
 
-    global $PHP_SELF, $sms_data, $user, $db, $_fullname_sql, $adresses_array, $search_exp, $my_messaging_settings;
+    global $PHP_SELF, $sms_data, $user, $db, $adresses_array, $search_exp, $my_messaging_settings, $_fullname_sql;
 
     $picture = 'icons/16/yellow/arr_2up.png';
 
@@ -822,18 +822,20 @@ function show_addrform() {
 
 function show_msgform() {
 
-    global $PHP_SELF, $sms_data, $user, $quote, $tmp_sms_content, $quote_username, $message, $messagesubject, $cmd;
+    global $PHP_SELF, $sms_data, $user, $tmp_sms_content, $messagesubject, $message, $quote_username, $quote, $cmd ;
 
+    
+     
     $tmp = "&nbsp;<font size=\"-1\"><b>"._("Betreff:")."</b></font>";
-    $tmp .= "<div align=\"center\"><input type=\"text\" ". ($cmd == "write_chatinv" ? "disabled" : "") ." name=\"messagesubject\" value=\"".trim(htmlready(stripslashes($messagesubject)))."\"style=\"width: 99%\"></div>";
+    $tmp .= "<div align=\"center\"><input type=\"text\" ". ($cmd == "write_chatinv" ? "disabled" : "") ." name=\"messagesubject\" value=\"".trim(htmlready($messagesubject))."\"style=\"width: 99%\"></div>";
 
     $tmp .= "<br>&nbsp;<font size=\"-1\"><b>"._("Nachricht:")."</b></font>";
     $tmp .= "<div align=\"center\"><textarea name=\"message\" style=\"width: 99%\" cols=80 rows=10 wrap=\"virtual\">\n";
     if ($quote) { $tmp .= quotes_encode(htmlReady($tmp_sms_content), get_fullname_from_uname($quote_username)); }
-    if ($message) { $tmp .= htmlReady(stripslashes($message)); }
+    if ($message) { $tmp .= htmlReady($message); }
     $tmp .= '</textarea><br><br><div class="button-group">';
     // send/ break-button
-    if (sizeof($sms_data["p_rec"]) > "0") { 
+    if (sizeof($sms_data["p_rec"]) > "0") {
         $tmp .= Button::createAccept(_('Abschicken'), 'cmd_insert');
     }
     $tmp .= LinkButton::createCancel(_('Abbrechen'), URLHelper::getURL('sms_box.php'));
@@ -846,16 +848,16 @@ function show_msgform() {
 
 function show_previewform()
 {
-    global $sms_data, $message, $signature, $my_messaging_settings, $messagesubject;
-
+    global $sms_data, $my_messaging_settings, $signature, $cmd, $messagesubject, $message;
+    
     $tmp = "<input type=\"image\" name=\"refresh_message\" class=\"text-top\" src=\"" . Assets::image_path('icons/16/blue/refresh.png') . "\" ".tooltip(_("aktualisiert die Vorschau der aktuellen Nachricht."))."> "._("Vorschau erneuern.")."<br><br>";
-    $tmp .= "<b>"._("Betreff:")."</b><br>".htmlready(stripslashes($messagesubject));
+    $tmp .= "<b>"._("Betreff:")."</b><br>".htmlready($messagesubject);
     $tmp .= "<br><br><b>"._("Nachricht:")."</b><br>";
-    $tmp .= formatReady(stripslashes($message));
+    $tmp .= formatReady($message);
     if ($sms_data["sig"] == "1") {
         $tmp .= "<br><br>-- <br>";
         if ($signature) {
-            $tmp .= formatReady(stripslashes($signature));
+            $tmp .= formatReady($signature);
         } else {
             $tmp .= formatReady(stripslashes($my_messaging_settings["sms_sig"]));
         }
@@ -866,8 +868,8 @@ function show_previewform()
 
 function show_sigform()
 {
-    global $sms_data, $signature, $my_messaging_settings;
-
+    global $sms_data, $my_messaging_settings, $signature, $cmd;
+        
     if ($sms_data["sig"] == "1") {
             $tmp =  "<font size=\"-1\">";
             $tmp .= _("Dieser Nachricht wird eine Signatur angehängt");
@@ -877,7 +879,7 @@ function show_sigform()
             if (!$signature) {
                 $tmp .= htmlready(stripslashes($my_messaging_settings["sms_sig"]));
             } else {
-                $tmp .= htmlready(stripslashes($signature));
+                $tmp .= htmlready($signature);
             }
             $tmp .= "</textarea>\n";
     } else {

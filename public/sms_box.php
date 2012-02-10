@@ -23,6 +23,8 @@
 use Studip\Button, Studip\LinkButton;
 require '../lib/bootstrap.php';
 
+unregister_globals();
+
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $perm->check("user");
 
@@ -46,11 +48,17 @@ if (get_config('CHAT_ENABLE')){
 }
 
 // let's register some ...
-$sess->register("sms_data");
-$sess->register("sms_show");
+//$sess->register("sms_data");
+//$sess->register("sms_show");
+$_SESSION['sms_data'] = $sms_data;
+$_SESSION['sms_show'] = $sms_show;
 $msging = new messaging;
 $query_showfolder = $query_time_sort = $query_movetofolder = $query_time = '';
-
+$cmd = Request::option('cmd');
+$cmd_show = Request::option('cmd_show');
+$sms_data = $_SESSION['sms_data'];
+$sms_show = $_SESSION['sms_show'];
+//$my_messaging_settings
 // determine view
 if (Request::option('sms_inout')) {
     $sms_data["view"] = Request::option('sms_inout');
@@ -75,9 +83,9 @@ include ('lib/include/header.php');
 check_messaging_default();
 
 
-if ($readingconfirmation) {
+if (Request::option('readingconfirmation')) {
     $sms_data['tmpreadsnd'] = "";
-    $query = "SELECT * FROM message WHERE message_id='".$readingconfirmation."'";
+    $query = "SELECT * FROM message WHERE message_id='".Request::option('readingconfirmation')."'";
     $db6->query($query);
     $db6->next_record();
     $date = date("d.m.y, H:i", $db6->f("mkdate"));
@@ -86,7 +94,7 @@ if ($readingconfirmation) {
     $user_id = $user->id;
     $user_fullname = get_fullname($user_id);
 
-    $query = "UPDATE message_user SET confirmed_read = '1' WHERE message_id = '".$readingconfirmation."'AND user_id = '".$user_id."'";
+    $query = "UPDATE message_user SET confirmed_read = '1' WHERE message_id = '".Request::option('readingconfirmation')."'AND user_id = '".$user_id."'";
     if($db->query($query)) {
         setTempLanguage(get_userid($rec_userid));
         $subject = sprintf (_("Lesebestätigung von %s"), $user_fullname);
@@ -97,15 +105,15 @@ if ($readingconfirmation) {
 }
 
 // do we have any selected messages for move-to-different-folder-action but no click on possible folder so undo selection
-if ($sms_data['tmp']['move_to_folder'] && !$move_folder) {
+if ($sms_data['tmp']['move_to_folder'] && !Request::option('move_folder')) {
     unset($sms_data['tmp']['move_to_folder']);
 }
 
 // delete selected messages
 if (Request::submitted('delete_selected_button') || $cmd == "delete_selected") {
     $l = 0;
-    if (is_array($sel_sms)) {
-        foreach ($sel_sms as $a) {
+    if (Request::optionArray('sel_sms')) {
+        foreach (Request::optionArray('sel_sms') as $a) {
             $count_deleted_sms = $msging->delete_message($a);
             $l = $l+$count_deleted_sms;
         }
@@ -122,10 +130,10 @@ if (Request::submitted('delete_selected_button') || $cmd == "delete_selected") {
 }
 
 // open festlegen
-if ($mclose) {
+if (Request::option('mclose')) {
     $sms_data["open"] = '';
-} else if ($mopen) {
-    $sms_data["open"] = $mopen;
+} else if (Request::option('mopen')) {
+    $sms_data["open"] = Request::option('mopen');
 }
 
 // do we like to memorize all messages as allready readed?
@@ -136,9 +144,9 @@ if ($cmd == "mark_allsmsreaded") {
 
 // how many messages do we have
 $count_newsms = count_messages_from_user($sms_data['view'], "AND deleted='0' AND readed='0'");
-
+$show_folder = Request::option('show_folder');
 // open default folder if there are new messages
-if ($neux) {
+if (Request::option('neux')) {
     $show_folder = "all";
 }
 
@@ -170,22 +178,23 @@ if ($sms_show['folder'][$sms_data['view']] != "all") { // ist ein persoenlicher
 }
 
 // insert new folder
-if ($new_folder != "" && Request::submitted('new_folder_button')) {
+if (Request::option('new_folder') != "" && Request::submitted('new_folder_button')) {
     if ($msging->check_newmsgfoldername($new_folder) == FALSE) { // check auf erlaubte ordnernamen
         $msg = "error§".sprintf(_("Der gewählte Ordnername ist vom System belegt. Bitte wählen Sie einen anderen."));
     } else { // ordnername ok und los
-        $my_messaging_settings["folder"][$sms_data["view"]][] = $new_folder;
-        $msg = "msg§".sprintf(_("Der Ordner %s wurde angelegt."), htmlready(stripslashes($new_folder)));
+        $my_messaging_settings["folder"][$sms_data["view"]][] = Request::option('new_folder');
+        $msg = "msg§".sprintf(_("Der Ordner %s wurde angelegt."), htmlready(Request::option('new_folder')));
     }
 }
 
 // remove selected folder
-if ($delete_folder && Request::submitted('delete_folder_button')) {
+if (Request::option('delete_folder') && Request::submitted('delete_folder_button')) {
     if ($sms_data["view"] == "in") {
         $tmp_sndrec = "rec";
     } else {
         $tmp_sndrec = "snd";
     }
+    $delete_folder = Request::quoted('delete_folder');
     $msg = "msg§".sprintf(_("Der Ordner %s wurde gelöscht."), htmlready(stripslashes(return_val_from_key($my_messaging_settings["folder"][$sms_data["view"]], $delete_folder))));
     $query = "UPDATE message_user SET folder='' WHERE folder='".$delete_folder."' AND snd_rec='".$tmp_sndrec."' AND user_id='{$user->id}'";
     $db->query($query);
@@ -199,7 +208,9 @@ if (Request::submitted('ren_folder_button')) {
     } else {
         $tmp_sndrec = "snd";
     }
-    $msg = "msg§".sprintf(_("Der Ordner %s wurde in %s umbenannt."), htmlready(stripslashes(return_val_from_key($my_messaging_settings["folder"][$sms_data["view"]], $orig_folder_name))), htmlready(stripslashes($new_foldername)));
+    $orig_folder_name = Request::quoted('orig_folder_name');
+    $new_foldername = Request::quoted('new_foldername');
+    $msg = "msg§".sprintf(_("Der Ordner %s wurde in %s umbenannt."), htmlready(stripslashes(return_val_from_key($my_messaging_settings["folder"][$sms_data["view"]], $orig_folder_name))), htmlready($new_foldername));
     $my_messaging_settings["folder"][$sms_data["view"]][$orig_folder_name] = $new_foldername;
 }
 
@@ -209,8 +220,8 @@ if (empty($my_messaging_settings["openall"])) {
 }
 
 // determine and memorize timefilter
-if ($sms_time) {
-    $sms_data["time"] = $sms_time;
+if (Request::option('sms_time')) {
+    $sms_data["time"] = Request::option('sms_time');
 } else if ($sms_data["time"] == "" && empty($my_messaging_settings["timefilter"])) {
     $sms_data["time"] = "all";
     $my_messaging_settings["timefilter"] = "all";
@@ -236,7 +247,7 @@ if ($sms_data['view'] == "in") {
 }
 
 // memorize del-lock for selected items
-if ($sel_lock) {
+if (Request::option('sel_lock')) {
     if ($cmd == "safe_selected") { // close del-lock
         $tmp_dont_delete = "1";
         $msg = "msg§"._("Der Lösch-Schutz wurde für die gewählte Nachricht aktiviert.");
@@ -244,21 +255,21 @@ if ($sel_lock) {
         $tmp_dont_delete = "0";
         $msg = "msg§"._("Der Lösch-Schutz wurde für die gewählte Nachricht aufgehoben.");
     }
-    $db->query("UPDATE message_user SET dont_delete='".$tmp_dont_delete."' WHERE user_id='".$user->id."' AND message_id='".$sel_lock."' AND snd_rec='".$tmp_snd_rec."'");
+    $db->query("UPDATE message_user SET dont_delete='".$tmp_dont_delete."' WHERE user_id='".$user->id."' AND message_id='".Request::option('sel_lock')."' AND snd_rec='".$tmp_snd_rec."'");
     $tmp_dont_delete = "";
     $tmp_snd_rec = "";
 }
 
 // do we have selected items for move-to-different-folder-action?
-if (is_array($move_to_folder)) {
-    $sms_data['tmp']['move_to_folder'] = $move_to_folder;
+if (Request::optionArray('move_to_folder')) {
+    $sms_data['tmp']['move_to_folder'] = Request::optionArray('move_to_folder');
 }
 
 // wenn mehrere verschieben-button gedrueckt
-if (Request::submitted('move_selected_button') && !empty($sel_sms)) {
-    $sms_data['tmp']['move_to_folder'] = $sel_sms;
+if (Request::submitted('move_selected_button') && Request::optionArray('sel_sms')) {
+    $sms_data['tmp']['move_to_folder'] = Request::optionArray('sel_sms');
 }
-
+$move_folder = Request::option('move_folder');
 // let's move some messages
 if ($move_folder) {
     $user_id = $user->id;
@@ -356,7 +367,7 @@ $query_time = $query_time_sort;
         // rename or make folder
         if ($cmd == "admin_folder") {
             // we would like to make a new folder
-            if ($cmd_2 == "new") {
+            if (Request::option('cmd_2') == "new") {
                 $tmp[0] = "new_folder";
                 $tmp[1] = _("einen neuen Ordner anlegen");
                 $tmp[2] = "new_folder_button";
@@ -364,15 +375,15 @@ $query_time = $query_time_sort;
                 $tmp[4] = "";
             }
             // we would like to rename a folder
-            if ($ren_folder) {
+            if (Request::get('ren_folder')) {
                 $tmp[0] = "new_foldername";
                 $tmp[1] = _("einen bestehenden Ordner umbennen");
                 $tmp[2] = "ren_folder_button";
-                $tmp[3] = " value=\"".htmlready(stripslashes(return_val_from_key($my_messaging_settings["folder"][$sms_data["view"]], $ren_folder)))."\"";
-                $tmp[4] = "<input type=\"hidden\" name=\"orig_folder_name\" value=\"".htmlready(stripslashes($ren_folder))."\">";
+                $tmp[3] = " value=\"".htmlready(stripslashes(return_val_from_key($my_messaging_settings["folder"][$sms_data["view"]], Request::get('ren_folder'))))."\"";
+                $tmp[4] = "<input type=\"hidden\" name=\"orig_folder_name\" value=\"".htmlready(Request::get('ren_folder'))."\">";
             }
             $titel = "  <input type=\"text\" name=\"".$tmp[0]."\"".$tmp[3]." style=\"font-size: 8pt\">";
-            echo "\n<form action=\"".$PHP_SELF."\" method=\"post\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"99%\" align=\"center\"><tr>";
+            echo "\n<form action=\"".URLHelper::getURL()."\" method=\"post\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"99%\" align=\"center\"><tr>";
             echo CSRFProtection::tokenTag();
             printhead(0, 0, FALSE, "open", FALSE, ' ' . Assets::img('icons/16/blue/add/folder-empty.png', array('class' => 'text-top')) . ' ', $titel, FALSE);
             echo "</tr></table> ";
@@ -392,7 +403,7 @@ $query_time = $query_time_sort;
         $open = folder_openclose($sms_show['folder'][$sms_data['view']], "all");
         if ($sms_data['tmp']['move_to_folder'] && $open == "close") {
             $picture = 'icons/16/yellow/arr_2right.png';
-            $link = $PHP_SELF."?move_folder=free";
+            $link = URLHelper::getLink("?move_folder=free");
         } else {
             $picture = showfoldericon("all", $count);
         }
@@ -408,12 +419,12 @@ $query_time = $query_time_sort;
         echo "</tr></table>";
         if (!$move_to_folder) {
             $content_content = "<div align=\"center\">
-                <form action=\"".$PHP_SELF."\" method=\"post\" style=\"display: inline\">" .
+                <form action=\"".URLHelper::getURL()."\" method=\"post\" style=\"display: inline\">" .
                 CSRFProtection::tokenTag() .
                 "<div class=\"button-group\"><input type=\"hidden\" name=\"cmd\" value=\"select_all\">"
                 . Button::create(_('Alle auswählen'), 'select', array('align' => 'absmiddle')) .    
                 "</form>
-                <form action=\"".$PHP_SELF."\" method=\"post\" style=\"display: inline\">".
+                <form action=\"".URLHelper::getURL()."\" method=\"post\" style=\"display: inline\">".
                 CSRFProtection::tokenTag() .
                 Button::create(_('Löschen'), 'delete_selected_button', array('align' => 'absmiddle'));
                 if (have_msgfolder($sms_data['view']) == TRUE) {                    
@@ -444,14 +455,15 @@ $query_time = $query_time_sort;
                     $open = folder_openclose($sms_show['folder'][$sms_data['view']], $x);
                     if ($sms_data['tmp']['move_to_folder'] && $open == "close") {
                         $picture = 'icons/16/yellow/arr_2right.png';
-                        $link = $PHP_SELF."?move_folder=".$x;
+                        $link = URLHelper::getLink("?move_folder=".$x);
                     } else {
-                        $link = $PHP_SELF."?cmd=";
+                        $link = URLHelper::getLink("?cmd=");
                         $picture = showfoldericon($x, $count);
                     }
                     if (!$sms_data['tmp']['move_to_folder']) {
-                        $link = folder_makelink($x);
-                        $link_add = "&cmd_show=openall";
+                         $link = folder_makelink($x);
+                         $link_add = "&cmd_show=openall";
+                        
                     }
                     // titel
                     $titel = "<a href=\"".$link."\" class=\"tree\" >".htmlready(stripslashes($my_messaging_settings["folder"][$sms_data['view']][$x]))."</a>";
@@ -466,12 +478,12 @@ $query_time = $query_time_sort;
                         $content_content = _("Ordner:")."&nbsp;".$sms_show['folder'][$sms_data['view']]."<br>";
                         if ($open == "open") {
                             $content_content = "<div align=\"center\">"._("Ordneroptionen:")."
-                                <form action=\"".$PHP_SELF."\" method=\"post\" style=\"display: inline\">".
+                                <form action=\"".URLHelper::getURL()."\" method=\"post\" style=\"display: inline\">".
                                     CSRFProtection::tokenTag() .
                                     "<input type=\"hidden\" name=\"delete_folder\" value=\"".$x."\">"
                                       . Button::create(_('Löschen'), 'delete_folder_button', array('align' => 'absmiddle')) .
                                 "</form>
-                                <form action=\"".$PHP_SELF."\" method=\"post\" style=\"display: inline\">".
+                                <form action=\"".URLHelper::getURL()."\" method=\"post\" style=\"display: inline\">".
                                     CSRFProtection::tokenTag() .
                                     "<input type=\"hidden\" name=\"cmd\" value=\"admin_folder\">
                                     <input type=\"hidden\" name=\"ren_folder\" value=\"".$x."\">"
@@ -480,12 +492,12 @@ $query_time = $query_time_sort;
                             if ($count_timefilter != "0") {
                                 $content_content .= "
                                     <br><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" height=\"5\"><br>"._("markierte Nachrichten:")."
-                                    <form action=\"".$PHP_SELF."\" method=\"post\" style=\"display: inline\">".
+                                    <form action=\"".URLHelper::getURL()."\" method=\"post\" style=\"display: inline\">".
                                         CSRFProtection::tokenTag() .
                                         "<input type=\"hidden\" name=\"cmd\" value=\"select_all\">"
                                         . Button::create(_('Alle auswählen'), 'select', array('align' => 'absmiddle')) .
                                         "</form>
-                                        <form action=\"".$PHP_SELF."\" method=\"post\" style=\"display: inline\">".
+                                        <form action=\"".URLHelper::getURL()."\" method=\"post\" style=\"display: inline\">".
                                         CSRFProtection::tokenTag()
                                         . Button::create(_('Löschen'), 'delete_selected_button', array('align' => 'absmiddle'))
                                         . Button::create(_('Verschieben'), 'move_selected_button', array('align' => 'absmiddle'))
@@ -512,14 +524,14 @@ $query_time = $query_time_sort;
 
         // build infobox_content > viewfilter
         $time_by_links = "";
-        $time_by_links .= "<a href=\"".$PHP_SELF."?sms_time=all\">".Assets::img(show_icon($sms_data["time"], "all"), array('width' => '16', 'class' => 'text-bottom'))." "._("alle Nachrichten")."</a><br>";
-        $time_by_links .= "<a href=\"".$PHP_SELF."?sms_time=24h\">".Assets::img(show_icon($sms_data["time"], "24h"), array('width' => '16', 'class' => 'text-bottom'))." "._("letzte 24 Stunden")."</a><br>";
-        $time_by_links .= "<a href=\"".$PHP_SELF."?sms_time=7d\">".Assets::img(show_icon($sms_data["time"], "7d"), array('width' => '16', 'class' => 'text-bottom'))." "._("letzte 7 Tage")."</a><br>";
-        $time_by_links .= "<a href=\"".$PHP_SELF."?sms_time=30d\">".Assets::img(show_icon($sms_data["time"], "30d"), array('width' => '16', 'class' => 'text-bottom'))." "._("letzte 30 Tage")."</a><br>";
-        $time_by_links .= "<a href=\"".$PHP_SELF."?sms_time=older\">".Assets::img(show_icon($sms_data["time"], "older"), array('width' => '16', 'class' => 'text-bottom'))." "._("&auml;lter als 30 Tage")."</a>";
+        $time_by_links .= "<a href=\"".URLHelper::getLink("?sms_time=all")."\">".Assets::img(show_icon($sms_data["time"], "all"), array('width' => '16', 'class' => 'text-bottom'))." "._("alle Nachrichten")."</a><br>";
+        $time_by_links .= "<a href=\"".URLHelper::getLink("?sms_time=24h")."\">".Assets::img(show_icon($sms_data["time"], "24h"), array('width' => '16', 'class' => 'text-bottom'))." "._("letzte 24 Stunden")."</a><br>";
+        $time_by_links .= "<a href=\"".URLHelper::getLink("?sms_time=7d")."\">".Assets::img(show_icon($sms_data["time"], "7d"), array('width' => '16', 'class' => 'text-bottom'))." "._("letzte 7 Tage")."</a><br>";
+        $time_by_links .= "<a href=\"".URLHelper::getLink("?sms_time=30d")."\">".Assets::img(show_icon($sms_data["time"], "30d"), array('width' => '16', 'class' => 'text-bottom'))." "._("letzte 30 Tage")."</a><br>";
+        $time_by_links .= "<a href=\"".URLHelper::getLink("?sms_time=older")."\">".Assets::img(show_icon($sms_data["time"], "older"), array('width' => '16', 'class' => 'text-bottom'))." "._("&auml;lter als 30 Tage")."</a>";
 
         $view_by_links = "";
-        $view_by_links .= "<a href=\"".$PHP_SELF."?sms_time=new\">".Assets::img(show_icon($sms_data["time"], "new"), array('width' => '16', 'class' => 'text-bottom'))." "._("neue Nachrichten")."</a><br>";
+        $view_by_links .= "<a href=\"".URLHelper::getLink("?sms_time=new")."\">".Assets::img(show_icon($sms_data["time"], "new"), array('width' => '16', 'class' => 'text-bottom'))." "._("neue Nachrichten")."</a><br>";
 
         // did we came from a ...?
         if ($SessSemName[0] && $SessSemName["class"] == "inst") {
@@ -545,8 +557,8 @@ $query_time = $query_time_sort;
             array("kategorie" => _("weitere Ansichten:"),"eintrag" => array(
                 array('icon' => 'icons/16/black/new/mail.png', "text" => $view_by_links))),
             array("kategorie" => _("Optionen:"),"eintrag" => array(
-                array("icon" => 'icons/16/black/admin.png', "text" => sprintf("<a href=\"%s?cmd_show=openall\">"._("Alle Nachrichten aufklappen")."</a><br><a href=\"%s?cmd=mark_allsmsreaded\">"._("Alle als gelesen speichern")."</a>", $PHP_SELF, $PHP_SELF, $PHP_SELF)),
-                array("icon" => 'icons/16/black/add/folder-empty.png', "text" => sprintf("<a href=\"%s?cmd=admin_folder&cmd_2=new\">"._("Neuen Ordner erstellen")."</a>", $PHP_SELF))
+                array("icon" => 'icons/16/black/admin.png', "text" => "<a href=\"".URLHelper::getLink("?cmd_show=openall")."\">"._("Alle Nachrichten aufklappen")."</a><br><a href=\"".URLHelper::getLink("?cmd=mark_allsmsreaded")."\">"._("Alle als gelesen speichern")."</a>"),
+                array("icon" => 'icons/16/black/add/folder-empty.png', "text" => "<a href=\"".URLHelper::getLink("?cmd=admin_folder&cmd_2=new")."\">"._("Neuen Ordner erstellen")."</a>")
             ))
         );
         // display infobox

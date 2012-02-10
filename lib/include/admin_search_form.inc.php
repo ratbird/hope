@@ -269,7 +269,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                     <td class="steel1" colspan="5">
                         <br>
                         <label>
-                            <input type="checkbox" name="show_rooms_check" value="on" <?  if ($_REQUEST['show_rooms_check'] == 'on') { echo 'checked="checked"'; } ?> >&nbsp; <?=_("Raumdaten einblenden")?>
+                            <input type="checkbox" name="show_rooms_check" value="on" <? if ($show_rooms_check == 'on') echo 'checked'; ?> >&nbsp; <?=_("Raumdaten einblenden")?>
                         </label>
                         <br>
                     </td>
@@ -326,7 +326,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
         <?= CSRFProtection::tokenTag() ?>
         <table border=0  cellspacing=0 cellpadding=2 align=center width="99%">
         <?
-        $show_rooms_check_url= ($_REQUEST['show_rooms_check']=="on") ? "&show_rooms_check=on" : null;
+        $show_rooms_check_url = $show_rooms_check == 'on' ? '&show_rooms_check=on' : null;
         // only show table header in case of hits
         if (count($results)) {
             ?>
@@ -376,12 +376,12 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                 <tr class="steel2">
                     <td colspan="3">
                     </td>
-                    <td colspan="<?=((Request::get('show_rooms_check')=='on')?'4':'3') ?>" align="right">
+                    <td colspan="<?= $show_rooms_check == 'on' ? 4 : 3 ?>" align="right">
                     <?
                         echo LinkButton::create(_("Alle auswählen"), 
-                             URLHelper::getURL('', array('select_all' => TRUE, 'list' => TRUE, 'show_rooms_check' => Request::get('show_rooms_check'))));
+                             URLHelper::getURL('', array('select_all' => TRUE, 'list' => TRUE, 'show_rooms_check' => $show_rooms_check)));
                         echo LinkButton::create(_('Keine auswählen'), 
-                             URLHelper::getURL('', array('select_none' => TRUE, 'list' => TRUE, 'show_rooms_check' => Request::get('show_rooms_check'))));
+                             URLHelper::getURL('', array('select_none' => TRUE, 'list' => TRUE, 'show_rooms_check' => $show_rooms_check)));
                     ?>
                     </td>
                 </tr>
@@ -393,11 +393,11 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                 <tr class="steel2">
                     <td colspan="3">
                     </td>
-                    <td colspan="<?= (( Request::get('show_rooms_check')=='on') ? '4':'3') ?>" align="right">
+                    <td colspan="<?= $show_rooms_check == 'on' ? 4 : 3 ?>" align="right">
                     <input type="hidden" name="change_visible" value="1">
                     <?
-                        echo LinkButton::create(_("Alle auswählen"), URLHelper::getURL('', array('select_all' => TRUE, 'list' => TRUE, 'show_rooms_check' => Request::get('show_rooms_check'))));
-                        echo LinkButton::create(_("Keine auswählen"), URLHelper::getURL('', array('select_none' => TRUE, 'list' => TRUE, 'show_rooms_check' => Request::get('show_rooms_check'))));
+                        echo LinkButton::create(_("Alle auswählen"), URLHelper::getURL('', array('select_all' => TRUE, 'list' => TRUE, 'show_rooms_check' => $show_rooms_check)));
+                        echo LinkButton::create(_("Keine auswählen"), URLHelper::getURL('', array('select_none' => TRUE, 'list' => TRUE, 'show_rooms_check' => $show_rooms_check)));
                     ?>
                     </td>
                 </tr>
@@ -670,7 +670,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
             if ($i_page == "admin_visibility.php" || $i_page == "admin_aux.php" || $i_page == "admin_lock.php") {
                 ?>
                 <tr class="steel2">
-                    <td colspan="<?=(Request::get('show_rooms_check')=='on')?'7':'6'; ?>" align="right">
+                    <td colspan="<?= $show_rooms_check == 'on' ? 7 : 6 ?>" align="right">
                     <?= _("Änderungen") ?> <?= Button::createAccept(_('Speichern')) ?>
                     </td>
                 </tr>
@@ -679,7 +679,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
             }
             if ($i_page == "archiv_assi.php"){ ?>
                 <tr class="steel2">
-                    <td colspan="<?=(Request::get('show_rooms_check')=='on')?'7':'6'; ?>" align="right">
+                    <td colspan="<?= $show_rooms_check == 'on' ? 7 : 6 ?>" align="right">
                         <?=_("Alle ausgewählten Veranstaltungen")?>
                         <?=Button::create(_("Archivieren"))?><br>
                         <span style="color: red">

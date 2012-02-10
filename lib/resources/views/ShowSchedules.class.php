@@ -36,7 +36,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-use Studip\Button;
+use Studip\Button,
+    Studip\LinkButton;
 
 require_once ($GLOBALS['RELATIVE_PATH_RESOURCES'].'/lib/AssignEventList.class.php');
 require_once ($GLOBALS['RELATIVE_PATH_RESOURCES'].'/views/ScheduleWeek.class.php');
@@ -199,7 +200,8 @@ class ShowSchedules {
                                 $add_info = '(' . join(', ' , $sem_doz_names) . ')';
                         }
                         if (!$print_view){
-                            echo "<a href=\"$PHP_SELF?quick_view=".$view."&quick_view_mode=".$quick_view_mode."&edit_assign_object=".$event->getAssignId()."\">".makeButton("eigenschaften")."</a><font size=-1>";
+                            echo LinkButton::create(_('Eigenschaften'), URLHelper::getURL('?quick_view='
+                                . $view . '&quick_view_mode=' . $quick_view_mode . '&edit_assign_object=' . $event->getAssignId()));
                         } else {
                             echo '<font size=-1>' . sprintf("%02d" , $num++) . '.';
                         }

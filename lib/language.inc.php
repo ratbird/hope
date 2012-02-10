@@ -95,12 +95,13 @@ function init_i18n($_language) {
 * Decides, which button (folder)
 * is used for international buttons.
 *
-* @access   public
-* @param    string  the (german) button name
-* @param    string  if mode = img, the functions return the full tag, if mode = src, it return only the src-part , if mode = input returns full input tag
-* @param    string  tooltip text, if tooltip should be included in tag
-* @param    string  if mode=input this param defines the name attribut
-* @return   string  html output of the button
+* @deprecated   2.3 2012/02/10
+* @access       public
+* @param        string  the (german) button name
+* @param        string  if mode = img, the functions return the full tag, if mode = src, it return only the src-part , if mode = input returns full input tag
+* @param        string  tooltip text, if tooltip should be included in tag
+* @param        string  if mode=input this param defines the name attribut
+* @return       string  html output of the button
 */
 function makeButton($name, $mode = "img", $tooltip = false, $inputname = false) {
 

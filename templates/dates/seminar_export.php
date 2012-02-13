@@ -53,7 +53,7 @@ if ($dates['regular']['turnus_data'] || sizeof($dates['irregular'])) :
     unset($irregular_rooms['']);
     echo sizeof($output) ? ", \n" : '';
 
-    $rooms = array_merge(getFormattedRooms($irregular_rooms, false), array_keys($freetext_rooms));
+    $rooms = array_merge(getPlainRooms($irregular_rooms, false), array_keys($freetext_rooms));
 
     if (is_array($irregular) && sizeof($irregular)) :
         echo _("Termine am") . implode(', ', shrink_dates($irregular));

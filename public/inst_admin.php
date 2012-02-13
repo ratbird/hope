@@ -347,199 +347,94 @@ function table_body ($db, $range_id, $structure, $css_switcher) {
 <table class="blank" border="0" align="center" cellspacing="0" cellpadding="0" width="100%">
 
 <?
-if (isset($nothing)) {  // abbrechen im Detailansicht angeklickt? => zu Namenübersicht wechseln
-    unset($set);
-    unset($details);
-}
 
-if (!isset($details) || isset($set)) {
-    // haben wir was uebergeben bekommen?
 
-    if (is_array($_POST) && list($key, $val) = each($_POST)) {
-    if ($perms!="") { //hoffentlich auch was Sinnvolles?
-            $db->query("SELECT " . $_fullname_sql['full'] . " AS fullname, perms FROM auth_user_md5 LEFT JOIN user_info USING (user_id) WHERE auth_user_md5.user_id = '$u_id'");
-            while ($db->next_record()) {
-                $scherge=$db->f("perms");
-                $Fullname = $db->f("fullname");
-            }
-
-            // Hier darf fast keiner was:
-
-            if (isset($u_kill_x)) {
-                if (!($perm->have_perm("root") || (!$SessSemName["is_fak"] && $perm->have_studip_perm("admin",$SessSemName["fak"]))) && $scherge=='admin')
-                    my_error("<b>" . _("Sie haben keine Berechtigung Administrierende dieser Einrichtung zu l&ouml;schen.") . "</b>");
-                else {
-                    log_event('INST_USER_DEL', $ins_id, $u_id);
-                    $db2->query("DELETE from user_inst WHERE Institut_id = '$ins_id' AND user_id = '$u_id'");
-                    my_msg ("<b>" . sprintf(_("%s wurde aus der Einrichtung ausgetragen."), $Fullname) . "</b>");
-                    // remove from all Statusgruppen
-                    RemovePersonStatusgruppeComplete (get_username($u_id), $ins_id);
-                    unset($set);
-                    unset($details);  // wechle zur Namenübersicht
+// Jemand soll ans Institut...
+if (Request::submitted('berufen') && $ins_id != "" && $u_id != "") {
+    $db->query("SELECT *  FROM user_inst WHERE Institut_id = '$ins_id' AND user_id = '$u_id'");
+    if (($db->next_record()) && ($db->f("inst_perms") != "user")) {
+        // der Admin hat Tomaten auf den Augen, der Mitarbeiter sitzt schon im Institut
+        my_error("<b>" . _("Die Person ist bereits in der Einrichtung eingetragen. Um Rechte etc. zu &auml;ndern folgen Sie dem Link zu den Nutzerdaten der Person!") . "</b>");
+    } else {  // mal nach dem globalen Status sehen
+        $db3->query("SELECT " . $_fullname_sql['full'] . " AS fullname, perms FROM auth_user_md5 a LEFT JOIN user_info USING(user_id) WHERE a.user_id = '$u_id'");
+        $db3->next_record();
+        $Fullname = $db3->f("fullname");
+        if ($db3->f("perms") == "root")
+            my_error("<b>" . _("ROOTs k&ouml;nnen nicht berufen werden!") . "</b>");
+        elseif ($db3->f("perms") == "admin") {
+            if ($perm->have_perm("root") || (!$SessSemName["is_fak"] && $perm->have_studip_perm("admin",$SessSemName["fak"]))) {
+                // Emails schreiben...
+                if($_POST['enable_mail_admin'] == "admin" && $_POST['enable_mail_dozent'] == "dozent"){
+                    $in = "'admin','dozent'";
+                    $wem = "Admins und Dozenten";
+                }else if($_POST['enable_mail_admin'] == "admin"){
+                    $in = "'admin'";
+                    $wem = "Admins";
+                }else if($_POST['enable_mail_dozent'] == "dozent"){
+                    $in = "'dozent'";
+                    $wem = "Dozenten";
                 }
-            }
-            if (isset($inherit)) {
-                $groupID = array_pop(array_keys($inherit)); // there is only 1 element in the array (and we get its key)
-                setOptionsOfStGroup($groupID, $u_id, '', $inherit[$groupID]);
-                $instID = GetRangeOfStatusgruppe($groupID);
-                $entries = DataFieldEntry::getDataFieldEntriesBySecondRangeID($instID);
-                foreach ($entries as $rangeID=>$entry) {
-                    $entry->setSecondRangeID($groupID);  // content of institute fields is default for user role fields
-                    $entry->store();
-                }
-            }
-            if (isset($u_edit_x) || isset($inherit)) {
-                if (!($perm->have_perm("root") || (!$SessSemName["is_fak"] && $perm->have_studip_perm("admin",$SessSemName["fak"]))) && $scherge=='admin' && $u_id != $auth->auth["uid"])
-                    my_error("<b>" . _("Sie haben keine Berechtigung andere Administrierende dieser Einrichtung zu ver&auml;ndern.") . "</b>");
+                if($in != ""){
+                    $i=0;
+                    $notin = array();
 
-                else {
-                    if ($perms=='autor' AND $scherge=='user') {
-                        my_error("<b>" . _("Sie k&ouml;nnen den Benutzer nicht auf AUTORiN hochstufen, da er oder sie im gesamten System nur den Status USER hat. Wenn Sie dennoch an der Bef&ouml;rderung festhalten wollen, kontaktieren Sie bitte eineN der Systemadministrierenden.") . "</b>");
-                    }
-                    elseif ($perms=='tutor' AND ($scherge=='user' OR $scherge=='autor')) {
-                        my_error("<b>" . sprintf(_("Sie k&ouml;nnen den Benutzer nicht auf TUTORiN hochstufen, da er oder sie im gesamten System nur den Status %s hat. Wenn Sie dennoch an der Bef&ouml;rderung festhalten wollen, kontaktieren Sie bitte eineN der Systemadministrierenden."), $scherge) . "</b>");
-                    }
-                    elseif ($perms=='dozent' AND ($scherge=='user' OR $scherge=='autor' OR $scherge=='tutor')) {
-                        my_error("<b>" . sprintf(_("Sie k&ouml;nnen den Benutzer nicht auf DOZENTiN hochstufen, da er oder sie im gesamten System nur den Status %s hat. Wenn Sie dennoch an der Bef&ouml;rderung festhalten wollen, kontaktieren Sie bitte eineN der Systemadministrierenden."), $scherge) . "</b>");
-                    }
-                    elseif ($perms=='admin' AND ($scherge=='user' OR $scherge=='autor' OR $scherge=='tutor' OR $scherge=='dozent')) {
-                        my_error("<b>" . sprintf(_("Sie k&ouml;nnen den Benutzer nicht auf ADMIN hochstufen, da er oder sie im gesamten System nur den Status %s hat. Wenn Sie dennoch an der Bef&ouml;rderung festhalten wollen, kontaktieren Sie bitte eineN der Systemadministrierenden."), $scherge) . "</b>");
-                    }
-                    elseif ($perms=='root') {
-                        my_error("<b>" . _("Sie k&ouml;nnen den Benutzer nicht auf ROOT hochstufen, dieser Status ist an einer Einrichtung nicht vorgesehen.") . "</b>");
-                    }
-                    elseif ($scherge == 'admin' && $perms != 'admin') {
-                        my_error("<b>" . _("Globale AdministratorInnen k&ouml;nnen auch an Einrichtung nur den Status \"admin\" haben.") . "</b>");
-                    }
-                    else { //na, dann muss es wohl sein (grummel)
-                        log_event("INST_USER_STATUS", $ins_id, $u_id, $perms);
+                $db->query(sprintf("SELECT Name FROM Institute WHERE Institut_id = '%s' ",$ins_id));
+                    if($db->next_record())
+                        $instname = $db->f("Name");
+                    $vorname = $Fullname;
+                    //$nachname = siehe $vorname
 
-                        $query = "UPDATE user_inst SET inst_perms='$perms', raum='$raum', Telefon='$Telefon', Fax='$Fax', sprechzeiten='$sprechzeiten' WHERE Institut_id = '$ins_id' AND user_id = '$u_id'";
-                        $db2->query($query);
-                        my_msg("<b>" . sprintf(_("Status&auml;nderung f&uuml;r %s durchgef&uuml;hrt."), $Fullname) . "</b>");
+                    $db->query(sprintf("SELECT a.user_id,b.Vorname,b.Nachname,b.Email FROM user_inst a INNER JOIN auth_user_md5 b ON a.user_id = b.user_id WHERE a.Institut_id = '%s' AND a.inst_perms IN (%s)",$ins_id,$in));
+                    while($db->next_record()){
+                        $user_language = getUserLanguagePath($db->f('user_id'));
+                        include("locale/$user_language/LC_MAILS/new_admin_mail.inc.php");
+                        StudipMail::sendMessage($db->f('Email'), $subject, $mailbody);
+                        $notin[$i] = $db->f('user_id'); $i++;
                     }
-                }
-                // process user role datafields
-                if (is_array($datafield_id)) {
-                    $ffCount = 0; // number of processed form fields
-                    foreach ($datafield_id as $i=>$id) {
-                        $struct = new DataFieldStructure(array("datafield_id"=>$id, 'type'=>$datafield_type[$i]));
-                        $entry  = DataFieldEntry::createDataFieldEntry($struct, array($u_id, $datafield_sec_range_id[$i]));
-                        $numFields = $entry->numberOfHTMLFields(); // number of form fields used by this datafield
-                        if ($datafield_type[$i] == 'bool' && $datafield_content[$ffCount] != $id) { // unchecked checkbox?
-                            $entry->setValue('');
-                            $ffCount -= $numFields;  // unchecked checkboxes are not submitted by GET/POST
-                        }
-                        elseif ($numFields == 1)
-                            $entry->setValue($datafield_content[$ffCount]);
-                        else
-                            $entry->setValue(array_slice($datafield_content, $ffCount, $numFields));
-                        $ffCount += $numFields;
-
-                        $entry->structure->load();
-                        if ($entry->isValid())
-                            $entry->store();
-                        else
-                            $invalidEntries[$struct->getID()] = $entry;
-                    }
-                    // change visibility of role data
-                    foreach ($group_id as $groupID)
-                        setOptionsOfStGroup($groupID, $u_id, ($visible[$groupID] == '0') ? '0' : '1');
-                    if (is_array($invalidEntries))
-                        my_error('<b>Fehlerhafte Eingaben (s.u.)');
-                }
-            }
-            $inst_id=$ins_id;
-        }
-    } // Ende HTTP-POST-VARS
-
-    // Jemand soll ans Institut...
-    //if (isset($berufen_x) && $ins_id != "" && ($perm->have_perm("root") || (!$SessSemName["is_fak"] && $perm->have_studip_perm("admin",$SessSemName["fak"])))) {
-    if (Request::submitted('berufen') && $ins_id != "" && $u_id != "") {
-        $db->query("SELECT *  FROM user_inst WHERE Institut_id = '$ins_id' AND user_id = '$u_id'");
-        if (($db->next_record()) && ($db->f("inst_perms") != "user")) {
-            // der Admin hat Tomaten auf den Augen, der Mitarbeiter sitzt schon im Institut
-            my_error("<b>" . _("Die Person ist bereits in der Einrichtung eingetragen. Um Rechte etc. zu &auml;ndern folgen Sie dem Link zu den Nutzerdaten der Person!") . "</b>");
-        } else {  // mal nach dem globalen Status sehen
-            $db3->query("SELECT " . $_fullname_sql['full'] . " AS fullname, perms FROM auth_user_md5 a LEFT JOIN user_info USING(user_id) WHERE a.user_id = '$u_id'");
-            $db3->next_record();
-            $Fullname = $db3->f("fullname");
-            if ($db3->f("perms") == "root")
-                my_error("<b>" . _("ROOTs k&ouml;nnen nicht berufen werden!") . "</b>");
-            elseif ($db3->f("perms") == "admin") {
-                if ($perm->have_perm("root") || (!$SessSemName["is_fak"] && $perm->have_studip_perm("admin",$SessSemName["fak"]))) {
-                 // Emails schreiben...
-                    if($_POST['enable_mail_admin'] == "admin" && $_POST['enable_mail_dozent'] == "dozent"){
-                        $in = "'admin','dozent'";
-                        $wem = "Admins und Dozenten";
-                    }else if($_POST['enable_mail_admin'] == "admin"){
-                        $in = "'admin'";
-                        $wem = "Admins";
-                    }else if($_POST['enable_mail_dozent'] == "dozent"){
-                        $in = "'dozent'";
-                        $wem = "Dozenten";
-                    }
-                    if($in != ""){
-                        $i=0;
-                        $notin = array();
-
-                    $db->query(sprintf("SELECT Name FROM Institute WHERE Institut_id = '%s' ",$ins_id));
-                        if($db->next_record())
-                            $instname = $db->f("Name");
-                        $vorname = $Fullname;
-                        //$nachname = siehe $vorname
-
-                        $db->query(sprintf("SELECT a.user_id,b.Vorname,b.Nachname,b.Email FROM user_inst a INNER JOIN auth_user_md5 b ON a.user_id = b.user_id WHERE a.Institut_id = '%s' AND a.inst_perms IN (%s)",$ins_id,$in));
+                    if($in != "'dozent'"){
+                        //Noch ein paar Mails für die Fakultätsadmins
+                        $db->query(sprintf("SELECT a.user_id,b.Vorname,b.Nachname,b.Email FROM user_inst a INNER JOIN auth_user_md5 b ON a.user_id = b.user_id WHERE a.user_id NOT IN ('%s','%s') AND a.Institut_id IN (SELECT fakultaets_id FROM Institute WHERE Institut_id = '%s' AND fakultaets_id !=  Institut_id) AND a.inst_perms = 'admin'",implode("','",$notin),$u_id,$ins_id));
                         while($db->next_record()){
                             $user_language = getUserLanguagePath($db->f('user_id'));
                             include("locale/$user_language/LC_MAILS/new_admin_mail.inc.php");
                             StudipMail::sendMessage($db->f('Email'), $subject, $mailbody);
-                            $notin[$i] = $db->f('user_id'); $i++;
+                            $i++;
                         }
-                        if($in != "'dozent'"){
-                            //Noch ein paar Mails für die Fakultätsadmins
-                            $db->query(sprintf("SELECT a.user_id,b.Vorname,b.Nachname,b.Email FROM user_inst a INNER JOIN auth_user_md5 b ON a.user_id = b.user_id WHERE a.user_id NOT IN ('%s','%s') AND a.Institut_id IN (SELECT fakultaets_id FROM Institute WHERE Institut_id = '%s' AND fakultaets_id !=  Institut_id) AND a.inst_perms = 'admin'",implode("','",$notin),$u_id,$ins_id));
-                            while($db->next_record()){
-                                $user_language = getUserLanguagePath($db->f('user_id'));
-                                include("locale/$user_language/LC_MAILS/new_admin_mail.inc.php");
-                                StudipMail::sendMessage($db->f('Email'), $subject, $mailbody);
-                                $i++;
-                            }
-                        }
-                        my_msg("<b>" . sprintf(_("Es wurden ingesamt %s Mails an die %s der Einrichtung geschickt."),$i,$wem) . "</b>");
                     }
-
-                    log_event('INST_USER_ADD', $ins_id ,$u_id, 'admin');
-
-                    // als admin aufnehmen
-                    $db2->query("INSERT into user_inst (user_id, Institut_id, inst_perms) values ('$u_id', '$ins_id', 'admin')");
-                    my_msg("<b>" . sprintf(_("%s wurde als \"admin\" in die Einrichtung aufgenommen."), $Fullname) . "</b>");
-                } else {
-                    my_error("<b>" . _("Sie haben keine Berechtigung einen Admin zu berufen!") . "</b>");
+                    my_msg("<b>" . sprintf(_("Es wurden ingesamt %s Mails an die %s der Einrichtung geschickt."),$i,$wem) . "</b>");
                 }
+
+                log_event('INST_USER_ADD', $ins_id ,$u_id, 'admin');
+
+                // als admin aufnehmen
+                $db2->query("INSERT into user_inst (user_id, Institut_id, inst_perms) values ('$u_id', '$ins_id', 'admin')");
+                my_msg("<b>" . sprintf(_("%s wurde als \"admin\" in die Einrichtung aufgenommen."), $Fullname) . "</b>");
             } else {
-                $insert_perms = $db3->f("perms");
-                //ok, aber nur hochstufen auf Maximal-Status (hat sich selbst schonmal gemeldet als Student an dem Inst)
-                if ($db->f("inst_perms") == "user") {
-                    log_event('INST_USER_STATUS', $ins_id ,$u_id, $insert_perms);
-
-                    $db2->query("UPDATE user_inst SET inst_perms='$insert_perms' WHERE user_id='$u_id' AND Institut_id = '$ins_id' ");
-                    // ok, neu aufnehmen als das was er global ist
-                } else {
-                    log_event('INST_USER_ADD', $ins_id ,$u_id, $insert_perms);
-                    $db2->query("INSERT into user_inst (user_id, Institut_id, inst_perms) values ('$u_id', '$ins_id', '$insert_perms')");
-                }
-                if ($db2->affected_rows())
-                my_msg("<b>" . sprintf(_("%s wurde als \"%s\" in die Einrichtung aufgenommen. Um Rechte etc. zu &auml;ndern folgen Sie dem Link zu den Nutzerdaten der Person!"), $Fullname, $insert_perms) . "</b>");
-                else
-                parse_msg ("error§<b>" . sprintf(_("%s konnte nicht in die Einrichtung aufgenommen werden!"), $Fullname) . "§");
+                my_error("<b>" . _("Sie haben keine Berechtigung einen Admin zu berufen!") . "</b>");
             }
-        }
-        checkExternDefaultForUser($u_id);
+        } else {
+            $insert_perms = $db3->f("perms");
+            //ok, aber nur hochstufen auf Maximal-Status (hat sich selbst schonmal gemeldet als Student an dem Inst)
+            if ($db->f("inst_perms") == "user") {
+                log_event('INST_USER_STATUS', $ins_id ,$u_id, $insert_perms);
 
-        $inst_id=$ins_id;
+                $db2->query("UPDATE user_inst SET inst_perms='$insert_perms' WHERE user_id='$u_id' AND Institut_id = '$ins_id' ");
+                // ok, neu aufnehmen als das was er global ist
+            } else {
+                log_event('INST_USER_ADD', $ins_id ,$u_id, $insert_perms);
+                $db2->query("INSERT into user_inst (user_id, Institut_id, inst_perms) values ('$u_id', '$ins_id', '$insert_perms')");
+            }
+            if ($db2->affected_rows())
+            my_msg("<b>" . sprintf(_("%s wurde als \"%s\" in die Einrichtung aufgenommen. Um Rechte etc. zu &auml;ndern folgen Sie dem Link zu den Nutzerdaten der Person!"), $Fullname, $insert_perms) . "</b>");
+            else
+            parse_msg ("error§<b>" . sprintf(_("%s konnte nicht in die Einrichtung aufgenommen werden!"), $Fullname) . "§");
+        }
     }
+    checkExternDefaultForUser($u_id);
+
+    $inst_id=$ins_id;
 }
+
 $lockrule = LockRules::getObjectRule($inst_id);
 if ($admin_view && $lockrule->description && LockRules::Check($inst_id, 'participants')) {
     my_info(formatLinks($lockrule->description),'',3);
@@ -572,29 +467,9 @@ if ($inst_id != "" && $inst_id !="0") {
             }
         }
     }
-    else
+    else {
         $count = CountMembersStatusgruppen($auswahl);
-
-    /*
-    if ($admin_view) {
-        printf("<blockquote>" . _("Auf dieser Seite k&ouml;nnen Sie Personen der Einrichtung %s zuordnen."), "<b>" . htmlReady($inst_name) . "</b>");
-        echo "<br>" . _("Um weitere Personen als Mitarbeiter hinzuzuf&uuml;gen, benutzen Sie die Suche.");
-        echo "<br><br></blockquote>";
-        echo '<table width="100%" border="0" cellpadding="2" cellspacing="0">';
-        echo '<tr>';
-    } else {
-        if ($count > 0) {
-            printf("<blockquote>%s <b>%s</b></blockquote>", _("Alle MitarbeiterInnen der Einrichtung"), $SessSemName[0]);
-        } else {
-            printf(_("Der Einrichtung <b>%s</b> wurden noch keine MitarbeiterInnen zugeordnet!"), $SessSemName[0]);
-            echo "\n<br><br></blockquote>\n";
-            echo "</td></tr></table\n";
-            echo "</body></html>";
-            page_close();
-            die;
-        }
     }
-    */
 
     echo '</td></tr>';
 
@@ -693,7 +568,6 @@ if ($inst_id != "" && $inst_id !="0") {
     }
 
 $datafields_list = DataFieldStructure::getDataFieldStructures("userinstrole");
-//$default_entries = DataFieldEntry::getDataFieldEntries(array($userID, $inst_id));
 
 if ($extend == 'yes') {
     if (is_array($GLOBALS['INST_ADMIN_DATAFIELDS_VIEW']['extended'])) {
@@ -735,52 +609,62 @@ if ($extend == "yes") {
         case 'liste' :
             if ($perm->have_perm("admin")) {
                 $table_structure = array(
-                                                "name" => array("name" => _("Name"),
-                                                        "link" => "?sortby=Nachname&direction=" . $new_direction,
-                                                        "width" => "30%"),
-                                                "status" => array("name" => _("Status"),
-                                                        "link" => "?sortby=inst_perms&direction=" . $new_direction,
-                                                        "width" => "10"),
-                                                "statusgruppe" => array("name" => _("Funktion"),
-                                                        "width" => "15%")
-                                            );
+                    "name" => array(
+                        "name" => _("Name"),
+                        "link" => "?sortby=Nachname&direction=" . $new_direction,
+                        "width" => "30%"),
+                    "status" => array(
+                        "name" => _("Status"),
+                        "link" => "?sortby=inst_perms&direction=" . $new_direction,
+                        "width" => "10"),
+                    "statusgruppe" => array(
+                        "name" => _("Funktion"),
+                        "width" => "15%")
+                );
             }
             else {
                 $table_structure = array(
-                                                "name" => array("name" => _("Name"),
-                                                        "link" => "?sortby=Nachname&direction=" . $new_direction,
-                                                        "width" => "30%"),
-                                                "statusgruppe" => array("name" => _("Funktion"),
-                                                        "width" => "10%")
-                                                );
+                    "name" => array(
+                        "name" => _("Name"),
+                        "link" => "?sortby=Nachname&direction=" . $new_direction,
+                        "width" => "30%"),
+                    "statusgruppe" => array(
+                        "name" => _("Funktion"),
+                        "width" => "10%")
+                );
             }
             break;
         case 'status' :
             $table_structure = array(
-                                                "name" => array("name" => _("Name"),
-                                                        "link" => "?sortby=Nachname&direction=" . $new_direction,
-                                                        "width" => "30%"),
-                                                "statusgruppe" => array("name" => _("Funktion"),
-                                                        "width" => "15%")
-                                                );
+                "name" => array(
+                    "name" => _("Name"),
+                    "link" => "?sortby=Nachname&direction=" . $new_direction,
+                    "width" => "30%"),
+                "statusgruppe" => array(
+                    "name" => _("Funktion"),
+                    "width" => "15%")
+            );
             break;
         default :
             if ($perm->have_perm("admin")) {
                 $table_structure = array(
-                                                "name" => array("name" => _("Name"),
-                                                        "link" => "?sortby=Nachname&direction=" . $new_direction,
-                                                        "width" => "30%"),
-                                                "status" => array("name" => _("Status"),
-                                                        "link" => "?sortby=inst_perms&direction=" . $new_direction,
-                                                        "width" => "10")
-                                                );
+                    "name" => array(
+                        "name" => _("Name"),
+                        "link" => "?sortby=Nachname&direction=" . $new_direction,
+                        "width" => "30%"),
+                    "status" => array(
+                        "name" => _("Status"),
+                        "link" => "?sortby=inst_perms&direction=" . $new_direction,
+                        "width" => "10")
+                );
             }
             else {
                 $table_structure = array(
-                                                "name" => array("name" => _("Name"),
-                                                        "link" => "?sortby=Nachname&direction=" . $new_direction,
-                                                        "width" => "30%")
-                                                );
+                    "name" => array(
+                        "name" => _("Name"),
+                        "link" => "?sortby=Nachname&direction=" . $new_direction,
+                        "width" => "30%")
+                );
             }
     } // switch
 }
@@ -789,52 +673,62 @@ else {
         case 'liste' :
             if ($perm->have_perm("admin")) {
                 $table_structure = array(
-                                                "name" => array("name" => _("Name"),
-                                                        "link" => "?sortby=Nachname&direction=" . $new_direction,
-                                                        "width" => "35%"),
-                                                "status" => array("name" => _("Status"),
-                                                        "link" => "?sortby=inst_perms&direction=" . $new_direction,
-                                                        "width" => "10"),
-                                                "statusgruppe" => array("name" => _("Funktion"),
-                                                        "width" => "15%")
-                                                );
+                    "name" => array(
+                        "name" => _("Name"),
+                        "link" => "?sortby=Nachname&direction=" . $new_direction,
+                        "width" => "35%"),
+                    "status" => array(
+                        "name" => _("Status"),
+                        "link" => "?sortby=inst_perms&direction=" . $new_direction,
+                        "width" => "10"),
+                    "statusgruppe" => array(
+                        "name" => _("Funktion"),
+                        "width" => "15%")
+                );
             }
             else {
                 $table_structure = array(
-                                                "name" => array("name" => _("Name"),
-                                                        "link" => "?sortby=Nachname&direction=" . $new_direction,
-                                                        "width" => "30%"),
-                                                "statusgruppe" => array("name" => _("Funktion"),
-                                                        "width" => "15%")
-                                                );
+                    "name" => array(
+                        "name" => _("Name"),
+                        "link" => "?sortby=Nachname&direction=" . $new_direction,
+                        "width" => "30%"),
+                    "statusgruppe" => array(
+                        "name" => _("Funktion"),
+                        "width" => "15%")
+                );
             }
             break;
         case 'status' :
             $table_structure = array(
-                                                "name" => array("name" => _("Name"),
-                                                        "link" => "?sortby=Nachname&direction=" . $new_direction,
-                                                        "width" => "40%"),
-                                                "statusgruppe" => array("name" => _("Funktion"),
-                                                        "width" => "20%")
-                                                );
+                "name" => array(
+                    "name" => _("Name"),
+                    "link" => "?sortby=Nachname&direction=" . $new_direction,
+                    "width" => "40%"),
+                "statusgruppe" => array(
+                    "name" => _("Funktion"),
+                    "width" => "20%")
+            );
             break;
         default :
             if ($perm->have_perm("admin")) {
                 $table_structure = array(
-                                                "name" => array("name" => _("Name"),
-                                                        "link" => "?sortby=Nachname&direction=" . $new_direction,
-                                                        "width" => "40%"),
-                                                "status" => array("name" => _("Status"),
-                                                        "link" => "?sortby=inst_perms&direction=" . $new_direction,
-                                                        "width" => "15")
-                                                );
+                    "name" => array(
+                        "name" => _("Name"),
+                        "link" => "?sortby=Nachname&direction=" . $new_direction,
+                        "width" => "40%"),
+                    "status" => array(
+                        "name" => _("Status"),
+                        "link" => "?sortby=inst_perms&direction=" . $new_direction,
+                        "width" => "15")
+                );
             }
             else {
                 $table_structure = array(
-                                                "name" => array("name" => _("Name"),
-                                                        "link" => "?sortby=Nachname&direction=" . $new_direction,
-                                                        "width" => "40%")
-                                                );
+                    "name" => array(
+                        "name" => _("Name"),
+                        "link" => "?sortby=Nachname&direction=" . $new_direction,
+                        "width" => "40%")
+                );
             }
     } // switch
 }

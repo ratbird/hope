@@ -59,6 +59,13 @@ jQuery(function ($) {
             });
             $('form[name$=block_appointments] .hasDatePicker').datepicker();
             $('form[name$=block_appointments] .hasDatePicker').blur();
+            $('#block_appointments_days input:checkbox').click(function () {
+                if (this.id == 'block_appointments_days_0') {
+                    $('#block_appointments_days input:checkbox').attr('checked', function(i) {return i == 0;});
+                } else {
+                    $('#block_appointments_days_0').attr('checked', false);
+                }
+            });
         },
         submit: function (form, button_clicked) {
             if (form) {

@@ -1538,7 +1538,6 @@ if (Request::submitted('save_state')) {
         if (sizeof($resources_data["requests_open"]) == 0) {
             $resources_data["view"] = "requests_start";
             $view = "requests_start";
-            //$msg->addMsg(36, array($PHP_SELF, $PHP_SELF));
             Request::set('save_state', 1);
         } else  {
             if ($resources_data["requests_working_pos"] == sizeof($resources_data["requests_working_on"])-1) {

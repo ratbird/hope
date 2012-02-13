@@ -136,13 +136,13 @@ $this->msg[28] = array (
 $this->msg[29] = array (
         "mode" => "info",
         "msg"=> _("Sie haben den Raum als <u>blockierbar</u> markiert. Wollen Sie auch alle untergeordneten R&auml;ume ebenfalls als <u>blockierbar</u> markieren?")
-            ."<br><a href=\"%s?set_lockable_recursiv=1&lock_resource_id=%s\">".makeButton("ja2")."</a>"
-            ."&nbsp;<a href=\"%s\">".makeButton("nein")."</a>");
+            . "<br>". LinkButton::createAccept(_('JA!'), '%s?set_lockable_recursiv=1&lock_resource_id=%s')
+            . ' ' . LinkButton::createCancel(_('NEIN!'), '%s'));
 $this->msg[30] = array (
         "mode" => "info",
         "msg"=> _("Sie haben den Raum als <u>nicht</u> mehr blockierbar markiert. Wollen Sie auch alle untergeordneten R&auml;ume ebenfalls als <u>nicht</u> blockierbar markieren?")
-            ."<br><a href=\"%s?unset_lockable_recursiv=1&lock_resource_id=%s\">".makeButton("ja2")."</a>"
-            ."&nbsp;<a href=\"%s\">".makeButton("nein")."</a>");
+            . "<br>". LinkButton::createAccept(_('JA!'), '%s?unset_lockable_recursiv=1&lock_resource_id=%s')
+            . ' ' . LinkButton::createCancel(_('NEIN!'), '%s'));
 $this->msg[31] = array (
         "mode" => "info",
         "msg"=> "<font size=\"-1\">"._("<b>Ressourcenblockierung vom %s bis zum %s.</b>")."</font><br>".
@@ -159,11 +159,7 @@ $this->msg[34] = array (
 $this->msg[35] = array (
         "mode" => "error",
         "msg"=> _("Die folgende R&auml;ume konnten wegen &Uuml;berschneidungen nicht gebucht werden:")."<br>"._("Eine neue Anfrage, die einzeln bearbeitet werden mu&szlig;, wurde f&uuml;r jede Belegungszeit erstellt.  <font size=\"-1\" color=\"black\">%s</font>"));
-$this->msg[36] = array (
-        "mode" => "info",
-        "msg"=> _("Sie haben alle Anfragen, die Sie ausgew&auml;hlt haben, bearbeitet. Wollen Sie jetzt Nachrichten zu allen aufgel&ouml;sten Anfragen versenden?")
-            ."<br><a href=\"%s?snd_closed_request_sms=1&reset_set=1\">".makeButton("ja2")."</a>"
-            ."&nbsp;<a href=\"%s?reset_set=1\">".makeButton("nein")."</a>");
+// message 36 is not used anymore
 $this->msg[37] = array (
         "mode" => 'success',
         "msg"=> _("Die regelm&auml;&szlig;ige Belegung wurde in Einzeltermine umgewandelt."));
@@ -176,7 +172,7 @@ $this->msg[39] = array (
 $this->msg[40] = array (
         "mode" => "info",
         "msg"=> _("Sie haben bereits Anfragen, die Sie ausgew&auml;hlt haben, bearbeitet. Klicken Sie auf &raquo;absenden&laquo;, um Nachrichten zu aufgel&ouml;sten Anfragen versenden.")
-            ."&nbsp;<a href=\"%s?snd_closed_request_sms=1\">".makeButton("absenden")."</a>");
+            . " ". LinkButton::createAccept(_('Absenden'), '%s?snd_closed_request_sms=1'));
 $this->msg[41] = array (
         "mode" => "info",
         "msg"=> _("Mit den von ihnen ausgewählten Einstellungen sind keine Anfragen, die Sie auflösen könnten, vorhanden."));
@@ -189,8 +185,8 @@ $this->msg[43] = array (
             . CSRFProtection::tokenTag()
             . "<table class=\"default\"><tr><td style=\"vertical-align:top\">"
             . _("Wollen Sie die Anfrage wirklich ablehnen?")
-            ."<br><br>" . makeButton('ja2', 'input')
-            ."&nbsp;<a href=\"%s?decline_request=0\">".makeButton("nein")."</a><br>"
+            ."<br><br>" . Button::createAccept('JA!')
+            . " ". LinkButton::createCancel(_('NEIN!'), '%s?decline_request=0') .'<br>'
             .'<input type="hidden" name="decline_request" value="1"></td><td style="vertical-align:top">'
             ._("Grund der Ablehnung:").'<br>'
             .'<textarea cols="30" rows="3" name="decline_message" style="width:90%%"></textarea></td></tr></table>'

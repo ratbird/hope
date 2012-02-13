@@ -1,5 +1,7 @@
 <?
 # Lifter010: TODO
+use Studip\Button,
+    Studip\LinkButton;
 ?>
 <form name="Formular" method="post" action="<?= URLHelper::getLink('?change_object_schedules='. (!$resAssign->isNew() ?  $resAssign->getId() : 'NEW')); ?>#anker">
 <?= CSRFProtection::tokenTag() ?>
@@ -19,15 +21,14 @@
         <? if ($resAssign->isNew()) : ?>
             <?= MessageBox::info(_("Sie erstellen eine neue Belegung")) ?>
         <? endif; ?>
-        <?
-        if (!$lockedAssign) :
-        ?>
-            <input type="image" <?=makeButton("uebernehmen", "src") ?> name="submit" value="<?= _("Übernehmen") ?>">
-            &nbsp;<a href="<?= URLHelper::getLink('?cancel_edit_assign=1&quick_view_mode='. $view_mode) ?>"><?=makeButton("abbrechen", "img") ?></a>
+
+        <? if (!$lockedAssign) : ?>
+            <?= Button::createAccept(_('Übernehmen'), 'submit') ?>
+            <?= LinkButton::CreateCancel(_('Abbrechen'), URLHelper::getURL('?cancel_edit_assign=1&quick_view_mode='. $view_mode)) ?>
         <? endif; ?>
 
         <? if ($killButton) : ?>
-            &nbsp;<input type="image" <?=makeButton("loeschen", "src") ?> name="kill_assign" value="<?=_("l&ouml;schen")?>">
+            <?= Button::create(_('Löschen'), 'kill_assign') ?>
         <? endif; ?>
 
         <? if ($lockedAssign) : ?>
@@ -119,12 +120,23 @@
             endif;
             ?>
         <? else : ?>
-            <input type="image" name="change_schedule_repeat_none" <?=makeButton("keine".(($resAssign->getRepeatMode()=="na") ? "2" :""), "src") ?> border=0>&nbsp;&nbsp;
-            &nbsp;<input type="image" name="change_schedule_repeat_day" <?=makeButton("taeglich".(($resAssign->getRepeatMode()=="d") ? "2" :""), "src") ?> border=0>
-            &nbsp;<input type="image" name="change_schedule_repeat_week" <?=makeButton("woechentlich".(($resAssign->getRepeatMode()=="w") ? "2" :""), "src") ?> border=0><br>
-            <input type="image" name="change_schedule_repeat_severaldays" <?=makeButton("mehrtaegig".(($resAssign->getRepeatMode()=="sd") ? "2" :""), "src") ?> border=0>&nbsp;&nbsp;
-            &nbsp;<input type="image" name="change_schedule_repeat_month" <?=makeButton("monatlich".(($resAssign->getRepeatMode()=="m") ? "2" :""), "src") ?> border=0>
-            &nbsp;<input type="image" name="change_schedule_repeat_year" <?=makeButton("jaehrlich".(($resAssign->getRepeatMode()=="y") ? "2" :""), "src") ?> border=0>
+            <? $repeat_buttons = array(
+                'na' => array('name' => _('Keine'), 'action' => 'change_schedule_repeat_none'),
+                'd'  => array('name' => _('Täglich'), 'action' => 'change_schedule_repeat_day'),
+                'w'  => array('name' => _('Wöchentlich'), 'action' => 'change_schedule_repeat_week'),
+                'sd' => array('name' => _('Mehrtägig'), 'action' => 'change_schedule_repeat_severaldays'),
+                'm'  => array('name' => _('Monatlich'), 'action' => 'change_schedule_repeat_month'),
+                'y'  => array('name' => _('Jährlich'),  'action' => 'change_schedule_repeat_year')
+            ) ?>
+            
+            <? foreach ($repeat_buttons as $repeat_mode => $button) : ?>
+                <? if ($resAssign->getRepeatMode() == $repeat_mode) : ?>
+                    <?= Button::createAccept($button['name'], $button['action']) ?>
+                <? else : ?>
+                    <?= Button::create($button['name'], $button['action']) ?>
+                <? endif ?>
+                <?= ($repeat_mode == 'w') ? '<br>' : '' ?>
+            <? endforeach ?>
         <? endif; ?>
         </td>
     </tr>
@@ -271,13 +283,12 @@
     ?>
     <tr>
         <td class="<? echo $cssSw->getClass() ?>" colspan="3" align="center"><br>&nbsp;
-            <input type="image" align="absmiddle" <?=makeButton("uebernehmen", "src") ?> border=0 name="submit" value="<?=_("Übernehmen")?>">
-            &nbsp;<a href="<?=$PHP_SELF."?cancel_edit_assign=1&quick_view_mode=".$view_mode?>"><?=makeButton("abbrechen", "img") ?></a>
-        <?
-        if ($killButton) : ?>
-            &nbsp;<input type="image" align="absmiddle" <?=makeButton("loeschen", "src") ?> border=0 name="kill_assign" value="<?=_("l&ouml;schen")?>">
-        <? endif; ?>
-        <br>&nbsp;
+            <?= Button::createAccept(_('Übernehmen'), 'submit') ?>
+            <?= LinkButton::CreateCancel(_('Abbrechen'), URLHelper::getURL('?cancel_edit_assign=1&quick_view_mode='. $view_mode)) ?>            
+            <? if ($killButton) : ?>
+                <?= Button::create(_('Löschen'), 'kill_assign') ?>
+            <? endif; ?>
+            <br>
         </td>
     </tr>
     <?  endif; ?>
@@ -285,7 +296,7 @@
     <? if (($ResourceObjectPerms->havePerm("tutor")) && (!$resAssign->isNew())) : ?>
     <tr>
         <td class="blank" colspan="3" width="100%">&nbsp;
-        <?if(isset($search_room_x)) echo '<a name="anker"> </a>';?>
+        <?= Request::submitted('search_room') ? '<a name="anker"> </a>' : '' ?>
         </td>
     </tr>
 
@@ -311,7 +322,7 @@
             <table cellspacing="5" cellpadding="2" border="0">
             <tr>
                 <td>
-                <input <?=($change_schedule_move_or_copy != 'copy' ? 'checked' : '')?> type="radio" name="change_schedule_move_or_copy" id="change_schedule_move_or_copy1" value="move">
+                <input <?=($change_schedule_move_or_copy != 'copy' ? 'checked' : '')?> type="radio" name="change_schedule_move_or_copy" id="change_schedule_move_or_copy1" value="move" <?= Request::submitted('search_room') ? 'readonly="readonly"' : '' ?>>
                 </td>
                 <td>
                 <label for="change_schedule_move_or_copy1" style="font-weight:bold;">
@@ -322,7 +333,7 @@
             </tr>
             <tr>
                 <td>
-                <input <?=($change_schedule_move_or_copy == 'copy' ? 'checked' : '')?> type="radio" name="change_schedule_move_or_copy" id="change_schedule_move_or_copy2" value="copy">
+                <input <?=($change_schedule_move_or_copy == 'copy' ? 'checked' : '')?> type="radio" name="change_schedule_move_or_copy" id="change_schedule_move_or_copy2" value="copy" <?= Request::submitted('search_room') ? 'readonly="readonly"' : '' ?>>
                 </td>
                 <td>
                 <label for="change_schedule_move_or_copy2" style="font-weight:bold;">
@@ -335,11 +346,11 @@
             <?
         }
         $result = null;
-        if (strlen($search_exp_room) > 1 && isset($search_room_x)) {
+        if (strlen($search_exp_room) > 1 && Request::submitted('search_room')) {
             if (getGlobalPerms($user->id) != "admin")
                 $resList = new ResourcesUserRoomsList ($user->id, FALSE, FALSE);
 
-            $result = $resReq->searchRooms($_POST['search_exp_room'], FALSE, 0, 10, FALSE, (is_object($resList)) ? array_keys($resList->getRooms()) : FALSE);
+            $result = $resReq->searchRooms(Request::get('search_exp_room'), FALSE, 0, 10, FALSE, (is_object($resList)) ? array_keys($resList->getRooms()) : FALSE);
         }
         if ($result) {
             echo MessageBox::info(sizeof($result) . " " . _("Ressourcen gefunden:"));
@@ -348,9 +359,10 @@
                 foreach ($result as $key => $val) {
                     printf ("<option value=\"%s\">%s  </option>", $key, htmlReady(my_substr($val, 0, 40)));
                 }
-                print "</select>";
-                print "&nbsp;<input type=\"IMAGE\" src=\"" . Assets::image_path('icons/16/blue/refresh.png') . "\"  ".tooltip(_("neue Suche starten"))." name=\"reset_room_search\">";
-                print "&nbsp;&nbsp;".makeButton('verschieben', 'input', _("Die Belegung in den ausgewählten Raum verschieben"),'send_change_resource');
+                print "</select> ";
+                echo Button::create(_('Verschieben'), 'send_change_resource', 
+                    array('title' => _("Die Belegung in den ausgewählten Raum verschieben")));
+                echo Button::create(_('Neue Suche'), 'reset_room_search');                
             } else {
                 ?>
                 <select name="select_change_resource[]" multiple size="10">
@@ -359,9 +371,9 @@
                 <?}?>
                 </select>
                 </font>
-                &nbsp;<input type="image" src="<?= Assets::image_path('icons/16/blue/refresh.png') ?>"  <?=tooltip(_("neue Suche starten"))?> name="reset_room_search">
-                &nbsp;&nbsp;
-                <?=makeButton('kopieren', 'input', _("Die Belegung in die ausgewählten Räume kopieren"),'send_change_resource')?>
+                <?= Button::create(_('Kopieren'), 'send_change_resource', 
+                    array('title' => _("Die Belegung in die ausgewählten Raum kopieren"))); ?>
+                <?= Button::create(_('Neue Suche'), 'reset_room_search'); ?>
                 <?
             }
             echo "<br><br>";
@@ -373,7 +385,7 @@
             <?=_("Geben Sie zur Suche den Namen der Ressource ganz oder teilweise ein:"); ?>
             <br>
             <input type="text" size="30" maxlength="255" name="search_exp_room">&nbsp;
-            <?=makeButton('suchen', 'input', _("Suche starten"), 'search_room') ?>
+            <?= Button::create(_('Suchen'), 'search_room') ?>
             <br>
             <?
         }
@@ -385,7 +397,8 @@
             ?>
             <b><?=_("Regelm&auml;&szlig;ige Belegung in Einzeltermine umwandeln:")?></b><br><br>
             <?=_("Nutzen Sie diese Funktion, um eine Terminserie in Einzeltermine umzuwandeln. Diese Einzeltermine k&ouml;nnen dann getrennt bearbeitet werden.");?>
-            <br><br><input type="image" align="absmiddle" <?=makeButton("umwandeln", "src") ?> border=0 name="change_meta_to_single_assigns" value="<?=_("umwandeln")?>">
+            <br><br>
+            <?= Button::create(_('Umwandeln'), 'change_meta_to_single_assigns') ?>
         <?
         endif;
         ?>

@@ -339,7 +339,7 @@ if ($change_object_schedules) {
 
     // check, if the submit-button has been pressed. Otherwise do not store the assign.
     $storeAssign = false;
-    if ($_REQUEST['submit_x']) {
+    if (Request::submitted('submit')) {
         $storeAssign = true;
     }
 
@@ -358,7 +358,7 @@ if ($change_object_schedules) {
         }
     }
 
-    if (($ObjectPerms->havePerm("tutor")) && ($change_meta_to_single_assigns_x)) {
+    if (($ObjectPerms->havePerm("tutor")) && Request::submitted('change_meta_to_single_assigns')) {
         $assObj = AssignObject::Factory($change_object_schedules);
         if ($assObj->getOwnerType() != 'sem'){
             $events = $assObj->getEvents();
@@ -381,7 +381,7 @@ if ($change_object_schedules) {
         }
     }
 
-    if ($ObjectPerms->havePerm("admin") && isset($_POST['send_change_resource_x']) && isset($_POST['select_change_resource'])) {
+    if ($ObjectPerms->havePerm("admin") && Request::submitted('send_change_resource') && isset($_POST['select_change_resource'])) {
         if(!is_array($_POST['select_change_resource'])){
         $ChangeObjectPerms = ResourceObjectPerms::Factory($_POST['select_change_resource']);
         if ($ChangeObjectPerms->havePerm("tutor")) {
@@ -420,13 +420,13 @@ if ($change_object_schedules) {
     }
 
     if ($ObjectPerms->havePerm("autor")) {
-        if ($kill_assign_x) {
+        if (Request::submitted('kill_assign')) {
             $killAssign = AssignObject::Factory($change_object_schedules);
             $killAssign->delete();
             $new_assign_object='';
             $msg->addMsg(5);
             $change_schedule_id = $change_object_schedules = $resources_data['actual_assign'] = FALSE;
-        } elseif (!$return_schedule && !isset($search_room_x) && !isset($reset_room_search_x)) {
+        } elseif (!$return_schedule && !Request::submitted('search_room') && !Request::submitted('reset_room_search')) {
             if ($change_object_schedules == "NEW")
                 $change_schedule_id=FALSE;
             else
@@ -461,7 +461,7 @@ if ($change_object_schedules) {
                 $change_schedule_begin=mktime($change_schedule_start_hour, $change_schedule_start_minute, 0, $change_schedule_month, $change_schedule_day, $change_schedule_year);
                 $change_schedule_end=mktime($change_schedule_end_hour, $change_schedule_end_minute, 0, $change_schedule_month, $change_schedule_day, $change_schedule_year);
                 if ($change_schedule_begin > $change_schedule_end) {
-                    if (($change_schedule_repeat_mode != "sd") && (!$change_schedule_repeat_severaldays_x)) {
+                    if (($change_schedule_repeat_mode != "sd") && (!Request::submitted('change_schedule_repeat_severaldays'))) {
                         $illegal_dates=TRUE;
                         $msg -> addMsg(20);
                     }
@@ -482,7 +482,7 @@ if ($change_object_schedules) {
             //create repeatdata
 
             //repeat = none
-            if ($change_schedule_repeat_none_x) {
+            if (Request::submitted('change_schedule_repeat_none')) {
                 $change_schedule_repeat_end='';
                 $change_schedule_repeat_month_of_year='';
                 $change_schedule_repeat_day_of_month='';
@@ -498,7 +498,7 @@ if ($change_object_schedules) {
 
 
             //repeat = several days
-            if ($change_schedule_repeat_severaldays_x) {
+            if (Request::submitted('change_schedule_repeat_severaldays')) {
                 $change_schedule_repeat_end = mktime(date("G", $change_schedule_end), date("i", $change_schedule_end), 0, date("n", $change_schedule_begin), date("j", $change_schedule_begin)+1, date("Y", $change_schedule_begin));
                 $change_schedule_repeat_month_of_year='';
                 $change_schedule_repeat_day_of_month='';
@@ -509,7 +509,7 @@ if ($change_object_schedules) {
             }
 
             //repeat = year
-            if ($change_schedule_repeat_year_x) {
+            if (Request::submitted('change_schedule_repeat_year')) {
                 $change_schedule_repeat_month_of_year=date("n", $change_schedule_begin);
                 $change_schedule_repeat_day_of_month=date("j", $change_schedule_begin);
                 $change_schedule_repeat_week_of_month='';
@@ -521,7 +521,7 @@ if ($change_object_schedules) {
             }
 
             //repeat = month
-            if ($change_schedule_repeat_month_x)
+            if (Request::submitted('change_schedule_repeat_month'))
                 if (!$change_schedule_repeat_week_of_month) {
                     $change_schedule_repeat_month_of_year='';
                     $change_schedule_repeat_day_of_month=date("j", $change_schedule_begin);
@@ -534,7 +534,7 @@ if ($change_object_schedules) {
                 }
 
             //repeat = week
-            if ($change_schedule_repeat_week_x) {
+            if (Request::submitted('change_schedule_repeat_week')) {
                 $change_schedule_repeat_month_of_year='';
                 $change_schedule_repeat_day_of_month='';
                 $change_schedule_repeat_week_of_month='';
@@ -548,7 +548,7 @@ if ($change_object_schedules) {
             }
 
             //repeat = day
-            if ($change_schedule_repeat_day_x) {
+            if (Request::submitted('change_schedule_repeat_day')) {
                 $change_schedule_repeat_month_of_year='';
                 $change_schedule_repeat_day_of_month='';
                 $change_schedule_repeat_week_of_month='';
@@ -559,22 +559,6 @@ if ($change_object_schedules) {
                 if (!$change_schedule_repeat_interval)
                     $change_schedule_repeat_interval=1;
             }
-
-            //repeat days, only if week
-            if ($change_schedule_repeat_day1_x)
-                $change_schedule_repeat_day_of_week=1;
-            if ($change_schedule_repeat_day2_x)
-                $change_schedule_repeat_day_of_week=2;
-            if ($change_schedule_repeat_day3_x)
-                $change_schedule_repeat_day_of_week=3;
-            if ($change_schedule_repeat_day4_x)
-                $change_schedule_repeat_day_of_week=4;
-            if ($change_schedule_repeat_day5_x)
-                $change_schedule_repeat_day_of_week=5;
-            if ($change_schedule_repeat_day6_x)
-                $change_schedule_repeat_day_of_week=6;
-            if ($change_schedule_repeat_day7_x)
-                $change_schedule_repeat_day_of_week=7;
 
             //give data to the assignobject
             if (!$change_schedule_id){

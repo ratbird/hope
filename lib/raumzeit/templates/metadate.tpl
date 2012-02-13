@@ -1,5 +1,7 @@
 <?
 # Lifter010: TODO
+use Studip\Button,
+    Studip\LinkButton;
 ?>
 <?
 if (!$sd_open[$tpl['md_id']] || $_LOCKED) { ?>
@@ -98,8 +100,8 @@ if (!$sd_open[$tpl['md_id']] || $_LOCKED) { ?>
                             <INPUT type="text" name="end_stunde" maxlength="2" size="2" value="<?=leadingZero($tpl['mdEndHour'])?>"> :
                             <INPUT type="text" name="end_minute" maxlength="2" size="2" value="<?=leadingZero($tpl['mdEndMinute'])?>"> Uhr
                             <?=Termin_Eingabe_javascript(2,0,0,$tpl['mdStartHour'],$tpl['mdStartMinute'],$tpl['mdEndHour'],$tpl['mdEndMinute']);?>
-                            &nbsp;&nbsp;<?=_("Beschreibung:")?> <INPUT type="text" name="description" value="<?=$tpl['mdDescription']?>">
-                            &nbsp;&nbsp;<INPUT type="image" name="editCycle" align="absmiddle" <?=makebutton('uebernehmen', 'src')?>>
+                            <?=_("Beschreibung:")?> <INPUT type="text" name="description" value="<?=$tpl['mdDescription']?>">
+                            <?= Button::createAccept(_('Übernehmen'), 'editCycle') ?>
                             <INPUT type="hidden" name="cycle_id" value="<?=$tpl['md_id']?>">
                         </B></FONT>
                          <br>
@@ -109,7 +111,6 @@ if (!$sd_open[$tpl['md_id']] || $_LOCKED) { ?>
                         <option value="1"<?=$tpl['cycle'] == 1 ? 'selected' : ''?>><?=_("zweiwöchentlich")?></option>
                         <option value="2"<?=$tpl['cycle'] == 2 ? 'selected' : ''?>><?=_("dreiwöchentlich")?></option>
                         </select>
-                        &nbsp;&nbsp;
                         <?=_("beginnt in der")?>:
                         <select name="startWeek">
                         <?
@@ -127,17 +128,17 @@ if (!$sd_open[$tpl['md_id']] || $_LOCKED) { ?>
                         <? if($GLOBALS['RESOURCES_ENABLE'] && $GLOBALS['RESOURCES_ALLOW_ROOM_REQUESTS']) : ?>
                         <div style="padding-top:2px">
                         <?=_("Raumanfrage")?>
-                        <A onClick="STUDIP.RoomRequestDialog.initialize(this.href.replace('edit','edit_dialog'));return false;" href="<?= URLHelper::getLink('dispatch.php/course/room_requests/edit/' .$tpl['seminar_id'], $tpl['room_request'] ? array('request_id' => $tpl['room_request']->request_id) : array('new_room_request_type' => 'cycle_' . $tpl['md_id'])) ?>">
-                            <?=($tpl['room_request']) ? makebutton('bearbeiten', 'img') : makebutton('erstellen', 'img')?>
-                        </A>
-                        <? if ($tpl['room_request']) { ?>
-                        <?=_("oder")?>
-                        <A href="<?= URLHelper::getLink('?cmd=removeMetadateRequest&metadate_id='. $tpl['md_id'] ) ?>">
-                            <?=($tpl['room_request']) ? makebutton('zurueckziehen', 'img') : ''?>
-                        </A>
-                        </div>
-                        <? } ?>
-                        <? endif;?>
+                        <?= LinkButton::create($tpl['room_request'] ? _('Bearbeiten') : _('Erstellen'),
+                                URLHelper::getURL('dispatch.php/course/room_requests/edit/' .$tpl['seminar_id'], $tpl['room_request'] ? array('request_id' => $tpl['room_request']->request_id) : array('new_room_request_type' => 'cycle_' . $tpl['md_id'])),
+                                array('onClick' => "STUDIP.RoomRequestDialog.initialize(this.href.replace('edit','edit_dialog'));return false;")) ?>
+
+                        <? if ($tpl['room_request']) : ?>
+                            <?=_("oder")?>
+                            <?= LinkButton::create(_('Zurückziehen'), URLHelper::getURL('?cmd=removeMetadateRequest&metadate_id='. $tpl['md_id'])) ?>
+                        <? endif ?>
+
+                        </div>                            
+                        <? endif?>
                     </FORM></TD>
                 <TD width="5%" nowrap="nowrap" class="<?=$tpl['class']?>" align="right">
                     <? if ($show_sorter) : ?>

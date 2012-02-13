@@ -116,7 +116,7 @@ class EditResourceData {
     function showScheduleForms($assign_id='') {
         global $PHP_SELF, $perm, $user, $resources_data, $new_assign_object, $search_user, $search_string_search_user,
             $CANONICAl_RELATIVE_PATH_STUDIP, $RELATIVE_PATH_RESOURCES, $cssSw, $view_mode,$quick_view, $add_ts,
-            $search_exp_room, $search_room_x, $search_properties_x;
+            $search_exp_room, $search_properties_x;
 
         $resReq = new RoomRequest();
 
@@ -204,7 +204,7 @@ class EditResourceData {
         $template->set_attribute('db', $this->db);
         $change_schedule_move_or_copy = $_POST['change_schedule_move_or_copy'];
         echo $template->render(compact( 'resAssign', 'resources_data', 'view_mode', 'cssSw', 'lockedAssign', 'killButton', 
-            'owner_type', 'perm', 'search_string_search_user', 'ResourceObjectPerms', 'search_exp_room', 'search_room_x',
+            'owner_type', 'perm', 'search_string_search_user', 'ResourceObjectPerms', 'search_exp_room',
             'search_properties_x', 'resReq', 'seminarName', 'seminarID','change_schedule_move_or_copy'));
     }
 

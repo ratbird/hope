@@ -1,5 +1,7 @@
 <?
 # Lifter010: TODO
+use Studip\Button,
+    Studip\LinkButton;
 ?>
 <? if (!$tpl['deleted']) : ?>
 <TR>
@@ -75,9 +77,9 @@
                         <OPTION value="retreat"><?=_("Raumbuchung aufheben")?></option>
                         <OPTION value="nothing"><?=_("keine Buchung, nur Textangabe")?></option>
                         <?
-                            while ($res = $resList->next()) {
+                            while ($res = $resList->next()) :
                                 echo '<OPTION value="'.$res['resource_id'].'">'.my_substr(htmlReady($res["name"]), 0, 30)."</OPTION>\n";
-                            }
+                            endwhile;
                         ?>
                     </SELECT>
                     <br>
@@ -85,19 +87,19 @@
                     <?=_("freie Ortsangabe:")?>
                     <INPUT type="text" name="freeRoomText_sd" size="50" maxlength="255" value="<?=$tpl['freeRoomText']?>">
                     <?=$GLOBALS['RESOURCES_ENABLE'] ? _("(f&uuml;hrt <em>nicht</em> zu einer Raumbuchung)"): ''?><br>
-                    <? if ($GLOBALS['RESOURCES_ENABLE'] && $GLOBALS['RESOURCES_ALLOW_ROOM_REQUESTS']) { ?>
+                    <? if ($GLOBALS['RESOURCES_ENABLE'] && $GLOBALS['RESOURCES_ALLOW_ROOM_REQUESTS']) : ?>
                     <?=_("Raumanfrage")?>
-                    <A onClick="STUDIP.RoomRequestDialog.initialize(this.href.replace('edit','edit_dialog'));return false;" href="<?= URLHelper::getLink('dispatch.php/course/room_requests/edit/' .$tpl['seminar_id'], $tpl['room_request'] ? array('request_id' => $tpl['room_request']->getId()) : array('new_room_request_type' => 'date_' . $tpl['sd_id'])) ?>">
-                        <IMG <?=($tpl['room_request']) ? makebutton('bearbeiten', 'src') : makebutton('erstellen', 'src')?> border="0" align="absmiddle">
-                    </A>
-                    <? if ($tpl['room_request']) { ?>
+                    <?= LinkButton::create(($tpl['room_request']) ? _('Bearbeiten') : _('Erstellen'),
+                            URLHelper::getURL('dispatch.php/course/room_requests/edit/' .$tpl['seminar_id'], $tpl['room_request'] ? array('request_id' => $tpl['room_request']->getId()) : array('new_room_request_type' => 'date_' . $tpl['sd_id'])),
+                            array('onClick' => "STUDIP.RoomRequestDialog.initialize(this.href.replace('edit','edit_dialog'));return false")) ?>
+                    <? if ($tpl['room_request']) : ?>
                     <?=_("oder")?>
-                    <A href="<?= URLHelper::getLink('?cmd=removeRequest&cycle_id='. $tpl['cycle_id'] .'&singleDateID='. $tpl['sd_id']) ?>">
-                        <IMG <?=($tpl['room_request']) ? makebutton('zurueckziehen', 'src') : ''?> border="0" align="absmiddle">
-                    </A>
-                    <? } ?>
+                    <?= LinkButton::create(_('Zurückziehen'), 
+                            URLHelper::getURL('?cmd=removeRequest&cycle_id='. $tpl['cycle_id'] .'&singleDateID='. $tpl['sd_id'])) ?>
+                    
+                    <? endif ?>
                     <br>
-                    <? } ?>
+                    <? endif ?>
                     </FONT>
                 </TD>
                 <TD class="printcontent" valign="top" colspan="2" align="right" nowrap>
@@ -120,11 +122,10 @@
             </TR>
             <TR>
                 <TD align="center" class="printcontent" colspan="4" style="text-align: center">
+                    <?= Button::createAccept(_('Übernehmen'), 'editSingleDate_button') ?>
+                    <?= LinkButton::createCancel(_('Abbrechen'),
+                            URLHelper::getURL('?cmd=close&open_close_id='. $tpl['sd_id'] .'#'. $tpl['sd_id'])) ?>
                     <INPUT type="hidden" name="cmd" value="doAddSingleDate">
-                    <INPUT type="image" <?=makebutton('uebernehmen', 'src')?> name="editSingleDate_button">
-                    <A href="<?= URLHelper::getLink('?cmd=close&open_close_id='. $tpl['sd_id'] .'#'. $tpl['sd_id']) ?>">
-                        <IMG <?=makebutton('abbrechen', 'src')?> border="0">
-                    </A>
                 </TD>
             </TR>
         </TABLE>
@@ -138,7 +139,7 @@
 <? else : ?>
 <tr>
     <td class="printcontent" colspan="9">
-        <a name="<?=$tpl['sd_id']?>" />
+        <a name="<?=$tpl['sd_id']?>"></a>
         <table cellpadding="2" cellspacing="0" border="0" width="100%">
             <tr>
                 <td width="2%" align="left" valign="center" class="<?=$tpl['class']?>" nowrap="nowrap">
@@ -178,10 +179,9 @@
             </tr>
             <tr>
                 <td align="center" class="printcontent" colspan="4" style="text-align: center">
-                    <input type="image" <?=makebutton('uebernehmen', 'src')?>>
-                    <a href="<?= URLHelper::getLink('?cmd=close&open_close_id='. $tpl['sd_id'] .'#'. $tpl['sd_id']) ?>">
-                        <img <?=makebutton('abbrechen', 'src')?> border="0">
-                    </a>
+                    <?= Button::createAccept(_('Übernehmen')) ?>
+                    <?= LinkButton::createCancel(_('Abbrechen'),
+                            URLHelper::getURL('?cmd=close&open_close_id='. $tpl['sd_id'] .'#'. $tpl['sd_id'])) ?>
                 </td>
             </tr>
         </table>

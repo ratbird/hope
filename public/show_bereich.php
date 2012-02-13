@@ -142,7 +142,7 @@ if (get_config('EXPORT_ENABLE') && $perm->have_perm("tutor")) {
     if ($level == "s") {
         $infobox[] =    array(  "kategorie" => _("Daten ausgeben:"),
             "eintrag" => array(array(   "icon" => "icons/16/black/download.png",
-                "text" => export_link($SessSemName[1], "veranstaltung", $SessSemName[0])),
+                "text" => '<a href="' . UrlHelper::getLink("export.php", array('range_id' => $SessSemName[1], 'o_mode' => 'choose', 'ex_type' => "veranstaltung",'xslt_filename' => $SessSemName[0], 'ex_sem' => $show_semester)).'">' . _("Diese Daten exportieren") . '</a>'),
                 array( 'icon' => 'icons/16/black/file-xls.png',
                     "text" => '<a href="' . UrlHelper::getLink('?send_excel=1&group_by='.(int)$group_by) . '">'._("Download als Excel Tabelle").'</a>')
                 )
@@ -152,7 +152,7 @@ if (get_config('EXPORT_ENABLE') && $perm->have_perm("tutor")) {
 
         $infobox[] =    array(  "kategorie" => _("Daten ausgeben:"),
             "eintrag" => array(array(   "icon" => "icons/16/black/download.png",
-                "text" => export_link($id, "veranstaltung", $id)),
+                "text" => '<a href="' . UrlHelper::getLink("export.php", array('range_id' => $id, 'o_mode' => 'choose', 'ex_type' => "veranstaltung",'xslt_filename' => $id, 'ex_sem' => $show_semester)).'">' . _("Diese Daten exportieren") . '</a>'),
                 array( 'icon' => 'icons/16/black/file-xls.png',
                     "text" => '<a href="' . UrlHelper::getLink('?send_excel=1&group_by='.(int)$group_by) . '">'._("Download als Excel Tabelle").'</a>')
                 )

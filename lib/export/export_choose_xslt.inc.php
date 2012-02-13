@@ -221,11 +221,8 @@ elseif ($page == 1) // Seite 2 : Auswahl des XSLT-Scripts
     $export_pagecontent .= "<input type=\"hidden\" name=\"xslt_filename\" value=\"" . htmlReady($xslt_filename) . "\">";
 
     $export_weiter_button = '<br><center><div class="button-group">' . Button::create('<< ' . _('Zurück'), 'back' ) . "&nbsp;";
-    $button_params = array();
-    if ($skip_page_3 AND $XSLT_ENABLE) {
-        $button_params['onClick'] = 'return export_start();';
-    }
-    $export_weiter_button .= Button::create(_('Weiter') . ' >>', 'next', $button_params);    
+
+    $export_weiter_button .= Button::create(_('Weiter') . ' >>', 'next');
     $export_weiter_button .=  "</div></center></form>";
 
 
@@ -282,7 +279,7 @@ elseif ($page == 2)  // Seite 3 : Download der Dateien
     if ($XSLT_ENABLE)
     {
         $export_pagecontent .= _("Um die Daten mit dem installierten XSLT-Prozessor in das gew&uuml;nschte Format zu bringen, klicken Sie bitte auf 'weiter'") . "<br><br>";
-        $export_weiter_button .= LinkButton::create(_('Weiter') . ' >>', '#', array('onClick' => 'return export_start();', 'name' => 'next'));
+        $export_weiter_button .= LinkButton::create(_('Weiter') . ' >>', '#', array('name' => 'next'));
     } else {
         $export_pagecontent .= "<br><br><br>";
     }

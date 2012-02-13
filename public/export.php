@@ -65,7 +65,7 @@ PageLayout::setHelpKeyword("Basis.Export");
 if ($EXPORT_ENABLE)
 {
     $ex_sem_class = Request::intArray('ex_sem_class');
-    
+
     // Zurueckbutton benutzt?
     if (Request::submitted('back'))
     {
@@ -87,36 +87,6 @@ if ($EXPORT_ENABLE)
                 $o_mode= "start";
             }
         }
-    }
-    if (($o_mode != "passthrough") AND ($o_mode != "direct"))
-    {
-        ?><script LANGUAGE="JavaScript">
-        <!-- Begin
-
-        var exportproc=false;
-
-        function export_end()
-        {
-            if (exportproc)
-            {
-                msg_window.close();
-            }
-            return;
-        }
-
-        function export_start()
-        {
-            msg_window=window.open("","messagewindow","height=250,width=200,left=20,top=20,scrollbars=no,resizable=no,toolbar=no");
-            msg_window.document.write("<html><head><title><? echo _("Daten-Export");?></title></head>");
-            msg_window.document.write("<body bgcolor='#ffffff'><center><p><img src='<?= $GLOBALS['ASSETS_URL'] ?>images/alienupload.gif' width='165' height='125'></p>");
-            msg_window.document.write("<p><font face='arial, helvetica, sans-serif'><b>&nbsp;<? printf(_("Die Daten werden exportiert. %sBitte haben Sie etwas Geduld!"),"<br>&nbsp;");?><br></font></p></body></html>");
-            exportproc=true;
-            return true;
-        }
-        // End -->
-        </script>
-        <body onUnLoad="export_end()">
-        <?
     }
 
     if ((!isset($range_id) AND !isset($xml_file_id) AND !isset($o_mode) AND !isset($ex_type)) OR ($o_mode == "start"))

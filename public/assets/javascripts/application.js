@@ -1481,7 +1481,6 @@ STUDIP.SkipLinks = {
             STUDIP.SkipLinks.moveSkipLinkNavigationIn();
             jQuery('.focus_box').removeClass('focus_box');
         }
-        return false;
     },
 
     /**

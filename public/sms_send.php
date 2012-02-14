@@ -185,7 +185,7 @@ if (Request::submitted('cmd_insert')) {
         $msg = "error§" . _("Ihre Nachricht konnte nicht gesendet werden.");
     }
 
-    $sms_source_page = Request::option('sms_source_page');
+    $sms_source_page = Request::get('sms_source_page');
     if (!preg_match('/^([a-zA-Z0-9_-]+\.php)([a-zA-Z0-9_?&=-]*)$/',$sms_source_page)) $sms_source_page = '';
     if ($sms_source_page) {
         $sess->register('sms_msg');
@@ -373,10 +373,10 @@ if (isset($_REQUEST['rec_uname'])  || isset($_REQUEST['filter']))
     if ((in_array($_REQUEST['filter'], words('all prelim waiting')) && $course_id) || ($_REQUEST['filter'] == 'send_sms_to_all' && isset($_REQUEST['who'])) && $perm->have_studip_perm('tutor', $course_id) || ($_REQUEST['filter'] == 'inst_status' && isset($_REQUEST['who']) && $perm->have_perm('admin') && isset($cid)))
     {
         //Datenbank abfragen für die verschiedenen Filter
-        switch($filter)
+        switch(Request::option('filter'))
         {
             case 'send_sms_to_all':
-                $who = Request::quoted('who');
+                $who = Request::option('who');
                 $db->query("SELECT b.username FROM seminar_user a, auth_user_md5 b WHERE a.Seminar_id = '".$course_id."' AND a.user_id = b.user_id AND a.status = '$who' ORDER BY Nachname, Vorname");
                 break;
             case 'all':
@@ -389,11 +389,14 @@ if (isset($_REQUEST['rec_uname'])  || isset($_REQUEST['filter']))
                 $db->query("SELECT username FROM admission_seminar_user LEFT JOIN auth_user_md5 USING(user_id) WHERE seminar_id = '".$course_id."' AND (status='awaiting' OR status='claiming') ORDER BY Nachname, Vorname");
                 break;
             case 'inst_status':
-                $who = Request::quoted('who');
+                $who = Request::option('who');
                 $db->query("SELECT b.username FROM user_inst a, auth_user_md5 b WHERE a.Institut_id = '".$cid."' AND a.user_id = b.user_id AND a.inst_perms = '$who' ORDER BY Nachname, Vorname");
                 break;
         }
-
+        // predefine subject
+        if(Request::get('subject')) {
+            $messagesubject = Request::quoted('subject');
+        }
         //Ergebnis der Query als Empfänger setzen
         while ($db->next_record())
         {

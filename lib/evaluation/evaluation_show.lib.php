@@ -312,8 +312,6 @@ class EvalShow
           $button = LinkButton::create(_('Schließen'),
                 'javascript:window.close()',
                 array('title' => _('Schließt dieses Fenster.')));
-         
-         $button->cont( $img );
       } else {
          $button = new HTM( "p" );
          $button->cont( _("Sie können dieses Fenster jetzt schließen.") );

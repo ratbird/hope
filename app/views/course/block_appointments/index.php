@@ -34,7 +34,7 @@
 <? if ($GLOBALS['TIME_PRESETS']) : ?>
     <div style="padding-top:5px;font-size:smaller;">
     <? foreach ($GLOBALS['TIME_PRESETS'] as $preset) : ?>
-    <button type="button" onClick="var preset=$.parseJSON('<?=jsReady(json_encode($preset), 'inline-double')?>');$('#block_appointments_start_time input,#block_appointments_end_time input').attr('value', function(i){return preset[i];});"><?=vsprintf('%s:%s - %s:%s', $preset)?></button>
+    <button type="button" class="button" onClick="var preset=$.parseJSON('<?=jsReady(json_encode($preset), 'inline-double')?>');$('#block_appointments_start_time input,#block_appointments_end_time input').attr('value', function(i){return preset[i];});"><?=vsprintf('%s:%s - %s:%s', $preset)?></button>
     <? endforeach ?>
     </div>
 <? endif ?>

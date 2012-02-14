@@ -26,7 +26,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
-
+unregister_globals();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $auth->login_if($auth->auth["uid"] == "nobody");
 
@@ -41,6 +41,7 @@ require_once ("lib/classes/DataFieldEntry.class.php");
 require_once('lib/classes/searchtypes/SQLSearch.class.php');
 require_once('lib/classes/QuickSearch.class.php');
 
+$admin_view = Request::option('admin_view');
 // if we are not in admin_view, we get the proper set variable from institut_members.php
 if (!isset($admin_view)) {
     $admin_view = true;
@@ -104,14 +105,15 @@ if ($perm->have_studip_perm("admin", $inst_id)) {
 } else {
   $accepted_columns = array("Nachname");
 }
-
+$sortby = Request::option('sortby');
+$extend = Request::option('extend');
 if (!in_array($sortby, $accepted_columns)) {
   $sortby = "Nachname";
   $statusgruppe_user_sortby = "position";
 } else {
   $statusgruppe_user_sortby = $sortby;
 }
-
+$direction = Request::option('direction');
 if ($direction == "ASC") {
   $new_direction = "DESC";
 } else if ($direction == "DESC") {
@@ -120,7 +122,7 @@ if ($direction == "ASC") {
     $direction = "ASC";
     $new_direction = "DESC";
 }
-
+$show = Request::option('show');
 if (!isset($show)) {
     $show = "funktion";
 }
@@ -133,6 +135,9 @@ URLHelper::addLinkParam('extend', $extend);
 $groups = GetAllStatusgruppen($inst_id);
 $group_list = GetRoleNames($groups, 0, '', true);
 
+$cmd = Request::option('cmd');
+$role_id = Request::option('role_id');
+$username = Request::quoted('username');
 if ($cmd == 'removeFromGroup' && $perm->have_studip_perm('admin', $inst_id)) {
     $db = new DB_Seminar();
     $db->query("DELETE FROM statusgruppe_user WHERE statusgruppe_id = '$role_id' AND user_id = '".get_userid($username)."'");
@@ -350,6 +355,8 @@ function table_body ($db, $range_id, $structure, $css_switcher) {
 
 
 // Jemand soll ans Institut...
+$u_id = Request::option('u_id');
+$ins_id = Request::option('ins_id');
 if (Request::submitted('berufen') && $ins_id != "" && $u_id != "") {
     $db->query("SELECT *  FROM user_inst WHERE Institut_id = '$ins_id' AND user_id = '$u_id'");
     if (($db->next_record()) && ($db->f("inst_perms") != "user")) {
@@ -364,13 +371,13 @@ if (Request::submitted('berufen') && $ins_id != "" && $u_id != "") {
         elseif ($db3->f("perms") == "admin") {
             if ($perm->have_perm("root") || (!$SessSemName["is_fak"] && $perm->have_studip_perm("admin",$SessSemName["fak"]))) {
                 // Emails schreiben...
-                if($_POST['enable_mail_admin'] == "admin" && $_POST['enable_mail_dozent'] == "dozent"){
+                if(Request::option('enable_mail_admin') == "admin" && Request::option('enable_mail_dozent') == "dozent"){
                     $in = "'admin','dozent'";
                     $wem = "Admins und Dozenten";
-                }else if($_POST['enable_mail_admin'] == "admin"){
+                }else if(Request::option('enable_mail_admin') == "admin"){
                     $in = "'admin'";
                     $wem = "Admins";
-                }else if($_POST['enable_mail_dozent'] == "dozent"){
+                }else if(Request::option('enable_mail_dozent') == "dozent"){
                     $in = "'dozent'";
                     $wem = "Dozenten";
                 }
@@ -916,8 +923,7 @@ elseif ($show == "status") {
             echo "<font size=\"-1\"><b>&nbsp;";
             echo $permission;
             echo "<b></font>"."</td><td class=\"steelkante\" colspan=\"2\" height=\"20\">";
-            echo "<a href=\"".URLHelper::getLink("sms_send.php?sms_source_page=inst_admin.php&filter=inst_status&who=".$key . "&group_id=" .
-                 $role_id."&subject=".rawurlencode($SessSemName[0]))."\"><img src=\"" . Assets::image_path('icons/16/blue/mail.png')
+            echo "<a href=\"".URLHelper::getLink("sms_send.php?sms_source_page=inst_admin.php&filter=inst_status&who=".$key . "&group_id=" .$role_id."&subject=".rawurlencode($SessSemName[0]))."\"><img src=\"" . Assets::image_path('icons/16/blue/mail.png')
                 ."\" " . tooltip(sprintf(_("Nachricht an alle Mitglieder mit dem Status %s verschicken"), $permission)) .
                  " border=\"0\"></a>&nbsp;";
             echo "</td></tr>\n";

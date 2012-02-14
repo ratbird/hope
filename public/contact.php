@@ -28,6 +28,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $perm->check("user");
 
@@ -54,7 +55,12 @@ include ('lib/include/header.php');   // Output of Stud.IP head
 
 echo "\n" . $cssSw->GetHoverJSFunction() . "\n";
 $cssSw->switchClass();
-
+$filter = Request::option('filter');
+$contact = Request::getArray('contact');
+$view = Request::option('view');
+$contact_id = Request::option('contact_id');
+$open = Request::option('open');
+$edit_id = Request::option('edit_id');
 if (!$contact["filter"])
     $contact["filter"]="all";
 if ($view) {
@@ -79,19 +85,19 @@ if ($contact["view"]=="gruppen" && strlen($filter) < 4)
 
 // adding a contact via search
 
-if ($Freesearch) {
-    $open = AddNewContact(get_userid($Freesearch));
+if (Request::get('Freesearch')) {
+    $open = AddNewContact(get_userid(Request::get('Freesearch')));
 }
 
 // deletel a contact
 
-if ($cmd == "delete") {
+if (Request::option('cmd') == "delete") {
     DeleteContact ($contact_id);
 }
 
 // remove from buddylist
 
-if ($cmd == "changebuddy") {
+if (Request::option('cmd') == "changebuddy") {
     changebuddy($contact_id);
     if (!$open) {
         $open = $contact_id;
@@ -107,23 +113,26 @@ if (!is_null(Request::get('calperm')))  {
 
 // delete a single userinfo
 
-if ($deluserinfo) {
-    DeleteUserinfo ($deluserinfo);
+if (Request::option('deluserinfo')) {
+    DeleteUserinfo (Request::option('deluserinfo'));
 }
 
-if ($move) {
-    MoveUserinfo ($move);
+if (Request::option('move')) {
+    MoveUserinfo (Request::option('move'));
 }
 
 // add a new userinfo
-
+$owninfocontent = Request::getArray('owninfocontent');
+$owninfolabel =  Request::getArray('owninfolabel');
 if ($owninfolabel AND ($owninfocontent[0]!=_("Inhalt"))){
     AddNewUserinfo ($edit_id, $owninfolabel[0], $owninfocontent[0]);
 }
-
+$existingowninfolabel = Request::quotedArray('existingowninfolabel');
+$userinfo_id = Request::getArray('userinfo_id');
+$existingowninfocontent = Request::quotedArray('existingowninfocontent');
 if ($existingowninfolabel) {
     for ($i=0; $i<sizeof($existingowninfolabel); $i++) {
-        UpdateUserinfo ($existingowninfolabel[$i], $existingowninfocontent[$i], $userinfo_id[$i]);
+      UpdateUserinfo ($existingowninfolabel[$i], $existingowninfocontent[$i], $userinfo_id[$i]);
     }
 }
 
@@ -153,7 +162,7 @@ if ($open != "all" && $size_of_book>0) {
 }
 
 echo "<td class=\"blank\" align=\"right\">";
-
+$search_exp = Request::quoted('search_exp');
 if ($search_exp) {
     $search_exp = str_replace("%","\%",$search_exp);
     $search_exp = str_replace("_","\_",$search_exp);
@@ -176,9 +185,9 @@ if ($search_exp) {
 }
 echo "</td></tr>";
 
-if ($sms_msg)   {
-    parse_msg ($sms_msg);
-    $sms_msg = '';
+if ($_SESSION['sms_msg'])   {
+    parse_msg ($_SESSION['sms_msg']);
+    $_SESSION['sms_msg'] = '';
     $sess->unregister('sms_msg');
     }
 ?>

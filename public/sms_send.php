@@ -369,7 +369,10 @@ if (isset($_REQUEST['rec_uname'])  || isset($_REQUEST['filter']))
     
     $course_id = Request::option('course_id');
     $cid = Request::option('cid');
-
+    // predefine subject
+    if(Request::get('subject')) {
+        $messagesubject = Request::quoted('subject');
+    }
     if ((in_array($_REQUEST['filter'], words('all prelim waiting')) && $course_id) || ($_REQUEST['filter'] == 'send_sms_to_all' && isset($_REQUEST['who'])) && $perm->have_studip_perm('tutor', $course_id) || ($_REQUEST['filter'] == 'inst_status' && isset($_REQUEST['who']) && $perm->have_perm('admin') && isset($cid)))
     {
         //Datenbank abfragen für die verschiedenen Filter
@@ -393,10 +396,7 @@ if (isset($_REQUEST['rec_uname'])  || isset($_REQUEST['filter']))
                 $db->query("SELECT b.username FROM user_inst a, auth_user_md5 b WHERE a.Institut_id = '".$cid."' AND a.user_id = b.user_id AND a.inst_perms = '$who' ORDER BY Nachname, Vorname");
                 break;
         }
-        // predefine subject
-        if(Request::get('subject')) {
-            $messagesubject = Request::quoted('subject');
-        }
+        
         //Ergebnis der Query als Empfänger setzen
         while ($db->next_record())
         {

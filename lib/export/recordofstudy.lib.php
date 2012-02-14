@@ -207,8 +207,8 @@ function printRecordOfStudies($infobox, $basicdata, $seminare, $notice = NULL){
     echo $html;
     print_infobox($infobox, "infobox/folders.jpg");
     $html = "      <br>\n"
-          . Button::create(_('<< Zurück'), 'select_new_semester', array('title' => _("Abbrechen und ein anderes Semester auswählen.")))
-          . Button::create(_('Weiter >>'), 'create_pdf', array('title' => _("Weiter zum Download Ihrer Veranstaltungsübersicht.")))
+          . Button::create('<< '._('Zurück'), 'select_new_semester', array('title' => _("Abbrechen und ein anderes Semester auswählen.")))
+          . Button::create(_('Weiter').' >>', 'create_pdf', array('title' => _("Weiter zum Download Ihrer Veranstaltungsübersicht.")))
           . "     <br><br></td>\n"
           . "    </tr>\n"
           . "   </table>\n"

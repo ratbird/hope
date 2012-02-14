@@ -813,13 +813,13 @@ if (isset($_calendar->event) && ($_calendar->event instanceof SeminarEvent || $_
     echo "<input type=\"hidden\" name=\"termin_id\" value=\"$termin_id\">\n";
     if ($set_recur_x) {
         echo "<input type=\"hidden\" name=\"evtype\" value=\"$evtype\">\n";
-        echo Button::create(_('<< Zurück'), 'back_recur');
+        echo Button::create('<< '._('Zurück'), 'back_recur');
         echo "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ";
         echo "<input type=\"hidden\" name=\"set_recur\" value=\"1\">\n";
         echo '<input type="hidden" name="wholeday" value="' . Request::get('wholeday') . "\">\n";
     }
 
-    echo Button::create(_('<< Zurück'), 'cancel');
+    echo Button::create('<< '._('Zurück'), 'cancel');
 } else {
     $css_switcher->switchClass();
     echo "<tr><td class=\"" . $css_switcher->getClass() . "\" align=\"center\" nowrap=\"nowrap\">\n";
@@ -829,7 +829,7 @@ if (isset($_calendar->event) && ($_calendar->event instanceof SeminarEvent || $_
     echo "<input type=\"hidden\" name=\"mod\" value=\"$mod\">\n";
     echo "<input type=\"hidden\" name=\"termin_id\" value=\"$termin_id\">\n";
     if ($set_recur_x) {
-        echo Button::create(_('<< Zurück'), 'back_recur');
+        echo Button::create('<< '._('Zurück'), 'back_recur');
         echo "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ";
         echo "<input type=\"hidden\" name=\"set_recur\" value=\"1\">\n";
         echo '<input type="hidden" name="wholeday" value="' . Request::get('wholeday') . "\">\n";
@@ -848,7 +848,7 @@ if (isset($_calendar->event) && ($_calendar->event instanceof SeminarEvent || $_
         }
         echo Button::createCancel(_('Abbrechen'), 'cancel')."\n";
       } elseif (!$set_recur_x || $evtype == 'semcal') {
-        echo Button::create(_('<< Zurück'), 'cancel')."\n";
+        echo Button::create('<< '._('Zurück'), 'cancel')."\n";
     }
 
     // create infobox entries

@@ -2225,7 +2225,7 @@ elseif ((!$level) || ($level == 1))
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
-                            &nbsp; <?= Button::create(_('Weiter >>'), 'jump_next') ?>
+                            &nbsp; <?= Button::create(_('Weiter').' >>', 'jump_next') ?>
                         </td>
                     </tr>
                     <tr <? $cssSw->switchClass() ?>>
@@ -2541,7 +2541,7 @@ elseif ((!$level) || ($level == 1))
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
-                            &nbsp; <?= Button::create(_('Weiter >>'), 'jump_next') ?>
+                            &nbsp; <?= Button::create(_('Weiter').' >>', 'jump_next') ?>
                         </td>
                     </tr>
                 </table>
@@ -2592,7 +2592,7 @@ if ($level == 2)
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
-                            &nbsp; <?= Button::create(_('<< Zurück'), 'jump_back') .'&nbsp;'. Button::create(_('Weiter >>'), 'jump_next') ?>
+                            &nbsp; <?= Button::create('<< '._('Zurück'), 'jump_back') .'&nbsp;'. Button::create(_('Weiter').' >>', 'jump_next') ?>
                         </td>
                     </tr>
                     <tr <? $cssSw->switchClass() ?>>
@@ -3001,7 +3001,7 @@ if ($level == 2)
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
-                            &nbsp; <?= Button::create(_('<< Zurück'), 'jump_back') ?>&nbsp;<?= Button::create(_('Weiter >>'), 'jump_next') ?>
+                            &nbsp; <?= Button::create('<< '._('Zurück'), 'jump_back') ?>&nbsp;<?= Button::create(_('Weiter').' >>', 'jump_next') ?>
                         </td>
                     </tr>
                 </table>
@@ -3059,7 +3059,7 @@ if ($level == 3) {
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
-                            &nbsp; <?= Button::create(_('<< Zurück'), 'jump_back') ?>&nbsp;<?= Button::create(_('Weiter >>'), 'jump_next') ?>
+                            &nbsp; <?= Button::create('<< '._('Zurück'), 'jump_back') ?>&nbsp;<?= Button::create(_('Weiter').' >>', 'jump_next') ?>
                         </td>
                     </tr>
                     <?
@@ -3275,7 +3275,7 @@ if ($level == 3) {
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
-                            &nbsp; <?= Button::create(_('<< Zurück'), 'jump_back') ?>&nbsp;<?= Button::create(_('Weiter >>'), 'jump_next') ?>
+                            &nbsp; <?= Button::create('<< '._('Zurück'), 'jump_back') ?>&nbsp;<?= Button::create(_('Weiter').' >>', 'jump_next') ?>
                         </td>
                     </tr>
                 </table>
@@ -3331,7 +3331,7 @@ if ($level == 4) {
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="96%" align="center" colspan=3>
-                            &nbsp; <?= Button::create(_('<< Zurück'), 'jump_back') ?>&nbsp;<?= Button::create(_('Weiter >>'), 'jump_next') ?>
+                            &nbsp; <?= Button::create('<< '._('Zurück'), 'jump_back') ?>&nbsp;<?= Button::create(_('Weiter').' >>', 'jump_next') ?>
                         </td>
                     </tr>
                     <?
@@ -3553,7 +3553,7 @@ if ($level == 4) {
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="96%" align="center" colspan=3>
-                            &nbsp; <?= Button::create(_('<< Zurück'), 'jump_back') ?>&nbsp;<?= Button::create(_('Weiter >>'), 'jump_next') ?>
+                            &nbsp; <?= Button::create('<< '._('Zurück'), 'jump_back') ?>&nbsp;<?= Button::create(_('Weiter').' >>', 'jump_next') ?>
                         </td>
                     </tr>
                 </table>
@@ -3601,7 +3601,7 @@ if ($level == 5)
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
-                            &nbsp; <?= Button::create(_('<< Zurück'), 'jump_back') ?>&nbsp;<?= Button::create(_('Weiter >>'), 'jump_next') ?>
+                            &nbsp; <?= Button::create('<< '._('Zurück'), 'jump_back') ?>&nbsp;<?= Button::create(_('Weiter').' >>', 'jump_next') ?>
                         </td>
                     </tr>
                     <? if ($sem_create_data["sem_admission"] != 3) { ?>
@@ -3972,7 +3972,7 @@ if ($level == 5)
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
-                            &nbsp; <?= Button::create(_('<< Zurück'), 'jump_back') ?>&nbsp;<?= Button::create(_('Weiter >>'), 'jump_next') ?>
+                            &nbsp; <?= Button::create('<< '._('Zurück'), 'jump_back') ?>&nbsp;<?= Button::create(_('Weiter').' >>', 'jump_next') ?>
                         </td>
                     </tr>
                 </table>
@@ -4003,7 +4003,7 @@ if ($level == 6)
                 <form method="POST" action="<? echo URLHelper::getLink() ?>">
                     <?= CSRFProtection::tokenTag() ?>
                     <input type="hidden" name="form" value=6>
-                    <?= Button::create(_('<< Zurück'), 'jump_back') ?>&nbsp;<?= Button::create(_('Weiter >>'), 'jump_next') ?>
+                    <?= Button::create('<< '._('Zurück'), 'jump_back') ?>&nbsp;<?= Button::create(_('Weiter').' >>', 'jump_next') ?>
                 </form>
                 </div>
             </td>
@@ -4038,7 +4038,7 @@ if ($level == 7)
                     <form method="POST" action="<? echo URLHelper::getLink() ?>">
                         <?= CSRFProtection::tokenTag() ?>
                         <input type="hidden" name="form" value=7>
-                        <?= Button::create(_('<< Zurück'), 'jump_back') ?>
+                        <?= Button::create('<< '._('Zurück'), 'jump_back') ?>
                     </form>
                     </div>
                 </td>
@@ -4072,7 +4072,7 @@ if ($level == 7)
                         echo Button::createCancel(_('Abbrechen'), 'cancel');
                         if (($sem_create_data["modules_list"]["schedule"]) || ($sem_create_data["modules_list"]["scm"])) {
                             ?>
-                            &nbsp;<?= Button::create(_('Weiter >>'), 'jump_next') ?>
+                            &nbsp;<?= Button::create(_('Weiter').' >>', 'jump_next') ?>
                             <?
                         }
                         ?>
@@ -4118,7 +4118,7 @@ if ($level == 7)
                         <?
                         if (($sem_create_data["modules_list"]["schedule"]) || ($sem_create_data["modules_list"]["scm"])) {
                             ?>
-                            <?= Button::create(_('Weiter >>'), 'jump_next') ?>
+                            <?= Button::create(_('Weiter').' >>', 'jump_next') ?>
                             <?
                         }
                         ?>
@@ -4261,7 +4261,7 @@ if ($level == 8)
                             echo Button::createCancel(_('Abbrechen'), 'cancel');
                             if ($sem_create_data["modules_list"]["schedule"]) {
                                 ?>
-                                &nbsp;<?= Button::create(_('Weiter >>'), 'jump_next') ?>
+                                &nbsp;<?= Button::create(_('Weiter').' >>', 'jump_next') ?>
                                 <?
                             } else {
                                 ?>
@@ -4319,7 +4319,7 @@ if ($level == 8)
                             echo Button::createCancel(_('Abbrechen'), 'cancel');
                             if ($sem_create_data["modules_list"]["schedule"]) {
                                 ?>
-                                &nbsp;<?= Button::create(_('Weiter >>'), 'jump_next') ?>
+                                &nbsp;<?= Button::create(_('Weiter').' >>', 'jump_next') ?>
                                 <?
                             } else {
                                 ?>

@@ -258,7 +258,7 @@ class Admin_SmileysController extends AuthenticatedController
      */
     private function addInfobox($view)
     {
-        $this->setInfoboxImage('infobox/administration.jpg');
+        $this->setInfoboxImage('infobox/administration.png');
 
         // Render items
         $factory = new Flexi_TemplateFactory($this->dispatcher->trails_root . '/views/admin/smileys/');

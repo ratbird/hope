@@ -89,13 +89,13 @@ foreach($kompletter_datensatz as $key=>$val){
 }
 
 if (Request::option('cmd')=="add_user") {
-    $msging->add_buddy (Request::get('add_uname'));
-    $visible_users[Request::get('add_uname')]['is_buddy'] = true;
+    $msging->add_buddy (Request::quoted('add_uname'));
+    $visible_users[Request::quoted('add_uname')]['is_buddy'] = true;
 }
 
 if (Request::option('cmd')=="delete_user"){
-    $msging->delete_buddy (Request::get('delete_uname'));
-    $visible_users[Request::get('delete_uname')]['is_buddy'] = false;
+    $msging->delete_buddy (Request::quoted('delete_uname'));
+    $visible_users[Request::quoted('delete_uname')]['is_buddy'] = false;
 }
 
 //now seperate the buddies from the others
@@ -119,13 +119,6 @@ if($page < 1 || $page > ceil($user_count/25)) $page = 1;
 
 //Slice the array to limit data
 $other_users = array_slice($others,($page-1) * 25, 25);
-
-if ($_SESSION['sms_msg']) {
-    $msg = $_SESSION['sms_msg'];
-    $_SESSION['sms_msg'] = '';
-    $sess->unregister('sms_msg');
-}
-
 
 ?>
 <div id="layout_container">
@@ -157,6 +150,7 @@ if ($_SESSION['sms_msg']) {
     <div id="layout_content">
 <? if ($_SESSION['sms_msg']) {
     parse_msg($_SESSION['sms_msg']);
+    unset($_SESSION['sms_msg']);
 } ?>
     <?
 ob_end_flush();
@@ -168,7 +162,7 @@ ob_start();
 
     foreach ($filtered_buddies as $username => $value) { //alle durchgehen die online sind
         $user_id = $value['userid'];
-        
+
         $query = "SELECT statusgruppen.position, name, statusgruppen.statusgruppe_id "
                . "FROM statusgruppen "
                .   "LEFT JOIN statusgruppe_user USING (statusgruppe_id) "
@@ -302,13 +296,9 @@ if (is_array($non_group_buddies))
 
                 <tr>
                     <td class="blank" width="50%" align="center" colspan="7">
-                        <font size="-1">
-                            <br>
-                            Zum Adressbuch (<?= GetSizeofBook() ?> Einträge) klicken Sie
-                            <a href="<?= URLHelper::getLink("contact.php") ?>">
-                                hier
-                            </a>
-                        </font>
+                    <? printf(_("Zum Adressbuch (%d Eintr&auml;ge) klicken Sie %shier%s"),
+                                      GetSizeofBook(),
+                                      "<a href=\"contact.php\">", "</a>") ?>
                     </td>
                 </tr>
             </table>

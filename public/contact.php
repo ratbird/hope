@@ -122,8 +122,8 @@ if (Request::option('move')) {
 }
 
 // add a new userinfo
-$owninfocontent = Request::getArray('owninfocontent');
-$owninfolabel =  Request::getArray('owninfolabel');
+$owninfocontent = Request::quotedArray('owninfocontent');
+$owninfolabel =  Request::quotedArray('owninfolabel');
 if ($owninfolabel AND ($owninfocontent[0]!=_("Inhalt"))){
     AddNewUserinfo ($edit_id, $owninfolabel[0], $owninfocontent[0]);
 }

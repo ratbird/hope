@@ -20,6 +20,7 @@
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
 page_open(array(
     "sess" => "Seminar_Session",
     "auth" => "Seminar_Auth",
@@ -87,14 +88,14 @@ foreach($kompletter_datensatz as $key=>$val){
     }
 }
 
-if ($cmd=="add_user") {
-    $msging->add_buddy ($add_uname);
-    $visible_users[$add_uname]['is_buddy'] = true;
+if (Request::option('cmd')=="add_user") {
+    $msging->add_buddy (Request::get('add_uname'));
+    $visible_users[Request::get('add_uname')]['is_buddy'] = true;
 }
 
-if ($cmd=="delete_user"){
-    $msging->delete_buddy ($delete_uname);
-    $visible_users[$delete_uname]['is_buddy'] = false;
+if (Request::option('cmd')=="delete_user"){
+    $msging->delete_buddy (Request::get('delete_uname'));
+    $visible_users[Request::get('delete_uname')]['is_buddy'] = false;
 }
 
 //now seperate the buddies from the others
@@ -119,9 +120,9 @@ if($page < 1 || $page > ceil($user_count/25)) $page = 1;
 //Slice the array to limit data
 $other_users = array_slice($others,($page-1) * 25, 25);
 
-if ($sms_msg) {
-    $msg = $sms_msg;
-    $sms_msg = '';
+if ($_SESSION['sms_msg']) {
+    $msg = $_SESSION['sms_msg'];
+    $_SESSION['sms_msg'] = '';
     $sess->unregister('sms_msg');
 }
 
@@ -154,8 +155,8 @@ if ($sms_msg) {
     ?>
     </div>
     <div id="layout_content">
-<? if ($msg) {
-    parse_msg($msg);
+<? if ($_SESSION['sms_msg']) {
+    parse_msg($_SESSION['sms_msg']);
 } ?>
     <?
 ob_end_flush();

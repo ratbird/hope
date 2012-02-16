@@ -343,7 +343,7 @@ switch ($submitted_task) {
         $message = _("Sind Sie sicher, dass Sie diese Einrichtung löschen wollen?");
         $post['i_id'] = Request::option('i_id');
         $post['i_kill'] = 1;
-        $post['Name'] = Request::get('Name');
+        $post['Name'] = Request::quoted('Name');
         $post['studipticket'] = get_ticket();
         echo createQuestion($message, $post);
         break;

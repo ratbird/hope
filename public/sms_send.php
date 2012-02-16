@@ -71,10 +71,10 @@ if ($cmd == 'new') {
 }
 
 // write a chat-invitation, so predefine the messagesubject
-   $messagesubject = Request::get('messagesubject');
-   $message = Request::get('message');
+   $messagesubject = Request::quoted('messagesubject');
+   $message = Request::quoted('message');
    $quote = Request::option('quote');
-   $signature = Request::get('signature');
+   $signature = Request::quoted('signature');
 if ($cmd == "write_chatinv" && !isset($messagesubject)) $messagesubject = _("Chateinladung");
 
 //wurde eine Datei hochgeladen?
@@ -250,7 +250,7 @@ if (Request::option('msgid')) {
 
 // send message at group of a study profession
 // created by nimuelle, step00194
-if (Request::get('sp_id') && $perm->have_perm("root")) {
+if (Request::option('sp_id') && $perm->have_perm("root")) {
 
     // be sure to send it as email
     if(Request::get('emailrequest') == 1) {
@@ -450,8 +450,8 @@ if (!isset($sms_data["sig"])) {
     $sms_data["sig"] = "0";
 }
 // add a reciever from adress-members
-if (Request::submitted('add_receiver_button_x') && Request::getArray('add_receiver')) {
-    $sms_data["p_rec"] = array_add_value(Request::getArray('add_receiver'), $sms_data["p_rec"]);
+if (Request::submitted('add_receiver_button_x') && Request::quotedArray('add_receiver')) {
+    $sms_data["p_rec"] = array_add_value(Request::quotedArray('add_receiver'), $sms_data["p_rec"]);
 
 }
 
@@ -476,8 +476,8 @@ if (Request::submitted('add_allreceiver_button_x')) {
 
 
 // add receiver from freesearch
-if (Request::submitted('add_freesearch_x') && Request::get("adressee")) {
-    $sms_data["p_rec"] = array_add_value(array(Request::get("adressee")), $sms_data["p_rec"]);
+if (Request::submitted('add_freesearch_x') && Request::quoted("adressee")) {
+    $sms_data["p_rec"] = array_add_value(array(Request::quoted("adressee")), $sms_data["p_rec"]);
 }
 
 

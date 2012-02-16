@@ -102,6 +102,9 @@ use Studip\Button, Studip\LinkButton;
             </td>
             <td>
                 <select name="visibility_perms" id="visibility_perms">
+                    <option value="all" <? if ($item->getViewPerms() == 'all') echo 'selected'; ?>>
+                        <?= _('alle') ?>
+                    </option>
                 <? foreach (array_keys($controller->user_status) as $key): ?>
                     <option <?= ($item->getViewPerms() == $key) ? 'selected="selected"' : '' ?>><?= $key ?></option>
                 <? endforeach; ?>

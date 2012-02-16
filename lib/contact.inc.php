@@ -173,9 +173,23 @@ function GetSizeofBook()
     return $db->f(0);
 }
 
+function GetSizeOfBookByGroup()
+{   global $user;
+    $ret = array();
+    $owner_id = $user->id;
+    $db = new DB_Seminar();
+    $db->query("SELECT statusgruppe_id, count(*) AS anzahl FROM statusgruppen 
+        LEFT JOIN statusgruppe_user USING(statusgruppe_id) 
+        WHERE range_id = '$owner_id' GROUP BY statusgruppe_id");
+    while ($db->next_record()){
+        $ret[$db->f('statusgruppe_id')] = $db->f('anzahl');
+    }
+    return $ret;
+}
+
 function GetSizeOfBookByLetter()
 {   global $user;
-    $ret = false;
+    $ret = array();
     $db = new DB_Seminar();
     $db->query("SELECT LCASE(LEFT(TRIM(Nachname),1)) AS first_letter, count(*) AS anzahl FROM contact LEFT JOIN auth_user_md5 USING(user_id)
                 WHERE owner_id='$user->id' AND NOT ISNULL(Nachname) GROUP BY first_letter");

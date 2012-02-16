@@ -56,7 +56,7 @@ include ('lib/include/header.php');   // Output of Stud.IP head
 echo "\n" . $cssSw->GetHoverJSFunction() . "\n";
 $cssSw->switchClass();
 $filter = Request::option('filter');
-$contact = Request::getArray('contact');
+$contact = Request::quotedArray('contact');
 $view = Request::option('view');
 $contact_id = Request::option('contact_id');
 $open = Request::option('open');
@@ -85,8 +85,8 @@ if ($contact["view"]=="gruppen" && strlen($filter) < 4)
 
 // adding a contact via search
 
-if (Request::get('Freesearch')) {
-    $open = AddNewContact(get_userid(Request::get('Freesearch')));
+if (Request::option('Freesearch')) {
+    $open = AddNewContact(get_userid(Request::option('Freesearch')));
 }
 
 // deletel a contact
@@ -128,7 +128,7 @@ if ($owninfolabel AND ($owninfocontent[0]!=_("Inhalt"))){
     AddNewUserinfo ($edit_id, $owninfolabel[0], $owninfocontent[0]);
 }
 $existingowninfolabel = Request::quotedArray('existingowninfolabel');
-$userinfo_id = Request::getArray('userinfo_id');
+$userinfo_id = Request::optionArray('userinfo_id');
 $existingowninfocontent = Request::quotedArray('existingowninfocontent');
 if ($existingowninfolabel) {
     for ($i=0; $i<sizeof($existingowninfolabel); $i++) {

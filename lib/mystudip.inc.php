@@ -158,8 +158,8 @@ function change_general_view() {
                         <br><div id="accesskey_enable_description" class="setting_info">
                         <? print _("Mit dieser Einstellung k&ouml;nnen Sie f&uuml;r die meisten in der Kopfzeile erreichbaren Hauptfunktionen eine Bedienung "
                         . "&uuml;ber Tastenkombinationen aktivieren. <br>Die Tastenkombination wird im Tooltip des jeweiligen Icons angezeigt. "
-                        . "Diese kann für jeden Browser und jedes Betriebssystem unterschiedlich sein (siehe "
-                                                                                             . URLHelper::getLink('http://en.wikipedia.org/wiki/Accesskey', NULL)); ?>
+                        . "Diese kann für jeden Browser und jedes Betriebssystem unterschiedlich sein (siehe <a href='"
+                        . URLHelper::getLink('http://en.wikipedia.org/wiki/Accesskey', NULL)."'>Wikipedia</a>)"); ?>
                         </div>
                     </td>
                     <td <?=$cssSw->getFullClass()?>>

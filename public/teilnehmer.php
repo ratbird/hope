@@ -125,7 +125,7 @@ $messaging=new messaging;
 $cssSw=new cssClassSwitcher;
 
 if ($_SESSION['sms_msg']) {
-    $msg = $sms_msg;
+    $msg = $_SESSION['sms_msg'];
     unset($_SESSION['sms_msg']) ;
 }
 // Aenderungen nur in dem Seminar, in dem ich gerade bin...

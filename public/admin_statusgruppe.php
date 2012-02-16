@@ -279,7 +279,7 @@ if ($_REQUEST['cmd'] == 'deleteRole') {
     } else {
         $msgs['info'][] = sprintf(_("Sind Sie sicher, dass Sie die Gruppe %s löschen möchten?"), '<b>'. htmlReady($statusgruppe->getName()) .'</b>')
             . '<br>'
-            . LinkButton::createAccept(_('JA!'), URLHelper::getURL('', array('cmd' => 'deleteRole', 'really' => 'true', 'role_id' => Request::get('role_id'))))
+            . LinkButton::createAccept(_('JA!'), URLHelper::getURL('', array('cmd' => 'deleteRole', 'really' => 'true', 'role_id' => Request::option('role_id'))))
             . '&nbsp;&nbsp;&nbsp;&nbsp;'
             . LinkButton::createCancel(_('NEIN!'), URLHelper::getURL(''));
     }

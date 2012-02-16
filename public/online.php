@@ -17,6 +17,7 @@
  * @license     http://www.gnu.org/licenses/gpl.html GPL Licence 3
  */
 
+use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
 
@@ -120,7 +121,35 @@ if($page < 1 || $page > ceil($user_count/25)) $page = 1;
 //Slice the array to limit data
 $other_users = array_slice($others,($page-1) * 25, 25);
 
-?>
+if ($sms_msg) {
+    $msg = $sms_msg;
+    $sms_msg = '';
+    $sess->unregister('sms_msg');
+}
+
+if (GetNumberOfBuddies()) {
+
+    if ($_REQUEST['show_only_buddys']){
+		$my_messaging_settings["show_only_buddys"] = true;	
+    }else{
+		$my_messaging_settings["show_only_buddys"] = false;	
+	}
+    if ($my_messaging_settings["show_only_buddys"]) 
+        $checked = " checked";
+    
+    $newInfoboxPart = array("kategorie" => _("Einstellung:"),
+        "eintrag" => array(
+            array(
+                  "text" => _("<form action=\"".$PHP_SELF."?messaging_cmd=change_view_insert\" method=\"post\"><input type=\"checkbox\" id=\"show_only_buddys\" name=\"show_only_buddys\" $checked >
+                  Nur Buddies in der &Uuml;bersicht der aktiven Benutzer anzeigen.<input type=\"hidden\" name=\"view\" value=\"Messaging\">".Button::create(_("Übernehmen"), 'newmsgset', array('messaging_cmd' => 'change_view_insert', 'titel' => _("Änderungen übernehmen")))."</form>")
+            )
+        )
+    );
+    
+}else{
+    $newInfoboxPart = array();
+}?>
+
 <div id="layout_container">
     <div id="layout_sidebar">
     <?
@@ -137,7 +166,7 @@ $other_users = array_slice($others,($page-1) * 25, 25);
                           "text"  => _("Wenn Sie auf den Namen klicken, kommen Sie zur Homepage des Benutzers.")
                     )
             )
-        )
+        ), $newInfoboxPart
     );
 
     print_infobox($infobox, 'infobox/online.jpg');

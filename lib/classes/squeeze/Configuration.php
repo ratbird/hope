@@ -72,13 +72,13 @@ class Configuration implements \ArrayAccess
     static private function parseAndCacheFile($path)
     {
         $cache = \StudipCacheFactory::getCache();
-        $parsed = $cache->read('squeeze/' . $path);
+        $parsed = unserialize($cache->read('squeeze/' . $path));
 
         if (!$parsed) {
             $parsed = self::parseFile($path);
 
             # write to cache and expire in 10 seconds
-            $cache->write('squeeze/' . $path, $parsed, 10);
+            $cache->write('squeeze/' . $path, serialize($parsed), 10);
         }
 
         return $parsed;

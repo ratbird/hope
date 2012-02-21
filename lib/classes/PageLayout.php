@@ -431,7 +431,6 @@ class PageLayout
         self::$squeeze_packages = func_get_args();
     }
 
-
     /**
      * Add a squeeze package to the list of squeeze packages to use
      *
@@ -459,38 +458,6 @@ class PageLayout
         $configuration = Configuration::load($config_path);
         $packager      = new Packager($configuration);
 
-        $elements = array();
-        foreach (self::getSqueezePackages() as $package) {
-            $elements = array_merge($elements, self::includeSqueezePackage($packager, $package));
-        }
-        return $elements;
-    }
-
-    /**
-     * Include a single squeeze package depending on \Studip\ENV as
-     * individual script elements or as a single one containing the
-     * squeezed source code of all files comprising the package.
-     *
-     * @return an array containing PageLayout style HTML elements
-     */
-    private static function includeSqueezePackage($packager, $package)
-    {
-        $elements = array();
-        if (\Studip\ENV === 'development') {
-            foreach ($packager->individualURLs($package) as $src) {
-                $elements[] = array(
-                    'name'       => 'script',
-                    'attributes' => compact('src'),
-                    'content'    => '');
-            }
-        } else {
-            $src = $packager->packageURL($package);
-            $charset = 'utf-8';
-                $elements[] = array(
-                    'name'       => 'script',
-                    'attributes' => compact('src', 'charset'),
-                    'content'    => '');
-        }
-        return $elements;
+        return \Studip\Squeeze\includePackages($packager, self::getSqueezePackages());
     }
 }

@@ -867,6 +867,18 @@ a.button:focus, button.button:focus {
     outline: dotted 1px black;
 }
 
+a.button.disabled, button.button.disabled,
+a.button[disabled], button.button[disabled] {
+  cursor: default;
+  background-image: none;
+  background-color: #e6e6e6;
+  opacity: 0.65;
+  filter: alpha(opacity=65);
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+
 button.button {
     width: auto;
     overflow: visible;

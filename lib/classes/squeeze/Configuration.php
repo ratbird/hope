@@ -11,6 +11,7 @@
 
 namespace Studip\Squeeze;
 
+require_once 'lib/classes/StudipCacheFactory.class.php';
 
 class Configuration implements \ArrayAccess
 {

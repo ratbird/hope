@@ -1097,13 +1097,13 @@ function JS_for_upload() {
             "<p><font face='arial, helvetica, sans-serif'><b>&nbsp;:file_only</b><br>&nbsp;"._("wird hochgeladen.") ."<br>&nbsp;" ._("Bitte haben Sie etwas Geduld!"). "<br></font></p></body></html>"
         ) ?>
     </div>
-    <div id="upload_error_message_wrong_type" style="display: none;"><?= 
+    <div id="upload_error_message_wrong_type" style="display: none;"><?=
         _("Dieser Dateityp ist nicht zugelassen!")
     ?></div>
-    <div id="upload_select_file_message" style="display: none;"><?= 
+    <div id="upload_select_file_message" style="display: none;"><?=
         _("Bitte wählen Sie eine Datei aus!")
     ?></div>
-    <div id="upload_file_types" style="display: none;"><?= 
+    <div id="upload_file_types" style="display: none;"><?=
         json_encode(
             $GLOBALS['UPLOAD_TYPES'][$GLOBALS['SessSemName']["art_num"]]
             ? array(
@@ -1738,7 +1738,7 @@ function display_folder_body($folder_id, $open, $change, $move, $upload, $refres
                     (
                         $level !=0
                         && (
-                            $folder_tree->isWritable($folder_id, $user->id) 
+                            $folder_tree->isWritable($folder_id, $user->id)
                             && $folder_tree->isWritable($folder_tree->getValue($folder_id, 'parent_id'), $user->id)
                             && !$folder_tree->isExerciseFolder($folder_id, $user->id)
                         )
@@ -2620,7 +2620,7 @@ function get_flash_player ($document_id, $filename, $type) {
     $flash_object  = "\n<object type=\"application/x-shockwave-flash\" id=\"FlashPlayer\" data=\"".Assets::url()."flash/player_flv.swf\" width=\"$width\" height=\"$height\">\n";
     $flash_object .= "<param name=\"movie\" value=\"".Assets::url()."flash/player_flv.swf\">\n";
     $flash_object .= "<param name=\"FlashVars\" value=\"flv=" . urlencode($movie_url) . $flash_config . "\">\n";
-    $flash_object .= "<embed src=\"".Assets::url()."flash/player_flv.swf\" movie=\"{$movie_url}\" type=\"application/x-shockwave-flash\" FlashVars=\"flv={$movie_url}{$flash_config}\">\n";
+    $flash_object .= "<embed src=\"".Assets::url()."flash/player_flv.swf\" movie=\"{$movie_url}\" type=\"application/x-shockwave-flash\" FlashVars=\"flv=".urlencode($movie_url).$flash_config."\">\n";
     $flash_object .= "</object>\n";
 
     return array('player' => $flash_object, 'width' => $width, 'height' => $height);

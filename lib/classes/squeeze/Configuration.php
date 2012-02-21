@@ -35,9 +35,6 @@ class Configuration implements \ArrayAccess
         );
 
         $this->settings = array_merge($defaults, $conf);
-
-        # TODO eigentlich immer nur aus einer Datei und nicht als array?
-        #      gegenwärtig Pfad nötig, um filemtime zu bestimmen
         $this->settings['config_path'] = $path ?: __FILE__;
     }
 
@@ -63,7 +60,31 @@ class Configuration implements \ArrayAccess
         throw new RuntimeException("Unsetting properties forbidden");
     }
 
-    static function load($path)
+    static function load($path, $force = FALSE)
+    {
+        $parsed = $force
+            ? self::parseFile($path)
+            : self::parseAndCacheFile($path);
+
+        return new Configuration($parsed, $path);
+    }
+
+    static private function parseAndCacheFile($path)
+    {
+        $cache = \StudipCacheFactory::getCache();
+        $parsed = $cache->read('squeeze/' . $path);
+
+        if (!$parsed) {
+            $parsed = self::parseFile($path);
+
+            # write to cache and expire in 10 seconds
+            $cache->write('squeeze/' . $path, $parsed, 10);
+        }
+
+        return $parsed;
+    }
+
+    static private function parseFile($path)
     {
         ob_start();
         require $path;
@@ -71,6 +92,7 @@ class Configuration implements \ArrayAccess
 
         require_once 'vendor/yaml/lib/sfYamlParser.php';
         $yaml = new \sfYamlParser();
-        return new Configuration($yaml->parse($config), $path);
+
+        return $yaml->parse($config);
     }
 }

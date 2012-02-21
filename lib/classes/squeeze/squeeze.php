@@ -40,7 +40,7 @@ namespace Studip\Squeeze {
     {
         global $STUDIP_BASE_PATH;
         $configFile = $configFile ?: "$STUDIP_BASE_PATH/config/assets.yml";
-        $configuration = Configuration::load($configFile);
+        $configuration = Configuration::load($configFile, $forced = TRUE);
         $packager = new Packager($configuration);
 
         $packager->cacheAll($outputDir);

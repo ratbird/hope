@@ -93,7 +93,7 @@ class Admin_UserController extends AuthenticatedController
         if (isset($request)) {
             //suche mit datafields
             foreach ($datafields as $id => $datafield) {
-                if ($request[$id] && ($datafield->getType() != 'selectbox' && $request[$id] != 'alle')) {
+                if (isset($request[$id]) && ($datafield->getType() != 'selectbox' && $request[$id] != 'alle')) {
                     $search_datafields[$id] = $request[$id];
                 }
             }

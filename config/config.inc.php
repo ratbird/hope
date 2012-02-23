@@ -469,7 +469,7 @@ $LIT_LIST_FORMAT_TEMPLATE = "**{dc_creator}** |({dc_contributor})||\n"
                         . "{dc_identifier}||\n"
                         . "%%{published}%%||\n"
                         . "{note}||\n"
-                        . "[{lit_plugin}]{external_link}|\n";
+                        . "[{lit_plugin_display_name}]{external_link}|\n";
 
 //define the used modules for instiutes
 $INST_MODULES["default"] = array(

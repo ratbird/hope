@@ -1381,7 +1381,11 @@ function printposting ($forumposting) {
             // es werden Porträts angezeigt
             if ($forum["showimages"] == TRUE) {
                 $addon .= "<br><div align=\"center\">";
-                $addon .= Avatar::getAvatar($forumposting["userid"])->getImageTag(Avatar::MEDIUM);
+				if ($anonymous){
+					$addon .= "<img src=\"".URLHelper::getLink("pictures/user/nobody_medium.png")."\" title=\"anonymer User\">";
+				}else{
+                	$addon .= Avatar::getAvatar($forumposting["userid"])->getImageTag(Avatar::MEDIUM);
+				}
                 $addon .= "</div>";
             }
 
@@ -2009,8 +2013,8 @@ function forum_move_navi ($topic_id) {
                 </td>
             </tr>
             <tr>
-                <td class="steel1" colspan="2">
-                    &nbsp;
+                <td class="steel1" colspan="2">&nbsp;
+                    
                 </td>
             </tr>
             <tr>
@@ -2063,8 +2067,8 @@ function forum_move_navi ($topic_id) {
         }
         ?>
             <tr valign="middle">
-                <td class="steel1" align="right" nowrap width="20%">
-                    &nbsp;
+                <td class="steel1" align="right" nowrap width="20%">&nbsp;
+                    
                 </td>
                 <td class="steel1" width="80%">
                 <br>

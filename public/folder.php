@@ -575,15 +575,16 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
     if ($_REQUEST["getfilebody"]) {
         $query = "SELECT ". $_fullname_sql['full'] ." AS fullname, username, a.user_id, a.*, IF(IFNULL(a.name,'')='', a.filename,a.name) AS t_name FROM dokumente a LEFT JOIN auth_user_md5 USING (user_id) LEFT JOIN user_info USING (user_id) WHERE a.dokument_id = ".$db->quote($_REQUEST["getfilebody"]);
         $datei = $db->query($query)->fetch(PDO::FETCH_ASSOC);
-        if ($folder_tree->isReadable($datei['range_id'] , $user->id)) {
-            display_file_body($datei, null, $folder_system_data["open"], null, $folder_system_data["move"], $folder_system_data["upload"], FALSE, $folder_system_data["refresh"], $folder_system_data["link"]);
+        if ($folder_tree->isReadable($datei['range_id'] , $user->id)){ 
+			$all = $folder_system_data['cmd']=='tree' ? FALSE : TRUE;
+            display_file_body($datei, null, $folder_system_data["open"], null, $folder_system_data["move"], $folder_system_data["upload"], $all, $folder_system_data["refresh"], $folder_system_data["link"]);
         }
     }
 
     //Frage den Ordnerkörper ab
     if ($_REQUEST["getfolderbody"]) {
         if ($folder_tree->isExecutable($_REQUEST["getfolderbody"] , $user->id)) {
-            display_folder_body($_REQUEST["getfolderbody"], $folder_system_data["open"], null, $folder_system_data["move"], null, null, null, null);
+			display_folder_body($_REQUEST["getfolderbody"], $folder_system_data["open"], null, $folder_system_data["move"], null, null, null, null);
         }
     }
 

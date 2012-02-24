@@ -1,6 +1,6 @@
 <?
 # Lifter010: TODO
-use Studip\Buttons, Studip\LinkButton;
+use Studip\Button, Studip\LinkButton;
 ?>
 <table width="100%" border="0" cellpadding="0" cellspacing="0" align="center">
     <tr>

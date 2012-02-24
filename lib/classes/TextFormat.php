@@ -112,7 +112,7 @@ class TextFormat
             }
 
             $tags = array_unique($tags);
-            $regexp = preg_replace('/\((?!\?)/', '(?:', join('|', $tags));
+            $regexp = preg_replace('/(?<!\\\\)(\\\\\\\\)*\((?!\?)/', '$0?:', join('|', $tags));
             $this->start_regexp = '/(' . $regexp . ')/ms';
         }
 

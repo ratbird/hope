@@ -187,6 +187,11 @@ function markupMail($markup, $matches)
     return sprintf('<a href="mailto:%s">%s</a>', $markup->quote($matches[2]), $text);
 }
 
+function markupSum($markup, $matches)
+{
+    return $matches[1] + $matches[2];
+}
+
 class TextFormatTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
@@ -227,6 +232,7 @@ class TextFormatTest extends PHPUnit_Framework_TestCase
 
         $markup->addMarkup('link', '(\[.*?\])?\b(https?:\/\/\S+)', NULL, 'markupLink');
         $markup->addMarkup('mail', '(\[.*?\])?\b([\w!#%+.-]+@[[:alnum:].-]+)', NULL, 'markupMail');
+        $markup->addMarkup('sum', '\(:sum\((\d+)\\\\(\d+)\):\)', NULL, 'markupSum');
 
         $this->markup = $markup;
     }
@@ -374,6 +380,13 @@ class TextFormatTest extends PHPUnit_Framework_TestCase
     {
         $input = '[Mail]some.user@example.com';
         $expected = '<a href="mailto:some.user@example.com">Mail</a>';
+        $this->assertEquals($this->markup->format($input), $expected);
+    }
+
+    public function testSum()
+    {
+        $input = '(:sum(3\\4):)';
+        $expected = '7';
         $this->assertEquals($this->markup->format($input), $expected);
     }
 }

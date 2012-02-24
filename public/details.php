@@ -379,7 +379,7 @@ echo $template_factory->render(
                     <font size="-1">
                     <b><?= _("Veranstaltungsort:") ?></b>
                     <br>
-                    <?= $sem->getDatesTemplate('dates/seminar_html_location') ?>
+                    <?= $sem->getDatesTemplate('dates/seminar_html_location', array('ort' => $db2->f('Ort'))) ?>
                     </font>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" valign="top">

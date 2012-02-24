@@ -45,7 +45,7 @@ endforeach;
 ?>
 
 <? if (sizeof($output) == 0) : ?>
-  <?= _("nicht angegeben") ?>
+    <?= $ort ?: _("nicht angegeben") ?>
 <? elseif (sizeof($output) == 1) : ?>
     <?= array_pop(array_keys($output)) ?>
 <? else: ?>

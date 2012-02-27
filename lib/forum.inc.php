@@ -1679,7 +1679,7 @@ function DisplayFolders ($open=0, $update="", $zitat="") {
 
     $fields = array("topic_id", "parent_id", "root_id", "name"
         , "description", "author", "author_host", "mkdate"
-        , "chdate", "user_id");
+        , "chdate", "user_id", "anonymous");
     $query = "select distinct ";
     $comma = "";
 

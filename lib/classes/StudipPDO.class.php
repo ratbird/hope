@@ -275,7 +275,12 @@ class StudipPDOStatement implements IteratorAggregate
      */
     public function __call($name, array $arguments)
     {
-        return call_user_func_array(array($this->stmt, $name), $arguments);
+        $callable = array($this->stmt, $name);
+        if (!is_callable($callable)) {
+            throw new BadMethodCallException();
+        }
+
+        return call_user_func_array($callable, $arguments);
     }
 
     /**

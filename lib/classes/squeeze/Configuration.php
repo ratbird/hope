@@ -13,9 +13,21 @@ namespace Studip\Squeeze;
 
 require_once 'lib/classes/StudipCacheFactory.class.php';
 
+/**
+ * This class is used to configure the Squeeze packager. You can
+ * either use a yaml file or a plain PHP array.
+ */
 class Configuration implements \ArrayAccess
 {
 
+    /**
+     * Create an instance of this class by using a plain PHP array.
+     *
+     * @param array $conf   an array containing the configuration
+     * settings
+     * @param string $path  the path to the config file that was used
+     *                      (NULL if instantiated via constructor)
+     */
     function __construct($conf = array(), $path = NULL)
     {
 
@@ -39,16 +51,25 @@ class Configuration implements \ArrayAccess
         $this->settings['config_path'] = $path ?: __FILE__;
     }
 
+    /**
+     * ArrayAccess: Check whether the given offset exists.
+     */
     function offsetExists($offset)
     {
         return array_key_exists($offset, $this->settings);
     }
 
+    /**
+     * ArrayAccess: Get the value at the given offset.
+     */
     function offsetGet($offset)
     {
         return @$this->settings[$offset] ;
     }
 
+    /**
+     * ArrayAccess: Set the value at the given offset.
+     */
     function offsetSet($offset, $value)
     {
         if (array_key_exists($offset, $this->settings)) {
@@ -56,11 +77,24 @@ class Configuration implements \ArrayAccess
         }
     }
 
+    /**
+     * ArrayAccess: Delete the value at the given offset.
+     */
     function offsetUnset($offset)
     {
         throw new RuntimeException("Unsetting properties forbidden");
     }
 
+    /**
+     * Create a configuration object by parsing a yaml file.
+     * The result of the parser is cached for 10 seconds. You can
+     * force an uncached parsing by setting the 2nd param to true.
+     *
+     * @param string $path   the file to parse
+     * @param bool   $force  cache unless TRUE
+     *
+     * @return Configuration  an instance of this class
+     */
     static function load($path, $force = FALSE)
     {
         $parsed = $force

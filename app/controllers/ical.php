@@ -32,7 +32,7 @@ class iCalController extends StudipController
     {
         global $user, $perm;
         
-        if (isset($key)) {
+        if (isset($key) && trim($key)) {
             $user_id = IcalExport::getUserIdByKey($key);
         } else {
             $username = $_SERVER['PHP_AUTH_USER'];
@@ -78,6 +78,8 @@ class iCalController extends StudipController
             header('Content-Length:' . strlen($content));
             $this->render_text($content);
         } else {
+            // delayed response to prevent brute force attacks
+            
             header('HTTP/1.1 404 Not Found');
             exit;
         }

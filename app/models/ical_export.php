@@ -28,7 +28,7 @@ class IcalExport
     }
 
     /**
-     * Returns a new key.
+     * Returns a key string.
      *
      * @return string
      */
@@ -78,14 +78,7 @@ class IcalExport
      */
     public static function getKeyByUser($user_id)
     {
-        $stmt = DBManager::get()->prepare('SELECT short_id FROM ical_export WHERE user_id = ?');
-        $stmt->execute(array($user_id));
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($result) {
-            return $result['short_id'];
-        } else {
-            return false;
-        }
+        return UserConfig::get($user_id)->getValue('ICAL_EXPORT_KEY');
     }
 
     /**
@@ -94,10 +87,11 @@ class IcalExport
      * @param type $short_id
      * @return mixed
      */
-    public static function getUserIdByKey($short_id)
+    public static function getUserIdByKey($key)
     {
-        $stmt = DBManager::get()->prepare('SELECT user_id FROM ical_export WHERE short_id = ?');
-        $stmt->execute(array($short_id));
+        $stmt = DBManager::get()->prepare('SELECT user_id FROM user_config
+            WHERE field = ? AND value = ?');
+        $stmt->execute(array('ICAL_EXPORT_KEY', $key));
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($result) {
             return $result['user_id'];
@@ -114,14 +108,19 @@ class IcalExport
      */
     public static function setKey($user_id)
     {
-        $short_id = self::getKeyByUser($user_id);
-        if ($short_id) {
+        // delete old key
+        $key = self::getKeyByUser($user_id);
+        if ($key) {
             self::deleteKey($user_id);
         }
-        $short_id = self::makeKey();
-        $stmt = DBManager::get()->prepare('INSERT INTO ical_export VALUES(?, ?)');
-        $stmt->execute(array($short_id, $user_id));
-        return $short_id;
+        // make new unique key
+        do {
+            $key = self::makeKey();
+        } while (self::getUserIdByKey($key));
+
+        UserConfig::get($user_id)->store('ICAL_EXPORT_KEY', $key);
+
+        return $key;
     }
 
     /**
@@ -131,8 +130,7 @@ class IcalExport
      */
     public static function deleteKey($user_id)
     {
-        $stmt = DBManager::get()->prepare('DELETE FROM ical_export WHERE user_id = ?');
-        $stmt->execute(array($user_id));
+        UserConfig::get($user_id)->delete('ICAL_EXPORT_KEY');
     }
 
 }

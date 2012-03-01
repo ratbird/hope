@@ -330,13 +330,12 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
                 $domain->removeUser($this->auth_user['user_id']);
             }
         }
-
-        if ($new_userdomain) {
+        if ($new_userdomain && $new_userdomain != 'none' ) {
             $domain = new UserDomain($new_userdomain);
             $domain->addUser($this->auth_user['user_id']);
         }
 
-        if (($userdomain_delete || $new_userdomain) && !$this->msg) {
+        if (($userdomain_delete || ($new_userdomain && $new_userdomain != 'none')) && !$this->msg) {
             $this->msg = "msg§" . _("Die Zuordnung zu Nutzerdomänen wurde ge&auml;ndert.");
             setTempLanguage($this->auth_user["user_id"]);
             $this->priv_msg .= _("Die Zuordnung zu Nutzerdomänen wurde geändert!\n");

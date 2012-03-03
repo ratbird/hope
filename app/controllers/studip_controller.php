@@ -77,6 +77,8 @@ abstract class StudipController extends Trails_Controller
 
     /**
      * Spawns a new infobox variable on this object, if neccessary.
+     *
+     * @since Stud.IP 2.3
      **/
     private function populateInfobox() {
         if (!isset($this->infobox)) {
@@ -91,6 +93,8 @@ abstract class StudipController extends Trails_Controller
      * Sets the header image for the infobox.
      *
      * @param String $image Image to display, path is relative to :assets:/images
+     *
+     * @since Stud.IP 2.3
      **/
     function setInfoBoxImage($image) {
         $this->populateInfobox();
@@ -109,6 +113,8 @@ abstract class StudipController extends Trails_Controller
      * @param String $text     The content of the item, may contain html
      * @param String $icon     Icon to display in front the item, path is
      *                         relative to :assets:/images
+     *
+     * @since Stud.IP 2.3
      **/
     function addToInfobox($category, $text, $icon = 'blank.gif') {
         $this->populateInfobox();

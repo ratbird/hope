@@ -146,7 +146,7 @@ class EvalCommon {
       "<a " .
           "href=\"". UrlHelper::getLink('show_evaluation.php?evalID=' .$evalID .'&isPreview=' . $isPreview) . "\" " .
           "target=\"".$evalID."\" " .
-          "onClick=\"openEval(\'".$evalID."\'); return false;\">" .
+          "onClick=\"openEval('".$evalID."'); return false;\">" .
       (is_object($content) ? str_replace("\n", "", $content->createContent()) : $content) .
       "</a>";
 

@@ -150,9 +150,9 @@ function xml_escape($string, $utf8encode = true)
 {
     $string = preg_replace('/[\x00-\x08\x0b\x0c\x0e-\x1f]/', '', $string);
     if ($utf8encode) {
-        return htmlspecialchars(studip_utf8encode($string), ENT_QUOTES, 'UTF-8', false);
+        return htmlspecialchars(studip_utf8encode($string), ENT_QUOTES, 'UTF-8');
     } else {
-        return htmlspecialchars($string, ENT_QUOTES, 'cp1252', false);
+        return htmlspecialchars(html_entity_decode($string, ENT_QUOTES, 'cp1252'), ENT_QUOTES, 'cp1252', false);
     }
 }
 ?>

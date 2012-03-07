@@ -17,6 +17,7 @@ $translations = array(
   , "Der eingegebene Wert darf nicht größer als $1 sein" => _("Der eingegebene Wert darf nicht größer als $1 sein")
   , "Der eingegebene Wert darf nicht kleiner als $1 sein" => _("Der eingegebene Wert darf nicht kleiner als $1 sein")
   , "Dies ist ein erforderliches Feld" => _("Dies ist ein erforderliches Feld")
+  , "Nicht buchbare Räume:" => _("Nicht buchbare Räume:")
   // add your translations here
 );
 

@@ -840,7 +840,7 @@ if (($add_type) || ($delete_type) || ($delete_type_property_id) || ($change_cate
             $query = sprintf ("UPDATE  resources_categories SET name='%s', iconnr='%s' WHERE category_id = '%s'", $change_category_name[$key], $change_category_iconnr[$key], $key);
             $db->query($query);
 
-            if (${"change_category_add_property".$key."_x"}) {
+            if (Request::submitted("change_category_add_property".$key)) {
                 $db->query("INSERT INTO resources_categories_properties SET category_id='$key', property_id='$add_type_property_id[$key]' ");
             }
         }

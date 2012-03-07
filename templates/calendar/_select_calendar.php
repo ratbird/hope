@@ -1,7 +1,7 @@
 <form name="cal_select_calendars" method="post" action="<?= URLHelper::getLink('', array('cmd' => $cmd, 'atime' => $atime)) ?>">
-    <table cellspacing="0" cellpadding="0" border="0">
+    <table width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <td align="right">
+            <td>
                 <span style="font-size: small; color: #555555;">
                     <?= _("Kalender auswählen:") ?>
                 </span>

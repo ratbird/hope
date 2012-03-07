@@ -4,7 +4,11 @@ jQuery(function ($) {
         var me = $(this);
         if (select !== null && select !== undefined) {
             me.attr('src', STUDIP.ASSETS_URL + 'images/ajax_indicator_small.gif');
-            $(select).children('option').show();
+            if (me.data('options') === undefined) {
+                me.data('options', $(select).children('option').clone(true));
+            } else {
+                $(select).empty().append(me.data('options').clone(true));
+            }
             $.ajax({
                 type: 'POST',
                 url: STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/resources/helpers/bookable_rooms',
@@ -20,7 +24,7 @@ jQuery(function ($) {
                       } else {
                           select.title = '';
                       }
-                      _.each(result, function (v) {$(select).children('option[value=' + v + ']').hide();});
+                      _.each(result, function (v) {$(select).children('option[value=' + v + ']').remove();});
                   } else {
                       select.title = '';
                   }

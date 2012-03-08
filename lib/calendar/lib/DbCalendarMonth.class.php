@@ -143,9 +143,9 @@ class DbCalendarMonth extends DbCalendarYear
                         if ($rep['day']) {
                             $lwst = mktime(12, 0, 0, $day->mon
                                     - ((($day->year - date('Y', $rep['ts'])) * 12
-                                    + ($day->mon - date('n', $rep['ts']))) % $rep['linterval']), $rep['day'], $day->year, 0);
+                                        + ($day->mon - date('n', $rep['ts']))) % $rep['linterval']), $rep['day'], $day->year, 0);
                             $hgst = $lwst + $duration * 86400;
-                            $this->createEvent($properties, $day, $lwst, $hgst, $day);
+                            $this->createEvent($properties, $day, $lwst, $hgst);
                             break;
                         }
                         if ($rep['sinterval']) {
@@ -158,18 +158,20 @@ class DbCalendarMonth extends DbCalendarYear
                                 $aday = strftime('%u', $lwst);
                                 $lwst -= ( $aday - $rep['wdays']) * 86400;
                                 if ($rep['sinterval'] == 5) {
-                                    if (date('j', $lwst) < 10)
+                                    if (date('j', $lwst) < 10) {
                                         $lwst -= 604800;
-                                    if (date('n', $lwst) == date('n', $lwst + 604800))
+                                    }
+                                    if (date('n', $lwst) == date('n', $lwst + 604800)) {
                                         $lwst += 604800;
-                                }
-                                else {
-                                    if ($aday > $rep['wdays'])
+                                    }
+                                } else {
+                                    if ($aday > $rep['wdays']) {
                                         $lwst += 604800;
+                                    }
                                 }
                                 $hgst = $lwst + $duration * 86400;
                                 if ($day->ts >= $lwst && $day->ts <= $hgst) {
-                                    $this->createEvent($properties, $day, $lwst, $hgst, $day);
+                                    $this->createEvent($properties, $day, $lwst, $hgst);
                                 }
                                 $mon += $rep['linterval'];
                             } while ($lwst < $day->ts);
@@ -301,7 +303,7 @@ class DbCalendarMonth extends DbCalendarYear
               } else {
               $event = new CalendarEvent($properties, $properties['STUDIP_ID'], $this->user_id, $this->permission);
               } */
-            $this->events["{$day->ts}"][$properties['STUDIP_ID']] = & $event;
+            $this->events["{$day->ts}"][$properties['STUDIP_ID']] =& $event;
             $this->appdays["{$day->ts}"]++;
 
             return true;

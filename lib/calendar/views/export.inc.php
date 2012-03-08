@@ -85,7 +85,7 @@ if (($expmod != 'exp' && $expmod != 'imp' && $expmod != 'sync') || ($expmod == '
     echo "<table border=\"0\" class=\"blank\" cellspacing=\"0\" cellpadding=\"5\" width=\"100%\">\n";
 
     if (!empty($err)) {
-        $error_sign = "<span style=\"color:#FF0000 font-size:1.2em; font-weight:bold;>&nbsp;*&nbsp;</span>";
+        $error_sign = "<span style=\"color:#FF0000; font-size:1.2em; font-weight:bold;\">&nbsp;*&nbsp;</span>";
         $error_message = sprintf(_("Bitte korrigieren Sie die mit %s gekennzeichneten Felder.%s"), $error_sign, $err_message);
         my_info($error_message, "blank", 2);
     }

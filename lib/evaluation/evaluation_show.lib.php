@@ -383,45 +383,49 @@ class EvalShow
    }
 
    function createEditButton ($eval) {
-         $button = LinkButton::create(_('Bearbeiten'), 
+         $button = LinkButton::create(_('Bearbeiten'),
                  UrlHelper::getURL(EVAL_FILE_ADMIN."?page=edit&evalID=".$eval->getObjectID()),
                  array('title' => _('Evaluation bearbeiten.')));
          return $button;
    }
 
    function createOverviewButton ($rangeID, $evalID) {
-         $button = LinkButton::create(_('Bearbeiten'), 
+         $button = LinkButton::create(_('Bearbeiten'),
                  UrlHelper::getURL(EVAL_FILE_ADMIN."?rangeID=".$rangeID."&openID=".$evalID."#open"),
                  array('title' => _('Evaluationsverwaltung.')));
          return $button;
    }
 
    function createDeleteButton ($eval) {
-         $button = LinkButton::create(_('Löschen'), 
+         $button = LinkButton::create(_('Löschen'),
                  UrlHelper::getURL(EVAL_FILE_ADMIN."?evalAction=delete_request&evalID=".$eval->getObjectID ()),
                  array('title' => _('Evaluation löschen.')));
          return $button;
    }
 
    function createStopButton ($eval) {
-         $button = LinkButton::createCancel(_('Stop'), 
+         $button = LinkButton::createCancel(_('Stop'),
                  UrlHelper::getURL(EVAL_FILE_ADMIN."?evalAction=stop&evalID=".$eval->getObjectID ()),
                  array('title' => _('Evaluation stoppen.')));
          return $button;
    }
 
    function createContinueButton ($eval) {
-         $button = LinkButton::create(_('Fortsetzen'), 
+         $button = LinkButton::create(_('Fortsetzen'),
                  UrlHelper::getURL(EVAL_FILE_ADMIN."?evalAction=continue&evalID=".$eval->getObjectID ()),
                  array('title' => _('Evaluation fortsetzen')));
          return $button;
    }
 
    function createExportButton ($eval) {
-         $button = LinkButton::create(_('Export'), 
+         $button = LinkButton::create(_('Export'),
                  UrlHelper::getURL(EVAL_FILE_ADMIN."?evalAction=export_request&evalID=".$eval->getObjectID ()),
                  array('title' => _('Evaluation exportieren.')));
          return $button;
+   }
+
+   function createReportButton($eval) {
+       return LinkButton::create(_('Auswertung'), UrlHelper::getURL("eval_summary.php?eval_id=" . $eval->getObjectID()), array('title' => _('Auswertung')));
    }
 
   /* ----------------------------------------------------------------------- */

@@ -57,8 +57,8 @@ function show_votes ($rangeID, $userID, $perm, $isHomepage = NO) {
    }
 
    if ($perm->have_studip_perm ("tutor", $rangeID) ||
-       get_username($userID) == $rangeID || 
-       (isDeputyEditAboutActivated() && 
+       get_username($userID) == $rangeID ||
+       (isDeputyEditAboutActivated() &&
        isDeputy($userID, get_userid($rangeID), true)))
       $haveFullPerm = true;
    else
@@ -218,6 +218,7 @@ function show_votes ($rangeID, $userID, $perm, $isHomepage = NO) {
             $td->addContent (EvalShow::createStopButton ($eval));
             $td->addContent (EvalShow::createDeleteButton ($eval));
             $td->addContent (EvalShow::createExportButton ($eval));
+            $td->addContent (EvalShow::createReportButton ($eval));
             }
 
             $tr->addContent ($td);
@@ -364,6 +365,7 @@ function show_votes ($rangeID, $userID, $perm, $isHomepage = NO) {
             $td->addContent (EvalShow::createContinueButton ($eval));
             $td->addContent (EvalShow::createDeleteButton ($eval));
             $td->addContent (EvalShow::createExportButton ($eval));
+            $td->addContent (EvalShow::createReportButton ($eval));
             $tr->addContent ($td);
             $table->addContent ($tr);
             echo $table->createContent ();

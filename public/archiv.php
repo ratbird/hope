@@ -72,7 +72,7 @@ if ($suche) {
     $archiv_data["doz"]=$doz;
     $archiv_data["pers"]=$pers;
     $archiv_data["perform_search"]=TRUE;
-} elseif ((!$open) && (!$delete_id) && (!$show_grants) && (!$hide_grants) && (!$delete_user) && (!$add_user) && (!$new_search) && (!$close) && (!$dump_id) && (!$sortby) && (!$back))
+} elseif ((!$open) && (!$delete_id) && (!$show_grants) && (!$hide_grants) && (!$delete_user) && (!Request::submitted('add_user')) && (!Request::submitted('new_search')) && (!$close) && (!$dump_id) && (!$sortby) && (!$back))
     $archiv_data["perform_search"]=FALSE;
 
 //Anzeige der Zugriffsberechtigten Personen ein/ausschalten
@@ -143,7 +143,7 @@ if ($delete_user) {
 }
 
 //Eintragen von Archiv_Usern
-if ($do_add_user) {
+if (Request::submitted('do_add_user')) {
     if (archiv_check_perm($a_sem_id) == "admin" || archiv_check_perm($a_sem_id) == "dozent") {
         $db->query("INSERT IGNORE INTO archiv_user SET seminar_id = '$a_sem_id', user_id='$add_user', status='autor'");
         if ($db->affected_rows()){
@@ -530,7 +530,7 @@ if ($archiv_data["perform_search"]) {
                             echo "<a href=\"". URLHelper::getLink("?delete_user=".$db2->f("user_id")."&d_sem_id=".$db->f("seminar_id")) ,"#anker\"><font size=\"-1\">&nbsp;" . _("Zugriffsberechtigung entfernen") . "</font> <img border=0 src=\"". Assets::image_path('icons/16/blue/trash.png') ."\" " . tooltip(_("Dieser Person die Zugriffsberechtigung entziehen")) . "></a>";
                         echo "<br>";
                     }
-                    if (($add_user) && (!$new_search)) {
+                    if ((Request::submitted('add_user')) && (!Request::submitted('new_search'))) {
                         $db2->query("SELECT " . $_fullname_sql['full'] . " AS fullname, username, auth_user_md5.user_id FROM auth_user_md5 LEFT JOIN user_info USING (user_id) WHERE Vorname LIKE '%$search_exp%' OR Nachname LIKE '%$search_exp%' OR username LIKE '%".trim($search_exp)."%' ORDER BY Nachname");
                         if ($db2->affected_rows()) {
                             echo "<form action=\"". URLHelper::getLink() ."#anker\">";
@@ -541,20 +541,20 @@ if ($archiv_data["perform_search"]) {
                                 echo "<option value=\"".$db2->f("user_id")."\">".htmlReady($db2->f("fullname")). " (".$db2->f("username").") </option>";
                             }
                             echo "</select></font>";
-                            echo "<br><font size=\"-1\"><input type=\"SUBMIT\"  name=\"do_add_user\" value=\"" . _("Diese Person hinzuf&uuml;gen") . "\"></font>";
-                            echo "&nbsp;<font size=\"-1\"><input type=\"SUBMIT\"  name=\"new_search\" value=\"" . _("Neue Suche") . "\"></font>";
+                            echo Button::create(_('Diese Person Hinzufügen'), 'do_add_user');
+                            echo Button::create(_('Neue Suche'), 'new_search');
                             echo "<input type=\"HIDDEN\"  name=\"a_sem_id\" value=\"",$db->f("seminar_id"), "\">";
                             echo "</form>";
                         }
                     }
-                    if ((($add_user) && (!$db2->affected_rows())) || (!$add_user) || ($new_search)) {
+                    if (((Request::submitted('add_user')) && (!$db2->affected_rows())) || (!Request::submitted('add_user')) || (Request::submitted('new_search'))) {
                         echo "<form action=\"". URLHelper::getLink() ."#anker\">";
                         echo "<hr><b><font size=\"-1\">" . _("Person Berechtigung erteilen:") . " </font></b><br>";
                         if (($add_user) && (!$db2->affected_rows())  && (!$new_search))
                             echo "<br><b><font size=\"-1\">" . _("Es wurde keine Person zu dem eingegebenem Suchbegriff gefunden!") . "</font></b><br>";
                         echo "<font size=\"-1\">" . _("Bitte Namen, Vornamen oder Benutzernamen eingeben:") . "</font>&nbsp; ";
                         echo "<br><input type=\"TEXT\" size=20 maxlength=255 name=\"search_exp\">";
-                        echo "&nbsp;<font size=\"-1\"><br><input type=\"SUBMIT\"  name=\"add_user\" value=\"" . _("Suche starten") . "\"></font>";
+                        echo Button::create(_('Suche Starten'), 'add_user');
                         echo "</form>";
                     }
                 }

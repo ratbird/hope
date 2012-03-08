@@ -33,6 +33,7 @@
 
 
 require '../lib/bootstrap.php';
+unregister_globals();
 
 if (!isset($EVAL_AUSWERTUNG_GRAPH_FORMAT)) $EVAL_AUSWERTUNG_GRAPH_FORMAT = 'jpg';
 
@@ -52,8 +53,10 @@ require_once('lib/evaluation/evaluation.config.php');
 require_once(EVAL_FILE_EVAL);
 require_once(EVAL_FILE_OBJECTDB);
 require_once('lib/export/export_tmp_gc.inc.php');
+require_once 'lib/classes/Institute.class.php';
 
 // Start of Output
+$eval_id = Request::option('eval_id');
 
 $no_permission = YES;
 $eval = new Evaluation($eval_id);
@@ -457,7 +460,46 @@ if ($db->next_record()) {
     $db_number_of_votes = new DB_Seminar();
     $db_number_of_votes->query(sprintf("SELECT COUNT(DISTINCT user_id) anz FROM eval_user WHERE eval_id='%s'", $eval_id));
     $db_number_of_votes->next_record();
-
+    $eval_ranges_names = array();
+    $eval_ranges = DbManager::get()
+                 ->query("SELECT range_id FROM eval_range WHERE eval_id = " . DbManager::get()->quote($eval_id))
+                 ->fetchAll(PDO::FETCH_COLUMN);
+    foreach ($eval_ranges as $eval_range) {
+      $o_type = get_object_type($eval_range, array('studip','user','sem','inst'));
+      switch($o_type) {
+      case 'global':
+          $name = _("Systemweite Evaluationen");
+          break;
+      case 'sem':
+          $name = _("Veranstaltung:");
+          $seminar = Seminar::getInstance($eval_range);
+          $name .= ' ' . $seminar->getName();
+          $name .= ' (' . Semester::findByTimestamp($seminar->semester_start_time)->name;
+          if ($seminar->semester_duration_time == -1) {
+              $name .= ' - ' . _("unbegrenzt");
+          }
+          if ($seminar->semester_duration_time > 0) {
+              $name .= ' - ' . Semester::findByTimestamp($seminar->semester_start_time + $seminar->semester_duration_time)->name;
+          }
+          $name .= ')';
+          $dozenten = array_map(function($v){return $v['Nachname'];}, $seminar->getMembers('dozent'));
+          $name .= ' (' . join(', ' , $dozenten) . ')';
+          break;
+      case 'user':
+          $name = _("Profil:");
+          $name .= ' ' . get_fullname($eval_range);
+          break;
+      case 'inst':
+      case 'fak':
+          $name = _("Einrichtung:");
+          $name .= ' ' . Institute::find($eval_range)->name;
+          break;
+      default:
+          $name = _("unbekannt");
+      }
+      $eval_ranges_names[] = $name;
+    }
+    sort($eval_ranges_names);
     if (file_exists($tmp_path_export."/evalsum".$db->f("eval_id").$auth->auth["uid"].".fo")) unlink($tmp_path_export."/evalsum".$db->f("eval_id").$auth->auth["uid"].".fo");
     if (file_exists($tmp_path_export."/evalsum".$db->f("eval_id").$auth->auth["uid"].".pdf")) unlink($tmp_path_export."/evalsum".$db->f("eval_id").$auth->auth["uid"].".pdf");
 
@@ -495,9 +537,19 @@ if ($db->next_record()) {
     fputs($fo_file,"    <fo:block font-size=\"16pt\" font-weight=\"bold\" font-family=\"sans-serif\" space-before.optimum=\"10pt\" space-after.optimum=\"15pt\" text-align=\"center\">\n");
     fputs($fo_file,"      ".preg_replace($pattern,$replace,smile(htmlspecialchars($db->f("title")),TRUE))."\n");
     fputs($fo_file,"    </fo:block>\n");
+    fputs($fo_file,"    <fo:block text-align=\"start\" line-height=\"10pt\" font-size=\"8pt\">\n");
+    fputs($fo_file,    _("Diese Evaluation ist folgenden Bereichen zugeordnet:"));
+    fputs($fo_file,"    </fo:block>\n");
+    foreach($eval_ranges_names as $n) {
+        fputs($fo_file,"    <fo:block text-align=\"start\" margin-left=\"0.5cm\" line-height=\"10pt\" font-size=\"8pt\">\n");
+        fputs($fo_file, htmlspecialchars($n));
+        fputs($fo_file,"    </fo:block>\n");
+    }
+
+
 
     if (do_template("show_total_stats")) {
-        fputs($fo_file,"    <fo:block text-align=\"start\" line-height=\"10pt\" font-size=\"8pt\">\n");
+        fputs($fo_file,"    <fo:block text-align=\"start\" space-before.optimum=\"10pt\" line-height=\"10pt\" font-size=\"8pt\">\n");
         fputs($fo_file,"      ".$db_number_of_votes->f("anz")." "._("Teilnehmer insgesamt").".\n");
         fputs($fo_file,"      "._("Die Teilnahme war")." ". ($db->f("anonymous")==0 ? _("nicht") : "") . " "._("anonym").".\n");
         fputs($fo_file,"      "._("Eigentümer").": ".$db_owner->f("fullname").". "._("Erzeugt am").": ".date("d.m.Y H:i:s")."\n");

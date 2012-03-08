@@ -33,6 +33,7 @@ require_once 'lib/evaluation/evaluation.config.php';
 require_once EVAL_FILE_EVAL;
 require_once EVAL_FILE_OBJECTDB;
 require_once 'lib/export/export_tmp_gc.inc.php';
+require_once 'lib/classes/Institute.class.php';
 
 ob_start();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
@@ -477,6 +478,47 @@ if ($db->next_record()) {
   $db_number_of_votes->query(sprintf("SELECT COUNT(DISTINCT user_id) anz FROM eval_user WHERE eval_id='%s'", $eval_id));
   $db_number_of_votes->next_record();
 
+  $eval_ranges_names = array();
+  $eval_ranges = DbManager::get()
+                 ->query("SELECT range_id FROM eval_range WHERE eval_id = " . DbManager::get()->quote($eval_id))
+                 ->fetchAll(PDO::FETCH_COLUMN);
+  foreach ($eval_ranges as $eval_range) {
+      $o_type = get_object_type($eval_range, array('studip','user','sem','inst'));
+      switch($o_type) {
+      case 'global':
+          $name = _("Systemweite Evaluationen");
+          break;
+      case 'sem':
+          $name = _("Veranstaltung:");
+          $seminar = Seminar::getInstance($eval_range);
+          $name .= ' ' . $seminar->getName();
+          $name .= ' (' . Semester::findByTimestamp($seminar->semester_start_time)->name;
+          if ($seminar->semester_duration_time == -1) {
+              $name .= ' - ' . _("unbegrenzt");
+          }
+          if ($seminar->semester_duration_time > 0) {
+              $name .= ' - ' . Semester::findByTimestamp($seminar->semester_start_time + $seminar->semester_duration_time)->name;
+          }
+          $name .= ')';
+          $dozenten = array_map(function($v){return $v['Nachname'];}, $seminar->getMembers('dozent'));
+          $name .= ' (' . join(', ' , $dozenten) . ')';
+          break;
+      case 'user':
+          $name = _("Profil:");
+          $name .= ' ' . get_fullname($eval_range);
+          break;
+      case 'inst':
+      case 'fak':
+          $name = _("Einrichtung:");
+          $name .= ' ' . Institute::find($eval_range)->name;
+          break;
+      default:
+          $name = _("unbekannt");
+      }
+      $eval_ranges_names[] = $name;
+  }
+  sort($eval_ranges_names);
+
   // Evaluation existiert auch...
   echo "<table border=\"0\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\">\n";
   echo "<tr><td class=\"topic\" align=\"left\"><font color=\"".($ausgabeformat==1 ? "white" : "black")."\">";
@@ -486,6 +528,13 @@ if ($db->next_record()) {
   echo "</tr>\n";
   echo "<tr><td class=\"blank\" colspan=\"2\" align=\"left\">&nbsp;</td></tr>\n";
   echo "<tr><td class=\"blank\" colspan=\"2\" align=\"left\"><font size=\"+1\"><b>&nbsp;&nbsp;".formatReady($db->f("title"))."</b></font></td>\n";
+  echo "<tr><td class=\"blank\" colspan=\"2\" align=\"left\">&nbsp;&nbsp;";
+  echo _("Diese Evaluation ist folgenden Bereichen zugeordnet:");
+  echo '<ul>';
+  echo '<li>' . join('</li><li>', array_map('htmlready', $eval_ranges_names)) . '</li>';
+  echo '</ul>';
+  echo "</td></tr>\n";
+
   echo "</tr>\n";
 
   echo "<tr><td class=\"blank\" colspan=\"2\" align=\"left\">&nbsp;</font></td></tr>\n";

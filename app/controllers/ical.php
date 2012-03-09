@@ -31,7 +31,7 @@ class iCalController extends StudipController
     function index_action($key)
     {
         global $user, $perm;
-        
+
         if (isset($key) && trim($key)) {
             $user_id = IcalExport::getUserIdByKey($key);
         } else {
@@ -70,16 +70,16 @@ class iCalController extends StudipController
                 exit;
             }
             $content = join($export->getExport());
-            header('Content-Type: text/calendar');
-            header('Content-Disposition: attachment; filename="studip.ics"');
-            header('Content-Transfer-Encoding: binary' );
-            header('Pragma: public');
-            header('Cache-Control: private');
-            header('Content-Length:' . strlen($content));
+            $this->response->add_header('Content-Type', 'text/calendar');
+            $this->response->add_header('Content-Disposition', 'attachment; filename="studip.ics"');
+            $this->response->add_header('Content-Transfer-Encoding', 'binary');
+            $this->response->add_header('Pragma', 'public');
+            $this->response->add_header('Cache-Control', 'private');
+            $this->response->add_header('Content-Length', strlen($content));
             $this->render_text($content);
         } else {
             // delayed response to prevent brute force attacks
-            
+
             header('HTTP/1.1 404 Not Found');
             exit;
         }

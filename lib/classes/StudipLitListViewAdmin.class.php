@@ -269,8 +269,8 @@ class StudipLitListViewAdmin extends TreeView
                     . sprintf(_("Es werden insgesamt %s Einträge gelöscht!"), count($this->tree->getKidsKids($item_id)))
                     . "\n" . _("Wollen Sie diese Liste wirklich löschen?");
         
-        $template->set_attribute('approvalLink', $this->getSelf("cmd=DeleteItem&item_id=$item_id"));
-        $template->set_attribute('disapprovalLink', $this->getSelf("cmd=Cancel&item_id=$item_id"));
+        $template->set_attribute('approvalLink', URLHelper::getLink($this->getSelf("cmd=DeleteItem&item_id=$item_id")));
+        $template->set_attribute('disapprovalLink', URLHelper::getLink($this->getSelf("cmd=Cancel&item_id=$item_id")));
         $template->set_attribute('question', $question);
 
         echo $template->render();
@@ -482,7 +482,7 @@ class StudipLitListViewAdmin extends TreeView
 
     function getNewLiteratureButton($item_id){
         $content = LinkButton::create(_('neue Literaturliste'), 
-                    $this->getSelf('cmd=NewItem&item_id='.$item_id), 
+                    URLHelper::getURL($this->getSelf('cmd=NewItem&item_id='.$item_id)),
                     array('title' => _('Eine neue Literaturliste anlegen')));
         $content .= "&nbsp;";
 
@@ -491,7 +491,7 @@ class StudipLitListViewAdmin extends TreeView
 
     function getEditFormatingButton($item_id){
         $content = LinkButton::create(_('bearbeiten'), 
-                    $this->getSelf('cmd=EditItem&item_id='.$item_id), 
+                    URLHelper::getURL($this->getSelf('cmd=EditItem&item_id='.$item_id)),
                     array('title' => _("Dieses Element bearbeiten")));
         $content .= "&nbsp;";
 
@@ -500,7 +500,7 @@ class StudipLitListViewAdmin extends TreeView
 
     function getEditLiteratureEntryButton($item_id){
         $content = LinkButton::create(_('Anmerkung'), 
-                    $this->getSelf('cmd=EditItem&item_id='. $item_id),
+                    URLHelper::getURL($this->getSelf('cmd=EditItem&item_id='. $item_id)),
                     array('title' => _('Dieses Element bearbeiten')));
         $content .= "&nbsp;";
 
@@ -518,7 +518,7 @@ class StudipLitListViewAdmin extends TreeView
 
     function getCopyListButton($item_id){
         $content = LinkButton::create(_('Kopie erstellen'),
-                    $this->getSelf('cmd=CopyList&item_0id='.$item_id),
+                    URLHelper::getURL($this->getSelf('cmd=CopyList&item_0id='.$item_id)),
                     array('title' => _('Eine Kopie dieser Liste erstellen')));
         $content .= "&nbsp;";
 
@@ -527,7 +527,7 @@ class StudipLitListViewAdmin extends TreeView
 
     function getSortButton($item_id){
         $content = LinkButton::create(_('sortieren'),
-                    $this->getSelf('cmd=SortKids&item_id='.$item_id),
+                    URLHelper::getURL($this->getSelf('cmd=SortKids&item_id='.$item_id)),
                     array('title' => _('Elemente dieser Liste alphabetisch sortieren')));
         $content .= "&nbsp;";
 
@@ -545,7 +545,7 @@ class StudipLitListViewAdmin extends TreeView
 
     function getDeleteButton($item_id, $cmd){
         $content = LinkButton::create(_('Löschen'), 
-                    $this->getSelf('cmd='.$cmd.'&item_id='.$item_id), 
+                    URLHelper::getURL($this->getSelf('cmd='.$cmd.'&item_id='.$item_id)),
                     array('title' => _('Dieses Element löschen')));
         $content .= '&nbsp;';
 
@@ -554,7 +554,7 @@ class StudipLitListViewAdmin extends TreeView
 
     function getToClipboardButton($item_id){
          $content = LinkButton::create(_('Merkliste'), 
-                    $this->getSelf('cmd=InClipboard&item_id='.$item_id), 
+                    URLHelper::getURL($this->getSelf('cmd=InClipboard&item_id='.$item_id)),
                     array('title' => _('Eintrag in Merkliste aufnehmen')));
         $content .= '&nbsp;';
 
@@ -666,7 +666,7 @@ class StudipLitListViewAdmin extends TreeView
                         array('title' => _("Einstellungen speichern"))) .
                 "&nbsp;" .
                 LinkButton::createCancel(_('Abbrechen'), 
-                        $this->getSelf("cmd=Cancel&item_id=".$this->edit_item_id),
+                        URLHelper::getURL($this->getSelf("cmd=Cancel&item_id=".$this->edit_item_id)),
                         array('Aktion abbrechen' => _('Aktion abbrechen'))) .
                 '</td></tr>';
         $content .= "\n</form>";

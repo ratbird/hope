@@ -89,12 +89,11 @@ class IcalExport
      */
     public static function getUserIdByKey($key)
     {
-        $stmt = DBManager::get()->prepare('SELECT user_id FROM user_config
-            WHERE field = ? AND value = ?');
-        $stmt->execute(array('ICAL_EXPORT_KEY', $key));
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($result) {
-            return $result['user_id'];
+        $where = "field = 'ICAL_EXPORT_KEY' AND value = " . DBManager::get()->quote($key);
+        $user_config_entries = UserConfigEntry::findBySql($where);
+        
+        if (isset($user_config_entries[0])) {
+            return $user_config_entries[0]->getValue('user_id');
         } else {
             return false;
         }

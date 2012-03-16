@@ -1,5 +1,5 @@
-<? if ($em['day_events']) : ?>
-        <table width="100%" border="0" cellpadding="0" cellspacing="0">
+<? if (sizeof($em['day_events'])) : ?>
+        <table border="0" cellpadding="0" cellspacing="0" width="100%">
             <? foreach ($em['day_events'] as $day_event) : ?>
                 <?
                 if ($calendar->view instanceof DbCalendarDay) {
@@ -10,7 +10,7 @@
                 ?>
                 <? $cstyle = $day_event->getCategoryStyle($calendar->view instanceof DbCalendarDay ? 'big' : 'small') ?>
                 <tr>
-                    <td style="width:100%; height:20px; vertical-align:top; text-align:left; border:solid 1px <?= $cstyle['color'] ?>; background-image:url(<?= $cstyle['image'] ?>);">
+                    <td style="height:20px; vertical-align:top; text-align:left; border:solid 1px <?= $cstyle['color'] ?>; background-image:url(<?= $cstyle['image'] ?>);">
                         <? if ($day_event->getPermission == Event::PERMISSION_CONFIDENTIAL) : ?>
                             <?= fit_title($day_event->getTitle(), 1, 1, $title_length); ?>
                         <? else : ?>
@@ -23,7 +23,23 @@
                             <? endif ?>
                         <? endif ?>
                     </td>
+                    <? if ($show_edit_link) : ?>
+                        <td style="width: 1%; vertical-align:top;" rowspan="<?= sizeof($em['day_events']) ?>">
+                            <a style="display: block; min-width: 11px;" href="<?= URLHelper::getLink('',  array('cmd' => 'edit', 'atime' => $wday->getTs(), 'devent' => '1')) ?>">
+                                <img src="<?= Assets::image_path('calplus.gif') ?>"<?= tooltip(_("neuer Tagestermin")) ?>>
+                            </a>
+                        </td>
+                        <?
+                            $show_edit_link = false;
+                        ?>
+                    <? endif; ?>
                 </tr>
             <? endforeach ?>
         </table>
+<? else : ?>
+    <? if ($show_edit_link) : ?>
+        <a href="<?= URLHelper::getLink('',  array('cmd' => 'edit', 'atime' => $wday->getTs(), 'devent' => '1')) ?>">
+            <img src="<?= Assets::image_path('calplus.gif') ?>"<?= tooltip(_("neuer Tagestermin")) ?>>
+        </a>
+    <? endif; ?>
 <? endif; ?>

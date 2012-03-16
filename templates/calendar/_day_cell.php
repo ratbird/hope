@@ -59,8 +59,8 @@ if ($calendar->view instanceof DbCalendarDay) {
         <? elseif ($em['term'][$row][$j] == '') : ?>
             <td class="<?= $style_cell ?>"<?= ($em['cspan'][$row][$j] > 1 ? ' colspan="' . $em['cspan'][$row][$j] . '"' : '') ?> align="right" valign="middle">
                 <? if ($calendar->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
-                <a href="<?= URLHelper::getLink('', array('cmd' => 'edit', 'atime' => $day->getStart() + $i * $step)) ?>">
-                    <img src="<?= Assets::image_path('calplus.gif') ?>"<?= tooltip(strftime(_("neuer Termin um %R Uhr"), $row * $step + $start - 3600)) ?>>
+                <a style="display: block; width: 11px;" href="<?= URLHelper::getLink('', array('cmd' => 'edit', 'atime' => $day->getStart() + $i * $step)) ?>">
+                    sdfs<img src="<?= Assets::image_path('calplus.gif') ?>"<?= tooltip(strftime(_("neuer Termin um %R Uhr"), $row * $step + $start - 3600)) ?>>
                 </a>
                 <? endif ?>
             </td>
@@ -70,9 +70,9 @@ if ($calendar->view instanceof DbCalendarDay) {
     <? endfor ?>
 <? endif ?>
 <? if ($link_notset) : ?>
-    <td class="<?= $style_cell ?>" align="right" valign="middle">
+    <td style="width: 0.1%;" class="<?= $style_cell ?>" align="right" valign="middle">
         <? if ($calendar->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
-        <a href="<?= URLHelper::getLink('', array('cmd' => 'edit', 'atime' => $day->getStart() + $i * $step)) ?>">
+        <a style="display: block; width: 10px;" href="<?= URLHelper::getLink('', array('cmd' => 'edit', 'atime' => $day->getStart() + $i * $step)) ?>">
             <img src="<?= Assets::image_path('calplus.gif') ?>"<?= tooltip(strftime(_("neuer Termin um %R Uhr"), $row * $step + $start - 3600)) ?>>
         </a>
         <? endif ?>

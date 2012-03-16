@@ -76,7 +76,7 @@ if ($calendar->view->getType() == 7) {
         </td>
         <? // weekday and date as title for each column ?>
         <? for ($i = 0; $i < $calendar->view->getType(); $i++) : ?>
-        <td class="steelgroup0" style="text-align:center; font-weight:bold;" <?= ($calendar->view->getType() == 5 ? 'width="19%"' : 'width="13%"') ?><?= ($tab_arr[$i]['max_cols'] > 0 ? ' colspan="' . ($tab_arr[$i]['max_cols'] + 1) . '"' : '' ) ?>>
+        <td class="steelgroup0" style="text-align:center; font-weight:bold; width:<?= (98 / $calendar->view->getType()) ?>%;"<?= ($tab_arr[$i]['max_cols'] > 0 ? ' colspan="' . ($tab_arr[$i]['max_cols'] + 1) . '"' : '' ) ?>>
             <a class="calhead" href="<?= URLHelper::getLink('', array('cmd' => 'showday', 'atime' => $calendar->view->wdays[$i]->getTs())) ?>">
                 <?= wday($calendar->view->wdays[$i]->getTs(), 'SHORT') . ' ' . date('d', $calendar->view->wdays[$i]->getTs()) ?>
             </a>
@@ -95,7 +95,7 @@ if ($calendar->view->getType() == 7) {
     </tr>
     <tr>
         <? // Zeile mit Tagesterminen ausgeben ?>
-        <td class="precol1w"<?= $colspan_1 ?> height="25">
+        <td class="precol1w"<?= $colspan_1 ?> height="20">
             <?= _("Tag") ?>
         </td>
         <? for ($i = 0; $i < $calendar->view->getType(); $i++) : ?>
@@ -107,15 +107,15 @@ if ($calendar->view->getType() == 7) {
             $style_cell = 'steel1';
         }
         ?>
-        <td class="<?= $style_cell ?>" style="text-align:right; vertical-align:bottom;"<?= (($tab_arr[$i]['max_cols'] > 0) ? ' colspan="' . ($tab_arr[$i]['max_cols'] + 1) . '"' : '') ?>>
-            <?= $this->render_partial('calendar/_day_dayevents', array('em' => $tab_arr[$i])) ?>
-            <? if ($calendar->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
-                <div>
+        <td class="<?= $style_cell ?>" style="text-align:right; vertical-align:top;"<?= (($tab_arr[$i]['max_cols'] > 0) ? ' colspan="' . ($tab_arr[$i]['max_cols'] + 1) . '"' : '') ?>>
+            <?= $this->render_partial('calendar/_day_dayevents', array('em' => $tab_arr[$i], 'show_edit_link' => $calendar->havePermission(Calendar::PERMISSION_WRITABLE), 'wday' => $calendar->view->wdays[$i])) ?>
+            <?/* if ($calendar->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
+                <div style="width: 14px; float:right;">
                     <a href="<?= URLHelper::getLink('',  array('cmd' => 'edit', 'atime' => $calendar->view->wdays[$i]->getTs(), 'devent' => '1')) ?>">
                         <img src="<?= Assets::image_path('calplus.gif') ?>"<?= tooltip(_("neuer Tagestermin")) ?>>
                     </a>
                 </div>
-            <? endif ?>
+            <? endif */?>
         </td>
         <? endfor ?>
         <td class="precol1w"<?= $colspan_1 ?>>

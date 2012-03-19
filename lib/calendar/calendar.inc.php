@@ -460,7 +460,7 @@ switch ($cmd) {
                     . $_SESSION['calendar_sess_control_data']['view_prv'] . "&atime=$atime");
             exit;
         }
-        if ($_calendar->havePermission(Calendar::PERMISSION_WRITABLE)) {
+        if ($_calendar->havePermission(Calendar::PERMISSION_READABLE)) {
             if (empty($_POST)) {
                 $_calendar->getEventProperties($_SESSION['calendar_sess_forms_data']);
             } else {
@@ -481,11 +481,11 @@ switch ($cmd) {
         }
         break;
 }
-
+/*
 if (!$_calendar->havePermission(Calendar::PERMISSION_WRITABLE)) {
-    Navigation::removeItem("/$calendar_rangecalendar/edit");
+    Navigation::removeItem("/$calendar_range/calendar/edit");
 }
-
+*/
 // Tagesuebersicht anzeigen ***************************************************
 if ($cmd == 'showday') {
 
@@ -596,24 +596,11 @@ if ($cmd == 'showlist') {
 // ist $termin_id an das Skript uebergeben worden, dann bearbeite diesen Termin
 // ist $atime an das Skript uebergeben worden, dann erzeuge neuen Termin (s.o.)
 if ($cmd == 'edit') {
-    if ($_calendar->havePermission(Calendar::PERMISSION_WRITABLE)) {
+    if ($_calendar->havePermission(Calendar::PERMISSION_READABLE)) {
         if (!$mod) {
             $mod = 'SINGLE';
         }
 
-        // transfer form->form
-        /*
-        if ($set_recur_x || $back_recur_x) {
-            $txt = Request::addslashes($txt);
-            //$txt = htmlentities(stripslashes($txt), ENT_QUOTES);
-            $content = Request::addslashes($content);
-            //$content = htmlentities(stripslashes($content), ENT_QUOTES);
-            $loc = Request::addslashes($loc);
-            //$loc = htmlentities(stripslashes($loc), ENT_QUOTES);
-            $cat_text = Request::addslashes($cat_text);
-            //$cat_text = htmlentities($cat_text, ENT_QUOTES);
-        }
-*/
         // start and end time in 5 minute steps
         $start_m = $start_m - ($start_m % 5);
         $end_m = $end_m - ($end_m % 5);

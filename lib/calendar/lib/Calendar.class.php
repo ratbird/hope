@@ -75,7 +75,7 @@ class Calendar
             $range_id = $user->id;
         }
 
-        if (!is_object($instance[$selection])) {
+        if (!is_object($instance[$range_id])) {
             global $perm;
 
             switch (get_object_type($range_id)) {

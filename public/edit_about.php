@@ -208,6 +208,7 @@ if (check_ticket($studipticket)) {
 
     if ($cmd == "fach_abschluss_edit" && (!StudipAuthAbstract::CheckField("studiengang_id", $my_about->auth_user['auth_plugin'])) && ($ALLOW_SELFASSIGN_STUDYCOURSE || $perm->have_perm('admin')))
     {
+        $course_id = Request::getArray('course_id'); // Temporary fix, TODO unregister_globals()
         $my_about->fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschluss,$fachsem,$change_fachsem,$course_id);
     }
 

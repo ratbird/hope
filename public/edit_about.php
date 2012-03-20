@@ -294,9 +294,12 @@ if (check_ticket($studipticket)) {
         );
 
         $invalidEntries = $my_about->edit_leben($lebenslauf,$schwerp,$publi,$view, $_REQUEST['datafields']);
-        $my_about->msg = "";
-        foreach ($invalidEntries as $entry)
-            $my_about->msg .= "error§" . sprintf(_("Fehlerhafter Eintrag im Feld <em>%s</em>: %s (Eintrag wurde nicht gespeichert)"), $entry->getName(), $entry->getDisplayValue()) . "§";
+        if (!empty($invalidEntries)) { // On error, erase other messages and create according error messages
+            $my_about->msg = "";
+            foreach ($invalidEntries as $entry) {
+                $my_about->msg .= "error§" . sprintf(_("Fehlerhafter Eintrag im Feld <em>%s</em>: %s (Eintrag wurde nicht gespeichert)"), $entry->getName(), $entry->getDisplayValue()) . "§";
+            }
+        }
         $my_about->get_auth_user($username);
     }
 

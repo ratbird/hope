@@ -335,7 +335,7 @@ if (Request::get('prof_id') && Request::get('deg_id') && $perm->have_perm("root"
 if (Request::option('group_id')) {
 
     // be sure to send it as email
-    if($emailrequest == 1) $sms_data['tmpemailsnd'] = 1;
+    if(Request::int('emailrequest') == 1) $sms_data['tmpemailsnd'] = 1;
 
     // predefine subject
     if(Request::get('subject')) $messagesubject = Request::quoted('subject');

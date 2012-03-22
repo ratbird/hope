@@ -318,7 +318,7 @@ function raumzeit_doAddSingleDate() {
         if ($start < $sem->filterStart || $ende > $sem->filterEnd) {
             $sem->setFilter('all');
         }
-        if (Request::get('room') == 'nothing') {
+        if (!Request::get('room') || Request::get('room') == 'nothing') {
             $termin->setFreeRoomText(Request::get('freeRoomText'));
             $sem->addSingleDate($termin);
         } else {

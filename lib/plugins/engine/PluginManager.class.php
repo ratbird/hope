@@ -168,7 +168,7 @@ class PluginManager
                . "WHERE pluginid = ? AND (poiid = CONCAT('sem', ?) OR poiid = CONCAT('inst', ?))";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($id, $context, $context));
-        $state = DBManager::fetchColumn();
+        $state = $statement->fetchColumn();
 
         return $default && $state !== 'off' || $state === 'on';
     }

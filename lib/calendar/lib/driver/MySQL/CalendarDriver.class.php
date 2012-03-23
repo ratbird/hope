@@ -299,7 +299,7 @@ class CalendarDriver
         $this->mod = 'EVENTS';
         $this->result = array();
         if ($event_type == 'CALENDAR_EVENTS') {
-            $db_cal = DBManager::get()->prepare("SELECT * FROM calendar_events WHERE range_id = '{$this->range_id}' AND event_id = '$event_id'");
+            $db_cal = DBManager::get()->prepare("SELECT * FROM calendar_events WHERE range_id = ? AND event_id = ?");
             $db_cal->execute(array($this->range_id, $event_id));
             $this->result['cal'] = $db_cal->fetchAll(PDO::FETCH_ASSOC);
         } elseif ($event_type == 'SEMINAR_CALENDAR_EVENTS') {

@@ -351,7 +351,8 @@ function ShowUserInfo ($contact_id)
         if (is_array($userinfo)) {
             while(list($key,$value) = each($userinfo)) {
                 $output .= "<tr><td class=\"steel1\" width=\"100\"><font size=\"2\">".$key.":</font></td><td class=\"steel1\" width=\"250\"><font size=\"2\">".$value."</font></td></tr>";
-            }
+            } 
+            $output .= "<br />";
         }
 
         $userinstinfo = GetInstInfo($user_id);
@@ -359,6 +360,7 @@ function ShowUserInfo ($contact_id)
             while(list($key,$value) = each($userinstinfo[$i])) {
                 $output .= "<tr><td class=\"steel1\" width=\"100\"><font size=\"2\">".$key.":</font></td><td class=\"steel1\" width=\"250\"><font size=\"2\">".$value."</font></td></tr>";
             }
+            $output .= "<br />";
         }
 
         $extra = GetExtraUserinfo ($contact_id);
@@ -375,6 +377,7 @@ function ShowUserInfo ($contact_id)
             while ($db->next_record()) {
                 $output .= "<tr><td class=\"steel1\" width=\"100\"><font size=\"2\">"._("Gruppe").":</font></td><td class=\"steel1\" width=\"250\"><a href=\"$PHP_SELF?view=gruppen&filter=".$db->f("statusgruppe_id")."\"><font size=\"2\">".htmlready($db->f("name"))."</font></a></td></tr>";
             }
+            $output .= "<br />";
         }
     }
     return $output;

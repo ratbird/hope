@@ -810,6 +810,7 @@ a.button, button.button {
     border-color: #1e3e70;
     background-color: #cddae4;
     font-family: "Helvetica Neue", "Helvetica", Arial, Verdana, sans-serif;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
     font-size: 11px;
     line-height: 130%;
     text-decoration: none;

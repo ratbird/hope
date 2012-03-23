@@ -139,7 +139,6 @@ $_attributes['search_plugin']['onChange'] = 'document.' . $_the_search->outer_fo
 </tr>
 <?
 $class_changer->switchClass();
-echo "<tr><td " . $class_changer->getFullClass() ." colspan=\"3\" align=\"center\"><img src=\"".$GLOBALS['ASSETS_URL']."images/border.jpg\" width=\"99%\" border=\"0\"></td></tr>";
 for ($i = 0 ; $i < $_the_search->term_count; ++$i){
     if ($i > 0){
         echo "<tr><td " . $class_changer->getFullClass() ." width=\"30%\">";
@@ -179,8 +178,6 @@ for ($i = 0 ; $i < $_the_search->term_count; ++$i){
     }
     echo "</td></tr>";
 }
-echo "<tr><td " . $class_changer->getFullClass() ." colspan=\"3\" align=\"center\"><img src=\"".$GLOBALS['ASSETS_URL']."images/border.jpg\" width=\"99%\" border=\"0\"></td></tr>";
-
 ?>
 
 <tr>
@@ -323,7 +320,7 @@ print_infobox ($infobox, "infobox/board1.jpg");
     <b><?=_("Merkliste:")?></b>
     <br>
     <?=$_the_clip_form->getFormField("clip_content", array_merge(array('size' => $_the_clipboard->getNumElements()), (array)$_attributes['lit_select']))?>
-    <div align="center" style="background-image:url(<?= $GLOBALS['ASSETS_URL'] ?>images/border.jpg);background-repeat:repeat-y;margin:3px;"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" height="2" border="0"></div>
+    <div align="center"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" height="2" border="0"></div>
     <?=$_the_clip_form->getFormField("clip_cmd", $_attributes['lit_select'])?>
     <div align="center">
     <?=$_the_clip_form->getFormButton("clip_ok",array('style'=>'vertical-align:middle;margin:3px;'))?>

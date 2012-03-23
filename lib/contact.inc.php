@@ -352,7 +352,6 @@ function ShowUserInfo ($contact_id)
             while(list($key,$value) = each($userinfo)) {
                 $output .= "<tr><td class=\"steel1\" width=\"100\"><font size=\"2\">".$key.":</font></td><td class=\"steel1\" width=\"250\"><font size=\"2\">".$value."</font></td></tr>";
             }
-            $output .= "<tr><td class=\"steel1\" colspan=\"2\"><img src=\"".$GLOBALS['ASSETS_URL']."images/border.jpg\"></td></tr>";
         }
 
         $userinstinfo = GetInstInfo($user_id);
@@ -360,7 +359,6 @@ function ShowUserInfo ($contact_id)
             while(list($key,$value) = each($userinstinfo[$i])) {
                 $output .= "<tr><td class=\"steel1\" width=\"100\"><font size=\"2\">".$key.":</font></td><td class=\"steel1\" width=\"250\"><font size=\"2\">".$value."</font></td></tr>";
             }
-            $output .= "<tr><td class=\"steel1\" colspan=\"2\"><img src=\"".$GLOBALS['ASSETS_URL']."images/border.jpg\"></td></tr>";
         }
 
         $extra = GetExtraUserinfo ($contact_id);
@@ -368,7 +366,6 @@ function ShowUserInfo ($contact_id)
             while(list($key,$value) = each($extra)) {
                 $output .= "<tr><td class=\"steel1\" width=\"100\"><font size=\"2\">".htmlReady($key).":</font></td><td class=\"steel1\" width=\"250\"><font size=\"2\">".formatReady($value)."</font></td></tr>";
             }
-            $output .= "<tr><td class=\"steel1\" colspan=\"2\"><img src=\"".$GLOBALS['ASSETS_URL']."images/border.jpg\"></td></tr>";
         }
 
         $output .= '<tr><td align="center" class="steel1" colspan="2" width="350"><br>'.Avatar::getAvatar($user_id)->getImageTag(Avatar::NORMAL).'</td>';
@@ -378,7 +375,6 @@ function ShowUserInfo ($contact_id)
             while ($db->next_record()) {
                 $output .= "<tr><td class=\"steel1\" width=\"100\"><font size=\"2\">"._("Gruppe").":</font></td><td class=\"steel1\" width=\"250\"><a href=\"$PHP_SELF?view=gruppen&filter=".$db->f("statusgruppe_id")."\"><font size=\"2\">".htmlready($db->f("name"))."</font></a></td></tr>";
             }
-        $output .= "<tr><td class=\"steel1\" colspan=\"2\"><img src=\"".$GLOBALS['ASSETS_URL']."images/border.jpg\"></td></tr>";
         }
     }
     return $output;

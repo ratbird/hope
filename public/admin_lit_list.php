@@ -227,7 +227,6 @@ print_infobox ($infobox, "infobox/literaturelist.jpg");
     <b><?=_("Merkliste:")?></b>
     <br>
     <?=$_the_clip_form->getFormField("clip_content", array_merge(array('size' => $_the_clipboard->getNumElements()),(array) $_attributes['lit_select']))?>
-    <div align="center" style="background-image:url(<?= $GLOBALS['ASSETS_URL'] ?>images/border.jpg);background-repeat:repeat-y;margin:3px; height: 2px;"></div>
     <?=$_the_clip_form->getFormField("clip_cmd", $_attributes['lit_select'])?>
     <div align="center">
     <?=$_the_clip_form->getFormButton("clip_ok",array('style'=>'vertical-align:middle;margin:3px;'))?>

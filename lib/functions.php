@@ -804,21 +804,22 @@ function get_username($user_id = "")
  */
 function get_userid($username = "")
 {
-    static $cache;
+    static $cache = array();
     global $auth;
-    $author = "";
-    if (!$username || $username == $auth->auth['uname'])
+
+    if (!$username || $username == $auth->auth['uname']) {
         return $auth->auth['uid'];
-    if (isset($cache[$username])){
-        return $cache[$username];
-    } else {
-        $db=new DB_Seminar;
-        $db->query ("SELECT user_id  FROM auth_user_md5 WHERE username = '$username'");
-        while ($db->next_record()){
-            $author=$db->f("user_id");
-        }
-        return ($cache[$username] = $author);
     }
+
+    // Read id from database if no cached version is available
+    if (!isset($cache[$username])) {
+        $query = "SELECT user_id FROM auth_user_md5 WHERE username = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($username));
+        $cache[$username] = $statement->fetchColumn();
+    }
+
+    return $cache[$username];
 }
 
 

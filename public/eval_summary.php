@@ -567,7 +567,7 @@ PageLayout::setTitle(_("Evaluations-Auswertung"));
 
 if ($ausgabeformat == 2) {
     PageLayout::removeStylesheet('style.css');
-    PageLayout::addStylesheet('style_print.css');
+    PageLayout::addStylesheet('print.css');
 }
 $layout = $GLOBALS['template_factory']->open('layouts/base_without_infobox');
 

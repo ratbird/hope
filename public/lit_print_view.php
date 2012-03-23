@@ -32,7 +32,7 @@ include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 require_once('lib/classes/StudipLitList.class.php');
 
 PageLayout::removeStylesheet('style.css');
-PageLayout::addStylesheet('style_print.css'); // use special stylesheet for printing
+PageLayout::addStylesheet('print.css'); // use special stylesheet for printing
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head
 

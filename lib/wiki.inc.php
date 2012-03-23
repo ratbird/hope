@@ -990,7 +990,7 @@ function printWikiPage($keyword, $version) {
     global $SessSemName;
     $wikiData=getWikiPage($keyword,$version);
     PageLayout::removeStylesheet('style.css');
-    PageLayout::addStylesheet('style_print.css'); // use special stylesheet for printing
+    PageLayout::addStylesheet('print.css'); // use special stylesheet for printing
     include ('lib/include/html_head.inc.php'); // Output of html head
     echo "<p><em>$SessSemName[header_line]</em></p>";
     echo "<h1>$keyword</h1>";

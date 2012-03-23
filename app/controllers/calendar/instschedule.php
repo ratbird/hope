@@ -108,9 +108,9 @@ class Calendar_InstscheduleController extends AuthenticatedController
         PageLayout::addStyle($factory->render('calendar/stylesheet', $style_parameters));
 
         if (Request::option('printview')) {
-            PageLayout::addStylesheet('style_print.css');
+            PageLayout::addStylesheet('print.css');
         } else {
-            PageLayout::addStylesheet('style_print.css', array('media' => 'print'));
+            PageLayout::addStylesheet('print.css', array('media' => 'print'));
         }
     }
 

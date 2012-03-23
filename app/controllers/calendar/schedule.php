@@ -201,9 +201,9 @@ class Calendar_ScheduleController extends AuthenticatedController
 
         if (Request::option('printview')) {
             $this->calendar_view->setReadOnly();
-            PageLayout::addStylesheet('style_print.css');
+            PageLayout::addStylesheet('print.css');
         } else {
-            PageLayout::addStylesheet('style_print.css', array('media' => 'print'));
+            PageLayout::addStylesheet('print.css', array('media' => 'print'));
         }
 
         $this->calendar_view->setInsertFunction("function (entry, column, hour, end_hour) {

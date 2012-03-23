@@ -38,7 +38,7 @@ if (!isset($SessSemName[0]) || $SessSemName[0] == "") {
 // -- here you have to put initialisations for the current page
 if (!isset($htmlversion)) {
     PageLayout::removeStylesheet('style.css');
-    PageLayout::addStylesheet('style_print.css'); // use special stylesheet for printing
+    PageLayout::addStylesheet('print.css'); // use special stylesheet for printing
 }
 
 // Start of Output

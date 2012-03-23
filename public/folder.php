@@ -678,7 +678,7 @@ if ($folder_system_data['cmd'] == 'all') {
 
 $config = Config::get();
 if ($config['FILESYSTEM_MULTICOPY_ENABLE']) {
-    PageLayout::addStylesheet('ui.multiselect.css');
+    PageLayout::addStylesheet('jquery-ui-multiselect.css');
     PageLayout::addScript('ui.multiselect.js');
 }
 

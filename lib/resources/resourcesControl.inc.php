@@ -165,7 +165,7 @@ Kopf der Ausgabe
 /*****************************************************************************/
 if (isset($_REQUEST['print_view'])){
     PageLayout::removeStylesheet('style.css');
-    PageLayout::addStylesheet('style_print.css'); // use special stylesheet for printing
+    PageLayout::addStylesheet('print.css'); // use special stylesheet for printing
 }
 
 include ('lib/include/html_head.inc.php');

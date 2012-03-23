@@ -36,11 +36,9 @@ include('lib/seminar_open.php'); // initialise Stud.IP-Session
 
 if ($druck) {
     PageLayout::removeStylesheet('style.css');
-    PageLayout::addStylesheet('style_print.css');
-} elseif (($dump_id) || ($forum_dump_id) || ($wiki_dump_id)) {
-    PageLayout::removeStylesheet('style.css');
-    PageLayout::addStylesheet('style_dump.css');
+    PageLayout::addStylesheet('print.css');
 }
+
 PageLayout::setHelpKeyword("Basis.Archiv");
 PageLayout::setTitle(_("Archiv"));
 Navigation::activateItem('/search/archive');

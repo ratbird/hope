@@ -71,13 +71,13 @@ class PageLayout
      */
     public static function initialize()
     {
+        // set favicon
+        self::addHeadElement('link', array('rel' => 'shortcut icon', 'href' => Assets::image_path('favicon.ico')));
         // include jQuery + UI
         self::addStylesheet('jquery-ui-1.8.14.custom.css', array('media' => 'screen, print'));
-        self::addStylesheet('jquery-ui-studip-2.2.css', array('media' => 'screen, print'));
+        self::addStylesheet('jquery-ui-studip.css', array('media' => 'screen, print'));
         // include default CSS
-        self::addHeadElement('link', array('rel' => 'shortcut icon', 'href' => Assets::image_path('favicon.ico')));
         self::addStylesheet('style.css', array('media' => 'screen, print'));
-        self::addStylesheet('header.css', array('media' => 'screen, print'));
         self::addStylesheet('smiley.css', array('media' => 'screen, print'));
 
         self::setSqueezePackages("base");

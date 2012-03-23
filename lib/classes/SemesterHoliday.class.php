@@ -62,8 +62,8 @@ class SemesterHoliday extends SimpleORMap
         return SimpleORMap::deleteBySQL(__CLASS__, $where);
     }
 
-    /**
-     * returns all SemesterHoliday between given timestamps
+     /**
+     * returns all SemesterHoliday between given timestamps (starting AND ending within given timestamps)
      * @param integer $timestamp_start
      * @param integer $timestamp_end
      * @return array of SemesterHoliday
@@ -73,8 +73,7 @@ class SemesterHoliday extends SimpleORMap
         $ret = array();
         if ($timestamp_start < $timestamp_end) {
             foreach(self::getAll() as $holiday) {
-                if ( ($holiday->beginn >= $timestamp_start && $holiday->beginn <= $timestamp_end)
-                    || ($holiday->beginn < $timestamp_start && $holiday->ende <= $timestamp_end) ) {
+               if ($holiday->beginn >= $timestamp_start && $holiday->ende <= $timestamp_end) {
                     $ret[] = $holiday;
                 }
             }

@@ -155,16 +155,20 @@ class PluginManager
      */
     public function isPluginActivated ($id, $context)
     {
-        $db = DBManager::get();
+        $query = "SELECT 1 "
+               . "FROM plugins_default_activations "
+               . "JOIN seminar_inst ON (institutid = institut_id) "
+               . "WHERE pluginid = ? AND seminar_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($id, $context));
+        $default = $statement->fetchColumn();
 
-        $result = $db->query("SELECT * FROM plugins_default_activations
-                              JOIN seminar_inst ON (institutid = institut_id)
-                              WHERE pluginid = '$id' AND seminar_id = '$context'");
-        $default = $result->rowCount() > 0;
-
-        $result = $db->query("SELECT state FROM plugins_activated
-                              WHERE pluginid = '$id' AND (poiid = 'sem$context' OR poiid = 'inst$context')");
-        $state = $result->fetchColumn();
+        $query = "SELECT state "
+               . "FROM plugins_activated "
+               . "WHERE pluginid = ? AND (poiid = CONCAT('sem', ?) OR poiid = CONCAT('inst', ?))";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($id, $context, $context));
+        $state = DBManager::fetchColumn();
 
         return $default && $state !== 'off' || $state === 'on';
     }

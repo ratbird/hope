@@ -81,8 +81,10 @@ class PageLayout
         self::addStylesheet('jquery-ui-1.8.14.custom.css', array('media' => 'screen, print'));
         self::addStylesheet('jquery-ui-studip.css', array('media' => 'screen, print'));
         // include default CSS
-        self::addStylesheet('style.css', array('media' => 'screen, print'));
+        self::addStylesheet('style.css', array('media' => 'screen'));
         self::addStylesheet('smiley.css', array('media' => 'screen, print'));
+        //include print CSS
+        self::addStylesheet('style.css', array('media' => 'print'));
 
         self::setSqueezePackages("base");
     }

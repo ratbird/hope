@@ -740,10 +740,6 @@ td.tree-elbow-end img {
     background-image: url('../images/steel1kante.gif');
 }
 
-.steelkante {
-    background-image: url('../images/steelkante.jpg');
-}
-
 /* Standardhintergrund fuer Button-Leite unterhalb von Tabellen, Umbenennen: button_footer */
 .steel2, .steel2 td {
     background-color: #e9e9e9;

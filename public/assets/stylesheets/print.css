@@ -1,5 +1,5 @@
 /*******************************************************************************
-    Druck-Stylesheet für Stud.IP
+    Druck-Stylesheet fï¿½r Stud.IP
 *******************************************************************************/
 html, body {
     font-family: Arial, Helvetica, sans-serif;
@@ -129,14 +129,54 @@ div.window_heading {
 #layout_content {
     margin-right: 0px;
 }
+/*zeige stud.ip-title oben rechts*/
+div#barTopFont
+{
+	font-weight:normal;
+	display:block !important;
+	font-size:1.8em;
+	text-align:right;
+	width:100%;
+	padding:0;
+	margin:0;
+	text-style: italic !important;
+ 
+}
+/*studip-logo im footer - das sehen die internetausdrucker*/
+div#layout_footer *
+{
+	display:none;
+}
+div#layout_footer
+{
+	width:100%;
+	text-align:center;
+	margin-top:6em;
+}
 
-#header, #barTopFont, #barTopMenu, #barTopTools,
+div#layout_footer:after {
+    
+    content:  url('http://localhost/studip-trunk/assets/images/logos/logo2b.gif');
+}
+/*ende studip-logo */
+
+h1,h2,h3,h4
+{
+	font-size:1.5em;
+	}
+
+#header *, #barTopMenu, #barTopTools,
 #barTopStudip, #barBottomLeft, #barBottommiddle,
 #barBottomright, #barBottomshadow, #tabs, #tabs2,
-#layout_infobox, #schedule_icons, #edit_inst_entry,
-#layout_footer, #layout_sidebar, #barBottomContainer,
-#layout_push {
+#layout_infobox,td.infoboxrahmen,td.infobox, td.infobox-img, #schedule_icons, #edit_inst_entry,
+#layout_sidebar, #barBottomContainer,
+#layout_push, .messagebox_buttons a.close, a.button, button.button {
     display: none !important;
+}
+
+img
+{
+	border:0;
 }
 
 a, a:link, a:visited {

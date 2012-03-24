@@ -476,7 +476,7 @@ td.reiterunten {
 }
 
 table.header {
-    background-image: url('../images/fill1.gif');
+    background-color: #899ab9;
 }
 
 table.links1 {
@@ -510,13 +510,9 @@ table.default td {
 
 td.topicwrite {
     border: none;
-    background: #4A5681 url('../images/fill1write.gif');
+    background-color: #c02a2a;
     color: #FFFFFF;
-    font-size: 12pt;
-}
-
-td.header {
-    background-image: url('../images/fill1.gif');
+    height: 20px;
 }
 
 td.angemeldet {
@@ -1555,7 +1551,7 @@ div.overdiv div.title {
     margin: 0;
     padding: 0;
     height: 1.4em;
-    background: #4A5681 url('../images/fill1.gif');
+    background: #899ab9;
 }
 
 div.overdiv h4.title {
@@ -2035,7 +2031,7 @@ div.schedule_edit_entry > form {
 div.window_heading, div.window_heading_nodrag {
     font-weight: bold;
     text-align: center;
-    background-image: url('../images/fill1.gif');
+    background-color: #899ab9;
     color: #FFF;
     cursor: move;
     padding: 2px;
@@ -2234,9 +2230,8 @@ img.bookable_rooms_action {
 
 #archiv TD.topic {
     border: 0 solid #000000;
-    background-image: url('../images/fill1.gif');
     color: #FFFFFF;
-    background-color: #4A5681
+    background-color: #899ab9;
 }
 
 #archiv BODY {

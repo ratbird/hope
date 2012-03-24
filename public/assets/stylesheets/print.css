@@ -120,7 +120,7 @@ div.new_entry {
 div.window_heading {
     font-weight: bold;
     text-align: center;
-    background-image: url('../images/fill1.gif');
+    background-color: #899ab9;
     color: #FFF;
     cursor: move;
     padding: 2px;

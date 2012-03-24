@@ -127,7 +127,7 @@ class QuicksearchController extends AuthenticatedController
     private function cleanUp()
     {
         $count = 0;
-        $lifetime = $GLOBALS['AUTH_LIFETIME'] ? $GLOBALS['AUTH_LIFETIME'] : 30;
+        $lifetime = 30;
         foreach($_SESSION['QuickSearches'] as $query_id => $query) {
             if (time() - $query['time'] > $lifetime * 60) {
                 unset($_SESSION['QuickSearches'][$query_id]);

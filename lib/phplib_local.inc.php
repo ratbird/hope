@@ -275,7 +275,7 @@ class Seminar_Session extends Session {
             if($sid){
                 $session_vars = Seminar_Session::get_session_vars($sid);
                 $session_auth = $session_vars['auth']->auth;
-                if($session_auth['perm'] && $session_auth['exp'] > time()){
+                if($session_auth['uid'] && !in_array($session_auth['uid'], array('nobody','form'))) {
                     $state = 'authenticated';
                 } else {
                     $state = in_array($session_auth['uid'], array('nobody','form')) ? 'nobody' : false;
@@ -472,7 +472,7 @@ class Seminar_User extends PhpLibUser {
 class Seminar_Auth extends Auth {
     var $classname      = "Seminar_Auth";
 
-    var $lifetime       =  60;
+    var $lifetime       =  0;
 
     var $magic    = "Fdfglkdfsg";  // Challenge seed
     var $database_class = "DB_Seminar";
@@ -481,12 +481,6 @@ class Seminar_Auth extends Auth {
 
     //constructor
     function Seminar_Auth() {
-    }
-
-    function start(){
-        //load the lifetime from the settings
-        $this->lifetime = $GLOBALS['AUTH_LIFETIME'];
-        return parent::start();
     }
 
     function login_if($ok){

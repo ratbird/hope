@@ -104,7 +104,7 @@ if (!$my_about->check) {
     include ('lib/include/header.php');   // Output of Stud.IP head
     parse_window('error§' . _("Zugriff verweigert.").
                  "<br>\n<font size=-1 color=black>".
-                 sprintf(_("Wahrscheinlich ist Ihre Session abgelaufen. Wenn Sie sich länger als %s Minuten nicht im System bewegt haben, werden Sie automatisch abgemeldet. Bitte nutzen Sie in diesem Fall den untenstehenden Link, um zurück zur Anmeldung zu gelangen.<br> <br> Eine andere Ursache kann der Versuch des Zugriffs auf Userdaten, die Sie nicht bearbeiten d&uuml;rfen, sein. Nutzen Sie den untenstehenden Link, um zurück auf die Startseite zu gelangen."), $AUTH_LIFETIME).
+                 sprintf(_("Wahrscheinlich ist Ihre Session abgelaufen. Bitte nutzen Sie in diesem Fall den untenstehenden Link, um zurück zur Anmeldung zu gelangen.<br> <br> Eine andere Ursache kann der Versuch des Zugriffs auf Userdaten, die Sie nicht bearbeiten d&uuml;rfen, sein. Nutzen Sie den untenstehenden Link, um zurück auf die Startseite zu gelangen.")).
                  '</font>', '§', _("Zugriff auf Userdaten verweigert"),
                  sprintf(_("%s Hier%s geht es wieder zur Anmeldung beziehungsweise Startseite."),'<a href="index.php"><b>&nbsp;','</b></a>')."<br>\n&nbsp;");
 

@@ -6,7 +6,6 @@ please note the CONFIG.INC.PHP for the indivual settings of your installation!*/
 
 $UNI_NAME_CLEAN = 'Stud.IP 2.4';                           //the clean-name of your master-faculty (e.g. University of Göttingen), without html-entities (used for mail-system)
 $STUDIP_INSTALLATION_ID='demo-installation';      //unique identifier for installation
-$AUTH_LIFETIME = 0;                                    //the length of a session in minutes, zero means php session lifetime
 
 
 /*settings for database access

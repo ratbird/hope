@@ -13,7 +13,7 @@ $current_page = _('Kein Objekt gewählt')
 <div style="background-color: white; width: 70%; padding: 1em; margin: auto;">
     <?= MessageBox::exception(htmlentities($exception->getMessage()), array(
             _('Dieser Teil des Systems kann nur genutzt werden, wenn Sie vorher ein Objekt (Veranstaltung oder Einrichtung) gewählt haben.'),
-            sprintf(_('Dieser Fehler tritt auch auf, wenn Ihre Session abgelaufen ist. Wenn Sie sich länger als %s Minuten nicht im System bewegt haben, werden Sie automatisch abgemeldet. Bitte nutzen Sie in diesem Fall den untenstehenden Link, um zurück zur Anmeldung zu gelangen.'), $GLOBALS['AUTH_LIFETIME']))) ?>
+            sprintf(_('Dieser Fehler tritt auch auf, wenn Ihre Session abgelaufen ist. Bitte nutzen Sie in diesem Fall den untenstehenden Link, um zurück zur Anmeldung zu gelangen.')))) ?>
 
     <? if ($last_edited = Request::get('content') . Request::get('description') . Request::get('body')) : ?>
         <p>

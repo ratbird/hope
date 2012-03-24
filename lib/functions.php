@@ -584,14 +584,13 @@ function my_substr($what, $start, $end)
  * @global string  $SemUserStatus
  * @global array   $perm
  * @global boolean $rechte
- * @global integer $AUTH_LIFETIME
  *
  * @return string  the error msg. If no msg is returned, the user has write permission
  *
  */
 function have_sem_write_perm ()
 {
-    global $SemSecLevelWrite, $SemUserStatus, $perm, $rechte, $AUTH_LIFETIME;
+    global $SemSecLevelWrite, $SemUserStatus, $perm, $rechte;
 
     $error_msg="";
     if (!($perm->have_perm("root"))) {
@@ -615,7 +614,7 @@ function have_sem_write_perm ()
                     //$error_msg=$error_msg."Bitte melden Sie sich an.<br><br><a href=\"register1.php\"><b>Registrierung</b></a> wenn Sie noch keinen Account im System haben.<br><a href=\"index.php?again=yes\"><b>Login</b></a> f&uuml;r registrierte Benutzer.<br><br>";
                     break;
                 }
-            $error_msg=$error_msg."info§" . _("Dieser Fehler kann auch auftreten, wenn Sie zu lange inaktiv gewesen sind.") . " <br>" . sprintf(_("Wenn Sie l&auml;nger als %s Minuten keine Aktion mehr ausgef&uuml;hrt haben, m&uuml;ssen Sie sich neu anmelden."), $AUTH_LIFETIME) . "§";
+            $error_msg=$error_msg."info§" . _("Dieser Fehler kann auch auftreten, wenn Sie zu lange inaktiv gewesen sind.") . "§";
             }
         }
     return $error_msg;

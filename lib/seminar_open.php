@@ -161,7 +161,7 @@ global $i_page,
        $forum,$LastLogin, $CurrentLogin,
        $my_messaging_settings, $my_schedule_settings,
        $my_personal_sems, $my_studip_settings, $homepage_cache_own,
-       $CALENDAR_ENABLE, $AUTH_LIFETIME, $_language_path;
+       $CALENDAR_ENABLE, $_language_path;
 
 //get the name of the current page in $i_page
 $i_page = basename($_SERVER['PHP_SELF']);

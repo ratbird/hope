@@ -784,25 +784,17 @@ p.info {
 }
 
 /* --- Styles fuer printhead und printcontent ------------------------------- */
+td.printcontent {
+    background-color: #f3f5f8;
+    text-align: left;
+}
+
 td.printhead2 {
     background-image: url('../images/content_object_arr-right.png');
 }
 
 td.printhead3 {
     background-image: url('../images/content_object_arr-down.png');
-}
-
-td.colorline {
-    background-image: url('../images/colorline.gif');
-}
-
-td.colorline2 {
-    background-image: url('../images/colorline2.gif');
-}
-
-td.printcontent {
-    background-color: #f3f5f8;
-    text-align: left;
 }
 
 /* --- Styles fuer Terminkalender ------------------------------------------- */

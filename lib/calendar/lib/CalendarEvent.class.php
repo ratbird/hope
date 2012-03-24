@@ -595,10 +595,12 @@ class CalendarEvent extends Event
 
     function getEditorId()
     {
-        if ($this->editor != '' && $this->editor != $this->properties['STUDIP_AUTHOR_ID']) {
-            return $this->editor;
-        }
-        return false;
+        return $this->getProperty('STUDIP_EDITOR_ID');
+    }
+
+    public function getAuthorId()
+    {
+        return $this->getProperty('STUDIP_AUTHOR_ID');
     }
 
 }

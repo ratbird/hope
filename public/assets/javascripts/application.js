@@ -1752,10 +1752,11 @@ STUDIP.CalendarDialog = {
     dialog: null,
     calendarTimeout: null,
     openBox: function (title, content, element) {
-        var coord = "center"; //coordinates to give to dialogbox - "center" means center of window
+        var coord = "center"; //coordinates of the dialogbox - "center" means center of window
         if (element) {
             coord = jQuery(element).position();
-            coord = [coord.left + jQuery(element).width() + 2, coord.top - jQuery(window).scrollTop() + 30];
+            coord = [coord.left + jQuery(element).width() + 2,
+                coord.top - jQuery(window).scrollTop() + jQuery(element).height()];
         }
         if (STUDIP.CalendarDialog.dialog === null) {
             STUDIP.CalendarDialog.dialog =
@@ -1766,12 +1767,25 @@ STUDIP.CalendarDialog = {
                     title: title,
                     draggable: false,
                     modal: false,
-                    width: Math.min(600, jQuery(window).width() - 64),
+                    width: Math.min(jQuery(window).width() / 3, jQuery(window).width() - 64),
                     height: 'auto',
                     maxHeight: jQuery(window).height(),
+                    dialogClass: 'ui-dialog-calendar',
                     close: function () {
                         jQuery(this).remove();
                         STUDIP.CalendarDialog.dialog = null;
+                    },
+                    open: function () {
+                        var offs = jQuery('.ui-dialog-calendar').offset();
+                        if (coord[0] + 500 > jQuery(window).width()) {
+                            offs.left = coord[0]- jQuery('.ui-dialog-calendar').width()
+                                - jQuery(element).width() - 10;
+                        }
+                        if (coord[1]> jQuery(window).height() ) {
+                          window.alert(coord[1] + jQuery('.ui-dialog-calendar').height());
+                            offs.top = coord[1] - jQuery('.ui-dialog-calendar').height();
+                        }
+                        jQuery('.ui-dialog-calendar').offset(offs);
                     }
                 });
         } else {

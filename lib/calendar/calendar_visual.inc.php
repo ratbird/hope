@@ -391,9 +391,13 @@ function to_string_month_events(&$calendar, $day_timestamp, $max_events = NULL)
                 $html_title = fit_title($event->getTitle(), 1, 1, 15);
                 $ev_type = '';
             }
-
-            $out .= '<br><a class="inday" href="' . URLHelper::getLink('', array('cmd' => 'edit', 'termin_id' => $event->getId(), 'atime' => $day_timestamp, 'evtype' => $ev_type)) . '">';
-            $category_style = $event->getCategoryStyle();
+	    $out .= '<br><a class="inday" href="'
+                    . URLHelper::getLink('', array('cmd' => 'edit',
+                        'termin_id' => $event->getId(),
+                        'atime' => $day_timestamp,
+                        'evtype' => $ev_type))
+                    . '"' . js_hover($event) . '>';
+	    $category_style = $event->getCategoryStyle();
             $out .= sprintf("<span style=\"color: %s;\">%s</span></a>", $category_style['color'], $html_title);
             $count++;
         }
@@ -756,6 +760,73 @@ function fit_title($title, $cols, $rows, $max_length, $end_str = "...", $pad = T
     return $new_title;
 }
 
+
+
+
+function js_hover(Event $aterm)
+{
+    global $user;
+
+    $jscript_text = '<b>' . _("Zusammenfassung:") . ' </b>'
+            . htmlReady($aterm->getTitle()) . '<hr>';
+
+    if ($aterm instanceof SeminarEvent || $aterm instanceof SeminarCalendarEvent) {
+        $jscript_text .= '<b>' . _("Veranstaltung:") . ' </b> '
+                . htmlReady($aterm->getSemName()) . '<br>';
+    }
+    if ($aterm->getDescription()) {
+        $jscript_text .= '<b>' . _("Beschreibung:") . ' </b> '
+                . htmlReady(mila($aterm->getDescription(), 200)) . '<br>';
+    }
+    if ($categories = $aterm->toStringCategories()) {
+        $jscript_text .= '<b>' . _("Kategorie:") . ' </b> '
+                . htmlReady($categories) . '<br>';
+    }
+    if ($aterm->getLocation()) {
+        $jscript_text .= '<b>' . _("Ort:") . ' </b> '
+                . htmlReady($aterm->getLocation()) . '<br>';
+    }
+    if (!($aterm instanceof SeminarEvent)) {
+        if ($aterm->toStringPriority()) {
+            $jscript_text .= '<b>' . _("Priorit&auml;t:") . ' </b>'
+                    . htmlReady($aterm->toStringPriority()) . '<br>';
+        }
+        $jscript_text .= '<b>' . _("Zugriff:") . ' </b>'
+                . htmlReady($aterm->toStringAccessibility()) . '<br>';
+        $jscript_text .= '<b>' . _("Wiederholung:") . ' </b>'
+                . htmlReady($aterm->toStringRecurrence()) . '<br>';
+    }
+    
+    if (!($aterm instanceof SeminarEvent)) {
+        if (get_config('CALENDAR_GROUP_ENABLE')) {
+            $jscript_text .= sprintf(_('<span style="font-weight: bold;">Eingetragen am:</span> %s von %s'),
+                strftime('%x, %X', $aterm->getMakeDate()),
+                    htmlReady(get_fullname($aterm->getAuthorId(), 'no_title')))
+                . '<br>';
+            if ($aterm->getMakeDate() < $aterm->getChangeDate()) {
+                $jscript_text .= sprintf(_('<span style="font-weight: bold;">Zuletzt bearbeitet am:</span> %s von %s'),
+                    strftime('%x, %X', $aterm->getChangeDate()),
+                        htmlReady(get_fullname($aterm->getEditorId(), 'no_title')))
+                    . '<br>';
+            }
+        } else {
+            $jscript_text .= sprintf(_('<span style="font-weight: bold;">Eingetragen am:</span> %s'),
+                    strftime('%x, %X', $aterm->getMakeDate())) . '<br>';
+            if ($aterm->getMakeDate() < $aterm->getChangeDate()) {
+                $jscript_text .= sprintf(_('<span style="font-weight: bold;">Zuletzt bearbeitet am:</span> %s'),
+                    strftime('%x, %X', $aterm->getChangeDate())) . '<br>';
+            }
+        }
+    }
+    $jscript_text .= '<br>';
+
+    return " onmouseover=\"STUDIP.CalendarDialog.openCalendarHover('" . JSReady($aterm->toStringDate('SHORT_DAY')) . "', '" . JSReady($jscript_text, 'contact') . "', this);\" onmouseout=\"STUDIP.CalendarDialog.closeCalendarHover();\"";
+}
+
+
+
+
+/*
 function js_hover($aterm)
 {
     global $forum, $auth;
@@ -802,6 +873,11 @@ function js_hover($aterm)
 
     return '';
 }
+*/
+
+
+
+
 
 function info_icons(&$event)
 {
@@ -831,20 +907,6 @@ function info_icons(&$event)
     }
 
     return $out;
-}
-
-function print_jscript_hover()
-{
-    global $forum, $auth;
-
-    // JS switched on in browser and "My Stud.IP"?
-    if ($forum["jshover"] == 1 && $auth->auth["jscript"]) {
-        echo "<script language=\"JavaScript\">";
-        echo "var ol_textfont = \"Arial\"";
-        echo "</script>";
-        echo "<div id=\"overDiv\" style=\"position:absolute; visibility:hidden; z-index:1000;\"></div>";
-        echo "<script language=\"JavaScript\" src=\"overlib.js\"></script>";
-    }
 }
 
 function quick_search_form($search_string, $cmd, $atime)

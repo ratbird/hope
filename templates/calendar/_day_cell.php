@@ -44,11 +44,11 @@ if ($calendar->view instanceof DbCalendarDay) {
                     <?= fit_title($title_out, $em['colsp'][$row], 1, $title_length); ?>
                 <? else : ?>
                     <? if ($em['term'][$row][$j] instanceof SeminarEvent) : ?>
-                        <a style="color:#fff;" href="<?= URLHelper::getLink('', array('cmd' => 'edit', 'atime' => ($day->getStart() + $em['term'][$row][$j]->getStart() % 86400), 'termin_id' => $em['term'][$row][$j]->getId(), 'evtype' => 'sem')) ?>"><?= fit_title($title_out, $em['colsp'][$row], 1, $title_length); ?></a>
+                        <a style="color:#fff;" href="<?= URLHelper::getLink('', array('cmd' => 'edit', 'atime' => ($day->getStart() + $em['term'][$row][$j]->getStart() % 86400), 'termin_id' => $em['term'][$row][$j]->getId(), 'evtype' => 'sem')) ?>" <?= js_hover($day->events[$em['mapping'][$row][$j]]); ?>><?= fit_title($title_out, $em['colsp'][$row], 1, $title_length); ?></a>
                     <? elseif ($em['term'][$row][$j] instanceof SeminarCalendarEvent) : ?>
-                        <a style="color:#fff;" href="<?= URLHelper::getLink('', array('cmd' => 'edit', 'atime' => ($day->getStart() + $em['term'][$row][$j]->getStart() % 86400), 'termin_id' => $em['term'][$row][$j]->getId(), 'evtype' => 'semcal')) ?>"><?= fit_title($title_out, $em['colsp'][$row], 1, $title_length); ?></a>
+                        <a style="color:#fff;" href="<?= URLHelper::getLink('', array('cmd' => 'edit', 'atime' => ($day->getStart() + $em['term'][$row][$j]->getStart() % 86400), 'termin_id' => $em['term'][$row][$j]->getId(), 'evtype' => 'semcal')) ?>" <?= js_hover($day->events[$em['mapping'][$row][$j]]); ?>><?= fit_title($title_out, $em['colsp'][$row], 1, $title_length); ?></a>
                     <? else : ?>
-                        <a style="color:#fff;" href="<?= URLHelper::getLink('', array('cmd' => 'edit', 'atime' => ($day->getStart() + $em['term'][$row][$j]->getStart() % 86400), 'termin_id' => $em['term'][$row][$j]->getId())) ?>"><?= fit_title($title_out, $em['colsp'][$row], 1, $title_length); ?></a>
+                        <a style="color:#fff;" href="<?= URLHelper::getLink('', array('cmd' => 'edit', 'atime' => ($day->getStart() + $em['term'][$row][$j]->getStart() % 86400), 'termin_id' => $em['term'][$row][$j]->getId())) ?>" <?= js_hover($day->events[$em['mapping'][$row][$j]]); ?>><?= fit_title($title_out, $em['colsp'][$row], 1, $title_length); ?></a>
                     <? endif ?>
                 <? endif ?>
             </td>

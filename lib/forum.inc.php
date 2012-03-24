@@ -977,7 +977,7 @@ function ForumStriche($forumposting) {
     if ($forumposting["lonely"]==FALSE)
         $striche.= "<td class=\"blank tree-indent\" nowrap background=\"".$GLOBALS['ASSETS_URL']."images/forumstrichgrau.gif\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\"></td>";
     else
-        $striche.= "<td class=\"blank tree-indent\" nowrap background-color: #f3f5f8\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\"></td>";
+        $striche.= "<td class=\"blank tree-indent\" nowrap background-color: #f3f5f8;><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\"></td>";
     return $striche;
 }
 
@@ -1550,7 +1550,7 @@ $db->query($query);
 
 ?>
 <table border=0 width="100%" cellspacing="0" cellpadding="0" align="center" id="main_content"><tr>
-<th align="left" width="45%" style="padding-left: 5px">
+<td class="steelgraudunkel" align="left" width="45%" style="padding-left: 5px">
 <?
 
 if ($forum["view"]=="flatfolder")
@@ -1571,9 +1571,9 @@ if ($forum["search"]!="" && $forum["view"]=="search") {
 } else {
    echo _('Forenbeiträge: ') . $forum["forumsum"];
 }
-echo "</th>";
+echo "</td>";
 
-echo "<td class=\"table_foot\" align=\"center\" width=\"10%\">";
+echo "<td class=\"steelgraudunkel\" align=\"center\" width=\"10%\">";
 if ($forum["flatallopen"]=="TRUE")
     echo "<a href=\"".URLHelper::getLink(
         "?flatviewstartposting=".$forum["flatviewstartposting"]."&flatallopen=FALSE")."\"><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif' border=0 height='10' align=middle><img src='".$GLOBALS['ASSETS_URL']."images/close_all.png' border=0 " . tooltip(_("Alle zuklappen")) . " align=middle><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif' border=0></a>";
@@ -1581,7 +1581,7 @@ else
     echo "<a href=\"".URLHelper::getLink(
         "?flatviewstartposting=".$forum["flatviewstartposting"]."&flatallopen=TRUE")."\"><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif' border=0 height='10' align=middle><img src='".$GLOBALS['ASSETS_URL']."images/open_all.png' border=0 " . tooltip(_("Alle aufklappen")) . " align=middle><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif' border=0></a>";
 
-echo "</td><td class=\"table_foot\" align=\"right\" width=\"45%\">";
+echo "</td><td class=\"steelgraudunkel\" align=\"right\" width=\"45%\">";
 echo forum_print_navi($forum)."&nbsp;&nbsp;&nbsp;".forum_get_index($forumposting)."&nbsp;&nbsp;&nbsp;";
 echo "</td></tr></table>";
 
@@ -1628,16 +1628,16 @@ while($db->next_record()){
 
 echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" valign=\"top\" align=\"center\">";
 echo "  <tr>";
-echo "      <td class=\"table_foot\" valign=\"top\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" border=\"0\" height=\"4\">";
+echo "      <td class=\"blank\" valign=\"top\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" border=\"0\" height=\"4\">";
 echo "</td>";
 echo "  </tr>";
 echo "  <tr>";
-echo "      <td class=\"table_foot\" align=\"right\" ><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" border=\"0\" height=\"10\" align=\"middle\">";
+echo "      <td class=\"steelgraudunkel\" align=\"right\" ><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" border=\"0\" height=\"10\" align=\"middle\">";
 echo forum_print_navi($forum)."&nbsp;&nbsp;&nbsp;".forum_get_index($forumposting);
 echo "      &nbsp;&nbsp;</td>";
 echo "  </tr>";
 echo "  <tr>";
-echo "      <td class=\"table_foot\" class=\"blank\">&nbsp;<br><br>";
+echo "      <td class=\"blank\">&nbsp;<br><br>";
 echo "      </td>";
 echo "  </tr>";
 echo "</table>";
@@ -1737,16 +1737,16 @@ function DisplayFolders ($open=0, $update="", $zitat="") {
         // HTML
 
         echo "<table class=\"blank\" width=\"100%\" border=0 cellpadding=0 cellspacing=0><tr>";
-        echo "<th width=\"33%\"><b>&nbsp;" . _("Thema") . "</font></b></th>";
-        echo "<th width=\"33%\" align=\"center\">&nbsp;&nbsp;";
+        echo "<td class=\"steelgraudunkel\" width=\"33%\"><b><font size=\"-1\">&nbsp;" . _("Thema") . "</font></b></td>";
+        echo "<td class=\"steelgraudunkel\" width=\"33%\" align=\"center\"><font size=\"-1\">&nbsp;&nbsp;";
         if ($user->id != "nobody") { // Nobody kriegt nur treeview
             if ($forum["view"] == "tree")
                 echo "<a href=\"".URLHelper::getLink("?view=mixed&themeview=mixed")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumtree.gif\" border=\"0\" align=\"top\"></a>";
             else
                 echo "<a href=\"".URLHelper::getLink("?view=tree&themeview=tree")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumflat.gif\" border=\"0\" align=\"top\"></a>";
         }
-        echo "</font><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" border=0 height=\"20\" align=\"middle\"></th>";
-        echo "<th width=\"33%\"align=\"right\">" . _("<b>Forenbeiträge</b> / letzter Eintrag") . "&nbsp;&nbsp;".forum_get_index($forumposting)."&nbsp;&nbsp;</font></th></tr></table>\n";
+        echo "</font><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" border=0 height=\"20\" align=\"middle\"></td>";
+        echo "<td class=\"steelgraudunkel\" width=\"33%\"align=\"right\"><font size=\"-1\">" . _("<b>Forenbeiträge</b> / letzter Eintrag") . "&nbsp;&nbsp;".forum_get_index($forumposting)."&nbsp;&nbsp;</font></td></tr></table>\n";
         while ($db->next_record()) {
             $forumposting["id"] = $db->f("topic_id");
             $forumposting["name"] = $db->f("name");
@@ -1778,10 +1778,10 @@ function DisplayFolders ($open=0, $update="", $zitat="") {
         }
     }
     echo "<table class=blank border=0 cellpadding=0 cellspacing=0 width=\"100%\"><tr><td class='blank'><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif' border=0 height='4'></td></tr><tr>";
-    echo "<th align=center><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif' border=0 height='20' align=middle>";
+    echo "<td align=center class=steelgraudunkel><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif' border=0 height='20' align=middle>";
     if (($perm->have_perm("autor")) && (($rechte) || ($SEM_CLASS[$SEM_TYPE[$SessSemName["art_num"]]["class"]]["topic_create_autor"])))
         echo "<a href='".URLHelper::getLink("?neuesthema=TRUE#anker")."'><img src='".$GLOBALS['ASSETS_URL']."images/icons/16/blue/arr_1down.png' border=0 align=middle " . tooltip(_("Neues Thema anlegen")) . "><img src='".$GLOBALS['ASSETS_URL']."images/icons/16/blue/add/folder-empty.png' " . tooltip(_("Neues Thema anlegen")) . " border=0 align=middle></a>";
-    echo "</th></tr><tr><td class=blank>&nbsp; <br>&nbsp; <br></td></tr></table>\n";
+    echo "</td></tr><tr><td class=blank>&nbsp; <br>&nbsp; <br></td></tr></table>\n";
 
 
 /*

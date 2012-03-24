@@ -64,7 +64,7 @@
 
     </table>
     <? if($anzahl>20) :?>
-    <div style="text-align:right; padding-top: 2px; padding-bottom: 2px" class="steelgraudunkel">
+    <div style="text-align:right;" class="table_foot">
     <?= $GLOBALS['template_factory']->render('shared/pagechooser', array("perPage" => 20, "num_postings" => $anzahl, "page" => $page, "pagelink" => $link)) ?>
     </div>
     <? endif;?>

@@ -1,9 +1,5 @@
 /*******************************************************************************
   Standard-Stylesheet für Stud.IP im Safire-Design
-  Infos:
-  - Vererbung beachten und doppelte Eigenschaften vermeiden
-  - Farben nur in hex (#666666)
-  - mehrere Klassen mit gleichen eigenschaften zusammenfassen
 *******************************************************************************/
 html, body {
     height: 100%;
@@ -15,7 +11,7 @@ html {
 
 /* --- Schrift (Vorgaben: Typ, Größe, Farbe --------------------------------- */
 body, input, textarea {
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'Helvetica Neue', 'Helvetica', Arial, sans-serif;
     font-size: 10pt;
     color: #000000;
 }
@@ -1026,7 +1022,6 @@ a.button, button.button {
     padding: 5px 15px 5px 15px;
     border: 1px solid #1e3e70;
     background-color: #cddae4;
-    font-family: "Helvetica Neue", "Helvetica", Arial, Verdana, sans-serif;
     text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
     font-size: 11px;
     line-height: 130%;
@@ -2186,12 +2181,10 @@ tr.sortable th.sortdesc {
 
 .steel_with_graulight_bg {
     background-image: url('../images/steel_with_graulight_bg.jpg');
-    font-family: Arial, Helvetica, sans-serif;
 }
 
 .steel_with_steel1_bg {
     background-image: url('../images/steel_with_steel1_bg.jpg');
-    font-family: Arial, Helvetica, sans-serif;
 }
 
 .steel3 {
@@ -2206,7 +2199,6 @@ h3.eval {
     font-size: 1.3em;
     color: #000000;
     font-weight: bold;
-    font-family: Arial, Helvetica, sans-serif;
 }
 
 /* skiplink-area highlighting -------------------------------------------- */
@@ -2281,13 +2273,11 @@ img.bookable_rooms_action {
     border: 0 solid #000000;
     background-image: url('../images/fill1.gif');
     color: #FFFFFF;
-    font-family: Arial, Helvetica, sans-serif;
     background-color: #4A5681
 }
 
 #archiv BODY {
     background-color: #91A2B6;
-    font-family: Arial, Helvetica, sans-serif
 }
 
 #archiv TABLE.blank {
@@ -2302,22 +2292,18 @@ img.bookable_rooms_action {
     border: 0 solid #000000;
     background: #B5B5B5 url('../images/steelgraudunkel.gif');
     color: #FFFFFF;
-    font-family: Arial, Helvetica, sans-serif;
 }
 
 #archiv p, #archiv td, #archiv form, #archiv ul {
-    font-family: Arial, Helvetica, sans-serif;
     color: #000000
 }
 
 #archiv h1, #archiv h2, #archiv h3 {
-    font-family: Arial, Helvetica, sans-serif;
     color: #213499;
     font-weight: bold;
 }
 
 #archiv h1.topic {
-    font-family: Arial, Helvetica, sans-serif;
     color: #FFFFFF;
     font-weight: bold;
     font-size: 1.6em;
@@ -2328,7 +2314,6 @@ img.bookable_rooms_action {
 }
 
 h2.topic, h3.topic {
-    font-family: Arial, Helvetica, sans-serif;
     color: #FFFFFF;
     font-weight: bold;
     font-size: 1.2em;

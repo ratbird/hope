@@ -2273,36 +2273,12 @@ img.bookable_rooms_action {
 }
 
 /* --- archiv -------------------------------------------------------------- */
-#archiv A:visited {
-    color: #213499;
-    text-decoration: none;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-#archiv A:link {
-    color: #213499;
-    text-decoration: none;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-#archiv A:hover {
-    color: #FF3333;
-    text-decoration: none;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-#archiv A:active {
-    color: #FF3333;
-    text-decoration: none;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
 #archiv table {
     background-color: #FFFFFF
 }
 
 #archiv TD.topic {
-    border: 0px solid #000000;
+    border: 0 solid #000000;
     background-image: url('../images/fill1.gif');
     color: #FFFFFF;
     font-family: Arial, Helvetica, sans-serif;
@@ -2323,11 +2299,10 @@ img.bookable_rooms_action {
 }
 
 #archiv th {
-    border: 0px solid #000000;
+    border: 0 solid #000000;
     background: #B5B5B5 url('../images/steelgraudunkel.gif');
     color: #FFFFFF;
     font-family: Arial, Helvetica, sans-serif;
-    background-color: #B5B5B5
 }
 
 #archiv p, #archiv td, #archiv form, #archiv ul {

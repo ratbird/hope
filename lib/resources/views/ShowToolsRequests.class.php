@@ -441,7 +441,7 @@ class ShowToolsRequests
                     ?>
                     </font>
                 </td>
-                <td style="border-left:1px dotted black; background-image: url('<?= $GLOBALS['ASSETS_URL'] ?>images/steel4.jpg')" width="51%" rowspan="3" valign="top">
+                <td style="border-left:1px dotted black; background-color: #f3f5f8" width="51%" rowspan="3" valign="top">
                     <table cellpadding="2" cellspacing="0" border="0" width="90%">
                         <tr>
                             <td width="70%">

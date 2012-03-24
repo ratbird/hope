@@ -66,7 +66,7 @@ $chatServer->caching = true;
     <title>Chat Nicklist</title>
     <link rel="stylesheet" href="<?=$GLOBALS['ASSETS_URL']?>stylesheets/style.css" type="text/css">
 </head>
-<body style="background-color:#EEEEEE;background-image:url('<?= $GLOBALS['ASSETS_URL'] ?>images/steel1.jpg');">
+<body style="background-color:#EEEEEE; background-color: #f3f5f8;">
 <?
 //darf ich überhaupt hier sein ?
 if (!$chatServer->isActiveUser($user->id,$chatid)) {

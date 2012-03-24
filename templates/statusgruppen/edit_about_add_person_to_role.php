@@ -7,7 +7,7 @@ use Studip\Button, Studip\LinkButton;
 </tr>
 <tr>
     <td class="blank" valign="top">
-        <div style="padding-left: 10px; background-image: url('<?=$GLOBALS['ASSETS_URL']?>/images/steel1.jpg');">
+        <div style="padding-left: 10px; background-color: #f3f5f8;">
         <form action="<?= URLHelper::getLink('?view=Karriere') ?>" method="post">
             <?= CSRFProtection::tokenTag() ?>
             <br>

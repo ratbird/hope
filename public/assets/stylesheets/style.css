@@ -484,7 +484,15 @@ table.links1 {
 }
 
 table.toolbar, td.toolbar, .steel, td.printhead {
-    background-image: url('../images/steelblau.png');
+   background-color: #e3eaf6;
+   border-top: 1px solid #899ab9;
+   background-image: -webkit-gradient(linear, left top, left bottom, from(#cdd9ed), to(#e3eaf6));
+   background-image: -webkit-linear-gradient(top, #cdd9ed 0%, #e3eaf6 40%, #e3eaf6 100%);
+   background-image: -moz-linear-gradient(top, #cdd9ed 0%, #e3eaf6 40%, #e3eaf6 100%);
+   background-image: -ms-linear-gradient(top, #cdd9ed 0%, #e3eaf6 40%, #e3eaf6 100%);
+   background-image: -o-linear-gradient(top, #cdd9ed 0%, #e3eaf6 40%, #e3eaf6 100%);
+   background-image: linear-gradient(top, #cdd9ed 0%, #e3eaf6 40%, #e3eaf6 100%);*
+   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#cdd9ed', endColorstr='#e3eaf6');
 }
 
 table.default {
@@ -956,7 +964,7 @@ td.weekend {
 }
 
 td.weekday {
-    background-image: url('../images/steel1.jpg');
+    background-color: #f3f5f8;
 }
 
 td.current {
@@ -974,7 +982,7 @@ td.month {
 }
 
 td.lightmonth {
-    background-image: url('../images/steel1.jpg');
+    background-color: #f3f5f8;
 }
 
 /* --- Styles fuer TerminZeile ---------------------------------------------- */

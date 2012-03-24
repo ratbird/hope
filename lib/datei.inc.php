@@ -1979,12 +1979,12 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
             ) { //Aenderungsmodus, Anker + Formular machen, Font tag direkt ausgeben (muss ausserhalb einer td stehen!
         $titel= "</a><input style=\"font-size:8 pt; width: 400px;\" type=\"text\" size=\"20\" maxlength=\"255\" aria-label=\"Ordnername eingeben\" name=\"change_name\" value=\"".htmlReady($result['name'])."\" >";
         if ($rechte && $folder_tree->permissions_activated)
-            $titel .= '&nbsp;<font color="red">['.$folder_tree->getPermissionString($result["folder_id"]).']</font>';
+            $titel .= '&nbsp;['.$folder_tree->getPermissionString($result["folder_id"]).']';
     }   else {
         //create a link onto the titel, too
         if ($rechte && $folder_tree->permissions_activated ) {
             $tmp_titel .= '&nbsp;';
-            $tmp_titel .= '<font color="red">['.$folder_tree->getPermissionString($result["folder_id"]).']</font>';
+            $tmp_titel .= '['.$folder_tree->getPermissionString($result["folder_id"]).']';
         }
         if ($document_count > 1)
             $titel= $tmp_titel."</span>&nbsp;&nbsp;" . sprintf(_("(%s Dokumente)"), $document_count);

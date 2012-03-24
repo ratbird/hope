@@ -100,7 +100,7 @@ class ShowTreeRow {
                 if ($weitere)
                     $striche.= "<td class=\"blank tree-indent\" nowrap background=\"".$GLOBALS['ASSETS_URL']."images/forumstrichgrau.gif\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\"></td>";
                 else
-                    $striche.= "<td class=\"blank tree-indent\" nowrap background=\"".$GLOBALS['ASSETS_URL']."images/steel1.jpg\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\"></td>";
+                    $striche.= "<td class=\"blank tree-indent\" nowrap background-color: #f3f5f8\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\"></td>";
 
                 echo $striche;
 

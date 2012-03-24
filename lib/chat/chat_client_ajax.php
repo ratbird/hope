@@ -179,7 +179,7 @@ include 'sajax_chat_functions.php';
     
     </script>
 </head>
-<body style="background-color:#EEEEEE;background-image:url('<?= $GLOBALS['ASSETS_URL'] ?>images/steel1.jpg');">
+<body style="background-color:#EEEEEE; background-color: #f3f5f8;">
 <div id="chat_msg" style="margin-left:2px;font-size:10pt;position:absolute;top:0px;left:0px;width:440px;height:418px;overflow:auto">
 <?
 echo "\n<b>" . sprintf(_("Hallo %s,<br> willkommen im Raum: %s"),htmlReady($chatServer->getNick($user->id,$chatid)),

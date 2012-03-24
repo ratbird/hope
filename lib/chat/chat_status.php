@@ -100,7 +100,7 @@ $chatServer->caching = true;
 </script>
 
 </head>
-<body style="background-color:#EEEEEE;background-image:url('<?= $GLOBALS['ASSETS_URL'] ?>images/steel1.jpg');">
+<body style="background-color:#EEEEEE; background-color: #f3f5f8;">
 <?
 //darf ich überhaupt hier sein ?
 if (!$chatServer->isActiveUser($user->id,$chatid)) {

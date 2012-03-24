@@ -24,7 +24,7 @@ td.rahmen_white {
 
 td.rahmen_steel {
     border: 1px solid #000000;
-    background-image: url('../images/steel1.jpg');
+    background-color: #f3f5f8;
 }
 
 td.rahmen_steelgraulight {

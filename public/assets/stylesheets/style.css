@@ -471,10 +471,6 @@ img.preview, video.preview, audio.preview {
 }
 
 /* --- Tabellen ------------------------------------------------------------- */
-td.reiterunten {
-    background-image: url('../images/reiter3.jpg');
-}
-
 table.header {
     background-color: #899ab9;
 }
@@ -743,8 +739,16 @@ td.tree-elbow-end img {
    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#b8c6db', endColorstr='#cedbef');
 }
 
+
 .red_gradient {
-    background: #FFFFFF url('../images/red_gradient.jpg');
+   border-top: 2px solid #b35357;
+   background-image: -webkit-gradient(linear, left top, left bottom, from(#e3969a), to(#e8b6b9));
+   background-image: -webkit-linear-gradient(top, #e3969a 0%, #e8b6b9 60%, #e8b6b9 100%);
+   background-image: -moz-linear-gradient(top, #e3969a 0%, #e8b6b9 60%, #e8b6b9 100%);
+   background-image: -ms-linear-gradient(top, #e3969a 0%, #e8b6b9 60%, #e8b6b9 100%);
+   background-image: -o-linear-gradient(top, #e3969a 0%, #e8b6b9 60%, #e8b6b9 100%);
+   background-image: linear-gradient(top, #e3969a 0%, #e8b6b9 60%, #e8b6b9 100%);*
+   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e3969a', endColorstr='#e8b6b9');
 }
 
 .quote {

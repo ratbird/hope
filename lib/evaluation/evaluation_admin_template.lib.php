@@ -127,7 +127,7 @@ class EvalTemplateGUI {
      /* Likertskalen ------------------------------------------------- */
      $td = new HTML ("td");
      $td->addAttr("align","right");
-     $td->addAttr("class","steel1kante");
+     $td->addAttr("class","steelkante");
      $tr = new HTML ("tr");
 
      $b = new HTM( "b" );
@@ -136,7 +136,7 @@ class EvalTemplateGUI {
      $tr->addContent($td);
 
      $td = new HTML ("td");
-     $td->addAttr("class","steel1kante");
+     $td->addAttr("class","steelkante");
 
      /* create button ------------------------------------ */
      $input = new HTMpty( "input" );
@@ -189,7 +189,7 @@ class EvalTemplateGUI {
 
      /* Normale / Multiplechoice ---------------------------------------- */
      $td = new HTML ("td");
-     $td->addAttr("class","steel1kante");
+     $td->addAttr("class","steelkante");
      $tr = new HTML ("tr");
      $td->addAttr("align","right");
 
@@ -199,7 +199,7 @@ class EvalTemplateGUI {
      $tr->addContent($td);
 
      $td = new HTML ("td");
-     $td->addAttr("class","steel1kante");
+     $td->addAttr("class","steelkante");
 
      /* create button ------------------------------------ */
      $input = new HTMpty( "input" );
@@ -254,7 +254,7 @@ class EvalTemplateGUI {
      /* Freitext ----------------------------------------------------- */
 
     $td = new HTML ("td");
-    $td->addAttr("class","steel1kante");
+    $td->addAttr("class","steelkante");
     $tr = new HTML ("tr");
     $td->addAttr("align","right");
 
@@ -264,7 +264,7 @@ class EvalTemplateGUI {
     $tr->addContent($td);
 
     $td = new HTML ("td");
-    $td->addAttr("class","steel1kante");
+    $td->addAttr("class","steelkante");
     $input = new HTMpty( "input" );
     $input->attr( "type", "image" );
     $input->attr( "name", "template_createfree_scale_button" );

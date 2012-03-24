@@ -115,12 +115,12 @@ $html = "\n" . $cssSw->GetHoverJSFunction() . "\n";
         $html .="   </tr>\n"
               . "   <tr ".$cssSw->getHover().">\n";
         if ($searchString == NULL){
-            $html .="    <td class=\"steel1kante\">\n"
+            $html .="    <td class=\"steelkante\">\n"
                   . "     <br><font size=\"-1\">\n"
                   . $label["searchresults_no_string"]."<br><br>\n";
         }
         else{
-            $html .="    <td class=\"steel1kante\">\n"
+            $html .="    <td class=\"steelkante\">\n"
                   . "     <br><font size=\"-1\">\n"
                   . $label["searchresults_no_results"]."<br><br>\n";
         }
@@ -151,7 +151,7 @@ $html = "\n" . $cssSw->GetHoverJSFunction() . "\n";
         $html .="    <tr><td class=\"steel\" style=\"vertical-align:bottom;\" align=\"left\" colspan=\"4\" height=\"26\"><font size=\"-1\"><b>$typen_value:</b></font></td></tr>\n";
         if ($ranges["$typen_key"]){
             foreach ($ranges["$typen_key"] as $range) {
-                if ($counter == 0)          $displayclass = "steel1kante";
+                if ($counter == 0)          $displayclass = "steelkante";
                 elseif (($counter % 2) == 0)    $displayclass = "steel1";
                 else                            $displayclass = "steelgraulight";
                 $html .="   <tr ".$cssSw->getHover().">"
@@ -166,7 +166,7 @@ $html = "\n" . $cssSw->GetHoverJSFunction() . "\n";
         }
         else{
                 $html .="   <tr>"
-                      . "<td class=\"steel1kante\" colspan=\"4\"><font size=\"-1\">".$label["searchresults_no_results_range"]."</font></td>"
+                      . "<td class=\"steelkante\" colspan=\"4\"><font size=\"-1\">".$label["searchresults_no_results_range"]."</font></td>"
                       . "   </tr>\n";
         }
         reset($ranges);
@@ -342,7 +342,7 @@ function printVoteTable($mode, $votes = NULL, $openID = NULL)
 
      // print tablerows until all votedata is plotted
      while($counter < $arraysize){
-        if ($counter == 0)              $displayclass = "steel1kante";
+        if ($counter == 0)              $displayclass = "steelkante";
         elseif (($counter % 2) == 0)    $displayclass = "steel1";
         else                            $displayclass = "steelgraulight";
 
@@ -473,7 +473,7 @@ reset($votes);
 // open/close all
     if (($mode != VOTE_STATE_NEW) && (!empty($votes))){
         $html .="   <tr>\n";
-        if (($counter % 2) == 0)    $html .="    <td class=\"steel1kante\" colspan=\"9\">\n";
+        if (($counter % 2) == 0)    $html .="    <td class=\"steelkante\" colspan=\"9\">\n";
         else                        $html .="    <td class=\"steelkante\" colspan=\"9\">\n";
         $html .="    <center>\n";
         if (($mode == VOTE_STATE_ACTIVE) && ($openID == ("openallactive")))
@@ -494,15 +494,15 @@ reset($votes);
 //** displays empty data-cells **
    else {
       $html .= "    <tr>\n"
-     . makeTableDataCell("blindgif","steel1kante","center","10","1")
-     . makeTableDataCell("blindgif","steel1kante","center","18","1")
-     . makeTableDataCell($fontstart.$no_votes_message.$fontend,"steel1kante","left","","1")
-     . makeTableDataCell("blindgif","steel1kante","center","120")
-     . makeTableDataCell("blindgif","steel1kante","center","93")
-     . makeTableDataCell("blindgif","steel1kante","center","93")
-     . makeTableDataCell("blindgif","steel1kante","center","93")
-     . makeTableDataCell("blindgif","steel1kante","center","93")
-     . makeTableDataCell("blindgif","steel1kante","center","93")
+     . makeTableDataCell("blindgif","steelkante","center","10","1")
+     . makeTableDataCell("blindgif","steelkante","center","18","1")
+     . makeTableDataCell($fontstart.$no_votes_message.$fontend,"steelkante","left","","1")
+     . makeTableDataCell("blindgif","steelkante","center","120")
+     . makeTableDataCell("blindgif","steelkante","center","93")
+     . makeTableDataCell("blindgif","steelkante","center","93")
+     . makeTableDataCell("blindgif","steelkante","center","93")
+     . makeTableDataCell("blindgif","steelkante","center","93")
+     . makeTableDataCell("blindgif","steelkante","center","93")
      . "    </tr>\n"
      . "   </table>\n"
      . "  </td>\n"

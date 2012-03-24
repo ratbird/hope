@@ -171,7 +171,7 @@ if (isset($eval_id) && $can_change) {
     echo "    <td class=\"steel1\">&nbsp;</td>\n";
     echo "  </tr>\n";
     echo "  <tr>\n";
-    echo "    <td class=\"steel1kante\" colspan=\"4\">&nbsp;</td>\n";
+    echo "    <td class=\"steelkante\" colspan=\"4\">&nbsp;</td>\n";
     echo "  </tr>\n";
     echo "  <tr>\n";
     echo "    <td class=\"".$cssSw->getClass()."\"><font color=\"-1\">"._("Zeige Gesamtstatistik an").":</font></td>\n";

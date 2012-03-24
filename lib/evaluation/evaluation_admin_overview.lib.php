@@ -206,7 +206,7 @@ class EvalOverview {
         if ($eval->getAuthor() != $user->id && $no_permissons)
             $no_buttons = 1;
 
-        $style = ($number % 2) ? "steelgraulight" : ($number == 0 ? "steel1kante" : "steel1");
+        $style = ($number % 2) ? "steelgraulight" : ($number == 0 ? "steelkante" : "steel1");
 
         $startDate = $eval->getStartdate() == NULL ? " " : date("d.m.Y", $eval->getStartdate());
 
@@ -669,7 +669,7 @@ class EvalOverview {
         /* Show templates ------------------------------------------------------ */
         $tr = new HTML("tr");
         $td = new HTML("td");
-        $td->addAttr("class", "steel1kante");
+        $td->addAttr("class", "steelkante");
         $td->addContent(" ");
         $tr->addContent($td);
         $table->addContent($tr);
@@ -846,7 +846,7 @@ class EvalOverview {
         $tr = new HTML("tr");
 
         $td = new HTML("td");
-        $td->addAttr("class", "steel1kante");
+        $td->addAttr("class", "steelkante");
         $td->addContent($text);
 
         $tr->addContent($td);
@@ -863,7 +863,7 @@ class EvalOverview {
         $tr = new HTML("tr");
         $tr->addAttr("height", "2");
         $td = new HTML("td");
-        $td->addAttr("class", "steel1kante");
+        $td->addAttr("class", "steelkante");
         $td->addContent("");
         $tr->addContent($td);
 
@@ -1960,7 +1960,7 @@ class EvalOverview {
             }
         } else {
             $td_r = new HTML("td");
-            $td_r->addAttr("class", "steel1kante");
+            $td_r->addAttr("class", "steelkante");
             $td_r->addAttr("width", "40");
             $td_r->addAttr("align", "center");
             $td_r->addAttr("style", "vertical-align:bottom;");
@@ -2071,7 +2071,7 @@ class EvalOverview {
                     foreach ($ranges["$type_key"] as $range) {
 
                         if ($counter == 0)
-                            $displayclass = "steel1kante";
+                            $displayclass = "steelkante";
                         elseif (($counter % 2) == 0)
                             $displayclass = "steel1";
                         else
@@ -2134,7 +2134,7 @@ class EvalOverview {
                 } elseif ($globalperm == "root" || $globalperm == "admin") {
                     $tr_s = new HTML("tr");
                     $td_s = new HTML("td");
-                    $td_s->addAttr("class", "steel1kante");
+                    $td_s->addAttr("class", "steelkante");
                     $td_s->addAttr("colspan", "4");
                     $td_s->addHTMLContent("&nbsp;");
                     $td_s->addContent(_("Es wurden keine Ergebnisse aus diesem Bereich gefunden."));
@@ -2294,7 +2294,7 @@ class EvalOverview {
                     foreach ($ranges["$type_key"] as $range) {
 
                         if ($counter == 0)
-                            $displayclass = "steel1kante";
+                            $displayclass = "steelkante";
                         elseif (($counter % 2) == 0)
                             $displayclass = "steel1";
                         else
@@ -2340,7 +2340,7 @@ class EvalOverview {
                 } elseif ($globalperm == "root" || $globalperm == "admin") {
                     $tr = new HTML("tr");
                     $td = new HTML("td");
-                    $td->addAttr("class", "steel1kante");
+                    $td->addAttr("class", "steelkante");
                     $td->addAttr("colspan", "4");
                     $td->addHTMLContent("&nbsp;");
                     $td->addContent(_("Es wurden keine Ergebnisse aus diesem Bereich gefunden."));

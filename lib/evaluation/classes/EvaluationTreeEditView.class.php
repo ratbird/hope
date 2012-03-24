@@ -2250,7 +2250,7 @@ function createFormNew($show = ARRANGMENT_BLOCK){
     $tr = new HTML ("tr");
 
     $td = new HTML ("td");
-    $td->addAttr ("class","steel1kante");
+    $td->addAttr ("class","steelkante");
 #   $td->addAttr ("class","steelgrau");
     $td->addAttr ("align","center");
 
@@ -2922,7 +2922,7 @@ function createQuestionForm(){
     $table2->addAttr ("class",
         ( $i%2 == 6 )
             ? "steelkante"
-            : "steel1kante");
+            : "steelkante");
     $table2->addAttr ("cellspacing", "0");
     $table2->addAttr ("cellpadding", "2");
 

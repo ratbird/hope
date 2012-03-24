@@ -138,7 +138,7 @@ function printRecordOfStudies($infobox, $basicdata, $seminare, $notice = NULL){
     $html .=createInputBox(_("Hochschule: "), $basicdata["university"], "university", "steelgraulight",     "60")
           . createInputBox(_("Studienfach: "), $basicdata["fieldofstudy"],   "fieldofstudy",  "steelgraulight",     "60")
           . createInputBox(_("Name (Vor- und Zuname): "), $basicdata["studentname"],     "studentname",   "steelgraulight",     "60")
-          . createInputBox(_("Semester: "), $basicdata["semester"],      "semester",      "steel1kante",        "30")
+          . createInputBox(_("Semester: "), $basicdata["semester"],      "semester",      "steelkante",        "30")
           . createInputBox(_("Fachsemester: "), $basicdata["semesternumber"],"semesternumber","steel1",             "2", "tes Fachsemester");
 
     $html .="       <tr>\n"

@@ -704,8 +704,9 @@ td.tree-elbow-end img {
     background-image: url('../images/steelgraulight_shadow.jpg');
 }
 
-.steel1kante {
-    background-image: url('../images/steel1kante.gif');
+.steelkante, .steelkante td {
+    background-color: #e5e5e5;
+ 	border-top: 1px solid #5a5a5a;
 }
 
 /* Standardhintergrund fuer Button-Leite unterhalb von Tabellen, Umbenennen: button_footer */

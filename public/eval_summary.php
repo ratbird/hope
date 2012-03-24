@@ -277,7 +277,7 @@ function answers($parent_id, $anz_nutzer, $question_type)
         if ($has_residual && ($db_answers_sum->f("anz")-$has_residual)>0) $prozente_wo_residual = ROUND($answer_counter*100/($anz_nutzer-$has_residual));
         $prozente = 0;
         if ($db_answers_sum->f("anz")>0) $prozente = ROUND($answer_counter*100/$anz_nutzer);
-        $edit .= "<tr class=\"".($i==1?"steel1kante":$css->getClass())."\"><td width=\"1%\"><font size=\"-1\"><b>".$antwort_nummer.".&nbsp;</b></font></td><td width=\"70%\"><font size=\"-1\">".($db_answers->f("text")!="" ? formatReady($db_answers->f("text")) : $db_answers->f("value"))."</font></td>";
+        $edit .= "<tr class=\"".($i==1?"steelkante":$css->getClass())."\"><td width=\"1%\"><font size=\"-1\"><b>".$antwort_nummer.".&nbsp;</b></font></td><td width=\"70%\"><font size=\"-1\">".($db_answers->f("text")!="" ? formatReady($db_answers->f("text")) : $db_answers->f("value"))."</font></td>";
         if ($has_residual) $edit .= "<td width=\"29%\"><font size=\"-1\">".$answer_counter." (".$prozente."%) ".($db_answers->f("residual")==0 ? "(".$prozente_wo_residual."%)<b>*</b>" : "" )."</font></td></tr>\n";
         else $edit .= "<td width=\"29%\"><font size=\"-1\">".$answer_counter." (".$prozente."%)</font></td></tr>\n";
         array_push($summary, array($antwort_nummer."(".$prozente."%)",$answer_counter));
@@ -429,7 +429,7 @@ function groups($parent_id)
                                             $antworten_angezeigt = TRUE;
                                         }
 
-                    echo "<tr class=\"". ($i==1?"steel1kante":$css->getClass())."\">";
+                    echo "<tr class=\"". ($i==1?"steelkante":$css->getClass())."\">";
                     echo "  <td><font size=\"-1\">".$questions["frage"]."</font></td>";
                     foreach ($questions["auswertung"] as $k3=>$v3) {
                         echo "<td width=\"10%\" valign=\"TOP\" ".($i!=1?"CLASS=\"".$css->getClass()."\"":"")."><font size=\"-1\">";

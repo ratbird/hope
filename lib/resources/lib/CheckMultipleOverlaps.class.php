@@ -133,7 +133,7 @@ class CheckMultipleOverlaps {
             $this->db->query($query);
             while ($this->db->next_record()) {
                 $result[$this->db->f("resource_id")][($index_mode == "assign_id") ? $events[$this->db->f("event_id")]->getAssignId() : $events[$this->db->f("event_id")]->getAssignUserId()][] =
-                    array("begin"=>$this->db->f("begin"), "end"=>$this->db->f("end"), "event_id"=>$this->db->f("event_id"),
+                    array("begin"=>$this->db->f("begin"), "end"=>$this->db->f("end"), "assign_id" => $this->db->f('assign_id'), "event_id"=>$this->db->f("event_id"),
                           "own_begin" =>$events[$this->db->f("event_id")]->getBegin(), "own_end" =>$events[$this->db->f("event_id")]->getEnd(),
                           "lock" =>($this->db->f("type") == "lock") ? TRUE : FALSE);
             }

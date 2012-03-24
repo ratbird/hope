@@ -44,12 +44,27 @@ class Resources_HelpersController extends AuthenticatedController
         $events = array();
         $dates = array();
         $timestamps = array();
+        if (count(Request::getArray('new_date'))) {
+            $new_date = array();
+            foreach (Request::getArray('new_date') as $one) {
+                $new_date[$one['name']] = $one['value'];
+            }
+            if (check_singledate($new_date['day'], $new_date['month'], $new_date['year'], $new_date['start_stunde'],
+            $new_date['start_minute'], $new_date['end_stunde'], $new_date['end_minute'])) {
+                $start = mktime($new_date['start_stunde'], $new_date['start_minute'], 0, $new_date['month'], $new_date['day'], $new_date['year']);
+                $ende = mktime($new_date['end_stunde'], $new_date['end_minute'], 0, $new_date['month'], $new_date['day'], $new_date['year']);
+                $timestamps[] = $start;
+                $timestamps[] = $ende;
+                $event = new AssignEvent('new_date', $start, $ende, null, null, '');
+                $events[$event->getId()] = $event;
+            }
+        }
         foreach(Request::optionArray('selected_dates') as $one) {
             $date = new SingleDate($one);
             if ($date->getStartTime()) {
                 $timestamps[] = $date->getStartTime();
                 $timestamps[] = $date->getEndTime();
-                $event = new AssignEvent($date->getTerminID(), $date->getStartTime(), $date->getEndTime(), $room, null, '');
+                $event = new AssignEvent($date->getTerminID(), $date->getStartTime(), $date->getEndTime(), null, null, '');
                 $events[$event->getId()] = $event;
                 $dates[$date->getTerminID()] = $date;
             }
@@ -61,8 +76,20 @@ class Resources_HelpersController extends AuthenticatedController
             foreach($rooms as $room) $checker->addResource($room);
             $checker->checkOverlap($events, $result, "assign_id");
             foreach((array)$result as $room_id => $details) {
-                foreach(array_keys($details) as $termin_id) {
-                    if ($dates[$termin_id]->getResourceId() == $room_id) {
+                foreach($details as $termin_id => $conflicts) {
+                    if ($termin_id == 'new_date' && Request::option('singleDateID')) {
+                        $assign_id = SingleDateDB::getAssignID(Request::option('singleDateID'));
+                    } else {
+                        $assign_id = SingleDateDB::getAssignID($termin_id);
+                    }
+                    $filter = function($a) use ($assign_id) 
+                        {
+                            if ($a['assign_id'] && $a['assign_id'] == $assign_id) {
+                                return false;
+                            }
+                            return true;
+                        };
+                    if (!count(array_filter($conflicts, $filter))) {
                         unset($result[$room_id][$termin_id]);
                     }
                 }

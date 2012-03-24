@@ -14,7 +14,9 @@ jQuery(function ($) {
                 url: STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/resources/helpers/bookable_rooms',
                 data: {
                     rooms: _.pluck(select.options, 'value'),
-                    selected_dates : _.pluck($('input[name="singledate[]"]:checked'), 'value')
+                    selected_dates : _.pluck($('input[name="singledate[]"]:checked'), 'value'),
+                    singleDateID: $('input[name=singleDateID]').attr('value'),
+                    new_date: _.map($('#day,#month,#year,#start_stunde,#start_minute,#end_stunde,#end_minute'), function (v) {return { name:v.id, value:v.value};})
                 },
                 success: function (result) {
                   if ($.isArray(result)) {

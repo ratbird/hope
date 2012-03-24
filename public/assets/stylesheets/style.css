@@ -2140,11 +2140,13 @@ tr.sortable th.sortdesc {
 }
 
 .steel_with_graulight_bg {
-    background-image: url('../images/steel_with_graulight_bg.jpg');
+	background-color: #dfe1f0;
+	border-top: 1px solid #e0e1e6;
 }
 
 .steel_with_steel1_bg {
-    background-image: url('../images/steel_with_steel1_bg.jpg');
+	background-color: #dfe1f0;
+	border-top: 1px solid #f9f8f6;
 }
 
 .steel3 {

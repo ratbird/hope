@@ -129,7 +129,7 @@ class EvalOverview {
         if ($state == "user_template")
             $style = "steel_with_steel1_bg";
         elseif ($state == "public_template")
-            $style = "steel_with_graulight_bg";
+            $style = "eval_grey_border";
         else
             $style = "steel";
 
@@ -511,19 +511,19 @@ class EvalOverview {
         if (($globalperm == "root" || $globalperm == "admin") &&
                 !$_REQUEST["search"] && $eval->isTemplate()) {
             // no RuntimeSettings and Save-Button for Template if there are no ranges
-            $td2->addHTMLContent($this->createDomainSettings($eval, $state, $number % 2 ? "steel_with_graulight_bg" : "steel_with_steel1_bg" ));
+            $td2->addHTMLContent($this->createDomainSettings($eval, $state, $number % 2 ? "eval_grey_border" : "eval_light_border" ));
         } elseif ($no_permission) {
             // no RuntimeSettings if there are ranges with no permission
-            $td2->addHTMLContent($this->createDomainSettings($eval, $state, $number % 2 ? "steel_with_graulight_bg" : "steel_with_steel1_bg" ));
+            $td2->addHTMLContent($this->createDomainSettings($eval, $state, $number % 2 ? "eval_grey_border" : "eval_light_border" ));
 
             $td2->addContent(new HTMLEmpty("br"));
 
             $saveButton = Button::create(_('Übernehmen'), 'save_button', array('title' => _('Einstellungen speichern')));
             $td2->addContent($saveButton);
         } else {
-            $td2->addHTMLContent($this->createRuntimeSettings($eval, $state, $number % 2 ? "steel_with_graulight_bg" : "steel_with_steel1_bg" ));
+            $td2->addHTMLContent($this->createRuntimeSettings($eval, $state, $number % 2 ? "eval_grey_border" : "eval_light_border" ));
 
-            $td2->addHTMLContent($this->createDomainSettings($eval, $state, $number % 2 ? "steel_with_graulight_bg" : "steel_with_steel1_bg" ));
+            $td2->addHTMLContent($this->createDomainSettings($eval, $state, $number % 2 ? "eval_grey_border" : "eval_light_border" ));
             $td2->addContent(new HTMLEmpty("br"));
 
             $saveButton = Button::create(_('Übernehmen'), 'save_button', array('title' => _('Einstellungen speichern')));

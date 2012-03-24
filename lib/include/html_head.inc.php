@@ -38,10 +38,11 @@
 <html class="no-js">
 <head>
     <meta charset="WINDOWS-1252">
-    <title>
-        <?= htmlReady(PageLayout::getTitle() . ' - ' . $GLOBALS['UNI_NAME_CLEAN']) ?>
-    </title>
+    <title><?= htmlReady(PageLayout::getTitle() . ' - ' . $GLOBALS['UNI_NAME_CLEAN']) ?></title>
     <?= PageLayout::getHeadElements() ?>
+    <!--[if IE]>
+    <link rel="stylesheet" href="<?= Assets::stylesheet_path('ie.css') ?>" media="screen,print">
+    <![endif]-->
 
     <script src="<?= URLHelper::getLink('dispatch.php/localizations/' . $_SESSION['_language']) ?>"></script>
 

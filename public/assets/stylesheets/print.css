@@ -29,7 +29,7 @@ td.rahmen_steel {
 
 td.rahmen_steelgraulight {
     border: 1px solid #000000;
-    background-image: url('../images/steelgraulight.jpg');
+    background-color: #ebebeb;
 }
 
 .hidden {

@@ -2133,7 +2133,7 @@ tr.sortable th.sortdesc {
 }
 
 .eval_highlight {
-    background-image: url('../images/steelgraulight_hover.gif');
+    background-color: #b8c3e8;
 }
 
 .eval_gray {

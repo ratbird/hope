@@ -765,7 +765,8 @@ td.tree-elbow-end img {
 }
 
 .steelblau_schatten {
-    background: #FFFFFF url('../images/steelblau_schatten.jpg');
+    background-color: #dfe2e9;
+    border-left: 1px solid #cccccc;
 }
 
 .category_divider {
@@ -960,7 +961,7 @@ th.inccal {
 }
 
 td.weekend {
-    background-image: url('../images/steelcal.jpg');
+    background-color: #f0f0f0;
 }
 
 td.weekday {
@@ -969,7 +970,7 @@ td.weekday {
 
 td.current {
     border: 2px solid #DD0000;
-    background-image: url('../images/steelcal.jpg');
+    background-color: #f0f0f0;
 }
 
 td.currenttoday {
@@ -978,7 +979,7 @@ td.currenttoday {
 }
 
 td.month {
-    background-image: url('../images/steelcal.jpg');
+    background-color: #f0f0f0;
 }
 
 td.lightmonth {
@@ -992,7 +993,7 @@ table.tabdaterow {
 
 td.tddaterowp {
     border: 1px solid #FFFFFF;
-    background-image: url('../images/steelcal.jpg');
+    background-color: #f0f0f0;
     font-weight: bold;
     color: #009900;
     font-size: 8pt;
@@ -1000,7 +1001,7 @@ td.tddaterowp {
 
 td.tddaterowpx {
     border: 1px solid #D00000;
-    background-image: url('../images/steelcal.jpg');
+    background-color: #f0f0f0;
     font-weight: bold;
     color: #009900;
     font-size: 8pt;

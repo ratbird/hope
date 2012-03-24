@@ -785,11 +785,11 @@ p.info {
 
 /* --- Styles fuer printhead und printcontent ------------------------------- */
 td.printhead2 {
-    background-image: url('../images/steelblau2.png');
+    background-image: url('../images/content_object_arr-right.png');
 }
 
 td.printhead3 {
-    background-image: url('../images/steelblau3.png');
+    background-image: url('../images/content_object_arr-down.png');
 }
 
 td.colorline {

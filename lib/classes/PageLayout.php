@@ -72,7 +72,11 @@ class PageLayout
     public static function initialize()
     {
         // set favicon
-        self::addHeadElement('link', array('rel' => 'shortcut icon', 'href' => Assets::image_path('favicon.ico')));
+        self::addHeadElement('link', array('rel' => 'shortcut icon', 'href' => Assets::image_path('favicon.png')));
+        self::addHeadElement('link', array('rel' => 'apple-touch-icon', 'href' => Assets::image_path('touch-icon-iphone.png')));
+        self::addHeadElement('link', array('rel' => 'apple-touch-icon', 'href' => Assets::image_path('touch-icon-ipad.png'), 'size' => '72x72'));
+        self::addHeadElement('link', array('rel' => 'apple-touch-icon', 'href' => Assets::image_path('touch-icon-iphone4.png'), 'size' => '114x114'));
+
         // include jQuery + UI
         self::addStylesheet('jquery-ui-1.8.14.custom.css', array('media' => 'screen, print'));
         self::addStylesheet('jquery-ui-studip.css', array('media' => 'screen, print'));

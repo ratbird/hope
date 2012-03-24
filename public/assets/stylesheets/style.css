@@ -484,7 +484,6 @@ table.links1 {
 }
 
 table.toolbar, td.toolbar, .steel, td.printhead {
-   background-color: #e3eaf6;
    border-top: 1px solid #899ab9;
    background-image: -webkit-gradient(linear, left top, left bottom, from(#cdd9ed), to(#e3eaf6));
    background-image: -webkit-linear-gradient(top, #cdd9ed 0%, #e3eaf6 40%, #e3eaf6 100%);
@@ -736,7 +735,14 @@ td.tree-elbow-end img {
 }
 
 .blue_gradient {
-    background-image: url('../images/blue_gradient.jpg');
+   border-top: 2px solid #97a6cf;
+   background-image: -webkit-gradient(linear, left top, left bottom, from(#b8c6db), to(#cedbef));
+   background-image: -webkit-linear-gradient(top, #b8c6db 0%, #cedbef 60%, #cedbef 100%);
+   background-image: -moz-linear-gradient(top, #b8c6db 0%, #cedbef 60%, #cedbef 100%);
+   background-image: -ms-linear-gradient(top, #b8c6db 0%, #cedbef 60%, #cedbef 100%);
+   background-image: -o-linear-gradient(top, #b8c6db 0%, #cedbef 60%, #cedbef 100%);
+   background-image: linear-gradient(top, #b8c6db 0%, #cedbef 60%, #cedbef 100%);*
+   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#b8c6db', endColorstr='#cedbef');
 }
 
 .red_gradient {

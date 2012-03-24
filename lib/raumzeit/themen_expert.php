@@ -328,18 +328,16 @@ $themen =& $sem->getIssues(true);   // read again, so we have the actual sort or
                     <td colspan="3" align="right" height="28">
                         <table width="100%" cellspacing="0" cellpadding="0" border="0">
                         <? if ($chronoGroupedFilter == 'grouped') { ?>
-                            <td background="<?= $GLOBALS['ASSETS_URL'] ?>images/steel1info.jpg">
-                                <IMG src="<?= $GLOBALS['ASSETS_URL'] ?>images/reiter1.jpg" align="middle">
+                            <td style="background-color: #e7eefe; height:28px;">
                             </td>
-                            <td background="<?= $GLOBALS['ASSETS_URL'] ?>images/steel1info.jpg">
+                            <td style="background-color: #e7eefe; border-left: 1px solid black;">
                                 <font size="-1">
                                     &nbsp;&nbsp;<?=_("gruppiert")?>&nbsp;&nbsp;
                                 </font>
                             </td>
-                            <td background="<?= $GLOBALS['ASSETS_URL'] ?>images/steel1info.jpg">
-                                <IMG src="<?= $GLOBALS['ASSETS_URL'] ?>images/reiter1.jpg" align="middle">
+                            <td style="background-color: #e7eefe;">
                             </td>
-                            <td background="<?= $GLOBALS['ASSETS_URL'] ?>images/steel2.jpg">
+                            <td style="background-color: #d2d3d7; border-left: 1px solid black; border-right: 1px solid black;">
                                 <font size="-1">
                                     <a href="<?= URLHelper::getLink("?cmd=changeChronoGroupedFilter&newFilter=chrono") ?>">
                                         &nbsp;&nbsp;<?=_("chronologisch")?>&nbsp;&nbsp;
@@ -347,23 +345,21 @@ $themen =& $sem->getIssues(true);   // read again, so we have the actual sort or
                                 </font>
                             </td>
                         <? } else { ?>
-                            <td background="<?= $GLOBALS['ASSETS_URL'] ?>images/steel2.jpg">
+                            <td style="background-color: #d2d3d7; border-left: 1px solid black; height: 28px;">
                                 <font size="-1">
                                     <a href="<?= URLHelper::getLink("?cmd=changeChronoGroupedFilter&newFilter=grouped") ?>">
                                         &nbsp;&nbsp;<?=_("gruppiert")?>&nbsp;&nbsp;
                                     </a>
                                 </font>
                             </td>
-                            <td background="<?= $GLOBALS['ASSETS_URL'] ?>images/steel1info.jpg">
-                                <IMG src="<?= $GLOBALS['ASSETS_URL'] ?>images/reiter1.jpg" align="middle">
+                            <td style="background-color: #e7eefe;">
                             </td>
-                            <td background="<?= $GLOBALS['ASSETS_URL'] ?>images/steel1info.jpg">
+                            <td style="background-color: #e7eefe; border-left: 1px solid black">
                                 <font size="-1">
                                     &nbsp;&nbsp;<?=_("chronologisch")?>&nbsp;&nbsp;
                                 </font>
                             </td>
-                            <td background="<?= $GLOBALS['ASSETS_URL'] ?>images/steel1info.jpg">
-                                <IMG src="<?= $GLOBALS['ASSETS_URL'] ?>images/reiter1.jpg" align="middle">
+                            <td style="background-color: #e7eefe; border-right: 1px solid black">
                             </td>
                             <? } ?>
                         </font>

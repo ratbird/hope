@@ -700,7 +700,9 @@ td.tree-elbow-end img {
 }
 
 .steelgraulight_shadow {
-    background-image: url('../images/steelgraulight_shadow.jpg');
+	background-color: #cecece;
+	border-top: 1px solid #4a4a4a;
+	border-left: 1px solid #4a4a4a;
 }
 
 .steelkante, .steelkante td {

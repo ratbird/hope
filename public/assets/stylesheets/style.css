@@ -740,9 +740,10 @@ td.tree-elbow-end img {
     background-image: url('../images/steelkante2.jpg');
 }
 
-/* dunkelster Standardhintergrund blau, überall umbenennen! */
-.steel2 {
-    background-color: #cdd7e9;
+/* Standardhintergrund fuer Button-Leite unterhalb von Tabellen, Umbenennen: button_footer */
+.steel2, .steel2 td {
+    background-color: #e9e9e9;
+    border-top: 1px solid #c8c8c8;
 }
 
 /* hellerer Standardhintergrund, überall umbenennen! */

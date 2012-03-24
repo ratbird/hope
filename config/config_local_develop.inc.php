@@ -5,7 +5,7 @@ you find here the basic system settings. You shouldn't have to touch much of the
 please note the CONFIG.INC.PHP in the system folder for the indivual settings of your installation!*/
 
 $UNI_NAME_CLEAN = "Stud.IP Entwicklungs- und Anwendungsforum";                          //the clean-name of your master-faculty (e.g. University of Göttingen), without html-entities (used for mail-system)
-$AUTH_LIFETIME = 120;                                   //the length of a session in minutes, zero means unlimited lifetime
+$AUTH_LIFETIME = 0;                                   //the length of a session in minutes, zero means php session lifetime
 
 
 /*settings for database access

@@ -215,12 +215,6 @@ if ($auth->is_authenticated() && is_object($user) && $user->id != "nobody") {
         }
     }
 
-    // log out user if AUTH_LIFETIME is reached
-    if ($i_page !== 'logout.php' && $AUTH_LIFETIME > 0) {
-        PageLayout::addHeadElement('meta', array('http-equiv' => 'refresh',
-                                                 'content'    => sprintf('%d; url=%s', $AUTH_LIFETIME * 60, URLHelper::getURL('logout.php'))));
-    }
-
     // lauch stud.ip messenger after login
     if ($my_messaging_settings['start_messenger_at_startup'] && $auth->auth['jscript'] &&
         !$seminar_open_redirected && !$_SESSION['messenger_started']) {

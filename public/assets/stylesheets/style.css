@@ -904,7 +904,7 @@ A:hover.calhead {
 }
 
 .celltoday {
-    background-image: url('../images/celltoday.png');
+    background-color: #edd5d5;
 }
 
 th.inccal {

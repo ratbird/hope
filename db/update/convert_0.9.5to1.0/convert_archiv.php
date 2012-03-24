@@ -25,7 +25,7 @@ while ($db->next_record()) {
     print "<i>".$db->f("name")."</i>";
 
     if($dump1[1] == NULL)
-        $html = "<font color=\"red\">"._(" ... besitzt keine Veranstalungsnummer!")."</font><br>";
+        $html = "<font color=\"red\">"._(" ... besitzt keine Veranstaltungsnummer!")."</font><br>";
     else{   
         $dump2 = explode($end,$dump1[1]);
         $semnumber = $dump2[0];

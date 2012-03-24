@@ -84,7 +84,7 @@ class PageLayout
         self::addStylesheet('style.css', array('media' => 'screen'));
         self::addStylesheet('smiley.css', array('media' => 'screen, print'));
         //include print CSS
-        self::addStylesheet('style.css', array('media' => 'print'));
+        self::addStylesheet('print.css', array('media' => 'print'));
 
         self::setSqueezePackages("base");
     }

@@ -2,7 +2,7 @@
 # Lifter010: TODO
 ?>
 <? SkipLinks::addIndex('Infobox', 'infobox_content', 10000); ?>
-<table class="infobox" align="center" width="250" border="0" cellpadding="0" cellspacing="0">
+<table class="infobox" width="250" border="0" cellpadding="0" cellspacing="0">
 
     <tr>
       <td class="infobox-avatar" align="right" style="background-image: url(<?= $picture ?>);">

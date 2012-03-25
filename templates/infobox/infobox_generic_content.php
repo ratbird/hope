@@ -9,7 +9,7 @@
 //
 ?>
 <? SkipLinks::addIndex('Infobox', 'infobox_content', 10000); ?>
-<table class="infobox" align="center" width="250" cellpadding="0" cellspacing="0">
+<table class="infobox" width="250" cellpadding="0" cellspacing="0">
 
     <? if ($picture) : ?>
 

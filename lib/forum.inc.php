@@ -977,7 +977,7 @@ function ForumStriche($forumposting) {
     if ($forumposting["lonely"]==FALSE)
         $striche.= "<td class=\"blank tree-indent\" nowrap background=\"".$GLOBALS['ASSETS_URL']."images/forumstrichgrau.gif\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\"></td>";
     else
-        $striche.= "<td class=\"blank tree-indent\" nowrap background-color: #f3f5f8;><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\"></td>";
+        $striche.= "<td class=\"printcontent tree-indent\" nowrap background-color: #f3f5f8;><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\"></td>";
     return $striche;
 }
 
@@ -1344,12 +1344,12 @@ function printposting ($forumposting) {
   // Kopfzeile ausgeben
 
         if ($forumposting["intree"]!=TRUE)
-            echo "<table width=\"100%\" border=0 cellpadding=0 cellspacing=0 align=center><tr>";
+            echo '<table class="forum_headline" width="100%" border="0" cellpadding="0" cellspacing="0"><tr>';
         if ($forum["anchor"] == $forumposting["id"])
             echo "<a name='anker'></a>";
         printhead ("100%","0",$link,$forumposting["openclose"],$new,$forumposting["icon"],$name,$zusatz,$age_tmp,"TRUE",$index,$forum["indikator"]);
-        if ($forumposting["intree"]==TRUE)
-            echo "<td class=\"blank\">&nbsp;&nbsp;&nbsp;</td>";
+        //if ($forumposting["intree"]==TRUE)
+        //    echo "<td class=\"blank\">&nbsp;&nbsp;&nbsp;</td>";
         echo "</tr></table>\n";
 
 // Kontentzeile zusammenbauen
@@ -1393,8 +1393,8 @@ function printposting ($forumposting) {
             if ($forumposting["rating"] != "?") {
                 $addon .=_("Bewertung: ").$forumposting["rating"]."<br>";
                 $rate = object_print_rates_detail($forumposting["id"]);
-                while(list($key,$value) = each($rate))
-                    $addon .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$key: $value<br>";
+                //while(list($key,$value) = each($rate))
+                //    $addon .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$key: $value<br>";
             } else {
                 $addon .= _("Noch nicht bewertet")."<br><br>";
             }
@@ -1424,13 +1424,13 @@ function printposting ($forumposting) {
 
   // Kontentzeile ausgeben
 
-        echo "<table width=\"100%\" border=0 cellpadding=0 cellspacing=0 align=center><tr>";
+        echo '<table class="forum_content" width="100%" border="0" cellpadding="0" cellspacing="0"><tr>';
 
         if ($forumposting["intree"]==TRUE) // etwas Schmuckwerk für die Strichlogik
             echo ForumStriche($forumposting);
         printcontent ("100%",$forumposting,$description,$edit,TRUE,$addon);
-        if ($forumposting["intree"]==TRUE)
-            echo "<td class=\"blank\">&nbsp;&nbsp;&nbsp;</td>";
+        //if ($forumposting["intree"]==TRUE)
+        //    echo "<td class=\"blank\">&nbsp;&nbsp;&nbsp;</td>";
         echo "</tr></table>\n";
     }
     return $forumposting;
@@ -1626,19 +1626,11 @@ while($db->next_record()){
 
 /////////// HTML für den Rest
 
-echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" valign=\"top\" align=\"center\">";
-echo "  <tr>";
-echo "      <td class=\"blank\" valign=\"top\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" border=\"0\" height=\"4\">";
-echo "</td>";
-echo "  </tr>";
+echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">";
 echo "  <tr>";
 echo "      <td class=\"steelgraudunkel\" align=\"right\" ><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" border=\"0\" height=\"10\" align=\"middle\">";
 echo forum_print_navi($forum)."&nbsp;&nbsp;&nbsp;".forum_get_index($forumposting);
 echo "      &nbsp;&nbsp;</td>";
-echo "  </tr>";
-echo "  <tr>";
-echo "      <td class=\"blank\">&nbsp;<br><br>";
-echo "      </td>";
 echo "  </tr>";
 echo "</table>";
 echo "</td>";
@@ -1738,15 +1730,15 @@ function DisplayFolders ($open=0, $update="", $zitat="") {
 
         echo "<table class=\"blank\" width=\"100%\" border=0 cellpadding=0 cellspacing=0><tr>";
         echo "<td class=\"steelgraudunkel\" width=\"33%\"><b><font size=\"-1\">&nbsp;" . _("Thema") . "</font></b></td>";
-        echo "<td class=\"steelgraudunkel\" width=\"33%\" align=\"center\"><font size=\"-1\">&nbsp;&nbsp;";
+        echo "<td class=\"steelgraudunkel\" width=\"33%\" align=\"center\">";
         if ($user->id != "nobody") { // Nobody kriegt nur treeview
             if ($forum["view"] == "tree")
-                echo "<a href=\"".URLHelper::getLink("?view=mixed&themeview=mixed")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumtree.gif\" border=\"0\" align=\"top\"></a>";
+                echo "<a href=\"".URLHelper::getLink("?view=mixed&themeview=mixed")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumtree.gif\" align=\"middle\"></a>";
             else
-                echo "<a href=\"".URLHelper::getLink("?view=tree&themeview=tree")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumflat.gif\" border=\"0\" align=\"top\"></a>";
+                echo "<a href=\"".URLHelper::getLink("?view=tree&themeview=tree")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumflat.gif\" align=\"middle\"></a>";
         }
-        echo "</font><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" border=0 height=\"20\" align=\"middle\"></td>";
-        echo "<td class=\"steelgraudunkel\" width=\"33%\"align=\"right\"><font size=\"-1\">" . _("<b>Forenbeiträge</b> / letzter Eintrag") . "&nbsp;&nbsp;".forum_get_index($forumposting)."&nbsp;&nbsp;</font></td></tr></table>\n";
+        echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" border=0 height=\"20\" align=\"middle\"></td>";
+        echo "<td class=\"steelgraudunkel\" width=\"33%\"align=\"right\">" . _("<b>Forenbeiträge</b> / letzter Eintrag") . " ".forum_get_index($forumposting)." </td></tr></table>\n";
         while ($db->next_record()) {
             $forumposting["id"] = $db->f("topic_id");
             $forumposting["name"] = $db->f("name");
@@ -1777,11 +1769,11 @@ function DisplayFolders ($open=0, $update="", $zitat="") {
             printposting($new_topic);
         }
     }
-    echo "<table class=blank border=0 cellpadding=0 cellspacing=0 width=\"100%\"><tr><td class='blank'><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif' border=0 height='4'></td></tr><tr>";
+    echo '<table border="0" cellpadding="0" cellspacing="0" width="100%"><tr>';
     echo "<td align=center class=steelgraudunkel><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif' border=0 height='20' align=middle>";
     if (($perm->have_perm("autor")) && (($rechte) || ($SEM_CLASS[$SEM_TYPE[$SessSemName["art_num"]]["class"]]["topic_create_autor"])))
-        echo "<a href='".URLHelper::getLink("?neuesthema=TRUE#anker")."'><img src='".$GLOBALS['ASSETS_URL']."images/icons/16/blue/arr_1down.png' border=0 align=middle " . tooltip(_("Neues Thema anlegen")) . "><img src='".$GLOBALS['ASSETS_URL']."images/icons/16/blue/add/folder-empty.png' " . tooltip(_("Neues Thema anlegen")) . " border=0 align=middle></a>";
-    echo "</td></tr><tr><td class=blank>&nbsp; <br>&nbsp; <br></td></tr></table>\n";
+        echo "<a href='".URLHelper::getLink("?neuesthema=TRUE#anker")."'><img src='".$GLOBALS['ASSETS_URL']."images/icons/16/blue/arr_1down.png' align=middle " . tooltip(_("Neues Thema anlegen")) . "><img src='".$GLOBALS['ASSETS_URL']."images/icons/16/blue/add/folder-empty.png' " . tooltip(_("Neues Thema anlegen")) . " border=0 align=middle></a>";
+    echo "</td></tr></table>\n";
 
 
 /*

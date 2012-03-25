@@ -140,7 +140,6 @@ class EvalOverview {
             $td->addAttr("nowrap", "nowrap");
             $td->addAttr("height", "22");
             $td->addAttr("class", $style);
-#      $td->addAttr ("class", "steelblau4");
 
             if ($i == 0) {
                 $td->addAttr("width", $state == "public_template" ? "1" : "10");

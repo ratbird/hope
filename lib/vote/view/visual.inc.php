@@ -134,7 +134,7 @@ function createBoxFooter () {
 
 function createBoxLineHeader () {
    $html = "";
-   $html .= "<table role=\"article\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n";
+   $html .= "<table class=\"evaluation_item\" role=\"article\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n";
    return $html;
 }
 

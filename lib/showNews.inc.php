@@ -197,7 +197,7 @@ function show_news($range_id, $show_admin = FALSE, $limit = "", $open, $width = 
         // Ausgabe der Daten
         foreach ($news as $id => $news_item) {
             $news_item['open'] = ($id == $open);
-            echo '<div id="news_item_'.$id.'" role="article">';
+            echo '<div id="news_item_'.$id.'" class="news_item" role="article">';
             echo show_news_item($news_item, $cmd_data, $show_admin, $admin_link);
             echo '</div>';
         }

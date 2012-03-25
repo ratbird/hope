@@ -1,13 +1,13 @@
 <?
 # Lifter010: TODO
 ?>
-<table width="100%" border="0" cellpadding="2" cellspacing="0">
+<table id="layout_container" width="100%" border="0" cellpadding="0" cellspacing="0">
   <tr>
-        <td class="blank" valign="top">
-            <table width="99%" cellspacing="0" cellpadding="0" border="0">
+      <td class="blank" valign="top">
+            <table width="100%" cellspacing="0" cellpadding="0" border="0" class="dates_items">
                 <? if (is_array($termine) && sizeof($termine) > 0) : ?>
                 <tr>
-                    <td class="steelgraulight" colspan="10" height="24" align="center">
+                    <th colspan="10">
                         <a href="<?= URLHelper::getLink('?cmd='.(($openAll) ? 'close' : 'open') .'All') ?>">
                             <? if ($openAll) : ?>
                             <?= Assets::img('close_all.png', array('title' => _("Alle Termine zuklappen"))) ?>
@@ -15,13 +15,9 @@
                             <?= Assets::img('open_all.png', array('title' => _("Alle Termine aufklappen"))) ?>
                             <? endif ?>
                         </a>
-                    </td>
+                    </th>
                 </tr>
                 <? endif; ?>
-                <tr>
-                    <td colspan="10" height="3">
-                    </td>
-                </tr>
                 <?
 
                 $semester = new SemesterData();
@@ -35,9 +31,9 @@
                                 $grenze = $zwsem['ende'];
                                 ?>
                                 <tr>
-                                    <td class="steelgraulight" align="center" colspan="9">
-                                        <font size="-1"><b><?=$zwsem['name']?></b></font>
-                                    </td>
+                                    <th colspan="9">
+                                        <b><?=$zwsem['name']?></b>
+                                    </th>
                                 </tr>
                                 <?
                             }
@@ -45,8 +41,6 @@
                     }
 
                     // Template fuer einzelnes Datum
-
-
                     echo $this->render_partial('raumzeit/singledate_student', compact('tpl', 'issue_open'));
 
                 } else {
@@ -61,8 +55,8 @@
                 }
                 ?>
             </table>
-        </td>
-        <td class="blank" align="right" valign="top" width="270">
+      </td>
+      <td class="blank" align="right" valign="top" width="270">
         <!-- Infobox -->
         <?
             // get a list of semesters (as display options)
@@ -76,11 +70,6 @@
             // render template
             echo $this->render_partial('infobox/infobox_dates', compact('picture', 'selectionlist_title', 'selectionlist', 'rechte', 'raumzeitFilter'));
         ?>
-        </td>
-    </tr>
-    <tr>
-        <td class="blank" colspan="2">
-            <br>
-        </td>
+      </td>
     </tr>
 </table>

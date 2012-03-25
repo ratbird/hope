@@ -525,8 +525,8 @@ if ($rate) { // Objekt bewerten
 //////////////////////////////////////////////////////////////////////////////////
 //Anzeige des Kopfes mit Meldungen und Toolbar
 //////////////////////////////////////////////////////////////////////////////////
-
-echo "\n<table width=\"100%\" class=\"blank\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
+echo '<div id="layout_container">';
+echo "\n<table width=\"100%\"border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 
 // Ausgabe für Zusatzinfos
 if ($message=="kill") echo parse_msg("msg§" . sprintf(_("%s Posting(s) gel&ouml;scht"), $count));
@@ -554,7 +554,7 @@ if ($forum["view"]=="flat" || $forum["view"]=="neue" || $forum["view"]=="flatfol
     flatview ($open, $show, $edit_id, $name, $description, $zitat);
 else
     DisplayFolders ($open, $edit_id, $zitat);
-echo '</div>';
+echo '</div></div>';
 //////////////////////////////////////////////////////////////////////////////////
 // Rest
 //////////////////////////////////////////////////////////////////////////////////

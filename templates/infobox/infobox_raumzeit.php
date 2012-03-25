@@ -1,7 +1,7 @@
 <?
 # Lifter010: TODO
 ?>
-<table class="infobox" align="center" width="250" border="0" cellpadding="0" cellspacing="0">
+<table class="infobox" width="250" border="0" cellpadding="0" cellspacing="0">
   <tr>
     <td class="infobox-img">
       <img src="<?=$GLOBALS['ASSETS_URL']?>images/<?=$picture?>">

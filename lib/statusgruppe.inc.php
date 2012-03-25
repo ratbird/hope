@@ -170,7 +170,7 @@ function GetAllSelected ($range_id, $level = 0) {
 
     // WTF???
     if ($level == 0) {
-        if ($db3->num_rows() == 0) return array("");
+        if ($db3->num_rows() == 0) return array();
     } else {
         if ($db3->num_rows() == 0) return FALSE;
     }

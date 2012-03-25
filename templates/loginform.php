@@ -38,7 +38,7 @@ $(function () {
           <table border="0" cellspacing="0" cellpadding="4">
             <tr valign=top align=left>
               <td><label for="loginname"><?=_("Benutzername:")?></label></td>
-              <td><input type="text" <?= strlen($uname) ? '' : 'autofocus' ?> id="loginname" name="loginname" value="<?=htmlReady($uname)?>" size="20" maxlength="63"></td>
+              <td><input type="text" <?= strlen($uname) ? '' : 'autofocus' ?> id="loginname" name="loginname" value="<?=htmlReady($uname)?>" size="20" maxlength="63" autocorrect="off" autocapitalize="off"></td>
             </tr>
 
             <tr valign=top align=left>

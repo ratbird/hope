@@ -828,7 +828,7 @@ if ($view == 'Daten') {
     if ($my_about->check == 'user') {
         echo "<tr><td class=\"".$cssSw->getClass()."\" width=\"25%\" align=\"left\"><b><label for=\"new_username\">" . _("Username:") . " </label></b></td><td class=\"".$cssSw->getClass()."\" colspan=2 width=\"75%\" align=\"left\">&nbsp;";
         if (($ALLOW_CHANGE_USERNAME && !StudipAuthAbstract::CheckField("auth_user_md5.username",$my_about->auth_user['auth_plugin']) && !LockRules::check($my_about->auth_user['user_id'], 'username')) ) {
-            echo "&nbsp;<input type=\"text\" size=\"".round($max_col*0.25)."\" name=\"new_username\" value=\"".$my_about->auth_user["username"]."\" id=\"new_username\">&nbsp; <font color=\"red\" size=+2>*</font>";
+            echo "&nbsp;<input type=\"text\" size=\"".round($max_col*0.25)."\" name=\"new_username\" value=\"".$my_about->auth_user["username"]."\" id=\"new_username\" autocorrect=\"off\" autocapitalize=\"off\">&nbsp; <font color=\"red\" size=+2>*</font>";
         } else {
             echo "&nbsp;<font size=\"-1\">".$my_about->auth_user["username"]."</font>";
         }
@@ -877,10 +877,10 @@ if ($view == 'Daten') {
     echo "<tr><td class=\"".$cssSw->getClass()."\" align=\"left\"><b>" . _("E-Mail:") . " </b></td><td class=\"".$cssSw->getClass()."\" align=\"left\">&nbsp;";
     if (($ALLOW_CHANGE_EMAIL && !StudipAuthAbstract::CheckField("auth_user_md5.Email", $my_about->auth_user['auth_plugin']) && !LockRules::check($my_about->auth_user['user_id'], 'email'))) {
         echo '<label><font size=-1>&nbsp; '. _("E-Mail:") .'</font><br>'.
-             ' &nbsp; <input type="text" size="'. round($max_col*0.25). '" name="email1" value="'.$my_about->auth_user["Email"].'"></label>&nbsp; <font color="red" size=+2>*</font>'.
+             ' &nbsp; <input type="email" size="'. round($max_col*0.25). '" name="email1" value="'.$my_about->auth_user["Email"].'"></label>&nbsp; <font color="red" size=+2>*</font>'.
              ' </td><td class="'. $cssSw->getClass() .'" align="left">'.
              '<label><font size=-1>&nbsp; '. _("E-Mail Wiederholung:") .'</font><br>'.
-             '&nbsp; <input type="text" size="'. round($max_col*0.25).'" name="email2" value="'.$my_about->auth_user["Email"]. '"></label>&nbsp; <font color="red" size=+2>*</font>';
+             '&nbsp; <input type="email" size="'. round($max_col*0.25).'" name="email2" value="'.$my_about->auth_user["Email"]. '"></label>&nbsp; <font color="red" size=+2>*</font>';
     } else {
         echo "&nbsp; <font size=\"-1\">".$my_about->auth_user["Email"]."</font>";
     }
@@ -1305,7 +1305,7 @@ if ($view == 'Lebenslauf') {
         echo '&nbsp;' . htmlReady($my_about->user_info['privatnr']);
     } else {
         echo '<label><font size="-1">&nbsp ' . _("Festnetz") . ':</font><br>';
-        echo '&nbsp; <input type="text" size="' .round($max_col*0.25).'" name="telefon" value="'. htmlReady($my_about->user_info["privatnr"]). '"></label>';
+        echo '&nbsp; <input type="tel" size="' .round($max_col*0.25).'" name="telefon" value="'. htmlReady($my_about->user_info["privatnr"]). '"></label>';
     }
     echo '<td class="'.$cssSw->getClass(). '"  width="50%" align="left">';
     if (StudipAuthAbstract::CheckField('user_info.privatcell', $my_about->auth_user['auth_plugin'])  || LockRules::check($my_about->auth_user['user_id'], 'privatcell')) {
@@ -1313,7 +1313,7 @@ if ($view == 'Lebenslauf') {
         echo '&nbsp;' . htmlReady($my_about->user_info['privatcell']);
     } else {
         echo '<label><font size="-1">&nbsp; '. _("Mobiltelefon"). ":</font><br>\n";
-        echo '&nbsp; <input type="text" size="' .round($max_col*0.25). '" name="cell" value="' .htmlReady($my_about->user_info['privatcell']).'"></label>';
+        echo '&nbsp; <input type="tel" size="' .round($max_col*0.25). '" name="cell" value="' .htmlReady($my_about->user_info['privatcell']).'"></label>';
     }
     echo "</td></tr>\n";
      $cssSw->switchClass();
@@ -1352,7 +1352,7 @@ if ($view == 'Lebenslauf') {
         echo "&nbsp;" . htmlReady($my_about->user_info["Home"]);
     } else {
         echo "<b><label for=\"home_page\">" . _("Homepage:") . "</label> </b></td><td class=\"".$cssSw->getClass()."\" colspan=2 align=\"left\">";
-        echo "&nbsp; <input type=\"text\" size=\"".round($max_col*0.6)."\" name=\"home\" id=\"home_page\" value=\"".htmlReady($my_about->user_info["Home"])."\">";
+        echo "&nbsp; <input type=\"url\" size=\"".round($max_col*0.6)."\" name=\"home\" id=\"home_page\" value=\"".htmlReady($my_about->user_info["Home"])."\">";
 
     }
     echo "</td></tr>\n";

@@ -7,7 +7,7 @@
     <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
         <td><?=htmlReady($one['name'])?></td>
         <td>
-            <div style="width:100px;text-align:right;white-space: nowrap">
+            <div style="width:100px;text-align:right;white-space: nowrap;word-spacing:1em;">
             <? if ($one['request']) : ?>
                 <a class="load-in-new-row" href="<?= $controller->link_for('index_assi/-', array('request_id' => $key)) ?>">
                     <?= Assets::img('icons/16/blue/info.png', array('title' => _('Weitere Informationen einblenden'))) ?>

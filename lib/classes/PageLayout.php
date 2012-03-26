@@ -276,6 +276,38 @@ class PageLayout
     }
 
     /**
+     * Insert a (conditional) comment in the header. To preserve execution
+     * order, this method utilizes addHeadElement() in a more or less hackish
+     * way.
+     *
+     * @param string $content    comment content
+     * @param string $condition  condition for this comment (only supported by IE)
+     */
+    public static function addComment($content, $condition = '')
+    {
+        $template = empty($condition)
+                  ? '!-- %s --'
+                  : '!--[if ' . $condition . ']>%s<![endif]--';
+        $comment  = sprintf($template, $content);
+        self::addHeadElement($comment);
+    }
+
+    /**
+     * Remove a (conditional) comment from the header.
+     *
+     * @param string $content    comment content
+     * @param string $condition  condition for this comment (only supported in IE)
+     */
+    public static function removeComment($content, $condition = '')
+    {
+        $template = empty($condition)
+                  ? '!-- %s --'
+                  : '!--[if ' . $condition . ']>%s<![endif]--';
+        $comment  = sprintf($template, $content);
+        self::removeHeadElement($comment);
+    }
+
+    /**
      * Return all HTML HEAD elements as a string.
      *
      * @return string   HTML fragment

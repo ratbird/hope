@@ -44,7 +44,15 @@ blockquote {
     margin: 0;
 }
 
-input.placeholder, ::-webkit-input-placeholder, :-moz-placeholder {
+input.placeholder {
+    opacity: 0.7;
+}
+
+::-webkit-input-placeholder {
+    color: rgba(0, 0, 0, 0.7);
+}
+
+:-moz-placeholder {
     color: rgba(0, 0, 0, 0.7);
 }
 

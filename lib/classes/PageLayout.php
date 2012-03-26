@@ -285,7 +285,6 @@ class PageLayout
      * way.
      *
      * @param string $content    comment content
-     * @param string $condition  condition for this comment (only supported by IE)
      */
     public static function addComment($content)
     {
@@ -296,9 +295,8 @@ class PageLayout
      * Remove a (conditional) comment from the header.
      *
      * @param string $content    comment content
-     * @param string $condition  condition for this comment (only supported in IE)
      */
-    public static function removeComment($content, $condition = '')
+    public static function removeComment($content)
     {
         self::removeHeadElement(sprintf('!--%s--', $content));
     }

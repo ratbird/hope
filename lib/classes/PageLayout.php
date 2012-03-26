@@ -86,6 +86,10 @@ class PageLayout
         //include print CSS
         self::addStylesheet('print.css', array('media' => 'print'));
 
+        // include ie-specific CSS
+        $css = sprintf('<link rel="stylesheet" href="%s" media="screen,print">', Assets::stylesheet_path('ie.css'));
+        self::addComment($css, 'IE');
+
         self::setSqueezePackages("base");
     }
 

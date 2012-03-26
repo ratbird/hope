@@ -87,7 +87,7 @@ class PageLayout
         self::addStylesheet('print.css', array('media' => 'print'));
 
         // include ie-specific CSS
-        $css = sprintf('<link rel="stylesheet" href="%s" media="screen,print">', Assets::stylesheet_path('ie.css'));
+        $css = sprintf('[if IE]><link rel="stylesheet" href="%s" media="screen,print"><![endif]', Assets::stylesheet_path('ie.css'));
         self::addComment($css, 'IE');
 
         self::setSqueezePackages("base");
@@ -287,13 +287,9 @@ class PageLayout
      * @param string $content    comment content
      * @param string $condition  condition for this comment (only supported by IE)
      */
-    public static function addComment($content, $condition = '')
+    public static function addComment($content)
     {
-        $template = empty($condition)
-                  ? '!-- %s --'
-                  : '!--[if ' . $condition . ']>%s<![endif]--';
-        $comment  = sprintf($template, $content);
-        self::addHeadElement($comment);
+        self::addHeadElement(sprintf('!--%s--', $content));
     }
 
     /**
@@ -304,11 +300,7 @@ class PageLayout
      */
     public static function removeComment($content, $condition = '')
     {
-        $template = empty($condition)
-                  ? '!-- %s --'
-                  : '!--[if ' . $condition . ']>%s<![endif]--';
-        $comment  = sprintf($template, $content);
-        self::removeHeadElement($comment);
+        self::removeHeadElement(sprintf('!--%s--', $content));
     }
 
     /**

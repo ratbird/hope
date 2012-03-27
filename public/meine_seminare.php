@@ -511,7 +511,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
     // Only display link to "mark all as read" if there is anything new
     if (count(array_filter($temp))) {
         $infobox[count($infobox) - 1]['eintrag'][] = array(
-            'icon' => 'icons/16/red/refresh.png',
+            'icon' => 'icons/16/black/refresh.png',
             'text' => '<a href="' . URLHelper::getURL('?action=tabularasa') . '">'
                     . _('Alles als gelesen markieren')
                     . '</a>',

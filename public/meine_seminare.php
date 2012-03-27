@@ -366,6 +366,55 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
         }
     }
 
+    // "Mark all as read"
+    //
+    // Nasty place for an action but since we don't have a model, this is the
+    // perfect place to grab all object ids
+    if (Request::option('action') === 'tabularasa') {
+        $query = "INSERT INTO object_user_visits "
+               .   "(object_id, user_id, type, visitdate, last_visitdate) "
+               . "("
+               .  "SELECT news_id, ?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP() "
+               .   "FROM news_range "
+               .   "WHERE range_id = ? "
+               . ") UNION ("
+               .   "SELECT vote_id, ?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP() "
+               .   "FROM vote "
+               .   "WHERE range_id = ?"
+               . ") "
+               . "ON DUPLICATE KEY UPDATE visitdate = UNIX_TIMESTAMP()";
+        $statement = DBManager::get()->prepare($query);
+
+        foreach ($my_obj as $id => $object) {
+            // Update all activated modules
+            foreach (words('forum documents schedule participants literature chat wiki scm elearning_interface') as $type) {
+                if ($object['modules'][$type]) {
+                    object_set_visit($id, $type);
+                }
+            }
+
+            // Update news and votes
+            $statement->execute(array(
+                $GLOBALS['auth']->auth['uid'], 'news', $id,
+                $GLOBALS['auth']->auth['uid'], 'vote', $id,
+             ));
+
+            // Update all other modules, TODO check activation
+            foreach (words('ilias_connect') as $type) {
+                object_set_visit($id, $type);
+            }
+
+            // Update object itself
+            object_set_visit($id, $object['obj_type']);
+        }
+
+        // PageLayout::postMessage(Messagebox::success(_('Alle Markierungen wurden entfernt')));
+        page_close();
+
+        header('Location: ' . URLHelper::getURL());
+        die;
+    }
+
     // Anzeige der Wartelisten
 
     $stmt = DBManager::get()->prepare(
@@ -450,6 +499,22 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
                     )
                 )
             )
+        );
+    }
+
+    // Determine whether there is anything new
+    $temp = array();
+    foreach ($groups as $group_members) {
+        $temp[] = check_group_new($group_members, $my_obj);
+    }
+
+    // Only display link to "mark all as read" if there is anything new
+    if (count(array_filter($temp))) {
+        $infobox[count($infobox) - 1]['eintrag'][] = array(
+            'icon' => 'icons/16/red/refresh.png',
+            'text' => '<a href="' . URLHelper::getURL('?action=tabularasa') . '">'
+                    . _('Alles als gelesen markieren')
+                    . '</a>',
         );
     }
 

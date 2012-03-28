@@ -890,25 +890,25 @@ function validate_upload($the_file, $real_file_name='') {
     $the_file_size = $the_file['size'];
     $the_file_name = $the_file['name'];
 
-    $active_upload_type = 'default';
-
-    if ($i_page == "sms_send.php") {
-        if (!$GLOBALS["ENABLE_EMAIL_ATTACHMENTS"] == true)
-                $emsg.= "error§" . _("Dateianhänge für Nachrichten sind in dieser Installation nicht erlaubt!") . "§";
-        $active_upload_type = "attachments";
-        $sem_status = $GLOBALS['perm']->get_perm();
-    } else {
-        $sem_status = $GLOBALS['perm']->get_studip_perm($SessSemName[1]);
-        $active_upload_type = $SessSemName["art_num"];
-    }
-
-    //erlaubte Dateigroesse aus Regelliste der Config.inc.php auslesen
-    $max_filesize = $UPLOAD_TYPES[$active_upload_type]["file_sizes"][$sem_status];
-
     if (!$the_file) { # haben wir eine Datei?
         $emsg.= "error§" . _("Sie haben keine Datei zum Hochladen ausgew&auml;hlt!") . "§";
     } else { # pruefen, ob der Typ stimmt
+        if ($i_page == "sms_send.php") {
+            if (!$GLOBALS["ENABLE_EMAIL_ATTACHMENTS"] == true)
+                    $emsg.= "error§" . _("Dateianhänge für Nachrichten sind in dieser Installation nicht erlaubt!") . "§";
+            $active_upload_type = "attachments";
+            $sem_status = $GLOBALS['perm']->get_perm();
+        } else {
+            $sem_status = $GLOBALS['perm']->get_studip_perm($SessSemName[1]);
+            $active_upload_type = $SessSemName["art_num"];
+            if (!isset($UPLOAD_TYPES[$active_upload_type])) {
+                $active_upload_type = 'default'; 
+            }
+        }
 
+        //erlaubte Dateigroesse aus Regelliste der Config.inc.php auslesen
+        $max_filesize = $UPLOAD_TYPES[$active_upload_type]["file_sizes"][$sem_status];
+        
         //Die Dateierweiterung von dem Original erfragen
         $pext = strtolower(getFileExtension($real_file_name ? $real_file_name : $the_file_name));
         if ($pext == "doc")
@@ -966,12 +966,13 @@ function validate_upload($the_file, $real_file_name='') {
             $emsg.= "error§" . sprintf(_("Die Datei konnte nicht &uuml;bertragen werden: Die maximale Gr&ouml;sse f&uuml;r einen Upload (%s Megabyte) wurde &uuml;berschritten!"), $max_filesize / 1048576);
         }
     }
+    
     if ($emsg) {
-        $msg.=$emsg;
-        return FALSE;
-        }
-    else
-        return TRUE;
+        $msg .= $emsg;
+        return true;
+    } else {
+        return true;
+    }
 }
 
 //der eigentliche Upload

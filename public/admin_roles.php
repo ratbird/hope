@@ -90,11 +90,6 @@ if (!$perm->have_studip_perm("admin", $range_id) || ($_range_type != 'inst' && $
 function MovePersonStatusgruppe ($range_id, $role_id, $type, $persons, $workgroup_mode=FALSE) {
     global $perm;
 
-    $mkdate = time();
-
-    $db=new DB_Seminar;
-    $db2=new DB_Seminar;
-
     if ($type == 'direct') {
         for ($i  = 0; $i < sizeof($persons); $i++) {
             $user_id = get_userid($persons[$i]);
@@ -129,10 +124,14 @@ function MovePersonStatusgruppe ($range_id, $role_id, $type, $persons, $workgrou
                     log_event('INST_USER_ADD', $range_id ,$user_id, $globalperms);
 
                     if ($perm->get_studip_perm($range_id, $user_id) == FALSE) {
-                        $db2->query("INSERT INTO user_inst SET Institut_id = '$range_id', user_id = '$user_id', inst_perms = '$globalperms'");
+                        $query = "INSERT INTO user_inst (Institut_id, user_id, inst_perms) VALUES (?, ?, ?)";
+                        $statement = DBManager::get()->prepare($query);
+                        $statement->execute(array($range_id, $user_id, $globalperms));
                     }
                     if ($perm->get_studip_perm($range_id, $user_id) =="user") {
-                        $db2->query("UPDATE user_inst SET inst_perms = '$globalperms' WHERE user_id = '$user_id' AND Institut_id = '$range_id'");
+                        $query = "UPDATE user_inst SET inst_perms = ? WHERE user_id = ? AND Institut_id = ?";
+                        $statement = DBManager::get()->prepare($query);
+                        $statement->execute(array($globalperms, $user_id, $range_id));
                     }
                 }
             }

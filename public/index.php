@@ -25,9 +25,6 @@ page_open(array('sess' => 'Seminar_Session', 'auth' => 'Seminar_Default_Auth', '
 
 $auth->login_if(Request::get('again') && ($auth->auth['uid'] == 'nobody'));
 
-// database object
-$db=new DB_Seminar;
-
 // evaluate language clicks
 // has to be done before seminar_open to get switching back to german (no init of i18n at all))
 if (Request::get('set_language')) {
@@ -41,7 +38,10 @@ if (Request::get('set_language')) {
 if ($auth->is_authenticated() && $user->id != 'nobody') {
     // store last language click
     if (strlen($_SESSION['forced_language'])) {
-        $db->query("UPDATE user_info SET preferred_language = '".$_SESSION['forced_language']."' WHERE user_id='$user->id'");
+        $query = "UPDATE user_info SET preferred_language = ? WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($_SESSION['forced_language'], $user->id));
+
         $_SESSION['_language'] = $_SESSION['forced_language'];
     }
     $_SESSION['forced_language'] = null;
@@ -191,12 +191,12 @@ if ($auth->is_authenticated() && $user->id != 'nobody') {
     }
 } else { //displaymodul for nobody
     $index_nobody_template = $GLOBALS['template_factory']->open('index_nobody');
-    $db->query("SELECT count(*) from seminare");
-    $db->next_record();
-    $index_nobody_template->set_attribute('num_active_courses', $db->f(0));
-    $db->query("SELECT count(*) from auth_user_md5");
-    $db->next_record();
-    $index_nobody_template->set_attribute('num_registered_users', $db->f(0));
+    
+    $num_active_courses = DBManager::get()->query("SELECT COUNT(*) FROM seminare")->fetchColumn();
+    $index_nobody_template->set_attribute('num_active_courses', $num_active_courses);
+    
+    $num_registered_users = DBManager::get()->query("SELECT COUNT(*) FROM auth_user_md5")->fetchColumn();
+    $index_nobody_template->set_attribute('num_registered_users', $num_registered_users);
     $index_nobody_template->set_attribute('num_online_users', get_users_online_count(10));
 
     if ($_REQUEST['logout'])
@@ -225,20 +225,23 @@ foreach ($portalplugins as $portalplugin) {
 page_close();
 
 if (is_object($user) && $user->id != 'nobody') {
-    $db->query(sprintf("SELECT * FROM rss_feeds WHERE user_id='%s' AND hidden=0 ORDER BY priority",$auth->auth["uid"]));
-    while ($db->next_record()) {
-        if ($db->f("name")!="" && $db->f("url")!="") {
-            $feed = new RSSFeed($db->f("url"));
-            if ($db->f('fetch_title') && $feed->ausgabe->channel['title']) {
-                $feedtitle = $feed->ausgabe->channel['title'];
-            } else {
-                $feedtitle = $db->f("name");
-            }
-
-            ob_start();
-            $feed->rssfeed_start();
-            echo $layout->render(array('title' => $feedtitle, 'icon_url' => 'icons/16/white/rss.png', 'admin_url' => 'edit_about.php?view=rss', 'content_for_layout' => ob_get_clean()));
+    $query = "SELECT url, name, fetch_title FROM rss_feeds "
+           . "WHERE user_id = ? AND hidden = 0 AND name != '' AND url != '' "
+           . "ORDER BY priority";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($auth->auth['uid']));
+    
+    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+        $feed = new RSSFeed($row['url']);
+        if ($row['fetch_title'] && $feed->ausgabe->channel['title']) {
+            $feedtitle = $feed->ausgabe->channel['title'];
+        } else {
+            $feedtitle = $row['name'];
         }
+
+        ob_start();
+        $feed->rssfeed_start();
+        echo $layout->render(array('title' => $feedtitle, 'icon_url' => 'icons/16/white/rss.png', 'admin_url' => 'edit_about.php?view=rss', 'content_for_layout' => ob_get_clean()));
     }
 }
 

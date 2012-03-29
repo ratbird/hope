@@ -76,6 +76,7 @@ class PageLayout
         self::addHeadElement('link', array('rel' => 'apple-touch-icon', 'href' => Assets::image_path('touch-icon-iphone.png')));
         self::addHeadElement('link', array('rel' => 'apple-touch-icon', 'href' => Assets::image_path('touch-icon-ipad.png'), 'size' => '72x72'));
         self::addHeadElement('link', array('rel' => 'apple-touch-icon', 'href' => Assets::image_path('touch-icon-iphone4.png'), 'size' => '114x114'));
+        self::addHeadElement('link', array('rel' => 'apple-touch-icon', 'href' => Assets::image_path('touch-icon-ipad3.png'), 'size' => '144x144'));
 
         // include jQuery + UI
         self::addStylesheet('jquery-ui-1.8.14.custom.css', array('media' => 'screen, print'));

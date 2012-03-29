@@ -381,13 +381,17 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
                .   "SELECT vote_id, ?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP() "
                .   "FROM vote "
                .   "WHERE range_id = ?"
+               . ") UNION ("
+               .   "SELECT eval_id, ?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP() "
+               .   "FROM eval_range "
+               .   "WHERE range_id = ?"
                . ") "
                . "ON DUPLICATE KEY UPDATE visitdate = UNIX_TIMESTAMP()";
         $statement = DBManager::get()->prepare($query);
 
         foreach ($my_obj as $id => $object) {
             // Update all activated modules
-            foreach (words('forum documents schedule participants literature chat wiki scm elearning_interface') as $type) {
+            foreach (words('forum documents schedule participants literature wiki scm elearning_interface') as $type) {
                 if ($object['modules'][$type]) {
                     object_set_visit($id, $type);
                 }
@@ -397,12 +401,8 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
             $statement->execute(array(
                 $GLOBALS['auth']->auth['uid'], 'news', $id,
                 $GLOBALS['auth']->auth['uid'], 'vote', $id,
+                $GLOBALS['auth']->auth['uid'], 'eval', $id,
              ));
-
-            // Update all other modules, TODO check activation
-            foreach (words('ilias_connect') as $type) {
-                object_set_visit($id, $type);
-            }
 
             // Update object itself
             object_set_visit($id, $object['obj_type']);

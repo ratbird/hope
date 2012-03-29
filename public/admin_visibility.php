@@ -107,8 +107,10 @@ if (is_array($visibility_sem)) {
         } 
 }
 
-// # Get a database connection
-$db = new DB_Seminar;
+// Prepare visibility statement
+$visibility_query     = "SELECT VeranstaltungsNummer, Name, visible FROM seminare WHERE Seminar_id = ?";
+$visibility_statement = DBManager::get()->prepare($visibility_query);
+
 //echo "<body>";
 $containerTable=new ContainerTable();
 echo $containerTable->openRow();
@@ -125,14 +127,16 @@ echo $zt->cell("<b>"._("Sichtbarkeit")."</b>",array("width"=>"20%"));
 echo $zt->closeRow();
 
 if ($SessSemName[1] && (!$change_visible)) {
-    $sql = "SELECT VeranstaltungsNummer, Name, visible FROM seminare WHERE Seminar_id='".$SessSemName[1]."'";   
-    $db->query($sql);
-    if ($db->next_record()) {
+    $visibility_statement->execute(array($SessSemName[1]));
+    $temp = $visibility_statement->fetch(PDO::FETCH_ASSOC);
+    $visibility_statement->closeCursor();
+    
+    if ($temp) {
         if(!LockRules::Check($SessSemName[1], 'seminar_visibility')) {
             $form   =   "<form name=\"asd\" action=\"". URLHelper::getLink() ."\" method=\"POST\">";
             $form   .= CSRFProtection::tokenTag();
             $form   .=  "<input type=\"checkbox\" name=\"visibility_sem[".$SessSemName[1]."]\"";
-            if ($db->f("visible")) {
+            if ($temp['visible']) {
                 $form .= " checked ";
             }
             $form   .=  ">";
@@ -141,17 +145,23 @@ if ($SessSemName[1] && (!$change_visible)) {
             $form   .=  Button::create(_('Zuweisen'));
             $form   .=  "</form>";
         } else {
-            $form = $db->f('visible') ? _("sichtbar") : _("versteckt");
+            $form = $temp['visible'] ? _("sichtbar") : _("versteckt");
         }
-        echo $zt->row(array(htmlready($db->f("VeranstaltungsNummer")), htmlready($db->f("Name")), $form));
+        echo $zt->row(array(htmlready($temp['VeranstaltungsNummer']), htmlready($temp['Name']), $form));
     }
 
 } else {
+    $update_query     = "UPDATE seminare SET visible = ? WHERE Seminar_id = ?";
+    $update_statement = DBManager::get()->prepare($update_query);
+    
     for ($i=0;$i<count($all_sem);$i++) {
         $visible=false;
-        $q="select VeranstaltungsNummer, Name, visible FROM seminare WHERE Seminar_id='". $all_sem[$i] . "'";
-        $db->query($q);
-        if ($db->next_record()) {
+        
+        $visibility_statement->execute(array($all_sem[$i]));
+        $temp = $visibility_statement->fetch(PDO::FETCH_ASSOC);
+        $visibility_statement->closeCursor();
+        
+        if ($temp) {
             if (is_array($visibility_sem)) {
                 reset($visibility_sem);
                 while (list($key, $val)=each($visibility_sem)) {
@@ -161,25 +171,24 @@ if ($SessSemName[1] && (!$change_visible)) {
                 }
             }
             if(!LockRules::Check($all_sem[$i], 'seminar_visibility')) {
-                if ($visible && ($db->f("visible")!=1)) {
-                    echo $zt->row(array(htmlready($db->f("VeranstaltungsNummer")), htmlready($db->f("Name")), visibility_change_message($db->f("visible"), 1)));
-                    $q="UPDATE seminare SET visible=1 WHERE Seminar_id='". $all_sem[$i] . "'";
-                    $db->query($q);
+                if ($visible && $temp['visible'] != 1) {
+                    echo $zt->row(array(htmlready($temp['VeranstaltungsNummer']), htmlready($temp['Name']), visibility_change_message($temp['visible'], 1)));
+                    $update_statement->execute(array(1, $all_sem[$i]));
                     log_event("SEM_VISIBLE",$all_sem[$i]);
-                } else if ($visible && ($db->f("visible")==1)) {
-                    echo $zt->row(array(htmlready($db->f("VeranstaltungsNummer")), htmlready($db->f("Name")), visibility_change_message($db->f("visible"), 1)));
-                } else if (!$visible && $db->f("visible") != 0) {
-                    $q = "UPDATE seminare SET visible=0 WHERE Seminar_id='".$all_sem[$i]."'";
-                    $db->query($q);
+                } else if ($visible && $temp['visible'] == 1) {
+                    echo $zt->row(array(htmlready($temp['VeranstaltungsNummer']), htmlready($temp['Name']), visibility_change_message($temp['visible'], 1)));
+                } else if (!$visible && $temp['visible'] != 0) {
+                    $update_statement->execute(array(0, $all_sem[$i]));
                     log_event("SEM_INVISIBLE",$all_sem[$i]);
-                     echo $zt->row(array(htmlready($db->f("VeranstaltungsNummer")), htmlready($db->f("Name")), visibility_change_message($db->f("visible"), 0)));
+                     echo $zt->row(array(htmlready($temp['VeranstaltungsNummer']), htmlready($temp['Name']), visibility_change_message($temp['visible'], 0)));
                 } else {
-                    echo $zt->row(array(htmlready($db->f("VeranstaltungsNummer")), htmlready($db->f("Name")), visibility_change_message($db->f("visible"), 0)));
+                    echo $zt->row(array(htmlready($temp['VeranstaltungsNummer']), htmlready($temp['Name']), visibility_change_message($temp['visible'], 0)));
                 }
                 $visible = false;
             }
         } else {
-            echo $zt->row(array("&nbsp;", $db->f("Name"), "<font color=red>". _("Änderung fehlgeschlagen") . "</font>"));
+            // TODO This will not have the expected output since $temp['Name'] will always be undefined
+            echo $zt->row(array("&nbsp;", $temp['Name'], "<font color=red>". _("Änderung fehlgeschlagen") . "</font>"));
         }
     }
 }

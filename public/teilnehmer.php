@@ -1129,10 +1129,8 @@ while (list ($key, $val) = each ($gruppe)) {
 
     if ($c % 2) {   // switcher fuer die Klassen
         $class="steel1";
-        $class2="colorline";
     } else {
         $class="steelgraulight";
-        $class2="colorline2";
     }
 
 //  Elemente holen
@@ -1182,7 +1180,7 @@ while (list ($key, $val) = each ($gruppe)) {
 if ($db->f('visible') == 'yes' || $i_see_everybody || $db->f('user_id') == $user->id) {
     echo "<tr>";
     if ($showscore == TRUE) {
-        printf("<td bgcolor=\"#%s%s%s\" class=\"%s\">", $red, $green,$blue, $class2);
+        printf("<td bgcolor=\"#%s%s%s\">", $red, $green,$blue, $class2);
         printf("<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" %s width=\"10\"></td>", tooltip(_("Aktivität: ").round($aktivity_index_user)."%"));
     }
 

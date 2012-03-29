@@ -255,55 +255,77 @@ class Seminar
      */
     function getUndecoratedData($filter = false)
     {
-        $cycles = $this->metadate->getCycleData();
-        $dates = $this->getSingleDates($filter, $filter);
-        $rooms = array();
 
-        foreach (array_keys($cycles) as $id) {
-            $cycles[$id]['first_date'] = CycleDataDB::getFirstDate($id);
-            if (!empty($cycles[$id]['assigned_rooms'])) {
-                foreach ($cycles[$id]['assigned_rooms'] as $room_id => $count) {
-                    $rooms[$room_id] += $count;
+        // Caching
+        $cache = StudipCacheFactory::getCache();
+        $cache_key = 'course/undecorated_data/'. $this->id;
+
+        if ($filter) {
+            $sub_key = $GLOBALS['_language'] .'/'. $this->filterStart .'-'. $this->filterEnd;
+        } else {
+            $sub_key = $GLOBALS['_language'] .'/unfiltered';
+        }
+
+        $data = unserialize($cache->read($cache_key));
+
+        // build cache from scratch
+        if (!$data || !$data[$sub_key]) {
+            $cycles = $this->metadate->getCycleData();
+            $dates = $this->getSingleDates($filter, $filter);
+            $rooms = array();
+
+            foreach (array_keys($cycles) as $id) {
+                $cycles[$id]['first_date'] = CycleDataDB::getFirstDate($id);
+                if (!empty($cycles[$id]['assigned_rooms'])) {
+                    foreach ($cycles[$id]['assigned_rooms'] as $room_id => $count) {
+                        $rooms[$room_id] += $count;
+                    }
                 }
             }
-        }
-        // besser wieder mit direktem Query statt Objekten
-        if (is_array($cycles) && (sizeof($cycles) == 0)) {
-            $cycles = FALSE;
-        }
 
-        $ret['regular']['turnus_data'] = $cycles;
-
-        // the irregular single-dates
-        foreach ($dates as $val) {
-            $zw = array(
-                'metadate_id' => $val->getMetaDateID(),
-                'termin_id'   => $val->getTerminID(),
-                'date_typ'    => $val->getDateType(),
-                'start_time'  => $val->getStartTime(),
-                'end_time'    => $val->getEndTime(),
-                'mkdate'      => $val->getMkDate(),
-                'chdate'      => $val->getMkDate(),
-                'ex_termin'   => $val->isExTermin(),
-                'orig_ex'     => $val->isExTermin(),
-                'range_id'    => $val->getRangeID(),
-                'author_id'   => $val->getAuthorID(),
-                'resource_id' => $val->getResourceID(),
-                'raum'        => $val->getFreeRoomText(),
-                'typ'         => $val->getDateType(),
-                'tostring'    => $val->toString()
-            );
-
-            if ($val->getResourceID()) {
-                $rooms[$val->getResourceID()]++;
+            // besser wieder mit direktem Query statt Objekten
+            if (is_array($cycles) && (sizeof($cycles) == 0)) {
+                $cycles = FALSE;
             }
 
-            $ret['irregular'][$val->getTerminID()] = $zw;
+            $ret['regular']['turnus_data'] = $cycles;
+
+            // the irregular single-dates
+            foreach ($dates as $val) {
+                $zw = array(
+                    'metadate_id' => $val->getMetaDateID(),
+                    'termin_id'   => $val->getTerminID(),
+                    'date_typ'    => $val->getDateType(),
+                    'start_time'  => $val->getStartTime(),
+                    'end_time'    => $val->getEndTime(),
+                    'mkdate'      => $val->getMkDate(),
+                    'chdate'      => $val->getMkDate(),
+                    'ex_termin'   => $val->isExTermin(),
+                    'orig_ex'     => $val->isExTermin(),
+                    'range_id'    => $val->getRangeID(),
+                    'author_id'   => $val->getAuthorID(),
+                    'resource_id' => $val->getResourceID(),
+                    'raum'        => $val->getFreeRoomText(),
+                    'typ'         => $val->getDateType(),
+                    'tostring'    => $val->toString()
+                );
+
+                if ($val->getResourceID()) {
+                    $rooms[$val->getResourceID()]++;
+                }
+
+                $ret['irregular'][$val->getTerminID()] = $zw;
+            }
+
+            $ret['rooms'] = $rooms;
+
+            $data[$sub_key] = $ret;
+
+            // write data to cache
+            $cache->write($cache_key, serialize($data), 600);
         }
 
-        $ret['rooms'] = $rooms;
-
-        return $ret;
+        return $data[$sub_key];
     }
 
     function getFormattedTurnus($short = FALSE)
@@ -803,6 +825,9 @@ class Seminar
         // logging >>>>>>
         log_event("SEM_ADD_SINGLEDATE", $this->getId(), $singledate->toString(), 'SingleDateID: '.$singledate->getTerminID());
         // logging <<<<<<
+
+        $cache = StudipCacheFactory::getCache();
+        $cache->expire('course/undecorated_data/'. $this->range_id);
 
         $this->readSingleDates();
         $this->irregularSingleDates[$singledate->getSingleDateID()] =& $singledate;

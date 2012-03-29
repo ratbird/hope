@@ -235,6 +235,9 @@ class SingleDate {
     }
 
     function delete($keepIssues = false) {
+        $cache = StudipCacheFactory::getCache();
+        $cache->expire('course/undecorated_data/'. $this->range_id);
+
         $this->chdate = time();
         $this->killAssign();
         if (!$keepIssues) {
@@ -245,6 +248,10 @@ class SingleDate {
     }
 
     function store() {
+
+        $cache = StudipCacheFactory::getCache();
+        $cache->expire('course/undecorated_data/'. $this->range_id);
+
         $this->chdate = time();
         if ($this->ex_termin) {
             $this->killAssign();

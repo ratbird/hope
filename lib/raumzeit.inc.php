@@ -67,7 +67,12 @@ function raumzeit_delete_singledate() {
                 $sem->createMessage(sprintf(_("Sie haben den Termin %s gelöscht, dem ein Thema zugeorndet war. Sie können das Thema in der %sExpertenansicht des Ablaufplans%s einem anderen Termin (z.B. einem Ausweichtermin) zuordnen."),
                     $termin->toString(), '<a href="'. URLHelper::getLink('themen.php?cmd=changeViewMode&newFilter=expert') .'">', '</a>'));
             } else {
-                $sem->createMessage(sprintf(_("Der Termin %s wurde gelöscht!"), $termin->toString()));
+                if ($termin->hasRoom()) {  
+                    $sem->createMessage(sprintf(_("Der Termin %s wurde gelöscht! <br> Die Buchung für den Raum %s wurde gelöscht."), 
+                        $termin->toString(), $termin->getRoom()));  
+                } else {  
+                    $sem->createMessage(sprintf(_("Der Termin %s wurde gelöscht!"), $termin->toString()));
+                }
             }
         }
 

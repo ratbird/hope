@@ -2,7 +2,7 @@
 # Lifter001: TEST
 # Lifter002: TODO
 # Lifter007: TODO
-# Lifter003: TODO
+# Lifter003: TEST
 # Lifter010: TODO
 /**
 * admin_aux.php - Zusatzangaben-Administration von Stud.IP.
@@ -70,17 +70,21 @@ include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
 include 'lib/include/admin_search_form.inc.php';
 
+// Prepare aux statement
+$aux_query     = "SELECT aux_lock_rule, Name, Veranstaltungsnummer FROM seminare WHERE Seminar_id = ?";
+$aux_statement = DBManager::get()->prepare($aux_query);
+
 if (isset($SessSemName[1]) && (!$make_aux)) {
-    $db7 = new DB_Seminar;
-    $db7->query("SELECT aux_lock_rule, Name, Veranstaltungsnummer FROM seminare WHERE Seminar_id='".$SessSemName[1]."'");
-    $db7->next_record();
-    $aux_sem[$SessSemName[1]]=$db7->f("aux_lock_rule");
+    $aux_statement->execute(array($SessSemName[1]));
+    $seminar_data = $aux_statement->fetch(PDO::FETCH_ASSOC);
+    $aux_statement->closeCursor();
+
+    $aux_sem[$SessSemName[1]] = $seminar_data['aux_lock_rule'];
     $selected = 1;
     //echo $db7->f("aux_lock_rule");
 }
 
 // Get a database connection
-$db = new DB_Seminar();
 $rules = AuxLockRules::getAllLockRules();
 //echo "<body>";
 $containerTable=new ContainerTable();
@@ -106,7 +110,7 @@ if (isset($SessSemName[1]) && isset($selected)) {
     if(is_array($rules)){
         foreach ($rules as $id => $rule) {
             $form .= '<option value="'.$id.'"';
-            if ($id == $db7->f("aux_lock_rule")) {
+            if ($id == $seminar_data['aux_lock_rule']) {
                 $form .= " selected ";
             }
             $form .= ">".htmlReady($rule["name"])."</option>";
@@ -116,30 +120,29 @@ if (isset($SessSemName[1]) && isset($selected)) {
     $form   .=  "<input type=\"hidden\" name=\"aux_all\" value=\"-1\">";
     $form   .=  Button::create(_('Zuweisen'));
     $form   .=  "</form>";
-    echo $zt->row(array(htmlReady($db7->f("Veranstaltungsnummer")), htmlReady($db7->f("Name")), $form));
+    echo $zt->row(array(htmlReady($seminar_data['Veranstaltungsnummer']), htmlReady($seminar_data['Name']), $form));
 
 }
 
 if (!Request::submitted('aux_rule') && is_array($aux_sem) && (!$selected)) {
+    $update_query     = "UPDATE seminare SET aux_lock_rule = ? WHERE Seminar_id = ?";
+    $update_statement = DBManager::get()->prepare($update_query);
+    
     foreach ($aux_sem as $key => $val) {
-        $sql = "SELECT Veranstaltungsnummer, Name, aux_lock_rule FROM seminare WHERE seminar_id='".$key."'";
-        $db->query($sql);
-        if ($db->next_record()) {
-                $rule = AuxLockRules::getLockRuleById($val);
-                if (!$rule['name']) {
-                    $rule['name'] = '-- '._('keine Zusatzangaben').' --';
-                }
-                echo $zt->row(array(htmlReady($db->f("Veranstaltungsnummer")), htmlReady($db->f("Name")), htmlReady($rule["name"])));
-                if ($make_aux) {
-                    if ($val == 'null') {
-                        $sql = "UPDATE seminare SET aux_lock_rule = NULL WHERE Seminar_id='".$key."'";
-                    } else {
-                        $sql = "UPDATE seminare SET aux_lock_rule='".$val."' WHERE Seminar_id='".$key."'";
-                    }
-                    $db->query($sql);
-                }
-        }
-        else {
+        $aux_statement->execute(array($key));
+        $aux_data = $aux_statement->fetch(PDO::FETCH_ASSOC);
+        $aux_statement->closeCursor();
+        
+        if ($aux_data) {
+            $rule = AuxLockRules::getLockRuleById($val);
+            if (!$rule['name']) {
+                $rule['name'] = '-- ' . _('keine Zusatzangaben') . ' --';
+            }
+            echo $zt->row(array(htmlReady($aux_data['Veranstaltungsnummer']), htmlReady($aux_data['Name']), htmlReady($rule["name"])));
+            if ($make_aux) {
+                $update_statement->execute(array($val == 'null' ? null : $val, $key));
+            }
+        } else {
             echo $zt->row(array("&nbsp;", $db->f("Name"), "<font color=red>". _("Änderung fehlgeschlagen") . "</font>"));
         }
     }

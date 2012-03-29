@@ -2,7 +2,7 @@
 # Lifter001: TEST
 # Lifter002: TODO
 # Lifter007: TODO
-# Lifter003: TODO
+# Lifter003: TODO - The big search query at the end is still left untouched
 # Lifter010: TODO
 /*
 archiv.php - Suchmaske fuer das Archiv
@@ -53,8 +53,6 @@ require_once 'lib/functions.php';
 require_once('lib/datei.inc.php');
 require_once('lib/log_events.inc.php');
 
-$db=new DB_Seminar;
-$db2=new DB_Seminar;
 $cssSw=new cssClassSwitcher;
 $sess->register("archiv_data");
 
@@ -97,23 +95,35 @@ unset($message, $details);
 //Loeschen aus dem Archiv
 if (($delete_id) && Request::submitted('delete_really')){
     if (archiv_check_perm($delete_id) == "admin") {
-        $db2->query("SELECT name,archiv_file_id FROM archiv WHERE seminar_id='$delete_id'");
-        $db2->next_record();
-        $db->query("DELETE FROM archiv WHERE seminar_id = '$delete_id'");
-        if ($db->affected_rows()) {
-            $message = sprintf(_('Die Veranstaltung "%s" wurde aus dem Archiv gelöscht'), htmlReady($db2->f("name")));
-            log_event("SEM_DELETE_FROM_ARCHIVE",$delete_id,NULL,$db2->f("name")." (".$db2->f("semester").")"); // ...logging...
+        // Load relevant data from archive
+        $query = "SELECT name, archiv_file_id, semester FROM archiv WHERE seminar_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($delete_id));
+        $seminar = $statement->fetch(PDO::FETCH_ASSOC);
+        
+        // Delete from archive
+        $query = "DELETE FROM archiv WHERE seminar_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($delete_id));        
+        if ($statement->rowCount()) {
+            $message = sprintf(_('Die Veranstaltung "%s" wurde aus dem Archiv gelöscht'), htmlReady($seminar['name']));
+            log_event("SEM_DELETE_FROM_ARCHIVE",$delete_id,NULL,$seminar['name']." (".$seminar['semester'].")"); // ...logging...
         }
-        if ($db2->f("archiv_file_id")) {
-            if (unlink ($ARCHIV_PATH."/".$db2->f("archiv_file_id"))){
+        
+        if ($seminar['archiv_file_id']) {
+            if (unlink ($ARCHIV_PATH."/".$seminar['archiv_file_id'])){
                 $details[] = _("Das Zip-Archiv der Veranstaltung wurde aus dem Archiv gelöscht.");
             } else {
                 $details[] = _("Das Zip-Archiv der Veranstaltung konnte nicht aus dem Archiv gelöscht werden.");
             }
         }
-        $db->query("DELETE FROM archiv_user WHERE seminar_id='$delete_id'");
-        if ($db->affected_rows()) {
-            $details[] = sprintf(_("Es wurden %s Zugriffsberechtigungen entfernt."), $db->affected_rows());
+        
+        // Delete from archiv_user
+        $query = "DELETE FROM archiv_user WHERE seminar_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($delete_id));
+        if ($statement->rowCount()) {
+            $details[] = sprintf(_("Es wurden %s Zugriffsberechtigungen entfernt."), $statement->rowCount());
         }
     } else {
         $msg="error§" . _("Sie haben leider nicht die notwendige Berechtigung für diese Aktion.");
@@ -123,7 +133,10 @@ if (($delete_id) && Request::submitted('delete_really')){
 
 //Sicherheitsabfrage
 if ($delete_id) {
-    $name = DBManager::get()->query("SELECT name FROM archiv WHERE seminar_id= '$delete_id'")->fetchColumn();
+    $query = "SELECT name FROM archiv WHERE seminar_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($delete_id));
+    $name = $statement->fetchColumn();
     echo createQuestion(sprintf(_('Wollen Sie die Veranstaltung "%s" wirklich löschen? Sämtliche Daten und die mit der Veranstaltung archivierte Dateisammlung werden unwiderruflich gelöscht!'), $name),
             array('delete_really' => 'true', 'delete_id' => $delete_id), array('back' => 'true'));
 }
@@ -131,8 +144,10 @@ if ($delete_id) {
 //Loeschen von Archiv-Usern
 if ($delete_user) {
     if (archiv_check_perm($d_sem_id) == "admin" || archiv_check_perm($d_sem_id) == "dozent") {
-        $db->query("DELETE FROM archiv_user WHERE seminar_id = '$d_sem_id' AND user_id='$delete_user'");
-        if ($db->affected_rows()){
+        $query = "DELETE FROM archiv_user WHERE seminar_id  = ? AND user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($d_sem_id, $delete_user));
+        if ($statement->rowCount()) {
             $msg="msg§" . _("Zugriffsberechtigung entfernt") . "§";
         }
     } else {
@@ -143,8 +158,10 @@ if ($delete_user) {
 //Eintragen von Archiv_Usern
 if (Request::submitted('do_add_user')) {
     if (archiv_check_perm($a_sem_id) == "admin" || archiv_check_perm($a_sem_id) == "dozent") {
-        $db->query("INSERT IGNORE INTO archiv_user SET seminar_id = '$a_sem_id', user_id='$add_user', status='autor'");
-        if ($db->affected_rows()){
+        $query = "INSERT IGNORE INTO archiv_user (seminar_id, user_id, status) VALUES (?, ?, 'autor')";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($a_sem_id, $add_user));
+        if ($statement->rowCount()) {
             $msg="msg§" . _("Zugriffsberechtigung erteilt") . "§";
         }
     } else {
@@ -158,13 +175,15 @@ if (Request::submitted('do_add_user')) {
 
 if (!empty($dump_id)) {
     if (archiv_check_perm($dump_id)){
-        $query = "SELECT dump FROM archiv WHERE archiv.seminar_id = '$dump_id'";
-        $db->query ($query);
-        if ($db->next_record()) {
+        $query = "SELECT dump FROM archiv WHERE seminar_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($dump_id));
+        $dump = $statement->fetchColumn();
+        if ($dump) {
             if (!isset($druck)) {
                 echo '<div align=center> <a href="'. URLHelper::getLink("?dump_id=".$dump_id."&druck=1") .'" target="_self"><b>' . _("Druckversion") . "</b></a><br><br></div>";
             }
-            echo $db->f('dump');
+            echo $dump;
         }
     } else {
         $msg="error§" . _("Sie haben leider nicht die notwendige Berechtigung für diese Aktion.");
@@ -175,13 +194,15 @@ if (!empty($dump_id)) {
 
 elseif (!empty($forum_dump_id)) {
     if (archiv_check_perm($forum_dump_id)){
-        $query = "SELECT forumdump FROM archiv WHERE archiv.seminar_id = '$forum_dump_id'";
-        $db->query ($query);
-        if ($db->next_record()) {
+        $query = "SELECT forumdump FROM archiv WHERE seminar_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($forum_dump_id));
+        $dump = $statement->fetchColumn();
+        if ($dump) {
             if (!isset($druck)) {
                 echo '<div align=center> <a href="'. URLHelper::getLink("?forum_dump_id=".$forum_dump_id."&druck=1") .'" target=_self><b>' . _("Druckversion") . "</b></a><br><br></div>";
             }
-            echo $db->f('forumdump');
+            echo $dump;
         }
     } else {
         $msg="error§" . _("Sie haben leider nicht die notwendige Berechtigung für diese Aktion.");
@@ -192,14 +213,16 @@ elseif (!empty($forum_dump_id)) {
 
 elseif (!empty($wiki_dump_id)) {
     if (archiv_check_perm($wiki_dump_id)){
-        $query = "SELECT wikidump FROM archiv WHERE archiv.seminar_id = '$wiki_dump_id'";
-        $db->query ($query);
-        if ($db->next_record()) {
+        $query = "SELECT wikidump FROM archiv WHERE seminar_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($wiki_dump_id));
+        $dump = $statement->fetchColumn();
+        if ($dump) {
             if (!isset($druck)) {
                 echo '<div align=center> <a href="'. URLHelper::getLink("?wiki_dump_id=".$wiki_dump_id."&druck=1") .'" target=_self><b>' . _("Druckversion") . "</b></a><br><br></div>";
             }
             echo "<table class=blank width=95% align=center><tr><td>";
-            echo stripslashes($db->f('wikidump'));
+            echo stripslashes($dump);
             echo "</td></tr></table>";
         }
     } else {
@@ -254,15 +277,15 @@ include('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
                                 <font size=-1>
                                 <select name="sem">
                                 <option selected value=0><?=_("alle")?></option>
-                                <?
-                                $db->query("SELECT DISTINCT semester FROM archiv ORDER BY start_time");
-                                while ($db->next_record())
-                                    if  ($db->f("semester"))
-                                        if ($db->f("semester") == $archiv_data["sem"])
-                                            echo "<option selected value=\"", $db->f("semester"), "\">", $db->f("semester"), "</option>";
-                                        else
-                                            echo "<option value=\"", $db->f("semester"), "\">", $db->f("semester"), "</option>";
-                                ?>
+                            <?
+                                $query = "SELECT DISTINCT semester FROM archiv WHERE semester != '' ORDER BY start_time";
+                                $statement = DBManager::get()->query($query);
+                                while ($semester = $statement->fetchColumn()) {
+                                    printf('<option%s>%s</option>',
+                                           $semester == $archiv_data['sem'] ? ' selected' : '',
+                                           htmlReady($semester));
+                                }
+                            ?>
                                 </select>
                                 </font>
                             </td>
@@ -275,18 +298,20 @@ include('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
                                 <font size=-1>
                                 <select name="inst">
                                 <option selected value=0><?=_("alle")?></option>
-                                <?
-                                $db->query("SELECT DISTINCT heimat_inst_id, Institute.Name FROM archiv LEFT JOIN Institute ON (Institut_id=heimat_inst_id)  ORDER BY Name");
-                                while ($db->next_record())
-                                    {
-                                    if  (($db->f("Name")) && ($db->f("Name")) !="- - -")
-                                        if ($db->f("heimat_inst_id") == $archiv_data["inst"])
-                                            echo "<option selected value=", $db->f("heimat_inst_id"), ">", htmlReady(my_substr($db->f("Name"),0, 40)), "</option>";
-                                        else
-                                            echo "<option value=", $db->f("heimat_inst_id"), ">", htmlReady(my_substr($db->f("Name"),0, 40)), "</option>";
-
-                                    }
-                                ?>
+                            <?
+                                $query = "SELECT DISTINCT heimat_inst_id, Institute.Name "
+                                       . "FROM archiv "
+                                       . "LEFT JOIN Institute ON (Institut_id = heimat_inst_id) "
+                                       . "WHERE Institute.Name NOT IN ('', '- - -') "
+                                       . "ORDER BY Name";
+                                $statement = DBManager::get()->query($query);
+                                while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                                    printf('<option value="%s"%s>%s</option>',
+                                           htmlReady($row['heimat_inst_id']),
+                                           $row['heimat_inst_id'] == $archiv_data['inst'] ? ' selected' : '',
+                                           htmlReady(my_substr($row['Name'], 0, 40)));
+                                }
+                            ?>
                                 </select>
                                 </font>
                             </td>
@@ -299,18 +324,16 @@ include('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
                                 <font size=-1>
                                 <select name="fak">
                                 <option selected value=0><?=_("alle")?></option>
-                                <?
-                                $db->query("SELECT DISTINCT fakultaet FROM archiv ORDER BY fakultaet");
-                                while ($db->next_record())
-                                    {
-                                    if ($db->f("fakultaet"))
-                                        if ($db->f("fakultaet") == stripslashes($archiv_data["fak"]))
-                                            echo '<option selected value="'. htmlReady($db->f("fakultaet")). '">'. htmlReady(my_substr($db->f("fakultaet"),0, 40)). "</option>";
-                                        else
-                                            echo '<option value="'. htmlReady($db->f("fakultaet")). '">'. htmlReady(my_substr($db->f("fakultaet"),0, 40)). "</option>";
-
-                                    }
-                                ?>
+                            <?
+                                $query = "SELECT DISTINCT fakultaet FROM archiv WHERE fakultaet != '' ORDER BY fakultaet";
+                                $statement = DBManager::get()->query($query);
+                                while ($fakultaet = $statement->fetchColumn()) {
+                                    printf('<option value="%s"%s>%s</option>',
+                                           htmlReady($fakultaet),
+                                           $fakultaet == stripslashes($archiv_data['fak']) ? ' selected' : '',
+                                           htmlReady(my_substr($fakultaet, 0, 40)));
+                                }
+                            ?>
                                 </select>
                                 </font>
                             </td>
@@ -365,6 +388,8 @@ include('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
 // wollen wir was Suchen?
 
 if ($archiv_data["perform_search"]) {
+    $db = new DB_Seminar;
+    
     //searchstring to short?
     if ((((strlen($archiv_data["all"]) < 4) && ($archiv_data["all"]))
         || ((strlen($archiv_data["name"]) < 4) && ($archiv_data["name"]))

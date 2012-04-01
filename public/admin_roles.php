@@ -2,7 +2,7 @@
 # Lifter001: DONE
 # Lifter002: TODO
 # Lifter007: TODO
-# Lifter003: TODO
+# Lifter003: TEST
 # Lifter010: TODO
 /*
 admin_statusgruppe.php - Statusgruppen-Verwaltung von Stud.IP.

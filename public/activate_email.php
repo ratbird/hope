@@ -34,8 +34,8 @@ function reenter_mail() {
     echo '<form action="activate_email.php" method="post">'
         . CSRFProtection::tokenTag()
         .'<input type="hidden" name="uid" value="'. htmlReady($_REQUEST['uid']) .'">'
-        .'<table><tr><td>'. _('E-Mail:') .'</td><td><input type="text" name="email1"></td></tr>'
-        .'<tr><td>'. _('Wiederholung:') . '</td><td><input type="text" name="email2"></td></tr></table>'
+        .'<table><tr><td>'. _('E-Mail:') .'</td><td><input type="email" name="email1"></td></tr>'
+        .'<tr><td>'. _('Wiederholung:') . '</td><td><input type="email" name="email2"></td></tr></table>'
         .Button::createAccept(). '</form>';
 }
 

@@ -470,19 +470,19 @@ if ($perm->have_studip_perm("admin",$i_view) || $i_view == "new") {
         </tr>
     <tr <? $cssSw->switchClass() ?>>
         <td class="<? echo $cssSw->getClass() ?>" ><?=_("Telefonnummer:")?> </td>
-        <td class="<? echo $cssSw->getClass() ?>" ><input style="width: 98%" type="text" <?=(LockRules::Check($i_id, 'telefon') ? 'readonly' : '')?> name="telefon" size=32 maxlength=254 value="<?php echo htmlReady($db->f("telefon")) ?>"></td>
+        <td class="<? echo $cssSw->getClass() ?>" ><input style="width: 98%" type="tel" <?=(LockRules::Check($i_id, 'telefon') ? 'readonly' : '')?> name="telefon" size=32 maxlength=254 value="<?php echo htmlReady($db->f("telefon")) ?>"></td>
     </tr>
     <tr <? $cssSw->switchClass() ?>>
         <td class="<? echo $cssSw->getClass() ?>" ><?=_("Faxnummer:")?> </td>
-        <td class="<? echo $cssSw->getClass() ?>" ><input style="width: 98%" type="text" <?=(LockRules::Check($i_id, 'fax') ? 'readonly' : '')?> name="fax" size=32 maxlength=254 value="<?php echo htmlReady($db->f("fax")) ?>"></td>
+        <td class="<? echo $cssSw->getClass() ?>" ><input style="width: 98%" type="tel" <?=(LockRules::Check($i_id, 'fax') ? 'readonly' : '')?> name="fax" size=32 maxlength=254 value="<?php echo htmlReady($db->f("fax")) ?>"></td>
     </tr>
     <tr <? $cssSw->switchClass() ?>>
         <td class="<? echo $cssSw->getClass() ?>" ><?=_("E-Mail-Adresse:")?> </td>
-        <td class="<? echo $cssSw->getClass() ?>" ><input style="width: 98%" type="text" <?=(LockRules::Check($i_id, 'email') ? 'readonly' : '')?> name="email" size=32 maxlength=254 value="<?php echo htmlReady($db->f("email")) ?>"></td>
+        <td class="<? echo $cssSw->getClass() ?>" ><input style="width: 98%" type="email" <?=(LockRules::Check($i_id, 'email') ? 'readonly' : '')?> name="email" size=32 maxlength=254 value="<?php echo htmlReady($db->f("email")) ?>"></td>
     </tr>
     <tr <? $cssSw->switchClass() ?>>
         <td class="<? echo $cssSw->getClass() ?>" ><?=_("Homepage:")?> </td>
-        <td class="<? echo $cssSw->getClass() ?>" ><input style="width: 98%" type="text" <?=(LockRules::Check($i_id, 'url') ? 'readonly' : '')?> name="home" size=32 maxlength=254 value="<?php echo htmlReady($db->f("url")) ?>"></td>
+        <td class="<? echo $cssSw->getClass() ?>" ><input style="width: 98%" type="url" <?=(LockRules::Check($i_id, 'url') ? 'readonly' : '')?> name="home" size=32 maxlength=254 value="<?php echo htmlReady($db->f("url")) ?>"></td>
     </tr>
     <?
     //choose preferred lit plugin

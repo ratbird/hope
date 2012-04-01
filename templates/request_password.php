@@ -36,7 +36,7 @@ use Studip\Button, Studip\LinkButton;
                 <tr valign=top align=left>
                     <td><?=_("E-Mail:")?> </td>
                     <td>
-                        <input type="text" name="email" value="<?=htmlReady($email)?>" size="20" maxlength="63">
+                        <input type="email" name="email" value="<?=htmlReady($email)?>" size="20" maxlength="63">
                     </td>
                 </tr>
                 <tr>

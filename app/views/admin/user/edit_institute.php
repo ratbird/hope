@@ -26,11 +26,11 @@
         </tr>
         <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
             <td><?= _("Telefon") ?>:</td>
-            <td><input class="user_form" type="text" name="telefon" value="<?= htmlReady($institute['Telefon'])?>"></td>
+            <td><input class="user_form" type="tel" name="telefon" value="<?= htmlReady($institute['Telefon'])?>"></td>
         </tr>
         <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
             <td><?= _("Fax") ?>:</td>
-            <td><input class="user_form" type="text" name="fax" value="<?= htmlReady($institute['Fax'])?>"></td>
+            <td><input class="user_form" type="tel" name="fax" value="<?= htmlReady($institute['Fax'])?>"></td>
         </tr>
         <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
             <td><?= _("Standard-Adresse") ?>:</td>

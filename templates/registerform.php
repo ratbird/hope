@@ -121,7 +121,7 @@ function checkdata(){
 <table border=0 bgcolor="#eeeeee" align="center" cellspacing=2 cellpadding=4>
  <tr valign=top align=left>
   <td colspan="2"><?=_("Benutzername:")?></td>
-  <td><input type="text" name="username" onchange="checkusername()" value="<?= isset($username) ? htmlReady($username) : "" ?>" size=32 maxlength=63></td>
+  <td><input type="text" name="username" onchange="checkusername()" value="<?= isset($username) ? htmlReady($username) : "" ?>" size=32 maxlength=63 autocapitalize="off" autocorrect="off"></td>
  </tr>
 
  <tr valign=top align=left>
@@ -184,7 +184,7 @@ function checkdata(){
 <tr valign=top align=left>
   <td colspan="2"><?=_("E-Mail:")?></td>
     <?
-    echo '<td nowrap="nowrap"><input type="text" name="Email" onchange="checkEmail()"  value="';
+    echo '<td nowrap="nowrap"><input type="email" name="Email" onchange="checkEmail()"  value="';
     if (trim($email_restriction)) {
         echo (isset($Email) ? preg_replace('|@.*|', '', trim($Email)) : '' );
         echo "\" size=20 maxlength=63>\n";

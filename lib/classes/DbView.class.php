@@ -7,7 +7,7 @@
 // This file is part of Stud.IP
 // DbView.class.php
 // Class to provide simple Views and Prepared Statements
-// Mainly for MySql, may work with other DBs (not tested) 
+// Mainly for MySql, may work with other DBs (not tested)
 // Copyright (c) 2002 André Noack <andre.noack@gmx.net>
 // +---------------------------------------------------------------------------+
 // This program is free software; you can redistribute it and/or
@@ -31,7 +31,7 @@
 * Only tested with MySql, needs MySql >= 3.23
 * Uses DB abstraction layer of PHPLib
 *
-* @access   public  
+* @access   public
 * @author   André Noack <andre.noack@gmx.net>
 * @package  DBTools
 */
@@ -39,26 +39,26 @@ class DbView {
     /**
     * the processed list of queries
     *
-    * 
+    *
     * @access   private
-    * @var      array   $query_list 
+    * @var      array   $query_list
     */
     private $query_list = array();
     /**
     * list of parameters
     *
-    * 
+    *
     * @access   public
-    * @var      array   $params 
+    * @var      array   $params
     */
     public $params = array();
-    
+
     /**
-    * Database Object 
+    * Database Object
     *
-    * 
+    *
     * @access   private
-    * @var      object  $db 
+    * @var      object  $db
     */
     private $db;
     /**
@@ -71,15 +71,15 @@ class DbView {
     */
     private $db_class_name = "DB_Seminar";
     /**
-    * Temp Table Type 
+    * Temp Table Type
     *
     * MyISAM is always safe, HEAP may provide better performance
     * @access   private
-    * @var      string $temp_table_type 
+    * @var      string $temp_table_type
     */
     private $temp_table_type = "MyISAM";
     /**
-    * Primary Key used in Temp Table 
+    * Primary Key used in Temp Table
     *
     * If none is set in your view, an auto_increment row is used
     * @access   private
@@ -90,7 +90,7 @@ class DbView {
     /**
     * delete the params array after each query execution
     *
-    * 
+    *
     * @access   public
     * @var      boolean $auto_free_params
     */
@@ -98,27 +98,27 @@ class DbView {
     /**
     * turn on/off debugging
     *
-    * 
+    *
     * @access   public
     * @var      boolean $debug
     */
     public $debug = false;
-    
-    
+
+
     static protected $dbviewfiles = array();
-    
+
     static protected $dbviews = array();
-    
+
     static public function addView($view){
         self::$dbviewfiles[strtolower($view)] = 0;
     }
-    
-    
-    
+
+
+
     /**
     * Constructor
     *
-    * Pass nothing to use a new instance of db_class_name, the classname for a new instance, or existing instance 
+    * Pass nothing to use a new instance of db_class_name, the classname for a new instance, or existing instance
     * @access   public
     * @param    mixed   $db classname of used db abstraction or existing db object
     */
@@ -133,7 +133,7 @@ class DbView {
         }
         $this->init_views();
     }
-    
+
     function init_views(){
         foreach(self::$dbviewfiles as $view => $status){
             if($status === 0){
@@ -144,7 +144,7 @@ class DbView {
             }
         }
     }
-    
+
     function __get($view){
         if(isset(self::$dbviews[$view])){
             return self::$dbviews[$view];
@@ -152,7 +152,7 @@ class DbView {
             return null;
         }
     }
-    
+
     /**
     * print error message and exit script
     *
@@ -168,13 +168,13 @@ class DbView {
         }
         die;
     }
-    
+
     function get_query() {
         $parsed_query = $this->get_parsed_query(func_get_args());
         $this->db->cache_query($parsed_query);
     return $this->db;
     }
-    
+
     function get_parsed_query($query_list) {
         $parsed_query = "";
         $this->query_list = array();
@@ -193,8 +193,8 @@ class DbView {
         }
     return $parsed_query;
     }
-    
-    
+
+
     function parse_query(&$query){
         if (is_array($query)) {
             for ($i = (count($query)-1); $i > 0 ; --$i){
@@ -206,7 +206,7 @@ class DbView {
                 $repl_query = (is_array($query[$i])) ? $query[$i][0] : $query[$i];
                 for ($j = 0; $j < $i; ++$j){
                     $spl = stristr($query[$j],"where");
-                    if (!$spl) 
+                    if (!$spl)
                         $spl = stristr($query[$j],"having");
                     if ($spl) {
                         $pos = strpos($spl,"{".$i."}");
@@ -224,17 +224,17 @@ class DbView {
         }
         return $query;
     }
-    
-    
+
+
     function get_temp_table($sub_query) {
         $id = $this->get_uniqid();
         $pk = ($this->pk)? "PRIMARY KEY($this->pk)" : "auto_".$id." INT NOT NULL AUTO_INCREMENT PRIMARY KEY";
-        $query = "CREATE TEMPORARY TABLE temp_$id ($pk)TYPE=$this->temp_table_type $sub_query";
+        $query = "CREATE TEMPORARY TABLE temp_$id ($pk) ENGINE=$this->temp_table_type $sub_query";
         $this->db->query($query);
         return " temp_".$id." ";
     }
-    
-    
+
+
     function get_temp_values($sub_query) {
         $this->db->query($sub_query);
         if (!$this->db->num_rows())
@@ -247,23 +247,23 @@ class DbView {
         }
         return $value_list;
     }
-    
+
     function get_uniqid(){
         mt_srand((double)microtime()*1000000);
         return md5(uniqid (mt_rand(),1));
     }
-    
+
     function get_value_list($list){
         $value_list = false;
-        if (count($list) == 1) 
+        if (count($list) == 1)
             $value_list = "'$list[0]'";
-        else 
+        else
             $value_list = "'".join("','",$list)."'";
         return $value_list;
     }
-    
+
     function get_view($name){
-        if (self::$dbviews[$name]["pk"]) 
+        if (self::$dbviews[$name]["pk"])
             $this->pk = self::$dbviews[$name]["pk"];
         if (self::$dbviews[$name]["temp_table_type"])
             $this->temp_table_type = self::$dbviews[$name]["temp_table_type"];
@@ -287,7 +287,7 @@ class DbView {
                     break;
                 }
             }
-            if (count($this->params) != count($types)) 
+            if (count($this->params) != count($types))
                 $this->halt("Wrong parameter count in view: $name");
             $query = "";
             for($i = 0; $i < count($this->params); ++$i){
@@ -310,12 +310,12 @@ class DbView {
             }
             $query .= $tokens[$i];
             if ($this->auto_free_params)
-                $this->params = array();        
+                $this->params = array();
         }
         (is_array($query_list)) ? $query_list[0] = $query  : $query_list = $query;
         return $query_list;
     }
-    
+
     function Get_union(){
     $queries = func_get_args();
     $view = new DbView();

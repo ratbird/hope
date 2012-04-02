@@ -1024,6 +1024,7 @@ a.button, button.button {
     padding: 5px 15px 5px 15px;
     border: 1px solid #1e3e70;
     background-color: #cddae4;
+    font-family: "Helvetica Neue", "Helvetica", Arial, Verdana, sans-serif;    
     text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
     font-size: 12px;
     line-height: 130%;

@@ -109,7 +109,7 @@ class StudipSemSearch {
         $this->visible_only = $visible_only;
         $this->search_sem_class = $sem_class;
 
-        if($this->form->isClicked('do_search') || ($this->form->isSended() && !$this->form->isClicked('sem_change'))){
+        if($this->form->isClicked('do_search') || ($this->form->isSended() && (!$this->form->isClicked('sem_change') || strlen($this->form->getFormFieldValue('quick_search')) > 2))){
             $this->search_button_clicked = true;
             if ($auto_search){
                 $this->doSearch();

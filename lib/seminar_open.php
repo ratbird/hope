@@ -232,11 +232,14 @@ $_language_path = init_i18n($_SESSION['_language']);
 include 'config.inc.php';
 
 // Try to select the course or institute given by the parameter 'cid'
-// in the current request. This also binds the global $_SESSION['SessionSeminar']
+// in the current request. For compatibility reasons there is a fallback to
+// the last selected one from the session
+
+$course_id = Request::option('cid', $_SESSION['SessionSeminar']);
+
+// Select the current course or institute if we got one from 'cid' or session.
+// This also binds the global $_SESSION['SessionSeminar']
 // variable to the URL parameter 'cid' for all generated links.
-
-$course_id = Request::option('cid');
-
 if (isset($course_id)) {
     selectSem($course_id) || selectInst($course_id);
     unset($course_id);

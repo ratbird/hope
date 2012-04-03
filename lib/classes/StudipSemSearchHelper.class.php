@@ -34,6 +34,7 @@ class StudipSemSearchHelper {
         return array(   'all' =>_("alles"),
                         'title_lecturer_number' => _("Titel") . ',' . _("DozentIn") . ',' . _("Nummer"), 
                         'title' => _("Titel"),
+                        'sub_title' => _("Untertitel"),
                         'lecturer' => _("DozentIn"),
                         'number' => _("Nummer"),
                         'comment' => _("Kommentar"),

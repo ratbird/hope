@@ -1,7 +1,7 @@
 <?php
 # Lifter002: TODO
 # Lifter007: TODO
-# Lifter003: TODO
+# Lifter003: TEST
 # Lifter010: TODO
 
 /*
@@ -43,11 +43,9 @@ class Token
 
     function save()
     {
-        $db = new DB_Seminar();
-
-        $db->query("INSERT INTO user_token 
-            (user_id, token, expiration)
-            VALUES ('{$this->user_id}', '{$this->token}', '{$this->expiration_time}');");
+        $query = "INSERT INTO user_token (user_id, token, expiration) VALUES (?, ?, ?)";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($this->user_id, $this->token, $this->expiration_time));
     }
 
     function calculate_expiration_time()
@@ -60,27 +58,21 @@ class Token
         $token = Token::generate_token();
         $expiration_time = Token::calculate_expiration_time();
 
-        $db = new DB_Seminar();
-
-        $db->query("INSERT INTO user_token 
-            (user_id, token, expiration)
-            VALUES ('{$user_id}', '{$token}', '{$expiration_time}');");
+        $query = "INSERT INTO user_token (user_id, token, expiration) VALUES (?, ?, ?)";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($user_id, $token, $expiration_time));
     }
 
     function remove_expired()
     {
-        $db = new DB_Seminar();
-
-        $db->query(sprintf("DELETE FROM user_token 
-            WHERE expiration < %u;", time()));
+        DBManager::get()->exec("DELETE FROM user_token WHERE expiration < UNIX_TIMESTAMP()");
     }
 
     function remove($token)
     {
-        $db = new DB_Seminar();
-
-        $db->query("DELETE FROM user_token 
-            WHERE token='{$token}';");
+        $query = "DELETE FROM user_token WHERE token = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($token));
     }
 
     function time_expired($expiration)
@@ -90,29 +82,26 @@ class Token
 
     function is_valid($token)
     {
-        $db = new DB_Seminar();
+        $query = "SELECT user_id, expiration FROM user_token WHERE token = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($token));
+        $token_info = $statement->fetch(PDO::FETCH_ASSOC);
 
-        $db->query("SELECT * FROM user_token 
-            WHERE token='{$token}';");
-
-        if ($db->next_record())
-        {
-            if (! Token::time_expired($db->f("expiration")))
-            {
-                $user_id = $db->f('user_id');
-                Token::remove($token);
-                return $user_id;
-            } else
-            {
-                Token::remove_expired();
-                return null;
-            }
-        } else
-        {
+        // No db entry for token
+        if (!$token_info) {
             return null;
         }
-    }
 
+        // Token is expired
+        if (Token::time_expired($token_info['expiration'])) {
+            Token::remove_expired();
+            return null;
+        }
+
+        // Token is valid
+        Token::remove($token);
+        return $token_info['user_id'];
+    }
 }
 
 # $token = new Token('38f32d5c0b1d16450408bb11c4089930', 1);

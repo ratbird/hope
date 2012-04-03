@@ -145,11 +145,11 @@ function wiki_newlifters($template_name) {
     $userid=$auth->auth['uid'];
     $wiki_text = $text;
     if ($lifters_create_topic){
-        $forum_text = sprintf(_("Die aktuellste Fassung dieses Lifters finden Sie immer im %sWiki%s"),'[',']'.$GLOBALS['ABSOLUTE_URI_STUDIP'].'wiki.php?keyword='.$pagename) . " \n--\n". $lifters_beschreibung;
+        $forum_text = sprintf(_("Die aktuellste Fassung dieses Lifters finden Sie immer im %sWiki%s"),'[',']'.URLHelper::getURL($GLOBALS['ABSOLUTE_URI_STUDIP'].'wiki.php?keyword='.$pagename)) . " \n--\n". $lifters_beschreibung;
         if($tt = CreateTopic($pagename . ': ' . $lifters_zusammenfassung, get_fullname($userid), $forum_text, 0, 0, $SessSemName[1],$userid)) {
             $message = MessageBox::success(_('Ein neues Thema im Forum wurde angelegt.'));
             PageLayout::postMessage($message);
-            $wiki_text = '['._("Link zum Forumsbeitrag").']' . $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'forum.php?open=' . $tt . '#anker ' . "\n--\n" . $wiki_text;
+            $wiki_text = '['._("Link zum Forumsbeitrag").']' . URLHelper::getURL($GLOBALS['ABSOLUTE_URI_STUDIP'] . 'forum.php?open=' . $tt . '#anker') . " \n--\n" . $wiki_text;
         }
     }
 

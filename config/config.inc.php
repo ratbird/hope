@@ -3,13 +3,12 @@
 * config.inc.php
 *
 * Configuration file for studip. In this file you can change the options of many
-* Stud.IP Settings.
-* Please note: To setup the system, you have to set the basic settings in the
-* config_local.inc.php in the same directory first.
+* Stud.IP Settings. Please note: to setup the system, set the basic settings in the
+* local.inc of the phpLib package first.
 *
 * @access       public
 * @package      studip_core
-* @modulegroup      library
+* @modulegroup  library
 * @module       config.inc.php
 */
 
@@ -33,6 +32,11 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
+
+/*basic settings for Stud.IP
+----------------------------------------------------------------
+you find here the indivual settings for your installation.
+please note the LOCAL.INC.PHP in the php-lib folder for the basic system settings!*/
 
 global
   $CALENDAR_MAX_EVENTS,
@@ -70,102 +74,15 @@ global
   $UPLOAD_TYPES,
   $username_prefix,
   $xml_filename,
-  $xslt_filename_default,
-  $SEM_TREE_TYPES,
-  $NOT_HIDEABLE_FIELDS,
-  $TEILNEHMER_IMPORT_DATAFIELDS;
+  $xslt_filename,
+  $SEM_TREE_TYPES;
 
-/*basic settings for Stud.IP
-----------------------------------------------------------------
-you find here the indivdual settings for your installation.
- ! for the basic system settings, please edit the file config_local.inc.php in the same folder !*/
-
-
-//Some more basic data
-//Note: The the clean-name of your institution ($UNI_NAME_CLEAN) is stored in the config_local.inc.php
+//Daten ueber die Uni
+    // der Name wird in der local.inc festgelegt
 $UNI_URL = "http://www.studip.de";
-$UNI_LOGIN_ADD='';
-$UNI_LOGOUT_ADD=sprintf(_("Und hier geht's zur %sStud.IP Portalseite%s&nbsp;"), "<a href=\"http://www.studip.de\"><b>", "</b></a>");
-$UNI_CONTACT = "<please insert your general contact mail-adress here>";
-$UNI_INFO = "Stud.IP 2.3 - Studienbegleitender Internetsupport von Präsenzlehre";
-
-
-/*
-* "courses" in Stud.IP generally classified using two attributes:
-* class (roughly 'the category') and type
-* both can be configured below
-*/
-
-// Classes are used as configuration templates and categories
-
-$SEM_CLASS[1]=array("name"=>_("Lehre"),                     //the name of the class
-                    "compact_mode"=>FALSE,          //indicates, if all fields are used in the creation process or only the fields that are necessary for workgroups
-                    "workgroup_mode"=>FALSE,        //indicates, if the workgroup mode is used (to use different declarations)
-                    "only_inst_user"=>TRUE,         //indicates, that olny staff from the Einrichtungen which own the Veranstaltung, are allowed for tutor and dozent
-                    "turnus_default"=>0 ,       //indicates, whether the turnus field is default set to "regulary" (0), "not regulary" (1) or "no dates" (-1) in the creation process
-                    "default_read_level"=>1,        //the default read acces level. "without signed in" (0), "signed in" (1), "password" (2)
-                    "default_write_level" =>1,      //the default write acces level. "without signed in" (0), "signed in" (1), "password" (2)
-                    "bereiche"=>TRUE,           //indicates, if bereiche should be used
-                    "show_browse"=>TRUE,            //indicates, if the hierachy-system should be shown in the search-process
-                    "write_access_nobody"=>FALSE,       //indicates, if write access level 0 is possible. If this is not possibly, don't set default_write_level to 0
-                    "topic_create_autor"=>FALSE,        //indicates, if global autor is allowed to create topic in the forums
-                    "visible"=>TRUE,            //indicates, if the seminar is visible throughout the systems, if FALSE, it is hidden!
-                    "course_creation_forbidden" => FALSE, //indicates if it is allowed to create courses of this class
-                    //modules, select the active modules for this class
-                    "forum"=>TRUE,              //forum, this module is stud_ip core; always available
-                    "documents"=>TRUE,          //documents, this module is stud_ip core; always available
-                    "schedule"=>TRUE,           //schedule, this module is stud_ip core; always available
-                    "participants"=>TRUE,           //participants, this module is stud_ip core; always available
-                    "scm"=>FALSE,               //simple content module, this modul is stud_ip core; always available
-                    "literature"=>TRUE,         //literature, this module is stud_ip core; always available
-                    "chat"=>TRUE,               //chat, only, if the module is global activated; see config_local.inc.php
-                    "wiki"=>TRUE,               //wikiwiki-web, this module is stud_ip core; always available
-                    "admission_prelim_default" => 0,     //default for direct (0) or provisional(1) entry
-                    "admission_type_default" => 0,     //default for participant restriction type (0 = none, 1 = chronological, 2 = by lots, 3 = locked)
-                    //descriptions
-                    "description"=>_("Hier finden Sie alle in Stud.IP registrierten Lehrveranstaltungen"),                      //the description
-                    "create_description"=>_("Verwenden Sie diese Kategorie, um normale Lehrveranstaltungen anzulegen"));        //the description in the creation process
-
-$SEM_CLASS[2]=array("name"=>_("Organisation"),
-                    "compact_mode"=>TRUE,
-                    "workgroup_mode"=>TRUE,
-                    "only_inst_user"=>FALSE,
-                    "turnus_default"=>-1,
-                    "default_read_level"=>2,
-                    "default_write_level" =>2,
-                    "show_browse"=>TRUE,
-                    "topic_create_autor"=>TRUE,
-                    "visible"=>TRUE,
-                    "forum"=>TRUE,
-                    "documents"=>TRUE,
-                    "schedule"=>TRUE,
-                    "participants"=>TRUE,
-                    "scm"=>FALSE,
-                    "literature"=>TRUE,
-                    "chat"=>TRUE,
-                    "wiki"=>TRUE,
-                    "description"=>_("Hier finden Sie virtuelle Veranstaltungen zu verschiedenen Gremien an der Universit&auml;t"),
-                    "create_description"=>_("Um virtuelle Veranstaltungen f&uuml;r Uni-Gremien anzulegen, verwenden Sie diese Kategorie"));
-
-$SEM_CLASS[3]=array("name"=>_("Community"),
-                    "compact_mode"=>TRUE,
-                    "only_inst_user"=>FALSE,
-                    "turnus_default"=>-1,
-                    "default_read_level"=>1,
-                    "default_write_level" =>1,
-                    "show_browse"=>TRUE,
-                    "write_access_nobody"=>TRUE,
-                    "visible"=>TRUE,
-                    "forum"=>TRUE,
-                    "documents"=>TRUE,
-                    "schedule"=>TRUE,
-                    "scm"=>FALSE,
-                    "participants"=>TRUE,
-                    "chat"=>TRUE,
-                    "description"=>_("Hier finden Sie virtuelle Veranstaltungen zu unterschiedlichen Themen"),
-                    "create_description"=>_("Wenn Sie Veranstaltungen als Diskussionsgruppen zu unterschiedlichen Themen anlegen m&ouml;chten, verwenden Sie diese Kategorie"));
-
-// more classes can be added below (please adhere exactly to the structure given above)
+$UNI_LOGOUT_ADD=sprintf(_("Und hier geht's direkt zum %sMensaplan%s&nbsp;;-)"), "<a href=\"http://studentenwerk.stud.uni-goettingen.de/mensa/mensen/alle_heute.php\"><b>", "</b></a>");
+$UNI_CONTACT = "studip-users@lists.sourceforge.net";
+$UNI_INFO = "Kontakt:\nStud.IP Crew c/o data-quest Suchi & Berg GmbH\nFriedländer Weg 20a\n37085 Göttingen\nTel. 0551-3819850\nFax 0551-3819853\nstudip@data-quest.de";
 
 
 // define default names for status groups
@@ -178,25 +95,40 @@ $DEFAULT_TITLE_FOR_STATUS = array(
     'accepted' => array(_('Vorläufig akzeptierte TeilnehmerIn'),
                         _('Vorläufig akzeptierte TeilnehmerInnen')));
 
-/*
-name the allowed course-types and assign them to one of the above classes
-alternative titles for members can be specified within each type (see example below)
-*/
-$SEM_TYPE_MISC_NAME=_("sonstige"); //this name is replaced by the common name (=course)
+//Festlegen der zulaessigen Typen fuer Veranstaltungen
+$SEM_TYPE_MISC_NAME="sonstige"; //dieser Name wird durch die allgemeine Bezechnung (=Veranstaltung ersetzt)
 $SEM_TYPE[1]=array("name"=>_("Vorlesung"), "class"=>1);
-$SEM_TYPE[2]=array("name"=>_("Seminar"),  "class"=>1);
-$SEM_TYPE[3]=array("name"=>_("Übung"),  "class"=>1);
-$SEM_TYPE[4]=array("name"=>_("Praktikum"), "class"=>1);
-$SEM_TYPE[5]=array("name"=>_("Colloquium"),  "class"=>1);
-$SEM_TYPE[6]=array("name"=>_("Forschungsgruppe"), "class"=>1);
-$SEM_TYPE[7]=array("name"=>_("sonstige"), "class"=>1);
-$SEM_TYPE[8]=array("name"=>_("Gremium"), "class"=>2, "title_dozent" => array(_("LeiterIn"), _("LeiterInnen")), "title_tutor" => array(_("Mitglied"), _("Mitglieder")));
-$SEM_TYPE[9]=array("name"=>_("Projektgruppe"), "class"=>2, "title_dozent" => array(_("LeiterIn"), _("LeiterInnen")), "title_tutor" => array(_("Mitglied"), _("Mitglieder")));
-$SEM_TYPE[10]=array("name"=>_("sonstige"), "class"=>2);
-$SEM_TYPE[11]=array("name"=>_("Kulturforum"), "class"=>3);
-$SEM_TYPE[12]=array("name"=>_("Veranstaltungsboard"), "class"=>3);
-$SEM_TYPE[13]=array("name"=>_("sonstige"), "class"=>3);
-//more types can be added below
+$SEM_TYPE[2]=array("name"=>_("Grundstudium"), "en"=>"Basic classes", "class"=>1);
+$SEM_TYPE[3]=array("name"=>_("Hauptstudium"), "en"=>"Advanced classes", "class"=>1);
+$SEM_TYPE[4]=array("name"=>_("Seminar"), "en"=>"Seminar", "class"=>1);
+$SEM_TYPE[5]=array("name"=>_("Praxisveranstaltung"), "en"=>"Practical course", "class"=>1);
+$SEM_TYPE[6]=array("name"=>_("Kolloquium"), "en"=>"Colloqia", "class"=>1);
+$SEM_TYPE[7]=array("name"=>_("Forschungsgruppe"), "en"=>"Research group", "class"=>1);
+$SEM_TYPE[8]=array("name"=>_("Arbeitsgruppe"), "en"=>"Workgroup", "class"=>5);
+$SEM_TYPE[9]=array("name"=>_("sonstige"), "en"=>"Miscellaneous", "class"=>1);
+$SEM_TYPE[10]=array("name"=>_("Forschungsgruppe"), "en"=>"Research group", "class"=>2, 'title_dozent' => array(_("Papst"),_("Päpste")), 'title_tutor' => array(_("Kardinal"),_("Kardinäle")), 'title_autor' => array(_("Scherge"),_("Schergen")) );
+$SEM_TYPE[11]=array("name"=>_("sonstige"), "en"=>"Miscellaneous", "class"=>2);
+$SEM_TYPE[12]=array("name"=>_("Gremiumsveranstaltung"), "en"=>"Board meeting", "class"=>3);
+$SEM_TYPE[13]=array("name"=>_("sonstige"), "en"=>"Miscellaneous", "class"=>3);
+$SEM_TYPE[14]=array("name"=>_("Community-Forum"), "en"=>"Community forum", "class"=>4);
+$SEM_TYPE[15]=array("name"=>_("sonstige"), "en"=>"Miscellaneous", "class"=>4);
+$SEM_TYPE[16]=array("name"=>_("Praktikum"), "en"=>"Practical course", "class"=>1);
+$SEM_TYPE[17]=array("name"=>_("Lehrveranstaltung nach PVO-Lehr I"), "en"=>"", "class"=>1);
+$SEM_TYPE[18]=array("name"=>_("Anleitung zu selbständigen wissenschaftlichen Arbeiten"), "en"=>"", "class"=>1);
+$SEM_TYPE[19]=array("name"=>_("Sprachkurs"), "en"=>"Language Course", "class"=>1);
+$SEM_TYPE[20]=array("name"=>_("Fachdidaktik"), "en"=>"Didactics", "class"=>1);
+$SEM_TYPE[21]=array("name"=>_("Übung"), "en"=>"Exercise Course", "class"=>1);
+$SEM_TYPE[22]=array("name"=>_("Proseminar"), "en"=>"Proseminar", "class"=>1);
+$SEM_TYPE[23]=array("name"=>_("Oberseminar"), "en"=>"Oberseminar", "class"=>1);
+$SEM_TYPE[24]=array("name"=>_("Arbeitsgemeinschaft"), "en"=>"Workgroup", "class"=>1);
+$SEM_TYPE[25]=array("name"=>_("Vorlesung"), "class"=>6);
+$SEM_TYPE[26]=array("name"=>_("Grundstudium"), "class"=>6);
+$SEM_TYPE[27]=array("name"=>_("Hauptstudium"), "class"=>6);
+$SEM_TYPE[28]=array("name"=>_("Seminar"), "class"=>6);
+$SEM_TYPE[29]=array("name"=>_("Praxisveranstaltung"), "class"=>6);
+$SEM_TYPE[30]=array("name"=>_("Kolloquium"), "class"=>6);
+$SEM_TYPE[31]=array("name"=>_("Forschungsgruppe"), "class"=>6);
+//weitere Typen koennen hier angefuegt werden
 
 // required config settings for study groups (courses that can be created by students)
 $SEM_TYPE[99]=array("name"=>_("Studiengruppe"), "class"=>99,
@@ -209,6 +141,137 @@ $SEM_CLASS[99]=array("name"=>_("Studiengruppen"),
                     "topic_create_autor"=>TRUE,
                     "course_creation_forbidden" => TRUE);
 
+//Festlegen der zulaessigen Klassen fuer Veranstaltungen. Jeder sem_type referenziert auf eine dieser Klassen
+$SEM_CLASS[1]=array("name"=>_("Lehre"),                         //the name of the class
+                    "compact_mode"=>FALSE,          //indicates, if all fields are used in the creation process or only the fields that are necessary for workgroups
+                    "workgroup_mode"=>FALSE,            //indicates, if the workgroup mode is used (to use different declarations)
+                    "only_inst_user"=>TRUE,             //indicates, that olny staff from the Einrichtungen which own the Veranstaltung, are allowed for tutor and dozent
+                    "turnus_default"=>0 ,               //indicates, whether the turnus field is default set to "regulary" (0), "not regulary" (1) or "no dates" (-1) in the creation process
+                    "default_read_level"=>1,                //the default read acces level. "without signed in" (0), "signed in" (1), "password" (2)
+                    "default_write_level" =>1,              //the default write acces level. "without signed in" (0), "signed in" (1), "password" (2)
+                    "bereiche"=>TRUE,                   //indicates, if bereiche should be used
+                    "show_browse"=>TRUE,                //indicates, if the hierachy-system should be shown in the search-process
+                    "write_access_nobody"=>FALSE,       //indicates, if write access level 0 is possible. If this is not possibly, don't set default_write_level to 0
+                    "topic_create_autor"=>TRUE,
+                    "visible"=>TRUE,
+                    //modules, select the active modules for this class
+                    "forum"=>TRUE,              //forum, this modul is stud_ip core; always avaiable
+                    "documents"=>TRUE,          //documents, this modul is stud_ip core; always avaiable
+                    "schedule"=>TRUE,
+                    "participants"=>TRUE,
+                    "literature"=>TRUE,
+                    "chat"=>TRUE,               //chat, only, if the modul is global activated; see local.inc
+                    "support"=>FALSE,           //support, only, if the modul is global activated; see local.inc (this modul is not part of the main distribution)
+                    "scm"=>TRUE,
+                    //descriptions
+                    "description"=>_("Hier finden Sie alle in Stud.IP registrierten Lehrveranstaltungen"),                      //the description
+                    "create_description"=>_("Verwenden Sie diese Kategorie, um normale Lehrveranstaltungen anzulegen"));        //the description in the creation process
+
+$SEM_CLASS[2]=array("name"=>_("Forschung"),
+                    "compact_mode"=>TRUE,
+                    "workgroup_mode"=>TRUE,
+                    "only_inst_user"=>TRUE,
+                    "turnus_default"=>-1,
+                    "default_read_level"=>2,
+                    "default_write_level" =>2,
+                    "bereiche"=>TRUE,
+                    "show_browse"=>TRUE,
+                    "write_access_nobody"=>FALSE,
+                    "visible"=>TRUE,
+                    "forum"=>TRUE,
+                    "topic_create_autor" => true,
+                    "documents"=>TRUE,
+                    "schedule"=>TRUE,
+                    "participants"=>TRUE,
+                    "literature"=>TRUE,
+                    "chat"=>TRUE,
+                    "description"=>_("Hier finden Sie virtuelle Veranstaltungen zum Thema Forschung an der Universit&auml;t"),
+                    "create_description"=>_("In dieser Kategorie k&ouml;nnen Sie virtuelle Veranstaltungen f&uuml;r Forschungsprojekte anlegen."));
+
+$SEM_CLASS[3]=array("name"=>_("Organisation"),
+                    "compact_mode"=>TRUE,
+                    "workgroup_mode"=>TRUE,
+                    "only_inst_user"=>FALSE,
+                    "turnus_default"=>-1,
+                    "default_read_level"=>2,
+                    "default_write_level" =>2,
+                    "bereiche"=>TRUE,                   //indicates, if bereiche should be used
+                    "show_browse"=>TRUE,
+                    "write_access_nobody"=>TRUE,
+                    "visible"=>TRUE,
+                    "forum"=>TRUE,
+                    "topic_create_autor" => true,
+                    "documents"=>TRUE,
+                    "schedule"=>TRUE,
+                    "participants"=>TRUE,
+                    "literature"=>TRUE,
+                    "chat"=>TRUE,
+                    "description"=>_("Hier finden Sie virtuelle Veranstaltungen zu verschiedenen Gremien an der Universit&auml;t"),
+                    "create_description"=>_("Um virtuelle Veranstaltungen f&uuml;r Uni-Gremien anzulegen, verwenden Sie diese Kategorie"));
+
+$SEM_CLASS[4]=array("name"=>_("Community"),
+                    "compact_mode"=>TRUE,
+                    "workgroup_mode"=>FALSE,
+                    "only_inst_user"=>FALSE,
+                    "turnus_default"=>-1,
+                    "default_read_level"=>0,
+                    "default_write_level" =>0,
+                    "bereiche"=>TRUE,                   //indicates, if bereiche should be used
+                    "show_browse"=>FALSE,
+                    "write_access_nobody"=>TRUE,
+                    "visible"=>TRUE,
+                    "forum"=>TRUE,
+                    "documents"=>TRUE,
+                    "schedule"=>TRUE,
+                    "participants"=>TRUE,
+                    "chat"=>TRUE,
+                    "description"=>_("Hier finden Sie virtuelle Veranstaltungen zu unterschiedlichen Themen"),
+                    "create_description"=>_("Wenn Sie Veranstaltungen als Diskussiongruppen zu unterschiedlichen Themen anlegen m&ouml;chten, verwenden Sie diese Kategorie."));
+
+$SEM_CLASS[5]=array("name"=>_("Arbeitsgruppen"),
+                    "compact_mode"=>FALSE,
+                    "workgroup_mode"=>FALSE,
+                    "only_inst_user"=>TRUE,
+                    "turnus_default"=>1,
+                    "default_read_level"=>1,
+                    "default_write_level" =>1,
+                    "bereiche"=>TRUE,
+                    "show_browse"=>FALSE,
+                    "topic_create_autor"=>TRUE,
+                    "write_access_nobody"=>FALSE,
+                    "visible"=>TRUE,
+                    "forum"=>TRUE,
+                    "documents"=>TRUE,
+                    "schedule"=>TRUE,
+                    "participants"=>TRUE,
+                    "literature"=>TRUE,
+                    "chat"=>TRUE,
+                    "description"=>sprintf(_("Hier finden Sie verschiedene Arbeitsgruppen an der %s"), htmlentities($GLOBALS['UNI_NAME_CLEAN'])),
+                    "create_description"=>_("Verwenden Sie diese Kategorie, um unterschiedliche Arbeitsgruppen anzulegen."));
+
+$SEM_CLASS[6]=array("name"=>_("importierte Kurse"),
+                    "compact_mode"=>FALSE,
+                    "workgroup_mode"=>FALSE,
+                    "only_inst_user"=>TRUE,
+                    "turnus_default"=>1,
+                    "default_read_level"=>1,
+                    "default_write_level" =>1,
+                    "bereiche"=>TRUE,
+                    "show_browse"=>FALSE,
+                    "topic_create_autor"=>TRUE,
+                    "write_access_nobody"=>FALSE,
+                    "visible"=>TRUE,
+                    "course_creation_forbidden" => TRUE,
+                    "forum"=>TRUE,
+                    "documents"=>TRUE,
+                    "schedule"=>TRUE,
+                    "participants"=>TRUE,
+                    "literature"=>TRUE,
+                    "chat"=>TRUE,
+                    "description"=> "Hier finden Sie importierte Kurse",
+                    "create_description"=> "Sie sollten diesen Text garnicht sehen.");
+//weitere Klassen koennen hier angefuegt werden. Bitte Struktur wie oben exakt uebernehmen.
+
 /*
 possible types of sem_tree ("Veranstaltungshierarchie") types
 the "editable" flag could be used to prevent modifications, e.g. imported data
@@ -216,64 +279,122 @@ the "is_module" flag specifies an entry which represents a "Studienmodul", if th
 plugin interface is used
 */
 $SEM_TREE_TYPES[0] = array("name" => "", "editable" => true); //default type, must be present
-//$SEM_TREE_TYPES[1] = array("name" => _("Studienmodul") , "editable" => true, "is_module" => true);
+$SEM_TREE_TYPES[1] = array("name" => _("Studienmodul") , "editable" => true, "is_module" => true);
 
-
-/* Set the allowed and prohibited file types for the types given above.
-*  If nothing is configured for a specific type, the values of the "default" setting are taken.
-*
-*  "type"=>"deny" means: only the listed "file_types" are allowed
-*  "type"=>"allow" means: all, but the listed "file_types" are allowed
-*
-*  "file_sizes" determines how much each user class can upload per file (multiple of 1 MB = 1048576 Bytes)
-*/
-
-$UPLOAD_TYPES=array(    "default" =>
-                array(  "type"=>"deny",
-                        "file_types" => array ("rtf", "xls", "ppt", "zip", "pdf", "txt", "tgz", "gz", "bz2"),
-                        "file_sizes" => array ( "root" => 7 * 1048576,
-                                    "admin" => 7 * 1048576,
-                                    "dozent" => 7 * 1048576,
-                                    "tutor" => 7 * 1048576,
-                                    "autor" => 1.38 * 1048576,
-                                    "nobody" => 1.38 * 1048576
-                                    )
-                ),
-            "8" =>
-                array(  "type"=>"allow",
-                        "file_types" => array ("exe"),
-                        "file_sizes" => array ( "root" => 7 * 1048576,
-                                    "admin" => 7 * 1048576,
-                                    "dozent" => 7 * 1048576,
-                                    "tutor" => 7 * 1048576,
-                                    "autor" => 7 * 1048576,
-                                    "nobody" => 1.38 * 1048576
-                                    )
-                ),
-            "9" =>
-                array(  "type"=>"allow",
-                        "file_types" => array ("exe"),
-                        "file_sizes" => array ( "root" => 7 * 1048576,
-                                    "admin" => 7 * 1048576,
-                                    "dozent" => 7 * 1048576,
-                                    "tutor" => 7 * 1048576,
-                                    "autor" => 7 * 1048576,
-                                    "nobody" => 1.38 * 1048576
-                                    )
-                ),
-            "10" =>
-                array(  "type"=>"allow",
-                        "file_types" => array ("exe"),
-                        "file_sizes" => array ( "root" => 7 * 1048576,
-                                    "admin" => 7 * 1048576,
-                                    "dozent" => 7 * 1048576,
-                                    "tutor" => 7 * 1048576,
-                                    "autor" => 7 * 1048576,
-                                    "nobody" => 1.38 * 1048576
-                                    )
-                )
-// rules for futher course-types can be added below (please adhere exactly to the structure given above)
-        );
+//Festlegen der erlaubten oder verbotenen Dateitypen
+$UPLOAD_TYPES=array(    "default" =>                                                //Name bezeichnet den zugehoerigen SEM_TYPE, name "1" waere entsprechend die Definition der Dateiendungen fuer SEM_TYPE[1]; default wird verwendet, wenn es keine spezielle Definition fuer einen SEM_TYPE gibt
+                        array(  "type"=>"allow",                                    //Type bezeichnet den grundsetzlichen Typ der Deklaration: deny verbietet alles ausser den angegebenen file_types, allow erlaubt alle ausser den angegebenen file_types
+                                "file_types" => array ("exe"),  //verbotene bzw. erlaubte Dateitypen
+                                "file_sizes" => array ( "root" => 14 * 1048576,         //Erlaubte Groesse je nach Rechtestufe
+                                                    "admin" => 14 * 1048576,
+                                                    "dozent" => 14 * 1048576,
+                                                    "tutor" => 14 * 1048576,
+                                                    "autor" => 7 * 1048576,
+                                                    "nobody" => 1.38 * 1048576
+                                                )
+                            ),
+                        "7" =>
+                        array(  "type"=>"allow",
+                                "file_types" => array ("exe"),
+                                "file_sizes" => array ( "root" =>   14 * 1048576,
+                                                    "admin" =>
+14 * 1048576,
+                                                    "dozent" =>
+14 * 1048576,
+                                                    "tutor" =>
+14 * 1048576,
+                                                    "autor" => 7 * 1048576,
+                                                    "nobody" => 1.38 * 1048576
+                                                )
+                            ),
+                        "8" =>
+                        array(  "type"=>"allow",
+                                "file_types" => array ("exe"),
+                                "file_sizes" => array ( "root" =>
+14 * 1048576,
+                                                    "admin" =>
+14 * 1048576,
+                                                    "dozent" =>
+14 * 1048576,
+                                                    "tutor" =>
+14 * 1048576,
+                                                    "autor" => 7 * 1048576,
+                                                    "nobody" => 1.38 * 1048576
+                                                )
+                            ),
+                        "9" =>
+                        array(  "type"=>"allow",
+                                "file_types" => array ("exe"),
+                                "file_sizes" => array ( "root" =>
+14 * 1048576,
+                                                    "admin" =>
+14 * 1048576,
+                                                    "dozent" =>
+14 * 1048576,
+                                                    "tutor" =>
+14 * 1048576,
+                                                    "autor" => 7 * 1048576,
+                                                    "nobody" => 1.38 * 1048576
+                                                )
+                            ),
+                        "10" =>
+                        array(  "type"=>"allow",
+                                "file_types" => array ("exe"),
+                                "file_sizes" => array ( "root" =>
+14 * 1048576,
+                                                    "admin" =>
+14 * 1048576,
+                                                    "dozent" =>
+14 * 1048576,
+                                                    "tutor" =>
+14 * 1048576,
+                                                    "autor" => 7 * 1048576,
+                                                    "nobody" => 1.38 * 1048576
+                                                )
+                            ),
+                        "11" =>
+                        array(  "type"=>"allow",
+                                "file_types" => array ("exe"),
+                                "file_sizes" => array ( "root" => 100 * 1048576,
+                                                    "admin" => 100 * 1048576,
+                                                    "dozent" => 100 * 1048576,
+                                                    "tutor" => 100 * 1048576,
+                                                    "autor" => 100 * 1048576,
+                                                    "nobody" => 1.38 * 1048576
+                                                )
+                            ),
+                        "12" =>
+                        array(  "type"=>"allow",
+                                "file_types" => array ("exe"),
+                                "file_sizes" => array ( "root" =>
+14 * 1048576,
+                                                    "admin" =>
+14 * 1048576,
+                                                    "dozent" =>
+14 * 1048576,
+                                                    "tutor" =>
+14 * 1048576,
+                                                    "autor" => 7 * 1048576,
+                                                    "nobody" => 1.38 * 1048576
+                                                )
+                            ),
+                        "13" =>
+                        array(  "type"=>"allow",
+                                "file_types" => array ("exe"),
+                                "file_sizes" => array ( "root" =>
+14 * 1048576,
+                                                    "admin" =>
+14 * 1048576,
+                                                    "dozent" =>
+14 * 1048576,
+                                                    "tutor" =>
+14 * 1048576,
+                                                    "autor" => 7 * 1048576,
+                                                    "nobody" => 1.38 * 1048576
+                                                )
+                            )
+                    );
+//weitere Definitionen fuer spezielle Veranstaltungstypen koennen hier angefuegt werden. Bitte Struktur wie oben exakt uebernehmen.
 
 /* Set the allowed and prohibited file types for mail attachments (if activated by ENABLE_MAIL_ATTACHMENTS).
 *
@@ -295,16 +416,6 @@ $UPLOAD_TYPES["attachments"] =
                                     )
                 );
 
-
-/*
-* define presets for the status-groups in courses (refers to the key of the $SEM_CLASS array above)
-* if none is given, the designations of $SEM_STATUS_GROUPS["default"] are used
-*/
-$SEM_STATUS_GROUPS["default"] = array ("DozentInnen", "TutorInnen", "AutorInnen", "LeserInnen", "sonstige");    //the default. Don't delete this entry!
-$SEM_STATUS_GROUPS["2"] = array ("Organisatoren", "Mitglieder", "Ausschußmitglieder", "sonstige");
-$SEM_STATUS_GROUPS["3"] = array ("Moderatoren des Forums","Mitglieder", "sonstige");
-// ...can be continued accordingly
-
 /*
  * define additional fields that can be shown in participant list view.
  */
@@ -317,9 +428,7 @@ $TEILNEHMER_VIEW[2] = array("field" => "preferred_language",
   "name" => _("Sprache"), "table" => "user_info", "export" => 1, "display"=> 1);
 
 
-/*
-* set allowed designations of institutes / divisions / administrative units
-*/
+//Festlegen von zulaessigen Bezeichnungen fuer Einrichtungen (=Institute)
 $INST_TYPE[1]=array("name"=>_("Einrichtung"));
 $INST_TYPE[2]=array("name"=>_("Zentrum"));
 $INST_TYPE[3]=array("name"=>_("Lehrstuhl"));
@@ -328,19 +437,39 @@ $INST_TYPE[5]=array("name"=>_("Fachbereich"));
 $INST_TYPE[6]=array("name"=>_("Seminar"));
 $INST_TYPE[7]=array("name"=>_("Fakultät"));
 $INST_TYPE[8]=array("name"=>_("Arbeitsgruppe"));
-// ...can be continued accordingly
+//weitere Typen koennen hier angefuegt werden
 
 
-/*
-* define presets for the status-groups in institutes / divisions / administrative units (refers to the key of the $INST_TYPE array above)
-* if none is given, the designations of $INST_STATUS_GROUPS["default"] are used
-*/
+//define the presets of statusgroups for Veranstaltungen (refers to the key of the $SEM_CLASS array)
+$SEM_STATUS_GROUPS["default"] = array ("DozentInnen", "TutorInnen", "AutorInnen", "LeserInnen", "sonstige");    //the default. Don't delete this entry!
+$SEM_STATUS_GROUPS["2"] = array ("Projektleitung", "Koordination", "Forschung", "Verwaltung", "sonstige");
+$SEM_STATUS_GROUPS["3"] = array ("Organisatoren", "Mitglieder", "Ausschu&szlig;mitglieder", "sonstige");
+$SEM_STATUS_GROUPS["4"] = array ("Moderatoren des Forums","Mitglieder", "sonstige");
+$SEM_STATUS_GROUPS["5"] = array ("ArbeitsgruppenleiterIn", "Arbeitsgruppenmitglieder", "sonstige");
+//you can add more specifig presets for the different classes
 
+
+//define the presets of statusgroups for Einrichtungen (refers to the key of the $INST_TYPE array)
 $INST_STATUS_GROUPS["default"] = array ("DirektorIn", "HochschullehrerIn", "Lehrbeauftragte", "Zweitmitglied", "wiss. Hilfskraft","wiss. MitarbeiterIn",
                                     "stud. Hilfskraft", "Frauenbeauftragte", "Internetbeauftragte(r)", "StudentIn", "techn. MitarbeiterIn", "Sekretariat / Verwaltung",
                                     "stud. VertreterIn");
-// ...can be continued accordingly
+//you can add more specifig presets for the different types
 
+
+//preset names for scm (simple content module)
+$SCM_PRESET[1] = array("name"=>_("Informationen"));     //the first entry is the default label for scms, it'll be used if the user give no information for another
+$SCM_PRESET[2] = array("name"=>_("Literatur"));
+$SCM_PRESET[3] = array("name"=>_("Links"));
+$SCM_PRESET[4] = array("name"=>_("Verschiedenes"));
+//you can add more presets here
+
+//preset template for formatting of literature list entries
+$LIT_LIST_FORMAT_TEMPLATE = "**{dc_creator}** |({dc_contributor})||\n"
+                        . "{dc_title}||\n"
+                        . "{dc_identifier}||\n"
+                        . "%%{published}%%||\n"
+                        . "{note}||\n"
+                        . "[{lit_plugin_display_name}]{external_link}|\n";
 
 //define the used modules for instiutes
 $INST_MODULES["default"] = array(
@@ -355,27 +484,18 @@ $INST_MODULES["default"] = array(
 //you can add more specific presets for the different types
 
 
-// Set presets for course appointment types
-/*
-* The first array element is used for the designation of regular meetings and will be labeled
-* accordingly in the schedule.
-* The second array element is always used to denominate preliminary discussions.
-* Both names can be chosen freely.
-* The appointment types marked as "sitzung"=>1 are shown in the course creation assistent and
-* while editing dates as templates for the description of regular turnus meetings.
-*/
-
-$TERMIN_TYP[1]=array("name"=>_("Sitzung"), "sitzung"=>1, "color"=>"#2D2C64");
-$TERMIN_TYP[2]=array("name"=>_("Vorbesprechung"), "sitzung"=>0, "color"=>"#5C2D64");
-$TERMIN_TYP[3]=array("name"=>_("Klausur"), "sitzung"=>0, "color"=>"#526416");
+//Festlegen der Veranstaltungs Termin Typen
+$TERMIN_TYP[1]=array("name"=>_("Sitzung"), "sitzung"=>1, "color"=>"#2D2C64");       //dieser Termin Typ wird immer als Seminarsitzung verwendet und im Ablaufplan entsprechend markiert. Der Titel kann veraendert werden, Eintraege aus dem Seminar Assistenten und Terminverwaltung fuer Seminar-Sitzungsterrmine bekommen jedoch immer diesen Typ
+$TERMIN_TYP[2]=array("name"=>_("Vorbesprechung"), "sitzung"=>0, "color"=>"#5C2D64");    //dieser Termin Typ wird immer als Vorbesprechung verwendet. Der Titel kann veraendert werden, Eintraege aus dem Seminar Assistenten fuer Vorbesprechungen bekommen jedoch immer diesen Typ
+$TERMIN_TYP[3]=array("name"=>_("Klausur"), "sitzung"=>0,  "color"=>"#526416");
 $TERMIN_TYP[4]=array("name"=>_("Exkursion"), "sitzung"=>0, "color"=>"#505064");
 $TERMIN_TYP[5]=array("name"=>_("anderer Termin"), "sitzung"=>0, "color"=>"#41643F");
 $TERMIN_TYP[6]=array("name"=>_("Sondersitzung"), "sitzung"=>0, "color"=>"#64372C");
 $TERMIN_TYP[7]=array("name"=>_("Vorlesung"), "sitzung"=>1, "color"=>"#627C95");
-// more types can be added here
+//weitere Typen koennen hier angefuegt werden
 
 
-// Configure the categories for the personal calendar
+// Festlegen der Kategorien für persönlichen Terminkalender
 $PERS_TERMIN_KAT[1]=array("name"=>_("Sonstiges"), "color"=>"#41643F");
 $PERS_TERMIN_KAT[2]=array("name"=>_("Sitzung"), "color"=>"#2D2C64");
 $PERS_TERMIN_KAT[3]=array("name"=>_("Vorbesprechung"), "color"=>"#5C2D64");
@@ -391,11 +511,10 @@ $PERS_TERMIN_KAT[12]=array("name"=>_("Familie"), "color"=>"#2C5964");
 $PERS_TERMIN_KAT[13]=array("name"=>_("Urlaub"), "color"=>"#951408");
 $PERS_TERMIN_KAT[14]=array("name"=>_("Reise"), "color"=>"#18645C");
 $PERS_TERMIN_KAT[15]=array("name"=>_("Vorlesung"), "color"=>"#627C95");
-// more categories can be added here
+// weitere Kategorien können hier angefügt werden
 
-
-//standard times for date-begin and date-end
-$TIME_PRESETS = array ( //starthour, startminute, endhour, endminute
+//standardtimes for date-begin and date-end
+$TIME_PRESETS = array ( //starthour, startminute, endshour, endminute
         array ('07','45','09','15'), // 07:45 - 09:15
         array ('09','30','11','00'), // 09:30 - 11:00
         array ('11','15','12','45'), // 11:15 - 12:45
@@ -406,11 +525,9 @@ $TIME_PRESETS = array ( //starthour, startminute, endhour, endminute
         );
 //$TIME_PRESETS = false;
 
-
-//number of personal events each user can store in his calendar
 $CALENDAR_MAX_EVENTS = 1000;
 
-//preset for academic titles -  add further titles to the array, if necessary
+//Vorgaben für die Titelauswahl
 $TITLE_FRONT_TEMPLATE = array("","Prof.","Prof. Dr.","Dr.","PD Dr.","Dr. des.","Dr. med.","Dr. rer. nat.","Dr. forest.",
                             "Dr. sc. agr.","Dipl.-Biol.","Dipl.-Chem.","Dipl.-Ing.","Dipl.-Sozw.","Dipl.-Geogr.",
                             "Dipl.-Geol.","Dipl.-Geophys.","Dipl.-Ing. agr.","Dipl.-Kfm.","Dipl.-Math.","Dipl.-Phys.",
@@ -419,8 +536,6 @@ $TITLE_REAR_TEMPLATE = array("","M.A.","B.A.","M.S.","MBA","Ph.D.","Dipl.-Biol."
                             "Dipl.-Geol.","Dipl.-Geophys.","Dipl.-Ing. agr.","Dipl.-Kfm.","Dipl.-Math.","Dipl.-Phys.",
                             "Dipl.-Psych.","M. Sc","B. Sc");
 
-// name templates for the list of currently active users ("who is online")
-
 $NAME_FORMAT_DESC['full'] = _("Titel1 Vorname Nachname Titel2");
 $NAME_FORMAT_DESC['full_rev'] = _("Nachname, Vorname, Titel1, Titel2");
 $NAME_FORMAT_DESC['no_title'] = _("Vorname Nachname");
@@ -428,23 +543,7 @@ $NAME_FORMAT_DESC['no_title_rev'] = _("Nachname, Vorname");
 $NAME_FORMAT_DESC['no_title_short'] = _("Nachname, V.");
 $NAME_FORMAT_DESC['no_title_motto'] = _("Vorname Nachname, Motto");
 
-
-//preset names for scm (simple content module)
-$SCM_PRESET[1] = array("name"=>_("Informationen"));     //the first entry is the default label for scms, it'll be used if the user give no information for another label
-$SCM_PRESET[2] = array("name"=>_("Literatur"));
-$SCM_PRESET[3] = array("name"=>_("Links"));
-$SCM_PRESET[4] = array("name"=>_("Verschiedenes"));
-//you can add more presets here
-
-//preset template for formatting of literature list entries
-$LIT_LIST_FORMAT_TEMPLATE = "**{dc_creator}** |({dc_contributor})||\n"
-                        . "{dc_title}||\n"
-                        . "{dc_identifier}||\n"
-                        . "%%{published}%%||\n"
-                        . "{note}||\n"
-                        . "[{lit_plugin_display_name}]{external_link}|\n";
-
-//Shortcuts for smileys
+//Shorts for Smiley
 $SMILE_SHORT = array( //diese Kuerzel fuegen das angegebene Smiley ein (Dateiname + ".gif")
     ":)"=>"smile" ,
     ":-)"=>"asmile" ,
@@ -454,7 +553,7 @@ $SMILE_SHORT = array( //diese Kuerzel fuegen das angegebene Smiley ein (Dateinam
     ":D"=>"biggrin",
     ";-)"=>"wink");
 
-//Shortcuts for symbols
+//Shorts for symbols
 $SYMBOL_SHORT = array(
     "=)"    => "&rArr;" ,
     "(="    => "&lArr;" ,
@@ -466,8 +565,8 @@ $SYMBOL_SHORT = array(
 
 /*configuration for additional modules
 ----------------------------------------------------------------
-this options are only needed, if you are using the addional Stud.IP modules (please see in config_local.inc.php
-which modules are activated). It's a good idea to leave this settings untouched...*/
+this options are only needed, if you are using the addional modules (please see in local.inc
+which modules are activated). It's a good idea to leave them untouched...*/
 
 // Literature-Import Plugins
 $LIT_IMPORT_PLUGINS[1] = array('name' => 'EndNote', 'visual_name' => 'EndNote ab Version 7 / Reference Manager 11', 'description' => _("Exportieren Sie Ihre Literaturliste aus EndNote / Reference Manager als XML-Datei."));
@@ -489,21 +588,21 @@ $LIT_IMPORT_PLUGINS[2] = array('name' => 'GenericXML', 'visual_name' => _("Einfa
 $LIT_IMPORT_PLUGINS[3] = array('name' => 'CSV', 'visual_name' => _("CSV mit Semikolon als Trennzeichen"), 'description' => _("Exportieren Sie Ihre Literaturliste in eine mit Trennzeichen getrennte Datei (CSV). Wichtig hierbei ist die Verwendung des Semikolons als Trennzeichen. Folgende Formatierung wird dabei in jeder Zeile erwartet:").'[pre]'._("Titel;Verfasser oder Urheber;Verleger;Herausgeber;Thema und Stichworte;ISBN").'[/pre]');
 $LIT_IMPORT_PLUGINS[4] = array('name' => 'StudipLitList', 'visual_name' => _("Literaturliste im Stud.IP Format"), 'description' => _("Benutzen Sie die Export-Funktion innerhalb von Stud.IP, um eine Literaturliste im Stud.IP Format zu exportieren."));
 
-// <<-- EXPORT-SETTINGS
-// Export modes
+// <<-- EXPORT-EINSTELLUNGEN
+// Ausgabemodi für den Export
 $export_o_modes = array("start","file","choose", "direct","processor","passthrough");
-// Exportable output-types
+// Exportierbare Datenarten
 $export_ex_types = array("veranstaltung", "person", "forschung");
 
 $skip_page_3 = true;
-// name of generated XML-file
+// Name der erzeugten XML-Datei
 $xml_filename = "data.xml";
-// name of generated output-file
+// Name der erzeugten Ausgabe-Datei
 $xslt_filename_default = "studip";
 
-// existing output formats
+// Vorhandene Ausgabeformate
 $output_formats = array(
-    "html"      =>      "Hypertext Markup Language (HTML)",
+    "html"      =>      "Hypertext (HTML)",
     "rtf"       =>      "Rich Text Format (RTF)",
     "txt"       =>      "Text (TXT)",
     "csv"       =>      "Comma Separated Values (Excel)",
@@ -513,22 +612,24 @@ $output_formats = array(
 
 // Icons für die Ausgabeformate
 $export_icon["xml"] = "icons/16/blue/file-generic.png";
-$export_icon["xslt"] = "icons/16/blue/file-generic.png";
-$export_icon["xsl"] = "icons/16/blue/file-generic.png";
+$export_icon["xslt"] = "icons/16/blue/file-xls.png";
+$export_icon["xsl"] = "icons/16/blue/file-xls.png";
 $export_icon["rtf"] = "icons/16/blue/file-text.png";
-$export_icon["fo"] = "icons/16/blue/file-generic.png";
+$export_icon["fo"] = "icons/16/blue/file-pdf.png";
 $export_icon["pdf"] = "icons/16/blue/file-pdf.png";
 $export_icon["html"] = "icons/16/blue/file-text.png";
 $export_icon["htm"] = "icons/16/blue/file-text.png";
 $export_icon["txt"] = "icons/16/blue/file-text.png";
 $export_icon["csv"] = "icons/16/blue/file-xls.png";
-// more icons can be added here
 
-// PDF- templates for the "record of study" course-export
-// title = Description of the template
-// template = PDF-template in '/export'
+// weitere Icons und Formate können hier angefügt werden
+
+// PDF-Vorlagen für den Veranstaltungsexport (Index von 1 bis X)
+// title = Beschreibung der Vorlage
+// template = PDF-Vorlage in '/export'
 $record_of_study_templates[1] = array("title" => "Allgemeine Druckvorlage", "template" =>"general_template.pdf");
 $record_of_study_templates[2] = array("title" => "Studienbuch", "template" => "recordofstudy_template.pdf");
+
 // EXPORT -->>
 
 // cofiguration for flash player
@@ -537,9 +638,12 @@ $FLASHPLAYER_DEFAULT_CONFIG_MAX = "&amp;showstop=1&amp;showvolume=1&amp;bgcolor=
 
 //Here you have to add the datafield_ids as elements. They will be shown in the standard / extended view on inst_admin.php
 $INST_ADMIN_DATAFIELDS_VIEW = array(
-    'default' => array(),
-    'extended' => array()
+    'extended' => array(
+    ),
+    'default' => array(
+    )
 );
+
 /*
  * Fields that may not be hidden by users in their privacy settings.
  * Can be configured per permission level.
@@ -556,5 +660,4 @@ $NOT_HIDEABLE_FIELDS = array(
     'root' => array()
 );
 //Add ids of datafields to use for import on teilnehmer.php
-$TEILNEHMER_IMPORT_DATAFIELDS = array();
-
+$TEILNEHMER_IMPORT_DATAFIELDS = array('36908df6f81f7401d96856f69e522d20');

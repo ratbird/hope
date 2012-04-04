@@ -2,7 +2,7 @@
 # Lifter001: TEST
 # Lifter002: TEST
 # Lifter007: TODO
-# Lifter003: TODO
+# Lifter003: TEST
 # Lifter010: TODO
 /*
 teilnehmer.php - Anzeige der Teilnehmer eines Seminares

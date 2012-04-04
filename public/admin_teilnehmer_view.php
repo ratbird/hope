@@ -1,7 +1,7 @@
 <?php
 # Lifter001: TEST
 # Lifter002: TEST
-# Lifter007: TODO
+# Lifter007: TEST
 # Lifter003: TEST
 # Lifter010: TODO
 /*
@@ -25,11 +25,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 require '../lib/bootstrap.php';
 
-page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
-
+page_open(array(
+    'sess' => 'Seminar_Session',
+    'auth' => 'Seminar_Auth',
+    'perm' => 'Seminar_Perm',
+    'user' => 'Seminar_User'
+));
 include 'lib/seminar_open.php'; //hier werden die sessions initialisiert
 
-PageLayout::setTitle(_("Teilnehmeransicht konfigurieren"));
+PageLayout::setTitle(_('Teilnehmeransicht konfigurieren'));
 Navigation::activateItem('/admin/config/member_view');
 
 $GLOBALS['perm']->check('root');

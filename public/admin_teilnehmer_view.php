@@ -52,8 +52,6 @@ $cssSw=new cssClassSwitcher;
 
 // Aenderungen nur in dem Seminar, in dem ich gerade bin...
 
-$db=new DB_Seminar;
-
 $id = "";
 if (!($auth->auth["perm"] == "root")) die;
 
@@ -63,11 +61,14 @@ if ($cmd == "change") {
         if ($key[0] == "#") {
             $zw = substr($key, 1, strlen($key));
             $zw2 = explode("##", $zw);
+            
             if ($val == 1) {
-                $db->query("REPLACE INTO teilnehmer_view (datafield_id, seminar_id) VALUES ('$zw2[0]', '$zw2[1]')");
+                $query = "REPLACE INTO teilnehmer_view (datafield_id, seminar_id) VALUES (?, ?)";
             } else {
-                $db->query("DELETE FROM teilnehmer_view WHERE datafield_id = '$zw2[0]' AND seminar_id = '$zw2[1]'");
+                $query = "DELETE FROM teilnehmer_view WHERE datafield_id = ? AND seminar_id = ?";
             }
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($zw2[0], $zw2[1]));
         }
     }
 }
@@ -86,19 +87,15 @@ echo $table->openCell();
 // Daten
 echo $tbl2->open();
 
-$query = "SELECT * FROM teilnehmer_view WHERE ";
-
-for ($i = 1; $i <= sizeof($SEM_CLASS); $i++) {
-    if ($i != 1) $query .= "OR ";
-    $query .= "seminar_id = '$i' ";
-}
-
-$db->query($query);
-
 $active = array();
-while ($db->next_record()) {
-    $active[$db->f("seminar_id")][$db->f("datafield_id")] = TRUE;
+
+$query = "SELECT * FROM teilnehmer_view WHERE seminar_id IN (?)";
+$statement = DBManager::get()->prepare($query);
+$statement->execute(array(array_keys($SEM_CLASS)));
+while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+    $active[ $row['seminar_id'] ][ $row['datafield_id'] ] = true;
 }
+
 echo "<form action=\"". URLHelper::getLink() ."\" method=\"post\">";
 echo CSRFProtection::tokenTag();
 foreach ($SEM_CLASS as $key => $val) {

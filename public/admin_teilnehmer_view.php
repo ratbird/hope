@@ -3,7 +3,7 @@
 # Lifter002: TEST
 # Lifter007: TEST
 # Lifter003: TEST
-# Lifter010: TODO
+# Lifter010: DONE
 /*
 teilnehmer.php - Anzeige der Teilnehmer eines Seminares
 Copyright (C) 2000 Stefan Suchi <suchi@gmx.de>, Ralf Stockmann <rstockm@gwdg.de>

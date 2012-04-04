@@ -1,3 +1,6 @@
+<?php
+# Lifter010: TEST
+?>
 <h1><?= _('Teilnehmeransicht konfigurieren') ?></h1>
 
 <form action="<?= URLHelper::getURL() ?>" method="post">

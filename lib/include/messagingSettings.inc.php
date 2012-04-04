@@ -71,7 +71,6 @@ if ($messaging_cmd=="change_view_insert" && !$set_msg_default_x && Request::subm
     $user_cfg->store("MAIL_AS_HTML", Request::int('mail_format'));
 
     $my_messaging_settings["changed"] = TRUE;
-    $my_messaging_settings["show_only_buddys"] = $show_only_buddys;
     $my_messaging_settings["delete_messages_after_logout"] = $delete_messages_after_logout;
     $my_messaging_settings["start_messenger_at_startup"] = $start_messenger_at_startup;
     $my_messaging_settings["sms_sig"] = $sms_sig;
@@ -82,7 +81,6 @@ if ($messaging_cmd=="change_view_insert" && !$set_msg_default_x && Request::subm
     } else {
         $my_messaging_settings["opennew"] = $opennew;
     }
-    $my_messaging_settings["show_sndpicture"] = $show_sndpicture;
     $my_messaging_settings["logout_markreaded"] = $logout_markreaded;
     $my_messaging_settings["addsignature"] = $addsignature;
     $sms_data["sig"] = $addsignature;

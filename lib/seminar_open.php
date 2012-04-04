@@ -72,7 +72,6 @@ function check_messaging_default() {
         $my_messaging_settings['folder']['out'][0] = "dummy";
     if (!$my_messaging_settings['confirm_reading'])
         $my_messaging_settings['confirm_reading'] = 3;
-    $my_messaging_settings['show_sndpicture'] = 1;
 }
 
 // set default Values for schedule (timetable)

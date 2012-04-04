@@ -43,7 +43,6 @@ function check_messaging_default() {
         $my_messaging_settings['delete_messages_after_logout'] = FALSE;
     if (!$my_messaging_settings['start_messenger_at_startup'])
         $my_messaging_settings['start_messenger_at_startup'] = FALSE;
-    $my_messaging_settings['active_time'] = 5;
     if (!$my_messaging_settings['default_setted'])
         $my_messaging_settings['default_setted'] = time();
     if (!$my_messaging_settings['last_login'])

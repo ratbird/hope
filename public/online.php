@@ -64,7 +64,7 @@ include ('lib/include/header.php');   // Output of Stud.IP head
 
 ob_start();
 
-$kompletter_datensatz= get_users_online($my_messaging_settings['active_time'], $user->cfg->getValue("ONLINE_NAME_FORMAT"));
+$kompletter_datensatz= get_users_online(5, $user->cfg->getValue("ONLINE_NAME_FORMAT"));
 $alle=count($kompletter_datensatz);
 /*
  * Start to filter
@@ -130,13 +130,13 @@ if ($sms_msg) {
 if (GetNumberOfBuddies()) {
 
     if ($_REQUEST['show_only_buddys']){
-		$my_messaging_settings["show_only_buddys"] = true;	
+		$my_messaging_settings["show_only_buddys"] = true;
     }else{
-		$my_messaging_settings["show_only_buddys"] = false;	
+		$my_messaging_settings["show_only_buddys"] = false;
 	}
-    if ($my_messaging_settings["show_only_buddys"]) 
+    if ($my_messaging_settings["show_only_buddys"])
         $checked = " checked";
-    
+
     $newInfoboxPart = array("kategorie" => _("Einstellung:"),
         "eintrag" => array(
             array(
@@ -145,7 +145,7 @@ if (GetNumberOfBuddies()) {
             )
         )
     );
-    
+
 }else{
     $newInfoboxPart = array();
 }?>

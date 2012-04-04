@@ -45,18 +45,18 @@ page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" =>
 
 if ($auth->auth["uid"] != "nobody"){
     ($cmd=="write") ? $refresh=0 : $refresh=30;
-    
+
     $db = new DB_Seminar;
     $sess->register("messenger_data");
     $sms= new messaging;
-    
-    $online = get_users_online($my_messaging_settings["active_time"],'no_title');
-    
+
+    $online = get_users_online(5, 'no_title');
+
     //Count new and old msg's
     $old_msg = count_messages_from_user('in', " AND message_user.readed = 1 ");
     $new_msg = count_messages_from_user('in', " AND message_user.readed = 0 ");
     $new_msgs = array();
-    
+
     if ($new_msg){
         //load the data from new messages
         $query =  "SELECT message.message_id, message.mkdate, autor_id, message, subject
@@ -64,7 +64,7 @@ if ($auth->auth["uid"] != "nobody"){
         WHERE deleted = 0 AND message_user.readed = 0 AND snd_rec = 'rec' AND message_user.user_id ='".$user->id."'
         ORDER BY message.mkdate";
         $db->query($query);
-        
+
         while ($db->next_record()){
             if ($cmd=="read" && $msg_id==$db->f("message_id")){
                 // "open" the message (display it in the messenger)
@@ -149,7 +149,7 @@ if ($auth->auth["uid"] != "nobody"){
     } else {
         echo "<tr><td class='blank' colspan='2' align='left' ><font size=-1>" . _("Kein Nutzer ist online.") . "</font>";
     }
-    
+
     if (!$my_messaging_settings["show_only_buddys"]) {
         if ((sizeof($online)-$c) == 1) {
             echo "<tr><td class=\"blank\" colspan=2 align=\"left\"><font size=-1>" . _("Es ist ein anderer Nutzer online.");
@@ -169,17 +169,17 @@ if ($auth->auth["uid"] != "nobody"){
         print (_("Keine Nachrichten") . "<br>");
     else
         print (_("Keine alten Nachrichten") . "<br>");
-    
+
     if ($new_msg) {
         printf ("<br><b>"._("%s neue Nachrichten:") . "</b><br>", $new_msg);
         foreach ($new_msgs as $val)
                 print "<br>".$val;
     }
-    
+
     ?>
     </font><br>&nbsp</td></tr>
     <?
-    
+
     if ($cmd=="send_msg" AND $nu_msg AND $msg_rec) {
         $nu_msg=trim($nu_msg);
         if (!$msg_subject) {
@@ -192,8 +192,8 @@ if ($auth->auth["uid"] != "nobody"){
             echo"\n<tr><td class='blank' colspan='2' valign='middle'><font size=-1 color='red'><b>"
                 . _("Ihre Nachricht konnte nicht verschickt werden!") . "</b></font></td></tr>";
     }
-    
-    
+
+
     if ($cmd=="read" AND $msg_text){
         if ($msg_autor_id == "____%system%____"){
             echo"\n<tr><td class='blank' colspan='2' valign='middle'><font size=-1><b>"
@@ -208,7 +208,7 @@ if ($auth->auth["uid"] != "nobody"){
             echo LinkButton::createCancel(_("Abbrechen"), "?cmd=cancel");
         }
     }
-    
+
     if ($cmd == "write"){
         if ($msg_id){
             $query = "SELECT message, subject, autor_id
@@ -240,10 +240,10 @@ if ($auth->auth["uid"] != "nobody"){
             echo "<font size=-1><a target=\"_blank\" href=\"" . URLHelper::getLink('dispatch.php/smileys') . "\">" . _("Smileys</a> k&ouml;nnen verwendet werden") . " </font>\n</td></tr>";
             echo "\n<tr><td class='blank' colspan='2' valign='middle' align='center'><font size=-1>&nbsp;";
             echo '<div class="button-group">';
-            echo Button::createAccept(_("Absenden")), LinkButton::createCancel(_("Abbrechen"), "?cmd=cancel"); 
+            echo Button::createAccept(_("Absenden")), LinkButton::createCancel(_("Abbrechen"), "?cmd=cancel");
             echo '</div>';
             echo "</form></font></td></tr>";
-        
+
             echo "\n<script language=\"JavaScript\">\n<!--\ndocument.eingabe.nu_msg.focus();\n//-->\n</script>";
         }
     }

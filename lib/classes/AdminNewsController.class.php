@@ -197,7 +197,7 @@ class AdminNewsController {
         echo "\n<tr><td width=\"100%\" class=\"blank\"><p class=\"info\">";
         echo "\n<form action=\"".URLHelper::getLink("?cmd=kill&view_mode=$view_mode")."\" method=\"POST\">";
         echo CSRFProtection::tokenTag();
-        echo "<table class=\"blank\" align=\"left\" width=\"".round(0.88*$this->xres)."\" cellspacing=\"0\" cellpadding=\"2\" border=\"0\">";
+        echo "<table class=\"default\">";
         echo "\n<tr><td class=\"blank\" colspan=\"4\" align=\"left\" style=\"vertical-align:middle;\"><font size=-1 >" . _("Vorhandene Ankündigungen im gew&auml;hlten Bereich:") . "<br>";
         echo "</td><td class=\"blank\" colspan=\"4\" align=\"right\" style=\"vertical-align:middle;\"><font size=-1 >" . _("Markierte Ankündigungen l&ouml;schen");
         echo "&nbsp;" . Button::create(_('Löschen'), 'kill', array('style' => 'vertical-align:middle;', 'title' => _('Markierte Ankündigungen löschen'))) . "&nbsp;&nbsp;</td></tr>";

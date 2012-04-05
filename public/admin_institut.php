@@ -2,7 +2,7 @@
 # Lifter001: TEST
 # Lifter002: TODO
 # Lifter007: TODO
-# Lifter003: TODO
+# Lifter003: TEST
 # Lifter010: TODO
 /*
 admin_institut.php - Einrichtungs-Verwaltung von Stud.IP.
@@ -71,8 +71,6 @@ if (get_config('EXTERN_ENABLE')) {
 
 
 // Get a database connection
-$db = new DB_Seminar;
-$db2 = new DB_Seminar;
 $cssSw = new cssClassSwitcher;
 $Modules = new Modules;
 
@@ -101,15 +99,22 @@ switch ($submitted_task) {
             $i_view="new";
             break;
         }
-        $Fakultaet = Request::option('Fakultaet');
+
         // Does the Institut already exist?
         // NOTE: This should be a transaction, but it is not...
-        $sql = "SELECT * FROM Institute WHERE Name='".Request::quoted('Name')."'";
-        if ($Fakultaet){
-           $sql .= " AND fakultaets_id='$Fakultaet'";
+        $query      = "SELECT 1 FROM Institute WHERE Name = ?";
+        $parameters = array(Request::get('Name'));
+
+        $Fakultaet = Request::option('Fakultaet');
+        if ($Fakultaet) {
+            $query .= " AND fakultaets_id = ?";
+            $parameters[] = $Fakultaet;
         }
-        $db->query($sql);
-        if ($db->nf()>0) {
+
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute($parameters);
+        
+        if ($statement->fetchColumn()) {
             $msg="error§<b>" . sprintf(_("Die Einrichtung \"%s\" existiert bereits!"), htmlReady(Request::get('Name')));
             break;
         }
@@ -125,15 +130,30 @@ switch ($submitted_task) {
             }
         }
 
-        $query = "insert into Institute (Institut_id,Name,fakultaets_id,Strasse,Plz,url,telefon,email,fax,type,lit_plugin_name,lock_rule,mkdate,chdate) values('$i_id','".Request::quoted('Name')."','$Fakultaet','".Request::option('Strasse')."','".Request::option('plz')."', '".Request::option('home')."', '".Request::option('telefon')."', '".Request::option('email')."', '".Request::option('fax')."', '".Request::option('type')."','".Request::option('lit_plugin_name')."','".Request::option('lock_rule')."', '".time()."', '".time()."')";
+        $query = "INSERT INTO Institute
+                      (Institut_id, Name, fakultaets_id, Strasse, Plz, url, telefon, email,
+                       fax, type, lit_plugin_name, lock_rule, mkdate, chdate)
+                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $i_id,
+            Request::get('Name'),
+            $Fakultaet,
+            Request::get('strasse'),
+            Request::get('plz'), // Beware: Despite the name, this contains both zip code AND city name
+            Request::get('home'),
+            Request::get('telefon'),
+            Request::get('email'),
+            Request::get('fax'),
+            Request::int('type'),
+            Request::get('lit_plugin_name'),
+            Request::option('lock_rule'),
+        ));
 
-        $db->query($query);
-
-        if ($db->affected_rows() == 0) {
+        if ($statement->rowCount() == 0) {
             $msg="error§<b>" . _("Datenbankoperation gescheitert:") . " " . $query . "</b>";
             break;
         }
-
 
         log_event("INST_CREATE",$i_id,NULL,NULL,$query); // logging
 
@@ -142,7 +162,16 @@ switch ($submitted_task) {
 
         // Create default folder and discussion
         CreateTopic(_("Allgemeine Diskussionen"), " ", _("Hier ist Raum für allgemeine Diskussionen"), 0, 0, $i_id, 0);
-        $db->query("INSERT INTO folder SET folder_id='".md5(uniqid(rand()))."', range_id='".$i_id."', name='" . _("Allgemeiner Dateiordner") . "', description='" . _("Ablage für allgemeine Ordner und Dokumente der Einrichtung") . "', mkdate='".time()."', chdate='".time()."'");
+        
+        $query = "INSERT INTO folder (folder_id, range_id, name, description, mkdate, chdate)
+                  VALUES (?, ?, ?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            md5(uniqid('folder')),
+            $i_id,
+            _('Allgemeiner Dateiordner'),
+            _('Ablage für allgemeine Ordner und Dokumente der Einrichtung'),
+        ));
 
         $msg="msg§" . sprintf(_("Die Einrichtung \"%s\" wurde erfolgreich angelegt."), htmlReady(Request::get('Name')));
 
@@ -168,9 +197,26 @@ switch ($submitted_task) {
         }
 
         //update Institut information.
-        $query = "UPDATE Institute SET Name='".Request::quoted('Name')."', fakultaets_id='".Request::quoted('Fakultaet')."', Strasse='".Request::quoted('strasse')."', Plz='".Request::quoted('plz')."', url='".Request::quoted('home')."', telefon='".Request::quoted('telefon')."', fax='".Request::quoted('fax')."', email='".Request::quoted('email')."', type='".Request::quoted('type')."', lit_plugin_name='".Request::quoted('lit_plugin_name')."',lock_rule='".Request::quoted('lock_rule')."' ,chdate=".time()." where Institut_id = '".Request::option('i_id')."'";
-        $db->query($query);
-        if ($db->affected_rows() == 0) {
+        $query = "UPDATE Institute
+                  SET Name = ?, fakultaets_id = ?, Strasse = ?, Plz = ?, url = ?, telefon = ?, fax = ?, 
+                      email = ?, type = ?, lit_plugin_name = ?, lock_rule = ?, chdate = UNIX_TIMESTAMP()
+                  WHERE Institut_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            Request::get('Name'),
+            Request::option('Fakultaet'),
+            Request::get('strasse'),
+            Request::get('plz'),
+            Request::get('home'),
+            Request::get('telefon'),
+            Request::get('fax'),
+            Request::get('email'),
+            Request::int('type'),
+            Request::get('lit_plugin_name'),
+            Request::option('lock_rule'),
+            Request::option('i_id'),
+        ));
+        if ($statement->rowCount() == 0) {
             $msg="error§<b>" . _("Datenbankoperation gescheitert:") . " " . $query . "</b>";
             break;
         } else {
@@ -210,40 +256,54 @@ switch ($submitted_task) {
         }
         $i_id=Request::option('i_id');
         // Institut in use?
-        $db->query("SELECT * FROM seminare WHERE Institut_id = '$i_id'");
-        if ($db->next_record()) {
+        $query = "SELECT 1 FROM seminare WHERE Institut_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($i_id));
+        if ($statement->fetchColumn()) {
             $msg="error§<b>" . _("Diese Einrichtung kann nicht gel&ouml;scht werden, da noch Veranstaltungen an dieser Einrichtung existieren!") . "</b>";
             break;
         }
 
-        $db->query("SELECT a.Institut_id,a.Name, IF(a.Institut_id=a.fakultaets_id,1,0) AS is_fak, count(b.Institut_id) as num_inst FROM Institute a LEFT JOIN Institute b ON (a.Institut_id=b.fakultaets_id) WHERE a.Institut_id ='$i_id' AND b.Institut_id!='$i_id' AND a.Institut_id=a.fakultaets_id GROUP BY a.Institut_id ");
-        $db->next_record();
-        if($db->f("num_inst")) {
+        $query = "SELECT a.Institut_id, a.Name, a.Institut_id = a.fakultaets_id AS is_fak, COUNT(b.Institut_id) AS num_inst
+                  FROM Institute AS a
+                    LEFT JOIN Institute AS b ON (a.Institut_id=b.fakultaets_id)
+                  WHERE a.Institut_id = ? AND b.Institut_id != ? AND a.Institut_id = a.fakultaets_id
+                  GROUP BY a.Institut_id";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($i_id, $i_id));
+        $temp = $statement->fetch(PDO::FETCH_ASSOC);
+        
+        if ($temp['num_inst']) {
             $msg="error§<b>" . _("Diese Einrichtung kann nicht gel&ouml;scht werden, da sie den Status Fakult&auml;t hat, und noch andere Einrichtungen zugeordnet sind!") . "</b>";
             break;
         }
 
-        if ($db->f("is_fak") && !$perm->have_perm("root")){
+        if ($temp['is_fak'] && !$perm->have_perm("root")) {
             $msg="error§<b>" . _("Sie haben nicht die Berechtigung Fakult&auml;ten zu l&ouml;schen!") . "</b>";
             break;
         }
 
         // delete users in user_inst
-        $result = DBManager::get()->query("SELECT user_id FROM user_inst WHERE institut_id = '$i_id'");
-        while ($data = $result->fetch()) {
-            log_event('INST_USER_DEL', $i_id, $data['user_id']);
+        $query = "SELECT user_id FROM user_inst WHERE institut_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($i_id));
+        while ($user_id = $statement->fetchColumn()) {
+            log_event('INST_USER_DEL', $i_id, $user_id);
         }
 
-        $query = "DELETE FROM user_inst WHERE Institut_id='$i_id'";
-        $db->query($query);
-        if (($db_ar = $db->affected_rows()) > 0) {
+        $query = "DELETE FROM user_inst WHERE Institut_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($i_id));
+
+        if (($db_ar = $statement->rowCount()) > 0) {
             $msg.="msg§" . sprintf(_("%s Mitarbeiter gel&ouml;scht."), $db_ar) . "§";
         }
 
         // delete participations in seminar_inst
-        $query = "DELETE FROM seminar_inst WHERE Institut_id='$i_id'";
-        $db->query($query);
-        if (($db_ar = $db->affected_rows()) > 0) {
+        $query = "DELETE FROM seminar_inst WHERE Institut_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($i_id));
+        if (($db_ar = $statement->rowCount()) > 0) {
             $msg.="msg§" . sprintf(_("%s Beteiligungen an Veranstaltungen gel&ouml;scht"), $db_ar) . "§";
         }
 
@@ -255,9 +315,10 @@ switch ($submitted_task) {
         }
 
         // SCM löschen
-        $query = "DELETE FROM scm where range_id='$i_id'";
-        $db->query($query);
-        if (($db_ar = $db->affected_rows()) > 0) {
+        $query = "DELETE FROM scm WHERE range_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($i_id));
+        if (($db_ar = $statement->rowCount()) > 0) {
             $msg .= "msg§" . _("Freie Seite der Einrichtung gel&ouml;scht") . "§";
         }
 
@@ -268,9 +329,14 @@ switch ($submitted_task) {
         StudipNews::UnsetRssId($i_id);
 
         //updating range_tree
-        $query = "UPDATE range_tree SET name='$Name " . _("(in Stud.IP gelöscht)") . "',studip_object='',studip_object_id='' WHERE studip_object_id='$i_id'";
-        $db->query($query);
-        if (($db_ar = $db->affected_rows()) > 0) {
+        $query = "UPDATE range_tree SET name = ?, studip_object = '', studip_object_id = '' WHERE studip_object_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            _('(in Stud.IP gelöscht)'),
+            $i_id,
+        ));
+        
+        if (($db_ar = $statement->rowCount()) > 0) {
             $msg.="msg§" . sprintf(_("%s Bereiche im Einrichtungsbaum angepasst."), $db_ar) . "§";
         }
 
@@ -283,15 +349,11 @@ switch ($submitted_task) {
         DataFieldEntry::removeAll($i_id);
 
         //kill all wiki-pages
-        $query = sprintf ("DELETE FROM wiki WHERE range_id='%s'", $i_id);
-        $db->query($query);
-
-        $query = sprintf ("DELETE FROM wiki_links WHERE range_id='%s'", $i_id);
-        $db->query($query);
-
-        $query = sprintf ("DELETE FROM wiki_locks WHERE range_id='%s'", $i_id);
-        $db->query($query);
-
+        foreach (array('', '_links', '_locks') as $area) {
+            $query = "DELETE FROM wiki{$area} WHERE range_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($i_id));
+        }
 
         // kill all the ressources that are assigned to the Veranstaltung (and all the linked or subordinated stuff!)
         if (get_config('RESOURCES_ENABLE')) {
@@ -309,11 +371,12 @@ switch ($submitted_task) {
         }
 
         // delete folders and discussions
-        $query = "DELETE from px_topics where Seminar_id='$i_id'";
-        $db->query($query);
-        if (($db_ar = $db->affected_rows()) > 0) {
+        $query = "DELETE FROM px_topics WHERE Seminar_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($i_id));
+        if (($db_ar = $statement->rowCount()) > 0) {
             $msg.="msg§" . sprintf(_("%s Postings aus dem Forum der Einrichtung gel&ouml;scht."), $db_ar) . "§";
-            }
+        }
 
         $db_ar = delete_all_documents($i_id);
         if ($db_ar > 0)
@@ -324,9 +387,10 @@ switch ($submitted_task) {
         object_kill_visits(null, $i_id);
 
         // Delete that Institut.
-        $query = "DELETE FROM Institute WHERE Institut_id='$i_id'";
-        $db->query($query);
-        if ($db->affected_rows() == 0) {
+        $query ="DELETE FROM Institute WHERE Institut_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($i_id));
+        if ($statement->rowCount() == 0) {
             $msg="error§<b>" . _("Datenbankoperation gescheitert:") . "</b> " . $query;
             break;
         } else {
@@ -392,15 +456,35 @@ if ($lockrule->description && LockRules::CheckLockRulePermission($i_view)) {
 }
 
 if ($perm->have_studip_perm("admin",$i_view) || $i_view == "new") {
-
+    $institute = array();
     if ($i_view != "new") {
-        $db->query("SELECT a.*,b.Name AS fak_name, count(Seminar_id) AS number FROM Institute a LEFT JOIN Institute b ON (b.Institut_id=a.fakultaets_id) LEFT JOIN seminare c ON (a.Institut_id=c.Institut_id) WHERE a.Institut_id ='$i_view' GROUP BY a.Institut_id");
-        $db->next_record();
-        $db2->query("SELECT a.Institut_id,a.Name,count(b.Institut_id) as num_inst FROM Institute a LEFT JOIN Institute b ON (a.Institut_id=b.fakultaets_id) WHERE a.Institut_id ='$i_view' AND b.Institut_id!='$i_view' AND a.Institut_id=a.fakultaets_id GROUP BY a.Institut_id ");
-        $db2->next_record();
-        $_num_inst = $db2->f("num_inst");
+        $query = "SELECT a.*, b.Name AS fak_name, COUNT(Seminar_id) AS number
+                  FROM Institute AS a
+                  LEFT JOIN Institute AS b ON (b.Institut_id = a.fakultaets_id)
+                  LEFT JOIN seminare AS c ON (a.Institut_id = c.Institut_id)
+                  WHERE a.Institut_id = ?
+                  GROUP BY a.Institut_id";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($i_view));
+        $institute = $statement->fetch(PDO::FETCH_ASSOC);
+
+        $query = "SELECT COUNT(b.Institut_id)
+                  FROM Institute AS a
+                  LEFT JOIN Institute AS b ON (a.Institut_id = b.fakultaets_id)
+                  WHERE a.Institut_id = ? AND b.Institut_id != ? AND a.Institut_id = a.fakultaets_id
+                  GROUP BY a.Institut_id";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($i_view, $i_view));
+        $_num_inst = $statement->fetchColumn();
     }
-    $i_id= $db->f("Institut_id");
+
+    $lockCheck = function ($field, $raw = false) use ($institute) {
+        $check = LockRules::Check($institute['Institut_id'], $field);
+        if ($raw) {
+            return $check;
+        }
+        return $check ? 'readonly' : '';
+    };
     ?>
 <tr>
     <td class="blank" valign="top">
@@ -409,32 +493,43 @@ if ($perm->have_studip_perm("admin",$i_view) || $i_view == "new") {
     <table class="default">
     <tr <? $cssSw->switchClass() ?>>
         <td class="<? echo $cssSw->getClass() ?>" ><?=_("Name:")?> </td>
-        <td class="<? echo $cssSw->getClass() ?>" ><input style="width: 98%" type="text" <?=(LockRules::Check($i_id, 'name') ? 'readonly' : '')?> name="Name" size=50 maxlength=254 value="<?php echo htmlReady($db->f("Name")) ?>"></td>
+        <td class="<? echo $cssSw->getClass() ?>" ><input style="width: 98%" type="text" <?= $lockCheck('name') ?> name="Name" size=50 maxlength=254 value="<?php echo htmlReady(Request::get('Name', $institute['Name'])) ?>"></td>
     </tr>
     <tr <? $cssSw->switchClass() ?>>
         <td class="<? echo $cssSw->getClass() ?>" ><?=_("Fakult&auml;t:")?></td>
         <td class="<? echo $cssSw->getClass() ?>" align=left>
         <?php
-        if ($perm->is_fak_admin() && !LockRules::Check($i_id, 'fakultaets_id') && ($perm->have_studip_perm("admin",$db->f("fakultaets_id")) || $i_view == "new")) {
+        if ($perm->is_fak_admin() && !$lockCheck('fakultaets_id', true) && ($perm->have_studip_perm("admin", $institute['fakultaets_id']) || $i_view == "new")) {
             if ($_num_inst) {
                 echo "\n<font size=\"-1\"><b>" . _("Diese Einrichtung hat den Status einer Fakult&auml;t.") . "<br>";
                 printf(_("Es wurden bereits %s andere Einrichtungen zugeordnet."), $_num_inst) . "</b></font>";
-                echo "\n<input type=\"hidden\" name=\"Fakultaet\" value=\"$i_id\">";
+                echo "\n<input type=\"hidden\" name=\"Fakultaet\" value=\"{$institute['Institut_id']}\">";
             } else {
                 echo "\n<select name=\"Fakultaet\" style=\"width: 98%\">";
                 if ($perm->have_perm("root")) {
-                    printf ("<option %s value=\"%s\">" . _("Diese Einrichtung hat den Status einer Fakult&auml;t.") . "</option>", ($db->f("fakultaets_id") == $db->f("Institut_id")) ? "selected" : "", $db->f("Institut_id"));
-                    $db2->query("SELECT Institut_id,Name FROM Institute WHERE Institut_id=fakultaets_id AND fakultaets_id !='". $db->f("institut_id") ."' ORDER BY Name");
+                    printf ("<option %s value=\"%s\">" . _("Diese Einrichtung hat den Status einer Fakult&auml;t.") . "</option>", ($institute['fakultaets_id'] == Request::option('Fakultaet', $institute['Institut_id'])) ? "selected" : "", $institute['Institut_id']);
+                    $query = "SELECT Institut_id, Name
+                              FROM Institute
+                              WHERE Institut_id = fakultaets_id AND fakultaets_id != ?
+                              ORDER BY Name";
+                    $statement = DBManager::get()->prepare($query);
+                    $statement->execute(array($institute['Institut_id'] ?: ''));
                 } else {
-                    $db2->query("SELECT a.Institut_id,Name FROM user_inst a LEFT JOIN Institute USING (Institut_id) WHERE user_id='$user->id' AND inst_perms='admin' AND a.Institut_id=fakultaets_id AND fakultaets_id !='". $db->f("institut_id") ."' ORDER BY Name");
+                    $query = "SELECT a.Institut_id, Name
+                              FROM user_inst AS a
+                              LEFT JOIN Institute USING (Institut_id)
+                              WHERE user_id = ? AND inst_perms = 'admin' AND fakultaets_id = ?
+                              ORDER BY Name";
+                    $statement = DBManager::get()->prepare($query);
+                    $statement->execute(array($user->id, $institute['Institut_id'] ?: ''));
                 }
-                while ($db2->next_record()) {
-                    printf ("<option %s value=\"%s\"> %s</option>", ($db2->f("Institut_id") == $db->f("fakultaets_id"))  ? "selected" : "", $db2->f("Institut_id"),htmlReady($db2->f("Name")));
+                while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                    printf ("<option %s value=\"%s\"> %s</option>", ($row['Institut_id'] == Request::option('Fakultaet', $institute['fakultaets_id']))  ? "selected" : "", $row['Institut_id'], htmlReady($row['Name']));
                 }
                 echo "</select>";
             }
         } else {
-            echo htmlReady($db->f("fak_name")) . "\n<input type=\"hidden\" name=\"Fakultaet\" value=\"" . $db->f("fakultaets_id") . "\">";
+            echo htmlReady($institute['fak_name']) . "\n<input type=\"hidden\" name=\"Fakultaet\" value=\"" . $institute['fakultaets_id'] . "\">";
         }
 
         ?>
@@ -443,56 +538,55 @@ if ($perm->have_studip_perm("admin",$i_view) || $i_view == "new") {
     <tr <? $cssSw->switchClass() ?>>
         <td class="<? echo $cssSw->getClass() ?>" ><?=_("Bezeichnung:")?> </td>
         <td class="<? echo $cssSw->getClass() ?>" >
-        <? if (!LockRules::Check($i_id, 'type')) : ?>
+        <? if (!$lockCheck('type', true)) : ?>
         <select style="width: 98%" name="type">
         <?
         $i=0;
-        foreach ($GLOBALS['INST_TYPE'] as $a) {
-            $i++;
-            if ($i==$db->f("type"))
-                echo "<option selected value=\"$i\">".htmlready($GLOBALS['INST_TYPE'][$i]["name"])."</option>";
+        foreach ($GLOBALS['INST_TYPE'] as $i => $inst_type) {
+            if ($i == Request::int('type', $institute['type']))
+                echo "<option selected value=\"$i\">".htmlready($inst_type['name'])."</option>";
             else
-                echo "<option value=\"$i\">".htmlready($GLOBALS['INST_TYPE'][$i]["name"])."</option>";
+                echo "<option value=\"$i\">".htmlready($inst_type['name'])."</option>";
         }
         ?></select>
         <? else :?>
-            <?=htmlReady($GLOBALS['INST_TYPE'][$db->f("type")]["name"])?><input type="hidden" name="type" value="<?=(int)$db->f('type') ?>">
+            <?=htmlReady($GLOBALS['INST_TYPE'][$institute['type']]["name"])?><input type="hidden" name="type" value="<?=(int)$institute['type'] ?>">
         <? endif;?>
         </td>
     </tr>
     <tr <? $cssSw->switchClass() ?>>
         <td class="<? echo $cssSw->getClass() ?>" ><?=_("Straße:")?> </td>
-        <td class="<? echo $cssSw->getClass() ?>" ><input style="width: 98%" type="text" <?=(LockRules::Check($i_id, 'strasse') ? 'readonly' : '')?> name="strasse" size=32 maxlength=254 value="<?php echo htmlReady($db->f("Strasse")) ?>"></td>
+        <td class="<? echo $cssSw->getClass() ?>" ><input style="width: 98%" type="text" <?= $lockCheck('strasse') ?> name="strasse" size=32 maxlength=254 value="<?php echo htmlReady(Request::get('strasse', $institute['Strasse'])) ?>"></td>
     </tr>
     <tr <? $cssSw->switchClass() ?>>
         <td class="<? echo $cssSw->getClass() ?>" ><?=_("Ort:")?> </td>
-        <td class="<? echo $cssSw->getClass() ?>" ><input style="width: 98%" type="text" <?=(LockRules::Check($i_id, 'plz') ? 'readonly' : '')?> name="plz" size=32 maxlength=254 value="<?php echo htmlReady($db->f("Plz")) ?>"></td>
+        <td class="<? echo $cssSw->getClass() ?>" ><input style="width: 98%" type="text" <?= $lockCheck('plz') ?> name="plz" size=32 maxlength=254 value="<?php echo htmlReady(Request::get('plz', $institute['Plz'])) ?>"></td>
         </tr>
     <tr <? $cssSw->switchClass() ?>>
         <td class="<? echo $cssSw->getClass() ?>" ><?=_("Telefonnummer:")?> </td>
-        <td class="<? echo $cssSw->getClass() ?>" ><input style="width: 98%" type="tel" <?=(LockRules::Check($i_id, 'telefon') ? 'readonly' : '')?> name="telefon" size=32 maxlength=254 value="<?php echo htmlReady($db->f("telefon")) ?>"></td>
+        <td class="<? echo $cssSw->getClass() ?>" ><input style="width: 98%" type="tel" <?= $lockCheck('telefon') ?> name="telefon" size=32 maxlength=254 value="<?php echo htmlReady(Request::get('telefon', $institute['telefon'])) ?>"></td>
     </tr>
     <tr <? $cssSw->switchClass() ?>>
         <td class="<? echo $cssSw->getClass() ?>" ><?=_("Faxnummer:")?> </td>
-        <td class="<? echo $cssSw->getClass() ?>" ><input style="width: 98%" type="tel" <?=(LockRules::Check($i_id, 'fax') ? 'readonly' : '')?> name="fax" size=32 maxlength=254 value="<?php echo htmlReady($db->f("fax")) ?>"></td>
+        <td class="<? echo $cssSw->getClass() ?>" ><input style="width: 98%" type="tel" <?= $lockCheck('fax') ?> name="fax" size=32 maxlength=254 value="<?php echo htmlReady(Request::get('fax', $institute['fax'])) ?>"></td>
     </tr>
     <tr <? $cssSw->switchClass() ?>>
         <td class="<? echo $cssSw->getClass() ?>" ><?=_("E-Mail-Adresse:")?> </td>
-        <td class="<? echo $cssSw->getClass() ?>" ><input style="width: 98%" type="email" <?=(LockRules::Check($i_id, 'email') ? 'readonly' : '')?> name="email" size=32 maxlength=254 value="<?php echo htmlReady($db->f("email")) ?>"></td>
+        <td class="<? echo $cssSw->getClass() ?>" ><input style="width: 98%" type="email" <?= $lockCheck('email') ?> name="email" size=32 maxlength=254 value="<?php echo htmlReady(Request::get('email', $institute['email'])) ?>"></td>
     </tr>
     <tr <? $cssSw->switchClass() ?>>
         <td class="<? echo $cssSw->getClass() ?>" ><?=_("Homepage:")?> </td>
-        <td class="<? echo $cssSw->getClass() ?>" ><input style="width: 98%" type="url" <?=(LockRules::Check($i_id, 'url') ? 'readonly' : '')?> name="home" size=32 maxlength=254 value="<?php echo htmlReady($db->f("url")) ?>"></td>
+        <td class="<? echo $cssSw->getClass() ?>" ><input style="width: 98%" type="url" <?= $lockCheck('url') ?> name="home" size=32 maxlength=254 value="<?php echo htmlReady(Request::get('home', $institute['url'])) ?>"></td>
     </tr>
     <?
     //choose preferred lit plugin
-    if (get_config('LITERATURE_ENABLE') && $db->f("Institut_id") == $db->f("fakultaets_id")){
+    if (get_config('LITERATURE_ENABLE') && $institute['Institut_id'] == $institute['fakultaets_id']){
         ?><tr <? $cssSw->switchClass() ?>><td class="<? echo $cssSw->getClass() ?>" ><?=_("Bevorzugter Bibliothekskatalog:")?></td>
         <td class="<? echo $cssSw->getClass() ?>" >
         <select name="lit_plugin_name" style="width: 98%">
         <?
         foreach (StudipLitSearch::GetAvailablePlugins() as $plugin_name => $plugin_display_name){
-            echo '<option value="'.$plugin_name.'" ' . ($db->f('lit_plugin_name') == $plugin_name ? 'selected' : '') .' >' . htmlReady($plugin_display_name) . '</option>';
+            echo '<option value="'.$plugin_name.'" ' . (Request::get('lit_plugin_name', $institute['lit_plugin_name']) == $plugin_name ? 'selected' : '') .' >' . htmlReady($plugin_display_name) . '</option>';
         }
         ?>
         </select>
@@ -509,7 +603,7 @@ if ($perm->have_studip_perm("admin",$i_view) || $i_view == "new") {
         <select name="lock_rule" style="width: 98%">
             <option value=""></option>
             <? foreach(LockRule::findAllByType('inst') as $rule) :?>
-            <option value="<?=$rule->getId()?>" <?=($rule->getId() == $db->f('lock_rule') ? 'selected' : '')?>><?=htmlReady($rule->name)?></option>
+            <option value="<?=$rule->getId()?>" <?=($rule->getId() == Request::option('lock_rule', $institute['lock_rule']) ? 'selected' : '')?>><?=htmlReady($rule->name)?></option>
             <? endforeach;?>
         </select>
         </td>
@@ -517,7 +611,7 @@ if ($perm->have_studip_perm("admin",$i_view) || $i_view == "new") {
         <?
     }
     //add the free administrable datafields
-    $localEntries = DataFieldEntry::getDataFieldEntries($i_id, "inst");
+    $localEntries = DataFieldEntry::getDataFieldEntries($institute['Institut_id'], "inst");
     if ($localEntries) {
       foreach ($localEntries as $entry) {
         $value = $entry->getValue();
@@ -535,7 +629,7 @@ if ($perm->have_studip_perm("admin",$i_view) || $i_view == "new") {
                </td>
                 <td class="<? echo $cssSw->getClass() ?>" >
                     <?
-                    if ($perm->have_perm($entry->structure->getEditPerms()) && !LockRules::Check($i_id, $entry->getId())) {
+                    if ($perm->have_perm($entry->structure->getEditPerms()) && !$lockCheck($entry->getId(), true)) {
                         print $entry->getHTML("datafields");
                     }
                     else
@@ -553,9 +647,9 @@ if ($perm->have_studip_perm("admin",$i_view) || $i_view == "new") {
         <td class="steel2" colspan="2" align="center">
 
     <?
-    if ($i_view != "new" && isset($i_id)) {
+    if ($i_view != "new" && isset($institute['Institut_id'])) {
         ?>
-        <input type="hidden" name="i_id" value="<?= $i_id ?>">
+        <input type="hidden" name="i_id" value="<?= $institute['Institut_id'] ?>">
         <?
         echo Button::create(_('Übernehmen'), 'i_edit');
         if ($db->f("number") < 1 && !$_num_inst && ($perm->have_perm("root") || ($perm->is_fak_admin() && get_config('INST_FAK_ADMIN_PERMS') == 'all'))) {
@@ -578,12 +672,12 @@ if ($perm->have_studip_perm("admin",$i_view) || $i_view == "new") {
                 $aktionen[] = array(
                   "icon" => "icons/16/black/edit.png",
                   "text" => '<a href="' .
-                            URLHelper::getLink('dispatch.php/institute/avatar/update/' . $i_id) .
+                            URLHelper::getLink('dispatch.php/institute/avatar/update/' . $institute['Institut_id']) .
                             '">' . _("Bild ändern") . '</a>');
                 $aktionen[] = array(
                   "icon" => "icons/16/black/trash.png",
                   "text" => '<a href="' .
-                            URLHelper::getLink('dispatch.php/institute/avatar/delete/'. $i_id) .
+                            URLHelper::getLink('dispatch.php/institute/avatar/delete/'. $institute['Institut_id']) .
                             '">' . _("Bild löschen") . '</a>');
             }
             $infobox = array(
@@ -593,7 +687,7 @@ if ($perm->have_studip_perm("admin",$i_view) || $i_view == "new") {
             ?>
             <?= $template_factory->render('infobox/infobox_avatar',
             array('content' => $infobox,
-                  'picture' => InstituteAvatar::getAvatar($i_id)->getUrl(Avatar::NORMAL)
+                  'picture' => InstituteAvatar::getAvatar($institute['Institut_id'])->getUrl(Avatar::NORMAL)
             )) ?>
     </td>
     </tr>

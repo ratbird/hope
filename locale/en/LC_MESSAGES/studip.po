@@ -4046,7 +4046,7 @@ msgid "Sie haben nicht die Berechtigung, um neue Einrichtungen zu erstellen!"
 msgstr "You are not authorized to create any new institute!"
 
 #: ../public/admin_institut.php:92 ../public/admin_institut.php:158
-msgid "Bitte geben Sie eine Bezeichnung f&uuml;r die Einrichtung ein!"
+msgid "Bitte geben Sie eine Bezeichnung für die Einrichtung ein!"
 msgstr "Please enter a description of the institute!"
 
 #: ../public/admin_institut.php:105
@@ -4056,7 +4056,7 @@ msgstr "Institute \"%s\" already exists!"
 
 #: ../public/admin_institut.php:115
 #, fuzzy
-msgid "Sie haben nicht die Berechtigung, neue Fakult&auml;ten zu erstellen"
+msgid "Sie haben nicht die Berechtigung, neue Fakultäten zu erstellen"
 msgstr "You are not authorized to create any new faculty"
 
 #: ../public/admin_institut.php:125 ../public/admin_institut.php:166
@@ -4099,12 +4099,12 @@ msgid "Die Änderung der Einrichtung \"%s\" wurde erfolgreich gespeichert.§"
 msgstr "Your changes made to institute \"%s\" have been saved."
 
 #: ../public/admin_institut.php:184
-msgid "ung&uuml;ltige Eingaben (s.u.) wurden nicht gespeichert"
+msgid "ungültige Eingaben (s.u.) wurden nicht gespeichert"
 msgstr "invalid entries (see below) have not been saved"
 
 #: ../public/admin_institut.php:186
 #, php-format
-msgid "Die Daten der Einrichtung \"%s\" wurden ver&auml;ndert."
+msgid "Die Daten der Einrichtung \"%s\" wurden verändert."
 msgstr "The details of institute \"%s\" have been changed."
 
 #: ../public/admin_institut.php:194
@@ -4112,19 +4112,19 @@ msgid "Ihr Ticket ist abgelaufen. Versuchen Sie die letzte Aktion erneut."
 msgstr "Your ticket has expired. Please repeat the last action."
 
 #: ../public/admin_institut.php:200 ../public/admin_institut.php:218
-msgid "Sie haben nicht die Berechtigung Fakult&auml;ten zu l&ouml;schen!"
+msgid "Sie haben nicht die Berechtigung Fakultäten zu löschen!"
 msgstr "You are not authorized to delete any faculty!"
 
 #: ../public/admin_institut.php:206
 msgid ""
-"Diese Einrichtung kann nicht gel&ouml;scht werden, da noch Veranstaltungen "
+"Diese Einrichtung kann nicht gelöscht werden, da noch Veranstaltungen "
 "an dieser Einrichtung existieren!"
 msgstr ""
 "Because there still are courses at this institute, it cannot be deleted!"
 
 #: ../public/admin_institut.php:213
 msgid ""
-"Diese Einrichtung kann nicht gel&ouml;scht werden, da sie den Status "
+"Diese Einrichtung kann nicht gelöscht werden, da sie den Status "
 "Fakult&auml;t hat, und noch andere Einrichtungen zugeordnet sind!"
 msgstr ""
 "This institute cannot be deleted because it has the status of a faculty and "
@@ -4132,21 +4132,21 @@ msgstr ""
 
 #: ../public/admin_institut.php:231
 #, php-format
-msgid "%s Mitarbeiter gel&ouml;scht."
+msgid "%s Mitarbeiter gelöscht."
 msgstr "%s staff members removed."
 
 #: ../public/admin_institut.php:238
 #, php-format
-msgid "%s Beteiligungen an Veranstaltungen gel&ouml;scht"
+msgid "%s Beteiligungen an Veranstaltungen gelöscht"
 msgstr "%s course participations deleted"
 
 #: ../public/admin_institut.php:245
 #, php-format
-msgid "%s Literaturlisten gel&ouml;scht."
+msgid "%s Literaturlisten gelöscht."
 msgstr "%s reference lists deleted."
 
 #: ../public/admin_institut.php:252
-msgid "Freie Seite der Einrichtung gel&ouml;scht"
+msgid "Freie Seite der Einrichtung gelöscht."
 msgstr "Free institution page deleted"
 
 #: ../public/admin_institut.php:262
@@ -4160,28 +4160,28 @@ msgstr "%s areas in the institute tree have been changed. "
 
 #: ../public/admin_institut.php:270
 #, php-format
-msgid "%s Funktionen/Gruppen gel&ouml;scht"
+msgid "%s Funktionen/Gruppen gelöscht."
 msgstr "%s functions / groups deleted."
 
 #: ../public/admin_institut.php:297
 #, php-format
-msgid "%s Konfigurationsdateien f&uuml;r externe Seiten gel&ouml;scht."
+msgid "%s Konfigurationsdateien für externe Seiten gelöscht."
 msgstr "%s configuration files for external pages deleted."
 
 #: ../public/admin_institut.php:306
 #, php-format
-msgid "%s Postings aus dem Forum der Einrichtung gel&ouml;scht."
+msgid "%s Postings aus dem Forum der Einrichtung gelöscht."
 msgstr "%s postings deleted from the forum of this institute."
 
 #: ../public/admin_institut.php:311
 #: ../lib/classes/UserManagement.class.php:694
 #, php-format
-msgid "%s Dokumente gel&ouml;scht."
+msgid "%s Dokumente gelöscht."
 msgstr "%s documents deleted."
 
 #: ../public/admin_institut.php:325
 #, php-format
-msgid "Die Einrichtung \"%s\" wurde gel&ouml;scht!"
+msgid "Die Einrichtung \"%s\" wurde gelöscht!"
 msgstr "Institute \"%s\" deleted!"
 
 #
@@ -4195,7 +4195,7 @@ msgid "Verwaltung der Grunddaten"
 msgstr "Administering basic details"
 
 #: ../public/admin_institut.php:379
-msgid "Die ausgewählte Einrichtung wurde gel&ouml;scht."
+msgid "Die ausgewählte Einrichtung wurde gelöscht."
 msgstr "Selected institute deleted."
 
 #: ../public/admin_institut.php:380
@@ -4221,12 +4221,12 @@ msgstr "Institutes"
 
 #: ../public/admin_institut.php:408 ../public/archiv.php:497
 #: ../public/institut_main.php:142
-msgid "Fakult&auml;t:"
+msgid "Fakultät:"
 msgstr "Faculty:"
 
 #: ../public/admin_institut.php:413 ../public/admin_institut.php:419
 #, php-format
-msgid "Diese Einrichtung hat den Status einer Fakult&auml;t."
+msgid "Diese Einrichtung hat den Status einer Fakultät."
 msgstr "This institute has the status of a faculty."
 
 #: ../public/admin_institut.php:414

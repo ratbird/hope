@@ -518,7 +518,7 @@ if ($archiv_data["perform_search"]) {
                 if (!$db->f('beschreibung')=='')
                     echo "<li><font size=\"-1\"><b>" . _("Beschreibung:") . " </b>".htmlReady($db->f('beschreibung'))."</font></li>";
                 if (!$db->f('fakultaet')=='')
-                    echo "<li><font size=\"-1\"><b>" . _("Fakult&auml;t:") . " </b>".htmlReady($db->f('fakultaet'))."</font></li>";
+                    echo "<li><font size=\"-1\"><b>" . _("Fakultät:") . " </b>".htmlReady($db->f('fakultaet'))."</font></li>";
                 if (!$db->f('studienbereiche')=='')
                     echo "<li><font size=-1><b>" . _("Bereich:") . " </b>".htmlReady($db->f('studienbereiche'))."</font></li>";
 

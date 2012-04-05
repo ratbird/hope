@@ -2351,3 +2351,17 @@ h2.topic, h3.topic {
     padding: 0.1em;
     line-height: 1em
 }
+
+/* --- institute administration ------------------------------------------- */
+.admin-institute input[type=text],
+.admin-institute input[type=tel],
+.admin-institute input[type=url],
+.admin-institute input[type=email],
+.admin-institute select {
+    /* see http://paulirish.com/2012/box-sizing-border-box-ftw/ */
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box; 
+
+    width: 98%;
+}

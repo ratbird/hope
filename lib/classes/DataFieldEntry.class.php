@@ -504,7 +504,7 @@ class DataFieldLinkEntry extends DataFieldEntry
     public function getHTML($name)
     {
         $field_name = $name . '[' . $this->structure->getID() . ']';
-        return sprintf('<input type="url" name="%s" value="%s" size="30">', $field_name, $this->getValue()==''?'http://':htmlready($this->getValue()));
+        return sprintf('<input type="url" name="%s" value="%s" size="30" placeholder="http://">', $field_name, htmlready($this->getValue()));
     }
 
     public function getDisplayValue($entities = true)

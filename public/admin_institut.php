@@ -652,7 +652,7 @@ if ($perm->have_studip_perm("admin",$i_view) || $i_view == "new") {
         <input type="hidden" name="i_id" value="<?= $institute['Institut_id'] ?>">
         <?
         echo Button::create(_('Übernehmen'), 'i_edit');
-        if ($db->f("number") < 1 && !$_num_inst && ($perm->have_perm("root") || ($perm->is_fak_admin() && get_config('INST_FAK_ADMIN_PERMS') == 'all'))) {
+        if ($institute['number'] < 1 && !$_num_inst && ($perm->have_perm("root") || ($perm->is_fak_admin() && get_config('INST_FAK_ADMIN_PERMS') == 'all'))) {
             echo '&nbsp;'.Button::create(_('Löschen'), 'i_trykill');
         }
     } else {

@@ -55,12 +55,7 @@ abstract class StudipController extends Trails_Controller
     * @return string  a URL to this route
     */
     function url_for($to/*, ...*/) {
-        $args = func_get_args();
-
-        // calling parent::url_for() is non-trivial in PHP...
-        $parent = new ReflectionMethod('Trails_Controller', 'url_for');
-        $url = $parent->invokeArgs($this, $args);
-
+        $url = call_user_func_array("parent::url_for", func_get_args());
         return URLHelper::getURL($url);
     }
 

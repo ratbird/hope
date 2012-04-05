@@ -487,7 +487,7 @@ class DataFieldEmailEntry extends DataFieldEntry
     function getHTML($name)
     {
         $field_name = $name . '[' . $this->structure->getID() . ']';
-        return sprintf('<input name="%s" value="%s" size="30">', $field_name, $this->getDisplayValue());
+        return sprintf('<input type="email" name="%s" value="%s" size="30">', $field_name, $this->getDisplayValue());
     }
 
     function isValid()
@@ -504,7 +504,7 @@ class DataFieldLinkEntry extends DataFieldEntry
     public function getHTML($name)
     {
         $field_name = $name . '[' . $this->structure->getID() . ']';
-        return sprintf('<input name="%s" value="%s" size="30">', $field_name, $this->getValue()==''?'http://':htmlready($this->getValue()));
+        return sprintf('<input type="url" name="%s" value="%s" size="30">', $field_name, $this->getValue()==''?'http://':htmlready($this->getValue()));
     }
 
     public function getDisplayValue($entities = true)
@@ -709,7 +709,7 @@ class DataFieldPhoneEntry extends DataFieldEntry
         foreach($parts as $i => $part)
         {
             //      $part = preg_replace('/^0+(.*)$/', '\1', $part);
-            $ret .= sprintf('%s<input name="%s" maxlength="%d" size="%d" value="%s" title="%s">', $prefix[$i], $name, $size[$i], $size[$i] - 1, htmlentities($part, ENT_QUOTES), $title[$i]);
+            $ret .= sprintf('%s<input type="tel" name="%s" maxlength="%d" size="%d" value="%s" title="%s">', $prefix[$i], $name, $size[$i], $size[$i] - 1, htmlentities($part, ENT_QUOTES), $title[$i]);
         }
         $ret .= '<font size="-1">';
         $ret .= ' ' . _('z.B.:') . ' +<span style="border-style:inset; border-width:2px;"> 49 </span>';

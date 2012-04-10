@@ -1,7 +1,7 @@
 <?php
 # Lifter002: TODO
 # Lifter007: TODO
-# Lifter003: TODO
+# Lifter003: TEST
 # Lifter010: TODO
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
@@ -47,11 +47,11 @@ class ClipBoard {
     var $msg;
     //querys for different object_types
     var $elements_query = array (
-                "sem" => "SELECT Seminar_id, Name  FROM Seminare WHERE Seminar_id  IN %s ORDER BY Name",
-                "user" => "SELECT user_id, CONCAT(Nachname, ', ', Vorname) AS name FROM auth_user_md5 WHERE user_id  IN %s ORDER BY name",
-                "inst" => "SELECT Institut_id, Name  FROM Institute WHERE Institut_id  IN %s ORDER BY Name",
-                "date" => "SELECT termin_id, content  FROM termine WHERE termin_id IN %s ORDER BY content",
-                "res" => "SELECT resource_id, name  FROM resources_objects WHERE resource_id  IN %s ORDER BY name"
+                "sem" => "SELECT Seminar_id, Name  FROM Seminare WHERE Seminar_id  IN (?) ORDER BY Name",
+                "user" => "SELECT user_id, CONCAT(Nachname, ', ', Vorname) AS name FROM auth_user_md5 WHERE user_id  IN (?) ORDER BY name",
+                "inst" => "SELECT Institut_id, Name  FROM Institute WHERE Institut_id  IN (?) ORDER BY Name",
+                "date" => "SELECT termin_id, content  FROM termine WHERE termin_id IN (?) ORDER BY content",
+                "res" => "SELECT resource_id, name  FROM resources_objects WHERE resource_id  IN (?) ORDER BY name"
                 );
     var $object_types_short = array(
                 "sem" => "S",
@@ -137,12 +137,12 @@ class ClipBoard {
             $this->elements = null;
             if (is_array($this->object_types))
                 foreach($this->object_types as $object_type => $object_elements) {
-                    $in="('".join("','",$object_elements)."')";
-                    $query = sprintf($this->elements_query[$object_type], $in);
-                    $this->db->query($query);
-                    while ($this->db->next_record()){
-                        $returned_elements[$this->db->Record[0]] = array("name" => $this->db->Record[1], "type" => $object_type);
-                        $this->elements[$this->db->Record[0]] = $object_type;
+                    $statement = DBManager::get()->prepare($this->elements_query[$object_type]);
+                    $statement->execute(array($object_elements));
+
+                    while ($row = $statement->fetch(PDO::FETCH_NUM)) {
+                        $returned_elements[$row[0]] = array("name" => $row[1], "type" => $object_type);
+                        $this->elements[$row[0]] = $object_type;
                     }
                 }
         }

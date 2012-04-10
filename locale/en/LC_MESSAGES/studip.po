@@ -32341,7 +32341,7 @@ msgstr "Survey not found or already is visible"
 #
 #: ../lib/vote/VoteDB.class.php:842 ../lib/vote/VoteDB.class.php:1137
 msgid ""
-"Sie haben mehrmals auf 'Speichern' gedr&uuml;ckt. Die Umfrage bzw. der Test "
+"Sie haben mehrmals auf 'Speichern' gedrückt. Die Umfrage bzw. der Test "
 "wurde bereits in die Datenbank geschrieben."
 msgstr ""
 "You have repeatedly clicked 'Save'. The survey resp. the test has already "

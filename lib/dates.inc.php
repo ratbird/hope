@@ -464,9 +464,9 @@ function isSchedule ($sem_id, $presence_dates_only = TRUE, $clearcache = FALSE)
 {
     $query = "SELECT COUNT(*)
               FROM termine
-              WHERE range_id = ? AND metdate_id != '' AND metadate_id IS NOT NULL";
+              WHERE range_id = ? AND metadate_id != '' AND metadate_id IS NOT NULL";
     if ($presence_dates_only) {
-        $query .= "AND date_typ IN " . getPresenceTypeClause();
+        $query .= " AND date_typ IN " . getPresenceTypeClause();
     }
 
     $statement = DBManager::get()->prepare($query);

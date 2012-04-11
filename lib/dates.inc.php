@@ -1,8 +1,8 @@
 <?php
 # Lifter002: TODO
+# Lifter003: TEST
 # Lifter007: TODO
-# Lifter003: TODO
-# Lifter010: TODO
+# Lifter010: DONE - no forms
 
 /*
 dates.inc.php - basale Routinen zur Terminveraltung.
@@ -200,30 +200,36 @@ Falle den entsprechenden Timestamp zurueck. Ansonsten wird FALSE zurueckgegeben.
 
 function vorbesprechung ($seminar_id, $type = 'standard')
 {
-    $db=new DB_Seminar;
-    $db->query("SELECT termin_id FROM termine WHERE range_id='$seminar_id' AND date_typ='2' ORDER by date");
-    if ($db->next_record()) {
-        $termin = new SingleDate($db->f('termin_id'));
-        $ret = $termin->toString();
-        if ($termin->getResourceID()) {
-            $ret .= ', '._("Ort:").' ';
-            switch ($type) {
-                case 'export':
-                    $resObj = ResourceObject::Factory($termin->getResourceID());
-                    $ret .= $resObj->getName();
-                    break;
+    $query = "SELECT termin_id
+              FROM termine
+              WHERE range_id = ? AND date_typ = '2'
+              ORDER BY date";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($seminar_id));
+    $termin_id = $statement->fetchColumn();
 
-                case 'standard':
-                default:
-                    $resObj = ResourceObject::Factory($termin->getResourceID());
-                    $ret .= $resObj->getFormattedLink(TRUE, TRUE, TRUE);
-                    break;
-            }
-        }
-        return $ret;
-    } else {
-        return FALSE;
+    if (!$termin_id) {
+        return false;
     }
+
+    $termin = new SingleDate($termin_id);
+    $ret = $termin->toString();
+    if ($termin->getResourceID()) {
+        $ret .= ', '._("Ort:").' ';
+        switch ($type) {
+            case 'export':
+                $resObj = ResourceObject::Factory($termin->getResourceID());
+                $ret .= $resObj->getName();
+                break;
+
+            case 'standard':
+            default:
+                $resObj = ResourceObject::Factory($termin->getResourceID());
+                $ret .= $resObj->getFormattedLink(TRUE, TRUE, TRUE);
+                break;
+        }
+    }
+    return $ret;
 }
 
 /*
@@ -267,17 +273,21 @@ function get_sem_num_sem_browse () {
 Die Funktion get_semester gibt den oder die Semester einer speziellen Veranstaltung aus.
 */
 
-function get_semester($seminar_id, $start_sem_only=FALSE) {
-    $db=new DB_Seminar;
-    $db->query("SELECT start_time, duration_time FROM seminare WHERE seminar_id='$seminar_id'");
-    $db->next_record();
+function get_semester($seminar_id, $start_sem_only=FALSE)
+{
+    $query = "SELECT start_time, duration_time FROM seminare WHERE seminar_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($seminar_id));
+    $temp = $statement->fetch(PDO::FETCH_ASSOC);
 
-    $return_string=get_sem_name($db->f("start_time"));
+    $return_string = get_sem_name($temp['start_time']);
     if (!$start_sem_only) {
-        if ($db->f("duration_time")>0)
-            $return_string.=" - ".get_sem_name($db->f("start_time") + $db->f("duration_time"));
-        if ($db->f("duration_time")==-1)
-            $return_string.= " " . _("bis unbegrenzt");
+        if ($temp['duration_time'] > 0) {
+            $return_string .= ' - ' . get_sem_name($temp['start_time'] + $temp['duration_time']);
+        }
+        if ($temp['duration_time'] == -1) {
+            $return_string .= ' ' . _('bis unbegrenzt');
+        }
     }
     return $return_string;
 }
@@ -318,24 +328,29 @@ function delete_topic($topic_id, &$deleted)  //rekursives löschen von topics VOR
     if (!$topic_id){ // if topic_id is 0, ALL postings would be deleted !
         return;
     }
-    $db=new DB_Seminar;
-    $db->query("SELECT topic_id FROM px_topics WHERE parent_id='$topic_id'");
-    if ($db->num_rows()) {
-        while ($db->next_record()) {
-            $next_topic=$db->f("topic_id");
-            delete_topic($next_topic,$deleted);
-        }
+
+    $query = "SELECT topic_id FROM px_topics WHERE parent_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($topic_id));
+
+    while ($next_topic = $statement->fetchColumn()) {
+        delete_topic($next_topic, $deleted);
     }
+
     NotificationCenter::postNotification('PostingWillDelete', $topic_id);
-    $db->query("DELETE FROM px_topics WHERE topic_id='$topic_id'");
+
+    $query = "DELETE FROM px_topics WHERE topic_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($topic_id));
+
     NotificationCenter::postNotification('PostingDidDelete', $topic_id);
     $deleted++;
 
     // gehoerte dieses Posting zu einem Termin?
     // dann Verknuepfung loesen...
-    $db->query("UPDATE termine SET topic_id = '' WHERE topic_id = '$topic_id'");
-
-    return;
+    $query = "UPDATE termine SET topic_id = '' WHERE topic_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($topic_id));
 }
 
 /*
@@ -362,14 +377,15 @@ function delete_date($termin_id, $topic_delete = TRUE, $folder_move = TRUE, $sem
         include_once ($RELATIVE_PATH_RESOURCES."/lib/VeranstaltungResourcesAssign.class.php");
     }
 
-    $db = new DB_Seminar;
-
     // Eventuell rekursiv Postings loeschen
     /*if ($topic_delete) { //deprecated at the moment because of bad usabilty (delete date kill whole topic in forum without a notice, that's bad...)
-        $db->query("SELECT topic_id FROM termine WHERE termin_id ='$termin_id'");
-        $db->next_record();
-        if ($db->f('topic_id')){
-            delete_topic($db->f("topic_id"),$count);
+        $query = "SELECT topic_id FROM termine WHERE termin_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($termin_id));
+        $topic_id = $statement->fetchColumn();
+
+        if ($topic_id) {
+            delete_topic($topic_id, $count);
         }
     }*/
 
@@ -381,17 +397,29 @@ function delete_date($termin_id, $topic_delete = TRUE, $folder_move = TRUE, $sem
         if (!doc_count($termin_id))
             recursiv_folder_delete($termin_id);
         else {
-            $db->query("SELECT folder_id FROM folder WHERE range_id = '$termin_id'");
-            $db->next_record();
-            move_item($db->f("folder_id"), $sem_id, true);
-            $db->query("UPDATE folder SET name='" . _("Dateiordner zu gelöschtem Termin") . "', description='" . _("Dieser Ordner enthält Dokumente und Termine eines gelöschten Termins") . "' WHERE folder_id='".$db->f("folder_id")."'");
+            $query = "SELECT folder_id FROM folder WHERE range_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($termin_id));
+            $folder_id = $statement->fetchColumn();
+
+            move_item($folder_id, $sem_id, true);
+
+            $query = "UPDATE folder SET name = ?, description = ? WHERE folder_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                _('Dateiordner zu gelöschtem Termin'),
+                _('Dieser Ordner enthält Dokumente und Termine eines gelöschten Termins'),
+                $folder_id,
+            ));
         }
     }
 
     ## Und den Termin selbst loeschen
-    $query = "DELETE FROM termine WHERE termin_id='$termin_id'";
-    $db->query($query);
-    if ($db->affected_rows() && $RESOURCES_ENABLE) {
+    $query = "DELETE FROM termine WHERE termin_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($termin_id));
+
+    if ($statement->rowCount() && $RESOURCES_ENABLE) {
         $insertAssign = new VeranstaltungResourcesAssign($sem_id);
         $insertAssign->killDateAssign($termin_id);
     }
@@ -413,16 +441,17 @@ Es erfolgt keine Überprüfung der Berechtigung innerhalb der Funktion,
 dies muss das aufrufende Script sicherstellen.
 */
 
-function delete_range_of_dates($range_id, $topics = FALSE) {
-
-    $db = new DB_Seminar;
+function delete_range_of_dates($range_id, $topics = FALSE)
+{
     $count = 0;
 
     ## Termine finden...
-    $query = "SELECT termin_id, topic_id FROM termine WHERE range_id='$range_id'";
-    $db->query($query);
-    while ($db->next_record()) {       // ...und nacheinander...
-        delete_date($db->f("termin_id"), $topics, true, $range_id);
+    $query = "SELECT termin_id FROM termine WHERE range_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($range_id));
+
+    while ($termin_id = $statement->fetchColumn()) {       // ...und nacheinander...
+        delete_date($termin_id, $topics, true, $range_id);
         $count++;
     }
 
@@ -431,39 +460,39 @@ function delete_range_of_dates($range_id, $topics = FALSE) {
 
 
 //Checkt, ob Ablaufplantermine zu gespeicherten Metadaten vorliegen
-function isSchedule ($sem_id, $presence_dates_only = TRUE, $clearcache = FALSE) {
+function isSchedule ($sem_id, $presence_dates_only = TRUE, $clearcache = FALSE)
+{
+    $query = "SELECT COUNT(*)
+              FROM termine
+              WHERE range_id = ? AND metdate_id != '' AND metadate_id IS NOT NULL";
+    if ($presence_dates_only) {
+        $query .= "AND date_typ IN " . getPresenceTypeClause();
+    }
 
-    $db = new DB_Seminar;
-    $query = sprintf("SELECT COUNT(*) as count FROM termine WHERE range_id='%s' AND metadate_id != '' AND metadate_id IS NOT NULL %s ORDER BY date", $sem_id, ($presence_dates_only) ? "AND date_typ IN".getPresenceTypeClause() : "");
-
-    $db->query($query);
-    $db->next_record();
-
-    return $db->f('count');
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($sem_id));
+    
+    return $statement->fetchColumn();
 }
 
 
 //Checkt, ob bereits angelegte Termine ueber mehrere Semester laufen
-function isDatesMultiSem ($sem_id) {
-    $db = new DB_Seminar;
-
+function isDatesMultiSem ($sem_id)
+{
     //we load the first date
-    $query = sprintf("SELECT date FROM termine WHERE range_id='%s' ORDER BY date LIMIT 1", $sem_id);
-    $db->query($query);
-    $db->next_record();
-    $first = $db->f("date");
+    $query = "SELECT date FROM termine WHERE range_id = ? ORDER BY date LIMIT 1";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($sem_id));
+    $first = $statement->fetchColumn();
 
     //we load the last date
-    $query = sprintf("SELECT date FROM termine WHERE range_id='%s' ORDER BY date DESC LIMIT 1", $sem_id);
-    $db->query($query);
-    $db->next_record();
-    $last = $db->f("date");
+    $query = "SELECT date FROM termine WHERE range_id = ? ORDER BY date DESC LIMIT 1";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($sem_id));
+    $last = $statement->fetchColumn();
 
-    //than we check, if they are in the same semester
-    if (get_sem_name ($first) != get_sem_name ($last))
-        return TRUE;
-    else
-        return FALSE;
+    //then we check, if they are in the same semester
+    return get_sem_name($first) != get_sem_name($last);
 }
 
 /**

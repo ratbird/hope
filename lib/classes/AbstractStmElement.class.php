@@ -1,8 +1,8 @@
 <?
-# Lifter002: TODO
+# Lifter002: DONE - no html
+# Lifter003: TEST - Seriously! Due to missing test case this is untested yet thorougly proofread
 # Lifter007: TODO
-# Lifter003: TODO
-# Lifter010: TODO
+# Lifter010: DONE - no html
 
 // Jetzt ist ein Element nur noch eine kleine Werteklasse :( 
 // naja etwas überzogen für ein paar Werte und eine Check-Methode, aber was solls _Maik
@@ -71,31 +71,41 @@ class  AbstractStmElement {
     {
         static $stm_element_types;
 
-        $db = new DB_Seminar;   
-        $stm_element_types = array();   
-        $db->query("SELECT * FROM stm_element_types WHERE lang_id='".LANGUAGE_ID."' ORDER BY name");        
-        if (!$db->num_rows()) 
-            return array();
-        while ($db->next_record()) {
-            $stm_element_types[$db->f("element_type_id")] = array('name' => $db->f("name"), 'abbrev' => $db->f("abbrev"));  
+        if (!is_array($stm_element_types)) {
+            $query = "SELECT element_type_id, name, abbrev
+                      FROM stm_element_types
+                      WHERE lang_id = ?
+                      ORDER BY name";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(LANGUAGE_ID));
+            $stm_element_types= $statement->fetchGrouped();
         }
-        
+
         return $stm_element_types;
     }
 
     function &AddElementType($name, $abbrev)
     {
         // pruefen, ob der Name schon existiert
-        $db = new DB_Seminar;   
-        $db->query("SELECT * FROM stm_element_types WHERE lang_id='".LANGUAGE_ID."' AND name='". $name ."'");       
+        $query = "SELECT 1 FROM stm_element_types WHERE lang_id = ? AND name = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(LANGUAGE_ID, $name));
+        $present = $statement->fetchColumn();
 
-        if ($db->num_rows())
+        if ($present) {
             return array('error', _('Eine Lehr- und Lernform mit diesem Namen existiert bereits'));
-        
-        $db->query("INSERT INTO stm_element_types VALUES ('" . md5(uniqid("NewElementType",1)) . "','" . LANGUAGE_ID  . "','" .  $abbrev  . "','" .  $name  . "')");    
+        }
 
-        if ($db->affected_rows())
+        $query = "INSERT INTO stm_element_types VALUES (?, ?, ?, ?)";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            md5(uniqid('NewElementType', true)),
+            LANGUAGE_ID, $abbrev, $name,
+        ));
+
+        if ($statement->rowCount()) {
             return array('msg', _('Die neue Lehr- und Lernform wurde angelegt'));
+        }
     }
     
     /**
@@ -167,44 +177,54 @@ class  AbstractStmElement {
         }
     }
 
-    function restore() {
-    
-        $db = new DB_Seminar;   
-        
-        $db->query("SELECT stm_abstr_id, element_type_id, sws, workload, semester, elementgroup, position, custom_name FROM stm_abstract_elements WHERE element_id='" . $this->element_id ."'");
+    function restore()
+    {
+        $query = "SELECT stm_abstr_id, element_type_id, sws, workload, semester, elementgroup, position, custom_name
+                  FROM stm_abstract_elements
+                  WHERE element_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($this->element_id));
+        $values = $statement->fetch(PDO::FETCH_ASSOC);
 
-        if ($db->next_record()) {
-            $vals = array(
-                'stm_abstr_id' => $db->f('stm_abstr_id'),
-                'element_type_id' => $db->f('element_type_id'), 
-                'sws' => $db->f('sws'), 
-                'workload' => $db->f('workload'), 
-                'semester' => $db->f('semester'), 
-                'elementgroup' => $db->f('elementgroup'), 
-                'position' => $db->f('position'), 
-                'custom_name' => $db->f('custom_name'));
-            $this->setValues($vals);
-            return TRUE;
+        if (!$values) {
+            return false;
         }
-        return FALSE;
+
+        $this->setValues($values);
+        return true;
     }
     
-    function store() {
-        $db = new DB_Seminar;   
+    function store()
+    {
+        $query = "INSERT INTO stm_abstract_elements (stm_abstr_id, element_id, element_type_id, sws, 
+                                                     workload, semester, elementgroup, position)
+                  VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $this->stm_abstr_id,
+            $this->element_id,
+            $this->element_type_id,
+            $this->sws,
+            $this->workload,
+            $this->semester,
+            $this->elementgroup,
+            $this->position,
+        ));
 
-        $db->query("INSERT INTO stm_abstract_elements (stm_abstr_id, element_id , element_type_id , sws ,   workload , semester , elementgroup, position) 
-        VALUES ('$this->stm_abstr_id','$this->element_id', '$this->element_type_id', '$this->sws', '$this->workload', '$this->semester', '$this->elementgroup', '$this->position')");
-
-        if (!$db->affected_rows())
-            $this->msg[] = array('error', "DB-Error beim Anlegen einer Kombination: %s");
+        if (!$statement->rowCount()) {
+            $this->msg[] = array('error', 'DB-Error beim Anlegen einer Kombination: %s');
+        }
     }
 
-    function delete() {
-        $db = new DB_Seminar;   
+    function delete()
+    {
+        $query = "DELETE FROM stm_abstract_elements WHERE element_type_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($this->element_id));
 
-        $db->query("DELETE FROM stm_abstract_elements WHERE element_type_id = $this->element_id");
-        if (!$db->affected_rows())
-            $this->msg[] = array('error', "DB-Error beim Entfernen einer Kombination");
+        if (!$statement->rowCount()) {
+            $this->msg[] = array('error', 'DB-Error beim Entfernen einer Kombination');
+        }
     }
         
     function getValues() {

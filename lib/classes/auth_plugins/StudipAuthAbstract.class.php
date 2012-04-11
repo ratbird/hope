@@ -1,7 +1,8 @@
 <?php
+# Lifter003: TEST
 # Lifter007: TODO
-# Lifter003: TODO
-# Lifter010: TODO
+# Lifter010: DONE - no html
+
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
 // StudipAuthAbstract.class.php
@@ -152,8 +153,6 @@ class StudipAuthAbstract {
     */
     function CheckAuthentication($username,$password,$jscript = false){
 
-        $db = new DB_Seminar();
-
         $plugins = StudipAuthAbstract::GetInstance();
         $error = false;
         $uid = false;
@@ -163,12 +162,16 @@ class StudipAuthAbstract {
                 continue;
             }
             if ($uid = $object->authenticateUser($username,$password,$jscript)){
-                $db->query(sprintf("SELECT * FROM auth_user_md5 WHERE username='%s'",mysql_escape_string($username)));
-                if($db->next_record()){
-                    $locked = $db->f('locked');
-                    $key = $db->f('validation_key');
+                $query = "SELECT user_id, locked, validation_key FROM auth_user_md5 WHERE username = ?";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($username));
+                $user = $statement->fetch(PDO::FETCH_ASSOC);
 
-                    $exp_d = UserConfig::get($db->f('user_id'))->EXPIRATION_DATE;
+                if ($user) {
+                    $locked = $user['locked'];
+                    $key = $user['validation_key'];
+
+                    $exp_d = UserConfig::get($user['user_id'])->EXPIRATION_DATE;
 
                     if($exp_d > 0 && $exp_d < time()){
                         $error .= _("Dieses Benutzerkonto ist abgelaufen.<br> Wenden Sie sich bitte an die Administration.")."<BR>";

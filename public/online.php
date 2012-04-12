@@ -186,7 +186,7 @@ ob_start();
     $owner_id = $user->id;
 
     foreach ($filtered_buddies as $username => $value) { //alle durchgehen die online sind
-        $user_id = $value['userid'];
+        $user_id = $value['user_id'];
 
         $query = "SELECT statusgruppen.position, name, statusgruppen.statusgruppe_id "
                . "FROM statusgruppen "
@@ -218,7 +218,7 @@ ob_start();
     }
 
     foreach($other_users as $username=>$value) {
-        $user_id = $value["userid"];
+        $user_id = $value["user_id"];
             $n_buddies[]=array($other_users[$username]["name"],$other_users[$username]["last_action"],$other_users[$username]["username"],$user_id);
     }
 

@@ -1,8 +1,8 @@
 <?php
-# Lifter002: TODO
+# Lifter002: DONE - not applicable
 # Lifter007: TODO
-# Lifter003: TODO
-# Lifter010: TODO
+# Lifter003: TODO - search_range() still undone
+# Lifter010: DONE - not applicable
 /**
  * functions.php
  *
@@ -103,30 +103,34 @@ function get_object_name($range_id, $object_type)
 
     $db = new DB_Seminar();
     if ($object_type == "sem") {
-        $query = sprintf ("SELECT status, Name FROM seminare WHERE Seminar_id = '%s' ", $range_id);
-        $db->query($query);
-        $db->next_record();
-        if ($SEM_TYPE[$db->f("status")]["name"] == $SEM_TYPE_MISC_NAME){
-            $type = _("Veranstaltung");
+        $query = "SELECT status, Name FROM seminare WHERE Seminar_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($range_id));
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
+
+        if ($SEM_TYPE[$row['status']]['name'] == $SEM_TYPE_MISC_NAME) {
+            $type = _('Veranstaltung');
         } else {
-            $type = $SEM_TYPE[$db->f("status")]["name"];
+            $type = $SEM_TYPE[$row['status']]['name'];
         }
-        if (!$type){
-            $type = _("Veranstaltung");
+        if (!$type) {
+            $type = _('Veranstaltung');
         }
-        $name = $db->f("Name");
-    } else if ($object_type == "inst" || $object_type == "fak") {
-        $query = sprintf ("SELECT type, Name FROM Institute WHERE Institut_id = '%s' ", $range_id);
-        $db->query($query);
-        $db->next_record();
-        $type = $INST_TYPE[$db->f("type")]["name"];
-        if (!$type){
-            $type = _("Einrichtung");
+        $name = $row['Name'];
+    } else if ($object_type == 'inst' || $object_type == 'fak') {
+        $query = "SELECT type, Name FROM Institute WHERE Institut_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($range_id));
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
+
+        $type = $INST_TYPE[$row['type']]['name'];
+        if (!$type) {
+            $type = _('Einrichtung');
         }
-        $name = $db->f("Name");
+        $name = $row['Name'];
     }
 
-    return array('name' => $name, 'type' => $type);
+    return compact('name', 'type');
 }
 
 /**
@@ -368,81 +372,54 @@ function closeObject()
  * This function returns the last activity in the Veranstaltung
  *
  * @param string $sem_id the id of the Veranstaltung
- *
  * @return integer  unix timestamp
- *
  */
 function lastActivity ($sem_id)
 {
-    $db=new DB_Seminar;
+    $queries = array(
+        // Veranstaltungs-data
+        "SELECT chdate FROM seminare WHERE Seminar_id = ?",
+        // Postings
+        "SELECT MAX(chdate) FROM px_topics WHERE Seminar_id = ?",
+        // Folder
+        "SELECT MAX(chdate) FROM folder WHERE range_id = ?",
+        // Dokuments
+        "SELECT MAX(chdate) FROM dokumente WHERE seminar_id = ?",
+        // SCM
+        "SELECT MAX(chdate) FROM scm WHERE range_id = ?",
+        // Dates
+        "SELECT MAX(chdate) FROM termine WHERE range_id = ?",
+        // News
+        "SELECT MAX(date) FROM news_range LEFT JOIN news USING (news_id) WHERE range_id = ?",
+        // Literature
+        "SELECT MAX(chdate) FROM lit_list WHERE range_id = ?",
+    );
 
-    //Veranstaltungs-data
-    $db->query("SELECT chdate FROM seminare WHERE Seminar_id = '$sem_id'");
-    $db->next_record();
-    $timestamp = $db->f("chdate");
-
-    //Postings
-    $db->query("SELECT chdate FROM px_topics WHERE Seminar_id = '$sem_id'  ORDER BY chdate DESC LIMIT 1");
-
-    $db->next_record();
-    if ($db->f("chdate") > $timestamp)
-        $timestamp = $db->f("chdate");
-
-    //Folder
-    $db->query("SELECT chdate FROM folder WHERE range_id = '$sem_id' ORDER BY chdate DESC LIMIT 1");
-    $db->next_record();
-    if ($db->f("chdate") > $timestamp)
-        $timestamp = $db->f("chdate");
-
-    //Dokuments
-    $db->query("SELECT chdate FROM dokumente WHERE seminar_id = '$sem_id' ORDER BY chdate DESC LIMIT 1");
-    $db->next_record();
-    if ($db->f("chdate") > $timestamp)
-        $timestamp = $db->f("chdate");
-
-    //SCM
-    $db->query("SELECT chdate FROM scm WHERE range_id = '$sem_id' ORDER BY chdate DESC LIMIT 1");
-    $db->next_record();
-    if ($db->f("chdate") > $timestamp)
-        $timestamp = $db->f("chdate");
-
-    //Dates
-    $db->query("SELECT chdate FROM termine WHERE range_id = '$sem_id' ORDER BY chdate DESC LIMIT 1");
-    $db->next_record();
-    if ($db->f("chdate") > $timestamp)
-        $timestamp = $db->f("chdate");
-
-    //News
-    $db->query("SELECT date FROM news_range LEFT JOIN news USING (news_id)  WHERE range_id = '$sem_id' ORDER BY date DESC LIMIT 1");
-    $db->next_record();
-    if ($db->f("date") > $timestamp)
-        $timestamp = $db->f("date");
-
-    //Literature
-    $db->query("SELECT MAX(chdate) as chdate FROM lit_list WHERE range_id='$sem_id' GROUP BY range_id");
-    $db->next_record();
-    if ($db->f("chdate") > $timestamp)
-            $timestamp = $db->f("chdate");
-
-    //Votes
+    // Votes
     if (get_config('VOTE_ENABLE')) {
-        $db->query("SELECT chdate FROM vote WHERE range_id = '$sem_id' ORDER BY chdate DESC LIMIT 1");
-        $db->next_record();
-        if ($db->f("chdate") > $timestamp)
-            $timestamp = $db->f("chdate");
+        $queries[] = "SELECT MAX(chdate) FROM vote WHERE range_id = ?";
     }
 
-    //Wiki
+    // Wiki
     if (get_config('WIKI_ENABLE')) {
-        $db->query("SELECT chdate FROM wiki WHERE range_id = '$sem_id' ORDER BY chdate DESC LIMIT 1");
-        $db->next_record();
-        if ($db->f("chdate") > $timestamp)
-            $timestamp = $db->f("chdate");
+        $queries[] = "SELECT MAX(chdate) FROM wiki WHERE range_id = ?";
+    }
+
+    $timestamp = false;
+    foreach ($queries as $query) {
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($sem_id));
+        $temp = $statement->fetchColumn();
+
+        if (!$timestamp || $temp > $timestamp) {
+            $timestamp = $temp;
+        }
     }
 
     //correct the timestamp, if date in the future (news can be in the future!)
-    if ($timestamp > time())
+    if ($timestamp > time()) {
         $timestamp = time();
+    }
 
     return $timestamp;
 }
@@ -467,59 +444,61 @@ function lastActivity ($sem_id)
 function get_object_type($id, $check_only = array())
 {
     static $object_type_cache;
+
+    // Nothing to check
+    if (!$id) {
+        return false;
+    }
+
+    // Id is global
+    if ($id == 'studip') {
+        return 'global';
+    }
+
+    // Read from cache if available
+    if ($object_type_cache[$id]) {
+        return $object_type_cache[$id];
+    }
+
+    // Tests for specific types
+    $tests = array(
+        'sem'        => "SELECT 1 FROM seminare WHERE Seminar_id = ?",
+        'date'       => "SELECT 1 FROM termine WHERE termin_id = ?",
+        'user'       => "SELECT 1 FROM auth_user_md5 WHERE user_id = ?",
+        'group'      => "SELECT 1 FROM statusgruppen WHERE statusgruppe_id = ?",
+        'dokument'   => "SELECT 1 FROM dokumente WHERE dokument_id = ?",
+        'range_tree' => "SELECT 1 FROM range_tree WHERE item_id = ?",
+    );
+
+    // Test for every type if no specific types are provided
     $check_all = !count($check_only);
-    if ($id){
-        if (!$object_type_cache[$id]){
-            if ($id == 'studip'){
-                return 'global';
-            }
-            $db=new DB_Seminar;
-            if ($check_all || in_array('sem', $check_only)) {
-                $db->query("SELECT Seminar_id FROM seminare WHERE Seminar_id = '$id' ");
-                if ($db->next_record())
-                return $object_type_cache[$id] = "sem";
-            }
-            if ($check_all || in_array('inst', $check_only)) {
-                $db->query("SELECT Institut_id,IF(Institut_id=fakultaets_id,1,0) AS is_fak FROM Institute WHERE Institut_id = '$id' ");
-                if ($db->next_record())
-                return $object_type_cache[$id] = ($db->f("is_fak")) ? "fak" : "inst";
-            }
 
-            if ($check_all || in_array('date', $check_only)) {
+    // Loop through tests
+    foreach ($tests as $key => $query) {
+        if ($check_all || in_array($key, $check_only)) {
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($id));
 
-                $db->query("SELECT termin_id FROM termine WHERE termin_id = '$id' ");
-                if ($db->next_record())
-                return $object_type_cache[$id] = "date";
+            if ($statement->fetchColumn()) {
+                return $object_type_cache[$id] = $key;
             }
-            if ($check_all || in_array('user', $check_only)) {
-
-                $db->query("SELECT user_id FROM auth_user_md5 WHERE user_id = '$id' ");
-                if ($db->next_record())
-                return $object_type_cache[$id] = "user";
-            }
-
-            if ($check_all || in_array('group', $check_only)) {
-                $db->query("SELECT statusgruppe_id FROM statusgruppen WHERE statusgruppe_id = '$id' ");
-                if ($db->next_record())
-                return $object_type_cache[$id] = "group";
-            }
-            if ($check_all || in_array('dokument', $check_only)) {
-
-                $db->query("SELECT dokument_id FROM dokumente WHERE dokument_id = '$id' ");
-                if ($db->next_record())
-                return $object_type_cache[$id] = "dokument";
-            }
-            if ($check_all || in_array('range_tree', $check_only)) {
-
-                $db->query("SELECT item_id FROM range_tree WHERE item_id = '$id' ");
-                if ($db->next_record())
-                return $object_type_cache[$id] = "range_tree";
-            }
-        } else {
-            return $object_type_cache[$id];
         }
     }
-    return FALSE;
+
+    // Institute or faculty?
+    if ($check_all || in_array('inst', $check_only)) {
+        $query = "SELECT Institut_id = fakultaets_id FROM Institute WHERE Institut_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($id));
+
+        $is_fak = $statement->fetchColumn();
+        if ($is_fak !== false) {
+            return $object_type_cache[$id] = ($is_fak ? 'fak' : 'inst');
+        }
+    }
+
+    // None of the above
+    return false;
 }
 
 /**
@@ -674,21 +653,25 @@ function get_perm($range_id, $user_id = "")
 function get_fullname($user_id = "", $format = "full" , $htmlready = false)
 {
     static $cache;
-    global $user,$_fullname_sql;
-    $author = _("unbekannt");
-    if (!($user_id)) $user_id=$user->id;
-    if (isset($cache[md5($user_id . $format)])){
-        return ($htmlready ? htmlReady($cache[md5($user_id . $format)]) : $cache[md5($user_id . $format)]);
-    } else {
-        $db=new DB_Seminar;
-        $db->query ("SELECT " . $_fullname_sql[$format] . " AS fullname FROM auth_user_md5 a LEFT JOIN user_info USING(user_id) WHERE a.user_id = '$user_id'");
-        if ($db->next_record()){
-            $author = $db->f('fullname');
-        }
-        $cache[md5($user_id . $format)] = $author;
-        return ($htmlready ? htmlReady($cache[md5($user_id . $format)]) : $cache[md5($user_id . $format)]);
+    global $user, $_fullname_sql;
+
+    if (!$user_id) {
+        $user_id = $user->id;
     }
- }
+
+    $hash = md5($user_id . $format);
+    if (!isset($cache[$hash])) {
+        $query = "SELECT {$_fullname_sql[$format]}
+                  FROM auth_user_md5
+                  LEFT JOIN user_info USING (user_id)
+                  WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($user_id));
+        $cache[$hash] = $statement->fetchColumn() ?: _('unbekannt');
+    }
+
+    return $htmlready ? htmlReady($cache[$hash]) : $cache[$hash];
+}
 
 /**
  * Retrieves the fullname for a given username
@@ -702,21 +685,25 @@ function get_fullname($user_id = "", $format = "full" , $htmlready = false)
 function get_fullname_from_uname($uname = "", $format = "full", $htmlready = false)
 {
     static $cache;
-    global $auth,$_fullname_sql;
-    $author = _("unbekannt");
-    if (!$uname) $uname=$auth->auth["uname"];
-    if (isset($cache[md5($uname . $format)])){
-        return ($htmlready ? htmlReady($cache[md5($uname . $format)]) : $cache[md5($uname . $format)]);
-    } else {
-        $db=new DB_Seminar;
-        $db->query ("SELECT " . $_fullname_sql[$format] . " AS fullname FROM auth_user_md5 LEFT JOIN user_info USING(user_id) WHERE username = '$uname'");
-        if ($db->next_record()){
-            $author = $db->f('fullname');
-        }
-        $cache[md5($uname . $format)] = $author;
-        return ($htmlready ? htmlReady($cache[md5($uname . $format)]) : $cache[md5($uname . $format)]);
+    global $auth, $_fullname_sql;
+
+    if (!$uname) {
+        $uname = $auth->auth['uname'];
     }
- }
+
+    $hash = md5($uname . $format);
+    if (!isset($cache[$hash])) {
+        $query = "SELECT {$_fullname_sql[$format]}
+                  FROM auth_user_md5
+                  LEFT JOIN user_info USING (user_id)
+                  WHERE username = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($uname));
+        $cache[$hash] = $statement->fetchColumn() ?: _('unbekannt');
+    }
+
+    return $htmlready ? htmlReady($cache[$hash]) : $cache[$hash];
+}
 
 /**
  * Retrieves the Vorname for a given user_id
@@ -728,13 +715,15 @@ function get_fullname_from_uname($uname = "", $format = "full", $htmlready = fal
 function get_vorname($user_id = "")
 {
     global $user;
-    if (!($user_id)) $user_id=$user->id;
-    $db=new DB_Seminar;
-    $db->query ("SELECT Vorname FROM auth_user_md5 WHERE user_id = '$user_id'");
-    while ($db->next_record())
-        $author=$db->f("Vorname");
 
-    if ($author=="") $author= _("unbekannt");
+    if (!$user_id) {
+        $user_id = $user->id;
+    }
+
+    $query = "SELECT Vorname FROM auth_user_md5 WHERE user_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($user_id));
+    $author = $statement->fetchColumn() ?: _('unbekannt');
 
     return $author;
 }
@@ -748,16 +737,19 @@ function get_vorname($user_id = "")
  */
 function get_nachname($user_id = "")
 {
- global $user;
- if (!($user_id)) $user_id=$user->id;
- $db=new DB_Seminar;
- $db->query ("SELECT Nachname FROM auth_user_md5 WHERE user_id = '$user_id'");
-                 while ($db->next_record())
-                     $author=$db->f("Nachname");
- if ($author=="") $author= _("unbekannt");
+    global $user;
 
- return $author;
- }
+    if (!$user_id) {
+        $user_id = $user->id;
+    }
+
+    $query = "SELECT Nachname FROM auth_user_md5 WHERE user_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($user_id));
+    $author = $statement->fetchColumn() ?: _('unbekannt');
+
+    return $author;
+}
 
 /**
  * Retrieves the username for a given user_id
@@ -772,21 +764,21 @@ function get_nachname($user_id = "")
  */
 function get_username($user_id = "")
 {
-    static $cache;
+    static $cache = array();
     global $auth;
-    $author = "";
-    if (!$user_id || $user_id == $auth->auth['uid'])
-        return $auth->auth["uname"];
-    if (isset($cache[$user_id])){
-        return $cache[$user_id];
-    } else {
-        $db=new DB_Seminar;
-        $db->query ("SELECT username , user_id FROM auth_user_md5 WHERE user_id = '$user_id'");
-        while ($db->next_record()){
-            $author = $db->f("username");
-        }
-        return ($cache[$user_id] = $author);
+
+    if (!$user_id || $user_id == $auth->auth['uid']) {
+        return $auth->auth['uname'];
     }
+
+    if (!isset($cache[$user_id])) {
+        $query = "SELECT username FROM auth_user_md5 WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($user_id));
+        $cache[$user_id] = $statement->fetchColumn();
+    }
+
+    return $cache[$user_id];
 }
 
 /**
@@ -837,8 +829,9 @@ function TrackAccess ($id, $object_type = null)
     }
     switch ($object_type) {         // what kind ob object shall we track
         case "dokument":                // the object is a dokument, so downloads will be increased
-            $db=new DB_Seminar;
-            $db->query ("UPDATE dokumente SET downloads = downloads + 1 WHERE dokument_id = '$id'");
+            $query = "UPDATE dokumente SET downloads = downloads + 1 WHERE dokument_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($id));
             break;
     }
 }
@@ -1002,20 +995,26 @@ function get_config($key)
  */
 function get_seminar_dozent($seminar_id)
 {
-    $db = new DB_Seminar;
-    $sql = "SELECT user_id, position FROM seminar_user WHERE Seminar_id='".$seminar_id."' AND status='dozent' ORDER BY position";
-    if (!$db->query($sql)) {
-        echo "Fehler bei DB-Abfrage in get_seminar_user!";
+    $query = "SELECT user_id, position
+              FROM seminar_user
+              WHERE Seminar_id = ? AND status = 'dozent'
+              ORDER BY position";
+    $statement = DBManager::get()->prepare($query);
+    $result = $statement->execute(array($seminar_id));
+
+    if (!$result) {
+        echo 'Fehler bei DB-Abfrage in get_seminar_user!';
         return 0;
     }
-    if (!$db->num_rows()) {
-        echo "Fehler in get_seminar_dozent: Kein Dozent gefunden";
+
+    $dozenten = $statement->fetchGrouped(PDO::FETCH_COLUMN);
+
+    if (empty($dozenten)) {
+        echo 'Fehler in get_seminar_dozent: Kein Dozent gefunden';
         return 0;
     }
-    while ($db->next_record()) {
-        $dozent[$db->f('user_id')] = $db->f('position');
-    }
-    return $dozent;
+
+    return $dozenten;
 }
 
 /**
@@ -1029,23 +1028,11 @@ function get_seminar_dozent($seminar_id)
  */
 function re_sort_dozenten($s_id, $position)
 {
-    $db = new DB_Seminar;
-    $db->query("SELECT user_id, position" .
-               " FROM seminar_user" .
-               " WHERE Seminar_id = '$s_id'" .
-               " AND status = 'dozent' " .
-               " AND position > '$position'");
-
-   while ($db->next_record())
-   {
-      $new_position = $db->f("position") - 1;
-      $user_id = $db->f("user_id");
-      $db2 = new DB_Seminar;
-      $db2->query("UPDATE seminar_user" .
-                  " SET position =  '$new_position'" .
-                  " WHERE Seminar_id = '$s_id'" .
-                  " AND user_id = '$user_id'");
-   }
+    $query = "UPDATE seminar_user
+              SET position = position - 1
+              WHERE Seminar_id = ? AND status = 'dozent' AND position > ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($s_id, $position));
 }
 
 /**
@@ -1059,23 +1046,11 @@ function re_sort_dozenten($s_id, $position)
  */
 function re_sort_tutoren($s_id, $position)
 {
-    $db = new DB_Seminar;
-    $db->query("SELECT user_id, position" .
-               " FROM seminar_user" .
-               " WHERE Seminar_id = '$s_id'" .
-               " AND status = 'tutor' " .
-               " AND position > '$position'");
-
-   while ($db->next_record())
-   {
-      $new_position = $db->f("position") - 1;
-      $user_id = $db->f("user_id");
-      $db2 = new DB_Seminar;
-      $db2->query("UPDATE seminar_user" .
-                  " SET position =  '$new_position'" .
-                  " WHERE Seminar_id = '$s_id'" .
-                  " AND user_id = '$user_id'");
-   }
+    $query = "UPDATE seminar_user
+              SET position = position - 1
+              WHERE Seminar_id = ? AND status = 'tutor' AND position > ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($s_id, $position));
 }
 
 /**
@@ -1089,15 +1064,13 @@ function re_sort_tutoren($s_id, $position)
  */
 function get_next_position($status, $seminar_id)
 {
-   $db_pos = new DB_Seminar;
-   $db_pos->query("SELECT max(position) + 1 as next_pos " .
-                  " FROM seminar_user" .
-                  " WHERE status = '$status' " .
-                  " AND   Seminar_id = '$seminar_id'");
+    $query = "SELECT MAX(position) + 1
+              FROM seminar_user
+              WHERE Seminar_id = ? AND status = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($seminar_id, $status));
 
-   $db_pos->next_record();
-
-   return $db_pos->f("next_pos");
+   return $statement->fetchColumn();
 }
 
 /**
@@ -1109,19 +1082,21 @@ function get_next_position($status, $seminar_id)
  */
 function get_seminar_tutor($seminar_id)
 {
-    $db = new DB_Seminar;
-    $sql = "SELECT user_id, position FROM seminar_user WHERE Seminar_id='".$seminar_id."' AND status='tutor' ORDER BY position";
-    if (!$db->query($sql)) {
-        echo "Fehler bei DB-Abfrage in get_seminar_user!";
+    $query = "SELECT user_id, position
+              FROM seminar_user
+              WHERE Seminar_id = ? AND status = 'tutor'
+              ORDER BY position";
+    $statement = DBManager::get()->prepare($query);
+    $result = $statement->execute(array($seminar_id));
+    
+    if (!$result) {
+        echo 'Fehler bei DB-Abfrage in get_seminar_user!';
         return 0;
     }
-    if (!$db->num_rows()) {
-        return null;
-    }
-    while ($db->next_record()) {
-        $tutor[$db->f('user_id')] = $db->f('position');
-    }
-    return $tutor;
+
+    $tutoren = $statement->fetchGrouped(PDO::FETCH_COLUMN);
+
+    return empty($tutoren) ? null : $tutoren;
 }
 
 /**
@@ -1153,23 +1128,14 @@ function get_seminar_sem_tree_entries($seminar_id)
  */
 function get_seminars_user($user_id)
 {
-    $db = new DB_Seminar;
-    $sql =  "SELECT seminare.name, seminare.Seminar_id, seminare.mkdate, seminare.VeranstaltungsNummer as va_nummer ".
-            "FROM seminare ".
-            "LEFT JOIN seminar_user ON seminare.Seminar_id=seminar_user.Seminar_id ".
-            "WHERE user_id = '".$user_id."'";
-    $db->query($sql);
+    $query = "SELECT Seminar_id, Name, sem.mkdate, VeranstaltungsNummer AS va_nummer
+              FROM seminare AS sem
+              JOIN seminar_user USING (Seminar_id)
+              WHERE user_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($user_id));
+    $seminars = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-    $seminars = array();
-    $i = 0;
-
-    while ($db->next_record()) {
-        $i++;
-        $seminars[$i]["name"] = $db->f("name");
-        $seminars[$i]["id"] = $db->f("Seminar_id");
-        $seminars[$i]["mkdate"] = $db->f("mkdate");
-        $seminars[$i]["va_nummer"] = $db->f("va_nummer");
-    }
     return $seminars;
 }
 
@@ -1209,28 +1175,43 @@ function StringToFloat($str)
 function archiv_check_perm($seminar_id)
 {
     static $archiv_perms;
-    global $perm,$auth;
-    $u_id = $auth->auth['uid'];
-    $db = new DB_Seminar();
-    if ($perm->have_perm("root")){  // root darf sowieso ueberall dran
-        return "admin";
+    global $perm, $user;
+
+    $u_id = $user->id;
+
+    // root darf sowieso ueberall dran
+    if ($perm->have_perm('root')) {
+        return 'admin';
     }
+
     if (!is_array($archiv_perms)){
-        $db->query("SELECT seminar_id,status FROM archiv_user WHERE user_id = '$u_id'");
-        while ($db->next_record()) {
-            $archiv_perms[$db->f("seminar_id")] = $db->f("status");
-        }
+        $query = "SELECT seminar_id, status FROM archiv_user WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($u_id));
+        $archiv_perms = $statement->fetchGrouped(PDO::FETCH_COLUMN);
+
         if ($perm->have_perm("admin")){
-            $db->query("SELECT archiv.seminar_id FROM user_inst INNER JOIN archiv ON (heimat_inst_id = institut_id) WHERE user_inst.user_id = '$u_id' AND user_inst.inst_perms = 'admin'");
-            while ($db->next_record()) {
-                $archiv_perms[$db->f("seminar_id")] = "admin";
-            }
+            $query = "SELECT archiv.seminar_id, 'admin'
+                      FROM user_inst
+                      INNER JOIN archiv ON (heimat_inst_id = institut_id)
+                      WHERE user_inst.user_id = ? AND user_inst.inst_perms = 'admin'";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($u_id));
+            $temp_perms = $statement->fetchGrouped(PDO::FETCH_COLUMN);
+
+            $archiv_perms = array_merge($archiv_perms, $temp_perms);
         }
         if ($perm->is_fak_admin()){
-            $db->query("SELECT archiv.seminar_id FROM user_inst INNER JOIN Institute ON ( user_inst.institut_id = Institute.fakultaets_id ) INNER JOIN archiv ON ( archiv.heimat_inst_id = Institute.institut_id )  WHERE user_inst.user_id = '$u_id' AND user_inst.inst_perms = 'admin'");
-            while($db->next_record()){
-                $archiv_perms[$db->f("seminar_id")] = "admin";
-            }
+            $query = "SELECT archiv.seminar_id, 'admin'
+                      FROM user_inst
+                      INNER JOIN Institute ON (user_inst.institut_id = Institute.fakultaets_id)
+                      INNER JOIN archiv ON (archiv.heimat_inst_id = Institute.institut_id)
+                      WHERE user_inst.user_id = ? AND user_inst.inst_perms = 'admin'";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($u_id));
+            $temp_perms = $statement->fetchGrouped(PDO::FETCH_COLUMN);
+
+            $archiv_perms = array_merge($archiv_perms, $temp_perms);
         }
     }
     return $archiv_perms[$seminar_id];
@@ -1250,25 +1231,31 @@ function archiv_check_perm($seminar_id)
 function get_users_online($active_time = 5, $name_format = 'full_rev')
 {
     global $user, $_fullname_sql;
-    $online = null;
+
     if (!isset($_fullname_sql[$name_format])) {
         reset($_fullname_sql);
         $name_format = key($_fullname_sql);
     }
-    $now = time(); // nach eingestellter Zeit (default = 5 Minuten ohne Aktion) zaehlt man als offline
-    $query = "SELECT a.username," . $_fullname_sql[$name_format] . " AS name,UNIX_TIMESTAMP() - UNIX_TIMESTAMP(changed) AS last_action,
-        a.user_id as userid, contact_id as is_buddy, " . get_vis_query('a', 'online') . " AS is_visible
-        FROM " . PHPLIB_USERDATA_TABLE . "
-        LEFT JOIN auth_user_md5 a ON (a.user_id=sid)
-        LEFT JOIN user_info USING(user_id)
-        LEFT JOIN user_visibility USING(user_id)
-        LEFT JOIN contact ON (owner_id='".$user->id."' AND contact.user_id=a.user_id AND buddy=1)
-        WHERE changed > '" . date("YmdHis", ($now - ($active_time * 60)))."'
-        AND sid != '".$user->id."' AND sid !='nobody'
-        ORDER BY a.Nachname ASC, a.Vorname ASC";
-    $rs = DBManager::get()->query($query);
-    $online = $rs->fetchAll(PDO::FETCH_ASSOC|PDO::FETCH_GROUP);
-    return array_map('array_shift', $online);
+
+    $query = "SELECT a.username, {$_fullname_sql[$name_format]} AS name,
+                     UNIX_TIMESTAMP() - UNIX_TIMESTAMP(changed) AS last_action,
+                     a.user_id, contact_id AS is_buddy, " . get_vis_query('a', 'online') . " AS is_visible
+              FROM " . PHPLIB_USERDATA_TABLE . "
+              LEFT JOIN auth_user_md5 a ON (a.user_id = sid)
+              LEFT JOIN user_info USING (user_id)
+              LEFT JOIN user_visibility USING (user_id)
+              LEFT JOIN contact ON (owner_id = ? AND contact.user_id = a.user_id AND buddy = 1)
+              WHERE changed > ? AND sid NOT IN ('nobody', ?)
+              ORDER BY a.Nachname ASC, a.Vorname ASC";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array(
+        $user->id,
+        date('YmdHis', time() - $active_time * 60),
+        $user->id,
+    ));
+    $online = $statement->fetchGrouped();
+
+    return $online;
 }
 
 /**
@@ -1280,11 +1267,14 @@ function get_users_online($active_time = 5, $name_format = 'full_rev')
  */
 function get_users_online_count($active_time = 5)
 {
-    return  DBManager::get()
-            ->query("SELECT COUNT(*) FROM " . PHPLIB_USERDATA_TABLE . " WHERE
-                    changed > '".date("YmdHis", (time() - ($active_time * 60))) . "' AND sid NOT IN
-                    ('nobody', '".$GLOBALS['user']->id."')")
-            ->fetchColumn();
+    $query = "SELECT COUNT(*) FROM " . PHPLIB_USERDATA_TABLE . "
+              WHERE changed > ? AND sid NOT IN ('nobody', ?)";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array(
+        date('YmdHis', time() - $active_time * 60),
+        $GLOBALS['user']->id,
+    ));
+    return $statement->fetchColumn();
 }
 
 /**

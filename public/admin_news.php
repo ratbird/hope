@@ -60,9 +60,9 @@ if ($_REQUEST['range_id'] == "self"){
 PageLayout::setHelpKeyword("Basis.News");
 PageLayout::setTitle(_("Verwaltung von Ankündigungen"));
 
-if ($list || $view || ($news_range_id != $user->id && 
-        $news_range_id != 'studip') && $view_mode != 'user' && 
-        !(isDeputyEditAboutActivated() && 
+if ($list || $view || ($news_range_id != $user->id &&
+        $news_range_id != 'studip') && $view_mode != 'user' &&
+        !(isDeputyEditAboutActivated() &&
         isDeputy($auth->auth["uid"], $news_range_id, true))){
     include 'lib/admin_search.inc.php';
 
@@ -162,15 +162,19 @@ if ($cmd=="news_submit") {
         $news->msg .= "error§"._("Leere Ankündigungen k&ouml;nnen nicht gespeichert werden! Geben Sie immer &Uuml;berschrift oder Inhalt an!")."§";
     } else if ($expire < 0) {
         $cmd = "edit";
+        $edit_news = Request::option('news_id');
         $news->msg .= "error§"._("Das Einstelldatum muss vor dem Ablaufdatum liegen!")."§";
     } else if ($expire > $max_expire) {
         $cmd = "edit";
-        $news->msg .= "error§".sprintf(_("Sie können Ankündigungen maximal bis zum %s einstellen!")."§", date('d M Y', $starttime + $max_expire));
+        $edit_news = Request::option('news_id');
+        $news->msg .= "error§".sprintf(_("Sie können Ankündigungen maximal bis zum %s einstellen!")."§", strftime('%x', $starttime + $max_expire));
     } else if (!$add_range) {
         $cmd = "edit";
+        $edit_news = Request::option('news_id');
         $news->msg .= "error§"._("Mindestens ein Bereich zum Anzeigen der Ankündigung muss gewählt sein!")."§";
     } else {
         $cmd = "edit";
+        $edit_news = Request::option('news_id');
         $news->msg .= "error§"._("Bitte geben Sie Start- und Ablaufdatum an")."§";
     }
 

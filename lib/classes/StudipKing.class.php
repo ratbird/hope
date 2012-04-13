@@ -32,6 +32,11 @@ class StudipKing {
     const CACHE_KEY = 'core/kings';
 
     /**
+    * store kings also in memory
+    */
+    private static $kings;
+
+    /**
      * Returns the awards of a user as an associative array consisting of
      * "award type" => "amount of posts, wiki pages etc." pairs that belong to
      * this user. If the 2nd parameter is set to true, the values are
@@ -57,19 +62,21 @@ class StudipKing {
 
     private static function get_kings()
     {
-        $cache = StudipCacheFactory::getCache();
+        if (self::$kings === null) {
+            $cache = StudipCacheFactory::getCache();
 
-        # read cache (unserializing a cache miss - FALSE - does not matter)
-        $kings = unserialize($cache->read(self::CACHE_KEY));
+            # read cache (unserializing a cache miss - FALSE - does not matter)
+            $kings = unserialize($cache->read(self::CACHE_KEY));
 
-        # cache miss, retrieve from database
-        if ($kings === FALSE) {
-            $kings = self::get_kings_uncached();
-            # write to cache with an expiry time of 1 hour
-            $cache->write(self::CACHE_KEY, serialize($kings), 3600);
+            # cache miss, retrieve from database
+            if ($kings === FALSE) {
+                $kings = self::get_kings_uncached();
+                # write to cache with an expiry time of 24 hours
+                $cache->write(self::CACHE_KEY, serialize($kings), 86400);
+            }
+            self::$kings = $kings;
         }
-
-        return $kings;
+        return self::$kings;
     }
 
     private static function get_kings_uncached()

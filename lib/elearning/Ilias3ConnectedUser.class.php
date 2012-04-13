@@ -47,10 +47,12 @@ class Ilias3ConnectedUser extends ConnectedUser
         global $connected_cms;
         parent::readData();
         if($this->is_connected){
-            $db = new DB_Seminar();
             $user_id = $connected_cms[$this->cms_type]->soap_client->lookupUser($this->login);
             if($user_id == false){
-                $db->query("DELETE FROM auth_extern WHERE studip_user_id = '" . $this->studip_id . "' LIMIT 1");
+                $query = "DELETE FROM auth_extern WHERE studip_user_id = ? LIMIT 1";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($this->studip_id));
+
                 $this->id = '';
                 $this->login = '';
                 $this->external_password = '';
@@ -60,7 +62,10 @@ class Ilias3ConnectedUser extends ConnectedUser
             } elseif($this->category != ''){
                 $cat = $connected_cms[$this->cms_type]->soap_client->checkReferenceById($this->category);
                 if(!$cat){
-                    $db->query("UPDATE auth_extern SET external_user_category = '' WHERE studip_user_id = '" . $this->studip_id . "' LIMIT 1");
+                    $query = "UPDATE auth_extern SET external_user_category = '' WHERE studip_user_id = ? LIMIT 1";
+                    $statement = DBManager::get()->prepare($query);
+                    $statement->execute(array($this->studip_id));
+
                     $this->category = '';
                 }
             }
@@ -270,9 +275,11 @@ class Ilias3ConnectedUser extends ConnectedUser
         if($this->type == 0 && $this->id){
             $ret['iliasuser_deleted'] = $connected_cms[$this->cms_type]->soap_client->deleteUser($this->id);
         }
-        $db = new DB_Seminar();
-        $db->query("DELETE FROM auth_extern WHERE studip_user_id = '" . $this->studip_id . "' LIMIT 1");
-        $ret['auth_extern_deleted'] = $db->affected_rows();
+        $query = "DELETE FROM auth_extern WHERE studip_user_id = ? LIMIT 1";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($this->studip_id));
+
+        $ret['auth_extern_deleted'] = $statement->rowCount();
         return $ret;
     }
 

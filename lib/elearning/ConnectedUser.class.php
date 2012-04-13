@@ -81,23 +81,25 @@ class ConnectedUser
     */
     function readData()
     {
-        $db = New DB_Seminar;
-        $db->query("SELECT * FROM auth_extern WHERE studip_user_id = '" . $this->studip_id . "' AND external_user_system_type = '" . $this->cms_type . "'");
-        if ($db->next_record())
-        {
-            $this->id = $db->f("external_user_id");
-            $this->login = $db->f("external_user_name");
-            $this->external_password = $db->f("external_user_password");
-            $this->category = $db->f("external_user_category");
-            $this->type = $db->f("external_user_type");
-            $this->is_connected = true;
-        }
-        else
-        {
-            $this->id = "";
+        $query = "SELECT external_user_id, external_user_name, external_user_password, external_user_category, external_user_type
+                  FROM auth_extern
+                  WHERE studip_user_id = ? AND external_user_system_type = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($this->studip_id, $this->cms_type));
+        $data = $statement->fetch(PDO::FETCH_ASSOC);
+
+        if (!$data) {
+            $this->id = '';
             $this->is_connected = false;
             return false;
         }
+
+        $this->id                = $data['external_user_id'];
+        $this->login             = $data['external_user_name'];
+        $this->external_password = $data['external_user_password'];
+        $this->category          = $data['external_user_category'];
+        $this->type              = $data['external_user_type'];
+        $this->is_connected      = true;
     }
 
     /**
@@ -110,40 +112,46 @@ class ConnectedUser
     function getStudipUserData()
     {
         global $connected_cms;
-        
-        $db = New DB_Seminar;
-        $db->query("SELECT * FROM user_info LEFT JOIN auth_user_md5 USING(user_id) WHERE user_info.user_id = '" . $this->studip_id . "'");
-        if ($db->next_record())
-        {
-            $this->studip_login = $db->f("username");
-            if ($this->is_connected == false)
-            {
-                $this->login = $connected_cms[$this->cms_type]->getUserPrefix() . $this->studip_login;
-            }
-            $this->studip_password = $db->f("password");
-            $this->title_front = $db->f("title_front");
-            $this->title_rear = $db->f("title_rear");
-            if ($this->title_front != "")
-                $this->title = $this->title_front;
-            if (($this->title_front != "") AND ($this->title_rear != ""))
-                $this->title .= " ";
-            if ($this->title_rear != "")
-                $this->title .= $this->title_rear;
-            $this->firstname = $db->f("Vorname");
-            $this->lastname = $db->f("Nachname");
-            $this->email = $db->f("Email");
-            $this->phone_home = $db->f("privatnr");
-            $this->street = $db->f("privadr");
-            if ($db->f("geschlecht") == '2')
-                $this->gender = 'f';
-            else
-                $this->gender = 'm';
-            return true;
-        }
-        else
-        {
+
+        $query = "SELECT username, password, title_front, title_rear, Vorname, 
+                         Nachname, Email, privatnr, privadr, geschlecht
+                  FROM user_info
+                  LEFT JOIN auth_user_md5 USING (user_id)
+                  WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($this->studip_id));
+        $data = $statement->fetch(PDO::FETCH_ASSOC);
+
+        if (!$data) {
             return false;
         }
+
+        $this->studip_login = $data['username'];
+        if ($this->is_connected == false) {
+            $this->login = $connected_cms[$this->cms_type]->getUserPrefix() . $this->studip_login;
+        }
+
+        $this->studip_password = $data['password'];
+        $this->title_front     = $data['title_front'];
+        $this->title_rear      = $data['title_rear'];
+        $this->firstname       = $data['Vorname'];
+        $this->lastname        = $data['Nachname'];
+        $this->email           = $data['Email'];
+        $this->phone_home      = $data['privatnr'];
+        $this->street          = $data['privadr'];
+        $this->gender          = ($data['geschlecht'] == 2 ? 'f' : 'm');
+
+        if ($this->title_front != '') {
+            $this->title = $this->title_front;
+        }
+        if ($this->title_front != '' && $this->title_rear != '') {
+            $this->title .= ' ';
+        }
+        if ($this->title_rear != '') {
+            $this->title .= $this->title_rear;
+        }
+
+        return true;
     }
 
     /**
@@ -466,18 +474,28 @@ class ConnectedUser
     function setConnection($user_type)
     {
         $this->setUserType($user_type);
-        $db = New DB_Seminar;
-        $db->query("SELECT * FROM auth_extern WHERE studip_user_id = '" . $this->studip_id . "' AND external_user_system_type = '" . $this->cms_type . "'");
-        if ($db->next_record())
-        {
-            $db->query("UPDATE auth_extern SET external_user_name='" . $this->login. "', external_user_password='" . $this->external_password. "', external_user_category='" . $this->category . "', external_user_id='" . $this->id. "', external_user_type='" . $this->type . "' "
-            ."WHERE studip_user_id = '" . $this->studip_id . "' AND external_user_system_type = '" . $this->cms_type . "'");
-        }
-        else
-        {
-            $db->query("INSERT INTO auth_extern (studip_user_id, external_user_id, external_user_name, external_user_password, external_user_category, external_user_system_type, external_user_type) "
-                ."VALUES ('" . $this->studip_id . "', '" . $this->id . "', '" . $this->login . "', '" . $this->external_password . "', '" . $this->category . "', '" . $this->cms_type . "', '" . $this->type . "')");
-        }
+
+        $query = "INSERT INTO auth_extern (studip_user_id, external_user_id, external_user_name, 
+                                           external_user_password, external_user_category,
+                                           external_user_system_type, external_user_type)
+                  VALUES (?, ?, ?, ?, ?, ?, ?)
+                  ON DUPLICATE KEY
+                    UPDATE external_user_name = VALUES(external_user_name),
+                           external_user_password = VALUES(external_user_password),
+                           external_user_category = VALUES(external_user_category),
+                           external_user_id = VALUES(external_user_id),
+                           external_user_type = VALUES(external_user_type)";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $this->studip_id,
+            $this->id,
+            $this->login,
+            $this->external_password,
+            $this->category,
+            $this->cms_type,
+            $this->type,
+        ));
+
         $this->is_connected = true;
         $this->readData();
     }

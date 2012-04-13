@@ -143,7 +143,7 @@ $message_types = array('msg' => "success", 'error' => "error", 'info' => "info")
       <table style="margin-left: auto; margin-right: auto; text-align: left;" id="leiterinnen_tabelle">
           <!-- Dozenten -->
           <tr>
-              <td style="font-weight: bold;"><?= $dozenten_title ?></td>
+              <td style="font-weight: bold;" colspan="6"><?= $dozenten_title ?></td>
           </tr>
           <? $num = 0; foreach($dozenten as $dozent) : ?>
           <tr>
@@ -168,10 +168,14 @@ $message_types = array('msg' => "success", 'error' => "error", 'info' => "info")
                   <?= get_fullname($dozent["user_id"], 'full_rev', true)." (".$dozent["username"].")" ?>
               </td>
               <td>
+              <? if ($perm_dozent && !$dozent_is_locked) : ?>
                   <label>
                   <?= _("Funktion") ?>:
                   <input value="<?= htmlReady($dozent["label"]) ?>" type="text" name="label[<?= htmlReady($dozent["user_id"]) ?>]" title="<?= _("Die Funktion, die die Person in der Veranstaltung erfüllt.") ?>">
                   </label>
+              <? else : ?>
+                  <?= $dozent["label"] ? htmlReady($dozent["label"]) : '&nbsp;' ?>
+              <? endif ?>
               </td>
               <td>
                   <? if ($perm_dozent && !$dozent_is_locked) : ?>
@@ -182,22 +186,23 @@ $message_types = array('msg' => "success", 'error' => "error", 'info' => "info")
               </td>
           </tr>
           <? $num++; endforeach ?>
-          <tr>
-              <td style="padding-top: 15px"></td>
-              <td style="padding-top: 15px"><input class="middle" type="image" src="<?= Assets::image_path("icons/16/yellow/arr_2up.png") ?>" name="add_dozent" title="<?= sprintf(_("Neuen %s hinzufügen"), $dozenten_title) ?>"></td>
-              <td style="padding-top: 15px"></td>
-              <td style="padding-top: 15px"><?= $dozentensuche ?></td>
-              <td style="padding-top: 15px"></td>
-              <td style="padding-top: 15px"></td>
-          </tr>
-
-          <? if ($deputies_enabled) : ?>
+          <? if ($perm_dozent && !$dozent_is_locked) : ?>
+              <tr>
+                  <td style="padding-top: 15px"></td>
+                  <td style="padding-top: 15px"><input class="middle" type="image" src="<?= Assets::image_path("icons/16/yellow/arr_2up.png") ?>" name="add_dozent" title="<?= sprintf(_("Neuen %s hinzufügen"), $dozenten_title) ?>"></td>
+                  <td style="padding-top: 15px"></td>
+                  <td style="padding-top: 15px"><?= $dozentensuche ?></td>
+                  <td style="padding-top: 15px"></td>
+                  <td style="padding-top: 15px"></td>
+              </tr>
+          <? endif ?>
+          <? if ($deputies_enabled && ($perm_dozent || count($deputies))) : ?>
           <!-- Stellvertreter -->
           <tr>
-              <td style="font-weight: bold;"><?= $deputy_title ?></td>
+              <td colspan="6"><hr></td>
           </tr>
           <tr>
-              <td colspan="6"><hr></td>
+              <td style="font-weight: bold;"  colspan="6"><?= $deputy_title ?></td>
           </tr>
           <? foreach($deputies as $deputy) : ?>
           <tr>
@@ -211,20 +216,24 @@ $message_types = array('msg' => "success", 'error' => "error", 'info' => "info")
               </td>
               <td></td>
               <td>
-                  <a href="<?= $controller->url_for('course/basicdata/deletedeputy', $course_id, $deputy["user_id"]) ?>">
+              <? if ($perm_dozent && !$dozent_is_locked) : ?>
+                      <a href="<?= $controller->url_for('course/basicdata/deletedeputy', $course_id, $deputy["user_id"]) ?>">
                       <?= Assets::img("icons/16/blue/trash.png") ?>
                   </a>
+              <? endif ?>
               </td>
           </tr>
           <? endforeach ?>
-          <tr>
-              <td style="padding-top: 15px"></td>
-              <td style="padding-top: 15px"><input class="middle" type="image" src="<?= Assets::image_path("icons/16/yellow/arr_2up.png") ?>" name="add_deputy" title="<?= sprintf(_("Neuen %s hinzufügen"), $deputy_title) ?>"></td>
-              <td style="padding-top: 15px"></td>
-              <td style="padding-top: 15px"><?= $deputysearch ?></td>
-              <td style="padding-top: 15px"></td>
-              <td style="padding-top: 15px"></td>
-          </tr>
+          <? if ($perm_dozent && !$dozent_is_locked) : ?>
+              <tr>
+                  <td style="padding-top: 15px"></td>
+                  <td style="padding-top: 15px"><input class="middle" type="image" src="<?= Assets::image_path("icons/16/yellow/arr_2up.png") ?>" name="add_deputy" title="<?= sprintf(_("Neuen %s hinzufügen"), $deputy_title) ?>"></td>
+                  <td style="padding-top: 15px"></td>
+                  <td style="padding-top: 15px"><?= $deputysearch ?></td>
+                  <td style="padding-top: 15px"></td>
+                  <td style="padding-top: 15px"></td>
+              </tr>
+          <? endif ?>
           <? endif ?>
 
           <!-- Tutoren -->
@@ -232,7 +241,7 @@ $message_types = array('msg' => "success", 'error' => "error", 'info' => "info")
               <td colspan="6"><hr></td>
           </tr>
           <tr>
-              <td style="font-weight: bold;"><?= $tutor_title ?></td>
+              <td style="font-weight: bold;" colspan="6"><?= $tutor_title ?></td>
           </tr>
           <? $num = 0; foreach($tutoren as $tutor) : ?>
           <tr>
@@ -257,9 +266,13 @@ $message_types = array('msg' => "success", 'error' => "error", 'info' => "info")
                   <?= get_fullname($tutor["user_id"], 'full_rev', true)." (".$tutor["username"].")" ?>
               </td>
               <td>
+              <? if ($perm_dozent && !$tutor_is_locked) : ?>
                   <label><?= _("Funktion") ?>:
                       <input value="<?= htmlReady($tutor["label"]) ?>" type="text" name="label[<?= htmlReady($tutor["user_id"]) ?>]" title="<?= _("Die Funktion, die die Person in der Veranstaltung erfüllt.") ?>">
                   </label>
+              <? else : ?>
+                <?= $tutor["label"] ? htmlReady($tutor["label"]) : '&nbsp;' ?>
+              <? endif ?>
               </td>
               <td>
                   <? if ($perm_dozent && !$tutor_is_locked) : ?>
@@ -270,17 +283,20 @@ $message_types = array('msg' => "success", 'error' => "error", 'info' => "info")
               </td>
           </tr>
           <? $num++; endforeach ?>
-          <tr>
-              <td style="padding-top: 15px"></td>
-              <td style="padding-top: 15px"><input class="middle" type="image" src="<?= Assets::image_path("icons/16/yellow/arr_2up.png") ?>" name="add_tutor" title="<?= sprintf(_("Neuen %s hinzufügen"), $tutor_title) ?>"></td>
-              <td style="padding-top: 15px"></td>
-              <td style="padding-top: 15px"><?= $tutorensuche ?></td>
-              <td style="padding-top: 15px"></td>
-              <td style="padding-top: 15px"></td>
-          </tr>
-
+          <? if ($perm_dozent && !$tutor_is_locked) : ?>
+              <tr>
+                  <td style="padding-top: 15px"></td>
+                  <td style="padding-top: 15px"><input class="middle" type="image" src="<?= Assets::image_path("icons/16/yellow/arr_2up.png") ?>" name="add_tutor" title="<?= sprintf(_("Neuen %s hinzufügen"), $tutor_title) ?>"></td>
+                  <td style="padding-top: 15px"></td>
+                  <td style="padding-top: 15px"><?= $tutorensuche ?></td>
+                  <td style="padding-top: 15px"></td>
+                  <td style="padding-top: 15px"></td>
+              </tr>
+          <? endif ?>
       </table>
-
+      <? if (!$perm_dozent) : ?>
+        <span style="color: #ff0000"><?= _("Die Personendaten können Sie mit Ihrem Status nicht bearbeiten!") ?></span>
+      <? endif; ?>
   </div>
 
 

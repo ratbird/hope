@@ -268,14 +268,14 @@ class AdminNewsController {
         echo "\n<input type=\"HIDDEN\" name=\"news_id\" value=\"".$this->news_query["news_id"]."\">";
         echo "\n<input type=\"HIDDEN\" name=\"user_id\" value=\"".$this->news_query["user_id"]."\">";
         echo "\n<input type=\"HIDDEN\" name=\"author\" value=\"".$this->news_query["author"]."\">";
-        echo "\n</td></tr>";
+        echo "\n<table>";
         echo "\n<tr> <td class=\"blank\" align=\"center\"><br>";
         echo "\n<table width=\"99%\" cellspacing=\"0\" cellpadding=\"6\" border=\"0\">";
         echo "\n<tr><td class=\"steel1\" width=\"70%\"><b>" . _("Autor:") . "</b>&nbsp;". htmlReady($this->news_query["author"]) ."<br><br><b>" . _("&Uuml;berschrift")
             . "</b><br><input type=\"TEXT\" style=\"width: 100%\" size=\"".floor($this->max_col*.5*.8)."\" maxlength=\"255\" name=\"topic\" value=\""
             .htmlReady($this->news_query["topic"])."\"><br>";
         list ($body,$admin_msg)=explode("<admin_msg>",$this->news_query["body"]);
-        echo "\n<br><b>" . _("Inhalt") . "</b><br><textarea name=\"body\" style=\"width: 100%\" cols=\"".floor($this->max_col*.8*.8)."\" rows=\"10\"      wrap=\"virtual\">"
+        echo "\n<br><b>" . _("Inhalt") . "</b><br><textarea class=\"add_toolbar resizable\" name=\"body\" style=\"width: 100%\" cols=\"".floor($this->max_col*.8*.8)."\" rows=\"10\"      wrap=\"virtual\">"
             .htmlReady($body)."</textarea><br></td>";
         echo "\n<td class=\"steelgraulight\" width=\"30%\">" . _("Geben Sie hier die &Uuml;berschrift und den Inhalt Ihrer Ankündigung ein.")
             . "<br><br>" . _("Im unteren Bereich k&ouml;nnen Sie ausw&auml;hlen, in welchen Bereichen Ihre Ankündigung angezeigt wird.");
@@ -332,17 +332,20 @@ class AdminNewsController {
         $this->list_range_details("sem");
         $this->list_range_details("inst");
         $this->list_range_details("fak");
-        echo "\n<tr><td class=\"blank\"> &nbsp; </td>";
-        echo "\n</td></tr>";
+
         if ($perm->have_perm("admin")) {
             echo "<tr><td class=\"blank\" colspan=2>";
             echo "<table class=\"blank\" width=\"100%\" cellspacing=\"0\" cellpadding=\"2\" border=\"0\" align=\"center\">";
             echo "\n<tr><td class=\"blank\"><b>" . _("Einen weiteren Bereich hinzuf&uuml;gen:") . "<br></td></tr>";
             echo "\n<tr><td class=\"steel1\"><font size=-1>" . _("Hier k&ouml;nnen Sie weitere Bereiche, auf die Sie Zugriff haben, der Auswahl hinzuf&uuml;gen") . "</font><br>";
             echo "<br><input style=\"vertical-align:middle;\" type=\"TEXT\"  name=\"search\" size=\"20\">&nbsp;"
-                . Button::create(_('Suche starten'), 'news_range_search', array('style' => 'vertical-align:middle;')) . "</div></td></tr></form></table><br>";
+                . Button::create(_('Suche starten'), 'news_range_search', array('style' => 'vertical-align:middle;')) . "</td></tr></table></td></tr>";
         }
-        echo "</form></table>";
+        echo "\n<tr><td class=\"blank\"> &nbsp; </td>";
+        echo "\n</td></tr>";
+        echo "\n</table>";
+        echo "\n</td></tr>";
+        echo "\n</table></form></td></tr>";
     }
 
     /**

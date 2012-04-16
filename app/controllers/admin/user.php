@@ -258,7 +258,7 @@ class Admin_UserController extends AuthenticatedController
      */
     public function edit_action($user_id = null)
     {
-        global $perm;
+        global $perm, $auth;
 
         //check submitted user_id
         if (is_null($user_id)) {

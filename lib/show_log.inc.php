@@ -1,7 +1,7 @@
 <?
 # Lifter007: TODO
-# Lifter003: TODO
-# Lifter010: TODO
+# Lifter003: TEST
+# Lifter010: DONE - not applicable
 /**
 * show_log.inc.php
 *
@@ -39,19 +39,27 @@
 require_once $GLOBALS['RELATIVE_PATH_RESOURCES'] . '/lib/ResourceObject.class.php';
 
 
-function get_log_action($action_id) {
-    static $actions=array();
+function get_log_action($action_id)
+{
+    static $actions = array();
+
     if ($actions[$action_id]) {
         return $actions[$action_id];
     }
-    $db=new DB_Seminar;
-    $db->query("SELECT * FROM log_actions WHERE action_id='$action_id'");
-    if ($db->next_record()) {
-        $res=array("name"=>$db->f('name'),"info_template"=>$db->f('info_template'));
-        $actions[$action_id]=$res;
-        return $res;
+
+    $query = "SELECT name, info_template FROM log_actions WHERE action_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($action_id));
+    $temp = $statement->fetch(PDO::FETCH_ASSOC);
+
+    if (!$temp) {
+        return array(
+            'name'          => 'unknown',
+            'info_template' => 'Error: unknown action'
+        );
     }
-    return array("name"=>"unknown","info_template"=>"Error: unknown action");
+
+    return $actions[$action_id] = $temp;
 }
 
 function showlog_format_resource($res_id) {
@@ -69,53 +77,71 @@ function showlog_format_username($uid)
     return '<a href="'.URLHelper::getLink('dispatch.php/admin/user/edit/' . $uid) . '">'.htmlReady(get_fullname($uid)).'</a>';
 }
 
-function showlog_format_sem($sem_id, $maxlen=100) {
-    $db=new DB_Seminar();
-    $q="SELECT seminare.Name as title, seminare.VeranstaltungsNummer as number, semester_data.name as semester FROM seminare LEFT JOIN semester_data ON (seminare.start_time=semester_data.beginn) WHERE Seminar_id='$sem_id'";
-    $db->query($q);
-    if ($db->next_record()) {
-        $title=htmlReady(my_substr($db->f('title'),0,$maxlen));
-        return '<a href="'.URLHelper::getLink('adminarea_start.php', array('select_sem_id' => $sem_id)).'">'.htmlReady($db->f('number')).' '.$title.' ('.htmlReady($db->f('semester')).')</a>';
-    } else {
+function showlog_format_sem($sem_id, $maxlen=100)
+{
+    $query = "SELECT seminare.Name AS title, VeranstaltungsNummer, semester_data.name AS semester
+              FROM seminare
+              LEFT JOIN semester_data ON (seminare.start_time = semester_data.beginn)
+              WHERE Seminar_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($sem_id));
+    $temp = $statement->fetch(PDO::FETCH_ASSOC);
+
+    if (!$temp) {
         return $sem_id;
     }
+
+    return sprintf('<a href="%s">%s %s (%s)</a>',
+                   URLHelper::getLink('adminarea_start.php', array('select_sem_id' => $sem_id)),
+                   htmlReady($temp['VeranstaltungsNummer']),
+                   htmlReady(my_substr($temp['title'], 0, $maxlen)),
+                   htmlReady($temp['semester']));
 }
 
-function showlog_format_institute($inst_id, $maxlen=100) {
-    $db=new DB_Seminar();
-    $q="SELECT Institute.Name as title FROM Institute WHERE Institut_id='$inst_id'";
-    $db->query($q);
-    if ($db->next_record()) {
-        $title=htmlReady(my_substr($db->f('title'),0,$maxlen));
-        return '<a href="'.URLHelper::getLink('institut_main.php', array('auswahl' => $inst_id)).'">'.$title.'</a>';
-    } else {
+function showlog_format_institute($inst_id, $maxlen=100)
+{
+    $query = "SELECT Name FROM Institute WHERE Institut_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($inst_id));
+    $name = $statement->fetchColumn();
+
+    if (!$name) {
         return $inst_id;
     }
+
+    return sprintf('<a href="%s">%s</a>',
+                   URLHelper::getLink('institut_main.php', array('auswahl' => $inst_id)),
+                   htmlReady(my_substr($name, 0, $maxlen)));
 }
 
-function showlog_format_studyarea($area_id) {
-    $db=new DB_Seminar();
-    $q="SELECT parent_id, sem_tree.name as name, Institute.Name as iname FROM sem_tree LEFT JOIN Institute ON (sem_tree.studip_object_id=Institute.Institut_id) WHERE sem_tree_id='%s'";
-    $db->query(sprintf($q,$area_id));
-    if ($db->next_record()) {
-        $path=array($db->f('name'));
-        while ($db->f('parent_id')!="root") {
-            $db->query(sprintf($q,$db->f('parent_id')));
-            if ($db->next_record()) {
-                if (!$db->f('name')) {
-                    $path[]=htmlReady($db->f('iname'));
-                } else {
-                    $path[]=htmlReady($db->f('name'));
-                }
-            } else {
-                break; // ERROR
-            }
-        }
-        $path=array_reverse($path);
-        return "<em>".implode(" &gt; ",$path)."</em>";
-    } else {
+function showlog_format_studyarea($area_id)
+{
+    $query = "SELECT parent_id, sem_tree.name AS name, Institute.Name AS iname
+              FROM sem_tree
+              LEFT JOIN Institute ON (sem_tree.studip_object_id = Institute.Institut_id)
+              WHERE sem_tree_id = ?";
+    $statement = DBManager::get()->prepare($query);
+
+    $statement->execute(array($area_id));
+    $temp = $statement->fetch(PDO::FETCH_ASSOC);
+    
+    if (!$temp) {
         return $area_id;
     }
+
+    $path = array($temp['name']);
+    while ($temp['parent_id'] != 'root') {
+        $statement->execute(array($temp['parent_id']));
+        $temp = $statement->fetch(PDO::FETCH_ASSOC);
+
+        if (!$temp) {
+            break;
+        }
+
+        array_unshift($path, $temp['name'] ?: $temp['iname']);
+    }
+
+    return '<em>' . implode(' &gt; ', $path) . '</em>';
 }
 
 function showlog_format_singledate($sd_id) {
@@ -169,75 +195,125 @@ function showlog_format_infotemplate($action, $user_id, $affected, $coaffected, 
     return $text;
 }
 
-function showlog_search_seminar($needle) {
-    $db=new DB_Seminar();
+function showlog_search_seminar($needle)
+{
+    $result = array();
+
     // search for active seminars
-    $q="SELECT Seminar_id, seminare.Name, semester_data.name as semester FROM seminare LEFT JOIN semester_data ON (seminare.start_time=semester_data.beginn) WHERE VeranstaltungsNummer like '%$needle%' OR seminare.Name like '%$needle%'";
-    $db->query($q);
-    $sems=array();
-    while ($db->next_record()) {
-        $sems[]=array($db->f("Seminar_id"),$db->f('VeranstaltungsNummer').' '.my_substr($db->f("Name"),0,40).' ('.$db->f('semester').')');
+    $query = "SELECT Seminar_id, seminare.Name, semester_data.name AS semester, VeranstaltungsNummer
+              FROM seminare
+              LEFT JOIN semester_data ON (seminare.start_time = semester_data.beginn)
+              WHERE VeranstaltungsNummer LIKE CONCAT('%', :needle, '%')
+                 OR seminare.Name LIKE CONCAT('%', :needle, '%')";
+    $statement = DBManager::get()->prepare($query);
+    $statement->bindParam(':needle', $needle);
+    $statement->execute();
+
+    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+        $title = sprintf('%s %s (%s)',
+                         $row['VeranstaltungsNummer'],
+                         my_substr($row['Name'], 0, 40),
+                         $row['semester']);
+
+        $result[] = array($row['Seminar_id'], $title);
     }
+
     // search deleted seminars
     // SemName and Number is part of info field, old id (still in DB) is in affected column
-    $q="SELECT * FROM log_events LEFT JOIN log_actions ON (log_actions.action_id=log_events.action_id) WHERE info LIKE '%$needle%' AND (log_actions.name='SEM_ARCHIVE' OR log_actions.name='SEM_DELETE_FROM_ARCHIVE')";
-    $db->query($q);
-    while ($db->next_record()) {
-        $sems[]=array($db->f("affected_range_id"), my_substr($db->f("info"),0,40)." ("._("gelöscht").")");
+    $query = "SELECT affected_range_id, info
+              FROM log_events
+              LEFT JOIN log_actions USING (action_id)
+              WHERE info LIKE CONCAT('%', ?, '%')
+                AND log_actions.name IN ('SEM_ARCHIVE', 'SEM_DELETE_FROM_ARCHIVE')";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($needle));
+
+    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+        $title = sprintf('%s (%s)', my_substr($row['info'], 0, 40), _('gelöscht'));
+        $result[] = array($row['affected_range_id'], $title);
     }
 
-    return $sems;
+    return $result;
 }
 
-function showlog_search_inst($needle) {
-    $db=new DB_Seminar();
-    $q="SELECT Institut_id, Name FROM Institute WHERE Name like '%$needle%'";
-    $db->query($q);
-    $sems=array();
-    while ($db->next_record()) {
-        $sems[]=array($db->f("Institut_id"),my_substr($db->f('Name'),0,28));
+function showlog_search_inst($needle)
+{
+    $result = array();
+
+    $query = "SELECT Institut_id, Name FROM Institute WHERE Name LIKE CONCAT('%', ?, '%')";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($needle));
+
+    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+        $result[] = array($row['Institut_id'], my_substr($row['Name'], 0, 28));
     }
 
     // search for deleted seminars
     // InstName is part of info field, old id (still in DB) is in affected column
-    $q="SELECT * FROM log_events LEFT JOIN log_actions ON (log_actions.action_id=log_events.action_id) WHERE info LIKE '%$needle%' AND (log_actions.name='INST_DEL')";
-    $db->query($q);
-    while ($db->next_record()) {
-        $sems[]=array($db->f("affected_range_id"),($db->f("info")." ("._("gelöscht").")"));
+    $query = "SELECT affected_range_id, info
+              FROM log_events
+              LEFT JOIN log_actions USING (action_id)
+              WHERE info LIKE CONCAT('%', ?, '%') AND log_actions.name = 'INST_DEL'";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($needle));
+
+    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+        $title = sprintf('%s (%s)', $row['info'], _('gelöscht'));
+        $result[] = array($row['affected_range_id'], $title);
     }
 
-    return $sems;
+    return $result;
 }
 
-function showlog_search_user($needle) {
+function showlog_search_user($needle)
+{
     global $_fullname_sql;
-    $db=new DB_Seminar();
-    $q="SELECT " . $_fullname_sql['full'] . " AS fullname, a.* FROM auth_user_md5 a LEFT JOIN user_info USING (user_id) WHERE Nachname LIKE '%$needle%' OR Vorname LIKE '%$needle%' OR username LIKE '%$needle%'";
-    $db->query($q);
-    $users=array();
-    while ($db->next_record()) {
-        $users[]=array($db->f("user_id"),my_substr($db->f('fullname'),0,20)." (".$db->f("username").")");
+
+    $result = array();
+
+    $query = "SELECT {$_fullname_sql['full']} AS fullname, a.user_id, a.username
+              FROM auth_user_md5 AS a
+              LEFT JOIN user_info USING (user_id)
+              WHERE Nachname LIKE CONCAT('%', :needle, '%')
+                 OR Vorname LIKE CONCAT('%', :needle, '%')
+                 OR username LIKE CONCAT('%', :needle, '%')";
+    $statement = DBManager::get()->prepare($query);
+    $statement->bindParam(':needle', $needle);
+    $statement->execute();
+    
+    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+        $name = sprintf('%s (%s)', my_substr($row['fullname'], 0, 20), $row['username']);
+        $result[] = array($row['user_id'], $name);
     }
 
     // search for deleted users
     // InstName is part of info field, old id (still in DB) is in affected column
-    $q="SELECT * FROM log_events LEFT JOIN log_actions ON (log_actions.action_id=log_events.action_id) WHERE info LIKE '%$needle%' AND (log_actions.name='USER_DEL')";
-    $db->query($q);
-    while ($db->next_record()) {
-        $users[]=array($db->f("affected_range_id"),($db->f("info")." ("._("gelöscht").")"));
+    $query = "SELECT affected_range_id, info
+              FROM log_events
+              LEFT JOIN log_actions USING (action_id)
+              WHERE info LIKE CONCAT('%', ?, '%') AND log_actions.name = 'USER_DEL'";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($needle));
+
+    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+        $name = sprintf('%s (%s)', $row['info'], _('gelöscht'));
+        $result[] = array($row['affected_range_id'], $name);
     }
 
-    return $users;
+    return $result;
 }
 
-function showlog_search_resource($needle) {
-    $db=new DB_Seminar();
-    $q="SELECT resource_id, name FROM resources_objects WHERE name like '%$needle%'";
-    $db->query($q);
-    $sems=array();
-    while ($db->next_record()) {
-        $sems[]=array($db->f("resource_id"),my_substr($db->f("name"),0,30));
+function showlog_search_resource($needle)
+{
+    $result = array();
+
+    $query = "SELECT resource_id, name FROM resources_objects WHERE name LIKE CONCAT('%', ?, '%')";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($needle));
+
+    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+        $result[] = array($row['resource_id'], my_substr($row['name'], 0, 30));
     }
-    return $sems;
-}
 
+    return $result;
+}

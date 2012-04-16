@@ -1,7 +1,7 @@
 <?
 # Lifter002: TODO
 # Lifter007: TODO
-# Lifter003: TODO
+# Lifter003: TEST
 # Lifter010: TODO
 /*
 user_visible.inc.php - Functions for determining a users visibility
@@ -38,13 +38,19 @@ define("VISIBILITY_EXTERN", 5);
  * @param   $user_id    user-id
  * @returns boolean true: user is visible, false: user is not visible
  */
-function get_visibility_by_id ($user_id) {
+function get_visibility_by_id ($user_id)
+{
     global $perm;
-    if ($perm->have_perm("root")) return true;
+    if ($perm->have_perm('root')) {
+        return true;
+    }
 
-    $db = new DB_Seminar("SELECT visible FROM auth_user_md5 WHERE user_id = '$user_id'");
-    $db->next_record();
-    return get_visibility_by_state($db->f("visible"), $user_id);
+    $query = "SELECT visible FROM auth_user_md5 WHERE user_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($user_id));
+    $visible = $statement->fetchColumn();
+
+    return get_visibility_by_state($visible, $user_id);
 }
 
 /*
@@ -53,13 +59,19 @@ function get_visibility_by_id ($user_id) {
  * @param   $username   username
  * @returns boolean true: user is visible, false: user is not visible
  */
-function get_visibility_by_username ($username) {
+function get_visibility_by_username ($username)
+{
     global $perm;
-    if ($perm->have_perm("root")) return true;
+    if ($perm->have_perm('root')) {
+        return true;
+    }
 
-    $db = new DB_Seminar("SELECT visible, user_id FROM auth_user_md5 WHERE username = '$username'");
-    $db->next_record();
-    return get_visibility_by_state($db->f("visible"), $db->f("user_id"));
+    $query = "SELECT visible, user_id FROM auth_user_md5 WHERE username = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($username));
+    $temp = $statement->fetch(PDO::FETCH_ASSOC);
+
+    return get_visibility_by_state($temp['visible'], $temp['user_id']);
 }
 
 /*
@@ -193,13 +205,20 @@ function first_decision($userid) {
     $user_language = getUserLanguagePath($userid);
 
     if ($vis_cmd == "apply" && ($vis_state == "global" || $vis_state == "yes" || $vis_state == "no")) {
-        $db = new DB_Seminar("UPDATE auth_user_md5 SET visible = '$vis_state' WHERE user_id = '$userid'");
+        $query = "UPDATE auth_user_md5 SET visible = ? WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($vis_state, $userid));
         return;
     }
 
-    $db = new DB_Seminar("SELECT visible FROM auth_user_md5 WHERE user_id = '$userid'");
-    $db->next_record();
-    if ($db->f("visible") != "unknown") return;
+    $query = "SELECT visible FROM auth_user_md5 WHERE user_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($userid));
+    $visiblity = $statement->fetchColumn();
+
+    if ($visiblity) {
+        return;
+    }
 
     PageLayout::setTitle(_('Bitte wählen Sie Ihren Sichtbarkeitsstatus aus!'));
     PageLayout::setTabNavigation(NULL);
@@ -222,9 +241,10 @@ function first_decision($userid) {
  * @return string User visibility.
  */
 function get_global_visibility_by_id($user_id) {
-    $stmt = DBManager::get()->query("SELECT visible FROM auth_user_md5 WHERE user_id='".$user_id."'");
-    $data = $stmt->fetch();
-    return $data['visible'];
+    $query = "SELECT visible FROM auth_user_md5 WHERE user_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($user_id));
+    return $statement->fetchColumn();
 }
 
 /**
@@ -261,18 +281,20 @@ function get_global_visibility_by_username($username) {
  */
 function get_local_visibility_by_id($user_id, $context, $return_user_perm=false) {
     global $NOT_HIDEABLE_FIELDS;
-    $stmt = DBManager::get()->query("SELECT a.`perms`, u.`".$context.
-        "` FROM `auth_user_md5` a LEFT JOIN `user_visibility` u ON ".
-        "(u.`user_id`=a.`user_id`) WHERE a.`user_id`='".$user_id."'");
-    $data = $stmt->fetch();
+    
+    $query = "SELECT a.perms, u.`{$context}`
+              FROM auth_user_md5 AS a
+              LEFT JOIN user_visibility AS u USING (user_id)
+              WHERE user_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($user_id));
+    $data = $statement->fetch(PDO::FETCH_ASSOC);
+
     if ($data[$context] === null) {
         $user_perm = $data['perm'];
         $data['perms'] = $user_perm;
-        if (get_config(strtoupper($context) . '_VISIBILITY_DEFAULT')) {
-            $data[$context] = true;
-        } else {
-            $data[$context] = false;
-        }
+
+        $data[$context] = get_config(strtoupper($context) . '_VISIBILITY_DEFAULT');
     }
     // Valid context given.
     if ($data[$context]) {
@@ -408,12 +430,15 @@ function is_element_visible_externally($owner_id, $owner_perm, $field_name, $ele
  * 
  * @return int Default visibility level.
  */
-function get_default_homepage_visibility($user_id) {
-    $result = DBManager::get()->query("SELECT `default_homepage_visibility` ".
-        "FROM `user_visibility` WHERE `user_id`='".$user_id."' LIMIT 1");
-    $data = $result->fetch();
-    if (intval($data['default_homepage_visibility']) != 0) {
-        $result = $data['default_homepage_visibility'];
+function get_default_homepage_visibility($user_id)
+{
+    $query = "SELECT default_homepage_visibility FROM user_visibility WHERE user_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($user_id));
+    $visibility = $statement->fetchColumn();
+
+    if (intval($visibility) != 0) {
+        $result = $visibility;
     } else {
         $result = @constant(Config::getInstance()->getValue('HOMEPAGE_VISIBILITY_DEFAULT'));
         if (!$result) {
@@ -439,20 +464,24 @@ function get_visible_email($user_id) {
     $result = '';
     // Email address is visible -> just show user's address.
     if (get_local_visibility_by_id($user_id, 'email')) {
-        $data = DBManager::get()->query("SELECT Email FROM auth_user_md5 WHERE user_id='".$user_id."'");
-        if ($current = $data->fetch()) {
-            $result = $current['Email'];
-        }
+        $query = "SELECT Email FROM auth_user_md5 WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($user_id));
+        $result = $statement->fetchColumn();
     // User's email is not visible
     } else if ($GLOBALS['perm']->get_perm($user_id) == 'dozent') {
         // bei Dozenten eine Institutsadresse verwenden
-        $data = DBManager::get()->query("SELECT i.email, u.externdefault 
-            FROM user_inst u JOIN Institute i USING (Institut_id) 
-            WHERE u.user_id='".$user_id."' AND u.inst_perms != 'user' 
-            ORDER BY u.priority");
-        while ($current = $data->fetch()) {
-            if (!$result || $current['externdefault']) {
-                $result = $current['email'];
+        $query = "SELECT i.email, u.externdefault
+                  FROM user_inst AS u
+                  JOIN Institute AS i USING (Institut_id)
+                  WHERE u.user_id = ? AND u.inst_perms != 'user'
+                  ORDER BY u.priority";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($user_id));
+
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            if (!$result || $row['externdefault']) {
+                $result = $row['email'];
             }
         }
     }
@@ -492,8 +521,12 @@ function set_homepage_element_visibility($user_id, $element_name, $visibility) {
     $visibilities = get_local_visibility_by_id($user_id, 'homepage');
     $visibilities = json_decode($visibilities, true);
     $visibilities[$element_name] = $visibility;
-    return DBManager::get()->exec("UPDATE user_visibility SET homepage='".
-        json_encode($visibilities)."' WHERE user_id='".$user_id."'");
+    
+    $query = "UPDATE user_visibility SET homepage = ? WHERE user_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array(
+        json_encode($visibilities),
+        $user_id,
+    ));
+    return $statement->rowCount();
 }
-
-?>

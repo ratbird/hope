@@ -415,9 +415,9 @@ if ($mcount > 3) {
     }
 } else { // nur einen Monat anzeigen
     if ($studipform) {
-        echo includeMonth($imt, URLHelper::getLink('', array('form_name' => $form_name, 'submit' => $submit, 'element_switch' => $element_switch, 'c' => $c, 'atime' => '')), 'NOKW', $js, $atime);
+        echo includeMonth($imt, URLHelper::getUrl('', array('form_name' => $form_name, 'submit' => $submit, 'element_switch' => $element_switch, 'c' => $c, 'atime' => '')), 'NOKW', $js, strtotime('noon', $atime));
     } else {
-        echo includeMonth($imt, URLHelper::getLink('', array('element_switch' => $element_switch, 'c' => $c, 'atime' => '')), 'NOKW', $js, $atime);
+        echo includeMonth($imt, URLHelper::getUrl('', array('element_switch' => $element_switch, 'c' => $c, 'atime' => '')), 'NOKW', $js, $atime);
     }
 }
 echo "</body>\n</html>";

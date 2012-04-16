@@ -106,7 +106,7 @@ function output_data($object_data, $output_mode = "file", $flush = false)
 */
 function export_range($range_id)
 {
-    global $db, $o_mode, $range_name,$ex_person_details,$persons, $ex_sem;
+    global $o_mode, $range_name,$ex_person_details,$persons, $ex_sem;
 
     $db=new DB_Seminar;
 
@@ -222,7 +222,7 @@ function export_range($range_id)
 */
 function export_inst($inst_id, $ex_sem_id = "all")
 {
-    global $db, $ex_type, $o_mode, $xml_file, $xml_names_inst, $xml_groupnames_inst, $INST_TYPE;
+    global $ex_type, $o_mode, $xml_file, $xml_names_inst, $xml_groupnames_inst, $INST_TYPE;
 
     $db=new DB_Seminar;
 
@@ -287,7 +287,7 @@ function export_inst($inst_id, $ex_sem_id = "all")
 */
 function export_sem($inst_id, $ex_sem_id = "all")
 {
-    global $db, $db2, $range_id, $xml_file, $o_mode, $xml_names_lecture, $xml_groupnames_lecture, $object_counter, $SEM_TYPE, $SEM_CLASS, $filter, $ex_sem, $ex_sem_class,$ex_person_details,$persons;
+    global $range_id, $xml_file, $o_mode, $xml_names_lecture, $xml_groupnames_lecture, $object_counter, $SEM_TYPE, $SEM_CLASS, $filter, $ex_sem, $ex_sem_class,$ex_person_details,$persons;
 
     $ex_only_homeinst = (int)$_REQUEST['ex_only_homeinst'];
 
@@ -478,7 +478,7 @@ function export_sem($inst_id, $ex_sem_id = "all")
 */
 function export_teilis($inst_id, $ex_sem_id = "no")
 {
-    global $db, $db2, $range_id, $xml_file, $o_mode, $xml_names_person, $xml_groupnames_person, $xml_names_studiengaenge, $xml_groupnames_studiengaenge, $object_counter, $filter, $SEM_CLASS, $SEM_TYPE, $SessSemName;
+    global $range_id, $xml_file, $o_mode, $xml_names_person, $xml_groupnames_person, $xml_names_studiengaenge, $xml_groupnames_studiengaenge, $object_counter, $filter, $SEM_CLASS, $SEM_TYPE, $SessSemName;
 
     $db=new DB_Seminar;
 
@@ -658,7 +658,7 @@ function export_teilis($inst_id, $ex_sem_id = "no")
 */
 function export_pers($inst_id)
 {
-    global $db, $db2, $range_id, $xml_file, $o_mode, $xml_names_person, $xml_groupnames_person, $object_counter, $filter;
+    global $range_id, $xml_file, $o_mode, $xml_names_person, $xml_groupnames_person, $object_counter, $filter;
 
     $db=new DB_Seminar;
 

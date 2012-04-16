@@ -85,8 +85,8 @@ if ($contact["view"]=="gruppen" && strlen($filter) < 4)
 
 // adding a contact via search
 
-if (Request::option('Freesearch')) {
-    $open = AddNewContact(get_userid(Request::option('Freesearch')));
+if (Request::get('Freesearch')) {
+    $open = AddNewContact(get_userid(Request::get('Freesearch')));
 }
 
 // deletel a contact

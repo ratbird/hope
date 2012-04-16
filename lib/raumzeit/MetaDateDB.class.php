@@ -1,8 +1,9 @@
 <?php
-# Lifter002: TODO
-# Lifter007: TODO
-# Lifter003: TODO
-# Lifter010: TODO
+# Lifter002: DONE - not applicable
+# Lifter007: TEST
+# Lifter003: TEST
+# Lifter010: DONE - not applicable
+
 // +--------------------------------------------------------------------------+
 // This file is part of Stud.IP
 // MetaDateDB.class.php
@@ -38,19 +39,17 @@ class MetaDateDB
 {
     function has_dates($metadate_id, $seminar_id, $filterStart = 0, $filterEnd = 0)
     {
-        $db = new DB_Seminar();
+        $query = "SELECT 1 FROM termine WHERE range_id = ? AND metadate_id = ?";
+        $parameters = array($seminar_id, $metadate_id);
 
-        if ($filterStart == 0) {
-            $query = "SELECT * FROM termine WHERE range_id = '$seminar_id' AND metadate_id = '$metadate_id'";
-        } else {
-            $query = "SELECT * FROM termine WHERE range_id = '$seminar_id' AND metadate_id = '$metadate_id' AND date >= $filterStart AND end_time <= $filterEnd";
+        if ($filterStart != 0) {
+            $query .= " AND date >= ? AND end_time <= ?";
+            array_push($parameters, $filterStart, $filterEnd);
         }
 
-        $db->query($query);
-        if ($db->next_record()) {
-            return true;
-        }
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute($parameters);
 
-        return false;
+        return (bool)$statement->fetchColumn();
     }
 }

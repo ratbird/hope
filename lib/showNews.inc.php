@@ -1,8 +1,8 @@
 <?php
 # Lifter001: DONE
-# Lifter002: TODO
+# Lifter002: TEST - the small chunks of html in show_news_item() are hard to get rid of [tlx]
 # Lifter007: TODO
-# Lifter003: TODO
+# Lifter003: TEST
 # Lifter010: TODO
 /**
  * showNews.inc.php - Anzeigefunktion fuer News
@@ -16,20 +16,19 @@
  * @author      Cornelis Kater <ckater@gwdg.de>
  * @author      Stefan Suchi <suchi@gmx.de>
  * @author      Michael Riehemann <michael.riehemann@uni-oldenburg.de>
+ * @author      Jan-Hendrik Willms <tleilax+studip@gmail.com>
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @package     news
  */
 
-use Studip\Button, Studip\LinkButton;
-
 require_once 'lib/functions.php';
-require_once ('lib/visual.inc.php');
-require_once ('lib/language.inc.php');
-require_once ('lib/object.inc.php');
-require_once ('lib/classes/StudipNews.class.php');
-require_once ('lib/classes/StudipComments.class.php');
-require_once ('lib/classes/Seminar.class.php');
+require_once 'lib/visual.inc.php';
+require_once 'lib/language.inc.php';
+require_once 'lib/object.inc.php';
+require_once 'lib/classes/StudipNews.class.php';
+require_once 'lib/classes/StudipComments.class.php';
+require_once 'lib/classes/Seminar.class.php';
 
 /**
  *
@@ -52,39 +51,6 @@ function process_news_commands(&$cmd_data)
     if ($_REQUEST['nclose'])  $cmd_data["nopen"]='';
     if ($_REQUEST['comnew']) $cmd_data["comnew"]=$_REQUEST['comnew'];
     if ($_REQUEST['comdel']) $cmd_data["comdel"]=$_REQUEST['comdel'];
-}
-
-/**
- *
- * @param unknown_type $num
- * @param unknown_type $authorname
- * @param unknown_type $authoruname
- * @param unknown_type $date
- * @param unknown_type $dellink
- * @param unknown_type $content
- */
-function commentbox($num, $authorname, $authoruname, $date, $dellink, $content)
-{
-    $out=array();
-    $out[]="<table role=\"article\" style=\"border: 1px black solid;\" cellpadding=3 cellspacing=0 width=100%>";
-    $out[].="<tr style=\"background:#ffffcc\">";
-    $out[].="<td align=left style=\"border-bottom: 1px black dotted\">";
-    $out[].="<font size=-1>#$num - ";
-    $out[].="<a href=\"".URLHelper::getLink("about.php?username=$authoruname")."\">".htmlReady($authorname)."</a> ";
-    $out[].=sprintf(_("hat am %s geschrieben:"),strftime('%x - %H:%M',$date));
-    $out[].="</font>";
-    $out[].="</td>";
-    $out[].="<td align=right style=\"border-bottom: 1px black dotted\">";
-    if ($dellink) {
-        $out[].="<a href=\"$dellink\">".Assets::img('icons/16/blue/trash.png')."</a>";
-    } else {
-        $out[]=" ";
-    }
-    $out[].="</td></tr>";
-    $out[].="<tr style=\"background:#ffffcc;\">";
-    $out[].="<td colspan=2><font size=-1>".formatReady($content)."<br> </font></td></tr>";
-    $out[].="</table>";
-    return implode("\n",$out);
 }
 
 /**
@@ -127,81 +93,53 @@ function show_news($range_id, $show_admin = FALSE, $limit = "", $open, $width = 
 {
     global $auth, $SessSemName;
 
-    $aktuell=time();
-
-    if (get_config('NEWS_RSS_EXPORT_ENABLE')){
-        $rss_id = StudipNews::GetRssIdFromRangeId($range_id);
-    }
-
-    if($show_admin && $_REQUEST['touch_news']){
-        StudipNews::TouchNews($_REQUEST['touch_news']);
+    if ($show_admin && $touch_id = Request::option('touch_news')) {
+        StudipNews::TouchNews($touch_id);
     }
 
     $news = StudipNews::GetNewsByRange($range_id, true);
 
-    if ($SessSemName[1] == $range_id){
-        $admin_link = ($SessSemName["class"]=="sem") ? "new_sem=TRUE&view=news_sem" :  "new_inst=TRUE&view=news_inst";
-    } else if ($range_id == $auth->auth['uid']){
-        $admin_link = "range_id=self";
-    } else if ($range_id == "studip"){
-        $admin_link = "range_id=studip";
-    } else if (isDeputyEditAboutActivated() && isDeputy($auth->auth["uid"], $range_id, true)) {
-        $admin_link = "range_id=".$range_id;
+    // Adjust news' open state
+    foreach ($news as $id => &$news_item) {
+        $news_item['open'] = ($id == $open);
     }
 
-    if (!empty($width)) {
-        $width = ' style="width: ' . $width . ';"';
+    if ($SessSemName[1] == $range_id) {
+        $admin_link = sprintf('new_%1$s=TRUE&view=news_%1$s', $SessSemName['class'] == 'sem' ? 'sem' : 'inst');
+    } else if ($range_id == $auth->auth['uid']) {
+        $admin_link = 'range_id=self';
+    } else if ($range_id == 'studip') {
+        $admin_link = 'range_id=studip';
+    } else if (isDeputyEditAboutActivated() && isDeputy($auth->auth['uid'], $range_id, true)) {
+        $admin_link = 'range_id=' . $range_id;
     }
+
+    // Leave if there are no news and we are not an admin
+    if (!count($news) && !$show_admin) {
+        return false;
+    }
+
+    SkipLinks::addIndex(_('Ankündigungen'), 'news_box');
 
     if (!count($news)) {
-        if ($show_admin) {
-            // set skip link
-            SkipLinks::addIndex(_("Ankündigungen"), 'news_box');
-
-            echo"\n<table id=\"news_box\" role=\"article\" class=\"index_box\"$width>";
-            echo"\n<tr><td class=\"topic\" colspan=\"2\"><img src=\"".Assets::image_path('icons/16/white/breaking-news.png')."\" ". tooltip(_("Newsticker. Klicken Sie rechts auf die Zahnräder, um neue News in diesen Bereich einzustellen. Klicken Sie auf die Pfeile am linken Rand, um den ganzen Nachrichtentext zu lesen.")) . "> <b> " . _("Ankündigungen") . "</b></td>";
-            echo"\n<td align=\"right\" class=\"topic\">";
-            echo "<a href=\"".URLHelper::getLink("admin_news.php?$admin_link&cmd=new_entry")."\"><img src=\"".Assets::image_path('icons/16/white/admin.png')."\" " . tooltip(_("Ankündigungen einstellen")) . "></a> ";
-            echo"</td></tr>";
-            echo "\n<tr><td class=\"steel1\" colspan=\"3\"><p class=\"info\">" . _("Es sind keine aktuellen Ankündigungen vorhanden. Um neue Ankündigungen zu erstellen, klicken Sie rechts auf die Zahnräder.") . "</p>";
-            echo "\n</td></tr></table>";
-            return TRUE;
-        } else {
-            return FALSE;
-        }
+        $template = $GLOBALS['template_factory']->open('news/list-empty');
+        $template->width      = $width;
+        $template->admin_link = $admin_link;
     } else {
-        // set skip link
-        SkipLinks::addIndex(_("Ankündigungen"), 'news_box');
+        $rss_id = get_config('NEWS_RSS_EXPORT_ENABLE')
+                ? StudipNews::GetRssIdFromRangeId($range_id)
+                : false;
 
-        $colspan=2;
-
-        //Ausgabe der Kopfzeile vor erster auszugebener Ankündigungen
-        echo"\n<table id=\"news_box\" role=\"article\" class=\"index_box\"$width>";
-        echo"\n<tr><td class=\"topic\"><img src=\"".Assets::image_path('icons/16/white/breaking-news.png')."\" ". tooltip(_("Newsticker. Klicken Sie rechts auf die Zahnräder, um neue Ankündigungen in diesen Bereich einzustellen. Klicken Sie auf die Pfeile am linken Rand, um den ganzen Nachrichtentext zu lesen.")) . "> <b>" . _("Ankündigungen") . "</b></td>";
-        if ($rss_id) {
-            $colspan++;
-            echo "\n<td align=\"right\" class=\"topic\">";
-            echo "\n<a href=\"rss.php?id=$rss_id\"><img src=\"".Assets::image_path('icons/16/white/rss.png')."\" " . tooltip(_("RSS-Feed")) . "></a>";
-            echo "\n</td>";
-        }
-        if ($show_admin) {
-            $colspan++;
-            echo "\n<td align=\"right\" class=\"topic\" width=\"1%\">";
-            echo " <a href=\"".URLHelper::getLink("admin_news.php?$admin_link&modus=admin&cmd=show")."\"><img src=\"".Assets::image_path('icons/16/white/admin.png')."\" " . tooltip(_("Ankündigungen bearbeiten")) . "></a> ";
-            echo "\n</td>";
-        }
-        echo "\n</tr>\n<tr><td class=\"blank\" colspan=\"$colspan\">";
-
-        // Ausgabe der Daten
-        foreach ($news as $id => $news_item) {
-            $news_item['open'] = ($id == $open);
-            echo '<div id="news_item_'.$id.'" class="news_item" role="article">';
-            echo show_news_item($news_item, $cmd_data, $show_admin, $admin_link);
-            echo '</div>';
-        }
-
+        $template = $GLOBALS['template_factory']->open('news/list');
+        $template->width      = $width;
+        $template->rss_id     = $rss_id;
+        $template->show_admin = $show_admin;
+        $template->admin_link = $admin_link;
+        $template->news       = $news;
+        $template->cmd_data   = $cmd_data;
     }
-    echo "</td></tr></table>";
+    echo $template->render();
+
     return true;
 }
 
@@ -212,66 +150,62 @@ function show_news($range_id, $show_admin = FALSE, $limit = "", $open, $width = 
  */
 function show_rss_news($range_id, $type)
 {
-    $RssTimeFmt = '%Y-%m-%dT%H:%MZ';
-    $last_changed = 0;
-    $item_url_fmt = "%s&nopen=%s";
+    $item_url_fmt = '%s&nopen=%s';
+
     switch ($type){
         case 'user':
-            $studip_url = $GLOBALS['ABSOLUTE_URI_STUDIP'] . "about.php?again=yes&username=" . get_username($range_id);
+            $studip_url = $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'about.php?again=yes&username=' . get_username($range_id);
             $title = get_fullname($range_id) . ' (Stud.IP - ' . $GLOBALS['UNI_NAME_CLEAN'] . ')';
-            $RssChannelDesc = _("Persönliche Neuigkeiten") . ' ' . $title;
+            $description = _('Persönliche Neuigkeiten') . ' ' . $title;
         break;
         case 'sem':
-            $studip_url = $GLOBALS['ABSOLUTE_URI_STUDIP'] . "seminar_main.php?auswahl=" . $range_id;
+            $studip_url = $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'seminar_main.php?auswahl=' . $range_id;
             $sem_obj = Seminar::GetInstance($range_id);
-            if ($sem_obj->read_level > 0) $studip_url .= "&again=yes";
+            if ($sem_obj->read_level > 0) $studip_url .= '&again=yes';
             $title = $sem_obj->getName() . ' (Stud.IP - ' . $GLOBALS['UNI_NAME_CLEAN'] . ')';
-            $RssChannelDesc = _("Neuigkeiten der Veranstaltung") . ' ' . $title;
+            $description = _('Neuigkeiten der Veranstaltung') . ' ' . $title;
 
         break;
         case 'inst':
-            $studip_url = $GLOBALS['ABSOLUTE_URI_STUDIP'] . "institut_main.php?auswahl=" . $range_id;
+            $studip_url = $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'institut_main.php?auswahl=' . $range_id;
             $object_name = get_object_name($range_id, $type);
             $title = $object_name['name'] . ' (Stud.IP - ' . $GLOBALS['UNI_NAME_CLEAN'] . ')';
-            $RssChannelDesc = _("Neuigkeiten der Einrichtung") . ' ' . $title;
+            $description = _('Neuigkeiten der Einrichtung') . ' ' . $title;
         break;
         case 'global':
-            $studip_url = $GLOBALS['ABSOLUTE_URI_STUDIP'] . "index.php?again=yes";
+            $studip_url = $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'index.php?again=yes';
             $item_url_fmt = $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'dispatch.php/news/get_news/%2$s';
             $title = 'Stud.IP - ' . $GLOBALS['UNI_NAME_CLEAN'];
-            $RssChannelDesc = _("Allgemeine Neuigkeiten") . ' ' . $title;
+            $description = _('Allgemeine Neuigkeiten') . ' ' . $title;
         break;
-
     }
 
-    foreach(StudipNews::GetNewsByRange($range_id, true) as  $news_id => $details) {
-        list ($body,$admin_msg) = explode("<admin_msg>",$details["body"]);
-        $items .= "<item>
-        <title>".htmlspecialchars(studip_utf8encode($details["topic"]))."</title>
-        <link>".htmlspecialchars(studip_utf8encode(sprintf($item_url_fmt, $studip_url, $news_id)))."</link>";
-        $items .= "<description>"."<![CDATA[".studip_utf8encode(formatready($body,1,1))."]]>"."</description>
-        <dc:contributor>"."<![CDATA[".studip_utf8encode($details['author'])."]]>"."</dc:contributor>
-        <dc:date>".gmstrftime($RssTimeFmt,($details['date'] > $details['chdate'] ? $details['date'] : $details['chdate']))."</dc:date>
-        <pubDate>".date("r",($details['date'] > $details['chdate'] ? $details['date'] : $details['chdate']))."</pubDate>
-        </item>\n";
-        if ($last_changed < $details['chdate']) $last_changed = $details['chdate'];
+    $items = StudipNews::GetNewsByRange($range_id, true);
+    $last_changed = 0;
+
+    foreach ($items as &$item) {
+        if ($last_changed < $item['chdate']) {
+            $last_changed = $item['chdate'];
+        }
+
+        if ($item['date'] < $item['chdate']) {
+            $item['date'] = $item['chdate'];
+        }
+        list($body, $admin_msg) = explode('<admin_msg>', $item['body']);
+        $item['body'] = $body;
     }
-    header("Content-type: text/xml; charset=utf-8");
-    echo "<?xml version=\"1.0\"?>
-    <rss version=\"2.0\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\">
-    <channel>
-    <title>".htmlspecialchars(studip_utf8encode($title))."</title>
-    <link>".htmlspecialchars(studip_utf8encode($studip_url))."</link>
-    <image>
-    <url>".Assets::image_path('logos/studipklein.gif')."</url>
-    <title>".htmlspecialchars(studip_utf8encode($title))."</title>
-    <link>".htmlspecialchars(studip_utf8encode($studip_url))."</link>
-    </image>
-    <description>".htmlspecialchars(studip_utf8encode($RssChannelDesc))."</description>
-    <lastBuildDate>".date("r",$last_changed)."</lastBuildDate>
-    <generator>". htmlspecialchars(studip_utf8encode('Stud.IP - ' . $GLOBALS['SOFTWARE_VERSION'])) . "</generator>";
-    echo chr(10).$items;
-    echo "</channel>\n</rss>";
+
+    header('Content-type: text/xml; charset=utf-8');
+
+    $template = $GLOBALS['template_factory']->open('news/rss-feed');
+    $template->items        = $items;
+    $template->title        = $title;
+    $template->studip_url   = $studip_url;
+    $template->description  = $description;
+    $template->last_changed = $last_changed;
+    $template->item_url_fmt = $item_url_fmt;
+    echo $template->render();
+
     return true;
 }
 
@@ -284,84 +218,51 @@ function show_rss_news($range_id, $type)
  */
 function show_news_item($news_item, $cmd_data, $show_admin, $admin_link)
 {
-  global $auth, $_fullname_sql;
+    global $auth;
 
-  $id = $news_item['news_id'];
+    $id = $news_item['news_id'];
 
-  $tempnew = (($news_item['chdate'] >= object_get_visit($id,'news',false,false))
-             && ($news_item['user_id'] != $auth->auth["uid"]));
+    $tempnew = (($news_item['chdate'] >= object_get_visit($id, 'news', false, false))
+             && ($news_item['user_id'] != $auth->auth['uid']));
 
-  if ($tempnew && $_REQUEST["new_news"])
-    $news_item["open"] = $tempnew;
+    if ($tempnew && $_REQUEST["new_news"]) {
+        $news_item['open'] = $tempnew;
+    }
 
-  ob_start();
+    $titel = htmlReady(mila($news_item['topic']));
 
-  $tmp_titel=htmlReady(mila($news_item['topic']));
-  $titel='';
+    if ($news_item['open']) {
+        $link = '?nclose=true';
 
-  if ($news_item['open']) {
-    $link = "?nclose=true";
+        if ($cmd_data['comopen'] != $id) {
+            $titel .= '<a name="anker"></a>';
+        }
 
-    if ($cmd_data['comopen'] != $id)
-      $titel = $tmp_titel."<a name=\"anker\"> </a>";
-    else
-      $titel = $tmp_titel;
+        if ($news_item['user_id'] != $auth->auth['uid']) {
+            object_add_view($id);  //Counter for news - not my own
+        }
 
-    if ($news_item['user_id'] != $auth->auth["uid"])
-      object_add_view($id);  //Counter for news - not my own
+        object_set_visit($id, 'news'); //and, set a visittime
+    } else {
+        $link = '?nopen=' . $id;
+    }
 
-    object_set_visit($id, "news"); //and, set a visittime
-  } else {
-    $link = "?nopen=".$id;
-    $titel=$tmp_titel;
-  }
+    $user = User::find($news_item['user_id']);
 
-  $query = "SELECT username, {$_fullname_sql['full']} AS fullname
-            FROM auth_user_md5
-            LEFT JOIN user_info USING (user_id)
-            WHERE user_id = ?";
-  $statement = DBManager::get()->prepare($query);
-  $statement->execute(array($news_item['user_id']));
-  $user = $statement->fetch(PDO::FETCH_ASSOC);
+    $link .= '&username=' . $user->username . '#anker';
+    $titel = sprintf('<a href="%s" onclick="STUDIP.News.openclose(\'%s\', \'%s\'); return false;" class="tree">%s</a>',
+                     URLHelper::getLink($link), $id, $admin_link, $titel);
 
-  $link .= "&username=".$user['username'] . "#anker";
-  $zusatz="<a href=\"".URLHelper::getLink("about.php?username=".$user['username'])."\"><font size=-1 color=\"#333399\">".htmlReady($user['fullname'])."</font></a><font size=-1> ".date("d.m.Y",$news_item['date'])." | <font color=\"#005500\">".object_return_views($id)."<font color=\"black\"> |</font>";
+    $template = $GLOBALS['template_factory']->open('news/news');
+    $template->news_item  = $news_item;
+    $template->icon       = Assets::img('icons/16/grey/news.png', array('class' => 'text-bottom'));
+    $template->titel      = $titel;
+    $template->zusatz     = $GLOBALS['template_factory']->render('news/zusatz', compact('user', 'news_item'));
+    $template->cmd_data   = $cmd_data;
+    $template->show_admin = $show_admin;
+    $template->admin_link = $admin_link;
 
-  $unamelink = '&username='.$user['username'];
-  $uname = $user['username'];
-
-  if ($news_item['allow_comments'] == 1) {
-    $numcomments = StudipComments::NumCommentsForObject($id);
-    $numnewcomments = StudipComments::NumCommentsForObjectSinceLastVisit($id, object_get_visit($id,'news',false,false), $auth->auth['uid']);
-    $zusatz .= " <font ".($numnewcomments ? tooltip(sprintf(_("%s neue(r) Kommentar(e)"),$numnewcomments),false) : '')." color=\"".($numnewcomments ? 'red' : '#aaaa66')."\">".$numcomments."</font><font color=\"black\"> |</font>";
-  }
-
-  $open_or_close = $news_item['open'] ? 'close' : 'open';
-  $ajax = "STUDIP.News.openclose('$id', '$admin_link')";
-  $link=URLHelper::getLink($link);
-  $link .= '" onClick="' . $ajax . ';return false;';
-
-  if ($link)
-    $titel = "<a href=\"$link\" class=\"tree\" >".$titel."</a>";
-
-  echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" align=\"center\"><tr>";
-
-  $icon = Assets::img('icons/16/grey/news.png', array('class' => 'text-bottom'));
-
-  if ($news_item['open'])
-    printhead(0, 0, $link, "open", $tempnew, $icon, $titel, $zusatz, $news_item['date']);
-  else
-    printhead(0, 0, $link, "close", $tempnew, $icon, $titel, $zusatz, $news_item['date']);
-
-  echo "</tr></table>   ";
-
-  echo "<div id=\"news_item_".$id."_content\"".($news_item['open'] ? "" : " style=\"display:none\"").">";
-  if ($news_item['open']) {
-    echo show_news_item_content($news_item, $cmd_data, $show_admin, $admin_link);
-  }
-  echo "</div>";
-
-  return ob_get_clean();
+    return $template->render();
 }
 
 /**
@@ -373,117 +274,55 @@ function show_news_item($news_item, $cmd_data, $show_admin, $admin_link)
  */
 function show_news_item_content($news_item, $cmd_data, $show_admin, $admin_link)
 {
-    global $auth, $_fullname_sql;
+    global $auth;
 
     $id = $news_item['news_id'];
 
-    $tempnew = (($news_item['chdate'] >= object_get_visit($id,'news',false,false))
-    && ($news_item['user_id'] != $auth->auth["uid"]));
+    $user = User::find($news_item['user_id']);
 
-    if ($tempnew && $_REQUEST["new_news"])
-    $news_item["open"] = $tempnew;
-    
-    $query = "SELECT username, {$_fullname_sql['full']} AS fullname
-              FROM auth_user_md5
-              LEFT JOIN user_info USING (user_id)
-              WHERE user_id = ?";
-    $statement = DBManager::get()->prepare($query);
-    $statement->execute(array($news_item['user_id']));
-    $user = $statement->fetch(PDO::FETCH_ASSOC);
+    $unamelink = '&username='.$user->username;
+    $uname = $user->username;
 
-    $link .= "&username=".$user['username'] . "#anker";
-    $zusatz="<a href=\"".URLHelper::getLink("about.php?username=".$user['username'])."\"><font size=-1 color=\"#333399\">".htmlReady($user['fullname'])."</font></a><font size=-1> ".date("d.m.Y",$news_item['date'])." | <font color=\"#005500\">".object_return_views($id)."<font color=\"black\"> |</font>";
+    list($content, $admin_msg) = explode('<admin_msg>', $news_item['body']);
 
-    $unamelink = '&username='.$user['username'];
-    $uname = $user['username'];
+    if (!$content) {
+        $content = _('Keine Beschreibung vorhanden.');
+    }
 
-    list($content, $admin_msg) = explode("<admin_msg>", $news_item['body']);
-    $content = formatReady($content);
-
-    if ($news_item['chdate_uid']){
+    if ($news_item['chdate_uid']) {
         $admin_msg = StudipNews::GetAdminMsg($news_item['chdate_uid'], $news_item['chdate']);
-    }
-
-    if ($admin_msg) {
-        $content.="<br><br><i>".htmlReady($admin_msg)."</i>";
-    }
-
-    if (!$content)
-      $content=_("Keine Beschreibung vorhanden.") . "\n";
-    else
-      $content.="<br>";
-
-    if ($auth->auth["uid"] == $news_item['user_id'] || $show_admin) {
-        $edit= LinkButton::create(_('Bearbeiten'), URLHelper::getURL("admin_news.php?cmd=edit&edit_news=".$id."&$admin_link"));
-        $edit.= LinkButton::create(_('Aktualisieren'), URLHelper::getURL("?touch_news=".$id."#anker"));
-        if ($auth->auth["uid"] == $news_item['user_id'] || $GLOBALS['perm']->have_perm('admin')) {
-            $edit.= LinkButton::create(_('Löschen'), URLHelper::getURL("admin_news.php?cmd=kill&kill_news=".$id."&$admin_link"));
-        }
     }
 
     //
     // Kommentare
     //
-    if ($news_item['allow_comments'] == 1) {
-        $showcomments = 0;
-        if ($cmd_data["comsubmit"] == $id) {
-            if (trim($_REQUEST['comment_content'])) {
+    if ($news_item['allow_comments']) {
+        $showcomments = $cmd_data['comopen'] == $id;
+
+        if ($cmd_data['comsubmit'] == $id) {
+            $comment_content = trim(Request::get('comment_content'));
+            if ($comment_content) {
                 $comment = new StudipComments();
                 $comment->setValue('object_id', $id);
                 $comment->setValue('user_id', $auth->auth['uid']);
-                $comment->setValue('content', stripslashes(trim($_REQUEST['comment_content'])));
+                $comment->setValue('content', stripslashes($comment_content));
                 $comment->store();
             }
             $showcomments = 1;
-        } else if ($cmd_data["comdelnews"] == $id) {
-            delete_comment($cmd_data["comdel"]);
+        } else if ($cmd_data['comdelnews'] == $id) {
+            delete_comment($cmd_data['comdel']);
             $showcomments = 1;
         }
-
-        if ($showcomments || $cmd_data["comopen"] == $id) {
-            $comments = "\n<table border=\"0\" cellpadding=\"2\" cellspacing=\"0\" width=\"90%\" align=\"center\" style=\"margin-top:10px\">";
-            $comments .= "<tr align=center><td><font size=-1><b>"._("Kommentare")."<b></font><a name=\"anker\"> </a></td></tr>";
-            $c=StudipComments::GetCommentsForObject($id);
-            if (count($c)) {
-                $num = 0;
-                foreach ($c as $comment) {
-                    $comments.="<tr><td>";
-                    if ($show_admin) {
-                        $dellink = URLHelper::getLink("?comdel=".$comment[4]."&comdelnews=".$id."#anker");
-                    } else {
-                        $dellink = NULL;
-                    }
-
-                    $comments .= commentbox(++$num, $comment[1], $comment[2], $comment[3], $dellink, $comment[0]);
-                    $comments .= "</td></tr>";
-                }
-            }
-            $comments .= "</table>";
-            $content  .= $comments;
-            $formular=" <br>\n<form action=\"".URLHelper::getLink("#anker")."\" method=\"POST\">";
-            $formular.= CSRFProtection::tokenTag();
-            $formular.="<input type=hidden name=\"comsubmit\" value=\"".$id."\">";
-            $formular.="<input type=hidden name=\"username\" value=\"$uname\">";
-            $formular.="<p align=\"center\">"._("Geben Sie hier Ihren Kommentar ein!")."</p>";
-            $formular.="<div align=\"center\">";
-            $formular.="<textarea name=\"comment_content\" style=\"width:70%\" rows=8 cols=38 wrap=virtual></textarea>";
-            $formular.="<br><br>";
-            $formular.=Button::createAccept(_('Absenden'));
-
-            $help_url = format_help_url("Basis.VerschiedenesFormat");
-            $formular.="   <a href=\"".URLHelper::getLink('dispatch.php/smileys')."\" target=\"_blank\"><font size=\"-1\">"._("Smileys")."</a>  <a href=\"".$help_url."\" target=\"_blank\"><font size=\"-1\">"._("Formatierungshilfen")."</a><br><br>";
-            $formular.="</div></form><p> </p>";
-            $content.=$formular;
-        } else {
-            $numcomments = StudipComments::NumCommentsForObject($id);
-            $cmdline = "<p align=center><font size=-1><a href=\"".URLHelper::getLink("?foo=".rand()."&comopen=".$id.$unamelink."#anker")."\">"
-                        .sprintf(_("Kommentare lesen (%s) / Kommentar schreiben"), $numcomments)."</a></font></p>";
-            $content .= $cmdline;
-        }
     }
-    ob_start();
-    echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" align=\"center\"><tr>";
-    printcontent(0,0, $content, $edit);
-    echo "</tr></table>";
-    return ob_get_clean();
+
+    $template = $GLOBALS['template_factory']->open('news/news-content');
+    $template->news          = $news_item;
+    $template->admin_link    = $admin_link;
+    $template->may_edit      = ($auth->auth['uid'] == $news_item['user_id'] || $show_admin);
+    $template->content       = $content;
+    $template->show_comments = $showcomments;
+    $template->show_admin    = $show_admin;
+    $template->admin_msg     = $admin_msg;
+
+    return $template->render();
 }

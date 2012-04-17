@@ -127,8 +127,6 @@ function show_news($range_id, $show_admin = FALSE, $limit = "", $open, $width = 
 {
     global $auth, $SessSemName;
 
-    $db2 = new DB_Seminar;
-
     $aktuell=time();
 
     if (get_config('NEWS_RSS_EXPORT_ENABLE')){
@@ -288,8 +286,6 @@ function show_news_item($news_item, $cmd_data, $show_admin, $admin_link)
 {
   global $auth, $_fullname_sql;
 
-  $db2 = new DB_Seminar();
-
   $id = $news_item['news_id'];
 
   $tempnew = (($news_item['chdate'] >= object_get_visit($id,'news',false,false))
@@ -320,15 +316,19 @@ function show_news_item($news_item, $cmd_data, $show_admin, $admin_link)
     $titel=$tmp_titel;
   }
 
+  $query = "SELECT username, {$_fullname_sql['full']} AS fullname
+            FROM auth_user_md5
+            LEFT JOIN user_info USING (user_id)
+            WHERE user_id = ?";
+  $statement = DBManager::get()->prepare($query);
+  $statement->execute(array($news_item['user_id']));
+  $user = $statement->fetch(PDO::FETCH_ASSOC);
 
-  $db2->query("SELECT username, " . $_fullname_sql['full'] ." AS fullname FROM auth_user_md5 a LEFT JOIN user_info USING (user_id) WHERE a.user_id='".$news_item['user_id']."'");
-  $db2->next_record();
+  $link .= "&username=".$user['username'] . "#anker";
+  $zusatz="<a href=\"".URLHelper::getLink("about.php?username=".$user['username'])."\"><font size=-1 color=\"#333399\">".htmlReady($user['fullname'])."</font></a><font size=-1> ".date("d.m.Y",$news_item['date'])." | <font color=\"#005500\">".object_return_views($id)."<font color=\"black\"> |</font>";
 
-  $link .= "&username=".$db2->f("username") . "#anker";
-  $zusatz="<a href=\"".URLHelper::getLink("about.php?username=".$db2->f("username"))."\"><font size=-1 color=\"#333399\">".htmlReady($db2->f("fullname"))."</font></a><font size=-1> ".date("d.m.Y",$news_item['date'])." | <font color=\"#005500\">".object_return_views($id)."<font color=\"black\"> |</font>";
-
-  $unamelink = '&username='.$db2->f('username');
-  $uname = $db2->f('username');
+  $unamelink = '&username='.$user['username'];
+  $uname = $user['username'];
 
   if ($news_item['allow_comments'] == 1) {
     $numcomments = StudipComments::NumCommentsForObject($id);
@@ -375,8 +375,6 @@ function show_news_item_content($news_item, $cmd_data, $show_admin, $admin_link)
 {
     global $auth, $_fullname_sql;
 
-    $db2 = new DB_Seminar();
-
     $id = $news_item['news_id'];
 
     $tempnew = (($news_item['chdate'] >= object_get_visit($id,'news',false,false))
@@ -384,14 +382,20 @@ function show_news_item_content($news_item, $cmd_data, $show_admin, $admin_link)
 
     if ($tempnew && $_REQUEST["new_news"])
     $news_item["open"] = $tempnew;
-    $db2->query("SELECT username, " . $_fullname_sql['full'] ." AS fullname FROM auth_user_md5 a LEFT JOIN user_info USING (user_id) WHERE a.user_id='".$news_item['user_id']."'");
-    $db2->next_record();
+    
+    $query = "SELECT username, {$_fullname_sql['full']} AS fullname
+              FROM auth_user_md5
+              LEFT JOIN user_info USING (user_id)
+              WHERE user_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($news_item['user_id']));
+    $user = $statement->fetch(PDO::FETCH_ASSOC);
 
-    $link .= "&username=".$db2->f("username") . "#anker";
-    $zusatz="<a href=\"".URLHelper::getLink("about.php?username=".$db2->f("username"))."\"><font size=-1 color=\"#333399\">".htmlReady($db2->f("fullname"))."</font></a><font size=-1> ".date("d.m.Y",$news_item['date'])." | <font color=\"#005500\">".object_return_views($id)."<font color=\"black\"> |</font>";
+    $link .= "&username=".$user['username'] . "#anker";
+    $zusatz="<a href=\"".URLHelper::getLink("about.php?username=".$user['username'])."\"><font size=-1 color=\"#333399\">".htmlReady($user['fullname'])."</font></a><font size=-1> ".date("d.m.Y",$news_item['date'])." | <font color=\"#005500\">".object_return_views($id)."<font color=\"black\"> |</font>";
 
-    $unamelink = '&username='.$db2->f('username');
-    $uname = $db2->f('username');
+    $unamelink = '&username='.$user['username'];
+    $uname = $user['username'];
 
     list($content, $admin_msg) = explode("<admin_msg>", $news_item['body']);
     $content = formatReady($content);

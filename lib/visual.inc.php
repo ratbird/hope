@@ -1046,6 +1046,22 @@ function tooltip2($text, $with_alt = TRUE, $with_popup = FALSE) {
 }
 
 /**
+ * returns a html-snippet with an icon and a tooltip on it
+ * 
+ * @param type $text 
+ */
+function tooltipIcon($text)
+{
+    // prepare text
+    $text = preg_replace("/(\n\r|\r\n|\n|\r)/", " ", $text);
+    $text = htmlReady($text);
+    
+    // render tooltip
+    $template = $GLOBALS['template_factory']->open('shared/tooltip');
+    return $template->render(compact('text'));
+}
+
+/**
 * detects internal links in a given string and convert used domain to the domain
 * actually used (only necessary if more than one domain exists)
 *

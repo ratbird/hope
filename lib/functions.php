@@ -101,7 +101,6 @@ function get_object_name($range_id, $object_type)
 {
     global $SEM_TYPE,$INST_TYPE, $SEM_TYPE_MISC_NAME;
 
-    $db = new DB_Seminar();
     if ($object_type == "sem") {
         $query = "SELECT status, Name FROM seminare WHERE Seminar_id = ?";
         $statement = DBManager::get()->prepare($query);

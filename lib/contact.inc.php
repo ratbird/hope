@@ -814,7 +814,6 @@ function PrintAllContact($filter="")
 {   global $user, $open, $filter, $contact, $auth;
     $i = 1;
     $owner_id = $user->id;
-    $db=new DB_Seminar;
 
     if (in_array($contact['view'], words('alpha gruppen')) && $filter == '') {
         $query = "SELECT contact_id

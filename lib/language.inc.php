@@ -1,8 +1,8 @@
 <?
-# Lifter002: TODO
+# Lifter002: DONE - not applicable
 # Lifter007: TODO
-# Lifter003: TODO
-# Lifter010: TODO
+# Lifter003: TEST
+# Lifter010: DONE - not applicable
 /**
 * language functions
 *
@@ -133,6 +133,27 @@ function makeButton($name, $mode = "img", $tooltip = false, $inputname = false) 
 
 
 /**
+ * retrieves preferred language of user from database, falls back to default
+ * language
+ *
+ * @access   public
+ * @param    string  the user_id of the user in question
+ * @return   string  the preferred language of the user or the default language
+ */
+function getUserLanguage($uid)
+{
+    global $DEFAULT_LANGUAGE;
+
+    // try to get preferred language from user, fallback to default
+    $query = "SELECT preferred_language FROM user_info WHERE user_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($uid));
+    $language = $statement->fetchColumn() ?: $DEFAULT_LANGUAGE;
+
+    return $language;
+}
+
+/**
 * retrieves path to preferred language of user from database
 *
 * Can be used for sending language specific mails to other users.
@@ -141,24 +162,13 @@ function makeButton($name, $mode = "img", $tooltip = false, $inputname = false) 
 * @param        string  the user_id of the recipient (function will try to get preferred language from database)
 * @return       string  the path to the language files, given in "en"-style
 */
-function getUserLanguagePath($uid) {
-    global $INSTALLED_LANGUAGES, $DEFAULT_LANGUAGE;
-    // try to get preferred language from user
-    $db=new DB_Seminar;
-    $db->query("SELECT preferred_language FROM user_info WHERE user_id='$uid'");
-    if ($db->next_record()) {
-        if ($db->f("preferred_language") != NULL && $db->f("preferred_language") != "") {
-            // we found a stored setting for preferred language
-            $temp_language = $db->f("preferred_language");
-        } else {
-            // no preferred language, use system default
-            $temp_language = $DEFAULT_LANGUAGE;
-        }
-    } else {
-        // no preferred language, use system default
-        $temp_language = $DEFAULT_LANGUAGE;
-    }
-    return $INSTALLED_LANGUAGES[$temp_language]["path"];
+function getUserLanguagePath($uid)
+{
+    global $INSTALLED_LANGUAGES;
+
+    $language = getUserLanguage($uid);
+
+    return $INSTALLED_LANGUAGES[$language]['path'];
 }
 
 /**
@@ -176,21 +186,7 @@ function setTempLanguage ($uid = FALSE, $temp_language = "") {
     global $_language_domain, $DEFAULT_LANGUAGE;
 
     if ($uid) {
-        // try to get preferred language from user
-        $db=new DB_Seminar;
-        $db->query("SELECT preferred_language FROM user_info WHERE user_id='$uid'");
-        if ($db->next_record()) {
-            if ($db->f("preferred_language") != NULL && $db->f("preferred_language") != "") {
-                // we found a stored setting for preferred language
-                $temp_language = $db->f("preferred_language");
-            } else {
-                // no preferred language, use system default
-                $temp_language = $DEFAULT_LANGUAGE;
-            }
-        } else {
-            // should never be reached, best we can do is to set system default
-            $temp_language = $DEFAULT_LANGUAGE;
-        }
+        $temp_language = getUserLanguage($uid);
     }
 
     if ($temp_language == "") {

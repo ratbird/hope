@@ -89,6 +89,7 @@ use Studip\Button, Studip\LinkButton;
             </tr>
         <? endforeach; ?>
         </tbody>
+    <? if (!empty($feeds)): ?>
         <tfoot>
             <tr>
                 <td colspan="4" style="text-align: center;">
@@ -96,5 +97,6 @@ use Studip\Button, Studip\LinkButton;
                 </td>
             </tr>
         </tfoot>
+    <? endif; ?>
     </table>
 </form>

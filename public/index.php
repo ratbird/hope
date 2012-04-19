@@ -225,23 +225,23 @@ foreach ($portalplugins as $portalplugin) {
 page_close();
 
 if (is_object($user) && $user->id != 'nobody') {
-    $query = "SELECT url, name, fetch_title FROM rss_feeds "
-           . "WHERE user_id = ? AND hidden = 0 AND name != '' AND url != '' "
-           . "ORDER BY priority";
-    $statement = DBManager::get()->prepare($query);
-    $statement->execute(array($auth->auth['uid']));
-    
-    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-        $feed = new RSSFeed($row['url']);
-        if ($row['fetch_title'] && $feed->ausgabe->channel['title']) {
-            $feedtitle = $feed->ausgabe->channel['title'];
-        } else {
-            $feedtitle = $row['name'];
+    $feeds = RSSFeed::loadByUserId($user->id);
+
+    foreach ($feeds as $feed) {
+        if ($feed->hidden) {
+            continue;
         }
 
-        ob_start();
-        $feed->rssfeed_start();
-        echo $layout->render(array('title' => $feedtitle, 'icon_url' => 'icons/16/white/rss.png', 'admin_url' => 'edit_about.php?view=rss', 'content_for_layout' => ob_get_clean()));
+        $limit = Request::option('more') == $feed->id
+               ? 0
+               : RSSFeed::getLimit();
+
+        echo $layout->render(array(
+            'content_for_layout' => $feed->render($limit),
+            'title'     => $feed->name,
+            'icon_url'  => 'icons/16/white/rss',
+            'admin_url' => 'dispatch.php/admin/rss_feeds',
+        ));
     }
 }
 

@@ -57,7 +57,7 @@ class ToolsNavigation extends Navigation
         }
 
         // rss feeds
-        $navigation = new Navigation(_('RSS-Feeds'), 'edit_about.php', array('view' => 'rss'));
+        $navigation = new Navigation(_('RSS-Feeds'), 'dispatch.php/admin/rss_feeds');
         $this->addSubNavigation('rss', $navigation);
 
         // literature

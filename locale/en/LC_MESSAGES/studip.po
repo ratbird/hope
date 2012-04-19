@@ -19076,8 +19076,8 @@ msgstr "Please enter a valid URL!"
 
 #
 #: ../lib/classes/RSSFeed.class.php:97
-msgid "Zeitüberschreitung beim Laden von "
-msgstr "Timeout while loading "
+msgid "Zeitüberschreitung beim Laden von %s..."
+msgstr "Timeout while loading %s..."
 
 #: ../lib/classes/Seminar.class.php:222
 #, php-format
@@ -33163,9 +33163,9 @@ msgstr "No entries in this area"
 #: ../lib/my_rss_feed.inc.php:47
 msgid ""
 "Hier können Sie beliebige eigene RSS-Feeds einbinden. Diese RSS-Feeds "
-"erscheinen auf Ihrer pers&ouml;nlichen Startseite. Mit den Pfeilsymbolen "
-"k&ouml;nnen Sie die Reihenfolge, in der die RSS-Feeds angezeigt werden, "
-"ver&auml;ndern."
+"erscheinen auf Ihrer persönlichen Startseite. Mit den Pfeilsymbolen "
+"können Sie die Reihenfolge, in der die RSS-Feeds angezeigt werden, "
+"verändern."
 msgstr ""
 "Here, you can integrate any personal RSS feeds. These RSS feeds will be "
 "displayed on your personal start page. By clicking on the arrow icons you "
@@ -33174,8 +33174,8 @@ msgstr ""
 #
 #: ../lib/my_rss_feed.inc.php:49
 msgid ""
-"<b>Achtung:</b> Je mehr RSS-Feeds Sie definieren, desto l&auml;nger ist die "
-"Ladezeit der Startseite f&uuml;r Sie!"
+"<b>Achtung:</b> Je mehr RSS-Feeds Sie definieren, desto länger ist die "
+"Ladezeit der Startseite für Sie!"
 msgstr ""
 "<B>Attention:</B> The more RSS feeds you define the longer loading of your "
 "start page will take!"
@@ -33189,11 +33189,11 @@ msgid "RSS-Feed"
 msgstr "RSS feed"
 
 #: ../lib/my_rss_feed.inc.php:57
-msgid "Neu anlegen"
-msgstr "Create"
+msgid "RSS-Feed neu anlegen"
+msgstr "Add new rss feed"
 
 #: ../lib/my_rss_feed.inc.php:70
-msgid "Name des Feeds holen"
+msgid "Namen des Feeds holen"
 msgstr "Get name of the feed"
 
 #: ../lib/my_rss_feed.inc.php:73
@@ -33221,11 +33221,11 @@ msgid "Anlegen fehlgeschlagen"
 msgstr "Creation failed."
 
 #: ../lib/my_rss_feed.inc.php:122
-msgid "RSS-Feed gel&ouml;scht!"
+msgid "RSS-Feed gelöscht!"
 msgstr "RSS feed deleted!"
 
 #: ../lib/my_rss_feed.inc.php:143
-msgid "RSS-Feeds ge&auml;ndert!"
+msgid "RSS-Feeds geändert!"
 msgstr "RSS feed changed!"
 
 #: ../lib/my_rss_feed.inc.php:157

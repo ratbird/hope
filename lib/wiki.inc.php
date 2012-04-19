@@ -418,7 +418,9 @@ function getWikiLinks($str) {
     preg_match_all("/$wiki_keyword_regex/", $str, $out_wikiwords, PREG_PATTERN_ORDER);
     preg_match_all("/$wiki_link_regex/", $str, $out_wikilinks, PREG_PATTERN_ORDER);
     preg_match_all("/$wiki_extended_link_regex/", $str, $out_wikiextlinks, PREG_PATTERN_ORDER);
-    return array_unique(array_merge($out_wikiwords[2], $out_wikilinks[1], $out_wikiextlinks[1]));
+    $result = array_merge($out_wikiwords[2], $out_wikilinks[1], $out_wikiextlinks[1]);
+    $result = array_map('trim', $result);
+    return array_unique($result);
 }
 
 /**

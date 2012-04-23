@@ -53,43 +53,48 @@ ob_start();
 // - seminars (filter=empty or =all: Mail to all accepted participants)
 //            (filter=prelim: Mail to all preliminarily accepted partic.)
 //            (filter=waiting: Mail to all waiting or claiming partic.)
-function groupmail($range_id, $filter="") {
+function groupmail($range_id, $filter = '')
+{
     $type = get_object_type($range_id);
-    if ($type == "group") {
-        $db=new DB_Seminar;
-        $db->query ("SELECT Email FROM statusgruppe_user LEFT JOIN auth_user_md5 USING(user_id) WHERE statusgruppe_id = '$range_id'");
-        while ($db->next_record()) {
-            $mailpersons .= ";".$db->f("Email");
-        }
-        $mailpersons = substr($mailpersons,1);
-        return $mailpersons;
-    }
-    if ($type == "sem") {
-        $db=new DB_Seminar;
-        if ($filter=="" || $filter=="all") {
-            $db->query ("SELECT Email FROM seminar_user LEFT JOIN auth_user_md5 USING(user_id) WHERE Seminar_id = '$range_id'");
-        } else if ($filter=="prelim") {
-            $db->query ("SELECT Email FROM admission_seminar_user LEFT JOIN auth_user_md5 USING(user_id) WHERE seminar_id = '$range_id' AND status='accepted'");
 
-        } else if ($filter=="waiting") {
-            $db->query ("SELECT Email FROM admission_seminar_user LEFT JOIN auth_user_md5 USING(user_id) WHERE seminar_id = '$range_id' AND (status='awaiting' OR status='claiming')");
+    if ($type == 'group') {
+        $query = "SELECT GROUP_CONCAT(Email SEPARATOR ';')
+                  FROM statusgruppe_user
+                  LEFT JOIN auth_user_md5 USING(user_id)
+                  WHERE statusgruppe_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($range_id));
+        return $statement->fetchColumn();
+    }
+
+    if ($type == 'sem') {
+        if (!$filter || $filter == 'all') {
+            $query = "SELECT GROUP_CONCAT(Email SEPARATOR ';')
+                      FROM seminar_user
+                      LEFT JOIN auth_user_md5 USING (user_id)
+                      WHERE Seminar_id = ?";
+        } else if ($filter == 'prelim') {
+            $query = "SELECT GROUP_CONCAT(Email SEPARATOR ';')
+                      FROM admission_seminar_user
+                      LEFT JOIN auth_user_md5 USING (user_id)
+                      WHERE seminar_id = ? AND status = 'accepted'";
+        } else if ($filter == 'waiting') {
+            $query = "SELECT GROUP_CONCAT(Email SEPARATOR ';')
+                      FROM admission_seminar_user
+                      LEFT JOIN auth_user_md5 USING (user_id)
+                      WHERE seminar_id = ? AND status IN ('awaiting', 'claiming')";
         } else {
-            echo "<p>ERROR: unknown filter: $filter</p>";
+            throw new InvalidArgumentException('ERROR: unknown filter: ' . $filter);
         }
-        while ($db->next_record()) {
-            $mailpersons .= ";".$db->f("Email");
-        }
-        $mailpersons = substr($mailpersons,1);
-        return $mailpersons;
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($range_id));
+        return $statement->fetchColumn();
     }
 }
 
 
 function PrintAktualStatusgruppen ($roles) {
     global $_fullname_sql,$SessSemName, $rechte, $user, $opened_groups;
-
-    $db2 = new DB_Seminar();
-
 
     if (is_array($roles))
     foreach ($roles as $role_id => $data) {
@@ -134,20 +139,24 @@ function PrintAktualStatusgruppen ($roles) {
         echo "</tr>";
         if (isset($opened_groups[$role_id])) {
             if (!$rechte) {
-                $db2->query("SELECT user_id, visible FROM seminar_user WHERE Seminar_id = '".$SessSemName[1]."'");
-                while ($db2->next_record()) {
-                    $visio[$db2->f('user_id')] = ($db2->f('visible') == 'yes') ? true : false;
-                }
+                $query = "SELECT user_id, visible = 'yes' FROM seminar_user WHERE Seminar_id = ?";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($SessSemName[1]));
+                $visio = $statement->fetchGrouped(PDO::FETCH_COLUMN);
             }
 
-            $db2->query ("SELECT statusgruppe_user.user_id, " . $_fullname_sql['full'] ." AS fullname, username, seminar_user.visible
-                          FROM statusgruppe_user
-                          INNER JOIN seminar_user USING (user_id)
-                          LEFT JOIN auth_user_md5 USING(user_id)
-                          LEFT JOIN user_info USING (user_id) WHERE statusgruppe_id = '$role_id' AND seminar_user.seminar_id = '{$SessSemName[1]}' ORDER BY statusgruppe_user.position ASC, Nachname ASC");
+            $query = "SELECT user_id, {$_fullname_sql['full']} AS fullname, username, seminar_user.visible
+                      FROM statusgruppe_user
+                      INNER JOIN seminar_user USING (user_id)
+                      LEFT JOIN auth_user_md5 USING (user_id)
+                      LEFT JOIN user_info USING (user_id)
+                      WHERE statusgruppe_id = ? AND seminar_user.seminar_id = ?
+                      ORDER BY statusgruppe_user.position, Nachname";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($role_id, $SessSemName[1]));
             $k = 1;
 
-            while ($db2->next_record()) {
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
                 if ($k % 2) {
                     $class="steel1";
                 } else {
@@ -155,9 +164,9 @@ function PrintAktualStatusgruppen ($roles) {
                 }
                 echo '<tr>';
                 echo '<td width="90%" class="'.$class.'">';
-                if ($db2->f('visible') == 'yes' || ($db2->f('user_id') == $user->id) || $rechte) {
-                    echo "<font size=\"-1\"><a href=\"".URLHelper::getLink("about.php?username=".$db2->f("username"))."\">&nbsp;".htmlReady($db2->f("fullname"))."</a>";
-                    if  (($db2->f('user_id') == $user->id) && !($db2->f('visible') == 'yes') && !$rechte) {
+                if ($row['visible'] == 'yes' || $row['user_id'] == $user->id || $rechte) {
+                    echo "<font size=\"-1\"><a href=\"".URLHelper::getLink("about.php?username=".$row['username'])."\">&nbsp;".htmlReady($row['fullname'])."</a>";
+                    if  (($row['user_id'] == $user->id) && !($row['visible'] == 'yes') && !$rechte) {
                         echo ' (unsichtbar)';
                     }
                     echo '</font>';
@@ -167,12 +176,12 @@ function PrintAktualStatusgruppen ($roles) {
 
                 echo '</td>';
                 echo "<td width=\"10%\" class=\"$class\" align=\"right\">";
-                if ((($data['role']->getSelfAssign() == '1')|| ($data['role']->getSelfassign()  == '2')) && $user->id == $db2->f("user_id")) {
+                if ((($data['role']->getSelfAssign() == '1')|| ($data['role']->getSelfassign()  == '2')) && $user->id == $row['user_id']) {
                     echo "<a href=\"".URLHelper::getLink("?delete_id=".$role_id)."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/trash.png\" " . tooltip(_("Aus dieser Gruppe austragen")) . " border=\"0\"></a>&nbsp; ";
                 }
 
-                if (($visio[$db2->f('user_id')] || $rechte) && ($db2->f('user_id') != $user->id)) {
-                    echo "<a href=\"".URLHelper::getLink("sms_send.php?sms_source_page=teilnehmer.php&rec_uname=".$db2->f("username"))."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/mail.png\" " . tooltip(_("Systemnachricht an Benutzer verschicken")) . " border=\"0\"></a>";
+                if (($visio[$row['user_id']] || $rechte) && ($row['user_id'] != $user->id)) {
+                    echo "<a href=\"".URLHelper::getLink("sms_send.php?sms_source_page=teilnehmer.php&rec_uname=".$row['username'])."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/mail.png\" " . tooltip(_("Systemnachricht an Benutzer verschicken")) . " border=\"0\"></a>";
                 }
                 echo "&nbsp;</td>";
                 echo "</tr>";
@@ -189,11 +198,19 @@ function PrintNonMembers ($range_id)
 {
     global $_fullname_sql, $rechte, $user, $opened_groups;
     $bereitszugeordnet = GetAllSelected($range_id);
-    $db=new DB_Seminar;
-    $query = "SELECT seminar_user.user_id, username, " . $_fullname_sql['full'] ." AS fullname, perms, seminar_user.visible FROM seminar_user  LEFT JOIN auth_user_md5 USING(user_id) LEFT JOIN user_info USING (user_id) WHERE Seminar_id = '$range_id' ORDER BY Nachname ASC";
-    $db->query ($query);
-    $nicht_zugeordnet = ($db->num_rows() - sizeof($bereitszugeordnet));
-    if ($db->num_rows() > sizeof($bereitszugeordnet)) { // there are non-grouped members
+
+    $query = "SELECT user_id, username, {$_fullname_sql['full']} AS fullname, perms, seminar_user.visible
+              FROM seminar_user
+              LEFT JOIN auth_user_md5 USING (user_id)
+              LEFT JOIN user_info USING (user_id)
+              WHERE Seminar_id = ?
+              ORDER BY Nachname";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($range_id));
+    $temp = $statement->fetchAll(PDO::FETCH_ASSOC);
+    
+    $nicht_zugeordnet = (count($temp) - count($bereitszugeordnet));
+    if ($nicht_zugeordnet > 0) { // there are non-grouped members
         echo "<table width=\"99%\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\" border=\"0\"><tr>";
         echo "<td width=\"100%\" colspan=\"2\" class=\"steel\" style=\"height: 25px\"><font size=\"-1\">";
         if (Request::option('toggle_group') == 'non_members') {
@@ -207,18 +224,18 @@ function PrintNonMembers ($range_id)
         echo "</td></tr>";
         $k = 1;
         if (isset($opened_groups['non_members'])) {
-            while ($db->next_record()) {
-                if (!in_array($db->f("user_id"), $bereitszugeordnet)) {
+            foreach ($temp as $row) {
+                if (!in_array($row['user_id'], $bereitszugeordnet)) {
                     if ($k % 2) {
                         $class="steel1";
                     } else {
                         $class="steelgraulight";
                     }
                     printf ("<tr>");
-                    if ($rechte || $db->f("visible")=="yes" || $db->f("user_id")==$user->id) {
-                        echo "<td width=\"90%\" class=\"$class\"><font size=\"-1\"><a href=\"".URLHelper::getLink("about.php?username=".$db->f("username"))."\">&nbsp;".htmlReady($db->f("fullname"))."</a>".($db->f("user_id") == $user->id && $db->f("visible") != "yes" ? " "._("(unsichtbar)") : '')."</font></td>";
+                    if ($rechte || $row['visible'] == 'yes' || $row['user_id'] == $user->id) {
+                        echo "<td width=\"90%\" class=\"$class\"><font size=\"-1\"><a href=\"".URLHelper::getLink("about.php?username=".$row['username'])."\">&nbsp;".htmlReady($row['fullname'])."</a>".($row['user_id'] == $user->id && $row['visible'] != "yes" ? " "._("(unsichtbar)") : '')."</font></td>";
                         echo "<td width=\"10%\" class=\"$class\" align=\"right\">";
-                        echo "<a href=\"".URLHelper::getLink("sms_send.php?sms_source_page=teilnehmer.php&rec_uname=".$db->f("username"))."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/mail.png\" " . tooltip(_("Systemnachricht an Benutzer verschicken")) . " border=\"0\"></a>";
+                        echo "<a href=\"".URLHelper::getLink("sms_send.php?sms_source_page=teilnehmer.php&rec_uname=".$row['username'])."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/mail.png\" " . tooltip(_("Systemnachricht an Benutzer verschicken")) . " border=\"0\"></a>";
                         echo "&nbsp;</td>";
                     } else {
                         echo "<td width=\"90%\" class=\"$class\"><font size=\"-1\" color=\"#666666\">". _("(unsichtbareR NutzerIn)"). "</font></td>";
@@ -232,11 +249,13 @@ function PrintNonMembers ($range_id)
         }
     echo "</table><br><br>";
     }
+
     if ($nicht_zugeordnet > 1) {
         $Memberstatus = 1;
     } else {
         $Memberstatus = 2;
     }
+
     if (!sizeof($bereitszugeordnet)) {
         $Memberstatus = 0;
     }

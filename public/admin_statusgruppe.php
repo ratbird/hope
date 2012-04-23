@@ -118,9 +118,6 @@ function MovePersonStatusgruppe ($range_id, $role_id, $type, $persons, $workgrou
 
     $mkdate = time();
 
-    $db=new DB_Seminar;
-    $db2=new DB_Seminar;
-
     if ($type == 'direct') {
         for ($i  = 0; $i < sizeof($persons); $i++) {
             $user_id = get_userid($persons[$i]);

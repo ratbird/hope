@@ -166,6 +166,28 @@ class ExternModuleTemplatePersondetails extends ExternModule {
         $markers['TemplateMain'][] = array('###CV###', _("Lebenslauf"));
         $markers['TemplateMain'][] = array('###PUBLICATIONS###', '');
         $markers['TemplateMain'][] = array('###OFFICE-HOURS###', '');
+        
+        $markers['TemplateMain'][] = array('<!-- BEGIN ALL-INST -->', '');
+        $markers['TemplateMain'][] = array('<!-- BEGIN SINGLE-INST -->', '');
+        $markers['TemplateMain'][] = array('###SINGLE-INST-NAME###', '');
+        $markers['TemplateMain'][] = array('###SINGLE-INST-HREF###', '');
+        $markers['TemplateMain'][] = array('###SINGLE-INST-STREET###', '');
+        $markers['TemplateMain'][] = array('###SINGLE-INST-ZIPCODE###', '');
+        $markers['TemplateMain'][] = array('###SINGLE-INST-EMAIL###', '');
+        $markers['TemplateMain'][] = array('###SINGLE-INST-EMAIL-LOCAL###', _("Der local-part der E-Mail-Adresse (vor dem @-Zeichen)"));
+        $markers['TemplateMain'][] = array('###SINGLE-INST-EMAIL-DOMAIN###', _("Der domain-part der E-Mail-Adresse (nach dem @-Zeichen)"));
+        $markers['TemplateMain'][] = array('###SINGLE-INST-ROOM###', '');
+        $markers['TemplateMain'][] = array('###SINGLE-INST-PHONE###', '');
+        $markers['TemplateMain'][] = array('###SINGLE-INST-FAX###', '');
+        $markers['TemplateMain'][] = array('###SINGLE-INST-HOMEPAGE-HREF###', '');
+        $markers['TemplateMain'][] = array('###SINGLE-INST-OFFICE-HOURS###', '');
+        $markers['TemplateMain'][] = array('###SINGLE-INST-RESEARCH-INTERESTS###', '');
+        $markers['TemplateMain'][] = array('###SINGLE-INST-CV###', _("Lebenslauf"));
+        $markers['TemplateMain'][] = array('###SINGLE-INST-PUBLICATIONS###', '');
+        $markers['TemplateMain'][] = array('###SINGLE-INST-OFFICE-HOURS###', '');
+        $markers['TemplateMain'][] = array('<!-- END SINGLE-INST -->', '');
+        $markers['TemplateMain'][] = array('<!-- END ALL-INST -->', '');
+        
         $this->insertDatafieldMarkers('user', $markers, 'TemplateMain');
         $this->insertPluginMarkers('HomepagePlugin', $markers, 'TemplateMain');
         $markers['TemplateMain'][] = array('###LECTURES###', _("Inhalt aus dem Template für Veranstaltungen"));
@@ -412,6 +434,21 @@ class ExternModuleTemplatePersondetails extends ExternModule {
             return array();
         }
 
+        // Alle Einrichtungen hohlen
+        $stm = DBManager::get()->prepare(sprintf(
+                "SELECT i.Institut_id, i.Name, i.Strasse, i.Plz, i.url, ui.*, aum.*, "
+                . "%s AS fullname, uin.user_id, uin.lebenslauf, uin.publi, uin.schwerp, "
+                . "uin.Home, uin.title_front, uin.title_rear "
+                . "FROM Institute i "
+                . "LEFT JOIN user_inst ui USING(Institut_id) "
+                . "LEFT JOIN auth_user_md5 aum USING(user_id) "
+                . "LEFT JOIN user_info uin USING (user_id) "
+                . "WHERE ui.inst_perms IN ('autor','tutor','dozent') "
+                . "AND aum.username = ?"
+                , $GLOBALS['_fullname_sql'][$nameformat]));
+        $stm->execute(array($username));
+        $allRows = $stm->fetchAll();
+        
         $this->user_id = $row['user_id'];
 
         $visibilities = get_local_visibility_by_id($this->user_id, 'homepage', true);
@@ -459,6 +496,24 @@ class ExternModuleTemplatePersondetails extends ExternModule {
         }
         $content['PERSONDETAILS']['OFFICE-HOURS'] = ExternModule::ExtHtmlReady($row['sprechzeiten']);
 
+        $j = 0;
+        foreach($allRows as $curRow)
+        {
+            $content['PERSONDETAILS']['ALL-INST']['SINGLE-INST'][$j]['SINGLE-INST-NAME'] = ExternModule::ExtHtmlReady($curRow['Name']);
+            $content['PERSONDETAILS']['ALL-INST']['SINGLE-INST'][$j]['SINGLE-INST-HREF'] = ExternModule::ExtHtmlReady(trim($curRow['url']));
+            $content['PERSONDETAILS']['ALL-INST']['SINGLE-INST'][$j]['SINGLE-INST-STREET'] = ExternModule::ExtHtmlReady($curRow['Strasse']);
+            $content['PERSONDETAILS']['ALL-INST']['SINGLE-INST'][$j]['SINGLE-INST-ZIPCODE'] = ExternModule::ExtHtmlReady($curRow['Plz']);
+            $content['PERSONDETAILS']['ALL-INST']['SINGLE-INST'][$j]['SINGLE-INST-EMAIL'] = ExternModule::ExtHtmlReady($curRow['Email']);
+            $content['PERSONDETAILS']['ALL-INST']['SINGLE-INST'][$j]['SINGLE-INST-EMAIL-LOCAL'] = array_shift(explode('@', $content['PERSONDETAILS']['ALL-INST']['SINGLE-INST'][$j]['SINGLE-INST-EMAIL']));
+            $content['PERSONDETAILS']['ALL-INST']['SINGLE-INST'][$j]['SINGLE-INST-EMAIL-DOMAIN'] = array_pop(explode('@', $content['PERSONDETAILS']['ALL-INST']['SINGLE-INST'][$j]['SINGLE-INST-EMAIL']));
+            $content['PERSONDETAILS']['ALL-INST']['SINGLE-INST'][$j]['SINGLE-INST-ROOM'] = ExternModule::ExtHtmlReady($curRow['raum']);
+            $content['PERSONDETAILS']['ALL-INST']['SINGLE-INST'][$j]['SINGLE-INST-PHONE'] = ExternModule::ExtHtmlReady($curRow['Telefon']);
+            $content['PERSONDETAILS']['ALL-INST']['SINGLE-INST'][$j]['SINGLE-INST-FAX'] = ExternModule::ExtHtmlReady($curRow['Fax']);
+            $content['PERSONDETAILS']['ALL-INST']['SINGLE-INST'][$j]['SINGLE-INST-HOMEPAGE-HREF'] = ExternModule::ExtHtmlReady(trim($curRow['Home']));
+            $content['PERSONDETAILS']['ALL-INST']['SINGLE-INST'][$j]['SINGLE-INST-OFFICE-HOURS'] = ExternModule::ExtHtmlReady($curRow['sprechzeiten']);
+            $j++;
+        }
+        
         // generic data fields
         if ($generic_datafields = $this->config->getValue('Main', 'genericdatafields')) {
             $localEntries = DataFieldEntry::getDataFieldEntries($this->user_id, 'user');

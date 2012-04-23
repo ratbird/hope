@@ -198,7 +198,7 @@ function renumber_admission ($seminar_id, $send_message=TRUE) {
                 setTempLanguage($db2->f("user_id"));
                 $message = sprintf(_("Sie sind in der Warteliste der Veranstaltung **%s (%s)** hochgestuft worden. Sie stehen zur Zeit auf Position %s."), $db->f("Name"), view_turnus($db->f("Seminar_id")), $position);
                 restoreLanguage();
-                $messaging->insert_message(addslashes($message), $db4->f("username"), "____%system%____", FALSE, FALSE, "1");
+                $messaging->insert_message(addslashes($message), $db4->f("username"), "____%system%____", FALSE, FALSE, "1",FALSE, sprintf(_("Ihre Position auf der Warteliste der Veranstaltung %s wurde verändert"),$db->f("Name"))); 
             }
             $position++;
         }
@@ -235,7 +235,7 @@ function check_group($user_id, $username, $grouped_sems, $cur_name, $cur_id) {
             setTempLanguage($db->f("user_id"));
             $message = sprintf (_("Ihr Abonnement der Veranstaltung **%s (%s)** wurde aufgehoben, da Sie in der Veranstaltung **%s (%s)** von der Warteliste nachgerückt sind. Bei diesen Veranstaltungen handelt sich um gruppierte Veranstaltungen, der Wartelisteneintrag wurde somit bevorzugt behandelt."),$db3->f("Name"), view_turnus($db->f("Seminar_id")),$cur_name, view_turnus($cur_id));
             restoreLanguage();
-            $messaging->insert_message(addslashes($message), $username, "____%system%____", FALSE, FALSE, "1");
+            $messaging->insert_message(addslashes($message), $username, "____%system%____", FALSE, FALSE, "1", FALSE, _("Ihre abbonierten Veranstaltungen wurden geändert")); 
             update_admission($db->f("Seminar_id"), $send_message);
         }
     }
@@ -479,7 +479,7 @@ function check_admission ($send_message=TRUE) {
                             setTempLanguage($winner["user_id"]);
                             $message = sprintf (_("Sie wurden als TeilnehmerIn der Veranstaltung **%s** ausgelost. Die endgültige Zulassung zu der Veranstaltung ist noch von weiteren Bedingungen abhängig, die Sie bitte der Veranstaltungsbeschreibung entnehmen."), $seminar->getName());
                             restoreLanguage();
-                            $messaging->insert_message(addslashes($message), $winner["username"], "____%system%____", FALSE, FALSE, "1");
+                            $messaging->insert_message(addslashes($message), $winner["username"], "____%system%____", FALSE, FALSE, "1", FALSE, sprintf(_("Teilnahme an der Veranstaltung %s"),$seminar->getName())); 
                         }
                     } else {
                         $group = select_group ($seminar->getSemesterStartTime(), $winner["user_id"]);
@@ -491,7 +491,7 @@ function check_admission ($send_message=TRUE) {
                                 setTempLanguage($winner["user_id"]);
                                 $message = sprintf (_("Sie wurden als TeilnehmerIn der Veranstaltung **%s** ausgelost. Ab sofort finden Sie die Veranstaltung in der Übersicht Ihrer Veranstaltungen. Damit sind Sie auch als TeilnehmerIn der Präsenzveranstaltung zugelassen."), $seminar->getName());
                                 restoreLanguage();
-                                $messaging->insert_message(addslashes($message), $winner["username"], "____%system%____", FALSE, FALSE, "1");
+                                $messaging->insert_message(addslashes($message), $winner["username"], "____%system%____", FALSE, FALSE, "1", FALSE, sprintf(_("Teilnahme an der Veranstaltung %s"),$seminar->getName())); 
                             }
                         }
                     }

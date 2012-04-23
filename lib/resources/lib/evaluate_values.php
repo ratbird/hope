@@ -417,6 +417,14 @@ if ($change_object_schedules) {
                 }
             }
     }
+    
+    }
+
+    if (($ObjectPerms->havePerm("admin")) && (Request::submitted('change_comment_internal'))) {
+        $changeAssign =& AssignObject::Factory($change_object_schedules);
+        $changeAssign->setCommentInternal(Request::quoted('comment_internal'));
+        $changeAssign->store();
+        $msg->addMsg(50);
     }
 
     if ($ObjectPerms->havePerm("autor")) {
@@ -426,7 +434,8 @@ if ($change_object_schedules) {
             $new_assign_object='';
             $msg->addMsg(5);
             $change_schedule_id = $change_object_schedules = $resources_data['actual_assign'] = FALSE;
-        } elseif (!$return_schedule && !Request::submitted('search_room') && !Request::submitted('reset_room_search')) {
+        } elseif (!$return_schedule && !Request::submitted('search_room') 
+            && !Request::submitted('reset_room_search') && !Request::submitted('change_comment_internal')) {
             if ($change_object_schedules == "NEW")
                 $change_schedule_id=FALSE;
             else
@@ -1439,14 +1448,17 @@ if (Request::submitted('save_state')) {
             if ($reqObj->getTerminId()) {
                 $assign_ids = array_keys($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["assign_objects"]);
                 $resObj = ResourceObject::Factory($res_id);
-                foreach ($result as $key=>$val) {
-                    if (!$val["overlap_assigns"]) {
-                        $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["assign_objects"][$assign_ids[0]]["resource_id"] = $resObj->getId();
-                        $good_msg.="<br>".sprintf(_("%s, Belegungszeit: %s"), $resObj->getFormattedLink( $assignObjects[0]->getBegin() ), $assignObjects[0]->getFormattedShortInfo());
-                        $succesful_assigned++;
-                    } else {
-                        $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["assign_objects"][$assign_ids[0]]["resource_id"] = FALSE;
-                        $bad_msg.="<br>".sprintf(_("%s, Belegungszeit: %s"), $resObj->getFormattedLink( $assignObjects[0]->getBegin() ), $assignObjects[0]->getFormattedShortInfo());
+
+                if (!empty($result)){
+                    foreach ($result as $key=>$val) {
+                        if (!$val["overlap_assigns"]) {
+                            $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["assign_objects"][$assign_ids[0]]["resource_id"] = $resObj->getId();
+                            $good_msg.="<br>".sprintf(_("%s, Belegungszeit: %s"), $resObj->getFormattedLink( $assignObjects[0]->getBegin() ), $assignObjects[0]->getFormattedShortInfo());
+                            $succesful_assigned++;
+                        } else {
+                            $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["assign_objects"][$assign_ids[0]]["resource_id"] = FALSE;
+                            $bad_msg.="<br>".sprintf(_("%s, Belegungszeit: %s"), $resObj->getFormattedLink( $assignObjects[0]->getBegin() ), $assignObjects[0]->getFormattedShortInfo());
+                        }
                     }
                 }
 

@@ -174,6 +174,7 @@ class VeranstaltungResourcesAssign {
                     $i++;
 
                     if ((!$check_only) && (!$overlaps)) {
+                        $obj->setCommentInternal(Request::quoted('comment_internal'));
                         $obj->create();
                         $result[$obj->getId()]=array("overlap_assigns"=>FALSE, "resource_id"=>$obj->getResourceId());
                     }
@@ -272,7 +273,7 @@ class VeranstaltungResourcesAssign {
             if ($begin) {
                 $createAssign = AssignObject::Factory(FALSE, $resource_id, $termin_id, '',
                                             $begin, $end, $end,
-                                            0, 0, 0, 0, 0, 0);
+                                            0, 0, 0, 0, 0, 0, Request::quoted('comment_internal'));
                 //check if there are overlaps (resource isn't free!)
                 if (!$this->dont_check)
                     $overlaps = $createAssign->checkOverlap($check_locks);

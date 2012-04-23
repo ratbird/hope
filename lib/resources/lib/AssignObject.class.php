@@ -59,6 +59,7 @@ class AssignObject {
     var $repeat_day_of_month;   //Wiederholungen an bestimmten Tag des Monats
     var $repeat_week_of_month;  //Wiederholungen immer in dieser Woche des Monats
     var $repeat_day_of_week;    //Wiederholungen immer an diesem Wochentag
+    var $comment_internal;      // interner Kommentar (z.B. Schliessdienst selbst, etc.)
     var $isNewObject;
     var $chng_flag;
     var $events;
@@ -106,6 +107,11 @@ class AssignObject {
             $this->repeat_day_of_month = $argv[10];
             $this->repeat_week_of_month = $argv[11];
             $this->repeat_day_of_week = $argv[12];
+
+            if ($argv[13]) {
+                $this->comment_internal = $argv[13];
+            }
+
             if (!$this->id)
                 $this->createId();
             $this->isNewObject =TRUE;
@@ -516,6 +522,17 @@ class AssignObject {
         $this->chng_flag=TRUE;
     }
 
+    function setCommentInternal($value) {
+        if ($value != '') {
+            $this->comment_internal = $value;
+            $this->chng_flag = TRUE;
+        }
+    }
+
+    function getCommentInternal() {
+        return $this->comment_internal;
+    }
+
     function restore($id='') {
         $db = DBManager::get();
         if(func_num_args() == 1){
@@ -547,6 +564,7 @@ class AssignObject {
             $this->repeat_week_of_month = (int)$res["repeat_week_of_month"];
             $this->repeat_day_of_week = (int)$res["repeat_day_of_week"];
             $this->repeat_week = (int)$res["repeat_week"];
+            $this->comment_internal = $res["comment_internal"]; 
             return TRUE;
         }
         return FALSE;
@@ -569,20 +587,20 @@ class AssignObject {
                 $query = sprintf("INSERT INTO resources_assign SET assign_id='%s', resource_id='%s', "
                     ."assign_user_id=%s, user_free_name='%s', begin='%s', end='%s', repeat_end='%s', "
                     ."repeat_quantity='%s', repeat_interval='%s', repeat_month_of_year='%s', repeat_day_of_month='%s',  "
-                    ."repeat_week_of_month='%s', repeat_day_of_week='%s', mkdate='%s' "
+                    ."repeat_week_of_month='%s', repeat_day_of_week='%s', mkdate='%s', comment_internal ='%s'  "
                              , $this->id, $this->resource_id, $tmp_assign_user_id, $this->user_free_name, $this->begin
                              , $this->end, $this->repeat_end, $this->repeat_quantity, $this->repeat_interval
                              , $this->repeat_month_of_year, $this->repeat_day_of_month, $this->repeat_week_of_month
-                             , $this->repeat_day_of_week, $mkdate);
+                             , $this->repeat_day_of_week, $mkdate,$this->comment_internal);
             } else {
                 $query = sprintf("UPDATE resources_assign SET resource_id='%s', "
                     ."assign_user_id=%s, user_free_name='%s', begin='%s', end='%s', repeat_end='%s', "
                     ."repeat_quantity='%s', repeat_interval='%s', repeat_month_of_year='%s', repeat_day_of_month='%s',  "
-                    ."repeat_week_of_month='%s', repeat_day_of_week='%s' WHERE assign_id='%s' "
+                    ."repeat_week_of_month='%s', repeat_day_of_week='%s', comment_internal = '%s' WHERE assign_id='%s' "
                              , $this->resource_id, $tmp_assign_user_id, $this->user_free_name, $this->begin
                              , $this->end, $this->repeat_end, $this->repeat_quantity, $this->repeat_interval
                              , $this->repeat_month_of_year, $this->repeat_day_of_month, $this->repeat_week_of_month
-                             , $this->repeat_day_of_week, $this->id);
+                             , $this->repeat_day_of_week, $this->comment_internal, $this->id);
             }
             $result = $db->exec($query);
             if ($result > 0 ) {

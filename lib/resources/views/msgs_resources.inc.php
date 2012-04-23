@@ -212,4 +212,8 @@ $this->msg[49] = array(
     'mode' => 'info',
     'msg'  => _('Sie können den Anfragenplan nur anzeigen, wenn Sie Anfragen für einen bestimmten Raum auflösen.')
 );
-?>
+
+$this->msg[50] = array(
+    'mode' => 'success',
+    'msg'  => _('Der Kommentar für diese Belegung wurde gespeichert')
+);

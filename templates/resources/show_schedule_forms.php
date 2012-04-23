@@ -277,7 +277,25 @@ use Studip\Button,
         <? endif; ?>
         </td>
     </tr>
-    <?
+
+    <? $cssSw->switchClass() ?>
+    <? if ($perm->have_perm('admin')) : ?>
+    <tr>
+        <td class="<? echo $cssSw->getClass() ?>" colspan="2" align="left">
+            <?=_("Kommentar (intern)")?>:<br>
+            <textarea name="comment_internal" cols="30" rows="2"><?= $resAssign->getCommentInternal() ?></textarea>
+            <?= Button::createAccept('Übernehmen', 'change_comment_internal') ?>
+        </td>
+    </tr>
+    <? else : ?>
+    <tr>
+        <td class="<? echo $cssSw->getClass() ?>" colspan="2" align="left">
+            <?=_("Kommentar (intern)")?>:<br>
+            <b><?= $resAssign->getCommentInternal() ?></b>
+        </td>
+    </tr>
+    <? endif;
+
     if (!$lockedAssign) :
         $cssSw->switchClass();
     ?>

@@ -826,6 +826,15 @@ class ShowToolsRequests
                 </td>
 
             </tr>
+            <tr>
+                <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
+                </td>
+                <td class="<? echo $cssSw->getClass() ?>" width="35%" valign="top">
+                    <font size="-1"><b><?=_("Kommentar (intern):")?></b><br /><br />
+                    <textarea name="comment_internal" cols="30" rows="2"></textarea>
+                    </font>
+                </td>
+            </tr>
 
             <tr>
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;

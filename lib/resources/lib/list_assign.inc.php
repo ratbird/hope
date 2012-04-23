@@ -89,9 +89,9 @@ function create_assigns($assign_object, &$assEvtLst, $begin=0, $end=0, $filter =
 
     //if no begin/end-date submitted, we create all the assigns from the given assign-object
     if (!$begin)
-        $begin = $assign_object->getBegin();
+        $begin = intval($assign_object->getBegin());
     if (!$end)
-        $end = $assign_object->getRepeatEnd();
+        $end = intval($assign_object->getRepeatEnd());
 
         //take a whole day!
     if(!($begin == -1 && $end == -1)){

@@ -96,161 +96,89 @@ function groupmail($range_id, $filter = '')
 function PrintAktualStatusgruppen ($roles) {
     global $_fullname_sql,$SessSemName, $rechte, $user, $opened_groups;
 
-    if (is_array($roles))
-    foreach ($roles as $role_id => $data) {
-        $title = $data['role']->getName();
-        $size = $data['size'];
-        echo "<table width=\"99%\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\" border=\"0\"><tr>";
-        echo '<td width="90%" class="steel" style="height: 25px"><font size="-1">';
-        $voll = CountMembersPerStatusgruppe ($role_id);
-        if (Request::option('toggle_group') == $role_id) {
-            echo '<a name="anker"></a>';
-        }
-        printf ("<b>%s&nbsp;<a href=\"%s\" class=\"tree\">%s&nbsp;%s</a></b></font>",
-            CheckAssignRights($role_id,$user->id, $SessSemName[1])?"&nbsp;<a href=\"".URLHelper::getLink("?assign=$role_id#anker")."\">". Assets::img('icons/16/yellow/arr_2right.png', array('style' => 'vertical-align:bottom', 'title' => _("In diese Gruppe eintragen")))."</a>":"",
-            UrlHelper::getLink('?#anker', array('toggle_group' => $role_id ,'bla' => rand())),
-            isset($opened_groups[$role_id]) ? Assets::img('icons/16/blue/arr_1down.png', array('style' => 'vertical-align:bottom')) : Assets::img('icons/16/blue/arr_1right.png',array('style' => 'vertical-align:bottom')),
-            htmlReady($title) . ' (' . (int)$voll . ')'
-        );
-
-        $limit = GetStatusgruppeLimit($role_id);
-        if ($limit!=FALSE && ($data['role']->getSelfassign()  == '1' || $data['role']->getSelfassign()  == '2')) {
-            if ($voll >= $limit)
-                $limitcolor = "#CC0000";
-            else
-                $limitcolor = "008800";
-            echo "<font size=\"-1\" color=$limitcolor>&nbsp;&nbsp;-&nbsp;&nbsp;";
-            printf ("%s von %s Plätzen belegt",$voll, $limit);
-            echo "&nbsp;</font>";
-        }
-        echo '</font></td><td width="10%" class="steel" valign="bottom" align="right" nowrap>';
-
-        if ((CheckUserStatusgruppe($role_id, $user->id) || $rechte) && ($folder_id = CheckStatusgruppeFolder($role_id)) ){
-            echo "<a href=\"".URLHelper::getLink("folder.php?cmd=tree&open=$folder_id#anker")."\"><img border=\"0\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/files.png\" ".tooltip(_("Dateiordner vorhanden"))."></a>&nbsp;";
-        }
-
-        if ($rechte || CheckUserStatusgruppe($role_id, $user->id)) {  // nicht alle duerfen Gruppenmails/Gruppensms verschicken
-            echo "&nbsp;<a href=\"".URLHelper::getLink("sms_send.php?sms_source_page=statusgruppen.php&group_id=".$role_id."&emailrequest=1&subject=".rawurlencode($SessSemName[0]))."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/move_right/mail.png\" " . tooltip(_("Systemnachricht mit Emailweiterleitung an alle Gruppenmitglieder verschicken")) . " border=\"0\"></a>&nbsp;";
-            echo "&nbsp;<a href=\"".URLHelper::getLink("sms_send.php?sms_source_page=statusgruppen.php&group_id=".$role_id."&subject=".rawurlencode($SessSemName[0]))."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/mail.png\" " . tooltip(_("Systemnachricht an alle Gruppenmitglieder verschicken")) . " border=\"0\"></a>&nbsp;";
-        } else {
-            echo "&nbsp;";
-        }
-        echo "</td>";
-        echo "</tr>";
-        if (isset($opened_groups[$role_id])) {
-            if (!$rechte) {
-                $query = "SELECT user_id, visible = 'yes' FROM seminar_user WHERE Seminar_id = ?";
-                $statement = DBManager::get()->prepare($query);
-                $statement->execute(array($SessSemName[1]));
-                $visio = $statement->fetchGrouped(PDO::FETCH_COLUMN);
-            }
-
-            $query = "SELECT user_id, {$_fullname_sql['full']} AS fullname, username, seminar_user.visible
-                      FROM statusgruppe_user
-                      INNER JOIN seminar_user USING (user_id)
-                      LEFT JOIN auth_user_md5 USING (user_id)
-                      LEFT JOIN user_info USING (user_id)
-                      WHERE statusgruppe_id = ? AND seminar_user.seminar_id = ?
-                      ORDER BY statusgruppe_user.position, Nachname";
-            $statement = DBManager::get()->prepare($query);
-            $statement->execute(array($role_id, $SessSemName[1]));
-            $k = 1;
-
-            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-                if ($k % 2) {
-                    $class="steel1";
-                } else {
-                    $class="steelgraulight";
-                }
-                echo '<tr>';
-                echo '<td width="90%" class="'.$class.'">';
-                if ($row['visible'] == 'yes' || $row['user_id'] == $user->id || $rechte) {
-                    echo "<font size=\"-1\"><a href=\"".URLHelper::getLink("about.php?username=".$row['username'])."\">&nbsp;".htmlReady($row['fullname'])."</a>";
-                    if  (($row['user_id'] == $user->id) && !($row['visible'] == 'yes') && !$rechte) {
-                        echo ' (unsichtbar)';
-                    }
-                    echo '</font>';
-                } else {
-                    echo '<font size="-1" color="#666666">&nbsp;'. _("(unsichtbareR NutzerIn)"). '</font>';
-                }
-
-                echo '</td>';
-                echo "<td width=\"10%\" class=\"$class\" align=\"right\">";
-                if ((($data['role']->getSelfAssign() == '1')|| ($data['role']->getSelfassign()  == '2')) && $user->id == $row['user_id']) {
-                    echo "<a href=\"".URLHelper::getLink("?delete_id=".$role_id)."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/trash.png\" " . tooltip(_("Aus dieser Gruppe austragen")) . " border=\"0\"></a>&nbsp; ";
-                }
-
-                if (($visio[$row['user_id']] || $rechte) && ($row['user_id'] != $user->id)) {
-                    echo "<a href=\"".URLHelper::getLink("sms_send.php?sms_source_page=teilnehmer.php&rec_uname=".$row['username'])."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/mail.png\" " . tooltip(_("Systemnachricht an Benutzer verschicken")) . " border=\"0\"></a>";
-                }
-                echo "&nbsp;</td>";
-                echo "</tr>";
-                $k++;
-            }
-        }
-        echo "</table><br><br>";
-
+    if (!is_array($roles)) {
+        return;
     }
 
+    // Prepare visibilities query
+    $query = "SELECT user_id, visible = 'yes' FROM seminar_user WHERE Seminar_id = ?";
+    $visibilities = DBManager::get()->prepare($query);
+
+    // Prepare group members query
+    $query = "SELECT user_id, {$_fullname_sql['full']} AS fullname, username,
+                     seminar_user.visible = 'yes' AS visible
+              FROM statusgruppe_user
+              INNER JOIN seminar_user USING (user_id)
+              LEFT JOIN auth_user_md5 USING (user_id)
+              LEFT JOIN user_info USING (user_id)
+              WHERE statusgruppe_id = ? AND seminar_user.seminar_id = ?
+              ORDER BY statusgruppe_user.position, Nachname";
+    $statement = DBManager::get()->prepare($query);
+
+    foreach ($roles as $role_id => $row) {
+        $limit = GetStatusgruppeLimit($role_id);
+    
+        $data = $visio = array();
+        if (isset($opened_groups[$role_id])) {
+            if (!$rechte) {
+                $visibilities->execute(array($SessSemName[1]));
+                $visio = $visibilities->fetchGrouped(PDO::FETCH_COLUMN);
+                $visibilities->closeCursor();
+            }
+
+            $statement->execute(array($role_id, $SessSemName[1]));
+            $data = $statement->fetchAll(PDO::FETCH_ASSOC);
+            $statement->closeCursor();
+        }
+
+        $template = $GLOBALS['template_factory']->open('statusgruppen/members');
+        $template->active      = Request::option('toggle_group') == $role_id;
+        $template->data        = $data;
+        $template->folder_id   = ($rechte || CheckUserStatusgruppe($role_id, $user->id)) ? CheckStatusgruppeFolder($role_id) : false;
+        $template->limit       = $limit;
+        $template->limitted    = $limit && in_array($row['role']->getSelfassign(), array(1, 2));
+        $template->may_assign  = CheckAssignRights($role_id, $user->id, $SessSemName[1]);
+        $template->may_mail    = $rechte || CheckUserStatusgruppe($role_id, $user->id);
+        $template->members     = CountMembersPerStatusgruppe($role_id);
+        $template->open        = isset($opened_groups[$role_id]);
+        $template->group_id    = $role_id;
+        $template->rechte      = $rechte;
+        $template->self_assign = in_array($row['role']->getSelfAssign(), array(1, 2));
+        $template->subject     = $SessSemName[0];
+        $template->size        = $row['size'];
+        $template->title       = $row['role']->getName();
+        $template->visio       = $visio;
+        echo $template->render();
+    }
 }
 
 function PrintNonMembers ($range_id)
 {
-    global $_fullname_sql, $rechte, $user, $opened_groups;
+    global $_fullname_sql, $rechte, $opened_groups;
+
     $bereitszugeordnet = GetAllSelected($range_id);
 
-    $query = "SELECT user_id, username, {$_fullname_sql['full']} AS fullname, perms, seminar_user.visible
+    $query = "SELECT user_id, username, {$_fullname_sql['full']} AS fullname,
+                     perms, seminar_user.visible = 'yes' AS visible
               FROM seminar_user
               LEFT JOIN auth_user_md5 USING (user_id)
               LEFT JOIN user_info USING (user_id)
-              WHERE Seminar_id = ?
+              WHERE Seminar_id = ? AND user_id NOT IN (?)
               ORDER BY Nachname";
     $statement = DBManager::get()->prepare($query);
-    $statement->execute(array($range_id));
-    $temp = $statement->fetchAll(PDO::FETCH_ASSOC);
+    $statement->execute(array($range_id, $bereitszugeordnet));
+    $data = $statement->fetchAll(PDO::FETCH_ASSOC);
     
-    $nicht_zugeordnet = (count($temp) - count($bereitszugeordnet));
-    if ($nicht_zugeordnet > 0) { // there are non-grouped members
-        echo "<table width=\"99%\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\" border=\"0\"><tr>";
-        echo "<td width=\"100%\" colspan=\"2\" class=\"steel\" style=\"height: 25px\"><font size=\"-1\">";
-        if (Request::option('toggle_group') == 'non_members') {
-            echo '<a name="anker"></a>';
-        }
-        printf ("<b>&nbsp;<a href=\"%s\" class=\"tree\">%s&nbsp;%s</a></b></font>",
-            UrlHelper::getLink('?#anker', array('toggle_group' => 'non_members' ,'bla' => rand())),
-            isset($opened_groups['non_members']) ? Assets::img('icons/16/blue/arr_1down.png', array('style' => 'vertical-align:bottom')) : Assets::img('icons/16/blue/arr_1right.png',array('style' => 'vertical-align:bottom')),
-            _("keiner Funktion oder Gruppe zugeordnet") . ' (' . $nicht_zugeordnet . ')'
-        );
-        echo "</td></tr>";
-        $k = 1;
-        if (isset($opened_groups['non_members'])) {
-            foreach ($temp as $row) {
-                if (!in_array($row['user_id'], $bereitszugeordnet)) {
-                    if ($k % 2) {
-                        $class="steel1";
-                    } else {
-                        $class="steelgraulight";
-                    }
-                    printf ("<tr>");
-                    if ($rechte || $row['visible'] == 'yes' || $row['user_id'] == $user->id) {
-                        echo "<td width=\"90%\" class=\"$class\"><font size=\"-1\"><a href=\"".URLHelper::getLink("about.php?username=".$row['username'])."\">&nbsp;".htmlReady($row['fullname'])."</a>".($row['user_id'] == $user->id && $row['visible'] != "yes" ? " "._("(unsichtbar)") : '')."</font></td>";
-                        echo "<td width=\"10%\" class=\"$class\" align=\"right\">";
-                        echo "<a href=\"".URLHelper::getLink("sms_send.php?sms_source_page=teilnehmer.php&rec_uname=".$row['username'])."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/mail.png\" " . tooltip(_("Systemnachricht an Benutzer verschicken")) . " border=\"0\"></a>";
-                        echo "&nbsp;</td>";
-                    } else {
-                        echo "<td width=\"90%\" class=\"$class\"><font size=\"-1\" color=\"#666666\">". _("(unsichtbareR NutzerIn)"). "</font></td>";
-                        echo "<td width=\"10%\" class=\"$class\" align=\"right\">";
-                        echo "&nbsp;</td>";
-                    }
-                    echo "  </tr>";
-                    $k++;
-                }
-            }
-        }
-    echo "</table><br><br>";
+    if (count($data) > 0) { // there are non-grouped members
+        $template = $GLOBALS['template_factory']->open('statusgruppen/non-members');
+        $template->active           = Request::option('toggle_group') == 'non_members';
+        $template->open             = $opened_groups['non_members'];
+        $template->data             = $data;
+        $template->rechte           = $rechte;
+        echo $template->render();
     }
 
-    if ($nicht_zugeordnet > 1) {
+    if (count($data) > 1) {
         $Memberstatus = 1;
     } else {
         $Memberstatus = 2;

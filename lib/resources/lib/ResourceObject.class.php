@@ -161,10 +161,18 @@ class ResourceObject {
     }
 
     function setMultipleAssign($value){
-        if ($value)
-            $this->multiple_assign=TRUE;
-        else
-            $this->multiple_assign=FALSE;
+        if ($value) {
+            $this->multiple_assign = true;
+        } else {
+            // multiple assigns where allowed and are not allowed anymore - update
+            if ($this->multiple_assign) {
+                // update the table resources_temporary_events or bad things will happen
+                $this->updateAllAssigns();
+            }
+            
+            $this->multiple_assign = false;
+        }
+        
         $this->chng_flag = TRUE;
     }
 
@@ -627,6 +635,26 @@ class ResourceObject {
         while ($this->db->next_record()) {
             $killAssign = AssignObject::Factory($this->db->f("assign_id"));
             $killAssign->delete();
+        }
+    }
+
+    /**
+     * update all assigns for this resource
+     * 
+     * @throws Exception 
+     */
+    function updateAllAssigns() {
+        if (!$this->id) {
+            throw new Exception('Missing resource-ID!');
+        }
+
+        $stmt = DBManager::get()->prepare("SELECT assign_id FROM resources_assign
+            WHERE resource_id = ?");
+        $stmt->execute(array($this->id));
+        
+        while ($assign_id = $stmt->fetchColumn()) {
+            $assign = AssignObject::Factory($assign_id);
+            $assign->updateResourcesTemporaryEvents();
         }
     }
 

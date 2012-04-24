@@ -616,23 +616,7 @@ class AssignObject {
                 $db->exec($query);
                 $this->syncronizeMetaDates();
                 
-                // update resources_temporary_events
-                $query = sprintf ("DELETE FROM resources_temporary_events WHERE assign_id = '%s'", $this->id); // alte Daten löschen
-                $db->query($query);
-
-                // get the events and keep resources_temporary_events up-to-date under all circumstances
-                $events = $this->getEvents();
-                $sql = Array();
-                $now = time();
-
-                foreach($events as $event) {
-                    $sql[] = "('" . md5(uniqid("tempo",1)) ."','$this->resource_id', '".$this->id."', ".$event->getBegin().", ".$event->getEnd().", 'assign', $now)";
-                }
-
-                if (sizeof($sql) > 0) {
-                    $query = "INSERT INTO resources_temporary_events (event_id ,resource_id, assign_id,begin,end,type,mkdate) VALUES " . join(",",$sql);
-                    $db->query($query);
-                }
+                $this->updateResourcesTemporaryEvents();
 
                 return true;
             } else {
@@ -640,6 +624,30 @@ class AssignObject {
             }
         }
         return false;
+    }
+
+    /**
+     * update the table resources_temporary_events for this assign
+     */
+    function updateResourcesTemporaryEvents() {
+        // delete old events
+        $stmt = DBManager::get()->prepare("DELETE FROM resources_temporary_events 
+            WHERE assign_id = ?");
+        $stmt->execute(array($this->id));
+
+        // get the events and keep resources_temporary_events up-to-date under all circumstances
+        $events = $this->getEvents();
+        $sql = Array();
+        $now = time();
+
+        foreach($events as $event) {
+            $sql[] = "('" . md5(uniqid("tempo",1)) ."','$this->resource_id', '".$this->id."', ".$event->getBegin().", ".$event->getEnd().", 'assign', $now)";
+        }
+
+        if (sizeof($sql) > 0) {
+            $query = "INSERT INTO resources_temporary_events (event_id ,resource_id, assign_id,begin,end,type,mkdate) VALUES " . join(",",$sql);
+            DBManager::get()->query($query);
+        }
     }
 
     function syncronizeMetaDates(){

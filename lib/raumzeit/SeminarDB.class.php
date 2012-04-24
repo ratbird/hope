@@ -1,4 +1,4 @@
-<?
+<?php
 # Lifter002: TODO
 # Lifter007: TODO
 # Lifter003: TODO
@@ -137,7 +137,14 @@ class SeminarDB {
         $in_list .= ')';
 
         if ($in_list != '()') {
-            $db->query($query = "DELETE FROM resources_assign WHERE assign_user_id IN $in_list");
+            // remove all assigns for the dates in question
+            $db2 = DBManager::get()->query("SELECT assign_id FROM resources_assign
+                WHERE assign_user_id IN $in_list");
+
+            foreach ($db2->fetchAll(PDO::FETCH_COLUMN) as $assign_id) {
+                $killAssign = AssignObject::Factory($assign_id);
+                $killAssign->delete();
+            }
         }
 
         //$db->query($query = "DELETE FROM termine WHERE (date < $start OR date > $end) AND range_id = '$seminar_id' AND NOT (metadate_id IS NULL OR metadate_id = '')");

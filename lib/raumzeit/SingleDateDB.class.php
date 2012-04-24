@@ -1,4 +1,4 @@
-<?
+<?php
 # Lifter007: TODO
 # Lifter003: TODO
 # Lifter010: TODO
@@ -43,9 +43,16 @@ class SingleDateDB {
             $db->query("SELECT assign_id FROM resources_assign WHERE assign_user_id = '".$termin->getTerminID()."'");
             if ($db->next_record()) {
                 $assign_id = $db->f('assign_id');
-                $db->query("DELETE FROM resources_assign WHERE assign_user_id = '".$termin->getTerminID()."'");
-                $db->query("DELETE FROM resources_requests WHERE termin_id = '".$termin->getTerminID()."'");
-                $db->query("DELETE FROM resources_temporary_events WHERE assign_id = '$assign_id'");
+
+                // delete resource-request, if any
+                if ($request_id = self::getRequestID($id)) {
+                    $rr = new RoomRequest($request_id);
+                    $rr->delete();
+                }
+
+                // delete resource assignment, if any
+                $killAssign = AssignObject::Factory($assign_id);
+                $killAssign->delete();
             }
         } else {
             $table = 'termine';
@@ -119,8 +126,11 @@ class SingleDateDB {
         }
         
         if (Config::get()->RESOURCES_ENABLE) {
-            $db->exec("DELETE FROM resources_temporary_events WHERE assign_id = ". $db->quote(self::getAssignID($id)));
-            $db->exec("DELETE FROM resources_assign WHERE assign_user_id = " . $db->quote($id));
+
+            // delete resource assignment, if any
+            $killAssign = AssignObject::Factory(self::getAssignID($id));
+            $killAssign->delete();
+
             if ($request_id = self::getRequestID($id)) {
                 $rr = new RoomRequest($request_id);
                 $rr->delete();

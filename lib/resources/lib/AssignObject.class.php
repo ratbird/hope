@@ -1,4 +1,4 @@
-<?
+<?php
 # Lifter002: TODO
 # Lifter007: TODO
 # Lifter003: TODO
@@ -40,6 +40,7 @@ require_once ("lib/classes/SemesterData.class.php");
 require_once $GLOBALS['RELATIVE_PATH_RESOURCES'] . "/lib/list_assign.inc.php";
 require_once $GLOBALS['RELATIVE_PATH_RESOURCES'] . "/resourcesFunc.inc.php";
 require_once('lib/log_events.inc.php');
+require_once('lib/resources/lib/CheckMultipleOverlaps.class.php');
 
 
 /*****************************************************************************
@@ -373,37 +374,29 @@ class AssignObject {
 
         //check for regular overlaps
         if (!$resObject->getMultipleAssign()) { //when multiple assigns are allowed, we need no check...
-            if (is_array($this->events))
-                $keys=array_keys($this->events);
-            $my_id = $this->getId();
-            //ok, a very heavy algorythmus to detect the overlaps...
-            $count_this_events = count($this->events);
-            for ($i1=0; $i1<$count_this_events; $i1++) {
-                $val_id = $this->events[$keys[$i1]]->getId();
-                $val_begin = $this->events[$keys[$i1]]->getBegin();
-                $val_end = $this->events[$keys[$i1]]->getEnd();
-                $val_assign_id = $this->events[$keys[$i1]]->getAssignId();
-                for ($i2=0; $i2<$count_this_events; $i2++) {
-                    $val2_id = $this->events[$keys[$i2]]->getId();
-                    if ($val2_id != $val_id) {
-                        $val2_begin = $this->events[$keys[$i2]]->getBegin();
-                        $val2_end = $this->events[$keys[$i2]]->getEnd();
-                        $val2_assign_id = $this->events[$keys[$i2]]->getAssignId();
-                        if ((($val_end > $val2_begin) && ($val_end < $val2_end))
-                        || (($val_begin > $val2_begin) && ($val_begin < $val2_end))
-                        || (($val2_end > $val_begin) && ($val2_end < $val_end))
-                        || (($val2_begin > $val_begin) && ($val2_begin < $val_end))
-                        || (($val_begin == $val2_begin) && ($val_end == $val2_end))) {
-                            if (($val2_assign_id  != $my_id) && ($val_assign_id  == $my_id )) {
-                                $overlaps[] = array("begin" =>$val_begin, "end"=>$val_end);
-                            }
-                        }
-                    }
+            $multiChecker = new CheckMultipleOverlaps();
+            $multiChecker->setAutoTimeRange(Array($this));
+            $multiChecker->addResource($this->resource_id);
+            $events = Array();
+            
+            foreach ($this->getEvents() as $evtObj) {
+                $events[$evtObj->getId()] = $evtObj;
+            }
+
+            $multiChecker->checkOverlap($events, $result);
+            $overlaps = Array();
+
+            if (is_array($result[$this->resource_id][$this->id])) {
+                foreach($result[$this->resource_id][$this->id] as $overlapping_event) {
+                    $overlaps[$overlapping_event["assign_id"]]["begin"] = $overlapping_event["begin"];
+                    $overlaps[$overlapping_event["assign_id"]]["end"]   = $overlapping_event["end"];
                 }
             }
+            
             return $overlaps;
-        } else
-            return FALSE;
+        } else {
+            return false;
+        }
     }
 
     function getFormattedShortInfo() {
@@ -622,12 +615,31 @@ class AssignObject {
                 $query = sprintf("UPDATE resources_assign SET chdate='%s' WHERE assign_id='%s' ", $chdate, $this->id);
                 $db->exec($query);
                 $this->syncronizeMetaDates();
-                return TRUE;
+                
+                // update resources_temporary_events
+                $query = sprintf ("DELETE FROM resources_temporary_events WHERE assign_id = '%s'", $this->id); // alte Daten löschen
+                $db->query($query);
+
+                // get the events and keep resources_temporary_events up-to-date under all circumstances
+                $events = $this->getEvents();
+                $sql = Array();
+                $now = time();
+
+                foreach($events as $event) {
+                    $sql[] = "('" . md5(uniqid("tempo",1)) ."','$this->resource_id', '".$this->id."', ".$event->getBegin().", ".$event->getEnd().", 'assign', $now)";
+                }
+
+                if (sizeof($sql) > 0) {
+                    $query = "INSERT INTO resources_temporary_events (event_id ,resource_id, assign_id,begin,end,type,mkdate) VALUES " . join(",",$sql);
+                    $db->query($query);
+                }
+
+                return true;
             } else {
-                return FALSE;
+                return false;
             }
         }
-        return FALSE;
+        return false;
     }
 
     function syncronizeMetaDates(){
@@ -665,6 +677,11 @@ class AssignObject {
             log_event("RES_ASSIGN_DEL_SINGLE",$this->resource_id,NULL,$this->getFormattedShortInfo(),NULL,$GLOBALS['user']->id);
         }
 
+        // delete entries from resources_temporary_events to keep it consistent
+        $query = sprintf("DELETE FROM resources_temporary_events WHERE assign_id='%s'", $this->id);
+        $db->query($query);
+
+        // delete entry from resources_assign
         $query = sprintf("DELETE FROM resources_assign WHERE assign_id='%s'", $this->id);
         if($db->exec($query))
             return TRUE;

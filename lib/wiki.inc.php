@@ -990,17 +990,18 @@ function wikiEdit($keyword, $wikiData, $user_id, $backpage=NULL)
 **/
 function printWikiPage($keyword, $version) {
     global $SessSemName;
-    $wikiData=getWikiPage($keyword,$version);
+    $wikiData=getWikiPage($keyword, $version);
     PageLayout::removeStylesheet('style.css');
     PageLayout::addStylesheet('print.css'); // use special stylesheet for printing
     include ('lib/include/html_head.inc.php'); // Output of html head
     echo "<p><em>$SessSemName[header_line]</em></p>";
     echo "<h1>$keyword</h1>";
     echo "<p><em>";
-    echo sprintf(_("Version %s, letzte Änderung %s von %s."), $wikiData['version'], date("d.m.Y, H:i", $wikiData['chdate']), get_fullname($wikiData['user_id'],'full',1));
+    echo sprintf(_("Version %s, letzte Änderung %s von %s."), $wikiData['version'], 
+    date("d.m.Y, H:i", $wikiData['chdate']), get_fullname($wikiData['user_id'], 'full', 1));
     echo "</em></p>";
     echo "<hr>";
-    echo wikiDirectives(wikiReady($wikiData['body'],TRUE,FALSE,"none"));
+    echo wikiLinks(wikiReady($wikiData['body'], TRUE, FALSE, "none"), $keyword, "wiki");
     echo "<hr><p><font size=-1>created by Stud.IP Wiki-Module ";
     echo date("d.m.Y, H:i", time());
     echo " </font></p>";
@@ -1016,8 +1017,14 @@ function exportWikiPagePDF($keyword, $version) {
     $document->setHeaderTitle(sprintf(_("Wiki von \"%s\""), $SessSemName[0]));
     $document->setHeaderSubtitle(sprintf(_("Seite: %s"), $keyword));
     $document->addPage();
-    $document->addContent($wikiData['body']);
+    $document->addContent(deleteWikiLinks($wikiData["body"]));
     $document->dispatch($SessSemName[header_line]." - ".$keyword);
+}
+
+function deleteWikiLinks($keyword){
+    $keyword = preg_replace('/\[\[[^|\]]*\|([^]]*)\]\]/', '$1', $keyword);
+    $keyword = preg_replace('/\[\[([^|\]]*)\]\]/', '$1', $keyword);
+    return $keyword;
 }
 
 /**

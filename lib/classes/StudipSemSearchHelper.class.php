@@ -169,7 +169,11 @@ class StudipSemSearchHelper {
             (isset($this->params['sub_title']) && strlen($this->params['sub_title']) > 2) ||
             (isset($this->params['number']) && strlen($this->params['number']) > 2) ||
             (isset($this->params['comment']) && strlen($this->params['comment']) > 2)){
-            $view->params[0] .= ($this->params['title']) ? " Name LIKE '%".trim($this->params['title'])."%' " : " ";
+
+            $toFilter = explode(" ", $this->params['title']);
+            $search_for = "(Name LIKE '%" . implode("%' AND Name LIKE '%", $toFilter) . "%')";
+            $view->params[0] .= ($this->params['title']) ? $search_for . " " : " "; 
+
             $view->params[0] .= ($this->params['title'] && $this->params['sub_title']) ? $combination : " ";
             $view->params[0] .= ($this->params['sub_title']) ? " Untertitel LIKE '%".trim($this->params['sub_title'])."%' " : " ";
             $view->params[0] .= (($this->params['title'] || $this->params['sub_title']) && $this->params['comment']) ? $combination : " ";

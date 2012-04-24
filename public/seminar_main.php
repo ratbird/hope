@@ -170,7 +170,7 @@ $quarter_year = 60 * 60 * 24 * 90;
         <br>
     <?
         // Ticket #68
-        if (!$perm->have_perm('dozent')) {
+        if (!$perm->have_studip_perm('dozent', $course_id)) {
             require_once('lib/classes/AuxLockRules.class.php');
             $rule = AuxLockRules::getLockRuleBySemId($course_id);
             if (isset($rule)) {
@@ -178,7 +178,7 @@ $quarter_year = 60 * 60 * 24 * 90;
                 foreach ((array)$rule['attributes'] as $val) {
                     if ($val == 1) {
                         // Es gibt also Zusatzangaben. Nun noch überprüfen ob der Nutzer diese Angaben schon gemacht hat...
-                        $dbtg = new DB_Seminar($query = "SELECT * FROM datafields as d LEFT JOIN datafields_entries as de USING (datafield_id) WHERE d.object_type = 'usersemdata' AND de.sec_range_id = '".$course_id."' AND de.range_id = '".$user->id."'");
+                        $dbtg = new DB_Seminar("SELECT * FROM datafields as d LEFT JOIN datafields_entries as de USING (datafield_id) WHERE d.object_type = 'usersemdata' AND de.sec_range_id = '".$course_id."' AND de.range_id = '".$user->id."'");
                         if ($dbtg->num_rows() == 0) {
                             $show = true;
                         }

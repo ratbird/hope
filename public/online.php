@@ -124,12 +124,12 @@ $other_users = array_slice($others,($page-1) * 25, 25);
 if (GetNumberOfBuddies()) {
 
     if ($_REQUEST['newmsgset'] == '' && $_REQUEST['messaging_cmd'] == 'change_view_insert'){
-		if ($_REQUEST['show_only_buddys'] == 1){
-			$my_messaging_settings["show_only_buddys"] = true;
-		}else{
-			$my_messaging_settings["show_only_buddys"] = false;
-		}
-	}
+        if ($_REQUEST['show_only_buddys'] == 1){
+            $my_messaging_settings["show_only_buddys"] = true;
+        }else{
+            $my_messaging_settings["show_only_buddys"] = false;
+        }
+    }
     if ($my_messaging_settings["show_only_buddys"])
         $checked = " checked";
 

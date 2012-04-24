@@ -243,7 +243,7 @@ if (($contact["view"])=="alpha") {
         }
         echo "<td width=\"3%\"  align=\"center\" valign=\"center\" ".$cssSw->getHover()." class=\"".$cssSw->getClass()."\""
         . tooltip(($size_of_book_by_filter[chr($i)] == 1) ? _("1 Eintrag") : (($size_of_book_by_filter[chr($i)] > 1 ) ? 
-								sprintf(_("%d Einträge"),$size_of_book_by_filter[chr($i)]) : _("keine Einträge")),false)
+                                sprintf(_("%d Einträge"),$size_of_book_by_filter[chr($i)]) : _("keine Einträge")),false)
         ."><a href=\"".URLHelper::getLink('',array('view'=>$view, 'filter'=>chr($i)))."\" "
         . ">".$character."</a>"
         ."</td>";
@@ -261,7 +261,7 @@ if (($contact["view"])=="gruppen") {
     }
     echo '<td nowrap ' . $cssSw->getHover() . ' class="' . $cssSw->getClass() . '">&nbsp; '
     . '<a href="' . URLHelper::getLink('', array('filter' => 'all', 'view' => 'gruppen')) . '" '
-				. tooltip(($size_of_book == 1) ? _('1 Eintrag') : sprintf(_('%d Einträge'), $size_of_book), false) .  '>' . _("Alle Gruppen") . '</a>'
+                . tooltip(($size_of_book == 1) ? _('1 Eintrag') : sprintf(_('%d Einträge'), $size_of_book), false) .  '>' . _("Alle Gruppen") . '</a>'
     . '&nbsp; <a href="' . URLHelper::getLink('', array('groupid' => 'all')) . '"><img style="vertical-align:middle;"'
     . Assets::img('icons/16/blue/vcard.png', array('class' => 'text-top', 'title' => _("Alle Einträge als vCard exportieren")))
     . '</a>&nbsp; </td>';
@@ -284,11 +284,11 @@ if (($contact["view"])=="gruppen") {
             $maillink ="";
         }
         
-								$link = URLHelper::getLink('',array('view'=>$view, 'filter' => $db->f("statusgruppe_id")));
+                                $link = URLHelper::getLink('',array('view'=>$view, 'filter' => $db->f("statusgruppe_id")));
         echo "<td " . $cssSw->getHover() . " class=\"" . $cssSw->getClass() . "\">&nbsp; "
         . "<a href=\"$link\" " . tooltip(($size_of_book_by_filter[$db->f("statusgruppe_id")] == 1) ? _("1 Eintrag") : 
-								(($size_of_book_by_filter[$db->f("statusgruppe_id")] > 1 ) ? sprintf(_("%d Einträge"), $size_of_book_by_filter[$db->f("statusgruppe_id")]) : 
-								_("keine Einträge")), false) . " ><font size=\"2\" $color>" . htmlready($db->f("name")) . "</font></a>$maillink" . "&nbsp; </td>";
+                                (($size_of_book_by_filter[$db->f("statusgruppe_id")] > 1 ) ? sprintf(_("%d Einträge"), $size_of_book_by_filter[$db->f("statusgruppe_id")]) : 
+                                _("keine Einträge")), false) . " ><font size=\"2\" $color>" . htmlready($db->f("name")) . "</font></a>$maillink" . "&nbsp; </td>";
         if ($filter == $db->f("statusgruppe_id")) {
             $cssSw->switchClass();
         }

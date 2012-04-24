@@ -202,7 +202,7 @@ class ClipBoard {
         <?
         print $this->form_obj->getFormField("clip_content", array_merge(array('size' => $this->getNumElements()), array('style' => 'font-size:8pt;width:250px')))
         ?>
-		<img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" height="2" border="0"></div>
+        <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" height="2" border="0"></div>
         <?
         print $this->form_obj->getFormField("clip_cmd", array('style' => 'font-size:8pt;width:250px'))
         ?>

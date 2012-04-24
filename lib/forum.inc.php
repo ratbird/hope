@@ -1381,11 +1381,11 @@ function printposting ($forumposting) {
             // es werden Porträts angezeigt
             if ($forum["showimages"] == TRUE) {
                 $addon .= "<br><div align=\"center\">";
-				if ($anonymous){
-					$addon .= "<img src=\"".URLHelper::getLink("pictures/user/nobody_medium.png")."\" title=\"anonymer User\">";
-				}else{
-                	$addon .= Avatar::getAvatar($forumposting["userid"])->getImageTag(Avatar::MEDIUM);
-				}
+                if ($anonymous){
+                    $addon .= "<img src=\"".URLHelper::getLink("pictures/user/nobody_medium.png")."\" title=\"anonymer User\">";
+                }else{
+                    $addon .= Avatar::getAvatar($forumposting["userid"])->getImageTag(Avatar::MEDIUM);
+                }
                 $addon .= "</div>";
             }
 

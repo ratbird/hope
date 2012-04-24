@@ -391,13 +391,13 @@ function to_string_month_events(&$calendar, $day_timestamp, $max_events = NULL)
                 $html_title = fit_title($event->getTitle(), 1, 1, 15);
                 $ev_type = '';
             }
-	    $out .= '<br><a class="inday" href="'
+        $out .= '<br><a class="inday" href="'
                     . URLHelper::getLink('', array('cmd' => 'edit',
                         'termin_id' => $event->getId(),
                         'atime' => $day_timestamp,
                         'evtype' => $ev_type))
                     . '"' . js_hover($event) . '>';
-	    $category_style = $event->getCategoryStyle();
+        $category_style = $event->getCategoryStyle();
             $out .= sprintf("<span style=\"color: %s;\">%s</span></a>", $category_style['color'], $html_title);
             $count++;
         }

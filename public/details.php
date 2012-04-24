@@ -848,7 +848,9 @@ echo $template_factory->render(
             <td class="<? echo $cssSw->getClass() ?>" width="25%" valign="top">
             <?
             if ($db2->f("admission_turnout")){
-                    printf ("<font size=-1><b>" . _("%s Teilnehmerzahl:") . "&nbsp;</b></font><font size=-1>%s </font>", ($db2->f("admission_type")) ? _("max.") : _("erw."), $db2->f("admission_turnout"));
+                    if($db2->f("admission_type")) {
+                        printf ("<font size=-1><b>" . _("max. Teilnehmerzahl:") . "&nbsp;</b></font><font size=-1>%s </font>", $db2->f("admission_turnout"));
+                    }
                     if (isset($all_cont_user) && $all_cont_user !== false){
                         printf ("<br><font size=-1><b>" . _("Freie Kontingentpl&auml;tze:") . "&nbsp;</b></font><font size=-1>%s </font>",$db2->f("admission_turnout") - $all_cont_user );
                         if (!$db2->f('admission_disable_waitlist') && ($db2->f("admission_turnout") - $all_cont_user) == 0){

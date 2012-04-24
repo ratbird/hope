@@ -122,29 +122,33 @@ if($page < 1 || $page > ceil($user_count/25)) $page = 1;
 $other_users = array_slice($others,($page-1) * 25, 25);
 
 if (GetNumberOfBuddies()) {
-
-    if ($_REQUEST['newmsgset'] == '' && $_REQUEST['messaging_cmd'] == 'change_view_insert'){
-        if ($_REQUEST['show_only_buddys'] == 1){
-            $my_messaging_settings["show_only_buddys"] = true;
-        }else{
-            $my_messaging_settings["show_only_buddys"] = false;
-        }
+    if (Request::submitted('change_show_only_buddys')) {
+        CSRFProtection::verifyUnsafeRequest();
+        $my_messaging_settings["show_only_buddys"] = Request::int('show_only_buddys', 0);
     }
-    if ($my_messaging_settings["show_only_buddys"])
-        $checked = " checked";
-
     $newInfoboxPart = array("kategorie" => _("Einstellung:"),
         "eintrag" => array(
             array(
-                  "text" => _("<form action=\"".$PHP_SELF."?messaging_cmd=change_view_insert\" method=\"post\"><input type=\"checkbox\" id=\"show_only_buddys\" name=\"show_only_buddys\" $checked value=\"1\">
-                  Nur Buddies in der &Uuml;bersicht der aktiven Benutzer anzeigen.".Button::create(_("Übernehmen"), 'newmsgset', array('messaging_cmd' => 'change_view_insert', 'titel' => _("Änderungen übernehmen")))."</form>")
+                  "text" => sprintf(
+                            '<form action="%s" method="post">
+                             %s
+                             <input type="checkbox" id="show_only_buddys" name="show_only_buddys" %s value="1">
+                             <label for="show_only_buddys">%s</label>
+                             %s
+                             </form>',
+                             UrlHelper::getLink(),
+                             CSRFProtection::tokenTag(),
+                             $my_messaging_settings["show_only_buddys"] ? 'checked' : '',
+                             _("Nur Buddies in der &Uuml;bersicht der aktiven Benutzer anzeigen"),
+                             Button::create(_("Übernehmen"), 'change_show_only_buddys', array('title' => _("Änderungen übernehmen")))
+                             )
             )
         )
     );
-
-}else{
+} else {
     $newInfoboxPart = array();
-}?>
+}
+?>
 
 <div id="layout_container">
     <div id="layout_sidebar">

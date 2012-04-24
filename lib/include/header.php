@@ -45,7 +45,7 @@ require_once ('lib/visual.inc.php');
  * Bei Nutzung dieser Funktion unbedingt die Texte unter locale/de/LC_HELP/visibility_decision.php bzw.
  * locale/en/LC_HELP/visibility_decision.php an die lokalen Verhältnisse anpassen!
  */
-if ($GLOBALS['USER_VISIBILITY_CHECK'])
+if ($GLOBALS['USER_VISIBILITY_CHECK'] && is_object($GLOBALS['user']) && $GLOBALS['user']->id != 'nobody')
 {
    require_once('lib/user_visible.inc.php');
    first_decision($GLOBALS['user']->id);

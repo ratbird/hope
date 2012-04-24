@@ -216,7 +216,7 @@ function first_decision($userid) {
     $statement->execute(array($userid));
     $visiblity = $statement->fetchColumn();
 
-    if ($visiblity) {
+    if ($visiblity != 'unknown') {
         return;
     }
 

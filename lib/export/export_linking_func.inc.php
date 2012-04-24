@@ -84,6 +84,7 @@ function export_link($range_id, $ex_type = "", $filename = "", $format = "", $ch
 {
     global $PATH_EXPORT, $xslt_filename, $i_page;
 
+    $filename = preg_replace('/[\x7f-\x9f]/', '_', $filename);
     $export_string = "";
     if ($choose != "")
         $export_string .= "<a href=\"" . "export.php?range_id=$range_id&ex_type=$ex_type&xslt_filename=".rawurlencode($filename)."&format=$format&choose=$choose&o_mode=$o_mode&filter=$filter&jump=$i_page\">";
@@ -115,6 +116,7 @@ function export_button($range_id, $ex_type = "", $filename = "", $format = "", $
 {
     global $PATH_EXPORT, $xslt_filename, $i_page;
     $filename = $xslt_filename;
+    $filename = preg_replace('/[\x7f-\x9f]/', '_', $filename);
     if ($choose != "")
         $export_link .= "export.php?range_id=$range_id&ex_type=$ex_type&xslt_filename=$filename&format=$format&choose=$choose&o_mode=processor&filter=$filter&jump=$i_page";
     elseif ($ex_type != "")

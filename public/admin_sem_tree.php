@@ -243,14 +243,14 @@ $the_tree->showSemTree();
     </select><br>&nbsp;<br><select name="mark_list_aktion" style="font-size:8pt;width:100%;">
     <?
     if (is_array($_possible_open_items) && count($_possible_open_items) && !(count($_possible_open_items) == 1 && $_possible_open_items['root'])){
-        echo "\n<option  value=\"insert_all\">" . _("In alle ge&ouml;ffneten Bereiche eintragen") . "</option>";
+        echo "\n<option  value=\"insert_all\">" . _("Markierte in alle ge&ouml;ffneten Bereiche eintragen") . "</option>";
         foreach ($_possible_open_items as $item_id => $value){
             echo "\n<option value=\"insert_{$item_id}\">"
-                . sprintf(_("In \"%s\" eintragen"),htmlReady(my_substr($the_tree->tree->tree_data[$item_id]['name'],0,floor($cols * .8)))) . "</option>";
+                . sprintf(_("Markierte in \"%s\" eintragen"),htmlReady(my_substr($the_tree->tree->tree_data[$item_id]['name'],0,floor($cols * .8)))) . "</option>";
         }
     }
     ?>
-    <option value="del"><?=_("Aus Merkliste l&ouml;schen")?></option>
+    <option value="del"><?=_("Markierte aus der Merkliste l&ouml;schen")?></option>
     </select>
     <div align="right">
     <?= Button::create(_('OK'), array('title' => _("Gewählte Aktion starten"))); ?>

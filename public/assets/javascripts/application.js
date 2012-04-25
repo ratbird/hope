@@ -208,10 +208,12 @@ STUDIP.URLHelper = {
         return base_url + url;
     },
     /**
-     * Creates an URL with the mandatory parameters
+     * returns a readily encoded URL with the mandatory parameters and additionally passed 
+     * parameters.
+     * 
      * @param url string: any url-string
      * @param param_object map: associative object for extra values
-     * @return: url with all necessary parameters - non URI-encoded!
+     * @return: url with all necessary and additional parameters, encoded
      */
     getURL: function (url, param_object) {
 

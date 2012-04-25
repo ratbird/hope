@@ -43,6 +43,11 @@ require_once 'lib/webservices/services/seminar_webservice.php';
 require_once 'lib/webservices/services/lecture_tree_webservice.php';
 require_once 'lib/webservices/services/institute_webservice.php';
 
+// set up dummy user environment (but no session)
+$user = new Seminar_User('nobody');
+$auth = new Seminar_Default_Auth();
+$perm = new Seminar_Perm();
+
 $AVAILABLE_SERVICES = array('UserService', 'SessionService', 'SeminarService', 'ContentmoduleService', 'LectureTreeService', 'InstituteService');
 
 $AVAILABLE_SERVICES =

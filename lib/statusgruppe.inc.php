@@ -52,7 +52,7 @@ function MakeUniqueStatusgruppeID ()
         $tmp_id = md5(uniqid('status_gruppe', true));
 
         $presence->execute(array($tmp_id));
-        $present = $statement->fetchColumn();
+        $present = $presence->fetchColumn();
         $presence->closeCursor();
     } while ($present);
 
@@ -78,7 +78,7 @@ function AddNewStatusgruppe ($new_statusgruppe_name, $range_id, $new_statusgrupp
         $new_statusgruppe_name,
         $range_id,
         $position,
-        $new_statusgruppe_size,
+        $new_statusgruppe_size ?: 0,
         $new_selfassign,
         Request::get('is_cal_group') ? 1 : 0,
     ));

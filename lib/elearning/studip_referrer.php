@@ -1,5 +1,4 @@
 <?php
-# Lifter010: TODO
 /**
 * redirect script for studip-users
 * copy to Ilias webroot
@@ -8,7 +7,7 @@
 *
 */
 
-/* ILIAS Version 4.0.x */
+/* ILIAS Version 4.0.x, 4.1.x, 4.2.x */
 
 if(file_exists("./ilias.ini.php")){
     require_once("classes/class.ilIniFile.php");
@@ -92,8 +91,10 @@ if(file_exists("./ilias.ini.php")){
             }
         break;
         case 'new':
-            $_POST['new_type'] = $_GET['type'];
-            $_POST['cmd']['create'] = 'add';
+            $_POST['new_type'] =
+            $_GET['new_type'] =
+            $_REQUEST['new_type'] = $_GET['type'];
+            $_POST['cmd']['create'] = '1';
             $_GET['cmd'] = 'post';
             $_GET[ilCtrl::IL_RTOKEN_NAME] = $ilCtrl->getRequestToken();
             $jump_to = 'repository.php';

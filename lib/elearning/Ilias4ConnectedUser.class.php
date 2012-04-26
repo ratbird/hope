@@ -54,8 +54,11 @@ class Ilias4ConnectedUser extends Ilias3ConnectedUser
             $this->auth_plugin &&
             $this->auth_plugin != "standard" &&
             $this->auth_plugin  == $connected_cms[$this->cms_type]->ldap_enable) {
+                if (!$this->external_password) {
+                    $this->setPassword(md5(uniqid("4dfmjsnll")));
+                }
                 $ok = $connected_cms[$this->cms_type]->soap_client->updatePassword($this->id, $this->external_password);
-                parent::setConnection($this->getUserType(), true);
+                $this->setConnection($this->getUserType(), true);
                 if ($ok) {
                     $messages["info"] .= sprintf(_("Verbindung mit Nutzer ID %s wiederhergestellt."), $this->id);
                 }

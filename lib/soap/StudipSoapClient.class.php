@@ -14,6 +14,7 @@ class StudipSoapClient
         require_once("vendor/nusoap/nusoap.php");
 
         $this->soap_client = new soap_client($path, true);
+        $this->soap_client->soap_defencoding = 'UTF-8';
 
         $err = $this->soap_client->getError();
         if ($err)
@@ -24,14 +25,14 @@ class StudipSoapClient
     {
         $this->faultstring = "";
         $result = $this->soap_client->call($method, $params);
-        
-        if ($this->soap_client->fault) 
+
+        if ($this->soap_client->fault)
         {
             $this->faultstring = $result["faultstring"];
-            if ($this->faultstring != "Session not valid")
+            if (!in_array($this->faultstring, array("Session not valid","Session Invalid")))
                 $this->error .= "<b>" . sprintf(_("SOAP-Fehler, Funktion \"%s\":"), $method) . "</b> " . $result["faultstring"] . " (" . $result["faultcode"] . ")<br>"; //.implode($params,"-");
         }
-        else 
+        else
         {
             $err = $this->soap_client->getError();
             if ($err)

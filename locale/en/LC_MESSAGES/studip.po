@@ -4336,25 +4336,25 @@ msgid "Mein Adressbuch"
 msgstr "My address book "
 
 #: ../public/contact.php:149
-msgid "Alle aufklappen ("
-msgstr "Open all ("
+msgid "Alle aufklappen"
+msgstr "Open all"
 
 #: ../public/contact.php:149 ../public/contact.php:152
 #: ../public/contact.php:199 ../public/contact.php:220
-msgid "1 Eintrag"
-msgstr "1 entry"
+msgid "(%d Eintrag)"
+msgstr "(%d entry)"
 
 #: ../public/contact.php:149 ../public/contact.php:152
 #, php-format
-msgid "%d Eintr&auml;ge"
-msgstr "%d entries"
+msgid "(%d Eintr‰ge)"
+msgstr "(%d entries)"
 
 #: ../public/contact.php:152
-msgid "Alle zuklappen ("
-msgstr "Close all ("
+msgid "Alle zuklappen"
+msgstr "Close all"
 
 #: ../public/contact.php:161
-msgid "Ihr Suchbegriff muss mindestens 3 Zeichen umfassen! "
+msgid "Ihr Suchbegriff muss mindestens 3 Zeichen umfassen!"
 msgstr "Your search string must comprise at least 3 characters!"
 
 # Groﬂklein
@@ -4377,8 +4377,8 @@ msgid "In Adressbuch eintragen"
 msgstr "Add to address book"
 
 #: ../public/contact.php:169
-msgid "keine Treffer zum Suchbegriff:"
-msgstr "no result matching the search string:"
+msgid "Keine Treffer zum Suchbegriff: %s"
+msgstr "No result matching the search string: %s"
 
 #: ../public/contact.php:174
 msgid "Person zum Eintrag in das Adressbuch suchen:"

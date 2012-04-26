@@ -177,7 +177,7 @@ class LockRule extends SimpleORMap
         $db = DBManager::get();
         $tables['sem'] = 'seminare';
         $tables['inst'] = 'Institute';
-        $tables['user'] = 'user_data';
+        $tables['user'] = 'user_info';
         $db->exec("UPDATE " . $tables[$object_type] . " SET lock_rule='' WHERE lock_rule = " . $db->quote($id));
         return $ret;
     }

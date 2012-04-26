@@ -268,15 +268,16 @@ if (($contact["view"])=="gruppen") {
     if (!$filter) {
         $cssSw->switchClass();
     }
-    $owner_id = $user->id;
-    $db=new DB_Seminar;
-    $db->query ("SELECT name, statusgruppe_id FROM statusgruppen WHERE range_id = '$owner_id' ORDER BY position ASC");
-    while ($db->next_record()) {
-        if ($filter == $db->f("statusgruppe_id")) {
+    
+    $query = "SELECT name, statusgruppe_id FROM statusgruppen WHERE range_id = ? ORDER BY position ASC";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($user->id));
+    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+        if ($filter == $row['statusgruppe_id']) {
             $cssSw->switchClass();
             $color = "color=\"#FF0000\"";
             $smslink = URLHelper::getLink('sms_send.php',array('sms_source_page'=>'contact.php', 'group_id' => $filter));
-            $exportlink = URLHelper::getLink('contact_export.php',array('groupid' => $db->f("statusgruppe_id")));
+            $exportlink = URLHelper::getLink('contact_export.php',array('groupid' => $row['statusgruppe_id']));
             $maillink = "&nbsp; <a href=\"$smslink\">" .  Assets::img('icons/16/blue/mail.png', array('class' => 'text-top', 'title' => _("Nachricht an alle Personen dieser Gruppe schicken"))) . "</a>";
             $maillink .= "&nbsp; <a href=\"$exportlink\">" .  Assets::img('icons/16/blue/vcard.png', array('class' => 'text-top', 'title' => _("Diese Gruppe als vCard exportieren"))) . " </a>";
         } else {
@@ -284,12 +285,12 @@ if (($contact["view"])=="gruppen") {
             $maillink ="";
         }
         
-                                $link = URLHelper::getLink('',array('view'=>$view, 'filter' => $db->f("statusgruppe_id")));
+        $link = URLHelper::getLink('',array('view'=>$view, 'filter' => $row['statusgruppe_id']));
         echo "<td " . $cssSw->getHover() . " class=\"" . $cssSw->getClass() . "\">&nbsp; "
-        . "<a href=\"$link\" " . tooltip(($size_of_book_by_filter[$db->f("statusgruppe_id")] == 1) ? _("1 Eintrag") : 
-                                (($size_of_book_by_filter[$db->f("statusgruppe_id")] > 1 ) ? sprintf(_("%d Einträge"), $size_of_book_by_filter[$db->f("statusgruppe_id")]) : 
-                                _("keine Einträge")), false) . " ><font size=\"2\" $color>" . htmlready($db->f("name")) . "</font></a>$maillink" . "&nbsp; </td>";
-        if ($filter == $db->f("statusgruppe_id")) {
+        . "<a href=\"$link\" " . tooltip(($size_of_book_by_filter[$row['statusgruppe_id']] == 1) ? _("1 Eintrag") : 
+                                (($size_of_book_by_filter[$row['statusgruppe_id']] > 1 ) ? sprintf(_("%d Einträge"), $size_of_book_by_filter[$row['statusgruppe_id']]) : 
+                                _("keine Einträge")), false) . " ><font size=\"2\" $color>" . htmlready($row['name']) . "</font></a>$maillink" . "&nbsp; </td>";
+        if ($filter == $row['statusgruppe_id']) {
             $cssSw->switchClass();
         }
     }

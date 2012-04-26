@@ -74,7 +74,7 @@ function insert_seminar_user($seminar_id, $user_id, $status, $copy_studycourse =
             $contingent = $data['studiengang_id'];
         }
         $admission_status = $data['status'];
-        $admission_comment = $data['comment'];
+        $admission_comment = ($data['comment'] == NULL) ? '' : $data['comment'];
         $mkdate = $data['mkdate'];
     }
 

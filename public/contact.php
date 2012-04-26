@@ -155,7 +155,8 @@ if (Request::get('edit_id') && Request::submitted('uebernehmen')) {
         <td class="blank" align="left">
 <?
 if ($size_of_book > 0) {
-    $link = URLHelper::getLink('',array('view'=>$view, 'open'=>'all', 'filter'=>$filter));
+    $state = $open === 'all' ? 'close' : 'open';
+    $link = URLHelper::getLink('',array('view'=>$view, $state=>'all', 'filter'=>$filter));
     
     if (Request::get('filter', 'all') == 'all' || Request::get('filter') == '') {
        $current_size = $size_of_book;

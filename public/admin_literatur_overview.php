@@ -71,28 +71,20 @@ function my_session_var($var, $id = false){
     }
 }
 
-function get_lit_admin_ids($user_id = false){
-    if (!$user_id){
-        $user_id = $GLOBALS['auth']->auth['uid'];
-    }
-    $db = new DB_Seminar("SHOW TABLES");
-    $found = false;
-    while ($db->next_record()){
-        if ($db->f(0) == "admin_perms"){
-            $found = true;
-            break;
-        }
-    }
-    if (!$found){
+function get_lit_admin_ids($user_id = false)
+{
+    $found = DBManager::get()
+           ->query("SHOW TABLES LIKE 'admin_perms'")
+           ->fetchColumn();
+
+    if (!$found) {
         return false;
-    } else {
-        $db->query("SELECT range_id FROM admin_perms WHERE perms='lit_admin' AND user_id='$user_id'");
-        $ret = false;
-        while($db->next_record()){
-            $ret[] = $db->f(0);
-        }
-        return $ret;
     }
+
+    $query = "SELECT range_id FROM admin_perms WHERE perms = 'lit_admin' AND user_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($user_id ?: $GLOBALS['user']->id));
+    return $statement->fetchAll(PDO::FETCH_COLUMN);
 }
 
 foreach ($GLOBALS['SEM_CLASS'] as $key => $value){

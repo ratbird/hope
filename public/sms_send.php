@@ -185,8 +185,10 @@ if (Request::submitted('cmd_insert')) {
         $msg = "error§" . _("Ihre Nachricht konnte nicht gesendet werden.");
     }
 
+    // redirect to source_page if set
     $sms_source_page = Request::get('sms_source_page');
-    if (!preg_match('/^([a-zA-Z0-9_-]+\.php)([a-zA-Z0-9_?&=-]*)$/',$sms_source_page)) $sms_source_page = '';
+    if (!preg_match('§^([a-zA-Z0-9_-]+\.php)([a-zA-Z0-9/#_?&=-]*)$§',$sms_source_page)) $sms_source_page = '';
+
     if ($sms_source_page) {
         $sess->register('sms_msg');
         $sms_msg = $msg;
@@ -542,7 +544,8 @@ $txt['008'] = _("Lesebestätigung");
     if($_REQUEST['answer_to']) {
          echo '<input type="hidden" name="answer_to" value="'. htmlReady($_REQUEST['answer_to']). '">';
     }
-    echo '<input type="hidden" name="sms_source_page" value="'.htmlReady($sms_source_page).'">';
+
+    echo '<input type="hidden" name="sms_source_page" value="'. htmlReady(Request::get('sms_source_page')) .'">';
     echo '<input type="hidden" name="cmd" value="'.htmlReady($cmd).'">';
 
     // we like to quote something

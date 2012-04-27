@@ -838,7 +838,12 @@ function show_msgform() {
     if (sizeof($sms_data["p_rec"]) > "0") {
         $tmp .= Button::createAccept(_('Abschicken'), 'cmd_insert');
     }
-    $tmp .= LinkButton::createCancel(_('Abbrechen'), URLHelper::getURL('sms_box.php'));
+
+    // cancel redirects to inbox or source-page if set
+    $tmp .= LinkButton::createCancel(_('Abbrechen'), Request::get('sms_source_page') 
+        ? URLHelper::getURL(Request::get('sms_source_page'))
+        : URLHelper::getURL('sms_box.php'));
+
     $tmp .= Button::create(_('Vorschau'), 'cmd');
     $tmp .= "</div><br><br>";
     $tmp .= "</div>";

@@ -630,13 +630,19 @@ class UserManagement
         }
 
         // active dozent?
-        $this->db->query("SELECT count(*) AS count FROM seminar_user as su "
-            . "LEFT JOIN auth_user_md5 as aum USING (user_id)"
-            . "LEFT JOIN seminare as s USING (Seminar_id)"
-            . "WHERE user_id = '" . $this->user_data['auth_user_md5.user_id'] . "'"
-            . "AND su.status = 'dozent' AND aum.perms = 'dozent' "
-            . "AND s.status NOT IN('". implode("','", studygroup_sem_types())."')"
-            . "GROUP BY user_id");
+        $this->db->query("SELECT sum( c ) as count FROM (
+            SELECT count( * ) AS c
+            FROM seminar_user su1
+            INNER JOIN seminar_user su2 ON su1.seminar_id = su2.seminar_id
+            AND su2.status = 'dozent'
+            INNER JOIN seminare ON su1.seminar_id = seminare.seminar_id
+            AND seminare.status NOT IN('". implode("','", studygroup_sem_types())."')
+            WHERE su1.user_id = '" . $this->user_data['auth_user_md5.user_id'] . "'
+            AND su1.status = 'dozent'
+            GROUP BY su1.seminar_id
+            HAVING c = 1
+            ORDER BY NULL
+            ) AS sub");
 
         $this->db->next_record();
         if ($this->db->f("count")) {

@@ -116,10 +116,10 @@ function ChangeBuddy($contact_id)
 function RemoveBuddy($username)
 {
     global $user;
-    
+
     $owner_id = $user->id;
     $user_id = get_userid($username);
-    
+
     $query = "SELECT contact_id FROM contact WHERE owner_id = ? AND user_id = ?";
     $statement = DBManager::get()->prepare($query);
     $statement->execute(array($owner_id, $user_id));
@@ -162,7 +162,7 @@ function CheckBuddy($username, $owner_id=FALSE)
         $owner_id = $user->id;
     }
     $user_id = get_userid($username);
-    
+
     $query = "SELECT 1 FROM contact WHERE owner_id = ? AND user_id = ? AND buddy = 1";
     $statement = DBManager::get()->prepare($query);
     $statement->execute(array($owner_id, $user_id));
@@ -174,7 +174,7 @@ function CheckBuddy($username, $owner_id=FALSE)
 function GetNumberOfBuddies()
 {
     global $user;
-    
+
     $query = "SELECT COUNT(*) FROM contact WHERE owner_id = ? AND buddy = 1";
     $statement = DBManager::get()->prepare($query);
     $statement->execute(array($user->id));
@@ -444,7 +444,7 @@ function ShowUserInfo ($contact_id)
         if (is_array($userinfo)) {
             while(list($key,$value) = each($userinfo)) {
                 $output .= "<tr><td class=\"steel1\" width=\"100\"><font size=\"2\">".$key.":</font></td><td class=\"steel1\" width=\"250\"><font size=\"2\">".$value."</font></td></tr>";
-            } 
+            }
         }
 
         $userinstinfo = GetInstInfo($user_id);
@@ -463,7 +463,7 @@ function ShowUserInfo ($contact_id)
 
         $output .= '<tr><td align="center" class="steel1" colspan="2" width="350"><br>'.Avatar::getAvatar($user_id)->getImageTag(Avatar::NORMAL).'</td>';
         $owner_id = $user->id;
-        
+
         $query = "SELECT DISTINCT name, statusgruppe_id
                   FROM statusgruppen
                   LEFT JOIN statusgruppe_user USING (statusgruppe_id)
@@ -650,8 +650,8 @@ function ShowEditContact ($contact_id)
                     . "\n"
                     . '</td></tr>';
         $css_switcher->switchClass();
-        $output .= '<tr><td valign="middle" colspan="3" class="' . $css_switcher->getClass() 
-                . '" align="center">' . LinkButton::create('<< ' . _('Zurück'),  URLHelper::getURL('#anker', array('open' => $contact_id)), array('title' => _('zurück zur Übersicht'))) 
+        $output .= '<tr><td valign="middle" colspan="3" class="' . $css_switcher->getClass()
+                . '" align="center">' . LinkButton::create('<< ' . _('Zurück'),  URLHelper::getURL('#anker', array('open' => $contact_id)), array('title' => _('zurück zur Übersicht')))
                 . '&nbsp; ' . Button::create(_('Übernehmen')) . '</form></td></tr>';
         $output .= '</table>';
     } else {
@@ -676,7 +676,7 @@ function MoveUserinfo($userinfo_id)
     $query = "SELECT userinfo_id FROM contact_userinfo WHERE contact_id = ? AND priority = ?";
     $statement = DBManager::get()->prepare($query);
     $statement->execute(array($contact_id, $priority_before));
-    $userinfo_id_before = $statement->fetchColumn();    
+    $userinfo_id_before = $statement->fetchColumn();
 
     $query = "UPDATE contact_userinfo SET priority = ? WHERE userinfo_id = ?";
     $statement = DBManager::get()->prepare($query);
@@ -779,7 +779,7 @@ function DeleteAdressbook($owner_id)
     $ids = $statement->fetchAll(PDO::FETCH_COLUMN);
 
     if (count($ids)) {
-        $query = "DELETE contact_userinfo WHERE contact_id IN (?)";
+        $query = "DELETE FROM contact_userinfo WHERE contact_id IN (?)";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($ids));
     }
@@ -866,7 +866,7 @@ function PrintAllContact($filter="")
         echo "</td><td valign=\"top\" width=\"300\" class=\"blank\">";
     } else {
         echo "<table class=\"blank\" width=\"$maxwidth\" align=center cellpadding=\"10\"><tr><td valign=\"top\" width=\"280\" class=\"white\">";
-        
+
         $i = 1;
         foreach ($ids as $id) {
             echo ShowContact($id);

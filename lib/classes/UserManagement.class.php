@@ -792,8 +792,8 @@ class UserManagement
 
         // delete all private appointments of this user
         if (get_config('CALENDAR_ENABLE')) {
-            $calendar = new CalendarDriver();
-            if ($appkills = $calendar->deleteFromDatabase('ALL', NULL, 0, 0, $this->user_data['auth_user_md5.user_id']))
+            $calendar = new CalendarDriver($this->user_data['auth_user_md5.user_id']);
+            if ($appkills = $calendar->deleteFromDatabase('ALL'))
                 $this->msg .= "info§" . sprintf(_("%s Eintr&auml;ge aus den Terminen gel&ouml;scht."), $appkills) ."§";
         }
 

@@ -17,9 +17,14 @@ require_once('app/models/ical_export.php');
 
 class iCalController extends StudipController
 {
+    
+    function before_filter(&$action, &$args) {
+        // allow only "word" characters in arguments
+        $this->validate_args($args);
+    }
 
     /**
-     * Handels the download the calendar data as iCalendar for the
+     * Handles the download the calendar data as iCalendar for the
      * user identified by $key.
      *
      * 
@@ -28,37 +33,29 @@ class iCalController extends StudipController
      * @param string $key
      * @param string $type type of export
      */
-    function index_action($key)
+    function index_action($key = '')
     {
-        global $user, $perm;
-
-        if (isset($key) && trim($key)) {
+        if (strlen($key)) {
             $user_id = IcalExport::getUserIdByKey($key);
         } else {
             $username = $_SERVER['PHP_AUTH_USER'];
             $password = $_SERVER['PHP_AUTH_PW'];
-
             if (isset($username) && isset($password)) {
                 $result = StudipAuthAbstract::CheckAuthentication($username, $password);
             }
-
             if (isset($result) && $result['uid'] !== false) {
-                $user_id = get_userid($username);
+                $user_id = $result['uid'];
             } else {
-                header('WWW-Authenticate: Basic realm="Stud.IP Login"');
-                header('HTTP/1.1 401 Unauthorized');
-
-                $exception = new AccessDeniedException('invalid password');
-                $this->render_text($template_factory->render('access_denied_exception',
-                        compact('exception')));
+               $this->response->add_header('WWW-Authenticate', 'Basic realm="Stud.IP Login"');
+               $this->set_status(401);
+               $this->render_text('authentication failed');
+               return;
             }
         }
 
         if ($user_id) {
-            if (!is_object($user) || $user->id == 'nobody') {
-                $user = new Seminar_User($user_id);
-                $perm = new Seminar_Perm();
-            }
+            $GLOBALS['user'] = new Seminar_User($user_id);
+            $GLOBALS['perm'] = new Seminar_Perm();
 
             $extype = 'ALL_EVENTS';
             $export = new CalendarExport(new CalendarWriterICalendar());
@@ -66,8 +63,9 @@ class iCalController extends StudipController
                     Calendar::getBindSeminare($user_id));
 
             if ($GLOBALS['_calendar_error']->getMaxStatus(ERROR_CRITICAL)) {
-                header('HTTP/1.1 404 Not Found');
-                exit;
+                $this->set_status(500);
+                $this->render_nothing();
+                return;
             }
             $content = join($export->getExport());
             $this->response->add_header('Content-Type', 'text/calendar');
@@ -78,10 +76,10 @@ class iCalController extends StudipController
             $this->response->add_header('Content-Length', strlen($content));
             $this->render_text($content);
         } else {
-            // delayed response to prevent brute force attacks
+            // delayed response to prevent brute force attacks ???
 
-            header('HTTP/1.1 404 Not Found');
-            exit;
+            $this->set_status(400);
+            $this->render_nothing();
         }
     }
 

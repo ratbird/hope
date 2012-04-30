@@ -117,7 +117,7 @@ if (($expmod != 'exp' && $expmod != 'imp' && $expmod != 'sync') || ($expmod == '
         $text .= _("Diese Email wurde vom Stud.IP-System verschickt. Sie können
 auf diese Nachricht nicht antworten.") . "\n\n";
         $text .= _("Über diese Adresse erreichen Sie den Export für Ihre Termine:") . "\n\n";
-        $text .= URLHelper::getLink($GLOBALS['ABSOLUTE_URI_STUDIP'].'ical.php/' . IcalExport::getKeyByUser($GLOBALS['user']->id));
+        $text .= $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'dispatch.php/ical/index/' . IcalExport::getKeyByUser($GLOBALS['user']->id);
         StudipMail::sendMessage(Request::get('email'), $subject, $text);
         echo MessageBox::success(_("Die Adresse wurde verschickt!"));
     } else {
@@ -340,10 +340,7 @@ auf diese Nachricht nicht antworten.") . "\n\n";
                 echo '<form action="' . URLHelper::getLink('') . '" method="post">';
                 echo CSRFProtection::tokenTag();
                 echo '<p>' . _("Verschicken Sie die Export-Andresse als Email:");
-                $stmt = DBManager::get()->prepare('SELECT email FROM auth_user_md5 WHERE user_id = ?');
-                $stmt->execute(array($GLOBALS['user']->id));
-                $cal_email = $stmt->fetch(PDO::FETCH_ASSOC);
-                echo ' <input type="email" name="email" value="' . ($cal_email ? htmlReady($cal_email['email']) : '') . '" required="required"></input>';
+                echo ' <input type="email" name="email" value="' . htmlReady($GLOBALS['user']->email) . '" required="required"></input>';
                 echo '<input type="hidden" name="cmd" value="export"></input>';
                 echo Button::create(_('Abschicken'), 'submit_email', array('title' => _('Abschicken')));
                 echo '</p></form>';

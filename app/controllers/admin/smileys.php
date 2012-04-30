@@ -40,7 +40,7 @@ class Admin_SmileysController extends AuthenticatedController
         // Remove layout and add charset for ajax requests
         if (Request::isXhr()) {
             $this->set_layout(null);
-            $this->response->add_header('Content-Type', 'text/html;charset=iso-8859-1');
+            $this->response->add_header('Content-Type', 'text/html;charset=windows-1252');
         }
     }
 

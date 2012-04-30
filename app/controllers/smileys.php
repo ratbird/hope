@@ -89,7 +89,7 @@ class SmileysController extends AuthenticatedController
             $this->response->add_header('Content-Type', 'application/json');
             $this->render_text(json_encode(array(
                 'state'   => $state,
-                'message' => utf8_encode($msg_box),
+                'message' => studip_utf8encode($msg_box),
             )));
         } else {
             PageLayout::postMessage($msg_box);

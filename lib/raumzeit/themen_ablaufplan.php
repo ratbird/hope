@@ -229,7 +229,7 @@ $termine = getAllSortedSingleDates($sem);
                         $tpl['art'] = $TERMIN_TYP[$tpl['type']]['name'];
 
                     // calendar jump
-                    $tpl['calendar'] = "&nbsp;<a href=\"".URLHelper::getLink("calendar.php?cmd=showweek&atime=". $singledate->getStartTime());
+                    $tpl['calendar'] = "&nbsp;<a href=\"".URLHelper::getLink("calendar.php?caluser=self&cmd=showweek&atime=". $singledate->getStartTime());
                     $tpl['calendar'] .= "\"><img class=\"text-top\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/schedule.png\" ";
                     $tpl['calendar'] .= tooltip(sprintf(_("Zum %s in den persönlichen Terminkalender springen"), date("d.m", $singledate->getStartTime())));
                     $tpl['calendar'] .= '></a>';

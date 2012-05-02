@@ -165,6 +165,9 @@ global $i_page,
 $i_page = basename($_SERVER['PHP_SELF']);
 
 //INITS
+$seminar_open_redirected = false;
+$user_did_login = false;
+
 // session init starts here
 if ($_SESSION['SessionStart'] == 0) {
     $_SESSION['SessionStart'] = time();
@@ -204,13 +207,11 @@ if ($auth->is_authenticated() && is_object($user) && $user->id != "nobody") {
             check_calendar_default();
         }
 
-        NotificationCenter::postNotification('UserDidLogin', $user->id);
-
         //redirect user to another page if he want to
         if (($my_studip_settings["startpage_redirect"]) && ($i_page == "index.php") && (!$perm->have_perm("root"))){
             $seminar_open_redirected = TRUE;
-            startpage_redirect($my_studip_settings["startpage_redirect"]);
         }
+        $user_did_login = true;
     }
 
     // lauch stud.ip messenger after login
@@ -253,4 +254,10 @@ if (Navigation::hasItem('/course')
     $plus_nav = new Navigation('+', 'admin_modules.php?view=modules_sem');
     $plus_nav->setDescription(_("Inhaltselemente konfigurieren"));
     Navigation::addItem('/course/modules', $plus_nav);
+}
+if ($user_did_login) {
+    NotificationCenter::postNotification('UserDidLogin', $user->id);
+}
+if ($seminar_open_redirected) {
+    startpage_redirect($my_studip_settings["startpage_redirect"]);
 }

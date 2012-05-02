@@ -825,8 +825,9 @@ table td.printhead2 {
     padding: 0;
 }
 
-td.printhead3 {
+table td.printhead3 {
     background-image: url('../images/content_object_arr-down.png');
+    padding: 0;
 }
 
 /* --- Styles fuer Terminkalender ------------------------------------------- */

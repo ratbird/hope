@@ -60,7 +60,7 @@ if ($calendar->view instanceof DbCalendarDay) {
             <td class="<?= $style_cell ?>"<?= ($em['cspan'][$row][$j] > 1 ? ' colspan="' . $em['cspan'][$row][$j] . '"' : '') ?> align="right" valign="middle">
                 <? if ($calendar->havePermission(Calendar::PERMISSION_WRITABLE)) : ?>
                 <a style="display: block; width: 11px;" href="<?= URLHelper::getLink('', array('cmd' => 'edit', 'atime' => $day->getStart() + $i * $step)) ?>">
-                    sdfs<img src="<?= Assets::image_path('calplus.gif') ?>"<?= tooltip(strftime(_("neuer Termin um %R Uhr"), $row * $step + $start - 3600)) ?>>
+                    <img src="<?= Assets::image_path('calplus.gif') ?>"<?= tooltip(strftime(_("neuer Termin um %R Uhr"), $row * $step + $start - 3600)) ?>>
                 </a>
                 <? endif ?>
             </td>

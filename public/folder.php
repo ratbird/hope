@@ -542,26 +542,29 @@ if ($close) {
     $folder_system_data["open"]['anker'] = $close;
 }
 if ($rechte && Request::submitted('delete_selected')) {
-    $_SESSION['download_ids'][$SessSemName[1]] = Request::getArray('download_ids');
-    if (count($_SESSION['download_ids'][$SessSemName[1]]) > 0) {
-        $files_to_delete = array_map(create_function('$f', 'return StudipDocument::find($f)->filename;'), $_SESSION['download_ids'][$SessSemName[1]]);
-        $question = createQuestion(_('Möchten Sie die ausgewählten Dateien wirklich löschen?') .
-                                    "\n- ". join("\n- ", $files_to_delete),
-                                    array('delete' => true, 'studipticket' => Seminar_Session::get_ticket()));
+    $download_ids = Request::optionArray('download_ids');
+    if (count($download_ids) > 0) {
+        $files_to_delete = array_map(function($f) {return htmlReady(StudipDocument::find($f)->filename) . '<input type="hidden" name="download_ids[]" value="' . $f . '">';}, $download_ids);
+        $template = $template_factory->open('usermanagement/question_form.php');
+        $template->set_attribute('question', _('Möchten Sie die ausgewählten Dateien wirklich löschen?'));
+        $template->set_attribute('elements', array('<ul><li>' . join('</li><li>', $files_to_delete) . '</li></ul>'));
+        $template->set_attribute('approvalbutton', Button::createAccept(_('JA!'), 'delete'));
+        $template->set_attribute('disapprovalbutton', Button::createCancel(_('NEIN!')));
+        $template->set_attribute('action', UrlHelper::getLink());
+        $question = $template->render();
     }
 }
 
-if ($rechte && Request::get('delete') && Seminar_Session::check_ticket(Request::option('studipticket'))) {
-    if (is_array($_SESSION['download_ids'][$SessSemName[1]]) && count($_SESSION['download_ids'][$SessSemName[1]]) > 0) {
-        $deleted = 0;
-        foreach ($_SESSION['download_ids'][$SessSemName[1]] as $id) {
-            $deleted += delete_document($id);
-        }
-        unset($_SESSION['download_ids'][$SessSemName[1]]);
-        if ($deleted) {
-            $msg .= "msg§" . sprintf(_("Es wurden %s Dateien gelöscht."), $deleted) . '§';
-        }
+if ($rechte && Request::submitted('delete') && count(Request::optionArray('download_ids'))) {
+    CSRFProtection::verifyUnsafeRequest();
+    $deleted = 0;
+    foreach (Request::optionArray('download_ids') as $one) {
+        $deleted += delete_document($one);
     }
+    if ($deleted) {
+        $msg .= "msg§" . sprintf(_("Es wurden %s Dateien gelöscht."), $deleted) . '§';
+    }
+
 }
 
 
@@ -575,7 +578,7 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
     if ($_REQUEST["getfilebody"]) {
         $query = "SELECT ". $_fullname_sql['full'] ." AS fullname, username, a.user_id, a.*, IF(IFNULL(a.name,'')='', a.filename,a.name) AS t_name FROM dokumente a LEFT JOIN auth_user_md5 USING (user_id) LEFT JOIN user_info USING (user_id) WHERE a.dokument_id = ".$db->quote($_REQUEST["getfilebody"]);
         $datei = $db->query($query)->fetch(PDO::FETCH_ASSOC);
-        if ($folder_tree->isReadable($datei['range_id'] , $user->id)){ 
+        if ($folder_tree->isReadable($datei['range_id'] , $user->id)){
             $all = $folder_system_data['cmd']=='tree' ? FALSE : TRUE;
             display_file_body($datei, null, $folder_system_data["open"], null, $folder_system_data["move"], $folder_system_data["upload"], $all, $folder_system_data["refresh"], $folder_system_data["link"]);
         }

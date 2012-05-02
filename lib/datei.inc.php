@@ -902,13 +902,13 @@ function validate_upload($the_file, $real_file_name='') {
             $sem_status = $GLOBALS['perm']->get_studip_perm($SessSemName[1]);
             $active_upload_type = $SessSemName["art_num"];
             if (!isset($UPLOAD_TYPES[$active_upload_type])) {
-                $active_upload_type = 'default'; 
+                $active_upload_type = 'default';
             }
         }
 
         //erlaubte Dateigroesse aus Regelliste der Config.inc.php auslesen
         $max_filesize = $UPLOAD_TYPES[$active_upload_type]["file_sizes"][$sem_status];
-        
+
         //Die Dateierweiterung von dem Original erfragen
         $pext = strtolower(getFileExtension($real_file_name ? $real_file_name : $the_file_name));
         if ($pext == "doc")
@@ -966,7 +966,7 @@ function validate_upload($the_file, $real_file_name='') {
             $emsg.= "error§" . sprintf(_("Die Datei konnte nicht &uuml;bertragen werden: Die maximale Gr&ouml;sse f&uuml;r einen Upload (%s Megabyte) wurde &uuml;berschritten!"), $max_filesize / 1048576);
         }
     }
-    
+
     if ($emsg) {
         $msg .= $emsg;
         return true;
@@ -1500,10 +1500,11 @@ function display_file_line ($datei, $folder_id, $open, $change, $move, $upload, 
 
     if ($all) {
       if ((!$upload) && ($datei["url"]=="") && check_protected_download($datei["dokument_id"])) {
-        $box = sprintf ("<input type=\"CHECKBOX\" %s name=\"download_ids[]\" value=\"%s\">",($check_all) ? "checked" : "" , $datei["dokument_id"]);
+        $checked = ($check_all || in_array($datei["dokument_id"], Request::getArray('download_ids'))) ? 'checked' : '';
+        $box = sprintf ("<input type=\"CHECKBOX\" %s name=\"download_ids[]\" value=\"%s\">",$checked , $datei["dokument_id"]);
         print $box;
       } else {
-        echo Assets::img('icons/16/grey/decline.png', array('title' => _("Diese Dateie kann nicht als ZIP-Archiv heruntergeladen werden."), 'style' => 'padding-left:5px;'));
+        echo Assets::img('icons/16/grey/decline.png', array('title' => _("Diese Datei kann nicht als ZIP-Archiv heruntergeladen werden."), 'style' => 'padding-left:5px;'));
     }
     }
     print "</td></tr>";

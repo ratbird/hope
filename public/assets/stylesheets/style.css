@@ -820,8 +820,9 @@ td.printcontent {
     text-align: left;
 }
 
-td.printhead2 {
+table td.printhead2 {
     background-image: url('../images/content_object_arr-right.png');
+    padding: 0;
 }
 
 td.printhead3 {

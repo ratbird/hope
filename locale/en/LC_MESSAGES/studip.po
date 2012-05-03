@@ -1515,8 +1515,8 @@ msgstr "No description available"
 
 #: ../public/user_activities.php:96 ../lib/datei.inc.php:1343
 #, php-format
-msgid "<b>Dateigr&ouml;&szlig;e:</b> %s kB"
-msgstr "<b>File size:</b> %s kB"
+msgid "<b>Dateigröße:</b> %u kB"
+msgstr "<b>File size:</b> %u kB"
 
 #: ../public/user_activities.php:97 ../lib/datei.inc.php:1344
 #, php-format

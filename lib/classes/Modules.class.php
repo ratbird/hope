@@ -1,6 +1,6 @@
 <?php
 # Lifter002: TODO
-# Lifter007: TEST - documentation and definition array still to do 
+# Lifter007: TEST - documentation and definition array still to do
 # Lifter003: TEST
 # Lifter010: TODO
 /**
@@ -54,11 +54,11 @@ class Modules {
         'documents_folder_permissions' => array('id' => 14, 'const' => '', 'sem' => true, 'inst' => true),
         'calendar' => array('id' => 16, 'const' => 'COURSE_CALENDAR_ENABLE', 'sem' => true, 'inst' => true)
     );
-    
+
     function Modules() {
-        
+
     }
-    
+
     function getStatus($modul, $range_id, $range_type = '') {
         $bitmask = $this->getBin($range_id, $range_type);
         $id = $this->registered_modules[$modul]['id'];
@@ -80,7 +80,7 @@ class Modules {
             $statement->execute(array($range_id));
             $modules = $statement->fetchColumn();
         }
-        if ($modules === null) {
+        if ($modules === null || $modules === false) {
             $modules = $this->getDefaultBinValue($range_id, $range_type, $type);
         }
 
@@ -137,7 +137,7 @@ class Modules {
         $statement->execute(array($range_id));
         $modules = $statement->fetchColumn();
 
-        if (!$modules) {
+        if ($modules === null || $modules === false) {
             $bitmask = $this->getDefaultBinValue($range_id, $range_type);
         } else {
             $bitmask = $modules;
@@ -196,7 +196,7 @@ class Modules {
         if ($this->checkGlobal($modul)) {
             return false;
         }
-        
+
         if ($range_type == 'sem') {
             $query = "UPDATE seminare SET modules = ? WHERE Seminar_id = ?";
         } else {

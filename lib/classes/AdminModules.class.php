@@ -166,7 +166,7 @@ class AdminModules extends ModulesNotification {
     function moduleDocumentsDeactivate($range_id) {
         delete_all_documents($range_id);
         //Örgs, warum immer ich...
-        $this->clearBit($GLOBALS['admin_modules_data']["changed_bin"], $this->registered_modules['documents_folder_permissions']['id']);
+        $this->clearBit($_SESSION['admin_modules_data']["changed_bin"], $this->registered_modules['documents_folder_permissions']['id']);
     }
     
     function moduleDocumentsActivate($range_id) {

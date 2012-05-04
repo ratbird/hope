@@ -40,6 +40,7 @@ use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 
 $perm->check("tutor");
@@ -54,13 +55,13 @@ require_once('lib/classes/AdminModules.class.php'); //Nachrichtenfunktionen
 require_once 'lib/admin_search.inc.php';
 
 $cssSw=new cssClassSwitcher;
-$sess->register("admin_modules_data");
-$sess->register("plugin_toggle");
+//$sess->register("admin_modules_data");
+//$sess->register("plugin_toggle");
 
 PageLayout::setTitle(_("Verwaltung verwendeter Inhaltselemente und Plugins"));
 
 if ($perm->have_perm('admin')) {
-    if ($links_admin_data['topkat'] == 'sem') {
+    if ($_SESSION['links_admin_data']['topkat'] == 'sem') {
         Navigation::activateItem('/admin/course/modules');
     } else {
         Navigation::activateItem('/admin/institute/modules');
@@ -68,7 +69,7 @@ if ($perm->have_perm('admin')) {
 } else {
     Navigation::activateItem('/course/modules');
 }
-
+$range_id = Request::option('range_id');
 //get ID
 if ($SessSemName[1])
     $range_id=$SessSemName[1];
@@ -82,60 +83,49 @@ if ($header_line)
 $amodules=new AdminModules;
 
 $admin_modules_plugins = PluginEngine::getPlugins('StandardPlugin'); // get all installed and enabled plugins
-
-if ($perm->have_studip_perm("tutor", $admin_modules_data["range_id"])) {
+if ($perm->have_studip_perm("tutor", $_SESSION['admin_modules_data']["range_id"])) {
     //Sicherheitscheck ob ueberhaupt was zum Bearbeiten gewaehlt ist.
     if ($default_x) {
-        $admin_modules_data["changed_bin"] = $amodules->getDefaultBinValue($admin_modules_data["range_id"]);
+        $_SESSION['admin_modules_data']["changed_bin"] = $amodules->getDefaultBinValue($_SESSION['admin_modules_data']["range_id"]);
     }
     //consistency: kill objects
     foreach ($amodules->registered_modules as $key => $val) {
         $moduleXxDeactivate = "module".$key."Deactivate";
-        $delete_xx = "delete_".$key;
-
-        if (($$delete_xx) && (method_exists($amodules,$moduleXxDeactivate))) {
-            $amodules->$moduleXxDeactivate($admin_modules_data["range_id"]);
-            $amodules->clearBit($admin_modules_data["changed_bin"], $amodules->registered_modules[$key]["id"]);
-            unset($admin_modules_data["conflicts"][$key]);
+        if ((Request::option('delete_'.$key)=='TRUE') && (method_exists($amodules,$moduleXxDeactivate))) {
+            $amodules->$moduleXxDeactivate($_SESSION['admin_modules_data']["range_id"]);
+            $amodules->clearBit($_SESSION['admin_modules_data']["changed_bin"], $amodules->registered_modules[$key]["id"]);
+            unset($_SESSION['admin_modules_data']["conflicts"][$key]);
             $resolve_conflicts = TRUE;
         }
     }
     //consistency: cancel kill objects
     foreach ($amodules->registered_modules as $key => $val) {
-        $cancel_xx = "cancel_".$key;
-
-        if ($$cancel_xx) {
-            $amodules->setBit($admin_modules_data["changed_bin"], $amodules->registered_modules[$key]["id"]);
-            unset($admin_modules_data["conflicts"][$key]);
+        if (Request::option('cancel_'.$key)=='TRUE') {
+            $amodules->setBit($_SESSION['admin_modules_data']["changed_bin"], $amodules->registered_modules[$key]["id"]);
+            unset($_SESSION['admin_modules_data']["conflicts"][$key]);
             $resolve_conflicts = TRUE;
         }
     }
 
-    if ((Request::submitted('uebernehmen')) || ($retry)) {
+    if ((Request::submitted('uebernehmen')) || (Request::option('retry'))) {
         $msg='';
         if (Request::submitted('uebernehmen')){
             foreach ($amodules->registered_modules as $key => $val) {
                 //after sending, set all "conflicts" to TRUE (we check them later)
-                $admin_modules_data["conflicts"][$key] = TRUE;
+                $_SESSION['admin_modules_data']["conflicts"][$key] = TRUE;
 
-                $tmp_key = $key."_value";
-                if ($$tmp_key == "TRUE")
-                    $$tmp_key = TRUE;
-                else
-                    $$tmp_key = FALSE;
-
-                if ($$tmp_key) {
-                    $amodules->setBit($admin_modules_data["changed_bin"], $amodules->registered_modules[$key]["id"]);
+                if (Request::option($key.'_value')== "TRUE") {
+                    $amodules->setBit($_SESSION['admin_modules_data']["changed_bin"], $amodules->registered_modules[$key]["id"]);
                 } else {
-                    $amodules->clearBit($admin_modules_data["changed_bin"], $amodules->registered_modules[$key]["id"]);
+                    $amodules->clearBit($_SESSION['admin_modules_data']["changed_bin"], $amodules->registered_modules[$key]["id"]);
                 }
             }
             // Setzen der Plugins
             foreach ($admin_modules_plugins as $plugin){
                 $check = ( $_POST[ "plugin_" . $plugin->getPluginId() ] == "TRUE" );
-                $setting = $plugin->isActivated($admin_modules_data['range_id']);
+                $setting = $plugin->isActivated($_SESSION['admin_modules_data']['range_id']);
                 if( $check != $setting ){
-                    array_push( $plugin_toggle , $plugin->getPluginId() );
+                    array_push( $_SESSION['plugin_toggle'] , $plugin->getPluginId() );
                 }
 
             }
@@ -150,10 +140,10 @@ if ($perm->have_studip_perm("tutor", $admin_modules_data["range_id"])) {
             $getModuleXxExistingItems = "getModule".$key."ExistingItems";
 
             if (method_exists($amodules,$getModuleXxExistingItems)) {
-                if (($amodules->isBit($admin_modules_data["orig_bin"],  $amodules->registered_modules[$key]["id"])) &&
-                    (!$amodules->isBit($admin_modules_data["changed_bin"],  $amodules->registered_modules[$key]["id"])) &&
-                    ($amodules->$getModuleXxExistingItems($admin_modules_data["range_id"])) &&
-                    ($admin_modules_data["conflicts"][$key])) {
+                if (($amodules->isBit($_SESSION['admin_modules_data']["orig_bin"],  $amodules->registered_modules[$key]["id"])) &&
+                    (!$amodules->isBit($_SESSION['admin_modules_data']["changed_bin"],  $amodules->registered_modules[$key]["id"])) &&
+                    ($amodules->$getModuleXxExistingItems($_SESSION['admin_modules_data']["range_id"])) &&
+                    ($_SESSION['admin_modules_data']["conflicts"][$key])) {
 
                     $msg.="info§".$amodules->registered_modules[$key]["msg_warning"];
                     $msg.="<br>";
@@ -162,42 +152,42 @@ if ($perm->have_studip_perm("tutor", $admin_modules_data["range_id"])) {
                     $msg.=LinkButton::createCancel(_('NEIN!'), URLHelper::getURL("?cancel_$key=TRUE&retry=TRUE"));
                     $msg.="\n§";
                 } else
-                    unset($admin_modules_data["conflicts"][$key]);
+                    unset($_SESSION['admin_modules_data']["conflicts"][$key]);
             } else
-                unset($admin_modules_data["conflicts"][$key]);
+                unset($_SESSION['admin_modules_data']["conflicts"][$key]);
 
             //checks for activating a module
             $moduleXxActivate = "module".$key."Activate";
 
             if (method_exists($amodules,$moduleXxActivate)) {
-                if ((!$amodules->isBit($admin_modules_data["orig_bin"],  $amodules->registered_modules[$key]["id"])) &&
-                    ($amodules->isBit($admin_modules_data["changed_bin"],  $amodules->registered_modules[$key]["id"]))) {
+                if ((!$amodules->isBit($_SESSION['admin_modules_data']["orig_bin"],  $amodules->registered_modules[$key]["id"])) &&
+                    ($amodules->isBit($_SESSION['admin_modules_data']["changed_bin"],  $amodules->registered_modules[$key]["id"]))) {
 
-                    $amodules->$moduleXxActivate($admin_modules_data["range_id"]);
+                    $amodules->$moduleXxActivate($_SESSION['admin_modules_data']["range_id"]);
                 }
             }
 
         }
 
     }
-    if( !count( $admin_modules_data["conflicts"] ) )  {
+    if( !count( $_SESSION['admin_modules_data']["conflicts"] ) )  {
         $changes = false;
         // Inhaltselemente speichern
-        if( $admin_modules_data["orig_bin"] != $admin_modules_data["changed_bin"] ){
-            $amodules->writeBin($admin_modules_data["range_id"], $admin_modules_data["changed_bin"]);
-            $admin_modules_data["orig_bin"] = $admin_modules_data["changed_bin"];
-            $admin_modules_data["modules_list"] = $amodules->getLocalModules($admin_modules_data["range_id"]);
+        if( $_SESSION['admin_modules_data']["orig_bin"] != $_SESSION['admin_modules_data']["changed_bin"] ){
+            $amodules->writeBin($_SESSION['admin_modules_data']["range_id"], $_SESSION['admin_modules_data']["changed_bin"]);
+            $_SESSION['admin_modules_data']["orig_bin"] = $_SESSION['admin_modules_data']["changed_bin"];
+            $_SESSION['admin_modules_data']["modules_list"] = $amodules->getLocalModules($_SESSION['admin_modules_data']["range_id"]);
             $changes = true;
         }
         // Plugins speichern
-        if( count( $plugin_toggle ) > 0 ){
-            $context = $admin_modules_data['range_id'];
+        if( count( $_SESSION['plugin_toggle'] ) > 0 ){
+            $context = $_SESSION['admin_modules_data']['range_id'];
             $plugin_manager = PluginManager::getInstance();
 
             foreach ($admin_modules_plugins as $plugin){
                 $plugin_id = $plugin->getPluginId();
 
-                if( in_array( $plugin_id , $plugin_toggle ) ){
+                if( in_array( $plugin_id , $_SESSION['plugin_toggle'] ) ){
                     $activated = !$plugin_manager->isPluginActivated($plugin_id, $context);
                     $plugin_manager->setPluginActivated($plugin_id, $context, $activated);
                     $changes = true;
@@ -210,10 +200,10 @@ if ($perm->have_studip_perm("tutor", $admin_modules_data["range_id"])) {
                     }
                 }
             }
-            $plugin_toggle = array();
+            $_SESSION['plugin_toggle'] = array();
         }
         if( $changes ){
-            $admin_modules_data['msg'] = 'msg§'._('Die veränderte Konfiguration wurde übernommen.');
+            $_SESSION['admin_modules_data']['msg'] = 'msg§'._('Die veränderte Konfiguration wurde übernommen.');
             header('Location: ' . URLHelper::getURL());
             page_close();
             die();
@@ -223,17 +213,17 @@ if ($perm->have_studip_perm("tutor", $admin_modules_data["range_id"])) {
 
 //wenn wir frisch reinkommen, werden benoetigte Daten eingelesen
 if (($range_id) && (!$default_x) && (!Request::submitted('uebernehmen')) && (!$resolve_conflicts)) {
-    $admin_modules_data["modules_list"] = $amodules->getLocalModules($range_id);
-    $admin_modules_data["orig_bin"] = $amodules->getBin($range_id);
-    $admin_modules_data["changed_bin"] = $amodules->getBin($range_id);
-    $admin_modules_data["range_id"] = $range_id;
-    $admin_modules_data["conflicts"] = array();
-    $plugin_toggle = array();
+    $_SESSION['admin_modules_data']["modules_list"] = $amodules->getLocalModules($range_id);
+    $_SESSION['admin_modules_data']["orig_bin"] = $amodules->getBin($range_id);
+    $_SESSION['admin_modules_data']["changed_bin"] = $amodules->getBin($range_id);
+    $_SESSION['admin_modules_data']["range_id"] = $range_id;
+    $_SESSION['admin_modules_data']["conflicts"] = array();
+    $_SESSION['plugin_toggle'] = array();
 }
 
-if (isset($admin_modules_data['msg'])) {
-    $msg = $admin_modules_data['msg'];
-    unset($admin_modules_data['msg']);
+if (isset($_SESSION['admin_modules_data']['msg'])) {
+    $msg = $_SESSION['admin_modules_data']['msg'];
+    unset($_SESSION['admin_modules_data']['msg']);
 }
 
 //Output starts here
@@ -242,7 +232,7 @@ include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
 include 'lib/include/admin_search_form.inc.php';
 
-if ($admin_modules_data["range_id"])
+if ($_SESSION['admin_modules_data']["range_id"])
 {
 
 ?>
@@ -275,7 +265,7 @@ if ($admin_modules_data["range_id"])
         <tr><? $cssSw->switchClass() ?>
             <td class="<?= $cssSw->getClass() ?>" align="center" colspan="3">
                 <?= Button::create(_('Übernehmen'), 'uebernehmen') ?>
-                <? if ($admin_modules_data["orig_bin"] != $admin_modules_data["changed_bin"]) {?>
+                <? if ($_SESSION['admin_modules_data']["orig_bin"] != $_SESSION['admin_modules_data']["changed_bin"]) {?>
                     <?= MessageBox::info(_("Diese Daten sind noch nicht gespeichert.")) ?>
                 <? } ?>
             </td>
@@ -283,12 +273,12 @@ if ($admin_modules_data["range_id"])
         <?
         foreach ($amodules->registered_modules as $key => $val)
         {
-            if ($amodules->isEnableable($key, $admin_modules_data["range_id"]))
+            if ($amodules->isEnableable($key, $_SESSION['admin_modules_data']["range_id"]))
             {
                 $pre_check = null;
                 if (isset($val['preconditions'])){
                     $method = 'module' . $key . 'Preconditions';
-                    if(method_exists($amodules, $method)) $pre_check = $amodules->$method($admin_modules_data["range_id"],$val['preconditions']);
+                    if(method_exists($amodules, $method)) $pre_check = $amodules->$method($_SESSION['admin_modules_data']["range_id"],$val['preconditions']);
                 }
 
                 ?>
@@ -297,9 +287,9 @@ if ($admin_modules_data["range_id"])
                     <font size=-1><b><?=$val["name"]?></b><br></font>
                 </td>
                 <td class="<?= $cssSw->getClass() ?>" width="15%">
-                    <input type="radio" <?=($pre_check ? 'disabled' : '')?> name="<?=$key?>_value" value="TRUE" <?=($amodules->isBit($admin_modules_data["changed_bin"], $val["id"])) ? "checked" : "" ?>>
+                    <input type="radio" <?=($pre_check ? 'disabled' : '')?> name="<?=$key?>_value" value="TRUE" <?=($amodules->isBit($_SESSION['admin_modules_data']["changed_bin"], $val["id"])) ? "checked" : "" ?>>
                     <font size=-1><?=_("an")?></font>
-                    <input type="radio" <?=($pre_check ? 'disabled' : '')?> name="<?=$key?>_value" value="FALSE" <?=($amodules->isBit($admin_modules_data["changed_bin"], $val["id"])) ? "" : "checked" ?>>
+                    <input type="radio" <?=($pre_check ? 'disabled' : '')?> name="<?=$key?>_value" value="FALSE" <?=($amodules->isBit($_SESSION['admin_modules_data']["changed_bin"], $val["id"])) ? "" : "checked" ?>>
                     <font size=-1><?=_("aus")?><br></font>
                 </td>
                 <td class="<?= $cssSw->getClass() ?>" width="70%">
@@ -307,12 +297,12 @@ if ($admin_modules_data["range_id"])
                     $getModuleXxExistingItems = "getModule".$key."ExistingItems";
 
                     if (method_exists($amodules,$getModuleXxExistingItems)) {
-                        if (($amodules->$getModuleXxExistingItems($admin_modules_data["range_id"])) && ($admin_modules_data["modules_list"][$key]))
-                            printf ("<font color=\"red\">".$amodules->registered_modules[$key]["msg_pre_warning"]."</font>", $amodules->$getModuleXxExistingItems($admin_modules_data["range_id"]));
+                        if (($amodules->$getModuleXxExistingItems($_SESSION['admin_modules_data']["range_id"])) && ($_SESSION['admin_modules_data']["modules_list"][$key]))
+                            printf ("<font color=\"red\">".$amodules->registered_modules[$key]["msg_pre_warning"]."</font>", $amodules->$getModuleXxExistingItems($_SESSION['admin_modules_data']["range_id"]));
                         else
-                            print ($admin_modules_data["modules_list"][$key]) ? $amodules->registered_modules[$key]["msg_deactivate"] : ($pre_check ? $pre_check : $amodules->registered_modules[$key]["msg_activate"]);
+                            print ($_SESSION['admin_modules_data']["modules_list"][$key]) ? $amodules->registered_modules[$key]["msg_deactivate"] : ($pre_check ? $pre_check : $amodules->registered_modules[$key]["msg_activate"]);
                     } else
-                        print ($admin_modules_data["modules_list"][$key]) ? $amodules->registered_modules[$key]["msg_deactivate"] : ($pre_check ? $pre_check : $amodules->registered_modules[$key]["msg_activate"]);
+                        print ($_SESSION['admin_modules_data']["modules_list"][$key]) ? $amodules->registered_modules[$key]["msg_deactivate"] : ($pre_check ? $pre_check : $amodules->registered_modules[$key]["msg_activate"]);
                     ?></font>
                 </td>
             </tr>
@@ -321,7 +311,7 @@ if ($admin_modules_data["range_id"])
         }
         foreach ($admin_modules_plugins as $plugin)
         {
-            $plugin_activated = $plugin->isActivated($admin_modules_data['range_id']);
+            $plugin_activated = $plugin->isActivated($_SESSION['admin_modules_data']['range_id']);
             ?>
             <tr><? $cssSw->switchClass() ?>
                 <td class="<?= $cssSw->getClass() ?>"  width="15%" align="left">
@@ -338,7 +328,7 @@ if ($admin_modules_data["range_id"])
                     <font size="-1">
                     <? if (!$plugin_activated): ?>
                         <?= _('Dieses Plugin kann jederzeit aktiviert werden.') ?>
-                    <? elseif ($warning = $plugin->deactivationWarning($admin_modules_data['range_id'])): ?>
+                    <? elseif ($warning = $plugin->deactivationWarning($_SESSION['admin_modules_data']['range_id'])): ?>
                         <font color="red"><?= $warning ?></font>
                     <? else: ?>
                         <?= _('Dieses Plugin kann jederzeit deaktiviert werden.') ?>

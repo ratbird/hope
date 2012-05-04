@@ -93,7 +93,8 @@ if (Request::option('new_session'))
     $_SESSION['archiv_assi_data'] = array();
 
 // A list was sent
-if (is_array($archiv_sem)) {
+$archiv_sem = Request::optionArray('archiv_sem');
+if (Request::optionArray('archiv_sem')) {
     $_SESSION['archiv_assi_data']['sems'] = array();
     $_SESSION['archiv_assi_data']['sem_check'] = array();
     $_SESSION['archiv_assi_data']['pos'] = 0;

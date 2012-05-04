@@ -128,7 +128,6 @@ $sem->registerCommand('changeChronoGroupedFilter', 'themen_changeChronoGroupedFi
 $sem->registerCommand('chronoAutoAssign', 'themen_chronoAutoAssign');
 $sem->registerCommand('open', 'themen_open');
 $sem->registerCommand('close', 'themen_close');
-$sem->registerCommand('doAddIssue', 'themen_close');
 $sem->registerCommand('doAddIssue', 'themen_doAddIssue');
 $sem->registerCommand('deleteIssueID', 'themen_deleteIssueID');
 $sem->registerCommand('changeIssue', 'themen_changeIssue');
@@ -174,7 +173,7 @@ $themen =& $sem->getIssues(true);   // read again, so we have the actual sort or
                         <?
                             $tpl['view']['simple'] = 'Standard';
                             $tpl['view']['expert'] = 'Erweitert';
-                            $tpl['selected'] = $viewModeFilter;
+                            $tpl['selected'] = $_SESSION['viewModeFilter'];
                             include('lib/raumzeit/templates/choose_view.tpl');
                         ?>
                     </td>
@@ -240,7 +239,7 @@ $themen =& $sem->getIssues(true);   // read again, so we have the actual sort or
                     </td>
                 </tr>
                 <?
-                if ( isset($cmd) && ($cmd == 'addIssue') && ($numIssues == 1)) {
+               if ( isset($cmd) && ($cmd == 'addIssue') && (Request::int('numIssues') == 1)) {
                     $tpl['submit_name'] = 'doAddIssue';
                     $tpl['first'] = true;
                     $tpl['last'] = true;
@@ -280,12 +279,12 @@ $themen =& $sem->getIssues(true);   // read again, so we have the actual sort or
                         $tpl['last'] = true;
                     }
 
-                    if ($openAll) {
+                    if (Request::option('openAll')) {
                         $tpl['openAll'] = TRUE;
                         $_SESSION['issue_open'][$themen_id] = TRUE;
                     }
 
-                    if (($_SESSION['issue_open'][$themen_id] && $open_close_id == $themen_id) || $openAll) {
+                    if (($_SESSION['issue_open'][$themen_id] && Request::option('open_close_id') == $themen_id) || Request::option('openAll')) {
                         $tpl['submit_name'] = 'changeIssue';
                         $tpl['theme_description'] = htmlReady($thema->getDescription());
                         $tpl['forumEntry'] = ($thema->hasForum()) ? SELECTED : NOT_SELECTED;
@@ -297,7 +296,7 @@ $themen =& $sem->getIssues(true);   // read again, so we have the actual sort or
                     }
                     $count++;
                 }
-                if ($openAll) {
+                if (Request::option('openAll')) {
                 ?>
                 <tr>
                     <td class="blank" colspan="3" align="center">

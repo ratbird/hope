@@ -55,7 +55,8 @@ include_once ("lib/vote/view/visual.inc.php");
 global $auth, $perm;
 
 /* If there is no rights to edit ------------------------------------------- */
-if (isset($_REQUEST["voteID"])) {
+$voteID = Request::option('voteID');
+if (isset($voteID)) {
    $vote = new Vote ($voteID);
    $rangeID = $vote->getRangeID ();
    if( !$rangeID ) $rangeID = $_REQUEST["rangeID"];
@@ -225,7 +226,10 @@ if( !isset( $rangeID ) )  $rangeID = $vote->getRangeID();
 /******************** page commands ********************************/
 
 if( $pageMode != MODE_RESTRICTED ) {
-
+    $move_up = Request::optionArray('move_up');
+    $move_down = Request::optionArray('move_down');
+    $deleteAnswers = Request::optionArray('deleteAnswers');
+    $newAnswerFields = Request::int('newAnswerFields');
     /**** Command: add Answers ****/
     if(Request::submitted('addAnswersButton')) {
     for( $i=0; $i<$newAnswerFields; $i++ )
@@ -233,19 +237,19 @@ if( $pageMode != MODE_RESTRICTED ) {
     }
 
     /**** Command: move Answers ****/
-    elseif( isset( $move_up ) ) {
+    if( !empty( $move_up ) ) {
     for( $i=0; $i<count($answers); $i++ )
         if( isset( $move_up[$i] ) )
         moveAnswerUp( $answers, $i );
     }
-    elseif( isset( $move_down ) ) {
+    if( !empty( $move_down ) ) {
     for( $i=0; $i<count($answers); $i++ )
         if( isset( $move_down[$i] ) )
         moveAnswerDown( $answers, $i );
     }
 
     /**** Command: delete Answers ****/
-    elseif(Request::submitted('deleteAnswersButton')) {
+    if(Request::submitted('deleteAnswersButton')) {
     for( $i=0; $i<count($answers); $i++ ) {
         if( $deleteAnswers[$i] == "on" ) {
         deleteAnswer( $i, $answers, $deleteAnswers );

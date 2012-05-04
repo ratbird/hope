@@ -25,7 +25,8 @@
 use Studip\Button, Studip\LinkButton; 
 
 require '../lib/bootstrap.php';
-
+var_dump($_REQUEST);
+//unregister_globals();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth",
                 "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $auth->login_if($auth->auth["uid"] == "nobody");
@@ -56,7 +57,7 @@ include ("lib/include/html_head.inc.php"); // Output of html head
 include ("lib/include/header.php"); // Output of Stud.IP head
 include 'lib/include/admin_search_form.inc.php';
 
-if (isset($SessSemName[1]) && (!$make_lock)) {
+if (isset($SessSemName[1]) && (!Request::int('make_lock'))) {
     $stmt = DBManager::get()->prepare(
       "SELECT lock_rule, Name, Veranstaltungsnummer ".
       "FROM seminare WHERE Seminar_id=?");
@@ -110,7 +111,7 @@ if (isset($SessSemName[1]) && isset($selected)) {
 
 }
 
-if (!Request::submitted('general_lock') && is_array($lock_sem) && !$selected) {
+if (!Request::submitted('general_lock') && Request::optionArray('lock_sem') && !$selected) {
     $db = DBManager::get();
 
     $stmt = $db->prepare("SELECT Veranstaltungsnummer, Name, lock_rule ".
@@ -121,7 +122,7 @@ if (!Request::submitted('general_lock') && is_array($lock_sem) && !$selected) {
 
     $stmt_lock2 = $db->prepare("UPDATE seminare SET lock_rule=NULL ".
                                "WHERE Seminar_id=?");
-
+    $lock_sem = Request::optionArray('lock_sem');
     while (list($key, $val) = each($lock_sem)) {
 
         $stmt->execute(array($key));
@@ -131,7 +132,7 @@ if (!Request::submitted('general_lock') && is_array($lock_sem) && !$selected) {
             echo $zt->row(array(htmlReady($row["Veranstaltungsnummer"]),
                                 htmlReady($row["Name"]),
                                 htmlReady($rule["name"])));
-            if ($make_lock) {
+            if (Request::int('make_lock')) {
                 if ($val != 'none') {
                     $stmt_lock1->execute(array($val, $key));
                 } else {

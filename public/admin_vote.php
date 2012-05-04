@@ -38,12 +38,13 @@
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
 ob_start(); // start output buffering
 
 page_open (array ("sess" => "Seminar_Session", "auth" => "Seminar_Auth",
           "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $perm->check ("autor");
-
+$view = Request::option('view');
 if (Request::get('admin_inst_id')) {
     $showrangeID = Request::get('admin_inst_id');
     $view = 'vote_inst';
@@ -57,7 +58,7 @@ PageLayout::setTitle(_("Verwaltung von Umfragen und Tests"));
 
 require_once 'lib/admin_search.inc.php';
 
-if ($list || $view && !(isDeputyEditAboutActivated() && isDeputy($auth->auth["uid"], get_userid(Request::get('cid')), true))) {
+if (Request::option('list') || Request::option('view') && !(isDeputyEditAboutActivated() && isDeputy($auth->auth["uid"], get_userid(Request::get('cid')), true))) {
     if ($perm->have_perm('admin')) {
         if ($links_admin_data['topkat'] == 'sem') {
             Navigation::activateItem('/admin/course/vote');
@@ -74,11 +75,11 @@ if ($list || $view && !(isDeputyEditAboutActivated() && isDeputy($auth->auth["ui
 include_once('lib/include/html_head.inc.php');
 include_once('lib/include/header.php');
 
-if ($list || $view) {
+if (Request::option('list') || Request::option('view')) {
     include 'lib/include/admin_search_form.inc.php';
 }
 
-if ($page == "edit")
+if (Request::option('page') == "edit")
     include 'lib/vote/vote_edit.inc.php';
 else
     include 'lib/vote/vote_overview.inc.php';

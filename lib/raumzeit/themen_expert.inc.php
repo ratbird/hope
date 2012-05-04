@@ -62,8 +62,8 @@ function themen_deleteIssueID() {
 }
 
 function themen_changeIssue() {
-    global $sem,$themen;
-
+    global $sem, $themen;
+    
     $msg .= sprintf(_("Das Thema \"%s\" wurde geändert."), htmlReady($themen[$_REQUEST['issue_id']]->toString())) . '<br>';
     $themen[$_REQUEST['issue_id']]->setDescription($_REQUEST['theme_description']);
     $themen[$_REQUEST['issue_id']]->setTitle($_REQUEST['theme_title']);
@@ -80,14 +80,14 @@ function themen_changeIssue() {
 
 function themen_deleteIssue() {
     global $sem, $themen;
-
     $sem->createMessage(_("Folgendes Thema wurde gelöscht:").'<br><li>'.htmlReady($themen[$_REQUEST['issue_id']]->toString()));
     $sem->deleteIssue($_REQUEST['issue_id']);
 }
 
 function themen_addIssue() {
-    global $sem, $numIssues, $cmd, $id;
+    global $sem, $cmd, $id;
 
+    $numIssues = Request::int('numIssues');
     if ($numIssues > 20) {      // for security reasons, it should not be possible to add thousands of issues at one time
         unset($cmd);
         unset($numIssues);
@@ -107,8 +107,7 @@ function themen_addIssue() {
 }
 
 function themen_changePriority() {
-    global $sem,$themen;
-
+    global $sem, $themen;
     if ($themen[$_REQUEST['issueID']]->getPriority() > $_REQUEST['newPriority']) {
         $sem->createMessage(sprintf(_("Das Thema \"%s\" wurde um eine Position nach oben verschoben."), htmlReady($themen[$_REQUEST['issueID']]->toString())));
     } else {
@@ -126,7 +125,7 @@ function themen_openAll() {
 
 function themen_saveAll() {
     global $sem, $themen, $changeTitle, $changeFile, $changeForum, $changeDescription;
-
+    
     $msg = _("Folgende Themen wurden bearbeitet:").'<br>';
     foreach ($changeTitle as $key => $val) {    // we use the changeTitle-array for running through all themes ($key = issue_id and $val = title)
         $forumValue = ($changeForum[$key] == 'on') ? TRUE : FALSE;

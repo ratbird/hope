@@ -27,6 +27,7 @@ use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", 'user' => "Seminar_User"));
 $auth->login_if($auth->auth["uid"] == "nobody");
 $perm->check("dozent");
@@ -74,7 +75,7 @@ include 'lib/include/admin_search_form.inc.php';
 $aux_query     = "SELECT aux_lock_rule, Name, Veranstaltungsnummer FROM seminare WHERE Seminar_id = ?";
 $aux_statement = DBManager::get()->prepare($aux_query);
 
-if (isset($SessSemName[1]) && (!$make_aux)) {
+if (isset($SessSemName[1]) && (!Request::option('make_aux'))) {
     $aux_statement->execute(array($SessSemName[1]));
     $seminar_data = $aux_statement->fetch(PDO::FETCH_ASSOC);
     $aux_statement->closeCursor();
@@ -124,11 +125,11 @@ if (isset($SessSemName[1]) && isset($selected)) {
 
 }
 
-if (!Request::submitted('aux_rule') && is_array($aux_sem) && (!$selected)) {
+if (!Request::submitted('aux_rule') && Request::optionArray('aux_sem') && (!$selected)) {
     $update_query     = "UPDATE seminare SET aux_lock_rule = ? WHERE Seminar_id = ?";
     $update_statement = DBManager::get()->prepare($update_query);
     
-    foreach ($aux_sem as $key => $val) {
+    foreach (Request::optionArray('aux_sem') as $key => $val) {
         $aux_statement->execute(array($key));
         $aux_data = $aux_statement->fetch(PDO::FETCH_ASSOC);
         $aux_statement->closeCursor();
@@ -139,7 +140,7 @@ if (!Request::submitted('aux_rule') && is_array($aux_sem) && (!$selected)) {
                 $rule['name'] = '-- ' . _('keine Zusatzangaben') . ' --';
             }
             echo $zt->row(array(htmlReady($aux_data['Veranstaltungsnummer']), htmlReady($aux_data['Name']), htmlReady($rule["name"])));
-            if ($make_aux) {
+            if (Request::option('make_aux')) {
                 $update_statement->execute(array($val == 'null' ? null : $val, $key));
             }
         } else {

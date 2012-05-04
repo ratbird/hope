@@ -1423,16 +1423,16 @@ class Seminar
 
     function setFilter($timestamp)
     {
-        global $raumzeitFilter, $semester;
+        global $semester;
 
         if ($timestamp == 'all') {
-            $raumzeitFilter = 'all';
+            $_SESSION['raumzeitFilter'] = 'all';
             $this->applyTimeFilter(0, 0);
         } else {
             if (!$semester) $semester = new SemesterData();
 
             $filterSemester = $semester->getSemesterDataByDate($timestamp);
-        $raumzeitFilter = $filterSemester['beginn'];
+            $_SESSION['raumzeitFilter'] = $filterSemester['beginn'];
             $this->applyTimeFilter($filterSemester['beginn'], $filterSemester['ende']);
         }
     }
@@ -1524,27 +1524,27 @@ class Seminar
     {
         global $raumzeitFilter, $cmd, $semester;
         if (isset($cmd) && ($cmd == 'applyFilter')) {
-            $raumzeitFilter = $_REQUEST['newFilter'];
+            $_SESSION['raumzeitFilter'] = $_REQUEST['newFilter'];
         }
 
         if ($this->getEndSemester() == 0 && !$this->hasDatesOutOfDuration()) {
-            $raumzeitFilter = $this->getStartSemester();
+            $_SESSION['raumzeitFilter'] = $this->getStartSemester();
         }
 
         /* Zeitfilter anwenden */
-        if ($raumzeitFilter == '') {
-            $raumzeitFilter = 'all';
+        if ($_SESSION['raumzeitFilter'] == '') {
+            $_SESSION['raumzeitFilter'] = 'all';
             /*
             $raumzeitFilter = $semester->getCurrentSemesterData();
             $raumzeitFilter = $raumzeitFilter['beginn'];
             */
         }
 
-        if ($raumzeitFilter != 'all') {
-            if (($raumzeitFilter < $this->getStartSemester()) || ($raumzeitFilter > $this->getEndSemesterVorlesEnde())) {
-                $raumzeitFilter = $this->getStartSemester();
+        if ($_SESSION['raumzeitFilter'] != 'all') {
+            if (($_SESSION['raumzeitFilter'] < $this->getStartSemester()) || ($_SESSION['raumzeitFilter'] > $this->getEndSemesterVorlesEnde())) {
+                $_SESSION['raumzeitFilter'] = $this->getStartSemester();
             }
-            $filterSemester = $semester->getSemesterDataByDate($raumzeitFilter);
+            $filterSemester = $semester->getSemesterDataByDate($_SESSION['raumzeitFilter']);
             $this->applyTimeFilter($filterSemester['beginn'], $filterSemester['ende']);
         }
 

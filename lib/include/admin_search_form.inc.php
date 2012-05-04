@@ -444,10 +444,10 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                     <?
                         echo '<select name="aux_all" size="1">';
                         echo '<option value="-1">'. _("Bitte auswählen"). '</option>';
-                        echo '<option value="null" ' . ($aux_all == 'null' ? 'selected=selected' : '') . '>-- '. _("keine Zusatzangaben") .' --</option>';
+                        echo '<option value="null" ' . (Request::option('aux_all') == 'null' ? 'selected=selected' : '') . '>-- '. _("keine Zusatzangaben") .' --</option>';
                         foreach ((array)$all_aux_rules as $lock_id => $data) {
                             echo '<option value="'.$lock_id.'"';
-                            if (isset($aux_all) && $aux_all==$lock_id) {
+                            if (Request::option('aux_all') && Request::option('aux_all')==$lock_id) {
                                 echo ' selected=selected ';
                             }
                             echo '>'.htmlReady($data['name']).'</option>';
@@ -610,9 +610,9 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                         <?
                             foreach ((array)$all_aux_rules as $lock_id => $data) {
                                 echo '<option value="'.$lock_id.'"';
-                                if (isset($aux_all) && $aux_all==$lock_id) {
+                                if (Request::option('aux_all') && Request::option('aux_all')==$lock_id) {
                                     echo ' selected ';
-                                } elseif (!isset($aux_all) && ($lock_id == $db5->f("aux_lock_rule"))) {
+                                } elseif (!Request::option('aux_all') && ($lock_id == $db5->f("aux_lock_rule"))) {
                                     echo ' selected ';
                                 }
                                 echo '>'.htmlReady($data['name']).'</option>';

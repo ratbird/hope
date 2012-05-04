@@ -27,6 +27,7 @@ use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
 require_once('lib/dates.inc.php'); // Funktionen zum Loeschen von Terminen
 require_once('lib/datei.inc.php'); // Funktionen zum Loeschen von Dokumenten
 require_once 'lib/functions.php';
@@ -88,7 +89,7 @@ function visibility_change_message($old_vis, $new_vis) {
 
 $sems=array();
 // single delete (a Veranstaltung is open)
-if ($SessSemName[1] && (!$change_visible)) {
+if ($SessSemName[1] && (!Request::int('change_visible'))) {
     $visibility_sem[] = "_id_" . $SessSemName[1];
     $visibility_sem[] = "on";
     $single=true;
@@ -96,7 +97,8 @@ if ($SessSemName[1] && (!$change_visible)) {
 
 // Handlings....
 // A list was sent
-if (is_array($visibility_sem)) {
+$visibility_sem = Request::optionArray('visibility_sem');
+if (Request::optionArray('visibility_sem')) {
     foreach($visibility_sem as $key => $val) {
         if ((substr($val, 0, 4) == "_id_") && (substr($visibility_sem[$key + 1], 0, 4) != "_id_"))
                 if ($visibility_sem[$key + 1] == "on") {
@@ -126,7 +128,7 @@ echo $zt->cell("<b>"._("Name")."</b>",array("width"=>"75%"));
 echo $zt->cell("<b>"._("Sichtbarkeit")."</b>",array("width"=>"20%"));
 echo $zt->closeRow();
 
-if ($SessSemName[1] && (!$change_visible)) {
+if ($SessSemName[1] && (!Request::int('change_visible'))) {
     $visibility_statement->execute(array($SessSemName[1]));
     $temp = $visibility_statement->fetch(PDO::FETCH_ASSOC);
     $visibility_statement->closeCursor();
@@ -151,9 +153,10 @@ if ($SessSemName[1] && (!$change_visible)) {
     }
 
 } else {
+    $all_sem = Request::optionArray('all_sem');
     $update_query     = "UPDATE seminare SET visible = ? WHERE Seminar_id = ?";
     $update_statement = DBManager::get()->prepare($update_query);
-    
+
     for ($i=0;$i<count($all_sem);$i++) {
         $visible=false;
         

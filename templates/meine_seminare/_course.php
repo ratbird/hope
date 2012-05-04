@@ -64,9 +64,7 @@ foreach ($group_members as $member) {
                     }
                 ?>
                         <?= _("[versteckt]") ?>
-                        <? $attributes = tooltip2($infotext, TRUE, TRUE) ?>
-                        <? $attributes['class'] = 'text-top'; ?>
-                        <?= Assets::img('icons/16/grey/info-circle.png', $attributes) ?>
+                        <?= tooltipicon($infotext) ?>
                 <? } ?>
             </td>
             <td class="<?= $cssSw->getClass() ?>" align="left" nowrap="nowrap">

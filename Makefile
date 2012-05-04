@@ -1,6 +1,7 @@
 PHP = php
 PLESSC = $(PHP) vendor/lessphp/plessc
 JLESSC = $(shell which lessc)
+STYLES = public/assets/stylesheets
 
 ifneq ($(wildcard $(JLESSC)),)
 	LESSC = $(JLESSC)

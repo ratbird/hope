@@ -45,10 +45,10 @@ class StmAbstractAssiVisualization {
             echo $table->cell($form->form_fields[$name]['info']);
             echo $table->closeRow();
         }
-        echo $table->blankRow();
-        $table->setCellColspan(4);
-        echo $table->cell($form->getFormButton("neuanlegen"), array('align' => 'center'));
-        echo $table->blankRow();
+        //echo $table->blankRow();
+        //$table->setCellColspan(4);
+        //echo $table->cell($form->getFormButton("neuanlegen"), array('align' => 'center'));
+        //echo $table->blankRow();
         echo $table->close();
         echo $table->open(array('class' => 'steelgraulight'));
 

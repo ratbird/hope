@@ -29,6 +29,7 @@ use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
 require_once ('lib/visual.inc.php');
 require_once ('lib/classes/StudipLitSearch.class.php');
 require_once ('lib/classes/StudipLitClipBoard.class.php');

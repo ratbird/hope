@@ -3,6 +3,7 @@
     use Studip\Button, Studip\LinkButton;
 ?>
 <?
+
 $cssSw = new CSSClassSwitcher();
 $style = "style=\"background-image: url('". Assets::image_path('forumstrich') ."');"
     ." background-position: left;"

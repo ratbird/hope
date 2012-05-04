@@ -27,13 +27,17 @@ use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $perm->check("user");
 
 include('lib/seminar_open.php'); // initialise Stud.IP-Session
 
 // -- here you have to put initialisations for the current page
-
+$druck = Request::option('druck');
+$wiki_dump_id = Request::option('wiki_dump_id');
+$forum_dump_id = Request::option('forum_dump_id');
+$dump_id = Request::option('dump_id');
 if ($druck) {
     PageLayout::removeStylesheet('style.css');
     PageLayout::addStylesheet('print.css');
@@ -54,40 +58,43 @@ require_once('lib/datei.inc.php');
 require_once('lib/log_events.inc.php');
 
 $cssSw=new cssClassSwitcher;
-$sess->register("archiv_data");
-
+//$sess->register("archiv_data");
+$delete_id = Request::option('delete_id');
+$open = Request::option('open');
+$delete_user = Request::option('delete_user');
+$add_user = Request::option('add_user');
 //Daten des Suchformulars uebernehmen oder loeschen
-if ($suche) {
-    $archiv_data='';
-    $archiv_data["all"]=$all;
-    $archiv_data["name"]=$name;
-    $archiv_data["sem"]=$sem;
-    $archiv_data["inst"]=$inst;
-    $archiv_data["fak"]=$fak;
-    $archiv_data["desc"]=$desc;
-    $archiv_data["doz"]=$doz;
-    $archiv_data["pers"]=$pers;
-    $archiv_data["perform_search"]=TRUE;
-} elseif ((!$open) && (!$delete_id) && (!$show_grants) && (!$hide_grants) && (!$delete_user) && (!Request::submitted('add_user')) && (!Request::submitted('new_search')) && (!$close) && (!$dump_id) && (!$sortby) && (!$back))
-    $archiv_data["perform_search"]=FALSE;
+if (Request::option('suche')) {
+    $_SESSION['archiv_data']='';
+    $_SESSION['archiv_data']["all"]= Request::get('all');
+    $_SESSION['archiv_data']["name"]=Request::get('name');
+    $_SESSION['archiv_data']["sem"]=Request::get('sem');
+    $_SESSION['archiv_data']["inst"]=Request::option('inst');
+    $_SESSION['archiv_data']["fak"]=Request::get('fak');
+    $_SESSION['archiv_data']["desc"]=Request::get('desc');
+    $_SESSION['archiv_data']["doz"]=Request::get('doz');
+    $_SESSION['archiv_data']["pers"]=Request::option('pers');
+    $_SESSION['archiv_data']["perform_search"]=TRUE;
+} elseif ((!$open) && (!$delete_id) && (!Request::option('show_grants')) && (!Request::option('hide_grants')) && (!$delete_user) && (!Request::submitted('add_user')) && (!Request::submitted('new_search')) && (!Request::option('close')) && (!$dump_id) && (!Request::option('sortby')) && (!Request::option('back')))
+    $_SESSION['archiv_data']["perform_search"]=FALSE;
+
 
 //Anzeige der Zugriffsberechtigten Personen ein/ausschalten
-if ($show_grants) {
-    $archiv_data["edit_grants"]=TRUE;
+if (Request::option('show_grants')) {
+    $_SESSION['archiv_data']["edit_grants"]=TRUE;
     }
-if ($hide_grants) {
-    $archiv_data["edit_grants"]=FALSE;
+if (Request::option('hide_grants')) {
+    $_SESSION['archiv_data']["edit_grants"]=FALSE;
     }
 
 if ($open) {
-    $archiv_data["open"]=$open;
-    }
+    $_SESSION['archiv_data']["open"]=$open;
+}
+if ((Request::option('close')) || (Request::option('suche'))){
+    $_SESSION['archiv_data']["open"]=FALSE;
+}
 
-if (($close) || ($suche)){
-    $archiv_data["open"]=FALSE;
-    }
-
-$archiv_data['sortby'] = Request::option('sortby', 'Name');
+$_SESSION['archiv_data']['sortby'] = Request::option('sortby', 'Name');
 
 $u_id = $user->id;
 unset($message, $details);
@@ -258,7 +265,7 @@ include('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
                                 <font size=-1><?=_("Name der Veranstaltung:")?></font>
                             </td>
                             <td class="<? echo $cssSw->getClass() ?>" width="90%">
-                                <input  type="text"  size=30 maxlength=255 name="name" value="<? echo htmlReady(stripslashes($archiv_data["name"])) ?>">
+                                <input  type="text"  size=30 maxlength=255 name="name" value="<? echo htmlReady(stripslashes($_SESSION['archiv_data']["name"])) ?>">
                             </td>
                         </tr>
                         <tr <? $cssSw->switchClass() ?>>
@@ -266,7 +273,7 @@ include('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
                                 <font size=-1><?=_("DozentIn der Veranstaltung:")?></font>
                             </td>
                             <td  class="<? echo $cssSw->getClass() ?>" width="90%">
-                                <input  type="text"  size=30 maxlength=255 name="doz" value="<? echo htmlReady(stripslashes($archiv_data["doz"])) ?>">
+                                <input  type="text"  size=30 maxlength=255 name="doz" value="<? echo htmlReady(stripslashes($_SESSION['archiv_data']["doz"])) ?>">
                             </td>
                         </tr>
                         <tr <? $cssSw->switchClass() ?>>
@@ -282,7 +289,7 @@ include('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
                                 $statement = DBManager::get()->query($query);
                                 while ($semester = $statement->fetchColumn()) {
                                     printf('<option%s>%s</option>',
-                                           $semester == $archiv_data['sem'] ? ' selected' : '',
+                                           $semester == $_SESSION['archiv_data']['sem'] ? ' selected' : '',
                                            htmlReady($semester));
                                 }
                             ?>
@@ -308,7 +315,7 @@ include('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
                                 while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
                                     printf('<option value="%s"%s>%s</option>',
                                            htmlReady($row['heimat_inst_id']),
-                                           $row['heimat_inst_id'] == $archiv_data['inst'] ? ' selected' : '',
+                                           $row['heimat_inst_id'] == $_SESSION['archiv_data']['inst'] ? ' selected' : '',
                                            htmlReady(my_substr($row['Name'], 0, 40)));
                                 }
                             ?>
@@ -330,7 +337,7 @@ include('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
                                 while ($fakultaet = $statement->fetchColumn()) {
                                     printf('<option value="%s"%s>%s</option>',
                                            htmlReady($fakultaet),
-                                           $fakultaet == stripslashes($archiv_data['fak']) ? ' selected' : '',
+                                           $fakultaet == stripslashes($_SESSION['archiv_data']['fak']) ? ' selected' : '',
                                            htmlReady(my_substr($fakultaet, 0, 40)));
                                 }
                             ?>
@@ -343,7 +350,7 @@ include('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
                                 <font size=-1><?=_("Beschreibung:")?></font>
                             </td>
                             <td class="<? echo $cssSw->getClass() ?>" width="90%">
-                                <input  type="text"  size=30 maxlength=255 name="desc" value="<?echo htmlReady(stripslashes($archiv_data["desc"])) ?>">
+                                <input  type="text"  size=30 maxlength=255 name="desc" value="<?echo htmlReady(stripslashes($_SESSION['archiv_data']["desc"])) ?>">
                             </td>
                         </tr>
                         <tr <? $cssSw->switchClass() ?>>
@@ -351,7 +358,7 @@ include('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
                                 <font size=-1><?=_("Suche &uuml;ber <b>alle</b> Felder:")?></font>
                             </td>
                             <td class="<? echo $cssSw->getClass() ?>" width="90%">
-                                <input  type="text"  size=30 maxlength=255 name="all" value="<? echo htmlReady(stripslashes($archiv_data["all"])) ?>">
+                                <input  type="text"  size=30 maxlength=255 name="all" value="<? echo htmlReady(stripslashes($_SESSION['archiv_data']["all"])) ?>">
                             </td>
                         </tr>
                         <tr <? $cssSw->switchClass() ?>>
@@ -359,7 +366,7 @@ include('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
                                 &nbsp;
                             </td>
                             <td class="<? echo $cssSw->getClass() ?>" width="90%">
-                                <input  type="checkbox" name="pers" <? if ($archiv_data["pers"]) echo "checked" ?>>
+                                <input  type="checkbox" name="pers" <? if ($_SESSION['archiv_data']["pers"]) echo "checked" ?>>
                                 <font size=-1><?=_("Nur Veranstaltungen anzeigen, an denen ich teilgenommen habe")?></font>
                             </td>
                         </tr>
@@ -387,60 +394,60 @@ include('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
 
 // wollen wir was Suchen?
 
-if ($archiv_data["perform_search"]) {
+if ($_SESSION['archiv_data']["perform_search"]) {
     $db = new DB_Seminar;
     
     //searchstring to short?
-    if ((((strlen($archiv_data["all"]) < 4) && ($archiv_data["all"]))
-        || ((strlen($archiv_data["name"]) < 4) && ($archiv_data["name"]))
-        || ((strlen($archiv_data["desc"]) < 4) && ($archiv_data["desc"]))
-        || ((strlen($archiv_data["doz"]) < 4) && ($archiv_data["doz"])))
-        && (!$archiv_data["pers"]) && (!$archiv_data["inst"]) && (!$archiv_data["fak"]))
+    if ((((strlen($_SESSION['archiv_data']["all"]) < 4) && ($_SESSION['archiv_data']["all"]))
+        || ((strlen($_SESSION['archiv_data']["name"]) < 4) && ($_SESSION['archiv_data']["name"]))
+        || ((strlen($_SESSION['archiv_data']["desc"]) < 4) && ($_SESSION['archiv_data']["desc"]))
+        || ((strlen($_SESSION['archiv_data']["doz"]) < 4) && ($_SESSION['archiv_data']["doz"])))
+        && (!$_SESSION['archiv_data']["pers"]) && (!$_SESSION['archiv_data']["inst"]) && (!$_SESSION['archiv_data']["fak"]))
         $string_too_short = TRUE;
-    if ((!$archiv_data["all"]) && (!$archiv_data["name"]) && (!$archiv_data["desc"]) && (!$archiv_data["doz"]) && (!$archiv_data["pers"]) && (!$archiv_data["inst"]) && (!$archiv_data["fak"]))
+    if ((!$_SESSION['archiv_data']["all"]) && (!$_SESSION['archiv_data']["name"]) && (!$_SESSION['archiv_data']["desc"]) && (!$_SESSION['archiv_data']["doz"]) && (!$_SESSION['archiv_data']["pers"]) && (!$_SESSION['archiv_data']["inst"]) && (!$_SESSION['archiv_data']["fak"]))
         $string_too_short = TRUE;
 
-    if ($archiv_data["pers"])
+    if ($_SESSION['archiv_data']["pers"])
         $query ="SELECT archiv.seminar_id, name, untertitel,  beschreibung, start_time, semester, studienbereiche, heimat_inst_id, institute, dozenten, fakultaet, archiv_file_id, forumdump, wikidump FROM archiv LEFT JOIN archiv_user USING (seminar_id) WHERE user_id = '".$user->id."' AND ";
     else
         $query ="SELECT seminar_id, name, untertitel,  beschreibung, start_time, semester, studienbereiche, heimat_inst_id, institute, dozenten, fakultaet, archiv_file_id, forumdump, wikidump FROM archiv WHERE ";
-    if ($archiv_data["all"]) {
-        $query .= "name LIKE '%".trim($archiv_data["all"])."%'";
-        $query .= " OR untertitel LIKE '%".trim($archiv_data["all"])."%'";
-        $query .= " OR beschreibung LIKE '%".trim($archiv_data["all"])."%'";
-        $query .= " OR start_time LIKE '%".trim($archiv_data["all"])."%'";
-        $query .= " OR semester LIKE '%".trim($archiv_data["all"])."%'";
-        $query .= " OR studienbereiche LIKE '%".trim($archiv_data["all"])."%'";
-        $query .= " OR institute LIKE '%".trim($archiv_data["all"])."%'";
-        $query .= " OR dozenten LIKE '%".trim($archiv_data["all"])."%'";
-        $query .= " OR fakultaet LIKE '%".trim($archiv_data["all"])."%'";
+    if ($_SESSION['archiv_data']["all"]) {
+        $query .= "name LIKE '%".trim($_SESSION['archiv_data']["all"])."%'";
+        $query .= " OR untertitel LIKE '%".trim($_SESSION['archiv_data']["all"])."%'";
+        $query .= " OR beschreibung LIKE '%".trim($_SESSION['archiv_data']["all"])."%'";
+        $query .= " OR start_time LIKE '%".trim($_SESSION['archiv_data']["all"])."%'";
+        $query .= " OR semester LIKE '%".trim($_SESSION['archiv_data']["all"])."%'";
+        $query .= " OR studienbereiche LIKE '%".trim($_SESSION['archiv_data']["all"])."%'";
+        $query .= " OR institute LIKE '%".trim($_SESSION['archiv_data']["all"])."%'";
+        $query .= " OR dozenten LIKE '%".trim($_SESSION['archiv_data']["all"])."%'";
+        $query .= " OR fakultaet LIKE '%".trim($_SESSION['archiv_data']["all"])."%'";
     } else {
-        if ($archiv_data["name"])
-            $query .= "name LIKE '%".trim($archiv_data["name"])."%'";
+        if ($_SESSION['archiv_data']["name"])
+            $query .= "name LIKE '%".trim($_SESSION['archiv_data']["name"])."%'";
         else
             $query .= "name LIKE '%%'";
-        if ($archiv_data["desc"])
-            $query .= " AND beschreibung LIKE '%".trim($archiv_data["desc"])."%'";
+        if ($_SESSION['archiv_data']["desc"])
+            $query .= " AND beschreibung LIKE '%".trim($_SESSION['archiv_data']["desc"])."%'";
         else
             $query .= " AND beschreibung LIKE '%%'";
-        if ($archiv_data["sem"])
-            $query .= " AND semester LIKE '%".trim($archiv_data["sem"])."%'";
+        if ($_SESSION['archiv_data']["sem"])
+            $query .= " AND semester LIKE '%".trim($_SESSION['archiv_data']["sem"])."%'";
         else
             $query .= " AND semester LIKE '%%'";
-        if ($archiv_data["inst"])
-            $query .= " AND heimat_inst_id LIKE '%".trim($archiv_data["inst"])."%'";
+        if ($_SESSION['archiv_data']["inst"])
+            $query .= " AND heimat_inst_id LIKE '%".trim($_SESSION['archiv_data']["inst"])."%'";
         else
             $query .= " AND heimat_inst_id LIKE '%%'";
-        if ($archiv_data["doz"])
-            $query .= " AND dozenten LIKE '%".trim($archiv_data["doz"])."%'";
+        if ($_SESSION['archiv_data']["doz"])
+            $query .= " AND dozenten LIKE '%".trim($_SESSION['archiv_data']["doz"])."%'";
         else
             $query .= " AND dozenten LIKE '%%'";
-        if ($archiv_data["fak"])
-            $query .= " AND fakultaet LIKE '%".trim($archiv_data["fak"])."%'";
+        if ($_SESSION['archiv_data']["fak"])
+            $query .= " AND fakultaet LIKE '%".trim($_SESSION['archiv_data']["fak"])."%'";
         else
             $query .= " AND fakultaet LIKE '%%'";
     }
-    $query .= " ORDER BY ".$archiv_data["sortby"];
+    $query .= " ORDER BY ".$_SESSION['archiv_data']["sortby"];
 
     $db->query($query);
 
@@ -469,8 +476,8 @@ if ($archiv_data["perform_search"]) {
     while ($db->next_record()) {
             $file_name=_("Dateisammlung") . " ".substr($db->f("name"),0,200).".zip";
             $view = 0;
-            if ($archiv_data["open"]) {
-            if ($archiv_data["open"] ==$db->f('seminar_id'))
+            if ($_SESSION['archiv_data']["open"]) {
+            if ($_SESSION['archiv_data']["open"] ==$db->f('seminar_id'))
                 $class="steelgraulight";
             else
                 $class="steel1";
@@ -485,7 +492,7 @@ if ($archiv_data["perform_search"]) {
             echo "<tr><td class=\"$class\" width=\"1%\" nowrap>&nbsp;";
 
             // schon aufgeklappt?
-            if ($archiv_data["open"]==$db->f('seminar_id')) {
+            if ($_SESSION['archiv_data']["open"]==$db->f('seminar_id')) {
                 echo "<a name=\"anker\"></a><a href=\"". URLHelper::getLink("?close=yes") ."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/arr_1down.png\" " . tooltip(_("Zuklappen")) . " border=\"0\" valign=\"top\"></a></td>";
                 echo "<td class=\"$class\" width=\"29%\"><font size=\"-1\"><b><a href=\"". URLHelper::getLink("?close=yes") ."\">".htmlReady($db->f("name"))."</a></b></font></td>";
             } else {
@@ -511,7 +518,7 @@ if ($archiv_data["perform_search"]) {
             } else
                 echo "<td class=\"$class\" width=\"9%\" colspan=\"3\">&nbsp;</td>";
 
-            if ($archiv_data["open"] == $db->f('seminar_id')) {
+            if ($_SESSION['archiv_data']["open"] == $db->f('seminar_id')) {
                 echo "</tr><tr><td class=\"steelgraulight\" colspan=8><blockquote>";
                 if (!$db->f('untertitel')=='')
                     echo "<li><font size=\"-1\"><b>" . _("Untertitel:") . " </b>".htmlReady($db->f('untertitel'))."</font></li>";
@@ -536,7 +543,7 @@ if ($archiv_data["perform_search"]) {
                     if (archiv_check_perm($db->f("seminar_id")) == "admin")
                         echo "<li><a href=\"". URLHelper::getLink("?delete_id=".$db->f('seminar_id')) ."\"><font size=\"-1\">" . _("Diese Veranstaltung unwiderruflich aus dem Archiv entfernen") . "</font></a></li>";
                     if (archiv_check_perm($db->f("seminar_id")) == "admin") {
-                        if (!$archiv_data["edit_grants"])
+                        if (!$_SESSION['archiv_data']["edit_grants"])
                             echo "<li><font size=\"-1\"><a href=\"". URLHelper::getLink("?show_grants=yes") ."#anker\">" . _("Zugriffsberechtigungen einblenden") . "</a></font></li>";
                         else
                             echo "<li><font size=\"-1\"><a href=\"". URLHelper::getLink("?hide_grants=yes") ."#anker\">" . _("Zugriffsberechtigungen ausblenden") . "</a></font></li>";
@@ -544,7 +551,7 @@ if ($archiv_data["perform_search"]) {
                 } else
                     echo "<br><br><li><font size=\"-1\">" . _("Die Veranstaltungsinhalte, Beitr&auml;ge im Forum und das Dateiarchiv sind nicht zug&auml;ngig, da Sie an dieser Veranstaltung nicht teilgenommen haben.") . "</font></li>";
 
-                if ($archiv_data["edit_grants"]) {
+                if ($_SESSION['archiv_data']["edit_grants"]) {
                     echo "<br><br><hr><b><font size=\"-1\">" . _("Folgende Personen haben Zugriff auf die Daten der Veranstaltung (&Uuml;bersicht, Beitr&auml;ge und Dateiarchiv):") . "</font></b><br><br>";
                     $db2->query("SELECT " . $_fullname_sql['full'] . " AS fullname , archiv_user.status, username, archiv_user.user_id FROM archiv_user LEFT JOIN auth_user_md5 USING (user_id) LEFT JOIN user_info USING (user_id) WHERE seminar_id = '".$db->f("seminar_id")."' ORDER BY Nachname");
                     while ($db2->next_record()) {
@@ -573,7 +580,7 @@ if ($archiv_data["perform_search"]) {
                     if (((Request::submitted('add_user')) && (!$db2->affected_rows())) || (!Request::submitted('add_user')) || (Request::submitted('new_search'))) {
                         echo "<form action=\"". URLHelper::getLink() ."#anker\">";
                         echo "<hr><b><font size=\"-1\">" . _("Person Berechtigung erteilen:") . " </font></b><br>";
-                        if (($add_user) && (!$db2->affected_rows())  && (!$new_search))
+                        if ((Request::submitted('add_user')) && (!$db2->affected_rows())  && (!Request::submitted('new_search')))
                             echo "<br><b><font size=\"-1\">" . _("Es wurde keine Person zu dem eingegebenem Suchbegriff gefunden!") . "</font></b><br>";
                         echo "<font size=\"-1\">" . _("Bitte Namen, Vornamen oder Benutzernamen eingeben:") . "</font>&nbsp; ";
                         echo "<br><input type=\"TEXT\" size=20 maxlength=255 name=\"search_exp\">";

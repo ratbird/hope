@@ -136,7 +136,7 @@ if (GetNumberOfBuddies()) {
                              <label for="show_only_buddys">%s</label>
                              %s
                              </form>',
-                             UrlHelper::getLink(),
+                             URLHelper::getLink(),
                              CSRFProtection::tokenTag(),
                              $my_messaging_settings["show_only_buddys"] ? 'checked' : '',
                              _("Nur Buddies in der &Uuml;bersicht der aktiven Benutzer anzeigen"),

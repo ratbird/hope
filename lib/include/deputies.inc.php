@@ -44,7 +44,7 @@ $args['permission'] = getValidDeputyPerms();
 $args['edit_about_enabled'] = get_config('DEPUTIES_EDIT_ABOUT_ENABLE');
 $args['deputies'] = getDeputies($user_id, true);
 
-if ($deputy_id_parameter) {
+if ($_SESSION['deputy_id_parameter']) {
     Request::set('deputy_id_parameter', $deputy_id_parameter);
     $sess->unregister('deputy_id_parameter');
 }

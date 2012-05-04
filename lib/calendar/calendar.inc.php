@@ -77,7 +77,7 @@ if (!get_config('COURSE_CALENDAR_ENABLE') && in_array($cal_select_range, array('
     $_SESSION['calendar_sess_control_data']['cal_select'] = $cal_select_range . '.' . $cal_select_id;
 }
 
-if (Request::get('cmd') == 'export'
+if (Request::option('cmd') == 'export'
         && array_shift(explode('.', $_SESSION['calendar_sess_control_data']['cal_select'])) == 'group') {
     $_calendar = Calendar::getInstance(Calendar::RANGE_USER, $GLOBALS['user']->id);
 } else {
@@ -95,19 +95,19 @@ if ($_calendar->getRange() == Calendar::RANGE_USER) {
 }
 
 // restore user defined settings
-if ($cmd_cal == 'chng_cal_settings') {
+if (Request::option('cmd_cal') == 'chng_cal_settings') {
     $calendar_user_control_data = array(
-        'view' => $cal_view,
-        'start' => $cal_start,
-        'end' => $cal_end,
-        'step_day' => $cal_step_day,
-        'step_week' => $cal_step_week,
-        'type_week' => $cal_type_week,
-        'holidays' => $cal_holidays,
-        'sem_data' => $cal_sem_data,
-        'delete' => $cal_delete,
-        'step_week_group' => $cal_step_week_group,
-        'step_day_group' => $cal_step_day_group
+        'view' => Request::option('cal_view'),
+        'start' => Request::option('cal_start'),
+        'end' => Request::option('cal_end'),
+        'step_day' => Request::option('cal_step_day'),
+        'step_week' => Request::option('cal_step_week'),
+        'type_week' => Request::option('cal_type_week'),
+        'holidays' => Request::option('cal_holidays'),
+        'sem_data' => Request::option('cal_sem_data'),
+        'delete' => Request::option('cal_delete'),
+        'step_week_group' => Request::option('cal_step_week_group'),
+        'step_day_group' => Request::option('cal_step_day_group')
     );
 }
 

@@ -78,7 +78,7 @@ function select_language($selected_language = "") {
 * @access   public
 */
 function change_general_view() {
-    global $PHP_SELF, $_language, $auth, $perm, $forum, $user, $my_studip_settings;
+    global $PHP_SELF, $auth, $perm, $forum, $user, $my_studip_settings;
 
     $cssSw = new cssClassSwitcher;
     ?>
@@ -91,7 +91,7 @@ function change_general_view() {
 
             <td class="blank" width="100%" align="center">
             
-            <form method="POST" action="<? echo $PHP_SELF ?>?cmd=change_general&studipticket=<?=get_ticket()?>">
+                <form method="POST" action="<?= URLHelper::getLink('?cmd=change_general&studipticket='.get_ticket())?>">
             <?= CSRFProtection::tokenTag() ?>
             <table width="70%" align="center" cellpadding=8 cellspacing=0 border=0 id="main_content">
                 <tr>
@@ -103,7 +103,7 @@ function change_general_view() {
                         <label for="forced_language"><?print _("Sprache");?></label>
                     </td>
                     <td <?=$cssSw->getFullClass()?>>
-                        <? select_language($_language); ?>
+                        <? select_language($_SESSION['_language']); ?>
                     </td>
                 </tr>
 

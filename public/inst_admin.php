@@ -42,9 +42,7 @@ require_once('lib/classes/searchtypes/SQLSearch.class.php');
 require_once('lib/classes/QuickSearch.class.php');
 
 // if we are not in admin_view, we get the proper set variable from institut_members.php
-if (!isset($admin_view)) {
-    $admin_view = true;
-}
+$admin_view = Request::option('admin_view',false);
 
 if ($perm->have_studip_perm('tutor', $SessSemName[1])) {
     $rechte = true;
@@ -125,7 +123,7 @@ $show = Request::option('show');
 if (!isset($show)) {
     $show = "funktion";
 }
-
+URLHelper::addLinkParam('admin_view', $admin_view);
 URLHelper::addLinkParam('sortby', $sortby);
 URLHelper::addLinkParam('direction', $direction);
 URLHelper::addLinkParam('show', $show);

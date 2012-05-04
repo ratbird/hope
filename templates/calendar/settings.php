@@ -200,8 +200,8 @@ $css_switcher->switchClass();
             ?>
                 <tr><? $css_switcher->switchClass(); ?>
                     <td class="<?= $css_switcher->getClass(); ?>" colspan="2" align="center">
-                    <? if ($atime) : ?>
-                        <input type="hidden" name="atime" value="<?= $atime ?>">
+                    <? if (Request::option('atime')) : ?>
+                        <input type="hidden" name="atime" value="<?= Request::option('atime') ?>">
                     <? endif ?>
                     <input type="hidden" name="view" value="calendar">
                     <?= Button::create(_('Übernehmen'), array('title' => _("Änderungen übernehmen")))?>

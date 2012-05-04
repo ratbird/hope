@@ -27,18 +27,19 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 use Studip\Button, Studip\LinkButton;
 
 $cssSw=new cssClassSwitcher;
-
+$forumsend = Request::option('forumsend');
+$presetview = Request::option('presetview');
 if ($forumsend=="bla"){
     if ($presetview == "theme")
-        $presetview = $themeview;
-    $forum["neuauf"] = $neuauf;
-    $forum["rateallopen"] = $rateallopen;
-    $forum["showimages"] = $showimages;
-    $forum["sortthemes"] = $sortthemes;
-    $forum["themeview"] = $themeview;
+        $presetview = Request::option('themeview');
+    $forum["neuauf"] = Request::option('neuauf');
+    $forum["rateallopen"] = Request::option('rateallopen');
+    $forum["showimages"] = Request::option('showimages');
+    $forum["sortthemes"] = Request::option('sortthemes');
+    $forum["themeview"] = Request::option('themeview');
     $forum["presetview"] = $presetview;
 
-    $forum["shrink"] = $shrink*604800; // Anzahl der Sekunden pro Woche
+    $forum["shrink"] = Request::option('shrink')*604800; // Anzahl der Sekunden pro Woche
     $forum["changed"] = "TRUE";
 }
 

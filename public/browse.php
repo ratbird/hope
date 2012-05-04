@@ -14,6 +14,7 @@
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
 page_open(array(
     'sess' => 'Seminar_Session',
     'auth' => 'Seminar_Default_Auth',
@@ -29,9 +30,6 @@ require_once 'lib/statusgruppe.inc.php';
 require_once 'lib/user_visible.inc.php';
 require_once 'lib/classes/Avatar.class.php';
 require_once $RELATIVE_PATH_CHAT.'/chat_func_inc.php';
-
-// disable register_globals if set
-unregister_globals();
 
 //Basics
 PageLayout::setHelpKeyword('Basis.SuchenPersonen');

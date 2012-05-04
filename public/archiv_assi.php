@@ -27,6 +27,7 @@ use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
 require_once('lib/dates.inc.php'); // Funktionen zum Loeschen von Terminen
 require_once('lib/datei.inc.php'); // Funktionen zum Loeschen von Dokumenten
 require_once('lib/archiv.inc.php');
@@ -55,8 +56,8 @@ require_once 'lib/admin_search.inc.php';
 
 // -- here you have to put initialisations for the current page
 
-if ($RESOURCES_ENABLE) {
-    include_once ($RELATIVE_PATH_RESOURCES . "/lib/DeleteResourcesUser.class.php");
+if (get_config('RESOURCES_ENABLE')) {
+    include_once ($GLOBALS['RELATIVE_PATH_RESOURCES'] . "/lib/DeleteResourcesUser.class.php");
 }
 // # Get a database connection
 $db = new DB_Seminar;
@@ -64,7 +65,7 @@ $db2 = new DB_Seminar;
 $db3 = new DB_Seminar;
 $db4 = new DB_Seminar;
 
-$sess->register("archiv_assi_data");
+//$sess->register("archiv_assi_data");
 $cssSw = new cssClassSwitcher;
 
 if ($perm->have_perm('admin')) {
@@ -88,45 +89,45 @@ if ($SessSemName[1]) {
 // Handlings....
 // Kill current list and stuff
 
-if ($new_session)
-    $archiv_assi_data = array();
+if (Request::option('new_session'))
+    $_SESSION['archiv_assi_data'] = array();
 
 // A list was sent
 if (is_array($archiv_sem)) {
-    $archiv_assi_data['sems'] = array();
-    $archiv_assi_data['sem_check'] = array();
-    $archiv_assi_data['pos'] = 0;
+    $_SESSION['archiv_assi_data']['sems'] = array();
+    $_SESSION['archiv_assi_data']['sem_check'] = array();
+    $_SESSION['archiv_assi_data']['pos'] = 0;
     foreach($archiv_sem as $key => $val) {
         if ((substr($val, 0, 4) == "_id_") && (substr($$archiv_sem[$key + 1], 0, 4) != "_id_"))
                 if ($archiv_sem[$key + 1] == "on") {
-                    $archiv_assi_data["sems"][] = array("id" => substr($val, 4, strlen($val)), "succesful_archived" => FALSE);
-                    $archiv_assi_data["sem_check"][substr($val, 4, strlen($val))] = TRUE;
+                    $_SESSION['archiv_assi_data']["sems"][] = array("id" => substr($val, 4, strlen($val)), "succesful_archived" => FALSE);
+                    $_SESSION['archiv_assi_data']["sem_check"][substr($val, 4, strlen($val))] = TRUE;
                 }
     }
 }
 // inc if we have lectures left in the upper
-if ($inc)
-    if ($archiv_assi_data["pos"] < sizeof($archiv_assi_data["sems"])-1) {
+if (Request::option('inc'))
+    if ($_SESSION['archiv_assi_data']["pos"] < sizeof($_SESSION['archiv_assi_data']["sems"])-1) {
         $i = 1;
-        while ((!$archiv_assi_data["sem_check"][$archiv_assi_data["sems"][$archiv_assi_data["pos"] + $i]["id"]]) && ($archiv_assi_data["pos"] + $i < sizeof($archiv_assi_data["sems"])-1))
+        while ((!$_SESSION['archiv_assi_data']["sem_check"][$_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"] + $i]["id"]]) && ($_SESSION['archiv_assi_data']["pos"] + $i < sizeof($_SESSION['archiv_assi_data']["sems"])-1))
         $i++;
-        if ((sizeof($archiv_assi_data["sem_check"]) > 1) && ($archiv_assi_data["sem_check"][$archiv_assi_data["sems"][$archiv_assi_data["pos"] + $i]["id"]]))
-            $archiv_assi_data["pos"] = $archiv_assi_data["pos"] + $i;
+        if ((sizeof($_SESSION['archiv_assi_data']["sem_check"]) > 1) && ($_SESSION['archiv_assi_data']["sem_check"][$_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"] + $i]["id"]]))
+            $_SESSION['archiv_assi_data']["pos"] = $_SESSION['archiv_assi_data']["pos"] + $i;
     }
 
 // dec if we have lectures left in the lower
-if ($dec)
-    if ($archiv_assi_data["pos"] > 0) {
+if (Request::option('dec'))
+    if ($_SESSION['archiv_assi_data']["pos"] > 0) {
         $d = -1;
-        while ((!$archiv_assi_data["sem_check"][$archiv_assi_data["sems"][$archiv_assi_data["pos"] + $d]["id"]]) && ($archiv_assi_data["pos"] + $d > 0))
+        while ((!$_SESSION['archiv_assi_data']["sem_check"][$_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"] + $d]["id"]]) && ($_SESSION['archiv_assi_data']["pos"] + $d > 0))
         $d--;
-        if ((sizeof($archiv_assi_data["sem_check"]) > 1) && ($archiv_assi_data["sem_check"][$archiv_assi_data["sems"][$archiv_assi_data["pos"] + $d]["id"]]))
-            $archiv_assi_data["pos"] = $archiv_assi_data["pos"] + $d;
+        if ((sizeof($_SESSION['archiv_assi_data']["sem_check"]) > 1) && ($_SESSION['archiv_assi_data']["sem_check"][$_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"] + $d]["id"]]))
+            $_SESSION['archiv_assi_data']["pos"] = $_SESSION['archiv_assi_data']["pos"] + $d;
     }
 
 
-if(LockRules::Check($archiv_assi_data["sems"][$archiv_assi_data["pos"]]["id"], 'seminar_archive')) {
-        $lockdata = LockRules::getObjectRule($archiv_assi_data["sems"][$archiv_assi_data["pos"]]["id"]);
+if(LockRules::Check($_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"], 'seminar_archive')) {
+        $lockdata = LockRules::getObjectRule($_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"]);
         if ($lockdata['description']){
             $details = formatLinks($lockdata['description']);
         } else {
@@ -136,9 +137,9 @@ if(LockRules::Check($archiv_assi_data["sems"][$archiv_assi_data["pos"]]["id"], '
 }
 
 // Delete (and archive) the lecture
-if ($archive_kill) {
+if (Request::option('archive_kill')) {
     $run = TRUE;
-    $s_id = $archiv_assi_data["sems"][$archiv_assi_data["pos"]]["id"];
+    $s_id = $_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"];
     // # Do we have permission to do so?
 
     if (!$perm->have_perm($check_perm)) {
@@ -166,7 +167,7 @@ if ($archive_kill) {
         $msg .= "msg§" . sprintf(_("Die Veranstaltung %s wurde erfolgreich archiviert und aus der Liste der aktiven Veranstaltungen gel&ouml;scht. Sie steht nun im Archiv zur Verf&uuml;gung."), "<b>" . htmlReady(stripslashes($tmp_name)) . "</b>") . "§";
 
         // unset the checker, lecture is now killed!
-        unset($archiv_assi_data["sem_check"][$s_id]);
+        unset($_SESSION['archiv_assi_data']["sem_check"][$s_id]);
 
         // redirect non-admin users to overview page, since the course is gone now
         if (!$perm->have_perm('admin')) {
@@ -177,18 +178,18 @@ if ($archive_kill) {
         }
 
         // if there are lectures left....
-        if (is_array($archiv_assi_data["sem_check"])) {
-            if ($archiv_assi_data["pos"] < sizeof($archiv_assi_data["sems"])-1) { // ...inc the counter if possible..
+        if (is_array($_SESSION['archiv_assi_data']["sem_check"])) {
+            if ($_SESSION['archiv_assi_data']["pos"] < sizeof($_SESSION['archiv_assi_data']["sems"])-1) { // ...inc the counter if possible..
                 $i = 1;
-                while ((! $archiv_assi_data["sem_check"][$archiv_assi_data["sems"][$archiv_assi_data["pos"] + $i]["id"]]) && ($archiv_assi_data["pos"] + $i < sizeof($archiv_assi_data["sems"])-1))
+                while ((! $_SESSION['archiv_assi_data']["sem_check"][$_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"] + $i]["id"]]) && ($_SESSION['archiv_assi_data']["pos"] + $i < sizeof($_SESSION['archiv_assi_data']["sems"])-1))
                 $i++;
-                $archiv_assi_data["pos"] = $archiv_assi_data["pos"] + $i;
+                $_SESSION['archiv_assi_data']["pos"] = $_SESSION['archiv_assi_data']["pos"] + $i;
             } else { // ...else dec the counter to find a unarchived lecture
-                if ($archiv_assi_data["pos"] > 0)
+                if ($_SESSION['archiv_assi_data']["pos"] > 0)
                     $d = -1;
-                while ((!$archiv_assi_data["sem_check"][$archiv_assi_data["sems"][$archiv_assi_data["pos"] + $d]["id"]]) && ($archiv_assi_data["pos"] + $d > 0))
+                while ((!$_SESSION['archiv_assi_data']["sem_check"][$_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"] + $d]["id"]]) && ($_SESSION['archiv_assi_data']["pos"] + $d > 0))
                 $d--;
-                $archiv_assi_data["pos"] = $archiv_assi_data["pos"] + $d;
+                $_SESSION['archiv_assi_data']["pos"] = $_SESSION['archiv_assi_data']["pos"] + $d;
             }
         }
     }
@@ -200,8 +201,8 @@ include ('lib/include/header.php'); // Output of Stud.IP head
 include 'lib/include/admin_search_form.inc.php';
 
 // Outputs...
-if (($archiv_assi_data["sems"]) && (sizeof($archiv_assi_data["sem_check"]) > 0)) {
-    $db->query("SELECT * FROM seminare WHERE Seminar_id = '" . $archiv_assi_data["sems"][$archiv_assi_data["pos"]]["id"] . "' ");
+if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_data']["sem_check"]) > 0)) {
+    $db->query("SELECT * FROM seminare WHERE Seminar_id = '" . $_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"] . "' ");
     $db->next_record();
     $msg .= "info§<font color=\"red\">" . _("Sie sind im Begriff, die untenstehende  Veranstaltung zu archivieren. Dieser Schritt kann nicht r&uuml;ckg&auml;ngig gemacht werden!") . "§";
     // check is Veranstaltung running
@@ -211,7 +212,7 @@ if (($archiv_assi_data["sems"]) && (sizeof($archiv_assi_data["sem_check"]) > 0))
         $msg .= "info§" . _("Das Archivieren k&ouml;nnte unter Umst&auml;nden nicht sinnvoll sein, da das oder die Semester, in denen die Veranstaltung stattfindet, noch nicht verstrichen sind.") . "§";
     }
     if($ELEARNING_INTERFACE_ENABLE){
-        $cms_types = ObjectConnections::GetConnectedSystems($archiv_assi_data["sems"][$archiv_assi_data["pos"]]["id"]);
+        $cms_types = ObjectConnections::GetConnectedSystems($_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"]);
         if(count($cms_types)){
             $msg .= "info§" . sprintf(_("Die Veranstaltung besitzt verknüpfte Inhalte in %s externen Systemen (%s). Diese verknüpften Inhalte werden durch die Archivierung gelöscht!"), count($cms_types), join(',',$cms_types)) . "§";
         }
@@ -251,7 +252,7 @@ if (($archiv_assi_data["sems"]) && (sizeof($archiv_assi_data["sem_check"]) > 0))
                     // Grunddaten des Seminars
                     printf ("<b>%s</b>", htmlReady($db->f("Name")));
                     // last activity
-                    $last_activity = lastActivity($archiv_assi_data["sems"][$archiv_assi_data["pos"]]["id"]);
+                    $last_activity = lastActivity($_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"]);
                     if ((time() - $last_activity) < (60 * 60 * 24 * 7 * 12))
                         $activity_warning = TRUE;
                     printf ("<br><font size=\"-1\" >" . _("letzte Ver&auml;nderung am:") . " %s%s%s </font>", ($activity_warning) ? "<font color=\"red\" >" : "", date("d.m.Y, G:i", $last_activity), ($activity_warning) ? "</font>" : "");
@@ -278,12 +279,12 @@ if (($archiv_assi_data["sems"]) && (sizeof($archiv_assi_data["sem_check"]) > 0))
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" valign="top" width="48%">
                 <?
-                printf ("<font size=-1><b>" . _("Zeit:") . "</b></font><br><font size=-1>%s</font>", htmlReady(view_turnus($archiv_assi_data["sems"][$archiv_assi_data["pos"]]["id"], FALSE)));
+                printf ("<font size=-1><b>" . _("Zeit:") . "</b></font><br><font size=-1>%s</font>", htmlReady(view_turnus($_SESSION['archiv_assi_data']['sems'][$_SESSION['archiv_assi_data']['pos']]['id'], FALSE)));
                 ?>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" valign="top" width="48%">
                 <?
-                printf ("<font size=-1><b>" . _("Semester:") . "</b></font><br><font size=-1>%s</font>", get_semester($archiv_assi_data["sems"][$archiv_assi_data["pos"]]["id"]));
+                printf ("<font size=-1><b>" . _("Semester:") . "</b></font><br><font size=-1>%s</font>", get_semester($_SESSION['archiv_assi_data']['sems'][$_SESSION['archiv_assi_data']['pos']]['id']));
                 ?>
                 </td>
             </tr>
@@ -292,12 +293,12 @@ if (($archiv_assi_data["sems"]) && (sizeof($archiv_assi_data["sem_check"]) > 0))
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" valign="top" width="48%">
                 <?
-                printf ("<font size=-1><b>" . _("Erster Termin:") . "</b></font><br><font size=-1>%s</font>", veranstaltung_beginn($archiv_assi_data["sems"][$archiv_assi_data["pos"]]["id"]));
+                printf ("<font size=-1><b>" . _("Erster Termin:") . "</b></font><br><font size=-1>%s</font>", veranstaltung_beginn($_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"]));
                 ?>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" valign="top" width="48%">
                 <?
-                printf ("<font size=-1><b>" . _("Vorbesprechung:") . "</b></font><br><font size=-1>%s</font>", (vorbesprechung($archiv_assi_data["sems"][$archiv_assi_data["pos"]]["id"])) ? htmlReady(vorbesprechung($archiv_assi_data["sems"][$archiv_assi_data["pos"]]["id"])) : _("keine"));
+                printf ("<font size=-1><b>" . _("Vorbesprechung:") . "</b></font><br><font size=-1>%s</font>", (vorbesprechung($_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"])) ? htmlReady(vorbesprechung($_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"])) : _("keine"));
                 ?>
                 </td>
             </tr>
@@ -306,7 +307,7 @@ if (($archiv_assi_data["sems"]) && (sizeof($archiv_assi_data["sem_check"]) > 0))
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="48%" valign="top">
                 <?
-                $sem = Seminar::getInstance($archiv_assi_data['sems'][$archiv_assi_data['pos']]['id']);
+                $sem = Seminar::getInstance($_SESSION['archiv_assi_data']['sems'][$_SESSION['archiv_assi_data']['pos']]['id']);
                 printf ("<font size=-1><b>" . _("Veranstaltungsort:") . "</b></font><br><font size=-1>%s</font>", 
                     htmlReady($sem->getDatesTemplate('dates/seminar_export_location')));
                 ?>
@@ -326,7 +327,7 @@ if (($archiv_assi_data["sems"]) && (sizeof($archiv_assi_data["sem_check"]) > 0))
                 <td class="<? echo $cssSw->getClass() ?>" width="48%" valign="top">
                 <?
                 // wer macht den Dozenten?
-                $db2->query ("SELECT " . $_fullname_sql['full'] . " AS fullname, seminar_user.user_id, username, status, position FROM seminar_user  LEFT JOIN auth_user_md5 USING (user_id) LEFT JOIN user_info USING (user_id) WHERE seminar_user.Seminar_id = '" . $archiv_assi_data["sems"][$archiv_assi_data["pos"]]["id"] . "' AND status = 'dozent' ORDER BY position, Nachname");
+                $db2->query ("SELECT " . $_fullname_sql['full'] . " AS fullname, seminar_user.user_id, username, status, position FROM seminar_user  LEFT JOIN auth_user_md5 USING (user_id) LEFT JOIN user_info USING (user_id) WHERE seminar_user.Seminar_id = '" . $_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"] . "' AND status = 'dozent' ORDER BY position, Nachname");
                 printf("<font size=-1><b>" . get_title_for_status('dozent', $db2->num_rows(), $db->f('status')) . "</b></font><br>");
                 while ($db2->next_record()) {
                     if ($db2->num_rows() > 1)
@@ -341,7 +342,7 @@ if (($archiv_assi_data["sems"]) && (sizeof($archiv_assi_data["sem_check"]) > 0))
                 <td class="<? echo $cssSw->getClass() ?>" width="48%" valign="top">
                 <?
                 // und wer ist Tutor?
-                $db2->query ("SELECT seminar_user.user_id, " . $_fullname_sql['full'] . " AS fullname, username, status, position FROM seminar_user  LEFT JOIN auth_user_md5 USING (user_id) LEFT JOIN user_info USING (user_id) WHERE seminar_user.Seminar_id = '" . $archiv_assi_data["sems"][$archiv_assi_data["pos"]]["id"] . "' AND status = 'tutor' ORDER BY position, Nachname");
+                $db2->query ("SELECT seminar_user.user_id, " . $_fullname_sql['full'] . " AS fullname, username, status, position FROM seminar_user  LEFT JOIN auth_user_md5 USING (user_id) LEFT JOIN user_info USING (user_id) WHERE seminar_user.Seminar_id = '" . $_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"] . "' AND status = 'tutor' ORDER BY position, Nachname");
                 printf("<font size=-1><b>" . get_title_for_status('tutor', $db2->num_rows(), $db->f('status')) . "</b></font><br>");
                 if ($db2->num_rows() == 0) {
                     print("<font size=-1>" . _("keine") . "</font>");
@@ -404,7 +405,7 @@ if (($archiv_assi_data["sems"]) && (sizeof($archiv_assi_data["sem_check"]) > 0))
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="48%" valign="top">
                 <?
-                $db2->query("SELECT Name, url, Institute.Institut_id FROM Institute LEFT JOIN seminar_inst USING (institut_id) WHERE seminar_id = '" . $archiv_assi_data["sems"][$archiv_assi_data["pos"]]["id"] . "' AND Institute.institut_id != '" . $db->f("Institut_id") . "'");
+                $db2->query("SELECT Name, url, Institute.Institut_id FROM Institute LEFT JOIN seminar_inst USING (institut_id) WHERE seminar_id = '" . $_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"] . "' AND Institute.institut_id != '" . $db->f("Institut_id") . "'");
                 if ($db2->num_rows() == 1)
                     printf ("<font size=-1><b>" . _("Beteiligte Einrichtung:") . "</b></font><br>");
                 elseif ($db2->num_rows() >= 2)
@@ -428,11 +429,11 @@ if (($archiv_assi_data["sems"]) && (sizeof($archiv_assi_data["sem_check"]) > 0))
                 <td class="<? echo $cssSw->getClass() ?>" colspan=2 width="96%" valign="top" align="center">
                 <?
                 // can we dec?
-                if ($archiv_assi_data["pos"] > 0) {
+                if ($_SESSION['archiv_assi_data']["pos"] > 0) {
                     $d = -1;
-                    while ((!$archiv_assi_data["sem_check"][$archiv_assi_data["sems"][$archiv_assi_data["pos"] + $d]["id"]]) && ($archiv_assi_data["pos"] + $d > 0))
+                    while ((!$_SESSION['archiv_assi_data']["sem_check"][$_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"] + $d]["id"]]) && ($_SESSION['archiv_assi_data']["pos"] + $d > 0))
                     $d--;
-                    if ((sizeof($archiv_assi_data["sem_check"]) > 1) && ($archiv_assi_data["sem_check"][$archiv_assi_data["sems"][$archiv_assi_data["pos"] + $d]["id"]]))
+                    if ((sizeof($_SESSION['archiv_assi_data']["sem_check"]) > 1) && ($_SESSION['archiv_assi_data']["sem_check"][$_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"] + $d]["id"]]))
                         $inc_possible = TRUE;
                 }
                 if ($inc_possible) {
@@ -453,18 +454,18 @@ if (($archiv_assi_data["sems"]) && (sizeof($archiv_assi_data["sem_check"]) > 0))
                     echo '">' . Button::createCancel(_('Abbrechen')) . '</a>';
                 }
                 // can we inc?
-                if ($archiv_assi_data["pos"] < sizeof($archiv_assi_data["sems"])-1) {
+                if ($_SESSION['archiv_assi_data']["pos"] < sizeof($_SESSION['archiv_assi_data']["sems"])-1) {
                     $i = 1;
-                    while ((!$archiv_assi_data["sem_check"][$archiv_assi_data["sems"][$archiv_assi_data["pos"] + $i]["id"]]) && ($archiv_assi_data["pos"] + $i < sizeof($archiv_assi_data["sems"])-1))
+                    while ((!$_SESSION['archiv_assi_data']["sem_check"][$_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"] + $i]["id"]]) && ($_SESSION['archiv_assi_data']["pos"] + $i < sizeof($_SESSION['archiv_assi_data']["sems"])-1))
                     $i++;
-                    if ((sizeof($archiv_assi_data["sem_check"]) > 1) && ($archiv_assi_data["sem_check"][$archiv_assi_data["sems"][$archiv_assi_data["pos"] + $i]["id"]]))
+                    if ((sizeof($_SESSION['archiv_assi_data']["sem_check"]) > 1) && ($_SESSION['archiv_assi_data']["sem_check"][$_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"] + $i]["id"]]))
                         $dec_possible = TRUE;
                 }
                 if ($dec_possible) {
                     printf("&nbsp;<a href=\"%s\">%s</a>", URLHelper::getLink("?inc=TRUE"), Button::create(_('Nächster >>')));
                 }
-                if (sizeof($archiv_assi_data["sems"]) > 1)
-                    printf ("<br><font size=\"-1\">" . _("noch <b>%s</b> von <b>%s</b> Veranstaltungen zum Archivieren ausgew&auml;hlt.") . "</font>", sizeof($archiv_assi_data["sem_check"]), sizeof($archiv_assi_data["sems"]));
+                if (sizeof($_SESSION['archiv_assi_data']["sems"]) > 1)
+                    printf ("<br><font size=\"-1\">" . _("noch <b>%s</b> von <b>%s</b> Veranstaltungen zum Archivieren ausgew&auml;hlt.") . "</font>", sizeof($_SESSION['archiv_assi_data']["sem_check"]), sizeof($_SESSION['archiv_assi_data']["sems"]));
                 ?>
                 </td>
             </tr>
@@ -475,7 +476,7 @@ if (($archiv_assi_data["sems"]) && (sizeof($archiv_assi_data["sem_check"]) > 0))
     </table>
 
     <?
-    } elseif (($archiv_assi_data["sems"]) && (sizeof($archiv_assi_data["sem_check"]) == 0)) {
+    } elseif (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_data']["sem_check"]) == 0)) {
     ?>
 
     <table width="100%" border="0" cellpadding="0" cellspacing="0">
@@ -490,10 +491,10 @@ if (($archiv_assi_data["sems"]) && (sizeof($archiv_assi_data["sem_check"]) > 0))
     </tr>
     </table>
     <?
-    if ($links_admin_data["sem_id"] == $archiv_assi_data["sems"][$archiv_assi_data["pos"]]["id"])
+    if ($links_admin_data["sem_id"] == $_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"])
         reset_all_data();
     } elseif (!$list) {
-    if ($links_admin_data["sem_id"] == $archiv_assi_data["sems"][$archiv_assi_data["pos"]]["id"])
+    if ($links_admin_data["sem_id"] == $_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"])
         reset_all_data();
     ?>
     <table width="100%" border="0" cellpadding="0" cellspacing="0">

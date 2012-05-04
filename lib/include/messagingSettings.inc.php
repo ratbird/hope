@@ -38,13 +38,13 @@ $reset_txt = '';
 ## ACTION ##
 
 // add forward_receiver
-if ($add_smsforward_rec_x) {
-    $query = "UPDATE user_info SET smsforward_rec='".get_userid($smsforward_rec)."', smsforward_copy='1' WHERE user_id='".$user->id."'";
+if (Request::submitted('add_smsforward_rec_x')) {
+    $query = "UPDATE user_info SET smsforward_rec='".get_userid(Request::get('smsforward_rec'))."', smsforward_copy='1' WHERE user_id='".$user->id."'";
     $db3->query($query);
 }
 
 // del forward receiver
-if ($del_forwardrec_x) {
+if (Request::submitted('del_forwardrec_x')) {
     $query = "UPDATE user_info SET smsforward_rec='', smsforward_copy='1' WHERE user_id='".$user->id."'";
     $db3->query($query);
 }
@@ -62,7 +62,8 @@ if ($email_forward == "0") $email_forward = $GLOBALS["MESSAGING_FORWARD_DEFAULT"
 
 //vorgenommene Anpassungen der Ansicht in Uservariablen schreiben
 
-if ($messaging_cmd=="change_view_insert" && !$set_msg_default_x && Request::submitted('newmsgset')) {
+if (Request::option('messaging_cmd')=="change_view_insert" && !Request::submitted('set_msg_default') && Request::submitted('newmsgset')) {
+        $send_as_email = Request::option('send_as_email');
         $db2->query("UPDATE user_info SET email_forward = '".$send_as_email."' WHERE user_id = '".$user->id."'");
         $email_forward = $send_as_email;
 
@@ -71,21 +72,23 @@ if ($messaging_cmd=="change_view_insert" && !$set_msg_default_x && Request::subm
     $user_cfg->store("MAIL_AS_HTML", Request::int('mail_format'));
 
     $my_messaging_settings["changed"] = TRUE;
-    $my_messaging_settings["delete_messages_after_logout"] = $delete_messages_after_logout;
-    $my_messaging_settings["start_messenger_at_startup"] = $start_messenger_at_startup;
-    $my_messaging_settings["sms_sig"] = $sms_sig;
-    $my_messaging_settings["timefilter"] = $timefilter;
-    $my_messaging_settings["openall"] = $openall;
+    $my_messaging_settings["delete_messages_after_logout"] = Request::option('delete_messages_after_logout');
+    $my_messaging_settings["start_messenger_at_startup"] = Request::option('start_messenger_at_startup');
+    $my_messaging_settings["sms_sig"] = Request::quoted('sms_sig');
+    $my_messaging_settings["timefilter"] = Request::option('timefilter');
+    $my_messaging_settings["openall"] = Request::option('openall');
+    $opennew = Request::option('opennew');
     if (!$opennew) {
         $my_messaging_settings["opennew"] = "2";
     } else {
         $my_messaging_settings["opennew"] = $opennew;
     }
-    $my_messaging_settings["logout_markreaded"] = $logout_markreaded;
-    $my_messaging_settings["addsignature"] = $addsignature;
-    $sms_data["sig"] = $addsignature;
-    $my_messaging_settings['confirm_reading'] = $confirm_reading;
+    $my_messaging_settings["logout_markreaded"] = Request::option('logout_markreaded');
+    $my_messaging_settings["addsignature"] = Request::option('addsignature');
+    $sms_data["sig"] = Request::option('addsignature');
+    $my_messaging_settings['confirm_reading'] = Request::option('confirm_reading');
     $my_messaging_settings["changed"] = "TRUE";
+    $save_snd= Request::option('save_snd');
     if (!$save_snd) {
         $my_messaging_settings["save_snd"] = "2";
     } else {
@@ -102,29 +105,29 @@ if ($messaging_cmd=="change_view_insert" && !$set_msg_default_x && Request::subm
             $db3->query($query);
         }
     }
-} else if ($messaging_cmd=="change_view_insert" && Request::submitted('set_msg_default')) {
+} else if (Request::option('messaging_cmd')=="change_view_insert" && Request::submitted('set_msg_default')) {
     $reset_txt = "<font size=\"-1\">"._("Durch das Zurücksetzen werden die persönliche Messaging-Einstellungen auf die Startwerte zurückgesetzt <b>und</b> die persönlichen Nachrichten-Ordner gelöscht. <b>Nachrichten werden nicht entfernt.</b>")."</font><br>";
 }
 
-if ($messaging_cmd == "reset_msg_settings") {
+if (Request::option('messaging_cmd') == "reset_msg_settings") {
     $user_id = $user->id;
     unset($my_messaging_settings);
     check_messaging_default();
     $db3->query("UPDATE user_info SET smsforward_copy='', smsforward_rec='' WHERE user_id='".$user_id."'");
     $db3->query("UPDATE message_user SET folder='' WHERE user_id='".$user_id."'");
 }
-
-if ($do_add_user_x)
+$add_user = Request::option('add_user');
+if (Request::submitted('do_add_user_x'))
     $msging->add_buddy ($add_user);
 
 ## FUNCTION ##
 
 function change_messaging_view()
 {
-    global $_fullname_sql,$my_messaging_settings, $PHP_SELF, $perm, $user, $search_exp,
-           $add_user, $add_user_x, $do_add_user_x, $new_search_x, $i_page, $search_exp,
+    global $_fullname_sql,$my_messaging_settings, $PHP_SELF, $perm, $user,
+           $add_user, $add_user_x, $do_add_user_x, $new_search_x, $i_page,
            $gosearch_x, $smsforward, $reset_txt, $email_forward, $user_cfg, $FOAF_ENABLE;
-
+    $search_exp = Request::quoted('search_exp');
     $msging=new messaging;
     $db=new DB_Seminar;
     $db2=new DB_Seminar;
@@ -139,7 +142,7 @@ function change_messaging_view()
 
             <td class="blank" width="100%" colspan="2" align="center">
 
-            <form action="<?=$PHP_SELF?>?messaging_cmd=change_view_insert" method="post">
+                <form action="<?=URLHelper::getLink('?messaging_cmd=change_view_insert') ?>" method="post">
             <?= CSRFProtection::tokenTag() ?>
             <? if ($reset_txt) {
                 ?><table width="70%" align="center" cellpadding=8 cellspacing=0 border=0><tr><td align="left" class="steel1"><?

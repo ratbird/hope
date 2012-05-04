@@ -23,19 +23,17 @@ class StmBrowse {
     var $target_id;
 
     function StmBrowse($sem_browse_data_init = array()){
-        global $sem_browse_data,$sess;
-        
+               
         $sem_browse_data_init['level'] = 'ev';
         
         $this->group_by_fields = array( array('name' => _("Semester"), 'group_field' => 'beginn'),
                                         array('name' => _("Empf. Studiensemester"), 'group_field' => 'recommed')
                                         );
 
-        if (!$sess->is_registered("sem_browse_data") || !$sem_browse_data){
-            $sess->register("sem_browse_data");
-            $sem_browse_data = $sem_browse_data_init;
+        if (!$_SESSION['sem_browse_data']){
+            $_SESSION['sem_browse_data'] = $sem_browse_data_init;
         }
-        $this->sem_browse_data =& $sem_browse_data;
+        $this->sem_browse_data =& $_SESSION['sem_browse_data'];
         $level_change = isset($_REQUEST['start_item_id']);
         for ($i = 0; $i < count($this->persistent_fields); ++$i){
             if (isset($_REQUEST[$this->persistent_fields[$i]])){

@@ -28,7 +28,7 @@ class SemBrowse {
     var $target_id;
 
     function SemBrowse($sem_browse_data_init = array()){
-        global $sem_browse_data,$sess,$SEM_CLASS,$SEM_TYPE;
+        global $SEM_CLASS,$SEM_TYPE;
 
         $this->group_by_fields = array( array('name' => _("Semester"), 'group_field' => 'sem_number'),
                                         array('name' => _("Bereich"), 'group_field' => 'bereich'),
@@ -36,11 +36,10 @@ class SemBrowse {
                                         array('name' => _("Typ"), 'group_field' => 'status'),
                                         array('name' => _("Einrichtung"), 'group_field' => 'Institut', 'unique_field' => 'Institut_id'));
 
-        if (!$sess->is_registered("sem_browse_data") || !$sem_browse_data){
-            $sess->register("sem_browse_data");
-            $sem_browse_data = $sem_browse_data_init;
+        if (!$_SESSION['sem_browse_data'] ){
+            $_SESSION['sem_browse_data'] = $sem_browse_data_init;
         }
-        $this->sem_browse_data =& $sem_browse_data;
+        $this->sem_browse_data =& $_SESSION['sem_browse_data'];
         $level_change = isset($_REQUEST['start_item_id']);
         for ($i = 0; $i < count($this->persistent_fields); ++$i){
             if (isset($_REQUEST[$this->persistent_fields[$i]])){

@@ -63,7 +63,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
     if (((!$SessSemName[1]) || ($SessSemName["class"] == "sem")) && $list && ($view_mode == "inst")) {
         //Save data back to database and start a connection  - so we avoid some problems with large search results and data is writing back to db too late
         page_close();
-
+        URLHelper::bindLinkParam('admin_view');
         ?>
         <table width="100%" cellspacing=0 cellpadding=0 border=0>
         <?
@@ -140,7 +140,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
     if (((!$SessSemName[1]) || ($SessSemName["class"] == "inst")) && $list && ($view_mode == "sem")) {
         //Save data back to database and start a connection  - so we avoid some problems with large search results and data is writing back to db too late
         page_close();
-
+        URLHelper::bindLinkParam('admin_view');
         ?>
         <table width="100%" cellspacing=0 cellpadding=0 border=0>
         <?
@@ -317,7 +317,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
 
     // display Seminar-List
     if ($_SESSION['links_admin_data']['srch_on'] || $auth->auth["perm"] =="tutor" || $auth->auth["perm"] == "dozent") {
-
+        URLHelper::bindLinkParam('admin_view');
         //Suchresultate abholen:
         $results = AdminList::getInstance()->getSearchResults();
 

@@ -178,16 +178,18 @@ function verify_delete_freie($kategorie_id) {
 }
 
 function update_freie() {
-    global $user, $freie_id,$freie_name,$freie_content;
+    global $user, $freie_id;
     $db = new DB_Seminar;
     $max = sizeof($freie_id);
     for ($i=0; $i < $max; $i++) {
         $now = time();
+        $freie_name = Request::quotedArray('freie_name');
         $name = $freie_name[$i];
         if ($name === '') {
             parse_msg ('error§' . _("Kategorien ohne Namen k&ouml;nnen nicht gespeichert werden!"));
             continue;
         }
+        $freie_content = Request::quotedArray('freie_content');
         $content = $freie_content[$i];
         $id = $freie_id[$i];
         $db->query("UPDATE kategorien SET name='$name', content='$content', chdate='$now' WHERE kategorie_id='$id'");

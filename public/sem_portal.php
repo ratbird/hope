@@ -40,6 +40,7 @@ use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
 ob_start();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $perm->check("user");
@@ -61,25 +62,25 @@ $db=new DB_Seminar;
 
 
 //Einstellungen fuer Reitersystem
-$sess->register("sem_portal");
+// $sess->register("sem_portal");
 
 
 //Standard herstellen
 
 if ($_REQUEST['view'])
-    $sem_portal["bereich"] = $_REQUEST['view'];
+    $_SESSION['sem_portal']['bereich'] = $_REQUEST['view'];
 
-if (!$sem_portal["bereich"])
-    $sem_portal["bereich"] = "all";
+if (!$_SESSION['sem_portal']['bereich'])
+    $_SESSION['sem_portal']['bereich'] = "all";
 
-$_REQUEST['view'] = $sem_portal['bereich'];
-Navigation::activateItem('/search/courses/'.$sem_portal['bereich']);
+$_REQUEST['view'] = $_SESSION['sem_portal']['bereich'];
+Navigation::activateItem('/search/courses/'.$_SESSION['sem_portal']['bereich']);
 
-if ($choose_toplist)
-    $sem_portal["toplist"] = $choose_toplist;
+if (Request::option('choose_toplist'))
+    $_SESSION['sem_portal']['toplist'] = Request::option('choose_toplist');
 
-if (!$sem_portal["toplist"])
-    $sem_portal["toplist"] = 4;
+if (!$_SESSION['sem_portal']['toplist'])
+    $_SESSION['sem_portal']['toplist'] = 4;
 
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head
@@ -97,7 +98,7 @@ function getToplist($rubrik, $query, $type="count") {
         $i=1;
         while ($db->next_record() ){
             $result .= "<tr><td width=\"1%\" valign=\"top\"><font size=\"-1\">$i.</font></td>";
-            $result .= "<td width=\"99%\"><font size=\"-1\"><a href=\"details.php?sem_id=".$db->f("seminar_id")."&send_from_search=true&send_from_search_page=$PHP_SELF\">";
+            $result .= "<td width=\"99%\"><font size=\"-1\"><a href=\"details.php?sem_id=".$db->f("seminar_id")."&send_from_search=true&send_from_search_page=".URLHelper::getURL()."\">";
             $result .= htmlReady(substr($db->f("name"),0,45));
             if (strlen ($db->f("name")) > 45)
                 $result .= "... ";
@@ -119,10 +120,10 @@ function getToplist($rubrik, $query, $type="count") {
     return $result;
 }
 
-if ($sem_portal["bereich"] != "all" && $sem_portal["bereich"] != "mod") {
+if ($_SESSION['sem_portal']['bereich'] != "all" && $_SESSION['sem_portal']['bereich'] != "mod") {
     $_sem_status = array();
     foreach ($SEM_CLASS as $key => $value){
-        if ($key == $sem_portal["bereich"]){
+        if ($key == $_SESSION['sem_portal']['bereich']){
             foreach($SEM_TYPE as $type_key => $type_value){
                 if($type_value['class'] == $key)
                 $_sem_status[] = $type_key;
@@ -140,7 +141,7 @@ if ($sem_portal["bereich"] != "all" && $sem_portal["bereich"] != "mod") {
     $_sem_status = false;
 }
 
-if ($sem_portal["bereich"] == "mod") {
+if ($_SESSION['sem_portal']['bereich'] == "mod") {
     $query = "SELECT count(*) AS count FROM stm_instances WHERE complete=1";
     $db->query($query);
     if ($db->next_record())
@@ -149,17 +150,17 @@ if ($sem_portal["bereich"] == "mod") {
 
 $init_data = array( "level" => "f",
                     "cmd"=>"qs",
-                    "show_class"=>$sem_portal['bereich'],
+                    "show_class"=>$_SESSION['sem_portal']['bereich'],
                     "group_by"=>0,
                     "default_sem"=> ( ($default_sem = SemesterData::GetSemesterIndexById($_SESSION['_default_sem'])) !== false ? $default_sem : "all"),
                     "sem_status"=>$_sem_status);
 
-if ($reset_all) $sem_browse_data = null;
-if (get_config('STM_ENABLE') &&  $sem_portal["bereich"] == "mod"){
+if (Request::option('reset_all')) $_SESSION['sem_browse_data'] = null;
+if (get_config('STM_ENABLE') &&  $_SESSION['sem_portal']['bereich'] == "mod"){
     $sem_browse_obj = new StmBrowse($init_data);
 } else {
     $sem_browse_obj = new SemBrowse($init_data);
-    $sem_browse_data['show_class'] = $sem_portal["bereich"];
+    $sem_browse_data['show_class'] = $_SESSION['sem_portal']['bereich'];
 }
 if (!$perm->have_perm("root")){
     $sem_browse_obj->target_url="details.php";
@@ -184,25 +185,25 @@ ob_end_flush();
     <table cellpadding="5" border="0" width="100%" id="main_content"><tr><td colspan="2">
         <?
         //
-        if ($sem_portal["bereich"] == "mod") {
+        if ($_SESSION['sem_portal']["bereich"] == "mod") {
             print "<br>"._("Hier finden Sie alle verfügbaren Studienmodule.");
         } elseif ($anzahl_seminare_class > 0) {
-            print $SEM_CLASS[$sem_portal["bereich"]]["description"]."<br>" ;
-        } elseif ($sem_portal["bereich"] != "all") {
+            print $SEM_CLASS[$_SESSION['sem_portal']["bereich"]]["description"]."<br>" ;
+        } elseif ($_SESSION['sem_portal']["bereich"] != "all") {
             print "<br>"._("In dieser Kategorie sind keine Veranstaltungen angelegt.<br>Bitte w&auml;hlen Sie einen andere Kategorie!");
         }
 
         echo "</td></tr><tr><td class=\"blank\" align=\"left\">";
-        if ($sem_portal["bereich"] != "mod"){
-                if ($sem_browse_data['cmd'] == "xts"){
-                    echo LinkButton::create(_('Schnellsuche'), $PHP_SELF.'?cmd=qs&level=f', array('title' => _("Zur Schnellsuche zurückgehen")));
+        if ($_SESSION['sem_portal']["bereich"] != "mod"){
+                if ($_SESSION['sem_browse_data']['cmd'] == "xts"){
+                    echo LinkButton::create(_('Schnellsuche'), URLHelper::getLink('?cmd=qs&level=f'), array('title' => _("Zur Schnellsuche zurückgehen")));
                 } else {
-                    echo LinkButton::create(_('Erweiterte Suche'), $PHP_SELF.'?cmd=xts&level=f', array('title' => _("Erweitertes Suchformular aufrufen")));
+                    echo LinkButton::create(_('Erweiterte Suche'), URLHelper::getLink('?cmd=xts&level=f'), array('title' => _("Erweitertes Suchformular aufrufen")));
                 }
         }
         echo "</td>\n";
         echo "<td class=\"blank\" align=\"right\">";
-        echo LinkButton::create(_('Zurücksetzen'), $PHP_SELF.'?reset_all=1', array('title' => _("zurücksetzen")));
+        echo LinkButton::create(_('Zurücksetzen'), URLHelper::getLink('?reset_all=1'), array('title' => _("zurücksetzen")));
         echo "</td></tr>\n";
 
 
@@ -215,16 +216,16 @@ $sem_browse_obj->do_output();
 
 print "</td><td class=\"blank\" width=\"270\" align=\"right\" valign=\"top\">";
 
-if ($sem_browse_obj->show_result && count($sem_browse_data['search_result'])){
+if ($sem_browse_obj->show_result && count($_SESSION['sem_browse_data']['search_result'])){
     $group_by_links = "";
     for ($i = 0; $i < count($sem_browse_obj->group_by_fields); ++$i){
-        if($sem_browse_data['group_by'] != $i){
-            $group_by_links .= "<a href=\"$PHP_SELF?group_by=$i&keep_result_set=1\"><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"16\" height=\"20\" border=\"0\">";
+        if($_SESSION['sem_browse_data']['group_by'] != $i){
+            $group_by_links .= "<a href=\"".URLHelper::getLink('?group_by=$i&keep_result_set=1')."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"16\" height=\"20\" border=\"0\">";
         } else {
             $group_by_links .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/red/arr_1right.png\" border=\"0\" align=\"bottom\">";
         }
         $group_by_links .= "&nbsp;" . $sem_browse_obj->group_by_fields[$i]['name'];
-        if($sem_browse_data['group_by'] != $i){
+        if($_SESSION['sem_browse_data']['group_by'] != $i){
             $group_by_links .= "</a>";
         }
         $group_by_links .= "<br>";
@@ -233,22 +234,22 @@ if ($sem_browse_obj->show_result && count($sem_browse_data['search_result'])){
                             "eintrag" => array(array(   'icon' => "blank.gif",
                                                         "text" => $group_by_links))
                     );
-    if ($sem_portal['bereich'] != 'mod') {
+    if ($_SESSION['sem_portal']['bereich'] != 'mod') {
             $infobox[] =    array(  "kategorie" => _("Aktionen:"),
                             "eintrag" => array(array(   'icon' => "icons/16/blue/download.png",
-                                                        "text" => '<a href="'.$PHP_SELF.'?send_excel=1">' . _("Download des Ergebnisses") . '</a>'))
+                                                        "text" => '<a href="'.URLHelper::getLink('?send_excel=1').'">' . _("Download des Ergebnisses") . '</a>'))
                     );
     }
-} elseif ($sem_portal['bereich'] != 'mod') {
+} elseif ($_SESSION['sem_portal']['bereich'] != 'mod') {
     $toplist = $toplist_links = '';
     $sql_where_query_seminare = " WHERE 1 ";
     if (!$GLOBALS['perm']->have_perm(get_config('SEM_VISIBILITY_PERM'))) $sql_where_query_seminare .= " AND seminare.visible=1  ";
 
-    if ($sem_portal['bereich'] !="all")
+    if ($_SESSION['sem_portal']['bereich'] !="all")
         $sql_where_query_seminare .= " AND seminare.status IN ('" . join("','", $_sem_status) . "')";
 
 
-    switch ($sem_portal["toplist"]) {
+    switch ($_SESSION['sem_portal']["toplist"]) {
         case 4:
         default:
             $toplist =  getToplist(_("neueste Veranstaltungen"),"SELECT seminare.seminar_id, seminare.name, mkdate as count FROM seminare ".$sql_where_query_seminare." ORDER BY mkdate DESC LIMIT 5", "date");
@@ -265,15 +266,15 @@ if ($sem_browse_obj->show_result && count($sem_browse_data['search_result'])){
     }
 
     //toplist link switcher
-    if ($sem_portal["toplist"] != 4)
-        $toplist_links .= "<a href=\"$PHP_SELF?choose_toplist=4\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/red/arr_1right.png\" border=\"0\"> "._("neueste Veranstaltungen")."</a><br>";
-    if ($sem_portal["toplist"] != 1)
-        $toplist_links .= "<a href=\"$PHP_SELF?choose_toplist=1\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/red/arr_1right.png\" border=\"0\"> "._("Teilnehmeranzahl")."</a><br>";
-    if ($sem_portal["toplist"] != 2)
-        $toplist_links .= "<a href=\"$PHP_SELF?choose_toplist=2\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/red/arr_1right.png\" border=\"0\"> "._("die meisten Materialien")."</a><br>";
-    if ($sem_portal["toplist"] != 3)
-        $toplist_links .= "<a href=\"$PHP_SELF?choose_toplist=3\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/red/arr_1right.png\" border=\"0\"> "._("aktivste Veranstaltungen")."</a><br>";
-    // if ($sem_portal["bereich"] == "all")
+    if ($_SESSION['sem_portal']["toplist"] != 4)
+        $toplist_links .= "<a href=\"".URLHelper::getLink('?choose_toplist=4')."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/red/arr_1right.png\" border=\"0\"> "._("neueste Veranstaltungen")."</a><br>";
+    if ($_SESSION['sem_portal']["toplist"] != 1)
+        $toplist_links .= "<a href=\"".URLHelper::getLink('?choose_toplist=1')."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/red/arr_1right.png\" border=\"0\"> "._("Teilnehmeranzahl")."</a><br>";
+    if ($_SESSION['sem_portal']["toplist"] != 2)
+        $toplist_links .= "<a href=\"".URLHelper::getLink('?choose_toplist=2')."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/red/arr_1right.png\" border=\"0\"> "._("die meisten Materialien")."</a><br>";
+    if ($_SESSION['sem_portal']["toplist"] != 3)
+        $toplist_links .= "<a href=\"".URLHelper::getLink('?choose_toplist=3')."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/red/arr_1right.png\" border=\"0\"> "._("aktivste Veranstaltungen")."</a><br>";
+    // if ($_SESSION['sem_portal']["bereich"] == "all")
     $infotxt = _("Sie können hier nach allen Veranstaltungen suchen, sich Informationen anzeigen lassen und Veranstaltungen abonnieren.");
     $infobox = array();
     $infobox[] =
@@ -285,12 +286,12 @@ if ($sem_browse_obj->show_result && count($sem_browse_data['search_result'])){
         )
     );
 
-    $infobox[] = ($sem_portal['bereich'] !="all") ?
+    $infobox[] = ($_SESSION['sem_portal']['bereich'] !="all") ?
                 array  ("kategorie"  => _("Information:"),
                         "eintrag" => array  (
                                     array ( 'icon' => 'icons/16/black/info.png',
-                                            "text"  => sprintf (_("Gew&auml;hlte Kategorie: <b>%s</b>")."<br>"._("%s Veranstaltungen vorhanden"), $SEM_CLASS[$sem_portal["bereich"]]["name"], $anzahl_seminare_class)
-                                                        . (($anzahl_seminare_class && $anzahl_seminare_class < 30) ? "<br>" . sprintf(_("Alle Veranstaltungen %sanzeigen%s"),"<a href=\"$PHP_SELF?do_show_class=1\">","</a>") : ""))
+                                            "text"  => sprintf (_("Gew&auml;hlte Kategorie: <b>%s</b>")."<br>"._("%s Veranstaltungen vorhanden"), $SEM_CLASS[$_SESSION['sem_portal']["bereich"]]["name"], $anzahl_seminare_class)
+                                                        . (($anzahl_seminare_class && $anzahl_seminare_class < 30) ? "<br>" . sprintf(_("Alle Veranstaltungen %sanzeigen%s"),"<a href=\"".URLHelper::getLink('?do_show_class=1')."\">","</a>") : ""))
                                         )
                         ) : FALSE;
     $infobox[] = $information_entry;
@@ -322,12 +323,12 @@ if ($sem_browse_obj->show_result && count($sem_browse_data['search_result'])){
         )
     );
 
-    $infobox[] = ($sem_portal['bereich'] !="all") ?
+    $infobox[] = ($_SESSION['sem_portal']['bereich'] !="all") ?
                 array  ("kategorie"  => _("Information:"),
                         "eintrag" => array  (
                                     array ( "icon" => "icons/16/black/info.png",
                                             "text"  => sprintf (_("Gew&auml;hlte Kategorie: <b>%s</b>")."<br>"._("%s Studienmodule vorhanden"), _("Studienmodule"), $anzahl_seminare_class)
-                                                        . (($anzahl_seminare_class && $anzahl_seminare_class < 30) ? "<br>" . sprintf(_("Alle Studienmodule %sanzeigen%s"),"<a href=\"$PHP_SELF?do_show_class=mod\">","</a>") : ""))
+                                                        . (($anzahl_seminare_class && $anzahl_seminare_class < 30) ? "<br>" . sprintf(_("Alle Studienmodule %sanzeigen%s"),"<a href=\"".URLHelper::getLink('?do_show_class=mod')."\">","</a>") : ""))
                                         )
                         ) : FALSE;
 }

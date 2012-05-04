@@ -26,20 +26,20 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 use Studip\Button, Studip\LinkButton;
 
 // -- here you have to put initialisations for the current page
-$sess->register('issue_open');
-$sess->register('raumzeitFilter');
-$sess->register('chronoGroupedFilter');
+//$sess->register('issue_open');
+//$sess->register('raumzeitFilter');
+//$sess->register('chronoGroupedFilter');
 
 require_once ('lib/classes/Seminar.class.php');
 require_once ('lib/raumzeit/raumzeit_functions.inc.php');
 require_once ('lib/raumzeit/themen_expert.inc.php');
 require_once 'lib/admin_search.inc.php';
 
-if ($RESOURCES_ENABLE) {
-    include_once ($RELATIVE_PATH_RESOURCES."/lib/ResourceObject.class.php");
-    include_once ($RELATIVE_PATH_RESOURCES."/lib/ResourcesUserRoomsList.class.php");
-    include_once ($RELATIVE_PATH_RESOURCES."/lib/VeranstaltungResourcesAssign.class.php");
-    include_once ($RELATIVE_PATH_RESOURCES."/lib/ResourceObjectPerms.class.php");
+if (get_config('RESOURCES_ENABLE')) {
+    include_once ($GLOBALS['RELATIVE_PATH_RESOURCES']."/lib/ResourceObject.class.php");
+    include_once ($GLOBALS['RELATIVE_PATH_RESOURCES']."/lib/ResourcesUserRoomsList.class.php");
+    include_once ($GLOBALS['RELATIVE_PATH_RESOURCES']."/lib/VeranstaltungResourcesAssign.class.php");
+    include_once ($GLOBALS['RELATIVE_PATH_RESOURCES']."/lib/ResourceObjectPerms.class.php");
     $resList = new ResourcesUserRoomsList($user->id, TRUE, FALSE, TRUE);
 }
 
@@ -57,13 +57,12 @@ define('SELECTED', ' checked');
 define('NOT_SELECTED', '');
 
 $powerFeatures = true;
-
-$sem = new Seminar($id);
-$sem->checkFilter();
-$themen =& $sem->getIssues();
 if (isset($_REQUEST['cmd'])) {
     $cmd = $_REQUEST['cmd'];
 }
+$sem = new Seminar($id);
+$sem->checkFilter();
+$themen =& $sem->getIssues();
 
 //workarounds for multiple submit-buttons
 
@@ -120,8 +119,8 @@ if (isset($submitter_id)) {
     }
 }
 
-if (($chronoGroupedFilter) == '') {
-    $chronoGroupedFilter = 'grouped';
+if (($_SESSION['chronoGroupedFilter']) == '') {
+    $_SESSION['chronoGroupedFilter'] = 'grouped';
 }
 
 $sem->registerCommand('autoAssign', 'themen_autoAssign');
@@ -160,13 +159,13 @@ $themen =& $sem->getIssues(true);   // read again, so we have the actual sort or
                                 if ($sem->getStartSemester() <= $val['vorles_beginn']) $passed = true;
                                 if ($passed && ($sem->getEndSemesterVorlesEnde() >= $val['vorles_ende'])) {
                                     $tpl['semester'][$val['beginn']] = $val['name'];
-                                    if ($raumzeitFilter != ($val['beginn'])) {
+                                    if ($_SESSION['raumzeitFilter'] != ($val['beginn'])) {
                                     } else {
                                         $tpl['seleceted'] = $val['beginn'];
                                     }
                                 }
                             }
-                            $tpl['selected'] = $raumzeitFilter;
+                            $tpl['selected'] = $_SESSION['raumzeitFilter'];
                             $tpl['semester']['all'] = _("Alle Semester");
                             include('lib/raumzeit/templates/choose_filter.tpl');
                         ?>
@@ -245,7 +244,7 @@ $themen =& $sem->getIssues(true);   // read again, so we have the actual sort or
                     $tpl['submit_name'] = 'doAddIssue';
                     $tpl['first'] = true;
                     $tpl['last'] = true;
-                    $issue_open[''] = true;
+                    $_SESSION['issue_open'][''] = true;
                     include('lib/raumzeit/templates/thema.tpl');
                 }
 
@@ -283,17 +282,17 @@ $themen =& $sem->getIssues(true);   // read again, so we have the actual sort or
 
                     if ($openAll) {
                         $tpl['openAll'] = TRUE;
-                        $issue_open[$themen_id] = TRUE;
+                        $_SESSION['issue_open'][$themen_id] = TRUE;
                     }
 
-                    if (($issue_open[$themen_id] && $open_close_id == $themen_id) || $openAll) {
+                    if (($_SESSION['issue_open'][$themen_id] && $open_close_id == $themen_id) || $openAll) {
                         $tpl['submit_name'] = 'changeIssue';
                         $tpl['theme_description'] = htmlReady($thema->getDescription());
                         $tpl['forumEntry'] = ($thema->hasForum()) ? SELECTED : NOT_SELECTED;
                         $tpl['fileEntry'] = ($thema->hasFile()) ? SELECTED : NOT_SELECTED;
                         include('lib/raumzeit/templates/thema.tpl');
                     } else {
-                        unset($issue_open[$themen_id]);
+                        unset($_SESSION['issue_open'][$themen_id]);
                         include('lib/raumzeit/templates/thema.tpl');
                     }
                     $count++;
@@ -327,7 +326,7 @@ $themen =& $sem->getIssues(true);   // read again, so we have the actual sort or
                 <tr>
                     <td colspan="3" align="right" height="28">
                         <table width="100%" cellspacing="0" cellpadding="0" border="0">
-                        <? if ($chronoGroupedFilter == 'grouped') { ?>
+                        <? if ($_SESSION['chronoGroupedFilter'] == 'grouped') { ?>
                             <td style="background-color: #e7eefe; height:28px;">
                             </td>
                             <td style="background-color: #e7eefe; border-left: 1px solid black;">
@@ -366,7 +365,7 @@ $themen =& $sem->getIssues(true);   // read again, so we have the actual sort or
                         </table>
                     </td>
                 </tr>
-                <? if ($chronoGroupedFilter == 'grouped') { ?>
+                <? if ($_SESSION['chronoGroupedFilter'] == 'grouped') { ?>
                     <tr>
                         <td class="printhead" colspan="3">
                             <font size="-1">
@@ -382,7 +381,7 @@ $themen =& $sem->getIssues(true);   // read again, so we have the actual sort or
                         $tpl['date'] = $turnus[$metadate_id];
                         include('lib/raumzeit/templates/metadate_themen.tpl');
 
-                        if ($issue_open[$metadate_id]) {
+                        if ($_SESSION['issue_open'][$metadate_id]) {
                             $all_semester = $semester->getAllSemesterData();
                             $grenze = 0;
 

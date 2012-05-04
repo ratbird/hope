@@ -300,7 +300,7 @@ function raumzeit_get_semesters(&$sem, &$semester, $filter) {
     if (sizeof($semester_chooser) == 2 && !$sem->hasDatesOutOfDuration(true)) {
         unset($semester_chooser['all']);
         foreach ($semester_chooser as $beginn => $trash) {
-            $GLOBALS['raumzeitFilter'] = $beginn;
+            $_SESSION['raumzeitFilter'] = $beginn;
             $filter = $beginn;
             $selected = $beginn;
             break;

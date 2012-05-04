@@ -28,6 +28,7 @@
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $perm->check("autor");
 
@@ -47,8 +48,8 @@ $_attributes['lit_select'] = array('style' => 'font-size:8pt;width:100%');
 PageLayout::setHelpKeyword("Basis.LiteraturListen");
 PageLayout::setTitle(_("Verwaltung von Literaturlisten"));
 
-if (!$sess->is_registered('_lit_range')){
-    $sess->register('_lit_range');
+if (!$_SESSION['_lit_range']){
+    $_SESSION['_lit_range']='';
 }
 
 if ($_REQUEST['_range_id'] == "self"){
@@ -56,17 +57,17 @@ if ($_REQUEST['_range_id'] == "self"){
 } else if (isset($_REQUEST['_range_id'])){
     $_range_id = $_REQUEST['_range_id'];
 } else {
-    $_range_id = $_lit_range;
+    $_range_id = $_SESSION['_lit_range'];
 }
 if (!$_range_id){
     $_range_id = $auth->auth['uid'];
 }
 
-if ($list  || $view || $view_mode || $_range_id != $auth->auth['uid']){
+if (Request::option('list')  || Request::option('view') || Request::option('view_mode') || $_range_id != $auth->auth['uid']){
     if ($perm->have_perm('admin')) {
         include 'lib/admin_search.inc.php';
 
-        if ($links_admin_data['topkat'] == 'sem') {
+        if ($_SESSION['links_admin_data']['topkat'] == 'sem') {
             Navigation::activateItem('/admin/course/literature');
         } else {
             Navigation::activateItem('/admin/institute/literature');
@@ -80,7 +81,7 @@ if ($list  || $view || $view_mode || $_range_id != $auth->auth['uid']){
     closeObject();
 }
 
-$_lit_range = $_range_id;
+$_SESSION['_lit_range'] = $_range_id;
 
 $_the_treeview = new StudipLitListViewAdmin($_range_id);
 $_the_tree =& $_the_treeview->tree;

@@ -33,16 +33,12 @@ function themen_chronoAutoAssign() {
 }
 
 function themen_open() {
-    global $issue_open;
-
-    $issue_open[$_REQUEST['open_close_id']] = true;
+   $_SESSION['issue_open'][$_REQUEST['open_close_id']] = true;
 }
 
 function themen_close() {
-    global $issue_open;
-
-    $issue_open[$_REQUEST['open_close_id']] = false;
-    unset ($issue_open[$_REQUEST['open_close_id']]);
+    $_SESSION['issue_open'][$_REQUEST['open_close_id']] = false;
+    unset ($_SESSION['issue_open'][$_REQUEST['open_close_id']]);
 }
 
 function themen_doAddIssue() {

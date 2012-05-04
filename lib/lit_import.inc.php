@@ -35,6 +35,9 @@ require_once ("lib/classes/lit_import_plugins/StudipLitImportPluginAbstract.clas
 
 function do_lit_import() {
     global $_msg, $cmd, $xmlfile, $xmlfile_size, $xmlfile_name, $username, $_range_id, $PHP_SELF, $plugin_name;
+    $cmd = Request::option('cmd');
+    $xmlfile = $_FILES['xmlfile']['name'];
+    $plugin_name = Request::quoted('plugin_name');
     if ($cmd) {
         if ($cmd=="import_lit_list" && $xmlfile) {
             StudipLitImportPluginAbstract::use_lit_import_plugins($xmlfile, $xmlfile_size, $xmlfile_name, $plugin_name, $_range_id);
@@ -46,11 +49,11 @@ function do_lit_import() {
 
 function print_lit_import_dlg() {
     global $PHP_SELF, $username, $_range_id, $plugin_name, $LIT_IMPORT_PLUGINS;
-
+    $plugin_name = Request::quoted('plugin_name');
     if (!$plugin_name) $plugin_name = "EndNote";
 
     $plugin = array();
-    
+
     if ($plugin_name)
         foreach ($LIT_IMPORT_PLUGINS as $p) {
             if ($p["name"] == $plugin_name) {
@@ -64,7 +67,7 @@ function print_lit_import_dlg() {
     $template->set_attribute('plugin_name', $plugin_name);
     $template->set_attribute('plugin', $plugin);
     $template->set_attribute('_range_id', $_range_id);
-    $template->set_attribute('username', $username);
+    $template->set_attribute('username', Request::quoted('username'));
 
     echo $template->render();
 

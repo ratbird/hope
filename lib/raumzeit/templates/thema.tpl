@@ -7,7 +7,7 @@ use Studip\Button, Studip\LinkButton;
     <TD width="10%" class="steel" nowrap>
         <A name="<?=$tpl['issue_id']?>" />
         <INPUT type="checkbox" name="themen[]" value="<?=$tpl['issue_id']?>"<?=$tpl['selected']?>>
-        <? if ($issue_open[$tpl['issue_id']]) { ?>
+        <? if ($_SESSION['issue_open'][$tpl['issue_id']]) { ?>
             <A href="<?= URLHelper::getLink('?cmd=close&open_close_id='. $tpl['issue_id'] .'#'. $tpl['issue_id']) ?>">
             <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/blue/arr_1down.png" border="0" class="text-bottom">
         <? } else { ?>
@@ -18,7 +18,7 @@ use Studip\Button, Studip\LinkButton;
     </TD>
     <TD width="70%" nowrap class="steel">
         <FONT size="-1">
-        <? if ($issue_open[$tpl['issue_id']]) { ?>
+        <? if ($_SESSION['issue_open'][$tpl['issue_id']]) { ?>
             <A class="tree" href="<?= URLHelper::getLink('?cmd=close&open_close_id='. $tpl['issue_id'] .'#'. $tpl['issue_id']) ?>">
         <? } else { ?>
             <A class="tree" href="<?= URLHelper::getLink('?cmd=open&open_close_id='. $tpl['issue_id'] .'#'. $tpl['issue_id']) ?>">
@@ -43,7 +43,7 @@ use Studip\Button, Studip\LinkButton;
         </A>
     </TD>
 </TR>
-<? if ($issue_open[$tpl['issue_id']]) { ?>
+<? if ($_SESSION['issue_open'][$tpl['issue_id']]) { ?>
 <TR>
     <TD width="10%" class="blank">
         &nbsp;

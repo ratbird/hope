@@ -5,8 +5,8 @@ use Studip\Button, Studip\LinkButton;
 ?>
 <TR style="height: 1.8em">
     <TD width="1%" align="right" valign="bottom" class="<?=$tpl['class']?>" nowrap="nowrap">
-        <A href="<?= URLHelper::getLink('?cmd='. ($issue_open[$tpl['sd_id']] ? 'close' : 'open') .'&open_close_id='. $tpl['sd_id'] .'#'. $tpl['sd_id'])?>">
-        <IMG class="middle" src="<?=$GLOBALS['ASSETS_URL'].(($issue_open[$tpl['sd_id']]) ? 'images/icons/16/blue/arr_1down.png' : 'images/icons/16/blue/arr_1right.png')?>">
+        <A href="<?= URLHelper::getLink('?cmd='. ($_SESSION['issue_open'][$tpl['sd_id']] ? 'close' : 'open') .'&open_close_id='. $tpl['sd_id'] .'#'. $tpl['sd_id'])?>">
+        <IMG class="middle" src="<?=$GLOBALS['ASSETS_URL'].(($_SESSION['issue_open'][$tpl['sd_id']]) ? 'images/icons/16/blue/arr_1down.png' : 'images/icons/16/blue/arr_1right.png')?>">
         </A>
     </TD>
     <TD width="1%" align="right" valign="bottom" class="<?=$tpl['class']?>" nowrap="nowrap">
@@ -14,7 +14,7 @@ use Studip\Button, Studip\LinkButton;
         <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/blue/date.png" class="middle">&nbsp;
     </TD>
     <TD nowrap="nowrap" class="<?=$tpl['class']?>" valign="bottom">
-        <A class="tree" href="<?= URLHelper::getLink('?cmd='. ($issue_open[$tpl['sd_id']] ? 'close' : 'open') .'&open_close_id='. $tpl['sd_id'] .'#'. $tpl['sd_id'])?>">
+        <A class="tree" href="<?= URLHelper::getLink('?cmd='. ($_SESSION['issue_open'][$tpl['sd_id']] ? 'close' : 'open') .'&open_close_id='. $tpl['sd_id'] .'#'. $tpl['sd_id'])?>">
                 <i><?= htmlReady($tpl['art']) ?>:&nbsp;</i>
                 <?=$tpl['date']?>&nbsp;
         </A>
@@ -32,7 +32,7 @@ use Studip\Button, Studip\LinkButton;
         <?=$tpl['calendar']?>
     </td>
 </tr>
-<? if ($issue_open[$tpl['sd_id']] || $openAll) { ?>
+<? if ($_SESSION['issue_open'][$tpl['sd_id']] || $openAll) { ?>
 <TR>
     <TD colspan="6" class="steel1" align="center">
         <? if (!$openAll) { ?>

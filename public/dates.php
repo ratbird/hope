@@ -16,14 +16,15 @@
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 
-$issue_open = array();
-$raumzeitFilter = Request::get('raumzeit_filter');
-
-URLHelper::bindLinkParam('date_type', Request::get('date_type'));
-URLHelper::bindLinkParam('raumzeit_filter', $raumzeitFilter);
-URLHelper::bindLinkParam('rzSeminar', $rzSeminar);
+$_SESSION['issue_open'] = array();
+$raumzeitFilter = Request::get('newFilter');
+$_SESSION['raumzeitFilter'] = $raumzeitFilter;
+URLHelper::bindLinkParam('date_type', Request::option('date_type'));
+URLHelper::bindLinkParam('raumzeit_filter', $_SESSION['raumzeitFilter']);
+URLHelper::bindLinkParam('rzSeminar', Request::option('rzSeminar'));
 
 include ("lib/seminar_open.php"); // initialise Stud.IP-Session
 
@@ -38,7 +39,7 @@ if ($RESOURCES_ENABLE) {
     include_once ($RELATIVE_PATH_RESOURCES."/lib/VeranstaltungResourcesAssign.class.php");
     include_once ($RELATIVE_PATH_RESOURCES."/lib/ResourceObjectPerms.class.php");
 }
-
+ $cmd = Request::option('cmd');
 $sem = new Seminar($SessionSeminar);
 
 checkObject();
@@ -49,34 +50,30 @@ PageLayout::setTitle($SessSemName["header_line"].' - '._("Ablaufplan"));
 
 if (Request::get('date_type') == '1') {
     Navigation::activateItem('/course/schedule/type1');
-    UrlHelper::bindLinkParam('type', $type);
+    UrlHelper::bindLinkParam('type', Request::option('type'));
 } else if (Request::get('date_type') == 'other') {
     Navigation::activateItem('/course/schedule/other');
-    UrlHelper::bindLinkParam('type', $type);
+    UrlHelper::bindLinkParam('type', Request::option('type'));
 } else {
     Navigation::activateItem('/course/schedule/all');
 }
 
 $semester = new SemesterData();
 $data = $semester->getCurrentSemesterData();
-if (!$raumzeitFilter || ($rzSeminar != $SessSemName[1])) {
-    $raumzeitFilter = $data['beginn'];
+if (!$_SESSION['raumzeitFilter'] || ($rzSeminar != $SessSemName[1])) {
+    $_SESSION['raumzeitFilter'] = $data['beginn'];
     $rzSeminar = $SessSemName[1];
 }
 $sem->checkFilter();
 $themen =& $sem->getIssues();
 
 function dates_open() {
-    global $issue_open;
-
-    $issue_open[$_REQUEST['open_close_id']] = true;
+    $_SESSION['issue_open'][$_REQUEST['open_close_id']] = true;
 }
 
 function dates_close() {
-    global $issue_open;
-
-    $issue_open[$_REQUEST['open_close_id']] = false;
-    unset ($issue_open[$_REQUEST['open_close_id']]);
+    $_SESSION['issue_open'][$_REQUEST['open_close_id']] = false;
+    unset ($_SESSION['issue_open'][$_REQUEST['open_close_id']]);
 }
 
 $sem->registerCommand('open', 'dates_open');
@@ -119,7 +116,7 @@ if (Request::get('export') && $rechte) {
     // Start of Output
     include ('lib/include/html_head.inc.php'); // Output of html head
     include ('lib/include/header.php');   // Output of Stud.IP head
-
+   
     if ($cmd == 'openAll') $openAll = true;
     $dates = array();
 
@@ -207,6 +204,7 @@ if (Request::get('export') && $rechte) {
 
 
     $template = $GLOBALS['template_factory']->open('dates');
+    $issue_open = $_SESSION['issue_open'];
     echo $template->render(compact('dates', 'sem', 'rechte', 'openAll', 'issue_open', 'raumzeitFilter'));
 
 }

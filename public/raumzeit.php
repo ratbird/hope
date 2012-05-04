@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
+unregister_globals();
 
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 
@@ -34,7 +35,8 @@ include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 PageLayout::setHelpKeyword("Basis.VeranstaltungenVerwaltenAendernVonZeitenUndTerminen");
 
 // -- here you have to put initialisations for the current page
-
+$list = Request::option('list');
+$seminar_id = Request::option('seminar_id');
 if ($list) {
     URLHelper::removeLinkParam('seminar_id');
     unset($seminar_id);
@@ -54,11 +56,11 @@ require_once 'lib/classes/LockRules.class.php';
 require_once 'lib/classes/AdminList.class.php';
 
 
-if ($RESOURCES_ENABLE) {
-    include_once ($RELATIVE_PATH_RESOURCES."/lib/ResourceObject.class.php");
-    include_once ($RELATIVE_PATH_RESOURCES."/lib/ResourcesUserRoomsList.class.php");
-    include_once ($RELATIVE_PATH_RESOURCES."/lib/VeranstaltungResourcesAssign.class.php");
-    include_once ($RELATIVE_PATH_RESOURCES."/lib/ResourceObjectPerms.class.php");
+if (get_config('RESOURCES_ENABLE')) {
+    include_once ($GLOBALS['RELATIVE_PATH_RESOURCES'] ."/lib/ResourceObject.class.php");
+    include_once ($GLOBALS['RELATIVE_PATH_RESOURCES'] ."/lib/ResourcesUserRoomsList.class.php");
+    include_once ($GLOBALS['RELATIVE_PATH_RESOURCES'] ."/lib/VeranstaltungResourcesAssign.class.php");
+    include_once ($GLOBALS['RELATIVE_PATH_RESOURCES'] ."/lib/ResourceObjectPerms.class.php");
     $resList = new ResourcesUserRoomsList($user->id, TRUE, FALSE, TRUE);
 }
 
@@ -70,9 +72,10 @@ if ($perm->have_perm('admin')) {
 } else {
     Navigation::activateItem('/course/admin/dates');
 }
-
+$sd_open = Request::optionArray('sd_open');
+$_SESSION['raumzeitFilter'] = Request::get('newFilter');
 // bind linkParams for chosen semester and opened dates
-URLHelper::bindLinkParam('raumzeitFilter', $raumzeitFilter);
+URLHelper::bindLinkParam('raumzeitFilter', $_SESSION['raumzeitFilter']);
 URLHelper::bindLinkParam('sd_open', $sd_open);
 
 //Change header_line if open object
@@ -92,7 +95,7 @@ include 'lib/include/admin_search_form.inc.php';
 if (!$perm->have_studip_perm('tutor', $id)) {
     die;
 }
-
+$cmd = Request::option('cmd');
 unQuoteAll();
 
 $sem = Seminar::GetInstance($id);
@@ -361,7 +364,7 @@ jQuery(function () {
                                 $tpl['cycle_sd'] = TRUE;
 
 
-                                if ($sd_open[$singledate_id] && ($open_close_id == $singledate_id)) {
+                                if ($sd_open[$singledate_id] && (Request::option('open_close_id') == $singledate_id)) {
                                     include('lib/raumzeit/templates/openedsingledate.tpl');
                                 } else {
                                     unset($sd_open[$singledate_id]);
@@ -455,7 +458,7 @@ jQuery(function () {
                                     }
                                 }
 
-                                if ($sd_open[$val->getSingleDateID()] && ($open_close_id == $val->getSingleDateID())) {
+                                if ($sd_open[$val->getSingleDateID()] && (Request::option('open_close_id') == $val->getSingleDateID())) {
                                     include('lib/raumzeit/templates/openedsingledate.tpl');
                                 } else {
                                     unset($sd_open[$val->getSingleDateID()]);
@@ -574,7 +577,7 @@ jQuery(function () {
                     $infobox_template = $GLOBALS['template_factory']->open('infobox/infobox_raumzeit');
 
                     // get a list of semesters (as display options)
-                    $semester_selectionlist = raumzeit_get_semesters($sem, $semester, $raumzeitFilter);
+                    $semester_selectionlist = raumzeit_get_semesters($sem, $semester, $_SESSION['raumzeitFilter']);
 
                     // fill attributes
                     $infobox_template->set_attribute('picture', 'infobox/schedules.jpg');

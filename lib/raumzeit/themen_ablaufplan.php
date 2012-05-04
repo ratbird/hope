@@ -29,10 +29,10 @@ use Studip\Button, Studip\LinkButton;
 define('SELECTED', ' checked');
 define('NOT_SELECTED', '');
 
-$sess->register('issue_open');
-$sess->register('raumzeitFilter');
+//$sess->register('issue_open');
+//$sess->register('raumzeitFilter');
 
-$issue_open = array();
+$_SESSION['issue_open'] = array();
 
 require_once ('lib/classes/Seminar.class.php');
 require_once ('lib/classes/Modules.class.php');
@@ -40,11 +40,11 @@ require_once ('lib/raumzeit/raumzeit_functions.inc.php');
 require_once ('lib/raumzeit/themen_ablaufplan.inc.php');
 require_once 'lib/admin_search.inc.php';
 
-if ($RESOURCES_ENABLE) {
-    include_once ($RELATIVE_PATH_RESOURCES."/lib/ResourceObject.class.php");
-    include_once ($RELATIVE_PATH_RESOURCES."/lib/ResourcesUserRoomsList.class.php");
-    include_once ($RELATIVE_PATH_RESOURCES."/lib/VeranstaltungResourcesAssign.class.php");
-    include_once ($RELATIVE_PATH_RESOURCES."/lib/ResourceObjectPerms.class.php");
+if (get_config('RESOURCES_ENABLE')) {
+    include_once ($GLOBALS['RELATIVE_PATH_RESOURCES']."/lib/ResourceObject.class.php");
+    include_once ($GLOBALS['RELATIVE_PATH_RESOURCES']."/lib/ResourcesUserRoomsList.class.php");
+    include_once ($GLOBALS['RELATIVE_PATH_RESOURCES']."/lib/VeranstaltungResourcesAssign.class.php");
+    include_once ($GLOBALS['RELATIVE_PATH_RESOURCES']."/lib/ResourceObjectPerms.class.php");
     $resList = new ResourcesUserRoomsList($user->id, TRUE, FALSE, TRUE);
 }
 
@@ -62,13 +62,12 @@ if (!$perm->have_studip_perm('tutor', $id)) {
 }
 
 $powerFeatures = true;
-
-$sem = new Seminar($id);
-$sem->checkFilter();
-$themen =& $sem->getIssues();
 if (isset($_REQUEST['cmd'])) {
     $cmd = $_REQUEST['cmd'];
 }
+$sem = new Seminar($id);
+$sem->checkFilter();
+$themen =& $sem->getIssues();
 
 // if all entries are opened, we parse the submitted results into appropriate arrays
 foreach ($_REQUEST as $key => $val) {
@@ -104,7 +103,7 @@ $sem->processCommands();
 // add status-message if there are dates which are not covered by the choosable semesters
 if ($sem->hasDatesOutOfDuration()) {
     $tpl['forceShowAll'] = TRUE;
-    if ($raumzeitFilter != 'all') {
+    if ($_SESSION['raumzeitFilter'] != 'all') {
         $sem->createInfo(_("Es gibt weitere Termine, die au&szlig;erhalb der regul&auml;ren Laufzeit der Veranstaltung liegen.<br> Um diese anzuzeigen w&auml;hlen Sie bitte \"Alle Semester\"!"));
     }
 } else {
@@ -286,7 +285,7 @@ $termine = getAllSortedSingleDates($sem);
             $infobox_template = $GLOBALS['template_factory']->open('infobox/infobox_topic_admin');
 
             // get a list of semesters (as display options)
-            $semester_selectionlist = raumzeit_get_semesters($sem, $semester, $raumzeitFilter);
+            $semester_selectionlist = raumzeit_get_semesters($sem, $semester, $_SESSION['raumzeitFilter']);
 
             // fill attributes
             $infobox_template->set_attribute('picture', 'infobox/schedules.jpg');

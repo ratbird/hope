@@ -75,8 +75,7 @@ $rangeID = ($rangeID) ? $rangeID : $SessSemName[1];
 if (empty ($rangeID)) {
     $rangeID = $user->id; }
 
-$evalID = $_GET["evalID"];
-
+$evalID = Request::option('evalID');
 $tree = new EvaluationTreeShowUser( $evalID );
 
 #$eval = new Evaluation( $evalID, NULL, EVAL_LOAD_ALL_CHILDREN );
@@ -99,7 +98,7 @@ $br = new HTMpty( "br" );
 
 /* Surrounding Form -------------------------------------------------------- */
 $form = new HTM( "form" );
-$form->attr( "action", $PHP_SELF."?evalID=".$evalID );
+$form->attr( "action", URLHelper::getLink("?evalID=".$evalID) );
 $form->attr( "method", "post" );
 $form->html(CSRFProtection::tokenTag());
 

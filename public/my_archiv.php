@@ -57,7 +57,7 @@ $db = new DB_Seminar;
 
 // we are defintely not in an lecture or institute
 closeObject();
-$links_admin_data='';    //Auch im Adminbereich gesetzte Veranstaltungen muessen geloescht werden.
+$_SESSION['links_admin_data']='';    //Auch im Adminbereich gesetzte Veranstaltungen muessen geloescht werden.
 PageLayout::setHelpKeyword("Basis.MeinArchiv");
 PageLayout::setTitle(_("Meine archivierten Veranstaltungen"));
 

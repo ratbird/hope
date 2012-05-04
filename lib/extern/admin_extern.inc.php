@@ -69,7 +69,7 @@ if ($_REQUEST['com'] == 'download_config') {
 
 PageLayout::setTitle(_("Verwaltung externer Seiten"));
 
-if ($links_admin_data["topkat"] == "inst") {
+if ($_SESSION['links_admin_data']["topkat"] == "inst") {
     Navigation::activateItem('/admin/institute/external');
 } else {
     Navigation::activateItem('/admin/config/external');

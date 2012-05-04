@@ -60,7 +60,7 @@ require_once 'lib/admin_search.inc.php';
 
 if (Request::option('list') || Request::option('view') && !(isDeputyEditAboutActivated() && isDeputy($auth->auth["uid"], get_userid(Request::get('cid')), true))) {
     if ($perm->have_perm('admin')) {
-        if ($links_admin_data['topkat'] == 'sem') {
+        if ($_SESSION['links_admin_data']['topkat'] == 'sem') {
             Navigation::activateItem('/admin/course/vote');
         } else {
             Navigation::activateItem('/admin/institute/vote');

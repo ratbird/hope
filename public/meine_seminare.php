@@ -96,7 +96,7 @@ $userConfig = UserConfig::get($GLOBALS['user']->id);
 
 // we are defintely not in an lexture or institute
 closeObject();
-$links_admin_data='';    //Auch im Adminbereich gesetzte Veranstaltungen muessen geloescht werden.
+$_SESSION['links_admin_data']='';    //Auch im Adminbereich gesetzte Veranstaltungen muessen geloescht werden.
 //delete all temporary permission changes
 if (is_array($_SESSION)) {
     foreach (array_keys($_SESSION) as $key) {

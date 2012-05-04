@@ -190,9 +190,7 @@ if (Request::submitted('cmd_insert')) {
     if (!preg_match('§^([a-zA-Z0-9_-]+\.php)([a-zA-Z0-9/#_?&=-]*)$§',$sms_source_page)) $sms_source_page = '';
 
     if ($sms_source_page) {
-        $sess->register('sms_msg');
-        $sms_msg = $msg;
-        $sess->freeze();
+        $_SESSION['sms_msg'] = $msg;
         if ($sms_source_page == "about.php") {
             $header_info = "Location: ".$sms_source_page."?username=".$sms_data["p_rec"][0];
         } else {

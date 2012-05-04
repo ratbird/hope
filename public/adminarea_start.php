@@ -25,7 +25,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 
 require '../lib/bootstrap.php';
-
+unregister_globals();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $perm->check("tutor");
 
@@ -56,7 +56,7 @@ if ($SessSemName[1]) {
     <tr><td class="blank" colspan=2>
     <p class="info">
     <?
-    if ($links_admin_data["referred_from"] == "sem") {
+    if ($_SESSION['links_admin_data']['referred_from'] == "sem") {
         printf(_("Hier k&ouml;nnen Sie die Daten der Veranstaltung <b>%s</b> direkt bearbeiten.") . "<br>", htmlReady($SessSemName[0]));
         print(_("Wenn Sie eine andere Veranstaltung bearbeiten wollen, klicken Sie bitte auf <b>Veranstaltungen</b> um zum Auswahlmenü zurückzukehren.") . "<br>&nbsp;");
     } else {

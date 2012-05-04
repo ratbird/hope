@@ -25,7 +25,7 @@
 use Studip\Button, Studip\LinkButton; 
 
 require '../lib/bootstrap.php';
-var_dump($_REQUEST);
+unregister_globals();
 //unregister_globals();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth",
                 "perm" => "Seminar_Perm", "user" => "Seminar_User"));
@@ -89,7 +89,7 @@ if (isset($SessSemName[1]) && isset($selected)) {
     if(!$perm->have_perm('root') && ($rule['permission'] == 'admin' || $rule['permission'] == 'root')){
         $form = htmlReady($rule['name']);
     } else {
-        $form    =  "<form name=\"\" action=\"".$PHP_SELF."\" method=\"post\">";
+        $form    =  "<form name=\"\" action=\"".URLHelper::getURL()."\" method=\"post\">";
         $form   .= CSRFProtection::tokenTag();
         $form   .=  "<input type=\"hidden\" name=\"make_lock\" value=\"1\">";
         $form   .=  "<select name=\"lock_sem[{$SessSemName[1]}]\">";

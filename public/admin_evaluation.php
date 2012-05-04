@@ -38,7 +38,8 @@
 
 
 require '../lib/bootstrap.php';
-
+unregister_globals();
+var_dump($_REQUEST);
 ob_start(); // start output buffering
 
 page_open (array ("sess" => "Seminar_Session",
@@ -62,9 +63,9 @@ PageLayout::setTitle(_("Verwaltung von Evaluationen"));
 require_once ('lib/evaluation/evaluation.config.php');
 require_once 'lib/admin_search.inc.php';
 
-if ($list || $view) {
+if (Request::option('list') || Request::option('view')) {
     if ($perm->have_perm('admin')) {
-        if ($links_admin_data['topkat'] == 'sem') {
+        if ($_SESSION['links_admin_data']['topkat'] == 'sem') {
             Navigation::activateItem('/admin/course/evaluation');
         } else {
             Navigation::activateItem('/admin/institute/evaluation');
@@ -76,7 +77,7 @@ if ($list || $view) {
     Navigation::activateItem('/tools/evaluation');
 }
 
-if (($SessSemName[1]) && (($view == "eval_sem") || ($view == "eval_inst")))
+if (($SessSemName[1]) && ((Request::option('view') == "eval_sem") || (Request::option('view') == "eval_inst")))
     $the_range = $SessSemName[1];
 else
     $the_range = $_REQUEST['rangeID'];
@@ -86,7 +87,7 @@ if ($the_range){
         $the_range = get_Username($the_range);
     if (get_Userid($the_range))
         $isUserrange = 1;
-} elseif ($_REQUEST['view']){
+} elseif (Request::option('view')){
     $the_range = $SessSemName[1];
 }
 
@@ -109,10 +110,9 @@ include_once('lib/include/header.php');
 if (!$isUserrange) {
     include 'lib/include/admin_search_form.inc.php';
 }
-
-if ($_REQUEST["page"] == "edit")
+if (Request::option('page') == "edit"){
     include (EVAL_PATH.EVAL_FILE_EDIT);
-else
+}else{
     include (EVAL_PATH.EVAL_FILE_OVERVIEW);
-
+}
 page_close ();

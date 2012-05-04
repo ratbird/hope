@@ -441,7 +441,7 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
                     printf("&nbsp;<a href=\"%s\">%s</a>", URLHelper::getLink("?dec=TRUE"), Button::create(_('<< Vorherige')));
                 }
                 printf("&nbsp;<a href=\"%s\">%s</a>", URLHelper::getLink("?archive_kill=TRUE"), Button::create(_('Archivieren')));
-                if (!$links_admin_data["sem_id"]) {
+                if (!$_SESSION['links_admin_data']["sem_id"]) {
                     echo '&nbsp;<a href="';
 
                     if ($perm->have_perm('admin')) {
@@ -492,10 +492,10 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
     </tr>
     </table>
     <?
-    if ($links_admin_data["sem_id"] == $_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"])
+    if ($_SESSION['links_admin_data']["sem_id"] == $_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"])
         reset_all_data();
     } elseif (!$list) {
-    if ($links_admin_data["sem_id"] == $_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"])
+    if ($_SESSION['links_admin_data']["sem_id"] == $_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"])
         reset_all_data();
     ?>
     <table width="100%" border="0" cellpadding="0" cellspacing="0">
@@ -506,7 +506,7 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
     <tr>
         <td class="blank" colspan=2><b>
         <?
-        if (!$links_admin_data["sem_id"])
+        if (!$_SESSION['links_admin_data']["sem_id"])
             parse_msg("info§" . _("Sie haben keine Veranstaltung zum Archivieren gew&auml;hlt."));
         ?></b>
         </td>

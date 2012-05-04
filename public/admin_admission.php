@@ -42,6 +42,7 @@ use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $perm->check("tutor");
 
@@ -78,7 +79,7 @@ $admin_admission_data_original = unserialize(base64_decode($_REQUEST['admin_admi
 if ($SessSemName[1]) {
     $seminar_id = $SessSemName[1];
 }
-
+$seminar_id = Request::option('seminar_id');
 if(!$seminar_id && $admin_admission_data["sem_id"]) {
     $seminar_id = $admin_admission_data["sem_id"];
 }
@@ -165,7 +166,7 @@ if ($_REQUEST['delete_domain']) {
 *
 */
 function get_snapshot() {
-    global $admin_admission_data;
+    global $admin_admission_data, $seminar_id;
 
     return  md5($admin_admission_data["admission_turnout"].
         $admin_admission_data["admission_type"].
@@ -261,7 +262,7 @@ if ($seminar_id
         "add_studg", "toggle_admission_quota")
     && !$delete_studg
     && !$delete_domain
-    && !$add_domain) {
+    && !Request::option('add_domain')) {
 
     $db->query("SELECT * FROM seminare WHERE Seminar_id = '$seminar_id' ");
     $db->next_record();
@@ -321,10 +322,12 @@ if ($seminar_id
     }
 
     //check start / enddate
-    if (!check_and_set_date($adm_s_tag, $adm_s_monat, $adm_s_jahr, $adm_s_stunde, $adm_s_minute, $admin_admission_data, "sem_admission_start_date")) {
+    if (!check_and_set_date(Request::quoted('adm_s_tag'), Request::quoted('adm_s_monat'), Request::quoted('adm_s_jahr'),
+            Request::quoted('adm_s_stunde'), Request::quoted('adm_s_minute'), $admin_admission_data, "sem_admission_start_date")) {
         $errormsg=$errormsg."error§"._("Bitte geben Sie g&uuml;ltige Zeiten f&uuml;r das Startdatum ein!")."§";
     }
-    if (!check_and_set_date($adm_e_tag, $adm_e_monat, $adm_e_jahr, $adm_e_stunde, $adm_e_minute, $admin_admission_data, "sem_admission_end_date")) {
+    if (!check_and_set_date(Request::quoted('adm_e_tag'), Request::quoted('adm_e_monat'), Request::quoted('adm_e_jahr')
+            , Request::quoted('adm_e_stunde'), Request::quoted('adm_e_minute'), $admin_admission_data, "sem_admission_end_date")) {
         $errormsg=$errormsg."error§"._("Bitte geben Sie g&uuml;ltige Zeiten f&uuml;r das Enddatum ein!")."§";
     }
     if ($admin_admission_data["sem_admission_end_date"] != "-1") {
@@ -365,16 +368,16 @@ if ($seminar_id
     }
 
     //Aenderungen ubernehmen
-    $admin_admission_data["admission_binding"]=$admission_binding;
+    $admin_admission_data["admission_binding"]=Request::option('admission_binding');
     if ($admin_admission_data["admission_binding"])
         $admin_admission_data["admission_binding"]=TRUE;
     settype($admin_admission_data["admission_binding"], 'integer');
 
-    if(isset($admission_turnout)) $admin_admission_data["admission_turnout"]=$admission_turnout;
+    if(Request::quoted('admission_turnout')) $admin_admission_data["admission_turnout"] = Request::quoted('admission_turnout');
 
-  if (isset($admission_prelim_txt))
+  if (Request::quoted('admission_prelim_txt'))
   {
-    $admin_admission_data["admission_prelim_txt"]=$admission_prelim_txt;
+    $admin_admission_data["admission_prelim_txt"]=Request::quoted('admission_prelim_txt');
   }
 
   if (Request::submitted('uebernehmen') && isset($_REQUEST["admission_waitlist"])) {
@@ -383,10 +386,10 @@ if ($seminar_id
 
 
   if (!$admin_admission_data["admission_type"]) {
-    if (isset($read_level))
-        $admin_admission_data["read_level"]=$read_level;
-    if (isset($write_level))
-        $admin_admission_data["write_level"]=$write_level;
+    if (Request::option('read_level'))
+        $admin_admission_data["read_level"]=Request::option('read_level');
+    if (Request::option('write_level'))
+        $admin_admission_data["write_level"]=Request::option('write_level');
     if($admin_admission_data["write_level"] < 2 && $admin_admission_data["read_level"] < 2) $admin_admission_data["passwort"] = "";
 
     //Alles was mit der Anmeldung zu tun hat ab hier
@@ -403,27 +406,31 @@ if ($seminar_id
         }
 
         //Studienbereiche entgegennehmen
-        if (is_array($studg_id)) {
+        if (Request::optionArray('studg_id')) {
+            $studg_ratio_old = Request::optionArray('studg_ratio_old');
+            $studg_ratio = Request::optionArray('studg_ratio');
+            $studg_id = Request::optionArray('studg_id');
             foreach ($studg_id as $key=>$val)
                 if ($studg_ratio_old[$key] != $studg_ratio[$key])
                     $admin_admission_data["admission_ratios_changed"]=TRUE;
             if ($admin_admission_data["admission_ratios_changed"]) {
                 $admin_admission_data["studg"]='';
+                $studg_name = Request::optionArray('studg_name');
                 foreach ($studg_id as $key=>$val)
                     $admin_admission_data["studg"][$val]=array("name"=>$studg_name[$key], "ratio"=>$studg_ratio[$key]);
             }
         }
 
     }
-
+    $add_ratio = Request::quoted('add_ratio');
     //Studiengang hinzufuegen
     if (Request::submitted("add_studg")) {
-        if ($add_studg && $add_studg != 'all') {
-            $db->query("SELECT name FROM studiengaenge WHERE studiengang_id='".$add_studg."' ");
+        if (Request::option('add_studg') && Request::option('add_studg') != 'all') {
+            $db->query("SELECT name FROM studiengaenge WHERE studiengang_id='".Request::option('add_studg')."' ");
             $db->next_record();
-            $admin_admission_data["studg"][$add_studg]=array("name"=>$db->f("name"), "ratio"=>$add_ratio);
-        } else if ($add_studg == 'all'){
-            $admin_admission_data["studg"][$add_studg]=array("name"=>_("Alle Studiengänge"), "ratio"=>$add_ratio);
+            $admin_admission_data["studg"][Request::option('add_studg')]=array("name"=>$db->f("name"), "ratio"=>$add_ratio);
+        } else if (Request::option('add_studg') == 'all'){
+            $admin_admission_data["studg"][Request::option('add_studg')]=array("name"=>_("Alle Studiengänge"), "ratio"=>$add_ratio);
         }
     }
 
@@ -442,12 +449,12 @@ if ($seminar_id
 
         if (($admin_admission_data["read_level"] == 2 || $admin_admission_data["write_level"] == 2) && !(LockRules::Check($seminar_id, 'Passwort')) ) {
             //Password bei Bedarf dann doch noch verschlusseln
-            if (!$sem_passwd)
+            if (!Request::quoted('sem_passwd'))
                 $admin_admission_data["passwort"] = "";
-            elseif($sem_passwd != "*******") {
-                $admin_admission_data["passwort"] = md5($sem_passwd);
-                if($sem_passwd2 != "*******")
-                    $check_pw = md5($sem_passwd2);
+            elseif(Request::quoted('sem_passwd') != "*******") {
+                $admin_admission_data["passwort"] = md5(Request::quoted('sem_passwd'));
+                if(Request::quoted('sem_passwd2') != "*******")
+                    $check_pw = md5(Request::quoted('sem_passwd2'));
             }
 
             if ($admin_admission_data["passwort"]=="")
@@ -506,7 +513,7 @@ if ($seminar_id
 
         //Ende der Anmeldung checken
         if (Request::submitted("uebernehmen") && (!in_array($admin_admission_data["admission_type_org"], array(1,2)) || $perm->have_perm("admin")) ) {
-            if (!check_and_set_date($adm_tag, $adm_monat, $adm_jahr, $adm_stunde, $adm_minute, $admin_admission_data, "admission_endtime") || !$admin_admission_data["admission_endtime"]) {
+            if (!check_and_set_date(Request::quoted('adm_tag'), Request::quoted('adm_monat'), Request::quoted('adm_jahr'), Request::quoted('adm_stunde'), Request::quoted('adm_minute'), $admin_admission_data, "admission_endtime") || !$admin_admission_data["admission_endtime"]) {
                 $admin_admission_data["admission_endtime"] = -1;
                 if ($admin_admission_data["admission_type"] == 1) {
                     $errormsg=$errormsg."error§"._("Bitte geben Sie g&uuml;ltige Zeiten f&uuml;r das Losdatum ein!")."§";
@@ -553,7 +560,7 @@ if ($seminar_id
     }
 
     //Meldung beim Wechseln des Modis
-    if (($adm_type_old != $admin_admission_data["admission_type"]) && (!$commit_no_admission_data))
+    if ((Request::option('adm_type_old') != $admin_admission_data["admission_type"]) && (!Request::option('commit_no_admission_data')))
         if ($admin_admission_data["admission_type"] > 0 && $admin_admission_data["admission_type"] != 3 )
             $infomsg.=sprintf ("info§"._("Sie haben ein Anmeldeverfahren vorgesehen. Beachten Sie bitte, dass nach dem &Uuml;bernehmen dieser Einstellung alle bereits eingetragenen Nutzerinnen und Nutzer aus der Veranstaltung entfernt werden und das Anmeldeverfahren anschließend nicht mehr abgeschaltet werden kann!")."§");
 
@@ -583,7 +590,7 @@ if ($seminar_id
         if (!LockRules::Check($seminar_id, 'admission_prelim'))
         {
         //for admission it have to be always 3
-        if ($admission_prelim == 1) {
+        if (Request::option('admission_prelim') == 1) {
             if ($admin_admission_data["admission_prelim"] == 0) { //we have to move the students to status "temporaly accepted", if put on
                 $db3->query("SELECT *,auth_user_md5.username FROM seminar_user,auth_user_md5 WHERE seminar_user.Seminar_id = '".$admin_admission_data["sem_id"]."' AND seminar_user.status='autor' AND seminar_user.user_id = auth_user_md5.user_id");
                 while ($db3->next_record()) {
@@ -603,7 +610,7 @@ if ($seminar_id
                 $db4->query("UPDATE seminare SET admission_prelim = 1 WHERE Seminar_id = '".$admin_admission_data["sem_id"]."'");
                 $admin_admission_data["admission_prelim"] = 1;
             }
-        } elseif (!$commit_no_admission_data && $admission_prelim == 0) {
+        } elseif (!Request::option('commit_no_admission_data') && Request::option('admission_prelim') == 0) {
             if ($admin_admission_data["admission_prelim"] == 1) { //we have to move the students again
                 if (!$perm->have_perm("admin")) {
                     $errormsg.=sprintf ("error§"._("Sie dürfen den Anmeldemodus nicht mehr verändern! Wenden Sie sich ggf. an den zuständigen Admin.")."§");

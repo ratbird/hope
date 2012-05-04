@@ -55,7 +55,7 @@ $cssSw->enableHover();
 
 // we are defintely not in an lexture or institute
 closeObject();
-$links_admin_data='';    //Auch im Adminbereich gesetzte Veranstaltungen muessen geloescht werden.
+$_SESSION['links_admin_data']='';    //Auch im Adminbereich gesetzte Veranstaltungen muessen geloescht werden.
 
 PageLayout::setTitle(_("Meine Studienmodule"));
 if (!$perm->have_perm('root')) {

@@ -84,11 +84,11 @@ class EvalEdit{
     function createHiddenIDs(){
         $input = new HTML ("input");
         $input->addAttr ("type","hidden");
-        $input->addAttr ("evalID",$_REQUEST["evalID"]);
+        $input->addAttr ("evalID",Request::option('evalID'));
         
         $input = new HTML ("input");
         $input->addAttr ("type","hidden");
-        $input->addAttr ("itemID",$_REQUEST["itemID"]);
+        $input->addAttr ("itemID",Request::option('itemID'));
         
         $input = new HTML ("input");
         $input->addAttr ("type","hidden");

@@ -65,8 +65,8 @@ $lib = new EvalOverview ($db, $perm, $user);
 
 
 /* Set variables ----------------------------------------------------------- */
-if( $sess->is_registered("evalID") )   $sess->unregister("evalID");
-if( $sess->is_registered("rangeID") )  $sess->unregister("rangeID");
+if( $_SESSION['evalID'] )   unset($_SESSION['evalID']);
+if( $_SESSION['evalID'] )  unset($_SESSION['rangeID']);
 
 if (!empty($the_range))
      $rangeID = $the_range;

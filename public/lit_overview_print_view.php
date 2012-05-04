@@ -23,7 +23,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 require '../lib/bootstrap.php';
-
+unregister_globals();
 function my_session_open($id = false){
     if (!$id){
         $id = md5(basename($GLOBALS['PHP_SELF']));

@@ -67,9 +67,9 @@ if ($list || $view || ($news_range_id != $user->id &&
     include 'lib/admin_search.inc.php';
 
     if ($perm->have_perm('admin')) {
-        if ($links_admin_data['topkat'] == 'sem' && !SeminarCategories::getByTypeId($SessSemName['art_num'])->studygroup_mode) {
+        if ($_SESSION['links_admin_data']['topkat'] == 'sem' && !SeminarCategories::getByTypeId($SessSemName['art_num'])->studygroup_mode) {
             Navigation::activateItem('/admin/course/news');
-        } elseif ($links_admin_data['topkat'] == 'inst') {
+        } elseif ($_SESSION['links_admin_data']['topkat'] == 'inst') {
             Navigation::activateItem('/admin/institute/news');
         } else {
             Navigation::activateItem('/tools/news');

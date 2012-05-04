@@ -62,15 +62,15 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
         global $links_admin_data, $sem_create_data, $admin_dates_data, $admin_admission_data,
         $archiv_assi_data, $term_metadata;
 
-        if($reset_search_fields) $links_admin_data='';
-        $sem_create_data='';
+        if($reset_search_fields) $_SESSION['links_admin_data']='';
+        $_SESSION['sem_create_data']='';
         $admin_dates_data='';
         $admin_admission_data='';
         $admin_rooms_data='';
         $archiv_assi_data='';
         $term_metadata='';
-        $links_admin_data["select_old"]=TRUE;
-        $links_admin_data['srch_sem'] =& $_SESSION['_default_sem'];
+        $_SESSION['links_admin_data']["select_old"]=TRUE;
+        $_SESSION['links_admin_data']['srch_sem'] =& $_SESSION['_default_sem'];
     }
 
 
@@ -82,7 +82,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
     //a Veranstaltung which was already open should be administrated
     } elseif (($SessSemName[1]) && ($new_sem)) {
         reset_all_data();
-        $links_admin_data["referred_from"]="sem";
+        $_SESSION['links_admin_data']["referred_from"]="sem";
     }
 
     //a Einrichtung was selected in the admin-search
@@ -93,7 +93,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
     //a Einrichtung which was already open should be administrated
     } elseif (($SessSemName[1]) && ($new_inst)) {
         reset_all_data();
-        $links_admin_data["referred_from"]="inst";
+        $_SESSION['links_admin_data']["referred_from"]="inst";
     }
 
     //Veranstaltung was selected but it is on his way to hell.... we close it at this point
@@ -113,17 +113,17 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
 
     // start tic #650, sortierung in der userconfig merken
     if ($_REQUEST['adminarea_sortby']) {
-        $links_admin_data["sortby"] = Request::option('adminarea_sortby');
+        $_SESSION['links_admin_data']["sortby"] = Request::option('adminarea_sortby');
         $list=TRUE;
     }
-    if (!isset($links_admin_data["sortby"])) {
-        $links_admin_data["sortby"]=$userConfig->getValue('LINKS_ADMIN');
+    if (!isset($_SESSION['links_admin_data']["sortby"])) {
+        $_SESSION['links_admin_data']["sortby"]=$userConfig->getValue('LINKS_ADMIN');
 
-        if ($links_admin_data["sortby"]=="" || $links_admin_data["sortby"]==false) {
-            $links_admin_data["sortby"]="VeranstaltungsNummer";
+        if ($_SESSION['links_admin_data']["sortby"]=="" || $_SESSION['links_admin_data']["sortby"]==false) {
+            $_SESSION['links_admin_data']["sortby"]="VeranstaltungsNummer";
         }
     } else {
-        $userConfig->store('LINKS_ADMIN', $links_admin_data["sortby"]);
+        $userConfig->store('LINKS_ADMIN', $_SESSION['links_admin_data']["sortby"]);
     }
 
     if (!Request::submitted('srch_send')) {
@@ -135,17 +135,17 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
     // end tic #650
 
     if ($_REQUEST['view'])
-        $links_admin_data["view"] = Request::option('view');
+        $_SESSION['links_admin_data']["view"] = Request::option('view');
 
     if ($_REQUEST['srch_send']) {
-        $links_admin_data["srch_sem"] = Request::option('srch_sem');
-        $links_admin_data["srch_doz"] = Request::option('srch_doz');
-        $links_admin_data["srch_inst"]= Request::option('srch_inst');
-        $links_admin_data["srch_fak"] = Request::option('srch_fak');
-        $links_admin_data["srch_exp"] = Request::get('srch_exp');
-        $links_admin_data["select_old"] = Request::int('select_old');
-        $links_admin_data["select_inactive"] = Request::int('select_inactive');
-        $links_admin_data["srch_on"] = true;
+        $_SESSION['links_admin_data']["srch_sem"] = Request::option('srch_sem');
+        $_SESSION['links_admin_data']["srch_doz"] = Request::option('srch_doz');
+        $_SESSION['links_admin_data']["srch_inst"]= Request::option('srch_inst');
+        $_SESSION['links_admin_data']["srch_fak"] = Request::option('srch_fak');
+        $_SESSION['links_admin_data']["srch_exp"] = Request::get('srch_exp');
+        $_SESSION['links_admin_data']["select_old"] = Request::int('select_old');
+        $_SESSION['links_admin_data']["select_inactive"] = Request::int('select_inactive');
+        $_SESSION['links_admin_data']["srch_on"] = true;
         $list = true;
     }
 
@@ -161,59 +161,59 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
 
     //user wants to create a new Einrichtung
     if ($i_view=="new")
-        $links_admin_data='';
+        $_SESSION['links_admin_data']='';
 
     //here are all the pages/views listed, which require the search form for Einrichtungen
     if ($i_page == "admin_institut.php"
-            OR ($i_page == "admin_roles.php" AND $links_admin_data["view"] == "statusgruppe_inst")
-            OR ($i_page == "admin_lit_list.php" AND $links_admin_data["view"] == "literatur_inst")
+            OR ($i_page == "admin_roles.php" AND $_SESSION['links_admin_data']["view"] == "statusgruppe_inst")
+            OR ($i_page == "admin_lit_list.php" AND $_SESSION['links_admin_data']["view"] == "literatur_inst")
             OR $i_page == "inst_admin.php"
-            OR ($i_page == "admin_news.php" AND $links_admin_data["view"] == "news_inst")
-            OR ($i_page == "admin_modules.php" AND $links_admin_data["view"] == "modules_inst")
-            OR ($i_page == "admin_extern.php" AND $links_admin_data["view"] == "extern_inst")
-            OR ($i_page == "admin_vote.php" AND $links_admin_data["view"] == "vote_inst")
-            OR ($i_page == "admin_evaluation.php" AND $links_admin_data["view"] == "eval_inst")
+            OR ($i_page == "admin_news.php" AND $_SESSION['links_admin_data']["view"] == "news_inst")
+            OR ($i_page == "admin_modules.php" AND $_SESSION['links_admin_data']["view"] == "modules_inst")
+            OR ($i_page == "admin_extern.php" AND $_SESSION['links_admin_data']["view"] == "extern_inst")
+            OR ($i_page == "admin_vote.php" AND $_SESSION['links_admin_data']["view"] == "vote_inst")
+            OR ($i_page == "admin_evaluation.php" AND $_SESSION['links_admin_data']["view"] == "eval_inst")
             ) {
 
-        $links_admin_data["topkat"]="inst";
+        $_SESSION['links_admin_data']["topkat"]="inst";
     }
 
     //here are all the pages/views listed, which require the search form for Veranstaltungen
     if ($i_page == "themen.php"
             OR $i_page == "raumzeit.php"
             OR $i_page == "admin_admission.php"
-            OR ($i_page == "admin_statusgruppe.php" AND $links_admin_data["view"]=="statusgruppe_sem")
-            OR ($i_page == "admin_lit_list.php" AND $links_admin_data["view"]=="literatur_sem")
+            OR ($i_page == "admin_statusgruppe.php" AND $_SESSION['links_admin_data']["view"]=="statusgruppe_sem")
+            OR ($i_page == "admin_lit_list.php" AND $_SESSION['links_admin_data']["view"]=="literatur_sem")
             OR $i_page == "archiv_assi.php"
             OR $i_page == "admin_visibility.php"
             OR $i_page == "admin_aux.php"
             OR $i_page == "admin_lock.php"
             OR $i_page == "copy_assi.php"
             OR $i_page == "adminarea_start.php"
-            OR ($i_page == "admin_modules.php" AND $links_admin_data["view"] == "modules_sem")
-            OR ($i_page == "admin_news.php" AND $links_admin_data["view"]=="news_sem")
-            OR ($i_page == "admin_vote.php" AND $links_admin_data["view"]=="vote_sem")
-            OR ($i_page == "admin_evaluation.php" AND $links_admin_data["view"]=="eval_sem")
+            OR ($i_page == "admin_modules.php" AND $_SESSION['links_admin_data']["view"] == "modules_sem")
+            OR ($i_page == "admin_news.php" AND $_SESSION['links_admin_data']["view"]=="news_sem")
+            OR ($i_page == "admin_vote.php" AND $_SESSION['links_admin_data']["view"]=="vote_sem")
+            OR ($i_page == "admin_evaluation.php" AND $_SESSION['links_admin_data']["view"]=="eval_sem")
             ) {
 
-        $links_admin_data["topkat"]="sem";
+        $_SESSION['links_admin_data']["topkat"]="sem";
     }
 
     //here are all the pages/views listed, which require the search form for Veranstaltungen
-    if ($i_page == "admin_extern.php" AND $links_admin_data["view"] == 'extern_global') {
+    if ($i_page == "admin_extern.php" AND $_SESSION['links_admin_data']["view"] == 'extern_global') {
 
-        $links_admin_data["topkat"] = 'global';
+        $_SESSION['links_admin_data']["topkat"] = 'global';
     }
 
     //remember the open topkat
     if ($view_mode=="sem")
-        $links_admin_data["topkat"]="sem";
+        $_SESSION['links_admin_data']["topkat"]="sem";
     elseif ($view_mode=="inst")
-        $links_admin_data["topkat"]="inst";
-    if (!$links_admin_data["topkat"])
-        $links_admin_data["topkat"]="global";
+        $_SESSION['links_admin_data']["topkat"]="inst";
+    if (!$_SESSION['links_admin_data']["topkat"])
+        $_SESSION['links_admin_data']["topkat"]="global";
     if ($view_mode != 'user')
-        $view_mode = $links_admin_data["topkat"];
+        $view_mode = $_SESSION['links_admin_data']["topkat"];
 
     //Wenn nur ein Institut verwaltet werden kann, immer dieses waehlen (Auswahl unterdruecken)
     if ((!$SessSemName[1]) && ($list) && ($view_mode=="inst")) {

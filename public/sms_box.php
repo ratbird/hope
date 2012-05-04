@@ -94,6 +94,8 @@ if (Request::option('readingconfirmation')) {
     $statement->execute(array(Request::option('readingconfirmation'), $user->id));
 
     if ($statement->rowCount()) {
+        $uname_snd = Request::get('uname_snd');
+
         setTempLanguage(get_userid($uname_snd));
         $subject = sprintf (_("Lesebestätigung von %s"), $user->getFullName());
         $message = sprintf (_("Ihre Nachricht an %s mit dem Betreff: %s vom %s wurde gelesen."), "%%".$user->getFullName()."%%", "%%".$orig_subject."%%", "%%".$date."%%");

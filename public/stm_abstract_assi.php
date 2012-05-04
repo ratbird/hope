@@ -6,6 +6,7 @@
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 
 include ("lib/seminar_open.php"); // initialise Stud.IP-Session
@@ -41,15 +42,15 @@ class AbstractStmControl{
 
         $form_fields = array();
 
-        $form_buttons = array("neuanlegen" => array('type' => 'neuanlegen', 'info' => "neues Allgemeines Modul"));
+        $form_buttons = array("neuanlegen" => array('type' => 'Anlegen', 'info' => "neues Allgemeines Modul"));
 
         foreach ($stm_arr as $id => $vals) {
             $form_fields["$id"] = array('type' => 'NoForm', 'info' => $vals['title']);
             if (!$vals['instanced']) {
-                $form_buttons["sel_$id"] = array('type' => 'edit', 'info' => "Allgemeines Modul bearbeiten");
-                $form_buttons["del_$id"] = array('type' => 'loeschen', 'info' => "Allgemeines Modul entfernen");
+                $form_buttons["sel_$id"] = array('type' => 'Bearbeiten', 'info' => "Allgemeines Modul bearbeiten");
+                $form_buttons["del_$id"] = array('type' => 'Löschen', 'info' => "Allgemeines Modul entfernen");
             }
-            $form_buttons["info_$id"] = array('type' => 'details', 'info' => "Details des Allgemeines Modul");
+            $form_buttons["info_$id"] = array('type' => 'Details', 'info' => "Details des Allgemeines Modul");
         }
         if (!is_object($this->sel_abs_stm_form)){
             $this->sel_abs_stm_form = new StudipForm($form_fields, $form_buttons, "sel_stm_form", false);
@@ -66,8 +67,8 @@ class AbstractStmControl{
         $form_fields = array(
         );
 
-        $form_buttons = array('back' => array('type' => 'zurueck', 'info' => _("Zum vorherigen Formular")),
-                            'continue' => array('type' => 'loeschen', 'info' => _("Das Modul loeschen")),
+        $form_buttons = array('back' => array('type' => 'Zurück', 'info' => _("Zum vorherigen Formular")),
+                            'continue' => array('type' => 'Löschen', 'info' => _("Das Modul loeschen")),
                             );
 
         if (!is_object($this->delete_form)){
@@ -84,7 +85,7 @@ class AbstractStmControl{
         $form_fields = array(
         );
 
-        $form_buttons = array('back' => array('type' => 'zurueck', 'info' => _("Zum vorherigen Formular")),
+        $form_buttons = array('back' => array('type' => 'Zurück', 'info' => _("Zum vorherigen Formular")),
                             );
 
         if (!is_object($this->info_form)){
@@ -115,9 +116,9 @@ class AbstractStmControl{
                                 'homeinst' => array('type' => 'select', 'default_value' => $this->abs_stm->getHomeinst(), 'caption' => 'Heimat-Einrichtung', 'info' => 'Die Einrichtung, der das allgemeine Modul zugeordnet ist', 'options' => $inst_arr, required => 'true'),
         );
 
-        $form_buttons = array('continue' => array('type' => 'weiter', 'info' => _("Dieses Formular abschicken")),
-                            'reset' => array('type' => 'zuruecksetzen', 'info' => _("Formularfelder leeren")),
-                            'back' => array('type' => 'zurueck', 'info' => _("Zum vorherigen Formular")),
+        $form_buttons = array('continue' => array('type' => 'Weiter', 'info' => _("Dieses Formular abschicken")),
+                            'reset' => array('type' => 'Zurücksetzen', 'info' => _("Formularfelder leeren")),
+                            'back' => array('type' => 'Zurück', 'info' => _("Zum vorherigen Formular")),
                             'preview' => array('type' => 'icons/16/black/question-circle.png', 'info' => _("Wiki Vorschau"), 'is_picture' => 'true'));
 
 
@@ -144,11 +145,11 @@ class AbstractStmControl{
 
         $form_fields = array();
 
-        $form_buttons = array('back' => array('type' => 'zurueck', 'info' => _("Zum vorherigen Formular")),
-                            'reset' => array('type' => 'zuruecksetzen', 'info' => _("Formularfelder leeren")),
-                            'continue' => array('type' => 'weiter', 'info' => _("Dieses Formular abschicken")),
-                            'add_element_type' => array('type' => 'anlegen', 'info' => _("Neue Lehr- und Lernform anlegen")),
-                            'add_block' => array('type' => 'feldhinzufuegen', 'info' => _("Neue Kombination hinzuf&#252;gen")));
+        $form_buttons = array('back' => array('type' => 'Zurück', 'info' => _("Zum vorherigen Formular")),
+                            'reset' => array('type' => 'Zurücksetzen', 'info' => _("Formularfelder leeren")),
+                            'continue' => array('type' => 'Weiter', 'info' => _("Dieses Formular abschicken")),
+                            'add_element_type' => array('type' => 'Anlegen', 'info' => _("Neue Lehr- und Lernform anlegen")),
+                            'add_block' => array('type' => 'Neues Feld', 'info' => _("Neue Kombination hinzuf&#252;gen")));
 
         for ( $i = 0; $i< count($this->abs_elements); $i++) {
         $form_fields = array_merge($form_fields,
@@ -162,9 +163,9 @@ class AbstractStmControl{
 
             $form_fields['element_type_id_' . $i]   =   array('type' => 'select', 'caption' => 'Lehr- und Lernformen', 'info' => '', 'options' => $type_arr);
 
-            $form_buttons['add_elem_' . $i] = array('type' => 'hinzufuegen', 'info' => _("Veranstaltung zu dieser Kombination hinzuf&#252;gen"));
+            $form_buttons['add_elem_' . $i] = array('type' => 'Hinzufügen', 'info' => _("Veranstaltung zu dieser Kombination hinzuf&#252;gen"));
             if ($i != 0) {
-                $form_buttons['remove_block_' . $i] = array('type' => 'entfernen', 'info' => _("Kombination entfernen"));
+                $form_buttons['remove_block_' . $i] = array('type' => 'Entfernen', 'info' => _("Kombination entfernen"));
             }
 
             foreach($this->abs_elements[$i] as $index => $elem) {
@@ -230,11 +231,11 @@ class AbstractStmControl{
             'recommed'  =>  array('type' => 'select', 'caption' => 'Empfohlenes Studiensemester', 'info' => 'Der empfohlene Zeitpunkt, dieses Modul zu belegen', 'options' => $sem_arr)
         );
 
-        $form_buttons = array('back' => array('type' => 'zurueck', 'info' => _("Zum vorherigen Formular")),
-                            'continue' => array('type' => 'weiter', 'info' => _("Dieses Formular abschicken")),
-                            'reset' => array('type' => 'zuruecksetzen', 'info' => _("Formularfelder leeren")),
-                            'add' => array('type' => 'hinzufuegen', 'info' => _("Kombination hinzufuegen")),
-                            'submit' => array('type' => 'submit', 'info' => ""));
+        $form_buttons = array('back' => array('type' => 'Zurück', 'info' => _("Zum vorherigen Formular")),
+                            'continue' => array('type' => 'Weiter', 'info' => _("Dieses Formular abschicken")),
+                            'reset' => array('type' => 'Zurücksetzen', 'info' => _("Formularfelder leeren")),
+                            'add' => array('type' => 'Hinzufügen', 'info' => _("Kombination hinzufuegen")),
+                            'submit' => array('type' => 'Abschicken', 'info' => ""));
 
         foreach ($this->assigns as $index => $val)
             $form_buttons['remove_' . $index] = array('type' => Assets::image_path('icons/16/blue/trash.png'), 'info' => _("Diese Zeile entfernen"), 'is_picture' => 'true');
@@ -254,8 +255,8 @@ class AbstractStmControl{
         $form_fields = array(
         );
 
-        $form_buttons = array('back' => array('type' => 'zurueck', 'info' => _("Zum vorherigen Formular")),
-                            'continue' => array('type' => 'speichern', 'info' => _("Das Modul abspeichern")),
+        $form_buttons = array('back' => array('type' => 'Zurück', 'info' => _("Zum vorherigen Formular")),
+                            'continue' => array('type' => 'Speichern', 'info' => _("Das Modul abspeichern")),
                             );
 
         if (!is_object($this->summary_form)){
@@ -325,23 +326,23 @@ class AbstractStmControl{
 
         static $stmvis;
 
-        $GLOBALS['sess']->register('stm_data');
+      //  $GLOBALS['sess']->register('stm_data');
 
         global $stm_data;
 
         // erstmal alle Daten wieder herstellen
 
-        if (!isset($stm_data['cur_abschl']))
-            $stm_data['cur_abschl'] = false;
+        if (!isset($_SESSION['stm_data']['cur_abschl']))
+            $_SESSION['stm_data']['cur_abschl'] = false;
 
-        if (!isset($stm_data['is_edit']))
-            $stm_data['is_edit'] = false;
+        if (!isset($_SESSION['stm_data']['is_edit']))
+            $_SESSION['stm_data']['is_edit'] = false;
 
-        if (!isset($stm_data['cur_stg']))
-            $stm_data['cur_stg'] = false;
+        if (!isset($_SESSION['stm_data']['cur_stg']))
+            $_SESSION['stm_data']['cur_stg'] = false;
 
-        if (is_array($stm_data['abs_elements_vals'])) {
-            foreach($stm_data['abs_elements_vals'] as $index => $val_list) {
+        if (is_array($_SESSION['stm_data']['abs_elements_vals'])) {
+            foreach($_SESSION['stm_data']['abs_elements_vals'] as $index => $val_list) {
                 $this->abs_elements[$index] = array();
                 foreach($val_list as $val) {
                     $elem = AbstractStmElement::GetInstance();
@@ -351,8 +352,8 @@ class AbstractStmControl{
             }
         }
 
-        if (is_array($stm_data['assigns'])) {
-            foreach($stm_data['assigns'] as $val) {
+        if (is_array($_SESSION['stm_data']['assigns'])) {
+            foreach($_SESSION['stm_data']['assigns'] as $val) {
                 $this->assigns[] = $val;
             }
         }
@@ -368,10 +369,10 @@ class AbstractStmControl{
 
         $this->abs_stm = AbstractStm::GetInstance();
 
-        if (isset($stm_data['cur_abs_stm']))
-            $this->abs_stm->setValues($stm_data['cur_abs_stm']);
+        if (isset($_SESSION['stm_data']['cur_abs_stm']))
+            $this->abs_stm->setValues($_SESSION['stm_data']['cur_abs_stm']);
 
-        if (isset($stm_data['assigns']))
+        if (isset($_SESSION['stm_data']['assigns']))
             $this->abs_stm->setValues(array('assigns' => $this->assigns));
 
         $this->setSelAbsStmForm();
@@ -379,7 +380,7 @@ class AbstractStmControl{
         $this->setInfoFormObject();
         $this->setInputFormObject();
         $this->setElementsInputFormObject();
-        $this->setAssignFormObject($stm_data['cur_abschl'], $stm_data['cur_stg']);
+        $this->setAssignFormObject($_SESSION['stm_data']['cur_abschl'], $_SESSION['stm_data']['cur_stg']);
         $this->setSummaryFormObject();
 
 
@@ -395,7 +396,8 @@ class AbstractStmControl{
             if ($this->sel_abs_stm_form->IsClicked("neuanlegen")) {
                 $this->abs_stm = AbstractStm::GetInstance();
                 $this->setInputFormObject();
-                $GLOBALS['sess']->unregister('stm_data');
+                //$GLOBALS['sess']->unregister('stm_data');
+                $_SESSION['stm_data'] = '';
                 $stmvis->showInputForm($this->abs_input_form);
             }
             else {
@@ -404,7 +406,7 @@ class AbstractStmControl{
                         $this->abs_stm = AbstractStm::GetInstance($name);
                         $this->abs_elements = $this->abs_stm->elements;
                         $this->assigns = $this->abs_stm->assigns;
-                        $stm_data['is_edit'] = true;
+                        $_SESSION['stm_data']['is_edit'] = true;
                         $this->setInputFormObject();
                         $stmvis->showInputForm($this->abs_input_form);
                         break;
@@ -442,7 +444,8 @@ class AbstractStmControl{
                     $stmvis->showSummaryForm($this->delete_form, $this->abs_stm, $this->abs_input_form, $this->elem_input_form, $this->assign_form);
                 }
                 else {
-                    $GLOBALS['sess']->unregister('stm_data');
+                    //$GLOBALS['sess']->unregister('stm_data');
+                    $_SESSION['stm_data'] = '';
                     $this->setSelAbsStmForm();
                     $stmvis->showError(array(array('msg', sprintf(_("Das allgemeine Modul wurde entfernt")))));
                     $stmvis->showSelAbsStmForm($this->sel_abs_stm_form);
@@ -577,8 +580,8 @@ class AbstractStmControl{
             elseif ($this->assign_form->IsClicked("reset")) {
                 $this->assign_form->doFormReset();
                 $this->assigns = array();
-                $stm_data['assigns'] = $this->assigns;
-                $this->setAssignFormObject($stm_data['cur_abschl'], $stm_data['cur_stg']);
+                $_SESSION['stm_data']['assigns'] = $this->assigns;
+                $this->setAssignFormObject($_SESSION['stm_data']['cur_abschl'], $_SESSION['stm_data']['cur_stg']);
                 $stmvis->showAssignForm($this->assign_form, $this->assigns);
             }
             elseif ($this->assign_form->IsClicked("continue")) {
@@ -616,7 +619,7 @@ class AbstractStmControl{
                         "recommed" => $this->assign_form->form_values['recommed'],
                         );
                 }
-                    $this->setAssignFormObject($stm_data['cur_abschl'], $stm_data['cur_stg']);
+                    $this->setAssignFormObject($_SESSION['stm_data']['cur_abschl'], $_SESSION['stm_data']['cur_stg']);
                     $stmvis->showAssignForm($this->assign_form, $this->assigns);
             }
             else {
@@ -634,16 +637,16 @@ class AbstractStmControl{
                     }
                 }
                 if (!$shift_others) {// Select hat sich geändert
-                    if ($stm_data['cur_abschl'] != $this->assign_form->form_values['abschl_list']) {
-                        $stm_data['cur_abschl'] = $this->assign_form->form_values['abschl_list'];
-                        $stm_data['cur_stg'] = false;
+                    if ($_SESSION['stm_data']['cur_abschl'] != $this->assign_form->form_values['abschl_list']) {
+                        $_SESSION['stm_data']['cur_abschl'] = $this->assign_form->form_values['abschl_list'];
+                        $_SESSION['stm_data']['cur_stg'] = false;
                     } else
-                        $stm_data['cur_stg'] = $this->assign_form->form_values['stg_list'];
+                        $_SESSION['stm_data']['cur_stg'] = $this->assign_form->form_values['stg_list'];
 
                 }
                 else // assigns haben sich geändert => Session aktualisieren
-                    $stm_data['assigns'] = $this->assigns;
-                $this->setAssignFormObject($stm_data['cur_abschl'], $stm_data['cur_stg']);
+                    $_SESSION['stm_data']['assigns'] = $this->assigns;
+                $this->setAssignFormObject($_SESSION['stm_data']['cur_abschl'], $_SESSION['stm_data']['cur_stg']);
                 $stmvis->showAssignForm($this->assign_form, $this->assigns);
             }
         }
@@ -652,14 +655,15 @@ class AbstractStmControl{
             if ($this->summary_form->IsClicked("back"))
                     $stmvis->showAssignForm($this->assign_form, $this->assigns);
             else { // speichern
-                $this->abs_stm->store($stm_data['is_edit']);
+                $this->abs_stm->store($_SESSION['stm_data']['is_edit']);
 
                 if (count($this->abs_stm->msg) != 0) {
                     $stmvis->showError($this->abs_stm->msg);
                     $stmvis->showSummaryForm($this->summary_form, $this->abs_stm, $this->abs_input_form, $this->elem_input_form, $this->assign_form);
                 }
                 else {
-                    $GLOBALS['sess']->unregister('stm_data');
+                    //$GLOBALS['sess']->unregister('stm_data');
+                    $_SESSION['stm_data'] = '';
                     $stmvis->showError(array(array('msg', sprintf(_("Das allgemeine Modul wurde erfolgreich gespeichert")))));
                     $this->setSelAbsStmForm();
                     $stmvis->showSelAbsStmForm($this->sel_abs_stm_form);
@@ -672,14 +676,14 @@ class AbstractStmControl{
             $stmvis->showSelAbsStmForm($this->sel_abs_stm_form);
 
         // Sessionvariablen setzen
-        $stm_data['assigns'] = $this->assigns;
+        $_SESSION['stm_data']['assigns'] = $this->assigns;
         foreach ($this->abs_elements as $index => $val_list) {
             $elems_vals[$index] = array();
             foreach ($val_list as $val)
                 $elems_vals[$index][] = $val->getValues();
         }
-        $stm_data['abs_elements_vals'] = $elems_vals;
-        $stm_data['cur_abs_stm'] = $this->abs_stm->getValues();
+        $_SESSION['stm_data']['abs_elements_vals'] = $elems_vals;
+        $_SESSION['stm_data']['cur_abs_stm'] = $this->abs_stm->getValues();
 
 //      var_dump($this->abs_stm); echo "<br><br>";
 //      var_dump($this->abs_elements); echo "<br><br>";

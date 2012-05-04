@@ -251,7 +251,7 @@ class InstanceStmControl {
     function setFillGroupForm(){
         global $stm_inst_data;
 
-        $group_index = $stm_inst_data["sel_group"];
+        $group_index = $_SESSION['stm_inst_data']["sel_group"];
         $form_fields = array(
         );
 
@@ -339,32 +339,32 @@ class InstanceStmControl {
         static $vis;
         global $user, $perm;
 
-        $GLOBALS['sess']->register('stm_inst_data');
+        //$GLOBALS['sess']->register('stm_inst_data');
 
         global $stm_inst_data;
 
         // erstmal alle Daten wieder herstellen
 
-        if (isset($stm_inst_data["abs_stm_id"]))
-            $this->abs_stm = AbstractStm::GetInstance($stm_inst_data['abs_stm_id']);
+        if (isset($_SESSION['stm_inst_data']["abs_stm_id"]))
+            $this->abs_stm = AbstractStm::GetInstance($_SESSION['stm_inst_data']['abs_stm_id']);
 
-        $this->users_found = $stm_inst_data["users_found"];
+        $this->users_found = $_SESSION['stm_inst_data']["users_found"];
 
-        if (isset($stm_inst_data["cur_sem_id"]))
-            $this->cur_seminar = Seminar::GetInstance($stm_inst_data['cur_sem_id']);
+        if (isset($_SESSION['stm_inst_data']["cur_sem_id"]))
+            $this->cur_seminar = Seminar::GetInstance($_SESSION['stm_inst_data']['cur_sem_id']);
 
-        if (isset($stm_inst_data["is_edit"]))
-            $is_edit = $stm_inst_data["is_edit"];
+        if (isset($_SESSION['stm_inst_data']["is_edit"]))
+            $is_edit = $_SESSION['stm_inst_data']["is_edit"];
         else
             $is_edit = false;
 
-        if (isset($stm_inst_data["inst_stm_vals"])) {
+        if (isset($_SESSION['stm_inst_data']["inst_stm_vals"])) {
             $this->inst_stm = InstanceStm::GetInstance();
-            $this->inst_stm->setValues($stm_inst_data["inst_stm_vals"]);
+            $this->inst_stm->setValues($_SESSION['stm_inst_data']["inst_stm_vals"]);
         }
 
-        if (isset($stm_inst_data["sel_group"]))
-            $this->sel_group = $this->abs_stm->elements[$stm_inst_data["sel_group"]];
+        if (isset($_SESSION['stm_inst_data']["sel_group"]))
+            $this->sel_group = $this->abs_stm->elements[$_SESSION['stm_inst_data']["sel_group"]];
 
         if ($vis == null)
             $vis = new StmInstanceAssiVisualization($this);
@@ -375,7 +375,7 @@ class InstanceStmControl {
         $this->sem_browse->target_id = "sem_id";
 
         $this->setSelStmForm();
-        $this->setStgInputFormObject($stm_inst_data['cur_abschl'], $stm_inst_data['cur_stg'], $stm_inst_data['cur_abs_stm']);
+        $this->setStgInputFormObject($_SESSION['stm_inst_data']['cur_abschl'], $_SESSION['stm_inst_data']['cur_stg'], $_SESSION['stm_inst_data']['cur_abs_stm']);
         $this->setAbsSummaryForm();
         $this->setAddInfoFormObject();
         $this->setSelElementgroupForm();
@@ -390,7 +390,8 @@ class InstanceStmControl {
         if ($this->sel_stm_form->IsSended()) {
             if ($this->sel_stm_form->IsClicked("neuanlegen")) {
                 $is_edit = false;
-                $GLOBALS['sess']->unregister('stm_inst_data');
+                //$GLOBALS['sess']->unregister('stm_inst_data');
+                $_SESSION['stm_inst_data'] ='';
                 $vis->showStgInputForm($this->stg_input_form);
             }
             else {
@@ -398,7 +399,7 @@ class InstanceStmControl {
                     if ($this->sel_stm_form->IsClicked("sel_$name")) {
                         $this->inst_stm = InstanceStm::GetInstance($name);
                         $this->abs_stm = AbstractStm::GetInstance($this->inst_stm->getStmAbstrId());
-                        $stm_data['is_edit'] = true;
+                        $_SESSION['stm_data']['is_edit'] = true;
                         $is_edit = true;
                         $this->setAddInfoFormObject();
                         $vis->showAddInfoForm($this->add_info_form);
@@ -437,7 +438,8 @@ class InstanceStmControl {
                     $vis->showSummaryForm($this->delete_form, $this->inst_stm, $this->abs_stm);
                 }
                 else {
-                    $GLOBALS['sess']->unregister('stm_inst_data');
+                    //$GLOBALS['sess']->unregister('stm_inst_data');
+                    $_SESSION['stm_inst_data'] = '';
                     unset($this->inst_stm);
                     unset($this->abs_stm);
                     unset($this->cur_seminar);
@@ -477,9 +479,9 @@ class InstanceStmControl {
                 $vis->showSelStmForm($this->sel_stm_form);
             }
             else { // select-Felder geaendert
-                $stm_inst_data['cur_abschl'] = $this->stg_input_form->form_values['abschl_list'];//
-                $stm_inst_data['cur_stg'] = $this->stg_input_form->form_values['stg_list'];//
-                $this->setStgInputFormObject($stm_inst_data['cur_abschl'], $stm_inst_data['cur_stg'], $stm_inst_data['cur_abs_stm']);
+                $_SESSION['stm_inst_data']['cur_abschl'] = $this->stg_input_form->form_values['abschl_list'];//
+                $_SESSION['stm_inst_data']['cur_stg'] = $this->stg_input_form->form_values['stg_list'];//
+                $this->setStgInputFormObject($_SESSION['stm_inst_data']['cur_abschl'], $_SESSION['stm_inst_data']['cur_stg'], $_SESSION['stm_inst_data']['cur_abs_stm']);
                 $vis->showStgInputForm($this->stg_input_form);
             }
         }
@@ -521,7 +523,7 @@ class InstanceStmControl {
             elseif ($this->add_info_form->IsClicked("search")) {
                 $this->users_found = $this->searchUser($this->add_info_form->form_values['homeinst'], $this->add_info_form->form_values['search_user']);
                 if (count($this->users_found) > 0) {
-                    $stm_inst_data['users_found'] = $this->users_found;
+                    $_SESSION['stm_inst_data']['users_found'] = $this->users_found;
                     $this->setAddInfoFormObject();
                 }
                 else
@@ -530,7 +532,7 @@ class InstanceStmControl {
             }
             else { // select change
                 $this->users_found = null;
-                $stm_inst_data['users_found'] = $this->users_found;
+                $_SESSION['stm_inst_data']['users_found'] = $this->users_found;
                 $this->setAddInfoFormObject();
                 $vis->showAddInfoForm($this->add_info_form);
             }
@@ -546,10 +548,10 @@ class InstanceStmControl {
             else { // pruefen, ob Element gewählt wurde
                 for ($i=0; $i<count($this->abs_stm->elements); $i++) {
                     if ($this->sel_elementgroup_form->IsClicked("sel_$i")) {
-                        $stm_inst_data['sel_group'] = $i;
+                        $_SESSION['stm_inst_data']['sel_group'] = $i;
                         $this->sel_group = $this->abs_stm->elements[$i];
                         $this->setFillGroupForm();
-                        $vis->showFillGroupForm($this->fill_group_form, $this->sel_group, $this->sem_browse, $this->inst_stm, $stm_inst_data['sel_group']);
+                        $vis->showFillGroupForm($this->fill_group_form, $this->sel_group, $this->sem_browse, $this->inst_stm, $_SESSION['stm_inst_data']['sel_group']);
                     }
                 }
             }
@@ -563,7 +565,7 @@ class InstanceStmControl {
             }
             elseif($_REQUEST["send_from_search"]) {
                 $this->cur_seminar = Seminar::GetInstance($_REQUEST["sem_id"]);
-                $vis->showFillGroupForm($this->fill_group_form, $this->sel_group, $this->sem_browse, $this->inst_stm, $stm_inst_data['sel_group'], $this->cur_seminar);
+                $vis->showFillGroupForm($this->fill_group_form, $this->sel_group, $this->sem_browse, $this->inst_stm, $_SESSION['stm_inst_data']['sel_group'], $this->cur_seminar);
             }
             else
             {
@@ -571,23 +573,23 @@ class InstanceStmControl {
                 for ($i=0; $i<count($this->sel_group); $i++) {
                     if ($this->fill_group_form->IsClicked("fill_$i")) {
                         $button_clicked = true;
-                        $this->inst_stm->addElement(array("sem_id" => $this->cur_seminar->getId(), "element_id" => $this->sel_group[$i]->getId()), $stm_inst_data['sel_group'], $i);
+                        $this->inst_stm->addElement(array("sem_id" => $this->cur_seminar->getId(), "element_id" => $this->sel_group[$i]->getId()), $_SESSION['stm_inst_data']['sel_group'], $i);
                         $this->setFillGroupForm();
-                        $vis->showFillGroupForm($this->fill_group_form, $this->sel_group, $this->sem_browse, $this->inst_stm, $stm_inst_data['sel_group']);
+                        $vis->showFillGroupForm($this->fill_group_form, $this->sel_group, $this->sem_browse, $this->inst_stm, $_SESSION['stm_inst_data']['sel_group']);
                         break;
                     }
-                    for ($j=0; $j<count($this->inst_stm->elements[($stm_inst_data['sel_group'])][$i]); $j++) {
+                    for ($j=0; $j<count($this->inst_stm->elements[($_SESSION['stm_inst_data']['sel_group'])][$i]); $j++) {
                         if ($this->fill_group_form->IsClicked("remove_" . $i ."_" .$j)) {
                             $button_clicked = true;
-                            $this->inst_stm->removeElement($stm_inst_data['sel_group'], $i, $j);
+                            $this->inst_stm->removeElement($_SESSION['stm_inst_data']['sel_group'], $i, $j);
                             $this->setFillGroupForm();
-                            $vis->showFillGroupForm($this->fill_group_form, $this->sel_group, $this->sem_browse, $this->inst_stm, $stm_inst_data['sel_group']);
+                            $vis->showFillGroupForm($this->fill_group_form, $this->sel_group, $this->sem_browse, $this->inst_stm, $_SESSION['stm_inst_data']['sel_group']);
                             break;
                         }
                     }
                 }
                 if (!$button_clicked)
-                    $vis->showFillGroupForm($this->fill_group_form, $this->sel_group, $this->sem_browse, $this->inst_stm, $stm_inst_data['sel_group']);
+                    $vis->showFillGroupForm($this->fill_group_form, $this->sel_group, $this->sem_browse, $this->inst_stm, $_SESSION['stm_inst_data']['sel_group']);
             }
         }
         // SUMMARY FORMULAR
@@ -601,7 +603,8 @@ class InstanceStmControl {
                     $vis->showSummaryForm($this->summary_form, $this->inst_stm, $this->abs_stm);
                 }
                 else {
-                    $GLOBALS['sess']->unregister('stm_inst_data');
+                    //$GLOBALS['sess']->unregister('stm_inst_data');
+                    $_SESSION['stm_inst_data'] = '';
                     $this->setStgInputFormObject(null, null, null);
                     $vis->showError(array(array('msg', sprintf(_("Das Modul wurde erfolgreich angelegt")))));
                     $this->setSelStmForm();
@@ -620,18 +623,18 @@ class InstanceStmControl {
 
         // Sessionvariablen setzen
         if ($this->abs_stm) {
-            $stm_inst_data['abs_stm_id'] = $this->abs_stm->GetId();
+            $_SESSION['stm_inst_data']['abs_stm_id'] = $this->abs_stm->GetId();
         }
 
         if ($this->inst_stm) {
-            $stm_inst_data['inst_stm_vals'] = $this->inst_stm->getValues();
+            $_SESSION['stm_inst_data']['inst_stm_vals'] = $this->inst_stm->getValues();
         }
 
         if ($this->cur_seminar) {
-            $stm_inst_data['cur_sem_id'] = $this->cur_seminar->getId();
+            $_SESSION['stm_inst_data']['cur_sem_id'] = $this->cur_seminar->getId();
         }
 
-        $stm_inst_data["is_edit"] = $is_edit;
+        $_SESSION['stm_inst_data']["is_edit"] = $is_edit;
     }
 
     function getMyInst() {

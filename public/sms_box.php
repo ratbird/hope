@@ -2,7 +2,7 @@
 # Lifter002: TODO
 # Lifter005: TODO - overlib
 # Lifter007: TODO
-# Lifter003: TODO
+# Lifter003: TEST
 # Lifter010: TODO
 /**
  * sms_box.php - displays messages in in- and outboxfolders
@@ -66,11 +66,6 @@ if (Request::option('sms_inout')) {
     $sms_data["view"] = "in";
 }
 
-// need kontact to mothership
-$db = new DB_Seminar;
-$db6 = new DB_Seminar;
-$db7 = new DB_Seminar;
-
 PageLayout::setTitle(_("Systeminterne Nachrichten"));
 PageLayout::setHelpKeyword("Basis.InteraktionNachrichten");
 Navigation::activateItem('/messaging/' . $sms_data['view']);
@@ -85,20 +80,23 @@ check_messaging_default();
 
 if (Request::option('readingconfirmation')) {
     $sms_data['tmpreadsnd'] = "";
-    $query = "SELECT * FROM message WHERE message_id='".Request::option('readingconfirmation')."'";
-    $db6->query($query);
-    $db6->next_record();
-    $date = date("d.m.y, H:i", $db6->f("mkdate"));
-    $orig_subject = $db6->f("subject");
 
-    $user_id = $user->id;
-    $user_fullname = get_fullname($user_id);
+    $query = "SELECT mkdate, subject FROM message WHERE message_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array(Request::option('readingconfirmation')));
+    $temp = $statement->fetch(PDO::FETCH_ASSOC);
 
-    $query = "UPDATE message_user SET confirmed_read = '1' WHERE message_id = '".Request::option('readingconfirmation')."'AND user_id = '".$user_id."'";
-    if($db->query($query)) {
-        setTempLanguage(get_userid($rec_userid));
-        $subject = sprintf (_("Lesebestätigung von %s"), $user_fullname);
-        $message = sprintf (_("Ihre Nachricht an %s mit dem Betreff: %s vom %s wurde gelesen."), "%%".$user_fullname."%%", "%%".$orig_subject."%%", "%%".$date."%%");
+    $date = date('d.m.y, H:i', $temp['mkdate']);
+    $orig_subject = $temp['subject'];
+
+    $query = "UPDATE message_user SET confirmed_read = 1 WHERE message_id = ? AND user_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array(Request::option('readingconfirmation'), $user->id));
+
+    if ($statement->rowCount()) {
+        setTempLanguage(get_userid($uname_snd));
+        $subject = sprintf (_("Lesebestätigung von %s"), $user->getFullName());
+        $message = sprintf (_("Ihre Nachricht an %s mit dem Betreff: %s vom %s wurde gelesen."), "%%".$user->getFullName()."%%", "%%".$orig_subject."%%", "%%".$date."%%");
         restoreLanguage();
         $msging->insert_message(mysql_escape_string($message), $uname_snd, "____%system%____", FALSE, FALSE, 1, FALSE, mysql_escape_string($subject));
     }
@@ -196,8 +194,13 @@ if (Request::option('delete_folder') && Request::submitted('delete_folder_button
     }
     $delete_folder = Request::quoted('delete_folder');
     $msg = "msg§".sprintf(_("Der Ordner %s wurde gelöscht."), htmlready(stripslashes(return_val_from_key($my_messaging_settings["folder"][$sms_data["view"]], $delete_folder))));
-    $query = "UPDATE message_user SET folder='' WHERE folder='".$delete_folder."' AND snd_rec='".$tmp_sndrec."' AND user_id='{$user->id}'";
-    $db->query($query);
+
+    $query = "UPDATE message_user
+              SET folder = ''
+              WHERE folder = ? AND snd_rec = ? AND user_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($delete_folder, $tmp_sndrec, $user->id));
+
     $my_messaging_settings["folder"][$sms_data["view"]][$delete_folder] = "dummy";
 }
 
@@ -255,7 +258,15 @@ if (Request::option('sel_lock')) {
         $tmp_dont_delete = "0";
         $msg = "msg§"._("Der Lösch-Schutz wurde für die gewählte Nachricht aufgehoben.");
     }
-    $db->query("UPDATE message_user SET dont_delete='".$tmp_dont_delete."' WHERE user_id='".$user->id."' AND message_id='".Request::option('sel_lock')."' AND snd_rec='".$tmp_snd_rec."'");
+    
+    $query = "UPDATE message_user
+              SET dont_delete = ?
+              WHERE user_id = ? AND message_id = ? AND snd_rec = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array(
+        $tmp_dont_delete, $user->id, Request::option('sel_lock'), $tmp_snd_rec,
+    ));
+
     $tmp_dont_delete = "";
     $tmp_snd_rec = "";
 }
@@ -272,16 +283,19 @@ if (Request::submitted('move_selected_button') && Request::optionArray('sel_sms'
 $move_folder = Request::option('move_folder');
 // let's move some messages
 if ($move_folder) {
-    $user_id = $user->id;
     if ($move_folder == "free") {
         $move_folder = "";
     }
     $l = 0;
     if (is_array($sms_data['tmp']['move_to_folder'])) {
+        $query = "UPDATE message_user
+                  SET folder = ?
+                  WHERE message_id = ? AND user_id = ? AND snd_rec = ?";
+        $statement = DBManager::get()->prepare($query);
+
         foreach ($sms_data['tmp']['move_to_folder'] as $a) {
-            if ($db->query("UPDATE message_user SET folder='".$move_folder."' WHERE message_id='".$a."' AND user_id='".$user_id."' AND snd_rec='".$tmp_snd_rec."'")) {
-                $l = $l+1;
-            }
+            $statement->execute(array($move_folder, $a, $user->id, $tmp_snd_rec));
+            $l += $statement->rowCount();
         }
     }
     if ($l) {

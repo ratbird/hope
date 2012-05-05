@@ -1,0 +1,204 @@
+/* --- ablaufplan / dates --------------------------------------------------- */
+.dates_items th, .dates_items td {
+    border-bottom: 3px solid #fff;
+}
+
+.dates_opened td {
+    border-bottom: 3px solid #F3F5F8;
+}
+
+.dates_content td {
+    padding: 10px;
+}
+
+#schedule {
+    width: 100%;
+    height: 100%;
+}
+
+#schedule_headings {
+    margin-left: 41px;
+    background-color: #E8EEF7;
+}
+
+table.schedule_headings td {
+    background-color: #E8EEF7;
+}
+
+div.schedule_day {
+    border-right: 3px double #DDDDDD;
+    position: relative;
+}
+
+div.schedule_marker {
+    border-bottom: 1px dotted #DDDDDD;
+    border-top: 1px solid #DDDDDD;
+    padding: 0;
+}
+
+div.schedule_hours {
+    border-top: 1px solid #DDDDDD;
+    border-right: 1px solid #DDDDDD;
+    padding-bottom: 1px;
+    color: black;
+    padding-right: 3px;
+}
+
+div.schedule_entry {
+    position: absolute;
+    margin: 0;
+    padding: 0 0 2px;
+    overflow: hidden;
+    font-size: 10px;
+}
+
+div.schedule_entry.clickable {
+    cursor: pointer;
+}
+
+div.schedule_entry dl {
+    color: white;
+    height: 100%;
+    background: url('../images/calendar/category_neutral.png') repeat-y top left;
+    margin: 0;
+}
+
+div.schedule_entry dl.hover:hover {
+    opacity: 0.7;
+}
+
+div.schedule_entry dl dd {
+    margin: 0;
+    padding: 2px;
+    overflow: hidden;
+    word-wrap: break-word;
+}
+
+div.schedule_entry dl a {
+    color: white;
+}
+
+div.schedule_entry dl a:hover {
+    text-decoration: underline;
+}
+
+div.snatch {
+    position: absolute;
+    bottom: 4px;
+    text-align: center;
+    width: 100%;
+    cursor: ns-resize;
+    padding-bottom: 2px;
+}
+
+div.snatch div {
+    border-top: 3px double white;
+    margin-left: auto;
+    margin-right: auto;
+    cursor: ns-resize;
+    height: 0;
+    width: 10px;
+}
+
+#schedule_new_entry {
+    position: absolute;
+    border: 2px solid #E0E0F0;
+    width: 400px;
+    height: 230px;
+    background-color: #E8EEF7;
+    z-index: 3;
+}
+
+#schedule_entry_new dl {
+    border: 1px solid #5C2D64;
+    background: #7C5783 url('../images/calendar/category_neutral.png');
+}
+
+#schedule_entry_new dt {
+    background-color: #5C2D64;
+}
+
+div.schedule_edit_entry, #schedule_settings {
+    position: absolute;
+    left: 50%;
+    top: 180px;
+    margin-left: -25%;
+    min-height: 15em;
+    max-height: 80em;
+    height: auto;
+    width: 50%;
+    min-width: 700px;
+    padding-bottom: 1em;
+    background-color: #E8EEF7;
+    border: 2px solid #E0E0F0;
+    z-index: 4;
+}
+
+div.schedule_edit_entry > form {
+    padding-left: 10px;
+    padding-top: 10px;
+    margin-right: 10px;
+}
+
+div.window_heading, div.window_heading_nodrag {
+    font-weight: bold;
+    text-align: center;
+    background-color: #899ab9;
+    color: #FFF;
+    cursor: move;
+    padding: 2px;
+}
+
+div.window_heading_nodrag {
+    cursor: default !important;
+}
+
+#color_picker {
+    white-space: nowrap;
+    padding-top: 3px;
+}
+
+#schedule_entry_hours {
+    display: inline;
+    padding: 2px;
+}
+
+.schedule_icons {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+div.invisible_entry {
+    opacity: 0.8;
+}
+
+span.invisible_entry {
+    font-style: italic;
+    background-color: #660000;
+}
+
+div.settings {
+    float: left;
+    margin-left: 10px;
+}
+
+div.settings div {
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+div#schedule-settings-dialog-shadow {
+    background: #000000 none repeat scroll 0 0;
+    position: absolute;
+    z-index: 3;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.7;
+    -moz-background-clip: border;
+    -moz-background-inline-policy: continuous;
+    -moz-background-origin: padding;
+}
+

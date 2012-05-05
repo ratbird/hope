@@ -1,0 +1,129 @@
+/* --- Reiternavigation ----------------------------------------------------- */
+#tabs, #tabs2 {
+    float: left;
+    line-height: 18pt;
+}
+
+#tabs ul, #tabs2 ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+#tabs li, #tabs2 li {
+    float: left;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+#tabs a, #tabs2 a {
+    color: #000000;
+    font-weight: bold;
+}
+
+div.clear {
+    clear: both;
+    visibility: hidden;
+}
+
+#tabs {
+    margin: 0;
+    padding: 0 2px 0 0;
+}
+
+#tabs li {
+    background-color: #899AB9;
+    border-right: 1px solid #1E3E70;
+    border-bottom: 1px solid #1E3E70;
+    -webkit-border-radius: 2px 2px 0 0;
+    -moz-border-radius: 2px 2px 0 0;
+    border-radius: 2px 2px 0 0;
+}
+
+#tabs li:last-child {
+    border-right: none;
+}
+
+#tabs a, #tabs span.quiet {
+    display: block;
+    padding-left: 1.3em;
+    padding-right: 1.3em;
+    white-space: nowrap;
+    color: #FFFFFF;
+}
+
+#tabs li:hover {
+    background: #7890BC;
+}
+
+#tabs li.current {
+    border-bottom: 1px solid #FFFFFF;
+}
+
+#tabs li.current, #tabs li.current:hover {
+    background: #eeeeee;
+    background: -moz-linear-gradient(top,  #eeeeee 0%, #ffffff 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#eeeeee), color-stop(100%,#ffffff));
+    background: -webkit-linear-gradient(top,  #eeeeee 0%,#ffffff 100%);
+    background: -o-linear-gradient(top,  #eeeeee 0%,#ffffff 100%);
+    background: -ms-linear-gradient(top,  #eeeeee 0%,#ffffff 100%);
+    background: linear-gradient(top,  #eeeeee 0%,#ffffff 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#ffffff',GradientType=0 );
+}
+
+#tabs li.current a, #tabs li.current span.quiet {
+    color: #000000;
+}
+
+#tabs .quiet img {
+    opacity: 0.25;
+}
+
+#tabs2 {
+    width: 100%;
+    background: #FFFFFF;
+    clear: both;
+    margin: 0 0 0 0;
+    padding: 4px 0 4px 0;
+    -webkit-border-radius: 0 2px 0 0;
+    -moz-border-radius: 0 2px 0 0;
+    border-radius: 0 2px 0 0;
+}
+
+#tabs2 li {
+    line-height: 20pt;
+    background: url("../images/icons/16/grey/arr_1right.png") no-repeat left center;
+    padding-left: 20px;
+    margin-left: 1em;
+}
+
+#tabs2 li:hover {
+    background: url("../images/icons/16/black/arr_1right.png") no-repeat left center;
+    cursor: pointer;
+}
+
+#tabs2 li.current {
+    background: url("../images/icons/16/red/arr_1down.png") no-repeat left center;
+}
+
+#tabs2 li a {
+    color: #6E6E6E;
+    display: block;
+}
+
+#tabs2 li a:hover, #tabs2 li:hover a, #tabs2 li.current a {
+    color: #000000;
+}
+
+#tabs span {
+    padding: 0;
+}
+
+.tab-icon {
+    float: left;
+    margin: 4px 5px 0 -0.5em;
+    height: 16px;
+    width: 16px;
+}
+

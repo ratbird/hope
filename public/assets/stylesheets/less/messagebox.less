@@ -1,19 +1,39 @@
+@image-path: "../images/messagebox";
+
 /* --- MessageBoxes --------------------------------------------------------- */
 div.messagebox {
-    margin: 5px;
     background: no-repeat 10px 10px;
     border: 1px solid;
-    padding: 15px 15px 15px 55px;
-    position: relative;
     font-size: 12pt;
     font-weight: bold;
+    margin: 5px;
+    padding: 15px 15px 15px 55px;
+    position: relative;
     text-align: left;
-}
 
-div.messagebox_buttons {
-    position: absolute;
-    right: 3px;
-    top: 3px;
+    .messagebox_buttons {
+        position: absolute;
+        right: 3px;
+        top: 3px;
+
+        a {
+            background: transparent no-repeat center center;
+            display: inline-block;
+            margin: 1px;
+            .square(16px);
+
+            &.close, &.details {
+                span { display: none; }
+            }
+            &.close   { background-image: url("@{image-path}/cross_inv.png"); }
+            &.details { background-image: url("@{image-path}/minimize_inv.png"); }
+        }
+    }
+    
+    &.details_hidden {
+        .messagebox_buttons a.details { background-image: url("@{image-path}/maximize_inv.png"); }
+        .messagebox_deails { height: 0; }
+    }
 }
 
 div.messagebox_details {
@@ -21,80 +41,35 @@ div.messagebox_details {
     overflow: hidden;
 }
 
-div.messagebox_info {
-    color: #000000;
-    border-color: #4B6FCB;
-    background-image: url("../images/messagebox/info.png");
-    background-color: #d8e3fc;
+// Messagebox definitions 
+.messagebox (@name, @color, @background-color, @border-color: @color, @image: @name) {
+    // Also generates the neccessary selector not only the rules
+    (~"div.messagebox_@{name}") {
+        color: @color;
+        background-color: @background-color;
+        background-image: url("@{image-path}/@{image}.png");
+        border-color: @border-color;
+    }
 }
 
-div.messagebox_success {
-    color: #000000;
-    border-color: #4B8847;
-    background-image: url("../images/messagebox/success.png");
-    background-color: #dcf1da;
-}
+.messagebox("info", #000, #d8e3fc, #4b6fcb);
+.messagebox("success", #000, #dcf1da, #4b8847);
+.messagebox("error", #000, #ffdddc, #c74039);
+.messagebox("exception", #d8000c, #ffbaba);
+.messagebox("warning", #b06500, #f7e98e, #b06500, "advice");
 
-div.messagebox_error {
-    color: #000000;
-    border-color: #C74039;
-    background-image: url("../images/messagebox/error.png");
-    background-color: #ffdddc;
-}
-
-div.messagebox_exception {
-    color: #D8000C;
-    background-image: url("../images/messagebox/exception.png");
-    background-color: #ffbaba;
-}
-
-div.messagebox_warning {
-    color: #B06500;
-    border-color: #B06500;
-    background-image: url("../images/messagebox/advice.png");
-    background-color: #F7E98E;
-}
-
+// Define modal messagebox
 div.messagebox_modal {
-    color: #000000;
-    background-image: url("../images/messagebox/question.png");
+    color: #000;
+    background-image: url("@{image-path}/question.png");
     background-color: #f3e180;
     margin: -8px 8px 8px -8px;
+
+    div { text-align: center; }
 }
 
-div.messagebox_modal div {
-    text-align: center;
-}
-
+// Specific adjustments
 #index .messagebox {
     margin: 5px 0;
 }
 
-div.messagebox .messagebox_buttons a {
-    background: transparent no-repeat center center;
-    display: inline-block;
-    margin: 1px;
-    height: 16px;
-    width: 16px;
-}
-
-div.messagebox .messagebox_buttons a.close span,
-div.messagebox .messagebox_buttons a.details span {
-    display: none;
-}
-
-div.messagebox .messagebox_buttons a.close {
-    background-image: url("../images/messagebox/cross_inv.png");
-}
-
-div.messagebox .messagebox_buttons a.details {
-    background-image: url("../images/messagebox/minimize_inv.png");
-}
-
-div.messagebox.details_hidden .messagebox_buttons a.details {
-    background-image: url("../images/messagebox/maximize_inv.png");
-}
-
-div.messagebox.details_hidden .messagebox_details {
-    height: 0;
-}

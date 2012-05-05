@@ -1,0 +1,72 @@
+@import "mixins.less";
+
+.smiley-popup
+{
+    #header {
+        background: inherit;
+        height: 3em;
+        width: 98%;
+    }
+    #barTopFont {
+        font-size: 1.5em;
+        left: 15px;
+        position: relative;
+        top: 15px;
+    }
+    #barTopStudip {
+        right: 15px;
+        top: 15px;
+    }
+    #tabs li a {
+        padding-left: 0.6em;
+        padding-right: 0.6em;
+    }
+    a:active, a:focus { outline: none; }
+    .smiley-column { width: 33%; }
+}
+
+.smiley-toggle
+{
+    background: url("../images/icons/16/blue/checkbox-unchecked.png") center no-repeat;
+    display: inline-block;
+    .square(16px);
+    .hide-text;
+
+    &.favorite { background-image: url("../images/icons/16/blue/checkbox-checked.png"); }
+    &.ajax     { background-image: url("../images/ajax_indicator_small.gif"); }
+}
+
+.smiley-admin
+{
+    .separator { border-left: 1px solid #aaa; }
+    a:active, a:focus { outline: none; }
+
+    tbody tr {
+        a, [type=checkbox] { visibility: hidden; }
+        input:checked      { visibility: visible; }
+
+        &:hover {
+            a, [type=checkbox] { visibility: visible; }
+        }
+    }
+}
+
+.smiley-select option.single { font-family: monospace; }
+
+.smiley-statistics
+{
+    margin: 0;
+    padding: 0;
+
+    dt {
+        clear: left;
+        float: left;
+        padding-right: 0.5em;
+    }
+    dd {
+        font-weight: 700;
+        margin: 0;
+        text-align: right;
+    }
+}
+

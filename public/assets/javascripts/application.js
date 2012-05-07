@@ -973,7 +973,6 @@ STUDIP.MultiSelect = {
         }
         jQuery(id).multiselect({
             'sortable': false,
-            'itemName': itemName,
             'draggable': true,
             'dividerLocation': 0.5,
             'itemName': itemName
@@ -1780,11 +1779,10 @@ STUDIP.CalendarDialog = {
                     open: function () {
                         var offs = jQuery('.ui-dialog-calendar').offset();
                         if (coord[0] + 500 > jQuery(window).width()) {
-                            offs.left = coord[0]- jQuery('.ui-dialog-calendar').width()
-                                - jQuery(element).width() - 10;
+                            offs.left = coord[0] - jQuery('.ui-dialog-calendar').width() - jQuery(element).width() - 10;
                         }
-                        if (coord[1]> jQuery(window).height() ) {
-                          window.alert(coord[1] + jQuery('.ui-dialog-calendar').height());
+                        if (coord[1] > jQuery(window).height()) {
+                            window.alert(coord[1] + jQuery('.ui-dialog-calendar').height());
                             offs.top = coord[1] - jQuery('.ui-dialog-calendar').height();
                         }
                         jQuery('.ui-dialog-calendar').offset(offs);

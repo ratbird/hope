@@ -39,7 +39,7 @@
 
 require '../lib/bootstrap.php';
 unregister_globals();
-var_dump($_REQUEST);
+
 ob_start(); // start output buffering
 
 page_open (array ("sess" => "Seminar_Session",

@@ -1,116 +1,83 @@
-// TODO: LESSify
-
 /* --- Tabellen ------------------------------------------------------------- */
-table.header {
-    background-color: #899ab9;
+th {
+    background-color: #d1d1d1;
+    border-bottom: 1px solid #aaa;
+    color: #000;
+    padding: 4px;
+
+    a, a:link, a:visited { color: #000000; }
 }
 
-table.links1 {
-    background-color: #FFFFFF;
-}
+table.header { background-color: #899ab9; }
+table.links1 { background-color: #fff; }
+table.logintable { background-image: url("@{image-path}/login.jpg"); }
 
-table.toolbar, td.toolbar, .steel, td.printhead {
+table.toolbar, td.toolbar, td.printhead, .steel {
+    #gradient > .vertical-three-colors(#cdd9ed, #e3eaf6, 40%, #e3eaf6);
     border-top: 1px solid #899ab9;
-    background: #cdd9ed;
-    background: -moz-linear-gradient(top,  #cdd9ed 0%, #e3eaf6 40%, #e3eaf6 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#cdd9ed), color-stop(40%,#e3eaf6), color-stop(100%,#e3eaf6));
-    background: -webkit-linear-gradient(top,  #cdd9ed 0%,#e3eaf6 40%,#e3eaf6 100%);
-    background: -o-linear-gradient(top,  #cdd9ed 0%,#e3eaf6 40%,#e3eaf6 100%);
-    background: -ms-linear-gradient(top,  #cdd9ed 0%,#e3eaf6 40%,#e3eaf6 100%);
-    background: linear-gradient(top,  #cdd9ed 0%,#e3eaf6 40%,#e3eaf6 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cdd9ed', endColorstr='#e3eaf6',GradientType=0 );
     line-height: 17pt;
     height: 25px;
 }
+td.toolbar, td.printhead, .steel {
+    &:last-child { padding-right: 5px; }
 
-td.toolbar:last-child, .steel:last-child, td.printhead:last-child {
-    padding-right: 5px;
-}
-
-td.toolbar img, .steel img, td.printhead img {
-    padding: 0 2px;
-    vertical-align: text-bottom;
-}
-
-.draggable {
-    margin-top: 4px;
-}
-
-.draggable_folder {
-    margin-bottom: 3px;
+    img {
+        padding: 0 2px;
+        vertical-align: text-bottom;
+    }
 }
 
 table.default {
     border-collapse: collapse;
     width: 100%;
-}
 
-table.default th {
-    padding: 3px;
-    text-align: left;
-}
-
-table.default td {
-    padding: 3px;
-}
-
-td.topicwrite {
-    border: none;
-    background-color: #c02a2a;
-    color: #FFFFFF;
-    height: 20px;
-}
-
-td.angemeldet {
-    border: 1px solid #000000;
-}
-
-td.rahmen_white {
-    border: 1px solid #000000;
-    background: #FFFFFF;
-}
-
-td.rahmen_steel {
-    border: 1px solid #000000;
-    background-color: #f3f5f8;
-}
-
-td.rahmen_steelgraulight {
-    border: 1px solid #000000;
-    background-color: #e7ebf1;
-}
-
-td.quote {
-    border: 1px solid #000000;
-    font-size: 8px;
-}
-
-td.nix {
-    background-color: transparent;
-}
-
-td.aufklapp {
-    background-color: #FFFAEE;
-}
-
-table.blank, td.blank, td.onlineinfo, td.blanksmall {
-    background-color: #FFFFFF;
+    td, th { padding: 3px; }
+    th { text-align: left; }
 }
 
 tr.cycle_odd {
     background-color: #f3f5f8;
+    &:hover { background-color: #ced8f2; }
 }
-
 tr.cycle_even {
     background-color: #e7ebf1;
+    &:hover { background-color: #B7C2E2; }
 }
 
-tr.cycle_odd:hover {
-    background-color: #CED8F2;
+td {
+    &.aufklapp { background-color: #fffaee; }
+    &.angemeldet { border: 1px solid #000; }
+    &.indexpage {
+        background: white url("@{image-path}/indexpage.jpg") no-repeat;
+        text-align: left;
+    }
+    &.nix { background-color: transparent; }
+    &.quote {
+        border: 1px solid #000;
+        font-size: 8px;
+    }
+    &.rahmen_steel {
+        background-color: #f3f5f8;
+        border: 1px solid #000;
+    }
+    &.rahmen_steelgraulight {
+        background-color: #e7ebf1;
+        border: 1px solid #000;
+    }
+    &.rahmen_white {
+        background: #fff;
+        border: 1px solid #000;
+    }
+    &.topicwrite {
+        border: none;
+        background-color: #c02a2a;
+        color: #fff;
+        height: 20px;
+    }
 }
 
-tr.cycle_even:hover {
-    background-color: #B7C2E2;
+table.blank, td.blank, td.onlineinfo, td.blanksmall {
+    background-color: #fff;
 }
 
 td.tree-indent img {
@@ -118,15 +85,15 @@ td.tree-indent img {
 }
 
 td.tree-elbow-line {
-    width: 5px;
+    background: url(@{image-path}/datatree_1.gif) repeat-y;
     vertical-align: bottom;
-    background: url(../images/datatree_1.gif) repeat-y;
+    width: 5px;
 }
 
 td.tree-elbow-end {
-    width: 5px;
     vertical-align: top;
     white-space: nowrap;
+    width: 5px;
 }
 
 td.tree-elbow-line img,
@@ -135,224 +102,96 @@ td.tree-elbow-end img {
 }
 
 /* --- table.collapsable ---------------------------------------------------- */
-.collapsable > .collapsed > tr {
-    display: none;
-}
+// TODO: This is pretty hard to understand and should be replaced with an easier,
+// better structured solution
+.collapsable {
+    .header-row > td {
+        border-bottom: 0;
+        padding-left: 0;
+    }
 
-.collapsable .collapsed .header-row {
-    display: table-row !important;
-}
+    .toggle-indicator {
+        color: #000;
+        font-weight: bold;
 
-* + html .collapsable .collapsed .header-row {
-    display: inline-block !important;
+        a {
+            background: url("@{image-path}/icons/16/blue/arr_1down.png") left center no-repeat;
+            color: #000;
+            cursor: pointer;
+        }
+    }
+    .empty .toggle-indicator a { background-image: url(@{image-path}/icons/16/grey/arr_1right.png); }
+    .collapsed .toggle-indicator a { background-image: url(@{image-path}/icons/16/blue/arr_1right.png); }
+    td.label-cell, .toggle-indicator a, .empty .toggle-indicator { padding-left: 20px; }
+    > .collapsed > tr { display: none; }
+    .collapsed .header-row { display: table-row !important; }
 }
-
-.collapsable .header-row > td {
-    border-bottom: 0;
-    padding-left: 0;
-}
-
-.collapsable td.label-cell,
-.collapsable .toggle-indicator a,
-.collapsable .empty .toggle-indicator {
-    padding-left: 20px;
-}
-
-.collapsable .toggle-indicator {
-    color: #000;
-    font-weight: bold;
-}
-
-.collapsable .toggle-indicator a {
-    background: url(../images/icons/16/blue/arr_1down.png) left center no-repeat;
-    color: #000;
-    cursor: pointer;
-}
-
-.collapsable .empty .toggle-indicator a {
-    background: url(../images/icons/16/grey/arr_1right.png) left center no-repeat;
-}
-
-.collapsable .collapsed .toggle-indicator a {
-    background-image: url(../images/icons/16/blue/arr_1right.png);
-    cursor: pointer;
-}
+* + html .collapsable .collapsed .header-row { display: inline-block !important; } // IE-Hack
 
 /* --- Table details -------------------------------------------------------- */
-.loaded-details > td {
-    padding: 0 20px 5px 20px !important;
-}
-
-.loaded-details table {
-    border: 1px solid #888;
-    border-top: 0;
+.loaded-details {
+    > td { padding: 0 20px 5px 20px !important; }
+    table {
+        border: 1px solid #888;
+        border-top: 0;
+    }    
 }
 
 /* --- Sonstige ------------------------------------------------------------- */
-.gruppe0 {
-    background: #FFFFFF;
-}
+.gruppe0 { background: #fff; }
+.gruppe1 { background: #f00; }
+.gruppe2 { background: #f93; }
+.gruppe3 { background: #fc6; }
+.gruppe4 { background: #9f9; }
+.gruppe5 { background: #6c6; }
+.gruppe6 { background: #69c; }
+.gruppe7 { background: #669; }
+.gruppe8 { background: #000; }
 
-.gruppe1 {
-    background: #FF0000;
-}
-
-.gruppe2 {
-    background: #FF9933;
-}
-
-.gruppe3 {
-    background: #FFCC66;
-}
-
-.gruppe4 {
-    background: #99FF99;
-}
-
-.gruppe5 {
-    background: #66CC66;
-}
-
-.gruppe6 {
-    background: #6699CC;
-}
-
-.gruppe7 {
-    background: #666699;
-}
-
-.gruppe8 {
-    background: #000000;
-}
-
-.white {
-    background: #FFFFFF none;
-}
-
-.lightgrey {
-    background: #F8F8F8 none;
-}
-
-.grey {
-    background: #BBBBBB none;
-}
-
-.steelgraudunkel {
-    background-image: url('../images/steelgraudunkel.gif');
-}
-
-.steelgraulight_shadow {
-    background-color: #cecece;
-    border-top: 1px solid #4a4a4a;
-    border-left: 1px solid #4a4a4a;
-}
-
-.steelkante, .steelkante td {
-    background-color: #e5e5e5;
-    border-top: 1px solid #5a5a5a;
-}
-
-/* Standardhintergrund fuer Button-Leite unterhalb von Tabellen, Umbenennen: button_footer */
-.steel2, .steel2 td {
-    background-color: #e9e9e9;
-    border-top: 1px solid #c8c8c8;
-}
-
-/* hellerer Standardhintergrund, überall umbenennen! */
-.steel1 {
-    background-color: #f3f5f8;
-}
-
-/* dunklerer Standardhintergrund, überall umbenennen! */
-.steelgraulight {
-    background-color: #e7ebf1;
-}
-
-.steelblau_schatten {
-    background-color: #dfe2e9;
-    border-left: 1px solid #cccccc;
-}
+.grey      { background: #bbb none; }
+.lightgrey { background: #f8f8f8 none; }
+.white     { background: #fff none; }
 
 .category_divider {
-    border-top: 1px solid #D0D0D0;
-    background-image: url('../images/background_stripes.jpg');
+    border-top: 1px solid #d0d0d0;
+    background-image: url('@{image-path}/background_stripes.jpg');
 }
 
 .blue_gradient {
+    #gradient > .vertical-three-colors(#b8c6db, #cedbef, 60%, #cedbef);
     border-top: 2px solid #97a6cf;
-    background-image: -webkit-gradient(linear, left top, left bottom, from(#b8c6db), to(#cedbef));
-    background-image: -webkit-linear-gradient(top, #b8c6db 0%, #cedbef 60%, #cedbef 100%);
-    background-image: -moz-linear-gradient(top, #b8c6db 0%, #cedbef 60%, #cedbef 100%);
-    background-image: -ms-linear-gradient(top, #b8c6db 0%, #cedbef 60%, #cedbef 100%);
-    background-image: -o-linear-gradient(top, #b8c6db 0%, #cedbef 60%, #cedbef 100%);
-    background-image: linear-gradient(top, #b8c6db 0%, #cedbef 60%, #cedbef 100%);
-    *filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = '#b8c6db', endColorstr = '#cedbef');
 }
-
 .red_gradient {
+    #gradient > .vertical-three-colors(#e3969a, #e8b6b9, 60%, #e8b6b9);
     border-top: 2px solid #b35357;
-    background-image: -webkit-gradient(linear, left top, left bottom, from(#e3969a), to(#e8b6b9));
-    background-image: -webkit-linear-gradient(top, #e3969a 0%, #e8b6b9 60%, #e8b6b9 100%);
-    background-image: -moz-linear-gradient(top, #e3969a 0%, #e8b6b9 60%, #e8b6b9 100%);
-    background-image: -ms-linear-gradient(top, #e3969a 0%, #e8b6b9 60%, #e8b6b9 100%);
-    background-image: -o-linear-gradient(top, #e3969a 0%, #e8b6b9 60%, #e8b6b9 100%);
-    background-image: linear-gradient(top, #e3969a 0%, #e8b6b9 60%, #e8b6b9 100%);
-    *filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = '#e3969a', endColorstr = '#e8b6b9');
-}
-
-.quote {
-    margin-left: 20px;
-    padding: 3px;
-    margin-right: 20px;
-    border: 1px solid black;
-    background: #EEEEEE none;
-}
-
-.steelgelb {
-    background-image: url('../images/plastic_yellow.jpg');
-}
-
-.steelgreen {
-    background-image: url('../images/plastic_green.jpg');
-}
-
-.steelred {
-    background-image: url('../images/plastic_red.jpg');
-}
-
-.semtree li {
-    padding-bottom: 5px;
-    list-style: none;
-    font-weight: bold;
-}
-
-/* descriptional texts */
-p.info {
-    padding: 10px;
-    margin: 0;
 }
 
 /* --- Styles fuer printhead und printcontent ------------------------------- */
-td.printcontent {
-    background-color: #f3f5f8;
-    text-align: left;
+table {
+    td.printcontent {
+        background-color: #f3f5f8;
+        text-align: left;
+    }
+    td.printhead2 {
+        background-image: url("@{image-path}/content_object_arr-right.png");
+        padding: 0;
+    }
+    td.printhead3 {
+        background-image: url("@{image-path}/content_object_arr-down.png");
+        padding: 0;
+    }
 }
 
-table td.printhead2 {
-    background-image: url('../images/content_object_arr-right.png');
-    padding: 0;
-}
+/* classes for sortable table headers --------------------------------------- */
+tr.sortable {
+    background-color: #d1d1d1;
 
-table td.printhead3 {
-    background-image: url('../images/content_object_arr-down.png');
-    padding: 0;
-}
-
-table.logintable {
-    background-image: url('../images/login.jpg');
-}
-
-td.indexpage {
-    background: white url('../images/indexpage.jpg') no-repeat;
-    text-align: left;
+    th.sortasc {
+        background: transparent url('@{image-path}/dreieck_up.png') no-repeat center left;
+        padding-left: 17px;
+    }
+    th.sortdesc {
+        background: transparent url('@{image-path}/dreieck_down.png') no-repeat center left;
+        padding-left: 17px;
+    }
 }

@@ -1,11 +1,9 @@
 // Turns a vertical list into a horizontal one spaced with separators
-.contact-legend
-{
+.contact-legend {
     color: #555;
     text-align: center;
 
-    ul, li
-    {
+    ul, li {
         list-style: none;
         margin: 0;
         padding: 0;
@@ -16,33 +14,31 @@
         display: inline-block;
         .ie7-inline-block();
         padding: 0 0.5em;
-        
-        :first-child { border-left: 0; }
-        
+
+        &:first-child { border-left: 0; }
+
         img { vertical-align: text-top; }
     }
 }
 
 // Prefixed table is neccessary to override some other previously defined rules
-table.contact-header
-{
+table.contact-header {
     margin: auto;
-    
+
     img { vertical-align: text-top; }
     td {
         background-color: #f2f2f2;
         padding: 3px 0.5em;
         text-align: center;
         vertical-align: middle;
-        
+
         &:hover { background-color: #ced8f2; }
 
         // Active state
-        .active
-        {
+        &.active {
             background-color: #e2e2e2;
             border: 1px solid #888;
-            
+
             &:hover { background-color: #b7c2e2; }
 
             a {
@@ -50,7 +46,6 @@ table.contact-header
                 font-weight: bold;
             }
         }
-
-        .empty a { color: #999; }
+        &.empty a { color: #999; }
     }
 }

@@ -1,56 +1,35 @@
-// TODO: LESSify
-
 /* --- Links ---------------------------------------------------------------- */
 a, a:link, a:visited {
     color: #24437c;
     text-decoration: none;
-}
 
-a:link.index, a:visited.index {
-    color: #444444;
-}
-
-a:link.tree, a:visited.tree {
-    color: #000000;
-}
-
-a:link.toolbar, a:visited.toolbar {
-    color: #91A2B6;
-    font-size: 9px;
+    &.index     { color: #444; }
+    &.printhead { color: #339; }    
+    &.tree      { color: #000; }
+    &.toolbar {
+        color: #91a2b6;
+        font-size: 9px;
+    }
 }
 
 a:hover, a:active, a:hover.index, a:active.index, a:hover.tree {
-    color: #FF3333;
+    color: #f33;
     text-decoration: none;
 }
 
 a:hover.toolbar {
-    color: #EEEEEE;
+    color: #eee;
 }
 
 a.link-intern {
     padding-left: 18px;
-    background: url('../images/icons/16/blue/link-intern.png') no-repeat;
+    background: url("@{icon-path}/blue/link-intern.png") no-repeat;
 }
-
 a.link-extern {
     padding-left: 18px;
-    background: url('../images/icons/16/blue/link-extern.png') no-repeat;
+    background: url("@{icon-path}/blue/link-extern.png") no-repeat;
 }
 
 a img {
     border: 0;
 }
-
-a:link.printhead {
-    color: #333399;
-}
-
-a:visited.printhead {
-    color: #333399;
-}
-
-a.printhead {
-    color: #333399;
-}
-

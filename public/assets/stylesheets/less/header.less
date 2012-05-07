@@ -1,5 +1,3 @@
-// TODO: LESSify
-
 /* --- header.css ----------------------------------------------------------- */
 div#wrap2 {
     position: absolute;
@@ -7,10 +5,10 @@ div#wrap2 {
 }
 
 div#barBottom {
+    background-color: #899ab9;
+    left: 0;
     position: absolute;
     top: 100px;
-    left: 0;
-    background-color: #899ab9;
 }
 
 div#barBottomContainer {
@@ -18,19 +16,19 @@ div#barBottomContainer {
     border: 1px #1e3e70;
     border-top-style: solid;
     border-bottom-style: solid;
-    width: 100%;
     height: 24px;
     margin-bottom: 1.5em;
     position: relative;
+    width: 100%;
 }
 
 #barBottomLeft, #barBottommiddle, #barBottomright {
-    vertical-align: middle;
+    background-color: #899ab9;
+    color: #fff;
     height: 24px;
     line-height: 24px;
-    background-color: #899ab9;
-    color: #ffffff;
     padding: 0;
+    vertical-align: middle;
 }
 
 div#barBottomLeft {
@@ -40,10 +38,10 @@ div#barBottomLeft {
 }
 
 div#barBottommiddle {
-    overflow: hidden;
-    background: url('../images/header/header_bottom_isolator.png') no-repeat;
-    padding-left: 40px;
+    background: url("@{image-path}/header/header_bottom_isolator.png") no-repeat;
     font-weight: bold;
+    overflow: hidden;
+    padding-left: 40px;    
 }
 
 div#barBottomright {
@@ -51,83 +49,78 @@ div#barBottomright {
     top: 0;
     right: 0;
     white-space: nowrap;
+
+    &:before {
+        #gradient > .directional(#899ab9, fade(#899ab9, 0%), 180deg);
+        content: " ";
+        left: -40px;
+        height: 24px;
+        position: absolute;
+        width: 40px;
+    }
+
+    ul { padding-left: 0; }
+    li input { vertical-align: text-bottom; }
 }
 
-#barBottomright:before {
-    position: absolute;
-    left: -40px;
-    width: 40px;
-    height: 24px;
-    content: " ";
-}
+div#barBottomright, #layout_footer {
+    a {
+        color: #dfdfdf;
+        margin: 0 6px;
+        text-decoration: none;
 
-#barBottomright:before {
-    background: #899ab9;
-    background: -moz-linear-gradient(top,  rgba(137,154,185,0) 0%, rgba(137,154,185,1) 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(137,154,185,0)), color-stop(100%,rgba(137,154,185,1)));
-    background: -webkit-linear-gradient(top,  rgba(137,154,185,0) 0%,rgba(137,154,185,1) 100%);
-    background: -o-linear-gradient(top,  rgba(137,154,185,0) 0%,rgba(137,154,185,1) 100%);
-    background: -ms-linear-gradient(top,  rgba(137,154,185,0) 0%,rgba(137,154,185,1) 100%);
-    background: linear-gradient(top,  rgba(137,154,185,0) 0%,rgba(137,154,185,1) 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00899ab9', endColorstr='#899ab9',GradientType=0 );
-}
-
-div#barBottomright ul {
-    padding-left: 0;
-}
-
-div#barBottomright ul, #layout_footer ul {
-    margin: 0;
-}
-
-div#barBottomright li, #layout_footer li {
-    display: inline;
-    list-style-type: none;
-    height: 24px;
-    line-height: 24px;
-}
-
-div#barBottomright li input {
-    vertical-align: text-bottom;
-}
-
-div#barBottomright a, #layout_footer a {
-    text-decoration: none;
-    color: #dfdfdf;
-    margin: 0 6px;
-}
-
-div#barBottomright a:hover, #layout_footer a:hover {
-    color: #ffffff;
+        &:hover { color: #fff; }
+    }
+    ul { margin: 0; }
+    li {
+        display: inline;
+        height: 24px;
+        line-height: 24px;
+        list-style-type: none;
+    }
 }
 
 div#barTopFont {
+    color: #cccccc;
+    font-size: 16pt;
+    left: 15px;
     position: absolute;
     top: 10px;
-    left: 15px;
-    font-size: 16pt;
-    color: #cccccc;
 }
 
 div#barTopStudip {
     position: absolute;
-    top: 45px;
     right: 5px;
     text-align: right;
-    border: none;
-}
+    top: 45px;
 
-div#barTopStudip img {
-    border: none;
+    &, img { border: none; }
 }
 
 div#barTopLogo {
+    left: 0;
     position: absolute;
     top: 0;
-    left: 0;
 }
 
 div#header {
+    #gradient > .vertical(#1e3e70, #36598f);
+//    background: url("@{image-path}/background_header.png") repeat-x;
     height: 100px;
-    background: url("../images/background_header.png") repeat-x;
+}
+
+/* --- public course marker ------------------------------------------------ */
+#barBottomContainer.public_course {
+    background-color: #c53d3d;
+
+    div#barBottommiddle, div#barBottomright, div#barBottomLeft {
+        background-color: #c53d3d;
+    }
+    div#barBottommiddle { 
+        background-image: url('@{image-path}/header/header_bottom_isolator_public.png');
+    }
+    #barBottomright:before {
+        background: #c53d3d;
+        #gradient > .vertical(rgba(197, 61, 61, 0), rgba(197, 61, 61, 1));
+    }
 }

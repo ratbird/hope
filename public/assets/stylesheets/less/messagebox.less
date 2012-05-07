@@ -1,5 +1,3 @@
-@image-path: "../images/messagebox";
-
 /* --- MessageBoxes --------------------------------------------------------- */
 div.messagebox {
     background: no-repeat 10px 10px;
@@ -20,18 +18,18 @@ div.messagebox {
             background: transparent no-repeat center center;
             display: inline-block;
             margin: 1px;
-            .square(16px);
+            .size(16px, 16px);
 
             &.close, &.details {
                 span { display: none; }
             }
-            &.close   { background-image: url("@{image-path}/cross_inv.png"); }
-            &.details { background-image: url("@{image-path}/minimize_inv.png"); }
+            &.close   { background-image: url("@{image-path}/messagebox/cross_inv.png"); }
+            &.details { background-image: url("@{image-path}/messagebox/minimize_inv.png"); }
         }
     }
-    
+
     &.details_hidden {
-        .messagebox_buttons a.details { background-image: url("@{image-path}/maximize_inv.png"); }
+        .messagebox_buttons a.details { background-image: url("@{image-path}/messagebox/maximize_inv.png"); }
         .messagebox_deails { height: 0; }
     }
 }
@@ -41,13 +39,13 @@ div.messagebox_details {
     overflow: hidden;
 }
 
-// Messagebox definitions 
+// Messagebox definitions
 .messagebox (@name, @color, @background-color, @border-color: @color, @image: @name) {
     // Also generates the neccessary selector not only the rules
     (~"div.messagebox_@{name}") {
         color: @color;
         background-color: @background-color;
-        background-image: url("@{image-path}/@{image}.png");
+        background-image: url("@{image-path}/messagebox/@{image}.png");
         border-color: @border-color;
     }
 }
@@ -61,15 +59,12 @@ div.messagebox_details {
 // Define modal messagebox
 div.messagebox_modal {
     color: #000;
-    background-image: url("@{image-path}/question.png");
     background-color: #f3e180;
+    background-image: url("@{image-path}/messagebox/question.png");
     margin: -8px 8px 8px -8px;
 
     div { text-align: center; }
 }
 
 // Specific adjustments
-#index .messagebox {
-    margin: 5px 0;
-}
-
+#index .messagebox { margin: 5px 0; }

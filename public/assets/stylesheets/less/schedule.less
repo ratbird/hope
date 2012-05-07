@@ -1,12 +1,10 @@
-// TODO: LESSify
-
 /* --- ablaufplan / dates --------------------------------------------------- */
 .dates_items th, .dates_items td {
     border-bottom: 3px solid #fff;
 }
 
 .dates_opened td {
-    border-bottom: 3px solid #F3F5F8;
+    border-bottom: 3px solid #f3f5f8;
 }
 
 .dates_content td {
@@ -20,135 +18,124 @@
 
 #schedule_headings {
     margin-left: 41px;
-    background-color: #E8EEF7;
+    background-color: #e8eef7;
 }
 
 table.schedule_headings td {
-    background-color: #E8EEF7;
+    background-color: #e8eef7;
 }
 
 div.schedule_day {
-    border-right: 3px double #DDDDDD;
+    border-right: 3px double #ddd;
     position: relative;
 }
 
 div.schedule_marker {
-    border-bottom: 1px dotted #DDDDDD;
-    border-top: 1px solid #DDDDDD;
+    border-bottom: 1px dotted #ddd;
+    border-top: 1px solid #ddd;
     padding: 0;
 }
 
 div.schedule_hours {
-    border-top: 1px solid #DDDDDD;
-    border-right: 1px solid #DDDDDD;
-    padding-bottom: 1px;
+    border-top: 1px solid #ddd;
+    border-right: 1px solid #ddd;
     color: black;
+    padding-bottom: 1px;
     padding-right: 3px;
 }
 
 div.schedule_entry {
-    position: absolute;
-    margin: 0;
-    padding: 0 0 2px;
-    overflow: hidden;
     font-size: 10px;
-}
-
-div.schedule_entry.clickable {
-    cursor: pointer;
-}
-
-div.schedule_entry dl {
-    color: white;
-    height: 100%;
-    background: url('../images/calendar/category_neutral.png') repeat-y top left;
     margin: 0;
-}
-
-div.schedule_entry dl.hover:hover {
-    opacity: 0.7;
-}
-
-div.schedule_entry dl dd {
-    margin: 0;
-    padding: 2px;
     overflow: hidden;
-    word-wrap: break-word;
-}
+    padding: 0 0 2px;
+    position: absolute;
 
-div.schedule_entry dl a {
-    color: white;
-}
+    &.clickable { cursor: pointer; }
 
-div.schedule_entry dl a:hover {
-    text-decoration: underline;
+    dl {
+        background: url("@{image-path}/calendar/category_neutral.png") repeat-y top left;
+        color: white;
+        height: 100%;
+        margin: 0;
+
+        &.hover:hover { opacity: 0.7; }
+
+        a {
+            color: white;
+            &:hover { text-decoration: underline; }
+        }
+        dd {
+            margin: 0;
+            overflow: hidden;
+            padding: 2px;
+            word-wrap: break-word;
+        }
+    }
 }
 
 div.snatch {
-    position: absolute;
     bottom: 4px;
-    text-align: center;
-    width: 100%;
     cursor: ns-resize;
     padding-bottom: 2px;
-}
+    position: absolute;
+    text-align: center;
+    width: 100%;
 
-div.snatch div {
-    border-top: 3px double white;
-    margin-left: auto;
-    margin-right: auto;
-    cursor: ns-resize;
-    height: 0;
-    width: 10px;
+    div {
+        border-top: 3px double white;
+        cursor: ns-resize;
+        height: 0;
+        margin-left: auto;
+        margin-right: auto;
+        width: 10px;
+    }
 }
 
 #schedule_new_entry {
-    position: absolute;
-    border: 2px solid #E0E0F0;
-    width: 400px;
+    background-color: #e8eef7;
+    border: 2px solid #e0e0f0;
     height: 230px;
-    background-color: #E8EEF7;
+    position: absolute;
+    width: 400px;
     z-index: 3;
-}
 
-#schedule_entry_new dl {
-    border: 1px solid #5C2D64;
-    background: #7C5783 url('../images/calendar/category_neutral.png');
-}
-
-#schedule_entry_new dt {
-    background-color: #5C2D64;
+    dl {
+        border: 1px solid #5c2d64;
+        background: #7c5783 url("@{image-path}/calendar/category_neutral.png");
+    }
+    dt { background-color: #5c2d64; }
 }
 
 div.schedule_edit_entry, #schedule_settings {
-    position: absolute;
-    left: 50%;
-    top: 180px;
-    margin-left: -25%;
-    min-height: 15em;
-    max-height: 80em;
-    height: auto;
-    width: 50%;
-    min-width: 700px;
-    padding-bottom: 1em;
     background-color: #E8EEF7;
     border: 2px solid #E0E0F0;
+    height: auto;
+    left: 50%;
+    margin-left: -25%;
+    max-height: 80em;
+    min-height: 15em;
+    min-width: 700px;
+    padding-bottom: 1em;
+    position: absolute;
+    top: 180px;
+    width: 50%;
     z-index: 4;
 }
 
 div.schedule_edit_entry > form {
+    margin-right: 10px;
     padding-left: 10px;
     padding-top: 10px;
-    margin-right: 10px;
 }
 
 div.window_heading, div.window_heading_nodrag {
-    font-weight: bold;
-    text-align: center;
     background-color: #899ab9;
-    color: #FFF;
+    color: #fff;
     cursor: move;
+    font-weight: bold;
     padding: 2px;
+    text-align: center;
 }
 
 div.window_heading_nodrag {
@@ -156,8 +143,8 @@ div.window_heading_nodrag {
 }
 
 #color_picker {
-    white-space: nowrap;
     padding-top: 3px;
+    white-space: nowrap;
 }
 
 #schedule_entry_hours {
@@ -176,31 +163,31 @@ div.invisible_entry {
 }
 
 span.invisible_entry {
+    background-color: #600;
     font-style: italic;
-    background-color: #660000;
 }
 
 div.settings {
     float: left;
     margin-left: 10px;
-}
 
-div.settings div {
-    margin-bottom: 10px;
-    font-weight: bold;
+    div {
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
 }
 
 div#schedule-settings-dialog-shadow {
-    background: #000000 none repeat scroll 0 0;
-    position: absolute;
-    z-index: 3;
-    top: 0;
-    left: 0;
-    width: 100%;
+    background: #000 none repeat scroll 0 0;
     height: 100%;
+    left: 0;
     opacity: 0.7;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 3;
+
     -moz-background-clip: border;
     -moz-background-inline-policy: continuous;
     -moz-background-origin: padding;
 }
-

@@ -1,56 +1,43 @@
-// TODO: LESSify
-
 /* --- main navigation ----------------------------------------------------- */
 #barTopMenu {
-    position: absolute;
-    top: 45px;
     left: 0;
-    z-index: 3;
     margin: 0;
     padding: 0;
-}
+    position: absolute;
+    top: 45px;
+    z-index: 3;
 
-#barTopMenu li {
-    float: left;
-    list-style-type: none;
-    padding: 0;
-    min-width: 64px;
-    z-index: 2;
-}
+    li {
+        float: left;
+        list-style-type: none;
+        min-width: 64px;
+        padding: 0;
+        z-index: 2;
+    }
+    a {
+        color: #abb7ce;
+        display: block;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 0 3px;
+        text-align: center;
 
-#barTopMenu a {
-    display: block;
-    color: #ABB7CE;
-    padding: 0 3px;
-    font-weight: bold;
-    font-size: 12px;
-    text-align: center;
-}
+        // Icon state: normal
+        span {
+            background: no-repeat 0 0;
+            display: inline-block;
+            .size(32px, 32px);
+            
+            // Icon state: new
+            &.new { background-position: -64px 0; }
+        }
+    }
+    a:hover, li.active a {
+        color: #fff;
 
-#barTopMenu li.active a:hover, #barTopMenu a:hover, #barTopMenu li.active a {
-    color: #fff;
+        // Icon state: hover
+        span     { background-position: -32px 0; }
+        // Icon state: hover and new
+        span.new { background-position: -96px 0; }
+    }
 }
-
-/* normal icon */
-#barTopMenu a span {
-    display: inline-block;
-    width: 32px;
-    height: 32px;
-    background: no-repeat 0 0;
-}
-
-/* hover icon */
-#barTopMenu a:hover span, #barTopMenu li.active a:hover span, #barTopMenu li.active a span {
-    background-position: -32px 0;
-}
-
-/* new icon */
-#barTopMenu a span.new {
-    background-position: -64px 0;
-}
-
-/* new hover icon */
-#barTopMenu a:hover span.new, #barTopMenu li.active a:hover span.new, #barTopMenu li.active a span.new {
-    background-position: -96px 0;
-}
-

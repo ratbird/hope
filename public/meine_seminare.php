@@ -88,8 +88,6 @@ if (get_config('CHAT_ENABLE')){
 
 $deputies_enabled = get_config('DEPUTIES_ENABLE');
 $default_deputies_enabled = get_config('DEPUTIES_DEFAULTENTRY_ENABLE');
-$cssSw = new cssClassSwitcher();                                    // Klasse für Zebra-Design
-$cssSw->enableHover();
 $db = new DB_Seminar();
 $Modules = new Modules();
 $userConfig = UserConfig::get($GLOBALS['user']->id);
@@ -115,7 +113,6 @@ if (!$perm->have_perm("root")) {
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
 
-echo "\n" . $cssSw->GetHoverJSFunction() . "\n";
 if (get_config('CHAT_ENABLE')){
     chat_get_javascript();
 }
@@ -535,7 +532,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
 
     $my_bosses = $default_deputies_enabled ? getDeputyBosses($user->id) : array();
 
-    echo $template->render(compact(words("num_my_sem meldung group_field groups my_obj view _my_sem_open cssSw meldung chat_info chat_invs waitlists ".($deputies_enabled && $default_deputies_enabled && $perm->have_perm(getValidDeputyPerms(true)) ? "my_bosses " : "")."num_my_inst infobox")));
+    echo $template->render(compact(words("num_my_sem meldung group_field groups my_obj view _my_sem_open meldung chat_info chat_invs waitlists ".($deputies_enabled && $default_deputies_enabled && $perm->have_perm(getValidDeputyPerms(true)) ? "my_bosses " : "")."num_my_inst infobox")));
 }
 
 
@@ -658,7 +655,7 @@ elseif ($auth->auth["perm"]=="admin") {
 
     $template = $GLOBALS["template_factory"]->open("meine_seminare/index_admin");
     $template->set_attribute('_default_sem', $_SESSION['_default_sem']);
-    echo $template->render(compact(words("meldung _my_inst _my_admin_inst_id num_my_sem Modules cssSw my_sem")));
+    echo $template->render(compact(words("meldung _my_inst _my_admin_inst_id num_my_sem Modules my_sem")));
 }
     include ('lib/include/html_end.inc.php');
     ob_end_flush(); //Outputbuffering beenden

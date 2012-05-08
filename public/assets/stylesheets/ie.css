@@ -1,3 +1,8 @@
+body {
+    background: #1e3e70 url("../images/background.png") repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+
 div.modaloverlay {
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
     filter: alpha(opacity = 50);

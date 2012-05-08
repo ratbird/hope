@@ -1174,8 +1174,8 @@ body, input, textarea {
   font-family:"Helvetica Neue", "Helvetica", Arial, sans-serif;
   font-size:10pt;
 }
+html, body { height:100%; }
 html { overflow-y:scroll; }
-body { height:100%; }
 body {
   background-color:#2c4e83;
   background-image:-moz-linear-gradient(top,#36598f,#1e3e70);
@@ -1189,6 +1189,7 @@ body {
   background-color:#1e3e70;
   background-repeat:repeat-x;
   margin:0;
+  min-height:100%;
 }
 h1, h2, h3 { font-weight:bold; }
 blockquote {

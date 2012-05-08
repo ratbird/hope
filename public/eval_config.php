@@ -36,6 +36,7 @@ use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 
 $perm->check('user');
@@ -55,7 +56,7 @@ require_once(EVAL_FILE_OBJECTDB);
 PageLayout::setTitle(_('Evaluations-Auswertung'));
 PageLayout::setHelpKeyword('Basis.Evaluationen');
 Navigation::activateItem('/tools/evaluation');
-
+$eval_id = Request::option('eval_id');
 $eval = new Evaluation($eval_id);
 $no_permissons = EvaluationObjectDB::getEvalUserRangesWithNoPermission ($eval);
 
@@ -118,10 +119,19 @@ function createInfoBox ($imgLogo) {
 }
 
 
-
+$cmd = Request::option('cmd');
+$template_id = Request::option('template_id');
 if (isset($cmd) && $can_change && isset($eval_id)) {
     if ($cmd=="save") {
         $db = new DB_Seminar();
+        $show_questions = Request::option('show_questions');
+        $show_total_stats = Request::option('show_total_stats');
+        $show_graphics= Request::option('show_graphics');
+        $show_questionblock_headline= Request::option('show_questionblock_headline');
+        $show_group_headline= Request::option('show_group_headline');
+        $polscale_gfx_type= Request::option('polscale_gfx_type');
+        $likertscale_gfx_type= Request::option('likertscale_gfx_type');
+        $mchoice_scale_gfx_type= Request::option('mchoice_scale_gfx_type');
         if (!isset($template_id) || $template_id=="") {
             // Neues Template einfuegen
             $template_id=DbView::get_uniqid();
@@ -130,6 +140,7 @@ if (isset($cmd) && $can_change && isset($eval_id)) {
             $msg .= "msg§"._("Template wurde neu erzeugt.");
         } else {
             // Bestehendes Template updaten
+            
             $db->query(sprintf("UPDATE eval_templates SET show_questions=%d,show_total_stats=%d,show_graphics=%d,show_questionblock_headline=%d,show_group_headline=%d,polscale_gfx_type='%s',likertscale_gfx_type='%s',mchoice_scale_gfx_type='%s' WHERE template_id='%s'",$show_questions,$show_total_stats,$show_graphics,$show_questionblock_headline,$show_group_headline,$polscale_gfx_type,$likertscale_gfx_type,$mchoice_scale_gfx_type,$template_id));
             $msg .= "msg§".("Template wurde ver&auml;ndert.");
         }

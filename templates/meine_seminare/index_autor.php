@@ -17,21 +17,24 @@ global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
         <tr valign="top">
             <td valign="top" class="blank" align="center">
                 <br>
-                <table border="0" cellpadding="1" cellspacing="0" width="98%" valign="top" id="my_seminars">
+                <table class="zebra" border="0" cellpadding="1" cellspacing="0" width="98%" valign="top" id="my_seminars">
+                    <thead>
+                        <? if (isset($meldung)) { parse_msg($meldung, "§", "blank", 5); }?>
 
-                    <? if (isset($meldung)) { parse_msg($meldung, "§", "blank", 5); }?>
-
-                    <tr align="center" valign="top">
-                        <th width="2%" colspan="2" nowrap="nowrap" align="center">
-                            <a href="gruppe.php">
-                                <?= Assets::img('icons/16/blue/group.png', array('title' => _("Gruppe ändern"), 'class' => 'middle')) ?>
-                            </a>
-                        </th>
-                        <th width="85%" align="left"><?= _("Name") ?></th>
-                        <th width="10%" align="left"><b><?= _("Inhalt") ?></b></th>
-                        <th width="3%"></th>
-                    </tr>
-                    <?= $this->render_partial("meine_seminare/_group") ?>
+                        <tr align="center" valign="top">
+                            <th width="2%" colspan="2" nowrap="nowrap" align="center">
+                                <a href="gruppe.php">
+                                    <?= Assets::img('icons/16/blue/group.png', array('title' => _("Gruppe ändern"), 'class' => 'middle')) ?>
+                                </a>
+                            </th>
+                            <th width="85%" align="left"><?= _("Name") ?></th>
+                            <th width="10%" align="left"><b><?= _("Inhalt") ?></b></th>
+                            <th width="3%"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?= $this->render_partial("meine_seminare/_group") ?>
+                    </tbody>
                 </table>
                 <br><br>
             <? } ?>
@@ -40,16 +43,16 @@ global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
             <? if (sizeof($waitlists)) { ?>
                 <? SkipLinks::addIndex(_("Wartelisten"), 'my_waitlists') ?>
                 <table border="0" cellpadding="2" cellspacing="0" width="98%" align="center" class="blank" id="my_waitlists">
-                    <tr>
-                        <th width="67%" align="left" colspan="3"><?= _("Anmelde- und Wartelisteneintr&auml;ge") ?></th>
-                        <th width="10%"><b><?= _("Datum") ?></b></th>
-                        <th width="10%" nowrap><b><?= _("Position/Chance") ?></b></th>
-                        <th width="10%"><b><?= _("Art") ?></b></th>
-                        <th width="3%"></th>
-                    </tr>
-
-                    <? $cssSw->resetClass(); ?>
-
+                    <thead>
+                        <tr>
+                            <th width="67%" align="left" colspan="3"><?= _("Anmelde- und Wartelisteneintr&auml;ge") ?></th>
+                            <th width="10%"><b><?= _("Datum") ?></b></th>
+                            <th width="10%" nowrap><b><?= _("Position/Chance") ?></b></th>
+                            <th width="10%"><b><?= _("Art") ?></b></th>
+                            <th width="3%"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
                     <?
                     foreach ($waitlists as $wait) {
                         // wir sind in einer Anmeldeliste und brauchen Prozentangaben
@@ -71,32 +74,29 @@ global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
                         if (SeminarCategories::GetByTypeId($wait['sem_status'])->studygroup_mode) {
                             $seminar_name .= ' ('. _("Studiengruppe") . ', ' . _("geschlossen") .')';
                         }
-
-                        $cssSw->switchClass();
                         ?>
-
-                        <tr<?= $cssSw->getHover()?>>
+                        <tr>
                             <td width="1%" bgcolor="#44<?= $chance_color ?>44">
                                 <?= Assets::img("blank.gif", array("size" => "7@12") + tooltip2(_("Position oder Wahrscheinlichkeit"))) ?>
                             </td>
 
-                            <td width="1%" class="<?= $cssSw->getClass() ?>">&nbsp;</td>
+                            <td width="1%">&nbsp;</td>
 
-                            <td width="55%" class="<?= $cssSw->getClass() ?>" align="left">
+                            <td width="55%" align="left">
                                 <a href="<?= URLHelper::getLink('details.php', array('sem_id' => $wait['seminar_id'], 'send_from_search_page' => 'meine_seminare.php', 'send_from_search' => 'TRUE'))?>">
                                     <?= htmlReady($seminar_name) ?>
                                 </a>
                             </td>
 
-                            <td width="10%" align="center" class="<?= $cssSw->getClass() ?>">
+                            <td width="10%" align="center">
                                 <?= $wait["status"] == "claiming" ? date("d.m.", $wait["admission_endtime"]) : "-" ?>
                             </td>
 
-                            <td width="10%" align="center" class="<?= $cssSw->getClass() ?>">
+                            <td width="10%" align="center">
                                 <?= $wait["status"] == "claiming" ? ($admission_chance . "%") : $wait["position"] ?>
                             </td>
 
-                            <td width="10%" align="center" class="<?= $cssSw->getClass() ?>">
+                            <td width="10%" align="center">
                                 <? if ($wait["status"] == "claiming") : ?>
                                     <?= _("Los") ?>
                                 <? elseif ($wait["status"] == "accepted") : ?>
@@ -106,13 +106,14 @@ global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
                                 <? endif ?>
                             </td>
 
-                            <td width="3%" class="<?= $cssSw->getClass() ?>" align="center">
+                            <td width="3%" align="center">
                                 <a href="<?= URLHelper::getLink('', array('auswahl' => $wait['seminar_id'], 'cmd' => 'suppose_to_kill_admission')) ?>">
                                     <?= Assets::img('icons/16/grey/door-leave.png', tooltip2(_("aus der Veranstaltung abmelden"))) ?>
                                 </a>
                             </td>
                         </tr>
                     <? } ?>
+                    </tbody>
                 </table>
                 <br>
                 <br>
@@ -138,35 +139,36 @@ global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
 
             <? } else { ?>
                 <? SkipLinks::addIndex(_("Meine Einrichtungen"), 'my_institutes')?>
-                <table border="0" cellpadding="1" cellspacing="0" width="98%" align="center" class="blank" id="my_institutes">
-                    <tr valign="top" align="center">
-                        <th width="1%">&nbsp; </th>
-                        <th width="86%" align="left"><?= _("Meine Einrichtungen") ?></th>
-                        <th width="10%"><b><?= _("Inhalt") ?></b></th>
-                        <th width="3%"></th>
-                    </tr>
-
+                <table border="0" cellpadding="1" cellspacing="0" width="98%" align="center" class="blank zebra" id="my_institutes">
+                    <thead>
+                        <tr valign="top" align="center">
+                            <th width="1%">&nbsp; </th>
+                            <th width="86%" align="left"><?= _("Meine Einrichtungen") ?></th>
+                            <th width="10%"><b><?= _("Inhalt") ?></b></th>
+                            <th width="3%"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
                     <? foreach ($my_obj as $instid => $values) {
                         if ($values['obj_type'] == "inst") {
-                            $cssSw->switchClass();
                             $lastVisit = $values['visitdate'];
                             ?>
-                            <tr <?= $cssSw->getHover()?>>
-                                <td class="<?= $cssSw->getClass() ?>">
+                            <tr>
+                                <td>
                                     <?= InstituteAvatar::getAvatar($instid)->getImageTag(Avatar::SMALL, array('title' => htmlReady($values['name']))) ?>
                                 </td>
 
-                                <td align="left" class="<?= $cssSw->getClass() ?>">
+                                <td align="left">
                                     <a href="institut_main.php?auswahl=<?= $instid ?>">
                                         <?= htmlReady($INST_TYPE[$values["type"]]["name"] . ": " . $values["name"]) ?>
                                     </a>
                                 </td>
 
-                                <td class="<?= $cssSw->getClass() ?>" align="left" nowrap="nowrap">
+                                <td align="left" nowrap="nowrap">
                                     <? print_seminar_content($instid, $values, "institut"); ?>
                                 </td>
 
-                                <td class="<?= $cssSw->getClass() ?>" align="right" nowrap="nowrap">
+                                <td align="right" nowrap="nowrap">
                                 <?  if ($GLOBALS['ALLOW_SELFASSIGN_INSTITUTE'] && $values['status'] == 'user') { ?>
                                     <? if (get_config('CHAT_ENABLE') && $values["modules"]["chat"]) { ?>
 
@@ -184,10 +186,11 @@ global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
                                 <? } else { ?>
                                         <?= Assets::img('blank.gif', array('size' => '16')) ?>
                                 <? } ?>
-                                    </td>
+                                </td>
                             </tr>
                         <? } ?>
                     <? } ?>
+                    </tbody>
                 </table>
             <? } ?>
         </td>

@@ -43,6 +43,15 @@ tr.cycle_even {
     background-color: #e7ebf1;
     &:hover { background-color: #B7C2E2; }
 }
+table.zebra > tbody > tr { 
+    background-color: #f2f2f2;
+    &:hover { background-color: #ced8f2; }
+
+    &:nth-child(2n+1) {
+        background-color: #e2e2e2;
+        &:hover { background-color: #b7c2e2; }
+    }
+}
 
 td {
     &.aufklapp { background-color: #fffaee; }

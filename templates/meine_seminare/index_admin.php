@@ -51,71 +51,70 @@ global $SEM_TYPE;
         <? if ($num_my_sem) { ?>
             <tr>
                 <td class="blank">
-                    <table border="0" cellpadding="0" cellspacing="0" width="99%" align="center">
-                        <tr>
-                            <td class="topic" colspan="8">
-                                <b>
-                                    <?=_("Veranstaltungen an meinen Einrichtungen") ?>
-                                    <?= $_my_admin_inst_id ? " - " . htmlReady($_my_inst[$_my_admin_inst_id]['name']) : "" ?>
-                                </b>
-                            </td>
-                        </tr>
+                    <table class="zebra" border="0" cellpadding="0" cellspacing="0" width="99%" align="center">
+                        <thead>
+                            <tr>
+                                <td class="topic" colspan="8">
+                                    <b>
+                                        <?=_("Veranstaltungen an meinen Einrichtungen") ?>
+                                        <?= $_my_admin_inst_id ? " - " . htmlReady($_my_inst[$_my_admin_inst_id]['name']) : "" ?>
+                                    </b>
+                                </td>
+                            </tr>
 
-                        <tr>
-                            <th width="2%">
-                                &nbsp;
-                            </th>
+                            <tr>
+                                <th width="2%">
+                                    &nbsp;
+                                </th>
 
-                            <th width="6%" align="left">
-                                <a href="<?= URLHelper::getLink('', array('sortby' => 'VeranstaltungsNummer')) ?>"><?=_("Nr.")?></a>
-                            </th>
+                                <th width="6%" align="left">
+                                    <a href="<?= URLHelper::getLink('', array('sortby' => 'VeranstaltungsNummer')) ?>"><?=_("Nr.")?></a>
+                                </th>
 
-                            <th width="50%" align="left">
-                                <a href="<?= URLHelper::getLink('', array('sortby' => 'Name')) ?>"><?=_("Name")?></a>
-                            </th>
+                                <th width="50%" align="left">
+                                    <a href="<?= URLHelper::getLink('', array('sortby' => 'Name')) ?>"><?=_("Name")?></a>
+                                </th>
 
-                            <th width="10%" align="left">
-                                <a href="<?= URLHelper::getLink('', array('sortby' => 'status')) ?>"><?=_("Veranstaltungstyp")?></a>
-                            </th>
+                                <th width="10%" align="left">
+                                    <a href="<?= URLHelper::getLink('', array('sortby' => 'status')) ?>"><?=_("Veranstaltungstyp")?></a>
+                                </th>
 
-                            <th width="15%" align="left">
-                                <b><?= _("DozentIn") ?></b>
-                            </th>
+                                <th width="15%" align="left">
+                                    <b><?= _("DozentIn") ?></b>
+                                </th>
 
-                            <th width="10%">
-                                <b><?= _("Inhalt") ?></b>
-                            </th>
+                                <th width="10%">
+                                    <b><?= _("Inhalt") ?></b>
+                                </th>
 
-                            <th width="5%">
-                                <a href="<?= URLHelper::getLink('', array('sortby' => 'teilnehmer')) ?>"><?=_("TeilnehmerInnen")?></a>
-                            </th>
+                                <th width="5%">
+                                    <a href="<?= URLHelper::getLink('', array('sortby' => 'teilnehmer')) ?>"><?=_("TeilnehmerInnen")?></a>
+                                </th>
 
-                            <th width="2%">
-                                &nbsp;
-                            </th>
-                        </tr>
-
-                        <? $cssSw->enableHover(); ?>
+                                <th width="2%">
+                                    &nbsp;
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
                         <? foreach ($my_sem as $semid => $values) { ?>
                             <?
-                            $cssSw->switchClass();
-                            $class = $cssSw->getClass();
 
                             $lastVisit = $values['visitdate'];
                             ?>
 
-                            <tr <?= $cssSw->getHover()?>>
-                                <td class="<?= $class ?>">
+                            <tr>
+                                <td>
                                     <?= CourseAvatar::getAvatar($semid)->getImageTag(Avatar::SMALL, array('title' => htmlReady($values['name']))) ?>
                                 </td>
 
-                                <td class="<?= $class ?>">
+                                <td>
                                     <a href="<?= URLHelper::getLink('seminar_main.php', array('auswahl' => $semid)) ?>">
                                         <?= $values["VeranstaltungsNummer"] ?>
                                     </a>
                                 </td>
 
-                                <td class="<?= $class ?>">
+                                <td>
                                     <a href="<?= URLHelper::getLink('seminar_main.php', array('auswahl' => $semid)) ?>"
                                        style="<?= lastVisit <= $values['chdate'] ? 'color: red;' : '' ?>">
                                         <?= htmlReady($values["name"]) ?>
@@ -130,29 +129,30 @@ global $SEM_TYPE;
                                     <? } ?>
                                 </td>
 
-                                <td class="<?= $class ?>">
+                                <td>
                                     <?= $SEM_TYPE[$values["status"]]["name"] ?>
                                 </td>
 
-                                <td class="<?= $class ?>">
+                                <td>
                                     <?= $this->render_partial_collection('meine_seminare/_dozent', $values['dozenten']) ?>
                                 </td>
 
-                                <td class="<?= $class ?>" nowrap>
+                                <td nowrap>
                                     <? print_seminar_content($semid, $values); ?>
                                 </td>
 
-                                <td class="<?= $class ?>" align="right" nowrap>
+                                <td align="right" nowrap>
                                     <?= $values["teilnehmer"] ?>
                                 </td>
 
-                                <td class="<?= $class ?>" align="right">
+                                <td align="right">
                                     <a href="<?= URLHelper::getLink('seminar_main.php', array('auswahl' => $semid, 'redirect_to' => 'adminarea_start.php', 'new_sem' => 'TRUE')) ?>">
                                         <?= Assets::img('icons/16/grey/admin.png', tooltip2(_("Veranstaltungsdaten bearbeiten"))) ?>
                                     </a>
                                 </td>
                             </tr>
                         <? } ?>
+                        </tbody>
                     </table>
                     <br>
                 </td>

@@ -2,8 +2,6 @@
 # Lifter010: TODO
 global $SEM_CLASS, $SEM_TYPE, $auth;
 
-$cssSw->resetClass();
-
 foreach ($group_members as $member) {
     $semid = $member['seminar_id'];
     $values = $my_obj[$semid];
@@ -11,18 +9,16 @@ foreach ($group_members as $member) {
 
     if ($values['obj_type'] == "sem") {
 
-        $cssSw->switchClass();
-
         $lastVisit = $values['visitdate'];
         ?>
-        <tr <?= $cssSw->getHover() ?>>
+        <tr>
             <td class="gruppe<?= $values['gruppe'] ?>">
                 <a href='gruppe.php'>
                     <?= Assets::img('blank.gif', array('size' => '7@12') + tooltip2(_("Gruppe ändern"))) ?>
                 </a>
             </td>
 
-            <td class="<?= $cssSw->getClass() ?>">
+            <td>
                 <? if ($studygroup_mode) { ?>
                     <?= StudygroupAvatar::getAvatar($semid)->getImageTag(Avatar::SMALL, array('title' => htmlReady($values['semname']))) ?>
                 <? } else { ?>
@@ -30,7 +26,7 @@ foreach ($group_members as $member) {
                 <? } ?>
             </td>
 
-            <td align="left" class="<?= $cssSw->getClass() ?>">
+            <td align="left">
                 <a href="seminar_main.php?auswahl=<?= $semid ?>"
                    <?= $lastVisit <= $values["chdate"] ? 'style="color: red;"' : '' ?>>
 
@@ -67,11 +63,11 @@ foreach ($group_members as $member) {
                         <?= tooltipicon($infotext) ?>
                 <? } ?>
             </td>
-            <td class="<?= $cssSw->getClass() ?>" align="left" nowrap="nowrap">
+            <td align="left" nowrap="nowrap">
                 <? print_seminar_content($semid, $values); ?>
             </td>
 
-            <td class="<?= $cssSw->getClass() ?>" align="right" nowrap="nowrap">
+            <td align="right" nowrap="nowrap">
             <? if (get_config('CHAT_ENABLE') && $values["modules"]["chat"]) { ?>
 
                 <a href="<?= !$auth->auth['jscript'] ? 'chat_online.php' : '#' ?>"

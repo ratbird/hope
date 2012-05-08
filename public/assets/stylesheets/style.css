@@ -84,6 +84,10 @@ tr.cycle_odd { background-color:#f3f5f8; }
 tr.cycle_odd:hover { background-color:#ced8f2; }
 tr.cycle_even { background-color:#e7ebf1; }
 tr.cycle_even:hover { background-color:#b7c2e2; }
+table.zebra > tbody > tr { background-color:#f2f2f2; }
+table.zebra > tbody > tr:hover { background-color:#ced8f2; }
+table.zebra > tbody > tr:nth-child(2n+1) { background-color:#e2e2e2; }
+table.zebra > tbody > tr:nth-child(2n+1):hover { background-color:#b7c2e2; }
 td.aufklapp { background-color:#fffaee; }
 td.angemeldet { border:1px solid #000000; }
 td.indexpage {

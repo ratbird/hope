@@ -57,6 +57,7 @@ require_once('lib/classes/UserDomain.php'); // Nutzerdomänen
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 require_once 'lib/admin_search.inc.php';
+require_once('lib/statusgruppe.inc.php');
 
 PageLayout::setHelpKeyword("Basis.VeranstaltungenVerwaltenZugangsberechtigungen");
 PageLayout::setTitle(_("Verwaltung von Zugangsberechtigungen"));
@@ -595,6 +596,7 @@ if ($seminar_id
                     $db4->query("DELETE FROM seminar_user WHERE user_id='".$db3->f("user_id")."' AND Seminar_id='".$db3->f("Seminar_id")."'");
                     $message=sprintf(_("Sie wurden in der Veranstaltung **%s** in den Status **vorläufig akzeptiert** befördert, da das Anmeldeverfahren geändert wurde."), $admin_admission_data["name"]);
                     $messaging->insert_message(addslashes($message), $db3->f("username"), "____%system%____", FALSE, FALSE, "1", FALSE, _("Systemnachricht:")." "._("vorläufig akzeptiert"), TRUE);
+                    RemovePersonStatusgruppeSeminar($db3->f("username"), $admin_admission_data["sem_id"]);
                 }
                 $db3->query("SELECT *, auth_user_md5.username FROM seminar_user, auth_user_md5 WHERE seminar_user.Seminar_id = '".$admin_admission_data["sem_id"]."' AND seminar_user.status='user' AND seminar_user.user_id = auth_user_md5.user_id");
                 $db4->query("DELETE FROM seminar_user WHERE Seminar_id = '".$admin_admission_data["sem_id"]."' AND status='user'");
@@ -602,6 +604,7 @@ if ($seminar_id
                     while ($db3->next_record()) {
                         $message=sprintf(_("Ihr Abonnement der Veranstaltung **%s** wurde aufgehoben, da die Veranstaltung mit einem teilnahmebeschränkten Anmeldeverfahren versehen wurde. \nWenn Sie einen Platz in der Veranstaltung bekommen wollen, melden Sie sich bitte erneut an."), $admin_admission_data["name"]);
                         $messaging->insert_message(addslashes($message), $db3->f("username"), "____%system%____", FALSE, FALSE, "1", FALSE, _("Systemnachricht:")." "._("Abonnement aufgehoben"), TRUE);
+                         RemovePersonStatusgruppeSeminar($db3->f("username"), $admin_admission_data["sem_id"]);
                     }
                 }
                 $db4->query("UPDATE seminare SET admission_prelim = 1 WHERE Seminar_id = '".$admin_admission_data["sem_id"]."'");
@@ -711,6 +714,7 @@ if ($seminar_id
                 while ($db->next_record()) {
                     $message="Ihr Abonnement der Veranstaltung **".$admin_admission_data["name"]."** wurde aufgehoben, da die Veranstaltung mit einem teilnahmebeschränkten Anmeldeverfahren versehen wurde. \nWenn Sie einen Platz in der Veranstaltung bekommen wollen, melden Sie sich bitte erneut an.";
                     $messaging->insert_message (addslashes($message), $db->f("username"), "____%system%____", FALSE, FALSE, "1", FALSE, _("Systemnachricht:")." "._("Abonnement aufgehoben"), TRUE);
+                    RemovePersonStatusgruppeSeminar($db3->f("username"), $admin_admission_data["sem_id"]);
                 }
             }
 
@@ -836,12 +840,12 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
         </tr>
         <tr <? $cssSw->switchClass() ?>>
             <td class="<? echo $cssSw->getClass() ?>" width="4%" align="right">
-                &nbsp;
+                &nbsp;    
             </td>
             <td class="<? echo $cssSw->getClass() ?>"  colspan=2 align="left">
                 <font size=-1><b><?=_("Anmeldeverfahren:")?></b><br></font>
 
-                <?
+                <? 
                     $admission_type_name = get_admission_description('admission_type', $admin_admission_data["admission_type_org"]);
 
                     if (($admin_admission_data["admission_type_org"] && $admin_admission_data["admission_type_org"] != 3) && (!$perm->have_perm("admin"))) {

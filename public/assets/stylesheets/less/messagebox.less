@@ -40,7 +40,16 @@ div.messagebox_details {
 }
 
 // Messagebox definitions
-.messagebox (@name, @color, @background-color, @border-color: @color, @image: @name) {
+
+.messagebox (@name, @color, @background-color) {
+  .messagebox (@name, @color, @background-color, @color, @name);
+}
+
+.messagebox (@name, @color, @background-color, @border-color) {
+  .messagebox (@name, @color, @background-color, @border-color, @name);
+}
+
+.messagebox (@name, @color, @background-color, @border-color, @image) {
     // Also generates the neccessary selector not only the rules
     (~"div.messagebox_@{name}") {
         color: @color;
@@ -50,11 +59,11 @@ div.messagebox_details {
     }
 }
 
-.messagebox("info", #000, #d8e3fc, #4b6fcb);
-.messagebox("success", #000, #dcf1da, #4b8847);
-.messagebox("error", #000, #ffdddc, #c74039);
+.messagebox("info",      #000,    #d8e3fc, #4b6fcb);
+.messagebox("success",   #000,    #dcf1da, #4b8847);
+.messagebox("error",     #000,    #ffdddc, #c74039);
 .messagebox("exception", #d8000c, #ffbaba);
-.messagebox("warning", #b06500, #f7e98e, #b06500, "advice");
+.messagebox("warning",   #b06500, #f7e98e, #b06500, "advice");
 
 // Define modal messagebox
 div.messagebox_modal {

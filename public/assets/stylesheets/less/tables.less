@@ -94,7 +94,7 @@ td.tree-indent img {
 }
 
 td.tree-elbow-line {
-    background: url(@{image-path}/datatree_1.gif) repeat-y;
+    background: url("@{image-path}/datatree_1.gif") repeat-y;
     vertical-align: bottom;
     width: 5px;
 }
@@ -129,8 +129,8 @@ td.tree-elbow-end img {
             cursor: pointer;
         }
     }
-    .empty .toggle-indicator a { background-image: url(@{image-path}/icons/16/grey/arr_1right.png); }
-    .collapsed .toggle-indicator a { background-image: url(@{image-path}/icons/16/blue/arr_1right.png); }
+    .empty .toggle-indicator a { background-image: url("@{image-path}/icons/16/grey/arr_1right.png"); }
+    .collapsed .toggle-indicator a { background-image: url("@{image-path}/icons/16/blue/arr_1right.png"); }
     td.label-cell, .toggle-indicator a, .empty .toggle-indicator { padding-left: 20px; }
     > .collapsed > tr { display: none; }
     .collapsed .header-row { display: table-row !important; }
@@ -163,7 +163,7 @@ td.tree-elbow-end img {
 
 .category_divider {
     border-top: 1px solid #d0d0d0;
-    background-image: url('@{image-path}/background_stripes.jpg');
+    background-image: url("@{image-path}/background_stripes.jpg");
 }
 
 .blue_gradient {
@@ -196,11 +196,11 @@ tr.sortable {
     background-color: #d1d1d1;
 
     th.sortasc {
-        background: transparent url('@{image-path}/dreieck_up.png') no-repeat center left;
+        background: transparent url("@{image-path}/dreieck_up.png") no-repeat center left;
         padding-left: 17px;
     }
     th.sortdesc {
-        background: transparent url('@{image-path}/dreieck_down.png') no-repeat center left;
+        background: transparent url("@{image-path}/dreieck_down.png") no-repeat center left;
         padding-left: 17px;
     }
 }

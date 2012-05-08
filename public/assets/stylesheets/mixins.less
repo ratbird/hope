@@ -207,6 +207,12 @@
           box-shadow: @shadow;
 }
 
+.box-shadow(@shadow1, @shadow2) {
+  -webkit-box-shadow: @arguments;
+     -moz-box-shadow: @arguments;
+          box-shadow: @arguments;
+}
+
 // Transitions
 .transition(@transition) {
   -webkit-transition: @transition;

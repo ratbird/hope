@@ -1,7 +1,7 @@
 <?php
 # Lifter002: TODO
 # Lifter007: TODO
-# Lifter003: TODO
+# Lifter003: TODO - halfway through - got stuck at DBView in line 297
 # Lifter010: TODO
 /**
  * meine_seminare.php - Anzeige der eigenen Seminare (anhaengig vom Status)
@@ -168,8 +168,10 @@ if(in_array($cmd, words('no_kill suppose_to_kill suppose_to_kill_admission kill 
             // LOGGING
             log_event('SEM_USER_DEL', $current_seminar->getId(), $user->id, 'Hat sich selbst ausgetragen');
 
-            $db->query("DELETE FROM seminar_user WHERE user_id='$user->id' AND Seminar_id='".$current_seminar->getId()."'");
-            if ($db->affected_rows() == 0)
+            $query = "DELETE FROM seminar_user WHERE user_id = ? AND Seminar_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($user->id, $current_seminar->getId()));
+            if ($statement->rowCount() == 0)
                 $meldung="error§" . _("Datenbankfehler!");
             else {
                 // Löschen aus Statusgruppen
@@ -189,8 +191,10 @@ if(in_array($cmd, words('no_kill suppose_to_kill suppose_to_kill_admission kill 
         // LOGGING
         log_event('SEM_USER_DEL', $current_seminar->getId(), $user->id, 'Hat sich selbst aus der Wartliste ausgetragen');
 
-        $db->query("DELETE FROM admission_seminar_user WHERE user_id='$user->id' AND seminar_id='".$current_seminar->getId()."'");
-        if ($db->affected_rows() == 0)  $meldung="error§" . _("Datenbankfehler!");
+        $query = "DELETE FROM admission_seminar_user WHERE user_id = ? AND seminar_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($user->id, $current_seminar->getId()));
+        if ($statement->rowCount() == 0)  $meldung="error§" . _("Datenbankfehler!");
         else {
             //Warteliste neu sortieren
             renumber_admission($current_seminar->getId());
@@ -202,14 +206,19 @@ if(in_array($cmd, words('no_kill suppose_to_kill suppose_to_kill_admission kill 
 }
 //bei Bedarf aus seminar_user austragen
 if ($cmd=="inst_kill" && $GLOBALS['ALLOW_SELFASSIGN_INSTITUTE']) {
-    $db->query("DELETE FROM user_inst WHERE user_id='$user->id' AND Institut_id='$auswahl' AND inst_perms='user'");
-    if ($db->affected_rows() == 0)
+    $query = "DELETE FROM user_inst WHERE user_id = ? AND Institut_id = ? AND inst_perms = 'user'";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($user->id, $auswahl));
+    if ($statement->rowCount() == 0)
         $meldung="error§" . _("Datenbankfehler!");
     else {
 
-      $db->query("SELECT Name FROM Institute WHERE Institut_id = '$auswahl'");
-      $db->next_record();
-      $meldung="msg§" . sprintf(_("Die Zuordnung zur Einrichtung %s wurde aufgehoben."), "<b>".htmlReady($db->f("Name"))."</b>");
+        $query = "SELECT Name FROM Institute WHERE Institut_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($auswahl));
+        $name = $statement->fetchColumn();
+
+        $meldung="msg§" . sprintf(_("Die Zuordnung zur Einrichtung %s wurde aufgehoben."), "<b>".htmlReady($name)."</b>");
     }
 }
 
@@ -218,10 +227,18 @@ if ($cmd=="inst_kill" && $GLOBALS['ALLOW_SELFASSIGN_INSTITUTE']) {
 if ($gruppesent == '1'){
     $_my_sem_group_field = $_REQUEST['select_group_field'];
     if (is_array($_REQUEST['gruppe'])){
+        $query = "UPDATE seminar_user SET gruppe = ? WHERE Seminar_id = ? AND user_id = ?";
+        $user_statement = DBManager::get()->prepare($query);
+        
+        $query = "UPDATE deputies SET gruppe = ? WHERE range_id = ? AND user_id = ?";
+        $deputy_statement = DBManager::get()->prepare($query);
+        
         foreach($_REQUEST['gruppe'] as $key => $value){
-            $updated = $db->query ("UPDATE seminar_user SET gruppe = '$value' WHERE Seminar_id = '$key' AND user_id = '$user->id'");
+            $user_statement->execute(array($value, $key, $user->id));
+            $updated = $statement->rowCount();
+
             if ($deputies_enabled && !$updated) {
-                $db->query ("UPDATE deputies SET gruppe = '$value' WHERE range_id = '$key' AND user_id = '$user->id'");
+                $deputy_statement->execute(array($value, $key, $user->id));
             }
         }
     }

@@ -364,7 +364,8 @@ function closeObject()
     $rechte = false;
 
     URLHelper::removeLinkParam('cid');
-    $sess->unregister('raumzeitFilter');
+    //$sess->unregister('raumzeitFilter');
+    $_SESSION['raumzeitFilter'] = '';
 }
 
 /**

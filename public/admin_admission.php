@@ -80,6 +80,9 @@ if ($SessSemName[1]) {
     $seminar_id = $SessSemName[1];
 }
 $seminar_id = Request::option('seminar_id');
+if(!$seminar_id ) {
+    $seminar_id = Request::option('cid');
+}
 if(!$seminar_id && $admin_admission_data["sem_id"]) {
     $seminar_id = $admin_admission_data["sem_id"];
 }

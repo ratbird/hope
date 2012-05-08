@@ -75,14 +75,8 @@ $db6 = new DB_Seminar;
 $cssSw = new cssClassSwitcher;
 $admin_admission_data = unserialize(base64_decode($_REQUEST['admin_admission_data']));
 $admin_admission_data_original = unserialize(base64_decode($_REQUEST['admin_admission_data_original']));
+$seminar_id = Request::option('seminar_id',$SessSemName[1]);
 
-if ($SessSemName[1]) {
-    $seminar_id = $SessSemName[1];
-}
-$seminar_id = Request::option('seminar_id');
-if(!$seminar_id ) {
-    $seminar_id = Request::option('cid');
-}
 if(!$seminar_id && $admin_admission_data["sem_id"]) {
     $seminar_id = $admin_admission_data["sem_id"];
 }

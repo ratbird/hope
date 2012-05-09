@@ -80,14 +80,6 @@ table.default {
 }
 table.default td, table.default th { padding:3px; }
 table.default th { text-align:left; }
-tr.cycle_odd { background-color:#f3f5f8; }
-tr.cycle_odd:hover { background-color:#ced8f2; }
-tr.cycle_even { background-color:#e7ebf1; }
-tr.cycle_even:hover { background-color:#b7c2e2; }
-table.zebra > tbody > tr { background-color:#f2f2f2; }
-table.zebra > tbody > tr:hover { background-color:#ced8f2; }
-table.zebra > tbody > tr:nth-child(2n+1) { background-color:#e2e2e2; }
-table.zebra > tbody > tr:nth-child(2n+1):hover { background-color:#b7c2e2; }
 td.aufklapp { background-color:#fffaee; }
 td.angemeldet { border:1px solid #000000; }
 td.indexpage {
@@ -130,6 +122,14 @@ td.tree-elbow-end {
   width:5px;
 }
 td.tree-elbow-line img, td.tree-elbow-end img { display:block; }
+tr.cycle_odd { background-color:#f3f5f8; }
+tr.cycle_odd:hover { background-color:#ced8f2; }
+tr.cycle_even { background-color:#e7ebf1; }
+tr.cycle_even:hover { background-color:#b7c2e2; }
+table.zebra > tbody > tr, table.zebra-hover > tbody > tr { background-color:#f2f2f2; }
+table.zebra > tbody > tr:nth-child(2n+1), table.zebra-hover > tbody > tr:nth-child(2n+1) { background-color:#e2e2e2; }
+table.zebra-hover > tbody > tr:hover { background-color:#ced8f2; }
+table.zebra-hover > tbody > tr:hover:nth-child(2n+1) { background-color:#b7c2e2; }
 .collapsable .header-row > td {
   border-bottom:0;
   padding-left:0;

@@ -1,7 +1,7 @@
 <?
 # Lifter010: TODO
 ?>
-<table border="0" cellpadding="2" cellspacing="0" width="98%" align="center" class="blank zebra">
+<table border="0" cellpadding="2" cellspacing="0" width="98%" align="center" class="blank zebra-hover">
     <thead>
         <tr>
             <th align="left"><?= _("Personen, deren Standardvertretung ich bin") ?></th>

@@ -51,7 +51,7 @@ global $SEM_TYPE;
         <? if ($num_my_sem) { ?>
             <tr>
                 <td class="blank">
-                    <table class="zebra" border="0" cellpadding="0" cellspacing="0" width="99%" align="center">
+                    <table class="zebra-hover" border="0" cellpadding="0" cellspacing="0" width="99%" align="center">
                         <thead>
                             <tr>
                                 <td class="topic" colspan="8">

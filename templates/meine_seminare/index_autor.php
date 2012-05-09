@@ -17,7 +17,7 @@ global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
         <tr valign="top">
             <td valign="top" class="blank" align="center">
                 <br>
-                <table class="zebra" border="0" cellpadding="1" cellspacing="0" width="98%" valign="top" id="my_seminars">
+                <table class="zebra-hover" border="0" cellpadding="1" cellspacing="0" width="98%" valign="top" id="my_seminars">
                     <thead>
                         <? if (isset($meldung)) { parse_msg($meldung, "§", "blank", 5); }?>
 
@@ -139,7 +139,7 @@ global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
 
             <? } else { ?>
                 <? SkipLinks::addIndex(_("Meine Einrichtungen"), 'my_institutes')?>
-                <table border="0" cellpadding="1" cellspacing="0" width="98%" align="center" class="blank zebra" id="my_institutes">
+                <table border="0" cellpadding="1" cellspacing="0" width="98%" align="center" class="blank zebra-hover" id="my_institutes">
                     <thead>
                         <tr valign="top" align="center">
                             <th width="1%">&nbsp; </th>

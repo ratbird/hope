@@ -35,24 +35,6 @@ table.default {
     th { text-align: left; }
 }
 
-tr.cycle_odd {
-    background-color: #f3f5f8;
-    &:hover { background-color: #ced8f2; }
-}
-tr.cycle_even {
-    background-color: #e7ebf1;
-    &:hover { background-color: #B7C2E2; }
-}
-table.zebra > tbody > tr { 
-    background-color: #f2f2f2;
-    &:hover { background-color: #ced8f2; }
-
-    &:nth-child(2n+1) {
-        background-color: #e2e2e2;
-        &:hover { background-color: #b7c2e2; }
-    }
-}
-
 td {
     &.aufklapp { background-color: #fffaee; }
     &.angemeldet { border: 1px solid #000; }
@@ -108,6 +90,28 @@ td.tree-elbow-end {
 td.tree-elbow-line img,
 td.tree-elbow-end img {
     display: block;
+}
+
+/* Zebra styles for tables */
+tr.cycle_odd {
+    background-color: #f3f5f8;
+    &:hover { background-color: #ced8f2; }
+}
+tr.cycle_even {
+    background-color: #e7ebf1;
+    &:hover { background-color: #B7C2E2; }
+}
+table.zebra, table.zebra-hover {
+    > tbody > tr { 
+        background-color: #f2f2f2;
+        &:nth-child(2n+1) { background-color: #e2e2e2; }
+    }
+}
+table.zebra-hover {
+    > tbody > tr:hover { 
+        background-color: #ced8f2;
+        &:nth-child(2n+1) { background-color: #b7c2e2; }
+    }
 }
 
 /* --- table.collapsable ---------------------------------------------------- */

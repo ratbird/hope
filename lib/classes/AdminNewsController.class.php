@@ -183,8 +183,6 @@ class AdminNewsController {
 
     function show_news($id){
         global $auth, $view_mode;
-        $cssSw= new cssClassSwitcher();
-        $cssSw->enableHover();
         $this->get_news_by_range($id);
         if (!is_array($this->news_query) || !count($this->news_query) ) {
             $this->msg .= "info§" . _("Keine Ankündigungen vorhanden!") . "§";
@@ -197,32 +195,31 @@ class AdminNewsController {
         echo "\n<tr><td width=\"100%\" class=\"blank\"><p class=\"info\">";
         echo "\n<form action=\"".URLHelper::getLink("?cmd=kill&view_mode=$view_mode")."\" method=\"POST\">";
         echo CSRFProtection::tokenTag();
-        echo "<table class=\"default\">";
-        echo "\n<tr><td class=\"blank\" colspan=\"4\" align=\"left\" style=\"vertical-align:middle;\"><font size=-1 >" . _("Vorhandene Ankündigungen im gew&auml;hlten Bereich:") . "<br>";
+        echo "<table class=\"default zebra-hover\">";
+        echo "\n<thead><tr><td class=\"blank\" colspan=\"4\" align=\"left\" style=\"vertical-align:middle;\"><font size=-1 >" . _("Vorhandene Ankündigungen im gew&auml;hlten Bereich:") . "<br>";
         echo "</td><td class=\"blank\" colspan=\"4\" align=\"right\" style=\"vertical-align:middle;\"><font size=-1 >" . _("Markierte Ankündigungen l&ouml;schen");
         echo "&nbsp;" . Button::create(_('Löschen'), 'kill', array('style' => 'vertical-align:middle;', 'title' => _('Markierte Ankündigungen löschen'))) . "&nbsp;&nbsp;</td></tr>";
         echo "\n<tr><th width=\"15%\">" . _("&Uuml;berschrift") . "</th><th width=\"20%\">" . _("Inhalt") . "</th><th width=\"20%\">"
             . _("Autor") . "</th><th width=\"10%\">" . _("Einstelldatum") . "</th><th width=\"10%\">" . _("Ablaufdatum") . "</th><th width=\"15%\">"
-            . _("Bearbeiten") . "</th><th width=\"10%\">" . _("L&ouml;schen") . "</th></tr>";
+            . _("Bearbeiten") . "</th><th width=\"10%\">" . _("L&ouml;schen") . "</th></tr></thead><tbody>";
         while (list ($news_id,$details) = each ($this->news_query)) {
-            $cssSw->switchClass();
-            echo "\n<tr ".$cssSw->getHover()."><td class=\"".$cssSw->getClass()."\" width=\"15%\" align=\"center\"><font size=\"-1\"><b>".htmlReady($details["topic"])."</b></font></td>";
+            echo "\n<tr><td width=\"15%\" align=\"center\"><font size=\"-1\"><b>".htmlReady($details["topic"])."</b></font></td>";
             list ($body,$admin_msg)=explode("<admin_msg>",$details["body"]);
-            echo "\n<td class=\"".$cssSw->getClass()."\" width=\"25%\" align=\"center\"><font size=\"-1\">".htmlready(mila($body))."</font></td>";
-            echo "\n<td class=\"".$cssSw->getClass()."\" width=\"15%\" align=\"center\"><font size=\"-1\">".htmlReady($details["author"])."</font></td>";
-            echo "\n<td class=\"".$cssSw->getClass()."\" width=\"10%\" align=\"center\">".strftime("%d.%m.%y", $details["date"])."</td>";
-            echo "\n<td class=\"".$cssSw->getClass()."\" width=\"10%\" align=\"center\">".strftime("%d.%m.%y", ($details["date"]+$details["expire"]))."</td>";
-            echo "\n<td class=\"".$cssSw->getClass()."\" width=\"15%\" align=\"center\">"
+            echo "\n<td width=\"25%\" align=\"center\"><font size=\"-1\">".htmlready(mila($body))."</font></td>";
+            echo "\n<td width=\"15%\" align=\"center\"><font size=\"-1\">".htmlReady($details["author"])."</font></td>";
+            echo "\n<td width=\"10%\" align=\"center\">".strftime("%d.%m.%y", $details["date"])."</td>";
+            echo "\n<td width=\"10%\" align=\"center\">".strftime("%d.%m.%y", ($details["date"]+$details["expire"]))."</td>";
+            echo "\n<td width=\"15%\" align=\"center\">"
                 . LinkButton::create(_('Bearbeiten'), URLHelper::getUrl("", array('cmd' => 'edit', 'edit_news' => $news_id, 'view_mode' => $view_mode, 'title' => _('Diese Ankündigung bearbeiten'))))
                 . "</td>";
-            echo "\n<td class=\"".$cssSw->getClass()."\" width=\"10%\" align=\"center\">";
+            echo "\n<td width=\"10%\" align=\"center\">";
             if ($this->news_perm[$id]["perm"]==3 OR $auth->auth["perm"]=="root" OR $details["user_id"]==$this->user_id)
                 echo "<input type=\"CHECKBOX\" name=\"kill_news[]\" value=\"$news_id\" " . tooltip(_("Diese Ankündigung zum Löschen vormerken"),false) . ">";
             else
                 echo "<font color=\"red\">" . _("Nein") . "</font>";
             echo "</td></tr>";
         }
-        echo "\n<tr><td class=\"blank\" colspan=8>&nbsp; </td></tr>";
+        echo "\n</tbody><tfoot><tr><td class=\"blank\" colspan=8>&nbsp; </td></tr></tfoot>";
         echo "\n</table></form><br><br></p></td></tr>";
         return TRUE;
     }
@@ -299,21 +296,18 @@ class AdminNewsController {
         echo "\n</table></td></tr>";
         echo "\n<tr><td class=\"blank\"><hr width=\"99%\"></td></tr>";
         echo "\n<tr><td class=\"blank\">&nbsp; <b>" . _("In diesen Bereichen wird die Ankündigung angezeigt:") . "</b><br><br></td></tr>";
-        echo "\n<tr><td class=\"blank\"><table class=\"blank\" width=\"99%\" cellspacing=\"0\" cellpadding=\"2\" border=\"0\" align=\"center\">";
-        $cssSw=new cssClassSwitcher;
-        $cssSw->enableHover();
-        $cssSw->switchClass();
+        echo "\n<tr><td class=\"blank\"><table class=\"blank zebra-hover\" width=\"99%\" cellspacing=\"0\" cellpadding=\"2\" border=\"0\" align=\"center\">";
         if ($perm->have_perm("root")) {
-            echo "\n<tr><th width=\"90%\" align=\"left\">" . _("Systembereich") . "</th><th align=\"center\" width=\"10%\">" . _("Anzeigen ?") . "</th></tr>";
-            echo "\n<tr ".$cssSw->getHover()."><td  ".$cssSw->getFullClass()." width=\"90%\">" . _("Systemweite Ankündigungen") . "</td>";
-            echo "\n<td ".$cssSw->getFullClass()." width=\"10%\" align=\"center\"><input type=\"CHECKBOX\" name=\"add_range[]\" value=\"studip\"";
+            echo "\n<tbody><tr><th width=\"90%\" align=\"left\">" . _("Systembereich") . "</th><th align=\"center\" width=\"10%\">" . _("Anzeigen ?") . "</th></tr>";
+            echo "\n<tr><td width=\"90%\">" . _("Systemweite Ankündigungen") . "</td>";
+            echo "\n<td width=\"10%\" align=\"center\"><input type=\"CHECKBOX\" name=\"add_range[]\" value=\"studip\"";
             if ($this->range_detail["studip"]["type"] OR ($this->news_range=="studip" AND $news_id=="new_entry"))
                 echo "checked";
-            echo "></td></tr>";
+            echo "></td></tr></tbody>";
         }
         echo "\n<tr><th width=\"90%\" align=\"left\">" . _("Pers&ouml;nlicher Bereich") . "</th><th align=\"center\" width=\"10%\">" . _("Anzeigen ?") . "</th></tr>";
-        echo "\n<tr ".$cssSw->getHover()."><td ".$cssSw->getFullClass()." width=\"90%\">".htmlReady($this->news_query["author"])."</td>";
-        echo "\n<td  ".$cssSw->getFullClass()." width=\"10%\" align=\"center\">";
+        echo "\n<tr><td width=\"90%\">".htmlReady($this->news_query["author"])."</td>";
+        echo "\n<td width=\"10%\" align=\"center\">";
         if ($this->news_perm[$this->news_query["user_id"]]["perm"] OR $this->news_query["user_id"]==$this->user_id) {
             echo"<input type=\"CHECKBOX\" name=\"add_range[]\" value=\"".$this->news_query["user_id"]."\"";
             if ($this->range_detail[$this->news_query["user_id"]]["type"] OR ($this->news_range==$this->user_id AND $news_id=="new_entry"))
@@ -555,6 +549,7 @@ class AdminNewsController {
 
     function list_range_details($type) {
         global $perm, $_fullname_sql;
+        
         $ranges = array();
 
         switch ($type) {
@@ -601,18 +596,13 @@ class AdminNewsController {
     }
 
     function list_range_groups($ranges) {
-        $cssSw=new cssClassSwitcher();
-        $cssSw->enableHover();
-
         foreach ($ranges as $range => $details) {
             if ($details['group'] != $lastgroup) {
                 echo "<tr><th width=\"90%\" align=\"left\">".$details['group'].'</th><th align="center" width="10%">' . _("Anzeigen ?") . '</th></tr>';
                 $lastgroup = $details['group'];
-                $cssSw->resetClass();
             }
-            $cssSw->switchClass();
-            echo "\n<tr ".$cssSw->getHover().'><td  '.$cssSw->getFullClass(). '  width="90%">' .htmlReady($details['name']).'</td>';
-            echo "\n<td  ".$cssSw->getFullClass(). ' width="10%" align="center">';
+            echo "\n" . '<tr><td width="90%">' .htmlReady($details['name']).'</td>';
+            echo "\n" . '<td width="10%" align="center">';
             if ($this->news_perm[$range]["perm"] || $GLOBALS['perm']->have_perm("root")) {
                 echo '<input type="CHECKBOX" name="add_range[]" value="' . $range. '"';
                 if ($range == $this->news_range && $this->news_query['news_id'] == 'new_entry' || isset($this->range_detail[$range]))

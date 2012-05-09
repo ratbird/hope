@@ -22,8 +22,6 @@ $infobox['content'] = array(
  * * * O U T P U T * * *
  * * * * * * * * * * * */
 
-$cssSw = new cssClassSwitcher();
-
 ?>
 
 <?= $this->render_partial("course/studygroup/_feedback") ?>
@@ -50,24 +48,22 @@ $cssSw = new cssClassSwitcher();
 <form action="<?= $controller->url_for('course/studygroup/savemodules') ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
     <!-- Title -->
-<table class="default">
+<table class="default zebra">
     <tr>
         <th colspan="2"><b><?= _("Aktivierbare Inhaltselemente / Plugins") ?></b></th>
     </tr>
-    <?= $cssSw->switchClass(); ?>
     <tr>
-        <td <?= $cssSw->getFullClass() ?>> <?=_("TeilnehmerInnen") ?> </td>
-        <td <?= $cssSw->getFullClass() ?>> <?=_("immer aktiv")?> </td>
+        <td> <?=_("TeilnehmerInnen") ?> </td>
+        <td> <?=_("immer aktiv")?> </td>
     </tr>
 
     <!-- Modules / Plugins -->
 <? if (is_array($modules)) foreach( $modules as $key => $name ) :
-    if (in_array($key, array('participants', 'schedule'))) continue;
-    $cssSw->switchClass(); ?>
+    if (in_array($key, array('participants', 'schedule'))) continue; ?>
 
     <tr>
-        <td <?= $cssSw->getFullClass() ?>> <?= htmlReady($name) ?> </td>
-        <td <?= $cssSw->getFullClass() ?>>
+        <td> <?= htmlReady($name) ?> </td>
+        <td>
             <select name='modules[<?= $key ?>]'>
                 <? if (!Config::getInstance()->getValue('STUDYGROUPS_ENABLE')):?>
                 <option value='invalid' selected><?= _("-- bitte auswählen --")?></option>
@@ -81,17 +77,16 @@ $cssSw = new cssClassSwitcher();
 <? endforeach; ?>
 </table>
     <br>
-    <? $cssSw->resetClass(); ?>
     <!-- Title -->
-<table class="default">
+<table class="default zebra">
     <tr>
         <th colspan="2"> <b><?= _("Einrichtungszuordnung") ?></b> </th>
     </tr>
     <tr>
-        <td <?= $cssSw->getFullClass() ?>>
+        <td>
             <?= _("Alle Studiengruppen werden folgender Einrichtung zugeordnet:") ?><br>
         </td>
-        <td <?= $cssSw->getFullClass() ?>>
+        <td>
             <select name="institute">
             <? if (!Config::getInstance()->getValue('STUDYGROUPS_ENABLE')):?>
                 <option value='invalid' selected><?= _("-- bitte auswählen --")?></option>
@@ -115,20 +110,19 @@ $cssSw = new cssClassSwitcher();
 
 <br>
 
-<? $cssSw->resetClass(); ?>
 <!-- Title -->
-<table class="default">
+<table class="default zebra">
     <tr>
         <th colspan="2"> <b><?= _("Nutzungsbedingugen") ?></b> </th>
     </tr>
-        <td colspan="2" <?= $cssSw->getFullClass() ?>>
+    <tr>
+        <td colspan="2">
         <?= _("Geben Sie hier Nutzungsbedingungen für die Studiengruppen ein. ".
                 "Diese müssen akzeptiert werden, bevor eine Studiengruppe angelegt werden kann.") ?>
         </td>
     </tr>
-    <? $cssSw->switchClass(); ?>
     <tr>
-        <td colspan="2" <?= $cssSw->getFullClass() ?>>
+        <td colspan="2" class="blank">
         <br>
         <textarea name="terms" style="width: 90%" rows="10" style='align:middle;'><?= htmlReady($terms) ?></textarea>
         <br>

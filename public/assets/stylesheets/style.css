@@ -530,6 +530,36 @@ div.autocomplete { position:absolute; }
   padding:2px;
   text-align:left;
 }
+.avatar-small {
+  vertical-align:middle;
+  width:25px;
+  height:20px;
+}
+.avatar-medium {
+  width:80px;
+  height:100px;
+}
+.avatar-normal {
+  width:250px;
+  height:200px;
+}
+.course-avatar-small {
+  vertical-align:middle;
+  width:20px;
+  height:20px;
+}
+.course-avatar-medium {
+  width:80px;
+  height:80px;
+}
+.course-avatar-normal {
+  width:125px;
+  height:250px;
+}
+#custom_avatar label {
+  display:block;
+  font-weight:bold;
+}
 a.button, button.button {
   background-color:#899ab9;
   background-image:-webkit-gradient(linear,0 0,0 100%,from(#c4d1e9),color-stop(20%,#899ab9),to(#899ab9));
@@ -1119,6 +1149,154 @@ h3.eval {
   font-size:1.3em;
   color:#000000;
   font-weight:bold;
+}
+.dates_items th, .dates_items td { border-bottom:3px solid #ffffff; }
+.dates_opened td { border-bottom:3px solid #f3f5f8; }
+.dates_content td { padding:10px; }
+#schedule {
+  width:100%;
+  height:100%;
+}
+#schedule_headings {
+  margin-left:41px;
+  background-color:#e8eef7;
+}
+table.schedule_headings td { background-color:#e8eef7; }
+div.schedule_day {
+  border-right:3px double #dddddd;
+  position:relative;
+}
+div.schedule_marker {
+  border-bottom:1px dotted #dddddd;
+  border-top:1px solid #dddddd;
+  padding:0;
+}
+div.schedule_hours {
+  border-top:1px solid #dddddd;
+  border-right:1px solid #dddddd;
+  color:black;
+  padding-bottom:1px;
+  padding-right:3px;
+}
+div.schedule_entry {
+  font-size:10px;
+  margin:0;
+  overflow:hidden;
+  padding:0 0 2px;
+  position:absolute;
+}
+div.schedule_entry.clickable { cursor:pointer; }
+div.schedule_entry dl {
+  background:url("../images/calendar/category_neutral.png") repeat-y top left;
+  color:white;
+  height:100%;
+  margin:0;
+}
+div.schedule_entry dl.hover:hover { opacity:0.7; }
+div.schedule_entry dl a { color:white; }
+div.schedule_entry dl a:hover { text-decoration:underline; }
+div.schedule_entry dl dd {
+  margin:0;
+  overflow:hidden;
+  padding:2px;
+  word-wrap:break-word;
+}
+div.snatch {
+  bottom:4px;
+  cursor:ns-resize;
+  padding-bottom:2px;
+  position:absolute;
+  text-align:center;
+  width:100%;
+}
+div.snatch div {
+  border-top:3px double white;
+  cursor:ns-resize;
+  height:0;
+  margin-left:auto;
+  margin-right:auto;
+  width:10px;
+}
+#schedule_new_entry {
+  background-color:#e8eef7;
+  border:2px solid #e0e0f0;
+  height:230px;
+  position:absolute;
+  width:400px;
+  z-index:3;
+}
+#schedule_new_entry dl {
+  border:1px solid #5c2d64;
+  background:#7c5783 url("../images/calendar/category_neutral.png");
+}
+#schedule_new_entry dt { background-color:#5c2d64; }
+div.schedule_edit_entry, #schedule_settings {
+  background-color:#e8eef7;
+  border:2px solid #e0e0f0;
+  height:auto;
+  left:50%;
+  margin-left:-25%;
+  max-height:80em;
+  min-height:15em;
+  min-width:700px;
+  padding-bottom:1em;
+  position:absolute;
+  top:180px;
+  width:50%;
+  z-index:4;
+}
+div.schedule_edit_entry > form {
+  margin-right:10px;
+  padding-left:10px;
+  padding-top:10px;
+}
+div.window_heading, div.window_heading_nodrag {
+  background-color:#899ab9;
+  color:#ffffff;
+  cursor:move;
+  font-weight:bold;
+  padding:2px;
+  text-align:center;
+}
+div.window_heading_nodrag { cursor:default !important; }
+#color_picker {
+  padding-top:3px;
+  white-space:nowrap;
+}
+#schedule_entry_hours {
+  display:inline;
+  padding:2px;
+}
+.schedule_icons {
+  position:absolute;
+  right:0;
+  top:0;
+}
+div.invisible_entry { opacity:0.8; }
+span.invisible_entry {
+  background-color:#660000;
+  font-style:italic;
+}
+div.settings {
+  float:left;
+  margin-left:10px;
+}
+div.settings div {
+  font-weight:bold;
+  margin-bottom:10px;
+}
+div#schedule-settings-dialog-shadow {
+  background:#000000 none repeat scroll 0 0;
+  height:100%;
+  left:0;
+  opacity:0.7;
+  position:absolute;
+  top:0;
+  width:100%;
+  z-index:3;
+  -moz-background-clip:border;
+  -moz-background-inline-policy:continuous;
+  -moz-background-origin:padding;
 }
 #study_area_selection { padding:1em; }
 #study_area_selection h3 { margin-top:1em; }

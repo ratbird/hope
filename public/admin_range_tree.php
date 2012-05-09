@@ -44,10 +44,11 @@ $perm->check($RANGE_TREE_ADMIN_PERM ? $RANGE_TREE_ADMIN_PERM  : 'admin');
 require_once('lib/visual.inc.php');
 require_once('lib/classes/StudipRangeTreeViewAdmin.class.php');
 
+include('lib/seminar_open.php'); //hier werden die sessions initialisiert
+
 PageLayout::setTitle($UNI_NAME_CLEAN . " - " . _("Einrichtungshierarchie bearbeiten"));
 Navigation::activateItem('/admin/config/range_tree');
 
-include('lib/seminar_open.php'); //hier werden die sessions initialisiert
 include('lib/include/html_head.inc.php');
 include('lib/include/header.php');   //hier wird der "Kopf" nachgeladen 
 

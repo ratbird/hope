@@ -38,14 +38,14 @@ if (!$perm->is_fak_admin()){
     die;
 }
 
-PageLayout::setTitle($UNI_NAME_CLEAN . " - " . _("Veranstaltungshierachie bearbeiten"));
-Navigation::activateItem('/admin/config/sem_tree');
-
 require_once ('lib/visual.inc.php');
 require_once ('lib/classes/StudipSemTreeViewAdmin.class.php');
 require_once ('lib/classes/StudipSemSearch.class.php');
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
+
+PageLayout::setTitle($UNI_NAME_CLEAN . " - " . _("Veranstaltungshierachie bearbeiten"));
+Navigation::activateItem('/admin/config/sem_tree');
 
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head

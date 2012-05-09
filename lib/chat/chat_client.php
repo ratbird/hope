@@ -422,7 +422,7 @@ $chat_log = array();
     <title>ChatAusgabe</title>
     <link rel="stylesheet" href="<?=$GLOBALS['ASSETS_URL']?>stylesheets/style.css" type="text/css">
 </head>
-<body style="font-size:10pt; background-color: #f3f5f8;">
+<body style="font-size:10pt; background: #f3f5f8;">
 <?
 if (!$chatServer->isActiveUser($user->id,$chatid)) {
     ?><table width="100%"><tr><?

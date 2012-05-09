@@ -154,8 +154,8 @@ if (!$chatServer->isActiveUser($user->id,$chatid)) {
                 }
                 ?>
                 <a href="javascript:<?=(($chatServer->chatDetail[$chatid]['log'][$user->id]) ? "doLogStop();" : "doLogStart();")?>">
-                <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/<?=(($chatServer->chatDetail[$chatid]['log'][$user->id]) ? Assets::image_path('icons/16/white/stop.png') : Assets::image_path('icons/16/white/start.png') )?>"
-                <?=tooltip(($chatServer->chatDetail[$chatid]['log'][$user->id]) ? _("Die Aufzeichnung für diesen Chat beenden.") : _("Eine Aufzeichnung für diesen Chat starten."))?>>
+                <img src="<?=(($chatServer->chatDetail[$chatid]['log'][$user->id]) ? Assets::image_path('icons/16/white/stop.png') : Assets::image_path('icons/16/white/play.png') )?>"
+                <?=tooltip(($chatServer->chatDetail[$chatid]['log'][$user->id]) ? _("Die Aufzeichnung für diesen Chat beenden.") : _("Eine Aufzeichnung für diesen Chat starten."))?> class="text-top">
                 </a>
                 <?
             }

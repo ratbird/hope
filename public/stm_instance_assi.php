@@ -6,6 +6,7 @@
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 
 include"lib/seminar_open.php"; // initialise Stud.IP-Session
@@ -350,21 +351,21 @@ class InstanceStmControl {
 
         $this->users_found = $_SESSION['stm_inst_data']["users_found"];
 
-        if (isset($_SESSION['stm_inst_data']["cur_sem_id"]))
+        if (isset($_SESSION['stm_inst_data']['cur_sem_id']))
             $this->cur_seminar = Seminar::GetInstance($_SESSION['stm_inst_data']['cur_sem_id']);
 
-        if (isset($_SESSION['stm_inst_data']["is_edit"]))
-            $is_edit = $_SESSION['stm_inst_data']["is_edit"];
+        if (isset($_SESSION['stm_inst_data']['is_edit']))
+            $is_edit = $_SESSION['stm_inst_data']['is_edit'];
         else
             $is_edit = false;
 
-        if (isset($_SESSION['stm_inst_data']["inst_stm_vals"])) {
+        if (isset($_SESSION['stm_inst_data']['inst_stm_vals'])) {
             $this->inst_stm = InstanceStm::GetInstance();
-            $this->inst_stm->setValues($_SESSION['stm_inst_data']["inst_stm_vals"]);
+            $this->inst_stm->setValues($_SESSION['stm_inst_data']['inst_stm_vals']);
         }
 
         if (isset($_SESSION['stm_inst_data']["sel_group"]))
-            $this->sel_group = $this->abs_stm->elements[$_SESSION['stm_inst_data']["sel_group"]];
+            $this->sel_group = $this->abs_stm->elements[$_SESSION['stm_inst_data']['sel_group']];
 
         if ($vis == null)
             $vis = new StmInstanceAssiVisualization($this);

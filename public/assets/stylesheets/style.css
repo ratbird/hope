@@ -532,16 +532,16 @@ div.autocomplete { position:absolute; }
 }
 .avatar-small {
   vertical-align:middle;
-  width:25px;
-  height:20px;
+  width:20px;
+  height:25px;
 }
 .avatar-medium {
-  width:80px;
-  height:100px;
+  width:100px;
+  height:80px;
 }
 .avatar-normal {
-  width:250px;
-  height:200px;
+  width:200px;
+  height:250px;
 }
 .course-avatar-small {
   vertical-align:middle;
@@ -553,8 +553,8 @@ div.autocomplete { position:absolute; }
   height:80px;
 }
 .course-avatar-normal {
-  width:125px;
-  height:250px;
+  width:250px;
+  height:125px;
 }
 #custom_avatar label {
   display:block;

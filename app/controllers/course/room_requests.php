@@ -141,7 +141,8 @@ class Course_RoomRequestsController extends AuthenticatedController
         if (!$request->isNew() && $request->isDirty()) {
             PageLayout::postMessage(MessageBox::info(_("Die Änderungen an der Raumanfrage wurden noch nicht gespeichert!")));
         }
-        $room_categories = array_filter(getResourcesCategories(), create_function('$a', 'return $a["is_room"] == 1;'));
+        $room_categories = array_values(array_filter(getResourcesCategories(), create_function('$a', 'return $a["is_room"] == 1;')));
+        fb($room_categories );
         if (!$request->getCategoryId() && count($room_categories) == 1) {
             $request->setCategoryId($room_categories[0]['category_id']);
         }
@@ -188,7 +189,7 @@ class Course_RoomRequestsController extends AuthenticatedController
                     $this->search_by_properties = $room_request_form_attributes['search_by_properties'];
                     $this->admission_turnout = $sem_create_data['sem_turnout'];
                     $this->request = $request;
-                    $room_categories = array_filter(getResourcesCategories(), create_function('$a', 'return $a["is_room"] == 1;'));
+                    $room_categories = array_values(array_filter(getResourcesCategories(), create_function('$a', 'return $a["is_room"] == 1;')));
                     if (!$request->getCategoryId() && count($room_categories) == 1) {
                         $request->setCategoryId($room_categories[0]['category_id']);
                     }

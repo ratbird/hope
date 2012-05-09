@@ -462,8 +462,8 @@ table.infobox td {
 }
 td.infobox-img img { display:block; }
 td.infobox-avatar {
-  width:125px;
-  height:250px;
+  width:250px;
+  height:125px;
   background-color:red;
   -webkit-border-top-left-radius:15px;
   -moz-border-radius-topleft:15px;

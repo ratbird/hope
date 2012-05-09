@@ -536,8 +536,8 @@ div.autocomplete { position:absolute; }
   height:25px;
 }
 .avatar-medium {
-  width:100px;
-  height:80px;
+  width:80;
+  height:100px;
 }
 .avatar-normal {
   width:200px;

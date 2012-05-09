@@ -71,10 +71,10 @@ if ($cmd == 'new') {
 }
 
 // write a chat-invitation, so predefine the messagesubject
-   $messagesubject = Request::quoted('messagesubject');
-   $message = Request::quoted('message');
-   $quote = Request::option('quote');
-   $signature = Request::quoted('signature');
+   $messagesubject = Request::get('messagesubject');
+   $message = Request::get('message');
+   $quote = Request::get('quote');
+   $signature = Request::get('signature');
 if ($cmd == "write_chatinv" && !isset($messagesubject)) $messagesubject = _("Chateinladung");
 
 //wurde eine Datei hochgeladen?
@@ -221,7 +221,7 @@ if ($_GET['answer_to']) {
     }
     $sms_data["sig"] = $my_messaging_settings["addsignature"];
 }
-$rec_uname=Request::quoted('rec_uname');
+$rec_uname=Request::get('rec_uname');
 if (isset($rec_uname)) {
     if (!get_visibility_by_username($rec_uname)) {
         if ($perm->get_perm() == "dozent") {
@@ -284,7 +284,7 @@ if (Request::get('sd_id') && $perm->have_perm("root")) {
 
     // predefine subject
     if(Request::get('subject')) {
-        $messagesubject = Request::quoted('subject');
+        $messagesubject = Request::get('subject');
     }
 
     $query = sprintf("SELECT DISTINCT auth_user_md5.username FROM user_studiengang LEFT JOIN auth_user_md5 USING (user_id) WHERE abschluss_id = '%s' ", Request::option('sd_id'));
@@ -313,7 +313,7 @@ if (Request::get('prof_id') && Request::get('deg_id') && $perm->have_perm("root"
 
     // predefine subject
     if(Request::get('subject')) {
-        $messagesubject = Request::quoted('subject');
+        $messagesubject = Request::get('subject');
     }
 
     $query = sprintf("SELECT DISTINCT auth_user_md5.username FROM user_studiengang LEFT JOIN auth_user_md5 USING (user_id) WHERE studiengang_id = '%s' and abschluss_id = '%s'", Request::option('prof_id'), Request::option('deg_id'));
@@ -338,7 +338,7 @@ if (Request::option('group_id')) {
     if(Request::int('emailrequest') == 1) $sms_data['tmpemailsnd'] = 1;
 
     // predefine subject
-    if(Request::get('subject')) $messagesubject = Request::quoted('subject');
+    if(Request::get('subject')) $messagesubject = Request::get('subject');
 
     $query = sprintf("SELECT statusgruppe_user.user_id, username FROM statusgruppe_user LEFT JOIN auth_user_md5 USING (user_id) WHERE statusgruppe_id = '%s' ", Request::option('group_id'));
     $db->query($query);
@@ -371,7 +371,7 @@ if (isset($_REQUEST['rec_uname'])  || isset($_REQUEST['filter']))
     $cid = Request::option('cid');
     // predefine subject
     if(Request::get('subject')) {
-        $messagesubject = Request::quoted('subject');
+        $messagesubject = Request::get('subject');
     }
     if ((in_array($_REQUEST['filter'], words('all prelim waiting')) && $course_id) || ($_REQUEST['filter'] == 'send_sms_to_all' && isset($_REQUEST['who'])) && $perm->have_studip_perm('tutor', $course_id) || ($_REQUEST['filter'] == 'inst_status' && isset($_REQUEST['who']) && $perm->have_perm('admin') && isset($cid)))
     {
@@ -407,13 +407,13 @@ if (isset($_REQUEST['rec_uname'])  || isset($_REQUEST['filter']))
     }
     //Nachricht wurde nur an bestimmte User versendet
     if (is_array($_REQUEST['rec_uname']))
-        foreach (Request::quotedArray('rec_uname') as $var)
+        foreach (Request::getArray('rec_uname') as $var)
         {
             if(get_userid($var) != "")
                 $sms_data['p_rec'][] = $var;
         }
-    elseif (isset($_REQUEST['rec_uname'])&& get_userid(Request::quoted('rec_uname')) != "")
-        $sms_data['p_rec'] = array(Request::quoted('rec_uname'));
+    elseif (isset($_REQUEST['rec_uname']) && get_userid(Request::get('rec_uname')) != "")
+        $sms_data['p_rec'] = array(Request::get('rec_uname'));
     // append signature
     $sms_data["sig"] = $my_messaging_settings["addsignature"];
 }
@@ -426,7 +426,7 @@ if (Request::option('inst_id') && $perm->have_studip_perm('admin', Request::opti
 
     // predefine subject
 
-    if(Request::quoted('subject')) $messagesubject = Request::quoted('subject');
+    if(Request::get('subject')) $messagesubject = Request::get('subject');
     $db = new DB_Seminar;
     $db->query ("SELECT username FROM user_inst LEFT JOIN auth_user_md5 USING(user_id) WHERE inst_perms!='user' AND Institut_id = '".Request::option('inst_id')."'");
     while ($db->next_record()) {
@@ -450,8 +450,8 @@ if (!isset($sms_data["sig"])) {
     $sms_data["sig"] = "0";
 }
 // add a reciever from adress-members
-if (Request::submitted('add_receiver_button_x') && Request::quotedArray('add_receiver')) {
-    $sms_data["p_rec"] = array_add_value(Request::quotedArray('add_receiver'), $sms_data["p_rec"]);
+if (Request::submitted('add_receiver_button_x') && Request::getArray('add_receiver')) {
+    $sms_data["p_rec"] = array_add_value(Request::getArray('add_receiver'), $sms_data["p_rec"]);
 
 }
 
@@ -476,8 +476,8 @@ if (Request::submitted('add_allreceiver_button_x')) {
 
 
 // add receiver from freesearch
-if (Request::submitted('add_freesearch_x') && Request::quoted("adressee")) {
-    $sms_data["p_rec"] = array_add_value(array(Request::quoted("adressee")), $sms_data["p_rec"]);
+if (Request::submitted('add_freesearch_x') && Request::get("adressee")) {
+    $sms_data["p_rec"] = array_add_value(array(Request::get("adressee")), $sms_data["p_rec"]);
 }
 
 

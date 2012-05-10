@@ -2570,6 +2570,7 @@ function get_flash_player ($document_id, $filename, $type) {
     $movie_url = GetDownloadLink($document_id, $filename, $type, 'force');
     $flash_object  = "\n<object type=\"application/x-shockwave-flash\" id=\"FlashPlayer\" data=\"".Assets::url()."flash/player_flv.swf\" width=\"$width\" height=\"$height\">\n";
     $flash_object .= "<param name=\"movie\" value=\"".Assets::url()."flash/player_flv.swf\">\n";
+    $flash_object .= '<param name="allFullScreen" value="true">' . "\n";
     $flash_object .= "<param name=\"FlashVars\" value=\"flv=" . urlencode($movie_url) . $flash_config . "\">\n";
     $flash_object .= "<embed src=\"".Assets::url()."flash/player_flv.swf\" movie=\"{$movie_url}\" type=\"application/x-shockwave-flash\" FlashVars=\"flv=".urlencode($movie_url).$flash_config."\">\n";
     $flash_object .= "</object>\n";

@@ -2,7 +2,7 @@
 # Lifter001: DONE
 # Lifter002: TODO
 # Lifter007: TODO
-# Lifter003: TODO
+# Lifter003: TEST
 # Lifter010: TODO
 /*
 seminar_main.php - Die Eingangs- und Uebersichtsseite fuer ein Seminar
@@ -178,8 +178,13 @@ $quarter_year = 60 * 60 * 24 * 90;
                 foreach ((array)$rule['attributes'] as $val) {
                     if ($val == 1) {
                         // Es gibt also Zusatzangaben. Nun noch überprüfen ob der Nutzer diese Angaben schon gemacht hat...
-                        $dbtg = new DB_Seminar("SELECT * FROM datafields as d LEFT JOIN datafields_entries as de USING (datafield_id) WHERE d.object_type = 'usersemdata' AND de.sec_range_id = '".$course_id."' AND de.range_id = '".$user->id."'");
-                        if ($dbtg->num_rows() == 0) {
+                        $query = "SELECT 1
+                                  FROM datafields
+                                  LEFT JOIN datafields_entries USING (datafield_id)
+                                  WHERE object_type = 'usersemdata' AND sec_range_id = ? AND range_id = ?";
+                        $statement = DBManager::get()->prepare($query);
+                        $statement->execute(array($course_id, $user->id));
+                        if (!$statement->fetchColumn()) {
                             $show = true;
                         }
                         break;

@@ -92,7 +92,7 @@ class EvaluationExportManagerCSV extends EvaluationExportManager {
    function EvaluationExportManagerCSV ($evalID) {
     /* Set default values ------------------------------------------------- */
     register_shutdown_function(array(&$this, "_EvaluationExportManagerCSV"));
-
+    ini_set('memory_limit', '256M');
     parent::EvaluationExportManager ($evalID);
     $this->setAuthorEmail ("mail@AlexanderWillner.de");
     $this->setAuthorName ("Alexander Willner");
@@ -165,6 +165,7 @@ class EvaluationExportManagerCSV extends EvaluationExportManager {
 
             if (!empty ($residual)) {
                $this->addCol ($residual);
+               $this->evalquestions_residual[$evalquestion->getObjectID()] = true;
             }
          /* ----------------------------------------------------- end: likert */
 
@@ -187,6 +188,7 @@ class EvaluationExportManagerCSV extends EvaluationExportManager {
             $this->addCol ($header);
             if (!empty ($residual)) {
                $this->addCol ($residual);
+               $this->evalquestions_residual[$evalquestion->getObjectID()] = true;
             }
          /* -------------------------------------------------------- end: pol */
 
@@ -224,7 +226,17 @@ class EvaluationExportManagerCSV extends EvaluationExportManager {
     */
    function exportContent () {
       $counter = 0;
-      $db      = new EvaluationAnswerDB ();
+      $answers = array();
+      $db = DBManager::get();
+      $stmt = $db->prepare("SELECT user_id,text,value,position,residual
+                    FROM evalanswer
+                    LEFT JOIN evalanswer_user
+                    USING ( evalanswer_id )
+                    WHERE parent_id = ?");
+      foreach ($this->evalquestions as $evalquestion) {
+          $stmt->execute(array($evalquestion->getObjectID()));
+          $answers[$evalquestion->getObjectID()] = $stmt->fetchGrouped();
+      }
 
       /* One row for each user --------------------------------------------- */
       foreach ($this->users as $userID) {
@@ -257,20 +269,15 @@ class EvaluationExportManagerCSV extends EvaluationExportManager {
             /* Questiontype: pol or likert scale --------------------------- */
             if ($type == EVALQUESTION_TYPE_LIKERT ||
                 $type == EVALQUESTION_TYPE_POL) {
-               $hasResidual = NO;
+               $hasResidual = $this->evalquestions_residual[$evalquestion->getObjectID()];
                $entry       = "";
                $residual    = 0;
-               foreach($db->getAllAnswers($evalquestion->getObjectID(), $userID) as $answer) {
-                  if ($answer['residual'])
-                     $hasResidual = YES;
-
-                  if ($answer['has_voted']) {
-                     if ($answer['residual']) {
-                        $residual = 1;
-                     } else {
-                        $entry = $answer['position'];
-                     }
-                  }
+               if ($answer = $answers[$evalquestion->getObjectID()][$userID]) {
+                   if ($answer['residual']) {
+                       $residual = 1;
+                   } else {
+                       $entry = $answer['position'];
+                   }
                }
                $this->addCol ($entry);
 
@@ -284,20 +291,11 @@ class EvaluationExportManagerCSV extends EvaluationExportManager {
             /* Questiontype: multiple chioice ------------------------------ */
             elseif ($type == EVALQUESTION_TYPE_MC) {
                 if ($evalquestion->isMultiplechoice ()) {
-                    foreach($db->getAllAnswers($evalquestion->getObjectID(), $userID) as $answer) {
-                        if ($answer['has_voted']) {
-                            $entry = 1;
-                        } else {
-                            $entry = 0;
-                        }
-                        $this->addCol ($entry);
-                    }
+                    $this->addCol ((int)isset($answers[$evalquestion->getObjectID()][$userID]));
                 } else {
                     $entry = "";
-                    foreach($db->getAllAnswers($evalquestion->getObjectID(), $userID, true) as $answer) {
-                        if ($answer['has_voted']) {
-                            $entry = preg_replace ("(\r\n|\n|\r)", " ", $answer['text']);
-                        }
+                    if ($answer = $answers[$evalquestion->getObjectID()][$userID]) {
+                        $entry = preg_replace ("(\r\n|\n|\r)", " ", $answer['text']);
                     }
                     $this->addCol ($entry);
                 }

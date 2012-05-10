@@ -668,7 +668,7 @@ function preg_call_link ($params, $mod, $img, $extern = FALSE, $wiki = FALSE) {
                 $flash_config = $width > 200 ? $GLOBALS['FLASHPLAYER_DEFAULT_CONFIG_MAX'] : $GLOBALS['FLASHPLAYER_DEFAULT_CONFIG_MIN'];
                 $flash_object  = "<object type=\"application/x-shockwave-flash\" id=\"FlashPlayer\" data=\"".Assets::url()."flash/player_flv.swf\" width=\"$width\" height=\"$height\">"; // height=\"323\" width=\"404\"
                 $flash_object .= "<param name=\"movie\" value=\"".Assets::url()."flash/player_flv.swf\">";
-                $flash_object .= '<param name="allFullScreen" value="true">' . "\n";
+                $flash_object .= '<param name="allowFullScreen" value="true">' . "\n";
                 $flash_object .= "<param name=\"FlashVars\" value=\"flv=".urlencode(decodeHTML($media_url))."&amp;startimage={$params[7]}{$flash_config}\">";
                 $flash_object .= "<embed src=\"".Assets::url()."flash/player_flv.swf\" movie=\"$media_url\" type=\"application/x-shockwave-flash\" FlashVars=\"flv=".urlencode(decodeHTML($media_url))."&amp;startimage={$params[7]}{$flash_config}\">";
                 $flash_object .= "</object>";

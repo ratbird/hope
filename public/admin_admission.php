@@ -384,9 +384,9 @@ if ($seminar_id
 
 
   if (!$admin_admission_data["admission_type"]) {
-    if (Request::option('read_level'))
+    if (strlen(Request::option('read_level'))) // we need strlen to check for $read_level = 0
         $admin_admission_data["read_level"]=Request::option('read_level');
-    if (Request::option('write_level'))
+    if (strlen(Request::option('write_level'))) // we need strlen to check for $write_level = 0
         $admin_admission_data["write_level"]=Request::option('write_level');
     if($admin_admission_data["write_level"] < 2 && $admin_admission_data["read_level"] < 2) $admin_admission_data["passwort"] = "";
 

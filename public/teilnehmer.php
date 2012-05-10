@@ -182,7 +182,7 @@ if (!isset($open_areas)) {
 }
 
 if ($cmd == "allinfos" && $rechte) {
-        insert_or_remove($open_areas, $area);
+        insert_or_remove($open_areas, Request::option('area'));
 }
 
 URLHelper::addLinkParam('open_areas', $open_areas);

@@ -12192,12 +12192,12 @@ msgstr "Your message has been sent to %s!"
 
 #: ../public/sms_send.php:167
 #, php-format
-msgid "Ihre Nachricht wurde an %s Empf&auml;nger verschickt!"
+msgid "Ihre Nachricht wurde an %s Empfänger verschickt!"
 msgstr "Your message has been sent to %s recipients!"
 
 #: ../public/sms_send.php:178
 msgid ""
-"Ihre Nachricht konnte nicht gesendet werden. Die Nachricht enth&auml;lt "
+"Ihre Nachricht konnte nicht gesendet werden. Die Nachricht enthält "
 "keinen Text."
 msgstr "Your message cannot be sent because it does not contain any text."
 

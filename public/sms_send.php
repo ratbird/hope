@@ -1,7 +1,7 @@
 <?
 # Lifter002: TODO
 # Lifter007: TODO
-# Lifter003: TODO
+# Lifter003: TEST
 # Lifter010: TODO
 /**
  * sms_send.php - Verwaltung von systeminternen Kurznachrichten
@@ -52,8 +52,6 @@ if (get_config('CHAT_ENABLE')) {
 
 //$sess->register("sms_data");
 $msging=new messaging;
-
-$db=new DB_Seminar;
 
 check_messaging_default();
 $cmd = Request::option('cmd');
@@ -169,20 +167,26 @@ if (Request::submitted('cmd_insert')) {
 
         $msg = "msg§";
         if ($count == "1") $msg .= sprintf(_("Ihre Nachricht an %s wurde verschickt!"), get_fullname_from_uname($sms_data["p_rec"][0],'full',true))."<br>";
-        if ($count >= "2") $msg .= sprintf(_("Ihre Nachricht wurde an %s Empf&auml;nger verschickt!"), $count)."<br>";
+        if ($count >= "2") $msg .= sprintf(_("Ihre Nachricht wurde an %s Empfänger verschickt!"), $count)."<br>";
         unset($signature);
         unset($message);
         $sms_data["sig"] = $my_messaging_settings["addsignature"];
-        if($_REQUEST['answer_to']) {
-            $query = "UPDATE message_user SET answered = '1' WHERE message_id = '".$_REQUEST['answer_to']."' AND user_id='".$user->id."' AND snd_rec = 'rec'";
-            $db->query ($query);
+
+        if (Request::option('answer_to')) {
+            $query = "UPDATE message_user
+                      SET answered = 1
+                      WHERE message_id = ? AND user_id = ? AND snd_rec = 'rec'";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                Request::option('answer_to'), $user->id,
+            ));
         }
     }
 
     if ($count < 0) {
-        $msg = "error§" . _("Ihre Nachricht konnte nicht gesendet werden. Die Nachricht enth&auml;lt keinen Text.");
+        $msg = 'error§' . _('Ihre Nachricht konnte nicht gesendet werden. Die Nachricht enthält keinen Text.');
     } else if ((!$count) && (!$group_count)) {
-        $msg = "error§" . _("Ihre Nachricht konnte nicht gesendet werden.");
+        $msg = 'error§' . _('Ihre Nachricht konnte nicht gesendet werden.');
     }
 
     // redirect to source_page if set
@@ -212,24 +216,40 @@ if (Request::submitted('cmd_insert')) {
 }
 
 // do we answer someone and did we came from somewhere != sms-page
-if ($_GET['answer_to']) {
-    $query = "SELECT auth_user_md5.username as rec_uname, message.autor_id FROM message LEFT JOIN auth_user_md5 ON(message.autor_id = auth_user_md5.user_id) WHERE message.message_id = '".$_REQUEST['answer_to']."'";
-    $db->query ($query);
-    while ($db->next_record()) {
-        if($quote) $quote_username = $db->f("rec_uname");
-             $sms_data["p_rec"] = array($db->f("rec_uname"));
+if (Request::option('answer_to')) {
+    $query = "SELECT username
+              FROM message
+              JOIN auth_user_md5 ON (message.autor_id = auth_user_md5.user_id)
+              WHERE message_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array(Request::option('answer_to')));
+    $u_name = $statement->fetchColumn();
+
+    if ($u_name) {
+        if($quote) {
+            $quote_username = $u_name;
+        }
+        $sms_data['p_rec'] = array($u_name);
+        
     }
-    $sms_data["sig"] = $my_messaging_settings["addsignature"];
+    $sms_data['sig'] = $my_messaging_settings['addsignature'];
 }
+
 $rec_uname=Request::get('rec_uname');
 if (isset($rec_uname)) {
     if (!get_visibility_by_username($rec_uname)) {
         if ($perm->get_perm() == "dozent") {
-            $dbv = new DB_Seminar("SELECT user_id FROM auth_user_md5 WHERE username = '$rec_uname'");
-            $dbv->next_record();
-            $the_user = $dbv->f("user_id");
-            $dbv->query("SELECT * FROM seminar_user a, seminar_user b WHERE a.Seminar_id = b.Seminar_id AND a.user_id = '$user->id' AND a.status = 'dozent' AND b.user_id = '$the_user'");
-            if ($dbv->num_rows() == 0) {
+            $the_user = User::findByUsername($rec_uname)->user_id;
+
+            $query = "SELECT 1
+                      FROM seminar_user AS a, seminar_user AS b
+                      WHERE a.Seminar_id = b.Seminar_id
+                        AND a.user_id = ? AND a.status = 'dozent'
+                        AND b.user_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($user->id, $the_user));
+
+            if (!$statement->fetchColumn()) {
                 $rec_uname = "";
                 $sms_data["p_rec"] = "";
             }
@@ -241,44 +261,53 @@ if (isset($rec_uname)) {
 }
 
 if (Request::option('msgid')) {
-    $dbv = new DB_Seminar;
-    $dbv->query("SELECT auth_user_md5.username FROM auth_user_md5, message_user WHERE message_user.message_id = '$msgid' AND message_user.user_id = auth_user_md5.user_id AND snd_rec = 'snd'");
-    $dbv->next_record();
-    $rec_uname = $dbv->f("username");
-    $sms_data["p_rec"] = "";
+    $query = "SELECT username
+              FROM message_user
+              JOIN auth_user_md5 USING (user_id)
+              WHERE message_id = ? AND snd_rec = 'snd'";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array(Request::option('msgid')));
+    $rec_uname = $statement->fetchColumn();
+
+    $sms_data['p_rec'] = '';
 }
 
 // send message at group of a study profession
 // created by nimuelle, step00194
-if (Request::option('sp_id') && $perm->have_perm("root")) {
+if (Request::option('sp_id') && $perm->have_perm('root')) {
 
     // be sure to send it as email
-    if(Request::get('emailrequest') == 1) {
+    if(Request::int('emailrequest') == 1) {
         $sms_data['tmpemailsnd'] = 1;
     }
 
     // predefine subject
-    $query = sprintf("SELECT DISTINCT auth_user_md5.username FROM user_studiengang LEFT JOIN auth_user_md5 USING (user_id) WHERE studiengang_id = '%s' ", Request::option('sp_id'));
-    $add_group_members = $db->query($query)->fetchAll(PDO::FETCH_COLUMN);
+    $query = "SELECT DISTINCT username
+              FROM user_studiengang
+              JOIN auth_user_md5 USING (user_id)
+              WHERE studiengang_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array(Request::option('sp_id')));
+    $add_group_members = $statement->fetchAll(PDO::FETCH_COLUMN);
 
-    $sms_data["p_rec"] = "";
-    if (is_array($add_group_members)) {
-        $sms_data["p_rec"] = array_add_value($add_group_members, $sms_data["p_rec"]);
+    $sms_data['p_rec'] = '';
+    if (!empty($add_group_members)) {
+        $sms_data['p_rec'] = array_add_value($add_group_members, $sms_data['p_rec']);
     } else {
-        $msg = "error§"._("Das gewählte Studienfach enthält keine Mitglieder.");
-        unset($sms_data["p_rec"]);
+        $msg = 'error§' . _('Das gewählte Studienfach enthält keine Mitglieder.');
+        unset($sms_data['p_rec']);
     }
 
     // append signature
-    $sms_data["sig"] = $my_messaging_settings["addsignature"];
+    $sms_data['sig'] = $my_messaging_settings['addsignature'];
 }
 
 // if send message at group of a study degree
 // created by nimuelle, step00194
-if (Request::get('sd_id') && $perm->have_perm("root")) {
+if (Request::option('sd_id') && $perm->have_perm('root')) {
 
     // be sure to send it as email
-    if(Request::get('emailrequest') == 1) {
+    if(Request::int('emailrequest') == 1) {
         $sms_data['tmpemailsnd'] = 1;
     }
 
@@ -287,44 +316,56 @@ if (Request::get('sd_id') && $perm->have_perm("root")) {
         $messagesubject = Request::get('subject');
     }
 
-    $query = sprintf("SELECT DISTINCT auth_user_md5.username FROM user_studiengang LEFT JOIN auth_user_md5 USING (user_id) WHERE abschluss_id = '%s' ", Request::option('sd_id'));
-    $add_group_members = $db->query($query)->fetchAll(PDO::FETCH_COLUMN);
+    $query = "SELECT DISTINCT username
+              FROM user_studiengang
+              JOIN auth_user_md5 USING (user_id)
+              WHERE abschluss_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array(Request::option('sd_id')));
+    $add_group_members = $statement->fetchAll(PDO::FETCH_COLUMN);
 
-    $sms_data["p_rec"] = "";
-    if (is_array($add_group_members)) {
-        $sms_data["p_rec"] = array_add_value($add_group_members, $sms_data["p_rec"]);
+    $sms_data['p_rec'] = '';
+    if (!empty($add_group_members)) {
+        $sms_data['p_rec'] = array_add_value($add_group_members, $sms_data['p_rec']);
     } else {
-        $msg = "error§"._("Der gewählte Studienabschluss enthält keine Mitglieder.");
-        unset($sms_data["p_rec"]);
+        $msg = 'error§' . _('Der gewählte Studienabschluss enthält keine Mitglieder.');
+        unset($sms_data['p_rec']);
     }
 
     // append signature
-    $sms_data["sig"] = $my_messaging_settings["addsignature"];
+    $sms_data['sig'] = $my_messaging_settings['addsignature'];
 }
 
 // if send message at group studys with profession and degree
 // created by nimuelle, step00194
-if (Request::get('prof_id') && Request::get('deg_id') && $perm->have_perm("root")) {
+if (Request::option('prof_id') && Request::option('deg_id') && $perm->have_perm('root')) {
 
     // be sure to send it as email
-    if(Request::get('emailrequest') == 1) {
+    if (Request::int('emailrequest') == 1) {
         $sms_data['tmpemailsnd'] = 1;
     }
 
     // predefine subject
-    if(Request::get('subject')) {
+    if (Request::get('subject')) {
         $messagesubject = Request::get('subject');
     }
 
-    $query = sprintf("SELECT DISTINCT auth_user_md5.username FROM user_studiengang LEFT JOIN auth_user_md5 USING (user_id) WHERE studiengang_id = '%s' and abschluss_id = '%s'", Request::option('prof_id'), Request::option('deg_id'));
-    $add_group_members = $db->query($query)->fetchAll(PDO::FETCH_COLUMN);
+    $query = "SELECT DISTINCT auth_user_md5.username 
+              FROM user_studiengang 
+              JOIN auth_user_md5 USING (user_id)
+              WHERE studiengang_id = ? AND abschluss_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array(
+        Request::option('prof_id'), Request::option('deg_id'),
+    ));
+    $add_group_members = $statement->fetchAll(PDO::FETCH_COLUMN);
 
-    $sms_data["p_rec"] = "";
-    if (is_array($add_group_members)) {
-        $sms_data["p_rec"] = array_add_value($add_group_members, $sms_data["p_rec"]);
+    $sms_data['p_rec'] = '';
+    if (!empty($add_group_members)) {
+        $sms_data['p_rec'] = array_add_value($add_group_members, $sms_data['p_rec']);
     } else {
-        $msg = "error§"._("Der gewählte Studiengang enthält keine Mitglieder.");
-        unset($sms_data["p_rec"]);
+        $msg = 'error§' . _('Der gewählte Studiengang enthält keine Mitglieder.');
+        unset($sms_data['p_rec']);
     }
 
     // append signature
@@ -335,23 +376,29 @@ if (Request::get('prof_id') && Request::get('deg_id') && $perm->have_perm("root"
 if (Request::option('group_id')) {
 
     // be sure to send it as email
-    if(Request::int('emailrequest') == 1) $sms_data['tmpemailsnd'] = 1;
-
-    // predefine subject
-    if(Request::get('subject')) $messagesubject = Request::get('subject');
-
-    $query = sprintf("SELECT statusgruppe_user.user_id, username FROM statusgruppe_user LEFT JOIN auth_user_md5 USING (user_id) WHERE statusgruppe_id = '%s' ", Request::option('group_id'));
-    $db->query($query);
-    while ($db->next_record()) {
-        $add_group_members[] = $db->f("username");
+    if (Request::int('emailrequest') == 1) {
+        $sms_data['tmpemailsnd'] = 1;
     }
 
-    $sms_data["p_rec"] = "";
-    if (is_array($add_group_members)) {
-        $sms_data["p_rec"] = array_add_value($add_group_members, $sms_data["p_rec"]);
+    // predefine subject
+    if (Request::get('subject')) {
+        $messagesubject = Request::get('subject');
+    }
+
+    $query = "SELECT username
+              FROM statusgruppe_user
+              JOIN auth_user_md5 USING (user_id)
+              WHERE statusgruppe_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array(Request::option('group_id')));
+    $add_group_members = $statement->fetchAll(PDO::FETCH_COLUMN);
+
+    $sms_data['p_rec'] = '';
+    if (!empty($add_group_members)) {
+        $sms_data['p_rec'] = array_add_value($add_group_members, $sms_data["p_rec"]);
     } else {
-        $msg = "error§"._("Die gewählte Adressbuchgruppe enthält keine Mitglieder.");
-        unset($sms_data["p_rec"]);
+        $msg = 'error§' . _('Die gewählte Adressbuchgruppe enthält keine Mitglieder.');
+        unset($sms_data['p_rec']);
     }
 
     // append signature
@@ -373,42 +420,69 @@ if (isset($_REQUEST['rec_uname'])  || isset($_REQUEST['filter']))
     if(Request::get('subject')) {
         $messagesubject = Request::get('subject');
     }
+    
+    // [tlx] omg, wtf is this?
     if ((in_array($_REQUEST['filter'], words('all prelim waiting')) && $course_id) || ($_REQUEST['filter'] == 'send_sms_to_all' && isset($_REQUEST['who'])) && $perm->have_studip_perm('tutor', $course_id) || ($_REQUEST['filter'] == 'inst_status' && isset($_REQUEST['who']) && $perm->have_perm('admin') && isset($cid)))
     {
+        // Stores parameters for query
+        $parameters = array($course_id);
+        
         //Datenbank abfragen für die verschiedenen Filter
-        switch(Request::option('filter'))
-        {
+        switch (Request::option('filter')) {
             case 'send_sms_to_all':
-                $who = Request::option('who');
-                $db->query("SELECT b.username FROM seminar_user a, auth_user_md5 b WHERE a.Seminar_id = '".$course_id."' AND a.user_id = b.user_id AND a.status = '$who' ORDER BY Nachname, Vorname");
+                $query = "SELECT username
+                          FROM seminar_user
+                          JOIN auth_user_md5 USING (user_id)
+                          WHERE Seminar_id = ? AND status = ?
+                          ORDER BY Nachname, Vorname";
+                $parameters[] = Request::option('who');
                 break;
             case 'all':
-                $db->query("SELECT username FROM seminar_user LEFT JOIN auth_user_md5 USING(user_id) WHERE Seminar_id = '".$course_id."' ORDER BY Nachname, Vorname");
+                $query = "SELECT username
+                          FROM seminar_user
+                          JOIN auth_user_md5 USING (user_id)
+                          WHERE Seminar_id = ?
+                          ORDER BY Nachname, Vorname";
                 break;
             case 'prelim':
-                $db->query("SELECT username FROM admission_seminar_user LEFT JOIN auth_user_md5 USING(user_id) WHERE seminar_id = '".$course_id."' AND status='accepted' ORDER BY Nachname, Vorname");
+                $query = "SELECT username
+                          FROM admission_seminar_user
+                          JOIN auth_user_md5 USING (user_id)
+                          WHERE seminar_id = ? AND status = 'accepted'
+                          ORDER BY Nachname, Vorname";
                 break;
             case 'waiting':
-                $db->query("SELECT username FROM admission_seminar_user LEFT JOIN auth_user_md5 USING(user_id) WHERE seminar_id = '".$course_id."' AND (status='awaiting' OR status='claiming') ORDER BY Nachname, Vorname");
+                $query = "SELECT username
+                          FROM admission_seminar_user
+                          JOIN auth_user_md5 USING (user_id)
+                          WHERE seminar_id = ? AND status IN ('awaiting', 'claiming')
+                          ORDER BY Nachname, Vorname";
                 break;
             case 'inst_status':
-                $who = Request::option('who');
-                $db->query("SELECT b.username FROM user_inst a, auth_user_md5 b WHERE a.Institut_id = '".$cid."' AND a.user_id = b.user_id AND a.inst_perms = '$who' ORDER BY Nachname, Vorname");
+                $query = "SELECT username
+                          FROM user_inst
+                          JOIN auth_user_md5 USING (user_id)
+                          WHERE Institut_id = ? AND inst_perms = ?
+                          ORDER BY Nachname, Vorname";
+                $parameters[0] = $cid; // Replace parameter
+                $parameters[] = Request::option('who');
                 break;
         }
         
-        //Ergebnis der Query als Empfänger setzen
-        while ($db->next_record())
-        {
-            $sms_data["p_rec"][] = $db->f("username");
-        }
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute($parameters);
+        $usernames = $statement->fetchAll(PDO::FETCH_COLUMN);
 
-        if($_REQUEST['emailrequest'] == 1) $sms_data['tmpemailsnd'] = 1;
+        // Ergebnis der Query als Empfänger setzen
+        $sms_data['p_rec'] = array_add_value($usernames, $sms_data['p_rec']);
+
+        if (Request::int('emailrequest') == 1) {
+            $sms_data['tmpemailsnd'] = 1;
+        }
     }
     //Nachricht wurde nur an bestimmte User versendet
     if (is_array($_REQUEST['rec_uname']))
-        foreach (Request::getArray('rec_uname') as $var)
-        {
+        foreach (Request::getArray('rec_uname') as $var) {
             if(get_userid($var) != "")
                 $sms_data['p_rec'][] = $var;
         }
@@ -422,22 +496,28 @@ if (isset($_REQUEST['rec_uname'])  || isset($_REQUEST['filter']))
 if (Request::option('inst_id') && $perm->have_studip_perm('admin', Request::option('inst_id'))) {
 
     // be sure to send it as email
-    if(Request::int('emailrequest') == 1) $sms_data['tmpemailsnd'] = 1;
+    if (Request::int('emailrequest') == 1) {
+        $sms_data['tmpemailsnd'] = 1;
+    }
 
     // predefine subject
 
-    if(Request::get('subject')) $messagesubject = Request::get('subject');
-    $db = new DB_Seminar;
-    $db->query ("SELECT username FROM user_inst LEFT JOIN auth_user_md5 USING(user_id) WHERE inst_perms!='user' AND Institut_id = '".Request::option('inst_id')."'");
-    while ($db->next_record()) {
-        $add_course_members[] = $db->f("username");
+    if (Request::get('subject')) {
+        $messagesubject = Request::get('subject');
     }
 
-    $sms_data["p_rec"] = "";
-    $sms_data["p_rec"] = array_add_value($add_course_members, $sms_data["p_rec"]);
+    $query = "SELECT username
+              FROM user_inst
+              JOIN auth_user_md5 USING (user_id)
+              WHERE inst_perms != 'user' AND Institut_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array(Request::option('inst_id')));
+    $add_course_members = $statement->fetchAll(PDO::FETCH_COLUMN);
+
+    $sms_data['p_rec'] = array_add_value($add_course_members, $sms_data['p_rec']);
 
     // append signature
-    $sms_data["sig"] = $my_messaging_settings["addsignature"];
+    $sms_data['sig'] = $my_messaging_settings['addsignature'];
 
 }
 
@@ -457,21 +537,25 @@ if (Request::submitted('add_receiver_button_x') && Request::getArray('add_receiv
 
 
 // add all reciever from adress-members
-if (Request::submitted('add_allreceiver_button_x')) {
+if (Request::submitted('add_allreceiver_button')) {
+    $query = "SELECT username
+              FROM contact
+              JOIN auth_user_md5 USING (user_id)
+              WHERE owner_id = ?
+              ORDER BY Nachname";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($user->id));
 
-    $query_for_adresses = "SELECT contact.user_id, username, ".$_fullname_sql['full_rev']." AS fullname     FROM contact LEFT JOIN auth_user_md5 USING(user_id) LEFT JOIN user_info USING (user_id) WHERE owner_id = '".$user->id."' ORDER BY Nachname ASC";
-    $db->query($query_for_adresses);
-    while ($db->next_record()) {
-        if (empty($sms_data["p_rec"])) {
-            $add_rec[] = $db->f("username");
-        } else {
-            if (!in_array($db->f("username"), $sms_data["p_rec"])) { $add_rec[] = $db->f("username"); }
+    while ($username = $statement->fetchColumn()) {
+        if (empty($sms_data['p_rec'])) {
+            $add_rec[] = $username;
+        } else if (!in_array($username, $sms_data['p_rec'])) { 
+            $add_rec[] = $username;
         }
     }
 
-    $sms_data["p_rec"] = array_add_value($add_rec, $sms_data["p_rec"]);
+    $sms_data['p_rec'] = array_add_value($add_rec, $sms_data['p_rec']);
     unset($add_rec);
-
 }
 
 
@@ -548,27 +632,32 @@ $txt['008'] = _("Lesebestätigung");
 
     // we like to quote something
     if ($quote) {
-        $db->query ("SELECT subject, message FROM message WHERE message_id = '".Request::option('quote')."'");
-        $db->next_record();
-        $tmp_subject = addslashes($db->f("subject"));
+        $query = "SELECT subject, message FROM message WHERE message_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(Request::option('quote')));
+        $temp = $statement->fetch(PDO::FETCH_ASSOC);
+
+        $tmp_subject = addslashes($temp['subject']);
         if(substr($tmp_subject, 0, 3) != "RE:") {
             $messagesubject = "RE: ".$tmp_subject;
         } else {
             $messagesubject = $tmp_subject;
         }
-        if (strpos($db->f("message"),$msging->sig_string)) {
-            $tmp_sms_content = substr($db->f("message"), 0, strpos($db->f("message"),$msging->sig_string));
+        if (strpos($temp['message'], $msging->sig_string)) {
+            $tmp_sms_content = substr($temp['message'], 0, strpos($temp['message'], $msging->sig_string));
         } else {
-            $tmp_sms_content = $db->f("message");
+            $tmp_sms_content = $temp['message'];
         }
     }
     // we simply answer, not more or less
-    else if (!isset($_REQUEST['messagesubject']) && $_REQUEST['answer_to']) {
-        $db->query ("SELECT subject, message FROM message WHERE message_id = '". $_REQUEST['answer_to']. "' ");
-        $db->next_record();
-        $tmp_subject = addslashes($db->f("subject"));
-        if(substr($tmp_subject, 0, 3) != "RE:") {
-            $messagesubject = "RE: ".$tmp_subject;
+    else if (!Request::get('messagesubject') && Request::option('answer_to')) {
+        $query = "SELECT subject FROM message WHERE message_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(Request::option('answer_to')));
+        $tmp_subject = addslashes($statement->fetchColumn());
+
+        if (substr($tmp_subject, 0, 3) != 'RE:') {
+            $messagesubject = 'RE: '.$tmp_subject;
         } else {
             $messagesubject = $tmp_subject;
         }

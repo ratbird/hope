@@ -735,8 +735,9 @@ function show_precform() {
 
 function show_addrform() {
 
-    global $PHP_SELF, $sms_data, $user, $db, $adresses_array, $search_exp, $my_messaging_settings, $_fullname_sql;
+    global $PHP_SELF, $sms_data, $user, $adresses_array, $search_exp, $my_messaging_settings, $_fullname_sql;
 
+    $db = new DB_Seminar;
     $picture = 'icons/16/yellow/arr_2up.png';
 
     // list of adresses

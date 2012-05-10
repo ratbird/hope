@@ -3989,7 +3989,7 @@ msgstr "Public courses"
 
 #: ../public/freie.php:198
 msgid ""
-"Die folgenden Veranstaltungen k&ouml;nnen Sie betreten, ohne sich im System "
+"Die folgenden Veranstaltungen können Sie betreten, ohne sich im System "
 "registriert zu haben."
 msgstr ""
 "You can enrol in the following courses without being registered to the "
@@ -3998,7 +3998,7 @@ msgstr ""
 #: ../public/freie.php:201
 #, php-format
 msgid ""
-"In den %s blau markierten Veranstaltungen d&uuml;rfen Sie nur lesen und "
+"In den %s blau markierten Veranstaltungen dürfen Sie nur lesen und "
 "Dokumente herunterladen."
 msgstr ""
 "In the %s courses depicted in blue you can read and download documents, only."
@@ -4006,15 +4006,15 @@ msgstr ""
 #: ../public/freie.php:203
 #, php-format
 msgid ""
-"In den %s orange markierten Veranstaltungen k&ouml;nnen Sie sich zus&auml;"
-"tzlich mit eigenen Beitr&auml;gen im Forum beteiligen."
+"In den %s orange markierten Veranstaltungen können Sie sich zusätzlich"
+" mit eigenen Beiträgen im Forum beteiligen."
 msgstr ""
 "In the %s courses depicted in orange you can furthermore write postings in "
 "the forum."
 
 #: ../public/freie.php:206
 msgid ""
-"In der rechten Spalte k&ouml;nnen Sie sehen, was in den einzelnen "
+"In der rechten Spalte können Sie sehen, was in den einzelnen "
 "Veranstaltungen an Inhalten vorhanden ist."
 msgstr ""
 "In the column at the right you can view the content of each individual "

@@ -1,8 +1,8 @@
 <?php
-# Lifter002: TODO
+# Lifter002: TEST
 # Lifter007: TODO
 # Lifter003: TEST
-# Lifter010: TODO
+# Lifter010: DONE - not applicable
 /**
 * freie.php
 *
@@ -189,9 +189,6 @@ if (get_config('ENABLE_FREE_ACCESS')) {
     Navigation::activateItem('/browse');
 }
 
-// Start of Output
-include ('lib/include/html_head.inc.php'); // Output of html head
-include ('lib/include/header.php');   // Output of Stud.IP head
 
 require_once('config.inc.php');
 require_once('lib/msg.inc.php');
@@ -219,56 +216,10 @@ if(get_config('ENABLE_FREE_ACCESS')){
     }
 }
 
-?>
-<table width="100%" cellpadding="0" cellspacing="0">
-<tr><td class="blank" width="99%"><br>
-<?
-    print("<blockquote>");
-    print( _("Die folgenden Veranstaltungen k&ouml;nnen Sie betreten, ohne sich im System registriert zu haben."));
-    print("<br></blockquote>");
-    print("<blockquote>");
-    printf( _("In den %s blau markierten Veranstaltungen d&uuml;rfen Sie nur lesen und Dokumente herunterladen."), "<span class=\"gruppe6\">&nbsp;&nbsp;</span>");
-    print("<br>");
-    printf( _("In den %s orange markierten Veranstaltungen k&ouml;nnen Sie sich zus&auml;tzlich mit eigenen Beitr&auml;gen im Forum beteiligen."), "<span class=\"gruppe2\">&nbsp;&nbsp;</span>");
-    print("</blockquote>");
-    print("<blockquote>");
-    print( _("In der rechten Spalte k&ouml;nnen Sie sehen, was in den einzelnen Veranstaltungen an Inhalten vorhanden ist."));
-    print("</blockquote>");
+$template = $GLOBALS['template_factory']->open('freie');
+$template->set_layout($GLOBALS['template_factory']->open('layouts/base_without_infobox'));
+$template->seminars = $my_sem;
+echo $template->render();
 
-    if (empty($my_sem)) {
-        echo MessageBox::info('Es gibt keine Veranstaltungen, die einen freien Zugriff erlauben!');
-    }
-?>
-    </td>
-    <td class="blank"  width="1%" align="right" valign="top"><?=Assets::img('infobox/board1.jpg') ?></td>
-</tr>
-
-<? if (!empty($my_sem)): ?>
-    <tr><td colspan="2">
-    <table class="default">
-    <tr>
-        <th></th>
-        <th><a href="<?= URLHelper::getLink('?sortby=Name') ?>"><?= _("Name") ?></a></th>
-        <th><a href="<?= URLHelper::getLink('?sortby=status') ?>"><?=_ ("Veranstaltungstyp") ?></a></th>
-        <th><a href="<?= URLHelper::getLink('?sortby=Institut') ?>"><?= _("Einrichtung") ?></a></th>
-        <th><? echo _("Inhalt") ?></th>
-    </tr>
-    <? foreach ($my_sem as $semid => $values): ?>
-        <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
-            <td class="<?= $values["Schreibzugriff"] ? 'gruppe6' : 'gruppe2' ?>">&nbsp;</td>
-            <td><a href="<?= URLHelper::getLink('seminar_main.php?auswahl='.$semid) ?>"><?= htmlReady($values["name"]) ?></a></td>
-            <td><?= htmlReady($SEM_TYPE[$values["status"]]["name"]) ?></td>
-            <td><a href="<?= URLHelper::getLink('institut_main.php?auswahl='.$values["id"]) ?>"><?= htmlReady($values["Institut"]) ?></a></td>
-            <td style="white-space: nowrap;"><? print_seminar_content($semid, $values) ?></td>
-        </tr>
-    <? endforeach ?>
-    </table>
-    </td></tr>
-<? endif ?>
-
-</table>
-<?php
-include ('lib/include/html_end.inc.php');
-  // Save data back to database.
-  page_close()
-?>
+// Save data back to database.
+page_close();

@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
+
 unregister_globals();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $auth->login_if($auth->auth["uid"] == "nobody");
@@ -971,9 +972,9 @@ else {
         table_body($db_institut_members, $auswahl, $table_structure, $css_switcher);
 }
 
-if (($EXPORT_ENABLE) AND ($db_institut_members->num_rows() > 0) AND ($perm->have_perm("tutor")))
+if ((get_config('EXPORT_ENABLE')) AND ($db_institut_members->num_rows() > 0) AND ($perm->have_perm("tutor")))
 {
-    include_once($PATH_EXPORT . "/export_linking_func.inc.php");
+    include_once($GLOBALS['PATH_EXPORT'] . "/export_linking_func.inc.php");
     echo "<tr><td colspan=$colspan><br>" . export_form($auswahl, "person", $SessSemName[0]) . "</td></tr>";
 }
 echo "<tr><td class=\"blank\" colspan=\"$colspan\">&nbsp;</td></tr>\n";

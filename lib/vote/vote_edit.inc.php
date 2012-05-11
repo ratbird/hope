@@ -56,11 +56,11 @@ global $auth, $perm;
 
 /* If there is no rights to edit ------------------------------------------- */
 $voteID = Request::option('voteID');
-$rangeID = Request::option('rangeID');
 if (isset($voteID)) {
    $vote = new Vote ($voteID);
    $rangeID = $vote->getRangeID ();
 }
+if( !$rangeID ) $rangeID = Request::option("rangeID");
 
 if ( ! ( $perm->have_studip_perm( "tutor", $rangeID ) || 
         $auth->auth["uname"] == $rangeID || (isDeputyEditAboutActivated() && 

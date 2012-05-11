@@ -1225,11 +1225,11 @@ div.snatch div {
   width:400px;
   z-index:3;
 }
-#schedule_new_entry dl {
+#schedule_entry_new dl {
   border:1px solid #5c2d64;
   background:#7c5783 url("../images/calendar/category_neutral.png");
 }
-#schedule_new_entry dt { background-color:#5c2d64; }
+#schedule_entry_new dt { background-color:#5c2d64; }
 div.schedule_edit_entry, #schedule_settings {
   background-color:#e8eef7;
   border:2px solid #e0e0f0;

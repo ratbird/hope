@@ -94,8 +94,6 @@ if ($view_mode != 'user') {
     include 'lib/include/admin_search_form.inc.php';
 }
 
-echo cssClassSwitcher::GetHoverJSFunction() . "\n";
-
 
 function callback_cmp_newsarray($a, $b) {
     return strnatcasecmp($a['name'], $b['name']); // Case insensitive string comparisons using a "natural order" algorithm
@@ -285,9 +283,6 @@ if (!$cmd OR $cmd=="show") {
             uasort($news->search_result, 'callback_cmp_newsarray');
             echo "\n".'<tr><td width="100%" class="blank"><p class="info">';
             echo '<table width="'.round(0.88*$news->xres).'" cellspacing="0" cellpadding="2" border="0">';
-            $css = new CssClassSwitcher(array("steel1","steel1"));
-            $css->hoverenabled = TRUE;
-            $css->switchClass();
             while (list($typen_key,$typen_value)=each ($typen)) {
                 if (!$perm->have_perm("root") AND $typen_key=="user")
                     continue;
@@ -296,7 +291,7 @@ if (!$cmd OR $cmd=="show") {
                 while (list ($range,$details) = each ($news->search_result)) {
                     $link_view_mode = $perm->have_perm('admin') ? $typen_value['view_mode'] : 'user';
                     if ($details['type'] == $typen_key) {
-                        echo "\n<li " . $css->getHover() . '><a href="'. URLHelper::getLink("?{$typen_value['id_param']}=$range&range_id=$range&view_mode={$link_view_mode}") .'">' .htmlReady($details['name']);
+                        echo "\n" . '<li><a href="'. URLHelper::getLink("?{$typen_value['id_param']}=$range&range_id=$range&view_mode={$link_view_mode}") .'">' .htmlReady($details['name']);
                         echo ($details['anzahl']) ? ' ('.$details['anzahl'].')' : ' (0)';
                         echo '</a></li>';
                     }

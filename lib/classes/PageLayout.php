@@ -88,8 +88,7 @@ class PageLayout
         self::addStylesheet('print.css', array('media' => 'print'));
 
         // include ie-specific CSS
-        $css = sprintf('[if IE]><link rel="stylesheet" href="%s" media="screen,print"><![endif]', Assets::stylesheet_path('ie.css'));
-        self::addComment($css, 'IE');
+        self::addComment('[if IE]>' . Assets::stylesheet('ie.css', array('media' => 'screen,print')) . '<![endif]');
 
         self::setSqueezePackages("base");
     }

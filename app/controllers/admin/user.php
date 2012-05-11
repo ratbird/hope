@@ -459,7 +459,7 @@ class Admin_UserController extends AuthenticatedController
         $this->user = array(
             'username' => Request::get('username'),
             'perm' => Request::option('perm'),
-            'visible' => Request::int('visible'),
+            'visible' => Request::get('visible'),
             'Vorname' => Request::get('Vorname'),
             'Nachname' => Request::get('Nachname'),
             'geschlecht' => Request::int('geschlecht'),

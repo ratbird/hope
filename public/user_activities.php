@@ -23,6 +23,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA   02111-1307, USA.
 */
 
 require '../lib/bootstrap.php';
+
+unregister_globals();
 require_once 'lib/functions.php';
 require_once 'lib/datei.inc.php';
 
@@ -167,30 +169,29 @@ function get_user_documents($user_id, $seminar_id = null)
     return $statement->fetchAll(PDO::FETCH_COLUMN);
 }
 
-if (!$sess->is_registered('_user_activities')){
-    $sess->register('_user_activities');
-    $_user_activities['open'] = array();
-    $_user_activities['details'] = 'files';
+if (!is_array($_SESSION['_user_activities'])){
+    $_SESSION['_user_activities']['open'] = array();
+    $_SESSION['_user_activities']['details'] = 'files';
 }
 
 $queries = array();
 $msg = array();
 
 if ($_REQUEST['username']){
-    $_user_activities['username'] = $_REQUEST['username'];
-    $_user_activities['open'] = array();
-    $_user_activities['details'] = 'files';
+    $_SESSION['_user_activities']['username'] = $_REQUEST['username'];
+    $_SESSION['_user_activities']['open'] = array();
+    $_SESSION['_user_activities']['details'] = 'files';
 }
-if ($_REQUEST['details']) $_user_activities['details'] = $_REQUEST['details'];
-if ($_REQUEST['open']) $_user_activities['open'][$_REQUEST['open']] = time();
-if ($_REQUEST['close']) unset($_user_activities['open'][$_REQUEST['close']]);
-$user_id = get_userid($_user_activities['username']);
-arsort($_user_activities['open'], SORT_NUMERIC);
+if ($_REQUEST['details']) $_SESSION['_user_activities']['details'] = $_REQUEST['details'];
+if ($_REQUEST['open']) $_SESSION['_user_activities']['open'][$_REQUEST['open']] = time();
+if ($_REQUEST['close']) unset($_SESSION['_user_activities']['open'][$_REQUEST['close']]);
+$user_id = get_userid($_SESSION['_user_activities']['username']);
+arsort($_SESSION['_user_activities']['open'], SORT_NUMERIC);
 if ($_REQUEST['download_as_zip']) {
     $download_ids = $_REQUEST['download_as_zip'] == 'all' ? get_user_documents($user_id) : get_user_documents($user_id, $_REQUEST['download_as_zip']);
     if (is_array($download_ids) && count($download_ids)) {
         $zip_file_id = createSelectedZip($download_ids, false);
-        $zip_name = prepareFilename($_user_activities['username'] . '-' . _("Dokumente") . '.zip');
+        $zip_name = prepareFilename($_SESSION['_user_activities']['username'] . '-' . _("Dokumente") . '.zip');
         header('Location: ' . getDownloadLink( $zip_file_id, $zip_name, 4));
         page_close();
         die;
@@ -207,8 +208,8 @@ if ($_REQUEST['deletepost'] && check_ticket($_REQUEST['ticket'])){
     }
 }
 
-reset($_user_activities['open']);
-$ank = key($_user_activities['open']);
+reset($_SESSION['_user_activities']['open']);
+$ank = key($_SESSION['_user_activities']['open']);
 
 // Define structure of displayed information
 $queries[] = array(
@@ -305,7 +306,7 @@ foreach ($queries as $index => $query) {
 
 // Create details if neccessary
 $details = false;
-if ($_user_activities['details'] == 'files') {
+if ($_SESSION['_user_activities']['details'] == 'files') {
     $files = array();
 
     // Seminar
@@ -327,7 +328,7 @@ if ($_user_activities['details'] == 'files') {
     $files['seminars'] = $statement->fetchAll(PDO::FETCH_ASSOC);
     
     foreach ($files['seminars'] as $index => $file) {
-        $is_open = $_user_activities['open'][$file['id']] ? 'open' : 'close';
+        $is_open = $_SESSION['_user_activities']['open'][$file['id']] ? 'open' : 'close';
         
         $title = sprintf('%s (%s%s)', $file['Name'], $file['startsem'],
                                       $file['startsem'] != $file['endsem'] ? ' - ' . $file['endsem'] : '');
@@ -356,7 +357,7 @@ if ($_user_activities['details'] == 'files') {
     
 
     foreach ($files['institutes'] as $index => $file) {
-        $is_open = $_user_activities['open'][$file['id']] ? 'open' : 'close';
+        $is_open = $_SESSION['_user_activities']['open'][$file['id']] ? 'open' : 'close';
 
         $title = sprintf('<a href="%s"%s class="tree">%s</a>',
                          URLHelper::getLink('?' . ($is_open == 'open' ? 'close' : 'open') . '=' . $file['id'] . '#dok_anker'),
@@ -370,10 +371,10 @@ if ($_user_activities['details'] == 'files') {
 
     $template = $GLOBALS['template_factory']->open('user_activities/files');
     $template->files   = $files;
-    $template->open    = $_user_activities['open'];
+    $template->open    = $_SESSION['_user_activities']['open'];
     $template->user_id = $user_id;
     $details = $template->render();
-} elseif ($_user_activities['details'] == 'guestbook') {
+} elseif ($_SESSION['_user_activities']['details'] == 'guestbook') {
     $query = "SELECT range_id, COUNT(post_id) AS count, MAX(mkdate) AS newest
               FROM guestbook
               WHERE user_id = ?
@@ -386,7 +387,7 @@ if ($_user_activities['details'] == 'files') {
     foreach ($posts as $index => $post) {
         $other_user = User::find($post['range_id']);
 
-        $is_open = $_user_activities['open'][$post['range_id']] ? 'open' : 'close';        
+        $is_open = $_SESSION['_user_activities']['open'][$post['range_id']] ? 'open' : 'close';        
         $title = sprintf('<a href="%s"%s class="tree">%s</a>',
                          URLHelper::getLink('?' . ($is_open == 'open' ? 'close' : 'open') . '=' . $post['range_id'] . '#guest_anker'),
                          $ank == $post['range_id'] ? ' name="guest_anker"' : '',
@@ -405,10 +406,10 @@ if ($_user_activities['details'] == 'files') {
     $template->posts   = $posts;
     $template->user_id = $user_id;
     $details = $template->render();
-} elseif (in_array($_user_activities['details'], words('seminar seminar_closed seminar_wait'))) {
+} elseif (in_array($_SESSION['_user_activities']['details'], words('seminar seminar_closed seminar_wait'))) {
     $table = $status = $desc = $where = '';
 
-    switch ($_user_activities['details']){
+    switch ($_SESSION['_user_activities']['details']){
         case 'seminar':
             $table  = 'seminar_user';
             $status = 'seminar_user.status';
@@ -446,7 +447,7 @@ if ($_user_activities['details'] == 'files') {
         $title = sprintf('%s (%s%s)', $course['Name'], $course['startsem'],
                                       $course['startsem'] != $course['endsem'] ? ' - ' . $course['endsem'] : '');
         $title = sprintf('<a href="%s" class="tree">%s</a>',
-                         URLHelper::getLink('seminar_main.php?redirect_to=teilnehmer.php#' . $_user_activities['username'], 
+                         URLHelper::getLink('seminar_main.php?redirect_to=teilnehmer.php#' . $_SESSION['_user_activities']['username'], 
                                             array('auswahl' => $course['Seminar_id'])),
                         htmlReady($title));
 

@@ -290,11 +290,18 @@ STUDIP.JSUpdater = {
         }
         STUDIP.JSUpdater.dateOfLastCall = new Date();
         var page = window.location.href.replace(STUDIP.ABSOLUTE_URI_STUDIP, "");
+        var page_info = {};
+        jQuery.each(STUDIP, function (index, element) {
+            if (typeof element.periodicalPushData === "function") {
+                page_info[index] = element.periodicalPushData();
+            }
+        });
         jQuery.ajax({
             url: STUDIP.ABSOLUTE_URI_STUDIP + "dispatch.php/jsupdater/get",
             dataType: "json",
             data: {
-                'page': page
+                'page': page,
+                'page_info': page_info
             },
             success: function (json, textStatus, jqXHR) {
                 STUDIP.JSUpdater.resetJsonMemory(json);

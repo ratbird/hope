@@ -74,6 +74,7 @@ class PluginRepository
         $xml = new SimpleXMLElement($metadata);
 
         if (!isset($xml->plugin)) {
+            $cache->expire($cache_key);
             throw new Exception(_('Keine Plugin Meta-Daten gefunden'));
         }
 

@@ -332,11 +332,11 @@ class VoteDB extends StudipObject
     {
         $query = "SELECT anonymous FROM vote WHERE vote_id = ?";
         $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($vote_id));
+        $statement->execute(array($voteID));
         $anonymous = $statement->fetchColumn();
 
         if ($anonymous) {
-            $query = "SELECT 1 FROM vote_user WHERE vote_id = ? AND user_id = ?";
+            $query = "SELECT 1 FROM vote_user WHERE user_id = ? AND vote_id = ?";
         } else {
             $query = "SELECT 1
                       FROM voteanswers_user AS a
@@ -344,7 +344,7 @@ class VoteDB extends StudipObject
                       WHERE a.user_id = ? AND b.vote_id = ?";
         }
         $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($voteID, $userID));
+        $statement->execute(array($userID, $voteID));
         return $statement->fetchColumn();
     }
 

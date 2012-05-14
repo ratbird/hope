@@ -65,7 +65,7 @@ $cmd = Request::option('cmd');
 $role_id = Request::option('role_id');
 if (!isset($ALLOW_CHANGE_NAME)) $ALLOW_CHANGE_NAME = TRUE; //wegen Abwärtskompatibilität, erst ab 1.1 bekannt
 
-$username = Request::option('username');
+$username = Request::quoted('username');
 // hier gehts los
 if (!$username) $username = $auth->auth["uname"];
 if ($_SESSION['edit_about_msg']) {
@@ -139,7 +139,7 @@ if (check_ticket(Request::option('studipticket'))) {
     // Person einer Rolle hinzufügen
     if ($cmd == 'addToGroup') {
         $db_group = new DB_Seminar();
-        if (InsertPersonStatusgruppe($my_about->auth_user['user_id'], Request::option('role_id'))) {
+        if (InsertPersonStatusgruppe($my_about->auth_user['user_id'], $role_id)) {
             $globalperms = get_global_perm($my_about->auth_user['user_id']);
             if ($perm->get_studip_perm(Request::option('subview_id'), $my_about->auth_user['user_id']) == FALSE) {
                 log_event('INST_USER_ADD', Request::option('subview_id') , $my_about->auth_user['user_id'], $globalperms);
@@ -177,16 +177,16 @@ if (check_ticket(Request::option('studipticket'))) {
     }
 
     if ($cmd == 'makeAllDefault') {
-        MakeDatafieldsDefault($my_about->auth_user['user_id'], Request::option('role_id'));
+        MakeDatafieldsDefault($my_about->auth_user['user_id'], $role_id);
     }
 
     if ($cmd == 'makeAllSpecial') {
-        MakeDatafieldsDefault($my_about->auth_user['user_id'], Request::option('role_id'), '');
+        MakeDatafieldsDefault($my_about->auth_user['user_id'], $role_id, '');
     }
 
     if ($cmd == 'removeFromGroup') {
         $db_group = new DB_Seminar();
-        $db_group->query("DELETE FROM statusgruppe_user WHERE user_id = '" . $my_about->auth_user['user_id'] . "' AND statusgruppe_id = '".Request::option('role_id')."'");
+        $db_group->query("DELETE FROM statusgruppe_user WHERE user_id = '" . $my_about->auth_user['user_id'] . "' AND statusgruppe_id = '".$role_id."'");
         $my_about->msg .= 'msg§' . _("Die Person wurde aus der ausgewählten Gruppe gelöscht!") . '§';
     }
 
@@ -234,7 +234,7 @@ if (check_ticket(Request::option('studipticket'))) {
     if ($cmd=="special_edit") {
         
         $invalidEntries = $my_about->special_edit(Request::quotedArray('raum'), Request::quotedArray('sprech'), Request::quotedArray('tel'), Request::quotedArray('fax'), Request::quotedArray('name'), Request::option('default_inst'), Request::optionArray('visible'),
-                                        Request::quotedArray('datafields'), Request::optionArray('group_id'), Request::option('role_id'), array('status' => Request::option('status'), 'inst_id' => Request::option('inst_id')));
+                                        Request::quotedArray('datafields'), Request::optionArray('group_id'), $role_id, array('status' => Request::option('status'), 'inst_id' => Request::option('inst_id')));
 
         if (is_array($invalidEntries))
             foreach ($invalidEntries as $entry)

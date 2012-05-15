@@ -97,11 +97,16 @@ class Calendar_ScheduleController extends AuthenticatedController
         // load semester-data and current semester
         $semdata = new SemesterData();
         $this->semesters = $semdata->getAllSemesterData();
-        $this->current_semester = $semdata->getCurrentSemesterData();
+        
+        if (Request::option('semester_id')) {
+            $this->current_semester = $semdata->getSemesterData(Request::option('semester_id'));
+        } else {
+            $this->current_semester = $semdata->getCurrentSemesterData();
+        }
+        URLHelper::bindLinkParam('semester_id', $this->current_semester['semester_id']);
 
         // convert old settings, if necessary (mein_stundenplan.php)
         if (!$my_schedule_settings['converted']) {
-            $my_schedule_settings['glb_sem'] = $this->current_semester['semester_id'];
             $c = 1;
             foreach ($my_schedule_settings['glb_days'] as $show) {
                 if ($c == 7) $c = 0;
@@ -112,16 +117,6 @@ class Calendar_ScheduleController extends AuthenticatedController
             sort($new_days);
             $my_schedule_settings['glb_days'] = $new_days;
             $my_schedule_settings['converted'] = true;
-        }
-
-        // set the user-defined semester and start/end-times
-        if ($my_schedule_settings['glb_sem']) {
-            foreach ($this->semesters as $semester) {
-                if ($semester['semester_id'] == $my_schedule_settings['glb_sem']) {
-                    $this->current_semester = $semester;
-                    break;
-                }
-            }
         }
 
         // check type-safe if days is false otherwise sunday (0) cannot be chosen
@@ -492,14 +487,12 @@ class Calendar_ScheduleController extends AuthenticatedController
             $start_hour  = Request::int('start_hour');
             $end_hour    = Request::int('end_hour');
             $days        = Request::getArray('days');
-            $semester_id = Request::option('semester_id');
         }
 
         $my_schedule_settings = array(
             'glb_start_time' => $start_hour,
             'glb_end_time'   => $end_hour,
             'glb_days'       => $days,
-            'glb_sem'        => $semester_id,
             'glb_inst_id'    => $GLOBALS['my_schedule_settings']["glb_inst_id"],
             'converted'      => true
         );

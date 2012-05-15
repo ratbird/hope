@@ -7,26 +7,10 @@ use Studip\Button, Studip\LinkButton;
 <div id="schedule-settings-dialog-shadow"></div>
 <div id="schedule_settings" class="edit_entry">
     <div class="window_heading_nodrag">
-        <?= _("Einstellungen des Stundenplans ändern") ?>
+        <?= _("Darstellung des Stundenplans anpassen") ?>
     </div>
     <form method="post" action="<?= $controller->url_for('calendar/schedule/storesettings') ?>" style="margin: 10px;">
         <?= CSRFProtection::tokenTag() ?>
-        <div class="settings" style="width: 100%">
-            <div><?= _("Angezeigtes Semester") ?>:</div>
-            <select name="semester_id">
-            <? foreach ($semesters as $semester) : ?>
-                <? if ($semester['ende'] > time() - strtotime('1year 1day')) : ?>
-                <option value="<?= $semester['semester_id'] ?>" <?= $settings['glb_sem'] == $semester['semester_id'] ? 'selected="selected"' : '' ?>>
-                    <?= $semester['name'] ?>
-                    <?= $semester['beginn'] < time() && $semester['ende'] > time() ? '(aktuelles Semester)' : '' ?>
-                </option>
-                <? endif ?>
-            <? endforeach ?>
-            </select>
-            <br>
-            <br>
-        </div>
-
         <div class="settings" style="width: 45%">
             <div><?= _("Angezeigter Zeitraum") ?>:</div>
 

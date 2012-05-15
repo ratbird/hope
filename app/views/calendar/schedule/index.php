@@ -30,6 +30,10 @@ $infobox['content'] = array(
     ),
 
     array(
+        'kategorie' => _("Angezeigtes Semester:")
+    ),
+
+    array(
         'kategorie' => _("Aktionen:")
     ),
 
@@ -39,37 +43,37 @@ $infobox['content'] = array(
 
 );
 
+$infobox['content'][1]['eintrag'][] = array(
+    'text' => $this->render_partial('calendar/schedule/_semester_chooser'),
+    'icon' => 'icons/16/black/add/date.png'
+);
+
 if (!$inst_mode) {
-    $infobox['content'][0]['eintrag'][] = array(
-        'text' => $text2 = sprintf(
-            _("Um neue Veranstaltungen hinzuzufügen, verwenden Sie die %sVeranstaltungssuche%s."),
-            '<a href="'. UrlHelper::getLink('sem_portal.php') .'">', '</a>'),
-        'icon' => 'icons/16/black/search.png');
-    $infobox['content'][1]['eintrag'][] = array (
+    $infobox['content'][2]['eintrag'][] = array (
         'text' => '<a href="'. $controller->url_for('calendar/schedule/entry') .'">'._("Neuer Eintrag") .'</a>',
         'icon' => 'icons/16/black/add/date.png'
     );
 }
 
-$infobox['content'][1]['eintrag'][] = array (
+$infobox['content'][2]['eintrag'][] = array (
     'text' => '<a href="'. $controller->url_for('calendar/schedule/index/'. implode(',', $days)
            .  '?printview=true')
            .  '" target="_blank">'._("Druckansicht") .'</a>',
     'icon' => "icons/16/black/print.png"
 );
 
-$infobox['content'][1]['eintrag'][] = array (
-    'text' => '<a href="'. $controller->url_for('calendar/schedule/index?show_settings=true') .'">'. _("Einstellungen ändern") .'</a>',
+$infobox['content'][2]['eintrag'][] = array (
+    'text' => '<a href="'. $controller->url_for('calendar/schedule/index?show_settings=true') .'">'. _("Darstellung ändern") .'</a>',
     'icon' => "icons/16/black/admin.png"
 );
 
-$infobox['content'][1]['eintrag'][] = array (
+$infobox['content'][2]['eintrag'][] = array (
     'text' => $hidden_text,
     'icon' => 'icons/16/black/visibility-visible.png'
 );
 
 // Infobox-entries for viewport size
-$infobox['content'][2]['eintrag'] = array (
+$infobox['content'][3]['eintrag'] = array (
     array (
         'icon' => 'icons/16/'. ($zoom == 0 ? 'red' : 'black') . '/schedule.png',
         'text' => '<a href="'. UrlHelper::getLink('', array('zoom' => 0)) .'">'. _("klein") .'</a>'

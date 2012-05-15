@@ -1697,7 +1697,9 @@ if (Request::submitted('inc_request') || Request::submitted('dec_request')
     require_once ("lib/classes/Seminar.class.php");
     require_once ("lib/classes/SemesterData.class.php");
 
-    if ((!is_array($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["detected_overlaps"])) || ($marked_clip_ids) || ($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["reload"])) {
+    if ((!is_array($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["detected_overlaps"])) 
+        || ($marked_clip_ids) || ($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["reload"])) {
+
         unset ($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["reload"]);
         if (!isset($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["search_limit_low"])) {
             $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["search_limit_low"] = 0;
@@ -1710,7 +1712,7 @@ if (Request::submitted('inc_request') || Request::submitted('dec_request')
 
         $reqObj = new RoomRequest($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["request_id"]);
         $semObj = Seminar::GetInstance($reqObj->getSeminarId(), true);
-        $multiOverlaps = new CheckMultipleOverlaps;
+        $multiOverlaps = new CheckMultipleOverlaps();
         $semResAssign = new VeranstaltungResourcesAssign($semObj->getId());
 
         //add the requested ressource to selection
@@ -1786,7 +1788,7 @@ if (Request::submitted('inc_request') || Request::submitted('dec_request')
             }
 
             //set the time range to check;
-                $multiOverlaps->setAutoTimeRange($assignObjects);
+            $multiOverlaps->setAutoTimeRange($assignObjects);
 
             //add the considered resources to the check-set
             if (is_array($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["considered_resources"])) {
@@ -1843,8 +1845,8 @@ if (Request::submitted('inc_request') || Request::submitted('dec_request')
                 }
 
                 $event_zw =  $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["groups"][$group_id]["termin_ids"];
-            $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["groups"][$group_id]["events_count"] = sizeof($event_zw);
-            $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["groups"][$group_id]["overlap_events_count"] = $overlaps;
+                $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["groups"][$group_id]["events_count"] = sizeof($event_zw);
+                $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["groups"][$group_id]["overlap_events_count"] = $overlaps;
 
                 // Der gebuchte Raum, soweit vorhanden => fuer den gruenen Haken
                 if ($groupedDates['info'][$group_id]['raum']) {
@@ -1853,8 +1855,8 @@ if (Request::submitted('inc_request') || Request::submitted('dec_request')
 
             }  // Ende: gruppierte Termine durchlaufen
 
-        $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["detected_overlaps"] = $result;
-        $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["first_event"] = $first_event;
+            $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["detected_overlaps"] = $result;
+            $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["first_event"] = $first_event;
         }
     }
 }

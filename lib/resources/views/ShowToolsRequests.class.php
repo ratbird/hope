@@ -488,9 +488,9 @@ class ShowToolsRequests
                                         $overlap_status = $this->showGroupOverlapStatus($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["detected_overlaps"][$request_resource_id], $val["events_count"], $val["overlap_events_count"][$request_resource_id], $val["termin_ids"]);
                                         print $overlap_status["html"];
                                         printf ("<input type=\"radio\" name=\"selected_resource_id[%s]\" value=\"%s\" %s %s>",
-                                        $i, $request_resource_id,
-                                        ($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["selected_resources"][$i] == $request_resource_id) ? "checked" : "",
-                                        ($overlap_status["status"] == 2 || !ResourcesUserRoomsList::CheckUserResource($request_resource_id)) ? "disabled" : "");
+                                            $i, $request_resource_id,
+                                            ($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["selected_resources"][$i] == $request_resource_id) ? "checked" : "",
+                                            ($overlap_status["status"] == 2 || !ResourcesUserRoomsList::CheckUserResource($request_resource_id)) ? "disabled" : "");
                                     }
                                 } else
                                     print "&nbsp;";

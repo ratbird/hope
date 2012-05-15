@@ -73,36 +73,6 @@ class ResourceObject {
     var $my_state = null;
     
     //Konstruktor
-    /*
-    function ResourceObject($name='', $description='', $parent_bind='', $root_id='', $parent_id='', $category_id='', $owner_id='', $id = '') {
-        global $user;
-        
-        $this->user_id = $user->id;
-        $this->db=new DB_Seminar;
-        
-        if(func_num_args() == 1) {
-            $id = func_get_arg(0);
-            $this->restore($id);
-        } elseif(func_num_args() == 7) {
-            $this->name = func_get_arg(0);
-            $this->description = func_get_arg(1);
-            $this->parent_bind = func_get_arg(2);
-            $this->root_id = func_get_arg(3);
-            $this->parent_id = func_get_arg(4);
-            $this->category_id = func_get_arg(5);
-            $this->owner_id = func_get_arg(6);
-            if (!$this->id)
-                $this->id=$this->createId();
-            if (!$this->root_id) {
-                $this->root_id = $this->id;
-                $this->parent_id = "0";
-            }
-            $this->changeFlg=FALSE;
-
-        }
-    }
-    */
-    
     function ResourceObject($argv) {
         global $user;
         

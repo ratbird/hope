@@ -72,10 +72,15 @@ class CheckMultipleOverlaps {
     }
 
     function addResource($resource_id, $day_of_week = false) {
-        global $RESOURCES_ASSIGN_LOCKING_ACTIVE, $user;
-
-        $this->resource_ids[] = $resource_id;
-        return;
+        // check, if the added resources needs to be checked
+        $resObj = ResourceObject::Factory($resource_id);
+        
+        if (!$resObj->getMultipleAssign()) {
+            $this->resource_ids[] = $resource_id;
+            return true;
+        }
+        
+        return false;
     }
 
     function checkOverlap ($events, &$result, $index_mode = "assign_id") {

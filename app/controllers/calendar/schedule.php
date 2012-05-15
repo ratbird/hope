@@ -103,7 +103,7 @@ class Calendar_ScheduleController extends AuthenticatedController
         } else {
             $this->current_semester = $semdata->getCurrentSemesterData();
         }
-        URLHelper::bindLinkParam('semester_id', $this->current_semester['semester_id']);
+        URLHelper::addLinkParam('semester_id', $this->current_semester['semester_id']);
 
         // convert old settings, if necessary (mein_stundenplan.php)
         if (!$my_schedule_settings['converted']) {

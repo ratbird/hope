@@ -50,7 +50,7 @@ $export_pagename = _("Datenexport - Startseite");
 
 $export_info = _("Bitte wählen Sie Datenart und Einrichtung.") . "<br>";
 
-$export_pagecontent .= "<form method=\"POST\" action=\"" . $PHP_SELF . "\">";
+$export_pagecontent .= "<form method=\"POST\" action=\"" . URLHelper::getURL() . "\">";
 
 $export_pagecontent .= CSRFProtection::tokenTag();
 

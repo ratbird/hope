@@ -132,7 +132,7 @@ else
         unlink( $TMP_PATH . "/export/" . $xml_file_id);
     } else {
 
-        $export_weiter_button = "<form method=\"POST\" action=\"" . $PHP_SELF . "\">";
+        $export_weiter_button = "<form method=\"POST\" action=\"" . URLHelper::getURL() . "\">";
         $export_weiter_button .= CSRFProtection::tokenTag();
         $export_weiter_button .= "<input type=\"hidden\" name=\"page\" value=\"4\">";
         $export_weiter_button .= "<input type=\"hidden\" name=\"choose\" value=\"" . htmlReady($choose) . "\">";
@@ -146,7 +146,7 @@ else
         $export_weiter_button .= "<input type=\"hidden\" name=\"range_id\" value=\"" . htmlReady($range_id) . "\">";
         $export_weiter_button .= "<input type=\"hidden\" name=\"xml_file_id\" value=\"" . htmlReady($xml_file_id) . "\">";
         $export_weiter_button .= "<input type=\"hidden\" name=\"xslt_filename\" value=\"" . htmlReady($xslt_filename) . "\">";
-        if (isset($jump))
+        if (Request::option('jump'))
             $export_weiter_button .= '<center>' . LinkButton::create('<< ' . _('Zurück'), URLHelper::getURL('seminar_main.php', array('auswahl' => $range_id, 'redirect_to' => $jump))) . "<br>";
         else
             $export_weiter_button .= "<center>" . Button::create('<< ' . _('Zurück'), 'back') . "<br>";

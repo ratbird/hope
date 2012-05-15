@@ -393,7 +393,7 @@ class Admin_UserController extends AuthenticatedController
                 $a = explode(".",stripslashes(trim(Request::get('expiration_date'))));
                 if ($timestamp = @mktime(0,0,0,$a[1],$a[0],$a[2])) {
                     UserConfig::get($user_id)->store("EXPIRATION_DATE", $timestamp);
-					$details[] = _("Das Ablaufdatum wurde geändert.");
+                    $details[] = _("Das Ablaufdatum wurde geändert.");
                 } else {
                     $details[] = _("Das Ablaufdatum wurde in einem falschen Format angegeben.");
                 }

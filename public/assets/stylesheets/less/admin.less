@@ -1,0 +1,29 @@
+.drag-and-drop { display: none; }
+.js .drag-and-drop {
+    border: 1px dotted #888;
+    display: block;
+    margin: 0 1em 0 0;
+    overflow: hidden;
+    padding: 1em;
+    position: relative;
+    text-align: center;
+
+    input[type=file] {
+        border: 0;
+        font-size: 5em;
+        margin: 0;
+        opacity: 0;
+        padding: 0;
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+
+    &.hovered {
+        #gradient > .vertical(#ffe, #fec);
+        border-radius: 1em;
+        border-style: solid;
+        box-shadow: 0 0 5px #888;
+        text-shadow: 1px 1px 3px #fc8;
+    }
+}

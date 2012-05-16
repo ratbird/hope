@@ -110,6 +110,7 @@ $infobox_content = array(
             array(
                 'icon' => 'icons/16/black/add/plugin.png',
                 'text' => '<a href="'.$controller->url_for('admin/plugin/search').'">'._('Weitere Plugins installieren').'</a>'
+                          . $this->render_partial('admin/plugin/upload-drag-and-drop')
             )
         )
     ), array(

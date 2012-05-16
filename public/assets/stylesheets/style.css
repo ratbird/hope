@@ -959,6 +959,41 @@ a.tooltip span:before {
   bottom:-8px;
 }
 a.tooltip:hover span { visibility:visible; }
+.drag-and-drop { display:none; }
+.js .drag-and-drop {
+  border:1px dotted #888888;
+  display:block;
+  margin:0 1em 0 0;
+  overflow:hidden;
+  padding:1em;
+  position:relative;
+  text-align:center;
+}
+.js .drag-and-drop input[type=file] {
+  border:0;
+  font-size:5em;
+  margin:0;
+  opacity:0;
+  padding:0;
+  position:absolute;
+  right:0;
+  top:0;
+}
+.js .drag-and-drop.hovered {
+  background-color:#fff8e0;
+  background-image:-moz-linear-gradient(top,#ffffee,#ffeecc);
+  background-image:-ms-linear-gradient(top,#ffffee,#ffeecc);
+  background-image:-webkit-gradient(linear,0 0,0 100%,from(#ffffee),to(#ffeecc));
+  background-image:-webkit-linear-gradient(top,#ffffee,#ffeecc);
+  background-image:-o-linear-gradient(top,#ffffee,#ffeecc);
+  background-image:linear-gradient(top,#ffffee,#ffeecc);
+  background-repeat:repeat-x;
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffee', endColorstr='#ffeecc', GradientType=0);
+  border-radius:1em;
+  border-style:solid;
+  box-shadow:0 0 5px #888888;
+  text-shadow:1px 1px 3px #ffcc88;
+}
 #archiv body { background-color:#91a2b6; }
 #archiv h1, #archiv h2, #archiv h3 {
   color:#213499;

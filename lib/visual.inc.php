@@ -605,7 +605,7 @@ function preg_call_link ($params, $mod, $img, $extern = FALSE, $wiki = FALSE) {
 
     if ($mod == 'LINK') {
         if (!in_array($params[5], words('img flash audio video'))) {
-            $link_text = $params[3] != '' ? formatReady($params[3]) : $params[4];
+            $link_text = $params[3] != '' ? formatReady(decodeHTML($params[3])) : $params[4];
             $tbr = '<a class="'.$link_class.'" href="'.idna_link($params[4]).'"'.($intern ? '' : ' target="_blank"').">$link_text</a>";
         }
         elseif ($img) {

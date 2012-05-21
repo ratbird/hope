@@ -19,6 +19,7 @@
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
 require_once 'lib/classes/CourseAvatar.class.php';
 require_once 'lib/classes/StudygroupAvatar.class.php';
 require_once 'lib/classes/InstituteAvatar.class.php';
@@ -224,7 +225,7 @@ if ($cmd=="inst_kill" && $GLOBALS['ALLOW_SELFASSIGN_INSTITUTE']) {
 
 
 // Update der Gruppen
-if ($gruppesent == '1'){
+if (Request::int('gruppesent') == '1'){
     $_my_sem_group_field = $_REQUEST['select_group_field'];
     if (is_array($_REQUEST['gruppe'])){
         $query = "UPDATE seminar_user SET gruppe = ? WHERE Seminar_id = ? AND user_id = ?";
@@ -598,9 +599,9 @@ elseif ($auth->auth["perm"]=="admin") {
         if($_REQUEST['institut_id']){
             $_my_admin_inst_id = ($_my_inst[$_REQUEST['institut_id']]) ? $_REQUEST['institut_id'] : $_my_inst_arr[0];
         }
-
+        $sortby = Request::quoted('sortby');
         //tic #650 sortierung in der userconfig merken
-        if (isset($sortby) && in_array($sortby, words('VeranstaltungsNummer Name status teilnehmer'))) {
+        if (!empty($sortby) && in_array($sortby, words('VeranstaltungsNummer Name status teilnehmer'))) {
             $userConfig->store('MEINE_SEMINARE_SORT', $sortby);
         } else {
             $sortby = $userConfig->getValue('MEINE_SEMINARE_SORT');

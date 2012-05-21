@@ -42,6 +42,7 @@ use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $auth->login_if($auth->auth["uid"] == "nobody");
 
@@ -52,7 +53,7 @@ require_once('lib/meine_seminare_func.inc.php');
 require_once('lib/classes/ModulesNotification.class.php');
 require_once('lib/msg.inc.php');
 
-if (!$MAIL_NOTIFICATION_ENABLE) {
+if (!get_config('MAIL_NOTIFICATION_ENABLE')) {
     $message = _("Die Benachrichtigungsfunktion wurde in den Systemeinstellungen nicht freigeschaltet.");
     throw new Exception($message);
 }
@@ -231,12 +232,11 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
             $out .= (sizeof($enabled_modules) + 3) . '">';
             if (isset($_my_sem_open[$group_id])){
                 $out .= '<a class="tree" style="font-weight:bold" name="' . $group_id;
-                $out .= '" href="' . $PHP_SELF . '?close_my_sem=' . $group_id;
+                $out .= '" href="' . URLHelper::getLink('?close_my_sem=' . $group_id);
                 $out .= '#' .$group_id . '" ' . tooltip(_("Gruppierung schließen"), true) . '>';
                 $out .= Assets::img('icons/16/blue/arr_1down.png');
             } else {
-                $out .= '<a class="tree"  name="' . $group_id . '" href="' . $PHP_SELF;
-                $out .= '?open_my_sem=' . $group_id . '#' .$group_id;
+                $out .= '<a class="tree"  name="' . $group_id . '" href="' . URLHelper::getLink('?open_my_sem=' . $group_id . '#' .$group_id);
                 $out .= '" ' . tooltip(_("Gruppierung öffnen"), true) . '>';
                 $out .= Assets::img('icons/16/blue/arr_1right.png');
             }
@@ -398,9 +398,9 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
     echo (sizeof($enabled_modules) + 3) . '"><br>';
     echo Button::create(_('Übernehmen'), array('title' => _("Änderungen übernehmen")));
     if ($_REQUEST['view'] != 'notification') {
-        echo "&nbsp; <a href=\"$PHP_SELF\">";
+        echo "&nbsp; <a href=\"".URLHelper::getURL()."\">";
     } else {
-        echo "&nbsp; <a href=\"$PHP_SELF?view=notification\">";
+        echo "&nbsp; <a href=\"".URLHelper::getLink('?view=notification')."\">";
     }
     echo Button::create(_('Zurücksetzen'), array('title' => _('zurücksetzen')));
     echo '<input type="hidden" name="cmd" value="set_sem_notification"><br>&nbsp; </td></tr></form>';

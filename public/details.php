@@ -21,6 +21,7 @@
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Default_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $auth->login_if($again && ($auth->auth["uid"] == "nobody"));
 
@@ -42,17 +43,18 @@ require_once 'lib/deputies_functions.inc.php';
 
 include 'lib/seminar_open.php'; // initialise Stud.IP-Session
 
+$sem_id = Request::option('sem_id');
 //wenn kein Seminar gesetzt und auch kein externer Aufruf raus....
-if (!isset($sem_id)) {
+if (empty($sem_id)) {
     checkObject();
 }
 
 PageLayout::setHelpKeyword("Basis.InVeranstaltungDetails");
-if ($SessSemName[1] && !isset($sem_id)) $header_object_id = $SessSemName[1];
+if ($SessSemName[1] && empty($sem_id)) $header_object_id = $SessSemName[1];
 else $header_object_id = $sem_id;
 PageLayout::setTitle(getHeaderLine($header_object_id). " - " . _("Details"));
 
-if (($SessSemName[1] != "") && (!isset($sem_id) || $SessSemName[1] == $sem_id)) {
+if (($SessSemName[1] != "") && (empty($sem_id) || $SessSemName[1] == $sem_id)) {
     Navigation::activateItem('/course/main/details');
     // add skip link
     SkipLinks::addIndex(Navigation::getItem('/course/main/details')->getTitle(), 'main_content', 100);
@@ -70,11 +72,12 @@ $db2=new DB_Seminar;
 $db3=new DB_Seminar;
 $db4=new DB_Seminar;
 $info_msg = $abo_msg = $delete_msg = $back_msg = '';
-$send_from_search = (int)isset($send_from_search);
+$send_from_search = Request::quoted('send_from_search');
+$send_from_search_page = Request::quoted('send_from_search_page');
 if (!preg_match('/^('.preg_quote($CANONICAL_RELATIVE_PATH_STUDIP,'/').')?([a-zA-Z0-9_-]+\.php)([a-zA-Z0-9_?&=-]*)$/', $send_from_search_page)) $send_from_search_page = '';
 
 //wenn Seminar gesetzt und kein externer Aufruf uebernahme der SessionVariable
-if (($SessSemName[1] != "") && (!isset($sem_id) || $SessSemName[1] == $sem_id)) {
+if (($SessSemName[1] != "") && (empty($sem_id) || $SessSemName[1] == $sem_id)) {
     $sem_id = $SessSemName[1];
 }
 

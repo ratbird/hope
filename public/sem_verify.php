@@ -53,10 +53,13 @@
 use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
+
+unregister_globals();
 require_once 'app/models/studygroup.php';
 
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
-
+$send_from_search_page = Request::quoted('send_from_search_page');
+$send_from_search = Request::option('send_from_search');
 if (!preg_match('/^('.preg_quote($CANONICAL_RELATIVE_PATH_STUDIP,'/').')?([a-zA-Z0-9_-]+\.php)([a-zA-Z0-9_?&=-]*)$/', $send_from_search_page)) $send_from_search_page = '';
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
@@ -154,7 +157,7 @@ function seminar_preliminary($seminar_id,$user_id=NULL) {
         return FALSE;
     }
 }
-
+$pass = Request::quoted('pass');
 $id = Request::option('id');
 if ($id) {
     $current_seminar = Seminar::getInstance($id);
@@ -188,8 +191,8 @@ $db6=new DB_Seminar;
 <?
 
     // temporaly accepted, if $ask is not set, then we assume, that it must be true
-
-    if (!isset($ask)) {
+    $ask = Request::option('ask');
+    if (empty($ask)) {
         $ask = "TRUE";
     }
     $temp_url = $sess->self_url();
@@ -256,8 +259,8 @@ $db6=new DB_Seminar;
 
     //check stuff for admission
     check_admission();
-
-    if ($sem_verify_selection_send && !$sem_verify_suggest_studg)
+    $sem_verify_suggest_studg = Request::option('sem_verify_suggest_studg');
+    if (Request::option('sem_verify_selection_send') && !$sem_verify_suggest_studg)
         parse_msg ("error§"._("Bitte w&auml;hlen Sie einen Studiengang zur Anmeldung f&uuml;r diese Veranstaltung aus!"));
 
     //check if entry is allowed
@@ -444,7 +447,7 @@ $db6=new DB_Seminar;
     {
 
         //Sonderfall, Passwort fuer Schreiben nicht eingegeben, Lesen aber erlaubt
-        if ($EntryMode == "read_only"){
+        if (Request::option('EntryMode') == "read_only"){
             $db->query("SELECT Lesezugriff, Name FROM seminare WHERE Seminar_id LIKE '$id'");
             $db->next_record();
             if ($db->f("Lesezugriff") <= 1 && $perm->have_perm("autor")) {
@@ -468,7 +471,7 @@ $db6=new DB_Seminar;
         }
 
         //wenn eine Sessionvariable gesetzt ist, nehmen wir besser die
-        if (!isset($id)) if (isset($SessSemName[1]))
+        if (empty($id)) if (isset($SessSemName[1]))
             $id=$SessSemName[1];
 
         //laden von benoetigten Informationen
@@ -486,7 +489,7 @@ $db6=new DB_Seminar;
         $SemUserStatus=$db->f("status");
 
         //Ueberpruefung auf korrektes Passwort
-        if (isset($pass) && $pass!="" && md5($pass)==$SemSecPass) {
+        if (!empty($pass) && $pass!="" && md5($pass)==$SemSecPass) {
             if (($SemUserStatus=="user") && ($perm->have_perm("autor")))
             {
                 // LOGGING
@@ -521,7 +524,7 @@ $db6=new DB_Seminar;
                 die;
             }
         }
-        elseif (isset($pass) && $pass!="") {
+        elseif (!empty($pass) && $pass!="") {
             parse_msg ("error§Ung&uuml;ltiges Passwort eingegeben, bitte nocheinmal versuchen !");
         }
 

@@ -80,7 +80,7 @@ PageLayout::setTitle(_("Archivieren von Veranstaltungen"));
 if ($SessSemName[1]) {
     PageLayout::setTitle(getHeaderLine($SessSemName[1]) . " - " . PageLayout::getTitle());
 }
-
+$archiv_sem = Request::optionArray('archiv_sem');
 // single delete (a Veranstaltung is open)
 if ($SessSemName[1]) {
     $archiv_sem[] = "_id_" . $SessSemName[1];
@@ -93,8 +93,7 @@ if (Request::option('new_session'))
     $_SESSION['archiv_assi_data'] = array();
 
 // A list was sent
-$archiv_sem = Request::optionArray('archiv_sem');
-if (Request::optionArray('archiv_sem')) {
+if (is_array($archiv_sem)) {
     $_SESSION['archiv_assi_data']['sems'] = array();
     $_SESSION['archiv_assi_data']['sem_check'] = array();
     $_SESSION['archiv_assi_data']['pos'] = 0;

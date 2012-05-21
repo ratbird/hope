@@ -123,7 +123,7 @@ class StmBrowse {
         global $PHP_SELF;
         //Quicksort Formular... fuer die eiligen oder die DAUs....
         echo "<table border=\"0\" align=\"center\" cellspacing=0 cellpadding=0 width = \"99%\">\n";
-        echo $this->search_obj->getFormStart("$PHP_SELF?send=yes");
+        echo $this->search_obj->getFormStart(URLHelper::getLink("?send=yes"));
         echo "<tr><td height=\"40\" class=\"steel1\" align=\"center\" valign=\"middle\" ><font size=\"-1\">";
         echo _("Schnellsuche:") . "&nbsp;";
         echo $this->search_obj->getSearchField("qs_choose",array('style' => 'vertical-align:middle;font-size:9pt;'));
@@ -147,7 +147,7 @@ class StmBrowse {
         $this->search_obj->attributes_default = array('style' => 'width:100%;font-size:10pt;');
         $this->search_obj->search_fields['type']['size'] = 40 ;
         echo "<table border=\"0\" align=\"center\" cellspacing=0 cellpadding=2 width = \"99%\">\n";
-        echo $this->search_obj->getFormStart("$PHP_SELF?send=yes");
+        echo $this->search_obj->getFormStart(URLHelper::getLink("?send=yes"));
         echo "<tr><td class=\"steel1\" align=\"right\" width=\"15%\">" . _("Titel:") . " </td>";
         echo "<td class=\"steel1\" align=\"left\" width=\"35%\">";
         echo $this->search_obj->getSearchField("title");
@@ -206,16 +206,16 @@ class StmBrowse {
         if ($this->sem_browse_data['level'] == "f"){
             echo "\n<tr><td align=\"center\" class=\"steelgraulight\" height=\"40\" valign=\"middle\"><div style=\"margin-top:10px;margin-bottom:10px;\"><font size=\"-1\">";
             if (($this->show_result && count($this->sem_browse_data['search_result'])) || $this->sem_browse_data['cmd'] == "xts") {
-                printf(_("Suche im %sModulverzeichnis%s"),"<a href=\"$PHP_SELF?level=ev&cmd=qs&sset=0\">","</a>");
+                printf(_("Suche im %sModulverzeichnis%s"),"<a href=\"".URLHelper::getLink('?level=ev&cmd=qs&sset=0')."\">","</a>");
             } else {
                 printf ("<table align=\"center\" cellspacing=\"10\">
                         <tr>
                         <td nowrap align=\"center\">
-                        <a href=\"%s?level=ev&cmd=qs&sset=0\">
+                        <a href=\"".URLHelper::getLink('?level=ev&cmd=qs&sset=0')."\">
                         <b>%s</b>
                         <br><br>
                         <img src=\"{$GLOBALS['ASSETS_URL']}images/institute.jpg\" %s border=\"0\">
-                        </a></td>", $PHP_SELF, _("Suche im Modulverzeichnis"), $_language_path, tooltip(_("Suche im Einrichtungsverzeichnis")));
+                        </a></td>", _("Suche im Modulverzeichnis"), $_language_path, tooltip(_("Suche im Einrichtungsverzeichnis")));
                 printf ("</tr></table>");
             }
             echo "</font></div>"; 
@@ -294,7 +294,7 @@ class StmBrowse {
                     while(list($stm_id,) = each($stm_ids['stm_instance_id'])){
                         $stm_obj = new StudipStmInstance($stm_id);
                         echo "<tr><td colspan=\"2\" class=\"steel1\" width=\"66%\"><font size=-1><a href=\"stm_details.php?stm_instance_id={$stm_id}&send_from_search=1&send_from_search_page="
-                        . $PHP_SELF. "?keep_result_set=1\">" . htmlReady($stm_obj->getValue('displayname')). "</a></td></tr>";
+                        .$_SERVER['PHP_SELF']. "?keep_result_set=1\">" . htmlReady($stm_obj->getValue('displayname')). "</a></td></tr>";
                         echo "<tr><td colspan=\"2\" class=\"steel1\" width=\"66%\">";
                         $el_group = false;
                         foreach(array_keys($stm_obj->elements) as $element_id){
@@ -308,7 +308,7 @@ class StmBrowse {
                             }
                             if($stm_obj->elements[$element_id]->getValue('sem_id')){
                             echo "<div style=\"margin-left:10px;margin-right:10px\"><font size=-2><a href=\"{$this->target_url}?{$this->target_id}=".$stm_obj->elements[$element_id]->getValue('sem_id')."&send_from_search=1&send_from_search_page="
-                                . $PHP_SELF. "?keep_result_set=1\">"
+                                . $_SERVER['PHP_SELF']. "?keep_result_set=1\">"
                                 . $stm_obj->elements[$element_id]->getValue('type_abbrev')
                                 . ': ' . htmlReady($stm_obj->elements[$element_id]->getValue('seminar_name'))
                                 . "</a>&nbsp;&nbsp;&nbsp;($dozenten)</div>";

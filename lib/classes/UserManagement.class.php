@@ -1,8 +1,8 @@
 <?php
-# Lifter002: TODO
+# Lifter002: DONE - not applicable
 # Lifter007: TODO
-# Lifter003: TODO
-# Lifter010: TODO
+# Lifter003: TEST
+# Lifter010: DONE - not applicable
 /**
  * UserManagement.class.php
  *
@@ -74,8 +74,6 @@ class UserManagement
     */
     function UserManagement($user_id = FALSE) {
 
-        $this->db = new DB_Seminar;
-        $this->db2 = new DB_Seminar;
         $this->validator = new email_validation_class;
         $this->validator->timeout = 10;                 // How long do we wait for response of mailservers?
         $mail = new StudipMail();
@@ -92,26 +90,31 @@ class UserManagement
     * @access   private
     * @param    string  $user_id    the user which should be retrieved
     */
-    function getFromDatabase($user_id) {
+    function getFromDatabase($user_id)
+    {
+        $query = "SELECT * FROM auth_user_md5 WHERE user_id = ?"; //ein paar userdaten brauchen wir schon mal
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($user_id));
+        $temp = $statement->fetch(PDO::FETCH_ASSOC);
 
-        $this->db->query("SELECT * FROM auth_user_md5 WHERE user_id = '$user_id'");  //ein paar userdaten brauchen wir schon mal
-            $fields = $this->db->metadata();
-            if ($this->db->next_record()) {
-                for ($i=0; $i<count($fields); $i++) {
-                    $field_name = $fields[$i]["name"];
-                    $this->user_data["auth_user_md5.".$field_name] = $this->db->f("$field_name");
+        if ($temp) {
+            foreach ($temp as $key => $value) {
+                $this->user_data['auth_user_md5.' . $key] = $value;
             }
         }
 
-        $this->db->query("SELECT * FROM user_info WHERE user_id = '".$this->user_data["auth_user_md5.user_id"]."'");
-        $fields = $this->db->metadata();
-        if ($this->db->next_record()) {
-            for ($i=0; $i<count($fields); $i++) {
-                $field_name = $fields[$i]["name"];
-                $this->user_data["user_info.".$field_name] = $this->db->f("$field_name");
+        $query = "SELECT * FROM user_info WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($user_id));
+        $temp = $statement->fetch(PDO::FETCH_ASSOC);
+
+        if ($temp) {
+            foreach ($temp as $key => $value) {
+                $this->user_data['user_info.' . $key] = $value;
             }
         }
-        $this->original_user_data=$this->user_data; // save original setting for logging purposes
+
+        $this->original_user_data = $this->user_data; // save original setting for logging purposes
     }
 
 
@@ -121,16 +124,27 @@ class UserManagement
     * @access   private
     * @return   bool all data stored?
     */
-    function storeToDatabase() {
-
+    function storeToDatabase()
+    {
         if (!$this->user_data['auth_user_md5.user_id']) {
             $this->user_data['auth_user_md5.user_id'] = md5(uniqid($this->hash_secret));
-            $this->db->query("INSERT INTO auth_user_md5 SET user_id = '".$this->user_data['auth_user_md5.user_id']."', username = '".$this->user_data['auth_user_md5.username']."', password = 'dummy'");
-            if ($this->db->affected_rows() == 0) {
+
+            $query = "INSERT INTO auth_user_md5 (user_id, username, password) VALUES (?, ?, 'dummy')";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                $this->user_data['auth_user_md5.user_id'],
+                $this->user_data['auth_user_md5.username'],
+            ));
+            if ($statement->rowCount() == 0) {
                 return FALSE;
             }
-            $this->db->query("INSERT INTO user_info SET user_id = '".$this->user_data['auth_user_md5.user_id']."', mkdate='".time()."'");
-            if ($this->db->affected_rows() == 0) {
+
+            $query = "INSERT INTO user_info (user_id, mkdate) VALUES (?, UNIX_TIMESTAMP())";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                $this->user_data['auth_user_md5.user_id']
+            ));
+            if ($statement->rowCount() == 0) {
                 return FALSE;
             }
             log_event("USER_CREATE",$this->user_data['auth_user_md5.user_id']);
@@ -139,31 +153,44 @@ class UserManagement
         if (!$this->user_data['auth_user_md5.auth_plugin']) {
             $this->user_data['auth_user_md5.auth_plugin'] = "standard"; // just to be sure
         }
+
+        $table = $field = $value = null; // Prepare variables
+
+        // Prepare queries
+        $query = "UPDATE :table SET :column = :value WHERE user_id = :user_id";
+        $update = DBManager::get()->prepare($query);
+        $update->bindValue(':user_id', $this->user_data['auth_user_md5.user_id']);
+        $update->bindParam(':table', $table, StudipPDO::PARAM_COLUMN);
+        $update->bindParam(':column', $field, StudipPDO::PARAM_COLUMN);
+        $update->bindParam(':value', $value);
+
+        $query = "DELETE FROM user_inst WHERE user_id = ? AND inst_perms = 'user'";
+        $institute_delete = DBManager::get()->prepare($query);
+
+        $query = "UPDATE auth_user_md5 SET visible = 'yes' WHERE user_id = ?";
+        $visibility_update = DBManager::get()->prepare($query);
+
         $changed = 0;
-        foreach($this->user_data as $key => $value) {
-            $split = explode(".",$key);
-            $table = $split[0];
-            $field = $split[1];
+        foreach ($this->user_data as $key => $value) {
             // update changed fields only
-            if ($this->original_user_data["$table.$field"]!=$value) {
-                $value_escaped = mysql_escape_string($value);
-                $this->db->query("UPDATE $table SET $field = '$value_escaped' WHERE user_id = '".$this->user_data['auth_user_md5.user_id']."'");
+            if ($this->original_user_data[$key] != $value) {
+                list($table, $field) = explode('.', $key, 2);
+
+                $update->execute();
 
                 // remove all 'user' entries to institutes if global status becomes 'dozent'
                 // (cf. http://develop.studip.de/trac/ticket/484 )
                 if ($field=='perms' && $this->user_data['auth_user_md5.perms']=='dozent' && in_array($this->original_user_data['auth_user_md5.perms'],array('user','autor','tutor'))) {
                     $this->logInstUserDel($this->user_data['auth_user_md5.user_id'], "inst_perms = 'user'");
-                    $sql="DELETE FROM user_inst WHERE user_id='".$this->user_data['auth_user_md5.user_id']."' AND inst_perms='user'";
-                    $this->db2->query($sql);
+                    $institute_delete->execute(array($this->user_data['auth_user_md5.user_id']));
                     // make user visible globally if dozent may not be invisible (StEP 00158)
                     if (get_config('DOZENT_ALWAYS_VISIBLE')) {
-                        $sql="UPDATE auth_user_md5 SET visible='yes' WHERE user_id='".$this->user_data['auth_user_md5.user_id']."'";
-                        $this->db2->query($sql);
+                        $visibility_update->execute(array($this->user_data['auth_user_md5.user_id']));
                     }
                 }
 
                 // logging
-                if ($this->db->affected_rows() != 0) {
+                if ($update->rowCount() != 0) {
                     ++$changed;
                     switch ($field) {
                         case 'username':
@@ -195,7 +222,9 @@ class UserManagement
 
         }
         if ($changed) {
-            $this->db->query("UPDATE user_info SET chdate='".time()."' WHERE user_id = '".$this->user_data['auth_user_md5.user_id']."'");
+            $query = "UPDATE user_info SET chdate = UNIX_TIMESTAMP() WHERE user_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($this->user_data['auth_user_md5.user_id']));
         }
         return (bool)$changed;
     }
@@ -298,11 +327,12 @@ class UserManagement
 
         // Does the user already exist?
         // NOTE: This should be a transaction, but it is not...
-        $this->db->query("select * from auth_user_md5 where username='{$newuser['auth_user_md5.username']}'");
-        if ($this->db->nf()>0) {
+        $temp = User::findByUsername($newuser['auth_user_md5.username']);
+        if ($temp) {
             $this->msg .= "error§" . sprintf(_("BenutzerIn <em>%s</em> ist schon vorhanden!"), $newuser['auth_user_md5.username']) . "§";
             return FALSE;
         }
+
 
         if (!$this->storeToDatabase()) {
             $this->msg .= "error§" . sprintf(_("BenutzerIn \"%s\" konnte nicht angelegt werden."), $newuser['auth_user_md5.username']) . "§";
@@ -362,12 +392,7 @@ class UserManagement
                 return FALSE;
             }
             if ($perm->is_fak_admin() && $this->user_data['auth_user_md5.perms'] == "admin") {
-                $this->db->query("SELECT IF(count(a.Institut_id) - count(c.inst_perms),0,1) AS admin_ok FROM user_inst AS a
-                            LEFT JOIN Institute b ON (a.Institut_id=b.Institut_id AND b.Institut_id!=b.fakultaets_id)
-                            LEFT JOIN user_inst AS c ON(b.fakultaets_id=c.Institut_id AND c.user_id = '" . $auth->auth["uid"] . "' AND c.inst_perms='admin')
-                            WHERE a.user_id ='" . $this->user_data['auth_user_md5.user_id'] . "' AND a.inst_perms = 'admin'");
-                $this->db->next_record();
-                if (!$this->db->f("admin_ok")) {
+                if (!$this->adminOK()) {
                     $this->msg .= "error§" . _("Sie haben keine Berechtigung diesen Admin-Account zu ver&auml;ndern.") . "§";
                     return FALSE;
                 }
@@ -377,27 +402,34 @@ class UserManagement
         // active dozent? (ignore the studygroup guys)
         $status = studygroup_sem_types();
 
-        $this->db->query("SELECT count(*) AS count FROM seminar_user as su LEFT JOIN seminare as s USING (Seminar_id)
-                          WHERE su.user_id = '" . $this->user_data['auth_user_md5.user_id'] . "'
-                          AND s.status NOT IN ('". implode("','", $status)."')
-                          AND su.status = 'dozent' GROUP BY user_id");
-
-        $this->db->next_record();
-
-        if ($this->db->f("count") &&  isset($newuser['auth_user_md5.perms']) && $newuser['auth_user_md5.perms'] != "dozent") {
-            $this->msg .= sprintf("error§" . _("Der Benutzer <em>%s</em> ist Dozent in %s aktiven Veranstaltungen und kann daher nicht in einen anderen Status versetzt werden!") . "§", $this->user_data['auth_user_md5.username'], $this->db->f("count"));
+        $query = "SELECT COUNT(*)
+                  FROM seminar_user AS su
+                  LEFT JOIN seminare AS s USING (Seminar_id)
+                  WHERE su.user_id = ? AND s.status NOT IN (?) AND su.status = 'dozent'
+                  GROUP BY user_id";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $this->user_data['auth_user_md5.user_id'],
+            $status,
+        ));
+        $count = $statement->fetchColumn();
+        if ($count && isset($newuser['auth_user_md5.perms']) && $newuser['auth_user_md5.perms'] != "dozent") {
+            $this->msg .= sprintf("error§" . _("Der Benutzer <em>%s</em> ist Dozent in %s aktiven Veranstaltungen und kann daher nicht in einen anderen Status versetzt werden!") . "§", $this->user_data['auth_user_md5.username'], $count);
             return FALSE;
         }
 
         // active admin?
         if ($this->user_data['auth_user_md5.perms'] == 'admin' && $newuser['auth_user_md5.perms'] != 'admin') {
             // count number of institutes where the user is admin
-            $stmt = DBManager::get()->query("SELECT COUNT(*) AS count FROM user_inst
-                WHERE user_id = '". $this->user_data['auth_user_md5.user_id'] ."' AND inst_perms = 'admin'
-                GROUP BY Institut_id");
+            $query = "SELECT COUNT(*)
+                      FROM user_inst
+                      WHERE user_id = ? AND inst_perms = 'admin'
+                      GROUP BY Institut_id";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($this->user_data['auth_user_md5.user_id']));
 
             // if there are institutes with admin-perms, add error-message and deny change
-            if ($count = $stmt->fetchColumn()) {
+            if ($count = $statement->fetchColumn()) {
                 $this->msg .= sprintf('error§'. _("Der Benutzer <em>%s</em> ist Admin in %s Einrichtungen und kann daher nicht in einen anderen Status versetzt werden!") .'§', $this->user_data['auth_user_md5.username'], $count);
                 return false;
             }
@@ -467,31 +499,36 @@ class UserManagement
          $this->re_sort_position_in_seminar_user();
 
             // delete all seminar entries
-            $query = "SELECT seminar_id FROM seminar_user WHERE user_id='" . $this->user_data['auth_user_md5.user_id'] . "'";
-            $query2 = "DELETE FROM seminar_user WHERE user_id='" . $this->user_data['auth_user_md5.user_id'] . "'";
-            $this->db->query($query);
-            $this->db2->query($query2);
-            if (($db_ar = $this->db2->affected_rows()) > 0) {
+            $query = "SELECT seminar_id FROM seminar_user WHERE user_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($this->user_data['auth_user_md5.user_id']));
+            $seminar_ids = $statement->fetchAll(PDO::FETCH_COLUMN);
+
+            $query = "DELETE FROM seminar_user WHERE user_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($this->user_data['auth_user_md5.user_id']));
+            if (($db_ar = $statement->rowCount()) > 0) {
                 $this->msg .= "info§" . sprintf(_("%s Eintr&auml;ge aus Veranstaltungen gel&ouml;scht."), $db_ar) . "§";
-                while ($this->db->next_record()) {
-                    update_admission($this->db->f("seminar_id"));
-                }
+                array_map('update_admission', $seminar_ids);
             }
             // delete all entries from waiting lists
-            $query = "SELECT seminar_id FROM admission_seminar_user WHERE user_id='" . $this->user_data['auth_user_md5.user_id'] . "'";
-            $query2 = "DELETE FROM admission_seminar_user WHERE user_id='" . $this->user_data['auth_user_md5.user_id'] . "'";
-            $this->db->query($query);
-            $this->db2->query($query2);
-            if (($db_ar = $this->db2->affected_rows()) > 0) {
+            $query = "SELECT seminar_id FROM admission_seminar_user WHERE user_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($this->user_data['auth_user_md5.user_id']));
+            $seminar_ids = $statement->fetchAll(PDO::FETCH_COLUMN);
+
+            $query = "DELETE FROM admission_seminar_user WHERE user_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($this->user_data['auth_user_md5.user_id']));
+            if (($db_ar = $statement->rowCount()) > 0) {
                 $this->msg .= "info§" . sprintf(_("%s Eintr&auml;ge aus Wartelisten gel&ouml;scht."), $db_ar) . "§";
-                while ($this->db->next_record()) {
-                    update_admission($this->db->f("seminar_id"));
-                }
+                array_map('update_admission', $seminar_ids);
             }
             // delete 'Studiengaenge'
-            $query = "DELETE FROM user_studiengang WHERE user_id='" . $this->user_data['auth_user_md5.user_id'] . "'";
-            $this->db->query($query);
-            if (($db_ar = $this->db->affected_rows()) > 0) {
+            $query = "DELETE FROM user_studiengang WHERE user_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($this->user_data['auth_user_md5.user_id']));
+            if (($db_ar = $statement->rowCount()) > 0) {
                 $this->msg .= "info§" . sprintf(_("%s Zuordnungen zu Studieng&auml;ngen gel&ouml;scht."), $db_ar) . "§";
             }
             // delete all private appointments of this user
@@ -503,18 +540,20 @@ class UserManagement
         if ($newuser['auth_user_md5.perms'] == "admin") {
 
             $this->logInstUserDel($this->user_data['auth_user_md5.user_id'], "inst_perms != 'admin'");
-            $query = "DELETE FROM user_inst WHERE user_id='" . $this->user_data['auth_user_md5.user_id'] . "' AND inst_perms != 'admin'";
-            $this->db->query($query);
-            if (($db_ar = $this->db->affected_rows()) > 0) {
+            $query = "DELETE FROM user_inst WHERE user_id = ? AND inst_perms != 'admin'";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($this->user_data['auth_user_md5.user_id']));
+            if (($db_ar = $statement->rowCount()) > 0) {
                 $this->msg .= "info§" . sprintf(_("%s Eintr&auml;ge aus MitarbeiterInnenlisten gel&ouml;scht."), $db_ar) . "§";
             }
         }
         if ($newuser['auth_user_md5.perms'] == "root") {
             $this->logInstUserDel($this->user_data['auth_user_md5.user_id']);
 
-            $query = "DELETE FROM user_inst WHERE user_id='" . $this->user_data['auth_user_md5.user_id'] . "'";
-            $this->db->query($query);
-            if (($db_ar = $this->db->affected_rows()) > 0) {
+            $query = "DELETE FROM user_inst WHERE user_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($this->user_data['auth_user_md5.user_id']));
+            if (($db_ar = $statement->rowCount()) > 0) {
                 $this->msg .= "info§" . sprintf(_("%s Eintr&auml;ge aus MitarbeiterInnenlisten gel&ouml;scht."), $db_ar) . "§";
             }
         }
@@ -523,16 +562,17 @@ class UserManagement
     }
 
 
-    private function logInstUserDel($user_id, $condition = NULL)  {
-        $db = DBManager::get();
-        $sql = "SELECT * FROM user_inst WHERE user_id = '$user_id'";
-
+    private function logInstUserDel($user_id, $condition = NULL) 
+    {
+        $query = "SELECT Institut_id FROM user_inst WHERE user_id = ?";
         if (isset($condition)) {
-            $sql .= ' AND ' . $condition;
+            $query .= ' AND ' . $condition;
         }
 
-        foreach ($db->query($sql) as $data) {
-            log_event('INST_USER_DEL', $data['Institut_id'], $user_id);
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($user_id));
+        while ($institute_id = $statement->fetchColumn()) {
+            log_event('INST_USER_DEL', $institute_id, $user_id);
         }
     }
     /**
@@ -557,12 +597,7 @@ class UserManagement
                 return FALSE;
             }
             if ($perm->is_fak_admin() && $this->user_data['auth_user_md5.perms'] == "admin"){
-                $this->db->query("SELECT IF(count(a.Institut_id) - count(c.inst_perms),0,1) AS admin_ok FROM user_inst AS a
-                            LEFT JOIN Institute b ON (a.Institut_id=b.Institut_id AND b.Institut_id!=b.fakultaets_id)
-                            LEFT JOIN user_inst AS c ON(b.fakultaets_id=c.Institut_id AND c.user_id = '" . $auth->auth["uid"] . "' AND c.inst_perms='admin')
-                            WHERE a.user_id ='" . $this->user_data['auth_user_md5.user_id'] . "' AND a.inst_perms = 'admin'");
-                $this->db->next_record();
-                if (!$this->db->f("admin_ok")) {
+                if (!$this->adminOK()) {
                     $this->msg .= "error§" . _("Sie haben keine Berechtigung diesen Admin-Account zu verändern.") . "§";
                     return FALSE;
                 }
@@ -602,7 +637,8 @@ class UserManagement
     * @param    bool delete all documents belonging to the user
     * @return   bool Removal successful?
     */
-    function deleteUser($delete_documents = true) {
+    function deleteUser($delete_documents = true)
+    {
         global $perm, $auth;
 
         // Do we have permission to do so?
@@ -617,12 +653,7 @@ class UserManagement
                 return FALSE;
             }
             if ($perm->is_fak_admin() && $this->user_data['auth_user_md5.perms'] == "admin"){
-                $this->db->query("SELECT IF(count(a.Institut_id) - count(c.inst_perms),0,1) AS admin_ok FROM user_inst AS a
-                            LEFT JOIN Institute b ON (a.Institut_id=b.Institut_id AND b.Institut_id!=b.fakultaets_id)
-                            LEFT JOIN user_inst AS c ON(b.fakultaets_id=c.Institut_id AND c.user_id = '" . $auth->auth["uid"] . "' AND c.inst_perms='admin')
-                            WHERE a.user_id ='" . $this->user_data['auth_user_md5.user_id'] . "' AND a.inst_perms = 'admin'");
-                $this->db->next_record();
-                if (!$this->db->f("admin_ok")) {
+                if (!$this->adminOK()) {
                     $this->msg .= "error§" . _("Sie haben keine Berechtigung diesen Admin-Account zu l&ouml;schen.") . "§";
                     return FALSE;
                 }
@@ -630,37 +661,43 @@ class UserManagement
         }
 
         // active dozent?
-        $this->db->query("SELECT sum( c ) as count FROM (
-            SELECT count( * ) AS c
-            FROM seminar_user su1
-            INNER JOIN seminar_user su2 ON su1.seminar_id = su2.seminar_id
-            AND su2.status = 'dozent'
-            INNER JOIN seminare ON su1.seminar_id = seminare.seminar_id
-            AND seminare.status NOT IN('". implode("','", studygroup_sem_types())."')
-            WHERE su1.user_id = '" . $this->user_data['auth_user_md5.user_id'] . "'
-            AND su1.status = 'dozent'
-            GROUP BY su1.seminar_id
-            HAVING c = 1
-            ORDER BY NULL
-            ) AS sub");
+        $query = "SELECT SUM(c) AS count FROM (
+                      SELECT COUNT(*) AS c
+                      FROM seminar_user AS su1
+                      INNER JOIN seminar_user AS su2 ON (su1.seminar_id = su2.seminar_id AND su2.status = 'dozent')
+                      INNER JOIN seminare ON (su1.seminar_id = seminare.seminar_id AND seminare.status NOT IN (?))
+                      WHERE su1.user_id = ? AND su1.status = 'dozent'
+                      GROUP BY su1.seminar_id
+                      HAVING c = 1
+                      ORDER BY NULL
+                  ) AS sub";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            studygroup_sem_types(),
+            $this->user_data['auth_user_md5.user_id'],
+        ));
+        $active_count = $statement->fetchColumn();
 
-        $this->db->next_record();
-        if ($this->db->f("count")) {
-            $this->msg .= sprintf("error§" . _("Der Benutzer/die Benutzerin <em>%s</em> ist DozentIn in %s aktiven Veranstaltungen und kann daher nicht gel&ouml;scht werden.") . "§", $this->user_data['auth_user_md5.username'], $this->db->f("count"));
+        if ($active_count) {
+            $this->msg .= sprintf("error§" . _("Der Benutzer/die Benutzerin <em>%s</em> ist DozentIn in %s aktiven Veranstaltungen und kann daher nicht gel&ouml;scht werden.") . "§", $this->user_data['auth_user_md5.username'], $active_count);
             return FALSE;
 
         //founder of studygroup?
         } elseif (get_config('STUDYGROUPS_ENABLE')) {
-          $stmt = DBManager::get()->query("SELECT * FROM seminare as s "
-                . "LEFT JOIN seminar_user as su USING (Seminar_id) "
-                . "WHERE su.status = 'dozent' "
-                . "AND su.user_id = '" . $this->user_data['auth_user_md5.user_id'] . "'"
-                . "AND s.status IN('". implode("','", studygroup_sem_types())."')");
+            $query = "SELECT Seminar_id
+                      FROM seminare AS s
+                      LEFT JOIN seminar_user AS su USING (Seminar_id)
+                      WHERE su.status = 'dozent' AND su.user_id = ? AND s.status IN (?)";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                $this->user_data['auth_user_md5.user_id'],
+                studygroup_sem_types(),
+            ));
+            $group_ids = $statement->fetchAll(PDO::FETCH_COLUMN);
 
-          if (is_array($groups = $stmt->fetchAll())) {
-            foreach($groups as $group) {
-                $sem = Seminar::GetInstance($group['Seminar_id']);
-                if (StudygroupModel::countMembers($group['Seminar_id']) > 1) {
+            foreach ($group_ids as $group_id) {
+                $sem = Seminar::GetInstance($group_id);
+                if (StudygroupModel::countMembers($group_id) > 1) {
                     // check whether there are tutors or even autors that can be promoted
                     $tutors = $sem->getMembers('tutor');
                     $autors = $sem->getMembers('autor');
@@ -681,7 +718,6 @@ class UserManagement
                 }
                 unset($sem);
             }
-          }
         }
 
         // store user preferred language for sending mail
@@ -690,11 +726,13 @@ class UserManagement
         // delete documents of this user
         if ($delete_documents) {
             $temp_count = 0;
-            $query = "SELECT dokument_id FROM dokumente WHERE user_id='" . $this->user_data['auth_user_md5.user_id'] . "'";
-            $this->db->query($query);
-            while ($this->db->next_record()) {
-                if (delete_document($this->db->f("dokument_id")))
-                    $temp_count ++;
+            $query = "SELECT dokument_id FROM dokumente WHERE user_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($this->user_data['auth_user_md5.user_id']));
+            while ($document_id = $statement->fetchColumn()) {
+                if (delete_document($document_id)) {
+                    $temp_count++;
+                }
             }
             if ($temp_count) {
                 $this->msg .= "info§" . sprintf(_("%s Dokumente gel&ouml;scht."), $temp_count) . "§";
@@ -702,16 +740,24 @@ class UserManagement
 
             // delete empty folders of this user
             $temp_count = 0;
-            $query = "SELECT folder_id FROM folder WHERE user_id='" . $this->user_data['auth_user_md5.user_id'] . "' ORDER BY mkdate DESC";
-            $this->db->query($query);
-            while ($this->db->next_record()) {
-                $query = "SELECT count(*) AS count FROM folder WHERE range_id = '".$this->db->f("folder_id")."'";
-                $this->db2->query($query);
-                $this->db2->next_record();
-                if (!$this->db2->f("count") && !doc_count($this->db->f("folder_id"))) {
-                    $query = "DELETE FROM folder WHERE folder_id ='".$this->db->f("folder_id")."'";
-                    $this->db2->query($query);
-                    $temp_count += $this->db2->affected_rows();
+            
+            $query = "SELECT COUNT(*) FROM folder WHERE range_id = ?";
+            $count_content = DBManager::get()->prepare($query);
+
+            $query = "DELETE FROM folder WHERE folder_id = ?";
+            $delete_folder = DBManager::get()->prepare($query);
+
+            $query = "SELECT folder_id FROM folder WHERE user_id = ? ORDER BY mkdate DESC";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($this->user_data['auth_user_md5.user_id']));
+            while ($folder_id = $statement->fetchColumn()) {
+                $count_content->execute(array($folder_id));
+                $count = $count_content->fetchColumn();
+                $count_content->closeCursor();
+
+                if (!$count && !doc_count($folder_id)) {
+                    $delete_folder->execute(array($folder_id));
+                    $temp_count += $delete_folder->rowCount();
                 }
             }
             if ($temp_count) {
@@ -719,11 +765,12 @@ class UserManagement
             }
 
             // folder left?
-            $query = "SELECT count(*) AS count FROM folder WHERE user_id='" . $this->user_data['auth_user_md5.user_id'] . "'";
-            $this->db->query($query);
-            $this->db->next_record();
-            if ($this->db->f("count")) {
-                $this->msg .= sprintf("info§" . _("%s Ordner konnten nicht gel&ouml;scht werden, da sie noch Dokumente anderer BenutzerInnen enthalten.") . "§", $this->db->f("count"));
+            $query = "SELECT COUNT(*) FROM folder WHERE user_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($this->user_data['auth_user_md5.user_id']));
+            $count = $statement->fetchColumn();
+            if ($count) {
+                $this->msg .= sprintf("info§" . _("%s Ordner konnten nicht gel&ouml;scht werden, da sie noch Dokumente anderer BenutzerInnen enthalten.") . "§", $count);
             }
         }
         // kill all the ressources that are assigned to the user (and all the linked or subordinated stuff!)
@@ -732,32 +779,37 @@ class UserManagement
             $killAssign->delete();
         }
 
-      $this->re_sort_position_in_seminar_user();
+        $this->re_sort_position_in_seminar_user();
 
         // delete user from seminars (postings will be preserved)
-        $query = "DELETE FROM seminar_user WHERE user_id='" . $this->user_data['auth_user_md5.user_id'] . "'";
-        $this->db->query($query);
-        if (($db_ar = $this->db->affected_rows()) > 0) {
+        $query = "DELETE FROM seminar_user WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($this->user_data['auth_user_md5.user_id']));
+        if (($db_ar = $statement->rowCount()) > 0) {
             $this->msg .= "info§" . sprintf(_("%s Eintr&auml;ge aus Veranstaltungen gel&ouml;scht."), $db_ar) . "§";
         }
 
         // delete user from waiting lists
-        $query2 = "SELECT seminar_id FROM admission_seminar_user where user_id='" . $this->user_data['auth_user_md5.user_id'] . "'";
-        $query = "DELETE FROM admission_seminar_user WHERE user_id='" . $this->user_data['auth_user_md5.user_id'] . "'";
-        $this->db->query($query);
-        $this->db2->query($query2);
-        if (($db_ar = $this->db->affected_rows()) > 0) {
+        $query = "SELECT seminar_id FROM admission_seminar_user WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($this->user_data['auth_user_md5.user_id']));
+        $seminar_ids = $statement->fetchAll(PDO::FETCH_COLUMN);
+
+        $query = "DELETE FROM admission_seminar_user WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($this->user_data['auth_user_md5.user_id']));
+        if (($db_ar = $statement->rowCount()) > 0) {
             $this->msg .= "info§" . sprintf(_("%s Eintr&auml;ge aus Wartelisten gel&ouml;scht."), $db_ar) . "§";
-        while ($this->db2->next_record())
-            update_admission($this->db2->f("seminar_id"));
+            array_map('update_admission', $seminar_ids);
         }
 
         // delete user from instituts
         $this->logInstUserDel($this->user_data['auth_user_md5.user_id']);
 
-        $query = "DELETE FROM user_inst WHERE user_id='" . $this->user_data['auth_user_md5.user_id'] . "'";
-        $this->db->query($query);
-        if (($db_ar = $this->db->affected_rows()) > 0) {
+        $query = "DELETE FROM user_inst WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($this->user_data['auth_user_md5.user_id']));
+        if (($db_ar = $statement->rowCount()) > 0) {
             $this->msg .= "info§" . sprintf(_("%s Eintr&auml;ge aus MitarbeiterInnenlisten gel&ouml;scht."), $db_ar) . "§";
         }
 
@@ -767,9 +819,10 @@ class UserManagement
         }
 
         // delete user from archiv
-        $query = "DELETE FROM archiv_user WHERE user_id='" . $this->user_data['auth_user_md5.user_id'] . "'";
-        $this->db->query($query);
-        if (($db_ar = $this->db->affected_rows()) > 0) {
+        $query = "DELETE FROM archiv_user WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($this->user_data['auth_user_md5.user_id']));
+        if (($db_ar = $statement->rowCount()) > 0) {
             $this->msg .= "info§" . sprintf(_("%s Eintr&auml;ge aus den Zugriffsberechtigungen f&uuml;r das Archiv gel&ouml;scht."), $db_ar) . "§";
         }
 
@@ -785,9 +838,10 @@ class UserManagement
         StudipNews::UnsetRssId($this->user_data['auth_user_md5.user_id']);
 
         // delete 'Studiengaenge'
-        $query = "DELETE FROM user_studiengang WHERE user_id='" . $this->user_data['auth_user_md5.user_id'] . "'";
-        $this->db->query($query);
-        if (($db_ar = $this->db->affected_rows()) > 0)
+        $query = "DELETE FROM user_studiengang WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($this->user_data['auth_user_md5.user_id']));
+        if (($db_ar = $statement->rowCount()) > 0)
             $this->msg .= "info§" . sprintf(_("%s Zuordnungen zu Studieng&auml;ngen gel&ouml;scht."), $db_ar) . "§";
 
         // delete all private appointments of this user
@@ -812,9 +866,10 @@ class UserManagement
         }
 
         // delete all guestbook entrys
-        $query = "DELETE FROM guestbook WHERE range_id='" . $this->user_data['auth_user_md5.user_id'] . "'";
-        $this->db->query($query);
-        if (($db_ar = $this->db->affected_rows()) > 0) {
+        $query = "DELETE FROM guestbook WHERE range_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($this->user_data['auth_user_md5.user_id']));
+        if (($db_ar = $statement->rowCount()) > 0) {
             $this->msg .= "info§" . sprintf(_("%s Eintr&auml;ge aus dem Gästebuch gel&ouml;scht."), $db_ar) . "§";
         }
 
@@ -824,16 +879,16 @@ class UserManagement
         UserConfigEntry::deleteByUser($this->user_data['auth_user_md5.user_id']);
 
         // delete all remaining user data
-        $query = "DELETE FROM seminar_user_schedule WHERE user_id='" . $this->user_data['auth_user_md5.user_id'] . "'";
-        $this->db->query($query);
-        $query = "DELETE FROM rss_feeds WHERE user_id='" . $this->user_data['auth_user_md5.user_id'] . "'";
-        $this->db->query($query);
-        $query = "DELETE FROM kategorien WHERE range_id = '" . $this->user_data['auth_user_md5.user_id'] . "'";
-        $this->db->query($query);
-        $query = "DELETE FROM user_info WHERE user_id= '" . $this->user_data['auth_user_md5.user_id'] . "'";
-        $this->db->query($query);
-        $query = "DELETE FROM user_visibility WHERE user_id= '" . $this->user_data['auth_user_md5.user_id'] . "'";
-        $this->db->query($query);
+        $query = "DELETE FROM seminar_user_schedule WHERE user_id = ?";
+        DBManager::get()->prepare($query)->execute(array($this->user_data['auth_user_md5.user_id']));
+        $query = "DELETE FROM rss_feeds WHERE user_id = ?";
+        DBManager::get()->prepare($query)->execute(array($this->user_data['auth_user_md5.user_id']));
+        $query = "DELETE FROM kategorien WHERE range_id = ?";
+        DBManager::get()->prepare($query)->execute(array($this->user_data['auth_user_md5.user_id']));
+        $query = "DELETE FROM user_info WHERE user_id = ?";
+        DBManager::get()->prepare($query)->execute(array($this->user_data['auth_user_md5.user_id']));
+        $query = "DELETE FROM user_visibility WHERE user_id = ?";
+        DBManager::get()->prepare($query)->execute(array($this->user_data['auth_user_md5.user_id']));
         $GLOBALS['user']->that->ac_delete($this->user_data['auth_user_md5.user_id'], $GLOBALS['user']->name);
         object_kill_visits($this->user_data['auth_user_md5.user_id']);
         object_kill_views($this->user_data['auth_user_md5.user_id']);
@@ -866,18 +921,21 @@ class UserManagement
         }
 
         // delete deputy entries if necessary
-        $query = "DELETE FROM deputies WHERE user_id='".$this->user_data['auth_user_md5.user_id']."' OR range_id='".$this->user_data['auth_user_md5.user_id']."'";
-        $deputyEntries = DBManager::get()->exec($query);
+        $query = "DELETE FROM deputies WHERE ? IN (user_id, range_id)";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($this->user_data['auth_user_md5.user_id']));
+        $deputyEntries = $statement->rowCount();
         if ($deputyEntries) {
             $this->msg .= "info§".sprintf(_("%s Einträge in den Vertretungseinstellungen gelöscht."), $deputyEntries)."§";
         }
 
         // delete Stud.IP account
-        $query = "DELETE FROM auth_user_md5 WHERE user_id='" . $this->user_data['auth_user_md5.user_id'] . "'";
-        $this->db->query($query);
-        if (!$this->db->affected_rows()) {
+        $query = "DELETE FROM auth_user_md5 WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($this->user_data['auth_user_md5.user_id']));
+        if (!$statement->rowCount()) {
             $this->msg .= "error§<em>" . _("Fehler:") . "</em> " . $query . "§";
-        return FALSE;
+            return FALSE;
         } else {
             $this->msg .= "msg§" . sprintf(_("Benutzer \"%s\" gel&ouml;scht."), $this->user_data['auth_user_md5.username']) . "§";
         }
@@ -898,23 +956,44 @@ class UserManagement
         return TRUE;
 
     }
-   function re_sort_position_in_seminar_user()
-   {
+    
+    private function adminOK()
+    {
+        static $ok = null;
 
-     $query = "SELECT Seminar_id, position, status FROM seminar_user WHERE user_id='" . $this->user_data['auth_user_md5.user_id'] . "'";
-        $this->db->query($query);
-        while ($this->db->next_record())
-      {
-          if ($this->db->f("status") == 'tutor')
-          {
-            re_sort_tutoren($this->db->f("Seminar_id"), $this->db->f("position"));
-          }
-          else if ($this->db->f("status") == 'dozent')
-          {
-            re_sort_dozenten($this->db->f("Seminar_id"), $this->db->f("position"));
-          }
+        if ($ok === null) {
+            $query = "SELECT COUNT(a.Institut_id) = COUNT(c.inst_perms)
+                      FROM user_inst AS a
+                      LEFT JOIN Institute b ON (a.Institut_id = b.Institut_id AND b.Institut_id != b.fakultaets_id)
+                      LEFT JOIN user_inst AS c ON (b.fakultaets_id = c.Institut_id AND c.user_id = ?
+                                                  AND c.inst_perms = 'admin')
+                      WHERE a.user_id = ? AND a.inst_perms = 'admin'";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                $GLOBALS['auth']->auth['uid'],
+                $this->user_data['auth_user_md5.user_id'],
+            ));
+            $ok = $statement->fetchColumn();
         }
-   }
+
+        return $ok;
+    }
+
+    function re_sort_position_in_seminar_user()
+    {
+        $query = "SELECT Seminar_id, position, status
+                  FROM seminar_user
+                  WHERE user_id = ? AND status IN ('tutor', 'dozent')";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($this->user_data['auth_user_md5.user_id']));
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            if ($row['status'] == 'tutor') {
+                re_sort_tutoren($row['Seminar_id'], $row['position']);
+            } else if ($row['status'] == 'dozent') {
+                re_sort_dozenten($row['Seminar_id'], $row['position']);
+            }
+        }
+    }
 
     /**
     * Change an existing user password

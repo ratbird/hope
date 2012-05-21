@@ -98,7 +98,7 @@ function getToplist($rubrik, $query, $type="count") {
         $i=1;
         while ($db->next_record() ){
             $result .= "<tr><td width=\"1%\" valign=\"top\"><font size=\"-1\">$i.</font></td>";
-            $result .= "<td width=\"99%\"><font size=\"-1\"><a href=\"details.php?sem_id=".$db->f("seminar_id")."&send_from_search=true&send_from_search_page=".URLHelper::getURL()."\">";
+            $result .= "<td width=\"99%\"><font size=\"-1\"><a href=\"details.php?sem_id=".$db->f("seminar_id")."&send_from_search=true&send_from_search_page=".$_SERVER['PHP_SELF']."\">";
             $result .= htmlReady(substr($db->f("name"),0,45));
             if (strlen ($db->f("name")) > 45)
                 $result .= "... ";

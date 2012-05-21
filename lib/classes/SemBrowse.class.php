@@ -274,7 +274,7 @@ class SemBrowse {
         $this->search_obj->attributes_default = array('style' => 'width:100%;font-size:10pt;');
         $this->search_obj->search_fields['type']['size'] = 40 ;
         echo "<table id=\"search_sem_xts\" border=\"0\" align=\"center\" cellspacing=0 cellpadding=2 width = \"99%\">\n";
-        echo $this->search_obj->getFormStart("$PHP_SELF?send=yes");
+        echo $this->search_obj->getFormStart(URLHelper::getLink("?send=yes"));
         echo "<tr><td class=\"steel1\" align=\"right\" width=\"15%\"><label for=\"search_sem_title\">" . _("Titel:") . "</label> </td>";
         echo "<td class=\"steel1\" align=\"left\" width=\"35%\">";
         echo $this->search_obj->getSearchField("title", array('id' => 'search_sem_title', 'style' => 'width:100%;font-size:10pt;'));
@@ -341,15 +341,15 @@ class SemBrowse {
 
             echo "\n<tr><td align=\"center\" class=\"steelgraulight\" height=\"40\" valign=\"middle\"><div style=\"margin-top:10px;margin-bottom:10px;\"><font size=\"-1\">";
             if (($this->show_result && count($this->sem_browse_data['search_result'])) || $this->sem_browse_data['cmd'] == "xts") {
-                printf(_("Suche im %sEinrichtungsverzeichnis%s"),"<a href=\"$PHP_SELF?level=ev&cmd=qs&sset=0\">","</a>");
+                printf(_("Suche im %sEinrichtungsverzeichnis%s"),"<a href=\"".URLHelper::getLink('?level=ev&cmd=qs&sset=0')."\">","</a>");
                 if ($this->show_class()){
-                    printf(_(" / %sVorlesungsverzeichnis%s"),"<a href=\"$PHP_SELF?level=vv&cmd=qs&sset=0\">","</a>");
+                    printf(_(" / %sVorlesungsverzeichnis%s"),"<a href=\"".URLHelper::getLink('?level=vv&cmd=qs&sset=0')."\">","</a>");
                 }
             } else {
-                printf ("<table align=\"center\" cellspacing=\"10\"><tr><td nowrap align=\"center\"><a href=\"%s?level=ev&cmd=qs&sset=0\"><b>%s</b><br><br><img src=\"".$GLOBALS['ASSETS_URL']."images/institute.jpg\" %s border=\"0\"></a></td>", $PHP_SELF, _("Suche in Einrichtungen"), tooltip(_("Suche im Einrichtungsverzeichnis")));
+                printf ("<table align=\"center\" cellspacing=\"10\"><tr><td nowrap align=\"center\"><a href=\"".URLHelper::getLink('?level=ev&cmd=qs&sset=0')."\"><b>%s</b><br><br><img src=\"".$GLOBALS['ASSETS_URL']."images/institute.jpg\" %s border=\"0\"></a></td>", _("Suche in Einrichtungen"), tooltip(_("Suche im Einrichtungsverzeichnis")));
                 if ($this->show_class()){
                     SkipLinks::addLink(_("Suche im Vorlesungsverzeichnis"), URLHelper::getLink('sem_portal.php', array('level' => 'vv', 'cmd' => 'qs', 'sset' => '0')));
-                    printf ("<td nowrap align=\"center\"><a href=\"%s?level=vv&cmd=qs&sset=0\"><b>%s</b><br><br><img src=\"".$GLOBALS['ASSETS_URL']."images/kommentar.jpg\" %s border=\"0\"></a></td>", $PHP_SELF, _("Suche im Vorlesungsverzeichnis"), tooltip(_("Suche im Vorlesungsverzeichnis")));
+                    printf ("<td nowrap align=\"center\"><a href=\"".URLHelper::getLink('?level=vv&cmd=qs&sset=0')."\"><b>%s</b><br><br><img src=\"".$GLOBALS['ASSETS_URL']."images/kommentar.jpg\" %s border=\"0\"></a></td>", _("Suche im Vorlesungsverzeichnis"), tooltip(_("Suche im Vorlesungsverzeichnis")));
                 }
                 SkipLinks::addLink(_("Suche im Einrichtungsverzeichnis"), URLHelper::getLink('sem_portal.php', array('level' => 'ev', 'cmd' => 'qs', 'sset' => '0')));
                 printf ("</tr></table>");
@@ -460,7 +460,7 @@ class SemBrowse {
 
                         echo '<td class="steel1" width="66%" colspan="2">';
                         echo "<a href=\"{$this->target_url}?{$this->target_id}={$seminar_id}&send_from_search=1&send_from_search_page=";
-                        echo $PHP_SELF. "?keep_result_set=1\">", htmlReady($sem_name), "</a><br>";
+                        echo $_SERVER['PHP_SELF']. "?keep_result_set=1\">", htmlReady($sem_name), "</a><br>";
 
                         //create Turnus field
                         if ($studygroup_mode) {
@@ -470,7 +470,7 @@ class SemBrowse {
                             //Shorten, if string too long (add link for details.php)
                             if (strlen($temp_turnus_string) > 70) {
                                 $temp_turnus_string = htmlReady(substr($temp_turnus_string, 0, strpos(substr($temp_turnus_string, 70, strlen($temp_turnus_string)), ",") + 71));
-                                $temp_turnus_string .= " ... <a href=\"".$this->target_url."?".$this->target_id."=".$seminar_id."&send_from_search=1&send_from_search_page={$PHP_SELF}?keep_result_set=1\">("._("mehr").")</a>";
+                                $temp_turnus_string .= " ... <a href=\"".$this->target_url."?".$this->target_id."=".$seminar_id."&send_from_search=1&send_from_search_page={$_SERVER['PHP_SELF']}?keep_result_set=1\">("._("mehr").")</a>";
                             } else {
                                 $temp_turnus_string = htmlReady($temp_turnus_string);
                             }
@@ -499,7 +499,7 @@ class SemBrowse {
                             foreach ($doz_name as $index => $value){
                                 if ($value) {  // hide dozenten with empty username
                                     if ($i == 4){
-                                        echo "... <a href=\"".$this->target_url."?".$this->target_id."=".$seminar_id."&send_from_search=1&send_from_search_page={$PHP_SELF}?keep_result_set=1\">("._("mehr").")</a>";
+                                        echo "... <a href=\"".$this->target_url."?".$this->target_id."=".$seminar_id."&send_from_search=1&send_from_search_page={$_SERVER['PHP_SELF']}?keep_result_set=1\">("._("mehr").")</a>";
                                         break;
                                     }
                                     echo "<a href=\"about.php?username=" . $doz_uname[$index] ."\">" . htmlReady($value) . "</a>";

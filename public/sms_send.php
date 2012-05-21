@@ -73,7 +73,7 @@ if ($cmd == 'new') {
    $message = Request::get('message');
    $quote = Request::get('quote');
    $signature = Request::get('signature');
-if ($cmd == "write_chatinv" && !isset($messagesubject)) $messagesubject = _("Chateinladung");
+if ($cmd == "write_chatinv" && empty($messagesubject)) $messagesubject = _("Chateinladung");
 
 //wurde eine Datei hochgeladen?
 if($GLOBALS["ENABLE_EMAIL_ATTACHMENTS"]){
@@ -522,7 +522,7 @@ if (Request::option('inst_id') && $perm->have_studip_perm('admin', Request::opti
 }
 
 // attach signature
-if (!isset($sms_data["sig"])) {
+if (empty($sms_data["sig"])) {
     $sms_data["sig"] = $my_messaging_settings["addsignature"];
 } else if (Request::submitted('add_sig_button_x')) {
     $sms_data["sig"] = "1";

@@ -39,6 +39,17 @@
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
+$o_mode = Request::option('o_mode');
+$xml_file_id = Request::option('xml_file_id',"");
+$xslt_filename = Request::quoted('xslt_filename');
+$page = Request::option('page');
+$filter = Request::option('filter');
+$ex_type = Request::quoted('ex_type');
+$format = Request::option('format');
+$choose = Request::quoted('choose');
+$range_id = Request::option('range_id');
+
 if (($o_mode != "direct") AND ($o_mode != "passthrough")) {
   page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
   $perm->check("tutor");
@@ -47,7 +58,7 @@ if (($o_mode != "direct") AND ($o_mode != "passthrough")) {
 
 //$i_page = "meine_seminare.php";
 //$EXPORT_ENABLE = TRUE;
-//$PATH_EXPORT = "export";
+//$GLOBALS['PATH_EXPORT'] = "export";
 // -- here you have to put initialisations for the current page
 
 require_once ('lib/visual.inc.php');
@@ -73,16 +84,16 @@ require_once (EVAL_FILE_EVALDB);
 
 
 
-if ($EXPORT_ENABLE)
+if (get_config('EXPORT_ENABLE'))
 {
     // Zurueckbutton benutzt?
-    if (isset($back_x))
+    if (Request::submitted('back'))
     {
         if ($o_mode == "choose")
         {
             if ($page == 4)
             {
-                if ($skip_page_3)
+                if (get_config('skip_page_3'))
                     $page = 1;
                 else
                     $page = 2;
@@ -128,26 +139,26 @@ if ($EXPORT_ENABLE)
         <?
     }
 
-    if ((!isset($range_id) AND !isset($xml_file_id) AND !isset($o_mode) AND !isset($ex_type)) OR ($o_mode == "start"))
+    if ((empty($range_id) AND empty($xml_file_id) AND empty($o_mode) AND empty($ex_type)) OR ($o_mode == "start"))
     {
-        include($PATH_EXPORT . "/export_start.inc.php");
+        include($GLOBALS['PATH_EXPORT'] . "/export_start.inc.php");
         $start_done = true;
     }
-
-    if (($page==2) AND $XSLT_ENABLE AND $skip_page_3)
+    if (($page==2) AND get_config('XSLT_ENABLE') AND get_config('skip_page_3'))
         $page=3;
+    
 
     //Exportmodul einbinden
-    if (/*($xml_file_id != "") AND */($page != 3) AND ($o_mode == "choose") AND ($export_error_num < 1))
+    if (($page != 3) AND ($o_mode == "choose") AND ($export_error_num < 1))
     {
-        include($PATH_EXPORT . "/export_choose_xslt.inc.php");
+        include($GLOBALS['PATH_EXPORT'] . "/export_choose_xslt.inc.php");
         if ($export_error_num < 1)
             $xslt_choose_done = true;
     }
 
-    if (($range_id != "") AND ($xml_file_id == "") AND ($o_mode != "start") AND (($o_mode != "choose") OR ($page == 3)))
+    if ( ($range_id != "") AND ($xml_file_id == "") AND ($o_mode != "start") AND (($o_mode != "choose") OR ($page == 3)))
     {
-        include($PATH_EXPORT . "/export_xml.inc.php");
+        include($GLOBALS['PATH_EXPORT'] . "/export_xml.inc.php");
         if ($export_error_num < 1)
             $xml_output_done = true;
     }
@@ -155,13 +166,13 @@ if ($EXPORT_ENABLE)
     if ( ($choose != "") AND ($format != "") AND ($format != "xml") AND ($XSLT_ENABLE) AND ($export_error_num==0) AND
         ( ($o_mode == "processor") OR ($o_mode == "passthrough") OR ($page == 3) ) )
     {
-        include($PATH_EXPORT . "/export_run_xslt.inc.php");
+        include($GLOBALS['PATH_EXPORT'] . "/export_run_xslt.inc.php");
         if ($export_error_num < 1)
             $xslt_process_done = true;
     }
 
     if (($export_error_num < 1) AND ($xslt_process_done) AND ($format == "fo"))
-        include($PATH_EXPORT . "/export_run_fop.inc.php");
+        include($GLOBALS['PATH_EXPORT'] . "/export_run_fop.inc.php");
 
     if (($export_error_num < 1) AND (!$start_done) AND ((!$xml_output_done) OR ($o_mode != "file")) AND (!$xslt_choose_done) AND (!$xslt_process_done))
     {
@@ -178,7 +189,7 @@ if ($EXPORT_ENABLE)
         );
     }
 
-    include($PATH_EXPORT . "/export_view.inc.php");
+    include($GLOBALS['PATH_EXPORT'] . "/export_view.inc.php");
 }
 else
 {

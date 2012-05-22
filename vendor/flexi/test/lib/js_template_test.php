@@ -20,23 +20,37 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-define('FLEXI_VERSION', '0.4.2');
+require_once dirname(__FILE__) . '/../flexi_tests.php';
+Flexi_Tests::setup();
 
-/**
- * Bootstrapping file for flexi. Just include this to get going.
- *
- * @package   flexi
- */
+class JsTemplateTestCase extends UnitTestCase {
 
-require_once 'exceptions.php';
-require_once 'template.php';
-require_once 'template_factory.php';
-require_once 'php_template.php';
-require_once 'js_template.php';
+  var $factory;
 
-require_once 'helper/js_helper.php';
-require_once 'helper/prototype_helper.php';
-require_once 'helper/scriptaculous_helper.php';
-require_once 'helper/tag_helper.php';
-require_once 'helper/text_helper.php';
+  function setUp() {
+    $this->setUpFS();
+    $this->factory = new Flexi_TemplateFactory('var://templates/');
+  }
+
+  function tearDown() {
+    unset($this->factory);
+
+    stream_wrapper_unregister("var");
+  }
+
+  function setUpFS() {
+    ArrayFileStream::set_filesystem(array(
+      'templates' => array(
+        'foo.pjs' => '',
+        'layout.pjs' => ''
+      )));
+    stream_wrapper_register("var", "ArrayFileStream") or die("Failed to register protocol");
+  }
+
+
+  function test_something() {
+    $template = $this->factory->open('foo');
+    $template->render(array('whom' => 'world'), 'layout');
+  }
+}
 

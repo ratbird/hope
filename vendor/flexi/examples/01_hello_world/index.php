@@ -1,6 +1,6 @@
 <?php
 
-# Copyright (c)  2009 - Marcus Lunzenauer <mlunzena@uos.de>
+# Copyright (c)  2008 - Marcus Lunzenauer <mlunzena@uos.de>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -20,5 +20,20 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-class Flexi_TemplateNotFoundException extends Exception {}
+# load flexi lib
+require_once dirname(__FILE__) . '/../../lib/flexi.php';
 
+# where are the templates
+$path_to_the_templates = dirname(__FILE__) . '/templates';
+
+# we need a template factory
+$factory = new Flexi_TemplateFactory($path_to_the_templates);
+
+# open template
+$template = $factory->open('hello_world');
+
+# set name of the greetee
+$template->set_attribute('name', 'Axel');
+
+# render template
+echo $template->render();

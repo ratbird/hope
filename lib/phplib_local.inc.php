@@ -64,7 +64,7 @@ require_once('lib/classes/Assets.class.php');
 Assets::set_assets_url($GLOBALS['ASSETS_URL']);
 
 // globale template factory anlegen
-require_once 'vendor/flexi/flexi.php';
+require_once 'vendor/flexi/lib/flexi.php';
 $GLOBALS['template_factory'] =
     new Flexi_TemplateFactory($STUDIP_BASE_PATH . '/templates');
 

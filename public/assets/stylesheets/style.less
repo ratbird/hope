@@ -12,6 +12,7 @@
 // See http://twitter.github.com/bootstrap/less.html#mixins
 @import "mixins.less";
 
+@import "less/colors.less";
 @import "less/links.less";
 @import "less/tables.less";
 @import "less/steel.less";
@@ -52,8 +53,8 @@ body, input, textarea {
 html, body { height: 100%; }
 html { overflow-y: scroll; }
 body {
-    #gradient > .vertical(#36598f, #1e3e70);
-    background-color: #1e3e70;
+    #gradient > .vertical(@brand-color-light, @brand-color-darker);
+    background-color: @brand-color-darker;
     background-repeat: repeat-x;
     margin: 0;
 }
@@ -71,7 +72,7 @@ input.placeholder { opacity: 0.7; }
 .placeholder(rgba(0, 0, 0, 0.7));
 
 /* --- Überschriften -------------------------------------------------------- */
-h1.content, h2.content, h3.content { color: #24437c; }
+h1.content, h2.content, h3.content { color: @brand-color-dark; }
 hr.content { margin: 0 1em; }
 
 table.content {
@@ -98,8 +99,8 @@ h2.topic, h3.topic { font-size: 1.2em; }
 
 .topic {
     border: 0;
-    border-bottom: 1px solid #1E3E70;
-    background-color: #899AB9;
+    border-bottom: 1px solid @brand-color-darker;
+    background-color: @brand-color-lighter;
     color: #FFFFFF;
     font-size: 12pt;
     padding: 3px 5px;
@@ -168,7 +169,7 @@ div.overdiv {
         float: right;
     }
     div.title {
-        background: #899ab9;
+        background: @brand-color-lighter;
         height: 1.4em;
         padding: 0;
     }

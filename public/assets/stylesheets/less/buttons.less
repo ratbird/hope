@@ -1,7 +1,7 @@
 a.button, button.button {
-    #gradient > .vertical-three-colors(#c4d1e9, #899ab9, 20%, #899ab9);
+    #gradient > .vertical-three-colors(#c4d1e9, @brand-color-lighter, 20%, @brand-color-lighter);
     background-color: #cddae4;
-    border: 1px solid #1e3e70;
+    border: 1px solid @brand-color-darker;
     .border-radius(2px);
     .box-sizing(border-box);
     color: #fff;
@@ -72,7 +72,7 @@ a.button, button.button {
     padding: 0;
 
     button, .button {
-        border-left: 1px solid #1e3e70;
+        border-left: 1px solid @brand-color-darker;
         float: left;
         margin-left: -1px;
         margin-right: 0;
@@ -87,7 +87,7 @@ a.button, button.button {
             border-bottom-right-radius: 2px;
             border-top-right-radius: 2px;
 
-            border-left: 1px solid #1e3e70;
+            border-left: 1px solid @brand-color-darker;
             margin-left: 0;
         }
         &:not(:first-child):not(:last-child) {

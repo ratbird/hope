@@ -123,4 +123,36 @@ abstract class StudIPPlugin {
     {
         # implement this in your own plugin
     }
+
+    /**
+     * Includes given stylesheet in page, compiles less if neccessary
+     *
+     * @param String $filename Name of the stylesheet (css or less) to include
+     *                         (relative to plugin directory)
+     */
+    protected function addStylesheet($filename)
+    {
+        if (substr($filename, -5) === '.less') {
+            $less_file = $GLOBALS['ABSOLUTE_PATH_STUDIP']
+                       . $this->getPluginPath() . '/'
+                       . $filename;
+            $css_file  = $GLOBALS['ABSOLUTE_PATH_STUDIP']
+                       . $this->getPluginPath() . '/'
+                       . substr($filename, 0, -5) . '.css';
+
+            if (!file_exists($css_file) || (filemtime($css_file) < filemtime($less_file))) {
+                $less  = file_get_contents($GLOBALS['ABSOLUTE_PATH_STUDIP'] . 'assets/stylesheets/mixins.less') . "\n";
+                $less .= file_get_contents($less_file);
+
+                require_once 'vendor/lessphp/lessc.inc.php';
+                $compiler = new lessc();
+                $css = $compiler->parse($less, array(
+                    'image-path' => '"' . substr(Assets::image_path('placeholder.png'), 0, -15) . '"',
+                ));
+                file_put_contents($css_file, $css);
+            }
+            $filename  = substr($filename, 0, -5) . '.css';
+        }
+        PageLayout::addStylesheet($this->getPluginURL() . '/' . $filename);
+    }
 }

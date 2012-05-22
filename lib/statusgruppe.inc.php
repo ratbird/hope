@@ -436,7 +436,7 @@ function SortPersonInAfter($user_id, $after, $role_id)
 
     $query = "UPDATE statusgruppe_user SET position = ? - position WHERE statusgruppe_id = ? AND user_id IN (?, ?)";
     $statement = DBManager::get()->prepare($query);
-    $statement->execute(array($position_sum, $user_id, $after));
+    $statement->execute(array($position_sum, $role_id, $user_id, $after));
 }
 
 function DeleteAllStatusgruppen ($range_id)

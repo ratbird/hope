@@ -157,7 +157,7 @@ class SiteinfoController extends StudipController
                 new AutoNavigation(_('Neue Rubrik'), $this->url_for('siteinfo/new')));
             $this->edit_rubric = TRUE;
         } else {
-            Navigation::addItem('/links/siteinfo/'.$this->currentrubric.'/detail_new',
+            Navigation::addItem('/footer/siteinfo/'.$this->currentrubric.'/detail_new',
                 new AutoNavigation(_('Neue Seite'), $this->url_for('siteinfo/new/'.$this->currentrubric)));
             $this->rubrics = $this->si->get_all_rubrics();
         }

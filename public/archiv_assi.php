@@ -95,7 +95,7 @@ if (Request::option('new_session'))
     $_SESSION['archiv_assi_data'] = array();
 
 // A list was sent
-if (is_array($archiv_sem) && !Request::option('archive_kill')) {
+if (is_array($archiv_sem) && !Request::option('archive_kill') && !Request::option('inc') && !Request::option('dec') ) {
     $_SESSION['archiv_assi_data']['sems'] = array();
     $_SESSION['archiv_assi_data']['sem_check'] = array();
     $_SESSION['archiv_assi_data']['pos'] = 0;
@@ -462,7 +462,7 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
                     if ((sizeof($_SESSION['archiv_assi_data']["sem_check"]) > 1) && ($_SESSION['archiv_assi_data']["sem_check"][$_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"] + $i]["id"]]))
                         $dec_possible = TRUE;
                 }
-                if (!$dec_possible) {
+                if ($dec_possible) {
                     echo LinkButton::create(_('Nächster >>'), URLHelper::getURL("?inc=TRUE"));
                 }
                 if (sizeof($_SESSION['archiv_assi_data']["sems"]) > 1)

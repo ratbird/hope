@@ -189,11 +189,11 @@ class Ilias4ConnectedCMS extends Ilias3ConnectedCMS
             }
         }
 
-        if ($_REQUEST["submit_x"] != "") {
-            ELearningUtils::setConfigValue("encrypt_passwords", $_REQUEST["encrypt_passwords"], $this->cms_type);
-            $encrypt_passwords = $_REQUEST["encrypt_passwords"];
-            ELearningUtils::setConfigValue("ldap_enable", $_REQUEST["ldap_enable"], $this->cms_type);
-            $this->ldap_enable = $_REQUEST["ldap_enable"];
+        if (Request::submitted('submit')) {
+            ELearningUtils::setConfigValue("encrypt_passwords", Request::option("encrypt_passwords"), $this->cms_type);
+            $encrypt_passwords = Request::option("encrypt_passwords");
+            ELearningUtils::setConfigValue("ldap_enable", Request::option("encrypt_passwords"), $this->cms_type);
+            $this->ldap_enable = Request::option("encrypt_passwords");
         } else {
             if (ELearningUtils::getConfigValue("encrypt_passwords", $this->cms_type) != "")
             $encrypt_passwords = ELearningUtils::getConfigValue("encrypt_passwords", $this->cms_type);

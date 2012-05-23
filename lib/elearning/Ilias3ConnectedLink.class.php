@@ -25,9 +25,9 @@ class Ilias3ConnectedLink extends ConnectedLink
     * constructor
     *
     * init class.
-    * @access 
+    * @access
     * @param string $cms system-type
-    */ 
+    */
     function Ilias3ConnectedLink($cms)
     {
         parent::ConnectedLink($cms);
@@ -44,9 +44,9 @@ class Ilias3ConnectedLink extends ConnectedLink
     function getUserModuleLinks()
     {
         global $connected_cms, $view, $search_key, $cms_select, $current_module;
-        
+
         if ($connected_cms[$this->cms_type]->isAuthNecessary() AND (! $connected_cms[$this->cms_type]->user->isConnected()))
-        {   
+        {
             $output .= $this->getNewAccountLink();
         }
         else
@@ -55,8 +55,8 @@ class Ilias3ConnectedLink extends ConnectedLink
             {
                 if ($connected_cms[$this->cms_type]->content_module[$current_module]->isAllowed(OPERATION_READ))
                 {
-                    
-                    $output .= LinkButton::create(_('Starten'), URLHelper::geURL($this->cms_link . "?"
+
+                    $output .= LinkButton::create(_('Starten'), URLHelper::getURL($this->cms_link . "?"
                         . "client_id=" . $connected_cms[$this->cms_type]->getClientId()
                         . "&cms_select=" . $this->cms_type
 //                      . "&sess_id=" . $connected_cms[$this->cms_type]->user->getSessionId()
@@ -68,7 +68,7 @@ class Ilias3ConnectedLink extends ConnectedLink
                 }
                 if ($connected_cms[$this->cms_type]->content_module[$current_module]->isAllowed(OPERATION_WRITE))
                 {
-                    $output .= LinkButton::create(_('Bearbeiten'), URLHelper::geURL($this->cms_link . "?"
+                    $output .= LinkButton::create(_('Bearbeiten'), URLHelper::getURL($this->cms_link . "?"
                         . "client_id=" . $connected_cms[$this->cms_type]->getClientId()
                         . "&cms_select=" . $this->cms_type
 //                      . "&sess_id=" . $connected_cms[$this->cms_type]->user->getSessionId()
@@ -77,7 +77,7 @@ class Ilias3ConnectedLink extends ConnectedLink
                         . $auth_data
                         . "&target=edit"), array('target' => "_blank"));
                     $output .= "&nbsp;";
-                    
+
                 }
             }
         }
@@ -108,7 +108,7 @@ class Ilias3ConnectedLink extends ConnectedLink
         if ($connected_cms[$this->cms_type]->content_module[$current_module]->isConnected())
             $output .= "&nbsp;" . Button::create(_('Entfernen'), 'remove');
         elseif ($connected_cms[$this->cms_type]->content_module[$current_module]->isAllowed(OPERATION_WRITE))
-        {   
+        {
             $output .= "<div align=\"left\"><input type=\"CHECKBOX\" value=\"1\" name=\"write_permission\" style=\"vertical-align:middle\">";
             $output .= _("Mit Schreibrechten f&uuml;r alle Dozenten/Tutoren dieser Veranstaltung") . "<br>";
             $output .= "<input type=\"CHECKBOX\" value=\"1\" style=\"vertical-align:middle\" name=\"write_permission_autor\">";
@@ -122,7 +122,7 @@ class Ilias3ConnectedLink extends ConnectedLink
         return $output;
 //      $output .= parent::getAdminModuleLinks();
     }
-    
+
     /**
     * get new module link
     *
@@ -157,7 +157,7 @@ class Ilias3ConnectedLink extends ConnectedLink
         $user_crs_role = $connected_cms[$this->cms_type]->crs_roles[$auth->auth["perm"]];
         if ($user_crs_role=="admin")
             return $output;
-        else 
+        else
             return false;
     }
 

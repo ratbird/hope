@@ -129,14 +129,14 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
                 $user_crs_role = $connected_cms[$module_system_type]->crs_roles[$auth->auth["perm"]];
                 ELearningUtils::loadClass($module_system_type);
             }
-            if ($_REQUEST['remove_x'] AND $rechte)
+            if (Request::submitted('remove') AND $rechte)
             {
                 $connected_cms[$module_system_type]->newContentModule($module_id, $module_type, true);
                 if ($connected_cms[$module_system_type]->content_module[$module_id]->unsetConnection($seminar_id, $module_id, $module_type, $module_system_type))
                     $messages["info"] .= _("Die Zuordnung wurde entfernt.");
                 unset($connected_cms[$module_system_type]->content_module[$module_id]);
             }
-            elseif ($_REQUEST['add_x'] AND $rechte)
+            elseif (Request::submitted('add') AND $rechte)
             {
                 $connected_cms[$module_system_type]->newContentModule($module_id, $module_type, true);
                 if ($connected_cms[$module_system_type]->content_module[$module_id]->setConnection($seminar_id))

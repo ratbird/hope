@@ -41,6 +41,7 @@
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $perm->check("user");
 
@@ -81,7 +82,7 @@ SkipLinks::addIndex(_("Hauptinhalt"), 'main_content', 100);
 echo "\n" . $cssSw->GetHoverJSFunction() . "\n";
 
 $sortby = Request::option('sortby', 'name');
-
+$view = Request::option('view');
 if ($sortby == "count")
     $sortby = "count DESC";
 

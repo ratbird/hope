@@ -38,8 +38,8 @@
 // +---------------------------------------------------------------------------+
 
 
-require_once($RELATIVE_PATH_EXTERN . "/lib/ExternModule.class.php");
-require_once($RELATIVE_PATH_EXTERN . "/lib/extern_functions.inc.php");
+require_once($GLOBALS['RELATIVE_PATH_EXTERN'] . "/lib/ExternModule.class.php");
+require_once($GLOBALS['RELATIVE_PATH_EXTERN'] . "/lib/extern_functions.inc.php");
 
 $default = "";
 
@@ -49,20 +49,24 @@ $auth = new Seminar_Default_Auth();
 $perm = new Seminar_Perm();
 
 // there is a page_url, switch to the sri-interface
+$page_url = Request::quoted('page_url');
 if ($page_url) {
-    require($RELATIVE_PATH_EXTERN . "/sri.inc.php");
+    require($GLOBALS['RELATIVE_PATH_EXTERN'] . "/sri.inc.php");
     exit;
 }
 
 // set base url for URLHelper class
-URLHelper::setBaseUrl($ABSOLUTE_URI_STUDIP);
-
+URLHelper::setBaseUrl($GLOBALS['ABSOLUTE_URI_STUDIP']);
+$range_id = Request::option('range_id',$SessSemName[1]);
+$module = Request::quoted('module');
+$config_id = Request::option('config_id');
+$global_id = Request::option('global_id');
 // range_id and module are always necessary
 if ($range_id && $module) {
     // $module = ucfirst(strtolower($module));
     
     // Is it a valid module name?
-    foreach ($EXTERN_MODULE_TYPES as $module_type => $module_data) {
+    foreach ($GLOBALS['EXTERN_MODULE_TYPES'] as $module_type => $module_data) {
         if ($module_data["module"] == $module) {
             $type = $module_type;
             break;
@@ -70,27 +74,27 @@ if ($range_id && $module) {
     }
     // Wrong module name!
     if (!$type) {
-        echo $EXTERN_ERROR_MESSAGE;
+        echo $GLOBALS['EXTERN_ERROR_MESSAGE'];
         exit;
     }
     
     if ($config_name) {
         // check for valid configuration name and convert it into a config_id
         if (!$config_id = ExternConfig::GetConfigurationByName($range_id, $type, $config_name)) {
-            echo $EXTERN_ERROR_MESSAGE;
+            echo $GLOBALS['EXTERN_ERROR_MESSAGE'];
             exit;
         }
-    } elseif (!$config_id) {
+    } elseif (empty($config_id)) {
         // check for standard configuration
         if ($id = ExternConfig::GetStandardConfiguration($range_id, $type)) {
             $config_id = $id;
         } else {
-            if ($EXTERN_ALLOW_ACCESS_WITHOUT_CONFIG) {
+            if ($GLOBALS['EXTERN_ALLOW_ACCESS_WITHOUT_CONFIG']) {
                 // use default configuraion
                 $default = 'DEFAULT';
                 $config_id = '';
             } else {
-                echo $EXTERN_ERROR_MESSAGE;
+                echo $GLOBALS['EXTERN_ERROR_MESSAGE'];
                 exit;
             }
         }
@@ -99,17 +103,17 @@ if ($range_id && $module) {
 } else {
     // without a range_id and a module-name there's no chance to printout data
     // except an error message
-    echo $EXTERN_ERROR_MESSAGE;
+    echo $GLOBALS['EXTERN_ERROR_MESSAGE'];
     exit;
 }
 
 // check for standard global configuration
-if (!$global_id && ($global_configuration = ExternConfig::GetGlobalConfiguration($range_id))) {
+if (empty($global_id) && ($global_configuration = ExternConfig::GetGlobalConfiguration($range_id))) {
     $global_id = $global_configuration;
 }
 
 // all parameters ok, instantiate module and print data
-foreach ($EXTERN_MODULE_TYPES as $type) {
+foreach ($GLOBALS['EXTERN_MODULE_TYPES'] as $type) {
     if ($type["module"] == $module) {
         $module_obj = ExternModule::GetInstance($range_id, $module, $config_id, $default, $global_id);
     }
@@ -130,7 +134,7 @@ foreach ($args as $arg) {
     $arguments[$arg] = $_REQUEST[$arg];
 }
 
-if ($preview) {
+if (Request::option('preview')) {
     $module_obj->printoutPreview();
 } else {
     $module_obj->printout($arguments);

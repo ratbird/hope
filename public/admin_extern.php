@@ -40,6 +40,7 @@
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth",
         "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $perm->check("admin");
@@ -49,8 +50,8 @@ require_once 'lib/functions.php';
 PageLayout::setHelpKeyword("Basis.EinrichtungenVerwaltenExterneSeiten");
 PageLayout::setTitle(_("Verwaltung externer Seiten"));
 
-if ($EXTERN_ENABLE) {
-    include($RELATIVE_PATH_EXTERN . "/admin_extern.inc.php");
+if (get_config('EXTERN_ENABLE')) {
+    include($GLOBALS['RELATIVE_PATH_EXTERN'] . "/admin_extern.inc.php");
 } else {
     // Start of Output
     include ('lib/include/html_head.inc.php'); // Output of html head

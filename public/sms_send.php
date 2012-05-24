@@ -132,17 +132,17 @@ if(!$sms_data["tmpsavesnd"]) {
     $sms_data["tmpsavesnd"] = $my_messaging_settings["save_snd"];
 } else if(Request::submitted('add_tmpsavesnd_button')) {
     $sms_data["tmpsavesnd"] = 1;
-} else if(Request::submitted('rmv_tmpsavesnd_button_x')) {
+} else if(Request::submitted('rmv_tmpsavesnd_button')) {
     $sms_data["tmpsavesnd"] = 2;
 }
 
 // email-forwarding?
-if (Request::submitted('rmv_tmpemailsnd_button_x')) $sms_data['tmpemailsnd'] = "";
-if (Request::submitted('add_tmpemailsnd_button_x')) $sms_data['tmpemailsnd'] = 1;
+if (Request::submitted('rmv_tmpemailsnd_button')) $sms_data['tmpemailsnd'] = "";
+if (Request::submitted('add_tmpemailsnd_button')) $sms_data['tmpemailsnd'] = 1;
 
 //reading-confirmation?
-if (Request::submitted('rmv_tmpreadsnd_button_x')) $sms_data["tmpreadsnd"] = "";
-if (Request::submitted('add_tmpreadsnd_button_x')) $sms_data["tmpreadsnd"] = 1;
+if (Request::submitted('rmv_tmpreadsnd_button')) $sms_data["tmpreadsnd"] = "";
+if (Request::submitted('add_tmpreadsnd_button')) $sms_data["tmpreadsnd"] = 1;
 
 
 // check if active chat avaiable
@@ -522,15 +522,15 @@ if (Request::option('inst_id') && $perm->have_studip_perm('admin', Request::opti
 }
 
 // attach signature
-if (empty($sms_data["sig"])) {
+if (!isset($sms_data["sig"])) {
     $sms_data["sig"] = $my_messaging_settings["addsignature"];
-} else if (Request::submitted('add_sig_button_x')) {
+} else if (Request::submitted('add_sig_button')) {
     $sms_data["sig"] = "1";
-} else if (Request::submitted('rmv_sig_button_x')) {
+} else if (Request::submitted('rmv_sig_button')) {
     $sms_data["sig"] = "0";
 }
 // add a reciever from adress-members
-if (Request::submitted('add_receiver_button_x') && Request::getArray('add_receiver')) {
+if (Request::submitted('add_receiver_button') && Request::getArray('add_receiver')) {
     $sms_data["p_rec"] = array_add_value(Request::getArray('add_receiver'), $sms_data["p_rec"]);
 
 }
@@ -560,17 +560,17 @@ if (Request::submitted('add_allreceiver_button')) {
 
 
 // add receiver from freesearch
-if (Request::submitted('add_freesearch_x') && Request::get("adressee")) {
+if (Request::submitted('add_freesearch') && Request::get("adressee")) {
     $sms_data["p_rec"] = array_add_value(array(Request::get("adressee")), $sms_data["p_rec"]);
 }
 
 
 // remove all from receiverlist
-if (Request::submitted('del_allreceiver_button_x')) { unset($sms_data["p_rec"]); }
+if (Request::submitted('del_allreceiver_button')) { unset($sms_data["p_rec"]); }
 
 
 // aus empfaengerliste loeschen
-if (Request::submitted('del_receiver_button_x') && Request::optionArray('del_receiver')) {
+if (Request::submitted('del_receiver_button') && Request::optionArray('del_receiver')) {
     foreach (Request::optionArray('del_receiver') as $a) {
         $sms_data["p_rec"] = array_delete_value($sms_data["p_rec"], $a);
     }

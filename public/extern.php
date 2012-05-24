@@ -39,12 +39,13 @@
 
 require '../lib/bootstrap.php';
 
-if (!$EXTERN_ENABLE) {
+unregister_globals();
+if (!get_config('EXTERN_ENABLE')) {
     echo "<br><br><br><blockquote><b>This page is not available!<br>The module \"extern\"";
     echo " is not enabled in this Stud.IP-installation.</b></blockquote>";
     exit;
 }
 
-include($RELATIVE_PATH_EXTERN . "/extern.inc.php");
+include($GLOBALS['RELATIVE_PATH_EXTERN'] . "/extern.inc.php");
 
 ?>

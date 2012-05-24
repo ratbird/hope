@@ -57,11 +57,11 @@ if ($_REQUEST['view'] == 'extern_global') {
     URLHelper::addLinkParam('view', 'extern_inst');
 }
 URLHelper::addLinkParam('cid', $range_id);
-
+$config_id = Request::option('config_id');
 // when downloading a config, do it here and stop afterwards
 if ($_REQUEST['com'] == 'download_config') {
     if ($range_id) {
-        download_config($range_id, $_REQUEST['config_id'], $_REQUEST['module']);
+        download_config($range_id, $config_id, $_REQUEST['module']);
         page_close();
         exit;
     }
@@ -74,14 +74,13 @@ if ($_SESSION['links_admin_data']["topkat"] == "inst") {
 } else {
     Navigation::activateItem('/admin/config/external');
 }
-
-//Change header_line if open object
+$mod=Request::quoted('mod');//Change header_line if open object
 $header_line = getHeaderLine($range_id);
 if ($header_line) {
     PageLayout::setTitle($header_line." - ".PageLayout::getTitle());
-    foreach ($EXTERN_MODULE_TYPES as $key => $type) {
+    foreach ($GLOBALS['EXTERN_MODULE_TYPES'] as $key => $type) {
         if ($type["module"] == $mod) {
-            PageLayout::setTitle(PageLayout::getTitle() . " ({$EXTERN_MODULE_TYPES[$key]['name']})");
+            PageLayout::setTitle(PageLayout::getTitle() . " ({$GLOBALS['EXTERN_MODULE_TYPES'][$key]['name']})");
             break;
         }
     }
@@ -89,7 +88,7 @@ if ($header_line) {
 
 // upload of configuration
 if ($_REQUEST['com'] == "do_upload_config") {
-    $file_content = file_get_contents($the_file);
+    $file_content = file_get_contents($_FILES['the_file']['name']);
 
     // revert the changes done by indentJson
     $file_content_wo_tabs = str_replace("\t", '', str_replace("\n", '', $file_content));
@@ -101,7 +100,7 @@ if ($_REQUEST['com'] == "do_upload_config") {
 
     if (!check_config($jsonconfig, $_REQUEST['check_module'])) {
         $msg ="error§". _("Die Konfigurationsdatei hat den falschen Modultyp!"). "§";
-    } else if (!store_config($range_id, $_REQUEST['config_id'], $jsonconfig)) {
+    } else if (!store_config($range_id, $config_id, $jsonconfig)) {
         $msg ="error§". _("Die Konfigurationsdatei konnte nicht hochgeladen werden!"). "§";
     } else {
         $msg = "info§". _("Die Datei wurde erfolgreich &uuml;bertragen!"). "§";
@@ -173,6 +172,7 @@ if ($_REQUEST['com'] == 'info') {
 }
 
 $element_command = FALSE;
+$edit = Request::option('edit');
 if ($edit) {
     $element_commands = array('show', 'hide', 'move_left', 'move_right', 'show_group', 'hide_group', 'do_search_x');
     foreach ($element_commands as $element_command) {
@@ -248,17 +248,17 @@ array_shift($module_types_ordered);
 foreach ($module_types_ordered as $i) {
     if ((sizeof($configurations[$GLOBALS['EXTERN_MODULE_TYPES'][$i]['module']]) < $EXTERN_MAX_CONFIGURATIONS)
         && ExternModule::HaveAccessModuleType($_REQUEST['view'], $i)) {
-        $choose_module_form .= "<option value=\"{$EXTERN_MODULE_TYPES[$i]['module']}\">"
-                . $EXTERN_MODULE_TYPES[$i]['name'] . "</option>\n";
+        $choose_module_form .= "<option value=\"{$GLOBALS['EXTERN_MODULE_TYPES'][$i]['module']}\">"
+                . $GLOBALS['EXTERN_MODULE_TYPES'][$i]['name'] . "</option>\n";
     }
-    if (isset($configurations[$EXTERN_MODULE_TYPES[$i]["module"]])) {
+    if (isset($configurations[$GLOBALS['EXTERN_MODULE_TYPES'][$i]["module"]])) {
         $have_config = TRUE;
     }
 }
 // add global configuration on first position
 array_unshift($module_types_ordered, 0);
 // check for global configurations
-if (isset($configurations[$EXTERN_MODULE_TYPES[0]["module"]])) {
+if (isset($configurations[$GLOBALS['EXTERN_MODULE_TYPES'][0]["module"]])) {
     $have_config = TRUE;
 }
 

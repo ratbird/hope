@@ -756,18 +756,20 @@ class MetaDate
         foreach ($this->getVirtualSingleDates($metadate_id) as $semester_id => $dates_for_semester) {
             list($dates, $dates_to_delete) = array_values($dates_for_semester);
             foreach ($dates as $d) {
-                $ao = new AssignObject(null);
-                $ao->setResourceId($resource_id);
-                $ao->setBegin($d->getStartTime());
-                $ao->setEnd($d->getEndTime());
-                $ao->setRepeatEnd($d->getEndTime());
-                $ao->setRepeatQuantity(0);
-                $ao->setRepeatInterval(0);
-                $ao->setRepeatMonthOfYear(0);
-                $ao->setRepeatDayOfMonth(0);
-                $ao->setRepeatWeekOfMonth(0);
-                $ao->setRepeatDayOfWeek(0);
-                $ret[] = $ao;
+                if (!$d->isExTermin()) {
+                    $ao = new AssignObject(null);
+                    $ao->setResourceId($resource_id);
+                    $ao->setBegin($d->getStartTime());
+                    $ao->setEnd($d->getEndTime());
+                    $ao->setRepeatEnd($d->getEndTime());
+                    $ao->setRepeatQuantity(0);
+                    $ao->setRepeatInterval(0);
+                    $ao->setRepeatMonthOfYear(0);
+                    $ao->setRepeatDayOfMonth(0);
+                    $ao->setRepeatWeekOfMonth(0);
+                    $ao->setRepeatDayOfWeek(0);
+                    $ret[] = $ao;
+                }
             }
         }
         return $ret;

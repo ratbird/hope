@@ -50,12 +50,6 @@ PageLayout::setTitle(_("Aktivierung"));
 
 ob_start();
 
-?>
-<div class="topic"><b><?=_("Bestätigung der E-Mail-Adresse")?></b></div>
-<table width="100%" border="0" cellpadding="2" cellspacing="0">
-    <tr>
-        <td class="blank"><br>
-<?php
     //user bereits vorhanden
     if ($perm->have_perm("autor")) {
         echo MessageBox::info(sprintf(_("Sie haben schon den Status <b>%s</b> im System.
@@ -103,12 +97,6 @@ ob_start();
             Deshalb wurden Sie jetzt automatisch ausgeloggt."), "<a href=\"index.php?again=yes\"><em>", "</em></a>"));
         }
     }
-?>
-        </td>
-    </tr>
-</table>
-
-<?php
 
     $template = $GLOBALS['template_factory']->open('email-validation');
     $template->set_layout($GLOBALS['template_factory']->open('layouts/base_without_infobox'));

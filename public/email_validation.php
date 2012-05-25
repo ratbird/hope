@@ -84,10 +84,10 @@ include ('lib/include/header.php');   // Output of Stud.IP head
 
     // alles paletti, Status ändern
     elseif ($secret == $hash) {
-        $db = new DB_Seminar;
-        $query = "update auth_user_md5 set perms='autor' where user_id='$user->id'";
-        $db->query($query);
-        if ($db->affected_rows() == 0) {
+        $query = "UPDATE auth_user_md5 SET perms = 'autor' WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($user->id));
+        if ($statement->rowCount() == 0) {
             echo MessageBox::error(_("Fehler! Bitte wenden Sie sich an den Systemadministrator."), array($query));
         } else {
             echo MessageBox::success(_("Ihr Status wurde erfolgreich auf <em>autor</em> gesetzt.<br>

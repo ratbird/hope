@@ -17,7 +17,7 @@
     <? else : ?>
     <input type="hidden" name="cmd" value="addPersonsToRoleDirect">
     <? endif; ?>
-    <input type="hidden" name="role_id" value="<?= $role_id ?>">
+    <input type="hidden" name="role_id" value="<?= Request::option('role_id') ?>">
     <?= Button::create(_('Eintragen'), 'eintragen') ?>
-    <input type="hidden" name="range_id" value="<?= $range_id ?>">
+    <input type="hidden" name="range_id" value="<?= Request::option('range_id') ?>">
 </form>

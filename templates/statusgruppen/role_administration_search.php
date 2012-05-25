@@ -2,12 +2,12 @@
 # Lifter010: TODO
     use Studip\Button;
 ?>
-<? $search_exp = $GLOBALS['search_exp']; ?>
+<? $search_exp = Request::quoted('search_exp'); ?>
 <form action="<?= URLHelper::getLink("#$anker") ?>" method="post" style="display: inline">
     <?= CSRFProtection::tokenTag() ?>
     <?
     if ($search_exp) :
-        $users = getSearchResults(trim($GLOBALS['search_exp']), $role_id);
+        $users = getSearchResults(trim($GLOBALS['search_exp']), Request::option('role_id'));
         if ($users) :
     ?>
     <select name="persons_to_add[]" size="10" multiple style="width: 90%">
@@ -17,7 +17,7 @@
         </option>
         <? endforeach; ?>
     </select>
-    <a href="<?= URLHelper::getLink("?role_id=$role_id&refresh=true#$anker") ?>">
+    <a href="<?= URLHelper::getLink("?role_id=".Request::option('role_id')."&refresh=true#$anker") ?>">
         <?= Assets::img('icons/16/blue/refresh.png', array(
             'title' => _('neue Suche')
         )) ?>
@@ -35,6 +35,6 @@
         <input type="image" name="search" src="<?= Assets::image_path('icons/16/blue/search.png') ?>" value="Personen suchen" <?= tooltip(_("Person suchen")) ?>>&nbsp;
         <br><br>
     <? endif;   ?>
-    <input type="hidden" name="role_id" value="<?= $role_id ?>">
-    <input type="hidden" name="range_id" value="<?= $range_id ?>">
+    <input type="hidden" name="role_id" value="<?= Request::option('role_id') ?>">
+    <input type="hidden" name="range_id" value="<?= Request::option('range_id') ?>">
 </form>

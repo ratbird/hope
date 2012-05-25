@@ -1,7 +1,7 @@
 <?php
 # Lifter002: TODO
 # Lifter007: TODO
-# Lifter003: TODO
+# Lifter003: TEST
 # Lifter010: TODO
 /*
 email_validation.php - Hochstufung eines user auf Status autor, wenn erfolgreich per Mail zurueckgemeldet
@@ -49,6 +49,8 @@ PageLayout::setTitle(_("Aktivierung"));
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
+
+ob_start();
 
 ?>
 <div class="topic"><b><?=_("Bestätigung der E-Mail-Adresse")?></b></div>
@@ -109,5 +111,10 @@ include ('lib/include/header.php');   // Output of Stud.IP head
 </table>
 
 <?php
+
+    $template = $GLOBALS['template_factory']->open('email-validation');
+    $template->content = ob_get_clean();
+    echo $template->render();
+
     include ('lib/include/html_end.inc.php');
     page_close();

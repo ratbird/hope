@@ -47,8 +47,6 @@ PageLayout::setHelpKeyword("Basis.AnmeldungMail");
 PageLayout::setTitle(_("Aktivierung"));
 
 // Start of Output
-include ('lib/include/html_head.inc.php'); // Output of html head
-include ('lib/include/header.php');   // Output of Stud.IP head
 
 ob_start();
 
@@ -113,8 +111,8 @@ ob_start();
 <?php
 
     $template = $GLOBALS['template_factory']->open('email-validation');
+    $template->set_layout($GLOBALS['template_factory']->open('layouts/base_without_infobox'));
     $template->content = ob_get_clean();
     echo $template->render();
 
-    include ('lib/include/html_end.inc.php');
     page_close();

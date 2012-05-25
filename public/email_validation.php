@@ -1,8 +1,8 @@
 <?php
 # Lifter002: TEST
-# Lifter007: TODO
 # Lifter003: TEST
-# Lifter010: TODO
+# Lifter007: TEST
+# Lifter010: DONE - not applicable
 /*
 email_validation.php - Hochstufung eines user auf Status autor, wenn erfolgreich per Mail zurueckgemeldet
 Copyright (C) 2001 Stefan Suchi <suchi@gmx.de>
@@ -22,32 +22,34 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-
 require '../lib/bootstrap.php';
 
-page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", 'user' => "Seminar_User"));
-$auth->login_if($auth->auth["uid"] == "nobody");
-$perm->check("user");
+page_open(array(
+    'sess' => 'Seminar_Session',
+    'auth' => 'Seminar_Auth',
+    'perm' => 'Seminar_Perm',
+    'user' => 'Seminar_User'
+));
+$auth->login_if($auth->auth['uid'] == 'nobody');
+$perm->check('user');
 // nobody hat hier nix zu suchen...
 
-include ('lib/seminar_open.php'); // initialise Stud.IP-Session
-require_once('config.inc.php');
+include 'lib/seminar_open.php'; // initialise Stud.IP-Session
+require_once 'config.inc.php';
 require_once 'lib/functions.php';
-require_once('lib/classes/UserManagement.class.php');
+require_once 'lib/classes/UserManagement.class.php';
 
-// -- here you have to put initialisations for the current page
-
-$magic     = "dsdfjhgretha";  // Challenge seed.
+$magic = 'dsdfjhgretha';  // Challenge seed.
 // MUSS IDENTISCH ZU DEM IN SEMINAR_REGISTER_AUTH IN LOCAL.INC SEIN!
 
 $hash = md5("$user->id:$magic");
 // hier wird noch mal berechnet, welches secret in der Bestaetigungsmail uebergeben wurde
 
-PageLayout::setHelpKeyword("Basis.AnmeldungMail");
-PageLayout::setTitle(_("Aktivierung"));
+PageLayout::setHelpKeyword('Basis.AnmeldungMail');
+PageLayout::setTitle(_('Aktivierung'));
 
 //user bereits vorhanden
-if ($perm->have_perm("autor")) {
+if ($perm->have_perm('autor')) {
     $info = sprintf(_('Sie haben schon den Status <b>%s</b> im System.
                        Eine Aktivierung des Accounts ist nicht mehr n&ouml;tig, um Schreibrechte zu bekommen'), $auth->auth['perm']);
     $details = array();
@@ -57,12 +59,12 @@ if ($perm->have_perm("autor")) {
 
 //  So, wer bis hier hin gekommen ist gehoert zur Zielgruppe...
 // Volltrottel (oder abuse)
-elseif (!isset($secret) || $secret == "") {
+else if (empty($secret)) {
     $message = MessageBox::error(_('Sie müssen den vollständigen Link aus der Bestätigungsmail in die Adresszeile Ihres Browsers kopieren.'));
 }
 
 // abuse (oder Volltrottel)
-elseif ($secret != $hash) {
+else if ($secret != $hash) {
     $error = _('Der übergebene <em>Secret-Code</em> ist nicht korrekt.');
     $details = array();
     $details[] = _('Sie müssen unter dem Benutzernamen eingeloggt sein, für den Sie die Bestätigungsmail erhalten haben.');
@@ -77,14 +79,13 @@ elseif ($secret != $hash) {
 }
 
 // alles paletti, Status ändern
-elseif ($secret == $hash) {
+else if ($secret == $hash) {
     $query = "UPDATE auth_user_md5 SET perms = 'autor' WHERE user_id = ?";
     $statement = DBManager::get()->prepare($query);
     $statement->execute(array($user->id));
     if ($statement->rowCount() == 0) {
         $error = _('Fehler! Bitte wenden Sie sich an den Systemadministrator.');
-        $details = array();
-        $details[] = $query;
+        $details = array($query);
         $message = MessageBox::error($error, $details);
     } else {
         $success = _('Ihr Status wurde erfolgreich auf <em>autor</em> gesetzt.<br>
@@ -95,7 +96,7 @@ elseif ($secret == $hash) {
         $message = MessageBox::success($success, $details);
 
         // Auto-Inserts
-        AutoInsert::checkNewUser("autor", $user->id);
+        AutoInsert::checkNewUser('autor', $user->id);
 
         $auth->logout();    // einen Logout durchführen, um erneuten Login zu erzwingen
         

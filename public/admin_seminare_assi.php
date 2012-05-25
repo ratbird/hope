@@ -141,7 +141,7 @@ if (Request::get('start_from_backup') && isset($_SESSION['sem_create_data_backup
 }
 // Kopieren einer vorhandenen Veranstaltung
 //
-if (isset($cmd) && ($cmd == 'do_copy') && $perm->have_studip_perm('tutor',$cp_id)) {
+if (!empty($cmd) && ($cmd == 'do_copy') && $perm->have_studip_perm('tutor',$cp_id)) {
     if(LockRules::Check($cp_id, 'seminar_copy')) {
         $lockdata = LockRules::getObjectRule($cp_id);
         $errormsg = 'error§' . _("Die Veranstaltung kann nicht kopiert werden.").'§';
@@ -631,7 +631,7 @@ if ($form == 3)
     if (!Request::get('vor_tag') && !Request::get('vor_monat') && !Request::get('vor_jahr')){
         $_SESSION['sem_create_data']["sem_vor_termin"] = $_SESSION['sem_create_data']["sem_vor_end_termin"] = -1;
     } else {
-        if (!check_and_set_date(Request::option('vor_tag'), Request::option('vor_monat'), Request::option('vor_jahr'), Request::option('vor_stunde'), $Request::option('vor_minute'), $_SESSION['sem_create_data'], "sem_vor_termin")
+        if (!check_and_set_date(Request::option('vor_tag'), Request::option('vor_monat'), Request::option('vor_jahr'), Request::option('vor_stunde'), Request::option('vor_minute'), $_SESSION['sem_create_data'], "sem_vor_termin")
         || !check_and_set_date(Request::option('vor_tag'), Request::option('vor_monat'), Request::option('vor_jahr'), Request::option('vor_end_stunde'), Request::option('vor_end_minute'), $_SESSION['sem_create_data'], "sem_vor_end_termin")){
             $errormsg=$errormsg."error§"._("Bitte geben Sie g&uuml;ltige Zeiten f&uuml;r Start- und Endzeit der Vorbesprechung ein!")."§";
         } elseif ($_SESSION['sem_create_data']["sem_vor_termin"] >= $_SESSION['sem_create_data']["sem_vor_end_termin"]) {
@@ -682,10 +682,14 @@ if ($form == 4) {
 
     if ($_SESSION['sem_create_data']["term_art"]==0) {
         //get incoming room-data
-        if (is_array($_SESSION['sem_create_data']["metadata_termin"]["turnus_data"]))
+        $turnus_data=$_SESSION['sem_create_data']["metadata_termin"]["turnus_data"];
+        
+        if (isset($turnus_data)){
+            
             $term_turnus_room = Request::optionArray('term_turnus_room');
             $term_turnus_resource_id = Request::optionArray('term_turnus_resource_id');
-            foreach ($_SESSION['sem_create_data']["metadata_termin"]["turnus_data"] as $key=>$val) {
+            
+            foreach ($turnus_data as $key=>$val) {
                 //echo $term_turnus_room[$key], $term_turnus_resource_id[$key];
 
                 $_SESSION['sem_create_data']["metadata_termin"]["turnus_data"][$key]["room"] = $term_turnus_room[$key];
@@ -697,6 +701,7 @@ if ($form == 4) {
                     $_SESSION['sem_create_data']["metadata_termin"]["turnus_data"][$key]["room"]=$resObject->getName();
                 }*/
             }
+        }
     } else {
         for ($i=0; $i<$_SESSION['sem_create_data']["term_count"]; $i++) {
             $_SESSION['sem_create_data']["term_room"][$i]=$term_room[$i];
@@ -1020,7 +1025,7 @@ if ((Request::submitted('send_doz_x')) && (!Request::submitted('reset_search')) 
             $deputies = getDeputies($doz_id);
             // Add the new lecturer's deputies if necessary.
             foreach ($deputies as $deputy) {
-                if (!isset($_SESSION['sem_create_data']['sem_doz'][$deputy['user_id']]) &&
+                if (empty($_SESSION['sem_create_data']['sem_doz'][$deputy['user_id']]) &&
                        !isset($_SESSION['sem_create_data']['sem_dep'][$deputy['user_id']])) {
                     $_SESSION['sem_create_data']['sem_dep'][$deputy['user_id']] = $deputy;
                 }
@@ -1059,13 +1064,12 @@ if (isset($_REQUEST['delete_domain'])) {
     unset($_SESSION['sem_create_data']["sem_domain"][$index]);
 }
 
-if (Request::submitted('search_doz_x') || Request::submitted('search_dep_x') ||Request::submitted('search_tut_x') || Request::submitted('reset_search_x') ||
-    Request::submitted('sem_bereich_do_search_x') || Request::submitted('add_domain') || isset($_REQUEST['delete_domain']) ||
+if (Request::submitted('add_doz') || Request::submitted('add_tut') || Request::submitted('add_dep') || Request::submitted('search_doz_x') || Request::submitted('search_dep_x') ||Request::submitted('search_tut_x') || Request::submitted('reset_search_x') ||
+    Request::submitted('sem_bereich_do_search') || Request::submitted('add_domain') || isset($_REQUEST['delete_domain']) ||
     $study_areas['add'] || $study_areas['remove'] ||
     $study_areas['showall_button'] || $study_areas['search_button'] ||
     $study_areas['search_key'] || $study_areas['selected'] ||
     $study_areas['rewind_button']) {
-
     $level=2;
 
 }
@@ -1496,7 +1500,7 @@ if (($form == 5) && (Request::submitted('jump_next')))
                 $_SESSION['sem_create_data']["sem_pw"] = "";
             elseif($sem_passwd != "*******") {
                 $_SESSION['sem_create_data']["sem_pw"] = md5(Request::quoted('sem_passwd'));
-                if($Request::quoted('sem_passwd2') != "*******")
+                if(Request::quoted('sem_passwd2') != "*******")
                     $check_pw = md5(Request::quoted('sem_passwd2'));
             }
 
@@ -1505,7 +1509,7 @@ if (($form == 5) && (Request::submitted('jump_next')))
                 $errormsg=$errormsg."error§"._("Sie haben kein Passwort eingegeben! Bitte geben Sie ein Passwort ein!")."§";
                 $level=5;
                 }
-              elseif (isset($check_pw) AND $_SESSION['sem_create_data']["sem_pw"] != $check_pw)
+              elseif (!empty($check_pw) AND $_SESSION['sem_create_data']["sem_pw"] != $check_pw)
                 {
             $errormsg=$errormsg."error§"._("Das eingegebene Passwort und das Passwort zur Best&auml;tigung stimmen nicht &uuml;berein!")."§";
                 $_SESSION['sem_create_data']["sem_pw"] = "";

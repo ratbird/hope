@@ -2,7 +2,7 @@
 <table width="100%" border="0" cellpadding="2" cellspacing="0">
     <tr>
         <td class="blank"><br>
-            <?= $content ?>
+            <?= $content ?><?= $message ?>
         </td>
     </tr>
 </table>

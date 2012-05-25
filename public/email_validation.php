@@ -56,13 +56,13 @@ ob_start();
                            Eine Aktivierung des Accounts ist nicht mehr n&ouml;tig, um Schreibrechte zu bekommen'), $auth->auth['perm']);
         $details = array();
         $details[] = sprintf('<a href="%s">%s</a>', URLHelper::getLink('index.php'), _('zur&uuml;ck zur Startseite'));
-        echo MessageBox::info($info, $details);
+        $message = MessageBox::info($info, $details);
     }
 
     //  So, wer bis hier hin gekommen ist gehoert zur Zielgruppe...
     // Volltrottel (oder abuse)
     elseif (!isset($secret) || $secret == "") {
-        echo MessageBox::error(_('Sie müssen den vollständigen Link aus der Bestätigungsmail in die Adresszeile Ihres Browsers kopieren.'));
+        $message = MessageBox::error(_('Sie müssen den vollständigen Link aus der Bestätigungsmail in die Adresszeile Ihres Browsers kopieren.'));
     }
 
     // abuse (oder Volltrottel)
@@ -71,7 +71,7 @@ ob_start();
         $details = array();
         $details[] = _('Sie müssen unter dem Benutzernamen eingeloggt sein, für den Sie die Bestätigungsmail erhalten haben.');
         $details[] = _('Und Sie müssen den vollständigen Link aus der Bestätigungsmail in die Adresszeile Ihres Browsers kopieren.');
-        echo MessageBox::error($error, $details);
+        $message = MessageBox::error($error, $details);
 
         // Mail an abuse
         $REMOTE_ADDR=getenv("REMOTE_ADDR");
@@ -89,14 +89,14 @@ ob_start();
             $error = _('Fehler! Bitte wenden Sie sich an den Systemadministrator.');
             $details = array();
             $details[] = $query;
-            echo MessageBox::error($error, $details);
+            $message = MessageBox::error($error, $details);
         } else {
             $success = _('Ihr Status wurde erfolgreich auf <em>autor</em> gesetzt.<br>
                           Damit dürfen Sie in den meisten Veranstaltungen schreiben, für die Sie sich anmelden.');
             $details = array();
             $details[] = _('Einige Veranstaltungen erfordern allerdings bei der Anmeldung die Eingabe eines Passwortes.
                             Dieses Passwort erfahren Sie von der Dozentin oder dem Dozenten der Veranstaltung.');
-            echo MessageBox::success($success, $details);
+            $message = MessageBox::success($success, $details);
 
             // Auto-Inserts
             AutoInsert::checkNewUser("autor", $user->id);
@@ -107,13 +107,13 @@ ob_start();
                               Deshalb wurden Sie jetzt automatisch ausgeloggt.'),
                             '<a href="index.php?again=yes"><em>',
                             '</em></a>');
-            echo MessageBox::info($info);
+            $message .= MessageBox::info($info);
         }
     }
 
     $template = $GLOBALS['template_factory']->open('email-validation');
     $template->set_layout($GLOBALS['template_factory']->open('layouts/base_without_infobox'));
-    $template->content = ob_get_clean();
+    $template->message = $message;
     echo $template->render();
 
     page_close();

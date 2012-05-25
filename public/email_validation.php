@@ -52,22 +52,26 @@ ob_start();
 
     //user bereits vorhanden
     if ($perm->have_perm("autor")) {
-        echo MessageBox::info(sprintf(_("Sie haben schon den Status <b>%s</b> im System.
-        Eine Aktivierung des Accounts ist nicht mehr n&ouml;tig, um Schreibrechte zu bekommen"), $auth->auth["perm"]),
-        array("<a href=\"index.php\">&nbsp;" . _("zur&uuml;ck zur Startseite") . "</a>"));
+        $info = sprintf(_('Sie haben schon den Status <b>%s</b> im System.
+                           Eine Aktivierung des Accounts ist nicht mehr n&ouml;tig, um Schreibrechte zu bekommen'), $auth->auth['perm']);
+        $details = array();
+        $details[] = sprintf('<a href="%s">%s</a>', URLHelper::getLink('index.php'), _('zur&uuml;ck zur Startseite'));
+        echo MessageBox::info($info, $details);
     }
 
     //  So, wer bis hier hin gekommen ist gehoert zur Zielgruppe...
     // Volltrottel (oder abuse)
     elseif (!isset($secret) || $secret == "") {
-        echo MessageBox::error(_("Sie müssen den vollständigen Link aus der Bestätigungsmail in die Adresszeile Ihres Browsers kopieren."));
+        echo MessageBox::error(_('Sie müssen den vollständigen Link aus der Bestätigungsmail in die Adresszeile Ihres Browsers kopieren.'));
     }
 
     // abuse (oder Volltrottel)
     elseif ($secret != $hash) {
-        echo MessageBox::error(_("Der übergebene <em>Secret-Code</em> ist nicht korrekt."),
-        array(_("Sie müssen unter dem Benutzernamen eingeloggt sein, für den Sie die Bestätigungsmail erhalten haben."),
-        _("Und Sie müssen den vollständigen Link aus der Bestätigungsmail in die Adresszeile Ihres Browsers kopieren.")));
+        $error = _('Der übergebene <em>Secret-Code</em> ist nicht korrekt.');
+        $details = array();
+        $details[] = _('Sie müssen unter dem Benutzernamen eingeloggt sein, für den Sie die Bestätigungsmail erhalten haben.');
+        $details[] = _('Und Sie müssen den vollständigen Link aus der Bestätigungsmail in die Adresszeile Ihres Browsers kopieren.');
+        echo MessageBox::error($error, $details);
 
         // Mail an abuse
         $REMOTE_ADDR=getenv("REMOTE_ADDR");
@@ -82,19 +86,28 @@ ob_start();
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($user->id));
         if ($statement->rowCount() == 0) {
-            echo MessageBox::error(_("Fehler! Bitte wenden Sie sich an den Systemadministrator."), array($query));
+            $error = _('Fehler! Bitte wenden Sie sich an den Systemadministrator.');
+            $details = array();
+            $details[] = $query;
+            echo MessageBox::error($error, $details);
         } else {
-            echo MessageBox::success(_("Ihr Status wurde erfolgreich auf <em>autor</em> gesetzt.<br>
-            Damit dürfen Sie in den meisten Veranstaltungen schreiben, für die Sie sich anmelden."),
-            array(_("Einige Veranstaltungen erfordern allerdings bei der Anmeldung die Eingabe eines Passwortes.
-            Dieses Passwort erfahren Sie von der Dozentin oder dem Dozenten der Veranstaltung.")));
+            $success = _('Ihr Status wurde erfolgreich auf <em>autor</em> gesetzt.<br>
+                          Damit dürfen Sie in den meisten Veranstaltungen schreiben, für die Sie sich anmelden.');
+            $details = array();
+            $details[] = _('Einige Veranstaltungen erfordern allerdings bei der Anmeldung die Eingabe eines Passwortes.
+                            Dieses Passwort erfahren Sie von der Dozentin oder dem Dozenten der Veranstaltung.');
+            echo MessageBox::success($success, $details);
 
             // Auto-Inserts
             AutoInsert::checkNewUser("autor", $user->id);
 
             $auth->logout();    // einen Logout durchführen, um erneuten Login zu erzwingen
-            echo MessageBox::info(sprintf(_("Die Statusänderung wird erst nach einem erneuten %sLogin%s wirksam!<br>
-            Deshalb wurden Sie jetzt automatisch ausgeloggt."), "<a href=\"index.php?again=yes\"><em>", "</em></a>"));
+            
+            $info = sprintf(_('Die Statusänderung wird erst nach einem erneuten %sLogin%s wirksam!<br>
+                              Deshalb wurden Sie jetzt automatisch ausgeloggt.'),
+                            '<a href="index.php?again=yes"><em>',
+                            '</em></a>');
+            echo MessageBox::info($info);
         }
     }
 

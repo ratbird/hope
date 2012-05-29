@@ -304,15 +304,25 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
             // ILIAS 4: Leeren Kurs anlegen oder Kurse von anderen Veranstaltungen zuordnen
             if ((method_exists($connected_cms[$cms_select], "updateConnections")) AND ! ($module_system_count[$cms_select]) AND ! (ObjectConnections::getConnectionModuleId($SessSemName[1], "crs", $cms_select)))
             {
-                $db = New DB_Seminar;
-
-                if ($perm->have_perm("root"))
-                $db->query("SELECT DISTINCT object_id, module_id, Name FROM object_contentmodules LEFT JOIN seminare ON (object_id = Seminar_id) WHERE module_type = 'crs' AND system_type = '$cms_select'");
-                else
-                    $db->query("SELECT DISTINCT object_id, module_id, Name FROM object_contentmodules LEFT JOIN seminare ON (object_id = Seminar_id) LEFT JOIN seminar_user USING (Seminar_id) WHERE module_type = 'crs' AND system_type = '$cms_select' AND seminar_user.status = 'dozent'");
-                while ($db->next_record())
-                    if ($perm->have_studip_perm("dozent", $db->f("object_id")))
-                        $options .= "<option value=\"".$db->f("object_id")."\">".htmlReady(my_substr($db->f("Name"),0,60))." ".sprintf(_("(Kurs-ID %s)"), $db->f("module_id"))."</option>";
+                if ($perm->have_perm('root')) {
+                    $query = "SELECT DISTINCT object_id, module_id, Name
+                              FROM object_contentmodules
+                              LEFT JOIN seminare ON (object_id = Seminar_id)
+                              WHERE module_type = 'crs' AND system_type = ?";
+                } else {
+                    $query = "SELECT DISTINCT object_id, module_id, Name
+                              FROM object_contentmodules
+                              LEFT JOIN seminare ON (object_id = Seminar_id)
+                              LEFT JOIN seminar_user USING (Seminar_id)
+                              WHERE module_type = 'crs' AND system_type = ? AND seminar_user.status = 'dozent'";
+                }
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($cms_select));
+                while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                    if ($perm->have_studip_perm('dozent', $row['object_id'])) {
+                        $options .= "<option value=\"".$row['object_id']."\">".htmlReady(my_substr($row['Name'],0,60))." ".sprintf(_("(Kurs-ID %s)"), $row['module_id'])."</option>";
+                    }
+                }
 
                 echo  "<form method=\"POST\" action=\"" . $PHP_SELF . "#anker\">\n";
                 echo CSRFProtection::tokenTag();

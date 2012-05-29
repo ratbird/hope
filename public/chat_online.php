@@ -160,7 +160,7 @@ chat_get_javascript();
                 <tr>
                     <td class="blank">&nbsp;</td>
                 </tr>
-<?if(is_array($active_user_chats) || is_array($hidden_user_chats)){?>
+<?if(!empty($active_user_chats) || !empty($hidden_user_chats)){?>
 <? SkipLinks::addIndex(html_entity_decode(_("Chatr&auml;ume anderer NutzerInnen")), 'chat_user') ?>
                 <tr>
                     <td class="topic" >
@@ -187,7 +187,7 @@ chat_get_javascript();
                     <td class="blank">&nbsp;</td>
                 </tr>
 <? } ?>
-<?if(is_array($active_sem_chats)){?>
+<?if(!empty($active_sem_chats)){?>
 <? SkipLinks::addIndex(html_entity_decode(_("Chatr&auml;ume f&uuml;r Veranstaltungen")), 'chat_sem') ?>
                 <tr>
                     <td class="topic" >
@@ -205,7 +205,7 @@ chat_get_javascript();
                     <td class="blank">&nbsp;</td>
                 </tr>
 <? } ?>
-<?if(is_array($active_inst_chats)){?>
+<?if(!empty($active_inst_chats)){?>
 <? SkipLinks::addIndex(html_entity_decode(_("Chatr&auml;ume f&uuml;r Einrichtungen")), 'chat_inst') ?>
                 <tr>
                     <td class="topic" >

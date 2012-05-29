@@ -1,7 +1,7 @@
 <?php
 # Lifter002: TODO
 # Lifter007: TODO
-# Lifter003: TODO
+# Lifter003: TEST
 # Lifter010: TODO
 /**
  * chat_online.php - overview of studip chatrooms
@@ -93,22 +93,30 @@ $active_chats = count($chatServer->chatDetail);
 if ($active_chats){
     $chatids = array_keys($chatServer->chatDetail);
     if (count($chatids)){
-        $db = new DB_Seminar("SELECT a.user_id, ".get_vis_query('a', 'chat')." AS is_visible FROM auth_user_md5 a LEFT JOIN user_visibility USING (user_id) WHERE a.user_id IN('" . join("','",$chatids) ."') AND a.user_id !='". $auth->auth['uid'] ."'");
-        while ($db->next_record()){
-            if ($db->f("is_visible")) {
-                $active_user_chats[] = $db->f(0);
+        $vis_query = get_vis_query('a', 'chat'); // 'a' is auth_user_md5
+        $query = "SELECT a.user_id, {$vis_query} AS is_visible
+                  FROM auth_user_md5 AS a
+                  LEFT JOIN user_visibility USING (user_id)
+                  WHERE user_id IN (?) AND user_id != ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($chatids, $auth->auth['uid']));
+        foreach ($statement as $row) {
+            if ($row['is_visible']) {
+                $active_user_chats[] = $row['user_id'];
             } else {
-                $hidden_user_chats[] = $db->f(0);
+                $hidden_user_chats[] = $row['user_id'];
             }
         }
-        $db->query("SELECT Seminar_id FROM seminare WHERE Seminar_id IN('" . join("','",$chatids) ."') AND visible='1'"); // OK_VISIBLE
-        while ($db->next_record()){
-            $active_sem_chats[] = $db->f(0);
-        }
-        $db->query("SELECT Institut_id FROM Institute WHERE Institut_id IN('" . join("','",$chatids) ."')");
-        while ($db->next_record()){
-            $active_inst_chats[] = $db->f(0);
-        }
+
+        $query = "SELECT Seminar_id FROM seminare WHERE Seminar_id IN (?) AND visible = 1";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($chatids));
+        $active_sem_chats = $statement->fetchAll(PDO::FETCH_COLUMN);
+
+        $query = "SELECT Institut_id FROM Institute WHERE Institut_id IN (?)";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($chatids));
+        $active_inst_chats = $statement->fetchAll(PDO::FETCH_COLUMN);
     }
 }
 chat_get_javascript();

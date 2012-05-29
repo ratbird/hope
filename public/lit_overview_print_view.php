@@ -82,7 +82,7 @@ PageLayout::addStylesheet('print.css'); // use special stylesheet for printing
 include ('lib/include/html_head.inc.php'); // Output of html head
 
 $element = new StudipLitCatElement();
-$db = new DB_Seminar();
+
 my_session_var(array('_semester_id','_inst_id','_lit_data','_lit_data_id'),md5('admin_literatur_overview.php'));
 $header = get_object_name($_inst_id, 'inst');
 ?>

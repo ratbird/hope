@@ -1,7 +1,7 @@
 <?php
 # Lifter002: TODO
 # Lifter007: TEST
-# Lifter003: TODO
+# Lifter003: TEST
 # Lifter010: TODO
 /**
  * eval_summary.php - Hauptseite fuer Eval-Auswertungen
@@ -61,29 +61,45 @@ if (EvaluationObjectDB::getEvalUserRangesWithNoPermission($eval) == YES || count
 $staff_member = $perm->have_studip_perm("tutor", $SessSemName[1]);
 
 // Template vorhanden?
-$has_template = 0;
-$db_template = new DB_Seminar();
-$question_type = "";
+$has_template   = 0;
+$eval_templates = array();
+$question_type  = "";
 
 $tmp_path_export = $GLOBALS['TMP_PATH']. '/export/';
 export_tmp_gc();
 
-
 if (isset($cmd)) {
     if ($cmd=="change_group_type" && isset($evalgroup_id) && isset($group_type)) {
-        $db = new DB_Seminar();
-        $db->query(sprintf("SELECT * FROM eval_group_template WHERE evalgroup_id='%s'",$evalgroup_id));
-        if ($db->next_record()) { // Datensatz schon vorhanden --> UPDATE
-            if ($group_type=="normal") {
-                $db->query(sprintf("DELETE FROM eval_group_template WHERE group_type='table' AND evalgroup_id='%s'",$evalgroup_id));
-                $db->next_record();
-            } else
-                $db->query(sprintf("UPDATE eval_group_template SET group_type='%s' WHERE evalgroup_id='%s' AND user_id='%s'",$group_type,$evalgroup_id,$auth->auth["uid"]));
+        $query = "SELECT 1 FROM eval_group_template WHERE evalgroup_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($evalgroup_id));
+        $present = $statement->fetchColumn();
+
+        if ($present) { // Datensatz schon vorhanden --> UPDATE
+            if ($group_type == "normal") {
+                $query = "DELETE FROM eval_group_template WHERE group_type = 'table' AND evalgroup_id = ?";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($evalgroup_id));
+            } else {
+                $query = "UPDATE eval_group_template SET group_type = ? WHERE evalgroup_id = ? AND user_id = ?";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($group_type, $evalgroup_id, $GLOBALS['user']->id));
+            }
         } else { // Datensatz nicht vorhanden --> INSERT
             // Ist der Benutzer auch wirklich der Eigentuemer der Eval?
-            $db->query(sprintf("SELECT * FROM eval WHERE eval_id='%s'",$eval_id));
-            if ($db->next_record() && ($db->f("author_id")==$auth->auth["uid"] || $staff_member))
-                $db->query(sprintf("INSERT INTO eval_group_template (evalgroup_id, user_id, group_type) VALUES ('%s','%s','%s')",$evalgroup_id,$auth->auth["uid"],$group_type));
+            $valid = $staff_member;
+            if (!$valid) {
+                $query = "SELECT 1 FROM eval WHERE eval_id = ? AND author_id = ?";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($eval_id, $GLOBALS['user']->id));
+                $valid = $statement->fetchColumn();
+            }
+            if ($valid) {
+                $query = "INSERT INTO eval_group_template (evalgroup_id, user_id, group_type)
+                          VALUES (?, ?, ?)";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($evalgroup_id, $GLOBALS['user']->id, $group_type));
+            }
         }
     }
 }
@@ -91,12 +107,9 @@ if (isset($cmd)) {
 
 function do_template($column)
 {
-    global $has_template, $db_template;
+    global $has_template, $eval_templates;
 
-    if ($has_template==0 || ($has_template==1 && $db_template->f($column)))
-        return true;
-    else
-        return false;
+    return ($has_template==0 || ($has_template==1 && $eval_templates[$column]));
 }
 
 
@@ -107,21 +120,20 @@ function do_template($column)
  */
 function do_graph_template()
 {
-    global $db_template, $has_template, $question_type;
+    global $eval_templates, $has_template, $question_type;
 
-    if ($has_template==1) {
-        if ($question_type=="likertskala") {
-            return $db_template->f("likertscale_gfx_type");
+    if ($has_template == 1) {
+        if ($question_type == 'likertskala') {
+            return $eval_templates['likertscale_gfx_type'];
         }
-        if ($question_type=="multiplechoice") {
-            return $db_template->f("mchoice_scale_gfx_type");
+        if ($question_type == 'multiplechoice') {
+            return $eval_templates['mchoice_scale_gfx_type'];
         }
-        if ($question_type=="polskala") {
-            return $db_template->f("polscale_gfx_type");
+        if ($question_type == 'polskala') {
+            return $eval_templates['polscale_gfx_type'];
         }
-    } else {
-        return "bars";
     }
+    return 'bars';
 }
 
 /**
@@ -192,21 +204,26 @@ function do_graph($data, $evalquestion_id)
 
 function freetype_answers($parent_id, $anz_nutzer)
 {
-    global $ausgabeformat;
-
-    $db_answers = new DB_Seminar();
-    $db_answers->query(sprintf("SELECT ea.* FROM evalanswer ea, evalanswer_user eau WHERE ea.parent_id='%s' AND ea.text!='' AND eau.evalanswer_id=ea.evalanswer_id ORDER BY ea.position",$parent_id));
+    $query = "SELECT `text`
+              FROM evalanswer
+              WHERE parent_id = ? AND `text` != ''
+              ORDER BY position";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($parent_id));
+    
     echo "  <tr>\n";
     echo "    <td colspan=\"2\">\n";
     echo "      <table border=\"0\" width=\"100%\">\n";
     echo "        <tr><td colspan=\"2\" class=\"blank\"><font size=\"-1\"><b>"._("Antworten")."</b></font></td></tr>\n";
+
     $counter = 1;
-    while ($db_answers->next_record()) {
+    while ($answer = $statement->fetchColumn()) {
         echo "      <tr>\n";
-        echo "        <td width=\"1%\" valign=\"TOP\"><font size=\"-1\"><b>".$counter.".</b></font></td><td><font size=\"-1\">".formatReady($db_answers->f("text"))."</font></td>\n";
+        echo "        <td width=\"1%\" valign=\"TOP\"><font size=\"-1\"><b>".$counter.".</b></font></td><td><font size=\"-1\">".formatReady($answer)."</font></td>\n";
         echo "      </tr>\n";
         $counter++;
     }
+
     echo "      </table>\n";
     echo "    </td>\n";
     echo "  </tr>\n";
@@ -215,18 +232,21 @@ function freetype_answers($parent_id, $anz_nutzer)
 
 function user_answers_residual($parent_id)
 {
-    $db_user_answers = new DB_Seminar();
-    $db_user_answers->query(sprintf("SELECT eau.* FROM evalanswer_user eau, evalanswer ea WHERE ea.parent_id='%s' AND ea.residual=1 AND eau.evalanswer_id=ea.evalanswer_id",$parent_id));
-    $db_user_answers->next_record();
-    return $db_user_answers->num_rows();
+    $query = "SELECT COUNT(*)
+              FROM evalanswer
+              JOIN evalanswer_user USING (evalanswer_id)
+              WHERE parent_id = ? AND residual = 1";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($parent_id));
+    return $statement->fetchColumn();
 }
 
 function user_answers($evalanswer_id)
 {
-    $db_user_answers = new DB_Seminar();
-    $db_user_answers->query(sprintf("SELECT * FROM evalanswer_user WHERE evalanswer_id='%s'",$evalanswer_id));
-    $db_user_answers->next_record();
-    return $db_user_answers->num_rows();
+    $query = "SELECT COUNT(*) FROM evalanswer_user WHERE evalanswer_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($evalanswer_id));
+    return $statement->fetchColumn();
 }
 
 function answers($parent_id, $anz_nutzer, $question_type)
@@ -251,12 +271,14 @@ function answers($parent_id, $anz_nutzer, $question_type)
 
     $css=new cssClassSwitcher;
 
-    $db_answers_sum = new DB_Seminar();
-    $db_answers_sum->query(sprintf("SELECT COUNT(*) anz FROM evalanswer AS ea LEFT JOIN evalanswer_user AS eau USING (evalanswer_id) WHERE ea.parent_id='%s' AND eau.evalanswer_id=ea.evalanswer_id",$parent_id));
-    $db_answers_sum->next_record();
+    $query = "SELECT COUNT(*)
+              FROM evalanswer
+              JOIN evalanswer_user USING (evalanswer_id)
+              WHERE parent_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($parent_id));
+    $answers_sum = $statement->fetchColumn();
 
-    $db_answers = new DB_Seminar();
-    $db_answers->query(sprintf("SELECT * FROM evalanswer WHERE parent_id='%s' ORDER BY position",$parent_id));
     $antwort_nummer = 0;
     $edit = "";
     $txt = "";
@@ -265,25 +287,29 @@ function answers($parent_id, $anz_nutzer, $question_type)
     $has_residual = user_answers_residual($parent_id);
     $i = 1;
     $edit .= "<tr class=\"steel1\"><td width=\"1%\">&nbsp;</td><td width=\"70%\"><font size=\"-1\"><b>"._("Antworten")."</b></font></td><td width=\"29%\"><font size=\"-1\"><b>"._("Auswertung")."</b></font></td></tr>\n";
-    while ($db_answers->next_record()) {
+
+    $query = "SELECT evalanswer_id, `text`, value, residual FROM evalanswer WHERE parent_id = ? ORDER BY position";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($parent_id));
+    while ($answer = $statement->fetch(PDO::FETCH_ASSOC)) {
         $css->switchClass();
         $antwort_nummer++;
-        $answer_counter = user_answers($db_answers->f("evalanswer_id"));
-        if ($db_answers->f("residual")==0) {
+        $answer_counter = user_answers($answer['evalanswer_id']);
+        if ($answer['residual'] == 0) {
             $gesamte_antworten += $answer_counter;
             $antwort_durchschnitt += $answer_counter * $antwort_nummer;
         }
         $prozente_wo_residual = 0;
-        if ($has_residual && ($db_answers_sum->f("anz")-$has_residual)>0) $prozente_wo_residual = ROUND($answer_counter*100/($anz_nutzer-$has_residual));
+        if ($has_residual && ($answers_sum - $has_residual)>0) $prozente_wo_residual = ROUND($answer_counter*100/($anz_nutzer-$has_residual));
         $prozente = 0;
-        if ($db_answers_sum->f("anz")>0) $prozente = ROUND($answer_counter*100/$anz_nutzer);
-        $edit .= "<tr class=\"".($i==1?"steelkante":$css->getClass())."\"><td width=\"1%\"><font size=\"-1\"><b>".$antwort_nummer.".&nbsp;</b></font></td><td width=\"70%\"><font size=\"-1\">".($db_answers->f("text")!="" ? formatReady($db_answers->f("text")) : $db_answers->f("value"))."</font></td>";
-        if ($has_residual) $edit .= "<td width=\"29%\"><font size=\"-1\">".$answer_counter." (".$prozente."%) ".($db_answers->f("residual")==0 ? "(".$prozente_wo_residual."%)<b>*</b>" : "" )."</font></td></tr>\n";
+        if ($answers_sum > 0) $prozente = ROUND($answer_counter*100/$anz_nutzer);
+        $edit .= "<tr class=\"".($i==1?"steelkante":$css->getClass())."\"><td width=\"1%\"><font size=\"-1\"><b>".$antwort_nummer.".&nbsp;</b></font></td><td width=\"70%\"><font size=\"-1\">".($answer['text'] != '' ? formatReady($answer['text']) : $answer['value'])."</font></td>";
+        if ($has_residual) $edit .= "<td width=\"29%\"><font size=\"-1\">".$answer_counter." (".$prozente."%) ".($answer['residual'] == 0 ? "(".$prozente_wo_residual."%)<b>*</b>" : "" )."</font></td></tr>\n";
         else $edit .= "<td width=\"29%\"><font size=\"-1\">".$answer_counter." (".$prozente."%)</font></td></tr>\n";
         array_push($summary, array($antwort_nummer."(".$prozente."%)",$answer_counter));
 
-        array_push($ret_array["antwort_texte"], ($db_answers->f("text")!="" ? formatReady($db_answers->f("text")) : $db_answers->f("value")));
-        array_push($ret_array["auswertung"], array($answer_counter, $prozente, ($db_answers->f("residual")==0 ? $prozente_wo_residual : null)));
+        array_push($ret_array["antwort_texte"], ($answer['text'] != '' ? formatReady($answer['text']) : $answer['value']));
+        array_push($ret_array["auswertung"], array($answer_counter, $prozente, ($answer['residual'] == 0 ? $prozente_wo_residual : null)));
         if ($has_residual) $ret_array["has_residual"] = 1;
 
         $i = 0;
@@ -330,84 +356,95 @@ function groups($parent_id)
 {
     global $ausgabeformat, $global_counter, $local_counter, $question_type, $eval_id, $PHP_SELF, $evalgroup_id;
 
-    $db_groups = new DB_Seminar();
-    $db_groups->query(sprintf("SELECT * FROM evalgroup WHERE parent_id='%s' ORDER BY position",$parent_id));
+    $query = "SELECT group_type FROM eval_group_template WHERE evalgroup_id = ?";
+    $type_statement = DBManager::get()->prepare($query);
 
-    while ($db_groups->next_record()) {
+    $query = "SELECT LOCATE('Freitext', `text`) > 0 FROM evalquestion WHERE evalquestion_id = ?";
+    $freetext_statement = DBManager::get()->prepare($query);
+    
+    $query = "SELECT evalquestion_id, `text`, type FROM evalquestion WHERE parent_id = ? ORDER BY position";
+    $questions_statement = DBManager::get()->prepare($query);
+    
+    $query = "SELECT COUNT(DISTINCT user_id)
+              FROM evalanswer
+              JOIN evalanswer_user USING(evalanswer_id)
+              WHERE parent_id = ?";
+    $question_users_statement = DBManager::get()->prepare($query);
+
+    $query = "SELECT evalgroup_id, child_type, title, template_id FROM evalgroup WHERE parent_id = ? ORDER BY position";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($parent_id));
+
+    while ($group = $statement->fetch(PDO::FETCH_ASSOC)) {
         // Heraussuchen, ob es sich um ein Freitext-Template handelt...
-        $db = new DB_Seminar();
-        $db->query(sprintf("SELECT * FROM evalquestion WHERE evalquestion_id='%s'",$db_groups->f("template_id")));
-        $freetype = FALSE;
-        if ($db->next_record()) {
-            if (strstr($db->f("text"),"Freitext"))
-                $freetype = TRUE;
-        }
+        $freetext_statement->execute(array($group['template_id']));
+        $freetype = $freetext_statement->fetchColumn();
+        $freetext_statement->closeCursor();
 
-        if ($db_groups->f("child_type")=="EvaluationGroup") {
+        if ($group['child_type'] == 'EvaluationGroup') {
             $global_counter += 1;
             $local_counter   = 0;
 
             echo "  <tr><td class=\"".($ausgabeformat==1 ? "topic" : "blank")."\" align=\"LEFT\" colspan=\"2\">\n";
             if (do_template("show_group_headline"))
-                echo "    <b>".$global_counter.". ".formatReady($db_groups->f("title"))."</b>&nbsp;\n";
+                echo "    <b>".$global_counter.". ".formatReady($group['title'])."</b>&nbsp;\n";
             else echo "&nbsp;";
         } else {
             $local_counter += 1;
 
-            $group_type = "normal";
-
-            $db_group_type = new DB_Seminar();
-            $db_group_type->query(sprintf("SELECT * FROM eval_group_template WHERE evalgroup_id='%s'",$db_groups->f("evalgroup_id")));
-            if ($db_group_type->next_record()) $group_type = $db_group_type->f("group_type");
+            $type_statement->execute(array($group['evalgroup_id']));
+            $group_type = $type_statement->fetchColumn() ?: 'normal';
+            $type_statement->closeCursor();
 
             echo "  <tr><td class=\"".($ausgabeformat==1 ? "steelgraulight" : "blank")."\" colspan=\"2\">\n";
             if (do_template("show_questionblock_headline")) {
-                echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr><td align=\"left\"><b>".$global_counter.".".$local_counter.". ".formatReady($db_groups->f("title"))."</b></td>";
-                echo "<td align=\"RIGHT\">".($ausgabeformat==1 && !($freetype) ? "<a href=\"$PHP_SELF?eval_id=$eval_id&evalgroup_id=".$db_groups->f("evalgroup_id")."&group_type=".($group_type=="normal" ? "table" : "normal")."&cmd=change_group_type#anker\"><IMG SRC=\"".Assets::image_path('icons/16/blue/'.($group_type=='normal' ? 'vote-stopped' : 'vote').'.png')."\" TITLE=\""._("Zum Darstellungstyp")." ".($group_type=="normal"?_("Tabelle"):_("Normal"))." "._("wechseln").".\" border=\"0\"></a>" : "&nbsp;"). "</td>";
+                echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr><td align=\"left\"><b>".$global_counter.".".$local_counter.". ".formatReady($group['title'])."</b></td>";
+                echo "<td align=\"RIGHT\">".($ausgabeformat==1 && !($freetype) ? "<a href=\"$PHP_SELF?eval_id=$eval_id&evalgroup_id=".$group['evalgroup_id']."&group_type=".($group_type=="normal" ? "table" : "normal")."&cmd=change_group_type#anker\"><IMG SRC=\"".Assets::image_path('icons/16/blue/'.($group_type=='normal' ? 'vote-stopped' : 'vote').'.png')."\" TITLE=\""._("Zum Darstellungstyp")." ".($group_type=="normal"?_("Tabelle"):_("Normal"))." "._("wechseln").".\" border=\"0\"></a>" : "&nbsp;"). "</td>";
                 echo "</tr></table>\n";
             }
-            if ($evalgroup_id == $db_groups->f("evalgroup_id")) {
+            if ($evalgroup_id == $group['evalgroup_id']) {
                 echo "  <a name=\"anker\"></a>\n";
             }
         }
 
         echo "  </td></tr>";
 
-        if ($db_groups->f("child_type")=="EvaluationQuestion") {
+        if ($group['child_type'] == 'EvaluationQuestion') {
             echo "  <tr><td class=\"blank\" colspan=\"2\">\n";
-            $db_questions = new DB_Seminar();
-            $db_questions->query(sprintf("SELECT * FROM evalquestion WHERE parent_id='%s' ORDER BY position",$db_groups->f("evalgroup_id")));
+            
             echo "<table border=\"". ($group_type=="normal" || $ausgabeformat==1 ? "0" : "1") ."\" width=\"100%\" cellspacing=\"0\">\n";
 
             $local_question_counter = 0;
             $answer_arr = array();
-            while ($db_questions->next_record()) {
 
-                $question_type = $db_questions->f("type");
-                $db_questions_user = new DB_Seminar();
-                $db_questions_user->query(sprintf("SELECT COUNT(DISTINCT eau.user_id) anz FROM evalanswer ea, evalanswer_user eau WHERE ea.parent_id='%s' AND eau.evalanswer_id=ea.evalanswer_id",$db_questions->f("evalquestion_id")));
-                $db_questions_user->next_record();
+            $questions_statement->execute(array($group['evalgroup_id']));
+            while ($question = $questions_statement->fetch(PDO::FETCH_ASSOC)) {
+                $question_type = $question['type'];
+                
+                $question_users_statement->execute(array($question['evalquestion_id']));
+                $question_users = $question_users_statement->fetchColumn();
+                $question_users_statement->closeCursor();
 
                 $local_question_counter += 1;
 
                 if (do_template("show_questions") && $group_type=="normal") {
                     echo "    <tr><td class=\"blank\" colspan=\"2\">\n";
-                    echo "      <b>".$global_counter.".".$local_counter.".".$local_question_counter.". ".formatReady($db_questions->f("text"))."</b></font>\n";
+                    echo "      <b>".$global_counter.".".$local_counter.".".$local_question_counter.". ".formatReady($question['text'])."</b></font>\n";
                     echo "    </td></tr>\n";
                 }
 
                 if (!($freetype)) {
                     // Keine Freitext-Eingabe
-                    $ret = answers($db_questions->f("evalquestion_id"), $db_questions_user->f("anz"), $db_questions->f("type"));
-                    $ret["frage"] = $db_questions->f("text");
+                    $ret = answers($question['evalquestion_id'], $question_users, $question['type']);
+                    $ret["frage"] = $question['text'];
                     array_push($answer_arr, $ret);
                     if ($group_type=="normal") echo $ret["txt"];
                 } else {
                     // Freitext
-                    freetype_answers($db_questions->f("evalquestion_id"), $db_questions_user->f("anz"));
+                    freetype_answers($question['evalquestion_id'], $question_users);
                 }
-
             }
+            $questions_statement->closeCursor();
 
             if (!($freetype) && $group_type=="table") {
                 $antworten_angezeigt = FALSE;
@@ -451,37 +488,47 @@ function groups($parent_id)
             echo "</table>\n";
             echo "</td></tr>\n";
         }
-        groups($db_groups->f("evalgroup_id"));
+        groups($group['evalgroup_id']);
     }
 }
 
+$query = "SELECT eval_id, title, author_id, anonymous
+          FROM eval
+          WHERE eval_id = ? AND author_id = IFNULL(?, author_id)";
+$statement = DBManager::get()->prepare($query);
+$statement->execute(array(
+    $eval_id,
+    $staff_member ? null : $GLOBALS['user']->id
+));
 
-$db = new DB_Seminar();
+if ($evaluation = $statement->fetch(PDO::FETCH_ASSOC)) {
+  $query = "SELECT t.*
+            FROM eval_templates AS t
+            JOIN eval_templates_eval AS te USING (template_id)
+            WHERE te.eval_id = ?";
+  $statement = DBManager::get()->prepare($query);
+  $statement->execute(array($eval_id));
+  $eval_templates = $statement->fetch(PDO::FETCH_ASSOC);
+  
+  $has_template = !empty($eval_templates);
 
-if ($staff_member)
-    $db->query(sprintf("SELECT * FROM eval WHERE eval_id='%s'",$eval_id));
-else
-    $db->query(sprintf("SELECT * FROM eval WHERE eval_id='%s' AND author_id='%s'",$eval_id,$auth->auth["uid"]));
-
-if ($db->next_record()) {
-  $db_template->query(sprintf("SELECT t.* FROM eval_templates t, eval_templates_eval te WHERE te.eval_id='%s' AND t.template_id=te.template_id",$eval_id));
-  if ($db_template->next_record()) $has_template = 1;
-
-  $db_owner = new DB_Seminar();
-  $db_owner->query(sprintf("SELECT ".$_fullname_sql['no_title']." AS fullname FROM auth_user_md5 WHERE user_id='%s'", $db->f("author_id")));
-  $db_owner->next_record();
+  $db_owner = User::find($evaluation['author_id'])->getFullName('no_title');
 
   $global_counter = 0;
   $local_counter  = 0;
 
-  $db_number_of_votes = new DB_Seminar();
-  $db_number_of_votes->query(sprintf("SELECT COUNT(DISTINCT user_id) anz FROM eval_user WHERE eval_id='%s'", $eval_id));
-  $db_number_of_votes->next_record();
+  $query = "SELECT COUNT(DISTINCT user_id) FROM eval_user WHERE eval_id = ?";
+  $statement = DBManager::get()->prepare($query);
+  $statement->execute(array($eval_id));
+  $number_of_votes = $statement->fetchColumn();
 
   $eval_ranges_names = array();
-  $eval_ranges = DbManager::get()
-                 ->query("SELECT range_id FROM eval_range WHERE eval_id = " . DbManager::get()->quote($eval_id))
-                 ->fetchAll(PDO::FETCH_COLUMN);
+
+  $query = "SELECT range_id FROM eval_range WHERE eval_id = ?";
+  $statement = DBManager::get()->prepare($query);
+  $statement->execute(array($eval_id));
+  $eval_ranges = $statement->fetchAll(PDO::FETCH_COLUMN);
+
   foreach ($eval_ranges as $eval_range) {
       $o_type = get_object_type($eval_range, array('studip','user','sem','inst'));
       switch($o_type) {
@@ -527,7 +574,7 @@ if ($db->next_record()) {
   echo "<td class=\"".($ausgabeformat==1 ? "topic" : "blank" )."\" align=\"RIGHT\">".($ausgabeformat==1 ? "<a href=\"eval_summary_export.php?eval_id=".$eval_id."\" TARGET=\"_blank\"><font color=\"WHITE\">"._("PDF-Export")."</font></a><b>&nbsp;|&nbsp;</b><a href=\"".$PHP_SELF."?eval_id=".$eval_id."&ausgabeformat=2\" TARGET=\"_blank\"><font color=\"WHITE\">"._("Druckansicht")."</font></a>&nbsp;&nbsp;<a href=\"eval_config.php?eval_id=".$eval_id."\"><IMG SRC=\"".Assets::image_path('icons/16/white/arr_2right.png')."\" border=\"0\" ALT=\""._("Auswertung konfigurieren")."\" TITLE=\""._("Auswertung konfigurieren")."\"></a>" : "" ) ."&nbsp;</td>\n";
   echo "</tr>\n";
   echo "<tr><td class=\"blank\" colspan=\"2\" align=\"left\">&nbsp;</td></tr>\n";
-  echo "<tr><td class=\"blank\" colspan=\"2\" align=\"left\"><font size=\"+1\"><b>&nbsp;&nbsp;".formatReady($db->f("title"))."</b></font></td>\n";
+  echo "<tr><td class=\"blank\" colspan=\"2\" align=\"left\"><font size=\"+1\"><b>&nbsp;&nbsp;".formatReady($evaluation['title'])."</b></font></td>\n";
   echo "<tr><td class=\"blank\" colspan=\"2\" align=\"left\">&nbsp;&nbsp;";
   echo _("Diese Evaluation ist folgenden Bereichen zugeordnet:");
   echo '<ul>';
@@ -543,9 +590,9 @@ if ($db->next_record()) {
   if (do_template("show_total_stats")) {
     echo "  <tr>\n";
     echo "    <td colspan=\"2\" class=\"blank\"><font size=\"-1\">\n";
-    echo "      &nbsp;&nbsp;".$db_number_of_votes->f("anz")." "._("Teilnehmer insgesamt").".&nbsp;";
-    echo "      "._("Die Teilnahme war")." ". ($db->f("anonymous")==0 ? _("nicht") : "") . " "._("anonym").".";
-    echo "      "._("Eigent&uuml;mer").": ".$db_owner->f("fullname").". ".("Erzeugt am").": ".date('d.m.Y H:i:s');
+    echo "      &nbsp;&nbsp;".$number_of_votes." "._("Teilnehmer insgesamt").".&nbsp;";
+    echo "      "._("Die Teilnahme war")." ". ($evaluation['anonymous']==0 ? _("nicht") : "") . " "._("anonym").".";
+    echo "      "._("Eigent&uuml;mer").": ".$db_owner.". ".("Erzeugt am").": ".date('d.m.Y H:i:s');
     echo "    </font></td>\n";
     echo "  </tr>\n";
   }
@@ -553,7 +600,7 @@ if ($db->next_record()) {
   echo "  <tr><td colspan=\"2\">\n";
   echo "    <table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"8\">\n";
 
-  groups($db->f("eval_id"));
+  groups($evaluation['eval_id']);
 
   echo "    </table>\n";
   echo "  </td></tr>\n";

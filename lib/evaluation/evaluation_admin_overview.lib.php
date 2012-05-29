@@ -1581,7 +1581,7 @@ class EvalOverview {
 
         $html .="    </td>\n";
         $html .="    <td align=\"left\" valign=\"middle\" style=\"vertical-align:middle;\">\n";
-        $html .="     <span class=\"" . ($sign == "ausruf" ? "eval_error" : "eval_success") . "\"><br>" . htmlReady($text) . "</span><br><br>\n";
+        $html .="     <span class=\"" . ($sign == "ausruf" ? "eval_error" : "eval_success") . "\"><br>" . $text . "</span><br><br>\n";
 
         if ($referer)
             $linkreferer = "&referer=" . $referer;

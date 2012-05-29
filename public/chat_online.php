@@ -73,7 +73,7 @@ PageLayout::setTitle(_("Chat-Online"));
 Navigation::activateItem('/community/chat');
 // add skip link
 SkipLinks::addIndex(_("Allgemeiner Chatraum"), 'chat_studip', 100);
-SkipLinks::addIndex(html_entity_decode(_("Persönlicher Chatraum")), 'chat_own');
+SkipLinks::addIndex(_('Persönlicher Chatraum'), 'chat_own');
 
 if (!$sess->is_registered("chat_online_id")){
     $sess->register("chat_online_id");

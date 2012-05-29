@@ -16,6 +16,7 @@
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
 require_once 'lib/migrations/db_migration.php';
 require_once 'lib/migrations/db_schema_version.php';
 require_once 'lib/migrations/migrator.php';
@@ -27,15 +28,15 @@ page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth",
 $auth->login_if(!$perm->have_perm("root"));
 $perm->check("root");
 
-if (!isset($_language)) {
-    $_language = get_accepted_languages();
+if (empty($_SESSION['_language'])) {
+    $_SESSION['_language'] = get_accepted_languages();
 }
 
-$_language_path = init_i18n($_language);
+$_language_path = init_i18n($_SESSION['_language']);
 
 include 'lib/include/html_head.inc.php';
 
-$path = $STUDIP_BASE_PATH.'/db/migrations';
+$path = $GLOBALS['STUDIP_BASE_PATH'].'/db/migrations';
 $verbose = false;
 $target = NULL;
 

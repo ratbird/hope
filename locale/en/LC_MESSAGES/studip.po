@@ -7289,15 +7289,15 @@ msgid "Allgemeiner Chatraum"
 msgstr "General chat room"
 
 #: ../public/chat_online.php:76 ../public/chat_online.php:143
-msgid "Pers&ouml;nlicher Chatraum"
+msgid "Persönlicher Chatraum"
 msgstr "Personal chat room"
 
 #: ../public/chat_online.php:122
-msgid "Hier sehen Sie eine &Uuml;bersicht aller aktiven Chatr&auml;ume."
+msgid "Hier sehen Sie eine Übersicht aller aktiven Chaträume."
 msgstr "Here, you can display an overview on all active chat rooms."
 
 #: ../public/chat_online.php:156 ../public/chat_online.php:160
-msgid "Chatr&auml;ume anderer NutzerInnen"
+msgid "Chaträume anderer NutzerInnen"
 msgstr "Other users' personal chat rooms"
 
 #: ../public/chat_online.php:170
@@ -7310,11 +7310,11 @@ msgid "+%s weitere, unsichtbare Chaträume."
 msgstr "+ %s further invisible chat rooms"
 
 #: ../public/chat_online.php:183 ../public/chat_online.php:187
-msgid "Chatr&auml;ume f&uuml;r Veranstaltungen"
+msgid "Chaträume für Veranstaltungen"
 msgstr "Course chat rooms"
 
 #: ../public/chat_online.php:201 ../public/chat_online.php:205
-msgid "Chatr&auml;ume f&uuml;r Einrichtungen"
+msgid "Chaträume für Einrichtungen"
 msgstr "Institute chat rooms"
 
 #: ../public/chat_online.php:232

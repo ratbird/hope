@@ -1,7 +1,7 @@
 <?php
-# Lifter002: TODO
-# Lifter007: TODO
+# Lifter002: TEST
 # Lifter003: TEST
+# Lifter007: TODO
 # Lifter010: TODO
 /**
  * chat_online.php - overview of studip chatrooms
@@ -73,12 +73,7 @@ PageLayout::setTitle(_("Chat-Online"));
 Navigation::activateItem('/community/chat');
 // add skip link
 SkipLinks::addIndex(_("Allgemeiner Chatraum"), 'chat_studip', 100);
-SkipLinks::addIndex(html_entity_decode(_("Pers&ouml;nlicher Chatraum")), 'chat_own');
-
-
-// Start of Output
-include ('lib/include/html_head.inc.php'); // Output of html head
-include ('lib/include/header.php');   // Output of Stud.IP head
+SkipLinks::addIndex(html_entity_decode(_("Persönlicher Chatraum")), 'chat_own');
 
 if (!$sess->is_registered("chat_online_id")){
     $sess->register("chat_online_id");
@@ -119,163 +114,60 @@ if ($active_chats){
         $active_inst_chats = $statement->fetchAll(PDO::FETCH_COLUMN);
     }
 }
-chat_get_javascript();
-?>
-<table width="100%" border="0" cellpadding="0" cellspacing="0">
-    <tr valign="top">
-        <td valign="top" class="blank" align="center">
-            <table border="0" cellpadding="1" cellspacing="0" width="98%" align="center" valign="top" class="blank">
-                <tr>
-                    <td class="blank">
-                <?=_("Hier sehen Sie eine &Uuml;bersicht aller aktiven Chatr&auml;ume.")?>
-                <br>&nbsp;</td>
-                </tr>
-                <tr>
-                    <td class="topic" >
-                    <font size="-1">
-                    &nbsp;<b><?=_("Allgemeiner Chatraum")?></b>
-                    </font>
-                    </td>
-                </tr>
-                <tr>
-                    <td id="chat_studip">
-                    <? print_chat_info(array('studip'));?>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="blank">&nbsp;</td>
-                </tr>
-                <tr>
-                    <td class="topic" >
-                    <font size="-1">
-                    &nbsp;<b><?=_("Pers&ouml;nlicher Chatraum")?></b>
-                    </font>
-                    </td>
-                </tr>
-                <tr>
-                    <td id="chat_own">
-                    <? print_chat_info(array($auth->auth['uid']));?>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="blank">&nbsp;</td>
-                </tr>
-<?if(!empty($active_user_chats) || !empty($hidden_user_chats)){?>
-<? SkipLinks::addIndex(html_entity_decode(_("Chatr&auml;ume anderer NutzerInnen")), 'chat_user') ?>
-                <tr>
-                    <td class="topic" >
-                    <font size="-1">
-                    &nbsp;<b><?=_("Chatr&auml;ume anderer NutzerInnen")?></b>
-                    </font>
-                    </td>
-                </tr>
-                <tr>
-                    <td id="chat_user">
-                    <? print_chat_info($active_user_chats);?>
-                    <?php
-                    if (is_array($hidden_user_chats)) {
-                        if (sizeof($hidden_user_chats) == 1) {
-                            echo _("+1 weiterer, unsichtbarer Chatraum.");
-                        } else {
-                            sprintf(_("+%s weitere, unsichtbare Chaträume."), sizeof($invisible_user_chats));
-                        }
-                    }
-                    ?>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="blank">&nbsp;</td>
-                </tr>
-<? } ?>
-<?if(!empty($active_sem_chats)){?>
-<? SkipLinks::addIndex(html_entity_decode(_("Chatr&auml;ume f&uuml;r Veranstaltungen")), 'chat_sem') ?>
-                <tr>
-                    <td class="topic" >
-                    <font size="-1">
-                    &nbsp;<b><?=_("Chatr&auml;ume f&uuml;r Veranstaltungen")?></b>
-                    </font>
-                    </td>
-                </tr>
-                <tr>
-                    <td id="chat_sem">
-                    <? print_chat_info($active_sem_chats);?>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="blank">&nbsp;</td>
-                </tr>
-<? } ?>
-<?if(!empty($active_inst_chats)){?>
-<? SkipLinks::addIndex(html_entity_decode(_("Chatr&auml;ume f&uuml;r Einrichtungen")), 'chat_inst') ?>
-                <tr>
-                    <td class="topic" >
-                    <font size="-1">
-                    &nbsp;<b><?=_("Chatr&auml;ume f&uuml;r Einrichtungen")?></b>
-                    </font>
-                    </td>
-                </tr>
-                <tr>
-                    <td id="chat_inst">
-                    <? print_chat_info($active_inst_chats);?>
-                    </td>
-                </tr>
-<? } ?>
-                <tr>
-                    <td class="blank">&nbsp;</td>
-                </tr>
-                </table>
-<?
 
-
-//Info-field on the right side
-?>
-
-</td>
-<td class="blank" width="270" align="right" valign="top">
-<?
-
-// Berechnung der uebrigen Seminare
-
-if (!$chatter){
-    $chat_tip = _("Es ist niemand im Chat");
-} elseif ($chatter == 1){
-    $chat_tip =_("Es ist eine Person im Chat");
+// Prepare infobox
+if (!$chatter) {
+    $chat_tip = _('Es ist niemand im Chat');
+} elseif ($chatter == 1) {
+    $chat_tip =_('Es ist eine Person im Chat');
 } else {
-    $chat_tip = sprintf(_("Es sind %s Personen im Chat"), $chatter);
+    $chat_tip = sprintf(_('Es sind %s Personen im Chat'), $chatter);
 }
-if ($active_chats == 1){
-    $chat_tip .= ", " . _("ein aktiver Chatraum");
-} elseif ($active_chats > 1){
-    $chat_tip .= ", " . sprintf(_("%s aktive Chaträume"), $active_chats);
+if ($active_chats == 1) {
+    $chat_tip .= ', ' . _('ein aktiver Chatraum');
+} elseif ($active_chats > 1) {
+    $chat_tip .= ', ' . sprintf(_('%s aktive Chaträume'), $active_chats);
 }
 
-$infobox = array    (
-    array  ("kategorie"  => _("Information:"),
-        "eintrag" => array  (
-            array("icon" => "icons/16/black/info.png",
-                  "text"  => $chat_tip
+$infobox = array(
+    'picture' => 'infobox/seminars.jpg',
+    'content' => array(
+        array(
+            'kategorie'  => _('Information:'),
+            'eintrag'    => array(
+                array(
+                    'icon' => 'icons/16/black/info.png',
+                    'text' => $chat_tip
+                )
+            )
+        ),
+        array(
+            'kategorie' => _('Symbole:'),
+            'eintrag'   => array(
+                array(
+                    'icon' => 'icons/16/grey/chat.png',
+                    'text' => _('Dieser Chatraum ist leer')
+                ),
+                array(
+                    'icon' => 'icons/16/red/new/chat.png',
+                    'text' => _('Eine oder mehrere Personen befinden sich in diesem Chatraum')
+                )
             )
         )
-    ),
-    array  ("kategorie" => _("Symbole:"),
-        "eintrag" => array  (
-            array("icon" => "icons/16/grey/chat.png",
-                  "text" => _("Dieser Chatraum ist leer")
-            ),
-            array("icon" => "icons/16/red/new/chat.png",
-                  "text" => _("Eine oder mehrere Personen befinden sich in diesem Chatraum")
-            )
-        )
+        
     )
 );
 
-// print the info_box
-print_infobox ($infobox, "infobox/seminars.jpg");
-?>
-        </td>
-    </tr>
-</table>
-<?php
-    include ('lib/include/html_end.inc.php');
-    page_close();
-?>
+// Create, prepare and display template
+$template = $GLOBALS['template_factory']->open('chat/online');
+$template->set_layout($GLOBALS['template_factory']->open('layouts/base'));
+
+$template->active_user_chats = $active_user_chats;
+$template->hidden_user_chats = $hidden_user_chats;
+$template->active_sem_chats  = $active_sem_chats;
+$template->active_inst_chats = $active_inst_chats;
+$template->infobox = $infobox;
+
+echo $template->render();
+
+page_close();

@@ -236,7 +236,7 @@ if (Request::int('gruppesent') == '1'){
         
         foreach($_REQUEST['gruppe'] as $key => $value){
             $user_statement->execute(array($value, $key, $user->id));
-            $updated = $statement->rowCount();
+            $updated = $user_statement->rowCount();
 
             if ($deputies_enabled && !$updated) {
                 $deputy_statement->execute(array($value, $key, $user->id));

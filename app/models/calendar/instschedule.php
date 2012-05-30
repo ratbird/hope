@@ -89,12 +89,15 @@ class CalendarInstscheduleModel
     {
         // fetch seminar-entries, show invisible seminars if the user has enough perms
         $visibility_perms = $GLOBALS['perm']->have_perm(get_config('SEM_VISIBILITY_PERM'));
-        $stmt = DBManager::get()->prepare("SELECT * FROM seminare
-            WHERE Institut_id = :institute AND (start_time = :begin
-                OR (start_time < :begin AND duration_time = -1)
-                OR (start_time + duration_time >= :begin AND start_time <= :begin)) "
-                . (!$visibility_perms ? " AND visible='1'" : ""));
 
+        $stmt = DBManager::get()->prepare("SELECT * FROM seminare 
+            LEFT JOIN seminar_inst ON (seminare.Seminar_id = seminar_inst.seminar_id)
+            WHERE seminar_inst.institut_id = :institute
+                AND (start_time = :begin
+                    OR (start_time < :begin AND duration_time = -1) 
+                    OR (start_time + duration_time >= :begin AND start_time <= :begin)) "
+                    . (!$visibility_perms ? " AND visible='1'" : ""));
+      
         $stmt->bindParam(':begin', $semester['beginn']);
         $stmt->bindParam(':institute', $institute_id);
         $stmt->execute();

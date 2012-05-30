@@ -184,8 +184,7 @@ if (!empty($cmd) && ($cmd == 'do_copy') && $perm->have_studip_perm('tutor',$cp_i
         $_SESSION['sem_create_data']["term_turnus"] = $term_turnus;
         $_SESSION['sem_create_data']["turnus_count"] = count($term_turnus);
         $_SESSION['sem_create_data']["term_art"] = count($term_turnus) > 0 ? 0 : 1;
-        var_dump($_SESSION['sem_create_data']);
-        // Nutzerdomänen
+                // Nutzerdomänen
         $_SESSION['sem_create_data']["sem_domain"] = UserDomain::getUserDomainsForSeminar($cp_id);
 
         if ($_SESSION['sem_create_data']["term_art"] == 1) { //unregelmaessige Veranstaltung oder Block -> Termine kopieren
@@ -1261,8 +1260,7 @@ if (($form == 3) && (Request::submitted('jump_next')))
             elseif(!$just_informed4)
                 if (($_SESSION['sem_create_data']["term_tag"][$i] === '') && ($_SESSION['sem_create_data']["term_monat"][$i] === '') && ($_SESSION['sem_create_data']["term_jahr"][$i] === '') && ($_SESSION['sem_create_data']["term_start_stunde"][$i] === '') && ($_SESSION['sem_create_data']["term_start_minute"][$i] === '') && ($_SESSION['sem_create_data']["term_end_stunde"][$i] === '') && ($_SESSION['sem_create_data']["term_end_minute"][$i] === ''))
                     $empty_fields++;
-                else {
-                    var_dump($_SESSION['sem_create_data']);
+                else {                    
                     $errormsg=$errormsg."error§"._("Sie haben nicht alle Felder bei der Termineingabe ausgef&uuml;llt. Bitte f&uuml;llen Sie alle Felder aus!")."§";
                     $just_informed4=TRUE;
                     }

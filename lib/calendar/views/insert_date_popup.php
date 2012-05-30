@@ -391,7 +391,7 @@ if ($mcount > 3) {
         // navigation arrows
 
         echo '<tr>';
-        $zeiten_buttons = LinkButton::create(_('übernehmen'), 'javascript:insert_time' . $function_addition).' &nbsp; '. LinkButton::createCancel(_('abbrechen'), 'javascript:window.close();');
+        $zeiten_buttons = LinkButton::create(_('übernehmen'), 'javascript:insert_time' . $function_addition. '()').' &nbsp; '. LinkButton::createCancel(_('abbrechen'), 'javascript:window.close();');
         if ($kalender) {
             echo '<td class="blank">&nbsp;<a href="';
             echo URLHelper::getLink('', array('imt' => mktime(0, 0, 0, $atimex['mon'] - $mcount, 10, $atimex['year']), 'form_name' => ($form_name ? $form_name : ''), 'submit' => ($submit ? '1' : ''), 'mcount' =>  $mcount, 'element_switch' => $element_switch, 'c' => $c, 'atime' => $atime)) . $q . '">';

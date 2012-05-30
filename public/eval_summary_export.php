@@ -69,37 +69,39 @@ if ($no_permissons == YES) {
 
 // Gehoert die benutzende Person zum Seminar-Stab (Dozenten, Tutoren) oder ist es ein ROOT?
 $staff_member = $perm->have_studip_perm("tutor",$SessSemName[1]);
-$db5 = new DB_Seminar;
 
 $tmp_path_export = $GLOBALS['TMP_PATH']. '/export/';
 export_tmp_gc();
 
 // Template vorhanden?
-$has_template = 0;
-$db_template = new DB_Seminar();
+$eval_templates = array();
+$has_template   = 0;
 
 $pattern = array("'<img[\s]+[^>]*?src[\s]?=[\s\"\']+(.*?)[\"\']+.*?>'si");
 $replace = array("<fo:external-graphic src=\"url(\\1)\"/>");
 
 
-function do_template($column) {
-        global $has_template, $db_template;
-        if ($has_template==0 || ($has_template==1 && $db_template->f($column)))
-                return true;
-        else
-                return false;
+function do_template($column)
+{
+    global $has_template, $eval_templates;
+
+    return ($has_template==0 || ($has_template==1 && $eval_templates[$column]));
 }
 
-
 function freetype_answers ($parent_id, $anz_nutzer) {
-    global $ausgabeformat, $fo_file, $pattern, $replace;
-    $db_answers = new DB_Seminar();
-        $db_answers->query(sprintf("SELECT ea.* FROM evalanswer ea, evalanswer_user eau WHERE ea.parent_id='%s' AND ea.text!='' AND eau.evalanswer_id=ea.evalanswer_id ORDER BY ea.position",$parent_id));
-    $counter = 1;
-    while ($db_answers->next_record()) {
+    global $fo_file, $pattern, $replace;
+
+    $query = "SELECT `text`
+              FROM evalanswer
+              WHERE parent_id = ? AND `text` != ''
+              ORDER BY position";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($parent_id));
+
+    while ($answer = $statement->fetchColumn()) {
         fputs($fo_file,"                <fo:table-row>\n");
         // fputs($fo_file,"                  <fo:table-cell ><fo:block font-size=\"8pt\">".$counter.". ".htmlspecialchars($db_answers->f("text"))."</fo:block></fo:table-cell>\n");
-        fputs($fo_file,"                  <fo:table-cell ><fo:block font-size=\"8pt\">".$counter.". ".preg_replace($pattern,$replace,smile(htmlspecialchars($db_answers->f("text")),TRUE))."</fo:block></fo:table-cell>\n");
+        fputs($fo_file,"                  <fo:table-cell ><fo:block font-size=\"8pt\">".$counter.". ".preg_replace($pattern,$replace,smile(htmlspecialchars($answer),TRUE))."</fo:block></fo:table-cell>\n");
         fputs($fo_file,"                </fo:table-row>\n");
         $counter++;
     }
@@ -108,19 +110,23 @@ function freetype_answers ($parent_id, $anz_nutzer) {
     fputs($fo_file,"                </fo:table-row>\n");
 }
 
-function user_answers_residual ($parent_id) {
-        $db_user_answers = new DB_Seminar();
-        $db_user_answers->query(sprintf("SELECT eau.* FROM evalanswer_user eau, evalanswer ea WHERE ea.parent_id='%s' AND ea.residual=1 AND eau.evalanswer_id=ea.evalanswer_id",$parent_id));
-        $db_user_answers->next_record();
-        return $db_user_answers->num_rows();
+function user_answers_residual($parent_id)
+{
+    $query = "SELECT COUNT(*)
+              FROM evalanswer
+              JOIN evalanswer_user USING (evalanswer_id)
+              WHERE parent_id = ? AND residual = 1";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($parent_id));
+    return $statement->fetchColumn();
 }
 
-
-function user_answers ($evalanswer_id) {
-    $db_user_answers = new DB_Seminar();
-    $db_user_answers->query(sprintf("SELECT * FROM evalanswer_user WHERE evalanswer_id='%s'",$evalanswer_id));
-    $db_user_answers->next_record();
-    return $db_user_answers->num_rows();
+function user_answers($evalanswer_id)
+{
+    $query = "SELECT COUNT(*) FROM evalanswer_user WHERE evalanswer_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($evalanswer_id));
+    return $statement->fetchColumn();
 }
 
 function answers ($parent_id, $anz_nutzer, $question_type) {
@@ -142,38 +148,44 @@ function answers ($parent_id, $anz_nutzer, $question_type) {
 
     $summary = array ();
 
-    $db_answers_sum = new DB_Seminar();
-    $db_answers_sum->query(sprintf("SELECT COUNT(*) anz FROM evalanswer AS ea LEFT JOIN evalanswer_user AS eau USING (evalanswer_id) WHERE ea.parent_id='%s' AND eau.evalanswer_id=ea.evalanswer_id",$parent_id));
-    $db_answers_sum->next_record();
+    $query = "SELECT COUNT(*)
+              FROM evalanswer
+              JOIN evalanswer_user USING (evalanswer_id)
+              WHERE parent_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($parent_id));
+    $answers_sum = $statement->fetchColumn();
 
-    $db_answers = new DB_Seminar();
-    $db_answers->query(sprintf("SELECT * FROM evalanswer WHERE parent_id='%s' ORDER BY position",$parent_id));
     $antwort_nummer = 0;
     $gesamte_antworten = 0;
     $edit = "";
     $txt = "";
     $antwort_durchschnitt = 0;
     $has_residual = user_answers_residual($parent_id);
-    while ($db_answers->next_record()) {
+
+    $query = "SELECT evalanswer_id, `text`, value, residual FROM evalanswer WHERE parent_id = ? ORDER BY position";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($parent_id));
+    while ($answer = $statement->fetch(PDO::FETCH_ASSOC)) {
         $antwort_nummer++;
-        $answer_counter = user_answers($db_answers->f("evalanswer_id"));
-        if ($db_answers->f("residual")==0) {
+        $answer_counter = user_answers($answer['evalanswer_id']);
+        if ($answer['residual'] == 0) {
             $gesamte_antworten += $answer_counter;
             $antwort_durchschnitt += $answer_counter * $antwort_nummer;
         }
         $prozente = 0;
-        if ($db_answers_sum->f("anz")>0) $prozente = ROUND($answer_counter*100/$anz_nutzer);
+        if ($answers_sum>0) $prozente = ROUND($answer_counter*100/$anz_nutzer);
         $prozente_wo_residual = 0;
-        if ($has_residual && ($db_answers_sum->f("anz")-$has_residual)>0) $prozente_wo_residual = ROUND($answer_counter*100/($anz_nutzer-$has_residual));
+        if ($has_residual && ($answers_sum-$has_residual)>0) $prozente_wo_residual = ROUND($answer_counter*100/($anz_nutzer-$has_residual));
         $edit .= "                <fo:table-row>\n";
-        $edit .= "                  <fo:table-cell ><fo:block font-size=\"8pt\">".$antwort_nummer.". ".preg_replace($pattern,$replace,smile(htmlspecialchars(($db_answers->f("text")!="" ? $db_answers->f("text") : $db_answers->f("value"))),TRUE))."</fo:block></fo:table-cell>\n";
+        $edit .= "                  <fo:table-cell ><fo:block font-size=\"8pt\">".$antwort_nummer.". ".preg_replace($pattern,$replace,smile(htmlspecialchars(($answer['text']!="" ? $answer['text'] : $answer['value'])),TRUE))."</fo:block></fo:table-cell>\n";
 
-        if ($has_residual) $edit .= "                  <fo:table-cell ><fo:block font-size=\"8pt\">".$answer_counter." (".$prozente."%) ".($db_answers->f("residual")==0 ? "(".$prozente_wo_residual."%)*" : "" )."</fo:block></fo:table-cell>\n";
+        if ($has_residual) $edit .= "                  <fo:table-cell ><fo:block font-size=\"8pt\">".$answer_counter." (".$prozente."%) ".($answer['residual'] == 0 ? "(".$prozente_wo_residual."%)*" : "" )."</fo:block></fo:table-cell>\n";
         else $edit .= "                  <fo:table-cell ><fo:block font-size=\"8pt\">".$answer_counter." (".$prozente."%)</fo:block></fo:table-cell>\n";
         $edit .= "                </fo:table-row>\n";
 
-        array_push($ret_array["antwort_texte"], ($db_answers->f("text")!="" ? $db_answers->f("text") : $db_answers->f("value")));
-                array_push($ret_array["auswertung"], array($answer_counter, $prozente, ($db_answers->f("residual")==0 ? $prozente_wo_residual : null)));
+        array_push($ret_array["antwort_texte"], ($answer['text'] != "" ? $answer['text'] : $answer['value']));
+                array_push($ret_array["auswertung"], array($answer_counter, $prozente, ($answer['residual']==0 ? $prozente_wo_residual : null)));
                 if ($has_residual) $ret_array["has_residual"] = 1;
 
     }
@@ -222,56 +234,64 @@ function answers ($parent_id, $anz_nutzer, $question_type) {
 
 function groups ($parent_id) {
     global $cssSw, $ausgabeformat, $fo_file, $auth, $global_counter, $local_counter, $tmp_path_export, $pattern, $replace;
-    $db_groups = new DB_Seminar();
-    $db_groups->query(sprintf("SELECT * FROM evalgroup WHERE parent_id='%s' ORDER BY position",$parent_id));
 
+    $query = "SELECT group_type FROM eval_group_template WHERE evalgroup_id = ?";
+    $type_statement = DBManager::get()->prepare($query);
 
-    while ($db_groups->next_record()) {
+    $query = "SELECT LOCATE('Freitext', `text`) > 0 FROM evalquestion WHERE evalquestion_id = ?";
+    $freetext_statement = DBManager::get()->prepare($query);
+    
+    $query = "SELECT evalquestion_id, `text`, type FROM evalquestion WHERE parent_id = ? ORDER BY position";
+    $questions_statement = DBManager::get()->prepare($query);
+    
+    $query = "SELECT COUNT(DISTINCT user_id)
+              FROM evalanswer
+              JOIN evalanswer_user USING(evalanswer_id)
+              WHERE parent_id = ?";
+    $question_users_statement = DBManager::get()->prepare($query);
+
+    $query = "SELECT evalgroup_id, child_type, title, template_id FROM evalgroup WHERE parent_id = ? ORDER BY position";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($parent_id));
+
+    while ($group = $statement->fetch(PDO::FETCH_ASSOC)) {
         // Heraussuchen, ob es sich um ein Freitext-Template handelt...
-        $db = new DB_Seminar();
-        $db->query(sprintf("SELECT * FROM evalquestion WHERE evalquestion_id='%s'",$db_groups->f("template_id")));
-        $freetype = FALSE;
-        if ($db->next_record()) {
-            if (strstr($db->f("text"),"Freitext"))
-                $freetype = TRUE;
-        }
+        $freetext_statement->execute(array($group['template_id']));
+        $freetype = $freetext_statement->fetchColumn();
+        $freetext_statement->closeCursor();
 
-        if ($db_groups->f("child_type")=="EvaluationGroup") {
+        if ($group['child_type'] == 'EvaluationGroup') {
             $global_counter += 1;
             $local_counter   = 0;
             fputs($fo_file,"    <!-- Groupblock -->\n");
             fputs($fo_file,"    <fo:block font-variant=\"small-caps\" font-weight=\"bold\" text-align=\"start\" space-after.optimum=\"2pt\" background-color=\"lightblue\" space-before.optimum=\"10pt\">\n");
             if (do_template("show_group_headline"))
-                fputs($fo_file,"      ".$global_counter.". ".preg_replace($pattern,$replace,smile(htmlspecialchars($db_groups->f("title")),TRUE))."\n");
+                fputs($fo_file,"      ".$global_counter.". ".preg_replace($pattern,$replace,smile(htmlspecialchars($group['title']),TRUE))."\n");
             fputs($fo_file,"    </fo:block>\n");
         } else {
             $local_counter += 1;
 
-                        $group_type = "normal";
-
-            $db_group_type = new DB_Seminar();
-                        $db_group_type->query(sprintf("SELECT * FROM eval_group_template WHERE evalgroup_id='%s'",$db_groups->f("evalgroup_id")));
-                        if ($db_group_type->next_record()) $group_type = $db_group_type->f("group_type");
+            $type_statement->execute(array($group['evalgroup_id']));
+            $group_type = $type_statement->fetchColumn() ?: 'normal';
+            $type_statement->closeCursor();
 
             fputs($fo_file,"    <!-- Questionblock -->\n");
             fputs($fo_file,"    <fo:block font-variant=\"small-caps\" font-weight=\"bold\" text-align=\"start\" background-color=\"grey\" color=\"white\" space-after.optimum=\"10pt\">\n");
             if (do_template("show_questionblock_headline"))
-                fputs($fo_file,"      ".$global_counter.".".$local_counter.". ".preg_replace($pattern,$replace,smile(htmlspecialchars($db_groups->f("title")),TRUE))."\n");
+                fputs($fo_file,"      ".$global_counter.".".$local_counter.". ".preg_replace($pattern,$replace,smile(htmlspecialchars($group['title']),TRUE))."\n");
             fputs($fo_file,"    </fo:block>\n");
         }
 
-        if ($db_groups->f("child_type")=="EvaluationQuestion") {
-
-            $db_questions = new DB_Seminar();
-            $db_questions->query(sprintf("SELECT * FROM evalquestion WHERE parent_id='%s' ORDER BY position",$db_groups->f("evalgroup_id")));
+        if ($group['child_type'] == 'EvaluationQuestion') {
 
             $local_question_counter = 0;
             $answer_arr = array();
 
-            while ($db_questions->next_record()) {
-                $db_questions_user = new DB_Seminar();
-                                $db_questions_user->query(sprintf("SELECT COUNT(DISTINCT eau.user_id) anz FROM evalanswer ea, evalanswer_user eau WHERE ea.parent_id='%s' AND eau.evalanswer_id=ea.evalanswer_id",$db_questions->f("evalquestion_id")));
-                $db_questions_user->next_record();
+            $questions_statement->execute(array($group['evalgroup_id']));
+            while ($question = $questions_statement->fetch(PDO::FETCH_ASSOC)) {
+                $question_users_statement->execute(array($question['evalquestion_id']));
+                $question_users = $question_users_statement->fetchColumn();
+                $question_users_statement->closeCursor();
 
                 if ($group_type=="normal") {
 
@@ -279,7 +299,7 @@ function groups ($parent_id) {
                 fputs($fo_file,"    <!-- Question -->\n");
                 fputs($fo_file,"    <fo:block text-align=\"start\" font-weight=\"bold\" space-before.optimum=\"10pt\" space-after.optimum=\"10pt\">\n");
                 if (do_template("show_questions")) {
-                    fputs($fo_file,"      ".$global_counter.".".$local_counter.".".$local_question_counter.". ".preg_replace($pattern,$replace,smile(htmlspecialchars($db_questions->f("text")),TRUE))."\n");
+                    fputs($fo_file,"      ".$global_counter.".".$local_counter.".".$local_question_counter.". ".preg_replace($pattern,$replace,smile(htmlspecialchars($question['text']),TRUE))."\n");
                 }
                 fputs($fo_file,"    </fo:block>\n");
                 fputs($fo_file,"    <!-- table start -->\n");
@@ -308,13 +328,13 @@ function groups ($parent_id) {
 
                 if (!($freetype)) {
                     // Keine Freitext-Eingabe
-                    $ret = answers($db_questions->f("evalquestion_id"), $db_questions_user->f("anz"), $db_questions->f("type"));
-                    $ret["frage"] = $db_questions->f("text");
-                                        array_push($answer_arr, $ret);
-                                        if ($group_type=="normal") fputs($fo_file, $ret["txt"]);
+                    $ret = answers($question['evalquestion_id'], $question_users, $question['type']);
+                    $ret["frage"] = $question['text'];
+                    array_push($answer_arr, $ret);
+                    if ($group_type=="normal") fputs($fo_file, $ret["txt"]);
                 } else {
                     // Freitext
-                    freetype_answers($db_questions->f("evalquestion_id"), $db_questions_user->f("anz"));
+                    freetype_answers($question['evalquestion_id'], $question_users);
                 }
 
 
@@ -327,7 +347,7 @@ function groups ($parent_id) {
                     if (!($freetype)) {
                         fputs($fo_file,"          <fo:table-cell ><fo:block start-indent=\"3mm\" end-indent=\"3mm\" padding-left=\"3mm\" padding-right=\"3mm\" padding-top=\"4mm\" padding-bottom=\"4mm\">\n");
                         if (do_template("show_graphics")) {
-                            fputs($fo_file,"            <fo:external-graphic content-width=\"70mm\" content-height=\"60mm\" src=\"url('file:///".$tmp_path_export."/evalsum".$db_questions->f("evalquestion_id").$auth->auth["uid"].".".$GLOBALS['EVAL_AUSWERTUNG_GRAPH_FORMAT']."')\"/>\n");
+                            fputs($fo_file,"            <fo:external-graphic content-width=\"70mm\" content-height=\"60mm\" src=\"url('file:///".$tmp_path_export."/evalsum".$question['evalquestion_id'].$auth->auth["uid"].".".$GLOBALS['EVAL_AUSWERTUNG_GRAPH_FORMAT']."')\"/>\n");
                         }
                         fputs($fo_file,"          </fo:block></fo:table-cell>\n");
                     }
@@ -432,34 +452,45 @@ function groups ($parent_id) {
             }
         }
 
-        groups($db_groups->f("evalgroup_id"));
+        groups($group['evalgroup_id']);
 
     }
 
 }
 
 
-$db = new DB_Seminar();
+$query = "SELECT eval_id, title, author_id, anonymous
+          FROM eval
+          WHERE eval_id = ? AND author_id = IFNULL(?, author_id)";
+$statement = DBManager::get()->prepare($query);
+$statement->execute(array(
+    $eval_id,
+    $staff_member ? null : $GLOBALS['user']->id
+));
 
-if ($staff_member) $db->query(sprintf("SELECT * FROM eval WHERE eval_id='%s'",$eval_id));
-else $db->query(sprintf("SELECT * FROM eval WHERE eval_id='%s' AND author_id='%s'",$eval_id,$auth->auth["uid"]));
-
-if ($db->next_record()) {
+if ($evaluation = $statement->fetch(PDO::FETCH_ASSOC)) {
     // Evaluation existiert auch...
 
-    $db_template->query(sprintf("SELECT t.* FROM eval_templates t, eval_templates_eval te WHERE te.eval_id='%s' AND t.template_id=te.template_id",$eval_id));
-    if ($db_template->next_record()) $has_template = 1;
+    $query = "SELECT t.*
+              FROM eval_templates AS t
+              JOIN eval_templates_eval AS te USING (template_id)
+              WHERE te.eval_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($eval_id));
+    $eval_templates = $statement->fetch(PDO::FETCH_ASSOC);
 
-    $db_owner = new DB_Seminar();
-    $db_owner->query(sprintf("SELECT ".$_fullname_sql['no_title']." AS fullname FROM auth_user_md5 WHERE user_id='%s'", $db->f("author_id")));
-    $db_owner->next_record();
+    $has_template = !empty($eval_templates);
+
+    $db_owner = User::find($evaluation['author_id'])->getFullName('no_title');
 
     $global_counter = 0;
     $local_counter  = 0;
 
-    $db_number_of_votes = new DB_Seminar();
-    $db_number_of_votes->query(sprintf("SELECT COUNT(DISTINCT user_id) anz FROM eval_user WHERE eval_id='%s'", $eval_id));
-    $db_number_of_votes->next_record();
+    $query = "SELECT COUNT(DISTINCT user_id) FROM eval_user WHERE eval_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($eval_id));
+    $number_of_votes = $statement->fetchColumn();
+
     $eval_ranges_names = array();
     $eval_ranges = DbManager::get()
                  ->query("SELECT range_id FROM eval_range WHERE eval_id = " . DbManager::get()->quote($eval_id))
@@ -500,10 +531,10 @@ if ($db->next_record()) {
       $eval_ranges_names[] = $name;
     }
     sort($eval_ranges_names);
-    if (file_exists($tmp_path_export."/evalsum".$db->f("eval_id").$auth->auth["uid"].".fo")) unlink($tmp_path_export."/evalsum".$db->f("eval_id").$auth->auth["uid"].".fo");
-    if (file_exists($tmp_path_export."/evalsum".$db->f("eval_id").$auth->auth["uid"].".pdf")) unlink($tmp_path_export."/evalsum".$db->f("eval_id").$auth->auth["uid"].".pdf");
+    if (file_exists($tmp_path_export."/evalsum".$evaluation['eval_id'].$auth->auth["uid"].".fo")) unlink($tmp_path_export."/evalsum".$evaluation['eval_id'].$auth->auth["uid"].".fo");
+    if (file_exists($tmp_path_export."/evalsum".$evaluation['eval_id'].$auth->auth["uid"].".pdf")) unlink($tmp_path_export."/evalsum".$evaluation['eval_id'].$auth->auth["uid"].".pdf");
 
-    $fo_file = fopen($tmp_path_export."/evalsum".$db->f("eval_id").$auth->auth["uid"].".fo","w");
+    $fo_file = fopen($tmp_path_export."/evalsum".$evaluation['eval_id'].$auth->auth["uid"].".fo","w");
 
     // ----- START HEADER -----
 
@@ -535,7 +566,7 @@ if ($db->next_record()) {
     fputs($fo_file,"    <!-- this defines a title level 2-->\n");
 
     fputs($fo_file,"    <fo:block font-size=\"16pt\" font-weight=\"bold\" font-family=\"sans-serif\" space-before.optimum=\"10pt\" space-after.optimum=\"15pt\" text-align=\"center\">\n");
-    fputs($fo_file,"      ".preg_replace($pattern,$replace,smile(htmlspecialchars($db->f("title")),TRUE))."\n");
+    fputs($fo_file,"      ".preg_replace($pattern,$replace,smile(htmlspecialchars($evaluation['title']),TRUE))."\n");
     fputs($fo_file,"    </fo:block>\n");
     fputs($fo_file,"    <fo:block text-align=\"start\" line-height=\"10pt\" font-size=\"8pt\">\n");
     fputs($fo_file,    _("Diese Evaluation ist folgenden Bereichen zugeordnet:"));
@@ -550,15 +581,15 @@ if ($db->next_record()) {
 
     if (do_template("show_total_stats")) {
         fputs($fo_file,"    <fo:block text-align=\"start\" space-before.optimum=\"10pt\" line-height=\"10pt\" font-size=\"8pt\">\n");
-        fputs($fo_file,"      ".$db_number_of_votes->f("anz")." "._("Teilnehmer insgesamt").".\n");
-        fputs($fo_file,"      "._("Die Teilnahme war")." ". ($db->f("anonymous")==0 ? _("nicht") : "") . " "._("anonym").".\n");
-        fputs($fo_file,"      "._("Eigentümer").": ".$db_owner->f("fullname").". "._("Erzeugt am").": ".date("d.m.Y H:i:s")."\n");
+        fputs($fo_file,"      ".$number_of_votes." "._("Teilnehmer insgesamt").".\n");
+        fputs($fo_file,"      "._("Die Teilnahme war")." ". ($evaluation['anonymous']==0 ? _("nicht") : "") . " "._("anonym").".\n");
+        fputs($fo_file,"      "._("Eigentümer").": ".$db_owner.". "._("Erzeugt am").": ".date("d.m.Y H:i:s")."\n");
         fputs($fo_file,"    </fo:block>\n");
     }
 
     // ----- ENDE HEADER -----
 
-    groups($db->f("eval_id"));
+    groups($evaluation['eval_id']);
 
     // ----- START FOOTER -----
 
@@ -570,15 +601,15 @@ if ($db->next_record()) {
 
     fclose($fo_file);
 
-    $pdffile = "$tmp_path_export/" . md5($db->f("eval_id").$auth->auth["uid"]);
+    $pdffile = "$tmp_path_export/" . md5($evaluation['eval_id'].$auth->auth["uid"]);
 
-    $str = $FOP_SH_CALL." $tmp_path_export/evalsum".$db->f("eval_id").$auth->auth["uid"].".fo $pdffile";
+    $str = $FOP_SH_CALL." $tmp_path_export/evalsum".$evaluation['eval_id'].$auth->auth["uid"].".fo $pdffile";
 
     $err = exec($str);
 
     if (file_exists($pdffile) && filesize($pdffile)) {
         header('Location: ' . getDownloadLink( basename($pdffile), "evaluation.pdf", 2));
-        unlink($tmp_path_export."/evalsum".$db->f("eval_id").$auth->auth["uid"].".fo");
+        unlink($tmp_path_export."/evalsum".$evaluation['eval_id'].$auth->auth["uid"].".fo");
     } else {
         echo "Fehler beim PDF-Export!<BR>".$err;
         echo "<BR>\n".$str;

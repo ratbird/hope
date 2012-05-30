@@ -121,6 +121,7 @@ $default_deputies_enabled = get_config('DEPUTIES_DEFAULTENTRY_ENABLE');
 $cmd = Request::option('cmd');
 $form = Request::option('form');
 $start_level = Request::option('start_level');
+$cp_id = Request::option('cp_id');
 //verbotene Kategorien checken
 if (($cmd == 'do_copy' && SeminarCategories::GetBySeminarId($cp_id)->course_creation_forbidden)
     || ( $form && (SeminarCategories::Get($_SESSION['sem_create_data']['sem_class']) === false || SeminarCategories::Get($_SESSION['sem_create_data']['sem_class'])->course_creation_forbidden))){
@@ -183,7 +184,7 @@ if (!empty($cmd) && ($cmd == 'do_copy') && $perm->have_studip_perm('tutor',$cp_i
         $_SESSION['sem_create_data']["term_turnus"] = $term_turnus;
         $_SESSION['sem_create_data']["turnus_count"] = count($term_turnus);
         $_SESSION['sem_create_data']["term_art"] = count($term_turnus) > 0 ? 0 : 1;
-
+        var_dump($_SESSION['sem_create_data']);
         // Nutzerdomänen
         $_SESSION['sem_create_data']["sem_domain"] = UserDomain::getUserDomainsForSeminar($cp_id);
 
@@ -684,7 +685,7 @@ if ($form == 4) {
         //get incoming room-data
         $turnus_data=$_SESSION['sem_create_data']["metadata_termin"]["turnus_data"];
         
-        if (isset($turnus_data)){
+        if (is_array($turnus_data)){
             
             $term_turnus_room = Request::optionArray('term_turnus_room');
             $term_turnus_resource_id = Request::optionArray('term_turnus_resource_id');
@@ -813,8 +814,8 @@ if ($form == 5) {
 
 if ($form == 8)
     {
-    $_SESSION['sem_create_data']["sem_scm_content"]=Requset::quoted('sem_scm_content');
-    if (!Requset::quoted('$sem_scm_name')) {
+    $_SESSION['sem_create_data']["sem_scm_content"]=Request::quoted('sem_scm_content');
+    if (!Request::quoted('$sem_scm_name')) {
         $_SESSION['sem_create_data']["sem_scm_name"]=$SCM_PRESET[$sem_scm_preset]["name"];
         $_SESSION['sem_create_data']["sem_scm_preset"]=Request::option('sem_scm_preset');
     } else
@@ -823,6 +824,7 @@ if ($form == 8)
 
 //jump-logic
 if (Request::submitted('jump_back')) {
+   
     if ($form > 1) {
         // if we have chosen to not enter dates, skip room-requests
         if ($form == 5) {
@@ -1012,6 +1014,7 @@ if (Request::quoted('delete_tut')) {
 }
 
 if ((Request::submitted('send_doz_x')) && (!Request::submitted('reset_search')) && (Request::quoted('add_doz'))) {
+    
     $next_position = sizeof($_SESSION['sem_create_data']["sem_doz"]) + 1;
     $doz_id = get_userid(Request::quoted('add_doz'));
     $_SESSION['sem_create_data']["sem_doz"][$doz_id]= $next_position;
@@ -1064,7 +1067,7 @@ if (isset($_REQUEST['delete_domain'])) {
     unset($_SESSION['sem_create_data']["sem_domain"][$index]);
 }
 
-if (Request::submitted('add_doz') || Request::submitted('add_tut') || Request::submitted('add_dep') || Request::submitted('search_doz_x') || Request::submitted('search_dep_x') ||Request::submitted('search_tut_x') || Request::submitted('reset_search_x') ||
+if (Request::quoted('add_doz_parameter') || Request::quoted('add_tut_parameter') || Request::submitted('add_dep') || Request::submitted('search_doz_x') || Request::submitted('search_dep_x') ||Request::submitted('search_tut_x') || Request::submitted('reset_search_x') ||
     Request::submitted('sem_bereich_do_search') || Request::submitted('add_domain') || isset($_REQUEST['delete_domain']) ||
     $study_areas['add'] || $study_areas['remove'] ||
     $study_areas['showall_button'] || $study_areas['search_button'] ||
@@ -1072,9 +1075,7 @@ if (Request::submitted('add_doz') || Request::submitted('add_tut') || Request::s
     $study_areas['rewind_button']) {
     $level=2;
 
-}
-
-elseif (($form == 2) && (Request::submitted('jump_next'))) //wenn alles stimmt, Checks und Sprung auf Schritt 3
+}elseif (($form == 2) && (Request::submitted('jump_next'))) //wenn alles stimmt, Checks und Sprung auf Schritt 3
     {
     if (is_array($_SESSION['sem_create_data']['sem_tut']))
         foreach ($_SESSION['sem_create_data']['sem_tut'] as $key=>$val){
@@ -1261,6 +1262,7 @@ if (($form == 3) && (Request::submitted('jump_next')))
                 if (($_SESSION['sem_create_data']["term_tag"][$i] === '') && ($_SESSION['sem_create_data']["term_monat"][$i] === '') && ($_SESSION['sem_create_data']["term_jahr"][$i] === '') && ($_SESSION['sem_create_data']["term_start_stunde"][$i] === '') && ($_SESSION['sem_create_data']["term_start_minute"][$i] === '') && ($_SESSION['sem_create_data']["term_end_stunde"][$i] === '') && ($_SESSION['sem_create_data']["term_end_minute"][$i] === ''))
                     $empty_fields++;
                 else {
+                    var_dump($_SESSION['sem_create_data']);
                     $errormsg=$errormsg."error§"._("Sie haben nicht alle Felder bei der Termineingabe ausgef&uuml;llt. Bitte f&uuml;llen Sie alle Felder aus!")."§";
                     $just_informed4=TRUE;
                     }

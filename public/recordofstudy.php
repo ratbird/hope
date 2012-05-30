@@ -81,12 +81,12 @@ include_once($PATH_EXPORT ."/recordofstudyDB.php");
 /*                                                                            *
 /* ************************************************************************* */
 $semester = $_POST['semester'];
-if( (isset($_POST["semester_selected_x"])) || (isset($_POST["add_seminars_x"])) ||
-    (isset($_POST["delete_seminars_x"])))
+if ( (Request::submitted('semester_selected')) || (Request::submitted('add_seminars')) ||
+    (Request::submitted('delete_seminars')))
     $mode = "edit";
-elseif (isset($_POST["create_pdf_x"]))
+elseif (Request::submitted('collect_information'))
     $mode = "pdf_assortment";
-elseif (isset($_GET["create_pdf"]))
+elseif (Request::int('create_pdf') == 1)
     $mode = "create_pdf";
 else
     $mode = "new";
@@ -142,8 +142,8 @@ elseif ($mode == "edit"){
         for($i=0;$i+1<=$seminare_max;$i++){
 
             // delete this entry
-            if(($_POST['delete'.$i]) &&
-              (!($_POST['add_seminars_x']) && (($_POST['delete'.$i])))){
+            if (($_POST['delete'.$i]) &&
+              (!Request::submitted('add_seminars') && (($_POST['delete'.$i])))){
                 $deletenumbers++;
             }
             else{
@@ -169,7 +169,7 @@ elseif ($mode == "edit"){
     $seminars_max = $i;
 
     // add new ones
-    if(($_POST['add_seminars_x']) && (!($_POST['delete'.$i]))){
+    if (Request::submitted('add_seminars') && (!($_POST['delete'.$i]))){
         $numberofnew = $_POST['newseminarfields'];
         for($i=1;$i<=$numberofnew;$i++){
             $seminareAR[$i+$seminare_max] = array("id" => $i+$seminars_max);
@@ -260,13 +260,13 @@ elseif ($mode == "create_pdf"){
 }
 
 // if you wanna create a pdf no html-header should be send to the browser
-if (!isset($_GET["create_pdf"])){
+if ($mode != 'create_pdf') {
     $out = ob_get_clean();
     require_once('lib/include/html_head.inc.php');
     require_once('lib/include/header.php');
 }
 echo $out;
-if (!isset($_GET["create_pdf"])) {
+if ($mode != 'create_pdf') {
     require_once 'lib/include/html_end.inc.php';
 }
 page_close ();

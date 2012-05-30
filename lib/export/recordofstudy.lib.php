@@ -70,7 +70,7 @@ function printSelectSemester($infobox,$semestersAR){
         $html .= "        <option value=\"".$semester["id"]."\">".$semester["name"]."</option>\n";
     }
     $html .="       </select>\n"
-          . Button::create(_('Auswähhlen'), 'semester_selected', _("Semester und Kriterium auswählen."))
+          . Button::create(_('Auswählen'), 'semester_selected', array('title' => _("Semester und Kriterium auswählen.")))
           . "       <br><br>&nbsp;<select name=\"onlyseminars\" style=\"vertical-align:middle;\">\n"
           . "        <option value=\"1\" selected>"._("nur Lehrveranstaltungen")."</option>\n"
           . "        <option value=\"0\">"._("alle Veranstaltungen")."</option>\n"
@@ -208,7 +208,7 @@ function printRecordOfStudies($infobox, $basicdata, $seminare, $notice = NULL){
     print_infobox($infobox, "infobox/folders.jpg");
     $html = "      <br>\n"
           . Button::create('<< '._('Zurück'), 'select_new_semester', array('title' => _("Abbrechen und ein anderes Semester auswählen.")))
-          . Button::create(_('Weiter').' >>', 'create_pdf', array('title' => _("Weiter zum Download Ihrer Veranstaltungsübersicht.")))
+          . Button::create(_('Weiter').' >>', 'collect_information', array('title' => _("Weiter zum Download Ihrer Veranstaltungsübersicht.")))
           . "     <br><br></td>\n"
           . "    </tr>\n"
           . "   </table>\n"

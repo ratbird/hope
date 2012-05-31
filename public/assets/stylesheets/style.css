@@ -423,6 +423,9 @@ tr.sortable th.sortdesc {
   margin: 0;
   padding: 20px;
 }
+#layout_content {
+  overflow: auto;
+}
 #layout_table {
   background-color: #fff;
   border: 20px solid #fff;

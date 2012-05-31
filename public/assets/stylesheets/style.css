@@ -29,9 +29,6 @@
   -ms-box-sizing: border-box;
   box-sizing: border-box;
 }
-/*
-
-*/
 /* --- Links ---------------------------------------------------------------- */
 a,
 a:link,
@@ -425,9 +422,6 @@ tr.sortable th.sortdesc {
   box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
   margin: 0;
   padding: 20px;
-}
-#layout_content {
-  overflow: auto;
 }
 #layout_table {
   background-color: #fff;

@@ -314,6 +314,7 @@ class StudipForm {
         for ($i = 0; $i < count($options); ++$i){
             $options_name = (is_array($options[$i])) ? $options[$i]['name'] : $options[$i];
             $options_value = (is_array($options[$i])) ? $options[$i]['value'] : $options[$i];
+            $options_attributes = (is_array($options[$i])) ? $options[$i]['attributes'] : array();
             $selected = false;
             if ((is_array($default) && in_array("" . $options_value, $default))
             || (!is_array($default) && ($default == "" . $options_value))){
@@ -323,6 +324,11 @@ class StudipForm {
                 $options_name = my_substr($options_name,0, $this->form_fields[$name]['max_length']);
             }
             $ret .= "\n<option value=\"".htmlReady($options_value)."\" " . (($selected) ? " selected " : "");
+            if (is_array($options_attributes)) {
+                foreach ($options_attributes as $key => $value) {
+                    $ret .= " ".$key."=\"".htmlReady($value)."\"";
+                }
+            }
             $ret .= ">".htmlReady($options_name)."</option>";
         }
         $ret .= "\n</select>";

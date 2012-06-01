@@ -303,6 +303,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
                 $nav->setURL('forum.php?view=neue&sort=age');
                 $nav->setImage('icons/16/red/new/forum.png', array('title' =>
                     sprintf(_('%s Forenbeiträge, %s neue'), $db2->f('count'), $db2->f('neue'))));
+                $nav->setBadgeNumber($db2->f('neue'));
             } else if ($db2->f('count')) {
                 $nav->setURL('forum.php?view=reset&sort=age');
                 $nav->setImage('icons/16/grey/forum.png', array('title' => sprintf(_('%s Forenbeiträge'), $db2->f('count'))));
@@ -342,6 +343,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
                 $nav->setURL('folder.php?cmd=all');
                 $nav->setImage('icons/16/red/new/files.png', array('title' =>
                     sprintf(_('%s Dokumente, %s neue'), $db2->f('count'), $db2->f('neue'))));
+                $nav->setBadgeNumber($db2->f('neue'));
             } else if ($db2->f('count')) {
                 $nav->setURL('folder.php?cmd=tree');
                 $nav->setImage('icons/16/grey/files.png', array('title' => sprintf(_('%s Dokumente'), $db2->f('count'))));
@@ -367,6 +369,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
             $nav->setURL('?new_news=true');
             $nav->setImage('icons/16/red/new/breaking-news.png', array('title' =>
                 sprintf(_('%s Ankündigungen, %s neue'), $db2->f('count'), $db2->f('neue'))));
+            $nav->setBadgeNumber($db2->f('neue'));
         } else if ($db2->f('count')) {
             $nav->setImage('icons/16/grey/breaking-news.png', array('title' => sprintf(_('%s Ankündigungen'), $db2->f('count'))));
         }
@@ -391,6 +394,8 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
             if ($db2->f('count')) {
                 if ($db2->f('neue')) {
                     $image = 'icons/16/red/new/infopage.png';
+
+                    $nav->setBadgeNumber($db2->f('neue'));
 
                     if ($db2->f('count') == 1) {
                         $title = $db2->f('tab_name')._(' (geändert)');
@@ -430,6 +435,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
             if ($db2->f('neue')) {
                 $nav->setImage('icons/16/red/new/schedule.png', array('title' =>
                     sprintf(_('%s Termine, %s neue'), $db2->f('count'), $db2->f('neue'))));
+                $nav->setBadgeNumber($db2->f('neue'));
             } else if ($db2->f('count')) {
                 $nav->setImage('icons/16/grey/schedule.png', array('title' => sprintf(_('%s Termine'), $db2->f('count'))));
             }
@@ -456,6 +462,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
                     $nav->setURL('wiki.php?view=listnew');
                     $nav->setImage('icons/16/red/new/wiki.png', array('title' =>
                         sprintf(_('%s WikiSeiten, %s Änderungen'), $db2->f('count'), $db2->f('neue'))));
+                    $nav->setBadgeNumber($db2->f('neue'));
                 } else if ($db2->f('count')) {
                     $nav->setURL('wiki.php');
                     $nav->setImage('icons/16/grey/wiki.png', array('title' => sprintf(_('%s WikiSeiten'), $db2->f('count'))));
@@ -485,6 +492,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
                 if ($db2->f('neue')) {
                     $nav->setImage('icons/16/red/new/learnmodule.png', array('title' =>
                         sprintf(_('%s Lernmodule, %s neue'), $db2->f('count'), $db2->f('neue'))));
+                    $nav->setBadgeNumber($db2->f('neue'));
                 } else if ($db2->f('count')) {
                     $nav->setImage('icons/16/grey/learnmodule.png', array('title' => sprintf(_('%s Lernmodule'), $db2->f('count'))));
                 }
@@ -524,6 +532,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
             if ($my_obj[$object_id]['neuevotes']) {
                 $nav->setImage('icons/16/red/new/vote.png', array('title' =>
                     sprintf(_('%s Umfrage(n), %s neue'), $my_obj[$object_id]['votes'], $my_obj[$object_id]['neuevotes'])));
+                $nav->setBadgeNumber($my_obj[$object_id]['neuevotes']);
             } else if ($my_obj[$object_id]['votes']) {
                 $nav->setImage('icons/16/grey/vote.png', array('title' => sprintf(_('%s Umfrage(n)'), $my_obj[$object_id]['votes'])));
             }
@@ -549,6 +558,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
                 if ($db2->f('neue')) {
                     $nav->setImage('icons/16/red/new/literature.png', array('title' =>
                         sprintf(_('%s Literaturlisten, %s neue'), $db2->f('count'), $db2->f('neue'))));
+                    $nav->setBadgeNumber($db2->f('neue'));
                 } else if ($db2->f('count')) {
                     $nav->setImage('icons/16/grey/literature.png', array('title' => sprintf(_('%s Literaturlisten'), $db2->f('count'))));
                 }
@@ -614,6 +624,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
                 if ($neue && ($GLOBALS['perm']->have_perm('admin', $user_id) || in_array($my_obj[$object_id]['status'], words('dozent tutor')))) {
                     $nav->setImage('icons/16/red/new/persons.png', array('title' =>
                         sprintf(_('%s TeilnehmerInnen, %s neue'), $count, $neue)));
+                    $nav->setBadgeNumber($neue);
                 } else if ($count) {
                     $nav->setImage('icons/16/grey/persons.png', array('title' => sprintf(_('%s TeilnehmerInnen'), $count)));
                 }

@@ -7765,22 +7765,22 @@ msgstr "Appointment calendar deactivated!"
 
 #: ../public/eval_config.php:110
 msgid ""
-"Auf dieser Seite k&ouml;nnen Sie die Auswertung Ihrer Evaluation "
+"Auf dieser Seite können Sie die Auswertung Ihrer Evaluation "
 "konfigurieren."
 msgstr "On this page you can configurate the evaluation assessment."
 
 #: ../public/eval_config.php:112
 msgid ""
-"W&auml;hlen Sie Ihre Einstellungen und dr&uuml;cken Sie auf \"Template "
-"speichern\". Anschlie&szlig;end kommen Sie mit dem Button unten links "
-"zur&uuml;ck zu Ihrer Evaluation."
+"Wählen Sie Ihre Einstellungen und drücken Sie auf \"Template "
+"speichern\". Anschließend kommen Sie mit dem Button unten links "
+"zurück zu Ihrer Evaluation."
 msgstr ""
 "Select your settings and click on \"Save template\". The button at the lower "
 "left will take you back to your evaluation."
 
 #: ../public/eval_config.php:130
-msgid "Template wurde neu erzeugt."
-msgstr "Template newly created."
+msgid "Die Auswertungskonfiguration wurde gespeichert."
+msgstr "Assessment configuration has been saved."
 
 #: ../public/eval_config.php:152
 msgid "Auswertungskonfiguration"
@@ -7824,23 +7824,23 @@ msgid "Zeige Fragen an"
 msgstr "Show questions"
 
 #: ../public/eval_config.php:204
-msgid "Zeige Gruppen&uuml;berschriften an"
+msgid "Zeige Gruppenüberschriften an"
 msgstr "Show group headers"
 
 #: ../public/eval_config.php:213
-msgid "Zeige Fragenblock&uuml;berschriften an"
+msgid "Zeige Fragenblocküberschriften an"
 msgstr "Show question block headers"
 
 #: ../public/eval_config.php:222
-msgid "Grafiktyp f&uuml;r Polskalen"
+msgid "Grafiktyp für Polskalen"
 msgstr "Graphic type for pole scales"
 
 #: ../public/eval_config.php:236
-msgid "Grafiktyp f&uuml;r Likertskalen"
+msgid "Grafiktyp für Likertskalen"
 msgstr "Graphic type for Likert scales"
 
 #: ../public/eval_config.php:250
-msgid "Grafiktyp f&uuml;r Multiplechoice"
+msgid "Grafiktyp für Multiplechoice"
 msgstr "Graphic type for multiple choice"
 
 #: ../public/admin_modules.php:58

@@ -36,12 +36,13 @@ class Navigation implements IteratorAggregate
     protected $active;
     protected $enabled;
 
-    protected $image;
     protected $active_image;
+    protected $badgeNumber;
+    protected $description;
+    protected $image;
     protected $params;
     protected $subnav;
     protected $title;
-    protected $description;
     protected $url;
 
     /**
@@ -228,6 +229,25 @@ class Navigation implements IteratorAggregate
     }
 
     /**
+     * Return the badge number of this navigation item.
+     *
+     * @return int  the badge number
+     */
+    public function getBadgeNumber()
+    {
+        return $this->badgeNumber;
+    }
+
+    /**
+     * Determines whether this navigation item has a badge number.
+     */
+    public function hasBadgeNumber()
+    {
+        return (boolean) $this->badgeNumber;
+    }
+
+
+    /**
      * Determine whether this navigation item is active.
      */
     public function isActive()
@@ -355,6 +375,16 @@ class Navigation implements IteratorAggregate
     {
         $this->url = $url;
         $this->params = $params;
+    }
+
+    /**
+     * Set the badge number of this navigation item.
+     *
+     * @param string $badgeNumber    the badge number
+     */
+    public function setBadgeNumber($badgeNumber)
+    {
+        $this->badgeNumber = $badgeNumber;
     }
 
     /**

@@ -23,6 +23,17 @@ class NavigationTest extends PHPUnit_Framework_TestCase
         Navigation::setRootNavigation(new Navigation(''));
     }
 
+    public function testBadgeNumber ()
+    {
+        $navigation = new Navigation('badge-test');
+        $this->assertFalse($navigation->hasBadgeNumber());
+        $this->assertEquals($navigation->getBadgeNumber(), 0);
+
+        $navigation->setBadgeNumber(23);
+        $this->assertTrue($navigation->hasBadgeNumber());
+        $this->assertEquals($navigation->getBadgeNumber(), 23);
+    }
+
     public function testTitle ()
     {
         $navigation = new Navigation('test');

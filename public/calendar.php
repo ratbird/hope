@@ -22,6 +22,7 @@
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $perm->check("user");
 
@@ -30,7 +31,7 @@ include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 // here you have to put initialisations for the current page
 if (get_config('CALENDAR_ENABLE')) {
     //Kalenderfrontend einbinden
-    include($RELATIVE_PATH_CALENDAR.'/calendar.inc.php');
+    include($GLOBALS['RELATIVE_PATH_CALENDAR'].'/calendar.inc.php');
 } else {
     //TODO: use messagebox
     require_once ('lib/msg.inc.php');

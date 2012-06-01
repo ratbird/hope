@@ -54,7 +54,7 @@ function print_seminar_content($semid, $my_obj_values, $type = 'seminar')
             $url = $type.'_main.php?auswahl='.$semid.'&redirect_to='.strtr($nav->getURL(), '?', '&');
             printf('<a %s href="%s"><img ',
                    $nav->hasBadgeNumber()
-                   ? 'class="badge" data-badgeNumber="' . intval($nav->getBadgeNumber())  . '"'
+                   ? 'class="badge" data-badge-number="' . intval($nav->getBadgeNumber())  . '"'
                    : '',
                    htmlspecialchars($url));
             foreach ($nav->getImage() as $key => $value) {

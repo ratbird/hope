@@ -32,6 +32,7 @@ class MessagingNavigation extends Navigation
             'AND mkdate > '.(int)$my_messaging_settings['last_box_visit'].' AND message_user.readed = 0 ');
 
         $mailclass = $neum ? 'new' : '';
+        $this->setBadgeNumber($neum);
 
         if ($neux > 0) {
             $tip = sprintf(ngettext('Sie haben %d neue ungelesene Nachricht',

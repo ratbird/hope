@@ -39,6 +39,7 @@ class ProfileNavigation extends Navigation
                                 AND mkdate > '".$time."'");
 
         $count = $result->fetchColumn();
+        $this->setBadgeNumber($count);
 
         if ($count > 0) {
             $hp_txt = _('Zu Ihrer Profilseite') . ', ' .

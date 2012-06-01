@@ -24,9 +24,15 @@
                 $accesskey_attr = 'accesskey="' . $accesskey . '"';
                 $image['title'] .= "  [ALT] + $accesskey";
             }
+
+            $badge_attr = '';
+            if ($nav->hasBadgeNumber()) {
+                $badge_attr = ' class="badge" data-badge-number="' . intval($nav->getBadgeNumber())  . '"';
+            }
+
             ?>
             <li<? if ($nav->isActive()) : ?> class="active"<? endif ?>>
-                <a href="<?= URLHelper::getLink($nav->getURL(), $link_params) ?>" title="<?= $image['title'] ?>" <?= $accesskey_attr ?>>
+                <a href="<?= URLHelper::getLink($nav->getURL(), $link_params) ?>" title="<?= $image['title'] ?>" <?= $accesskey_attr ?><?= $badge_attr ?>>
                    <span style="background-image: url('<?= $image['src'] ?>');" class="<?= $image['class'] ?>"> </span><br>
                    <?= htmlReady($nav->getTitle()) ?>
                </a>

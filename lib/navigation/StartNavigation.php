@@ -52,6 +52,7 @@ class StartNavigation extends Navigation
         $homeinfo .= $news ? ' - ' . sprintf(_('%s neue Ankündigungen'), $news) : '';
         $homeinfo .= $vote ? ' - ' . sprintf(_('%s neue Umfrage(n)'), $vote) : '';
         $homeclass = $vote + $news ? 'new' : '';
+        $this->setBadgeNumber($vote + $news);
 
         $this->setImage('header/home.png', array('title' => $homeinfo, 'class' => $homeclass));
     }

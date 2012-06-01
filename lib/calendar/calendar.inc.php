@@ -26,7 +26,12 @@ require_once($RELATIVE_PATH_CALENDAR . '/lib/calendar_misc_func.inc.php');
 require_once($RELATIVE_PATH_CALENDAR . '/lib/DbCalendarEvent.class.php');
 require_once($RELATIVE_PATH_CALENDAR . '/lib/SeminarEvent.class.php');
 require_once($RELATIVE_PATH_CALENDAR . '/lib/Calendar.class.php');
-
+$atime = Request::int('atime', time());
+$termin_id = Request::option('termin_id');
+$cmd = Request::option('cmd');
+$cmd_cal = Request::option('cmd_cal');
+$mod_prv = Request::option('mod_prv');
+$mod = Request::option('mod');
 // switch to own calendar if called from header
 if (!get_config('CALENDAR_GROUP_ENABLE') || Request::get('caluser') == 'self') {
     closeObject();
@@ -95,7 +100,7 @@ if ($_calendar->getRange() == Calendar::RANGE_USER) {
 }
 
 // restore user defined settings
-if (Request::option('cmd_cal') == 'chng_cal_settings') {
+if ($cmd_cal == 'chng_cal_settings') {
     $calendar_user_control_data = array(
         'view' => Request::option('cal_view'),
         'start' => Request::option('cal_start'),
@@ -112,8 +117,6 @@ if (Request::option('cmd_cal') == 'chng_cal_settings') {
 }
 
 // use current timestamp if no timestamp is given
-$atime = Request::int('atime', time());
-$termin_id = Request::get('termin_id');
 if (Request::submitted('mod_s')) {
     $mod = 'SINGLE';
 }
@@ -209,6 +212,7 @@ if ($cmd == 'add' || $cmd == 'edit') {
     if (!isset($_SESSION['calendar_sess_forms_data'])) {
         $_SESSION['calendar_sess_forms_data'] = array();
     }
+    
     if (!empty($_POST)) {
         // Formulardaten uebernehmen
         foreach ($accepted_vars as $key) {
@@ -233,8 +237,8 @@ if ($cmd == 'add' || $cmd == 'edit') {
     unset($_SESSION['calendar_sess_forms_data']);
 }
 
-if ($source_page && ($cmd == 'edit' || $cmd == 'add' || $cmd == 'delete')) {
-    $_SESSION['calendar_sess_control_data']['source'] = preg_replace('![^0-9a-z+_?&#/=.-\[\]]!i', '', rawurldecode($source_page));
+if (Request::quoted('source_page') && ($cmd == 'edit' || $cmd == 'add' || $cmd == 'delete')) {
+    $_SESSION['calendar_sess_control_data']['source'] = preg_replace('![^0-9a-z+_?&#/=.-\[\]]!i', '', rawurldecode(Request::quoted('source_page')));
 }
 
 // Seitensteuerung
@@ -392,8 +396,7 @@ switch ($cmd) {
                 if (!$_calendar->event->restore($termin_id)) {
                     // something wrong... better to go back to the last view
                     page_close();
-                    header('Location: ' . $PHP_SELF . '?cmd='
-                            . $_SESSION['calendar_sess_control_data']['view_prv'] . "&atime=$atime");
+                    header('Location: ' . URLHelper::getLink('?cmd=' . $_SESSION['calendar_sess_control_data']['view_prv'] . '&atime=' .$atime));
                     exit;
                 }
                 $atime = $_calendar->event->getStart();
@@ -426,7 +429,7 @@ switch ($cmd) {
             }
             // call from dayview for new event -> set default values
             if ($atime && empty($_POST)) {
-                if ($devent) {
+                if (Request::option('devent')) {
                     $properties = array(
                         'DTSTART' => mktime(0, 0, 0, date('n', $atime), date('j', $atime), date('Y', $atime)),
                         'DTEND' => mktime(23, 59, 59, date('n', $atime), date('j', $atime), date('Y', $atime)),
@@ -456,8 +459,7 @@ switch ($cmd) {
             }
         } else {
             page_close();
-            header('Location: ' . $PHP_SELF . '?cmd='
-                    . $_SESSION['calendar_sess_control_data']['view_prv'] . "&atime=$atime");
+            header('Location: ' . URLHelper::getLink('?cmd=' . $_SESSION['calendar_sess_control_data']['view_prv'] . '&atime='. $atime));
             exit;
         }
         if ($_calendar->havePermission(Calendar::PERMISSION_READABLE)) {

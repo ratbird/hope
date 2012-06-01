@@ -41,8 +41,9 @@
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
 page_open(array('sess' => 'Seminar_Session', 'auth' => 'Seminar_Default_Auth', 'perm' => 'Seminar_Perm', 'user' => 'Seminar_User'));
-
+$step = Request::int('step');
 // set up user session
 include 'lib/seminar_open.php';
 
@@ -190,7 +191,7 @@ if ($_GET['id'] != '') {
     }
 }
 
-if (!$_POST['step'] && !isset($step)) {
+if (!$_POST['step'] && empty($step)) {
     $step = 1;
 }
 

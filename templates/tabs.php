@@ -7,7 +7,14 @@
         <? if ($nav->isVisible()) : ?>
             <li<?= $nav->isActive() ? ' class="current"' : '' ?>>
                 <? if ($nav->isEnabled()) : ?>
-                    <a href="<?= URLHelper::getLink($nav->getURL()) ?>">
+                    <?
+                    $badge_attr = '';
+                    if ($nav->hasBadgeNumber()) {
+                      $badge_attr = ' class="badge" data-badge-number="' . intval($nav->getBadgeNumber())  . '"';
+                    }
+                    ?>
+
+                    <a href="<?= URLHelper::getLink($nav->getURL()) ?>"<?= $badge_attr ?>>
                         <? if ($image = $nav->getImage()) : ?>
                             <img class="tab-icon" src="<?=$image['src']?>" title="<?= $nav->getTitle() ? htmlReady($nav->getTitle()) : htmlReady($nav->getDescription()) ?>" />
                         <? endif ?>

@@ -26,7 +26,15 @@ require_once($RELATIVE_PATH_CALENDAR . '/lib/sync/CalendarWriterICalendar.class.
 require_once($RELATIVE_PATH_CALENDAR . '/lib/sync/CalendarSynchronizer.class.php');
 require_once('app/models/ical_export.php');
 require_once('lib/msg.inc.php');
-
+$experiod = Request::option('experiod');
+$expmod = Request::option('expmod');
+$extype = Request::option('extype');
+$exendday = Request::option('exendday');
+$exendmonth = Request::option('exendmonth');
+$exendyear = Request::option('exendyear');
+$exstartday = Request::option('exstartday');
+$exstartmonth = Request::option('exstartmonth');
+$exstartyear = Request::option('exstartyear');
 if ($experiod != 'period') {
     unset($exstartmonth);
     unset($exstartday);
@@ -36,15 +44,12 @@ if ($experiod != 'period') {
     unset($exendyear);
 }
 
-if (!isset($calendar_sess_export)) {
-    $sess->register('calendar_sess_export');
-}
 
 // direct "one-button-export(tm)" of an event-object
 if ($expmod == 'exp_direct' && $termin_id) {
     $export = new CalendarExportFile(new CalendarWriterICalendar());
 
-    if ($evtype == 'sem') {
+    if (Request::option('evtype') == 'sem') {
         $exp_event = array(new SeminarEvent($termin_id));
     } else {
         $exp_event = array(new DbCalendarEvent($_calendar, $termin_id));
@@ -59,10 +64,10 @@ if ($expmod == 'exp_direct' && $termin_id) {
 
 $err = array();
 if ($experiod == 'period') {
-    if (!$exstart = check_date($exstartmonth, $exstartday, $exstartyear, 0, 0)) {
+    if (!$exstart = check_date(Request::option('exstartmonth'), Request::option('exstartday'), Request::option('exstartyear'), 0, 0)) {
         $err['exstart'] = true;
     }
-    if (!$exend = check_date($exendmonth, $exendday, $exendyear, 23, 59)) {
+    if (!$exend = check_date(Request::option('exendmonth'), Request::option('exendday'), Request::option('exendyear'), 23, 59)) {
         $err['exend'] = true;
     }
     if ($exstart >= $exend) {
@@ -91,9 +96,9 @@ if (($expmod != 'exp' && $expmod != 'imp' && $expmod != 'sync') || ($expmod == '
     }
 
     // print messages
-    if ($calendar_sess_export['msg'] != '') {
-        parse_msg($calendar_sess_export['msg']);
-        unset($calendar_sess_export['msg']);
+    if ($_SESSION['calendar_sess_export']['msg'] != '') {
+        parse_msg($_SESSION['calendar_sess_export']['msg']);
+        unset($_SESSION['calendar_sess_export']['msg']);
     }
 
     echo "<tr valign=\"top\">\n";
@@ -131,14 +136,14 @@ auf diese Nachricht nicht antworten.") . "\n\n";
     if ($expmod == 'syncrec') {
 
         $info = array();
-        if ($calendar_sess_export['count_synchronized']) {
-            $info['sync'] = sprintf(_("Stud.IP hat %s Termine synchronisiert."), $calendar_sess_export['count_synchronized']);
+        if ($_SESSION['calendar_sess_export']['count_synchronized']) {
+            $info['sync'] = sprintf(_("Stud.IP hat %s Termine synchronisiert."), $_SESSION['calendar_sess_export']['count_synchronized']);
         } else {
             $info['sync'] = _("Ihre iCalendar-Datei enthielt keine Termine, die synchronisiert werden konnten.");
         }
 
-        if ($calendar_sess_export['count_export']) {
-            $info['export'] = sprintf(_("Die zum Download zur Verf&uuml;gung stehende Datei enthält %s Termine."), $calendar_sess_export['count_export']);
+        if ($_SESSION['calendar_sess_export']['count_export']) {
+            $info['export'] = sprintf(_("Die zum Download zur Verf&uuml;gung stehende Datei enthält %s Termine."), $_SESSION['calendar_sess_export']['count_export']);
         } else {
             $info['export'] = _("Ihr Stud.IP-Kalender enthält keine neueren Termine als die hochgeladene iCalendar-Datei. Es wurde keine Ausgabedatei erzeugt.");
         }
@@ -149,7 +154,7 @@ auf diese Nachricht nicht antworten.") . "\n\n";
         $info['all'][0]['eintrag'][] = array('icon' => 'blank.gif',
             'text' => $info['export']);
 
-        if ($calendar_sess_export['count_export']) {
+        if ($_SESSION['calendar_sess_export']['count_export']) {
             $send_sync = GetDownloadLink($tmpfile, $file, 2, 'force');
             $params['content'] = _("Klicken Sie auf den Button, um die Datei mit den synchronisierten Kalenderdaten herunterzuladen.")
                     . _("Die Daten liegen ebenfalls in einer iCalendar-Datei vor, die Sie in Ihren lokalen Terminkalender (z.B. MS Outlook) importieren können.");
@@ -230,7 +235,6 @@ auf diese Nachricht nicht antworten.") . "\n\n";
         if ($experiod == 'period') {
             $params['content'] .= "checked=\"checked\"";
         }
-
         if (!$exstartday)
             $exstartday = date("d", time());
         if (!$exstartmonth)
@@ -356,9 +360,9 @@ auf diese Nachricht nicht antworten.") . "\n\n";
         }
 
         if ($expmod == 'impdone') {
-            if ($calendar_sess_export['count_import']) {
-                $info['import'] = sprintf(_("Es wurden %s Termine importiert."), $calendar_sess_export['count_import']);
-                unset($calendar_sess_export['count_import']);
+            if ($_SESSION['calendar_sess_export']['count_import']) {
+                $info['import'] = sprintf(_("Es wurden %s Termine importiert."), $_SESSION['calendar_sess_export']['count_import']);
+                unset($_SESSION['calendar_sess_export']['count_import']);
             } else {
                 $info['import'] = _("Es wurden keine Termine importiert.");
             }
@@ -406,16 +410,16 @@ auf diese Nachricht nicht antworten.") . "\n\n";
     }
 
     if ($_calendar_error->getMaxStatus(ErrorHandler::ERROR_CRITICAL)) {
-        $calendar_sess_export['msg'] = 'error§' . _("Der Export konnte nicht durchgef&uuml;hrt werden!");
+        $_SESSION['calendar_sess_export']['msg'] = 'error§' . _("Der Export konnte nicht durchgef&uuml;hrt werden!");
         while ($error = $_calendar_error->nextError(ErrorHandler::ERROR_CRITICAL)) {
-            $calendar_sess_export['msg'] .= '<br>' . $error->getMessage();
+            $_SESSION['calendar_sess_export']['msg'] .= '<br>' . $error->getMessage();
         }
         while ($error = $_calendar_error->nextError(ErrorHandler::ERROR_FATAL)) {
-            $calendar_sess_export['msg'] .= '<br>' . $error->getMessage();
+            $_SESSION['calendar_sess_export']['msg'] .= '<br>' . $error->getMessage();
         }
 
         page_close();
-        header("Location: $PHP_SELF?cmd=export&atime=$atime&");
+        header("Location: ".URLHelper::getLink('?cmd=export&atime=$atime&'));
         exit;
     }
 
@@ -440,31 +444,31 @@ auf diese Nachricht nicht antworten.") . "\n\n";
         $import->importIntoDatabase($_calendar->getUserId());
 
         if ($_calendar_error->getMaxStatus(ErrorHandler::ERROR_CRITICAL)) {
-            $calendar_sess_export['count_import'] = 0;
-            $calendar_sess_export['msg'] = 'error§' . _("Der Import konnte nicht durchgef&uuml;hrt werden!");
+            $_SESSION['calendar_sess_export']['count_import'] = 0;
+            $_SESSION['calendar_sess_export']['msg'] = 'error§' . _("Der Import konnte nicht durchgef&uuml;hrt werden!");
             while ($error = $_calendar_error->nextError(ErrorHandler::ERROR_CRITICAL))
-                $calendar_sess_export['msg'] .= '<br>' . $error->getMessage();
+                $_SESSION['calendar_sess_export']['msg'] .= '<br>' . $error->getMessage();
             while ($error = $_calendar_error->nextError(ErrorHandler::ERROR_FATAL))
-                $calendar_sess_export['msg'] .= '<br>' . $error->getMessage();
+                $_SESSION['calendar_sess_export']['msg'] .= '<br>' . $error->getMessage();
         } else {
-            $calendar_sess_export['count_import'] = $import->getCount();
-            $calendar_sess_export['msg'] = 'msg§' . _("Der Import wurde erfolgreich durchgef&uuml;hrt!");
+            $_SESSION['calendar_sess_export']['count_import'] = $import->getCount();
+            $_SESSION['calendar_sess_export']['msg'] = 'msg§' . _("Der Import wurde erfolgreich durchgef&uuml;hrt!");
             if ($_calendar_error->getMaxStatus(ErrorHandler::ERROR_WARNING)) {
                 $warnings = array();
-                $calendar_sess_export['msg'] .= '§info§';
+                $_SESSION['calendar_sess_export']['msg'] .= '§info§';
                 while ($error = $_calendar_error->nextError(ErrorHandler::ERROR_WARNING)) {
                     $warnings[] = $error->getMessage();
                 }
-                $calendar_sess_export['msg'] .= implode('<br />', $warnings);
+                $_SESSION['calendar_sess_export']['msg'] .= implode('<br />', $warnings);
             }
         }
     } else {
-        $calendar_sess_export['msg'] = 'error§' . _("Der Import konnte nicht durchgef&uuml;hrt werden!");
-        $calendar_sess_export['msg'] .= '<br>' . _("Die zu importierende Datei enth&auml;lt zuviele Termine.");
+        $_SESSION['calendar_sess_export']['msg'] = 'error§' . _("Der Import konnte nicht durchgef&uuml;hrt werden!");
+        $_SESSION['calendar_sess_export']['msg'] .= '<br>' . _("Die zu importierende Datei enth&auml;lt zuviele Termine.");
     }
 
     page_close();
-    header("Location: $PHP_SELF?cmd=export&expmod=impdone&atime=$atime");
+    header("Location: ".URLHelper::getLink('?cmd=export&expmod=impdone&atime='.$atime));
     exit;
 } elseif ($expmod == 'sync') {
 
@@ -486,30 +490,29 @@ auf diese Nachricht nicht antworten.") . "\n\n";
     $synchronizer->synchronize($_calendar->getUserId());
 
     if ($_calendar_error->getMaxStatus(ErrorHandler::ERROR_CRITICAL)) {
-        unset($calendar_sess_export['count_import']);
-        unset($calendar_sess_export['count_export']);
-        unset($calendar_sess_export['count_synchronized']);
-        $calendar_sess_export['msg'] = 'error§' . _("Die Synchronisation konnte nicht durchgef&uuml;hrt werden!");
+        unset($_SESSION['calendar_sess_export']['count_import']);
+        unset($_SESSION['calendar_sess_export']['count_export']);
+        unset($_SESSION['calendar_sess_export']['count_synchronized']);
+        $_SESSION['calendar_sess_export']['msg'] = 'error§' . _("Die Synchronisation konnte nicht durchgef&uuml;hrt werden!");
         while ($error = $_calendar_error->nextError(ErrorHandler::ERROR_CRITICAL))
-            $calendar_sess_export['msg'] .= '<br />' . $error->getMessage();
+            $_SESSION['calendar_sess_export']['msg'] .= '<br />' . $error->getMessage();
         while ($error = $_calendar_error->nextError(ErrorHandler::ERROR_FATAL))
-            $calendar_sess_export['msg'] .= '<br />' . $error->getMessage();
+            $_SESSION['calendar_sess_export']['msg'] .= '<br />' . $error->getMessage();
         $location = "Location: $PHP_SELF?cmd=export&atime=$atime";
     } else {
-        $calendar_sess_export['count_import'] = $import->getCount();
-        $calendar_sess_export['count_export'] = $export->getCount();
-        $calendar_sess_export['count_synchronized'] = $synchronizer->getCount();
-        $calendar_sess_export['msg'] = 'msg§' . _("Die Synchronisation wurde erfolgreich durchgef&uuml;hrt!");
+        $_SESSION['calendar_sess_export']['count_import'] = $import->getCount();
+        $_SESSION['calendar_sess_export']['count_export'] = $export->getCount();
+        $_SESSION['calendar_sess_export']['count_synchronized'] = $synchronizer->getCount();
+        $_SESSION['calendar_sess_export']['msg'] = 'msg§' . _("Die Synchronisation wurde erfolgreich durchgef&uuml;hrt!");
         while ($error = $_calendar_error->nextError(ErrorHandler::ERROR_MESSAGE))
-            $calendar_sess_export['msg'] .= '<br />' . $error->getMessage();
+            $_SESSION['calendar_sess_export']['msg'] .= '<br />' . $error->getMessage();
         $warnings = array();
         while ($error = $_calendar_error->nextError(ErrorHandler::ERROR_WARNING))
             $warnings[] = $error->getMessage();
         if (sizeof($warnings)) {
-            $calendar_sess_export['msg'] .= '§info§' . implode('<br />', $warnings);
+            $_SESSION['calendar_sess_export']['msg'] .= '§info§' . implode('<br />', $warnings);
         }
-        $location = "Location: $PHP_SELF?cmd=export&expmod=syncrec&tmpfile="
-                . $export->getTempFileName() . "&file=" . $export->getFileName() . "&atime=$atime";
+        $location = "Location: ". URLHelper::getLink('?cmd=export&expmod=syncrec&tmpfile='. $export->getTempFileName() . '&file=' . $export->getFileName() . '&atime='.$atime);
     }
 
     page_close();

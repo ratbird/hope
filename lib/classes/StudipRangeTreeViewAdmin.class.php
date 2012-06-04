@@ -310,8 +310,8 @@ class StudipRangeTreeViewAdmin extends TreeView{
                         . sprintf(_("Es werden insgesamt %s Elemente gel&ouml;scht!"),count($this->tree->getKidsKids($item_id))+1)
                         . "<br>" . _("Wollen Sie diese Elemente wirklich l&ouml;schen?") . "<br>"
                         . '<div class="button-group">'
-                        . LinkButton::createAccept(_("JA"), $this->getSelf("cmd=DeleteItem&item_id=$item_id"))
-                        . LinkButton::createCancel(_("NEIN"), $this->getSelf("cmd=Cancel&item_id=$item_id"))
+                        . LinkButton::createAccept(_("JA"), URLHelper::getURL($this->getSelf("cmd=DeleteItem&item_id=$item_id")))
+                        . LinkButton::createCancel(_("NEIN"), URLHelper::getURL($this->getSelf("cmd=Cancel&item_id=$item_id")))
                         . "</div>";
         }
         return false;
@@ -516,23 +516,23 @@ class StudipRangeTreeViewAdmin extends TreeView{
 
         if ($this->isItemAdmin($item_id)){
             $content .= LinkButton::create(_("Neues Objekt"),
-                                           $this->getSelf("cmd=NewItem&item_id=$item_id"),
-                                           array('title' => _("Innerhalb dieser Ebene ein neues Element einfügen")));
+                URLHelper::getURL($this->getSelf("cmd=NewItem&item_id=$item_id")),
+                array('title' => _("Innerhalb dieser Ebene ein neues Element einfügen")));
         }
 
         if ($this->isParentAdmin($item_id) && $item_id !=$this->start_item_id && $item_id != "root"){
             $content .= LinkButton::create(_("Bearbeiten"),
-                                           $this->getSelf("cmd=EditItem&item_id=$item_id"));
+                URLHelper::getURL($this->getSelf("cmd=EditItem&item_id=$item_id")));
 
             $content .= LinkButton::create(_("Löschen"),
-                                           $this->getSelf("cmd=AssertDeleteItem&item_id=$item_id"));
+                URLHelper::getURL($this->getSelf("cmd=AssertDeleteItem&item_id=$item_id")));
 
             if ($this->move_item_id == $item_id && $this->mode == "MoveItem"){
                 $content .= LinkButton::create(_("Abbrechen"),
-                                               $this->getSelf("cmd=Cancel&item_id=$item_id"));
+                    URLHelper::getURL($this->getSelf("cmd=Cancel&item_id=$item_id")));
             } else {
                 $content .= LinkButton::create(_("Verschieben"),
-                                               $this->getSelf("cmd=MoveItem&item_id=$item_id"));
+                    URLHelper::getURL($this->getSelf("cmd=MoveItem&item_id=$item_id")));
             }
         }
 
@@ -648,7 +648,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
                 . "\"></td><td class=\"steel1\" align=\"left\">";
 
         $content .= Button::createAccept(_("Absenden"));
-        $content .= LinkButton::createCancel(_("Abbrechen"), $this->getSelf("cmd=Cancel&item_id=" . ($this->mode == "NewItem" ? $this->tree->tree_data[$this->edit_item_id]['parent_id'] : $this->edit_item_id)));
+        $content .= LinkButton::createCancel(_("Abbrechen"), URLHelper::getURL($this->getSelf("cmd=Cancel&item_id=" . ($this->mode == "NewItem" ? $this->tree->tree_data[$this->edit_item_id]['parent_id'] : $this->edit_item_id))));
 
         $content .= "</td></tr>";
         $content .= "\n<tr><td colspan=\"2\" class=\"steelgraudunkel\"><b>". _("Element mit einer Stud.IP-Einrichtung verlinken") . "</b></td></tr>";
@@ -684,7 +684,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
     function getEditCatContent($item_id, $cat_snap){
         $content = "\n<table width=\"100%\" cellspacing=\"0\" border=\"0\" style=\"font-size:10pt\"><tr><td class=\"blank\" colspan=\"2\">" . _("Neues Datenfeld anlegen") . "&nbsp;&nbsp;";
 
-        $content .= LinkButton::create(_("Neues Datenfeld anlegen"), $this->getSelf("cmd=NewCat&item_id=$item_id"));
+        $content .= LinkButton::create(_("Neues Datenfeld anlegen"), URLHelper::getURL($this->getSelf("cmd=NewCat&item_id=$item_id")));
 
         $content .= "</td></tr>";
         $content .= "\n<tr><td colspan=\"2\" class=\"blank\">&nbsp;</td></tr>";
@@ -712,7 +712,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
                         . htmlReady($cat_snap->getField("content")) . "</textarea></td></tr>";
                 $content .= "<tr><td class=\"blank\" colspan=\"2\">";
                 $content .= Button::create(_("Übernehmen"), 'übernehmen');
-                $content .= LinkButton::create(_("Datenfeld löschen"), $this->getSelf("cmd=DeleteCat&item_id=$item_id&cat_id=" . $cat_snap->getField("kategorie_id")));
+                $content .= LinkButton::create(_("Datenfeld löschen"), URLHelper::getURL($this->getSelf("cmd=DeleteCat&item_id=$item_id&cat_id=" . $cat_snap->getField("kategorie_id"))));
                 $content .= "</td></tr>";
                 $content .= "\n<tr><td colspan=\"2\" class=\"blank\">&nbsp;</td></tr>";
             }

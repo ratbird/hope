@@ -92,21 +92,18 @@ class StudipFileCache implements StudipCache {
      * @param string a cache key
      * @return string|bool
      */
-     public function read($key) {
-         $time = microtime(true);
-         if($file = $this->check($key)){
-             $f = @fopen($file, 'rb');
-             if ($f) {
-                 @flock($f, LOCK_SH);
-                 $result = stream_get_contents($f);
-                 @fclose($f);
-             }
-             StudipDebug::log_time('cache hit ' .$key, $time);
-             return $result;
-         }
-         StudipDebug::log_time('cache miss ' .$key, $time);
-         return false;
-     }
+    public function read($key) {
+        if($file = $this->check($key)){
+            $f = @fopen($file, 'rb');
+            if ($f) {
+                @flock($f, LOCK_SH);
+                $result = stream_get_contents($f);
+                @fclose($f);
+            }
+            return $result;
+        }
+        return false;
+    }
 
     /**
      * store data as cache item in filesystem

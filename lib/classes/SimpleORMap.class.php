@@ -50,6 +50,12 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
     protected $pk = null;
 
     /**
+     * default values for columns
+     * @var array
+     */
+     protected $default_values = array();
+
+     /**
      * db table metadata
      * @var array
      */
@@ -217,6 +223,11 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         if(self::TableScheme($this->db_table)){
             $this->db_fields =& self::$schemes[$this->db_table]['db_fields'];
             $this->pk =& self::$schemes[$this->db_table]['pk'];
+            foreach ($this->db_fields as $field => $meta) {
+                if (!isset($this->default_values[$field])) {
+                    $this->default_values[$field] = $meta['default'];
+                }
+            }
         }
     }
 
@@ -554,7 +565,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
                     }
                 }
                 if ($value === null && $meta['null'] == 'NO') {
-                    $value = $meta['default'];
+                    $value = $this->default_values[$field];
                     if ($value === null) {
                         throw new Exception($this->db_table . '.' . $field . ' must not be null.');
                     }

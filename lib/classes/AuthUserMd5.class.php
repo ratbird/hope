@@ -47,6 +47,7 @@ class AuthUserMd5 extends SimpleORMap
     function __construct($id = null)
     {
         $this->db_table = 'auth_user_md5';
+        $this->default_values['validation_key'] = '';
         parent::__construct($id);
     }
 }

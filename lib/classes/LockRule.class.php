@@ -117,6 +117,7 @@ class LockRule extends SimpleORMap
     function __construct($id = null)
     {
         $this->db_table = 'lock_rules';
+        $this->default_values['description'] = '';
         parent::__construct($id);
         if ($this->isNew() && !$this->content['attributes'] instanceof ArrayObject) {
             $this->content['attributes'] = $this->convertJsonToArray($this->content['attributes']);

@@ -106,6 +106,7 @@ class StudipDocument extends SimpleORMap {
     function __construct($id = null)
     {
         $this->db_table = 'dokumente';
+        $this->default_values['description'] = '';
         parent::__construct($id);
     }
 

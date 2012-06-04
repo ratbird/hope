@@ -35,19 +35,19 @@ class StudipFileCache implements StudipCache {
 
     /**
      * full path to cache directory
-     * 
+     *
      * @var string
      */
     private $dir;
 
     /**
-     * without the 'dir' argument the cache path is taken from 
+     * without the 'dir' argument the cache path is taken from
      * $CACHING_FILECACHE_PATH or is set to
-     * $TMP_PATH/studip_cache 
-     * throws exception if the directory does not exists or could not 
+     * $TMP_PATH/studip_cache
+     * throws exception if the directory does not exists or could not
      * be created
-     * 
-     * 
+     *
+     *
      * @param array use $args['dir'] to set cache directory
      * @return void
      */
@@ -63,7 +63,7 @@ class StudipFileCache implements StudipCache {
     }
 
     /**
-     * get path to cache directory 
+     * get path to cache directory
      *
      * @return string
      */
@@ -73,7 +73,7 @@ class StudipFileCache implements StudipCache {
 
     /**
      * expire cache item
-     * 
+     *
      * @see StudipCache::expire()
      * @param string $key
      * @return void
@@ -87,27 +87,30 @@ class StudipFileCache implements StudipCache {
     /**
      * retrieve cache item from filesystem
      * tests first if item is expired
-     * 
+     *
      * @see StudipCache::read()
      * @param string a cache key
-     * @return string|bool 
+     * @return string|bool
      */
-    public function read($key) {
-        if($file = $this->check($key)){
-            $f = @fopen($file, 'rb');
-            if ($f) {
-                @flock($f, LOCK_SH);
-                $result = stream_get_contents($f);
-                @fclose($f);
-            }
-            return $result;
-        }
-        return false;
-    }
+     public function read($key) {
+         $time = microtime(true);
+         if($file = $this->check($key)){
+             $f = @fopen($file, 'rb');
+             if ($f) {
+                 @flock($f, LOCK_SH);
+                 $result = stream_get_contents($f);
+                 @fclose($f);
+             }
+             StudipDebug::log_time('cache hit ' .$key, $time);
+             return $result;
+         }
+         StudipDebug::log_time('cache miss ' .$key, $time);
+         return false;
+     }
 
     /**
      * store data as cache item in filesystem
-     * 
+     *
      * @see StudipCache::write()
      * @param string a cache key
      * @param string data to store
@@ -124,7 +127,7 @@ class StudipFileCache implements StudipCache {
     /**
      * checks if specified cache item is expired
      * if expired the cache file is deleted
-     * 
+     *
      * @param string a cache key to check
      * @return string|bool the path to the cache file or false if expired
      */
@@ -142,12 +145,12 @@ class StudipFileCache implements StudipCache {
 
     /**
      * get the full path to a cache file
-     * 
-     * the cache files are organized in sub-folders named by 
+     *
+     * the cache files are organized in sub-folders named by
      * the first two characters of the hashed cache key.
      * the filename is constructed from the hashed cache key
      * and the timestamp of expiration
-     * 
+     *
      * @param string a cache key
      * @param int expiry time in seconds
      * @return string|bool full path to cache item or false on failure
@@ -170,8 +173,8 @@ class StudipFileCache implements StudipCache {
     }
 
     /**
-     * purges expired entries from the cache directory  
-     * 
+     * purges expired entries from the cache directory
+     *
      * @param bool echo messages if set to false
      * @return int the number of deleted files
      */

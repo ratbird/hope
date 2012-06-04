@@ -134,6 +134,7 @@ class Semester extends SimpleORMap
     function __construct($id = null)
     {
         $this->db_table = 'semester_data';
+        $this->default_values['description'] = '';
         parent::__construct($id);
     }
 

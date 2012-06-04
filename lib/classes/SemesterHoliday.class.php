@@ -117,6 +117,7 @@ class SemesterHoliday extends SimpleORMap
     function __construct($id = null)
     {
         $this->db_table = 'semester_holiday';
+        $this->default_values['description'] = '';
         parent::__construct($id);
     }
 }

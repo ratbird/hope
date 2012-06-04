@@ -54,6 +54,7 @@ class UserConfigEntry extends SimpleORMap
     function __construct($id = null)
     {
         $this->db_table = 'user_config';
+        $this->default_values['comment'] = '';
         parent::__construct($id);
     }
 }

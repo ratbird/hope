@@ -41,6 +41,8 @@ class UserInfo extends SimpleORMap
     function __construct($id = null)
     {
         $this->db_table = 'user_info';
+        $this->default_values['publi'] = '';
+        $this->default_values['schwerp'] = '';
         parent::__construct($id);
     }
 }

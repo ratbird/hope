@@ -360,27 +360,30 @@ function printAnswerFields ( $answers ) {
     // buttons for adding/deleting answers
     if( $pageMode != MODE_RESTRICTED ) {
     $html .= "<table border=0 cellpadding=0 cellspacing=0 width=\"100%\">";
-    $html .= "<tr><td align=left>";    
-    $html .= Button::create(_('Hinzufügen'), 'addAnswersButton' ,array('title' => _('Antwortfelder hinzufügen')));
-    $html .= "<select style=\"vertical-align:middle;\" name=\"newAnswerFields\" size=1>";
+    $html .= "<tr><td align=left>";   
+     $html .= "<select style=\"vertical-align:middle;\" name=\"newAnswerFields\" size=1>";
     for( $i=1; $i<=10; $i++ )
         $html .= "<option value=\"$i\">$i</option>";
 
-    $html .= "</select></td><td align=right><font size=-1>";
+    $html .= "</select>";
 
+    $html .= Button::create(_('Hinzufügen'), 'addAnswersButton' ,array('title' => _('Antwortfelder hinzufügen'))).'</td><td align=right>';
+   
     if( count($answers) >= 10 && $auth->auth["jscript"])
         $html .= "(<a href=\"#markAll\" onClick=\"markAllAnswers(document.voteform.deleteCheckboxes);\" title=\""
         . _("Alle Antworten zum L&ouml;schen (de)markieren")."\">". _("Alle markieren") . "</a>)&nbsp;";
 
-    $html .= _("Markierte Antworten")
-        . "</font>"
-        . Button::create(_('Löschen'), 'deleteAnswersButton', array('title' => _('Markierte Antworten löschen')))
+    $html .= Button::create(_('Löschen'), 'deleteAnswersButton', array('title' => _('Markierte Antworten löschen')))
         ."\n";
 
     $html .= "</td>\n";
     $html .= "</tr></table>\n";
     }
-
+    
+    $html .= '<div style="text-align:center"><div class="button-group">';
+    $html .= Button::createAccept(_('Speichern'), 'saveButton', array('title' => _('Alle Änderungen speichern und zurück!')));
+    $html .= Button::createCancel(_('Abbrechen'), 'cancelButton', array('title' => _('Alle Änderungen verwerfen und zurück!')));
+    $html .= '</div></div>';
     $html .= "</td>";
 
     echo $html;
@@ -471,10 +474,6 @@ function printRightRegion ( ) {
     echo "<td width=\"270\" align=\"center\" valign=\"top\">\n";
     print_infobox($infobox, "infobox/voting.jpg");
 
-    echo '<div class="button-group">';
-    echo Button::createAccept(_('Speichern'), 'saveButton', array('title' => _('Alle Änderungen speichern und zurück!')));
-    echo Button::createCancel(_('Abbrechen'), 'cancelButton', array('title' => _('Alle Änderungen verwerfen und zurück!')));
-    echo '<div>';
     echo "</td></tr>";
     echo "</table>";
 }

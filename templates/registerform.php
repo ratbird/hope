@@ -103,7 +103,8 @@ function checkdata(){
 // -->
 </SCRIPT>
 <div class="index_container" style="width: 750px;">
-<?if (isset($username)): ?>
+
+<?if ((Request::quoted('username'))): ?>
     <?= MessageBox::error(_("Bei der Registrierung ist ein Fehler aufgetreten!"), array($error_msg, _("Bitte korrigieren Sie Ihre Eingaben und versuchen Sie es erneut"))) ?>
 <?endif;?>
 <table class="index_box logintable">
@@ -121,7 +122,7 @@ function checkdata(){
 <table border=0 bgcolor="#eeeeee" align="center" cellspacing=2 cellpadding=4>
  <tr valign=top align=left>
   <td colspan="2"><?=_("Benutzername:")?></td>
-  <td><input type="text" name="username" onchange="checkusername()" value="<?= isset($username) ? htmlReady($username) : "" ?>" size=32 maxlength=63 autocapitalize="off" autocorrect="off"></td>
+  <td><input type="text" name="username" onchange="checkusername()" value="<?= (Request::quoted('username')) ? htmlReady(Request::quoted('username')) : "" ?>" size=32 maxlength=63 autocapitalize="off" autocorrect="off"></td>
  </tr>
 
  <tr valign=top align=left>
@@ -139,6 +140,7 @@ function checkdata(){
   <td align="right">
   <select name="title_chooser_front" onChange="document.login.title_front.value=document.login.title_chooser_front.options[document.login.title_chooser_front.selectedIndex].text;">
   <?
+  $title_front = Request::quoted('title_front');
   for($i = 0; $i < count($GLOBALS['TITLE_FRONT_TEMPLATE']); ++$i){
       echo "\n<option";
       if($GLOBALS['TITLE_FRONT_TEMPLATE'][$i] == $title_front)
@@ -148,7 +150,7 @@ function checkdata(){
   ?>
   </select>
   </td>
-  <td><input type="text" name="title_front" value="<?= isset($title_front) ? htmlReady($title_front) : "" ?>" size=32 maxlength=63></td>
+  <td><input type="text" name="title_front" value="<?= !empty($title_front) ? htmlReady($title_front) : "" ?>" size=32 maxlength=63></td>
  </tr>
 
   <tr valign=top align=left>
@@ -156,6 +158,7 @@ function checkdata(){
   <td align="right">
   <select name="title_chooser_rear" onChange="document.login.title_rear.value=document.login.title_chooser_rear.options[document.login.title_chooser_rear.selectedIndex].text;">
   <?
+  $title_rear = Request::quoted('title_rear');
   for($i = 0; $i < count($GLOBALS['TITLE_REAR_TEMPLATE']); ++$i){
       echo "\n<option";
       if($GLOBALS['TITLE_REAR_TEMPLATE'][$i] == $title_rear)
@@ -164,21 +167,21 @@ function checkdata(){
   }
   ?>
   </select></td>
-  <td><input type="text" name="title_rear" value="<?= isset($title_rear) ? htmlReady($title_rear) : "" ?>" size=32 maxlength=63></td>
+  <td><input type="text" name="title_rear" value="<?= !empty($title_rear) ? htmlReady($title_rear) : "" ?>" size=32 maxlength=63></td>
  </tr>
  <tr valign=top align=left>
   <td colspan="2"><?=_("Vorname:")?></td>
-  <td><input type="text" name="Vorname" onchange="checkVorname()" value="<?= isset($Vorname) ? htmlReady($Vorname) : "" ?>"size=32 maxlength=63></td>
+  <td><input type="text" name="Vorname" onchange="checkVorname()" value="<?= (Request::quoted('Vorname')) ? htmlReady(Request::quoted('Vorname')) : "" ?>"size=32 maxlength=63></td>
  </tr>
 
  <tr valign=top align=left>
   <td colspan="2"><?=_("Nachname:")?></td>
-  <td><input type="text" name="Nachname" onchange="checkNachname()" value="<?= isset($Nachname) ? htmlReady($Nachname) : "" ?>"size=32 maxlength=63></td>
+  <td><input type="text" name="Nachname" onchange="checkNachname()" value="<?= (Request::quoted('Nachname')) ? htmlReady(Request::quoted('Nachname')) : "" ?>"size=32 maxlength=63></td>
  </tr>
 
 <tr valign=top align=left>
   <td colspan="2"><?=_("Geschlecht:")?></td>
-  <td><input type="radio" <? if (!$geschlecht) echo "checked" ?> name="geschlecht" value="0"><?=_("unbekannt")?>&nbsp; <input type="radio" <? if ($geschlecht == 1) echo "checked" ?> name="geschlecht" value="1"><?=_("männlich")?>&nbsp; <input type="radio" name="geschlecht" <? if ($geschlecht == 2) echo "checked" ?> value="2"><?=_("weiblich")?></td>
+  <td><input type="radio" <? if (!(Request::quoted('geschlecht'))) echo "checked" ?> name="geschlecht" value="0"><?=_("unbekannt")?>&nbsp; <input type="radio" <? if (Request::int('geschlecht') == 1) echo "checked" ?> name="geschlecht" value="1"><?=_("männlich")?>&nbsp; <input type="radio" name="geschlecht" <? if (Request::int('geschlecht') == 2) echo "checked" ?> value="2"><?=_("weiblich")?></td>
  </tr>
 
 <tr valign=top align=left>
@@ -186,7 +189,7 @@ function checkdata(){
     <?
     echo '<td nowrap="nowrap"><input type="email" name="Email" onchange="checkEmail()"  value="';
     if (trim($email_restriction)) {
-        echo (isset($Email) ? preg_replace('|@.*|', '', trim($Email)) : '' );
+        echo ((Request::quoted('Email')) ? preg_replace('|@.*|', '', trim(Request::quoted('Email'))) : '' );
         echo "\" size=20 maxlength=63>\n";
         $email_restriction_parts = explode(',', $email_restriction);
         echo '&nbsp;<select name="emaildomain">';
@@ -199,7 +202,7 @@ function checkdata(){
         }
         echo '</select>';
     } else {
-        echo (isset($Email) ? trim($Email) : '' ) ."\" size=32 maxlength=63>\n" ;
+        echo ((Request::quoted('Email')) ? trim(Request::quoted('Email')) : '' ) ."\" size=32 maxlength=63>\n" ;
     }
     ?>
     </td>

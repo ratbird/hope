@@ -547,7 +547,7 @@ class Seminar_Auth extends Auth {
         require_once('lib/visual.inc.php');
         require_once('config.inc.php');
 
-        global $_language, $_language_path;
+        global $_language_path;
 
         // set up dummy user environment
         if($GLOBALS['user']->id !== 'nobody') {
@@ -555,14 +555,14 @@ class Seminar_Auth extends Auth {
             $GLOBALS['perm'] = new Seminar_Perm();
         }
 
-        if (!isset($_language)) {
-            $_language = get_accepted_languages();
+        if (!($_SESSION['_language'])) {
+            $_SESSION['_language'] = get_accepted_languages();
         }
-        if (!$_language) {
-            $_language = $GLOBALS['DEFAULT_LANGUAGE'];
+        if (!$_SESSION['_language']) {
+            $_SESSION['_language'] = $GLOBALS['DEFAULT_LANGUAGE'];
         }
         // init of output via I18N
-        $_language_path = init_i18n($_language);
+        $_language_path = init_i18n($_SESSION['_language']);
 
         // load the default set of plugins
         PluginEngine::loadPlugins();
@@ -593,7 +593,7 @@ class Seminar_Auth extends Auth {
     }
 
     function auth_validatelogin() {
-        global $_language, $_language_path;
+        global $_language_path;
 
         //prevent replay attack
         if (!Seminar_Session::check_ticket($_REQUEST['login_ticket'])){
@@ -601,11 +601,11 @@ class Seminar_Auth extends Auth {
         }
 
         // check for direct link
-        if (!isset($_language) || $_language == "") {
-            $_language = get_accepted_languages();
+        if (!($_SESSION['_language']) || $_SESSION['_language'] == "") {
+            $_SESSION['_language'] = get_accepted_languages();
         }
 
-        $_language_path = init_i18n($_language);
+        $_language_path = init_i18n($_SESSION['_language']);
 
 
         $this->auth["uname"] = $_REQUEST['loginname'];   // This provides access for "loginform.ihtml"
@@ -707,20 +707,20 @@ class Seminar_Register_Auth extends Seminar_Auth {
     }
 
     function auth_doregister() {
-        global $username, $password, $Vorname, $Nachname, $geschlecht,$emaildomain,$Email,$title_front,$title_front_chooser,$title_rear,$title_rear_chooser, $DEFAULT_LANGUAGE;
+        global $title_front_chooser,$title_rear_chooser, $DEFAULT_LANGUAGE;
 
-        global $_language, $_language_path;
+        global $_language_path;
 
         $this->error_msg = "";
 
         // check for direct link to register2.php
-        if (!isset($_language) || $_language == "") {
-            $_language = get_accepted_languages();
+        if (!$_SESSION['_language'] || $_SESSION['_language'] == "") {
+            $_SESSION['_language'] = get_accepted_languages();
         }
 
-        $_language_path = init_i18n($_language);
+        $_language_path = init_i18n($_SESSION['_language']);
 
-        $this->auth["uname"]=$username;                 // This provides access for "crcregister.ihtml"
+        $this->auth["uname"]=Request::quoted('username');                 // This provides access for "crcregister.ihtml"
 
         $validator=new email_validation_class;  // Klasse zum Ueberpruefen der Eingaben
         $validator->timeout=10;                                 // Wie lange warten wir auf eine Antwort des Mailservers?
@@ -729,17 +729,17 @@ class Seminar_Register_Auth extends Seminar_Auth {
             return false;
         }
 
-        $username = trim($username);
-        $Vorname = trim($Vorname);
-        $Nachname = trim($Nachname);
+        $username = trim(Request::quoted('username'));
+        $Vorname = trim(Request::quoted('Vorname'));
+        $Nachname = trim(Request::quoted('Nachname'));
 
         // accept only registered domains if set
         $cfg = Config::GetInstance();
         $email_restriction = $cfg->getValue('EMAIL_DOMAIN_RESTRICTION');
         if ($email_restriction) {
-            $Email = trim($Email) . '@' . trim($emaildomain);
+            $Email = trim(Request::quoted('Email')) . '@' . trim(Request::quoted('emaildomain'));
         } else {
-            $Email = trim($Email);
+            $Email = trim(Request::quoted('Email'));
         }
 
         if (!$validator->ValidateUsername($username))
@@ -749,7 +749,7 @@ class Seminar_Register_Auth extends Seminar_Auth {
         }                                                       // username syntaktisch falsch oder zu kurz
         // auf doppelte Vergabe wird weiter unten getestet.
 
-        if (!$validator->ValidatePassword($password))
+        if (!$validator->ValidatePassword(Request::quoted('password')))
         {
             $this->error_msg=$this->error_msg. _("Das Passwort ist zu kurz!") . "<br>";
             return false;
@@ -807,7 +807,7 @@ class Seminar_Register_Auth extends Seminar_Auth {
         }
 
         // alle Checks ok, Benutzer registrieren...
-        $newpass = md5($password);
+        $newpass = md5(Request::quoted('password'));
         $uid = md5(uniqid($this->magic));
         $perm = "user";
         $this->db->query(sprintf("insert into %s (user_id, username, perms, password, Vorname, Nachname, Email) ".
@@ -816,6 +816,9 @@ class Seminar_Register_Auth extends Seminar_Auth {
         addslashes($Vorname), addslashes($Nachname), addslashes($Email)));
         $this->auth["perm"] = $perm;
 
+        $geschlecht = Request::int('geschlecht');
+        $title_front = Request::quoted('title_front');
+        $title_rear = Request::quoted('title_rear');
         if($title_front == "")
             $title_front = $title_front_chooser;
 

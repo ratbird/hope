@@ -38,6 +38,8 @@
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
+
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $perm->check($RANGE_TREE_ADMIN_PERM ? $RANGE_TREE_ADMIN_PERM  : 'admin');
         

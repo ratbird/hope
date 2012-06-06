@@ -77,7 +77,7 @@ if($_REQUEST['plugin'] AND in_array($_REQUEST['plugin'],$_integrity_plugins)) {
         $anzahl = $result->num_rows();
         $msg = "info§" . sprintf(_("Sie beabsichtigen %s Datens&auml;tze der Tabelle <b>%s</b> zu l&ouml;schen."), $anzahl, $plugin_obj->getCheckDetailTable($_REQUEST['checkid'])) . "<br>"
         ._("Dieser Schritt kann <u>nicht</u> r&uuml;ckg&auml;ngig gemacht werden! Sind Sie sicher?") . " <br>\n"
-        ."<br>".LinkButton::createAccept(_('Ja'), URLHelper::getURL('?plugin='.$_REQUEST['plugin'].'&cmd=delete&checkid='.$_REQUEST['checkid'])) . '&nbsp;'
+        ."<br>".LinkButton::createAccept(_('Ja'), URLHelper::getLink('?plugin='.$_REQUEST['plugin'].'&cmd=delete&checkid='.$_REQUEST['checkid'])) . '&nbsp;'
         .LinkButton::createCancel(_('Nein'))."\n";
         ?><table border="0" width="80%" cellpadding="2" cellspacing="0" class="steel1">
         <tr><td class="blank">&nbsp; </td></tr>

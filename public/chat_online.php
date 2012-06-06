@@ -21,6 +21,7 @@
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $perm->check("user");
 
@@ -44,7 +45,7 @@ if (get_config('CHAT_ENABLE')) {
 
 function print_chat_info($chatids)
 {
-    global $chatServer,$auth,$sms,$chat_online_id,$PHP_SELF;
+    global $chatServer,$auth,$sms,$chat_online_id;
 
     for ($i = 0; $i < count($chatids); ++$i) {
         $chat_id = $chatids[$i];
@@ -55,7 +56,7 @@ function print_chat_info($chatids)
         $chatinv = $sms->check_chatinv($chat_id);
         $is_active = $chatServer->isActiveUser($auth->auth['uid'],$chat_id);
         $chatname = ($chatter) ? $chatServer->chatDetail[$chat_id]['name'] : chat_get_name($chat_id);
-        $link = $PHP_SELF . "?chat_id=" . $chat_id . "&cmd=" . (($chat_online_id[$chat_id]) ? "close" : "open");
+        $link = URLHelper::getLink('?chat_id=' . $chat_id . '&cmd=' . (($chat_online_id[$chat_id]) ? 'close' : 'open'));
         $link_name = "<a class=\"tree\" href=\"$link\">" . htmlReady($chatname) . "</a>";
         echo "\n<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\"><tr>";
         printhead(0,0,$link,(($chat_online_id[$chat_id])) ? "open" : "close", true, chat_get_chat_icon($chatter, $chatinv, $is_active), $link_name, "");

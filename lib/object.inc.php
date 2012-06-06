@@ -1,7 +1,7 @@
 <?
 # Lifter002: TODO
 # Lifter007: TODO
-# Lifter003: TODO
+# Lifter003: TEST
 # Lifter010: TODO
 /**
 * object.inc.php
@@ -53,22 +53,23 @@ function object_set_visit_module($type){
 * @param    string  the user who visited the object - if not given, the actual user is used
 *
 */
-function object_set_visit($object_id, $type, $user_id = '') {
+function object_set_visit($object_id, $type, $user_id = '')
+{
     global $user;
-    $now = time();
-    if (!$user_id)
+    if (!$user_id) {
         $user_id = $user->id;
+    }
 
     $last_visit = object_get_visit($object_id, $type, FALSE, false , $user_id);
 
-    if ($last_visit === false){
+    if ($last_visit === false) {
         $last_visit = 0;
     }
 
-    $db=new DB_Seminar;
-    $query = sprintf ("REPLACE INTO object_user_visits SET object_id = '%s', user_id ='%s', type='%s', visitdate='%s', last_visitdate = '%s'",
-                        $object_id, $user_id, $type, $now, $last_visit);
-    $db->query($query);
+    $query = "REPLACE INTO object_user_visits (object_id, user_id, type, visitdate, last_visitdate)
+              VALUES (?, ?, ?, UNIX_TIMESTAMP(), ?)";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($object_id, $user_id, $type, $last_visit));
 
     return object_get_visit($object_id, $type, FALSE, false, $user_id, true);
 }
@@ -84,182 +85,213 @@ function object_set_visit($object_id, $type, $user_id = '') {
 * @return   int the timestamp of the last visit or FALSE
 *
 */
-function object_get_visit($object_id, $type, $mode = "last", $open_object_id = '', $user_id = '', $refresh_cache = false) {
+function object_get_visit($object_id, $type, $mode = "last", $open_object_id = '', $user_id = '', $refresh_cache = false)
+{
     global $user;
     static $cache;
 
-    if (!$user_id){
+    if (!$user_id) {
         $user_id = $user->id;
     }
-    if (!$open_object_id && $open_object_id !== false){
+    if (!$open_object_id && $open_object_id !== false) {
         $open_object_id = $object_id;
     }
-    if ($refresh_cache){
+    if ($refresh_cache) {
         $cache[$object_id][$type][$user_id] = null;
     }
 
     if ($cache[$object_id][$type][$user_id]) {
-        if ($mode == "last")
-            return $cache[$object_id][$type][$user_id]["last_visitdate"];
-        else
-            return $cache[$object_id][$type][$user_id]["visitdate"];
+        return $mode == 'last'
+             ? $cache[$object_id][$type][$user_id]['last_visitdate']
+             : $cache[$object_id][$type][$user_id]['visitdate'];
     }
 
-    $db=new DB_Seminar;
-    $query = sprintf ("SELECT visitdate, last_visitdate FROM object_user_visits WHERE object_id = '%s' AND user_id = '%s' AND type = '%s'",
-            $object_id, $user_id, $type);
-    $db->query($query);
+    $query = "SELECT visitdate, last_visitdate
+              FROM object_user_visits
+              WHERE object_id = ? AND user_id = ? AND type = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($object_id, $user_id, $type));
+    $temp = $statement->fetch(PDO::FETCH_ASSOC);
 
-    if ($db->next_record()) {
-        $cache[$object_id][$type][$user_id] = array("last_visitdate" => $db->f("last_visitdate"), "visitdate" =>$db->f("visitdate"));
-        if ($mode == "last")
-            return $db->f("last_visitdate");
-        else
-            return $db->f("visitdate");
+    if ($temp) {
+        $cache[$object_id][$type][$user_id] = $temp;
+        
+        return $mode == 'last'
+             ? $temp['last_visitdate']
+             : $temp['visitdate'];
     //no visitdate for the object or modul - we have to gather the information from the studip-object (seminar or institute)
     } elseif ($open_object_id) {
-        $query = sprintf ("SELECT visitdate, last_visitdate FROM object_user_visits WHERE object_id = '%s' AND user_id = '%s' AND (type = 'sem' OR type = 'inst')",
-                $open_object_id, $user_id);
-        $db->query($query);
-        if ($db->next_record()) {
-            if ($mode == "last")
-                return $db->f("last_visitdate");
-            else
-                return $db->f("visitdate");
-        } else
-            return FALSE;
+        $query = "SELECT visitdate, last_visitdate
+                  FROM object_user_visits
+                  WHERE object_id = ? AND user_id = ? AND type IN ('sem', 'inst')";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($open_object_id, $user_id));
+        $temp = $statement->fetch(PDO::FETCH_ASSOC);
 
-    } else
-        return FALSE;
-}
-
-function object_kill_visits($user_id, $object_ids = false){
-    if ($user_id || $object_ids){
-        if ($user_id){
-            $sql = " user_id='$user_id' ";
+        if ($temp) {
+            return $mode == 'last'
+                 ? $temp['last_visitdate']
+                 : $temp['visitdate'];
         } else {
-            $sql = " 1 ";
+            return false;
         }
-        if ($object_ids){
-            if (!is_array($object_ids)){
-                $object_ids = array($object_ids);
-            }
-            $sql .= "AND object_id IN('" . join("','", $object_ids) . "')";
-        }
-        $db = new DB_Seminar("DELETE FROM object_user_visits WHERE " . $sql);
-        return $db->affected_rows();
+
     } else {
         return false;
     }
 }
 
-function object_add_view ($object_id) {
-    $now = time();
-    $db=new DB_Seminar;
-    $db->query("SELECT * FROM object_views WHERE object_id = '$object_id'");
-    if ($db->next_record()) { // wurde schon mal angeschaut, also hochzählen
-        if (!in_array($object_id, $_SESSION['object_cache'])) {
-            $views = $db->f("views")+1;
-            $query = "UPDATE object_views SET chdate='$now', views='$views' WHERE object_id='$object_id'";
-            $_SESSION['object_cache'][] = $object_id;
-        }
-    } else { // wird zum ersten mal angesehen, also counter anlegen
-        $views = 1;
-        $query = "INSERT INTO object_views (object_id,views,chdate) values ('$object_id', '$views', '$now')";
-        $_SESSION['object_cache'][] = $object_id;
+function object_kill_visits($user_id, $object_ids = false)
+{
+    if (!$user_id && !$object_ids) {
+        return false;
     }
-    $db->query($query);
-    return $views;
-}
 
-function object_kill_views($object_id){
-    if (!is_array($object_id)) $cond = " object_id='$object_id'";
-    else $cond = "object_id IN('".join("','", $object_id)."')";
-    $db = new DB_Seminar("DELETE FROM object_views WHERE $cond ");
-    return $db->affected_rows();
-}
+    $query      = "DELETE FROM object_user_visits WHERE ";
+    $parameters = array();
 
-function object_switch_fav ($object_id) {
-    global $user;
-    $now = time();
-    $db=new DB_Seminar;
-    if (object_check_user($object_id,"fav") == "TRUE") { // gibt einen Eintrag, also aus Favoriten löschen...
-        $db->query("DELETE FROM object_user WHERE object_id='$object_id' AND user_id = '$user->id' AND flag = 'fav'");
-        $tmp = FALSE;
-    } else { // in die Favoriten aufgenommen...
-        $db->query("INSERT INTO object_user (object_id, user_id, flag, mkdate) values ('$object_id', '$user->id', 'fav', '$now')");
-        $tmp = TRUE;
-    }
-    return $tmp;
-}
-
-function object_check_user ($object_id, $flag) {
-    global $user;
-    $db=new DB_Seminar;
-    $db->query("SELECT * FROM object_user WHERE object_id = '$object_id' AND user_id = '$user->id' AND flag = '$flag'");
-    if ($db->next_record())  // Der Nutzer hat hier einen Eintrag
-        $tmp = TRUE;
-    else
-        $tmp = FALSE;
-    return $tmp;
-}
-
-function object_add_rate ($object_id, $rate) {
-    global $user;
-    $rate = (int)$rate;
-    if (object_check_user($object_id, "rate") == FALSE) {
-        $now = time();
-        $db=new DB_Seminar;
-        $db->query("INSERT INTO object_user (object_id, user_id, flag, mkdate) values ('$object_id', '$user->id', 'rate', '$now')");
-        $db->query("INSERT INTO object_rate (object_id, rate, mkdate) values ('$object_id', '$rate', '$now')");
-        $txt = _("Sie haben das Objekt mit \"$rate\"  bewertet.");
+    if ($user_id) {
+        $query       .= "user_id = ?";
+        $parameters[] = $user_id;
     } else {
-        $txt = _("Sie haben dieses Objekt bereits bewertet.");
+        $query .= "1";
     }
-    return $txt;
-}
 
-function object_print_rate ($object_id) {
-    $db=new DB_Seminar;
-    $db->query("SELECT ROUND(avg(rate),1) as mittelwert FROM object_rate WHERE object_id = '$object_id'");
-    if ($db->next_record()) {
-        $tmp = $db->f("mittelwert");
-        if ($tmp == 0)
-            $tmp = "?";
+    if ($object_ids) {
+        if (!is_array($object_ids)) {
+            $object_ids = array($object_ids);
         }
-    return $tmp;
+        $query       .= " AND object_id IN (?)";
+        $parameters[] = $object_ids;
+    }
+
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute($parameters);
+    return $statement->rowCount();
+}
+
+function object_add_view ($object_id)
+{
+    $count_view = !in_array($object_id, $_SESSION['object_cache']);
+    if (!$count_view) {
+        return;
+    }
+
+    $_SESSION['object_cache'][] = $object_id;
+
+    $query = "INSERT INTO object_views (object_id, views, chdate)
+              VALUES (?, 1, UNIX_TIMESTAMP())
+              ON DUPLICATE KEY UPDATE views = views + 1,
+                                      chdate = UNIX_TIMESTAMP()";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($object_id));
+
+    $query = "SELECT views FROM object_views WHERE object_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($object_id));
+    return $statement->fetchColumn();
+}
+
+function object_kill_views($object_id)
+{
+    $query = "DELETE FROM object_views WHERE object_id IN (?)";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($object_id));
+    return $statement->rowCount();
+}
+
+function object_switch_fav ($object_id)
+{
+    $is_favorite = object_check_user($object_id, 'fav');
+
+    if ($is_favorite) {
+        $query = "DELETE FROM object_user WHERE object_id = ? AND user_id = ? AND flag = 'fav'";
+    } else {
+        $query = "INSERT INTO object_user (object_id, user_id, flag, mkdate)
+                  VALUES (?, ?, 'fav', UNIX_TIMESTAMP())";
+    }
+
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($object_id, $GLOBALS['user']->id));
+
+    return !$is_favorite;
+}
+
+function object_check_user ($object_id, $flag)
+{
+    $query = "SELECT 1
+              FROM object_user
+              WHERE object_id = ? AND user_id = ? AND flag = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($object_id, $GLOBALS['user']->id, $flag));
+    return $statement->fetchColumn();
+}
+
+function object_add_rate ($object_id, $rate)
+{
+    if (object_check_user($object_id, 'rate')) {
+        return _('Sie haben dieses Objekt bereits bewertet.');
+    }
+
+    $rate = (int)$rate;
+
+    $query = "INSERT INTO object_user (object_id, user_id, flag, mkdate)
+              VALUES (?, ?, 'rate', UNIX_TIMESTAMP())";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($object_id, $GLOBALS['user']->id));
+    
+    $query = "INSERT INTO object_rate (object_id, rate, mkdate)
+              VALUES (?, ?, UNIX_TIMESTAMP())";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($object_id, $rate));
+
+    return _('Sie haben das Objekt mit "' . $rate . '"  bewertet.');
+}
+
+function object_print_rate ($object_id)
+{
+    $query = "SELECT ROUND(AVG(rate), 1)
+              FROM object_rate
+              WHERE object_id = ?";
+    $statement = DBMananager::get()->prepare($query);
+    $statement->execute(array($object_id));
+    return $statement->fetchColumn() ?: '?';
 }
 
 
 
-function object_print_rates_detail ($object_id) {
-    $db=new DB_Seminar;
-    for ($i = 1;$i<6;$i++)
-        $tmp[$i] = 0;
-    $db->query("SELECT DISTINCT count(rate) as count, rate FROM object_rate WHERE object_id = '$object_id' GROUP BY rate");
-    while ($db->next_record())
-        $tmp[$db->f("rate")] = $db->f("count");
-    return $tmp;
+function object_print_rates_detail ($object_id)
+{
+    $query = "SELECT DISTINCT COUNT(rate), rate
+              FROM object_rate
+              WHERE object_id = ?
+              GROUP BY rate";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($object_id));
+    $result = $statement->fetchGrouped(PDO::FETCH_COLUMN);
+
+    // Ensure a valid result
+    for ($i = 1; $i <= 5; $i++) {
+        if (!isset($result[$i])) {
+            $result[$i] = 0;
+        }
+    }
+
+    return $result;
 }
 
-function object_return_views ($object_id) {
-    $db=new DB_Seminar;
-    $db->query("SELECT views FROM object_views WHERE object_id = '$object_id'");
-    if ($db->next_record())
-        $views = $db->f("views");
-    else
-        $views = 0;
-    return $views;
+function object_return_views ($object_id)
+{
+    $query = "SELECT views FROM object_views WHERE object_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($object_id));
+    return $statement->fetchColumn() ?: 0;
 }
 
-function object_return_ratecount ($object_id) {
-    $db=new DB_Seminar;
-    $db->query("SELECT count(rate) as count FROM object_rate WHERE object_id = '$object_id'");
-    if ($db->next_record())
-        $ratecount = $db->f("count");
-    else
-        $ratecount = 0;
-    return $ratecount;
+function object_return_ratecount ($object_id)
+{
+    $query = "SELECT COUNT(rate) FROM object_rate WHERE object_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($object_id));
+    return $statement->fetchColumn() ?: 0;
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-?>

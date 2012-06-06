@@ -26,6 +26,7 @@
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", 'user' => "Seminar_User"));
 $auth->login_if($auth->auth["uid"] == "nobody");
 
@@ -33,12 +34,22 @@ $auth->login_if($auth->auth["uid"] == "nobody");
 $hash_secret = "dslkjjhetbjs";
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
+$range_id = Request::option('range_id');
+$cmd = Request::option('cmd');
+$view = Request::option('view');
+$name = Request::quoted('name');
+$Freesearch = Request::quotedArray('Freesearch');
+$AktualMembers = Request::quotedArray('AktualMembers');
+$edit_id = Request::option('edit_id');
+$statusgruppe_id = Request::option('statusgruppe_id');
+
 require_once ('lib/contact.inc.php');
 require_once ('config.inc.php');
 require_once ('lib/visual.inc.php');
 require_once 'lib/functions.php';
 require_once ('lib/statusgruppe.inc.php');
 require_once ('lib/user_visible.inc.php');
+
 
 if (get_config('CALENDAR_GROUP_ENABLE') && Request::get('nav') == 'calendar') {
     PageLayout::setTitle(_("Mein persönlicher Terminkalender - Kontaktgruppen"));
@@ -97,7 +108,7 @@ function MovePersonStatusgruppe($range_id, $AktualMembers = '', $Freesearch = ''
 
 function PrintAktualStatusgruppen($range_id, $view, $edit_id = '')
 {
-    global $PHP_SELF, $range_id_statusgruppe, $_fullname_sql, $user;
+    global $range_id_statusgruppe, $_fullname_sql, $user;
 
     $db = new DB_Seminar();
     $db2 = new DB_Seminar();
@@ -318,7 +329,7 @@ function PrintAktualContacts($range_id)
 // alles ist userbezogen:
 // Abfrage der Formulare und Aktionen
 // neue Statusgruppe hinzufuegen
-
+$new_statusgruppe_name = Request::quoted('new_statusgruppe_name');
 if (($cmd == "add_new_statusgruppe") && ($new_statusgruppe_name != "")) {
     if (Statusgruppe::countByName($new_statusgruppe_name, $range_id) > 0) {
         $msgs[] = 'info§' . sprintf(_("Die Gruppe %s wurde hinzugefügt, es gibt jedoch bereits ein Gruppe mit demselben Namen!"), '<b>' . htmlReady($new_statusgruppe_name) . '</b>');
@@ -332,7 +343,7 @@ if (($cmd == "add_new_statusgruppe") && ($new_statusgruppe_name != "")) {
 // bestehende Statusgruppe editieren
 
 if (($cmd == "edit_existing_statusgruppe") && ($new_statusgruppe_name != "")) {
-    EditStatusgruppe($new_statusgruppe_name, $new_statusgruppe_size, $update_id);
+    EditStatusgruppe($new_statusgruppe_name, $new_statusgruppe_size, Request::option('update_id'));
 }
 
 // zuordnen von Personen zu einer Statusgruppe
@@ -343,7 +354,7 @@ if ($cmd == "move_person" && ($AktualMembers != "" || $Freesearch != "")) {
 // Entfernen von Personen aus einer Statusgruppe
 
 if ($cmd == "remove_person") {
-    RemovePersonStatusgruppe($entry_id, $statusgruppe_id, $range_id);
+    RemovePersonStatusgruppe(Request::option('entry_id'), $statusgruppe_id, $range_id);
 }
 
 // Entfernen von Statusgruppen
@@ -467,6 +478,7 @@ if (is_array($msgs)) {
         ?>
                         <br><br>
         <?
+        $search_exp = Request::quoted('search_exp');
         if ($search_exp) {
 
             $search_exp = str_replace("%", "\%", $search_exp);

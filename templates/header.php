@@ -97,6 +97,9 @@
                     <? else : ?>
                         href="<?= htmlspecialchars($url) ?>" target="_blank"
                     <? endif ?>
+                    <? if ($nav->getDescription()): ?>
+                        title="<?= htmlReady($nav->getDescription()) ?>"
+                    <? endif; ?>
                     ><?= htmlReady($nav->getTitle()) ?></a>
                     </li>
                 <? endif ?>

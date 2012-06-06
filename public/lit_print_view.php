@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
@@ -35,7 +36,7 @@ PageLayout::removeStylesheet('style.css');
 PageLayout::addStylesheet('print.css'); // use special stylesheet for printing
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head
-
+$_range_id = Request::option('_range_id');
 if ($_range_id != $user->id && !$perm->have_studip_perm('user',$_range_id)){
     page_close();
     die;

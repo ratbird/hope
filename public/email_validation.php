@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
 page_open(array(
     'sess' => 'Seminar_Session',
     'auth' => 'Seminar_Auth',
@@ -44,7 +45,7 @@ $magic = 'dsdfjhgretha';  // Challenge seed.
 
 $hash = md5("$user->id:$magic");
 // hier wird noch mal berechnet, welches secret in der Bestaetigungsmail uebergeben wurde
-
+$secret = Request::option('secret');
 PageLayout::setHelpKeyword('Basis.AnmeldungMail');
 PageLayout::setTitle(_('Aktivierung'));
 

@@ -26,6 +26,7 @@ use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 
 $perm->check('user');
@@ -149,10 +150,10 @@ FOR ($i=0; $i<9; $i++)
             echo '<tr><td class="blank" colspan="9"><img src="'.$GLOBALS['ASSETS_URL'].'images/blank.gif" width="1px" height="5px"></td></tr>';
             echo '<tr><td class="blue_gradient" valign="middle" height="20" colspan="9">';
             if (isset($_my_sem_open[$group_id])){
-                echo '<a class="tree" style="font-weight:bold" name="' . $group_id . '" href="' . $PHP_SELF . '?close_my_sem=' . $group_id . '#' .$group_id . '" ' . tooltip(_("Gruppierung schließen"), true) . '>';
+                echo '<a class="tree" style="font-weight:bold" name="' . $group_id . '" href="' . URLHelper::getLink('?close_my_sem=' . $group_id . '#' .$group_id) . '" ' . tooltip(_("Gruppierung schließen"), true) . '>';
                 echo '<img src="'.$GLOBALS['ASSETS_URL'].'images/icons/16/blue/arr_1down.png"   hspace="3" border="0">';
             } else {
-                echo '<a class="tree"  name="' . $group_id . '" href="' . $PHP_SELF . '?open_my_sem=' . $group_id . '#' .$group_id . '" ' . tooltip(_("Gruppierung öffnen"), true) . '>';
+                echo '<a class="tree"  name="' . $group_id . '" href="' . URLHelper::getLink('?open_my_sem=' . $group_id . '#' .$group_id ). '" ' . tooltip(_("Gruppierung öffnen"), true) . '>';
                 echo '<img src="'.$GLOBALS['ASSETS_URL'].'images/icons/16/blue/arr_1right.png"  hspace="3" border="0">';
             }
             if (is_array($group_names[$group_id])){

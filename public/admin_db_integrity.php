@@ -37,10 +37,11 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-use Studip\Button, Studip\LinkButton; 
+use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", 'user' => "Seminar_User"));
 $perm->check("root");
 
@@ -76,7 +77,7 @@ if($_REQUEST['plugin'] AND in_array($_REQUEST['plugin'],$_integrity_plugins)) {
         $anzahl = $result->num_rows();
         $msg = "info§" . sprintf(_("Sie beabsichtigen %s Datens&auml;tze der Tabelle <b>%s</b> zu l&ouml;schen."), $anzahl, $plugin_obj->getCheckDetailTable($_REQUEST['checkid'])) . "<br>"
         ._("Dieser Schritt kann <u>nicht</u> r&uuml;ckg&auml;ngig gemacht werden! Sind Sie sicher?") . " <br>\n"
-        ."<br>".LinkButton::createAccept(_('Ja'), $PHP_SELF.'?plugin='.$_REQUEST['plugin'].'&cmd=delete&checkid='.$_REQUEST['checkid']).'&nbsp;'
+        ."<br>".LinkButton::createAccept(_('Ja'), URLHelper::getURL('?plugin='.$_REQUEST['plugin'].'&cmd=delete&checkid='.$_REQUEST['checkid'])) . '&nbsp;'
         .LinkButton::createCancel(_('Nein'))."\n";
         ?><table border="0" width="80%" cellpadding="2" cellspacing="0" class="steel1">
         <tr><td class="blank">&nbsp; </td></tr>
@@ -105,9 +106,9 @@ if($_REQUEST['plugin'] AND in_array($_REQUEST['plugin'],$_integrity_plugins)) {
         <?
         printf(_("Bereich: <i>%s</i> Datens&auml;tze der Tabelle %s</b></td>"), $_REQUEST['plugin'], $plugin_obj->getCheckDetailTable($_REQUEST['checkid']));
         print("<td class=\"blank\" align=\"center\">");
-        $link = sprintf('%s?plugin=%s&cmd=assure&checkid=%s', $PHP_SELF, $_REQUEST['plugin'], $_REQUEST['checkid']);
+        $link = URLHelper::getURL('?plugin='.Request::quoted('plugin').'&cmd=assure&checkid='.Request::option('checkid'));
         print(LinkButton::create(_('Löschen'), $link));
-        print(LinkButton::createCancel(_('Abbrechen'), $PHP_SELF).'</td></tr>');
+        print(LinkButton::createCancel(_('Abbrechen'), URLHelper::getURL()).'</td></tr>');
         ?>
         <tr><td class="blank" colspan="2">&nbsp; </td></tr>
         <tr><td class="steel1" align="center" colspan="2">
@@ -140,7 +141,7 @@ if($_REQUEST['plugin'] AND in_array($_REQUEST['plugin'],$_integrity_plugins)) {
         printf(_("Bereich: <i>%s</i> der Datenbank wird gepr&uuml;ft!"), $_REQUEST['plugin']);
         ?>
         </b></td>
-        <td class="blank" align="center"><?= LinkButton::createCancel(_('Abbrechen'), $PHP_SELF) ?></td> </tr>
+        <td class="blank" align="center"><?= LinkButton::createCancel(_('Abbrechen'), URLHelper::getLink()) ?></td> </tr>
         <tr><td class="blank" colspan="3">&nbsp; </td></tr>
         <tr><th width="20%"><?=_("Tabelle")?></th><th width="60%"><?=_("Ergebnis")?></th><th width="20%"><?=_("Aktion")?></th></tr>
         <?
@@ -154,10 +155,10 @@ if($_REQUEST['plugin'] AND in_array($_REQUEST['plugin'],$_integrity_plugins)) {
             if( $anzahl == 0 ) {
                 echo "&nbsp;";
             } else {
-                $link_anzeigen = sprintf('%s?plugin=%s&cmd=show&checkid=%s', $PHP_SELF, $_REQUEST['plugin'], $i);
-                $link_loeschen = sprintf('%s?plugin=%s&cmd=assure&checkid=%s', $PHP_SELF, $_REQUEST['plugin'], $i);
-                $button_anzeigen = LinkButton::create(_('Anzeigen'), $link1);
-                $button_loeschen = LinkButton::create(_('Löschen'), $link2);
+                $link_anzeigen = URLHelper::getURL('?plugin='.Request::option('plugin').'&cmd=show&checkid='.$i);
+                $link_loeschen = URLHelper::getURL('?plugin='.Request::option('plugin').'&cmd=assure&checkid='.$i);
+                $button_anzeigen = LinkButton::create(_('Anzeigen'), $link_anzeigen);
+                $button_loeschen = LinkButton::create(_('Löschen'), $link_loeschen);
                 echo $button_anzeigen.'&nbsp;'.$button_loeschen.'</td></tr>';
             }
             $_csw->switchClass();
@@ -190,7 +191,7 @@ if(!$_REQUEST['plugin']) {
             ."</b> " . _("gegen") . " <i>".join(", ",$plugin_obj->getCheckDetailList())."</i></td>";
         echo "\n<td align=\"center\" ".$_csw->getFullClass().">".$plugin_obj->getCheckCount()."</td>";
         echo "\n<td align=\"center\" ".$_csw->getFullClass().">";
-        echo LinkButton::create(_('Jetzt testen'), $PHP_SELF.'?plugin='.$_integrity_plugins[$i]);
+        echo LinkButton::create(_('Jetzt testen'), URLHelper::getURL('?plugin='.$_integrity_plugins[$i]));
         echo "</td></tr>";
         $_csw->switchClass();
     }

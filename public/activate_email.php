@@ -6,6 +6,7 @@
 require '../lib/bootstrap.php';
 
 use Studip\Button, Studip\LinkButton;
+unregister_globals();
 
 $_GET['cancel_login'] = 1;
 page_open(array('sess' => 'Seminar_Session', 'auth' => 'Seminar_Default_Auth', 'perm' => 'Seminar_Perm', 'user' => 'Seminar_User'));
@@ -102,7 +103,7 @@ if(isset($_REQUEST['key'])) {
         // change mail
         require_once('lib/edit_about.inc.php');
 
-        $send = edit_email($uid, $_REQUEST['email1'], True);
+        $send = edit_email($_REQUEST['uid'], $_REQUEST['email1'], True);
 
         if($send[0]) {
             $_SESSION['semi_logged_in'] = False;

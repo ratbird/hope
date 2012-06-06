@@ -14,6 +14,7 @@ use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
 require_once 'lib/statusgruppe.inc.php';
 require_once 'lib/user_visible.inc.php';
 
@@ -24,7 +25,9 @@ $perm->check ("autor");
 include ('lib/seminar_open.php');
 
 
-
+$contactid = Request::option('contactid');
+$username = Request::quoted('username');
+$groupid = Request::option('groupid');
 /* ************************************************************************** *
 /*                                                                            *
 /* including needed files                                                     *
@@ -32,9 +35,9 @@ include ('lib/seminar_open.php');
 /* ************************************************************************* */
 // if you wanna export a vCard no html-header should be send to the browser
 if (!( (Request::submitted('export_vcard'))
-    || (isset($_GET["contactid"]))
-    || (isset($_GET["username"]))
-    || (isset($_GET["groupid"])) )){
+    || (!empty($contactid))
+    || (!empty($username))
+    || (!empty($groupid)) )){
     PageLayout::setTitle(_("Adressbuch exportieren"));
     Navigation::activateItem('/community/contacts/export');
     // add skip link
@@ -52,11 +55,11 @@ if (!( (Request::submitted('export_vcard'))
 /* ************************************************************************* */
 if (Request::submitted('export_vcard'))
     $mode = "export_vcard";
-elseif (isset($_GET["contactid"]))
+elseif (!empty($contactid))
     $mode = "ext_export";
-elseif (isset($_GET["username"]))
+elseif (!empty($username))
     $mode = "ext_export_username";
-elseif (isset($_GET["groupid"]))
+elseif (!empty($groupid)) 
     $mode = "ext_export_group";
 else
     $mode = "select_group";
@@ -82,13 +85,13 @@ if ($mode == "select_group"){
 
     $groups = getContactGroups();
 } elseif ($mode == "export_vcard"){
-    $contacts = getContactGroupData($_POST["groupid"]);
+    $contacts = getContactGroupData($groupid);
 } elseif ($mode == "ext_export"){
-    $contacts = getContactGroupData($_GET["contactid"],"user");
+    $contacts = getContactGroupData($contactid,"user");
 } elseif ($mode == "ext_export_username"){
-    $contacts = getContactGroupData($_GET["username"],"username");
+    $contacts = getContactGroupData($username,"username");
 } elseif ($mode == "ext_export_group"){
-    $contacts = getContactGroupData($_GET["groupid"],"group");
+    $contacts = getContactGroupData($groupid,"group");
 }
 
 
@@ -155,7 +158,7 @@ function printSelectGroup($infobox, $groups)
         . "  <tr>"
         . "   <td valign=\"top\" id=\"main_content\"><font size=\"-1\">\n"
         . _("Bitte wählen Sie ein Gruppe aus, deren Daten Sie in eine vCard-Datei exportieren möchten:")."\n"
-        . "    <form action=\"$PHP_SELF\" method=post>\n"
+        . "    <form action=\"".URLHelper::getURL()."\" method=post>\n"
         . CSRFProtection::tokenTag()
         . "       &nbsp;<select name=\"groupid\" style=\"vertical-align:middle;\">\n";
     // the groups
@@ -373,7 +376,9 @@ function getContactGroupData($exportID,$mode = "group"){
  */
 function exportVCard($contacts){
 
-    if (!isset($_GET["contactid"]) && !isset($_GET["username"]))
+    global $contactid,$username;
+
+    if (empty($contactid) && empty($username))
         $filename = $contacts["groupname"];
     else
         $filename = $contacts[0]["NICKNAME"];

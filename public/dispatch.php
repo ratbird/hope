@@ -18,6 +18,7 @@
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
 require_once 'lib/functions.php';
 
 # define root
@@ -30,9 +31,6 @@ require_once 'vendor/trails/trails.php';
 
 # set base url for URLHelper class
 URLHelper::setBaseUrl($ABSOLUTE_URI_STUDIP);
-
-# disable register_globals if set
-unregister_globals();
 
 # dispatch
 $request_uri = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '/';

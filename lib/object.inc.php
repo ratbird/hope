@@ -194,10 +194,15 @@ function object_add_view ($object_id)
 
 function object_kill_views($object_id)
 {
-    $query = "DELETE FROM object_views WHERE object_id IN (?)";
-    $statement = DBManager::get()->prepare($query);
-    $statement->execute(array($object_id));
-    return $statement->rowCount();
+    if (!empty($object_id)) {
+        $query = "DELETE FROM object_views WHERE object_id IN (:object_ids)";
+        $statement = DBManager::get()->prepare($query);
+        $statement->bindParam(':object_ids', $object_id, StudipPDO::PARAM_ARRAY);
+        $statement->execute();
+        return $statement->rowCount();
+    } else {
+        return 0;
+    }
 }
 
 function object_switch_fav ($object_id)

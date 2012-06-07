@@ -78,18 +78,20 @@ function show_documents($documents, $open = null)
         $ank = key($open);
     }
 
-    $query = "SELECT {$GLOBALS['_fullname_sql']['full']} AS fullname, username, user_id,
-                     dokument_id, filename, filesize, downloads, protected, url, description,
-                     IF(IFNULL(name, '') = '', filename, name) AS t_name,
-                     GREATEST(a.chdate, a.mkdate) AS chdate
-              FROM dokumente AS a
-              LEFT JOIN auth_user_md5 USING (user_id)
-              LEFT JOIN user_info USING (user_id)
-              WHERE dokument_id IN (?)
-              ORDER BY a.chdate DESC";
-    $statement = DBManager::get()->prepare($query);
-    $statement->execute(array($documents));
-    $documents = $statement->fetchAll(PDO::FETCH_ASSOC);
+    if (!empty($documents)) {
+        $query = "SELECT {$GLOBALS['_fullname_sql']['full']} AS fullname, username, user_id,
+                         dokument_id, filename, filesize, downloads, protected, url, description,
+                         IF(IFNULL(name, '') = '', filename, name) AS t_name,
+                         GREATEST(a.chdate, a.mkdate) AS chdate
+                  FROM dokumente AS a
+                  LEFT JOIN auth_user_md5 USING (user_id)
+                  LEFT JOIN user_info USING (user_id)
+                  WHERE dokument_id IN (?)
+                  ORDER BY a.chdate DESC";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($documents));
+        $documents = $statement->fetchAll(PDO::FETCH_ASSOC);
+    }
 
     foreach ($documents as $index => $document) {
         $type      = empty($document['url']) ? 0 : 6;

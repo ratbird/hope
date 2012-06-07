@@ -402,17 +402,21 @@ class UserManagement
         // active dozent? (ignore the studygroup guys)
         $status = studygroup_sem_types();
 
-        $query = "SELECT COUNT(*)
-                  FROM seminar_user AS su
-                  LEFT JOIN seminare AS s USING (Seminar_id)
-                  WHERE su.user_id = ? AND s.status NOT IN (?) AND su.status = 'dozent'
-                  GROUP BY user_id";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array(
-            $this->user_data['auth_user_md5.user_id'],
-            $status,
-        ));
-        $count = $statement->fetchColumn();
+        if (empty($status)) {
+            $count = 0;
+        } else {
+            $query = "SELECT COUNT(*)
+                      FROM seminar_user AS su
+                      LEFT JOIN seminare AS s USING (Seminar_id)
+                      WHERE su.user_id = ? AND s.status NOT IN (?) AND su.status = 'dozent'
+                      GROUP BY user_id";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                $this->user_data['auth_user_md5.user_id'],
+                $status,
+            ));
+            $count = $statement->fetchColumn();
+        }
         if ($count && isset($newuser['auth_user_md5.perms']) && $newuser['auth_user_md5.perms'] != "dozent") {
             $this->msg .= sprintf("error§" . _("Der Benutzer <em>%s</em> ist Dozent in %s aktiven Veranstaltungen und kann daher nicht in einen anderen Status versetzt werden!") . "§", $this->user_data['auth_user_md5.username'], $count);
             return FALSE;
@@ -660,23 +664,29 @@ class UserManagement
             }
         }
 
+        $status = studygroup_sem_types();
+
         // active dozent?
-        $query = "SELECT SUM(c) AS count FROM (
-                      SELECT COUNT(*) AS c
-                      FROM seminar_user AS su1
-                      INNER JOIN seminar_user AS su2 ON (su1.seminar_id = su2.seminar_id AND su2.status = 'dozent')
-                      INNER JOIN seminare ON (su1.seminar_id = seminare.seminar_id AND seminare.status NOT IN (?))
-                      WHERE su1.user_id = ? AND su1.status = 'dozent'
-                      GROUP BY su1.seminar_id
-                      HAVING c = 1
-                      ORDER BY NULL
-                  ) AS sub";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array(
-            studygroup_sem_types(),
-            $this->user_data['auth_user_md5.user_id'],
-        ));
-        $active_count = $statement->fetchColumn();
+        if (empty($status)) {
+            $active_count = 0;
+        } else {
+            $query = "SELECT SUM(c) AS count FROM (
+                          SELECT COUNT(*) AS c
+                          FROM seminar_user AS su1
+                          INNER JOIN seminar_user AS su2 ON (su1.seminar_id = su2.seminar_id AND su2.status = 'dozent')
+                          INNER JOIN seminare ON (su1.seminar_id = seminare.seminar_id AND seminare.status NOT IN (?))
+                          WHERE su1.user_id = ? AND su1.status = 'dozent'
+                          GROUP BY su1.seminar_id
+                          HAVING c = 1
+                          ORDER BY NULL
+                      ) AS sub";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                studygroup_sem_types(),
+                $this->user_data['auth_user_md5.user_id'],
+            ));
+            $active_count = $statement->fetchColumn();
+        }
 
         if ($active_count) {
             $this->msg .= sprintf("error§" . _("Der Benutzer/die Benutzerin <em>%s</em> ist DozentIn in %s aktiven Veranstaltungen und kann daher nicht gel&ouml;scht werden.") . "§", $this->user_data['auth_user_md5.username'], $active_count);
@@ -684,16 +694,22 @@ class UserManagement
 
         //founder of studygroup?
         } elseif (get_config('STUDYGROUPS_ENABLE')) {
-            $query = "SELECT Seminar_id
-                      FROM seminare AS s
-                      LEFT JOIN seminar_user AS su USING (Seminar_id)
-                      WHERE su.status = 'dozent' AND su.user_id = ? AND s.status IN (?)";
-            $statement = DBManager::get()->prepare($query);
-            $statement->execute(array(
-                $this->user_data['auth_user_md5.user_id'],
-                studygroup_sem_types(),
-            ));
-            $group_ids = $statement->fetchAll(PDO::FETCH_COLUMN);
+            $status = studygroup_sem_types();
+
+            if (empty($status)) {
+                $group_ids = array();
+            } else {
+                $query = "SELECT Seminar_id
+                          FROM seminare AS s
+                          LEFT JOIN seminar_user AS su USING (Seminar_id)
+                          WHERE su.status = 'dozent' AND su.user_id = ? AND s.status IN (?)";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array(
+                    $this->user_data['auth_user_md5.user_id'],
+                    studygroup_sem_types(),
+                ));
+                $group_ids = $statement->fetchAll(PDO::FETCH_COLUMN);
+            }
 
             foreach ($group_ids as $group_id) {
                 $sem = Seminar::GetInstance($group_id);

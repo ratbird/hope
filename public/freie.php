@@ -44,6 +44,10 @@ page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Default_Auth", "
 
 
 function get_my_sem_values(&$my_sem) {
+    if (empty($my_sem)) {
+        return;
+    }
+
     $my_semids = array_keys($my_sem);
 // Postings
     $query = "SELECT Seminar_id, COUNT(*) AS count

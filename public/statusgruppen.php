@@ -158,17 +158,21 @@ function PrintNonMembers ($range_id)
 
     $bereitszugeordnet = GetAllSelected($range_id);
 
-    $query = "SELECT user_id, username, {$_fullname_sql['full']} AS fullname,
-                     perms, seminar_user.visible = 'yes' AS visible
-              FROM seminar_user
-              LEFT JOIN auth_user_md5 USING (user_id)
-              LEFT JOIN user_info USING (user_id)
-              WHERE Seminar_id = ? AND user_id NOT IN (?)
-              ORDER BY Nachname";
-    $statement = DBManager::get()->prepare($query);
-    $statement->execute(array($range_id, $bereitszugeordnet));
-    $data = $statement->fetchAll(PDO::FETCH_ASSOC);
-    
+    if (empty($bereitszugeordnet)) {
+        $data = array();
+    } else {
+        $query = "SELECT user_id, username, {$_fullname_sql['full']} AS fullname,
+                         perms, seminar_user.visible = 'yes' AS visible
+                  FROM seminar_user
+                  LEFT JOIN auth_user_md5 USING (user_id)
+                  LEFT JOIN user_info USING (user_id)
+                  WHERE Seminar_id = ? AND user_id NOT IN (?)
+                  ORDER BY Nachname";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($range_id, $bereitszugeordnet));
+        $data = $statement->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     if (count($data) > 0) { // there are non-grouped members
         $template = $GLOBALS['template_factory']->open('statusgruppen/non-members');
         $template->active           = Request::option('toggle_group') == 'non_members';

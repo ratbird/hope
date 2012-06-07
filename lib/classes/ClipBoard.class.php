@@ -137,6 +137,10 @@ class ClipBoard {
             $this->elements = null;
             if (is_array($this->object_types))
                 foreach($this->object_types as $object_type => $object_elements) {
+                    if (empty($object_elements)) {
+                        continue;
+                    }
+
                     $statement = DBManager::get()->prepare($this->elements_query[$object_type]);
                     $statement->execute(array($object_elements));
 

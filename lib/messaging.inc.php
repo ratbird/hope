@@ -627,7 +627,7 @@ class messaging
      */
     function check_list_of_chatinv($chat_uniqids, $user_id = false)
     {
-        if (!get_config('CHAT_ENABLE') || !is_array($chat_uniqids)){
+        if (!get_config('CHAT_ENABLE') || !is_array($chat_uniqids) || empty($chat_uniqids)) {
             return false;
         }
 

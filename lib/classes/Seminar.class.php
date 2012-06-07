@@ -213,7 +213,6 @@ class Seminar
         if (!$termine = SeminarDB::getNextDate($this->id))
             return false;
 
-        // group dates by start- and endtime
         foreach ($termine['termin'] as $singledate_id) {
             $next_date .= DateFormatter::formatDateAndRoom($singledate_id, $return_mode) . '<br>';
         }

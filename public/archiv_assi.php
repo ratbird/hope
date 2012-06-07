@@ -206,7 +206,7 @@ include 'lib/include/admin_search_form.inc.php';
 if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_data']["sem_check"]) > 0)) {
     $db->query("SELECT * FROM seminare WHERE Seminar_id = '" . $_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"] . "' ");
     $db->next_record();
-    $msg .= "info§<font color=\"red\">" . _("Sie sind im Begriff, die untenstehende  Veranstaltung zu archivieren. Dieser Schritt kann nicht r&uuml;ckg&auml;ngig gemacht werden!") . "§";
+    $msg .= "info§<font color=\"black\">" . _("Sie sind im Begriff, die untenstehende  Veranstaltung zu archivieren. Dieser Schritt kann nicht r&uuml;ckg&auml;ngig gemacht werden!") . "§";
     // check is Veranstaltung running
     if ($db->f("duration_time") == -1) {
         $msg .= "info§" . _("Das Archivieren k&ouml;nnte unter Umst&auml;nden nicht sinnvoll sein, da es sich um eine dauerhafte Veranstaltung handelt.") . "§";

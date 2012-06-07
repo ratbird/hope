@@ -213,25 +213,31 @@ class Seminar
         if (!$termine = SeminarDB::getNextDate($this->id))
             return false;
 
-        $next_date = DateFormatter::formatDateWithAllRooms($termine, $return_mode);
+        // group dates by start- and endtime
+        foreach ($termine['termin'] as $singledate_id) {
+            $next_date .= DateFormatter::formatDateAndRoom($singledate_id, $return_mode) . '<br>';
+        }
 
-        if ($termine['ex_termin']) {
-            $ex_termin = new SingleDate($termine['ex_termin']);
+        if (!empty($termine['ex_termin'])) {
+            foreach ($termine['ex_termin'] as $ex_termin_id) {
+                $ex_termin = new SingleDate($ex_termin_id);
 
-            $missing_date  = '<div style="border:1px solid black; background:#FFFFDD;">';
-            $missing_date .= sprintf(_("Der Termin am %s findet nicht statt."), DateFormatter::formatDateAndRoom($termine['ex_termin'], $return_mode));
-            $missing_date .= '<br>' . _("Kommentar"). ': '.htmlReady($ex_termin->getComment());
-            $missing_date .= '</div>';
+                $missing_date  = '<div style="border:1px solid black; background:#FFFFDD;">';
+                $missing_date .= sprintf(_("Der Termin am %s findet nicht statt."),
+                    DateFormatter::formatDateAndRoom($ex_termin_id, $return_mode));
 
-            if ($termine['termin']) {
-                $termin = new SingleDate($termine['termin'][0]);
-                if ($ex_termin->getStartTime() < $termin->getStartTime()) {
-                    return $next_date.'<br>'.$missing_date;
+                $missing_date .= '<br>' . _("Kommentar"). ': '.htmlReady($ex_termin->getComment());
+
+                if (!empty($termine['termin'])) {
+                    $termin = new SingleDate($termine['termin'][0]);
+                    if ($ex_termin->getStartTime() <= $termin->getStartTime()) {
+                        return $next_date .'<br>'. $missing_date . '<br>'. _('Die anderen Termine finden wie angegeben statt!') . '</div>';
+                    } else {
+                        return $next_date;
+                    }
                 } else {
-                    return $next_date;
+                    return $missing_date . '</div>';
                 }
-            } else {
-                return $missing_date;
             }
         } else {
             return $next_date;
@@ -289,7 +295,7 @@ class Seminar
             }
 
             $ret['regular']['turnus_data'] = $cycles;
-
+            
             // the irregular single-dates
             foreach ($dates as $val) {
                 $zw = array(

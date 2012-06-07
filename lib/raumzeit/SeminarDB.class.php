@@ -180,21 +180,30 @@ class SeminarDB {
     function getNextDate($seminar_id)
     {
         $termin = array();
-        $ex_termin = 0;
-        $db = new DB_Seminar("SELECT termin_id, date, end_time FROM termine WHERE range_id = '$seminar_id' AND date > ".(time() - 3600)." ORDER BY date");
+        $ex_termin = array();
+        
+        $stmt = DBManager::get()->prepare("SELECT termin_id, date, end_time FROM termine 
+            WHERE range_id = ? AND date > ".(time() - 3600)."
+            ORDER BY date, end_time");
+        $stmt->execute(array($seminar_id));
+        
         $start = 0;
-        $end = 0;
-        while ($db->next_record()) {
-            if (($start == 0 && $end == 0) || ($start == $db->f('date') && $end == $db->f('end_time'))) {
-                $termin[] = $db->f('termin_id');
-                $start = $db->f('date');
-                $end = $db->f('end_time');
+        while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            if ($start == 0 || $start == $data['date']) {
+                $termin[] = $data['termin_id'];
+                $start = $data['date'];
             }
         }
 
-        $db = new DB_Seminar("SELECT termin_id FROM ex_termine WHERE range_id = '$seminar_id' AND date > ".(time() - 3600)." AND content != '' AND content IS NOT NULL ORDER BY date LIMIT 1");
-        if ($db->next_record()) {
-            $ex_termin = $db->f('termin_id');
+        
+        $stmt = DBManager::get()->prepare("SELECT termin_id FROM ex_termine 
+            WHERE range_id = ? AND date > ".(time() - 3600)." 
+                AND content != '' AND content IS NOT NULL
+            ORDER BY date LIMIT 1");
+        $stmt->execute(array($seminar_id));
+
+        while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $ex_termin[] = $data['termin_id'];
         }
 
         return array('termin' => $termin, 'ex_termin' => $ex_termin);

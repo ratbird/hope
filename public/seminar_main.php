@@ -133,24 +133,25 @@ $quarter_year = 60 * 60 * 24 * 90;
         echo "<br>";
     }
 
-    if (!$studygroup_mode) {
-        echo '<b>'. _("Zeit") .':</b><br>';
+    if (!$studygroup_mode) { ?>
+        <b><?= _("Zeit") ?>:</b><br>
+        <?
         $show_link = ($perm->have_studip_perm('autor', $course_id) && $modules['schedule']);
-        echo $sem->getDatesHTML(array('link_to_dates' => $show_link));
+        echo $sem->getDatesTemplate('dates/seminar_html', array('link_to_dates' => $show_link, 'show_room' => true));
+        ?>
 
-        echo '<br>';
+        <br>
+        <br>
 
+        <?
         $next_date = $sem->getNextDate();
         if ($next_date) {
-            echo '<br>';
             echo '<b>'._("Nächster Termin").':</b><br>';
             echo $next_date . '<br>';
         } else if ($first_date = $sem->getFirstDate()) {
-            echo '<br>';
             echo '<b>'._("Erster Termin").':</b><br>';
             echo $first_date . '<br>';
         } else {
-            echo '<br>';
             echo '<b>'._("Erster Termin").':</b><br>';
             echo _("Die Zeiten der Veranstaltung stehen nicht fest."). '<br>';
         }

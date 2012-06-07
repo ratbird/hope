@@ -49,11 +49,12 @@ endforeach;
 <? elseif (sizeof($output) == 1) : ?>
     <?= array_pop(array_keys($output)) ?>
 <? else: ?>
-<table class="default">
-  <? foreach ($output as $room => $dates) : ?>
-  <tr>
-    <td style="vertical-align: top"><?= $room ?></td>
-    <td><?= implode('<br>', $dates) ?></td>
-  <? endforeach ?>
+<table class="default" style="width: auto;">
+    <? foreach ($output as $room => $dates) : ?>
+    <tr>
+        <td style="vertical-align: top; padding: 0 10px 0 0;"><?= $room ?></td>
+        <td style="padding: 0px;"><?= implode('<br>', $dates) ?></td>
+    </tr>
+    <? endforeach ?>
 </table>
 <? endif ?>

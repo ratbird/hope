@@ -809,6 +809,13 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
         </td>
     </tr>
     <? } ?>
+    <? if ($admin_admission_data["original"] != get_snapshot()) { ?>
+    <tr>
+        <td class="blank" colspan="2">
+            <?= MessageBox::info(_("Diese Daten sind noch nicht gespeichert.")) ?>
+        </td>
+    </tr>
+    <? } ?>
     <tr>
         <td class="blank" valign="top">
             <br>
@@ -833,14 +840,11 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
         <tr <? $cssSw->switchClass() ?>>
             <td class="<? echo $cssSw->getClass() ?>" align="center" colspan="3">
                 <?= Button::createAccept(_("Übernehmen"), "uebernehmen") ?>
-                <?if ($admin_admission_data["original"] != get_snapshot()) { ?>
-                <?= MessageBox::info(_("Diese Daten sind noch nicht gespeichert.")) ?>
-                <? } ?>
             </td>
         </tr>
         <tr <? $cssSw->switchClass() ?>>
-            <td class="<? echo $cssSw->getClass() ?>" width="4%" align="right">
-                &nbsp;    
+            <td class="<? echo $cssSw->getClass() ?>" width="4%" align="right">&nbsp;
+                    
             </td>
             <td class="<? echo $cssSw->getClass() ?>"  colspan=2 align="left">
                 <font size=-1><b><?=_("Anmeldeverfahren:")?></b><br></font>
@@ -1038,8 +1042,8 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
         if (!$admin_admission_data["admission_type"]  || $admin_admission_data["admission_type"] == 3) {
         ?>
         <tr <? $cssSw->switchClass() ?>>
-            <td class="<? echo $cssSw->getClass() ?>" width="4%" align="right">
-                &nbsp;
+            <td class="<? echo $cssSw->getClass() ?>" width="4%" align="right">&nbsp;
+                
             </td>
             <td class="<? echo $cssSw->getClass() ?>" colspan=2 align="left">
                 <font size=-1><b><?=_("Berechtigungen:")?></b><br></font>
@@ -1048,8 +1052,8 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
             </td>
         </tr>
         <tr>
-            <td class="<? echo $cssSw->getClass() ?>" width="4%" align="right">
-                &nbsp;
+            <td class="<? echo $cssSw->getClass() ?>" width="4%" align="right">&nbsp;
+                
             </td>
             <td class="<? echo $cssSw->getClass() ?>" width="20%" align="left">
             <?
@@ -1125,8 +1129,8 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
             </td>
             </tr>
             <tr <? $cssSw->switchClass() ?>>
-                <td class="<? echo $cssSw->getClass() ?>" width="4%">
-                    &nbsp;
+                <td class="<? echo $cssSw->getClass() ?>" width="4%">&nbsp;
+                    
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="96%" colspan=2>
                     <font size=-1><b><?=_("Passwort:")?> </b></font><br>
@@ -1166,8 +1170,8 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
         } else {
         ?>
             <tr <? $cssSw->switchClass() ?>>
-                <td class="<? echo $cssSw->getClass() ?>" width="4%">
-                    &nbsp;
+                <td class="<? echo $cssSw->getClass() ?>" width="4%">&nbsp;
+                    
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="96%" colspan=2>
                     <font size=-1><b><?=_("maximale Teilnehmeranzahl:")?> </b></font><br>
@@ -1180,8 +1184,8 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
                     </td>
             </tr>
             <tr <? $cssSw->switchClass() ?>>
-                <td class="<? echo $cssSw->getClass() ?>" width="4%">
-                    &nbsp;
+                <td class="<? echo $cssSw->getClass() ?>" width="4%">&nbsp;
+                    
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="96%" colspan=2>
                     <font size=-1><b><?=_("zugelassenene Studieng&auml;nge:")?> </b></font><br>
@@ -1307,8 +1311,8 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
             <?if($admin_admission_data["admission_enable_quota"] || $admin_admission_data["admission_type"] == 1){
                 ?>
                 <tr  <? $cssSw->switchClass() ?>>
-                    <td class="<? echo $cssSw->getClass() ?>" width="4%">
-                        &nbsp;
+                    <td class="<? echo $cssSw->getClass() ?>" width="4%">&nbsp;
+                        
                     </td>
                     <td class="<? echo $cssSw->getClass() ?>" width="96%" colspan=2>
                         <font size=-1><b><? if ($admin_admission_data["admission_type"] == 1) echo _("Losdatum"); else echo _("Enddatum der Kontingentierung");?>:</b></font><br>
@@ -1342,8 +1346,8 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
             <?}?>
             <?if (get_config('ADMISSION_ALLOW_DISABLE_WAITLIST')) {?>
             <tr <? $cssSw->switchClass() ?>>
-                <td class="<? echo $cssSw->getClass() ?>" width="4%">
-                    &nbsp;
+                <td class="<? echo $cssSw->getClass() ?>" width="4%">&nbsp;
+                    
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="96%" colspan=2>
                     <font size=-1><b><?=_("Warteliste:")?> </b></font><br>
@@ -1379,8 +1383,8 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
             </tr>
             <?}?>
             <tr <? $cssSw->switchClass() ?>>
-                <td class="<? echo $cssSw->getClass() ?>" width="4%">
-                    &nbsp;
+                <td class="<? echo $cssSw->getClass() ?>" width="4%">&nbsp;
+                    
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="96%" colspan=2>
                     <font size=-1><b><?=_("verbindliche Anmeldung:")?> </b></font><br>
@@ -1401,8 +1405,8 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
         <!-- Hier Änderungen zur Nutzerdomäne -->
         <? if (count(($all_domains = UserDomain::getUserDomains()))): ?>
         <tr <? $cssSw->switchClass() ?>>
-            <td class="<? echo $cssSw->getClass() ?>" width="4%">
-                &nbsp;
+            <td class="<? echo $cssSw->getClass() ?>" width="4%">&nbsp;
+                
             </td>
             <td class="<? echo $cssSw->getClass() ?>" width="96%" colspan="2">
                 <font size=-1><b><?=_("Zugelassenene Nutzerdomänen:")?> </b></font><br>

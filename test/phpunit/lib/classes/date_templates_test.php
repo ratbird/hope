@@ -66,6 +66,7 @@ class DateTemplatesTests extends PHPUnit_Framework_TestCase
         );
         
         date_default_timezone_set(@date_default_timezone_get());
+        setlocale(LC_TIME, "C");
 
     }
 
@@ -108,14 +109,16 @@ class DateTemplatesTests extends PHPUnit_Framework_TestCase
 
 
         $data = renderTemplate('dates/seminar_html_location', $this->testData);
-        $compare = '<table class="default">
-    <tr>
-    <td style="vertical-align: top"><a onclick="window.open(...)">Hörsaal 1</a></td>
-    <td>Mo. 10:00 - 12:00 (2x)</td>
-    <tr>
-    <td style="vertical-align: top">(&lt;script&gt;alert(&quot;b&ouml;se&quot;);&lt;/script&gt;)</td>
-    <td>Mo. 10:00 - 12:00 (16x)<br> 12.05. 09:00 - 13:00</td>
-  </table>';
+        $compare = '<table class="default" style="width: auto;">
+        <tr>
+        <td style="vertical-align: top; padding: 0 10px 0 0;"><a onclick="window.open(...)">Hörsaal 1</a></td>
+        <td style="padding: 0px;">Mo. 10:00 - 12:00 (2x)</td>
+    </tr>
+        <tr>
+        <td style="vertical-align: top; padding: 0 10px 0 0;">(&lt;script&gt;alert(&quot;b&ouml;se&quot;);&lt;/script&gt;)</td>
+        <td style="padding: 0px;">Mo. 10:00 - 12:00 (16x)<br> 12.05. 09:00 - 13:00</td>
+    </tr>
+    </table>';
         $this->assertEquals($data, $compare);
 
 
@@ -140,14 +143,16 @@ class DateTemplatesTests extends PHPUnit_Framework_TestCase
 
 
         $data = renderTemplate('dates/seminar_html_location', $this->testData, array('link' => false));
-        $compare = '<table class="default">
-    <tr>
-    <td style="vertical-align: top">H&ouml;rsaal 1 &lt;br&gt;</td>
-    <td>Mo. 10:00 - 12:00 (2x)</td>
-    <tr>
-    <td style="vertical-align: top">(&lt;script&gt;alert(&quot;b&ouml;se&quot;);&lt;/script&gt;)</td>
-    <td>Mo. 10:00 - 12:00 (16x)<br> 12.05. 09:00 - 13:00</td>
-  </table>';
+        $compare = '<table class="default" style="width: auto;">
+        <tr>
+        <td style="vertical-align: top; padding: 0 10px 0 0;">H&ouml;rsaal 1 &lt;br&gt;</td>
+        <td style="padding: 0px;">Mo. 10:00 - 12:00 (2x)</td>
+    </tr>
+        <tr>
+        <td style="vertical-align: top; padding: 0 10px 0 0;">(&lt;script&gt;alert(&quot;b&ouml;se&quot;);&lt;/script&gt;)</td>
+        <td style="padding: 0px;">Mo. 10:00 - 12:00 (16x)<br> 12.05. 09:00 - 13:00</td>
+    </tr>
+    </table>';
         $this->assertEquals($data, $compare);
 
 

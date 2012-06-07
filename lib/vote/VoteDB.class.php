@@ -78,6 +78,10 @@ class VoteDB extends StudipObject
      */
     private function getVotes($rangeID, $state, $author_id = null)
     {
+        if (empty($state)) {
+            return array();
+        }
+
         // convert username to userID
         if ($id = get_userID($rangeID)) {
             $rangeID = $id;

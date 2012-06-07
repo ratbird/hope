@@ -69,7 +69,7 @@ function imaging($img, $img_size, $img_name)
     $uploaddir = $GLOBALS['DYNAMIC_CONTENT_PATH'] . '/banner';
     $md5hash = md5($img_name+time());
     $newfile = $uploaddir . '/' . $md5hash . '.' . $ext;
-    $_SESSION['banner_data']["banner_path"] = $md5hash . '.' . $ext;
+    $_SESSION['banner_data']["banner_path"] = $uploaddir.$md5hash . '.' . $ext;
     if(!@move_uploaded_file($img,$newfile)) {
         $msg = "error§" . _("Es ist ein Fehler beim Kopieren der Datei aufgetreten. Das Bild wurde nicht hochgeladen!");
         return $msg;
@@ -110,7 +110,8 @@ function show_banner_list($table) {
         print $table->row(array(_("Anzeigezeitraum"), ($banner['startdate'] ? date("d.m.Y, H:i",$banner['startdate']) : _("sofort")) . " " . _("bis") . " " . ($banner['enddate'] ? date("d.m.Y, H:i", $banner['enddate']) : _("unbegrenzt"))),"",0);
         print $table->row(array(_("Views"), $banner['views']),"",0);
         print $table->row(array(_("Priorität (Wahrscheinlichkeit)"), $banner['priority'] . " (" . view_probability($banner['priority']) . ")"),"",0);
-        print $table->row(array("", LinkButton::create(_('Bearbeiten'), $PHP_SELF.'?cmd=editdb&ad_id='.$banner['ad_id']).' '.LinkButton::create(_('Löschen'), $PHP_SELF.'?cmd=delete&ad_id='.$banner['ad_id'])),"",0);
+        print $table->row(array("", LinkButton::create(_('Bearbeiten'), URLHelper::getURL('?cmd=editdb&ad_id='.$banner['ad_id'])).' '.LinkButton::create(_('Löschen'), URLHelper::getURL('?cmd=delete&ad_id='.$banner['ad_id']))),"",0);
+       
         print $table->row(array("&nbsp;","&nbsp"),array("class"=>"blank", "bgcolor"=>"white"),0);
     }
     if (empty($banners)) {
@@ -234,7 +235,7 @@ function edit_banner_pic($banner_data) {
     print "</td></tr>";
     echo $table->closeRow();
 
-    print "<form enctype=\"multipart/form-data\" action=\"$PHP_SELF?cmd=upload&view=edit\" method=\"POST\">";
+    print "<form enctype=\"multipart/form-data\" action=\"".URLHelper::getLink('?cmd=upload&view=edit')."\" method=\"POST\">";
     echo CSRFProtection::tokenTag();
     print $table->row(array(_("1. Bilddatei auswählen:")." <input name=\"imgfile\" type=\"file\" cols=45>"),"",0);
     print $table->row(array(_("2. Bilddatei hochladen:").Button::createAccept(_('Absenden'))),"",0);
@@ -256,7 +257,7 @@ function edit_banner_data($banner_data) {
     $table=new ZebraTable(array("bgcolor"=>"#eeeeee", "align"=>"center", "width"=>"75%", "padding"=>"2"));
     echo $table->open();
 
-    print "<form action=\"$PHP_SELF?cmd=edit&i_view=edit\" method=\"post\">";
+    print "<form action=\"".URLHelper::getLink('?cmd=edit&i_view=edit')."\" method=\"post\">";
     echo CSRFProtection::tokenTag();
     if ($banner_data["ad_id"]) {
         print "<input type=hidden name=\"ad_id\" value=\"" . $banner_data["ad_id"] . "\">";
@@ -337,13 +338,14 @@ echo $container->openCell();
 $content=new ContentTable();
 echo $content->open();
 echo $content->openRow();
-echo $content->cell("<b><a href=\"$PHP_SELF?i_view=new\">&nbsp;"._("Neues Banner anlegen")."</a><b><br><br>", array("colspan"=>"2"));
+echo $content->cell("<b><a href=\"".URLHelper::getLink('?i_view=new')."\">&nbsp;"._("Neues Banner anlegen")."</a><b><br><br>", array("colspan"=>"2"));
 echo $content->openRow();
 echo $content->openCell(array("colspan"=>"2"));
 
 $_SESSION['banner_data']=array();
 $cmd = Request::option('cmd');
 $i_view = Request::option('i_view');
+$banner_path = Request::quoted('banner_path');
 if ($cmd=="upload") {
     $msg=imaging(Request::quoted('imgfile'),$imgfile_size,$imgfile_name);
     parse_msg($msg);
@@ -355,14 +357,14 @@ if ($cmd=="upload") {
 } elseif ($cmd=="delete") {
     DBManager::get()
         ->prepare("DELETE FROM banner_ads WHERE ad_id = ?")
-        ->execute(array($ad_id));
+        ->execute(array(Request::option('ad_id')));
     parse_msg("msg§". _("Banner gelöscht"));
     $i_view="list";
 } elseif ($cmd=="editdb") {
     $query = "SELECT ad_id, target, target_type, description, alttext, banner_path, priority, startdate, enddate "
            . "FROM banner_ads WHERE ad_id = ?";
     $statement = DBManager::get()->prepare($query);
-    $statement->execute(array($ad_id));
+    $statement->execute(array(Request::option('ad_id')));
     $_SESSION['banner_data'] = $statement->fetch(PDO::FETCH_ASSOC);
     if ($_SESSION['banner_data']) {
         $starttime = $_SESSION['banner_data']['startdate'];
@@ -391,7 +393,7 @@ if ($cmd=="upload") {
     $_SESSION['banner_data']['target_type']  = Request::option('target_type');
     $_SESSION['banner_data']['description']  = Request::get('description');
     $_SESSION['banner_data']['alttext']      = Request::get('alttext');
-    $_SESSION['banner_data']['banner_path']  = Request::get('banner_path');
+    $_SESSION['banner_data']['banner_path']  = Request::quoted('banner_path');
     $_SESSION['banner_data']['start_minute'] = Request::option('start_minute');
     $_SESSION['banner_data']['start_hour']   = Request::option('start_hour');
     $_SESSION['banner_data']['start_day']    = Request::option('start_day');

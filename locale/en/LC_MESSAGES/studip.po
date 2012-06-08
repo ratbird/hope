@@ -488,7 +488,7 @@ msgstr ""
 #: ../public/my_stm.php:201
 #, php-format
 msgid ""
-"Um Informationen &uuml;ber alle Studienmodule anzuzeigen nutzen Sie die <br> "
+"Um Informationen über alle Studienmodule anzuzeigen nutzen Sie die <br> "
 "%sSuche nach Studienmodulen%s"
 msgstr ""
 "<br> %sSearch for study modules%s will transfer you to an overview page on "

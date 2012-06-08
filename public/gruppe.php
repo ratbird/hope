@@ -85,11 +85,11 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
             <option value="dozent_id" <?=($_my_sem_group_field == 'dozent_id' ? 'selected' : '')?>><?=_("Dozenten")?></option>
         </select>
         </td>
-        <td class="blank" align="center" colspan="8">
+        <td class="blank" align="center" colspan="9">
             <?= Button::createAccept() ?>
         </td>
     </tr>
-    <tr><td class="blank" align="right" colspan="9">&nbsp;
+    <tr><td class="blank" align="right" colspan="10">&nbsp;
     
     </td></tr>
     <tr valign="top" align="center">
@@ -147,8 +147,8 @@ FOR ($i=0; $i<9; $i++)
 
     foreach ($groups as $group_id => $group_members){
         if ($group_field != 'not_grouped'){
-            echo '<tr><td class="blank" colspan="9"><img src="'.$GLOBALS['ASSETS_URL'].'images/blank.gif" width="1px" height="5px"></td></tr>';
-            echo '<tr><td class="blue_gradient" valign="middle" height="20" colspan="9">';
+            echo '<tr><td class="blank" colspan="10"><img src="'.$GLOBALS['ASSETS_URL'].'images/blank.gif" width="1px" height="5px"></td></tr>';
+            echo '<tr><td class="blue_gradient" valign="middle" height="20" colspan="10">';
             if (isset($_my_sem_open[$group_id])){
                 echo '<a class="tree" style="font-weight:bold" name="' . $group_id . '" href="' . URLHelper::getLink('?close_my_sem=' . $group_id . '#' .$group_id) . '" ' . tooltip(_("Gruppierung schließen"), true) . '>';
                 echo '<img src="'.$GLOBALS['ASSETS_URL'].'images/icons/16/blue/arr_1down.png"   hspace="3" border="0">';
@@ -188,7 +188,7 @@ FOR ($i=0; $i<9; $i++)
             }
         }
     }
-    ECHO "<tr><td class=\"blank\">&nbsp; </td><td class=\"blank\" align=center colspan=8><br>";
+    ECHO "<tr><td class=\"blank\">&nbsp; </td><td class=\"blank\" align=center colspan=9><br>";
     echo Button::createAccept();
     echo "<input type=hidden name=gruppesent value=1><br>&nbsp; </td></tr>";
     echo "</table></form></td></tr></table>";

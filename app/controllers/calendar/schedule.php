@@ -47,6 +47,7 @@ class Calendar_ScheduleController extends AuthenticatedController
         // bind zoom and show_hidden for all actions, even preserving them after redirect
         if (Request::int('zoom')) {
             URLHelper::addLinkParam('zoom', Request::int('zoom'));
+			$GLOBALS['user']->user_vars['my_schedule_settings']['zoom'] = Request::int('zoom');
         }
 
         if (Request::int('show_hidden')) {
@@ -178,7 +179,7 @@ class Calendar_ScheduleController extends AuthenticatedController
 
         $this->controller = $this;
         $this->calendar_view = new CalendarWeekView($this->entries, 'schedule');
-        $this->calendar_view->setHeight(40 + (20 * Request::option('zoom', 0)));
+        $this->calendar_view->setHeight(40 + (20 * $GLOBALS['user']->user_vars['my_schedule_settings']['zoom']));
         $this->calendar_view->setRange($my_schedule_settings['glb_start_time'], $my_schedule_settings['glb_end_time']);
 
         if ($inst_mode) {

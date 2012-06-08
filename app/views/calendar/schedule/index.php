@@ -1,6 +1,6 @@
 <?
 # Lifter010: TODO
-$zoom = Request::get('zoom', 0);
+$zoom = $GLOBALS['user']->user_vars['my_schedule_settings']['zoom'];
 
 if ($inst_mode) {
     $text  = _("Der Stundenplan zeigt die regelmäßigen Veranstaltungen dieser '

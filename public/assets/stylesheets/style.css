@@ -338,10 +338,12 @@ table td.printcontent {
 }
 table td.printhead2 {
   background-image: url("../images/content_object_arr-right.png");
+  border-top: 1px solid #899ab9;
   padding: 0;
 }
 table td.printhead3 {
   background-image: url("../images/content_object_arr-down.png");
+  border-top: 1px solid #899ab9;
   padding: 0;
 }
 /* classes for sortable table headers --------------------------------------- */
@@ -2210,8 +2212,7 @@ p.info {
   box-sizing: border-box;
   width: 98%;
 }
-
 /* --- info text neu lecture --------------------------------------------- */
-div.info{
+div.info {
   padding-left: 1%;
 }

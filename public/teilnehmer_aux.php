@@ -2,7 +2,7 @@
 # Lifter001: TEST
 # Lifter002: TODO
 # Lifter007: TODO
-# Lifter003: TODO
+# Lifter003: TEST
 # Lifter010: TODO
 /*
 teilnehmer_aux.php - Anzeige der Teilnehmer eines Seminares
@@ -69,7 +69,7 @@ function filterDatafields($entries) {
 
 function get_aux_data() {
     global $sem_id, $user, $sem_type, $rule;
-    $db = new DB_Seminar();
+
     $entries[0] = filterDatafields(DataFieldStructure::getDataFieldStructures('usersemdata'));
     $entries[1] = filterDatafields(DataFieldStructure::getDataFieldStructures('user'));
 
@@ -88,43 +88,51 @@ function get_aux_data() {
     }
 
     $data = array();
-    $db->query($query = "SELECT *, seminare.VeranstaltungsNummer as vanr, seminare.Name as vatitle, auth_user_md5.Vorname, auth_user_md5.Nachname FROM seminar_user LEFT JOIN auth_user_md5 USING(user_id) LEFT JOIN seminare ON (seminar_user.Seminar_id = seminare.Seminar_id) WHERE seminar_user.Seminar_id = '$sem_id' AND (seminar_user.status = 'autor' OR seminar_user.status = 'user')");
-    while ($db->next_record()) {
-        $data[$db->f('user_id')]['entry'] = $entry_data;
-        $data[$db->f('user_id')]['fullname'] = $db->f('Vorname').' '.$db->f('Nachname');
-        $data[$db->f('user_id')]['username'] = $db->f('username');
 
-        $entries[0] = filterDatafields(DataFieldEntry::getDataFieldEntries(array($db->f('user_id'), $sem_id), 'usersemdata'));
-        $entries[1] = filterDatafields(DataFieldEntry::getDataFieldEntries($db->f('user_id'), 'user'));
+    $query    = "SELECT GROUP_CONCAT({$GLOBALS['_fullname_sql']['full']} SEPARATOR ', ')
+                 FROM seminar_user
+                 LEFT JOIN auth_user_md5 USING (user_id)
+                 LEFT JOIN user_info USING (user_id)
+                 WHERE seminar_user.status = 'dozent' AND seminar_user.Seminar_id = ?";
+    $teachers = DBManager::get()->prepare($query);
+
+    $query = "SELECT *, seminare.VeranstaltungsNummer AS vanr, seminare.Name AS vatitle
+              FROM seminar_user
+              LEFT JOIN auth_user_md5 USING (user_id)
+              LEFT JOIN seminare USING (Seminar_id)
+              WHERE Seminar_id = ? AND seminar_user.status IN ('autor', 'user')";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($sem_id));
+    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+        $data[$row['user_id']]['entry']    = $entry_data;
+        $data[$row['user_id']]['fullname'] = $row['Vorname'].' '.$row['Nachname'];
+        $data[$row['user_id']]['username'] = $row['username'];
+
+        $entries[0] = filterDatafields(DataFieldEntry::getDataFieldEntries(array($row['user_id'], $sem_id), 'usersemdata'));
+        $entries[1] = filterDatafields(DataFieldEntry::getDataFieldEntries($row['user_id'], 'user'));
 
         for ($i = 0; $i <= 1; $i++) {
             foreach ($entries[$i] as $id => $entry) {
-                $data[$db->f('user_id')]['entry'][$id] = $entry->getDisplayValue(false);
+                $data[$row['user_id']]['entry'][$id] = $entry->getDisplayValue(false);
             }
         }
 
         foreach ($semFields as $key => $name) {
             if ($key == 'vadozent') {
                 if (!isset($vadozent)) {
-                    $db2 = new DB_Seminar();
-                    $db2->query($query = "SELECT ".$GLOBALS['_fullname_sql']['full']." as fullname FROM seminar_user LEFT JOIN auth_user_md5 USING (user_id) LEFT JOIN user_info USING (user_id) WHERE seminar_user.status = 'dozent' AND seminar_user.Seminar_id = '$sem_id'");
-                    $va_dozent = '';
-                    $first = true;
-                    while ($db2->next_record()) {
-                        if (!$first) $vadozent .= ', ';
-                        $vadozent .= $db2->f('fullname');
-                        $first = false;
-                    }
+                    $teachers->execute(array($sem_id));
+                    $vadozent = $teachers->fetchColumn();
+                    $teachers->closeCursor();
                 }
 
-                $data[$db->f('user_id')]['entry'][$key] = $vadozent;
+                $data[$row['user_id']]['entry'][$key] = $vadozent;
             } else if ($key == 'vasemester') {
                 if (!isset($vasemester)) {
                     $vasemester = get_semester($sem_id);
                 }
-                $data[$db->f('user_id')]['entry'][$key] = $vasemester;
+                $data[$row['user_id']]['entry'][$key] = $vasemester;
             } else {
-                $data[$db->f('user_id')]['entry'][$key] = $db->f($key);
+                $data[$row['user_id']]['entry'][$key] = $row[$key];
             }
         }
     }

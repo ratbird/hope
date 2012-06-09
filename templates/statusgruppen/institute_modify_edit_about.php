@@ -110,13 +110,13 @@ $style = "style=\"background-image: url('". Assets::image_path('forumstrich') ."
                         <? else : ?>
                         <input type="checkbox" name="default_inst" value="<?=$inst_id?>" <?=($data['externdefault'] ? ' checked="checked"' : '')?>>
                         <? endif; ?>
-                        &nbsp;<img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/grey/info-circle.png" <?=tooltip($info, TRUE, TRUE)?>>
+                        <?= tooltipicon($info) ?>
                     </td>
                     <? $info = _("Die Angaben zu dieser Einrichtung werden nicht auf Ihrer Profilseite und in Adressbüchern ausgegeben."); ?>
                     <td class="<?=$cssSw->getClass()?>">
                         &nbsp;<?= _("Einrichtung nicht auf der Profilseite:"); ?>
                         <input type="checkbox" name="visible[<?=$inst_id?>]" value="1" <?=($data['visible'] == '1' ? '' : ' checked="checked"')?>>&nbsp;
-                        <img src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/grey/info-circle.png" <?=tooltip($info, TRUE, TRUE)?>>
+                        <?= tooltipicon($info) ?>
                     </td>
                 </tr>
 

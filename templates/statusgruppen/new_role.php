@@ -60,7 +60,7 @@
                 <td class="<?= $cssSw->getClass() ?>" width="30%" nowrap>
                     <font size="-1">
                         <?= _("Gruppengröße") ?>:
-                        &nbsp;<img style="cursor:pointer; vertical-align:bottom;" src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/grey/info-circle.png" <?=tooltip(_("Mit dem Feld 'Gruppengröße' haben Sie die Möglichkeit, die Sollstärke für eine Gruppe festzulegen. Dieser Wert wird nur für die Anzeige benutzt - es können auch mehr Personen eingetragen werden."), TRUE, TRUE)?>>
+                        <?=tooltipicon(_("Mit dem Feld 'Gruppengröße' haben Sie die Möglichkeit, die Sollstärke für eine Gruppe festzulegen. Dieser Wert wird nur für die Anzeige benutzt - es können auch mehr Personen eingetragen werden.")) ?>
                     </font>
                 </td>
                 <td class="<?= $cssSw->getClass() ?>" width="70%" nowrap>

@@ -240,7 +240,7 @@ function scm_edit_content($range_id, $scm_id) {
 
     scm_change_header($content_table, $titel, $scm->getValue("user_id"), $scm->getValue("chdate"));
 
-    $content = "<textarea name=\"content\" style=\"width: 90%\" cols=$max_col rows=10 wrap=virtual >".htmlReady($scm->getValue("content"))."</textarea>\n";
+    $content = "<textarea class=\"add_toolbar\" name=\"content\" style=\"width: 90%\" cols=$max_col rows=10 wrap=virtual >".htmlReady($scm->getValue("content"))."</textarea>\n";
     $content.= "<input type=\"HIDDEN\" name=\"show_scm\" value=\"$scm_id\">";
     $content.= "<input type=\"HIDDEN\" name=\"i_view\" value=\"change\">";
 

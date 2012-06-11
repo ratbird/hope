@@ -46,7 +46,7 @@ use Studip\Button, Studip\LinkButton;
                         <B><?=("Thema:")?></B><br>
                         <INPUT type="text" name="theme_title<?=$openAll ? '§'.$tpl['sd_id']: ''?>" maxlength="255" size="50" value="<?= htmlReady($tpl['theme_title']) ?>" style="width: 98%"><br>
                         <B><?=_("Beschreibung:")?></B><br>
-                        <TEXTAREA name="theme_description<?=$openAll ? '§'.$tpl['sd_id']: ''?>" rows="5" cols="50" style="width: 98%"><?= htmlReady($tpl['theme_description']) ?></TEXTAREA><br>
+                        <textarea class="add_toolbar" name="theme_description<?=$openAll ? '§'.$tpl['sd_id']: ''?>" rows="5" cols="50" style="width: 98%"><?= htmlReady($tpl['theme_description']) ?></textarea><br>
                     </FONT>
                 </TD>
                 <TD class="steel1" valign="top" nowrap="nowrap">

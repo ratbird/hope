@@ -234,7 +234,7 @@ function printQuestionField ( $question = "" ) {
     $html = "<font size=-1><b>" . _("Frage:")   . "</b></font><br>";
 
     if( $pageMode != MODE_RESTRICTED ) {
-    $html .= "<textarea cols=50 rows=2 style=\"width:100%;\" name=\"question\" ".$js." tabindex=2>".htmlReady($question)."</textarea>";
+    $html .= "<textarea class=\"add_toolbar\" cols=50 rows=2 style=\"width:100%;\" name=\"question\" ".$js." tabindex=2>".htmlReady($question)."</textarea>";
     } else {
        $html .= "<div class=steelgraulight style=\"padding:2px;\">"
       . "<font size=-1>".formatReady($question)."</font>"

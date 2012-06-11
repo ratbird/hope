@@ -53,7 +53,7 @@ use Studip\Button, Studip\LinkButton;
             <B><?=("Titel:")?></B><BR/>
             <INPUT type="text" name="theme_title<?=$tpl['openAll'] ? '§'.$tpl['issue_id']: ''?>" maxlength="255" size="50" value="<?=$tpl['theme_title']?>" style="width: 98%"><BR/>
             <B><?=_("Beschreibung:")?></B><BR/>
-            <TEXTAREA name="theme_description<?=$tpl['openAll'] ? '§'.$tpl['issue_id']: ''?>" rows="5" cols="50"><?=$tpl['theme_description']?></TEXTAREA><BR/>
+            <textarea class="add_toolbar" style="width: 100%" name="theme_description<?=$tpl['openAll'] ? '§'.$tpl['issue_id']: ''?>" rows="5" cols="50"><?=$tpl['theme_description']?></textarea><BR/>
             <B><?=_("Verknüfpungen mit diesem Termin:")?></B>
             <BR/>
             <? if ($tpl['forumEntry']) {

@@ -60,7 +60,7 @@ if ($SessSemName[1])
     PageLayout::setTitle(getHeaderLine($SessSemName[1])." - ");
 PageLayout::setTitle(_("Verwaltung von Evaluationen"));
 
-require_once ('lib/evaluation/evaluation.config.php');
+require_once 'lib/evaluation/evaluation.config.php';
 require_once 'lib/admin_search.inc.php';
 
 if (Request::option('list') || Request::option('view')) {

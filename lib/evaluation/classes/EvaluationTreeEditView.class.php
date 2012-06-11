@@ -2386,7 +2386,7 @@ function createTitleInput($mode = ROOT_BLOCK){
     $input->addAttr ("name","title");
     $input->addString ("value=\"".$title."\"");
     $input->addAttr ("size","60");
-    $input->addAttr ("style","vertical-align:middle;");
+    $input->addAttr ("style","vertical-align:middle; width: 100%;");
 
     $td->addContent ($input);
     $tr->addContent ($td);
@@ -2402,8 +2402,8 @@ function createTitleInput($mode = ROOT_BLOCK){
 
     $td = new HTML ("td");
 
-    $textarea = "<textarea name=\"text\" cols=\"40\" rows=\"4\" "
-        . "style=\"vertical-align:top;\">";
+    $textarea = "<br><textarea class=\"add_toolbar\" name=\"text\" rows=\"4\" "
+        . "style=\"vertical-align:top; width: 100%;\">";
     $textarea .=($text)
             ? $text
             : "";

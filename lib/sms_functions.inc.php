@@ -831,10 +831,10 @@ function show_msgform() {
     $tmp .= "<div align=\"center\"><input type=\"text\" ". ($cmd == "write_chatinv" ? "disabled" : "") ." name=\"messagesubject\" value=\"".trim(htmlready($messagesubject))."\"style=\"width: 99%\"></div>";
 
     $tmp .= "<br>&nbsp;<font size=\"-1\"><b>"._("Nachricht:")."</b></font>";
-    $tmp .= "<div align=\"center\"><textarea name=\"message\" style=\"width: 99%\" cols=80 rows=10 wrap=\"virtual\">\n";
+    $tmp .= "<textarea class=\"add_toolbar\" name=\"message\" style=\"width: 99%\" cols=80 rows=10 wrap=\"virtual\">\n";
     if ($quote) { $tmp .= quotes_encode(htmlReady($tmp_sms_content), get_fullname_from_uname($quote_username)); }
     if ($message) { $tmp .= htmlReady($message); }
-    $tmp .= '</textarea><br><br><div class="button-group">';
+    $tmp .= '</textarea><br><br><div style="text-align: center"><div class="button-group">';
     // send/ break-button
     if (sizeof($sms_data["p_rec"]) > "0") {
         $tmp .= Button::createAccept(_('Abschicken'), 'cmd_insert');

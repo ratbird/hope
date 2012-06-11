@@ -51,17 +51,17 @@ if (!$id) {
 }
 
 
-if (!$viewModeFilter) {
-    $viewModeFilter = 'simple';
+if (!$_SESSION['viewModeFilter']) {
+    $_SESSION['viewModeFilter'] = 'simple';
 }
 
 if (Request::option('cmd') == 'changeViewMode') {
-    $viewModeFilter = $_REQUEST['newFilter'];
+    $_SESSION['viewModeFilter'] = $_REQUEST['newFilter'];
 }
 
 // expert view enabled ?
 if(!$GLOBALS["RESOURCES_ENABLE_EXPERT_SCHEDULE_VIEW"]){
-    $viewModeFilter = 'simple';
+    $_SESSION['viewModeFilter'] = 'simple';
 }
 
 PageLayout::setTitle(_("Verwaltung der Themen des Ablaufplans"));

@@ -655,17 +655,14 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                     break;
                 case "dispatch.php":
                     if ($this instanceof Course_StudyAreasController){
-                        printf(_("Studienbereiche") . '<br><a href="%s">%s</a>',
-                            $this->url_for('course/study_areas/show/' . $seminar_id),
-                            Button::create(_("Bearbeiten")));
+                        echo _("Studienbereiche") . '<br>',
+                            LinkButton::create(_("Bearbeiten"), $this->url_for('course/study_areas/show/' . $seminar_id));
                     } elseif ($this instanceof Course_BasicdataController){
-                        printf(_("Veranstaltung") . '<br><a href="%s">%s</a>',
-                            $this->url_for('course/basicdata/view/' . $seminar_id),
-                            Button::create(_("Bearbeiten")));
+                        echo _("Veranstaltung") . '<br>',
+                            LinkButton::create(_("Bearbeiten"), $this->url_for('course/basicdata/view/' . $seminar_id));
                     } elseif ($this instanceof Course_RoomRequestsController){
-                        printf(_("Raumanfragen") . '<br><a href="%s">%s</a>',
-                            $this->url_for('index/' . $seminar_id),
-                            Button::create(_("Bearbeiten")));
+                        echo _("Raumanfragen") . '<br>',
+                            LinkButton::create(_("Bearbeiten"), $this->url_for('index/' . $seminar_id));
                     }
                     break;
             }

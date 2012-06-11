@@ -323,6 +323,7 @@ class Seminar
             }
 
             $ret['rooms'] = $rooms;
+            $ret['ort']   = $this->location;
 
             $data[$sub_key] = $ret;
 

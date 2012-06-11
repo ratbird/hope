@@ -134,7 +134,7 @@ $quarter_year = 60 * 60 * 24 * 90;
     }
 
     if (!$studygroup_mode) { ?>
-        <b><?= _("Zeit") ?>:</b><br>
+        <b><?= _("Zeit / Veranstaltungsort") ?>:</b><br>
         <?
         $show_link = ($perm->have_studip_perm('autor', $course_id) && $modules['schedule']);
         echo $sem->getDatesTemplate('dates/seminar_html', array('link_to_dates' => $show_link, 'show_room' => true));

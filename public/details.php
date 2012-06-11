@@ -67,10 +67,6 @@ include ('lib/include/header.php');  // Output of Stud.IP head
 
 //Inits
 $cssSw=new cssClassSwitcher;
-$db=new DB_Seminar;
-$db2=new DB_Seminar;
-$db3=new DB_Seminar;
-$db4=new DB_Seminar;
 $info_msg = $abo_msg = $delete_msg = $back_msg = '';
 $send_from_search = Request::quoted('send_from_search');
 $send_from_search_page = Request::quoted('send_from_search_page');
@@ -104,8 +100,10 @@ if ( $SEM_CLASS[$SEM_TYPE[$sem->status]["class"]]["studygroup_mode"] ) {
 }
 
 //load all the data
-$db2->query("SELECT * FROM seminare WHERE Seminar_id = '$sem_id'");
-$db2->next_record();
+$query = "SELECT * FROM seminare WHERE Seminar_id = ?";
+$statement = DBManager::get()->prepare($query);
+$statement->execute(array($sem_id));
+$seminar = $statement->fetch(PDO::FETCH_ASSOC);
 
 $same_domain = true;
 $user_domains = UserDomain::getUserDomainsForUser($auth->auth['uid']);
@@ -120,30 +118,42 @@ if ($sem_id) {
     if ($perm->have_studip_perm("admin",$sem_id)) {
         $skip_verify=TRUE;
     } elseif ($perm->have_perm("user") && !$perm->have_perm("admin") && $same_domain) { //Add lecture only if logged in
-        $db->query("SELECT status FROM seminar_user WHERE user_id ='$user->id' AND Seminar_id = '$sem_id'");
-        $db->next_record();
-        if (($db2->f("admission_starttime") > time()) && (($db2->f("admission_endtime_sem") == "-1"))) {
-            $abo_msg = sprintf ("</a>"._("Tragen Sie sich hier ab %s um %s ein.")."<a>",date("d.m. Y",$db2->f("admission_starttime")),date("G:i",$db2->f("admission_starttime")));
-        } elseif (($db2->f("admission_starttime") > time()) && (($db2->f("admission_endtime_sem") != "-1"))) {
-            $abo_msg = sprintf ("</a>"._("Tragen Sie sich hier von %s bis %s ein.")."<a>",date("d.m. Y, G:i",$db2->f("admission_starttime")),date("d.m.Y, G:i",$db2->f("admission_endtime_sem")));
-        } elseif (($db2->f("admission_endtime_sem") < time()) && ($db2->f("admission_endtime_sem") != -1)) {
-            if (!$db->f("status") == "user") $info_msg = _("Eintragen nicht mehr möglich, der Anmeldezeitraum ist abgelaufen");
-        } elseif ($db2->f("admission_type") == 3) {
+        $query = "SELECT status FROM seminar_user WHERE user_id = ? AND Seminar_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($user->id, $sem_id));
+        $status = $statement->fetchColumn();
+
+        if (($seminar['admission_starttime'] > time()) && ($seminar['admission_endtime_sem'] == "-1")) {
+            $abo_msg = sprintf ("</a>"._("Tragen Sie sich hier ab %s um %s ein.")."<a>", date("d.m. Y", $seminar['admission_starttime']), date("G:i", $seminar['admission_starttime']));
+        } elseif (($seminar['admission_starttime'] > time()) && ($seminar['admission_endtime_sem'] != "-1")) {
+            $abo_msg = sprintf ("</a>"._("Tragen Sie sich hier von %s bis %s ein.")."<a>",date("d.m. Y, G:i", $seminar['admission_starttime']), date('d.m.Y, G:i', $seminar['admission_endtime_sem']));
+        } elseif (($seminar['admission_endtime_sem'] < time()) && ($seminar['admission_endtime_sem'] != -1)) {
+            if (!$status == "user") $info_msg = _("Eintragen nicht mehr möglich, der Anmeldezeitraum ist abgelaufen");
+        } elseif ($seminar['admission_type'] == 3) {
                         $info_msg = _("Eintragen nicht m&ouml;glich, diese Veranstaltung ist gesperrt.");
         } else {
-            if (!$db->num_rows() && (!$deputies_enabled || !isDeputy($user->id, $sem_id))) {
-                $db->query("SELECT status FROM admission_seminar_user WHERE user_id ='$user->id' AND seminar_id = '$sem_id'");
-                if (!$db->num_rows()) $abo_msg = _("Tragen Sie sich hier f&uuml;r die Veranstaltung ein");
-            } else {
-                if ($db->f("status") == "user") $abo_msg = _("Schreibrechte aktivieren");
+            if (!$status && (!$deputies_enabled || !isDeputy($user->id, $sem_id))) {
+                $query = "SELECT status FROM admission_seminar_user WHERE user_id = ? AND seminar_id = ?";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($user->id, $sem_id));
+                $status = $statement->fetchColumn();
+                if (!$status) {
+                    $abo_msg = _("Tragen Sie sich hier f&uuml;r die Veranstaltung ein");
+                }
+            } else if ($status == "user") {
+                $abo_msg = _("Schreibrechte aktivieren");
             }
         }
 
-        $sem_user_schedule = DBManager::get()->query("SELECT COUNT(*) FROM schedule_seminare
-            WHERE seminar_id = '$sem_id' AND user_id = '". $GLOBALS['user']->id ."'")->fetchColumn();
+        $query = "SELECT COUNT(*) FROM schedule_seminare WHERE seminar_id = ? AND user_id = ?";
+        $statement = DBManager::Get()->prepare($query);
+        $statement->execute(array($sem_id, $GLOBALS['user']->id));
+        $sem_user_schedule = $statement->fetchColumn();
 
-        $db->query("SELECT * FROM seminar_user WHERE Seminar_id = '$sem_id' AND user_id = '".$auth->auth['uid']."'");
-        $sem_user = $db->num_rows();
+        $query = "SELECT COUNT(*) FROM seminar_user WHERE Seminar_id = ? AND user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($sem_id, $auth->auth['uid']));
+        $sem_user = $statement->fetchColumn();
 
         if (!$sem_user && !$sem_user_schedule && get_config('SCHEDULE_ENABLE')) {
             $plan_msg = "<a href=\"".URLHelper::getLink("dispatch.php/calendar/schedule/addvirtual/$sem_id")."\">"._("Nur im Stundenplan vormerken")."</a>";
@@ -152,8 +162,8 @@ if ($sem_id) {
     }
 
     if ($perm->have_studip_perm("user",$sem_id) && !$perm->have_studip_perm("tutor",$sem_id)) {
-        if ($db2->f("admission_binding"))
-            $info_msg = sprintf(_("Das Austragen aus der Veranstaltung ist nicht mehr m&ouml;glich, da das Abonnement bindend ist.<br>Bitte wenden Sie sich an den Leiter (%s) der Veranstaltung!"), get_title_for_status('dozent', 1), $db2->f('status'));
+        if ($seminar['admission_binding'])
+            $info_msg = sprintf(_("Das Austragen aus der Veranstaltung ist nicht mehr m&ouml;glich, da das Abonnement bindend ist.<br>Bitte wenden Sie sich an den Leiter (%s) der Veranstaltung!"), get_title_for_status('dozent', 1), $seminar['status']);
         else
             $delete_msg = _("Tragen Sie sich hier aus der Veranstaltung aus");
     }
@@ -168,10 +178,10 @@ $quarter_year = 60 * 60 * 24 * 90;
 
 
 //In dieser Datei nehmen wir die Art direkt, nicht aus Session, da die Datei auch ausserhalb von Seminaren aufgerufen wird
-if ($SEM_TYPE[$db2->f("status")]["name"] == $SEM_TYPE_MISC_NAME) //Typ fuer Sonstiges
+if ($SEM_TYPE[$seminar['status']]["name"] == $SEM_TYPE_MISC_NAME) //Typ fuer Sonstiges
     $art = _("Veranstaltung");
 else
-    $art = $SEM_TYPE[$db2->f("status")]["name"];
+    $art = $SEM_TYPE[$seminar['status']]["name"];
 
 
     ?>
@@ -199,8 +209,8 @@ else
             <td class="<? echo $cssSw->getClass() ?>" valign="top" colspan="2" valign="top">
                 <?
                 //Titel und Untertitel der Veranstaltung
-                printf ("<b>%s</b><br> ",htmlReady($db2->f("Name")));
-                printf ("<font size=-1>%s</font>",htmlReady($db2->f("Untertitel")));
+                printf ("<b>%s</b><br> ",htmlReady($seminar['Name']));
+                printf ("<font size=-1>%s</font>",htmlReady($seminar['Untertitel']));
                 ?>
             </td>
             <td class="blank" width="270" rowspan="7" valign="top" align="right">
@@ -208,19 +218,22 @@ else
             <? // Infobox
 
             $user_id = $auth->auth["uid"];
-            $db3->query("SELECT status FROM seminar_user WHERE Seminar_id = '$sem_id' AND user_id = '$user_id'");
-            if ($db3->next_record() ){
-                $mein_status = $db3->f("status");
-            } else if ($deputies_enabled && isDeputy($user_id, $sem_id)) {
+            
+            $query = "SELECT status FROM seminar_user WHERE Seminar_id = ? AND user_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($sem_id, $user_id));
+            $mein_status = $statement->fetchColumn();
+            if (!$mein_status && $deputies_enabled && isDeputy($user_id, $sem_id)) {
                 $mein_status = 'dozent';
-            } else {
+            } else if (!$mein_status) {
                 unset ($mein_status);
             }
             //Status als Wartender ermitteln
-            $db3->query("SELECT status FROM admission_seminar_user WHERE seminar_id = '$sem_id' AND user_id = '$user_id'");
-            if ($db3->next_record() ){
-                $admission_status = $db3->f("status");
-            } else {
+            $query = "SELECT status FROM admission_seminar_user WHERE seminar_id = ? AND user_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($sem_id, $user_id));
+            $admission_status = $statement->fetchColumn();
+            if (!$admission_status) {
                 unset ($admission_status);
             }
 
@@ -255,9 +268,6 @@ else
             }
 
 
-    $db4->query("SELECT admission_prelim FROM seminare WHERE Seminar_id = '$sem_id'");
-    $db4->next_record();
-
     $infobox = array    (
         array   ("kategorie"    => _("Pers&ouml;nlicher Status:"),
             "eintrag" => array  (
@@ -269,10 +279,10 @@ else
         array   ("kategorie" => _("Berechtigungen:"),
             "eintrag" => array  (
                 array   (   "icon" => "blank.gif",
-                    "text"  => _("Lesen:") . " " . get_ampel_read($mein_status, $admission_status, $db2->f("Lesezugriff"), FALSE, $db2->f("admission_starttime"), $db2->f("admission_endtime_sem"), $db2->f("admission_prelim"))
+                    "text"  => _("Lesen:") . " " . get_ampel_read($mein_status, $admission_status, $seminar['Lesezugriff'], FALSE, $seminar['admission_starttime'], $seminar['admission_endtime_sem'], $seminar['admission_prelim'])
                 ),
                 array   (   "icon" => "blank.gif",
-                    "text"  => _("Schreiben:") . " " . get_ampel_write($mein_status, $admission_status, $db2->f("Schreibzugriff"), FALSE, $db2->f("admission_starttime"), $db2->f("admission_endtime_sem"), $db2->f("admission_prelim"))
+                    "text"  => _("Schreiben:") . " " . get_ampel_write($mein_status, $admission_status, $seminar['Schreibzugriff'], FALSE, $seminar['admission_starttime'], $seminar['admission_endtime_sem'], $seminar['admission_prelim'])
                 )
             )
         )
@@ -313,7 +323,7 @@ if ($abo_msg || $back_msg || $delete_msg || $info_msg || $plan_msg || $mein_stat
 }
 
 
-if ($db2->f("admission_binding")) {
+if ($seminar['admission_binding']) {
     $infobox[count($infobox)]["kategorie"] = _("Information:");
     $infobox[count($infobox)-1]["eintrag"][] = array (  "icon" => 'icons/16/black/info.png',
                                 "text"  => _("Das Abonnement dieser Veranstaltung ist <u>bindend</u>!")
@@ -382,13 +392,13 @@ echo $template_factory->render(
                     <font size="-1">
                     <b><?= _("Veranstaltungsort:") ?></b>
                     <br>
-                    <?= $sem->getDatesTemplate('dates/seminar_html_location', array('ort' => $db2->f('Ort'))) ?>
+                    <?= $sem->getDatesTemplate('dates/seminar_html_location', array('ort' => $seminar['Ort'])) ?>
                     </font>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" valign="top">
                 <?
-                if ($db2->f("VeranstaltungsNummer"))
-                    printf ("<font size=-1><b>" . _("Veranstaltungsnummer:") . "</b></font><br><font size=-1>%s</font>",htmlReady($db2->f("VeranstaltungsNummer")));
+                if ($seminar['VeranstaltungsNummer'])
+                    printf ("<font size=-1><b>" . _("Veranstaltungsnummer:") . "</b></font><br><font size=-1>%s</font>",htmlReady($seminar['VeranstaltungsNummer']));
                 else
                     print "&nbsp; ";
                 ?>
@@ -429,72 +439,72 @@ echo $template_factory->render(
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" colspan=2 width="51%" valign="top">
                 <?
-                printf ("<font size=-1><b>" . _("Veranstaltungstyp:") . "</b></font><br><font size=-1>" . _("%s in der Kategorie %s") . "</font>",$SEM_TYPE[$db2->f("status")]["name"], $SEM_CLASS[$SEM_TYPE[$db2->f("status")]["class"]]["name"]);
+                printf ("<font size=-1><b>" . _("Veranstaltungstyp:") . "</b></font><br><font size=-1>" . _("%s in der Kategorie %s") . "</font>",$SEM_TYPE[$seminar['status']]["name"], $SEM_CLASS[$SEM_TYPE[$seminar['status']]["class"]]["name"]);
                 ?>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" colspan=2 width="48%" valign="top">
                 <?
-                if ($db2->f("art"))
-                    printf ("<font size=-1><b>" . _("Art/Form:") . "</b></font><br><font size=-1>%s</font>",htmlReady($db2->f("art")));
+                if ($seminar['art'])
+                    printf ("<font size=-1><b>" . _("Art/Form:") . "</b></font><br><font size=-1>%s</font>",htmlReady($seminar['art']));
                 else
                     print "&nbsp; ";
                 ?>
                 </td>
             </tr>
-            <? if ($db2->f("Beschreibung") !="") {
+            <? if ($seminar['Beschreibung'] !="") {
             ?>
             <tr>
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="1%">&nbsp;</td>
                 <td class="<? echo $cssSw->getClass() ?>" colspan=4 width="99%" valign="top">
                 <?
-                printf ("<font size=-1><b>" . _("Kommentar/Beschreibung:") . "</b></font><br><font size=-1>%s</font>",formatLinks($db2->f("Beschreibung")));
+                printf ("<font size=-1><b>" . _("Kommentar/Beschreibung:") . "</b></font><br><font size=-1>%s</font>",formatLinks($seminar['Beschreibung']));
                 ?>
                 </td>
             </tr>
             <? }
-            if ($db2->f("teilnehmer") !="") {
+            if ($seminar['teilnehmer'] !="") {
             ?>
             <tr>
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="1%">&nbsp;</td>
                 <td class="<? echo $cssSw->getClass() ?>" colspan=4 width="99%" valign="top">
                 <?
-                printf ("<font size=-1><b>" . _("Teilnehmende:") . "</b></font><br><font size=-1>%s</font>",htmlReady($db2->f("teilnehmer"), TRUE, TRUE));
+                printf ("<font size=-1><b>" . _("Teilnehmende:") . "</b></font><br><font size=-1>%s</font>",htmlReady($seminar['teilnehmer'], TRUE, TRUE));
                 ?>
                 </td>
             </tr>
             <? }
-            if ($db2->f("vorrausetzungen") !="") {
+            if ($seminar['vorrausetzungen'] !="") {
             ?>
             <tr>
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="1%">&nbsp;
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" colspan=4 width="99%" valign="top">
                 <?
-                printf ("<font size=-1><b>" . _("Voraussetzungen:") . "</b></font><br><font size=-1>%s</font>",htmlReady($db2->f("vorrausetzungen"), TRUE, TRUE));
+                printf ("<font size=-1><b>" . _("Voraussetzungen:") . "</b></font><br><font size=-1>%s</font>",htmlReady($seminar['vorrausetzungen'], TRUE, TRUE));
                 ?>
                 </td>
             </tr>
             <? }
-            if ($db2->f("lernorga") !="") {
+            if ($seminar['lernorga'] !="") {
             ?>
             <tr>
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="1%">&nbsp;
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" colspan=4 width="99%" valign="top">
                 <?
-                printf ("<font size=-1><b>" . _("Lernorganisation:") . "</b></font><br><font size=-1>%s</font>",htmlReady($db2->f("lernorga"), TRUE, TRUE));
+                printf ("<font size=-1><b>" . _("Lernorganisation:") . "</b></font><br><font size=-1>%s</font>",htmlReady($seminar['lernorga'], TRUE, TRUE));
                 ?>
                 </td>
             </tr>
             <? }
-            if ($db2->f("leistungsnachweis") !="") {
+            if ($seminar['leistungsnachweis'] !="") {
             ?>
             <tr>
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="1%">&nbsp;
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" colspan=4 width="99%" valign="top">
                 <?
-                printf ("<font size=-1><b>" . _("Leistungsnachweis:") . "</b></font><br><font size=-1>%s</font>",htmlReady($db2->f("leistungsnachweis"), TRUE, TRUE));
+                printf ("<font size=-1><b>" . _("Leistungsnachweis:") . "</b></font><br><font size=-1>%s</font>",htmlReady($seminar['leistungsnachweis'], TRUE, TRUE));
                 ?>
             </td>
             </tr>
@@ -519,26 +529,26 @@ echo $template_factory->render(
                      }
                 }
             }
-            if ($db2->f("Sonstiges") !="") {
+            if ($seminar['Sonstiges'] !="") {
             ?>
             <tr>
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="1%">&nbsp;
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" colspan=4 width="99%" valign="top">
                 <?
-                printf ("<font size=-1><b>" . _("Sonstiges:") . "</b></font><br><font size=-1>%s</font>",formatLinks($db2->f("Sonstiges")));
+                printf ("<font size=-1><b>" . _("Sonstiges:") . "</b></font><br><font size=-1>%s</font>",formatLinks($seminar['Sonstiges']));
                 ?>
                 </td>
             </tr>
             <? }
-            if ($db2->f("ects")) {
+            if ($seminar['ects']) {
             ?>
             <tr>
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="1%">&nbsp;
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" colspan=4 width="99%" valign="top">
                 <?
-                printf ("<font size=-1><b>" . _("ECTS-Punkte:") . "</b></font><br><font size=-1>%s</font>",htmlReady($db2->f("ects"), TRUE, TRUE));
+                printf ("<font size=-1><b>" . _("ECTS-Punkte:") . "</b></font><br><font size=-1>%s</font>",htmlReady($seminar['ects'], TRUE, TRUE));
                 ?>
                 </td>
             </tr>
@@ -571,7 +581,7 @@ echo $template_factory->render(
             if ($studienmodulmanagement = PluginEngine::getPlugin('StudienmodulManagement')){
                 $studienmodule = array_filter(StudipStudyArea::getStudyAreasForCourse($sem_id), create_function('$a', 'return $a->isModule();'));
                 if (count($studienmodule)){
-                    $semester_id = SemesterData::GetSemesterIdByDate($db2->f("start_time"));
+                    $semester_id = SemesterData::GetSemesterIdByDate($seminar['start_time']);
                     foreach($studienmodule as $module){
                         $nav = $studienmodulmanagement->getModuleInfoNavigation($module->getId(), $semester_id);
                         $title = $studienmodulmanagement->getModuleTitle($module->getId(), $semester_id);
@@ -599,7 +609,7 @@ echo $template_factory->render(
                 }
             }
             // Anzeige der Bereiche
-            if ($SEM_CLASS[$SEM_TYPE[$db2->f("status")]["class"]]["bereiche"]) {
+            if ($SEM_CLASS[$SEM_TYPE[$seminar['status']]["class"]]["bereiche"]) {
                 $sem_path = (array)get_sem_tree_path($sem_id);
                 if(is_array($studienmodule)){
                     $sem_path = array_diff_key($sem_path, $studienmodule);
@@ -640,11 +650,13 @@ echo $template_factory->render(
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" colspan=2 width="51%" valign="top">
                 <?
-                $db3->query("SELECT Name, url, Institut_id FROM Institute WHERE Institut_id = '".$db2->f("Institut_id")."' ");
-                $db3->next_record();
-                if ($db3->num_rows()) {
-                printf("<font size=-1><b>" . _("Heimat-Einrichtung:") . "</b></font><br><font size=-1><a href=\"%s\">%s</a></font>", URLHelper::getLink("institut_main.php?auswahl=".$db3->f("Institut_id")), htmlReady($db3->f("Name")));
-                }
+                    $query = "SELECT Name, url FROM Institute WHERE Institut_id = ?";
+                    $statement = DBManager::get()->prepare($query);
+                    $statement->execute(array($seminar['Institut_id']));
+                    $temp = $statement->fetch(PDO::FETCH_ASSOC);
+                    if (!empty($temp)) {
+                        printf("<font size=-1><b>" . _("Heimat-Einrichtung:") . "</b></font><br><font size=-1><a href=\"%s\">%s</a></font>", URLHelper::getLink("institut_main.php?auswahl=".$seminar['Institut_id']), htmlReady($temp['Name']));
+                    }
                 ?>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" colspan=2 width="48%" valign="top">
@@ -654,7 +666,7 @@ echo $template_factory->render(
                 $stmt = DBManager::get()->prepare('SELECT Name, url, Institute.Institut_id FROM Institute '
                     . 'LEFT JOIN seminar_inst USING (institut_id) '
                     . 'WHERE seminar_id = ? AND Institute.institut_id != ?');
-                $stmt->execute(array($sem_id, $db2->f("Institut_id")));
+                $stmt->execute(array($sem_id, $seminar['Institut_id']));
                 if ($entries = $stmt->fetchAll(PDO::FETCH_ASSOC)) {
                     $data = array();
                     foreach ($entries as $entry) {
@@ -676,7 +688,7 @@ echo $template_factory->render(
                 </td>
     </tr>
             <?
-            if ($db2->f("admission_type") | ($db2->f("admission_prelim") == 1) | ($db2->f("admission_starttime") > time()) | ($db2->f("admission_endtime_sem") != -1)) {
+            if ($seminar['admission_type'] || ($seminar['admission_prelim'] == 1) || ($seminar['admission_starttime'] > time()) || ($seminar['admission_endtime_sem'] != -1)) {
             ?>
             <tr>
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="1%">&nbsp;
@@ -685,14 +697,19 @@ echo $template_factory->render(
                 <font size=-1><b><?=_("Anmeldeverfahren:")?></b></font><br>
                 <?
     }
-    if ($db2->f("admission_prelim") == 1 && $db2->f("admission_type") != 3) {
+    if ($seminar['admission_prelim'] == 1 && $seminar['admission_type'] != 3) {
         echo "<font size=-1>";
         print(_("Die Auswahl der Teilnehmenden wird nach der Eintragung manuell vorgenommen."));
         echo "<br>";
-        $db3->query("SELECT * FROM admission_seminar_user WHERE user_id='$user->id' AND seminar_id='$sem_id'");
-        if ($db3->next_record()) {
+        
+        $query = "SELECT 1 FROM admission_seminar_user WHERE user_id = ? AND seminar_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($user->id, $sem_id));
+        $present = $statement->fetchColumn();
+        
+        if ($present) {
             echo "<table width=\"100%\">";
-            printf ("<tr><td width=\"%s\">&nbsp;</td><td><font size=-1>%s</font><br></td></tr></table>", "2%", formatReady($db2->f("admission_prelim_txt")));
+            printf ("<tr><td width=\"%s\">&nbsp;</td><td><font size=-1>%s</font><br></td></tr></table>", "2%", formatReady($seminar['admission_prelim_txt']));
         } else {
             if (!$perm->have_perm("admin")) {
                 print("<p>"._("Wenn Sie an der Veranstaltung teilnehmen wollen, klicken Sie auf \"Tragen Sie sich hier ein\". Sie erhalten dann nähere Hinweise und können sich immer noch gegen eine Teilnahme entscheiden.")."</p>");
@@ -702,60 +719,60 @@ echo $template_factory->render(
         }
         echo "</font>";
     }
-    if ($db2->f("admission_starttime") > time()) {
+    if ($seminar['admission_starttime'] > time()) {
         echo "<font size=-1>";
-        printf ("<br>"._("Das Teilnahmeverfahren für diese Veranstaltung startet am %s um %s."),date("d.m.Y",$db2->f("admission_starttime")), date("G:i",$db2->f("admission_starttime")));
+        printf ("<br>"._("Das Teilnahmeverfahren für diese Veranstaltung startet am %s um %s."),date("d.m.Y",$seminar['admission_starttime']), date("G:i",$seminar['admission_starttime']));
         echo "</font>";
     }
-    if (($db2->f("admission_endtime_sem") > time()) && ($db2->f("admission_endtime_sem") != -1)) {
+    if (($seminar['admission_endtime_sem'] > time()) && ($seminar['admission_endtime_sem'] != -1)) {
         echo "<font size=-1>";
-        printf (" "._("Das Teilnahmeverfahren für diese Veranstaltung endet am %s um %s."),date("d.m.Y",$db2->f("admission_endtime_sem")), date("G:i",$db2->f("admission_endtime_sem")));
+        printf (" "._("Das Teilnahmeverfahren für diese Veranstaltung endet am %s um %s."),date("d.m.Y",$seminar['admission_endtime_sem']), date("G:i",$seminar['admission_endtime_sem']));
         echo "<br>";
         echo "</font>";
     }
-    if (($db2->f("admission_endtime_sem") <= time()) && ($db2->f("admission_endtime_sem") != -1)) {
+    if (($seminar['admission_endtime_sem'] <= time()) && ($seminar['admission_endtime_sem'] != -1)) {
         echo "<font size=-1>";
-        printf (_("Das Teilnahmeverfahren für diese Veranstaltung wurde am %s um %s beendet."),date("d.m.Y",$db2->f("admission_endtime_sem")), date("G:i",$db2->f("admission_endtime_sem")));
+        printf (_("Das Teilnahmeverfahren für diese Veranstaltung wurde am %s um %s beendet."),date("d.m.Y",$seminar['admission_endtime_sem']), date("G:i",$seminar['admission_endtime_sem']));
         echo "<br>";
         echo "</font>";
     }
-    if ($db2->f("admission_type") == 3) {
+    if ($seminar['admission_type'] == 3) {
                 echo '<font size="-1" color="red">'. _("Diese Veranstaltung ist gesperrt, Sie k&ouml;nnen sich nicht selbst eintragen!");
                 echo "<td class=\"".$cssSw->getClass()."\" colspan=2 width=\"48%\" valign=\"top\"><td>";
-        } elseif ($db2->f("admission_type")) {
-        if ($db2->f("admission_selection_take_place") == 1) {
-            if ($db2->f("admission_type") == 1) {
-                printf ("<font size=-1>" . _("Die Auswahl der Teilnehmenden wurde nach dem Losverfahren am %s Uhr festgelegt.") . "</font>", date("d.m.Y, G:i", $db2->f("admission_endtime")));
-                if (!$db2->f('admission_disable_waitlist') && ($db2->f("admission_endtime_sem") > time()) || ($db2->f("admission_endtime_sem") == -1)) {
+        } elseif ($seminar['admission_type']) {
+        if ($seminar['admission_selection_take_place'] == 1) {
+            if ($seminar['admission_type'] == 1) {
+                printf ("<font size=-1>" . _("Die Auswahl der Teilnehmenden wurde nach dem Losverfahren am %s Uhr festgelegt.") . "</font>", date("d.m.Y, G:i", $seminar['admission_endtime']));
+                if (!$seminar['admission_disable_waitlist'] && ($seminar['admission_endtime_sem'] > time()) || ($seminar['admission_endtime_sem'] == -1)) {
                     echo "<font size=-1>" . _("Weitere Interessierte k&ouml;nnen per Warteliste einen Platz bekommen.") . "</font>";
                 }
                 echo "<br>";
             } else {
-                if ($db2->f("admission_prelim") == 1) {
+                if ($seminar['admission_prelim'] == 1) {
                     printf ("<font size=-1>" . _("Die vorläufige Auswahl der Teilnehmenden erfolgte in der Reihenfolge der Anmeldung.")."</font>");
                 } else {
                     printf ("<font size=-1>" . _("Die Auswahl der Teilnehmenden erfolgte in der Reihenfolge der Anmeldung.")."</font>");
                 }
-                if($db2->f("admission_enable_quota")) printf("<font size=-1>" .  _("Die Kontingentierung wurde am %s aufgehoben.") . "</font>", date("d.m.Y, G:i", $db2->f("admission_endtime")));
-                if (!$db2->f('admission_disable_waitlist') && ($db2->f("admission_endtime_sem") > time() || $db2->f("admission_endtime_sem") == -1)) {
+                if($seminar['admission_enable_quota']) printf("<font size=-1>" .  _("Die Kontingentierung wurde am %s aufgehoben.") . "</font>", date("d.m.Y, G:i", $seminar['admission_endtime']));
+                if (!$seminar['admission_disable_waitlist'] && ($seminar['admission_endtime_sem'] > time() || $seminar['admission_endtime_sem'] == -1)) {
                     echo "<font size=-1>" . _("Weitere Pl&auml;tze k&ouml;nnen noch &uuml;ber Wartelisten vergeben werden.") . "</font>";
                 }
                 echo "<br>";
             }
         } else {
-            if ($db2->f("admission_type") == 1)
-                printf ("<font size=-1>" . _("Die Auswahl der Teilnehmenden erfolgt nach dem Losverfahren am %s Uhr.") . "</font><br>", date("d.m.Y, G:i", $db2->f("admission_endtime")));
+            if ($seminar['admission_type'] == 1)
+                printf ("<font size=-1>" . _("Die Auswahl der Teilnehmenden erfolgt nach dem Losverfahren am %s Uhr.") . "</font><br>", date("d.m.Y, G:i", $seminar['admission_endtime']));
             else {
-                if ($db2->f("admission_prelim") == 1) {
+                if ($seminar['admission_prelim'] == 1) {
                     printf ("<font size=-1>" . _("Die vorläufige Auswahl der Teilnehmenden erfolgt in der Reihenfolge der Anmeldung."));
                 } else {
                     printf ("<font size=-1>" . _("Die Auswahl der Teilnehmenden erfolgt in der Reihenfolge der Anmeldung."));
                 }
-                if ($db2->f("admission_enable_quota")) {
-                    if ($db2->f("admission_endtime") < time()) {
-                        printf ( _("Die Kontingentierung wurde am %s aufgehoben.") . "<br>", date("d.m.Y, G:i", $db2->f("admission_endtime")));
+                if ($seminar['admission_enable_quota']) {
+                    if ($seminar['admission_endtime'] < time()) {
+                        printf ( _("Die Kontingentierung wurde am %s aufgehoben.") . "<br>", date("d.m.Y, G:i", $seminar['admission_endtime']));
                     } else {
-                        printf (_("Die Kontingentierung wird am %s aufgehoben.") . "<br>", date("d.m.Y, G:i", $db2->f("admission_endtime")));
+                        printf (_("Die Kontingentierung wird am %s aufgehoben.") . "<br>", date("d.m.Y, G:i", $seminar['admission_endtime']));
                     }
                 }
             }
@@ -812,7 +829,7 @@ echo $template_factory->render(
             </td>
         </tr>
         <?
-        } elseif (($db2->f("admission_starttime") > time()) || ($db2->f("admission_prelim") == 1) || ($db2->f("admission_endtime_sem") != -1)) {
+        } elseif (($seminar['admission_starttime'] > time()) || ($seminar['admission_prelim'] == 1) || ($seminar['admission_endtime_sem'] != -1)) {
             echo "<td class=\"".$cssSw->getClass()."\" colspan=2 width=\"48%\" valign=\"top\"><td>";
         }
         ?>
@@ -832,34 +849,44 @@ echo $template_factory->render(
             <td class="<? echo $cssSw->getClass() ?>" width="24%" valign="top">
             <?
                 //Statistikfunktionen
-                $db3->query("SELECT COUNT(Seminar_id) AS anzahl, COUNT(IF(status='dozent',Seminar_id,NULL)) AS anz_dozent
-                        , COUNT(IF(status='tutor',Seminar_id,NULL)) AS anz_tutor, COUNT(IF(status='autor',Seminar_id,NULL)) AS anz_autor
-                        , COUNT(IF(status='user',Seminar_id,NULL)) AS anz_user FROM seminar_user
-                        WHERE Seminar_id = '$sem_id' GROUP BY Seminar_id");
-                $db3->next_record();
-                $db4->query("SELECT count(*) as anzahl FROM admission_seminar_user WHERE seminar_id = '$sem_id' AND status = 'accepted'");
-                $db4->next_record();
+                $query = "SELECT COUNT(*) AS anzahl, SUM(status = 'dozent') AS anz_dozent,
+                                 SUM(status = 'tutor') AS anz_tutor, SUM(status = 'autor') AS anz_autor,
+                                 SUM(status = 'user') AS anz_user
+                          FROM seminar_user
+                          WHERE Seminar_id = ?
+                          GROUP BY Seminar_id";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($sem_id));
+                $seminar_counts = $statement->fetch(PDO::FETCH_ASSOC);
+
+                $query = "SELECT COUNT(*) FROM admission_seminar_user WHERE seminar_id = ? AND status = 'accepted'";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($sem_id));
+                $admission_count = $statement->fetchColumn();
+
                 $count = 0;
-                if ($db3->f("anzahl")) $count += $db3->f("anzahl");
-                if ($db4->f("anzahl")) $count += $db4->f("anzahl");
+                if ($seminar_counts['anzahl']) $count += $seminar_counts['anzahl'];
+                if ($admission_count) $count += $admission_count;
                 printf("<font size=-1><b>" . _("Anzahl der Teilnehmenden:") . "&nbsp;</b></font><font size=-1>%s </font>", ($count!=0) ? $count : _("keine"));
-                printf("<br><font size=-1><b>%s:&nbsp;</b></font><font size=-1>%s </font>", get_title_for_status('dozent', $db3->f("anz_dozent"), $db2->f('status')), $db3->f("anz_dozent") ? $db3->f("anz_dozent") : _("keine"));
-                printf("<br><font size=-1><b>%s:&nbsp;</b></font><font size=-1>%s </font>", get_title_for_status('tutor', $db3->f("anz_tutor"), $db2->f('status')), $db3->f("anz_tutor") ? $db3->f("anz_tutor") : _("keine"));
-                printf("<br><font size=-1><b>" . _("Sonstige") . ":&nbsp;</b></font><font size=-1>%s </font>", (($db3->f("anz_autor")+ $db3->f("anz_user") + $db4->f("anzahl")) ? $db3->f("anz_autor")+$db3->f("anz_user") +$db4->f("anzahl") : _("keine")));
+                printf("<br><font size=-1><b>%s:&nbsp;</b></font><font size=-1>%s </font>", get_title_for_status('dozent', $seminar_counts['anz_dozent'], $seminar['status']), $seminar_counts['anz_dozent'] ?: _('keine'));
+                printf("<br><font size=-1><b>%s:&nbsp;</b></font><font size=-1>%s </font>", get_title_for_status('tutor', $seminar_counts['anz_tutor'], $seminar['status']), $seminar_counts['anz_tutor'] ?: _('keine'));
+                printf("<br><font size=-1><b>" . _("Sonstige") . ":&nbsp;</b></font><font size=-1>%s </font>", (($seminar_counts['anz_autor'] + $seminar_counts['anz_user'] + $admission_count) ?: _('keine')));
             ?>
             </td>
             <td class="<? echo $cssSw->getClass() ?>" width="25%" valign="top">
             <?
-            if ($db2->f("admission_turnout")){
-                    if($db2->f("admission_type")) {
-                        printf ("<font size=-1><b>" . _("max. Teilnehmerzahl:") . "&nbsp;</b></font><font size=-1>%s </font>", $db2->f("admission_turnout"));
+            if ($seminar['admission_turnout']){
+                    if($seminar['admission_type']) {
+                        printf ("<font size=-1><b>" . _("max. Teilnehmerzahl:") . "&nbsp;</b></font><font size=-1>%s </font>", $seminar['admission_turnout']);
                     }
                     if (isset($all_cont_user) && $all_cont_user !== false){
-                        printf ("<br><font size=-1><b>" . _("Freie Kontingentpl&auml;tze:") . "&nbsp;</b></font><font size=-1>%s </font>",$db2->f("admission_turnout") - $all_cont_user );
-                        if (!$db2->f('admission_disable_waitlist') && ($db2->f("admission_turnout") - $all_cont_user) == 0){
-                            $db3->query("SELECT COUNT(*) AS wartende FROM admission_seminar_user WHERE seminar_id='$sem_id' AND status !='accepted'");
-                            $db3->next_record();
-                            printf ("<br><font size=-1><b>" . _("Wartelisteneintr&auml;ge:") . "&nbsp;</b></font><font size=-1>%s </font>",$db3->f("wartende"));
+                        printf ("<br><font size=-1><b>" . _("Freie Kontingentpl&auml;tze:") . "&nbsp;</b></font><font size=-1>%s </font>",$seminar['admission_turnout'] - $all_cont_user );
+                        if (!$seminar['admission_disable_waitlist'] && ($seminar['admission_turnout'] - $all_cont_user) == 0){
+                            $query = "SELECT COUNT(*) FROM admission_seminar_user WHERE seminar_id = ? AND status != 'accepted'";
+                            $statement = DBManager::get()->prepare($query);
+                            $statement->execute(array($sem_id));
+                            $count = $statement->fetchColumn();
+                            printf ("<br><font size=-1><b>" . _("Wartelisteneintr&auml;ge:") . "&nbsp;</b></font><font size=-1>%s </font>",$count);
                         }
                     }
             }
@@ -867,16 +894,20 @@ echo $template_factory->render(
             </td>
             <td class="<? echo $cssSw->getClass() ?>" width="25%" valign="top">
             <?
-                $db3->query("SELECT count(*) as anzahl FROM px_topics WHERE Seminar_id = '$sem_id'");
-                $db3->next_record();
-                printf ("<font size=-1><b>" . _("Forenbeiträge:") . "&nbsp;</b></font><font size=-1>%s </font>", ($db3->f("anzahl")) ? $db3->f("anzahl") : _("keine"));
+                $query = "SELECT COUNT(*) FROM px_topics WHERE Seminar_id = ?";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($sem_id));
+                $count = $statement->fetchColumn();
+                printf ("<font size=-1><b>" . _("Forenbeiträge:") . "&nbsp;</b></font><font size=-1>%s </font>", $count ?: _('keine'));
             ?>
             </td>
             <td class="<? echo $cssSw->getClass() ?>" width="25%" valign="top">
             <?
-                $db3->query("SELECT count(*) as anzahl FROM dokumente WHERE Seminar_id = '$sem_id'");
-                $db3->next_record();
-                printf ("<font size=-1><b>" . _("Dokumente:") . "&nbsp;</b></font><font size=-1>%s </font>", ($db3->f("anzahl")) ? $db3->f("anzahl") : _("keine"));
+                $query = "SELECT COUNT(*) FROM dokumente WHERE Seminar_id = ?";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($sem_id));
+                $count = $statement->fetchColumn();
+                printf ("<font size=-1><b>" . _("Dokumente:") . "&nbsp;</b></font><font size=-1>%s </font>", $count ?: _('keine'));
             ?>
             </td>
             </tr>

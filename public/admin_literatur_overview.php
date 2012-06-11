@@ -10,7 +10,6 @@ require '../lib/bootstrap.php';
 unregister_globals();
 
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
-my_session_open();
 $perm->check("admin");
 require_once ('lib/classes/SemesterData.class.php');
 require_once ('lib/dbviews/literatur.view.php');
@@ -27,50 +26,6 @@ Navigation::activateItem('/tools/literature');
 
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
-
-function my_session_open($id = false){
-    if (!$id){
-        $id = md5(basename($GLOBALS['PHP_SELF']));
-    }
-    if (!$GLOBALS['sess']->is_registered($id)){
-        $GLOBALS['sess']->register($id);
-    }
-    if (isset($GLOBALS[$id])){
-        $GLOBALS[$id] = unserialize($GLOBALS[$id]);
-    }
-}
-
-function my_session_close($id = false){
-    if (!$id){
-        $id = md5(basename($GLOBALS['PHP_SELF']));
-    }
-    if (isset($GLOBALS[$id])){
-        $GLOBALS[$id] = serialize($GLOBALS[$id]);
-    }
-}
-
-function my_session_var($var, $id = false){
-    if (!$id){
-        $id = md5(basename($GLOBALS['PHP_SELF']));
-    }
-    if (is_array($var)){
-        foreach ($var as $name){
-            if (isset($_REQUEST[$name])){
-                $GLOBALS[$id][$name] = $_REQUEST[$name];
-            } else {
-                $_REQUEST[$name] = $GLOBALS[$id][$name];
-            }
-            $GLOBALS[$name] =& $GLOBALS[$id][$name];
-        }
-    } else {
-        if (isset($_REQUEST[$var])){
-            $GLOBALS[$id][$var] = $_REQUEST[$var];
-        } else {
-            $_REQUEST[$var] = $GLOBALS[$id][$var];
-        }
-        $GLOBALS[$var] =& $GLOBALS[$id][$var];
-    }
-}
 
 function get_lit_admin_ids($user_id = false)
 {
@@ -100,6 +55,31 @@ $_sem_status_sql = ((is_array($allowed_sem_status)) ? " s.status IN('" . join("'
 
 $db = new DB_Seminar();
 $db2 = new DB_Seminar();
+if(Request::option('_semester_id'))
+     $_SESSION['_semester_id'] = Request::option('_semester_id');
+
+if(Request::option('_inst_id'))
+     $_SESSION['_inst_id'] = Request::option('_inst_id');
+
+if(Request::option('_anker_id'))
+     $_SESSION['_anker_id'] = Request::option('_anker_id');
+
+if(Request::optionArray('_open'))
+     $_SESSION['_open'] = Request::optionArray('_open');
+
+if(Request::quotedArray('_lit_data'))
+     $_SESSION['_lit_data'] = Request::quotedArray('_lit_data');
+
+if(Request::option('_lit_data_id'))
+     $_SESSION['_lit_data_id'] = Request::option('_lit_data_id');
+
+
+if(Request::optionArray('_check_list'))
+     $_SESSION['_check_list'] = Request::optionArray('_check_list');
+
+if(Request::option('_check_plugin'))
+     $_SESSION['_check_plugin'] = Request::option('_check_plugin');
+
 $_semester = new SemesterData();
 $element = new StudipLitCatElement();
 
@@ -107,45 +87,47 @@ if ($_REQUEST['cmd'] == 'check' && !isset($_REQUEST['_check_list'])){
     $_REQUEST['_check_list'] = array();
 }
 
-my_session_var(array('_semester_id','_inst_id','_anker_id','_open','_lit_data','_lit_data_id','_check_list','_check_plugin'));
+//my_session_var(array('_semester_id','_inst_id','_anker_id','_open','_lit_data','_lit_data_id','_check_list','_check_plugin'));
 
 if (isset($_REQUEST['send'])){
-    $_anker_id = null;
-    $_open = null;
-    $_lit_data = null;
-    $_lit_data_id = null;
-    $_check_list = null;
+    $_SESSION['_anker_id'] = null;
+    $_SESSION['_open'] = null;
+    $_SESSION['_lit_data'] = null;
+    $_SESSION['_lit_data_id'] = null;
+    $_SESSION['_check_list'] = null;
 }
 
 if (isset($_REQUEST['open_element'])){
-    $_open[$_REQUEST['open_element']] = true;
+    $_SESSION['_open'][$_REQUEST['open_element']] = true;
     $_anker_id = $_REQUEST['open_element'];
 }
 if (isset($_REQUEST['close_element'])){
-    unset($_open[$_REQUEST['close_element']]);
-    $_anker_id = $_REQUEST['close_element'];
+    unset($_SESSION['_open'][$_REQUEST['close_element']]);
+    $_SESSION['_anker_id'] = $_REQUEST['close_element'];
 }
 if (isset($_GET['_catalog_id'])){
-    $_anker_id = $_GET['_catalog_id'];
+    $_SESSION['_anker_id'] = $_GET['_catalog_id'];
 }
-if ($_REQUEST['cmd'] == 'markall' && is_array($_lit_data)){
-    $_check_list = array_keys($_lit_data);
+
+if ($_REQUEST['cmd'] == 'markall' && is_array($_SESSION['_lit_data'])){
+    
+    $_SESSION['_check_list'] = array_keys($_SESSION['_lit_data']);
 }
-if ($_REQUEST['cmd'] == 'open_all' && is_array($_lit_data)){
-    $_open = array_keys($_lit_data);
-    $_open = array_flip($_open);
+if ($_REQUEST['cmd'] == 'open_all' && is_array($_SESSION['_lit_data'])){
+    $_SESSION['_open'] = array_keys($_SESSION['_lit_data']);
+    $_SESSION['_open'] = array_flip($_SESSION['_open']);
 }
 if ($_REQUEST['cmd'] == 'close_all'){
-    $_anker_id = null;
-    $_open = null;
+    $_SESSION['_anker_id'] = null;
+    $_SESSION['_open'] = null;
 }
-if ($_REQUEST['cmd'] == 'check' && is_array($_check_list) && is_array($_lit_data)){
-    foreach ($_check_list as $el){
-        $check = StudipLitSearch::CheckZ3950($_lit_data[$el]['accession_number'], $_check_plugin);
-        if (is_array($_lit_data[$el]['check_accession'])){
-            $_lit_data[$el]['check_accession'] = array_merge((array)$_lit_data[$el]['check_accession'],(array)$check);
+if ($_REQUEST['cmd'] == 'check' && is_array($_SESSION['_check_list']) && is_array($_SESSION['_lit_data'])){
+    foreach ($_SESSION['_check_list'] as $el){
+        $check = StudipLitSearch::CheckZ3950($_SESSION['_lit_data'][$el]['accession_number'], $_SESSION['_check_plugin']);
+        if (is_array($_SESSION['_lit_data'][$el]['check_accession'])){
+            $_SESSION['_lit_data'][$el]['check_accession'] = array_merge((array)$_SESSION['_lit_data'][$el]['check_accession'],(array)$check);
         } else {
-            $_lit_data[$el]['check_accession'] = $check;
+            $_SESSION['_lit_data'][$el]['check_accession'] = $check;
         }
     }
 }
@@ -170,6 +152,7 @@ $_lit_admin_ids = get_lit_admin_ids();
 $_is_lit_admin = (is_array($_lit_admin_ids) && count($_lit_admin_ids));
 
 $_search_plugins = array_keys(StudipLitSearch::GetAvailablePlugins());
+
 if (in_array('Studip', $_search_plugins)){
     array_splice($_search_plugins,  array_search('Studip', $_search_plugins), 1);
 }
@@ -190,7 +173,7 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
     ?>
     <tr>
         <td class="blank" colspan=2>&nbsp;
-            <form name="choose_institute" action="<?=$PHP_SELF?>?send=1" method="POST">
+            <form name="choose_institute" action="<?=URLHelper::getLink('?send=1')?>" method="POST">
             <?= CSRFProtection::tokenTag() ?>
             <table cellpadding="0" cellspacing="0" border="0" width="99%" align="center">
                 <tr>
@@ -272,7 +255,7 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
                 </td>
             </tr>
         </form>
-        <form name="check_elements" action="<?=$PHP_SELF?>?cmd=check" method="POST">
+            <form name="check_elements" action="<?=URLHelper::getLink('?cmd=check')?>" method="POST">
             <?= CSRFProtection::tokenTag() ?>
             <tr>
                 <td class="steel1" align="right">
@@ -280,14 +263,14 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
                     <?
                     foreach($_search_plugins as $sp){
                         ?>
-                        <option <?=($sp == $_check_plugin ? " selected " : "")?>><?=htmlReady($sp)?></option>
+                        <option <?=($sp == $_SESSION['_check_plugin'] ? " selected " : "")?>><?=htmlReady($sp)?></option>
                         <?
                     }
                     ?>
                 </select>
                     <?= Button::create(_('Verfügbarkeit'), array('title' => _("Alle markierten Einträge im ausgewählten Katalog suchen"), 'style' => "vertical-align:middle")) ?>
                     &nbsp;&nbsp;&nbsp;
-                    <?= LinkButton::create(_('Auswählen'), $PHP_SELF.'?cmd=markal', array('title' => _("Alle Einträge markieren"))) ?>
+                    <?= LinkButton::create(_('Auswählen'), URLHelper::getURL('?cmd=markall'), array('title' => _("Alle Einträge markieren"))) ?>
                     <br>&nbsp;
                 </td>
             </tr>
@@ -327,27 +310,27 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
                 LEFT JOIN seminar_user su ON (c.seminar_id = su.seminar_id)
                 WHERE c.institut_id='" . $_REQUEST['_inst_id'] . "' AND catalog_id='?' GROUP BY s.Seminar_id ORDER BY s.Name";
     }
-    if ($_lit_data_id != md5($sql)){
+    if ($_SESSION['_lit_data_id'] != md5($sql)){
         $db->query($sql);
-        $_lit_data_id = md5($sql);
+        $_SESSION['_lit_data_id'] = md5($sql);
         while ($db->next_record()){
-            $_lit_data[$db->f('catalog_id')] = $db->Record;
+            $_SESSION['_lit_data'][$db->f('catalog_id')] = $db->Record;
         }
     }
-    if (is_array($_lit_data)){
+    if (is_array($_SESSION['_lit_data'])){
         echo "\n<table width=\"99%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" align=\"center\"><tr><th align=\"left\">";
-        if (is_array($_open) && count($_open)){
-            echo "\n<a href=\"$PHP_SELF?cmd=close_all\" class=\"tree\"><img class=\"text-top\" src=\"". Assets::image_path('icons/16/blue/arr_1down.png') ."\"> " . _("Alle Einträge zuklappen") . "</a>";
+        if (is_array($_SESSION['_open']) && count($_SESSION['_open'])){
+            echo "\n<a href=\"".URLHelper::getLink('?cmd=close_all')."\" class=\"tree\"><img class=\"text-top\" src=\"". Assets::image_path('icons/16/blue/arr_1down.png') ."\"> " . _("Alle Einträge zuklappen") . "</a>";
         } else {
-            echo "\n<a href=\"$PHP_SELF?cmd=open_all\" class=\"tree\"><img class=\"text-top\" src=\"". Assets::image_path('icons/16/blue/arr_1right.png') ."\"> " . _("Alle Einträge aufklappen") . "</a>";
+            echo "\n<a href=\"".URLHelper::getLink('?cmd=open_all')."\" class=\"tree\"><img class=\"text-top\" src=\"". Assets::image_path('icons/16/blue/arr_1right.png') ."\"> " . _("Alle Einträge aufklappen") . "</a>";
         }
         echo "\n</th><th align=\"right\">";
         echo "<a href=\"lit_overview_print_view.php\" class=\"tree\" target=\"_blank\">" . Assets::img('icons/16/blue/print.png', array('class' => 'text-top')) . " " . _("Druckansicht") ."</a></th>";
         echo "</tr></table>";
-        foreach ($_lit_data as $cid => $data){
+        foreach ($_SESSION['_lit_data'] as $cid => $data){
             $element->setValues($data);
             if ($element->getValue('catalog_id')){
-                if ($_anker_id == $element->getValue('catalog_id')){
+                if ($_SESSION['_anker_id'] == $element->getValue('catalog_id')){
                     $icon = "<a name=\"anker\">";
                     $icon .= Assets::img('icons/16/grey/literature.png', array('class' => 'text-top'));
                     $icon .= "</a>";
@@ -355,8 +338,8 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
                     $icon = Assets::img('icons/16/grey/literature.png', array('class' => 'text-top'));
                 }
                 $ampel = "";
-                if ($_check_plugin && isset($_lit_data[$cid]['check_accession'][$_check_plugin])){
-                    $check = $_lit_data[$cid]['check_accession'][$_check_plugin];
+                if ($_SESSION['_check_plugin'] && isset($_SESSION['_lit_data'][$cid]['check_accession'][$_SESSION['_check_plugin']])){
+                    $check = $_SESSION['_lit_data'][$cid]['check_accession'][$_SESSION['_check_plugin']];
                     if ($check['found']){
                         $ampel_pic = 'icons/16/green/accept.png';
                         $tt = _("gefunden");
@@ -367,29 +350,29 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
                         $ampel_pic = 'icons/16/red/decline.png';
                         $tt =_("nicht gefunden");
                     }
-                    $ampel = '<span ' . tooltip($tt,false) . '><img class="middle" src="' . Assets::image_path($ampel_pic) . '" > (' . $_check_plugin . ')</span>&nbsp;&nbsp;';
+                    $ampel = '<span ' . tooltip($tt,false) . '><img class="middle" src="' . Assets::image_path($ampel_pic) . '" > (' . $_SESSION['_check_plugin'] . ')</span>&nbsp;&nbsp;';
                 }
                 $addon = $ampel . '<input type="checkbox" style="vertical-align:middle;" name="_check_list[]" value="' . $element->getValue('catalog_id') . '" '
-                        . (is_array($_check_list) && in_array($element->getValue('catalog_id'), $_check_list) ? 'checked' : '') .' >';
+                        . (is_array($_SESSION['_check_list']) && in_array($element->getValue('catalog_id'), $_SESSION['_check_list']) ? 'checked' : '') .' >';
                 $open = isset($_open[$element->getValue('catalog_id')]) ? 'open' : 'close';
-                $link = $PHP_SELF . '?' . (isset($_open[$element->getValue('catalog_id')]) ? 'close' : 'open') . '_element=' . $element->getValue('catalog_id') . '#anker';
+                $link = URLHelper::getLink('?' . (isset($_SESSION['_open'][$element->getValue('catalog_id')]) ? 'close' : 'open') . '_element=' . $element->getValue('catalog_id') . '#anker');
                 $titel = '<a href="' . $link . '" class="tree">' . htmlReady(my_substr($element->getShortName(),0,85)) . '</a>';
                 echo "\n<table width=\"99%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" align=\"center\"><tr>";
                 printhead(0,0,$link,$open,true,$icon,$titel,$addon);
                 echo "\n</tr></table>";
-                if (!is_array($_lit_data[$cid]['sem_data'])){
+                if (!is_array($_SESSION['_lit_data'][$cid]['sem_data'])){
                         $db->query(str_replace('?', $element->getValue('catalog_id'), $sql2));
                         while ($db->next_record()){
-                            $_lit_data[$cid]['sem_data'][$db->f('Seminar_id')] = $db->Record;
+                            $_SESSION['_lit_data'][$cid]['sem_data'][$db->f('Seminar_id')] = $db->Record;
                         }
                     }
-                if (!is_array($_lit_data[$cid]['doz_data'])){
+                if (!is_array($_SESSION['_lit_data'][$cid]['doz_data'])){
                         $db->query("SELECT position, Nachname,username,su.user_id FROM seminar_user su INNER JOIN auth_user_md5 USING(user_id)
-                                    WHERE status='dozent' AND seminar_id IN('" . join("','", array_keys($_lit_data[$cid]['sem_data'])) . "')
+                                    WHERE status='dozent' AND seminar_id IN('" . join("','", array_keys($_SESSION['_lit_data'][$cid]['sem_data'])) . "')
                                     ORDER BY position, Nachname");
-                        $_lit_data[$cid]['doz_data'] = array();
+                        $_SESSION['_lit_data'][$cid]['doz_data'] = array();
                         while ($db->next_record()){
-                            $_lit_data[$cid]['doz_data'][$db->f('user_id')] = $db->Record;
+                            $_SESSION['_lit_data'][$cid]['doz_data'][$db->f('user_id')] = $db->Record;
                         }
                 }
                 if ($open == 'open'){
@@ -397,7 +380,7 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
                     $content = "";
                     $estimated_p = 0;
                     $participants = 0;
-                    $edit .= LinkButton::create(_('Verfügbarkeit'), $PHP_SELF.'?_catalog_id=' . $element->getValue('catalog_id') . '#anker', array('title' => _("Verfügbarkeit überprüfen")));
+                    $edit .= LinkButton::create(_('Verfügbarkeit'), URLHelper::getURL('?_catalog_id=' . $element->getValue('catalog_id') . '#anker'), array('title' => _("Verfügbarkeit überprüfen")));
                     $edit .= "&nbsp;";
                     $edit .= LinkButton::create(_('Details'), 'admin_lit_element.php?_catalog_id=' . $element->getValue('catalog_id'), array('title' => _("Detailansicht dieses Eintrages ansehen.")));
                     $edit .= "&nbsp;";
@@ -416,7 +399,7 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
                         $content .= "<br>";
                     }
                     $content .= "<b>" . _("Veranstaltungen:") . "</b>&nbsp;&nbsp;";
-                    foreach ($_lit_data[$cid]['sem_data'] as $sem_data){
+                    foreach ($_SESSION['_lit_data'][$cid]['sem_data'] as $sem_data){
                         $content .= '<a href="details.php?sem_id=' . $sem_data['Seminar_id'] . '&send_from_search=1&send_from_search_page=' . URLHelper::getURL() . '">' . htmlReady(my_substr($sem_data["Name"],0,50)) . "</a>, ";
                         $estimated_p += $sem_data['admission_turnout'];
                         $participants += $sem_data['participants'];
@@ -424,7 +407,7 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
                     $content = substr($content,0,-2);
                     $content .= "<br>";
                     $content .= "<b>" . _("Dozenten:") . "</b>&nbsp;&nbsp;";
-                    foreach ($_lit_data[$cid]['doz_data'] as $doz_data){
+                    foreach ($_SESSION['_lit_data'][$cid]['doz_data'] as $doz_data){
                         $content .= '<a href="about.php?username=' . $doz_data['username'] . '">' . htmlReady($doz_data["Nachname"]) . "</a>, ";
                     }
                     $content = substr($content,0,-2);
@@ -434,11 +417,11 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
                     $content .= ' / ' . (int)$participants;
                     $content .= "<br>";
                     if ($_REQUEST['_catalog_id'] == $element->getValue('catalog_id') ){
-                        $_lit_data[$cid]['check_accession'] = StudipLitSearch::CheckZ3950($element->getValue('accession_number'));
+                        $_SESSION['_lit_data'][$cid]['check_accession'] = StudipLitSearch::CheckZ3950($element->getValue('accession_number'));
                     }
-                    if (is_array($_lit_data[$cid]['check_accession'])){
+                    if (is_array($_SESSION['_lit_data'][$cid]['check_accession'])){
                         $content .= "<div style=\"margin-top: 10px;border: 1px solid black;padding: 5px; width:96%;\"<b>" ._("Verf&uuml;gbarkeit in externen Katalogen:") . "</b><br>";
-                        foreach ( $_lit_data[$cid]['check_accession'] as $plugin_name => $ret){
+                        foreach ( $_SESSION['_lit_data'][$cid]['check_accession'] as $plugin_name => $ret){
                             $content .= "<b>&nbsp;{$plugin_name}&nbsp;</b>";
                             if ($ret['found']){
                                 $content .= _("gefunden") . "&nbsp;";
@@ -474,6 +457,5 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
     </table>
     </form>
 <?
-my_session_close();
 page_close();
 ?>

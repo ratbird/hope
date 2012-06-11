@@ -138,16 +138,31 @@ if (check_ticket(Request::option('studipticket'))) {
 
     // Person einer Rolle hinzufügen
     if ($cmd == 'addToGroup') {
-        $db_group = new DB_Seminar();
         if (InsertPersonStatusgruppe($my_about->auth_user['user_id'], $role_id)) {
             $globalperms = get_global_perm($my_about->auth_user['user_id']);
             if ($perm->get_studip_perm(Request::option('subview_id'), $my_about->auth_user['user_id']) == FALSE) {
                 log_event('INST_USER_ADD', Request::option('subview_id') , $my_about->auth_user['user_id'], $globalperms);
-                $db_group->query("INSERT IGNORE INTO user_inst SET Institut_id = '".Request::option('subview_id')."', user_id = '{$my_about->auth_user['user_id']}', inst_perms = '$globalperms'");
+
+                $query = "INSERT IGNORE INTO user_inst (Institut_id, user_id, inst_perms) VALUES (?, ?, ?)";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array(
+                    Request::option('subview_id'),
+                    $my_about->auth_user['user_id'],
+                    $globalperms,
+                ));
             }
             if ($perm->get_studip_perm(Request::option('subview_id'), $my_about->auth_user['user_id']) == 'user') {
                 log_event('INST_USER_STATUS', Request::option('subview_id') , $my_about->auth_user['user_id'], $globalperms);
-                $db_group->query("UPDATE user_inst SET inst_perms = '$globalperms' WHERE user_id = '{$my_about->auth_user['user_id']}' AND Institut_id = '".Request::option('subview_id')."'");
+
+                $query = "UPDATE user_inst
+                          SET inst_perms = ?
+                          WHERE user_id = ? AND Institut_id = ?";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array(
+                  $globalperms,
+                  $my_about->auth_user['user_id'],
+                  Request::option('subview_id'),
+                ));
             }
             $my_about->msg .= 'msg§'. _("Die Person wurde in die ausgewählte Gruppe eingetragen!"). '§';
             checkExternDefaultForUser($my_about->auth_user['user_id']);
@@ -158,22 +173,31 @@ if (check_ticket(Request::option('studipticket'))) {
 
     //Default von Einrichtung Übernehmen
     if ($cmd == 'set_default') {
-        $dbdef = new DB_Seminar();
-        $dbdef->query("UPDATE datafields_entries SET content='default_value' WHERE datafield_id = '".$_REQUEST['chgdef_entry_id']."' AND range_id = '".$my_about->auth_user['user_id']."' AND sec_range_id = '".$_REQUEST['sec_range_id']."'");
-        if ($dbdef->affected_rows() == 0) {
-            $dbdef->query("INSERT INTO datafields_entries (datafield_id, range_id, sec_range_id, content, chdate, mkdate) VALUES ".
-                "('".$_REQUEST['chgdef_entry_id']."',".
-                "'".$my_about->auth_user['user_id']."', ".
-                "'".$_REQUEST['sec_range_id']."', ".
-                "'default_value', ".time().", ".time().")");
-        }
+        $query = "INSERT INTO datafields_entries (datafield_id, range_id, sec_range_id, content, chdate, mkdate)
+                  VALUES (?, ?, ?, 'default_value', UNIX_TIMESTAMP(), UNIX_TIMESTAMP())
+                  ON DUPLICATE KEY UPDATE content = VALUES(content), chdate = UNIX_TIMESTAMP()";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            Request::option('chgdef_entry_id'),
+            $my_about->auth_user['user_id'],
+            Request::option('sec_range_id'),
+        ));
     }
 
     //Default NICHT von Einrichtung Übernehmen
     if ($cmd == 'unset_default') {
         $default_entries = DataFieldEntry::getDataFieldEntries($zw = array($my_about->auth_user['user_id'], $_REQUEST['cor_inst_id']));
-        $dbdef = new DB_Seminar();
-        $dbdef->query("UPDATE datafields_entries SET content='".$default_entries[$_REQUEST['chgdef_entry_id']]->getValue()."' WHERE datafield_id = '".$_REQUEST['chgdef_entry_id']."' AND range_id = '".$my_about->auth_user['user_id']."' AND sec_range_id = '".$_REQUEST['sec_range_id']."'");
+
+        $query = "UPDATE datafields_entries
+                  SET content = ?
+                  WHERE datafields_id = ? AND range_id = ? AND sec_range_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $default_entries[Request::option('chgdef_entry_id')],
+            Request::option('chgdef_entry_id'),
+            $my_about->auth_user['user_id'],
+            Request::option('sec_range_id'),
+        ));
     }
 
     if ($cmd == 'makeAllDefault') {
@@ -185,8 +209,10 @@ if (check_ticket(Request::option('studipticket'))) {
     }
 
     if ($cmd == 'removeFromGroup') {
-        $db_group = new DB_Seminar();
-        $db_group->query("DELETE FROM statusgruppe_user WHERE user_id = '" . $my_about->auth_user['user_id'] . "' AND statusgruppe_id = '".$role_id."'");
+        $query = "DELETE FROM statusgruppe_user WHERE user_id = ? AND statusgruppe_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($my_about->auth_user['user_id'], $role_id));
+
         $my_about->msg .= 'msg§' . _("Die Person wurde aus der ausgewählten Gruppe gelöscht!") . '§';
     }
 
@@ -1187,37 +1213,56 @@ if ($view == 'userdomains') {
 if ($view == 'Karriere') {
     $all_rights = false;
     if ($my_about->auth['username'] != $username) {
-        $db_r = new DB_Seminar();
+        $query = "SELECT Institut_id
+                  FROM Institute
+                  WHERE fakultaets_id = ? AND fakultaets_id != Institut_id
+                  ORDER BY Name";
+        $inner_statement = DBManager::get()->prepare($query);
 
-        if ($auth->auth['perm'] == "root"){
+        $parameters = array();
+        if ($auth->auth['perm'] == 'root') {
             $all_rights = true;
-            $db_r->query("SELECT Institut_id, Name, 1 AS is_fak  FROM Institute WHERE Institut_id=fakultaets_id ORDER BY Name");
-        } elseif ($auth->auth['perm'] == "admin") {
-            $db_r->query("SELECT a.Institut_id,Name, IF(b.Institut_id=b.fakultaets_id,1,0) AS is_fak FROM user_inst a LEFT JOIN Institute b USING (Institut_id)
-                    WHERE a.user_id='$user->id' AND a.inst_perms='admin' ORDER BY is_fak,Name");
+            $query = "SELECT Institut_id, Name, 1 AS is_fak
+                      FROM Institute
+                      WHERE Institut_id = fakultaets_id
+                      ORDER BY Name";
+        } elseif ($auth->auth['perm'] == 'admin') {
+            $query = "SELECT Institut_id, Name, b.Institut_id = b.fakultaets_id AS is_fak
+                      FROM user_inst AS a
+                      LEFT JOIN Institute AS b USING (Institut_id)
+                      WHERE a.user_id = ? AND a.inst_perms = 'admin'
+                      ORDER BY is_fak, Name";
+            $parameters[] = $user->id;
         } else {
-            $db_r->query("SELECT a.Institut_id,Name FROM user_inst a LEFT JOIN Institute b USING (Institut_id) WHERE inst_perms IN('tutor','dozent') AND user_id='$user->id' ORDER BY Name");
+            $query = "SELECT a.Institut_id, Name
+                      FROM user_inst AS a
+                      LEFT JOIN Institute AS b USING (Institut_id)
+                      WHERE inst_perms IN ('tutor', 'dozent') AND user_id = ?
+                      ORDER BY Name";
+            $parameters[] = $user->id;
         }
+
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute($parameters);
 
         $inst_rights = array();
         $admin_insts = array();
-        while ($db_r->next_record()) {
-            if ($auth->auth['perm'] == 'admin' && $db_r->f('is_fak')) {
-                $db_r2 = new DB_Seminar("SELECT Institut_id, Name FROM Institute WHERE fakultaets_id='" .$db_r->f("Institut_id") . "' AND institut_id!='" .$db_r->f("Institut_id") . "' ORDER BY Name");
-                while ($db_r2->next_record()) {
-                    $inst_rights[] = $db_r2->f('Institut_id');
-                }
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            if ($auth->auth['perm'] == 'admin' && $row['is_fak']) {
+                $inner_statement->execute(array($row['Institut_id']));
+                $inst_rights = array_merge($inst_rights, $statement->fetchAll(PDO::FETCH_COLUMN));
+                $inner_statement->closeCursor();
             }
-            $inst_rights[] = $db_r->f('Institut_id');
-            $admin_insts[] = $db_r->Record;
+            $inst_rights[] = $row['Institut_id'];
+            $admin_insts[] = $row;
         }
     } else {
         $all_rights = true;
     }
     foreach ($admin_insts as $data) {
         if ($data["is_fak"]) {
-            $stmt = DBManager::get()->prepare("SELECT Institut_id, Name FROM Institute WHERE fakultaets_id = ? AND Institut_id != ? ORDER BY Name");
-            if ($stmt->execute(array($data['Institut_id'], $data['Institut_id']))) {
+            $stmt = DBManager::get()->prepare("SELECT Institut_id, Name FROM Institute WHERE fakultaets_id = ? AND Institut_id != fakultaets_id ORDER BY Name");
+            if ($stmt->execute(array($data['Institut_id']))) {
                 while($sub_data = $stmt->fetch(PDO::FETCH_ASSOC)) {
                     $sub_admin_insts[$data['Institut_id']][$sub_data['Institut_id']] = $sub_data;
                 }

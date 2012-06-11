@@ -52,7 +52,7 @@ if ($forumsend=="bla"){
         <td class="blank" width="100%" colspan="2" align="center">
 
         <?
-        echo "<form action=\"$PHP_SELF?view=$view\" method=\"POST\">";
+        echo "<form action=\"".URLHelper::getLink('?view=$view')."\" method=\"POST\">";
         echo CSRFProtection::tokenTag();
         ?>
         <table width="70%" align="center" cellpadding="8" cellspacing="0" border="0" id="main_content">

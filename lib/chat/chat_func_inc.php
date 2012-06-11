@@ -187,9 +187,9 @@ function chat_get_content($chatid, $chatter, $chatinv, $password, $is_active, $c
             $ret .= _("Dieser Chatraum ist mit einem Passwort gesichert.");
         }
         if ($chatter && $entry_level == "admin"){
-            $ret .= "<br><a href=\"" . $GLOBALS['PHP_SELF'] . "?kill_chat=$chatid\">";
+            $ret .= "<br><a href=\"" . URLHelper::getLink('?kill_chat='.$chatid)."\">";
             $ret .= "<img src=\"".Assets::image_path('icons/16/grey/trash.png')."\" " . tooltip(_("Diesen Chatraum leeren")) ."></a> ";
-            $ret .= sprintf(_("Diesen Chatraum %sleeren%s"),"<a href=\"" . $GLOBALS['PHP_SELF'] . "?kill_chat=$chatid\">","</a>");
+            $ret .= sprintf(_("Diesen Chatraum %sleeren%s"),"<a href=\"" .URLHelper::getLink('?kill_chat='.$chatid)."\">","</a>");
         }
         if ($entry_level == "admin" && count($_SESSION['chat_logs'][$chatid])){
             $ret .= '<br>'._("Ihre gespeicherten Aufzeichnungen:");

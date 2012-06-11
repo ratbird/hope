@@ -113,7 +113,11 @@ function PrintAktualStatusgruppen($range_id, $view, $edit_id = '')
     $db = new DB_Seminar();
     $db2 = new DB_Seminar();
     $db3 = new DB_Seminar();
-    $db->query("SELECT name, statusgruppe_id, calendar_group FROM statusgruppen WHERE range_id = '$range_id_statusgruppe' ORDER BY position ASC");
+    $db->query("SELECT name, statusgruppe_id, calendar_group, 
+        (SELECT COUNT(*) FROM statusgruppe_user
+            WHERE statusgruppe_user.statusgruppe_id = statusgruppen.statusgruppe_id) as count
+        FROM statusgruppen 
+        WHERE range_id = '$range_id_statusgruppe' ORDER BY position ASC");
     $AnzahlStatusgruppen = $db->num_rows();
     $lid = rand(1, 1000);
     $i = 0;
@@ -127,28 +131,45 @@ function PrintAktualStatusgruppen($range_id, $view, $edit_id = '')
         echo 'src="' . Assets::image_path('icons/16/yellow/arr_2right.png') . '" ';
         echo tooltip(_("Markierte Personen dieser Gruppe zuordnen"));
         echo ">&nbsp; </td>";
-        if ($edit_id == $statusgruppe_id) {
-            $s_name = htmlReady($db->f("name"));
-        } else {
-            $s_name = "<a class=\"tree\" href=\"" . URLHelper::getLink("?toggle_statusgruppe=$statusgruppe_id&range_id=$range_id&view=$view&foo=" . md5(uniqid('foo', 1)) . "#$statusgruppe_id") . '">'
-                    . '<img style="vertical-align:top;" src="' . Assets::image_path($_SESSION['contact_statusgruppen']['group_open'][$statusgruppe_id] ? 'icons/16/blue/arr_1down.png' : 'icons/16/blue/arr_1right.png')
-                    . '">&nbsp;' . htmlReady($db->f("name")) . '</a>';
-        }
+
         $cal_group = get_config('CALENDAR_GROUP_ENABLE') && $db->f('calendar_group');
-        echo '<td width="' . ($cal_group ? '80%' : '85%') . '" class="';
-        echo ($edit_id == $statusgruppe_id ? 'topicwrite' : 'topic') . '">';
-        echo $s_name . '</td>';
-        echo '<td class="' . ($edit_id == $statusgruppe_id ? 'topicwrite' : 'topic') . '" width="5%">';
+        echo '<td width="' . ($cal_group ? '80%' : '85%') . '" class="topic';
+        echo ($edit_id == $statusgruppe_id ? ' topicwrite' : '') . '">';
+        ?>
+
+            <a class="tree" href="<?= URLHelper::getLink("?toggle_statusgruppe=$statusgruppe_id&range_id=$range_id&view=$view&foo=" . md5(uniqid('foo', 1)) . "#$statusgruppe_id") ?>">
+            <? if ($_SESSION['contact_statusgruppen']['group_open'][$statusgruppe_id]) : ?>
+                <?= Assets::img('icons/16/blue/arr_1down.png') ?>
+            <? else : ?>
+                <?= Assets::img('icons/16/blue/arr_1right.png') ?>
+            <? endif ?>
+                <? /* <img style="vertical-align:top;" src="<?=. Assets::image_path( ? 'icons/16/blue/arr_1down.png' : 'icons/16/blue/arr_1right.png') */ ?>
+                <?= htmlReady($db->f("name")) ?>
+            </a>
+        </td>
+
+        <td class="topic<?= $edit_id == $statusgruppe_id ? ' topicwrite' : '' ?>" style="width: 1%; white-space: nowrap">
+            <? if ($size) : ?>
+            <?= $db->f('count') ?> / <?= $size ?>
+            <? else : ?>
+            <?= $db->f('count') ?>
+            <? endif ?>
+        </td>
+
+        <?
+        echo '<td class="topic' . ($edit_id == $statusgruppe_id ? ' topicwrite' : '') . '" width="1%">';
         if ($cal_group) {
             echo '<img src="' . Assets::image_path('icons/16/white/schedule.png') . '" ' . tooltip(_('Kalendergruppe')) . '>';
-            echo '</td><td class="' . ($edit_id == $statusgruppe_id ? 'topicwrite' : 'topic') . '" style="whitespace: width="5%">';
+            echo '</td><td class="topic ' . ($edit_id == $statusgruppe_id ? ' topicwrite' : '') . '" style="whitespace: width="5%">';
         }
         echo '<a href="' . URLHelper::getLink('', array('edit_id' => $statusgruppe_id, 'range_id' => $range_id, 'view' => $view, 'cmd' => 'edit_statusgruppe')) . '">';
         echo '<img src="' . Assets::image_path('icons/16/white/edit.png') . '" ';
         echo tooltip(_("Gruppenname oder -größe anpassen")) . '></a></td>';
 
-        printf("<td align=\"right\" width=\"5%%\" class=\"%s\"><a href=\"%s\"><img src=\"" . Assets::image_path('icons/16/white/trash.png') . "\" %s></a></td>", ($edit_id == $statusgruppe_id ? "topicwrite" : "topic"), URLHelper::getLink("?cmd=verify_remove_statusgruppe&statusgruppe_id=" . $statusgruppe_id . "&range_id=" . $range_id . "&view=" . $view . "&name=" . $db->f("name")), tooltip(_("Gruppe mit Personenzuordnung entfernen")));
+        printf("<td align=\"right\" width=\"1%%\" class=\"topic%s\"><a href=\"%s\"><img src=\"" . Assets::image_path('icons/16/white/trash.png') . "\" %s></a></td>", ($edit_id == $statusgruppe_id ? " topicwrite" : ''), URLHelper::getLink("?cmd=verify_remove_statusgruppe&statusgruppe_id=" . $statusgruppe_id . "&range_id=" . $range_id . "&view=" . $view . "&name=" . $db->f("name")), tooltip(_("Gruppe mit Personenzuordnung entfernen")));
         echo "\n</tr>";
+
+        // if the current statusgroup is opened, display associated users
         if ($_SESSION['contact_statusgruppen']['group_open'][$statusgruppe_id]) {
             $db2->query("SELECT statusgruppe_user.user_id, " . $_fullname_sql['full']
                     . " AS fullname , username, nachname FROM statusgruppe_user LEFT JOIN auth_user_md5 "
@@ -184,8 +205,9 @@ function PrintAktualStatusgruppen($range_id, $view, $edit_id = '')
                         $class = 'steelgraulight';
                     }
                     echo "\n<tr>\n\t\t<td><font color=\"#AAAAAA\">$k</font></td>";
-                    echo "<td class=\"$class\"><font size=\"2\" color=\"$color\">";
+                    echo "<td class=\"$class\" colspan=\"2\"><font size=\"2\" color=\"$color\">";
                     echo htmlReady($fullname) . "</font></td>";
+
                     if (get_config('CALENDAR_GROUP_ENABLE')) {
                         if ($cal_group) {
                             echo '<td class="' . $class . '"> </td>';
@@ -211,6 +233,7 @@ function PrintAktualStatusgruppen($range_id, $view, $edit_id = '')
                     } else {
                         echo "<td class=\"$class\">&nbsp;</td>\n";
                     }
+
                     echo '<td style="text-align: center;" class="' . $class . '">';
                     echo '<a href="' . URLHelper::getLink('#' . $statusgruppe_id, array('cmd' => 'remove_person', 'statusgruppe_id' => $statusgruppe_id, 'entry_id' => $identifier, 'range_id' => $range_id, 'view' => $view)) . '">';
                     echo Assets::img('icons/16/blue/trash.png', tooltip(_("Person aus der Gruppe entfernen"))) . '</a></td>';
@@ -219,16 +242,18 @@ function PrintAktualStatusgruppen($range_id, $view, $edit_id = '')
                 }
             }
         }
-        while ($k <= $db->f("size")) {
+
+        if ($db->f('size')) while ($k <= $db->f("size")) {
             echo "\n\t<tr>\n\t\t<td><font color=\"#FF4444\">$k</font></td>";
             echo "<td class=\"blank\" colspan=\"3\">&nbsp; </td>";
             echo "\n\t</tr>";
             $k++;
         }
+
         $i++;
         echo "</table>";
         if ($i < $AnzahlStatusgruppen) {
-            printf("<p align=\"center\"><a href=\"%s\"><img src=\"" . Assets::image_path('icons/16/yellow/arr_2up.png') . "\" %s><img src=\"" . Assets::image_path('icons/16/yellow/arr_2down.png') . "\" %s></a><br>&nbsp;", URLHelper::getLink('?cmd=swap&statusgruppe_id=' . $statusgruppe_id . '&range_id=' . $range_id . '&view=' . $view), tooltip(_("Gruppenreihenfolge tauschen")), tooltip(_("Gruppenreihenfolge tauschen")));
+            printf("<p align=\"center\"><a href=\"%s\"><img src=\"" . Assets::image_path('icons/16/yellow/arr_2up.png') . "\" %s><img src=\"" . Assets::image_path('icons/16/yellow/arr_2down.png') . "\" %s></a>&nbsp;", URLHelper::getLink('?cmd=swap&statusgruppe_id=' . $statusgruppe_id . '&range_id=' . $range_id . '&view=' . $view), tooltip(_("Gruppenreihenfolge tauschen")), tooltip(_("Gruppenreihenfolge tauschen")));
         }
     }
 }

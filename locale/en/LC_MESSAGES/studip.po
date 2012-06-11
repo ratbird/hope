@@ -551,10 +551,10 @@ msgstr "Changing aborted"
 
 #: ../public/gruppe.php:63
 msgid ""
-"Hier k&ouml;nnen Sie Ihre Veranstaltungen in Farbgruppen einordnen und eine "
+"Hier können Sie Ihre Veranstaltungen in Farbgruppen einordnen und eine "
 "Gliederung nach Kategorien festlegen. <br>Die Darstellung unter <b>meine "
 "Veranstaltungen</b> wird entsprechend den Gruppen sortiert bzw. entsprechend "
-"der gew&auml;hlten Kategorie gegliedert."
+"der gewählten Kategorie gegliedert."
 msgstr ""
 "You can group your courses by colours and define an ordering by categories. "
 "<br>On the page <b>My courses</b> the output will be put in order according "

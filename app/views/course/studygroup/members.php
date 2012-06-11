@@ -69,6 +69,7 @@ list-style-position:outside;list-style-type:none;">
     <li style="position:relative;width:200px;display:inline-block;overflow:hidden;vertical-align:top;" align="left">
 
         <? if (($GLOBALS['perm']->have_studip_perm('dozent', $sem_id) && $m['status'] != 'dozent')
+               || ($GLOBALS['perm']->have_studip_perm('tutor', $sem_id) && $m['user_id'] == $GLOBALS['auth']->auth['uid'])
                || $GLOBALS['perm']->have_studip_perm('admin', $sem_id)) : ?>
             <div style="float:left;cursor:hand;" onMouseOver="$('.invitation', this).fadeIn();"
                onMouseOut ="$('.invitation', this).fadeOut();"
@@ -87,6 +88,7 @@ list-style-position:outside;list-style-type:none;">
         <? endif ?>
 
         <? if (($GLOBALS['perm']->have_studip_perm('dozent', $sem_id) && $m['status'] != 'dozent')
+               || ($GLOBALS['perm']->have_studip_perm('tutor', $sem_id) && $m['user_id'] == $GLOBALS['auth']->auth['uid'])
                || $GLOBALS['perm']->have_studip_perm('admin', $sem_id)) : ?>
         <noscript>
             <div id="user_<?= $m['user_id']?>" style="float:left; margin-right: 10px; width: 110px;" align="left" valign="top">

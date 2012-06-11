@@ -651,8 +651,7 @@ class Course_StudygroupController extends AuthenticatedController {
                     $msg->insert_message(addslashes($message), get_username($receiver),'', '', '', '', '', addslashes($subject));
                     $this->flash['success'] = sprintf(_("%s wurde in die Studiengruppe eingeladen."), get_fullname($receiver, 'full', true));
                 }
-            }
-            elseif ($perm->have_studip_perm('dozent', $id)) {
+            } elseif ($perm->have_studip_perm('dozent', $id)) {
                 if(!$perm->have_studip_perm('dozent',$id,get_userid($user))) {
                     if ($action == 'promote' && $status != 'dozent') {
                         StudygroupModel::promote_user($user,$id,$status);
@@ -672,6 +671,9 @@ class Course_StudygroupController extends AuthenticatedController {
                         )
                     );
                 }
+            } elseif ($action == 'promote' && $status == 'autor' && $GLOBALS['auth']->auth['uname'] == $user) {
+                StudygroupModel::promote_user($user,$id,$status);
+                $this->flash['success'] = sprintf(_("Der Status des Nutzers %s wurde geändert."), get_fullname_from_uname($user, 'full', true));
             }
             //Für die QuickSearch-Suche:
             if (Request::get('choose_member_parameter') && Request::get('choose_member_parameter') !== _("Nutzer suchen") ) {

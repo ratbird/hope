@@ -9,10 +9,16 @@ use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
 
+//unregister_globals();
+
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
+$root_id = Request::option('root_id');
+$topic_id = Request::option('topic_id');
+$name = Request::quoted('name');
+$parent_id = Request::option('parent_id');
 // -- here you have to put initialisations for the current page
 
 checkObject();
@@ -64,10 +70,10 @@ if ($user->id == "nobody"){
     $statement->execute(array($GLOBALS['SessSemName'][1]));
     $pass = $statement->fetchColumn() > 0;
 }
-
+$Create = Request::option('Create');
 if (!(have_sem_write_perm()) OR $pass==TRUE) {
-    if (!isset($Create)) {  // $Create != "abschicken"
-        if (isset($topic_id)) {
+    if (empty ($Create)) {  // $Create != "abschicken"
+        if (!empty ($topic_id)) {
             $query = "SELECT name, description, anonymous FROM px_topics WHERE topic_id = ? AND Seminar_id = ?";
             $statement = DBManager::get()->prepare($query);
             $statement->execute(array($topic_id, $GLOBALS['SessSemName'][1]));
@@ -126,24 +132,24 @@ if (!(have_sem_write_perm()) OR $pass==TRUE) {
         echo htmlReady(get_fullname());
         print ("\" size=\"20\"><br><br>");
         if  ($user->id == "nobody") {  // nicht angemeldete muessen Namen angeben
-            $description =  "<b>" . _("Ihr Name:") . "</b>&nbsp; <input type=text size=50 name=nobodysname onchange=\"return pruefe_name()\" value=\"" . _("unbekannt") . "\"><br><br><input type=hidden name=update value='".$write."'>";
+            $description =  "<b>" . _("Ihr Name:") . "</b>&nbsp; <input type=text size=50 name=nobodysname onchange=\"return pruefe_name()\" value=\"" . _("unbekannt") . "\"><br><br><input type=hidden name=update value='".Request::int('write')."'>";
         } 
         echo $description;
         echo _("Ihr Beitrag:");
         echo "<br><textarea name=\"description\" cols=60 rows=12>";
-        if ($quote==TRUE) {  // es soll zitiert werden
+        if (Request::option('quote')==TRUE) {  // es soll zitiert werden
             $zitat = quote($topic_id);
             echo htmlReady($zitat);
             echo "\n";
         }
         echo "</textarea><br><br>";
-        echo Button::createAccept();
+        echo Button::createAccept(_('Übernehmen'));
         $help_url = format_help_url("Basis.VerschiedenesFormat");
         echo "&nbsp;&nbsp;<a href=\"" . URLHelper::getURL('dispatch.php/smileys') . "\" target=\"_blank\"><font size=\"-1\">"._("Smileys")."</a>&nbsp;&nbsp;"."<a href=\"".$help_url."\" target=\"_blank\"><font size=\"-1\">"._("Formatierungshilfen")."</a>";
         echo "</form>";
         
     } else {
-        if ($parent_id) {
+        if (!empty($parent_id)) {
             $query = "SELECT 1 FROM px_topics WHERE topic_id = ? AND Seminar_id = ?";
             $statement = DBManager::get()->prepare($query);
             $statement->execute(array($parent_id, $GLOBALS['SessSemName'][1]));
@@ -153,9 +159,9 @@ if (!(have_sem_write_perm()) OR $pass==TRUE) {
                 die;
             }
         }
-        if ($nobodysname) $author = $nobodysname;
+        if (Request::quoted('nobodysname')) $author = Request::quoted('nobodysname');
         $writeextern = TRUE;
-        $topic_id = CreateTopic ($name, $author, $description, $parent_id, $root_id);
+        $topic_id = CreateTopic ( Request::quoted('name'), Request::quoted('author'), Request::quoted('description'), $parent_id, $root_id);
         parse_window( "msg§" . _("Ihr Beitrag wurde erfolgreich ins System &uuml;bernommen") . "§info§" . _("Sie k&ouml;nnen dieses Fenster jetzt schliessen.<br>Um Ihr neues Posting zu sehen, m&uuml;ssen Sie das Hauptfenster aktualisieren!") . "§", "§", "Schreiben erfolgreich", "&nbsp;");
     }
 } else {

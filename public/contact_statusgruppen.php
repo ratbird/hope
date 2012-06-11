@@ -465,9 +465,10 @@ if (is_array($msgs)) {
         echo '<input type="hidden" name="range_id" value="' . $range_id . '">';
         echo"<input type=\"hidden\" name=\"view\" value=\"$view\">";
         ?>
-                    <font size="2"><?= _("Adressbuchgruppe anlegen:") ?></font>
-
-                    <input type="text" name="new_statusgruppe_name" style="vertical-align:middle" value="<?= _("Gruppenname") ?>">
+                    <label>
+                        <?= _('Adressbuchgruppe anlegen:') ?>
+                        <input type="text" name="new_statusgruppe_name" style="vertical-align:middle" placeholder="<?= _("Gruppenname") ?>">
+                    </label>
                     <? if (get_config('CALENDAR_GROUP_ENABLE')) : ?>
                         <label><?= _('im Kalender auswählbar:') ?>
                         <input type="checkbox" name="is_cal_group" value="1" class="text-top"></label>

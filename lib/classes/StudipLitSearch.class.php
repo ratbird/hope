@@ -214,11 +214,13 @@ class StudipLitSearch {
                 }
             }
         }
-        foreach($plugin_list as $plugin_name => $plugin_obj){
-            $found = $plugin_obj->doCheckAccession($accession_number);
-            $error = $plugin_obj->getError();
-            $ret[$plugin_name]['error'] = $error;
-            $ret[$plugin_name]['found'] = $found;
+        if (is_array($plugin_list) && !empty ($plugin_list)){
+            foreach($plugin_list as $plugin_name => $plugin_obj){
+                 $found = $plugin_obj->doCheckAccession($accession_number);
+                 $error = $plugin_obj->getError();
+                 $ret[$plugin_name]['error'] = $error;
+                 $ret[$plugin_name]['found'] = $found;
+            }
         }
         return $ret;
     }

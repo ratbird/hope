@@ -205,7 +205,7 @@ class StudipSemTreeSearch {
 
     function getFormStart($action = ""){
         if (!$action){
-            $action = $GLOBALS['PHP_SELF'];
+            $action = URLHelper::getLink();
         }
         $ret = "\n<form action=\"$action\" method=\"post\" name=\"{$this->form_name}\">";
         $ret .= CSRFProtection::tokenTag();

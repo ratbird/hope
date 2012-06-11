@@ -121,11 +121,16 @@ function PrintAktualStatusgruppen($range_id, $view, $edit_id = '')
     $AnzahlStatusgruppen = $db->num_rows();
     $lid = rand(1, 1000);
     $i = 0;
+    ?>
+    <div class="sortable">
+    <?
     while ($db->next_record()) {
         $statusgruppe_id = $db->f("statusgruppe_id");
         $size = $db->f("size");
-        echo "\n<table id=\"$statusgruppe_id\" width=\"95%\" border=\"0\" cellpadding=\"2\" cellspacing=\"0\">";
-        echo "\n<tr>";
+        ?>
+        <table id="<?= $statusgruppe_id ?>" width="95%" border="0" cellpadding="2" cellspacing="0" class="sortable">
+            <tr class="handle">
+        <?
         echo "\n<td width=\"5%\">";
         echo "<input type=\"IMAGE\" name=\"$statusgruppe_id\" ";
         echo 'src="' . Assets::image_path('icons/16/yellow/arr_2right.png') . '" ';
@@ -134,9 +139,10 @@ function PrintAktualStatusgruppen($range_id, $view, $edit_id = '')
 
         $cal_group = get_config('CALENDAR_GROUP_ENABLE') && $db->f('calendar_group');
         echo '<td width="' . ($cal_group ? '80%' : '85%') . '" class="topic';
-        echo ($edit_id == $statusgruppe_id ? ' topicwrite' : '') . '">';
+        echo ($edit_id == $statusgruppe_id ? ' topicwrite' : '') . '" style="cursor: move">';
         ?>
 
+            <?= Assets::img('') ?>
             <a class="tree" href="<?= URLHelper::getLink("?toggle_statusgruppe=$statusgruppe_id&range_id=$range_id&view=$view&foo=" . md5(uniqid('foo', 1)) . "#$statusgruppe_id") ?>">
             <? if ($_SESSION['contact_statusgruppen']['group_open'][$statusgruppe_id]) : ?>
                 <?= Assets::img('icons/16/blue/arr_1down.png') ?>
@@ -252,10 +258,13 @@ function PrintAktualStatusgruppen($range_id, $view, $edit_id = '')
 
         $i++;
         echo "</table>";
-        if ($i < $AnzahlStatusgruppen) {
-            printf("<p align=\"center\"><a href=\"%s\"><img src=\"" . Assets::image_path('icons/16/yellow/arr_2up.png') . "\" %s><img src=\"" . Assets::image_path('icons/16/yellow/arr_2down.png') . "\" %s></a>&nbsp;", URLHelper::getLink('?cmd=swap&statusgruppe_id=' . $statusgruppe_id . '&range_id=' . $range_id . '&view=' . $view), tooltip(_("Gruppenreihenfolge tauschen")), tooltip(_("Gruppenreihenfolge tauschen")));
-        }
     }
+    ?>
+    </div>
+    <script>
+        STUDIP.StatusGroup.init();
+    </script>
+    <?
 }
 
 function PrintSearchResults($search_exp, $range_id)
@@ -393,10 +402,20 @@ if ($cmd == "remove_statusgruppe") {
     DeleteStatusgruppe($statusgruppe_id);
 }
 
-// Aendern der Position
-
-if ($cmd == 'swap') {
-    SwapStatusgruppe($statusgruppe_id);
+// store the position of the statusgroups
+if ($cmd == 'storeSortOrder') {
+    $i = 0;
+    foreach (Request::optionArray('statusgroup_ids') as $statusgroup_id) {
+        $statusgroup = new Statusgruppe($statusgroup_id);
+        $statusgroup->setPosition($i);
+        $statusgroup->store();
+        $i++;
+    }
+    
+    // if we have an ajax call, no further execution is required
+    if (Request::isXhr()) {
+        die;
+    }
 }
 
 // Switch Group calendar access

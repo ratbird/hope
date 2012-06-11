@@ -216,9 +216,9 @@ class StudipSemTreeView extends TreeView {
 
     function getSelf($param = "", $with_start_item = true){
         if ($param)
-            $url = $GLOBALS['PHP_SELF'] . (($with_start_item) ? "?start_item_id=" . $this->start_item_id . "&" : "?") . $param . "#anchor";
+            $url = (($with_start_item) ? "?start_item_id=" . $this->start_item_id . "&" : "?") . $param . "#anchor";
         else
-            $url = $GLOBALS['PHP_SELF'] . (($with_start_item) ? "?start_item_id=" . $this->start_item_id : "") . "#anchor";
+            $url = (($with_start_item) ? "?start_item_id=" . $this->start_item_id : "") . "#anchor";
         return $url;
     }
 }

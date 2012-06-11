@@ -184,7 +184,7 @@ function PrintAktualStatusgruppen($range_id, $view, $edit_id = '')
             $k = 1;
             while ($db2->next_record()) {
                 if (get_visibility_by_id($db2->f("user_id"))) {
-                    $color = '#000000';
+                    $color = '#0000FF';
                     // user entries
 
                     $fullname = $db2->f('fullname');
@@ -211,9 +211,17 @@ function PrintAktualStatusgruppen($range_id, $view, $edit_id = '')
                         $class = 'steelgraulight';
                     }
                     echo "\n<tr>\n\t\t<td><font color=\"#AAAAAA\">$k</font></td>";
-                    echo "<td class=\"$class\" colspan=\"2\"><font size=\"2\" color=\"$color\">";
-                    echo htmlReady($fullname) . "</font></td>";
+                    ?>
 
+                    <td class="<?= $class ?>" colspan="2">
+                        <a href="<?= URLHelper::getLink('about.php?username=' . $identifier) ?>">
+                            <span style="color: <?= $color ?>">
+                                <?= htmlReady($fullname) ?>
+                            </span>
+                        </a>
+                    </td>
+
+                    <?
                     if (get_config('CALENDAR_GROUP_ENABLE')) {
                         if ($cal_group) {
                             echo '<td class="' . $class . '"> </td>';

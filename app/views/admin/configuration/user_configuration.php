@@ -14,7 +14,7 @@ use Studip\Button, Studip\LinkButton;
 
 <? if (!empty($search_users)) : ?>
 <h3>
-    <?= _('Vorhanden Konfigurationsparameter für den Nutzer: ').$search_users[0]['fullname'] ?>
+    <?= _('Vorhandene Konfigurationsparameter für den Nutzer: ').$search_users[0]['fullname'] ?>
 </h3>
 <table class="default">
     <tr>

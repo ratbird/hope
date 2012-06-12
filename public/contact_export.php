@@ -199,27 +199,16 @@ function printSelectGroup($infobox, $groups)
 function getContactGroups(){
     global $user;
 
-    // all contacts
-    $groups[0] = array ("id" => "all", "name" => _("Alle Einträge des Adressbuches"));
+    $query = "SELECT statusgruppe_id AS id, name, size 
+              FROM statusgruppen
+              WHERE range_id = '".$user->id."'
+              ORDER BY position ASC";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($user->id));
+    $groups = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-    $db=new DB_Seminar;
-
-    $query = "SELECT name, statusgruppe_id, size "
-        . "FROM statusgruppen "
-        . "WHERE range_id = '".$user->id."' "
-        . "ORDER BY position ASC";
-
-    $db->query ($query);
-
-    $i = 1;
-    while ($db->next_record()){
-        $groups[$i] = array(
-            "id" => $db->f("statusgruppe_id"),
-            "name" => $db->f("name"),
-            "size" => $db->f("size")
-            );
-        $i++;
-    }
+    // Insert selection "all entries" at the top
+    array_unshift($groups, array('id' => 'all', 'name' => _('Alle Einträge des Adressbuches')));
 
     return $groups;
 }
@@ -232,137 +221,118 @@ function getContactGroups(){
  * @returns array the contact group data
  *
  */
-function getContactGroupData($exportID,$mode = "group"){
+function getContactGroupData($exportID, $mode = 'group')
+{
     global $user, $_fullname_sql;
 
-    $db = new DB_Seminar;
-    $db2 = new DB_Seminar;
+    // Prepare inner statement, collects office data
+    $query = "SELECT a.sprechzeiten AS consultation_hours, a.raum AS room, a.Telefon AS TEL, a.Fax AS FAX,
+                     b.Institut_id AS inst_id, b.Name AS fak_name, b.Strasse AS fak_strasse, b.Plz AS fak_plz,
+                     b.url AS fak_url, b.telefon AS fak_TEL, b.email AS fak_mail, b.fax AS fak_FAX
+              FROM user_inst AS a
+              LEFT JOIN Institute b USING (Institut_id)
+              WHERE user_id = ? AND inst_perms != 'user' AND externdefault = ? AND visible = 1";
+    $inner_statement = DBManager::get()->prepare($query);
 
-    // the users from one group
-    if (($mode == "group") && ($exportID != "all")){
-        $query = "SELECT statusgruppe_user.user_id, statusgruppe_user.statusgruppe_id, "
-            . $_fullname_sql['full'] . " AS fullname , auth_user_md5.username, auth_user_md5.Email, auth_user_md5.Vorname, auth_user_md5.Nachname, "
-            . "user_info.Home, user_info.privatnr, user_info.privadr, user_info.title_front, user_info.title_rear "
-            . "FROM statusgruppe_user "
-            . "LEFT JOIN auth_user_md5 USING(user_id) "
-            . "LEFT JOIN user_info USING (user_id) "
-            . "WHERE statusgruppe_id = '$exportID'";
-
-    // all contacts from this user
-    } elseif ($mode == "group") {
-        $query = "SELECT contact.user_id, "
-            . $_fullname_sql['full'] . " AS fullname , auth_user_md5.username, auth_user_md5.Email, auth_user_md5.Vorname, auth_user_md5.Nachname, "
-            . "user_info.Home, user_info.privatnr, user_info.privadr, user_info.title_front, user_info.title_rear "
-            . "FROM contact "
-            . "LEFT JOIN auth_user_md5 USING(user_id) "
-            . "LEFT JOIN user_info USING (user_id) "
-            . "WHERE owner_id = '".$user->id."'";
-    // contact by username
-    } elseif ($mode == "username") {
-        $query = "SELECT auth_user_md5.user_id, "
-            . $_fullname_sql['full'] . " AS fullname , auth_user_md5.Email, auth_user_md5.username, auth_user_md5.Vorname, auth_user_md5.Nachname, "
-            . "user_info.Home, user_info.privatnr, user_info.privadr, user_info.title_front, user_info.title_rear "
-            . "FROM auth_user_md5 "
-            . "LEFT JOIN user_info USING (user_id) "
-            . "WHERE username = '".$exportID."'";
+    // Get contacts
+    $needle = $exportID;
+    if ($mode == 'group' && $exportID != 'all') {
+        // the users from one group
+        $query = "SELECT statusgruppe_id,
+                         user_id AS id, {$_fullname_sql['full']} AS FN,
+                         auth_user_md5.username AS NICKNAME, auth_user_md5.Email AS EMAIL,
+                         auth_user_md5.Vorname AS gname, auth_user_md5.Nachname AS fname,
+                         user_info.Home AS URL, user_info.privatnr AS TEL, user_info.privadr AS ADR,
+                         user_info.title_front AS prefix, user_info.title_rear AS suffix
+                  FROM statusgruppe_user
+                  LEFT JOIN auth_user_md5 USING (user_id)
+                  LEFT JOIN user_info USING (user_id)
+                  WHERE statusgruppe_id = ?";
+    
+    } elseif ($mode == 'group') {
+        // all contacts from this user
+        $query = "SELECT user_id AS id, {$_fullname_sql['full']} AS FN,
+                         auth_user_md5.username AS NICKNAME, auth_user_md5.Email AS EMAIL,
+                         auth_user_md5.Vorname AS gname, auth_user_md5.Nachname AS fname,
+                         user_info.Home AS URL, user_info.privatnr AS TEL, user_info.privadr AS ADR,
+                         user_info.title_front AS prefix, user_info.title_rear AS suffix
+                  FROM contact
+                  LEFT JOIN auth_user_md5 USING (user_id)
+                  LEFT JOIN user_info USING (user_id)
+                  WHERE owner_id = ?";
+        $needle = $user->id;
+    } elseif ($mode == 'username') {
+        // contact by username
+        $query = "SELECT user_id AS id, {$_fullname_sql['full']} AS FN,
+                         auth_user_md5.username AS NICKNAME, auth_user_md5.Email AS EMAIL,
+                         auth_user_md5.Vorname AS gname, auth_user_md5.Nachname AS fname,
+                         user_info.Home AS URL, user_info.privatnr AS TEL, user_info.privadr AS ADR,
+                         user_info.title_front AS prefix, user_info.title_rear AS suffix
+                  FROM auth_user_md5
+                  LEFT JOIN user_info USING (user_id)
+                  WHERE username = ?";
     } else {
-        $query = "SELECT contact.user_id, "
-            . $_fullname_sql['full'] . " AS fullname , auth_user_md5.username, auth_user_md5.Email, auth_user_md5.Vorname, auth_user_md5.Nachname, "
-            . "user_info.Home, user_info.privatnr, user_info.privadr, user_info.title_front, user_info.title_rear "
-            . "FROM contact "
-            . "LEFT JOIN auth_user_md5 USING(user_id) "
-            . "LEFT JOIN user_info USING (user_id) "
-            . "WHERE contact_id = '".$exportID."'";
+        $query = "SELECT user_id AS id, {$_fullname_sql['full']} AS FN,
+                         auth_user_md5.username AS NICKNAME, auth_user_md5.Email AS EMAIL,
+                         auth_user_md5.Vorname AS gname, auth_user_md5.Nachname AS fname,
+                         user_info.Home AS URL, user_info.privatnr AS TEL, user_info.privadr AS ADR,
+                         user_info.title_front AS prefix, user_info.title_rear AS suffix
+                  FROM contact
+                  LEFT JOIN auth_user_md5 USING (user_id)
+                  LEFT JOIN user_info USING (user_id)
+                  WHERE contact_id = ?";
     }
+    $statement = DBManager::Get()->prepare($query);
+    $statement->execute(array($needle));
 
-    $db->query($query);
-
-    $i = 0;
-    while ($db->next_record()){
-        if (get_visibility_by_id($db->f("user_id"))) {
-            $contacts[$i] = array(
-                    "id" => $db->f("user_id"),
-                    "FN" => $db->f("fullname"),
-                    "NICKNAME" => $db->f("username"),
-                    "URL" => $db->f("Home"),
-                    "TEL" => $db->f("privatnr"),
-                    "ADR" => $db->f("privadr"),
-                    "EMAIL" => $db->f("Email"),
-                    "gname" => $db->f("Vorname"),
-                    "fname" => $db->f("Nachname"),
-                    "prefix" => $db->f("title_front"),
-                    "suffix" => $db->f("title_rear")
-                    );
-
-            // collecting the office data
-            $query = "SELECT a.*, "
-                . "b.Institut_id as inst_id, b.Name as fak_name, b.Strasse as fak_strasse, b.Plz as fak_plz, "
-                . "b.url as fak_url, b.telefon as fak_TEL, b.email as fak_mail, b.fax as fak_FAX "
-                . "FROM user_inst a "
-                . "LEFT JOIN Institute b USING (Institut_id) "
-                . "WHERE user_id = '".$contacts[$i]["id"]."' AND inst_perms != 'user'"
-                . "AND externdefault = 1 "
-                . "AND visible = 1";
-            $db2->query($query);
-
-            // if externdefault isn't set
-            if ($db2->num_rows() == 0) {
-                $query = "SELECT a.*, "
-                . "b.Institut_id as inst_id, b.Name as fak_name, b.Strasse as fak_strasse, b.Plz as fak_plz, "
-                . "b.url as fak_url, b.telefon as fak_TEL, b.email as fak_mail, b.fax as fak_FAX "
-                . "FROM user_inst a "
-                . "LEFT JOIN Institute b USING (Institut_id) "
-                . "WHERE user_id = '".$contacts[$i]["id"]."' AND inst_perms != 'user' "
-                . "AND visible = 1 ORDER BY priority ASC";
-                $db2->query($query);
-            }
-
-            $j = 0;
-
-            while ($db2->next_record()){
-                $grouppositions = GetRoleNames(GetAllStatusgruppen($db2->f("inst_id"),$contacts[$i]["id"]));
-                if (is_array($grouppositions)){
-                    $positions_tmp = array_values($grouppositions);
-                    $positions = $positions_tmp[0];
-                    for ($k=1;$k<sizeof($positions_tmp);$k++){
-                        $positions .= ", ".$positions_tmp[$k];
-                    }
-                }
-                else
-                    $positions = NULL;
-
-                $contacts[$i]["fak"][$j] = array(
-                        "fak_name" => $db2->f("fak_name"),
-                        "consultation_hours" => $db2->f("sprechzeiten"),
-                        "room" => $db2->f("raum"),
-                        "TEL" => $db2->f("Telefon"),
-                        "FAX" => $db2->f("Fax"),
-                        "fak_strasse" => $db2->f("fak_strasse"),
-                        "fak_plz" => $db2->f("fak_plz"),
-                        "fak_url" => $db2->f("fak_url"),
-                        "fak_TEL" => $db2->f("fak_TEL"),
-                        "fak_mail" => $db2->f("fak_mail"),
-                        "fak_FAX" => $db2->f("fak_FAX"),
-                        "fak_position" => $positions
-                        );
-                //              print "TEL: ".$contacts[$i]["fak"][$j]["TEL"]."<br>";
-                $j++;
-            }
-            $statusgruppe_id = $db->f("statusgruppe_id");
-            $i++;
+    $contacts = array();
+    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+        if (!get_visibility_by_id($row['id'])) {
+            continue;
         }
+
+        $contact = $row;
+        $contact['fak'] = array();
+        unset($contact['statusgruppe_id']);
+
+        $inner_statement->execute(array($row['id'], 1));
+        $temp = $inner_statement->fetchAll(PDO::FETCH_ASSOC);
+        $inner_statement->closeCursor();
+        
+        if (empty($temp)) {
+            $inner_statement->execute(array($row['id'], 0));
+            $temp = $inner_statement->fetchAll(PDO::FETCH_ASSOC);
+            $inner_statement->closeCursor();
+        }
+
+        foreach ($temp as $inner_row) {
+            $grouppositions = GetRoleNames(GetAllStatusgruppen($inner_row['inst_id'], $row['id']));
+            if (is_array($grouppositions)) {
+                $inner_row['fak_position'] = implode(', ', $grouppositions);
+            } else {
+                $inner_row['fak_position'] = null;
+            }
+            unset($inner_row['inst_id']);
+            
+            $contact['fak'][] = $inner_row;
+        }
+        
+        $contacts[] = $contact;
+
+        $statusgruppe_id = $row['statusgruppe_id'];
     }
 
     //geting the groupname
-    if ($exportID != "all"){
-        $query = "SELECT name FROM statusgruppen WHERE statusgruppe_id = '".$statusgruppe_id."'";
-        $db->query($query);
-        $db->next_record();
-        $groupname = $db->f("name");
+    if ($exportID != 'all') {
+        $query = "SELECT name FROM statusgruppen WHERE statusgruppe_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($statusgruppe_id));
+        $groupname = $statement->fetchColumn();
     } else {
-        $groupname  = _("StudIP-Kontakte");
+        $groupname  = _('StudIP-Kontakte');
     }
-    $contacts["groupname"] = $groupname;
+    $contacts['groupname'] = $groupname;
+
     return $contacts;
 }
 

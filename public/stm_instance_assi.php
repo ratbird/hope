@@ -298,41 +298,45 @@ class InstanceStmControl {
     function getMyStmInstances() {
 
         global $perm, $user;
-        $db = new DB_Seminar;
 
+        $parameters = array(
+            ':lang_id' => LANGUAGE_ID,
+            ':user_id' => $user->id,
+        );
         if ($perm->get_perm() == 'dozent'){
-            $db->query("SELECT stm_instances.stm_instance_id, title FROM stm_instances  NATURAL JOIN  stm_instances_text WHERE stm_instances_text.lang_id='".LANGUAGE_ID."'  AND responsible='" . $user->id . "' ORDER BY title");
+            $query = "SELECT stm_instances.stm_instance_id, title
+                      FROM stm_instances
+                      NATURAL JOIN stm_instances_text
+                      WHERE stm_instances_text.lang_id = :lang_id AND responsible = :user_id
+                      ORDER BY title";
         } elseif ($perm->get_perm() == 'admin'){
-            $db->query("SELECT stm_instances.stm_instance_id, title
-                        FROM stm_instances  NATURAL JOIN  stm_instances_text
-                        WHERE stm_instances_text.lang_id='".LANGUAGE_ID."'
-                        AND homeinst IN (
-                        SELECT institut_id
-                        FROM user_inst a
-                        WHERE user_id = '" . $user->id . "'
-                        AND inst_perms = 'admin'
+            $query = "SELECT stm_instances.stm_instance_id, title
+                      FROM stm_instances
+                      NATURAL JOIN stm_instances_text
+                      WHERE stm_instances_text.lang_id = :lang_id AND homeinst IN (
+                          SELECT institut_id FROM user_inst WHERE user_id = :user_id AND inst_perms = 'admin'
                         UNION DISTINCT
-                        SELECT c.institut_id
-                        FROM user_inst a
-                        INNER JOIN Institute b ON ( a.Institut_id = b.Institut_id
-                        AND b.Institut_id = b.fakultaets_id )
-                        INNER JOIN Institute c ON ( c.fakultaets_id = b.institut_id
-                        AND c.fakultaets_id != c.institut_id )
-                        WHERE user_id = '" . $user->id . "'
-                        AND inst_perms = 'admin'
-                        ) ORDER BY title");
+                          SELECT c.institut_id
+                          FROM user_inst AS a
+                          INNER JOIN Institute AS b ON (a.Institut_id = b.Institut_id AND b.Institut_id = b.fakultaets_id)
+                          INNER JOIN Institute AS c ON (b.Institut_id = c.fakultaets_id AND c.fakultaets_id != c.Institut_id)
+                          WHERE user_id = :user_id AND inst_perms = 'admin'
+                      )
+                      ORDER BY title";
         } else {
-            $db->query("SELECT stm_instance_id, title FROM stm_instances_text WHERE lang_id='".LANGUAGE_ID."' ORDER BY title");
+            $query = "SELECT stm_instance_id, title
+                      FROM stm_instances_text
+                      WHERE lang_id = :lang_id
+                      ORDER BY title";
+            unset($parameters[':user_id']);
         }
-        if (!$db->num_rows())
-            return array();
-
-        $stm_arr = array();
-
-        while ($db->next_record()) {
-            $stm_arr[$db->f('stm_instance_id')] = $db->f("title");
+        $statement = DBManager::get()->prepare($query);
+        foreach ($parameters as $key => $value) {
+            $statement->bindValue($key, $value);
         }
-        return $stm_arr;
+        $statement->execute();
+
+        return $statement->fetchGrouped(PDO::FETCH_COLUMN);
     }
 
     function show(){
@@ -642,54 +646,71 @@ class InstanceStmControl {
 
         global $perm;
         global $user;
+        
+        $query = "SELECT Institut_id AS value, CONCAT(REPEAT('&#160;', 4), Name) AS name
+                  FROM Institute
+                  WHERE fakultaets_id = ? AND Institut_id != fakultaets_id
+                  ORDER BY Name";
+        $inner_statement = DBManager::get()->prepare($query);
 
-        $db = new DB_Seminar;
-        $db2 = new DB_Seminar;
-
-        if (!$perm->have_perm('admin'))
-            $db->query("SELECT Name, a.Institut_id AS Institut_id,IF(a.Institut_id=fakultaets_id,1,0) AS is_fak,inst_perms FROM user_inst a LEFT JOIN Institute b ON a.Institut_id=b.Institut_id WHERE (user_id = '" . $user->id . "' AND inst_perms = 'dozent' ) ORDER BY is_fak,Name") ;
-        elseif (!$perm->have_perm('root'))
-            $db->query("SELECT Name, a.Institut_id AS Institut_id ,IF(a.Institut_id=fakultaets_id,1,0) AS is_fak,inst_perms FROM user_inst a LEFT JOIN Institute b ON a.Institut_id=b.Institut_id WHERE (user_id = '" . $user->id . "' AND inst_perms = 'admin') ORDER BY is_fak,Name") ;
-        else
-            $db->query("SELECT Name, Institut_id, '1' AS is_fak,'admin' AS inst_perms FROM Institute WHERE Institut_id=fakultaets_id ORDER BY Name") ;
-
-        if (!$db->num_rows())
-            return array();
+        $parameters = array($user->id);
+        if (!$perm->have_perm('admin')) {
+            $query = "SELECT Name, Institut_id, Institut_id = fakultaets_id AS is_fak, inst_perms
+                      FROM user_inst
+                      LEFT JOIN Institute USING (Institut_id)
+                      WHERE user_id = ? AND inst_perms = 'dozent'
+                      ORDER BY is_fak, Name";
+        } else if (!$perm->have_perm('root')) {
+            $query = "SELECT Name, Institut_id, Institut_id = fakultaets_id AS is_fak, inst_perms
+                      FROM user_inst
+                      LEFT JOIN Institute USING (Institut_id)
+                      WHERE user_id = ? AND inst_perms = 'admin'
+                      ORDER BY is_fak, Name";
+        } else {
+            $query = "SELECT Name, Institut_id, 1 AS is_fak, 'admin' AS inst_perms
+                      FROM Institute
+                      WHERE Institut_id = fakultaets_id
+                      ORDER BY Name";
+            $parameters = array();
+        }
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute($parameters);
 
         $inst_arr = array();
-        while ($db->next_record()) {
-            $inst_arr[] = array('name' => $db->f("Name") , 'value' => $db->f('Institut_id'));
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $inst_arr[] = array('name' => $row['Name'], 'value' => $row['Institut_id']);
 
-            if ($db->f("is_fak") && $db->f("inst_perms") == "admin") {
-                $db2->query("SELECT Institut_id, Name FROM Institute
-                     WHERE fakultaets_id= '" . $db->f("Institut_id") . "' AND Institut_id!= '" . $db->f("Institut_id") . "' ORDER BY Name");
-
-                if ($db2->num_rows()) {
-                    while ($db2->next_record()) {
-                        $inst_arr[] = array('name' => '&#160;&#160;&#160;&#160;' . $db2->f('Name') , 'value' => $db2->f('Institut_id'));
-                    }
+            if ($row['is_fak'] && $row['inst_perms'] == 'admin') {
+                $inner_statement->execute(array($row['Institut_id']));
+                while ($temp = $inner_statement->fetch(PDO::FETCH_ASSOC)) {
+                    $inst_arr[] = $temp;
                 }
-
+                $inner_statement->closeCursor();
             }
         }
         return $inst_arr;
 
     }
 
-    function searchUser($inst_id, $search_str) {
+    function searchUser($inst_id, $search_str)
+    {
         global $_fullname_sql;
-        $db = new DB_Seminar;
 
-        $db->query("SELECT DISTINCT user_info.user_id AS user_id, " . $_fullname_sql['full_rev'] . " AS fullname FROM user_inst LEFT JOIN auth_user_md5 USING (user_id) LEFT JOIN user_info USING(user_id) WHERE Institut_id = '" . $inst_id . "' AND inst_perms = 'dozent'  AND (username LIKE '%" . $search_str . "%' OR Vorname LIKE '%" . $search_str . "%' OR Nachname LIKE '%" . $search_str . "%') ORDER BY Nachname");
+        $query = "SELECT DISTINCT user_id AS value, {$_fullname_sql['full_rev']} AS name
+                  FROM user_inst
+                  LEFT JOIN auth_user_md5 USING (user_id)
+                  LEFT JOIN user_info USING (user_id)
+                  WHERE Institut_id = :inst_id AND inst_perms = 'dozent'
+                    AND (username LIKE CONCAT('%', :needle, '%') OR
+                         Vorname LIKE CONCAT('%', :needle, '%') OR
+                         Nachname LIKE CONCAT('%', :needle, '%'))
+                  ORDER BY Nachname, Vorname";
+        $statement = DBManager::get()->prepare($query);
+        $statement->bindValue(':inst_id', $inst_id);
+        $statement->bindValue(':needle', $search_str);
+        $statement->execute();
 
-        $found_arr = array();
-
-        if ($db->num_rows()) {
-            while ($db->next_record()) {
-                $found_arr[] = array('name' => $db->f("fullname"), 'value' => $db->f("user_id"));
-            }
-        }
-        return $found_arr;
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 }
 

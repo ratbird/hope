@@ -166,10 +166,10 @@ class Admin_UserController extends AuthenticatedController
                 //delete
                 if ($umanager->deleteUser(Request::option('documents', false))) {
                     $details = explode('§', str_replace(array('msg§', 'info§', 'error§'), '', substr($umanager->msg, 0, -1)));
-                    PageLayout::postMessage(MessageBox::success(htmlReady(sprintf(_('Der Benutzer "%s %s (%s)" wurde erfolgreich gelöscht'), $user['Vorname'], $user['Nachname'], $user['username'])), $details));
+                    PageLayout::postMessage(MessageBox::success(htmlReady(sprintf(_('Der Benutzer "%s %s (%s)" wurde erfolgreich gelöscht.'), $user['Vorname'], $user['Nachname'], $user['username'])), $details));
                 } else {
                     $details = explode('§', str_replace(array('msg§', 'info§', 'error§'), '', substr($umanager->msg, 0, -1)));
-                    PageLayout::postMessage(MessageBox::error(htmlReady(sprintf(_('Fehler! Der Benutzer "%s %s (%s)" konnte nicht gelöscht werden'), $user['Vorname'], $user['Nachname'], $user['username'])), $details));
+                    PageLayout::postMessage(MessageBox::error(htmlReady(sprintf(_('Fehler! Der Benutzer "%s %s (%s)" konnte nicht gelöscht werden.'), $user['Vorname'], $user['Nachname'], $user['username'])), $details));
                 }
 
                 //reavtivate messages

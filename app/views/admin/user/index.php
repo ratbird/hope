@@ -131,7 +131,7 @@ $infobox = array(
             'kategorie' => _("Information"),
             'eintrag'   => array(
                 array(
-                    "text" => _("Auf dieser Seite können Sie nach Benutzer suchen und die Daten einsehen bzw. verändern."),
+                    "text" => _("Auf dieser Seite können Sie nach Benutzern suchen und die Benutzerdaten einsehen bzw. verändern."),
                     "icon" => "icons/16/black/info.png"
                 )
             )

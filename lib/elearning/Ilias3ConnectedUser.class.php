@@ -48,11 +48,13 @@ class Ilias3ConnectedUser extends ConnectedUser
         parent::readData();
         if($this->is_connected){
             $user_id = $connected_cms[$this->cms_type]->soap_client->lookupUser($this->login);
-            if($user_id == false){
-                $query = "DELETE FROM auth_extern WHERE studip_user_id = ? LIMIT 1";
-                $statement = DBManager::get()->prepare($query);
-                $statement->execute(array($this->studip_id));
-
+            if (!$user_id) {
+                //do not delete in case of error
+                if($user_id !== false) {
+                    $query = "DELETE FROM auth_extern WHERE studip_user_id = ? LIMIT 1";
+                    $statement = DBManager::get()->prepare($query);
+                    $statement->execute(array($this->studip_id));
+                }
                 $this->id = '';
                 $this->login = '';
                 $this->external_password = '';

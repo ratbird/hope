@@ -155,7 +155,7 @@ class StudipFormat extends TextFormat
             'callback' => 'StudipFormat::markupCode'
         ),
         'media' => array(
-            'start'    => '\[(img|flash|audio|video)(.*?)\](.*?)([\s|$])',
+            'start'    => '\[(img|flash|audio|video)(.*?)\](.*?)(?=\s|$)',
             'callback' => 'StudipFormat::markupMedia'
         ),
         'emails' => array(
@@ -163,7 +163,7 @@ class StudipFormat extends TextFormat
             'callback' => 'StudipFormat::markupEmails'
         ),
         'links' => array(
-            'start'    => '\[(.*?)\](.*?)([\s|$])',
+            'start'    => '\[(.*?)\](.*?)(?=\s|$)',
             'callback' => 'StudipFormat::markupLinks'
         ),
     );

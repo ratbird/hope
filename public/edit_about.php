@@ -190,7 +190,7 @@ if (check_ticket(Request::option('studipticket'))) {
 
         $query = "UPDATE datafields_entries
                   SET content = ?
-                  WHERE datafields_id = ? AND range_id = ? AND sec_range_id = ?";
+                  WHERE datafield_id = ? AND range_id = ? AND sec_range_id = ?";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array(
             $default_entries[Request::option('chgdef_entry_id')],

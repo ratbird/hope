@@ -495,9 +495,9 @@ class StudipFormat extends TextFormat
         
         $url = TransformInternalLinks($url);
         
-        return sprintf('<a href="%s" class="%s"%s>%s</a>%s',
-            htmlReady($url),
+        return sprintf('<a class="%s" href="%s"%s>%s</a>%s',
             $intern ? "link-intern" : "link-extern",
+            htmlReady($url),
             $intern ? "" : ' target="_blank"',
             $title,
             $whitespace

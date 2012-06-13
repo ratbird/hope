@@ -307,8 +307,11 @@ function formatReady ($what, $trim = TRUE, $extern = FALSE, $wiki = FALSE, $show
     $markup = new StudipFormat();
     $what = preg_replace("/\r\n?/", "\n", $what);
 
-    $what = FixLinks(htmlReady($what, $trim), FALSE, FALSE, TRUE, false, $wiki);
-    $what = symbol(smile(latex($markup->format($what), false)));
+    if ($wiki) {
+        
+    }
+    $what = $markup->format($what);
+    $what = symbol(smile(latex($what, false)));
     return str_replace("\n", '<br>', $what);
 }
 
@@ -595,10 +598,8 @@ function preg_call_link ($params, $mod, $img, $extern = FALSE, $wiki = FALSE) {
     $chars= '&;_a-z0-9-';
 
     $pu = @parse_url($params[4]);
-    if (($pu['scheme'] == 'http' || $pu['scheme'] == 'https')
-    && ($pu['host'] == $_SERVER['HTTP_HOST'] || $pu['host'].':'.$pu['port'] == $_SERVER['HTTP_HOST'])
-    && strpos($pu['path'], $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP']) === 0){
-        $intern = true;
+    $intern = isLinkIntern($params[4]);
+    if ($intern) {
         list($pu['first_target']) = explode('/',substr($pu['path'],strlen($GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'])));
     }
 
@@ -648,13 +649,8 @@ function preg_call_link ($params, $mod, $img, $extern = FALSE, $wiki = FALSE) {
             if ($params[5] == 'img') {
                 $width = isset($width) ? "width=\"$width\"" : '';
                 $tbr = '<img src="'.$media_url."\" $width alt=\"{$params[1]}\" title=\"{$params[1]}\">";
-                if (preg_match('#(((https?://|ftp://)(['.$chars.':]+@)?)['.$chars.']+(\.['.$chars.':]+)*/?([^<\s]*[^\.\s\]<])*)#i', $params[7])) {
-                    $pum = @parse_url($params[7]);
-                    if (($pum['scheme'] == 'http' || $pum['scheme'] == 'https')
-                    && ($pum['host'] == $_SERVER['HTTP_HOST'] || $pum['host'].':'.$pum['port'] == $_SERVER['HTTP_HOST'])
-                    && strpos($pum['path'], $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP']) === 0){
-                        $imgintern = true;
-                    }
+                if (isURL($params[7])) {
+                    $imgintern = isLinkIntern($params[7]);
                     $tbr = '<a href="'.idna_link($params[7]).'"'.($imgintern ? '' : ' target="_blank"').'>'.$tbr.'</a>';
                 }
             } else if ($params[5] == 'audio') {
@@ -692,6 +688,20 @@ function preg_call_link ($params, $mod, $img, $extern = FALSE, $wiki = FALSE) {
     }
     if ($wiki) $tbr = '<nowikilink>'.$tbr.'</nowikilink>';
     return $tbr;
+}
+
+function isURL($url) {
+    return filter_var($url, FILTER_VALIDATE_URL) !== false;
+}
+
+function isLinkIntern($url) {
+    $pum = @parse_url($url);
+    if (($pum['scheme'] === 'http' || $pum['scheme'] === 'https')
+            && ($pum['host'] == $_SERVER['HTTP_HOST'] || $pum['host'].':'.$pum['port'] == $_SERVER['HTTP_HOST'])
+            && strpos($pum['path'], $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP']) === 0) {
+        return true;
+    }
+    return false;
 }
 
 /**

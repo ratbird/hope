@@ -264,7 +264,6 @@ class UserManagement
             $this->msg .= "error§" . _("E-Mail-Adresse syntaktisch falsch!") . "§";
             return FALSE;
         }
-        return true;
         // E-Mail reachable?
         if (!$this->validator->ValidateEmailHost($Email)) {      // Mailserver nicht erreichbar, ablehnen
             $this->msg .= "error§" . _("Mailserver ist nicht erreichbar!") . "§";

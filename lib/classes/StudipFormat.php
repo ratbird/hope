@@ -483,13 +483,13 @@ class StudipFormat extends TextFormat
      * Has lower priority than [code], [img], etc
      */
     protected static function markupLinks($markup, $matches) {
-        if ($matches[1][0] === "[") {
-            //Wiki-Syntax
-            return $matches[0];
-        }
         $title = $matches[1];
         $url = $matches[2];
         $whitespace = $matches[3];
+        if ($title[0] === "[" || $url[0] === "[") {
+            //Wiki-Syntax oder Forum
+            return $matches[0];
+        }
         
         $intern = isLinkIntern($url);
         

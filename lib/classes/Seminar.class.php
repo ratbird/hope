@@ -2446,7 +2446,7 @@ class Seminar
                       "position = ".$db->quote($new_position ? $new_position : 0).", " .
                       "gruppe = " . (int)select_group($this->getSemesterStartTime()) . ", " .
                        (in_array($status, words('tutor dozent')) ? "visible='yes', " : "" ) .
-                      "mkdate = ".$db->quote(time()));
+                      "mkdate = ".time());
             removeScheduleEntriesMarkedAsVirtual($user_id, $this->getId());
             return $this;
         } elseif (($force || $rangordnung[$old_status] < $rangordnung[$status])

@@ -71,12 +71,6 @@ if (get_config('CALENDAR_GROUP_ENABLE')) {
     require_once('lib/calendar/lib/Calendar.class.php');
 }
 
-$cssSw = new cssClassSwitcher;                                  // Klasse für Zebra-Design
-$cssSw->enableHover();
-
-echo "\n" . $cssSw->GetHoverJSFunction() . "\n";
-$cssSw->switchClass();
-
 $range_id_statusgruppe = $range_id = $GLOBALS['user']->id;
 
 // Beginn Funktionsteil

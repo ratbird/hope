@@ -51,22 +51,22 @@ class AvatarTestCase extends PHPUnit_Framework_TestCase {
 
   function test_avatar_url() {
     $url = $this->avatar->getCustomAvatarUrl(Avatar::NORMAL);
-    $this->assertEquals($url, "/dynamic/user/" . $this->avatar_id . "_normal.png");
+    $this->assertEquals("/dynamic/user/" . $this->avatar_id . "_normal.png", $url);
   }
 
   function test_avatar_path() {
     $path = $this->avatar->getCustomAvatarPath(Avatar::NORMAL);
-    $this->assertEquals($path, "/dynamic/user/" . $this->avatar_id . "_normal.png");
+    $this->assertEquals("/dynamic/user/" . $this->avatar_id . "_normal.png", $path);
   }
 
   function test_nobody_url() {
     $url = Avatar::getNobody()->getUrl(Avatar::NORMAL);
-    $this->assertEquals($url, "/dynamic/user/nobody_normal.png");
+    $this->assertEquals("/dynamic/user/nobody_normal.png", $url);
   }
 
   function test_nobody_path() {
     $path = Avatar::getNobody()->getCustomAvatarPath(Avatar::NORMAL);
-    $this->assertEquals($path, "/dynamic/user/nobody_normal.png");
+    $this->assertEquals("/dynamic/user/nobody_normal.png", $path);
   }
 }
 
@@ -111,22 +111,21 @@ class CourseAvatarTestCase extends PHPUnit_Framework_TestCase
 
   function test_avatar_url() {
     $url = $this->avatar->getCustomAvatarUrl(Avatar::NORMAL);
-    $this->assertEquals($url, "/dynamic/course/". $this->avatar_id . "_normal.png");
+    $this->assertEquals("/dynamic/course/". $this->avatar_id . "_normal.png", $url);
   }
 
   function test_avatar_path() {
     $path = $this->avatar->getCustomAvatarPath(Avatar::NORMAL);
-    $this->assertEquals($path, "/dynamic/course/". $this->avatar_id . "_normal.png");
+    $this->assertEquals("/dynamic/course/". $this->avatar_id . "_normal.png", $path);
   }
 
   function test_nobody_url() {
     $url = CourseAvatar::getNobody()->getUrl(Avatar::NORMAL);
-    $this->assertEquals($url, "/dynamic/course/nobody_normal.png");
+    $this->assertEquals("/dynamic/course/nobody_normal.png", $url);
   }
 
   function test_nobody_path() {
     $path = CourseAvatar::getNobody()->getCustomAvatarPath(Avatar::NORMAL);
-    $this->assertEquals($path, "/dynamic/course/nobody_normal.png");
+    $this->assertEquals("/dynamic/course/nobody_normal.png", $path);
   }
 }
-

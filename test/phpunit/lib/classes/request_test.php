@@ -40,14 +40,14 @@ class RequestTest extends PHPUnit_Framework_TestCase
         $_SERVER['SERVER_PORT'] = '443';
         $_SERVER['REQUEST_URI'] = '/do/it?now=1';
 
-        $this->assertEquals(Request::url(), 'https://www.example.com/do/it?now=1');
+        $this->assertEquals('https://www.example.com/do/it?now=1', Request::url());
 
         $_SERVER['HTTPS'] = '';
         $_SERVER['SERVER_NAME'] = 'www.example.com';
         $_SERVER['SERVER_PORT'] = '8080';
         $_SERVER['REQUEST_URI'] = '/index.php';
 
-        $this->assertEquals(Request::url(), 'http://www.example.com:8080/index.php');
+        $this->assertEquals('http://www.example.com:8080/index.php', Request::url());
     }
 
     public function testArrayAccess ()
@@ -180,13 +180,13 @@ class RequestMethodTest extends PHPUnit_Framework_TestCase
     public function testMethod()
     {
         $this->setRequestMethod('GET');
-        $this->assertEquals(Request::method(), 'GET');
+        $this->assertEquals('GET', Request::method());
     }
 
     public function testMethodUppercases()
     {
         $this->setRequestMethod('gEt');
-        $this->assertEquals(Request::method(), 'GET');
+        $this->assertEquals('GET', Request::method());
     }
 
     public function testRequestMethodGet()

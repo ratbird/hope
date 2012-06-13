@@ -45,13 +45,13 @@ class AssetsTestCase extends PHPUnit_Framework_TestCase {
 
 
   function test_url_should_return_ASSETS_URL() {
-    $this->assertEquals(Assets::url(), STATIC_ASSETS_URL);
+    $this->assertEquals(STATIC_ASSETS_URL, Assets::url());
   }
 
 
   function test_url_should_concats_argument() {
-    $this->assertEquals(Assets::url('prototype.js'),
-                       STATIC_ASSETS_URL . 'prototype.js');
+    $this->assertEquals(STATIC_ASSETS_URL . 'prototype.js',
+                        Assets::url('prototype.js'));
   }
 }
 
@@ -71,9 +71,9 @@ class DynamicAssetsTestCase extends PHPUnit_Framework_TestCase
 
   function test_url_without_arg_should_cycle() {
     for ($i = 0; $i < Assets::NUMBER_OF_ALIASES + 1; ++$i)
-      $this->assertEquals(Assets::url(),
-                         sprintf(DYNAMIC_ASSETS_URL,
-                                 $i % Assets::NUMBER_OF_ALIASES));
+      $this->assertEquals(sprintf(DYNAMIC_ASSETS_URL,
+                                  $i % Assets::NUMBER_OF_ALIASES),
+                          Assets::url());
   }
 
 
@@ -103,13 +103,13 @@ class AssetsHelpersTestCase extends PHPUnit_Framework_TestCase
 
   function test_image_path_should_add_directory_before_image() {
     $expected = STATIC_ASSETS_URL.'images/logo.png';
-    $this->assertEquals(Assets::image_path('logo.png'), $expected);
+    $this->assertEquals($expected, Assets::image_path('logo.png'));
   }
 
 
   function test_image_path_should_add_png_if_no_extension_were_given() {
     $expected = STATIC_ASSETS_URL.'images/logo.png';
-    $this->assertEquals(Assets::image_path('logo'), $expected);
+    $this->assertEquals($expected, Assets::image_path('logo'));
   }
 
 
@@ -121,13 +121,13 @@ class AssetsHelpersTestCase extends PHPUnit_Framework_TestCase
 
   function test_javascript_path_should_add_directory_before_script() {
     $expected = STATIC_ASSETS_URL.'javascripts/prototype.js';
-    $this->assertEquals(Assets::javascript_path('prototype.js'), $expected);
+    $this->assertEquals($expected, Assets::javascript_path('prototype.js'));
   }
 
 
   function test_javascript_path_should_add_js_if_no_extension_were_given() {
     $expected = STATIC_ASSETS_URL.'javascripts/prototype.js';
-    $this->assertEquals(Assets::javascript_path('prototype'), $expected);
+    $this->assertEquals($expected, Assets::javascript_path('prototype'));
   }
 
 
@@ -139,13 +139,13 @@ class AssetsHelpersTestCase extends PHPUnit_Framework_TestCase
 
   function test_stylesheet_path_should_add_directory_before_script() {
     $expected = STATIC_ASSETS_URL.'stylesheets/print.css';
-    $this->assertEquals(Assets::stylesheet_path('print.css'), $expected);
+    $this->assertEquals($expected, Assets::stylesheet_path('print.css'));
   }
 
 
   function test_stylesheet_path_should_add_css_if_no_extension_were_given() {
     $expected = STATIC_ASSETS_URL.'stylesheets/print.css';
-    $this->assertEquals(Assets::stylesheet_path('print'), $expected);
+    $this->assertEquals($expected, Assets::stylesheet_path('print'));
   }
 
 
@@ -157,54 +157,54 @@ class AssetsHelpersTestCase extends PHPUnit_Framework_TestCase
 
   function test_img_should_return_img_tag_with_alt_attribute() {
     $expected = '<img alt="Logo" src="'.STATIC_ASSETS_URL.'images/logo.png">';
-    $this->assertEquals(Assets::img('logo.png'), $expected);
+    $this->assertEquals($expected, Assets::img('logo.png'));
   }
 
 
   function test_img_should_respect_alt_attribute() {
     $expected = '<img alt="logo" src="'.STATIC_ASSETS_URL.'images/logo.png">';
-    $this->assertEquals(Assets::img('logo.png', array('alt' => 'logo')),
-                       $expected);
+    $this->assertEquals($expected,
+                        Assets::img('logo.png', array('alt' => 'logo')));
   }
 
 
   function test_img_should_respect_size_attribute() {
     $expected = '<img alt="Logo" height="20" src="'.STATIC_ASSETS_URL.'images/logo.png" width="10">';
-    $this->assertEquals(Assets::img('logo.png', array('size' => '10@20')),
-                       $expected);
+    $this->assertEquals($expected,
+                        Assets::img('logo.png', array('size' => '10@20')));
   }
 
 
   function test_img_should_respect_other_attributes() {
     $expected = '<img a="1" alt="Logo" b="2" src="'.STATIC_ASSETS_URL.'images/logo.png">';
-    $this->assertEquals(Assets::img('logo.png', array('a' => '1', 'b' => 2)),
-                       $expected);
+    $this->assertEquals($expected,
+                        Assets::img('logo.png', array('a' => '1', 'b' => 2)));
   }
 
 
   function test_script_should_return_script_tag() {
     $expected = '<script src="'.STATIC_ASSETS_URL.'javascripts/prototype.js"></script>' . "\n";
-    $this->assertEquals(Assets::script('prototype'), $expected);
+    $this->assertEquals($expected, Assets::script('prototype'));
   }
 
 
   function test_script_should_return_multiple_script_tags() {
     $expected  = '<script src="'.STATIC_ASSETS_URL.'javascripts/prototype.js"></script>' . "\n";
     $expected .= '<script src="'.STATIC_ASSETS_URL.'javascripts/scriptaculous.js"></script>' . "\n";
-    $this->assertEquals(Assets::script('prototype', 'scriptaculous'), $expected);
+    $this->assertEquals($expected, Assets::script('prototype', 'scriptaculous'));
   }
 
   function test_script_should_respect_url_parameters() {
     $expected  = '<script '.
                  'src="'.STATIC_ASSETS_URL.'javascripts/scriptaculous.js?load=effects,dragdrop">'.
                  '</script>' . "\n";
-    $this->assertEquals(Assets::script('scriptaculous.js?load=effects,dragdrop'), $expected);
+    $this->assertEquals($expected, Assets::script('scriptaculous.js?load=effects,dragdrop'));
   }
 
 
   function test_stylesheet_should_return_link_tag() {
     $expected = '<link href="'.STATIC_ASSETS_URL.'stylesheets/blue.css" media="screen" rel="stylesheet">' . "\n";
-    $this->assertEquals(Assets::stylesheet('blue'), $expected);
+    $this->assertEquals($expected, Assets::stylesheet('blue'));
   }
 
 
@@ -212,7 +212,7 @@ class AssetsHelpersTestCase extends PHPUnit_Framework_TestCase
     $expected  = '<link href="'.STATIC_ASSETS_URL.'stylesheets/blue.css" media="screen" rel="stylesheet">' . "\n";
     $expected .= '<link href="'.STATIC_ASSETS_URL.'stylesheets/green.css" media="screen" rel="stylesheet">' . "\n";
     $expected .= '<link href="'.STATIC_ASSETS_URL.'stylesheets/red.css" media="screen" rel="stylesheet">' . "\n";
-    $this->assertEquals(Assets::stylesheet('blue', 'green', 'red'), $expected);
+    $this->assertEquals($expected, Assets::stylesheet('blue', 'green', 'red'));
   }
 
 
@@ -220,6 +220,6 @@ class AssetsHelpersTestCase extends PHPUnit_Framework_TestCase
     $expected  = '<link href="'.STATIC_ASSETS_URL.'stylesheets/blue.css" media="all" rel="stylesheet">' . "\n";
     $expected .= '<link href="'.STATIC_ASSETS_URL.'stylesheets/green.css" media="all" rel="stylesheet">' . "\n";
     $expected .= '<link href="'.STATIC_ASSETS_URL.'stylesheets/red.css" media="all" rel="stylesheet">' . "\n";
-    $this->assertEquals(Assets::stylesheet('blue', 'green', 'red', array('media' => 'all')), $expected);
+    $this->assertEquals($expected, Assets::stylesheet('blue', 'green', 'red', array('media' => 'all')));
   }
 }

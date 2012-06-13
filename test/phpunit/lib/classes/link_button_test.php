@@ -25,47 +25,49 @@ class LinkButtonTestCase extends PHPUnit_Framework_TestCase
 
     function testCreateWithLabel()
     {
-        $this->assertEquals('' . LinkButton::create('yes'), '<a class="button" href="?" tabindex="0">yes</a>');
+        $this->assertEquals('<a class="button" href="?" tabindex="0">yes</a>',
+                            '' . LinkButton::create('yes'));
     }
 
     function testCreateWithLabelAndUrl()
     {
-        $this->assertEquals('' . LinkButton::create('yes', 'http://example.net'), '<a class="button" href="http://example.net" tabindex="0">yes</a>');
+        $this->assertEquals('<a class="button" href="http://example.net" tabindex="0">yes</a>',
+                            '' . LinkButton::create('yes', 'http://example.net'));
     }
 
     function testCreateWithLabelAndArray()
     {
-        $this->assertEquals('' . LinkButton::create('yes', array('a' => 1, 'b' => 2)),
-                            '<a a="1" b="2" class="button" href="?" tabindex="0">yes</a>');
+        $this->assertEquals('<a a="1" b="2" class="button" href="?" tabindex="0">yes</a>',
+                            '' . LinkButton::create('yes', array('a' => 1, 'b' => 2)));
     }
 
     function testCreateWithLabelUrlAndArray()
     {
-        $this->assertEquals('' . LinkButton::create('yes', 'http://example.net', array('a' => 1, 'b' => 2)),
-                            '<a a="1" b="2" class="button" href="http://example.net" tabindex="0">yes</a>');
+        $this->assertEquals('<a a="1" b="2" class="button" href="http://example.net" tabindex="0">yes</a>',
+                            '' . LinkButton::create('yes', 'http://example.net', array('a' => 1, 'b' => 2)));
     }
 
     function testCreateAccept()
     {
-        $this->assertEquals('' . LinkButton::createAccept(),
-                            '<a class="accept button" href="?" name="accept" tabindex="0">&uuml;bernehmen</a>');
+        $this->assertEquals('<a class="accept button" href="?" name="accept" tabindex="0">&uuml;bernehmen</a>',
+                            '' . LinkButton::createAccept());
     }
 
     function testCreateCancel()
     {
-        $this->assertEquals('' . LinkButton::createCancel(),
-                            '<a class="cancel button" href="?" name="cancel" tabindex="0">abbrechen</a>');
+        $this->assertEquals('<a class="cancel button" href="?" name="cancel" tabindex="0">abbrechen</a>',
+                            '' . LinkButton::createCancel());
     }
 
     function testCreatePreOrder()
     {
-        $this->assertEquals('' . LinkButton::createPreOrder(),
-                            '<a class="pre-order button" href="?" name="pre-order" tabindex="0">ok</a>');
+        $this->assertEquals('<a class="pre-order button" href="?" name="pre-order" tabindex="0">ok</a>',
+                            '' . LinkButton::createPreOrder());
     }
 
     function testCreateWithInsaneArguments()
     {
-        $this->assertEquals('' . LinkButton::create('>ok<', 'http://example.net?m=&m=', array('mad' => '<S>tu"ff')),
-                            '<a class="button" href="http://example.net?m=&amp;m=" mad="&lt;S&gt;tu&quot;ff" tabindex="0">&gt;ok&lt;</a>');
+        $this->assertEquals('<a class="button" href="http://example.net?m=&amp;m=" mad="&lt;S&gt;tu&quot;ff" tabindex="0">&gt;ok&lt;</a>',
+                            '' . LinkButton::create('>ok<', 'http://example.net?m=&m=', array('mad' => '<S>tu"ff')));
     }
 }

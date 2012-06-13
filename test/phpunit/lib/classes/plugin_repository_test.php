@@ -39,13 +39,13 @@ class PluginRepositoryTest extends PHPUnit_Framework_TestCase
     {
         $plugins = $this->repository->getPlugins();
 
-        $this->assertEquals(count($plugins), 2);
+        $this->assertEquals(2, count($plugins));
         $this->assertNotNull($plugins['Alija']);
         $this->assertNotNull($plugins['TracTickets']);
 
         $plugins = $this->repository->getPlugins('Ticket');
 
-        $this->assertEquals(count($plugins), 1);
+        $this->assertEquals(2, count($plugins));
         $this->assertNotNull($plugins['TracTickets']);
     }
 }

@@ -27,20 +27,20 @@ class NavigationTest extends PHPUnit_Framework_TestCase
     {
         $navigation = new Navigation('badge-test');
         $this->assertFalse($navigation->hasBadgeNumber());
-        $this->assertEquals($navigation->getBadgeNumber(), 0);
+        $this->assertEquals(0, $navigation->getBadgeNumber());
 
         $navigation->setBadgeNumber(23);
         $this->assertTrue($navigation->hasBadgeNumber());
-        $this->assertEquals($navigation->getBadgeNumber(), 23);
+        $this->assertEquals(23, $navigation->getBadgeNumber());
     }
 
     public function testTitle ()
     {
         $navigation = new Navigation('test');
-        $this->assertEquals($navigation->getTitle(), 'test');
+        $this->assertEquals('test', $navigation->getTitle());
 
         $navigation->setTitle('frob');
-        $this->assertEquals($navigation->getTitle(), 'frob');
+        $this->assertEquals('frob', $navigation->getTitle());
     }
 
     public function testImage ()
@@ -51,8 +51,8 @@ class NavigationTest extends PHPUnit_Framework_TestCase
         $navigation->setImage('foo.png', array('alt' => 'foo'));
         $assets_img = Assets::url('images/foo.png');
         $this->assertTrue($navigation->isVisible(true));
-        $this->assertEquals($navigation->getImage(),
-                           array('src' => $assets_img, 'alt' => 'foo'));
+        $this->assertEquals(array('src' => $assets_img, 'alt' => 'foo'),
+                            $navigation->getImage());
     }
 
     public function testActiveImage ()
@@ -61,12 +61,12 @@ class NavigationTest extends PHPUnit_Framework_TestCase
         $navigation->setImage('foo.png');
         $navigation->setActiveImage('bar.png');
 
-        $this->assertEquals($navigation->getImage(),
-                           array('src' => Assets::url('images/foo.png')));
+        $this->assertEquals(array('src' => Assets::url('images/foo.png')),
+                            $navigation->getImage());
 
         $navigation->setActive(true);
-        $this->assertEquals($navigation->getImage(),
-                           array('src' => Assets::url('images/bar.png')));
+        $this->assertEquals(array('src' => Assets::url('images/bar.png')),
+                            $navigation->getImage());
     }
 
     public function testURL ()
@@ -75,7 +75,7 @@ class NavigationTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($navigation->getURL(), 'foo.php');
 
         $navigation->setURL('bar.php', array('fuzz' => 'yes'));
-        $this->assertEquals($navigation->getURL(), 'bar.php?fuzz=yes');
+        $this->assertEquals('bar.php?fuzz=yes', $navigation->getURL());
         $this->assertTrue($navigation->isEnabled());
 
         $navigation->setEnabled(false);
@@ -95,16 +95,16 @@ class NavigationTest extends PHPUnit_Framework_TestCase
         $nav3 = new Navigation('baz', 'baz.php');
         $nav4 = new Navigation('egg', 'egg.php');
         $this->assertNull($navigation->getURL());
-        $this->assertEquals($navigation->getSubNavigation(), array());
+        $this->assertEquals(array(), $navigation->getSubNavigation());
 
         $navigation->addSubNavigation('a1', $nav1);
         $navigation->addSubNavigation('a2', $nav2);
         $navigation->addSubNavigation('a3', $nav3);
         $nav2->addSubNavigation('b1', $nav4);
         $this->assertFalse($navigation->isActive());
-        $this->assertEquals($navigation->getURL(), 'bar.php');
-        $this->assertEquals($navigation->getSubNavigation(),
-                           array('a1' => $nav1, 'a2' => $nav2, 'a3' => $nav3));
+        $this->assertEquals('bar.php', $navigation->getURL());
+        $this->assertEquals(array('a1' => $nav1, 'a2' => $nav2, 'a3' => $nav3),
+                            $navigation->getSubNavigation());
 
         $nav4->setActive(true);
         $this->assertTrue($navigation->isActive());
@@ -115,11 +115,11 @@ class NavigationTest extends PHPUnit_Framework_TestCase
         $navigation->insertSubNavigation('a3', $nav3, 'a2');
         $navigation->removeSubNavigation('a1');
         $nav2->insertSubNavigation('a1', $nav1, '');
-        $this->assertEquals($navigation->getURL(), 'baz.php');
-        $this->assertEquals($navigation->getSubNavigation(),
-                           array('a3' => $nav3, 'a2' => $nav2));
-        $this->assertEquals($nav2->getSubNavigation(),
-                           array('b1' => $nav4, 'a1' => $nav1));
+        $this->assertEquals('baz.php', $navigation->getURL());
+        $this->assertEquals(array('a3' => $nav3, 'a2' => $nav2),
+                            $navigation->getSubNavigation());
+        $this->assertEquals(array('b1' => $nav4, 'a1' => $nav1),
+                            $nav2->getSubNavigation());
     }
 
     public function testNavigationTree ()
@@ -138,9 +138,9 @@ class NavigationTest extends PHPUnit_Framework_TestCase
         Navigation::addItem('/test/a2/b1', $nav4);
         $this->assertTrue(Navigation::hasItem('/test/a2'));
         $this->assertFalse(Navigation::getItem('/test')->isActive());
-        $this->assertEquals(Navigation::getItem('/test')->getURL(), 'bar.php');
-        $this->assertEquals(Navigation::getItem('/test')->getSubNavigation(),
-                           array('a1' => $nav1, 'a2' => $nav2, 'a3' => $nav3));
+        $this->assertEquals('bar.php', Navigation::getItem('/test')->getURL());
+        $this->assertEquals(array('a1' => $nav1, 'a2' => $nav2, 'a3' => $nav3),
+                            Navigation::getItem('/test')->getSubNavigation());
 
         Navigation::activateItem('/test/a2/b1');
         $this->assertTrue(Navigation::getItem('/test')->isActive());
@@ -151,11 +151,11 @@ class NavigationTest extends PHPUnit_Framework_TestCase
         Navigation::insertItem('/test/a3', $nav3, 'a2');
         Navigation::removeItem('/test/a1');
         Navigation::insertItem('/test/a2/a1', $nav1, '');
-        $this->assertEquals(Navigation::getItem('/test')->getURL(), 'baz.php');
-        $this->assertEquals(Navigation::getItem('/test')->getSubNavigation(),
-                           array('a3' => $nav3, 'a2' => $nav2));
-        $this->assertEquals(Navigation::getItem('/test/a2')->getSubNavigation(),
-                           array('b1' => $nav4, 'a1' => $nav1));
+        $this->assertEquals('baz.php', Navigation::getItem('/test')->getURL());
+        $this->assertEquals(array('a3' => $nav3, 'a2' => $nav2),
+                            Navigation::getItem('/test')->getSubNavigation());
+        $this->assertEquals(array('b1' => $nav4, 'a1' => $nav1),
+                            Navigation::getItem('/test/a2')->getSubNavigation());
     }
 
     public function testExceptionOnGet ()

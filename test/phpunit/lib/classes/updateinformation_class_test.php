@@ -34,8 +34,8 @@ class UpdateInformationCase extends PHPUnit_Framework_TestCase
         $this->assertInternalType("array", $new_data);
         $this->assertInternalType("array", $new_data['test.myfunc']);
         $this->assertInternalType("string", $new_data['test.myfunc2']);
-        $this->assertEquals($new_data['test.myfunc']['test'], "TestValue");
-        $this->assertEquals($new_data['test.myfunc2'], "strangedata");
+        $this->assertEquals("TestValue", $new_data['test.myfunc']['test']);
+        $this->assertEquals("strangedata", $new_data['test.myfunc2']);
     }
     
     //kann man nicht automatischtesten, da abhängig von $_SERVER

@@ -401,9 +401,10 @@ class StudipFormat extends TextFormat
      */
     protected static function markupEmails($markup, $matches)
     {
-        $link_text = $matches[0] != '' ? $matches[0] : $matches[1];
+        var_dump($matches);
         $email = $matches[3];
         $domain = $matches[5];
+        $link_text = $email;
         
         $intern = $domain === $_SERVER['HTTP_HOST'];
         
@@ -495,9 +496,10 @@ class StudipFormat extends TextFormat
         
         $url = TransformInternalLinks($url);
         
-        return sprintf('<a href="%s" class="%s">%s</a>%s',
+        return sprintf('<a href="%s" class="%s"%s>%s</a>%s',
             htmlReady($url),
             $intern ? "link-intern" : "link-extern",
+            $intern ? "" : ' target="blank"',
             $title,
             $whitespace
         );

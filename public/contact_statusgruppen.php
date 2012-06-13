@@ -2,7 +2,7 @@
 # Lifter001: TEST
 # Lifter002: TODO
 # Lifter007: TODO
-# Lifter003: TODO
+# Lifter003: TEST
 # Lifter010: TODO
 /*
   contact_statusgruppe.php - Statusgruppen-Verwaltung von Stud.IP.
@@ -110,23 +110,38 @@ function PrintAktualStatusgruppen($range_id, $view, $edit_id = '')
 {
     global $range_id_statusgruppe, $_fullname_sql, $user;
 
-    $db = new DB_Seminar();
-    $db2 = new DB_Seminar();
-    $db3 = new DB_Seminar();
-    $db->query("SELECT name, statusgruppe_id, calendar_group, 
-        (SELECT COUNT(*) FROM statusgruppe_user
-            WHERE statusgruppe_user.statusgruppe_id = statusgruppen.statusgruppe_id) as count
-        FROM statusgruppen 
-        WHERE range_id = '$range_id_statusgruppe' ORDER BY position ASC");
-    $AnzahlStatusgruppen = $db->num_rows();
+    // Prepare statement for members of a contact group
+    $query = "SELECT statusgruppe_user.user_id, {$_fullname_sql['full']} AS fullname, username, nachname
+              FROM statusgruppe_user
+              LEFT JOIN auth_user_md5 USING (user_id)
+              LEFT JOIN user_info USING (user_id)
+              WHERE statusgruppe_id = ?
+              ORDER BY nachname";
+    $members_statement = DBManager::get()->prepare($query);
+
+    // Prepare statement for calendar permissions
+    $query = "SELECT calpermission
+              FROM contact
+              WHERE owner_id = ? AND user_id = ?";
+    $permission_statement = DBManager::get()->prepare($query);
+
+    // Prepare and execute main query that reads all contact groups
+    $query = "SELECT statusgruppe_id, name, calendar_group, COUNT(statusgruppe_user.user_id) AS count
+              FROM statusgruppen
+              LEFT JOIN statusgruppe_user USING (statusgruppe_id)
+              WHERE range_id = ?
+              GROUP BY statusgruppe_id
+              ORDER BY statusgruppen.position ASC";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($range_id_statusgruppe));
+
     $lid = rand(1, 1000);
     $i = 0;
     ?>
     <div class="sortable">
     <?
-    while ($db->next_record()) {
-        $statusgruppe_id = $db->f("statusgruppe_id");
-        $size = $db->f("size");
+    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+        $statusgruppe_id = $row['statusgruppe_id'];
         ?>
         <table id="<?= $statusgruppe_id ?>" width="95%" border="0" cellpadding="2" cellspacing="0" class="sortable">
             <tr class="handle">
@@ -137,7 +152,7 @@ function PrintAktualStatusgruppen($range_id, $view, $edit_id = '')
         echo tooltip(_("Markierte Personen dieser Gruppe zuordnen"));
         echo ">&nbsp; </td>";
 
-        $cal_group = get_config('CALENDAR_GROUP_ENABLE') && $db->f('calendar_group');
+        $cal_group = get_config('CALENDAR_GROUP_ENABLE') && $row['calendar_group'];
         echo '<td width="' . ($cal_group ? '80%' : '85%') . '" class="topic';
         echo ($edit_id == $statusgruppe_id ? ' topicwrite' : '') . '" style="cursor: move">';
         ?>
@@ -150,16 +165,12 @@ function PrintAktualStatusgruppen($range_id, $view, $edit_id = '')
                 <?= Assets::img('icons/16/blue/arr_1right.png') ?>
             <? endif ?>
                 <? /* <img style="vertical-align:top;" src="<?=. Assets::image_path( ? 'icons/16/blue/arr_1down.png' : 'icons/16/blue/arr_1right.png') */ ?>
-                <?= htmlReady($db->f("name")) ?>
+                <?= htmlReady($row['name']) ?>
             </a>
         </td>
 
         <td class="topic<?= $edit_id == $statusgruppe_id ? ' topicwrite' : '' ?>" style="width: 1%; white-space: nowrap">
-            <? if ($size) : ?>
-            <?= $db->f('count') ?> / <?= $size ?>
-            <? else : ?>
-            <?= $db->f('count') ?>
-            <? endif ?>
+            <?= $row['count']?>
         </td>
 
         <?
@@ -172,96 +183,90 @@ function PrintAktualStatusgruppen($range_id, $view, $edit_id = '')
         echo '<img src="' . Assets::image_path('icons/16/white/edit.png') . '" ';
         echo tooltip(_("Gruppenname oder -größe anpassen")) . '></a></td>';
 
-        printf("<td align=\"right\" width=\"1%%\" class=\"topic%s\"><a href=\"%s\"><img src=\"" . Assets::image_path('icons/16/white/trash.png') . "\" %s></a></td>", ($edit_id == $statusgruppe_id ? " topicwrite" : ''), URLHelper::getLink("?cmd=verify_remove_statusgruppe&statusgruppe_id=" . $statusgruppe_id . "&range_id=" . $range_id . "&view=" . $view . "&name=" . $db->f("name")), tooltip(_("Gruppe mit Personenzuordnung entfernen")));
+        printf("<td align=\"right\" width=\"1%%\" class=\"topic%s\"><a href=\"%s\"><img src=\"" . Assets::image_path('icons/16/white/trash.png') . "\" %s></a></td>", ($edit_id == $statusgruppe_id ? " topicwrite" : ''), URLHelper::getLink("?cmd=verify_remove_statusgruppe&statusgruppe_id=" . $statusgruppe_id . "&range_id=" . $range_id . "&view=" . $view . "&name=" . $row['name']), tooltip(_("Gruppe mit Personenzuordnung entfernen")));
         echo "\n</tr>";
 
         // if the current statusgroup is opened, display associated users
         if ($_SESSION['contact_statusgruppen']['group_open'][$statusgruppe_id]) {
-            $db2->query("SELECT statusgruppe_user.user_id, " . $_fullname_sql['full']
-                    . " AS fullname , username, nachname FROM statusgruppe_user LEFT JOIN auth_user_md5 "
-                    . "USING(user_id) LEFT JOIN user_info USING (user_id) WHERE "
-                    . "statusgruppe_id = '$statusgruppe_id' ORDER BY nachname");
+            $members_statement->execute(array($statusgruppe_id));
+
             $k = 1;
-            while ($db2->next_record()) {
-                if (get_visibility_by_id($db2->f("user_id"))) {
-                    $color = '#0000FF';
-                    // user entries
-
-                    $fullname = $db2->f('fullname');
-                    $identifier = $db2->f('username');
-
-                    // query whether the current user has the permission to access the calendar
-                    // of this user
-                    if (get_config('CALENDAR_GROUP_ENABLE')) {
-                        $query = "SELECT calpermission FROM contact WHERE owner_id = '" . $db2->f('user_id');
-                        $query .= "' AND user_id = '{$user->id}' AND calpermission > 1";
-                        $db3->query($query);
-                        if ($db3->num_rows())
-                            $color = '#FF0000';
-
-                        $query = "SELECT calpermission FROM contact WHERE owner_id = '{$user->id}'";
-                        $query .= " AND user_id = '" . $db2->f('user_id') . "'";
-                        $db3->query($query);
-                        $db3->next_record();
-                    }
-
-                    if ($k % 2) {
-                        $class = 'steel1';
-                    } else {
-                        $class = 'steelgraulight';
-                    }
-                    echo "\n<tr>\n\t\t<td><font color=\"#AAAAAA\">$k</font></td>";
-                    ?>
-
-                    <td class="<?= $class ?>" colspan="2">
-                        <a href="<?= URLHelper::getLink('about.php?username=' . $identifier) ?>">
-                            <span style="color: <?= $color ?>">
-                                <?= htmlReady($fullname) ?>
-                            </span>
-                        </a>
-                    </td>
-
-                    <?
-                    if (get_config('CALENDAR_GROUP_ENABLE')) {
-                        if ($cal_group) {
-                            echo '<td class="' . $class . '"> </td>';
-                        }
-                        echo '<td style="text-align: center;" class="' . $class . '">';
-                        echo '<a href="';
-                        switch ($db3->f('calpermission')) {
-                            case Calendar::PERMISSION_READABLE:
-                                echo URLHelper::getLink('#' . $statusgruppe_id, array('user_id' => $db2->f('user_id'), 'view' => $view, 'lid' => $lid, 'calperm' => Calendar::PERMISSION_WRITABLE)) . '">';
-                                echo Assets::img('icons/16/blue/visibility/calendar-visible.png', tooltip(_("Mein Kalender ist für diese Person lesbar")));
-                                break;
-                            case Calendar::PERMISSION_WRITABLE:
-                                echo URLHelper::getLink('#' . $statusgruppe_id, array('user_id' => $db2->f('user_id'), 'view' => $view, 'lid' => $lid, 'calperm' => Calendar::PERMISSION_FORBIDDEN)) . '">';
-                                echo Assets::img('icons/16/red/schedule.png', tooltip(_("Mein Kalender ist für diese Person schreibbar")));
-                                break;
-                            default:
-                                echo URLHelper::getLink('#' . $statusgruppe_id, array('user_id' => $db2->f('user_id'), 'view' => $view, 'lid' => $lid, 'calperm' => Calendar::PERMISSION_READABLE)) . '">';
-                                echo Assets::img('icons/16/blue/visibility/calendar-invisible.png', tooltip(_("Mein Kalender ist für diese Person unsichtbar")));
-                                break;
-                        }
-                        echo '</a></td>';
-
-                    } else {
-                        echo "<td class=\"$class\">&nbsp;</td>\n";
-                    }
-
-                    echo '<td style="text-align: center;" class="' . $class . '">';
-                    echo '<a href="' . URLHelper::getLink('#' . $statusgruppe_id, array('cmd' => 'remove_person', 'statusgruppe_id' => $statusgruppe_id, 'entry_id' => $identifier, 'range_id' => $range_id, 'view' => $view)) . '">';
-                    echo Assets::img('icons/16/blue/trash.png', tooltip(_("Person aus der Gruppe entfernen"))) . '</a></td>';
-                    echo "\n\t</tr>";
-                    $k++;
+            while ($member = $members_statement->fetch(PDO::FETCH_ASSOC)) {
+                if (!get_visibility_by_id($member['user_id'])) {
+                    continue;
                 }
-            }
-        }
 
-        if ($db->f('size')) while ($k <= $db->f("size")) {
-            echo "\n\t<tr>\n\t\t<td><font color=\"#FF4444\">$k</font></td>";
-            echo "<td class=\"blank\" colspan=\"3\">&nbsp; </td>";
-            echo "\n\t</tr>";
-            $k++;
+                $color = false;
+
+                // user entries
+                $fullname = $member['fullname'];
+                $identifier = $member['username'];
+
+                // query whether the current user has the permission to access the calendar
+                // of this user
+                if (get_config('CALENDAR_GROUP_ENABLE')) {
+                    $permission_statement->execute(array($member['user_id'], $user->id));
+                    $cal_permission = $permission_statement->fetchColumn();
+                    $permission_statement->closeCursor();
+
+                    if ($cal_permission > 1)
+                        $color = '#FF0000';
+                }
+
+                if ($k % 2) {
+                    $class = 'steel1';
+                } else {
+                    $class = 'steelgraulight';
+                }
+                echo "\n<tr>\n\t\t<td><font color=\"#AAAAAA\">$k</font></td>";
+                ?>
+
+                <td class="<?= $class ?>" colspan="2">
+                    <a href="<?= URLHelper::getLink('about.php?username=' . $identifier) ?>"
+                       <? if ($color) echo 'style="color:' . $color . '"'; ?>>
+                        <?= htmlReady($fullname) ?>
+                    </a>
+                </td>
+
+                <?
+                if (get_config('CALENDAR_GROUP_ENABLE')) {
+                    $permission_statement->execute(array($user->id, $member['user_id']));
+                    $cal_permission = $permission_statement->fetchColumn();
+                    $permission_statement->closeCursor();
+
+                    if ($cal_group) {
+                        echo '<td class="' . $class . '"> </td>';
+                    }
+                    echo '<td style="text-align: center;" class="' . $class . '">';
+                    echo '<a href="';
+                    switch ($cal_permission) {
+                        case Calendar::PERMISSION_READABLE:
+                            echo URLHelper::getLink('#' . $statusgruppe_id, array('user_id' => $member['user_id'], 'view' => $view, 'lid' => $lid, 'calperm' => Calendar::PERMISSION_WRITABLE)) . '">';
+                            echo Assets::img('icons/16/blue/visibility/calendar-visible.png', tooltip(_("Mein Kalender ist für diese Person lesbar")));
+                            break;
+                        case Calendar::PERMISSION_WRITABLE:
+                            echo URLHelper::getLink('#' . $statusgruppe_id, array('user_id' => $member['user_id'], 'view' => $view, 'lid' => $lid, 'calperm' => Calendar::PERMISSION_FORBIDDEN)) . '">';
+                            echo Assets::img('icons/16/red/schedule.png', tooltip(_("Mein Kalender ist für diese Person schreibbar")));
+                            break;
+                        default:
+                            echo URLHelper::getLink('#' . $statusgruppe_id, array('user_id' => $member['user_id'], 'view' => $view, 'lid' => $lid, 'calperm' => Calendar::PERMISSION_READABLE)) . '">';
+                            echo Assets::img('icons/16/blue/visibility/calendar-invisible.png', tooltip(_("Mein Kalender ist für diese Person unsichtbar")));
+                            break;
+                    }
+                    echo '</a></td>';
+
+                } else {
+                    echo "<td class=\"$class\">&nbsp;</td>\n";
+                }
+
+                echo '<td style="text-align: center;" class="' . $class . '">';
+                echo '<a href="' . URLHelper::getLink('#' . $statusgruppe_id, array('cmd' => 'remove_person', 'statusgruppe_id' => $statusgruppe_id, 'entry_id' => $identifier, 'range_id' => $range_id, 'view' => $view)) . '">';
+                echo Assets::img('icons/16/blue/trash.png', tooltip(_("Person aus der Gruppe entfernen"))) . '</a></td>';
+                echo "\n\t</tr>";
+                $k++;
+            }
+
+            $members_statement->closeCursor();
         }
 
         $i++;
@@ -279,90 +284,97 @@ function PrintSearchResults($search_exp, $range_id)
 {
     global $_fullname_sql, $user;
     $search_exp = '%' . $search_exp . '%';
-    $query = 'SELECT DISTINCT auth_user_md5.user_id, ' . $_fullname_sql['full_rev']
-            . ' AS fullname, username, perms '
-            . 'FROM auth_user_md5 LEFT JOIN user_info USING (user_id) '
-            . 'WHERE perms != ? AND '
-            . '(Vorname LIKE ? OR Nachname LIKE ? OR username LIKE ?) '
-            . 'ORDER BY Nachname';
-    $stmt = DBManager::get()->prepare($query);
-    $stmt->execute(array('user', $search_exp, $search_exp, $search_exp));
-    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $query = "SELECT DISTINCT user_id, {$_fullname_sql['full_rev']} AS fullname, username, perms
+              FROM auth_user_md5
+              LEFT JOIN user_info USING (user_id)
+              WHERE perms != 'user'
+                AND (Vorname LIKE CONCAT('%', :needle, '%') OR
+                    Nachname LIKE CONCAT('%', :needle, '%') OR
+                    username LIKE CONCAT('%', :needle, '%'))
+              ORDER BY Nachname";
+    $statement = DBManager::get()->prepare($query);
+    $statement->bindValue(':needle', $search_exp);
+    $statement->execute();
+    $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+
     if (!$result) {
         echo "&nbsp; " . _("keine Treffer") . "&nbsp; ";
-    } else {
-        $stmt2 = DBManager::get()->prepare('SELECT COUNT(*) FROM contact '
-                . 'WHERE owner_id = ? '
-                . 'AND user_id = ? AND calpermission > 1');
-        echo "&nbsp; <select name=\"Freesearch[]\" size=\"4\" >";
-        foreach ($result as $row) {
-            if (get_visibility_by_id($row['user_id'])) {
-                $have_perm = false;
-                if (get_config('CALENDAR_GROUP_ENABLE')) {
-                    $stmt2->execute(array($row['user_id'], $GLOBALS['user']->id));
-                    $have_perm = $stmt2->fetchColumn() > 0;
-                }
-                if ($have_perm) {
-                    printf("<option style=\"color:#ff0000;\" value=\"%s\">%s - %s\n", $row['username'], htmlReady(my_substr($row['fullname'], 0, 35) . " (" . $row['username'] . ")"), $row['perms']);
-                } else {
-                    printf("<option value=\"%s\">%s - %s\n", $row['username'], htmlReady(my_substr($row['fullname'], 0, 35) . " (" . $row['username'] . ")"), $row['perms']);
-                }
-            }
+        return;
+    } 
+
+    $query = "SELECT COUNT(*) FROM contact WHERE owner_id = ? AND user_id = ? AND calpermission > 1";
+    $statement = DBManager::get()->prepare($query);
+
+    echo "&nbsp; <select name=\"Freesearch[]\" size=\"4\" >";
+    foreach ($result as $row) {
+        if (!get_visibility_by_id($row['user_id'])) {
+            continue;
         }
-        echo "</select>";
+        $have_perm = false;
+        if (get_config('CALENDAR_GROUP_ENABLE')) {
+            $statement->execute(array($row['user_id'], $GLOBALS['user']->id));
+            $have_perm = $statement->fetchColumn() > 0;
+            $statement->closeCursor();
+        }
+        if ($have_perm) {
+            printf("<option style=\"color:#ff0000;\" value=\"%s\">%s - %s\n", $row['username'], htmlReady(my_substr($row['fullname'], 0, 35) . " (" . $row['username'] . ")"), $row['perms']);
+        } else {
+            printf("<option value=\"%s\">%s - %s\n", $row['username'], htmlReady(my_substr($row['fullname'], 0, 35) . " (" . $row['username'] . ")"), $row['perms']);
+        }
     }
+    echo "</select>";
 }
 
 function PrintAktualContacts($range_id)
 {
     global $_fullname_sql, $user;
     $selected = GetAllSelected($range_id);
-    $query = "SELECT contact.user_id, username, " . $_fullname_sql['full_rev'];
-    $query .= " AS fullname, perms FROM contact LEFT JOIN auth_user_md5 USING(user_id) ";
-    $query .= "LEFT JOIN user_info USING (user_id)  WHERE owner_id = '$range_id' ";
-    $query .= " ORDER BY Nachname ASC";
-    $db = new DB_Seminar();
-    $db2 = new DB_Seminar();
-    $db->query($query);
-    if ($db->num_rows() > 10) {
-        $size = 25;
-    } else {
-        $size = 10;
-    }
+
+    // Prepare calendar permission statement
+    $query = "SELECT calpermission
+              FROM contact
+              WHERE owner_id = ? AND user_id = ? AND calpermission > 1";
+    $permission_statement = DBManager::get()->prepare($query);
+
+    // Prepare and execute contacts query
+    $query = "SELECT user_id, username, {$_fullname_sql['full_rev']} AS fullname, perms
+              FROM contact
+              LEFT JOIN auth_user_md5 USING (user_id)
+              LEFT JOIN user_info USING (user_id)
+              WHERE owner_id = ?
+              ORDER BY Nachname ASC";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($range_id));
+    $contacts = $statement->fetchAll(PDO::FETCH_ASSOC);
+    
+    $size = (count($contacts) > 10) ? 25 : 10;
 
     echo "<font size=\"-1\">&nbsp; " . _("Personen im Adressbuch") . "</font><br>";
     echo "&nbsp; <select size=\"$size\" name=\"AktualMembers[]\" multiple>";
 
-    while ($db->next_record()) {
-        if (get_visibility_by_id($db->f('user_id'))) {
-            $have_perm = false;
-            if ($GLOBALS['CALENDAR_GROUP_ENABLE']) {
-                $query = "SELECT calpermission FROM contact WHERE owner_id = '" . $db->f('user_id');
-                $query .= "' AND user_id = '{$user->id}' AND calpermission > 1";
-                $db2->query($query);
-                $have_perm = $db2->num_rows();
-            }
-            if ($have_perm) {
-                if (in_array($db->f('user_id'), $selected)) {
-                    $tmpcolor = '#ff7777';
-                } else {
-                    $tmpcolor = '#ff0000';
-                }
-            } else {
-                if (in_array($db->f('user_id'), $selected)) {
-                    $tmpcolor = '#777777';
-                } else {
-                    $tmpcolor = '#000000';
-                }
-            }
-            echo "<option style=\"color:$tmpcolor;\" value=\"" . $db->f('username');
-            echo '">';
-            echo htmlReady(my_substr($db->f('fullname'), 0, 35) . " (" . $db->f('username') . ")");
-            echo " - " . $db->f('perms') . "</option>\n";
+    foreach ($contacts as $contact) {
+        if (!get_visibility_by_id($conact['user_id'])) {
+            continue;
         }
+        $have_perm = false;
+        if ($GLOBALS['CALENDAR_GROUP_ENABLE']) {
+            $permission_statement->execute(array($contact['user_id'], $user->id));
+            $have_perm = $permission_statement->fetchColumn();
+            $permission_statement->closeCursor();
+        }
+
+        if ($have_perm) {
+            $tmp_color = in_array($contact['user_id'], $selected) ? '#ff7777' : '#ff0000';
+        } else {
+            $tmp_color = in_array($contact['user_id'], $selected) ? '#777777' : '#000000';
+        }
+
+        echo "<option style=\"color:$tmpcolor;\" value=\"" . $contact['username'];
+        echo '">';
+        echo htmlReady(my_substr($contact['fullname'], 0, 35) . " (" . $contact['username'] . ")");
+        echo " - " . $contact['perms'] . "</option>\n";
     }
-
-
     echo "</select>";
 }
 
@@ -484,9 +496,13 @@ if (is_array($msgs)) {
                 <form action="<? echo URLHelper::getLink(sprintf('?cmd=edit_existing_statusgruppe#%s', $edit_id)) ?>" method="POST">
     <?= CSRFProtection::tokenTag() ?>
                     <?
-                    $db = new DB_Seminar("SELECT name, size, calendar_group FROM statusgruppen WHERE statusgruppe_id = '$edit_id'");
-                    if ($db->next_record()) {
-                        $gruppe_name = $db->f("name");
+                    $query = "SELECT name, size, calendar_group FROM statusgruppen WHERE statusgruppe_id = ?";
+                    $statement = DBManager::get()->prepare($query);
+                    $statement->execute(array($edit_id));
+                    $temp = $statement->fetch(PDO::FETCH_ASSOC);
+
+                    if ($temp) {
+                        $gruppe_name = $temp['name'];
                     }
                     echo"<input type=\"HIDDEN\" name=\"range_id\" value=\"$range_id\">";
                     echo"<input type=\"HIDDEN\" name=\"update_id\" value=\"$edit_id\">";
@@ -496,7 +512,7 @@ if (is_array($msgs)) {
                     <input type="text" name="new_statusgruppe_name" style="vertical-align:middle" value="<? echo htmlReady($gruppe_name); ?>">
                     <? if (get_config('CALENDAR_GROUP_ENABLE')) : ?>
                         <label><?= _('im Kalender auswählbar:') ?>
-                        <input type="checkbox" name="is_cal_group" value="1" class="text-top"<?= ($db->f('calendar_group') ? ' checked="checked"' : '') ?>></label>
+                        <input type="checkbox" name="is_cal_group" value="1" class="text-top"<?= ($temp['calendar_group'] ? ' checked' : '') ?>></label>
                     <? endif ?>
                     &nbsp; &nbsp; &nbsp; <b><?= _("&Auml;ndern") ?></b>&nbsp;
                     <?
@@ -512,9 +528,12 @@ if (is_array($msgs)) {
 </table><?
 // Ende Edit-Bereich
 // Anfang Personenbereich
-                $db = new DB_Seminar();
-                $db->query("SELECT name, statusgruppe_id, size FROM statusgruppen WHERE range_id = '$range_id_statusgruppe' ORDER BY position ASC");
-                if ($db->num_rows() > 0) {   // haben wir schon Gruppen? dann Anzeige
+                $query = "SELECT 1 FROM statusgruppen WHERE range_id = ?";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($range_id_statusgruppe));
+                $present = $statement->fetchColumn();
+
+                if ($present) {   // haben wir schon Gruppen? dann Anzeige
                     ?>
     <form action="<? echo URLHelper::getLink('?cmd=move_person') ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
@@ -525,36 +544,36 @@ if (is_array($msgs)) {
     <?
     echo"<input type=\"HIDDEN\" name=\"range_id\" value=\"$range_id\">\n";
     echo"<input type=\"HIDDEN\" name=\"view\" value=\"$view\">\n";
-    if ($db->num_rows() > 0) {
-        $nogroups = 1;
-        PrintAktualContacts($range_id);
-        ?>
-                        <br><br>
-        <?
-        $search_exp = Request::quoted('search_exp');
-        if ($search_exp) {
 
-            $search_exp = str_replace("%", "\%", $search_exp);
-            $search_exp = str_replace("_", "\_", $search_exp);
-            if (strlen(trim($search_exp)) < 3) {
-                echo "&nbsp; <font size=\"-1\">" . _("Ihr Suchbegriff muss mindestens 3 Zeichen umfassen!");
-                echo "<br><br><font size=\"-1\">&nbsp; " . _("freie Personensuche (wird in Adressbuch übernommen)") . "</font><br>";
-                echo "&nbsp; <input type=\"text\" name=\"search_exp\" value=\"\">";
-                printf(" <input class=\"middle\" type=\"IMAGE\" name=\"search\" src=\"" . Assets::image_path('icons/16/blue/search.png') . "\"  value=\" %s \" %s>&nbsp;  ", _("Person suchen"), tooltip(_("Person suchen")));
-            } else {
-                PrintSearchResults($search_exp, $range_id);
-                printf("<input type=\"IMAGE\" name=\"search\" src=\"" . Assets::image_path('icons/16/blue/refresh.png') . "\"  value=\" %s \" %s>&nbsp;  ", _("neue Suche"), tooltip(_("neue Suche")));
-            }
-        } else {
-            echo _("freie Personensuche (wird in Adressbuch &uuml;bernommen)") . "<br>";
+    $nogroups = 1;
+    PrintAktualContacts($range_id);
+    ?>
+                    <br><br>
+    <?
+    $search_exp = Request::quoted('search_exp');
+    if ($search_exp) {
+
+        $search_exp = str_replace("%", "\%", $search_exp);
+        $search_exp = str_replace("_", "\_", $search_exp);
+        if (strlen(trim($search_exp)) < 3) {
+            echo "&nbsp; <font size=\"-1\">" . _("Ihr Suchbegriff muss mindestens 3 Zeichen umfassen!");
+            echo "<br><br><font size=\"-1\">&nbsp; " . _("freie Personensuche (wird in Adressbuch übernommen)") . "</font><br>";
             echo "&nbsp; <input type=\"text\" name=\"search_exp\" value=\"\">";
             printf(" <input class=\"middle\" type=\"IMAGE\" name=\"search\" src=\"" . Assets::image_path('icons/16/blue/search.png') . "\"  value=\" %s \" %s>&nbsp;  ", _("Person suchen"), tooltip(_("Person suchen")));
+        } else {
+            PrintSearchResults($search_exp, $range_id);
+            printf("<input type=\"IMAGE\" name=\"search\" src=\"" . Assets::image_path('icons/16/blue/refresh.png') . "\"  value=\" %s \" %s>&nbsp;  ", _("neue Suche"), tooltip(_("neue Suche")));
         }
-        echo "<br><br>\n";
-        if ($GLOBALS['CALENDAR_GROUP_ENABLE']) {
-            printf(_("%sRot%s dargestellte Nutzernamen kennzeichnen Personen, auf deren Kalender Sie Zugriff haben."), '<span style="color:#FF0000;">', '</span>');
-        }
+    } else {
+        echo _("freie Personensuche (wird in Adressbuch &uuml;bernommen)") . "<br>";
+        echo "&nbsp; <input type=\"text\" name=\"search_exp\" value=\"\">";
+        printf(" <input class=\"middle\" type=\"IMAGE\" name=\"search\" src=\"" . Assets::image_path('icons/16/blue/search.png') . "\"  value=\" %s \" %s>&nbsp;  ", _("Person suchen"), tooltip(_("Person suchen")));
     }
+    echo "<br><br>\n";
+    if ($GLOBALS['CALENDAR_GROUP_ENABLE']) {
+        printf(_("%sRot%s dargestellte Nutzernamen kennzeichnen Personen, auf deren Kalender Sie Zugriff haben."), '<span style="color:#FF0000;">', '</span>');
+    }
+
     echo "\n</td>\n";
     echo '<td class="blank" width="50%" align="center" valign="top">';
     // Ende Personen-Bereich

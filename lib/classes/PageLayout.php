@@ -159,10 +159,15 @@ class PageLayout
      * Add a STYLE element to the HTML HEAD section.
      *
      * @param string $content   element contents
+     * @param string $media     media types
      */
-    public static function addStyle($content)
+    public static function addStyle($content, $media = '')
     {
-        self::addHeadElement('style', array(), $content);
+        $attr = array();
+        if($media) {
+            $attr = array('media' => $media);
+        }
+        self::addHeadElement('style', $attr, $content);
     }
 
     /**

@@ -193,7 +193,7 @@ class Calendar_ScheduleController extends AuthenticatedController
         );
 
         $factory = new Flexi_TemplateFactory($this->dispatcher->trails_root . '/views');
-        PageLayout::addStyle($factory->render('calendar/stylesheet', $style_parameters));
+        PageLayout::addStyle($factory->render('calendar/stylesheet', $style_parameters), 'screen, print');
 
         if (Request::option('printview')) {
             $this->calendar_view->setReadOnly();

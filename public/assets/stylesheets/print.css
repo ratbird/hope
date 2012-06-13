@@ -118,6 +118,7 @@ table.schedule_headings td {
 
 div.schedule_day {
     border-right: 1pt solid black;
+    position: relative;
 }
 
 div.schedule_entry {

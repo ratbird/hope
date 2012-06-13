@@ -104,8 +104,8 @@ $style = "style=\"background-image: url('". Assets::image_path('forumstrich') ."
                     <? $info = _("Angaben, die im Adressbuch und auf den externen Seiten als Standard benutzt werden."); ?>
                     <td class="<?=$cssSw->getClass()?>" align="left" nowrap="nowrap" colspan="2">
                         &nbsp;<?=_("Standard-Adresse:")?>&nbsp;
-                        <? if ($data['externdefault']) :
-                        Assets::img('icons/16/grey/accept.png', array('class' => 'text-top'));?>
+                        <? if ($data['externdefault']) : ?>
+                        <?= Assets::img('icons/16/grey/accept.png', array('class' => 'text-top'));?>
                         <input type="hidden" name="default_inst" value="<?=$inst_id?>">
                         <? else : ?>
                         <input type="checkbox" name="default_inst" value="<?=$inst_id?>" <?=($data['externdefault'] ? ' checked="checked"' : '')?>>

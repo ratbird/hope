@@ -16,12 +16,12 @@ class FunctionsTest extends PHPUnit_Framework_TestCase {
 
   function testWords() {
     $string = "one two three";
-    $this->assertEquals(words($string), array('one', 'two', 'three'));
+    $this->assertEquals(array('one', 'two', 'three'), words($string));
   }
 
   function testWordsWithEmptyString() {
     $string = "";
-    $this->assertEquals(words($string), array());
+    $this->assertEquals(array(), words($string));
   }
 
     function testArrayFlatten()

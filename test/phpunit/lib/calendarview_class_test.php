@@ -37,7 +37,7 @@ class CalendarViewCase extends PHPUnit_Framework_TestCase {
         $height = 75;
         $cview = new CalendarView();
         $cview->setHeight($height);
-        $this->assertEquals($cview->getHeight(), $height);
+        $this->assertEquals($height, $cview->getHeight());
     }
 
     function test_setRange() {
@@ -61,11 +61,11 @@ class CalendarViewCase extends PHPUnit_Framework_TestCase {
         $columns = $view->getColumns();
         $this->assertInternalType("array", $columns);
         $this->assertInstanceOf("CalendarColumn", $columns[0]);
-        $this->assertEquals($columns[0]->getTitle(), $title1);
-        $this->assertEquals($columns[0]->getId(), $id1);
+        $this->assertEquals($title1, $columns[0]->getTitle());
+        $this->assertEquals($id1, $columns[0]->getId());
         $this->assertInstanceOf("CalendarColumn", $columns[1]);
-        $this->assertEquals($columns[1]->getTitle(), $title2);
-        $this->assertEquals($columns[1]->getId(), $id2);
+        $this->assertEquals($title2, $columns[1]->getTitle());
+        $this->assertEquals($id2, $columns[1]->getId());
     }
 
     public function test_negative_addEntry() {
@@ -98,7 +98,7 @@ class CalendarViewCase extends PHPUnit_Framework_TestCase {
         $view = new CalendarView();
         $js_function_object = 'function () { alert("Watch out, Gringo!"); }';
         $view->setInsertFunction($js_function_object);
-        $this->assertEquals($view->getInsertFunction(), $js_function_object);
+        $this->assertEquals($js_function_object, $view->getInsertFunction());
     }
 
     //Die anderen Methoden muss Till testen.

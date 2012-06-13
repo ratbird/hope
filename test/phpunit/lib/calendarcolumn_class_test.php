@@ -39,27 +39,27 @@ class CalendarColumnCase extends PHPUnit_Framework_TestCase {
     function test_get_id() {
         $id = "test_id";
         $column = new CalendarColumn($id);
-        $this->assertEquals($column->getId(), $id);
+        $this->assertEquals($id, $column->getId());
     }
 
     function test_set_id() {
         $id = "test_id";
         $column = new CalendarColumn("falsche id");
         $column->setId($id);
-        $this->assertEquals($column->getId(), $id);
+        $this->assertEquals($id, $column->getId());
     }
 
     function test_set_title() {
         $title = "test_title";
         $column = new CalendarColumn();
         $column->setTitle($title);
-        $this->assertEquals($column->getTitle(), $title);
+        $this->assertEquals($title, $column->getTitle());
     }
 
     function test_set_url() {
         $url = URLHelper::getURL("about.php", array("username" => get_username()));
         $column = CalendarColumn::create()->setURL($url);
-        $this->assertEquals($column->getURL(), $url);
+        $this->assertEquals($url, $column->getURL());
     }
 
     function test_add_entry() {
@@ -69,9 +69,9 @@ class CalendarColumnCase extends PHPUnit_Framework_TestCase {
         $column->addEntry($entry);
         $entries = $column->getEntries();
         $this->assertInternalType("array", $entries);
-        $this->assertEquals(count($entries), 2);
+        $this->assertEquals(2, count($entries));
         $this->assertNotEquals($entries[0], $entry);
-        $this->assertEquals($entries[1], $entry);
+        $this->assertEquals($entry, $entries[1]);
         $this->assertInternalType("array", $entries[1]);
     }
 
@@ -100,7 +100,7 @@ class CalendarColumnCase extends PHPUnit_Framework_TestCase {
         $column->eraseEntries();
         $entries = $column->getEntries();
         $this->assertInternalType("array", $entries);
-        $this->assertEquals(count($entries), 0);
+        $this->assertEquals(0, count($entries));
     }
 
 

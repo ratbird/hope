@@ -307,9 +307,6 @@ function formatReady ($what, $trim = TRUE, $extern = FALSE, $wiki = FALSE, $show
     $markup = new StudipFormat();
     $what = preg_replace("/\r\n?/", "\n", $what);
 
-    if ($wiki) {
-        
-    }
     $what = $markup->format($what);
     $what = symbol(smile(latex($what, false)));
     return str_replace("\n", '<br>', $what);

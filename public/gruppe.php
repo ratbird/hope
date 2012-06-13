@@ -83,7 +83,7 @@ $query = "SELECT seminare.Seminar_id, seminare.VeranstaltungsNummer AS sem_nr, s
           WHERE seminar_user.user_id = ?";
 if (get_config('DEPUTIES_ENABLE')) {
     $query .= " UNION "
-            . getMyDeputySeminarsQuery('gruppe', $db->sem_number_sql, $dbv->sem_number_end_sql, $add_fields, $add_query);
+            . getMyDeputySeminarsQuery('gruppe', $dbv->sem_number_sql, $dbv->sem_number_end_sql, $add_fields, $add_query);
 }
 $query .= " ORDER BY sem_nr ASC";
 

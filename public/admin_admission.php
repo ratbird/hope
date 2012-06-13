@@ -519,6 +519,12 @@ if ($seminar_id
                     $errormsg=$errormsg."error§"._("Bitte geben Sie g&uuml;ltige Zeiten f&uuml;r das Enddatum der Kontingentierung ein!")."§";
                 }
             }
+           
+            if($admin_admission_data['admission_endtime'] <
+                   $admin_admission_data['sem_admission_start_date'])
+            {
+                $errormsg=$errormsg."error§"._("Das Losdatum darf nicht vor dem Start des Anmeldezeitraums liegen!")."§";
+            }
             if (($admin_admission_data["admission_type"]) && ($admin_admission_data["admission_endtime"]) && ($admin_admission_data["admission_type"]!=3)) {
                 if ($admin_admission_data["admission_type"] == 1)
                     $end_date_name=_("Losdatum");

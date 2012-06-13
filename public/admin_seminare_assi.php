@@ -784,6 +784,13 @@ if ($form == 5) {
             } elseif ($_SESSION['sem_create_data']["sem_admission"] == 2 && $_SESSION['sem_create_data']["admission_enable_quota"] == 1) {
                 $errormsg=$errormsg."error§"._("Bitte geben Sie g&uuml;ltige Werte f&uuml;r das Enddatum der Kontingentierung ein!")."§";
             }
+           
+    }
+    if($_SESSION['sem_create_data']['sem_admission_date'] <
+            $_SESSION['sem_create_data']['sem_admission_start_date'])
+    {
+        $errormsg=$errormsg."error§"._("Das Losdatum darf nicht vor dem Start des Anmeldezeitraums liegen!")."§";
+           
     }
 
     //Datum fuer ersten Termin umwandeln. Checken muessen wir es auch leider direkt hier, da wir es sonst nicht umwandeln duerfen

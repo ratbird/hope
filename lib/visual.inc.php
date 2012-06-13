@@ -306,10 +306,11 @@ function quotes_encode($description,$author)
 function formatReady ($what, $trim = TRUE, $extern = FALSE, $wiki = FALSE, $show_comments="icon") {
     $markup = new StudipFormat();
     $what = preg_replace("/\r\n?/", "\n", $what);
-    $what = htmlReady($what);
+    $what = htmlReady($what, $trim);
 
     $what = $markup->format($what);
     $what = symbol(smile(latex($what, false)));
+    !$trim || $what = trim($what);
     return str_replace("\n", '<br>', $what);
 }
 

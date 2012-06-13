@@ -483,7 +483,7 @@ class StudipFormat extends TextFormat
      * Has lower priority than [code], [img], etc
      */
     protected static function markupLinks($markup, $matches) {
-        if ($matches[0][0] === "[") {
+        if ($matches[1][0] === "[") {
             //Wiki-Syntax
             return $matches[0];
         }

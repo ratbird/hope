@@ -437,6 +437,7 @@ if ($form == 1)
     $_SESSION['sem_create_data']["sem_turnout"]=Request::quoted('sem_turnout');
 
     //Anmeldeverfahren festlegen
+    $sem_admission = Request::get('sem_admission');
     if (($_SESSION['sem_create_data']["sem_admission"] = $sem_admission) && $_SESSION['sem_create_data']["sem_admission"] != 3) {
         if(!is_array($_SESSION['sem_create_data']["sem_studg"]) || !count($_SESSION['sem_create_data']["sem_studg"])) $_SESSION['sem_create_data']["sem_studg"]['all'] = array('name' => _("Alle Studiengänge"), 'ratio' => 100);
     } else {

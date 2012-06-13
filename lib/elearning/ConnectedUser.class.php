@@ -487,13 +487,13 @@ class ConnectedUser
                            external_user_type = VALUES(external_user_type)";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array(
-            $this->studip_id,
-            $this->id,
-            $this->login,
-            $this->external_password,
-            $this->category,
-            $this->cms_type,
-            $this->type,
+            (string)$this->studip_id,
+            (string)$this->id,
+            (string)$this->login,
+            (string)$this->external_password,
+            (string)$this->category,
+            (string)$this->cms_type,
+            (int)$this->type,
         ));
 
         $this->is_connected = true;

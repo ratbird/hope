@@ -159,7 +159,7 @@ class StudipFormat extends TextFormat
             'callback' => 'StudipFormat::markupMedia'
         ),
         'emails' => array(
-            'start'    => '(?<=\s|^|\>)(\[([^\n\f]+?)\])?([a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*@([a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)+))',
+            'start'    => '(?<=\s|^|\>)(?:\[([^\n\f]+?)\])?([a-zA-Z0-9_]+(?:[\.\+][a-zA-Z0-9_]+)*@([a-zA-Z0-9_]+(?:\.[a-zA-Z0-9_]+)+))',
             'callback' => 'StudipFormat::markupEmails'
         ),
         'links' => array(
@@ -401,9 +401,9 @@ class StudipFormat extends TextFormat
      */
     protected static function markupEmails($markup, $matches)
     {
-        $email = $matches[3];
-        $domain = $matches[5];
-        $link_text = $matches[2] ? $matches[2] : $email;
+        $link_text = $matches[1] ?: $matches[2];
+        $email = $matches[2];
+        $domain = $matches[3];
         
         $intern = $domain === $_SERVER['HTTP_HOST'];
         

@@ -195,8 +195,8 @@ class VisualFunctionsTest extends PHPUnit_Framework_TestCase
 
     public function testMail()
     {
-        $input = '[Mail]some.user@example.com';
-        $expected = '<a class="link-extern" href="mailto:some.user@example.com">Mail</a>';
+        $input = '[Mail]some.user+tag@example.com';
+        $expected = '<a class="link-extern" href="mailto:some.user+tag@example.com">Mail</a>';
         $this->assertEquals($expected, formatReady($input));
     }
 }

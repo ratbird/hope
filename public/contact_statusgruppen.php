@@ -348,7 +348,7 @@ function PrintAktualContacts($range_id)
     echo "&nbsp; <select size=\"$size\" name=\"AktualMembers[]\" multiple>";
 
     foreach ($contacts as $contact) {
-        if (!get_visibility_by_id($conact['user_id'])) {
+        if (!get_visibility_by_id($contact['user_id'])) {
             continue;
         }
         $have_perm = false;

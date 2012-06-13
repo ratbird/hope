@@ -45,7 +45,7 @@ class PluginRepositoryTest extends PHPUnit_Framework_TestCase
 
         $plugins = $this->repository->getPlugins('Ticket');
 
-        $this->assertEquals(2, count($plugins));
+        $this->assertEquals(1, count($plugins));
         $this->assertNotNull($plugins['TracTickets']);
     }
 }

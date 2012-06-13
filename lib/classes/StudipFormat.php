@@ -401,10 +401,9 @@ class StudipFormat extends TextFormat
      */
     protected static function markupEmails($markup, $matches)
     {
-        var_dump($matches);
         $email = $matches[3];
         $domain = $matches[5];
-        $link_text = $email;
+        $link_text = $matches[2] ? $matches[2] : $email;
         
         $intern = $domain === $_SERVER['HTTP_HOST'];
         

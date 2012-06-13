@@ -113,7 +113,7 @@ class VisualFunctionsTest extends PHPUnit_Framework_TestCase
     public function testImage()
     {
         $input = '[img=Stud.IP-Logo]http://www.studip.de/logo.png';
-        $expected = '<img src="http://www.studip.de/logo.png"  alt="Stud.IP-Logo" title="Stud.IP-Logo">';
+        $expected = '<img src="http://www.studip.de/logo.png" style="" title="Stud.IP-Logo" alt="Stud.IP-Logo">';
         $this->assertEquals(formatReady($input), $expected);
     }
 

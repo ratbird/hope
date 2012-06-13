@@ -193,7 +193,7 @@ if (check_ticket(Request::option('studipticket'))) {
                   WHERE datafield_id = ? AND range_id = ? AND sec_range_id = ?";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array(
-            $default_entries[Request::option('chgdef_entry_id')],
+            $default_entries[Request::option('chgdef_entry_id')]->getValue(),
             Request::option('chgdef_entry_id'),
             $my_about->auth_user['user_id'],
             Request::option('sec_range_id'),

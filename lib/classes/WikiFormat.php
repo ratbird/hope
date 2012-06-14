@@ -113,8 +113,7 @@ class WikiFormat extends StudipFormat
      */
     protected static function markupWikiComments($markup, $matches, $comment)
     {
-        $from = decodeHTML(substr($matches[1], 1));
-        $comment = decodeHTML($comment);
+        $from = substr($matches[1], 1);
         
         if (Request::get("wiki_comments") === "all") {
             $commenttmpl = "<table style=\"border:thin solid;margin: 5px;\" bgcolor=\"#ffff88\"><tr><td><font size=-1><b>"._("Kommentar von")." %1\$s:</b>&nbsp;</font></td></tr><tr class=steelgrau><td class=steelgrau><font size=-1>%2\$s</font></td></tr></table>";
@@ -123,6 +122,8 @@ class WikiFormat extends StudipFormat
                 $comment
             );
         } elseif(Request::get("wiki_comments") !== "none") {
+            $from = decodeHTML($from);
+            $comment = decodeHTML($comment); //because tooltip already escapes
             return sprintf(
                     '<a href="javascript:void(0);"%s">'.
                         Assets::img("comment.png").

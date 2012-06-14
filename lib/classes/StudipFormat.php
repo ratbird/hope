@@ -159,7 +159,7 @@ class StudipFormat extends TextFormat
             'callback' => 'StudipFormat::markupMedia'
         ),
         'emails' => array(
-            'start'    => '(?<=\s|^|\>)(?:\[([^\n\f]+?)\])?([\w.!#%+-]+@[[:alnum:].-]+)(?=\s|$)',
+            'start'    => '(?<=\s|^|\>)(?:\[([^\n\f]+?)\])?([\w.!#%+-]+@([[:alnum:].-]+))(?=\s|$)',
             'callback' => 'StudipFormat::markupEmails'
         ),
         'links' => array(
@@ -226,7 +226,7 @@ class StudipFormat extends TextFormat
     public static function getStudipMarkup($name) {
         return self::$studip_rules[$name];
     }
-
+    
     /**
      * Removes a markup rule from the global Stud.IP markup set.
      *

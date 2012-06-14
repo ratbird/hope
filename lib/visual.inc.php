@@ -320,7 +320,15 @@ function formatReady ($what, $trim = TRUE, $extern = FALSE, $wiki = FALSE, $show
  */
 function formatLinks($what)
 {
-    return FixLinks(htmlReady($what));
+    $link_markup_rule = StudipFormat::getStudipMarkup("links");
+    $markup = new TextFormat();
+    $markup->addMarkup(
+        "links", 
+        $link_markup_rule['start'], 
+        $link_markup_rule['end'], 
+        $link_markup_rule['callback']
+    );
+    return $markup->format(htmlReady($what));
 }
 
 /**
@@ -536,156 +544,6 @@ function kill_format ($text) {
     }
 
     return preg_replace($pattern, $replace, $text);
-}
-
-/**
-* detects links in a given string and convert it into html-links
-*
-* @access   public
-* @param    string  text to convert
-* @param    string  TRUE if all forms of newlines have to be converted in single \n
-* @param    boolean TRUE if newlines have to be converted into <br>
-* @param    boolean TRUE if pictures should be displayed
-* @param    boolean TRUE if called from external pages ('externe Seiten')
-* @return   string
-*/
-function FixLinks ($data = "", $fix_nl = TRUE, $nl_to_br = TRUE, $img = FALSE, $extern = FALSE, $wiki = FALSE) {
-    global $STUDIP_DOMAINS;
-    $chars= '&;_a-z0-9-';
-    if (empty($data)) {
-        return $data;
-    }
-    if ($fix_nl)
-        $data = preg_replace("/\n?\r\n?/", "\n", $data); // newline fixen
-    $img = $img ? 'TRUE' : 'FALSE';
-    // add protocol type
-    $pattern = array("/([ \t\]\n=]|^)www\./i", "/([ \t\]\n]|^)ftp\./i");
-    $replace = array("\\1http://www.", "\\1ftp://ftp.");
-    $fixed_text = preg_replace($pattern, $replace, $data);
-
-    //transform the domain names of links within Stud.IP
-    $fixed_text = TransformInternalLinks($fixed_text);
-
-    $pattern = array(
-        '#((\[(img|flash|audio|video)(\=([^\n\f:]+?))?(:(\d{1,3}%?))?(:(center|right))?(:([^\]]+))?\]|\[([^\n\f\[]+)\])?(((https?://|ftp://)(['.$chars.':]+@)?)['.$chars.']+(\.['.$chars.':]+)*/?([^<\s]*[^\.\s\]<])*))#ie',
-                    '#(?<=\s|^|\>)(\[([^\n\f]+?)\])?(['.$chars.']+(\.['.$chars.']+)*@(['.$chars.']+(\.['.$chars.']+)+))#ie'
-                    );
-    $replace = array(
-            "preg_call_link(array('\\1', '\\5', '\\7', '\\12', '\\13', '\\3', '\\9', '\\11'), 'LINK', $img, false, '$wiki')",
-            "preg_call_link(array('\\2', '\\3'), 'MAIL', false, false, '$wiki')");
-    $fixed_text = preg_replace($pattern, $replace, $fixed_text);
-
-    if ($nl_to_br)
-        $fixed_text = str_replace("\n", "<br>", $fixed_text);
-
-    return $fixed_text;
-}
-
-/**
-* callback function used by FixLinks()
-*
-* @access   private
-* @param    array $params   parameters extracted by the regular expression
-* @param    string  $mod    type of lin ('LINK' or 'MAIL')
-* @param    boolean $img    TRUE to handle image-links
-* @param    boolean $extern TRUE if called from external pages ('externe Seiten')
-* @return   string
-*/
-function preg_call_link ($params, $mod, $img, $extern = FALSE, $wiki = FALSE) {
-    global $auth, $STUDIP_DOMAINS;
-    $chars= '&;_a-z0-9-';
-
-    $pu = @parse_url($params[4]);
-    $intern = isLinkIntern($params[4]);
-    if ($intern) {
-        list($pu['first_target']) = explode('/',substr($pu['path'],strlen($GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'])));
-    }
-
-    $link_class = $intern ? 'link-intern' : 'link-extern';
-
-    if ($mod == 'LINK') {
-        if (!in_array($params[5], words('img flash audio video'))) {
-            $link_text = $params[3] != '' ? formatReady(decodeHTML($params[3])) : $params[4];
-            $tbr = '<a class="'.$link_class.'" href="'.idna_link($params[4]).'"'.($intern ? '' : ' target="_blank"').">$link_text</a>";
-        }
-        elseif ($img) {
-            $cfg = Config::GetInstance();
-            $LOAD_EXTERNAL_MEDIA = $cfg->getValue('LOAD_EXTERNAL_MEDIA');
-
-            // Don't execute internal scripts
-            if ($intern && !in_array($pu['first_target'], array('sendfile.php','download','assets','pictures'))) {
-                return $params[0];
-            } else if ((!$LOAD_EXTERNAL_MEDIA || $LOAD_EXTERNAL_MEDIA == 'deny') && !$intern) {
-                return $params[0];
-            }
-
-            $media_url = idna_link($params[4]);
-
-            if (!$intern && $LOAD_EXTERNAL_MEDIA == 'proxy') {
-                if (Seminar_Session::is_current_session_authenticated()) {
-                    // flash player requires ABSOLUTE_URI_STUDIP here
-                    $media_url = $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'dispatch.php/media_proxy?url=' . urlencode(decodeHTML($media_url));
-                }
-            }
-
-            if ($params[2]) {
-                // width in percent
-                if (substr($params[2], -1) == '%') {
-                    $width = (int) substr($params[2], 0, -1) < 100 ? $params[2] : '100%';
-                } else {
-                    // width of image in pixels
-                    if (is_object($auth) && $auth->auth['xres']) {
-                        // 80% of x-resolution maximal
-                        $max_width = floor($auth->auth['xres'] * 0.8);
-                    } else {
-                        $max_width = 800;
-                    }
-                    $width = min($params[2], $max_width);
-                }
-            }
-
-            if ($params[5] == 'img') {
-                $width = isset($width) ? "width=\"$width\"" : '';
-                $tbr = '<img src="'.$media_url."\" $width alt=\"{$params[1]}\" title=\"{$params[1]}\">";
-                if (isURL($params[7])) {
-                    $imgintern = isLinkIntern($params[7]);
-                    $tbr = '<a href="'.idna_link($params[7]).'"'.($imgintern ? '' : ' target="_blank"').'>'.$tbr.'</a>';
-                }
-            } else if ($params[5] == 'audio') {
-                $width = isset($width) ? "width=\"$width\"" : '';
-                $tbr = '<audio src="'.$media_url."\" $width controls title=\"{$params[1]}\"></audio>";
-            } else if ($params[5] == 'video') {
-                $width = isset($width) ? "width=\"$width\"" : '';
-                $tbr = '<video src="'.$media_url."\" $width controls title=\"{$params[1]}\"></video>";
-            } elseif ($params[5] == 'flash') {
-                $width = isset($width) ? $width : 200;
-                $height = round($width * 0.75);
-                $flash_config = $width > 200 ? $GLOBALS['FLASHPLAYER_DEFAULT_CONFIG_MAX'] : $GLOBALS['FLASHPLAYER_DEFAULT_CONFIG_MIN'];
-                $flash_object  = "<object type=\"application/x-shockwave-flash\" id=\"FlashPlayer\" data=\"".Assets::url()."flash/player_flv.swf\" width=\"$width\" height=\"$height\">"; // height=\"323\" width=\"404\"
-                $flash_object .= "<param name=\"movie\" value=\"".Assets::url()."flash/player_flv.swf\">";
-                $flash_object .= '<param name="allowFullScreen" value="true">' . "\n";
-                $flash_object .= "<param name=\"FlashVars\" value=\"flv=".urlencode(decodeHTML($media_url))."&amp;startimage={$params[7]}{$flash_config}\">";
-                $flash_object .= "<embed src=\"".Assets::url()."flash/player_flv.swf\" movie=\"$media_url\" type=\"application/x-shockwave-flash\" FlashVars=\"flv=".urlencode(decodeHTML($media_url))."&amp;startimage={$params[7]}{$flash_config}\">";
-                $flash_object .= "</object>";
-                $tbr = $flash_object;
-            } else {
-                return $params[0];
-            }
-
-            if ($params[6]) {
-                $tbr = "<div align=\"{$params[6]}\">$tbr</div>";
-            }
-        } else {
-            return $params[0];
-        }
-
-    } elseif ($mod == 'MAIL') {
-        $mailtolink=preg_replace("/&quot;/","",idna_link($params[1],true));
-        $link_text = $params[0] != '' ? $params[0] : $params[1];
-        $tbr = '<a class="'.$link_class.'" href="mailto:'.$mailtolink."\">$link_text</a>";
-    }
-    if ($wiki) $tbr = '<nowikilink>'.$tbr.'</nowikilink>';
-    return $tbr;
 }
 
 function isURL($url) {

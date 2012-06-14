@@ -189,7 +189,7 @@ class VisualFunctionsTest extends PHPUnit_Framework_TestCase
     public function testLink()
     {
         $input = '[Testlink]https://www.studip.de/';
-        $expected = '<a href="https://www.studip.de/" class="link-extern" target="_blank">Testlink</a>';
+        $expected = '<a class="link-extern" href="https://www.studip.de/" target="_blank">Testlink</a>';
         $this->assertEquals($expected, formatReady($input));
     }
 

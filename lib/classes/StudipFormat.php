@@ -159,7 +159,7 @@ class StudipFormat extends TextFormat
             'callback' => 'StudipFormat::markupMedia'
         ),
         'emails' => array(
-            'start'    => '(?<=\s|^|\>)(?:\[([^\n\f]+?)\])?([\w\d]+[\w\d\.\-\+]*@[\w\d]+[\w\d\.\-]*\.\w+)(?=\s|$)',
+            'start'    => '(?<=\s|^|\>)(?:\[([^\n\f]+?)\])?([\w.!#%+-]+@[[:alnum:].-]+)(?=\s|$)',
             'callback' => 'StudipFormat::markupEmails'
         ),
         'links' => array(

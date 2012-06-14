@@ -113,7 +113,8 @@ class WikiFormat extends StudipFormat
      */
     protected static function markupWikiComments($markup, $matches, $comment)
     {
-        $from = substr($matches[1], 1);
+        $from = decodeHTML(substr($matches[1], 1));
+        $comment = decodeHTML($comment);
         
         if (Request::get("wiki_comments") === "all") {
             $commenttmpl = "<table style=\"border:thin solid;margin: 5px;\" bgcolor=\"#ffff88\"><tr><td><font size=-1><b>"._("Kommentar von")." %1\$s:</b>&nbsp;</font></td></tr><tr class=steelgrau><td class=steelgrau><font size=-1>%2\$s</font></td></tr></table>";

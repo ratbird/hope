@@ -71,15 +71,41 @@ class TextFormat
      * - $matches   match results of preg_match for $start
      * - $contents  (parsed) contents of this markup rule
      *
+     * Sometimes you may want your rule to apply before another specific rule
+     * will apply. For this case the parameter $before defines a rulename of
+     * existing markup, before which your rule should apply.
+     *
      * @param string $name      name of this rule
      * @param string $start     start regular expression
      * @param string $end       end regular expression (optional)
      * @param callback $callback function generating output of this rule
+     * @param string $before mark before which rule this rule should be appended
      */
-    public function addMarkup($name, $start, $end, $callback)
+    public function addMarkup($name, $start, $end, $callback, $before = null)
     {
-        $this->markup_rules[$name] = compact('start', 'end', 'callback');
+        $inserted = false;
+        foreach ($this->markup_rules as $rule_name => $rule) {
+            if ($rule_name === $before) {
+                $this->markup_rules[$name] = compact('start', 'end', 'callback');
+                $inserted = true;
+            }
+            if ($inserted) {
+                unset($this->markup_rules[$rule_name]);
+                $this->markup_rules[$rule_name] = $rule;
+            }
+        }
+        if (!$inserted) {
+            $this->markup_rules[$name] = compact('start', 'end', 'callback');
+        }
         $this->start_regexp = NULL;
+    }
+    
+    /**
+     * Returns a single markup-rule if it exists.
+     * @return array: array('start' => "...", 'end' => "...", 'callback' => "...")
+     */
+    public function getMarkup($name) {
+        return $this->markup_rules[$name];
     }
 
     /**

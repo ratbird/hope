@@ -7,6 +7,7 @@
 
 require_once('config.inc.php');
 require_once 'lib/classes/StudipFormat.php';
+require_once 'lib/classes/WikiFormat.php';
 require_once 'lib/classes/StudipTransformFormat.php';
 require_once('lib/classes/cssClassSwitcher.inc.php');
 include_once('vendor/idna_convert/idna_convert.class.php');
@@ -341,45 +342,16 @@ function formatLinks($what)
 * @param        boolean $extern TRUE if called from external pages ('externe Seiten')
 * @return       string
 */
-function wikiReady ($what, $trim = TRUE, $extern = FALSE, $show_comments="icon") {
-    return wiki_format(formatReady($what, $trim, false, TRUE), $show_comments);
+function wikiReady ($what, $trim = TRUE) {
+    $markup = new WikiFormat();
+    $what = preg_replace("/\r\n?/", "\n", $what);
+    $what = htmlReady($what, $trim);
+
+    $what = $markup->format($what);
+    $what = symbol(smile(latex($what, false)));
+    return str_replace("\n", '<br>', $what);
 }
 
-/**
-* a special wiki formatting routine (used for comments)
-*
-*
-* @access       public
-* @param        string $text        what to format
-* @param    string  $show_comments  How to show comments
-*/
-function wiki_format ($text, $show_comments) {
-    if ($show_comments=="icon" || $show_comments=="all") {
-        $text=preg_replace("#\[comment(=.*)?\](.*)\[/comment\]#emsU","format_wiki_comment('\\2','\\1',$show_comments)",$text);
-    } else {
-        $text=preg_replace("#\[comment(=.*)?\](.*)\[/comment\]#msU","",$text);
-    }
-    // Signatur (~~~~ in Wiki, expanded to [sig uname time])
-    $text = preg_replace("'\[sig ([\w@.-]+) ([0-9]+)\]'e", "preg_call_format_signature('\\1','\\2')", $text);
-    return $text;
-}
-
-
-function format_wiki_comment($comment, $metainfo, $show_comment) {
-    $metainfo=trim($metainfo,"=");
-    if ($show_comment=="all") {
-        $commenttmpl="<table style=\"border:thin solid;margin: 5px;\" bgcolor=\"#ffff88\"><tr><td><font size=-1><b>"._("Kommentar von")." %1\$s:</b>&nbsp;</font></td></tr><tr class=steelgrau><td class=steelgrau><font size=-1>%2\$s</font></td></tr></table>";
-        return sprintf($commenttmpl, $metainfo, stripslashes($comment));
-    } elseif ($show_comment=="icon") {
-        $comment = decodehtml($comment);
-        $comment = preg_replace("/<.*>/U","",$comment);
-        $metainfo = decodeHTML($metainfo);
-        return '<nowikilink><a href="javascript:void(0);" '.tooltip(sprintf("%s %s:\n%s",_("Kommentar von"),$metainfo,$comment),TRUE,TRUE) . "><img src=\"".$GLOBALS['ASSETS_URL']."images/comment.png\"></a></nowikilink>";
-    } else {
-        echo "<p>Error: unknown show_comment value in format_wiki_comment: ".$show_comment."</p>";
-        die();
-    }
-}
 
 /**
  * Transform the argument using the replace-before-save rules defined

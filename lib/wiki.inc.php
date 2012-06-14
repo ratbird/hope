@@ -371,40 +371,6 @@ function wikiDirectives($str) {
 }
 
 /**
-* Replace WikiWords with appropriate links in given string
-* and process registered wiki-directives
-*
-* @param    string  str
-* @param    string  page
-* @param    string  "wiki"=link to wiki, "inline"=link to same page
-*
-**/
-function wikiLinks($str, $page, $format="wiki", $sem_id=NULL) {
-    global $wiki_keyword_regex, $wiki_link_regex, $wiki_extended_link_regex;
-    // regex adapted from RoboWiki
-    // added > as possible start of WikiWord
-    // because htmlFormat converts newlines to <br>
-
-    // in [nop] und [code] Bereichen werden keine wikiLinks gesetzt
-    if (preg_match_all("'\<nowikilink\>(.+)\</nowikilink\>'isU", $str, $matches)) {
-        $str = preg_replace("'\<nowikilink\>.+\</nowikilink\>'isU", 'ö', $str);
-        $str = preg_replace("/$wiki_keyword_regex/e", "'\\1'.isKeyword('\\2', '$page', '$format','$sem_id')", $str);
-        $str = preg_replace("/$wiki_link_regex/e", "isKeyword('\\1', '$page', '$format','$sem_id')", $str);
-        $str = preg_replace("/$wiki_extended_link_regex/e", "isKeyword('\\1', '$page', '$format','$sem_id','\\3')", $str);
-        $str=wikiDirectives($str);
-        $str = explode('ö', $str);
-        $i = 0; $all = '';
-        foreach ($str as $w) $all .= $w .  $matches[1][$i++];
-        return $all;
-    }
-
-    $str = preg_replace("/$wiki_keyword_regex/e", "'\\1'.isKeyword('\\2', '$page', '$format','$sem_id')", $str);
-    $str = preg_replace("/$wiki_link_regex/e", "isKeyword('\\1', '$page', '$format','$sem_id')", $str);
-    $str = preg_replace("/$wiki_extended_link_regex/e", "isKeyword('\\1', '$page', '$format','$sem_id','\\3')", $str);
-    return wikiDirectives($str);
-}
-
-/**
 * Return list of WikiWord in given page body ($str)
 *
 * @param    string  str
@@ -1001,7 +967,7 @@ function printWikiPage($keyword, $version) {
     date("d.m.Y, H:i", $wikiData['chdate']), get_fullname($wikiData['user_id'], 'full', 1));
     echo "</em></p>";
     echo "<hr>";
-    echo wikiLinks(wikiReady($wikiData['body'], TRUE, FALSE, "none"), $keyword, "wiki");
+    echo wikiReady($wikiData['body'], TRUE, FALSE, "none");
     echo "<hr><p><font size=-1>created by Stud.IP Wiki-Module ";
     echo date("d.m.Y, H:i", time());
     echo " </font></p>";
@@ -1096,7 +1062,7 @@ function getAllWikiPages($range_id, $header, $fullhtml=TRUE) {
                 $out[] = sprintf(_("Version %s, letzte Änderung %s von %s."), $pagedata['version'], date("d.m.Y, H:i", $pagedata['chdate']), get_fullname($pagedata['user_id'], 'full', 1));
                 $out[] = "</em></p></font>";
                 // output is html without comments
-                $out[]=wikiLinks(wikiReady($pagedata['body'],TRUE,FALSE,"none"),$pagename,"inline",$range_id);
+                $out[]=wikiReady($pagedata['body'],TRUE,FALSE,"none");
                 $out[] = '<p><font size=-1>(<a href="#top">' . _("nach oben") . '</a>)</font></p>';
             }
         }
@@ -1342,7 +1308,7 @@ function get_toc_content() {
     if ($toc) {
         $toccont.="<div class='wikitoc'>";
         $toccont.="<div id='00toc'>";
-        $toccont.= wikiLinks(wikiReady($toc["body"],TRUE,FALSE,$show_comments), "toc", "wiki");
+        $toccont.= wikiReady($toc["body"],TRUE,FALSE,$show_comments);
         $toccont.="</div>";
         $toccont.="</div>\n";
     }
@@ -1425,7 +1391,8 @@ function showWikiPage($keyword, $version, $special="", $show_comments="icon", $h
     echo "<tr>\n";
     $cont="";
 
-    $cont .= wikiLinks(wikiReady($wikiData["body"],TRUE,FALSE,$show_comments), $keyword, "wiki");
+    $content = wikiReady($wikiData["body"],TRUE,FALSE,$show_comments);
+    $cont .= $content;
     if ($hilight) {
         // Highlighting must only take place outside HTML tags, so
         // 1. save all html tags in array $founds[0]

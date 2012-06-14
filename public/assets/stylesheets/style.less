@@ -110,7 +110,7 @@ h2.topic, h3.topic { font-size: 1.2em; }
     color: #FFFFFF;
     font-size: 12pt;
     padding: 3px 5px;
-    
+
     img { vertical-align: middle; } // for the topic-icons
 }
 
@@ -127,13 +127,21 @@ img.preview, video.preview, audio.preview {
     padding: 5px;
 }
 
-fieldset.selectbox {
-    background-color: #FFFFFF;
-    border: 1px solid;
-    margin: 5px;
-    max-height: 200px;
-    overflow: auto;
-    padding: 5px;
+/* --- StudipForm selectbox control------------------------------------------ */
+div.selectbox {
+    background-color:#ffffff;
+    border:1px solid;
+    margin-top:5px;
+    margin-bottom:5px;
+    padding:5px;
+    max-height:200px;
+    overflow:auto;
+}
+
+div.selectbox fieldset {
+    border:none;
+    margin:0px;
+    padding:0px;
 }
 
 .minor {
@@ -260,7 +268,7 @@ img.plugin_preview {
         min-width: 21.5em;
         max-width: 21.5em;
         width: 21.5em;
-        
+
         &:hover {
             background-color: #F2F2F2;
             border: 1px solid #A4A4A4;

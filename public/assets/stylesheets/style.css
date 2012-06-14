@@ -1427,13 +1427,19 @@ img.preview, video.preview, audio.preview {
   font-size:16px;
   padding:5px;
 }
-fieldset.selectbox {
+div.selectbox {
   background-color:#ffffff;
   border:1px solid;
-  margin:5px;
+  margin-top:5px;
+  margin-bottom:5px;
+  padding:5px;
   max-height:200px;
   overflow:auto;
-  padding:5px;
+}
+div.selectbox fieldset {
+  border:none;
+  margin:0px;
+  padding:0px;
 }
 .minor {
   color:gray;

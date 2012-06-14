@@ -324,11 +324,7 @@ class StudipForm {
                 $options_name = my_substr($options_name,0, $this->form_fields[$name]['max_length']);
             }
             $ret .= "\n<option value=\"".htmlReady($options_value)."\" " . (($selected) ? " selected " : "");
-            if (is_array($options_attributes)) {
-                foreach ($options_attributes as $key => $value) {
-                    $ret .= " ".$key."=\"".htmlReady($value)."\"";
-                }
-            }
+            $ret .= $this->getAttributes($options_attributes);
             $ret .= ">".htmlReady($options_name)."</option>";
         }
         $ret .= "\n</select>";
@@ -337,7 +333,8 @@ class StudipForm {
 
     function getFormFieldSelectBox($name, $attributes, $default){
         $box_attributes = $this->form_fields[$name]['box_attributes'] ? $this->form_fields[$name]['box_attributes'] : array();
-        $ret = "\n<fieldset id=\"{$attributes['id']}\" class=\"selectbox\" ".$this->getAttributes($box_attributes)." >";
+        $ret = "\n<div class=\"selectbox\" ".$this->getAttributes($box_attributes)." >";
+        $ret .= "\n<fieldset id=\"{$attributes['id']}\">";
         unset($attributes['id']);
         if ($this->form_fields[$name]['multiple']) {
             $element = 'checkbox';
@@ -354,9 +351,10 @@ class StudipForm {
         } else if ($this->form_fields[$name]['options_callback']){
             $options = call_user_func($this->form_fields[$name]['options_callback'],$this,$name);
         }
-        for ($i = 0; $i < count($options); ++$i){
+        for ($i = 0; $i < count($options); ++$i) {
             $options_name = (is_array($options[$i])) ? $options[$i]['name'] : $options[$i];
             $options_value = (is_array($options[$i])) ? $options[$i]['value'] : $options[$i];
+            $options_attributes = (is_array($options[$i])) ? $options[$i]['attributes'] : array();
             $selected = false;
             if ((is_array($default) && in_array("" . $options_value, $default))
             || (!is_array($default) && ($default == "" . $options_value))){
@@ -369,12 +367,14 @@ class StudipForm {
             $ret .= "\n<div ";
             $ret .= $this->getAttributes($attributes);
             $ret .= ">";
-            $ret .= "\n<label for=\"$id\"><input style=\"vertical-align:middle;\" id=\"$id\" type=\"$element\" name=\"$element_name\" value=\"".htmlReady($options_value)."\" " . (($selected) ? " checked " : "");
+            $ret .= "\n<label for=\"$id\" ";
+            $ret .= $this->getAttributes($options_attributes);
+            $ret .= "><input style=\"vertical-align:middle;\" id=\"$id\" type=\"$element\" name=\"$element_name\" value=\"".htmlReady($options_value)."\" " . (($selected) ? " checked " : "");
             $ret .= ">&nbsp;";
             $ret .= htmlReady($options_name) . "</label>";
             $ret .= "\n</div>";
         }
-        $ret .= "\n</fieldset>";
+        $ret .= "\n</fieldset>\n</div>";
         return $ret;
     }
 
@@ -521,9 +521,9 @@ class StudipForm {
 
     function getAttributes($attributes){
         $ret = "";
-        if ($attributes){
+        if (is_array($attributes)) {
             foreach($attributes as $key => $value){
-                $ret .= " $key=\"$value\"";
+                $ret .= " ".$key."=\"".htmlReady($value)."\"";
             }
         }
         return $ret;

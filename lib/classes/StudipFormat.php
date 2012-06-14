@@ -520,7 +520,7 @@ class StudipFormat extends TextFormat
         
         return sprintf('<a class="%s" href="%s"%s>%s</a>',
             $intern ? "link-intern" : "link-extern",
-            htmlReady($url),
+            $url,
             $intern ? "" : ' target="_blank"',
             $title
         );

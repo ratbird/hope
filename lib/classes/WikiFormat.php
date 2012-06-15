@@ -137,20 +137,20 @@ class WikiFormat extends StudipFormat
     }
     
     protected static function markupWikiLinks($markup, $matches) {
-        $page = $matches[1];
+        $page = decodeHTML($matches[1]);
         
         if (keywordExists($page, $_SESSION['SessionSeminar'])) {
             return sprintf('<a href="%s">%s</a>',
-                URLHelper::getLink("wiki.php", array('keyword' => decodeHTML($page))),
-                $page
+                URLHelper::getLink("wiki.php", array('keyword' => $page)),
+                htmlReady($page)
             );
         } else {
             return sprintf('<a href="%s">%s(?)</a>',
                 URLHelper::getLink("wiki.php", array(
-                    'keyword' => decodeHTML($page), 
+                    'keyword' => $page, 
                     'view' => 'editnew'
                 )),
-                $page
+                htmlReady($page)
             );
         }
     }

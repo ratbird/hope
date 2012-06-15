@@ -141,13 +141,13 @@ class WikiFormat extends StudipFormat
         
         if (keywordExists($page, $_SESSION['SessionSeminar'])) {
             return sprintf('<a href="%s">%s</a>',
-                URLHelper::getLink("wiki.php", array('keyword' => $page)),
+                URLHelper::getLink("wiki.php", array('keyword' => decodeHTML($page))),
                 $page
             );
         } else {
             return sprintf('<a href="%s">%s(?)</a>',
                 URLHelper::getLink("wiki.php", array(
-                    'keyword' => $page, 
+                    'keyword' => decodeHTML($page), 
                     'view' => 'editnew'
                 )),
                 $page

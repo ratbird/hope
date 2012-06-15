@@ -290,9 +290,12 @@ if ($topic_id AND !$update) {
     $sql_topic_id = $answer_id;
 }
 if ($sql_topic_id) {
-    $db=new DB_Seminar;
-    $db->query('SELECT * FROM px_topics WHERE topic_id=\''.$sql_topic_id. '\' AND Seminar_id =\''.$SessSemName[1].'\'');
-    if (!$db->num_rows()) { // wir sind NICHT im richtigen Seminar!
+    $query = "SELECT 1 FROM px_topics WHERE topic_id = ? AND Seminar_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($sql_topic_id, $SessSemName[1]));
+    $check = $statement->fetchColumn();
+
+    if (!$check) { // wir sind NICHT im richtigen Seminar!
         echo '<br><br>';
         parse_window ('error§' . _("Sie versuchen, mit zwei Browserfenstern innerhalb verschiedener Foren zu navigieren.") . '<br><font size="-1" color="black">' . _("Um unerw&uuml;nschte Effekte - wie falsch einsortierten Postings - zu vermeiden,<br>empfehlen wir, Stud.IP nur in einem Browserfenster zu verwenden.") . '</font>', '§',
                 _("zuviele Browserfenster im Forenbereich!"),
@@ -308,27 +311,27 @@ if ($sql_topic_id) {
 $delete_id = Request::option('delete_id');
 
 if ($delete_id) {
-    $db=new DB_Seminar;
     $mutter = suche_kinder($delete_id);
-    $mutter = explode (";",$mutter);
-    $count = sizeof($mutter)-2;
-    $db->query("SELECT *, IFNULL(ROUND(AVG(rate),1),99) as rating FROM px_topics LEFT JOIN object_rate ON(object_rate.object_id=topic_id) WHERE topic_id='$delete_id' AND Seminar_id ='$SessSemName[1]' GROUP BY topic_id");
-    if ($db->num_rows()) { // wir sind im richtigen Seminar!
-        $db->next_record();
-        if ($rechte || (($db->f("user_id") == $user->id) && ($count == 0))) {  // noch mal checken ob alles o.k.
-            $root = $db->f("root_id");
-            $forumposting["id"] = $db->f("topic_id");
-            $forumposting["name"] = $db->f("name");
-            $forumposting["description"] = $db->f("description");
-            $forumposting["author"] = $db->f("author");
-            $forumposting["username"] = $db->f("username");
-            $forumposting["rootid"] = $db->f("root_id");
-            $forumposting["rootname"] = $db->f("root_name");
-            $forumposting["mkdate"] = $db->f("mkdate");
-            $forumposting["chdate"] = $db->f("chdate");
-            $forumposting["buttons"] = "no";
-            $forumposting["rating"] = $db->f("rating");
-            $forumposting["anonymous"] = get_config('FORUM_ANONYMOUS_POSTINGS') ? $db->f("anonymous") : false;
+    $mutter = explode (';', $mutter);
+    $count = sizeof($mutter) - 2;
+
+    $query = "SELECT topic_id AS id, root_id AS rootid, name, description, author, px_topics.mkdate, chdate,
+                     anonymous, user_id, IFNULL(ROUND(AVG(rate), 1), 99) AS rating
+              FROM px_topics
+              LEFT JOIN object_rate ON (object_rate.object_id = topic_id)
+              WHERE topic_id = ? AND Seminar_id = ?
+              GROUP BY topic_id";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($delete_id, $SessSemName[1]));
+    $temp = $statement->fetch(PDO::FETCH_ASSOC);
+    
+    if ($temp) {
+        if ($rechte || (($temp['user_id'] == $user->id) && $count == 0)) {  // noch mal checken ob alles o.k.
+            $root = $temp['rootid'];
+
+            $forumposting = $temp;
+            $forumposting['buttons'] = 'no';
+            $forumposting['anonymous'] = get_config('FORUM_ANONYMOUS_POSTINGS') ? $forumposting['anonymous'] : false;
             $forumposting = ForumGetAnonymity ($forumposting);
 
             if ($forumposting["id"] == $forumposting["rootid"])
@@ -337,7 +340,7 @@ if ($delete_id) {
                 $tmp_label = _("das untenstehende Posting");
             echo "\n\n<table class=\"blank\" cellspacing=0 cellpadding=5 border=0 width=\"100%\"><colgroup span=1></colgroup>\n";
             echo "<tr><td class=\"blank\"></td></tr>";
-            $msg="info§" . sprintf(_("Wollen Sie %s %s von %s wirklich löschen?"), $tmp_label, "<b>".htmlReady($db->f("name"))."</b>", "<b>".($forumposting["anonymous"] ? _("anonym") : htmlReady($db->f("author")))."</b>") . "<br>\n";
+            $msg="info§" . sprintf(_("Wollen Sie %s %s von %s wirklich löschen?"), $tmp_label, "<b>".htmlReady($forumposting['name'])."</b>", "<b>".($forumposting["anonymous"] ? _("anonym") : htmlReady($forumposting['author']))."</b>") . "<br>\n";
             if ($count)
                 $msg.= sprintf(_("Alle %s Antworten auf diesen Beitrag werden ebenfalls gelöscht!"), $count) . "<br>\n<br>\n";
 
@@ -401,18 +404,20 @@ if ($target =="Thema"){ //Es soll in ein anderes Thema verschoben werden
 $really_kill = Request::option('really_kill');
 
 if ($really_kill) {
-    $db=new DB_Seminar;
-    $db->query("SELECT * FROM px_topics WHERE topic_id='$really_kill' AND Seminar_id ='$SessSemName[1]'");
-    if ($db->num_rows()) { // wir sind im richtigen Seminar!
-        $db->next_record();
+    $query = "SELECT root_id, user_id FROM px_topics WHERE topic_id = ? AND Seminar_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($really_kill, $SessSemName[1]));
+    $temp = $statement->fetch(PDO::FETCH_ASSOC);
+
+    if ($temp) { // wir sind im richtigen Seminar!
         $mutter = suche_kinder($really_kill);
         $mutter = explode (";",$mutter);
         $count = sizeof($mutter)-2;
-        $open = $db->f("root_id");
-        if ($rechte || (($db->f("user_id") == $user->id || $db->f("user_id") == "") && ($count == 0))) {  // noch mal checken ob alles o.k.
+
+        $open = $temp['root_id'];
+        if ($rechte || (($temp['user_id'] == $user->id || $temp['user_id'] == '') && ($count == 0))) {  // noch mal checken ob alles o.k.
             $count = 0;
             delete_topic($really_kill, $count);
-            $db->next_record();
             $message = "kill";
         }
     }
@@ -425,15 +430,18 @@ if ($really_kill) {
 $edit_id = Request::option('edit_id');
 
 if ($answer_id) {
-    $db=new DB_Seminar;
-    $db->query("SELECT name, topic_id, root_id FROM px_topics WHERE topic_id = '$answer_id'");
-    while($db->next_record()){
-        $name = $db->f("name");
-        if (substr($name,0,3)!="Re:")
-            $name = "Re: ".$name; // Re: vor Überschriften bei Antworten
+    $query = "SELECT name, root_id FROM px_topics WHERE topic_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($answer_id));
+
+    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+        $name = $row['name'];
+        if (substr($name, 0, 3) != 'Re:') {
+            $name = 'Re: ' . $name; // Re: vor Überschriften bei Antworten
+        }
         $author = get_fullname();
         $postinginhalt = _("Dieser Beitrag wird gerade bearbeitet.");
-        $edit_id = CreateNewTopic($name, $postinginhalt, $answer_id, $db->f("root_id"), Request::int('anonymous'));
+        $edit_id = CreateNewTopic($name, $postinginhalt, $answer_id, $row['root_id'], Request::int('anonymous'));
     }
 }
 

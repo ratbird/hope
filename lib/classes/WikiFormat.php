@@ -138,12 +138,12 @@ class WikiFormat extends StudipFormat
     
     protected static function markupWikiLinks($markup, $matches) {
         $page = decodeHTML(trim($matches[1]));
-        $display_page = $matches[2] ? trim(decodeHTML($matches[2])) : $page;
+        $display_page = $matches[2] ? $markup->format(trim(decodeHTML($matches[2]))) : $page;
         
         if (keywordExists($page, $_SESSION['SessionSeminar'])) {
             return sprintf('<a href="%s">%s</a>',
                 URLHelper::getLink("wiki.php", array('keyword' => $page)),
-                htmlReady($display_page)
+                $display_page
             );
         } else {
             return sprintf('<a href="%s">%s(?)</a>',
@@ -151,7 +151,7 @@ class WikiFormat extends StudipFormat
                     'keyword' => $page, 
                     'view' => 'editnew'
                 )),
-                htmlReady($display_page)
+                $display_page
             );
         }
     }

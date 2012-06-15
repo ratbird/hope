@@ -28,7 +28,7 @@ class WikiFormat extends StudipFormat
             'before'   => 'links'
         ),
         'wiki-links' => array(
-            'start'    => '(?<=\s|^)\[\[(.*?)\]\](?=\s|$)',
+            'start'    => '\[\[(.*?)\]\]',
             'callback' => 'WikiFormat::markupWikiLinks',
             'before'   => 'links'
         ),

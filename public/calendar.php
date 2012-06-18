@@ -29,7 +29,7 @@ $perm->check("user");
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
 // here you have to put initialisations for the current page
-if (false and get_config('CALENDAR_ENABLE')) {
+if (get_config('CALENDAR_ENABLE')) {
     //Kalenderfrontend einbinden
     include($GLOBALS['RELATIVE_PATH_CALENDAR'].'/calendar.inc.php');
 } else {

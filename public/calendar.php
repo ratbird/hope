@@ -29,16 +29,14 @@ $perm->check("user");
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
 // here you have to put initialisations for the current page
-if (get_config('CALENDAR_ENABLE')) {
+if (false and get_config('CALENDAR_ENABLE')) {
     //Kalenderfrontend einbinden
     include($GLOBALS['RELATIVE_PATH_CALENDAR'].'/calendar.inc.php');
 } else {
-    //TODO: use messagebox
-    require_once ('lib/msg.inc.php');
-    // Start of Output
-    include ('lib/include/html_head.inc.php'); // Output of html head
-    include ('lib/include/header.php');   // Output of Stud.IP head
-    $message = _("Der Terminkalender ist nicht eingebunden. Der Terminkalender wurde in den Systemeinstellungen nicht freigeschaltet. Wenden Sie sich bitte an die zuständigen Administrator.");
-    parse_window ("error§$message", "§", _("Terminkalender ist nicht eingebunden!"));
-    include ('lib/include/html_end.inc.php');
+    $message = _('Der Terminkalender ist nicht eingebunden. Der Terminkalender '
+                .'wurde in den Systemeinstellungen nicht freigeschaltet. Wenden '
+                .'Sie sich bitte an die zuständigen Administratoren.');
+    $template = $GLOBALS['template_factory']->open('layouts/base_without_infobox');
+    $template->content_for_layout = Messagebox::error($message);
+    echo $template->render();
 }

@@ -376,7 +376,8 @@ function is_element_visible_for_user($user_id, $owner_id, $element_visibility) {
             case VISIBILITY_DOMAIN:
                 $user_domains = UserDomain::getUserDomainsForUser($user_id);
                 $owner_domains = UserDomain::getUserDomainsForUser($owner_id);
-                if (array_intersect($user_domains, $owner_domains)) {
+                if ((count($user_domains) === 0 && count($owner_domains) === 0)
+                    || array_intersect($user_domains, $owner_domains)) {
                     $is_visible = true;
                 }
                 break;

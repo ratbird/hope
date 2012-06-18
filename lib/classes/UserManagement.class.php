@@ -895,8 +895,6 @@ class UserManagement
         UserConfigEntry::deleteByUser($this->user_data['auth_user_md5.user_id']);
 
         // delete all remaining user data
-        $query = "DELETE FROM seminar_user_schedule WHERE user_id = ?";
-        DBManager::get()->prepare($query)->execute(array($this->user_data['auth_user_md5.user_id']));
         $query = "DELETE FROM rss_feeds WHERE user_id = ?";
         DBManager::get()->prepare($query)->execute(array($this->user_data['auth_user_md5.user_id']));
         $query = "DELETE FROM kategorien WHERE range_id = ?";

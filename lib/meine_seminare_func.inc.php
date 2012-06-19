@@ -188,15 +188,16 @@ function add_sem_name(&$my_obj)
 {
     if ($GLOBALS['user']->cfg->getValue('SHOWSEM_ENABLE')) {
         $sem_data = SemesterData::GetSemesterArray();
-        foreach ($my_obj as $seminar_id => $values){
-            if ($values['obj_type'] == 'sem' && $values['sem_number'] != $values['sem_number_end']){
-                $sem_name = " (" . $sem_data[$values['sem_number']]['name'] . " - ";
-                $sem_name .= (($values['sem_number_end'] == -1) ? _("unbegrenzt") : $sem_data[$values['sem_number_end']]['name']) . ")";
-                $my_obj[$seminar_id]['name'] .= $sem_name;
-            } else {
-                $my_obj[$seminar_id]['name'] .= " (" . $sem_data[$values['sem_number']]['name'] . ") ";
+        if ($seminar_id != null)
+            foreach ($my_obj as $seminar_id => $values){
+                if ($values['obj_type'] == 'sem' && $values['sem_number'] != $values['sem_number_end']){
+                    $sem_name = " (" . $sem_data[$values['sem_number']]['name'] . " - ";
+                    $sem_name .= (($values['sem_number_end'] == -1) ? _("unbegrenzt") : $sem_data[$values['sem_number_end']]['name']) . ")";
+                    $my_obj[$seminar_id]['name'] .= $sem_name;
+                } else {
+                    $my_obj[$seminar_id]['name'] .= " (" . $sem_data[$values['sem_number']]['name'] . ") ";
+                }
             }
-        }
     }
     return true;
 }

@@ -364,7 +364,7 @@ function PrintAktualContacts($range_id)
             $tmp_color = in_array($contact['user_id'], $selected) ? '#777777' : '#000000';
         }
 
-        echo "<option style=\"color:$tmpcolor;\" value=\"" . $contact['username'];
+        echo "<option style=\"color:$tmp_color;\" value=\"" . $contact['username'];
         echo '">';
         echo htmlReady(my_substr($contact['fullname'], 0, 35) . " (" . $contact['username'] . ")");
         echo " - " . $contact['perms'] . "</option>\n";

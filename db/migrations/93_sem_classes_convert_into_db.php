@@ -16,7 +16,7 @@ class SemClassesConvertIntoDb extends Migration
     function up()
     {
         $db = DBManager::get();
-        
+
         $db->exec("
             CREATE TABLE IF NOT EXISTS `sem_classes` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -72,7 +72,7 @@ class SemClassesConvertIntoDb extends Migration
                 PRIMARY KEY (`id`)
             ) ENGINE=MyISAM
         ");
-        
+
         $statement = $db->prepare(
             "INSERT IGNORE INTO sem_classes " .
             "SET id = :id, " .
@@ -114,11 +114,13 @@ class SemClassesConvertIntoDb extends Migration
                 "mkdate = UNIX_TIMESTAMP(), " .
                 "chdate = UNIX_TIMESTAMP() " .
         "");
-        
+
+        include 'config.inc.php';
+
         $studygroup_settings = $this->getStudygroupSettings();
         $core_modules = array('forum','documents','literature','wiki','documents_folder_permission','participants','schedule');
-        
-        foreach ($GLOBALS['SEM_CLASS'] as $id => $sem_class) {
+
+        foreach ($SEM_CLASS as $id => $sem_class) {
             $modules = array(
                 'CoreOverview' => array('activated' => 1, 'sticky' => 1)
             );
@@ -134,7 +136,7 @@ class SemClassesConvertIntoDb extends Migration
             } else {
                 $modules['CoreAdmin'] = array('activated' => 1, 'sticky' => 1);
             }
-            
+
             $forum = $this->checkModule("forum", $sem_class, $studygroup_settings)
                 ? "CoreForum"
                 : null;
@@ -153,17 +155,17 @@ class SemClassesConvertIntoDb extends Migration
             $wiki = $sem_class['studygroup_mode'] || $studygroup_settings['wiki'] || !isset($studygroup_settings['wiki'])
                 ? "CoreWiki"
                 : null;
-            
+
             $title_dozent = $title_tutor = $title_autor = null;
             $title_dozent_plural = $title_tutor_plural = $title_autor_plural = null;
-            foreach ($GLOBALS['SEM_TYPE'] as $sem_type_id => $sem_type) {
+            foreach ($SEM_TYPE as $sem_type_id => $sem_type) {
                 if ($sem_type['class'] == $id) {
                     $title_dozent || list($title_dozent, $title_dozent_plural) = $sem_type['title_dozent'];
                     $title_tutor || list($title_tutor, $title_tutor_plural) = $sem_type['title_tutor'];
                     $title_autor || list($title_autor, $title_autor_plural) = $sem_type['title_autor'];
                 }
             }
-            
+
             $success = $statement->execute(array(
                 'id' => $id,
                 'name' => $sem_class['name'],
@@ -206,7 +208,7 @@ class SemClassesConvertIntoDb extends Migration
                 'title_autor_plural' => $title_autor_plural ? $title_autor_plural : null
             ));
         }
-        
+
         $statement = $db->prepare(
             "INSERT IGNORE INTO `sem_types` " .
             "SET id = :id, " .
@@ -215,20 +217,20 @@ class SemClassesConvertIntoDb extends Migration
                 "chdate = UNIX_TIMESTAMP(), " .
                 "mkdate = UNIX_TIMESTAMP() " .
         "");
-        foreach ($GLOBALS['SEM_TYPE'] as $id => $sem_type) {
+        foreach ($SEM_TYPE as $id => $sem_type) {
             $success = $statement->execute(array(
                 'id' => $id,
                 'name' => $sem_type['name'],
                 'class' => $sem_type['class']
             ));
         }
-        
+
         $statement = $db->prepare(
             "DELETE FROM config WHERE field = 'STUDYGROUP_SETTINGS' " .
         "");
         //$statement->execute();
     }
-    
+
     protected function checkModule($module, $sem_class, $studygroup_settings) {
         if ($sem_class['studygroup_mode']) {
             if (!isset($studygroup_settings[$module]) || $studygroup_settings[$module]) {
@@ -240,7 +242,7 @@ class SemClassesConvertIntoDb extends Migration
             return isset($sem_class[$module]) ? (bool) $sem_class[$module] : true;
         }
     }
-    
+
     protected function getStudygroupSettings() {
         $db = DBManager::get();
         $studygroup_settings_statement = $db->prepare(
@@ -265,5 +267,5 @@ class SemClassesConvertIntoDb extends Migration
         DBManager::get()->exec("DROP TABLE `sem_classes` ");
         DBManager::get()->exec("DROP TABLE `sem_types` ");
     }
-    
+
 }

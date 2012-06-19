@@ -371,7 +371,7 @@ switch ($view) {
     break;
     case "openobject_assign":
         if ($resources_data["actual_object"])
-            $page_intro=sprintf(_("Anzeigen der Belegung der Ressource %s. Sie können die Belegung auch bearbeiten, falls Sie entsprechende Rechte besitzen, oder eine neue Belegung erstellen."), "<b>".$currentObject->getName()."</b> (".$currentObject->getCategoryName().").");
+            $page_intro=sprintf(_("Anzeigen der Belegung der Ressource %s. Sie können die Belegung auch bearbeiten, falls Sie entsprechende Rechte besitzen, oder eine neue Belegung erstellen."), "<b>".$currentObject->getName()."</b> (".$currentObject->getCategoryName().")");
         PageLayout::setTitle($SessSemName["header_line"]." - ".("Belegung anzeigen/bearbeiten"));
         Navigation::activateItem('/course/resources/edit_assign');
     break;

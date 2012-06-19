@@ -4,7 +4,7 @@ use Studip\Button, Studip\LinkButton;
 
 <div class="modalshadow">
     <div class="messagebox messagebox_modal">
-        <?= formatReady(_("Möchten Sie folgende Inhaltselemente wirklich deaktivieren? Vorhandene Inhalte werden in der Regel dabei gelöscht")
+        <?= formatReady(_("Möchten Sie folgende Inhaltselemente wirklich deaktivieren?")
                     . "\n" . $deactivate_modules_names) ?>
         <div style="margin-top: 1em;">
             <form action="<?= $controller->url_for('course/studygroup/update/'.$sem_id) ?>" method=post>

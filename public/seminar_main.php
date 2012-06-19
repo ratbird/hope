@@ -62,7 +62,7 @@ if (Request::get('auswahl')) {
 }
 
 // gibt es eine Anweisung zur Umleitung?
-if(Request::get('redirect_to')) {
+if (Request::get('redirect_to')) {
     $query_parts = explode('&', stristr($_SERVER['QUERY_STRING'], 'redirect_to'));
     list( , $where_to) = explode('=', array_shift($query_parts));
     $new_query = $where_to . '?' . join('&', $query_parts);
@@ -70,6 +70,14 @@ if(Request::get('redirect_to')) {
     $new_query = preg_replace('/[^0-9a-z+_#?&=.-\/]/i', '', $new_query);
     header('Location: '.URLHelper::getURL($new_query));
     die;
+}
+$sem = new Seminar($course_id);
+$sem_class = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$sem->status]['class']];
+if ($sem_class->getSlotModule("overview") !== "CoreOverview") {
+    foreach ($sem_class->getNavigationForSlot("overview") as $nav) {
+        header('Location: '.URLHelper::getURL($nav->getURL()));
+        die;
+    }
 }
 
 if (get_config('NEWS_RSS_EXPORT_ENABLE') && $course_id){

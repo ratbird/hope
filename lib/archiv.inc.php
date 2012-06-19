@@ -649,8 +649,7 @@ function in_archiv ($sem_id) {
     $fakultaet = addslashes($fakultaet);
 
     setTempLanguage();  // use $DEFAULT_LANGUAGE for archiv-dumps
-    include ("config.inc.php");
-
+    
     //Dump holen
 
     $dump = addslashes(dump_sem($sem_id));
@@ -663,8 +662,7 @@ function in_archiv ($sem_id) {
     $wikidump=addslashes(getAllWikiPages($sem_id, $name, FALSE));
 
     restoreLanguage();
-    include ("config.inc.php");
-
+    
     //OK, naechster Schritt: Kopieren der Personendaten aus seminar_user in archiv_user
 
     $db->query("SELECT * FROM seminar_user WHERE Seminar_id = '$seminar_id'");

@@ -227,9 +227,6 @@ if ($auth->is_authenticated() && is_object($user) && $user->id != "nobody") {
 // init of output via I18N
 $_language_path = init_i18n($_SESSION['_language']);
 
-//force reload of config to get translated data
-include 'config.inc.php';
-
 // Try to select the course or institute given by the parameter 'cid'
 // in the current request. For compatibility reasons there is a fallback to
 // the last selected one from the session
@@ -250,8 +247,8 @@ PluginEngine::loadPlugins();
 // add navigation item: add modules
 if (Navigation::hasItem('/course')
     && ($perm->have_studip_perm('tutor', $SessSemName[1]) && $SessSemName['class'] == 'sem')
-    && !$SEM_CLASS[$SEM_TYPE[$SessSemName['art_num']]['class']]['studygroup_mode']) {
-    $plus_nav = new Navigation('+', 'admin_modules.php?view=modules_sem');
+    && ($SessSemName['class'] != 'sem' || !$GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$SessSemName['art_num']]['class']]['studygroup_mode'])) {
+    $plus_nav = new Navigation('+', 'dispatch.php/course/plus/index');
     $plus_nav->setDescription(_("Inhaltselemente konfigurieren"));
     Navigation::addItem('/course/modules', $plus_nav);
 }

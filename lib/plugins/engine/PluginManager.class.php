@@ -148,20 +148,22 @@ class PluginManager
 
     /**
      * Get the activation status of a plugin in the given context.
-     * This also checks the plugin default activations.
+     * This also checks the plugin default activations and sem_class-settings.
      *
      * @param $id        id of the plugin
      * @param $context   context range id
      */
     public function isPluginActivated ($id, $context)
     {
+        $plugin_class = $this->plugins[$id]['class'];
+        
         $query = "SELECT 1 "
                . "FROM plugins_default_activations "
                . "JOIN seminar_inst ON (institutid = institut_id) "
                . "WHERE pluginid = ? AND seminar_id = ?";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($id, $context));
-        $default = $statement->fetchColumn();
+        $inst_default = $statement->fetchColumn();
 
         $query = "SELECT state "
                . "FROM plugins_activated "
@@ -169,10 +171,23 @@ class PluginManager
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($id, $context, $context));
         $state = $statement->fetchColumn();
+        
+        $statement = DBManager::get()->prepare(
+            "SELECT status FROM seminare WHERE Seminar_id = :seminar_id " .
+        "");
+        $statement->execute(array('seminar_id' => $context));
+        $sem_class = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$statement->fetch(PDO::FETCH_COLUMN, 0)]['class']];
+        if ($sem_class) {
+            $modules = $sem_class->getModules();
+            $sem_class_default = $modules[$plugin_class]['activated'];
+            $mandatory = $modules[$plugin_class]['sticky'] && $sem_class_default;
+            $forbidden = $modules[$plugin_class]['sticky'] && !$sem_class_default;
+        }
 
-        return $default && $state !== 'off' || $state === 'on';
+        return ((($inst_default || $sem_class_default) && $state !== 'off' || $state === 'on') && !$forbidden) 
+            || $mandatory;
     }
-
+    
     /**
      * Sets the activation status of a plugin in the given context.
      *
@@ -545,8 +560,8 @@ class PluginManager
         usort($plugin_info, array('self', 'positionCompare'));
 
         foreach ($plugin_info as $info) {
-            $activated = $context == NULL ||
-                $this->isPluginActivated($info['id'], $context);
+            $activated = $context == NULL 
+                || $this->isPluginActivated($info['id'], $context);
 
             if ($this->checkUserAccess($info, $user) && $activated) {
                 $plugin = $this->getCachedPlugin($info, $context);

@@ -38,14 +38,30 @@ ob_start(); //Outputbuffering für maximal Performance
  * @param unknown_type $my_obj_values
  * @param unknown_type $type
  */
-function print_seminar_content($semid, $my_obj_values, $type = 'seminar')
+function print_seminar_content($semid, $my_obj_values, $type = 'seminar', $sem_class = null)
 {
+    $slot_mapper = array(
+        'files' => "documents",
+        'elearning' => "elearning_interface"
+    );
     foreach (words('forum participants files news scm schedule wiki vote literature elearning') as $key) {
+        if ($sem_class) {
+            $slot = isset($slot_mapper[$key]) ? $slot_mapper[$key] : $key;
+            $module = $sem_class->getModule($slot);
+            if (is_a($module, "StandardPlugin")) {
+                $navigation[$key] = $module->getIconNavigation($semid, $my_obj_values['visitdate']);
+            } else {
         $navigation[$key] = $my_obj_values[$key];
+    }
+        } else {
+            $navigation[$key] = $my_obj_values[$key];
+        }
     }
 
     foreach (PluginEngine::getPlugins('StandardPlugin', $semid) as $plugin) {
+        if (!$sem_class || !$sem_class->isSlotModule(get_class($plugin))) {
         $navigation[] = $plugin->getIconNavigation($semid, $my_obj_values['visitdate']);
+    }
     }
 
     foreach ($navigation as $key => $nav) {

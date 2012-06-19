@@ -69,6 +69,17 @@ class AdminList {
                     $my_inst[] = $institute['Institut_id'];
                 }
             }
+            
+            $forbidden_sem_types = studygroup_sem_types();
+            if (!$GLOBALS['perm']->have_perm("root")) {
+                foreach ($GLOBALS['SEM_TYPE'] as $id => $sem_type) {
+                    if (!$GLOBALS['SEM_CLASS'][$sem_type['class']]->getSlotModule("admin")) {
+                        //Die Verwaltungsseite ist ausgeschaltet, 
+                        //also darf nicht einmal Admin das Seminar bearbeiten.
+                        $forbidden_sem_types[] = $id;
+                    }
+                }
+            }
 
             $params = array();
             $query =
@@ -80,7 +91,7 @@ class AdminList {
                 "LEFT JOIN semester_data AS sd1 ON ( start_time BETWEEN sd1.beginn AND sd1.ende) " .
                 "LEFT JOIN semester_data AS sd2 ON ((start_time + duration_time) BETWEEN sd2.beginn AND sd2.ende) " .
             "WHERE su.status = 'dozent' " .
-                "AND sem.status NOT IN ('".implode("', '", studygroup_sem_types())."') ";
+                "AND sem.status NOT IN ('".implode("', '", $forbidden_sem_types)."') ";
             //$params = array('studygroup_sem_types' => studygroup_sem_types());
 
             if ($links_admin_data["srch_sem"]) {

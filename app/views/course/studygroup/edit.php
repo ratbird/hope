@@ -69,17 +69,33 @@ $infobox['content'] = array(
   <td style='text-align:right; vertical-align:top;'><?= _('Module:') ?></td>
   <td>
     <? foreach($available_modules as $key => $name) : ?>
-        <? if ($key != 'participants') :?>
+        <? if (($key === "chat" && $sem_class['chat']) || $key === "documents_folder_permissions") : ?>
         <label>
-            <input name="groupmodule[<?= $key ?>]" type="checkbox" <?= ($modules->getStatus($key, $sem_id, 'sem')) ? 'checked="checked"' : '' ?>> <?= htmlReady($name) ?>
+                <input name="groupplugin[<?= $key ?>]" type="checkbox" <?= ($modules->getStatus($key, $sem_id, 'sem')) ? 'checked="checked"' : '' ?>>
+                <?= htmlReady($name) ?>
         </label><br>
+        <? else : ?>
+            <? $module = $sem_class->getSlotModule($key) ?>
+            <? if ($module && $sem_class->isModuleAllowed($module) && !$sem_class->isSlotMandatory($key)) : ?>
+            <label>
+                <input name="groupplugin[<?= $module ?>]" type="checkbox" <?= ($modules->getStatus($key, $sem_id, 'sem')) ? 'checked="checked"' : '' ?>>
+                <?= htmlReady($name) ?>
+                <? $studip_module = $sem_class->getModule($module);
+                if (is_a($studip_module, "StandardPlugin")) : ?>
+                (<?= htmlReady($studip_module->getPluginName()) ?>)
+                <? endif ?>
+            </label><br>
         <? endif;?>
+        <? endif ?>
     <? endforeach; ?>
 
     <? foreach($available_plugins as $key => $name) : ?>
+        <? if ($sem_class->isModuleAllowed($key) && !$sem_class->isModuleMandatory($key) && !$sem_class->isSlotModule($key)) : ?>
         <label>
-            <input name="groupplugin[<?= $key ?>]" type="checkbox" <?= ($enabled_plugins[$key]) ? 'checked="checked"' : '' ?>> <?= htmlReady($name) ?>
+            <input name="groupplugin[<?= $key ?>]" type="checkbox" <?= ($enabled_plugins[$key]) ? 'checked="checked"' : '' ?>>
+            <?= htmlReady($name) ?>
         </label><br>
+        <? endif ?>
     <? endforeach; ?>
   </td>
 </tr>

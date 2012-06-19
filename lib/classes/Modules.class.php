@@ -41,6 +41,8 @@ require_once 'config.inc.php';
 
 class Modules {
     var $registered_modules = array(
+        'overview' => array('id' => 20, 'const' => '', 'sem' => true, 'inst' => false),
+        'admin' => array('id' => 17, 'const' => '', 'sem' => true, 'inst' => false),
         'forum' => array('id' => 0, 'const' => '', 'sem' => true, 'inst' => true),
         'documents' => array('id' => 1, 'const' => '', 'sem' => true, 'inst' => true),
         'schedule' => array('id' => 2, 'const' => '', 'sem' => true, 'inst' => false),
@@ -52,7 +54,8 @@ class Modules {
         'scm' => array('id' => 12, 'const' => 'SCM_ENABLE', 'sem' => true, 'inst' => true),
         'elearning_interface' => array('id' => 13, 'const' => 'ELEARNING_INTERFACE_ENABLE', 'sem' => true, 'inst' => true),
         'documents_folder_permissions' => array('id' => 14, 'const' => '', 'sem' => true, 'inst' => true),
-        'calendar' => array('id' => 16, 'const' => 'COURSE_CALENDAR_ENABLE', 'sem' => true, 'inst' => true)
+        'calendar' => array('id' => 16, 'const' => 'COURSE_CALENDAR_ENABLE', 'sem' => true, 'inst' => true),
+        'resources' => array('id' => 21, 'const' => '', 'sem' => true, 'inst' => false)
     );
 
     function Modules() {
@@ -69,23 +72,32 @@ class Modules {
         if (!$range_type) {
             $range_type = get_object_type($range_id);
         }
-
+        
         if ($modules === false) {
             if ($range_type == 'sem') {
-                $query = "SELECT modules FROM seminare WHERE Seminar_id = ?";
+                $query = "SELECT modules, status FROM seminare WHERE Seminar_id = ?";
             } else {
                 $query = "SELECT modules FROM Institute WHERE Institut_id = ? ";
             }
             $statement = DBManager::get()->prepare($query);
             $statement->execute(array($range_id));
-            $modules = $statement->fetchColumn();
+            $modules = $statement->fetch(PDO::FETCH_ASSOC);
+            $sem_class = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$modules['status']]['class']];
+            $modules = $modules['modules'];
         }
         if ($modules === null || $modules === false) {
             $modules = $this->getDefaultBinValue($range_id, $range_type, $type);
         }
-
+        
         foreach ($this->registered_modules as $key => $val) {
+            if ($sem_class) {
+                $module = $sem_class->getSlotModule($key);
+            }
+            if (!$sem_class || $sem_class->isModuleAllowed($module)) {
             $modules_list[$key] = $this->isBit($modules, $val['id']);
+            } else {
+                $modules_list[$key] = 0;
+        }
         }
 
         return $modules_list;

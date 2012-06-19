@@ -66,7 +66,7 @@ class SeminarCategories {
      */
     public static function GetAll(){
         $ret = array();
-        foreach(array_keys($GLOBALS['SEM_CLASS']) as $id){
+        foreach($GLOBALS['SEM_CLASS'] as $id => $sem_class){
             $ret[] = self::get($id);
         }
         return $ret;

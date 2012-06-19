@@ -20,6 +20,21 @@ require_once 'lib/classes/LockRules.class.php';
 require_once 'lib/classes/AuxLockRules.class.php';
 require_once 'lib/classes/AutoInsert.class.php';
 
+require_once 'lib/modules/CoreAdmin.class.php';
+require_once 'lib/modules/CoreStudygroupAdmin.class.php';
+require_once 'lib/modules/CoreOverview.class.php';
+require_once 'lib/modules/CoreForum.class.php';
+require_once 'lib/modules/CoreParticipants.class.php';
+require_once 'lib/modules/CoreStudygroupParticipants.class.php';
+require_once 'lib/modules/CoreDocuments.class.php';
+require_once 'lib/modules/CoreSchedule.class.php';
+require_once 'lib/modules/CoreScm.class.php';
+require_once 'lib/modules/CoreLiterature.class.php';
+require_once 'lib/modules/CoreWiki.class.php';
+require_once 'lib/modules/CoreResources.class.php';
+require_once 'lib/modules/CoreCalendar.class.php';
+require_once 'lib/modules/CoreElearningInterface.class.php';
+
 if (get_config('ELEARNING_INTERFACE_ENABLE')) {
     require_once $GLOBALS['RELATIVE_PATH_ELEARNING_INTERFACE'].'/ObjectConnections.class.php';
 }
@@ -62,49 +77,156 @@ class CourseNavigation extends Navigation
     public function initSubNavigation()
     {
         global $SEM_CLASS, $SEM_TYPE;
-        global $SessSemName, $forum, $perm, $user;
+        global $SessSemName, $user;
 
         parent::initSubNavigation();
 
+        $object_type = $SessSemName['class'];
+        if ($object_type === "inst") {
+            $this->initInstSubNavigation();
+            return;
+        }
+        
         // list of used modules
-        $Modules = new Modules;
-        $modules = $Modules->getLocalModules($SessSemName[1]);
-        $studygroup_mode = $SEM_CLASS[$SEM_TYPE[$SessSemName['art_num']]['class']]['studygroup_mode'];
+        $Modules = new Modules();
+        $modules = $Modules->getLocalModules($_SESSION['SessionSeminar']);
+        $sem_class = $SEM_CLASS[$SEM_TYPE[$SessSemName['art_num']]['class']];
 
-        $db = DBManager::get();
-        $result = $db->query("SELECT admission_binding FROM seminare WHERE seminar_id = '$SessSemName[1]'");
-        $admission_binding = $result->fetchColumn();
-
-        $rule = AuxLockRules::getLockRuleBySemId($SessSemName[1]);
-        $sem_class = $SessSemName['class'];
-
-        if ($modules['scm']) {
-            $scms = array_values(StudipScmEntry::GetSCMEntriesForRange($SessSemName[1]));
+        // general information
+        if ($modules['overview'] || $sem_class->isSlotMandatory("overview")) {
+            foreach ($sem_class->getNavigationForSlot("overview") as $nav_name => $navigation) {
+                if ($nav_name && is_a($navigation, "Navigation")) {
+                    $this->addSubNavigation($nav_name, $navigation);
+                }
+            }
         }
 
-        $sem_create_perm = in_array(get_config('SEM_CREATE_PERM'), array('root','admin','dozent')) ? get_config('SEM_CREATE_PERM') : 'dozent';
+        // admin area
+        if ($modules['admin'] || $sem_class->isSlotMandatory("admin")) {
+            foreach ($sem_class->getNavigationForSlot("admin") as $nav_name => $navigation) {
+                if ($nav_name && is_a($navigation, "Navigation")) {
+                    $this->addSubNavigation($nav_name, $navigation);
+                }
+            }
+        }
 
+        // forum
+        if ($modules['forum'] || $sem_class->isSlotMandatory("forum")) {
+            foreach ($sem_class->getNavigationForSlot("forum") as $nav_name => $navigation) {
+                if ($nav_name && is_a($navigation, "Navigation")) {
+                    $this->addSubNavigation($nav_name, $navigation);
+        }
+            }
+        }
+
+        // participants
+        if ($user->id != 'nobody' && ($modules['participants'] || $sem_class->isSlotMandatory("participants"))) {
+            foreach ($sem_class->getNavigationForSlot("participants") as $nav_name => $navigation) {
+                if ($nav_name && is_a($navigation, "Navigation")) {
+                    $this->addSubNavigation($nav_name, $navigation);
+                }
+            }
+        }
+
+        // files
+        if ($modules['documents'] || $sem_class->isSlotMandatory("documents")) {
+            foreach ($sem_class->getNavigationForSlot("documents") as $nav_name => $navigation) {
+                if ($nav_name && is_a($navigation, "Navigation")) {
+                    $this->addSubNavigation($nav_name, $navigation);
+                }
+            }
+        }
+
+        // schedule
+        if ($modules['schedule'] || $sem_class->isSlotMandatory("schedule")) {
+            foreach ($sem_class->getNavigationForSlot("schedule") as $nav_name => $navigation) {
+                if ($nav_name && is_a($navigation, "Navigation")) {
+                    $this->addSubNavigation($nav_name, $navigation);
+                }
+            }
+        }
+
+        // information page
+        if (get_config('SCM_ENABLE') && ($modules['scm'] || $sem_class->isSlotMandatory("scm"))) {
+            foreach ($sem_class->getNavigationForSlot("scm") as $nav_name => $navigation) {
+                if ($nav_name && is_a($navigation, "Navigation")) {
+                    $this->addSubNavigation($nav_name, $navigation);
+            }
+            }
+        }
+
+        // literature
+        if (get_config('LITERATURE_ENABLE') && ($modules['literature'] || $sem_class->isSlotMandatory("literature"))) {
+            foreach ($sem_class->getNavigationForSlot("literature") as $nav_name => $navigation) {
+                if ($nav_name && is_a($navigation, "Navigation")) {
+                    $this->addSubNavigation($nav_name, $navigation);
+            }
+            }
+        }
+
+        // wiki
+        if (get_config('WIKI_ENABLE') && ($modules['wiki'] || $sem_class->isSlotMandatory("wiki"))) {
+            foreach ($sem_class->getNavigationForSlot("wiki") as $nav_name => $navigation) {
+                if ($nav_name && is_a($navigation, "Navigation")) {
+                    $this->addSubNavigation($nav_name, $navigation);
+            }
+            }
+        }
+
+        // resources
+        if (get_config('RESOURCES_ENABLE')) {
+            foreach ($sem_class->getNavigationForSlot("resources") as $nav_name => $navigation) {
+                if ($nav_name && is_a($navigation, "Navigation")) {
+                    $this->addSubNavigation($nav_name, $navigation);
+                }
+            }
+        }
+
+        // calendar
+        if (get_config('CALENDAR_GROUP_ENABLE') && get_config('COURSE_CALENDAR_ENABLE') 
+                && ($modules['calendar'] || $sem_class->isSlotMandatory("calendar") )) {
+            foreach ($sem_class->getNavigationForSlot("calendar") as $nav_name => $navigation) {
+                if ($nav_name && is_a($navigation, "Navigation")) {
+                    $this->addSubNavigation($nav_name, $navigation);
+                }
+            }
+        }
+
+        // content modules
+        if (get_config('ELEARNING_INTERFACE_ENABLE') && $user->id != 'nobody'
+                && ($modules['elearning_interface'] || $sem_class->isSlotMandatory("elearning_interface"))) {
+            foreach ($sem_class->getNavigationForSlot("elearning_interface") as $nav_name => $navigation) {
+                if ($nav_name && is_a($navigation, "Navigation")) {
+                    $this->addSubNavigation($nav_name, $navigation);
+                }
+            }
+        }
+        
+        //plugins
+        $standard_plugins = PluginManager::getInstance()->getPlugins("StandardPlugin", $_SESSION['SessionSeminar']);
+        foreach ($standard_plugins as $plugin) {
+            if (!$sem_class->isSlotModule(get_class($plugin))) {
+                foreach ($sem_class->getNavigationForSlot(get_class($plugin)) as $nav_name => $navigation) {
+                    if ($nav_name && is_a($navigation, "Navigation")) {
+                        $this->addSubNavigation($nav_name, $navigation);
+                    }
+                }
+            }
+        }
+        
+    }
+    
+    protected function initInstSubNavigation() {
+        global $SessSemName, $forum, $perm, $user;
+
+        // list of used modules
+        $Modules = new Modules();
+        $modules = $Modules->getLocalModules($SessSemName[1]);
+        
         // general information
         $navigation = new Navigation(_('Übersicht'));
         $navigation->setImage('icons/16/white/seminar.png');
         $navigation->setActiveImage('icons/16/black/seminar.png');
-
-        if ($sem_class == 'sem') {
-            $navigation->addSubNavigation('info', new Navigation(_('Kurzinfo'), 'seminar_main.php'));
-
-            if (!$studygroup_mode) {
-                $navigation->addSubNavigation('details', new Navigation(_('Details'), 'details.php'));
-                $navigation->addSubNavigation('print', new Navigation(_('Druckansicht'), 'print_seminar.php'));
-            }
-
-            if ($perm->have_studip_perm('admin', $SessSemName[1]) && !$studygroup_mode) {
-                $navigation->addSubNavigation('admin', new Navigation(_('Administration dieser Veranstaltung'), 'adminarea_start.php?new_sem=TRUE'));
-            }
-
-            if (!$admission_binding && !$perm->have_studip_perm('tutor', $SessSemName[1]) && $user->id != 'nobody') {
-                $navigation->addSubNavigation('leave', new Navigation(_('Austragen aus der Veranstaltung'), 'meine_seminare.php?auswahl='.$SessSemName[1].'&cmd=suppose_to_kill'));
-            }
-        } else {
             $navigation->addSubNavigation('info', new Navigation(_('Info'), 'institut_main.php'));
             $navigation->addSubNavigation('courses', new Navigation(_('Veranstaltungen'), 'show_bereich.php?level=s&id='.$SessSemName[1]));
             $navigation->addSubNavigation('schedule', new Navigation(_('Veranstaltungs-Stundenplan'), 'dispatch.php/calendar/instschedule?cid='.$SessSemName[1]));
@@ -112,80 +234,16 @@ class CourseNavigation extends Navigation
             if ($perm->have_studip_perm('tutor', $SessSemName[1]) && $perm->have_perm('admin')) {
                 $navigation->addSubNavigation('admin', new Navigation(_('Administration der Einrichtung'), 'admin_institut.php?new_inst=TRUE'));
             }
-        }
-
         $this->addSubNavigation('main', $navigation);
 
         // admin area
         $navigation = new Navigation(_('Verwaltung'));
         $navigation->setImage('icons/16/white/admin.png');
         $navigation->setActiveImage('icons/16/black/admin.png');
-
-        if ($studygroup_mode) {
-            if ($perm->have_studip_perm('dozent', $SessSemName[1])) {
-                $navigation->addSubNavigation('main', new Navigation(_('Verwaltung'), 'dispatch.php/course/studygroup/edit/'.$SessSemName[1]));
-            }
-        } else if ($perm->have_studip_perm('tutor', $SessSemName[1]) && !$perm->have_perm('admin')) {
+        if ($perm->have_studip_perm('tutor', $SessSemName[1]) && !$perm->have_perm('admin')) {
             $main = new Navigation(_('Verwaltung'), 'dispatch.php/course/management');
             $navigation->addSubNavigation('main', $main);
-
-            if ($sem_class == 'sem') {
-                $item = new Navigation(_('Grunddaten'), 'dispatch.php/course/basicdata/view/' . $_SESSION['SessionSeminar']);
-                $item->setDescription(_('Prüfen und Bearbeiten Sie in diesem Verwaltungsbereich die Grundeinstellungen dieser Veranstaltung.'));
-                $navigation->addSubNavigation('details', $item);
-
-                $item = new Navigation(_('Studienbereiche'), 'dispatch.php/course/study_areas/show/' . $_SESSION['SessionSeminar']);
-                $item->setDescription(_('Legen Sie hier fest, in welchen Studienbereichen diese Veranstaltung im Verzeichnis aller Veranstaltungen erscheint.'));
-                $navigation->addSubNavigation('study_areas', $item);
-
-                $item = new Navigation(_('Zeiten/Räume'), 'raumzeit.php');
-                $item->setDescription(_('Verändern Sie hier Angaben über regelmäßige Veranstaltungszeiten, Einzeltermine und Ortsangaben.'));
-                $navigation->addSubNavigation('dates', $item);
-
-                if (get_config('RESOURCES_ENABLE') && get_config('RESOURCES_ALLOW_ROOM_REQUESTS')) {
-                    $item = new Navigation(_('Raumanfragen'), 'dispatch.php/course/room_requests/index/' . $_SESSION['SessionSeminar']);
-                    $item->setDescription(_('Verwalten Sie hier Raumanfragen zu Veranstaltungszeiten.'));
-                    $navigation->addSubNavigation('room_requests', $item);
                 }
-
-                $item = new Navigation(_('Zugangsberechtigungen'), 'admin_admission.php');
-                $item->setDescription(_('Richten Sie hier verschiedene Zugangsbeschränkungen, Anmeldeverfahren oder einen Passwortschutz für Ihre Veranstaltung ein.'));
-                $navigation->addSubNavigation('admission', $item);
-
-                $item = new Navigation(_('Zusatzangaben'), 'admin_aux.php');
-                $item->setDescription(_('Hier können Sie Vorlagen zur Erhebung weiter Angaben von Ihren Teilnehmern auswählen.'));
-                $navigation->addSubNavigation('aux_data', $item);
-
-                if ($perm->have_perm($sem_create_perm)) {
-                    if (!LockRules::check($SessSemName[1], 'seminar_copy')) {
-                        $item = new Navigation(_('Veranstaltung kopieren'), 'admin_seminare_assi.php?cmd=do_copy&cp_id='.$SessSemName[1].'&start_level=TRUE&class=1');
-                        $item->setImage('icons/16/black/add/seminar.png');
-                        $main->addSubNavigation('copy', $item);
-                    }
-
-                    if (get_config('ALLOW_DOZENT_ARCHIV')) {
-                        $item = new Navigation(_('Veranstaltung archivieren'), 'archiv_assi.php');
-                        $item->setImage('icons/16/black/remove/seminar.png');
-                        $main->addSubNavigation('archive', $item);
-                    }
-
-                    if (get_config('ALLOW_DOZENT_VISIBILITY')) {
-                        $item = new Navigation(_('Sichtbarkeit ändern'), 'admin_visibility.php');
-                        $item->setImage('icons/16/black/visibility-invisible.png');
-                        $main->addSubNavigation('visibility', $item);
-                    }
-                }
-
-                // show entry for simulated participant view
-                $item= new Navigation('Studierendenansicht simulieren', 'dispatch.php/course/change_view?cid='.Request::option('cid'));
-                $item->setDescription(_('Hier können Sie sich die Veranstaltung so ansehen, wie sie für Ihre TeilnehmerInnen aussieht.'));
-                $item->setImage('icons/16/black/visibility-invisible.png');
-                $main->addSubNavigation('change_view', $item);
-
-            }
-
-        }
-
         if ($perm->have_studip_perm('tutor', $SessSemName[1]) && !$perm->have_perm('admin')) {
             $item = new Navigation(_('Ankündigungen'), 'admin_news.php?view=news_' . $sem_class);
             $item->setDescription(_('Erstellen Sie Ankündigungen und bearbeiten Sie laufende Ankündigungen.'));
@@ -201,58 +259,20 @@ class CourseNavigation extends Navigation
                 $navigation->addSubNavigation('evaluation', $item);
             }
         }
-
         $this->addSubNavigation('admin', $navigation);
-
+        
         // forum
         if ($modules['forum']) {
-            $navigation = new Navigation(_('Forum'), 'forum.php?view=reset');
-            $navigation->setImage('icons/16/white/forum.png');
-            $navigation->setActiveImage('icons/16/black/forum.png');
-
-            $navigation->addSubNavigation('view', new Navigation(_('Themenansicht'), 'forum.php?view='.$forum['themeview']));
-
-            if ($user->id != 'nobody') {
-                $navigation->addSubNavigation('unread', new Navigation(_('Neue Beiträge'), 'forum.php?view=neue&sort=age'));
+            $core_module = new CoreForum();
+            $navigations = $core_module->getTabNavigation($_SESSION['SessionSeminar']);
+            foreach ((array) $navigations as $name => $navigation) {
+                $this->addSubNavigation($name, $navigation);
             }
-
-            $navigation->addSubNavigation('recent', new Navigation(_('Letzte Beiträge'), 'forum.php?view=flat&sort=age'));
-            $navigation->addSubNavigation('search', new Navigation(_('Suchen'), 'forum.php?view=search&reset=1'));
-            $navigation->addSubNavigation('export', new Navigation(_('Druckansicht'), 'forum_export.php'));
-
-            if ($perm->have_studip_perm('tutor', $SessSemName[1]) || $SEM_CLASS[$SEM_TYPE[$SessSemName['art_num']]['class']]['topic_create_autor']) {
-                $navigation->addSubNavigation('create_topic', new Navigation(_('Neues Thema anlegen'), 'forum.php?view='.$forum['themeview'].'&neuesthema=TRUE#anker'));
             }
-
-            $this->addSubNavigation('forum', $navigation);
-        }
 
         // participants
         if ($user->id != 'nobody') {
-            if ($modules['participants']) {
-                $navigation = new Navigation(_('TeilnehmerInnen'));
-                $navigation->setImage('icons/16/white/persons.png');
-                $navigation->setActiveImage('icons/16/black/persons.png');
-
-                if ($studygroup_mode) {
-                    $navigation->setURL('dispatch.php/course/studygroup/members/'.$SessSemName[1]);
-                    $this->addSubNavigation('members', $navigation);
-                } else if ($perm->have_studip_perm((AutoInsert::checkSeminar($SessSemName[1]) ? Config::get()->AUTO_INSERT_SEM_PARTICIPANTS_VIEW_PERM : 'user') , $SessSemName[1])) {
-                    $navigation->addSubNavigation('view', new Navigation(_('TeilnehmerInnen'), 'teilnehmer.php'));
-
-                    if (is_array($rule['attributes']) && in_array(1, $rule['attributes'])) {
-                        $navigation->addSubNavigation('aux_data', new Navigation(_('Zusatzangaben'), 'teilnehmer_aux.php'));
-                    }
-
-                    $navigation->addSubNavigation('view_groups', new Navigation(_('Funktionen / Gruppen'), 'statusgruppen.php?view=statusgruppe_sem'));
-
-                    if ($perm->have_studip_perm('tutor', $SessSemName[1]) && !LockRules::check($SessSemName[1], 'groups')) {
-                        $navigation->addSubNavigation('edit_groups', new Navigation(_('Funktionen / Gruppen verwalten'), 'admin_statusgruppe.php?new_sem=TRUE&range_id=' .$SessSemName[1]));
-                    }
-
-                    $this->addSubNavigation('members', $navigation);
-                }
-            } else if ($modules['personal']) {
+            if ($modules['personal']) {
                 $navigation = new Navigation(_('Personal'));
                 $navigation->setImage('icons/16/white/persons.png');
                 $navigation->setActiveImage('icons/16/black/persons.png');
@@ -268,131 +288,84 @@ class CourseNavigation extends Navigation
 
         // files
         if ($modules['documents']) {
-            $navigation = new Navigation(_('Dateien'));
-            $navigation->setImage('icons/16/white/files.png');
-            $navigation->setActiveImage('icons/16/black/files.png');
-
-            $navigation->addSubNavigation('tree', new Navigation(_('Ordneransicht'), 'folder.php?cmd=tree'));
-            $navigation->addSubNavigation('all', new Navigation(_('Alle Dateien'), 'folder.php?cmd=all'));
-            $this->addSubNavigation('files', $navigation);
+            $core_module = new CoreDocuments();
+            $navigations = $core_module->getTabNavigation($_SESSION['SessionSeminar']);
+            foreach ((array) $navigations as $name => $navigation) {
+                $this->addSubNavigation($name, $navigation);
+        }
         }
 
         // schedule
         if ($modules['schedule']) {
-            $navigation = new Navigation(_('Ablaufplan'));
-            $navigation->setImage('icons/16/white/schedule.png');
-            $navigation->setActiveImage('icons/16/black/schedule.png');
-
-            $navigation->addSubNavigation('all', new Navigation(_('Alle Termine'), 'dates.php?date_type=all'));
-            $navigation->addSubNavigation('type1', new Navigation(_('Sitzungstermine'), 'dates.php?date_type=1'));
-            $navigation->addSubNavigation('other', new Navigation(_('Andere Termine'), 'dates.php?date_type=other'));
-
-
-            if ($perm->have_studip_perm('tutor', $SessSemName[1])) {
-                $navigation->addSubNavigation('edit', new Navigation(_('Ablaufplan bearbeiten'), 'themen.php?seminar_id=' . $SessSemName[1]));
+            $core_module = new CoreSchedule();
+            $navigations = $core_module->getTabNavigation($_SESSION['SessionSeminar']);
+            foreach ((array) $navigations as $name => $navigation) {
+                $this->addSubNavigation($name, $navigation);
             }
-
-            $this->addSubNavigation('schedule', $navigation);
         }
 
         // information page
         if (get_config('SCM_ENABLE') && $modules['scm']) {
-            $navigation = new Navigation($scms[0]['tab_name']);
-            $navigation->setImage('icons/16/white/infopage.png');
-            $navigation->setActiveImage('icons/16/black/infopage.png');
-
-            foreach ($scms as $scm) {
-                $navigation->addSubNavigation($scm['scm_id'], new Navigation($scm['tab_name'] , 'scm.php?show_scm=' . $scm['scm_id']));
+            $core_module = new CoreScm();
+            $navigations = $core_module->getTabNavigation($_SESSION['SessionSeminar']);
+            foreach ((array) $navigations as $name => $navigation) {
+                $this->addSubNavigation($name, $navigation);
             }
-
-            if ($perm->have_studip_perm('tutor', $SessSemName[1])) {
-                $navigation->addSubNavigation('new_entry', new Navigation(_('Neuen Eintrag anlegen'), 'scm.php?show_scm=new_entry&i_view=edit'));
             }
-
-            $this->addSubNavigation('scm', $navigation);
-        }
 
         // literature
         if (get_config('LITERATURE_ENABLE') && $modules['literature']) {
-            $navigation = new Navigation(_('Literatur'));
-            $navigation->setImage('icons/16/white/literature.png');
-            $navigation->setActiveImage('icons/16/black/literature.png');
-
-            $navigation->addSubNavigation('view', new Navigation(_('Literatur'), 'literatur.php?view=literatur_'.$sem_class));
-            $navigation->addSubNavigation('print', new Navigation(_('Druckansicht'), 'lit_print_view.php?_range_id=' . $SessSemName[1]));
-
-            if ($perm->have_studip_perm('tutor', $SessSemName[1])) {
-                $navigation->addSubNavigation('edit', new Navigation(_('Literatur bearbeiten'), 'admin_lit_list.php?view=literatur_'.$sem_class.'&new_'.$sem_class.'=TRUE&_range_id='. $SessSemName[1]));
+            $core_module = new CoreLiterature();
+            $navigations = $core_module->getTabNavigation($_SESSION['SessionSeminar']);
+            foreach ((array) $navigations as $name => $navigation) {
+                $this->addSubNavigation($name, $navigation);
             }
-
-            $this->addSubNavigation('literature', $navigation);
         }
 
         // wiki
         if (get_config('WIKI_ENABLE') && $modules['wiki']) {
-            $navigation = new Navigation(_('Wiki'));
-            $navigation->setImage('icons/16/white/wiki.png');
-            $navigation->setActiveImage('icons/16/black/wiki.png');
-
-            $navigation->addSubNavigation('show', new Navigation(_('WikiWikiWeb'), 'wiki.php?view=show'));
-            $navigation->addSubNavigation('listnew', new Navigation(_('Neue Seiten'), 'wiki.php?view=listnew'));
-            $navigation->addSubNavigation('listall', new Navigation(_('Alle Seiten'), 'wiki.php?view=listall'));
-            $navigation->addSubNavigation('export', new Navigation(_('Export'), 'wiki.php?view=export'));
-            $this->addSubNavigation('wiki', $navigation);
+            $core_module = new CoreWiki();
+            $navigations = $core_module->getTabNavigation($_SESSION['SessionSeminar']);
+            foreach ((array) $navigations as $name => $navigation) {
+                $this->addSubNavigation($name, $navigation);
+        }
         }
 
         // resources
         if (get_config('RESOURCES_ENABLE')) {
-            if (checkAvailableResources($SessSemName[1])) {
-                $navigation = new Navigation(_('Ressourcen'), 'resources.php?view=openobject_main&view_mode=oobj');
-                $navigation->setImage('icons/16/white/resources.png');
-                $navigation->setActiveImage('icons/16/black/resources.png');
-
-                $navigation->addSubNavigation('overview', new Navigation(_('Übersicht'), 'resources.php?view=openobject_main'));
-                $navigation->addSubNavigation('group_schedule', new Navigation(_('Übersicht Belegung'), 'resources.php?view=openobject_group_schedule'));
-                $navigation->addSubNavigation('view_details', new Navigation(_('Details'), 'resources.php?view=openobject_details'));
-                $navigation->addSubNavigation('view_schedule', new Navigation(_('Belegung'), 'resources.php?view=openobject_schedule'));
-                $navigation->addSubNavigation('edit_assign', new Navigation(_('Belegungen bearbeiten'), 'resources.php?view=openobject_assign'));
-                $this->addSubNavigation('resources', $navigation);
+            $core_module = new CoreResources();
+            $navigations = $core_module->getTabNavigation($_SESSION['SessionSeminar']);
+            foreach ((array) $navigations as $name => $navigation) {
+                $this->addSubNavigation($name, $navigation);
             }
         }
 
         // calendar
         if (get_config('CALENDAR_GROUP_ENABLE') && get_config('COURSE_CALENDAR_ENABLE') && $modules['calendar']) {
-            $navigation = new Navigation(_('Kalender'), 'calendar.php');
-            $navigation->setImage('icons/16/white/schedule.png');
-            $navigation->setActiveImage('icons/16/black/schedule.png');
-
-            $navigation->addSubNavigation('day', new Navigation(_('Tag'), 'calendar.php', array('cmd' => 'showday')));
-            $navigation->addSubNavigation('week', new Navigation(_('Woche'), 'calendar.php', array('cmd' => 'showweek')));
-            $navigation->addSubNavigation('month', new Navigation(_('Monat'), 'calendar.php', array('cmd' => 'showmonth')));
-            $navigation->addSubNavigation('year', new Navigation(_('Jahr'), 'calendar.php', array('cmd' => 'showyear')));
-            $navigation->addSubNavigation('edit', new Navigation(_('Termin anlegen/bearbeiten'), 'calendar.php', array('cmd' => 'edit')));
-            $navigation->addSubNavigation('export', new Navigation(_('Export/Sync'), 'calendar.php', array('cmd' => 'export')));
-            $this->addSubNavigation('calendar', $navigation);
+            $core_module = new CoreCalendar();
+            $navigations = $core_module->getTabNavigation($_SESSION['SessionSeminar']);
+            foreach ((array) $navigations as $name => $navigation) {
+                $this->addSubNavigation($name, $navigation);
+        }
         }
 
         // content modules
         if (get_config('ELEARNING_INTERFACE_ENABLE') && $modules['elearning_interface'] && $user->id != 'nobody') {
-            $navigation = new Navigation(_('Lernmodule'));
-            $navigation->setImage('icons/16/white/learnmodule.png');
-            $navigation->setActiveImage('icons/16/black/learnmodule.png');
-
-            if (ObjectConnections::isConnected($SessSemName[1])) {
-                $elearning_nav = new Navigation(_('Lernmodule dieser Veranstaltung'), 'elearning_interface.php?view=show&seminar_id=' . $SessSemName[1]);
-
-                if ($sem_class == 'inst') {
-                    $elearning_nav->setTitle(_('Lernmodule dieser Einrichtung'));
+            $core_module = new CoreElearningInterface();
+            $navigations = $core_module->getTabNavigation($_SESSION['SessionSeminar']);
+            foreach ((array) $navigations as $name => $navigation) {
+                $this->addSubNavigation($name, $navigation);
                 }
-
-                $navigation->addSubNavigation('show', $elearning_nav);
             }
-
-            if ($perm->have_studip_perm('tutor', $SessSemName[1])) {
-                $navigation->addSubNavigation('edit', new Navigation(_('Lernmodule hinzufügen / entfernen'), 'elearning_interface.php?view=edit&seminar_id=' . $SessSemName[1]));
+        
+        //plugins
+        $standard_plugins = PluginManager::getInstance()->getPlugins("StandardPlugin", $_SESSION['SessionSeminar']);
+        foreach ($standard_plugins as $plugin) {
+            foreach ($plugin->getTabNavigation($_SESSION['SessionSeminar']) as $nav_name => $navigation) {
+                if ($nav_name && is_a($navigation, "Navigation")) {
+                    $this->addSubNavigation($nav_name, $navigation);
             }
-
-            $this->addSubNavigation('elearning', $navigation);
         }
+    }
     }
 }

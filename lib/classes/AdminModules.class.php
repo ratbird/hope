@@ -57,14 +57,14 @@ class AdminModules extends ModulesNotification {
     function AdminModules() {
         parent::ModulesNotification();
         //please add here the special messages for modules you need consistency checks (defined below in this class)
-        $this->registered_modules["forum"]["msg_warning"] = _("Wollen Sie wirklich das Forum deaktivieren und damit alle Diskussionbeitr&auml;ge l&ouml;schen?");
-        $this->registered_modules["forum"]["msg_pre_warning"] = _("Achtung: Beim Deaktivieren des Forums werden <b>%s</b> Postings ebenfalls gel&ouml;scht!");
+        $this->registered_modules["forum"]["msg_warning"] = _("Wollen Sie wirklich das Forum deaktivieren?");
+        //$this->registered_modules["forum"]["msg_pre_warning"] = _("Achtung: Beim Deaktivieren des Forums werden <b>%s</b> Postings ebenfalls gel&ouml;scht!");
         $this->registered_modules["forum"]["msg_activate"] = _("Das Forum kann jederzeit aktiviert werden.");
         $this->registered_modules["forum"]["msg_deactivate"] = _("Das Forum kann jederzeit deaktiviert werden.");
 
 
-        $this->registered_modules["documents"]["msg_warning"] = _("Wollen Sie wirklich den Dateiordner deaktivieren und damit alle hochgeladenen Dokumente und alle Ordner l&ouml;schen?");
-        $this->registered_modules["documents"]["msg_pre_warning"] = _("Achtung: Beim Deaktivieren des Dateiordners werden <b>%s</b> Dateien und Ordner ebenfalls gel&ouml;scht!");
+        $this->registered_modules["documents"]["msg_warning"] = _("Wollen Sie wirklich den Dateiordner deaktivieren?");
+        //$this->registered_modules["documents"]["msg_pre_warning"] = _("Achtung: Beim Deaktivieren des Dateiordners werden <b>%s</b> Dateien und Ordner ebenfalls gel&ouml;scht!");
         $this->registered_modules["documents"]["msg_activate"] = _("Der Dateiordner kann jederzeit aktiviert werden.");
         $this->registered_modules["documents"]["msg_deactivate"] = _("Der Dateiordner kann jederzeit deaktiviert werden.");
 
@@ -77,22 +77,22 @@ class AdminModules extends ModulesNotification {
         $this->registered_modules["personal"]["msg_activate"] = _("Die Personalliste kann jederzeit aktiviert werden.");
         $this->registered_modules["personal"]["msg_deactivate"] = _("Die Personalliste kann jederzeit deaktiviert werden.");
 
-        $this->registered_modules["literature"]["msg_warning"] = _("Wollen Sie wirklich die Literaturverwaltung deaktivieren und damit die erfassten Literaturlisten l&ouml;schen?");
-        $this->registered_modules["literature"]["msg_pre_warning"] = _("Achtung: Beim Deaktivieren der Literaturverwaltung werden <b>%s</b> &ouml;ffentliche / nicht &ouml;ffentliche Literaturlisten ebenfalls gel&ouml;scht!");
+        $this->registered_modules["literature"]["msg_warning"] = _("Wollen Sie wirklich die Literaturverwaltung deaktivieren?");
+        //$this->registered_modules["literature"]["msg_pre_warning"] = _("Achtung: Beim Deaktivieren der Literaturverwaltung werden <b>%s</b> &ouml;ffentliche / nicht &ouml;ffentliche Literaturlisten ebenfalls gel&ouml;scht!");
         $this->registered_modules["literature"]["msg_activate"] = _("Die Literaturverwaltung kann jederzeit aktiviert werden.");
         $this->registered_modules["literature"]["msg_deactivate"] = _("Die Literaturverwaltung kann jederzeit deaktiviert werden.");
 
         $this->registered_modules["chat"]["msg_activate"] = _("Der Chat kann jederzeit aktiviert werden.");
         $this->registered_modules["chat"]["msg_deactivate"] = _("Der Chat kann jederzeit deaktiviert werden.");
 
-        $this->registered_modules["wiki"]["msg_warning"] = _("Wollen Sie wirklich das Wiki deaktivieren und damit alle Seitenversionen l&ouml;schen?");
-        $this->registered_modules["wiki"]["msg_pre_warning"] = _("Achtung: Beim Deaktivieren des Wiki-Webs werden <b>%s</b> Seitenversionen ebenfalls gel&ouml;scht!");
+        $this->registered_modules["wiki"]["msg_warning"] = _("Wollen Sie wirklich das Wiki deaktivieren?");
+        //$this->registered_modules["wiki"]["msg_pre_warning"] = _("Achtung: Beim Deaktivieren des Wiki-Webs werden <b>%s</b> Seitenversionen ebenfalls gel&ouml;scht!");
         $this->registered_modules["wiki"]["msg_activate"] = _("Das Wiki-Web kann jederzeit aktiviert werden.");
         $this->registered_modules["wiki"]["msg_deactivate"] = _("Das Wiki-Web kann jederzeit deaktiviert werden.");
 
         $this->registered_modules["scm"]["msg_activate"] = _("Die freie Informationsseite kann jederzeit aktiviert werden.");
-        $this->registered_modules["scm"]["msg_warning"] = _("Wollen Sie wirklich die freie Informationsseite deaktivieren und damit den erfassten Inhalt l&ouml;schen?");
-        $this->registered_modules["scm"]["msg_pre_warning"] = _("Achtung: Beim Deaktivieren der freien Informationsseite werden die eingestellten Inhalte gel&ouml;scht!");
+        $this->registered_modules["scm"]["msg_warning"] = _("Wollen Sie wirklich die freie Informationsseite deaktivieren?");
+        //$this->registered_modules["scm"]["msg_pre_warning"] = _("Achtung: Beim Deaktivieren der freien Informationsseite werden die eingestellten Inhalte gel&ouml;scht!");
         $this->registered_modules["scm"]["msg_deactivate"] = _("Die freie Informationsseite kann jederzeit deaktiviert werden.");
 
         $this->registered_modules["elearning_interface"]["name"] = _("Lernmodul-Schnittstelle");
@@ -114,16 +114,28 @@ class AdminModules extends ModulesNotification {
             $this->registered_modules["calendar"]["msg_pre_warning"] = _("Achtung: Beim Deaktivieren des Kalenders werden <b>%s</b> Termine ebenfalls gel&ouml;scht!");
             $this->registered_modules["calendar"]["msg_deactivate"] = _("Der Kalender kann jederzeit deaktiviert werden.");
         }
+        $this->registered_modules["overview"]['name'] = _("Übersicht");
+        $this->registered_modules["overview"]["msg_activate"] = _("Die Veranstaltungsübersicht kann jederzeit aktiviert werden.");
+        $this->registered_modules["overview"]["msg_deactivate"] = _("Die Veranstaltungsübersicht kann jederzeit deaktiviert werden.");
+        
+        $this->registered_modules["admin"]['name'] = _("Verwaltung");
+        $this->registered_modules["admin"]["msg_activate"] = _("Wenn die Verwaltungsseite aktiviert wird, kann die Veranstaltung wieder von Admin und Dozenten bearbeitet werden.");
+        $this->registered_modules["admin"]["msg_deactivate"] = _("Wenn Sie die Verwaltungsseite deaktivieren, können Sie sie eventuell nicht mehr aktivieren.");
+        $this->registered_modules["admin"]["msg_warning"] = _("Wenn die Verwaltungsseite deaktiviert wird, können Dozenten und Admin (Sie eventuell eingeschlossen) die Veranstaltung nicht mehr administrieren.");
+        
+        $this->registered_modules["resources"]['name'] = _("Ressourcen");
+        $this->registered_modules["resources"]["msg_activate"] = _("Sie können die Ressourcenseite der Studiengruppen jederzeit aktivieren.");
+        $this->registered_modules["resources"]["msg_deactivate"] = _("Sie können die Ressourcenseite der Studiengruppen jederzeit deaktivieren.");
     }
     
-    function getModuleForumExistingItems($range_id) {
+    function getForumExistingItems($range_id) { //getModuleForumExistingItems
         $query = "SELECT COUNT(topic_id) FROM px_topics WHERE Seminar_id = ?";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($range_id));
         return $statement->fetchColumn();
     }
 
-    function moduleForumDeactivate($range_id) {
+    /*function moduleForumDeactivate($range_id) {
         $db = DBManager::get();
         
         // Prepare "delete topic" statement
@@ -142,16 +154,18 @@ class AdminModules extends ModulesNotification {
             $delete->execute(array($topic_id));
             $update->execute(array($topic_id));
         }
-    }
+    }*/
     
     function moduleForumActivate($range_id) {
         global $user;
-
+        if ($this->getForumExistingItems($range_id)) {
+            return;
+        }
         //create a default folder
         CreateTopic(_("Allgemeine Diskussionen"), get_fullname($user->id), _("Hier ist Raum für allgemeine Diskussionen"), 0, 0, $range_id);
     }   
     
-    function getModuleDocumentsExistingItems($range_id) {
+    function getDocumentsExistingItems($range_id) { //getModuleDocumentsExistingItems
         $query = "SELECT COUNT(dokument_id) FROM dokumente WHERE seminar_id = ?";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($range_id));
@@ -163,13 +177,16 @@ class AdminModules extends ModulesNotification {
         return $items; 
     }
 
-    function moduleDocumentsDeactivate($range_id) {
-        delete_all_documents($range_id);
+    /*function moduleDocumentsDeactivate($range_id) {
+        //delete_all_documents($range_id);
         //Örgs, warum immer ich...
         $this->clearBit($_SESSION['admin_modules_data']["changed_bin"], $this->registered_modules['documents_folder_permissions']['id']);
-    }
+    }*/
     
     function moduleDocumentsActivate($range_id) {
+        if ($this->getDocumentsExistingItems($range_id)) {
+            return;
+        }
         //create a default folder
         $query = "INSERT INTO folder "
                . "(folder_id, range_id, user_id, name, description, mkdate, chdate) "
@@ -190,9 +207,9 @@ class AdminModules extends ModulesNotification {
         return ($list_count["visible_list"] || $list_count["invisible_list"]) ? $list_count["visible_list"] . "/" . $list_count["invisible_list"] : false;
     }
 
-    function moduleLiteratureDeactivate($range_id) {
-        return StudipLitList:: DeleteListsByRange($range_id);
-    }
+    /*function moduleLiteratureDeactivate($range_id) {
+        //return StudipLitList::DeleteListsByRange($range_id);
+    }*/
 
     function getModuleWikiExistingItems($range_id) {
         $query = "SELECT COUNT(keyword) FROM wiki WHERE range_id = ?";
@@ -201,7 +218,7 @@ class AdminModules extends ModulesNotification {
         return $statement->fetchColumn();
     }
 
-    function moduleWikiDeactivate($range_id) {
+    /*function moduleWikiDeactivate($range_id) {
         DBManager::get()
             ->prepare("DELETE FROM wiki WHERE range_id = ?")
             ->execute(array($range_id));
@@ -213,7 +230,8 @@ class AdminModules extends ModulesNotification {
         DBManager::get()
             ->prepare("DELETE FROM wiki_locks WHERE range_id = ?")
             ->execute(array($range_id));
-    }
+        
+    }*/
 
     function getModuleScmExistingItems($range_id) {
         $query = "SELECT COUNT(scm_id) FROM scm WHERE range_id = ?";
@@ -222,15 +240,17 @@ class AdminModules extends ModulesNotification {
         return $statement->fetchColumn();
     }
 
-    function moduleScmDeactivate($range_id) {
+    /*function moduleScmDeactivate($range_id) {
         DBManager::get()
             ->prepare("DELETE FROM scm WHERE range_id = ?")
             ->execute(array($range_id));
-    }
+    }*/
 
     function moduleScmActivate($range_id) {
         global $user, $SCM_PRESET;
-
+        if ($this->getModuleScmExistingItems($range_id)) {
+            return;
+        }
         //create a default folder
         $query = "INSERT IGNORE INTO scm "
                . "(scm_id, range_id, user_id, tab_name, content, mkdate, chdate) "
@@ -295,13 +315,13 @@ class AdminModules extends ModulesNotification {
         return $calendar_connect->getCountEvents();
     }
 
-    function moduleCalendarDeactivate($range_id)
+    /*function moduleCalendarDeactivate($range_id)
     {
         $calendar_connect = CalendarDriver::GetInstance($range_id);
         if ($deleted = $calendar_connect->deleteFromDatabase('ALL')) {
             return $deleted;
         }
         return 0;
-    }
+    }*/
 
 }

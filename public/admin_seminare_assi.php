@@ -35,7 +35,6 @@ require_once 'lib/resources/lib/RoomRequest.class.php';
 page_open(array('sess' => 'Seminar_Session', 'auth' => 'Seminar_Auth', 'perm' => 'Seminar_Perm', 'user' => 'Seminar_User'));
 
 require_once ('lib/msg.inc.php');       //Funktionen fuer Nachrichtenmeldungen
-require_once ('config.inc.php');        //wir brauchen die Seminar-Typen
 require_once 'lib/functions.php';       //noch mehr Stuff
 require_once ('lib/forum.inc.php');     //damit wir Themen anlegen koennen
 require_once ('lib/visual.inc.php');        //Aufbereitungsfunktionen
@@ -359,7 +358,7 @@ if ($start_level) { //create defaults
                 }
             }
         }
-
+        
         //add default values from config.inc.php ($SEM_CLASS)
         if ($SEM_CLASS[$class]['turnus_default'] && !array_key_exists('term_art', $_SESSION['sem_create_data'])) {
             $_SESSION['sem_create_data']['term_art'] = $SEM_CLASS[$class]['turnus_default'];

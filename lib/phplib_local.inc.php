@@ -112,20 +112,6 @@ if (isset($_SERVER['REQUEST_METHOD'])) {
     set_exception_handler('studip_default_exception_handler');
 }
 
-require_once 'lib/classes/URLHelper.php';
-require_once 'lib/navigation/Navigation.php';
-require_once 'lib/navigation/AutoNavigation.php';
-require_once 'lib/classes/PageLayout.php';
-
-//software version - please leave it as it is!
-$SOFTWARE_VERSION = '2.4 alpha svn';
-
-// set dummy navigation until db is ready
-Navigation::setRootNavigation(new Navigation(''));
-
-// set up default page layout
-PageLayout::initialize();
-
 // set default pdo connection
 require_once('lib/classes/DBManager.class.php');
 DBManager::getInstance()
@@ -164,6 +150,21 @@ class DB_Seminar extends DB_Sql {
         parent::DB_Sql($query);
     }
 }
+require_once 'lib/classes/URLHelper.php';
+require_once 'lib/navigation/Navigation.php';
+require_once 'lib/navigation/AutoNavigation.php';
+require_once 'lib/classes/PageLayout.php';
+
+//software version - please leave it as it is!
+$SOFTWARE_VERSION = '2.4 alpha svn';
+
+// set dummy navigation until db is ready
+Navigation::setRootNavigation(new Navigation(''));
+
+// set up default page layout
+PageLayout::initialize();
+
+
 
 require_once 'lib/msg.inc.php';
 require_once('lib/language.inc.php');
@@ -188,6 +189,7 @@ $GLOBALS['_fullname_sql']['full_rev_username'] = "TRIM(CONCAT(Nachname,', ',Vorn
 
 // set up global navigation
 require_once 'lib/navigation/StudipNavigation.php';
+
 Navigation::setRootNavigation(new StudipNavigation(''));
 
 /*class for config; load config in globals (should be deprecated in future)

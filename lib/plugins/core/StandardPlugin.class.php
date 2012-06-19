@@ -12,25 +12,10 @@
  * the License, or (at your option) any later version.
  */
 
-interface StandardPlugin
-{
-    /**
-     * Return a navigation object representing this plugin in the
-     * course overview table or return NULL if you want to display
-     * no icon for this plugin (or course). The navigation object's
-     * title will not be shown, only the image (and its associated
-     * attributes like 'title') and the URL are actually used.
-     *
-     * By convention, new or changed plugin content is indicated
-     * by a different icon and a corresponding tooltip.
-     *
-     * @param  string   course or institute range id
-     * @param  int      time of user's last visit
-     *
-     * @return object   navigation item to render or NULL
-     */
-    function getIconNavigation($course_id, $last_visit);
+require_once 'lib/modules/StudipModule.class.php';
 
+interface StandardPlugin extends StudipModule
+{
     /**
      * Return a template (an instance of the Flexi_Template class)
      * to be rendered on the course summary page. Return NULL to

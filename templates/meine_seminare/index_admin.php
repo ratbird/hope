@@ -99,7 +99,7 @@ global $SEM_TYPE;
                         <tbody>
                         <? foreach ($my_sem as $semid => $values) { ?>
                             <?
-
+                            $sem_class = $GLOBALS['SEM_CLASS'][$SEM_TYPE[$values["status"]]["class"]];
                             $lastVisit = $values['visitdate'];
                             ?>
 
@@ -138,7 +138,7 @@ global $SEM_TYPE;
                                 </td>
 
                                 <td nowrap>
-                                    <? print_seminar_content($semid, $values); ?>
+                                    <? print_seminar_content($semid, $values, "seminar", $sem_class); ?>
                                 </td>
 
                                 <td align="right" nowrap>
@@ -146,9 +146,11 @@ global $SEM_TYPE;
                                 </td>
 
                                 <td align="right">
+                                    <? if ($sem_class->getSlotModule("admin")) : ?>
                                     <a href="<?= URLHelper::getLink('seminar_main.php', array('auswahl' => $semid, 'redirect_to' => 'adminarea_start.php', 'new_sem' => 'TRUE')) ?>">
                                         <?= Assets::img('icons/16/grey/admin.png', tooltip2(_("Veranstaltungsdaten bearbeiten"))) ?>
                                     </a>
+                                    <? endif ?>
                                 </td>
                             </tr>
                         <? } ?>

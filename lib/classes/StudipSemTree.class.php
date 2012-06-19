@@ -30,7 +30,6 @@ require_once("lib/classes/SemesterData.class.php");
 require_once("lib/classes/StudipStudyArea.class.php");
 require_once "lib/classes/NotificationCenter.class.php";
 require_once("config.inc.php");
-require_once 'lib/classes/SemClass.class.php';
 
 DbView::addView('sem_tree');
 

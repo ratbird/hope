@@ -187,6 +187,12 @@ $GLOBALS['_fullname_sql']['no_title_short'] = "CONCAT(Nachname,', ',UCASE(LEFT(T
 $GLOBALS['_fullname_sql']['no_title_motto'] = "CONCAT(Vorname ,' ', Nachname,IF(motto!='',CONCAT(', ',motto),''))";
 $GLOBALS['_fullname_sql']['full_rev_username'] = "TRIM(CONCAT(Nachname,', ',Vorname,IF(title_front!='',CONCAT(', ',title_front),''),IF(title_rear!='',CONCAT(', ',title_rear),''),' (',username,')'))";
 
+//Initialize $SEM_TYPE and $SEM_CLASS arrays
+require_once 'lib/classes/SemClass.class.php';
+require_once 'lib/classes/SemType.class.php';
+$GLOBALS['SEM_CLASS'] = SemClass::getClasses();
+$GLOBALS['SEM_TYPE'] = SemType::getTypes();
+
 // set up global navigation
 require_once 'lib/navigation/StudipNavigation.php';
 

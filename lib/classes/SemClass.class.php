@@ -532,4 +532,3 @@ class SemClass implements ArrayAccess
     
 }
 
-$GLOBALS['SEM_CLASS'] = SemClass::getClasses();

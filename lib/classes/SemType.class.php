@@ -195,4 +195,3 @@ class SemType implements ArrayAccess
     
 }
 
-$GLOBALS['SEM_TYPE'] = SemType::getTypes();

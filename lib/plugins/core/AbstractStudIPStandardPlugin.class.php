@@ -91,8 +91,12 @@ class AbstractStudIPStandardPlugin extends AbstractStudIPLegacyPlugin
     
     function getTabNavigation($course_id) {
         $nav = $this->getNavigation();
-        $nav->setImage($this->getPluginiconname());
-        return array(__class__ => $nav);
+        if ($nav) {
+            $nav->setImage($this->getPluginiconname());
+            return array(get_class($this) => $nav);
+        } else {
+            return null;
+        }
     }
 
     /**

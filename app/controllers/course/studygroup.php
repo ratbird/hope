@@ -464,6 +464,14 @@ class Course_StudygroupController extends AuthenticatedController {
                         $methodDeactivate = "module".ucfirst($key)."Deactivate";
                         if (method_exists($admin_mods, $methodDeactivate)) {
                             $admin_mods->$methodDeactivate($sem->id);
+                            $studip_module = $sem_class->getModule($key);
+                            if (is_a($studip_module, "StandardPlugin")) {
+                                PluginManager::getInstance()->setPluginActivated(
+                                    $studip_module->getPluginId(), 
+                                    $id, 
+                                    false
+                                );
+                            }
                         }
                     }
 
@@ -558,6 +566,14 @@ class Course_StudygroupController extends AuthenticatedController {
                                 $methodActivate = "module".ucfirst($key)."Activate";
                                 if (method_exists($admin_mods, $methodActivate)) {
                                     $admin_mods->$methodActivate($sem->id);
+                                    $studip_module = $sem_class->getModule($key);
+                                    if (is_a($studip_module, "StandardPlugin")) {
+                                        PluginManager::getInstance()->setPluginActivated(
+                                            $studip_module->getPluginId(),
+                                            $id, 
+                                            true
+                                        );
+                                    }
                                 }
                             }
                         } else {

@@ -128,9 +128,12 @@ class SemClassesConvertIntoDb extends Migration
                 $modules['CoreStudygroupAdmin'] = array('activated' => 1, 'sticky' => 1);
                 $modules['CoreStudygroupParticipants'] = array('activated' => 1, 'sticky' => 1);
                 foreach ($studygroup_settings as $module_name => $activated) {
-                    if (!in_array($module_name, $core_modules)) {
-                        //Modul ist ein Plugin und entweder aktiviert oder nicht aktivierbar
-                        $modules[$module_name] = array('activated' => $activated, 'sticky' => !$activated);
+                    if (!in_array($module_name, $core_modules) && !$activated) {
+                        //Modul ist ein Plugin und nicht aktivierbar nach alter Einstellung
+                        $modules[$module_name] = array(
+                            'activated' => 0,
+                            'sticky' => 1
+                        );
                     }
                 }
             } else {
@@ -228,7 +231,7 @@ class SemClassesConvertIntoDb extends Migration
         $statement = $db->prepare(
             "DELETE FROM config WHERE field = 'STUDYGROUP_SETTINGS' " .
         "");
-        //$statement->execute();
+        $statement->execute();
     }
 
     protected function checkModule($module, $sem_class, $studygroup_settings) {

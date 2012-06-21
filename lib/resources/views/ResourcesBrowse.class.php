@@ -504,6 +504,8 @@ class ResourcesBrowse {
                 } else {
                     if ($this->check_assigns)
                         $this->showTimeRange();
+                    if ($this->mode == "properties")
+                        $this->showProperties();
                     $this->showSearchList(($resources_data["check_assigns"]) ? TRUE : FALSE);
                 }
                 ?>

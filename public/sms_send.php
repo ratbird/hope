@@ -71,8 +71,9 @@ if ($cmd == 'new') {
 // write a chat-invitation, so predefine the messagesubject
    $messagesubject = Request::get('messagesubject');
    $message = Request::get('message');
-   $quote = Request::get('quote');
+   $quote = Request::option('quote');
    $signature = Request::get('signature');
+   $forward = Request::option('forward');
 if ($cmd == "write_chatinv" && empty($messagesubject)) $messagesubject = _("Chateinladung");
 
 //wurde eine Datei hochgeladen?
@@ -230,7 +231,7 @@ if (Request::option('answer_to')) {
             $quote_username = $u_name;
         }
         $sms_data['p_rec'] = array($u_name);
-        
+
     }
     $sms_data['sig'] = $my_messaging_settings['addsignature'];
 }
@@ -350,8 +351,8 @@ if (Request::option('prof_id') && Request::option('deg_id') && $perm->have_perm(
         $messagesubject = Request::get('subject');
     }
 
-    $query = "SELECT DISTINCT auth_user_md5.username 
-              FROM user_studiengang 
+    $query = "SELECT DISTINCT auth_user_md5.username
+              FROM user_studiengang
               JOIN auth_user_md5 USING (user_id)
               WHERE studiengang_id = ? AND abschluss_id = ?";
     $statement = DBManager::get()->prepare($query);
@@ -413,20 +414,20 @@ if (isset($_REQUEST['rec_uname'])  || isset($_REQUEST['filter']))
     unset($sms_data['tmp_save_snd_folder']);
     unset($sms_data['tmpreadsnd']);
     unset($sms_data['tmpemailsnd']);
-    
+
     $course_id = Request::option('course_id');
     $cid = Request::option('cid');
     // predefine subject
     if(Request::get('subject')) {
         $messagesubject = Request::get('subject');
     }
-    
+
     // [tlx] omg, wtf is this?
     if ((in_array($_REQUEST['filter'], words('all prelim waiting')) && $course_id) || ($_REQUEST['filter'] == 'send_sms_to_all' && isset($_REQUEST['who'])) && $perm->have_studip_perm('tutor', $course_id) || ($_REQUEST['filter'] == 'inst_status' && isset($_REQUEST['who']) && $perm->have_perm('admin') && isset($cid)))
     {
         // Stores parameters for query
         $parameters = array($course_id);
-        
+
         //Datenbank abfragen für die verschiedenen Filter
         switch (Request::option('filter')) {
             case 'send_sms_to_all':
@@ -468,7 +469,7 @@ if (isset($_REQUEST['rec_uname'])  || isset($_REQUEST['filter']))
                 $parameters[] = Request::option('who');
                 break;
         }
-        
+
         $statement = DBManager::get()->prepare($query);
         $statement->execute($parameters);
         $usernames = $statement->fetchAll(PDO::FETCH_COLUMN);
@@ -549,7 +550,7 @@ if (Request::submitted('add_allreceiver_button')) {
     while ($username = $statement->fetchColumn()) {
         if (empty($sms_data['p_rec'])) {
             $add_rec[] = $username;
-        } else if (!in_array($username, $sms_data['p_rec'])) { 
+        } else if (!in_array($username, $sms_data['p_rec'])) {
             $add_rec[] = $username;
         }
     }
@@ -632,21 +633,39 @@ $txt['008'] = _("Lesebestätigung");
 
     // we like to quote something
     if ($quote) {
-        $query = "SELECT subject, message FROM message WHERE message_id = ?";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array(Request::option('quote')));
-        $temp = $statement->fetch(PDO::FETCH_ASSOC);
-
-        $tmp_subject = addslashes($temp['subject']);
-        if(substr($tmp_subject, 0, 3) != "RE:") {
-            $messagesubject = "RE: ".$tmp_subject;
+        $temp = get_message_data($quote, $user->id, $forward ? $forward : 'rec');
+        $tmp_subject = $temp['subject'];
+        if (!$forward) {
+            if(substr($tmp_subject, 0, 3) != "RE:") {
+                $messagesubject = "RE: ".$tmp_subject;
+            } else {
+                $messagesubject = $tmp_subject;
+            }
+            if (strpos($temp['message'], $msging->sig_string)) {
+                $tmp_sms_content = substr($temp['message'], 0, strpos($temp['message'], $msging->sig_string));
+            } else {
+                $tmp_sms_content = $temp['message'];
+            }
         } else {
-            $messagesubject = $tmp_subject;
-        }
-        if (strpos($temp['message'], $msging->sig_string)) {
-            $tmp_sms_content = substr($temp['message'], 0, strpos($temp['message'], $msging->sig_string));
-        } else {
-            $tmp_sms_content = $temp['message'];
+            $messagesubject = 'FWD: ' . $temp['subject'];
+            $message = _("-_-_ Weitergeleitete Nachricht _-_-");
+            $message .= "\n" . _("Betreff") . ": " . $temp['subject'];
+            $message .= "\n" . _("Datum") . ": " . strftime('%x %X', $temp['mkdate']);
+            $message .= "\n" . _("Von") . ": " . get_fullname($temp['snd_uid']);
+            $message .= "\n" . _("An") . ": " . join(', ', array_map('get_fullname', explode(',', $temp['rec_uid'])));
+            $message .= "\n\n" . $temp['message'];
+            Request::set('attachment_message_id', md5(uniqid('message', true)));
+            foreach(array_filter(array_map(array('StudipDocument','find'), array_unique(explode(',', $temp['attachments'])))) as $attachment) {
+                $attachment->range_id = 'provisional';
+                $attachment->seminar_id = $user->id;
+                $attachment->autor_host = $_SERVER['REMOTE_ADDR'];
+                $attachment->user_id = $user->id;
+                $attachment->description = Request::option('attachment_message_id');
+                $new_attachment = $attachment->toArray();
+                unset($new_attachment['dokument_id']);
+                StudipDocument::createWithFile(get_upload_file_path($attachment->getId()), $new_attachment);
+            }
+            unset($quote);
         }
     }
     // we simply answer, not more or less
@@ -654,7 +673,7 @@ $txt['008'] = _("Lesebestätigung");
         $query = "SELECT subject FROM message WHERE message_id = ?";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array(Request::option('answer_to')));
-        $tmp_subject = addslashes($statement->fetchColumn());
+        $tmp_subject = $statement->fetchColumn();
 
         if (substr($tmp_subject, 0, 3) != 'RE:') {
             $messagesubject = 'RE: '.$tmp_subject;

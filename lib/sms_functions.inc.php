@@ -270,12 +270,14 @@ function print_snd_message($psm) {
         }
 
         // buttons
-
-        $edit = LinkButton::create(_('Löschen'), URLHelper::getURL("?cmd=delete_selected", array('sel_sms[1]' => $psm['message_id'])), array('title' => _('Diese Nachricht löschen.')));
+        $edit = '<div class="button-group">';
+        $edit .= LinkButton::create(_('Weiterleiten'), UrlHelper::getUrl('sms_send.php', array('cmd' => 'write', 'quote' => $psm['message_id'], 'forward' => 'snd')));
+        $edit .= LinkButton::create(_('Drucken'),  UrlHelper::getUrl('dispatch.php/messages/show_print/' . $psm['message_id'] . '/snd'), array('target' => '_blank', 'class' => 'print_action'));
+        $edit .= LinkButton::create(_('Löschen'), URLHelper::getURL("?cmd=delete_selected", array('sel_sms[1]' => $psm['message_id'])), array('title' => _('Diese Nachricht löschen.')));
         if (have_msgfolder($sms_data['view']) == TRUE) {
-            $edit .= LinkButton::create(_('Verschieben'), URLHelper::getURL('', array('move_to_folder[1]' => $psm['message_id'])), array('title' => _('Diese Nachricht in einen frei wählbaren Ordner verschieben.')))
-                  . "<br><br>";
+            $edit .= LinkButton::create(_('Verschieben'), URLHelper::getURL('', array('move_to_folder[1]' => $psm['message_id'])), array('title' => _('Diese Nachricht in einen frei wählbaren Ordner verschieben.')));
         }
+        $edit .= '</div>';
     }
 
     if ($psm['num_attachments'])
@@ -448,7 +450,9 @@ function print_rec_message($prm) {
             $edit .= LinkButton::create(_('Antworten'), URLHelper::getURL('sms_send.php', array('cmd'=> 'write', 'answer_to' => $prm['message_id'])));
             $edit .= LinkButton::create(_('Zitieren'), URLHelper::getURL('sms_send.php', array('cmd' => 'write', 'quote' => $prm['message_id'], 'answer_to' => $prm['message_id'])));
         }
-        $edit.= LinkButton::create(_('Löschen'), URLHelper::getURL('', array('cmd' => 'delete_selected', "sel_sms[1]" => $prm['message_id'])));
+        $edit .= LinkButton::create(_('Weiterleiten'), UrlHelper::getUrl('sms_send.php', array('cmd' => 'write', 'quote' => $prm['message_id'], 'forward' => 'rec')));
+        $edit .= LinkButton::create(_('Drucken'),  UrlHelper::getUrl('dispatch.php/messages/show_print/' . $prm['message_id'] . '/rec'), array('target' => '_blank', 'class' => 'print_action'));
+        $edit .= LinkButton::create(_('Löschen'), URLHelper::getURL('', array('cmd' => 'delete_selected', "sel_sms[1]" => $prm['message_id'])));
         if (have_msgfolder($sms_data['view']) == TRUE) {
             $edit .= LinkButton::create(_('Verschieben'), URLHelper::getURL('', array('move_to_folder[1]'=> $prm['message_id'])), array('title' => _('Diese Nachricht in einen frei wählbaren Ordner verschieben.')));
         }
@@ -492,7 +496,7 @@ function print_rec_message($prm) {
 
 function print_messages() {
     global $user,$_fullname_sql, $my_messaging_settings, $PHP_SELF ,$sms_data, $sms_show, $query_showfolder, $query_time_sort, $query_movetofolder, $query_time, $srch_result, $no_message_text, $n, $count, $count_timefilter, $cmd, $cmd_show;
-    
+
     $db = new DB_Seminar();
     $db2 = new DB_Seminar();
     if ($query_time) $count = $count_timefilter;
@@ -825,8 +829,8 @@ function show_msgform() {
 
     global $PHP_SELF, $sms_data, $user, $tmp_sms_content, $messagesubject, $message, $quote_username, $quote, $cmd ;
 
-    
-     
+
+
     $tmp = "&nbsp;<font size=\"-1\"><b>"._("Betreff:")."</b></font>";
     $tmp .= "<div align=\"center\"><input type=\"text\" ". ($cmd == "write_chatinv" ? "disabled" : "") ." name=\"messagesubject\" value=\"".trim(htmlready($messagesubject))."\"style=\"width: 99%\"></div>";
 
@@ -841,7 +845,7 @@ function show_msgform() {
     }
 
     // cancel redirects to inbox or source-page if set
-    $tmp .= LinkButton::createCancel(_('Abbrechen'), Request::get('sms_source_page') 
+    $tmp .= LinkButton::createCancel(_('Abbrechen'), Request::get('sms_source_page')
         ? URLHelper::getURL(Request::get('sms_source_page'))
         : URLHelper::getURL('sms_box.php'));
 
@@ -855,7 +859,7 @@ function show_msgform() {
 function show_previewform()
 {
     global $sms_data, $my_messaging_settings, $signature, $cmd, $messagesubject, $message;
-    
+
     $tmp = "<input type=\"image\" name=\"refresh_message\" class=\"text-top\" src=\"" . Assets::image_path('icons/16/blue/refresh.png') . "\" ".tooltip(_("aktualisiert die Vorschau der aktuellen Nachricht."))."> "._("Vorschau erneuern.")."<br><br>";
     $tmp .= "<b>"._("Betreff:")."</b><br>".htmlready($messagesubject);
     $tmp .= "<br><br><b>"._("Nachricht:")."</b><br>";
@@ -875,7 +879,7 @@ function show_previewform()
 function show_sigform()
 {
     global $sms_data, $my_messaging_settings, $signature, $cmd;
-        
+
     if ($sms_data["sig"] == "1") {
             $tmp =  "<font size=\"-1\">";
             $tmp .= _("Dieser Nachricht wird eine Signatur angehängt");
@@ -1035,4 +1039,34 @@ function get_message_attachments($message_id, $provisional = false)
         $st = $db->prepare("SELECT * FROM dokumente WHERE range_id='provisional' AND description=? ORDER BY chdate");
     }
     return $st->execute(array($message_id)) ? $st->fetchAll(PDO::FETCH_ASSOC) : array();
+}
+
+function get_message_data($message_id, $user_id, $sndrec)
+{
+    $db = DBManager::get();
+    $db->exec("SET SESSION group_concat_max_len = 8192");
+    if ($sndrec == 'rec') {
+        $stmt = $db->prepare("SELECT message.*,message_user.user_id as rec_uid,autor_id as snd_uid, GROUP_CONCAT(dokument_id) as attachments FROM message_user
+                    LEFT JOIN message USING (message_id)
+                    LEFT JOIN dokumente ON range_id=message_user.message_id
+                    WHERE message_user.user_id = :user_id AND message_user.snd_rec = 'rec'
+                    AND message_user.deleted = 0
+                    AND message.message_id = :mid GROUP BY message_user.message_id");
+        $stmt->bindParam(':user_id', $user_id);
+        $stmt->bindParam(':mid', $message_id);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    } else {
+      $stmt = $db->prepare("SELECT message.*,autor_id as snd_uid,GROUP_CONCAT(message_user.user_id) as rec_uid, GROUP_CONCAT(dokument_id) as attachments
+                FROM message
+                LEFT JOIN message_user USING (message_id)
+                LEFT JOIN dokumente ON range_id=message_user.message_id
+                WHERE autor_id = :user_id AND message_user.snd_rec = 'rec'
+                AND message.message_id = :mid GROUP BY message_user.message_id");
+      $stmt->bindParam(':user_id', $user_id);
+      $stmt->bindParam(':mid', $message_id);
+      $stmt->execute();
+      $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    return $row ? $row : array();
 }

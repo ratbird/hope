@@ -41,4 +41,20 @@ class MessagesController extends AuthenticatedController {
     $sms_data['open'] = $open ? $id : NULL;
     $this->render_text(studip_utf8encode(ajax_show_body($id)));
   }
+
+  function show_print_action($message_id, $sndrec = 'rec')
+  {
+      $data = get_message_data($message_id, $GLOBALS['user']->id, $sndrec);
+      if ($data) {
+          $this->msg = $data;
+          $this->msg['from'] = get_fullname($data['snd_uid']);
+          $this->msg['to'] = join(', ', array_map('get_fullname', explode(',', $data['rec_uid'])));
+          $this->msg['attachments'] = array_filter(array_map(array('StudipDocument','find'), array_unique(explode(',', $data['attachments']))));
+          PageLayout::setTitle($data['subject']);
+          $this->set_layout($GLOBALS['template_factory']->open('layouts/base_without_infobox'));
+      } else {
+          $this->set_status(400);
+          return $this->render_nothing();
+      }
+  }
 }

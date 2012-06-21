@@ -208,9 +208,9 @@ STUDIP.URLHelper = {
         return base_url + url;
     },
     /**
-     * returns a readily encoded URL with the mandatory parameters and additionally passed 
+     * returns a readily encoded URL with the mandatory parameters and additionally passed
      * parameters.
-     * 
+     *
      * @param url string: any url-string
      * @param param_object map: associative object for extra values
      * @return: url with all necessary and additional parameters, encoded
@@ -1011,7 +1011,7 @@ STUDIP.Browse = {
  * application wide setup
  * ------------------------------------------------------------------------ */
 
-jQuery(function () { 
+jQuery(function () {
     // AJAX Indicator
     STUDIP.ajax_indicator = true;
     STUDIP.URLHelper.base_url = STUDIP.ABSOLUTE_URI_STUDIP;
@@ -1832,7 +1832,7 @@ STUDIP.OldUpload = {
             jQuery(form_name).find("input[type=file]").focus();
             return false;
         }
-        
+
         if (file_name.charAt(file_name.length - 1) === "\"") {
             ende = file_name.length - 1;
         } else {
@@ -1846,14 +1846,14 @@ STUDIP.OldUpload = {
         if (file_name.lastIndexOf("\\") > 0) {
             file_only = file_name.substring(file_name.lastIndexOf("\\") + 1, ende);
         }
-        
+
         var permission = jQuery.parseJSON(jQuery("#upload_file_types").html());
         if ((permission.allow && jQuery.inArray(ext, permission.types) !== -1) || (!permission.allow && jQuery.inArray(ext, permission.types) === -1)) {
             alert(jQuery("#upload_error_message_wrong_type").text());
             jQuery(form_name).find("input[type=file]").focus();
             return false;
         }
-        
+
         STUDIP.OldUpload.msg_window = window.open("", "messagewindow", "height=250,width=200,left=20,top=20,scrollbars=no,resizable=no,toolbar=no");
         STUDIP.OldUpload.msg_window.document.write(jQuery("#upload_window_template").text().replace(/\:file_only/, file_only));
 
@@ -1901,13 +1901,30 @@ STUDIP.StatusGroup = {
                 jQuery('div.sortable').find('table.sortable').each(function() {
                     statusgroup_ids.statusgroup_ids[jQuery(this).attr('id')] = jQuery(this).attr('id');
                 });
-                
+
                 jQuery.ajax({
                     type: 'POST',
                     url: STUDIP.URLHelper.getURL('contact_statusgruppen.php?cmd=storeSortOrder'),
                     data: statusgroup_ids
                 });
             }
-        });   
+        });
     }
 }
+
+jQuery(function ($) {
+    $('a.print_action').live('click', function (event) {
+        var url_to_print = this.href;
+        $('<iframe/>', {
+            name: url_to_print,
+            src: url_to_print,
+            width: '1px',
+            height: '1px',
+            frameborder: 0
+         })
+        .css({top: '-99px', position: 'absolute'})
+        .appendTo('body')
+        .load(function () { this.contentWindow.focus(); this.contentWindow.print();});
+        return false;
+    });
+});

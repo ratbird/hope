@@ -163,8 +163,7 @@ foreach ($order as $position) {
             // generic data fields
             default :
                 // include generic datafields
-                if (isset($fieldEntries[$data_field]) && is_object($fieldEntries[$data_field]) && $fieldEntries[$data_field]->getDisplayValue() 
-				    && $fieldEntries[$data_field]->isVisible()) {
+                if (isset($fieldEntries[$data_field]) && is_object($fieldEntries[$data_field]) && $fieldEntries[$data_field]->getDisplayValue()) {
                     echo "<tr><td width=\"100%\">\n";
                     echo "<table" . $this->config->getAttributes("TableParagraph", "table") . ">\n";
                     echo "<tr" . $this->config->getAttributes("TableParagraphHeadline", "tr");

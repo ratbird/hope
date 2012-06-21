@@ -56,7 +56,7 @@ class ExternEditModule extends ExternEditHtml {
                 = $this->config->getValue($this->element_name, "order");
         $this->form_values[$this->element_name . "_visible"]
                 = $this->config->getValue($this->element_name, "visible");
-
+        
         $order = $this->getValue("order");
         $aliases = $this->getValue("aliases");
         $visible = $this->getValue("visible");
@@ -88,8 +88,7 @@ class ExternEditModule extends ExternEditHtml {
 
         for ($i = 0; $i < sizeof($field_names); $i++) {
 
-            if ($field_names[$order[$i]])
-			// name of column
+            // name of column
             $out .= "<tr" . $this->css->getFullClass() . " valign=\"middle\">\n";
             $out .= '<td>&nbsp;' . htmlReady($field_names[$order[$i]]) . '</td>';
 

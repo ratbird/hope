@@ -358,32 +358,14 @@ function RemovePersonStatusgruppeComplete ($username, $range_id) {
     }
 }
 
-/**
-* clear all person in "Statusgruppen" of a seminar
-**/
-function RemovePersonStatusgruppeSeminar ($username, $range_id) {
-    
-    $result = getAllStatusgruppenIDS($range_id);
-    $user_id = get_userid($username);
-
-    if (is_array($result))
-    foreach($result as $range_id){
-        $db=new DB_Seminar;
-        $db->query("SELECT DISTINCT statusgruppe_user.statusgruppe_id FROM statusgruppe_user LEFT JOIN statusgruppen USING(statusgruppe_id) WHERE range_id = '$range_id' AND user_id = '$user_id'");
-        while ($db->next_record()) {
-            $statusgruppe_id = $db->f("statusgruppe_id");
-            $db->query("DELETE FROM statusgruppe_user WHERE statusgruppe_id = '$statusgruppe_id' AND user_id = '$user_id'");
-        }
-    }
-}
-
-function DeleteStatusgruppe ($statusgruppe_id) {
-
-    $db=new DB_Seminar;
-    $db->query("SELECT position, range_id FROM statusgruppen WHERE statusgruppe_id = '$statusgruppe_id'");
-    if ($db->next_record()) {
-        $position = $db->f("position");
-        $range_id = $db->f("range_id");
+function DeleteStatusgruppe ($statusgruppe_id)
+{
+    $query = "SELECT position, range_id FROM statusgruppen WHERE statusgruppe_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($statusgruppe_id));
+    $temp = $statement->fetch(PDO::FETCH_ASSOC);
+    if (!$temp) {
+        return;
     }
 
     // get all child-statusgroups and put them as a child of the father, so they don't hang around without a parent

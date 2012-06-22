@@ -45,8 +45,6 @@ require_once ($RELATIVE_PATH_RESOURCES.'/lib/RoomRequest.class.php');
 require_once ('lib/dates.inc.php');
 require_once ("lib/classes/SemesterData.class.php");
 
-//a temp session-variable...
-$sess->register("new_assign_object");
 
 /*****************************************************************************
 Functions...
@@ -54,10 +52,10 @@ Functions...
 
 //a small helper function to close all the kids
 function closeStructure ($resource_id) {
-    global $resources_data;
+   
     $db = new DB_Seminar;
 
-    unset($resources_data["structure_opens"][$resource_id]);
+    unset($_SESSION['resources_data']["structure_opens"][$resource_id]);
     $query = sprintf ("SELECT resource_id FROM resources_objects WHERE parent_id = '%s' ", $resource_id);
     $db->query($query);
     while ($db->next_record()) {
@@ -71,7 +69,7 @@ $GLOBALS['messageForUsers'] = '';
 foreach (words('view view_mode quick_view quick_view_mode') as $parameter_name) {
     $$parameter_name = Request::option($parameter_name);
 }
-
+$change_schedule_repeat_quantity = Request::option('change_schedule_repeat_quantity');
 //a small helper function to update some data of the tree-structure (after move something)
 function updateStructure ($resource_id, $root_id, $level) {
     $db = new DB_Seminar;
@@ -90,28 +88,28 @@ handle the view-logic
 /*****************************************************************************/
 
 //got a fresh session?
-if ((!$view && !$quick_view && !isset($resources_data['view']))
+if ((!$view && !$quick_view && !isset($_SESSION['resources_data']['view']))
     || ( sizeof($_POST) == 0 && sizeof($_GET) == 0
-    && (!isset($resources_data['view']) || $resources_data['view_mode'] == 'oobj' || $resources_data['view_mode'] == 'search') ) ) {
-    $resources_data='';
-    $resources_data["view"]="search";
-    $resources_data["view_mode"]=FALSE;
+    && (!isset($_SESSION['resources_data']['view']) || $_SESSION['resources_data']['view_mode'] == 'oobj' || $_SESSION['resources_data']['view_mode'] == 'search') ) ) {
+    $_SESSION['resources_data']='';
+    $_SESSION['resources_data']["view"]="search";
+    $_SESSION['resources_data']["view_mode"]=FALSE;
     closeObject();
 }
 
 //get views/view_modes
 if ($view)
-    $resources_data["view"]=$view;
-else //or we take back the persistant view from $resources_data
-    $view = $resources_data["view"];
+    $_SESSION['resources_data']["view"]=$view;
+else //or we take back the persistant view from $_SESSION['resources_data']
+    $view = $_SESSION['resources_data']["view"];
 
 if ($view_mode)
-    $resources_data["view_mode"]=$view_mode;
+    $_SESSION['resources_data']["view_mode"]=$view_mode;
 else //or... see above ;)
-    $view_mode = $resources_data["view_mode"];
+    $view_mode = $_SESSION['resources_data']["view_mode"];
 
 if (strpos($view, "openobject") !== FALSE) {
-    $resources_data["view_mode"] = "oobj";
+    $_SESSION['resources_data']["view_mode"] = "oobj";
     $view_mode = "oobj";
 }
 
@@ -123,75 +121,78 @@ if ($quick_view)
 if ($quick_view_mode)
     $view_mode = $quick_view_mode;
 else
-    $quick_view_mode = $resources_data["view_mode"];
+    $quick_view_mode = $_SESSION['resources_data']["view_mode"];
 
 //reset edit the assign... (Zugegeben, immer noch krank: Hier wird ein "sauberer" Seitenaufruf anhand der Anzahl der Parameter ermittelt... )
 if (((sizeof($_POST) + sizeof($_GET)) == 2) && (($view == "edit_object_assign") || ($view == "openobject_assign"))) {
-    $new_assign_object=FALSE;
+    $_SESSION['new_assign_object']=FALSE;
 }
 if (((sizeof($_POST) + sizeof($_GET)) == 3) && ($edit_assign_object) && (($view == "edit_object_assign") || ($view == "openobject_assign"))) {
-    $new_assign_object=FALSE;
+    $_SESSION['new_assign_object']=FALSE;
 }
-if ($cancel_edit_assign) {
-    $new_assign_object=FALSE;
-    $resources_data["actual_assign"]=FALSE;
+if (Request::option('cancel_edit_assign')) {
+    $_SESSION['new_assign_object']=FALSE;
+    $_SESSION['resources_data']["actual_assign"]=FALSE;
 }
 
 //send the user to index, if he want to use studip-object based modul but has no object set!
 if (($view=="openobject_main") || ($view=="openobject_details") || ($view=="openobject_assign") || ($view=="openobject_schedule")){
     if (!$SessSemName[1]) {
-        $resources_data = null;
-        $resources_data["view"] = $view = "search";
-        $resources_data["view_mode"] = $view_mode = FALSE;
+        $_SESSION['resources_data'] = null;
+        $_SESSION['resources_data']["view"] = $view = "search";
+        $_SESSION['resources_data']["view_mode"] = $view_mode = FALSE;
     }
 }
 //we take a search as long with us, as no other overview modul is used
 if (($view=="openobject_main") || ($view=="lists") || ($view=="resources"))
-    $resources_data["search_array"]='';
+    $_SESSION['resources_data']["search_array"]='';
 
 
 
 //Open a level/resource
+$structure_open = Request::option('structure_open');
 if ($structure_open) {
-    $resources_data["structure_opens"][$structure_open] =TRUE;
-    $resources_data["actual_object"]=$structure_open;
+    $_SESSION['resources_data']["structure_opens"][$structure_open] =TRUE;
+    $_SESSION['resources_data']["actual_object"]=$structure_open;
 }
 
-if ($edit_object)
-    $resources_data["actual_object"]=$edit_object;
+if (Request::option('edit_object'))
+    $_SESSION['resources_data']["actual_object"]=Request::option('edit_object');
 
 
 //Select an object to work with
-if ($actual_object) {
-    $resources_data["actual_object"]=$actual_object;
+if (Request::option('actual_object')) {
+    $_SESSION['resources_data']["actual_object"] = Request::option('actual_object');
 }
 
 //Close a level/resource
+$structure_close = Request::option('structure_close');
 if ($structure_close)
     closeStructure ($structure_close);
 
 //switch to move mode
+$pre_move_object = Request::option('pre_move_object');
 if ($pre_move_object) {
-    $resources_data["move_object"]=$pre_move_object;
+    $_SESSION['resources_data']["move_object"]=$pre_move_object;
 }
 
 //cancel move mode
-if ($cancel_move) {
-    $resources_data["move_object"]='';
+if (Request::option('cancel_move')) {
+    $_SESSION['resources_data']["move_object"]='';
 }
 
 //Listenstartpunkt festlegen
-if ($open_list) {
-    $resources_data["list_open"]=$open_list;
-    $resources_data["view"]="lists";
-    $view = $resources_data["view"];
+if (Request::option('open_list')) {
+    $_SESSION['resources_data']["list_open"]=Request::option('open_list');
+    $_SESSION['resources_data']["view"]="lists";
+    $view = $_SESSION['resources_data']["view"];
     }
 
-if ($recurse_list)
-    $resources_data["list_recurse"]=TRUE;
+if (Request::option('recurse_list'))
+    $_SESSION['resources_data']["list_recurse"]=TRUE;
 
-if ($nrecurse_list)
-    $resources_data["list_recurse"]=FALSE;
+if (Request::option('nrecurse_list'))
+    $_SESSION['resources_data']["list_recurse"]=FALSE;
 
 //Create ClipBoard-Class, if needed
 if (($view == "search") || ($view == "edit_request")) {
@@ -209,7 +210,8 @@ if (($view == "search") || ($view == "edit_request")) {
             $msg->addMsg(32);
         }
     }
-
+    $clip_in = Request::option('clip_in');
+    $clip_out = Request::option('clip_out');
     if ($clip_in)
         $clipObj->insertElement($clip_in, "res");
     if ($clip_out)
@@ -220,6 +222,7 @@ if (($view == "search") || ($view == "edit_request")) {
 
 
 //Neue Hierachieebene oder Unterebene anlegen
+$create_hierachie_level = Request::option('create_hierachie_level');
 if ($view == "create_hierarchie" || $create_hierachie_level) {
     if ($view == "create_hierarchie") {
         $newHiearchie = ResourceObject::Factory("Neue Hierachie", "Dieses Objekt kennzeichnet eine Hierachie und kann jederzeit in eine Ressource umgewandelt werden"
@@ -231,48 +234,51 @@ if ($view == "create_hierarchie" || $create_hierachie_level) {
     }
     $newHiearchie->create();
     $edit_structure_object=$newHiearchie->id;
-    $resources_data["structure_opens"][$newHiearchie->id] =TRUE;
-    $resources_data["actual_object"]=$newHiearchie->getId();
-    $resources_data["view"]="resources";
-    $view = $resources_data["view"];
+    $_SESSION['resources_data']["structure_opens"][$newHiearchie->id] =TRUE;
+    $_SESSION['resources_data']["actual_object"]=$newHiearchie->getId();
+    $_SESSION['resources_data']["view"]="resources";
+    $view = $_SESSION['resources_data']["view"];
     }
 
 //Neues Objekt anlegen
+$create_object = Request::option('create_object');
 if ($create_object) {
     $parent_Object = ResourceObject::Factory($create_object);
     $new_Object= ResourceObject::Factory("Neues Objekt", "Dieses Objekt wurde neu erstellt. Es wurden noch keine Eigenschaften zugewiesen."
                     , FALSE, $parent_Object->getRootId(), $create_object, "0", $user->id);
     $new_Object->create();
-    $resources_data["view"]="edit_object_properties";
-    $view = $resources_data["view"];
-    $resources_data["actual_object"]=$new_Object->getId();
+    $_SESSION['resources_data']["view"]="edit_object_properties";
+    $view = $_SESSION['resources_data']["view"];
+    $_SESSION['resources_data']["actual_object"]=$new_Object->getId();
     }
 
 
 //Object loeschen
+$kill_object = Request::option('kill_object');
 if ($kill_object) {
     $ObjectPerms = ResourceObjectPerms::Factory($kill_object);
     if ($ObjectPerms->getUserPerm () == "admin") {
         $killObject = ResourceObject::Factory($kill_object);
         if ($killObject->delete())
             $msg -> addMsg(7);
-        $resources_data["view"]="resources";
-        $view = $resources_data["view"];
-        unset($resources_data['actual_object']);
+        $_SESSION['resources_data']["view"]="resources";
+        $view = $_SESSION['resources_data']["view"];
+        unset($_SESSION['resources_data']['actual_object']);
     } else {
         $msg->addMsg(1);
     }
 }
 
 //cancel a just created object
+$cancel_edit = Request::option('cancel_edit');
 if ($cancel_edit) {
     $ObjectPerms = ResourceObjectPerms::Factory($cancel_edit);
     if ($ObjectPerms->getUserPerm () == "admin") {
         $cancel_edit = ResourceObject::Factory($cancel_edit);
         $cancel_edit->delete();
-        $resources_data["view"]="resources";
-        $view = $resources_data["view"];
-        unset($resources_data['actual_object']);
+        $_SESSION['resources_data']["view"]="resources";
+        $view = $_SESSION['resources_data']["view"];
+        unset($_SESSION['resources_data']['actual_object']);
     } else {
         $msg->addMsg(1);
     }
@@ -280,51 +286,53 @@ if ($cancel_edit) {
 
 
 //move an object
+$target_object = Request::option('target_object');
 if ($target_object) {
     $ObjectPerms = ResourceObjectPerms::Factory($target_object);
     if ($ObjectPerms->getUserPerm () == "admin") {
-        if ($target_object != $resources_data["move_object"]) {
+        if ($target_object != $_SESSION['resources_data']["move_object"]) {
             //we want to move an object, so we have first to check if we want to move a object in a subordinated object
             $db->query ("SELECT parent_id FROM resources_objects WHERE resource_id = '$target_object'");
             while ($db->next_record()) {
-                if ($db->f("parent_id") == $resources_data["move_object"])
+                if ($db->f("parent_id") == $_SESSION['resources_data']["move_object"])
                     $target_is_child=TRUE;
                 $db->query ("SELECT parent_id FROM resources_objects WHERE resource_id = '".$db->f("parent_id")."' ");
             }
             if (!$target_is_child) {
-                $db->query ("UPDATE resources_objects SET parent_id='$target_object' WHERE resource_id = '".$resources_data["move_object"]."' ");
+                $db->query ("UPDATE resources_objects SET parent_id='$target_object' WHERE resource_id = '".$_SESSION['resources_data']["move_object"]."' ");
                 $db->query ("SELECT root_id, level FROM resources_objects WHERE resource_id = '$target_object'");
                 $db->next_record();
                 //set the correct root_id's and levels
-                updateStructure($resources_data["move_object"], $db->f("root_id"), $db->f("level")+1);
-                $resources_data["structure_opens"][$resources_data["move_object"]] =TRUE;
-                $resources_data["structure_opens"][$target_object] =TRUE;
+                updateStructure($_SESSION['resources_data']["move_object"], $db->f("root_id"), $db->f("level")+1);
+                $_SESSION['resources_data']["structure_opens"][$_SESSION['resources_data']["move_object"]] =TRUE;
+                $_SESSION['resources_data']["structure_opens"][$target_object] =TRUE;
                 if ($db->nf()) {
                     $msg -> addMsg(9);
                 }
             }
         }
-        unset($resources_data["move_object"]);
+        unset($_SESSION['resources_data']["move_object"]);
     } else {
         $msg->addMsg(1);
     }
 }
 
 //Name und Beschreibung aendern
+$change_structure_object = Request::option('change_structure_object');
 if ($change_structure_object) {
     $ObjectPerms = ResourceObjectPerms::Factory($change_structure_object);
     if ($ObjectPerms->getUserPerm () == "admin") {
         $changeObject = ResourceObject::Factory($change_structure_object);
-        $changeObject->setName($change_name);
-        $changeObject->setDescription($change_description);
+        $changeObject->setName(Request::quoted('change_name'));
+        $changeObject->setDescription(Request::quoted('change_description'));
         if ($changeObject->store())
             $msg -> addMsg(6);
     } else {
         $msg->addMsg(1);
     }
-    $resources_data["view"]="resources";
-    $view = $resources_data["view"];
-    $resources_data["actual_object"]=$change_structure_object;
+    $_SESSION['resources_data']["view"]="resources";
+    $view = $_SESSION['resources_data']["view"];
+    $_SESSION['resources_data']["actual_object"]=$change_structure_object;
 }
 
 /*****************************************************************************
@@ -332,6 +340,7 @@ edit/add assigns
 /*****************************************************************************/
 
 //Objektbelegung erstellen/aendern
+$change_object_schedules = Request::option('change_object_schedules');
 if ($change_object_schedules) {
     require_once ('lib/calendar_functions.inc.php'); //needed for extended checkdate
     require_once ($RELATIVE_PATH_RESOURCES."/lib/VeranstaltungResourcesAssign.class.php");
@@ -346,10 +355,10 @@ if ($change_object_schedules) {
     $semester = new SemesterData;
     $all_semester = $semester->getAllSemesterData();
     //load the object perms
-    $ObjectPerms = ResourceObjectPerms::Factory($change_schedule_resource_id);
+    $ObjectPerms = ResourceObjectPerms::Factory(Request::option('change_schedule_resource_id'));
 
     //in some case, we load the perms from the assign object, if it has an owner
-    if (($ObjectPerms->getUserPerm() != "admin") && ($change_object_schedules != "NEW") && (!$new_assign_object)) {
+    if (($ObjectPerms->getUserPerm() != "admin") && ($change_object_schedules != "NEW") && (!$_SESSION['new_assign_object'])) {
         //load the assign-object perms of a saved object
         $SavedStateAssignObject = AssignObject::Factory($change_object_schedules);
         if ($SavedStateAssignObject->getAssignUserId()){
@@ -385,7 +394,7 @@ if ($change_object_schedules) {
         if(!is_array($_POST['select_change_resource'])){
         $ChangeObjectPerms = ResourceObjectPerms::Factory($_POST['select_change_resource']);
         if ($ChangeObjectPerms->havePerm("tutor")) {
-                $changeAssign = AssignObject::Factory($_REQUEST['change_object_schedules']);
+                $changeAssign = AssignObject::Factory($change_object_schedules);
                 $changeAssign->setResourceId($_POST['select_change_resource']);
             $overlaps = $changeAssign->checkOverlap();
             if ($overlaps) {
@@ -431,9 +440,9 @@ if ($change_object_schedules) {
         if (Request::submitted('kill_assign')) {
             $killAssign = AssignObject::Factory($change_object_schedules);
             $killAssign->delete();
-            $new_assign_object='';
+            $_SESSION['new_assign_object']='';
             $msg->addMsg(5);
-            $change_schedule_id = $change_object_schedules = $resources_data['actual_assign'] = FALSE;
+            $change_schedule_id = $change_object_schedules = $_SESSION['resources_data']['actual_assign'] = FALSE;
         } elseif (!$return_schedule && !Request::submitted('search_room') 
             && !Request::submitted('reset_room_search') && !Request::submitted('change_comment_internal')) {
             if ($change_object_schedules == "NEW")
@@ -441,49 +450,49 @@ if ($change_object_schedules) {
             else
                 $change_schedule_id=$change_object_schedules;
 
-            if ($reset_search_user_x)
-                $search_string_search_user=FALSE;
+            if (Request::submitted('reset_search_user'))
+                Request::set('search_string_search_user',FALSE);
 
-            if (($send_search_user_x) && ($submit_search_user !="FALSE") && (!$reset_search_user_x)) {
+            if ((Request::submitted('send_search_user')) && (!Request::submitted('reset_search_user'))) {
                 //Check if this user is able to reach the resource (and this assign), to provide, that the owner of the resources foists assigns to others
-                $ForeignObjectPerms = ResourceObjectPerms::Factory($change_schedule_resource_id, $submit_search_user);
+                $ForeignObjectPerms = ResourceObjectPerms::Factory(Request::option('change_schedule_resource_id'));
                 if ($ForeignObjectPerms->havePerm("autor"))
-                    $change_schedule_assign_user_id=$submit_search_user;
+                    Request::set('change_schedule_assign_user_id',Request::quoted('submit_search_user'));
                 else
                     $msg->addMsg(2);
             }
 
             //the user send infinity repeat (until date) as empty field, but it's -1 in the db
-            if (($change_schedule_repeat_quantity_infinity) && (!$change_schedule_repeat_quantity))
+            if ((Request::option('change_schedule_repeat_quantity_infinity')) && (!$change_schedule_repeat_quantity))
                 $change_schedule_repeat_quantity=-1;
 
             //check dates
             $illegal_dates=FALSE;
-            if ((!check_date($change_schedule_month, $change_schedule_day, $change_schedule_year, $change_schedule_start_hour, $change_schedule_start_minute)) ||
-                (!check_date($change_schedule_month, $change_schedule_day, $change_schedule_year, $change_schedule_end_hour, $change_schedule_end_minute))) {
+            if ((!check_date(Request::quoted('change_schedule_month'), Request::quoted('change_schedule_day'), Request::quoted('change_schedule_year'), Request::quoted('change_schedule_start_hour'), Request::quoted('change_schedule_start_minute'))) ||
+                (!check_date(Request::quoted('change_schedule_month'), Request::quoted('change_schedule_day'), Request::quoted('change_schedule_year'), Request::quoted('change_schedule_end_hour'), Request::quoted('change_schedule_end_minute')))) {
                 $illegal_dates=TRUE;
                 $msg -> addMsg(17);
             }
 
             //create timestamps
             if (!$illegal_dates) {
-                $change_schedule_begin=mktime($change_schedule_start_hour, $change_schedule_start_minute, 0, $change_schedule_month, $change_schedule_day, $change_schedule_year);
-                $change_schedule_end=mktime($change_schedule_end_hour, $change_schedule_end_minute, 0, $change_schedule_month, $change_schedule_day, $change_schedule_year);
+                $change_schedule_begin=mktime(Request::quoted('change_schedule_start_hour'), Request::quoted('change_schedule_start_minute'), 0, Request::quoted('change_schedule_month'), Request::quoted('change_schedule_day'), Request::quoted('change_schedule_year'));
+                $change_schedule_end=mktime(Request::quoted('change_schedule_end_hour'), Request::quoted('change_schedule_end_minute'), 0, Request::quoted('change_schedule_month'), Request::quoted('change_schedule_day'), Request::quoted('change_schedule_year'));
                 if ($change_schedule_begin > $change_schedule_end) {
-                    if (($change_schedule_repeat_mode != "sd") && (!Request::submitted('change_schedule_repeat_severaldays'))) {
+                    if ((Request::option('change_schedule_repeat_mode') != "sd") && (!Request::submitted('change_schedule_repeat_severaldays'))) {
                         $illegal_dates=TRUE;
                         $msg -> addMsg(20);
                     }
                 }
             }
 
-            if (check_date($change_schedule_repeat_end_month, $change_schedule_repeat_end_day, $change_schedule_repeat_end_year))
-                if ($change_schedule_repeat_mode == "sd")
-                    $change_schedule_repeat_end=mktime(date("G", $change_schedule_end), date("i", $change_schedule_end), 0, $change_schedule_repeat_end_month, $change_schedule_repeat_end_day, $change_schedule_repeat_end_year);
+            if (check_date(Request::quoted('change_schedule_repeat_end_month'), Request::quoted('change_schedule_repeat_end_day'), Request::quoted('change_schedule_repeat_end_year')))
+                if (Request::option('change_schedule_repeat_mode') == "sd")
+                    $change_schedule_repeat_end=mktime(date("G", $change_schedule_end), date("i", $change_schedule_end), 0, Request::quoted('change_schedule_repeat_end_month'), Request::quoted('change_schedule_repeat_end_day'), Request::quoted('change_schedule_repeat_end_year'));
                 else
-                    $change_schedule_repeat_end=mktime(23, 59, 59, $change_schedule_repeat_end_month, $change_schedule_repeat_end_day, $change_schedule_repeat_end_year);
+                    $change_schedule_repeat_end=mktime(23, 59, 59, Request::quoted('change_schedule_repeat_end_month'), Request::quoted('change_schedule_repeat_end_day'), Request::quoted('change_schedule_repeat_end_year'));
 
-            if ($change_schedule_repeat_sem_end)
+            if (Request::option('change_schedule_repeat_sem_end'))
                 foreach ($all_semester as $a)
                     if (($change_schedule_begin >= $a["beginn"]) && ($change_schedule_begin <= $a["ende"]))
                         $change_schedule_repeat_end=$a["vorles_ende"];
@@ -491,6 +500,13 @@ if ($change_object_schedules) {
             //create repeatdata
 
             //repeat = none
+
+                $change_schedule_repeat_month_of_year=Request::quoted('change_schedule_repeat_month_of_year');
+                $change_schedule_repeat_day_of_month=Request::quoted('change_schedule_repeat_day_of_month');
+                $change_schedule_repeat_week_of_month=Request::quoted('change_schedule_repeat_week_of_month');
+                $change_schedule_repeat_day_of_week=Request::quoted('change_schedule_repeat_quantity');
+                
+                $change_schedule_repeat_interval=Request::option('change_schedule_repeat_interval');
             if (Request::submitted('change_schedule_repeat_none')) {
                 $change_schedule_repeat_end='';
                 $change_schedule_repeat_month_of_year='';
@@ -573,9 +589,9 @@ if ($change_object_schedules) {
             if (!$change_schedule_id){
                 $changeAssign = AssignObject::Factory(
                     $change_schedule_id,
-                    $change_schedule_resource_id,
-                    $change_schedule_assign_user_id,
-                    $change_schedule_user_free_name,
+                    Request::option('change_schedule_resource_id'),
+                    Request::option('change_schedule_assign_user_id'),
+                    Request::quoted('change_schedule_user_free_name'),
                     $change_schedule_begin,
                     $change_schedule_end,
                     $change_schedule_repeat_end,
@@ -587,9 +603,9 @@ if ($change_object_schedules) {
                     $change_schedule_repeat_day_of_week);
             } else {
                 $changeAssign = AssignObject::Factory($change_schedule_id);
-                $changeAssign->setResourceId($change_schedule_resource_id);
-                $changeAssign->setUserFreeName($change_schedule_user_free_name);
-                $changeAssign->setAssignUserId($change_schedule_assign_user_id);
+                $changeAssign->setResourceId(Request::option('change_schedule_resource_id'));
+                $changeAssign->setUserFreeName(Request::quoted('change_schedule_user_free_name'));
+                $changeAssign->setAssignUserId(Request::option('change_schedule_assign_user_id'));
                 $changeAssign->setBegin($change_schedule_begin);
                 $changeAssign->setEnd($change_schedule_end);
                 $changeAssign->setRepeatEnd($change_schedule_repeat_end);
@@ -606,8 +622,8 @@ if ($change_object_schedules) {
                 $changeAssign->setRepeatEnd($changeAssign->getRepeatEndByQuantity());
 
             //check repeat_end
-            if (($changeAssign->getRepeatMode() != "na") && ($change_schedule_repeat_end_month) && ($change_schedule_repeat_end_day) && ($change_schedule_repeat_end_year)) {
-                if (!check_date($change_schedule_repeat_end_month, $change_schedule_repeat_end_day, $change_schedule_repeat_end_year)) {
+            if (($changeAssign->getRepeatMode() != "na") && (Request::quoted('change_schedule_repeat_end_month')) && (Request::quoted('change_schedule_repeat_end_day')) && (Request::quoted('change_schedule_repeat_end_year'))) {
+                if (!check_date(Request::quoted('change_schedule_repeat_end_month'), Request::quoted('change_schedule_repeat_end_day'), Request::quoted('change_schedule_repeat_end_year'))) {
                     $illegal_dates=TRUE;
                     $msg -> addMsg(18);
                 }
@@ -646,16 +662,16 @@ if ($change_object_schedules) {
 
             if ($illegal_dates) {
                 if ($changeAssign->isNew()){
-                    $new_assign_object=serialize($changeAssign);
+                    $_SESSION['new_assign_object']=serialize($changeAssign);
                 } else {
                     $changeAssign->restore();
                 }
             }
 
             // create a new assign
-            elseif ( ($change_object_schedules == "NEW" || $new_assign_object)){
+            elseif ( ($change_object_schedules == "NEW" || $_SESSION['new_assign_object'])){
 
-                if (($change_schedule_assign_user_id) || ($change_schedule_user_free_name)) {
+                if ((Request::option('change_schedule_assign_user_id')) || (Request::quoted('change_schedule_user_free_name'))) {
                     $overlaps = $changeAssign->checkOverlap(FALSE);
                     $locks = $changeAssign->checkLock();
                 }
@@ -666,14 +682,14 @@ if ($change_object_schedules) {
 
                 if ((!$overlaps) && (!$locks)) {
                     if ($storeAssign && $changeAssign->create()) {
-                        $resources_data["actual_assign"]=$changeAssign->getId();
+                        $_SESSION['resources_data']["actual_assign"]=$changeAssign->getId();
                         $msg->addMsg(3);
-                        $new_assign_object='';
+                        $_SESSION['new_assign_object']='';
                     } else {
-                        $new_assign_object=serialize($changeAssign);  // store the submitted form-data
+                        $_SESSION['new_assign_object']=serialize($changeAssign);  // store the submitted form-data
 
-                        if ( $storeAssign && !$do_search_user_x && !$reset_search_user_x
-                            && !$change_schedule_assign_user_id && $change_schedule_user_free_name) {
+                        if ( $storeAssign && !Request::submitted('do_search_user') && !Request::submitted('reset_search_user')
+                            && !Request::option('change_schedule_assign_user_id') && Request::quoted('change_schedule_user_free_name')) {
                                 $msg->addMsg(10);
                         }
                     }
@@ -681,7 +697,7 @@ if ($change_object_schedules) {
                     if ($storeAssign) {
                         if ($overlaps) {  // add error message an store the submitted form-data
                             $msg->addMsg(11);
-                            $new_assign_object=serialize($changeAssign);
+                            $_SESSION['new_assign_object']=serialize($changeAssign);
                         }
 
                         if ($locks) {
@@ -690,14 +706,14 @@ if ($change_object_schedules) {
                             $msg->addMsg(44, array($locks_txt));
                         }
                     } else {  // store the submitted form-data
-                        $new_assign_object=serialize($changeAssign);
+                        $_SESSION['new_assign_object']=serialize($changeAssign);
                     }
                 }
             }
 
             // change an existing assign
             else {
-                if (($change_schedule_assign_user_id) || ($change_schedule_user_free_name)) {
+                if ((Request::option('change_schedule_assign_user_id')) || (Request::quoted('change_schedule_user_free_name'))) {
                     $overlaps = $changeAssign->checkOverlap(FALSE);
                     $locks = $changeAssign->checkLock();
                 }
@@ -706,9 +722,9 @@ if ($change_object_schedules) {
                     $changeAssign->chng_flag=TRUE;
                     if ($changeAssign->store()) {
                         $msg->addMsg(4);
-                        $new_assign_object='';
+                        $_SESSION['new_assign_object']='';
                     }
-                    $resources_data["actual_assign"]=$changeAssign->getId();
+                    $_SESSION['resources_data']["actual_assign"]=$changeAssign->getId();
                 } else {
                     if ($overlaps)
                         $msg->addMsg(11);
@@ -728,15 +744,15 @@ if ($change_object_schedules) {
 }
 
 //Objekteigenschaften aendern
+$change_object_properties = Request::option('change_object_properties');
 if ($change_object_properties) {
     $ObjectPerms = ResourceObjectPerms::Factory($change_object_properties);
     if ($ObjectPerms->getUserPerm () == "admin") {
         $changeObject = ResourceObject::Factory($change_object_properties);
-        $changeObject->setName($change_name);
-        $changeObject->setDescription($change_description);
-        $changeObject->setCategoryId($change_category_id);
-        $changeObject->setParentBind($change_parent_bind);
-        $changeObject->setInstitutId($change_institut_id);
+        $changeObject->setName(Request::quoted('change_name'));
+        $changeObject->setDescription(Request::quoted('change_description'));
+        $changeObject->setCategoryId(Request::option('change_category_id'));
+        $changeObject->setInstitutId(Request::option('change_institut_id'));
 
         if (getGlobalPerms($user->id) == "admin") {
             $changeObject->setMultipleAssign($change_multiple_assign);
@@ -747,6 +763,7 @@ if ($change_object_properties) {
 
         //Eigenschaften neu schreiben
         $props_changed=FALSE;
+        $change_property_val = Request::quotedArray('change_property_val');
         if (is_array($change_property_val))
             foreach ($change_property_val as $key=>$val) {
                 if ((substr($val, 0, 4) == "_id_") && (substr($change_property_val[$key+1], 0, 4) != "_id_"))
@@ -761,47 +778,48 @@ if ($change_object_properties) {
         $msg->addMsg(1);
     }
 
-    $resources_data["view"]="edit_object_properties";
-    $view = $resources_data["view"];
+    $_SESSION['resources_data']["view"]="edit_object_properties";
+    $view = $_SESSION['resources_data']["view"];
 }
 
 //Objektberechtigungen aendern
-if ($change_object_perms) {
-    $ObjectPerms = ResourceObjectPerms::Factory($change_object_perms);
+if (Request::option('change_object_perms')) {
+    $ObjectPerms = ResourceObjectPerms::Factory(Request::option('change_object_perms'));
     if ($ObjectPerms->getUserPerm () == "admin") {
-        $changeObject = ResourceObject::Factory($change_object_perms);
-
+        $changeObject = ResourceObject::Factory(Request::option('change_object_perms'));
+        $change_user_id = Request::optionArray('change_user_id');
         if (is_array($change_user_id))
+            $change_user_perms = Request::optionArray('change_user_perms');
             foreach ($change_user_id as $key=>$val) {
                 if ($changeObject->storePerms($val, $change_user_perms[$key]))
                     $perms_changed=TRUE;
             }
 
-        if ($delete_user_perms)
-            if ($changeObject->deletePerms($delete_user_perms))
+        if (Request::option('delete_user_perms'))
+            if ($changeObject->deletePerms(Request::option('delete_user_perms')))
                 $perms_changed=TRUE;
 
-        if ($reset_search_owner_x)
+        if (Request::submitted('reset_search_owner'))
             $search_string_search_owner=FALSE;
 
-        if ($reset_search_perm_user_x)
+        if (Request::submitted('reset_search_perm_user'))
             $search_string_search_perm_user=FALSE;
 
-        if (($send_search_owner_x) && ($submit_search_owner !="FALSE") && (!$reset_search_owner_x))
-            $changeObject->setOwnerId($submit_search_owner);
+        if ((Request::submitted('send_search_owner')) && (Request::option('submit_search_owner') !="FALSE") && (!Request::submitted('reset_search_owner')))
+            $changeObject->setOwnerId(Request::option('submit_search_owner'));
 
-        if (($send_search_perm_user_x) && ($submit_search_perm_user !="FALSE") && (!$reset_search_perm_user_x))
-            if ($changeObject->storePerms($submit_search_perm_user))
+        if ((Request::submitted('send_search_perm_user')) && (Request::option('submit_search_perm_user') !="FALSE") && (!Request::submitted('reset_search_perm_user')))
+            if ($changeObject->storePerms(Request::option('submit_search_perm_user')))
                 $perms_changed=TRUE;
 
         if ((getGlobalPerms($user->id) == "admin") && ($changeObject->isRoom())) {
             if ($changeObject->isParent()) {
-                if (($change_lockable) && (!$changeObject->isLockable()))
-                    $msg->addMsg(29, array($PHP_SELF, $changeObject->getId(), $PHP_SELF));
-                elseif ((!$change_lockable) && ($changeObject->isLockable()))
-                    $msg->addMsg(30, array($PHP_SELF, $changeObject->getId(), $PHP_SELF));
+                if ((Request::option('change_lockable')) && (!$changeObject->isLockable()))
+                    $msg->addMsg(29, array(URLHelper::getURL('?set_lockable_recursiv=1&lock_resource_id='.$changeObject->getId())));
+                elseif ((!Request::option('change_lockable')) && ($changeObject->isLockable()))
+                    $msg->addMsg(30, array(URLHelper::getURL('?unset_lockable_recursiv=1&lock_resource_id='.$changeObject->getId())));
             }
-            $changeObject->setLockable($change_lockable);
+            $changeObject->setLockable(Request::option('change_lockable'));
         }
 
         //Object speichern
@@ -810,41 +828,44 @@ if ($change_object_perms) {
     } else {
         $msg->addMsg(1);
     }
-    $resources_data["view"]="edit_object_perms";
-    $view = $resources_data["view"];
+    $_SESSION['resources_data']["view"]="edit_object_perms";
+    $view = $_SESSION['resources_data']["view"];
 }
 
 //set/unset lockable for a comlete hierarchy
-if (($set_lockable_recursiv) || ($unset_lockable_recursiv)) {
+if ((Request::option('set_lockable_recursiv')) || (Request::option('unset_lockable_recursiv'))) {
     if (getGlobalPerms($user->id) == "admin") {
-        changeLockableRecursiv($lock_resource_id, ($set_lockable_recursiv) ? TRUE : FALSE);
+        changeLockableRecursiv(Request::option('lock_resource_id'), (Request::option('set_lockable_recursiv')) ? TRUE : FALSE);
     } else {
         $msg->addMsg(1);
     }
-    $resources_data["view"]="edit_object_perms";
-    $view = $resources_data["view"];
+    $_SESSION['resources_data']["view"]="edit_object_perms";
+    $view = $_SESSION['resources_data']["view"];
 }
 
 //Typen bearbeiten
-if (($add_type) || ($delete_type) || ($delete_type_property_id) || ($change_categories)) {
+if ((Request::quoted('add_type')) || (Request::option('delete_type')) || (Request::option('delete_type_property_id')) || (Request::option('change_categories'))) {
     if (getGlobalPerms ($user->id) == "admin") { //check for resources root or global root
-        if ($delete_type) {
-            $db->query("DELETE FROM resources_categories WHERE category_id ='$delete_type'");
+        if (Request::option('delete_type')) {
+            $db->query("DELETE FROM resources_categories WHERE category_id ='".Request::option('delete_type')."'");
         }
-
-        if (($add_type) && ($_add_type_x)) {
+        $resource_is_room = Request::option('resource_is_room');
+        //$insert_type_description = Request::quoted('insert_type_description');
+        if ((Request::quoted('add_type')) && (Request::submitted('_add_type'))) {
             $id=md5(uniqid("Sommer2002",1));
             if ($resource_is_room)
                 $resource_is_room = 1;
-            $db->query("INSERT INTO resources_categories SET category_id='$id', name='$add_type', description='$insert_type_description', is_room='$resource_is_room' ");
+            $db->query("INSERT INTO resources_categories SET category_id='$id', name='".Request::quoted('add_type')."', description='$insert_type_description', is_room='$resource_is_room' ");
             if ($db->affected_rows())
                 $created_category_id=$id;
         }
 
-        if ($delete_type_property_id) {
-            $db->query("DELETE FROM resources_categories_properties WHERE category_id='$delete_type_category_id' AND property_id='$delete_type_property_id' ");
+        if (Request::option('delete_type_property_id')) {
+            $db->query("DELETE FROM resources_categories_properties WHERE category_id='$delete_type_category_id' AND property_id='".  Request::option('delete_type_property_id') ."' ");
         }
-
+        $change_category_name = Request::quotedArray('change_category_name');
+        $change_category_iconnr = Request::optionArray('change_category_iconnr');
+        $add_type_property_id = Request::optionArray('add_type_property_id');
         if (is_array($change_category_name)) foreach ($change_category_name as $key=>$val) {
             $query = sprintf ("UPDATE  resources_categories SET name='%s', iconnr='%s' WHERE category_id = '%s'", $change_category_name[$key], $change_category_iconnr[$key], $key);
             $db->query($query);
@@ -853,7 +874,7 @@ if (($add_type) || ($delete_type) || ($delete_type_property_id) || ($change_cate
                 $db->query("INSERT INTO resources_categories_properties SET category_id='$key', property_id='$add_type_property_id[$key]' ");
             }
         }
-
+        $requestable = Request::optionArray('requestable');
         if (is_array($requestable)) {
             foreach ($requestable as $key=>$val) {
                 if ((strpos($requestable[$key-1], "id1_")) &&  (strpos($requestable[$key], "id2_"))) {
@@ -872,21 +893,24 @@ if (($add_type) || ($delete_type) || ($delete_type_property_id) || ($change_cate
 }
 
 //Eigenschaften bearbeiten
-if (($add_property) || ($delete_property) || ($change_properties)) {
+if ((Request::option('add_property')) || (Request::option('delete_property')) || (Request::option('change_properties'))) {
     if ($globalPerm == "admin") { //check for resources root or global root
-        if ($delete_property) {
-            $db->query("DELETE FROM resources_properties WHERE property_id ='$delete_property' ");
+        if (Request::option('delete_property')) {
+            $db->query("DELETE FROM resources_properties WHERE property_id ='".Request::option('delete_property')."' ");
         }
 
-        if ($add_property) {
-            if ($add_property_type=="bool")
+        if (Request::quoted('add_property')) {
+            if (Request::option('add_property_type')=="bool")
                 $options="vorhanden";
-            if ($add_property_type=="select")
+            if (Request::option('add_property_type')=="select")
                 $options="Option 1;Option 2;Option 3";
             $id=md5(uniqid("Regen2002",1));
-            $db->query("INSERT INTO resources_properties SET options='$options', property_id='$id', name='$add_property', description='$insert_property_description', type='$add_property_type' ");
+            $db->query("INSERT INTO resources_properties SET options='$options', property_id='$id', name='".Request::quoted('add_property')."', description='".Request::quoted('insert_property_description')."', type='".Request::quoted('add_property_type')."' ");
         }
-
+       $change_property_name = Request::quotedArray('change_property_name');
+       $send_property_type = Request::optionArray('send_property_type');
+       $send_property_select_opt = Request::optionArray('send_property_select_opt');
+       $send_property_bool_desc = Request::optionArray('send_property_bool_desc');
         if (is_array($change_property_name)) foreach ($change_property_name as $key=>$val) {
             if ($send_property_type[$key] == "select") {
                 $tmp_options=explode (";",$send_property_select_opt[$key]);
@@ -913,16 +937,16 @@ if (($add_property) || ($delete_property) || ($change_properties)) {
 }
 
 //Globale Perms bearbeiten
-if (($add_root_user) || ($delete_root_user_id)){
+if ((Request::option('add_root_user')) || (Request::option('delete_root_user_id'))){
     if ($globalPerm == "admin") { //check for resources root or global root
-        if ($reset_search_root_user_x)
+        if (Request::submitted('reset_search_root_user'))
             $search_string_search_root_user=FALSE;
 
-        if (($send_search_root_user_x) && ($submit_search_root_user !="FALSE") && (!$reset_search_root_user_x))
-            $db->query("INSERT resources_user_resources SET user_id='$submit_search_root_user', resource_id='all', perms='admin' ");
+        if ((Request::submitted('send_search_root_user')) && (Request::option('submit_search_root_user') !="FALSE") && (!Request::submitted('reset_search_root_user')))
+            $db->query("INSERT resources_user_resources SET user_id='".Request::option('submit_search_root_user')."', resource_id='all', perms='admin' ");
 
-        if ($delete_root_user_id)
-            $db->query("DELETE FROM resources_user_resources WHERE user_id='$delete_root_user_id' AND resource_id='all' ");
+        if (Request::option('delete_root_user_id'))
+            $db->query("DELETE FROM resources_user_resources WHERE user_id='".Request::option('delete_root_user_id')."' AND resource_id='all' ");
     } else {
         $msg->addMsg(25);
     }
@@ -933,55 +957,69 @@ change settings
 /*****************************************************************************/
 
 //change settings
-if ($change_global_settings) {
+if (Request::option('change_global_settings')) {
     if ($globalPerm == "admin") { //check for resources root or global root
-        write_config("RESOURCES_LOCKING_ACTIVE", $locking_active);
-        write_config("RESOURCES_ASSIGN_LOCKING_ACTIVE", $assign_locking_active);
-        write_config("RESOURCES_ALLOW_ROOM_REQUESTS", $allow_requests);
-        write_config("RESOURCES_ALLOW_CREATE_ROOMS", $allow_create_resources);
-        write_config("RESOURCES_INHERITANCE_PERMS_ROOMS", $inheritance_rooms);
-        write_config("RESOURCES_INHERITANCE_PERMS", $inheritance);
-        write_config("RESOURCES_ENABLE_ORGA_CLASSIFY", $enable_orga_classify);
-        write_config("RESOURCES_ENABLE_ORGA_ADMIN_NOTICE", $enable_orga_admin_notice);
-        write_config("RESOURCES_ALLOW_SINGLE_ASSIGN_PERCENTAGE", $allow_single_assign_percentage);
-        write_config("RESOURCES_ALLOW_SINGLE_DATE_GROUPING", $allow_single_date_grouping);
+        write_config("RESOURCES_LOCKING_ACTIVE", Request::option('locking_active',false));
+        write_config("RESOURCES_ASSIGN_LOCKING_ACTIVE", Request::option('assign_locking_active',false));
+        write_config("RESOURCES_ALLOW_ROOM_REQUESTS", Request::option('allow_requests',false));
+        write_config("RESOURCES_ALLOW_CREATE_ROOMS", Request::option('allow_create_resources'));
+        write_config("RESOURCES_INHERITANCE_PERMS_ROOMS", Request::option('inheritance_rooms'));
+        write_config("RESOURCES_INHERITANCE_PERMS", Request::option('inheritance'));
+        write_config("RESOURCES_ENABLE_ORGA_CLASSIFY", Request::option('enable_orga_classify',false));
+        write_config("RESOURCES_ENABLE_ORGA_ADMIN_NOTICE", Request::option('enable_orga_admin_notice',false));
+        write_config("RESOURCES_ALLOW_SINGLE_ASSIGN_PERCENTAGE", Request::option('allow_single_assign_percentage'));
+        write_config("RESOURCES_ALLOW_SINGLE_DATE_GROUPING", Request::option('allow_single_date_grouping'));
     } else {
         $msg->addMsg(25);
     }
 }
 
 //create a lock
-if ($create_lock) {
+if (Request::option('create_lock')) {
     if ($globalPerm == "admin") { //check for resources root or global root
         $id = md5(uniqid("locks",1));
-        $query = sprintf("INSERT INTO resources_locks SET lock_begin = '%s', lock_end = '%s', lock_id = '%s', type= '%s' ", 0, 0, $id, $create_lock);
+        $query = sprintf("INSERT INTO resources_locks SET lock_begin = '%s', lock_end = '%s', lock_id = '%s', type= '%s' ", 0, 0, $id, Request::option('create_lock'));
         $db->query($query);
 
-        $resources_data["lock_edits"][$id] = TRUE;
+        $_SESSION['resources_data']["lock_edits"][$id] = TRUE;
     } else {
         $msg->addMsg(25);
     }
 }
 
 //edit a lock
+$edit_lock = Request::option('edit_lock');
 if ($edit_lock) {
     if ($globalPerm == "admin") { //check for resources root or global root
-        $resources_data["lock_edits"][$edit_lock] = TRUE;
+        $_SESSION['resources_data']["lock_edits"][$edit_lock] = TRUE;
     } else {
         $msg->addMsg(25);
     }
 }
 
 //edit locks
-if (($lock_sent_x)) {
+
+if ((Request::submitted('lock_sent'))) {
     if ($globalPerm == "admin") { //check for resources root or global root
         require_once ('lib/calendar_functions.inc.php'); //needed for extended checkdate
-
+        $lock_id = Request::optionArray('lock_id');
         foreach ($lock_id as $key=>$id) {
             $illegal_begin = FALSE;
             $illegal_end = FALSE;
 
             //checkdates
+            $lock_begin_month = Request::optionArray('lock_begin_month');
+            $lock_begin_day = Request::optionArray('lock_begin_day');
+            $lock_begin_year = Request::optionArray('lock_begin_year');
+            $lock_begin_hour = Request::optionArray('lock_begin_hour');
+            $lock_begin_min = Request::optionArray('lock_begin_min');
+
+            $lock_end_month = Request::optionArray('lock_end_month');
+            $lock_end_day = Request::optionArray('lock_end_day');
+            $lock_end_year = Request::optionArray('lock_end_year');
+            $lock_end_hour = Request::optionArray('lock_end_hour');
+            $lock_end_min = Request::optionArray('lock_end_min');
+
             if (!check_date($lock_begin_month[$key], $lock_begin_day[$key], $lock_begin_year[$key], $lock_begin_hour[$key], $lock_begin_min[$key])) {
                 //$msg->addMsg(2);
                 $illegal_begin=TRUE;
@@ -1000,7 +1038,7 @@ if (($lock_sent_x)) {
 
                 if ($db->affected_rows()) {
                     $msg->addMsg(27);
-                    unset($resources_data["lock_edits"][$id]);
+                    unset($_SESSION['resources_data']["lock_edits"][$id]);
                 }
             } else
                 $msg->addMsg(26);
@@ -1011,13 +1049,14 @@ if (($lock_sent_x)) {
 }
 
 //kill a lock-time
+$kill_lock = Request::option('kill_lock');
 if (($kill_lock)) {
     if ($globalPerm == "admin") { //check for resources root or global root
         $query = sprintf("DELETE FROM resources_locks WHERE lock_id = '%s' ", $kill_lock);
         $db->query($query);
         if ($db->affected_rows()) {
             $msg->addMsg(28);
-            unset($resources_data["lock_edits"][$kill_lock]);
+            unset($_SESSION['resources_data']["lock_edits"][$kill_lock]);
         }
     } else {
         $msg->addMsg(25);
@@ -1029,70 +1068,70 @@ evaluate the commands from schedule navigator
 /*****************************************************************************/
 
 // fixed BIEST0210; ermoeglicht sofortiges zurueckblaettern im Belegungsplan;
-if ($resources_data['schedule_week_offset']==null)
+if ($_SESSION['resources_data']['schedule_week_offset']==null)
 {
-  $resources_data['schedule_week_offset']=0;
+  $_SESSION['resources_data']['schedule_week_offset']=0;
 }
 
 if ($view == "view_schedule" || $view == "openobject_schedule") {
-    if ($next_week)
-        $resources_data["schedule_week_offset"]++;
-    if ($previous_week)
-        $resources_data["schedule_week_offset"]--;
-    if ($start_time) {
-        $resources_data["schedule_start_time"] = $start_time;
-        $resources_data["schedule_end_time"] = $resources_data["schedule_start_time"] + (7 * 24 * 60 * 60) + 59;
-        $resources_data["schedule_mode"] = "graphical";
-        $resources_data["schedule_week_offset"] = 0;
+    if (Request::option('next_week'))
+        $_SESSION['resources_data']["schedule_week_offset"]++;
+    if (Request::option('previous_week'))
+        $_SESSION['resources_data']["schedule_week_offset"]--;
+    if (Request::quoted('start_time')) {
+        $_SESSION['resources_data']["schedule_start_time"] = Request::quoted('start_time');
+        $_SESSION['resources_data']["schedule_end_time"] = $_SESSION['resources_data']["schedule_start_time"] + (7 * 24 * 60 * 60) + 59;
+        $_SESSION['resources_data']["schedule_mode"] = "graphical";
+        $_SESSION['resources_data']["schedule_week_offset"] = 0;
     }
-    elseif ($navigate) {
-        $resources_data["schedule_length_factor"] = $schedule_length_factor;
-        $resources_data["schedule_length_unit"] = $schedule_length_unit;
-        $resources_data["schedule_week_offset"] = 0;
-        $resources_data["schedule_start_time"] = mktime (0,0,0,$schedule_begin_month, $schedule_begin_day, $schedule_begin_year);
-        if (Request::submitted('start_list') || (Request::submitted('jump') && ($resources_data["schedule_mode"] == "list"))) {
-            $resources_data["schedule_mode"] = "list";
-            if ($resources_data["schedule_start_time"] < 1)
-                $resources_data["schedule_start_time"] = mktime (0, 0, 0, date("n", time()), date("j", time()), date("Y", time()));
-            switch ($resources_data["schedule_length_unit"]) {
+    elseif (Request::option('navigate')) {
+        $_SESSION['resources_data']["schedule_length_factor"] = Request::quoted('schedule_length_factor');
+        $_SESSION['resources_data']["schedule_length_unit"] = Request::quoted('schedule_length_unit');
+        $_SESSION['resources_data']["schedule_week_offset"] = 0;
+        $_SESSION['resources_data']["schedule_start_time"] = mktime (0,0,0,Request::quoted('schedule_begin_month'), Request::quoted('schedule_begin_day'), Request::quoted('schedule_begin_year'));
+        if (Request::submitted('start_list') || (Request::submitted('jump') && ($_SESSION['resources_data']["schedule_mode"] == "list"))) {
+            $_SESSION['resources_data']["schedule_mode"] = "list";
+            if ($_SESSION['resources_data']["schedule_start_time"] < 1)
+                $_SESSION['resources_data']["schedule_start_time"] = mktime (0, 0, 0, date("n", time()), date("j", time()), date("Y", time()));
+            switch ($_SESSION['resources_data']["schedule_length_unit"]) {
                 case "y" :
-                    $resources_data["schedule_end_time"] =mktime(23,59,59,date("n",$resources_data["schedule_start_time"]), date("j", $resources_data["schedule_start_time"]), date("Y",$resources_data["schedule_start_time"])+$resources_data["schedule_length_factor"]);
+                    $_SESSION['resources_data']["schedule_end_time"] =mktime(23,59,59,date("n",$_SESSION['resources_data']["schedule_start_time"]), date("j", $_SESSION['resources_data']["schedule_start_time"]), date("Y",$_SESSION['resources_data']["schedule_start_time"])+$_SESSION['resources_data']["schedule_length_factor"]);
                 break;
                 case "m" :
-                    $resources_data["schedule_end_time"] =mktime(23,59,59,date("n",$resources_data["schedule_start_time"])+$resources_data["schedule_length_factor"], date("j", $resources_data["schedule_start_time"]), date("Y",$resources_data["schedule_start_time"]));
+                    $_SESSION['resources_data']["schedule_end_time"] =mktime(23,59,59,date("n",$_SESSION['resources_data']["schedule_start_time"])+$_SESSION['resources_data']["schedule_length_factor"], date("j", $_SESSION['resources_data']["schedule_start_time"]), date("Y",$_SESSION['resources_data']["schedule_start_time"]));
                 break;
                 case "w" :
-                    $resources_data["schedule_end_time"] =mktime(23,59,59,date("n",$resources_data["schedule_start_time"]), date("j", $resources_data["schedule_start_time"])+($resources_data["schedule_length_factor"] * 7), date("Y",$resources_data["schedule_start_time"]));
+                    $_SESSION['resources_data']["schedule_end_time"] =mktime(23,59,59,date("n",$_SESSION['resources_data']["schedule_start_time"]), date("j", $_SESSION['resources_data']["schedule_start_time"])+($_SESSION['resources_data']["schedule_length_factor"] * 7), date("Y",$_SESSION['resources_data']["schedule_start_time"]));
                 break;
                 case "d" :
-                    $resources_data["schedule_end_time"] =mktime(23,59,59,date("n",$resources_data["schedule_start_time"]), date("j", $resources_data["schedule_start_time"])+$resources_data["schedule_length_factor"]-1, date("Y",$resources_data["schedule_start_time"]));
+                    $_SESSION['resources_data']["schedule_end_time"] =mktime(23,59,59,date("n",$_SESSION['resources_data']["schedule_start_time"]), date("j", $_SESSION['resources_data']["schedule_start_time"])+$_SESSION['resources_data']["schedule_length_factor"]-1, date("Y",$_SESSION['resources_data']["schedule_start_time"]));
                 break;
             }
-            if ($resources_data["schedule_end_time"]  < 1)
-                $resources_data["schedule_end_time"] = mktime (23, 59, 59, date("n", time()), date("j", time())+1, date("Y", time()));
-        } elseif (Request::submitted('start_graphical') || (!$resources_data["schedule_mode"]) || (Request::submitted('jump') && ($resources_data["schedule_mode"] == "graphical"))) {
-            $resources_data["schedule_end_time"] = $resources_data["schedule_start_time"] + (7 * 24 * 60 * 60) + 59;
-            $resources_data["schedule_mode"] = "graphical";
+            if ($_SESSION['resources_data']["schedule_end_time"]  < 1)
+                $_SESSION['resources_data']["schedule_end_time"] = mktime (23, 59, 59, date("n", time()), date("j", time())+1, date("Y", time()));
+        } elseif (Request::submitted('start_graphical') || (!$_SESSION['resources_data']["schedule_mode"]) || (Request::submitted('jump') && ($_SESSION['resources_data']["schedule_mode"] == "graphical"))) {
+            $_SESSION['resources_data']["schedule_end_time"] = $_SESSION['resources_data']["schedule_start_time"] + (7 * 24 * 60 * 60) + 59;
+            $_SESSION['resources_data']["schedule_mode"] = "graphical";
         }
     } else {
-        if (!$resources_data["schedule_start_time"])
-            $resources_data["schedule_start_time"] = mktime (0, 0, 0, date("n", time()), date("j", time()), date("Y", time()));
-        if (!$resources_data["schedule_end_time"])
-            $resources_data["schedule_end_time"] = mktime (23, 59, 59, date("n", time()), date("j", time())+7, date("Y", time()));
-        if (!$resources_data["schedule_mode"])
-            $resources_data["schedule_mode"] = "graphical";
+        if (!$_SESSION['resources_data']["schedule_start_time"])
+            $_SESSION['resources_data']["schedule_start_time"] = mktime (0, 0, 0, date("n", time()), date("j", time()), date("Y", time()));
+        if (!$_SESSION['resources_data']["schedule_end_time"])
+            $_SESSION['resources_data']["schedule_end_time"] = mktime (23, 59, 59, date("n", time()), date("j", time())+7, date("Y", time()));
+        if (!$_SESSION['resources_data']["schedule_mode"])
+            $_SESSION['resources_data']["schedule_mode"] = "graphical";
     }
 }
 
-if (($show_repeat_mode) && ($send_schedule_repeat_mode_x)) {
-    $resources_data["show_repeat_mode"] = $show_repeat_mode;
+if (Request::option('show_repeat_mode') && (Request::submitted('send_schedule_repeat_mode'))) {
+    $_SESSION['resources_data']["show_repeat_mode"] = Request::option('show_repeat_mode');
 }
 
-if ($time_range) {
-    if ($time_range == "FALSE")
-        $resources_data["schedule_time_range"] = '';
+if (Request::option('time_range')) {
+    if (Request::option('time_range') == "FALSE")
+        $_SESSION['resources_data']["schedule_time_range"] = '';
     else
-        $resources_data["schedule_time_range"] = $time_range;
+        $_SESSION['resources_data']["schedule_time_range"] = Request::option('time_range');
 }
 
 /*****************************************************************************
@@ -1100,52 +1139,53 @@ handle commands from the search 'n' browse module
 /*****************************************************************************/
 if ($view == "search") {
 
-    if(!isset($resources_data['search_only_rooms'])){
-        $resources_data['search_only_rooms'] = 1;
+    if(!isset($_SESSION['resources_data']['search_only_rooms'])){
+        $_SESSION['resources_data']['search_only_rooms'] = 1;
     }
 
-    if ($open_level)
-         $resources_data["browse_open_level"]=$open_level;
-
+    if (Request::option('open_level'))
+         $_SESSION['resources_data']["browse_open_level"]=Request::option('open_level');
+    $mode = Request::option('mode');
     if ($mode == "properties")
-        $resources_data["search_mode"]="properties";
+        $_SESSION['resources_data']["search_mode"]="properties";
 
     if ($mode == "browse")
-        $resources_data["search_mode"]="browse";
+        $_SESSION['resources_data']["search_mode"]="browse";
 
-    if ($check_assigns == "TRUE")
-        $resources_data["check_assigns"]=TRUE;
+    if (Request::option('check_assigns') == "TRUE")
+        $_SESSION['resources_data']["check_assigns"]=TRUE;
 
-    if ($check_assigns == "FALSE")
-        $resources_data["check_assigns"]=FALSE;
+    if (Request::option('check_assigns') == "FALSE")
+        $_SESSION['resources_data']["check_assigns"]=FALSE;
     if (isset($_REQUEST['search_only_rooms']))
-        $resources_data["search_only_rooms"] = $_REQUEST['search_only_rooms'];
+        $_SESSION['resources_data']["search_only_rooms"] = $_REQUEST['search_only_rooms'];
 
-    if ((isset($start_search_x)) || ($search_send)) {
-        unset($resources_data["search_array"]);
-        $resources_data["search_array"]["search_exp"] = Request::quoted('search_exp');
+    if ((Request::submitted('start_search')) || (Request::option('search_send'))) {
+        unset($_SESSION['resources_data']["search_array"]);
+        $_SESSION['resources_data']["search_array"]["search_exp"] = Request::quoted('search_exp');
 
-        $resources_data["search_array"]["resources_search_range"]=$resources_data["browse_open_level"]=$_REQUEST['resources_search_range'];
+        $_SESSION['resources_data']["search_array"]["resources_search_range"]=$_SESSION['resources_data']["browse_open_level"]=$_REQUEST['resources_search_range'];
+        $search_property_val = Request::quotedArray('search_property_val');
         if (is_array($search_property_val))
             foreach ($search_property_val as $key=>$val) {
                 if ((substr($val, 0, 4) == "_id_") && (substr($search_property_val[$key+1], 0, 4) != "_id_") && ($search_property_val[$key+1]))
-                    $resources_data["search_array"]["properties"][substr($val, 4, strlen($val))]=$search_property_val[$key+1];
+                    $_SESSION['resources_data']["search_array"]["properties"][substr($val, 4, strlen($val))]=$search_property_val[$key+1];
         }
 
         //handle dates for searching resources that are free for this times
         /// >> changed for advanced room searches
-        if ($search_day_of_week!=-1) // a day is selected. this indicates the user searches a room for the whole term
+        if (Request::option('search_day_of_week')!=-1) // a day is selected. this indicates the user searches a room for the whole term
         {
             /// search whole term
             $semesterData = new SemesterData();
-            $sel_semester = $semesterData->getSemesterData($search_semester);
+            $sel_semester = $semesterData->getSemesterData(Request::option('search_semester'));
             $date =  (int)$sel_semester["vorles_beginn"];
 
             $days = array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday');
 
             $beginn_day = date('w', $date);
 
-            $target_day = array_search($search_day_of_week, $days);
+            $target_day = array_search(Request::option('search_day_of_week'), $days);
 
             $diff = $target_day - $beginn_day;
 
@@ -1158,27 +1198,27 @@ if ($view == "search") {
             //$date = strtotime($str = "this $search_day_of_week 12:00:00", $date);
             $date= strtotime($str = "+ $diff days", $date);
 
-            check_and_set_date (date("d",$date), date("m",$date), date("Y",$date), $search_begin_hour_2, $search_begin_minute_2, $resources_data["search_array"], "search_assign_begin");
-            check_and_set_date (date("d",$date), date("m",$date), date("Y",$date), $search_end_hour_2, $search_end_minute_2, $resources_data["search_array"], "search_assign_end");
-            $resources_data["search_array"]["search_repeating"] = '1';
+            check_and_set_date (date("d",$date), date("m",$date), date("Y",$date), Request::quoted('search_begin_hour_2'), Request::quoted('search_begin_minute_2'), $_SESSION['resources_data']["search_array"], "search_assign_begin");
+            check_and_set_date (date("d",$date), date("m",$date), date("Y",$date), Request::quoted('search_end_hour_2'), Request::quoted('search_end_minute_2'), $_SESSION['resources_data']["search_array"], "search_assign_end");
+            $_SESSION['resources_data']["search_array"]["search_repeating"] = '1';
         } else
         {
-            check_and_set_date ($search_day, $search_month, $search_year, $search_begin_hour, $search_begin_minute, $resources_data["search_array"], "search_assign_begin");
-            check_and_set_date ($search_day, $search_month, $search_year, $search_end_hour, $search_end_minute, $resources_data["search_array"], "search_assign_end");
-            $resources_data["search_array"]["search_repeating"] = $search_repeating;
+            check_and_set_date (Request::quoted('search_day'), Request::quoted('search_month'), Request::quoted('search_year'), Request::quoted('search_begin_hour'), Request::quoted('search_begin_minute'), $_SESSION['resources_data']["search_array"], "search_assign_begin");
+            check_and_set_date (Request::quoted('search_day'), Request::quoted('search_month'), Request::quoted('search_year'), Request::quoted('search_end_hour'), Request::quoted('search_end_minute'), $_SESSION['resources_data']["search_array"], "search_assign_end");
+            $_SESSION['resources_data']["search_array"]["search_repeating"] = Request::int('search_repeating');
         }
-                $resources_data["search_array"]["search_day_of_week"] = $search_day_of_week;
-                $resources_data["search_array"]["search_semester"] = $search_semester;
+                $_SESSION['resources_data']["search_array"]["search_day_of_week"] = Request::option('search_day_of_week');
+                $_SESSION['resources_data']["search_array"]["search_semester"] = Request::option('search_semester');
         /// << changed for advanced room searches
-        if (($resources_data["search_array"]["search_assign_begin"] == -1) || ($resources_data["search_array"]["search_assign_end"] == -1)) {
-            $resources_data["search_array"]["search_assign_begin"] = 0;
-            $resources_data["search_array"]["search_assign_end"] = 0;
+        if (($_SESSION['resources_data']["search_array"]["search_assign_begin"] == -1) || ($_SESSION['resources_data']["search_array"]["search_assign_end"] == -1)) {
+            $_SESSION['resources_data']["search_array"]["search_assign_begin"] = 0;
+            $_SESSION['resources_data']["search_array"]["search_assign_end"] = 0;
         }
     }
 
-    if ($reset) {
-        unset($resources_data["browse_open_level"]);
-        unset($resources_data["search_array"]);
+    if (Request::option('reset')) {
+        unset($_SESSION['resources_data']["browse_open_level"]);
+        unset($_SESSION['resources_data']["search_array"]);
     }
 }
 
@@ -1186,52 +1226,52 @@ if ($view == "search") {
 the room-planning module
 /*****************************************************************************/
 if(isset($_REQUEST['tools_requests_sem_choose_button_x']) || isset($_REQUEST['tools_requests_sem_choose'])){
-    $resources_data["sem_schedule_semester_id"] = $_REQUEST['tools_requests_sem_choose'];
-    $resources_data["resolve_requests_no_time"] = (bool)$_REQUEST['resolve_requests_no_time'];
-    unset($resources_data["requests_working_on"]);
-    unset($resources_data["requests_open"]);
-    $resources_data["view"] = "requests_start";
+    $_SESSION['resources_data']["sem_schedule_semester_id"] = $_REQUEST['tools_requests_sem_choose'];
+    $_SESSION['resources_data']["resolve_requests_no_time"] = (bool)$_REQUEST['resolve_requests_no_time'];
+    unset($_SESSION['resources_data']["requests_working_on"]);
+    unset($_SESSION['resources_data']["requests_open"]);
+    $_SESSION['resources_data']["view"] = "requests_start";
     $view = "requests_start";
 }
 
 if ($view == "view_requests_schedule") {
     if ($_REQUEST['next_week'])
-        $resources_data["schedule_week_offset"]++;
+        $_SESSION['resources_data']["schedule_week_offset"]++;
     elseif ($_REQUEST['previous_week'])
-        $resources_data["schedule_week_offset"]--;
+        $_SESSION['resources_data']["schedule_week_offset"]--;
     elseif($_REQUEST["show_repeat_mode_requests"])
-        $resources_data["show_repeat_mode_requests"] = $_REQUEST["show_repeat_mode_requests"];
+        $_SESSION['resources_data']["show_repeat_mode_requests"] = $_REQUEST["show_repeat_mode_requests"];
     elseif ($_REQUEST['start_time']) {
-        $resources_data["schedule_start_time"] = $_REQUEST['start_time'];
-        $resources_data["schedule_end_time"] = $resources_data["schedule_start_time"] + (7 * 24 * 60 * 60) + 59;
-        $resources_data["schedule_mode"] = "graphical";
-        $resources_data["schedule_week_offset"] = 0;
+        $_SESSION['resources_data']["schedule_start_time"] = $_REQUEST['start_time'];
+        $_SESSION['resources_data']["schedule_end_time"] = $_SESSION['resources_data']["schedule_start_time"] + (7 * 24 * 60 * 60) + 59;
+        $_SESSION['resources_data']["schedule_mode"] = "graphical";
+        $_SESSION['resources_data']["schedule_week_offset"] = 0;
     }
     elseif ($_REQUEST['navigate']) {
-        $resources_data["schedule_week_offset"] = 0;
-        $resources_data["schedule_start_time"] = mktime (0,0,0,(int)$_REQUEST['schedule_begin_month'], (int)$_REQUEST['schedule_begin_day'], (int)$_REQUEST['schedule_begin_year']);
+        $_SESSION['resources_data']["schedule_week_offset"] = 0;
+        $_SESSION['resources_data']["schedule_start_time"] = mktime (0,0,0,(int)$_REQUEST['schedule_begin_month'], (int)$_REQUEST['schedule_begin_day'], (int)$_REQUEST['schedule_begin_year']);
     } else {
-        if($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]['first_event']){
-            $resources_data["schedule_start_time"] = $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]['first_event'];
+        if($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]['first_event']){
+            $_SESSION['resources_data']["schedule_start_time"] = $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]['first_event'];
         } else {
-            $semester_data = SemesterData::GetInstance()->getSemesterData($resources_data["sem_schedule_semester_id"]);
-            $resources_data["schedule_start_time"] = $semester_data['vorles_beginn'];
+            $semester_data = SemesterData::GetInstance()->getSemesterData($_SESSION['resources_data']["sem_schedule_semester_id"]);
+            $_SESSION['resources_data']["schedule_start_time"] = $semester_data['vorles_beginn'];
         }
-        $resources_data["schedule_mode"] = "graphical";
-        $resources_data["show_repeat_mode_requests"] = 'all';
-        $resources_data["schedule_week_offset"] = 0;
-        $resources_data['sem_schedule_timespan'] = 'course_time';
+        $_SESSION['resources_data']["schedule_mode"] = "graphical";
+        $_SESSION['resources_data']["show_repeat_mode_requests"] = 'all';
+        $_SESSION['resources_data']["schedule_week_offset"] = 0;
+        $_SESSION['resources_data']['sem_schedule_timespan'] = 'course_time';
     }
 }
-switch ($skip_closed_requests) {
-    case "FALSE" : $resources_data["skip_closed_requests"] = FALSE; break;
-    case "TRUE" : $resources_data["skip_closed_requests"] = TRUE; break;
+switch (Request::option('skip_closed_requests')) {
+    case "FALSE" : $_SESSION['resources_data']["skip_closed_requests"] = FALSE; break;
+    case "TRUE" : $_SESSION['resources_data']["skip_closed_requests"] = TRUE; break;
 }
 
 //cancel an edit request session
-if (Request::submitted('cancel_edit_request')) {
-    if (sizeof($resources_data["requests_open"]) < sizeof ($resources_data["requests_working_on"])) {
-        foreach ($resources_data["requests_working_on"] as $val) {
+if (Request::int('cancel_edit_request_x') || Request::submitted('cancel_edit_request') ) {
+    if (sizeof($_SESSION['resources_data']["requests_open"]) < sizeof ($_SESSION['resources_data']["requests_working_on"])) {
+        foreach ($_SESSION['resources_data']["requests_working_on"] as $val) {
             $request_ids[] = $val["request_id"];
             $request_data[$val["request_id"]] = $val;
         }
@@ -1241,27 +1281,27 @@ if (Request::submitted('cancel_edit_request')) {
         $db->query($query);
 
         if ($db->nf()) {
-            $msg->addMsg(40, array($PHP_SELF, $PHP_SELF));
+            $msg->addMsg(40, array(URLHelper::getLink(), URLHelper::getLink('?snd_closed_request_sms=1')));
             Request::set('save_state', 1);
         }
     }
-    $resources_data["view"] = "requests_start";
+    $_SESSION['resources_data']["view"] = "requests_start";
     $view = "requests_start";
 }
 
 //we start a new room-planning-session
-if (Request::submitted('start_multiple_mode') || ($single_request)) {
-    unset($resources_data["requests_working_on"]);
-    unset($resources_data["requests_open"]);
+if (Request::submitted('start_multiple_mode') || (Request::option('single_request'))) {
+    unset($_SESSION['resources_data']["requests_working_on"]);
+    unset($_SESSION['resources_data']["requests_open"]);
 
-    $requests = (array)getMyRoomRequests($GLOBALS['user']->id, $resources_data["sem_schedule_semester_id"], true, $single_request);
+    $requests = (array)getMyRoomRequests($GLOBALS['user']->id, $_SESSION['resources_data']["sem_schedule_semester_id"], true, Request::option('single_request'));
 
-    $resources_data["requests_working_pos"] = 0;
-    $resources_data["skip_closed_requests"] = TRUE;
+    $_SESSION['resources_data']["requests_working_pos"] = 0;
+    $_SESSION['resources_data']["skip_closed_requests"] = TRUE;
     if($_REQUEST['resolve_requests_mode'] == "one_res"){
-        $resources_data['resolve_requests_one_res'] = $_REQUEST['resolve_requests_one_res'];
+        $_SESSION['resources_data']['resolve_requests_one_res'] = $_REQUEST['resolve_requests_one_res'];
     } else {
-        $resources_data['resolve_requests_one_res'] = null;
+        $_SESSION['resources_data']['resolve_requests_one_res'] = null;
     }
     $selected_requests = array();
     //filter the requests
@@ -1282,27 +1322,27 @@ if (Request::submitted('start_multiple_mode') || ($single_request)) {
         }
     }
 
-    if ($single_request) {
-        if ($selected_requests[$single_request]) {
-            $resources_data["requests_working_on"][] = array("request_id" => $single_request, "closed" => FALSE);
-            $resources_data["requests_open"][$single_request] = TRUE;
-            if($requests[$single_request]['resource_id']){
-                $resources_data['resolve_requests_one_res'] = $requests[$single_request]['resource_id'];
+    if (Request::option('single_request')) {
+        if ($selected_requests[Request::option('single_request')]) {
+            $_SESSION['resources_data']["requests_working_on"][] = array("request_id" => Request::option('single_request'), "closed" => FALSE);
+            $_SESSION['resources_data']["requests_open"][Request::option('single_request')] = TRUE;
+            if($requests[Request::option('single_request')]['resource_id']){
+                $_SESSION['resources_data']['resolve_requests_one_res'] = $requests[Request::option('single_request')]['resource_id'];
             }
         }
     } elseif (is_array($selected_requests)) {
         //order requests
         $order = '';
         $in =  "('".join("','",array_keys($selected_requests))."')";
-        if ($resolve_requests_order == "complex")
+        if (Request::option('resolve_requests_order') == "complex")
             $order = "seats DESC, complexity DESC";
-        if ($resolve_requests_order == "newest")
+        if (Request::option('resolve_requests_order') == "newest")
             $order = "a.mkdate DESC";
-        if ($resolve_requests_order == "oldest")
+        if (Request::option('resolve_requests_order') == "oldest")
             $order = "a.mkdate ASC";
 
         // for sort-order urgent a simpler query suffices
-        if ($resolve_requests_order == "urgent") {
+        if (Request::option('resolve_requests_order') == "urgent") {
             $stmt = DBManager::get()->query("SELECT rq.request_id, rq.seminar_id, rq.termin_id FROM resources_requests as rq, termine as t
                 WHERE rq.request_id IN $in AND t.date > ". time() ." AND (
                     (t.range_id = rq.seminar_id AND (rq.termin_id IS NULL OR rq.termin_id = ''))
@@ -1337,24 +1377,24 @@ if (Request::submitted('start_multiple_mode') || ($single_request)) {
 
         // insert sorted requests into resources_data-Array
         if (is_array($db_requests)) foreach ($db_requests as $val) {
-            $resources_data["requests_working_on"][] = array("request_id" => $val['request_id'], "closed" => FALSE);
-            $resources_data["requests_open"][$val['request_id']] = TRUE;
+            $_SESSION['resources_data']["requests_working_on"][] = array("request_id" => $val['request_id'], "closed" => FALSE);
+            $_SESSION['resources_data']["requests_open"][$val['request_id']] = TRUE;
         }
 
     }
-    if (is_array($resources_data['requests_open']) && count($resources_data['requests_open'])){
-        $resources_data["view"] = "edit_request";
-        $view = $resources_data["view"];
+    if (is_array($_SESSION['resources_data']['requests_open']) && count($_SESSION['resources_data']['requests_open'])){
+        $_SESSION['resources_data']["view"] = "edit_request";
+        $view = $_SESSION['resources_data']["view"];
         $new_session_started = TRUE;
     } else {
-        $resources_data["view"] = $view = "requests_start";
+        $_SESSION['resources_data']["view"] = $view = "requests_start";
         $msg->addMsg(41);
     }
 }
-
+$selected_resource_id = Request::optionArray('selected_resource_id');
 if (is_array($selected_resource_id)) {
     foreach ($selected_resource_id as $key=>$val) {
-        $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["selected_resources"][$key] = $val;
+        $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["selected_resources"][$key] = $val;
     }
 }
 
@@ -1364,7 +1404,7 @@ if (Request::submitted('save_state')) {
     require_once ($RELATIVE_PATH_RESOURCES."/lib/VeranstaltungResourcesAssign.class.php");
     require_once ("lib/classes/Seminar.class.php");
 
-    $reqObj = new RoomRequest($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["request_id"]);
+    $reqObj = new RoomRequest($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["request_id"]);
     $semObj = Seminar::GetInstance($reqObj->getSeminarId());
     $semResAssign = new VeranstaltungResourcesAssign($semObj->getId());
 
@@ -1384,7 +1424,7 @@ if (Request::submitted('save_state')) {
     }
 
     //multiple assign_objects (every date one assign-object or every metadate one assign-object)
-    elseif (is_array ($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["assign_objects"])) {
+    elseif (is_array ($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["assign_objects"])) {
         $i=0;
         //check, if one assignment should assigned to a room, which is only particularly free - so we have treat every single date
         if ($reqObj->getType() == 'cycle' ) {
@@ -1395,9 +1435,9 @@ if (Request::submitted('save_state')) {
     }
 
     //get the selected resources, save this informations and create the right msgs
-    if (is_array($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["selected_resources"])) {
+    if (is_array($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["selected_resources"])) {
         //check all selected resources for perms
-        foreach ($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["selected_resources"] as $key=>$val) {
+        foreach ($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["selected_resources"] as $key=>$val) {
             $resPerms = ResourceObjectPerms::Factory($val);
             if (!$resPerms->havePerm("autor"))
                 $no_perm = TRUE;
@@ -1412,17 +1452,17 @@ if (Request::submitted('save_state')) {
 
             //single date mode
             if ($reqObj->getTerminId()) {
-                reset($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["selected_resources"]);
-                list(,$res_id) = each($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["selected_resources"]);
+                reset($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["selected_resources"]);
+                list(,$res_id) = each($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["selected_resources"]);
                 $result = $semResAssign->changeDateAssign($reqObj->getTerminId(), $res_id);
 
             //grouped multiple dates mode
             } else {
-                foreach ($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["selected_resources"] as $key=>$val) {
-                    $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["groups"][$key]["resource_id"] = $val;
-                    foreach ($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["groups"][$key]["termin_ids"] as $key2 => $val2) {
+                foreach ($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["selected_resources"] as $key=>$val) {
+                    $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["groups"][$key]["resource_id"] = $val;
+                    foreach ($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["groups"][$key]["termin_ids"] as $key2 => $val2) {
                         if (!$dates_with_request[$key2]) {
-                            $result = array_merge((array)$result, (array)$semResAssign->changeDateAssign($key2, $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["selected_resources"][$key]));
+                            $result = array_merge((array)$result, (array)$semResAssign->changeDateAssign($key2, $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["selected_resources"][$key]));
                             $result_termin_id[] = $key2;
                         } else
                             $skipped_termin_ids[$key2]=TRUE;
@@ -1430,8 +1470,8 @@ if (Request::submitted('save_state')) {
                 }
 
                 // only close request, if number of booked entries matches number of bookable entries
-                $booked_entries = sizeof($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["selected_resources"]);
-                $bookable_entries = sizeof($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]['groups']);
+                $booked_entries = sizeof($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["selected_resources"]);
+                $bookable_entries = sizeof($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]['groups']);
 
                 if ($booked_entries == $bookable_entries ) {
                     $close_request = TRUE;
@@ -1446,17 +1486,17 @@ if (Request::submitted('save_state')) {
             $succesful_assigned = 0;
             //create msgs, single date mode
             if ($reqObj->getTerminId()) {
-                $assign_ids = array_keys($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["assign_objects"]);
+                $assign_ids = array_keys($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["assign_objects"]);
                 $resObj = ResourceObject::Factory($res_id);
 
                 if (!empty($result)){
                     foreach ($result as $key=>$val) {
                         if (!$val["overlap_assigns"]) {
-                            $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["assign_objects"][$assign_ids[0]]["resource_id"] = $resObj->getId();
+                            $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["assign_objects"][$assign_ids[0]]["resource_id"] = $resObj->getId();
                             $good_msg.="<br>".sprintf(_("%s, Belegungszeit: %s"), $resObj->getFormattedLink( $assignObjects[0]->getBegin() ), $assignObjects[0]->getFormattedShortInfo());
                             $succesful_assigned++;
                         } else {
-                            $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["assign_objects"][$assign_ids[0]]["resource_id"] = FALSE;
+                            $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["assign_objects"][$assign_ids[0]]["resource_id"] = FALSE;
                             $bad_msg.="<br>".sprintf(_("%s, Belegungszeit: %s"), $resObj->getFormattedLink( $assignObjects[0]->getBegin() ), $assignObjects[0]->getFormattedShortInfo());
                         }
                     }
@@ -1499,7 +1539,7 @@ if (Request::submitted('save_state')) {
             }
 
             //set reload flag for this request (the next time the user skips to the request, we reload all data)
-            $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["reload"] = TRUE;
+            $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["reload"] = TRUE;
 
             //create msg's
             if ($good_msg) {
@@ -1518,7 +1558,7 @@ if (Request::submitted('save_state')) {
 
     //set request to closed, if we have a room for every assign_object
     $assigned_resources = 0;
-    foreach ($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["assign_objects"] as $val) {
+    foreach ($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["assign_objects"] as $val) {
         if ($val["resource_id"])
             $assigned_resources++;
     }
@@ -1530,13 +1570,13 @@ if (Request::submitted('save_state')) {
 
         $reqObj->setClosed(1);
         $reqObj->store();
-        unset($resources_data["requests_open"][$reqObj->getId()]);
-        if (sizeof($resources_data["requests_open"]) == 0) {
-            $resources_data["view"] = "requests_start";
+        unset($_SESSION['resources_data']["requests_open"][$reqObj->getId()]);
+        if (sizeof($_SESSION['resources_data']["requests_open"]) == 0) {
+            $_SESSION['resources_data']["view"] = "requests_start";
             $view = "requests_start";
             Request::set('save_state', 1);
         } else  {
-            if ($resources_data["requests_working_pos"] == sizeof($resources_data["requests_working_on"])-1) {
+            if ($_SESSION['resources_data']["requests_working_pos"] == sizeof($_SESSION['resources_data']["requests_working_on"])-1) {
                 $auto_dec = TRUE;
             } else {
                 $auto_inc = TRUE;
@@ -1550,29 +1590,29 @@ if (Request::submitted('do_delete_requests') && get_config('RESOURCES_ALLOW_DELE
         foreach($_REQUEST['requests_marked_to_kill'] as $rid){
             $req_obj = new RoomRequest($rid);
             $count += ($req_obj->delete() != 0);
-            unset($resources_data["requests_open"][$rid]);
-            foreach($resources_data['requests_working_on'] as $number => $rwo){
+            unset($_SESSION['resources_data']["requests_open"][$rid]);
+            foreach($_SESSION['resources_data']['requests_working_on'] as $number => $rwo){
                 if ($rwo['request_id'] == $rid){
-                    unset($resources_data['requests_working_on'][$number]);
+                    unset($_SESSION['resources_data']['requests_working_on'][$number]);
                     break;
                 }
             }
         }
-        $resources_data['requests_working_pos'] = 0;
-        $resources_data['requests_working_on'] = array_values($resources_data['requests_working_on']);
+        $_SESSION['resources_data']['requests_working_pos'] = 0;
+        $_SESSION['resources_data']['requests_working_on'] = array_values($_SESSION['resources_data']['requests_working_on']);
         $msg->addMsg(45, array($count));
     }
 }
 
 if (Request::submitted('suppose_decline_request')) {
-    $msg->addMsg(43, array($PHP_SELF, $PHP_SELF));
+    $msg->addMsg(43, array(URLHelper::getLink(), URLHelper::getLink('?decline_request=0')));
     $view = "edit_request";
 }
 
-if ($decline_request) {
+if (Request::int('decline_request')) {
     require_once ($RELATIVE_PATH_RESOURCES."/lib/RoomRequest.class.php");
 
-    $reqObj = new RoomRequest($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["request_id"]);
+    $reqObj = new RoomRequest($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["request_id"]);
 
     $_sendMessage['request_id'] = $reqObj->id;
     $_sendMessage['seminar_id'] = $reqObj->seminar_id;
@@ -1580,13 +1620,13 @@ if ($decline_request) {
 
     $reqObj->setClosed(3);
     $reqObj->store();
-    unset($resources_data["requests_open"][$reqObj->getId()]);
-    if (sizeof($resources_data["requests_open"]) == 0) {
-        $resources_data["view"] = "requests_start";
+    unset($_SESSION['resources_data']["requests_open"][$reqObj->getId()]);
+    if (sizeof($_SESSION['resources_data']["requests_open"]) == 0) {
+        $_SESSION['resources_data']["view"] = "requests_start";
         $view = "requests_start";
 
     } else  {
-        if ($resources_data["requests_working_pos"] == sizeof($resources_data["requests_working_on"])-1) {
+        if ($_SESSION['resources_data']["requests_working_pos"] == sizeof($_SESSION['resources_data']["requests_working_on"])-1) {
             $auto_dec = TRUE;
         } else {
             $auto_inc = TRUE;
@@ -1601,17 +1641,17 @@ if (Request::submitted('delete_request') || $_REQUEST['approveDelete']) {
 
     if($_REQUEST['approveDelete']){
             require_once ($RELATIVE_PATH_RESOURCES."/lib/RoomRequest.class.php");
-            $reqObj = new RoomRequest($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["request_id"]);//$_REQUEST['request_id']);
-            unset($resources_data["requests_open"][$reqObj->getId()]);
+            $reqObj = new RoomRequest($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["request_id"]);//$_REQUEST['request_id']);
+            unset($_SESSION['resources_data']["requests_open"][$reqObj->getId()]);
             $reqObj->delete();
-            $resources_data['requests_working_pos'] = 0;
-            $resources_data['requests_working_on'] = array_values($resources_data['requests_working_on']);
+            $_SESSION['resources_data']['requests_working_pos'] = 0;
+            $_SESSION['resources_data']['requests_working_on'] = array_values($_SESSION['resources_data']['requests_working_on']);
             unset($_REQUEST['approveDelete']);
-                if (sizeof($resources_data["requests_open"]) == 0) {
-                    $resources_data["view"] = "requests_start";
+                if (sizeof($_SESSION['resources_data']["requests_open"]) == 0) {
+                    $_SESSION['resources_data']["view"] = "requests_start";
                     $view = "requests_start";
             } else  {
-                    if ($resources_data["requests_working_pos"] == sizeof($resources_data["requests_working_on"])-1) {
+                    if ($_SESSION['resources_data']["requests_working_pos"] == sizeof($_SESSION['resources_data']["requests_working_on"])-1) {
                             $auto_dec = TRUE;
                     } else {
                             $auto_inc = TRUE;
@@ -1623,73 +1663,73 @@ if (Request::submitted('delete_request') || $_REQUEST['approveDelete']) {
 
 // inc if we have requests left in the upper
 if (Request::submitted('inc_request') || $auto_inc)
-    if ($resources_data["requests_working_pos"] < sizeof($resources_data["requests_working_on"])-1) {
+    if ($_SESSION['resources_data']["requests_working_pos"] < sizeof($_SESSION['resources_data']["requests_working_on"])-1) {
         $i = 1;
-        if ($resources_data["skip_closed_requests"])
-            while ((!$resources_data["requests_open"][$resources_data["requests_working_on"][$resources_data["requests_working_pos"] + $i]["request_id"]]) && ($resources_data["requests_working_pos"] + $i < sizeof($resources_data["requests_open"])-1))
+        if ($_SESSION['resources_data']["skip_closed_requests"])
+            while ((!$_SESSION['resources_data']["requests_open"][$_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"] + $i]["request_id"]]) && ($_SESSION['resources_data']["requests_working_pos"] + $i < sizeof($_SESSION['resources_data']["requests_open"])-1))
                 $i++;
-        if ((sizeof($resources_data["requests_open"]) >= 1) && (($resources_data["requests_open"][$resources_data["requests_working_on"][$resources_data["requests_working_pos"] + $i]["request_id"]]) || (!$resources_data["skip_closed_requests"]))){
-            $resources_data["requests_working_pos"] = $resources_data["requests_working_pos"] + $i;
+        if ((sizeof($_SESSION['resources_data']["requests_open"]) >= 1) && (($_SESSION['resources_data']["requests_open"][$_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"] + $i]["request_id"]]) || (!$_SESSION['resources_data']["skip_closed_requests"]))){
+            $_SESSION['resources_data']["requests_working_pos"] = $_SESSION['resources_data']["requests_working_pos"] + $i;
         } elseif ($auto_inc)
             Request::set('dec_request', 1); //we cannot inc - so we are at the end and want to find an request below, so try do dec.
     }
 
 // dec if we have requests left in the lower
 if ((Request::submitted('dec_request')) || ($auto_dec))
-    if ($resources_data["requests_working_pos"] > 0) {
+    if ($_SESSION['resources_data']["requests_working_pos"] > 0) {
         $d = -1;
-        if ($resources_data["skip_closed_requests"])
-            while ((!$resources_data["requests_open"][$resources_data["requests_working_on"][$resources_data["requests_working_pos"] + $d]["request_id"]]) && ($resources_data["requests_working_pos"] + $d > 0))
+        if ($_SESSION['resources_data']["skip_closed_requests"])
+            while ((!$_SESSION['resources_data']["requests_open"][$_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"] + $d]["request_id"]]) && ($_SESSION['resources_data']["requests_working_pos"] + $d > 0))
                 $d--;
-        if ((sizeof($resources_data["requests_open"]) >= 1) && (($resources_data["requests_open"][$resources_data["requests_working_on"][$resources_data["requests_working_pos"] + $d]["request_id"]]) || (!$resources_data["skip_closed_requests"]))) {
-            $resources_data["requests_working_pos"] = $resources_data["requests_working_pos"] + $d;
+        if ((sizeof($_SESSION['resources_data']["requests_open"]) >= 1) && (($_SESSION['resources_data']["requests_open"][$_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"] + $d]["request_id"]]) || (!$_SESSION['resources_data']["skip_closed_requests"]))) {
+            $_SESSION['resources_data']["requests_working_pos"] = $_SESSION['resources_data']["requests_working_pos"] + $d;
         }
     }
 
 //inc/dec the limits of found rooms
-if ($inc_limit_low) {
-    $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["search_limit_low"]+=10;
-    $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["reload"] = TRUE;
-    if ($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["search_limit_low"] >= $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["search_limit_high"])
-        $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["search_limit_low"] = $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["search_limit_high"] -1;
+if (Request::int('inc_limit_low')) {
+    $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["search_limit_low"]+=10;
+    $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["reload"] = TRUE;
+    if ($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["search_limit_low"] >= $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["search_limit_high"])
+        $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["search_limit_low"] = $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["search_limit_high"] -1;
 }
-if ($inc_limit_high) {
-    $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["search_limit_high"]+=10;
-    $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["reload"] = TRUE;
+if (Request::int('inc_limit_high')) {
+    $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["search_limit_high"]+=10;
+    $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["reload"] = TRUE;
 }
 
-if ($dec_limit_low) {
-    $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["search_limit_low"]-=10;
-    $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["reload"] = TRUE;
-    if ($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["search_limit_low"] < 0)
-        $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["search_limit_low"] = 0;
+if (Request::int('dec_limit_low')) {
+    $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["search_limit_low"]-=10;
+    $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["reload"] = TRUE;
+    if ($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["search_limit_low"] < 0)
+        $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["search_limit_low"] = 0;
 }
-if ($dec_limit_high) {
-    $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["search_limit_high"]-=10;
-    $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["reload"] = TRUE;
-    if ($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["search_limit_high"] <= $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["search_limit_low"])
-        $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["search_limit_high"] = $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["search_limit_low"] +1;
+if (Request::int('dec_limit_high')) {
+    $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["search_limit_high"]-=10;
+    $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["reload"] = TRUE;
+    if ($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["search_limit_high"] <= $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["search_limit_low"])
+        $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["search_limit_high"] = $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["search_limit_low"] +1;
 }
-if ($matching_rooms_limit_submit_x) {
-    $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["search_limit_low"] = $search_rooms_limit_low - 1;
-    $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["search_limit_high"] = $search_rooms_limit_high ;
-    $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["reload"] = TRUE;
+if (Request::submitted('matching_rooms_limit_submit')) {
+    $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["search_limit_low"] = Request::quoted('search_rooms_limit_low') - 1;
+    $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["search_limit_high"] = Request::quoted('search_rooms_limit_high') ;
+    $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["reload"] = TRUE;
 }
 
 if (Request::submitted('request_tool_group')) {
     if ($_REQUEST['request_tool_choose_group'] == '-'){
-        $resources_data['actual_room_group'] = null;
+        $_SESSION['resources_data']['actual_room_group'] = null;
     } else {
-        $resources_data['actual_room_group'] = $_REQUEST['request_tool_choose_group'];
+        $_SESSION['resources_data']['actual_room_group'] = $_REQUEST['request_tool_choose_group'];
     }
-    $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["reload"] = TRUE;
+    $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["reload"] = TRUE;
 }
 
 
 //create the (overlap)data for all resources that should checked for a request
 if (Request::submitted('inc_request') || Request::submitted('dec_request') 
     || $new_session_started || $marked_clip_ids || Request::submitted('save_state') || $auto_inc 
-    || $auto_dec || $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["reload"]) {
+    || $auto_dec || $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["reload"]) {
     require_once ($RELATIVE_PATH_RESOURCES."/lib/RoomRequest.class.php");
     require_once ($RELATIVE_PATH_RESOURCES."/lib/CheckMultipleOverlaps.class.php");
     require_once ($RELATIVE_PATH_RESOURCES."/lib/VeranstaltungResourcesAssign.class.php");
@@ -1697,35 +1737,35 @@ if (Request::submitted('inc_request') || Request::submitted('dec_request')
     require_once ("lib/classes/Seminar.class.php");
     require_once ("lib/classes/SemesterData.class.php");
 
-    if ((!is_array($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["detected_overlaps"])) 
-        || ($marked_clip_ids) || ($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["reload"])) {
+    if ((!is_array($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["detected_overlaps"]))
+        || ($marked_clip_ids) || ($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["reload"])) {
 
-        unset ($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["reload"]);
-        if (!isset($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["search_limit_low"])) {
-            $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["search_limit_low"] = 0;
-            $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["search_limit_high"] = 10;
+        unset ($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["reload"]);
+        if (!isset($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["search_limit_low"])) {
+            $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["search_limit_low"] = 0;
+            $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["search_limit_high"] = 10;
         }
-        $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["considered_resources"] = array();
+        $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["considered_resources"] = array();
 
         $semester = new SemesterData;
         $all_semester = $semester->getAllSemesterData();
 
-        $reqObj = new RoomRequest($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["request_id"]);
+        $reqObj = new RoomRequest($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["request_id"]);
         $semObj = Seminar::GetInstance($reqObj->getSeminarId(), true);
         $multiOverlaps = new CheckMultipleOverlaps();
         $semResAssign = new VeranstaltungResourcesAssign($semObj->getId());
 
         //add the requested ressource to selection
         if ($reqObj->getResourceId())
-            $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["considered_resources"][$reqObj->getResourceId()] = array("type"=>"requested");
+            $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["considered_resources"][$reqObj->getResourceId()] = array("type"=>"requested");
 
         //add resource_ids from room groups
         if (get_config('RESOURCES_ENABLE_GROUPING')){
             $room_group = RoomGroups::GetInstance();
-            $group_id = $resources_data['actual_room_group'];
+            $group_id = $_SESSION['resources_data']['actual_room_group'];
             if ($room_group->getGroupCount($group_id)){
                 foreach ($room_group->getGroupContent($group_id) as $val) {
-                    $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["considered_resources"][$val] = array("type"=>"grouped");
+                    $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["considered_resources"][$val] = array("type"=>"grouped");
                 }
             }
         }
@@ -1733,20 +1773,20 @@ if (Request::submitted('inc_request') || Request::submitted('dec_request')
         //add the matching ressources to selection
         if (getGlobalPerms($user->id) != "admin")
             $resList = new ResourcesUserRoomsList ($user->id, FALSE, FALSE);
-        $matching_resources = $reqObj->searchRooms(FALSE, TRUE, $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["search_limit_low"], $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["search_limit_high"], TRUE, (is_object($resList)) ? array_keys($resList->getRooms()) : FALSE);
-        if ($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["search_limit_high"]  > ($reqObj->last_search_result_count + $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["search_limit_low"]))
-            $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["search_limit_high"] = $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["search_limit_low"] + $reqObj->last_search_result_count;
+        $matching_resources = $reqObj->searchRooms(FALSE, TRUE, $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["search_limit_low"], $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["search_limit_high"], TRUE, (is_object($resList)) ? array_keys($resList->getRooms()) : FALSE);
+        if ($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["search_limit_high"]  > ($reqObj->last_search_result_count + $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["search_limit_low"]))
+            $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["search_limit_high"] = $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["search_limit_low"] + $reqObj->last_search_result_count;
 
         foreach ($matching_resources as $key => $val) {
-            if (!$resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["considered_resources"][$key])
-                $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["considered_resources"][$key] = array("type"=>"matching");
+            if (!$_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["considered_resources"][$key])
+                $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["considered_resources"][$key] = array("type"=>"matching");
         }
 
         //add resource_ids from clipboard
         if (is_array($marked_clip_ids))
             foreach ($marked_clip_ids as $val)
-                if (!$resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["considered_resources"][$val])
-                    $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["considered_resources"][$val] = array("type"=>"clipped");
+                if (!$_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["considered_resources"][$val])
+                    $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["considered_resources"][$val] = array("type"=>"clipped");
 
 
         //create the assign-objects for the seminar (virtual!)
@@ -1759,18 +1799,20 @@ if (Request::submitted('inc_request') || Request::submitted('dec_request')
             $assignObjects = $semResAssign->getDateAssignObjects(TRUE);
         }
 
-        $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["assign_objects"]=array();
+        $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["assign_objects"]=array();
         $current_time = (time()-3600);
         if ($GLOBALS['RESOURCES_HIDE_PAST_SINGLE_DATES']) {
             $new_assign_objects = Array();
             if (!$reqObj->getTerminId()) {
-                foreach ($assignObjects as $assObj) {
-                    if (  $assObj->begin < $current_time
-                            && $assObj->end < $current_time )
-                    {
-                        continue;
-                    }
-                    $new_assign_objects [] = $assObj;
+                if (is_array($assignObjects) && sizeof($assignObjects) > 0) {
+                     foreach ($assignObjects as $assObj) {
+                         if (  $assObj->begin < $current_time
+                                 && $assObj->end < $current_time )
+                         {
+                             continue;
+                         }
+                         $new_assign_objects [] = $assObj;
+                     }
                 }
                 $assignObjects = $new_assign_objects;
             }
@@ -1781,18 +1823,18 @@ if (Request::submitted('inc_request') || Request::submitted('dec_request')
             //add already assigned resource_ids to the check-set and remember those assigns
             foreach($assignObjects as $assObj){
                 if ($assObj->getResourceId()){
-                    if(!$resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["considered_resources"][$assObj->getResourceId()])
-                        $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["considered_resources"][$assObj->getResourceId()] = array("type"=>"matching");
+                    if(!$_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["considered_resources"][$assObj->getResourceId()])
+                        $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["considered_resources"][$assObj->getResourceId()] = array("type"=>"matching");
                 }
-                $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["assign_objects"][$assObj->getId()] = array("resource_id" => $assObj->getResourceId());
+                $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["assign_objects"][$assObj->getId()] = array("resource_id" => $assObj->getResourceId());
             }
 
             //set the time range to check;
             $multiOverlaps->setAutoTimeRange($assignObjects);
 
             //add the considered resources to the check-set
-            if (is_array($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["considered_resources"])) {
-                foreach ($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["considered_resources"] as $key => $val) {
+            if (is_array($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["considered_resources"])) {
+                foreach ($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["considered_resources"] as $key => $val) {
                     $multiOverlaps->addResource($key);
                 }
             }
@@ -1807,7 +1849,7 @@ if (Request::submitted('inc_request') || Request::submitted('dec_request')
              * * * * * * * * * * * * * */
 
             $groupedDates = $semObj->getGroupedDates($reqObj->getTerminId(),$reqObj->getMetadateId());
-            $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["groups"] = $groupedDates['groups'];
+            $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["groups"] = $groupedDates['groups'];
 
             //gruppierte Termine durchlaufen
             foreach($groupedDates['groups'] as $group_id => $group) {
@@ -1844,19 +1886,19 @@ if (Request::submitted('inc_request') || Request::submitted('dec_request')
                     }
                 }
 
-                $event_zw =  $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["groups"][$group_id]["termin_ids"];
-                $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["groups"][$group_id]["events_count"] = sizeof($event_zw);
-                $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["groups"][$group_id]["overlap_events_count"] = $overlaps;
+                $event_zw =  $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["groups"][$group_id]["termin_ids"];
+                $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["groups"][$group_id]["events_count"] = sizeof($event_zw);
+                $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["groups"][$group_id]["overlap_events_count"] = $overlaps;
 
                 // Der gebuchte Raum, soweit vorhanden => fuer den gruenen Haken
                 if ($groupedDates['info'][$group_id]['raum']) {
-                    $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["groups"][$group_id]["resource_id"] = $groupedDates['info'][$group_id]['raum'];
+                    $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["groups"][$group_id]["resource_id"] = $groupedDates['info'][$group_id]['raum'];
                 }
 
             }  // Ende: gruppierte Termine durchlaufen
 
-            $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["detected_overlaps"] = $result;
-            $resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["first_event"] = $first_event;
+            $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["detected_overlaps"] = $result;
+            $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["first_event"] = $first_event;
         }
     }
 }
@@ -1872,7 +1914,7 @@ if ($_sendMessage) {
 
     $messaging = new messaging;
 
-    foreach ($resources_data["requests_working_on"] as $val) {
+    foreach ($_SESSION['resources_data']["requests_working_on"] as $val) {
         //$request_ids[] = $val["request_id"];
         $request_data[$val["request_id"]] = $val;
     }
@@ -1949,9 +1991,9 @@ if ($_sendMessage) {
 }
 
 //unset, if all requests are edited and the set of requests should be resetted after
-if ($reset_set) {
-    unset($resources_data["requests_working_on"]);
-    unset($resources_data["requests_open"]);
+if (Request::option('reset_set')) {
+    unset($_SESSION['resources_data']["requests_working_on"]);
+    unset($_SESSION['resources_data']["requests_open"]);
 }
 
 /*****************************************************************************
@@ -1962,8 +2004,8 @@ if ($view == "view_sem_schedule" || $view == "view_group_schedule" || $view == "
     if ($_REQUEST['next_sem']){
         $sem_array = SemesterData::GetSemesterArray();
         foreach ($sem_array as $id => $one_sem){
-            if ($one_sem['semester_id'] == $resources_data['sem_schedule_semester_id'] && isset($sem_array[$id+1])){
-                $resources_data['sem_schedule_semester_id'] = $sem_array[$id+1]['semester_id'];
+            if ($one_sem['semester_id'] == $_SESSION['resources_data']['sem_schedule_semester_id'] && isset($sem_array[$id+1])){
+                $_SESSION['resources_data']['sem_schedule_semester_id'] = $sem_array[$id+1]['semester_id'];
                 break;
             }
         }
@@ -1971,73 +2013,73 @@ if ($view == "view_sem_schedule" || $view == "view_group_schedule" || $view == "
     if ($_REQUEST['previous_sem']){
         $sem_array = SemesterData::GetSemesterArray();
         foreach ($sem_array as $id => $one_sem){
-            if ($one_sem['semester_id'] == $resources_data['sem_schedule_semester_id'] && ($id-1) && isset($sem_array[$id-1])){
-                $resources_data['sem_schedule_semester_id'] = $sem_array[$id-1]['semester_id'];
+            if ($one_sem['semester_id'] == $_SESSION['resources_data']['sem_schedule_semester_id'] && ($id-1) && isset($sem_array[$id-1])){
+                $_SESSION['resources_data']['sem_schedule_semester_id'] = $sem_array[$id-1]['semester_id'];
                 break;
             }
         }
     }
     if($view == "view_group_schedule_daily" || $view == 'openobject_group_schedule'){
         if(Request::submitted('jump')) {
-            $resources_data["schedule_start_time"] = mktime (0, 0, 0, (int)$_REQUEST['schedule_begin_month'], (int)$_REQUEST['schedule_begin_day'], (int)$_REQUEST['schedule_begin_year']);
+            $_SESSION['resources_data']["schedule_start_time"] = mktime (0, 0, 0, (int)$_REQUEST['schedule_begin_month'], (int)$_REQUEST['schedule_begin_day'], (int)$_REQUEST['schedule_begin_year']);
         }
-        if(!$resources_data["schedule_start_time"]) $resources_data["schedule_start_time"] = strtotime('today');
+        if(!$_SESSION['resources_data']["schedule_start_time"]) $_SESSION['resources_data']["schedule_start_time"] = strtotime('today');
         if ($_REQUEST['previous_day']){
-            $resources_data["schedule_start_time"] = strtotime('yesterday', $resources_data["schedule_start_time"]);
+            $_SESSION['resources_data']["schedule_start_time"] = strtotime('yesterday', $_SESSION['resources_data']["schedule_start_time"]);
         }
         if ($_REQUEST['next_day']){
-            $resources_data["schedule_start_time"] = strtotime('tomorrow', $resources_data["schedule_start_time"]);
+            $_SESSION['resources_data']["schedule_start_time"] = strtotime('tomorrow', $_SESSION['resources_data']["schedule_start_time"]);
         }
     }
     if($view == "view_group_schedule"){
     if ($_REQUEST['previous_day']){
-        $resources_data['group_schedule_dow'] = (--$resources_data['group_schedule_dow'] == 0 ? 7 : $resources_data['group_schedule_dow']);
+        $_SESSION['resources_data']['group_schedule_dow'] = (--$_SESSION['resources_data']['group_schedule_dow'] == 0 ? 7 : $_SESSION['resources_data']['group_schedule_dow']);
     }
     if ($_REQUEST['next_day']){
-        $resources_data['group_schedule_dow'] = (++$resources_data['group_schedule_dow'] == 8 ? 1 : $resources_data['group_schedule_dow']);
+        $_SESSION['resources_data']['group_schedule_dow'] = (++$_SESSION['resources_data']['group_schedule_dow'] == 8 ? 1 : $_SESSION['resources_data']['group_schedule_dow']);
     }
     }
     if ($_REQUEST['navigate']) {
         if (isset($_REQUEST['sem_time_choose'])){
-            $resources_data['sem_schedule_timespan'] = $_REQUEST['sem_time_choose'];
+            $_SESSION['resources_data']['sem_schedule_timespan'] = $_REQUEST['sem_time_choose'];
         }
         if (isset($_REQUEST['sem_schedule_choose'])){
-            $resources_data['sem_schedule_semester_id'] = $_REQUEST['sem_schedule_choose'];
+            $_SESSION['resources_data']['sem_schedule_semester_id'] = $_REQUEST['sem_schedule_choose'];
         }
-        if (Request::submitted('sem_schedule_start_list') || (Request::submitted('jump') && ($resources_data["schedule_mode"] == "list"))){
-            $resources_data["schedule_mode"] = "list";
-        } elseif (Request::submitted('sem_schedule_start_graphical') || (!$resources_data["schedule_mode"]) || (Request::submitted('jump') && ($resources_data["schedule_mode"] == "graphical"))) {
-            $resources_data["schedule_mode"] = "graphical";
+        if (Request::submitted('sem_schedule_start_list') || (Request::submitted('jump') && ($_SESSION['resources_data']["schedule_mode"] == "list"))){
+            $_SESSION['resources_data']["schedule_mode"] = "list";
+        } elseif (Request::submitted('sem_schedule_start_graphical') || (!$_SESSION['resources_data']["schedule_mode"]) || (Request::submitted('jump') && ($_SESSION['resources_data']["schedule_mode"] == "graphical"))) {
+            $_SESSION['resources_data']["schedule_mode"] = "graphical";
         }
 
         if (isset($_REQUEST['group_schedule_choose_group'])){
-            $resources_data['actual_room_group'] = (int)$_REQUEST['group_schedule_choose_group'];
+            $_SESSION['resources_data']['actual_room_group'] = (int)$_REQUEST['group_schedule_choose_group'];
         }
     }
-    if (!$resources_data['sem_schedule_semester_id']){
-        $resources_data['sem_schedule_semester_id'] = $_SESSION['_default_sem'];
-        $resources_data['sem_schedule_timespan'] = 'course_time';
-        $resources_data["schedule_mode"] = "graphical";
-        $resources_data["show_repeat_mode"] = 'all';
+    if (!$_SESSION['resources_data']['sem_schedule_semester_id']){
+        $_SESSION['resources_data']['sem_schedule_semester_id'] = $_SESSION['_default_sem'];
+        $_SESSION['resources_data']['sem_schedule_timespan'] = 'course_time';
+        $_SESSION['resources_data']["schedule_mode"] = "graphical";
+        $_SESSION['resources_data']["show_repeat_mode"] = 'all';
     }
-    if (!isset($resources_data['actual_room_group'])){
-        $resources_data['actual_room_group'] = 0;
-        $resources_data["schedule_mode"] = "graphical";
-        $resources_data["show_repeat_mode"] = 'all';
-        $resources_data['group_schedule_dow'] = 1;
+    if (!isset($_SESSION['resources_data']['actual_room_group'])){
+        $_SESSION['resources_data']['actual_room_group'] = 0;
+        $_SESSION['resources_data']["schedule_mode"] = "graphical";
+        $_SESSION['resources_data']["show_repeat_mode"] = 'all';
+        $_SESSION['resources_data']['group_schedule_dow'] = 1;
     }
-    $_SESSION['_default_sem'] = $resources_data['sem_schedule_semester_id'];
+    $_SESSION['_default_sem'] = $_SESSION['resources_data']['sem_schedule_semester_id'];
 }
 
-if (($show_repeat_mode) && ($send_schedule_repeat_mode_x)) {
-    $resources_data["show_repeat_mode"] = $show_repeat_mode;
+if ((Request::option('show_repeat_mode')) && (Request::submitted('send_schedule_repeat_mode'))) {
+    $_SESSION['resources_data']["show_repeat_mode"] = $show_repeat_mode;
 }
 
-if ($time_range) {
-    if ($time_range == "FALSE")
-        $resources_data["schedule_time_range"] = '';
+if (Request::option('time_range')) {
+    if (Request::option('time_range') == "FALSE")
+        $_SESSION['resources_data']["schedule_time_range"] = '';
     else
-        $resources_data["schedule_time_range"] = $time_range;
+        $_SESSION['resources_data']["schedule_time_range"] = Request::option('time_range');
 }
 
 /*****************************************************************************
@@ -2046,7 +2088,7 @@ some other stuff ;-)
 
 //display perminvalid window
 if ((in_array("1", $msg->codes)) || (in_array("25", $msg->codes))) {
-    $forbiddenObject = ResourceObject::Factory($resources_data["actual_object"]);
+    $forbiddenObject = ResourceObject::Factory($_SESSION['resources_data']["actual_object"]);
     if ($forbiddenObject->isLocked()) {
         $lock_ts = getLockPeriod("edit");
         $msg->addMsg(31, array(date("d.m.Y, G:i", $lock_ts[0]), date("d.m.Y, G:i", $lock_ts[1])));
@@ -2056,33 +2098,33 @@ if ((in_array("1", $msg->codes)) || (in_array("25", $msg->codes))) {
 }
 
 //show object, this object will be edited or viewed
-if ($show_object)
-    $resources_data["actual_object"]=$show_object;
+if (Request::option('show_object'))
+    $_SESSION['resources_data']["actual_object"]=Request::option('show_object');
 
-if ($show_msg) {
-    if ($msg_resource_id)
+if (Request::option('show_msg')) {
+    if (Request::option('msg_resource_id'))
         $msgResourceObj = ResourceObject::Factory($msg_resource_id);
-    $msg->addMsg($show_msg, ($msg_resource_id) ? array(htmlReady($msgResourceObj->getName())) : FALSE);
+    $msg->addMsg(Request::option('show_msg'), (Request::option('msg_resource_id')) ? array(htmlReady($msgResourceObj->getName())) : FALSE);
 }
 
 //if ObjectPerms for actual user and actual object are not loaded, load them!
 
 if ($ObjectPerms) {
-    if (($ObjectPerms->getId() == $resources_data["actual_object"]) && ($ObjectPerms->getUserId()  == $user->id))
+    if (($ObjectPerms->getId() == $_SESSION['resources_data']["actual_object"]) && ($ObjectPerms->getUserId()  == $user->id))
         $ActualObjectPerms = $ObjectPerms;
      else
-        $ActualObjectPerms = ResourceObjectPerms::Factory($resources_data["actual_object"]);
+        $ActualObjectPerms = ResourceObjectPerms::Factory($_SESSION['resources_data']["actual_object"]);
 } else
-    $ActualObjectPerms = ResourceObjectPerms::Factory($resources_data["actual_object"]);
+    $ActualObjectPerms = ResourceObjectPerms::Factory($_SESSION['resources_data']["actual_object"]);
 
 //edit or view object
-if ($edit_object) {
+if (Request::option('edit_object')) {
     if ($ActualObjectPerms->getUserPerm() == "admin") {
-        $resources_data["view"]="edit_object_properties";
-        $view = $resources_data["view"];
+        $_SESSION['resources_data']["view"]="edit_object_properties";
+        $view = $_SESSION['resources_data']["view"];
     } else {
-        $resources_data["view"]="view_details";
-        $view = $resources_data["view"];
+        $_SESSION['resources_data']["view"]="view_details";
+        $view = $_SESSION['resources_data']["view"];
     }
 }
 

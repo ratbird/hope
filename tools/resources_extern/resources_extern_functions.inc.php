@@ -37,7 +37,7 @@ function show_tree($rid, $level){
         foreach ($rtree->getKids($rid) as $rrid){
             echo chr(10).'<div class="tree" style="margin-left:'.($level*20).'px;">';
             if($rtree->tree_data[$rrid]['viewable']){
-                echo "\n<a href=\"{$GLOBALS['PHP_SELF']}?view=sem_plan&semester_id={$GLOBALS['_semester_id']}&timespan={$GLOBALS['_timespan']}&rid=$rrid\">";
+                echo "\n<a href=\"{$_SERVER['PHP_SELF']}?view=sem_plan&semester_id={$GLOBALS['_semester_id']}&timespan={$GLOBALS['_timespan']}&rid=$rrid\">";
             }
             echo htmlReady($rtree->tree_data[$rrid]['name']);
             if($rtree->tree_data[$rrid]['viewable']) echo '</a>';
@@ -59,7 +59,7 @@ function show_sem_plan($rid, $semester_id, $timespan = 'sem_time'){
 function show_sem_chooser($semester_id, $timespan){
     $semester = SemesterData::GetSemesterArray();
     unset($semester[0]);
-    echo chr(10) . '<form method="POST" name="schedule_form" action="'.$GLOBALS['PHP_SELF'].'?view='.$GLOBALS['_view'].'&rid='.$_REQUEST['rid'].'">';
+    echo chr(10) . '<form method="POST" name="schedule_form" action="'.URLHelper::getLink('?view='.$GLOBALS['_view'].'&rid='.$_REQUEST['rid']).'">';
     echo CSRFProtection::tokenTag();
     echo chr(10) . '<div class="sem_chooser">' . _("Semester:");
     echo chr(10) . '&nbsp;&nbsp;<select name="semester_id" onChange="document.schedule_form.submit()">';

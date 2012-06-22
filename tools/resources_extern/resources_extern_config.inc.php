@@ -27,5 +27,5 @@
 $VIEWABLE_PROPERTY_ID = '539dd9e5bea93208b7e6b5415a01f661';
 
 setLocale(LC_ALL, 'de_DE','german');
-$GLOBALS['resources_data']["show_repeat_mode"] = 'all';
+$_SESSION['resources_data']["show_repeat_mode"] = 'all';
 ?>

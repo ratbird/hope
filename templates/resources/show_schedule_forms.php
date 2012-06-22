@@ -8,7 +8,7 @@ use Studip\Button,
 <table border="0" cellpadding="2" cellspacing="0" width="99%" align="center">
     <input type="hidden" name="quick_view" value="<?=$used_view ?>">
     <input type="hidden" name="quick_view_mode" value="<?=$view_mode ?>">
-    <input type="hidden" name="change_schedule_resource_id" value="<? printf ("%s", (!$resAssign->isNew()) ? $resAssign->getResourceId() : $resources_data["actual_object"]); ?>">
+    <input type="hidden" name="change_schedule_resource_id" value="<? printf ("%s", (!$resAssign->isNew()) ? $resAssign->getResourceId() : $_SESSION['resources_data']["actual_object"]); ?>">
     <input type="hidden" name="change_schedule_repeat_month_of_year" value="<? echo $resAssign->getRepeatMonthOfYear() ?>">
     <input type="hidden" name="change_schedule_repeat_day_of_month" value="<? echo $resAssign->getRepeatDayOfMonth() ?>">
     <input type="hidden" name="change_schedule_repeat_week_of_month" value="<? echo $resAssign->getRepeatWeekOfMonth() ?>">

@@ -172,7 +172,6 @@ function isLockPeriod($type, $timestamp='') {
 *
 **/
 function changeLockableRecursiv ($resource_id, $state) {
-    global $resources_data;
     $db = new DB_Seminar;
 
     $query = sprintf ("UPDATE resources_objects SET lockable = '%s' WHERE resource_id = '%s' ", $state, $resource_id);

@@ -26,6 +26,7 @@ use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Default_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $auth->login_if($again && ($auth->auth["uid"] == "nobody"));
 
@@ -44,7 +45,8 @@ include ("lib/include/html_head.inc.php"); // Output of html head
 //Inits
 $cssSw=new cssClassSwitcher;
 $msg = array();
-$send_from_search = (int)isset($send_from_search);
+$send_from_search = Request::int('send_from_search',false);
+$send_from_search_page = Request::quoted('send_from_search_page');
 if (!preg_match('/^('.preg_quote($CANONICAL_RELATIVE_PATH_STUDIP,'/').')?([a-zA-Z0-9_-]+\.php)([a-zA-Z0-9_?&=-]*)$/', $send_from_search_page)) $send_from_search_page = '';
 
 if ($send_from_search) $back_msg =_("Zur&uuml;ck zur letzten Auswahl");
@@ -79,7 +81,7 @@ if (!$stm_obj->isNew()){
         ?>
         <tr><td class="blank">
         <div style="margin:20px;font-size:10pt;">
-        <form action="<? echo $PHP_SELF.'?cmd=do_enter&stm_instance_id='.$stm_obj->getId().'&send_from_search=1&send_from_search_page='.urlencode($send_from_search_page)?>" method="post">
+            <form action="<? echo URLHelper::getLink('?cmd=do_enter&stm_instance_id='.$stm_obj->getId().'&send_from_search=1&send_from_search_page='.urlencode($send_from_search_page))?>" method="post">
         <?= CSRFProtection::tokenTag() ?>
         <?=$out?>
         <br><br>
@@ -175,7 +177,7 @@ if (1 || $back_msg || $info_msg || $enter) {
     $infobox[0]["kategorie"] = _("Aktionen:");
     if ($enter) {
         $infobox[0]["eintrag"][] = array (  "icon" => "icons/16/black/schedule.png" ,
-                                    "text"  => "<a href=\"$PHP_SELF?cmd=enter&stm_instance_id=".$stm_obj->getId()."&send_from_search=1&send_from_search_page=".urlencode($send_from_search_page)."\">"._("Tragen Sie sich hier in das Modul ein"). "</a>"
+                                    "text"  => "<a href=\"".URLHelper::getLink('?cmd=enter&stm_instance_id=".$stm_obj->getId()."&send_from_search=1&send_from_search_page='.urlencode($send_from_search_page))."\">"._("Tragen Sie sich hier in das Modul ein"). "</a>"
                                 );
     }
     if ($back_msg) {

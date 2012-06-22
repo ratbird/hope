@@ -103,7 +103,7 @@ class ShowGroupSchedulesDaily extends ShowSemSchedules {
     }
 
     function showScheduleGraphical($print_view = false) {
-        global $RELATIVE_PATH_RESOURCES, $PHP_SELF, $cssSw, $view_mode, $resources_data, $ActualObjectPerms;
+        global $RELATIVE_PATH_RESOURCES, $PHP_SELF, $cssSw, $view_mode, $ActualObjectPerms;
 
         $categories["na"] = 4;
         $categories["sd"] = 4;
@@ -125,10 +125,10 @@ class ShowGroupSchedulesDaily extends ShowSemSchedules {
         $start_time = $this->start_time;
         $end_time = $this->end_time;
 
-        if ($resources_data["schedule_time_range"] == -1) {
+        if ($_SESSION['resources_data']["schedule_time_range"] == -1) {
             $start_hour = 0;
             $end_hour = 12;
-        } elseif ($resources_data["schedule_time_range"] == 1) {
+        } elseif ($_SESSION['resources_data']["schedule_time_range"] == 1) {
             $start_hour = 12;
             $end_hour = 23;
         } else {
@@ -148,7 +148,7 @@ class ShowGroupSchedulesDaily extends ShowSemSchedules {
 
             foreach ($this->resources_groups->getGroupContent($this->group_id) as $resource_to_show_id => $resource_id){
                 //fill the schedule
-                $assign_events=new AssignEventList ($start_time, $end_time, $resource_id, '', '', TRUE, $resources_data["show_repeat_mode"]);
+                $assign_events=new AssignEventList ($start_time, $end_time, $resource_id, '', '', TRUE, $_SESSION['resources_data']["show_repeat_mode"]);
                 while ($event=$assign_events->nextEvent()) {
                     $repeat_mode = $event->getRepeatMode(TRUE);
                     if(in_array($repeat_mode, array('w','d','m','y'))){
@@ -219,8 +219,8 @@ class ShowGroupSchedulesDaily extends ShowSemSchedules {
             <tr>
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%" align="center" valign="bottom">&nbsp;
                     <?
-                    if ((!$resources_data["schedule_time_range"]) || ($resources_data["schedule_time_range"] == 1))
-                        printf ("<a href=\"%s?quick_view=%s&quick_view_mode=%s&time_range=%s\"><img src=\"" . Assets::image_path('icons/16/blue/arr_2up.png') . "\" %s></a>", $PHP_SELF, $this->used_view, $view_mode, ($resources_data["schedule_time_range"]) ? "FALSE" : -1, tooltip (_("Frühere Belegungen anzeigen")));
+                    if ((!$_SESSION['resources_data']["schedule_time_range"]) || ($_SESSION['resources_data']["schedule_time_range"] == 1))
+                        printf ("<a href=\"%s?quick_view=%s&quick_view_mode=%s&time_range=%s\"><img src=\"" . Assets::image_path('icons/16/blue/arr_2up.png') . "\" %s></a>", $PHP_SELF, $this->used_view, $view_mode, ($_SESSION['resources_data']["schedule_time_range"]) ? "FALSE" : -1, tooltip (_("Frühere Belegungen anzeigen")));
                     ?>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="76%" colspan="2">
@@ -233,9 +233,9 @@ class ShowGroupSchedulesDaily extends ShowSemSchedules {
                 <td class="<? echo $cssSw->getClass() ?>" width="20%" nowrap>
                     <?
                     print "<select style=\"font-size:10px;\" name=\"show_repeat_mode\">";
-                    printf ("<option style=\"font-size:10px;\" %s value=\"all\">"._("alle Belegungen")."</option>", ($resources_data["show_repeat_mode"] == "all") ? "selected" : "");
-                    printf ("<option %s style=\"font-size:10px;\" value=\"single\">"._("nur Einzeltermine")."</option>", ($resources_data["show_repeat_mode"] == "single") ? "selected" : "");
-                    printf ("<option %s style=\"font-size:10px;\" value=\"repeated\">"._("nur Wiederholungstermine")."</option>", ($resources_data["show_repeat_mode"] == "repeated") ? "selected" : "");
+                    printf ("<option style=\"font-size:10px;\" %s value=\"all\">"._("alle Belegungen")."</option>", ($_SESSION['resources_data']["show_repeat_mode"] == "all") ? "selected" : "");
+                    printf ("<option %s style=\"font-size:10px;\" value=\"single\">"._("nur Einzeltermine")."</option>", ($_SESSION['resources_data']["show_repeat_mode"] == "single") ? "selected" : "");
+                    printf ("<option %s style=\"font-size:10px;\" value=\"repeated\">"._("nur Wiederholungstermine")."</option>", ($_SESSION['resources_data']["show_repeat_mode"] == "repeated") ? "selected" : "");
                     print "</select>";
                     print "&nbsp;<input type=\"IMAGE\" name=\"send_schedule_repeat_mode\" src=\"" . Assets::image_path('icons/16/blue/arr_2down.png') . "\" ".tooltip(_("Ansicht umschalten")).">";
                     ?>
@@ -253,8 +253,8 @@ class ShowGroupSchedulesDaily extends ShowSemSchedules {
             <tr>
                 <td class="<? echo $cssSw->getClass() ?>" width="4%" align="center" valign="bottom">&nbsp;
                     <?
-                    if ((!$resources_data["schedule_time_range"]) || ($resources_data["schedule_time_range"] == -1))
-                        printf ("<a href=\"%s?quick_view=%s&quick_view_mode=%s&time_range=%s\"><img src=\"" . Assets::image_path('icons/16/blue/arr_2down.png') . "\" %sborder=\"0\"></a>", $PHP_SELF, $this->used_view, $view_mode, ($resources_data["schedule_time_range"]) ? "FALSE" : 1, tooltip (_("Spätere Belegungen anzeigen")));
+                    if ((!$_SESSION['resources_data']["schedule_time_range"]) || ($_SESSION['resources_data']["schedule_time_range"] == -1))
+                        printf ("<a href=\"%s?quick_view=%s&quick_view_mode=%s&time_range=%s\"><img src=\"" . Assets::image_path('icons/16/blue/arr_2down.png') . "\" %sborder=\"0\"></a>", $PHP_SELF, $this->used_view, $view_mode, ($_SESSION['resources_data']["schedule_time_range"]) ? "FALSE" : 1, tooltip (_("Spätere Belegungen anzeigen")));
                     ?>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="20%" nowrap colspan="3">

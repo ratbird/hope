@@ -88,7 +88,7 @@ class ShowList extends ShowTreeRow{
 
     //private
     function showListObject ($resource_id, $admin_buttons=FALSE) {
-        global $resources_data, $edit_structure_object, $RELATIVE_PATH_RESOURCES, $PHP_SELF, $ActualObjectPerms, $SessSemName,
+        global $edit_structure_object, $RELATIVE_PATH_RESOURCES, $ActualObjectPerms, $SessSemName,
             $user, $perm, $clipObj, $view_mode, $view;
 
         //Object erstellen
@@ -103,7 +103,7 @@ class ShowList extends ShowTreeRow{
 
         if ($this->simple_list){
             //create a simple list intead of printhead/printcontent-design
-            $return="<li><a href=\"$PHP_SELF?view=view_details&actual_object=".$resObject->getId().$link_add."\">".htmlReady($resObject->getName())."</a></li>\n";
+            $return="<li><a href=\"".URLHelper::getLink('?view=view_details&actual_object='.$resObject->getId().$link_add)."\">".htmlReady($resObject->getName())."</a></li>\n";
             print $return;
         } else {
             //Daten vorbereiten
@@ -112,10 +112,10 @@ class ShowList extends ShowTreeRow{
             else
                 $icon="<img src=\"".$GLOBALS['ASSETS_URL']."images/cont_res".$resObject->getCategoryIconnr().".gif\">";
 
-            if ($resources_data["structure_opens"][$resObject->id]) {
+            if ($_SESSION['resources_data']["structure_opens"][$resObject->id]) {
                 $link = URLHelper::getLink('?structure_close=' . $resObject->id . $link_add . '#a');
                 $open = 'open';
-                if ($resources_data["actual_object"] == $resObject->id)
+                if ($_SESSION['resources_data']["actual_object"] == $resObject->id)
                     echo '<a name="a"></a>';
             } else {
                 $link = URLHelper::getLink('?structure_open=' . $resObject->id . $link_add . '#a');
@@ -152,9 +152,9 @@ class ShowList extends ShowTreeRow{
             //clipboard in/out
             if ((is_object($clipObj)) && $simple_perms && $resObject->getCategoryId())
                 if ($clipObj->isInClipboard($resObject->getId()))
-                    $zusatz .= " <a href=\"".$PHP_SELF."?clip_out=".$resObject->getId().$link_add."\"><img class=\"text-top\" src=\"".Assets::image_path('icons/16/blue/remove/resources.png')."\" ".tooltip(_("Aus der Merkliste entfernen"))."></a>";
+                    $zusatz .= " <a href=\"".URLHelper::getLink('?clip_out='.$resObject->getId().$link_add)."\"><img class=\"text-top\" src=\"".Assets::image_path('icons/16/blue/remove/resources.png')."\" ".tooltip(_("Aus der Merkliste entfernen"))."></a>";
                 else
-                    $zusatz .= " <a href=\"".$PHP_SELF."?clip_in=".$resObject->getId().$link_add."\"><img class=\"text-top\" src=\"".Assets::image_path('icons/16/blue/add/resources.png')."\" ".tooltip(_("In Merkliste aufnehmen"))."></a>";
+                    $zusatz .= " <a href=\"".URLHelper::getLink('?clip_in='.$resObject->getId().$link_add)."\"><img class=\"text-top\" src=\"".Assets::image_path('icons/16/blue/add/resources.png')."\" ".tooltip(_("In Merkliste aufnehmen"))."></a>";
 
             $new=TRUE;
             

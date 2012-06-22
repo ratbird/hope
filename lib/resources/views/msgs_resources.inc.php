@@ -136,12 +136,12 @@ $this->msg[28] = array (
 $this->msg[29] = array (
         "mode" => "info",
         "msg"=> _("Sie haben den Raum als <u>blockierbar</u> markiert. Wollen Sie auch alle untergeordneten R&auml;ume ebenfalls als <u>blockierbar</u> markieren?")
-            . "<br>". LinkButton::createAccept(_('JA!'), '%s?set_lockable_recursiv=1&lock_resource_id=%s')
+            . "<br>". LinkButton::createAccept(_('JA!'), '%s')
             . ' ' . LinkButton::createCancel(_('NEIN!'), '%s'));
 $this->msg[30] = array (
         "mode" => "info",
         "msg"=> _("Sie haben den Raum als <u>nicht</u> mehr blockierbar markiert. Wollen Sie auch alle untergeordneten R&auml;ume ebenfalls als <u>nicht</u> blockierbar markieren?")
-            . "<br>". LinkButton::createAccept(_('JA!'), '%s?unset_lockable_recursiv=1&lock_resource_id=%s')
+            . "<br>". LinkButton::createAccept(_('JA!'), '%s')
             . ' ' . LinkButton::createCancel(_('NEIN!'), '%s'));
 $this->msg[31] = array (
         "mode" => "info",
@@ -172,7 +172,7 @@ $this->msg[39] = array (
 $this->msg[40] = array (
         "mode" => "info",
         "msg"=> _("Sie haben bereits Anfragen, die Sie ausgew&auml;hlt haben, bearbeitet. Klicken Sie auf &raquo;absenden&laquo;, um Nachrichten zu aufgel&ouml;sten Anfragen versenden.")
-            . " ". LinkButton::createAccept(_('Absenden'), '%s?snd_closed_request_sms=1'));
+            . " ". LinkButton::createAccept(_('Absenden'), '%s'));
 $this->msg[41] = array (
         "mode" => "info",
         "msg"=> _("Mit den von ihnen ausgewählten Einstellungen sind keine Anfragen, die Sie auflösen könnten, vorhanden."));
@@ -186,7 +186,7 @@ $this->msg[43] = array (
             . "<table class=\"default\"><tr><td style=\"vertical-align:top\">"
             . _("Wollen Sie die Anfrage wirklich ablehnen?")
             ."<br><br>" . Button::createAccept('JA!')
-            . " ". LinkButton::createCancel(_('NEIN!'), '%s?decline_request=0') .'<br>'
+            . " ". LinkButton::createCancel(_('NEIN!'), '%s') .'<br>'
             .'<input type="hidden" name="decline_request" value="1"></td><td style="vertical-align:top">'
             ._("Grund der Ablehnung:").'<br>'
             .'<textarea cols="30" rows="3" name="decline_message" style="width:90%%"></textarea></td></tr></table>'

@@ -24,8 +24,8 @@ require_once ($GLOBALS['RELATIVE_PATH_RESOURCES']."/lib/ResourceObject.class.php
 require_once ($GLOBALS['RELATIVE_PATH_RESOURCES']."/lib/RoomGroups.class.php");
 
 
-if ($resources_data["actual_object"]) {
-    $currentObject = ResourceObject::Factory($resources_data["actual_object"]);
+if ($_SESSION['resources_data']["actual_object"]) {
+    $currentObject = ResourceObject::Factory($_SESSION['resources_data']["actual_object"]);
     $currentObjectTitelAdd=": ".(($currentObject->getCategoryName()) ? $currentObject->getCategoryName() : _("Hierachieebene"));
     if ($currentObjectTitelAdd)
         $currentObjectTitelAdd=": ";
@@ -63,7 +63,7 @@ switch ($view) {
                 "eintrag" => array (
                     array (
                         "icon" => "icons/16/black/search.png",
-                        "text"  => (($resources_data["search_mode"] == "browse") || (!$resources_data["search_mode"]))
+                        "text"  => (($_SESSION['resources_data']["search_mode"] == "browse") || (!$_SESSION['resources_data']["search_mode"]))
                             ? sprintf(_("Gewünschte Eigenschaften <br>%sangeben%s"),
                                 '<a href="'. URLHelper::getLink('?view=search&quick_view_mode=' . $view_mode . '&mode=properties') . '">',
                                 '</a>')
@@ -73,7 +73,7 @@ switch ($view) {
                     ),
                     array (
                         "icon" => "icons/16/black/schedule.png",
-                        "text"  => (!$resources_data["check_assigns"])
+                        "text"  => (!$_SESSION['resources_data']["check_assigns"])
                             ? sprintf(_("Gewünschte Belegungszeit %sberücksichtigen%s"),
                                 '<a href="'. URLHelper::getLink('?view=search&quick_view_mode=' . $view_mode . '&check_assigns=TRUE') .'">',
                                 '</a>')
@@ -83,7 +83,7 @@ switch ($view) {
                     ),
                     array (
                         "icon" => "icons/16/black/resources.png",
-                        "text"  => (!$resources_data["search_only_rooms"])
+                        "text"  => (!$_SESSION['resources_data']["search_only_rooms"])
                             ? sprintf(_("Nur Räume %sanzeigen%s"),
                                 '<a href="'. URLHelper::getLink('?view=search&quick_view_mode=' . $view_mode . '&search_only_rooms=1') . '">',
                                 '</a>')
@@ -104,21 +104,21 @@ switch ($view) {
     break;
     //Reiter "Listen"
     case "lists":
-        if ($resources_data["list_open"])
-            $page_intro= sprintf(_("Sie sehen alle Einträge in der Ebene <b>%s</b>"), getResourceObjectName($resources_data["list_open"]));
+        if ($_SESSION['resources_data']["list_open"])
+            $page_intro= sprintf(_("Sie sehen alle Einträge in der Ebene <b>%s</b>"), getResourceObjectName($_SESSION['resources_data']["list_open"]));
         PageLayout::setTitle(_("Bearbeiten und ausgeben von Listen"));
         Navigation::activateItem('/resources/lists/show');
-        if ($resources_data["list_open"])
-            $title.=" - "._("Ebene").": ".getResourceObjectName($resources_data["list_open"]);
+        if ($_SESSION['resources_data']["list_open"])
+            $title.=" - "._("Ebene").": ".getResourceObjectName($_SESSION['resources_data']["list_open"]);
         $infobox = array(
                     array  ("kategorie"  => _("Information:"),
                             "eintrag" => array (
                                 array ("icon" => "icons/16/black/info.png",
-                                    "text"  => ($resources_data["list_recurse"]) ? _("Untergeordnete Ebenen werden ausgegeben.") : _("Untergeordnete Ebenen werden <u>nicht</u> ausgegeben.")))),
+                                    "text"  => ($_SESSION['resources_data']["list_recurse"]) ? _("Untergeordnete Ebenen werden ausgegeben.") : _("Untergeordnete Ebenen werden <u>nicht</u> ausgegeben.")))),
                     array  ("kategorie" => _("Aktionen:"),
                             "eintrag" => array (
-                                array   ("icon" =>  (!$resources_data["list_recurse"]) ? "icons/16/black/checkbox-checked.png" : "icons/16/black/checkbox-unchecked.png",
-                                    "text"  => ($resources_data["list_recurse"]) ? sprintf(_("Ressourcen in untergeordneten Ebenen %snicht ausgeben%s."), "<a href=\"$PHP_SELF?nrecurse_list=TRUE\">", "</a>") :  sprintf(_("Ressourcen in untergeordneten Ebenen %s(mit) ausgeben%s"), "<a href=\"$PHP_SELF?recurse_list=TRUE\">", "</a>")))));
+                                array   ("icon" =>  (!$_SESSION['resources_data']["list_recurse"]) ? "icons/16/black/checkbox-checked.png" : "icons/16/black/checkbox-unchecked.png",
+                                    "text"  => ($_SESSION['resources_data']["list_recurse"]) ? sprintf(_("Ressourcen in untergeordneten Ebenen %snicht ausgeben%s."), "<a href=\"".URLHelper::getLink('?nrecurse_list=TRUE')."\">", "</a>") :  sprintf(_("Ressourcen in untergeordneten Ebenen %s(mit) ausgeben%s"), "<a href=\"".URLHelper::getLink('?recurse_list=TRUE')."\">", "</a>")))));
         $infopic = "infobox/rooms.jpg";
     break;
 
@@ -165,10 +165,10 @@ switch ($view) {
 
         $infobox[0]["kategorie"] = _("Aktionen:");
         $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/resources.png",
-                                "text"  => sprintf (_("%sEigenschaften%s anzeigen"), "<a href=\"$PHP_SELF?quick_view=view_details&quick_view_mode=".$view_mode."\">", "</a>"));
+                                "text"  => sprintf (_("%sEigenschaften%s anzeigen"), "<a href=\"".URLHelper::getLink('?quick_view=view_details&quick_view_mode='.$view_mode)."\">", "</a>"));
         if (($ActualObjectPerms->havePerm("autor")) && ($currentObject->getCategoryId()))
             $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/add/date.png",
-                                    "text"  =>sprintf (_("Eine neue Belegung %serstellen%s"), ($view_mode == "oobj") ? "<a href=\"$PHP_SELF?cancel_edit_assign=1&quick_view=openobject_assign&quick_view_mode=".$view_mode."\">" : "<a href=\"$PHP_SELF?cancel_edit_assign=1&quick_view=edit_object_assign&quick_view_mode=".$view_mode."\">", "</a>"));
+                                    "text"  =>sprintf (_("Eine neue Belegung %serstellen%s"), ($view_mode == "oobj") ? "<a href=\"".URLHelper::getLink('?cancel_edit_assign=1&quick_view=openobject_assign&quick_view_mode='.$view_mode)."\">" : "<a href=\"".URLHelper::getLink('?cancel_edit_assign=1&quick_view=edit_object_assign&quick_view_mode='.$view_mode)."\">", "</a>"));
 
 
         if ($view_mode != "no_nav") {
@@ -182,7 +182,7 @@ switch ($view) {
 
         if (get_config('RESOURCES_ENABLE_SEM_SCHEDULE'))
             $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
-                                "text"  => sprintf (_("%sSemesterplan%s anzeigen"), "<a href=\"$PHP_SELF?quick_view=view_sem_schedule&quick_view_mode=".$view_mode."\">", "</a>"));
+                                "text"  => sprintf (_("%sSemesterplan%s anzeigen"), "<a href=\"".URLHelper::getLink('?quick_view=view_sem_schedule&quick_view_mode='.$view_mode)."\">", "</a>"));
 
         $infobox[0]["eintrag"][] = array (
             "icon" => "icons/16/black/print.png",
@@ -203,14 +203,14 @@ switch ($view) {
         $infobox[0]["kategorie"] = _("Aktionen:");
 
         $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/resources.png",
-                                "text"  => sprintf (_("%sEigenschaften%s anzeigen"), "<a href=\"$PHP_SELF?quick_view=view_details&quick_view_mode=".$view_mode."\">", "</a>"));
+                                "text"  => sprintf (_("%sEigenschaften%s anzeigen"), "<a href=\"".URLHelper::getLink('?quick_view=view_details&quick_view_mode='.$view_mode)."\">", "</a>"));
         if (($ActualObjectPerms->havePerm("autor")) && ($currentObject->getCategoryId()))
             $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/add/date.png",
-                                    "text"  =>sprintf (_("Eine neue Belegung %serstellen%s"), ($view_mode == "oobj") ? "<a href=\"$PHP_SELF?cancel_edit_assign=1&quick_view=openobject_assign&quick_view_mode=".$view_mode."\">" : "<a href=\"$PHP_SELF?cancel_edit_assign=1&quick_view=edit_object_assign&quick_view_mode=".$view_mode."\">", "</a>"));
+                                    "text"  =>sprintf (_("Eine neue Belegung %serstellen%s"), ($view_mode == "oobj") ? "<a href=\"".URLHelper::getLink('?cancel_edit_assign=1&quick_view=openobject_assign&quick_view_mode='.$view_mode)."\">" : "<a href=\"".URLHelper::getLink('?cancel_edit_assign=1&quick_view=edit_object_assign&quick_view_mode='.$view_mode)."\">", "</a>"));
 
         if ($view_mode == "no_nav"){
             $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
-                                    "text"  =>sprintf (_("%sBelegungsplan%s anzeigen"), ($view_mode == "oobj") ? "<a href=\"$PHP_SELF?quick_view=openobject_schedule&quick_view_mode=".$view_mode."\">" : "<a href=\"$PHP_SELF?quick_view=view_schedule".(($view_mode == "no_nav") ? "&quick_view_mode=no_nav" : "")."\">", "</a>"));
+                                    "text"  =>sprintf (_("%sBelegungsplan%s anzeigen"), ($view_mode == "oobj") ? "<a href=\"".URLHelper::getLink('?quick_view=openobject_schedule&quick_view_mode='.$view_mode)."\">" : "<a href=\"".URLHelper::getLink('?quick_view=view_schedule'.(($view_mode == "no_nav") ? "&quick_view_mode=no_nav" : ""))."\">", "</a>"));
         }
 
         if ($view_mode != "no_nav") {
@@ -223,7 +223,7 @@ switch ($view) {
         }
 
         $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/print.png",
-                                "text"  => "<a href=\"$PHP_SELF?view=view_sem_schedule&print_view=1\" target=\"_blank\">"
+                                "text"  => "<a href=\"".URLHelper::getLink('?view=view_sem_schedule&print_view=1')."\" target=\"_blank\">"
                                             . _("Druckansicht")
                                             . "</a>");
         $infobox[0]['eintrag'][] = array(
@@ -237,24 +237,24 @@ switch ($view) {
     case "view_group_schedule":
         $room_groups = RoomGroups::GetInstance();
         $page_intro=_("Hier können Sie sich die Belegungszeiten einer Raumgruppe anzeigen lassen.");
-        PageLayout::setTitle(_("Belegungszeiten einer Raumgruppe pro Semester ausgeben:") . ' ' . $room_groups->getGroupName($resources_data['actual_room_group']));
+        PageLayout::setTitle(_("Belegungszeiten einer Raumgruppe pro Semester ausgeben:") . ' ' . $room_groups->getGroupName($_SESSION['resources_data']['actual_room_group']));
         Navigation::activateItem('/resources/view/group_schedule');
 
         $infobox[0]["kategorie"] = _("Aktionen:");
         $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/print.png",
-                                "text"  => "<a href=\"$PHP_SELF?view=view_group_schedule&print_view=1\" target=\"_blank\">"
+                                "text"  => "<a href=\"".URLHelper::getLink('?view=view_group_schedule&print_view=1')."\" target=\"_blank\">"
                                             . _("Druckansicht")
                                             . "</a>");
     break;
     case "view_group_schedule_daily":
         $room_groups = RoomGroups::GetInstance();
         $page_intro=_("Hier können Sie sich die Belegungszeiten einer Raumgruppe anzeigen lassen.");
-        PageLayout::setTitle(_("Belegungszeiten einer Raumgruppe pro Tag ausgeben:") . ' ' . $room_groups->getGroupName($resources_data['actual_room_group']));
+        PageLayout::setTitle(_("Belegungszeiten einer Raumgruppe pro Tag ausgeben:") . ' ' . $room_groups->getGroupName($_SESSION['resources_data']['actual_room_group']));
         Navigation::activateItem('/resources/view/group_schedule_daily');
 
         $infobox[0]["kategorie"] = _("Aktionen:");
         $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/print.png",
-                                "text"  => "<a href=\"$PHP_SELF?view=view_group_schedule_daily&print_view=1\" target=\"_blank\">"
+                                "text"  => "<a href=\"".URLHelper::getLink('?view=view_group_schedule_daily&print_view=1')."\" target=\"_blank\">"
                                             . _("Druckansicht")
                                             . "</a>");
     break;
@@ -295,15 +295,15 @@ switch ($view) {
                     array  ("kategorie"  => _("Information:"),
                             "eintrag" => array (
                                 array ("icon" => "icons/16/black/info.png",
-                                    "text"  => ($resources_data["skip_closed_requests"]) ? _("Bereits bearbeitete Anfragen werden <u>nicht</u> angezeigt.") : _("Bereits bearbeitete Anfragen werden weiterhin angezeigt.")))),
+                                    "text"  => ($_SESSION['resources_data']["skip_closed_requests"]) ? _("Bereits bearbeitete Anfragen werden <u>nicht</u> angezeigt.") : _("Bereits bearbeitete Anfragen werden weiterhin angezeigt.")))),
                     array  ("kategorie" => _("Aktionen:"),
                             "eintrag" => array (
                                 array   ("icon" =>  "icons/16/black/search.png" ,
                                     "text"  =>  "<a href=\"javascript:void(null)\" onClick=\"window.open('resources.php?view=search&quick_view_mode=no_nav','','scrollbars=yes,left=10,top=10,width=1000,height=680,resizable=yes')\" >"._("Ressourcen suchen")."</a>"),
-                                array   ("icon" =>  (!$resources_data["skip_closed_requests"]) ? "icons/16/black/checkbox-unchecked.png" : "icons/16/black/checkbox-checked.png",
-                                    "text"  => ($resources_data["skip_closed_requests"]) ? sprintf(_("Bearbeitete Anfragen %sanzeigen%s."), "<a href=\"$PHP_SELF?skip_closed_requests=FALSE\">", "</a>") :  sprintf(_("Bearbeitete Anfragen %snicht anzeigen%s"), "<a href=\"$PHP_SELF?skip_closed_requests=TRUE\">", "</a>")),
+                                array   ("icon" =>  (!$_SESSION['resources_data']["skip_closed_requests"]) ? "icons/16/black/checkbox-unchecked.png" : "icons/16/black/checkbox-checked.png",
+                                    "text"  => ($_SESSION['resources_data']["skip_closed_requests"]) ? sprintf(_("Bearbeitete Anfragen %sanzeigen%s."), "<a href=\"".URLHelper::getLink('?skip_closed_requests=FALSE')."\">", "</a>") :  sprintf(_("Bearbeitete Anfragen %snicht anzeigen%s"), "<a href=\"".URLHelper::getLink('?skip_closed_requests=TRUE')."\">", "</a>")),
                                 array   ("icon" =>  "icons/16/black/mail.png",
-                                    "text"  => sprintf(_("Nachrichten zu zugewiesenen Anfragen %sversenden%s."), "<a href=\"$PHP_SELF?snd_closed_request_sms=TRUE\">", "</a>")))));
+                                    "text"  => sprintf(_("Nachrichten zu zugewiesenen Anfragen %sversenden%s."), "<a href=\"".URLHelper::getLink('?snd_closed_request_sms=TRUE')."\">", "</a>")))));
         $infopic = "infobox/rooms.jpg";
         $clipboard = TRUE;
     break;
@@ -330,7 +330,7 @@ switch ($view) {
     break;
     case "openobject_details":
     case "view_details":
-        if ($resources_data["actual_object"])
+        if ($_SESSION['resources_data']["actual_object"])
             $page_intro= sprintf(_("Hier sehen Sie detaillierte Informationen der Ressource %s"), "<b>".htmlReady($currentObject->getName())."</b> (".(($currentObject->getCategoryName()) ? $currentObject->getCategoryName() : _("Hierachieebene")).").");
         if ($view_mode == "oobj") {
             PageLayout::setTitle($SessSemName["header_line"]." - "._("Ressourcendetails").$currentObjectTitelAdd);
@@ -347,10 +347,10 @@ switch ($view) {
             if (is_object($currentObject)) {
                 if ($currentObject->getCategoryId())
                     $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
-                                            "text"  =>sprintf (_("%sBelegungsplan%s anzeigen"), ($view_mode == "oobj") ? "<a href=\"$PHP_SELF?quick_view=openobject_schedule&quick_view_mode=".$view_mode."\">" : "<a href=\"$PHP_SELF?quick_view=view_schedule".(($view_mode == "no_nav") ? "&quick_view_mode=no_nav" : "")."\">", "</a>"));
+                                            "text"  =>sprintf (_("%sBelegungsplan%s anzeigen"), ($view_mode == "oobj") ? "<a href=\"".URLHelper::getLink('?quick_view=openobject_schedule&quick_view_mode='.$view_mode)."\">" : "<a href=\"".URLHelper::getLink('?quick_view=view_schedule'.(($view_mode == "no_nav") ? "&quick_view_mode=no_nav" : ""))."\">", "</a>"));
                 if (($ActualObjectPerms->havePerm("autor")) && ($currentObject->getCategoryId()))
                     $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/add/date.png",
-                                            "text"  =>sprintf (_("Eine neue Belegung %serstellen%s"), ($view_mode == "oobj") ? "<a href=\"$PHP_SELF?cancel_edit_assign=1&quick_view=openobject_assign&quick_view_mode=".$view_mode."\">" : "<a href=\"$PHP_SELF?cancel_edit_assign=1&quick_view=edit_object_assign&quick_view_mode=".$view_mode."\">", "</a>"));
+                                            "text"  =>sprintf (_("Eine neue Belegung %serstellen%s"), ($view_mode == "oobj") ? "<a href=\"".URLHelper::getLink('?cancel_edit_assign=1&quick_view=openobject_assign&quick_view_mode='.$view_mode)."\">" : "<a href=\"".URLHelper::getLink('?cancel_edit_assign=1&quick_view=edit_object_assign&quick_view_mode='.$view_mode)."\">", "</a>"));
             }
 
         }
@@ -364,13 +364,13 @@ switch ($view) {
     break;
 
     case "openobject_schedule":
-        if ($resources_data["actual_object"])
+        if ($_SESSION['resources_data']["actual_object"])
             $page_intro=sprintf(_("Hier können Sie sich die Belegungszeiten der Ressource %s ausgeben lassen"), "<b>".$currentObject->getName()."</b> (".$currentObject->getCategoryName().")");
         PageLayout::setTitle($SessSemName["header_line"]." - "._("Ressourcenbelegung"));
         Navigation::activateItem('/course/resources/view_schedule');
     break;
     case "openobject_assign":
-        if ($resources_data["actual_object"])
+        if ($_SESSION['resources_data']["actual_object"])
             $page_intro=sprintf(_("Anzeigen der Belegung der Ressource %s. Sie können die Belegung auch bearbeiten, falls Sie entsprechende Rechte besitzen, oder eine neue Belegung erstellen."), "<b>".$currentObject->getName()."</b> (".$currentObject->getCategoryName().")");
         PageLayout::setTitle($SessSemName["header_line"]." - ".("Belegung anzeigen/bearbeiten"));
         Navigation::activateItem('/course/resources/edit_assign');
@@ -382,18 +382,18 @@ switch ($view) {
 
         $infobox[0]["kategorie"] = _("Aktionen:");
         $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/print.png",
-                                "text"  => "<a href=\"$PHP_SELF?view=openobject_group_schedule&print_view=1\" target=\"_blank\">"
+                                "text"  => "<a href=\"".URLHelper::getLink('?view=openobject_group_schedule&print_view=1')."\" target=\"_blank\">"
                                             . _("Druckansicht")
                                             . "</a>");
     break;
     case "view_requests_schedule":
         $page_intro=_("Hier können Sie sich eine Übersicht über alle Anfragen und vorhandenenen Belegungen eines angeforderten Raums anzeigen lassen.");
-        PageLayout::setTitle(_("Anfragenübersicht eines Raums:") . ' ' . ResourceObject::Factory($resources_data["resolve_requests_one_res"])->getName());
+        PageLayout::setTitle(_("Anfragenübersicht eines Raums:") . ' ' . ResourceObject::Factory($_SESSION['resources_data']["resolve_requests_one_res"])->getName());
         Navigation::activateItem('/resources/room_requests/schedule');
 
         $infobox[0]["kategorie"] = _("Aktionen:");
         $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
-                                    "text"  =>  sprintf("<a href=\"javascript:void(null)\" onclick=\"window.open('resources.php?actual_object={$resources_data['resolve_requests_one_res']}&amp;quick_view=view_sem_schedule&amp;quick_view_mode=no_nav','','scrollbars=yes,left=10,top=10,width=1000,height=680,resizable=yes');\">%s</a>", _("Semesterplan")));
+                                    "text"  =>  sprintf("<a href=\"javascript:void(null)\" onclick=\"window.open('resources.php?actual_object={$_SESSION['resources_data']['resolve_requests_one_res']}&amp;quick_view=view_sem_schedule&amp;quick_view_mode=no_nav','','scrollbars=yes,left=10,top=10,width=1000,height=680,resizable=yes');\">%s</a>", _("Semesterplan")));
 
 
 

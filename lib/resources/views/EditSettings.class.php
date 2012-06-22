@@ -110,13 +110,13 @@ class EditSettings {
 
 
     function showPermsForms() {
-        global $PHP_SELF, $search_string_search_root_user, $search_root_user, $cssSw;
+        global $search_string_search_root_user, $search_root_user, $cssSw;
 
         $resObject = ResourceObject::Factory();
 
         ?>
         <table border=0 celpadding=2 cellspacing=0 width="99%" align="center">
-            <form method="POST" action="<?echo $PHP_SELF ?>?add_root_user=TRUE">
+            <form method="POST" action="<?=URLHelper::getLink('?add_root_user=TRUE') ?>">
             <?= CSRFProtection::tokenTag() ?>
             <tr>
                 <td class="<? echo $cssSw->getHeaderClass() ?>" width="4%">
@@ -176,7 +176,7 @@ class EditSettings {
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="10%" valign="middle" align="center">
                     <font size=-1>
-                        <a href="<? echo $PHP_SELF ?>?delete_root_user_id=<? echo $this->db->f("user_id") ?>">
+                        <a href="<?=URLHelper::getLink('?delete_root_user_id='.$this->db->f("user_id")) ?>">
                             <?=Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _('Berechtigungen löschen'))) ?>
                         </a>
                     </font>
@@ -193,7 +193,7 @@ class EditSettings {
     }
 
     function showTypesForms() {
-        global $PHP_SELF, $RELATIVE_PATH_RESOURCES, $created_category_id, $cssSw;
+        global $RELATIVE_PATH_RESOURCES, $created_category_id, $cssSw;
 
         //the avaiable object-icons for every category
         $availableIcons = array (1=>"cont_res1.gif",2=> "cont_res2.gif",3=> "cont_res3.gif", 4=>"cont_res4.gif",5=> "cont_res5.gif");
@@ -214,7 +214,7 @@ class EditSettings {
                     <font size=-1><b><?=_("X")?></b></font>
                 </td>
             </tr>
-            <form method="POST" action="<?echo $PHP_SELF ?>#a">
+            <form method="POST" action="<?echo URLHelper::getLink() ?>#a">
             <?= CSRFProtection::tokenTag() ?>
             <tr>
                 <td class="<? echo $cssSw->getClass() ?>" width="4%">&nbsp;
@@ -233,7 +233,7 @@ class EditSettings {
                 </td>
             </tr>
             </form>
-            <form method="POST" action="<?echo $PHP_SELF ?>?change_categories=TRUE">
+            <form method="POST" action="<?=URLHelper::getLink('?change_categories=TRUE') ?>">
             <?= CSRFProtection::tokenTag() ?>
             <?
             $this->selectTypes();
@@ -296,7 +296,7 @@ class EditSettings {
                                 <?
                                 if (!$this->db2->f("system")) {
                                     ?>
-                                    <a href="<? echo $PHP_SELF ?>?delete_type_property_id=<? echo $this->db2->f("property_id") ?>&delete_type_category_id=<? echo $this->db2->f("category_id") ?>">
+                                    <a href="<?=URLHelper::getLink('?delete_type_property_id='.$this->db2->f("property_id").'&delete_type_category_id='.$this->db2->f("category_id")) ?>">
                                             <?=Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _('Eigenschaft löschen'))) ?>
                                     </a>
                                     <?
@@ -391,7 +391,7 @@ class EditSettings {
     }
 
     function showPropertiesForms() {
-        global $PHP_SELF, $cssSw;
+        global $cssSw;
 
         ?>
         <table border=0 celpadding=2 cellspacing=0 width="99%" align="center">
@@ -409,7 +409,7 @@ class EditSettings {
                     <font size=-1><b><?=_("X")?></b></font>
                 </td>
             </tr>
-            <form method="POST" action="<?echo $PHP_SELF ?>?add_type_category_id=<? echo $this->db2->f("category_id")?>">
+            <form method="POST" action="<?=URLHelper::getLink('?add_type_category_id='.$this->db2->f("category_id"))?>">
             <?= CSRFProtection::tokenTag() ?>
             <tr>
                 <td class="<? echo $cssSw->getClass() ?>" width="4%">&nbsp;
@@ -429,7 +429,7 @@ class EditSettings {
                 </td>
             </tr>
             </form>
-            <form method="POST" action="<?echo $PHP_SELF ?>?change_properties=TRUE">
+            <form method="POST" action="<?=URLHelper::getLink('?change_properties=TRUE')?>">
             <?= CSRFProtection::tokenTag() ?>
             <?
             $this->selectProperties($dummy, TRUE);
@@ -517,11 +517,11 @@ class EditSettings {
     }
 
     function showSettingsForms() {
-        global $PHP_SELF, $cssSw, $resources_data;
+        global $cssSw;
 
         ?>
         <table border=0 celpadding=2 cellspacing=0 width="99%" align="center">
-        <form method="POST" action="<?echo $PHP_SELF ?>?change_global_settings=TRUE">
+        <form method="POST" action="<?=URLHelper::getLink('?change_global_settings=TRUE')?>">
             <?= CSRFProtection::tokenTag() ?>
             <tr>
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
@@ -572,7 +572,7 @@ class EditSettings {
                         ?>
                         <tr>
                         <?
-                            if ($resources_data["lock_edits"][$this->db->f("lock_id")]) {
+                            if ($_SESSION['resources_data']["lock_edits"][$this->db->f("lock_id")]) {
                                 //edit lock start time
                                 print"<td width=\"40%%\"><font size=\"-1\">";
                                 printf ("<input type=\"TEXT\" style=\"font-size:8pt;\" name=\"lock_begin_day[]\" size=\"2\" maxlength=\"2\" value=\"%s\">.", ($this->db->f("lock_begin")) ? date("d", $this->db->f("lock_begin")) : _("tt"));
@@ -594,13 +594,13 @@ class EditSettings {
                                 print "<td width=\"20%%\" align=\"right\" valign=\"top\"><font size=\"-1\">";
                                 print "<br><input type=\"HIDDEN\" name=\"lock_id[]\" value=\"".$this->db->f("lock_id")."\">";
                                 print "<input type=\"IMAGE\" name=\"lock_sent\" src=\"".Assets::image_path('icons/16/blue/accept.png')."\" border=\"0\" ".tooltip(_("Diesen Eintrag speichern")).">";
-                                print "&nbsp;&nbsp;<a href=\"$PHP_SELF?kill_lock=".$this->db->f("lock_id")."\">" .  Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _("Diesen Eintrag löschen"))). "</a>";
+                                print "&nbsp;&nbsp;<a href=\"".URLHelper::getLink('?kill_lock='.$this->db->f("lock_id"))."\">" .  Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _("Diesen Eintrag löschen"))). "</a>";
                                 print "</td></tr>";
                             } else {
                                 printf ("<td width=\"40%%\"><font size=\"-1\">%s</font></td>", date("d.m.Y H:i", $this->db->f("lock_begin")));
                                 printf ("<td width=\"40%%\"><font size=\"-1\">%s</font></td>", date("d.m.Y H:i", $this->db->f("lock_end")));
-                                print "<td width=\"10%%\" align=\"right\" valign=\"top\"><a href=\"$PHP_SELF?edit_lock=".$this->db->f("lock_id")."\"><img src=\"".Assets::image_path('icons/16/blue/edit.png')."\" ".tooltip(_("Diesen Eintrag bearbeiten"))."></a> ";
-                                print "<a href=\"$PHP_SELF?kill_lock=".$this->db->f("lock_id")."\"" .  Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _("Diesen Eintrag löschen"))) . "></a></td>";
+                                print "<td width=\"10%%\" align=\"right\" valign=\"top\"><a href=\"".URLHelper::getLink('?edit_lock='.$this->db->f("lock_id"))."\"><img src=\"".Assets::image_path('icons/16/blue/edit.png')."\" ".tooltip(_("Diesen Eintrag bearbeiten"))."></a> ";
+                                print "<a href=\"".URLHelper::getLink('?kill_lock='.$this->db->f("lock_id"))."\"" .  Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _("Diesen Eintrag löschen"))) . "></a></td>";
                             }
                         }
                         print "</tr>";
@@ -608,7 +608,7 @@ class EditSettings {
                     ?>
                         <tr>
                             <td colspan="3">
-                                <a href="<?=$PHP_SELF?>?create_lock=edit"><?= Assets::img('icons/16/blue/plus.png')?></a>
+                                <a href="<?= URLHelper::getLink('?create_lock=edit')?>"><?= Assets::img('icons/16/blue/plus.png')?></a>
                             </td>
                         </tr>
                     </table>
@@ -654,7 +654,7 @@ class EditSettings {
                         ?>
                         <tr>
                         <?
-                            if ($resources_data["lock_edits"][$this->db->f("lock_id")]) {
+                            if ($_SESSION['resources_data']["lock_edits"][$this->db->f("lock_id")]) {
                                 //edit lock start time
                                 print"<td width=\"40%%\"><font size=\"-1\">";
                                 printf ("<input type=\"TEXT\" style=\"font-size:8pt;\" name=\"lock_begin_day[]\" size=\"2\" maxlength=\"2\" value=\"%s\">.", ($this->db->f("lock_begin")) ? date("d", $this->db->f("lock_begin")) : _("tt"));
@@ -676,13 +676,13 @@ class EditSettings {
                                 print "<td width=\"20%%\" align=\"right\" valign=\"top\"><font size=\"-1\">";
                                 print "<br><input type=\"HIDDEN\" name=\"lock_id[]\" value=\"".$this->db->f("lock_id")."\">";
                                 print "<input type=\"IMAGE\" name=\"lock_sent\" src=\"".Assets::image_path('icons/16/blue/accept.png')."\" border=\"0\" ".tooltip(_("Diesen Eintrag speichern")).">";
-                                print "&nbsp;&nbsp;<a href=\"$PHP_SELF?kill_lock=".$this->db->f("lock_id")."\">" .  Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _("Diesen Eintrag löschen"))). "</a>";
+                                print "&nbsp;&nbsp;<a href=\"".URLHelper::getLink('?kill_lock='.$this->db->f("lock_id"))."\">" .  Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _("Diesen Eintrag löschen"))). "</a>";
                                 print "</td></tr>";
                             } else {
                                 printf ("<td width=\"40%%\"><font size=\"-1\">%s</font></td>", date("d.m.Y H:i", $this->db->f("lock_begin")));
                                 printf ("<td width=\"40%%\"><font size=\"-1\">%s</font></td>", date("d.m.Y H:i", $this->db->f("lock_end")));
-                                print "<td width=\"10%%\" align=\"right\" valign=\"top\"><a href=\"$PHP_SELF?edit_lock=".$this->db->f("lock_id")."\"><img src=\"".Assets::image_path('icons/16/blue/edit.png')."\" ".tooltip(_("Diesen Eintrag bearbeiten"))."></a> ";
-                                print "<a href=\"$PHP_SELF?kill_lock=".$this->db->f("lock_id")."\">" .  Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _("Diesen Eintrag löschen"))). "</a></td>";
+                                print "<td width=\"10%%\" align=\"right\" valign=\"top\"><a href=\"".URLHelper::getLink('?edit_lock='.$this->db->f("lock_id"))."\"><img src=\"".Assets::image_path('icons/16/blue/edit.png')."\" ".tooltip(_("Diesen Eintrag bearbeiten"))."></a> ";
+                                print "<a href=\"".URLHelper::getLink('?kill_lock=').$this->db->f("lock_id")."\">" .  Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _("Diesen Eintrag löschen"))). "</a></td>";
                             }
                         }
                         print "</tr>";
@@ -690,7 +690,7 @@ class EditSettings {
                     ?>
                         <tr>
                             <td colspan="3">
-                                <a href="<?=$PHP_SELF?>?create_lock=assign"><?= Assets::img('icons/16/blue/plus.png')?></a>
+                                <a href="<?=URLHelper::getLink('?create_lock=assign')?>"><?= Assets::img('icons/16/blue/plus.png')?></a>
                             </td>
                         </tr>
                     </table>
@@ -769,11 +769,9 @@ class EditSettings {
         <?
     }
     function showPesonalSettingsForms() {
-        global $PHP_SELF;
-
         ?>
         <table border=0 celpadding=2 cellspacing=0 width="99%" align="center">
-        <form method="POST" action="<?echo $PHP_SELF ?>">
+            <form method="POST" action="<?echo URLHelper::getLink()?>">
         <?= CSRFProtection::tokenTag() ?>
         </table>
         <br><br>

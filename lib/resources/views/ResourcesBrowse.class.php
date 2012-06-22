@@ -110,15 +110,15 @@ class ResourcesBrowse {
                     </select>
                 <input name="search_exp" type="text" style="vertical-align: middle;" size=35 maxlength=255 value="<? echo htmlReady(stripslashes($this->searchArray["search_exp"])); ?>">
                 <?= Button::create(_('Suche starten'), 'start_search') ?>
-                <?= LinkButton::create(_('Neue Suche'), URLHelper::getURL('?view=search&quick_view_mode=' . $GLOBALS['view_mode'] . '&reset=TRUE')) ?>
+                <?= LinkButton::create(_('Neue Suche'), URLHelper::getURL('?view=search&quick_view_mode=' . Request::option('view_mode') . '&reset=TRUE')) ?>
             </td>
         </tr>
         <?
     }
 
     //private
-    function getHistory($id, $view = FALSE) {
-        global $PHP_SELF, $UNI_URL, $UNI_NAME_CLEAN, $view, $view_mode;
+    function getHistory($id) {
+        global $UNI_URL, $UNI_NAME_CLEAN;
         $top=FALSE;
         $k=0;
         while ((!$top) && ($id)) {
@@ -134,7 +134,6 @@ class ResourcesBrowse {
                 $top = TRUE;
             }
         }
-
         if (is_array($result_arr))
             switch (ResourceObject::getOwnerType($result_arr[count($result_arr)-1]["owner_id"])) {
                 case "global":
@@ -154,18 +153,16 @@ class ResourcesBrowse {
                 break;
             }
 
-            if ($view == 'search') {
-                $result  = '<a href="'. URLHelper::getLink('?view=search&quick_view_mode='. $view_mode .'&reset=TRUE') .'">';
+            if (Request::option('view') == 'search') {
+                $result  = '<a href="'. URLHelper::getLink('?view=search&quick_view_mode='. Request::option('view_mode') .'&reset=TRUE') .'">';
                 $result .=  $top_level_name;
                 $result .= '</a>';
             }
-
+                
             for ($i = sizeof($result_arr)-1; $i>=0; $i--) {
-                if ($view) {
-                    $result .= '> <a href="';
-                    $result .= URLHelper::getLink(sprintf('?quick_view=%s&quick_view_mode=%s&%s=%s',
-                        (!$view) ? "search" : $view, $view_mode,
-                        ($view=='search') ? "open_level" : "actual_object", $result_arr[$i]["id"]));
+                if (Request::option('view')) {
+                    $result .= '> <a href="'.URLHelper::getLink(sprintf('?quick_view='.Request::option('view').'&quick_view_mode='.Request::option('view_mode').'&%s='.$result_arr[$i]["id"],(Request::option('view')=='search') ? "open_level" : "actual_object" ) );
+                        
                     $result .= '">'. htmlReady($result_arr[$i]["name"]) .'</a>';
                 } else {
                     $result.= sprintf (" > %s", htmlReady($result_arr[$i]["name"]));
@@ -280,8 +277,6 @@ class ResourcesBrowse {
 
     //private
     function showProperties() {
-        global $PHP_SELF;
-
         ?>
         <tr>
             <td <? $this->cssSw->switchClass(); echo $this->cssSw->getFullClass() ?> >
@@ -363,7 +358,6 @@ class ResourcesBrowse {
 
     //private
     function browseLevels() {
-        global $PHP_SELF, $view_mode;
 
         if ($this->open_object) {
             $query = sprintf ("SELECT a.resource_id, a.name, a.description FROM resources_objects a LEFT JOIN resources_objects b ON (b.parent_id = a.resource_id)  WHERE a.parent_id = '%s' AND (a.category_id IS NULL OR b.resource_id IS NOT NULL) GROUP BY resource_id ORDER BY name", $this->open_object);
@@ -409,7 +403,7 @@ class ResourcesBrowse {
             <td <? echo $this->cssSw->getFullClass() ?>width="15%" align="right" nowrap valign="top">
                 <?
                 if ($way_back>=0) : ?>
-                    <a href="<?= URLHelper::getLink('?view=search&quick_view_mode='. $view_mode
+                <a href="<?= URLHelper::getLink('?view=search&quick_view_mode='. Request::option('view_mode')
                             . '&' . (!$way_back) ? "reset=TRUE" : "open_level=$way_back") ?>">
                     <?= Assets::img('icons/16/blue/arr_2left.png', array(
                         'class' => 'text-top',
@@ -437,7 +431,7 @@ class ResourcesBrowse {
                             print "</td><td width=\"40%\" valign=\"top\">";
                             $switched = TRUE;
                         } ?>
-                        <a href="<?= URLHelper::getLink('?view=search&quick_view_mode='. $view_mode .'&open_level=' . $this->db->f("resource_id")) ?>">
+                        <a href="<?= URLHelper::getLink('?view=search&quick_view_mode='. Request::option('view_mode') .'&open_level=' . $this->db->f("resource_id")) ?>">
                             <b><?= htmlReady($this->db->f("name")) ?></b>
                         </a><br>
                         <? $i++;
@@ -485,9 +479,8 @@ class ResourcesBrowse {
 
     //private
     function showSearch() {
-        global $view_mode, $resources_data;
         ?>
-        <form method="post" action="<?= URLHelper::getLink('?search_send=yes&quick_view=search&quick_view_mode='. $view_mode) ?>">
+        <form method="post" action="<?= URLHelper::getLink('?search_send=yes&quick_view=search&quick_view_mode='. Request::option('view_mode')) ?>">
             <?= CSRFProtection::tokenTag() ?>
             <table border=0 celpadding=2 cellspacing=0 width="99%" align="center">
                 <?
@@ -506,7 +499,8 @@ class ResourcesBrowse {
                         $this->showTimeRange();
                     if ($this->mode == "properties")
                         $this->showProperties();
-                    $this->showSearchList(($resources_data["check_assigns"]) ? TRUE : FALSE);
+                    $this->showSearchList(($_SESSION['resources_data']["check_assigns"]) ? TRUE : FALSE);
+
                 }
                 ?>
             </table>

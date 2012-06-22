@@ -59,7 +59,7 @@ class ShowSchedulesRequests extends ShowSchedules{
     }
 
     function navigator () {
-        global $cssSw, $view, $PHP_SELF;
+        global $cssSw, $view;
 
         //match start_time & end_time for a whole week
         $dow = date ("w", $this->start_time);
@@ -73,7 +73,7 @@ class ShowSchedulesRequests extends ShowSchedules{
 
         ?>
         <table border=0 celpadding=2 cellspacing=0 width="99%" align="center">
-        <form method="POST" action="<?echo $PHP_SELF ?>?navigate=TRUE&quick_view=<?=$view?>">
+            <form method="POST" action="<?echo URLHelper::getLink('?navigate=TRUE&quick_view='.$view) ?>">
             <?= CSRFProtection::tokenTag() ?>
             <tr>
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
@@ -103,7 +103,7 @@ class ShowSchedulesRequests extends ShowSchedules{
 
 
     function showScheduleGraphical() {
-        global $RELATIVE_PATH_RESOURCES, $PHP_SELF, $cssSw, $view_mode, $resources_data, $ActualObjectPerms;
+        global $RELATIVE_PATH_RESOURCES, $cssSw, $view_mode, $ActualObjectPerms;
 
         $categories["na"] = 4;
         $categories["sd"] = 4;
@@ -126,10 +126,10 @@ class ShowSchedulesRequests extends ShowSchedules{
         $start_time = mktime (0, 0, 0, date("n",$this->start_time), date("j", $this->start_time)+$offset+($this->week_offset*7), date("Y", $this->start_time));
         $end_time = mktime (23, 59, 59, date("n",$start_time), date("j", $start_time)+6, date("Y", $start_time));
 
-        if ($resources_data["schedule_time_range"] == -1) {
+        if ($_SESSION['resources_data']["schedule_time_range"] == -1) {
             $start_hour = 0;
             $end_hour = 12;
-        } elseif ($resources_data["schedule_time_range"] == 1) {
+        } elseif ($_SESSION['resources_data']["schedule_time_range"] == 1) {
             $start_hour = 12;
             $end_hour = 23;
         } else {
@@ -158,19 +158,19 @@ class ShowSchedulesRequests extends ShowSchedules{
                 $add_info = '(' . join(', ' , $sem_doz_names) . ')';
             }
             $schedule->addEvent($event->getName(get_config('RESOURCES_SCHEDULE_EXPLAIN_USER_NAME')), $event->getBegin(), $event->getEnd(),
-                        "$PHP_SELF?show_object={$this->resource_id}&cancel_edit_assign=1&quick_view=edit_object_assign&edit_assign_object=".$event->getAssignId(), $add_info, $categories[$repeat_mode]);
+                        URLHelper::getLink('?show_object='.$this->resource_id.'&cancel_edit_assign=1&quick_view=edit_object_assign&edit_assign_object='.$event->getAssignId()), $add_info, $categories[$repeat_mode]);
         }
-        foreach($resources_data["requests_working_on"] as $req){
-            if($resources_data['skip_closed_requests'] && $req['closed']) continue;
+        foreach($_SESSION['resources_data']["requests_working_on"] as $req){
+            if($_SESSION['resources_data']['skip_closed_requests'] && $req['closed']) continue;
             $reqObj = RoomRequest::find($req["request_id"]);
             $assignObjects = array();
             if ($reqObj) {
             $semResAssign = new VeranstaltungResourcesAssign($reqObj->getSeminarId());
-                if ($reqObj->getType() == 'date' && $resources_data["show_repeat_mode_requests"] != 'repeated') {
+                if ($reqObj->getType() == 'date' && $_SESSION['resources_data']["show_repeat_mode_requests"] != 'repeated') {
                     $assignObjects[] = $semResAssign->getDateAssignObject($reqObj->getTerminId());
-                } else if ($reqObj->getType() == 'cycle' && $resources_data["show_repeat_mode_requests"] != 'single') {
+                } else if ($reqObj->getType() == 'cycle' && $_SESSION['resources_data']["show_repeat_mode_requests"] != 'single') {
                     $assignObjects = $semResAssign->getMetaDateAssignObjects($reqObj->getMetadateId());
-                } else if ($reqObj->getType() == 'course' && $resources_data["show_repeat_mode_requests"] != 'single') {
+                } else if ($reqObj->getType() == 'course' && $_SESSION['resources_data']["show_repeat_mode_requests"] != 'single') {
                     $assignObjects = $semResAssign->getDateAssignObjects(TRUE);
             }
             }
@@ -223,7 +223,7 @@ class ShowSchedulesRequests extends ShowSchedules{
                     $overlaps_info = ShowToolsRequests::showOverlapStatus(count($overlaps) ? $overlaps : null, count($current_events), count($overlaps));
                     $add_info .= '</a>&nbsp;' .$overlaps_info['html'] . '<a>';
                     $schedule->addEvent($name, $event->getBegin(), $event->getEnd(),
-                        "$PHP_SELF?view=edit_request&edit=".$req["request_id"], $add_info, $color);
+                        URLHelper::getLink('?view=edit_request&edit='.$req["request_id"]), $add_info, $color);
                     $requested_events++;
                 }
 
@@ -232,7 +232,7 @@ class ShowSchedulesRequests extends ShowSchedules{
         }
         $semester = SemesterData::getInstance()->getSemesterDataByDate($start_time);
         ?>
-        <form method="POST" action="<?echo $PHP_SELF ?>?quick_view=<?=$view?>">
+            <form method="POST" action="<?echo URLHelper::getLink()?>?quick_view=<?=$view?>">
         <?= CSRFProtection::tokenTag() ?>
         <table border=0 celpadding=2 cellspacing=0 width="99%" align="center">
             <tr>
@@ -240,7 +240,7 @@ class ShowSchedulesRequests extends ShowSchedules{
                     <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" height="35" border="0">
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>"  width="10%" align="left">&nbsp;
-                    <a href="<? echo $PHP_SELF ?>?quick_view=<?=$this->used_view?>&quick_view_mode=<?=$view_mode?>&previous_week=TRUE"><img class="middle" src="<?= Assets::image_path('icons/16/blue/arr_2left.png') ?>" <? echo tooltip (_("Vorherige Woche anzeigen")) ?>border="0"></a>
+                    <a href="<? echo URLHelper::getLink('?quick_view='.$this->used_view.'&quick_view_mode='.$view_mode.'&previous_week=TRUE')?>"><img class="middle" src="<?= Assets::image_path('icons/16/blue/arr_2left.png') ?>" <? echo tooltip (_("Vorherige Woche anzeigen")) ?>border="0"></a>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="76%" align="center" style="font-weight:bold">
                     <? echo sprintf(_("Anzeige der Woche vom %s bis %s (KW %s)"), strftime("%x", $start_time), strftime("%x",$end_time), strftime("%V", $start_time));?>
@@ -250,14 +250,14 @@ class ShowSchedulesRequests extends ShowSchedules{
                     ?>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="10%" align="center">&nbsp;
-                    <a href="<? echo $PHP_SELF ?>?quick_view=<?=$this->used_view?>&quick_view_mode=<?=$view_mode?>&next_week=TRUE"><img class="middle" src="<?= Assets::image_path('icons/16/blue/arr_2right.png') ?>" <? echo tooltip (_("Nächste Woche anzeigen")) ?>border="0"></a>
+                    <a href="<? echo URLHelper::getLink('?quick_view='.$this->used_view.'&quick_view_mode='.$view_mode.'&next_week=TRUE')?>"><img class="middle" src="<?= Assets::image_path('icons/16/blue/arr_2right.png') ?>" <? echo tooltip (_("Nächste Woche anzeigen")) ?>border="0"></a>
                 </td>
             </tr>
             <tr>
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%" align="center" valign="bottom">&nbsp;
                     <?
-                    if ((!$resources_data["schedule_time_range"]) || ($resources_data["schedule_time_range"] == 1))
-                        printf ("<a href=\"%s?quick_view=%s&quick_view_mode=%s&time_range=%s\"><img src=\"" . Assets::image_path('icons/16/blue/arr_2up.png') . "\" %s></a>", $PHP_SELF, $this->used_view, $view_mode, ($resources_data["schedule_time_range"]) ? "FALSE" : -1, tooltip (_("Frühere Belegungen anzeigen")));
+                    if ((!$_SESSION['resources_data']["schedule_time_range"]) || ($_SESSION['resources_data']["schedule_time_range"] == 1))
+                        printf ("<a href=\"".URLHelper::getLink('?quick_view=%s&quick_view_mode=%s&time_range=%s')."\"><img src=\"" . Assets::image_path('icons/16/blue/arr_2up.png') . "\" %s></a>", $this->used_view, $view_mode, ($_SESSION['resources_data']["schedule_time_range"]) ? "FALSE" : -1, tooltip (_("Frühere Belegungen anzeigen")));
                     ?>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="76%" colspan="2">
@@ -269,9 +269,9 @@ class ShowSchedulesRequests extends ShowSchedules{
                 <td class="<? echo $cssSw->getClass() ?>" width="20%" nowrap>
                     <?
                     print "<select style=\"font-size:10px;\" name=\"show_repeat_mode_requests\">";
-                    printf ("<option style=\"font-size:10px;\" %s value=\"all\">"._("alle Anfragen")."</option>", ($resources_data["show_repeat_mode_requests"] == "all") ? "selected" : "");
-                    printf ("<option %s style=\"font-size:10px;\" value=\"single\">"._("nur Anfragen zu Einzelterminen")."</option>", ($resources_data["show_repeat_mode_requests"] == "single") ? "selected" : "");
-                    printf ("<option %s style=\"font-size:10px;\" value=\"repeated\">"._("nur Anfragen zu Wiederholungsterminen")."</option>", ($resources_data["show_repeat_mode_requests"] == "repeated") ? "selected" : "");
+                    printf ("<option style=\"font-size:10px;\" %s value=\"all\">"._("alle Anfragen")."</option>", ($_SESSION['resources_data']["show_repeat_mode_requests"] == "all") ? "selected" : "");
+                    printf ("<option %s style=\"font-size:10px;\" value=\"single\">"._("nur Anfragen zu Einzelterminen")."</option>", ($_SESSION['resources_data']["show_repeat_mode_requests"] == "single") ? "selected" : "");
+                    printf ("<option %s style=\"font-size:10px;\" value=\"repeated\">"._("nur Anfragen zu Wiederholungsterminen")."</option>", ($_SESSION['resources_data']["show_repeat_mode_requests"] == "repeated") ? "selected" : "");
                     print "</select>";
                     print "&nbsp;<input type=\"IMAGE\" name=\"send_schedule_repeat_mode\" src=\"" . Assets::image_path('icons/16/green/accept.png') . "\" ".tooltip(_("Ansicht umschalten")).">";
                     ?>
@@ -289,8 +289,8 @@ class ShowSchedulesRequests extends ShowSchedules{
             <tr>
                 <td class="<? echo $cssSw->getClass() ?>" width="4%" align="center" valign="bottom">&nbsp;
                     <?
-                    if ((!$resources_data["schedule_time_range"]) || ($resources_data["schedule_time_range"] == -1))
-                        printf ("<a href=\"%s?quick_view=%s&quick_view_mode=%s&time_range=%s\"><img src=\"" . Assets::image_path('icons/16/blue/arr_2down.png') . "\" %sborder=\"0\"></a>", $PHP_SELF, $this->used_view, $view_mode, ($resources_data["schedule_time_range"]) ? "FALSE" : 1, tooltip (_("Spätere Belegungen anzeigen")));
+                    if ((!$_SESSION['resources_data']["schedule_time_range"]) || ($_SESSION['resources_data']["schedule_time_range"] == -1))
+                        printf ("<a href=\"".URLHelper::getLink('?quick_view=%s&quick_view_mode=%s&time_range=%s')."\"><img src=\"" . Assets::image_path('icons/16/blue/arr_2down.png') . "\" %sborder=\"0\"></a>", $this->used_view, $view_mode, ($_SESSION['resources_data']["schedule_time_range"]) ? "FALSE" : 1, tooltip (_("Spätere Belegungen anzeigen")));
                     ?>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="20%" nowrap colspan="3">

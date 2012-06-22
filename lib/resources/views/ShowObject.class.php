@@ -70,11 +70,9 @@ class ShowObject {
     }
     
     function showProperties() {
-        global $PHP_SELF, $view_mode;
-
         ?>
         <table border=0 celpadding=2 cellspacing=0 width="99%" align="center">
-        <form method="POST" action="<?echo $PHP_SELF ?>?change_object_properties=<? echo $this->resObject->getId() ?>">
+        <form method="POST" action="<?echo URLHelper::getLink('?change_object_properties='.$this->resObject->getId())?>">
             <?= CSRFProtection::tokenTag() ?>
             <input type="hidden" name="view" value="edit_object_properties">
             <tr>
@@ -86,7 +84,7 @@ class ShowObject {
                 <td class="<? echo $this->cssSw->getClass() ?>" width="60%" valign="top"><font size=-1><b><?=_("verantwortlich:")?></b></font><br>
                 <font size=-1>
                 <? 
-                if ($view_mode == "no_nav")
+                if (Request::option('view_mode') == "no_nav")
                     print htmlReady($this->resObject->getOwnerName(TRUE));
                 else
                     print "<a href=\"".$this->resObject->getOwnerLink()."\">".htmlReady($this->resObject->getOwnerName(TRUE))."</a>";
@@ -108,7 +106,7 @@ class ShowObject {
                 <td class="<? $this->cssSw->switchClass(); echo $this->cssSw->getClass() ?>" width="4%">&nbsp; 
                 </td>
                 <td class="<? echo $this->cssSw->getClass() ?>" valign="top" <?=($childs) ? "" : "colspan=\"2\"" ?>><font size=-1><b><?=_("Einordnung:")?></b></font><br>
-                <font size=-1><? echo ResourcesBrowse::getHistory($this->resObject->getId(), TRUE) ?></font>
+                <font size=-1><? echo ResourcesBrowse::getHistory($this->resObject->getId()) ?></font>
                 </td>
                 <?
                 if ($childs) {

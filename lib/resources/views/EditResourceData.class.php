@@ -114,25 +114,24 @@ class EditResourceData {
     }
 
     function showScheduleForms($assign_id='') {
-        global $PHP_SELF, $perm, $user, $resources_data, $new_assign_object, $search_user, $search_string_search_user,
-            $CANONICAl_RELATIVE_PATH_STUDIP, $RELATIVE_PATH_RESOURCES, $cssSw, $view_mode,$quick_view, $add_ts,
-            $search_exp_room, $search_properties_x;
+        global $perm, $user,
+            $CANONICAl_RELATIVE_PATH_STUDIP, $RELATIVE_PATH_RESOURCES, $cssSw;
 
         $resReq = new RoomRequest();
 
         $killButton = TRUE;
-        if ($new_assign_object)
-            $resAssign = unserialize($new_assign_object);
+        if ($_SESSION['new_assign_object'])
+            $resAssign = unserialize($_SESSION['new_assign_object']);
         else
             $resAssign = AssignObject::Factory($assign_id);
 
         //workaround anoack: AssignObject::resource_id  must match the actual resource object
-        if($resAssign->getResourceId() != $resources_data['actual_object']) {
+        if($resAssign->getResourceId() != $_SESSION['resources_data']['actual_object']) {
             $resAssign = AssignObject::Factory(false);
         }
         //workaround anoack: new AssignObjects need a resource_id !
         if ($resAssign->isNew()){
-            $resAssign->setResourceId($resources_data['actual_object']);
+            $resAssign->setResourceId($_SESSION['resources_data']['actual_object']);
         }
 
         if (($add_ts) && ($resAssign->isNew())) {
@@ -157,7 +156,7 @@ class EditResourceData {
         $ResourceObjectPerms = ResourceObjectPerms::Factory($resAssign->getResourceId());
 
         //in some case, we load the perms from the assign object, if it has an owner
-        if (($ResourceObjectPerms->getUserPerm() != "admin") && (!$resAssign->isNew()) && (!$new_assign_object)) {
+        if (($ResourceObjectPerms->getUserPerm() != "admin") && (!$resAssign->isNew()) && (!$_SESSION['new_assign_object'])) {
             //load the assign-object perms of a saved object
             $SavedStateAssignObject = AssignObject::Factory($resAssign->getId());
             if ($SavedStateAssignObject->getAssignUserId()){
@@ -195,6 +194,13 @@ class EditResourceData {
                 $seminarName = Seminar::GetInstance($seminarID)->getName();
             }
         }
+        $search_user = Request::quoted('search_user');
+        $search_string_search_user = Request::quoted('search_string_search_user');
+        $view_mode = Request::option('view_mode');
+        $quick_view = Request::option('quick_view');
+        $add_ts = Request::option('add_ts');
+        $search_exp_room = Request::quoted('search_exp_room');
+        $search_properties = Request::submitted('search_properties');
 
         /* * * * * * * * * * * * * * * *
          * * * * T E M P L A T E * * * *
@@ -210,7 +216,7 @@ class EditResourceData {
 
 
     function showPropertiesForms() {
-        global $PHP_SELF, $cssSw, $user;
+        global $cssSw, $user;
 
         $ObjectPerms = ResourceObjectPerms::Factory($this->resObject->getId());
 
@@ -227,7 +233,7 @@ class EditResourceData {
     }
 
     function showPermsForms() {
-        global $PHP_SELF, $search_owner, $search_perm_user, $search_string_search_perm_user, $search_string_search_owner,
+        global $search_owner, $search_perm_user, $search_string_search_perm_user, $search_string_search_owner,
             $cssSw, $user;
 
         $ObjectPerms = ResourceObjectPerms::Factory($this->resObject->getId());

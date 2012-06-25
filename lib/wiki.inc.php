@@ -342,9 +342,8 @@ function releasePageLocks($keyword, $user_id) {
 **/
 function getWikiLinks($str) {
     global $wiki_keyword_regex, $wiki_link_regex, $wiki_extended_link_regex;
-    $str = wikiReady($str,TRUE,FALSE,"none"); // ohne Kommentare
-    // [nop] und [code] Bereiche ausblenden ...
-    $str = preg_replace("'\<nowikilink\>.+\</nowikilink\>'isU", ' ', $str);
+    $str = preg_replace('/\[nop\].*\[\/nop\]/', '', $str);
+    $str = preg_replace('/\[code\].*\[\/code\]/', '', $str);
     preg_match_all("/$wiki_keyword_regex/", $str, $out_wikiwords, PREG_PATTERN_ORDER);
     preg_match_all("/$wiki_link_regex/", $str, $out_wikilinks, PREG_PATTERN_ORDER);
     preg_match_all("/$wiki_extended_link_regex/", $str, $out_wikiextlinks, PREG_PATTERN_ORDER);

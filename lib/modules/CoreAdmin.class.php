@@ -83,6 +83,22 @@ class CoreAdmin implements StudipModule {
             $item->setImage('icons/16/black/visibility-invisible.png');
             $main->addSubNavigation('change_view', $item);
 
+            if ($GLOBALS['perm']->have_studip_perm('tutor', $course_id) && !$GLOBALS['perm']->have_perm('admin')) {
+                $item = new Navigation(_('Ankündigungen'), 'admin_news.php?view=news_' . $sem_class);
+                $item->setDescription(_('Erstellen Sie Ankündigungen und bearbeiten Sie laufende Ankündigungen.'));
+                $navigation->addSubNavigation('news', $item);
+
+                if (get_config('VOTE_ENABLE')) {
+                    $item = new Navigation(_('Umfragen und Tests'), 'admin_vote.php?view=vote_sem');
+                    $item->setDescription(_('Erstellen und bearbeiten Sie einfache Umfragen und Tests.'));
+                    $navigation->addSubNavigation('vote', $item);
+
+                    $item = new Navigation(_('Evaluationen'), 'admin_evaluation.php?view=eval_sem');
+                    $item->setDescription(_('Richten Sie fragebogenbasierte Umfragen und Lehrevaluationen ein.'));
+                    $navigation->addSubNavigation('evaluation', $item);
+                }
+            }
+
             return array('admin' => $navigation);
         } else {
             return array();

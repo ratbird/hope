@@ -15,9 +15,6 @@ $wiki_keyword_regex = "(^|\s|\A|\>)(([A-Z]|&[AOU]uml;)([a-z0-9]|&[aou]uml;|&szli
 $wiki_link_regex = "\[\[(([\w\.\-\:\(\)_§\/@# ]|&[AOUaou]uml;|&szlig;)+)\]\]";
 $wiki_extended_link_regex = "\[\[(([\w\.\-\:\(\)_§\/@# ]|&[AOUaou]uml;|&szlig;)+)\|([^\]]+)\]\]";
 
-// protect $wiki_directives from register_globals
-$GLOBALS['wiki_directives'] = array();
-
 /**
 * Retrieve a WikiPage version from current seminar's WikiWikiWeb.
 *
@@ -336,39 +333,6 @@ function releasePageLocks($keyword, $user_id) {
     $db->query("DELETE FROM wiki_locks WHERE range_id='$SessSemName[1]' AND keyword='$keyword' AND user_id='$user_id'");
 }
 
-
-/**
-* Register Wiki directive markup
-*
-* @param    string  pattern
-* @param    string  replace
-*
-**/
-function wikiMarkup($pattern, $replace, $needed_perm='autor') {
-    global $wiki_directives;
-    $wiki_directives[]=array($pattern, $replace, $needed_perm);
-}
-
-/**
-* Process registered wiki-directives
-*
-* @param    string  text, all other markup conversions applied
-*
-**/
-function wikiDirectives($str) {
-    global $wiki_directives; // array of pattern-replace-arrays
-    $failure_message = _("Sie haben keine Berechtigung diese Wiki Direktive auszuführen.");
-    if (is_array($wiki_directives)){
-        foreach ($wiki_directives as $direct) {
-            if ($GLOBALS['perm']->have_studip_perm($direct[2], $GLOBALS['SessSemName'][1])){
-                $str = preg_replace($direct[0],$direct[1],$str);
-            } else {
-                $str = preg_replace($direct[0], "sprintf('<i>%s' . \$failure_message . '</i>', '\$0');", $str);
-            }
-        }
-    }
-    return $str;
-}
 
 /**
 * Return list of WikiWord in given page body ($str)

@@ -47,15 +47,6 @@ require_once 'lib/visual.inc.php';
 
 $db = new DB_Seminar();
 
-// -- Load Wiki Plugins -------------------
-// $WIKI_PLUGINS is defined in local.inc
-//
-if (is_array($WIKI_PLUGINS)) {
-    foreach ($WIKI_PLUGINS as $plugin) {
-        require_once('lib/'.$plugin);
-    }
-}
-
 $view = Request::get('view');
 $keyword = Request::quoted('keyword');
 $version = Request::int('version');

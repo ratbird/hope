@@ -39064,7 +39064,7 @@ msgstr "The course of study has been added."
 
 #: ../app/controllers/admin/user.php:356 ../app/controllers/admin/user.php:365
 msgid "Die Einrichtung wurde hinzugefügt."
-msgstr "Institute %s added."
+msgstr "The institute has been added."
 
 #: ../app/controllers/admin/user.php:367
 msgid ""

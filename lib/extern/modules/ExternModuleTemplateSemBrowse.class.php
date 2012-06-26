@@ -1071,7 +1071,7 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
     }
 
 function getResultSearch ($level_id = null) {
-        global $_fullname_sql,$PHP_SELF,$SEM_TYPE,$SEM_CLASS;
+        global $_fullname_sql,$SEM_TYPE,$SEM_CLASS;
         $add_fields = '';
         $add_query = '';
         $sem_tree_query = '';
@@ -1271,7 +1271,7 @@ function getResultSearch ($level_id = null) {
     }
 
     function getResult ($level_id = null) {
-        global $_fullname_sql,$PHP_SELF,$SEM_TYPE,$SEM_CLASS;
+        global $_fullname_sql,$SEM_TYPE,$SEM_CLASS;
         $add_fields = '';
         $add_query = '';
         $sem_tree_query = '';

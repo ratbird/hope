@@ -162,9 +162,9 @@ class ExternRangeLectureTree {
     
     function getSelf ($param = "", $with_start_item = true) {
         if ($param)
-            $url = $GLOBALS['PHP_SELF'] . (($with_start_item) ? "?start_item_id=" . $this->start_item_id . "&" : "?") . $param ;
+            $url = $_SERVER['PHP_SELF'] . (($with_start_item) ? "?start_item_id=" . $this->start_item_id . "&" : "?") . $param ;
         else
-            $url = $GLOBALS['PHP_SELF'] . (($with_start_item) ? "?start_item_id=" . $this->start_item_id : "") ;
+            $url = $_SERVER['PHP_SELF'] . (($with_start_item) ? "?start_item_id=" . $this->start_item_id : "") ;
         return $url;
     }
 }

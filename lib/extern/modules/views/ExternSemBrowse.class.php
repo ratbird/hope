@@ -121,7 +121,7 @@ class ExternSemBrowse extends SemBrowse {
     }
     
     function print_result ($args) {
-        global $_fullname_sql,$PHP_SELF,$SEM_TYPE,$SEM_CLASS;
+        global $_fullname_sql,$SEM_TYPE,$SEM_CLASS;
         
         if (is_array($this->sem_browse_data['search_result']) && count($this->sem_browse_data['search_result'])) {
             

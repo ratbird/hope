@@ -120,7 +120,7 @@ class ExternSemBrowseTable extends SemBrowse {
     }
     
     function print_result () {
-        global $_fullname_sql,$PHP_SELF,$SEM_TYPE,$SEM_CLASS,$sem_type_tmp;
+        global $_fullname_sql,$SEM_TYPE,$SEM_CLASS,$sem_type_tmp;
         
         $sem_link = $this->module->getModuleLink("Lecturedetails",
             $this->module->config->getValue("SemLink", "config"),

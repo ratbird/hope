@@ -58,7 +58,6 @@ require_once('lib/deputies_functions.inc.php');
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
-// b$sess->register('edit_about_data');
 URLHelper::addLinkParam('admin_view', Request::option('admin_view'));
 $view = Request::option('view');
 $cmd = Request::option('cmd');
@@ -397,8 +396,7 @@ if (check_ticket(Request::option('studipticket'))) {
 
     // Needed for QuickSearch to function without JavaScript.
     if (Request::get('deputy_id_parameter')) {
-        $sess->register('deputy_id_parameter');
-        $deputy_id_parameter = Request::get('deputy_id_parameter');
+        $_SESSION['deputy_id_parameter'] = Request::get('deputy_id_parameter');
     }
 
     if (Request::submitted('add_deputy') && Request::get('deputy_id')) {
@@ -476,7 +474,6 @@ if (check_ticket(Request::option('studipticket'))) {
             restoreLanguage();
             $my_about->insert_message($priv_msg, $my_about->auth_user["username"], "____%system%____", FALSE, FALSE, "1", FALSE, _("Systemnachricht:")." "._("Profil verändert"));
         }
-        $sess->register('edit_about_msg');
         $_SESSION['edit_about_msg'] = $my_about->msg;
         header("Location:  ".URLHelper::getURL('',array('username'=>$username,'view'=>$view)));  //Seite neu aufrufen, um Parameter loszuwerden
         page_close();

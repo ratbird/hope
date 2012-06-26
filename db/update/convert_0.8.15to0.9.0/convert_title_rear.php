@@ -34,7 +34,7 @@ $query= " SELECT user_id,username, SUBSTRING(Nachname,LENGTH(SUBSTRING_INDEX(Nac
  IF(RIGHT(SUBSTRING_INDEX(Nachname,' ',1),1)=',',LEFT(SUBSTRING_INDEX(Nachname,' ',1),LENGTH(SUBSTRING_INDEX(Nachname,' ',1))-1),SUBSTRING_INDEX(Nachname,' ',1)) AS new_nachname,Vorname,Nachname FROM auth_user_md5
  WHERE SUBSTRING(Nachname,LENGTH(SUBSTRING_INDEX(Nachname,' ',1))+1) !='' ORDER BY SUBSTRING(Nachname,LENGTH(SUBSTRING_INDEX(Nachname,' ',1))+1)";
 $db->query($query);
-echo "<form action=\"$PHP_SELF\" method=\"post\">"; 
+echo "<form action=\"".URLHelper::getLink()."\" method=\"post\">";
 echo "<table  border=\"0\" cellspacing=\"2\" cellpadding=\"2\"><tr>";
 echo "<th>username</th><th>Vorname</th><th>Nachname</th><th>new_nachname</th><th>titel_rear</th><th><a href=\"#\" onClick=\"invert_selection();\" title=\"Auswahl umkehren\">umwandeln ?</a></th></tr>";
 while ($db->next_record()){

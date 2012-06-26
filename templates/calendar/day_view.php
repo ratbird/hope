@@ -33,11 +33,11 @@ SkipLinks::addIndex(_("Tagesansicht"), 'main_content', 100);
         </td>
         <td valign="top" align="left" class="blank" width="30%">
             <? $imt = Request::int('imt', mktime(12, 0, 0, date('n', $atime) - 1, date('j', $atime), date('Y', $atime))) ?>
-            <?= includeMonth($imt, "$PHP_SELF?cmd=showday&atime=", '', '', $atime) ?>
+            <?= includeMonth($imt, "?cmd=showday&atime=", '', '', $atime) ?>
             <? $imt = mktime(12, 0, 0, date('n', $imt) + 1, date('j', $imt), date('Y', $imt)) ?>
-            <?= includeMonth($imt, "$PHP_SELF?cmd=showday&atime=", 'NONAVARROWS', '', $atime) ?>
+            <?= includeMonth($imt, "?cmd=showday&atime=", 'NONAVARROWS', '', $atime) ?>
             <? $imt = mktime(12, 0, 0, date('n', $imt) + 1, date('j', $imt), date('Y', $imt)) ?>
-            <?= includeMonth($imt, "$PHP_SELF?cmd=showday&atime=", 'NONAVARROWS', '', $atime) ?>
+            <?= includeMonth($imt, "?cmd=showday&atime=", 'NONAVARROWS', '', $atime) ?>
         </td>
     </tr>
 </table>

@@ -34,7 +34,7 @@
 require_once ("lib/classes/lit_import_plugins/StudipLitImportPluginAbstract.class.php");
 
 function do_lit_import() {
-    global $_msg, $cmd, $xmlfile, $xmlfile_size, $xmlfile_name, $username, $_range_id, $PHP_SELF, $plugin_name;
+    global $_msg, $cmd, $xmlfile, $xmlfile_size, $xmlfile_name, $username, $_range_id,$plugin_name;
     $cmd = Request::option('cmd');
     $xmlfile = $_FILES['xmlfile']['name'];
     $plugin_name = Request::quoted('plugin_name');
@@ -48,7 +48,7 @@ function do_lit_import() {
 }
 
 function print_lit_import_dlg() {
-    global $PHP_SELF, $username, $_range_id, $plugin_name, $LIT_IMPORT_PLUGINS;
+    global $username, $_range_id, $plugin_name, $LIT_IMPORT_PLUGINS;
     $plugin_name = Request::quoted('plugin_name');
     if (!$plugin_name) $plugin_name = "EndNote";
 

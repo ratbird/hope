@@ -911,10 +911,9 @@ function info_icons(&$event)
 
 function quick_search_form($search_string, $cmd, $atime)
 {
-    global $PHP_SELF;
-
+   
     $out = "\n<!-- CALENDAR QUICK SEARCH -->\n";
-    $out .= "<form name=\"cal_event_search\" method=\"post\" action=\"$PHP_SELF?cmd=$cmd&atime=$atime\">\n";
+    $out .= "<form name=\"cal_event_search\" method=\"post\" action=\"".URLHelper::getLink('?cmd=$cmd&atime='.$atime)."\">\n";
     $out .= "<font font size=\"2\" color=\"#555555\">";
     $out .= _("Suche: ") . " </font>";
     $out .= "<input type=\"text\" name=\"cal_quick_search\" size=\"15\" maxlength=\"50\">";

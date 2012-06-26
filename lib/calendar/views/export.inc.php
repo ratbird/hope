@@ -498,7 +498,7 @@ auf diese Nachricht nicht antworten.") . "\n\n";
             $_SESSION['calendar_sess_export']['msg'] .= '<br />' . $error->getMessage();
         while ($error = $_calendar_error->nextError(ErrorHandler::ERROR_FATAL))
             $_SESSION['calendar_sess_export']['msg'] .= '<br />' . $error->getMessage();
-        $location = "Location: $PHP_SELF?cmd=export&atime=$atime";
+        $location = "Location: ".URLHelper::getLink('?cmd=export&atime='.$atime);
     } else {
         $_SESSION['calendar_sess_export']['count_import'] = $import->getCount();
         $_SESSION['calendar_sess_export']['count_export'] = $export->getCount();

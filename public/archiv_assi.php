@@ -65,7 +65,6 @@ $db2 = new DB_Seminar;
 $db3 = new DB_Seminar;
 $db4 = new DB_Seminar;
 
-//$sess->register("archiv_assi_data");
 $cssSw = new cssClassSwitcher;
 
 if ($perm->have_perm('admin')) {

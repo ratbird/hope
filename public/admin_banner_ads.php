@@ -31,8 +31,6 @@ page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" =>
 $perm->check("root");
 
 // keep data copies for search etc.
-$sess->register("save_banner_data");
-$sess->register("banner_data");
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
@@ -47,7 +45,6 @@ require_once('lib/classes/ZebraTable.class.php');
 
 function imaging($img, $img_size, $img_name)
 {
-    global $banner_data;
     $msg = '';
     if (!$img_name) { //keine Datei ausgewählt!
         return "error§" . _("Sie haben keine Datei zum Hochladen ausgewählt!");

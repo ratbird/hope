@@ -46,7 +46,6 @@ $args['deputies'] = getDeputies($user_id, true);
 
 if ($_SESSION['deputy_id_parameter']) {
     Request::set('deputy_id_parameter', $deputy_id_parameter);
-    $sess->unregister('deputy_id_parameter');
 }
 
 $template->clear_attributes();

@@ -38,13 +38,13 @@ $reset_txt = '';
 ## ACTION ##
 
 // add forward_receiver
-if (Request::submitted('add_smsforward_rec_x')) {
+if (Request::submitted('add_smsforward_rec')) {
     $query = "UPDATE user_info SET smsforward_rec='".get_userid(Request::get('smsforward_rec'))."', smsforward_copy='1' WHERE user_id='".$user->id."'";
     $db3->query($query);
 }
 
 // del forward receiver
-if (Request::submitted('del_forwardrec_x')) {
+if (Request::submitted('del_forwardrec')) {
     $query = "UPDATE user_info SET smsforward_rec='', smsforward_copy='1' WHERE user_id='".$user->id."'";
     $db3->query($query);
 }
@@ -117,16 +117,16 @@ if (Request::option('messaging_cmd') == "reset_msg_settings") {
     $db3->query("UPDATE message_user SET folder='' WHERE user_id='".$user_id."'");
 }
 $add_user = Request::option('add_user');
-if (Request::submitted('do_add_user_x'))
+if (Request::submitted('do_add_user'))
     $msging->add_buddy ($add_user);
 
 ## FUNCTION ##
 
 function change_messaging_view()
 {
-    global $_fullname_sql,$my_messaging_settings, $PHP_SELF, $perm, $user,
-           $add_user, $add_user_x, $do_add_user_x, $new_search_x, $i_page,
-           $gosearch_x, $smsforward, $reset_txt, $email_forward, $user_cfg, $FOAF_ENABLE;
+    global $_fullname_sql,$my_messaging_settings, $perm, $user,
+           $add_user, $add_user, $do_add_user, $new_search, $i_page,
+           $gosearch, $smsforward, $reset_txt, $email_forward, $user_cfg, $FOAF_ENABLE;
     $search_exp = Request::quoted('search_exp');
     $msging=new messaging;
     $db=new DB_Seminar;

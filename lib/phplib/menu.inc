@@ -49,10 +49,9 @@ class Menu {
   }
   
   function get() {
-    global $PHP_SELF;
     
     # Determine normalized current position in tree
-    $this->map = $this->normalize_pos($PHP_SELF);
+    $this->map = $this->normalize_pos($_SERVER['PHP_SELF']);
 
     # Determine menu levels up from current position
     $r = $this->split_path($this->map);
@@ -111,11 +110,10 @@ class Menu {
   /* public: build the title of the page based on
              its location in the menu hierarchy. */
   function get_title() {
-    global $PHP_SELF;
     unset($this->title);
     
     # Determine normalized current position in tree
-    $this->map = $this->normalize_pos($PHP_SELF);
+    $this->map = $this->normalize_pos($_SERVER['PHP_SELF']);
 
     # Determine menu levels up from current position
     $r = $this->split_path($this->map);

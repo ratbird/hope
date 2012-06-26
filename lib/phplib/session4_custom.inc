@@ -538,7 +538,7 @@ class Session {
   }
 
   function self_url(){
-      return $GLOBALS['PHP_SELF'] . ($_SERVER['QUERY_STRING'] ? '?'.$_SERVER['QUERY_STRING'] : '');
+      return $_SERVER['PHP_SELF'] . ($_SERVER['QUERY_STRING'] ? '?'.$_SERVER['QUERY_STRING'] : '');
   }
 
   function pself_url() {

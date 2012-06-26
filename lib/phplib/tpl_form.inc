@@ -133,7 +133,6 @@ class tpl_form {
   function display() {
     global $sess;
     global $form_name;
-    global $PHP_SELF;
     
     if (! is_object($this->form_data)) {
       $this->setup();

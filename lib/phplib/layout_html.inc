@@ -367,7 +367,7 @@ class Layout {
     function htmlhd ($TITLE='', $meta='',$rest='') {
         $this->defval($TITLE,   $this->htmlhd_def['TITLE']);
         if (!$TITLE) {
-            $TITLE = $GLOBALS[PHP_SELF];
+            $TITLE = $_SERVER[PHP_SELF];
         }
         $TITLE = $this->htmlhd_def[PRETITLE] . $TITLE;
 

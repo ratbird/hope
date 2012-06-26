@@ -156,14 +156,13 @@ class form {
   var $n;
 
   function get_start($jvs_name="",$method="",$action="",$target="",$form_name="") {
-    global $PHP_SELF;
     
     $str = "";
     
     $this->jvs_name = "";
     $this->n = 0;
     if (!$method) $method = "POST";
-    if (!$action) $action = $PHP_SELF;
+    if (!$action) $action = URLHelper::getLink();
     if (!$target) $target = "_self";
 
     $str .= "<form name='$form_name' ";

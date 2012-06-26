@@ -31,7 +31,7 @@ if($_REQUEST['convertible']){
 }
 $query = "SELECT user_id,username, LEFT(Vorname,INSTR(Vorname,SUBSTRING_INDEX(Vorname,' ',-1))-1) AS title_front,SUBSTRING_INDEX(Vorname,' ',-1) AS new_vorname,Vorname,Nachname FROM auth_user_md5 WHERE (LEFT(Vorname,INSTR(Vorname,SUBSTRING_INDEX(Vorname,' ',-1))-1))!='' ORDER BY LEFT(Vorname,INSTR(Vorname,SUBSTRING_INDEX(Vorname,' ',-1))-1)";
 $db->query($query);
-echo "<form action=\"$PHP_SELF\" method=\"post\">"; 
+echo "<form action=\"".URLHelper::getLink()."\" method=\"post\">";
 echo "<table  border=\"0\" cellspacing=\"2\" cellpadding=\"2\"><tr>";
 echo "<th>username</th><th>Vorname</th><th>Nachname</th><th>new_vorname</th><th>titel_front</th><th><a href=\"#\" onClick=\"invert_selection();\" title=\"Auswahl umkehren\">umwandeln ?</a></th></tr>";
 while ($db->next_record()){

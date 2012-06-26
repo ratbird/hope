@@ -12,7 +12,7 @@ $css_switcher->switchClass();
             <p class="info">
             <b><?= _("Hier k&ouml;nnen Sie die Ansicht Ihres pers&ouml;nlichen Terminkalenders anpassen."); ?></b>
             </p>
-            <form method="post" action="<? echo $PHP_SELF ?>?cmd_cal=chng_cal_settings">
+            <form method="post" action="<? echo URLHelper::getLink('?cmd_cal=chng_cal_settings')?>">
             <?= CSRFProtection::tokenTag() ?>
             <table width ="70%" align="center" cellspacing="0" cellpadding="8" border="0" id="main_content">
                 <tr>

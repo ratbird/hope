@@ -112,7 +112,7 @@ class PmWikiConnectedLink extends ConnectedLink
 
         ob_start(); ?>
 
-        <form method="post" action="<?= $GLOBALS["PHP_SELF"] ?>">
+        <form method="post" action="<?= URLHelper::getLink() ?>">
             <?= CSRFProtection::tokenTag() ?>
             <input type="hidden"    name="view"                             value="<?= $view ?>">
             <input type="hidden"    name="search_key"               value="<?= $search_key ?>">

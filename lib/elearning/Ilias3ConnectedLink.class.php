@@ -96,7 +96,7 @@ class Ilias3ConnectedLink extends ConnectedLink
     {
         global $connected_cms, $view, $search_key, $cms_select, $current_module;
 
-        $output .= "<form method=\"POST\" action=\"" . $GLOBALS["PHP_SELF"] . "\">\n";
+        $output .= "<form method=\"POST\" action=\"" . URLHelper::getLink() . "\">\n";
         $output .= CSRFProtection::tokenTag();
         $output .= "<input type=\"HIDDEN\" name=\"view\" value=\"" . $view . "\">\n";
         $output .= "<input type=\"HIDDEN\" name=\"search_key\" value=\"" . $search_key . "\">\n";
@@ -132,7 +132,7 @@ class Ilias3ConnectedLink extends ConnectedLink
     */
     function getNewModuleLink()
     {
-        global $connected_cms, $module_type, $auth, $PHP_SELF;
+        global $connected_cms, $module_type, $auth;
         $output = "\n";
 //      echo "NML.";
         if (($GLOBALS["module_type_" . $this->cms_type] != ""))
@@ -170,7 +170,7 @@ class Ilias3ConnectedLink extends ConnectedLink
     */
     function getStartpageLink($name)
     {
-        global $connected_cms, $module_type, $auth, $PHP_SELF;
+        global $connected_cms, $module_type, $auth;
 
         if ($connected_cms[$this->cms_type]->user->isConnected())
         {

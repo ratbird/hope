@@ -104,14 +104,14 @@ class ELearningUtils
     */
     function getCMSSelectbox($message, $check_active = true)
     {
-        global $ELEARNING_INTERFACE_MODULES, $PHP_SELF, $cms_select, $search_key, $view;
+        global $ELEARNING_INTERFACE_MODULES, $cms_select, $search_key, $view;
         if (! is_array($ELEARNING_INTERFACE_MODULES))
         {
             $msg = sprintf(_("Die ELearning-Schnittstelle ist nicht korrekt konfiguriert. Die Variable \"%s\" muss in der Konfigurationsdatei von Stud.IP erst mit den Verbindungsdaten angebundener Learning-Content-Management-Systeme aufgef&uuml;llt werden. Solange dies nicht geschehen ist, setzen Sie die Variable \"%s\" auf FALSE!"),"\$ELEARNING_INTERFACE_MODULES", "\$ELEARNING_INTERFACE_ENABLE");
             parse_window ("error§" . $msg, "§", _("Konfigurationsfehler"));
             die();
         }
-        $output .=  "<form method=\"POST\" action=\"" . $PHP_SELF . "#anker\">\n";
+        $output .=  "<form method=\"POST\" action=\"" . URLHelper::getLink() . "#anker\">\n";
         $output .= CSRFProtection::tokenTag();
         $output .= "<table border=\"0\" cellspacing=0 cellpadding=0 width = \"99%\">";
         $output .= "<tr><td class=\"steel1\" align=\"center\" valign=\"middle\" ><font size=\"-1\">";
@@ -192,8 +192,8 @@ class ELearningUtils
     */
     function getSearchfield($message)
     {
-        global $PHP_SELF, $cms_select, $search_key, $view;
-        $output .=  "<form method=\"POST\" action=\"" . $PHP_SELF . "#anker\">\n";
+        global $cms_select, $search_key, $view;
+        $output .=  "<form method=\"POST\" action=\"" . URLHelper::getLink('#anker')."\">\n";
         $output .= CSRFProtection::tokenTag();
         $output .= "<table border=\"0\" cellspacing=0 cellpadding=0 width = \"99%\">";
         $output .= "<tr><td class=\"steel1\" align=\"center\" valign=\"middle\" ><font size=\"-1\">";
@@ -228,7 +228,7 @@ class ELearningUtils
     */
     function getNewModuleForm($cms)
     {
-        global $ELEARNING_INTERFACE_MODULES, $PHP_SELF, $connected_cms, $module_type;
+        global $ELEARNING_INTERFACE_MODULES, $connected_cms, $module_type;
 
         if (sizeof($ELEARNING_INTERFACE_MODULES[$cms]["types"]) == 1)
             foreach($ELEARNING_INTERFACE_MODULES[$cms]["types"] as $type => $info)
@@ -237,7 +237,7 @@ class ELearningUtils
         if ($link == false)
             return false;
         $output .= ELearningUtils::getHeader(sprintf(_("Neues Lernmodul erstellen")));
-        $output .=  "<form method=\"POST\" action=\"" . $PHP_SELF . "#anker\">\n";
+        $output .=  "<form method=\"POST\" action=\"" . URLHelper::getLink('#anker')."\">\n";
         $output .= CSRFProtection::tokenTag();
         $output .= "<table border=\"0\" cellspacing=\"0\" cellpadding=\"6\" width=\"100%\">";
         $output .= "<tr><td>";
@@ -269,9 +269,9 @@ class ELearningUtils
     */
     function getMyAccountForm($message, $my_account_cms)
     {
-        global $PHP_SELF, $connected_cms;
+        global $connected_cms;
 
-        $output .=  "<form method=\"POST\" action=\"" . $PHP_SELF . "#anker\">\n";
+        $output .=  "<form method=\"POST\" action=\"" . URLHelper::getLink('#anker')."\">\n";
         $output .= CSRFProtection::tokenTag();
         $output .= "<table border=\"0\" cellspacing=\"0\" cellpadding=\"6\" width=\"100%\">";
         $output .= "<tr><td>";
@@ -301,7 +301,7 @@ class ELearningUtils
     */
     function getNewAccountForm(&$new_account_cms)
     {
-        global $PHP_SELF, $connected_cms, $cms_select, $search_key, $view, $new_account_step, $current_module,
+        global $connected_cms, $cms_select, $search_key, $view, $new_account_step, $current_module,
             $start, $next, $go_back, $assign, $ext_username, $ext_password, $ext_password_2, $messages, $ref_id, $module_type, $assign,
             $RELATIVE_PATH_ELEARNING_INTERFACE, $ELEARNING_INTERFACE_MODULES;
 
@@ -372,7 +372,7 @@ class ELearningUtils
         {
             // Assign existing Account
             $output .= "<a name='anker'></a>";
-            $output .=  "<form method=\"POST\" action=\"" . $PHP_SELF . "#anker\">\n";
+            $output .=  "<form method=\"POST\" action=\"" . URLHelper::getLink('#anker')."\">\n";
             $output .= CSRFProtection::tokenTag();
             $output .= "<table border=\"0\" cellspacing=0 cellpadding=6 width = \"99%\">";
             $output .= "<tr><td class=\"steel1\" align=\"left\" valign=\"middle\" colspan=\"2\"><br>\n";
@@ -420,7 +420,7 @@ class ELearningUtils
         {
             // Create new Account: ask for new password
             $output .= "<a name='anker'></a>";
-            $output .=  "<form method=\"POST\" action=\"" . $PHP_SELF . "#anker\">\n";
+            $output .=  "<form method=\"POST\" action=\"" . URLHelper::getLink('#anker')."\">\n";
             $output .= CSRFProtection::tokenTag();
             $output .= "<table border=\"0\" cellspacing=0 cellpadding=6 width = \"99%\">";
             $output .= "<tr><td class=\"steel1\" align=\"left\" valign=\"middle\" colspan=\"2\"><br>\n";
@@ -488,7 +488,7 @@ class ELearningUtils
         else
         {
             $output .= "<a name='anker'></a>";
-            $output .=  "<form method=\"POST\" action=\"" . $PHP_SELF . "#anker\">\n";
+            $output .=  "<form method=\"POST\" action=\"" . URLHelper::getLink('#anker')."\">\n";
             $output .= CSRFProtection::tokenTag();
             $output .= "<table border=\"0\" cellspacing=0 cellpadding=6 width = \"99%\">";
             $output .= "<tr><td>\n";
@@ -577,7 +577,7 @@ class ELearningUtils
     */
     function getModuleHeader($title)
     {
-        global $PHP_SELF, $view, $cms_select, $search_key, $elearning_open_close;
+        global $view, $cms_select, $search_key, $elearning_open_close;
         $output .= "<table class=\"blank\"  align=\"center\" valign=\"top\" width=\"100%\" border=\"0\" cellpadding=\"1\" cellspacing=\"0\">";
         $output .= "<tr valign=\"top\"><td class=\"steelgraulight\" align=\"left\" width=\"40%\">&nbsp;";
         $output .= "<font size=\"-1\"><b>";
@@ -585,9 +585,9 @@ class ELearningUtils
         $output .= "</b></font>";
         $output .= "</td><td class=\"steelgraulight\" align=\"left\" width=\"40%\">";
         if ($elearning_open_close["all open"] != "")
-            $output .= "<a href=\"" . $PHP_SELF . "?close_all=1&view=$view&cms_select=$cms_select&search_key=$search_key\"><img src=\"".$GLOBALS['ASSETS_URL']."images/close_all.png\" alt=\"" . _("Alle Module schlie&szlig;en") . "\" title=\"" . _("Alle Module schlie&szlig;en") . "\"  border=\"0\">";
+            $output .= "<a href=\"" . URLHelper::getLink('?close_all=1&view='.$view.'&cms_select='.$cms_select.'&search_key='.$search_key)."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/close_all.png\" alt=\"" . _("Alle Module schlie&szlig;en") . "\" title=\"" . _("Alle Module schlie&szlig;en") . "\"  border=\"0\">";
         else
-            $output .= "<a href=\"" . $PHP_SELF . "?open_all=1&view=$view&cms_select=$cms_select&search_key=$search_key\"><img src=\"".$GLOBALS['ASSETS_URL']."images/open_all.png\" alt=\"" . _("Alle Module &ouml;ffnen") . "\" title=\"" . _("Alle Module &ouml;ffnen") . "\"  border=\"0\">";
+            $output .= "<a href=\"" . URLHelper::getLink('?open_all=1&view='.$view.'&cms_select='.$cms_select.'&search_key='.$search_key)."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/open_all.png\" alt=\"" . _("Alle Module &ouml;ffnen") . "\" title=\"" . _("Alle Module &ouml;ffnen") . "\"  border=\"0\">";
         $output .= "</a></td></tr>";
         $output .= "</table>";
         return $output;

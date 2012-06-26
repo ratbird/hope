@@ -47,7 +47,7 @@ class ConnectedLink
     {
         global $connected_cms, $view, $search_key, $cms_select, $current_module;
         
-        $output .= "<form method=\"POST\" action=\"" . $GLOBALS["PHP_SELF"] . "\">\n";
+        $output .= "<form method=\"POST\" action=\"" . URLHelper::getLink() . "\">\n";
         $output .= CSRFProtection::tokenTag();
         $output .= "<input type=\"HIDDEN\" name=\"view\" value=\"" . $view . "\">\n";
         $output .= "<input type=\"HIDDEN\" name=\"ref_id\" value=\"" . $connected_cms[$this->cms_type]->content_module[$current_module]->getId() . "\">\n";
@@ -84,7 +84,7 @@ class ConnectedLink
     {
         global $connected_cms, $view, $search_key, $cms_select, $current_module;
 
-        $output .= "<form method=\"POST\" action=\"" . $GLOBALS["PHP_SELF"] . "\">\n";
+        $output .= "<form method=\"POST\" action=\"" . URLHelper::getLink() . "\">\n";
         $output .= CSRFProtection::tokenTag();
         $output .= "<input type=\"HIDDEN\" name=\"view\" value=\"" . $view . "\">\n";
         $output .= "<input type=\"HIDDEN\" name=\"search_key\" value=\"" . $search_key . "\">\n";

@@ -45,7 +45,7 @@ class ContentModuleView
     */
     function show($mode = "")
     {
-            global $PHP_SELF, $connected_cms, $view, $search_key, $cms_select, $elearning_open_close, $current_module, $anker_target;
+            global $connected_cms, $view, $search_key, $cms_select, $elearning_open_close, $current_module, $anker_target;
 
             $content_module = $connected_cms[$this->cms_type]->content_module[$current_module];
 
@@ -72,9 +72,9 @@ class ContentModuleView
                     $module_title = $module_title . " " . _("Lesezugriff") . ")";
             }/**/
             if ($this->isOpen() == true)
-                $printlink = "<a href=\"".$PHP_SELF . "?do_close=" . $content_module->getReferenceString() . "&view=$view&search_key=$search_key&cms_select=$cms_select#anker\" class=\"tree\">" . $module_title . "</a>";
+                $printlink = "<a href=\"".URLHelper::getLink('?do_close='. $content_module->getReferenceString() . '&view='.$view.'&search_key='.$search_key.'&cms_select='.$cms_select.'#anker')."\" class=\"tree\">" . $module_title . "</a>";
             else
-                $printlink = "<a href=\"".$PHP_SELF . "?do_open=" . $content_module->getReferenceString() . "&view=$view&search_key=$search_key&cms_select=$cms_select#anker\" class=\"tree\">" . $module_title . "</a>";
+                $printlink = "<a href=\"".URLHelper::getLink('?do_open=' . $content_module->getReferenceString() . '&view='.$view.'&search_key='.$search_key.'&cms_select='.$cms_select.'#anker')."\" class=\"tree\">" . $module_title . "</a>";
             $printimage = $content_module->getIcon();
             $printdesc = $content_module->getCMSName() . " / " . $content_module->getModuleTypeName();
             if ($content_module->getAuthors() != "") 
@@ -89,9 +89,9 @@ class ContentModuleView
                     <tr>
                         <?
                         if ($this->isOpen() == true)
-                            printhead ("99%", FALSE, $PHP_SELF . "?do_close=" . $content_module->getReferenceString() . "&view=$view&search_key=$search_key&cms_select=$cms_select#anker", "open", $this->module_new, $printimage, $printlink, $printdesc, $this->change_date);
+                            printhead ("99%", FALSE, URLHelper::getLink('?do_close=' . $content_module->getReferenceString() . '&view='.$view.'&search_key='.$search_key.'&cms_select='.$cms_select.'#anker'), "open", $this->module_new, $printimage, $printlink, $printdesc, $this->change_date);
                         else
-                            printhead ("99%", FALSE, $PHP_SELF . "?do_open=" . $content_module->getReferenceString() . "&view=$view&search_key=$search_key&cms_select=$cms_select#anker", "close", $this->module_new, $printimage, $printlink, $printdesc, $this->change_date);
+                            printhead ("99%", FALSE, URLHelper::getLink('?do_open=' .  $content_module->getReferenceString() . '&view='.$view.'&search_key='.$search_key.'&cms_select='.$cms_select.'#anker'), "close", $this->module_new, $printimage, $printlink, $printdesc, $this->change_date);
                         ?>
                     </tr>
                 </table>
@@ -115,7 +115,7 @@ class ContentModuleView
     */
     function showAdmin($mode = "")
     {
-            global $PHP_SELF, $connected_cms, $view, $search_key, $cms_select, $elearning_open_close, $SessSemName, $current_module, $anker_target;
+            global $connected_cms, $view, $search_key, $cms_select, $elearning_open_close, $SessSemName, $current_module, $anker_target;
 
             $content_module = $connected_cms[$this->cms_type]->content_module[$current_module];
 
@@ -135,9 +135,9 @@ class ContentModuleView
                 $module_title = $module_title . ")";
             }   
             if ($this->isOpen() == true)
-                $printlink = "<a href=\"".$PHP_SELF . "?do_close=" . $content_module->getReferenceString() . "&view=$view&search_key=$search_key&cms_select=$cms_select#anker\" class=\"tree\">" . $module_title . "</a>";
+                $printlink = "<a href=\"".URLHelper::getLink('?do_close=' . $content_module->getReferenceString() . '&view='.$view.'&search_key='.$search_key.'&cms_select='.$cms_select.'#anker')."\" class=\"tree\">" . $module_title . "</a>";
             else
-                $printlink = "<a href=\"".$PHP_SELF . "?do_open=" . $content_module->getReferenceString() . "&view=$view&search_key=$search_key&cms_select=$cms_select#anker\" class=\"tree\">" . $module_title . "</a>";
+                $printlink = "<a href=\"".URLHelper::getLink('?do_open='  . $content_module->getReferenceString() . '&view='.$view.'&search_key='.$search_key.'&cms_select='.$cms_select.'#anker')."\" class=\"tree\">" . $module_title . "</a>";
             $printimage = $content_module->getIcon();
             $printdesc = $content_module->getCMSName() . " / " . $content_module->getModuleTypeName();
             if ($content_module->getAuthors() != "") 
@@ -152,9 +152,9 @@ class ContentModuleView
                     <tr>
                         <?
                         if ($this->isOpen() == true)
-                            printhead ("99%", FALSE, $PHP_SELF . "?do_close=" . $content_module->getReferenceString() . "&view=$view&search_key=$search_key&cms_select=$cms_select#anker", "open", $this->module_new, $printimage, $printlink, $printdesc, $this->change_date);
+                            printhead ("99%", FALSE, URLHelper::getLink('?do_close=' . $content_module->getReferenceString() . '&view='.$view.'&search_key='.$search_key.'&cms_select='.$cms_select.'#anker'), "open", $this->module_new, $printimage, $printlink, $printdesc, $this->change_date);
                         else
-                            printhead ("99%", FALSE, $PHP_SELF . "?do_open=" . $content_module->getReferenceString() . "&view=$view&search_key=$search_key&cms_select=$cms_select#anker", "close", $this->module_new, $printimage, $printlink, $printdesc, $this->change_date);
+                            printhead ("99%", FALSE, URLHelper::getLink('?do_open=' . $content_module->getReferenceString() . '&view='.$view.'&search_key='.$search_key.'&cms_select='.$cms_select.'#anker'), "close", $this->module_new, $printimage, $printlink, $printdesc, $this->change_date);
                         ?>
                     </tr>
                 </table>

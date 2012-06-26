@@ -145,7 +145,7 @@ if (($o_mode == "file") OR ($o_mode == "choose"))
         else
             $export_msg = sprintf(_("%s Objekte wurden verarbeitet.") . " ", $object_counter);
 
-        $export_pagecontent .= "<form method=\"POST\" action=\"" . $PHP_SELF . "\">";
+        $export_pagecontent .= "<form method=\"POST\" action=\"" . URLHelper::getLink() . "\">";
         $export_pagecontent .= CSRFProtection::tokenTag();
         $export_pagecontent .= "<input type=\"hidden\" name=\"page\" value=\"2\">";
         $export_pagecontent .= "<input type=\"hidden\" name=\"format\" value=\"" . htmlReady($format) . "\">";

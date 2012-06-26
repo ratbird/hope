@@ -137,13 +137,13 @@ input {
    </tr>
    <tr>
     <td align="right">
-     <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="get">
+        <form action="<?php echo URLHelper::getLink(); ?>" method="get">
       <input type="text" name="decoded" value="<?php echo htmlentities($decoded, null, 'UTF-8'); ?>" size="48" maxlength="255" /><br />
       <input type="submit" name="encode" value="Encode &gt;&gt;" /><?php echo $add; ?>
      </form>
     </td>
     <td align="left">
-     <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="get">
+        <form action="<?php echo URLHelper::getLink(); ?>" method="get">
       <input type="text" name="encoded" value="<?php echo htmlentities($encoded, null, 'UTF-8'); ?>" size="48" maxlength="255" /><br />
       <input type="submit" name="decode" value="&lt;&lt; Decode" /><?php echo $add; ?>
      </form>

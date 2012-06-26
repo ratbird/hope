@@ -26,9 +26,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 use Studip\Button, Studip\LinkButton;
 
 // -- here you have to put initialisations for the current page
-//$sess->register('issue_open');
-//$sess->register('raumzeitFilter');
-//$sess->register('chronoGroupedFilter');
 
 require_once ('lib/classes/Seminar.class.php');
 require_once ('lib/raumzeit/raumzeit_functions.inc.php');

@@ -29,9 +29,6 @@ use Studip\Button, Studip\LinkButton;
 define('SELECTED', ' checked');
 define('NOT_SELECTED', '');
 
-//$sess->register('issue_open');
-//$sess->register('raumzeitFilter');
-
 $_SESSION['issue_open'] = array();
 
 require_once ('lib/classes/Seminar.class.php');

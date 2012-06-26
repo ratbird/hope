@@ -26,16 +26,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 # necessary if you want to include admin_search_form.inc.php in function/method scope
 global  $auth, $perm, $sess, $user;
 
-global  $admin_dates_data,
-        $archiv_assi_data,
+global  $archiv_assi_data,
         $archive_kill,
         $i_page,
         $i_view,
-        $links_admin_data,
         $list,
         $new_inst,
         $new_sem,
-        $sem_create_data,
         $SessSemName,
         $view_mode;
 
@@ -45,9 +42,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
     require_once 'lib/dates.inc.php';
     require_once 'lib/functions.php';
 
-    $sess->register("links_admin_data");
-    $sess->register("sem_create_data");
-    $sess->register("admin_dates_data");
+   
 
     $userConfig = UserConfig::get($GLOBALS['user']->id); // tic #650
 
@@ -59,12 +54,12 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
     */
     function reset_all_data($reset_search_fields = false)
     {
-        global $links_admin_data, $sem_create_data, $admin_dates_data, $admin_admission_data,
+        global $admin_admission_data,
         $archiv_assi_data, $term_metadata;
 
         if($reset_search_fields) $_SESSION['links_admin_data']='';
         $_SESSION['sem_create_data']='';
-        $admin_dates_data='';
+        $_SESSION['admin_dates_data']='';
         $admin_admission_data='';
         $admin_rooms_data='';
         $archiv_assi_data='';

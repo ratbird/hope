@@ -50,7 +50,6 @@ if (get_config('CHAT_ENABLE')) {
     $admin_chats = $chatServer->getAdminChats($auth->auth['uid']);
 }
 
-//$sess->register("sms_data");
 $msging=new messaging;
 
 check_messaging_default();

@@ -82,10 +82,6 @@ $Modules = new Modules;
 $semester = new SemesterData;
 
 
-//Registrieren der Sessionvariablen
-//$sess->register("sem_create_data");
-//$sess->register('links_admin_data');
-
 # init of study area selection
 $study_areas = isset($_REQUEST['study_area_selection'])
    ? remove_magic_quotes($_REQUEST['study_area_selection'])

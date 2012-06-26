@@ -473,7 +473,7 @@ function ShowUserInfo ($contact_id)
         $temp = $statement->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($temp as $row) {
-            $output .= "<tr><td class=\"steel1\" width=\"100\"><font size=\"2\">"._("Gruppe").":</font></td><td class=\"steel1\" width=\"250\"><a href=\"$PHP_SELF?view=gruppen&filter=".$row['statusgruppe_id']."\"><font size=\"2\">".htmlready($row['name'])."</font></a></td></tr>";
+            $output .= "<tr><td class=\"steel1\" width=\"100\"><font size=\"2\">"._("Gruppe").":</font></td><td class=\"steel1\" width=\"250\"><a href=\"".URLHelper::getLink('?view=gruppen&filter='.$row['statusgruppe_id'])."\"><font size=\"2\">".htmlready($row['name'])."</font></a></td></tr>";
         }
     }
     return $output;
@@ -481,7 +481,7 @@ function ShowUserInfo ($contact_id)
 
 function ShowContact ($contact_id)
 {   // Ausgabe eines Kontaktes
-    global $PHP_SELF, $open, $filter, $view;
+    global $open, $filter, $view;
 
     $query = "SELECT contact_id, user_id, buddy, calpermission
               FROM contact

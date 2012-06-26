@@ -62,8 +62,6 @@ $db=new DB_Seminar;
 
 
 //Einstellungen fuer Reitersystem
-// $sess->register("sem_portal");
-
 
 //Standard herstellen
 
@@ -89,7 +87,7 @@ PageLayout::addBodyElements(cssClassSwitcher::GetHoverJSFunction());
 
 //function to display toplists
 function getToplist($rubrik, $query, $type="count") {
-    global $PHP_SELF;
+    
     $result .= "<table cellpadding=\"0\" cellspacing=\"2\" border=\"0\">";
     $db=new DB_Seminar;
     $db->cache_query($query);

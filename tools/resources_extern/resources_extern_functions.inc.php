@@ -37,7 +37,7 @@ function show_tree($rid, $level){
         foreach ($rtree->getKids($rid) as $rrid){
             echo chr(10).'<div class="tree" style="margin-left:'.($level*20).'px;">';
             if($rtree->tree_data[$rrid]['viewable']){
-                echo "\n<a href=\"{$_SERVER['PHP_SELF']}?view=sem_plan&semester_id={$GLOBALS['_semester_id']}&timespan={$GLOBALS['_timespan']}&rid=$rrid\">";
+                echo "\n<a href=\"".URLHelper::getLink('?view=sem_plan&semester_id='.$_SESSION['_semester_id'].'&timespan='.$_SESSION['_timespan'].'&rid='.$rrid)."\">";
             }
             echo htmlReady($rtree->tree_data[$rrid]['name']);
             if($rtree->tree_data[$rrid]['viewable']) echo '</a>';

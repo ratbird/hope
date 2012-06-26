@@ -32,7 +32,7 @@ class AdminNavigation extends Navigation
      */
     public function initSubNavigation()
     {
-        global $SessSemName, $archive_kill, $links_admin_data, $perm;
+        global $SessSemName, $archive_kill, $perm;
 
         parent::initSubNavigation();
 

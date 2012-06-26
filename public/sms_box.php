@@ -48,8 +48,6 @@ if (get_config('CHAT_ENABLE')){
 }
 
 // let's register some ...
-//$sess->register("sms_data");
-//$sess->register("sms_show");
 $_SESSION['sms_data'] = $sms_data;
 $_SESSION['sms_show'] = $sms_show;
 $msging = new messaging;

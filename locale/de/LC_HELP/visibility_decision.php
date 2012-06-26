@@ -60,7 +60,7 @@ anderen zugänglich sind.</p>
 </td>
 </tr>
 <tr>
-<td width=50% align=center valign=top><a href="<?=$PHP_SELF?>?vis_state=yes&vis_cmd=apply"><img src="<?=$GLOBALS['ASSETS_URL']?>images/an.png" border="0"><br>sichtbar werden</a></td>
+    <td width=50% align=center valign=top><a href="<?=URLHelper::getLink('?vis_state=yes&vis_cmd=apply')?>"><img src="<?=$GLOBALS['ASSETS_URL']?>images/an.png" border="0"><br>sichtbar werden</a></td>
 </tr>
 </table>
 </td>
@@ -74,7 +74,7 @@ beschrieben und begründet dennoch AdministratorInnen und in Teilen den
 DozentInnen meiner Veranstaltungen zugänglich sind.
 </tr>
 <tr>
-<td width=50% align=center valign=top><a href="<?=$PHP_SELF?>?vis_state=no&vis_cmd=apply"><img src="<?=$GLOBALS['ASSETS_URL']?>images/aus.png" border="0"><br>unsichtbar werden</a></td>
+    <td width=50% align=center valign=top><a href="<?=URLHelper::getLink('?vis_state=no&vis_cmd=apply')?>"><img src="<?=$GLOBALS['ASSETS_URL']?>images/aus.png" border="0"><br>unsichtbar werden</a></td>
 </tr>
 </table>
 </td></tr>

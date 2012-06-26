@@ -58,7 +58,6 @@ require_once('lib/datei.inc.php');
 require_once('lib/log_events.inc.php');
 
 $cssSw=new cssClassSwitcher;
-//$sess->register("archiv_data");
 $delete_id = Request::option('delete_id');
 $open = Request::option('open');
 $delete_user = Request::option('delete_user');

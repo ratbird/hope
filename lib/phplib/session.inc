@@ -202,9 +202,9 @@ class Session {
   }
 
   function self_url() {
-    global $PHP_SELF, $QUERY_STRING;
+    global $QUERY_STRING;
 
-    return $this->url($PHP_SELF.
+    return $this->url($_SERVER['PHP_SELF'].
            ((isset($QUERY_STRING) && ("" != $QUERY_STRING)) ? "?".$QUERY_STRING : ""));
   }
 
@@ -218,7 +218,6 @@ class Session {
   }
 
   function add_query($qarray) {
-    global $PHP_SELF;
     global $QUERY_STRING;
 
     if ((isset($QUERY_STRING) && ("" != $QUERY_STRING))

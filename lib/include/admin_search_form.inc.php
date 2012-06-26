@@ -33,7 +33,6 @@ global  $auth, $perm, $user;
 
 global  $_fullname_sql,
         $i_page,
-        $links_admin_data,
         $list,
         $msg,
         $SessSemName,

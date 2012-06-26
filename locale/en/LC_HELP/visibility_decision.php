@@ -52,7 +52,7 @@ You <em>now</em> have the possibility to decide whether to be visible as usual a
 </td>
 </tr>
 <tr>
-<td width=50% align=center valign=top><a href="<?=$PHP_SELF?>?vis_state=yes&vis_cmd=apply"><img src="<?=$GLOBALS['ASSETS_URL']?>images/an.png" border="0"><br>become visible</a></td>
+<td width=50% align=center valign=top><a href="<?=URLHelper::getLink('?vis_state=yes&vis_cmd=apply')?>"><img src="<?=$GLOBALS['ASSETS_URL']?>images/an.png" border="0"><br>become visible</a></td>
 </tr>
 </table>
 </td>
@@ -64,7 +64,7 @@ You <em>now</em> have the possibility to decide whether to be visible as usual a
 <p>I note that my personal data - as described and well-founded in the explanation of data protection - is nevertheless accessible for administrators and partly for lecturers of my courses.
 </tr>
 <tr>
-<td width=50% align=center valign=top><a href="<?=$PHP_SELF?>?vis_state=no&vis_cmd=apply"><img src="<?=$GLOBALS['ASSETS_URL']?>images/aus.png" border="0"><br>become invisible</a></td>
+<td width=50% align=center valign=top><a href="<?=URLHelper::getLink('?vis_state=no&vis_cmd=apply')?>"><img src="<?=$GLOBALS['ASSETS_URL']?>images/aus.png" border="0"><br>become invisible</a></td>
 </tr>
 </table>
 </td></tr>

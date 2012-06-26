@@ -349,7 +349,6 @@ class ResourceObject {
 
     
     function getOwnerLink($id='') {
-        global $PHP_SELF;
         
         if (!$id)
             $id=$this->owner_id;

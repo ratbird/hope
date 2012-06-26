@@ -55,12 +55,12 @@ class ShowGroupSchedulesDaily extends ShowSemSchedules {
     }
 
     function navigator ($print_view = false) {
-        global $cssSw, $view_mode,$view, $PHP_SELF;
+        global $cssSw, $view_mode,$view;
         $start_time = $this->start_time;
         if (!$print_view){
         ?>
         <table border="0" celpadding="2" cellspacing="0" width="99%" align="center">
-        <form method="POST" name="schedule_form" action="<?echo $PHP_SELF ?>?navigate=TRUE&quick_view=<?=$view?>&quick_view_mode=<?=$view_mode?>">
+        <form method="POST" name="schedule_form" action="<?echo URLHelper::getLink('?navigate=TRUE&quick_view='.$view.'&quick_view_mode='.$view_mode) ?>">
             <?= CSRFProtection::tokenTag() ?>
             <tr>
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
@@ -103,7 +103,7 @@ class ShowGroupSchedulesDaily extends ShowSemSchedules {
     }
 
     function showScheduleGraphical($print_view = false) {
-        global $RELATIVE_PATH_RESOURCES, $PHP_SELF, $cssSw, $view_mode, $ActualObjectPerms;
+        global $RELATIVE_PATH_RESOURCES, $cssSw, $view_mode, $ActualObjectPerms;
 
         $categories["na"] = 4;
         $categories["sd"] = 4;
@@ -188,7 +188,7 @@ class ShowGroupSchedulesDaily extends ShowSemSchedules {
                         $add_info .= '(' . join(', ' , $sem_doz_names) . ')';
                     }
                     $schedule->addEvent($resource_to_show_id, $event->getName(get_config('RESOURCES_SCHEDULE_EXPLAIN_USER_NAME')), $event->getBegin(), $event->getEnd(),
-                        "$PHP_SELF?show_object=$resource_id&cancel_edit_assign=1&quick_view=$view&quick_view_mode=".$view_mode."&edit_assign_object=".$event->getAssignId(), $add_info, $categories[$repeat_mode]);
+                        URLHelper::getLink('?show_object='.$resource_id.'&cancel_edit_assign=1&quick_view='.$view.'&quick_view_mode='.$view_mode.'&edit_assign_object='.$event->getAssignId()), $add_info, $categories[$repeat_mode]);
                 }
             }
         } else {
@@ -202,7 +202,7 @@ class ShowGroupSchedulesDaily extends ShowSemSchedules {
                     <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" height="35" border="0">
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>"  width="10%" align="left">&nbsp;
-                    <a href="<? echo $PHP_SELF ?>?quick_view=<?=$this->used_view?>&quick_view_mode=<?=$view_mode?>&previous_day=1"><img class="middle" src="<?= Assets::image_path('icons/16/blue/arr_2left.png') ?>" <? echo tooltip (_("Vorherigen Tag anzeigen")) ?>border="0"></a>
+                    <a href="<? echo URLHelper::getLink('?quick_view='.$this->used_view.'&quick_view_mode='.$view_mode.'&previous_day=1')?>"><img class="middle" src="<?= Assets::image_path('icons/16/blue/arr_2left.png') ?>" <? echo tooltip (_("Vorherigen Tag anzeigen")) ?>border="0"></a>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="76%" align="center" style="font-weight:bold">
                 <? echo htmlReady(strftime('%A, %x (KW %V)', $start_time));
@@ -213,14 +213,14 @@ class ShowGroupSchedulesDaily extends ShowSemSchedules {
                 ?>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="10%" align="center">&nbsp;
-                    <a href="<? echo $PHP_SELF ?>?quick_view=<?=$this->used_view?>&quick_view_mode=<?=$view_mode?>&next_day=1"><img class="middle" src="<?= Assets::image_path('icons/16/blue/arr_2right.png') ?>" <? echo tooltip (_("Nächsten Tag anzeigen")) ?>border="0"></a>
+                    <a href="<? echo URLHelper::getLink('?quick_view='.$this->used_view.'&quick_view_mode='.$view_mode,'&next_day=1')?>"><img class="middle" src="<?= Assets::image_path('icons/16/blue/arr_2right.png') ?>" <? echo tooltip (_("Nächsten Tag anzeigen")) ?>border="0"></a>
                 </td>
             </tr>
             <tr>
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%" align="center" valign="bottom">&nbsp;
                     <?
                     if ((!$_SESSION['resources_data']["schedule_time_range"]) || ($_SESSION['resources_data']["schedule_time_range"] == 1))
-                        printf ("<a href=\"%s?quick_view=%s&quick_view_mode=%s&time_range=%s\"><img src=\"" . Assets::image_path('icons/16/blue/arr_2up.png') . "\" %s></a>", $PHP_SELF, $this->used_view, $view_mode, ($_SESSION['resources_data']["schedule_time_range"]) ? "FALSE" : -1, tooltip (_("Frühere Belegungen anzeigen")));
+                        printf ("<a href=\"".URLHelper::getLink('?quick_view=%s&quick_view_mode=%s&time_range=%s')."\"><img src=\"" . Assets::image_path('icons/16/blue/arr_2up.png') . "\" %s></a>", $this->used_view, $view_mode, ($_SESSION['resources_data']["schedule_time_range"]) ? "FALSE" : -1, tooltip (_("Frühere Belegungen anzeigen")));
                     ?>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="76%" colspan="2">
@@ -254,7 +254,7 @@ class ShowGroupSchedulesDaily extends ShowSemSchedules {
                 <td class="<? echo $cssSw->getClass() ?>" width="4%" align="center" valign="bottom">&nbsp;
                     <?
                     if ((!$_SESSION['resources_data']["schedule_time_range"]) || ($_SESSION['resources_data']["schedule_time_range"] == -1))
-                        printf ("<a href=\"%s?quick_view=%s&quick_view_mode=%s&time_range=%s\"><img src=\"" . Assets::image_path('icons/16/blue/arr_2down.png') . "\" %sborder=\"0\"></a>", $PHP_SELF, $this->used_view, $view_mode, ($_SESSION['resources_data']["schedule_time_range"]) ? "FALSE" : 1, tooltip (_("Spätere Belegungen anzeigen")));
+                        printf ("<a href=\"".URLHelper::getLink('?quick_view=%s&quick_view_mode=%s&time_range=%s')."\"><img src=\"" . Assets::image_path('icons/16/blue/arr_2down.png') . "\" %sborder=\"0\"></a>", $this->used_view, $view_mode, ($_SESSION['resources_data']["schedule_time_range"]) ? "FALSE" : 1, tooltip (_("Spätere Belegungen anzeigen")));
                     ?>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="20%" nowrap colspan="3">

@@ -66,7 +66,7 @@ function return_val_from_key($array, $key) {
  */
 function MessageIcon($message_hovericon)
 {
-    global $my_messaging_settings, $PHP_SELF, $auth, $forum;
+    global $my_messaging_settings, $auth, $forum;
 
     $hovericon = "<a href=\"".$message_hovericon['link']."\">".Assets::img($message_hovericon["picture"], array('class' => 'text-bottom'))."</a>";
     return $hovericon;
@@ -148,7 +148,7 @@ function show_icon($sms_show, $value)
  */
 function showfoldericon($tmp, $count)
 {
-    global $sms_show, $sms_data, $PHP_SELF;
+    global $sms_show, $sms_data;
 
     if ($count == "0" && folder_openclose($sms_show['folder'][$sms_data['view']], $tmp) == "close") {
         $picture = "icons/16/blue/folder-empty.png";
@@ -163,11 +163,11 @@ function showfoldericon($tmp, $count)
 }
 
 function folder_makelink($tmp) {
-    global $sms_show, $sms_data, $PHP_SELF;
+    global $sms_show, $sms_data;
     if (folder_openclose($sms_show['folder'][$sms_data['view']], $tmp) == "open") {
-        $link = $PHP_SELF."?show_folder=close";
+        $link = URLHelper::getLink('?show_folder=close');
     } else {
-        $link = $PHP_SELF."?show_folder=".$tmp;
+        $link = URLHelper::getLink('?show_folder='.$tmp);
     }
     return $link;
 }
@@ -183,20 +183,20 @@ function folder_openclose($folder, $x) {
 
 // print_snd_message
 function print_snd_message($psm) {
-    global $n, $LastLogin, $my_messaging_settings, $PHP_SELF, $msging, $sms_data, $user, $_fullname_sql, $cmd_show, $cmd;
+    global $n, $LastLogin, $my_messaging_settings, $msging, $sms_data, $user, $_fullname_sql, $cmd_show, $cmd;
 
     $db = DBManager::get();
 
     // open?!
     if ($sms_data["open"] == $psm['message_id']) {
         $open = "open";
-        $link = $PHP_SELF."?mclose=TRUE";
+        $link = URLHelper::getLink('?mclose=TRUE');
     } else if ($cmd_show == "openall" || $my_messaging_settings["openall"] == "1") {
         $open = "open";
-        $link = $PHP_SELF."?mopen=".$psm['message_id']."#".$psm['message_id'];
+        $link = URLHelper::getLink('?mopen='.$psm['message_id'].'#'.$psm['message_id']);
     } else {
         $open = "close";
-        $link = $PHP_SELF."?mopen=".$psm['message_id']."#".$psm['message_id'];
+        $link = URLHelper::getLink('?mopen='.$psm['message_id'].'#'.$psm['message_id']);
     }
 
     // make message_header
@@ -210,21 +210,21 @@ function print_snd_message($psm) {
         $tmp_cmd = "safe_selected";
         $tmp_picture = "icons/16/blue/lock-unlocked.png";
         $tmp_tooltip = tooltip(_("Löschschutz für diese Nachricht aktivieren."));
-        $trash = "<a href=\"".$PHP_SELF."?cmd=delete_selected&sel_sms[1]=".$psm['message_id']."\">" .  Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _("Diese Nachricht löschen."))) . "</a> ";
+        $trash = "<a href=\"".URLHelper::getLink('?cmd=delete_selected&sel_sms[1]='.$psm['message_id'])."\">" .  Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _("Diese Nachricht löschen."))) . "</a> ";
     }
 
     if ($x == 1) { // if only one receiver
         $zusatz .= sprintf(_("an %s, %s"), "</font><a href=\"about.php?username=".$psm['rec_uname']."\"><font size=-1 color=\"#333399\">".htmlReady($psm['rec_vorname'])."&nbsp;".htmlReady($psm['rec_nachname'])."</font></a><font size=-1>", date("d.m.y, H:i",$psm['mkdate']));
         $zusatz .= "&nbsp;";
-        $zusatz .= "<a href=\"".$PHP_SELF."?cmd=".$tmp_cmd."&sel_lock=".$psm['message_id']."#".$psm['message_id']."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".$tmp_picture."\" ".$tmp_tooltip."></a> ".$trash." <input type=\"checkbox\" name=\"sel_sms[]\" value=\"".$psm['message_id']."\" ".CheckChecked($cmd, "select_all").">";
+        $zusatz .= "<a href=\"".URLHelper::getLink('?cmd='.$tmp_cmd.'&sel_lock='.$psm['message_id'].'#'.$psm['message_id'])."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".$tmp_picture."\" ".$tmp_tooltip."></a> ".$trash." <input type=\"checkbox\" name=\"sel_sms[]\" value=\"".$psm['message_id']."\" ".CheckChecked($cmd, "select_all").">";
     } else if ($x >= "2") { // if more than one receiver
         $zusatz .= sprintf(_("an %s Empf&auml;nger, %s"), $x, date("d.m.y, H:i",$psm['mkdate']));
         $zusatz .= "&nbsp;";
-        $zusatz .= "<a href=\"".$PHP_SELF."?cmd=".$tmp_cmd."&sel_lock=".$psm['message_id']."#".$psm['message_id']."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".$tmp_picture."\" ".$tmp_tooltip."></a> ".$trash." <input type=\"checkbox\" name=\"sel_sms[]\" value=\"".$psm['message_id']."\" ".CheckChecked($cmd, "select_all").">";
+        $zusatz .= "<a href=\"".URLHelper::getLink('?cmd='.$tmp_cmd.'&sel_lock='.$psm['message_id'].'#'.$psm['message_id'])."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".$tmp_picture."\" ".$tmp_tooltip."></a> ".$trash." <input type=\"checkbox\" name=\"sel_sms[]\" value=\"".$psm['message_id']."\" ".CheckChecked($cmd, "select_all").">";
     }
 
     if (have_msgfolder($sms_data['view']) == TRUE) {
-        $zusatz .= " <a href=\"".$PHP_SELF."?move_to_folder[1]=".$psm['message_id']."\">";
+        $zusatz .= " <a href=\"".URLHelper::getLink('?move_to_folder[1]='.$psm['message_id'])."\">";
         $zusatz .= Assets::img('icons/16/blue/move_right/folder-empty.png', array('class' => 'text-top', 'title' => _("Diese Nachricht in einen frei wählbaren Ordner verschieben.")));
         $zusatz .= "</a> ";
     }
@@ -330,21 +330,21 @@ function print_snd_message($psm) {
 
 // print_rec_message
 function print_rec_message($prm) {
-    global $n, $LastLogin, $my_messaging_settings, $PHP_SELF, $msging, $sms_show, $sms_data, $user, $cmd_show, $cmd;
+    global $n, $LastLogin, $my_messaging_settings, $msging, $sms_show, $sms_data, $user, $cmd_show, $cmd;
 
     // build
     if ($prm['readed'] != "1" && $my_messaging_settings["opennew"] == "1") { // open if unread
         $open = "open";
-        $link = $PHP_SELF."?mclose=TRUE";
+        $link = URLHelper::getLink('?mclose=TRUE');
     } else if ($sms_data["open"] == $prm['message_id']) {
         $open = "open";
-        $link = $PHP_SELF."?mclose=TRUE";
+        $link = URLHelper::getLink('?mclose=TRUE');
     } else if ($cmd_show == "openall" || $my_messaging_settings["openall"] == "1") {
         $open = "open";
-        $link = $PHP_SELF."?mopen=".$prm['message_id']."#".$prm['message_id'];
+        $link = URLHelper::getLink('?mopen='.$prm['message_id'].'#'.$prm['message_id']);
     } else {
         $open = "close";
-        $link = $PHP_SELF."?mopen=".$prm['message_id']."#".$prm['message_id'];
+        $link = URLHelper::getLink('?mopen='.$prm['message_id'].'#'.$prm['message_id']);
     }
     if ($prm['readed'] == "1") { // unread=new ... is message new? if new and opened=set readed
         $red = FALSE;
@@ -367,11 +367,11 @@ function print_rec_message($prm) {
         $tmp_cmd = "safe_selected";
         $tmp_picture = "icons/16/blue/lock-unlocked.png";
         $tmp_tooltip = tooltip(_("Löschschutz für diese Nachricht aktivieren."));
-        $trash = "<a href=\"".$PHP_SELF."?cmd=delete_selected&sel_sms[1]=".$prm['message_id']."\">" .  Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _("Diese Nachricht löschen."))) . "</a> ";
+        $trash = "<a href=\"".URLHelper::getLink('?cmd=delete_selected&sel_sms[1]='.$prm['message_id'])."\">" .  Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _("Diese Nachricht löschen."))) . "</a> ";
     }
     // zusatz
     if (have_msgfolder($sms_data['view']) == TRUE) {
-        $move_option = "<a href=\"".$PHP_SELF."?move_to_folder[1]=".$prm['message_id']."\">";
+        $move_option = "<a href=\"".URLHelper::getLink('?move_to_folder[1]='.$prm['message_id'])."\">";
         $move_option .= Assets::img('icons/16/blue/move_right/folder-empty.png', array('class' => 'text-top', 'title' => _("Diese Nachricht in einen frei wählbaren Ordner verschieben."))) . "</a> ";
     }
     $zusatz = "<font size=-1>";
@@ -381,7 +381,7 @@ function print_rec_message($prm) {
         $zusatz .= sprintf(_("von %s, "), "</font><a href=\"about.php?username=".$prm['uname_snd']."\"><font size=-1 color=\"#333399\">".htmlReady($prm['vorname'])."&nbsp;".htmlReady($prm['nachname'])."</font></a><font size=-1>");
     }
     $zusatz .= date("d.m.y, H:i", $prm['mkdate']);
-    $zusatz .= " ".$move_option."<a href=\"".$PHP_SELF."?cmd=".$tmp_cmd."&sel_lock=".$prm['message_id']."#".$prm['message_id']."\"><img class=\"text-top\" src=\"".$GLOBALS['ASSETS_URL']."images/".$tmp_picture."\" ".$tmp_tooltip."></a> ".$trash." <input type=\"checkbox\" name=\"sel_sms[]\" value=\"".$prm['message_id']."\" ".CheckChecked($cmd, "select_all").">";
+    $zusatz .= " ".$move_option."<a href=\"".URLHelper::getLink('?cmd='.$tmp_cmd.'&sel_lock='.$prm['message_id'].'#'.$prm['message_id'])."\"><img class=\"text-top\" src=\"".$GLOBALS['ASSETS_URL']."images/".$tmp_picture."\" ".$tmp_tooltip."></a> ".$trash." <input type=\"checkbox\" name=\"sel_sms[]\" value=\"".$prm['message_id']."\" ".CheckChecked($cmd, "select_all").">";
     $zusatz .= "</font>";
 
     if ($prm["num_attachments"])
@@ -418,7 +418,7 @@ function print_rec_message($prm) {
         if ($my_messaging_settings["confirm_reading"] != 1 && $prm['message_reading_confirmation'] == 1) { // yeah i'm interested in readingconfirmations and the message has a readingrequested
             if ($my_messaging_settings["confirm_reading"] == 3 && $prm['confirmed_read'] != 1) { // let me decided what to do
                 $content .= "<br>--<br>"._("Der Absender / Die Absenderin hat eine Lesebestätigung angefordert.");
-                $content .= "<br><a href=\"".$PHP_SELF."?readingconfirmation=".$prm['message_id']."&uname_snd=".$prm['uname_snd']."#".$prm['message_id']."\">"._("Klicken Sie hier um das Lesen der Nachricht zu bestätigen")."</a>";
+                $content .= "<br><a href=\"".URLHelper::getLink('?readingconfirmation='.$prm['message_id'].'&uname_snd='.$prm['uname_snd'].'#'.$prm['message_id'])."\">"._("Klicken Sie hier um das Lesen der Nachricht zu bestätigen")."</a>";
             } else if ($my_messaging_settings["confirm_reading"] == 2 && $prm['confirmed_read'] != 1) { // automatic confirm my reading and don't nag me
                 $dbX = new DB_Seminar;
                 $user_id = $user->id;
@@ -495,7 +495,7 @@ function print_rec_message($prm) {
 }
 
 function print_messages() {
-    global $user,$_fullname_sql, $my_messaging_settings, $PHP_SELF ,$sms_data, $sms_show, $query_showfolder, $query_time_sort, $query_movetofolder, $query_time, $srch_result, $no_message_text, $n, $count, $count_timefilter, $cmd, $cmd_show;
+    global $user,$_fullname_sql, $my_messaging_settings, $sms_data, $sms_show, $query_showfolder, $query_time_sort, $query_movetofolder, $query_time, $srch_result, $no_message_text, $n, $count, $count_timefilter, $cmd, $cmd_show;
 
     $db = new DB_Seminar();
     $db2 = new DB_Seminar();
@@ -582,7 +582,7 @@ function print_messages() {
 }
 
 function ajax_show_body($mid)   {
-    global  $my_messaging_settings, $_fullname_sql, $user, $n, $count, $PHP_SELF, $sms_data, $query_time, $query_movetofolder,$sms_show, $query_time_sort, $srch_result, $no_message_text, $count_timefilter;
+    global  $my_messaging_settings, $_fullname_sql, $user, $n, $count, $sms_data, $query_time, $query_movetofolder,$sms_show, $query_time_sort, $srch_result, $no_message_text, $count_timefilter;
     $db = DBManager::get();
     if ($query_time) $count = $count_timefilter;
     $n = 0;
@@ -711,7 +711,7 @@ function CheckAllAdded($adresses_array, $rec_array) {
 
 function show_precform() {
 
-    global $PHP_SELF, $sms_data, $user, $my_messaging_settings;
+    global $sms_data, $user, $my_messaging_settings;
 
     $tmp_01 = min(sizeof($sms_data["p_rec"]), 12);
     $tmp = "";
@@ -739,7 +739,7 @@ function show_precform() {
 
 function show_addrform() {
 
-    global $PHP_SELF, $sms_data, $user, $adresses_array, $search_exp, $my_messaging_settings, $_fullname_sql;
+    global $sms_data, $user, $adresses_array, $search_exp, $my_messaging_settings, $_fullname_sql;
 
     $db = new DB_Seminar;
     $picture = 'icons/16/yellow/arr_2up.png';
@@ -827,7 +827,7 @@ function show_addrform() {
 
 function show_msgform() {
 
-    global $PHP_SELF, $sms_data, $user, $tmp_sms_content, $messagesubject, $message, $quote_username, $quote, $cmd ;
+    global $sms_data, $user, $tmp_sms_content, $messagesubject, $message, $quote_username, $quote, $cmd ;
 
 
 

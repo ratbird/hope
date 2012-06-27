@@ -1878,7 +1878,7 @@ STUDIP.DragAndDropUpload = {
             return false;
         });
     }
-}
+};
 jQuery(document).ready(function ($) {
     $('form.drag-and-drop').each(function () {
         STUDIP.DragAndDropUpload.bind(this);
@@ -1886,7 +1886,7 @@ jQuery(document).ready(function ($) {
 });
 
 STUDIP.StatusGroup = {
-    init: function() {
+    init: function () {
         // make the tables in the div sortable
         jQuery('div.sortable').sortable({
             axis: 'y',
@@ -1898,7 +1898,7 @@ STUDIP.StatusGroup = {
                 var statusgroup_ids = {};
                 statusgroup_ids.statusgroup_ids = {};
                 //areas.areas = {};
-                jQuery('div.sortable').find('table.sortable').each(function() {
+                jQuery('div.sortable').find('table.sortable').each(function () {
                     statusgroup_ids.statusgroup_ids[jQuery(this).attr('id')] = jQuery(this).attr('id');
                 });
 
@@ -1910,7 +1910,7 @@ STUDIP.StatusGroup = {
             }
         });
     }
-}
+};
 
 jQuery(function ($) {
     $('a.print_action').live('click', function (event) {
@@ -1921,10 +1921,13 @@ jQuery(function ($) {
             width: '1px',
             height: '1px',
             frameborder: 0
-         })
+        })
         .css({top: '-99px', position: 'absolute'})
         .appendTo('body')
-        .load(function () { this.contentWindow.focus(); this.contentWindow.print();});
+        .load(function () {
+            this.contentWindow.focus();
+            this.contentWindow.print();
+        });
         return false;
     });
 });

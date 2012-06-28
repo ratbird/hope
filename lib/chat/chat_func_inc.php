@@ -230,7 +230,7 @@ function chat_get_content($chatid, $chatter, $chatinv, $password, $is_active, $c
 
 function chat_get_online_icon($user_id = false, $username = false, $pref_chat_id = false)
 {
-    global $i_page;
+    $i_page  = Request::option('i_page');
     if (get_config('CHAT_ENABLE')) {
         if ($user_id && !$username){
             $username = get_username($user_id);

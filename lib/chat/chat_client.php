@@ -6,9 +6,9 @@
 # Lifter010: TODO
 /**
 * chat client
-* 
+*
 * prints messages, handles all communication
-* 
+*
 *
 * @author       André Noack <andre.noack@gmx.net>
 * @access       public
@@ -67,8 +67,8 @@ function printJs($code){
 }
 
 function fullNick($userid) {
-    global $chatServer,$chatid;
-    return (CHAT_NICKNAME == 'username' ? $chatServer->getNick($userid,$chatid) : $chatServer->getFullname($userid,$chatid));
+    global $chatServer;
+    return (CHAT_NICKNAME == 'username' ? $chatServer->getNick($userid,Request::option('chatid')) : $chatServer->getFullname($userid,Request::option('chatid')));
 }
 
 //Hilfsfunktion, unterscheidet zwischen öffentlichen und privaten System Nachrichten
@@ -86,24 +86,24 @@ function chatSystemMsg($msg){
 }
 //Die Funktionen für die Chatkommandos, für jedes Kommando in $chatCmd muss es eine Funktion geben
 function chatCommand_color($msgStr){
-    global $user,$chatServer,$chatid;
+    global $user,$chatServer;
     if (!$msgStr || $msgStr == "\n" || $msgStr == "\r")
         return;
-    $chatServer->chatDetail[$chatid]['users'][$user->id]["color"] = htmlReady($msgStr);
+    $chatServer->chatDetail[Request::option('chatid')]['users'][$user->id]["color"] = htmlReady($msgStr);
     $chatServer->store();
-    $chatServer->addMsg("system:$user->id",$chatid,sprintf(_("Ihre %sSchriftfarbe%s wurde ge&auml;ndert!"),"<font color=\"".htmlReady($msgStr)."\">", '</font>'));
+    $chatServer->addMsg("system:$user->id",Request::option('chatid'),sprintf(_("Ihre %sSchriftfarbe%s wurde ge&auml;ndert!"),"<font color=\"".htmlReady($msgStr)."\">", '</font>'));
     return;
 }
 
 function chatCommand_quit($msgStr){
-    global $user,$chatServer,$chatid,$userQuit;
+    global $user,$chatServer,$userQuit;
     $full_nick = fullNick($user->id);
-    if ($chatServer->chatDetail[$chatid]['log'][$user->id]){
+    if ($chatServer->chatDetail[Request::option('chatid')]['log'][$user->id]){
             chatCommand_log("stop");
     }
-    $chatServer->addMsg("system",$chatid,sprintf(_("%s verl&auml;sst den Chat und sagt: %s"),htmlReady($full_nick),formatReady($msgStr)));
+    $chatServer->addMsg("system",Request::option('chatid'),sprintf(_("%s verl&auml;sst den Chat und sagt: %s"),htmlReady($full_nick),formatReady($msgStr)));
     echo _("Sie haben den Chat verlassen!") . "<br>";
-    if (is_array($chatServer->chatDetail[$chatid]['users'][$user->id]['log'])){
+    if (is_array($chatServer->chatDetail[Request::option('chatid')]['users'][$user->id]['log'])){
         echo _("Ihre letzte Aufzeichnung wird noch einmal zum Download angeboten.<br>Nachdem Sie dieses Fenster schließen wird diese Aufzeichnung gel&ouml;scht.");
         printJs("if (parent.frames['frm_dummy'].location.href) parent.frames['frm_dummy'].location.href = parent.frames['frm_dummy'].location.href;");
         flush();
@@ -112,52 +112,52 @@ function chatCommand_quit($msgStr){
         echo _("Das Chatfenster wird in 3 Sekunden geschlossen!") . "<br>";
         printJs("window.scrollBy(0, 500);");
         printJs("setTimeout('parent.close()',3000);");
-    } 
+    }
     flush();
-    $chatServer->removeUser($user->id,$chatid);
+    $chatServer->removeUser($user->id,Request::option('chatid'));
     $userQuit = true;  //dirty deeds...
 }
 
 function chatCommand_me($msgStr){
-    global $user,$chatServer,$chatid;
-    $chatServer->addMsg("system",$chatid,"<b>".htmlReady(fullNick($user->id))." ".formatReady($msgStr)."</b>");
+    global $user,$chatServer;
+    $chatServer->addMsg("system",Request::option('chatid'),"<b>".htmlReady(fullNick($user->id))." ".formatReady($msgStr)."</b>");
 }
 
 function chatCommand_help($msgStr){
-    global $user,$chatServer,$chatid,$chatCmd;
+    global $user,$chatServer,$chatCmd;
     $str = _("Mögliche Chat-Kommandos:");
     foreach($chatCmd as $cmd => $text)
         $str .= "<br><b>/$cmd</b>" . htmlReady($text);
-    $chatServer->addMsg("system:$user->id",$chatid,$str);
+    $chatServer->addMsg("system:$user->id",Request::option('chatid'),$str);
 }
 
 function chatCommand_private($msgStr){
-    global $user,$chatServer,$chatid;
+    global $user,$chatServer;
     $recnick = trim(substr($msgStr." ",0,strpos($msgStr," ")));
-    $recid = $chatServer->getIdFromNick($chatid,$recnick);
+    $recid = $chatServer->getIdFromNick(Request::option('chatid'),$recnick);
     $privMsgStr = trim(strstr($msgStr," "));
-    if ($chatServer->isActiveUser($recid,$chatid)){
-        $chatServer->addMsg("system:$user->id",$chatid,sprintf(_("Ihre Botschaft an %s wurde verschickt."),htmlReady(fullNick($recid)))
-            .":<br></i><font color=\"".$chatServer->chatDetail[$chatid]['users'][$user->id]["color"]."\"> " . formatReady($privMsgStr)
+    if ($chatServer->isActiveUser($recid,Request::option('chatid'))){
+        $chatServer->addMsg("system:$user->id",Request::option('chatid'),sprintf(_("Ihre Botschaft an %s wurde verschickt."),htmlReady(fullNick($recid)))
+            .":<br></i><font color=\"".$chatServer->chatDetail[Request::option('chatid')]['users'][$user->id]["color"]."\"> " . formatReady($privMsgStr)
             ."</font>");
-        $chatServer->addMsg("system:$recid",$chatid,sprintf(_("Eine geheime Botschaft von %s"),htmlReady(fullNick($user->id)))
-            .":<br></i><font color=\"".$chatServer->chatDetail[$chatid]['users'][$user->id]["color"]."\"> " . formatReady($privMsgStr)
+        $chatServer->addMsg("system:$recid",Request::option('chatid'),sprintf(_("Eine geheime Botschaft von %s"),htmlReady(fullNick($user->id)))
+            .":<br></i><font color=\"".$chatServer->chatDetail[Request::option('chatid')]['users'][$user->id]["color"]."\"> " . formatReady($privMsgStr)
             ."</font>");
     } elseif ($recnick) {
-        $chatServer->addMsg("system:$user->id",$chatid,sprintf(_("%s ist in diesem Chat nicht bekannt."),'<b>'.$recnick.'</b>'));
+        $chatServer->addMsg("system:$user->id",Request::option('chatid'),sprintf(_("%s ist in diesem Chat nicht bekannt."),'<b>'.$recnick.'</b>'));
     } else {
-        $chatServer->addMsg("system:$user->id",$chatid,_("Fehler: Falsche Kommandosyntax!"));
+        $chatServer->addMsg("system:$user->id",Request::option('chatid'),_("Fehler: Falsche Kommandosyntax!"));
     }
 }
 
 function chatCommand_kick($msgStr){
-    global $user,$chatServer,$chatid;
+    global $user,$chatServer;
     //$kicknick = trim(substr($msgStr." ",0,strpos($msgStr," ")-1));
     $kicknick = $msgStr;
-    if ($chatServer->getPerm($user->id,$chatid) && $kicknick){
-        $chat_users = $chatServer->getUsers($chatid);
+    if ($chatServer->getPerm($user->id,Request::option('chatid')) && $kicknick){
+        $chat_users = $chatServer->getUsers(Request::option('chatid'));
         if ($kicknick != "all") {
-            $kickid = $chatServer->getIdFromNick($chatid,$kicknick);
+            $kickid = $chatServer->getIdFromNick(Request::option('chatid'),$kicknick);
             if ($kickid){
                 $kickids[$kickid] = $chat_users[$kickid];
             }
@@ -166,159 +166,159 @@ function chatCommand_kick($msgStr){
         }
         if (is_array($kickids)){
             foreach ($kickids as $kickid => $detail){
-                if ($chatServer->getPerm($kickid,$chatid)){
+                if ($chatServer->getPerm($kickid,Request::option('chatid'))){
                     unset($kickids[$kickid]);
                 }
             }
         }
         if (is_array($kickids) && count($kickids)){
             foreach ($kickids as $kickid => $detail){
-                if ($chatServer->removeUser($kickid,$chatid)){
-                    $chatServer->addMsg("system",$chatid,sprintf(_("%s wurde von %s aus dem Chat geworfen!"),htmlReady($detail['nick']),htmlReady(fullNick($user->id))));
+                if ($chatServer->removeUser($kickid,Request::option('chatid'))){
+                    $chatServer->addMsg("system",Request::option('chatid'),sprintf(_("%s wurde von %s aus dem Chat geworfen!"),htmlReady($detail['nick']),htmlReady(fullNick($user->id))));
                 }
             }
         } else {
-            $chatServer->addMsg("system:$user->id",$chatid,_("Kein(e) Nutzer(in) zum entfernen gefunden."));
+            $chatServer->addMsg("system:$user->id",Request::option('chatid'),_("Kein(e) Nutzer(in) zum entfernen gefunden."));
         }
     } elseif (!$kicknick){
-        $chatServer->addMsg("system:$user->id",$chatid,_("Fehler: Falsche Kommandosyntax!"));
+        $chatServer->addMsg("system:$user->id",Request::option('chatid'),_("Fehler: Falsche Kommandosyntax!"));
     } else {
-        $chatServer->addMsg("system:$user->id",$chatid,_("Sie d&uuml;rfen hier niemanden rauswerfen!"));
+        $chatServer->addMsg("system:$user->id",Request::option('chatid'),_("Sie d&uuml;rfen hier niemanden rauswerfen!"));
     }
 }
 
 function chatCommand_sms($msgStr){
-    global $user,$chatServer,$chatid;
+    global $user,$chatServer;
     $recUserName = trim(substr($msgStr." ",0,strpos($msgStr," ")));
     $smsMsgStr = trim(strstr($msgStr," "));
     if (!$recUserName || !$smsMsgStr){
-        $chatServer->addMsg("system:$user->id",$chatid,_("Fehler: Falsche Kommandosyntax!"));
+        $chatServer->addMsg("system:$user->id",Request::option('chatid'),_("Fehler: Falsche Kommandosyntax!"));
         return;
     }
     $msging = new messaging();
     if ($recUserName != get_username($user->id)) {
         if (get_visibility_by_username($recUserName) && $msging->insert_message(addslashes($smsMsgStr), $recUserName))
-            $chatServer->addMsg("system:$user->id",$chatid,sprintf(_("Ihre Nachricht an %s wurde verschickt."),'<b>'.$recUserName.'</b>'));
+            $chatServer->addMsg("system:$user->id",Request::option('chatid'),sprintf(_("Ihre Nachricht an %s wurde verschickt."),'<b>'.$recUserName.'</b>'));
         else
-            $chatServer->addMsg("system:$user->id",$chatid,_("Fehler: Ihre Nachricht konnte nicht verschickt werden!"));
+            $chatServer->addMsg("system:$user->id",Request::option('chatid'),_("Fehler: Ihre Nachricht konnte nicht verschickt werden!"));
     } else {
-        $chatServer->addMsg("system:$user->id",$chatid,_("Fehler: Es macht keinen Sinn, sich selbst Nachrichten zu schicken!"));
+        $chatServer->addMsg("system:$user->id",Request::option('chatid'),_("Fehler: Es macht keinen Sinn, sich selbst Nachrichten zu schicken!"));
     }
 }
 
 function chatCommand_invite($msgStr){
-    global $user,$chatServer,$chatid;
-    if ($chatServer->getPerm($user->id,$chatid)){
+    global $user,$chatServer;
+    if ($chatServer->getPerm($user->id,Request::option('chatid'))){
         $recUserName = trim(substr($msgStr." ",0,strpos($msgStr." "," ")));
         $smsMsgStr = trim(strstr($msgStr," "));
         if (!$recUserName){
-            $chatServer->addMsg("system:$user->id",$chatid,_("Fehler: Falsche Kommandosyntax!"));
+            $chatServer->addMsg("system:$user->id",Request::option('chatid'),_("Fehler: Falsche Kommandosyntax!"));
             return;
         }
         $msging = new messaging();
         if ($recUserName != get_username($user->id)) {
-            if ($msging->insert_chatinv(addslashes($smsMsgStr), $recUserName, $chatid)) {
-                $chatServer->addMsg("system:$user->id",$chatid,sprintf(_("Ihre Einladung an %s wurde verschickt."),'<b>'.$recUserName.'</b>'));
+            if ($msging->insert_chatinv(addslashes($smsMsgStr), $recUserName, Request::option('chatid'))) {
+                $chatServer->addMsg("system:$user->id",Request::option('chatid'),sprintf(_("Ihre Einladung an %s wurde verschickt."),'<b>'.$recUserName.'</b>'));
             } else {
-                $chatServer->addMsg("system:$user->id",$chatid,_("Fehler: Ihre Einladung konnte nicht verschickt werden!"));
+                $chatServer->addMsg("system:$user->id",Request::option('chatid'),_("Fehler: Ihre Einladung konnte nicht verschickt werden!"));
             }
         } else {
-            $chatServer->addMsg("system:$user->id",$chatid,_("Fehler: Es macht keinen Sinn, sich selbst in den Chat einzuladen!"));
+            $chatServer->addMsg("system:$user->id",Request::option('chatid'),_("Fehler: Es macht keinen Sinn, sich selbst in den Chat einzuladen!"));
         }
     } else {
-        $chatServer->addMsg("system:$user->id",$chatid,_("Sie d&uuml;rfen f&uuml;r diesen Chat keine Einladungen verschicken!"));
+        $chatServer->addMsg("system:$user->id",Request::option('chatid'),_("Sie d&uuml;rfen f&uuml;r diesen Chat keine Einladungen verschicken!"));
     }
 }
 
 function chatCommand_password($msgStr){
-    global $user,$chatServer,$chatid;
+    global $user,$chatServer;
     $password = $msgStr;
-    if ($chatServer->getPerm($user->id,$chatid)){
+    if ($chatServer->getPerm($user->id,Request::option('chatid'))){
         if ($password){
-            $chatServer->addMsg("system",$chatid,sprintf(_("Dieser Chat wurde soeben von %s mit einem Passwort gesichert."),'<b>' . htmlReady(fullNick($user->id)).'</b>'));
-            $chatServer->chatDetail[$chatid]['password'] = $password;
+            $chatServer->addMsg("system",Request::option('chatid'),sprintf(_("Dieser Chat wurde soeben von %s mit einem Passwort gesichert."),'<b>' . htmlReady(fullNick($user->id)).'</b>'));
+            $chatServer->chatDetail[Request::option('chatid')]['password'] = $password;
             $chatServer->store();
-        } elseif ($chatServer->chatDetail[$chatid]['password']){
-            $chatServer->addMsg("system",$chatid,sprintf(_("Der Passwortschutz f&uuml;r diesen Chat wurde soeben von %s aufgehoben."),'<b>'.htmlReady(fullNick($user->id)).'</b>'));
-            $chatServer->chatDetail[$chatid]['password'] = false;
+        } elseif ($chatServer->chatDetail[Request::option('chatid')]['password']){
+            $chatServer->addMsg("system",Request::option('chatid'),sprintf(_("Der Passwortschutz f&uuml;r diesen Chat wurde soeben von %s aufgehoben."),'<b>'.htmlReady(fullNick($user->id)).'</b>'));
+            $chatServer->chatDetail[Request::option('chatid')]['password'] = false;
             $chatServer->store();
         } else {
-            $chatServer->addMsg("system:$user->id",$chatid,_("Dieser Chat ist nicht mit einem Passwort gesichert."));
+            $chatServer->addMsg("system:$user->id",Request::option('chatid'),_("Dieser Chat ist nicht mit einem Passwort gesichert."));
         }
     } else {
-        $chatServer->addMsg("system:$user->id",$chatid,_("Sie d&uuml;rfen hier kein Passwort setzen!"));
+        $chatServer->addMsg("system:$user->id",Request::option('chatid'),_("Sie d&uuml;rfen hier kein Passwort setzen!"));
     }
-    
+
 }
 
 function chatCommand_lock($msgStr){
-    global $user,$chatServer,$chatid;
-    if ($chatServer->getPerm($user->id,$chatid)){
-        chatCommand_password(md5($chatServer->chatDetail[$chatid]['id'] . ":" . uniqid("blablubb",1)));
+    global $user,$chatServer;
+    if ($chatServer->getPerm($user->id,Request::option('chatid'))){
+        chatCommand_password(md5($chatServer->chatDetail[Request::option('chatid')]['id'] . ":" . uniqid("blablubb",1)));
         chatCommand_kick("all");
     } else {
-        $chatServer->addMsg("system:$user->id",$chatid,_("Sie d&uuml;rfen diesen Chat nicht absichern!"));
+        $chatServer->addMsg("system:$user->id",Request::option('chatid'),_("Sie d&uuml;rfen diesen Chat nicht absichern!"));
     }
 }
 
 function chatCommand_unlock($msgStr){
-    global $user,$chatServer,$chatid;
-    if ($chatServer->getPerm($user->id,$chatid)){
+    global $user,$chatServer;
+    if ($chatServer->getPerm($user->id,Request::option('chatid'))){
         chatCommand_password("");
     } else {
-        $chatServer->addMsg("system:$user->id",$chatid,_("Sie d&uuml;rfen diesen Chat nicht entsichern!"));
+        $chatServer->addMsg("system:$user->id",Request::option('chatid'),_("Sie d&uuml;rfen diesen Chat nicht entsichern!"));
     }
 }
 
 function chatCommand_log($msgStr){
-    global $user,$chatServer,$chatid,$chat_log;
+    global $user,$chatServer,$chat_log;
     $cmd = $msgStr;
-    if ($chatServer->getPerm($user->id,$chatid)){
+    if ($chatServer->getPerm($user->id,Request::option('chatid'))){
         if ($cmd == "start"){
-            if ($chatServer->chatDetail[$chatid]['log'][$user->id]){
-                $chatServer->addMsg("system:$user->id",$chatid,sprintf(_("Sie lassen bereits seit %s eine Aufzeichnung laufen."),date("H:i",$chatServer->chatDetail[$chatid]['log'][$user->id])));
+            if ($chatServer->chatDetail[Request::option('chatid')]['log'][$user->id]){
+                $chatServer->addMsg("system:$user->id",Request::option('chatid'),sprintf(_("Sie lassen bereits seit %s eine Aufzeichnung laufen."),date("H:i",$chatServer->chatDetail[Request::option('chatid')]['log'][$user->id])));
             } else {
-                $chatServer->addMsg("system",$chatid,sprintf(_("Es wurde soeben von %s eine Aufzeichnung gestartet."),'<b>'.htmlReady(fullNick($user->id)).'</b>'));
-                $chatServer->chatDetail[$chatid]['log'][$user->id] = time();
+                $chatServer->addMsg("system",Request::option('chatid'),sprintf(_("Es wurde soeben von %s eine Aufzeichnung gestartet."),'<b>'.htmlReady(fullNick($user->id)).'</b>'));
+                $chatServer->chatDetail[Request::option('chatid')]['log'][$user->id] = time();
                 $chatServer->store();
                 $chat_log = array();
             }
         } elseif ($cmd == "stop"){
-            if ($chatServer->chatDetail[$chatid]['log'][$user->id]){
-                $chatServer->addMsg("system",$chatid,sprintf(_("Die Aufzeichnung von %s wurde beendet."),'<b>'.htmlReady(fullNick($user->id)).'</b>'));
-                $chatServer->addMsg("system:$user->id",$chatid,_("Ihre Aufzeichnug wurde beendet und wird zu Ihrem Browser geschickt."));
-                $chat_log[] = $chatServer->chatDetail[$chatid]['log'][$user->id];
+            if ($chatServer->chatDetail[Request::option('chatid')]['log'][$user->id]){
+                $chatServer->addMsg("system",Request::option('chatid'),sprintf(_("Die Aufzeichnung von %s wurde beendet."),'<b>'.htmlReady(fullNick($user->id)).'</b>'));
+                $chatServer->addMsg("system:$user->id",Request::option('chatid'),_("Ihre Aufzeichnug wurde beendet und wird zu Ihrem Browser geschickt."));
+                $chat_log[] = $chatServer->chatDetail[Request::option('chatid')]['log'][$user->id];
                 $chat_log[] = time();
-                $chatServer->chatDetail[$chatid]['users'][$user->id]['log'] = $chat_log;
-                unset($chatServer->chatDetail[$chatid]['log'][$user->id]);
+                $chatServer->chatDetail[Request::option('chatid')]['users'][$user->id]['log'] = $chat_log;
+                unset($chatServer->chatDetail[Request::option('chatid')]['log'][$user->id]);
                 $chatServer->store();
                 printJs("if (parent.frames['frm_dummy'].location.href) parent.frames['frm_dummy'].location.href = parent.frames['frm_dummy'].location.href;");
             } else {
-                $chatServer->addMsg("system:$user->id",$chatid,_("Sie haben keine Aufzeichnung gestartet."));
+                $chatServer->addMsg("system:$user->id",Request::option('chatid'),_("Sie haben keine Aufzeichnung gestartet."));
             }
         } elseif ($cmd == "send"){
-            if ($chatServer->chatDetail[$chatid]['users'][$user->id]['log']){
-                $chatServer->addMsg("system:$user->id",$chatid,_("Ihre Aufzeichnung wird zu Ihrem Browser geschickt."));
+            if ($chatServer->chatDetail[Request::option('chatid')]['users'][$user->id]['log']){
+                $chatServer->addMsg("system:$user->id",Request::option('chatid'),_("Ihre Aufzeichnung wird zu Ihrem Browser geschickt."));
                 printJs("if (parent.frames['frm_dummy'].location.href) parent.frames['frm_dummy'].location.href = parent.frames['frm_dummy'].location.href;");
             } else {
-                $chatServer->addMsg("system:$user->id",$chatid,_("Sie haben keine gespeicherte Aufzeichnung."));
+                $chatServer->addMsg("system:$user->id",Request::option('chatid'),_("Sie haben keine gespeicherte Aufzeichnung."));
             }
         } else {
-            $chatServer->addMsg("system:$user->id",$chatid,_("Fehler: Falsche Kommandosyntax!"));
+            $chatServer->addMsg("system:$user->id",Request::option('chatid'),_("Fehler: Falsche Kommandosyntax!"));
         }
     } else {
-        $chatServer->addMsg("system:$user->id",$chatid,_("Sie d&uuml;rfen hier keine Aufzeichnung starten!"));
+        $chatServer->addMsg("system:$user->id",Request::option('chatid'),_("Sie d&uuml;rfen hier keine Aufzeichnung starten!"));
     }
 }
 
 
 //Simpler Kommandoparser
 function chatCommand($msg){
-    global $user,$chatServer,$chatCmd,$chatid;
+    global $user,$chatServer,$chatCmd;
     $cmdStr = trim(substr($msg[1]." ",1,strpos($msg[1]," ")-1));
     $msgStr = trim(strstr($msg[1]," "));
     if (!$chatCmd[$cmdStr]) {
-        $chatServer->addMsg("system:$user->id",$chatid,sprintf(_("Unbekanntes Kommando: %s"),'<b>'.htmlReady($cmdStr).'</b>'));
+        $chatServer->addMsg("system:$user->id",Request::option('chatid'),sprintf(_("Unbekanntes Kommando: %s"),'<b>'.htmlReady($cmdStr).'</b>'));
         return;
     }
     $chatFunc = "chatCommand_" . $cmdStr;
@@ -329,6 +329,8 @@ function chatCommand($msg){
 //Die Ausgabeschleife, läuft endlos wenn keine Abbruchbedingung erreicht wird
 function outputLoop($chatid){
     global $user,$chatServer,$userQuit,$chat_log;
+
+
     $lastPingTime = 0;
     $lastMsgTime = $chatServer->getMsTime();
     --$lastMsgTime[1];
@@ -346,8 +348,11 @@ function outputLoop($chatid){
         }
         //Gibt es neue Nachrichten ?
         $newMsg = $chatServer->getMsg($chatid,$lastMsgTime);
+
         if ($newMsg) {
             foreach($newMsg as $msg){
+                var_dump('newxx');
+                var_dump($newMsg);
                 $output = "";
                 if (substr($msg[0],0,6) == "system") {
                     $output = chatSystemMsg($msg);
@@ -381,7 +386,7 @@ function outputLoop($chatid){
         }
 
         if ($userQuit) break; //...done dirt cheap
-        
+
         $chatServer->setHeartbeat($user->id, $chatid);
 
 //wurden wir zwischenzeitlich gekickt?
@@ -402,7 +407,7 @@ function outputLoop($chatid){
             flush();
             break;
         }
-        
+
 
         usleep(CHAT_SLEEP_TIME);
     }
@@ -424,7 +429,7 @@ $chat_log = array();
 </head>
 <body style="font-size:10pt; background: #f3f5f8;">
 <?
-if (!$chatServer->isActiveUser($user->id,$chatid)) {
+if (!$chatServer->isActiveUser($user->id,Request::option('chatid'))) {
     ?><table width="100%"><tr><?
     my_error('<font size="-1">'._("Sie sind nicht in diesem Chat angemeldet!").'</font>','chat',1,false);
     ?></tr></table></body></html><?
@@ -433,10 +438,10 @@ if (!$chatServer->isActiveUser($user->id,$chatid)) {
     die;
 }
 echo "\n<b>" . sprintf(_("Hallo %s,<br> willkommen im Raum: %s"),htmlReady(fullNick($user->id)),
-    htmlReady($chatServer->chatDetail[$chatid]["name"])) . "</b><br>";
+    htmlReady($chatServer->chatDetail[Request::option('chatid')]["name"])) . "</b><br>";
 
 register_shutdown_function("chatLogout");   //für korrektes ausloggen am Ende!
-outputLoop($chatid);
+outputLoop(Request::option('chatid'));
 //PHPLib Session Variablen unangetastet lassen
 //page_close();
 
@@ -444,9 +449,9 @@ outputLoop($chatid);
 
 //shutdown funktion, wird automatisch bei skriptende aufgerufen
 function chatLogout(){
-    global $userid,$chatid,$chatServer;
-    $chatServer->removeUser($userid,$chatid);
-    $chatServer->isActiveChat($chatid); 
+    global $userid,$chatServer;
+    $chatServer->removeUser($userid,Request::option('chatid'));
+    $chatServer->isActiveChat(Request::option('chatid'));
 }
 ?>
 

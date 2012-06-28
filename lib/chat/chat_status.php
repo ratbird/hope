@@ -49,6 +49,7 @@ if (!$CHAT_ENABLE) {
     page_close();
     die;
 }
+$chatid = Request::option('chatid');
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 require_once $RELATIVE_PATH_CHAT.'/ChatServer.class.php';
 //Studip includes

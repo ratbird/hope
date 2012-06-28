@@ -37,6 +37,7 @@
 use Studip\Button, Studip\LinkButton;
 
 include 'sajax_chat_functions.php';
+$chatid = Request::option('chatid');
 ?>
 <html>
 <head>

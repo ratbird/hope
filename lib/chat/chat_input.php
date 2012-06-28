@@ -6,7 +6,7 @@
 # Lifter010: TODO
 /**
 * Input Window for the Chat
-* 
+*
 * This script prints a HTML input form and handles color changing and quitting the chat with some JavaScript
 *
 * @author       André Noack <andre.noack@gmx.net>
@@ -52,7 +52,8 @@ if (!$CHAT_ENABLE) {
     die;
 }
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
-
+$chatid = Request::option('chatid');
+$chatInput = Request::quoted('chatInput');
 require_once $RELATIVE_PATH_CHAT.'/ChatServer.class.php';
 //Studip includes
 require_once 'lib/msg.inc.php';
@@ -76,12 +77,12 @@ $chatServer->caching = true;
     function strtrim() {
         return this.replace(/^\s+/,'').replace(/\s+$/,'');
     }
-    
+
     String.prototype.ltrim = strltrim;
     String.prototype.rtrim = strrtrim;
     String.prototype.trim = strtrim;
 /**
-* JavaScript 
+* JavaScript
 */
     function doQuit(){
         document.inputform.chatInput.value="/quit bye";
@@ -89,7 +90,7 @@ $chatServer->caching = true;
     }
 
 /**
-* JavaScript 
+* JavaScript
 */
     function doColorChange(){
         for(i=0;i<document.inputform.chatColor.length;++i)
@@ -101,12 +102,12 @@ $chatServer->caching = true;
     }
 
 /**
-* JavaScript 
+* JavaScript
 */
     function doCheck(){
         var the_string = document.inputform.chatInput.value.trim();
         if (the_string.substring(0,the_string.indexOf(" ")) == "/password"){
-            document.inputform.chatInput.value = "/password " + 
+            document.inputform.chatInput.value = "/password " +
                 parent.MD5(parent.chatuniqid + ":" + the_string.substring(the_string.indexOf(" "),the_string.length).trim());
             document.inputform.submit();
             return false;
@@ -115,7 +116,7 @@ $chatServer->caching = true;
         }
     }
 
-    
+
 </script>
 
 </head>
@@ -133,14 +134,18 @@ if (!$chatServer->isActiveUser($user->id,$chatid)) {
 
 //neue chatnachricht einfügen
 if ($chatInput) {
+    var_dump($chatInput);
+    var_dump('inpv');
     if ($chatServer->isActiveUser($user->id,$chatid)){
-        $chatInput = stripslashes($chatInput);
+       var_dump($chatInput);
+       var_dump('inpnactive');
         $chatServer->addMsg($user->id,$chatid,$chatInput);
         //evtl Farbe umstellen
         $cmdStr = trim(substr($chatInput." ",1,strpos($chatInput," ")-1));
         $msgStr = trim(strstr($chatInput," "));
         if ($cmdStr == "color" && $msgStr != "" && $msgStr != "\n" && $msgStr != "\r")
             $chatServer->chatDetail[$chatid]["users"][$user->id]["color"] = $msgStr;
+
         }
 
 }
@@ -173,10 +178,10 @@ if ($chatInput) {
                             print ">$c</option>\n";
                         }
                         if (!$selected) {
-                            print "<option style=\"color:" . $chatServer->chatDetail[$chatid]["users"][$user->id]["color"].";\" 
+                            print "<option style=\"color:" . $chatServer->chatDetail[$chatid]["users"][$user->id]["color"].";\"
                                 value=\"".$chatServer->chatDetail[$chatid]["users"][$user->id]["color"] . "\" selected>user</option>\n";
                         }
-                        ?>  
+                        ?>
                         </select>
                     </td>
                     <td align="center" valign="middle">

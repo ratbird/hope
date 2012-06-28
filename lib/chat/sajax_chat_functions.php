@@ -35,7 +35,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
-
+$chatid = Request::option('chatid');
 if (!function_exists("ob_get_clean")) {
    function ob_get_clean() {
        $ob_contents = ob_get_contents();
@@ -63,10 +63,8 @@ if (!is_object($chatServer)){
     $chatServer = ChatServer::GetInstance($CHAT_SERVER_NAME);
     $chatServer->caching = true;
 } else {
-    $sess->register('chat_logs');
-    $sess->register('last_msg_times');
-    $last_msg_times[$chatid] = $chatServer->getMsTime();
-    --$last_msg_times[$chatid][1];
+    $_SESSION['last_msg_times'][$chatid] = $chatServer->getMsTime();
+    --$_SESSION['last_msg_times'][$chatid][1];
 }
 
 $userQuit = false;
@@ -74,7 +72,7 @@ $userQuit = false;
 require("Sajax.php");
 
 function get_chat_status($chatid){
-    global $user, $chatServer, $chat_logs, $CANONICAL_RELATIVE_PATH_STUDIP;
+    global $user, $chatServer, $CANONICAL_RELATIVE_PATH_STUDIP;
     if (!$chatServer->isActiveUser($user->id,$chatid)) return ;
     ob_start();
     ?>
@@ -100,7 +98,7 @@ function get_chat_status($chatid){
             <td width="20%" align="right" class="topic" >
             <?
             if ($chatServer->getPerm($user->id,$chatid)){
-                $chat_log = $chat_logs[$chatid][count($chat_logs[$chatid])-1];
+                $chat_log = $_SESSION['chat_logs'][$chatid][count($_SESSION['chat_logs'][$chatid])-1];
                 if ($chat_log['start']){
                     ?>
                     <a href="javascript:doLogSend();">
@@ -196,7 +194,7 @@ function get_chat_color_chooser($chatid){
 }
 
 function do_logout($chatid){
-    global $user, $chatServer,$chat_logs,$last_msg_time,$do_page_close;
+    global $user, $chatServer, $last_msg_time,$do_page_close;
     if (!$chatServer->isActiveUser($user->id,$chatid)) return ;
     if ($chatid){
         $chatServer->caching = false;
@@ -218,11 +216,11 @@ function insert_message($chatid, $msg){
 }
 
 function check_and_get_messages($chatid){
-    global $user,$chatServer,$last_msg_times, $chat_logs, $userQuit;
+    global $user,$chatServer,$userQuit;
 
-    $lastMsgTime =& $last_msg_times[$chatid];
+    $lastMsgTime =& $_SESSION['last_msg_times'][$chatid];
     if ($chatServer->chatDetail[$chatid]['log'][$user->id]){
-        $chat_log =& $chat_logs[$chatid][count($chat_logs[$chatid])-1]['msg'];
+        $chat_log =& $_SESSION['chat_logs'][$chatid][count($_SESSION['chat_logs'][$chatid])-1]['msg'];
     }
 
     //Gibt es neue Nachrichten ?
@@ -311,14 +309,14 @@ function chatCommand_color($msgStr, $chatid){
 }
 
 function chatCommand_quit($msgStr, $chatid){
-    global $user,$chatServer,$userQuit,$chat_logs;
+    global $user,$chatServer,$userQuit;
     $full_nick = fullNick($user->id, $chatid);
     if ($chatServer->chatDetail[$chatid]['log'][$user->id]){
             chatCommand_log("stop", $chatid);
     }
     $chatServer->addMsg("system",$chatid,sprintf(_("%s verl&auml;sst den Chat und sagt: %s"),htmlReady($full_nick),formatReady($msgStr)));
     echo '<!--<logout>-->' . _("Sie haben den Chat verlassen!") . "<br>";
-    if (is_array($chat_logs[$chatid])){
+    if (is_array($_SESSION['chat_logs'][$chatid])){
         echo _("Ihre Aufzeichnungen k&ouml;nnen Sie weiterhin in der Chat&uuml;bersicht downloaden.") . '<br>';
     }
         echo '<!--<close>-->' . _("Das Chatfenster wird in 3 Sekunden geschlossen!") . "<br>";
@@ -479,7 +477,7 @@ function chatCommand_unlock($msgStr, $chatid){
 }
 
 function chatCommand_log($msgStr, $chatid){
-    global $user,$chatServer,$chat_logs;
+    global $user,$chatServer;
     $cmd = $msgStr;
     if ($chatServer->getPerm($user->id,$chatid)){
         if ($cmd == "start"){
@@ -489,11 +487,11 @@ function chatCommand_log($msgStr, $chatid){
                 $chatServer->addMsg("system",$chatid,sprintf(_("Es wurde soeben von %s eine Aufzeichnung gestartet."),'<b>'.htmlReady(fullNick($user->id,$chatid)).'</b>'));
                 $chatServer->chatDetail[$chatid]['log'][$user->id] = time();
                 $chatServer->store();
-                $chat_logs[$chatid][] = array('start' => time(), 'msg' => array());
+                $_SESSION['chat_logs'][$chatid][] = array('start' => time(), 'msg' => array());
             }
         } elseif ($cmd == "stop"){
             if ($chatServer->chatDetail[$chatid]['log'][$user->id]){
-                $chat_log = $chat_logs[$chatid][count($chat_logs[$chatid])-1];
+                $chat_log = $_SESSION['chat_logs'][$chatid][count($_SESSION['chat_logs'][$chatid])-1];
                 $chat_log['stop'] = time();
                 $chatServer->addMsg("system",$chatid,sprintf(_("Die Aufzeichnung von %s wurde beendet."),'<b>'.htmlReady(fullNick($user->id,$chatid)).'</b>'));
                 $chatServer->addMsg("system:$user->id",$chatid, _("Ihre Aufzeichnug wurde beendet."));
@@ -505,7 +503,7 @@ function chatCommand_log($msgStr, $chatid){
                 $chatServer->addMsg("system:$user->id",$chatid,_("Sie haben keine Aufzeichnung gestartet."));
             }
         } elseif ($cmd == "send"){
-            $chat_log = $chat_logs[$chatid][count($chat_logs[$chatid])-1];
+            $chat_log = $_SESSION['chat_logs'][$chatid][count($_SESSION['chat_logs'][$chatid])-1];
             if ($chat_log['start']){
                 $chatServer->addMsg("system:$user->id",$chatid, '<a href="#" onclick="window.open(\'chat_dispatcher.php?target=chat_dummy.php&chatid='.$chatid.'\', \'chat_dummy\', \'scrollbars=no,width=100,height=100,resizable=no\');return false;">download</a>&nbsp;'
                     . sprintf(_("<-- Ihre Aufzeichnung von %s ."), strftime('%X',$chat_log['start'])));

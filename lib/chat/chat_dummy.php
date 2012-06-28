@@ -4,7 +4,7 @@
 # Lifter010: TODO
 /**
 * chat_dummy
-* 
+*
 * Shows nothing, only used to send chatlogs
 *
 * @author       André Noack <andre.noack@gmx.net>
@@ -46,6 +46,7 @@ if (!$CHAT_ENABLE) {
     page_close();
     die;
 }
+$chatid = Request::option('chatid');
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 require_once $RELATIVE_PATH_CHAT.'/ChatServer.class.php';
 require_once 'lib/visual.inc.php';
@@ -54,10 +55,10 @@ require_once 'lib/chat/chat_func_inc.php';
 $chatServer = ChatServer::GetInstance($CHAT_SERVER_NAME);
 $chatServer->caching = true;
 if (UserConfig::get($user->id)->CHAT_USE_AJAX_CLIENT){
-    $log_id = isset($_GET['log_id']) ? (int)$_GET['log_id'] : count($chat_logs[$chatid])-1;
-    $chat_log = $chat_logs[$chatid][$log_id]['msg'];
-    $end_time = $chat_logs[$chatid][$log_id]['stop'];
-    $start_time = $chat_logs[$chatid][$log_id]['start'];
+    $log_id = isset($_GET['log_id']) ? (int)$_GET['log_id'] : count($_SESSION['chat_logs'][$chatid])-1;
+    $chat_log = $_SESSION['chat_logs'][$chatid][$log_id]['msg'];
+    $end_time = $_SESSION['chat_logs'][$chatid][$log_id]['stop'];
+    $start_time = $_SESSION['chat_logs'][$chatid][$log_id]['start'];
 } else {
     $chat_log = $chatServer->chatDetail[$chatid]['users'][$user->id]['log'];
     $end_time = array_pop($chat_log);

@@ -61,7 +61,8 @@ require_once 'lib/functions.php';
 require_once 'lib/visual.inc.php';
 
 //korrekte chatid ?
-if (!$chatid || !in_array(get_object_type($chatid), array('user','sem','inst','fak','global'))) {
+$chatid = Request::option('chatid');
+if (empty ($chatid) || !in_array(get_object_type($chatid), array('user','sem','inst','fak','global'))) {
     page_close();
     die;
 }

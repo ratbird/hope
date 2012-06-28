@@ -71,13 +71,11 @@ class StudipRangeTreeViewAdmin extends TreeView{
     * @access public
     */
     function StudipRangeTreeViewAdmin(){
-        global $sess,$_marked_item;
+        
         $this->root_content = $GLOBALS['UNI_INFO'];
         parent::TreeView("StudipRangeTree"); //calling the baseclass constructor
-        if (is_object($sess)){
-            $sess->register("_marked_item");
-            $this->marked_item =& $_marked_item;
-        }
+        $this->marked_item =& $_SESSION['_marked_item'];
+       
         $this->initTreeStatus();
         $this->parseCommand();
     }

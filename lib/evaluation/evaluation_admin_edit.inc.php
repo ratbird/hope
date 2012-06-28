@@ -144,29 +144,22 @@ if (Request::submitted('newButton')){
     $error_msgs[] = $error->createContent();
 }
 
-
-$sess->register("evalID");
-
 # ===================================================== END: check the evalID #
 
 # check the itemID =========================================================  #
 
 if (isset($_REQUEST['itemID'])) {
-    $itemID = $_REQUEST['itemID'];
-    $sess->register("itemID");
+    $_SESSION['itemID'] = $_REQUEST['itemID'];
 } elseif (Request::submitted('newButton')) {
-    $itemID = "root";
-}else {
-    # $itemID = "root";
+    $_SESSION['itemID'] = "root";
 }
-
 # ===================================================== END: check the itemID #
 
 # check the rangeID ========================================================  #
 
 if (isset($_REQUEST["rangeID"])) {
-    $rangeID = $_REQUEST["rangeID"];
-    $sess->register("rangeID");
+    $_SESSION['rangeID'] = $_REQUEST["rangeID"];
+   
 }
 
 # ==================================================== END: check the rangeID #
@@ -230,7 +223,7 @@ if ( $authorID != $user->id ) {
 if ($error_msgs){
 
     $back_button = ("&nbsp;&nbsp;&nbsp;")
-                    . "<a href=\"". UrlHelper::getLink('admin_evaluation.php?page=overview&rangeID='. $rangeID) ."\">"
+                    . "<a href=\"". UrlHelper::getLink('admin_evaluation.php?page=overview&rangeID='. Request::option('rangeID')) ."\">"
                     . _("Zur Evaluations-Verwaltung")
                     . "</a>";
     

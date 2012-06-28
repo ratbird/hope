@@ -45,23 +45,23 @@ if (get_config('CHAT_ENABLE')) {
 
 function print_chat_info($chatids)
 {
-    global $chatServer,$auth,$sms,$chat_online_id;
+    global $chatServer,$auth,$sms;
 
     for ($i = 0; $i < count($chatids); ++$i) {
         $chat_id = $chatids[$i];
         if ($chatServer->isActiveUser($_REQUEST['search_user'], $chat_id)) {
-            $chat_online_id[$chat_id] = true;
+            $_SESSION['chat_online_id'][$chat_id] = true;
         }
         $chatter = $chatServer->isActiveChat($chat_id);
         $chatinv = $sms->check_chatinv($chat_id);
         $is_active = $chatServer->isActiveUser($auth->auth['uid'],$chat_id);
         $chatname = ($chatter) ? $chatServer->chatDetail[$chat_id]['name'] : chat_get_name($chat_id);
-        $link = URLHelper::getLink('?chat_id=' . $chat_id . '&cmd=' . (($chat_online_id[$chat_id]) ? 'close' : 'open'));
+        $link = URLHelper::getLink('?chat_id=' . $chat_id . '&cmd=' . (($_SESSION['chat_online_id'][$chat_id]) ? 'close' : 'open'));
         $link_name = "<a class=\"tree\" href=\"$link\">" . htmlReady($chatname) . "</a>";
         echo "\n<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\"><tr>";
-        printhead(0,0,$link,(($chat_online_id[$chat_id])) ? "open" : "close", true, chat_get_chat_icon($chatter, $chatinv, $is_active), $link_name, "");
+        printhead(0,0,$link,(($_SESSION['chat_online_id'][$chat_id])) ? "open" : "close", true, chat_get_chat_icon($chatter, $chatinv, $is_active), $link_name, "");
         echo "\n</tr></table>";
-        if ($chat_online_id[$chat_id]){
+        if ($_SESSION['chat_online_id'][$chat_id]){
             echo "\n<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\">";
             echo chat_get_content($chat_id, $chatter, $chatinv, $chatServer->chatDetail[$chat_id]['password'], $is_active, $chatServer->getUsers($chat_id));
             echo "\n</table>";
@@ -76,13 +76,10 @@ Navigation::activateItem('/community/chat');
 SkipLinks::addIndex(_("Allgemeiner Chatraum"), 'chat_studip', 100);
 SkipLinks::addIndex(_('Persönlicher Chatraum'), 'chat_own');
 
-if (!$sess->is_registered("chat_online_id")){
-    $sess->register("chat_online_id");
-}
 if (!$_REQUEST['chat_id'] && !$_REQUEST['kill_chat']){
-    $chat_online_id = null;
+    $_SESSION['chat_online_id'] = null;
 } else {
-    $chat_online_id[$_REQUEST['chat_id']] = ($_REQUEST['cmd'] == "open") ? true : false;
+    $_SESSION['chat_online_id'][$_REQUEST['chat_id']] = ($_REQUEST['cmd'] == "open") ? true : false;
 }
 $chatter = $chatServer->getAllChatUsers();
 $active_chats = count($chatServer->chatDetail);
@@ -155,7 +152,7 @@ $infobox = array(
                 )
             )
         )
-        
+
     )
 );
 

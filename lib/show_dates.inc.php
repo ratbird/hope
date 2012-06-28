@@ -53,7 +53,7 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
                     $show_docs = TRUE, $show_admin = FALSE, $full_width = TRUE,
                     $show_as_window = TRUE)
 {
-    global $PHP_SELF, $TERMIN_TYP, $SessSemName, $user, $username, $rechte;
+    global $TERMIN_TYP, $SessSemName, $user, $username, $rechte;
 
     // wenn man keinen Start und Endtag angibt, soll wohl alles angezeigt werden
     // "0" bedeutet jeweils "open end"
@@ -369,7 +369,7 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
  */
 function show_personal_dates ($range_id, $date_start, $date_end, $show_docs = FALSE, $show_admin = FALSE, $open)
 {
-    global $PHP_SELF, $SessSemName, $user, $TERMIN_TYP;
+    global $SessSemName, $user, $TERMIN_TYP;
     global $PERS_TERMIN_KAT, $username, $LastLogin;
 
     if ($show_admin && $range_id == $user->id) {
@@ -539,7 +539,7 @@ function show_personal_dates ($range_id, $date_start, $date_end, $show_docs = FA
  */
 function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TRUE, $open)
 {
-    global $PHP_SELF, $RELATIVE_PATH_CALENDAR, $SessSemName, $user, $TERMIN_TYP;
+    global $RELATIVE_PATH_CALENDAR, $SessSemName, $user, $TERMIN_TYP;
     global $PERS_TERMIN_KAT, $username, $CALENDAR_DRIVER, $LastLogin, $calendar_user_control_data;
 
     $admin_link = '<a href="'.URLHelper::getLink('calendar.php', array('cmd' => 'edit', 'source_page' => URLHelper::getURL())).'">';

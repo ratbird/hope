@@ -120,8 +120,7 @@ class StmBrowse {
     
         
     function print_qs(){
-        global $PHP_SELF;
-        //Quicksort Formular... fuer die eiligen oder die DAUs....
+         //Quicksort Formular... fuer die eiligen oder die DAUs....
         echo "<table border=\"0\" align=\"center\" cellspacing=0 cellpadding=0 width = \"99%\">\n";
         echo $this->search_obj->getFormStart(URLHelper::getLink("?send=yes"));
         echo "<tr><td height=\"40\" class=\"steel1\" align=\"center\" valign=\"middle\" ><font size=\"-1\">";
@@ -143,7 +142,6 @@ class StmBrowse {
     }
     
     function print_xts(){
-        global $PHP_SELF;
         $this->search_obj->attributes_default = array('style' => 'width:100%;font-size:10pt;');
         $this->search_obj->search_fields['type']['size'] = 40 ;
         echo "<table border=\"0\" align=\"center\" cellspacing=0 cellpadding=2 width = \"99%\">\n";
@@ -201,7 +199,7 @@ class StmBrowse {
         
     function print_level(){
         ob_start();
-        global $PHP_SELF, $_language_path;
+        global $_language_path;
         echo "\n<table border=\"0\" align=\"center\" cellspacing=0 cellpadding=0 width = \"99%\">\n";
         if ($this->sem_browse_data['level'] == "f"){
             echo "\n<tr><td align=\"center\" class=\"steelgraulight\" height=\"40\" valign=\"middle\"><div style=\"margin-top:10px;margin-bottom:10px;\"><font size=\"-1\">";
@@ -230,7 +228,7 @@ class StmBrowse {
     
     function print_result(){
         ob_start();
-        global $_fullname_sql,$PHP_SELF,$SEM_TYPE,$SEM_CLASS;
+        global $_fullname_sql,$SEM_TYPE,$SEM_CLASS;
         
         if (is_array($this->sem_browse_data['search_result']) && count($this->sem_browse_data['search_result']) && strlen($this->sem_browse_data['search_result'][0]) == 32) {
             $constraint = "1";

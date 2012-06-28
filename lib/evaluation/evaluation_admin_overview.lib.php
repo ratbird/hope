@@ -211,7 +211,7 @@ class EvalOverview {
 
         $stopDate = $eval->getRealStopdate() == NULL ? " " : date("d.m.Y", $eval->getRealStopdate());
 
-        $link = "?rangeID=" . $GLOBALS["rangeID"];
+        $link = "?rangeID=" . $_SESSION["rangeID"];
         if ($open == NO)
             $link .= '&openID=' . $evalID . '#open';
 
@@ -315,7 +315,7 @@ class EvalOverview {
         }
 
         $form = new HTML("form");
-        $form->addAttr("action", UrlHelper::getLink("?rangeID=" . $GLOBALS["rangeID"]));
+        $form->addAttr("action", UrlHelper::getLink("?rangeID=" . $_SESSION["rangeID"]));
         $form->addAttr("method", "post");
         $form->addAttr("style", "display:inline;");
         $form->addHTMLContent(CSRFProtection::tokenTag());
@@ -459,7 +459,7 @@ class EvalOverview {
         $form = new HTML("form");
         $form->addAttr("name", "settingsForm");
         $form->addAttr("action", UrlHelper::getLink("?rangeID=" .
-                        $GLOBALS["rangeID"] . "&openID=" . $evalID . "#open"));
+                        $_SESSION["rangeID"] . "&openID=" . $evalID . "#open"));
         $form->addAttr("method", "post");
         $form->addAttr("style", "display:inline;");
         $form->addHTMLContent(CSRFProtection::tokenTag());
@@ -696,7 +696,7 @@ class EvalOverview {
      *
      */
     function createNewEvalForm() {
-        $currentRangeID = $GLOBALS['rangeID'];
+        $currentRangeID = $_SESSION['rangeID'];
 
         $form = new HTML("form");
         $form->addAttr("method", "post");
@@ -748,7 +748,7 @@ class EvalOverview {
      */
     function createShowRangeForm() {
 
-        $currentRangeID = $GLOBALS['rangeID'];
+        $currentRangeID = $_SESSION['rangeID'];
 
         $form = new HTML("form");
         $form->addAttr("method", "post");
@@ -809,7 +809,7 @@ class EvalOverview {
     function createSearchTemplateForm() {
         $form = new HTML("form");
         $form->addAttr("method", "post");
-        $form->addAttr("action", UrlHelper::getLink("?rangeID=" . $GLOBALS["rangeID"]));
+        $form->addAttr("action", UrlHelper::getLink("?rangeID=" . $_SESSION["rangeID"]));
         $form->addHTMLContent(CSRFProtection::tokenTag());
 
         $form->addContent(_("Öffentliche Evaluationsvorlage suchen: "));

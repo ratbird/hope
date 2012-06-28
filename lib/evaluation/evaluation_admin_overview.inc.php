@@ -75,7 +75,7 @@ $rangeID = ($rangeID) ? $rangeID : $SessSemName[1];
 
 if (empty ($rangeID) || ($rangeID == get_username ($user->id)))
      $rangeID = $user->id;
-
+$_SESSION['rangeID'] = $rangeID;
 $debug = 0;
 
 $evalAction = $lib->getPageCommand();

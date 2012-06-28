@@ -164,8 +164,7 @@ define ("VOTE_SHOW_MAXTITLELENGTH", 80);
 # ===================================================== end: public constants #
 
 // workaround for BIEST00082
-$vote_HTTP_REFERER_2 = $vote_HTTP_REFERER_1;
-$vote_HTTP_REFERER_1 = (($_SERVER['SERVER_PORT'] == 443 || $_SERVER['HTTPS'] == 'on')? 'https://':'http://') . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-$sess->register('vote_HTTP_REFERER_1');
-$sess->register('vote_HTTP_REFERER_2');
+$_SESSION['vote_HTTP_REFERER_2'] = $_SESSION['vote_HTTP_REFERER_1'];
+$_SESSION['vote_HTTP_REFERER_1'] = (($_SERVER['SERVER_PORT'] == 443 || $_SERVER['HTTPS'] == 'on')? 'https://':'http://') . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+
 ?>

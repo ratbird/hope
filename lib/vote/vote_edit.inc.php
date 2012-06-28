@@ -98,7 +98,7 @@ if ( ! ( $perm->have_studip_perm( "tutor", $rangeID ) ||
 $referer = $_POST['referer'];
 if( ! $referer ) {
     //$referer = $_SERVER['HTTP_REFERER'];
-    $referer = $GLOBALS['vote_HTTP_REFERER_2']; // workaround for BIEST00082
+    $referer = $_SESSION['vote_HTTP_REFERER_2']; // workaround for BIEST00082
     $referer = removeArgFromURL( $referer, "voteaction" );
     $referer = removeArgFromURL( $referer, "voteID" );
     $referer = removeArgFromURL( $referer, "showrangeID" );

@@ -168,7 +168,7 @@ function printFormStart ( $voteID, $rangeID, $referer ) {
     $html = createBoxHeader (FALSE, ' style="width: 100%;"', $task_string,
                  Assets::image_path($type."-icon.gif"),"","","","",
                  "blank" );
-    $html .= "<form action=\"".$GLOBALS['PHP_SELF']."?page=edit&type=".$type."\" name=\"voteform\" method=post>"
+    $html .= "<form action=\"".URLHelper::getLink('?page=edit&type='.$type)."\" name=\"voteform\" method=post>"
     . CSRFProtection::tokenTag()
     . "<input type=hidden name=\"voteID\" value=\"".$voteID."\">"
     . "<input type=hidden name=\"rangeID\" value=\"".$rangeID."\">"

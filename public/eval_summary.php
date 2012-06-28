@@ -354,7 +354,7 @@ function answers($parent_id, $anz_nutzer, $question_type)
 
 function groups($parent_id)
 {
-    global $ausgabeformat, $global_counter, $local_counter, $question_type, $eval_id, $PHP_SELF, $evalgroup_id;
+    global $ausgabeformat, $global_counter, $local_counter, $question_type, $eval_id, $evalgroup_id;
 
     $query = "SELECT group_type FROM eval_group_template WHERE evalgroup_id = ?";
     $type_statement = DBManager::get()->prepare($query);
@@ -399,7 +399,7 @@ function groups($parent_id)
             echo "  <tr><td class=\"".($ausgabeformat==1 ? "steelgraulight" : "blank")."\" colspan=\"2\">\n";
             if (do_template("show_questionblock_headline")) {
                 echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr><td align=\"left\"><b>".$global_counter.".".$local_counter.". ".formatReady($group['title'])."</b></td>";
-                echo "<td align=\"RIGHT\">".($ausgabeformat==1 && !($freetype) ? "<a href=\"$PHP_SELF?eval_id=$eval_id&evalgroup_id=".$group['evalgroup_id']."&group_type=".($group_type=="normal" ? "table" : "normal")."&cmd=change_group_type#anker\"><IMG SRC=\"".Assets::image_path('icons/16/blue/'.($group_type=='normal' ? 'vote-stopped' : 'vote').'.png')."\" TITLE=\""._("Zum Darstellungstyp")." ".($group_type=="normal"?_("Tabelle"):_("Normal"))." "._("wechseln").".\" border=\"0\"></a>" : "&nbsp;"). "</td>";
+                echo "<td align=\"RIGHT\">".($ausgabeformat==1 && !($freetype) ? "<a href=\"".URLHelper::getLink('?eval_id='.$eval_id.'&evalgroup_id='.$group['evalgroup_id']."&group_type=".($group_type=="normal" ? "table" : "normal").'&cmd=change_group_type#anker')."\"><IMG SRC=\"".Assets::image_path('icons/16/blue/'.($group_type=='normal' ? 'vote-stopped' : 'vote').'.png')."\" TITLE=\""._("Zum Darstellungstyp")." ".($group_type=="normal"?_("Tabelle"):_("Normal"))." "._("wechseln").".\" border=\"0\"></a>" : "&nbsp;"). "</td>";
                 echo "</tr></table>\n";
             }
             if ($evalgroup_id == $group['evalgroup_id']) {
@@ -571,7 +571,7 @@ if ($evaluation = $statement->fetch(PDO::FETCH_ASSOC)) {
   echo "<tr><td class=\"topic\" align=\"left\"><font color=\"".($ausgabeformat==1 ? "white" : "black")."\">";
   echo ($ausgabeformat==1 ? Assets::img('icons/16/white/test.png') : "" );
   echo "<b>"._("Evaluations-Auswertung")."</b></font></td>\n";
-  echo "<td class=\"".($ausgabeformat==1 ? "topic" : "blank" )."\" align=\"RIGHT\">".($ausgabeformat==1 ? "<a href=\"eval_summary_export.php?eval_id=".$eval_id."\" TARGET=\"_blank\"><font color=\"WHITE\">"._("PDF-Export")."</font></a><b>&nbsp;|&nbsp;</b><a href=\"".$PHP_SELF."?eval_id=".$eval_id."&ausgabeformat=2\" TARGET=\"_blank\"><font color=\"WHITE\">"._("Druckansicht")."</font></a>&nbsp;&nbsp;<a href=\"eval_config.php?eval_id=".$eval_id."\"><IMG SRC=\"".Assets::image_path('icons/16/white/arr_2right.png')."\" border=\"0\" ALT=\""._("Auswertung konfigurieren")."\" TITLE=\""._("Auswertung konfigurieren")."\"></a>" : "" ) ."&nbsp;</td>\n";
+  echo "<td class=\"".($ausgabeformat==1 ? "topic" : "blank" )."\" align=\"RIGHT\">".($ausgabeformat==1 ? "<a href=\"eval_summary_export.php?eval_id=".$eval_id."\" TARGET=\"_blank\"><font color=\"WHITE\">"._("PDF-Export")."</font></a><b>&nbsp;|&nbsp;</b><a href=\"".URLHelper::getLink('?eval_id='.$eval_id.'&ausgabeformat=2')."\" TARGET=\"_blank\"><font color=\"WHITE\">"._("Druckansicht")."</font></a>&nbsp;&nbsp;<a href=\"eval_config.php?eval_id=".$eval_id."\"><IMG SRC=\"".Assets::image_path('icons/16/white/arr_2right.png')."\" border=\"0\" ALT=\""._("Auswertung konfigurieren")."\" TITLE=\""._("Auswertung konfigurieren")."\"></a>" : "" ) ."&nbsp;</td>\n";
   echo "</tr>\n";
   echo "<tr><td class=\"blank\" colspan=\"2\" align=\"left\">&nbsp;</td></tr>\n";
   echo "<tr><td class=\"blank\" colspan=\"2\" align=\"left\"><font size=\"+1\"><b>&nbsp;&nbsp;".formatReady($evaluation['title'])."</b></font></td>\n";

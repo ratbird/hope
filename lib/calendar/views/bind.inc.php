@@ -52,9 +52,9 @@ echo "<tr><td class=\"blank\">\n";
 echo "<table border=\"0\" width=\"100%\" cellspacing=\"0\" cellpadding=\"1\" class=\"blank\" id=\"main_content\">\n";
 
 if (!empty($calendar_sess_control_data["view_prv"])) {
-    echo "<form action=\"$PHP_SELF?cmd={$calendar_sess_control_data['view_prv']}\" method=\"post\">";
+    echo "<form action=\"".URLHelper::getLink('?cmd='.$calendar_sess_control_data['view_prv'])."\" method=\"post\">";
 } else {
-    echo "<form action=\"$PHP_SELF?cmd=showweek\" method=\"post\">";
+    echo "<form action=\"".URLHelper::getLink('?cmd=showweek')."\" method=\"post\">";
 }
 echo CSRFProtection::tokenTag();
 echo "\n<tr>\n";
@@ -64,11 +64,11 @@ $tooltip = tooltip(_("Gruppe ändern"));
 echo "<img src=\"" . Assets::image_path('icons/16/blue/group.png') . "\" {$tooltip}>";
 echo "</a></th>\n";
 echo "<th width=\"64%\" align=\"left\">";
-echo "<a href=\"$PHP_SELF?cmd=bind&sortby=Name&order=$order\">" . _("Name") . "</a></th>\n";
-echo "<th width=\"7%\"><a href=\"$PHP_SELF?cmd=bind&sortby=count&order=$order\">";
+echo "<a href=\"".URLHelper::getLink('?cmd=bind&sortby=Name&order='.$order)."\">" . _("Name") . "</a></th>\n";
+echo "<th width=\"7%\"><a href=\"".URLHelper::getLink('?cmd=bind&sortby=count&order='.$order)."\">";
 echo _("Termine") . "</a></th>\n";
 echo "<th width=\"13%\"><b>" . _("besucht") . "</b></th>\n";
-echo "<th width=\"13%\"><a href=\"$PHP_SELF?cmd=bind&sortby=status&order=$order\">";
+echo "<th width=\"13%\"><a href=\"".URLHelper::getLink('?cmd=bind&sortby=status&order='.$order)."\">";
 echo _("Status") . "</a></th>\n";
 echo "<th width=\"2%\">&nbsp;</th>\n</tr>\n";
 

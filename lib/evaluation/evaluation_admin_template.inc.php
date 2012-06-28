@@ -87,9 +87,6 @@ if( empty($template_answers) ) {
 } elseif( $_POST['template_answers'] ) {
     $template_answers = $_POST['template_answers'];
 }
-#$sess->register( "template_answers" );
-#$sess->register( "template_name" );
-#$sess->register( "template_multiple" );
 
 /* ---------------------------------------------------------- end: variables */
 

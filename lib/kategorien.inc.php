@@ -30,7 +30,7 @@ require_once 'user_visible.inc.php';
 
 function print_freie($username) {
 
-    global $view,$PHP_SELF,$auth, $user;
+    global $view,$auth, $user;
     $db=new DB_Seminar;
     SkipLinks::addIndex(_("Eigene Kategorien bearbeiten"), 'edit_categories');
     $cssSw=new cssClassSwitcher;

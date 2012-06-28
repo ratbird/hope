@@ -73,7 +73,7 @@ class Guestbook
 
     function showGuestbook()
     {
-        global $perm, $PHP_SELF;
+        global $perm;
 
         if ($this->rights == TRUE)
             if ($this->active==TRUE)
@@ -81,9 +81,9 @@ class Guestbook
             else
                 $active = " ("._("deaktiviert").")";
         if ($this->openclose == "close")
-            $link = $PHP_SELF."?guestbook=open&username=$this->username#guest";
+            $link = URLHelper::getLink('?guestbook=open&username='.$this->username.'#guest');
         else
-            $link = $PHP_SELF."?guestbook=close&username=$this->username#guest";
+            $link =URLHelper::getLink('?guestbook=close&username='.$this->username.'#guest');
 
         // set Anchor
         if ($this->anchor == TRUE)
@@ -139,13 +139,12 @@ class Guestbook
      */
     function guest_navi()
     {
-        global $PHP_SELF;
 
         $i = 1;
         $maxpages = $this->pages_total;
         $ipage = ($this->guestpage / $this->perpage)+1;
         if ($ipage != 1)
-            $navi .= "<a href=\"$PHP_SELF?guestpage=".($ipage-2)*$this->perpage."&guestbook=open&username=$this->username#guest\"><font size=-1>" . _("zurück") . "</a> | </font>";
+            $navi .= "<a href=\"".URLHelper::getLink('?guestpage='.($ipage-2)*$this->perpage.'&guestbook=open&username='.$this->username.'#guest')."\"><font size=-1>" . _("zurück") . "</a> | </font>";
         else
             $navi .= "<font size=\"-1\">Seite: </font>";
         while ($i <= $maxpages) {
@@ -155,7 +154,7 @@ class Guestbook
                     $space = 0;
                 }
                 if ($i != $ipage)
-                    $navi .= "<a href=\"$PHP_SELF?guestpage=".($i-1)*$this->perpage."&guestbook=open&username=$this->username#guest\"><font size=-1>".$i."</a></font>";
+                    $navi .= "<a href=\"".URLHelper::getLink('?guestpage='.($i-1)*$this->perpage.'&guestbook=open&username='.$this->username.'#guest')."\"><font size=-1>".$i."</a></font>";
                 else
                     $navi .= "<font size=\"-1\"><b>".$i."</b></font>";
                 if ($maxpages != 1)
@@ -166,14 +165,13 @@ class Guestbook
             $i++;
         }
         if ($ipage != $maxpages)
-            $navi .= "<a href=\"$PHP_SELF?guestpage=".($ipage)*$this->perpage."&guestbook=open&username=$this->username#guest\"><font size=-1> " . _("weiter") . "</a></font>";
+            $navi .= "<a href=\"".URLHelper::getLink('?guestpage='.($ipage)*$this->perpage.'&guestbook=open&username='.$this->username.'#guest')."\"><font size=-1> " . _("weiter") . "</a></font>";
         return $navi;
     }
 
     function showPostsGuestbook()
     {
-        global $PHP_SELF;
-
+        
         $i = 0;
         $output = "<table class=\"blank\" width=\"98%%\" border=\"0\" cellpadding=\"5\" cellspacing=\"0\">";
 
@@ -188,7 +186,7 @@ class Guestbook
         $statement->execute(array($this->user_id));
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
             $position = $this->number - ($this->guestpage+$i);
-            $output .= "<tr><td class=\"steel2\"><b><font size=\"-1\">#$position - <a href=\"$PHP_SELF?username=".get_username($row['user_id'])."\">";
+            $output .= "<tr><td class=\"steel2\"><b><font size=\"-1\">#$position - <a href=\"".URLHelper::getLink('?username='.get_username($row['user_id']))."\">";
             $output .= sprintf(_('%s hat am %s geschrieben:'), get_fullname($row['user_id'], 'full', true)."</a>", date('d.m.Y - H:i', $row['mkdate']));
             $output .= "</font></b></td></tr>"
                 . "<tr><td class=\"steelgraulight\"><font size=\"-1\">".formatready($row['content'])."</font><p align=\"right\">";
@@ -209,7 +207,7 @@ class Guestbook
 
     function formGuestbook()
     {
-        global $auth, $PHP_SELF;
+        global $auth;
         if ($auth->auth["jscript"]) {
             $max_col = round($auth->auth["xres"] / 12 );
         } else
@@ -220,7 +218,7 @@ class Guestbook
         $help_url = format_help_url("Basis.VerschiedenesFormat");
         $text = "<p align=\"center\"><label for=\"post\">"._("Geben Sie hier Ihren Gästebuchbeitrag ein!")."</label></p>";
 
-            $form = "<form name=\"guestbook\" method=\"post\" action=\"".$PHP_SELF."?studipticket=".get_ticket()."#guest\">"
+            $form = "<form name=\"guestbook\" method=\"post\" action=\"".URLHelper::getLink('?studipticket='.get_ticket().'#guest')."\">"
             . CSRFProtection::tokenTag()
             ."<input type=hidden name=guestbook value='$this->user_id'>"
             ."<input type=hidden name=username value='$this->username'>"

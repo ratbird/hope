@@ -218,7 +218,6 @@ class SemBrowse {
     }
 
     function print_qs(){
-        global $PHP_SELF;
         // add skip link
         SkipLinks::addIndex(_("Suchformular"), 'search_sem_qs', 100);
         // add a skip link for advanced search here
@@ -266,7 +265,6 @@ class SemBrowse {
     }
 
     function print_xts(){
-        global $PHP_SELF;
         // add skip link
         SkipLinks::addIndex(_("Suchformular"), 'search_sem_xts', 100);
         // add skip link for simple search here
@@ -332,8 +330,7 @@ class SemBrowse {
 
     function print_level(){
         ob_start();
-        global $PHP_SELF;
-
+        
         SkipLinks::addIndex(_("Gefundene Bereiche"), 'sem_search_level', 110);
 
         echo "\n<table id=\"sem_search_level\" border=\"0\" align=\"center\" cellspacing=0 cellpadding=0 width = \"99%\">\n";
@@ -372,7 +369,7 @@ class SemBrowse {
 
     function print_result(){
         ob_start();
-        global $_fullname_sql,$PHP_SELF,$SEM_TYPE,$SEM_CLASS;
+        global $_fullname_sql,$SEM_TYPE,$SEM_CLASS;
 
         if (is_array($this->sem_browse_data['search_result']) && count($this->sem_browse_data['search_result'])) {
             if (!is_object($this->sem_tree)){
@@ -460,7 +457,7 @@ class SemBrowse {
 
                         echo '<td class="steel1" width="66%" colspan="2">';
                         echo "<a href=\"{$this->target_url}?{$this->target_id}={$seminar_id}&send_from_search=1&send_from_search_page=";
-                        echo $_SERVER['PHP_SELF']. "?keep_result_set=1\">", htmlReady($sem_name), "</a><br>";
+                        echo URLHelper::getLink('?keep_result_set=1')."\">", htmlReady($sem_name), "</a><br>";
 
                         //create Turnus field
                         if ($studygroup_mode) {
@@ -535,7 +532,7 @@ class SemBrowse {
         require_once "vendor/write_excel/Worksheet.php";
         require_once "vendor/write_excel/Workbook.php";
 
-        global $_fullname_sql,$PHP_SELF,$SEM_TYPE,$SEM_CLASS,$TMP_PATH;
+        global $_fullname_sql,$SEM_TYPE,$SEM_CLASS,$TMP_PATH;
 
         if(!$headline) $headline = _("Stud.IP Veranstaltungen") . ' - ' . $GLOBALS['UNI_NAME_CLEAN'];
         if (is_array($this->sem_browse_data['search_result']) && count($this->sem_browse_data['search_result'])) {
@@ -693,7 +690,7 @@ class SemBrowse {
     }
 
     function get_result() {
-        global $_fullname_sql,$PHP_SELF,$SEM_TYPE,$SEM_CLASS;;
+        global $_fullname_sql,$SEM_TYPE,$SEM_CLASS;;
         if ($this->sem_browse_data['group_by'] == 1){
             if (!is_object($this->sem_tree)){
                 $the_tree = TreeAbstract::GetInstance("StudipSemTree", false);

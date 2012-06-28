@@ -78,7 +78,7 @@ function select_language($selected_language = "") {
 * @access   public
 */
 function change_general_view() {
-    global $PHP_SELF, $auth, $perm, $forum, $user, $my_studip_settings;
+    global $auth, $perm, $forum, $user, $my_studip_settings;
 
     $cssSw = new cssClassSwitcher;
     ?>

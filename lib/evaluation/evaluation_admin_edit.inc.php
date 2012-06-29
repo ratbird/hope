@@ -124,17 +124,6 @@ if (Request::submitted('newButton')){
         $error_msgs[] = $error->createContent();
     }
     
-} elseif (isset($evalID)) {
-
-    $debug .= "isset [evalID]!<br>";
-    // evalID known as sess. variable
-    if (($evalID == NULL) || ($evalID == "") || ($evalID == "NULL")){
-        $error = EvalCommon::createReportMessage (
-            _("Es wurde keine Evaluations-ID übergeben"),
-            EVAL_PIC_ERROR, EVAL_CSS_ERROR);
-        $error_msgs[] = $error->createContent();
-    }
-    
 } else {
 
     $debug .= "keine evalID!<br>";

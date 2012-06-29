@@ -144,7 +144,8 @@ if ($cmd == "mark_allsmsreaded") {
 $count_newsms = count_messages_from_user($sms_data['view'], "AND deleted='0' AND readed='0'");
 $show_folder = Request::option('show_folder');
 // open default folder if there are new messages
-if (Request::option('neux')) {
+//$neux -> global from lib/Navigation/MessagingNavigation.php 
+if ($neux && !$show_folder) {
     $show_folder = "all";
 }
 

@@ -46,6 +46,8 @@
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
+
 page_open (array ("sess" => "Seminar_Session", "auth" => "Seminar_Auth",
           "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $perm->check ("autor");
@@ -53,11 +55,19 @@ include ('lib/seminar_open.php');
 require_once('config.inc.php');
 require_once('lib/datei.inc.php');
 
+
+
 {
 // needed session-variables
-$sess->register("seminars");
-$sess->register("semestersAR");
-$sess->register("template");
+		
+if(empty($_SESSION['seminars'])) $_SESSION['seminars'] = "";
+if(empty($_SESSION['semestersAR'])) $_SESSION['semestersAR'] = array();
+if(empty($_SESSION['template'])) $_SESSION['template'] = "";
+
+$seminars = $_SESSION['seminars'];
+$semestersAR = $_SESSION['semestersAR'];
+$template = $_SESSION['template'];
+
 }
 
 /* **END*of*initialise*Stud.IP-Session*********************************** */
@@ -67,7 +77,6 @@ $sess->register("template");
 /* including needed files                                                     *
 /*                                                                            *
 /* ************************************************************************* */
-
 
 $FDF_USAGE_HINT=sprintf(_("Die Ausgabe wird in einem speziellen Format erzeugt, für das Sie den %sAcrobat Reader%s mit Browser- und Formularunterstützung benötigen."),"<a href='http://get.adobe.com/reader/' target='_blank'>","</a>");
 
@@ -80,7 +89,7 @@ include_once($PATH_EXPORT ."/recordofstudyDB.php");
 /* identify the current site-mode                                             *
 /*                                                                            *
 /* ************************************************************************* */
-$semester = $_POST['semester'];
+$semester = Request::get('semester');
 if ( (Request::submitted('semester_selected')) || (Request::submitted('add_seminars')) ||
     (Request::submitted('delete_seminars')))
     $mode = "edit";
@@ -107,21 +116,21 @@ if ($mode == "new"){
 }
 elseif ($mode == "edit"){
     // get the basic data
-    if ($_POST['template']){
-        $template = $_POST['template'];
+    if (Request::get('template')){
+        $template = Request::get('template');
     };
 
-    $university = htmlReady(stripslashes($_POST['university']));
+    $university = htmlReady(stripslashes(Request::get('university')));
     if (empty($university)) $university = htmlentities($GLOBALS['UNI_NAME_CLEAN']);
-    $fieldofstudy = htmlReady(stripslashes($_POST['fieldofstudy']));
+    $fieldofstudy = htmlReady(stripslashes(Request::get('fieldofstudy')));
     if (empty($fieldofstudy)) $fieldofstudy = getFieldOfStudy();
-    $studentname = htmlReady(stripslashes($_POST['studentname']));
+    $studentname = htmlReady(stripslashes(Request::get('studentname')));
     if (empty($studentname)) $studentname = getStudentname();
-    $semesterid = htmlReady(stripslashes($_POST['semesterid']));
-    $semester = htmlReady(stripslashes($_POST['semester']));
+    $semesterid = htmlReady(stripslashes(Request::get('semesterid')));
+    $semester = htmlReady(stripslashes(Request::get('semester')));
     if (empty($semester))
         $semester = $semestersAR[$semesterid]["name"];
-    $semesternumber = htmlReady($_POST['semesternumber']);
+    $semesternumber = htmlReady(Request::get('semesternumber'));
 
     $basicdata = array(
         "university"    => $university,
@@ -133,25 +142,25 @@ elseif ($mode == "edit"){
 
     // get the seminars from the db
     if ($semester = $_POST['semester_selected_x']){
-        $seminareAR = getSeminare($semesterid,$_POST['onlyseminars']);
+        $seminareAR = getSeminare($semesterid,Request::get('onlyseminars'));
     }
     // get the seminars from post
     else{
-        $seminare_max = $_POST['seminare_max'];
+        $seminare_max = Request::get('seminare_max');
         $deletenumbers = 0;
         for($i=0;$i+1<=$seminare_max;$i++){
 
             // delete this entry
             if (($_POST['delete'.$i]) &&
-              (!Request::submitted('add_seminars') && (($_POST['delete'.$i])))){
+              (!Request::submitted('add_seminars') && ((Request::get('delete'.$i))))){
                 $deletenumbers++;
             }
             else{
                 // adding this one to the current seminas-array
-                $seminarnumber = htmlReady(stripslashes($_POST['seminarnumber'.$i]));
-                $tutor = htmlReady(stripslashes($_POST['tutor'.$i]));
-                $sws = htmlReady(stripslashes($_POST['sws'.$i]));
-                $description = htmlReady(stripslashes($_POST['description'.$i]));
+                $seminarnumber = htmlReady(stripslashes(Request::get('seminarnumber'.$i)));
+                $tutor = htmlReady(Request::get('tutor'.$i));
+                $sws = htmlReady(stripslashes(Request::get('sws'.$i)));
+                $description = htmlReady(stripslashes(Request::get('description'.$i)));
 
                 $seminareAR[$i-$deletenumbers] = array(
                     "id"            => $i,
@@ -170,7 +179,7 @@ elseif ($mode == "edit"){
 
     // add new ones
     if (Request::submitted('add_seminars') && (!($_POST['delete'.$i]))){
-        $numberofnew = $_POST['newseminarfields'];
+        $numberofnew = Request::get('newseminarfields');
         for($i=1;$i<=$numberofnew;$i++){
             $seminareAR[$i+$seminare_max] = array("id" => $i+$seminars_max);
         }
@@ -180,14 +189,14 @@ elseif ($mode == "edit"){
 elseif($mode == "pdf_assortment"){
 
     // the last entry
-    $seminare_max = $_POST['seminare_max'];
+    $seminare_max = Request::get('seminare_max');
 
     // the basic data
-    $university = stripslashes($_POST['university']);
-    $fieldofstudy = stripslashes($_POST['fieldofstudy']);
-    $studentname = stripslashes($_POST['studentname']);
-    $semester = stripslashes($_POST['semester']);
-    $semesternumber = stripslashes($_POST['semesternumber']);
+    $university = stripslashes(Request::get('university'));
+    $fieldofstudy = stripslashes(Request::get('fieldofstudy'));
+    $studentname = stripslashes(Request::get('studentname'));
+    $semester = stripslashes(Request::get('semester'));
+    $semesternumber = stripslashes(Request::get('semesternumber'));
     $seminars = array (
         "university" => $university,
         "fieldofstudy" => $fieldofstudy,
@@ -206,10 +215,10 @@ elseif($mode == "pdf_assortment"){
         for($i=0;$i+1<=$runner;$i++){
                 // $y is the running nummber from 0 -> last seminar
                 $y = $i+($j*10);
-                $seminars[$j][$i]["seminarnumber"] = stripslashes($_POST['seminarnumber'.$y]);
-                $seminars[$j][$i]["tutor"] = stripslashes($_POST['tutor'.$y]);
-                $seminars[$j][$i]["sws"] = stripslashes($_POST['sws'.$y]);
-                $seminars[$j][$i]["description"] = stripslashes($_POST['description'.$y]);
+                $seminars[$j][$i]["seminarnumber"] = stripslashes(Request::get('seminarnumber'.$y));
+                $seminars[$j][$i]["tutor"] = stripslashes(Request::get('tutor'.$y));
+                $seminars[$j][$i]["sws"] = stripslashes(Request::get('sws'.$y));
+                $seminars[$j][$i]["description"] = stripslashes(Request::get('description'.$y));
         }
     }
     $exemptions = array (10,20,30,40,50,60,70,80,90,100);
@@ -289,7 +298,7 @@ page_close ();
  */
 function createFdfAR($seminars){
 
-    $page = $_GET['page']-1;
+    $page = Request::get('page')-1;
     $university = $seminars["university"];
     $fieldofstudy = $seminars["fieldofstudy"];
     $studentname = $seminars["studentname"];

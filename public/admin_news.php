@@ -27,6 +27,8 @@ use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
+
 page_open(array("sess"=> "Seminar_Session", "auth" =>"Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $auth->login_if($auth->auth["uid"] == "nobody");
 $perm->check("autor");
@@ -39,11 +41,23 @@ require_once 'lib/classes/AdminNewsController.class.php';
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
+$Seminar_Session = Request::option('Seminar_Session');
+    
+// unregister globals
+$news_range_id = Request::option('news_range_id');
+$news_range_name = Request::quoted('news_range_name');
+$cmd = Request::quoted('cmd');
+$edit_news = Request::quoted('edit_news');
+$view_mode = Request::quoted('view_mode');
+$title = Request::quoted('title');
+
+$search = Request::quoted('search');
+
 URLHelper::bindLinkParam('news_range_id',$news_range_id);
 URLHelper::bindLinkParam('news_range_name',$news_range_name);
 
-if (Request::get('admin_inst_id')) {
-    $news_range_id = Request::get('admin_inst_id');
+if (Request::option('admin_inst_id')) {
+    $news_range_id = Request::option('admin_inst_id');
     $view_mode = 'inst';
 }
 
@@ -117,6 +131,8 @@ if ($perm->have_perm("admin"))  {
     }
 }
 
+
+
 if ($cmd == 'news_edit'){
     if (isset($_REQUEST['news_submit'])) $cmd = 'news_submit';
     if (isset($_REQUEST['news_range_search'])){
@@ -124,6 +140,10 @@ if ($cmd == 'news_edit'){
         $edit_news = $_REQUEST['news_id'];
     }
 }
+
+// unregister globals
+$topic = Request::quoted('topic');
+$body = Request::quoted('body');
 
 if ($cmd=="news_submit") {
     if (!trim(stripslashes($topic)) && trim(stripslashes($body))) {
@@ -133,19 +153,25 @@ if ($cmd=="news_submit") {
     //Maximale Gültigkeitsdauer von News auf 24 Wochen festgelegt
     $max_expire = 24 * 7 * 24 * 60 * 60;
 
-    if (Request::get('startdate') && Request::get('enddate')) {
-        if (preg_match('/^(\d{2}).(\d{2}).(\d{4})$/',Request::get('startdate'))
-            && preg_match('/^(\d{2}).(\d{2}).(\d{4})$/',Request::get('enddate'))) {
+    if (Request::quoted('startdate') && Request::quoted('enddate')) {
+        if (preg_match('/^(\d{2}).(\d{2}).(\d{4})$/',Request::quoted('startdate'))
+            && preg_match('/^(\d{2}).(\d{2}).(\d{4})$/',Request::quoted('enddate'))) {
 
-            $start_array = explode(".", Request::get('startdate'));
+            $start_array = explode(".", Request::quoted('startdate'));
             $starttime = mktime(0, 0, 0, $start_array[1], $start_array[0], $start_array[2]);
-            $end_array = explode(".", Request::get('enddate'));
+            $end_array = explode(".", Request::quoted('enddate'));
             $endtime = mktime(23, 59, 59, $end_array[1], $end_array[0], $end_array[2]);
             $expire = $endtime - $starttime;
         }
     }
 
-
+// unregister globals
+        $author = Request::option('author');
+        $user_id = Request::option('user_id');
+        $add_range = Request::optionArray('add_range');
+        $news_id = Request::option('news_id');
+        $allow_comments = Request::option('allow_comments');
+    
     $max_endtime = $starttime + $expire;
     if ($topic != "" && $add_range && $expire > 0 && $expire <= $max_expire) {
         $edit_news = $news->update_news($news_id, $author, $topic, $body, $user_id, $starttime, $expire, $add_range, $allow_comments);
@@ -215,6 +241,9 @@ if ($cmd=="edit") {
 
     $news->edit_news($edit_news);
 }
+
+// unregister globals
+$kill_news = Request::optionArray('kill_news');
 
 if ($cmd=="kill") {
     $news->kill_news($kill_news);

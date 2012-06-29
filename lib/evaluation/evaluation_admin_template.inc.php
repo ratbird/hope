@@ -432,7 +432,8 @@ if( !$command || $command == "back" ) {
 
     /* a back button */
     $form = new HTM( "form" );
-    $form->attr( "action", UrlHelper::getLink("?page=edit"));
+    $evalID = Request::quoted('evalID');
+    $form->attr( "action", UrlHelper::getLink("?page=edit&evalID=".$evalID));
     $form->attr( "method", "post" );
     $form->html(CSRFProtection::tokenTag());
     $form->cont( Button::create(_('zurück'), 'template_back_button', array('title' => _('Zurück zur Auswahl'))) );

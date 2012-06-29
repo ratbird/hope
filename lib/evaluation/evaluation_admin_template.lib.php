@@ -51,8 +51,11 @@ class EvalTemplateGUI {
   function createSelections( $polTemplates, $skalaTemplates,
               $normalTemplates, $freeTemplates, $myuserid) {
 
+     global $evalID;
+
      $form = new HTM( "form" );
-     $form->attr( "action", UrlHelper::getLink("?page=edit") );
+
+     $form->attr( "action", UrlHelper::getLink("?page=edit&evalID=".$evalID) );
      $form->attr( "method", "post" );
      $form->html(CSRFProtection::tokenTag());
 
@@ -320,6 +323,7 @@ class EvalTemplateGUI {
    * @param
    */
   function createTemplateForm( &$question, $onthefly = "" ) {
+      global $evalID;
      $type=$question->getType();
      $tableA = new HTM( "table" );
      $tableA->attr("border", "0");
@@ -364,8 +368,9 @@ class EvalTemplateGUI {
      $trA = new HTM( "tr" );
      $tdA = new HTM( "td" );
 
-    $form = new HTM( "form" );
-    $form->attr( "action", UrlHelper::getLink("?page=edit"));
+     $form = new HTM( "form" );
+     $form->attr( "action", UrlHelper::getLink("?page=edit&evalID=".$evalID) );
+
     $form->attr( "method", "post" );
     $form->html(CSRFProtection::tokenTag());
     /* template name --------------------------------- */
@@ -521,8 +526,7 @@ class EvalTemplateGUI {
        $form->html("&nbsp;");
        $form->cont( $input );
        $form->cont( $this->BR );
-    }
-    else{
+    }else{
        if($type == EVALQUESTION_TYPE_POL){
       $form->cont( $this->createSubHeadline( _("Antworten").": " ) );
       /* answers --------------------------------------- */
@@ -546,8 +550,7 @@ class EvalTemplateGUI {
               $input->attr( "value", $answer->getObjectID() );
               $form->cont( $input );
               $form->cont( $this->BR );
-           }
-           else{
+           }else{
 
               if($answer->getText(UNQUOTED) == "" ){
              $oldid=$answer->getObjectID();
@@ -801,6 +804,7 @@ class EvalTemplateGUI {
    * @param
    */
  function createTemplateFormFree( &$question ) {
+     global $evalID;
      $answer = $question->getNextChild ();
 
      $tableA = new HTM( "table" );
@@ -822,7 +826,7 @@ class EvalTemplateGUI {
      $trA = new HTM( "tr" );
      $tdA = new HTM( "td" );
      $form = new HTM( "form" );
-     $form->attr( "action", UrlHelper::getLink("?page=edit") );
+     $form->attr( "action", UrlHelper::getLink("?page=edit&evalID=".$evalID) );
      $form->attr( "method", "post" );
      $form->html(CSRFProtection::tokenTag());
 

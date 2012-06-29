@@ -50,9 +50,9 @@ class EvalTemplateGUI {
    */
   function createSelections( $polTemplates, $skalaTemplates,
               $normalTemplates, $freeTemplates, $myuserid) {
-    $evalID = Request::quoted('evalID');
+
      $form = new HTM( "form" );
-     $form->attr( "action", UrlHelper::getLink("?page=edit&evalID=". $evalID) );
+     $form->attr( "action", UrlHelper::getLink("?page=edit") );
      $form->attr( "method", "post" );
      $form->html(CSRFProtection::tokenTag());
 
@@ -363,10 +363,9 @@ class EvalTemplateGUI {
 
      $trA = new HTM( "tr" );
      $tdA = new HTM( "td" );
-    
-     $evalID = Request::quoted('evalID');
+
     $form = new HTM( "form" );
-    $form->attr( "action", UrlHelper::getLink("?page=edit&evalID=".$evalID));
+    $form->attr( "action", UrlHelper::getLink("?page=edit"));
     $form->attr( "method", "post" );
     $form->html(CSRFProtection::tokenTag());
     /* template name --------------------------------- */
@@ -823,8 +822,7 @@ class EvalTemplateGUI {
      $trA = new HTM( "tr" );
      $tdA = new HTM( "td" );
      $form = new HTM( "form" );
-     $evalID = Request::quoted('evalID');
-     $form->attr( "action", UrlHelper::getLink("?page=edit&evalID=".$evalID) );
+     $form->attr( "action", UrlHelper::getLink("?page=edit") );
      $form->attr( "method", "post" );
      $form->html(CSRFProtection::tokenTag());
 

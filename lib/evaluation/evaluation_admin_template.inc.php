@@ -479,6 +479,7 @@ if( $command ) {
 
     switch( $command ) {
       case "editpol_scale":
+          $template_editpol_scale = Request::quoted('template_editpol_scale');
        $question=  new EvaluationQuestion ($template_editpol_scale, NULL,
                         EVAL_LOAD_ALL_CHILDREN);
        $td->cont( $lib->createTemplateForm( $question ) );
@@ -501,6 +502,7 @@ if( $command ) {
     $td->cont( $lib->createTemplateForm( $question ) );
     break;
       case "editlikert_scale":
+          $template_editlikert_scale = Request::quoted('template_editlikert_scale');
        $question=  new EvaluationQuestion ($template_editlikert_scale,
                         NULL, EVAL_LOAD_ALL_CHILDREN);
        //$td->cont( $lib->createTemplateFormLikert( $question ) );
@@ -521,6 +523,7 @@ if( $command ) {
        $td->cont( $lib->createTemplateForm( $question ) );
        break;
       case "editnormal_scale":
+          $template_editnormal_scale = Request::quoted('template_editnormal_scale');
        $question=  new EvaluationQuestion ($template_editnormal_scale,
                         NULL, EVAL_LOAD_ALL_CHILDREN);
        $td->cont( $lib->createTemplateForm( $question ) );
@@ -594,6 +597,7 @@ if( $command ) {
        $td->cont( $lib->createTemplateFormFree( $question ) );
        break;
       case "editfree_scale":
+          $template_editfree_scale = Request::quoted('template_editfree_scale');
        $question=  new EvaluationQuestion ($template_editfree_scale,
                         NULL, EVAL_LOAD_ALL_CHILDREN);
        $td->cont( $lib->createTemplateFormFree( $question ) );

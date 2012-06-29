@@ -432,7 +432,8 @@ if( !$command || $command == "back" ) {
 
     /* a back button */
     $form = new HTM( "form" );
-    $form->attr( "action", UrlHelper::getLink("?page=edit"));
+
+    $form->attr( "action", UrlHelper::getLink("?page=edit&evalID=".$evalID));
     $form->attr( "method", "post" );
     $form->html(CSRFProtection::tokenTag());
     $form->cont( Button::create(_('zurück'), 'template_back_button', array('title' => _('Zurück zur Auswahl'))) );
@@ -478,8 +479,7 @@ if( $command ) {
 
     switch( $command ) {
       case "editpol_scale":
-       $question=  new EvaluationQuestion ($template_editpol_scale, NULL,
-                        EVAL_LOAD_ALL_CHILDREN);
+       $question=  new EvaluationQuestion (Request::option('template_editpol_scale'), NULL,EVAL_LOAD_ALL_CHILDREN);
        $td->cont( $lib->createTemplateForm( $question ) );
        break;
       case "createpol_scale":
@@ -502,6 +502,7 @@ if( $command ) {
       case "editlikert_scale":
        $question=  new EvaluationQuestion ($template_editlikert_scale,
                         NULL, EVAL_LOAD_ALL_CHILDREN);
+      $question->setType(EVALQUESTION_TYPE_LIKERT);
        //$td->cont( $lib->createTemplateFormLikert( $question ) );
        $td->cont( $lib->createTemplateForm( $question ) );
        break;
@@ -522,6 +523,7 @@ if( $command ) {
       case "editnormal_scale":
        $question=  new EvaluationQuestion ($template_editnormal_scale,
                         NULL, EVAL_LOAD_ALL_CHILDREN);
+      $question->setType(EVALQUESTION_TYPE_MC);
        $td->cont( $lib->createTemplateForm( $question ) );
        break;
       case "createnormal_scale":

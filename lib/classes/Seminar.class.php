@@ -1,7 +1,7 @@
 <?
 # Lifter002: TODO
+# Lifter003: TEST
 # Lifter007: TODO
-# Lifter003: TODO
 # Lifter010: TODO
 /**
  * Seminar.class.php - This class represents a Seminar in Stud.IP
@@ -47,8 +47,6 @@ class Seminar
     var $issues = null;                 // Array of Issue
     var $irregularSingleDates = null;   // Array of SingleDates
     var $metadate = null;               // MetaDate
-    var $db;                            // DB_Seminar
-    var $db2;                           // unsere Datenbankverbindung
     var $messages = array();            // occured errors, infos, and warnings
     var $semester = null;
     var $filterStart = 0;
@@ -85,8 +83,6 @@ class Seminar
     */
     function Seminar($id = FALSE)
     {
-        $this->db  = new DB_Seminar();
-        $this->db2 = new DB_Seminar();
         $this->semester = new SemesterData();
 
         if ($id) {
@@ -128,17 +124,19 @@ class Seminar
 
     function restoreMembers($status = 'dozent')
     {
-        $this->members[$status] = array();
-        $this->db->query("SELECT su.user_id,username,Vorname,Nachname,Email,
-                        ".$GLOBALS['_fullname_sql']['full']." as fullname,
-                        admission_studiengang_id, su.status, su.label
-                        FROM seminar_user su INNER JOIN auth_user_md5 USING(user_id)
-                        LEFT JOIN user_info USING(user_id)
-                        WHERE status='$status' AND su.seminar_id='".$this->getId()."' ORDER BY su.position, Nachname");
-        while($this->db->next_record()){
-            $this->members[$status][$this->db->f('user_id')] = $this->db->Record;
-        }
-        return $this->db->num_rows();
+        $query = "SELECT user_id, username, Vorname, Nachname, Email,
+                         {$GLOBALS['_fullname_sql']['full']} AS fullname,
+                         admission_studiengang_id, su.status, su.label
+                  FROM seminar_user AS su
+                  INNER JOIN auth_user_md5 USING (user_id)
+                  LEFT JOIN user_info USING (user_id)
+                  WHERE status = ? AND su.seminar_id = ?
+                  ORDER BY su.position, Nachname";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($status, $this->getId()));
+        $this->members[$status] = $statement->fetchGrouped(PDO::FETCH_ASSOC);
+
+        return count($this->members[$status]);
     }
 
     function getAdmissionMembers($status = 'awaiting')
@@ -151,17 +149,19 @@ class Seminar
 
     function restoreAdmissionMembers($status = 'awaiting')
     {
-        $this->admission_members[$status] = array();
-        $this->db->query("SELECT su.user_id,username,Vorname,Nachname,Email,
-                        ".$GLOBALS['_fullname_sql']['full']." as fullname,
-                        studiengang_id, su.status
-                        FROM admission_seminar_user su INNER JOIN auth_user_md5 USING(user_id)
-                        LEFT JOIN user_info USING(user_id)
-                        WHERE status='$status' AND su.seminar_id='".$this->getId()."' ORDER BY su.position, Nachname");
-        while ($this->db->next_record()) {
-            $this->admission_members[$status][$this->db->f('user_id')] = $this->db->Record;
-        }
-        return $this->db->num_rows();
+        $query = "SELECT user_id, username, Vorname, Nachname, Email,
+                         {$GLOBALS['_fullname_sql']['full']} AS fullname,
+                         studiengang_id, su.status
+                  FROM admission_seminar_user AS su
+                  INNER JOIN auth_user_md5 USING (user_id)
+                  LEFT JOIN user_info USING (user_id)
+                  WHERE status = ? AND su.seminar_id = ?
+                  ORDER BY su.position, Nachname";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($status, $this->getId()));
+        $this->admission_members[$status] = $statement->fetchGrouped(PDO::FETCH_ASSOC);
+
+        return count($this->admission_members[$status]);
     }
 
     function getId()
@@ -500,91 +500,120 @@ class Seminar
             }
         }
 
-        if ($this->is_new) {
-            $query = "INSERT INTO seminare SET
-                Seminar_id = '".            $this->id."',
-                VeranstaltungsNummer = '".      mysql_escape_string($this->seminar_number)."',
-                Institut_id = '".           $this->institut_id."',
-                Name = '".              mysql_escape_string($this->name)."',
-                Untertitel = '".            mysql_escape_string($this->subtitle)."',
-                status = '".                $this->status."',
-                Beschreibung = '".          mysql_escape_string($this->description)."',
-                Ort = '".               mysql_escape_string($this->location)."',
-                Sonstiges = '".             mysql_escape_string($this->misc)."',
-                Passwort= '".               $this->password."',
-                Lesezugriff = '".           $this->read_level."',
-                Schreibzugriff = '".            $this->write_level."',
-                start_time = '".            $this->semester_start_time."',
-                duration_time = '".         $this->semester_duration_time."',
-                art = '".               mysql_escape_string($this->form)."',
-                teilnehmer = '".            mysql_escape_string($this->participants)."',
-                vorrausetzungen = '".           mysql_escape_string($this->requirements)."',
-                lernorga = '".              mysql_escape_string($this->orga)."',
-                leistungsnachweis = '".         mysql_escape_string($this->leistungsnachweis)."',
-                mkdate = '".                time()."',
-                chdate = '".                time()."',
-                ects = '".              mysql_escape_string($this->ects)."',
-                admission_endtime = '".         $this->admission_endtime."',
-                admission_turnout = '".         $this->admission_turnout."',
-                admission_binding =             NULL ,
-                admission_type = '".            $this->admission_type."',
-                admission_selection_take_place =    '0',
-                admission_group =           NULL ,
-                admission_prelim = '".          $this->admission_prelim."',
-                admission_prelim_txt = '".      mysql_escape_string($this->admission_prelim_txt)."',
-                admission_starttime = '".       $this->admission_starttime."',
-                admission_endtime_sem = '".     $this->admission_endtime_sem."',
-                admission_disable_waitlist = '".$this->admission_disable_waitlist . "',
-                admission_enable_quota = '".$this->admission_enable_quota . "',
-                visible =               '".     $this->visible."',
-                showscore =             '0',
-                modules = ".(($this->modules == NULL) ? 'NULL' : "'".$this->modules."'");
-        } else {
-            $query = "UPDATE seminare SET
-                VeranstaltungsNummer = '".      mysql_escape_string($this->seminar_number)."',
-                Institut_id = '".           $this->institut_id."',
-                Name = '".              mysql_escape_string($this->name)."',
-                Untertitel = '".            mysql_escape_string($this->subtitle)."',
-                status = '".                $this->status."',
-                Beschreibung = '".          mysql_escape_string($this->description)."',
-                Ort = '".               mysql_escape_string($this->location)."',
-                Sonstiges = '".             mysql_escape_string($this->misc)."',
-                Passwort= '".               $this->password."',
-                Lesezugriff = '".           $this->read_level."',
-                Schreibzugriff = '".            $this->write_level."',
-                start_time = '".            $this->semester_start_time."',
-                duration_time = '".         $this->semester_duration_time."',
-                art = '".               mysql_escape_string($this->form)."',
-                teilnehmer = '".            mysql_escape_string($this->participants)."',
-                vorrausetzungen = '".           mysql_escape_string($this->requirements)."',
-                lernorga = '".              mysql_escape_string($this->orga)."',
-                leistungsnachweis = '".         mysql_escape_string($this->leistungsnachweis)."',
-                ects = '".              mysql_escape_string($this->ects)."',
-                admission_endtime = '".         $this->admission_endtime."',
-                admission_turnout = '".         $this->admission_turnout."',
-                admission_binding = '".         $this->admission_binding."',
-                admission_type = '".            $this->admission_type."',
-                admission_selection_take_place ='".     $this->admission_selection_take_place."',
-                admission_group = '".           $this->admission_group."' ,
-                admission_prelim = '".          $this->admission_prelim."',
-                admission_prelim_txt = '".      mysql_escape_string($this->admission_prelim_txt)."',
-                admission_starttime = '".       $this->admission_starttime."',
-                admission_endtime_sem = '".     $this->admission_endtime_sem."',
-                admission_disable_waitlist = '".$this->admission_disable_waitlist . "',
-                admission_enable_quota = '".$this->admission_enable_quota . "',
-                visible = '".               $this->visible."',
-                showscore ='".              $this->showscore."',
-                modules = ".(($this->modules == NULL) ? 'NULL' : "'".$this->modules."'")."
-                WHERE Seminar_id = '".          $this->id."'";
-        }
-        $this->db->query($query);
         $metadate_changed = $this->metadate->store();
-        if (($this->db->affected_rows() || $metadate_changed) && $trigger_chdate) {
-            $query = sprintf("UPDATE seminare SET chdate='%s' WHERE Seminar_id='%s' ", time(), $this->id);
-            $this->db->query($query);
-            return TRUE;
-        } else
-            return FALSE;
+
+        $query = "INSERT INTO seminare SET Seminar_id = :Seminar_id,
+                                           VeranstaltungsNummer = :VeranstaltungsNummer,
+                                           Institut_id = :Institut_id,
+                                           Name = :Name,
+                                           Untertitel = :Untertitel,
+                                           status = :status,
+                                           Beschreibung = :Beschreibung,
+                                           Ort = :Ort,
+                                           Sonstiges = :Sonstiges,
+                                           Passwort = :Passwort,
+                                           Lesezugriff = :Lesezugriff,
+                                           Schreibzugriff = :Schreibzugriff,
+                                           start_time = :start_time,
+                                           duration_time = :duration_time,
+                                           art = :art,
+                                           teilnehmer = :teilnehmer,
+                                           vorrausetzungen = :vorrausetzungen,
+                                           lernorga = :lernorga,
+                                           leistungsnachweis = :leistungsnachweis,
+                                           mkdate = UNIX_TIMESTAMP(),
+                                           chdate = UNIX_TIMESTAMP(),
+                                           ects = :ects,
+                                           admission_endtime = :admission_endtime,
+                                           admission_turnout = :admission_turnout,
+                                           admission_binding = NULL,
+                                           admission_type = :admission_type,
+                                           admission_selection_take_place = 0,
+                                           admission_group = NULL,
+                                           admission_prelim = :admission_prelim,
+                                           admission_prelim_txt = :admission_prelim_txt,
+                                           admission_starttime = :admission_starttime,
+                                           admission_endtime_sem = :admission_endtime_sem,
+                                           admission_disable_waitlist = :admission_disable_waitlist,
+                                           admission_enable_quota = :admission_enable_quota,
+                                           visible = :visible,
+                                           showscore = 0,
+                                           modules = :modules
+                  ON DUPLICATE KEY UPDATE  VeranstaltungsNummer = VALUES(VeranstaltungsNummer),
+                                           Institut_id = VALUES(Institut_id),
+                                           Name = VALUES(Name),
+                                           Untertitel = VALUES(Untertitel),
+                                           status = VALUES(status),
+                                           Beschreibung = VALUES(Beschreibung),
+                                           Ort = VALUES(Ort),
+                                           Sonstiges = VALUES(Sonstiges),
+                                           Passwort = VALUES(Passwort),
+                                           Lesezugriff = VALUES(Lesezugriff),
+                                           Schreibzugriff = VALUES(Schreibzugriff),
+                                           start_time = VALUES(start_time),
+                                           duration_time = VALUES(duration_time),
+                                           art = VALUES(art),
+                                           teilnehmer = VALUES(teilnehmer),
+                                           vorrausetzungen = VALUES(vorrausetzungen),
+                                           lernorga = VALUES(lernorga),
+                                           leistungsnachweis = VALUES(leistungsnachweis),
+                                           ects = VALUES(ects),
+                                           admission_endtime = VALUES(admission_endtime),
+                                           admission_turnout = VALUES(admission_turnout),
+                                           admission_binding = :admission_binding,
+                                           admission_type = VALUES(admission_type),
+                                           admission_selection_take_place = :admission_selection_take_place,
+                                           admission_group = :admission_group,
+                                           admission_prelim = VALUES(admission_prelim),
+                                           admission_prelim_txt = VALUES(admission_prelim_txt),
+                                           admission_starttime = VALUES(admission_starttime),
+                                           admission_endtime_sem = VALUES(admission_endtime_sem),
+                                           admission_disable_waitlist = VALUES(admission_disable_waitlist),
+                                           admission_enable_quota = VALUES(admission_enable_quota),
+                                           visible = VALUES(visible),
+                                           showscore = :showscore,
+                                           modules = VALUES(modules),
+                                           chdate = IF(:update_chdate, UNIX_TIMESTAMP(), chdate)";
+        $statement = DBManager::get()->prepare($query);
+        $statement->bindValue(':Seminar_id', $this->id);
+        $statement->bindValue(':VeranstaltungsNummer', $this->seminar_number);
+        $statement->bindValue(':Institut_id', $this->institut_id);
+        $statement->bindValue(':Name', $this->name);
+        $statement->bindValue(':Untertitel', $this->subtitle);
+        $statement->bindValue(':status', $this->status);
+        $statement->bindValue(':Beschreibung', $this->description);
+        $statement->bindValue(':Ort', $this->location);
+        $statement->bindValue(':Sonstiges', $this->misc);
+        $statement->bindValue(':Passwort', $this->password);
+        $statement->bindValue(':Lesezugriff', $this->read_level);
+        $statement->bindValue(':Schreibzugriff', $this->write_level);
+        $statement->bindValue(':start_time', $this->semester_start_time);
+        $statement->bindValue(':duration_time', $this->semester_duration_time);
+        $statement->bindValue(':art', $this->form);
+        $statement->bindValue(':teilnehmer', $this->participants);
+        $statement->bindValue(':vorrausetzungen', $this->requirements);
+        $statement->bindValue(':lernorga', $this->orga);
+        $statement->bindValue(':leistungsnachweis', $this->leistungsnachweis);
+        $statement->bindValue(':ects', $this->ects);
+        $statement->bindValue(':admission_endtime', $this->admission_endtime);
+        $statement->bindValue(':admission_turnout', $this->admission_turnout);
+        $statement->bindValue(':admission_binding', $this->admission_binding);
+        $statement->bindValue(':admission_type', $this->admission_type);
+        $statement->bindValue(':admission_selection_take_place', $this->admission_selection_take_place);
+        $statement->bindValue(':admission_group', $this->admission_group);
+        $statement->bindValue(':admission_prelim', $this->admission_prelim);
+        $statement->bindValue(':admission_prelim_txt', $this->admission_prelim_txt);
+        $statement->bindValue(':admission_starttime', $this->admission_starttime);
+        $statement->bindValue(':admission_endtime_sem', $this->admission_endtime_sem);
+        $statement->bindValue(':admission_disable_waitlist', (int)$this->admission_disable_waitlist);
+        $statement->bindValue(':admission_enable_quota', (int)$this->admission_enable_quota);
+        $statement->bindValue(':visible', $this->visible);
+        $statement->bindValue(':showscore', $this->showscore);
+        $statement->bindValue(':modules', $this->modules);
+        $statement->bindValue(':update_chdate', (int)!empty($trigger_chdate));
+        $statement->execute();
+
+        return $trigger_chdate && ($statement->rowCount() > 0);
     }
 
     function setStartSemester($start)
@@ -1911,14 +1940,21 @@ class Seminar
         $count = 0;
         $admission_turnout = $this->admission_turnout;
         $dont_check_quota = !$this->isAdmissionQuotaEnabled();
-        $this->db->query("SELECT quota, name, ass.studiengang_id FROM admission_seminar_studiengang ass LEFT JOIN studiengaenge st USING(studiengang_id) WHERE seminar_id = '".$this->getId()."' ORDER BY (ass.studiengang_id <> 'all'),name");
-        while($this->db->next_record()){
-            $ret[$this->db->f('studiengang_id')]['name'] = $this->db->f("studiengang_id") == 'all' ? _("Alle Studiengänge") : $this->db->f("name");
-            if($this->db->f("studiengang_id") != 'all' && !$dont_check_quota) {
-                $ret[$this->db->f('studiengang_id')]['num_total'] = round($admission_turnout * ($this->db->f("quota") / 100));
-                $count += $ret[$this->db->f('studiengang_id')]['num_total'];
+        
+        $query = "SELECT quota, name, ass.studiengang_id
+                  FROM admission_seminar_studiengang AS ass
+                  LEFT JOIN studiengaenge AS st USING (studiengang_id)
+                  WHERE seminar_id = ?
+                  ORDER BY ass.studiengang_id <> 'all', name";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($this->getId()));
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $ret[$row['studiengang_id']]['name'] = $row['studiengang_id'] == 'all' ? _('Alle Studiengänge') : $row['name'];
+            if ($row['studiengang_id'] != 'all' && !$dont_check_quota) {
+                $ret[$row['studiengang_id']]['num_total'] = round($admission_turnout * ($row['quota'] / 100));
+                $count += $ret[$row['studiengang_id']]['num_total'];
             } else {
-                $ret[$this->db->f('studiengang_id')]['num_total'] = $admission_turnout;
+                $ret[$row['studiengang_id']]['num_total'] = $admission_turnout;
             }
         }
         if(!$dont_check_quota && isset($ret['all'])) {
@@ -1927,17 +1963,26 @@ class Seminar
         }
         if (is_array($ret)) foreach($ret as $studiengang_id => $data){
             $ret[$studiengang_id]['num_occupied'] = 0;
-            $this->db->query("SELECT COUNT(user_id) FROM seminar_user
-                WHERE seminar_id = '".$this->getId()."'
-                    AND admission_studiengang_id='$studiengang_id'
-                    AND status != 'dozent'");
-            $this->db->next_record();
-            $ret[$studiengang_id]['num_occupied'] += $this->db->f(0);
-            $this->db->query("SELECT COUNT(IF(status='accepted',user_id,NULL)) as accepted,COUNT(IF(status='claiming',user_id,NULL)) as claiming,COUNT(IF(status='awaiting',user_id,NULL)) as awaiting  FROM admission_seminar_user WHERE seminar_id = '".$this->getId()."' AND studiengang_id='$studiengang_id'");
-            $this->db->next_record();
-            $ret[$studiengang_id]['num_occupied'] += $this->db->f('accepted');
-            $ret[$studiengang_id]['num_claiming'] += $this->db->f('claiming');
-            $ret[$studiengang_id]['num_awaiting'] += $this->db->f('awaiting');
+            
+            $query = "SELECT COUNT(user_id)
+                      FROM seminar_user
+                      WHERE seminar_id = ? AND admission_studiengang_id = ? AND status != 'dozent'";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($this->getId(), $studiengang_id));
+            $ret[$studiengang_id]['num_occupied'] += $statement->fetchColumn();
+            
+            $query = "SELECT SUM(status = 'accepted') AS accepted,
+                             SUM(status = 'claiming') AS claiming,
+                             SUM(status = 'awaiting') AS awaiting
+                      FROM admission_seminar_user
+                      WHERE seminar_id = ? AND studiengang_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($this->getId(), $studiengang_id));
+            $temp = $statement->fetch(PDO::FETCH_ASSOC);
+
+            $ret[$studiengang_id]['num_occupied'] += $temp['accepted'];
+            $ret[$studiengang_id]['num_claiming'] += $temp['claiming'];
+            $ret[$studiengang_id]['num_awaiting'] += $temp['awaiting'];
         }
         $this->admission_studiengang = $ret;
         return true;
@@ -2058,25 +2103,28 @@ class Seminar
         // Delete that Seminar.
 
         // Alle Benutzer aus dem Seminar rauswerfen.
-        $query = "DELETE from seminar_user where Seminar_id='$s_id'";
-        $db = new DB_Seminar();
-        $db->query($query);
-        if (($db_ar = $db->affected_rows()) > 0) {
+        $query = "DELETE FROM seminar_user WHERE Seminar_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($s_id));
+        if (($db_ar = $statement->rowCount()) > 0) {
             $this->createMessage(sprintf(_("%s VeranstaltungsteilnehmerInnen, DozentInnen oder TutorInnen archiviert."), $db_ar));
         }
 
         // Alle Benutzer aus Wartelisten rauswerfen
-        $query = "DELETE from admission_seminar_user where seminar_id='$s_id'";
-        $db->query($query);
+        $query = "DELETE FROM admission_seminar_user WHERE seminar_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($s_id));
 
         // Alle Eintraege aus Zuordnungen zu Studiengaenge rauswerfen
-        $query = "DELETE from admission_seminar_studiengang where seminar_id='$s_id'";
-        $db->query($query);
+        $query = "DELETE FROM admission_seminar_studiengang WHERE seminar_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($s_id));
 
         // Alle beteiligten Institute rauswerfen
-        $query = "DELETE FROM seminar_inst where Seminar_id='$s_id'";
-        $db->query($query);
-        if (($db_ar = $db->affected_rows()) > 0) {
+        $query = "DELETE FROM seminar_inst WHERE Seminar_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($s_id));
+        if (($db_ar = $statement->rowCount()) > 0) {
             $this->createMessage(sprintf(_("%s Zuordnungen zu Einrichtungen archiviert."), $db_ar));
         }
 
@@ -2104,9 +2152,10 @@ class Seminar
         SeminarCycleDate::deleteBySQL('seminar_id = ' . DBManager::get()->quote($s_id));
 
         // Alle weiteren Postings zu diesem Seminar loeschen.
-        $query = "DELETE from px_topics where Seminar_id='$s_id'";
-        $db->query($query);
-        if (($db_ar = $db->affected_rows()) > 0) {
+        $query = "DELETE from px_topics where Seminar_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($s_id));
+        if (($db_ar = $statement->rowCount()) > 0) {
             $this->createMessage(sprintf(_("%s Postings archiviert."), $db_ar));
         }
 
@@ -2116,9 +2165,10 @@ class Seminar
         }
 
         // Freie Seite zu diesem Seminar löschen
-        $query = "DELETE FROM scm where range_id='$s_id'";
-        $db->query($query);
-        if (($db_ar = $db->affected_rows()) > 0) {
+        $query = "DELETE FROM scm WHERE range_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($s_id));
+        if (($db_ar = $statement->rowCount()) > 0) {
             $this->createMessage(_("Freie Seite der Veranstaltung archiviert."));
         }
 
@@ -2139,17 +2189,20 @@ class Seminar
         DataFieldEntry::removeAll($s_id);
 
         //kill all wiki-pages
-        $query = sprintf ("DELETE FROM wiki WHERE range_id='%s'", $s_id);
-        $db->query($query);
-        if (($db_wiki = $db->affected_rows()) > 0) {
+        $query = "DELETE FROM wiki WHERE range_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($s_id));
+        if (($db_wiki = $statement->rowCount()) > 0) {
             $this->createMessage(sprintf(_("%s Wiki-Seiten archiviert."), $db_wiki));
         }
 
-        $query = sprintf ("DELETE FROM wiki_links WHERE range_id='%s'", $s_id);
-        $db->query($query);
+        $query = "DELETE FROM wiki_links WHERE range_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($s_id));
 
-        $query = sprintf ("DELETE FROM wiki_locks WHERE range_id='%s'", $s_id);
-        $db->query($query);
+        $query = "DELETE FROM wiki_locks WHERE range_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($s_id));
 
         // kill all the ressources that are assigned to the Veranstaltung (and all the linked or subordinated stuff!)
         if ($GLOBALS['RESOURCES_ENABLE']) {
@@ -2161,9 +2214,9 @@ class Seminar
         }
 
         // kill virtual seminar-entries in calendar
-        $stmt = DBManager::get()->prepare("DELETE FROM schedule_seminare
-            WHERE seminar_id = ?");
-        $stmt->execute(array($seminar_id));
+        $query = "DELETE FROM schedule_seminare WHERE seminar_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($s_id));
 
         if(get_config('ELEARNING_INTERFACE_ENABLE')){
             global $connected_cms;
@@ -2181,13 +2234,14 @@ class Seminar
         object_kill_visits(null, $s_id);
 
         // Logging...
-        $query="SELECT seminare.name as name, seminare.VeranstaltungsNummer as number, semester_data.name as semester FROM seminare LEFT JOIN semester_data ON (seminare.start_time = semester_data.beginn) WHERE seminare.Seminar_id='$s_id'";
-        $db->query($query);
-        if ($db->next_record()) {
-            $semlogname=$db->f('number')." ".$db->f('name')." (".$db->f('semester').")";
-        } else {
-            $semlogname="unknown sem_id: $s_id";
-        }
+        $query = "SELECT CONCAT(seminare.VeranstaltungsNummer, ' ', seminare.name, '(', semester_data.name, ')')
+                  FROM seminare
+                  LEFT JOIN semester_data ON (seminare.start_time = semester_data.beginn)
+                  WHERE seminare.Seminar_id='$s_id'";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($s_id));
+        $semlogname = $statement->fetchColumn() ?: sprintf('unknown sem_id: %s', $s_id);
+
         log_event("SEM_ARCHIVE",$s_id,NULL,$semlogname);
         // ...logged
 
@@ -2199,9 +2253,10 @@ class Seminar
         AutoInsert::deleteSeminar($s_id);
 
         // und das Seminar loeschen.
-        $query = "DELETE FROM seminare where Seminar_id= '$s_id'";
-        $db->query($query);
-        if ($db->affected_rows() == 0) {
+        $query = "DELETE FROM seminare WHERE Seminar_id=  ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($s_id));
+        if ($statement->rowCount() == 0) {
             throw new Exception(_("Fehler beim Löschen der Veranstaltung"));
         }
         return true;
@@ -2332,15 +2387,13 @@ class Seminar
         if (!$sem_id && $this) {
             $sem_id = $this->id;
         }
-        $db = DBManager::get();
-        return $db->query("SELECT seminar_inst.institut_id as Institut_id " .
-               "FROM seminar_inst " .
-               "WHERE seminar_inst.seminar_id = ".$db->quote($sem_id)." " .
-               "UNION DISTINCT SELECT seminare.Institut_id " .
-               "FROM seminare " .
-               "WHERE seminare.Seminar_id = ".$db->quote($sem_id)." " .
-               "")
-            ->fetchAll(PDO::FETCH_COLUMN, 0);
+
+        $query = "SELECT institut_id FROM seminar_inst WHERE seminar_id = :sem_id
+                  UNION
+                  SELECT Institut_id FROM seminare WHERE Seminar_id = :sem_id";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(compact('sem_id'));
+        return $statement->fetchAll(PDO::FETCH_COLUMN);
     }
 
     /**
@@ -2352,30 +2405,32 @@ class Seminar
     public function setInstitutes($institutes = array())
     {
         if (is_array($institutes)) {
-            $db = DBManager::get();
             $institutes[] = $this->institut_id;
             $institutes = array_unique($institutes);
-            $old_inst = $db->query("SELECT institut_id " .
-                    "FROM seminar_inst " .
-                    "WHERE seminar_id = ".$db->quote($this->id)." " .
-                    "")
-            ->fetchAll(PDO::FETCH_COLUMN, 0);
+
+            $query = "SELECT institut_id FROM seminar_inst WHERE seminar_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($this->id));
+            $old_inst = $statement->fetchAll(PDO::FETCH_COLUMN);
+
             $todelete = array_diff($old_inst, $institutes);
+
+            $query = "DELETE FROM seminar_inst WHERE seminar_id = ? AND institut_id = ?";
+            $statement = DBManager::get()->prepare($query);
+
             foreach($todelete as $inst) {
                 log_event('CHANGE_INSTITUTE_DATA', $this->id, $inst, 'Die beteiligte Einrichtung '. get_object_name($inst, 'inst') .' wurde gelöscht.');
-
-                $db->exec("DELETE FROM seminar_inst " .
-                    "WHERE seminar_id = ".$db->quote($this->id)." " .
-                        "AND institut_id = ".$db->quote($inst));
+                $statement->execute(array($this->id, $inst));
             }
 
             $toinsert = array_diff($institutes, $old_inst);
+
+            $query = "INSERT INTO seminar_inst (seminar_id, institut_id) VALUES (?, ?)";
+            $statement = DBManager::get()->prepare($query);
+
             foreach($toinsert as $inst) {
                 log_event('CHANGE_INSTITUTE_DATA', $this->id, $inst, 'Die beteiligte Einrichtung '. get_object_name($inst, 'inst') .' wurde hinzugefügt.');
-
-                $db->exec("INSERT INTO seminar_inst " .
-                    "SET seminar_id = ".$db->quote($this->id).", " .
-                        "institut_id = ".$db->quote($inst));
+                $statement->execute(array($this->id, $inst));
             }
             return $todelete || $toinsert;
         } else {
@@ -2422,47 +2477,62 @@ class Seminar
         }
 
         if (!$force) {
-            $old_status = $db->query("SELECT status " .
-                    "FROM seminar_user " .
-                    "WHERE user_id = ".$db->quote($user_id)." " .
-                        "AND Seminar_id = ".$db->quote($this->id))->fetch(PDO::FETCH_COLUMN, 0);
+            $query = "SELECT status FROM seminar_user WHERE user_id = ? AND Seminar_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($user_id, $this->id));
+            $old_status = $statement->fetchColumn();
         }
 
-        $new_position = $db->query("SELECT MAX(position)+1 " .
-                "FROM seminar_user " .
-                "WHERE status = ".$db->quote($status)." " .
-                    "AND Seminar_id = ".$db->quote($this->id)."")->fetch(PDO::FETCH_COLUMN, 0);
+        $query = "SELECT MAX(position) + 1 FROM seminar_user WHERE status = ? AND Seminar_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($status, $this->id));
+        $new_position = $statement->fetchColumn();
 
-        $numberOfTeachers = $db->query("SELECT COUNT(*) " .
-                "FROM seminar_user " .
-                "WHERE Seminar_id = ".$db->quote($this->id)." ".
-                    "AND status = 'dozent' ")->fetch(PDO::FETCH_COLUMN, 0);
+        $query = "SELECT COUNT(*) FROM seminar_user WHERE Seminar_id = ? AND status = 'dozent'";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($this->id));
+        $numberOfTeachers = $statement->fetchColumn();
 
         if (!$old_status) {
-            $db->exec("INSERT INTO seminar_user " .
-                      "SET status = ".$db->quote($status).", " .
-                      "Seminar_id = ".$db->quote($this->id).", " .
-                      "user_id = ".$db->quote($user_id).", " .
-                      "position = ".$db->quote($new_position ? $new_position : 0).", " .
-                      "gruppe = " . (int)select_group($this->getSemesterStartTime()) . ", " .
-                       (in_array($status, words('tutor dozent')) ? "visible='yes', " : "" ) .
-                      "mkdate = ".time());
+            $query = "INSERT INTO seminar_user (Seminar_id, user_id, status, position, gruppe, visible, mkdate)
+                      VALUES (?, ?, ?, ?, ?, ?, UNIX_TIMESTAMP())";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                $this->id,
+                $user_id,
+                $status,
+                $new_position ?: 0,
+                (int)select_group($this->getSemesterStartTime()),
+                in_array($status, words('tutor dozent')) ? 'yes' : 'unknown',
+            ));
+
             removeScheduleEntriesMarkedAsVirtual($user_id, $this->getId());
             return $this;
         } elseif (($force || $rangordnung[$old_status] < $rangordnung[$status])
                 && ($old_status !== "dozent" || $numberOfTeachers > 1)) {
-            $db->exec("UPDATE seminar_user " .
-                      "SET status = ".$db->quote($status).", " .
-                      (in_array($status, words('tutor dozent')) ? "visible='yes', " : "" ) .
-                      "position = ".$db->quote($new_position)." " .
-                      "WHERE Seminar_id = ".$db->quote($this->id)." " .
-                      "AND user_id = ".$db->quote($user_id));
-            if ($old_status === "dozent") {
-                $termine = $db->query(
-                    "SELECT termin_id FROM termine WHERE range_id = ".$db->quote($this->id)." " .
-                "")->fetchAll(PDO::FETCH_COLUMN, 0);
+            $query = "UPDATE seminar_user
+                      SET status = ?, visible = IFNULL(?, visible), position = ?
+                      WHERE Seminar_id = ? AND user_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                $status,
+                in_array($status, words('tutor dozent')) ? 'yes' : null,
+                $new_position,
+                $this->id,
+                $user_id,
+            ));
+
+            if ($old_status === 'dozent') {
+                $query = "SELECT termin_id FROM termine WHERE range_id = ?";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($this->id));
+                $termine = $statement->fetchAll(PDO::FETCH_COLUMN);
+
+                $query = "DELETE FROM termin_related_persons WHERE range_id = ? AND user_id = ?";
+                $statement = DBManager::get()->prepare($query);
+                
                 foreach ($termine as $termin_id) {
-                    $db->exec("DELETE FROM termin_related_persons WHERE range_id = ".$db->quote($termin_id)." AND user_id = ".$db->quote($user_id)." ");
+                    $statement->execute(array($termin_id, $user_id));
                 }
             }
             return $this;
@@ -2487,17 +2557,21 @@ class Seminar
         $db = DBManager::get();
         $dozenten = $this->getMembers('dozent');
         if (count($dozenten) >= 2 || !$dozenten[$user_id]) {
-            $db->exec(
-                "DELETE FROM seminar_user " .
-                "WHERE Seminar_id = ".$db->quote($this->id)." " .
-                    "AND user_id = ".$db->quote($user_id)." " .
-            "");
+            $query = "DELETE FROM seminar_user WHERE Seminar_id = ? AND user_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($this->id, $user_id));
+
             if ($dozenten[$user_id]) {
-                $termine = $db->query(
-                    "SELECT termin_id FROM termine WHERE range_id = ".$db->quote($this->id)." " .
-                "")->fetchAll(PDO::FETCH_COLUMN, 0);
+                $query = "SELECT termin_id FROM termine WHERE range_id = ?";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($this->id));
+                $termine = $statement->fetchAll(PDO::FETCH_COLUMN);
+
+                $query = "DELETE FROM termin_related_persons WHERE range_id = ? AND user_id = ?";
+                $statement = DBManager::get()->prepare($query);
+
                 foreach ($termine as $termin_id) {
-                    $db->exec("DELETE FROM termin_related_persons WHERE range_id = ".$db->quote($termin_id)." AND user_id = ".$db->quote($user_id)." ");
+                    $statement->execute(array($termin_id, $user_id));
                 }
             }
             $this->createMessage(sprintf(_("Nutzer %s wurde aus der Veranstaltung entfernt."),
@@ -2518,15 +2592,15 @@ class Seminar
      */
     public function setMemberPriority($members)
     {
-        $db = DBManager::get();
-        $num = 0;
-        foreach($members as $member) {
-            $num++;
-            $db->exec("UPDATE seminar_user " .
-                    "SET position = ".$db->quote($num)." " .
-                    "WHERE Seminar_id = ".$db->quote($this->id)." " .
-                        "AND user_id = ".$db->quote($member));
+        $query = "UPDATE seminar_user
+                  SET position = ?
+                  WHERE Seminar_id = ? AND user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+
+        foreach(array_values($members) as $num => $member) {
+            $statement->execute(array($num, $this->id, $member));
         }
+
         return $this;
     }
 

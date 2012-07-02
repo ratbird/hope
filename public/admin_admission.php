@@ -413,7 +413,7 @@ if ($seminar_id
                     $admin_admission_data["admission_ratios_changed"]=TRUE;
             if ($admin_admission_data["admission_ratios_changed"]) {
                 $admin_admission_data["studg"]='';
-                $studg_name = Request::optionArray('studg_name');
+                $studg_name = Request::getArray('studg_name');
                 foreach ($studg_id as $key=>$val)
                     $admin_admission_data["studg"][$val]=array("name"=>$studg_name[$key], "ratio"=>$studg_ratio[$key]);
             }

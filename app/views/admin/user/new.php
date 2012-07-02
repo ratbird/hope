@@ -24,12 +24,12 @@ use Studip\Button, Studip\LinkButton;
         </td>
         <td>
             <select class="user_form" name="perm" id="perm" onchange="jQuery('#admin_special').toggle( jQuery('#institut').val() != '0' && jQuery('#perm').val() == 'admin' )">
-                <option>user</option>
-                <option selected="selected">autor</option>
-                <option>tutor</option>
-                <option>dozent</option>
-                <option>admin</option>
-                <option>root</option>
+                <option <? if ($user['perm'] == 'user') echo 'selected'; ?>>user</option>
+                <option <? if (!$user['perm'] || $user['perm'] == 'autor') echo 'selected'; ?>>autor</option>
+                <option <? if ($user['perm'] == 'tutor') echo 'selected'; ?>>tutor</option>
+                <option <? if ($user['perm'] == 'dozent') echo 'selected'; ?>>dozent</option>
+                <option <? if ($user['perm'] == 'admin') echo 'selected'; ?>>admin</option>
+                <option <? if ($user['perm'] == 'root') echo 'selected'; ?>>root</option>
             </select>
         </td>
     </tr>
@@ -119,9 +119,9 @@ use Studip\Button, Studip\LinkButton;
             <select id="institut" class="user_form" name="institute" onchange="jQuery('#admin_special').toggle( jQuery('#institut').val() != '0' && jQuery('#perm').val() == 'admin')">
                 <option value="0"><?= _("-- bitte Einrichtung auswählen --") ?></option>
                 <? foreach ($faks as $fak) : ?>
-                    <option value="<?= $fak['Institut_id'] ?>"<?= ($user['inst'] == $fak['Institut_id']) ? 'selected' : '' ?><?= ($fak['is_fak']) ? 'style="font-weight: bold;"' : '' ?>><?= htmlReady($fak['Name']) ?></option>
+                    <option value="<?= $fak['Institut_id'] ?>" <?= ($user['institute'] == $fak['Institut_id']) ? 'selected' : '' ?><?= ($fak['is_fak']) ? 'style="font-weight: bold;"' : '' ?>><?= htmlReady($fak['Name']) ?></option>
                     <? foreach ($fak['institutes'] as $institute) : ?>
-                    <option value="<?= $institute['Institut_id'] ?>"<?= ($user['inst'] == $institute['Institut_id']) ? 'selected' : '' ?>>&nbsp;&nbsp;&nbsp;<?= htmlReady($institute['Name']) ?></option>
+                    <option value="<?= $institute['Institut_id'] ?>" <?= ($user['institute'] == $institute['Institut_id']) ? 'selected' : '' ?>>&nbsp;&nbsp;&nbsp;<?= htmlReady($institute['Name']) ?></option>
                     <? endforeach ?>
                 <? endforeach ?>
             </select>

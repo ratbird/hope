@@ -619,18 +619,28 @@ class Admin_UserController extends AuthenticatedController
             $faks = DBManager::get()->query($sql)->fetchAll(PDO::FETCH_ASSOC);
             $domains = UserDomain::getUserDomains();
         } else {
-            $sql = "SELECT a.Institut_id, Name, IF(b.Institut_id=b.fakultaets_id,1,0) AS is_fak "
-                 . "FROM user_inst a LEFT JOIN Institute b USING (Institut_id) "
-                 . "WHERE a.user_id='{$auth->auth['uid']}' AND a.inst_perms='admin' ORDER BY is_fak, Name";
-            $faks = DBManager::get()->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+            $sql = "SELECT a.Institut_id, Name, b.Institut_id = b.fakultaets_id AS is_fak
+                    FROM user_inst a
+                    LEFT JOIN Institute b USING (Institut_id) 
+                    WHERE a.user_id = ? AND a.inst_perms = 'admin'
+                    ORDER BY is_fak, Name";
+            $statement = DBManager::get()->prepare($sql);
+            $statement->execute(array($auth->auth['uid']));
+            $faks = $statement->fetchAll(PDO::FETCH_ASSOC);
             $domains = UserDomain::getUserDomainsForUser($auth->auth["uid"]);
         }
 
+        $query = "SELECT Institut_id, Name
+                  FROM Institute
+                  WHERE fakultaets_id = ? AND institut_id != fakultaets_id
+                  ORDER BY Name";
+        $statement = DBManager::get()->prepare($query);
+
         foreach ($faks as $index => $fak) {
             if ($fak['is_fak']) {
-                $sql = "SELECT Institut_id, Name FROM Institute WHERE fakultaets_id='{$fak['Institut_id']}' "
-                     . "AND institut_id!='{$fak['Institut_id']}' ORDER BY Name";
-                $faks[$index]['institutes'] = DBManager::get()->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+                $statement->execute(array($fak['Institut_id']));
+                $faks[$index]['institutes'] = $statement->fetchAll(PDO::FETCH_ASSOC);
+                $statement->closeCursor();
             }
         }
 

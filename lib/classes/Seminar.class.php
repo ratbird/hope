@@ -124,7 +124,9 @@ class Seminar
 
     function restoreMembers($status = 'dozent')
     {
-        $query = "SELECT user_id, username, Vorname, Nachname, Email,
+        // user_id needs to be be defined twice so it can be used both as
+        // a key for the associative array and as a regular field in the array
+        $query = "SELECT user_id AS tmp, user_id, username, Vorname, Nachname, Email,
                          {$GLOBALS['_fullname_sql']['full']} AS fullname,
                          admission_studiengang_id, su.status, su.label
                   FROM seminar_user AS su
@@ -149,7 +151,9 @@ class Seminar
 
     function restoreAdmissionMembers($status = 'awaiting')
     {
-        $query = "SELECT user_id, username, Vorname, Nachname, Email,
+        // user_id needs to be be defined twice so it can be used both as
+        // a key for the associative array and as a regular field in the array
+        $query = "SELECT user_id AS tmp, user_id, username, Vorname, Nachname, Email,
                          {$GLOBALS['_fullname_sql']['full']} AS fullname,
                          studiengang_id, su.status
                   FROM admission_seminar_user AS su

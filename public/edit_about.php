@@ -1088,7 +1088,7 @@ if ($view == 'Studium') {
         echo '<tr><td class="blank" id="select_institute">';
         echo "<h3>" . _("Ich studiere an folgenden Einrichtungen:") . "</h3>";
         if ($allow_change_in) {
-            echo '<form action="' . URLHelper::getLink('?cmd=inst_edit&username='.$username.'&view='.$view.'&studipticket=' . get_ticket() . '#einrichtungen').' method="POST">'. "\n";
+            echo '<form action="' . URLHelper::getLink('?cmd=inst_edit&username='.$username.'&view='.$view.'&studipticket=' . get_ticket() . '#einrichtungen').'" method="POST">'. "\n";
             echo CSRFProtection::tokenTag();
         }
         echo '<table class="default">'."\n";

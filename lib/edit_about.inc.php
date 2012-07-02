@@ -287,7 +287,7 @@ class about extends messaging {
 function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschluss,$fachsem,$change_fachsem,$course_id) {
 
         $any_change = true;
-        if (is_array($fach_abschluss_delete)) {
+        if (!empty($fach_abschluss_delete)) {
             $any_change = false;
             for ($i=0; $i < count($fach_abschluss_delete); $i++) {
                 $this->db->query("DELETE FROM user_studiengang WHERE user_id='".$this->auth_user["user_id"]."' AND studiengang_id='$fach_abschluss_delete[$i]'");

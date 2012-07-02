@@ -1195,10 +1195,11 @@ if ($db->f('visible') == 'yes' || $i_see_everybody || $db->f('user_id') == $user
     }
     if ($i_see_everybody) {
         $anker = "<a name=\"".$db->f("username")."\">";
+        $anker2 = '</a>';
     } else {
-        $anker = '';
+        $anker = $anker2 = '';
     }
-    printf ("<td class=\"%s\" nowrap>%s<font size=\"-1\">&nbsp;%s.</td>", $class, $anker, $c);
+    printf ("<td class=\"%s\" nowrap>%s<font size=\"-1\">&nbsp;%s.</font>%s</td>", $class, $anker, $c, $anker2);
     printf ("<td colspan=\"2\" class=\"%s\">", $class);
     if ($rechte) {
         printf ("<a href=\"%s\"><img class=\"text-top\" src=\"".$GLOBALS['ASSETS_URL']."images/%s\"", $link, $img);
@@ -1640,7 +1641,8 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
     <table width="99%" border="0" cellpadding="2" cellspacing="0" border=0 align="center">
     <tr>
         <td class="steel1" width="40%" align="left">&nbsp; <font size=-1><b><?=_("Nutzer in die Veranstaltung eintragen")?></b></font>
-            <a name="suchergebnisse"><br><font size=-1>&nbsp; <? printf(_("Bitte geben Sie den Vornamen, Nachnamen %s oder Benutzernamen zur Suche ein"), "<br>&nbsp;")?> </font></a></td>
+            <a name="suchergebnisse"></a>
+            <br><font size=-1>&nbsp; <? printf(_("Bitte geben Sie den Vornamen, Nachnamen %s oder Benutzernamen zur Suche ein"), "<br>&nbsp;")?> </font></td>
         <td class="steel1" width="20%" align="left">
         <input type="hidden" name="studipticket" value="<?=$studipticket?>">
         <?php

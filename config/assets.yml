@@ -13,6 +13,7 @@ javascripts:
     - javascripts/l10n.js
     - javascripts/application.js
     - javascripts/tabs.js
+    - javascripts/audio.js
 
   raumzeit:
     - javascripts/raumzeit.js

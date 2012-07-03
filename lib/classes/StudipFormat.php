@@ -491,6 +491,12 @@ class StudipFormat extends TextFormat
                 $title
             );
         }
+        
+        if ($tag === 'audio') {
+            $random_id = 'audio-' . substr(md5(uniqid('audio', true)), -8);
+            $media = str_replace('<audio ', '<audio id="' . $random_id . '" onerror="STUDIP.Audio.handle(this);" ', $media);
+        }
+        
         if ($link && $tag === "img") {
             $media = sprintf('<a href="%s"%s>%s</a>',
                 idna_link($link),

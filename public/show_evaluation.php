@@ -40,6 +40,7 @@
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
 page_open (array ("sess" => "Seminar_Session",
           "auth" => "Seminar_Auth",
           "perm" => "Seminar_Perm",
@@ -71,14 +72,13 @@ $lib = new EvalShow();
 #error_reporting( E_ALL & ~E_NOTICE );
 
 /* Set variables ----------------------------------------------------------- */
-$rangeID = ($rangeID) ? $rangeID : $SessSemName[1];
+$rangeID = Request::option('rangeID',$SessSemName[1]);
 if (empty ($rangeID)) {
     $rangeID = $user->id; }
 
 $evalID = Request::option('evalID');
 $tree = new EvaluationTreeShowUser( $evalID );
 
-#$eval = new Evaluation( $evalID, NULL, EVAL_LOAD_ALL_CHILDREN );
 $eval = $tree->tree->eval;
 $evalDB = new EvaluationDB();
 

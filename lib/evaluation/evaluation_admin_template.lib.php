@@ -1018,7 +1018,7 @@ class EvalTemplateGUI {
 
       $infoOverviewText = sprintf(_("Zurück zur %s Evaluations-Verwaltung %s"),
                   "<a href=\"". UrlHelper::getLink('admin_evaluation.php?page=overview'
-                    ."&check_abort_creation_button_x=1&evalID=$evalID&rangeID=$rangeID") .
+                    ."&check_abort_creation_button=1&evalID=$evalID&rangeID=$rangeID") .
                   "\">",
                   "</a>");
 
@@ -1099,7 +1099,7 @@ class EvalTemplateGUI {
    */
   function getPageCommand() {
       foreach( $_REQUEST as $key => $value ) {
-    if( preg_match( "/template_(.*)_button(_x)?/", $key, $command ) )
+    if( preg_match( "/template_(.*)_button?/", $key, $command ) )
          break;
       }
 

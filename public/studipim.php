@@ -32,6 +32,7 @@ use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
 define("CLOSE_ON_LOGIN_SCREEN",true);
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 
@@ -42,12 +43,12 @@ page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" =>
     require_once ('lib/messaging.inc.php');
     require_once ('lib/sms_functions.inc.php');
 
+$cmd = Request::option('cmd');
 
 if ($auth->auth["uid"] != "nobody"){
     ($cmd=="write") ? $refresh=0 : $refresh=30;
 
     $db = new DB_Seminar;
-    $sess->register("messenger_data");
     $sms= new messaging;
 
     $online = get_users_online(5, 'no_title');
@@ -56,7 +57,7 @@ if ($auth->auth["uid"] != "nobody"){
     $old_msg = count_messages_from_user('in', " AND message_user.readed = 1 ");
     $new_msg = count_messages_from_user('in', " AND message_user.readed = 0 ");
     $new_msgs = array();
-
+    $msg_id = Request::option('msg_id');
     if ($new_msg){
         //load the data from new messages
         $query =  "SELECT message.message_id, message.mkdate, autor_id, message, subject
@@ -74,9 +75,9 @@ if ($auth->auth["uid"] != "nobody"){
                 $msg_subject = $db->f("subject");
             }
             if ($db->f("autor_id") == "____%system%____"){
-                $new_msgs[]=date("H:i",$db->f("mkdate")) . sprintf(_(" <b>Systemnachricht</b> %s[lesen]%s"),"<a href='$PHP_SELF?cmd=read&msg_id=".$db->f("message_id")."'>","</a>");
+                $new_msgs[]=date("H:i",$db->f("mkdate")) . sprintf(_(" <b>Systemnachricht</b> %s[lesen]%s"),"<a href='".URLHelper::getLink('?cmd=read&msg_id='.$db->f("message_id"))."'>","</a>");
             } else {
-                $new_msgs[]=date("H:i",$db->f("mkdate")). sprintf(_(" von <b>%s</b> %s[lesen]%s"),get_fullname($db->f("autor_id"),'full',true),"<a href='$PHP_SELF?cmd=read&msg_id=".$db->f("message_id")."'>","</a>");
+                $new_msgs[]=date("H:i",$db->f("mkdate")). sprintf(_(" von <b>%s</b> %s[lesen]%s"),get_fullname($db->f("autor_id"),'full',true),"<a href='".URLHelper::getLink('?cmd=read&msg_id='.$db->f("message_id"))."'>","</a>");
             }
         }
         $refresh+=10;
@@ -116,7 +117,7 @@ function coming_home(url)
 function again_and_again()
     {
     <? if ($cmd!="write")
-        ($cmd) ? print("location.replace('$PHP_SELF');\n") : print("location.reload();\n"); ?>
+        ($cmd) ? print("location.replace('".URLHelper::getURL()."');\n") : print("location.reload();\n"); ?>
     }
 
 
@@ -142,7 +143,7 @@ if ($auth->auth["uid"] != "nobody"){
                     echo "<tr><td class=\"blank\" colspan=2 align=\"left\" ><font size=-1><b>" . _("Buddies:") . "</b></td></tr>";
                 }
                 echo "<tr><td class='blank' width='90%' align='left'><font size=-1><a " . tooltip(sprintf(_("letztes Lebenszeichen: %s"),date("i:s",$detail['last_action'])),false) . " href=\"javascript:coming_home('about.php?username=$tmp_uname');\">".htmlReady($detail['name'])."</a></font></td>\n";
-                echo "<td  class='blank' width='10%' align='middle'><font size=-1><a href='$PHP_SELF?cmd=write&msg_rec=$tmp_uname'>" . Assets::img('icons/16/blue/mail.png', array('class' => 'text-top', 'title' =>_('Nachricht an Benutzer verschicken'))) . "</a></font></td></tr>";
+                echo "<td  class='blank' width='10%' align='middle'><font size=-1><a href='".URLHelper::getLink('?cmd=write&msg_rec='.$tmp_uname).">" . Assets::img('icons/16/blue/mail.png', array('class' => 'text-top', 'title' =>_('Nachricht an Benutzer verschicken'))) . "</a></font></td></tr>";
                 $c++;
             }
         }
@@ -179,7 +180,9 @@ if ($auth->auth["uid"] != "nobody"){
     ?>
     </font><br>&nbsp</td></tr>
     <?
-
+    $msg_rec = Request::quoted('msg_rec');
+    $nu_msg = Request::quoted('nu_msg');
+    $msg_subject = Request::quoted('msg_subject');
     if ($cmd=="send_msg" AND $nu_msg AND $msg_rec) {
         $nu_msg=trim($nu_msg);
         if (!$msg_subject) {
@@ -219,7 +222,7 @@ if ($auth->auth["uid"] != "nobody"){
             if ($db->next_record()){
                 $msg_autor_id = $db->f('autor_id');
                 $msg_subject = (substr($db->f("subject"), 0, 3) != "RE:" ? "RE: " . $db->f('subject')  :  $db->f('subject') );
-                if($quote){
+                if(Request::int('quote')){
                     if (strpos($db->f("message"),$sms->sig_string)) $msg_text = substr($db->f("message"), 0, strpos($db->f("message"),$sms->sig_string));
                     else $msg_text = $db->f('message');
                     $msg_text = quotes_encode($msg_text,get_fullname($msg_autor_id));
@@ -231,7 +234,7 @@ if ($auth->auth["uid"] != "nobody"){
             echo "\n<tr><td class='blank' colspan='2' valign='middle'><font size=-1>";
             echo    sprintf(_("Ihre Nachricht an <b>%s:</b>"),get_fullname_from_uname($msg_rec,'full',true)) . "</font>";
             echo "</td></tr>";
-            echo "\n<form  name='eingabe' action='$PHP_SELF?cmd=send_msg' method='POST'>";
+            echo "\n<form  name='eingabe' action='".URLHelper::getLink('?cmd=send_msg')." method='POST'>";
             echo CSRFProtection::tokenTag();
             echo "<input type='HIDDEN'  name='msg_rec' value='".$msg_rec."'>";
             echo "<input type='HIDDEN'  name='msg_subject' value='".HtmlReady($msg_subject)."'>";

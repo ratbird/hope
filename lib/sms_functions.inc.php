@@ -813,7 +813,7 @@ function show_addrform() {
            type="image"
            name="search_person"
            title="<?= !(Request::get("adressee_parameter") && Request::get("adressee_parameter") !== _("Nutzer suchen") )
-                        ? _("Suche starten")
+                        ? _("Suchen")
                         : _("Suche zurücksetzen") ?>"
            src="<?= !(Request::get("adressee_parameter") && Request::get("adressee_parameter") !== _("Nutzer suchen") )
                         ? Assets::image_path('icons/16/blue/search.png')

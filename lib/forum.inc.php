@@ -1945,7 +1945,7 @@ $searchfield = "
             <td class=\"steelgraulight\" colspan=\"2\" align=\"center\">
                 <input type=\"hidden\" name=\"view\" value=\"search\">
                 <br>
-                ".Button::create(_("Suche starten"))."
+                ".Button::create(_("Suchen"))."
                 <br><br>
             </td>
         </tr>

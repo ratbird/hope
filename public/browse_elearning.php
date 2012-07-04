@@ -87,7 +87,7 @@ if ($ELEARNING_INTERFACE_ENABLE)
 
     $infobox[1]["kategorie"] = _("Aktionen:");
     $infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/learnmodule.png" ,
-                                    "text"  => sprintf(_("Geben Sie einen Suchbegriff ein und klicken Sie auf 'Suche starten'. Die Suche bezieht sich auf den ausgew&auml;hlten Suchbereich.")));
+                                    "text"  => sprintf(_("Geben Sie einen Suchbegriff ein und klicken Sie auf 'Suchen'. Die Suche bezieht sich auf den ausgew&auml;hlten Suchbereich.")));
 
     ?>
     <table cellspacing="0" cellpadding="0" border="0" width="100%">

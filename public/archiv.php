@@ -375,7 +375,7 @@ include('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
                             </td>
                             <td class="<? echo $cssSw->getClass() ?>" width="90%">
                                 <center>
-                                <?= Button::create(_("Suche starten")) ?>
+                                <?= Button::create(_("Suchen")) ?>
                                 </center>
                             </td>
                         </tr>

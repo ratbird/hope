@@ -109,7 +109,7 @@ class ResourcesBrowse {
                     <?}?>
                     </select>
                 <input name="search_exp" type="text" style="vertical-align: middle;" size=35 maxlength=255 value="<? echo htmlReady(stripslashes($this->searchArray["search_exp"])); ?>">
-                <?= Button::create(_('Suche starten'), 'start_search') ?>
+                <?= Button::create(_('Suchen'), 'start_search') ?>
                 <?= LinkButton::create(_('Neue Suche'), URLHelper::getURL('?view=search&quick_view_mode=' . Request::option('view_mode') . '&reset=TRUE')) ?>
             </td>
         </tr>

@@ -276,7 +276,7 @@ if (!$cmd OR $cmd=="show") {
             echo "<tr><td class=\"steel1\">";
             echo "&nbsp; <font size=-1>" . _("Geben Sie einen Suchbegriff ein, um weitere Bereiche zu finden!") . "</font><br><br>";
             echo "&nbsp; <input type=\"TEXT\" style=\"vertical-align:middle;\" name=\"search\" size=\"20\">&nbsp;&nbsp;";
-            echo Button::create(_('Suche starten'), 'submit', array('style' => 'vertical-align:middle;'));
+            echo Button::create(_('Suchen'), 'submit', array('style' => 'vertical-align:middle;'));
             echo "</td></tr></form></table>\n";
             echo "</p>";
             echo "</td></tr>";

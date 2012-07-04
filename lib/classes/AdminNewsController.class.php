@@ -333,7 +333,7 @@ class AdminNewsController {
             echo "\n<tr><td class=\"blank\"><b>" . _("Einen weiteren Bereich hinzuf&uuml;gen:") . "<br></td></tr>";
             echo "\n<tr><td class=\"steel1\"><font size=-1>" . _("Hier k&ouml;nnen Sie weitere Bereiche, auf die Sie Zugriff haben, der Auswahl hinzuf&uuml;gen") . "</font><br>";
             echo "<br><input style=\"vertical-align:middle;\" type=\"TEXT\"  name=\"search\" size=\"20\">&nbsp;"
-                . Button::create(_('Suche starten'), 'news_range_search', array('style' => 'vertical-align:middle;')) . "</td></tr></table></td></tr>";
+                . Button::create(_('Suchen'), 'news_range_search', array('style' => 'vertical-align:middle;')) . "</td></tr></table></td></tr>";
         }
         echo "\n<tr><td class=\"blank\"> &nbsp; </td>";
         echo "\n</td></tr>";

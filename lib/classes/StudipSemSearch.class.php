@@ -96,9 +96,9 @@ class StudipSemSearch {
                                                     'options_callback' => array($this, 'getSelectOptions')
                                                     )
                                 );
-        $search_buttons = array('do_search' => array('caption' => _("Suche starten"), 'info' => _("Suche starten")),
-                                'sem_change' => array('caption' => _('auswählen'), 'info' => _("anderes Semester auswählen")),
-                                'new_search' => array('caption' => _('neue Suche'), 'info' =>_("Neue Suche starten")));
+        $search_buttons = array('do_search' => array('caption' => _("Suchen"), 'info' => _("Suche starten")),
+                                'sem_change' => array('caption' => _('Auswählen'), 'info' => _("anderes Semester auswählen")),
+                                'new_search' => array('caption' => _('Neue Suche'), 'info' =>_("Neue Suche starten")));
         //workaround: Qicksearch ändert den Namen des Eingabefeldes
         if (Request::get("search_sem_quick_search_parameter")) {
             Request::set('search_sem_quick_search', Request::get("search_sem_quick_search_parameter"));

@@ -1166,7 +1166,7 @@ function parseCommand(){
     } else {
         # extract the command from the template-site ========================= #
         foreach( $_REQUEST as $key => $value ) {
-            if( preg_match( "/template_(.*)_#(.*)_button(_x)?/", $key, $command ) ){
+            if( preg_match( "/template_(.*)_#(.*)_button?/", $key, $command ) ){
                 $found = 1;
                 break;
             }
@@ -1174,7 +1174,7 @@ function parseCommand(){
 
        if (!$found){
         foreach( $_REQUEST as $key => $value ) {
-            if( preg_match( "/cmd_(.*)_#(.*)_§(.*)_button(_x)?/", $key, $command ) )
+            if( preg_match( "/cmd_(.*)_#(.*)_§(.*)_button?/", $key, $command ) )
                 break;
         }
        }
@@ -1707,7 +1707,7 @@ function execCommandQuestionAnswersCreate(){
 
      // extract the questionID from the command
      foreach( $_REQUEST as $key => $value ) {
-         if( preg_match( "/template_(.*)_button(_x)?/", $key, $command ) )
+         if( preg_match( "/template_(.*)_button?/", $key, $command ) )
              break;
          }
       if ( preg_match( "/(.*)_#(.*)/", $command[1], $command_parts ) )
@@ -2201,7 +2201,7 @@ function createButtonbar ( $show = ARRANGMENT_BLOCK ){
         $child->getText == ""){
         
         $a_content = LinkButton::createCancel(_('Abbrechen'), 
-                UrlHelper::getURL(EVAL_FILE_ADMIN. "?evalID=").$this->tree->eval->getObjectID()."&abort_creation_button_x=1",
+                UrlHelper::getURL(EVAL_FILE_ADMIN. "?evalID=").$this->tree->eval->getObjectID()."&abort_creation_button=1",
                 array('title' => _("Erstellung einer Evaluation abbrechen")));
        
         $buttons .= $seperator
@@ -2311,7 +2311,7 @@ function createFormNew($show = ARRANGMENT_BLOCK){
         $cancel = $seperator ."&nbsp;";
         
         $a_content = LinkButton::createCancel(_('Abbrechen'), 
-                UrlHelper::getURL(EVAL_FILE_ADMIN . "?evalID=".$this->tree->eval->getObjectID()."&abort_creation_button_x=1"),
+                UrlHelper::getURL(EVAL_FILE_ADMIN . "?evalID=".$this->tree->eval->getObjectID()."&abort_creation_button=1"),
                 array('title' => _("Erstellung einer Evaluation abbrechen")));
         
         $cancel .= $a_content;
@@ -2722,13 +2722,13 @@ function createQuestionForm(){
     // brrr :)
     // extract the questionID from the command
     foreach( $_REQUEST as $key => $value ) {
-        if( preg_match( "/template_(.*)_button(_x)?/", $key, $command ) )
+        if( preg_match( "/template_(.*)_button?/", $key, $command ) )
         break;
     }
     if ( preg_match( "/(.*)_#(.*)/", $command[1], $command_parts ) )
         $questionID = $command_parts[2];
     else
-        $questionID = Request::submitted('template_save2_button_x') ? "" : $_REQUEST["template_id"];
+        $questionID = Request::submitted('template_save2_button') ? "" : $_REQUEST["template_id"];
 
     if ($question->getObjectID() == $questionID)
         $tr2->addAttr ("class", "eval_highlight");

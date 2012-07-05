@@ -7,7 +7,6 @@ th {
 
     a, a:link, a:visited { color: #000000; }
 }
-
 table.header { background-color: @brand-color-lighter; }
 table.links1 { background-color: #fff; }
 table.logintable { background-image: url("@{image-path}/login.jpg"); }
@@ -101,16 +100,28 @@ tr.cycle_even {
     background-color: #e7ebf1;
     &:hover { background-color: #B7C2E2; }
 }
-table.zebra, table.zebra-hover {
+table.zebra, table.zebra-hover { // bg color alternates with tr
     > tbody > tr { 
-        background-color: #f2f2f2;
-        &:nth-child(2n+1) { background-color: #e2e2e2; }
+        background-color: @alternating-color-even;
+        &:nth-child(2n+1) { background-color: @alternating-color-odd; }
     }
 }
 table.zebra-hover {
     > tbody > tr:hover { 
-        background-color: #ced8f2;
-        &:nth-child(2n+1) { background-color: #b7c2e2; }
+        background-color: @alternating-highlight-color-even;
+        &:nth-child(2n+1) { background-color: @alternating-highlight-color-odd; }
+    }
+}
+table.zebra-big, table.zebra-big-hover { // bg color alternates with tbody
+    > tbody { 
+        > tr { background-color: @alternating-color-even; }
+        &:nth-child(2n+1) > tr { background-color: @alternating-color-odd; }
+    }
+}
+table.zebra-big-hover {
+    > tbody {
+        > tr:hover { background-color: @alternating-highlight-color-even; }
+        &:nth-child(2n+1) > tr:hover { background-color: @alternating-highlight-color-odd; }
     }
 }
 

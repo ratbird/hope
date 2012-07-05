@@ -43,7 +43,7 @@ class Admin_SemClassesController extends AuthenticatedController
             'CoreWiki' => array('id' => "CoreWiki", 'name' => _("Kern-Wiki"), 'enabled' => true),
             'CoreResources' => array('id' => "CoreResources", 'name' => _("Kern-Ressourcen"), 'enabled' => true),
             'CoreCalendar' => array('id' => "CoreCalendar", 'name' => _("Kern-Kalender"), 'enabled' => true),
-            'CoreElearning' => array('id' => "CoreElearning", 'name' => _("Kern-Lernmodule"), 'enabled' => true)
+            'CoreElearningInterface' => array('id' => "CoreElearningInterface", 'name' => _("Kern-Lernmodule"), 'enabled' => true)
         );
         $plugin_infos = PluginManager::getInstance()->getPluginInfos("StandardPlugin");
         foreach ($plugin_infos as $plugin_info) {

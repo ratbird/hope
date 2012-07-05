@@ -595,7 +595,7 @@
 				}
 				else
 				{
-					$data = isset($GLOBALS['HTTP_RAW_POST_DATA']) ? $GLOBALS['HTTP_RAW_POST_DATA'] : '';
+					$data = isset($_SERVER['HTTP_RAW_POST_DATA']) ? $_SERVER['HTTP_RAW_POST_DATA'] : '';
 				}
 			}
 			$raw_data = $data;
@@ -1239,7 +1239,7 @@
 		*/
 		function echoInput()
 		{
-			$r=new xmlrpcresp(new xmlrpcval( "'Aha said I: '" . $GLOBALS['HTTP_RAW_POST_DATA'], 'string'));
+			$r=new xmlrpcresp(new xmlrpcval( "'Aha said I: '" . $_SERVER['HTTP_RAW_POST_DATA'], 'string'));
 			print $r->serialize();
 		}
 	}

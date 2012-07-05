@@ -160,7 +160,7 @@ function seminar_preliminary($seminar_id,$user_id=NULL) {
     }
     return true;
 }
-$pass = Request::quoted('pass');
+$pass = Request::get('pass');
 $id = Request::option('id');
 if ($id) {
     $current_seminar = Seminar::getInstance($id);

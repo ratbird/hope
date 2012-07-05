@@ -7,7 +7,7 @@ use Studip\Button, Studip\LinkButton;
 <?= MessageBox::info(_("Das Startdatum kann nur bei Semestern geändert werden, in denen keine Veranstaltungen liegen!")) ?>
 <? endif ?>
 
-<form method="post" action="<?= $controller->url_for('admin/semester/edit_semester') ?><?= ($semester['semester_id']) ? '/'.$semester['semester_id'] : '' ?>">
+<form method="post" action="<?= $controller->url_for('admin/semester/edit_semester'. ($semester['semester_id'] ? '/'.$semester['semester_id'] : '')) ?>">
 <?= CSRFProtection::tokenTag() ?>
 <table class="default">
     <tr>

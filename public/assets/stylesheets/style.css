@@ -1286,6 +1286,91 @@ a.tooltip:hover span {
   box-shadow: 0 0 5px #888;
   text-shadow: 1px 1px 3px #fc8;
 }
+table.attribute_table {
+  border-collapse: collapse;
+}
+table.attribute_table > tbody > tr > td {
+  border-top: thin solid #aaaaaa;
+  border-bottom: thin solid #aaaaaa;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+table.attribute_table ul {
+  margin: 0px;
+}
+table.attribute_table div[container] {
+  display: inline-block;
+  width: 150px;
+  max-width: 150px;
+  overflow: hidden;
+  border: thin solid #cccccc;
+  vertical-align: top;
+  margin-top: 3px;
+  margin-bottom: 3px;
+}
+table.attribute_table div[container] > h2 {
+  display: block;
+  width: 100%;
+  background-color: #dddddd;
+  font-size: 12px;
+  text-align: center;
+  margin: 0px;
+}
+table.attribute_table div[container] > div.droparea {
+  min-height: 30px;
+  padding: 1px;
+}
+table.attribute_table div[container] > div.droparea > div.plugin {
+  cursor: move;
+  border: thin solid #cccccc;
+  border-radius: 5px;
+  background-color: #dddddd;
+  margin: 5px;
+  margin-left: 7px;
+  margin-right: 7px;
+  display: inline-block;
+  min-width: 132px;
+  max-width: 132px;
+}
+table.attribute_table div[container] > div.droparea > div > h2 {
+  display: block;
+  width: 100%;
+  background-color: #cccccc;
+  font-size: 12px;
+  text-align: center;
+  margin: 0px;
+}
+table.attribute_table div[container] > div.droparea > div.deactivated {
+  opacity: 0.5;
+}
+table.attribute_table div[container] > div.droparea > div.plugin .lock {
+  display: none;
+}
+table.attribute_table div[container] > div.droparea > div.plugin.sticky .lock {
+  display: inline-block;
+}
+table.attribute_table div[container]#nonactivated_plugins,
+table.attribute_table div[container]#activated_plugins {
+  width: 49%;
+  max-width: 49%;
+  margin-left: auto;
+  margin-right: auto;
+}
+table.attribute_table hr {
+  height: 1px;
+  color: #aaaaaa;
+  background-color: #aaaaaa;
+  border: none;
+}
+table.attribute_table div[container]#deactivated_modules {
+  width: 99%;
+  max-width: 99%;
+  margin-left: auto;
+  margin-right: auto;
+}
+table.attribute_table div[container]#deactivated_modules .plugin > div {
+  display: none;
+}
 /* --- archiv -------------------------------------------------------------- */
 #archiv body {
   background-color: #91a2b6;

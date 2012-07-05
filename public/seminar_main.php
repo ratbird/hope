@@ -68,7 +68,7 @@ if (Request::get('redirect_to')) {
     $new_query = $where_to . '?' . join('&', $query_parts);
     page_close();
     $new_query = preg_replace('/[^0-9a-z+_#?&=.-\/]/i', '', $new_query);
-    header('Location: '.URLHelper::getURL($new_query));
+    header('Location: '.URLHelper::getURL($new_query, array('cid' => $course_id)));
     die;
 }
 $sem = new Seminar($course_id);

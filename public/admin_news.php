@@ -74,6 +74,9 @@ if ($_REQUEST['range_id'] == "self"){
 PageLayout::setHelpKeyword("Basis.News");
 PageLayout::setTitle(_("Verwaltung von Ankündigungen"));
 
+$view = Request::option('view');
+$list = Request::option('list');
+
 if ($list || $view || ($news_range_id != $user->id &&
         $news_range_id != 'studip') && $view_mode != 'user' &&
         !(isDeputyEditAboutActivated() &&

@@ -18,6 +18,7 @@
 require '../lib/bootstrap.php';
 require '../lib/webservices/webservices_bootstrap.php';
 
+unregister_globals();
 $delegate = new Studip_Ws_SoapDispatcher($AVAILABLE_SERVICES);
 $server   = new DelegatingSoapServer($delegate);
 
@@ -30,4 +31,4 @@ $server->wsdl->schemaTargetNamespace = $namespace;
 $delegate->register_operations($server);
 
 # start server
-$server->service(isset($HTTP_RAW_POST_DATA) ? $HTTP_RAW_POST_DATA : '');
+$server->service(isset($_SERVER['HTTP_RAW_POST_DATA']) ? $_SERVER['HTTP_RAW_POST_DATA'] : '');

@@ -48,6 +48,9 @@ page_open (array ("sess" => "Seminar_Session",
                   "user" => "Seminar_User"));
 $perm->check ("autor");
 
+$list = Request::option('list');
+$view = Request::option('view');
+
 if (Request::get('admin_inst_id')) {
     $view = 'eval_inst';
 }
@@ -63,7 +66,7 @@ PageLayout::setTitle(_("Verwaltung von Evaluationen"));
 require_once 'lib/evaluation/evaluation.config.php';
 require_once 'lib/admin_search.inc.php';
 
-if (Request::option('list') || Request::option('view')) {
+if ($list || $view) {
     if ($perm->have_perm('admin')) {
         if ($_SESSION['links_admin_data']['topkat'] == 'sem') {
             Navigation::activateItem('/admin/course/evaluation');
@@ -77,7 +80,7 @@ if (Request::option('list') || Request::option('view')) {
     Navigation::activateItem('/tools/evaluation');
 }
 
-if (($SessSemName[1]) && ((Request::option('view') == "eval_sem") || (Request::option('view') == "eval_inst")))
+if (($SessSemName[1]) && ($view == "eval_sem") || ($view == "eval_inst"))
     $the_range = $SessSemName[1];
 else
     $the_range = $_REQUEST['rangeID'];
@@ -87,7 +90,7 @@ if ($the_range){
         $the_range = get_Username($the_range);
     if (get_Userid($the_range))
         $isUserrange = 1;
-} elseif (Request::option('view')){
+} elseif ($view) {
     $the_range = $SessSemName[1];
 }
 
@@ -95,7 +98,6 @@ if (empty($the_range)) {
     $the_range = $user->id;
     $isUserrange = 1;
 }
-
 
 if ($the_range != $auth->auth['uname'] && $the_range != 'studip' && !$isUserrange){
     $view_mode = get_object_type($the_range);
@@ -107,7 +109,7 @@ if ($the_range != $auth->auth['uname'] && $the_range != 'studip' && !$isUserrang
 include_once('lib/include/html_head.inc.php');
 include_once('lib/include/header.php');
 
-if (!$isUserrange) {
+if ($list || !$isUserrange) {
     include 'lib/include/admin_search_form.inc.php';
 }
 if (Request::option('page') == "edit"){

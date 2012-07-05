@@ -480,7 +480,7 @@ msgstr "You have been entered as module representative for %s modules."
 
 #: ../public/my_stm.php:194
 msgid ""
-"Um mehr Informationen &uuml;ber ein Studienmodul anzuzeigen, klicken Sie "
+"Um mehr Informationen über ein Studienmodul anzuzeigen, klicken Sie "
 "bitte aus den Namen des Moduls."
 msgstr ""
 "Click on the study module's name for displaying further information about it."
@@ -488,7 +488,7 @@ msgstr ""
 #: ../public/my_stm.php:201
 #, php-format
 msgid ""
-"Um Informationen über alle Studienmodule anzuzeigen nutzen Sie die <br> "
+"Um Informationen über alle Studienmodule anzuzeigen nutzen Sie die<br>"
 "%sSuche nach Studienmodulen%s"
 msgstr ""
 "<br> %sSearch for study modules%s will transfer you to an overview page on "

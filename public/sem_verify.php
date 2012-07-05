@@ -3,7 +3,7 @@
 # Lifter002: TODO
 # Lifter005: TODO - passwortabsicherung
 # Lifter007: TODO
-# Lifter003: TODO
+# Lifter003: TEST
 # Lifter010: TODO
 /**
 * sem_verify.php
@@ -72,17 +72,18 @@ include ('lib/seminar_open.php'); // initialise Stud.IP-Session
  */
 function temporaly_accepted($sem_name, $user_id, $sem_id, $ask = "TRUE", $studiengang_id, $url) {
     global $pass;
-    $db = new DB_Seminar;
 
     if ($ask == "TRUE") {
-        $db->query("SELECT admission_prelim_txt FROM seminare WHERE Seminar_id = '$sem_id'");
-        $db->next_record();
+        $query = "SELECT admission_prelim_txt FROM seminare WHERE Seminar_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($sem_id));
+        $admission_prelim_txt = $statement->fetchColumn();
         echo "<tr><td class=\"blank\">&nbsp;&nbsp;</td><td class=\"blank\">";
         printf (_("Um endg&uuml;ltig in die Veranstaltung %s aufgenommen zu werden, m&uuml;ssen Sie noch weitere Voraussetzungen erf&uuml;llen."),'<b>'.$sem_name.'</b>');
-        if ($db->f("admission_prelim_txt")) {
+        if ($admission_prelim_txt) {
             print " "._("Lesen Sie bitte folgenden Hinweistext:")."<br>";
             echo "<br><table width=90%><tr><td>\n";
-            echo formatReady($db->f("admission_prelim_txt"));
+            echo formatReady($admission_prelim_txt);
             echo "</td></tr></table><br>\n";
         } else {
             printf(" "._("Bitte erkundigen Sie sich bei dem/der %s der Veranstaltung nach weiteren Teilnahmevoraussetzungen."), get_title_for_status('dozent', 1));
@@ -139,23 +140,25 @@ function temporaly_accepted($sem_name, $user_id, $sem_id, $ask = "TRUE", $studie
 *
 */
 function seminar_preliminary($seminar_id,$user_id=NULL) {
-    $db=new DB_Seminar;
-    $db->query("SELECT Name,admission_prelim FROM seminare WHERE Seminar_id='$seminar_id'");
-    $db->next_record();
-    if ($db->f("admission_prelim") == 1) {
-        if ($user_id) {
-            if (admission_seminar_user_get_position($user_id, $seminar_id)) {
-                echo "<tr><td class=\"blank\" colspan=2>";
-                parse_msg (sprintf("msg§"._("Sie sind für die Veranstaltung \"%s\" bereits vorläufig eingetragen!"),htmlReady($db->f("Name"))));
-                echo "</td></tr>";
-                page_close();
-                die;
-            }
-        }
-        return TRUE;
-    } else {
-        return FALSE;
+    $query = "SELECT Name, admission_prelim FROM seminare WHERE Seminar_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($seminar_id));
+    $temp = $statement->fetch(PDO::FETCH_ASSOC);
+
+    if ($temp['admission_prelim'] != 1) {
+        return false;
     }
+
+    if ($user_id) {
+        if (admission_seminar_user_get_position($user_id, $seminar_id)) {
+            echo "<tr><td class=\"blank\" colspan=2>";
+            parse_msg (sprintf("msg§"._("Sie sind für die Veranstaltung \"%s\" bereits vorläufig eingetragen!"),htmlReady($temp['Name'])));
+            echo "</td></tr>";
+            page_close();
+            die;
+        }
+    }
+    return true;
 }
 $pass = Request::quoted('pass');
 $id = Request::option('id');
@@ -176,13 +179,6 @@ require_once 'lib/classes/StudipAdmissionGroup.class.php';
 require_once 'lib/classes/UserDomain.php';
 require_once 'lib/classes/LockRules.class.php';
 
-
-$db=new DB_Seminar;
-$db2=new DB_Seminar;
-$db3=new DB_Seminar;
-$db4=new DB_Seminar;
-$db5=new DB_Seminar;
-$db6=new DB_Seminar;
 
 ?>
     <table width="100%" border=0 cellpadding=0 cellspacing=0>
@@ -288,12 +284,11 @@ $db6=new DB_Seminar;
     }
 
     //check if seminar is grouped
-    $db6->query("SELECT studiengang_id FROM user_studiengang WHERE user_id = '$user->id' "); //Hat der Student ueberhaupt Studiengaenge angegeben?
-    if ($db6->num_rows()) {
-        $user_has_studiengang = true;
-    } else {
-        $user_has_studiengang = false;
-    }
+    $query = "SELECT 1 FROM user_studiengang WHERE user_id = ?"; //Hat der Student ueberhaupt Studiengaenge angegeben?
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($user->id));
+    $user_has_studiengang = (bool)$statement->fetchColumn();
+
     if($user_has_studiengang && ($group_obj = StudipAdmissionGroup::GetAdmissionGroupBySeminarId($id)) ){
         $admission_group = is_object($group_obj) ? $group_obj->getId() : false;
         $admission_disable_waitlist = $current_seminar->admission_disable_waitlist;
@@ -448,20 +443,23 @@ $db6=new DB_Seminar;
 
         //Sonderfall, Passwort fuer Schreiben nicht eingegeben, Lesen aber erlaubt
         if (Request::option('EntryMode') == "read_only"){
-            $db->query("SELECT Lesezugriff, Name FROM seminare WHERE Seminar_id LIKE '$id'");
-            $db->next_record();
-            if ($db->f("Lesezugriff") <= 1 && $perm->have_perm("autor")) {
+            $query = "SELECT Lesezugriff, Name FROM seminare WHERE Seminar_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($id));
+            $temp = $statement->fetch(PDO::FETCH_ASSOC);
+
+            if ($temp['Lesezugriff'] <= 1 && $perm->have_perm("autor")) {
                 if (!seminar_preliminary($id,$user->id)) {  // we have to change behaviour, depending on preliminary
 
                     insert_seminar_user($id, $GLOBALS['user']->id, 'user', false, false, 'Mit Leserechten - ohne Schreibrechte - eingetragen');
 
-                    parse_msg (sprintf("msg§"._("Sie wurden mit dem Status <b>Leser</b> in die Veranstaltung %s eingetragen."), '<b>'.htmlReady($db->f("Name")).'</b>'));
+                    parse_msg (sprintf("msg§"._("Sie wurden mit dem Status <b>Leser</b> in die Veranstaltung %s eingetragen."), '<b>'.htmlReady($temp['Name']).'</b>'));
                     echo"<tr><td class=\"blank\" colspan=2><a href=\"seminar_main.php?auswahl=$id\">&nbsp; &nbsp; "._("Hier kommen Sie zu der Veranstaltung")."</a>";
                     if ($send_from_search)
                             echo "&nbsp; |&nbsp;<a href=\"$send_from_search_page\">"._("Zur&uuml;ck zur letzten Auswahl")."</a>";
                     echo "<br><br></td></tr>";
                 } else {
-                    parse_msg (sprintf("error§"._("Die Veranstaltung \"%s\" ist teilnahmebeschränkt. Sie können sich nicht als Leser eintragen lassen."),htmlReady($db->f("Name"))));
+                    parse_msg (sprintf("error§"._("Die Veranstaltung \"%s\" ist teilnahmebeschränkt. Sie können sich nicht als Leser eintragen lassen."),htmlReady($temp['Name'])));
                 }
                 echo "</table>";
             }
@@ -475,26 +473,32 @@ $db6=new DB_Seminar;
             $id=$SessSemName[1];
 
         //laden von benoetigten Informationen
-        $db=new DB_Seminar;
-        $db->query("SELECT Lesezugriff, Schreibzugriff, Passwort, Name FROM seminare WHERE Seminar_id LIKE '$id'");
-        while ($db->next_record())
-        {
-            $SemSecLevelRead=$db->f("Lesezugriff");
-            $SemSecLevelWrite=$db->f("Schreibzugriff");
-            $SemSecPass=$db->f("Passwort");
-            $SeminarName=htmlReady($db->f("Name"));
+        $query = "SELECT Lesezugriff, Schreibzugriff, Passwort, Name FROM seminare WHERE Seminar_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($id));
+        $temp = $statement->fetch(PDO::FETCH_ASSOC);
+
+        if ($temp) {
+            $SemSecLevelRead  = $temp['Lesezugriff'];
+            $SemSecLevelWrite = $temp['Schreibzugriff'];
+            $SemSecPass       = $temp['Passwort'];
+            $SeminarName      = htmlReady($temp['Name']);
         }
-        $db->query("SELECT status FROM seminar_user WHERE Seminar_id LIKE '$id' AND user_id LIKE '$user->id'");
-        $db->next_record();
-        $SemUserStatus=$db->f("status");
+        $query ="SELECT status FROM seminar_user WHERE Seminar_id = ? AND user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($id, $user->id));
+        $SemUserStatus = $statement->fetchColumn();
 
         //Ueberpruefung auf korrektes Passwort
         if (!empty($pass) && $pass!="" && md5($pass)==$SemSecPass) {
             if (($SemUserStatus=="user") && ($perm->have_perm("autor")))
             {
+                $query = "UPDATE seminar_user SET status = 'autor' WHERE Seminar_id = ? AND user_id = ?";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($id, $user->id));
+
                 // LOGGING
                 log_event('SEM_USER_ADD', $id, $user->id, 'autor', 'Schreibrechte erworben');
-                $db->query("UPDATE seminar_user SET status='autor' WHERE Seminar_id = '$id' AND user_id = '$user->id'");
                 parse_msg (sprintf("msg§"._("Sie wurden in der Veranstaltung %s auf den Status <b> Autor </b> hochgestuft."), '<b>'.$SeminarName.'</b>'));
                 echo "<tr><td class=\"blank\" colspan=2><a href=\"seminar_main.php?auswahl=$id\">&nbsp; &nbsp; "._("Hier kommen Sie zu der Veranstaltung")."</a>";
                     if ($send_from_search)
@@ -566,10 +570,13 @@ $db6=new DB_Seminar;
                 }
                 elseif ($SemSecLevelWrite==1){//Hat sich der globale Status in der Zwischenzeit geaendert? Dann hochstufen
                     if ($perm->have_perm("autor")) {
+                        $query = "UPDATE seminar_user SET status = 'autor' WHERE Seminar_id = ? AND user_id = ?";
+                        $statement = DBManager::get()->prepare($query);
+                        $statement->execute(array($id, $user->id));
+                        
                         // LOGGING
                         log_event('SEM_USER_ADD', $id, $user->id, 'autor', 'Hochgestuft auf autor');
 
-                        $db->query("UPDATE seminar_user SET status='autor' WHERE Seminar_id = '$id' AND user_id = '$user->id'");
                         parse_msg(sprintf("info§"._("Sie wurden in der Veranstaltung %s hochgestuft auf den Status <b>Autor</b>."), '<b>'.$SeminarName.'</b>'));
                         echo"<tr><td class=\"blank\" colspan=2><a href=\"seminar_main.php?auswahl=$id\">&nbsp; &nbsp; "._("Hier kommen Sie zu der Veranstaltung")."</a>";
                         if ($send_from_search)
@@ -612,8 +619,10 @@ $db6=new DB_Seminar;
                         page_close();
                         die;
                         }*/
-                    $db->query("SELECT studiengang_id FROM user_studiengang WHERE user_id = '$user->id' "); //Hat der Studie ueberhaupt Studiengaenge angegeben?
-                    if (!$db->num_rows()) { //Es sind gar keine vorhanden! Hinweis wie man das eintragen kann
+                    $query = "SELECT 1 FROM user_studiengang WHERE user_id = ?"; //Hat der Studie ueberhaupt Studiengaenge angegeben?
+                    $statement = DBManager::get()->prepare($query);
+                    $statement->execute(array($user->id));
+                    if (!$statement->fetchColumn()) { //Es sind gar keine vorhanden! Hinweis wie man das eintragen kann
                         parse_msg ('info§' . sprintf(_("Die Veranstaltung %s ist teilnahmebeschr&auml;nkt. Um sich f&uuml;r teilnahmebeschr&auml;nkte Veranstaltungen eintragen zu k&ouml;nnen, m&uuml;ssen Sie einmalig Ihre Studieng&auml;nge angeben! <br> Bitte tragen Sie Ihre Studieng&auml;nge auf Ihrer %sProfilseite%s ein!"), '<b>'.$SeminarName .'</b>', '<a href="edit_about.php?view=Studium#studiengaenge">','</a>'));
                         echo "<tr><td class=\"blank\" colspan=2><a href=\"index.php\">&nbsp;&nbsp; "._("Zur&uuml;ck zur Startseite")."</a>";
                         if ($send_from_search)
@@ -651,12 +660,15 @@ $db6=new DB_Seminar;
                             die;
                         }
                     }
-                    $db->query("SELECT admission_seminar_studiengang.studiengang_id FROM admission_seminar_studiengang LEFT JOIN studiengaenge USING (studiengang_id) LEFT JOIN user_studiengang USING (studiengang_id) WHERE seminar_id LIKE '$id' AND (user_id = '$user->id' OR admission_seminar_studiengang.studiengang_id = 'all')"); //Hat der Studi passende Studiengaenge ausgewaehlt?
-                    $user_studiengang = array();
-                    while($db->next_record())
-                    {
-                        $user_studiengang[$db->f('studiengang_id')] = 1;
-                    }
+                    $query = "SELECT studiengang_id, 1
+                              FROM admission_seminar_studiengang AS ass
+                              LEFT JOIN studiengang_id USING (studiengang_id)
+                              LEFT JOIN user_studiengang USING (studiengang_id)
+                              WHERE seminar_id = ? AND (user_id = ? OR ass.studiengang_id = 'all')";
+                    $statement = DBManager::get()->prepare($query);
+                    $statement->execute(array($id, $user->id));
+                    $user_studiengang = $statement->fetchGrouped(PDO::FETCH_COLUMN);
+
                     if (!$sem_verify_suggest_studg) {//Wir wissen noch nicht mit welchem Studiengang der Benutzer rein will
                         if (count($user_studiengang) == 1 || (count($user_studiengang) > 1 && !$current_seminar->isAdmissionQuotaEnabled())) {//Nur einen passenden gefunden? Dann nehmen wir einfach mal diesen...
                             $sem_verify_suggest_studg = key($user_studiengang);
@@ -704,8 +716,10 @@ $db6=new DB_Seminar;
                             page_close();
                             die;
                         } else { //Keinen passenden Studiengaenge gefunden, abbruch
-                            $db->query("SELECT studiengang_id FROM user_studiengang WHERE user_id = '$user->id' "); //Hat der Studie ueberhaupt Studiengaenge angegeben?
-                            if ($db->num_rows() >=1) { //Es waren nur die falschen
+                            $query = "SELECT 1 FROM user_studiengang WHERE user_id = ?"; //Hat der Studie ueberhaupt Studiengaenge angegeben?
+                            $statement = DBManager::get()->prepare($query);
+                            $statement->execute(array($user->id));
+                            if ($statement->fetchColumn()) { //Es waren nur die falschen
                                 parse_msg ('info§' . sprintf(_("Sie belegen leider keinen passenden Studiengang, um an der teilnahmebeschr&auml;nkten Veranstaltung %s teilnehmen zu k&ouml;nnen."), '<b>'.$SeminarName.'</b>'));
                                 echo "<tr><td class=\"blank\" colspan=2><a href=\"index.php\">&nbsp;&nbsp; "._("Zur&uuml;ck zur Startseite")."</a>";
                                 if ($send_from_search)

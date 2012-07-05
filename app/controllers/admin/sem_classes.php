@@ -63,6 +63,7 @@ class Admin_SemClassesController extends AuthenticatedController
             $sem_class->setSlotModule($slot, studip_utf8decode($module));
         }
         $sem_class->setModules(Request::getArray("modules"));
+        $sem_class->set('name', Request::get("sem_class_name"));
         $sem_class->set('title_dozent', Request::get("title_dozent") ? studip_utf8decode(Request::get("title_dozent")) : null);
         $sem_class->set('title_dozent_plural', Request::get("title_dozent_plural") ? studip_utf8decode(Request::get("title_dozent_plural")) : null);
         $sem_class->set('title_tutor', Request::get("title_tutor") ? studip_utf8decode(Request::get("title_tutor")) : null);
@@ -87,6 +88,16 @@ class Admin_SemClassesController extends AuthenticatedController
             'html' => studip_utf8encode(MessageBox::success(_("Änderungen wurden gespeichert.")))
         );
         echo json_encode($output);
+        $this->render_nothing();
+    }
+
+    public function delete_sem_type_action() {
+        if (count($_POST)) {
+            $sem_type = $GLOBALS['SEM_TYPE'][Request::int("sem_type")];
+            if (!$sem_type->delete()) {
+                throw new Exception("Could not delete sem_type because it' still in use.");
+            }
+        }
         $this->render_nothing();
     }
 

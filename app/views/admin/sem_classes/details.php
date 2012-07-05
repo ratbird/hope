@@ -18,8 +18,13 @@
                 <?= _("Name der Seminarklasse") ?>
             </td>
             <td width="80%">
-                <input id="sem_class_name" type="hidden" value="<?= htmlReady($sem_class['name']) ?>">
-                <?= $sem_class['name'] ?>
+                <div>
+                    <span class="name"><?= $sem_class['name'] ?></span>
+                    <a href="#" onClick="jQuery(this).closest('td').children().toggle(); return false;"><?= Assets::img("icons/16/blue/edit", array('class' => "text-bottom")) ?></a>
+                </div>
+                <div class="name_input" style="display: none;">
+                    <input id="sem_class_name" type="text" value="<?= htmlReady($sem_class['name']) ?>" onBlur="jQuery(this).closest('td').children().toggle().find('.name').text(this.value);">
+                </div>
             </td>
         </tr>
         <tr>
@@ -33,6 +38,7 @@
                     <li id="sem_type_<?= htmlReady($id) ?>">
                         <?= htmlReady($type['name']) ?>
                         (<?= sprintf(_("%s Veranstaltungen"), $number_of_seminars ? $number_of_seminars : _("keine")) ?>)
+                        <?= $number_of_seminars == 0 ? '<a href="#" class="sem_type_delete" onClick="return false;">'.Assets::img("icons/16/blue/trash.png")."</a>" : "" ?>
                     </li>
                 <? endforeach ?>
                 </ul>
@@ -152,7 +158,7 @@
             </td>
         </tr>
         <tr>
-            <td><label for="chat"><?= _("Chat ist eingeschaltet") ?></label></td>
+            <td><label for="chat"><?= _("Chat ist erlaubt") ?></label></td>
             <td><input type="checkbox" id="chat" value="1"<?= $sem_class['chat'] ? " checked" : "" ?>></td>
         </tr>
         <tr>
@@ -231,6 +237,14 @@
     </tbody>
 </table>
 
+<div id="sem_type_delete_question_title" style="display: none;"><?= _("Sicherheitsabfrage") ?></div>
+<div id="sem_type_delete_question" style="display: none;">
+    <p class="info"><?= _("Wirklich den Seminartyp löschen?") ?></p>
+    <input type="hidden" id="sem_type_for_deletion">
+    <?= Studip\LinkButton::create(_("löschen"), array('onclick' => "STUDIP.admin_sem_class.delete_sem_type(); return false;")) ?>
+    <?= Studip\LinkButton::create(_("abbrechen"), array('onclick' => "jQuery(this).closest('#sem_type_delete_question').dialog('close'); return false;")) ?>
+</div>
+
 <script>
 STUDIP.admin_sem_class = {
     'make_sortable': function () {
@@ -298,6 +312,7 @@ STUDIP.admin_sem_class = {
             'url': STUDIP.ABSOLUTE_URI_STUDIP + "dispatch.php/admin/sem_classes/save",
             'data': {
                 'sem_class_id': jQuery("#sem_class_id").val(),
+                'sem_class_name': jQuery("#sem_class_name").val(),
                 'title_dozent': !jQuery("#title_dozent_isnull").is(":checked") ? jQuery("#title_dozent").val() : "",
                 'title_dozent_plural': !jQuery("#title_dozent_isnull").is(":checked") ? jQuery("#title_dozent_plural").val() : "",
                 'title_tutor': !jQuery("#title_tutor_isnull").is(":checked") ? jQuery("#title_tutor").val() : "",
@@ -326,8 +341,30 @@ STUDIP.admin_sem_class = {
                 jQuery("#message_below").html(data.html);
             }
         });
+    },
+    'delete_sem_type_question': function () {
+        var sem_type = jQuery(this).closest("li").attr('id');
+        sem_type = sem_type.substr(sem_type.lastIndexOf("_") + 1);
+        jQuery("#sem_type_for_deletion").val(sem_type);
+        jQuery("#sem_type_delete_question").dialog({
+            'title': jQuery("#sem_type_delete_question_title").text()
+        });
+    },
+    'delete_sem_type': function () {
+        jQuery.ajax({
+            'url': STUDIP.ABSOLUTE_URI_STUDIP + "dispatch.php/admin/sem_classes/delete_sem_type",
+            'data': {
+                'sem_type': jQuery("#sem_type_for_deletion").val()
+            },
+            'type': "post",
+            'success': function () {
+                jQuery("#sem_type_" + jQuery("#sem_type_for_deletion").val()).remove();
+                jQuery("#sem_type_delete_question").dialog("close");
+            }
+        });
     }
 }
+jQuery(".sem_type_delete").live("click", STUDIP.admin_sem_class.delete_sem_type_question);
 jQuery(STUDIP.admin_sem_class.make_sortable);
 jQuery("div[container] > div.droparea > div.plugin select[name=sticky]").change(function () {
     if (this.value === "sticky") {

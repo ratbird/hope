@@ -72,26 +72,27 @@ $num_my_mod = 0;
 $my_stm = array();
 $all_sems = array();
 
-$db = new DB_Seminar();
-
-$db->query("SELECT seminar_user.seminar_id, IF(seminare.visible=0,CONCAT(seminare.Name, ' "._("(versteckt)")."'), seminare.Name) AS Name , stm_instance_id,
-            sd1.name AS startsem,IF(duration_time=-1, '"._("unbegrenzt")."', sd2.name) AS endsem
-            FROM seminar_user INNER JOIN seminare ON seminar_user.seminar_id=seminare.Seminar_id
-            INNER JOIN stm_instances_elements ON seminar_user.seminar_id=sem_id
-            LEFT JOIN semester_data sd1 ON ( start_time BETWEEN sd1.beginn AND sd1.ende)
-            LEFT JOIN semester_data sd2 ON ((start_time + duration_time) BETWEEN sd2.beginn AND sd2.ende)
-            WHERE seminar_user.user_id = '$user->id' AND seminar_user.status = 'dozent'
-            ");
-
-while($db->next_record()){
-    $my_stm[$db->f('stm_instance_id')][] = $db->Record;
+$query = "SELECT su.seminar_id, IF(s.visible = 0, CONCAT(s.Name, ?), s.Name) AS Name,
+                 stm_instance_id,
+                 sd1.name AS startsem, IF(duration_time = -1, ?, sd2.name) AS endsem
+          FROM seminar_user AS su
+          INNER JOIN seminare AS s ON (su.seminar_id = s.Seminar_id)
+          LEFT JOIN stm_instances_elements AS sie ON (su.seminar_id = sem_id)
+          LEFT JOIN semester_data AS sd1 ON (start_time BETWEEN sd1.beginn AND sd1.ende)
+          LEFT JOIN semester_data AS sd2 ON (start_time + duration_time BETWEEN sd2.beginn AND sd2.ende)
+          WHERE su.user_id = ? AND su.status = 'dozent'";
+$statement = DBManager::get()->prepare($query);
+$statement->execute(array(_('(versteckt)'), _('unbegrenzt'), $user->id));
+while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+    $my_stm[$row['stm_instance_id']][] = $row;
 }
-$db->query("SELECT stm_instance_id FROM stm_instances
-            WHERE responsible = '$user->id'");
 
-while($db->next_record()){
-    if(!isset($my_stm[$db->f('stm_instance_id')])){
-        $my_stm[$db->f('stm_instance_id')][] = array();
+$query = "SELECT stm_instance_id FROM stm_instances WHERE responsible = ?";
+$statement = DBManager::get()->prepare($query);
+$statement->execute(array($user->id));
+while ($id = $statement->fetchColumn()) {
+    if (!isset($my_stm[$id])) {
+        $my_stm[$id][] = array();
     }
 }
 

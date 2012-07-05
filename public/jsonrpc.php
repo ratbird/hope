@@ -18,7 +18,7 @@
 require '../lib/bootstrap.php';
 require '../lib/webservices/webservices_bootstrap.php';
 
-//unregister_globals();
+unregister_globals();
 # create server
 $dispatcher = new Studip_Ws_JsonrpcDispatcher($AVAILABLE_SERVICES);
 $server = new jsonrpc_server($dispatcher->get_dispatch_map(), 0);

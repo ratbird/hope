@@ -643,8 +643,8 @@ elseif ($auth->auth["perm"]=="admin") {
     $query = "SELECT a.Institut_id, b.Name, b.Institut_id = b.fakultaets_id AS is_fak,
                      COUNT(seminar_id) AS num_sem
               FROM user_inst AS a
-              LEFT JOIN Institut_id AS b USING (Institut_id)
-              LEFT JOIN seminar_id ON (seminare.Institut_id = b.Institut_id {$sem_condition})
+              LEFT JOIN Institute AS b USING (Institut_id)
+              LEFT JOIN seminare ON (seminare.Institut_id = b.Institut_id {$sem_condition})
               WHERE a.user_id = :user_id AND a.inst_perms = 'admin'
               GROUP BY a.Institut_id
               ORDER BY is_fak, num_sem DESC";

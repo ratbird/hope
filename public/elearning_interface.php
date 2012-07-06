@@ -28,6 +28,7 @@ use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", 'user' => "Seminar_User"));
 $perm->check("autor");
 
@@ -45,7 +46,16 @@ Navigation::activateItem('/course/elearning/' . Request::get('view'));
 
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
-
+$search_key = Request::quoted('search_key');
+$cms_select = Request::option('cms_select');
+$view = Request::option('view');
+$open_all = Request::option('open_all');
+$close_all = Request::option('close_all');
+$new_account_cms = Request::quoted('new_account_cms');
+$module_system_type = Request::quoted('module_system_type');
+$module_id = Request::option('module_id');
+$module_type = Request::option('module_type');
+$anker_target = Request::option('anker_target');
 if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
 {
     $caching_active = false;
@@ -62,30 +72,27 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
     if ((! $rechte) AND ($view == "edit"))
         $view = "show";
 
-    if ($seminar_id != $elearning_open_close["id"])
+    if ($seminar_id != $_SESSION['elearning_open_close']["id"])
     {
-        $sess->unregister("cache_data");
-        unset($cache_data);
-        $sess->unregister("elearning_open_close");
-        unset($elearning_open_close);
+        unset($_SESSION['cache_data']);
+        unset($_SESSION['elearning_open_close']);
     }
     if ($open_all != "")
-        $elearning_open_close["all open"] = true;
+        $_SESSION['elearning_open_close']["all open"] = true;
     elseif ($close_all != "")
-        $elearning_open_close["all open"] = "";
-    $elearning_open_close["type"] = "seminar";
-    $elearning_open_close["id"] = $seminar_id;
-    if (isset($do_open))
+        $_SESSION['elearning_open_close']["all open"] = "";
+    $_SESSION['elearning_open_close']["type"] = "seminar";
+    $_SESSION['elearning_open_close']["id"] = $seminar_id;
+    if (Request::option('do_open'))
     {
-        $anker_target = $do_open;
-        $elearning_open_close[$do_open] = true;
+        $anker_target = Request::option('do_open');
+        $_SESSION['elearning_open_close'][Request::option('do_open')] = true;
     }
-    elseif (isset($do_close))
+    elseif (Request::option('do_close'))
     {
-        $anker_target = $do_close;
-        $elearning_open_close[$do_close] = false;
+        $anker_target = Request::option('do_close');
+        $_SESSION['elearning_open_close'][Request::option('do_close')] = false;
     }
-    $sess->register("elearning_open_close");
 
     // ggf. neuen Ilias4-Kurs anlegen
     if (Request::submitted('create_course') AND $rechte) {
@@ -111,7 +118,7 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
 
     ELearningUtils::bench("init");
 
-    if (($view=="show") AND (isset($new_account_cms)))
+    if (($view=="show") AND (!empty($new_account_cms)))
     {
         $page_content = ELearningUtils::getNewAccountForm($new_account_cms);
 
@@ -209,9 +216,9 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
             $module_system_count[$connection["cms"]]++;
 
                 if ($open_all != "")
-                    $elearning_open_close[$connected_cms[$connection["cms"]]->content_module[$connection["id"]]->getReferenceString()] = true;
+                    $_SESSION['elearning_open_close'][$connected_cms[$connection["cms"]]->content_module[$connection["id"]]->getReferenceString()] = true;
                 elseif ($close_all != "")
-                    $elearning_open_close[$connected_cms[$connection["cms"]]->content_module[$connection["id"]]->getReferenceString()] = false;
+                    $_SESSION['elearning_open_close'][$connected_cms[$connection["cms"]]->content_module[$connection["id"]]->getReferenceString()] = false;
                 // USE_CASE 1: show connected contentmodules
                 if ($view == "show")
                 {
@@ -324,7 +331,7 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
                     }
                 }
 
-                echo  "<form method=\"POST\" action=\"" . $PHP_SELF . "#anker\">\n";
+                echo  "<form method=\"POST\" action=\"" . URLHelper::getLink() . "#anker\">\n";
                 echo CSRFProtection::tokenTag();
                 echo ELearningUtils::getHeader(_("Leeren Kurs anlegen"));
                 echo "<div align=\"center\">";
@@ -339,7 +346,7 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
                 echo "</form>";
 
                 if ($options) {
-                    echo  "<form method=\"POST\" action=\"" . $PHP_SELF . "#anker\">\n";
+                    echo  "<form method=\"POST\" action=\"" . URLHelper::getLink() . "#anker\">\n";
                     echo CSRFProtection::tokenTag();
                     echo ELearningUtils::getHeader(_("Verkn&uuml;pfung mit einem bestehenden Kurs"));
                     echo "<div align=\"center\">";

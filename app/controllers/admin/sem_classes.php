@@ -24,6 +24,28 @@ class Admin_SemClassesController extends AuthenticatedController
     public function overview_action()
     {
         Navigation::activateItem("/admin/config/sem_classes");
+        if (count($_POST) && Request::get("delete_sem_class")) {
+            $sem_class = $GLOBALS['SEM_CLASS'][Request::get("delete_sem_class")];
+            if ($sem_class->delete()) {
+                PageLayout::postMessage(MessageBox::success(_("Seminarklasse wurde gelöscht.")));
+                $GLOBALS['SEM_CLASS'] = SemClass::refreshClasses();
+            }
+        }
+        if (count($_POST) && Request::get("add_name")) {
+            $statement = DBManager::get()->prepare(
+                "INSERT INTO sem_classes SET name = :name, mkdate = UNIX_TIMESTAMP(), chdate = UNIX_TIMESTAMP() " .
+            "");
+            $statement->execute(array('name' => Request::get("add_name")));
+            $id = DBManager::get()->lastInsertId();
+            if (Request::get("add_like")) {
+                $sem_class = clone $GLOBALS['SEM_CLASS'][Request::get("add_like")];
+                $sem_class->set('name', Request::get("add_name"));
+                $sem_class->set('id', $id);
+                $sem_class->store();
+            }
+            PageLayout::postMessage(MessageBox::success(_("Seminarklasse wurde erstellt.")));
+            $GLOBALS['SEM_CLASS'] = SemClass::refreshClasses();
+        }
     }
     
     public function details_action() 
@@ -51,6 +73,7 @@ class Admin_SemClassesController extends AuthenticatedController
         }
         $this->modules = $modules;
         $this->sem_class = $GLOBALS['SEM_CLASS'][Request::get("id")];
+        $this->overview_url = $this->url_for("admin/sem_classes/overview");
     }
     
     public function save_action() 
@@ -89,6 +112,31 @@ class Admin_SemClassesController extends AuthenticatedController
         );
         echo json_encode($output);
         $this->render_nothing();
+    }
+
+    public function add_sem_type_action() {
+        if (Request::get('name') && Request::get("sem_class") && count($_POST)) {
+            $name = studip_utf8decode(Request::get('name'));
+            $statement = DBManager::get()->prepare(
+                "INSERT INTO sem_types " .
+                "SET name = :name, " .
+                    "class = :sem_class, " .
+                    "mkdate = UNIX_TIMESTAMP(), " .
+                    "chdate = UNIX_TIMESTAMP() " .
+            "");
+            $statement->execute(array(
+                'name' => $name,
+                'sem_class' => Request::get("sem_class")
+            ));
+            $id = DBManager::get()->lastInsertId();
+            $this->render_text(
+                '<li id="sem_type_'.$id.'">'.
+                htmlReady($name).
+                ' ('._("Keine veranstaltungen").') '.
+                '<a href="#" class="sem_type_delete" onClick="return false;">'.Assets::img("icons/16/blue/trash.png")."</a>"
+                .'</li>' .
+            '');
+        }
     }
 
     public function delete_sem_type_action() {

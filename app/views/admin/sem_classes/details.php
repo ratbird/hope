@@ -32,15 +32,29 @@
                 <?= _("Seminartypen") ?>
             </td>
             <td>
-                <ul>
-                <? foreach ($sem_class->getSemTypes() as $id => $type) : ?>
+                <ul id="sem_type_list">
+                    <? foreach ($sem_class->getSemTypes() as $id => $type) : ?>
                     <? $number_of_seminars = $type->countSeminars() ?>
                     <li id="sem_type_<?= htmlReady($id) ?>">
                         <?= htmlReady($type['name']) ?>
                         (<?= sprintf(_("%s Veranstaltungen"), $number_of_seminars ? $number_of_seminars : _("keine")) ?>)
                         <?= $number_of_seminars == 0 ? '<a href="#" class="sem_type_delete" onClick="return false;">'.Assets::img("icons/16/blue/trash.png")."</a>" : "" ?>
                     </li>
-                <? endforeach ?>
+                    <? endforeach ?>
+                    
+                </ul>
+                <ul style="list-style-type: none;">
+                    <li>
+                        <div style="display: none;">
+                            <input type="text" id="new_sem_type" onBlur="if (!this.value) jQuery(this).closest('li').children().toggle();">
+                            <a href="" onClick="STUDIP.admin_sem_class.add_sem_type(); return false;"><?= Assets::img("icons/16/yellow/arr_2up", array('class' => "text-bottom", "title" => _("hinzufügen"))) ?></a>
+                        </div>
+                        <div>
+                            <a href="#" onClick="jQuery(this).closest('li').children().toggle(); jQuery('#new_sem_type').focus(); return false;">
+                                <?= Assets::img("icons/16/blue/plus", array('class' => "text-bottom", "title" => _("Seminartyp hinzufügen"))) ?>
+                            </a>
+                        </div>
+                    </li>
                 </ul>
             </td>
         </tr>
@@ -231,7 +245,13 @@
             <td></td>
             <td>
                 <div id="message_below"></div>
-                <?= Studip\Button::create(_("Speichern"), "safe", array('onClick' => "STUDIP.admin_sem_class.saveData();"))?>
+                <?= Studip\Button::create(_("Speichern"), "save", array('onClick' => "STUDIP.admin_sem_class.saveData();"))?>
+                <? if ($sem_class->countSeminars() === 0) : ?>
+                <form action="<?= URLHelper::getLink($overview_url) ?>" method="post">
+                    <input type="hidden" name="delete_sem_class" value="<?= Request::int("id") ?>">
+                    <?= Studip\Button::create(_("Löschen"), "delete", array('onClick' => "return window.confirm('"._("Wirklich löschen?")."');"))?>
+                </form>
+                <? endif ?>
             </td>
         </tr>
     </tbody>
@@ -348,6 +368,23 @@ STUDIP.admin_sem_class = {
         jQuery("#sem_type_for_deletion").val(sem_type);
         jQuery("#sem_type_delete_question").dialog({
             'title': jQuery("#sem_type_delete_question_title").text()
+        });
+    },
+    'add_sem_type': function () {
+        jQuery.ajax({
+            'url': STUDIP.ABSOLUTE_URI_STUDIP + "dispatch.php/admin/sem_classes/add_sem_type",
+            'type': "post",
+            'data': {
+                'sem_class': jQuery("#sem_class_id").val(),
+                'name': jQuery("#new_sem_type").val()
+            },
+            'success': function (ret) {
+                jQuery("#sem_type_list").append(jQuery(ret));
+                jQuery("#new_sem_type").val('').closest("li").children().toggle();
+            },
+            'error': function () {
+                jQuery("#new_sem_type").val('').closest("li").children().toggle();
+            }
         });
     },
     'delete_sem_type': function () {

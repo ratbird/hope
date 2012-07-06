@@ -20,9 +20,10 @@
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", 'user' => "Seminar_User"));
 $perm->check("autor");
-
+$new_account_cms = Request::quoted('new_account_cms');
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
 require_once ('config.inc.php');
@@ -39,18 +40,17 @@ if (get_config('ELEARNING_INTERFACE_ENABLE')) {
     require_once ($RELATIVE_PATH_ELEARNING_INTERFACE . "/ELearningUtils.class.php");
     ELearningUtils::bench("start");
 
-    if ($elearning_open_close["type"] != "user")
+    if ($_SESSION['elearning_open_close']["type"] != "user")
     {
-        $sess->unregister("elearning_open_close");
-        unset($elearning_open_close);
+       unset($_SESSION['elearning_open_close']);
     }
-    $elearning_open_close["type"] = "user";
-    $elearning_open_close["id"] = $auth->auth["uid"];
-    if (isset($do_open))
-        $elearning_open_close[$do_open] = true;
-    elseif (isset($do_close))
-        $elearning_open_close[$do_close] = false;
-    $sess->register("elearning_open_close");
+    $_SESSION['elearning_open_close']["type"] = "user";
+    $_SESSION['elearning_open_close']["id"] = $auth->auth["uid"];
+    if (Request::option('do_open'))
+        $_SESSION['elearning_open_close'][Request::option('do_open')] = true;
+    elseif (Request::option('do_close'))
+        $_SESSION['elearning_open_close'][Request::option('do_close')] = false;
+    
 
 
     ?><table cellspacing="0" cellpadding="0" border="0" width="100%">

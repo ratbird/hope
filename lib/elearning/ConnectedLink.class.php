@@ -45,14 +45,14 @@ class ConnectedLink
     */
     function getNewAccountLink()
     {
-        global $connected_cms, $view, $search_key, $cms_select, $current_module;
+        global $connected_cms, $cms_select, $current_module;
         
         $output .= "<form method=\"POST\" action=\"" . URLHelper::getLink() . "\">\n";
         $output .= CSRFProtection::tokenTag();
-        $output .= "<input type=\"HIDDEN\" name=\"view\" value=\"" . $view . "\">\n";
+        $output .= "<input type=\"HIDDEN\" name=\"view\" value=\"" . Request::option('view') . "\">\n";
         $output .= "<input type=\"HIDDEN\" name=\"ref_id\" value=\"" . $connected_cms[$this->cms_type]->content_module[$current_module]->getId() . "\">\n";
         $output .= "<input type=\"HIDDEN\" name=\"module_type\" value=\"" . $connected_cms[$this->cms_type]->content_module[$current_module]->getModuleType() . "\">\n";
-        $output .= "<input type=\"HIDDEN\" name=\"search_key\" value=\"" . $search_key . "\">\n";
+        $output .= "<input type=\"HIDDEN\" name=\"search_key\" value=\"" . Request::quoted('search_key') . "\">\n";
         $output .= "<input type=\"HIDDEN\" name=\"cms_select\" value=\"" . $cms_select . "\">\n";
         $output .= "<input type=\"HIDDEN\" name=\"new_account_cms\" value=\"" . $this->cms_type . "\">\n";
         $output .= "<input type=\"HIDDEN\" name=\"new_account_step\" value=\"0\">\n";

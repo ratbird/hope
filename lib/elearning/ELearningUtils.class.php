@@ -577,14 +577,14 @@ class ELearningUtils
     */
     function getModuleHeader($title)
     {
-        global $view, $cms_select, $search_key, $elearning_open_close;
+        global $view, $cms_select, $search_key;
         $output .= "<table class=\"blank\"  align=\"center\" valign=\"top\" width=\"100%\" border=\"0\" cellpadding=\"1\" cellspacing=\"0\">";
         $output .= "<tr valign=\"top\"><td class=\"steelgraulight\" align=\"left\" width=\"40%\">&nbsp;";
         $output .= "<font size=\"-1\"><b>";
         $output .= $title;
         $output .= "</b></font>";
         $output .= "</td><td class=\"steelgraulight\" align=\"left\" width=\"40%\">";
-        if ($elearning_open_close["all open"] != "")
+        if ($_SESSION['elearning_open_close']["all open"] != "")
             $output .= "<a href=\"" . URLHelper::getLink('?close_all=1&view='.$view.'&cms_select='.$cms_select.'&search_key='.$search_key)."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/close_all.png\" alt=\"" . _("Alle Module schlie&szlig;en") . "\" title=\"" . _("Alle Module schlie&szlig;en") . "\"  border=\"0\">";
         else
             $output .= "<a href=\"" . URLHelper::getLink('?open_all=1&view='.$view.'&cms_select='.$cms_select.'&search_key='.$search_key)."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/open_all.png\" alt=\"" . _("Alle Module &ouml;ffnen") . "\" title=\"" . _("Alle Module &ouml;ffnen") . "\"  border=\"0\">";

@@ -45,7 +45,7 @@ class ContentModuleView
     */
     function show($mode = "")
     {
-            global $connected_cms, $view, $search_key, $cms_select, $elearning_open_close, $current_module, $anker_target;
+            global $connected_cms, $view, $search_key, $cms_select, $current_module, $anker_target;
 
             $content_module = $connected_cms[$this->cms_type]->content_module[$current_module];
 
@@ -59,7 +59,7 @@ class ContentModuleView
             }
 //          echo implode($connected_cms[$this->cms_type]->permissions->allowed_operations," ");
             
-            if ($elearning_open_close[$content_module->getReferenceString()] == true)
+            if ($_SESSION['elearning_open_close'][$content_module->getReferenceString()] == true)
                 $this->setViewMode("open");
             $module_title = $content_module->getTitle();
 /*/
@@ -115,11 +115,11 @@ class ContentModuleView
     */
     function showAdmin($mode = "")
     {
-            global $connected_cms, $view, $search_key, $cms_select, $elearning_open_close, $SessSemName, $current_module, $anker_target;
+            global $connected_cms, $view, $search_key, $cms_select, $SessSemName, $current_module, $anker_target;
 
             $content_module = $connected_cms[$this->cms_type]->content_module[$current_module];
 
-            if ($elearning_open_close[$content_module->getReferenceString()] == true)
+            if ($_SESSION['elearning_open_close'][$content_module->getReferenceString()] == true)
                 $this->setViewMode("open");
 
             $module_title = $content_module->getTitle();

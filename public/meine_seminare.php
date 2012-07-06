@@ -401,7 +401,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
 
     $num_my_inst = 0;
     while ($institute = $statement->fetch(PDO::FETCH_ASSOC)) {
-        $my_obj[$$institute['Institut_id']]= array(
+        $my_obj[$institute['Institut_id']]= array(
             'name'      => $institute['Name'],
             'status'    => $institute['inst_perms'],
             'type'      => $institute['type'] ?: 1,

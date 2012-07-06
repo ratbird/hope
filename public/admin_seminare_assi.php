@@ -921,6 +921,10 @@ if (($form == 1) && (Request::submitted('jump_next')))
 // move Dozenten
 if (Request::quoted('moveup_doz'))
 {
+    // Ensure continuous order by sorting and reordering
+    asort($_SESSION['sem_create_data']['sem_doz']);
+    $_SESSION['sem_create_data']['sem_doz'] = array_flip(array_keys($_SESSION['sem_create_data']['sem_doz']));
+    
    $move_uid = get_userid(Request::quoted('moveup_doz'));
    $move_pos = $_SESSION['sem_create_data']["sem_doz"][$move_uid];
 
@@ -936,6 +940,10 @@ if (Request::quoted('moveup_doz'))
 }
 if (Request::quoted('movedown_doz'))
 {
+    // Ensure continuous order by sorting and reordering
+    asort($_SESSION['sem_create_data']['sem_doz']);
+    $_SESSION['sem_create_data']['sem_doz'] = array_flip(array_keys($_SESSION['sem_create_data']['sem_doz']));
+
    $move_uid = get_userid(Request::quoted('movedown_doz'));
    $move_pos = $_SESSION['sem_create_data']["sem_doz"][$move_uid];
 
@@ -952,6 +960,10 @@ if (Request::quoted('movedown_doz'))
 // move Tutoren
 if (Request::quoted('moveup_tut'))
 {
+    // Ensure continuous order by sorting and reordering
+    asort($_SESSION['sem_create_data']['sem_tut']);
+    $_SESSION['sem_create_data']['sem_tut'] = array_flip(array_keys($_SESSION['sem_create_data']['sem_tut']));
+    
    $move_uid = get_userid(Request::quoted('moveup_tut'));
    $move_pos = $_SESSION['sem_create_data']["sem_tut"][$move_uid];
 
@@ -967,6 +979,10 @@ if (Request::quoted('moveup_tut'))
 }
 if (Request::quoted('movedown_tut'))
 {
+    // Ensure continuous order by sorting and reordering
+    asort($_SESSION['sem_create_data']['sem_tut']);
+    $_SESSION['sem_create_data']['sem_tut'] = array_flip(array_keys($_SESSION['sem_create_data']['sem_tut']));
+
    $move_uid = get_userid(Request::quoted('movedown_tut'));
    $move_pos = $_SESSION['sem_create_data']["sem_tut"][$move_uid];
 

@@ -28,6 +28,7 @@ use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", 'user' => "Seminar_User"));
 $perm->check("root");
 
@@ -45,8 +46,9 @@ Navigation::activateItem('/admin/config/elearning');
 
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
+$cms_select = Request::quoted('cms_select');
 
-if ($ELEARNING_INTERFACE_ENABLE)
+if (get_config('ELEARNING_INTERFACE_ENABLE'))
 {
 
     if ($cms_select != "")
@@ -136,7 +138,7 @@ if ($ELEARNING_INTERFACE_ENABLE)
         echo "</table>";
         echo "<br>\n";
         echo ELearningUtils::getCMSHeader($connected_cms[$cms_select]->getName());
-        echo "<form method=\"POST\" action=\"" . $PHP_SELF . "\">\n";
+        echo "<form method=\"POST\" action=\"" . URLHelper::getLink() . "\">\n";
         echo CSRFProtection::tokenTag();
         echo "<font size=\"-1\">";
         echo "<br>\n";
@@ -170,7 +172,7 @@ if ($ELEARNING_INTERFACE_ENABLE)
         echo "</form>";
         echo "<br>\n";
 
-        echo "<form method=\"POST\" action=\"" . $PHP_SELF . "\">\n";
+        echo "<form method=\"POST\" action=\"" . URLHelper::getURL() . "\">\n";
         echo CSRFProtection::tokenTag();
         echo "<font size=\"-1\">";
         if ($error_count == 0)

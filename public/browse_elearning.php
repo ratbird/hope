@@ -27,10 +27,13 @@
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", 'user' => "Seminar_User"));
 $perm->check("autor");
 
-
+$search_key = Request::quoted('search_key');
+$cms_select = Request::quoted('cms_select');
+$new_account_cms = Request::quoted('new_account_cms');
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
 require_once ('config.inc.php');
@@ -39,11 +42,10 @@ require_once ('lib/messaging.inc.php');
 
 PageLayout::setTitle(_("Lernmodulsuche"));
 
-if (isset($do_open))
-    $print_open_search[$do_open] = true;
-elseif (isset($do_close))
-    $print_open_search[$do_close] = false;
-$sess->register("print_open_search");
+if (Request::option('do_open'))
+    $_SESSION['print_open_search'][Request::option('do_open')] = true;
+elseif (Request::option('do_close'))
+    $_SESSION['print_open_search'][Request::option('do_close')] = false;
 
 if ($ELEARNING_INTERFACE_ENABLE)
 {
@@ -53,18 +55,17 @@ if ($ELEARNING_INTERFACE_ENABLE)
     include ('lib/include/html_head.inc.php'); // Output of html head
     include ('lib/include/header.php');   // Output of Stud.IP head
 
-    if ($elearning_open_close["type"] != "search")
+    if ($_SESSION['elearning_open_close']["type"] != "search")
     {
-        $sess->unregister("elearning_open_close");
-        unset($elearning_open_close);
+      unset($_SESSION['elearning_open_close']);
     }/**/
-    $elearning_open_close["type"] = "search";
-    $elearning_open_close["id"] = "";
-    if (isset($do_open))
-        $elearning_open_close[$do_open] = true;
-    elseif (isset($do_close))
-        $elearning_open_close[$do_close] = false;
-    $sess->register("elearning_open_close");
+    $_SESSION['elearning_open_close']["type"] = "search";
+    $_SESSION['elearning_open_close']["id"] = "";
+    if (Request::option('do_open'))
+        $_SESSION['elearning_open_close'][Request::option('do_open')] = true;
+    elseif (Request::option('do_close'))
+        $_SESSION['elearning_open_close'][Request::option('do_close')] = false;
+    
 
     if ($search_key != "")
     {
@@ -105,7 +106,7 @@ if ($ELEARNING_INTERFACE_ENABLE)
                 <td width="90%" class="blank">
 
     <?
-    if (isset($new_account_cms))
+    if (!empty($new_account_cms))
     {
         $output = ELearningUtils::getNewAccountForm($new_account_cms);
     }

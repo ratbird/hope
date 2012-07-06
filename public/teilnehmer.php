@@ -128,7 +128,6 @@ if (Request::submitted('do_send_msg') && Request::intArray('send_msg') && Semina
     include ('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
 
 $messaging=new messaging;
-$cssSw=new cssClassSwitcher;
 
 if ($_SESSION['sms_msg']) {
     $msg = $_SESSION['sms_msg'];
@@ -1091,7 +1090,7 @@ $anzahl_teilnehmer_kontingent += $temp['teilnehmer_kontingent'];
 <tr>
     <td class="blank" colspan="2">
 
-    <table width="99%" border="0"  cellpadding="2" cellspacing="0" align="center">
+    <table class="zebra" width="99%" border="0"  cellpadding="2" cellspacing="0" align="center">
 
 <?
 $studipticket = Seminar_Session::get_ticket();
@@ -1192,7 +1191,7 @@ while (list ($key, $val) = each ($gruppe)) {
         }
         if ($key == 'accepted') echo '<input type="hidden" name="accepted" value="1">';
 
-        echo "<tr height=28>";
+        echo "<tbody><tr height=28>";
         if ($showscore==TRUE)
             echo "<td class=\"steel\" width=\"1%\">&nbsp; </td>";
         print "<td class=\"steel\" width=\"1%\" align=\"center\" valign=\"middle\">";
@@ -1323,12 +1322,6 @@ while (list ($key, $val) = each ($gruppe)) {
                 $one_user['fullname'] .= ' ('._("unsichtbar").')';
             }
 
-            if ($c % 2) {   // switcher fuer die Klassen
-                $class="steel1";
-            } else {
-                $class="steelgraulight";
-            }
-
             //  Elemente holen
             if (array_key_exists($documents, $one_user)) {
                 $Dokumente = $one_user['documents'];
@@ -1377,7 +1370,7 @@ while (list ($key, $val) = each ($gruppe)) {
             if ($one_user['visible'] == 'yes' || $i_see_everybody || $one_user['user_id'] == $user->id) {
                 echo "<tr>";
                 if ($showscore == TRUE) {
-                    printf("<td bgcolor=\"#%s%s%s\">", $red, $green,$blue, $class2);
+                    printf("<td bgcolor=\"#%s%s%s\">", $red, $green,$blue);
                     printf("<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" %s width=\"10\"></td>", tooltip(_("Aktivität: ").round($aktivity_index_user)."%"));
                 }
 
@@ -1396,8 +1389,8 @@ while (list ($key, $val) = each ($gruppe)) {
                 } else {
                     $anker = $anker2 = '';
                 }
-                printf ("<td class=\"%s\" nowrap>%s<font size=\"-1\">&nbsp;%s.</font>%s</td>", $class, $anker, $c, $anker2);
-                printf ("<td colspan=\"2\" class=\"%s\">", $class);
+                printf ("<td nowrap>%s<font size=\"-1\">&nbsp;%s.</font>%s</td>", $anker, $c, $anker2);
+                echo "<td colspan=\"2\">";
                 if ($rechte) {
                     printf ("<a href=\"%s\"><img class=\"text-top\" src=\"".$GLOBALS['ASSETS_URL']."images/%s\"", $link, $img);
                     echo tooltip(sprintf(_("Weitere Informationen über %s"), $one_user['username']));
@@ -1425,17 +1418,17 @@ while (list ($key, $val) = each ($gruppe)) {
                 <?
                 if ($key != "dozent" && $rechte) {
                     if ($one_user['mkdate']) {
-                        echo "<td class=\"$class\" align=\"center\"><font size=\"-1\">".date("d.m.y,",$one_user['mkdate'])."&nbsp;".date("H:i:s",$one_user['mkdate'])."</font></td>";
+                        echo "<td align=\"center\"><font size=\"-1\">".date("d.m.y,",$one_user['mkdate'])."&nbsp;".date("H:i:s",$one_user['mkdate'])."</font></td>";
                     } else {
-                        echo "<td class=\"$class\" align=\"center\"><font size=\"-1\">"._("unbekannt")."</font></td>";
+                        echo "<td align=\"center\"><font size=\"-1\">"._("unbekannt")."</font></td>";
                     }
                 } else if ($key == "dozent" && $rechte) {
-                    echo "<td class=\"$class\" align=\"center\">&nbsp;</td>";
+                    echo "<td align=\"center\">&nbsp;</td>";
                 }
-                echo "<td class=\"$class\" align=\"center\"><font size=\"-1\">".$one_user['doll']."</font></td>";
-                echo "<td class=\"$class\" align=\"center\"><font size=\"-1\">".$Dokumente."</font></td>";
+                echo "<td align=\"center\"><font size=\"-1\">".$one_user['doll']."</font></td>";
+                echo "<td align=\"center\"><font size=\"-1\">".$Dokumente."</font></td>";
 
-                echo "<td class=\"$class\" align=\"center\">";
+                echo "<td align=\"center\">";
 
                 $username=$one_user['username'];
                 if ($one_user['visible'] == 'yes' || $i_see_everybody) {
@@ -1456,8 +1449,8 @@ while (list ($key, $val) = each ($gruppe)) {
 
                     // Tutor entlassen
                     if ($key == "tutor" AND $SemUserStatus!="tutor") {
-                        echo "<td class=\"$class\">&nbsp</td>";
-                        echo "<td class=\"$class\" align=\"center\">";
+                        echo "<td>&nbsp</td>";
+                        echo "<td align=\"center\">";
                         echo "<a href=\"".URLHelper::getLink("?cmd=pain&username=$username&studipticket=$studipticket")."\"><img border=\"0\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/yellow/arr_2down.png\"></a>";
                         echo "<input type=\"checkbox\" name=\"tutor_to_autor[$username]\" value=\"1\">";
                         echo "</td>";
@@ -1484,14 +1477,14 @@ while (list ($key, $val) = each ($gruppe)) {
                             }
                             if ($check) {
                                 ++$tutor_count;
-                                echo "<td class=\"$class\" align=\"center\">";
+                                echo "<td align=\"center\">";
                                 echo "<a href=\"".URLHelper::getLink("?cmd=pleasure&username=$username&studipticket=$studipticket")."\"><img border=\"0\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/yellow/arr_2up.png\"></a>";
                                 echo "<input type=\"checkbox\" name=\"autor_to_tutor[$username]\" value=\"1\">";
                                 echo "</td>";
-                            } else echo "<td class=\"$class\" >&nbsp;</td>";
-                        } else echo "<td class=\"$class\">&nbsp;</td>";
+                            } else echo "<td>&nbsp;</td>";
+                        } else echo "<td>&nbsp;</td>";
                         // Schreibrecht entziehen
-                        echo "<td class=\"$class\" align=\"center\">";
+                        echo "<td align=\"center\">";
                         echo "<a href=\"".URLHelper::getLink("?cmd=lesen&username=$username&studipticket=$studipticket")."\"><img border=\"0\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/yellow/arr_2down.png\"></a>";
                         echo "<input type=\"checkbox\" name=\"autor_to_user[$username]\" value=\"1\">";
                         echo "</td>";
@@ -1505,13 +1498,13 @@ while (list ($key, $val) = each ($gruppe)) {
                         $check = $statement->fetchColumn();
 
                         if ($check) { // Leute, die sich nicht zurueckgemeldet haben duerfen auch nicht schreiben!
-                            echo "<td class=\"$class\" align=\"center\">";
+                            echo "<td align=\"center\">";
                             echo "<a href=\"".URLHelper::getLink("?cmd=schreiben&username=$username&studipticket=$studipticket")."\"><img border=\"0\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/yellow/arr_2up.png\"></a>";
                             echo "<input type=\"checkbox\" name=\"user_to_autor[$username]\" value=\"1\">";
                             echo "</td>";
-                        } else echo "<td class=\"$class\">&nbsp;</td>";
+                        } else echo "<td>&nbsp;</td>";
                         // aus dem Seminar werfen
-                        echo "<td class=\"$class\" align=\"center\">";
+                        echo "<td align=\"center\">";
                         echo "<a href=\"".URLHelper::getLink("?cmd=raus&username=$username&studipticket=$studipticket")."\"><img border=\"0\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/yellow/arr_2down.png\"></a>";
                         echo "<input type=\"checkbox\" name=\"user_to_null[$username]\" value=\"1\">";
                         echo "</td>";
@@ -1519,24 +1512,24 @@ while (list ($key, $val) = each ($gruppe)) {
 
                     elseif ($key == "accepted") { // temporarily accepted students
                         // forward to autor
-                        echo "<td width=\"15%\" align=\"center\" class=\"$class\">";
+                        echo "<td width=\"15%\" align=\"center\">";
                         echo "<a href=\"".URLHelper::getLink("?cmd=admission_rein&username=$username&accepted=1&studipticket=$studipticket")."\"><img border=\"0\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/yellow/arr_2up.png\"></a><input type=\"checkbox\" name=\"admission_insert[$username]\" value=\"1\">";
                         echo "</td>";
                         // kick
-                        echo "<td class=\"$class\" align=\"center\">";
+                        echo "<td align=\"center\">";
                         echo "<a href=\"".URLHelper::getLink("?cmd=admission_raus&username=$username&accepted=1&studipticket=$studipticket")."\"><img border=\"0\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/yellow/arr_2down.png\"></a><input type=\"checkbox\" name=\"admission_delete[$username]\" value=\"1\">";
                         echo "</td>";
                     }
 
                     else { // hier sind wir bei den Dozenten
-                        echo "<td colspan=\"2\" class=\"$class\" >&nbsp;</td>";
+                        echo "<td colspan=\"2\">&nbsp;</td>";
                     }
 
                     if ($sem->isAdmissionEnabled()) {
                         if ($key == "autor" || $key == "user" || $key == "accepted")
-                            printf ("<td width=\"80%%\" align=\"center\" class=\"%s\"><font size=-1>%s%s</font></td>", $class, ($one_user['studiengang_id'] == "all") ? _("alle Studieng&auml;nge") : $one_user['name'], (!$one_user['name'] && !$one_user['studiengang_id'] == "all") ?  "&nbsp; ": "");
+                            printf ("<td width=\"80%%\" align=\"center\"><font size=-1>%s%s</font></td>", ($one_user['studiengang_id'] == "all") ? _("alle Studieng&auml;nge") : $one_user['name'], (!$one_user['name'] && !$one_user['studiengang_id'] == "all") ?  "&nbsp; ": "");
                         else
-                            printf ("<td width=\"10%%\" align=\"center\" class=\"%s\">&nbsp;</td>", $class);
+                            echo "<td width=\"10%%\" align=\"center\">&nbsp;</td>";
                     }
                 } // Ende der Dozenten/Tutorenspalten
                 print("</tr>\n");
@@ -1578,7 +1571,7 @@ while (list ($key, $val) = each ($gruppe)) {
                     }
 
                 ?>
-                    <tr class="<?= $class ?>">
+                    <tr>
 
                         <? if ($showscore) : ?>
                             <td colspan="2">&nbsp;</td>
@@ -1666,6 +1659,7 @@ while (list ($key, $val) = each ($gruppe)) {
         echo "<tr><td colspan=\"$colspan\">".sprintf(_("+%d unsichtbare %s"), $invisible,$val)."</td></tr>";
         $invisible = 0;
     }
+    echo '</tbody>';
 }
 
 echo "</table>\n";
@@ -1722,20 +1716,19 @@ if ($rechte) {
                 $admission_chance = $sem->getAdmissionChance($waiting_user['studiengang_id']);
             }
 
-            $cssSw->switchClass();
-            printf ("<tr><td width=\"%s\" class=\"%s\" align=\"left\"><font size=\"-1\"><a name=\"%s\" href=\"%s\">%s</a></font></td>",  ($sem->admission_type == 1 && $sem->admission_selection_take_place !=1) ? "40%" : "30%", $cssSw->getClass(), $waiting_user['username'], URLHelper::getLink('about.php?username='.$waiting_user['username']), htmlReady($waiting_user['fullname']));
+            printf ("<tr><td width=\"%s\" align=\"left\"><font size=\"-1\"><a name=\"%s\" href=\"%s\">%s</a></font></td>",  ($sem->admission_type == 1 && $sem->admission_selection_take_place !=1) ? "40%" : "30%", $waiting_user['username'], URLHelper::getLink('about.php?username='.$waiting_user['username']), htmlReady($waiting_user['fullname']));
             if ($sem->admission_type == 2 || $sem->admission_selection_take_place==1)
-                printf ("<td width=\"10%%\" align=\"center\" class=\"%s\"><font size=\"-1\">%s</font></td>", $cssSw->getClass(), $waiting_user['position']);
-            printf ("<td width=\"10%%\" align=\"center\" class=\"%s\">&nbsp; </td>", $cssSw->getClass());
+                printf ("<td width=\"10%%\" align=\"center\"><font size=\"-1\">%s</font></td>", $waiting_user['position']);
+            echo "<td width=\"10%%\" align=\"center\">&nbsp; </td>";
 
-            printf ("<td width=\"10%%\" align=\"center\" class=\"%s\"><a href=\"%s\"><img class=\"text-bottom\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/mail.png\" %s></a></td>", $cssSw->getClass(), URLHelper::getLink('sms_send.php', array('sms_source_page' => 'teilnehmer.php?cid=' . $_SESSION['SessionSeminar'], 'rec_uname' => $waiting_user['username'])), tooltip(_("Nachricht an Benutzer verschicken")));
+            printf ("<td width=\"10%%\" align=\"center\"><a href=\"%s\"><img class=\"text-bottom\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/mail.png\" %s></a></td>", URLHelper::getLink('sms_send.php', array('sms_source_page' => 'teilnehmer.php?cid=' . $_SESSION['SessionSeminar'], 'rec_uname' => $waiting_user['username'])), tooltip(_("Nachricht an Benutzer verschicken")));
             if(!LockRules::Check($id, 'participants')){
-                printf ("<td width=\"15%%\" align=\"center\" class=\"%s\"><input type=\"image\" name=\"admission_rein[%s]\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/yellow/arr_2up.png\">
-                        <input type=\"checkbox\" name=\"admission_insert[%s]\" value=\"1\"></td>", $cssSw->getClass(), $waiting_user['username'], $waiting_user['username']);
-                printf ("<td width=\"15%%\" align=\"center\" class=\"%s\"><a href=\"%s\"><img border=\"0\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/yellow/arr_2down.png\"></a>
-                        <input type=\"checkbox\" name=\"admission_delete[%s]\" value=\"1\"></td>", $cssSw->getClass(), URLHelper::getLink("?cmd=admission_raus&username=".$waiting_user['username']."&studipticket=$studipticket"), $waiting_user['username']);
+                printf ("<td width=\"15%%\" align=\"center\"><input type=\"image\" name=\"admission_rein[%s]\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/yellow/arr_2up.png\">
+                        <input type=\"checkbox\" name=\"admission_insert[%s]\" value=\"1\"></td>", $waiting_user['username'], $waiting_user['username']);
+                printf ("<td width=\"15%%\" align=\"center\"><a href=\"%s\"><img border=\"0\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/yellow/arr_2down.png\"></a>
+                        <input type=\"checkbox\" name=\"admission_delete[%s]\" value=\"1\"></td>", URLHelper::getLink("?cmd=admission_raus&username=".$waiting_user['username']."&studipticket=$studipticket"), $waiting_user['username']);
             }
-            printf ("<td width=\"10%%\" align=\"center\" class=\"%s\"><font size=\"-1\">%s</font></td></tr>\n", $cssSw->getClass(), ($waiting_user['studiengang_id'] == "all") ? _("alle Studieng&auml;nge") : $waiting_user['name']);
+            printf ("<td width=\"10%%\" align=\"center\"><font size=\"-1\">%s</font></td></tr>\n", ($waiting_user['studiengang_id'] == "all") ? _("alle Studieng&auml;nge") : $waiting_user['name']);
         }
         if(!LockRules::Check($id, 'participants')){
             echo '<tr><td class="blank" colspan="3" align="right"><font size="-1">';
@@ -1994,12 +1987,10 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
             echo '<b>' . _("Manuelle Zuordnung") . '</b><br>';
             echo _("Folgende NutzerInnen konnten <b>nicht eindeutig</b> zugewiesen werden. Bitte wählen Sie aus der jeweiligen Trefferliste:");
             echo "</div></td></tr>\n";
-            $cssSw->resetClass();
             foreach ($csv_mult_founds as $csv_key => $csv_mult_found) {
-                printf("<tr%s><td%s width=\"40%%\"><div style=\"font-size:small; margin-left:8px;\">%s</div></td>",
-                        $cssSw->getHover(), $cssSw->getFullClass(),
+                printf("<tr><td width=\"40%%\"><div style=\"font-size:small; margin-left:8px;\">%s</div></td>",
                         htmlReady(mila($csv_key, 50)));
-                printf("<td%s width=\"60%%\">", $cssSw->getFullClass());
+                echo "<td width=\"60%%\">";
                 echo "<select name=\"selected_users[]\">\n";
                 echo '<option value=""> - - ' . _("bitte ausw&auml;hlen") . " - - </option>\n";
 
@@ -2013,10 +2004,7 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
                 }
 
                 echo "</select>\n</td></tr>\n";
-                $cssSw->switchClass();
             }
-            $cssSw->resetClass();
-            $cssSw->switchClass();
             echo "<tr><td class=\"steel1\" colspan=\"2\" align=\"right\" nowrap=\"nowrap\">";
             if($sem->isAdmissionEnabled()){
                 echo '<img src="'.$GLOBALS['ASSETS_URL'].'images/icons/16/grey/info-circle.png" align="absmiddle" hspace="3" border="0" '.tooltip(_("Mit dieser Einstellung beeinflussen Sie, ob Teilnehmer die Sie hinzufügen auf die Kontingentplätze angerechnet werden."),1,1).' >';

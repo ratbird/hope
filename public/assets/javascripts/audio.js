@@ -34,7 +34,7 @@
                 queue.push(element);
             } else {
                 AudioPlayer.embed(element.id, {
-                    soundFile: element.src,
+                    soundFile: encodeURIComponent(element.src),
                     titles: element.title,
                     width: element.clientWidth || 300
                 });

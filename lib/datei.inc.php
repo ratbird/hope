@@ -173,9 +173,24 @@ function parse_link($link, $level=0) {
             fclose($socket);
         }
         $parsed_link = parse_header($response);
+
+        // Anderer Dateiname?
+        $disposition_header = $parsed_link['Content-Disposition']
+                           ?: $parsed_link['content-disposition'];
+        if ($disposition_header) {
+            $header_parts = explode(';', $disposition_header);
+            foreach ($header_parts as $part) {
+                $part = trim($part);
+                list($key, $value) = explode('=', $part, 2);
+                if (strtolower($key) === 'filename') {
+                    $the_file_name = trim($value, '"');
+                }
+            }
+        }
+
         // Weg über einen Locationheader:
         if (($parsed_link["HTTP/1.1 302 Found"] || $parsed_link["HTTP/1.0 302 Found"]) && $parsed_link["Location"]) {
-            $the_file_name = basename($url_parts["path"]);
+            $the_file_name = $the_file_name ?: basename($url_parts["path"]);
             $the_link = $parsed_link["Location"];
             parse_link($parsed_link["Location"],$level + 1);
         }
@@ -1099,7 +1114,7 @@ function insert_link_db($range_id, $the_file_size, $refresh = FALSE) {
     $name = trim(Request::get('name'));            // laestige white spaces loswerden
 
     $url_parts = parse_url($the_link);
-    $the_file_name = basename($url_parts['path']);
+    $the_file_name = $the_file_name ?: basename($url_parts['path']);
 
     if (!$name) {
         $name = $the_file_name;

@@ -1312,11 +1312,11 @@ function display_file_body($datei, $folder_id, $open, $change, $move, $upload, $
                 $content = "<div style=\"margin-bottom: 10px; height: {$flash_player['height']}; width: {$flash_player['width']};\">" . $flash_player['player'] . '</div>';
             }
         } else if (strpos($media_type, 'video/') === 0 || $media_type == 'application/ogg') {
-            $content = sprintf('<video class="preview" controls><source src="%s" type="%s"></video><br>', htmlspecialchars($media_url), $media_type);
+            $content = '<div class="preview">' . formatReady('[video]' . $media_url) . '<div>';
         } else if (strpos($media_type, 'audio/') === 0) {
-            $content = sprintf('<audio class="preview" controls><source src="%s" type="%s"></audio><br>', htmlspecialchars($media_url), $media_type);
+            $content = '<div class="preview">' . formatReady('[audio]' . $media_url) . '<div>';
         } else if (strpos($media_type, 'image/') === 0) {
-            $content = sprintf('<img class="preview" src="%s" alt=""><br>', htmlspecialchars($media_url));
+            $content = '<div class="preview">' . formatReady('[img]' . $media_url) . '<div>';
         }
         if ($datei["description"]) {
             $content .= htmlReady($datei["description"], TRUE, TRUE);

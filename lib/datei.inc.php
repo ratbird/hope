@@ -186,11 +186,12 @@ function parse_link($link, $level=0) {
                     $the_file_name = trim($value, '"');
                 }
             }
+        } else {
+            $the_file_name = basename($url_parts['path']) ?: $the_file_name;
         }
 
         // Weg über einen Locationheader:
         if (($parsed_link["HTTP/1.1 302 Found"] || $parsed_link["HTTP/1.0 302 Found"]) && $parsed_link["Location"]) {
-            $the_file_name = $the_file_name ?: basename($url_parts["path"]);
             $the_link = $parsed_link["Location"];
             parse_link($parsed_link["Location"],$level + 1);
         }

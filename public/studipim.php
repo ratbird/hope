@@ -1,8 +1,8 @@
 <?php
 # Lifter002: TODO
+# Lifter003: TEST
 # Lifter005: TODO
 # Lifter007: TODO
-# Lifter003: TODO
 # Lifter010: TODO
 /*
 studipim.php - Instant Messenger for Studip
@@ -48,7 +48,6 @@ $cmd = Request::option('cmd');
 if ($auth->auth["uid"] != "nobody"){
     ($cmd=="write") ? $refresh=0 : $refresh=30;
 
-    $db = new DB_Seminar;
     $sms= new messaging;
 
     $online = get_users_online(5, 'no_title');
@@ -60,32 +59,43 @@ if ($auth->auth["uid"] != "nobody"){
     $msg_id = Request::option('msg_id');
     if ($new_msg){
         //load the data from new messages
-        $query =  "SELECT message.message_id, message.mkdate, autor_id, message, subject
-        FROM message_user LEFT JOIN message USING (message_id)
-        WHERE deleted = 0 AND message_user.readed = 0 AND snd_rec = 'rec' AND message_user.user_id ='".$user->id."'
-        ORDER BY message.mkdate";
-        $db->query($query);
+        $query =  "SELECT message_id, message.mkdate, autor_id, message, subject
+                   FROM message_user
+                   LEFT JOIN message USING (message_id)
+                   WHERE deleted = 0 AND message_user.readed = 0 AND snd_rec = 'rec'
+                     AND message_user.user_id = ?
+                   ORDER BY message.mkdate";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($user->id));
 
-        while ($db->next_record()){
-            if ($cmd=="read" && $msg_id==$db->f("message_id")){
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            if ($cmd=="read" && $msg_id == $row['message_id']){
                 // "open" the message (display it in the messenger)
-                $msg_text = $db->f("message");
-                $msg_snd = get_username($db->f("autor_id"));
-                $msg_autor_id = $db->f("autor_id");
-                $msg_subject = $db->f("subject");
+                $msg_text = $row['message'];
+                $msg_snd = get_username($row['autor_id']);
+                $msg_autor_id = $row['autor_id'];
+                $msg_subject = $row['subject'];
             }
-            if ($db->f("autor_id") == "____%system%____"){
-                $new_msgs[]=date("H:i",$db->f("mkdate")) . sprintf(_(" <b>Systemnachricht</b> %s[lesen]%s"),"<a href='".URLHelper::getLink('?cmd=read&msg_id='.$db->f("message_id"))."'>","</a>");
+            if ($row['autor_id'] == '____%system%____'){
+                $new_msgs[] = date('H:i', $row['mkdate'])
+                            . sprintf(_(' <b>Systemnachricht</b> %s[lesen]%s'),
+                                      '<a href="' . URLHelper::getLink('?cmd=read&msg_id=' . $row['message_id']) . '">',
+                                      '</a>');
             } else {
-                $new_msgs[]=date("H:i",$db->f("mkdate")). sprintf(_(" von <b>%s</b> %s[lesen]%s"),get_fullname($db->f("autor_id"),'full',true),"<a href='".URLHelper::getLink('?cmd=read&msg_id='.$db->f("message_id"))."'>","</a>");
+                $new_msgs[] = date('H:i', $row['mkdate'])
+                            . sprintf(_(' von <b>%s</b> %s[lesen]%s'),
+                                      get_fullname($row['autor_id'], 'full', true),
+                                      '<a href="' . URLHelper::getLink('?cmd=read&msg_id=' . $row['message_id']).'">',
+                                      '</a>');
             }
         }
         $refresh+=10;
     }
     //set a msg to readed
-    if ($cmd=="read") {
-        $query = sprintf ("UPDATE message_user SET readed = 1 WHERE message_id = '%s' AND user_id ='%s'", $msg_id, $user->id);
-        $db->query($query);
+    if ($cmd == 'read') {
+        $query = "UPDATE message_user SET readed = 1 WHERE message_id = ? AND user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($msg_id, $user->id));
     }
 }
 
@@ -178,7 +188,7 @@ if ($auth->auth["uid"] != "nobody"){
     }
 
     ?>
-    </font><br>&nbsp</td></tr>
+    </font><br>&nbsp;</td></tr>
     <?
     $msg_rec = Request::quoted('msg_rec');
     $nu_msg = Request::quoted('nu_msg');
@@ -212,25 +222,31 @@ if ($auth->auth["uid"] != "nobody"){
         }
     }
 
-    if ($cmd == "write"){
-        if ($msg_id){
+    if ($cmd == 'write') {
+        if ($msg_id) {
             $query = "SELECT message, subject, autor_id
-                    FROM message_user LEFT JOIN message USING (message_id)
-                    WHERE snd_rec = 'rec' AND message_user.user_id ='".$user->id."'
-                    AND message_user.message_id='$msg_id'";
-            $db->query($query);
-            if ($db->next_record()){
-                $msg_autor_id = $db->f('autor_id');
-                $msg_subject = (substr($db->f("subject"), 0, 3) != "RE:" ? "RE: " . $db->f('subject')  :  $db->f('subject') );
-                if(Request::int('quote')){
-                    if (strpos($db->f("message"),$sms->sig_string)) $msg_text = substr($db->f("message"), 0, strpos($db->f("message"),$sms->sig_string));
-                    else $msg_text = $db->f('message');
-                    $msg_text = quotes_encode($msg_text,get_fullname($msg_autor_id));
+                      FROM message_user AS mu
+                      LEFT JOIN message AS m USING (message_id)
+                      WHERE snd_rec = 'rec' AND mu.user_id = ? AND mu.message_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($user->id, $msg_id));
+            $temp = $statement->fetch(PDO::FETCH_ASSOC);
+
+            if ($temp) {
+                $msg_autor_id = $temp['autor_id'];
+                $msg_subject = substr($temp['subject'], 0, 3) != 'RE:' ? 'RE: ' . $temp['subject']  :  $temp['subject'];
+                if (Request::int('quote')) {
+                    if (strpos($temp['message'], $sms->sig_string)) {
+                        $msg_text = substr($temp['message'], 0, strpos($temp['message'], $sms->sig_string));
+                    } else {
+                        $msg_text = $temp['message'];
+                    }
+                    $msg_text = quotes_encode($msg_text, get_fullname($msg_autor_id));
                 }
                 $msg_rec = get_username($msg_autor_id);
             }
         }
-        if ($msg_rec){
+        if ($msg_rec) {
             echo "\n<tr><td class='blank' colspan='2' valign='middle'><font size=-1>";
             echo    sprintf(_("Ihre Nachricht an <b>%s:</b>"),get_fullname_from_uname($msg_rec,'full',true)) . "</font>";
             echo "</td></tr>";

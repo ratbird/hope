@@ -45,8 +45,6 @@ require_once 'lib/wiki.inc.php';
 require_once 'lib/functions.php';
 require_once 'lib/visual.inc.php';
 
-$db = new DB_Seminar();
-
 $view = Request::get('view');
 $keyword = Request::quoted('keyword');
 $version = Request::int('version');
@@ -147,7 +145,7 @@ if ($view=="listall") {
     $wikiData=getWikiPage($keyword,0); // always get newest page
 
     // set lock
-    setWikiLock($db, $user->id, $SessSemName[1], $keyword);
+    setWikiLock(null, $user->id, $SessSemName[1], $keyword);
 
     //show form
     wikiEdit($keyword, $wikiData, $user->id);
@@ -158,7 +156,7 @@ if ($view=="listall") {
         throw new AccessDeniedException(_('Sie haben keine Berechtigung, Seiten zu editieren!'));
     }
     // set lock
-    setWikiLock($db, $user->id, $SessSemName[1], $keyword);
+    setWikiLock(null, $user->id, $SessSemName[1], $keyword);
     wikiEdit($keyword, NULL, $user->id, Request::quoted('lastpage'));
 
 } else {

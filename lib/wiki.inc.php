@@ -1,9 +1,9 @@
 <?
 # Lifter001: DONE
 # Lifter002: TODO
+# Lifter003: TEST
 # Lifter005: TODO
 # Lifter007: TODO
-# Lifter003: TODO
 # Lifter010: TODO
 use Studip\Button, Studip\LinkButton;
 // wiki regex pattern
@@ -25,31 +25,38 @@ $wiki_extended_link_regex = "\[\[(([\w\.\-\:\(\)_§\/@# ]|&[AOUaou]uml;|&szlig;)+
 * @param int    Version number. If empty, latest version is returned.
 *
 **/
-function getWikiPage($keyword, $version, $db=NULL) {
+function getWikiPage($keyword, $version, $db = NULL) {
     global $SessSemName;
-    if (!$db) {
-        $db=new DB_Seminar();
-    }
-    $q = "SELECT * FROM wiki WHERE ";
-    $q .= "keyword = '$keyword' AND range_id='$SessSemName[1]' ";
-    if (!$version) {
-        $q .= "ORDER BY version DESC";
-    } else {
-        $q .= "AND version='$version'";
-    }
-    $q .= " LIMIT 1"; // only one version needed
 
-    $db->query($q);
-    $exists=$db->next_record();
-    if (!$exists) {
-        if ($keyword=="WikiWikiWeb") {
-            $body=_("Dieses Wiki ist noch leer. Bearbeiten Sie es!\nNeue Seiten oder Links werden einfach durch Eingeben von WikiNamen angelegt.");
-            $wikidata=array("body"=>$body, "user_id"=>"nobody",  "version"=>0);
+    $query = "SELECT * 
+              FROM wiki
+              WHERE keyword = :keyword AND range_id = :range_id";
+    $parameters = array(
+        'keyword'  => $keyword,
+        'range_id' => $SessSemName[1],
+    );
+
+    if (!$version) {
+        $query .= " ORDER BY version DESC";
+    } else {
+        $query .= " AND version = :version";
+        $parameters['version'] = $version;
+    }
+    $query .= " LIMIT 1"; // only one version needed
+
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute($parameters);
+    $row = $statement->fetch(PDO::FETCH_ASSOC);
+
+    if (!$row) {
+        if ($keyword == 'WikiWikiWeb') {
+            $body = _('Dieses Wiki ist noch leer. Bearbeiten Sie es!\nNeue Seiten oder Links werden einfach durch Eingeben von WikiNamen angelegt.');
+            $wikidata = array('body' => $body, 'user_id' => 'nobody',  'version' => 0);
         } else {
             return NULL;
         }
     } else {
-        $wikidata = $db->Record;
+        $wikidata = $row;
     }
     return $wikidata;
 }
@@ -91,7 +98,6 @@ function completeWikiSignatures($body)
 function submitWikiPage($keyword, $version, $body, $user_id, $range_id) {
 
     releasePageLocks($keyword, $user_id); // kill lock that was set when starting to edit
-    $db=new DB_Seminar;
     // write changes to db, show new page
     $latestVersion=getWikiPage($keyword,false);
     if ($latestVersion) {
@@ -115,7 +121,12 @@ function submitWikiPage($keyword, $version, $body, $user_id, $range_id) {
         // apply replace-before-save transformations
         $body = transformBeforeSave($body);
 
-        $result=$db->query("UPDATE wiki SET body='$body', chdate='$date' WHERE keyword='$keyword' AND range_id='$range_id' AND version='$version'");
+        $query = "UPDATE wiki
+                  SET body = ?, chdate = UNIX_TIMESTAMP()
+                  WHERE keyword = ? AND range_id = ? AND version = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($body, $keyword, $range_id, $version));
+
         NotificationCenter::postNotification('WikiPageDidUpdate', array($range_id, $keyword));
         $message = MessageBox::success(_('Update ok, keine neue Version, da erneute Änderung innerhalb 30 Minuten.'));
     } else {
@@ -124,13 +135,17 @@ function submitWikiPage($keyword, $version, $body, $user_id, $range_id) {
         } else {
             $version=$latestVersion['version']+1;
         }
-        $date=time();
+
         NotificationCenter::postNotification('WikiPageWillCreate', array($range_id, $keyword));
 
         // apply replace-before-save transformations
         $body = transformBeforeSave($body);
 
-        $result=$db->query("INSERT INTO wiki (range_id, user_id, keyword, body, chdate, version) VALUES ('$range_id', '$user_id', '$keyword','$body','$date','$version')");
+        $query = "INSERT INTO wiki (range_id, user_id, keyword, body, chdate, version)
+                  VALUES (?, ?, ?, ?, UNIX_TIMESTAMP(), ?)";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($range_id, $user_id, $keyword, $body, $version));
+
         NotificationCenter::postNotification('WikiPageDidCreate', array($range_id, $keyword));
         $message = MessageBox::success(_('Update ok, neue Version angelegt.'));
     }
@@ -146,13 +161,14 @@ function submitWikiPage($keyword, $version, $body, $user_id, $range_id) {
 *
 **/
 function getLatestVersion($keyword, $range_id) {
-    $db=new DB_Seminar;
-    $q = "SELECT * FROM wiki WHERE ";
-    $q .= "keyword='".decodeHTML($keyword)."' AND range_id='$range_id' ";
-    $q .= "ORDER BY version DESC LIMIT 1";
-    $db->query($q);
-    $db->next_record();
-    return $db->Record;
+    $query = "SELECT *
+              FROM wiki
+              WHERE keyword = ? AND range_id = ?
+              ORDER BY version DESC
+              LIMIT 1";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array(decodeHTML($keyword), $range_id));
+    return $statement->fetch(PDO::FETCH_ASSOC);
 }
 
 /**
@@ -162,13 +178,14 @@ function getLatestVersion($keyword, $range_id) {
 *
 **/
 function getFirstVersion($keyword, $range_id) {
-    $db=new DB_Seminar;
-    $q = "SELECT * FROM wiki WHERE ";
-    $q .= "keyword='$keyword' AND range_id='$range_id' ";
-    $q .= "ORDER BY version ASC LIMIT 1";
-    $db->query($q);
-    $db->next_record();
-    return $db->Record;
+    $query = "SELECT *
+              FROM wiki
+              WHERE keyword = ? AND range_id = ?
+              ORDER BY version ASC
+              LIMIT 1";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array(decodeHTML($keyword), $range_id));
+    return $statement->fetch(PDO::FETCH_ASSOC);
 }
 
 /**
@@ -181,20 +198,21 @@ function getFirstVersion($keyword, $range_id) {
 **/
 function getWikiPageVersions($keyword, $limit=10, $getfirst=0) {
     global $SessSemName;
-    $db = new DB_Seminar;
-    $db->query("SELECT version,chdate FROM wiki WHERE keyword = '$keyword' AND range_id='$SessSemName[1]' ORDER BY version DESC LIMIT $limit");
-    if ($db->affected_rows() == 0) {
-        return array();
-    }
-    $versions=array();
+    
+    $query = "SELECT version, chdate
+              FROM wiki
+              WHERE keyword = ? AND range_id = ?
+              ORDER BY version DESC
+              LIMIT " . (int)$limit;
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($keyword, $SessSemName[1]));
+    $versions = $statement->fetchAll(PDO::FETCH_ASSOC);
+
     if (!$getfirst) {
         // skip first
-        $db->next_record();
+        $versions = array_slice($versions, 1);
     }
-    while ($db->next_record()) {
-        $versions[]=array("version"=>$db->f("version"),
-                "chdate"=>$db->f("chdate"));
-    }
+
     return $versions;
 }
 
@@ -208,13 +226,12 @@ function getWikiPageVersions($keyword, $limit=10, $getfirst=0) {
 function keywordExists($str, $sem_id=NULL) {
     static $keywords;
     global $SessSemName;
-    if (!$sem_id) $sem_id=$SessSemName[1];
-    if (is_null($keywords)){
-        $db = new DB_Seminar;
-        $db->query("SELECT DISTINCT keyword FROM wiki WHERE range_id='$sem_id' ");
-        while($db->next_record()){
-            $keywords[$db->f(0)] = true;
-        }
+
+    if (is_null($keywords)) {
+        $query = "SELECT DISTINCT keyword, 1 FROM wiki WHERE range_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($sem_id ?: $SessSemName[1]));
+        $keywords = $statement->fetchGrouped(PDO::FETCH_COLUMN);
     }
     // retranscode html entities to ascii values (as stored in db)
     // (nessecary for umlauts)
@@ -268,36 +285,47 @@ function isKeyword($str, $page, $format="wiki", $sem_id=NULL, $alt_str=NULL){
 **/
 function getLock($keyword, $user_id) {
     global $SessSemName;
-    $db=new DB_seminar;
-    $result=$db->query("SELECT user_id, chdate FROM wiki_locks WHERE range_id='$SessSemName[1]' AND keyword='$keyword' AND user_id != '$user_id' ORDER BY chdate DESC");
 
-    $lockstring="";
-    $count=0;
-    $num=$db->nf();
-    while ($db->next_record()) {
-        if ($count>0 && $count==$num-1) {
-            $lockstring .= _(" und ");
-        } else if ($count>0) {
-            $lockstring .= ", ";
+    $query = "SELECT user_id, chdate
+              FROM wiki_locks
+              WHERE range_id = ? AND keyword = ? AND user_id != ?
+              ORDER BY chdate DESC";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($SessSemName[1], $keyword, $user_id));
+    $locks = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+    $lockstring = '';    
+    foreach ($locks as $index => $lock) {
+        if ($index) {
+            if ($index == count($locks) - 1) {
+                $lockstring .= _(' und ');
+            } else {
+                $lockstring .= ', ';
+            }
         }
-        $lockstring .= get_fullname($db->f("user_id"),'full',TRUE);
-        $lockstring .= sprintf(_(" (seit %d Minuten)"), ceil((time()-$db->f("chdate"))/60));
-        $count++;
+        $duration = ceil((time() - $lock['chdate']) / 60);
+        
+        $lockstring .= get_fullname($lock['user_id'], 'full', true);
+        $lockstring .= sprintf(_(' (seit %d Minuten)'), $duration);
     }
+
     return $lockstring;
 }
 
 /**
 * Set lock for current user and current page
 *
-* @param    DB_Seminar  db  DB_Seminar instance
+* @param    DB_Seminar  db  DB_Seminar instance (no longer neccessary)
 * @param    string      user_id Internal user id
 * @param    string      range_if    Internal seminar id
 * @param    string      keyword WikiPage name
 *
 **/
 function setWikiLock($db, $user_id, $range_id, $keyword) {
-    $db->query("REPLACE INTO wiki_locks (user_id, range_id, keyword, chdate) VALUES ('$user_id', '$range_id', '$keyword', '".time()."')");
+    $query = "REPLACE INTO wiki_locks (user_id, range_id, keyword, chdate)
+              VALUES (?, ?, ?, UNIX_TIMESTAMP())";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($user_id, $range_id, $keyword));
 }
 
 
@@ -309,14 +337,24 @@ function setWikiLock($db, $user_id, $range_id, $keyword) {
 **/
 function releaseLocks($keyword) {
     global $SessSemName;
-    $db=new DB_seminar;
-    $db2=new DB_Seminar;
-    $db->query("SELECT * FROM wiki_locks WHERE range_id='$SessSemName[1]' AND keyword='$keyword'");
-    while ($db->next_record()) {
-        if ((time() - $db->f("chdate")) > (30*60)) {
-            $q="DELETE FROM wiki_locks WHERE range_id='".$db->f("range_id")."' AND keyword='".$db->f("keyword")."' AND chdate='".$db->f("chdate")."'";
-            $db2->query($q);
-        }
+
+    // Prepare statement that actually releases (removes) the lock
+    $query = "DELETE FROM wiki_locks WHERE range_id = ? AND keyword = ? AND chdate = ?";
+    $release_statement = DBManager::get()->prepare($query);
+
+    // Prepare and execute statement that reads all locks
+    $query = "SELECT range_id, keyword, chdate
+              FROM wiki_locks
+              WHERE range_id = ? AND keyword = ? AND chdate < NOW() - INTERVAL 30 MINUTE";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($SessSemName[1], $keyword));
+
+    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+        $release_statement->execute(array(
+            $row['range_id'],
+            $row['keyword'],
+            $row['chdate'],
+        ));
     }
 }
 
@@ -329,8 +367,11 @@ function releaseLocks($keyword) {
 **/
 function releasePageLocks($keyword, $user_id) {
     global $SessSemName;
-    $db=new DB_seminar;
-    $db->query("DELETE FROM wiki_locks WHERE range_id='$SessSemName[1]' AND keyword='$keyword' AND user_id='$user_id'");
+
+    $query = "DELETE FROM wiki_locks
+              WHERE range_id = ? AND keyword = ? AND user_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($SessSemName[1], $keyword, $user_id));
 }
 
 
@@ -360,16 +401,14 @@ function getWikiLinks($str) {
 **/
 function getBacklinks($keyword) {
     global $SessSemName;
-    $db=new DB_seminar();
-    $q="SELECT DISTINCT from_keyword FROM wiki_links WHERE range_id='$SessSemName[1]' AND to_keyword='$keyword'";
-    $db->query($q);
-    $backlinks=array();
-    while ($db->next_record()) {
-        if ($db->f("from_keyword")!='toc') { // don't show references from Table of contents
-            $backlinks[]=$db->f("from_keyword");
-        }
-    }
-    return $backlinks;
+
+    // don't show references from Table of contents (='toc')
+    $query = "SELECT DISTINCT from_keyword
+              FROM wiki_links
+              WHERE range_id = ? AND to_keyword = ? AND from_keyword != 'toc'";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($SessSemName[1], $keyword));
+    return $statement->fetchAll(PDO::FETCH_COLUMN);
 }
 
 /**
@@ -385,19 +424,23 @@ function refreshBacklinks($keyword, $str) {
     // insert links from page to db
     // logic: all links are added, also links to nonexistant pages
     // (these will change when submitting other pages)
-    $db_wiki_list=new DB_seminar();
+
     // first delete all links
-    $q="DELETE FROM wiki_links WHERE range_id='$SessSemName[1]' AND from_keyword='$keyword'";
-    $db_wiki_list->query($q);
+    $query = "DELETE FROM wiki_links WHERE range_id = ? AND from_keyword = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($SessSemName[1], $keyword));
+
     // then reinsert those (still) existing
-    $wikiLinkList=getWikiLinks($str);
+    $wikiLinkList = getWikiLinks($str);
     if (!empty($wikiLinkList)) {
+        $query = "INSERT INTO wiki_links (range_id, from_keyword, to_keyword)
+                  VALUES (?, ?, ?)";
+        $statement = DBManager::get()->prepare($query);
+
         foreach ($wikiLinkList as $key => $value) {
-            $q="INSERT INTO wiki_links (range_id, from_keyword, to_keyword) VALUES ('$SessSemName[1]', '$keyword', '".decodeHTML($value)."')";
-            $db_wiki_list->query($q);
+            $statement->execute(array($SessSemName[1], $keyword, decodeHTML($value)));
         }
     }
-    $db_wiki_list->free();
 }
 
 /**
@@ -514,11 +557,15 @@ function deleteWikiPage($keyword, $version, $range_id) {
     if ($lv["version"] != $version) {
         throw new InvalidArgumentException(_('Die Version, die Sie löschen wollen, ist nicht die aktuellste. Überprüfen Sie, ob inzwischen eine aktuellere Version erstellt wurde.'));
     }
-    $q="DELETE FROM wiki WHERE keyword='$keyword' AND version='$version' AND range_id='$range_id'";
-    $db=new DB_Seminar;
+    
     NotificationCenter::postNotification('WikiPageWillDelete', array($range_id, $keyword));
-    $db->query($q);
+
+    $query = "DELETE FROM wiki WHERE keyword = ? AND version = ? AND range_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($keyword, $version, $range_id));
+
     NotificationCenter::postNotification('WikiPageDidDelete', array($range_id, $keyword));
+
     if (!keywordExists($keyword)) { // all versions have gone
         $addmsg = '<br>' . sprintf(_("Damit ist die Seite %s mit allen Versionen gelöscht."),'<b>'.$keyword.'</b>');
         $newkeyword = "WikiWikiWeb";
@@ -552,9 +599,11 @@ function deleteAllWikiPage($keyword, $range_id) {
     if (!$perm->have_studip_perm("tutor", $SessSemName[1])) {
         throw new AccessDeniedException(_('Sie haben keine Berechtigung, Seiten zu löschen.'));
     }
-    $q="DELETE FROM wiki WHERE keyword='$keyword' AND range_id='$range_id'";
-    $db=new DB_Seminar;
-    $db->query($q);
+    
+    $query = "DELETE FROM wiki WHERE keyword = ? AND range_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($keyword, $range_id));
+
     $message = MessageBox::info(sprintf(_('Die Seite %s wurde mit allen Versionen gelöscht.'), '<b>'.$keyword.'</b>'));
     PageLayout::postMessage($message);
     refreshBacklinks($keyword, "");
@@ -569,11 +618,8 @@ function deleteAllWikiPage($keyword, $range_id) {
 * @param  mode  string  Either "all" or "new", affects default sorting and page title.
 * @param  sortby  string  Different sortings of entries.
 **/
-function listPages($mode, $sortby=NULL) {
+function listPages($mode, $sortby = NULL) {
     global $SessSemName;
-
-    $db=new DB_Seminar;
-    $db2=new DB_Seminar;
 
     if ($mode=="all") {
         $selfurl = "?view=listall";
@@ -621,16 +667,28 @@ function listPages($mode, $sortby=NULL) {
     }
 
     if ($mode=="all") {
-        $q="SELECT keyword, MAX(chdate) AS lastchange, MAX(version) AS lastversion FROM wiki WHERE range_id='$SessSemName[1]' GROUP BY keyword " . $sort;
+        $query = "SELECT keyword, MAX(chdate) AS lastchange, MAX(version) AS lastversion
+                  FROM wiki
+                  WHERE range_id = ?
+                  GROUP BY keyword
+                  {$sort}";
+        $parameters = array($SessSemName[1]);
     } else if ($mode=="new") {
-        $q="SELECT keyword, MAX(chdate) AS lastchange, MAX(version) AS lastversion FROM wiki WHERE range_id='$SessSemName[1]' AND chdate > '$lastlogindate' GROUP BY keyword " . $sort;
+        $query = "SELECT keyword, MAX(chdate) AS lastchange, MAX(version) AS lastversion
+                  FROM wiki
+                  WHERE range_id = ? AND chdate > ?
+                  GROUP BY keyword
+                  {$sort}";
+        $parameters = array($SessSemName[1], $lastlogindate);
     }
-    $result=$db->query($q);
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute($parameters);
+    $pages = $statement->fetchAll(PDO::FETCH_ASSOC);
 
     // show pages
     begin_blank_table();
 
-    if ($db->affected_rows() == 0) {
+    if (count($pages) == 0) {
         PageLayout::postMessage(MessageBox::info($nopages));
     } else {
         echo "<tr><td class=\"blank\" colspan=\"2\">&nbsp;</td></tr>\n";
@@ -645,16 +703,24 @@ function listPages($mode, $sortby=NULL) {
         printf($s, 25,"left",  "<font size=-1><b>"._("von")."</b></font>");
         echo "</tr>";
 
-        $c=1;
-        while ($db->next_record()) {
+        $query = "SELECT user_id, version
+                  FROM wiki
+                  WHERE range_id = ? AND keyword = ? AND chdate = ?";
+        $meta_statement = DBManager::get()->prepare($query);
 
+        $c=1;
+        foreach ($pages as $page) {
             $class = ($c++ % 2) ? "steel1" : "steelgraulight";
 
-            $keyword=$db->f("keyword");
-            $lastchange=$db->f("lastchange");
-            $db2->query("SELECT user_id, version FROM wiki WHERE range_id='$SessSemName[1]' AND keyword='$keyword' AND chdate='$lastchange'");
-            $db2->next_record();
-            $userid=$db2->f("user_id");
+            $keyword    = $page['keyword'];
+            $lastchange = $page['lastchange'];
+
+            $meta_statement->execute(array($SessSemName[1], $keyword, $lastchange));
+            $temp = $meta_statement->fetch(PDO::FETCH_ASSOC);
+            $meta_statement->closeCursor();
+
+            $user_id = $temp['user_id'];
+            $version = $temp['version'];
 
             $tdheadleft="<td class=\"$class\" align=\"left\"><font size=\"-1\">";
             $tdheadcenter="<td class=\"$class\" align=\"center\"><font size=\"-1\">";
@@ -663,13 +729,13 @@ function listPages($mode, $sortby=NULL) {
             print($tdheadleft."<a href=\"".URLHelper::getLink("?keyword=" . urlencode($keyword) . "")."\">");
             print(htmlReady($keyword) ."</a>");
             print($tdtail);
-            print($tdheadcenter.$db2->f("version").$tdtail);
+            print($tdheadcenter.$version . $tdtail);
             print($tdheadleft.date("d.m.Y, H:i", $lastchange));
-            if ($mode=="new" && $db2->f("version")>1) {
+            if ($mode=="new" && $version > 1) {
                 print("&nbsp;(<a href=\"".URLHelper::getLink("?view=diff&keyword=".urlencode($keyword)."&versionssince=$lastlogindate")."\">"._("Änderungen")."</a>)");
             }
             print($tdtail);
-            print($tdheadleft.get_fullname($userid,'full',TRUE).$tdtail."</tr>");
+            print($tdheadleft.get_fullname($user_id,'full',TRUE).$tdtail."</tr>");
         }
     }
     echo "</table><p>&nbsp;</p>";
@@ -688,7 +754,6 @@ function searchWiki($searchfor, $searchcurrentversions, $keyword, $localsearch) 
     global $SessSemName;
     $range_id=$SessSemName[1];
 
-    $db=new DB_Seminar;
     $result=NULL;
 
     // check for invalid search string
@@ -698,21 +763,41 @@ function searchWiki($searchfor, $searchcurrentversions, $keyword, $localsearch) 
         $invalid_searchstring=1;
     } else {
         // make search string
-        $searchfori=addslashes($searchfor);
         if ($localsearch) {
-            $q="SELECT * FROM wiki WHERE range_id='$range_id' AND body LIKE '%$searchfori%' AND keyword='$keyword' ORDER BY version DESC";
+            $query = "SELECT *
+                      FROM wiki
+                      WHERE range_id = ? AND body LIKE CONCAT('%', ?, '%') AND keyword = ?
+                      ORDER BY version DESC";
+            $parameters = array($range_id, $searchfor, $keyword);
+//            $q="SELECT * FROM wiki WHERE range_id='$range_id' AND body LIKE '%$searchfori%' AND keyword='$keyword' ORDER BY version DESC";
         } else if (!$searchcurrentversions) {
             // search in all versions of all pages
-            $q="SELECT * FROM wiki WHERE range_id='$range_id' AND body LIKE '%$searchfori%' ORDER BY keyword ASC, version DESC";
+            $query = "SELECT *
+                      FROM wiki
+                      WHERE range_id = ? AND body LIKE CONCAT('%', ?, '%')
+                      ORDER BY keyword ASC, version DESC";
+            $parameters = array($range_id, $searchfor);
+//            $q="SELECT * FROM wiki WHERE range_id='$range_id' AND body LIKE '%$searchfori%' ORDER BY keyword ASC, version DESC";
         } else {
             // search only latest versions of all pages
-            $q="SELECT * FROM wiki AS w1 WHERE range_id='$range_id' AND version=(SELECT MAX(version) FROM wiki AS w2 WHERE w2.range_id='$range_id' AND w2.keyword=w1.keyword) AND w1.body LIKE '%$searchfori%' ORDER BY w1.keyword ASC";
+            $query = "SELECT *
+                      FROM wiki AS w1
+                      WHERE range_id = ? AND w1.body LIKE CONCAT('%', ?, '%') AND version = (
+                          SELECT MAX(version)
+                          FROM wiki AS w2
+                          WHERE w2.range_id =? AND w2.keyword = w1.keyword
+                      )
+                      ORDER BY w1.keyword ASC";
+             $parameters = array($range_id, $searchfor, $range_id);
+//            $q="SELECT * FROM wiki AS w1 WHERE range_id='$range_id' AND version=(SELECT MAX(version) FROM wiki AS w2 WHERE w2.range_id='$range_id' AND w2.keyword=w1.keyword) AND w1.body LIKE '%$searchfori%' ORDER BY w1.keyword ASC";
         }
-        $result=$db->query($q); //result wird nie benutzt... wofür?
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute($parameters);
+        $results = $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
     // quit if no pages found / search string was invalid
-    if ($invalid_searchstring || $db->affected_rows() == 0) {
+    if ($invalid_searchstring || count($results) == 0) {
         if ($invalid_searchstring) {
             $message = MessageBox::error(_('Suchbegriff zu kurz. Geben Sie mindestens drei Zeichen ein.'));
         } else {
@@ -747,12 +832,11 @@ function searchWiki($searchfor, $searchcurrentversions, $keyword, $localsearch) 
     $c=1;
     $last_keyword="";
     $last_keyword_count=0;
-    while ($db->next_record()) {
-
+    foreach ($results as $result) {
         if (!$localsearch) {
             // don't display more than one hit in a page's versions
             // offer link instead
-            if ($db->f("keyword")==$last_keyword) {
+            if ($result['keyword']==$last_keyword) {
                 $last_keyword_count++;
                 continue;
             } else if ($last_keyword_count>0) {
@@ -767,7 +851,7 @@ function searchWiki($searchfor, $searchcurrentversions, $keyword, $localsearch) 
                 print($tdheadleft."&nbsp;".$tdtail);
                 print("</tr>");
             }
-            $last_keyword=$db->f("keyword");
+            $last_keyword=$result['keyword'];
             $last_keyword_count=0;
         }
 
@@ -779,8 +863,8 @@ function searchWiki($searchfor, $searchcurrentversions, $keyword, $localsearch) 
         print("<tr>".$tdheadleft."&nbsp;"."$tdtail");
         // Pagename
         print($tdheadleft);
-        print("<a href=\"".URLHelper::getLink("?keyword=".$db->f("keyword")."&version=".$db->f("version")."&hilight=$searchfor&searchfor=$searchfor")."\">");
-        print($db->f("keyword")."</a>");
+        print("<a href=\"".URLHelper::getLink("?keyword=".$result['keyword']."&version=".$result['version']."&hilight=$searchfor&searchfor=$searchfor")."\">");
+        print($result['keyword']."</a>");
         print($tdtail);
         // display hit previews
         $offset=0; // step through text
@@ -788,8 +872,8 @@ function searchWiki($searchfor, $searchcurrentversions, $keyword, $localsearch) 
         $first_line=1; // don't print <br> before first hit
         print($tdheadleft);
         // find all occurences
-        while ($offset < strlen($db->f("body"))) {
-            $pos=stripos($db->f("body"), $searchfor,$offset);
+        while ($offset < strlen($result['body'])) {
+            $pos=stripos($result['body'], $searchfor,$offset);
             if ($pos===FALSE) break;
             $offset=$pos+1;
             if (($ignore_next_hits--)>0) {
@@ -800,7 +884,7 @@ function searchWiki($searchfor, $searchcurrentversions, $keyword, $localsearch) 
             }
             // show max 80 chars
             $fragment = '';
-            $split_fragment = preg_split('/('.preg_quote($searchfor,'/').')/i', substr($db->f("body"),max(0, $pos-40), 80), -1, PREG_SPLIT_DELIM_CAPTURE);
+            $split_fragment = preg_split('/('.preg_quote($searchfor,'/').')/i', substr($result['body'],max(0, $pos-40), 80), -1, PREG_SPLIT_DELIM_CAPTURE);
             for ($i = 0; $i < count($split_fragment); ++$i) {
                 if ($i % 2) {
                     $fragment .= '<span style="background-color:#FFFF88">';
@@ -818,7 +902,7 @@ function searchWiki($searchfor, $searchcurrentversions, $keyword, $localsearch) 
         print($tdtail);
         // version info
         print($tdheadleft);
-        print(date("d.m.Y, H:i", $db->f("chdate"))." ("._("Version")." ".$db->f("version").")");
+        print(date("d.m.Y, H:i", $result['chdate'])." ("._("Version")." ".$result['version'].")");
         print($tdtail);
         print "</tr>";
 
@@ -994,12 +1078,13 @@ function printAllWikiPages($range_id, $header) {
 **/
 function getAllWikiPages($range_id, $header, $fullhtml=TRUE) {
     global $SessSemName;
-    $db = new DB_Seminar();
-    $q = "SELECT DISTINCT keyword FROM wiki WHERE range_id='" . $SessSemName[1] . "' ORDER BY keyword DESC";
-    $db->query($q);
-    while($db->next_record()){
-        $allpages[] = htmlReady($db->f('keyword'));
-    }
+    
+    $query = "SELECT DISTINCT keyword FROM wiki WHERE range_id = ? ORDER BY keyword DESC";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($SessSemName[1]));
+    $allpages = $statement->fetchAll(PDO::FETCH_COLUMN);
+    $allpages = array_map('htmlReady', $allpages);
+
     $out=array();
     $visited=array(); // holds names of already visited pages
     $tovisit=array(); // holds names of pages yetto visit/expand
@@ -1411,12 +1496,16 @@ function end_blank_table() {
 **/
 function showDiffs($keyword, $versions_since) {
     global $SessSemName;
-    $db = new DB_Seminar;
-    $q = "SELECT * FROM wiki WHERE ";
-    $q .= "keyword = '$keyword' AND range_id='$SessSemName[1]' ";
-    $q .= "ORDER BY version DESC";
-    $result = $db->query($q);
-    if ($db->affected_rows() == 0) {
+    
+    $query = "SELECT *
+              FROM wiki
+              WHERE keyword = ? AND range_id = ?
+              ORDER BY version DESC";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($keyword, $SessSemName[1]));
+    $versions = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+    if (count($versions) === 0) {
         throw new InvalidArgumentException(_('Es gibt keine zu vergleichenden Versionen.'));
     }
 
@@ -1424,29 +1513,34 @@ function showDiffs($keyword, $versions_since) {
     wikiSinglePageHeader($wikiData, $keyword);
 
     echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">";
-    $db->next_record();
-    $last = $db->f("body");
-    $lastversion = $db->f("version");
-    $zusatz=getZusatz($db->Record);
-    while ($db->next_record()) {
-        echo "<tr>";
-        $current = $db->f("body");
-        $currentversion = $db->f("version");
+
+    $version     = array_shift($versions);
+    $last        = $version['body'];
+    $lastversion = $version['version'];
+    $zusatz      = getZusatz($version);
+
+    foreach ($versions as $version) {
+        echo '<tr>';
+        $current        = $version['body'];
+        $currentversion = $version['version'];
+
         $diffarray = '<b><font size=-1>'. _("Änderungen zu") . " </font> $zusatz</b><p>";
         $diffarray .= "<table cellpadding=0 cellspacing=0 border=0 width=\"100%\">\n";
         $diffarray .= do_diff($current, $last);
         $diffarray .= "</table>\n";
-        printcontent(0,0, $diffarray, "");
-        echo "</tr>";
-        $last = $current;
+        printcontent(0, 0, $diffarray, '');
+        echo '</tr>';
+
+        $last        = $current;
         $lastversion = $currentversion;
-        $zusatz=getZusatz($db->Record);
-        if ($versions_since && $db->f("chdate") < $versions_since) {
+        $zusatz      = getZusatz($version);
+        if ($versions_since && $version['chdate'] < $versions_since) {
             break;
         }
     }
-    echo "</table>     ";
-    $infobox=getDiffPageInfobox($keyword);
+    echo '</table>';
+
+    $infobox = getDiffPageInfobox($keyword);
     showPageFrameEnd($infobox);
 }
 
@@ -1491,15 +1585,13 @@ function showComboDiff($keyword, $db=NULL) {
     echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">";
 
     // create combodiff
-    if (!$db) {
-        $db=new DB_Seminar();
-    }
-    $wd1 = getWikiPage($keyword, $version1, $db);
+
+    $wd1 = getWikiPage($keyword, $version1);
     $diffarray1 = toDiffLineArray($wd1['body'], $wd1['user_id']);
     $current_version = $version1 + 1;
     $differ = new line_diff();
     while ($current_version <= $version2) {
-        $wd2 = getWikiPage($keyword, $current_version, $db);
+        $wd2 = getWikiPage($keyword, $current_version);
         if ($wd2) {
             $diffarray2 = toDiffLineArray($wd2['body'], $wd2['user_id']);
             $newarray = $differ->arr_compare("diff", $diffarray1, $diffarray2);

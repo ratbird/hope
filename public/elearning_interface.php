@@ -46,13 +46,13 @@ Navigation::activateItem('/course/elearning/' . Request::get('view'));
 
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
-$search_key = Request::quoted('search_key');
+$search_key = Request::get('search_key');
 $cms_select = Request::option('cms_select');
 $view = Request::option('view');
 $open_all = Request::option('open_all');
 $close_all = Request::option('close_all');
-$new_account_cms = Request::quoted('new_account_cms');
-$module_system_type = Request::quoted('module_system_type');
+$new_account_cms = Request::option('new_account_cms');
+$module_system_type = Request::option('module_system_type');
 $module_id = Request::option('module_id');
 $module_type = Request::option('module_type');
 $anker_target = Request::option('anker_target');
@@ -96,20 +96,20 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
 
     // ggf. neuen Ilias4-Kurs anlegen
     if (Request::submitted('create_course') AND $rechte) {
-        ELearningUtils::loadClass($_REQUEST["cms_select"]);
-        if ((method_exists($connected_cms[$_REQUEST["cms_select"]], "createCourse")))
-            if ($connected_cms[$_REQUEST["cms_select"]]->createCourse($SessSemName[1]))
+        ELearningUtils::loadClass($cms_select);
+        if ((method_exists($connected_cms[$cms_select], "createCourse")))
+            if ($connected_cms[$cms_select]->createCourse($SessSemName[1]))
                 $messages["info"] .= "Kurs wurde angelegt.<br>";
     }
 
 // ggf. bestehenden Ilias4-Kurs zuordnen
     if (Request::submitted('connect_course')) {
-        if ((ObjectConnections::getConnectionModuleId($_REQUEST["connect_course_sem_id"], "crs", $_REQUEST["cms_select"])) AND ($perm->have_studip_perm("dozent", $_REQUEST["connect_course_sem_id"]))) {
-            ObjectConnections::setConnection($SessSemName[1], ObjectConnections::getConnectionModuleId($_REQUEST["connect_course_sem_id"], "crs", $_REQUEST["cms_select"]), "crs", $_REQUEST["cms_select"]);
+        if ((ObjectConnections::getConnectionModuleId(Request::option("connect_course_sem_id"), "crs", $cms_select)) AND ($perm->have_studip_perm("dozent", Request::option("connect_course_sem_id")))) {
+            ObjectConnections::setConnection($SessSemName[1], ObjectConnections::getConnectionModuleId(Request::option("connect_course_sem_id"), "crs", $cms_select), "crs", $cms_select);
             $messages["info"] .= "Zuordnung wurde gespeichert.<br>";
-            ELearningUtils::loadClass($_REQUEST["cms_select"]);
-            if ((method_exists($connected_cms[$_REQUEST["cms_select"]], "updateConnections")))
-                $connected_cms[$_REQUEST["cms_select"]]->updateConnections( ObjectConnections::getConnectionModuleId($_REQUEST["connect_course_sem_id"], "crs", $_REQUEST["cms_select"]) );
+            ELearningUtils::loadClass($cms_select);
+            if ((method_exists($connected_cms[$cms_select], "updateConnections")))
+                $connected_cms[$cms_select]->updateConnections( ObjectConnections::getConnectionModuleId(Request::option("connect_course_sem_id"), "crs", $cms_select) );
         }
     }
 

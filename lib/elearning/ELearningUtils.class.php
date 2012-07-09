@@ -165,7 +165,7 @@ class ELearningUtils
             foreach($ELEARNING_INTERFACE_MODULES[$cms]["types"] as $type => $info)
             {
                 $output .=  "<option value=\"$type\"";
-                if ($GLOBALS["module_type_" . $cms] == $type)
+                if (Request::get("module_type_" . $cms) == $type)
                     $output .=  " selected";
                 $output .=  ">" . $info["name"] . "</option>\n";
             }
@@ -206,7 +206,7 @@ class ELearningUtils
         $output .= "<input type=\"HIDDEN\" name=\"anker_target\" value=\"search\">\n";
         $output .= "<input type=\"HIDDEN\" name=\"view\" value=\"" . $view . "\">\n";
         $output .= "<input type=\"HIDDEN\" name=\"cms_select\" value=\"" . $cms_select . "\">\n";
-        $output .= "<input name=\"search_key\" size=\"30\" style=\"vertical-align:middle;font-size:9pt;\" value=\"" . $search_key . "\">\n";
+        $output .= "<input name=\"search_key\" size=\"30\" style=\"vertical-align:middle;font-size:9pt;\" value=\"" . htmlReady($search_key) . "\">\n";
 
         $output .=  "&nbsp;";
         $output .=  Button::create(_('Suchen'));
@@ -228,11 +228,11 @@ class ELearningUtils
     */
     function getNewModuleForm($cms)
     {
-        global $ELEARNING_INTERFACE_MODULES, $connected_cms, $module_type;
+        global $ELEARNING_INTERFACE_MODULES, $connected_cms;
 
         if (sizeof($ELEARNING_INTERFACE_MODULES[$cms]["types"]) == 1)
             foreach($ELEARNING_INTERFACE_MODULES[$cms]["types"] as $type => $info)
-                $GLOBALS["module_type_" . $cms] = $type;
+                Request::set("module_type_" . $cms, $type);
         $link = $connected_cms[$cms]->link->getNewModuleLink();
         if ($link == false)
             return false;
@@ -242,7 +242,7 @@ class ELearningUtils
         $output .= "<table border=\"0\" cellspacing=\"0\" cellpadding=\"6\" width=\"100%\">";
         $output .= "<tr><td>";
         foreach ($ELEARNING_INTERFACE_MODULES as $cms_type => $cms_data)
-            $output .= "<input type=\"HIDDEN\" name=\"module_type_" . $cms_type . "\" value=\"" . $GLOBALS["module_type_" . $cms_type] . "\">\n";
+            $output .= "<input type=\"HIDDEN\" name=\"module_type_" . $cms_type . "\" value=\"" . Request::option("module_type_" . $cms_type) . "\">\n";
 //      $output .= "<input type=\"HIDDEN\" name=\"module_type_cms\" value=\"" . $cms . "\">\n";
         $output .= "<font size=\"-1\">";
         $output .= sprintf(_("Typ f&uuml;r neues Lernmodul: %s"), ELearningUtils::getTypeSelectbox($cms));
@@ -301,10 +301,16 @@ class ELearningUtils
     */
     function getNewAccountForm(&$new_account_cms)
     {
-        global $connected_cms, $cms_select, $search_key, $view, $new_account_step, $current_module,
-            $start, $next, $go_back, $assign, $ext_username, $ext_password, $ext_password_2, $messages, $ref_id, $module_type, $assign,
+        global $connected_cms, $cms_select, $view, $current_module, $messages,
             $RELATIVE_PATH_ELEARNING_INTERFACE, $ELEARNING_INTERFACE_MODULES;
 
+        $new_account_step = Request::int('new_account_step');
+        $ext_password = Request::get('ext_password');
+        $ext_password_2 = Request::get('ext_password_2');
+        $ext_username = Request::get('ext_username');
+        $ref_id = Request::option('ref_id');
+        $module_type = Request::option('module_type');
+        
         ELearningUtils::loadClass($new_account_cms);
 
 //      echo "nas:$new_account_step.cm:$current_module.n:$next.gb:$go_back.a:$assign.<br>";

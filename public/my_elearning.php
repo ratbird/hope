@@ -23,10 +23,9 @@ require '../lib/bootstrap.php';
 unregister_globals();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", 'user' => "Seminar_User"));
 $perm->check("autor");
-$new_account_cms = Request::quoted('new_account_cms');
+$new_account_cms = Request::option('new_account_cms');
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
-require_once ('config.inc.php');
 require_once ('lib/visual.inc.php');
 
 PageLayout::setTitle(_("Meine Lernmodule und Benutzer-Accounts"));

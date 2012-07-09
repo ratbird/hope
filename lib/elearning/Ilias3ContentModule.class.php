@@ -135,7 +135,10 @@ class Ilias3ContentModule extends ContentModule
     */
     function setConnection($seminar_id)
     {
-        global $connected_cms, $messages, $SessSemName, $DEFAULT_LANGUAGE, $seminar_id, $write_permission, $write_permission_autor;
+        global $connected_cms, $messages, $SessSemName, $DEFAULT_LANGUAGE;
+        
+        $write_permission = Request::option("write_permission");
+        $write_permission_autor = Request::option("write_permission_autor");
         
         $crs_id = ObjectConnections::getConnectionModuleId($seminar_id, "crs", $this->cms_type);
 //      echo "SET?".$this->cms_type;

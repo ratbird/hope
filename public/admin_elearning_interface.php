@@ -35,8 +35,6 @@ $perm->check("root");
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 // -- here you have to put initialisations for the current page
 
-require_once ('config.inc.php');
-
 require_once ('lib/elearning/ELearningUtils.class.php');
 require_once ('lib/elearning/ConnectedCMS.class.php');
 
@@ -46,7 +44,7 @@ Navigation::activateItem('/admin/config/elearning');
 
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
-$cms_select = Request::quoted('cms_select');
+$cms_select = Request::option('cms_select');
 
 if (get_config('ELEARNING_INTERFACE_ENABLE'))
 {

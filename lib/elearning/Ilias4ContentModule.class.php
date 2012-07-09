@@ -46,7 +46,7 @@ class Ilias4ContentModule extends Ilias3ContentModule
     {
         global $connected_cms, $messages;
 
-        $write_permission = $_POST["write_permission"];
+        $write_permission = Request::option("write_permission");
 
         $crs_id = ObjectConnections::getConnectionModuleId($seminar_id, "crs", $this->cms_type);
         $connected_cms[$this->cms_type]->soap_client->setCachingStatus(false);
@@ -65,7 +65,7 @@ class Ilias4ContentModule extends Ilias3ContentModule
 
         $ref_id = $this->getId();
 
-        if ($_REQUEST["copy_object"] == "1") {
+        if (Request::get("copy_object") == "1") {
             $ref_id = $connected_cms[$this->cms_type]->soap_client->copyObject($this->id, $crs_id);
         } else {
             $ref_id = $connected_cms[$this->cms_type]->soap_client->addReference($this->id, $crs_id);

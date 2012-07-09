@@ -29,7 +29,7 @@ class StudipSoapClient
         if ($this->soap_client->fault)
         {
             $this->faultstring = $result["faultstring"];
-            if (!in_array($this->faultstring, array("Session not valid","Session Invalid")))
+            if (!in_array(strtolower($this->faultstring), array("session not valid","session invalid", "session idled")))
                 $this->error .= "<b>" . sprintf(_("SOAP-Fehler, Funktion \"%s\":"), $method) . "</b> " . $result["faultstring"] . " (" . $result["faultcode"] . ")<br>"; //.implode($params,"-");
         }
         else

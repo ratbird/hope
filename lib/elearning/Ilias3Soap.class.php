@@ -110,7 +110,7 @@ class Ilias3Soap extends StudipSoapClient
         {
             $result = parent::call($method, $params);
             // if Session is expired, re-login and try again
-            if (($method != "login") AND $this->soap_client->fault AND ($this->faultstring == "Session not valid" || $this->faultstring == "Session invalid" ))
+            if (($method != "login") AND $this->soap_client->fault AND in_array(strtolower($this->faultstring), array("session not valid","session invalid", "session idled")) )
             {
 //              echo "LOGIN AGAIN.";
                 $caching_status = $this->caching_active;

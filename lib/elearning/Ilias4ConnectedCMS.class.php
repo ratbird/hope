@@ -149,14 +149,17 @@ class Ilias4ConnectedCMS extends Ilias3ConnectedCMS
      */
     function getPreferences()
     {
-        global $connected_cms, $role_template_name, $cat_name, $style_setting;
+        global $connected_cms;
+
+        $role_template_name = Request::get('role_template_name');
+        $cat_name = Request::get('cat_name');
 
         $this->soap_client->setCachingStatus(false);
 
         if ($cat_name != "") {
             $cat = $this->soap_client->getReferenceByTitle( trim( $cat_name ), "cat");
             if ($cat == false) {
-                $messages["error"] .= sprintf(_("Das Objekt mit dem Namen \"%s\" wurde im System %s nicht gefunden."), $cat_name, $this->getName()) . "<br>\n";
+                $messages["error"] .= sprintf(_("Das Objekt mit dem Namen \"%s\" wurde im System %s nicht gefunden."), htmlReady($cat_name), htmlReady($this->getName())) . "<br>\n";
             } elseif ($cat != "") {
                 ELearningUtils::setConfigValue("category_id", $cat, $this->cms_type);
                 $this->main_category_node_id = $cat;
@@ -165,7 +168,7 @@ class Ilias4ConnectedCMS extends Ilias3ConnectedCMS
 
         if (($this->main_category_node_id != false) AND (ELearningUtils::getConfigValue("user_category_id", $this->cms_type) == "")) {
             $object_data["title"] = sprintf(_("User-Daten"));
-            $object_data["description"] = sprintf(_("Hier befinden sich die persönlichen Ordner der Stud.IP-User."), $this->getName());
+            $object_data["description"] = _("Hier befinden sich die persönlichen Ordner der Stud.IP-User.");
             $object_data["type"] = "cat";
             $object_data["owner"] = $this->user->getId();
             $user_cat = $connected_cms[$this->cms_type]->soap_client->addObject($object_data, $connected_cms[$this->cms_type]->main_category_node_id);
@@ -173,14 +176,14 @@ class Ilias4ConnectedCMS extends Ilias3ConnectedCMS
                 $this->user_category_node_id = $user_cat;
                 ELearningUtils::setConfigValue("user_category_id", $user_cat, $this->cms_type);
             } else {
-                $messages["error"] .= sprintf(_("Die Kategorie für User-Daten konnte nicht angelegt werden."), $cat_name, $this->getName()) . "<br>\n";
+                $messages["error"] .= _("Die Kategorie für User-Daten konnte nicht angelegt werden.") . "<br>\n";
             }
         }
 
         if ($role_template_name != "") {
             $role_template = $this->soap_client->getObjectByTitle( trim( $role_template_name ), "rolt" );
             if ($role_template == false) {
-                $messages["error"] .= sprintf(_("Das Rollen-Template mit dem Namen \"%s\" wurde im System %s nicht gefunden."), $role_template_name, $this->getName()) . "<br>\n";
+                $messages["error"] .= sprintf(_("Das Rollen-Template mit dem Namen \"%s\" wurde im System %s nicht gefunden."), htmlReady($role_template_name), htmlReady($this->getName())) . "<br>\n";
             }
             if (is_array($role_template)) {
                 ELearningUtils::setConfigValue("user_role_template_id", $role_template["obj_id"], $this->cms_type);

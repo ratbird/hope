@@ -97,15 +97,20 @@ class Ilias3ConnectedCMS extends ConnectedCMS
     */
     function getPreferences()
     {
-        global $connected_cms, $submit, $role_template_name, $cat_name, $style_setting, $encrypt_passwords;
-    
+        global $connected_cms;
+        
+        $role_template_name = Request::get('role_template_name');
+        $cat_name = Request::get('cat_name');
+        $style_setting = Request::option('style_setting');
+        $encrypt_passwords = Request::option('encrypt_passwords');
+        
         $this->soap_client->setCachingStatus(false);
 
         if ($cat_name != "")
         {
             $cat = $this->soap_client->getReferenceByTitle( trim( $cat_name ), "cat");
             if ($cat == false)
-                $messages["error"] .= sprintf(_("Das Objekt mit dem Namen \"%s\" wurde im System %s nicht gefunden."), $cat_name, $this->getName()) . "<br>\n";
+                $messages["error"] .= sprintf(_("Das Objekt mit dem Namen \"%s\" wurde im System %s nicht gefunden."), htmlReady($cat_name), htmlReady($this->getName())) . "<br>\n";
             if ($cat != "")
             {
                 ELearningUtils::setConfigValue("category_id", $cat, $this->cms_type);
@@ -117,7 +122,7 @@ class Ilias3ConnectedCMS extends ConnectedCMS
         {
             $role_template = $this->soap_client->getObjectByTitle( trim( $role_template_name ), "rolt" );
             if ($role_template == false)
-                $messages["error"] .= sprintf(_("Das Rollen-Template mit dem Namen \"%s\" wurde im System %s nicht gefunden."), $role_template_name, $this->getName()) . "<br>\n";
+                $messages["error"] .= sprintf(_("Das Rollen-Template mit dem Namen \"%s\" wurde im System %s nicht gefunden."), htmlReady($role_template_name), htmlReady($this->getName())) . "<br>\n";
             if (is_array($role_template))
             {
                 ELearningUtils::setConfigValue("user_role_template_id", $role_template["obj_id"], $this->cms_type);
@@ -126,7 +131,7 @@ class Ilias3ConnectedCMS extends ConnectedCMS
             }
         }
 
-        if ($submit != "")
+        if (Request::submitted('submit'))
         {
             ELearningUtils::setConfigValue("user_style", $style_setting, $this->cms_type);
             ELearningUtils::setConfigValue("user_skin", $style_setting, $this->cms_type);
@@ -152,7 +157,7 @@ class Ilias3ConnectedCMS extends ConnectedCMS
         if ($error != false)
             echo sprintf(_("Beim Herstellen der SOAP-Verbindung trat folgender Fehler auf:")) . "<br><br>" . $error;
         else
-            echo sprintf(_("Die SOAP-Verbindung zum Klienten \"%s\" wurde hergestellt, der Name des Administrator-Accounts ist \"%s\"."), $this->soap_data["client"], $this->soap_data["username"]);
+            echo sprintf(_("Die SOAP-Verbindung zum Klienten \"%s\" wurde hergestellt, der Name des Administrator-Accounts ist \"%s\"."), htmlReady($this->soap_data["client"]), htmlReady($this->soap_data["username"]));
         echo "<br>\n";
         echo "<br>\n";
         echo "</td></tr><tr><td  width=30% align=\"left\"><font size=\"-1\">";
@@ -165,7 +170,7 @@ class Ilias3ConnectedCMS extends ConnectedCMS
         echo "</td></tr><tr><td></td><td><font size=\"-1\">";
         echo " (ID " . $this->main_category_node_id;
         if ($cat["description"] != "")
-            echo ", " . _("Beschreibung: ") . $cat["description"];
+            echo ", " . _("Beschreibung: ") . htmlReady($cat["description"]);
         echo ")";
         echo "<br>\n";
         echo "<br>\n";
@@ -211,7 +216,7 @@ class Ilias3ConnectedCMS extends ConnectedCMS
 
         echo "</td></tr>";
         echo "</table>";
-        echo "<center>" . Buttton::create(_('übernehmen'), 'submit') . "</center><br>";
+        echo "<center>" . Button::create(_('übernehmen'), 'submit') . "</center><br>";
         echo "<br>\n";
 
         parent::getPreferences();

@@ -132,10 +132,10 @@ class Ilias3ConnectedLink extends ConnectedLink
     */
     function getNewModuleLink()
     {
-        global $connected_cms, $module_type, $auth;
+        global $connected_cms, $auth;
         $output = "\n";
 //      echo "NML.";
-        if (($GLOBALS["module_type_" . $this->cms_type] != ""))
+        if ((Request::get("module_type_" . $this->cms_type) != ""))
         {
 //          echo "TYPE.";
             if ($connected_cms[$this->cms_type]->user->category == "")
@@ -151,7 +151,7 @@ class Ilias3ConnectedLink extends ConnectedLink
 //              . "&sess_id=" . $connected_cms[$this->cms_type]->user->getSessionId()
                 . "&ref_id=" . $connected_cms[$this->cms_type]->user->category
                 . $auth_data
-                . "&type=" . $GLOBALS["module_type_" . $this->cms_type] . "&target=new"), array('target'=> '_blank'));
+                . "&type=" . Request::option("module_type_" . $this->cms_type) . "&target=new"), array('target'=> '_blank'));
 //          echo $output . ".";
         }
         $user_crs_role = $connected_cms[$this->cms_type]->crs_roles[$auth->auth["perm"]];

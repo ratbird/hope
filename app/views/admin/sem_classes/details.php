@@ -33,29 +33,21 @@
             </td>
             <td>
                 <ul id="sem_type_list">
-                    <? foreach ($sem_class->getSemTypes() as $id => $type) : ?>
-                    <? $number_of_seminars = $type->countSeminars() ?>
-                    <li id="sem_type_<?= htmlReady($id) ?>">
-                        <?= htmlReady($type['name']) ?>
-                        (<?= sprintf(_("%s Veranstaltungen"), $number_of_seminars ? $number_of_seminars : _("keine")) ?>)
-                        <?= $number_of_seminars == 0 ? '<a href="#" class="sem_type_delete" onClick="return false;">'.Assets::img("icons/16/blue/trash.png")."</a>" : "" ?>
-                    </li>
+                    <? foreach ($sem_class->getSemTypes() as $id => $sem_type) : ?>
+                    <?= $this->render_partial("admin/sem_classes/_sem_type.php", array('sem_type' => $sem_type)) ?>
                     <? endforeach ?>
-                    
                 </ul>
-                <ul style="list-style-type: none;">
-                    <li>
-                        <div style="display: none;">
-                            <input type="text" id="new_sem_type" onBlur="if (!this.value) jQuery(this).closest('li').children().toggle();">
-                            <a href="" onClick="STUDIP.admin_sem_class.add_sem_type(); return false;"><?= Assets::img("icons/16/yellow/arr_2up", array('class' => "text-bottom", "title" => _("hinzufügen"))) ?></a>
-                        </div>
-                        <div>
-                            <a href="#" onClick="jQuery(this).closest('li').children().toggle(); jQuery('#new_sem_type').focus(); return false;">
-                                <?= Assets::img("icons/16/blue/plus", array('class' => "text-bottom", "title" => _("Seminartyp hinzufügen"))) ?>
-                            </a>
-                        </div>
-                    </li>
-                </ul>
+                <div class="add">
+                    <div style="display: none; margin-left: 37px;">
+                        <input type="text" id="new_sem_type" onBlur="if (!this.value) jQuery(this).closest('.add').children().toggle();">
+                        <a href="" onClick="STUDIP.admin_sem_class.add_sem_type(); return false;"><?= Assets::img("icons/16/yellow/arr_2up", array('class' => "text-bottom", "title" => _("hinzufügen"))) ?></a>
+                    </div>
+                    <div style="margin-left: 21px;">
+                        <a href="#" onClick="jQuery(this).closest('.add').children().toggle(); jQuery('#new_sem_type').focus(); return false;">
+                            <?= Assets::img("icons/16/blue/plus", array('class' => "text-bottom", "title" => _("Seminartyp hinzufügen"))) ?>
+                        </a>
+                    </div>
+                </div>
             </td>
         </tr>
         <? foreach (array("dozent","tutor","autor") as $role) : ?>
@@ -399,9 +391,28 @@ STUDIP.admin_sem_class = {
                 jQuery("#sem_type_delete_question").dialog("close");
             }
         });
+    },
+    'rename_sem_type': function () {
+        jQuery(this).closest('span.name_container').children().toggle();
+        var name = this.value;
+        var old_name = jQuery(this).closest(".name_container").find(".name_html");
+        var sem_type = jQuery(this).closest("li").attr('id');
+        sem_type = sem_type.substr(sem_type.lastIndexOf("_") + 1);
+        jQuery.ajax({
+            'url': STUDIP.ABSOLUTE_URI_STUDIP + "dispatch.php/admin/sem_classes/rename_sem_type",
+            'data': {
+                'sem_type': sem_type,
+                'name': name
+            },
+            'type': "post",
+            'success': function () {
+                old_name.text(name);
+            }
+        });
     }
 }
 jQuery(".sem_type_delete").live("click", STUDIP.admin_sem_class.delete_sem_type_question);
+jQuery(".name_input > input").live("blur", STUDIP.admin_sem_class.rename_sem_type);
 jQuery(STUDIP.admin_sem_class.make_sortable);
 jQuery("div[container] > div.droparea > div.plugin select[name=sticky]").change(function () {
     if (this.value === "sticky") {

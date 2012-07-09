@@ -978,6 +978,14 @@ table.attribute_table > tbody > tr > td {
   padding-bottom:15px;
 }
 table.attribute_table ul { margin:0px; }
+table.attribute_table ul#sem_type_list > li { height: 20px; }
+table.attribute_table ul#sem_type_list > li .sem_type_delete, table.attribute_table ul#sem_type_list > li .sem_type_edit {
+  display: none;
+  vertical-align: middle;
+}
+table.attribute_table ul#sem_type_list > li:hover .sem_type_delete, table.attribute_table ul#sem_type_list > li:hover .sem_type_edit {
+    display: inline;
+}
 table.attribute_table div[container] {
   display:inline-block;
   width:150px;

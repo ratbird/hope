@@ -40,6 +40,15 @@ table.attribute_table {
     ul {
         margin: 0px;
     }
+    ul#sem_type_list > li {
+        height: 20px;
+    }
+    ul#sem_type_list > li .sem_type_delete, ul#sem_type_list > li .sem_type_edit {
+        display: none;
+    }
+    ul#sem_type_list > li:hover .sem_type_delete, ul#sem_type_list > li:hover .sem_type_edit {
+        display: inline;
+    }
     div[container] {
         display: inline-block;
         width: 150px;

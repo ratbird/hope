@@ -129,14 +129,22 @@ class Admin_SemClassesController extends AuthenticatedController
                 'sem_class' => Request::get("sem_class")
             ));
             $id = DBManager::get()->lastInsertId();
-            $this->render_text(
-                '<li id="sem_type_'.$id.'">'.
-                htmlReady($name).
-                ' ('._("Keine veranstaltungen").') '.
-                '<a href="#" class="sem_type_delete" onClick="return false;">'.Assets::img("icons/16/blue/trash.png")."</a>"
-                .'</li>' .
-            '');
+            $GLOBALS['SEM_TYPE'] = SemType::refreshTypes();
+            $this->sem_type = $GLOBALS['SEM_TYPE'][$id];
+
+            $this->render_template(
+                "admin/sem_classes/_sem_type.php"
+            );
         }
+    }
+
+    public function rename_sem_type_action() {
+        $sem_type = $GLOBALS['SEM_TYPE'][Request::get("sem_type")];
+        if ($sem_type) {
+            $sem_type->set('name', studip_utf8decode(Request::get("name")));
+            $sem_type->store();
+        }
+        $this->render_nothing();
     }
 
     public function delete_sem_type_action() {

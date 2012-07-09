@@ -52,7 +52,7 @@ class SemType implements ArrayAccess
         $db = DBManager::get();
         $statement = $db->prepare("SELECT COUNT(*) FROM seminare WHERE status = :sem_type ");
         $statement->execute(array('sem_type' => $this->data['id']));
-        return $statement->fetch(PDO::FETCH_COLUMN, 0);
+        return (int) $statement->fetch(PDO::FETCH_COLUMN, 0);
     }
     
     /**
@@ -62,7 +62,7 @@ class SemType implements ArrayAccess
     public function store() {
         $db = DBManager::get();
         $statement = $db->prepare(
-            "UPDATE sem_classes " .
+            "UPDATE sem_types " .
                 "SET name = :name, " .
                 "class = :class, " .
                 "chdate = UNIX_TIMESTAMP() " .
@@ -70,8 +70,30 @@ class SemType implements ArrayAccess
         "");
         return $statement->execute(array(
             'id' => $this->data['id'],
-            'name' => $this->data['name']
+            'name' => $this->data['name'],
+            'class' => $this->data['class']
         ));
+    }
+
+    /**
+     * Deletes the sem_type-object. Will only delete,
+     * if there are no seminars in this sem_type.
+     * Remember to refresh the global $SEM_TYPE array.
+     * @return boolean : success of deletion
+     */
+    public function delete() {
+        if ($this->countSeminars() === 0) {
+            $db = DBManager::get();
+            $statement = $db->prepare(
+                "DELETE FROM sem_types " .
+                "WHERE id = :id ".
+            "");
+            return $statement->execute(array(
+                'id' => $this->data['id']
+            ));
+        } else {
+            return false;
+        }
     }
     
     /**
@@ -170,6 +192,11 @@ class SemType implements ArrayAccess
             }
         }
         return self::$sem_types;
+    }
+
+    static public function refreshTypes() {
+        self::$sem_types = null;
+        return self::getTypes();
     }
         
     /**

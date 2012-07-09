@@ -99,7 +99,8 @@ class SemClass implements ArrayAccess
      * the old $SEM_CLASS style.
      * @param integer | array $data 
      */
-    public function __construct($data) {
+    public function __construct($data)
+    {
         $db = DBManager::get();
         if (is_int($data)) {
             $statement = $db->prepare("SELECT * FROM sem_classes WHERE id = :id ");
@@ -110,6 +111,8 @@ class SemClass implements ArrayAccess
         }
         if ($this->data['modules']) {
             $this->data['modules'] = self::object2array(json_decode($this->data['modules']));
+        } else {
+            $this->data['modules'] = array();
         }
     }
     
@@ -117,18 +120,16 @@ class SemClass implements ArrayAccess
      * Returns the number of seminars of this sem_class in Stud.IP
      * @return integer 
      */
-    public function countSeminars() {
+    public function countSeminars()
+    {
         $db = DBManager::get();
-        $sem_types = array();
+        $sum = 0;
         foreach ($GLOBALS['SEM_TYPE'] as $sem_type) {
             if ($sem_type['class'] == $this->data['id']) {
-                $sem_types[] = $this->data['id'];
+                $sum += $sem_type->countSeminars();
             }
         }
-        $statement = $db->prepare("SELECT COUNT(*) FROM seminare WHERE status IN (:sem_types) ");
-        $statement->bindParam("sem_types", $sem_types, StudipPDO::PARAM_ARRAY);
-        $statement->execute();
-        return $statement->fetch(PDO::FETCH_COLUMN, 0);
+        return $sum;
     }
     
     /**
@@ -137,7 +138,8 @@ class SemClass implements ArrayAccess
      * @param string $slot
      * @return string 
      */
-    public function getSlotModule($slot) {
+    public function getSlotModule($slot)
+    {
         if (in_array($slot, self::$slots)) {
             return $this->data[$slot];
         } else {
@@ -150,7 +152,8 @@ class SemClass implements ArrayAccess
      * @param string $slot
      * @param string $module (coremodule or classname of plugin)
      */
-    public function setSlotModule($slot, $module) {
+    public function setSlotModule($slot, $module)
+    {
         if (in_array($slot, self::$slots)) {
             $this->data[$slot] = $module ? $module : null;
         }
@@ -161,7 +164,8 @@ class SemClass implements ArrayAccess
      * @param string $modulename
      * @return array('sticky' => (bool), 'activated' => (bool))
      */
-    public function getModuleMetadata($modulename) {
+    public function getModuleMetadata($modulename)
+    {
         return $this->data['modules'][$modulename];
     }
     
@@ -169,7 +173,8 @@ class SemClass implements ArrayAccess
      * Sets the metadata for each module at once.
      * @param array $module_array: array($module_name => array('sticky' => (bool), 'activated' => (bool)), ...)
      */
-    public function setModules($module_array) {
+    public function setModules($module_array)
+    {
         $this->data['modules'] = $module_array;
     }
     
@@ -177,7 +182,8 @@ class SemClass implements ArrayAccess
      * Returns all metadata of the modules at once.
      * @return array: array($module_name => array('sticky' => (bool), 'activated' => (bool)), ...)
      */
-    public function getModules() {
+    public function getModules()
+    {
         return $this->data['modules'];
     }
     
@@ -186,7 +192,8 @@ class SemClass implements ArrayAccess
      * @param string $modulename
      * @return boolean 
      */
-    public function isModuleAllowed($modulename) {
+    public function isModuleAllowed($modulename)
+    {
         return !$this->data['modules'][$modulename] 
             || !$this->data['modules'][$modulename]['sticky']
             ||  $this->data['modules'][$modulename]['activated']
@@ -198,7 +205,8 @@ class SemClass implements ArrayAccess
      * @param string $module
      * @return boolean 
      */
-    public function isModuleMandatory($module) {
+    public function isModuleMandatory($module)
+    {
         return $this->data['modules'][$module]['sticky']
             && ($this->data['modules'][$module]['activated']
                 || $this->isSlotModule($module));
@@ -210,7 +218,8 @@ class SemClass implements ArrayAccess
      * @param string  $slot
      * @return boolean 
      */
-    public function isSlotMandatory($slot) {
+    public function isSlotMandatory($slot)
+    {
         $module = $this->getSlotModule($slot);
         return $module && $this->isModuleMandatory($module);
     }
@@ -221,7 +230,8 @@ class SemClass implements ArrayAccess
      * @param string $module
      * @return boolean 
      */
-    public function isSlotModule($module) {
+    public function isSlotModule($module)
+    {
         foreach (self::$slots as $slot) {
             if ($module === $this->getSlotModule($slot)) {
                 return true;
@@ -235,10 +245,10 @@ class SemClass implements ArrayAccess
      * @param string $slot_or_plugin
      * @return StudipModule | null
      */
-    public function getModule($slot_or_plugin) {
+    public function getModule($slot_or_plugin)
+    {
         $module = $this->getSlotModule($slot_or_plugin);
         if ($module && $this->isModuleAllowed($module)) {
-            $course_id = $_SESSION['SessionSeminar'];
             if (in_array($module, self::$core_modules)) {
                 return new $module();
             }
@@ -255,7 +265,8 @@ class SemClass implements ArrayAccess
      * @param string $slot
      * @return array('navigation_name' => Navigation $nav, ...)
      */
-    public function getNavigationForSlot($slot) {
+    public function getNavigationForSlot($slot)
+    {
         $module = $this->getModule($slot);
         if ($module) {
             return (array) $module->getTabNavigation($_SESSION['SessionSeminar']);
@@ -264,7 +275,8 @@ class SemClass implements ArrayAccess
         }
     }
     
-    public function getSemTypes() {
+    public function getSemTypes()
+    {
         $types = array();
         foreach (SemType::getTypes() as $id => $type) {
             if ($type['class'] == $this->data['id']) {
@@ -278,7 +290,8 @@ class SemClass implements ArrayAccess
      * stores all data in the database 
      * @return boolean success
      */
-    public function store() {
+    public function store()
+    {
         $db = DBManager::get();
         $statement = $db->prepare(
             "UPDATE sem_classes " .
@@ -367,13 +380,42 @@ class SemClass implements ArrayAccess
                 : null
         ));
     }
+
+    /**
+     * Deletes the sem_class-object and all its sem_types. Will only delete,
+     * if there are no seminars in this sem_class.
+     * Remember to refresh the global $SEM_CLASS and $SEM_TYPE array.
+     * @return boolean : success of deletion
+     */
+    public function delete()
+    {
+        if ($this->countSeminars() === 0) {
+            foreach ($GLOBALS['SEM_TYPE'] as $sem_type) {
+                if ($sem_type['class'] == $this->data['id']) {
+                    $sem_type->delete();
+                }
+            }
+            $GLOBALS['SEM_TYPE'] = SemType::getTypes();
+            $db = DBManager::get();
+            $statement = $db->prepare(
+                "DELETE FROM sem_classes " .
+                "WHERE id = :id ".
+            "");
+            return $statement->execute(array(
+                'id' => $this->data['id']
+            ));
+        } else {
+            return false;
+        }
+    }
     
     /**
      * Sets an attribute of sem_class->data
      * @param string $offset
      * @param mixed $value 
      */
-    public function set($offset, $value) {
+    public function set($offset, $value)
+    {
         $this->data[$offset] = $value;
     }
     
@@ -467,7 +509,8 @@ class SemClass implements ArrayAccess
      * $SEM_CLASS variable. This variable is statically stored in this class.
      * @return array of SemClass 
      */
-    static public function getClasses() {
+    static public function getClasses()
+    {
         if (!is_array(self::$sem_classes)) {
             $db = DBManager::get();
             self::$sem_classes = array();
@@ -491,13 +534,24 @@ class SemClass implements ArrayAccess
         }
         return self::$sem_classes;
     }
+
+    /**
+     * Refreshes the internal $sem_classes cache-variable.
+     * @return array of SemClass 
+     */
+    static public function refreshClasses()
+    {
+        self::$sem_classes = null;
+        return self::getClasses();
+    }
     
     /**
      * Static method to recursively transform an object into an associative array.
      * @param mixed $obj: should be of class StdClass
      * @return array 
      */
-    static public function object2array($obj) {
+    static public function object2array($obj)
+    {
         $arr_raw = is_object($obj) ? get_object_vars($obj) : $obj;
         foreach ($arr_raw as $key => $val) {
             $val = (is_array($val) || is_object($val)) ? self::object2array($val) : $val;
@@ -510,7 +564,8 @@ class SemClass implements ArrayAccess
      * Static method only to keep the translationstrings of the values. It is 
      * never used within the system.
      */
-    static private function localization() {
+    static private function localization()
+    {
         _("Lehre");
         _("Forschung");
         _("Organisation");

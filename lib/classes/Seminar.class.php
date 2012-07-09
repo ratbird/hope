@@ -576,8 +576,7 @@ class Seminar
                                            admission_enable_quota = VALUES(admission_enable_quota),
                                            visible = VALUES(visible),
                                            showscore = :showscore,
-                                           modules = VALUES(modules),
-                                           chdate = IF(:update_chdate, UNIX_TIMESTAMP(), chdate)";
+                                           modules = VALUES(modules)";
         $statement = DBManager::get()->prepare($query);
         $statement->bindValue(':Seminar_id', $this->id);
         $statement->bindValue(':VeranstaltungsNummer', $this->seminar_number);
@@ -614,10 +613,15 @@ class Seminar
         $statement->bindValue(':visible', $this->visible);
         $statement->bindValue(':showscore', $this->showscore);
         $statement->bindValue(':modules', $this->modules);
-        $statement->bindValue(':update_chdate', (int)!empty($trigger_chdate));
         $statement->execute();
 
-        return $trigger_chdate && ($statement->rowCount() > 0);
+        if (($statement->rowCount() > 0 || $metadate_changed) && $trigger_chdate) {
+            $statement = DBManager::get()->prepare("UPDATE seminare SET chdate = UNIX_TIMESTAMP() WHERE Seminar_id = ?");
+            $statement->execute(array($this->id));
+            return $statement->rowCount() > 0;
+        } else {
+            return false;
+        }
     }
 
     function setStartSemester($start)

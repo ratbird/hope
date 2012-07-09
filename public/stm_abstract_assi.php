@@ -1,7 +1,7 @@
 <?php
 # Lifter002: TODO
+# Lifter003: TEST
 # Lifter007: TODO
-# Lifter003: TODO
 # Lifter010: TODO
 
 require '../lib/bootstrap.php';
@@ -267,30 +267,39 @@ class AbstractStmControl{
         return true;
     }
 
-        function getMyInst() {
+    function getMyInst() {
+        // Prepare statement that reads all institutes for a faculty
+        $query = "SELECT Institut_id AS value, CONCAT(REPEAT('&#160;', 4), Name) AS name
+                  FROM Institute
+                  WHERE fakultaets_id = ? AND Institut_id != fakultaets_id
+                  ORDER BY Name";
+        $institutes_statement = DBManager::get()->prepare($query);
+        
+        // Prepare and execute statement that reads all faculties
+        $query = "SELECT Name, Institut_id, 1 AS is_fak, 'admin' AS inst_perms
+                  FROM Institute
+                  WHERE Institut_id = fakultaets_id
+                  ORDER BY Name";
+        $statement = DBManager::get()->query($query);
+        $faculties = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-        $db = new DB_Seminar;
-        $db2 = new DB_Seminar;
-
-        $db->query("SELECT Name, Institut_id AS 'a.Institut_id',1 AS is_fak,'admin' AS inst_perms FROM Institute WHERE Institut_id=fakultaets_id ORDER BY Name") ;
-
-        if (!$db->num_rows())
+        if (count($faculties) === 0) {
             return array();
+        }
 
         $inst_arr = array();
-        while ($db->next_record()) {
-            $inst_arr[] = array('name' => $db->f("Name") , 'value' => $db->f('a.Institut_id'));
+        foreach ($faculties as $faculty) {
+            $inst_arr[] = array(
+                'name'  => $faculty['Name'],
+                'value' => $faculty['Institut_id'],
+            );
 
-            if ($db->f("is_fak") && $db->f("inst_perms") == "admin") {
-                $db2->query("SELECT Institut_id, Name FROM Institute
-                     WHERE fakultaets_id= '" . $db->f("a.Institut_id") . "' AND Institut_id!= '" . $db->f("a.Institut_id") . "' ORDER BY Name");
+            if ($faculty['is_fak'] && $faculty['inst_perms'] == 'admin') {
+                $institutes_statement->execute(array($faculty['Institut_id']));
+                $institutes = $institutes_statement->fetchAll(PDO::FETCH_ASSOC);
+                $institutes_statement->closeCursor();
 
-                if ($db2->num_rows()) {
-                    while ($db2->next_record()) {
-                        $inst_arr[] = array('name' => '&#160;&#160;&#160;&#160;' . $db2->f('Name') , 'value' => $db2->f('Institut_id'));
-                    }
-                }
-
+                $inst_arr = array_merge($inst_arr, $institutes);
             }
         }
         return $inst_arr;
@@ -298,28 +307,16 @@ class AbstractStmControl{
     }
 
     function getAllAbsStm() {
-
-        $db = new DB_Seminar;
-
-        $db->query("SELECT a.stm_abstr_id AS stm_abstr_id, title, COUNT( stm_instance_id ) AS instanced
-                    FROM stm_abstract_text a
-                    INNER JOIN stm_abstract b ON a.stm_abstr_id = b.stm_abstr_id
-                    LEFT JOIN stm_instances c ON c.stm_abstr_id = b.stm_abstr_id
-                    WHERE a.lang_id = '".LANGUAGE_ID."'
-                    AND a.stm_abstr_id <> ''
-                    GROUP BY a.stm_abstr_id
-                    ORDER BY title");
-
-        if (!$db->num_rows())
-            return array();
-
-        $stm_arr = array();
-
-        while ($db->next_record()) {
-            $stm_arr[$db->f('stm_abstr_id')] = array('title' => $db->f("title"),
-                                                    'instanced' => $db->f('instanced'));
-        }
-        return $stm_arr;
+        $query = "SELECT stm_abstr_id, title, COUNT( stm_instance_id ) AS instanced
+                  FROM stm_abstract_text a
+                  INNER JOIN stm_abstract b USING (stm_abstr_id)
+                  LEFT JOIN stm_instances c USING (stm_abstr_id)
+                  WHERE a.lang_id = ? AND a.stm_abstr_id != ''
+                  GROUP BY stm_abstr_id
+                  ORDER BY title";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(LANGUAGE_ID));
+        return $statement->fetchGrouped(PDO::FETCH_ASSOC);
     }
 
     function show(){

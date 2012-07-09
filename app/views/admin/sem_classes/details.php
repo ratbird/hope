@@ -17,10 +17,10 @@
             <td width="20%">
                 <?= _("Name der Seminarklasse") ?>
             </td>
-            <td width="80%">
+            <td width="80%" class="sem_class_name">
                 <div>
                     <span class="name"><?= $sem_class['name'] ?></span>
-                    <a href="#" onClick="jQuery(this).closest('td').children().toggle(); return false;"><?= Assets::img("icons/16/blue/edit", array('class' => "text-bottom")) ?></a>
+                    <a href="#" class="sem_class_edit" onClick="jQuery(this).closest('td').children().toggle(); return false;"><?= Assets::img("icons/16/blue/edit", array('class' => "text-bottom")) ?></a>
                 </div>
                 <div class="name_input" style="display: none;">
                     <input id="sem_class_name" type="text" value="<?= htmlReady($sem_class['name']) ?>" onBlur="jQuery(this).closest('td').children().toggle().find('.name').text(this.value);">

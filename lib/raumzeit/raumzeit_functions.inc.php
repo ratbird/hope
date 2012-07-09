@@ -167,6 +167,8 @@ function getTemplateDataForSingleDate($val, $cycle_id = '') {
         $request_status = $request->getStatus();
         if ($request_status == 'declined') {
             $tpl['symbol'] = 'icons/16/red/exclaim.png';
+        } elseif ($request_status == 'closed') {
+            $tpl['symbol'] = 'icons/16/grey/accept.png';
         } else {
             $tpl['symbol'] = 'icons/16/grey/pause/date.png';
         }

@@ -314,6 +314,8 @@ jQuery(function () {
                             $tpl['room_request_ausruf'] .= "\n\n" . $tpl['room_request']->getInfo();
                             if ($tpl['room_request']->getStatus() == 'declined') {
                                 $tpl['symbol'] = 'icons/16/red/exclaim.png';
+                            } elseif ($tpl['room_request']->getStatus() == 'closed') {
+                                $tpl['symbol'] = 'icons/16/grey/accept.png';
                             } else {
                                 $tpl['symbol'] = 'icons/16/grey/pause/date.png';
                             }

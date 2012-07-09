@@ -756,6 +756,14 @@ if ($form == 5) {
             $_SESSION['sem_create_data']['sem_datafields'][$id] = array('name'=>$entry->getName(), 'type'=>$entry->getType(), 'value'=> $entry->getValue());
         }
     }
+    //check if required datafield was not filled out
+    $dataFieldStructures = DataFieldStructure::getDataFieldStructures('sem', $_SESSION['sem_create_data']['sem_class'], true);
+      foreach ((array)$dataFieldStructures as $id=>$struct) {
+         if ($struct->accessAllowed($perm) && $perm->have_perm($struct->getEditPerms()) && $struct->getIsRequired() ) {
+           	if(! trim($_REQUEST['sem_datafields'][$id]))
+         	     $errormsg=$errormsg."error§".sprintf(_("Das Feld %s wurde nicht ausgef&uuml;llt"),$struct->getName())."§";
+                        }
+                    }
 
     //Studienbereiche entgegennehmen
     $sem_studg_id = Request::optionArray('sem_studg_id');
@@ -3868,25 +3876,35 @@ if ($level == 5)
                     }
                     //add the free adminstrable datafields
                     $dataFieldStructures = DataFieldStructure::getDataFieldStructures('sem', $_SESSION['sem_create_data']['sem_class'], true);
-                    foreach ($dataFieldStructures as $id=>$struct) {
+                    foreach ((array)$dataFieldStructures as $id=>$struct) {
                         if ($struct->accessAllowed($perm)) {
                             ?>
                             <tr <? $cssSw->switchClass() ?>>
                                 <td class="<?= $cssSw->getClass() ?>" width="10%" align="right">
                                     <?=htmlReady($struct->getName()) ?>
+                                     
+                                    <?if($struct->getIsRequired() && $perm->have_perm($struct->getEditPerms())):?>
+                                        <font color="red" size=+2>*</font> 
+                                    <?endif;?>
                                 </td>
                                 <td class="<?= $cssSw->getClass() ?>" width="90%" colspan=3>
-                                    <?
-                                    if ($perm->have_perm($struct->getEditPerms())) {
-                                        $entry = DataFieldEntry::createDataFieldEntry($struct, '', stripslashes($_SESSION['sem_create_data']["sem_datafields"][$id]['value']));
-                                        print "&nbsp;&nbsp;".$entry->getHTML("sem_datafields");
-                                    } else {
-                                    ?>
-                                    &nbsp;<font size="-1"><?=_("Diese Daten werden von Ihrem zust&auml;ndigen Administrator erfasst.")?></font>
-                                    <?= tooltipIcon(_("Diese Felder werden zentral durch die zuständigen Administratoren erfasst.")) ?>
-                                    <?
-                                    }
-                                    ?>
+                                    <div style="width:33.8em; float:left;">
+	                                    <?
+	                                    if ($perm->have_perm($struct->getEditPerms())) {
+	                                        $entry = DataFieldEntry::createDataFieldEntry($struct, '', stripslashes($_SESSION['sem_create_data']["sem_datafields"][$id]['value']));
+	                                        print "&nbsp;&nbsp;".$entry->getHTML("sem_datafields");
+	
+	                                    } else {
+	                                    ?>
+	                                    &nbsp;<font size="-1"><?=_("Diese Daten werden von Ihrem zust&auml;ndigen Administrator erfasst.")?></font>
+	                                    <?= tooltipIcon(_("Diese Felder werden zentral durch die zuständigen Administratoren erfasst.")) ?>
+	                                    <?
+	                                    }
+	                                    ?>
+                                    </div>
+                                    <?if ($perm->have_perm($struct->getEditPerms()) && $struct->getDescription())  
+                                          echo tooltipIcon(_($struct->getDescription()));
+                                    ?> 
                                 </td>
                             </tr>
                             <?

@@ -17,6 +17,8 @@
  * @category    Stud.IP
  */
 
+
+
 class DataFieldStructure
 {
 
@@ -60,6 +62,9 @@ class DataFieldStructure
   function getPriority()         {return $this->data['priority'];}
   function getEditPerms()        {return $this->data['edit_perms'];}
   function getViewPerms()        {return $this->data['view_perms'];}
+  function getIsRequired()       {return (bool)$this->data['is_required']; }
+  function getDescription()      {return $this->data['description'];}
+  
 
   function getCachedNumEntries() {
     if (is_null($this->numEntries)) {
@@ -76,6 +81,8 @@ class DataFieldStructure
   function setPriority($v)         {$this->data['priority'] = $v;}
   function setEditPerms($v)        {$this->data['edit_perms'] = $v;}
   function setViewPerms($v)        {$this->data['view_perms'] = $v;}
+  function setIsRequired($v)        {$this->data['is_required'] = $v;}
+  function setDescription($v)        {$this->data['description'] = $v;}
 
   function setType($v) {
     $this->data['type'] = $v;
@@ -242,17 +249,17 @@ class DataFieldStructure
         $st = $db->prepare("UPDATE datafields ".
                 "SET name=?, object_type=?, ".
                 "object_class=?, edit_perms=?, priority=?, ".
-                "view_perms=?, type=?, typeparam=?, chdate=UNIX_TIMESTAMP() WHERE datafield_id=?");
+                "view_perms=?, type=?, typeparam=?, is_required=?, description=?, chdate=UNIX_TIMESTAMP() WHERE datafield_id=?");
     } else {
         $st = $db->prepare("INSERT INTO datafields ".
                 "SET name=?, object_type=?, ".
                 "object_class=?, edit_perms=?, priority=?, ".
-                "view_perms=?, type=?, typeparam=?, chdate=UNIX_TIMESTAMP(), mkdate=UNIX_TIMESTAMP(), datafield_id=?");
+                "view_perms=?, type=?, typeparam=?, is_required=?, description=?, chdate=UNIX_TIMESTAMP(), mkdate=UNIX_TIMESTAMP(), datafield_id=?");
     }
 
     $st->execute(array($data['name'], $data['object_type'],
                 $data['object_class'], $data['edit_perms'], (int)$data['priority'],
-                $data['view_perms'], (string)$data['type'], (string)$data['typeparam'], $data['datafield_id']));
+                $data['view_perms'], (string)$data['type'], (string)$data['typeparam'],(bool)$data['is_required'],(string)$data['description'], $data['datafield_id']));
     return $st->rowCount();
   }
 

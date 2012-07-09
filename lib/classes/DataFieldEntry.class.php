@@ -358,7 +358,10 @@ abstract class DataFieldEntry
      */
     public function isValid()
     {
-        return true;
+    	if(!trim($this->getValue()) && $this->structure->getIsRequired())
+    	   return false;
+    	else 
+    	   return true;
     }
 
     /**
@@ -479,6 +482,7 @@ class DataFieldTextareaEntry extends DataFieldEntry
         $field_name = $name . '[' . $this->structure->getID() . ']';
         return sprintf('<textarea name="%s" rows="6" cols="58">%s</textarea>', $field_name, htmlReady($this->getValue()));
     }
+   
 }
 
 class DataFieldEmailEntry extends DataFieldEntry
@@ -493,8 +497,8 @@ class DataFieldEmailEntry extends DataFieldEntry
     function isValid()
     {
         if($this->getValue())
-            return preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/", strtolower($this->getValue()));
-        return true;
+            return (preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/", strtolower($this->getValue())) && parent::isValid());
+        return  parent::isValid();
     }
 }
 
@@ -529,7 +533,7 @@ class DataFieldLinkEntry extends DataFieldEntry
 
     public function isValid()
     {
-        return (preg_match('%^(https?|ftp)://%', $this->getValue()) || $this->getValue() == '');
+        return (preg_match('%^(https?|ftp)://%', $this->getValue()) || $this->getValue() == '')  && parent::isValid();
     }
 }
 
@@ -722,8 +726,8 @@ class DataFieldPhoneEntry extends DataFieldEntry
     function isValid()
     {
         if(trim($this->value) == '')
-            return true;
-        return preg_match('/^[1-9][0-9]*\n[1-9][0-9]+\n[1-9][0-9]+(-[0-9]+)?$/', $this->value);
+            return  parent::isValid();;
+        return (preg_match('/^[1-9][0-9]*\n[1-9][0-9]+\n[1-9][0-9]+(-[0-9]+)?$/', $this->value)  && parent::isValid());
     }
 }
 
@@ -769,10 +773,10 @@ class DataFieldDateEntry extends DataFieldEntry
     function isValid()
     {
         if(trim($this->value) == '')
-            return true;
+            return parent::isValid();
         $parts = explode("-", $this->value);
         $valid = preg_match('/^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$/', $this->value);
-        return trim($this->value) != '' && $valid && checkdate($parts[1], $parts[2], $parts[0]);
+        return trim($this->value) != '' && $valid  && parent::isValid() && checkdate($parts[1], $parts[2], $parts[0]);
     }
 }
 
@@ -804,7 +808,7 @@ class DataFieldTimeEntry extends DataFieldEntry
     function isValid()
     {
         $parts = explode(':', $this->value);
-        return $parts[0] >= 0 && $parts[0] <= 24 && $parts[1] >= 0 && $parts[1] <= 59;
+        return (($parts[0] >= 0 && $parts[0] <= 24 && $parts[1] >= 0 && $parts[1] <= 59)  && parent::isValid());
     }
 }
 ?>

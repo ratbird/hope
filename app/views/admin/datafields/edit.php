@@ -119,6 +119,30 @@ use Studip\Button, Studip\LinkButton;
                 <input type="text" name="priority" id="priority" value="<?= $item->getPriority() ?>" maxlength="10" size="5" />
            </td>
         </tr>
+          <? if ($item->getObjectType() == 'sem'): ?>
+          <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+            <td>
+                <label for="is_required">
+                    <?= _('Eintrag verpflichtend') ?>
+                </label>
+            </td>
+            <td>
+                <input type="checkbox" name="is_required" id="is_required" value="1" <?= $item->getIsRequired() ? 'checked="checked"':'' ?>  >
+            </td>
+        </tr>
+        <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+            <td valign="top">
+                <label for="description">
+                    <?= _('Beschreibung des Datenfelds') ?>
+                </label>
+            </td>
+            <td>
+                 <textarea cols="58" rows="3" name="description" id="description"><?= htmlReady($item->getDescription()) ?></textarea>
+            </td>
+        </tr>
+        
+         <? endif; ?>
+         
         <tr class="steel2">
             <td>&nbsp;</td>
             <td>

@@ -13,12 +13,12 @@
 
 <h3><?= _('Verwaltung von generischen Datenfeldern') ?></h3>
 
-<!-- Datenfelder für Veranstaltungen -->
+<!-- Alle Datenfelder  -->
 <table class="collapsable default" cellspacing="0" cellpadding="2">
 <? foreach ($datafields_list as $key => $data): ?>
     <tbody class="<?= ((!is_null($current_class) && $current_class == $key) || !is_null($class_filter)) ? '': 'collapsed' ?> <? if (empty($datafields_list[$key])): ?>empty<? endif ?>">
         <tr class="steel header-row">
-            <td class="toggle-indicator" colspan="8">
+            <td class="toggle-indicator" colspan="9">
             <? if (empty($datafields_list[$key])): ?>
                 <?= sprintf(_('Datenfelder für %s'), $allclasses[$key]) ?>
             <? else: ?>
@@ -42,6 +42,7 @@
             </th>
             <th><?= _('benötigter Status') ?></th>
             <th><?= _('Sichtbarkeit') ?></th>
+            <th><?= ($key == 'sem'? _('Pflichtfeld'):'') ?></th>
             <th><?= _('Reihenfolge') ?></th>
             <th><?= _('Einträge') ?></th>
             <th style="text-align: right;"><?= _('Aktionen') ?></th>
@@ -74,6 +75,11 @@
             </td>
             <td><?= $val->getEditPerms() ?></td>
             <td><?= $val->getViewPerms() ?></td>
+            <td>
+             <? if ($key == 'sem'): ?>
+              <?= Assets::img('icons/16/black/'.($val->getIsRequired()?'accept.png':'decline.png'))?>
+             <? endif; ?>
+            </td>
             <td><?= $val->getPriority() ?></td>
             <td><?= $val->getCachedNumEntries() ?></td>
             <td style="text-align: right;">

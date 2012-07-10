@@ -19,20 +19,11 @@ use Studip\Button, Studip\LinkButton;
 class Course_PlusController extends AuthenticatedController
 {
 
-    public function before_filter(&$action, &$args)
+    public function index_action($range_id = null)
     {
-        parent::before_filter($action, $args);
 
-        // user must have tutor permission
-        if (!$_SESSION['SessionSeminar']
-            && !$GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) {
-            throw new AccessDeniedException("Kein Zugriff.");
-        }
-    }
-
-    public function index_action()
-    {
         if ($GLOBALS['perm']->have_perm('admin')) {
+            require_once 'lib/admin_search.inc.php';
             if ($_SESSION['links_admin_data']['topkat'] == 'sem') {
                 Navigation::activateItem('/admin/course/modules');
             } else {
@@ -41,25 +32,42 @@ class Course_PlusController extends AuthenticatedController
         } else {
             Navigation::activateItem('/course/modules');
         }
-        
-        $object_type = get_object_type($_SESSION['SessionSeminar']);
+
+        PageLayout::setTitle(_("Verwaltung verwendeter Inhaltselemente und Plugins"));
+
+        $id = $range_id ? $range_id : $_SESSION['SessionSeminar'];
+
+        if (!$id) {
+            include 'lib/include/html_head.inc.php';
+            include 'lib/include/header.php';
+            include 'lib/include/admin_search_form.inc.php';  // will not return
+            die(); //must not return
+        }
+        $object_type = get_object_type($id);
+
+        if (!$GLOBALS['perm']->have_studip_perm($object_type === 'sem' ? 'tutor' : 'admin', $id)) {
+            throw new AccessDeniedException(_("Keine Berechtigung."));
+        }
+
+        PageLayout::setTitle(getHeaderLine($id) . " - " . PageLayout::getTitle());
+
         if ($object_type === "sem") {
-            $this->sem           = new Seminar($_SESSION['SessionSeminar']);
+            $this->sem           = new Seminar($id);
             $this->sem_class     = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$this->sem->status]['class']];
         }
-        
+
         $this->save();
-        
+
         $this->available_modules = StudygroupModel::getInstalledModules();
         $this->available_plugins = PluginEngine::getPlugins('StandardPlugin');
         $this->modules           = new AdminModules();
         $this->save_url          = "?";
-        
-        if (!Request::submitted('uebernehmen') && (!$resolve_conflicts)) {
-            $_SESSION['admin_modules_data']["modules_list"] = $this->modules->getLocalModules($_SESSION['SessionSeminar']);
-            $_SESSION['admin_modules_data']["orig_bin"] = $this->modules->getBin($_SESSION['SessionSeminar']);
-            $_SESSION['admin_modules_data']["changed_bin"] = $this->modules->getBin($_SESSION['SessionSeminar']);
-            $_SESSION['admin_modules_data']["range_id"] = $_SESSION['SessionSeminar'];
+
+        if (!Request::submitted('uebernehmen')) {
+            $_SESSION['admin_modules_data']["modules_list"] = $this->modules->getLocalModules($id);
+            $_SESSION['admin_modules_data']["orig_bin"] = $this->modules->getBin($id);
+            $_SESSION['admin_modules_data']["changed_bin"] = $this->modules->getBin($id);
+            $_SESSION['admin_modules_data']["range_id"] = $id;
             $_SESSION['admin_modules_data']["conflicts"] = array();
             $_SESSION['plugin_toggle'] = array();
         }
@@ -69,8 +77,8 @@ class Course_PlusController extends AuthenticatedController
             unset($_SESSION['admin_modules_data']['msg']);
         }
     }
-    
-    protected function save() 
+
+    protected function save()
     {
         $seminar_id = $_SESSION['admin_modules_data']['range_id'];
         $modules = new AdminModules();
@@ -85,8 +93,8 @@ class Course_PlusController extends AuthenticatedController
                         $studip_module = $this->sem_class->getModule($key);
                         if (is_a($studip_module, "StandardPlugin")) {
                             PluginManager::getInstance()->setPluginActivated(
-                                $studip_module->getPluginId(), 
-                                $seminar_id, 
+                                $studip_module->getPluginId(),
+                                $seminar_id,
                                 false
                             );
                         }
@@ -121,8 +129,8 @@ class Course_PlusController extends AuthenticatedController
                         $studip_module = $this->sem_class->getModule($key);
                         if (is_a($studip_module, "StandardPlugin")) {
                             PluginManager::getInstance()->setPluginActivated(
-                                $studip_module->getPluginId(), 
-                                $seminar_id, 
+                                $studip_module->getPluginId(),
+                                $seminar_id,
                                 Request::option($key.'_value') == "TRUE"
                             );
                         }
@@ -179,8 +187,8 @@ class Course_PlusController extends AuthenticatedController
                             $studip_module = $this->sem_class->getModule($key);
                             if (is_a($studip_module, "StandardPlugin")) {
                                 PluginManager::getInstance()->setPluginActivated(
-                                    $studip_module->getPluginId(), 
-                                    $seminar_id, 
+                                    $studip_module->getPluginId(),
+                                    $seminar_id,
                                     true
                                 );
                             }
@@ -234,5 +242,5 @@ class Course_PlusController extends AuthenticatedController
     }
 
 
-    
+
 }

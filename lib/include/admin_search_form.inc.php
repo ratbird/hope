@@ -37,7 +37,7 @@ global  $_fullname_sql,
         $msg,
         $SessSemName,
         $view_mode;
-      
+
 if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
 
     require_once 'config.inc.php';
@@ -116,16 +116,16 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                 </tr>
                 <tr>
                     <td class="steel1">&nbsp;
-                        
+
                     </td>
                 </tr>
                 <tr>
                     <td class="blank">&nbsp;
-                        
+
                     </td>
                 </tr>
-                
-                
+
+
             </table>
             </form>
             </td>
@@ -298,12 +298,12 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                     ?>
                     <tr>
                         <td class="steel1" colspan=5>&nbsp;
-                            
+
                         </td>
                     </tr>
                     <tr>
                         <td class="blank" colspan=5>&nbsp;
-                            
+
                         </td>
                     </tr>
                     <? if (! empty($message)) : ?>
@@ -383,9 +383,9 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                     </td>
                     <td colspan="<?= $show_rooms_check == 'on' ? 4 : 3 ?>" align="right">
                     <?
-                        echo LinkButton::create(_("Alle auswählen"), 
+                        echo LinkButton::create(_("Alle auswählen"),
                              URLHelper::getURL('', array('select_all' => TRUE, 'list' => TRUE, 'show_rooms_check' => $show_rooms_check)));
-                        echo LinkButton::create(_('Keine auswählen'), 
+                        echo LinkButton::create(_('Keine auswählen'),
                              URLHelper::getURL('', array('select_none' => TRUE, 'list' => TRUE, 'show_rooms_check' => $show_rooms_check)));
                     ?>
                     </td>
@@ -406,7 +406,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                     ?>
                     </td>
                 </tr>
-                
+
                 <?
             }
         //more Options for lock changing
@@ -555,11 +555,11 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                     printf(_("Literatur") . "<br>%s", LinkButton::create(_('Bearbeiten'), URLHelper::getURL('', array('_range_id'=> $seminar_id))));
                     break;
                 case "admin_statusgruppe.php":
-                    printf(_("Funktionen / Gruppen") . "<br>%s", LinkButton::create(_('Bearbeiten'), 
+                    printf(_("Funktionen / Gruppen") . "<br>%s", LinkButton::create(_('Bearbeiten'),
                     URLHelper::getURL('', array('ebene' => 'sem', 'range_id' => $seminar_id))));
                     break;
                 case "admin_roles.php":
-                    printf(_("Funktionen / Gruppen") . "<br>%s", LinkButton::create(_('Bearbeiten'), 
+                    printf(_("Funktionen / Gruppen") . "<br>%s", LinkButton::create(_('Bearbeiten'),
                     URLHelper::getURL('', array('ebene' => 'sem', 'range_id'=> $seminar_id))));
                     break;
                 case "admin_modules.php":
@@ -569,15 +569,15 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                     printf(_("Ankündigungen") . "<br>%s", LinkButton::create(_('Bearbeiten'), URLHelper::getURl('', array('range_id' => $seminar_id))));
                     break;
                 case 'admin_vote.php':
-                    printf(_("Umfragen und Tests") . "<br>%s", LinkButton::create(_('Bearbeiten'), 
+                    printf(_("Umfragen und Tests") . "<br>%s", LinkButton::create(_('Bearbeiten'),
                     URLHelper::getURL('', array('view' => 'vote_sem', 'showrangeID' => $seminar_id))));
                     break;
                 case 'admin_evaluation.php':
-                    printf(_("Evaluationen") . "<br>%s", LinkButton::create(_('Bearbeiten'), 
+                    printf(_("Evaluationen") . "<br>%s", LinkButton::create(_('Bearbeiten'),
                     URLHelper::getURL('', array('view' => 'eval_sem', 'rangeID' => $seminar_id))));
                     break;
                 case "copy_assi.php":
-                    printf(_("Veranstaltung") . "<br>%s", LinkButton::create(_('Kopieren'), 
+                    printf(_("Veranstaltung") . "<br>%s", LinkButton::create(_('Kopieren'),
                     URLHelper::getURL('admin_seminare_assi.php', array('cmd' => 'do_copy', 'start_level' => TRUE, 'class' => '1', 'cp_id' => $seminar_id))));
                     break;
                 case "admin_lock.php":
@@ -662,12 +662,15 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                     } elseif ($this instanceof Course_RoomRequestsController){
                         echo _("Raumanfragen") . '<br>',
                             LinkButton::create(_("Bearbeiten"), $this->url_for('index/' . $seminar_id));
+                    } elseif ($this instanceof Course_PlusController){
+                        echo _("Inhaltselemente") . '<br>',
+                            LinkButton::create(_("Bearbeiten"), $this->url_for('course/plus/index/' . $seminar_id));
                     }
                     break;
             }
             echo "</tr>";
         }
-        
+
         //more Options for visibility changing
             if ($i_page == "admin_visibility.php" || $i_page == "admin_aux.php" || $i_page == "admin_lock.php") {
                 ?>
@@ -676,7 +679,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                     <?= _("Änderungen") ?> <?= Button::createAccept(_('Speichern')) ?>
                     </td>
                 </tr>
-                
+
                 <?
             }
             if ($i_page == "archiv_assi.php"){ ?>

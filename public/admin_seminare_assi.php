@@ -83,9 +83,7 @@ $semester = new SemesterData;
 
 
 # init of study area selection
-$study_areas = isset($_REQUEST['study_area_selection'])
-   ? remove_magic_quotes($_REQUEST['study_area_selection'])
-   : array();
+$study_areas = Request::getArray('study_area_selection', array());
 
 $area_selection = new StudipStudyAreaSelection();
 
@@ -354,7 +352,7 @@ if ($start_level) { //create defaults
                 }
             }
         }
-        
+
         //add default values from config.inc.php ($SEM_CLASS)
         if ($SEM_CLASS[$class]['turnus_default'] && !array_key_exists('term_art', $_SESSION['sem_create_data'])) {
             $_SESSION['sem_create_data']['term_art'] = $SEM_CLASS[$class]['turnus_default'];
@@ -523,7 +521,7 @@ if ($form == 3)
         $term_turnus_end_stunde =Request::optionArray('term_turnus_end_stunde');
         $term_turnus_end_minute = Request::optionArray('term_turnus_end_minute');
         $term_turnus_desc = Request::optionArray('term_turnus_desc_chooser');
-        
+
         for ($i=0; $i<$_SESSION['sem_create_data']["turnus_count"]; $i++) {
 
             $_SESSION['sem_create_data']["term_turnus_date"][$i]=$term_turnus_date[$i];
@@ -679,12 +677,12 @@ if ($form == 4) {
     if ($_SESSION['sem_create_data']["term_art"]==0) {
         //get incoming room-data
         $turnus_data=$_SESSION['sem_create_data']["metadata_termin"]["turnus_data"];
-        
+
         if (is_array($turnus_data)){
-            
+
             $term_turnus_room = Request::optionArray('term_turnus_room');
             $term_turnus_resource_id = Request::optionArray('term_turnus_resource_id');
-            
+
             foreach ($turnus_data as $key=>$val) {
                 //echo $term_turnus_room[$key], $term_turnus_resource_id[$key];
 
@@ -787,13 +785,13 @@ if ($form == 5) {
             } elseif ($_SESSION['sem_create_data']["sem_admission"] == 2 && $_SESSION['sem_create_data']["admission_enable_quota"] == 1) {
                 $errormsg=$errormsg."error§"._("Bitte geben Sie g&uuml;ltige Werte f&uuml;r das Enddatum der Kontingentierung ein!")."§";
             }
-           
+
     }
     if($_SESSION['sem_create_data']['sem_admission_date'] <
             $_SESSION['sem_create_data']['sem_admission_start_date'])
     {
         $errormsg=$errormsg."error§"._("Das Losdatum darf nicht vor dem Start des Anmeldezeitraums liegen!")."§";
-           
+
     }
 
     //Datum fuer ersten Termin umwandeln. Checken muessen wir es auch leider direkt hier, da wir es sonst nicht umwandeln duerfen
@@ -834,7 +832,7 @@ if ($form == 8)
 
 //jump-logic
 if (Request::submitted('jump_back')) {
-   
+
     if ($form > 1) {
         // if we have chosen to not enter dates, skip room-requests
         if ($form == 5) {
@@ -932,7 +930,7 @@ if (Request::quoted('moveup_doz'))
     // Ensure continuous order by sorting and reordering
     asort($_SESSION['sem_create_data']['sem_doz']);
     $_SESSION['sem_create_data']['sem_doz'] = array_flip(array_keys($_SESSION['sem_create_data']['sem_doz']));
-    
+
    $move_uid = get_userid(Request::quoted('moveup_doz'));
    $move_pos = $_SESSION['sem_create_data']["sem_doz"][$move_uid];
 
@@ -971,7 +969,7 @@ if (Request::quoted('moveup_tut'))
     // Ensure continuous order by sorting and reordering
     asort($_SESSION['sem_create_data']['sem_tut']);
     $_SESSION['sem_create_data']['sem_tut'] = array_flip(array_keys($_SESSION['sem_create_data']['sem_tut']));
-    
+
    $move_uid = get_userid(Request::quoted('moveup_tut'));
    $move_pos = $_SESSION['sem_create_data']["sem_tut"][$move_uid];
 
@@ -1039,24 +1037,25 @@ if (Request::quoted('delete_tut')) {
   $level=2;
 }
 
-if ((Request::submitted('send_doz_x')) && (!Request::submitted('reset_search')) && (Request::quoted('add_doz'))) {
-    
-    $next_position = sizeof($_SESSION['sem_create_data']["sem_doz"]) + 1;
-    $doz_id = get_userid(Request::quoted('add_doz'));
-    $_SESSION['sem_create_data']["sem_doz"][$doz_id]= $next_position;
-    $_SESSION['sem_create_data']["sem_doz_label"][$doz_id]= Request::get("sem_doz_label");
-    if ($deputies_enabled) {
-        // Unset person as deputy.
-        if ($_SESSION['sem_create_data']['sem_dep'][$doz_id]) {
-            unset($_SESSION['sem_create_data']['sem_dep'][$doz_id]);
-        }
-        if (get_config('DEPUTIES_DEFAULTENTRY_ENABLE')) {
-            $deputies = getDeputies($doz_id);
-            // Add the new lecturer's deputies if necessary.
-            foreach ($deputies as $deputy) {
-                if (empty($_SESSION['sem_create_data']['sem_doz'][$deputy['user_id']]) &&
-                       !isset($_SESSION['sem_create_data']['sem_dep'][$deputy['user_id']])) {
+if (Request::submitted('send_doz')) {
+    if (Request::get('add_doz')) {
+        $next_position = sizeof($_SESSION['sem_create_data']["sem_doz"]) + 1;
+        $doz_id = get_userid(Request::quoted('add_doz'));
+        $_SESSION['sem_create_data']["sem_doz"][$doz_id]= $next_position;
+        $_SESSION['sem_create_data']["sem_doz_label"][$doz_id]= Request::get("sem_doz_label");
+        if ($deputies_enabled) {
+            // Unset person as deputy.
+            if ($_SESSION['sem_create_data']['sem_dep'][$doz_id]) {
+                unset($_SESSION['sem_create_data']['sem_dep'][$doz_id]);
+            }
+            if (get_config('DEPUTIES_DEFAULTENTRY_ENABLE')) {
+                $deputies = getDeputies($doz_id);
+                // Add the new lecturer's deputies if necessary.
+                foreach ($deputies as $deputy) {
+                    if (empty($_SESSION['sem_create_data']['sem_doz'][$deputy['user_id']]) &&
+                        !isset($_SESSION['sem_create_data']['sem_dep'][$deputy['user_id']])) {
                     $_SESSION['sem_create_data']['sem_dep'][$deputy['user_id']] = $deputy;
+                        }
                 }
             }
         }
@@ -1064,44 +1063,47 @@ if ((Request::submitted('send_doz_x')) && (!Request::submitted('reset_search')) 
     $level=2;
 }
 
-if ($deputies_enabled && Request::submitted('send_dep_x') && !Request::submitted('reset_search_x') && Request::quoted('add_dep')) {
-    $dep_id = get_userid(Request::quoted('add_dep'));
-    $_SESSION['sem_create_data']["sem_dep"][$dep_id] = array(
-            'user_id' => $dep_id,
-            'username' => get_username($dep_id),
-            'fullname' => get_fullname($dep_id, 'full_rev'),
-            'perms' => $perm->get_perm($dep_id)
-        );
-    // Remove as lecturer if necessary.
-    if (isset($_SESSION['sem_create_data']['sem_doz'][$dep_id])) {
-        unset($_SESSION['sem_create_data']['sem_doz'][$dep_id]);
+if ($deputies_enabled && Request::submitted('send_dep')) {
+    if (Request::get('add_dep')) {
+        $dep_id = get_userid(Request::quoted('add_dep'));
+        $_SESSION['sem_create_data']["sem_dep"][$dep_id] = array(
+                'user_id' => $dep_id,
+                'username' => get_username($dep_id),
+                'fullname' => get_fullname($dep_id, 'full_rev'),
+                'perms' => $perm->get_perm($dep_id)
+            );
+        // Remove as lecturer if necessary.
+        if (isset($_SESSION['sem_create_data']['sem_doz'][$dep_id])) {
+            unset($_SESSION['sem_create_data']['sem_doz'][$dep_id]);
+        }
     }
     $level=2;
 }
 
-if ((Request::submitted('send_tut_x')) && (!Request::submitted('reset_search_x')) && (Request::quoted('add_tut'))) {
-    $next_position = sizeof($_SESSION['sem_create_data']["sem_tut"]) + 1;
-    $tut_id = get_userid(Request::quoted('add_tut'));
-    $_SESSION['sem_create_data']["sem_tut"][$tut_id]= $next_position;
-    $_SESSION['sem_create_data']["sem_tut_label"][$tut_id]= Request::quoted("sem_tut_label");
+if (Request::submitted('send_tut')) {
+    if (Request::get('add_tut')) {
+        $next_position = sizeof($_SESSION['sem_create_data']["sem_tut"]) + 1;
+        $tut_id = get_userid(Request::quoted('add_tut'));
+        $_SESSION['sem_create_data']["sem_tut"][$tut_id]= $next_position;
+        $_SESSION['sem_create_data']["sem_tut_label"][$tut_id]= Request::quoted("sem_tut_label");
+    }
     $level=2;
 }
 
 // delete user domain
-if (isset($_REQUEST['delete_domain'])) {
-    $index = array_search($_REQUEST['delete_domain'], $_SESSION['sem_create_data']["sem_domain"]);
+if (Request::submitted('delete_domain')) {
+    $index = array_search(Request::get('delete_domain'), $_SESSION['sem_create_data']["sem_domain"]);
     unset($_SESSION['sem_create_data']["sem_domain"][$index]);
 }
 
-if (Request::quoted('add_doz_parameter') || Request::quoted('add_tut_parameter') || Request::submitted('add_dep') || Request::submitted('search_doz_x') || Request::submitted('search_dep_x') ||Request::submitted('search_tut_x') || Request::submitted('reset_search_x') ||
-    Request::submitted('sem_bereich_do_search') || Request::submitted('add_domain') || isset($_REQUEST['delete_domain']) ||
+if (Request::submitted('search_doz') || Request::submitted('search_dep') || Request::submitted('search_tut') || Request::submitted('reset_search') ||
+    Request::submitted('sem_bereich_do_search') || Request::submitted('add_domain') || Request::submitted('delete_domain') ||
     $study_areas['add'] || $study_areas['remove'] ||
     $study_areas['showall_button'] || $study_areas['search_button'] ||
     $study_areas['search_key'] || $study_areas['selected'] ||
     $study_areas['rewind_button']) {
     $level=2;
-
-}elseif (($form == 2) && (Request::submitted('jump_next'))) //wenn alles stimmt, Checks und Sprung auf Schritt 3
+} elseif (($form == 2) && (Request::submitted('jump_next'))) //wenn alles stimmt, Checks und Sprung auf Schritt 3
     {
     if (is_array($_SESSION['sem_create_data']['sem_tut']))
         foreach ($_SESSION['sem_create_data']['sem_tut'] as $key=>$val){
@@ -1287,7 +1289,7 @@ if (($form == 3) && (Request::submitted('jump_next')))
             elseif(!$just_informed4)
                 if (($_SESSION['sem_create_data']["term_tag"][$i] === '') && ($_SESSION['sem_create_data']["term_monat"][$i] === '') && ($_SESSION['sem_create_data']["term_jahr"][$i] === '') && ($_SESSION['sem_create_data']["term_start_stunde"][$i] === '') && ($_SESSION['sem_create_data']["term_start_minute"][$i] === '') && ($_SESSION['sem_create_data']["term_end_stunde"][$i] === '') && ($_SESSION['sem_create_data']["term_end_minute"][$i] === ''))
                     $empty_fields++;
-                else {                    
+                else {
                     $errormsg=$errormsg."error§"._("Sie haben nicht alle Felder bei der Termineingabe ausgef&uuml;llt. Bitte f&uuml;llen Sie alle Felder aus!")."§";
                     $just_informed4=TRUE;
                     }
@@ -2603,7 +2605,6 @@ if ($level == 2)
             <form method="POST" action="<? echo URLHelper::getLink() ?>#anker">
             <?= CSRFProtection::tokenTag() ?>
             <input type="hidden" name="form" value=2>
-            <input type="hidden" name="level" value=2>
                 <table width ="99%" cellspacing=0 cellpadding=2 border=0 align="center">
                     <tr <? $cssSw->switchClass() ?>>
                         <td class="<? echo $cssSw->getClass() ?>" width="10%">
@@ -3882,9 +3883,9 @@ if ($level == 5)
                             <tr <? $cssSw->switchClass() ?>>
                                 <td class="<?= $cssSw->getClass() ?>" width="10%" align="right">
                                     <?=htmlReady($struct->getName()) ?>
-                                     
+
                                     <?if($struct->getIsRequired() && $perm->have_perm($struct->getEditPerms())):?>
-                                        <font color="red" size=+2>*</font> 
+                                        <font color="red" size=+2>*</font>
                                     <?endif;?>
                                 </td>
                                 <td class="<?= $cssSw->getClass() ?>" width="90%" colspan=3>
@@ -3893,7 +3894,7 @@ if ($level == 5)
 	                                    if ($perm->have_perm($struct->getEditPerms())) {
 	                                        $entry = DataFieldEntry::createDataFieldEntry($struct, '', stripslashes($_SESSION['sem_create_data']["sem_datafields"][$id]['value']));
 	                                        print "&nbsp;&nbsp;".$entry->getHTML("sem_datafields");
-	
+
 	                                    } else {
 	                                    ?>
 	                                    &nbsp;<font size="-1"><?=_("Diese Daten werden von Ihrem zust&auml;ndigen Administrator erfasst.")?></font>
@@ -3902,9 +3903,9 @@ if ($level == 5)
 	                                    }
 	                                    ?>
                                     </div>
-                                    <?if ($perm->have_perm($struct->getEditPerms()) && $struct->getDescription())  
+                                    <?if ($perm->have_perm($struct->getEditPerms()) && $struct->getDescription())
                                           echo tooltipIcon(_($struct->getDescription()));
-                                    ?> 
+                                    ?>
                                 </td>
                             </tr>
                             <?

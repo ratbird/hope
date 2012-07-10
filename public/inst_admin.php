@@ -49,8 +49,6 @@ if ($perm->have_studip_perm('tutor', $SessSemName[1])) {
     $rechte = true;
 }
 
-$css_switcher = new CssClassSwitcher();
-
 // this page is used for administration (if the user has the proper rights)
 // or for just displaying the workers and their roles
 if ($admin_view) {
@@ -86,7 +84,6 @@ if ($header_line)
 // Start of Output
 include ("lib/include/html_head.inc.php"); // Output of html head
 include ('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
-PageLayout::addBodyElements(cssClassSwitcher::GetHoverJSFunction());
 
 if ($admin_view || !isset($inst_id)) {
     include 'lib/include/admin_search_form.inc.php';
@@ -156,7 +153,7 @@ if ($cmd == 'removeFromInstitute' && $perm->have_studip_perm('admin', $inst_id))
 }
 
 
-function table_head ($structure, $css_switcher) {
+function table_head ($structure) {
     echo "<colgroup>\n";
     foreach ($structure as $key => $field) {
         if ($key != 'statusgruppe') {
@@ -189,12 +186,10 @@ function table_head ($structure, $css_switcher) {
 }
 
 
-function table_body ($members, $range_id, $structure, $css_switcher) {
+function table_body ($members, $range_id, $structure) {
     global $datafields_list, $group_list, $admin_view;
 
     $cells = sizeof($structure);
-
-    $css_switcher->enableHover();
 
     foreach ($members as $member) {
 
@@ -206,10 +201,9 @@ function table_body ($members, $range_id, $structure, $css_switcher) {
             $role_entries = DataFieldEntry::getDataFieldEntries(array($member['user_id'], $member['statusgruppe_id']));
         }
 
-        $css_switcher->switchClass();
-        printf("<tr%s>\n", $css_switcher->getHover());
+        print "<tr>\n";
         if ($member['fullname']) {
-            printf("<td%s>", $css_switcher->getFullClass());
+            print "<td>";
             echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"2\" height=\"1\">";
             echo '<font size="-1">';
             if ($admin_view) {
@@ -221,22 +215,20 @@ function table_body ($members, $range_id, $structure, $css_switcher) {
             echo '</font></td>';
         }
         else
-            printf("<td%s>&nbsp;</td>", $css_switcher->getFullClass());
+            print "<td>&nbsp;</td>";
 
         if ($structure["status"]) {
             if ($member['inst_perms']) {
-                printf("<td%salign=\"left\"><font size=\"-1\">%s</font></td>\n",
-                    $css_switcher->getFullClass(), htmlReady($member['inst_perms']));
+                printf("<td align=\"left\"><font size=\"-1\">%s</font></td>\n",
+                    htmlReady($member['inst_perms']));
             } else { // It is actually impossible !
-                printf("<td%salign=\"left\"><font size=\"-1\">&nbsp;</font></td>\n",
-                    $css_switcher->getFullClass());
+                print "<td align=\"left\"><font size=\"-1\">&nbsp;</font></td>\n";
             }
             $pre_cells++;
         }
 
         if ($structure["statusgruppe"]) {
-            printf("<td%salign=\"left\"><font size=\"-1\">&nbsp;</font></td>\n",
-                $css_switcher->getFullClass());
+            print "<td align=\"left\"><font size=\"-1\">&nbsp;</font></td>\n";
         }
 
         foreach ($datafields_list as $entry) {
@@ -254,28 +246,27 @@ function table_body ($members, $range_id, $structure, $css_switcher) {
                     }
                 }
 
-                printf("<td%salign=\"left\"><font size=\"-1\">%s</font></td>\n",
-                    $css_switcher->getFullClass(), $value);
+                printf("<td align=\"left\"><font size=\"-1\">%s</font></td>\n", $value);
             }
         }
 
         if (sizeof($GLOBALS['dview']) == 0) {
-            if ($structure['raum']) echo '<td '.$css_switcher->getFullClass().'>'. htmlReady($member['raum']) .'</td>';
-            if ($structure['sprechzeiten']) echo '<td '.$css_switcher->getFullClass().'>'. htmlReady($member['sprechzeiten']) .'</td>';
-            if ($structure['telefon']) echo '<td '.$css_switcher->getFullClass().'>'. htmlReady($member['Telefon']) .'</td>';
-            if ($structure['email']) echo '<td '.$css_switcher->getFullClass().'>'. htmlReady($member['Email']) .'</td>';
-            if ($structure['homepage']) echo '<td '.$css_switcher->getFullClass().'>'. htmlReady($member['Home']) .'</td>';
+            if ($structure['raum']) echo '<td>'. htmlReady($member['raum']) .'</td>';
+            if ($structure['sprechzeiten']) echo '<td>'. htmlReady($member['sprechzeiten']) .'</td>';
+            if ($structure['telefon']) echo '<td>'. htmlReady($member['Telefon']) .'</td>';
+            if ($structure['email']) echo '<td>'. htmlReady($member['Email']) .'</td>';
+            if ($structure['homepage']) echo '<td>'. htmlReady($member['Home']) .'</td>';
         }
 
         if ($structure["nachricht"]) {
-            printf("<td%salign=\"left\" width=\"1%%\"".(($admin_view) ? "" : " colspan=\"2\""). " nowrap>\n",$css_switcher->getFullClass());
+            print "<td align=\"left\" width=\"1%%\"".(($admin_view) ? "" : " colspan=\"2\""). " nowrap>\n";
             printf("<a href=\"%s\">", URLHelper::getLink("sms_send.php?sms_source_page=" . ($admin_view == true ? "inst_admin.php" : "institut_members.php") . "&rec_uname=".$member['username']));
             printf("<img src=\"" . Assets::image_path('icons/16/blue/mail.png') . "\" alt=\"%s\" ", _("Nachricht an Benutzer verschicken"));
             printf("title=\"%s\" border=\"0\" valign=\"baseline\"></a>", _("Nachricht an Benutzer verschicken"));
             echo '</td>';
 
             if ($admin_view && !LockRules::Check($range_id, 'participants')) {
-                echo '<td '.$css_switcher->getFullClass().' width="1%" nowrap>';
+                echo '<td width="1%" nowrap>';
                 if ($member['statusgruppe_id']) {    // if we are in a view grouping by statusgroups
                     echo '&nbsp;<a href="'.URLHelper::getLink('?cmd=removeFromGroup&username='.$member['username'].'&role_id='. $member['statusgruppe_id']).'">';
                 } else {
@@ -295,13 +286,12 @@ function table_body ($members, $range_id, $structure, $css_switcher) {
                 foreach ($statusgruppen as $id) {
                     $entries = DataFieldEntry::getDataFieldEntries(array($member['user_id'], $id));
 
-                    $css_switcher->switchClass();
-                    echo '<tr '.$css_switcher->getHover().'>';
+                    echo '<tr>';
                     for ($i = 0; $i <= $pre_cells; $i++) {
-                        echo '<td '.$css_switcher->getFullClass().'></td>';
+                        echo '<td>&nbsp;</td>';
                     }
 
-                    echo '<td '.$css_switcher->getFullClass().'><font size="-1">';
+                    echo '<td><font size="-1">';
 
                     if ($admin_view) {
                         echo '<a href="'.URLHelper::getLink('admin_statusgruppe.php?role_id='.$id.'&cmd=displayRole').'">'.htmlReady($group_list[$id]).'</a>';
@@ -314,7 +304,7 @@ function table_body ($members, $range_id, $structure, $css_switcher) {
                     if (sizeof($entries) > 0) {
                         foreach ($entries as $e_id => $entry) {
                             if (in_array($e_id, $GLOBALS['dview']) === TRUE) {
-                                echo '<td '.$css_switcher->getFullClass().'><font size="-1">';
+                                echo '<td><font size="-1">';
                                 if ($entry->getValue() == 'default_value') {
                                     echo $default_entries[$e_id]->getDisplayValue();
                                 } else {
@@ -325,22 +315,22 @@ function table_body ($members, $range_id, $structure, $css_switcher) {
                         }
                     } else {
                         for ($i = 0; $i < sizeof($GLOBALS['struct']); $i++) {
-                            echo '<td '.$css_switcher->getFullClass().'></td>';
+                            echo '<td>&nbsp;</td>';
                         }
                     }
                     if ($admin_view && !LockRules::Check($range_id, 'participants')) {
-                        echo '<td '.$css_switcher->getFullClass().'>';
+                        echo '<td>';
                         echo '<a href="'.URLHelper::getLink('edit_about.php?view=Karriere&username='.$member['username'].'&switch='.$id).'"><font size="-1">';
                         echo Assets::img('icons/16/blue/edit.png');
                         echo '</font></a></td>';
 
-                        echo '<td '.$css_switcher->getFullClass().'>';
+                        echo '<td>';
                         echo '&nbsp;<a href="'.URLHelper::getLink('?cmd=removeFromGroup&username='.$member['username'].'&role_id='.$id).'">';
                         echo Assets::img('icons/16/blue/trash.png', array('class' => 'text-top'));
                         echo '</a>&nbsp</td>';
                     }
                     elseif ($structure["nachricht"]) {
-                        echo '<td '.$css_switcher->getFullClass().' colspan=\"2\">&nbsp;</td>';
+                        echo '<td colspan=\"2\">&nbsp;</td>';
                     }
                     echo '</tr>', "\n";
                 }
@@ -861,9 +851,9 @@ echo "</td></tr></table>\n";
 if ($perm->have_perm("admin")) {
     echo "\n</form>\n";
 }
-echo "<table border=\"0\" width=\"99%\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n";
+echo "<table class=\"zebra\" border=\"0\" width=\"99%\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n";
 
-table_head($table_structure, $css_switcher);
+table_head($table_structure);
 
 // if you have the right question you will get the right answer ;-)
 if ($show == "funktion") {
@@ -871,7 +861,7 @@ if ($show == "funktion") {
     if ($all_statusgruppen) {
         function display_recursive($roles, $level = 0, $title = '') {
             global $statusgruppe_user_sortby, $direction, $extend, $auswahl;
-            global $_fullname_sql, $css_switcher, $table_structure, $colspan;
+            global $_fullname_sql, $table_structure, $colspan;
             global $admin_view, $rechte, $perm, $SessSemName;
             foreach ($roles as $role_id => $role) {
                 if ($title == '') {
@@ -928,7 +918,7 @@ if ($show == "funktion") {
                         echo htmlReady($zw_title);
                         echo "<b></font></td></tr>\n";
                     }
-                    table_body($institut_members, $auswahl, $table_structure, $css_switcher);
+                    table_body($institut_members, $auswahl, $table_structure);
                 }
                 if ($role['child']) {
                     display_recursive($role['child'], $level + 1, $zw_title);
@@ -973,7 +963,7 @@ if ($show == "funktion") {
             echo "<tr><td class=\"steelkante\" colspan=\"$colspan\" height=\"20\">";
             echo "<font size=\"-1\"><b>&nbsp;";
             echo _("keiner Funktion zugeordnet") . "<b></font></td></tr>\n";
-            table_body($institut_members, $auswahl, $table_structure, $css_switcher);
+            table_body($institut_members, $auswahl, $table_structure);
         }
     }
 } elseif ($show == 'status') {
@@ -1016,7 +1006,7 @@ if ($show == "funktion") {
                  " border=\"0\"></a>&nbsp;";
             echo "</td></tr>\n";
 
-            table_body($institut_members, $auswahl, $table_structure, $css_switcher);
+            table_body($institut_members, $auswahl, $table_structure);
         }
     }
 } else {
@@ -1091,7 +1081,7 @@ if ($show == "funktion") {
         $institut_members = $statement->fetchAll(PDO::FETCH_ASSOC);
 
         if (count($institut_members) > 0) {
-            table_body($institut_members, $auswahl, $table_structure, $css_switcher);
+            table_body($institut_members, $auswahl, $table_structure);
         }
     }
 }

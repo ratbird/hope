@@ -1,7 +1,7 @@
 <?
 # Lifter002: TODO
+# Lifter003: TEST
 # Lifter007: TODO
-# Lifter003: TODO
 # Lifter010: TODO
 /**
 * sem_portal.php
@@ -57,8 +57,6 @@ require_once 'lib/visual.inc.php';  //wir brauchen die Seminar-Typen
 require_once 'lib/classes/SemBrowse.class.php';
 require_once 'lib/classes/StmBrowse.class.php';
 
-$db=new DB_Seminar;
-
 
 
 //Einstellungen fuer Reitersystem
@@ -86,35 +84,48 @@ include ('lib/include/header.php');   // Output of Stud.IP head
 PageLayout::addBodyElements(cssClassSwitcher::GetHoverJSFunction());
 
 //function to display toplists
-function getToplist($rubrik, $query, $type="count") {
+function getToplist($rubrik, $query, $type = 'count', $parameters = array()) {
+    $cache = StudipCacheFactory::getCache();
+    $hash  = '/sem_portal/' . md5($query);
     
-    $result .= "<table cellpadding=\"0\" cellspacing=\"2\" border=\"0\">";
-    $db=new DB_Seminar;
-    $db->cache_query($query);
-    if  ($db->num_rows() > 0) {
-        $result .= "<tr><td colspan=\"2\"><font size=\"-1\"><b>$rubrik</b></font></td></tr>";
-        $i=1;
-        while ($db->next_record() ){
-            $result .= "<tr><td width=\"1%\" valign=\"top\"><font size=\"-1\">$i.</font></td>";
-            $result .= "<td width=\"99%\"><font size=\"-1\"><a href=\"details.php?sem_id=".$db->f("seminar_id")."&send_from_search=true&send_from_search_page=".$_SERVER['PHP_SELF']."\">";
-            $result .= htmlReady(substr($db->f("name"),0,45));
-            if (strlen ($db->f("name")) > 45)
-                $result .= "... ";
-            $result .= "</a>";
-            if ($type == "date" AND $db->f("count") >0) {
-                $last =  date("YmdHis",$db->f("count"));
-                $count = substr($last,6,2).".".substr($last,4,2).".". substr($last,0,4);
-            }
-            else
-                $count = $db->f("count");
-            if ($count>0)
-                $result .= "&nbsp; (".$count.")";
-            $result .= "</font></td></tr>";
-            $i++;
-        }
-        $result .= "</tr>";
+    $top_list = unserialize($cache->read($hash));
+    if (!$top_list) {
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute($parameters);
+        $top_list = $statement->fetchAll(PDO::FETCH_ASSOC);
+        
+        $cache->write($hash, serialize($top_list), 5 * 60);
     }
+    
+    if (empty($top_list)) {
+        return '';
+    }
+
+    $result .= "<table cellpadding=\"0\" cellspacing=\"2\" border=\"0\">";
+    $result .= "<tr><td colspan=\"2\"><font size=\"-1\"><b>$rubrik</b></font></td></tr>";
+    $i=1;
+    foreach ($top_list as $item) {
+        $result .= "<tr><td width=\"1%\" valign=\"top\"><font size=\"-1\">$i.</font></td>";
+        $result .= "<td width=\"99%\"><font size=\"-1\"><a href=\"details.php?sem_id=".$item['seminar_id']."&send_from_search=true&send_from_search_page=".$_SERVER['PHP_SELF']."\">";
+        $result .= htmlReady(substr($item['name'], 0, 45));
+        if (strlen ($item['name']) > 45) {
+            $result .= "... ";
+        }
+        $result .= "</a>";
+        if ($type == 'date' && $item['count'] > 0) {
+            $count = date('d.m.Y', $item['count']);
+        } else {
+            $count = $item['count'];
+        }
+        if ($count > 0) {
+            $result .= "&nbsp; (" . $count . ")";
+        }
+        $result .= "</font></td></tr>";
+        $i++;
+    }
+    $result .= "</tr>";
     $result .= "</table>";
+
     return $result;
 }
 
@@ -129,21 +140,20 @@ if ($_SESSION['sem_portal']['bereich'] != "all" && $_SESSION['sem_portal']['bere
         }
     }
 
-    $query = "SELECT count(*) AS count FROM seminare WHERE "
-        . (!$GLOBALS['perm']->have_perm(get_config('SEM_VISIBILITY_PERM')) ? "seminare.visible=1 AND" : "" )
-        . " seminare.status IN ('" . join("','", $_sem_status) . "')";
-    $db->query($query);
-    if ($db->next_record())
-        $anzahl_seminare_class = $db->f("count");
+    $query = "SELECT COUNT(*) FROM seminare WHERE status IN (?)";
+    if (!$GLOBALS['perm']->have_perm(get_config('SEM_VISIBILITY_PERM'))) {
+        $query .= " AND visible = 1";
+    }
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($_sem_status));
+    $anzahl_seminare_class = $statement->fetchColumn();
 } else {
     $_sem_status = false;
 }
 
 if ($_SESSION['sem_portal']['bereich'] == "mod") {
-    $query = "SELECT count(*) AS count FROM stm_instances WHERE complete=1";
-    $db->query($query);
-    if ($db->next_record())
-        $anzahl_seminare_class = $db->f("count");
+    $query = "SELECT COUNT(*) FROM stm_instances WHERE complete = 1";
+    $anzahl_seminare_class = DBManager::get()->query($query)->fetchColumn();
 }
 
 $init_data = array( "level" => "f",
@@ -240,26 +250,59 @@ if ($sem_browse_obj->show_result && count($_SESSION['sem_browse_data']['search_r
     }
 } elseif ($_SESSION['sem_portal']['bereich'] != 'mod') {
     $toplist = $toplist_links = '';
-    $sql_where_query_seminare = " WHERE 1 ";
-    if (!$GLOBALS['perm']->have_perm(get_config('SEM_VISIBILITY_PERM'))) $sql_where_query_seminare .= " AND seminare.visible=1  ";
 
-    if ($_SESSION['sem_portal']['bereich'] !="all")
-        $sql_where_query_seminare .= " AND seminare.status IN ('" . join("','", $_sem_status) . "')";
+    $sql_where_query_seminare = " WHERE 1 ";
+    $parameters = array();
+    
+    if (!$GLOBALS['perm']->have_perm(get_config('SEM_VISIBILITY_PERM'))) {
+        $sql_where_query_seminare .= " AND seminare.visible = 1 ";
+    }
+
+    if ($_SESSION['sem_portal']['bereich'] != 'all') {
+        $sql_where_query_seminare .= " AND seminare.status IN (?) ";
+        $parameters[] = $_sem_status;
+    }
 
 
     switch ($_SESSION['sem_portal']["toplist"]) {
         case 4:
         default:
-            $toplist =  getToplist(_("neueste Veranstaltungen"),"SELECT seminare.seminar_id, seminare.name, mkdate as count FROM seminare ".$sql_where_query_seminare." ORDER BY mkdate DESC LIMIT 5", "date");
+            $query = "SELECT seminar_id, name, mkdate AS count
+                      FROM seminare 
+                      {$sql_where_query_seminare}
+                      ORDER BY mkdate DESC
+                      LIMIT 5";
+            $toplist =  getToplist(_('neueste Veranstaltungen'), $query, 'date', $parameters);
         break;
         case 1:
-            $toplist = getToplist(_("Teilnehmeranzahl"), "SELECT seminare.seminar_id, seminare.name, count(seminare.seminar_id) as count FROM seminare LEFT JOIN seminar_user USING(seminar_id) ".$sql_where_query_seminare." GROUP BY seminare.seminar_id ORDER BY count DESC LIMIT 5");
+            $query = "SELECT seminare.seminar_id, seminare.name, COUNT(seminare.seminar_id) AS count
+                      FROM seminare
+                      LEFT JOIN seminar_user USING (seminar_id)
+                      {$sql_where_query_seminare}
+                      GROUP BY seminare.seminar_id
+                      ORDER BY count DESC
+                      LIMIT 5";
+            $toplist = getToplist(_('Teilnehmeranzahl'), $query, 'count', $parameters);
         break;
         case 2:
-            $toplist =  getToplist(_("die meisten Materialien"),"SELECT dokumente.seminar_id, seminare.name, count(dokumente.seminar_id) as count FROM seminare INNER JOIN  dokumente USING(seminar_id) ".$sql_where_query_seminare." GROUP BY dokumente.seminar_id  ORDER BY count DESC LIMIT 5");
+            $query = "SELECT dokumente.seminar_id, seminare.name, COUNT(dokumente.seminar_id) AS count
+                      FROM seminare
+                      INNER JOIN dokumente USING (seminar_id) 
+                      {$sql_where_query_seminare}
+                      GROUP BY dokumente.seminar_id
+                      ORDER BY count DESC
+                      LIMIT 5";
+            $toplist =  getToplist(_('die meisten Materialien'), $query, 'count', $parameters);
         break;
         case 3:
-            $toplist =  getToplist(_("aktivste Veranstaltungen"),"SELECT px_topics.seminar_id, seminare.name, count(px_topics.seminar_id) as count FROM px_topics INNER JOIN seminare USING(seminar_id) ".$sql_where_query_seminare." AND px_topics.mkdate > ".(time()-1209600) . " GROUP BY px_topics.seminar_id  ORDER BY count DESC LIMIT 5");
+            $query = "SELECT px_topics.seminar_id, seminare.name, COUNT(px_topics.seminar_id) AS count
+                      FROM px_topics
+                      INNER JOIN seminare USING (seminar_id)
+                      {$sql_where_query_seminare} AND px_topics.mkdate > UNIX_TIMESTAMP(NOW() - INTERVAL 14 DAY)
+                      GROUP BY px_topics.seminar_id
+                      ORDER BY count DESC
+                      LIMIT 5";
+            $toplist =  getToplist(_("aktivste Veranstaltungen"), $query, 'count', $parameters);
         break;
     }
 

@@ -345,7 +345,7 @@ class  AbstractStm {
         foreach ($this->assigns as $index => $val) {
             $statement->execute(array(
                 $this->id,
-                $val['stm_type_id'],
+                '' . $val['stm_type_id'],
                 $val['abschl'],
                 $val['stg'],
                 $val['pversion'],
@@ -380,14 +380,14 @@ class  AbstractStm {
 
         $query = "DELETE FROM stm_abstract_text WHERE stm_abstr_id = ?";
         $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($this-id));
+        $statement->execute(array($this->id));
         if (!$statement->rowCount()) {
             $this->msg[] = array('error', _('DB-Error beim Entfernen der Textfelder'));
         }
 
         $query = "DELETE FROM stm_abstract WHERE stm_abstr_id = ?";
         $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($this-id));
+        $statement->execute(array($this->id));
         if (!$statement->rowCount()) {
             $this->msg[] = array('error', _('DB-Error beim Entfernen des Moduls'));
         }

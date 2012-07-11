@@ -1,8 +1,8 @@
 <?
 # Lifter001: TEST
+# Lifter003: TEST
 # Lifter002: TODO
 # Lifter007: TODO
-# Lifter003: TODO - The big search query at the end is still left untouched
 # Lifter010: TODO
 /*
 archiv.php - Suchmaske fuer das Archiv
@@ -64,7 +64,7 @@ $delete_user = Request::option('delete_user');
 $add_user = Request::option('add_user');
 //Daten des Suchformulars uebernehmen oder loeschen
 if (Request::option('suche')) {
-    $_SESSION['archiv_data']='';
+    $_SESSION['archiv_data'] = array();
     $_SESSION['archiv_data']["all"]= Request::get('all');
     $_SESSION['archiv_data']["name"]=Request::get('name');
     $_SESSION['archiv_data']["sem"]=Request::get('sem');
@@ -74,17 +74,18 @@ if (Request::option('suche')) {
     $_SESSION['archiv_data']["doz"]=Request::get('doz');
     $_SESSION['archiv_data']["pers"]=Request::option('pers');
     $_SESSION['archiv_data']["perform_search"]=TRUE;
-} elseif ((!$open) && (!$delete_id) && (!Request::option('show_grants')) && (!Request::option('hide_grants')) && (!$delete_user) && (!Request::submitted('add_user')) && (!Request::submitted('new_search')) && (!Request::option('close')) && (!$dump_id) && (!Request::option('sortby')) && (!Request::option('back')))
+} elseif (!$open && !$delete_id && !Request::option('show_grants') && !Request::option('hide_grants') && !$delete_user && !Request::submitted('add_user') && !Request::submitted('new_search') && !Request::option('close') && !$dump_id && !Request::option('sortby') && !Request::option('back')) {
     $_SESSION['archiv_data']["perform_search"]=FALSE;
+}
 
 
 //Anzeige der Zugriffsberechtigten Personen ein/ausschalten
 if (Request::option('show_grants')) {
     $_SESSION['archiv_data']["edit_grants"]=TRUE;
-    }
+}
 if (Request::option('hide_grants')) {
     $_SESSION['archiv_data']["edit_grants"]=FALSE;
-    }
+}
 
 if ($open) {
     $_SESSION['archiv_data']["open"]=$open;
@@ -394,7 +395,6 @@ include('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
 // wollen wir was Suchen?
 
 if ($_SESSION['archiv_data']["perform_search"]) {
-    $db = new DB_Seminar;
     
     //searchstring to short?
     if ((((strlen($_SESSION['archiv_data']["all"]) < 4) && ($_SESSION['archiv_data']["all"]))
@@ -406,54 +406,73 @@ if ($_SESSION['archiv_data']["perform_search"]) {
     if ((!$_SESSION['archiv_data']["all"]) && (!$_SESSION['archiv_data']["name"]) && (!$_SESSION['archiv_data']["desc"]) && (!$_SESSION['archiv_data']["doz"]) && (!$_SESSION['archiv_data']["pers"]) && (!$_SESSION['archiv_data']["inst"]) && (!$_SESSION['archiv_data']["fak"]))
         $string_too_short = TRUE;
 
-    if ($_SESSION['archiv_data']["pers"])
-        $query ="SELECT archiv.seminar_id, name, untertitel,  beschreibung, start_time, semester, studienbereiche, heimat_inst_id, institute, dozenten, fakultaet, archiv_file_id, forumdump, wikidump FROM archiv LEFT JOIN archiv_user USING (seminar_id) WHERE user_id = '".$user->id."' AND ";
-    else
-        $query ="SELECT seminar_id, name, untertitel,  beschreibung, start_time, semester, studienbereiche, heimat_inst_id, institute, dozenten, fakultaet, archiv_file_id, forumdump, wikidump FROM archiv WHERE ";
-    if ($_SESSION['archiv_data']["all"]) {
-        $query .= "name LIKE '%".trim($_SESSION['archiv_data']["all"])."%'";
-        $query .= " OR untertitel LIKE '%".trim($_SESSION['archiv_data']["all"])."%'";
-        $query .= " OR beschreibung LIKE '%".trim($_SESSION['archiv_data']["all"])."%'";
-        $query .= " OR start_time LIKE '%".trim($_SESSION['archiv_data']["all"])."%'";
-        $query .= " OR semester LIKE '%".trim($_SESSION['archiv_data']["all"])."%'";
-        $query .= " OR studienbereiche LIKE '%".trim($_SESSION['archiv_data']["all"])."%'";
-        $query .= " OR institute LIKE '%".trim($_SESSION['archiv_data']["all"])."%'";
-        $query .= " OR dozenten LIKE '%".trim($_SESSION['archiv_data']["all"])."%'";
-        $query .= " OR fakultaet LIKE '%".trim($_SESSION['archiv_data']["all"])."%'";
+    $parameters = array();
+    if ($_SESSION['archiv_data']['pers']) {
+        $query = "SELECT seminar_id, name, untertitel, beschreibung, 
+                         start_time, semester, studienbereiche, heimat_inst_id,
+                         institute, dozenten, fakultaet, archiv_file_id,
+                         forumdump, wikidump
+                  FROM archiv
+                  LEFT JOIN archiv_user USING (seminar_id)
+                  WHERE user_id = :user_id";
+        $parameters['user_id'] = $user->id;
     } else {
-        if ($_SESSION['archiv_data']["name"])
-            $query .= "name LIKE '%".trim($_SESSION['archiv_data']["name"])."%'";
-        else
-            $query .= "name LIKE '%%'";
-        if ($_SESSION['archiv_data']["desc"])
-            $query .= " AND beschreibung LIKE '%".trim($_SESSION['archiv_data']["desc"])."%'";
-        else
-            $query .= " AND beschreibung LIKE '%%'";
-        if ($_SESSION['archiv_data']["sem"])
-            $query .= " AND semester LIKE '%".trim($_SESSION['archiv_data']["sem"])."%'";
-        else
-            $query .= " AND semester LIKE '%%'";
-        if ($_SESSION['archiv_data']["inst"])
-            $query .= " AND heimat_inst_id LIKE '%".trim($_SESSION['archiv_data']["inst"])."%'";
-        else
-            $query .= " AND heimat_inst_id LIKE '%%'";
-        if ($_SESSION['archiv_data']["doz"])
-            $query .= " AND dozenten LIKE '%".trim($_SESSION['archiv_data']["doz"])."%'";
-        else
-            $query .= " AND dozenten LIKE '%%'";
-        if ($_SESSION['archiv_data']["fak"])
-            $query .= " AND fakultaet LIKE '%".trim($_SESSION['archiv_data']["fak"])."%'";
-        else
-            $query .= " AND fakultaet LIKE '%%'";
+        $query = "SELECT seminar_id, name, untertitel, beschreibung,
+                         start_time, semester, studienbereiche, heimat_inst_id,
+                         institute, dozenten, fakultaet, archiv_file_id,
+                         forumdump, wikidump
+                  FROM archiv
+                  WHERE 1";
     }
-    $query .= " ORDER BY ".$_SESSION['archiv_data']["sortby"];
+    if ($_SESSION['archiv_data']['all']) {
+        $query .= " AND (";
+        $query .= "name LIKE CONCAT('%', :needle, '%')";
+        $query .= " OR untertitel LIKE CONCAT('%', :needle, '%')";
+        $query .= " OR beschreibung LIKE CONCAT('%', :needle, '%')";
+        $query .= " OR start_time LIKE CONCAT('%', :needle, '%')";
+        $query .= " OR semester LIKE CONCAT('%', :needle, '%')";
+        $query .= " OR studienbereiche LIKE CONCAT('%', :needle, '%')";
+        $query .= " OR institute LIKE CONCAT('%', :needle, '%')";
+        $query .= " OR dozenten LIKE CONCAT('%', :needle, '%')";
+        $query .= " OR fakultaet LIKE CONCAT('%', :needle, '%')";
+        $query .= ")";
+        
+        $parameters['needle'] = trim($_SESSION['archiv_data']['all']);
+    } else {
+        if ($_SESSION['archiv_data']['name']) {
+            $query .= " AND name LIKE CONCAT('%', :needle_name, '%')";
+            $parameters['needle_name'] = trim($_SESSION['archiv_data']['name']);
+        }
+        if ($_SESSION['archiv_data']['desc']) {
+            $query .= " AND beschreibung LIKE CONCAT('%', :needle_desc, '%')";
+            $parameters['needle_desc'] = trim($_SESSION['archiv_data']['desc']);
+        }
+        if ($_SESSION['archiv_data']['sem']) {
+            $query .= " AND semester LIKE CONCAT('%', :needle_sem, '%')";
+            $parameters['needle_sem'] = trim($_SESSION['archiv_data']['sem']);
+        }
+        if ($_SESSION['archiv_data']['inst']) {
+            $query .= " AND heimat_inst_id LIKE CONCAT('%', :needle_inst, '%')";
+            $parameters['needle_inst'] = trim($_SESSION['archiv_data']['inst']);
+        }
+        if ($_SESSION['archiv_data']['doz']) {
+            $query .= " AND dozenten LIKE CONCAT('%', :needle_doz, '%')";
+            $parameters['needle_doz'] = trim($_SESSION['archiv_data']['doz']);
+        }
+        if ($_SESSION['archiv_data']['fak']) {
+            $query .= " AND fakultaet LIKE CONCAT('%', :needle_fak, '%')";
+            $parameters['needle_fak'] = trim($_SESSION['archiv_data']['fak']);
+        }
+    }
+    $query .= " ORDER BY " . $_SESSION['archiv_data']['sortby'];
 
-    $db->query($query);
 
-    if ((!$db->affected_rows() == 0) && (!$string_too_short)) {
-        $hits = $db->affected_rows();
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute($parameters);
+    $results = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-    ?>
+    $hits = count($results);
+    if ($hits > 0 && (!$string_too_short)) { ?>
     <tr>
         <td class="blank" colspan="2">
         <?
@@ -472,76 +491,74 @@ if ($_SESSION['archiv_data']["perform_search"]) {
         echo "<td  width=\"10%\" class=\"steel\" colspan=3 align=center valign=bottom><b>" . _("Aktion") . "</b></td></tr>\n";
 
         $c=0;
-    while ($db->next_record()) {
-            $file_name=_("Dateisammlung") . " ".substr($db->f("name"),0,200).".zip";
+        foreach ($results as $result) {
+            $file_name=_("Dateisammlung") . " ".substr($result['name'], 0, 200).".zip";
             $view = 0;
-            if ($_SESSION['archiv_data']["open"]) {
-            if ($_SESSION['archiv_data']["open"] ==$db->f('seminar_id'))
-                $class="steelgraulight";
-            else
-                $class="steel1";
-          } else {
-            if ($c % 2)
-                $class="steelgraulight";
-                else
-                    $class="steel1";
+            if ($_SESSION['archiv_data']['open']) {
+                if ($_SESSION['archiv_data']['open'] == $result['seminar_id']) {
+                    $class = 'steelgraulight';
+                } else {
+                    $class = 'steel1';
+                }
+            } else {
+                $class = ($c % 2) ? 'steelgraulight' : 'steel1';
                 $c++;
             }
 
             echo "<tr><td class=\"$class\" width=\"1%\" nowrap>&nbsp;";
 
             // schon aufgeklappt?
-            if ($_SESSION['archiv_data']["open"]==$db->f('seminar_id')) {
+            if ($_SESSION['archiv_data']["open"]==$result['seminar_id']) {
                 echo "<a name=\"anker\"></a><a href=\"". URLHelper::getLink("?close=yes") ."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/arr_1down.png\" " . tooltip(_("Zuklappen")) . " border=\"0\" valign=\"top\"></a></td>";
-                echo "<td class=\"$class\" width=\"29%\"><font size=\"-1\"><b><a href=\"". URLHelper::getLink("?close=yes") ."\">".htmlReady($db->f("name"))."</a></b></font></td>";
+                echo "<td class=\"$class\" width=\"29%\"><font size=\"-1\"><b><a href=\"". URLHelper::getLink("?close=yes") ."\">".htmlReady($result['name'])."</a></b></font></td>";
             } else {
-          echo "<a href=\"". URLHelper::getLink("?open=" . $db->f('seminar_id')) . "#anker\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/arr_1right.png\" " . tooltip(_("Aufklappen")) . " border=\"0\" valign=\"top\"></a></td>";
-                echo "<td class=\"$class\" width=\"29%\"><font size=\"-1\"><a href=\"". URLHelper::getLink("?open=" . $db->f('seminar_id')) . "#anker\">".htmlReady($db->f("name"))."</a></font></td>";
+          echo "<a href=\"". URLHelper::getLink("?open=" . $result['seminar_id']) . "#anker\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/arr_1right.png\" " . tooltip(_("Aufklappen")) . " border=\"0\" valign=\"top\"></a></td>";
+                echo "<td class=\"$class\" width=\"29%\"><font size=\"-1\"><a href=\"". URLHelper::getLink("?open=" . $result['seminar_id']) . "#anker\">".htmlReady($result['name'])."</a></font></td>";
             }
-        echo "<td align=center class=\"$class\">&nbsp;<font size=-1>".htmlReady($db->f("dozenten"))."</font></td>";
-            echo "<td align=center class=\"$class\">&nbsp;<font size=-1>".htmlReady($db->f("institute"))."</font></td>";
-            echo "<td align=center class=\"$class\">&nbsp;<font size=-1>".htmlReady($db->f("semester"))."</font></td>";
+        echo "<td align=center class=\"$class\">&nbsp;<font size=-1>".htmlReady($result['dozenten'])."</font></td>";
+            echo "<td align=center class=\"$class\">&nbsp;<font size=-1>".htmlReady($result['institute'])."</font></td>";
+            echo "<td align=center class=\"$class\">&nbsp;<font size=-1>".htmlReady($result['semester'])."</font></td>";
 
-            if (archiv_check_perm($db->f("seminar_id")))
+            if (archiv_check_perm($result['seminar_id']))
                 $view = 1;
             if ($view == 1) {
-                echo "<td class=\"$class\" width=\"3%\">&nbsp;<a href=\"". URLHelper::getLink("?dump_id=".$db->f('seminar_id')) ."\" target=_blank>" .  Assets::img('icons/16/blue/info.png', array('class' => 'text-top', 'title' =>_('Komplettansicht'))) . "</a></td>";
+                echo "<td class=\"$class\" width=\"3%\">&nbsp;<a href=\"". URLHelper::getLink("?dump_id=".$result['seminar_id']) ."\" target=_blank>" .  Assets::img('icons/16/blue/info.png', array('class' => 'text-top', 'title' =>_('Komplettansicht'))) . "</a></td>";
                 echo "<td class=\"$class\" width=\"3%\">&nbsp;";
-                if (!$db->f('archiv_file_id')=='') {
-                    echo '<a href="' . URLHelper::getLink(GetDownloadLink($db->f('archiv_file_id'), $file_name, 1)) .'"> ' .  Assets::img('icons/16/blue/download.png', array('class' => 'text-top', 'title' =>_('Dateisammlung'))) . '</a>';
+                if (!$result['archiv_file_id']=='') {
+                    echo '<a href="' . URLHelper::getLink(GetDownloadLink($result['archiv_file_id'], $file_name, 1)) .'"> ' .  Assets::img('icons/16/blue/download.png', array('class' => 'text-top', 'title' =>_('Dateisammlung'))) . '</a>';
                 }
                 echo "</td><td class=\"$class\" width=\"3%\">&nbsp;";
-                if (archiv_check_perm($db->f("seminar_id")) == "admin")
-                    echo "<a href=\"". URLHelper::getLink("?delete_id=".$db->f('seminar_id')) ."\">&nbsp;<img border=0 src=\"". Assets::image_path('icons/16/blue/trash.png') ."\" " . tooltip(_("Diese Veranstaltung aus dem Archiv entfernen")) . "></a>";
+                if (archiv_check_perm($result['seminar_id']) == "admin")
+                    echo "<a href=\"". URLHelper::getLink("?delete_id=".$result['seminar_id']) ."\">&nbsp;<img border=0 src=\"". Assets::image_path('icons/16/blue/trash.png') ."\" " . tooltip(_("Diese Veranstaltung aus dem Archiv entfernen")) . "></a>";
                 echo "</td>";
             } else
                 echo "<td class=\"$class\" width=\"9%\" colspan=\"3\">&nbsp;</td>";
 
-            if ($_SESSION['archiv_data']["open"] == $db->f('seminar_id')) {
+            if ($_SESSION['archiv_data']["open"] == $result['seminar_id']) {
                 echo "</tr><tr><td class=\"steelgraulight\" colspan=8><blockquote>";
-                if (!$db->f('untertitel')=='')
-                    echo "<li><font size=\"-1\"><b>" . _("Untertitel:") . " </b>".htmlReady($db->f('untertitel'))."</font></li>";
-                if (!$db->f('beschreibung')=='')
-                    echo "<li><font size=\"-1\"><b>" . _("Beschreibung:") . " </b>".htmlReady($db->f('beschreibung'))."</font></li>";
-                if (!$db->f('fakultaet')=='')
-                    echo "<li><font size=\"-1\"><b>" . _("Fakultät:") . " </b>".htmlReady($db->f('fakultaet'))."</font></li>";
-                if (!$db->f('studienbereiche')=='')
-                    echo "<li><font size=-1><b>" . _("Bereich:") . " </b>".htmlReady($db->f('studienbereiche'))."</font></li>";
+                if (!$result['untertitel']=='')
+                    echo "<li><font size=\"-1\"><b>" . _("Untertitel:") . " </b>".htmlReady($result['untertitel'])."</font></li>";
+                if (!$result['beschreibung']=='')
+                    echo "<li><font size=\"-1\"><b>" . _("Beschreibung:") . " </b>".htmlReady($result['beschreibung'])."</font></li>";
+                if (!$result['fakultaet']=='')
+                    echo "<li><font size=\"-1\"><b>" . _("Fakultät:") . " </b>".htmlReady($result['fakultaet'])."</font></li>";
+                if (!$result['studienbereiche']=='')
+                    echo "<li><font size=-1><b>" . _("Bereich:") . " </b>".htmlReady($result['studienbereiche'])."</font></li>";
 
             // doppelt haelt besser: noch mal die Extras
 
                 if ($view == 1) {
-                    echo "<br><br><li><a href=\"". URLHelper::getLink("?dump_id=".$db->f('seminar_id')) ."\" target=_blank><font size=\"-1\">" . _("&Uuml;bersicht der Veranstaltungsinhalte") . "</font></a></li>";
-                    if (!$db->f('forumdump')=='')
-                        echo "<li><font size=\"-1\"><a href=\"". URLHelper::getLink("?forum_dump_id=".$db->f('seminar_id')) ."\" target=_blank>" . _("Beitr&auml;ge des Forums") . "</a></font></li>";
-                    if (!$db->f('wikidump')=='')
-                        echo "<li><font size=\"-1\"><a href=\"". URLHelper::getLink("?wiki_dump_id=".$db->f('seminar_id')) ."\" target=_blank>" . _("Wikiseiten") . "</a></font></li>";
-                    if (!$db->f('archiv_file_id')=='') {
-                        echo '<li><font size="-1"><a href="' . URLHelper::getLink(GetDownloadLink($db->f('archiv_file_id'), $file_name, 1)) .'">' . _("Download der Dateisammlung") . '</a></font></li>';
+                    echo "<br><br><li><a href=\"". URLHelper::getLink("?dump_id=".$result['seminar_id']) ."\" target=_blank><font size=\"-1\">" . _("&Uuml;bersicht der Veranstaltungsinhalte") . "</font></a></li>";
+                    if (!$result['forumdump']=='')
+                        echo "<li><font size=\"-1\"><a href=\"". URLHelper::getLink("?forum_dump_id=".$result['seminar_id']) ."\" target=_blank>" . _("Beitr&auml;ge des Forums") . "</a></font></li>";
+                    if (!$result['wikidump']=='')
+                        echo "<li><font size=\"-1\"><a href=\"". URLHelper::getLink("?wiki_dump_id=".$result['seminar_id']) ."\" target=_blank>" . _("Wikiseiten") . "</a></font></li>";
+                    if (!$result['archiv_file_id']=='') {
+                        echo '<li><font size="-1"><a href="' . URLHelper::getLink(GetDownloadLink($result['archiv_file_id'], $file_name, 1)) .'">' . _("Download der Dateisammlung") . '</a></font></li>';
                     }
-                    if (archiv_check_perm($db->f("seminar_id")) == "admin")
-                        echo "<li><a href=\"". URLHelper::getLink("?delete_id=".$db->f('seminar_id')) ."\"><font size=\"-1\">" . _("Diese Veranstaltung unwiderruflich aus dem Archiv entfernen") . "</font></a></li>";
-                    if (archiv_check_perm($db->f("seminar_id")) == "admin") {
+                    if (archiv_check_perm($result['seminar_id']) == "admin")
+                        echo "<li><a href=\"". URLHelper::getLink("?delete_id=".$result['seminar_id']) ."\"><font size=\"-1\">" . _("Diese Veranstaltung unwiderruflich aus dem Archiv entfernen") . "</font></a></li>";
+                    if (archiv_check_perm($result['seminar_id']) == "admin") {
                         if (!$_SESSION['archiv_data']["edit_grants"])
                             echo "<li><font size=\"-1\"><a href=\"". URLHelper::getLink("?show_grants=yes") ."#anker\">" . _("Zugriffsberechtigungen einblenden") . "</a></font></li>";
                         else
@@ -552,34 +569,53 @@ if ($_SESSION['archiv_data']["perform_search"]) {
 
                 if ($_SESSION['archiv_data']["edit_grants"]) {
                     echo "<br><br><hr><b><font size=\"-1\">" . _("Folgende Personen haben Zugriff auf die Daten der Veranstaltung (&Uuml;bersicht, Beitr&auml;ge und Dateiarchiv):") . "</font></b><br><br>";
-                    $db2->query("SELECT " . $_fullname_sql['full'] . " AS fullname , archiv_user.status, username, archiv_user.user_id FROM archiv_user LEFT JOIN auth_user_md5 USING (user_id) LEFT JOIN user_info USING (user_id) WHERE seminar_id = '".$db->f("seminar_id")."' ORDER BY Nachname");
-                    while ($db2->next_record()) {
-                        echo "<font size=\"-1\">".htmlReady($db2->f("fullname")). " (" . _("Status:") . " ". $db2->f("status"). ")</font>";
-                        if ($db2->f("status") != "dozent")
-                            echo "<a href=\"". URLHelper::getLink("?delete_user=".$db2->f("user_id")."&d_sem_id=".$db->f("seminar_id")) ,"#anker\"><font size=\"-1\">&nbsp;" . _("Zugriffsberechtigung entfernen") . "</font> <img border=0 src=\"". Assets::image_path('icons/16/blue/trash.png') ."\" " . tooltip(_("Dieser Person die Zugriffsberechtigung entziehen")) . "></a>";
+                    $query = "SELECT {$_fullname_sql['full']} AS fullname, archiv_user.status, username, user_id
+                              FROM archiv_user
+                              LEFT JOIN auth_user_md5 USING (user_id)
+                              LEFT JOIN user_info USING (user_id)
+                              WHERE seminar_id = ?
+                              ORDER BY Nachname";
+                    $statement = DBManager::get()->prepare($query);
+                    $statement->execute(array($result['seminar_id']));
+
+                    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                        echo "<font size=\"-1\">".htmlReady($row['fullname']). " (" . _("Status:") . " ". $row['status']. ")</font>";
+                        if ($row['status'] != "dozent")
+                            echo "<a href=\"". URLHelper::getLink("?delete_user=".$row['user_id']."&d_sem_id=".$result['seminar_id']) ,"#anker\"><font size=\"-1\">&nbsp;" . _("Zugriffsberechtigung entfernen") . "</font> <img border=0 src=\"". Assets::image_path('icons/16/blue/trash.png') ."\" " . tooltip(_("Dieser Person die Zugriffsberechtigung entziehen")) . "></a>";
                         echo "<br>";
                     }
                     if ((Request::submitted('add_user')) && (!Request::submitted('new_search'))) {
-                        $db2->query("SELECT " . $_fullname_sql['full'] . " AS fullname, username, auth_user_md5.user_id FROM auth_user_md5 LEFT JOIN user_info USING (user_id) WHERE Vorname LIKE '%$search_exp%' OR Nachname LIKE '%$search_exp%' OR username LIKE '%".trim($search_exp)."%' ORDER BY Nachname");
-                        if ($db2->affected_rows()) {
+                        $query = "SELECT {$_fullname_sql['full']} AS fullname, username, user_id
+                                  FROM auth_user_md5
+                                  LEFT JOIN user_info USING (user_id)
+                                  WHERE Vorname LIKE CONCAT('%', :needle, '%')
+                                     OR Nachname LIKE CONCAT('%', :needle, '%')
+                                     OR username LIKE CONCAT('%', :needle, '%')
+                                  ORDER BY Nachname";
+                        $statement = DBManager::get()->prepare($query);
+                        $statement->bindValue(':needle', trim($search_exp));
+                        $statement->execute();
+                        $temp = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+                        if (count($temp)) {
                             echo "<form action=\"". URLHelper::getLink() ."#anker\">";
                             echo "<hr><b><font size=\"-1\">" . _("Person Berechtigung erteilen:") . " </font></b><br><br>";
-                            echo "<b><font size=\"-1\">" . sprintf(_("Es wurden %s Personen gefunden"), $db2->affected_rows()) . " </font></b><br>";
+                            echo "<b><font size=\"-1\">" . sprintf(_("Es wurden %s Personen gefunden"), count($temp)) . " </font></b><br>";
                             echo "<font size=\"-1\">" . _("Bitte w&auml;hlen Sie die Person aus der Liste aus:") . "</font>&nbsp;<br><font size=\"-1\"><select name=\"add_user\">";
-                            while ($db2->next_record()) {
-                                echo "<option value=\"".$db2->f("user_id")."\">".htmlReady($db2->f("fullname")). " (".$db2->f("username").") </option>";
+                            foreach ($temp as $row) {
+                                echo "<option value=\"".$row['user_id']."\">".htmlReady($row['fullname']). " (".$row['username'].") </option>";
                             }
                             echo "</select></font>";
                             echo Button::create(_('Diese Person Hinzufügen'), 'do_add_user');
                             echo Button::create(_('Neue Suche'), 'new_search');
-                            echo "<input type=\"HIDDEN\"  name=\"a_sem_id\" value=\"",$db->f("seminar_id"), "\">";
+                            echo "<input type=\"HIDDEN\"  name=\"a_sem_id\" value=\"",$result['seminar_id'], "\">";
                             echo "</form>";
                         }
                     }
-                    if (((Request::submitted('add_user')) && (!$db2->affected_rows())) || (!Request::submitted('add_user')) || (Request::submitted('new_search'))) {
+                    if ((Request::submitted('add_user') && !count($temp)) || !Request::submitted('add_user') || Request::submitted('new_search')) {
                         echo "<form action=\"". URLHelper::getLink() ."#anker\">";
                         echo "<hr><b><font size=\"-1\">" . _("Person Berechtigung erteilen:") . " </font></b><br>";
-                        if ((Request::submitted('add_user')) && (!$db2->affected_rows())  && (!Request::submitted('new_search')))
+                        if (Request::submitted('add_user') && !count($temp)  && !Request::submitted('new_search'))
                             echo "<br><b><font size=\"-1\">" . _("Es wurde keine Person zu dem eingegebenem Suchbegriff gefunden!") . "</font></b><br>";
                         echo "<font size=\"-1\">" . _("Bitte Namen, Vornamen oder Benutzernamen eingeben:") . "</font>&nbsp; ";
                         echo "<br><input type=\"TEXT\" size=20 maxlength=255 name=\"search_exp\">";

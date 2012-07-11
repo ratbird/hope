@@ -172,7 +172,7 @@ if ($view=="listall") {
         //
         // Page was edited and submitted
         //
-        submitWikiPage($keyword, $version, Request::quoted('body'), $user->id, $SessSemName[1]);
+        submitWikiPage($keyword, $version, Request::get('body'), $user->id, $SessSemName[1]);
         $version=""; // $version="" means: get latest
 
     } else if ($cmd == "abortedit") { // Editieren abgebrochen

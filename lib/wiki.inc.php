@@ -11,7 +11,7 @@ use Studip\Button, Studip\LinkButton;
 // Make sure to change routines below if this changes
 //
 global $wiki_keyword_regex, $wiki_link_regex, $wiki_extended_link_regex;
-$wiki_keyword_regex = "(^|\s|\A|\>)(([A-Z]|&[AOU]uml;)([a-z0-9]|&[aou]uml;|&szlig;)+([A-Z]|&[AOU]uml;)([a-zA-Z0-9]|&[aouAOU]uml;|&szlig;)+)";
+$wiki_keyword_regex = "(^|\s|\A|\>)(([A-ZÄÖÜ]|&[AOU]uml;)([a-z0-9äöüß]|&[aou]uml;|&szlig;)+([A-ZÄÖÜ]|&[AOU]uml;)([a-zA-Z0-9äöüÄÖÜß]|&[aouAOU]uml;|&szlig;)+)";
 $wiki_link_regex = "\[\[(([\w\.\-\:\(\)_§\/@# ]|&[AOUaou]uml;|&szlig;)+)\]\]";
 $wiki_extended_link_regex = "\[\[(([\w\.\-\:\(\)_§\/@# ]|&[AOUaou]uml;|&szlig;)+)\|([^\]]+)\]\]";
 

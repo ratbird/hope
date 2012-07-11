@@ -1070,7 +1070,7 @@ function get_next_position($status, $seminar_id)
     $statement = DBManager::get()->prepare($query);
     $statement->execute(array($seminar_id, $status));
 
-   return $statement->fetchColumn();
+   return $statement->fetchColumn() ?: 0;
 }
 
 /**

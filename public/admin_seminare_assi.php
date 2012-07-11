@@ -1,9 +1,9 @@
 <?
 # Lifter001: TODO - URLHelper installed, but still no multi-tab-compatibilty
 # Lifter002: TODO
+# Lifter003: TODO
 # Lifter005: TODO - md5 hash
 # Lifter007: TODO
-# Lifter003: TODO
 # Lifter010: TODO
 /*
 admin_seminare_assi.php - Seminar-Assisten von Stud.IP.
@@ -73,10 +73,6 @@ if (Request::submitted('cancel')) {
 }
 
 // Get a database connection and Stuff
-$db = new DB_Seminar;
-$db2 = new DB_Seminar;
-$db3 = new DB_Seminar;
-$db4 = new DB_Seminar;
 $cssSw = new cssClassSwitcher;
 $Modules = new Modules;
 $semester = new SemesterData;
@@ -148,46 +144,49 @@ if (!empty($cmd) && ($cmd == 'do_copy') && $perm->have_studip_perm('tutor',$cp_i
         $_SESSION['sem_create_data'] = '';
     } else {
         // Einträge in generischen Datenfelder auslesen und zuweisen
-        $sql = "SELECT datafields_entries.datafield_id, datafields_entries.content, datafields.name, datafields.type FROM datafields_entries LEFT JOIN datafields USING (datafield_id) WHERE range_id = '$cp_id'";
-        $db->query($sql);
-        while ($db->next_record()) {
-            $s_d_fields[$db->f("datafield_id")] = array("type"=>$db->f("type"), "name"=>$db->f("name"), "value"=>$db->f("content"));
-        }
+        $query = "SELECT datafield_id, datafields_entries.content AS value, datafields.name, datafields.type
+                  FROM datafields_entries
+                  LEFT JOIN datafields USING (datafield_id)
+                  WHERE range_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($cp_id));
+        $s_d_fields = $statement->fetchGrouped(PDO::FETCH_ASSOC);
 
         // Beteiligte Einrichtungen finden und zuweisen
-        $sql = "SELECT institut_id FROM seminar_inst WHERE seminar_id = '$cp_id'";
-        $db->query($sql);
-        while ($db->next_record()) {
-            $sem_bet_inst[] = $db->f("institut_id");
-        }
+        $query = "SELECT institut_id FROM seminar_inst WHERE seminar_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($cp_id));
+        $sem_bet_inst = $statement->fetchAll(PDO::FETCH_COLUMN);
 
         // Veranstaltungsgrunddaten finden
-        $sql = "SELECT * FROM seminare WHERE Seminar_id = '$cp_id'";
-        $db->query($sql);
-        $db->next_record();
-        $_SESSION['sem_create_data'] = '';
-        $_SESSION['sem_create_data']["sem_datafields"] = $s_d_fields;
-        $_SESSION['sem_create_data']["sem_bet_inst"] = $sem_bet_inst;
+        $_SESSION['sem_create_data'] = array(
+            'sem_datafields' => $s_d_fields,
+            'sem_bet_inst'   => $sem_bet_inst,
+        );
 
         // Termine
         $term_turnus = array();
         foreach(SeminarCycleDate::findBySeminar($cp_id) as $cycle) {
             $term_turnus[] = $cycle->toArray();
         }
-        $_SESSION['sem_create_data']["term_turnus"] = $term_turnus;
-        $_SESSION['sem_create_data']["turnus_count"] = count($term_turnus);
-        $_SESSION['sem_create_data']["term_art"] = count($term_turnus) > 0 ? 0 : 1;
-                // Nutzerdomänen
-        $_SESSION['sem_create_data']["sem_domain"] = UserDomain::getUserDomainsForSeminar($cp_id);
+        $_SESSION['sem_create_data']['term_turnus'] = $term_turnus;
+        $_SESSION['sem_create_data']['turnus_count'] = count($term_turnus);
+        $_SESSION['sem_create_data']['term_art'] = count($term_turnus) > 0 ? 0 : 1;
+        // Nutzerdomänen
+        $_SESSION['sem_create_data']['sem_domain'] = UserDomain::getUserDomainsForSeminar($cp_id);
 
-        if ($_SESSION['sem_create_data']["term_art"] == 1) { //unregelmaessige Veranstaltung oder Block -> Termine kopieren
+        if ($_SESSION['sem_create_data']['term_art'] == 1) { //unregelmaessige Veranstaltung oder Block -> Termine kopieren
             // Sitzungen
-            $db2->query('SELECT * FROM termine WHERE range_id=\''. $cp_id . '\' AND date_typ=\'1\' ORDER by date');
-            $db2_term_count = 0;
-            while ($db2->next_record()) {
-                $db2_start_date = $db2->f('date');
-                $db2_end_date = $db2->f('end_time');
-                $db2_raum = $db2->f('raum');
+            $query = "SELECT `date`, end_time, raum
+                      FROM termine
+                      WHERE range_id = ? AND date_typ = 1 ORDER BY `date`";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($cp_id));
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                $db2_start_date = $row['date'];
+                $db2_end_date   = $row['end_time'];
+                $db2_raum       = $row['raum'];
+
                 $_SESSION['sem_create_data']['term_tag'][$db2_term_count] = intval(date('j', $db2_start_date));
                 $_SESSION['sem_create_data']['term_monat'][$db2_term_count] = intval(date('n', $db2_start_date));
                 $_SESSION['sem_create_data']['term_jahr'][$db2_term_count] = intval(date('Y', $db2_start_date));
@@ -195,7 +194,8 @@ if (!empty($cmd) && ($cmd == 'do_copy') && $perm->have_studip_perm('tutor',$cp_i
                 $_SESSION['sem_create_data']['term_start_minute'][$db2_term_count] = intval(date('i', $db2_start_date));
                 $_SESSION['sem_create_data']['term_end_stunde'][$db2_term_count] = intval(date('G', $db2_end_date));
                 $_SESSION['sem_create_data']['term_end_minute'][$db2_term_count] = intval(date('i', $db2_end_date));
-                $_SESSION['sem_create_data']['term_room'][$db2_term_count] = ($db2_raum)? $db2_raum : '';
+                $_SESSION['sem_create_data']['term_room'][$db2_term_count] = $db2_raum ?: '';
+
                 $db2_term_count++;
             }
             $_SESSION['sem_create_data']['term_count'] = $db2_term_count;
@@ -216,75 +216,80 @@ if (!empty($cmd) && ($cmd == 'do_copy') && $perm->have_studip_perm('tutor',$cp_i
             $_SESSION['sem_create_data']['sem_vor_termin'] = -1;
         }
 
-        for ($i=0;$i<$_SESSION['sem_create_data']["turnus_count"];$i++) {
-            $_SESSION['sem_create_data']["term_turnus_start_stunde"][$i] = $term_turnus[$i]["start_hour"];
-            $_SESSION['sem_create_data']["term_turnus_start_minute"][$i] = $term_turnus[$i]["start_minute"];
-            $_SESSION['sem_create_data']["term_turnus_end_stunde"][$i] = $term_turnus[$i]["end_hour"];
-            $_SESSION['sem_create_data']["term_turnus_end_minute"][$i] = $term_turnus[$i]["end_minute"];
-            $_SESSION['sem_create_data']["term_turnus_date"][$i] = $term_turnus[$i]["weekday"];
-            $_SESSION['sem_create_data']["term_turnus_desc"][$i] = $term_turnus[$i]["description"];
-            $_SESSION['sem_create_data']["term_turnus_week_offset"][$i] = $term_turnus[$i]["week_offset"];
-            $_SESSION['sem_create_data']["term_turnus_cycle"][$i] = $term_turnus[$i]["cycle"];
-            $_SESSION['sem_create_data']["term_turnus_sws"][$i] = $term_turnus[$i]["sws"];
+        for ($i = 0;$i < $_SESSION['sem_create_data']['turnus_count']; $i++) {
+            $_SESSION['sem_create_data']['term_turnus_start_stunde'][$i] = $term_turnus[$i]['start_hour'];
+            $_SESSION['sem_create_data']['term_turnus_start_minute'][$i] = $term_turnus[$i]['start_minute'];
+            $_SESSION['sem_create_data']['term_turnus_end_stunde'][$i] = $term_turnus[$i]['end_hour'];
+            $_SESSION['sem_create_data']['term_turnus_end_minute'][$i] = $term_turnus[$i]['end_minute'];
+            $_SESSION['sem_create_data']['term_turnus_date'][$i] = $term_turnus[$i]['weekday'];
+            $_SESSION['sem_create_data']['term_turnus_desc'][$i] = $term_turnus[$i]['description'];
+            $_SESSION['sem_create_data']['term_turnus_week_offset'][$i] = $term_turnus[$i]['week_offset'];
+            $_SESSION['sem_create_data']['term_turnus_cycle'][$i] = $term_turnus[$i]['cycle'];
+            $_SESSION['sem_create_data']['term_turnus_sws'][$i] = $term_turnus[$i]['sws'];
         }
 
         // Sonstiges
-        $_SESSION['sem_create_data']["sem_id"] = $db->f("Seminar_id");
-        $_SESSION['sem_create_data']["sem_nummer"] = $db->f("VeranstaltungsNummer");
-        $_SESSION['sem_create_data']["sem_inst_id"] = $db->f("Institut_id");
-        $_SESSION['sem_create_data']["sem_name"] = $db->f("Name");
-        $_SESSION['sem_create_data']["sem_untert"] = $db->f("Untertitel");
-        $_SESSION['sem_create_data']["sem_status"] = $db->f("status");
-        $class = $SEM_TYPE[$_SESSION['sem_create_data']["sem_status"]]["class"];
-        $_SESSION['sem_create_data']["sem_class"] = $class;
-        $_SESSION['sem_create_data']["sem_desc"] = $db->f("Beschreibung");
-        $_SESSION['sem_create_data']["sem_room"] = $db->f("Ort");
-        $_SESSION['sem_create_data']["sem_sonst"] = $db->f("Sonstiges");
-        $_SESSION['sem_create_data']["sem_pw"] = $db->f("Passwort");
-        $_SESSION['sem_create_data']["sem_sec_lese"] = $db->f("Lesezugriff");
-        $_SESSION['sem_create_data']["sem_sec_schreib"] = $db->f("Schreibzugriff");
-        $_SESSION['sem_create_data']["sem_start_time"] = $db->f("start_time");
-        $_SESSION['sem_create_data']["sem_duration_time"] = $db->f("duration_time");
-        $_SESSION['sem_create_data']["sem_art"] = $db->f("art");
-        $_SESSION['sem_create_data']["sem_teiln"] = $db->f("teilnehmer");
-        $_SESSION['sem_create_data']["sem_voraus"] = $db->f("vorrausetzungen");
-        $_SESSION['sem_create_data']["sem_orga"] = $db->f("lernorga");
-        $_SESSION['sem_create_data']["sem_leistnw"] = $db->f("leistungsnachweis");
-        $_SESSION['sem_create_data']["sem_ects"] = $db->f("ects");
-        //$_SESSION['sem_create_data']["sem_admission_date"] = $db->f("admission_endtime");
-        $_SESSION['sem_create_data']["sem_admission_date"] = -1;
-        $_SESSION['sem_create_data']["sem_turnout"] = $db->f("admission_turnout");
-        //$_SESSION['sem_create_data']["sem_admission"] = $db->f("admission_type");
-        $_SESSION['sem_create_data']["sem_payment"] = $db->f("admission_prelim");
-        $_SESSION['sem_create_data']["sem_paytxt"] = $db->f("admission_prelim_txt");
-        //$_SESSION['sem_create_data']["sem_admission_start_date"] = $db->f("admission_starttime");
-        //$_SESSION['sem_create_data']["sem_admission_end_date"] = $db->f("admission_endtime_sem");
-        $_SESSION['sem_create_data']["sem_admission_start_date"] = -1;
-        $_SESSION['sem_create_data']["sem_admission_end_date"] = -1;
-        $_SESSION['sem_create_data']["timestamp"] = time(); // wichtig, da sonst beim ersten Aufruf sofort sem_create_data resetted wird!
+        $query = "SELECT * FROM seminare WHERE Seminar_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($cp_id));
+        $seminar = $statement->fetch(PDO::FETCH_ASSOC);
+
+        $_SESSION['sem_create_data']['sem_id'] = $seminar['Seminar_id'];
+        $_SESSION['sem_create_data']['sem_nummer'] = $seminar['VeranstaltungsNummer'];
+        $_SESSION['sem_create_data']['sem_inst_id'] = $seminar['Institut_id'];
+        $_SESSION['sem_create_data']['sem_name'] = $seminar['Name'];
+        $_SESSION['sem_create_data']['sem_untert'] = $seminar['Untertitel'];
+        $_SESSION['sem_create_data']['sem_status'] = $seminar['status'];
+        $class = $SEM_TYPE[$_SESSION['sem_create_data']['sem_status']]['class'];
+        $_SESSION['sem_create_data']['sem_class'] = $class;
+        $_SESSION['sem_create_data']['sem_desc'] = $seminar['Beschreibung'];
+        $_SESSION['sem_create_data']['sem_room'] = $seminar['Ort'];
+        $_SESSION['sem_create_data']['sem_sonst'] = $seminar['Sonstiges'];
+        $_SESSION['sem_create_data']['sem_pw'] = $seminar['Passwort'];
+        $_SESSION['sem_create_data']['sem_sec_lese'] = $seminar['Lesezugriff'];
+        $_SESSION['sem_create_data']['sem_sec_schreib'] = $seminar['Schreibzugriff'];
+        $_SESSION['sem_create_data']['sem_start_time'] = $seminar['start_time'];
+        $_SESSION['sem_create_data']['sem_duration_time'] = $seminar['duration_time'];
+        $_SESSION['sem_create_data']['sem_art'] = $seminar['art'];
+        $_SESSION['sem_create_data']['sem_teiln'] = $seminar['teilnehmer'];
+        $_SESSION['sem_create_data']['sem_voraus'] = $seminar['vorrausetzungen'];
+        $_SESSION['sem_create_data']['sem_orga'] = $seminar['lernorga'];
+        $_SESSION['sem_create_data']['sem_leistnw'] = $seminar['leistungsnachweis'];
+        $_SESSION['sem_create_data']['sem_ects'] = $seminar['ects'];
+        //$_SESSION['sem_create_data']['sem_admission_date'] = $seminar['admission_endtime'];
+        $_SESSION['sem_create_data']['sem_admission_date'] = -1;
+        $_SESSION['sem_create_data']['sem_turnout'] = $seminar['admission_turnout'];
+        //$_SESSION['sem_create_data']['sem_admission'] = $seminar['admission_type'];
+        $_SESSION['sem_create_data']['sem_payment'] = $seminar['admission_prelim'];
+        $_SESSION['sem_create_data']['sem_paytxt'] = $seminar['admission_prelim_txt'];
+        //$_SESSION['sem_create_data']['sem_admission_start_date'] = $seminar['admission_starttime'];
+        //$_SESSION['sem_create_data']['sem_admission_end_date'] = $seminar['admission_endtime_sem'];
+        $_SESSION['sem_create_data']['sem_admission_start_date'] = -1;
+        $_SESSION['sem_create_data']['sem_admission_end_date'] = -1;
+        $_SESSION['sem_create_data']['timestamp'] = time(); // wichtig, da sonst beim ersten Aufruf sofort sem_create_data resetted wird!
         // eintragen der sem_tree_ids
-        $_SESSION['sem_create_data']["sem_bereich"] = get_seminar_sem_tree_entries($cp_id);
+        $_SESSION['sem_create_data']['sem_bereich'] = get_seminar_sem_tree_entries($cp_id);
 
         // Modulkonfiguration übernehmen
         $_SESSION['sem_create_data']['modules_list'] = $Modules->getLocalModules($cp_id,'sem');
-        $_SESSION['sem_create_data']['sem_modules'] = $db->f('modules');
+        $_SESSION['sem_create_data']['sem_modules'] = $seminar['modules'];
 
         // Pluginkonfiguration übernehmen
         $enabled_plugins = PluginEngine::getPlugins('StandardPlugin', $cp_id);
 
         foreach ($enabled_plugins as $plugin) {
-            $_SESSION['sem_create_data']["enabled_plugins"][] = $plugin->getPluginId();
+            $_SESSION['sem_create_data']['enabled_plugins'][] = $plugin->getPluginId();
         }
 
         // Dozenten und Tutoren eintragen
-        $_SESSION['sem_create_data']["sem_doz"] = get_seminar_dozent($cp_id);
+        $_SESSION['sem_create_data']['sem_doz'] = get_seminar_dozent($cp_id);
         if ($deputies_enabled) {
-            if (!$_SESSION['sem_create_data']["sem_dep"] = getDeputies($cp_id)) {
-                unset($_SESSION['sem_create_data']["sem_dep"]);
+            if (!$_SESSION['sem_create_data']['sem_dep'] = getDeputies($cp_id)) {
+                unset($_SESSION['sem_create_data']['sem_dep']);
             }
         }
-        if (!$_SESSION['sem_create_data']["sem_tut"] = get_seminar_tutor($cp_id)) {
-            unset($_SESSION['sem_create_data']["sem_tut"]);
+        if (!$_SESSION['sem_create_data']['sem_tut'] = get_seminar_tutor($cp_id)) {
+            unset($_SESSION['sem_create_data']['sem_tut']);
         }
     }
 }
@@ -785,13 +790,11 @@ if ($form == 5 && Request::isPost()) {
             } elseif ($_SESSION['sem_create_data']["sem_admission"] == 2 && $_SESSION['sem_create_data']["admission_enable_quota"] == 1) {
                 $errormsg=$errormsg."error§"._("Bitte geben Sie g&uuml;ltige Werte f&uuml;r das Enddatum der Kontingentierung ein!")."§";
             }
-
-    }
-    if($_SESSION['sem_create_data']['sem_admission_date'] <
-            $_SESSION['sem_create_data']['sem_admission_start_date'])
-    {
-        $errormsg=$errormsg."error§"._("Das Losdatum darf nicht vor dem Start des Anmeldezeitraums liegen!")."§";
-
+            if($_SESSION['sem_create_data']['sem_admission_date'] <
+                    $_SESSION['sem_create_data']['sem_admission_start_date'])
+            {
+                $errormsg=$errormsg."error§"._("Das Losdatum darf nicht vor dem Start des Anmeldezeitraums liegen!")."§";
+            }
     }
 
     //Datum fuer ersten Termin umwandeln. Checken muessen wir es auch leider direkt hier, da wir es sonst nicht umwandeln duerfen
@@ -1049,7 +1052,7 @@ if (Request::submitted('send_tut')) {
         $next_position = sizeof($_SESSION['sem_create_data']["sem_tut"]) + 1;
         $tut_id = get_userid(Request::quoted('add_tut'));
         $_SESSION['sem_create_data']["sem_tut"][$tut_id]= $next_position;
-        $_SESSION['sem_create_data']["sem_tut_label"][$tut_id]= Request::quoted("sem_tut_label");
+        $_SESSION['sem_create_data']["sem_tut_label"][$tut_id]= Request::get("sem_tut_label");
     }
     $level=2;
 }
@@ -1415,11 +1418,20 @@ if ($level == 4 && $GLOBALS['RESOURCES_ENABLE'] && $GLOBALS['RESOURCES_ALLOW_ROO
 //Neuen Studiengang zur Begrenzung aufnehmen
 if (Request::submitted('add_studg')) {
     if ($sem_add_studg && $sem_add_studg != 'all') {
-        $db->query("SELECT name FROM studiengaenge WHERE studiengang_id='".$sem_add_studg."' ");
-        $db->next_record();
-        $_SESSION['sem_create_data']["sem_studg"][$sem_add_studg]=array("name"=>$db->f("name"), "ratio"=>(int)$sem_add_ratio);
+        $query = "SELECT name FROM studiengaenge WHERE studiengang_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($sem_add_studg));
+        $studiengang_name = $statement->fetchColumn();
+
+        $_SESSION['sem_create_data']["sem_studg"][$sem_add_studg] = array(
+            'name'  => $studiengang_name,
+            'ratio' => (int)$sem_add_ratio
+        );
     } else if ($sem_add_studg == 'all'){
-        $_SESSION['sem_create_data']["sem_studg"][$sem_add_studg]=array("name"=>_("Alle Studiengänge"), "ratio"=>(int)$sem_add_ratio);
+        $_SESSION['sem_create_data']["sem_studg"][$sem_add_studg] = array(
+            'name'  => _('Alle Studiengänge'),
+            'ratio' => (int)$sem_add_ratio
+        );
     }
     $level=5;
 }
@@ -1845,19 +1857,25 @@ if (($form == 6) && (Request::submitted('jump_next')))
                 {
                     $group=select_group($_SESSION['sem_create_data']["sem_start_time"]);
 
-                    if ($key == $user_id)
+                    if ($key == $user_id) {
                         $self_included=TRUE;
+                    }
 
-               $next_pos = get_next_position("dozent",$_SESSION['sem_create_data']["sem_id"]);
+                    $next_pos = get_next_position("dozent",$_SESSION['sem_create_data']["sem_id"]);
 
-                    $query = "insert into seminar_user SET Seminar_id = '".
-                    $_SESSION['sem_create_data']["sem_id"]."', user_id = '".
-                    $key."', status = 'dozent', gruppe = '$group', visible = 'yes',".
-                    " mkdate = '".time()."', position = '$next_pos', label = ".DBManager::get()->quote($_SESSION['sem_create_data']["sem_doz_label"][$key], PDO::PARAM_STR)." ";
-                    $db3->query($query);// Dozenten eintragen:w
+                    $query = "INSERT INTO seminar_user (Seminar_id, user_id, status, gruppe,
+                                                        visible, mkdate, position, label)
+                              VALUES (?, ?, 'dozent', ?, 'yes', UNIX_TIMESTAMP(), ?, ?)";
+                    $statement = DBManager::get()->prepare($query);
+                    $statement->execute(array(
+                        $_SESSION['sem_create_data']['sem_id'],
+                        $key, $group, $next_pos,
+                        $_SESSION['sem_create_data']['sem_doz_label'][$key]
+                    ));
 
-                    if ($db3->affected_rows() >=1)
+                    if ($statement->rowCount() >= 1) {
                         $count_doz++;
+                    }
                 }
             }
 
@@ -1867,105 +1885,171 @@ if (($form == 6) && (Request::submitted('jump_next')))
 
                 $next_pos = get_next_position("dozent",$_SESSION['sem_create_data']["sem_id"]);
 
-                $query = "insert into seminar_user SET Seminar_id = '".
-                    $_SESSION['sem_create_data']["sem_id"]."', user_id = '".
-                    $user_id."', status = 'dozent', gruppe = '$group', mkdate = '".time()."', position = '$next_pos', " .
-                    "label = ".DBManager::get()->quote($_SESSION['sem_create_data']["sem_doz_label"][$user_id], PDO::PARAM_STR)." ";
-                $db3->query($query);
-                if ($db3->affected_rows() >=1)
+                $query = "INSERT INTO seminar_user (Seminar_id, user_id, status, gruppe,
+                                                    mkdate, position, label)
+                          VALUES (?, ?, 'dozent', ?, UNIX_TIMESTAMP(), ?, ?)";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array(
+                    $_SESSION['sem_create_data']['sem_id'],
+                    $user_id, $group, $next_pos,
+                    $_SESSION['sem_create_data']['sem_doz_label'][$user_id]
+                ));
+
+                if ($statement->rowCount() >= 1) {
                     $count_doz++;
+                }
             }
 
             if (is_array($_SESSION['sem_create_data']["sem_dep"]))  // alle ausgewählten Vertretungen durchlaufen
             {
-                $count_dep=0;
-                foreach ($_SESSION['sem_create_data']["sem_dep"] as $key=>$val)
-                {
-                    $group=select_group($_SESSION['sem_create_data']["sem_start_time"]);
+                // Prepare statement that checks whether a user is already
+                // present in the seminar_user table for a given seminar
+                $query = "SELECT 1 FROM seminar_user WHERE Seminar_id = ? AND user_id = ?";
+                $check_statement = DBManager::get()->prepare($query);
 
-                    $query = "SELECT user_id FROM seminar_user WHERE Seminar_id = '".
-                        $_SESSION['sem_create_data']["sem_id"]."' AND user_id ='$key'";
-                    $db4->query($query);
-                    if ($db4->next_record())    // User schon da, kann beim Anlegen nur als Dozent sein, also ignorieren
-                        ;
-                    else // User noch nicht da
-                        {
+                // Prepare statement that inserts the user as a deputy
+                $query = "INSERT INTO deputies (range_id, user_id, gruppe)
+                          VALUES (?, ?, ?)";
+                $insert_statement = DBManager::get()->prepare($query);
+
+                $count_dep=0;
+                foreach ($_SESSION['sem_create_data']['sem_dep'] as $key => $val) {
+                    $group = select_group($_SESSION['sem_create_data']['sem_start_time']);
+
+                    $check_statement->execute(array(
+                        $_SESSION['sem_create_data']['sem_id'],
+                        $key
+                    ));
+                    $present = $check_statement->fetchColumn();
+                    $check_statement->closeCursor();
+
+                    if (!$present) { // Vertretung eintragen
+                        $insert_statement->execute(array(
+                            $_SESSION['sem_create_data']['sem_id'],
+                            $key, $group
+                        ));
                         $query = "insert into deputies SET range_id = '".
                             $_SESSION['sem_create_data']["sem_id"]."', user_id = '".
                             $key."', gruppe = '$group'";
-                        $db3->query($query);                 // Vertretung eintragen
-                            if ($db3->affected_rows() >= 1)
-                                $count_dep++;
+                        if ($insert_statement->rowCount() >= 1) {
+                            $count_dep++;
                         }
                     }
                 }
+            }
 
             if (is_array($_SESSION['sem_create_data']["sem_tut"]))  // alle ausgewählten Tutoren durchlaufen
             {
+                // Prepare statement that checks whether a user is already
+                // present in the seminar_user table for a given seminar
+                $query = "SELECT 1 FROM seminar_user WHERE Seminar_id = ? AND user_id = ?";
+                $check_statement = DBManager::get()->prepare($query);
+
+                // Prepare statement that inserts the user as a deputy
+                $query = "INSERT INTO seminar_user (Seminar_id, user_id, status, 
+                                                    label, gruppe, mkdate, position, visible)
+                          VALUES (?, ?, 'tutor', ?, ?, UNIX_TIMESTAMP(), ?, 'yes')";
+                $insert_statement = DBManager::get()->prepare($query);
+
                 $count_tut=0;
                 foreach ($_SESSION['sem_create_data']["sem_tut"] as $key=>$val)
                 {
                     $group=select_group($_SESSION['sem_create_data']["sem_start_time"]);
 
-                    $query = "SELECT user_id FROM seminar_user WHERE Seminar_id = '".
-                        $_SESSION['sem_create_data']["sem_id"]."' AND user_id ='$key'";
-                    $db4->query($query);
-                    if ($db4->next_record())    // User schon da, kann beim Anlegen nur als Dozent sein, also ignorieren
-                        ;
-                    else // User noch nicht da
-                        {
-                  $next_pos = get_next_position("tutor",$_SESSION['sem_create_data']["sem_id"]);
-                        $query = "insert into seminar_user SET Seminar_id = '".
-                            $_SESSION['sem_create_data']["sem_id"]."', user_id = '".
-                            $key."', status = 'tutor', label=".DBManager::get()->quote($_SESSION['sem_create_data']["sem_tut_label"][$key], PDO::PARAM_STR)." , gruppe = '$group', mkdate = '".time()."', position = '$next_pos', visible='yes'";
-                        $db3->query($query);                 // Tutor eintragen
-                            if ($db3->affected_rows() >= 1)
-                                $count_tut++;
+                    $check_statement->execute(array(
+                        $_SESSION['sem_create_data']['sem_id'],
+                        $key
+                    ));
+                    $present = $check_statement->fetchColumn();
+                    $check_statement->closeCursor();
+
+                    if (!$present) { // User noch nicht da
+                        $next_pos = get_next_position("tutor",$_SESSION['sem_create_data']["sem_id"]);
+
+                        $insert_statement->execute(array(
+                            $_SESSION['sem_create_data']['sem_id'],
+                            $key,
+                            $_SESSION['sem_create_data']['sem_tut_label'][$key],
+                            $group, $next_pos
+                        ));
+
+                        if ($insert_statement->rowCount() >= 1) {
+                            $count_tut++;
                         }
                     }
                 }
+            }
 
             //Eintrag der Studienbereiche
             if (is_array($_SESSION['sem_create_data']["sem_bereich"])) {
                 $seminar = Seminar::getInstance($_SESSION['sem_create_data']["sem_id"]);
                 $seminar->setStudyAreas($_SESSION['sem_create_data']["sem_bereich"]);
                 $count_bereich = sizeof($_SESSION['sem_create_data']["sem_bereich"]);
-                }
+            }
 
             //Eintrag der zugelassen Studiengänge
             if ($_SESSION['sem_create_data']["sem_admission"] && $_SESSION['sem_create_data']["sem_admission"] != 3) {
                 if (is_array($_SESSION['sem_create_data']["sem_studg"])){
-                    foreach($_SESSION['sem_create_data']["sem_studg"] as $key=>$val){
-                        $query = "INSERT INTO admission_seminar_studiengang VALUES('".$_SESSION['sem_create_data']["sem_id"]."', '$key', '".$val["ratio"]."' )";
-                        $db3->query($query);// Studiengang eintragen
+                    $query = "INSERT INTO admission_seminar_studiengang 
+                              VALUES (?, ?, ?)";
+                    $insert_statement = DBManager::get()->prepare($query);
+
+                    foreach($_SESSION['sem_create_data']["sem_studg"] as $key => $val) {
+                        // Studiengang eintragen
+                        $insert_statement->execute(array(
+                            $_SESSION['sem_create_data']['sem_id'],
+                            $key, $val['ratio']
+                        ));
                     }
                 }
             }
 
             //Eintrag der beteiligten Institute
-            if (is_array($_SESSION['sem_create_data']["sem_bet_inst"])>0)
-                {
-                $count_bet_inst=0;
-                foreach ($_SESSION['sem_create_data']["sem_bet_inst"] as $tmp_array) //Alle beteiligten Institute durchlaufen
-                    {
-                    $query = "INSERT INTO seminar_inst VALUES('".$_SESSION['sem_create_data']["sem_id"]."', '$tmp_array')";
-                    $db3->query($query);// Institut eintragen
-                    if ($db3->affected_rows() >= 1)
+            if (is_array($_SESSION['sem_create_data']["sem_bet_inst"])) {
+                $query = "INSERT INTO seminar_inst
+                          VALUES (?, ?)";
+                $insert_statement = DBManager::get()->prepare($query);
+
+                $count_bet_inst = 0;
+                //Alle beteiligten Institute durchlaufen
+                foreach ($_SESSION['sem_create_data']["sem_bet_inst"] as $tmp_array) {
+                    // Institut eintragen
+                    $insert_statement->execute(array(
+                        $_SESSION['sem_create_data']['sem_id'],
+                        $tmp_array
+                    ));
+
+                    if ($statement->rowCount() >= 1) {
                         $count_bet_inst++;
                     }
                 }
+            }
 
             //Heimat-Institut ebenfalls eintragen, wenn noch nicht da
-            $query = "INSERT IGNORE INTO seminar_inst values('".$_SESSION['sem_create_data']["sem_id"]."', '".$_SESSION['sem_create_data']["sem_inst_id"]."')";
-            $db3->query($query);
+            $query = "INSERT IGNORE INTO seminar_inst VALUES (?, ?)";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                $_SESSION['sem_create_data']['sem_id'],
+                $_SESSION['sem_create_data']['sem_inst_id']
+            ));
 
             //Standard Thema im Forum anlegen, damit Studis auch ohne Zutun des Dozenten diskutieren koennen
             if ($_SESSION['sem_create_data']["modules_list"]["forum"])
                 CreateTopic(_("Allgemeine Diskussionen"), get_fullname($user_id), _("Hier ist Raum für allgemeine Diskussionen"), 0, 0, $_SESSION['sem_create_data']["sem_id"]);
 
             //Standard Ordner im Foldersystem anlegen, damit Studis auch ohne Zutun des Dozenten Uploaden k&ouml;nnen
-            if ($_SESSION['sem_create_data']["modules_list"]["documents"])
-                $db3->query("INSERT INTO folder SET folder_id='".md5(uniqid("sommervogel"))."', range_id='".$_SESSION['sem_create_data']["sem_id"]."', user_id='".$user_id."', name='"._("Allgemeiner Dateiordner")."', description='"._("Ablage für allgemeine Ordner und Dokumente der Veranstaltung")."', mkdate='".time()."', chdate='".time()."'");
+            if ($_SESSION['sem_create_data']["modules_list"]["documents"]) {
+                $query = "INSERT INTO folder (folder_id, range_id, user_id, name, description, mkdate, chdate)
+                          VALUES (?, ?, ?, ?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array(
+                    md5(uniqid('sommervogel', true)),
+                    $_SESSION['sem_create_data']['sem_id'],
+                    $user_id,
+                    _('Allgemeiner Dateiordner'),
+                    _('Ablage für allgemeine Ordner und Dokumente der Veranstaltung')
+                ));
+            }
 
             //Vorbesprechung, falls vorhanden, in Termintabelle eintragen
             if ($_SESSION['sem_create_data']["sem_vor_termin"] <>-1) {
@@ -2008,7 +2092,17 @@ if (($form == 6) && (Request::submitted('jump_next')))
             if ($_SESSION['sem_create_data']["modules_list"]["scm"]){
                 $_SESSION['sem_create_data']["sem_scm_name"] = ($SCM_PRESET[1]['name'] ? $SCM_PRESET[1]['name'] : _("Informationen"));
                 $_SESSION['sem_create_data']["sem_scm_id"] = md5(uniqid(rand()));
-                $db->query("INSERT INTO scm SET scm_id='".$_SESSION['sem_create_data']["sem_scm_id"]."', tab_name='".$_SESSION['sem_create_data']["sem_scm_name"]."', range_id='".$_SESSION['sem_create_data']["sem_id"]."', user_id='$user_id', content='".$_SESSION['sem_create_data']["sem_scm_content"]."', mkdate='".time()."', chdate='".time()."' ");
+                
+                $query = "INSERT INTO scm (scm_id, tab_name, range_id, user_id, content, mkdate, chdate)
+                          VALUES (?, ?, ?, ?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array(
+                    $_SESSION['sem_create_data']['sem_scm_id'],
+                    $_SESSION['sem_create_data']['sem_scm_name'],
+                    $_SESSION['sem_create_data']['sem_id'],
+                    $user_id,
+                    $_SESSION['sem_create_data']['sem_scm_content']
+                ));
             }
 
             // save activation of plugins
@@ -2053,31 +2147,49 @@ if (($form == 8) && (Request::submitted('jump_next'))) {
         //if content is created, we enable the module again (it was turned off above)
         $Modules->writeStatus("scm", $_SESSION['sem_create_data']["sem_id"], TRUE);
         if ($_SESSION['sem_create_data']["sem_scm_id"]) {
-            $db->query("UPDATE scm SET content='".$_SESSION['sem_create_data']["sem_scm_content"]."', tab_name='".$_SESSION['sem_create_data']["sem_scm_name"]."', chdate='".time()."' WHERE scm_id='".$_SESSION['sem_create_data']["sem_scm_id"]."'");
+            $query = "UPDATE scm
+                      SET content = ?, tab_name = ?, chdate = UNIX_TIMESTAMP()
+                      WHERE scm_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                $_SESSION['sem_create_data']['sem_scm_content'],
+                $_SESSION['sem_create_data']['sem_scm_name'],
+                $_SESSION['sem_create_data']['sem_scm_id']
+            ));
+            $affected_rows = $statement->rowCount();
         } else {
             $_SESSION['sem_create_data']["sem_scm_id"]=md5(uniqid(rand()));
-            $db->query("INSERT INTO scm SET scm_id='".$_SESSION['sem_create_data']["sem_scm_id"]."', tab_name='".$_SESSION['sem_create_data']["sem_scm_name"]."', range_id='".$_SESSION['sem_create_data']["sem_id"]."', user_id='$user_id', content='".$_SESSION['sem_create_data']["sem_scm_content"]."', mkdate='".time()."', chdate='".time()."' ");
+
+            $query = "INSERT INTO scm (scm_id, tab_name, range_id, user_id, content, mkdate, chdate)
+                      VALUES (?, ?, ?, ?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                $_SESSION['sem_create_data']['sem_scm_id'],
+                $_SESSION['sem_create_data']['sem_scm_name'],
+                $_SESSION['sem_create_data']['sem_id'],
+                $user_id,
+                $_SESSION['sem_create_data']['sem_scm_content']
+            ));
+            $affected_rows = $statement->rowCount();
         }
-        if ($db->affected_rows()) {
+        if ($affected_rows) {
             //if ($_SESSION['sem_create_data']["modules_list"]["schedule"]) // ## RAUMZEIT : schedule duerfte veraltet sein, muesste als komplett weg
                 //header ("Location: admin_dates.php?assi=yes&ebene=sem&range_id=".$_SESSION['sem_create_data']["sem_id"]);
             //else
-                header ('Location: ' . UrlHelper::getUrl('dispatch.php/course/basicdata/view/' . $_SESSION['sem_create_data']["sem_id"]));
+            header ('Location: ' . UrlHelper::getUrl('dispatch.php/course/basicdata/view/' . $_SESSION['sem_create_data']["sem_id"]));
             page_close();
             die;
-            }
-        else
-            {
+        } else {
             $errormsg .= "error§"._("Fehler! Der Eintrag konnte nicht erfolgreich vorgenommen werden!")."";
             $level=8;
-            }
+        }
     } else {
         //if no content is created yet, we disable the module and jump to the schedule (if activated)
         //$Modules->writeStatus("scm", $_SESSION['sem_create_data']["sem_id"], FALSE); //BIEST00072
         //if ($_SESSION['sem_create_data']["modules_list"]["schedule"]) // ## RAUMZEIT : siehe oben
         //  header ("Location: admin_dates.php?assi=yes&ebene=sem&range_id=".$_SESSION['sem_create_data']["sem_id"]);
         //else
-            header ("Location: " . UrlHelper::getUrl('dispatch.php/course/basicdata/view/' . $_SESSION['sem_create_data']["sem_id"]));
+        header ("Location: " . UrlHelper::getUrl('dispatch.php/course/basicdata/view/' . $_SESSION['sem_create_data']["sem_id"]));
         page_close();
         die;
     }
@@ -2462,27 +2574,61 @@ elseif ((!$level) || ($level == 1))
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" colspan=3>
                             &nbsp;
                             <?
-                            if (!$perm->have_perm("admin"))
-                                $db->query("SELECT Name,a.Institut_id,IF(a.Institut_id=fakultaets_id,1,0) AS is_fak,inst_perms FROM user_inst a LEFT JOIN Institute USING (institut_id) WHERE (user_id = '$user_id' AND inst_perms = 'dozent' ) ORDER BY is_fak,Name");
-                            else if (!$perm->have_perm("root"))
-                                $db->query("SELECT Name,a.Institut_id,IF(a.Institut_id=fakultaets_id,1,0) AS is_fak,inst_perms FROM user_inst  a LEFT JOIN Institute USING (institut_id) WHERE (user_id = '$user_id' AND inst_perms = 'admin') ORDER BY is_fak,Name");
-                            else
-                                $db->query("SELECT Name,Institut_id,1 AS is_fak,'admin' AS inst_perms FROM Institute WHERE Institut_id=fakultaets_id ORDER BY Name");
-                            if ($db->affected_rows()){
-                                echo "<select name=\"sem_inst_id\">";
-                                while ($db->next_record()) {
-                                    printf ("<option %s style=\"%s\" value=%s>%s</option>", $db->f("Institut_id") == $_SESSION['sem_create_data']["sem_inst_id"] ? "selected" : "",
-                                        ($db->f("is_fak")) ? "font-weight:bold;" : "",$db->f("Institut_id"), htmlReady(my_substr($db->f("Name"),0,60)));
-                                    if ($db->f("is_fak") && $db->f("inst_perms") == "admin"){
-                                        $db2->query("SELECT a.Institut_id, a.Name FROM Institute a
-                                            WHERE fakultaets_id='" . $db->f("Institut_id") . "' AND a.Institut_id!='" .$db->f("Institut_id") . "' ORDER BY Name");
-                                        while($db2->next_record()){
-                                            printf ("<option %s value=\"%s\">&nbsp;&nbsp;&nbsp;&nbsp;%s</option>", $db2->f("Institut_id") == $_SESSION['sem_create_data']["sem_inst_id"] ? "selected" : "",
-                                                $db2->f("Institut_id"), htmlReady(my_substr($db2->f("Name"),0,60)));
+                            // Prepare inner statement that obtains all institutes
+                            // for a given faculty id
+                            $query = "SELECT Institut_id, Name
+                                      FROM Institute a
+                                      WHERE fakultaets_id = ? AND Institut_id != fakultaets_id
+                                      ORDER BY Name";
+                            $institute_statement = DBManager::get()->prepare($query);
+
+                            // Prepare outer statement
+                            $parameters = array();
+                            if (!$perm->have_perm('admin')) {
+                                $query = "SELECT Name, a.Institut_id, a.Institut_id = fakultaets_id AS is_fak, inst_perms
+                                          FROM user_inst AS a
+                                          LEFT JOIN Institute USING (institut_id)
+                                          WHERE user_id = ? AND inst_perms = 'dozent'
+                                          ORDER BY is_fak, Name";
+                                $parameters[] = $user_id;
+                            } else if (!$perm->have_perm('root')) {
+                                $query = "SELECT Name, a.Institut_id, a.Institut_id = fakultaets_id AS is_fak, inst_perms
+                                          FROM user_inst AS a
+                                          LEFT JOIN Institute USING (institut_id)
+                                          WHERE user_id = ? AND inst_perms = 'admin'
+                                          ORDER BY is_fak, Name";
+                                $parameters[] = $user_id;
+                            } else {
+                                $query = "SELECT Name, Institut_id, 1 AS is_fak, 'admin' AS inst_perms
+                                          FROM Institute
+                                          WHERE Institut_id = fakultaets_id
+                                          ORDER BY Name";
+                            }
+                            $statement = DBManager::get()->prepare($query);
+                            $statement->execute($parameters);
+                            $options = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+                            if (count($options)) {
+                                echo '<select name="sem_inst_id">';
+                                foreach ($options as $option) {
+                                    printf('<option %s style="%s" value="%s">%s</option>',
+                                           $option['Institut_id'] == $_SESSION['sem_create_data']["sem_inst_id"] ? 'selected' : '',
+                                           $option['is_fak'] ? 'font-weight:bold;' : '',
+                                           $option['Institut_id'],
+                                           htmlReady(my_substr($option['Name'], 0, 60)));
+
+                                    if ($option['is_fak'] && $option['inst_perms'] == 'admin') {
+                                        $institute_statement->execute(array($option['Institut_id']));
+                                        while ($row = $institute_statement->fetch(PDO::FETCH_ASSOC)) {
+                                            printf('<option %s value="%s">&nbsp;&nbsp;&nbsp;&nbsp;%s</option>',
+                                                   $row['Institut_id'] == $_SESSION['sem_create_data']["sem_inst_id"] ? 'selected' : '',
+                                                   $row['Institut_id'],
+                                                   htmlReady(my_substr($row['Name'], 0, 60)));
                                         }
+                                        $institute_statement->closeCursor();
                                     }
                                 }
-                                echo "</select>";
+                                echo '</select>';
                             }
                             ?>
                             <?= tooltipIcon(_("Die Heimat-Einrichtung ist die Einrichtung, die offiziell für die Veranstaltung zuständig ist.")) ?>
@@ -2496,24 +2642,49 @@ elseif ((!$level) || ($level == 1))
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" colspan=3>
                             &nbsp; <select  name="sem_bet_inst[]" MULTIPLE size=7>
                             <?
-                                $db->query("SELECT Institut_id,Name FROM Institute WHERE Institut_id = fakultaets_id ORDER BY Name");
-                                while ($db->next_record()) {
-                                    $selected="";
-                                    if(is_array($_SESSION['sem_create_data']["sem_bet_inst"]) && in_array($db->f("Institut_id"),$_SESSION['sem_create_data']["sem_bet_inst"])){
-                                        $selected = "selected";
+                                // Prepare statement that reads all institutes for
+                                // a given faculty id
+                                $query = "SELECT Institut_id, Name
+                                          FROM Institute
+                                          WHERE fakultaets_id = ? AND Institut_id != fakultaets_id
+                                          ORDER BY Name";
+                                $institute_statement = DBManager::get()->prepare($query);
+
+                                // Prepare and execute statement that obtains
+                                // all faculties
+                                $query = "SELECT Institut_id, Name
+                                          FROM Institute
+                                          WHERE Institut_id = fakultaets_id
+                                          ORDER BY Name";
+                                $statement = DBManager::get()->query($query);
+                                $options = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+                                foreach ($options as $option) {
+                                    $selected = '';
+                                    if (is_array($_SESSION['sem_create_data']['sem_bet_inst'])
+                                        && in_array($option['Institut_id'],$_SESSION['sem_create_data']['sem_bet_inst']))
+                                    {
+                                        $selected = 'selected';
                                     }
-                                    printf ("<option %s style=\"font-weight:bold;\" value=\"%s\">%s</option>",$selected,$db->f("Institut_id")
-                                        , htmlReady(my_substr($db->f("Name"),0,60)));
-                                    $db2->query("SELECT Institut_id, Name FROM Institute
-                                        WHERE fakultaets_id='" . $db->f("Institut_id") . "' AND Institut_id!='" .$db->f("Institut_id") . "' ORDER BY Name" );
-                                    while($db2->next_record()){
-                                        $selected="";
-                                        if(is_array($_SESSION['sem_create_data']["sem_bet_inst"]) && in_array($db2->f("Institut_id"),$_SESSION['sem_create_data']["sem_bet_inst"])){
-                                        $selected = "selected";
+                                    printf('<option %s style="font-weight:bold;" value="%s">%s</option>',
+                                           $selected,
+                                           $option['Institut_id'],
+                                           htmlReady(my_substr($option['Name'], 0, 60)));
+
+                                    $institute_statement->execute(array($option['Institut_id']));
+                                    while ($row = $institute_statement->fetch(PDO::FETCH_ASSOC)) {
+                                        $selected = '';
+                                        if (is_array($_SESSION['sem_create_data']['sem_bet_inst'])
+                                            && in_array($row['Institut_id'], $_SESSION['sem_create_data']['sem_bet_inst']))
+                                        {
+                                            $selected = 'selected';
                                         }
-                                        printf ("<option %s value=\"%s\">&nbsp;&nbsp;&nbsp;&nbsp;%s</option>", $selected,
-                                            $db2->f("Institut_id"), htmlReady(my_substr($db2->f("Name"),0,60)));
+                                        printf('<option %s value="%s">&nbsp;&nbsp;&nbsp;&nbsp;%s</option>',
+                                               $selected,
+                                               $row['Institut_id'],
+                                               htmlReady(my_substr($row['Name'], 0, 60)));
                                     }
+                                    $institute_statement->closeCursor();
                                 }
                             ?>
                             </select>
@@ -3732,14 +3903,22 @@ if ($level == 5)
                                     <?
                                         }
                                     }
-                                    $db->queryf("SELECT * FROM studiengaenge WHERE studiengang_id NOT IN ('%s') ORDER BY name", join("','", array_keys($_SESSION['sem_create_data']["sem_studg"])));
                                     $stg = array();
                                     if(!isset($_SESSION['sem_create_data']["sem_studg"]['all'])){
                                         $stg[] = array('name' => _("Alle Studiengänge"), 'studiengang_id' => 'all');
                                     }
-                                    while($db->next_record()){
-                                        $stg[] = $db->Record;
-                                    }
+
+                                    $query = "SELECT *
+                                              FROM studiengaenge
+                                              WHERE studiengang_id NOT IN (?)
+                                              ORDER BY name";
+                                    $statement = DBManager::get()->prepare($query);
+                                    $statement->execute(array(
+                                        array_keys($_SESSION['sem_create_data']['sem_studg']) ?: array('')
+                                    ));
+                                    $studiengaenge = $statement->fetchAll(PDO::FETCH_ASSOC);
+                                    $stg = array_merge($stg, $studiengaenge);
+
                                     if (count($stg)) {
                                     ?>
                                     <tr>

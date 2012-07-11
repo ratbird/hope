@@ -91,6 +91,7 @@ class PageLayout
         self::addComment('[if IE]>' . Assets::stylesheet('ie.css', array('media' => 'screen,print')) . '<![endif]');
 
         self::setSqueezePackages("base");
+        self::addScript("mathjax/MathJax.js?config=TeX-AMS_HTML,default");
     }
 
     /**

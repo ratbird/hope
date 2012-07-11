@@ -310,7 +310,7 @@ function formatReady ($what, $trim = TRUE, $extern = FALSE, $wiki = FALSE, $show
     $what = htmlReady($what, $trim);
 
     $what = $markup->format($what);
-    $what = symbol(smile(latex($what, false)));
+    $what = symbol(smile($what, false));
     return str_replace("\n", '<br>', $what);
 }
 
@@ -348,7 +348,7 @@ function wikiReady ($what, $trim = TRUE) {
     $what = htmlReady($what, $trim);
 
     $what = $markup->format($what);
-    $what = symbol(smile(latex($what, false)));
+    $what = symbol(smile($what, false));
     return str_replace("\n", '<br>', $what);
 }
 

@@ -614,6 +614,9 @@ class Seminar
         $statement->bindValue(':showscore', $this->showscore);
         $statement->bindValue(':modules', $this->modules);
         $statement->execute();
+        if ($statement->rowCount() > 0) {
+            NotificationCenter::postNotification("CourseIsCreatedOrUpdated", $this);
+        }
 
         if (($statement->rowCount() > 0 || $metadate_changed) && $trigger_chdate) {
             $statement = DBManager::get()->prepare("UPDATE seminare SET chdate = UNIX_TIMESTAMP() WHERE Seminar_id = ?");
@@ -2061,6 +2064,9 @@ class Seminar
         foreach($added as $one){
             $count_added += StudipSemTree::InsertSemEntry($one, $this->getId());
         }
+        if ($count_added || $count_removed) {
+            NotificationCenter::postNotification("CourseDidChangeStudyArea", $this);
+        }
         return count($old) + $count_added - $count_removed;
     }
 
@@ -2267,6 +2273,7 @@ class Seminar
         if ($statement->rowCount() == 0) {
             throw new Exception(_("Fehler beim Löschen der Veranstaltung"));
         }
+        NotificationCenter::postNotification("CourseIsDeleted", $this);
         return true;
     }
 
@@ -2440,6 +2447,9 @@ class Seminar
                 log_event('CHANGE_INSTITUTE_DATA', $this->id, $inst, 'Die beteiligte Einrichtung '. get_object_name($inst, 'inst') .' wurde hinzugefügt.');
                 $statement->execute(array($this->id, $inst));
             }
+            if ($todelete || $toinsert) {
+                NotificationCenter::postNotification("CourseDidChangeInstitutes", $this);
+            }
             return $todelete || $toinsert;
         } else {
             $this->createError(_("Ungültige Eingabe der Institute. Es muss " .
@@ -2515,6 +2525,7 @@ class Seminar
             ));
 
             removeScheduleEntriesMarkedAsVirtual($user_id, $this->getId());
+            NotificationCenter::postNotification("CourseDidGetMember", $this, $user_id);
             return $this;
         } elseif (($force || $rangordnung[$old_status] < $rangordnung[$status])
                 && ($old_status !== "dozent" || $numberOfTeachers > 1)) {
@@ -2543,6 +2554,7 @@ class Seminar
                     $statement->execute(array($termin_id, $user_id));
                 }
             }
+            NotificationCenter::postNotification("CourseDidChangeMember", $this, $user_id);
             return $this;
         } else {
             if ($old_status === "dozent" && $numberOfTeachers <= 1) {
@@ -2584,6 +2596,7 @@ class Seminar
             }
             $this->createMessage(sprintf(_("Nutzer %s wurde aus der Veranstaltung entfernt."),
                     "<i>".htmlReady(get_fullname($user_id))."</i>"));
+            NotificationCenter::postNotification("CourseDidChangeMember", $this, $user_id);
             return $this;
         } else {
             $this->createError(sprintf(_("Die Veranstaltung muss wenigstens <b>einen/eine</b> VeranstaltungsleiterIn (%s) eingetragen haben!"),
@@ -2625,6 +2638,7 @@ class Seminar
                 'seminar_id' => $this->getId(),
                 'label' => $label
             ));
+            NotificationCenter::postNotification("CourseDidChangeMemberLabel", $this);
         }
     }
 }

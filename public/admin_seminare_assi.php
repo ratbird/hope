@@ -1,7 +1,7 @@
 <?
 # Lifter001: TODO - URLHelper installed, but still no multi-tab-compatibilty
 # Lifter002: TODO
-# Lifter003: TODO
+# Lifter003: TEST
 # Lifter005: TODO - md5 hash
 # Lifter007: TODO
 # Lifter010: TODO

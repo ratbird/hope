@@ -1471,7 +1471,7 @@ if ($view == 'Lebenslauf') {
 }
 
 if ($view == "Sonstiges") {
-    $freie_id = Request::optionArray('freie_id');
+    $freie_id = Request::option('freie_id');
     if (Request::option('freie') == "create_freie") create_freie();
     if (Request::option('freie') == "delete_freie") delete_freie($freie_id);
     if (Request::option('freie') == "verify_delete_freie") verify_delete_freie($freie_id);

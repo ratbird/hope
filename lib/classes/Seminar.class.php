@@ -615,7 +615,7 @@ class Seminar
         $statement->bindValue(':modules', $this->modules);
         $statement->execute();
         if ($statement->rowCount() > 0) {
-            NotificationCenter::postNotification("CourseIsCreatedOrUpdated", $this);
+            NotificationCenter::postNotification("CourseDidCreatOrUpdate", $this);
         }
 
         if (($statement->rowCount() > 0 || $metadate_changed) && $trigger_chdate) {
@@ -2273,7 +2273,7 @@ class Seminar
         if ($statement->rowCount() == 0) {
             throw new Exception(_("Fehler beim Löschen der Veranstaltung"));
         }
-        NotificationCenter::postNotification("CourseIsDeleted", $this);
+        NotificationCenter::postNotification("CourseDidDelete", $this);
         return true;
     }
 

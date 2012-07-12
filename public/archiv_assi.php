@@ -60,8 +60,6 @@ if (get_config('RESOURCES_ENABLE')) {
     include_once ($GLOBALS['RELATIVE_PATH_RESOURCES'] . "/lib/DeleteResourcesUser.class.php");
 }
 
-$cssSw = new cssClassSwitcher;
-
 if ($perm->have_perm('admin')) {
     Navigation::activateItem('/admin/course/archive');
 } else {
@@ -242,14 +240,13 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
                 <?= MessageBox::$type($message_data['title'], $message_data['details']) ?>
             <? endforeach ?>
         <? endif ?>
-        <table align="center" width="99%" border=0 cellpadding=2 cellspacing=0>
+        <table class="zebra" align="center" width="99%" border=0 cellpadding=2 cellspacing=0>
             <?
             parse_msg($msg, "§", "blank", 3);
             ?>
             <tr>
-                <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
-                </td>
-                <td class="<? echo $cssSw->getClass() ?>" valign="top" colspan=3 valign="top" width="96%">
+                <td width="4%">&nbsp;</td>
+                <td valign="top" colspan=3 valign="top" width="96%">
                 <?
                     // Grunddaten des Seminars
                     printf ("<b>%s</b>", htmlReady($seminar['Name']));
@@ -265,9 +262,9 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
 
                         ?>
             <tr>
-                <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
+                <td width="4%">&nbsp;
                 </td>
-                <td class="<? echo $cssSw->getClass() ?>" valign="top" colspan=2 valign="top" width="96%">
+                <td valign="top" colspan=2 valign="top" width="96%">
                 <?
                 // Grunddaten des Seminars
                 printf ("<font size=-1><b>" . _("Untertitel:") . "</b></font><br><font size=-1>%s</font>", htmlReady($seminar['Untertitel']));
@@ -277,44 +274,41 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
             <? }
                     ?>
             <tr>
-                <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
-                </td>
-                <td class="<? echo $cssSw->getClass() ?>" valign="top" width="48%">
+                <td width="4%">&nbsp;</td>
+                <td valign="top" width="48%">
                 <?
                 printf ("<font size=-1><b>" . _("Zeit:") . "</b></font><br><font size=-1>%s</font>", htmlReady(view_turnus($_SESSION['archiv_assi_data']['sems'][$_SESSION['archiv_assi_data']['pos']]['id'], FALSE)));
                 ?>
                 </td>
-                <td class="<? echo $cssSw->getClass() ?>" valign="top" width="48%">
+                <td valign="top" width="48%">
                 <?
                 printf ("<font size=-1><b>" . _("Semester:") . "</b></font><br><font size=-1>%s</font>", get_semester($_SESSION['archiv_assi_data']['sems'][$_SESSION['archiv_assi_data']['pos']]['id']));
                 ?>
                 </td>
             </tr>
             <tr>
-                <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
-                </td>
-                <td class="<? echo $cssSw->getClass() ?>" valign="top" width="48%">
+                <td width="4%">&nbsp;</td>
+                <td valign="top" width="48%">
                 <?
                 printf ("<font size=-1><b>" . _("Erster Termin:") . "</b></font><br><font size=-1>%s</font>", veranstaltung_beginn($_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"]));
                 ?>
                 </td>
-                <td class="<? echo $cssSw->getClass() ?>" valign="top" width="48%">
+                <td valign="top" width="48%">
                 <?
                 printf ("<font size=-1><b>" . _("Vorbesprechung:") . "</b></font><br><font size=-1>%s</font>", (vorbesprechung($_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"])) ? htmlReady(vorbesprechung($_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"])) : _("keine"));
                 ?>
                 </td>
             </tr>
             <tr>
-                <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
-                </td>
-                <td class="<? echo $cssSw->getClass() ?>" width="48%" valign="top">
+                <td width="4%">&nbsp;</td>
+                <td width="48%" valign="top">
                 <?
                 $sem = Seminar::getInstance($_SESSION['archiv_assi_data']['sems'][$_SESSION['archiv_assi_data']['pos']]['id']);
                 printf ("<font size=-1><b>" . _("Veranstaltungsort:") . "</b></font><br><font size=-1>%s</font>", 
                     htmlReady($sem->getDatesTemplate('dates/seminar_export_location')));
                 ?>
                 </td>
-                <td class="<? echo $cssSw->getClass() ?>" width="48%" valign="top">
+                <td width="48%" valign="top">
                 <?
                 if ($seminar['VeranstaltungsNummer'])
                     printf ("<font size=-1><b>" . _("Veranstaltungsnummer:") . "</b></font><br><font size=-1>%s</font>", htmlReady($seminar['VeranstaltungsNummer']));
@@ -324,9 +318,8 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
                 </td>
             </tr>
             <tr>
-                <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
-                </td>
-                <td class="<? echo $cssSw->getClass() ?>" width="48%" valign="top">
+                <td width="4%">&nbsp;</td>
+                <td width="48%" valign="top">
                 <?
                 // wer macht den Dozenten?
                 $query = "SELECT {$_fullname_sql['full']} AS fullname, username
@@ -363,7 +356,7 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
 
                 ?>
                 </td>
-                <td class="<? echo $cssSw->getClass() ?>" width="48%" valign="top">
+                <td width="48%" valign="top">
                 <?
                 // und wer ist Tutor?
                 $statement->execute(array(
@@ -397,14 +390,13 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
                 </td>
             </tr>
             <tr>
-                <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
-                </td>
-                <td class="<? echo $cssSw->getClass() ?>" width="48%" valign="top">
+                <td width="4%">&nbsp;</td>
+                <td width="48%" valign="top">
                 <?
                 printf ("<font size=-1><b>" . _("Veranstaltungstyp:") . "</b></font><br><font size=-1>%s in der Kategorie %s</font>", $SEM_TYPE[$seminar['status']]["name"], $SEM_CLASS[$SEM_TYPE[$seminar['status']]["class"]]["name"]);
                 ?>
                 </td>
-                <td class="<? echo $cssSw->getClass() ?>" width="48%" valign="top">
+                <td width="48%" valign="top">
                 <?
                 if ($seminar['art'])
                     printf ("<font size=-1><b>" . _("Art/Form:") . "</b></font><br><font size=-1>%s</font>", htmlReady($seminar['art']));
@@ -417,9 +409,8 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
 
                         ?>
             <tr>
-                <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
-                </td>
-                <td class="<? echo $cssSw->getClass() ?>" colspan=2 width="96%" valign="top">
+                <td width="4%">&nbsp;</td>
+                <td colspan="2" width="96%" valign="top">
                 <?
                 printf ("<font size=-1><b>" . _("Kommentar/Beschreibung:") . "</b></font><br><font size=-1>%s</font>", htmlReady($seminar['Beschreibung'], TRUE, TRUE));
                 ?>
@@ -429,9 +420,8 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
             }
             ?>
             <tr>
-                <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
-                </td>
-                <td class="<? echo $cssSw->getClass() ?>" width="48%" valign="top">
+                <td width="4%">&nbsp;</td>
+                <td width="48%" valign="top">
                 <?
                 $query = "SELECT Name FROM Institute WHERE Institut_id = ?";
                 $statement = DBManager::get()->prepare($query);
@@ -446,7 +436,7 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
 
                 ?>
                 </td>
-                <td class="<? echo $cssSw->getClass() ?>" width="48%" valign="top">
+                <td width="48%" valign="top">
                 <?
                 $query = "SELECT Name, Institut_id
                           FROM Institute
@@ -482,9 +472,8 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
                 </td>
             </tr>
             <tr>
-                <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
-                </td>
-                <td class="<? echo $cssSw->getClass() ?>" colspan=2 width="96%" valign="top" align="center">
+                <td width="4%">&nbsp;</td>
+                <td colspan="2" width="96%" valign="top" align="center">
                 <?
                 // can we dec?
                 if ($_SESSION['archiv_assi_data']["pos"] > 0) {

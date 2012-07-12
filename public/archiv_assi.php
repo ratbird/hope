@@ -1,8 +1,8 @@
 <?
 # Lifter001: TEST
 # Lifter002: TODO
+# Lifter003: TEST
 # Lifter007: TODO
-# Lifter003: TODO
 # Lifter010: TODO
 /**
 * archiv_Assi.php - Archivierungs-Assistent von Stud.IP.
@@ -59,11 +59,6 @@ require_once 'lib/admin_search.inc.php';
 if (get_config('RESOURCES_ENABLE')) {
     include_once ($GLOBALS['RELATIVE_PATH_RESOURCES'] . "/lib/DeleteResourcesUser.class.php");
 }
-// # Get a database connection
-$db = new DB_Seminar;
-$db2 = new DB_Seminar;
-$db3 = new DB_Seminar;
-$db4 = new DB_Seminar;
 
 $cssSw = new cssClassSwitcher;
 
@@ -203,13 +198,19 @@ include 'lib/include/admin_search_form.inc.php';
 
 // Outputs...
 if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_data']["sem_check"]) > 0)) {
-    $db->query("SELECT * FROM seminare WHERE Seminar_id = '" . $_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"] . "' ");
-    $db->next_record();
+    $query = "SELECT Name, Untertitel, status, Beschreibung, VeranstaltungsNummer,
+                     duration_time, start_time, art, Institut_id
+              FROM seminare
+              WHERE Seminar_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($_SESSION['archiv_assi_data']['sems'][$_SESSION['archiv_assi_data']['pos']]['id']));
+    $seminar = $statement->fetch(PDO::FETCH_ASSOC);
+
     $msg .= "info§<font color=\"black\">" . _("Sie sind im Begriff, die untenstehende  Veranstaltung zu archivieren. Dieser Schritt kann nicht r&uuml;ckg&auml;ngig gemacht werden!") . "§";
     // check is Veranstaltung running
-    if ($db->f("duration_time") == -1) {
+    if ($seminar['duration_time'] == -1) {
         $msg .= "info§" . _("Das Archivieren k&ouml;nnte unter Umst&auml;nden nicht sinnvoll sein, da es sich um eine dauerhafte Veranstaltung handelt.") . "§";
-    } elseif (time() < ($db->f("start_time") + $db->f("duration_time"))) {
+    } elseif (time() < $seminar['start_time'] + $seminar['duration_time']) {
         $msg .= "info§" . _("Das Archivieren k&ouml;nnte unter Umst&auml;nden nicht sinnvoll sein, da das oder die Semester, in denen die Veranstaltung stattfindet, noch nicht verstrichen sind.") . "§";
     }
     if($ELEARNING_INTERFACE_ENABLE){
@@ -226,8 +227,8 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
     <tr>
         <td class="topic" colspan=2><b>&nbsp;
         <?
-        echo $SEM_TYPE[$db->f("status")]["name"], ": ", htmlReady(substr($db->f("Name"), 0, 60));
-        if (strlen($db->f("Name")) > 60)
+        echo $SEM_TYPE[$seminar['status']]["name"], ": ", htmlReady(substr($seminar['Name'], 0, 60));
+        if (strlen($seminar['Name']) > 60)
             echo "... ";
         echo " -  " . _("Archivieren der Veranstaltung");
         ?></b>
@@ -251,7 +252,7 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
                 <td class="<? echo $cssSw->getClass() ?>" valign="top" colspan=3 valign="top" width="96%">
                 <?
                     // Grunddaten des Seminars
-                    printf ("<b>%s</b>", htmlReady($db->f("Name")));
+                    printf ("<b>%s</b>", htmlReady($seminar['Name']));
                     // last activity
                     $last_activity = lastActivity($_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"]);
                     if ((time() - $last_activity) < (60 * 60 * 24 * 7 * 12))
@@ -260,7 +261,7 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
                     ?>
                 </td>
             </tr>
-            <? if ($db->f("Untertitel") != "") {
+            <? if ($seminar['Untertitel'] != "") {
 
                         ?>
             <tr>
@@ -269,7 +270,7 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
                 <td class="<? echo $cssSw->getClass() ?>" valign="top" colspan=2 valign="top" width="96%">
                 <?
                 // Grunddaten des Seminars
-                printf ("<font size=-1><b>" . _("Untertitel:") . "</b></font><br><font size=-1>%s</font>", htmlReady($db->f("Untertitel")));
+                printf ("<font size=-1><b>" . _("Untertitel:") . "</b></font><br><font size=-1>%s</font>", htmlReady($seminar['Untertitel']));
                 ?>
                 </td>
             </tr>
@@ -315,8 +316,8 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="48%" valign="top">
                 <?
-                if ($db->f("VeranstaltungsNummer"))
-                    printf ("<font size=-1><b>" . _("Veranstaltungsnummer:") . "</b></font><br><font size=-1>%s</font>", htmlReady($db->f("VeranstaltungsNummer")));
+                if ($seminar['VeranstaltungsNummer'])
+                    printf ("<font size=-1><b>" . _("Veranstaltungsnummer:") . "</b></font><br><font size=-1>%s</font>", htmlReady($seminar['VeranstaltungsNummer']));
                 else
                     print "&nbsp; ";
                 ?>
@@ -328,14 +329,36 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
                 <td class="<? echo $cssSw->getClass() ?>" width="48%" valign="top">
                 <?
                 // wer macht den Dozenten?
-                $db2->query ("SELECT " . $_fullname_sql['full'] . " AS fullname, seminar_user.user_id, username, status, position FROM seminar_user  LEFT JOIN auth_user_md5 USING (user_id) LEFT JOIN user_info USING (user_id) WHERE seminar_user.Seminar_id = '" . $_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"] . "' AND status = 'dozent' ORDER BY position, Nachname");
-                printf("<font size=-1><b>" . get_title_for_status('dozent', $db2->num_rows(), $db->f('status')) . "</b></font><br>");
-                while ($db2->next_record()) {
-                    if ($db2->num_rows() > 1)
-                        print "<li>";
-                    printf("<font size=-1><a href=\"%s\">%s</a></font>", URLHelper::getLink("about.php?username=".$db2->f("username")), htmlReady($db2->f("fullname")));
-                    if ($db2->num_rows() > 1)
-                        print "</li>";
+                $query = "SELECT {$_fullname_sql['full']} AS fullname, username
+                          FROM seminar_user
+                          LEFT JOIN auth_user_md5 USING (user_id)
+                          LEFT JOIN user_info USING (user_id)
+                          WHERE Seminar_id = ? AND status = ? ORDER BY position, Nachname";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array(
+                    $_SESSION['archiv_assi_data']['sems'][$_SESSION['archiv_assi_data']['pos']]['id'],
+                    'dozent'
+                ));
+                $teachers = $statement->fetchAll(PDO::FETCH_ASSOC);
+                $statement->closeCursor();
+
+                printf("<font size=-1><b>" . get_title_for_status('dozent', count($teachers), $seminar['status']) . "</b></font><br>");
+
+                if (count($teachers) === 1) {
+                    $teacher = reset($teachers);
+                    printf('<font size=-1><a href="%s">%s</a></font>',
+                           URLHelper::getLink('about.php?username=' . $teacher['username']),
+                           htmlReady($teacher['fullname']));
+                } else {
+                    echo '<ul style="margin:0;">';
+                    foreach ($teachers as $teacher) {
+                        echo '<li>';
+                        printf('<font size=-1><a href="%s">%s</a></font>',
+                               URLHelper::getLink('about.php?username=' . $teacher['username']),
+                               htmlReady($teacher['fullname']));
+                        echo '</li>';
+                    }
+                    echo '</ul>';
                 }
 
                 ?>
@@ -343,17 +366,31 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
                 <td class="<? echo $cssSw->getClass() ?>" width="48%" valign="top">
                 <?
                 // und wer ist Tutor?
-                $db2->query ("SELECT seminar_user.user_id, " . $_fullname_sql['full'] . " AS fullname, username, status, position FROM seminar_user  LEFT JOIN auth_user_md5 USING (user_id) LEFT JOIN user_info USING (user_id) WHERE seminar_user.Seminar_id = '" . $_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"] . "' AND status = 'tutor' ORDER BY position, Nachname");
-                printf("<font size=-1><b>" . get_title_for_status('tutor', $db2->num_rows(), $db->f('status')) . "</b></font><br>");
-                if ($db2->num_rows() == 0) {
-                    print("<font size=-1>" . _("keine") . "</font>");
-                }
-                while ($db2->next_record()) {
-                    if ($db2->num_rows() > 1)
-                        print "<li>";
-                    printf("<font size=-1><a href=\"%s\">%s</a></font>", URLHelper::getLink("about.php?username=".$db2->f("username")), htmlReady($db2->f("fullname")));
-                    if ($db2->num_rows() > 1)
-                        print "</li>";
+                $statement->execute(array(
+                    $_SESSION['archiv_assi_data']['sems'][$_SESSION['archiv_assi_data']['pos']]['id'],
+                    'tutor'
+                ));
+                $tutors = $statement->fetchAll(PDO::FETCH_ASSOC);
+                $statement->closeCursor();
+
+                printf("<font size=-1><b>" . get_title_for_status('tutor', count($tutors), $seminar['status']) . "</b></font><br>");
+                if (count($teachers) === 0) {
+                    echo '<font size=-1>' . _('keine') . '</font>';
+                } else if (count($teachers) === 1) {
+                    $teacher = reset($teachers);
+                    printf('<font size=-1><a href="%s">%s</a></font>',
+                           URLHelper::getLink('about.php?username=' . $teacher['username']),
+                           htmlReady($teacher['fullname']));
+                } else {
+                    echo '<ul style="margin:0;">';
+                    foreach ($teachers as $teacher) {
+                        echo '<li>';
+                        printf('<font size=-1><a href="%s">%s</a></font>',
+                               URLHelper::getLink('about.php?username=' . $teacher['username']),
+                               htmlReady($teacher['fullname']));
+                        echo '</li>';
+                    }
+                    echo '</ul>';
                 }
 
                 ?>
@@ -364,19 +401,19 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="48%" valign="top">
                 <?
-                printf ("<font size=-1><b>" . _("Veranstaltungstyp:") . "</b></font><br><font size=-1>%s in der Kategorie %s</font>", $SEM_TYPE[$db->f("status")]["name"], $SEM_CLASS[$SEM_TYPE[$db->f("status")]["class"]]["name"]);
+                printf ("<font size=-1><b>" . _("Veranstaltungstyp:") . "</b></font><br><font size=-1>%s in der Kategorie %s</font>", $SEM_TYPE[$seminar['status']]["name"], $SEM_CLASS[$SEM_TYPE[$seminar['status']]["class"]]["name"]);
                 ?>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="48%" valign="top">
                 <?
-                if ($db->f("art"))
-                    printf ("<font size=-1><b>" . _("Art/Form:") . "</b></font><br><font size=-1>%s</font>", htmlReady($db->f("art")));
+                if ($seminar['art'])
+                    printf ("<font size=-1><b>" . _("Art/Form:") . "</b></font><br><font size=-1>%s</font>", htmlReady($seminar['art']));
                 else
                     print "&nbsp; ";
                 ?>
                 </td>
             </tr>
-            <? if ($db->f("Beschreibung") != "") {
+            <? if ($seminar['Beschreibung'] != "") {
 
                         ?>
             <tr>
@@ -384,7 +421,7 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" colspan=2 width="96%" valign="top">
                 <?
-                printf ("<font size=-1><b>" . _("Kommentar/Beschreibung:") . "</b></font><br><font size=-1>%s</font>", htmlReady($db->f("Beschreibung"), TRUE, TRUE));
+                printf ("<font size=-1><b>" . _("Kommentar/Beschreibung:") . "</b></font><br><font size=-1>%s</font>", htmlReady($seminar['Beschreibung'], TRUE, TRUE));
                 ?>
                 </td>
             </tr>
@@ -396,31 +433,51 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="48%" valign="top">
                 <?
-                $db2->query("SELECT Name, url, Institut_id FROM Institute WHERE Institut_id = '" . $db->f("Institut_id") . "' ");
-                $db2->next_record();
-                if ($db2->num_rows()) {
-                    printf("<font size=-1><b>" . _("Heimat-Einrichtung:") . "</b></font><br><font size=-1><a href=\"%s\">%s</a></font>", URLHelper::getLink("institut_main.php?auswahl=".$db2->f("Institut_id")), htmlReady($db2->f("Name")));
+                $query = "SELECT Name FROM Institute WHERE Institut_id = ?";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($seminar['Institut_id']));
+                $institute_name = $statement->fetchColumn();
+
+                if ($institute_name) {
+                    printf("<font size=-1><b>" . _('Heimat-Einrichtung:') . "</b></font><br><font size=-1><a href=\"%s\">%s</a></font>",
+                           URLHelper::getLink('institut_main.php?auswahl=' . $seminar['Institut_id']),
+                           htmlReady($institute_name));
                 }
 
                 ?>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="48%" valign="top">
                 <?
-                $db2->query("SELECT Name, url, Institute.Institut_id FROM Institute LEFT JOIN seminar_inst USING (institut_id) WHERE seminar_id = '" . $_SESSION['archiv_assi_data']["sems"][$_SESSION['archiv_assi_data']["pos"]]["id"] . "' AND Institute.institut_id != '" . $db->f("Institut_id") . "'");
-                if ($db2->num_rows() == 1)
-                    printf ("<font size=-1><b>" . _("Beteiligte Einrichtung:") . "</b></font><br>");
-                elseif ($db2->num_rows() >= 2)
-                    printf ("<font size=-1><b>" . _("Beteiligte Einrichtungen:") . "</b></font><br>");
-                else
-                    print "&nbsp; ";
-                while ($db2->next_record()) {
-                    if ($db2->num_rows() >= 2)
-                        print "<li>";
-                    printf("<font size=-1><a href=\"%s\">%s</a></font><br>", URLHelper::getLink("institut_main.php?auswahl=".$db2->f("Institut_id")), htmlReady($db2->f("Name")));
-                    if ($db2->num_rows() > 2)
-                        print "</li>";
-                }
+                $query = "SELECT Name, Institut_id
+                          FROM Institute
+                          LEFT JOIN seminar_inst USING (institut_id)
+                          WHERE seminar_id = ? AND Institute.Institut_id != ?";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array(
+                    $_SESSION['archiv_assi_data']['sems'][$_SESSION['archiv_assi_data']['pos']]['id'],
+                    $seminar['Institut_id']
+                ));
+                $institutes = $statement->fetchAll(PDO::FETCH_ASSOC);
 
+                if (count($institutes) === 1) {
+                    print("<font size=-1><b>" . _("Beteiligte Einrichtung:") . "</b></font><br>");
+                    $institute = reset($institutes);
+                    printf('<font size=-1><a href="%s">%s</a></font><br>',
+                           URLHelper::getLink('institut_main.php?auswahl=' . $institute['Institut_id']),
+                           htmlReady($institute['Name']));
+                } else if (count($institutes) >= 2) {
+                    print("<font size=-1><b>" . _("Beteiligte Einrichtungen:") . "</b></font><br>");
+
+                    echo '<ul style="margin:0;">';
+                    foreach ($institutes as $institute) {
+                        echo '<li>';
+                        printf('<font size=-1><a href="%s">%s</a></font><br>',
+                               URLHelper::getLink('institut_main.php?auswahl=' . $institute['Institut_id']),
+                               htmlReady($institute['Name']));
+                        echo '</li>';
+                    }
+                    echo '</ul>';
+                }
                 ?>
                 </td>
             </tr>

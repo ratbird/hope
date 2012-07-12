@@ -439,6 +439,7 @@ function raumzeit_editSingleDate() {
             }
         }
         $termin->store();
+        NotificationCenter::postNotification("CourseDidChangeSchedule", $sem);
     }
 
     // unregelmäßiger Termin
@@ -495,6 +496,7 @@ function raumzeit_editSingleDate() {
                 $termin->killAssign();
                 $sem->createInfo(sprintf(_("Die Raumbuchung für den Termin %s wurde aufgehoben, da die neuen Zeiten außerhalb der Alten liegen!"), '<b>'. $termin->toString() .'</b>'));
             }
+            NotificationCenter::postNotification("CourseDidChangeSchedule", $sem);
             $sem->createMessage(sprintf(_("Der Termin %s wurde geändert!"), '<b>'.$termin->toString().'</b>'));
         }
         $sem->appendMessages($termin->getMessages());

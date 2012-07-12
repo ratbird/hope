@@ -634,6 +634,7 @@ class Seminar
         if ($perm->have_perm('tutor') && $start != $this->semester_start_time) {
             // logging >>>>>>
             log_event("SEM_SET_STARTSEMESTER", $this->getId(), $start);
+            NotificationCenter::postNotification("CourseDidChangeSchedule", $this);
             // logging <<<<<<
             $this->semester_start_time = $start;
             $this->metadate->setSeminarStartTime($start);
@@ -653,7 +654,7 @@ class Seminar
             $this->metadate->createSingleDates($key);
             $this->metadate->cycles[$key]->termine = NULL;
         }
-
+        NotificationCenter::postNotification("CourseDidChangeSchedule", $this);
     }
 
     function getStartSemester()
@@ -696,6 +697,7 @@ class Seminar
             }
 
             $this->createMessage(_("Die Dauer wurde geändert."));
+            NotificationCenter::postNotification("CourseDidChangeSchedule", $this);
 
             /*
              * If the duration has been changed, we have to create new SingleDates
@@ -877,6 +879,7 @@ class Seminar
 
         $this->readSingleDates();
         $this->irregularSingleDates[$singledate->getSingleDateID()] =& $singledate;
+        NotificationCenter::postNotification("CourseDidChangeSchedule", $this);
         return TRUE;
     }
 
@@ -909,9 +912,11 @@ class Seminar
             $this->irregularSingleDates[$date_id]->setExTermin(true);
             $this->irregularSingleDates[$date_id]->store();
             unset ($this->irregularSingleDates[$date_id]);
+            NotificationCenter::postNotification("CourseDidChangeSchedule", $this);
             return TRUE;
         } else {
             $this->metadate->deleteSingleDate($cycle_id, $date_id, $this->filterStart, $this->filterEnd);
+            NotificationCenter::postNotification("CourseDidChangeSchedule", $this);
             return TRUE;
         }
     }
@@ -920,6 +925,7 @@ class Seminar
     {
         // logging >>>>>>
         log_event("SEM_UNDELETE_SINGLEDATE",$date_id, $this->getId(), 'Cycle_id: '.$cycle_id);
+        NotificationCenter::postNotification("CourseDidChangeSchedule", $this);
         // logging <<<<<<
         if ($cycle_id == '') {
             $this->readSingleDates();
@@ -1058,6 +1064,7 @@ class Seminar
         // logging >>>>>>
         if($new_id){
             $cycle_info = $this->metadate->cycles[$new_id]->toString();
+            NotificationCenter::postNotification("CourseDidChangeSchedule", $this);
             log_event("SEM_ADD_CYCLE", $this->getId(), NULL, $cycle_info, '<pre>'.print_r($data,true).'</pre>');
         }
         // logging <<<<<<
@@ -1165,6 +1172,7 @@ class Seminar
                 if (!$same_time) {
                     // logging >>>>>>
                     log_event("SEM_CHANGE_CYCLE", $this->getId(), NULL, $change_from .' -> '. $cycle->toString());
+                    NotificationCenter::postNotification("CourseDidChangeSchedule", $this);
                     // logging <<<<<<
                     $this->createMessage(sprintf(_("Die regelmäßige Veranstaltungszeit wurde auf \"%s\" für alle in der Zukunft liegenden Termine geändert!"), '<b>'.$cycle->toString().'</b>'));
                     $message = true;
@@ -1188,6 +1196,7 @@ class Seminar
         // logging >>>>>>
         $cycle_info = $this->metadate->cycles[$cycle_id]->toString();
         log_event("SEM_DELETE_CYCLE", $this->getId(), NULL, $cycle_info);
+        NotificationCenter::postNotification("CourseDidChangeSchedule", $this);
         // logging <<<<<<
         return $this->metadate->deleteCycle($cycle_id);
     }
@@ -1200,6 +1209,7 @@ class Seminar
             $this->createMessage(sprintf(_("Der Turnus für den Termin %s wurde geändert."), $this->metadate->cycles[$key]->toString()));
             $this->metadate->createSingleDates($key);
             $this->metadate->cycles[$key]->termine = null;
+            NotificationCenter::postNotification("CourseDidChangeSchedule", $this);
         }
         return TRUE;
     }
@@ -1639,6 +1649,7 @@ class Seminar
             $this->createMessage(sprintf(_("Die Startwoche für den Termin %s wurde geändert."), $this->metadate->cycles[$key]->toString()));
             $this->metadate->createSingleDates($key);
             $this->metadate->cycles[$key]->termine = null;
+            NotificationCenter::postNotification("CourseDidChangeSchedule", $this);
         }
     }
 

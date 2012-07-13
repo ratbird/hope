@@ -152,7 +152,7 @@ function show_votes ($rangeID, $userID, $perm, $isHomepage = NO) {
       /* Get post and get-variables ---------------------------------------- */
       $formID = $_REQUEST["voteformID"];
       $openID = $_REQUEST["voteopenID"];
-      $open = (($openID == $evalID) || $_GET["openAllVotes"]) && (!$_GET["closeVotes"]);
+      $open = (($openID == $evalID) || Request::option('openAllVotes')) && (!Request::option('closeVotes'));
       /* ------------------------------------------------------------------- */
 
       /* Show headlines ---------------------------------------------------- */
@@ -256,15 +256,15 @@ function show_votes ($rangeID, $userID, $perm, $isHomepage = NO) {
       $userID == $vote->getAuthorID();
 
       /* Get post and get-variables ---------------------------------------- */
-      $formID = $_REQUEST["voteformID"];
-      $openID = $_REQUEST["voteopenID"];
-      $open = (($openID == $voteID) || $_GET["openAllVotes"]) && (!$_GET["closeVotes"]);
+      $formID = Request::option('voteformID');
+      $openID =  Request::option('voteopenID');
+      $open = (($openID == $voteID) || Request::option('openAllVotes') && (!Request::option('closeVotes')));
 
       $voted = Request::submitted('voteButton');
       $changeAnswer = Request::submitted('changeAnswerButton');
-      $answerChanged = $_POST["answerChanged"];
+      $answerChanged = Request::option('answerChanged');
       $previewResults = Request::submitted('previewButton');
-      if ( !$previewResults ) $previewResults = $_GET["previewResults"];
+      if ( !$previewResults ) $previewResults = Request::option('previewResults');
       $previewResults = $previewResults &&
       ($vote->getResultvisibility() == VOTE_RESULTS_ALWAYS || $haveFullPerm);
       /* ------------------------------------------------------------------- */
@@ -279,7 +279,7 @@ function show_votes ($rangeID, $userID, $perm, $isHomepage = NO) {
      echo createBoxContentHeader ();
      echo createFormHeader ($vote);
 
-     if ($_GET["voteaction"]=="saved" && $voteID == $_GET["voteID"])
+     if (Request::option('voteaction')=="saved" && $voteID == Request::option('voteID'))
         echo createReportMessage (_("Die &Auml;nderungen wurden gespeichert"),
                       VOTE_ICON_SUCCESS, VOTE_COLOR_SUCCESS).
         "<br>\n";
@@ -299,7 +299,7 @@ function show_votes ($rangeID, $userID, $perm, $isHomepage = NO) {
      elseif (($voted && $formID == $voteID && !$changeAnswer) ||
          ($voted && $formID == $voteID && $answerChanged)
          ) {
-        $vote->executeAssociate ($userID, $_POST["answer"]);
+        $vote->executeAssociate ($userID, Request::getArray('answer'));
         if ($vote->isError ()) {
            echo createErrorReport ($vote, _("Fehler bei der Abstimmung"));
            echo createVoteForm ($vote, $userID);
@@ -333,8 +333,8 @@ function show_votes ($rangeID, $userID, $perm, $isHomepage = NO) {
    /* Show all stopped Votes ----------------------------------------------- */
    if (!empty ($stoppedVotes) || (!empty ($stoppedEvals) && $haveFullPerm)) {
 
-      $openStoppedVotes = $_GET["openStoppedVotes"];
-      if (!isset($openStoppedVotes))
+      $openStoppedVotes = Request::option('openStoppedVotes');
+      if (!empty($openStoppedVotes))
      $openStoppedVotes = NO;
 
       echo createBoxLineHeader ();

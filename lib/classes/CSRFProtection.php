@@ -109,7 +109,7 @@ class CSRFProtection
      */
     static private function checkSecurityToken()
     {
-        return isset($_POST[self::TOKEN]) && self::token() === $_POST[self::TOKEN];
+        return (Request::option(self::TOKEN)) && self::token() === Request::option(self::TOKEN);
     }
 
     /**

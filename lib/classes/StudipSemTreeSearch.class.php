@@ -237,9 +237,11 @@ class StudipSemTreeSearch {
 
     function insertSelectedRanges($selected = null){
         if (!$selected){
-            for ($i = 0; $i < count($_REQUEST[$this->form_name . "_chooser"]); ++$i){
-                if($_REQUEST[$this->form_name . "_chooser"][$i]){
-                    $selected[] = $_REQUEST[$this->form_name . "_chooser"][$i];
+            $val = $this->form_name . "_chooser";
+            $$val = Request::quotedArray($this->form_name . "_chooser");
+            for ($i = 0; $i < count($$val); ++$i){
+                if($$val[$i]){
+                    $selected[] = $$val[$i];
                 }
             }
         }

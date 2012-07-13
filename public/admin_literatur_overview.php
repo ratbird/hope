@@ -105,8 +105,8 @@ if (isset($_REQUEST['close_element'])){
     unset($_SESSION['_open'][$_REQUEST['close_element']]);
     $_SESSION['_anker_id'] = $_REQUEST['close_element'];
 }
-if (isset($_GET['_catalog_id'])){
-    $_SESSION['_anker_id'] = $_GET['_catalog_id'];
+if (Request::option('_catalog_id')){
+    $_SESSION['_anker_id'] = Request::option('_catalog_id');
 }
 
 if ($_REQUEST['cmd'] == 'markall' && is_array($_SESSION['_lit_data'])){

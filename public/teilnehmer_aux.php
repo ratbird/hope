@@ -266,12 +266,12 @@ function aux_enter_data() {
     global $datafield_id, $datafield_type, $datafield_sec_range_id, $datafield_content;
 
     unset($msgs);
-
-    if (is_array($_REQUEST['datafields'])) {
+    $datafields = Request::getArray('datafields');
+    if (is_array($datafields)) {
         $invalidEntries = array();
         foreach (filterDatafields(DataFieldEntry::getDataFieldEntries(array($user_id, $sem_id), 'usersemdata')) as $id => $entry){
-            if(isset($_REQUEST['datafields'][$entry->getId()])){
-                $entry->setValueFromSubmit($_REQUEST['datafields'][$entry->getId()]);
+            if(isset($datafields[$entry->getId()])){
+                $entry->setValueFromSubmit($datafields[$entry->getId()]);
                 if ($entry->isValid()) {
                     $entry->store();
                 } else {

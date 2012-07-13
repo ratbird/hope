@@ -102,19 +102,11 @@ if (!isset($SAJAX_INCLUDED)) {
             // always modified
             header ("Cache-Control: no-cache, must-revalidate");  // HTTP/1.1
             header ("Pragma: no-cache");                          // HTTP/1.0
-            $func_name = $_GET["rs"];
-            if (! empty($_GET["rsargs"])) 
-                $args = $_GET["rsargs"];
+            $func_name = Request::get('rs');
+            if (Request::getArray('rs'))
+                 $args = Request::getArray('rsargs');
             else
-                $args = array();
-        }
-        else {
-            $func_name = $_POST["rs"];
-            if (! empty($_POST["rsargs"])) 
-                $args = $_POST["rsargs"];
-            else
-                $args = array();
-        }
+                 $args = array();
         header("Content-type: text/javascript;charset=utf-8",true);
         if (! in_array($func_name, $sajax_export_list))
             echo "-:$func_name not callable";

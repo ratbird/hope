@@ -55,7 +55,7 @@ require_once 'lib/chat/chat_func_inc.php';
 $chatServer = ChatServer::GetInstance($CHAT_SERVER_NAME);
 $chatServer->caching = true;
 if (UserConfig::get($user->id)->CHAT_USE_AJAX_CLIENT){
-    $log_id = isset($_GET['log_id']) ? (int)$_GET['log_id'] : count($_SESSION['chat_logs'][$chatid])-1;
+    $log_id = Request::int('log_id', count($_SESSION['chat_logs'][$chatid])-1);
     $chat_log = $_SESSION['chat_logs'][$chatid][$log_id]['msg'];
     $end_time = $_SESSION['chat_logs'][$chatid][$log_id]['stop'];
     $start_time = $_SESSION['chat_logs'][$chatid][$log_id]['start'];

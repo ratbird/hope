@@ -109,7 +109,7 @@ function temporaly_accepted($sem_name, $user_id, $sem_id, $ask = "TRUE", $studie
 
     } else {
         if (get_config('ADMISSION_PRELIM_COMMENT_ENABLE')){
-            $comment = get_fullname() . ': ' . stripslashes($_POST['comment']);
+            $comment = get_fullname() . ': ' . (Request::quoted('comment'));
         } else {
             $comment = '';
         }

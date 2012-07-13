@@ -444,7 +444,7 @@ if(Request::submitted('group_sem') && (count($_REQUEST['gruppe']) > 1 || isset($
         }
         if(isset($_REQUEST['admission_change_endtime'])){
             $admission_times["admission_endtime"] = '-1';
-            if (!check_and_set_date($_POST['adm_tag'], $_POST['adm_monat'], $_POST['adm_jahr'], $_POST['adm_stunde'], $_POST['adm_minute'], $admission_times, "admission_endtime")) {
+            if (!check_and_set_date(Request::option('adm_tag'), Request::option('adm_monat'), Request::option('adm_jahr'), Request::option('adm_stunde'), Request::option('adm_minute'), $admission_times, "admission_endtime")) {
                 $msg[] = array("error", _("Bitte geben Sie g&uuml;ltige Zeiten f&uuml;r das Ende Kontingente / Losdatum ein!"));
                 $ok = false;
             } else {
@@ -476,14 +476,14 @@ if(Request::submitted('group_sem') && (count($_REQUEST['gruppe']) > 1 || isset($
         }
         if(isset($_REQUEST['admission_change_starttime'])){
             $admission_times["admission_starttime"] = -1;
-            if (!check_and_set_date($_POST['adm_s_tag'], $_POST['adm_s_monat'], $_POST['adm_s_jahr'], $_POST['adm_s_stunde'], $_POST['adm_s_minute'], $admission_times, "admission_starttime")) {
+            if (!check_and_set_date(Request::option('adm_s_tag'), Request::option('adm_s_monat'), Request::option('adm_s_jahr'), Request::option('adm_s_stunde'), Request::option('adm_s_minute'), $admission_times, "admission_starttime")) {
                 $msg[] = array("error", _("Bitte geben Sie g&uuml;ltige Zeiten f&uuml;r das Startdatum für Anmeldungen ein!"));
                 $ok = false;
             }
         }
         if(isset($_REQUEST['admission_change_endtime_sem'])){
             $admission_times["admission_endtime_sem"] = -1;
-            if (!check_and_set_date($_POST['adm_e_tag'], $_POST['adm_e_monat'], $_POST['adm_e_jahr'], $_POST['adm_e_stunde'], $_POST['adm_e_minute'], $admission_times, "admission_endtime_sem")) {
+            if (!check_and_set_date(Request::option('adm_e_tag'), Request::option('adm_e_monat'), Request::option('adm_e_jahr'), Request::option('adm_e_stunde'), Request::option('adm_e_minute'), $admission_times, "admission_endtime_sem")) {
                 $msg[] = array("error", _("Bitte geben Sie g&uuml;ltige Zeiten f&uuml;r das Enddatum für Anmeldungen ein!"));
                 $ok = false;
             }

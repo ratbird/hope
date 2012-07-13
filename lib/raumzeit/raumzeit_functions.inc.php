@@ -229,25 +229,6 @@ function getFilterForSemester($semester_id) {
     }
 }
 
-function unQuoteAll() {
-    function cleanArray(&$arr) {
-        foreach($arr as $k => $v)
-            if (is_array($v))
-                cleanArray($arr[$k]);
-            else
-                $arr[$k] = stripslashes($v);
-    }
-
-    /// before processing anything in PHP do
-    if (get_magic_quotes_gpc()) {
-        cleanArray($_REQUEST);
-        cleanArray($_POST);
-        cleanArray($_COOKIE);
-        cleanArray($_GET);
-    }
-
-}
-
 function raumzeit_parse_messages($msgs) {
     $first = true;
     foreach ($msgs as $msg) {

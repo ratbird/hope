@@ -416,19 +416,19 @@ class Course_BasicdataController extends AuthenticatedController
             } 
 
             //Dozenten hinzufügen:
-            if ($_POST['new_doz'] && $_POST['add_dozent_x']
+            if (Request::get('new_doz') && Request::submitted('add_dozent_x')
                    && $perm->have_studip_perm("dozent", $sem->getId())) {
-                if ($sem->addMember($_POST['new_doz'], "dozent")) {
+                if ($sem->addMember(Request::option('new_doz'), "dozent")) {
                     // Only applicable when globally enabled and user deputies enabled too
                     if ($deputies_enabled) {
                         // Check whether chosen person is set as deputy
                         // -> delete deputy entry.
-                        if (isDeputy($_POST['new_doz'], $sem->getId())) {
-                            deleteDeputy($_POST['new_doz'], $sem->getId());
+                        if (isDeputy(Request::option('new_doz'), $sem->getId())) {
+                            deleteDeputy(Request::option('new_doz'), $sem->getId());
                         }
                         // Add default deputies of the chosen lecturer...
                         if (get_config('DEPUTIES_DEFAULTENTRY_ENABLE')) {
-                            $deputies = getDeputies($_POST['new_doz']);
+                            $deputies = getDeputies(Request::option('new_doz'));
                             $lecturers = $sem->getMembers('dozent');
                             foreach ($deputies as $deputy) {
                                 // ..but only if not already set as lecturer or deputy.
@@ -443,17 +443,17 @@ class Course_BasicdataController extends AuthenticatedController
                 }
             }
             //Vertretung hinzufügen:
-            if ($deputies_enabled && $_POST['new_dep'] && $_POST['add_deputy_x']
+            if ($deputies_enabled && Request::option('new_dep') && Request::submitted('add_deputy_x')
                    && $perm->have_studip_perm("dozent", $sem->getId())) {
-                if (addDeputy($_POST['new_dep'], $sem->getId())) {
+                if (addDeputy(Request::option('new_dep'), $sem->getId())) {
                     $this->msg[] = array("msg", sprintf(_("%s wurde hinzugefügt."),
                             get_title_for_status('deputy', 1, $sem->status)));
                 }
             }
             //Tutoren hinzufügen:
-            if ($_POST['new_tut'] && $_POST['add_tutor_x']
+            if (Request::option('new_tut') && Request::submitted('add_tutor_x')
                     && $perm->have_studip_perm("tutor", $sem->getId())) {
-                if ($sem->addMember($_POST['new_tut'], "tutor")) {
+                if ($sem->addMember(Request::option('new_tut'), "tutor")) {
                     $this->msg[] = array("msg", sprintf(_("%s wurde hinzugefügt."),
                             get_title_for_status('tutor', 1, $sem->status)));
                 }
@@ -476,24 +476,24 @@ class Course_BasicdataController extends AuthenticatedController
         }
         $this->flash['msg'] = $this->msg;
 
-        if (($_POST["new_doz_parameter"]
-                && !$_POST["add_dozent_x"]
-                && $_POST["new_doz_parameter"] !== sprintf(_("Name %s"), get_title_for_status('dozent', 1, $sem->status)))
-            || ($deputies_enabled && $_POST["new_dep_parameter"]
-                && !$_POST["add_deputy_x"]
-                && $_POST["new_dep_parameter"] !== sprintf(_("Name %s"), get_title_for_status('deputy', 1, $sem->status)))
-            || ($_POST["new_tut_parameter"]
-                && !$_POST["add_tutor_x"]
-                && $_POST["new_tut_parameter"] !== sprintf(_("Name %s"), get_title_for_status('tutor', 1, $sem->status)))) {
+        if ((Request::get("new_doz_parameter")
+                && !Request::submitted("add_dozent_x")
+                && Request::get("new_doz_parameter") !== sprintf(_("Name %s"), get_title_for_status('dozent', 1, $sem->status)))
+            || ($deputies_enabled && Request::get("new_dep_parameter")
+                && !Request::submitted("add_deputy_x")
+                && Request::get("new_dep_parameter") !== sprintf(_("Name %s"), get_title_for_status('deputy', 1, $sem->status)))
+            || (Request::get("new_tut_parameter")
+                && !Request::submitted("add_tutor_x")
+                && Request::get("new_tut_parameter") !== sprintf(_("Name %s"), get_title_for_status('tutor', 1, $sem->status)))) {
             if (!$changemade) {
                 unset($this->flash['msg']);
             }
         }
-        $this->flash['new_doz_parameter'] = $_POST['new_doz'] ? null : Request::get('new_doz_parameter');
+        $this->flash['new_doz_parameter'] = Request::get('new_doz_parameter');
         if ($deputies_enabled) {
-            $this->flash['new_dep_parameter'] = $_POST['new_dep'] ? null : Request::get('new_dep_parameter');
+            $this->flash['new_dep_parameter'] = Request::get('new_dep_parameter');
         }
-        $this->flash['new_tut_parameter'] = $_POST['new_tut'] ? null : Request::get('new_tut_parameter');
+        $this->flash['new_tut_parameter'] = Request::get('new_tut_parameter');
         $this->flash['open'] = Request::get("open");
         $this->redirect($this->url_for('course/basicdata/view/' . $sem->getId()));
     }

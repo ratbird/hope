@@ -195,7 +195,7 @@ class Course_StudyAreasController extends AuthenticatedController
 
         // retrieve the study area from the POST body
         // w/o a study area ID, render a BAD REQUEST
-        $id = isset($_POST['id']) ? $_POST['id'] : NULL;
+        $id = Request::option('id');
         if ($id === NULL) {
             $this->set_status(400);
             return $this->render_nothing();
@@ -221,7 +221,7 @@ class Course_StudyAreasController extends AuthenticatedController
     function remove_action($course_id = '-')
     {
 
-        $id = isset($_POST['id']) ? $_POST['id'] : NULL;
+        $id = Request::option('id');
 
         if ($id === NULL) {
             $this->set_status(400);

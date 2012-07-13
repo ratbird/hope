@@ -50,8 +50,8 @@ function createFormHeader(&$vote)
       "<form action=\"";
 
    $unamelink="";
-   if (!empty ($GLOBALS["username"]))
-      $unamelink = "?username=".$GLOBALS["username"];
+   if (Request::get('username'))
+      $unamelink = "?username=".Request::get('username');
 
    $html .= URLHelper::getLink($unamelink."#openvote")."\" method=post>\n".
       " <input type=\"hidden\" name=\"voteformID\" ".
@@ -60,7 +60,7 @@ function createFormHeader(&$vote)
       "value=\"".$vote->getObjectID (). "\">\n".
       " <input type=\"hidden\" name=\"answerChanged\" ".
       "value=\"".(Request::submitted('changeAnswerButton') ||
-          (isset($_POST["answerChanged"]) && !isset($_POST["answer"]))
+          (Request::option('answerChanged') && Request::get('answer'))
           ? YES : NO). "\">\n";
    $html .= CSRFProtection::tokenTag();
    return $html;
@@ -80,28 +80,28 @@ function createFormFooter (&$vote, $userID, $perm, $rangeID) {
    $haveFullPerm = $perm->have_studip_perm ("tutor", $vote->getRangeID()) ||
        $userID == $vote->getAuthorID ();
 
-   $isPreview = ($_GET["previewResults"] || Request::submitted('previewButton')) &&
+   $isPreview = (Request::option('previewResults') || Request::submitted('previewButton')) &&
        ($vote->getResultvisibility() == VOTE_RESULTS_ALWAYS || $haveFullPerm);
 
    $isAssociated = $vote->voteDB->isAssociated ($vote->getObjectID(), $userID);
    $isStopped = $vote->isStopped();
 
-   $revealNames = $_GET["revealNames"] && $vote->getObjectID() == $_GET["voteopenID"]
+   $revealNames = Request::option('revealNames') && $vote->getObjectID() == Request::option('voteopenID')
        && ! $vote->isAnonymous();
 
-   $sortAnswers = $_GET["sortAnswers"] && $vote->getObjectID() == $_GET["voteopenID"];
-
+   $sortAnswers = Request::option('sortAnswers') && $vote->getObjectID() == Request::option('voteopenID');
+   $answer = Request::getArray('answer');
    $changeAnswer = Request::submitted('changeAnswerButton') ||
-       ($_POST["answerChanged"] && !isset($_POST["answer"]));
+       (Request::option('answerChanged') && !$answer);
 
    $link = "?voteopenID=".$vote->getObjectID();
 
-   $link .= ($_GET["openAllVotes"]) ? "&openAllVotes=".YES : "";
+   $link .= (Request::option('openAllVotes')) ? "&openAllVotes=".YES : "";
 
-   $link .= ($_GET["openStoppedVotes"]) ? "&openStoppedVotes=".YES : "";
-   $link .= ($_GET["showrangeID"]) ? "&showrangeID=".$_GET["showrangeID"] : "";
+   $link .= (Request::option('openStoppedVotes')) ? "&openStoppedVotes=".YES : "";
+   $link .= (Request::option('showrangeID')) ? "&showrangeID=".Request::option('showrangeID') : "";
    $link .= ($isPreview) ? "&previewResults=".YES : "";
-   $link .= ($GLOBALS["username"]) ? "&username=".$GLOBALS["username"] : "";
+   $link .= (Request::get('username')) ? "&username=".Request::get('username') : "";
 
    /* Meta-information about the vote -------------------------------------- */
    $html .= createVoteInfo ($vote, $isAssociated);
@@ -175,17 +175,17 @@ function createFormFooter (&$vote, $userID, $perm, $rangeID) {
     && (! $changeAnswer || $isPreview)
     )
        {
-       $link_reveal = $link."&sortAnswers=".($_GET["sortAnswers"] ? YES : NO);
+       $link_reveal = $link."&sortAnswers=".(Request::option('sortAnswers') ? YES : NO);
 
-       if ($GLOBALS["voteopenID"] != $vote->getObjectID ())
+       if (Request::option('voteopenID') != $vote->getObjectID ())
       $link_reveal .= "&revealNames=".YES;
        else
-      $link_reveal .= "&revealNames=".($_GET["revealNames"] ? NO : YES);
+      $link_reveal .= "&revealNames=".(Request::option('revealNames') ? NO : YES);
 
        $link_reveal .= ($vote->isStopped()) ? "#stoppedvotes" : "#openvote";
 
-       if( $_GET["revealNames"] &&
-       $GLOBALS["voteopenID"] == $vote->getObjectID ())
+       if(Request::option('revealNames') &&
+       Request::option('voteopenID') == $vote->getObjectID ())
        $html .= LinkButton::create(_('Normale Ansicht'),URLHelper::getURL($link_reveal), array('title' => _('Zurück zur normalen Ansicht.')));
        else
        $html .= LinkButton::create(_('Namen zeigen'),URLHelper::getURL($link_reveal), array('title' => _('Zeigen, wer welche Antwort gewählt hat.')));
@@ -292,8 +292,8 @@ function createOpeningOrClosingArrow($eval = FALSE)
 
    /* If we are on a homepage ---------------------------------------------- */
    $arrowlink="";
-   if (!empty ($GLOBALS["username"])) {
-      $arrowlink = "?username=".$GLOBALS["username"];
+   if (Request::get('username')) {
+      $arrowlink = "?username=".Request::get('username');
       $isHomepage = YES;
    }
    /* ---------------------------------------------------------------------- */
@@ -377,13 +377,13 @@ function createVoteHeadline(&$vote, $open, $openID, $evalDB = "", $isHomepage = 
 
    if ($open) {
       $link = "?closeVotes=1";
-      if (!empty ($GLOBALS["username"]))
-     $link .= "&username=".$GLOBALS["username"];
+      if (Request::get('username'))
+     $link .= "&username=".Request::get('username');
       $link .= "#votetop";
    } else {
       $link = "?voteopenID=".$vote->getObjectID();
-      if (!empty ($GLOBALS["username"]))
-     $link .= "&username=".$GLOBALS["username"];
+      if (Request::get('username'))
+     $link .= "&username=".Request::get('username');
       $link .= "#openvote";
    }
    $link=URLHelper::getLink($link);
@@ -408,8 +408,8 @@ function createStoppedVotesHeadline($stoppedVotes, $openStoppedVotes, $stoppedEv
 {
    $link = "?openStoppedVotes=" .
        ($openStoppedVotes ? NO : YES);
-   if (!empty ($GLOBALS["username"]))
-       $link .= "&username=".$GLOBALS["username"];
+   if (Request::get('username'))
+       $link .= "&username=".Request::get('username');
    $link .= "#stoppedvotes";
    $link=URLHelper::getLink($link);
 
@@ -538,8 +538,8 @@ function createSuccessReport (&$vote, $firstTime = YES, $changed = NO)
    // show user-depending test-result message
    if ($vote->x_instanceof() == INSTANCEOF_TEST AND ($firstTime OR $changed)) {
       if ($vote->getCo_Visibility()) {
-     $nrAll = count($_POST["answer"]);
-     $nrCorrect = $vote->getNumberOfCorrectAnswers ($_POST["answer"]);
+     $nrAll = count(Request::getArray('answer'));
+     $nrCorrect = $vote->getNumberOfCorrectAnswers (Request::getArray('answer'));
      $nrFalse = $nrAll - $nrCorrect;
 
      if ($vote->isMultipleChoice ()) {
@@ -610,10 +610,10 @@ function createVoteResult ($vote, $preview = NO)
 
    $haveFullPerm = $perm->have_studip_perm ("tutor", $vote->getRangeID()) ||
        $auth->auth["uid"] == $vote->getAuthorID ();
-   $sortAnswers = $_GET["sortAnswers"] &&
-       ($vote->getObjectID() == $_GET["voteopenID"]);
-   $revealNames = $_GET["revealNames"] &&
-       ($vote->getObjectID() == $_GET["voteopenID"]) &&
+   $sortAnswers = Request::option('sortAnswers') &&
+       ($vote->getObjectID() == Request::option('voteopenID'));
+   $revealNames = Request::option('revealNames') &&
+       ($vote->getObjectID() == Request::option('voteopenID')) &&
        ($haveFullPerm || $vote->getNamesVisibility()) &&
        ! $vote->isAnonymous();
 

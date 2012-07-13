@@ -63,13 +63,13 @@ require_once 'lib/classes/StmBrowse.class.php';
 
 //Standard herstellen
 
-if ($_REQUEST['view'])
-    $_SESSION['sem_portal']['bereich'] = $_REQUEST['view'];
+if (Request::option('view'))
+    $_SESSION['sem_portal']['bereich'] = Request::option('view');
 
 if (!$_SESSION['sem_portal']['bereich'])
     $_SESSION['sem_portal']['bereich'] = "all";
 
-$_REQUEST['view'] = $_SESSION['sem_portal']['bereich'];
+Request::set('view', $_SESSION['sem_portal']['bereich']);
 Navigation::activateItem('/search/courses/'.$_SESSION['sem_portal']['bereich']);
 
 if (Request::option('choose_toplist'))

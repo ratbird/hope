@@ -111,8 +111,9 @@ $admin_link = sprintf(_("Leider ist ein Fehler aufgetreten. Bitte fordern Sie ge
     ### Formularauswertung: Eingabe der E-Mail-Adresse ###
     ######################################################
 */
-if( $_POST['email'] != "" ) {
-    $email = trim( stripslashes( $_POST['email'] ) );
+$email = Request::get($email);
+if( $email != "" ) {
+    $email = trim( $email );
     $validator = new email_validation_class();
     if( !$validator->ValidateEmailAddress( $email ) ) {
         // E-Mail ungültig
@@ -138,7 +139,7 @@ if( $_POST['email'] != "" ) {
                 $username = $row['username'];
                 $vorname  = $row['Vorname'];
                 $nachname = $row['Nachname'];
-                $id = md5($username . $GLOBALS['REQUEST_NEW_PASSWORD_SECRET']);
+                $id = md5($username . $GLOBALS('REQUEST_NEW_PASSWORD_SECRET'));
 
                 // include language-specific subject and mailbody
                 $user_language = getUserLanguagePath($row['user_id']);
@@ -154,7 +155,7 @@ if( $_POST['email'] != "" ) {
     }
 } else {
     // E-Mail leer
-    if ($_POST['step']) {
+    if (Request::int('step')) {
         $msg[] = array('error', _("Sie haben keine E-Mail-Adresse eingegeben!"));
     }
 }
@@ -164,15 +165,14 @@ if( $_POST['email'] != "" ) {
     ### Auswerten des Bestätigungslinks           ###
     #################################################
 */
-if ($_GET['id'] != '') {
+if (Request::option('id') != '') {
     $step = 4;
-    if ($_GET['uname'] != '') {
-        $username = trim($_GET['uname']);
-        $username = mysql_escape_string($username);
+    if (Request::get('uname') != '') {
+        $username = trim(Request::get('uname'));
         $db = DBManager::get();
         $stmt = $db->prepare("SELECT user_id FROM auth_user_md5 WHERE username=?");
         $success = $stmt->execute(array($username));
-        if ($success && $stmt->rowCount() === 1 && trim($_GET['id']) == md5($username . $GLOBALS['REQUEST_NEW_PASSWORD_SECRET'])) {
+        if ($success && $stmt->rowCount() === 1 && trim(Request::option('id')) == md5($username . $GLOBALS['REQUEST_NEW_PASSWORD_SECRET'])) {
             $row = $stmt->fetch();
             $user_management = new UserManagementRequestNewPassword($row['user_id']);
             if ($user_management->setPassword()) {
@@ -191,7 +191,7 @@ if ($_GET['id'] != '') {
     }
 }
 
-if (!$_POST['step'] && empty($step)) {
+if (!Request::int('step') && empty($step)) {
     $step = 1;
 }
 

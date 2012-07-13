@@ -222,7 +222,8 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
             $statement = DBManager::get()->prepare($query);
             $statement->execute(array($user->id));
 
-            if ($institute_id = $statement->fetchColumn()) {
+            if ($statement->rowCount() == 1) {
+                $institute_id = $statement->fetchColumn();
                 reset_all_data();
                 openInst($institute_id);
             }

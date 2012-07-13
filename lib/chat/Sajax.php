@@ -101,12 +101,13 @@ if (!isset($SAJAX_INCLUDED)) {
             header ("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
             // always modified
             header ("Cache-Control: no-cache, must-revalidate");  // HTTP/1.1
-            header ("Pragma: no-cache");                          // HTTP/1.0
-            $func_name = Request::get('rs');
-            if (Request::getArray('rs'))
-                 $args = Request::getArray('rsargs');
-            else
-                 $args = array();
+            header ("Pragma: no-cache");
+        }// HTTP/1.0
+        $func_name = Request::get('rs');
+        if (Request::getArray('rs'))
+             $args = Request::getArray('rsargs');
+        else
+             $args = array();
         header("Content-type: text/javascript;charset=utf-8",true);
         if (! in_array($func_name, $sajax_export_list))
             echo "-:$func_name not callable";

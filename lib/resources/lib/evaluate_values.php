@@ -389,13 +389,13 @@ if ($change_object_schedules) {
             }
         }
     }
-
-    if ($ObjectPerms->havePerm("admin") && Request::submitted('send_change_resource') && isset($_POST['select_change_resource'])) {
-        if(!is_array($_POST['select_change_resource'])){
-        $ChangeObjectPerms = ResourceObjectPerms::Factory($_POST['select_change_resource']);
+    $select_change_resource = Request::quotedArray('select_change_resource');
+    if ($ObjectPerms->havePerm("admin") && Request::submitted('send_change_resource') && !empty($select_change_resource)) {
+        if(!is_array($select_change_resource)){
+        $ChangeObjectPerms = ResourceObjectPerms::Factory($select_change_resource);
         if ($ChangeObjectPerms->havePerm("tutor")) {
                 $changeAssign = AssignObject::Factory($change_object_schedules);
-                $changeAssign->setResourceId($_POST['select_change_resource']);
+                $changeAssign->setResourceId($$select_change_resource);
             $overlaps = $changeAssign->checkOverlap();
             if ($overlaps) {
                 $msg->addMsg(11);
@@ -408,7 +408,7 @@ if ($change_object_schedules) {
             $msg->addMsg(2);
         } else {
             $original_assign = AssignObject::Factory($_REQUEST['change_object_schedules']);
-            foreach($_POST['select_change_resource'] as $copy_to_resource_id){
+            foreach($select_change_resource as $copy_to_resource_id){
                 $ChangeObjectPerms = ResourceObjectPerms::Factory($copy_to_resource_id);
                 if ($ChangeObjectPerms->havePerm("tutor")) {
                     $new_assign = $original_assign->getCopyForResource($copy_to_resource_id);

@@ -208,7 +208,7 @@ class EditResourceData {
         $template = $GLOBALS['template_factory']->open('resources/show_schedule_forms.php');
         $template->set_attribute('used_view', $this->used_view);
         $template->set_attribute('db', $this->db);
-        $change_schedule_move_or_copy = $_POST['change_schedule_move_or_copy'];
+        $change_schedule_move_or_copy = Request::option('change_schedule_move_or_copy');
         echo $template->render(compact( 'resAssign', 'resources_data', 'view_mode', 'cssSw', 'lockedAssign', 'killButton', 
             'owner_type', 'perm', 'search_string_search_user', 'ResourceObjectPerms', 'search_exp_room',
             'search_properties_x', 'resReq', 'seminarName', 'seminarID','change_schedule_move_or_copy'));

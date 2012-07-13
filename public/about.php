@@ -139,16 +139,16 @@ $semester = new SemesterData;
 $msging = new messaging;
 
 //Buddie hinzufuegen
-if ($_GET['cmd'] == "add_user") {
-    $msging->add_buddy ($_GET['add_uname'], 0);
+if (Request::option('cmd') == "add_user") {
+    $msging->add_buddy (Request::get('add_uname'), 0);
 }
 
 
 //Auf und Zuklappen Termine
-if ($_GET['dopen'])
-    $about_data["dopen"]=$_GET['dopen'];
+if (Request::option('dopen'))
+    $about_data["dopen"]=Request::option('dopen');
 
-if ($_GET['dclose'])
+if (Request::option('dclose'))
     $about_data["dopen"]='';
 
 //Auf und Zuklappen News

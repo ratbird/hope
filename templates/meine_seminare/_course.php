@@ -81,17 +81,17 @@ foreach ($group_members as $member) {
 
             <? if (in_array($values["status"], array("dozent", "tutor"))) { ?>
                 <?
-                    if ($sem_class["studygroup_mode"]) {
-                        $course_url = 'dispatch.php/course/studygroup/edit/'. $semid .'?cid='. $semid;
-                    }
-                    else {
-                        $course_url = 'dispatch.php/course/management?cid='. $semid;
-                    }
-                ?>
-
-                    <a href="<?= URLHelper::getUrl($course_url) ?>">
-                        <?= Assets::img('icons/16/grey/admin.png', tooltip2(_("Veranstaltung administrieren"))) ?>
-                    </a>
+                $adminmodule = $sem_class->getModule("admin");
+                if ($adminmodule) {
+                    $adminnavigation = $adminmodule->getIconNavigation($semid, 0);
+                }
+                if ($adminnavigation) : ?>
+                <a href="<?= URLHelper::getLink($adminnavigation->getURL(), array('cid' => $semid)) ?>">
+                    <img <? foreach ($adminnavigation->getImage() as $attribute => $value) {
+                        echo " ".$attribute."=\"".$value."\"";
+                    } ?>>
+                </a>
+                <? endif ?>
 
             <? } else if ($values["binding"]) { ?>
 

@@ -96,8 +96,6 @@ if (!$perm->have_studip_perm('tutor', $id)) {
     die;
 }
 $cmd = Request::option('cmd');
-unQuoteAll();
-
 $sem = Seminar::GetInstance($id);
 $sem->checkFilter();
 

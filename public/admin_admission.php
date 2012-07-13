@@ -1,9 +1,9 @@
 <?
 # Lifter001: TEST
 # Lifter002: TODO
+# Lifter003: TEST
 # Lifter005: TODO - form validation and password encryption
 # Lifter007: TODO
-# Lifter003: TODO
 # Lifter010: TODO
 /**
 * admin_admission.php
@@ -68,11 +68,6 @@ if ($perm->have_perm('admin')) {
     Navigation::activateItem('/course/admin/admission');
 }
 
-$db = new DB_Seminar;
-$db2 = new DB_Seminar;
-$db3 = new DB_Seminar;
-$db4 = new DB_Seminar;
-$db6 = new DB_Seminar;
 $cssSw = new cssClassSwitcher;
 $admin_admission_data = unserialize(base64_decode($_REQUEST['admin_admission_data']));
 $admin_admission_data_original = unserialize(base64_decode($_REQUEST['admin_admission_data_original']));
@@ -209,46 +204,33 @@ if (isset($seminar_id) && !LockRules::check($seminar_id, 'user_domain') && $_REQ
 
 if (isset($seminar_id)) {
 
-  $lockdata = LockRules::getObjectRule($seminar_id);
+    $lockdata = LockRules::getObjectRule($seminar_id);
 
-  $db->query("SELECT * FROM seminare WHERE Seminar_id = '$seminar_id' ");
-  $db->next_record();
+    $query = "SELECT * FROM seminare WHERE Seminar_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($seminar_id));
+    $seminar = $statement->fetch(PDO::FETCH_ASSOC);
 
-  if (LockRules::Check($seminar_id, 'admission_turnout'))
-    $admin_admission_data["admission_turnout"]=$db->f("admission_turnout");
-
-  if (LockRules::Check($seminar_id, 'admission_type'))
-    $admin_admission_data["admission_type"]=$db->f("admission_type");
-
-  if (LockRules::Check($seminar_id, 'admission_endtime'))
-    $admin_admission_data["admission_endtime"]= (int)$db->f("admission_endtime");
-
-  if (LockRules::Check($seminar_id, 'admission_binding'))
-    $admin_admission_data["admission_binding"]=$db->f("admission_binding");
-
-  if (LockRules::Check($seminar_id, 'Passwort'))
-    $admin_admission_data["passwort"]=$db->f("Passwort");
-
-  if (LockRules::Check($seminar_id, 'Lesezugriff'))
-    $admin_admission_data["read_level"]=$db->f("Lesezugriff");
-
-  if (LockRules::Check($seminar_id, 'Schreibzugriff'))
-    $admin_admission_data["write_level"]=$db->f("Schreibzugriff");
-
-  if (LockRules::Check($seminar_id, 'admission_prelim'))
-    $admin_admission_data["admission_prelim"]=$db->f("admission_prelim");
-
-  if (LockRules::Check($seminar_id, 'admission_prelim_txt'))
-    $admin_admission_data["admission_prelim_txt"]=$db->f("admission_prelim_txt");
-
-  if (LockRules::Check($seminar_id, 'admission_starttime'))
-    $admin_admission_data["sem_admission_start_date"]=$db->f("admission_starttime");
-
-  if (LockRules::Check($seminar_id, 'admission_endtime_sem'))
-    $admin_admission_data["sem_admission_end_date"]= $db->f("admission_endtime_sem");
-
-  if (LockRules::Check($seminar_id, 'admission_disable_waitlist'))
-    $admin_admission_data["admission_disable_waitlist"]= $db->f("admission_disable_waitlist");
+    $fields = array(
+        'admission_turnout'          => 'admission_turnout',
+        'admission_type'             => 'admission_type',
+        'admission_endtime'          => 'admission_endtime',
+        'admission_binding'          => 'admission_binding',
+        'Passwort'                   => 'passwort',
+        'Lesezugriff'                => 'read_level',
+        'Schreibzugriff'             => 'write_level',
+        'admission_prelim'           => 'admission_prelim',
+        'admission_prelim_txt'       => 'admission_prelim_txt',
+        'admission_starttime'        => 'admission_starttime',
+        'admission_endtime_sem'      => 'admission_endtime_sem',
+        'admission_disable_waitlist' => 'admission_disable_waitlist',
+    );
+    
+    foreach ($fields as $key => $field) {
+        if (LockRules::Check($seminar_id, $key)) {
+            $admin_admission_data[$field] = $seminar[$key];
+        }
+    }
 }
 // end new stuff
 
@@ -262,45 +244,61 @@ if ($seminar_id
     && !$delete_domain
     && !Request::option('add_domain')) {
 
-    $db->query("SELECT * FROM seminare WHERE Seminar_id = '$seminar_id' ");
-    $db->next_record();
-    $admin_admission_data='';
-    $admin_admission_data["admission_turnout"]=$db->f("admission_turnout");
-    $admin_admission_data["admission_turnout_org"]=$db->f("admission_turnout");
-    $admin_admission_data["admission_type"]=$db->f("admission_type");
-    $admin_admission_data["admission_type_org"]=$db->f("admission_type");
-    $admin_admission_data["admission_selection_take_place"]=$db->f("admission_selection_take_place");
-    $admin_admission_data["admission_endtime"]=$db->f("admission_endtime");
-    $admin_admission_data["admission_binding"]=$db->f("admission_binding");
-    $admin_admission_data["sem_id"]=$seminar_id;
-    settype($admin_admission_data["admission_binding"], 'integer');
-    $admin_admission_data["heimat_inst_id"]=$db->f("Institut_id");
-    $admin_admission_data["passwort"]=$db->f("Passwort");
-    $admin_admission_data["name"]=$db->f("Name");
-    $admin_admission_data["status"]=$db->f("status");
-    $admin_admission_data["start_time"]=$db->f("start_time");
-    $admin_admission_data["read_level"]=$db->f("Lesezugriff");
-    $admin_admission_data["write_level"]=$db->f("Schreibzugriff");
-    $admin_admission_data["admission_prelim"]=$db->f("admission_prelim");
-    $admin_admission_data["admission_prelim_txt"]=$db->f("admission_prelim_txt");
-    $admin_admission_data["sem_admission_start_date"]=$db->f("admission_starttime");
-    $admin_admission_data["sem_admission_end_date"]=$db->f("admission_endtime_sem");
-    $admin_admission_data["admission_disable_waitlist"] = $db->f("admission_disable_waitlist");
-    $admin_admission_data["admission_disable_waitlist_org"] = $db->f("admission_disable_waitlist");
-    $admin_admission_data["admission_enable_quota"] = $db->f("admission_enable_quota");
-    $admin_admission_data["admission_enable_quota_org"] = $db->f("admission_enable_quota");
-    if ($admin_admission_data["admission_endtime"] <= 0){
-        $admin_admission_data["admission_endtime"] = veranstaltung_beginn($seminar_id, 'int');
-        if(!$admin_admission_data["admission_endtime"]) $admin_admission_data["admission_endtime"] = -1;
+    $query = "SELECT * FROM seminare WHERE Seminar_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($seminar_id));
+    $seminar = $statement->fetch(PDO::FETCH_ASSOC);
+
+    $admin_admission_data = array(
+        'admission_turnout'              => $seminar['admission_turnout'],
+        'admission_turnout_org'          => $seminar['admission_turnout'],
+        'admission_type'                 => $seminar['admission_type'],
+        'admission_type_org'             => $seminar['admission_type'],
+        'admission_selection_take_place' => $seminar['admission_selection_take_place'],
+        'admission_endtime'              => $seminar['admission_endtime'],
+        'admission_binding'              => (int)$seminar['admission_binding'],
+        'sem_id'                         => $seminar_id,
+        'heimat_inst_id'                 => $seminar['Institut_id'],
+        'passwort'                       => $seminar['Passwort'],
+        'name'                           => $seminar['Name'],
+        'status'                         => $seminar['status'],
+        'start_time'                     => $seminar['start_time'],
+        'read_level'                     => $seminar['Lesezugriff'],
+        'write_level'                    => $seminar['Schreibzugriff'],
+        'admission_prelim'               => $seminar['admission_prelim'],
+        'admission_prelim_txt'           => $seminar['admission_prelim_txt'],
+        'sem_admission_start_date'       => $seminar['admission_starttime'],
+        'sem_admission_end_date'         => $seminar['admission_endtime_sem'],
+        'admission_disable_waitlist'     => $seminar['admission_disable_waitlist'],
+        'admission_disable_waitlist_org' => $seminar['admission_disable_waitlist'],
+        'admission_enable_quota'         => $seminar['admission_enable_quota'],
+        'admission_enable_quota_org'     => $seminar['admission_enable_quota'],
+    );
+    if ($admin_admission_data['admission_endtime'] <= 0){
+        $admin_admission_data['admission_endtime'] = veranstaltung_beginn($seminar_id, 'int');
+        if (!$admin_admission_data['admission_endtime']) {
+            $admin_admission_data['admission_endtime'] = -1;
+        }
     }
-    $db->query("SELECT admission_seminar_studiengang.studiengang_id, name, quota, COUNT(admission_seminar_user.user_id) + COUNT(seminar_user.user_id) as count
-                FROM admission_seminar_studiengang LEFT JOIN studiengaenge USING (studiengang_id)
-                LEFT JOIN admission_seminar_user ON admission_seminar_studiengang.seminar_id=admission_seminar_user.seminar_id AND admission_seminar_user.studiengang_id=admission_seminar_studiengang.studiengang_id
-                LEFT JOIN seminar_user ON admission_seminar_studiengang.seminar_id=seminar_user.seminar_id AND admission_studiengang_id=admission_seminar_studiengang.studiengang_id
-                WHERE admission_seminar_studiengang.seminar_id = '$seminar_id' GROUP BY admission_seminar_studiengang.studiengang_id ORDER BY (admission_seminar_studiengang.studiengang_id <> 'all'),name");
-    while ($db->next_record()) {
-        $name = $db->f("studiengang_id") == 'all' ? _("Alle Studiengänge") : $db->f("name");
-        $admin_admission_data["studg"][$db->f("studiengang_id")] = array("name"=>$name, "ratio"=>$db->f("quota"), 'count' => $db->f('count'));
+    
+    $query = "SELECT ass.studiengang_id, name, quota, COUNT(asu.user_id) + COUNT(su.user_id) AS count
+              FROM admission_seminar_studiengang AS ass
+              LEFT JOIN studiengaenge USING (studiengang_id)
+              LEFT JOIN admission_seminar_user AS asu USING (seminar_id, studiengang_id)
+              LEFT JOIN seminar_user AS su
+                ON (ass.seminar_id = su.seminar_id AND admission_studiengang_id = ass.studiengang_id)
+              WHERE ass.seminar_id = ?
+              GROUP BY ass.studiengang_id
+              ORDER BY ass.studiengang_id != 'all', name";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($seminar_id));
+    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+        $name = $row['studiengang_id'] == 'all' ? _('Alle Studiengänge') : $row['name'];
+        $admin_admission_data['studg'][$row['studiengang_id']] = array(
+            'name'  => $name,
+            'ratio' => $row['quota'],
+            'count' => $row['count'],
+        );
     }
     $admin_admission_data["original"]=get_snapshot();
     if (Request::submitted("reset_admission_time")){
@@ -423,10 +421,17 @@ if ($seminar_id
     $add_ratio = Request::quoted('add_ratio');
     //Studiengang hinzufuegen
     if (Request::submitted("add_studg")) {
-        if (Request::option('add_studg') && Request::option('add_studg') != 'all') {
-            $db->query("SELECT name FROM studiengaenge WHERE studiengang_id='".Request::option('add_studg')."' ");
-            $db->next_record();
-            $admin_admission_data["studg"][Request::option('add_studg')]=array("name"=>$db->f("name"), "ratio"=>$add_ratio);
+        $add_studg = Request::option('add_studg');
+        if ($add_studg && $add_studg != 'all') {
+            $query = "SELECT name FROM studiengaenge WHERE studiengang_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($add_studg));
+            $name = $statement->fetchColumn();
+
+            $admin_admission_data['studg'][$add_studg] = array(
+                'name'  => $name,
+                'ratio' => $add_ratio
+            );
         } else if (Request::option('add_studg') == 'all'){
             $admin_admission_data["studg"][Request::option('add_studg')]=array("name"=>_("Alle Studiengänge"), "ratio"=>$add_ratio);
         }
@@ -577,13 +582,29 @@ if ($seminar_id
         //Warteliste aktivieren / deaktivieren
             if($admin_admission_data["admission_disable_waitlist"] != $admin_admission_data["admission_disable_waitlist_org"]){
                 if($admin_admission_data["admission_disable_waitlist_org"] == 0){ //Warteliste war eingeschaltet
-                    $db3->query("SELECT admission_seminar_user.user_id ,auth_user_md5.username FROM admission_seminar_user LEFT JOIN auth_user_md5 USING(user_id) WHERE seminar_id = '".$admin_admission_data["sem_id"]."' AND status='awaiting'");
-                    while ($db3->next_record()) {
-                        $db4->query("DELETE FROM admission_seminar_user WHERE user_id='".$db3->f("user_id")."' AND seminar_id='".$admin_admission_data["sem_id"]."' AND status='awaiting'");
-                        if ($db4->affected_rows()){
-                            setTempLanguage($db3->f("user_id"));
-                            $message= sprintf(_("Die Warteliste der Veranstaltung **%s** wurde von einem/r DozentIn oder AdministratorIn deaktiviert, Sie sind damit __nicht__ zugelassen worden."), $admin_admission_data["name"]);
-                            $messaging->insert_message(addslashes($message), $db3->f('username'), "____%system%____", FALSE, FALSE, "1", FALSE, _("Systemnachricht:")." "._("nicht zugelassen in Veranstaltung"), TRUE);
+                    // Prepare statement that deletes user from the awaiting list
+                    $query = "DELETE FROM admission_seminar_user
+                              WHERE user_id = ? AND seminar_id = ? AND status = 'awaiting'";
+                    $delete_statement = DBManager::get()->prepare($query);
+
+                    // Prepare and execute statement that reads all awaiting
+                    // users for a given seminar
+                    $query = "SELECT user_id, username
+                              FROM admission_seminar_user
+                              LEFT JOIN auth_user_md5 USING (user_id)
+                              WHERE seminar_id = ? AND status = 'awaiting'";
+                    $statement = DBManager::get()->prepare($query);
+                    $statement->execute(array($admin_admission_data['sem_id']));
+
+                    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                        $delete_statement->execute(array(
+                            $row['user_id'],
+                            $admin_admission_data['sem_id'],
+                        ));
+                        if ($delete_statement->rowCount()) {
+                            setTempLanguage($row['user_id']);
+                            $message= sprintf(_('Die Warteliste der Veranstaltung **%s** wurde von einem/r DozentIn oder AdministratorIn deaktiviert, Sie sind damit __nicht__ zugelassen worden.'), $admin_admission_data['name']);
+                            $messaging->insert_message(addslashes($message), $row['username'], '____%system%____', FALSE, FALSE, '1', FALSE, _('Systemnachricht:').' '._('nicht zugelassen in Veranstaltung'), TRUE);
                             restoreLanguage();
                         }
                     }
@@ -596,40 +617,125 @@ if ($seminar_id
         //for admission it have to be always 3
         if (Request::option('admission_prelim') == 1) {
             if ($admin_admission_data["admission_prelim"] == 0) { //we have to move the students to status "temporaly accepted", if put on
-                $db3->query("SELECT *,auth_user_md5.username FROM seminar_user,auth_user_md5 WHERE seminar_user.Seminar_id = '".$admin_admission_data["sem_id"]."' AND seminar_user.status='autor' AND seminar_user.user_id = auth_user_md5.user_id");
-                while ($db3->next_record()) {
-                    $db4->query("INSERT INTO admission_seminar_user SET user_id ='".$db3->f("user_id")."', seminar_id = '".$db3->f("Seminar_id")."', studiengang_id ='".$db3->f("admission_studiengang_id")."', mkdate='".$db3->f("mkdate")."', status ='accepted'");
-                    $db4->query("DELETE FROM seminar_user WHERE user_id='".$db3->f("user_id")."' AND Seminar_id='".$db3->f("Seminar_id")."'");
-                    $message=sprintf(_("Sie wurden in der Veranstaltung **%s** in den Status **vorläufig akzeptiert** befördert, da das Anmeldeverfahren geändert wurde."), $admin_admission_data["name"]);
-                    $messaging->insert_message(addslashes($message), $db3->f("username"), "____%system%____", FALSE, FALSE, "1", FALSE, _("Systemnachricht:")." "._("vorläufig akzeptiert"), TRUE);
-                    RemovePersonStatusgruppeSeminar($db3->f("username"), $admin_admission_data["sem_id"]);
+                // Prepare statement that deletes a given user from a given seminar
+                $query = "DELETE FROM seminar_user
+                          WHERE user_id = ? AND Seminar_id = ?";
+                $delete_statement = DBManager::get()->prepare($query);
+
+                // Prepare statement that inserts a given user into a seminar
+                // with the status "temporarily accepted"
+                $query = "INSERT INTO admission_seminar_user
+                            (user_id, seminar_id, studiengang_id, mkdate, status)
+                          VALUES (?, ?, ?, ?, 'accepted')";
+                $insert_statement = DBManager::get()->prepare($query);
+
+                // Prepare and execute statement that obtains all users with
+                // the status 'autor' for a given seminar
+                $query = "SELECT user_id, username, Seminar_id, admission_studiengang_id, mkdate
+                          FROM seminar_user AS su
+                          LEFT JOIN auth_user_md5 USING (user_id)
+                          WHERE Seminar_id = ? AND su.status = 'autor'";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($admin_admission_data['sem_id']));
+                
+                while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                    $insert_statement->execute(array(
+                        $row['user_id'],
+                        $row['Seminar_id'],
+                        $row['admission_studiengang_id'],
+                        $row['mkdate'],
+                    ));
+                    $delete_statement->execute(array($row['user_id'], $row['Seminar_id']));
+
+                    $message=sprintf(_('Sie wurden in der Veranstaltung **%s** in den Status **vorläufig akzeptiert** befördert, da das Anmeldeverfahren geändert wurde.'), $admin_admission_data['name']);
+                    $messaging->insert_message(addslashes($message), $row['username'], '____%system%____', FALSE, FALSE, '1', FALSE, _('Systemnachricht:').' '._('vorläufig akzeptiert'), TRUE);
+                    RemovePersonStatusgruppeSeminar($row['username'], $admin_admission_data['sem_id']);
                 }
-                $db3->query("SELECT *, auth_user_md5.username FROM seminar_user, auth_user_md5 WHERE seminar_user.Seminar_id = '".$admin_admission_data["sem_id"]."' AND seminar_user.status='user' AND seminar_user.user_id = auth_user_md5.user_id");
-                $db4->query("DELETE FROM seminar_user WHERE Seminar_id = '".$admin_admission_data["sem_id"]."' AND status='user'");
-                if ($db4->affected_rows()) {
-                    while ($db3->next_record()) {
-                        $message=sprintf(_("Ihr Abonnement der Veranstaltung **%s** wurde aufgehoben, da die Veranstaltung mit einem teilnahmebeschränkten Anmeldeverfahren versehen wurde. \nWenn Sie einen Platz in der Veranstaltung bekommen wollen, melden Sie sich bitte erneut an."), $admin_admission_data["name"]);
-                        $messaging->insert_message(addslashes($message), $db3->f("username"), "____%system%____", FALSE, FALSE, "1", FALSE, _("Systemnachricht:")." "._("Abonnement aufgehoben"), TRUE);
-                         RemovePersonStatusgruppeSeminar($db3->f("username"), $admin_admission_data["sem_id"]);
+
+                // Prepare and execute statement that obtains all users
+                // from a given seminar with the status 'user'
+                $query = "SELECT username
+                          FROM seminar_user AS su
+                          LEFT JOIN auth_user_md5 USING (user_id)
+                          WHERE Seminar_id = ? AND su.status = 'user'";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($admin_admission_data['sem_id']));
+                $usernames = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+                // Prepare and execute statement that deletes all users with
+                // the status 'user' from a given seminar
+                $query = "DELETE FROM seminar_user
+                          WHERE Seminar_id = ? AND status = 'user'";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($admin_admission_data['sem_id']));
+                $deleted = $statement->rowCount();
+                
+                if ($deleted > 0) {
+                    foreach ($usernames as $username) {
+                        $message = sprintf(_('Ihr Abonnement der Veranstaltung **%s** wurde aufgehoben, da die Veranstaltung mit einem teilnahmebeschränkten Anmeldeverfahren versehen wurde. \nWenn Sie einen Platz in der Veranstaltung bekommen wollen, melden Sie sich bitte erneut an.'), $admin_admission_data['name']);
+                        $messaging->insert_message(addslashes($message), $username, '____%system%____', FALSE, FALSE, '1', FALSE, _('Systemnachricht:').' '._('Abonnement aufgehoben'), TRUE);
+                         RemovePersonStatusgruppeSeminar($username, $admin_admission_data['sem_id']);
                     }
                 }
-                $db4->query("UPDATE seminare SET admission_prelim = 1 WHERE Seminar_id = '".$admin_admission_data["sem_id"]."'");
-                $admin_admission_data["admission_prelim"] = 1;
+
+                // Prepare and execute statement that updates the admission
+                // setting for a given seminar
+                $query = "UPDATE seminar SET admission_prelim = 1 WHERE Seminar_id = ?";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($admin_admission_data['sem_id']));
+
+                $admin_admission_data['admission_prelim'] = 1;
             }
         } elseif (!Request::option('commit_no_admission_data') && Request::option('admission_prelim') == 0) {
             if ($admin_admission_data["admission_prelim"] == 1) { //we have to move the students again
                 if (!$perm->have_perm("admin")) {
                     $errormsg.=sprintf ("error§"._("Sie dürfen den Anmeldemodus nicht mehr verändern! Wenden Sie sich ggf. an den zuständigen Admin.")."§");
                 } else {
-                    $db3->query("SELECT *, auth_user_md5.username FROM admission_seminar_user, auth_user_md5 WHERE admission_seminar_user.seminar_id = '".$admin_admission_data["sem_id"]."' AND admission_seminar_user.status='accepted' AND admission_seminar_user.user_id = auth_user_md5.user_id");
-                    while ($db3->next_record()) {
-                        $db4->query("INSERT INTO seminar_user SET user_id ='".$db3->f("user_id")."', Seminar_id = '".$db3->f("seminar_id")."', admission_studiengang_id ='".$db3->f("studiengang_id")."', mkdate='".$db3->f("mkdate")."', status='autor'");
-                        $db4->query("DELETE FROM admission_seminar_user WHERE user_id='".$db3->f("user_id")."' AND seminar_id='".$db3->f("seminar_id")."'");
-                        $message=sprintf(_("Sie wurden in der Veranstaltung **%s** in den Status **Autor** versetzt, da das Anmeldeverfahren geändert wurde."), $admin_admission_data["name"]);
-                        $messaging->insert_message(addslashes($message), $db3->f("username"), "____%system%____", FALSE, FALSE, "1", FALSE, _("Systemnachricht:")." "._("Statusänderung"), TRUE);
+                    // Prepare statement that inserts a given user into a
+                    // given seminar with the status 'autor'
+                    $query = "INSERT INTO seminar_user
+                                (user_id, Seminar_id, admission_studiengang_id, mkdate, status)
+                              VALUES (?, ?, ?, ?, 'autor')";
+                    $insert_statement = DBManager::get()->prepare($query);
+
+                    // Prepare statement that deletes a given user from the
+                    // admission list for a given seminar
+                    $query = "DELETE FROM admission_seminar_user
+                              WHERE user_id = ? AND seminar_id = ?";
+                    $delete_statement = DBManager::get()->prepare($query);
+
+                    // Prepare and execute statement that obtains all users
+                    // with the status 'accepted' from an admission list for 
+                    // a given seminar
+                    $query = "SELECT user_id, seminar_id, studiengang_id, mkdate, username
+                              FROM admission_seminar_user AS asu
+                              LEFT JOIN auth_user_md5 USING (user_id)
+                              WHERE asu.seminar_id = ? AND asu.status = 'accepted'";
+                    $statement = DBManager::get()->prepare($query);
+                    $statement->execute(array($admin_admission_data['sem_id']));
+                    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                        $insert_statement->execute(array(
+                            $row['user_id'],
+                            $row['seminar_id'],
+                            $row['studiengang_id'],
+                            $row['mkdate'],
+                        ));
+                        $delete_statement->execute(array(
+                            $row['user_id'],
+                            $row['seminar_user'],
+                        ));
+
+                        $message = sprintf(_('Sie wurden in der Veranstaltung **%s** in den Status **Autor** versetzt, da das Anmeldeverfahren geändert wurde.'), $admin_admission_data['name']);
+                        $messaging->insert_message(addslashes($message), $row['username'], '____%system%____', FALSE, FALSE, '1', FALSE, _('Systemnachricht:').' '._('Statusänderung'), TRUE);
                     }
-                    $db4->query("UPDATE seminare SET admission_prelim = 0 WHERE Seminar_id = '".$admin_admission_data["sem_id"]."'");
-                    $admin_admission_data["admission_prelim"] = 0;
+
+                    // Prepare and execute statement that updates the admission
+                    // setting for a given seminar
+                    $query = "UPDATE seminar SET admission_prelim = 0 WHERE Seminar_id = ?";
+                    $statement = DBManager::get()->prepare($query);
+                    $statement->execute(array($admin_admission_data['sem_id']));
+
+                    $admin_admission_data['admission_prelim'] = 0;
                 }
             }
         }
@@ -677,33 +783,44 @@ if ($seminar_id
         if (sizeof($update_data) > 0)
         {
             $query = "UPDATE seminare SET ";
+            $columns = $parameters = array();
 
             $count = 0;
-
-            foreach($update_data as $db_key => $value)
-            {
-                if ($count > 0)
-                {
-                    $query .= ", ";
+            foreach($update_data as $db_key => $value) {
+                if ($count > 0) {
+                    $query .= ', ';
                 }
 
-                $query .= " $db_key ='$value' ";
+                $query .= ":column{$count} = :parameter{$count}";
+                $columns[':column' . $count]       = $db_key;
+                $parameters[':parameter' . $count] = $value;
 
-                $count ++;
-
+                $count += 1;
             }
 
-            $query .= "WHERE seminar_id = '{$admin_admission_data['sem_id']}' ";
+            $query .= " WHERE seminar_id = :seminar_id";
 
-            $db->query($query);
+            $statement = DBManager::get()->prepare($query);
+            foreach ($columns as $key => $column) {
+                $statement->bindValue($key, $column, StudipPDO::PARAM_COLUMN);
+            }
+            foreach ($parameters as $key => $parameter) {
+                $statement->bindValue($key, $parameter);
+            }
+            $statement->bindValue(':seminar_id', $admin_admission_data['sem_id']);
+            $statement->execute();
 
             //check, if we need to update the admission data after saving new settings
-            if ($do_update_admission)
-                    update_admission($admin_admission_data["sem_id"]);
+            if ($do_update_admission) {
+                update_admission($admin_admission_data['sem_id']);
+            }
 
-            if ($db->affected_rows()) {
+            if ($statement->rowCount()) {
                 $errormsg.="msg§"._("Die Berechtigungseinstellungen f&uuml;r die Veranstaltung wurden aktualisiert")."§";
-                $db->query ("UPDATE seminare SET chdate='".time()."' WHERE Seminar_id ='".$admin_admission_data["sem_id"]."'");
+                
+                $query = "UPDATE seminare SET chdate = UNIX_TIMESTAMP() WHERE Seminar_id = ?";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($admin_admission_data['sem_id']));
             }
 
         }
@@ -714,53 +831,106 @@ if ($seminar_id
 
         //Variante nachtraeglich Anmeldeverfahren starten, alle alten Teilnehmer muessen raus
         if (($admin_admission_data["admission_type"] >$admin_admission_data["admission_type_org"]) && ($admin_admission_data["admission_type_org"]==0) && $admin_admission_data["admission_type"]!=3) {
-            $db->query("SELECT seminar_user.user_id, username FROM seminar_user LEFT JOIN auth_user_md5 USING (user_id) WHERE Seminar_id ='".$admin_admission_data["sem_id"]."' AND status IN ('autor', 'user') ");
-            $db2->query("DELETE FROM seminar_user WHERE Seminar_id ='".$admin_admission_data["sem_id"]."' AND status IN ('autor', 'user') ");
-            if ($db2->affected_rows()) {
-                while ($db->next_record()) {
-                    $message="Ihr Abonnement der Veranstaltung **".$admin_admission_data["name"]."** wurde aufgehoben, da die Veranstaltung mit einem teilnahmebeschränkten Anmeldeverfahren versehen wurde. \nWenn Sie einen Platz in der Veranstaltung bekommen wollen, melden Sie sich bitte erneut an.";
-                    $messaging->insert_message (addslashes($message), $db->f("username"), "____%system%____", FALSE, FALSE, "1", FALSE, _("Systemnachricht:")." "._("Abonnement aufgehoben"), TRUE);
-                    RemovePersonStatusgruppeSeminar($db3->f("username"), $admin_admission_data["sem_id"]);
+            $query = "SELECT username
+                      FROM seminar_user
+                      LEFT JOIN auth_user_md5 USING (user_id)
+                      WHERE Seminar_id = ? AND status IN ('user', 'autor')";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($admin_admission_data['sem_id']));
+            $usernames = $statement->fetchAll(PDO::FETCH_COLUMN);
+
+            $query = "DELETE FROM seminar_user
+                      WHERE Seminar_id = ? AND status IN ('user', 'autor')";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($admin_admission_data['sem_id']));
+
+            if ($statement->rowCount()) {
+                foreach ($usernames as $username) {
+                    $message = sprintf(_("Ihr Abonnement der Veranstaltung **%s** wurde aufgehoben, da die Veranstaltung mit einem teilnahmebeschränkten Anmeldeverfahren versehen wurde. \nWenn Sie einen Platz in der Veranstaltung bekommen wollen, melden Sie sich bitte erneut an."), $admin_admission_data['name']);
+                    $messaging->insert_message (addslashes($message), $username, '____%system%____', FALSE, FALSE, '1', FALSE, _('Systemnachricht:').' '._('Abonnement aufgehoben'), TRUE);
+                    RemovePersonStatusgruppeSeminar($username, $admin_admission_data['sem_id']);
                 }
             }
 
             //Kill old data
-            $db2->query ("DELETE FROM admission_seminar_studiengang WHERE seminar_id= '".$admin_admission_data["sem_id"]."' ");
-            $admin_admission_data["write_level"]='';
-            $admin_admission_data["read_level"]='';
-            $admin_admission_data["passwort"]='';
+            $query = "DELETE FROM admission_seminar_studiengang WHERE seminar_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($admin_admission_data['sem_id']));
+
+            $admin_admission_data['write_level'] = '';
+            $admin_admission_data['read_level']  = '';
+            $admin_admission_data['passwort']    = '';
         }
 
         //Variante nachtraeglich Anmeldeverfahren beenden, alle aus Warteliste kommen in die Veranstaltung
         if (($admin_admission_data["admission_type"] == 0) && ($admin_admission_data["admission_type_org"] > 0)) {
-            $db->query("SELECT admission_seminar_user.user_id, username  FROM admission_seminar_user LEFT JOIN auth_user_md5 USING (user_id) WHERE seminar_id ='".$admin_admission_data["sem_id"]."' ");
-            while ($db->next_record()) {
-                $group=select_group ($admin_admission_data["start_time"], $db->f("user_id"));
-                $db2->query("INSERT INTO seminar_user SET user_id = '".$db->f("user_id")."', Seminar_id = '".$admin_admission_data["sem_id"]."', status='autor', gruppe='$group', mkdate ='".time()."' ");
-                $message="Sie wurden in die Veranstaltung **".$admin_admission_data["name"]."** eingetragen, da das Anmeldeverfahren aufgehoben wurde. Damit sind Sie als Teilnehmer der Präsenzveranstaltung zugelassen.";
-                $messaging->insert_message(addslashes($message), $db->f("username"), "____%system%____", FALSE, FALSE, "1", FALSE, _("Systemnachricht:")." "._("Eintragung in Veranstaltung"), TRUE);
+            $query = "INSERT INTO seminar_user 
+                        (user_id, Seminar_id, status, gruppe, mkdate)
+                      VALUES (?, ?, 'autor', ?, UNIX_TIMESTAMP())";
+            $insert_statement = DBManager::get()->prepare($query);
+
+            $query = "SELECT user_id, username
+                       FROM admission_seminar_user
+                       LEFT JOIN auth_user_md5 USING (user_id)
+                       WHERE seminar_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($admin_admission_data['sem_id']));
+
+            $inserted = 0;
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                $group = select_group($admin_admission_data['start_time'], $row['user_id']);
+
+                $insert_statement->execute(array(
+                    $row['user_id'],
+                    $admin_admission_data['sem_id'],
+                    $group,
+                ));
+
+                $message = sprintf(_('Sie wurden in die Veranstaltung **%s** eingetragen, da das Anmeldeverfahren aufgehoben wurde. Damit sind Sie als Teilnehmer der Präsenzveranstaltung zugelassen.'), $admin_admission_data['name']);
+                $messaging->insert_message(addslashes($message), $username, '____%system%____', FALSE, FALSE, '1', FALSE, _('Systemnachricht:').' '._('Eintragung in Veranstaltung'), TRUE);
+                
+                $inserted += 1;
             }
-            if ($db->num_rows())
-                $db2->query("DELETE FROM admission_seminar_user  WHERE seminar_id ='".$admin_admission_data["sem_id"]."' ");
+            
+            if ($inserted) {
+                $query = "DELETE FROM admission_seminar_user WHERE seminar_id = ?";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($admin_admission_data['sem_id']));
+            }
 
             //Kill old Studiengang entries and data
-            $db2->query ("DELETE FROM admission_seminar_studiengang WHERE seminar_id= '".$admin_admission_data["sem_id"]."' ");
-            $admin_admission_data["studg"]='';
-            $admin_admission_data["all_ratio"]='';
-            $admin_admission_data["admission_ratios_changed"]='';
-            $admin_admission_data["admission_endtime"]='';
+            $query = "DELETE FROM admission_seminar_studiengang WHERE seminar_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($admin_admission_data['sem_id']));
+
+            $admin_admission_data['studg']                    = '';
+            $admin_admission_data['all_ratio']                = '';
+            $admin_admission_data['admission_ratios_changed'] = '';
+            $admin_admission_data['admission_endtime']        = '';
         }
 
         //Eintrag der zugelassen Studienbereiche
         if ($admin_admission_data["admission_type"]) {
-            $query = "DELETE FROM admission_seminar_studiengang WHERE seminar_id= '".$admin_admission_data["sem_id"]."' ";
-            $db->query($query); // Alle Eintraege rauswerfen
+            // Alle Eintraege rauswerfen
+            $query = "DELETE FROM admission_seminar_studiengang WHERE seminar_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($admin_admission_data['sem_id']));
 
-            if (is_array($admin_admission_data["studg"]))
-                foreach($admin_admission_data["studg"] as $key=>$val){
-                    $query = "INSERT INTO admission_seminar_studiengang (seminar_id,studiengang_id,quota) VALUES('".$admin_admission_data["sem_id"]."', '$key', '".$val["ratio"]."' )";
-                    $db->query($query);// Studiengang eintragen
+            if (is_array($admin_admission_data['studg'])) {
+                $query = "INSERT INTO admission_seminar_studiengang
+                            (seminar_id, studiengang_id, quota)
+                          VALUES (?, ?, ?)";
+                $statement = DBManager::get()->prepare($query);
+
+                foreach($admin_admission_data['studg'] as $key => $val) {
+                    // Studiengang eintragen
+                    $statement->execute(array(
+                        $admin_admission_data['sem_id'],
+                        $key,
+                        $val['ratio'],
+                    ));
                 }
+            }
 
             //Save the current state as snapshot to compare with current data
             $admin_admission_data["original"]=get_snapshot();
@@ -788,9 +958,12 @@ if ($errormsg && !Request::submittedSome("uebernehmen", "adm_null", "adm_los", "
     $errormsg='';
 
 //check, ob Warteliste gefüllt.
-$db->query("SELECT count(*) FROM admission_seminar_user WHERE seminar_id = '$seminar_id' AND status='awaiting'");
-$db->next_record();
-$num_waitlist = $db->f(0);
+$query = "SELECT COUNT(*)
+          FROM admission_seminar_user
+          WHERE seminar_id = ? AND status = 'awaiting'";
+$statement = DBManager::get()->prepare($query);
+$statement->execute(array($seminar_id));
+$num_waitlist = 0 + $statement->fetchColumn();
 
 $num_all = $admin_admission_data["admission_turnout"];
 
@@ -859,14 +1032,24 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
                     $admission_type_name = get_admission_description('admission_type', $admin_admission_data["admission_type_org"]);
 
                     if (($admin_admission_data["admission_type_org"] && $admin_admission_data["admission_type_org"] != 3) && (!$perm->have_perm("admin"))) {
-                    $db->query("SELECT username, ". $_fullname_sql['full'] . "  as fullname FROM user_inst LEFT JOIN auth_user_md5 USING (user_id) LEFT JOIN user_info USING(user_id) WHERE institut_id ='".$admin_admission_data["heimat_inst_id"]."' AND perms = 'admin' ORDER BY Nachname, Vorname ASC");
-                    if  (!$db->num_rows())
+                        $query = "SELECT username, {$_fullname_sql['full']} AS fullname
+                                  FROM user_inst
+                                  LEFT JOIN auth_user_md5 USING (user_id)
+                                  LEFT JOIN user_info USING (user_id)
+                                  WHERE institut_id = ? AND perms = 'admin'
+                                  ORDER BY Nachname, Vorname";
+                        $statement = DBManager::get()->prepare($query);
+                        $statement->execute(array($admin_admission_data['heimat_inst_id']));
+                        $users = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+                    if  (!count($user)) {
                         printf ("<font size=-1>"._("Sie haben ein Anmeldeverfahren aktiviert (%s). Dieser Schritt kann %s nicht %s r&uuml;ckg&auml;ngig gemacht werden! Bei Problemen wenden Sie sich bitte an eine Administratorin oder einen Administrator.")."<br></font>", $admission_type_name, "</font><font size=-1 color=\"red\"><b>", "</b></font><font size=-1>");
-                    else
+                    } else {
                         printf ("<font size=-1>"._("Sie haben ein Anmeldeverfahren aktiviert (%s). Dieser Schritt kann %s nicht %s r&uuml;ckg&auml;ngig gemacht werden! Bei Problemen wenden Sie sich bitte an eineN der hier aufgef&uuml;hrten AdministratorInnen.")."<br></font>", $admission_type_name, "</font><font size=-1 color=\"red\"><b>", "</b></font><font size=-1>");
+                    }
                     printf ("<input type=\"HIDDEN\" name=\"commit_no_admission_data\" value=\"TRUE\">");
-                    while ($db->next_record()) {
-                        echo "<li><font size=-1><a href=\"". URLHelper::getLink('about.php?username='.$db->f("username")) ."\">". htmlReady($db->f("fullname")) ."</a></font></li>";
+                    foreach ($users as $one_user) {
+                        echo "<li><font size=-1><a href=\"". URLHelper::getLink('about.php?username='.$one_user['username']) ."\">". htmlReady($one_user['fullname']) ."</a></font></li>";
                     }
                 } else { ?>
           <? if (LockRules::Check($seminar_id, 'admission_type')) : ?>
@@ -998,17 +1181,26 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
                 <font size=-1>
                     <?
                     if ((!$perm->have_perm("admin")) && ($admin_admission_data["admission_prelim"] == 1)) {
-                        $db->query("SELECT username, ". $_fullname_sql['full'] . "  as fullname FROM user_inst LEFT JOIN auth_user_md5 USING (user_id) LEFT JOIN user_info USING(user_id) WHERE institut_id ='".$admin_admission_data["heimat_inst_id"]."' AND perms = 'admin'");
+                        $query = "SELECT username, {$_fullname_sql['full']} AS fullname
+                                  FROM user_inst
+                                  LEFT JOIN auth_user_md5 USING (user_id)
+                                  LEFT JOIN user_info USING (user_id)
+                                  WHERE institut_id = ? AND perms = 'admin'";
+                        $statement = DBManager::get()->prepare($query);
+                        $statement->execute(array($admin_admission_data['heimat_inst_id']));
+                        $users = $statement->fetchAll(PDO::FETCH_ASSOC);
+
                         echo "<b>"._("Anmeldemodus:")."</b><br>";
                         echo _("Sie haben den Anmeldemodus \"Vorl&auml;ufiger Eintrag\" aktiviert. ");
                         printf ("<font size=-1>"._("Dieser Schritt kann %s nicht %s r&uuml;ckg&auml;ngig gemacht werden! ")."</font>", "</font><font size=-1 color=\"red\"><b>", "</b></font><font size=-1>");
-                        if  (!$db->num_rows())
+                        if (!count($users)) {
                             echo _("Bei Problemen wenden Sie sich bitte an eine Administratorin oder einen Administrator.");
-                        else
+                        } else {
                             echo _("Bei Problemen wenden Sie sich bitte an eineN der hier aufgef&uuml;hrten AdministratorInnen.");
+                        }
                         printf ("<input type=\"HIDDEN\" name=\"commit_no_admission_data\" value=\"TRUE\">");
-                        while ($db->next_record()) {
-                            echo "<li><font size=-1><a href=\"". URLHelper::getLink('about.php?username='.$db->f("username")) ."\">". htmlReady($db->f("fullname")) ."</a></font></li>";
+                        foreach ($users as $one_user) {
+                            echo "<li><font size=-1><a href=\"". URLHelper::getLink('about.php?username='.$one_user['username']) ."\">". htmlReady($one_user['fullname']) ."</a></font></li>";
                         }
                     } else { ?>
                         <b><?=_("Anmeldemodus:")?></b><br>
@@ -1273,13 +1465,21 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
                             <?
                                 }
                             }
-                            $db->queryf("SELECT * FROM studiengaenge WHERE studiengang_id NOT IN ('%s') ORDER BY name", join("','", array_keys($admin_admission_data["studg"])));
-                            $stg = array();
+                            $query = "SELECT *
+                                      FROM studiengaenge
+                                      WHERE studiengang_id NOT IN (?)
+                                      ORDER BY name";
+                            $statement = DBManager::get()->prepare($query);
+                            $statement->execute(array(
+                                array_keys($admin_admission_data['studg']) ?: ''
+                            ));
+                            $stg = $statement->fetchAll(PDO::FETCH_ASSOC);
+
                             if(!isset($admin_admission_data["studg"]['all'])){
-                                $stg[] = array('name' => _("Alle Studiengänge"), 'studiengang_id' => 'all');
-                            }
-                            while($db->next_record()){
-                                $stg[] = $db->Record;
+                                array_unshift($stg, array(
+                                    'name'           => _('Alle Studiengänge'),
+                                    'studiengang_id' => 'all',
+                                ));
                             }
                             if (count($stg) && !LockRules::Check($seminar_id, 'admission_studiengang') && (!in_array($admin_admission_data["admission_type_org"], array(1,2)) || $perm->have_perm("admin"))) {
                                 ?>

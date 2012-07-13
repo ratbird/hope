@@ -82,8 +82,7 @@ class Auth {
       switch ($uid) {
         case "form":
           # Login in progress
-          if ((isset($_POST[$this->cancel_login]) && $_POST[$this->cancel_login]) or
-              (isset($_GET[$this->cancel_login]) && $_GET[$this->cancel_login])) {
+          if (Request::option($this->cancel_login)) {
             # If $this->cancel_login is set, delete all auth info and set
             # state to "Not logged in", so eventually default or automatic
             # authentication may take place

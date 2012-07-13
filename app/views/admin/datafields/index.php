@@ -18,7 +18,7 @@
 <? foreach ($datafields_list as $key => $data): ?>
     <tbody class="<?= ((!is_null($current_class) && $current_class == $key) || !is_null($class_filter)) ? '': 'collapsed' ?> <? if (empty($datafields_list[$key])): ?>empty<? endif ?>">
         <tr class="steel header-row">
-            <td class="toggle-indicator" colspan="9">
+            <td class="toggle-indicator" colspan="10">
             <? if (empty($datafields_list[$key])): ?>
                 <?= sprintf(_('Datenfelder für %s'), $allclasses[$key]) ?>
             <? else: ?>
@@ -42,7 +42,8 @@
             </th>
             <th><?= _('benötigter Status') ?></th>
             <th><?= _('Sichtbarkeit') ?></th>
-            <th><?= ($key == 'sem'? _('Pflichtfeld'):'') ?></th>
+            <th><?= (in_array($key, array('sem'))? _('Pflichtfeld'):'') ?></th>
+            <th><?= (in_array($key, array('sem'))? _('Beschreibung'):'') ?></th>
             <th><?= _('Reihenfolge') ?></th>
             <th><?= _('Einträge') ?></th>
             <th style="text-align: right;"><?= _('Aktionen') ?></th>
@@ -76,10 +77,16 @@
             <td><?= $val->getEditPerms() ?></td>
             <td><?= $val->getViewPerms() ?></td>
             <td>
-             <? if ($key == 'sem'): ?>
-              <?= Assets::img('icons/16/black/'.($val->getIsRequired()?'accept.png':'decline.png'))?>
+             <? if (in_array($key, array('sem'))): ?>
+              <?= Assets::img('icons/16/grey/'.($val->getIsRequired()?'accept.png':'decline.png'))?>
              <? endif; ?>
             </td>
+             <td>
+             <? if (in_array($key, array('sem'))): ?>
+              <?= Assets::img('icons/16/grey/'.(trim($val->getDescription())?'accept.png':'decline.png'))?>
+             <? endif; ?>
+            </td>
+            
             <td><?= $val->getPriority() ?></td>
             <td><?= $val->getCachedNumEntries() ?></td>
             <td style="text-align: right;">

@@ -57,7 +57,7 @@ use Studip\Button, Studip\LinkButton;
             </td>
         </tr>
         <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
-            <td><? if ($object_typ == 'sem'): ?>Veranstaltungskategorie<? elseif ($object_typ == 'inst'): ?>Einrichtungstyp<? else: ?>Nutzerstatus<? endif; ?></td>
+            <td><? if ($object_typ == 'sem') echo _('Veranstaltungskategorie'); elseif ($object_typ == 'inst') echo _('Einrichtungstyp'); else echo _('Nutzerstatus'); ?></td>
             <td>
                 <? if ($object_typ == 'sem'): ?>
                     <select name="object_class">;
@@ -118,6 +118,24 @@ use Studip\Button, Studip\LinkButton;
                 <input type="text" maxlength="10" size="2" value="<?= htmlReady($this->flash['request']['priority']) ?>" name="priority">
            </td>
         </tr>
+        <? if (in_array($object_typ, array('sem'))): ?>
+	         <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+	            <td>
+	               <?= _("Pflichtfeld") ?>:
+	            </td>
+	            <td>
+	                <input type="checkbox" name="mandatory" value="true" <?= ($this->flash['request']['priority']?'checked="checked"':'') ?>>
+	           </td>
+	        </tr>
+	        <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+	            <td>
+	               <?= _("Beschreibung") ?>:
+	            </td>
+	            <td>
+	                 <textarea cols="58" rows="3" name="description" id="description"><?= htmlReady($this->flash['request']['description']) ?></textarea>
+	           </td>
+	        </tr>
+        <? endif ?>
         <tr>
             <td colspan="2" align="center">
                 <?= Button::create(_('Anlegen'),'anlegen', array('title' => _('Neues Datenfeld anlegen')))?>

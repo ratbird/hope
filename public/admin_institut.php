@@ -230,11 +230,12 @@ switch ($submitted_task) {
             PageLayout::postMessage(Messagebox::success($message));
         }
         // update additional datafields
-        if (is_array($_REQUEST['datafields'])) {
+        $datafields = Request::getArray('datafields');
+        if (is_array($datafields)) {
             $invalidEntries = array();
             foreach (DataFieldEntry::getDataFieldEntries(Request::option('i_id'), 'inst') as $entry) {
-                if(isset($_REQUEST['datafields'][$entry->getId()])){
-                    $entry->setValueFromSubmit($_REQUEST['datafields'][$entry->getId()]);
+                if(isset($datafields[$entry->getId()])){
+                    $entry->setValueFromSubmit($datafields[$entry->getId()]);
                     if ($entry->isValid())
                         $entry->store();
                     else
@@ -252,7 +253,7 @@ switch ($submitted_task) {
 
     // Delete the Institut
     case 'i_kill':
-        if (!check_ticket($_GET['studipticket'])) {
+        if ( !check_ticket(Request::option('studipticket'))) {
             PageLayout::postMessage(Messagebox::error(_('Ihr Ticket ist abgelaufen. Versuchen Sie die letzte Aktion erneut.')));
             break;
         }

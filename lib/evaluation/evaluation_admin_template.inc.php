@@ -76,9 +76,9 @@ else{
 if(!$parentID){
    $parentID = Request::option('parentID');
 }
-$template_name = $_POST['template_name'] ? $_POST['template_name'] : $template_name;
+$template_name = Request::get('template_name',$template_name);
 $template_type = Request::quoted('template_type') ? Request::quoted('template_type') : $template_type;
-$template_multiple = isset($_POST['template_multiple']) ? $_POST['template_multiple'] : $template_multiple;
+$template_multiple = Request::get('template_multiple',$template_multiple) ;
 if(Request::quotedArray('template_answers'))
 $template_answers = Request::quotedArray('template_answers');
 $template_add_num_answers = Request::quoted('template_add_num_answers') ? Request::quoted('template_add_num_answers') : $template_add_num_answers;

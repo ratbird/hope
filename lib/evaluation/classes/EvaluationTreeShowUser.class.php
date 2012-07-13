@@ -338,7 +338,6 @@ class EvaluationTreeShowUser {
     $answerArray = $question->getChildren();
     $hasResidual = NO;
     $leftOutStyle = ( $group->isMandatory() &&
-#             (is_array($_POST["answers"]) || is_array($_POST["freetexts"])) &&
               Request::submitted('voteButton') &&
               is_array( $GLOBALS["mandatories"] ) &&
               in_array( $question->getObjectID(), $GLOBALS["mandatories"] ) )
@@ -437,7 +436,8 @@ class EvaluationTreeShowUser {
             $extraStyle .= ($question->getPosition() == $group->getNumberChildren() - 1
                     ? " border-bottom: $answerBorder;"
                     : "");
-            $checked = $_POST["answers"][$question->getObjectID()] == $answer->getObjectID() ? "checked" : "";
+            $answers = Request::quotedArray('answers');
+            $checked = $answers[$question->getObjectID()] == $answer->getObjectID() ? "checked" : "";
 
             $html .= "  <td align=\"center\" style=\"border-left: $answerBorder; $extraStyle;\" ".
             "width=\"".$cellWidth."%\">";
@@ -506,12 +506,13 @@ class EvaluationTreeShowUser {
                     "</td>\n";
 
                 /* one row input field */
+                $freetexts = Request::quotedArray('freetexts');
                 if( $answer->getRows() == 1)
                 $html .=
                     "<td colspan=\"2\">".
                     "<input type=\"text\"".
                     " name=\"freetexts[".$question->getObjectID()."]\"".
-                    " value=\"".htmlspecialchars($_POST["freetexts"][$question->getObjectID()])."\" size=\"60\">".
+                    " value=\"".htmlReady($freetexts[$question->getObjectID()])."\" size=\"60\">".
                     "</td>\n";
 
                 /* multiple row input field (textarea) */
@@ -521,22 +522,22 @@ class EvaluationTreeShowUser {
                     "<textarea".
                     " name=\"freetexts[".$question->getObjectID()."]\"".
                     " cols=\"60\" rows=\"".$answer->getRows()."\">".
-                    htmlspecialchars($_POST["freetexts"][$question->getObjectID()]).
+                    htmlspecialchars($freetexts[$question->getObjectID()]).
                     "</textarea>".
                     "</td>\n";
             }
 
             /* show normal answer ------------- */
             else {
-
+                $answers = Request::quotedArray('answers');
                 /* see if it must be checked  */
                 if( $type == "radio" )
-                $checked = $_POST["answers"][$question->getObjectID()] == $answer->getObjectID()
+                $checked = $answers[$question->getObjectID()] == $answer->getObjectID()
                     ? "checked"
                     : "";
                 else
-                $checked = ( is_array($_POST["answers"][$question->getObjectID()]) &&
-                         in_array( $answer->getObjectID(), $_POST["answers"][$question->getObjectID()] ) )
+                $checked = ( is_array($answers[$question->getObjectID()]) &&
+                         in_array( $answer->getObjectID(), $answers[$question->getObjectID()] ) )
                     ? "checked"
                     : "";
 

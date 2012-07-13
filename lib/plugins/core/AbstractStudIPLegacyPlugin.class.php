@@ -379,14 +379,14 @@ abstract class AbstractStudIPLegacyPlugin extends StudIPPlugin {
    * @return void
    */
   function display_action($action) {
-    if (!isset($GLOBALS['CURRENT_PAGE'])) {
-      $GLOBALS['CURRENT_PAGE'] = $this->getDisplayTitle();
+    if (!Request::get('CURRENT_PAGE')) {
+      Request::set('CURRENT_PAGE',$this->getDisplayTitle());
     }
 
     include 'lib/include/html_head.inc.php';
     include 'lib/include/header.php';
 
-    $pluginparams = $_GET['plugin_subnavi_params'];
+    $pluginparams = Requeat::quoted('plugin_subnavi_params');
 
     StudIPTemplateEngine::startContentTable();
     $this->$action($pluginparams);

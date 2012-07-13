@@ -696,13 +696,13 @@ class Seminar_Register_Auth extends Seminar_Auth {
             $register_template = $GLOBALS['template_factory']->open('registerform');
             $register_template->set_attribute('validator',  new email_validation_class());
             $register_template->set_attribute('error_msg', $this->error_msg);
-            $register_template->set_attribute('username', $_POST['username']);
-            $register_template->set_attribute('Vorname', $_POST['Vorname']);
-            $register_template->set_attribute('Nachname', $_POST['Nachname']);
-            $register_template->set_attribute('Email', $_POST['Email']);
-            $register_template->set_attribute('title_front', $_POST['title_front']);
-            $register_template->set_attribute('title_rear', $_POST['title_rear']);
-            $register_template->set_attribute('geschlecht', $_POST['geschlecht']);
+            $register_template->set_attribute('username', Request::quoted('username'));
+            $register_template->set_attribute('Vorname', Request::quoted('Vorname'));
+            $register_template->set_attribute('Nachname', Request::quoted('Nachname'));
+            $register_template->set_attribute('Email', Request::quoted('Email'));
+            $register_template->set_attribute('title_front', Request::quoted('title_front'));
+            $register_template->set_attribute('title_rear', Request::quoted('title_rear'));
+            $register_template->set_attribute('geschlecht', Request::quoted('geschlecht'));
         }
         PageLayout::setHelpKeyword('Basis.AnmeldungRegistrierung');
         $header_template = $GLOBALS['template_factory']->open('header');

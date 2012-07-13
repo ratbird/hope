@@ -183,7 +183,7 @@ if ($edit) {
                 $pos = $pos_tmp[0];
             }
             $execute_command = $element_command;
-            $_REQUEST['com'] = 'store';
+            Request::set('com','store');
         }
     }
 }

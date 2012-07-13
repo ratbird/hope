@@ -218,7 +218,7 @@ class ExternElement {
                 if ($value >= 0 || $value < sizeof($visible)) {
                     $visible[$value] = "1";
                     $this->config->setValue($this->name, "visible", $visible);
-                    $_POST["{$this->name}_visible"] = $visible;
+                    Request::set("{$this->name}_visible",$visible);
                 }
                 break;
                 
@@ -228,7 +228,7 @@ class ExternElement {
                 if ($value >= 0 || $value < sizeof($visible)) {
                     $visible[$value] = "0";
                     $this->config->setValue($this->name, "visible", $visible);
-                    $_POST["{$this->name}_visible"] = $visible;
+                    Request::set("{$this->name}_visible",$visible);
                 }
                 break;
                 
@@ -247,7 +247,7 @@ class ExternElement {
                         $order[$value] = $b;
                     }
                     $this->config->setValue($this->name, "order", $order);
-                    $_POST["{$this->name}_order"] = $order;
+                    Request::set("{$this->name}_order", $order);
                 }
                 break;
                 
@@ -266,7 +266,7 @@ class ExternElement {
                         $order[$value] = $b;
                     }
                     $this->config->setValue($this->name, "order", $order);
-                    $_POST["{$this->name}_order"] = $order;
+                    Request::set("{$this->name}_order", $order);
                 }
                 break;
             
@@ -285,7 +285,7 @@ class ExternElement {
                     $visible[] = $value;
                     $visible = array_unique($visible);
                     $this->config->setValue($this->name, "groupsvisible", $visible);
-                    $_POST["{$this->name}_groupsvisible"] = array_values($visible);
+                    Request::set("{$this->name}_groupsvisible", array_values($visible));
                 }
                 break;
             
@@ -303,7 +303,7 @@ class ExternElement {
                     $visible = array_keys(get_all_statusgruppen($this->config->range_id));
                 $visible = array_diff($visible, array($value));
                 $this->config->setValue($this->name, "groupsvisible", $visible);
-                $_POST["{$this->name}_groupsvisible"] = array_values($visible);
+                Request::set("{$this->name}_groupsvisible", array_values($visible));
                 break;
             
             default :

@@ -264,10 +264,10 @@ if (check_ticket(Request::option('studipticket'))) {
         if (is_array($invalidEntries))
             foreach ($invalidEntries as $entry)
                 $my_about->msg .= "error§" . sprintf(_("Fehlerhafter Eintrag im Feld <em>%s</em>: %s (Eintrag wurde nicht gespeichert)"), $entry->getName(), $entry->getDisplayValue()) . "§";
-
-        if (count($_REQUEST['role_visible']) > 0) { // change inheritance state of a user role
-            $groupID = array_pop(array_keys($_REQUEST['role_visible'])); // there is only 1 element in the array (and we get its key)
-            if ($_REQUEST['role_visible'][$groupID] == 1) {
+        $role_visible = Request::getArray('role_visible');
+        if (count($role_visible) > 0) { // change inheritance state of a user role
+            $groupID = array_pop(array_keys($role_visible)); // there is only 1 element in the array (and we get its key)
+            if ($role_visible[$groupID] == 1) {
                 $visible = 0;
             } else {
                 $visible = 1;

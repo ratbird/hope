@@ -95,13 +95,14 @@ if ($search_obj->search_done){
 }
 
 if ($_REQUEST['cmd'] == "MarkList"){
-    if (is_array($_REQUEST['sem_mark_list'])){
+    $sem_mark_list = Request::quotedArray('sem_mark_list');
+    if ($sem_mark_list){
         if ($_REQUEST['mark_list_aktion'] == "del"){
             $count_del = 0;
-            for ($i = 0; $i < count($_REQUEST['sem_mark_list']); ++$i){
-                if (isset($_SESSION['_marked_sem'][$_REQUEST['sem_mark_list'][$i]])){
+            for ($i = 0; $i < count($sem_mark_list); ++$i){
+                if (isset($_SESSION['_marked_sem'][$sem_mark_list[$i]])){
                     ++$count_del;
-                    unset($_SESSION['_marked_sem'][$_REQUEST['sem_mark_list'][$i]]);
+                    unset($_SESSION['_marked_sem'][$sem_mark_list[$i]]);
                 }
             }
             $_msg .= "msg§" . sprintf(_("%s Veranstaltung(en) wurde(n) aus Ihrer Merkliste entfernt."),$count_del);

@@ -32,7 +32,6 @@ $perm->check("tutor");
 
 include ("lib/seminar_open.php"); // initialise Stud.IP-Session
 require_once('lib/raumzeit/raumzeit_functions.inc.php');
-unQuoteAll();
 
 // search for a valid id
 $id = Request::option('cid');

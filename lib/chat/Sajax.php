@@ -102,7 +102,8 @@ if (!isset($SAJAX_INCLUDED)) {
             // always modified
             header ("Cache-Control: no-cache, must-revalidate");  // HTTP/1.1
             header ("Pragma: no-cache");
-        }// HTTP/1.0
+        }
+        // HTTP/1.0
         $func_name = Request::get('rs');
         if (Request::getArray('rs'))
              $args = Request::getArray('rsargs');

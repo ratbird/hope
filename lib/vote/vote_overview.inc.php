@@ -37,28 +37,20 @@ include_once("lib/vote/view/vote_overview.lib.php");
 /* initialize post/get variables                                              *
 /*                                                                            *
 /* ************************************************************************* */
-$voteaction                                 = $_POST['voteaction'];
-    if (empty($voteaction))     $voteaction = $_GET['voteaction'];
-    if (empty($voteaction))     $voteaction = NULL;
-$showrangeID                                = $_POST['rangeID'];
-    if(empty($showrangeID)) $showrangeID    = $_GET['showrangeID'];
-    if(empty($showrangeID)) $showrangeID    = $_GET['cid'];
-    if(empty($showrangeID)) $showrangeID    = $_POST['showrangeID'];
+$voteaction                                 = Request::option('voteaction');
+$showrangeID                                = Request::option('rangeID');
+    if(empty($showrangeID)) $showrangeID    = Request::option('cid');
+    if(empty($showrangeID)) $showrangeID    = Request::option('showrangeID');
     //<workaround author='anoack'>
     if( empty($showrangeID)
         && isset($SessSemName[1]))
                             $showrangeID    = $SessSemName[1];
-    //</workaround>
-    if(empty($showrangeID)) $showrangeID    = NULL;
-$voteID                                     = $_POST['voteID'];
-    if(empty($voteID))          $voteID     = $_GET['voteID'];
-    if(empty($voteID))          $voteID     = NULL;
-$openID                                     = $_GET['openID'];
-    if(empty($openID))          $openID     = $_GET['voteopenID'];
-    if(empty($openID))          $openID     = NULL;
-$searchRange                                = $_POST['searchRange'];
+$voteID                                     = Request::option('voteID');
+$openID                                     = Request::option('openID');
+    if(empty($openID))          $openID     = Request::option('voteopenID');
+$searchRange                                = Request::quoted('searchRange');
     if(empty($searchRange))     $searchRange= NULL;
-$referer                                    = $_GET['referer'];
+$referer                                    = Request::option('referer');
 
 /* **END*of*initialize*post/get*variables*********************************** */
 
@@ -107,17 +99,10 @@ elseif ($voteaction != "search"){
     }
 
 if (($referer) && ($referer == "1")){
-
-//  if( ! $referer ) {
         $referer = $_SERVER['HTTP_REFERER'];
         $referer = removeArgFromURL( $referer, "voteaction" );
         $referer = removeArgFromURL( $referer, "voteID" );
         $referer = removeArgFromURL( $referer, "showrangeID" );
-//      if( $_POST['rangeID'] )
-//      $referer .= "&showrangeID=".$_POST['rangeID'];
-//      elseif( $_REQUEST["showrangeID"] )
-//      $referer .= "&showrangeID=".$showrangeID;
-//  }
 }
 
 /* ************************************************************************** *

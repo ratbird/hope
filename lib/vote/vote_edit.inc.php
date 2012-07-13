@@ -95,24 +95,24 @@ if ( ! ( $perm->have_studip_perm( "tutor", $rangeID ) ||
 /******************** initialization *******************************/
 
 // get and memorize the url, where we came from
-$referer = $_POST['referer'];
+$referer =  Request::option('referer');
 if( ! $referer ) {
     //$referer = $_SERVER['HTTP_REFERER'];
     $referer = $_SESSION['vote_HTTP_REFERER_2']; // workaround for BIEST00082
     $referer = removeArgFromURL( $referer, "voteaction" );
     $referer = removeArgFromURL( $referer, "voteID" );
     $referer = removeArgFromURL( $referer, "showrangeID" );
-    if( $_POST['rangeID'] )
-    $referer .= "&showrangeID=".$_POST['rangeID'];
-    elseif( $_REQUEST["showrangeID"] )
+    if( Request::option('rangeID') )
+    $referer .= "&showrangeID=". Request::option('rangeID');
+    elseif(  Request::option('showrangeID') )
     $referer .= "&showrangeID=".$showrangeID;
 }
 
-$voteID = $_POST['voteID'];    if( ! $voteID ) $voteID = $_GET['voteID'];
-$rangeID = $_POST['rangeID'];  if( ! $rangeID ) $rangeID = $_GET['rangeID'];
-$type = $_POST['type'];        if( ! $type ) $type = $_GET['type'];
-if( ! $type ) $type = "vote";
-$makeACopy = $_GET['makecopy'];
+$voteID = Request::option('voteID');
+$rangeID = Request::option('rangeID');
+$type = Request::option('type');
+if( empty($type) ) $type = "vote";
+$makeACopy = Request::option('makecopy');
 
 if ($type=="test") { $vote = new TestVote( $voteID ); }
 else               { $vote = new Vote    ( $voteID ); }
@@ -131,30 +131,30 @@ $debug.="pagemode: $pageMode\n";
 
 $vote->finalize(); // reset ErrorHandler
 
-$answers           = $_POST['answers'];
-$title             = $_POST['title'] != TITLE_HELPTEXT ? $_POST['title'] : NULL;
-$question          = $_POST['question'] != QUESTION_HELPTEXT ? $_POST['question'] : NULL;
-$startMode         = $_POST['startMode'];
-$startDay          = $_POST['startDay'];
-$startMonth        = $_POST['startMonth'];
-$startYear         = $_POST['startYear'];
-$startHour         = $_POST['startHour'];
-$startMinute       = $_POST['startMinute'];
+$answers           =  Request::getArray('answers');
+$title             = Request::get('title') != TITLE_HELPTEXT ? Request::get('title') : NULL;
+$question          = Request::get('question') != QUESTION_HELPTEXT ? Request::get('question') : NULL;
+$startMode         = Request::get('startMode');
+$startDay          = Request::get('startDay');
+$startMonth        = Request::get('startMonth');
+$startYear         = Request::get('startYear');
+$startHour         = Request::get('startHour');
+$startMinute       = Request::get('startMinute');
 if( $startDay )    $startDate = $vote->date2timestamp( $startDay, $startMonth, $startYear, $startHour, $startMinute );
-$stopMode          = $_POST['stopMode'];
-$stopDay           = $_POST['stopDay'];
-$stopMonth         = $_POST['stopMonth'];
-$stopYear          = $_POST['stopYear'];
-$stopHour          = $_POST['stopHour'];
-$stopMinute        = $_POST['stopMinute'];
+$stopMode          = Request::get('stopMode');
+$stopDay           = Request::get('stopDay');
+$stopMonth         = Request::get('stopMonth');
+$stopYear          = Request::get('stopYear');
+$stopHour          = Request::get('stopHour');
+$stopMinute        = Request::get('stopMinute');
 if( $stopDay )     $stopDate = $vote->date2timestamp( $stopDay, $stopMonth, $stopYear, $stopHour, $stopMinute );
-$timeSpan          = $_POST['timeSpan'];
-$multipleChoice    = $_POST['multipleChoice'];
-$resultVisibility  = $_POST['resultVisibility'];
-$co_visibility     = $_POST['co_visibility'];
-$anonymous         = $_POST['anonymous'];
-$namesVisibility   = $_POST['namesVisibility'];
-$changeable        = $_POST['changeable'];
+$timeSpan          = Request::get('timeSpan');
+$multipleChoice    = Request::get('multipleChoice');
+$resultVisibility  = Request::get('resultVisibility');
+$co_visibility     = Request::get('co_visibility');
+$anonymous         = Request::get('anonymous');
+$namesVisibility   = Request::get('namesVisibility');
+$changeable        = Request::get('changeable');
 
 // undo damage done by magic quotes
 if (isset($title)) {
@@ -169,12 +169,12 @@ if (is_array($answers)) {
     }
 }
 
-if( !isset($_POST["changeable"]) && isset($_POST["title"]) )
+if( empty ($changeable) && !empty($title) )
      $changeable = NO;
-if( !isset($_POST["namesVisibility"]) && isset($_POST["title"]) )
+if( empty ($namesVisibility) && !empty($title) )
      $namesVisibility = NO;
 
-if( !isset( $answers ) ) {
+if( empty( $answers ) ) {
     $answers = $vote->getAnswers();
     if( $makeACopy ) {
     for( $i=0; $i<count($answers); $i++ ) {
@@ -192,26 +192,26 @@ if( empty( $answers ) ) {
     $answers = array();
 }
 
-if( !isset( $title ) )           { $title = $vote->getTitle(); if( $makeACopy ) $title .= _(" (Kopie)"); }
-if( !isset( $question ) )          $question = $vote->getQuestion();
-if( !isset( $startDay ) )          $startDate = $vote->getStartDate();
-if( !isset( $stopDay ) )           $stopDate = $vote->getStopDate();
-if( !isset( $timeSpan ) )          $timeSpan = $vote->getTimeSpan();
-if( !isset( $multipleChoice ) )    $multipleChoice = $vote->isMultipleChoice();
-if( !isset( $resultVisibility ) )  $resultVisibility = $vote->getResultVisibility();
-if( !isset( $anonymous ) )         $anonymous = $vote->isAnonymous();
-if( !isset( $namesVisibility ) )   $namesVisibility = $vote->getNamesVisibility();
-if( !isset( $changeable ) )        $changeable = $vote->isChangeable();
+if( empty( $title ) )           { $title = $vote->getTitle(); if( $makeACopy ) $title .= _(" (Kopie)"); }
+if( empty( $question ) )          $question = $vote->getQuestion();
+if( empty( $startDay ) )          $startDate = $vote->getStartDate();
+if( empty( $stopDay ) )           $stopDate = $vote->getStopDate();
+if( empty( $timeSpan ) )          $timeSpan = $vote->getTimeSpan();
+if( empty( $multipleChoice ) )    $multipleChoice = $vote->isMultipleChoice();
+if( empty( $resultVisibility ) )  $resultVisibility = $vote->getResultVisibility();
+if( empty( $anonymous ) )         $anonymous = $vote->isAnonymous();
+if( empty( $namesVisibility ) )   $namesVisibility = $vote->getNamesVisibility();
+if( empty( $changeable ) )        $changeable = $vote->isChangeable();
 if( $type == "test" ) {
-    if( !isset( $co_visibility ) ) $co_visibility = $vote->getCo_Visibility();
+    if( empty( $co_visibility ) ) $co_visibility = $vote->getCo_Visibility();
 }
-if( !isset( $startMode ) ) {
+if( empty( $startMode ) ) {
     if( $startDate && $pageMode != MODE_CREATE )
     $startMode = "timeBased";
     elseif( $pageMode != MODE_CREATE )
     $startMode = "manual";
 }
-if( !isset( $stopMode ) ) {
+if( empty( $stopMode ) ) {
     if( $stopDate )
     $stopMode = "timeBased";
     elseif ( $timeSpan )
@@ -219,8 +219,8 @@ if( !isset( $stopMode ) ) {
     else
     $stopMode = "manual";
 }
-if( !isset( $voteID ) )   $voteID = $vote->getVoteID();
-if( !isset( $rangeID ) )  $rangeID = $vote->getRangeID();
+if( empty( $voteID ) )   $voteID = $vote->getVoteID();
+if( empty( $rangeID ) )  $rangeID = $vote->getRangeID();
 
 /*******************************************************************/
 /******************** page commands ********************************/
@@ -517,7 +517,7 @@ function deleteAnswer( $pos, &$answers, &$deleteAnswers ) {
 
     for( $i=$pos; $i<count($answers); $i++ ) {
 
-    if( !isset( $answers[$i] ) ) {
+    if( empty( $answers[$i] ) ) {
         $answers[$i] = $answers[$i+1];
         unset( $answers[$i+1] );
         if( is_array( $deleteAnswers ) ) {

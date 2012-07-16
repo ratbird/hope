@@ -334,8 +334,13 @@ if (check_ticket(Request::option('studipticket'))) {
     // general settings from mystudip: language, jshover, accesskey
     if ($cmd=="change_general") {
         if(array_key_exists(Request::get('forced_language'), $GLOBALS['INSTALLED_LANGUAGES'])) {
-            $my_about->db->query("UPDATE user_info SET preferred_language = '".Request::quoted('forced_language')."' WHERE user_id='" . $my_about->auth_user["user_id"] ."'");
-            $_SESSION['_language'] = $_language = Request::quoted('forced_language');
+            $query = "UPDATE user_info SET preferred_language = ? WHERE user_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                Request::get('forced_language'),
+                $my_about->auth_user['user_id'],
+            ));
+            $_SESSION['_language'] = $_language = Request::get('forced_language');
         }
 
         $forum["jshover"] = Request::int('jshover');

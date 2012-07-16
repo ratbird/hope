@@ -73,10 +73,15 @@ if ($perm->have_studip_perm('tutor', $SessSemName[1]) && in_array($i_view, words
     } else if ($i_view == 'first_position') {
         $scm = new StudipScmEntry($_show_scm);
         if (!$scm->isNew() && $scm->getValue('range_id') == $SessSemName[1]){
-            $minmkdate = DBManager::get()
-                ->query("SELECT MIN(mkdate)-1 FROM scm WHERE range_id='" .  $scm->getValue('range_id') . "'")
-                ->fetchColumn();
-            if(DBManager::get()->exec("UPDATE scm SET mkdate='$minmkdate' WHERE scm_id='" . $scm->getId() . "'")){
+            $query = "SELECT MIN(mkdate) - 1 FROM scm WHERE range_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($scm->getValue('range_id')));
+            $minmkdate = $statement->fetchColumn();
+
+            $query = "UPDATE scm SET mkdate = ? WHERE scm_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($minmkdate, $scm->getId()));
+            if ($statement->rowCount() > 0) {
                 $msg = "msg§" . _("Der Eintrag wurde an die erste Position verschoben.");
             }
         }

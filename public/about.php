@@ -594,33 +594,38 @@ if (isset($current_user)) {
     }
 
     //add the own categories - this ones are self created by the user
-    $categories = DBManager::get()->query("SELECT * FROM kategorien WHERE range_id = '$user_id' ORDER BY priority");
-    while ($category = $categories->fetch())  {
-        $head=$category["name"];
-        $body=$category["content"];
+    $query = "SELECT name, content, kategorie_id
+              FROM kategorien
+              WHERE range_id = ?
+              ORDER BY priority";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($user_id));
+    while ($category = $statement->fetch())  {
+        $head = $category['name'];
+        $body = $category['content'];
         if ($user->id == $user_id) {
-            switch ($visibilities['kat_'.$category['kategorie_id']]) {
+            switch ($visibilities['kat_' . $category['kategorie_id']]) {
                 case VISIBILITY_ME:
-                    $vis_text = _("nur für mich sichtbar");
+                    $vis_text = _('nur für mich sichtbar');
                     break;
                 case VISIBILITY_BUDDIES:
-                    $vis_text = _("nur für meine Buddies sichtbar");
+                    $vis_text = _('nur für meine Buddies sichtbar');
                     break;
                 case VISIBILITY_DOMAIN:
-                    $vis_text = _("nur für meine Nutzerdomäne sichtbar");
+                    $vis_text = _('nur für meine Nutzerdomäne sichtbar');
                     break;
                 case VISIBILITY_EXTERN:
-                    $vis_text = _("auf externen Seiten sichtbar");
+                    $vis_text = _('auf externen Seiten sichtbar');
                     break;
                 default:
                 case VISIBILITY_STUDIP:
-                    $vis_text = _("für alle Stud.IP-Nutzer sichtbar");
+                    $vis_text = _('für alle Stud.IP-Nutzer sichtbar');
                     break;
             }
-            $head .= ' ('.$vis_text.')';
+            $head .= ' (' . $vis_text . ')';
         }
         // oeffentliche Rubrik oder eigene Homepage
-        if (is_element_visible_for_user($user->id, $user_id, $visibilities['kat_'.$category['kategorie_id']])) {
+        if (is_element_visible_for_user($user->id, $user_id, $visibilities['kat_' . $category['kategorie_id']])) {
             echo $layout->render(array('title' => $head, 'content_for_layout' => formatReady($body)));
         }
     }

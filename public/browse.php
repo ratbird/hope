@@ -50,12 +50,11 @@ if (!Request::submitted('reset')) {
 //Eine Suche wurde abgeschickt
 
 // Suchstring merken für evtl. Sortieraktionen
-if(Request::get('name') && !Request::submitted('send') ) {
+if (Request::get('name') && !Request::submitted('send')) {
     $name = Request::get('name');
 }
 
-if (isset($name))
-{
+if (isset($name)) {
     $template->set_attribute('name', $name);
     $template->set_attribute('inst_id', $inst_id);
     $template->set_attribute('sem_id', $sem_id);
@@ -66,12 +65,8 @@ $sortby_fields = array('perms', 'status');
 $sortby = Request::option('sortby');
 $sortby = in_array($sortby, $sortby_fields) ? "$sortby, Nachname, Vorname" : 'Nachname, Vorname';
 
-/* --- Search --------------------------------------------------------------- */
-$db = DBManager::get();
-
 // print success message when returning from sms_send.php
-if ($sms_msg)
-{
+if ($sms_msg) {
     $template->set_attribute('sms_msg', $sms_msg);
     $sms_msg = '';
     $sess->unregister('sms_msg');
@@ -81,30 +76,45 @@ if ($sms_msg)
 $exclude_sem = "AND Seminar_id NOT IN (SELECT seminar_id FROM auto_insert_sem)";
 
 //List of Institutes
-if ($perm->have_perm('admin'))
-{
-    $query = 'SELECT * FROM Institute WHERE (Institute.modules & 16) ORDER BY name';
+$parameters = array();
+if ($perm->have_perm('admin')) {
+    $query = "SELECT Institut_id, Name
+              FROM Institute
+              WHERE (Institute.modules & 16)
+              ORDER BY name";
+} else {
+    $query = "SELECT Institut_id, Name
+              FROM user_inst
+              LEFT JOIN Institute USING (institut_id)
+              WHERE user_id = ? AND (Institute.modules & 16)
+              ORDER BY name";
+    $parameters[] = $user->id;
 }
-else
-{
-    $query = "SELECT * FROM user_inst LEFT JOIN Institute USING (institut_id) WHERE user_id = '$user->id' AND (Institute.modules & 16) ORDER BY name";
-}
+$statement = DBManager::get()->prepare($query);
+$statement->execute($parameters);
 
-$result = $db->query($query);
-
-foreach ($result as $row)
-{
-    $institutes[] = array('id' => $row['Institut_id'], 'name' => my_substr($row['Name'], 0, 40));
+while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+    $institutes[] = array(
+        'id'   => $row['Institut_id'],
+        'name' => my_substr($row['Name'], 0, 40)
+    );
 }
 
 //List of Seminars
-if (!$perm->have_perm('admin'))
-{
-    $result = $db->query("SELECT * FROM seminar_user LEFT JOIN seminare USING (Seminar_id) WHERE user_id = '$user->id' AND (seminare.modules & 8) $exclude_sem ORDER BY Name");
+if (!$perm->have_perm('admin')) {
+    $query = "SELECT Seminar_id, Name
+              FROM seminar_user
+              LEFT JOIN seminare USING (Seminar_id)
+              WHERE user_id = ? AND (seminare.modules & 8) {$exclude_sem}
+              ORDER BY Name";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($user->id));
 
-    foreach ($result as $row)
-    {
-        $courses[] = array('id' => $row['Seminar_id'], 'name' => my_substr($row['Name'], 0, 40));
+    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+        $courses[] = array(
+            'id'   => $row['Seminar_id'],
+            'name' => my_substr($row['Name'], 0, 40)
+        );
     }
 }
 
@@ -125,27 +135,38 @@ $template->set_attribute('search_object', $search_object);
 
 $fields = array($_fullname_sql['full_rev'].' AS fullname', 'username', 'perms', 'auth_user_md5.user_id', $vis_query);
 $tables = array('auth_user_md5', 'LEFT JOIN user_info USING (user_id)', 'LEFT JOIN user_visibility USING (user_id)');
+$parameters = array();
 
 if ($inst_id) {
-    $result = $db->query("SELECT Institut_id FROM user_inst WHERE Institut_id = '".$inst_id."' AND user_id = '$user->id'");
+    $query = "SELECT 1 FROM user_inst WHERE Institut_id = ? AND user_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($inst_id, $user->id));
+    $check = $statement->fetchColumn();
 
     // entweder wir gehoeren auch zum Institut oder sind global admin
-    if ($result->rowCount() > 0 || $perm->have_perm('admin')) {
+    if ($check || $perm->have_perm('admin')) {
         $fields[] = 'user_inst.inst_perms';
         $tables[] = 'JOIN user_inst USING (user_id)';
-        $filter[] = "user_inst.Institut_id = '".$inst_id."'";
+        $filter[] = "user_inst.Institut_id = :inst_id";
         $filter[] = "user_inst.inst_perms != 'user'";
+
+        $parameters[':inst_id'] = $inst_id;
     }
 }
 
 if ($sem_id) {
-    $result = $db->query("SELECT Seminar_id FROM seminar_user WHERE Seminar_id = '".$sem_id."' AND user_id = '$user->id' $exclude_sem");
+    $query = "SELECT 1 FROM seminar_user WHERE Seminar_id = ? AND user_id = ? {$exclude_sem}";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($sem_id, $user->id));
+    $check = $statement->fetchColumn();
 
     // wir gehoeren auch zum Seminar
-    if ($result->rowCount() > 0) {
+    if ($check) {
         $fields[] = 'seminar_user.status';
         $tables[] = 'JOIN seminar_user USING (user_id)';
-        $filter[] = "seminar_user.Seminar_id = '".$sem_id."'";
+        $filter[] = "seminar_user.Seminar_id = :sem_id";
+
+        $parameters[':sem_id'] =  $sem_id;
     }
 }
 
@@ -153,22 +174,29 @@ if ($sem_id) {
 if (strlen($name) > 2) {
     $name = str_replace('%', '\%', $name);
     $name = str_replace('_', '\_', $name);
-    $filter[] = "CONCAT(Vorname, ' ', Nachname) LIKE '%".addslashes($name)."%'";
+    $filter[] = "CONCAT(Vorname, ' ', Nachname) LIKE CONCAT('%', :needle, '%')";
+    $parameters[':needle'] = $name;
 }
 
-if (count($filter))
-{
-    $query = 'SELECT '.join(',', $fields).' FROM '.join(' ', $tables).' WHERE '.join(' AND ', $filter).' ORDER BY '.$sortby;
-    $result = $db->query($query);
+if (count($filter)) {
+    $_fields  = implode(', ', $fields);
+    $_tables  = implode(' ', $tables);
+    $_filters = implode(' AND ', $filter);
 
-    foreach ($result as $row)
-    {
+    $query = "SELECT {$_fields}
+              FROM {$_tables}
+              WHERE {$_filters}
+              ORDER BY {$sortby}";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute($parameters);
+
+    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
         if ($row['visible']) {
             $userinfo = array(
-                'user_id' => $row['user_id'],
+                'user_id'  => $row['user_id'],
                 'username' => $row['username'],
                 'fullname' => $row['fullname'],
-                'status' => isset($row['status']) ? $row['status'] : $row['perms']
+                'status'   => $row['status'] ?: $row['perms'],
             );
 
             if (isset($row['inst_perms'])) {

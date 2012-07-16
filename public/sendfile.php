@@ -53,7 +53,6 @@ require_once 'lib/classes/StudipLitList.class.php';
 //basename() needs setlocale()
 init_i18n($_SESSION['_language']);
 
-$db = DBManager::get();
 $file_id = escapeshellcmd(basename(Request::get('file_id')));
 $type = Request::int('type');
 if($type < 0 || $type > 7) $type = 0;
@@ -70,8 +69,10 @@ if ($object_id && in_array($type, array(0, 6, 7))) {
 }
 //download from archive, allowed if former participant
 if ($type == 1){
-    $archiv_seminar_id = $db->query("SELECT seminar_id FROM archiv WHERE archiv_file_id = ".$db->quote($file_id))
-                            ->fetchColumn();
+    $query = "SELECT seminar_id FROM archiv WHERE archiv_file_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($file_id));
+    $archiv_seminar_id = $statement->fetchColumn();
     $no_access = !archiv_check_perm($archiv_seminar_id);
 }
 //download bibliography

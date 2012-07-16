@@ -491,10 +491,12 @@ if ($evaluation = $statement->fetch(PDO::FETCH_ASSOC)) {
     $statement->execute(array($eval_id));
     $number_of_votes = $statement->fetchColumn();
 
+    $query = "SELECT range_id FROM eval_range WHERE eval_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($eval_id));
+    $eval_ranges = $statement->fetchAll(PDO::FETCH_COLUMN);
+
     $eval_ranges_names = array();
-    $eval_ranges = DbManager::get()
-                 ->query("SELECT range_id FROM eval_range WHERE eval_id = " . DbManager::get()->quote($eval_id))
-                 ->fetchAll(PDO::FETCH_COLUMN);
     foreach ($eval_ranges as $eval_range) {
       $o_type = get_object_type($eval_range, array('studip','user','sem','inst'));
       switch($o_type) {

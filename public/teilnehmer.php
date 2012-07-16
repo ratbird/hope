@@ -108,9 +108,13 @@ Navigation::activateItem('/course/members/view');
 SkipLinks::addIndex(Navigation::getItem('/course/members/view')->getTitle(), 'main_content', 100);
 
 //Subject for sms
-$stmt = DBManager::get()->query("SELECT VeranstaltungsNummer as sn FROM seminare WHERE Seminar_id = '".$SessSemName[1]."'");
-$result = $stmt->fetch();
-$subject = ( $result["sn"] == "" ) ? "[".$SessSemName['0']."]" : "[".$result['sn'].": ".$SessSemName['0']."]";
+$query = "SELECT VeranstaltungsNummer FROM seminare WHERE Seminar_id = ?";
+$stmt = DBManager::get()->prepare($query);
+$stmt->execute(array($SessSemName[1]));
+$result = $stmt->fetchColumn();
+$subject = ($result == '')
+         ? '[' . $SessSemName['0'] . ']'
+         : '[' . $result . ': ' . $SessSemName['0'] . ']';
 
 // Send message to multiple user
 if (Request::submitted('do_send_msg') && Request::intArray('send_msg') && Seminar_Session::check_ticket(Request::option('studipticket')) && !LockRules::Check($id, 'participants')){

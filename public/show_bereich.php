@@ -89,17 +89,31 @@ case "s":
     $head_text = _("Übersicht aller Veranstaltungen einer Einrichtung");
     $intro_text = sprintf(_("Alle Veranstaltungen der Einrichtung: <b>%s</b>"), htmlReady(Institute::find($id)->name));
     $excel_text = strip_tags(DecodeHtml($intro_text));
-    $query = "SELECT seminar_inst.seminar_id FROM seminar_inst "
-              ."LEFT JOIN seminare s ON (seminar_inst.seminar_id=s.Seminar_id) "
-              . ($show_semester ? "
-                  INNER JOIN semester_data sd ON((s.start_time <= sd.beginn
-                  AND sd.beginn <= ( s.start_time + s.duration_time )
-                  OR (s.start_time <= sd.beginn AND s.duration_time = -1))
-                  AND semester_id = " . $db->quote($show_semester) . ")"
-                  : "")
-              . " WHERE seminar_inst.Institut_id=".$db->quote($id)
-              . (!$GLOBALS['perm']->have_perm(get_config('SEM_VISIBILITY_PERM')) ? " AND s.visible=1" : "");
-    $sem_browse_obj->sem_browse_data['search_result'] = array_flip($db->query($query)->fetchAll(PDO::FETCH_COLUMN));
+
+    $parameters = array($id);
+    if ($show_semester) {
+        $query = "SELECT seminar_inst.seminar_id
+                  FROM seminar_inst
+                  LEFT JOIN seminare AS s ON (seminar_inst.seminar_id = s.Seminar_id)
+                  INNER JOIN semester_data sd
+                     ON ((s.start_time <= sd.beginn AND sd.beginn <= (s.start_time + s.duration_time )
+                         OR (s.start_time <= sd.beginn AND s.duration_time = -1))
+                      AND semester_id = ?)
+                  WHERE seminar_inst.Institut_id = ?";
+        array_unshift($parameters, $show_semester);
+    } else {
+        $query = "SELECT seminar_inst.seminar_id
+                  FROM seminar_inst
+                  LEFT JOIN seminare AS s ON (seminar_inst.seminar_id = s.Seminar_id)
+                  WHERE seminar_inst.Institut_id = ?";
+    }
+    if (!$GLOBALS['perm']->have_perm(get_config('SEM_VISIBILITY_PERM'))) {
+        $query .= " AND s.visible = 1";
+    }
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute($parameters);
+    $seminar_ids = $statement->fetchAll(PDO::FETCH_COLUMN);
+    $sem_browse_obj->sem_browse_data['search_result'] = array_flip($seminar_ids);
     $sem_browse_obj->show_result = true;
     break;
 }

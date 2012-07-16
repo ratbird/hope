@@ -48,9 +48,6 @@ require_once('lib/classes/StudipDocumentTree.class.php');
 require_once('lib/classes/StudipDocument.class.php');
 require_once 'lib/raumzeit/Issue.class.php';
 
-$db = DBManager::get();
-$db2 = DBManager::get();
-
 $open = Request::option('open');
 $close = Request::option('close');
 $check_all = Request::option('check_all');
@@ -81,10 +78,13 @@ if (Request::option('orderby')) {
 if ($_REQUEST['folderzip']) {
     $zip_file_id = createFolderZip($_REQUEST['folderzip'], true, true);
     if($zip_file_id){
-        $query = sprintf ("SELECT name FROM folder WHERE folder_id = '%s'", $_REQUEST['folderzip']);
-        $result = $db->query($query)->fetch();
-        $zip_name = prepareFilename(_("Dateiordner").'_'.$result['name'].'.zip');
-        header('Location: ' . getDownloadLink( $zip_file_id, $zip_name, 4));
+        $query = "SELECT name FROM folder WHERE folder_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($_REQUEST['folderzip']));
+        $name = $statement->fetchColumn();
+
+        $zip_name = prepareFilename(_('Dateiordner') . '_' . $name . '.zip');
+        header('Location: ' . getDownloadLink($zip_file_id, $zip_name, 4));
         page_close();
         die;
     }
@@ -93,12 +93,18 @@ if ($_REQUEST['folderzip']) {
 if ($_REQUEST['zipnewest']) {
     //Abfrage der neuen Dateien
     $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessSemName[1]));
-    $download_ids = $db->query("SELECT * " .
-            "FROM dokumente " .
-            "WHERE seminar_id = '$SessSemName[1]' " .
-            "AND user_id != '".$user->id."' " .
-            "AND ( chdate > '".(($_REQUEST['zipnewest']) ? $_REQUEST['zipnewest'] : time())."' " .
-                    "OR mkdate > '".(($_REQUEST['zipnewest']) ? $_REQUEST['zipnewest'] : time())."')")->fetchAll();
+    $query = "SELECT range_id, dokument_id, url
+              FROM dokumente
+              WHERE seminar_id = ? AND user_id != ?
+                AND GREATEST(mkdate, IFNULL(chdate, 0)) > IFNULL(?, UNIX_TIMESTAMP())";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array(
+        $SessSemName[1],
+        $user->id,
+        $_REQUEST['zipnewest'] ?: null,
+    ));
+    $download_ids = $statement->fetchAll(PDO::FETCH_ASSOC);
+
     foreach($download_ids as $key => $dl_id) {
         if ($folder_tree->isReadable($dl_id['range_id'], $user->id)
             && check_protected_download($dl_id['dokument_id']) && $dl_id['url'] == "") {
@@ -156,17 +162,19 @@ if (strpos($open, "_") !== false){
 }
 
 //Wenn nicht Rechte und Operation uebermittelt: Ist das mein Dokument und ist der Ordner beschreibbar?
-if ((!$rechte) && $open_cmd) {
-    $query = "SELECT user_id,range_id FROM dokumente WHERE dokument_id = ".$db->quote($open_id)."";
-    $result = $db->query($query)->fetch();
-    if (($result["user_id"] == $user->id)
-         && ($result["user_id"] != "nobody")
-         && $folder_tree->isWritable($result['range_id'], $user->id))
-        $owner=TRUE;
-    else
-        $owner=FALSE;
-} else
-    $owner=FALSE;
+if (!$rechte && $open_cmd) {
+    $query = "SELECT user_id, range_id FROM dokumente WHERE dokument_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($open_id));
+    $result = $statement->fetch();
+
+    $owner = (($result['user_id'] == $user->id)
+           && ($result['user_id'] != 'nobody')
+           && $folder_tree->isWritable($result['range_id'], $user->id)); 
+} else {
+    $owner = FALSE;
+}
+
 if(!$rechte && in_array($open_cmd, array('n','d','c','sc','m','co')) && $SemUserStatus == "autor"){
     $create_folder_perm = $folder_tree->checkCreateFolder($open_id, $user->id);
 } else {
@@ -218,8 +226,10 @@ if ($rechte || $owner || $create_folder_perm) {
             $titel = $issue->getTitle();
             $description= _("Themenbezogener Dateiordner");
         } else {
-            $query = "SELECT title FROM themen WHERE issue_id=".$db->quote($open_id)."";
-            if ($result = $db->query($query)->fetch()) {
+            $query = "SELECT title FROM themen WHERE issue_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($open_id));
+            if ($result = $statement->fetch()) {
                 $titel = $result["title"];
                 $description= _("Themenbezogener Dateiordner");
             }
@@ -251,8 +261,14 @@ if ($rechte || $owner || $create_folder_perm) {
 
     //wurde Code fuer Loeschen von Dateien ubermittelt (=id+"_fd_"), wird erstmal nachgefragt
     if ($open_cmd == 'fd') {
-        $query = "SELECT filename, ". $_fullname_sql['full'] ." AS fullname, username FROM dokumente LEFT JOIN auth_user_md5 USING (user_id) LEFT JOIN user_info USING (user_id) WHERE dokument_id ='".$open_id."'";
-        $result = $db->query($query)->fetch();
+        $query = "SELECT filename, {$_fullname_sql['full']} AS fullname, username
+                  FROM dokumente
+                  LEFT JOIN auth_user_md5 USING (user_id)
+                  LEFT JOIN user_info USING (user_id)
+                  WHERE dokument_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($open_id));
+        $result = $statement->fetch();
         if (getLinkPath($open_id)) {
             $question = createQuestion(sprintf(_('Wollen Sie die Verlinkung zu "%s" von %s wirklich löschen?'), $result['filename'], $result['fullname']), array('open' => $open_id.'_rl_'));
         } else {
@@ -293,78 +309,141 @@ if ($rechte || $owner || $create_folder_perm) {
     }
 
     //wurde Code fuer Hoch-Schieben einer Datei (=id+"_mfu_") in der Darstellungsreihenfolge ausgewählt?
-    if (($open_cmd == 'mfu') && (!Request::submitted("cancel"))) {
-        $result = $db->query("SELECT range_id FROM dokumente WHERE dokument_id = ".$db->quote($open_id)."")->fetch();
-        $result = $db->query("SELECT dokument_id FROM dokumente WHERE range_id = '".$result['range_id']."' ORDER BY priority ASC, chdate")->fetchAll();
-        for ($i=1; $i < count($result); $i++) {
-            if ($result[$i]['dokument_id'] == $open_id) {
-                $result[$i]['dokument_id'] = $result[$i-1]['dokument_id'];
-                $result[$i-1]['dokument_id'] = $open_id;
+    if (($open_cmd == 'mfu') && !Request::submitted('cancel')) {
+        $query = "SELECT range_id FROM dokumente WHERE dokument_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($open_id));
+        $temp_id = $statement->fetchColumn();
+
+        $query = "SELECT dokument_id FROM dokumente WHERE range_id = ? ORDER BY priority, chdate";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($temp_id));
+        $result = $statement->fetchAll(PDO::FETCH_COLUMN);
+
+        for ($i = 1; $i < count($result); $i += 1) {
+            if ($result[$i] == $open_id) {
+                $result[$i]     = $result[$i - 1];
+                $result[$i - 1] = $open_id;
             }
         }
-        for ($i=0; $i < count($result); $i++) {
-            $db->query("UPDATE dokumente SET priority = ".($i+1)." WHERE dokument_id = '".$result[$i]['dokument_id']."'");
+
+        $query = "UPDATE dokumente SET priority = ? WHERE dokument_id = ?";
+        $statement = DBManager::get()->prepare($query);
+
+        for ($i = 0; $i < count($result); $i += 1) {
+            $statement->execute(array($i + 1, $result[$i]));
         }
         unset($open_id);
     }
 
     //wurde Code fuer Runter-Schieben einer Datei (=id+"_mfu_") in der Darstellungsreihenfolge ausgewählt?
-    if (($open_cmd == 'mfd') && (!Request::submitted("cancel"))) {
-        $result = $db->query("SELECT range_id FROM dokumente WHERE dokument_id = ".$db->quote($open_id)."")->fetch();
-        $result = $db->query("SELECT dokument_id FROM dokumente WHERE range_id = '".$result['range_id']."' ORDER BY priority ASC, chdate")->fetchAll();
-        for ($i=count($result)-1; $i >=0 ; $i--) {
-            if ($result[$i]['dokument_id'] == $open_id) {
-                $result[$i]['dokument_id'] = $result[$i+1]['dokument_id'];
-                $result[$i+1]['dokument_id'] = $open_id;
+    if (($open_cmd == 'mfd') && !Request::submitted('cancel')) {
+        $query = "SELECT range_id FROM dokumente WHERE dokument_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($open_id));
+        $temp_id = $statement->fetchColumn();
+
+        $query = "SELECT dokument_id FROM dokumente WHERE range_id = ? ORDER BY priority, chdate";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($temp_id));
+        $result = $statement->fetchAll(PDO::FETCH_COLUMN);
+
+        for ($i = count($result) - 1; $i >= 0; $i -= 1) {
+            if ($result[$i] == $open_id) {
+                $result[$i]     = $result[$i + 1];
+                $result[$i + 1] = $open_id;
             }
         }
-        for ($i=0; $i < count($result); $i++) {
-            $db->query("UPDATE dokumente SET priority = ".($i+1)." WHERE dokument_id = '".$result[$i]['dokument_id']."'");
+
+        $query = "UPDATE dokumente SET priority = ? WHERE dokument_id = ?";
+        $statement = DBManager::get()->prepare($query);
+
+        for ($i = 0; $i < count($result); $i += 1) {
+            $statement->execute(array($i + 1, $result[$i]));
         }
         unset($open_id);
     }
 
     //wurde Code fuer Hoch-Schieben eines Ordners (=id+"_mfou_") in der Darstellungsreihenfolge ausgewählt?
     if (($open_cmd == 'mfou') && (!Request::submitted("cancel"))) {
-        $result = $db->query("SELECT range_id FROM folder WHERE folder_id = ".$db->quote($open_id))->fetch();
-        $result = $db->query("SELECT folder_id FROM folder WHERE range_id = '".$result['range_id']."' ORDER BY priority ASC, chdate")->fetchAll();
-        for ($i=1; $i < count($result); $i++) {
-            if ($result[$i]['folder_id'] == $open_id) {
-                $result[$i]['folder_id'] = $result[$i-1]['folder_id'];
-                $result[$i-1]['folder_id'] = $open_id;
+        $query = "SELECT range_id FROM folder WHERE folder_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($open_id));
+        $temp_id = $statement->fetchColumn();
+
+        $query = "SELECT folder_id FROM folder WHERE range_id = ? ORDER BY priority, chdate";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($temp_id));
+        $result = $statement->fetchAll(PDO::FETCH_COLUMN);
+
+        for ($i = 1; $i < count($result); $i += 1) {
+            if ($result[$i] == $open_id) {
+                $result[$i]     = $result[$i - 1];
+                $result[$i - 1] = $open_id;
             }
         }
-        for ($i=0; $i < count($result); $i++) {
-            $db->query("UPDATE folder SET priority = ".($i+1)." WHERE folder_id = '".$result[$i]['folder_id']."'");
+
+        $query = "UPDATE folder SET priority = ? WHERE folder_id = ?";
+        $statement = DBManager::get()->prepare($query);
+
+        for ($i = 0; $i < count($result); $i += 1) {
+            $statement->execute(array($i + 1, $result[$i]));
         }
         unset($open_id);
     }
 
     //wurde Code fuer Runter-Schieben einer Datei (=id+"_mfu_") in der Darstellungsreihenfolge ausgewählt?
     if (($open_cmd == 'mfod') && (!Request::submitted("cancel"))) {
-        $result = $db->query("SELECT range_id FROM folder WHERE folder_id = ".$db->quote($open_id))->fetch();
-        $result = $db->query("SELECT folder_id FROM folder WHERE range_id = '".$result['range_id']."' ORDER BY priority ASC, chdate")->fetchAll();
-        for ($i=count($result)-1; $i >=0 ; $i--) {
-            if ($result[$i]['folder_id'] == $open_id) {
-                $result[$i]['folder_id'] = $result[$i+1]['folder_id'];
-                $result[$i+1]['folder_id'] = $open_id;
+        $query = "SELECT range_id FROM folder WHERE folder_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($open_id));
+        $temp_id = $statement->fetchColumn();
+
+        $query = "SELECT folder_id FROM folder WHERE range_id = ? ORDER BY priority, chdate";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($temp_id));
+        $result = $statement->fetchAll(PDO::FETCH_COLUMN);
+
+        for ($i = count($result) - 1; $i >= 0; $i -= 1) {
+            if ($result[$i] == $open_id) {
+                $result[$i]     = $result[$i + 1];
+                $result[$i + 1] = $open_id;
             }
         }
-        for ($i=0; $i < count($result); $i++) {
-            $db->query("UPDATE folder SET priority = ".($i+1)." WHERE folder_id = '".$result[$i]['folder_id']."'");
+
+        $query = "UPDATE folder SET priority = ? WHERE folder_id = ?";
+        $statement = DBManager::get()->prepare($query);
+
+        for ($i = 0; $i < count($result); $i += 1) {
+            $statement->execute(array($i + 1, $result[$i]));
         }
         unset($open_id);
     }
 
     //wurde Code für alphabetisches Sortieren (=id+"_az_") fuer Ordner id ausgewählt?
     if (($open_cmd == 'az') && (!Request::submitted("cancel"))) {
-        $result = $db->query("SELECT dokument_id FROM dokumente WHERE range_id = ".$db->quote($open_id)." ORDER BY name ASC, chdate DESC")->fetchAll();
-        for ($i=0; $i < count($result); $i++) {
-            $db->query("UPDATE dokumente SET priority = ".($i+1)." WHERE dokument_id = '".$result[$i]['dokument_id']."'");
+        $query = "SELECT dokument_id FROM dokumente WHERE range_id = ? ORDER BY name, chdate DESC";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($open_id));
+        $result = $statement->fetchAll(PDO::FETCH_COLUMN);
+
+        $query = "UPDATE dokumente SET priority = ? WHERE dokument_id = ?";
+        $statement = DBManager::get()->prepare($query);
+
+        for ($i = 0; $i < count($result); $i += 1) {
+            $statement->execute(array($i + 1, $result[$i]));
         }
-        $result = $db->query("SELECT folder_id FROM folder WHERE range_id = ".$db->quote($open_id)." ORDER BY name ASC, chdate DESC")->fetchAll();
-        for ($i=0; $i < count($result); $i++) {
-            $db->query("UPDATE folder SET priority = ".($i+1)." WHERE folder_id = '".$result[$i]['folder_id']."'");
+
+        $query = "SELECT folder_id FROM folder WHERE range_id = ? ORDER BY name, chdate DESC";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($open_id));
+        $result = $statement->fetchAll(PDO::FETCH_COLUMN);
+
+        $query = "UPDATE folder SET priority = ? WHERE folder_id = ?";
+        $statement = DBManager::get()->prepare($query);
+
+        for ($i = 0; $i < count($result); $i += 1) {
+            $statement->execute(array($i + 1, $result[$i]));
         }
     }
 
@@ -519,21 +598,26 @@ if ($open_cmd == 'md' && $folder_tree->isWritable($open_id, $user->id) && !Reque
 
 //wurde ein weiteres Objekt aufgeklappt?
 if (isset($open)) {
-    if (!isset($open_id))
+    if (!isset($open_id)) {
         $open_id = $open;
+    }
     $folder_system_data["open"][$open_id] = true;
     $folder_system_data["open"]['anker'] = $open_id;
     //Übergeordnete Ordner mitöffnen - das ergibt Sinn
     if (!($path = $folder_tree->getParents($open_id))) {
         //Und falls $open ein Dokument sein sollte:
-        $path = $db->query("SELECT range_id FROM dokumente WHERE dokument_id = '".$open_id."'")->fetch();
-        $path = $path["range_id"];
-        $folder_system_data["open"][$path] = true;
+        $query = "SELECT range_id FROM dokumente WHERE dokument_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($open_id));
+        $path = $statement->fetchColumn();
+
+        $folder_system_data['open'][$path] = true;
         $path = $folder_tree->getParents($path);
     }
     for ($i=0; $i < count($path); $i++) {
-        if ($path[$i] != "root")
-            $folder_system_data["open"][$path[$i]] = true;
+        if ($path[$i] != 'root') {
+            $folder_system_data['open'][$path[$i]] = true;
+        }
     }
 }
 //wurde ein Objekt zugeklappt?
@@ -576,8 +660,15 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
     ob_start();
     //Frage den Dateienkörper ab
     if ($_REQUEST["getfilebody"]) {
-        $query = "SELECT ". $_fullname_sql['full'] ." AS fullname, username, a.user_id, a.*, IF(IFNULL(a.name,'')='', a.filename,a.name) AS t_name FROM dokumente a LEFT JOIN auth_user_md5 USING (user_id) LEFT JOIN user_info USING (user_id) WHERE a.dokument_id = ".$db->quote($_REQUEST["getfilebody"]);
-        $datei = $db->query($query)->fetch(PDO::FETCH_ASSOC);
+        $query = "SELECT {$_fullname_sql['full']} AS fullname, username, a.user_id, a.*,
+                         IF(IFNULL(a.name, '') = '', a.filename, a.name) AS t_name
+                  FROM dokumente AS a
+                  LEFT JOIN auth_user_md5 USING (user_id)
+                  LEFT JOIN user_info USING (user_id)
+                  WHERE a.dokument_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($_REQUEST['getfilebody']));
+        $datei = $statement->fetch(PDO::FETCH_ASSOC);
         if ($folder_tree->isReadable($datei['range_id'] , $user->id)){
             $all = $folder_system_data['cmd']=='tree' ? FALSE : TRUE;
             display_file_body($datei, null, $folder_system_data["open"], null, $folder_system_data["move"], $folder_system_data["upload"], $all, $folder_system_data["refresh"], $folder_system_data["link"]);
@@ -600,11 +691,17 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
                 $file_order = explode(",", Request::get('file_order'));
                 $sorttype = "";
                 if ($file_order) {
-                    $result = $db->query("SELECT 1 FROM dokumente WHERE dokument_id = ".$db->quote($file_order[0]))->fetch();
+                    $query = "SELECT 1 FROM dokumente WHERE dokument_id = ?";
+                    $statement = DBManager::get()->prepare($query);
+                    $statement->execute(array($file_order[0]));
+                    $result = $statement->fetchColumn();
                     if ($result) {
-                        $sorttype = "file";
+                        $sorttype = 'file';
                     } else {
-                        $result = $db->query("SELECT 1 FROM folder WHERE folder_id = ".$db->quote($file_order[0]))->fetch();
+                        $query = "SELECT 1 FROM folder WHERE folder_id = ?";
+                        $statement = DBManager::get()->prepare($query);
+                        $statement->execute(array($file_order[0]));
+                        $result = $statement->fetchColumn();
                         if ($result) {
                             $sorttype = "folder";
                         }
@@ -612,13 +709,18 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
                 }
                 if ($sorttype == "file") {
                     //Dateien werden sortiert:
-                    for ($i=0; $i < count($file_order); $i++) {
-                        $db->query("UPDATE dokumente SET priority = ".($i+1)." WHERE dokument_id = ".$db->quote($file_order[$i]));
+                    $query = "UPDATE dokumente SET priority = ? WHERE dokument_id = ?";
+                    $statement = DBManager::get()->prepare($query);
+                    for ($i = 0; $i < count($file_order); $i += 1) {
+                        $statement->execute(array($i + 1, $file_order[$i]));
                     }
                 } elseif ($sorttype == "folder") {
                     //Ordner werden sortiert:
-                    for ($i=0; $i < count($file_order); $i++) {
-                        $db->query("UPDATE folder SET priority = ".($i+1)." WHERE folder_id = ".$db->quote($file_order[$i]));
+                    $query = "UPDATE folder SET priority = ? WHERE folder_id = ?";
+                    $statement = DBManager::get()->prepare($query);
+
+                    for ($i = 0; $i < count($file_order); $i += 1) {
+                        $statement->execute(array($i + 1, $file_order[$i]));
                     }
                 }
             }
@@ -627,17 +729,35 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
 
     //Datei soll in einen Ordner verschoben werden
     if (($_REQUEST["moveintofolder"]) && ($_REQUEST["movefile"])) {
-        $result = $db->query("SELECT range_id FROM dokumente WHERE dokument_id = '".$_REQUEST["movefile"]."'")->fetch();
-        if (($rechte) || (($folder_tree->isWriteable($result['range_id'] , $user->id))
-        && ($folder_tree->isWriteable($result['moveintofolder'] , $user->id)))) {
-            $db->query("UPDATE dokumente SET range_id = '".$_REQUEST["moveintofolder"]."', priority = 0 WHERE dokument_id = '".$_REQUEST["movefile"]."'");
+        $query = "SELECT range_id FROM dokumente WHERE dokument_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($_REQUEST['movefile']));
+        $temp_id = $statement->fetchColumn();
+
+        if (($rechte) || (($folder_tree->isWriteable($temp_id , $user->id))
+        && ($folder_tree->isWriteable($_REQUEST['moveintofolder'] , $user->id)))) {
+            $query = "UPDATE dokumente
+                      SET range_id = ?, priority = 0
+                      WHERE dokument_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                $_REQUEST['moveintofolder'],
+                $_REQUEST['movefile'],
+            ));
         }
     }
 
     //Datei soll in einen Ordner kopiert werden
     if (($_REQUEST["copyintofolder"]) && ($_REQUEST["copyfile"])) {
-        $result = $db->query("SELECT * FROM dokumente WHERE dokument_id = ".$db->quote($_REQUEST["copyfile"]))->fetch();
-        if (($rechte) || ($folder_tree->isWriteable($result['moveintofolder'] , $user->id))) {
+        $query = "SELECT name, description, filename, mkdate, filesize, 
+                         autor_host, url, protected
+                  FROM dokumente
+                  WHERE dokument_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($_REQUEST['copyfile']));
+        $result = $statement->fetch(PDO::FETCH_ASSOC);
+
+        if (($rechte) || ($folder_tree->isWriteable($_REQUEST['copyintofolder'] , $user->id))) {
             $doc = new StudipDocument();
             $doc->setData(
                 array(
@@ -788,24 +908,40 @@ if ($question) {
 
         } elseif($folder_system_data["cmd"]=="tree") {
             $select = '<option value="' . md5("new_top_folder") . '_a_">' . _("ausw&auml;hlen oder wie Eingabe").' --&gt;</option>';
-            $query = "SELECT SUM(1) FROM folder WHERE range_id='$range_id'";
-            $result2 = $db2->query($query)->fetch();
-            if ($result2[0] == 0)
+            $query = "SELECT SUM(1) FROM folder WHERE range_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($range_id));
+            $result2 = $statement->fetchColumn();
+            if ($result2 == 0) {
                 $select.="\n<option value=\"".$range_id."_a_\">" . _("Allgemeiner Dateiordner") . "</option>";
+            }
 
 
             if($SessSemName['class'] == 'sem'){
-                $query = "SELECT statusgruppen.name, statusgruppe_id FROM statusgruppen LEFT JOIN folder ON (statusgruppe_id = folder.range_id) WHERE statusgruppen.range_id='$range_id' AND folder_id IS NULL ORDER BY position";
-                $result2 = $db2->query($query)->fetchAll();
+                $query = "SELECT statusgruppen.name, statusgruppe_id
+                          FROM statusgruppen
+                          LEFT JOIN folder ON (statusgruppe_id = folder.range_id)
+                          WHERE statusgruppen.range_id = ? AND folder_id IS NULL
+                          ORDER BY position";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($range_id));
+                $result2 = $statement->fetchAll(PDO::FETCH_ASSOC);
                 foreach ($result2 as $row2) {
-                    $select.="\n<option value=\"".$row2["statusgruppe_id"]."_a_\">" . sprintf(_("Dateiordner der Gruppe: %s"), htmlReady($row2['name'])) . "</option>";
+                    $select.="\n<option value=\"".$row2['statusgruppe_id']."_a_\">" . sprintf(_("Dateiordner der Gruppe: %s"), htmlReady($row2['name'])) . "</option>";
                 }
-
-                $query = "SELECT themen_termine.issue_id, termine.date, folder.name, termine.termin_id, date_typ FROM termine LEFT JOIN themen_termine USING (termin_id) LEFT JOIN folder ON (themen_termine.issue_id = folder.range_id) WHERE termine.range_id='$range_id' AND folder.folder_id IS NULL ORDER BY termine.date, name";
 
                 $issues = array();
                 $shown_dates = array();
-                $result2 = $db2->query($query)->fetchAll();
+
+                $query = "SELECT themen_termine.issue_id, termine.date, folder.name, termine.termin_id, date_typ
+                          FROM termine
+                          LEFT JOIN themen_termine USING (termin_id)
+                          LEFT JOIN folder ON (themen_termine.issue_id = folder.range_id)
+                          WHERE termine.range_id = ? AND folder.folder_id IS NULL
+                          ORDER BY termine.date, name";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($range_id));
+                $result2 = $statement->fetchAll(PDO::FETCH_ASSOC);
 
                 foreach ($result2 as $row2) {
                     if (!$row2["name"]) {
@@ -874,17 +1010,19 @@ if ($question) {
     }
 
     $lastvisit = object_get_visit($SessSemName[1], "documents");
-    $query = "SELECT * " .
-            "FROM dokumente " .
-            "WHERE seminar_id = '$range_id' " .
-            "AND user_id != '".$user->id."' " .
-            "AND ( chdate > '".(($lastvisit) ? $lastvisit : time())."' " .
-                    "OR mkdate > '".(($lastvisit) ? $lastvisit : time())."')";
-    $result = $db->query($query)->fetchAll();
-    if (count($result)>0) {
+    $query = "SELECT COUNT(*)
+              FROM dokumente
+              WHERE seminar_id = ? AND user_id != ?
+                AND GREATEST(mkdate, IFNULL(chdate, 0)) > IFNULL(?, UNIX_TIMESTAMP())";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array(
+        $range_id, $user->id, $lastvisit ?: null
+    ));
+    $result = $statement->fetchColumn();
+    if ($result > 0) {
         print "<p class=\"info\">";
         print _("Es gibt ");
-        print "<b>".(count($result)>1 ? count($result) : _("eine"))."</b>";
+        print "<b>".($result > 1 ? $result : _('eine'))."</b>";
         print _(" neue/geänderte Dateie(n). Jetzt ");
         echo LinkButton::create(_("Herunterladen"), URLHelper::getURL("?zipnewest=".$lastvisit));
         print "</p>";
@@ -913,8 +1051,10 @@ div.droppable.hover {
         print "<div class=\"\" id=\"folder_subfolders_root\">"; //class = "folder_container" for sorting
         //Seminar...
         //Algemeiner Dateienordner
-        $folders = $db->query("SELECT folder_id FROM folder WHERE range_id = '$range_id' ORDER BY name")->fetchAll();
-        foreach($folders as $general_folder) {
+        $query = "SELECT folder_id FROM folder WHERE range_id = ? ORDER BY name";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($range_id));
+        while ($general_folder = $statement->fetch(PDO::FETCH_ASSOC)) {
             if ($folder_tree->isExecutable($general_folder["folder_id"], $user->id) || $rechte) {
                 display_folder($general_folder["folder_id"],
                         $folder_system_data["open"],
@@ -928,14 +1068,13 @@ div.droppable.hover {
                         false);
             }
         }
-
+        $statement->closeCursor();
 
         //Weitere Ordner:
-        $folders = $db->query("SELECT folder_id " .
-                "FROM folder " .
-                "WHERE range_id = '".md5($SessSemName[1] . 'top_folder')."' " .
-                "ORDER BY name")->fetchAll();
-        foreach($folders as $general_folder) {
+        $statement->execute(array(
+            md5($SessSemName[1] . 'top_folder')
+        ));
+        while ($general_folder = $statement->fetch(PDO::FETCH_ASSOC)) {
             if ($folder_tree->isExecutable($general_folder['folder_id'], $user->id) || $rechte) {
                 display_folder($general_folder["folder_id"],
                         $folder_system_data["open"],
@@ -952,14 +1091,16 @@ div.droppable.hover {
 
         // Themenordner zu Terminen:
         if($SessSemName['class'] == 'sem') {
-            $query = "SELECT DISTINCT folder_id " .
-                "FROM themen as th " .
-                "LEFT JOIN themen_termine as tt ON(th.issue_id = tt.issue_id) " .
-                "LEFT JOIN termine as t ON (t.termin_id = tt.termin_id) " .
-                "INNER JOIN folder ON (th.issue_id=folder.range_id) " .
-              "WHERE th.seminar_id='$range_id' " .
-              "ORDER BY t.date, th.priority";
-            $result = $db->query($query)->fetchAll();
+            $query = "SELECT DISTINCT folder_id
+                      FROM themen AS th
+                      LEFT JOIN themen_termine AS tt ON (th.issue_id = tt.issue_id) 
+                      LEFT JOIN termine AS t ON (t.termin_id = tt.termin_id)
+                      INNER JOIN folder ON (th.issue_id = folder.range_id)
+                      WHERE th.seminar_id = ?
+                      ORDER BY t.date, th.priority";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($range_id));
+            $result = $statement->fetchAll();
             foreach ($result as $row) {
                 if ($folder_tree->isExecutable($row['folder_id'], $user->id) || $rechte) {
                   display_folder($row['folder_id'],
@@ -975,13 +1116,37 @@ div.droppable.hover {
                 }
             }
 
-            //Gruppenordner:
-            $query = "SELECT sg.statusgruppe_id FROM statusgruppen sg "
-                    . (!$rechte ? "INNER JOIN statusgruppe_user sgu ON sgu.statusgruppe_id=sg.statusgruppe_id AND sgu.user_id='$user->id'" : "")
-                    . " INNER JOIN folder ON sg.statusgruppe_id=folder.range_id WHERE sg.range_id='$range_id' ORDER BY sg.position";
-            $result2 = $db->query($query)->fetchAll();
+        //Gruppenordner:
+            // Prepare folder statement
+            $query = "SELECT folder_id FROM folder WHERE range_id = ?";
+            $folder_statement = DBManager::get()->prepare($query);
+
+            $parameters = array($range_id);
+            if ($rechte) {
+                $query = "SELECT sg.statusgruppe_id
+                          FROM statusgruppen AS sg
+                          INNER JOIN folder ON sg.statusgruppe_id = folder.range_id
+                          WHERE sg.range_id = ?
+                          ORDER BY sg.position";
+            } else {
+                $query = "SELECT sg.statusgruppe_id
+                          FROM statusgruppen AS sg
+                          INNER JOIN statusgruppe_user AS sgu
+                             ON sgu.statusgruppe_id = sg.statusgruppe_id AND sgu.user_id = ?
+                          INNER JOIN folder ON sg.statusgruppe_id = folder.range_id
+                          WHERE sg.range_id = ?
+                          ORDER BY sg.position";
+                array_unshift($parameters, $user->id);
+            }
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute($parameters);
+            $result2 = $statement->fetchAll(PDO::FETCH_ASSOC);
+
             foreach ($result2 as $row2) {
-                $folders = $db->query("SELECT folder_id FROM folder WHERE range_id = '".$row2["statusgruppe_id"]."'")->fetchAll();
+                $folder_statement->execute(array($row['statusgruppe_id']));
+                $folders = $folder_statement->fetchAll(PDO::FETCH_ASSOC);
+                $folder_statement->closeCursor();
+
                 foreach ($folders as $folder) {
                     if ($folder_tree->isExecutable($folder["folder_id"], $user->id) || $rechte) {
                         display_folder($folder["folder_id"],
@@ -1007,32 +1172,40 @@ div.droppable.hover {
         }
 
         //Ordnen nach: Typ, Name, Größe, Downloads, Autor, Alter
-        $query = "SELECT a.*, ". $_fullname_sql['full'] ." AS fullname,username, IF(IFNULL(a.name,'')='', a.filename,a.name) AS t_name FROM dokumente a LEFT JOIN auth_user_md5 USING (user_id) LEFT JOIN user_info USING (user_id) WHERE seminar_id = '$range_id'";
-        if ($folder_system_data['orderby'] == "type")
+        $query = "SELECT a.*, {$_fullname_sql['full']} AS fullname, username,
+                         IF(IFNULL(a.name,'')='', a.filename,a.name) AS t_name
+                  FROM dokumente AS a
+                  LEFT JOIN auth_user_md5 USING (user_id)
+                  LEFT JOIN user_info USING (user_id)
+                  WHERE seminar_id = ?";
+        if ($folder_system_data['orderby'] == 'type') {
             $query .= " ORDER BY SUBSTRING_INDEX(a.filename, '.', -1) ASC";
-        if ($folder_system_data['orderby'] == "type_rev")
+        } else if ($folder_system_data['orderby'] == 'type_rev') {
             $query .= " ORDER BY SUBSTRING_INDEX(a.filename, '.', -1) DESC";
-        if ($folder_system_data['orderby'] == "filename")
+        } else if ($folder_system_data['orderby'] == 'filename') {
             $query .= " ORDER BY t_name ASC, a.chdate DESC";
-        if ($folder_system_data['orderby'] == "filename_rev")
+        } else if ($folder_system_data['orderby'] == 'filename_rev') {
             $query .= " ORDER BY t_name DESC, a.chdate ASC";
-        if ($folder_system_data['orderby'] == "size")
+        } else if ($folder_system_data['orderby'] == 'size') {
             $query .= " ORDER BY a.filesize ASC";
-        if ($folder_system_data['orderby'] == "size_rev")
+        } else if ($folder_system_data['orderby'] == 'size_rev') {
             $query .= " ORDER BY a.filesize DESC";
-        if ($folder_system_data['orderby'] == "downloads")
+        } else if ($folder_system_data['orderby'] == 'downloads') {
             $query .= " ORDER BY a.downloads ASC, t_name DESC, a.chdate ASC";
-        if ($folder_system_data['orderby'] == "downloads_rev")
+        } else if ($folder_system_data['orderby'] == 'downloads_rev') {
             $query .= " ORDER BY a.downloads DESC, t_name ASC, a.chdate DESC";
-        if ($folder_system_data['orderby'] == "autor")
+        } else if ($folder_system_data['orderby'] == 'autor') {
             $query .= " ORDER BY ". $_fullname_sql['no_title_rev'] ." ASC";
-        if ($folder_system_data['orderby'] == "autor_rev")
+        } else if ($folder_system_data['orderby'] == 'autor_rev') {
             $query .= " ORDER BY ". $_fullname_sql['no_title_rev'] ." DESC";
-        if ($folder_system_data['orderby'] == "date")
+        } else if ($folder_system_data['orderby'] == 'date') {
             $query .= " ORDER BY a.chdate ASC";
-        if ($folder_system_data['orderby'] == "date_rev")
+        } else if ($folder_system_data['orderby'] == 'date_rev') {
             $query .= " ORDER BY a.chdate DESC";
-        $result2 = $db->query($query)->fetchAll();
+        }
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($range_id));
+        $result2 = $statement->fetchAll(PDO::FETCH_ASSOC);
         if (count($result2)) {
 
             print '<table border=0 cellpadding=0 cellspacing=0 width="100%">';

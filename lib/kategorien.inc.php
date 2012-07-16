@@ -1,7 +1,7 @@
 <?
 # Lifter002: TODO
+# Lifter003: TEST
 # Lifter007: TODO
-# Lifter003: TODO
 # Lifter010: TODO
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
@@ -25,19 +25,27 @@
 
 use Studip\Button, Studip\LinkButton;
 
+require_once 'functions.php';
 require_once 'visual.inc.php';
 require_once 'user_visible.inc.php';
 
-function print_freie($username) {
+function print_freie($username)
+{
+    global $view, $auth, $user;
 
-    global $view,$auth, $user;
-    $db=new DB_Seminar;
-    SkipLinks::addIndex(_("Eigene Kategorien bearbeiten"), 'edit_categories');
-    $cssSw=new cssClassSwitcher;
+    SkipLinks::addIndex(_('Eigene Kategorien bearbeiten'), 'edit_categories');
 
+    $cssSw = new cssClassSwitcher;
     $cssSw->switchClass();
 
-    $db->query("SELECT * FROM auth_user_md5 LEFT JOIN kategorien ON(range_id=user_id) WHERE username='$username' AND NOT ISNULL(range_id) ORDER BY priority ");
+    $query = "SELECT kategorie_id, name, content
+              FROM auth_user_md5
+              LEFT JOIN kategorien ON (range_id = user_id)
+              WHERE username = ? AND NOT ISNULL(range_id)
+              ORDER BY priority";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($username));
+    $temp = $statement->fetchAll(PDO::FETCH_ASSOC);
 
     echo '<tr><td align="left" valign="top" class="blank" id="edit_categories"><p class="info"><br>'. "\n";
     echo _("Hier können Sie beliebige eigene Kategorien anlegen. Diese Kategorien erscheinen je nach eingestellter Sichtbarkeit auf Ihrer Profilseite. Mit den Pfeilsymbolen k&ouml;nnen Sie die Reihenfolge, in der die Kategorien angezeigt werden, ver&auml;ndern.");
@@ -47,27 +55,28 @@ function print_freie($username) {
     echo '<form action="'. URLHelper::getLink('?freie=update_freie&username='.$username.'&view='.$view) .'" method="POST" name="edit_freie">';
     echo CSRFProtection::tokenTag();
     echo '<table width="100%" class="blank" border="0" cellpadding="0" cellspacing="0">';
-    if (!$db->num_rows())
+    if (count($temp) === 0) {
         echo '<tr><td class="'.$cssSw->getClass().'"><font size="-1"><b><p class="info">' . _("Es existieren zur Zeit keine eigenen Kategorien.") . "</p></b></font></td></tr>\n";
+    }
     echo '<tr><td class="'.$cssSw->getClass().'"> <p class="info">' . _("Kategorie") . '&nbsp;' . 
                 LinkButton::create(_('Neuanlegen'), URLHelper::getURL('', array('freie' => 'create_freie', 'view' => $view, 'username' => $username)), 
                 array('title' => _('Kategorie anlegen'))) . "</p></td></tr>\n";
+
     $count = 0;
     $hidden_count = 0;
-    while ($db->next_record() ){
-          $visibility = get_homepage_element_visibility($user->id, 'kat_'.$db->f('kategorie_id'));
-        IF ((($auth->auth["perm"] == "root") OR ($auth->auth["perm"] == "admin")) AND $visibility == VISIBILITY_ME AND $username != $auth->auth["uname"]) {
+    foreach ($temp as $row) {
+        $visibility = get_homepage_element_visibility($user->id, 'kat_' . $row['kategorie_id']);
+        if ((($auth->auth['perm'] == 'root') OR ($auth->auth['perm'] == 'admin')) AND $visibility == VISIBILITY_ME AND $username != $auth->auth['uname']) {
             $hidden_count++;
-            }
-        ELSE {
+        } else {
             $cssSw->switchClass();
-            $id = $db->f("kategorie_id");
+            $id = $row['kategorie_id'];
             echo '<tr><td class="'.$cssSw->getClass().'">';
             if ($count) {
                 echo "<br>\n";
             }
-            echo '<input type="hidden" name="freie_id[]" value="'.$db->f("kategorie_id")."\">\n";
-            echo '<p class="info"><input type="text" aria-label="' . _("Name der Kategorie") . '" name="freie_name[]" style="width: 50%" value="' . htmlReady($db->f("name")).'" size="40">';
+            echo '<input type="hidden" name="freie_id[]" value="' . $row['kategorie_id'] . "\">\n";
+            echo '<p class="info"><input type="text" aria-label="' . _('Name der Kategorie') . '" name="freie_name[]" style="width: 50%" value="' . htmlReady($row['name']).'" size="40">';
             switch ($visibility) {
                 case VISIBILITY_ME:
                     $vis_text = _("sichtbar für mich selbst");
@@ -87,12 +96,12 @@ function print_freie($username) {
             }
             echo "&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;".$vis_text."&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;";
             if ($count){
-                echo "\n".'<a href="'.URLHelper::getLink('?freie=order_freie&direction=up&username='.$username.'&view='.$view.'&cat_id=' . $db->f('kategorie_id'))
+                echo "\n".'<a href="'.URLHelper::getLink('?freie=order_freie&direction=up&username='.$username.'&view='.$view.'&cat_id=' . $row['kategorie_id'])
                 . '">' . Assets::img('icons/16/yellow/arr_2up.png', array('class' => 'text-top', 'title' =>_('Kategorie nach oben verschieben')))
                 . '</a>';
             }
-            if (($count+$hidden_count) != ($db->num_rows()-1) ){
-                echo "\n".'<a href="'.URLHelper::getLink('?freie=order_freie&direction=down&username='.$username.'&view='.$view.'&cat_id=' . $db->f("kategorie_id"))
+            if (($count+$hidden_count) != count($temp) - 1) {
+                echo "\n".'<a href="'.URLHelper::getLink('?freie=order_freie&direction=down&username='.$username.'&view='.$view.'&cat_id=' . $row['kategorie_id'])
                 . '">' . Assets::img('icons/16/yellow/arr_2down.png', array('class' => 'text-top', 'title' =>_('Kategorie nach unten verschieben')))
                 . '</a>';
             }
@@ -100,7 +109,7 @@ function print_freie($username) {
             // Breite für textarea
             $cols = ($auth->auth["jscript"])? ceil($auth->auth["xres"]/13):50;
             echo '<tr><td class="'.$cssSw->getClass(). '"><p class="info">';
-            echo '<textarea aria-label="' . _("Inhalt der Kategorie:") . '" name="freie_content[]" style="width: 90%" cols="' . $cols . '" rows="7" wrap="virtual">' . htmlReady($db->f('content')) . '</textarea>';
+            echo '<textarea aria-label="' . _("Inhalt der Kategorie:") . '" name="freie_content[]" style="width: 90%" cols="' . $cols . '" rows="7" wrap="virtual">' . htmlReady($row['content']) . '</textarea>';
             echo '<br><br>' . Button::create(_('Übernehmen'));
             echo LinkButton::create(_('Löschen'), URLHelper::getURL('', array('freie' => 'verify_delete_freie', 'freie_id' => $id, 'view' => $view, 'username' => $username))) ;
 
@@ -110,8 +119,8 @@ function print_freie($username) {
 
             echo '<br>', "\n", '&nbsp; </p></td></tr>', "\n";
             $count++;
-            }
         }
+    }
     if ($hidden_count) {
         echo '<tr><td class="'.$cssSw->getClass().'"><font size="-1"><b><p class="info">';
         if ($hidden_count > 1) {
@@ -125,100 +134,132 @@ function print_freie($username) {
     echo '</td></tr></table></form></td></tr>'."\n";
 }
 
-function create_freie() {
+function create_freie()
+{
     global $username;
 
-    $db=new DB_Seminar;
-    $now = time();
-    $kategorie_id=md5(uniqid("blablubburegds4"));
-    $db->query ("SELECT user_id FROM auth_user_md5 WHERE username = '$username'");
-    $db->next_record();
-    $user_id = $db->f("user_id");
-    $db->query("UPDATE kategorien SET priority=priority+1 WHERE range_id='$user_id'");
-    $db->query("INSERT INTO kategorien (kategorie_id,name, content, mkdate, chdate, range_id,priority) VALUES ('$kategorie_id','" . _("neue Kategorie") . "','" . _("Inhalt der Kategorie") . "','$now','$now','$user_id',0)");
-    if ($db->affected_rows() == 0) {
-        parse_msg ("info§" . _("Anlegen fehlgeschlagen"));
+    $kategorie_id = md5(uniqid('blablubburegds4', true));
+
+    $user_id = get_userid($username);
+
+    $query = "UPDATE kategorien SET priority = priority + 1 WHERE range_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($user_id));
+
+    $query = "INSERT INTO kategorien (kategorie_id, name, content, mkdate, chdate, range_id, priority)
+              VALUES (?, ?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), ?, 0)";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array(
+        $kategorie_id,
+        _('neue Kategorie'),
+        _('Inhalt der Kategorie'),
+        $user_id
+    ));
+    if ($statement->rowCount() == 0) {
+        parse_msg ('info§' . _('Anlegen fehlgeschlagen'));
         die;
     }
 }
 
-function delete_freie($kategorie_id) {
-
+function delete_freie($kategorie_id)
+{
     global $username;
 
-    $db=new DB_Seminar;
-
-    $db->query("DELETE FROM kategorien WHERE kategorie_id='$kategorie_id'");
-    if ($db->affected_rows() == 1) {
-        parse_msg ("msg§" . _("Kategorie gel&ouml;scht!"));
+    $query = "DELETE FROM kategorien WHERE kategorie_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($kategorie_id));
+    if ($statement->rowCount() == 1) {
+        parse_msg ('msg§' . _('Kategorie gel&ouml;scht!'));
     }
 }
 
-function verify_delete_freie($kategorie_id) {
-
+function verify_delete_freie($kategorie_id)
+{
     global $username;
 
+    $query = "SELECT 1
+              FROM kategorien
+              LEFT JOIN auth_user_md5 ON (range_id = user_id)
+              WHERE username = ? AND kategorie_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($username, $kategorie_id));
 
-    $db=new DB_Seminar;
-
-    $db->query ("SELECT * FROM kategorien LEFT JOIN auth_user_md5 ON(range_id=user_id) WHERE username = '$username' and kategorie_id='$kategorie_id'");
-    if (!$db->next_record()) { //hier wollte jemand schummeln
-        parse_msg ("info§" . _("Sie haben leider nicht die notwendige Berechtigung für diese Aktion."));
+    if (!$statement->fetchColumn()) { //hier wollte jemand schummeln
+        parse_msg ('info§' . _('Sie haben leider nicht die notwendige Berechtigung für diese Aktion.'));
         die;
-    } else {
-        $db->query("SELECT name FROM kategorien WHERE kategorie_id='$kategorie_id'");
-        while($db->next_record()) {
-            $name = $db->f("name");
-        }
-        $msg = _('Möchten Sie wirklich die Kategorie **'.$name.'** löschen?');
-        echo createQuestion($msg,array('freie' => 'delete_freie', "freie_id" => $kategorie_id,'username'=> $username, 'view' => 'Sonstiges'),array('username'=> $username, 'view' => 'Sonstiges'));
     }
 
+    $query = "SELECT name FROM kategorien WHERE kategorie_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($kategorie_id));
+    $name = $statement->fetchColumn();
 
+    $msg = sprintf(_('Möchten Sie wirklich die Kategorie **%s** löschen?'), $name);
+    echo createQuestion($msg, array(
+        'freie'    => 'delete_freie',
+        'freie_id' => $kategorie_id,
+        'username' => $username,
+        'view'     => 'Sonstiges'
+    ), array(
+        'username' => $username,
+        'view'     => 'Sonstiges'
+    ));
 }
 
-function update_freie() {
+function update_freie()
+{
     global $user, $freie_id;
-    $db = new DB_Seminar;
-    $max = sizeof($freie_id);
-    for ($i=0; $i < $max; $i++) {
-        $now = time();
-        $freie_name = Request::quotedArray('freie_name');
-        $name = $freie_name[$i];
+
+    $query = "UPDATE kategorien
+              SET name = ?, content = ?, chdate = UNIX_TIMESTAMP()
+              WHERE kategorie_id = ?";
+    $statement = DBManager::get()->prepare($query);
+
+    $freie_name    = Request::getArray('freie_name');
+    $freie_content = Request::getArray('freie_content');
+
+    for ($i = 0, $max = sizeof($freie_id); $i < $max; $i += 1) {
+        $name    = $freie_name[$i];
+        $content = $freie_content[$i];
+        $id      = $freie_id[$i];
+
         if ($name === '') {
-            parse_msg ('error§' . _("Kategorien ohne Namen k&ouml;nnen nicht gespeichert werden!"));
+            parse_msg('error§' . _('Kategorien ohne Namen k&ouml;nnen nicht gespeichert werden!'));
             continue;
         }
-        $freie_content = Request::quotedArray('freie_content');
-        $content = $freie_content[$i];
-        $id = $freie_id[$i];
-        $db->query("UPDATE kategorien SET name='$name', content='$content', chdate='$now' WHERE kategorie_id='$id'");
+
+        $statement->execute(array($name, $content, $id));
     }
-    parse_msg ("msg§" . _("Kategorien ge&auml;ndert!"));
+    parse_msg('msg§' . _('Kategorien ge&auml;ndert!'));
 }
 
-function order_freie($cat_id,$direction,$username){
-    $items_to_order = array();
+function order_freie($cat_id, $direction, $username)
+{
     $user_id = get_userid($username);
-    $db = new DB_Seminar("SELECT kategorie_id FROM kategorien WHERE range_id='$user_id' ORDER BY priority");
-    while($db->next_record()) {
-        $items_to_order[] = $db->f("kategorie_id");
-    }
-    for ($i = 0; $i < count($items_to_order); ++$i) {
-        if ($cat_id == $items_to_order[$i])
-            break;
-    }
-    if ($direction == "up" && isset($items_to_order[$i-1])) {
-        $items_to_order[$i] = $items_to_order[$i-1];
-        $items_to_order[$i-1] = $cat_id;
-    } elseif (isset($items_to_order[$i+1])) {
-        $items_to_order[$i] = $items_to_order[$i+1];
-        $items_to_order[$i+1] = $cat_id;
-    }
-    for ($i = 0; $i < count($items_to_order); ++$i) {
-        $db->query("UPDATE kategorien SET priority=$i WHERE kategorie_id='$items_to_order[$i]'");
-    }
-    parse_msg("msg§" . _("Kategorien wurden neu geordnet"));
-}
+    
+    $query = "SELECT kategorie_id FROM kategorien WHERE range_id = ? ORDER BY priority";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($user_id));
+    $items_to_order = $statement->fetchAll(PDO::FETCH_COLUMN);
 
-?>
+    for ($i = 0; $i < count($items_to_order); ++$i) {
+        if ($cat_id == $items_to_order[$i]) {
+            break;
+        }
+    }
+    if ($direction == 'up' && isset($items_to_order[$i - 1])) {
+        $items_to_order[$i] = $items_to_order[$i - 1];
+        $items_to_order[$i - 1] = $cat_id;
+    } elseif (isset($items_to_order[$i + 1])) {
+        $items_to_order[$i] = $items_to_order[$i + 1];
+        $items_to_order[$i + 1] = $cat_id;
+    }
+    
+    $query = "UPDATE kategorien SET priority = ? WHERE kategorie_id = ?";
+    $statement = DBManager::get()->prepare($query);
+
+    for ($i = 0; $i < count($items_to_order); $i += 1) {
+        $statement->execute(array($i, $items_to_order[$i]));
+    }
+    parse_msg('msg§' . _('Kategorien wurden neu geordnet'));
+}

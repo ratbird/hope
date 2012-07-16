@@ -156,25 +156,19 @@ class Course_StudygroupController extends AuthenticatedController {
 
             // do not allow to search with the empty string
             if ($search_for_founder) {
-
                 // search for the user
-                $pdo = DBManager::get();
-                $search_for_founder = $pdo->quote('%' . $search_for_founder . '%');
-                $stmt = $pdo->query("SELECT user_id, {$GLOBALS['_fullname_sql']['full_rev']} as fullname, username, perms"
-                            . " FROM auth_user_md5"
-                            . " LEFT JOIN user_info USING (user_id)"
-                            . " WHERE perms NOT IN('root', 'admin')"
-                            . " AND (username LIKE $search_for_founder OR Vorname LIKE $search_for_founder"
-                            . " OR Nachname LIKE $search_for_founder)"
-                            . " LIMIT 500");
-
-                while ($data = $stmt->fetch()) {
-                    $results_founders[$data['user_id']] = array(
-                        'fullname' => $data['fullname'],
-                        'username' => $data['username'],
-                        'perms'    => $data['perms']
-                    );
-                }
+                $query = "SELECT user_id, {$GLOBALS['_fullname_sql']['full_rev']} AS fullname, username, perms
+                          FROM auth_user_md5
+                          LEFT JOIN user_info USING (user_id)
+                          WHERE perms NOT IN ('root', 'admin')
+                            AND (username LIKE CONCAT('%', :needle, '%')
+                              OR Vorname LIKE CONCAT('%', :needle, '%')
+                              OR Nachname LIKE CONCAT('%', :needle, '%')
+                          LIMIT 500";
+                $statement = DBManager::get()->prepare($query);
+                $statement->bindValue(':needle', $search_for_founder);
+                $statement->execute();
+                $results_founders = $statement->fetchGrouped(PDO::FETCH_ASSOC);
             }
 
             if(is_array($results_founders)) {
@@ -228,10 +222,12 @@ class Course_StudygroupController extends AuthenticatedController {
             if (!Request::get('groupname')) {
                 $errors[] = _("Bitte Gruppennamen angeben");
             } else {
-                $pdo = DBManager::get();
-                $stmt = $pdo->query($query = "SELECT * FROM seminare WHERE name = "
-                                           . $pdo->quote(Request::get('groupname')));
-                if ($stmt->fetch()) {
+                $query = "SELECT 1 FROM seminare WHERE name = ?";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array(
+                    Request::get('groupname')
+                ));
+                if ($statement->fetchColumn()) {
                     $errors[] = _("Eine Veranstaltung/Studiengruppe mit diesem Namen existiert bereits. Bitte wählen Sie einen anderen Namen");
                 }
             }
@@ -294,11 +290,10 @@ class Course_StudygroupController extends AuthenticatedController {
                 } else {
                     $user_id = $GLOBALS['auth']->auth['uid'];
                     // insert dozent
-                    DBManager::get()->query("INSERT INTO seminar_user SET "
-                                        . "seminar_id = '$sem->id', "
-                                        . "user_id    = '$user_id', "
-                                        . "status     = 'dozent', "
-                                        . "gruppe     = 8");
+                    $query = "INSERT INTO seminar_user (seminar_id, user_id, status, gruppe)
+                              VALUES (?, ?, 'dozent', 8)";
+                    $statement = DBManager::get()->prepare($query);
+                    $statement->execute(array($sem->id, $user_id));
                 }
 
                 // de-/activate modules
@@ -512,11 +507,13 @@ class Course_StudygroupController extends AuthenticatedController {
                     $errors[] = _("Bitte Gruppennamen angeben");
                 //... if so, test if this is not taken by another group
                 } else {
-                    $pdo = DBManager::get();
-                    $stmt = $pdo->query($query = "SELECT * FROM seminare WHERE name = "
-                                               . $pdo->quote(Request::get('groupname'))
-                                               . " AND Seminar_id != " . $pdo->quote( $id ));
-                    if ($stmt->fetch()) {
+                    $query = "SELECT 1 FROM seminare WHERE name = ? AND Seminar_id != ?";
+                    $statement = DBManager::get()->prepare($query);
+                    $statement->execute(array(
+                        Request::get('groupname'),
+                        $id
+                    ));
+                    if ($statement->fetchColumn()) {
                         $errors[] = _("Eine Veranstaltung/Studiengruppe mit diesem Namen existiert bereits. Bitte wählen Sie einen anderen Namen");
                     }
                 }
@@ -814,12 +811,12 @@ class Course_StudygroupController extends AuthenticatedController {
         PageLayout::setTitle(_('Verwaltung studentischer Arbeitsgruppen'));
         Navigation::activateItem('/admin/config/studygroup');
 
-        $db = DBManager::get()->query("SELECT COUNT(*) as c FROM seminare"
-                . " WHERE status IN ('"
-                . implode("', '", studygroup_sem_types()) . "')");
+        $query = "SELECT COUNT(*) FROM seminare WHERE status IN (?)";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(studygroup_sem_types()));
 
         // set variables for view
-        $this->can_deactivate = ($db->fetchColumn() != 0) ? false : true;
+        $this->can_deactivate = $statement->fetchColumn() == 0;
         $this->current_page   = _("Verwaltung erlaubter Inhaltselemente und Plugins für Studiengruppen");
         $this->configured     = count(studygroup_sem_types()) > 0;
         $this->institutes     = $institutes;
@@ -881,9 +878,11 @@ class Course_StudygroupController extends AuthenticatedController {
         $perm->check("root");
         PageLayout::setHelpKeyword('Admin.Studiengruppen');
 
-        $db = DBManager::get()->query("SELECT COUNT(*) as c FROM seminare"
-                . " WHERE status IN ('" . implode("', '", studygroup_sem_types()) . "')");
-        if (($count = $db->fetchColumn()) != 0) {
+        $query = "SELECT COUNT(*) FROM seminare WHERE status IN (?)";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(studygroup_sem_types()));
+
+        if (($count = $statement->fetchColumn()) != 0) {
             $this->flash['messages'] = array('error' => array(
                 'title' => sprintf(_("Sie können die Studiengruppen nicht deaktivieren, da noch %s Studiengruppen vorhanden sind!"), $count)
             ));

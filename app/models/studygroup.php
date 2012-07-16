@@ -84,6 +84,13 @@ class StudygroupModel
     {
         $institues = array();
 
+        // Prepare institutes statement
+        $query = "SELECT Institut_id, Name
+                  FROM Institute
+                  WHERE fakultaets_id = ? AND fakultaets_id != Institut_id
+                  ORDER BY Name";
+        $institute_statement = DBManager::get()->prepare($query);
+
         // get faculties
         $stmt = DBManager::get()->query("SELECT Name, Institut_id, 1 AS is_fak,'admin' AS inst_perms "
               . "FROM Institute WHERE Institut_id = fakultaets_id ORDER BY Name");
@@ -93,13 +100,11 @@ class StudygroupModel
                     'childs' => array()
                     );
             // institutes for faculties
-            $stmt2 = DBManager::get()->query("SELECT a.Institut_id, a.Name FROM Institute a "
-                   . "WHERE fakultaets_id='". $data['Institut_id']
-                   . "' AND a.Institut_id !='". $data['Institut_id'] . "' ORDER BY Name");
-
-            while ($data2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
+            $institute_statement->execute(array($data['Institut_id']));
+            while ($data2 = $institute_statement->fetch(PDO::FETCH_ASSOC)) {
                 $institutes[$data['Institut_id']]['childs'][$data2['Institut_id']] = $data2['Name'];
             }
+            $institute_statement->closeCursor();
         }
 
         return $institutes;
@@ -115,16 +120,26 @@ class StudygroupModel
      */
     function accept_user($username, $sem_id)
     {
-        $stmt = DBManager::get()->query("SELECT asu.user_id FROM admission_seminar_user asu "
-              . "LEFT JOIN auth_user_md5 au ON (au.user_id=asu.user_id) "
-              . "WHERE au.username='$username' AND asu.seminar_id='". $sem_id ."'");
-        if ($data = $stmt->fetch()) {
+        $query = "SELECT user_id
+                  FROM admission_seminar_user AS asu
+                  LEFT JOIN auth_user_md5 AS au USING (user_id)
+                  WHERE au.username = ? AND asu.seminar_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($username, $sem_id));
+        if ($data = $statement->fetch()) {
             $accept_user_id = $data['user_id'];
 
-            DBManager::get()->query("INSERT INTO seminar_user SET user_id='".$accept_user_id."', seminar_id='".$sem_id."',
-                    status='autor', position=0, gruppe=8, admission_studiengang_id=0, notification=0, mkdate=NOW(), comment='', visible='yes'");
+            $query = "INSERT INTO seminar_user
+                        (user_id, seminar_id, status, position, gruppe,
+                         admission_studiengang_id, notification, mkdate, comment, visible)
+                      VALUES (?, ?, 'autor', 0, 8, 0, 0, UNIX_TIMESTAMP(), '', 'yes')";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($accept_user_id, $sem_id));
 
-            DBManager::get()->query("DELETE FROM admission_seminar_user WHERE user_id='".$accept_user_id."' AND seminar_id='".$sem_id."'");
+            $query = "DELETE FROM admission_seminar_user
+                      WHERE user_id = ? AND seminar_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($accept_user_id, $sem_id));
         }
     }
 
@@ -138,7 +153,13 @@ class StudygroupModel
      */
     function deny_user($username, $sem_id)
     {
-        DBManager::get()->query("DELETE FROM admission_seminar_user WHERE user_id='". get_userid($username) ."' AND seminar_id='".$sem_id."'");
+        $query = "DELETE FROM admission_seminar_user
+                  WHERE user_id = ? AND seminar_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            get_userid($username),
+            $sem_id
+        ));
     }
 
     /**
@@ -152,7 +173,15 @@ class StudygroupModel
      */
     function promote_user($username, $sem_id, $perm)
     {
-        DBManager::get()->query( "UPDATE seminar_user SET status = '$perm' WHERE Seminar_id = '$sem_id' AND user_id = '". get_userid($username) ."'");
+        $query = "UPDATE seminar_user
+                  SET status = ?
+                  WHERE Seminar_id = ? AND user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $perm,
+            $sem_id,
+            get_userid($username),
+        ));
     }
 
     /**
@@ -165,7 +194,13 @@ class StudygroupModel
      */
     function remove_user($username, $sem_id)
     {
-        DBManager::get()->query("DELETE FROM seminar_user WHERE Seminar_id = '$sem_id' AND user_id = '" . get_userid($username) . "'");
+        $query = "DELETE FROM seminar_user
+                  WHERE Seminar_id = ? AND user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $sem_id,
+            get_userid($username)
+        ));
     }
 
     /**
@@ -179,14 +214,19 @@ class StudygroupModel
     {
         $status = studygroup_sem_types();
 
-        $sql = "SELECT COUNT(*) as c FROM seminare WHERE status IN ('" . implode("','", $status) . "')";
+        $query = "SELECT COUNT(*)
+                  FROM seminare
+                  WHERE status IN (?)";
+        $parameters = array($status);
 
         if (isset($search)) {
-            $search = DBManager::get()->quote('%' . $search . '%');
-            $sql .= " AND seminare.Name LIKE {$search}";
+            $query .= " AND Name LIKE CONCAT('%', ?, '%')";
+            $parameters[] = $search;
         }
 
-        return DBManager::get()->query($sql)->fetchColumn();
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute($parameters);
+        return $statement->fetchColumn();
     }
 
     /**
@@ -206,62 +246,77 @@ class StudygroupModel
         }
 
         $status = studygroup_sem_types();
-        $sql = "SELECT * FROM seminare WHERE status IN('" . implode("','", $status) . "')";
+
+        $sql = "SELECT *
+                FROM seminare AS s
+                WHERE status IN (?)";
+        $parameters[] = array($status);
+
         if (isset($search)) {
-            $search = DBManager::get()->quote('%' . $search . '%');
-            $sql .= " AND seminare.Name LIKE {$search}";
+            $sql .= " AND Name LIKE CONCAT('%', ?, '%')";
+            $parameters[] = $search;
         }
         $sort_order = (substr($sort, strlen($sort) - 3, 3) == 'asc') ? 'asc' : 'desc';
 
         // add here the sortings
         if ($sort == 'name_asc') {
             $sql .= " ORDER BY Name ASC";
-        }
-        elseif ($sort == 'name_desc') {
+        } else if ($sort == 'name_desc') {
             $sql .= " ORDER BY Name DESC";
-        }
-        elseif ($sort == 'founded_asc') {
+        } else if ($sort == 'founded_asc') {
             $sql .= " ORDER BY mkdate ASC";
-        }
-        elseif ($sort == 'founded_desc') {
+        } else if ($sort == 'founded_desc') {
             $sql .= " ORDER BY mkdate DESC";
-        }
-        elseif ($sort == 'member_asc' || $sort == 'member_desc') {
-            $sql = "SELECT s.*, (SELECT COUNT(*) FROM seminar_user as su "
-                 . "WHERE s.Seminar_id = su.Seminar_id) as countsems "
-                 . "FROM seminare as s "
-                 . "WHERE s.status IN ('". implode("','", $status)."') ";
-            if(!empty($search)) $sql.= "AND s.Name LIKE {$search} ";
-            $sql .= "ORDER BY countsems $sort_order";
-        }
-        elseif ($sort == 'founder_asc' || $sort == 'founder_desc') {
-            $sql = "SELECT s.* FROM seminare as s "
-                 . "LEFT JOIN seminar_user as su ON s.Seminar_id = su.Seminar_id AND su.status = 'dozent' "
-                 . "LEFT JOIN auth_user_md5 as aum ON su.user_id = aum.user_id "
-                 . "WHERE s.status IN ('". implode("','", $status)."') ";
-            if(!empty($search)) $sql.= "AND s.Name LIKE {$search} ";
-            $sql     .= "ORDER BY aum.Nachname ". $sort_order;
-        }
-        elseif ($sort == 'ismember_asc' || $sort == 'ismember_desc') {
-            $sql = "SELECT s.*, "
-                 . "( SELECT su.user_id FROM seminar_user AS su WHERE su.user_id = '".$GLOBALS['user']->id."' AND su.Seminar_id = s.Seminar_id ) "
-                 . "AS ismember FROM seminare AS s  "
-                 . "WHERE s.status IN ('". implode("','", $status)."') ";
-           if(!empty($search)) $sql.= "AND s.Name LIKE {$search} ";
-           $sql  .= "ORDER BY `ismember`". $sort_order;
+        } else if ($sort == 'member_asc' || $sort == 'member_desc') {
+            $sql = "SELECT s.*, (SELECT COUNT(*) FROM seminar_user AS su WHERE s.Seminar_id = su.Seminar_id) AS countsems
+                    FROM seminare AS s
+                    WHERE s.status IN (?)";
+            $parameters = array($status);
 
-        }
-        elseif ($sort == 'access_asc') {
+            if(!empty($search)) {
+                $sql .= " AND s.Name LIKE CONCAT('%', ?, '%')";
+                $parameters[] = $search;
+            }
+
+            $sql .= " ORDER BY countsems " . $sort_order;
+        } else if ($sort == 'founder_asc' || $sort == 'founder_desc') {
+            $sql = "SELECT s.*
+                    FROM seminare AS s
+                    LEFT JOIN seminar_user AS su ON (s.Seminar_id = su.Seminar_id AND su.status = 'dozent')
+                    LEFT JOIN auth_user_md5 AS aum ON (su.user_id = aum.user_id)
+                    WHERE s.status IN (?)";
+            $parameters = array($status);
+
+            if(!empty($search)) {
+                $sql .= " AND s.Name LIKE CONCATA('%', ?, '%')";
+                $parameters[] = $search;
+            }
+            $sql     .= " ORDER BY aum.Nachname ". $sort_order;
+        } else if ($sort == 'ismember_asc' || $sort == 'ismember_desc') {
+            $sql = "SELECT s.*,
+                          (SELECT su.user_id FROM seminar_user AS su WHERE su.user_id = ? AND su.Seminar_id = s.Seminar_id ) AS ismember
+                    FROM seminare AS s
+                    WHERE s.status IN (?)";
+            $parameters = array(
+                $GLOBALS['user']->id,
+                $status,
+            );
+            if(!empty($search)) {
+                $sql .= " AND s.Name LIKE CONCAT('%', ?, '%')";
+                $parameters[] = $search;
+            }
+            $sql  .= " ORDER BY `ismember`". $sort_order;
+        } else if ($sort == 'access_asc') {
             $sql .= " ORDER BY admission_prelim ASC";
-        }
-        elseif ($sort == 'access_desc') {
+        } else if ($sort == 'access_desc') {
             $sql .= " ORDER BY admission_prelim DESC";
         }
 
-        $sql .= ', name ASC LIMIT '. $lower_bound .','. $elements_per_page;
+        $sql .= ', name ASC LIMIT '. (int)$lower_bound .','. (int)$elements_per_page;
 
-        $stmt = DBManager::get()->query($sql);
-        $groups = $stmt->fetchAll();
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute($parameters);
+        $groups = $statement->fetchAll();
 
         return $groups;
     }
@@ -275,12 +330,13 @@ class StudygroupModel
      */
     function countMembers($semid)
     {
-        $sql = "SELECT COUNT(user_id) FROM `seminar_user` WHERE Seminar_id = '{$semid}'";
+        $sql = "SELECT COUNT(user_id) FROM `seminar_user` WHERE Seminar_id = ?";
 
-        $stmt = DBManager::get()->query($sql);
-        $count= $stmt->fetch();
+        $stmt = DBManager::get()->prepare($sql);
+        $stmt->execute(array($semid));
+        $count = $stmt->fetchColumn();
 
-        return intval($count[0]);
+        return (int)$count;
     }
 
     /**
@@ -293,10 +349,15 @@ class StudygroupModel
      */
     function getFounder($semid)
     {
-        $sql  = "SELECT user_id FROM `seminar_user` WHERE Seminar_id = '{$semid}' AND status = 'dozent'";
-        $stmt = DBManager::get()->query($sql);
+        $sql  = "SELECT user_id FROM `seminar_user` WHERE Seminar_id = ? AND status = 'dozent'";
+        $stmt = DBManager::get()->prepare($sql);
+        $stmt->execute(array($semid));
         while ($user = $stmt->fetch()) {
-            $founder[] = array('user_id' => $user['user_id'], 'fullname' => get_fullname($user['user_id']), 'uname' => get_username($user['user_id']));
+            $founder[] = array(
+                'user_id'  => $user['user_id'],
+                'fullname' => get_fullname($user['user_id']),
+                'uname'    => get_username($user['user_id'])
+            );
         }
 
         return $founder;
@@ -312,12 +373,11 @@ class StudygroupModel
      */
     function isMember($userid, $semid)
     {
-        $sql  = "SELECT * FROM `seminar_user` WHERE Seminar_id = '{$semid}' AND user_id = '{$userid}'";
+        $sql  = "SELECT 1 FROM `seminar_user` WHERE Seminar_id = ? AND user_id = ?";
 
-        $stmt = DBManager::get()->query($sql);
-        $res  = $stmt->fetch();
-
-        return is_array($res);
+        $stmt = DBManager::get()->prepare($sql);
+        $stmt->execute(array($semid, $userid));
+        return (bool)$stmt->fetchColumn();
     }
 
     /**
@@ -432,7 +492,14 @@ class StudygroupModel
      */
     function isStudygroup($sem_id)
     {
-        $stmt = DBManager::get()->query("SELECT * FROM seminare WHERE Seminar_id = '$sem_id' AND status IN ('". implode("','", studygroup_sem_types())."')");
+        $sql = "SELECT *
+                FROM seminare
+                WHERE Seminar_id = ? AND status IN (?)";
+        $stmt = DBManager::get()->prepare($sql);
+        $stmt->execute(array(
+            $sem_id,
+            studygroup_sem_types()
+        ));
         return $stmt->fetch();
     }
 

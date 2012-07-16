@@ -35,15 +35,18 @@ class StudycourseModel
     {
         if (!is_null($sci)) {
             //one profession with id and count studys
-            $query = "SELECT s.studiengang_id, s.name,s.beschreibung, "
-                   . "count(user_studiengang.studiengang_id) AS count_user, "
-                   . "count(admission_seminar_studiengang.seminar_id) AS count_sem "
-                   . "FROM studiengaenge s "
-                   . "LEFT JOIN user_studiengang USING(studiengang_id) "
-                   . "LEFT JOIN admission_seminar_studiengang USING(studiengang_id)"
-                   . "WHERE s.studiengang_id='{$sci}' "
-                   . "GROUP BY studiengang_id ORDER BY name";
-            $studycourses = DBManager::get()->query($query)->fetchAll(PDO::FETCH_ASSOC);
+            $query = "SELECT s.studiengang_id, s.name, s.beschreibung, 
+                             COUNT(user_studiengang.studiengang_id) AS count_user, 
+                             COUNT(admission_seminar_studiengang.seminar_id) AS count_sem
+                      FROM studiengaenge AS s
+                      LEFT JOIN user_studiengang USING (studiengang_id)
+                      LEFT JOIN admission_seminar_studiengang USING (studiengang_id)
+                      WHERE s.studiengang_id = ?
+                      GROUP BY studiengang_id
+                      ORDER BY name";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($sci));
+            $studycourses = $statement->fetchAll(PDO::FETCH_ASSOC);
         } else {
             // all profession
               $query1 = "SELECT studiengang_id, name, beschreibung "
@@ -61,14 +64,20 @@ class StudycourseModel
             }
         }
 
+        $query = "SELECT DISTINCT abschluss.name, abschluss.abschluss_id,
+                         COUNT(user_studiengang.abschluss_id) AS count_user
+                  FROM abschluss
+                  LEFT JOIN user_studiengang USING (abschluss_id)
+                  WHERE user_studiengang.studiengang_id = ?
+                  GROUP BY abschluss_id
+                  ORDER BY name";
+        $statement = DBManager::get()->prepare($query);
+
         foreach ($studycourses as $index => $row) {
             // get one profession with all degrees
-            $query = "SELECT DISTINCT abschluss.name, abschluss.abschluss_id, "
-                   . "count(user_studiengang.abschluss_id) AS count_user "
-                   . "FROM abschluss LEFT JOIN user_studiengang USING(abschluss_id) "
-                   . "WHERE user_studiengang.studiengang_id='{$row['studiengang_id']}' "
-                   . "GROUP BY abschluss_id ORDER BY name";
-            $studycourses[$index]['degree'] = DBManager::get()->query($query)->fetchAll(PDO::FETCH_ASSOC);
+            $statement->execute(array($row['studiengang_id']));
+            $studycourses[$index]['degree'] = $statement->fetchAll(PDO::FETCH_ASSOC);
+            $statement->closeCursor();
         }
 
         return $studycourses;
@@ -85,11 +94,16 @@ class StudycourseModel
     {
         if (isset($sdi)) {
             // one degree with count user
-            $query = "SELECT a.abschluss_id, a.name, count(us.abschluss_id) AS count_user "
-                   . "FROM abschluss a LEFT JOIN user_studiengang us USING (abschluss_id) "
-                   . "WHERE a.abschluss_id = '{$sdi}' "
-                   . "GROUP BY a.abschluss_id ORDER BY a.name";
-            $studydegrees = DBManager::get()->query($query)->fetchAll(PDO::FETCH_ASSOC);
+            $query = "SELECT a.abschluss_id, a.name,
+                             COUNT(us.abschluss_id) AS count_user
+                      FROM abschluss AS a
+                      LEFT JOIN user_studiengang AS us USING (abschluss_id)
+                      WHERE a.abschluss_id = ?
+                      GROUP BY a.abschluss_id
+                      ORDER BY a.name";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($sdi));
+            $studydegrees = $statement->fetchAll(PDO::FETCH_ASSOC);
         } else {
             // get  all degrees
             $query1 = "SELECT abschluss_id, name FROM abschluss ORDER BY name";
@@ -104,14 +118,18 @@ class StudycourseModel
             }
         }
 
+        $query = "SELECT DISTINCT studiengaenge.name, studiengaenge.studiengang_id,
+                         COUNT(user_studiengang.studiengang_id) AS count_user
+                  FROM studiengaenge
+                  LEFT JOIN user_studiengang USING (studiengang_id)
+                  WHERE user_studiengang.abschluss_id = ?
+                  GROUP BY studiengang_id
+                  ORDER BY name";
         foreach ($studydegrees as $index => $row) {
             // one degree with all professions
-            $query = "SELECT DISTINCT studiengaenge.name, studiengaenge.studiengang_id, "
-                   . "count(user_studiengang.studiengang_id) AS count_user "
-                   . "FROM studiengaenge LEFT JOIN user_studiengang USING(studiengang_id) "
-                   . "WHERE user_studiengang.abschluss_id='{$row['abschluss_id']}' "
-                   . "GROUP BY studiengang_id ORDER BY name";
-            $studydegrees[$index]['profession'] = DBManager::get()->query($query)->fetchAll(PDO::FETCH_ASSOC);
+            $statement->execute(array($row['abschluss_id']));
+            $studydegrees[$index]['profession'] = $statement->fetchAll(PDO::FETCH_ASSOC);
+            $statement->closeCursor();
         }
 
         return $studydegrees;
@@ -125,7 +143,10 @@ class StudycourseModel
      */
     public static function deleteStudyCourse($prof_id)
     {
-        return DBManager::get()->exec("DELETE FROM studiengaenge WHERE studiengang_id = '{$prof_id}'");
+        $query = "DELETE FROM studiengaenge WHERE studiengang_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($prof_id));
+        return $statement->rowCount();
     }
 
     /**
@@ -135,7 +156,10 @@ class StudycourseModel
      */
     public static function deleteStudyDegree($deg_id)
     {
-        return DBManager::get()->exec("DELETE FROM abschluss WHERE abschluss_id = '{$deg_id}'");
+        $query = "DELETE FROM abschluss WHERE abschluss_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($deg_id));
+        return $statement->rowCount();
     }
 
     /**
@@ -147,10 +171,12 @@ class StudycourseModel
     public static function getStudyCourseInfo($prof_id = NULL)
     {
         if (!is_null($prof_id)) {
-            $query = "SELECT s.studiengang_id, s.name,s.beschreibung "
-                   . "FROM studiengaenge s "
-                   . "WHERE s.studiengang_id = '{$prof_id}'";
-            return DBManager::get()->query($query)->fetch(PDO::FETCH_ASSOC);
+            $query = "SELECT studiengang_id, name, beschreibung
+                      FROM studiengaenge s
+                      WHERE studiengang_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($prof_id));
+            return $statement->fetch(PDO::FETCH_ASSOC);
         }
         return false;
     }
@@ -164,10 +190,12 @@ class StudycourseModel
     public static function getStudyDegreeInfo($deg_id = NULL)
     {
         if (!is_null($deg_id)) {
-            $query = "SELECT abschluss_id, name, beschreibung "
-                   . "FROM abschluss "
-                   . "WHERE abschluss_id = '{$deg_id}'";
-            return DBManager::get()->query($query)->fetch(PDO::FETCH_ASSOC);
+            $query = "SELECT abschluss_id, name, beschreibung
+                      FROM abschluss
+                      WHERE abschluss_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($deg_id));
+            return $statement->fetch(PDO::FETCH_ASSOC);
         }
         return false;
     }

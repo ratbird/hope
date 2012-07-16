@@ -96,6 +96,8 @@ class EventLog
      */
     function get_log_events ($action_id, $object_id, $offset)
     {
+        $offset = (int)$offset;
+
         $db = DBManager::get();
 
         $log_events = array();
@@ -175,12 +177,16 @@ class EventLog
         }
 
         $sql = "UPDATE log_actions
-                SET description = '".addslashes($description)."',
-                    info_template = '".addslashes($info_template)."',
-                    active = $active,
-                    expires = $expires
-                WHERE action_id='".addslashes($action_id)."'";
-        $db->exec($sql);
+                SET description = ?, info_template = ?, active = ?, expires = ?
+                WHERE action_id = ?";
+        $stmt = $db->prepare($sql);
+        $stmt->execute(array(
+            $description,
+            $info_template,
+            $active,
+            $expires,
+            $action_id
+        ));
     }
 }
 ?>

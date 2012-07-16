@@ -519,13 +519,13 @@ class Admin_UserController extends AuthenticatedController
                     if ($check) {
                         //check recipients
                         if (Request::get('enable_mail_admin') == "admin" && Request::get('enable_mail_dozent') == "dozent") {
-                            $in = "'admin','dozent'";
+                            $in = words('admin dozent');
                             $wem = "Admins und Dozenten";
                         } elseif (Request::get('enable_mail_admin') == "admin") {
-                            $in = "'admin'";
+                            $in = 'admin';
                             $wem = "Admins";
                         } elseif (Request::get('enable_mail_dozent') == "dozent") {
-                            $in = "'dozent'";
+                            $in = 'dozent';
                             $wem = "Dozenten";
                         }
 
@@ -534,15 +534,25 @@ class Admin_UserController extends AuthenticatedController
                             $i = 0;
                             $notin = array();
 
-                            $sql = "SELECT Name FROM Institute WHERE Institut_id='" . Request::option('institute') . "'";
-                            $inst_name = DBManager::get()->query($sql)->fetch(PDO::FETCH_COLUMN);
+                            $sql = "SELECT Name FROM Institute WHERE Institut_id = ?";
+                            $statement = DBManager::get()->prepare($sql);
+                            $statement->execute(array(
+                                Request::option('institute')
+                            ));
+                            $inst_name = $statement->fetchColumn();
 
                             //get admins
-                            $sql = "SELECT a.user_id, b.Vorname, b.Nachname, b.Email FROM "
-                                 . "user_inst a INNER JOIN auth_user_md5 b ON a.user_id = b.user_id "
-                                 . "WHERE a.Institut_id = '" . Request::option('institute') . "' "
-                                 . "AND a.inst_perms IN ({$in}) AND a.user_id != '{$user_id}'";
-                            $users = DBManager::get()->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+                            $sql = "SELECT user_id, b.Vorname, b.Nachname, b.Email
+                                    FROM user_inst AS a
+                                    INNER JOIN auth_user_md5 AS b USING (user_id)
+                                    WHERE a.Institut_id = ? AND a.inst_perms IN (?) AND a.user_id != ?";
+                            $statement = DBManager::get()->prepare($sql);
+                            $statement->execute(array(
+                                Request::option('institute'),
+                                $in,
+                                $user_id
+                            ));
+                            $users = $statement->fetchAll(PDO::FETCH_ASSOC);
 
                             foreach ($users as $admin) {
                                 $subject = _("Neuer Administrator in Ihrer Einrichtung angelegt");
@@ -559,16 +569,23 @@ class Admin_UserController extends AuthenticatedController
                             }
 
                             //Noch ein paar Mails für die Fakultätsadmins
-                            if ($in != "'dozent'") {
-
+                            if ($in != 'dozent') {
+                                $notin[] = $user_id;
                                 //get admins
-                                $sql = sprintf("SELECT a.user_id,b.Vorname,b.Nachname,b.Email FROM user_inst a "
-                                     . "INNER JOIN auth_user_md5 b ON a.user_id = b.user_id WHERE a.user_id NOT "
-                                     . "IN ('%s','%s') AND  a.Institut_id IN (SELECT fakultaets_id FROM Institute "
-                                     . "WHERE Institut_id = '%s' AND fakultaets_id != Institut_id) AND "
-                                     . "a.inst_perms = 'admin' AND a.user_id != '%s' ", implode("','",$notin),
-                                     $user_id, Request::option('institute'), $user_id);
-                                $fak_admins = DBManager::get()->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+                                $sql = "SELECT a.user_id, b.Vorname, b.Nachname, b.Email
+                                        FROM user_inst AS a
+                                        INNER JOIN auth_user_md5 AS b USING (user_id)
+                                        WHERE a.user_id NOT IN (?) AND a.Institut_id IN (
+                                            SELECT fakultaets_id
+                                            FROM Institute
+                                            WHERE Institut_id = ? AND fakultaets_id != Institut_id
+                                        ) AND a.inst_perms = 'admin'";
+                                $statement = DBManager::get()->prepare($sql);
+                                $statement->execute(array(
+                                    $notin,
+                                    Request::option('institute')
+                                ));
+                                $fak_admins = $statement->fetchAll(PDO::FETCH_ASSOC);
 
                                 foreach ($fak_admins as $admin) {
                                     $subject = _("Neuer Administrator in Ihrer Einrichtung angelegt");
@@ -615,7 +632,10 @@ class Admin_UserController extends AuthenticatedController
         }
 
         if ($this->perm->have_perm('root')) {
-            $sql = "SELECT Institut_id, Name, 1 AS is_fak  FROM Institute WHERE Institut_id=fakultaets_id ORDER BY Name";
+            $sql = "SELECT Institut_id, Name, 1 AS is_fak
+                    FROM Institute
+                    WHERE Institut_id=fakultaets_id
+                    ORDER BY Name";
             $faks = DBManager::get()->query($sql)->fetchAll(PDO::FETCH_ASSOC);
             $domains = UserDomain::getUserDomains();
         } else {

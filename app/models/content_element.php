@@ -38,8 +38,11 @@ abstract class StudipContentElement {
 class StudipContentElementForum extends StudipContentElement {
     
     function restore(){
-        $db = DBManager::Get();
-        $data = $db->query("SELECT * FROM px_topics WHERE topic_id=" . $db->quote($this->id))->fetch(PDO::FETCH_ASSOC);
+        $query = "SELECT * FROM px_topics WHERE topic_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($this->id));
+        $data = $statement->fetch(PDO::FETCH_ASSOC);
+
         if($data){
             $this->data = $data;
             $this->id = $data['topic_id'];
@@ -87,8 +90,11 @@ class StudipContentElementForum extends StudipContentElement {
 class StudipContentElementMessage extends StudipContentElement {
     
     function restore(){
-        $db = DBManager::Get();
-        $data = $db->query("SELECT * FROM message WHERE message_id=" . $db->quote($this->id))->fetch(PDO::FETCH_ASSOC);
+        $query = "SELECT * FROM message WHERE message_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statment->execute(array($this->id));
+        $data = $statement->fetch(PDO::FETCH_ASSOC);
+
         if($data){
             $this->data = $data;
             $this->id = $data['message_id'];
@@ -121,8 +127,11 @@ class StudipContentElementMessage extends StudipContentElement {
 class StudipContentElementContact extends StudipContentElement {
     
     function restore(){
-        $db = DBManager::Get();
-        $data = $db->query("SELECT * FROM contact WHERE contact_id=" . $db->quote($this->id))->fetch(PDO::FETCH_ASSOC);
+        $query = "SELECT * FROM contact WHERE contact_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($this->id));
+        $data = $statement->fetch(PDO::FETCH_ASSOC);
+
         if($data){
             $this->data = $data;
             $this->id = $data['contact_id'];

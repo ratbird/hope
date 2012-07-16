@@ -58,16 +58,28 @@ class Admin_RoleController extends AuthenticatedController
      */
     private function get_role_stats($roles)
     {
-        $db = DBManager::get();
+        // Prepare count users statement
+        $query = "SELECT COUNT(*)
+                  FROM roles_user
+                  WHERE role_id = ? AND user_id != 'nobody'";
+        $users_statement = DBManager::get()->prepare($query);
+
+        // Prepare count plugins statement
+        $query = "SELECT COUNT(*)
+                  FROM roles_plugins
+                  WHERE roleid = ?";
+        $plugins_statement = DBManager::get()->prepare($query);
 
         foreach ($roles as $role) {
             $roleid = $role->getRoleid();
 
-            $sql = "SELECT COUNT(*) FROM roles_user WHERE roleid = $roleid AND userid != 'nobody'";
-            $stats[$roleid]['users'] = $db->query($sql)->fetchColumn();
+            $users_statement->execute(array($roleid));
+            $stats[$roleid]['users'] = $users_statement->fetchColumn();
+            $users_statement->closeCursor();
 
-            $sql = "SELECT COUNT(*) FROM roles_plugins WHERE roleid = $roleid";
-            $stats[$roleid]['plugins'] = $db->query($sql)->fetchColumn();
+            $plugins_statement->execute(array($roleid));
+            $stats[$roleid]['plugins'] = $plugins_statement->fetchColumn();
+            $plugins_statement->closeCursor();
         }
 
         return $stats;
@@ -296,10 +308,15 @@ class Admin_RoleController extends AuthenticatedController
         $this->roles = RolePersistence::getAllRoles();
 
         if (isset($roleid)) {
-            $sql = "SELECT * FROM auth_user_md5 JOIN roles_user ON userid = user_id
-                    WHERE roleid = '".$roleid."' ORDER BY Nachname, Vorname";
+            $sql = "SELECT *
+                    FROM auth_user_md5
+                    JOIN roles_user USING (user_id)
+                    WHERE roleid = ?
+                    ORDER BY Nachname, Vorname";
+            $statement = DBManager::get()->prepare($sql);
+            $statement->execute(array($roleid));
 
-            $users = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+            $users = $statement->fetchAll(PDO::FETCH_ASSOC);
             $plugins = PluginManager::getInstance()->getPluginInfos();
 
             foreach ($plugins as $id => $plugin) {

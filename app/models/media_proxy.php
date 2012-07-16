@@ -55,13 +55,16 @@ class MediaProxy
      */
     public function getMetaData($url)
     {
-        $db = DBManager::get();
         $id = md5($url);
 
-        $result = $db->query("SELECT id, type, UNIX_TIMESTAMP(chdate) AS chdate,
-                                UNIX_TIMESTAMP(expires) AS expires FROM media_cache WHERE id = '$id'");
+        $query = "SELECT id, type, UNIX_TIMESTAMP(chdate) AS chdate,
+                         UNIX_TIMESTAMP(expires) AS expires
+                  FROM media_cache
+                  WHERE id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($id));
 
-        if ($row = $result->fetch()) {
+        if ($row = $statement->fetch()) {
             if ($row['expires'] > time()) {
                 return $row;
             } else {
@@ -198,7 +201,7 @@ class MediaProxy
     {
         $db = DBManager::get();
         $config = Config::GetInstance();
-        $limit = $config->getValue('MEDIA_CACHE_MAX_FILES');
+        $limit = (int)$config->getValue('MEDIA_CACHE_MAX_FILES');
 
         $result = $db->query("SELECT id FROM media_cache ORDER BY expires DESC LIMIT $limit, 1000");
 
@@ -232,8 +235,9 @@ class MediaProxy
     private function removeCacheEntries(array $ids)
     {
         $db = DBManager::get();
-
-        $db->exec("DELETE FROM media_cache WHERE id IN('" . join("','", $ids) . "')");
+        
+        $stmt = $db->prepare("DELETE FROM media_cache WHERE id IN (?)");
+        $stmt->execute(array($ids ?: ''));
 
         foreach ($ids as $id) {
             @unlink($this->getCacheFile($id));

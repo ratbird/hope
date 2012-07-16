@@ -1,6 +1,6 @@
 <?php
 # Lifter007: TODO
-# Lifter003: TODO
+# Lifter003: TEST
 # Lifter010: TODO
 /*
  * siteinfo - display information about Stud.IP
@@ -43,20 +43,22 @@ class Siteinfo {
         } else {
             $sql = "SELECT content
                     FROM siteinfo_details
-                    WHERE detail_id = ".$this->db->quote($id,PDO::PARAM_INT);
-            $result = $this->db->query($sql);
-            $rows = $result->fetch();
-            return $rows[0];
+                    WHERE detail_id = :id";
+            $statement = DBManager::get()->prepare($query);
+            $statement->bindValue(':id', $id, PDO::PARAM_INT);
+            $statement->execute();
+            return $statement->fetchColumn();
         }
     }
 
     function get_detail_name($id) {
         $sql = "SELECT name
                 FROM siteinfo_details
-                WHERE detail_id = ".$this->db->quote($id,PDO::PARAM_INT);
-        $result = $this->db->query($sql);
-        $rows = $result->fetch();
-        return $rows[0];
+                WHERE detail_id = :id";
+        $statement = DBManager::get()->prepare($query);
+        $statement->bindValue(':id', $id, PDO::PARAM_INT);
+        $statement->execute();
+        return $statement->fetchColumn();
     }
 
     function get_detail_content_processed($id) {
@@ -75,21 +77,17 @@ class Siteinfo {
     }
 
     function first_detail_id($rubric = NULL) {
-        $rubric_id = $rubric ? $rubric : $this->first_rubric_id();
+        $rubric_id = $rubric ?: $this->first_rubric_id();
         $sql = "SELECT detail_id
-                FROM siteinfo_details ";
-        if($rubric_id) {
-            $sql .= "WHERE rubric_id = ".$this->db->quote($rubric_id,PDO::PARAM_INT);
-        }
-        $sql .= " ORDER BY position, detail_id ASC
-                 LIMIT 1";
-        $result = $this->db->query($sql);
-        $rows = $result->fetch();
-        if (count($rows) > 0) {
-            return $rows[0];
-        } else {
-            return 0;
-        }
+                FROM siteinfo_details
+                WHERE rubric_id = IFNULL(?, rubric_id)
+                ORDER BY position, detail_id ASC
+                LIMIT 1";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $rubric_id ?: null
+        ));
+        return $statement->fetchColumn() ?: 0;
     }
 
     function get_all_rubrics() {
@@ -118,58 +116,72 @@ class Siteinfo {
     function rubric_for_detail($id) {
         $sql = "SELECT rubric_id
                 FROM siteinfo_details
-                WHERE detail_id = ".$this->db->quote($id,PDO::PARAM_INT);
-        $result = $this->db->query($sql);
-        $rows = $result->fetch();
-        return $rows[0];
+                WHERE detail_id = :id";
+        $statement = DBManager::get()->prepare($query);
+        $statement->bindValue(':id', $id, PDO::PARAM_INT);
+        $statement->execute();
+        return $statement->fetchColumn();
     }
 
     function rubric_name($id) {
         $sql = "SELECT name
                 FROM siteinfo_rubrics
-                WHERE rubric_id = ".$this->db->quote($id,PDO::PARAM_INT);
-        $result = $this->db->query($sql);
-        $rows = $result->fetch();
-        return $rows[0];
+                WHERE rubric_id = :id";
+        $statement = DBManager::get()->prepare($query);
+        $statement->bindValue(':id', $id, PDO::PARAM_INT);
+        $statement->execute();
+        return $statement->fetchColumn();
     }
 
     function save($type, $input) {
         //distinguish the subject and the action (modification/insertion)
         switch ($type) {
-            case "update_detail":
-                $this->db->exec("UPDATE siteinfo_details
-                                 SET rubric_id = ".$this->db->quote($input['rubric_id'],PDO::PARAM_INT).",
-                                     name = ".$this->db->quote($input['detail_name']).",
-                                     content = ".$this->db->quote($input['content'])."
-                                 WHERE detail_id=".$this->db->quote($input['detail_id'],PDO::PARAM_INT));
+            case 'update_detail':
+                $query = "UPDATE siteinfo_details
+                          SET rubric_id = :rubric_id, name = :name, :content = :content
+                          WHERE detail_id = :detail_id";
+                $statement = DBManager::get()->prepare($query);
+                $statement->bindValue(':rubric_id', $input['rubric_id'], PDO::PARAM_INT);
+                $statement->bindValue(':name', $input['detail_name']);
+                $statement->bindValue(':content', $input['content']);
+                $statement->bindValue(':detail_id', $input['detail_id'], PDO::PARAM_INT);
+                $statement->execute();
+
                 $rubric = $input['rubric_id'];
                 $detail = $input['detail_id'];
                 break;
-            case "insert_detail":
-                $this->db->exec("INSERT
-                           INTO siteinfo_details
-                           (rubric_id,
-                            name,
-                            content)
-                           VALUES (".$this->db->quote($input['rubric_id'],PDO::PARAM_INT).",
-                                   ".$this->db->quote($input['detail_name']).",
-                                   ".$this->db->quote($input['content']).");");
+            case 'insert_detail':
+                $query = "INSERT INTO siteinfo_details (rubric_id, name, content)
+                          VALUES (:rubric_id, :name, :content)";
+                $statement = DBManager::get()->prepare($query);
+                $statement->bindValue(':rubric_id', $input['rubric_id'], PDO::PARAM_INT);
+                $statement->bindValue(':name', $input['detail_name']);
+                $statement->bindValue(':content', $input['content']);
+                $statement->execute();
+
                 $rubric = $input['rubric_id'];
-                $detail = $this->db->lastInsertId();
+                $detail = DBManager::get()->lastInsertId();
                 break;
             case "update_rubric":
-                $this->db->exec("UPDATE siteinfo_rubrics
-                           SET name = ".$this->db->quote($input['rubric_name'])."
-                           WHERE rubric_id = ".$this->db->quote($input['rubric_id'],PDO::PARAM_INT).";");
+                $query = "UPDATE siteinfo_rubrics
+                          SET name = :name
+                          WHERE rubric_id = :id";
+                $statement = DBManager::get()->prepare($query);
+                $statement->bindValue(':name', $input['rubric_name']);
+                $statement->bindValue(':id', $input['rubric_id'], PDO::PARAM_INT);
+                $statement->execute();
+
                 $rubric = $input['rubric_id'];
                 $detail = $this->first_detail_id($rubric);
                 break;
             case "insert_rubric":
-                $this->db->exec("INSERT
-                           INTO siteinfo_rubrics
-                           (name)
-                           VALUES (".$this->db->quote($input['rubric_name']).");");
-                $rubric = $this->db->lastInsertId();
+                $query = "INSERT INTO siteinfo_rubrics (name)
+                          VALUES (:name)";
+                $statement = DBManager::get()->prepare($query);
+                $statement->bindValue(':name', $input['rubric_name']);
+                $statement->execute();
+
+                $rubric = DBManager::get()->lastInsertId();
                 $detail = 0;
         }
         return array($rubric, $detail);
@@ -177,10 +189,17 @@ class Siteinfo {
 
     function delete($type,$id) {
         if($type=="rubric") {
-            $this->db->exec("DELETE FROM siteinfo_details WHERE rubric_id = ".$this->db->quote($id).";");
-            $this->db->exec("DELETE FROM siteinfo_rubrics WHERE rubric_id = ".$this->db->quote($id).";");
+            $query = "DELETE FROM siteinfo_details WHERE rubric_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($id));
+
+            $query = "DELETE FROM siteinfo_rubrics WHERE rubric_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($id));
         } else {
-            $this->db->exec("DELETE FROM siteinfo_details WHERE detail_id = ".$this->db->quote($id).";");
+            $query = "DELETE FROM siteinfo_details WHERE detail_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($id));
         }
     }
 }
@@ -241,19 +260,20 @@ class SiteinfoMarkupEngine {
 
     function userinfo($input) {
         $template = $this->template_factory->open('userinfo');
-        $sql = "SELECT ".$GLOBALS['_fullname_sql']['full'] ." AS fullname,
-                       Email,
-                       username
+        $sql = "SELECT {$GLOBALS['_fullname_sql']['full']} AS fullname,
+                       Email, username
                 FROM auth_user_md5
                 LEFT JOIN user_info USING (user_id)
-                WHERE username=".$this->db->quote($input)."
-                AND ".get_vis_query();
-        $result = $this->db->query($sql);
-        if ($result->rowCount() == 1) {
-            $user = $result->fetch(PDO::FETCH_ASSOC);
+                WHERE username = ? AND ".get_vis_query();
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($input));
+        $temp = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+        if (count($temp) == 1) {
+            $user = reset($temp);
             $template->username = $user['username'];
             $template->fullname = $user['fullname'];
-            $template->email = $user['Email'];
+            $template->email    = $user['Email'];
         } else {
             $template->error = TRUE;
         }
@@ -262,15 +282,16 @@ class SiteinfoMarkupEngine {
 
     function userlink($input) {
         $template = $this->template_factory->open('userlink');
-        $sql = "SELECT ".$GLOBALS['_fullname_sql']['full'] ." AS fullname,
-                       username
+        $sql = "SELECT {$GLOBALS['_fullname_sql']['full']} AS fullname, username
                 FROM auth_user_md5
                 LEFT JOIN user_info USING (user_id)
-                WHERE username=".$this->db->quote($input)."
-                AND ".get_vis_query();
-        $result = $this->db->query($sql);
-        if ($result->rowCount() == 1) {
-            $user = $result->fetch(PDO::FETCH_ASSOC);
+                WHERE username = ? AND ".get_vis_query();
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($input));
+        $temp = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+        if (count($temp) == 1) {
+            $user = reset($temp);
             $template->username = $user['username'];
             $template->fullname = $user['fullname'];
         } else {
@@ -415,60 +436,60 @@ class SiteinfoMarkupEngine {
 
     function indicator($key) {
         $template = $this->template_factory->open('indicator');
-        $indicator['seminar_all'] = array("query" => "SELECT count(*) FROM seminare",
+        $indicator['seminar_all'] = array("query" => "SELECT COUNT(*) FROM seminare",
                                           "title" => _("Aktive Veranstaltungen"),
                                           "detail" => _("alle Veranstaltungen, die nicht archiviert wurden"));
-        $indicator['seminar_archived'] = array("query" => "SELECT count(*) FROM archiv",
+        $indicator['seminar_archived'] = array("query" => "SELECT COUNT(*) FROM archiv",
                                                "title" => _("Archivierte Veranstaltungen"),
                                                "detail" => _("alle Veranstaltungen, die archiviert wurden"));
-        $indicator['institute_secondlevel_all'] = array("query" => "SELECT count(*) FROM Institute WHERE Institut_id != fakultaets_id",
+        $indicator['institute_secondlevel_all'] = array("query" => "SELECT COUNT(*) FROM Institute WHERE Institut_id != fakultaets_id",
                                                         "title" => _("beteiligte Einrichtungen"),
                                                         "detail" => _("alle Einrichtungen außer den Fakultäten"));
-        $indicator['institute_firstlevel_all'] = array("query" => "SELECT count(*) FROM Institute WHERE Institut_id = fakultaets_id",
+        $indicator['institute_firstlevel_all'] = array("query" => "SELECT COUNT(*) FROM Institute WHERE Institut_id = fakultaets_id",
                                                        "title" => _("beteiligte Fakultäten"),
                                                        "detail" => _("alle Fakultäten"));
-        $indicator['user_admin'] = array("query" => "SELECT count(*) FROM auth_user_md5 WHERE perms='admin'",
+        $indicator['user_admin'] = array("query" => "SELECT COUNT(*) FROM auth_user_md5 WHERE perms='admin'",
                                          "title" => _("registrierte Administratoren"),
                                          "detail" => "");
-        $indicator['user_dozent'] = array("query" => "SELECT count(*) FROM auth_user_md5 WHERE perms='dozent'",
+        $indicator['user_dozent'] = array("query" => "SELECT COUNT(*) FROM auth_user_md5 WHERE perms='dozent'",
                                           "title" => _("registrierte Dozenten"),
                                           "detail" => "");
-        $indicator['user_tutor'] = array("query" => "SELECT count(*) FROM auth_user_md5 WHERE perms='tutor'",
+        $indicator['user_tutor'] = array("query" => "SELECT COUNT(*) FROM auth_user_md5 WHERE perms='tutor'",
                                          "title" => _("registrierte Tutoren"),
                                          "detail" => "");
-        $indicator['user_autor'] = array("query" => "SELECT count(*) FROM auth_user_md5 WHERE perms='autor'",
+        $indicator['user_autor'] = array("query" => "SELECT COUNT(*) FROM auth_user_md5 WHERE perms='autor'",
                                          "title" => _("registrierte Autoren"),
                                          "detail" => "");
-        $indicator['posting'] = array("query" => "SELECT count(*) FROM px_topics",
+        $indicator['posting'] = array("query" => "SELECT COUNT(*) FROM px_topics",
                                       "title" => _("Forenbeiträge"),
                                       "detail" => "");
-        $indicator['document'] = array("query" => "SELECT count(*) FROM dokumente WHERE url = ''",
+        $indicator['document'] = array("query" => "SELECT COUNT(*) FROM dokumente WHERE url = ''",
                                        "title" => _("Dokumente"),
                                        "detail" => "");
-        $indicator['link'] = array("query" => "SELECT count(*) FROM dokumente WHERE url != ''",
+        $indicator['link'] = array("query" => "SELECT COUNT(*) FROM dokumente WHERE url != ''",
                                    "title" => _("verlinkte Dateien"),
                                    "detail" => "");
-        $indicator['litlist'] = array("query" => "SELECT count(*) FROM lit_list",
+        $indicator['litlist'] = array("query" => "SELECT COUNT(*) FROM lit_list",
                                       "title" => _("Literaturlisten"),
                                       "detail" => "");
-        $indicator['termin'] = array("query" => "SELECT count(*) FROM termine",
+        $indicator['termin'] = array("query" => "SELECT COUNT(*) FROM termine",
                                      "title" => _("Termine"),
                                      "detail" => "");
-        $indicator['news'] = array("query" => "SELECT count(*) FROM news",
+        $indicator['news'] = array("query" => "SELECT COUNT(*) FROM news",
                                    "title" => _("Ankündigungen"),
                                    "detail" => "");
-        $indicator['guestbook'] = array("query" => "SELECT count(*) FROM user_info WHERE guestbook='1'",
+        $indicator['guestbook'] = array("query" => "SELECT COUNT(*) FROM user_info WHERE guestbook='1'",
                                         "title" => _("Gästebücher"),
                                         "detail" => "");
-        $indicator['vote'] = array("query" => "SELECT count(*) FROM vote WHERE type='vote'",
+        $indicator['vote'] = array("query" => "SELECT COUNT(*) FROM vote WHERE type='vote'",
                                    "title" => _("Umfragen"),
                                    "detail" => "",
                                    "constraint" => get_config('VOTE_ENABLE'));
-        $indicator['test'] = array("query" => "SELECT count(*) FROM vote WHERE type='test'",
+        $indicator['test'] = array("query" => "SELECT COUNT(*) FROM vote WHERE type='test'",
                                    "title" => _("Tests"),
                                    "detail" => "",
                                    "constraint" => get_config('VOTE_ENABLE'));
-        $indicator['evaluation'] = array("query" => "SELECT count(*) FROM eval",
+        $indicator['evaluation'] = array("query" => "SELECT COUNT(*) FROM eval",
                                          "title" => _("Evaluationen"),
                                          "detail" => "",
                                          "constraint" => get_config('VOTE_ENABLE'));

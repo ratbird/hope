@@ -294,55 +294,78 @@ class UserModel
         //Identitätsrelevante Daten migrieren
         if ($identity) {
             // Namen übertragen
-            $query = "SELECT Vorname, Nachname FROM auth_user_md5 WHERE user_id = '{$old_id}'";
-            $db = DBManager::get()->query($query)->fetch(PDO::FETCH_ASSOC);
-            $update = "UPDATE IGNORE auth_user_md5 SET Vorname = '{$db['Vorname']}', Nachname = '{$db['Nachname']}' WHERE user_id = '{$old_id}'";
-            DBManager::get()->exec($update);
+            $query = "SELECT Vorname, Nachname FROM auth_user_md5 WHERE user_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($old_id));
+            $db = $statement->fetch(PDO::FETCH_ASSOC);
+
+            $update = "UPDATE IGNORE auth_user_md5
+                       SET Vorname = ?, Nachname = ?
+                       WHERE user_id = ?";
+            $statement = DBManager::get()->prepare($update);
+            $statement->execute(array(
+                $db['Vorname'], $db['Nachname'], $old_id
+            ));
 
             // Veranstaltungseintragungen
             self::removeDoubles('seminar_user', 'Seminar_id', $new_id, $old_id);
-            $query = "UPDATE IGNORE seminar_user SET user_id = '{$new_id}' WHERE user_id = '{$old_id}'";
-            DBManager::get()->exec($query);
+            $query = "UPDATE IGNORE seminar_user SET user_id = ? WHERE user_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($new_id, $old_id));
 
             self::removeDoubles('admission_seminar_user', 'seminar_id', $new_id, $old_id);
-            $query = "UPDATE IGNORE admission_seminar_user SET user_id = '{$new_id}' WHERE user_id = '{$old_id}'";
-            DBManager::get()->exec($query);
+            $query = "UPDATE IGNORE admission_seminar_user SET user_id = ? WHERE user_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($new_id, $old_id));
 
             // Persönliche Infos
-            $query = "DELETE FROM user_info WHERE user_id = '{$new_id}'";
-            DBManager::get()->exec($query);
-            $query = "UPDATE IGNORE user_info SET user_id = '{$new_id}' WHERE user_id = '{$old_id}'";
-            DBManager::get()->exec($query);
+            $query = "DELETE FROM user_info WHERE user_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($new_id));
+
+            $query = "UPDATE IGNORE user_info SET user_id = ? WHERE user_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($new_id, $old_id));
 
             // Studiengänge
             self::removeDoubles('user_studiengang', 'studiengang_id', $new_id, $old_id);
-            $query = "UPDATE IGNORE user_studiengang SET user_id = '{$new_id}' WHERE user_id = '{$old_id}'";
-            DBManager::get()->exec($query);
+            $query = "UPDATE IGNORE user_studiengang SET user_id = ? WHERE user_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($new_id, $old_id));
 
             // Gästebuch
-            $query = "UPDATE IGNORE guestbook SET user_id = '{$new_id}' WHERE user_id = '{$old_id}'";
-            DBManager::get()->exec($query);
-            $query = "UPDATE IGNORE guestbook SET range_id = '{$new_id}' WHERE range_id = '{$old_id}'";
-            DBManager::get()->exec($query);
+            $query = "UPDATE IGNORE guestbook SET user_id = ? WHERE user_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($new_id, $old_id));
+
+            $query = "UPDATE IGNORE guestbook SET range_id = ? WHERE range_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($new_id, $old_id));
 
             // Eigene Kategorien
-            $query = "UPDATE IGNORE kategorien SET range_id = '{$new_id}' WHERE range_id = '{$old_id}'";
-            DBManager::get()->exec($query);
+            $query = "UPDATE IGNORE kategorien SET range_id = ? WHERE range_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($new_id, $old_id));
 
             // Institute
             self::removeDoubles('user_inst', 'Institut_id', $new_id, $old_id);
-            $query = "UPDATE IGNORE user_inst SET user_id = '{$new_id}' WHERE user_id = '{$old_id}'";
-            DBManager::get()->exec($query);
+            $query = "UPDATE IGNORE user_inst SET user_id = ? WHERE user_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($new_id, $old_id));
 
             // Generische Datenfelder
-            $query = "DELETE FROM datafields_entries WHERE range_id = '{$new_id}'";
-            DBManager::get()->exec($query);
-            $query = "UPDATE IGNORE datafields_entries SET range_id = '{$new_id}' WHERE range_id = '{$old_id}'";
-            DBManager::get()->exec($query);
+            $query = "DELETE FROM datafields_entries WHERE range_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($new_id));
+
+            $query = "UPDATE IGNORE datafields_entries SET range_id = ? WHERE range_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($new_id, $old_id));
 
             //Buddys
-            $query = "UPDATE IGNORE contact SET owner_id='{$new_id}' WHERE owner_id = '{$old_id}'";
-            DBManager::get()->exec($query);
+            $query = "UPDATE IGNORE contact SET owner_id = ? WHERE owner_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($new_id, $old_id));
 
             $messages[] = _('Identitätsrelevante Daten wurden migriert.');
         }
@@ -350,98 +373,136 @@ class UserModel
         // Restliche Daten übertragen
 
         // Forumsbeiträge
-        $query = "UPDATE IGNORE px_topics SET user_id='{$new_id}' WHERE user_id = '{$old_id}'";
-        DBManager::get()->exec($query);
+        $query = "UPDATE IGNORE px_topics SET user_id = ? WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($new_id, $old_id));
 
         // Dateieintragungen und Ordner
         // TODO (mlunzena) should post a notification
-        $query = "UPDATE IGNORE dokumente SET user_id='{$new_id}' WHERE user_id = '{$old_id}'";
-        DBManager::get()->exec($query);
-        $query = "UPDATE IGNORE folder SET user_id='{$new_id}' WHERE user_id = '{$old_id}'";
-        DBManager::get()->exec($query);
+        $query = "UPDATE IGNORE dokumente SET user_id = ? WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($new_id, $old_id));
+
+        $query = "UPDATE IGNORE folder SET user_id = ? WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($new_id, $old_id));
 
         //Kalender
-        $query = "UPDATE IGNORE calendar_events SET range_id='{$new_id}' WHERE range_id = '{$old_id}'";
-        DBManager::get()->exec($query);
-        $query = "UPDATE IGNORE calendar_events SET autor_id='{$new_id}' WHERE autor_id = '{$old_id}'";
-        DBManager::get()->exec($query);
+        $query = "UPDATE IGNORE calendar_events SET range_id = ? WHERE range_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($new_id, $old_id));
+
+        $query = "UPDATE IGNORE calendar_events SET autor_id = ? WHERE autor_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($new_id, $old_id));
 
         //Archiv
         self::removeDoubles('archiv_user', 'seminar_id', $new_id, $old_id);
-        $query = "UPDATE IGNORE archiv_user SET user_id='{$new_id}' WHERE user_id = '{$old_id}'";
-        DBManager::get()->exec($query);
+        $query = "UPDATE IGNORE archiv_user SET user_id = ? WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($new_id, $old_id));
 
         // Evaluationen
-        $query = "UPDATE IGNORE eval SET author_id='{$new_id}' WHERE author_id = '{$old_id}'";
-        DBManager::get()->exec($query);
+        $query = "UPDATE IGNORE eval SET author_id = ? WHERE author_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($new_id, $old_id));
+
         self::removeDoubles('eval_user', 'eval_id', $new_id, $old_id);
-        $query = "UPDATE IGNORE eval_user SET user_id='{$new_id}' WHERE user_id = '{$old_id}'";
-        DBManager::get()->exec($query);
-        $query = "UPDATE IGNORE evalanswer_user SET user_id='{$new_id}' WHERE user_id = '{$old_id}'";
-        DBManager::get()->exec($query);
+        $query = "UPDATE IGNORE eval_user SET user_id = ? WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($new_id, $old_id));
+
+        $query = "UPDATE IGNORE evalanswer_user SET user_id = ? WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($new_id, $old_id));
 
         // Kategorien
-        $query = "UPDATE IGNORE kategorien SET range_id='{$new_id}' WHERE range_id = '{$old_id}'";
-        DBManager::get()->exec($query);
+        $query = "UPDATE IGNORE kategorien SET range_id = ? WHERE range_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($new_id, $old_id));
 
         // Literatur
-        $query = "UPDATE IGNORE lit_catalog SET user_id='{$new_id}' WHERE user_id = '{$old_id}'";
-        DBManager::get()->exec($query);
-        $query = "UPDATE IGNORE lit_list SET range_id='{$new_id}' WHERE range_id = '{$old_id}'";
-        DBManager::get()->exec($query);
+        $query = "UPDATE IGNORE lit_catalog SET user_id = ? WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($new_id, $old_id));
+
+        $query = "UPDATE IGNORE lit_list SET range_id = ? WHERE range_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($new_id, $old_id));
 
         // Nachrichten (Interne)
-        $query = "UPDATE IGNORE message SET autor_id='{$new_id}' WHERE autor_id = '{$old_id}'";
-        DBManager::get()->exec($query);
+        $query = "UPDATE IGNORE message SET autor_id = ? WHERE autor_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($new_id, $old_id));
+
         self::removeDoubles('message_user', 'message_id', $new_id, $old_id);
-        $query = "UPDATE IGNORE message_user SET user_id='{$new_id}' WHERE user_id = '{$old_id}'";
-        DBManager::get()->exec($query);
+        $query = "UPDATE IGNORE message_user SET user_id = ? WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($new_id, $old_id));
 
         // News
-        $query = "UPDATE IGNORE news SET user_id='{$new_id}' WHERE user_id = '{$old_id}'";
-        DBManager::get()->exec($query);
-        $query = "UPDATE IGNORE news_range SET range_id='{$new_id}' WHERE range_id = '{$old_id}'";
-        DBManager::get()->exec($query);
+        $query = "UPDATE IGNORE news SET user_id = ? WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($new_id, $old_id));
+
+        $query = "UPDATE IGNORE news_range SET range_id = ? WHERE range_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($new_id, $old_id));
 
         // Referenztabelle: Abstimmungen, etc.
         self::removeDoubles('object_user', 'object_id', $new_id, $old_id);
-        $query = "UPDATE IGNORE object_user SET user_id='{$new_id}' WHERE user_id = '{$old_id}'";
-        DBManager::get()->exec($query);
+        $query = "UPDATE IGNORE object_user SET user_id = ? WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($new_id, $old_id));
 
         // Informationsseiten
-        $query = "UPDATE IGNORE scm SET user_id='{$new_id}' WHERE user_id = '{$old_id}'";
-        DBManager::get()->exec($query);
+        $query = "UPDATE IGNORE scm SET user_id = ? WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($new_id, $old_id));
 
         // Statusgruppeneinträge
         self::removeDoubles('statusgruppe_user', 'statusgruppe_id', $new_id, $old_id);
-        $query = "UPDATE IGNORE statusgruppe_user SET user_id='{$new_id}' WHERE user_id = '{$old_id}'";
-        DBManager::get()->exec($query);
+        $query = "UPDATE IGNORE statusgruppe_user SET user_id = ? WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($new_id, $old_id));
 
         // Termine
-        $query = "UPDATE IGNORE termine SET autor_id='{$new_id}' WHERE autor_id = '{$old_id}'";
-        DBManager::get()->exec($query);
+        $query = "UPDATE IGNORE termine SET autor_id = ? WHERE autor_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($new_id, $old_id));
 
         //Votings
-        $query = "UPDATE IGNORE vote SET author_id='{$new_id}' WHERE author_id = '{$old_id}'";
-        DBManager::get()->exec($query);
-        $query = "UPDATE IGNORE vote SET range_id='{$new_id}' WHERE range_id = '{$old_id}'";
-        DBManager::get()->exec($query);
+        $query = "UPDATE IGNORE vote SET author_id = ? WHERE author_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($new_id, $old_id));
+
+        $query = "UPDATE IGNORE vote SET range_id = ? WHERE range_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($new_id, $old_id));
+
         self::removeDoubles('vote_user', 'vote_id', $new_id, $old_id);
-        $query = "UPDATE IGNORE vote_user SET user_id='{$new_id}' WHERE user_id = '{$old_id}'";
-        DBManager::get()->exec($query);
+        $query = "UPDATE IGNORE vote_user SET user_id = ? WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($new_id, $old_id));
+
         self::removeDoubles('voteanswers_user', 'answer_id', $new_id, $old_id);
-        $query = "UPDATE IGNORE voteanswers_user SET user_id='{$new_id}' WHERE user_id = '{$old_id}'";
-        DBManager::get()->exec($query);
+        $query = "UPDATE IGNORE voteanswers_user SET user_id = ? WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($new_id, $old_id));
 
         //Wiki
-        $query = "UPDATE IGNORE wiki SET user_id='{$new_id}' WHERE user_id = '{$old_id}'";
-        DBManager::get()->exec($query);
-        $query = "UPDATE IGNORE wiki_locks SET user_id='{$new_id}' WHERE user_id = '{$old_id}'";
-        DBManager::get()->exec($query);
+        $query = "UPDATE IGNORE wiki SET user_id = ? WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($new_id, $old_id));
+
+        $query = "UPDATE IGNORE wiki_locks SET user_id = ? WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($new_id, $old_id));
 
         //Adressbucheinträge
-        $query = "UPDATE IGNORE contact SET owner_id = '{$new_id}' WHERE owner_id = '{$old_id}'";
-        DBManager::get()->exec($query);
+        $query = "UPDATE IGNORE contact SET owner_id = ? WHERE owner_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($new_id, $old_id));
 
         $messages[] = _('Dateien, Termine, Adressbuch, Nachrichten und weitere Daten wurden migriert.');
         return $messages;
@@ -476,15 +537,23 @@ class UserModel
     {
         $items = array();
 
-        $query = "SELECT a.".$field." AS field_item FROM ".$table." a, ".$table." b "
-               . "WHERE a.user_id = '{$new_id}' AND b.user_id = '{$old_id}' AND a.".$field." = b.".$field."";
-        $results = DBManager::get()->query($query)->fetchAll(PDO::FETCH_ASSOC);
+        $query = "SELECT a.{$field} AS field_item
+                  FROM {$table} AS a, {$table} AS b
+                  WHERE a.user_id = ? AND b.user_id = ? AND a.{$field} = b.{$field}";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($new_id, $old_id));
+        $results = $statement->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($results as $value) {
             array_push($items, $value['field_item']);
         }
 
-        $query = "DELETE FROM ".$table." WHERE user_id='{$new_id}' AND ".$field." IN ('".implode("','", $items)."')";
-        DBManager::get()->exec($query);
+        $query = "DELETE FROM {$table}
+                  WHERE user_id = ? AND {$field} IN (?)";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $new_id,
+            $items
+        ));
     }
 }

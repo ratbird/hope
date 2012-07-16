@@ -1,7 +1,7 @@
 <?php
 # Lifter002: TODO
+# Lifter003: TEST
 # Lifter007: TODO
-# Lifter003: TODO
 # Lifter010: TODO
 
 use Studip\Button, Studip\LinkButton;
@@ -53,8 +53,6 @@ foreach ($GLOBALS['SEM_CLASS'] as $key => $value){
 }
 $_sem_status_sql = ((is_array($allowed_sem_status)) ? " s.status IN('" . join("','",$allowed_sem_status) . "') AND " : "");
 
-$db = new DB_Seminar();
-$db2 = new DB_Seminar();
 if(Request::option('_semester_id'))
      $_SESSION['_semester_id'] = Request::option('_semester_id');
 
@@ -185,52 +183,81 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
                     <td class="steel1">
                     <font size=-1><select name="_inst_id" size="1" style="vertical-align:middle">
                     <?
-                    if ($auth->auth['perm'] == "root"){
-                        $db->query("SELECT a.Institut_id, a.Name, 1 AS is_fak, COUNT(DISTINCT(catalog_id)) as anzahl FROM Institute a
-                                    LEFT JOIN Institute b ON (a.Institut_id = b.fakultaets_id AND b.fakultaets_id != b.Institut_id)
-                                    LEFT JOIN seminar_inst c ON (c.Institut_id=b.Institut_id)
-                                    $_sem_sql
-                                    LEFT JOIN lit_list_content e USING(list_id)
-                                    WHERE a.Institut_id=a.fakultaets_id
-                                    GROUP BY a.Institut_id ORDER BY Name");
+                    // Prepare inner statement that obtains all institutes
+                    // for a given faculty
+                    $query = "SELECT a.Institut_id, a.Name, COUNT(DISTINCT catalog_id) AS anzahl
+                              FROM Institute AS a
+                              LEFT JOIN seminar_inst AS c USING (Institut_id)
+                              {$_sem_sql}
+                              LEFT JOIN lit_list_content AS e USING (list_id)
+                              WHERE fakultaets_id = ? AND a.institut_id != fakultaets_id
+                              GROUP BY a.Institut_id
+                              ORDER BY Name";
+                    $institute_statement = DBManager::get()->prepare($query);
+
+                    // Prepare and execute statement that obtains a list of
+                    // all institutes and faculties the user has access to
+                    $parameters = array();
+                    if ($auth->auth['perm'] == 'root'){
+                        $query = "SELECT a.Institut_id, a.Name, 1 AS is_fak, COUNT(DISTINCT catalog_id) AS anzahl
+                                  FROM Institute AS a
+                                  LEFT JOIN Institute AS b ON (a.Institut_id = b.fakultaets_id AND b.fakultaets_id != b.Institut_id)
+                                  LEFT JOIN seminar_inst AS c ON (c.Institut_id = b.Institut_id)
+                                  {$_sem_sql}
+                                  LEFT JOIN lit_list_content AS e USING (list_id)
+                                  WHERE a.Institut_id = a.fakultaets_id
+                                  GROUP BY a.Institut_id
+                                  ORDER BY Name";
                     } elseif (!$_is_lit_admin) {
-                        $db->query("SELECT a.Institut_id,b.Name, IF(b.Institut_id=b.fakultaets_id,1,0) AS is_fak,COUNT(DISTINCT(catalog_id)) as anzahl
-                                    FROM user_inst a LEFT JOIN Institute b USING (Institut_id)
-                                    LEFT JOIN Institute f ON (f.fakultaets_id=b.institut_id OR f.Institut_id=b.Institut_id)
-                                    LEFT JOIN seminar_inst c ON (c.Institut_id=f.Institut_id)
-                                    $_sem_sql
-                                    LEFT JOIN lit_list_content e USING(list_id)
-                                    WHERE a.user_id='$user->id' AND a.inst_perms='admin'
-                                    GROUP BY a.Institut_id ORDER BY is_fak,b.Name");
+                        $query = "SELECT a.Institut_id, b.Name, b.Institut_id = b.fakultaets_id AS is_fak,
+                                         COUNT(DISTINCT catalog_id) AS anzahl
+                                  FROM user_inst AS a
+                                  LEFT JOIN Institute AS b USING (Institut_id)
+                                  LEFT JOIN Institute AS f ON (b.institut_id IN (f.fakultaets_id, f.Institut_id))
+                                  LEFT JOIN seminar_inst AS c ON (c.Institut_id = f.Institut_id)
+                                  {$_sem_sql}
+                                  LEFT JOIN lit_list_content AS e USING (list_id)
+                                  WHERE a.user_id = ? AND a.inst_perms = 'admin'
+                                  GROUP BY a.Institut_id
+                                  ORDER BY is_fak, b.Name";
+                        $parameters[] = $user->id;
                     } else {
-                        $db->query("SELECT b.Institut_id,b.Name, IF(b.Institut_id=b.fakultaets_id,1,0) AS is_fak,COUNT(DISTINCT(catalog_id)) as anzahl
-                                    FROM Institute b
-                                    LEFT JOIN Institute f ON (f.fakultaets_id=b.institut_id OR f.Institut_id=b.Institut_id)
-                                    LEFT JOIN seminar_inst c ON (c.Institut_id=f.Institut_id)
-                                    $_sem_sql
-                                    LEFT JOIN lit_list_content e USING(list_id)
-                                    WHERE b.Institut_id IN('" . join("','", $_lit_admin_ids) . "')
-                                    GROUP BY b.Institut_id ORDER BY is_fak,b.Name");
+                        $query = "SELECT b.Institut_id, b.Name, b.Institut_id = b.fakultaets_id AS is_fak,
+                                         COUNT(DISTINCT catalog_id) AS anzahl
+                                  FROM Institute AS b
+                                  LEFT JOIN Institute AS f ON (b.institut_id IN (f.fakultaets_id, f.Institut_id))
+                                  LEFT JOIN seminar_inst AS c ON (c.Institut_id = f.Institut_id)
+                                  {$_sem_sql}
+                                  LEFT JOIN lit_list_content AS e USING (list_id)
+                                  WHERE b.Institut_id IN (?)
+                                  GROUP BY b.Institut_id
+                                  ORDER BY is_fak, b.Name";
+                        $parameters[] = $_lit_admin_ids;
                     }
+                    $statement = DBManager::get()->prepare($query);
+                    $statement->execute($parameters);
+                    $institutes = $statement->fetchAll(PDO::FETCH_ASSOC);
 
                     printf ("<option value=\"-1\">%s</option>\n", _("-- bitte Einrichtung ausw&auml;hlen --"));
-                    while ($db->next_record()){
-                        printf ("<option value=\"%s\" style=\"%s\" %s>%s </option>\n", $db->f("Institut_id"),($db->f("is_fak") ? "font-weight:bold;" : ""),
-                                ($db->f("Institut_id") == $_REQUEST['_inst_id'] ? " selected " : ""), htmlReady(substr($db->f("Name"), 0, 70)) . " (" . $db->f("anzahl") . ")");
-                        if ($db->f("is_fak")){
-                            if ($db->f("Institut_id") == $_REQUEST['_inst_id']){
+                    foreach ($institutes as $institute) {
+                        printf("<option value=\"%s\" style=\"%s\" %s>%s </option>\n",
+                               $institute['Institut_id'],
+                               $institute['is_fak'] ? 'font-weight:bold;' : '',
+                               $institute['Institut_id'] == $_REQUEST['_inst_id'] ? ' selected ' : '',
+                               htmlReady(substr($institute['Name'], 0, 70)) . ' (' . $institute['anzahl'] . ')');
+                        if ($institute['is_fak']) {
+                            if ($institute['Institut_id'] == $_REQUEST['_inst_id']){
                                 $_is_fak = true;
                             }
-                            $db2->query("SELECT a.Institut_id, a.Name, COUNT(DISTINCT(catalog_id)) as anzahl FROM Institute a
-                                        LEFT JOIN seminar_inst c USING(Institut_id)
-                                        $_sem_sql
-                                        LEFT JOIN lit_list_content e USING(list_id)
-                                        WHERE fakultaets_id='" .$db->f("Institut_id") . "' AND a.institut_id!='" .$db->f("Institut_id") . "'
-                                        GROUP BY a.Institut_id ORDER BY Name");
-                            while ($db2->next_record()){
-                                printf("<option value=\"%s\" %s>&nbsp;&nbsp;&nbsp;&nbsp;%s </option>\n", $db2->f("Institut_id"),
-                                ($db2->f("Institut_id") == $_REQUEST['_inst_id'] ? " selected " : ""),htmlReady(substr($db2->f("Name"), 0, 70)) . " (" . $db2->f("anzahl") . ")");
+
+                            $institute_statement->execute(array($institute['Institut_id']));
+                            while ($row = $institute_statement->fetch(PDO::FETCH_ASSOC)) {
+                                printf("<option value=\"%s\" %s>&nbsp;&nbsp;&nbsp;&nbsp;%s </option>\n",
+                                       $row['Institut_id'],
+                                       $row['Institut_id'] == $_REQUEST['_inst_id'] ? ' selected ' : '',
+                                       htmlReady(substr($row['Name'], 0, 70)) . ' (' . $row['anzahl'] . ')');
                             }
+                            $institute_statement->closeCursor();
                         }
                     }
                     ?>
@@ -277,47 +304,61 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
 
         </table>
         <?
-    if ($_is_fak){
+    if ($_is_fak) {
         $sql = "SELECT f.*
-                FROM Institute a INNER JOIN seminar_inst c USING (Institut_id)
-                INNER JOIN seminare s ON ($_sem_status_sql c.seminar_id=s.Seminar_id)
-                $_sem_sql2
-                INNER JOIN lit_list d ON (c.seminar_id = d.range_id)
-                INNER JOIN lit_list_content e USING(list_id)
-                INNER JOIN lit_catalog f USING(catalog_id)
-                WHERE fakultaets_id='" . $_REQUEST['_inst_id'] . "' GROUP BY e.catalog_id ORDER BY dc_date";
-        $sql2 = "SELECT s.Name,s.Seminar_id,admission_turnout, COUNT(DISTINCT(su.user_id)) AS participants FROM Institute a INNER JOIN seminar_inst c USING (Institut_id)
-                INNER JOIN seminare s ON ($_sem_status_sql c.seminar_id=s.Seminar_id)
-                $_sem_sql2
-                INNER JOIN lit_list d ON (c.seminar_id = d.range_id)
-                INNER JOIN lit_list_content e USING(list_id)
-                LEFT JOIN seminar_user su ON (c.seminar_id = su.seminar_id)
-                WHERE fakultaets_id='" . $_REQUEST['_inst_id'] . "' AND catalog_id='?' GROUP BY s.Seminar_id ORDER BY s.Name";
+                FROM Institute AS a
+                INNER JOIN seminar_inst AS c USING (Institut_id)
+                INNER JOIN seminare AS s ON ({$_sem_status_sql} c.seminar_id = s.Seminar_id)
+                {$_sem_sql2}
+                INNER JOIN lit_list AS d ON (c.seminar_id = d.range_id)
+                INNER JOIN lit_list_content AS e USING (list_id)
+                INNER JOIN lit_catalog AS f USING (catalog_id)
+                WHERE fakultaets_id = ?
+                GROUP BY e.catalog_id
+                ORDER BY dc_date";
+        $sql2 = "SELECT s.Name, s.Seminar_id, admission_turnout, COUNT(DISTINCT su.user_id) AS participants
+                 FROM Institute AS a
+                 INNER JOIN seminar_inst AS c USING (Institut_id)
+                 INNER JOIN seminare AS s ON ({$_sem_status_sql} c.seminar_id = s.Seminar_id)
+                 {$_sem_sql2}
+                 INNER JOIN lit_list AS d ON (c.seminar_id = d.range_id)
+                 INNER JOIN lit_list_content AS e USING (list_id)
+                 LEFT JOIN seminar_user AS su ON (c.seminar_id = su.seminar_id)
+                 WHERE fakultaets_id = ? AND catalog_id = ?
+                 GROUP BY s.Seminar_id
+                 ORDER BY s.Name";
     } else {
         $sql = "SELECT f.*
-                FROM seminar_inst c
-                INNER JOIN seminare s ON ($_sem_status_sql c.seminar_id=s.Seminar_id)
-                $_sem_sql2
-                INNER JOIN lit_list d ON (c.seminar_id = d.range_id)
-                INNER JOIN lit_list_content e USING(list_id)
-                INNER JOIN lit_catalog f USING(catalog_id)
-                WHERE c.institut_id='" . $_REQUEST['_inst_id'] . "' GROUP BY e.catalog_id ORDER BY dc_date";
-        $sql2 = "SELECT s.Name,s.Seminar_id, admission_turnout, COUNT(DISTINCT(su.user_id)) AS participants FROM seminar_inst c
-                INNER JOIN seminare s ON ($_sem_status_sql c.seminar_id=s.Seminar_id)
-                $_sem_sql2
-                INNER JOIN lit_list d ON (c.seminar_id = d.range_id)
-                INNER JOIN lit_list_content e USING(list_id)
-                LEFT JOIN seminar_user su ON (c.seminar_id = su.seminar_id)
-                WHERE c.institut_id='" . $_REQUEST['_inst_id'] . "' AND catalog_id='?' GROUP BY s.Seminar_id ORDER BY s.Name";
+                FROM seminar_inst AS c
+                INNER JOIN seminare AS s ON ({$_sem_status_sql} c.seminar_id = s.Seminar_id)
+                {$_sem_sql2}
+                INNER JOIN lit_list AS d ON (c.seminar_id = d.range_id)
+                INNER JOIN lit_list_content AS e USING (list_id)
+                INNER JOIN lit_catalog AS f USING (catalog_id)
+                WHERE c.institut_id = ?
+                GROUP BY e.catalog_id
+                ORDER BY dc_date";
+        $sql2 = "SELECT s.Name, s.Seminar_id, admission_turnout, COUNT(DISTINCT su.user_id) AS participants
+                 FROM seminar_inst AS c
+                 INNER JOIN seminare AS s ON ({$_sem_status_sql} c.seminar_id = s.Seminar_id)
+                 {$_sem_sql2}
+                 INNER JOIN lit_list AS d ON (c.seminar_id = d.range_id)
+                 INNER JOIN lit_list_content AS e USING(list_id)
+                 LEFT JOIN seminar_user AS su ON (c.seminar_id = su.seminar_id)
+                 WHERE c.institut_id = ? AND catalog_id = ?
+                 GROUP BY s.Seminar_id
+                 ORDER BY s.Name";
     }
-    if ($_SESSION['_lit_data_id'] != md5($sql)){
-        $db->query($sql);
-        $_SESSION['_lit_data_id'] = md5($sql);
-        while ($db->next_record()){
-            $_SESSION['_lit_data'][$db->f('catalog_id')] = $db->Record;
+    if ($_SESSION['_lit_data_id'] != md5($sql . '#' . $_REQUEST['_inst_id'])) {
+        $_SESSION['_lit_data_id'] = md5($sql . '#' . $_REQUEST['_inst_id']);
+
+        $statement = DBManager::get()->prepare($sql);
+        $statement->execute(array($_REQUEST['_inst_id']));
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $_SESSION['_lit_data'][$row['catalog_id']] = $row;
         }
     }
-    if (is_array($_SESSION['_lit_data'])){
+    if (is_array($_SESSION['_lit_data'])) {
         echo "\n<table width=\"99%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" align=\"center\"><tr><th align=\"left\">";
         if (is_array($_SESSION['_open']) && count($_SESSION['_open'])){
             echo "\n<a href=\"".URLHelper::getLink('?cmd=close_all')."\" class=\"tree\"><img class=\"text-top\" src=\"". Assets::image_path('icons/16/blue/arr_1down.png') ."\"> " . _("Alle Einträge zuklappen") . "</a>";
@@ -361,19 +402,32 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
                 printhead(0,0,$link,$open,true,$icon,$titel,$addon);
                 echo "\n</tr></table>";
                 if (!is_array($_SESSION['_lit_data'][$cid]['sem_data'])){
-                        $db->query(str_replace('?', $element->getValue('catalog_id'), $sql2));
-                        while ($db->next_record()){
-                            $_SESSION['_lit_data'][$cid]['sem_data'][$db->f('Seminar_id')] = $db->Record;
-                        }
+                    $statement = DBManager::get()->prepare($sql2);
+                    $statement->execute(array(
+                        $_REQUEST['_inst_id'],
+                        $element->getValue('catalog_id')
+                    ));
+
+                    $_SESSION['_lit_data'][$cid]['sem_data'] = array();
+                    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                        $_SESSION['_lit_data'][$cid]['sem_data'][$row['Seminar_id']] = $row;
                     }
-                if (!is_array($_SESSION['_lit_data'][$cid]['doz_data'])){
-                        $db->query("SELECT position, Nachname,username,su.user_id FROM seminar_user su INNER JOIN auth_user_md5 USING(user_id)
-                                    WHERE status='dozent' AND seminar_id IN('" . join("','", array_keys($_SESSION['_lit_data'][$cid]['sem_data'])) . "')
-                                    ORDER BY position, Nachname");
-                        $_SESSION['_lit_data'][$cid]['doz_data'] = array();
-                        while ($db->next_record()){
-                            $_SESSION['_lit_data'][$cid]['doz_data'][$db->f('user_id')] = $db->Record;
-                        }
+                }
+                if (!is_array($_SESSION['_lit_data'][$cid]['doz_data'])) {
+                    $query = "SELECT position, Nachname, username, user_id
+                              FROM seminar_user
+                              INNER JOIN auth_user_md5 USING (user_id)
+                              WHERE status = 'dozent' AND seminar_id IN (?)
+                              ORDER BY position, Nachname";
+                    $statement = DBManager::get()->prepare($query);
+                    $statement->execute(array(
+                        array_keys($_SESSION['_lit_data'][$cid]['sem_data'])
+                    ));
+
+                    $_SESSION['_lit_data'][$cid]['doz_data'] = array();
+                    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                        $_SESSION['_lit_data'][$cid]['doz_data'][$row['user_id']] = $row;
+                    }
                 }
                 if ($open == 'open'){
                     $edit = "";

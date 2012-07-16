@@ -48,7 +48,6 @@ $auth->login_if($auth->auth["uid"] == "nobody");
 
 require_once 'lib/functions.php';
 require_once('lib/visual.inc.php');
-require_once('lib/classes/cssClassSwitcher.inc.php');
 require_once('lib/meine_seminare_func.inc.php');
 require_once('lib/classes/ModulesNotification.class.php');
 require_once('lib/msg.inc.php');
@@ -176,12 +175,9 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
         }
     }
     $enabled_modules = $modules->getGlobalEnabledNotificationModules('sem');
-    $css = new cssClassSwitcher();
-    $css->enableHover();
-    echo $css->GetHoverJSFunction();
     echo '<table class="blank" cellspacing="0" cellpadding="2" border="0" width="100%">';
     echo "<tr><td class=\"blank\" width=\"100%\">\n";
-    echo "\n<table width=\"75%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\" id=\"main_content\">\n";
+    echo "\n<table class=\"zebra-hover\" width=\"75%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\" id=\"main_content\">\n";
     echo "<form method=\"post\" action=\"".URLHelper::getLink()."\">\n";
     echo CSRFProtection::tokenTag();
     echo '<tr><td class="blank" colspan="' . (sizeof($enabled_modules) + 3);
@@ -265,16 +261,14 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
         }
 
         if (isset($_my_sem_open[$group_id])) {
-            $css->resetClass();
-            $css->switchClass();
             $s_count++;
             foreach ($group_members as $member){
                 $values = $my_sem[$member['seminar_id']];
 
-                $out .= sprintf("<tr%s>\n<td class=\"gruppe%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" border=\"0\" width=\"7\" height=\"12\"></td>",
-                $css->getHover(), $values['gruppe']);
-                $out .= sprintf("<td%s><font size=\"-1\">&nbsp;<a href=\"seminar_main.php?auswahl=%s\">%s</a>%s</font>",
-                $css->getFullClass(), $member['seminar_id'],
+                $out .= sprintf("<tr>\n<td class=\"gruppe%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" border=\"0\" width=\"7\" height=\"12\"></td>",
+                $values['gruppe']);
+                $out .= sprintf("<td><font size=\"-1\">&nbsp;<a href=\"seminar_main.php?auswahl=%s\">%s</a>%s</font>",
+                $member['seminar_id'],
                 htmlReady(my_substr($values["name"],0,70)),
                 (!$values["visible"] ? '&nbsp;' . _("(versteckt)")  : ''));
                 $out .= "\n<input type=\"hidden\" ";
@@ -282,7 +276,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
                 $m_count = 0;
                 $r_checked = 0;
                 foreach ($enabled_modules as $m_name => $m_data) {
-                    $out .= '<td' . $css->getFullClass() . '>';
+                    $out .= '<td>';
                     $out .= '<input type="checkbox" name="m_checked[' . $member['seminar_id'] . "][$m_count]\" ";
                     $out .= "value=\"" . pow(2, $m_data['id']) . '"';
                     if ($modules->isBit($m_notifications[$member['seminar_id']], $m_data['id'])) {
@@ -298,7 +292,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
                     $m_count++;
                 }
                 if ($GLOBALS['auth']->auth['jscript']) {
-                    $out .= '<td' . $css->getFullClass() . 'nowrap="nowrap">&nbsp;&nbsp;';
+                    $out .= '<td nowrap="nowrap">&nbsp;&nbsp;';
                     $out .= "<input type=\"checkbox\" id=\"{$member['seminar_id']}_{$group_id}\"";
                     if ($r_checked == sizeof($enabled_modules)) {
                         $out .= 'checked="checked"';
@@ -306,10 +300,9 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
                     $out .= " onClick=\"selectRow('{$member['seminar_id']}', this)\">";
                     $out .= '&nbsp;&nbsp;</td>';
                 } else {
-                    $out .= '<td' . $css->getFullClass() . '>&nbsp</td>';
+                    $out .= '<td>&nbsp</td>';
                 }
                 $out .= "</tr>\n";
-                $css->switchClass();
             }
         }
     }

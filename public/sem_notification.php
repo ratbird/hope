@@ -1,8 +1,8 @@
 <?php
 # Lifter002: TODO
+# Lifter003: TEST
 # Lifter005: TODO
 # Lifter007: TODO
-# Lifter003: TODO
 # Lifter010: TODO
 /**
 * sem_notification.php
@@ -121,8 +121,6 @@ if (isset($_REQUEST['close_my_sem']))
     unset($_my_sem_open[$_REQUEST['close_my_sem']]);
 
 if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("admin")) {
-    $db = new DB_Seminar();
-
     if (isset($_my_sem_group_field)) {
         $group_field = $_my_sem_group_field;
     } else {
@@ -141,18 +139,24 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
 
     $dbv = new DbView();
 
-    $query = "SELECT seminare.VeranstaltungsNummer AS sem_nr, seminare.Name, seminare.Seminar_id, seminare.status as sem_status, seminar_user.gruppe, seminare.visible,
-                {$dbv->sem_number_sql} as sem_number, {$dbv->sem_number_end_sql} as sem_number_end $add_fields
-                FROM seminar_user LEFT JOIN seminare  USING (Seminar_id)
-                $add_query
-                WHERE seminar_user.user_id = '$user->id'";
+    $query = "SELECT seminare.VeranstaltungsNummer AS sem_nr, seminare.Name, seminare.Seminar_id,
+                     seminare.status AS sem_status, seminar_user.gruppe, seminare.visible,
+                     {$dbv->sem_number_sql} AS sem_number, {$dbv->sem_number_end_sql} AS sem_number_end
+                     {$add_fields}
+              FROM seminar_user
+              LEFT JOIN seminare  USING (Seminar_id)
+              {$add_query}
+              WHERE seminar_user.user_id = ?";
     if (get_config('DEPUTIES_ENABLE')) {
         $query .= " UNION ".getMyDeputySeminarsQuery('notification', $dbv->sem_number_sql, $dbv->sem_number_end_sql, $add_fields, $add_query);
     }
     $query .= " ORDER BY sem_nr ASC";
-    $db->query($query);
+    
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($user->id));
+    $seminars = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-    if (!$db->num_rows()) {
+    if (!count($seminars)) {
         echo "<table class=\"blank\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" id=\"main_content\">\n";
         echo "<tr><td class=\"blank\">&nbsp;</td></tr>";
         parse_msg("info§" . sprintf(_("Sie haben zur Zeit keine Veranstaltungen abonniert, an denen Sie teilnehmen k&ouml;nnen. Bitte nutzen Sie %s<b>Veranstaltung suchen / hinzuf&uuml;gen</b>%s um neue Veranstaltungen aufzunehmen."), "<a href=\"sem_portal.php\">", "</a>"),
@@ -203,11 +207,22 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
 
     $groups = array();
     $my_sem = array();
-    while ($db->next_record()){
-        $my_sem[$db->f("Seminar_id")] = array("obj_type" => "sem", "name" => $db->f("Name"), "visible" => $db->f("visible"), "gruppe" => $db->f("gruppe"),
-        "sem_status" => $db->f("sem_status"),"sem_number" => $db->f("sem_number"),"sem_number_end" => $db->f("sem_number_end") );
+    foreach ($seminars as $seminar) {
+        $my_sem[$seminar['Seminar_id']] = array(
+            'obj_type'       => "sem",
+            'name'           => $seminar['Name'],
+            'visible'        => $seminar['visible'],
+            'gruppe'         => $seminar['gruppe'],
+            'sem_status'     => $seminar['sem_status'],
+            'sem_number'     => $seminar['sem_number'],
+            'sem_number_end' => $seminar['sem_number_end']
+        );
         if ($group_field){
-            fill_groups($groups, $db->f($group_field), array('seminar_id' => $db->f('Seminar_id'), 'name' => $db->f("Name"), 'gruppe' => $db->f('gruppe')));
+            fill_groups($groups, $seminar[$group_field], array(
+                'seminar_id' => $seminar['Seminar_id'],
+                'name'       => $seminar['Name'],
+                'gruppe'     => $seminar['gruppe']
+            ));
         }
     }
 
@@ -382,14 +397,14 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
         echo _("Benachrichtigung für alle aufgelisteten Veranstaltungen:") . '</td>';
         for ($i = 0; $i < sizeof($enabled_modules); $i++) {
             echo "<td><input type=\"checkbox\" id=\"mod_row_$i\" ";
-            if ($c_checked[$i] == $db->num_rows()) {
+            if ($c_checked[$i] == count($seminars)) {
                 echo 'checked="checked"';
             }
             echo "onClick=\"selectColumn($i, this)\"></td>";
         }
         echo '<td><input type="checkbox" onClick="selectAll(';
         echo sizeof($enabled_modules) . ', this)"';
-        if (array_sum($c_checked) == $db->num_rows() * sizeof($enabled_modules)) {
+        if (array_sum($c_checked) == count($seminars) * sizeof($enabled_modules)) {
             echo ' checked="checked"';
         }
         echo "></td></tr>\n";

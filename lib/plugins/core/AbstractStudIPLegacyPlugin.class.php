@@ -386,7 +386,7 @@ abstract class AbstractStudIPLegacyPlugin extends StudIPPlugin {
     include 'lib/include/html_head.inc.php';
     include 'lib/include/header.php';
 
-    $pluginparams = Requeat::quoted('plugin_subnavi_params');
+    $pluginparams = Request::quoted('plugin_subnavi_params');
 
     StudIPTemplateEngine::startContentTable();
     $this->$action($pluginparams);

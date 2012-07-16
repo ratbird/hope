@@ -192,16 +192,16 @@ if( empty( $answers ) ) {
     $answers = array();
 }
 
-if( empty( $title ) )           { $title = $vote->getTitle(); if( $makeACopy ) $title .= _(" (Kopie)"); }
-if( empty( $question ) )          $question = $vote->getQuestion();
-if( empty( $startDay ) )          $startDate = $vote->getStartDate();
-if( empty( $stopDay ) )           $stopDate = $vote->getStopDate();
-if( empty( $timeSpan ) )          $timeSpan = $vote->getTimeSpan();
-if( empty( $multipleChoice ) )    $multipleChoice = $vote->isMultipleChoice();
-if( empty( $resultVisibility ) )  $resultVisibility = $vote->getResultVisibility();
-if( empty( $anonymous ) )         $anonymous = $vote->isAnonymous();
-if( empty( $namesVisibility ) )   $namesVisibility = $vote->getNamesVisibility();
-if( empty( $changeable ) )        $changeable = $vote->isChangeable();
+if(!isset( $title ) )           { $title = $vote->getTitle(); if( $makeACopy ) $title .= _(" (Kopie)"); }
+if(!isset( $question ) )          $question = $vote->getQuestion();
+if(!isset( $startDay ) )          $startDate = $vote->getStartDate();
+if(!isset( $stopDay ) )           $stopDate = $vote->getStopDate();
+if(!isset( $timeSpan ) )          $timeSpan = $vote->getTimeSpan();
+if(!isset( $multipleChoice ) )    $multipleChoice = $vote->isMultipleChoice();
+if(!isset( $resultVisibility ) )  $resultVisibility = $vote->getResultVisibility();
+if(!isset( $anonymous ) )         $anonymous = $vote->isAnonymous();
+if(!isset( $namesVisibility ) )   $namesVisibility = $vote->getNamesVisibility();
+if(!isset( $changeable ) )        $changeable = $vote->isChangeable();
 if( $type == "test" ) {
     if( empty( $co_visibility ) ) $co_visibility = $vote->getCo_Visibility();
 }

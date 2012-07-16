@@ -527,6 +527,10 @@ if ($form == 3 && Request::isPost())
         $term_turnus_end_minute = Request::optionArray('term_turnus_end_minute');
         $term_turnus_desc = Request::optionArray('term_turnus_desc_chooser');
 
+        $term_turnus_week_offset = Request::optionArray('term_turnus_week_offset');
+        $term_turnus_cycle = Request::optionArray('term_turnus_cycle');
+        $term_turnus_sws = Request::optionArray('term_turnus_sws');
+
         for ($i=0; $i<$_SESSION['sem_create_data']["turnus_count"]; $i++) {
 
             $_SESSION['sem_create_data']["term_turnus_date"][$i]=$term_turnus_date[$i];
@@ -535,9 +539,9 @@ if ($form == 3 && Request::isPost())
             $_SESSION['sem_create_data']["term_turnus_end_stunde"][$i] = (strlen($term_turnus_end_stunde[$i]))? intval($term_turnus_end_stunde[$i]) : '';
             $_SESSION['sem_create_data']["term_turnus_end_minute"][$i] = (strlen($term_turnus_end_minute[$i]))? intval($term_turnus_end_minute[$i]) : '';
             $_SESSION['sem_create_data']["term_turnus_desc"][$i]=($term_turnus_desc[$i] ? $term_turnus_desc[$i] : $term_turnus_desc_chooser[$i]);
-            $_SESSION['sem_create_data']["term_turnus_week_offset"][$i] = (int)$_REQUEST['term_turnus_week_offset'][$i];
-            $_SESSION['sem_create_data']["term_turnus_cycle"][$i] = (int)$_REQUEST['term_turnus_cycle'][$i];
-            $_SESSION['sem_create_data']["term_turnus_sws"][$i] = round(str_replace(',','.',$_REQUEST['term_turnus_sws'][$i]),1);
+            $_SESSION['sem_create_data']["term_turnus_week_offset"][$i] = (int)$term_turnus_week_offset[$i];
+            $_SESSION['sem_create_data']["term_turnus_cycle"][$i] = (int)$term_turnus_cycle[$i];
+            $_SESSION['sem_create_data']["term_turnus_sws"][$i] = round(str_replace(',','.',$term_turnus_sws[$i]),1);
         }
 
         //Turnus-Metadaten-Array erzeugen
@@ -1058,13 +1062,16 @@ if (Request::submitted('send_tut')) {
 }
 
 // delete user domain
+
 if (Request::submitted('delete_domain')) {
     $index = array_search(Request::get('delete_domain'), $_SESSION['sem_create_data']["sem_domain"]);
+
     unset($_SESSION['sem_create_data']["sem_domain"][$index]);
 }
 
 if (Request::submitted('search_doz') || Request::submitted('search_dep') || Request::submitted('search_tut') || Request::submitted('reset_search') ||
     Request::submitted('sem_bereich_do_search') || Request::submitted('add_domain') || Request::submitted('delete_domain') ||
+
     $study_areas['add'] || $study_areas['remove'] ||
     $study_areas['showall_button'] || $study_areas['search_button'] ||
     $study_areas['search_key'] || $study_areas['selected'] ||
@@ -3075,9 +3082,10 @@ if ($level == 2)
                                     </td>
                                 </tr>
                                     <?
+                                    $sem_domain = Request::quoted('sem_domain');
                                     if (Request::submitted('add_domain') && $_REQUEST['sem_domain'] !== '' &&
-                                        !in_array($_REQUEST['sem_domain'], $_SESSION['sem_create_data']["sem_domain"])) {
-                                        $_SESSION['sem_create_data']["sem_domain"][]= $_REQUEST['sem_domain'];
+                                        !in_array($sem_domain, $_SESSION['sem_create_data']["sem_domain"])) {
+                                        $_SESSION['sem_create_data']["sem_domain"][]= $sem_domain;
                                     }
 
                                     foreach ($_SESSION['sem_create_data']["sem_domain"] as $domain_id) {

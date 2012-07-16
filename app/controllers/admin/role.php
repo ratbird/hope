@@ -61,7 +61,7 @@ class Admin_RoleController extends AuthenticatedController
         // Prepare count users statement
         $query = "SELECT COUNT(*)
                   FROM roles_user
-                  WHERE role_id = ? AND user_id != 'nobody'";
+                  WHERE roleid = ? AND userid != 'nobody'";
         $users_statement = DBManager::get()->prepare($query);
 
         // Prepare count plugins statement
@@ -310,7 +310,7 @@ class Admin_RoleController extends AuthenticatedController
         if (isset($roleid)) {
             $sql = "SELECT *
                     FROM auth_user_md5
-                    JOIN roles_user USING (user_id)
+                    JOIN roles_user ON userid = user_id
                     WHERE roleid = ?
                     ORDER BY Nachname, Vorname";
             $statement = DBManager::get()->prepare($sql);

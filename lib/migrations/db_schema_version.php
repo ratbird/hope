@@ -1,7 +1,7 @@
 <?php
 # Lifter002: DONE - not applicable
 # Lifter003: TEST
-# Lifter007: TODO
+# Lifter007: TEST
 # Lifter010: DONE - not applicable
 /*
  * db_schema_version.php - database backed schema versions

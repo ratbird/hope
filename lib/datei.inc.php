@@ -1,8 +1,8 @@
 <?php
 # Lifter001: DONE
 # Lifter002: TODO
+# Lifter003: TEST
 # Lifter007: TODO
-# Lifter003: TODO
 # Lifter005: TODO
 # Lifter010: TODO
 /*
@@ -309,7 +309,8 @@ function createFolderZip ($folder_id, $perm_check = TRUE, $size_check = false) {
  * @param bool $in_recursion used internally to indicate recursive call
  * @return array assoc array with metadata from zipped files
  */
-function createTempFolder($folder_id, $tmp_full_path, $perm_check = TRUE, $in_recursion = false) {
+function createTempFolder($folder_id, $tmp_full_path, $perm_check = TRUE, $in_recursion = false)
+{
     global $SessSemName;
     static $filelist;
 
@@ -317,41 +318,53 @@ function createTempFolder($folder_id, $tmp_full_path, $perm_check = TRUE, $in_re
         $filelist = array();
         $tmp_path = $tmp_full_path;
     }
-    $db = new DB_Seminar();
+
     if ($perm_check){
         $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessSemName[1]));
         if (!$folder_tree->isDownloadFolder($folder_id, $GLOBALS['user']->id)) return false;
     }
     //copy all documents from this folder to the temporary folder
     $linkinfo = FALSE;
-    $query = sprintf ("SELECT dokument_id, filename, url, author_name, filesize, name, description, FROM_UNIXTIME(chdate) as chdate FROM dokumente WHERE range_id = '%s' %s ORDER BY name, filename", $folder_id, ($perm_check) ? "AND seminar_id = '".$SessSemName[1]."'" : "");
-    $db->query($query);
-    while ($db->next_record()) {
-        if ($db->f("url") != "") {  // just a linked file
-            $linkinfo .= "\r\n".$db->f("filename");
-        } else {
-            if(check_protected_download($db->f('dokument_id'))){
-                $filename = prepareFilename($db->f('filename'), FALSE, $tmp_full_path);
-                if (copy(get_upload_file_path($db->f('dokument_id')), $tmp_full_path.'/'.$filename)) {
-                TrackAccess($db->f('dokument_id'),'dokument');
-                    $filelist[] = $db->Record + array('path' => $tmp_full_path.'/'.$filename);
+    
+    $query = "SELECT dokument_id, filename, url, author_name, filesize, name,
+                     description, FROM_UNIXTIME(chdate) AS chdate
+              FROM dokumente
+              WHERE range_id = ? AND seminar_id = IFNULL(?, seminar_id)
+              ORDER BY name, filename";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array(
+        $folder_id,
+        $perm_check ? $SessSemName[1] : null
+    ));
+    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+        if ($row['url'] != '') {  // just a linked file
+            $linkinfo .= "\r\n" . $row['filename'];
+        } else if(check_protected_download($row['dokument_id'])) {
+            $filename = prepareFilename($row['filename'], FALSE, $tmp_full_path);
+            if (copy(get_upload_file_path($row['dokument_id']), $tmp_full_path . '/' . $filename)) {
+                TrackAccess($row['dokument_id'], 'dokument');
+                $filelist[] = $row + array('path' => $tmp_full_path . '/' . $filename);
             }
         }
-    }
     }
     if ($linkinfo) {
         $linkinfo = _("Hinweis: die folgenden Dateien sind nicht im Archiv enthalten, da sie lediglich verlinkt wurden:").$linkinfo;
         $fp = fopen ("$tmp_full_path/info.txt","a");
-        fwrite ($fp,$linkinfo);
+        fwrite ($fp, $linkinfo);
         fclose ($fp);
     }
 
-    $db->query("SELECT folder_id, name FROM folder WHERE range_id = '$folder_id' ORDER BY name");
-    while ($db->next_record()) {
-        $foldername = prepareFilename($db->f('name'), FALSE, $tmp_full_path);
-        $tmp_sub_full_path = $tmp_full_path.'/'.$foldername;
+    $query = "SELECT folder_id, name
+              FROM folder
+              WHERE range_id = ?
+              ORDER BY name";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($folder_id));
+    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+        $foldername = prepareFilename($row['name'], FALSE, $tmp_full_path);
+        $tmp_sub_full_path = $tmp_full_path . '/' . $foldername;
         mkdir($tmp_sub_full_path, 0700);
-        createTempFolder($db->f("folder_id"), $tmp_sub_full_path, $perm_check, true);
+        createTempFolder($row['folder_id'], $tmp_sub_full_path, $perm_check, true);
     }
     if ($in_recursion === false) {
        array_walk($filelist, create_function('&$a', '$a["path"] = substr($a["path"], ' . (int)strlen($tmp_path) . ');'));
@@ -411,83 +424,119 @@ function getFolderId($parent_id, $in_recursion = false){
  * @param $range_id      the range id for the folder, course or institute id
  * @return integer
  */
-function doc_count($parent_id, $range_id = null) {
+function doc_count($parent_id, $range_id = null)
+{
     global $SessionSeminar, $user;
     if ($range_id === null)  {
         $range_id = $SessionSeminar;
     }
     $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $range_id));
-    $db=new DB_Seminar;
-    $arr = $folder_tree->getReadableKidsKids($parent_id,$user->id);
-    if($folder_tree->isReadable($parent_id,$user->id) && $folder_tree->isExecutable($parent_id,$user->id)) $arr[] = $parent_id;
-    if (!(is_array($arr) && count($arr))) return 0;
-    $in="('".join("','",$arr)."')";
-    $db->query ("SELECT count(*) as count FROM dokumente WHERE range_id IN $in");
-    $db->next_record();
-    return $db->Record[0];
+
+    $arr = $folder_tree->getReadableKidsKids($parent_id, $user->id);
+    if ($folder_tree->isReadable($parent_id, $user->id) && $folder_tree->isExecutable($parent_id, $user->id)) {
+        $arr[] = $parent_id;
+    }
+
+    if (!is_array($arr) || count($arr) === 0) {
+        return 0;
+    }
+
+    $query = "SELECT COUNT(*) FROM dokumente WHERE range_id IN (?)";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($arr));
+    return $statement->fetchColumn();
 }
 
-function doc_sum_filesize ($parent_id) {
+function doc_sum_filesize ($parent_id)
+{
     global $SessionSeminar, $user;
     $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
-    $db=new DB_Seminar;
-    $arr = $folder_tree->getReadableKidsKids($parent_id,$user->id);
-    if($folder_tree->isReadable($parent_id,$user->id) && $folder_tree->isExecutable($parent_id,$user->id)) $arr[] = $parent_id;
-    if (!(is_array($arr) && count($arr))) return 0;
-    $in="('".join("','",$arr)."')";
-    $db->query ("SELECT sum(filesize) FROM dokumente WHERE url='' AND range_id IN $in");
-    $db->next_record();
-    return $db->Record[0];
+
+    $arr = $folder_tree->getReadableKidsKids($parent_id, $user->id);
+    if($folder_tree->isReadable($parent_id, $user->id) && $folder_tree->isExecutable($parent_id, $user->id)) {
+        $arr[] = $parent_id;
+    }
+    if (!is_array($arr) || count($arr) === 0) {
+        return 0;
+    }
+
+    $query = "SELECT SUM(filesize)
+              FROM dokumente
+              WHERE url = '' AND range_id IN (?)";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($arr));
+    return $statement->fetchColumn();
 }
 
-function doc_newest ($parent_id) {
+function doc_newest ($parent_id)
+{
     global $SessionSeminar, $user;
     $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
-    $db=new DB_Seminar;
-    $arr = $folder_tree->getReadableKidsKids($parent_id,$user->id);
-    if($folder_tree->isReadable($parent_id,$user->id) && $folder_tree->isExecutable($parent_id,$user->id)) $arr[] = $parent_id;
-    if (!(is_array($arr) && count($arr))) return 0;
-    $in="('".join("','",$arr)."')";
-    $db->query ("SELECT max(chdate), max(mkdate) FROM dokumente WHERE range_id IN $in ");
-    $db->next_record();
-    if ($db->Record[0] > $db->Record[1])
-        return $db->Record[0];
-    else
-        return $db->Record[1];
+
+    $arr = $folder_tree->getReadableKidsKids($parent_id, $user->id);
+    if($folder_tree->isReadable($parent_id, $user->id) && $folder_tree->isExecutable($parent_id, $user->id)) {
+        $arr[] = $parent_id;
+    }
+    if (!is_array($arr) || count($arr) === 0) {
+        return 0;
+    }
+
+    $query = "SELECT GREATEST(IFNULL(MAX(mkdate), 0), IFNULL(MAX(chdate), 0))
+              FROM dokumente
+              WHERE range_id IN (?)";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($arr));
+    return $statement->fetchColumn();
 }
 
-function doc_challenge ($parent_id){
+function doc_challenge ($parent_id)
+{
     global $SessionSeminar, $user;
     $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
-    $db=new DB_Seminar;
-    $arr = $folder_tree->getReadableKidsKids($parent_id,$user->id);
-    if($folder_tree->isReadable($parent_id,$user->id) && $folder_tree->isExecutable($parent_id,$user->id)) $arr[] = $parent_id;
-    if (!(is_array($arr) && count($arr))) return 0;
-    $in="('".join("','",$arr)."')";
-    $db->query ("SELECT dokument_id FROM dokumente WHERE range_id IN $in");
-    while($db->next_record()) $result[] = $db->Record[0];
-    return $result;
+
+    $arr = $folder_tree->getReadableKidsKids($parent_id, $user->id);
+    if($folder_tree->isReadable($parent_id, $user->id) && $folder_tree->isExecutable($parent_id ,$user->id)) {
+        $arr[] = $parent_id;
+    }
+    if (!is_array($arr) || count($arr) === 0) {
+        return 0;
+    }
+
+    $query = "SELECT dokument_id FROM dokumente WHERE range_id IN (?)";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($arr));
+    return $statement->fetchAll(PDO::FETCH_COLUMN);
 }
 
-function get_user_documents_in_folder($folder_id, $user_id){
-    $db = new DB_Seminar("SELECT filename, filesize, chdate FROM dokumente WHERE range_id='$folder_id' AND user_id='$user_id'");
+function get_user_documents_in_folder($folder_id, $user_id)
+{
+    $query = "SELECT filename, filesize, chdate
+              FROM dokumente
+              WHERE range_id = ? AND user_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($folder_id, $user_id));
+
     $ret = array();
-    while ($db->next_record()){
-        $ret[] = $db->f('filename') . ' ('.round($db->f('filesize')/1024).'kB, '.date("d.m.Y - H:i", $db->f('chdate')).')';
+    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+        $ret[] = $row['filename']
+               . ' (' . round($row['filesize'] / 1024) . 'kB, '
+               . date('d.m.Y - H:i', $row['chdate']) . ')';
     }
     return $ret;
 }
 
-function move_item($item_id, $new_parent, $change_sem_to = false) {
+function move_item($item_id, $new_parent, $change_sem_to = false)
+{
     global $SessionSeminar;
-    $db = new DB_Seminar;
     $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
 
-    if ($change_sem_to && !$folder_tree->isFolder($item_id)){
-        $db->query("SELECT folder_id FROM folder WHERE range_id='$change_sem_to'");
-        if ($db->next_record()){
-            $new_folder_id = $db->f(0);
-        } else {
+    if ($change_sem_to && !$folder_tree->isFolder($item_id)) {
+        $query = "SELECT folder_id FROM folder WHERE range_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($change_sem_to));
+        $new_folder_id = $statement->fetchColumn();
+
+        if (!$new_folder_id) {
             return false;
         }
     }
@@ -508,21 +557,28 @@ function move_item($item_id, $new_parent, $change_sem_to = false) {
             return array(0,1);
         } else {
             //we want to move a folder, so we have first to check if we want to move a folder in a subordinated folder
-
             $folder = getFolderId($item_id);
 
-            if (is_array($folder) && in_array($new_parent, $folder)) $target_is_child = true;
+            if (is_array($folder) && in_array($new_parent, $folder)) {
+                $target_is_child = true;
+            }
 
             if (!$target_is_child){
-                if ($change_sem_to){
-                    $db->query("UPDATE folder SET range_id='".$new_parent."' WHERE folder_id = '$item_id'");
+                $query = "UPDATE folder SET range_id = ? WHERE folder_id = ?";
+                $statement = DBManager::get()->prepare($query);
+                $statement->exexute(array($new_parent, $item_id));
+
+                if ($change_sem_to) {
                     $folder[] = $item_id;
                     // TODO (mlunzena): notify these documents
-                    $db->query("UPDATE dokumente SET seminar_id='$change_sem_to' WHERE range_id IN('".join("','", $folder)."')");
+                    $query = "UPDATE dokumente SET seminar_id = ? WHERE range_id IN (?)";
+                    $statement = DBManager::get()->prepare($query);
+                    $statement->execute(array($change_sem_to, $folder));
+                    $affected = $statement->rowCount();
+
                     $folder_tree->init();
-                    return array(count($folder), (int)$db->affected_rows());
+                    return array(count($folder), $affected);
                 } else {
-                    $db->query("UPDATE folder SET range_id='$new_parent' WHERE folder_id = '$item_id'");
                     $folder_tree->init();
                     return array(1, doc_count($item_id));
                 }
@@ -532,45 +588,56 @@ function move_item($item_id, $new_parent, $change_sem_to = false) {
     return false;
 }
 
-function copy_item($item_id, $new_parent, $change_sem_to = false) {
+function copy_item($item_id, $new_parent, $change_sem_to = false)
+{
     global $SessionSeminar;
 
-    $db=new DB_Seminar;
     $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
 
-    if ($change_sem_to && !$folder_tree->isFolder($item_id)){
-        $db->query("SELECT folder_id FROM folder WHERE range_id='$change_sem_to'");
-        if ($db->next_record()){
-            $new_folder_id = $db->f(0);
-        } else {
+    if ($change_sem_to && !$folder_tree->isFolder($item_id)) {
+        $query = "SELECT folder_id FROM folder WHERE range_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($change_sem_to));
+        $new_folder_id = $statement->fetchColumn();
+
+        if (!$new_folder_id) {
             return false;
         }
     }
 
     if ($item_id != $new_parent) {
-        $db->query("SELECT dokument_id FROM dokumente WHERE dokument_id = '$item_id'");
-        if ($db->next_record()){
+        $query = "SELECT 1 FROM dokumente WHERE dokument_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($item_id));
+        $check = $statement->fetchColumn();
+
+        if ($check) {
             $ret = copy_doc($item_id,
-                            (($change_sem_to) ? $new_folder_id : $new_parent),
+                            $change_sem_to ? $new_folder_id : $new_parent,
                             $change_sem_to);
 
-            return ($ret ? array(0,1) : false);
+            return $ret ? array(0,1) : false;
         } else {
             //we want to move a folder, so we have first to check if we want to move a folder in a subordinated folder
             $folder = getFolderId($item_id);
 
-            if (is_array($folder) && in_array($new_parent, $folder)) $target_is_child = true;
+            if (is_array($folder) && in_array($new_parent, $folder)) {
+                $target_is_child = true;
+            }
 
             $seed = md5(uniqid('blaofuasof',1));
 
-            if (!$target_is_child){
-                if (!($folder_count = copy_folder($item_id, $new_parent, $seed)) ){
+            if (!$target_is_child) {
+                if (!($folder_count = copy_folder($item_id, $new_parent, $seed))) {
                     return false;
                 }
                 $folder[] = $item_id;
-                $db->query("SELECT dokument_id, range_id FROM dokumente WHERE range_id IN('".join("','", $folder)."')");
-                while($db->next_record()){
-                    $doc_count += copy_doc($db->f('dokument_id'), md5($db->f('range_id').$seed), $change_sem_to);
+
+                $query = "SELECT dokument_id, range_id FROM dokument_id WHERE range_id IN (?)";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($folder));
+                while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                    $doc_count += copy_doc($row['dokument_id'], md5($row['range_id'] . $seed), $change_sem_to);
                 }
                 $folder_tree->init();
                 return array($folder_count, $doc_count);
@@ -613,108 +680,158 @@ function copy_doc($doc_id, $new_range, $new_sem = false)
     return $doc->store();
 }
 
-function copy_folder($folder_id, $new_range, $seed = false){
-    $db = new DB_Seminar();
-    if (!$seed){
-        $seed = md5(uniqid('blaofuasof',1));
+function copy_folder($folder_id, $new_range, $seed = false)
+{
+    if (!$seed) {
+        $seed = md5(uniqid('blaofuasof', 1));
     }
-    $db->query("SELECT MD5(CONCAT(folder_id,'$seed')), '$new_range', user_id, name,
-                description, mkdate, " .time(). " as chdate,permission FROM folder WHERE folder_id='$folder_id'");
-    if ($db->next_record()){
-        $record = $db->Record;
-        $record[3] = mysql_escape_string($record[3]);
-        $record[4] = mysql_escape_string($record[4]);
-        $db->query("INSERT INTO folder (folder_id, range_id, user_id, name,
-                    description, mkdate, chdate,permission) VALUES ( '{$record[0]}','{$record[1]}',
-                    '{$record[2]}','{$record[3]}','{$record[4]}',{$record[5]},
-                    {$record[6]},{$record[7]})");
-        if (!$db->affected_rows()){
+
+    // Prepare select statement
+    $query = "SELECT MD5(CONCAT(folder_id, :seed)) AS new_folder_id,
+                     MD5(CONCAT(range_id, :seed)) AS new_range_id,
+                     user_id, name, description, mkdate, permission
+              FROM folder
+              WHERE folder_id = :folder_id";
+    $select_statement = DBManager::get()->prepare($query);
+    $select_statement->bindValue(':seed', $seed);
+
+    // Prepare insert statement
+    $query = "INSERT INTO folder
+                (folder_id, range_id, user_id, name, description, mkdate,
+                 chdate, permission)
+              VALUES (?, ?, ?, ?, ?, ?, UNIX_TIMESTAMP(), ?)";
+    $insert_statement = DBManager::get()->prepare($query);
+
+    // Execute select statement
+    $select_statement->bindValue(':folder_id', $folder_id);
+    $select_statement->execute();
+    $temp = $select_statement->fetch(PDO::FETCH_ASSOC);
+    $select_statement->closeCursor();
+
+    if ($temp) {
+        $insert_statement->execute(array(
+            $temp['new_folder_id'],
+            $new_range,
+            $temp['user_id'],
+            $temp['name'],
+            $temp['description'],
+            $temp['mkdate'],
+            $temp['permission']
+        ));
+        if (!$insert_statement->rowCount()){
             return false;
-        } else {
-            $count = 1;
-            $folder = getFolderId($folder_id);
-            if (is_array($folder)){
-                foreach($folder as $id){
-                    $db->query("SELECT MD5(CONCAT(folder_id,'$seed')), MD5(CONCAT(range_id,'$seed')), user_id, name,
-                                description, mkdate, " .time(). " as chdate,permission FROM folder WHERE folder_id='$id'");
-                    if ($db->next_record()){
-                        $record = $db->Record;
-                        $record[3] = mysql_escape_string($record[3]);
-                        $record[4] = mysql_escape_string($record[4]);
-                        $db->query("INSERT INTO folder (folder_id, range_id, user_id,
-                                    name, description, mkdate, chdate, permission) VALUES (
-                                    '{$record[0]}','{$record[1]}','{$record[2]}',
-                                    '{$record[3]}','{$record[4]}',{$record[5]},
-                                    {$record[6]},{$record[7]})");
-                        $count += $db->affected_rows();
-                    }
+        }
+
+        $count = 1;
+        $folder = getFolderId($folder_id);
+        if (is_array($folder)) {
+            foreach($folder as $id) {
+                $select_statement->bindValue(':folder_id', $id);
+                $select_statement->execute();
+                $temp = $select_statement->fetch(PDO::FETCH_ASSOC);
+                $select_statement->closeCursor();
+
+                if ($temp) {
+                    $insert_statement->execute(array(
+                        $temp['new_folder_id'],
+                        $temp['new_range_id'],
+                        $temp['user_id'],
+                        $temp['name'],
+                        $temp['description'],
+                        $temp['mkdate'],
+                        $temp['permission']
+                    ));
+
+                    $count += $insert_statement->rowCount();
                 }
             }
-            return $count;
         }
+        return $count;
     }
 }
 
-function edit_item ($item_id, $type, $name, $description, $protected=0, $url = "", $filesize="") {
+function edit_item($item_id, $type, $name, $description, $protected = 0, $url = '', $filesize = '')
+{
     global $SessionSeminar;
 
-    $db=new DB_Seminar;
     $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
 
-    if ($url != ""){
+    if ($url != '') {
         $url_parts = parse_url($url);
         $the_file_name = basename($url_parts['path']);
     }
 
-    if ($type){
-        $db->query("UPDATE folder SET  description='$description' " . (strlen($name) ? ", name='$name'" : "" ). " WHERE folder_id ='$item_id'");
-        if($GLOBALS['perm']->have_studip_perm('tutor', $SessionSeminar)){
+    if ($type) {
+        $query = "UPDATE folder
+                  SET description = ?, name = IFNULL(?, name)
+                  WHERE folder_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $description,
+            strlen($name) ? $name : null,
+            $item_id,
+        ));
+
+        if ($GLOBALS['perm']->have_studip_perm('tutor', $SessionSeminar)) {
             if ($folder_tree->permissions_activated) {
-                foreach(array('r'=>'read','w'=>'write','x'=>'exec') as $p => $v){
-                    if ($_REQUEST["perm_$v"]) $folder_tree->setPermission($item_id, $p);
-                    else $folder_tree->unsetPermission($item_id, $p);
+                foreach(array('r' => 'read', 'w' => 'write', 'x' => 'exec') as $p => $v){
+                    if ($_REQUEST['perm_' . $v]) {
+                        $folder_tree->setPermission($item_id, $p);
+                    } else {
+                        $folder_tree->unsetPermission($item_id, $p);
+                    }
                 }
             }
-            if ($_REQUEST["perm_folder"]) $folder_tree->setPermission($item_id, 'f');
-            else $folder_tree->unsetPermission($item_id, 'f');
+            if ($_REQUEST['perm_folder']) {
+                $folder_tree->setPermission($item_id, 'f');
+            } else {
+                $folder_tree->unsetPermission($item_id, 'f');
+            }
         }
-        return !!$db->affected_rows();
+        return $statement->rowCount() > 0;
     } else {
 
         $doc = new StudipDocument($item_id);
-        $doc->setData(
-            array(
-                'name'        => $name,
-                'description' => $description,
-                'protected'   => $protected
-            ));
+        $doc->setData(compact(words('name description protected')));
 
-        if ($url != "") {
-            $doc["url"] = $url;
-            $doc["filename"] = $the_file_name;
+        if ($url != '') {
+            $doc['url'] = $url;
+            $doc['filename'] = $the_file_name;
         }
 
         return !!$doc->store();
     }
 }
 
-function create_folder ($name, $description, $parent_id, $permission = 7) {
+function create_folder ($name, $description, $parent_id, $permission = 7)
+{
     global $user, $SessionSeminar;
-    $db=new DB_Seminar;
-    $id=md5(uniqid("salmonellen",1));
+
+    $id = md5(uniqid('salmonellen',1));
     $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
 
-    $db->query("INSERT INTO folder SET name='$name', folder_id='$id', description='$description', range_id='$parent_id', user_id='".$user->id."',permission='$permission', mkdate='".time()."', chdate='".time()."'");
-    if ($db->affected_rows()) {
+    $query = "INSERT INTO folder (name, folder_id, description, range_id, user_id, permission, mkdate, chdate)
+              VALUES (?, ?, ?, ?, ?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array(
+        $name,
+        $id,
+        $description,
+        $parent_id,
+        $user->id,
+        $permission
+    ));
+    if ($statement->rowCount()) {
         $folder_tree->init();
         return $id;
-        }
     }
+}
 
 ## Upload Funktionen ################################################################################
 
 //Ausgabe des Formulars
-function form($refresh = FALSE) {
+function form($refresh = FALSE)
+{
     global $UPLOAD_TYPES,$range_id,$SessSemName,$user,$folder_system_data;
 
     $sem_status = $GLOBALS['perm']->get_studip_perm($SessSemName[1]);
@@ -1189,25 +1306,35 @@ function link_item ($range_id, $create = FALSE, $echo = FALSE, $refresh = FALSE,
 }
 
 
-function link_form ($range_id, $updating=FALSE) {
+function link_form ($range_id, $updating=FALSE)
+{
     global $SessSemName, $the_link, $protect, $description, $name, $folder_system_data, $user;
-    if ($folder_system_data["update_link"])
+    if ($folder_system_data['update_link']) {
         $updating = TRUE;
-    if ($protect=="on") $protect = "checked";
-    $print = "";
+    }
+    if ($protect == 'on') {
+        $protect = 'checked';
+    }
+    $print = '';
     $hiddenurl = FALSE;
     if ($updating == TRUE) {
-        $db=new DB_Seminar;
-        $db->query("SELECT * FROM dokumente WHERE dokument_id='$range_id'");
-        if ($db->next_record()) {
-            $the_link = $db->f("url");
-            $protect = $db->f("protected");
-            if ($protect==1) $protect = "checked";
-            $name = $db->f("name");
-            $description = $db->f("description");
-            if ($db->f("user_id") != $user->id) { // check if URL can be seen
+        $query = "SELECT name, description, url, protected, user_id
+                  FROM dokumente
+                  WHERE dokument_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($range_id));
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
+        if ($row) {
+            $the_link = $row['url'];
+            $protect  = $row['protected'];
+            if ($protect == 1) {
+                $protect = 'checked';
+            }
+            $name = $row['name'];
+            $description = $row['description'];
+            if ($row['user_id'] != $user->id) { // check if URL can be seen
                 $url_parts = @parse_url( $the_link );
-                if ($url_parts["user"] && $url_parts["user"]!="anonymous") {
+                if ($url_parts['user'] && $url_parts['user'] != 'anonymous') {
                     $hiddenurl = TRUE;
                 }
 
@@ -2017,14 +2144,12 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
 }
 
 
-function getLinkPath($file_id) {
-    $db = new DB_Seminar;
-    $db->query("SELECT url FROM dokumente WHERE dokument_id='$file_id'");
-    if ($db->next_record())
-        $url = $db->f("url");
-    else
-        $url = FALSE;
-    return $url;
+function getLinkPath($file_id)
+{
+    $query = "SELECT url FROM dokumente WHERE dokument_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($file_id));
+    return $statement->fetchColumn() ?: false;
 }
 
 function GetFileIcon($ext, $with_img_tag = false){
@@ -2196,11 +2321,15 @@ Es erfolgt keine Überprüfung der Berechtigung innerhalb der Funktion,
 dies muss das aufrufende Script sicherstellen.
 */
 
-function delete_document($dokument_id, $delete_only_file = FALSE) {
-    $db = new DB_Seminar;
-    $db->query("SELECT * FROM dokumente WHERE dokument_id='$dokument_id'");
-    if ($db->next_record()) {
-        if ($db->f("url") == "") {   //Bei verlinkten Datein nicht nachsehen ob es Datei gibt!
+function delete_document($dokument_id, $delete_only_file = FALSE)
+{
+    $query = "SELECT url FROM dokumente WHERE dokument_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($dokument_id));
+    $url = $statement->fetchColumn();
+
+    if ($url !== false) {
+        if (!$url) {   //Bei verlinkten Datein nicht nachsehen ob es Datei gibt!
             @unlink(get_upload_file_path($dokument_id));
             if ($delete_only_file){
                 return TRUE;
@@ -2229,11 +2358,9 @@ Es erfolgt keine Überprüfung der Berechtigung innerhalb der Funktion,
 dies muss das aufrufende Script sicherstellen.
 */
 
-function delete_folder($folder_id, $delete_subfolders = false) {
-
+function delete_folder($folder_id, $delete_subfolders = false)
+{
     global $msg;
-
-    $db = new DB_Seminar;
 
     if ($delete_subfolders){
         list($subfolders, $num_subfolders) = getFolderChildren($folder_id);
@@ -2244,18 +2371,28 @@ function delete_folder($folder_id, $delete_subfolders = false) {
         }
     }
 
-    $db->query("SELECT name,folder_id FROM folder WHERE folder_id='$folder_id'");
-    if ($db->next_record()){
-        $foldername = $db->f('name');
-        $db->query("SELECT dokument_id FROM dokumente WHERE range_id='$folder_id'");
-        while ($db->next_record()){
-            if (delete_document($db->f("dokument_id"))){
+    $query = "SELECT folder_id, name FROM folder WHERE folder_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($folder_id));
+    $temp = $statement->fetch(PDO::FETCH_ASSOC);
+
+    if ($temp) {
+        $foldername = $temp['name'];
+
+        $query = "SELECT dokument_id FROM dokumente WHERE range_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($folder_id));
+        while ($dokument_id = $statement->fetchColumn()) {
+            if (delete_document($dokument_id)) {
                 $deleted++;
             }
         }
-        $db->query("DELETE FROM folder WHERE folder_id='$folder_id'");
-        if ($db->affected_rows()) {
-            if ($deleted){
+
+        $query = "DELETE FROM folder WHERE folder_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($folder_id));
+        if ($statement->rowCount()) {
+            if ($deleted) {
                 $msg.="info§" . sprintf(_("Der Dateiordner <b>%s</b> und %s Dokument(e) wurden gel&ouml;scht"), htmlReady($foldername), $deleted) . "§";
             } else {
                 $msg.="info§" . sprintf(_("Der Dateiordner <b>%s</b> wurde gel&ouml;scht"),htmlReady($foldername)) . "§";
@@ -2273,29 +2410,40 @@ function delete_folder($folder_id, $delete_subfolders = false) {
 }
 
 //Rekursive Loeschfunktion, loescht erst jeweils enthaltene Dokumente und dann den entsprechenden Ordner
-function recursiv_folder_delete($parent_id) {
+function recursiv_folder_delete($parent_id)
+{
+    // Prepare files statement
+    $query = "SELECT dokument_id FROM dokumente WHERE range_id = ?";
+    $files_statement = DBManager::get()->prepare($query);
 
-    $db=new DB_Seminar;
-    $db2=new DB_Seminar;
+    // Prepare delete statement
+    $query = "DELETE FROM folder WHERE folder_id = ?";
+    $delete_statement = DBManager::get()->prepare($query);
 
     $doc_count = 0;
 
-    $db->query ("SELECT folder_id FROM folder WHERE range_id='$parent_id'");
+    $query = "SELECT folder_id FROM folder WHERE range_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($parent_id));
+    $folder_ids = $statement->fetchAll(PDO::FETCH_COLUMN);
 
-    while ($db->next_record()) {
-        $doc_count += recursiv_folder_delete($db->f("folder_id"));
+    foreach ($folder_ids as $folder_id) {
+        $doc_count += recursiv_folder_delete($folder_id);
 
-        $db2->query ("SELECT dokument_id FROM dokumente WHERE range_id='".$db->f("folder_id")."'");
+        $files_statement->execute(array($folder_id));
+        $file_ids = $files_statement->fetchAll(PDO::FETCH_COLUMN);
+        $files_statement->closeCursor();
 
-        while ($db2->next_record()) {
-            if (delete_document($db2->f("dokument_id")))
+        foreach ($file_ids as $file_id) {
+            if (delete_document($file_id)) {
                 $doc_count++;
             }
-
-         $db2->query ("DELETE FROM folder WHERE folder_id ='".$db->f("folder_id")."'");
         }
-    return $doc_count;
+
+        $delete_statement->execute(array($folder_id));
     }
+    return $doc_count;
+}
 
 function delete_all_documents($range_id){
     if (!$range_id){

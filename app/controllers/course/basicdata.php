@@ -392,7 +392,7 @@ class Course_BasicdataController extends AuthenticatedController
             }
 		         //check if required datafield was not filled out
 		         $sem_data = $sem->getData();
-		    $dataFieldStructures = DataFieldStructure::getDataFieldStructures('sem',$sem_data['form'], true);
+		    $dataFieldStructures = DataFieldStructure::getDataFieldStructures('sem',$sem_data['status'], true);
 		    foreach ((array)$dataFieldStructures as $id=>$struct) {
 		        if ($struct->accessAllowed($perm) && $perm->have_perm($struct->getEditPerms()) && $struct->getIsRequired() ) {
 		           if (! trim($_REQUEST['datafields'][$id])&& !in_array($struct->getName(), $invalid_datafields))

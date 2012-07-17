@@ -2,7 +2,7 @@
 # Lifter002: TODO
 # Lifter005: TEST
 # Lifter007: TODO
-# Lifter003: TODO
+# Lifter003: TEST
 # Lifter010: TODO
 /**
 * several functions used for the systeminternal messages
@@ -72,57 +72,52 @@ function MessageIcon($message_hovericon)
     return $hovericon;
 }
 
-function count_x_messages_from_user($snd_rec, $folder, $where="") {
+function count_x_messages_from_user($snd_rec, $folder, $where = '')
+{
     global $user;
-    $db = new DB_Seminar();
-    if ($snd_rec == "in" || $snd_rec == "out") {
-        if ($snd_rec == "in") {
-            $tmp_snd_rec = "rec";
-        } else {
-            $tmp_snd_rec = "snd";
-        }
+
+    if ($snd_rec == 'in' || $snd_rec == 'out') {
+        $tmp_snd_rec = ($snd_rec == 'in') ? 'rec' : 'snd';
     } else {
         $tmp_snd_rec = $snd_rec;
     }
-    $user_id = $user->id;
-    if ($folder == "all") {
-        $folder_query = "";
-    } else {
-        $folder_query = " AND message_user.folder = " . $folder;
-    }
+
     $query = "SELECT COUNT(*)
-        FROM message_user
-        WHERE message_user.snd_rec = '".$tmp_snd_rec."'
-            AND message_user.user_id = '".$user_id."'
-            AND message_user.deleted = 0
-            ".$folder_query . $where;
-    $db->query($query);
-    $db->next_record();
-    return $db->f(0);
+              FROM message_user
+              WHERE snd_rec = ? AND user_id = ? AND deleted = 0 ";
+    $parameters = array($tmp_snd_rec, $user->id);
+
+    if ($folder != 'all') {
+        $query .= " AND message_user.folder = ? ";
+        $parameters[] = $folder;
+    }
+    $query .= $where;
+
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute($parameters);
+    return $statement->fetchColumn();
 }
 
-function count_messages_from_user($snd_rec, $where="") {
+function count_messages_from_user($snd_rec, $where = '')
+{
     global  $user;
-    $db = new DB_Seminar();
-    if ($snd_rec == "in" || $snd_rec == "out") {
-        if ($snd_rec == "in") {
-            $tmp_snd_rec = "rec";
-        } else {
-            $tmp_snd_rec = "snd";
-        }
+
+    if ($snd_rec == 'in' || $snd_rec == 'out') {
+        $tmp_snd_rec = ($snd_rec == 'in') ? 'rec' : 'snd';
     } else {
         $tmp_snd_rec = $snd_rec;
     }
-    $user_id = $user->id;
     $query = "SELECT COUNT(*)
-        FROM message_user
-        WHERE snd_rec = '".$tmp_snd_rec."'
-            AND user_id = '".$user_id."'
-            AND deleted = 0
-            ".$where;
-    $db->query($query);
-    $db->next_record();
-    return $db->f(0);
+              FROM message_user
+              WHERE snd_rec = ? AND user_id = ? AND deleted = 0 "
+           . $where;
+
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array(
+        $tmp_snd_rec,
+        $user->id
+    ));
+    return $statement->fetchColumn();
 
 }
 
@@ -420,18 +415,22 @@ function print_rec_message($prm) {
                 $content .= "<br>--<br>"._("Der Absender / Die Absenderin hat eine Lesebestätigung angefordert.");
                 $content .= "<br><a href=\"".URLHelper::getLink('?readingconfirmation='.$prm['message_id'].'&uname_snd='.$prm['uname_snd'].'#'.$prm['message_id'])."\">"._("Klicken Sie hier um das Lesen der Nachricht zu bestätigen")."</a>";
             } else if ($my_messaging_settings["confirm_reading"] == 2 && $prm['confirmed_read'] != 1) { // automatic confirm my reading and don't nag me
-                $dbX = new DB_Seminar;
-                $user_id = $user->id;
-                $user_fullname = get_fullname($user_id);
-                $query = "
-                    UPDATE message_user SET
-                        confirmed_read = '1'
-                        WHERE message_id = '".$prm['message_id']."'
-                            AND user_id = '".$user_id."'";
-                if($dbX->query($query)) {
-                    $subject = sprintf (_("Lesebestätigung von %s"), $user_fullname);
-                    $message = sprintf (_("Ihre Nachricht an %s mit dem Betreff: %s vom %s wurde gelesen."), "%%".$user_fullname."%%", "%%".$prm['message_subject']."%%", "%%".date("d.m.y, H:i", $prm['mkdate'])."%%");
-                    $msging->insert_message(mysql_escape_string($message), $prm['uname_snd'], "____%system%____", FALSE, FALSE, 1, FALSE, mysql_escape_string($subject));
+                $query = "UPDATE message_user
+                          SET confirmed_read = 1
+                          WHERE message_id = ? AND user_id = ?";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array(
+                    $prm['message_id'],
+                    $user->id
+                ));
+                if ($statement->rowCount() > 0) {
+                    $user_fullname = get_fullname($user->id);
+                    $subject = sprintf (_('Lesebestätigung von %s'), $user_fullname);
+                    $message = sprintf (_('Ihre Nachricht an %s mit dem Betreff: %s vom %s wurde gelesen.'),
+                                        '%%' . $user_fullname . '%%',
+                                        '%%' . $prm['message_subject'] . '%%',
+                                        '%%' . date('d.m.y, H:i', $prm['mkdate']) . '%%');
+                    $msging->insert_message(mysql_escape_string($message), $prm['uname_snd'], '____%system%____', FALSE, FALSE, 1, FALSE, mysql_escape_string($subject));
                 }
             }
         }
@@ -497,39 +496,49 @@ function print_rec_message($prm) {
 function print_messages() {
     global $user,$_fullname_sql, $my_messaging_settings, $sms_data, $sms_show, $query_showfolder, $query_time_sort, $query_movetofolder, $query_time, $srch_result, $no_message_text, $n, $count, $count_timefilter, $cmd, $cmd_show;
 
-    $db = new DB_Seminar();
-    $db2 = new DB_Seminar();
-    if ($query_time) $count = $count_timefilter;
+    if ($query_time) {
+        $count = $count_timefilter;
+    }
     $n = 0;
     $user_id = $user->id;
+
     if ($sms_data['view'] == "in") { // postbox in
-        $query = "SELECT message.*, folder,confirmed_read,answered,message_user.readed,dont_delete,Vorname,Nachname,username,count(dokument_id) as num_attachments FROM message_user
-                LEFT JOIN message USING (message_id) LEFT JOIN auth_user_md5 ON (autor_id=auth_user_md5.user_id)
-                LEFT JOIN dokumente ON range_id=message_user.message_id
-                WHERE message_user.user_id = '".$user_id."' AND message_user.snd_rec = 'rec'
-                AND message_user.deleted = 0 ".$query_movetofolder." ".$query_showfolder." ".$query_time. " GROUP BY message_user.message_id ORDER BY message_user.mkdate DESC";
-        $db->query($query);
         $tmp_move_to_folder = sizeof($sms_data['tmp']['move_to_folder']);
-        while ($db->next_record()) {
-            --$count;
-            $prm['count'] = $count;
-            $prm['count_2'] = $tmp_move_to_folder - ($n+1);
-            $prm['user_id_snd'] = $db->f("autor_id");
-            $prm['folder'] = $my_messaging_settings['folder']['active']['in'];
-            $prm['mkdate'] = $db->f("mkdate");
-            $prm['message_id'] = $db->f("message_id");
-            $prm['message_subject'] = $db->f("subject");
-            $prm['message_reading_confirmation'] = $db->f("reading_confirmation");
-            $prm['confirmed_read'] = $db->f("confirmed_read");
-            $prm['answered'] = $db->f("answered");
-            $prm['message'] = $db->f("message");
-            $prm['vorname'] = $db->f("Vorname");
-            $prm['nachname'] = $db->f("Nachname");
-            $prm['readed'] = $db->f("readed");
-            $prm['dont_delete'] = $db->f("dont_delete");
-            $prm['uname_snd'] = $db->f("username");
-            $prm['priority'] = $db->f("priority");
-            $prm['num_attachments'] = $db->f("num_attachments");
+
+        $query = "SELECT message.*, folder, confirmed_read, answered,
+                         message_user.readed, dont_delete, Vorname, Nachname, username,
+                         COUNT(dokument_id) AS num_attachments
+                  FROM message_user
+                  LEFT JOIN message USING (message_id)
+                  LEFT JOIN auth_user_md5 ON (autor_id=auth_user_md5.user_id)
+                  LEFT JOIN dokumente ON range_id=message_user.message_id
+                  WHERE message_user.user_id = ? AND message_user.snd_rec = 'rec'
+                    AND message_user.deleted = 0 {$query_movetofolder} {$query_showfolder} {$query_time}
+                  GROUP BY message_user.message_id
+                  ORDER BY message_user.mkdate DESC";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($user_id));
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $count -= 1;
+            $prm['count']           = $count;
+            $prm['count_2']         = $tmp_move_to_folder - ($n + 1);
+            $prm['user_id_snd']     = $row['autor_id'];
+            $prm['folder']          = $my_messaging_settings['folder']['active']['in'];
+            $prm['mkdate']          = $row['mkdate'];
+            $prm['message_id']      = $row['message_id'];
+            $prm['message_subject'] = $row['subject'];
+            $prm['message_reading_confirmation'] = $row['reading_confirmation'];
+            $prm['confirmed_read']  = $row['confirmed_read'];
+            $prm['answered']        = $row['answered'];
+            $prm['message']         = $row['message'];
+            $prm['vorname']         = $row['Vorname'];
+            $prm['nachname']        = $row['Nachname'];
+            $prm['readed']          = $row['readed'];
+            $prm['dont_delete']     = $row['dont_delete'];
+            $prm['uname_snd']       = $row['username'];
+            $prm['priority']        = $row['priority'];
+            $prm['num_attachments'] = $row['num_attachments'];
+
             ob_start();
             echo '<div id="msg_item_'.$prm['message_id'].'">' ;
             print_rec_message($prm);
@@ -537,35 +546,41 @@ function print_messages() {
             ob_end_flush();
         }
     } else if ($sms_data['view'] == "out") { // postbox out
-        $db->query("SELECT message. * , message_user.folder,message_user.dont_delete , auth_user_md5.user_id AS rec_uid,
-                    auth_user_md5.vorname AS rec_vorname, auth_user_md5.nachname AS rec_nachname,
-                    auth_user_md5.username AS rec_uname, count( mu.message_id )  AS num_rec,
-                    count(dokument_id) as num_attachments
-                    FROM message_user
-                    LEFT  JOIN message_user AS mu ON ( message_user.message_id = mu.message_id AND mu.snd_rec =  'rec'  )
-                    LEFT  JOIN message ON ( message.message_id = message_user.message_id )
-                    LEFT  JOIN auth_user_md5 ON ( mu.user_id = auth_user_md5.user_id )
-                    LEFT JOIN dokumente ON range_id=message_user.message_id
-                    WHERE message_user.user_id = '".$user_id."'
-                    AND message_user.snd_rec = 'snd' AND message_user.deleted = 0 "
-                    .$query_movetofolder." ".$query_showfolder. $query_time_sort . " GROUP BY (message_user.message_id) ORDER BY message_user.mkdate DESC");
         $tmp_move_to_folder = sizeof($sms_data['tmp']['move_to_folder']);
-        while ($db->next_record()) {
-            --$count;
-            $psm['count'] = $count;
-            $psm['count_2'] = $tmp_move_to_folder - ($n+1);
-            $psm['mkdate'] = $db->f("mkdate");
-            $psm['folder'] = $my_messaging_settings['folder']['active']['out'];
-            $psm['message_id'] = $db->f("message_id");
-            $psm['message_subject'] = $db->f("subject");
-            $psm['message'] = $db->f("message");
-            $psm['dont_delete'] = $db->f("dont_delete");
-            $psm['rec_uid'] = $db->f("rec_uid");
-            $psm['rec_vorname'] = $db->f("rec_vorname");
-            $psm['rec_nachname'] = $db->f("rec_nachname");
-            $psm['rec_uname'] = $db->f("rec_uname");
-            $psm['num_rec'] = $db->f("num_rec");
-            $psm['num_attachments'] = $db->f("num_attachments");
+
+        $query = "SELECT message.*, message_user.folder, message_user.dont_delete ,
+                         auth_user_md5.user_id AS rec_uid, auth_user_md5.vorname AS rec_vorname,
+                         auth_user_md5.nachname AS rec_nachname, auth_user_md5.username AS rec_uname,
+                         COUNT(mu.message_id) AS num_rec, COUNT(dokument_id) AS num_attachments
+                  FROM message_user
+                  LEFT JOIN message_user AS mu ON (message_user.message_id = mu.message_id AND mu.snd_rec = 'rec')
+                  LEFT JOIN message ON (message.message_id = message_user.message_id)
+                  LEFT JOIN auth_user_md5 ON (mu.user_id = auth_user_md5.user_id)
+                  LEFT JOIN dokumente ON (range_id = message_user.message_id)
+                  WHERE message_user.user_id = ?
+                    AND message_user.snd_rec = 'snd' AND message_user.deleted = 0
+                        {$query_movetofolder} {$query_showfolder} {$query_time_sort}
+                  GROUP BY message_user.message_id
+                  ORDER BY message_user.mkdate DESC";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($user_id));
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $count -= 1;
+            $psm['count']           = $count;
+            $psm['count_2']         = $tmp_move_to_folder - ($n+1);
+            $psm['mkdate']          = $row['mkdate'];
+            $psm['folder']          = $my_messaging_settings['folder']['active']['out'];
+            $psm['message_id']      = $row['message_id'];
+            $psm['message_subject'] = $row['subject'];
+            $psm['message']         = $row['message'];
+            $psm['dont_delete']     = $row['dont_delete'];
+            $psm['rec_uid']         = $row['rec_uid'];
+            $psm['rec_vorname']     = $row['rec_vorname'];
+            $psm['rec_nachname']    = $row['rec_nachname'];
+            $psm['rec_uname']       = $row['rec_uname'];
+            $psm['num_rec']         = $row['num_rec'];
+            $psm['num_attachments'] = $row['num_attachments'];
+
             ob_start();
             echo '<div id="msg_item_'.$psm['message_id'].'">' ;
             print_snd_message($psm);
@@ -583,88 +598,94 @@ function print_messages() {
 
 function ajax_show_body($mid)   {
     global  $my_messaging_settings, $_fullname_sql, $user, $n, $count, $sms_data, $query_time, $query_movetofolder,$sms_show, $query_time_sort, $srch_result, $no_message_text, $count_timefilter;
-    $db = DBManager::get();
-    if ($query_time) $count = $count_timefilter;
+    if ($query_time) {
+        $count = $count_timefilter;
+    }
     $n = 0;
     $user_id = $user->id;
 
-    if ($sms_data['view'] == 'in')
-        {
-             $stmt = $db->prepare("SELECT message.*, folder,confirmed_read,answered,message_user.readed,dont_delete,Vorname,Nachname,username,count(dokument_id) as num_attachments FROM message_user
-                    LEFT JOIN message USING (message_id) LEFT JOIN auth_user_md5 ON (autor_id=auth_user_md5.user_id)
-                    LEFT JOIN dokumente ON range_id=message_user.message_id
-                    WHERE message_user.user_id = :user_id AND message_user.snd_rec = 'rec'
+    if ($sms_data['view'] == 'in') {
+        $query = "SELECT message.*, folder, confirmed_read, answered, message_user.readed,
+                         dont_delete, Vorname, Nachname, username,
+                         COUNT(dokument_id) AS num_attachments
+                  FROM message_user
+                  LEFT JOIN message USING (message_id)
+                  LEFT JOIN auth_user_md5 ON (autor_id = auth_user_md5.user_id)
+                  LEFT JOIN dokumente ON (range_id = message_user.message_id)
+                  WHERE message_user.user_id = :user_id AND message_user.snd_rec = 'rec'
                     AND message_user.deleted = 0
-                    AND message.message_id = :mid GROUP BY message_user.message_id");
-            $stmt->bindParam(':user_id', $user_id);
-            $stmt->bindParam(':mid', $mid);
-            $stmt->execute();
-
-            $tmp_move_to_folder = sizeof($sms_data['tmp']['move_to_folder']);
-            $row = $stmt->fetch();
-
-            $prm['folder'] = $my_messaging_settings['folder']['active']['in'];
-            $prm['answered'] = $row["answered"];
-            $prm['vorname'] = $row["Vorname"];
-            $prm['nachname'] = $row["Nachname"];
-            $prm['readed'] = $row["readed"];
-            $prm['dont_delete'] = $row["dont_delete"];
-            $prm['priority'] = $row["priority"];
-            $prm['num_attachments'] = $row["num_attachments"];
-            $prm['count_2'] = $tmp_move_to_folder - ($n+1);
-            $prm['count'] = (int)$count;
-            $prm['message_id'] = $row["message_id"];
-            $prm['message'] = $row["message"];
-            $prm['message_reading_confirmation'] = $row["reading_confirmation"];
-            $prm['confirmed_read'] = $row["confirmed_read"];
-            $prm['uname_snd'] = $row["username"];
-            $prm['message_subject'] = $row["subject"];
-            $prm['mkdate'] = $row["mkdate"];
-            $prm['user_id_snd'] = $row["autor_id"];
-
-            ob_start();
-            print_rec_message($prm, $f_open);
-            return ob_get_clean();
-
-        }
-        elseif ($sms_data['view'] == "out")
-        {
-            $query = "SELECT message. * , message_user.folder,message_user.dont_delete , auth_user_md5.user_id AS rec_uid,
-                    auth_user_md5.vorname AS rec_vorname, auth_user_md5.nachname AS rec_nachname,
-                    auth_user_md5.username AS rec_uname, count( mu.message_id )  AS num_rec,
-                    count(dokument_id) as num_attachments
-                    FROM message_user
-                    LEFT  JOIN message_user AS mu ON ( message_user.message_id = mu.message_id AND mu.snd_rec =  'rec'  )
-                    LEFT  JOIN message ON ( message.message_id = message_user.message_id )
-                    LEFT  JOIN auth_user_md5 ON ( mu.user_id = auth_user_md5.user_id )
-                    LEFT JOIN dokumente ON range_id=message_user.message_id
-                    WHERE message_user.user_id = '".$user_id."'
-                    AND message_user.snd_rec = 'snd' AND message_user.deleted = 0
-                    AND message.message_id = '".$mid."'
-                    GROUP BY (message_user.message_id)";
-        $res = $db->query($query);
+                    AND message.message_id = :mid
+                  GROUP BY message_user.message_id";
+        $stmt = DBManager::get()->prepare($query);
+        $stmt->bindParam(':user_id', $user_id);
+        $stmt->bindParam(':mid', $mid);
+        $stmt->execute();
 
         $tmp_move_to_folder = sizeof($sms_data['tmp']['move_to_folder']);
-        $row = $res->fetch();
-        $psm['count'] = $count;
-        $psm['count_2'] = $tmp_move_to_folder - ($n+1);
-        $psm['mkdate'] = $row["mkdate"];
-        $psm['folder'] = $my_messaging_settings['folder']['active']['out'];
-        $psm['message_id'] = $row["message_id"];
-        $psm['message_subject'] = $row["subject"];
-        $psm['message'] = $row["message"];
-        $psm['dont_delete'] = $row["dont_delete"];
-        $psm['rec_uid'] = $row["rec_uid"];
-        $psm['rec_vorname'] = $row["rec_vorname"];
-        $psm['rec_nachname'] = $row["rec_nachname"];
-        $psm['rec_uname'] = $row["rec_uname"];
-        $psm['num_rec'] = $row["num_rec"];
-        $psm['num_attachments'] = $row["num_attachments"];
+        $row = $stmt->fetch();
+
+        $prm['folder']          = $my_messaging_settings['folder']['active']['in'];
+        $prm['answered']        = $row['answered'];
+        $prm['vorname']         = $row['Vorname'];
+        $prm['nachname']        = $row['Nachname'];
+        $prm['readed']          = $row['readed'];
+        $prm['dont_delete']     = $row['dont_delete'];
+        $prm['priority']        = $row['priority'];
+        $prm['num_attachments'] = $row['num_attachments'];
+        $prm['count_2']         = $tmp_move_to_folder - ($n+1);
+        $prm['count']           = (int)$count;
+        $prm['message_id']      = $row['message_id'];
+        $prm['message']         = $row['message'];
+        $prm['message_reading_confirmation'] = $row['reading_confirmation'];
+        $prm['confirmed_read']  = $row['confirmed_read'];
+        $prm['uname_snd']       = $row['username'];
+        $prm['message_subject'] = $row['subject'];
+        $prm['mkdate']          = $row['mkdate'];
+        $prm['user_id_snd']     = $row['autor_id'];
+
+        ob_start();
+        print_rec_message($prm, $f_open);
+        return ob_get_clean();
+
+    } else if ($sms_data['view'] == 'out') {
+        $tmp_move_to_folder = sizeof($sms_data['tmp']['move_to_folder']);
+
+        $query = "SELECT message.*, message_user.folder, message_user.dont_delete,
+                         auth_user_md5.user_id AS rec_uid, auth_user_md5.vorname AS rec_vorname,
+                         auth_user_md5.nachname AS rec_nachname, auth_user_md5.username AS rec_uname,
+                         COUNT(mu.message_id) AS num_rec, COUNT(dokument_id) AS num_attachments
+                  FROM message_user
+                  LEFT  JOIN message_user AS mu ON (message_user.message_id = mu.message_id AND mu.snd_rec = 'rec')
+                  LEFT  JOIN message ON (message.message_id = message_user.message_id)
+                  LEFT  JOIN auth_user_md5 ON (mu.user_id = auth_user_md5.user_id)
+                  LEFT JOIN dokumente ON (range_id = message_user.message_id)
+                  WHERE message_user.user_id = ?
+                    AND message_user.snd_rec = 'snd' AND message_user.deleted = 0
+                    AND message.message_id = ?
+                  GROUP BY message_user.message_id";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($user_id, $mid));
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
+
+        $psm['count']           = $count;
+        $psm['count_2']         = $tmp_move_to_folder - ($n+1);
+        $psm['mkdate']          = $row['mkdate'];
+        $psm['folder']          = $my_messaging_settings['folder']['active']['out'];
+        $psm['message_id']      = $row['message_id'];
+        $psm['message_subject'] = $row['subject'];
+        $psm['message']         = $row['message'];
+        $psm['dont_delete']     = $row['dont_delete'];
+        $psm['rec_uid']         = $row['rec_uid'];
+        $psm['rec_vorname']     = $row['rec_vorname'];
+        $psm['rec_nachname']    = $row['rec_nachname'];
+        $psm['rec_uname']       = $row['rec_uname'];
+        $psm['num_rec']         = $row['num_rec'];
+        $psm['num_attachments'] = $row['num_attachments'];
 
         ob_start();
         print_snd_message($psm, $f_open);
         return ob_get_clean();
-        }
+    }
 }
 
 function show_nachrichtencount($count, $count_timefilter) {
@@ -737,19 +758,25 @@ function show_precform() {
 }
 
 
-function show_addrform() {
-
+function show_addrform()
+{
     global $sms_data, $user, $adresses_array, $search_exp, $my_messaging_settings, $_fullname_sql;
 
-    $db = new DB_Seminar;
     $picture = 'icons/16/yellow/arr_2up.png';
 
     // list of adresses
-    $query_for_adresses = "SELECT contact.user_id, username, ".$_fullname_sql['full_rev']." AS fullname FROM contact LEFT JOIN auth_user_md5 USING(user_id) LEFT JOIN user_info USING (user_id) WHERE owner_id = '".$user->id."' ORDER BY Nachname ASC";
-    $db->query($query_for_adresses);
-    while ($db->next_record()) {
-        $adresses_array[] = $db->f("username");
-    }
+    $query = "SELECT username, user_id, {$_fullname_sql['full_rev']} AS fullname
+              FROM contact
+              LEFT JOIN auth_user_md5 USING(user_id)
+              LEFT JOIN user_info USING (user_id)
+              WHERE owner_id = ?
+              ORDER BY Nachname ASC";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($user->id));
+    $temp = $statement->fetchAll(PDO::FETCH_COLUMN, 0);
+    $statement->closeCursor();
+
+    $adresses_array = array_merge((array)$adresses_array, $temp);
 
     $tmp = "<b><font size=\"-1\">"._("Adressbuch-Liste:")."</font></b><br>";
 
@@ -762,17 +789,15 @@ function show_addrform() {
         if (CheckAllAdded($adresses_array, $sms_data["p_rec"]) == TRUE) { // all adresses already added
             $tmp .= sprintf("<font size=\"-1\">"._("Bereits alle Personen des Adressbuchs hinzugef&uuml;gt!")."</font>");
         } else { // show adresses-select
-            $tmp_count = "0";
-            $db->query($query_for_adresses);
-            while ($db->next_record()) {
-                if (empty($sms_data["p_rec"])) {
-                    $tmp_02 .= "<option value=\"".$db->f("username")."\">".htmlReady(my_substr($db->f("fullname"),0,35))."</option>";
-                    $tmp_count = ($tmp_count+1);
-                } else {
-                    if (!in_array($db->f("username"), $sms_data["p_rec"])) {
-                        $tmp_02 .= "<option value=\"".$db->f("username")."\">".htmlReady(my_substr($db->f("fullname"),0,35))."</option>";
-                        $tmp_count = ($tmp_count+1);
-                    }
+            $tmp_count = 0;
+
+            $statement->execute(array($user->id));
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                if (empty($sms_data['p_rec']) || !in_array($row['username'], $sms_data['p_rec'])) {
+                    $tmp_02 .= sprintf('<option value="%s">%s</option>',
+                                       $row['username'],
+                                       htmlReady(my_substr($row['fullname'],0,35)));
+                    $tmp_count += 1;
                 }
             }
 

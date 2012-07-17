@@ -1877,7 +1877,7 @@ if (($form == 6) && (Request::submitted('jump_next')))
                     $statement->execute(array(
                         $_SESSION['sem_create_data']['sem_id'],
                         $key, $group, $next_pos,
-                        $_SESSION['sem_create_data']['sem_doz_label'][$key]
+                        $_SESSION['sem_create_data']['sem_doz_label'][$key] ?: ''
                     ));
 
                     if ($statement->rowCount() >= 1) {

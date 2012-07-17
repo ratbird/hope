@@ -1,7 +1,7 @@
 <?php
-# Lifter002: TODO
+# Lifter002: DONE
+# Lifter003: TEST
 # Lifter007: TODO
-# Lifter003: TODO
 # Lifter010: TODO
 /**
 * class to handle object connections
@@ -43,27 +43,33 @@ class ObjectConnections
         global $ELEARNING_INTERFACE_MODULES;
         
         $this->object_connections = "";
-        $db = New DB_Seminar;
-        $db->query("SELECT * FROM object_contentmodules WHERE object_id = '" . $this->id . "' ORDER BY chdate DESC");
-        $module_count = 0;
-        while ($db->next_record())
-        {
-            // show only connected modules with valid module-type
-            if ($ELEARNING_INTERFACE_MODULES[$db->f("system_type")]["types"][$db->f("module_type")] == "")
-                continue;
-            $module_count++;
-            $d_system_type = $db->f("system_type");
-            $d_module_type = $db->f("module_type");
-            $d_module_id = $db->f("module_id");
 
-            $reference = $d_system_type . "_" . $d_module_type . "_" . $d_module_id;
-            $this->object_connections[$reference]["cms"] = $d_system_type;
-            $this->object_connections[$reference]["type"] = $d_module_type;
-            $this->object_connections[$reference]["id"] = $d_module_id;
-            $this->object_connections[$reference]["chdate"] = $db->f("chdate");
+        $query = "SELECT system_type, module_type, module_id, chdate
+                  FROM object_contentmodules
+                  WHERE object_id = ?
+                  ORDER BY chdate DESC";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($this->id));
+
+        $module_count = 0;
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            // show only connected modules with valid module-type
+            if ($ELEARNING_INTERFACE_MODULES[$row['system_type']]['types'][$row['module_type']] == '') {
+                continue;
+            }
+            $module_count += 1;
+            $d_system_type = $row['system_type'];
+            $d_module_type = $row['module_type'];
+            $d_module_id   = $row['module_id'];
+
+            $reference = $d_system_type . '_' . $d_module_type . '_' . $d_module_id;
+            $this->object_connections[$reference]['cms']    = $d_system_type;
+            $this->object_connections[$reference]['type']   = $d_module_type;
+            $this->object_connections[$reference]['id']     = $d_module_id;
+            $this->object_connections[$reference]['chdate'] = $Row['chdate'];
         }
-        if ($module_count == 0)
-        {
+
+        if ($module_count == 0) {
             $this->object_connections = false;
         }
     }
@@ -96,12 +102,11 @@ class ObjectConnections
             return (boolean) $this->object_connections;
         }
         // direct functioncall without existing instance
-        if (isset($object_id))
-        {
-            $db = New DB_Seminar;
-            $db->query("SELECT * FROM object_contentmodules WHERE object_id = '" . $object_id . "'");
-            if ($db->next_record())
-                return true;
+        if (isset($object_id)) {
+            $query = "SELECT 1 FROM object_contentmodules WHERE object_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($object_id));
+            return (bool)$statement->fetchColumn();
         }
         return false;
     }
@@ -118,14 +123,16 @@ class ObjectConnections
     */
     function getConnectionModuleId($connection_object_id, $connection_module_type, $connection_cms)
     {
-        $db = New DB_Seminar;
-        $db->query("SELECT * FROM object_contentmodules WHERE object_id = '" . $connection_object_id . "' AND system_type = '" . $connection_cms . "' AND module_type = '" . $connection_module_type . "'");
-        if ($db->next_record())
-        {
-            return $db->f("module_id");
-        }
-        else
-            return false;
+        $query = "SELECT module_id
+                  FROM object_contentmodules
+                  WHERE object_id = ? AND system_type = ? AND module_type = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $connection_object_id,
+            $connection_cms,
+            $connection_module_type
+        ));
+        return $statement->fetchColumn() ?: false;
     }
 
     /**
@@ -141,20 +148,46 @@ class ObjectConnections
     */
     function setConnection($connection_object_id, $connection_module_id, $connection_module_type, $connection_cms)
     {
-        $db = New DB_Seminar;
-        $db->query("SELECT * FROM object_contentmodules WHERE object_id = '" . $connection_object_id . "' AND module_id = '" . $connection_module_id . "' AND system_type = '" . $connection_cms . "' AND module_type = '" . $connection_module_type . "'");
-        if ($db->next_record())
-        {
-            $db->query("UPDATE object_contentmodules SET module_type='" . $connection_module_type . "', chdate='" . time() . "' "
-            ."WHERE object_id = '" . $connection_object_id . "' AND module_id = '" . $connection_module_id . "' AND system_type = '" . $connection_cms . "'");
-        }
-        else
-        {
-            $db->query("INSERT INTO object_contentmodules (object_id, module_id, system_type, module_type, mkdate, chdate) "
-                ."VALUES ('" . $connection_object_id . "', '" . $connection_module_id . "', '" . $connection_cms . "', '" . $connection_module_type . "', '" . time() . "', '" . time() . "')");
+        $query = "SELECT 1
+                  FROM object_contentmodules
+                  WHERE object_id = ? AND module_id = ? AND system_type = ?
+                    AND module_type = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $connection_object_id,
+            $connection_module_id,
+            $connection_cms,
+            $connection_module_type
+        ));
+        $check = $statement->fetchColumn();
+
+        if ($check) {
+            $query = "UPDATE object_contentmodules
+                      SET module_type = ?, chdate = UNIX_TIMESTAMP()
+                      WHERE object_id = ? AND module_id = ? AND system_type = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                $connection_module_type,
+                $connection_object_id,
+                $connection_module_id,
+                $connection_cms
+            ));
+        } else {
+            $query = "INSERT INTO object_contentmodules
+                        (object_id, module_id, system_type, module_type, mkdate, chdate)
+                      VALUES (?, ?, ?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                $connection_object_id,
+                $connection_module_id,
+                $connection_cms,
+                $connection_module_type
+            ));
         }
         //uargl, warum immer ich
-        if ($this instanceof ObjectConnections) $this->readData();
+        if ($this instanceof ObjectConnections) {
+            $this->readData();
+        }
         return true;
     }
 
@@ -171,31 +204,56 @@ class ObjectConnections
     */
     function unsetConnection($connection_object_id, $connection_module_id, $connection_module_type, $connection_cms)
     {
-        $db = New DB_Seminar;
-        $db->query("SELECT * FROM object_contentmodules WHERE object_id = '" . $connection_object_id . "' AND module_id = '" . $connection_module_id . "' AND system_type = '" . $connection_cms . "' AND module_type = '" . $connection_module_type . "'");
-        if ($db->next_record())
-        {
-            $db->query("DELETE FROM object_contentmodules WHERE object_id = '" . $connection_object_id . "' AND module_id = '" . $connection_module_id . "' AND system_type = '" . $connection_cms . "' AND module_type = '" . $connection_module_type . "'");
+        $query = "SELECT 1
+                  FROM object_contentmodules
+                  WHERE object_id = ? AND module_id = ? AND system_type = ?
+                    AND module_type = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $connection_object_id,
+            $connection_module_id,
+            $connection_cms,
+            $connection_module_type
+        ));
+        $check = $statement->fetchColumn();
+
+
+        if ($check) {
+            $query = "DELETE FROM object_contentmodules
+                      WHERE object_id = ? AND module_id = ? AND system_type = ?
+                        AND module_type = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                $connection_object_id,
+                $connection_module_id,
+                $connection_cms,
+                $connection_module_type
+            ));
             //uargl, warum immer ich
-            if ($this instanceof ObjectConnections) $this->readData();
+            if ($this instanceof ObjectConnections) {
+                $this->readData();
+            }
             return true;
         }
-        else
-            return false;
+        return false;
     }
 
-    function GetConnectedSystems($object_id){
-        $ret = array();
-        $db = new DB_Seminar("SELECT DISTINCT system_type FROM object_contentmodules WHERE object_id='$object_id'");
-        while($db->next_record()){
-            $ret[] = $db->f(0);
-        }
-        return $ret;
+    function GetConnectedSystems($object_id)
+    {
+        $query = "SELECT DISTINCT system_type
+                  FROM object_contentmodules
+                  WHERE object_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($object_id));
+        return $statement->fetchAll(PDO::FETCH_COLUMN);
     }
     
-    function DeleteAllConnections($object_id, $cms_type){
-        $db = new DB_Seminar("DELETE FROM object_contentmodules WHERE object_id='$object_id' AND system_type='$cms_type'");
-        return $db->affected_rows();
+    function DeleteAllConnections($object_id, $cms_type)
+    {
+        $query = "DELETE FROM object_contentmodules
+                  WHERE object_id = ? AND system_type = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($object_id, $cms_type));
+        return $statement->rowCount();
     }
 }
-?>

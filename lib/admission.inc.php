@@ -1,7 +1,7 @@
 <?
 # Lifter002: TODO
+# Lifter003: TEST
 # Lifter007: TODO
-# Lifter003: TODO
 # Lifter010: TODO
 /**
 * admission.inc.php
@@ -174,33 +174,56 @@ function get_free_admission ($seminar_id) {
 *
 */
 
-function renumber_admission ($seminar_id, $send_message=TRUE) {
-    $db=new DB_Seminar;
-    $db2=new DB_Seminar;
-    $db3=new DB_Seminar;
-    $db4=new DB_Seminar;
-    $messaging=new messaging;
+function renumber_admission ($seminar_id, $send_message = TRUE)
+{
+    $messaging = new messaging;
 
     //Daten holen / Abfrage ob ueberhaupt begrenzt
-    $db->query("SELECT Seminar_id, Name FROM seminare WHERE Seminar_id = '$seminar_id' AND ((admission_type = '1'  AND admission_selection_take_place = '1') OR (admission_type = '2'))");
-    if ($db->next_record()) {
+    $query = "SELECT Seminar_id, Name
+              FROM seminare
+              WHERE Seminar_id = ?
+                AND ((admission_type = 1 AND admission_selection_take_place = 1) OR
+                     (admission_type = 2))";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($seminar_id));
+    $temp = $statement->fetch(PDO::FETCH_ASSOC);
+
+    if ($temp) {
         //Liste einlesen
-        $db2->query("SELECT user_id FROM admission_seminar_user WHERE seminar_id =  '".$db->f("Seminar_id")."' AND status = 'awaiting' ORDER BY position ");
-        $position=1;
+        $query = "SELECT user_id
+                  FROM admission_seminar_user
+                  WHERE seminar_id = ? AND status = 'awaiting'
+                  ORDER BY position";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($temp['Seminar_id']));
+        $user_ids = $statement->fetchAll(PDO::FETCH_COLUMN);
+
+        // Prepare statement that updates the position
+        $query = "UPDATE admission_seminar_user
+                  SET position = ?
+                  WHERE user_id = ? AND seminar_id = ?";
+        $update_statement = DBManager::get()->prepare($query);
+
+        $position = 1;
         //Liste neu numerieren
-        while ($db2->next_record()) {
-            $db3->query("UPDATE admission_seminar_user SET position = '$position' WHERE user_id = '".$db2->f("user_id")."' AND seminar_id = '".$db->f("Seminar_id")."' ");
+        foreach ($user_ids as $user_id) {
+            $update_statement->execute(array($position, $user_id, $temp['Seminar_id']));
+
             //User benachrichten
-            if (($db3->affected_rows()) && ($send_message)) {
+            if ($update_statement->rowCount() && $send_message) {
                 //Usernamen auslesen
-                $db4->query("SELECT username FROM auth_user_md5 WHERE user_id = '".$db2->f("user_id")."' ");
-                $db4->next_record();
-                setTempLanguage($db2->f("user_id"));
-                $message = sprintf(_("Sie sind in der Warteliste der Veranstaltung **%s (%s)** hochgestuft worden. Sie stehen zur Zeit auf Position %s."), $db->f("Name"), view_turnus($db->f("Seminar_id")), $position);
+                $username = get_username($user_id);
+
+                setTempLanguage($user_id);
+                $message = sprintf(_('Sie sind in der Warteliste der Veranstaltung **%s (%s)** hochgestuft worden. Sie stehen zur Zeit auf Position %s.'),
+                                   $temp['Name'],
+                                   view_turnus($temp['Seminar_id']),
+                                   $position);
                 restoreLanguage();
-                $messaging->insert_message(addslashes($message), $db4->f("username"), "____%system%____", FALSE, FALSE, "1",FALSE, sprintf(_("Ihre Position auf der Warteliste der Veranstaltung %s wurde verändert"),$db->f("Name"))); 
+
+                $messaging->insert_message(addslashes($message), $username, '____%system%____', FALSE, FALSE, '1', FALSE, sprintf(_('Ihre Position auf der Warteliste der Veranstaltung %s wurde verändert'), $temp['Name'])); 
             }
-            $position++;
+            $position += 1;
         }
     }
 }
@@ -211,52 +234,57 @@ function renumber_admission ($seminar_id, $send_message=TRUE) {
  * Helper-Functions for grouped admissions
  * Grouped seminars MUST HAVE chronologically admission-procedure activated!
  */
-function check_group($user_id, $username, $grouped_sems, $cur_name, $cur_id) {
+function check_group($user_id, $username, $grouped_sems, $cur_name, $cur_id)
+{
     global $send_message;
 
-    $db = new DB_Seminar;
-    $db2 = new DB_Seminar;
-    $db3 = new DB_Seminar;
     $messaging = new messaging;
 
-    //crunch array into sql_statement
-    $sql = "";
-    while ($elem = array_pop($grouped_sems)) {
-        if ($sql != "") $sql .= " OR ";
-        $sql .= "(Seminar_id = '$elem')";
-    }
-    $db->query("SELECT * FROM seminar_user WHERE user_id = '$user_id' AND ($sql);");
-    if ($db->num_rows() != 0) {
-        $db->next_record();
-        $db2->query("DELETE FROM seminar_user WHERE user_id = '$user_id' AND Seminar_id = '".$db->f("Seminar_id")."';");
-        if ($db2->affected_rows()) {
-            $db3->query("SELECT Name FROM seminare WHERE Seminar_id = '".$db->f("Seminar_id")."';");
-            $db3->next_record();
-            setTempLanguage($db->f("user_id"));
-            $message = sprintf (_("Ihr Abonnement der Veranstaltung **%s (%s)** wurde aufgehoben, da Sie in der Veranstaltung **%s (%s)** von der Warteliste nachgerückt sind. Bei diesen Veranstaltungen handelt sich um gruppierte Veranstaltungen, der Wartelisteneintrag wurde somit bevorzugt behandelt."),$db3->f("Name"), view_turnus($db->f("Seminar_id")),$cur_name, view_turnus($cur_id));
+    $query = "SELECT Seminar_id
+              FROM seminar_user
+              WHERE user_id = ? AND Seminar_id IN (?)";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($user_id, $grouped_sems ?: ''));
+    $seminar_ids = $statement->fetchAll(PDO::FETCH_COLUMN);
+
+    if (count($seminar_ids) > 0) {
+        $seminar_id = reset($seminar_ids);
+
+        $query = "DELETE FROM seminar_user WHERE user_id = ? AND Seminar_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($seminar_id));
+        if ($statement->rowCount() > 0) {
+            $query = "SELECT Name FROM seminare WHERE Seminar_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($seminar_id));
+            $name = $statement->fetchColumn();
+
+            setTempLanguage($user_id);
+            $message = sprintf (_('Ihr Abonnement der Veranstaltung **%s (%s)** wurde aufgehoben, da Sie in der Veranstaltung **%s (%s)** von der Warteliste nachgerückt sind. Bei diesen Veranstaltungen handelt sich um gruppierte Veranstaltungen, der Wartelisteneintrag wurde somit bevorzugt behandelt.'), $name, view_turnus($seminar_id), $cur_name, view_turnus($cur_id));
             restoreLanguage();
-            $messaging->insert_message(addslashes($message), $username, "____%system%____", FALSE, FALSE, "1", FALSE, _("Ihre abbonierten Veranstaltungen wurden geändert")); 
-            update_admission($db->f("Seminar_id"), $send_message);
+
+            $messaging->insert_message(addslashes($message), $username, '____%system%____', FALSE, FALSE, '1', FALSE, _('Ihre abbonierten Veranstaltungen wurden geändert')); 
+            update_admission($seminar_id, $send_message);
         }
     }
 }
 
-function group_update_admission($seminar_id, $send_message = TRUE) {
-
-    $db=new DB_Seminar;
+function group_update_admission($seminar_id, $send_message = TRUE)
+{
     $messaging=new messaging;
 
     //get date / check if there is any admission
     $seminar = Seminar::GetInstance($seminar_id);
     $seminar->restoreAdmissionStudiengang();
 
-
     //Groups exist only for chronological admissions
-    if ($seminar->admission_type != 2) return;
+    if ($seminar->admission_type != 2) {
+        return;
+    }
 
     //check if seminar ist grouped
     $group = StudipAdmissionGroup::GetAdmissionGroupBySeminarId($seminar_id);
-    if(is_object($group) && $group->getValue('status') == 0){
+    if (is_object($group) && $group->getValue('status') == 0) {
         $grouped_seminars = array_flip($group->getMemberIds());
         unset($grouped_seminars[$seminar_id]);
         $grouped_seminars = array_keys($grouped_seminars);
@@ -264,19 +292,38 @@ function group_update_admission($seminar_id, $send_message = TRUE) {
         if (!$seminar->isAdmissionQuotaChecked()) {
             $count = (int)$seminar->getFreeAdmissionSeats();
             //Studis auswaehlen, die jetzt aufsteigen koennen
-            $db->query("SELECT admission_seminar_user.user_id, username, studiengang_id FROM admission_seminar_user LEFT JOIN auth_user_md5 USING (user_id) WHERE seminar_id =  '".$seminar->getId()."' AND status != 'accepted' ORDER BY position LIMIT $count");
-            while ($db->next_record()) {
+            $query = "SELECT user_id, username
+                      FROM admission_seminar_user
+                      LEFT JOIN auth_user_md5 USING (user_id)
+                      WHERE seminar_id = ? AND status != 'accepted'
+                      ORDER BY position
+                      LIMIT " . (int)$count;
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($seminar->getId()));
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
                 //First we check to parse the grouped seminars
-                check_group($db->f("user_id"),$db->f("username"),$grouped_seminars,$seminar->getName(),$seminar->getId());
+                check_group($row['user_id'], $row['username'], $grouped_seminars, $seminar->getName(), $seminar->getId());
             }
         } else {
+            $query = "SELECT user_id, username
+                      FROM admission_seminar_user
+                      LEFT JOIN auth_user_md5 USING (user_id)
+                      WHERE seminar_id = ? AND studiengang_id = ? AND status != 'accepted'
+                      ORDER BY position
+                      LIMIT " . (int)$free_quota;
+            $statement = DBManager::get()->prepare($query);
+
             //Alle zugelassenen Studiengaenge einzeln bearbeiten
             foreach($seminar->admission_studiengang as $studiengang_id => $studiengang){
                 $free_quota = (int) $seminar->getFreeAdmissionSeats($studiengang_id);
+
                 //Studis auswaehlen, die jetzt aufsteigen koennen
-                $db->query("SELECT admission_seminar_user.user_id, username, studiengang_id FROM admission_seminar_user LEFT JOIN auth_user_md5 USING (user_id) WHERE seminar_id =  '".$seminar->getId()."' AND studiengang_id = '".$studiengang_id."' AND status != 'accepted' ORDER BY position LIMIT $free_quota");
-                while ($db->next_record()) {
-                    check_group($db->f("user_id"),$db->f("username"),$grouped_seminars,$seminar->getName(),$seminar->getId());
+                $statement->execute(array(
+                    $seminar_id->getId(),
+                    $studiengang_id
+                ));
+                while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                    check_group($row['user_id'], $row['username'], $grouped_seminars, $seminar->getName(), $seminar->getId());
                 }
             }
         }
@@ -307,28 +354,18 @@ function update_admission ($seminar_id, $send_message = TRUE) {
 * @param        boolean send_message        should a system-message be send?
 *
 */
-function normal_update_admission($seminar_id, $send_message = TRUE) {
-
-    $db=new DB_Seminar;
-    $db2=new DB_Seminar;
-    $db3=new DB_Seminar;
-    $db4=new DB_Seminar;
-    $db5=new DB_Seminar;
-    $db6=new DB_Seminar;
+function normal_update_admission($seminar_id, $send_message = TRUE)
+{
     $messaging=new messaging;
 
     //Daten holen / Abfrage ob ueberhaupt begrenzt
-
     $seminar = Seminar::GetInstance($seminar_id);
 
     if($seminar->isAdmissionEnabled()){
 
         $seminar->restoreAdmissionStudiengang();
 
-        if ($seminar->admission_prelim == 1)
-            $sem_preliminary = TRUE;
-        else
-            $sem_preliminary = FALSE;
+        $sem_preliminary = ($seminar->admission_prelim == 1);
 
         //Veranstaltung einfach auffuellen (nach Lostermin und Ende der Kontingentierung)
         if (!$seminar->isAdmissionQuotaChecked()) {
@@ -336,28 +373,68 @@ function normal_update_admission($seminar_id, $send_message = TRUE) {
             $count = (int)$seminar->getFreeAdmissionSeats();
 
             //Studis auswaehlen, die jetzt aufsteigen koennen
-            $db3->query("SELECT admission_seminar_user.user_id, username, studiengang_id FROM admission_seminar_user LEFT JOIN auth_user_md5 USING (user_id) WHERE seminar_id =  '".$seminar->getId()."' AND status = 'awaiting' ORDER BY position LIMIT $count");
-            while ($db3->next_record()) {
-                $group = select_group ($seminar->getSemesterStartTime(), $db3->f("user_id")); //ok, here ist the "colored-group" meant (for grouping on meine_seminare), not the grouped seminars as above!
+            $query = "SELECT user_id, username, studiengang_id
+                      FROM admission_seminar_user
+                      LEFT JOIN auth_user_md5 USING (user_id)
+                      WHERE seminar_id = ? AND status = 'awaiting'
+                      ORDER BY position
+                      LIMIT " . (int)$count;
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($seminar_id->getId()));
+            $temp = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+            foreach ($temp as $row) {
+                //ok, here ist the "colored-group" meant (for grouping on meine_seminare), not the grouped seminars as above!
+                $group = select_group($seminar->getSemesterStartTime(), $row['user_id']); 
+
                 if (!$sem_preliminary) {
-                    $db4->query("INSERT INTO seminar_user SET user_id = '".$db3->f("user_id")."', Seminar_id = '".$seminar->getId()."', status= 'autor', gruppe = '$group', admission_studiengang_id = '".$db3->f("studiengang_id")."', mkdate = '".time()."' ");
+                    $query = "INSERT INTO seminar_user
+                                (user_id, Seminar_id, status, gruppe, admission_studiengang_id, mkdate)
+                              VALUES (?, ?, 'autor', ?, ?, UNIX_TIMESTAMP())";
+                    $statement = DBManager::get()->prepare($query);
+                    $statement->execute(array(
+                        $row['user_id'],
+                        $seminar->getId(),
+                        $group,
+                        $row['studiengang_id']
+                    ));
+                    $affected = $statement->rowCount();
                 } else {
-                    $db4->query("UPDATE admission_seminar_user SET status = 'accepted' WHERE user_id='".$db3->f("user_id")."' AND seminar_id = '".$seminar->getId()."'");
+                    $query = "UPDATE admission_seminar_user
+                              SET status = 'accepted'
+                              WHERE user_id = ? AND seminar_id = ?";
+                    $statement = DBManager::get()->prepare($query);
+                    $statement->execute(array(
+                        $row['user_id'],
+                        $seminar->getId()
+                    ));
+                    $affected = $statement->rowCount();
                 }
-                if ($db4->affected_rows()) {
-                    if (!$sem_preliminary)
-                        $db5->query("DELETE FROM admission_seminar_user WHERE user_id ='".$db3->f("user_id")."' AND seminar_id = '".$seminar->getId()."' ");
+                if ($affected > 0) {
+                    if (!$sem_preliminary) {
+                        $query = "DELETE FROM admission_seminar_user
+                                  WHERE user_id = ? AND seminar_id = ?";
+                        $statement = DBManager::get()->prepare($query);
+                        $statement->execute(array(
+                            $row['user_id'],
+                            $seminar->getId()
+                        ));
+                        $affected = $statement->rowCount();
+                    } else {
+                        $affected = 0;
+                    }
                     //User benachrichtigen
-                    if (($sem_preliminary || $db5->affected_rows()) && ($send_message)) {
-                        setTempLanguage($db3->f("user_id"));
+                    if (($sem_preliminary || $affected > 0) && $send_message) {
+                        setTempLanguage($row['user_id']);
                         if (!$sem_preliminary) {
-                            $message = sprintf (_("Sie sind als TeilnehmerIn der Veranstaltung **%s (%s)** eingetragen worden, da für Sie ein Platz frei geworden ist. Ab sofort finden Sie die Veranstaltung in der Übersicht Ihrer Veranstaltungen. Damit sind Sie auch als TeilnehmerIn der Präsenzveranstaltung zugelassen."), $seminar->getName(), $seminar->getFormattedTurnus(true));
+                            $message = sprintf (_('Sie sind als TeilnehmerIn der Veranstaltung **%s (%s)** eingetragen worden, da für Sie ein Platz frei geworden ist. Ab sofort finden Sie die Veranstaltung in der Übersicht Ihrer Veranstaltungen. Damit sind Sie auch als TeilnehmerIn der Präsenzveranstaltung zugelassen.'), $seminar->getName(), $seminar->getFormattedTurnus(true));
                         } else {
-                            $message = sprintf (_("Sie haben den Status vorläufig akzeptiert in der Veranstaltung **%s (%s)** erhalten, da für Sie ein Platz freigeworden ist."), $seminar->getName(), $seminar->getFormattedTurnus(true));
+                            $message = sprintf (_('Sie haben den Status vorläufig akzeptiert in der Veranstaltung **%s (%s)** erhalten, da für Sie ein Platz freigeworden ist.'), $seminar->getName(), $seminar->getFormattedTurnus(true));
                         }
                         $subject = sprintf(_("Teilnahme an der Veranstaltung %s"),$seminar->getName());
                         restoreLanguage();
-                        $messaging->insert_message(addslashes($message), $db3->f("username"), "____%system%____", FALSE, FALSE, "1", FALSE, addslashes($subject), true);
+
+                        $messaging->insert_message(addslashes($message), $row['username'], '____%system%____', FALSE, FALSE, '1', FALSE, addslashes($subject), true);
                     }
                 }
             }
@@ -366,32 +443,82 @@ function normal_update_admission($seminar_id, $send_message = TRUE) {
 
         //Nachruecken in einzelnen Kontingenten veranlassen (nur bei chronologischer Anmeldung)
         } elseif ($seminar->admission_type == 2) {
+            // Prepare statement that obtains all valid students
+            $query = "SELECT user_id, username, studiengang_id
+                      FROM admission_seminar_user
+                      LEFT JOIN auth_user_md5 USING (user_id)
+                      WHERE seminar_id = :seminar_id AND studiengang_id = :studiengang_id AND status = 'awaiting'
+                      ORDER BY position
+                      LIMIT :limit";
+            $student_statement = DBManager::get()->prepare($query);
+            $student_statement->bindValue(':seminar_id', $seminar->getId());
+
+            // Prepare statement that inserts into seminar_user
+            $query = "INSERT INTO seminar_user
+                        (user_id, Seminar_id, status, gruppe, admission_studiengang_id, mkdate)
+                      VALUES (:user_id, :seminar_id, 'autor', :group, :studiengang_id, UNIX_TIMESTAMP())";
+            $insert_statement = DBManager::get()->prepare($query);
+            $insert_statement->bindValue(':seminar_id', $seminar->getId());
+            
+            // Prepare statement that updates admission_seminar_user
+            $query = "UPDATE admission_seminar_user
+                      SET status = 'accepted'
+                      WHERE user_id = :user_id AND seminar_id = :seminar_id";
+            $update_statement = DBManager::get()->prepare($query);
+            $update_statement->bindValue(':seminar_id', $seminar->getId());
+
+            // Prepare statement that deletes from admission_seminar_user
+            $query = "DELETE FROM admission_seminar_user
+                      WHERE user_id = :user_id AND seminar_id = :seminar_id";
+            $delete_statement = DBManager::get()->prepare($query);
+            $delete_statement->bindValue(':seminar_id', $seminar->getId());
+
             //Alle zugelassenen Studiengaenge einzeln bearbeiten
             foreach($seminar->admission_studiengang as $studiengang_id => $studiengang){
                 $free_quota = (int) $seminar->getFreeAdmissionSeats($studiengang_id);
                 //Studis auswaehlen, die jetzt aufsteigen koennen
-                $db4->query("SELECT admission_seminar_user.user_id, username, studiengang_id FROM admission_seminar_user LEFT JOIN auth_user_md5 USING (user_id) WHERE seminar_id =  '".$seminar->getId()."' AND studiengang_id = '".$studiengang_id."' AND status = 'awaiting' ORDER BY position LIMIT $free_quota");
-                while ($db4->next_record()) {
-                    $group = select_group ($seminar->getSemesterStartTime(), $db4->f("user_id")); //ok, here ist the "colored-group" meant (for grouping on meine_seminare), not the grouped seminars as above!
+                $student_statement->bindValue(':studiengang_id', $studiengang_id);
+                $student_statement->bindValue(':limit', $free_quota, PDO::PARAM_INT);
+                $student_statement->execute();
+                $temp = $student_statement->fetchAll(PDO::FETCH_ASSOC);
+                $student_statement->closeCursor();
+
+                foreach ($temp as $row) {
+                    //ok, here ist the "colored-group" meant (for grouping on meine_seminare), not the grouped seminars as above!
+                    $group = select_group ($seminar->getSemesterStartTime(), $row['user_id']);
+
                     if (!$sem_preliminary) {
-                        $db5->query("INSERT INTO seminar_user SET user_id = '".$db4->f("user_id")."', Seminar_id = '".$seminar->getId()."', status= 'autor', gruppe = '$group', admission_studiengang_id = '".$studiengang_id."', mkdate = '".time()."' ");
+                        $insert_statement->bindValue(':user_id', $row['user_id']);
+                        $insert_statement->bindValue(':group', $group);
+                        $insert_statement->bindValue(':studiengang_id', $studiengang_id);
+                        $insert_statement->execute();
+                        $affected = $insert_statement->rowCount();
                     } else {
-                        $db5->query("UPDATE admission_seminar_user SET status = 'accepted' WHERE user_id = '".$db4->f("user_id")."' AND seminar_id = '".$seminar->getId()."'");
+                        $update_statement->bindValue(':user_id', $row['user_id']);
+                        $update_statement->execute();
+                        $affected = $update_statement->rowCount();
                     }
-                    if ($db5->affected_rows()) {
-                        if (!$sem_preliminary)
-                        $db6->query("DELETE FROM admission_seminar_user WHERE user_id ='".$db4->f("user_id")."' AND seminar_id = '".$seminar->getId()."' ");
+
+                    if ($affected > 0) {
+                        if (!$sem_preliminary) {
+                            $delete_statement->bindValue(':user_id', $row['user_id']);
+                            $delete_statement->execute();
+                            $affected = $delete_statement->rowCount();
+                        } else {
+                            $affected = 0;
+                        }
                         //User benachrichtigen
-                        if (($sem_preliminary || $db6->affected_rows()) && ($send_message)) {
-                            setTempLanguage($db4->f("user_id"));
+                        if (($sem_preliminary || $affected > 0) && $send_message) {
+                            setTempLanguage($row['user_id']);
                             if (!$sem_preliminary) {
-                                $message = sprintf (_("Sie sind als TeilnehmerIn der Veranstaltung **%s (%s)** eingetragen worden, da für Sie ein Platz frei geworden ist. Ab sofort finden Sie die Veranstaltung in der Übersicht Ihrer Veranstaltungen. Damit sind Sie auch als TeilnehmerIn der Präsenzveranstaltung zugelassen."), $seminar->getName(), $seminar->getFormattedTurnus(true));
+                                $message = sprintf (_('Sie sind als TeilnehmerIn der Veranstaltung **%s (%s)** eingetragen worden, da für Sie ein Platz frei geworden ist. Ab sofort finden Sie die Veranstaltung in der Übersicht Ihrer Veranstaltungen. Damit sind Sie auch als TeilnehmerIn der Präsenzveranstaltung zugelassen.'), $seminar->getName(), $seminar->getFormattedTurnus(true));
                             } else {
-                                $message = sprintf (_("Sie haben den Status vorläufig akzeptiert in der Veranstaltung **%s (%s)** erhalten,  da für Sie ein Platz freigeworden ist."), $seminar->getName(), $seminar->getFormattedTurnus(true));
+                                $message = sprintf (_('Sie haben den Status vorläufig akzeptiert in der Veranstaltung **%s (%s)** erhalten,  da für Sie ein Platz freigeworden ist.'), $seminar->getName(), $seminar->getFormattedTurnus(true));
                             }
-                            $subject = sprintf(_("Teilnahme an der Veranstaltung %s"),$seminar->getName());
+                            $subject = sprintf(_('Teilnahme an der Veranstaltung %s'), $seminar->getName());
                             restoreLanguage();
-                            $messaging->insert_message(addslashes($message), $db4->f("username"), "____%system%____", FALSE, FALSE, "1", FALSE, addslashes($subject), true);
+
+                            $messaging->insert_message(addslashes($message), $row['username'], '____%system%____', FALSE, FALSE, '1', FALSE, addslashes($subject), true);
                         }
                     }
                 }
@@ -413,123 +540,215 @@ function normal_update_admission($seminar_id, $send_message = TRUE) {
 * @param        boolean send_message        should a system-message be send?
 *
 */
-function check_admission ($send_message=TRUE) {
-
-    $db=new DB_Seminar;
-    $db2=new DB_Seminar;
-    $db3=new DB_Seminar;
-    $db4=new DB_Seminar;
-    $db5=new DB_Seminar;
-    $messaging=new messaging;
+function check_admission ($send_message=TRUE)
+{
+    $messaging = new messaging;
 
     //Daten holen / Abfrage ob ueberhaupt begrenzt
-    $db->query("SELECT Seminar_id FROM seminare WHERE admission_endtime != -1 AND admission_endtime <= '".time()."' AND admission_type IN(1,2) AND (admission_selection_take_place = '0' OR admission_selection_take_place IS NULL) AND visible='1'"); // OK_VISIBLE
-    if($db->num_rows()){
-        ignore_user_abort(true);
-        if(!ini_get('safe_mode')) set_time_limit(0);
-        while ($db->next_record()) {
-            $seminar = Seminar::GetInstance($db->f("Seminar_id"));
-            $seminar->restore();
-            if ($seminar->admission_prelim == 1)
-                $sem_preliminary = TRUE;
-            else
-            $sem_preliminary = FALSE;
+    $query = "SELECT Seminar_id
+              FROM seminare
+              WHERE admission_endtime != -1 AND admission_endtime <= UNIX_TIMESTAMP()
+                AND admission_type IN (1,2)
+                AND (admission_selection_take_place IS NULL OR admission_selection_take_place = 0)
+                AND visible = 1";
+    $statement = DBManager::get()->query($query);
+    $seminar_ids = $statement->fetchAll(PDO::FETCH_COLUMN);
 
-            if ($seminar->admission_type == 1) { //nur Losveranstaltungen losen
-                //Check, if locked
-                if ($seminar->admission_selection_take_place != 0)
-                    break; //Someone has locked or checked the Veranstaltung in the meanwhile
+    if (count($seminar_ids) === 0) {
+        return;
+    }
 
-                //Veranstaltung locken
-                $seminar->admission_selection_take_place = -1;
-                $seminar->store(false);
-                $seminar->restoreAdmissionStudiengang();
-                $users_to_move = array();
-                if($seminar->isAdmissionQuotaEnabled()){
-                    //Alle zugelassenen Studiengaenge einzeln auslosen
-                    foreach($seminar->admission_studiengang as $studiengang_id => $quota_info){
-                        $tmp_admission_quota = (int)$seminar->getFreeAdmissionSeats($studiengang_id);
-                        if($tmp_admission_quota > 0){
-                            //Losfunktion
-                            $db3->query("SELECT admission_seminar_user.user_id, username, studiengang_id FROM admission_seminar_user LEFT JOIN auth_user_md5 USING (user_id) WHERE seminar_id = '".$seminar->getId()."' AND studiengang_id = '".$studiengang_id."' AND status != 'accepted' ORDER BY RAND() LIMIT ".$tmp_admission_quota);
-                            //User aus admission_Seminar_user in seminar_user verschieben oder in Status "vorläufig akzeptiert" setzen
-                            while ($db3->next_record()){
-                                $users_to_move[] = $db3->Record;
-                            }
-                        }
+    // Prepare user statement
+    $query = "SELECT user_id, username, studiengang_id
+              FROM admission_seminar_user
+              LEFT JOIN auth_user_md5 USING (user_id)
+              WHERE status != 'accepted' AND seminar_id = :seminar_id 
+                AND IFNULL(:studiengang_id, studiengang_id) = studiengang_id
+              ORDER BY RAND()
+              LIMIT :limit";
+    $users_statement = DBManager::get()->prepare($query);
+    
+    // Prepare user statement without limit
+    $query = "SELECT user_id
+              FROM admission_seminar_user
+              LEFT JOIN auth_user_md5 USING (user_id)
+              WHERE seminar_id = ? AND status != 'accepted'
+              ORDER BY RAND()";
+    $users2_statement = DBManager::get()->prepare($query);
+
+    // Prepare user statement (no random order)
+    $query = "SELECT user_id, username, position
+              FROM admission_seminar_user
+              LEFT JOIN auth_user_md5 USING (user_id)
+              WHERE seminar_id = ? AND status != 'accepted'
+              ORDER BY position";
+    $users3_statement = DBManager::get()->prepare($query);
+
+    // Prepare promote statement
+    $query = "UPDATE admission_seminar_user
+              SET status = 'accepted'
+              WHERE Seminar_id = ? AND user_id = ?";
+    $promote_statement = DBManager::get()->prepare($query);
+
+    // Prepare insert statement
+    $query = "INSERT INTO seminar_user (Seminar_id, user_id, status, gruppe, admission_studiengang_id, mkdate)
+              VALUES (?, ?, 'autor', ?, ?, UNIX_TIMESTAMP())";
+    $insert_statement = DBManager::get()->prepare($query);
+
+    // Prepare delete statement
+    $query = "DELETE FROM admission_seminar_user
+              WHERE user_id = ? AND seminar_id = ?";
+    $delete_statement = DBManager::get()->prepare($query);
+
+    // Prepare position statement
+    $query = "UPDATE admission_seminar_user
+              SET position = ?, status = 'awaiting'
+              WHERE user_id = ? AND seminar_id = ?";
+    $position_statement = DBManager::get()->prepare($query);
+
+    ignore_user_abort(true);
+    if (!ini_get('safe_mode')) {
+        set_time_limit(0);
+    }
+    foreach ($seminar_ids as $seminar_id) {
+        $seminar = Seminar::GetInstance($seminar_id);
+        $seminar->restore();
+        $sem_preliminary = ($seminar->admission_prelim == 1);
+
+        if ($seminar->admission_type == 1) { //nur Losveranstaltungen losen
+            //Check, if locked
+            if ($seminar->admission_selection_take_place != 0) {
+                break; //Someone has locked or checked the Veranstaltung in the meanwhile
+            }
+
+            //Veranstaltung locken
+            $seminar->admission_selection_take_place = -1;
+            $seminar->store(false);
+            $seminar->restoreAdmissionStudiengang();
+            $users_to_move = array();
+            if ($seminar->isAdmissionQuotaEnabled()) {
+                //Alle zugelassenen Studiengaenge einzeln auslosen
+                foreach ($seminar->admission_studiengang as $studiengang_id => $quota_info) {
+                    $tmp_admission_quota = (int)$seminar->getFreeAdmissionSeats($studiengang_id);
+                    if ($tmp_admission_quota > 0) {
+                        //Losfunktion
+                        $users_statement->bindValue(':seminar_id', $seminar->getId());
+                        $users_statement->bindValue(':studiengang_id', $studiengang_id);
+                        $users_statement->bindValue(':limit', $tmp_admission_quota, PDO::PARAM_INT);
+                        $users_statement->execute();
+                        $temp = $users_statement->fetchAll(PDO::FETCH_ASSOC);
+                        $users_statement->closeCursor();
+
+                        //User aus admission_Seminar_user in seminar_user verschieben oder in Status "vorläufig akzeptiert" setzen
+                        $users_to_move = array_merge($users_to_move, $temp);
+                    }
+                }
+            } else {
+                $tmp_admission_quota = (int)$seminar->getFreeAdmissionSeats();
+                if ($tmp_admission_quota > 0) {
+                    //Losfunktion
+                    $users_statement->bindValue(':seminar_id', $seminar->getId());
+                    $users_statement->bindValue(':studiengang_id', NULL);
+                    $users_statement->bindValue(':limit', $tmp_admission_quota, PDO::PARAM_INT);
+                    $users_statement->execute();
+                    $temp = $users_statement->fetchAll(PDO::FETCH_ASSOC);
+                    $users_statement->closeCursor();
+
+                    //User aus admission_Seminar_user in seminar_user verschieben oder in Status "vorläufig akzeptiert" setzen
+                    $users_to_move = array_merge($users_to_move, $temp);
+                }
+            }
+
+            foreach ($users_to_move as $winner) {
+                if ($sem_preliminary) {
+                    // Bei Seminaren mit vorläufiger Akzeptierung wird nicht in die Teilnehmerliste
+                    // gelost, sondern der Status wird auf "accepted" gesetzt
+                    $promote_statement->execute(array(
+                        $seminar->getId(),
+                        $winner['user_id']
+                    ));
+                    if ($send_message) {
+                        setTempLanguage($winner['user_id']);
+                        $message = sprintf (_('Sie wurden als TeilnehmerIn der Veranstaltung **%s** ausgelost. Die endgültige Zulassung zu der Veranstaltung ist noch von weiteren Bedingungen abhängig, die Sie bitte der Veranstaltungsbeschreibung entnehmen.'), 
+                                            $seminar->getName());
+                        restoreLanguage();
+                        $messaging->insert_message(addslashes($message), $winner['username'], '____%system%____', FALSE, FALSE, '1', FALSE, sprintf(_('Teilnahme an der Veranstaltung %s'), $seminar->getName())); 
                     }
                 } else {
-                    $tmp_admission_quota = (int)$seminar->getFreeAdmissionSeats();
-                    if($tmp_admission_quota > 0){
-                        //Losfunktion
-                        $db3->query("SELECT admission_seminar_user.user_id, username, studiengang_id FROM admission_seminar_user LEFT JOIN auth_user_md5 USING (user_id) WHERE seminar_id = '".$seminar->getId()."' AND status != 'accepted' ORDER BY RAND() LIMIT ".$tmp_admission_quota);
-                        //User aus admission_Seminar_user in seminar_user verschieben oder in Status "vorläufig akzeptiert" setzen
-                        while ($db3->next_record()){
-                            $users_to_move[] = $db3->Record;
-                        }
-                    }
-                }
+                    $group = select_group($seminar->getSemesterStartTime(), $winner['user_id']);
+                    $insert_statement->execute(array(
+                        $seminar->getId(),
+                        $winner['user_id'],
+                        $group,
+                        $winner['studiengang_id']
+                    ));
+                    if ($insert_statement->rowCount()) {
+                        $delete_statement->execute(array(
+                            $winner['user_id'],
+                            $seminar->getId()
+                        ));
 
-                foreach($users_to_move as $winner){
-                    if ($sem_preliminary) {
-                        // Bei Seminaren mit vorläufiger Akzeptierung wird nicht in die Teilnehmerliste
-                        // gelost, sondern der Status wird auf "accepted" gesetzt
-                        $db4->query("UPDATE admission_seminar_user SET status='accepted' WHERE Seminar_id = '".$seminar->getId()."' AND user_id = '".$winner["user_id"]."'");
-                        if ($send_message) {
-                            setTempLanguage($winner["user_id"]);
-                            $message = sprintf (_("Sie wurden als TeilnehmerIn der Veranstaltung **%s** ausgelost. Die endgültige Zulassung zu der Veranstaltung ist noch von weiteren Bedingungen abhängig, die Sie bitte der Veranstaltungsbeschreibung entnehmen."), $seminar->getName());
+                        //User benachrichten
+                        if ($delete_statement->rowCount() && $send_message) {
+                            setTempLanguage($winner['user_id']);
+                            $message = sprintf (_("Sie wurden als TeilnehmerIn der Veranstaltung **%s** ausgelost. Ab sofort finden Sie die Veranstaltung in der Übersicht Ihrer Veranstaltungen. Damit sind Sie auch als TeilnehmerIn der Präsenzveranstaltung zugelassen."),
+                                                $seminar->getName());
                             restoreLanguage();
-                            $messaging->insert_message(addslashes($message), $winner["username"], "____%system%____", FALSE, FALSE, "1", FALSE, sprintf(_("Teilnahme an der Veranstaltung %s"),$seminar->getName())); 
-                        }
-                    } else {
-                        $group = select_group ($seminar->getSemesterStartTime(), $winner["user_id"]);
-                        $db4->query("INSERT INTO seminar_user SET Seminar_id = '".$seminar->getId()."', user_id = '".$winner["user_id"]."', status= 'autor', gruppe = '$group', admission_studiengang_id = '".$winner['studiengang_id']."', mkdate = '".time()."' ");
-                        if ($db4->affected_rows()) {
-                            $db5->query("DELETE FROM admission_seminar_user WHERE user_id ='".$winner["user_id"]."' AND seminar_id = '".$seminar->getId()."' ");
-                            //User benachrichten
-                            if (($db5->affected_rows()) && ($send_message)) {
-                                setTempLanguage($winner["user_id"]);
-                                $message = sprintf (_("Sie wurden als TeilnehmerIn der Veranstaltung **%s** ausgelost. Ab sofort finden Sie die Veranstaltung in der Übersicht Ihrer Veranstaltungen. Damit sind Sie auch als TeilnehmerIn der Präsenzveranstaltung zugelassen."), $seminar->getName());
-                                restoreLanguage();
-                                $messaging->insert_message(addslashes($message), $winner["username"], "____%system%____", FALSE, FALSE, "1", FALSE, sprintf(_("Teilnahme an der Veranstaltung %s"),$seminar->getName())); 
-                            }
+                            $messaging->insert_message(addslashes($message), $winner['username'], '____%system%____', FALSE, FALSE, '1', FALSE, sprintf(_('Teilnahme an der Veranstaltung %s'),$seminar->getName())); 
                         }
                     }
                 }
-
-                //Alle anderen Teilnehmer in der Warteliste losen
-                $db3->query("SELECT admission_seminar_user.user_id, username FROM admission_seminar_user LEFT JOIN auth_user_md5 USING (user_id) WHERE seminar_id = '".$seminar->getId()."' AND status != 'accepted' ORDER BY RAND() ");
-                //Warteposition ablegen
-                $position=1;
-                while ($db3->next_record()) {
-                    $db4->query("UPDATE admission_seminar_user SET position = '$position', status = 'awaiting' WHERE user_id = '".$db3->f("user_id")."' AND seminar_id = '".$seminar->getId()."' ");
-                    $position++;
-                }
             }
 
-            //Veranstaltung lock aufheben und erfolgreichen Losvorgang eintragen bzw. verstreichen der Kontingentierungsfrist notieren
-            $seminar->admission_selection_take_place = 1;
-            $seminar->store(false);
+            //Alle anderen Teilnehmer in der Warteliste losen
+            $users2_statement->execute(array($seminar->getId()));
+            $user_ids = $users2_statement->fetchAll(PDO::FETCH_COLUMN);
+            $users2_statement->closeCursor();
 
-            //evtl. verbliebene Plaetze auffuellen
-            normal_update_admission($seminar->getId(), $send_message);
+            //Warteposition ablegen
+            $position = 1;
+            foreach ($user_ids as $user_id) {
+                $position_statement-execute(array(
+                    $position,
+                    $user_id,
+                    $seminar->getId()
+                ));
 
-            //User benachrichten (nur bei Losverfahren, da Warteliste erst waehrend des Losens generiert wurde)
-            //verbleibende Warteliste löschen, wenn keine Warteliste vorgesehen
-            if (($send_message) && ($seminar->admission_type == 1)) {
-                $db2->query("SELECT admission_seminar_user.user_id, username, position FROM admission_seminar_user LEFT JOIN auth_user_md5 USING (user_id) WHERE seminar_id = '".$seminar->getId()."' AND status != 'accepted' ORDER BY position ");
-                while ($db2->next_record()) {
-                    setTempLanguage($db2->f("user_id"));
-                    if (!$seminar->admission_disable_waitlist){
-                        $message = sprintf(_("Sie wurden leider im Losverfahren der Veranstaltung **%s** __nicht__ ausgelost. Sie wurden jedoch auf Position %s auf die Warteliste gesetzt. Das System wird Sie automatisch eintragen und benachrichtigen, sobald ein Platz für Sie frei wird."), $seminar->getName(), $db2->f("position"));
-                    } else {
-                        $message = sprintf(_("Sie wurden leider im Losverfahren der Veranstaltung **%s** __nicht__ ausgelost. Für diese Veranstaltung wurde keine Warteliste vorgesehen."), $seminar->getName());
-                        $db3->query("DELETE FROM admission_seminar_user WHERE user_id = '".$db2->f("user_id")."' AND seminar_id = '".$seminar->getId()."' ");
-                    }
-                    $messaging->insert_message(addslashes($message), $db2->f("username"), "____%system%____", FALSE, FALSE, "1");
-                    restoreLanguage();
-                }
+                $position += 1;
             }
+        }
+
+        //Veranstaltung lock aufheben und erfolgreichen Losvorgang eintragen bzw. verstreichen der Kontingentierungsfrist notieren
+        $seminar->admission_selection_take_place = 1;
+        $seminar->store(false);
+
+        //evtl. verbliebene Plaetze auffuellen
+        normal_update_admission($seminar->getId(), $send_message);
+
+        //User benachrichten (nur bei Losverfahren, da Warteliste erst waehrend des Losens generiert wurde)
+        //verbleibende Warteliste löschen, wenn keine Warteliste vorgesehen
+        if ($send_message && ($seminar->admission_type == 1)) {
+            $users3_statement->execute(array($seminar->getId()));
+
+            while ($row = $users3_statement->fetch(PDO::FETCH_ASSOC)) {
+                setTempLanguage($row['user_id']);
+                if (!$seminar->admission_disable_waitlist) {
+                    $message = sprintf(_('Sie wurden leider im Losverfahren der Veranstaltung **%s** __nicht__ ausgelost. Sie wurden jedoch auf Position %s auf die Warteliste gesetzt. Das System wird Sie automatisch eintragen und benachrichtigen, sobald ein Platz für Sie frei wird.'),
+                                       $seminar->getName(),
+                                       $row['position']);
+                } else {
+                    $message = sprintf(_('Sie wurden leider im Losverfahren der Veranstaltung **%s** __nicht__ ausgelost. Für diese Veranstaltung wurde keine Warteliste vorgesehen.'),
+                                       $seminar->getName());
+                    $delete_statement->execute(array(
+                        $row['user_id'],
+                        $seminar->getId()
+                    ));
+                }
+                $messaging->insert_message(addslashes($message), $row['username'], '____%system%____', FALSE, FALSE, '1');
+                restoreLanguage();
+            }
+            
+            $users3_statement->closeCursor();
         }
     }
 }
@@ -547,24 +766,34 @@ function check_admission ($send_message=TRUE) {
 * @return       integer position on waiting list
 *
 */
-function admission_seminar_user_insert($user_id, $seminar_id, $status, $studiengang_id = '', $comment = ''){
-    $db = DBManager::get();
-    if($status == 'claiming' || $status == 'accepted'){
-        $stmt = $db->prepare("INSERT INTO admission_seminar_user
-                            (user_id,seminar_id,status,studiengang_id,mkdate,comment)
-                            VALUES (?,?,?,?,UNIX_TIMESTAMP(),?)");
-        $stmt->execute(array($user_id, $seminar_id, $status, $studiengang_id, $comment));
+function admission_seminar_user_insert($user_id, $seminar_id, $status, $studiengang_id = '', $comment = '')
+{
+    if($status == 'claiming' || $status == 'accepted') {
+        $query = "INSERT INTO admission_seminar_user
+                    (user_id, seminar_id, status, studiengang_id, mkdate, comment)
+                  VALUES (?, ?, ?, ?, UNIX_TIMESTAMP(), ?)";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $user_id,
+            $seminar_id,
+            $status,
+            $studiengang_id,
+            $comment
+        ));
     } elseif ($status == 'awaiting'){
-        $db->exec(sprintf("INSERT INTO admission_seminar_user
-                        (user_id,seminar_id,studiengang_id,status,mkdate,comment,position)
-                        SELECT %s,%s,%s,'awaiting',UNIX_TIMESTAMP(),%s,IFNULL(MAX(position),0)+1
-                        FROM admission_seminar_user WHERE seminar_id=%s AND status <> 'accepted'",
-                        $db->quote($user_id),
-                        $db->quote($seminar_id),
-                        $db->quote($studiengang_id),
-                        $db->quote($comment),
-                        $db->quote($seminar_id)));
-
+        $query = "INSERT INTO admission_seminar_user
+                    (user_id, seminar_id, studiengang_id, status, mkdate, comment, position)
+                  SELECT ?, ?, ?, 'awaiting', UNIX_TIMESTAMP(), ?, IFNULL(MAX(position), 0) + 1
+                  FROM admission_seminar_user
+                  WHERE seminar_id = ? AND status != 'accepted'";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $user_id,
+            $seminar_id,
+            $studiengang_id,
+            $comment,
+            $seminar_id
+        ));
     }
     return admission_seminar_user_get_position($user_id, $seminar_id);
 }
@@ -580,12 +809,15 @@ function admission_seminar_user_insert($user_id, $seminar_id, $status, $studieng
 * @return       integer position in waiting list or false if not found
 *
 */
-function admission_seminar_user_get_position($user_id, $seminar_id){
-    $db = DBManager::get();
-    $query = "SELECT IFNULL(position,'na') FROM admission_seminar_user
-            WHERE user_id=".$db->quote($user_id)."
-            AND seminar_id=".$db->quote($seminar_id);
-    $position = $db->query($query)->fetchColumn();
+function admission_seminar_user_get_position($user_id, $seminar_id)
+{
+    $query = "SELECT IFNULL(position, 'na')
+              FROM admission_seminar_user
+              WHERE user_id = ? AND seminar_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($user_id, $seminar_id));
+    $position = $statement->fetchColumn();
+
     return $position == 'na' ? true : $position;
 }
 

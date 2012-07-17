@@ -44,7 +44,7 @@ class Siteinfo {
             $sql = "SELECT content
                     FROM siteinfo_details
                     WHERE detail_id = :id";
-            $statement = DBManager::get()->prepare($query);
+            $statement = DBManager::get()->prepare($sql);
             $statement->bindValue(':id', $id, PDO::PARAM_INT);
             $statement->execute();
             return $statement->fetchColumn();
@@ -55,7 +55,7 @@ class Siteinfo {
         $sql = "SELECT name
                 FROM siteinfo_details
                 WHERE detail_id = :id";
-        $statement = DBManager::get()->prepare($query);
+        $statement = DBManager::get()->prepare($sql);
         $statement->bindValue(':id', $id, PDO::PARAM_INT);
         $statement->execute();
         return $statement->fetchColumn();
@@ -83,7 +83,7 @@ class Siteinfo {
                 WHERE rubric_id = IFNULL(?, rubric_id)
                 ORDER BY position, detail_id ASC
                 LIMIT 1";
-        $statement = DBManager::get()->prepare($query);
+        $statement = DBManager::get()->prepare($sql);
         $statement->execute(array(
             $rubric_id ?: null
         ));
@@ -117,7 +117,7 @@ class Siteinfo {
         $sql = "SELECT rubric_id
                 FROM siteinfo_details
                 WHERE detail_id = :id";
-        $statement = DBManager::get()->prepare($query);
+        $statement = DBManager::get()->prepare($sql);
         $statement->bindValue(':id', $id, PDO::PARAM_INT);
         $statement->execute();
         return $statement->fetchColumn();
@@ -127,7 +127,7 @@ class Siteinfo {
         $sql = "SELECT name
                 FROM siteinfo_rubrics
                 WHERE rubric_id = :id";
-        $statement = DBManager::get()->prepare($query);
+        $statement = DBManager::get()->prepare($sql);
         $statement->bindValue(':id', $id, PDO::PARAM_INT);
         $statement->execute();
         return $statement->fetchColumn();
@@ -265,7 +265,7 @@ class SiteinfoMarkupEngine {
                 FROM auth_user_md5
                 LEFT JOIN user_info USING (user_id)
                 WHERE username = ? AND ".get_vis_query();
-        $statement = DBManager::get()->prepare($query);
+        $statement = DBManager::get()->prepare($sql);
         $statement->execute(array($input));
         $temp = $statement->fetchAll(PDO::FETCH_ASSOC);
 
@@ -286,7 +286,7 @@ class SiteinfoMarkupEngine {
                 FROM auth_user_md5
                 LEFT JOIN user_info USING (user_id)
                 WHERE username = ? AND ".get_vis_query();
-        $statement = DBManager::get()->prepare($query);
+        $statement = DBManager::get()->prepare($sql);
         $statement->execute(array($input));
         $temp = $statement->fetchAll(PDO::FETCH_ASSOC);
 

@@ -1,8 +1,8 @@
 <?php
-# Lifter002: TODO
+# Lifter002: DONE - not applicable
+# Lifter003: TEST
 # Lifter007: TODO
-# Lifter003: TODO
-# Lifter010: TODO
+# Lifter010: DONE - not applicable
 /*
  * db_schema_version.php - database backed schema versions
  * Copyright (C) 2007  Elmar Ludwig
@@ -28,15 +28,7 @@ class DBSchemaVersion extends SchemaVersion
      * @access private
      * @var string
      */
-    var $domain;
-
-    /**
-     * database connection object
-     *
-     * @access private
-     * @var DB_Seminar
-     */
-    var $db;
+    private $domain;
 
     /**
      * current schema version number
@@ -44,15 +36,7 @@ class DBSchemaVersion extends SchemaVersion
      * @access private
      * @var int
      */
-    var $version;
-
-    /**
-     * use UPDATE when updating version number
-     *
-     * @access private
-     * @var boolean
-     */
-    var $update;
+    private $version;
 
     /**
      * Initialize a new DBSchemaVersion for a given domain.
@@ -63,7 +47,6 @@ class DBSchemaVersion extends SchemaVersion
     function DBSchemaVersion ($domain = 'studip')
     {
         $this->domain = $domain;
-        $this->db = new DB_Seminar();
         $this->version = 0;
         $this->init_schema_info();
     }
@@ -83,17 +66,14 @@ class DBSchemaVersion extends SchemaVersion
      *
      * @access private
      */
-    function init_schema_info ()
+    private function init_schema_info ()
     {
-        $this->db->Halt_On_Error = 'no';
-        $this->db->query('SELECT version FROM schema_version'.
-                         " WHERE domain = '".$this->domain."'");
-
-        if ($this->db->next_record()) {
-            $this->version = (int) $this->db->f('version');
-            $this->update = true;
-        }
-        $this->db->Halt_On_Error = 'yes';
+        $query = "SELECT version FROM schema_version WHERE domain = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $this->domain
+        ));
+        $this->version = (int)$statement->fetchColumn();
     }
 
     /**
@@ -115,13 +95,13 @@ class DBSchemaVersion extends SchemaVersion
     {
         $this->version = (int) $version;
 
-        if ($this->update) {
-            $this->db->query('UPDATE schema_version SET version = '.$this->version.
-                             " WHERE domain = '".$this->domain."'");
-        } else {
-            $this->db->query('INSERT INTO schema_version (domain, version)'.
-                             " VALUES ('".$this->domain."', ".$this->version.')');
-            $this->update = true;
-        }
+        $query = "INSERT INTO schema_version (domain, version)
+                  VALUES (?, ?)
+                  ON DUPLICATE KEY UPDATE version = VALUES(version)";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $this->domain,
+            $this->version
+        ));
     }
 }

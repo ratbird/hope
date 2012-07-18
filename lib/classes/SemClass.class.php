@@ -93,6 +93,27 @@ class SemClass implements ArrayAccess
         "CoreElearningInterface"
     );
     static protected $sem_classes = null;
+
+    static public function getDefaultSemClass() {
+        $data = array(
+            'name' => "Fehlerhafte Seminarklasse!",
+            'overview' => "CoreOverview",
+            'forum' => "CoreForum",
+            'admin' => "CoreAdmin",
+            'documents' => "CoreDocuments",
+            'schedule' => "CoreSchedule",
+            'participants' => "CoreParticipants",
+            'literature' => "CoreLiterature",
+            'scm' => "CoreScm",
+            'wiki' => "CoreWiki",
+            'resources' => "CoreResources",
+            'calendar' => "CoreCalendar",
+            'elearning_interface' => "CoreElearningInterface",
+            'modules' => '{"CoreOverview":{"activated":1,"sticky":1},"CoreAdmin":{"activated":1,"sticky":1}}',
+            'visible' => 1
+        );
+        return new SemClass($data);
+    }
     
     /**
      * Constructor can be set with integer of sem_class_id or an array of

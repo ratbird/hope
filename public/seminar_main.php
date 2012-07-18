@@ -73,6 +73,7 @@ if (Request::get('redirect_to')) {
 }
 $sem = new Seminar($course_id);
 $sem_class = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$sem->status]['class']];
+$sem_class || $sem_class = SemClass::getDefaultSemClass();
 if ($sem_class->getSlotModule("overview") !== "CoreOverview") {
     foreach ($sem_class->getNavigationForSlot("overview") as $nav) {
         header('Location: '.URLHelper::getURL($nav->getURL()));

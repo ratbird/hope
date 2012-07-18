@@ -221,3 +221,22 @@ tr.sortable {
         padding-left: 17px;
     }
 }
+
+/* styles for settings tables */
+.settings {
+    th { text-align: center; }
+    tbody {
+        td:first-child {
+            background-color: #fff;
+            border-bottom: 1px dotted #000;
+            text-align: right;
+
+            &[colspan="2"] {
+                background-color: #e7ebf1;
+                border-top: 1px dotted #000;
+                text-align: center;
+            }
+        }
+        tr:last-child td:first-child { border-bottom: 0; }
+    }
+}

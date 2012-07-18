@@ -1234,7 +1234,7 @@ msgid "letzte 30 Tage"
 msgstr "last 30 days"
 
 #: ../public/sms_box.php:516 ../lib/include/messagingSettings.inc.php:291
-msgid "&auml;lter als 30 Tage"
+msgid "älter als 30 Tage"
 msgstr "older than 30 days"
 
 # Großklein
@@ -16130,8 +16130,8 @@ msgstr "Forwarding of received messages"
 
 #: ../lib/include/messagingSettings.inc.php:251
 #, php-format
-msgid "Empfänger: %s%s%s"
-msgstr "recipient: %s%s%s"
+msgid "Empfänger:"
+msgstr "recipient:"
 
 #: ../lib/include/messagingSettings.inc.php:251
 msgid "Empfänger und Weiterleitung löschen."

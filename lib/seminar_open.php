@@ -97,6 +97,22 @@ function check_schedule_default() {
     }
 }
 
+function check_forum_default() {
+    global $forum;
+
+    $default_values = array(
+        'sortthemes'    => 'asc',
+        'themeview'     => 'tree',
+        'presetview'    => 'tree'
+    );
+
+    foreach ($default_values as $key => $value) {
+        if (!isset($forum[$key])) {
+            $forum[$key] = $value;
+        }
+    }
+}
+
 // set default Values for calendar
 function check_calendar_default(){
     global $calendar_user_control_data;
@@ -201,6 +217,7 @@ if ($auth->is_authenticated() && is_object($user) && $user->id != "nobody") {
         check_messaging_default();
         check_schedule_default();
         check_semester_default();
+        check_forum_default();
 
         if($CALENDAR_ENABLE){
             $user->register("calendar_user_control_data");

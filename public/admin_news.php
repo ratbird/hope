@@ -46,7 +46,7 @@ $Seminar_Session = Request::option('Seminar_Session');
 // unregister globals
 $news_range_id = Request::option('news_range_id');
 $news_range_name = Request::quoted('news_range_name');
-$cmd = Request::quoted('cmd');
+$cmd = Request::option('cmd');
 $edit_news = Request::quoted('edit_news');
 $view_mode = Request::quoted('view_mode');
 $title = Request::quoted('title');
@@ -61,10 +61,10 @@ if (Request::option('admin_inst_id')) {
     $view_mode = 'inst';
 }
 
-if ($_REQUEST['range_id'] == "self"){
+if (Request::option('range_id') == "self"){
     $news_range_id = $auth->auth['uid'];
-} else if (isset($_REQUEST['range_id'])){
-    $news_range_id = $_REQUEST['range_id'];
+} else if (Request::option('range_id')){
+    $news_range_id = Request::option('range_id');
 } else if ($view == 'news_sem' || $view == 'news_inst') {
     $news_range_id = $SessSemName[1];
 } else if (!$news_range_id){
@@ -137,10 +137,10 @@ if ($perm->have_perm("admin"))  {
 
 
 if ($cmd == 'news_edit'){
-    if (isset($_REQUEST['news_submit'])) $cmd = 'news_submit';
-    if (isset($_REQUEST['news_range_search'])){
+    if (Request::submitted('news_submit')) $cmd = 'news_submit';
+    if (Request::submitted('news_range_search')){
         $cmd = 'edit';
-        $edit_news = $_REQUEST['news_id'];
+        $edit_news = Request::option('news_id');
     }
 }
 

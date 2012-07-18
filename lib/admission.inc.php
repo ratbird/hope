@@ -242,7 +242,7 @@ function check_group($user_id, $username, $grouped_sems, $cur_name, $cur_id)
 
     $query = "SELECT Seminar_id
               FROM seminar_user
-              WHERE user_id = ? AND Seminar_id IN (?)";
+              WHERE user_id = ? AND Seminar_id IN (?) AND status != 'dozent'";
     $statement = DBManager::get()->prepare($query);
     $statement->execute(array($user_id, $grouped_sems ?: ''));
     $seminar_ids = $statement->fetchAll(PDO::FETCH_COLUMN);

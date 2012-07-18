@@ -212,7 +212,7 @@ class DataFieldStructure
               {$expr}
               ORDER BY object_class, priority, name";
     $statement = DBManager::get()->prepare($query);
-    $statement->execute($parameters);
+    $statement->execute($params);
 
     $ret = array();
     while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {

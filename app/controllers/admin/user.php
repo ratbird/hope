@@ -348,8 +348,10 @@ class Admin_UserController extends AuthenticatedController
             }
 
             //change institute for studiendaten
-            if (in_array($editPerms[0], array('autor', 'tutor', 'dozent')) && Request::option('new_student_inst') != 'none' &&
-                Request::option('new_student_inst') != Request::option('new_inst')) {
+            if (in_array($editPerms[0], array('autor', 'tutor', 'dozent'))
+                    && Request::option('new_student_inst') != 'none'
+                    && Request::option('new_student_inst') != Request::option('new_inst')
+                    && $GLOBALS['perm']->have_studip_perm("admin", Request::option('new_student_inst'))) {
                 log_event('INST_USER_ADD', Request::option('new_student_inst'), $user_id, 'user');
                 $db = DbManager::get()->prepare("INSERT IGNORE INTO user_inst (user_id, Institut_id, inst_perms) "
                                                ."VALUES (?,?,'user')");
@@ -358,7 +360,10 @@ class Admin_UserController extends AuthenticatedController
             }
 
             //change institute
-            if (Request::option('new_inst') != 'none' && Request::option('new_student_inst') != Request::option('new_inst') && $editPerms[0] != 'root') {
+            if (Request::option('new_inst') != 'none'
+                    && Request::option('new_student_inst') != Request::option('new_inst')
+                    && $editPerms[0] != 'root'
+                    && $GLOBALS['perm']->have_studip_perm("admin", Request::option('new_inst'))) {
                 log_event('INST_USER_ADD', Request::option('new_inst'), $user_id, $editPerms[0]);
                 $db = DbManager::get()->prepare("REPLACE INTO user_inst (user_id, Institut_id, inst_perms) "
                                                ."VALUES (?,?,?)");
@@ -753,7 +758,7 @@ class Admin_UserController extends AuthenticatedController
      */
     public function edit_institute_action($user_id, $institute_id)
     {
-        if (Request::submitted('uebernehmen')) {
+        if (Request::submitted('uebernehmen') && $GLOBALS['perm']->have_studip_perm("admin", $institute_id)) {
             //standard-values
             $values=array();
             foreach(words('inst_perms visible raum sprechzeiten Telefon Fax') as $param) {
@@ -817,10 +822,14 @@ class Admin_UserController extends AuthenticatedController
      */
     public function delete_institute_action($user_id, $institut_id)
     {
-        $db = DBManager::get()->prepare("DELETE FROM user_inst WHERE user_id = ? AND Institut_id = ?");
-        $db->execute(array($user_id, $institut_id));
-        if ($db->rowCount() == 1) {
-            PageLayout::postMessage(MessageBox::success(_('Die Einrichtung wurde erfolgreich gelöscht.')));
+        if ($GLOBALS['perm']->have_studip_perm("admin", $institut_id)) {
+            $db = DBManager::get()->prepare("DELETE FROM user_inst WHERE user_id = ? AND Institut_id = ?");
+            $db->execute(array($user_id, $institut_id));
+            if ($db->rowCount() == 1) {
+                PageLayout::postMessage(MessageBox::success(_('Die Einrichtung wurde erfolgreich gelöscht.')));
+            } else {
+                PageLayout::postMessage(MessageBox::error(_('Die Einrichtung konnte nicht gelöscht werden.')));
+            }
         } else {
             PageLayout::postMessage(MessageBox::error(_('Die Einrichtung konnte nicht gelöscht werden.')));
         }

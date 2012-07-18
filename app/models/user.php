@@ -516,11 +516,13 @@ class UserModel
      */
     public static function getAvailableInstitutes($user_id)
     {
-        $sql = "SELECT a.Institut_id, a.Name FROM Institute AS a LEFT JOIN user_inst "
-             . "AS b ON (b.user_id=? AND a.Institut_id=b.Institut_id) "
-             . "WHERE b.Institut_id IS NULL ORDER BY a.Name";
+        $sql = "SELECT a.Institut_id, a.Name " .
+               "FROM Institute AS a " .
+                   "LEFT JOIN user_inst AS b ON (b.user_id=? AND a.Institut_id=b.Institut_id) " .
+                   (!$GLOBALS['perm']->have_perm("root") ? "INNER JOIN user_inst AS p ON (p.Institut_id = a.Institut_id AND p.user_id = ? AND p.inst_perms = 'admin') " : "") .
+               "WHERE b.Institut_id IS NULL ORDER BY a.Name ";
         $db = DBManager::get()->prepare($sql);
-        $db->execute(array($user_id));
+        $db->execute(array($user_id, ($GLOBALS['perm']->have_perm("root") ? null : $GLOBALS['user']->id)));
         return $db->fetchAll(PDO::FETCH_ASSOC);
     }
 

@@ -310,9 +310,11 @@ use Studip\Button, Studip\LinkButton;
             <?= htmlReady($institute['Name']) ?>
         </td>
         <td align="right">
+            <? if ($GLOBALS['perm']->have_studip_perm("admin", $institute['Institut_id'])) : ?>
             <a href="<?= $controller->url_for('admin/user/delete_institute/' . $user['user_id'] . '/' . $institute['Institut_id']) ?>">
                 <?= Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _('Diese Einrichtung löschen'))) ?>
             </a>
+            <? endif ?>
         </td>
     </tr>
     <? endforeach ?>
@@ -350,12 +352,14 @@ use Studip\Button, Studip\LinkButton;
             <?= htmlReady($institute['Name']) ?>
         </td>
         <td align="right">
+            <? if ($GLOBALS['perm']->have_studip_perm("admin", $institute['Institut_id'])) : ?>
             <a class="load-in-new-row" href="<?= $controller->url_for('admin/user/edit_institute/' . $user['user_id'] . '/' . $institute['Institut_id']) ?>">
                 <?= Assets::img('icons/16/blue/edit.png', array('class' => 'text-top', 'title' => _('Diese Einrichtung bearbeiten'))) ?>
             </a>
             <a href="<?= $controller->url_for('admin/user/delete_institute/' . $user['user_id'] . '/' . $institute['Institut_id']) ?>">
                 <?= Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _('Diese Einrichtung löschen'))) ?>
             </a>
+            <? endif ?>
         </td>
     </tr>
     <? endforeach ?>

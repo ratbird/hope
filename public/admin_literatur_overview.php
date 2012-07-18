@@ -71,8 +71,8 @@ if(Request::quotedArray('_lit_data'))
 if(Request::option('_lit_data_id'))
      $_SESSION['_lit_data_id'] = Request::option('_lit_data_id');
 
-
-if(Request::optionArray('_check_list'))
+$_check_list = Request::optionArray('_check_list');
+if(!empty ($_check_list))
      $_SESSION['_check_list'] = Request::optionArray('_check_list');
 
 if(Request::option('_check_plugin'))
@@ -81,13 +81,13 @@ if(Request::option('_check_plugin'))
 $_semester = new SemesterData();
 $element = new StudipLitCatElement();
 
-if ($_REQUEST['cmd'] == 'check' && !isset($_REQUEST['_check_list'])){
-    $_REQUEST['_check_list'] = array();
+if (Request::option('cmd') == 'check' && !isset($_check_list)){
+    Request::set('_check_list',array());
 }
 
 //my_session_var(array('_semester_id','_inst_id','_anker_id','_open','_lit_data','_lit_data_id','_check_list','_check_plugin'));
 
-if (isset($_REQUEST['send'])){
+if (Request::quoted('send')){
     $_SESSION['_anker_id'] = null;
     $_SESSION['_open'] = null;
     $_SESSION['_lit_data'] = null;
@@ -95,31 +95,31 @@ if (isset($_REQUEST['send'])){
     $_SESSION['_check_list'] = null;
 }
 
-if (isset($_REQUEST['open_element'])){
-    $_SESSION['_open'][$_REQUEST['open_element']] = true;
-    $_anker_id = $_REQUEST['open_element'];
+if (Request::get('open_element')){
+    $_SESSION['_open'][Request::option('open_element')] = true;
+    $_anker_id = Request::option('open_element');
 }
-if (isset($_REQUEST['close_element'])){
-    unset($_SESSION['_open'][$_REQUEST['close_element']]);
-    $_SESSION['_anker_id'] = $_REQUEST['close_element'];
+if (Request::get('close_element')){
+    unset($_SESSION['_open'][Request::option('close_element')]);
+    $_SESSION['_anker_id'] = Request::option('close_element');
 }
 if (Request::option('_catalog_id')){
     $_SESSION['_anker_id'] = Request::option('_catalog_id');
 }
 
-if ($_REQUEST['cmd'] == 'markall' && is_array($_SESSION['_lit_data'])){
+if (Request::option('cmd') == 'markall' && is_array($_SESSION['_lit_data'])){
     
     $_SESSION['_check_list'] = array_keys($_SESSION['_lit_data']);
 }
-if ($_REQUEST['cmd'] == 'open_all' && is_array($_SESSION['_lit_data'])){
+if (Request::option('cmd') == 'open_all' && is_array($_SESSION['_lit_data'])){
     $_SESSION['_open'] = array_keys($_SESSION['_lit_data']);
     $_SESSION['_open'] = array_flip($_SESSION['_open']);
 }
-if ($_REQUEST['cmd'] == 'close_all'){
+if (Request::option('cmd') == 'close_all'){
     $_SESSION['_anker_id'] = null;
     $_SESSION['_open'] = null;
 }
-if ($_REQUEST['cmd'] == 'check' && is_array($_SESSION['_check_list']) && is_array($_SESSION['_lit_data'])){
+if (Request::option('cmd') == 'check' && is_array($_SESSION['_check_list']) && is_array($_SESSION['_lit_data'])){
     foreach ($_SESSION['_check_list'] as $el){
         $check = StudipLitSearch::CheckZ3950($_SESSION['_lit_data'][$el]['accession_number'], $_SESSION['_check_plugin']);
         if (is_array($_SESSION['_lit_data'][$el]['check_accession'])){
@@ -130,15 +130,15 @@ if ($_REQUEST['cmd'] == 'check' && is_array($_SESSION['_check_list']) && is_arra
     }
 }
 
-if (isset($_REQUEST['_semester_id']) && $_REQUEST['_semester_id'] != 'all'){
+if (Request::option('_semester_id') && Request::option('_semester_id') != 'all'){
     $_sem_sql = "  LEFT JOIN seminare s ON ($_sem_status_sql c.seminar_id=s.Seminar_id)
                 LEFT JOIN semester_data sd
                 ON (( s.start_time <= sd.beginn AND sd.beginn <= ( s.start_time + s.duration_time )
-                OR ( s.start_time <= sd.beginn AND s.duration_time =  - 1 )) AND semester_id='" . $_REQUEST['_semester_id'] . "')
+                OR ( s.start_time <= sd.beginn AND s.duration_time =  - 1 )) AND semester_id='" . Request::option('_semester_id') . "')
                 LEFT JOIN lit_list d ON (s.Seminar_id = d.range_id AND semester_id IS NOT NULL)";
     $_sem_sql2 = "INNER JOIN semester_data sd
                 ON (( s.start_time <= sd.beginn AND sd.beginn <= ( s.start_time + s.duration_time )
-                OR ( s.start_time <= sd.beginn AND s.duration_time =  - 1 )) AND semester_id='" . $_REQUEST['_semester_id'] . "') ";
+                OR ( s.start_time <= sd.beginn AND s.duration_time =  - 1 )) AND semester_id='" . Request::option('_semester_id') . "') ";
 } else {
     $_sem_sql = "  LEFT JOIN seminare s ON ($_sem_status_sql c.seminar_id=s.Seminar_id)
                 LEFT JOIN lit_list d ON (s.Seminar_id = d.range_id) ";
@@ -243,10 +243,10 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
                         printf("<option value=\"%s\" style=\"%s\" %s>%s </option>\n",
                                $institute['Institut_id'],
                                $institute['is_fak'] ? 'font-weight:bold;' : '',
-                               $institute['Institut_id'] == $_REQUEST['_inst_id'] ? ' selected ' : '',
+                               $institute['Institut_id'] == Request::option('_inst_id') ? ' selected ' : '',
                                htmlReady(substr($institute['Name'], 0, 70)) . ' (' . $institute['anzahl'] . ')');
                         if ($institute['is_fak']) {
-                            if ($institute['Institut_id'] == $_REQUEST['_inst_id']){
+                            if ($institute['Institut_id'] == Request::option('_inst_id')){
                                 $_is_fak = true;
                             }
 
@@ -254,7 +254,7 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
                             while ($row = $institute_statement->fetch(PDO::FETCH_ASSOC)) {
                                 printf("<option value=\"%s\" %s>&nbsp;&nbsp;&nbsp;&nbsp;%s </option>\n",
                                        $row['Institut_id'],
-                                       $row['Institut_id'] == $_REQUEST['_inst_id'] ? ' selected ' : '',
+                                       $row['Institut_id'] == Request::option('_inst_id') ? ' selected ' : '',
                                        htmlReady(substr($row['Name'], 0, 70)) . ' (' . $row['anzahl'] . ')');
                             }
                             $institute_statement->closeCursor();
@@ -267,7 +267,7 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
                     <?
                     foreach($_semester->getAllSemesterData() as $sem){
                         ?>
-                        <option value="<?=$sem['semester_id']?>" <?=($sem['semester_id'] == $_REQUEST['_semester_id'] ? " selected " : "")?>><?=htmlReady($sem['name'])?></option>
+                        <option value="<?=$sem['semester_id']?>" <?=($sem['semester_id'] == Request::option('_semester_id') ? " selected " : "")?>><?=htmlReady($sem['name'])?></option>
                         <?
                     }
                     ?>
@@ -349,11 +349,11 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
                  GROUP BY s.Seminar_id
                  ORDER BY s.Name";
     }
-    if ($_SESSION['_lit_data_id'] != md5($sql . '#' . $_REQUEST['_inst_id'])) {
-        $_SESSION['_lit_data_id'] = md5($sql . '#' . $_REQUEST['_inst_id']);
+    if ($_SESSION['_lit_data_id'] != md5($sql . '#' . Request::option('_inst_id'))) {
+        $_SESSION['_lit_data_id'] = md5($sql . '#' . Request::option('_inst_id'));
 
         $statement = DBManager::get()->prepare($sql);
-        $statement->execute(array($_REQUEST['_inst_id']));
+        $statement->execute(array(Request::option('_inst_id')));
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
             $_SESSION['_lit_data'][$row['catalog_id']] = $row;
         }
@@ -404,7 +404,7 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
                 if (!is_array($_SESSION['_lit_data'][$cid]['sem_data'])){
                     $statement = DBManager::get()->prepare($sql2);
                     $statement->execute(array(
-                        $_REQUEST['_inst_id'],
+                        Request::option('_inst_id'),
                         $element->getValue('catalog_id')
                     ));
 
@@ -470,7 +470,7 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
                     $content .= ($estimated_p ? $estimated_p : _("unbekannt"));
                     $content .= ' / ' . (int)$participants;
                     $content .= "<br>";
-                    if ($_REQUEST['_catalog_id'] == $element->getValue('catalog_id') ){
+                    if (Request::option('_catalog_id') == $element->getValue('catalog_id') ){
                         $_SESSION['_lit_data'][$cid]['check_accession'] = StudipLitSearch::CheckZ3950($element->getValue('accession_number'));
                     }
                     if (is_array($_SESSION['_lit_data'][$cid]['check_accession'])){

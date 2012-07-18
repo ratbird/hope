@@ -1,7 +1,7 @@
 <?
 # Lifter002: TODO
+# Lifter003: TEST
 # Lifter007: TODO
-# Lifter003: TODO
 # Lifter010: TODO
 // +--------------------------------------------------------------------------+
 // This file is part of Stud.IP
@@ -38,32 +38,59 @@ class CycleDataDB
 {
     function getTermine($metadate_id, $start = 0, $end = 0)
     {
-        $db = new DB_Seminar();
-
         if (($start != 0) || ($end != 0)) {
-            $db->query("SELECT termine.*, r.resource_id,GROUP_CONCAT(trp.user_id) as related_persons FROM termine LEFT JOIN termin_related_persons trp ON termin_id=trp.range_id LEFT JOIN resources_assign as r ON (termin_id = assign_user_id)  WHERE metadate_id = '$metadate_id' AND termine.date >= $start AND termine.date <= $end GROUP BY termin_id ORDER BY NULL");
+            $query = "SELECT termine.*, r.resource_id, GROUP_CONCAT(trp.user_id) AS related_persons
+                      FROM termine
+                      LEFT JOIN termin_related_persons AS trp ON (termin_id = trp.range_id)
+                      LEFT JOIN resources_assign AS r ON (termin_id = assign_user_id)
+                      WHERE metadate_id = ? AND termine.date BETWEEN ? AND ?
+                      GROUP BY termin_id
+                      ORDER BY NULL";
+            $parameters = array($metadate_id, $start, $end);
         } else {
-            $db->query("SELECT termine.*, r.resource_id,GROUP_CONCAT(trp.user_id) as related_persons FROM termine LEFT JOIN termin_related_persons trp ON termin_id=trp.range_id LEFT JOIN resources_assign as r ON (termin_id = assign_user_id)  WHERE metadate_id = '$metadate_id' GROUP BY termin_id ORDER BY NULL");
+            $query = "SELECT termine.*, r.resource_id, GROUP_CONCAT(trp.user_id) AS related_persons
+                      FROM termine
+                      LEFT JOIN termin_related_persons AS trp ON (termin_id = trp.range_id)
+                      LEFT JOIN resources_assign AS r ON (termin_id = assign_user_id)
+                      WHERE metadate_id = ?
+                      GROUP BY termin_id
+                      ORDER BY NULL";
+            $parameters = array($metadate_id);
         }
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute($parameters);
 
         $ret = array();
-
-        while ($db->next_record()) {
-            $data = $db->Record;
-            $data['related_persons'] = $data['related_persons'] ? explode(',', $data['related_persons']) : array();
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $data = $row;
+            $data['related_persons'] = explode(',', $data['related_persons']);
             $ret[] = $data;
         }
 
         if (($start != 0) || ($end != 0)) {
-            $db->query("SELECT ex_termine.*, GROUP_CONCAT(trp.user_id) as related_persons FROM ex_termine LEFT JOIN termin_related_persons trp ON termin_id=trp.range_id WHERE metadate_id = '$metadate_id' AND date >= $start AND date <= $end GROUP BY termin_id ORDER BY NULL");
+            $query = "SELECT ex_termine.*, GROUP_CONCAT(trp.user_id) AS related_persons
+                      FROM ex_termine
+                      LEFT JOIN termin_related_persons AS trp ON (termin_id = trp.range_id)
+                      WHERE metadate_id = ? AND `date` BETWEEN $start AND $end
+                      GROUP BY termin_id
+                      ORDER BY NULL";
+            $parameters = array($metadate_id, $start, $end);
         } else {
-            $db->query("SELECT ex_termine.*, GROUP_CONCAT(trp.user_id) as related_persons FROM ex_termine LEFT JOIN termin_related_persons trp ON termin_id=trp.range_id WHERE metadate_id = '$metadate_id' GROUP BY termin_id ORDER BY NULL");
+            $query = "SELECT ex_termine.*, GROUP_CONCAT(trp.user_id) AS related_persons
+                      FROM ex_termine
+                      LEFT JOIN termin_related_persons AS trp ON (termin_id = trp.range_id)
+                      WHERE metadate_id = ?
+                      GROUP BY termin_id
+                      ORDER BY NULL";
+            $parameters = array($metadate_id);
         }
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute($parameters);
 
-        while ($db->next_record()) {
-            $zw = $db->Record;
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $zw = $row;
             $zw['ex_termin'] = TRUE;
-            $zw['related_persons'] = $zw['related_persons'] ? explode(',', $zw['related_persons']) : array();
+            $zw['related_persons'] = explode(',', $zw['related_persons']);
             $ret[] = $zw;
         }
 
@@ -83,61 +110,79 @@ class CycleDataDB
 
     function deleteNewerSingleDates($metadate_id, $timestamp, $keepIssues = false)
     {
-        $db = new DB_Seminar();
+        $count = 0;
 
-        $c = 0;
-        $db->query("SELECT * FROM termine WHERE metadate_id = '$metadate_id' AND date > $timestamp");
-        while ($db->next_record()) {
-            $termin = new SingleDate($db->f('termin_id'));
+        $query = "SELECT termin_id
+                  FROM termine
+                  WHERE metadate_id = ? AND `date` > ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($metadate_id, $timestamp));
+        while ($termin_id = $statement->fetchColumn()) {
+            $termin = new SingleDate($termin_id);
             $termin->delete($keepIssues);
-            $c++;
             unset($termin);
+
+            $count += 1;
         }
 
-        $db->query("DELETE FROM termine WHERE metadate_id = '$metadate_id' AND date > $timestamp");
-        $db->query("DELETE FROM ex_termine WHERE metadate_id = '$metadate_id' AND date > $timestamp");
-        return $c;
+        $query = "DELETE FROM termine WHERE metadate_id = ? AND `date` > ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($metadate_id, $timestamp));
+
+        $query = "DELETE FROM ex_termine WHERE metadate_id = ? AND `date` > ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($metadate_id, $timestamp));
+
+        return $count;
     }
 
     function getPredominantRoomDB($metadate_id, $filterStart = 0, $filterEnd = 0)
     {
-        $db = new DB_Seminar();
-        $rooms = array();
-
         if (($filterStart == 0) && ($filterEnd == 0)) {
-            $query = "SELECT COUNT(resource_id) as c, resource_id FROM termine INNER JOIN resources_assign ON (termin_id = assign_user_id) WHERE termine.metadate_id = '$metadate_id' GROUP BY resource_id ORDER BY c DESC";
+            $query = "SELECT resource_id, COUNT(resource_id) AS c
+                      FROM termine
+                      INNER JOIN resources_assign ON (termin_id = assign_user_id)
+                      WHERE termine.metadate_id = ? AND resource_id != ''
+                      GROUP BY resource_id
+                      ORDER BY c DESC";
+            $parameters = array($metadate_id);
         } else {
-            $query = "SELECT COUNT(resource_id) as c, resource_id FROM termine INNER JOIN resources_assign ON (termin_id = assign_user_id) WHERE termine.metadate_id = '$metadate_id' AND termine.date >= $filterStart AND termine.end_time <= $filterEnd GROUP BY resource_id ORDER BY c DESC";
+            $query = "SELECT resource_id, COUNT(resource_id) AS c
+                      FROM termine
+                      INNER JOIN resources_assign ON (termin_id = assign_user_id)
+                      WHERE termine.metadate_id = ? AND termine.date BETWEEN ? AND ?
+                      GROUP BY resource_id
+                      ORDER BY c DESC";
+            $parameters = array($metadate_id, $filterStart, $filterEnd);
         }
-
-        $db->query($query);
-        if ($db->num_rows() == 0) return FALSE;
-
-        while ($db->next_record()) {
-            if ($db->f('resource_id') != '') {
-                $rooms[$db->f('resource_id')] = $db->f('c');
-            }
-        }
-
-        return $rooms;
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute($parameters);
+        return $statement->fetchGrouped(PDO::FETCH_COLUMN) ?: false;
     }
 
     function getFreeTextPredominantRoomDB($metadate_id, $filterStart = 0, $filterEnd = 0)
     {
         if (($filterStart == 0) && ($filterEnd == 0)) {
-            $query = "SELECT COUNT(raum) as c, raum FROM termine LEFT JOIN resources_assign ON (termin_id = assign_user_id) WHERE termine.metadate_id = '$metadate_id' AND assign_user_id IS NULL GROUP BY raum ORDER BY c DESC";
+            $query = "SELECT raum, COUNT(raum) AS c
+                      FROM termine
+                      LEFT JOIN resources_assign ON (termin_id = assign_user_id)
+                      WHERE termine.metadate_id = ? AND assign_user_id IS NULL
+                      GROUP BY raum
+                      ORDER BY c DESC";
+            $parameters = array($metadate_id);
         } else {
-            $query = "SELECT COUNT(raum) as c, raum FROM termine LEFT JOIN resources_assign ON (termin_id = assign_user_id) WHERE termine.metadate_id = '$metadate_id' AND assign_user_id IS NULL AND termine.date >= $filterStart AND termine.end_time <= $filterEnd GROUP BY raum ORDER BY c DESC";
+            $query = "SELECT raum, COUNT(raum) AS c
+                      FROM termine
+                      LEFT JOIN resources_assign ON (termin_id = assign_user_id)
+                      WHERE termine.metadate_id = ? AND assign_user_id IS NULL
+                        AND termine.date BETWEEN ? AND ?
+                      GROUP BY raum
+                      ORDER BY c DESC";
+            $parameters = array($metadate_id, $filterStart, $filterEnd);
         }
-
-        $db = DBManager::get()->query($query);
-        if (!$data = $db->fetchAll(PDO::FETCH_ASSOC)) return false;
-
-        foreach ($data as $room) {
-            $ret[$room['raum']] = $room['c'];
-        }
-
-        return $ret;
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute($parameters);
+        return $statement->fetchGrouped(PDO::FETCH_COLUMN) ?: false;
     }
 
     /**
@@ -147,8 +192,13 @@ class CycleDataDB
      */
     function getFirstDate($metadate_id)
     {
-        $db = DbManager::get();
-        $ret = $db->query("SELECT * FROM termine WHERE metadate_id=" . $db->quote($metadate_id) . " ORDER BY date ASC LIMIT 1")->fetch(PDO::FETCH_ASSOC);
-        return $ret;
+        $query = "SELECT *
+                  FROM termine
+                  WHERE metadate_id = ?
+                  ORDER BY `date` ASC
+                  LIMIT 1";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($metadate_id));
+        return $statement->fetch(PDO::FETCH_ASSOC);
     }
 }

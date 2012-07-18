@@ -1,7 +1,7 @@
 <?
 # Lifter002: TODO
+# Lifter003: TEST
 # Lifter007: TODO
-# Lifter003: TODO
 # Lifter010: TODO
 // +--------------------------------------------------------------------------+
 // This file is part of Stud.IP
@@ -37,49 +37,126 @@
 
 class IssueDB {
 
-    function restoreIssue($issue_id) {
-        $db = new DB_Seminar();
-        $db->query("SELECT themen.*, folder.range_id, folder.folder_id, px_topics.topic_id FROM themen LEFT JOIN folder ON (range_id = issue_id) LEFT JOIN px_topics ON (px_topics.topic_id = issue_id) WHERE issue_id = '$issue_id'");
-        $db->next_record();
-        return $db->Record;
+    function restoreIssue($issue_id)
+    {
+        $query = "SELECT themen.*, folder.range_id, folder.folder_id, px_topics.topic_id
+                  FROM themen
+                  LEFT JOIN folder ON (range_id = issue_id)
+                  LEFT JOIN px_topics ON (px_topics.topic_id = issue_id)
+                  WHERE issue_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($issue_id));
+        return $statement->fetch(PDO::FETCH_ASSOC);
     }
 
-    function storeIssue(&$issue) {
+    function storeIssue(&$issue)
+    {
         global $user;
-        $db = new DB_Seminar();
         if ($issue->file) {
-            $db->query("SELECT folder_id FROM folder WHERE range_id = '{$issue->issue_id}'");
-            if ($db->num_rows() == 0) {
-                $db->query("INSERT INTO folder (folder_id, range_id, user_id, name, description, mkdate, chdate) VALUES ('".md5(uniqid('folder'))."', '{$issue->issue_id}', '{$user->id}', '".mysql_escape_string($issue->toString())."', '"._("Themenbezogener Dateiordner")."', '".time()."', '".time()."')");
+            $query = "SELECT 1 FROM folder WHERE range_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($issue->issue_id));
+            $check = $statement->fetchColumn();
+
+            if ($check) {
+                $query = "UPDATE folder SET name = ? WHERE range_id = ?";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array(
+                    $issue->toString(),
+                    $issue->issue_id
+                ));
             } else {
-                $db->query("UPDATE folder SET name = '".mysql_escape_string($issue->toString())."' WHERE range_id = '{$issue->issue_id}'");
+                $query = "INSERT INTO folder (folder_id, range_id, user_id, name, description, mkdate, chdate)
+                          VALUES (?, ?, ?, ?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array(
+                    md5(uniqid('folder', true)),
+                    $issue->issue_id,
+                    $user->id,
+                    $issue->toString(),
+                    _('Themenbezogener Dateiordner')
+                ));
             }
         } else {
             //$db->query("DELETE FROM folder WHERE range_id = '{$issue->issue_id}'");
         }
 
         if ($issue->forum) {
-            $db->query("SELECT topic_id FROM px_topics WHERE topic_id = '{$issue->issue_id}'");
-            if ($db->num_rows() == 0) {
-                $db->query("INSERT INTO px_topics (topic_id, root_id, parent_id, name, description, mkdate, chdate, author, Seminar_id, user_id) VALUES ('{$issue->issue_id}', '{$issue->issue_id}', '0', '".mysql_escape_string($issue->toString())."', '"._("Themenbezogene Diskussionen")."', '".time()."', '".time()."', '".get_fullname($user->id)."', '{$issue->seminar_id}' , '{$user->id}')");
+            $query = "SELECT 1 FROM px_topics WHERE topic_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($issue->issue_id));
+            $check = $statement->fetchColumn();
+
+            if ($check) {
+                $query = "UPDATE px_topics SET name = ? WHERE topic_id = ?";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array(
+                    $issue->toString(),
+                    $issue->issue_id
+                ));
             } else {
-                $db->query("UPDATE px_topics SET name = '".mysql_escape_string($issue->toString())."' WHERE topic_id = '{$issue->issue_id}'");
+                $query = "INSERT INTO px_topics
+                            (topic_id, root_id, parent_id, name, description, mkdate, chdate, author, Seminar_id, user_id)
+                          VALUES (?, ?, '0', ?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), ?, ?, ?)";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array(
+                    $issue->issue_id,
+                    $issue->issue_id,
+                    $issue->toString(),
+                    _('Themenbezogene Diskussionen'),
+                    get_fullname($user->id),
+                    $issue->seminar_id,
+                    $user->id
+                ));
             }
         } else {
             //$db->query("DELETE FROM px_topics WHERE topic_id = '{$issue->issue_id}'");
         }
         
         if ($issue->new) {
-            $db->query("INSERT INTO themen (issue_id, seminar_id, author_id, title, description, mkdate, chdate, priority) VALUES ('{$issue->issue_id}', '{$issue->seminar_id}', '{$issue->author_id}', '".mysql_escape_string($issue->title)."', '".mysql_escape_string($issue->description)."', '{$issue->mkdate}', '{$issue->chdate}', '{$issue->priority}')");
+            $query = "INSERT INTO themen
+                        (issue_id, seminar_id, author_id, title, description, mkdate, chdate, priority)
+                      VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                $issue->issue_id,
+                $issue->seminar_id,
+                $issue->author_id,
+                $issue->title,
+                $issue->description,
+                $issue->mkdate,
+                $issue->chdate,
+                $issue->priority
+            ));
         } else {
-            $db->query("UPDATE themen SET seminar_id = '{$issue->seminar_id}', author_id = '{$issue->author_id}', title = '".mysql_escape_string($issue->title)."', description = '".mysql_escape_string($issue->description)."', mkdate = '{$issue->mkdate}', priority = '{$issue->priority}' WHERE issue_id = '{$issue->issue_id}'");
+            $query = "UPDATE themen
+                      SET seminar_id = ?, author_id = ?, title = ?, description = ?, mkdate = ?, priority = ?
+                      WHERE issue_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                $issue->seminar_id,
+                $issue->author_id,
+                $issue->title,
+                $issue->description,
+                $issue->mkdate,
+                $issue->priority,
+                $issue->issue_id
+            ));
 
-            if ($db->affected_rows()) {
-                $db->query("UPDATE themen SET chdate = ".time()." WHERE issue_id = '{$issue->issue_id}'");
-                $db->query("SELECT termin_id FROM themen_termine WHERE issue_id = '{$issue->issue_id}'");
-                $db2 = new DB_Seminar();
-                while ($db->next_record()) {
-                    $db2->query("UPDATE termine SET chdate = ".time()." WHERE termin_id = '".$db->f('termin_id')."'");
+            if ($statement->rowCount()) {
+                $query = "UPDATE themen SET chdate = UNIX_TIMESTAMP() WHERE issue_id = ?";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($issue->issue_id));
+
+                $query = "SELECT termin_id FROM themen_termine WHERE issue_id = ?";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($issue->issue_id));
+                $termin_ids = $statement->fetchAll(PDO::FETCH_COLUMN);
+
+                if (count($termin_ids) > 0) {
+                    $query = "UPDATE termine SET chdate = UNIX_TIMESTAMP() WHERE termin_id IN (?)";
+                    $statement = DBManager::get()->prepare($query);
+                    $statement->execute(array($termin_ids));
                 }
             }
 
@@ -87,20 +164,36 @@ class IssueDB {
         return TRUE;
     }
 
-    function deleteIssue($issue_id, $seminar_id, $title = '', $description = '') {
-        $db = new DB_Seminar();
+    function deleteIssue($issue_id, $seminar_id, $title = '', $description = '')
+    {
         if ($title) {
-            $new_id = md5($seminar_id . 'top_folder');
-            $db->query("UPDATE folder SET name = '".mysql_escape_string($title)."', description= '".mysql_escape_string($description)."', range_id = '$new_id' WHERE range_id = '{$issue_id}'");
+            $query = "UPDATE folder
+                      SET name = ?, description= ?, range_id = ?
+                      WHERE range_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                $title,
+                $description,
+                md5($seminar_id . 'top_folder'),
+                $issue_id
+            ));
         }
-        $db->query("DELETE FROM themen WHERE issue_id = '$issue_id'");
-        $db->query("DELETE FROM themen_termine WHERE issue_id = '$issue_id'");
+
+        $query = "DELETE FROM themen WHERE issue_id = ?";
+        $statement = DBManager::get()->prepare($query);$
+        $statement->execute(array($issue_id));
+
+        $query = "DELETE FROM themen_termine WHERE issue_id = ?";
+        $statement = DBManager::get()->prepare($query);$
+        $statement->execute(array($issue_id));
     }
 
-    function isIssue($issue_id) {
-        $db = new DB_Seminar();
-        $db->query("SELECT * FROM themen WHERE issue_id = '$issue_id'");
-        return $db->num_rows() ? true : false;
+    function isIssue($issue_id)
+    {
+        $query = "SELECT 1 FROM themen WHERE issue_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($issue_id));
+        return (bool)$statement->fetchColumn();
     }
 
     /*function checkFile($issue_id) {
@@ -113,19 +206,34 @@ class IssueDB {
         }
     }*/
     
-    function getDatesforIssue($issue_id){
+    function getDatesforIssue($issue_id)
+    {
+        $query = "SELECT termine.*
+                  FROM themen_termine
+                  INNER JOIN termine USING (termin_id)
+                  WHERE issue_id = ?
+                  ORDER BY `date` ASC";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($issue_id));
+
         $ret = array();
-        $db = new DB_Seminar("SELECT termine.* FROM themen_termine INNER JOIN termine USING(termin_id) WHERE issue_id='$issue_id' ORDER BY date ASC");
-        while($db->next_record()) $ret[$db->f('termin_id')] = $db->Record;
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $ret[$row['termin_id']] = $row;
+        }
         return $ret;
     }
     
-    static function deleteAllIssues($course_id) {
-        $db = DBManager::get();
-        $themen = $db->query("SELECT issue_id FROM themen WHERE seminar_id = " . $db->quote($course_id))->fetchAll(PDO::FETCH_COLUMN);
+    static function deleteAllIssues($course_id)
+    {
+        $query = "SELECT issue_id FROM themen WHERE seminar_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($course_id));
+        $themen = $statement->fetchAll(PDO::FETCH_COLUMN);
+
         foreach ($themen as $issue_id) {
             self::deleteIssue($issue_id, $course_id);
         }
+
         return count($themen);
     }
 }

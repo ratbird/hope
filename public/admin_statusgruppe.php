@@ -121,12 +121,12 @@ function MovePersonStatusgruppe ($range_id, $role_id, $type, $persons, $workgrou
     if ($type == 'direct') {
         for ($i  = 0; $i < sizeof($persons); $i++) {
             $user_id = get_userid($persons[$i]);
-            InsertPersonStatusgruppe ($user_id, $role_id);
+            InsertPersonStatusgruppe ($user_id, $role_id, false);
         }
     } else if ($type == 'indirect') {
         for ($i = 0; $i < sizeof($persons); $i++) {
             $user_id = get_userid($persons[$i]);
-            $writedone = InsertPersonStatusgruppe ($user_id, $role_id);
+            $writedone = InsertPersonStatusgruppe ($user_id, $role_id, false);
             if ($writedone) {
                 if ($workgroup_mode == TRUE) {
                     $globalperms = get_global_perm($user_id);
@@ -145,7 +145,7 @@ function MovePersonStatusgruppe ($range_id, $role_id, $type, $persons, $workgrou
         if ($persons != "") {
             for ($i  = 0; $i < sizeof($persons); $i++) {
                 $user_id = get_userid($persons[$i]);
-                $writedone = InsertPersonStatusgruppe ($user_id, $role_id);
+                $writedone = InsertPersonStatusgruppe ($user_id, $role_id, false);
                 if ($writedone) {
                     if ($workgroup_mode == TRUE) {
                         $globalperms = get_global_perm($user_id);

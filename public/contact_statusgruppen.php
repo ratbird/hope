@@ -86,12 +86,12 @@ function MovePersonStatusgruppe($range_id, $AktualMembers = '', $Freesearch = ''
     $_SESSION['contact_statusgruppen']['group_open'][$statusgruppe_id] = true;
     if ($AktualMembers != '') {
         for ($i = 0; $i < sizeof($AktualMembers); $i++) {
-            InsertPersonStatusgruppe(get_userid($AktualMembers[$i]), $statusgruppe_id);
+            InsertPersonStatusgruppe(get_userid($AktualMembers[$i]), $statusgruppe_id, false);
         }
     }
     if ($Freesearch != '') {
         for ($i = 0; $i < sizeof($Freesearch); $i++) {
-            if (InsertPersonStatusgruppe(get_userid($Freesearch[$i]), $statusgruppe_id)) {
+            if (InsertPersonStatusgruppe(get_userid($Freesearch[$i]), $statusgruppe_id, false)) {
                 AddNewContact(get_userid($Freesearch[$i]), $range_id);
             }
         }

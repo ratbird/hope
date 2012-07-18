@@ -1,7 +1,7 @@
 <?php
 # Lifter002: TODO
+# Lifter003: TEST
 # Lifter007: TODO
-# Lifter003: TODO
 # Lifter010: TODO
 /**
  * messagingSettings.php - displays editable personal messaging-settings
@@ -31,44 +31,61 @@ require_once ('lib/contact.inc.php');
 $user_cfg = UserConfig::get($GLOBALS['user']->id);
 
 check_messaging_default();
-$db2=new DB_Seminar;
-$db3=new DB_Seminar;
 $reset_txt = '';
 
 ## ACTION ##
 
 // add forward_receiver
 if (Request::submitted('add_smsforward_rec')) {
-    $query = "UPDATE user_info SET smsforward_rec='".get_userid(Request::get('smsforward_rec'))."', smsforward_copy='1' WHERE user_id='".$user->id."'";
-    $db3->query($query);
+    $query = "UPDATE user_info
+              SET smsforward_rec = ?, smsforward_copy = 1
+              WHERE user_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array(
+        get_userid(Request::get('smsforward_rec')),
+        $user->id
+    ));
 }
 
 // del forward receiver
 if (Request::submitted('del_forwardrec')) {
-    $query = "UPDATE user_info SET smsforward_rec='', smsforward_copy='1' WHERE user_id='".$user->id."'";
-    $db3->query($query);
+    $query = "UPDATE user_info
+              SET smsforward_rec = '', smsforward_copy = 1
+              WHERE user_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($user->id));
 }
 
-$query = "SELECT * FROM user_info WHERE user_id='".$user->id."'";
-$db2->query($query);
-$db2->next_record();
+$query = "SELECT smsforward_copy, smsforward_rec, email_forward
+          FROM user_info
+          WHERE user_id='".$user->id."'";
+$statement = DBManager::get()->prepare($query);
+$statement->execute(array($user->id));
+$row = $statement->fetch(PDO::FETCH_ASSOC);
 
-$smsforward['copy'] = $db2->f("smsforward_copy");
-$smsforward['rec'] = $db2->f("smsforward_rec");
+$smsforward['copy'] = $row['smsforward_copy'];
+$smsforward['rec']  = $row['smsforward_rec'];
+$email_forward      = $row['email_forward'];
 
-$email_forward = $db2->f("email_forward");
-
-if ($email_forward == "0") $email_forward = $GLOBALS["MESSAGING_FORWARD_DEFAULT"];
+if ($email_forward == "0") {
+    $email_forward = $GLOBALS["MESSAGING_FORWARD_DEFAULT"];
+}
 
 //vorgenommene Anpassungen der Ansicht in Uservariablen schreiben
 
 if (Request::option('messaging_cmd')=="change_view_insert" && !Request::submitted('set_msg_default') && Request::submitted('newmsgset')) {
-        $send_as_email = Request::option('send_as_email');
-        $db2->query("UPDATE user_info SET email_forward = '".$send_as_email."' WHERE user_id = '".$user->id."'");
-        $email_forward = $send_as_email;
+    $send_as_email = Request::option('send_as_email');
+
+    $query = "UPDATE user_info SET email_forward = ? WHERE user_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array(
+        $send_as_email,
+        $user->id
+    ));
+    $email_forward = $send_as_email;
 
     // write to user config table
-    $user_cfg->store("ONLINE_NAME_FORMAT", $_REQUEST['online_format']);
+    $user_cfg->store("ONLINE_NAME_FORMAT", Request::get('online_format'));
     $user_cfg->store("MAIL_AS_HTML", Request::int('mail_format'));
 
     $my_messaging_settings["changed"] = TRUE;
@@ -97,12 +114,14 @@ if (Request::option('messaging_cmd')=="change_view_insert" && !Request::submitte
     $sms_data["time"] = $my_messaging_settings["timefilter"];
     if ($smsforward['rec']) {
         if ($smsforward_copy && !$smsforward['copy'])  {
-            $query = "UPDATE user_info SET smsforward_copy='1'  WHERE user_id='".$user->id."'";
-            $db3->query($query);
+            $query = "UPDATE user_info SET smsforward_copy = 1 WHERE user_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($user->id));
         }
         if (!$smsforward_copy && $smsforward['copy'])  {
-            $query = "UPDATE user_info SET smsforward_copy=''  WHERE user_id='".$user->id."'";
-            $db3->query($query);
+            $query = "UPDATE user_info SET smsforward_copy = 0 WHERE user_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($user->id));
         }
     }
 } else if (Request::option('messaging_cmd')=="change_view_insert" && Request::submitted('set_msg_default')) {
@@ -113,12 +132,22 @@ if (Request::option('messaging_cmd') == "reset_msg_settings") {
     $user_id = $user->id;
     unset($my_messaging_settings);
     check_messaging_default();
-    $db3->query("UPDATE user_info SET smsforward_copy='', smsforward_rec='' WHERE user_id='".$user_id."'");
-    $db3->query("UPDATE message_user SET folder='' WHERE user_id='".$user_id."'");
+
+    $query = "UPDATE user_info
+              SET smsforward_copy = 0, smsforward_rec = ''
+              WHERE user_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($user_id));
+
+    $query = "UPDATE message_user SET folder = 0 WHERE user_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($user_id));
 }
+
 $add_user = Request::option('add_user');
-if (Request::submitted('do_add_user'))
+if (Request::submitted('do_add_user')) {
     $msging->add_buddy ($add_user);
+}
 
 ## FUNCTION ##
 
@@ -129,9 +158,6 @@ function change_messaging_view()
            $gosearch, $smsforward, $reset_txt, $email_forward, $user_cfg, $FOAF_ENABLE;
     $search_exp = Request::quoted('search_exp');
     $msging=new messaging;
-    $db=new DB_Seminar;
-    $db2=new DB_Seminar;
-    $db3=new DB_Seminar;
     $cssSw=new cssClassSwitcher;
     ?>
     <table width="100%" border="0" cellpadding="0" cellspacing="0" align="center">
@@ -244,11 +270,15 @@ function change_messaging_view()
                         <label for="search_exp"><?print _("Weiterleitung empfangener Nachrichten");?></label>
                     </td>
                     <td <?=$cssSw->getFullClass()?>> <?
-                        $query = "SELECT * FROM user_info WHERE user_id='".$user->id."'";
-                        $db2->query($query);
-                        while ($db2->next_record()) {
-                            $smsforward['copy'] = $db2->f("smsforward_copy");
-                            $smsforward['rec'] = $db2->f("smsforward_rec");
+                        $query = "SELECT smsforward_copy, smsforward_rec
+                                  FROM user_info
+                                  WHERE user_id = ?";
+                        $statement = DBManager::get()->prepare($query);
+                        $statement->execute(array($user->id));
+                        $row = $statement->fetch(PDO::FETCH_ASSOC);
+                        if ($row) {
+                            $smsforward['copy'] = $row['smsforward_copy'];
+                            $smsforward['rec']  = $row['smsforward_rec'];
                         }
                         if ($smsforward['rec']) { // empfaenger ausgewaehlt
                             printf("&nbsp;<font size=\"-1\">"._("Empfänger: %s%s%s")."</font>&nbsp;&nbsp;<input type=\"image\" name=\"del_forwardrec\" src=\"" . Assets::image_path('icons/16/blue/trash.png') . "\" ".tooltip(_("Empfänger und Weiterleitung löschen.")).">&nbsp;<input type=\"image\" name=\"del_forwardrec\" src=\"".Assets::image_path('icons/16/blue/search.png')."\"  ".tooltip(_("Neuen Empfänger suchen."))."><br>", "<a href=\"about.php?username=".get_username($smsforward['rec'])."\">", get_fullname($smsforward['rec'],'full',true), "</a>");
@@ -260,16 +290,29 @@ function change_messaging_view()
                                 <input type="text" name="search_exp" id="search_exp" size="30" value="">
                                 <input type="image" name="gosearch" src="<?=Assets::image_path('icons/16/blue/search.png') ?>" class="middle" title="<?= _("Nach Empfänger suchen") ?>" border="0"><?
                             } else {
-                                $db->query("SELECT username, ".$_fullname_sql['full_rev']." AS fullname, perms FROM auth_user_md5 LEFT JOIN user_info USING(user_id) WHERE (username LIKE '%$search_exp%' OR Vorname LIKE '%$search_exp%' OR Nachname LIKE '%$search_exp%') AND ".get_vis_query('auth_user_md5')." ORDER BY Nachname ASC");
-                                if (!$db->num_rows()) { // wenn keine treffer
+                                $vis_query = get_vis_query('auth_user_md5');
+                                $query = "SELECT user_id, username, {$_fullname_sql['full_rev']} AS fullname, perms
+                                          FROM auth_user_md5
+                                          LEFT JOIN user_info USING (user_id)
+                                          WHERE (username LIKE CONCAT('%', :needle, '%') OR
+                                                 Vorname LIKE CONCAT('%', :needle, '%') OR
+                                                 Nachname LIKE CONCAT('%', :needle, '%'))
+                                            AND {$vis_query}
+                                          ORDER BY Nachname ASC";
+                                $statement = DBManager::get()->prepare($query);
+                                $statement->bindValue(':needle', $search_exp);
+                                $statement->execute();
+                                $matches = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+                                if (count($matches) === 0) { // wenn keine treffer
                                     echo '<input type="image" name="reset_serach" src="' . Assets::image_path('icons/16/blue/refresh.png') . '" class="text-top" value="' . _("Suche zurücksetzen") . '" ' . tooltip(_("setzt die Suche zurück")) . '>';
                                     echo "<font size=\"-1\">&nbsp;"._("keine Treffer")."</font>";
                                 } else { // treffer auswählen
                                     echo "<input type=\"image\" name=\"add_smsforward_rec\" ".tooltip(_("als Empfänger weitergeleiteter Nachrichten eintragen"))." value=\""._("als Empfänger auswählen")."\" src=\"" . Assets::image_path('icons/16/blue/accept.png') . "\" border=\"0\">&nbsp;&nbsp;";
                                     echo "<select size=\"1\" name=\"smsforward_rec\">";
-                                    while ($db->next_record()) {
-                                        if (get_username($user->id) != $db->f("username")) {
-                                            echo "<option value=\"".$db->f("username")."\">".htmlReady(my_substr($db->f("fullname"),0,35))." (".$db->f("username").") - ".$db->f("perms")."</option>";
+                                    foreach ($matches as $match) {
+                                        if ($user->id != $match['user_id']) {
+                                            echo "<option value=\"".$match['username']."\">".htmlReady(my_substr($match['fullname'],0,35))." (".$match['username'].") - ".$match['perms']."</option>";
                                         }
                                     } ?>
                                     </select>

@@ -1,7 +1,7 @@
 <?php
 # Lifter002: TODO
 # Lifter007: TODO
-# Lifter003: TODO
+# Lifter003: TEST
 # Lifter010: TODO
 /*
 * DataFieldEntry.class.php - <short-description>
@@ -55,50 +55,48 @@ abstract class DataFieldEntry
     {
         if(! $range_id)
             return false; // we necessarily need a range ID
-        if(is_array($range_id))
-        { // rangeID may be an array ("classic" rangeID and second rangeID used for user roles)
+
+        $parameters = array();
+        if(is_array($range_id)) {
+            // rangeID may be an array ("classic" rangeID and second rangeID used for user roles)
             $secRangeID = $range_id[1];
             $rangeID = $range_id[0]; // to keep compatible with following code
-            if('usersemdata' !== $object_type && 'roleinstdata' !== $object_type)
-            {
+            if('usersemdata' !== $object_type && 'roleinstdata' !== $object_type) {
                 $object_type = 'userinstrole';
             }
-            $clause1 = "AND sec_range_id='$secRangeID'";
-        }
-        else
-        {
+            $clause1 = "AND sec_range_id= :sec_range_id";
+            $parameters[':sec_range_id'] = $secRangeID;
+        } else {
             $rangeID = $range_id;
         }
-        if(! $object_type)
+        if (!$object_type) {
             $object_type = get_object_type($rangeID);
-        if($object_type)
-        {
-            switch ($object_type)
-            {
+        }
+
+        if($object_type) {
+            switch ($object_type) {
                 case 'sem':
-                    if($object_class_hint)
-                    {
+                    if($object_class_hint) {
                         $object_class = SeminarCategories::GetByTypeId($object_class_hint);
-                    }
-                    else
-                    {
+                    } else {
                         $object_class = SeminarCategories::GetBySeminarId($rangeID);
                     }
-                    $clause2 = "object_class=" . (int) $object_class . " OR object_class IS NULL";
+                    $clause2 = "object_class = :object_class OR object_class IS NULL";
+                    $parameters[':object_class'] = (int) $object_class;
                     break;
                 case 'inst':
                 case 'fak':
-                    if($object_class_hint)
-                    {
+                    if($object_class_hint) {
                         $object_class = $object_class_hint;
-                    }
-                    else
-                    {
-                        $query = "SELECT type FROM Institute WHERE Institut_id = '$rangeID'";
-                        $object_class = DBManager::get()->query($query)->fetchColumn();
+                    } else {
+                        $query = "SELECT type FROM Institute WHERE Institut_id = ?";
+                        $statement = DBManager::get()->prepare($query);
+                        $statement->execute(array($rangeID));
+                        $object_class = $statement->fetchColumn();
                     }
                     $object_type = "inst";
-                    $clause2 = "object_class=" . (int) $object_class . " OR object_class IS NULL";
+                    $clause2 = "object_class = :object_class OR object_class IS NULL";
+                    $parameters[':object_class'] = (int) $object_class;
                     break;
                 case 'roleinstdata': //hmm tja, vermutlich so
                     $clause2 = '1';
@@ -107,16 +105,24 @@ abstract class DataFieldEntry
                 case 'userinstrole':
                 case 'usersemdata':
                     $object_class = is_object($GLOBALS['perm']) ? DataFieldStructure::permMask($GLOBALS['perm']->get_perm($rangeID)) : 0;
-                    $clause2 = "((object_class & " . (int) $object_class . ") OR object_class IS NULL)";
+                    $clause2 = "((object_class & :object_class) OR object_class IS NULL)";
+                    $parameters[':object_class'] = (int) $object_class;
                     break;
             }
-            $query = "SELECT a.*, content ";
-            $query .= "FROM datafields a LEFT JOIN datafields_entries b ON (a.datafield_id=b.datafield_id AND range_id = '$rangeID' $clause1) ";
-            $query .= "WHERE object_type ='$object_type' AND ($clause2) ORDER BY object_class, priority";
-            $rs = DBManager::get()->query($query);
+            $query = "SELECT a.*, content 
+                      FROM datafields AS a
+                      LEFT JOIN datafields_entries AS b
+                        ON (a.datafield_id = b.datafield_id AND range_id = :range_id {$clause1})
+                      WHERE object_type = :object_type AND ({$clause2})
+                      ORDER BY object_class, priority";
+            $parameters[':range_id']    = $rangeID;
+            $parameters[':object_type'] = $object_type;
+
+            $rs = DBManager::get()->prepare($query);
+            $rs->execute($parameters);
+
             $entries = array();
-            while($data = $rs->fetch(PDO::FETCH_ASSOC))
-            {
+            while($data = $rs->fetch(PDO::FETCH_ASSOC)) {
                 $struct = new DataFieldStructure($data);
                 $entries[$data['datafield_id']] = DataFieldEntry::createDataFieldEntry($struct, $range_id, $data['content']);
             }

@@ -1,7 +1,7 @@
 <?php
 # Lifter002: TODO
 # Lifter007: TODO
-# Lifter003: TODO
+# Lifter003: TEST
 # Lifter010: TODO
 /**
  *  DataFieldStructure.class.php
@@ -113,13 +113,14 @@ class DataFieldStructure
    *
    * @return integer  the count of entries for this datafield
    */
-  function numberOfUsedEntries() {
-    $db = new DB_Seminar;
+  function numberOfUsedEntries()
+  {
     $id = $this->data['datafield_id'];
-    $query = "SELECT count(range_id) AS count FROM datafields_entries WHERE datafield_id = '$id'";
-    $db->query($query);
-    $db->next_record();
-    return $this->numEntries = $db->f('count');
+
+    $query = "SELECT COUNT(range_id) FROM datafields_entries WHERE datafield_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($id));
+    return $this->numEntries = $statement->fetchColumn();
   }
 
     /**
@@ -190,30 +191,33 @@ class DataFieldStructure
    *
    * @return array    <description>
    */
-  function getDataFieldStructures($objectType=NULL, $objectClass='', $includeNullClass=false) {
+  function getDataFieldStructures($objectType=NULL, $objectClass='', $includeNullClass=false)
+  {
+    $expr = $params = array();
+    if (isset($objectType)) {
+      $expr[] = "object_type = :object_type";
+      $params[':object_type'] = $objectType;
+    }
 
-    $ret = array();
-
-    $db = new DB_Seminar();
-
-    $expr = array();
-
-    if (isset($objectType))
-      $expr[] = "object_type='$objectType'";
-
-    if ($objectClass)
-      $expr[] = "(object_class & $objectClass" .
-                ($includeNullClass ? ' OR object_class IS NULL)' : ')');
-
+    if ($objectClass) {
+      $expr[] = "(object_class & :object_class" .
+                  ($includeNullClass ? ' OR object_class IS NULL)' : ')');
+      $params[':object_class'] = $objectClass;
+    }
 
     $expr = empty($expr) ? '' : 'WHERE ' . join(' AND ', $expr);
 
-    $query = "SELECT * FROM datafields $expr ".
-             "ORDER BY object_class, priority, name";
-    $db->query($query);
+    $query = "SELECT *
+              FROM datafields
+              {$expr}
+              ORDER BY object_class, priority, name";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute($parameters);
 
-    while ($db->next_record())
-      $ret[$db->f("datafield_id")] = new DataFieldStructure($db->Record);
+    $ret = array();
+    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+      $ret[$row['datafield_id']] = new DataFieldStructure($row);
+    }
 
     return $ret;
   }
@@ -222,11 +226,10 @@ class DataFieldStructure
   # load structure information from database
   function load() {
     if ($this->getID()) {
-      $db = new DB_Seminar;
-      $query = sprintf("SELECT * FROM datafields WHERE datafield_id='%s'", $this->getID());
-      $db->query($query);
-      $db->next_record();
-      $this->data = $db->Record;
+      $query = "SELECT * FROM datafields WHERE datafield_id = ?";
+      $statement = DBManager::get()->prepare($query);
+      $statement->execute(array($this->getID()));
+      $this->data = $statement->fetch(PDO::FETCH_ASSOC);
     }
   }
 
@@ -234,9 +237,11 @@ class DataFieldStructure
   function store() {
     $data = $this->data;
     $db = DbManager::get();
-    $query = "SELECT * FROM datafields WHERE datafield_id = " . $db->quote($data['datafield_id']);
 
-    $row = $db->query($query)->fetch(PDO::FETCH_ASSOC);
+    $query = "SELECT * FROM datafields WHERE datafield_id = ?";
+    $statement = $db->prepare($query);
+    $statement->execute(array($data['datafield_id']));
+    $row = $statement->fetch(PDO::FETCH_ASSOC);
     if ($row['datafield_id']) {
         $data = array_merge($row, $data);
     }
@@ -265,12 +270,13 @@ class DataFieldStructure
 
 
   function remove($id='') {
-    if (!$id)
+    if (!$id) {
       $id = $this->getID();
-    $db = new DB_Seminar;
-    $query = "DELETE FROM datafields WHERE datafield_id = '$id'";
-    $db->query($query);
-    return $db->affected_rows() > 0;
+    }
+    $query = "DELETE FROM datafields WHERE datafield_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($id));
+    return $statement->rowCount() > 0;
   }
 
 

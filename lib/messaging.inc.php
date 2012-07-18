@@ -316,8 +316,7 @@ class messaging
     {
         global $user, $my_messaging_settings;
 
-        $url = URLHelper::getURL();
-        if (strpos($url, 'sms_send.php') !== false) {
+        if (basename($_SERVER['PHP_SELF']) == 'sms_send.php'){
             $sms_data = $_SESSION['sms_data'];
         } else {
             $sms_data['tmpsavesnd'] = $my_messaging_settings['save_snd'];
@@ -379,7 +378,6 @@ class messaging
             $subject, $message,
             $reading_confirmation, $priority,
         ));
-
         // insert snd
         $query = "INSERT INTO message_user (message_id, user_id, snd_rec, folder, deleted, mkdate)
                   VALUES (?, ?, 'snd', ?, ?, UNIX_TIMESTAMP())";

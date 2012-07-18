@@ -54,12 +54,12 @@ $check_all = Request::option('check_all');
 
 //Switch fuer die Ansichten
 URLHelper::bindLinkParam('data', $folder_system_data);
-if ($_REQUEST['cmd'] == 'tree') {
+if (Request::option('cmd') == 'tree') {
     URLHelper::removeLinkParam('data');
     $folder_system_data = array();
     $folder_system_data['cmd'] = 'tree';
     URLHelper::addLinkParam('data', $folder_system_data);
-} elseif ($_REQUEST['cmd'] == 'all') {
+} elseif (Request::option('cmd') == 'all') {
     URLHelper::removeLinkParam('data');
     $folder_system_data = array();
     $folder_system_data['cmd'] = 'all';
@@ -75,12 +75,12 @@ if (Request::option('orderby')) {
 ///////////////////////////////////////////////////////////
 //Zip-Download-Funktionen
 ///////////////////////////////////////////////////////////
-if ($_REQUEST['folderzip']) {
-    $zip_file_id = createFolderZip($_REQUEST['folderzip'], true, true);
+if (Request::get('folderzip')) {
+    $zip_file_id = createFolderZip(Request::option('folderzip'), true, true);
     if($zip_file_id){
         $query = "SELECT name FROM folder WHERE folder_id = ?";
         $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($_REQUEST['folderzip']));
+        $statement->execute(array(Request::option('folderzip')));
         $name = $statement->fetchColumn();
 
         $zip_name = prepareFilename(_('Dateiordner') . '_' . $name . '.zip');
@@ -90,7 +90,7 @@ if ($_REQUEST['folderzip']) {
     }
 }
 
-if ($_REQUEST['zipnewest']) {
+if (Request::get('zipnewest')) {
     //Abfrage der neuen Dateien
     $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessSemName[1]));
     $query = "SELECT range_id, dokument_id, url
@@ -101,7 +101,7 @@ if ($_REQUEST['zipnewest']) {
     $statement->execute(array(
         $SessSemName[1],
         $user->id,
-        $_REQUEST['zipnewest'] ?: null,
+        Request::get('zipnewest') ?: null,
     ));
     $download_ids = $statement->fetchAll(PDO::FETCH_ASSOC);
 
@@ -207,7 +207,7 @@ if ($rechte || $owner || $create_folder_perm) {
             $titel=_("Allgemeiner Dateiordner");
             $description= sprintf(_("Ablage für allgemeine Ordner und Dokumente der %s"), $SessSemName["art_generic"]);
         } else if ($open_id == md5('new_top_folder')){
-            $titel = $_REQUEST['top_folder_name'] ? stripslashes($_REQUEST['top_folder_name']) : _("Neuer Ordner");
+            $titel = Request::get('top_folder_name') ? Request::get('top_folder_name') : _("Neuer Ordner");
             $open_id = md5($SessSemName[1] . 'top_folder');
         } elseif($titel = GetStatusgruppeName($open_id)) {
             $titel = _("Dateiordner der Gruppe:") . ' ' . $titel;
@@ -659,7 +659,8 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
     ob_end_clean();
     ob_start();
     //Frage den Dateienkörper ab
-    if ($_REQUEST["getfilebody"]) {
+
+    if (Request::get("getfilebody")) {
         $query = "SELECT {$_fullname_sql['full']} AS fullname, username, a.user_id, a.*,
                          IF(IFNULL(a.name, '') = '', a.filename, a.name) AS t_name
                   FROM dokumente AS a
@@ -667,7 +668,7 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
                   LEFT JOIN user_info USING (user_id)
                   WHERE a.dokument_id = ?";
         $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($_REQUEST['getfilebody']));
+        $statement->execute(array(Request::get("getfilebody")));
         $datei = $statement->fetch(PDO::FETCH_ASSOC);
         if ($folder_tree->isReadable($datei['range_id'] , $user->id)){
             $all = $folder_system_data['cmd']=='tree' ? FALSE : TRUE;
@@ -676,18 +677,18 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
     }
 
     //Frage den Ordnerkörper ab
-    if ($_REQUEST["getfolderbody"]) {
-        if ($folder_tree->isExecutable($_REQUEST["getfolderbody"] , $user->id)) {
-            display_folder_body($_REQUEST["getfolderbody"], $folder_system_data["open"], null, $folder_system_data["move"], null, null, null, null);
+    if (Request::quoted("getfolderbody")) {
+        if ($folder_tree->isExecutable(Request::quoted("getfolderbody") , $user->id)) {
+            display_folder_body(Request::quoted("getfolderbody"), $folder_system_data["open"], null, $folder_system_data["move"], null, null, null, null);
         }
     }
 
     //Dateien eines Ordners sollen sortiert werden nach einem Array
-    if ($_REQUEST["folder_sort"]) {
-        if (($rechte) && ($_REQUEST["folder_sort"] == "root")) {
+    if (Request::quoted("folder_sort")) {
+        if (($rechte) && (Request::quoted("folder_sort") == "root")) {
 
         } else {
-            if (($rechte) || ($folder_tree->isWriteable($_REQUEST["folder_sort"] , $user->id))) {
+            if (($rechte) || ($folder_tree->isWriteable(Request::quoted("folder_sort") , $user->id))) {
                 $file_order = explode(",", Request::get('file_order'));
                 $sorttype = "";
                 if ($file_order) {
@@ -728,40 +729,38 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
     }
 
     //Datei soll in einen Ordner verschoben werden
-    if (($_REQUEST["moveintofolder"]) && ($_REQUEST["movefile"])) {
+
+    if ((Request::get("moveintofolder")) && (Request::get("movefile"))) {
         $query = "SELECT range_id FROM dokumente WHERE dokument_id = ?";
         $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($_REQUEST['movefile']));
+        $statement->execute(array(Request::get("movefile")));
         $temp_id = $statement->fetchColumn();
 
         if (($rechte) || (($folder_tree->isWriteable($temp_id , $user->id))
-        && ($folder_tree->isWriteable($_REQUEST['moveintofolder'] , $user->id)))) {
+        && ($folder_tree->isWriteable(Request::get("moveintofolder") , $user->id)))) {
             $query = "UPDATE dokumente
                       SET range_id = ?, priority = 0
                       WHERE dokument_id = ?";
             $statement = DBManager::get()->prepare($query);
-            $statement->execute(array(
-                $_REQUEST['moveintofolder'],
-                $_REQUEST['movefile'],
-            ));
+            $statement->execute(array(Request::get("moveintofolder"),Request::get("movefile")));
         }
     }
 
     //Datei soll in einen Ordner kopiert werden
-    if (($_REQUEST["copyintofolder"]) && ($_REQUEST["copyfile"])) {
+    if ((Request::get("copyintofolder")) && (Request::get("copyfile"))) {
         $query = "SELECT name, description, filename, mkdate, filesize, 
                          autor_host, url, protected
                   FROM dokumente
                   WHERE dokument_id = ?";
         $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($_REQUEST['copyfile']));
+        $statement->execute(array(Request::get("copyfile")));
         $result = $statement->fetch(PDO::FETCH_ASSOC);
 
-        if (($rechte) || ($folder_tree->isWriteable($_REQUEST['copyintofolder'] , $user->id))) {
+        if (($rechte) || ($folder_tree->isWriteable(Request::get("copyintofolder") , $user->id))) {
             $doc = new StudipDocument();
             $doc->setData(
                 array(
-                    'range_id'    => $_REQUEST["copyintofolder"],
+                    'range_id'    => Request::get("copyintofolder"),
                     'user_id'     => $user->id,
                     'seminar_id'  => $SessSemName[1],
                     'name'        => $result['name'],

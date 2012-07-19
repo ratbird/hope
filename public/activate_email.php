@@ -34,7 +34,7 @@ function reenter_mail() {
     echo _('Sollten Sie keine E-Mail erhalten haben, können Sie sich einen neuen Aktivierungsschlüssel zuschicken lassen. Geben Sie dazu Ihre gewünschte E-Mail-Adresse unten an:');
     echo '<form action="activate_email.php" method="post">'
         . CSRFProtection::tokenTag()
-        .'<input type="hidden" name="uid" value="'. htmlReady($_REQUEST['uid']) .'">'
+        .'<input type="hidden" name="uid" value="'. htmlReady(Request::option('uid')) .'">'
         .'<table><tr><td>'. _('E-Mail:') .'</td><td><input type="email" name="email1"></td></tr>'
         .'<tr><td>'. _('Wiederholung:') . '</td><td><input type="email" name="email2"></td></tr></table>'
         .Button::createAccept(). '</form>';
@@ -44,12 +44,12 @@ function mail_explain() {
     echo _('Sie haben Ihre E-Mail-Adresse geändert. Um diese frei zu schalten müssen Sie den Ihnen an Ihre neue Adresse zugeschickten Aktivierungs Schlüssel im unten stehenden Eingabefeld eintragen.');
     echo '<br><form action="activate_email.php" method="post">'
         . CSRFProtection::tokenTag()
-        .'<input type="text" name="key"><input name="uid" type="hidden" value="'.htmlReady($_REQUEST['uid']).'"><br>'
+        .'<input type="text" name="key"><input name="uid" type="hidden" value="'.htmlReady(Request::option('uid')).'"><br>'
         .Button::createAccept(). '</form><br><br>';
 
 }
 
-if(!$_REQUEST['uid'])
+if(!Request::option('uid'))
     header("Location: index.php");
 
 // set up user session
@@ -60,15 +60,15 @@ PageLayout::setTitle(_('E-Mail Aktivierung'));
 include 'lib/include/html_head.inc.php'; // Output of html head
 include 'lib/include/header.php';
 
-$uid = $_REQUEST['uid'];
-if(isset($_REQUEST['key'])) {
+$uid = Request::option('uid');
+if(Request::get('key')) {
     
     $db = DBManager::get();
     $sth = $db->prepare("SELECT validation_key FROM auth_user_md5 WHERE user_id=?");
     $sth->execute(array($uid));
     $result = $sth->fetch();
     $key = $result['validation_key'];
-    if($_REQUEST['key'] == $key) {
+    if(Request::quoted('key') == $key) {
         $sth = $db->prepare("UPDATE auth_user_md5 SET validation_key='' WHERE user_id=?");
         $sth->execute(array($uid));
         unset($_SESSION['half_logged_in']);
@@ -88,7 +88,7 @@ if(isset($_REQUEST['key'])) {
 
         head(PageLayout::getTitle());
         mail_explain();
-        if($_SESSION['semi_logged_in'] == $_REQUEST['uid']) {
+        if($_SESSION['semi_logged_in'] == Request::option('uid')) {
             reenter_mail();
         } else {
             printf(_('Sie können sich %seinloggen%s und sich den Bestätigungscode neu oder an eine andere E-Mail-Adresse schicken lassen.'),
@@ -98,17 +98,17 @@ if(isset($_REQUEST['key'])) {
     }
 
 // checking semi_logged_in is important to avoid abuse
-} else if(isset($_REQUEST['email1']) && isset($_REQUEST['email2']) && $_SESSION['semi_logged_in'] == $_REQUEST['uid']) {
-    if($_REQUEST['email1'] == $_REQUEST['email2']) {
+} else if(Request::get('email1') && Request::get('email2') && $_SESSION['semi_logged_in'] == Request::option('uid')) {
+    if(Request::get('email1') == Request::get('email2')) {
         // change mail
         require_once('lib/edit_about.inc.php');
 
-        $send = edit_email($_REQUEST['uid'], $_REQUEST['email1'], True);
+        $send = edit_email(Request::option('uid'), Request::quoted('email1'), True);
 
         if($send[0]) {
             $_SESSION['semi_logged_in'] = False;
             head(PageLayout::getTitle());
-            printf(_('An %s wurde ein Aktivierungslink geschickt.'), $_REQUEST['email1']);
+            printf(_('An %s wurde ein Aktivierungslink geschickt.'), Request::quoted('email1'));
             footer();
         } else {
             head(_('Fehler'), True);

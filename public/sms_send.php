@@ -405,8 +405,9 @@ if (Request::option('group_id')) {
     $sms_data["sig"] = $my_messaging_settings["addsignature"];
 
 }
+
 // if send message at single/multiple user coming from teilnehmer.php
-if (isset($_REQUEST['rec_uname'])  || isset($_REQUEST['filter']))
+if (Request::getArray('rec_uname')  || Request::get('filter'))
 {
     //$sms_data für neue Nachricht vorbereiten
     unset($sms_data['p_rec']);
@@ -422,7 +423,8 @@ if (isset($_REQUEST['rec_uname'])  || isset($_REQUEST['filter']))
     }
 
     // [tlx] omg, wtf is this?
-    if ((in_array($_REQUEST['filter'], words('all prelim waiting')) && $course_id) || ($_REQUEST['filter'] == 'send_sms_to_all' && isset($_REQUEST['who'])) && $perm->have_studip_perm('tutor', $course_id) || ($_REQUEST['filter'] == 'inst_status' && isset($_REQUEST['who']) && $perm->have_perm('admin') && isset($cid)))
+    $filter = Request::get('filter');
+    if ((in_array($filter, words('all prelim waiting')) && $course_id) || Request::get('filter') == 'send_sms_to_all' && Request::get('who') && $perm->have_studip_perm('tutor', $course_id) || (Request::get('filter') == 'inst_status' && Request::get('who') && $perm->have_perm('admin') && isset($cid)))
     {
         // Stores parameters for query
         $parameters = array($course_id);
@@ -481,12 +483,13 @@ if (isset($_REQUEST['rec_uname'])  || isset($_REQUEST['filter']))
         }
     }
     //Nachricht wurde nur an bestimmte User versendet
-    if (is_array($_REQUEST['rec_uname']))
-        foreach (Request::getArray('rec_uname') as $var) {
+    $rec_uname = Request::getArray('rec_uname');
+    if ($rec_uname)
+        foreach ($rec_uname as $var) {
             if(get_userid($var) != "")
                 $sms_data['p_rec'][] = $var;
         }
-    elseif (isset($_REQUEST['rec_uname']) && get_userid(Request::get('rec_uname')) != "")
+    elseif (Request::get('rec_uname') && get_userid(Request::get('rec_uname')) != "")
         $sms_data['p_rec'] = array(Request::get('rec_uname'));
     // append signature
     $sms_data["sig"] = $my_messaging_settings["addsignature"];
@@ -623,8 +626,8 @@ $txt['008'] = _("Lesebestätigung");
 
     echo '<form enctype="multipart/form-data" name="upload_form" action="'.URLHelper::getURL().'" method="post">';
     echo CSRFProtection::tokenTag();
-    if($_REQUEST['answer_to']) {
-         echo '<input type="hidden" name="answer_to" value="'. htmlReady($_REQUEST['answer_to']). '">';
+    if(Request::quoted('answer_to')) {
+         echo '<input type="hidden" name="answer_to" value="'. htmlReady(Request::get('answer_to')). '">';
     }
 
     echo '<input type="hidden" name="sms_source_page" value="'. htmlReady(Request::get('sms_source_page')) .'">';

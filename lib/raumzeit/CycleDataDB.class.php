@@ -71,7 +71,7 @@ class CycleDataDB
             $query = "SELECT ex_termine.*, GROUP_CONCAT(trp.user_id) AS related_persons
                       FROM ex_termine
                       LEFT JOIN termin_related_persons AS trp ON (termin_id = trp.range_id)
-                      WHERE metadate_id = ? AND `date` BETWEEN $start AND $end
+                      WHERE metadate_id = ? AND `date` BETWEEN ? AND ?
                       GROUP BY termin_id
                       ORDER BY NULL";
             $parameters = array($metadate_id, $start, $end);

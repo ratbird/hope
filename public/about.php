@@ -31,7 +31,7 @@ require '../lib/bootstrap.php';
 unregister_globals();
 
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Default_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
-$auth->login_if($_REQUEST['again'] && ($auth->auth["uid"] == "nobody"));
+$auth->login_if(Request::quoted('again') && ($auth->auth["uid"] == "nobody"));
 $perm->check("user");
 
 
@@ -510,7 +510,8 @@ if (isset($current_user)) {
         && UserConfig::get($user_id)->FOAF_SHOW_IDENTITY) {
             include("lib/classes/FoafDisplay.class.php");
             $foaf=new FoafDisplay($auth->auth['uid'], $user_id, $username);
-            $foaf->show($_REQUEST['foaf_open']);
+            $foaf_open = Request::option('foaf_open');
+            $foaf->show($foaf_open);
     }
 
     // include and show votes and tests
@@ -523,8 +524,12 @@ if (isset($current_user)) {
     $guest = new Guestbook($user_id, Request::int('guestpage', 0));
 
     if (($guest->active == TRUE || $guest->rights == TRUE) && is_element_visible_for_user($user->id, $user_id, $visibilities['guestbook'])) {
-        if ($_REQUEST['guestbook'] && $perm->have_perm('autor')) {
-            $guest->actionsGuestbook($_REQUEST['guestbook'],$_REQUEST['post'],$_REQUEST['deletepost'],$_REQUEST['studipticket']);
+        if (Request::quoted('guestbook') && $perm->have_perm('autor')) {
+            $guestbook = Request::quoted('guestbook');
+            $post = Request::quoted('post');
+            $deletepost = Request::quoted('deletepost');
+            $studipticket = Request::option('studipticket');
+            $guest->actionsGuestbook($guestbook,$post,$deletepost,$studipticket);
         }
         $guest->showGuestbook();
     }

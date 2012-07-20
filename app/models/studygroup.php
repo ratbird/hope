@@ -314,7 +314,7 @@ class StudygroupModel
 
         $sql .= ', name ASC LIMIT '. (int)$lower_bound .','. (int)$elements_per_page;
 
-        $statement = DBManager::get()->prepare($query);
+        $statement = DBManager::get()->prepare($sql);
         $statement->execute($parameters);
         $groups = $statement->fetchAll();
 

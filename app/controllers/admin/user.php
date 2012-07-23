@@ -17,6 +17,7 @@
 require_once 'app/controllers/authenticated_controller.php';
 require_once 'app/models/user.php';
 require_once 'lib/classes/UserManagement.class.php';
+require_once 'lib/classes/Institute.class.php';
 require_once 'vendor/email_message/blackhole_message.php';
 
 /**
@@ -437,7 +438,7 @@ class Admin_UserController extends AuthenticatedController
         $this->studycourses = UserModel::getUserStudycourse($user_id);
         $this->student_institutes = UserModel::getUserInstitute($user_id, true);
         $this->institutes = UserModel::getUserInstitute($user_id);
-        $this->available_institutes = UserModel::getAvailableInstitutes($user_id);
+        $this->available_institutes = Institute::getMyInstitutes();
         $this->datafields = DataFieldStructure::getDataFieldStructures("user");
         $this->userfields = DataFieldEntry::getDataFieldEntries($user_id);
         $this->userdomains = UserDomain::getUserDomainsForUser($user_id);

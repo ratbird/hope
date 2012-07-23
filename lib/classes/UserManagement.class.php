@@ -656,11 +656,9 @@ class UserManagement
                 $this->msg .= "error§" . _("Sie haben keine Berechtigung <em>Root-Accounts</em> zu l&ouml;schen.") . "§";
                 return FALSE;
             }
-            if ($perm->is_fak_admin() && $this->user_data['auth_user_md5.perms'] == "admin"){
-                if (!$this->adminOK()) {
-                    $this->msg .= "error§" . _("Sie haben keine Berechtigung diesen Admin-Account zu l&ouml;schen.") . "§";
-                    return FALSE;
-                }
+            if ($this->user_data['auth_user_md5.perms'] == "admin" && !$this->adminOK()) {
+                $this->msg .= "error§" . _("Sie haben keine Berechtigung diesen Admin-Account zu l&ouml;schen.") . "§";
+                return FALSE;
             }
         }
 

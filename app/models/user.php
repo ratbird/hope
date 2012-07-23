@@ -89,7 +89,7 @@ class UserModel
      */
     public static function getUserInstitute($user_id, $as_student = false)
     {
-        $sql = "SELECT ui.*, i.Name FROM Institute AS i "
+        $sql = "SELECT i.Institut_id, i.Name, ui.* FROM Institute AS i "
              . "LEFT JOIN user_inst AS ui ON i.Institut_id = ui.Institut_id "
              . "WHERE user_id=?";
         if ($as_student) {
@@ -97,10 +97,10 @@ class UserModel
         } else {
              $sql .= " AND inst_perms <> 'user'";
         }
-
+        $sql .= " ORDER BY Name";
         $db = DBManager::get()->prepare($sql);
         $db->execute(array($user_id));
-        return $db->fetchAll(PDO::FETCH_ASSOC);
+        return $db->fetchGrouped(PDO::FETCH_ASSOC);
     }
 
     /**

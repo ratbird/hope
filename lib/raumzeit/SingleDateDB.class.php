@@ -1,7 +1,7 @@
 <?php
 # Lifter007: TODO
-# Lifter003: TODO
-# Lifter010: TODO
+# Lifter003: TEST
+# Lifter010: DONE
 // +--------------------------------------------------------------------------+
 // This file is part of Stud.IP
 // SingleDateDB.class.php
@@ -34,16 +34,21 @@
  * @package     raumzeit
  */
 
-class SingleDateDB {
-    static function storeSingleDate($termin) {
-        $db = new DB_Seminar();
+class SingleDateDB
+{
+    static function storeSingleDate($termin)
+    {
+        $table = 'termine';
 
         if ($termin->isExTermin()) {
             $table = 'ex_termine';
-            $db->query("SELECT assign_id FROM resources_assign WHERE assign_user_id = '".$termin->getTerminID()."'");
-            if ($db->next_record()) {
-                $assign_id = $db->f('assign_id');
+            
+            $query = "SELECT assign_id FROM resources_assign WHERE assign_user_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($termin->getTerminID()));
+            $assign_id = $statement->fetchColumn();
 
+            if ($assign_id) {
                 // delete resource-request, if any
                 if ($request_id = self::getRequestID($id)) {
                     $rr = new RoomRequest($request_id);
@@ -51,82 +56,131 @@ class SingleDateDB {
                 }
 
                 // delete resource assignment, if any
-                $killAssign = AssignObject::Factory($assign_id);
-                $killAssign->delete();
+                AssignObject::Factory($assign_id)->delete();
             }
-        } else {
-            $table = 'termine';
         }
 
         $issueIDs = $termin->getIssueIDs();
         if (is_array($issueIDs)) {
+            $query = "REPLACE INTO themen_termine (termin_id, issue_id)
+                      VALUES (?, ?)";
+            $statement = DBManager::get()->prepare($query);
+
             foreach ($issueIDs as $val) {
-                $db->query($query = "REPLACE INTO themen_termine (termin_id, issue_id) VALUES ('".$termin->getTerminID()."', '$val')");
+                $statement->execute(array(
+                    $termin->getTerminID(),
+                    $val
+                ));
             }
         }
 
         if ($termin->isUpdate()) {
-            $metadate_id = $termin->getMetaDateId() ? "'".$termin->getMetaDateID()."'" : 'NULL';
-            $db->query($query = "UPDATE $table SET metadate_id = $metadate_id, date_typ = '".$termin->getDateType()."', date = '".$termin->getStartTime()."', end_time = '".$termin->getEndTime()."', range_id = '".$termin->getRangeID()."', autor_id = '".$termin->getAuthorID()."',raum = '".mysql_escape_string($termin->getFreeRoomText())."', content = '".$termin->getComment()."'  WHERE termin_id = '".$termin->getTerminID()."'");
-            if ($db->affected_rows()) {
-                $db->query("UPDATE $table SET chdate = '".$termin->getChDate()."' WHERE termin_id = '".$termin->getTerminID()."'");
+            $query = "UPDATE :table
+                      SET metadate_id = :metadate_id, date_typ = :date_typ,
+                          date = :date, end_time = :end_time,
+                          range_id = :range_id, autor_id = :autor_id,
+                          raum = :raum, content = :content
+                      WHERE termin_id = :termin_id";
+            $statement = DBManager::get()->prepare($query);
+            $statement->bindValue(':table', $table, StudipPDO::PARAM_COLUMN);
+            $statement->bindValue(':metadate_id', $termin->getMetaDateID() ?: null);
+            $statement->bindValue(':date_typ', $termin->getDateType());
+            $statement->bindValue(':date', $termin->getStartTime());
+            $statement->bindValue(':end_time', $termin->getEndTime());
+            $statement->bindValue(':range_id', $termin->getRangeID());
+            $statement->bindValue(':autor_id', $termin->getAuthorID());
+            $statement->bindValue(':raum', $termin->getFreeRoomText());
+            $statement->bindValue(':content', $termin->getComment());
+            $statement->bindValue(':termin_id', $termin_id);
+            $statement->execute();
+
+            if ($statement->rowCount() > 0) {
+                $query = "UPDATE :table SET chate = :chdate WHERE termin_id = :termin_id";
+                $statement = DBManager::get()->prepare($query);
+                $statement->bindValue(':table', $table, StudipPDO::PARAM_COLUMN);
+                $statement->bindValue(':chdate', $termin->getChDate());
+                $statement->bindValue(':termin_id', $termin->getTerminID());
+                $statement->execute();
             }
         } else {
-            $db->query($query = "REPLACE INTO $table (metadate_id, date_typ, date, end_time, mkdate, chdate, termin_id, range_id, autor_id, raum, content) VALUES ('".$termin->getMetaDateID()."', '".$termin->getDateType()."', '".$termin->getStartTime()."', '".$termin->getEndTime()."', '".$termin->getMkDate()."', '".$termin->getChDate()."', '".$termin->getTerminID()."', '".$termin->getRangeID()."', '".$termin->getAuthorID()."', '".mysql_escape_string($termin->getFreeRoomText())."', '".$termin->getComment()."')");
+            $query = "REPLACE INTO :table
+                        (metadate_id, date_typ, date, end_time, mkdate, chdate,
+                         termin_id, range_id, autor_id, raum, content)
+                      VALUES
+                        (:metadate_id, :date_typ, :date, :end_time, :mkdate, :chdate,
+                         :termin_id, :range_id, :autor_id, :raum, :content)";
+            $statement = DBManager::get()->prepare($query);
+            $statement->bindValue(':table', $table, StudipPDO::PARAM_COLUMN);
+            $statement->bindValue(':metadate_id', $termin->getMetaDateID());
+            $statement->bindValue(':date_typ', $termin->getDateType());
+            $statement->bindValue(':date', $termin->getStartTime());
+            $statement->bindValue(':end_time', $termin->getEndTime());
+            $statement->bindValue(':mkdate', $termin->getMkDate());
+            $statement->bindValue(':chdate', $termin->getChDate());
+            $statement->bindValue(':termin_id', $termin->getTerminID());
+            $statement->bindValue(':range_id', $termin->getRangeID());
+            $statement->bindValue(':autor_id', $termin->getAuthorID());
+            $statement->bindValue(':raum', $termin->getFreeRoomText());
+            $statement->bindValue(':content', $termin->getComment());
+            $statement->execute();
         }
 
-        $db = DBManager::get();
-        $db->exec(
-           "DELETE FROM termin_related_persons WHERE range_id = ".$db->quote($termin->getTerminId())." " .
-        "");
+        $query = "DELETE FROM termin_related_persons WHERE range_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($termin->getTerminId()));
+
         if (count($termin->related_persons)) {
-            $query = "INSERT INTO termin_related_persons (range_id, user_id) VALUES ";
-            $number = 0;
+            $query = "INSERT INTO termin_related_persons (range_id, user_id) VALUES (?, ?)";
+            $statement = DBManager::get()->prepare($query);
+
             foreach ($termin->getRelatedPersons() as $user_id) {
-                $query .= $number > 0 ? ", " : "";
-                $query .= "(".$db->quote($termin->getTerminId()).", ".$db->quote($user_id).") ";
-                $number++;
-            }
-            $db->exec($query);
-        }
-
-        return TRUE;
-    }
-
-    static function restoreSingleDate($termin_id) {
-        $db = DBManager::get();
-        $rs = $db->query("SELECT termine.*, resource_id,GROUP_CONCAT(trp.user_id) as related_persons
-                    FROM termine LEFT JOIN termin_related_persons trp ON termin_id=trp.range_id
-                    LEFT JOIN resources_assign ON (assign_user_id = termin_id)
-                    WHERE termin_id = " . $db->quote($termin_id) . " GROUP BY termin_id ORDER BY NULL");
-        if ($ret = $rs->fetch(PDO::FETCH_ASSOC)) {
-            $ret['ex_termin'] = FALSE;
-            $ret['related_persons'] = $ret['related_persons'] ? explode(',', $ret['related_persons']) : array();
-            return $ret;
-        } else {
-            $rs = $db->query("SELECT ex_termine.*,GROUP_CONCAT(trp.user_id) as related_persons
-                        FROM ex_termine LEFT JOIN termin_related_persons trp ON termin_id=trp.range_id
-                        WHERE termin_id = " . $db->quote($termin_id) . " GROUP BY termin_id ORDER BY NULL");
-            if ($ret = $rs->fetch(PDO::FETCH_ASSOC)) {
-                $ret['ex_termin'] = TRUE;
-                $ret['related_persons'] = $ret['related_persons'] ? explode(',', $ret['related_persons']) : array();
-                return $ret;
-            } else {
-                return FALSE;
+                $statement->execute(array(
+                    $termin->getTerminId(),
+                    $user_id
+                ));
             }
         }
+
+        return true;
     }
 
-    static function deleteSingleDate($id, $ex_termin) {
-        $db = DBManager::get();
-        if ($ex_termin) {
-            $table = 'ex_termine';
-        } else  {
-            $table = 'termine';
+    static function restoreSingleDate($termin_id)
+    {
+        $query = "SELECT termine.*, resource_id, 0 AS ex_termin,
+                         GROUP_CONCAT(trp.user_id) AS related_persons
+                  FROM termine
+                  LEFT JOIN termin_related_persons AS trp ON (termin_id = trp.range_id)
+                  LEFT JOIN resources_assign ON (assign_user_id = termin_id)
+                  WHERE termin_id = ?
+                  GROUP BY termin_id
+                  ORDER BY NULL";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($termin_id));
+        if ($result = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $result['related_persons'] = explode(',', $result['related_persons']);
+            return $result;
         }
-        
+
+        $query = "SELECT ex_termine.*, 1 AS ex_termin,
+                         GROUP_CONCAT(trp.user_id) AS related_persons
+                  FROM ex_termine
+                  LEFT JOIN termin_related_persons AS trp ON (termin_id = trp.range_id)
+                  WHERE termin_id = ?
+                  GROUP BY termin_id
+                  ORDER BY NULL";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($termin_id));
+        if ($result = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $result['related_persons'] = explode(',', $result['related_persons']);
+            return $result;
+        }
+
+        return false;
+    }
+
+    static function deleteSingleDate($id, $ex_termin)
+    {
         if (Config::get()->RESOURCES_ENABLE) {
-
             // delete resource assignment, if any
             $killAssign = AssignObject::Factory(self::getAssignID($id));
             $killAssign->delete();
@@ -136,67 +190,95 @@ class SingleDateDB {
                 $rr->delete();
             }
         }
-        
-        $db->query("DELETE FROM $table WHERE termin_id = '$id'");
-        $db->query("DELETE FROM themen_termine WHERE termin_id = '$id'");
-        $db->query("DELETE FROM termin_related_persons WHERE range_id = '$id'");
 
-        return TRUE;
+        // Prepare query that deletes all entries for a given termin id
+        // from a given table 
+        $query = "DELETE FROM :table WHERE termin_id = :termin_id";
+        $statement = DBManager::get()->prepare($query);
+        $statement->bindValue(':termin_id', $termin_id);
+
+        // Execute statement for the termin itself (ex_termin if neccessary)
+        $statement->bindValue(':table', $ex_termin ? 'ex_termine' : 'termine', StudipPDO::PARAM_COLUMN);
+        $statement->execute();
+
+        // Execute statement for themen_termine
+        $statement->bindValue(':table', 'themen_termine', StudipPDO::PARAM_COLUMN);
+        $statement->execute();
+
+        // Execute statement for termin_related_persons
+        $statement->bindValue(':table', 'termin_related_persons', StudipPDO::PARAM_COLUMN);
+        $statement->execute();
+
+        return true;
     }
 
-    static function getAssignID($termin_id) {
-        $db = new DB_Seminar();
-        $db->query("SELECT assign_id FROM termine LEFT JOIN resources_assign ON (assign_user_id = termin_id) WHERE termin_id = '$termin_id'");
-        if ($db->next_record()) {
-            return $db->f('assign_id');
-        }
-
-        return FALSE;
+    static function getAssignID($termin_id)
+    {
+        $query = "SELECT assign_id
+                  FROM termine
+                  LEFT JOIN resources_assign ON (assign_user_id = termin_id)
+                  WHERE termin_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($termin_id));
+        return $statement->fetchColumn() ?: false;
     }
 
-    static function getRequestID($termin_id) {
-        $db = new DB_Seminar();
-        $db->query("SELECT request_id FROM resources_requests WHERE termin_id = '$termin_id'");
-        if ($db->next_record()) {
-            return $db->f('request_id');
-        }
-
-        return FALSE;
+    static function getRequestID($termin_id)
+    {
+        $query = "SELECT request_id FROM resources_requests WHERE termin_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($termin_id));
+        return $statement->fetchColumn() ?: false;
     }
 
-    static function getIssueIDs($termin_id) {
-        $db = new DB_Seminar();
-        $db->query("SELECT tt.* FROM themen_termine as tt LEFT JOIN themen as t ON (tt.issue_id = t.issue_id) WHERE termin_id = '$termin_id' AND t.issue_id IS NOT NULL");
+    static function getIssueIDs($termin_id)
+    {
+        $query = "SELECT tt.*
+                  FROM themen_termine AS tt
+                  LEFT JOIN themen AS t USING (issue_id)
+                  WHERE termin_id = ?
+                    AND issue_id IS NOT NULL AND issue_id != ''";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($termin_id));
+        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-        if ($db->num_rows() == 0) return NULL;
-
-        while ($db->next_record()) {
-            if ($db->f('issue_id')) {
-                $ret[] = $db->Record;
-            }
-        }
-        return $ret;
+        return $result ?: null;
     }
 
-    static function deleteIssueID($issue_id, $termin_id) {
-        $db = new DB_Seminar();
-        $db->query("DELETE FROM themen_termine WHERE termin_id = '$termin_id' AND issue_id = '$issue_id'");
-        return TRUE;
+    static function deleteIssueID($issue_id, $termin_id)
+    {
+        $query = "DELETE FROM themen_termine WHERE termin_id = ? AND issue_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $sttement->execute(array($termin_id, $issue_id));
+
+        return true;
     }
 
-    static function deleteRequest($termin_id) {
-        $db = new DB_Seminar();
-        $db->query("DELETE FROM resources_requests WHERE termin_id = '$termin_id'");
-        return TRUE;
+    static function deleteRequest($termin_id)
+    {
+        $query = "DELETE FROM resources_requests WHERE termin_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($termin_id));
+
+        return true;
     }
     
-    static function deleteAllDates($course_id) {
-        $db = DBManager::get();
-        $db->exec("DELETE FROM ex_termine WHERE range_id = " . $db->quote($course_id));
-        $termine = $db->query("SELECT termin_id FROM termine WHERE range_id = " . $db->quote($course_id))->fetchAll(PDO::FETCH_COLUMN);
-        foreach ($termine as $termin_id) {
+    static function deleteAllDates($course_id)
+    {
+        $query = "DELETE FROM ex_termine WHERE range_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($course_id));
+
+        $query = "SELECT termin_id FROM termine WHERE range_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($course_id));
+
+        $termine = 0;
+        while ($termin_id = $statement->fetchColumn()) {
             self::deleteSingleDate($termin_id, false);
+            $termine += 1;
         }
-        return count($termine);
+
+        return $termine;
     }
 }

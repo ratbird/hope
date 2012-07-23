@@ -1,8 +1,8 @@
 <?php
-# Lifter002: TODO
+# Lifter002: DONE
+# Lifter003: TEST
 # Lifter007: TODO
-# Lifter003: TODO
-# Lifter010: TODO
+# Lifter010: DONE
 // +--------------------------------------------------------------------------+
 // This file is part of Stud.IP
 // SeminarDB.class.php
@@ -35,158 +35,217 @@
  * @package     raumzeit
  */
 
-class SeminarDB {
-    function getIssues($seminar_id) {
-        $db = new DB_Seminar();
-
-        $ret = Array();
-
-        $db->query("SELECT themen.*, folder.range_id, folder.folder_id, px_topics.topic_id FROM themen LEFT JOIN folder ON (range_id = issue_id) LEFT JOIN px_topics ON (px_topics.topic_id = issue_id) WHERE themen.seminar_id = '$seminar_id' ORDER BY priority");
-        while ($db->next_record()) {
-            $ret[] = $db->Record;
-        }
-
-        return $ret;
+class SeminarDB
+{
+    function getIssues($seminar_id)
+    {
+        $query = "SELECT themen.*, folder.range_id, folder.folder_id, px_topics.topic_id
+                  FROM themen
+                  LEFT JOIN folder ON (range_id = issue_id)
+                  LEFT JOIN px_topics ON (px_topics.topic_id = issue_id)
+                  WHERE themen.seminar_id = ?
+                  ORDER BY priority";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($seminar_id));
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    function getSingleDates($seminar_id, $start = 0, $end = 0) {
-        $db = new DB_Seminar();
+    function getSingleDates($seminar_id, $start = 0, $end = 0)
+    {
+        $query = "SELECT termine.*, resources_assign.resource_id, GROUP_CONCAT(trp.user_id) AS related_persons
+                  FROM termine
+                  LEFT JOIN termin_related_persons AS trp ON (termin_id = trp.range_id)
+                  LEFT JOIN resources_assign ON (assign_user_id = termin_id)
+                  WHERE termine.range_id = ?
+                    AND (metadate_id IS NULL OR metadate_id = '')";
+        $parameters = array($seminar_id);
 
-        $ret = Array();
-
-        if (($start != 0) || ($end != 0)) {
-            $db->query("SELECT termine.*, resources_assign.resource_id,GROUP_CONCAT(trp.user_id) as related_persons FROM termine LEFT JOIN termin_related_persons trp ON termin_id=trp.range_id LEFT JOIN resources_assign ON (assign_user_id = termin_id) WHERE termine.range_id = '$seminar_id' AND (metadate_id IS NULL OR metadate_id = '') AND termine.date >= $start AND termine.date <= $end GROUP BY termin_id ORDER BY date");
-        } else {
-            $db->query("SELECT termine.*, resources_assign.resource_id,GROUP_CONCAT(trp.user_id) as related_persons FROM termine LEFT JOIN termin_related_persons trp ON termin_id=trp.range_id LEFT JOIN resources_assign ON (assign_user_id = termin_id) WHERE termine.range_id = '$seminar_id' AND (metadate_id IS NULL OR metadate_id = '') GROUP BY termin_id ORDER BY date");
+        if ($start != 0 || $end != 0) {
+            $query .= " AND termine.date BETWEEN ? AND ?";
+            array_push($parameters, $start, $end);
         }
 
-        while($db->next_record()) {
-            $data = $db->Record;
-            $data['related_persons'] = $data['related_persons'] ? explode(',', $data['related_persons']) : array();
+        $query .= " GROUP BY termin_id ORDER BY date";
+
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute($parameters);
+
+        $ret = array();
+        while ($data = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $data['related_persons'] = explode(',', $data['related_persons']);
             $ret[] = $data;
         }
 
         return $ret;
     }
 
-    function getStatOfNotBookedRooms($cycle_id, $seminar_id, $filterStart = 0, $filterEnd = 0) {
-        $db = new DB_Seminar();
-        if (($filterStart == 0) && ($filterEnd == 0)) {
-            $query = "SELECT termine.*, resources_assign.resource_id FROM termine LEFT JOIN resources_assign ON (assign_user_id = termin_id) WHERE range_id = '$seminar_id' AND metadate_id = '$cycle_id' ORDER BY date";
-        } else {
-            $query = "SELECT termine.*, resources_assign.resource_id FROM termine LEFT JOIN resources_assign ON (assign_user_id = termin_id) WHERE range_id = '$seminar_id' AND metadate_id = '$cycle_id' AND date >= $filterStart AND end_time <= $filterEnd ORDER BY date";
+    function getStatOfNotBookedRooms($cycle_id, $seminar_id, $filterStart = 0, $filterEnd = 0)
+    {
+        $stat = array(
+            'booked'         => 0,
+            'open'           => 0,
+            'open_rooms'     => array(),
+            'declined'       => 0,
+            'declined_dates' => array(),
+        );
+
+        $query = "SELECT termine.*, resources_assign.resource_id
+                  FROM termine
+                  LEFT JOIN resources_assign ON (assign_user_id = termin_id)
+                  WHERE range_id = ? AND metadate_id = ?";
+        $parameters = array($seminar_id, $cycle_id);
+
+        if ($filterStart != 0 || $filterEnd != 0) {
+            $query .= " AND date >= ? AND end_time <= ?";
+            array_push($parameters, $filterStart, $filterEnd);
         }
-        $db->query($query);
-        while ($db->next_record()) {
-            $stat['all']++;
-            if ($db->f('resource_id')) {
-                $stat['booked']++;
+        $query .= " ORDER BY date";
+
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute($parameters);
+
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $stat['all'] += 1;
+            if ($row['resource_id']) {
+                $stat['booked'] += 1;
             } else {
-                $stat['open']++;
-                $stat2[] = $db->Record;
+                $stat['open'] += 1;
+                $stat['open_rooms'][] = $row;
             }
         }
-        $stat['open_rooms'] = $stat2;
-
 
         // count how many singledates have a declined room-request
-        $stmt = DBManager::get()->query("SELECT * FROM termine t
-            LEFT JOIN resources_requests rr ON (t.termin_id = rr.termin_id)
-            WHERE range_id = '$seminar_id' AND t.metadate_id = '$cycle_id' AND closed = 3"
-            . (($filterStart != 0 && $filterEnd != 0) ? " AND date >= $filterStart AND end_time <= $filterEnd " : '') .
-            " ORDER BY date");
+        $query = "SELECT *
+                  FROM termine t
+                  LEFT JOIN resources_requests AS rr ON (t.termin_id = rr.termin_id)
+                  WHERE range_id = ? AND t.metadate_id = ? AND closed = 3";
+        $parameters = array($seminar_id, $cycle_id);
 
-        $tmp = array();
+        if ($filterStart != 0 && $filterEnd != 0) {
+            $query .= " AND date >= ? AND end_time <= ?";
+            array_push($parameters, $filterStart, $filterEnd);
+        }
+        $query .= " ORDER BY date";
+
+        $stmt = DBManager::get()->prepare($query);
+        $stmt->execute($parameters);
+
         while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $stat['declined'] += 1;
             $stat['declined_dates'][] = $data;
-            $stat['declined']++;
         }
 
         return $stat;
     }
 
-    function countRequestsForSingleDates($cycle_id, $seminar_id, $filterStart = 0, $filterEnd = 0) {
-        $db = new DB_Seminar();
-        if (($filterStart == 0) && ($filterEnd == 0)) {
-            $query = "SELECT COUNT(*) AS anzahl FROM termine t LEFT JOIN resources_requests rr ON (t.termin_id = rr.termin_id) WHERE seminar_id = '$seminar_id' AND t.metadate_id = '$cycle_id' AND closed = 0";
-        } else {
-            $query = "SELECT COUNT(*) AS anzahl FROM termine t LEFT JOIN resources_requests rr ON (t.termin_id = rr.termin_id) WHERE seminar_id = '$seminar_id' AND t.metadate_id = '$cycle_id' AND closed = 0 AND date >= $filterStart AND end_time <= $filterEnd";
+    function countRequestsForSingleDates($cycle_id, $seminar_id, $filterStart = 0, $filterEnd = 0)
+    {
+        $query = "SELECT COUNT(*)
+                  FROM termine AS t
+                  LEFT JOIN resources_requests AS rr ON (t.termin_id = rr.termin_id)
+                  WHERE seminar_id = ? AND t.metadate_id = ? AND closed = 0";
+        $parameters = array($seminar_id, $cycle_id);
+
+        if ($filterStart > 0 || $filterEnd > 0) {
+            $query .= " AND `date` >= ? AND end_time <= ?";
+            array_push($parameters, $filterStart, $filterEnd);
         }
 
-        $db->query($query);
-        $db->next_record();
-        return $db->f('anzahl');
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute($parameters);
+        return $statement->fetchColumn();
     }
 
     // removes all singleDates which are NOT between $start and $end
-    function removeOutRangedSingleDates($start, $end, $seminar_id) {
-        $db = new DB_Seminar();
-        $db->query("SELECT * FROM termine WHERE (date < $start OR date > $end) AND range_id = '$seminar_id' AND NOT (metadate_id IS NULL OR metadate_id = '')");
-        $in_list = '(';
-        $i = 0;
-        while ($db->next_record()) {
-            if ($i == 1) {
-                $in_list .= ',';
-            }
-            $in_list .= "'".$db->f('termin_id')."'";
-            $i = 1;
-            $termin = new SingleDate($db->f('termin_id'));
+    function removeOutRangedSingleDates($start, $end, $seminar_id)
+    {
+        $query = "SELECT termin_id
+                  FROM termine
+                  WHERE range_id = ? AND (`date` NOT BETWEEN ? AND ?)
+                    AND NOT (metadate_id IS NULL OR metadate_id = '')";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($seminar_id, $start, $end));
+        $ids = $statement->fetchAll(PDO::FETCH_COLUMN);
+
+        foreach ($ids as $id) {
+            $termin = new SingleDate($id);
             $termin->delete();
             unset($termin);
         }
-        $in_list .= ')';
 
-        if ($in_list != '()') {
+        if (count($ids) > 0) {
             // remove all assigns for the dates in question
-            $db2 = DBManager::get()->query("SELECT assign_id FROM resources_assign
-                WHERE assign_user_id IN $in_list");
+            $query = "SELECT assign_id FROM resources_assign WHERE assign_user_id IN (?)";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($ids));
 
-            foreach ($db2->fetchAll(PDO::FETCH_COLUMN) as $assign_id) {
-                $killAssign = AssignObject::Factory($assign_id);
-                $killAssign->delete();
+            while ($id = $statement->fetchColumn()) {
+                AssignObject::Factory($assign_id)->delete();
             }
         }
 
-        //$db->query($query = "DELETE FROM termine WHERE (date < $start OR date > $end) AND range_id = '$seminar_id' AND NOT (metadate_id IS NULL OR metadate_id = '')");
-        $db->query($query = "DELETE FROM ex_termine WHERE (date < $start OR date > $end) AND range_id = '$seminar_id' AND NOT (metadate_id IS NULL OR metadate_id = '')");
+        // $query = "DELETE FROM termine
+        //           WHERE range_id = ? AND (`date` NOT BETWEEN ? AND ?)
+        //             AND NOT (metadate_id IS NULL OR metadate_id = '')";
+        // $statement = DBManager::get()->prepare($query);
+        // $statement->execute(array($seminar_id, $start, $end));
+
+        $query = "DELETE FROM ex_termine
+                  WHERE range_id = ? AND (`date` NOT BETWEEN ? AND ?)
+                    AND NOT (metadate_id IS NULL OR metadate_id = '')";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($seminar_id, $start, $end));
     }
 
-    function hasDatesOutOfDuration($start, $end, $seminar_id) {
-        $db = new DB_Seminar();
-        $db->query("SELECT COUNT(*) as c FROM termine WHERE (date < $start OR date > $end) AND range_id = '$seminar_id'");
-        $db->next_record();
-        return $db->f('c');
+    function hasDatesOutOfDuration($start, $end, $seminar_id)
+    {
+        $query = "SELECT COUNT(*)
+                  FROM termine
+                  WHERE range_id = ? AND `date` NOT BETWEEN ? AND ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($seminar_id, $start, $end));
+        return $statement->fetchColumn();
     }
 
     function getFirstDate($seminar_id)
     {
         $termine = array();
-        $db = new DB_Seminar("SELECT termin_id, date, end_time FROM termine
-            WHERE range_id = '$seminar_id' AND date_typ IN ".getPresenceTypeClause()."
-            ORDER BY date");
-        $start = 0;
-        $end = 0;
-        while ($db->next_record()) {
-            if (($start == 0 && $end == 0) || ($start == $db->f('date') && $end == $db->f('end_time'))) {
-                $termine[] = $db->f('termin_id');
-                $start = $db->f('date');
-                $end = $db->f('end_time');
+
+        $presence_types = getPresenceTypes();
+        if (count($presence_types) > 0) {
+            $query = "SELECT termin_id, date, end_time
+                      FROM termine
+                      WHERE range_id = ? AND date_typ IN (?)
+                      ORDER BY date";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($seminar_id, $presence_types));
+
+            $start = 0;
+            $end = 0;
+
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                if (($start == 0 && $end == 0) || ($start == $row['date'] && $end == $row['end_time'])) {
+                    $termine[] = $row['termin_id'];
+                    $start     = $row['date'];
+                    $end       = $row['end_time'];
+                }
             }
         }
 
-        return sizeof($termine) ? $termine : false;
+        return $termine ?: false;
     }
 
     function getNextDate($seminar_id)
     {
         $termin = array();
-        $ex_termin = array();
-        
-        $stmt = DBManager::get()->prepare("SELECT termin_id, date, end_time FROM termine 
-            WHERE range_id = ? AND date > ".(time() - 3600)."
-            ORDER BY date, end_time");
+
+        $query = "SELECT termin_id, date, end_time
+                  FROM termine 
+                  WHERE range_id = ? AND date > UNIX_TIMESTAMP(NOW() - INTERVAL 1 HOUR)
+                  ORDER BY date, end_time";
+        $stmt = DBManager::get()->prepare($query);
         $stmt->execute(array($seminar_id));
-        
+
         $start = 0;
         while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
             if ($start == 0 || $start == $data['date']) {
@@ -195,18 +254,22 @@ class SeminarDB {
             }
         }
 
-        
-        $stmt = DBManager::get()->prepare("SELECT termin_id FROM ex_termine 
-            WHERE range_id = ? AND date > ".(time() - 3600)." 
-                AND content != '' AND content IS NOT NULL
-            ORDER BY date LIMIT 1");
+        $ex_termin = array();
+
+        $query = "SELECT termin_id
+                  FROM ex_termine 
+                  WHERE range_id = ? AND date > UNIX_TIMESTAMP(NOW() - INTERVAL 1 HOUR)
+                    AND content != '' AND content IS NOT NULL
+                  ORDER BY date
+                  LIMIT 1";
+        $stmt = DBManager::get()->prepare($query);
         $stmt->execute(array($seminar_id));
 
-        while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $ex_termin[] = $data['termin_id'];
+        while ($termin_id = $stmt->fetchColumn()) {
+            $ex_termin[] = $termin_id;
         }
 
-        return array('termin' => $termin, 'ex_termin' => $ex_termin);
+        return compact('termin', 'ex_termin');
     }
 
     /**
@@ -215,10 +278,15 @@ class SeminarDB {
      * @param unknown_type $id
      * @return boolean
      */
-    function deleteRequest($id) {
-        $db = new DB_Seminar();
-        $db->query("DELETE FROM resources_requests WHERE seminar_id = '$id' AND (termin_id = '' OR termin_id IS NULL)");
-        return TRUE;
+    function deleteRequest($id)
+    {
+        $query = "DELETE FROM resources_requests
+                  WHERE seminar_id = ?
+                    AND (termin_id = '' OR termin_id IS NULL)";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($id));
+
+        return true;
     }
 
 }

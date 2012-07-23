@@ -125,7 +125,7 @@ function editarea($forumposting) {
     $help_url = format_help_url("Basis.VerschiedenesFormat");
     $zusatz .= "&nbsp;&nbsp;<a href=\"".URLHelper::getLink('dispatch.php/smileys')."\" target=\"_blank\"><font size=\"-1\">"._("Smileys")."</a>&nbsp;&nbsp;"."<a href=\"".$help_url."\" target=\"_blank\"><font size=\"-1\">"._("Formatierungshilfen")."</a>";
     if ($forumposting["writestatus"] == "new") { // es ist ein neuer Beitrag, der Autor sieht dann:
-        $description = _("Ihr Beitrag");
+        $description = '';
     } else {
         $description = $forumposting["description"];  // bereits bestehender Text
     }
@@ -138,13 +138,13 @@ function editarea($forumposting) {
     }
     if ($user->id == "nobody") {  // nicht angemeldete muessen Namen angeben
         $description =  "<label><b>" . _("Ihr Name:") . "</b>&nbsp; <input id=\"namenobody\" type=text size=50 name=nobodysname onchange=\"STUDIP.Forum.pruefe_name()\" value=\"" . _("unbekannt") . "\"></label><br><br><input type=hidden name=update value='".$forumposting["id"]."'>"
-                ."<div align=center><textarea aria-label=\"" . _("Text des Beitrags") . "\" name=\"description\" class=\"add_toolbar resizable\" style=\"width:70%\" cols=\"". $cols."\" rows=12 wrap=virtual>"
+                ."<div align=center><textarea aria-label=\"" . _("Text des Beitrags") . "\" name=\"description\" class=\"add_toolbar resizable\" style=\"width:70%\" cols=\"". $cols."\" rows=12 wrap=virtual placeholder=\"" . _("Ihr Beitrag") . "\">"
                 .htmlReady($description)
                 .htmlReady($zitat)
                 ."</textarea>";
     } else {
         $description =  "<input type=hidden name=update value='".$forumposting["id"]."'>"
-                ."<div align=center><textarea aria-label=\"" . _("Text des Beitrags") . "\" name=\"description\" class=\"add_toolbar resizable\" style=\"width:70%\" cols=\"". $cols."\"  rows=12 wrap=virtual>"
+                ."<div align=center><textarea aria-label=\"" . _("Text des Beitrags") . "\" name=\"description\" class=\"add_toolbar resizable\" style=\"width:70%\" cols=\"". $cols."\"  rows=12 wrap=virtual placeholder=\"" . _("Ihr Beitrag") . "\">"
                 .htmlReady($description)
                 .htmlReady($zitat)
                 ."</textarea>";
@@ -1317,7 +1317,7 @@ function printposting ($forumposting) {
 
         if ($forumposting["writestatus"]!="none") {    //wir sind im Schreibmodus
             echo '<input type="hidden" name="topic_id" value="'.$forumposting['id'].'">';
-            $name = "<input aria-label=\"" . _("Titel des Beitrags") . "\" type=text size=50 style='font-size:8 pt;font-weight:normal;' name=titel value='".htmlReady($forumposting["name"])."'>";
+            $name = "<input aria-label=\"" . _("Titel des Beitrags") . "\" type=text size=50 style='font-size:8 pt;font-weight:normal;' name=titel value='".htmlReady($forumposting["name"])."' placeholder=\"" . _('Name des Themas') . "\">";
             $zusatz = ""; // beim editieren brauchen wir den Kram nicht
         } else {
             $name = "<a href=\"$link\" class=\"tree\" >".htmlReady(mila($forumposting["name"]))."</a>";

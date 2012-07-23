@@ -489,7 +489,7 @@ if ($update) {
 //////////////////////////////////////////////////////////////////////////////////
 
 if (Request::option('neuesthema') && ($rechte || $SEM_CLASS[$SEM_TYPE[$SessSemName["art_num"]]["class"]]["topic_create_autor"])) {            // es wird ein neues Thema angelegt
-        $name = _("Name des Themas");
+        $name = '';
         $author = get_fullname();
         $edit_id = CreateNewTopic($name, "Beschreibung des Themas", 0, 0, Request::int('anonymous'));
         // add skip link right before the link to the main content

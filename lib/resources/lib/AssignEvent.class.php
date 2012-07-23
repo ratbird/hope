@@ -1,7 +1,7 @@
 <?
 # Lifter002: TODO
+# Lifter003: DONE
 # Lifter007: TODO
-# Lifter003: TODO
 # Lifter010: TODO
 /**
 * AssignEvent.class.php
@@ -43,7 +43,6 @@ require_once ($GLOBALS['RELATIVE_PATH_RESOURCES'] . '/lib/AssignObject.class.php
 AssignEvent, the assigned events
 /*****************************************************************************/
 class AssignEvent {
-    var $db;                    //Database
     var $id;                    //Id from mother AssignObject
     var $resource_id;               //resource_id from mother AssignObject
     var $assign_user_id;                //user_id of mother AssignObject
@@ -56,7 +55,6 @@ class AssignEvent {
     function AssignEvent($assign_id, $begin, $end, $resource_id, $assign_user_id, $user_free_name='') {
         global $user;
         $this->user_id = $user->id;
-        //$this->db=new DB_Seminar;
 
         $this->assign_id=$assign_id;
         $this->begin=$begin;

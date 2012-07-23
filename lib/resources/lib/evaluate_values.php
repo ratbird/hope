@@ -1,7 +1,7 @@
 <?
 # Lifter002: TODO
+# Lifter003: TEST
 # Lifter007: TODO
-# Lifter003: TODO
 # Lifter010: TODO
 /**
 * evaluate_values.php
@@ -51,15 +51,15 @@ Functions...
 /*****************************************************************************/
 
 //a small helper function to close all the kids
-function closeStructure ($resource_id) {
-   
-    $db = new DB_Seminar;
-
-    unset($_SESSION['resources_data']["structure_opens"][$resource_id]);
-    $query = sprintf ("SELECT resource_id FROM resources_objects WHERE parent_id = '%s' ", $resource_id);
-    $db->query($query);
-    while ($db->next_record()) {
-        closeStructure ($db->f("resource_id"));
+function closeStructure ($resource_id)
+{
+    unset($_SESSION['resources_data']['structure_opens'][$resource_id]);
+    
+    $query = "SELECT resource_id FROM resources_objects WHERE parent_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($resource_id));
+    while ($resource_id = $statement->fetchColumn()) {
+        closeStructure ($resource_id);
     }
 }
 /*****************************************************************************
@@ -71,15 +71,23 @@ foreach (words('view view_mode quick_view quick_view_mode') as $parameter_name) 
 }
 $change_schedule_repeat_quantity = Request::option('change_schedule_repeat_quantity');
 //a small helper function to update some data of the tree-structure (after move something)
-function updateStructure ($resource_id, $root_id, $level) {
-    $db = new DB_Seminar;
-    $query = sprintf ("UPDATE resources_objects SET root_id = '%s', level='%s' WHERE resource_id = '%s' ", $root_id, $level, $resource_id);
-    $db->query($query);
+function updateStructure ($resource_id, $root_id, $level)
+{
+    $query = "UPDATE resources_objects
+              SET root_id = ?, level = ?
+              WHERE resource_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array(
+        $root_id,
+        $level,
+        $resource_id
+    ));
 
-    $query = sprintf ("SELECT resource_id FROM resources_objects WHERE parent_id = '%s' ", $resource_id);
-    $db->query($query);
-    while ($db->next_record()) {
-        closeStructure ($db->f("resource_id"), $root_id, $level+1);
+    $query = "SELECT resource_id FROM resources_objects WHERE parent_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($resource_id));
+    while ($resource_id = $statement->fetchColumn()) {
+        closeStructure ($resource_id, $root_id, $level + 1);
     }
 }
 
@@ -292,21 +300,35 @@ if ($target_object) {
     if ($ObjectPerms->getUserPerm () == "admin") {
         if ($target_object != $_SESSION['resources_data']["move_object"]) {
             //we want to move an object, so we have first to check if we want to move a object in a subordinated object
-            $db->query ("SELECT parent_id FROM resources_objects WHERE resource_id = '$target_object'");
-            while ($db->next_record()) {
-                if ($db->f("parent_id") == $_SESSION['resources_data']["move_object"])
-                    $target_is_child=TRUE;
-                $db->query ("SELECT parent_id FROM resources_objects WHERE resource_id = '".$db->f("parent_id")."' ");
+            $query = "SELECT parent_id FROM resources_objects WHERE resource_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($target_object));
+            while ($parent_id = $statement->fetchColumn()) {
+                if ($parent_id == $_SESSION['resources_data']['move_object']) {
+                    $target_is_child = true;
+                }
+                
+                $statement->closeCursor();
+                $statement->execute(array($parent_id));
             }
             if (!$target_is_child) {
-                $db->query ("UPDATE resources_objects SET parent_id='$target_object' WHERE resource_id = '".$_SESSION['resources_data']["move_object"]."' ");
-                $db->query ("SELECT root_id, level FROM resources_objects WHERE resource_id = '$target_object'");
-                $db->next_record();
+                $query = "UPDATE resources_objects SET parent_id = ? WHERE resource_id = ?";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array(
+                    $target_object,
+                    $_SESSION['resources_data']['move_object']
+                ));
+
+                $query = "SELECT root_id, level FROM resources_objects WHERE resource_id = ?";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($target_object));
+                $temp = $statement->fetch(PDO::FETCH_ASSOC);
+
                 //set the correct root_id's and levels
-                updateStructure($_SESSION['resources_data']["move_object"], $db->f("root_id"), $db->f("level")+1);
-                $_SESSION['resources_data']["structure_opens"][$_SESSION['resources_data']["move_object"]] =TRUE;
-                $_SESSION['resources_data']["structure_opens"][$target_object] =TRUE;
-                if ($db->nf()) {
+                updateStructure($_SESSION['resources_data']["move_object"], $temp['root_id'], $temp['level'] + 1);
+                $_SESSION['resources_data']['structure_opens'][$_SESSION['resources_data']['move_object']] =TRUE;
+                $_SESSION['resources_data']['structure_opens'][$target_object] =TRUE;
+                if ($temp) {
                     $msg -> addMsg(9);
                 }
             }
@@ -847,43 +869,90 @@ if ((Request::option('set_lockable_recursiv')) || (Request::option('unset_lockab
 if ((Request::quoted('add_type')) || (Request::option('delete_type')) || (Request::option('delete_type_property_id')) || (Request::option('change_categories'))) {
     if (getGlobalPerms ($user->id) == "admin") { //check for resources root or global root
         if (Request::option('delete_type')) {
-            $db->query("DELETE FROM resources_categories WHERE category_id ='".Request::option('delete_type')."'");
+            $query = "DELETE FROM resources_categories WHERE category_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                Request::option('delete_type')
+            ));
         }
-        $resource_is_room = Request::option('resource_is_room');
+        $resource_is_room = Request::int('resource_is_room');
         //$insert_type_description = Request::quoted('insert_type_description');
-        if ((Request::quoted('add_type')) && (Request::submitted('_add_type'))) {
+        if (Request::quoted('add_type') && Request::submitted('_add_type')) {
             $id=md5(uniqid("Sommer2002",1));
-            if ($resource_is_room)
+            if ($resource_is_room) {
                 $resource_is_room = 1;
-            $db->query("INSERT INTO resources_categories SET category_id='$id', name='".Request::quoted('add_type')."', description='$insert_type_description', is_room='$resource_is_room' ");
-            if ($db->affected_rows())
-                $created_category_id=$id;
+            }
+            $query = "INSERT INTO resources_categories
+                        (category_id, name, description, is_room)
+                      VALUES (?, ?, ?, ?)";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                $id,
+                Request::get('add_type'),
+                Request::get('insert_type_description'),
+                $resource_is_room
+            ));
+            if ($statement->rowCount()) {
+                $created_category_id = $id;
+            }
         }
 
         if (Request::option('delete_type_property_id')) {
-            $db->query("DELETE FROM resources_categories_properties WHERE category_id='$delete_type_category_id' AND property_id='".  Request::option('delete_type_property_id') ."' ");
+            $query = "DELETE FROM resources_categories_properties
+                      WHERE category_id = ? AND property_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+               Request::option('delete_type_category_id'),
+               Request::option('delete_type_property_id'),
+            ));
         }
-        $change_category_name = Request::quotedArray('change_category_name');
+        $change_category_name = Request::getArray('change_category_name');
         $change_category_iconnr = Request::optionArray('change_category_iconnr');
         $add_type_property_id = Request::optionArray('add_type_property_id');
-        if (is_array($change_category_name)) foreach ($change_category_name as $key=>$val) {
-            $query = sprintf ("UPDATE  resources_categories SET name='%s', iconnr='%s' WHERE category_id = '%s'", $change_category_name[$key], $change_category_iconnr[$key], $key);
-            $db->query($query);
+        if (is_array($change_category_name)) {
+            $query = "UPDATE resources_categories
+                      SET name = ?, iconnr = ?
+                      WHERE category_id = ?";
+            $update_statement = DBManager::get()->prepare($query);
 
-            if (Request::submitted("change_category_add_property".$key)) {
-                $db->query("INSERT INTO resources_categories_properties SET category_id='$key', property_id='$add_type_property_id[$key]' ");
+            $query = "INSERT INTO resources_categories_properties
+                        (category_id, property_id)
+                      VALUES (?, ?)";
+            $insert_statement = DBManager::get()->prepare($query);
+
+            foreach ($change_category_name as $key => $val) {
+                $update_statement->execute(array(
+                    $change_category_name[$key],
+                    $change_category_iconnr[$key],
+                    $key
+                ));
+
+                if (Request::submitted('change_category_add_property' . $key)) {
+                    $insert_statement->execute(array(
+                        $key, $add_type_property_id[$key]
+                    ));
+                }
             }
         }
         $requestable = Request::optionArray('requestable');
         if (is_array($requestable)) {
+            $query = "UPDATE resources_categories_properties
+                      SET requestable = ?
+                      WHERE category_id = ? AND property_id = ?";
+            $statement = DBManager::get()->prepare($query);
+
             foreach ($requestable as $key=>$val) {
                 if ((strpos($requestable[$key-1], "id1_")) &&  (strpos($requestable[$key], "id2_"))) {
-                    if ($requestable[$key+1] == "on")
+                    if ($requestable[$key+1] == "on") {
                         $req_num = 1;
-                    else
+                    } else {
                         $req_num = 0;
-                    $query = sprintf ("UPDATE resources_categories_properties SET requestable ='%s' WHERE category_id = '%s' AND property_id = '%s' ", $req_num, substr($requestable[$key-1], 5, strlen($requestable[$key-1])), substr($requestable[$key], 5, strlen($requestable[$key])));
-                    $db->query($query);
+                    }
+                    $statement->execute(array(
+                        $req_num,
+                        substr($requestable[$key - 1], 5),
+                        substr($requestable[$key], 5)
+                    ));
                 }
             }
         }
@@ -896,7 +965,11 @@ if ((Request::quoted('add_type')) || (Request::option('delete_type')) || (Reques
 if ((Request::option('add_property')) || (Request::option('delete_property')) || (Request::option('change_properties'))) {
     if ($globalPerm == "admin") { //check for resources root or global root
         if (Request::option('delete_property')) {
-            $db->query("DELETE FROM resources_properties WHERE property_id ='".Request::option('delete_property')."' ");
+            $query = "DELETE FROM resources_properties WHERE property_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                Request::option('delete_property')
+            ));
         }
 
         if (Request::quoted('add_property')) {
@@ -905,31 +978,46 @@ if ((Request::option('add_property')) || (Request::option('delete_property')) ||
             if (Request::option('add_property_type')=="select")
                 $options="Option 1;Option 2;Option 3";
             $id=md5(uniqid("Regen2002",1));
-            $db->query("INSERT INTO resources_properties SET options='$options', property_id='$id', name='".Request::quoted('add_property')."', description='".Request::quoted('insert_property_description')."', type='".Request::quoted('add_property_type')."' ");
-        }
-       $change_property_name = Request::quotedArray('change_property_name');
-       $send_property_type = Request::optionArray('send_property_type');
-       $send_property_select_opt = Request::optionArray('send_property_select_opt');
-       $send_property_bool_desc = Request::optionArray('send_property_bool_desc');
-        if (is_array($change_property_name)) foreach ($change_property_name as $key=>$val) {
-            if ($send_property_type[$key] == "select") {
-                $tmp_options=explode (";",$send_property_select_opt[$key]);
-                $options='';
-                $i=0;
-                if (is_array($tmp_options))
-                    foreach ($tmp_options as $a) {
-                        if ($i)
-                            $options.=";";
-                        $options.=trim($a);
-                        $i++;
-                    }
-            } elseif ($send_property_type[$key] == "bool") {
-                $options=$send_property_bool_desc[$key];
-            }
-            else
-                $options='';
 
-            $db->query("UPDATE resources_properties SET name='$change_property_name[$key]', options='$options', type='$send_property_type[$key]' WHERE property_id='$key' ");
+            $query = "INSERT INTO resources_properties
+                        (options, property_id, name, description, type)
+                      VALUES (?, ?, ?, ?, ?)";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                $options,
+                $id,
+                Request::get('add_property'),
+                Request::get('insert_property_description'),
+                Request::get('add_property_type')
+            ));
+        }
+        $change_property_name = Request::getArray('change_property_name');
+        $send_property_type = Request::optionArray('send_property_type');
+        $send_property_select_opt = Request::optionArray('send_property_select_opt');
+        $send_property_bool_desc = Request::optionArray('send_property_bool_desc');
+
+        $query = "UPDATE resources_properties
+                  SET name = ?, options = ?, type = ?
+                  WHERE property_id = ?";
+        $statement = DBManager::get()->prepare($query);
+
+        foreach ($change_property_name as $key => $val) {
+            if ($send_property_type[$key] == 'select') {
+                $tmp_options = explode(';', $send_property_select_opt[$key]);
+                $tmp_options = array_map('trim', $tmp_options);
+                $options = implode(';', $tmp_options);
+            } elseif ($send_property_type[$key] == 'bool') {
+                $options = $send_property_bool_desc[$key];
+            } else {
+                $options='';
+            }
+
+            $statement->execute(array(
+                $change_property_name[$key],
+                $options,
+                $send_property_type[$key],
+                $key
+            ));
         }
     } else {
         $msg->addMsg(25);
@@ -939,14 +1027,27 @@ if ((Request::option('add_property')) || (Request::option('delete_property')) ||
 //Globale Perms bearbeiten
 if ((Request::option('add_root_user')) || (Request::option('delete_root_user_id'))){
     if ($globalPerm == "admin") { //check for resources root or global root
-        if (Request::submitted('reset_search_root_user'))
+        if (Request::submitted('reset_search_root_user')) {
             $search_string_search_root_user=FALSE;
+        }
 
-        if ((Request::submitted('send_search_root_user')) && (Request::option('submit_search_root_user') !="FALSE") && (!Request::submitted('reset_search_root_user')))
-            $db->query("INSERT resources_user_resources SET user_id='".Request::option('submit_search_root_user')."', resource_id='all', perms='admin' ");
+        if ((Request::submitted('send_search_root_user')) && (Request::option('submit_search_root_user') !="FALSE") && (!Request::submitted('reset_search_root_user'))) {
+            $query = "INSERT INTO resources_user_resources (user_id, resource_id, perms)
+                      VALUES (?, 'all', 'admin')";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                Request::option('submit_search_root_user')
+            ));
+        }
 
-        if (Request::option('delete_root_user_id'))
-            $db->query("DELETE FROM resources_user_resources WHERE user_id='".Request::option('delete_root_user_id')."' AND resource_id='all' ");
+        if (Request::option('delete_root_user_id')) {
+            $query = "DELETE FROM resources_user_resources
+                      WHERE user_id = ? AND resource_id = 'all'";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                Request::option('delete_root_user_id')
+            ));
+        }
     } else {
         $msg->addMsg(25);
     }
@@ -978,8 +1079,13 @@ if (Request::option('change_global_settings')) {
 if (Request::option('create_lock')) {
     if ($globalPerm == "admin") { //check for resources root or global root
         $id = md5(uniqid("locks",1));
-        $query = sprintf("INSERT INTO resources_locks SET lock_begin = '%s', lock_end = '%s', lock_id = '%s', type= '%s' ", 0, 0, $id, Request::option('create_lock'));
-        $db->query($query);
+        $query = "INSERT INTO resources_locks (lock_id, lock_begin, lock_end, type)
+                  VALUES (?, 0, 0, ?)";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $id,
+            Request::option('create_lock')
+        ));
 
         $_SESSION['resources_data']["lock_edits"][$id] = TRUE;
     } else {
@@ -1001,42 +1107,53 @@ if ($edit_lock) {
 
 if ((Request::submitted('lock_sent'))) {
     if ($globalPerm == "admin") { //check for resources root or global root
-        require_once ('lib/calendar_functions.inc.php'); //needed for extended checkdate
+        require_once 'lib/calendar_functions.inc.php'; //needed for extended checkdate
+
+        $query = "UPDATE resources_locks
+                  SET lock_begin = ?, lock_end = ?
+                  WHERE lock_id = ?";
+        $statement = DBManager::get()->prepare($query);
+
         $lock_id = Request::optionArray('lock_id');
         foreach ($lock_id as $key=>$id) {
             $illegal_begin = FALSE;
             $illegal_end = FALSE;
 
             //checkdates
+            $lock_begin_year  = Request::optionArray('lock_begin_year');
             $lock_begin_month = Request::optionArray('lock_begin_month');
-            $lock_begin_day = Request::optionArray('lock_begin_day');
-            $lock_begin_year = Request::optionArray('lock_begin_year');
-            $lock_begin_hour = Request::optionArray('lock_begin_hour');
-            $lock_begin_min = Request::optionArray('lock_begin_min');
+            $lock_begin_day   = Request::optionArray('lock_begin_day');
+            $lock_begin_hour  = Request::optionArray('lock_begin_hour');
+            $lock_begin_min   = Request::optionArray('lock_begin_min');
 
+            $lock_end_year  = Request::optionArray('lock_end_year');
             $lock_end_month = Request::optionArray('lock_end_month');
-            $lock_end_day = Request::optionArray('lock_end_day');
-            $lock_end_year = Request::optionArray('lock_end_year');
-            $lock_end_hour = Request::optionArray('lock_end_hour');
-            $lock_end_min = Request::optionArray('lock_end_min');
+            $lock_end_day   = Request::optionArray('lock_end_day');
+            $lock_end_hour  = Request::optionArray('lock_end_hour');
+            $lock_end_min   = Request::optionArray('lock_end_min');
 
             if (!check_date($lock_begin_month[$key], $lock_begin_day[$key], $lock_begin_year[$key], $lock_begin_hour[$key], $lock_begin_min[$key])) {
                 //$msg->addMsg(2);
                 $illegal_begin=TRUE;
-            } else
+            } else {
                 $lock_begin = mktime($lock_begin_hour[$key],$lock_begin_min[$key],0,$lock_begin_month[$key], $lock_begin_day[$key], $lock_begin_year[$key]);
+            }
 
             if (!check_date($lock_end_month[$key], $lock_end_day[$key], $lock_end_year[$key], $lock_end_hour[$key], $lock_end_min[$key])) {
                 //$msg -> addMsg(3);
                 $illegal_end=TRUE;
-            } else
+            } else {
                 $lock_end = mktime($lock_end_hour[$key],$lock_end_min[$key],0,$lock_end_month[$key], $lock_end_day[$key], $lock_end_year[$key]);
+            }
 
             if ((!$illegal_begin) && (!$illegal_end) && ($lock_begin < $lock_end)) {
-                $query = sprintf("UPDATE resources_locks SET lock_begin = '%s', lock_end = '%s' WHERE lock_id = '%s' ", $lock_begin, $lock_end, $id);
-                $db->query($query);
+                $statement->execute(array(
+                    $lock_begin,
+                    $lock_end,
+                    $id
+                ));
 
-                if ($db->affected_rows()) {
+                if ($statement->rowCount() > 0) {
                     $msg->addMsg(27);
                     unset($_SESSION['resources_data']["lock_edits"][$id]);
                 }
@@ -1050,13 +1167,14 @@ if ((Request::submitted('lock_sent'))) {
 
 //kill a lock-time
 $kill_lock = Request::option('kill_lock');
-if (($kill_lock)) {
-    if ($globalPerm == "admin") { //check for resources root or global root
-        $query = sprintf("DELETE FROM resources_locks WHERE lock_id = '%s' ", $kill_lock);
-        $db->query($query);
-        if ($db->affected_rows()) {
+if ($kill_lock) {
+    if ($globalPerm == 'admin') { //check for resources root or global root
+        $query = "DELETE FROM resources_locks WHERE lock_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($kill_lock));
+        if ($statement->rowCount() > 0) {
             $msg->addMsg(28);
-            unset($_SESSION['resources_data']["lock_edits"][$kill_lock]);
+            unset($_SESSION['resources_data']['lock_edits'][$kill_lock]);
         }
     } else {
         $msg->addMsg(25);
@@ -1275,14 +1393,15 @@ if (Request::int('cancel_edit_request_x') || Request::submitted('cancel_edit_req
             $request_ids[] = $val["request_id"];
             $request_data[$val["request_id"]] = $val;
         }
-        $in="('".join("','",$request_ids)."')";
 
-        $query = sprintf ("SELECT request_id FROM resources_requests WHERE closed='1' AND request_id IN %s", $in);
-        $db->query($query);
-
-        if ($db->nf()) {
-            $msg->addMsg(40, array(URLHelper::getLink(), URLHelper::getLink('?snd_closed_request_sms=1')));
-            Request::set('save_state', 1);
+        if (count($request_ids) > 0) {
+            $query = "SELECT 1 FROM resources_requests WHERE closed = 1 AND request_id IN (?)";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($request_ids));
+            if ($statement->fetchColumn()) {
+                $msg->addMsg(40, array(URLHelper::getLink(), URLHelper::getLink('?snd_closed_request_sms=1')));
+                Request::set('save_state', 1);
+            }
         }
     }
     $_SESSION['resources_data']["view"] = "requests_start";
@@ -1333,44 +1452,50 @@ if (Request::submitted('start_multiple_mode') || (Request::option('single_reques
     } elseif (is_array($selected_requests)) {
         //order requests
         $order = '';
-        $in =  "('".join("','",array_keys($selected_requests))."')";
-        if (Request::option('resolve_requests_order') == "complex")
+        if (Request::option('resolve_requests_order') == 'complex') {
             $order = "seats DESC, complexity DESC";
-        if (Request::option('resolve_requests_order') == "newest")
+        } else  if (Request::option('resolve_requests_order') == 'newest') {
             $order = "a.mkdate DESC";
-        if (Request::option('resolve_requests_order') == "oldest")
+        } else if (Request::option('resolve_requests_order') == 'oldest') {
             $order = "a.mkdate ASC";
+        }
 
         // for sort-order urgent a simpler query suffices
-        if (Request::option('resolve_requests_order') == "urgent") {
-            $stmt = DBManager::get()->query("SELECT rq.request_id, rq.seminar_id, rq.termin_id FROM resources_requests as rq, termine as t
-                WHERE rq.request_id IN $in AND t.date > ". time() ." AND (
-                    (t.range_id = rq.seminar_id AND (rq.termin_id IS NULL OR rq.termin_id = ''))
-                    OR ( rq.termin_id IS NOT NULL AND rq.termin_id != '' AND rq.termin_id = t.termin_id)
-                )
-                ORDER BY t.date ASC");
-            while ($data = $stmt->fetch()) {
-                if (!$db_requests[$data['request_id']]) {
-                    $db_requests[$data['request_id']] = array(
-                        'request_id' => $data['request_id'],
-                        'termin_id'  => $data['termin_id'],
-                        'seminar_id' => $data['seminar_id']
-                    );
+        if (Request::option('resolve_requests_order') == 'urgent') {
+            $query = "SELECT rq.request_id, rq.seminar_id, rq.termin_id
+                      FROM resources_requests AS rq,
+                           termine AS t
+                      WHERE rq.request_id IN (?) AND t.date > UNIX_TIMESTAMP()
+                        AND ((t.range_id = rq.seminar_id AND IFNULL(rq.termin_id, '') = '')
+                             OR (IFNULL(rq.termin_id, '') != '' AND rq.termin_id = t.termin_id))
+                      ORDER BY {$order}";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+               array_keys($selected_requests) ?: ''
+            ));
+            while ($data = $statement->fetch(PDO::FETCH_ASSOC)) {
+                if (!isset($db_requests[$data['request_id']])) {
+                    $db_requests[$data['request_id']] = $data;
                 }
             }
         } else {
-            $query = sprintf ("SELECT a.seminar_id, a.termin_id, a.request_id, a.resource_id, COUNT(b.property_id) AS complexity, MAX(d.state) AS seats
-                FROM resources_requests a
-                LEFT JOIN resources_requests_properties b USING (request_id)
-                LEFT JOIN resources_properties c ON (b.property_id = c.property_id AND c.system = 2)
-                LEFT JOIN resources_requests_properties d ON (c.property_id = d.property_id AND a.request_id = d.request_id)
-                WHERE a.request_id IN %s
-                GROUP BY a.request_id
-                ORDER BY %s", $in, $order);
-            $db->query($query);
+            $query = "SELECT a.seminar_id, a.termin_id, a.request_id #, a.resource_id,
+                             # COUNT(b.property_id) AS complexity, MAX(d.state) AS seats
+                      FROM resources_requests AS a
+                      LEFT JOIN resources_requests_properties AS b USING (request_id)
+                      LEFT JOIN resources_properties AS c ON (b.property_id = c.property_id AND c.system = 2)
+                      LEFT JOIN resources_requests_properties AS d
+                        ON (c.property_id = d.property_id AND a.request_id = d.request_id)
+                      WHERE a.request_id IN (?)
+                      GROUP BY a.request_id
+                      ORDER BY {$order}";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                array_keys($selected_requests) ?: ''
+            ));
 
-            while ($db->next_record()) {
-                $db_requests[] = array('request_id' => $db->f('request_id'), 'termin_id' => $db->f('termin_id'), 'seminar_id' => $db->f('seminar_id'));
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                $db_requests[] = $row;
             }
 
         }
@@ -1410,10 +1535,18 @@ if (Request::submitted('save_state')) {
 
     //if not single date-mode, we have to load all termin_ids from other requests of this seminar, because these dates don't have to be touched (they have an own request!)
     if (!$reqObj->getTerminId()) {
-        $query = sprintf ("SELECT rr.termin_id, closed, date, end_time FROM resources_requests rr LEFT JOIN termine USING (termin_id) WHERE seminar_id = '%s' AND rr.termin_id != '' ", $reqObj->getSeminarId());
-        $db->query($query);
-        while ($db->next_record()) {
-            $dates_with_request[$db->f("termin_id")] = array("closed"=>$db->f("closed"), "begin" => $db->f("date"), "end" => $db->f("end_time"));
+        $query = "SELECT rr.termin_id, closed, date, end_time
+                  FROM resources_requests AS rr
+                  LEFT JOIN termine USING (termin_id)
+                  WHERE seminar_id = ? AND rr.termin_id != ''";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($reqObj->getSeminarId()));
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $dates_with_request[$row['termin_id']] = array(
+                'closed' => $row['closed'],
+                'begin'  => $row['date'],
+                'end'    => $row['end_time']
+            );
         }
     }
 

@@ -1,7 +1,7 @@
 <?
 # Lifter002: TODO
+# Lifter003: TEST
 # Lifter007: TODO
-# Lifter003: TODO
 # Lifter010: TODO
 /**
 * ResourceObject.class.php
@@ -61,7 +61,6 @@ class ResourceObject {
     }
     
     var $id;                //resource_id des Objects;
-    var $db;                //Datenbankanbindung;
     var $name;              //Name des Objects
     var $description;           //Beschreibung des Objects;
     var $owner_id;              //Owner_id;
@@ -77,7 +76,6 @@ class ResourceObject {
         global $user;
         
         $this->user_id = $user->id;
-        $this->db = new DB_Seminar;
         
         if($argv && !is_array($argv)) {
             $id = $argv;
@@ -101,18 +99,24 @@ class ResourceObject {
         }
     }
     
-    function createId() {
+    function createId()
+    {
         return md5(uniqid("DuschDas",1));
     }
 
-    function create() {
-        $query = sprintf("SELECT resource_id FROM resources_objects WHERE resource_id ='%s'", $this->id);
-        $this->db->query($query);
-        if ($this->db->nf()) {
-            $this->chng_flag=TRUE;      
+    function create()
+    {
+        $query = "SELECT resource_id FROM resources_objects WHERE resource_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($this->id));
+        $check = $statement->fetchColumn();
+
+        if ($check) {
+            $this->chng_flag = TRUE;
             return $this->store();
-        } else
-            return $this->store(TRUE);
+        }
+
+        return $this->store(TRUE);
     }
     
     function setName($name){
@@ -242,17 +246,20 @@ class ResourceObject {
     }
     
     function getOrgaName ($explain=FALSE, $id='') {
-        if (!$id)
+        if (!$id) {
             $id=$this->institut_id;
+        }
 
-        $query = sprintf("SELECT Name FROM Institute WHERE Institut_id='%s' ",$id);
-        $this->db->query($query);
-        
-        if ($this->db->next_record())
-            if (!$explain)
-                return $this->db->f("Name");
-            else
-                return $this->db->f("Name")." ("._("Einrichtung").")";  
+        $query = "SELECT Name FROM Institute WHERE Institut_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($id));
+        $name = $statement->fetchColumn();
+
+        if ($name) {
+            return $explain
+                ? sprintf('%s (%s)', $name, _('Einrichtung'))
+                : $name;
+        }
     }
     
     function getOwnerName($explain=FALSE, $id='') {
@@ -279,22 +286,19 @@ class ResourceObject {
                     return get_fullname($id,'full')." ("._("NutzerIn").")";
             break;
             case "inst":
-                $query = sprintf("SELECT Name FROM Institute WHERE Institut_id='%s' ",$id);
-                $this->db->query($query);
-                if ($this->db->next_record())
-                    if (!$explain)
-                        return $this->db->f("Name");
-                    else
-                        return $this->db->f("Name")." ("._("Einrichtung").")";
+                return $this->getOrgaName($explain, $id);
             break;
             case "sem":
-                $query = sprintf("SELECT Name FROM seminare WHERE Seminar_id='%s' ",$id);
-                $this->db->query($query);
-                if ($this->db->next_record())
-                    if (!$explain)
-                        return $this->db->f("Name");
-                    else
-                        return $this->db->f("Name"). " ("._("Veranstaltung").")";
+                $query = "SELECT Name FROM seminare WHERE Seminar_id = ?";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($id));
+                $name = $statement->fetchColumn();
+
+                if ($name) {
+                    return $explain
+                        ? sprintf('%s (%s)', $name, _('Veranstaltung'))
+                        : $name;
+                }
             break;
         }
     }
@@ -370,240 +374,331 @@ class ResourceObject {
         }
     }
     
-    function getPlainProperties($only_requestable = FALSE) {
-        $query = sprintf("SELECT b.name, a.state, b.type, b.options FROM resources_objects_properties a LEFT JOIN resources_properties b USING (property_id) LEFT JOIN resources_categories_properties c USING (property_id) WHERE resource_id = '%s' AND c.category_id = '%s' %s ORDER BY b.name", $this->id, $this->category_id, ($only_requestable) ? "AND requestable = '1'" : "");     
-        $this->db->query($query);
-        
-        $i=0;
-        while ($this->db->next_record()) {
-            if ($i)
-                $plain_properties .= " \n";
-            $plain_properties .= $this->db->f("name").": ".(($this->db->f("type") == "bool") ? (($this->db->f("state")) ? $this->db->f("options") : "-") : $this->db->f("state"));
-            $i++;
+    function getPlainProperties($only_requestable = FALSE)
+    {
+        $query = "SELECT b.name, a.state, b.type, b.options
+                  FROM resources_objects_properties AS a
+                  LEFT JOIN resources_properties AS b USING (property_id)
+                  LEFT JOIN resources_categories_properties AS c USING (property_id)
+                  WHERE resource_id = ? AND c.category_id = ?";
+        if ($only_requestable) {
+            $query .= " AND requestable = 1";
         }
-        
-        return $plain_properties;
-    }
-    
+        $query .= " ORDER BY b.name";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $this->id,
+            $this->category_id
+        ));
 
-    function getSeats() {
-        if (is_null($this->my_state)){
-            $query = sprintf("SELECT a.state FROM resources_objects_properties a LEFT JOIN resources_properties b USING (property_id) LEFT JOIN resources_categories_properties c USING (property_id) WHERE resource_id = '%s' AND c.category_id = '%s' AND b.system = 2 ORDER BY b.name", $this->id, $this->category_id);
-            $this->db->query($query);
-            if ($this->db->next_record()) {
-                $this->my_state = $this->db->f("state");
-            }
+        $temp = array();
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $temp[] = sprintf('%s: %s',
+                              $row['name'],
+                              $row['type'] == 'bool'
+                                  ? ($row['state'] ? $row['options'] : '-')
+                                  : $row['state']);
         }
-        return is_null($this->my_state) ? false : $this->my_state;
+
+        return implode(" \n", $temp);
     }
 
-    function isUnchanged() {
-        if ($this->mkdate == $this->chdate)
-            return TRUE;
-        else
-            return FALSE;
+    function getSeats()
+    {
+        if (is_null($this->my_state)) {
+            $query = "SELECT a.state
+                      FROM resources_objects_properties AS a
+                      LEFT JOIN resources_properties AS b USING (property_id)
+                      LEFT JOIN resources_categories_properties AS c USING (property_id)
+                      WHERE resource_id = ? AND c.category_id = ? AND b.system = 2
+                      ORDER BY b.name";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                $this->id,
+                $this->category_id
+            ));
+            $this->my_state = $statement->fetchColumn() ?: null;
+        }
+        return $this->my_state ?: false;
     }
 
-    function isDeletable() {
+    function isUnchanged()
+    {
+        return $this->mkdate == $this->chdate;
+    }
+
+    function isDeletable()
+    {
         return (!$this->isParent() && !$this->isAssigned());
     }
 
-    function isParent() {
-        if (is_null($this->is_parent)){
-            $query = sprintf ("SELECT resource_id FROM resources_objects WHERE parent_id = '%s' LIMIT 1", $this->id);
-            $this->db->query($query);
-            if ($this->db->next_record()){
-                $this->is_parent = true;
-            }
+    function isParent()
+    {
+        if (is_null($this->is_parent)) {
+            $query = "SELECT 1
+                      FROM resources_objects
+                      WHERE parent_id = ?
+                      LIMIT 1";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($this->id));
+            $this->is_parent = ($statement->fetchColumn() > 0) ?: null;
         }
         return (!is_null($this->is_parent));
     }
     
-    function isAssigned() {
-        if (is_null($this->is_assigned)){
-            $query = sprintf ("SELECT assign_id FROM resources_assign WHERE resource_id = '%s' LIMIT 1", $this->id);
-            $this->db->query($query);
-            if ($this->db->next_record()){
-                $this->is_assigned = true;
-            }
+    function isAssigned()
+    {
+        if (is_null($this->is_assigned)) {
+            $query = "SELECT 1
+                      FROM resources_assign
+                      WHERE resource_id = ?
+                      LIMIT 1";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($this->id));
+            $this->is_assigned = ($statement->fetchColumn() > 0) ?: null;
         }
         return (!is_null($this->is_assigned));
     }
     
-    function isRoom() {
-        if (is_null($this->is_room)){
-            $query = sprintf ("SELECT is_room FROM resources_objects LEFT JOIN resources_categories USING (category_id) WHERE resource_id = '%s'", $this->id);
-            $this->db->query($query);
-            $this->db->next_record();
-            if ($this->db->f("is_room")){
-                $this->is_room = true;
-            }
+    function isRoom()
+    {
+        if (is_null($this->is_room)) {
+            $query = "SELECT is_room
+                      FROM resources_objects
+                      LEFT JOIN resources_categories USING (category_id)
+                      WHERE resource_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($this->id));
+            $this->is_room = ($statement->fetchColumn() > 0) ?: null;
         }
         return (!is_null($this->is_room));
     }
     
-    function isLocked() {
-        if (($this->isRoom()) 
-        && ($this->isLockable())
-        && (isLockPeriod("edit")))
-            return isLockPeriod("edit");
-        else
-            return FALSE;
+    function isLocked()
+    {
+        return $this->isRoom() && $this->isLockable() && isLockPeriod('edit');
     }
 
-    function isLockable() {
+    function isLockable()
+    {
         return $this->lockable;
     }
     
-    function flushProperties() {
-        $query = sprintf("DELETE FROM resources_objects_properties WHERE resource_id='%s' ",$this->id);
-        $this->db->query($query);
-        if ($this->db->affected_rows())
-            return TRUE;
-        else 
-            return FALSE;
+    function flushProperties()
+    {
+        $query = "DELETE FROM resources_objects_properties
+                  WHERE resource_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($this->id));
+        return $statement->rowCount() > 0;
     }
     
-    function storeProperty ($property_id, $state) {
-        $query = sprintf("INSERT INTO resources_objects_properties SET resource_id='%s', property_id='%s', state='%s' ",$this->id, $property_id, $state);
-        $this->db->query($query);
-        if ($this->db->affected_rows())
-            return TRUE;
-        else 
-            return FALSE;
+    function storeProperty ($property_id, $state)
+    {
+        $query = "INSERT INTO resources_objects_properties
+                    (resource_id, property_id, state)
+                  VALUES (?, ?, ?)";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $this->id,
+            $property_id,
+            $state
+        ));
+        return $statement->rowCount() > 0;
     }
     
-    function deletePerms ($user_id) {
-        $query = sprintf("DELETE FROM resources_user_resources WHERE user_id='%s' AND resource_id='%s'",$user_id, $this->id);
-        $this->db->query($query);
-        if ($this->db->affected_rows())
-            return TRUE;
-        else 
-            return FALSE;
+    function deletePerms ($user_id)
+    {
+        $query = "DELETE FROM resources_user_resources
+                  WHERE user_id = ? AND resource_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $user_id,
+            $this->id
+        ));
+        return $statement->rowCount() > 0;
     }
     
-    function storePerms ($user_id, $perms='') {
-        $query = sprintf("SELECT user_id FROM resources_user_resources WHERE user_id='%s' AND resource_id='%s'",$user_id, $this->id);
-        $this->db->query($query);
-        
+    function storePerms ($user_id, $perms = '')
+    {
         //User_id zwingend notwendig
-        if (!$user_id)
+        if (!$user_id) {
             return FALSE;
-        
+        }
+
+        $query = "SELECT 1
+                  FROM resources_user_resources
+                  WHERE user_id = ? AND resource_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $user_id,
+            $this->id
+        ));
+        $check = $statement->fetchColumn();
+
         //neuer Eintrag 
-        if (!$this->db->num_rows()) {
-            if (!$perms)
-                $perms="autor";
-            $query = sprintf("INSERT INTO resources_user_resources SET perms='%s', user_id='%s', resource_id='%s'",$perms, $user_id, $this->id);
-            $this->db->query($query);
-            if ($this->db->affected_rows())
-                return TRUE;
-            else 
-                return FALSE;
+        if (!$check) {
+            if (!$perms) {
+                $perms = 'autor';
+            }
+            $query = "INSERT INTO resources_user_resources
+                        (perms, user_id, resource_id)
+                      VALUES (?, ?, ?)";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                $perms,
+                $user_id,
+                $this->id
+            ));
+            return $statement->rowCount() > 0;
+        } 
 
         //alter Eintrag wird veraendert
-        } elseif ($perms) {
-            $query = sprintf("UPDATE resources_user_resources SET perms='%s' WHERE user_id='%s' AND resource_id='%s'",$perms, $user_id, $this->id);
-            $this->db->query($query);
-            if ($this->db->affected_rows())
-                return TRUE;
-            else 
-                return FALSE;
-        } else
-            return FALSE;
+        if ($perms) {
+            $query = "UPDATE resources_user_resources
+                      SET perms = ?
+                      WHERE user_id = ? AND resource_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                $perms,
+                $user_id,
+                $this->id
+            ));
+            return $statement->rowCount() > 0;
+        }
+
+        return FALSE;
     }
     
-    function restore($id='') {
-
-        if(func_num_args() == 1)
-            $query = sprintf("SELECT resources_objects.*, resources_categories.name AS category_name, resources_categories.iconnr FROM resources_objects LEFT JOIN resources_categories USING (category_id) WHERE resource_id='%s' ",$id);
-        else 
-            $query = sprintf("SELECT resources_objects.*, resources_categories.name AS category_name, resources_categories.iconnr FROM resources_objects LEFT JOIN resources_categories USING (category_id) WHERE resource_id='%s' ",$this->id);
-        $this->db->query($query);
-        
-        if($this->db->next_record()) {
-            $this->id = $id;
-            $this->name = $this->db->f("name");
-            $this->description = $this->db->f("description");
-            $this->owner_id = $this->db->f("owner_id");
-            $this->institut_id = $this->db->f("institut_id");
-            $this->category_id = $this->db->f("category_id");
-            $this->category_name = $this->db->f("category_name");
-            $this->category_iconnr = $this->db->f("iconnr");
-            $this->parent_id =$this->db->f("parent_id");
-            $this->lockable = $this->db->f("lockable");
-            $this->multiple_assign = $this->db->f("multiple_assign");
-            $this->root_id =$this->db->f("root_id");
-            $this->mkdate =$this->db->f("mkdate");
-            $this->chdate =$this->db->f("chdate");
-            
-            if ($this->db->f("parent_bind"))
-                $this->parent_bind = TRUE;
-            else
-                $this->parent_bind = FALSE;
-            
-            return TRUE;
+    function restore($id='')
+    {
+        if (func_num_args() == 0) {
+            $id = $this->id;
         }
-        return FALSE;
+
+        $query = "SELECT ro.*, rc.name AS category_name, rc.iconnr
+                  FROM resources_objects AS ro
+                  LEFT JOIN resources_categories AS rc USING (category_id)
+                  WHERE resource_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($id));
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$row) {
+            return false;
+        }
+
+        $this->id = $id;
+        $this->name            = $row['name'];
+        $this->description     = $row['description'];
+        $this->owner_id        = $row['owner_id'];
+        $this->institut_id     = $row['institut_id'];
+        $this->category_id     = $row['category_id'];
+        $this->category_name   = $row['category_name'];
+        $this->category_iconnr = $row['iconnr'];
+        $this->parent_id       = $row['parent_id'];
+        $this->lockable        = $row['lockable'];
+        $this->multiple_assign = $row['multiple_assign'];
+        $this->root_id         = $row['root_id'];
+        $this->mkdate          = $row['mkdate'];
+        $this->chdate          = $row['chdate'];
+        $this->parent_bind     = !empty($row['parent_bind']);
+
+        return true;
     }
 
     function store($create=''){
         // Natuerlich nur Speichern, wenn sich was gaendert hat oder das Object neu angelegt wird
-        if(($this->chng_flag) || ($create)) {
+        if ($this->chng_flag || $create) {
             $chdate = time();
             $mkdate = time();
             
-            if($create) {
+            if ($create) {
                 //create level value
-                if (!$this->parent_id)
-                    $level=0;
-                else {
-                    $query = sprintf("SELECT level FROM resources_objects WHERE resource_id = '%s'", $this->parent_id);
-                    $this->db->query($query);
-                    $this->db->next_record();
-                    $level = $this->db->f("level") +1;
+                if (!$this->parent_id) {
+                    $level = 0;
+                } else {
+                    $query = "SELECT level FROM resources_objects WHERE resource_id = ?";
+                    $statement = DBManager::get()->prepare($query);
+                    $statement->execute(array($this->parent_id));
+                    $level = $statement->fetchColumn();
                 }
 
-                $query = sprintf("INSERT INTO resources_objects SET resource_id='%s', root_id='%s', " 
-                    ."parent_id='%s', category_id='%s', owner_id='%s', institut_id = '%s', level='%s', name='%s', description='%s', "
-                    ."lockable='%s', multiple_assign='%s',mkdate='%s', chdate='%s' "
-                             , $this->id, $this->root_id, $this->parent_id, $this->category_id, $this->owner_id, $this->institut_id
-                             , $level, $this->name, $this->description, $this->lockable, $this->multiple_assign 
-                             , $mkdate, $chdate);
-            } else
-                $query = sprintf("UPDATE resources_objects SET root_id='%s'," 
-                    ."parent_id='%s', category_id='%s', owner_id='%s', institut_id = '%s', name='%s', description='%s', "
-                    ."lockable='%s', multiple_assign='%s' WHERE resource_id='%s' "
-                             , $this->root_id, $this->parent_id, $this->category_id, $this->owner_id, $this->institut_id
-                             , $this->name, $this->description, $this->lockable, $this->multiple_assign 
-                             , $this->id);
-            $this->db->query($query);
+                $query = "INSERT INTO resources_objects
+                            (resource_id, root_id, parent_id, category_id,
+                             owner_id, institut_id, level, name, description, 
+                             lockable, multiple_assign, mkdate, chdate)
+                          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
+                                  UNIX_TIMESTAMP(), UNIX_TIMESTAMP())";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array(
+                    $this->id,
+                    $this->root_id,
+                    $this->parent_id,
+                    $this->category_id,
+                    $this->owner_id,
+                    $this->institut_id,
+                    $level,
+                    $this->name,
+                    $this->description,
+                    $this->lockable,
+                    $this->multiple_assign 
+                ));
+                $affected_rows = $statement->rowCount();
+            } else {
+                $query = "UPDATE resources_objects
+                          SET root_id = ?, parent_id = ?, category_id = ?,
+                              owner_id = ?, institut_id = ?, name = ?,
+                              description = ?, lockable = ?, multiple_assign = ?
+                          WHERE resource_id = ?";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array(
+                    $this->root_id,
+                    $this->parent_id,
+                    $this->category_id,
+                    $this->owner_id,
+                    $this->institut_id,
+                    $this->name,
+                    $this->description,
+                    $this->lockable,
+                    $this->multiple_assign,
+                    $this->id
+                ));
+                $affected_rows = $statement->rowCount();
+                
+                if ($affected_rows) {
+                    $query = "UPDATE resources_objects
+                              SET chdate = UNIX_TIMESTAMP()
+                              WHERE resource_id = ?";
+                    $statement = DBManager::get()->prepare($query);
+                    $statement->execute(array($this->id));
+                }
+            }
 
-            if ($this->db->affected_rows()) {
-                $query = sprintf("UPDATE resources_objects SET chdate='%s' WHERE resource_id='%s' ", $chdate, $this->id);
-                $this->db->query($query);
-                return TRUE;
-            } else
-                return FALSE;
+            return $affected_rows > 0;
         }
         return FALSE;
     }
 
-    function delete() {
+    function delete()
+    {
         $this->deleteResourceRecursive ($this->id);
     }
     
     //delete section, very privat :)
     
     //private
-    function deleteAllAssigns($id='') {
-        if (!$id)
+    function deleteAllAssigns($id='')
+    {
+        if (!$id) {
             $id = $this->id;
-        $query = sprintf("SELECT assign_id FROM resources_assign WHERE resource_id = '%s' ", $id);
-        $this->db->query($query);
-        while ($this->db->next_record()) {
-            $killAssign = AssignObject::Factory($this->db->f("assign_id"));
-            $killAssign->delete();
+        }
+
+        $query = "SELECT assign_id FROM resources_assign WHERE resource_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($id));
+        while ($assign_id = $statement->fetchColumn()) {
+            AssignObject::Factory($assign_id)->delete();
         }
     }
 
@@ -617,64 +712,78 @@ class ResourceObject {
             throw new Exception('Missing resource-ID!');
         }
 
-        $stmt = DBManager::get()->prepare("SELECT assign_id FROM resources_assign
-            WHERE resource_id = ?");
-        $stmt->execute(array($this->id));
+        $query = "SELECT assign_id FROM resources_assign WHERE resource_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($this->id));
         
-        while ($assign_id = $stmt->fetchColumn()) {
-            $assign = AssignObject::Factory($assign_id);
-            $assign->updateResourcesTemporaryEvents();
+        while ($assign_id = $statement->fetchColumn()) {
+            AssignObject::Factory($assign_id)->updateResourcesTemporaryEvents();
         }
     }
 
     //private
-    function deleteAllPerms($id='') {
-        if (!$id)
+    function deleteAllPerms($id='')
+    {
+        if (!$id) {
             $id = $this->id;
-        $query = sprintf("DELETE FROM resources_user_resources WHERE resource_id = '%s' ", $id);
-        $this->db->query($query);           
+        }
+        $query = "DELETE FROM resources_user_resources
+                  WHERE resource_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($id));
     }
 
-    function deleteResourceRecursive($id) {
-        $db = new DB_Seminar;
-        $db2 = new DB_Seminar;
-        
+    function deleteResourceRecursive($id)
+    {
         //subcurse to subordinated resource-levels
-        $query = sprintf("SELECT resource_id FROM resources_objects WHERE parent_id = '%s' ", $id);
-        $db->query($query);
-            
-        while ($db->next_record()) 
-            $this->deleteResourceRecursive($db->f("resource_id"), $recursive);
+        $query = "SELECT resource_id FROM resources_objects WHERE parent_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($id));
+
+        while ($resource_id = $statement->fetchColumn()) {
+            $this->deleteResourceRecursive($resource_id, $recursive);
+        }
 
         $this->deleteAllAssigns($id);
         $this->deleteAllPerms($id);
         $this->flushProperties($id);
-    
-        $query2 = sprintf("DELETE FROM resources_objects WHERE resource_id = '%s' ", $id);
-        $db2->query($query2);           
+
+        $query = "DELETE FROM resources_objects WHERE resource_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($id));
     }
     
-    function getPathArray($include_self = false){
+    function getPathArray($include_self = false)
+    {
+        $result_arr = array();
+
         $id = $this->getId();
-        if ($include_self){
+        if ($include_self) {
             $result_arr[$id] = $this->getName();
-        } else {
-            $result_arr = array();
         }
-        while($id){
-            $query = sprintf ("SELECT name, parent_id, resource_id, owner_id FROM resources_objects WHERE resource_id = '%s' ", $id);
-            $this->db->query($query);
-            if ($this->db->next_record()){
-                $id = $this->db->f("parent_id");
-                $result_arr[$this->db->f("resource_id")] = $this->db->f("name");
-            } else {
+
+        $query = "SELECT name, parent_id, resource_id
+                  FROM resources_objects
+                  WHERE resource_id = ?";
+        $statement = DBManager::get()->prepare($query);
+
+        while ($id) {
+            $statement->execute(array($id));
+            $temp = $statement->fetch(PDO::FETCH_ASSOC);
+            $statement->closeCursor();
+
+            if (!$temp) {
                 break;
             }
+            
+            $id = $temp['parent_id'];
+            $result_arr[$temp['resource_id']] = $temp['name'];
         }
         return $result_arr;
     }
     
-    function getPathToString($include_self = false, $delimeter = '/'){
+    function getPathToString($include_self = false, $delimeter = '/')
+    {
         return join($delimeter, array_reverse(array_values($this->getPathArray($include_self))));
     }
 }

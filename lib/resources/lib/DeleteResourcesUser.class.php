@@ -42,17 +42,15 @@ require_once $GLOBALS['RELATIVE_PATH_RESOURCES'] . "/lib/AssignObject.class.php"
 require_once $GLOBALS['RELATIVE_PATH_RESOURCES'] . "/lib/ResourceObject.class.php";
 require_once $GLOBALS['RELATIVE_PATH_RESOURCES'] . "/lib/RoomRequest.class.php";
 
-class DeleteResourcesUser {
-    var $db;
-    var $db2;
+class DeleteResourcesUser
+{
     var $range_id;
     var $object_type;
     
     //Konstruktor
-    function DeleteResourcesUser ($range_id) {
+    function DeleteResourcesUser ($range_id)
+    {
         global $RELATIVE_PATH_RESOURCES;
-        $this->db = new DB_Seminar;
-        $this->db2 = new DB_Seminar;
         $this->range_id = $range_id;
         $this->object_type = get_object_type($this->range_id);
     }
@@ -61,59 +59,66 @@ class DeleteResourcesUser {
     function deleteForeignAssigns() {
         //all assigns linked to resource
         if ($this->range_id) {
-            $query = sprintf("SELECT assign_id FROM resources_assign WHERE assign_user_id = '%s' ", $this->range_id);
-            $this->db->query($query);
-            while ($this->db->next_record()) {
-                $killAssign = AssignObject::Factory($this->db->f("assign_id"));
-                $killAssign->delete();
+            $query = "SELECT assign_id FROM resources_assign WHERE assign_user_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($this->range_id));
+            while ($assign_id = $statement->fetchColumn()) {
+                AssignObject::Factory($assign_id)->delete();
             }
         }
-        if ($this->object_type == "sem") {
-            $query = sprintf("SELECT assign_id FROM termine LEFT JOIN resources_assign ON (resources_assign.assign_user_id = termine.termin_id) WHERE range_id = '%s' ", $this->range_id);
-            $this->db->query($query);
-            while ($this->db->next_record()) {
-                $killAssign = AssignObject::Factory($this->db->f("assign_id"));
-                $killAssign->delete();
+        if ($this->object_type == 'sem') {
+            $query = "SELECT assign_id
+                      FROM termine AS t
+                      LEFT JOIN resources_assign AS ra ON (ra.assign_user_id = t.termin_id)
+                      WHERE range_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($this->range_id));
+            while ($assign_id = $statement->fetchColumn()) {
+                AssignObject::Factory($assign_id)->delete();
             }
         }
     }
     
     //private
-    function deleteRequests() {
-        if ($this->object_type == "sem") {
-            $query = sprintf("SELECT request_id FROM resources_requests WHERE seminar_id = '%s' ", $this->range_id);
-            $this->db->query($query);
-            while ($this->db->next_record()) {
-                $killRequest = new RoomRequest ($this->db->f("request_id"));
-                $killRequest->delete();
-            }
-        } elseif ($this->object_type == "date") {
-            $query = sprintf("SELECT request_id FROM resources_requests WHERE termin_id = '%s' ", $this->range_id);
-            $this->db->query($query);
-            while ($this->db->next_record()) {
-                $killRequest = new RoomRequest ($this->db->f("request_id"));
-                $killRequest->delete();
-            }
+    function deleteRequests()
+    {
+        $column = $this->object_type == 'sem'
+                ? 'seminar_id'
+                : 'termin_id';
+
+        $query = "SELECT request_id FROM resources_requests WHERE :column = :value";
+        $statement = DBManager::get()->prepare($query);
+        $statement->bindValue(':column', $column, StudipPDO::PARAM_COLUMN);
+        $statement->bindValue(':value', $this->range_id);
+        $statement->execute();
+
+        while ($request_id = $statement->fetchColumn()) {
+            $killRequest = new RoomRequest($request_id);
+            $killRequest->delete();
         }
     }
 
     //private
-    function deleteForeignPerms() {
-        $query = sprintf("DELETE FROM resources_user_resources WHERE user_id = '%s' ", $this->range_id);
-        $this->db->query($query);           
+    function deleteForeignPerms()
+    {
+        $query = "DELETE FROM resources_user_resources WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($this->range_id));
     }
 
     //private
-    function deleteOwnerResources() {
-        $query = sprintf("SELECT resource_id FROM resources_objects WHERE owner_id = '%s' ", $this->range_id);
-        $this->db->query($query);   
-        while ($this->db->next_record()) {
-            $killResource = ResourceObject::Factory ($this->db->f("resource_id"));
-            $killResource->delete();
+    function deleteOwnerResources()
+    {
+        $query = "SELECT resource_id FROM resources_objects WHERE owner_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($this->range_id));
+        while ($resource_id = $statement->fetchColumn()) {
+            ResourceObject::Factory($resource_id)->delete();
         }
     }
     
-    function delete() {
+    function delete()
+    {
         if ($this->range_id) {
             $this->deleteForeignAssigns();
             $this->deleteRequests();

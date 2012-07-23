@@ -1,7 +1,7 @@
 <?
 # Lifter002: TODO
 # Lifter007: TODO
-# Lifter003: TODO
+# Lifter003: TEST
 # Lifter010: TODO
 /**
 * AssignObjectPerms.class.php
@@ -45,15 +45,10 @@ Verfuegung
 
 class AssignObjectPerms {
     var $user_id;
-    var $db;
-    var $db2;
     var $assign_id;
     
     function AssignObjectPerms ($assign_id, $user_id='') {
         global $user, $perm;
-        
-        $this->db = new DB_Seminar;
-        $this->db2 = new DB_Seminar;
         
         if ($user_id)
             $this->user_id=$user_id;
@@ -71,22 +66,33 @@ class AssignObjectPerms {
 
         //check if the user assigns the assign 
         if ($this->perm != "admin") {
-            $this->db->query("SELECT assign_user_id FROM resources_assign WHERE assign_user_id='$this->user_id' AND assign_id = '$this->assign_id' ");
-            if ($this->db->next_record()) {
-                $this->owner=TRUE;
-                $this->perm="admin";
-            } else {
-                $this->owner=FALSE;
+            $query = "SELECT 1
+                      FROM resources_assign
+                      WHERE assign_user_id = ? AND assign_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                $this->user_id,
+                $this->assign_id
+            ));
+            $this->owner = (bool)$statement->fetchColumn();
+
+            if ($this->owner) {
+                $this->perm = 'admin';
             }
         }
         
         //else check if the user is admin of the assigned resource
         if ($this->perm != "admin") {
-            $this->db->query("SELECT resource_id FROM resources_assign WHERE assign_id = '$this->assign_id' ");
-            if ($this->db->next_record()) {     
-                $ObjectPerms = ResourceObjectPerms::Factory($this->db->f("resource_id"));
-                if ($ObjectPerms->havePerm("tutor"))
-                    $this->perm="admin";
+            $query = "SELECT resource_id FROM resources_assign WHERE assign_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($this->assign_id));
+            $resource_id = $statement->fetchColumn();
+
+            if ($resource_id) {
+                $ObjectPerms = ResourceObjectPerms::Factory($resource_id);
+                if ($ObjectPerms->havePerm('tutor')) {
+                    $this->perm = 'admin';
+                }
             }
         }
     }

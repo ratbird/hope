@@ -54,10 +54,10 @@ $_attributes['combo'] = array('style' => 'width:45%');
 $_attributes['lit_select'] = array('style' => 'font-size:8pt;width:98%');
 
 
-if ($_REQUEST['cmd'] == "new_entry"){
+if (Request::option('cmd') == "new_entry"){
     $_catalog_id = "new_entry";
 } else {
-    $_catalog_id = isset($_REQUEST['_catalog_id']) ? Request::option('_catalog_id') : "new_entry";
+    $_catalog_id = Request::option('_catalog_id', "new_entry");
 }
 
 //dump data into db if $_catalog_id points to a search result
@@ -78,7 +78,7 @@ if ($_catalog_id{0} == "_"){
         }
 }
 
-if ($_REQUEST['cmd'] == 'clone_entry'){
+if (Request::option('cmd') == 'clone_entry'){
     $_the_element = StudipLitCatElement::GetClonedElement($_catalog_id);
     if ($_the_element->isNewEntry()){
         $_msg = "msg§" . _("Der Eintrag wurde kopiert, Sie können die Daten jetzt ändern.") . "§";
@@ -106,7 +106,7 @@ $_the_clip_form->form_fields['clip_cmd']['options'][] = array('name' => _("In Me
 $_the_clip_form->form_fields['clip_cmd']['options'][] = array('name' => _("Markierten Eintrag bearbeiten"), 'value' => 'edit');
 
 
-if ($_the_form->IsClicked("reset") || $_REQUEST['cmd'] == "new_entry"){
+if ($_the_form->IsClicked("reset") || Request::option('cmd') == "new_entry"){
     $_the_form->doFormReset();
 }
 
@@ -122,15 +122,15 @@ if ($_the_form->IsClicked("delete") && $_catalog_id != "new_entry" && $_the_elem
     }
 }
 
-if ($_REQUEST['cmd'] == "delete_element" && $_the_element->isChangeable() && !$_the_element->reference_count){
+if (Request::option('cmd') == "delete_element" && $_the_element->isChangeable() && !$_the_element->reference_count){
     $_the_element->deleteElement();
 }
 
-if ($_REQUEST['cmd'] == "in_clipboard" && $_catalog_id != "new_entry"){
+if (Request::option('cmd') == "in_clipboard" && $_catalog_id != "new_entry"){
         $_the_clipboard->insertElement($_catalog_id);
 }
 
-if ($_REQUEST['cmd'] == "check_entry"){
+if (Request::option('cmd') == "check_entry"){
     $lit_plugin_value = $_the_element->getValue('lit_plugin');
     $content = "<div style=\"font-size:70%\"<b>" ._("Verf&uuml;gbarkeit in externen Katalogen:") . "</b><br>";
     foreach (StudipLitSearch::CheckZ3950($_the_element->getValue('accession_number')) as $plugin_name => $ret){

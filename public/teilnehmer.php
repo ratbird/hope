@@ -1474,7 +1474,7 @@ while (list ($key, $val) = each ($gruppe)) {
                             } else {
                                 $query = "SELECT 1
                                           FROM auth_user_md5
-                                          WHERE user_id = ? AND perms NOT IN ('tutor', 'dozent')";
+                                          WHERE user_id = ? AND perms IN ('tutor', 'dozent')";
                                 $statement = DBManager::get()->prepare($query);
                                 $statement->execute(array($one_user['user_id']));
                                 $check = $statement->fetchColumn();

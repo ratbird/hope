@@ -53,7 +53,7 @@ include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
 
 $view = new DbView();
-$the_tree = new StudipSemTreeViewAdmin($_REQUEST['start_item_id']);
+$the_tree = new StudipSemTreeViewAdmin(Request::option('start_item_id'));
 $search_obj = new StudipSemSearch();
 
 $_open_items =& $the_tree->open_items;
@@ -94,10 +94,10 @@ if ($search_obj->search_done){
     }
 }
 
-if ($_REQUEST['cmd'] == "MarkList"){
+if (Request::option('cmd') == "MarkList"){
     $sem_mark_list = Request::quotedArray('sem_mark_list');
     if ($sem_mark_list){
-        if ($_REQUEST['mark_list_aktion'] == "del"){
+        if (Request::quoted('mark_list_aktion') == "del"){
             $count_del = 0;
             for ($i = 0; $i < count($sem_mark_list); ++$i){
                 if (isset($_SESSION['_marked_sem'][$sem_mark_list[$i]])){
@@ -107,7 +107,7 @@ if ($_REQUEST['cmd'] == "MarkList"){
             }
             $_msg .= "msg§" . sprintf(_("%s Veranstaltung(en) wurde(n) aus Ihrer Merkliste entfernt."),$count_del);
         } else {
-            $tmp = explode("_",$_REQUEST['mark_list_aktion']);
+            $tmp = explode("_",Request::quoted('mark_list_aktion'));
             $item_ids[0] = $tmp[1];
             if ($item_ids[0] == "all"){
                 $item_ids = array();
@@ -118,9 +118,9 @@ if ($_REQUEST['cmd'] == "MarkList"){
             }
             for ($i = 0; $i < count($item_ids); ++$i){
                 $count_ins = 0;
-                for ($j = 0; $j < count($_REQUEST['sem_mark_list']); ++$j){
-                    if ($_REQUEST['sem_mark_list'][$j]){
-                        $count_ins += StudipSemTree::InsertSemEntry($item_ids[$i], $_REQUEST['sem_mark_list'][$j]);
+                for ($j = 0; $j < count($sem_mark_list); ++$j){
+                    if ($sem_mark_list[$j]){
+                        $count_ins += StudipSemTree::InsertSemEntry($item_ids[$i], $sem_mark_list[$j]);
                     }
                 }
                 $_msg .= sprintf(_("%s Veranstaltung(en) in <b>" .htmlReady($the_tree->tree->tree_data[$item_ids[$i]]['name']) . "</b> eingetragen.<br>"), $count_ins);

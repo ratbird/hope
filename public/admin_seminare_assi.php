@@ -525,27 +525,24 @@ if ($form == 3 && Request::isPost())
         $term_turnus_start_minute =Request::optionArray('term_turnus_start_minute');
         $term_turnus_end_stunde =Request::optionArray('term_turnus_end_stunde');
         $term_turnus_end_minute = Request::optionArray('term_turnus_end_minute');
-        $term_turnus_desc = Request::optionArray('term_turnus_desc_chooser');
-
+        $term_turnus_desc_chooser = Request::quotedArray('term_turnus_desc_chooser');
+        $term_turnus_desc = Request::quotedArray('term_turnus_desc');
         $term_turnus_week_offset = Request::optionArray('term_turnus_week_offset');
         $term_turnus_cycle = Request::optionArray('term_turnus_cycle');
-        $term_turnus_sws = Request::optionArray('term_turnus_sws');
+        $term_turnus_sws = Request::getArray('term_turnus_sws');
 
         for ($i=0; $i<$_SESSION['sem_create_data']["turnus_count"]; $i++) {
 
             $_SESSION['sem_create_data']["term_turnus_date"][$i]=$term_turnus_date[$i];
-            $_SESSION['sem_create_data']["term_turnus_start_stunde"][$i] = (strlen($term_turnus_start_stunde[$i]))? intval($term_turnus_start_stunde[$i]) : '';
-            $_SESSION['sem_create_data']["term_turnus_start_minute"][$i] = (strlen($term_turnus_start_minute[$i]))? intval($term_turnus_start_minute[$i]) : '';
-            $_SESSION['sem_create_data']["term_turnus_end_stunde"][$i] = (strlen($term_turnus_end_stunde[$i]))? intval($term_turnus_end_stunde[$i]) : '';
-            $_SESSION['sem_create_data']["term_turnus_end_minute"][$i] = (strlen($term_turnus_end_minute[$i]))? intval($term_turnus_end_minute[$i]) : '';
+            $_SESSION['sem_create_data']["term_turnus_start_stunde"][$i] =  intval($term_turnus_start_stunde[$i]);
+            $_SESSION['sem_create_data']["term_turnus_start_minute"][$i] =  intval($term_turnus_start_minute[$i]);
+            $_SESSION['sem_create_data']["term_turnus_end_stunde"][$i] = intval($term_turnus_end_stunde[$i]);
+            $_SESSION['sem_create_data']["term_turnus_end_minute"][$i] = intval($term_turnus_end_minute[$i]);
             $_SESSION['sem_create_data']["term_turnus_desc"][$i]=($term_turnus_desc[$i] ? $term_turnus_desc[$i] : $term_turnus_desc_chooser[$i]);
             $_SESSION['sem_create_data']["term_turnus_week_offset"][$i] = (int)$term_turnus_week_offset[$i];
             $_SESSION['sem_create_data']["term_turnus_cycle"][$i] = (int)$term_turnus_cycle[$i];
             $_SESSION['sem_create_data']["term_turnus_sws"][$i] = round(str_replace(',','.',$term_turnus_sws[$i]),1);
         }
-
-        //Turnus-Metadaten-Array erzeugen
-        $_SESSION['sem_create_data']["metadata_termin"]='';
 
         //indizierte (=sortierbares Temporaeres Array erzeugen)
         if ($_SESSION['sem_create_data']["term_art"] == 0)
@@ -560,15 +557,14 @@ if ($form == 3 && Request::isPost())
                     if ($_SESSION['sem_create_data']["term_turnus_start_minute"][$i] < 10)
                         $tmp_idx.="0";
                     $tmp_idx.=$_SESSION['sem_create_data']["term_turnus_start_minute"][$i];
+                    $tmp_idx.=$_SESSION['sem_create_data']["term_turnus_desc"][$i];
                     $tmp_metadata_termin["turnus_data"][]=array("idx"=>$tmp_idx,
                                                                 "day" => $_SESSION['sem_create_data']["term_turnus_date"][$i],
                                                                 "start_stunde" => $_SESSION['sem_create_data']["term_turnus_start_stunde"][$i],
                                                                 "start_minute" => $_SESSION['sem_create_data']["term_turnus_start_minute"][$i],
                                                                 "end_stunde" => $_SESSION['sem_create_data']["term_turnus_end_stunde"][$i],
                                                                 "end_minute" => $_SESSION['sem_create_data']["term_turnus_end_minute"][$i],
-                                                                // they are not needed anymore, but who knows...
-                                                                "room"=>$_SESSION['sem_create_data']["term_turnus_room"][$i],
-                                                                //"resource_id"=>$_SESSION['sem_create_data']["term_turnus_resource_id"][$i],
+                                                                "room"=> is_array($_SESSION['sem_create_data']["metadata_termin"]["turnus_data"]) ? $_SESSION['sem_create_data']["metadata_termin"]["turnus_data"][$i]['room'] : '',
                                                                 "desc"=>$_SESSION['sem_create_data']["term_turnus_desc"][$i],
                                                                 "week_offset"=>$_SESSION['sem_create_data']["term_turnus_week_offset"][$i],
                                                                 "cycle"=>$_SESSION['sem_create_data']["term_turnus_cycle"][$i],
@@ -576,14 +572,16 @@ if ($form == 3 && Request::isPost())
                                                                 );
                 }
 
+            $_SESSION['sem_create_data']["metadata_termin"] = array();
             if (is_array($tmp_metadata_termin["turnus_data"])) {
                 //sortieren
-                sort ($tmp_metadata_termin["turnus_data"]);
-
-                foreach ($tmp_metadata_termin["turnus_data"] as $tmp_array)
-                    {
-                    $_SESSION['sem_create_data']["metadata_termin"]["turnus_data"][]=$tmp_array;
+                uasort ($tmp_metadata_termin["turnus_data"], create_function('$a,$b', 'return strcmp($a["idx"],$b["idx"]);'));
+                foreach(words('term_turnus_date term_turnus_start_stunde term_turnus_start_minute term_turnus_end_stunde term_turnus_end_minute term_turnus_desc term_turnus_week_offset term_turnus_cycle term_turnus_sws') as $k) {
+                    $sorter = array_flip(array_keys($tmp_metadata_termin["turnus_data"]));
+                    ksort($sorter);
+                    array_multisort($sorter,$_SESSION['sem_create_data'][$k]);
                     }
+                $_SESSION['sem_create_data']["metadata_termin"]["turnus_data"]=$tmp_metadata_termin["turnus_data"];
                 }
             }
         }
@@ -682,14 +680,14 @@ if ($form == 4 && Request::isPost()) {
                 }
             }
         }
-
+    }
     if ($_SESSION['sem_create_data']["term_art"]==0) {
         //get incoming room-data
         $turnus_data=$_SESSION['sem_create_data']["metadata_termin"]["turnus_data"];
 
         if (is_array($turnus_data)){
 
-            $term_turnus_room = Request::optionArray('term_turnus_room');
+            $term_turnus_room = Request::quotedArray('term_turnus_room');
             $term_turnus_resource_id = Request::optionArray('term_turnus_resource_id');
 
             foreach ($turnus_data as $key=>$val) {
@@ -715,7 +713,6 @@ if ($form == 4 && Request::isPost()) {
                 $_SESSION['sem_create_data']["term_room"][$i]=$resObject->getName();
             }*/
         }
-    }
     }
 }
 
@@ -1385,7 +1382,7 @@ if ($level == 4 && $GLOBALS['RESOURCES_ENABLE'] && $GLOBALS['RESOURCES_ALLOW_ROO
             if ($_SESSION['sem_create_data']["term_art"] == 0) {
                 foreach ($_SESSION['sem_create_data']['metadata_termin']['turnus_data'] as $key => $value) {
                     $cycle = new SeminarCycleDate();
-                    $cycle->weekday = $value['day'];
+                    $cycle->weekday = $value['day'] == 7 ? 0 : $value['day'];
                     $cycle->week_offset = $value['week_offset'];
                     $cycle->cycle = $value['cycle'];
                     $cycle->start_hour = $value['start_stunde'];
@@ -1714,6 +1711,9 @@ if (($form == 6) && (Request::submitted('jump_next')))
                 foreach ($_SESSION['sem_create_data']["metadata_termin"]["turnus_data"] as $key=>$val) {
                     $_SESSION['sem_create_data']["metadata_termin"]["turnus_data"][$key]["room"] = stripslashes($_SESSION['sem_create_data']["metadata_termin"]["turnus_data"][$key]["room"]);
                     $_SESSION['sem_create_data']["metadata_termin"]["turnus_data"][$key]["description"] = stripslashes($_SESSION['sem_create_data']["metadata_termin"]["turnus_data"][$key]["desc"]);
+                    if ($_SESSION['sem_create_data']["metadata_termin"]["turnus_data"][$key]["day"] == 7) {
+                        $_SESSION['sem_create_data']["metadata_termin"]["turnus_data"][$key]["day"] = 0;
+                    }
                     $metadate_id = $sem->metadate->addCycle($_SESSION['sem_create_data']["metadata_termin"]["turnus_data"][$key]);
                     $temp_rooms[$metadate_id] = $_SESSION['sem_create_data']["metadata_termin"]["turnus_data"][$key]["room"];
                     $temp_resources[$metadate_id] = $_SESSION['sem_create_data']["metadata_termin"]["turnus_data"][$key]["resource_id"];
@@ -1953,7 +1953,7 @@ if (($form == 6) && (Request::submitted('jump_next')))
                 $check_statement = DBManager::get()->prepare($query);
 
                 // Prepare statement that inserts the user as a deputy
-                $query = "INSERT INTO seminar_user (Seminar_id, user_id, status, 
+                $query = "INSERT INTO seminar_user (Seminar_id, user_id, status,
                                                     label, gruppe, mkdate, position, visible)
                           VALUES (?, ?, 'tutor', ?, ?, UNIX_TIMESTAMP(), ?, 'yes')";
                 $insert_statement = DBManager::get()->prepare($query);
@@ -1997,7 +1997,7 @@ if (($form == 6) && (Request::submitted('jump_next')))
             //Eintrag der zugelassen Studiengänge
             if ($_SESSION['sem_create_data']["sem_admission"] && $_SESSION['sem_create_data']["sem_admission"] != 3) {
                 if (is_array($_SESSION['sem_create_data']["sem_studg"])){
-                    $query = "INSERT INTO admission_seminar_studiengang 
+                    $query = "INSERT INTO admission_seminar_studiengang
                               VALUES (?, ?, ?)";
                     $insert_statement = DBManager::get()->prepare($query);
 
@@ -2099,7 +2099,7 @@ if (($form == 6) && (Request::submitted('jump_next')))
             if ($_SESSION['sem_create_data']["modules_list"]["scm"]){
                 $_SESSION['sem_create_data']["sem_scm_name"] = ($SCM_PRESET[1]['name'] ? $SCM_PRESET[1]['name'] : _("Informationen"));
                 $_SESSION['sem_create_data']["sem_scm_id"] = md5(uniqid(rand()));
-                
+
                 $query = "INSERT INTO scm (scm_id, tab_name, range_id, user_id, content, mkdate, chdate)
                           VALUES (?, ?, ?, ?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())";
                 $statement = DBManager::get()->prepare($query);
@@ -3225,7 +3225,7 @@ if ($level == 3) {
                                         if ($i>0) echo "<hr>\n";
                                         echo '&nbsp; <font size=-1><select name="term_turnus_date[', $i, ']">';
                                         $ttd = (empty($_SESSION['sem_create_data']["term_turnus_date"][$i]))? 1 : $_SESSION['sem_create_data']["term_turnus_date"][$i];
-                                        for($kk = 0; $kk <= 6; $kk++ ){
+                                        for($kk = 1; $kk <= 7; $kk++ ){
                                             echo '<option ', (($kk == $ttd)? 'selected ':'');
                                             echo 'value="',$kk,'">';
                                             switch ($kk){
@@ -3234,7 +3234,7 @@ if ($level == 3) {
                                                 case 4: echo _("Donnerstag"); break;
                                                 case 5: echo _("Freitag"); break;
                                                 case 6: echo _("Samstag"); break;
-                                                case 0: echo _("Sonntag"); break;
+                                                case 7: echo _("Sonntag"); break;
                                                 case 1:
                                                 default: echo _("Montag");
                                             }

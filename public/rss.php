@@ -29,8 +29,8 @@ ob_end_clean();
 ob_start();
 require_once('lib/showNews.inc.php');
 if (get_config('NEWS_RSS_EXPORT_ENABLE')){
-    $range = StudipNews::GetRangeFromRssID($_REQUEST['id']);
-    if (is_array($range)){
+    $range = StudipNews::GetRangeFromRssID(Request::optionArray('id'));
+    if (!empty($range)){
         show_rss_news($range['range_id'], $range['range_type']);
     } else {
         header("Content-type: text/xml; charset=utf-8");

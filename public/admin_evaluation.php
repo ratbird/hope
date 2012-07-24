@@ -83,7 +83,7 @@ if ($list || $view) {
 if (($SessSemName[1]) && ($view == "eval_sem") || ($view == "eval_inst"))
     $the_range = $SessSemName[1];
 else
-    $the_range = $_REQUEST['rangeID'];
+    $the_range = Request::option('range_id');
 
 if ($the_range){
     if (get_Username($the_range))

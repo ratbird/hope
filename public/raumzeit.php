@@ -42,7 +42,7 @@ if ($list) {
     unset($seminar_id);
 }
 
-if (isset($_REQUEST['seminar_id'])) {
+if (Request::option('seminar_id')) {
     URLHelper::bindLinkParam('seminar_id', $seminar_id);
 }
 
@@ -111,14 +111,16 @@ if (LockRules::Check($id, 'room_time')) {
 
 // what to do with the text-field
 if ($GLOBALS['RESOURCES_ENABLE'] && $resList->numberOfRooms()) {
-    if ( ($_REQUEST['freeRoomText'] != '' && !in_array($_REQUEST['room'], words('nothing nochange'))) || ($_REQUEST['freeRoomText_sd'] != '' && !in_array($_REQUEST['room_sd'], words('nothing nochange'))) ) {
+    $room=Request::quoted('room');
+    $room_sd = Request::quoted('room_sd');
+    if ( (Request::quoted('freeRoomText') != '' && !in_array($room, words('nothing nochange'))) || (Request::quoted('freeRoomText_sd') != '' && !in_array($room_sd, words('nothing nochange'))) ) {
         $sem->createError("Sie k&ouml;nnen nur eine freie Raumangabe machen, wenn Sie \"keine Buchung, nur Textangabe\" ausw&auml;hlen!");
         unset($_REQUEST['freeRoomText']);
         unset($_REQUEST['room']);
         unset($_REQUEST['freeRoomText_sd']);
         unset($_REQUEST['room_sd']);
         unset($cmd);
-        $open_close_id = $_REQUEST['singleDateID'];
+        $open_close_id = Request::quoted('singleDateID');
         $cmd = 'open';
     }
 }
@@ -396,15 +398,15 @@ jQuery(function () {
             ?>
                 <tr>
                     <?
-                    if (isset($_REQUEST['day'])) {
-                        $tpl['day'] = $_REQUEST['day'];
+                    if (Request::quoted('day')) {
+                        $tpl['day'] = Request::quoted('day');
                     } else {
                         $tpl['day'] = 1;
                     }
-                    $tpl['start_stunde'] = $_REQUEST['start_stunde'];
-                    $tpl['start_minute'] = $_REQUEST['start_minute'];
-                    $tpl['end_stunde'] = $_REQUEST['end_stunde'];
-                    $tpl['end_minute'] = $_REQUEST['end_minute'];
+                    $tpl['start_stunde'] = Request::quoted('start_stunde');
+                    $tpl['start_minute'] = Request::quoted('start_minute');
+                    $tpl['end_stunde'] = Request::quoted('end_stunde');
+                    $tpl['end_minute'] = Request::quoted('end_minute');
                     include('lib/raumzeit/templates/addcycle.tpl')
                     ?>
                 </tr>

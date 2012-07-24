@@ -66,7 +66,7 @@ $st->execute(array($_SESSION['SessionSeminar']));
 
 /* ---------------------------------- */
 $username = Request::quoted('username');
-$cmd = Request::quoted('cmd');
+$cmd = Request::option('cmd');
 
 if ($cmd == "make_me_visible" && !$perm->have_studip_perm('tutor',$SessSemName[1])) {
     if (Request::option('mode') == "participant") {
@@ -120,7 +120,7 @@ $subject = ($result == '')
 if (Request::submitted('do_send_msg') && Request::intArray('send_msg') && Seminar_Session::check_ticket(Request::option('studipticket')) && !LockRules::Check($id, 'participants')){
         $post = NULL;
         $sms_data = array();
-        $send_msg = array_keys($_REQUEST['send_msg']);
+        $send_msg = array_keys(Request::intArray('send_msg'));
         page_close(NULL);
 
         header('Location: '.URLHelper::getURL('sms_send.php', array('sms_source_page' => 'teilnehmer.php?cid=' .$_SESSION['SessionSeminar'], 'subject' => $subject, 'tmpsavesnd' => 1, 'rec_uname' => $send_msg)));
@@ -252,15 +252,15 @@ if (Seminar_Session::check_ticket(Request::option('studipticket')) && !LockRules
     }
 
     // Hier will jemand die Karriereleiter rauf...
-
-    if ( ($cmd == "pleasure" && $username) || (Request::submitted('do_autor_to_tutor') && is_array($_REQUEST['autor_to_tutor'])) ){
+    $autor_to_tutor = Request::getArray('autor_to_tutor');
+    if ( ($cmd == "pleasure" && $username) || (Request::submitted('do_autor_to_tutor') && !empty($autor_to_tutor)) ){
         //erst mal sehen, ob er hier wirklich Dozent ist... Tutoren d&uuml;rfen andere nicht zu Tutoren befoerdern!
         if ($rechte AND $SemUserStatus != "tutor")  {
             $msgs = array();
             if ($cmd == "pleasure"){
                 $pleasure = array($username);
             } else {
-                $pleasure = (is_array($_REQUEST['autor_to_tutor']) ? array_keys($_REQUEST['autor_to_tutor']) : array());
+                $pleasure = (!empty($autor_to_tutor) ? array_keys($autor_to_tutor) : array());
             }
 
             $query = "SELECT {$_fullname_sql['full']} AS fullname, user_id
@@ -301,14 +301,14 @@ if (Seminar_Session::check_ticket(Request::option('studipticket')) && !LockRules
 
     // jemand ist der anspruchsvollen Aufgabe eines Tutors nicht gerecht geworden...
 
-    if ( ($cmd == "pain" && $username) || (Request::submitted('do_tutor_to_autor') && is_array($_REQUEST['tutor_to_autor'])) ){
+    if ( ($cmd == "pain" && $username) || (Request::submitted('do_tutor_to_autor') && !empty($autor_to_tutor)) ){
         //erst mal sehen, ob er hier wirklich Dozent ist... Tutoren d&uuml;rfen andere Tutoren nicht rauskicken!
         if ($rechte AND $SemUserStatus != "tutor") {
             $msgs = array();
             if ($cmd == "pain"){
                 $pain = array($username);
             } else {
-                $pain = (is_array($_REQUEST['tutor_to_autor']) ? array_keys($_REQUEST['tutor_to_autor']) : array());
+                $pain = (!empty($autor_to_tutor) ? array_keys($autor_to_tutor) : array());
             }
 
             $query = "SELECT {$_fullname_sql['full']} AS fullname, user_id
@@ -352,15 +352,15 @@ if (Seminar_Session::check_ticket(Request::option('studipticket')) && !LockRules
     }
 
     // jemand ist zu bloede, sein Seminar selbst zu abbonieren...
-
-    if ( ($cmd == "schreiben" && $username) || (Request::submitted('do_user_to_autor') && is_array($_REQUEST['user_to_autor'])) ){
+    $user_to_autor = Request::getArray('user_to_autor');
+    if ( ($cmd == "schreiben" && $username) || (Request::submitted('do_user_to_autor') && !empty($user_to_autor)) ){
         //erst mal sehen, ob er hier wirklich Dozent ist...
         if ($rechte) {
             $msgs = array();
             if ($cmd == "schreiben"){
                 $schreiben = array($username);
             } else {
-                $schreiben = (is_array($_REQUEST['user_to_autor']) ? array_keys($_REQUEST['user_to_autor']) : array());
+                $schreiben = (!empty($user_to_autor) ? array_keys($user_to_autor) : array());
             }
 
             $query = "SELECT {$_fullname_sql['full']} AS fullname, user_id
@@ -399,14 +399,14 @@ if (Seminar_Session::check_ticket(Request::option('studipticket')) && !LockRules
 
     // jemand sollte erst mal das Maul halten...
 
-    if ( ($cmd == "lesen" && $username) || (Request::submitted('do_autor_to_user') && is_array($_REQUEST['autor_to_user'])) ){
+    if ( ($cmd == "lesen" && $username) || (Request::submitted('do_autor_to_user') && !empty($user_to_autor)) ){
         //erst mal sehen, ob er hier wirklich Dozent ist...
         if ($rechte) {
             $msgs = array();
             if ($cmd == "lesen"){
                 $lesen = array($username);
             } else {
-                $lesen = (is_array($_REQUEST['autor_to_user']) ? array_keys($_REQUEST['autor_to_user']) : array());
+                $lesen = (!empty($user_to_autor) ? array_keys($user_to_autor) : array());
             }
 
             $query = "SELECT {$_fullname_sql['full']} AS fullname, user_id
@@ -444,15 +444,15 @@ if (Seminar_Session::check_ticket(Request::option('studipticket')) && !LockRules
     }
 
     // und tschuess...
-
-    if ( ($cmd == "raus" && $username) || (Request::submitted('do_user_to_null') && is_array($_REQUEST['user_to_null'])) ){
+    $user_to_null = Request::getArray('user_to_null');
+    if ( ($cmd == "raus" && $username) || (Request::submitted('do_user_to_null') && !empty($user_to_null)) ){
         //erst mal sehen, ob er hier wirklich Dozent ist...
         if ($rechte) {
             $msgs = array();
             if ($cmd == "raus"){
                 $raus = array($username);
             } else {
-                $raus = (is_array($_REQUEST['user_to_null']) ? array_keys($_REQUEST['user_to_null']) : array());
+                $raus = (!empty($user_to_null) ? array_keys($user_to_null) : array());
             }
 
             $query = "SELECT {$_fullname_sql['full']} AS fullname, user_id
@@ -496,16 +496,16 @@ if (Seminar_Session::check_ticket(Request::option('studipticket')) && !LockRules
         }
         else $msg ="error§" . _("Sie haben leider nicht die notwendige Berechtigung für diese Aktion.") . "§";
     }
-
+    $admission_delete = Request::getArray('admission_delete');
     //aus der Anmelde- oder Warteliste entfernen
-    if ( ($cmd == "admission_raus" && $username)  || (Request::submitted('do_admission_delete') && is_array($_REQUEST['admission_delete']) ) ) {
+    if ( ($cmd == "admission_raus" && $username)  || (Request::submitted('do_admission_delete') && !empty($admission_delete) ) ) {
         //erst mal sehen, ob er hier wirklich Dozent ist...
         if ($rechte) {
             $msgs = array();
             if ($cmd == "admission_raus"){
                 $adm_delete[] = $username;
             } else {
-                $adm_delete = (is_array($_REQUEST['admission_delete']) ? array_keys($_REQUEST['admission_delete']) : array());
+                $adm_delete = (!empty($admission_delete) ? array_keys($admission_delete) : array());
             }
 
             $query = "SELECT {$_fullname_sql['full']} AS fullname, user_id
@@ -551,19 +551,21 @@ if (Seminar_Session::check_ticket(Request::option('studipticket')) && !LockRules
             $msg ="error§" . _("Sie haben leider nicht die notwendige Berechtigung für diese Aktion.") . "§";
         }
     }
-    if(is_array($_REQUEST['admission_rein'])){
+    $admission_rein = Request::getArray('admission_rein');
+    if(!empty($admission_rein)){
         $cmd = 'admission_rein';
-        $username = key($_REQUEST['admission_rein']);
+        $username = key($admission_rein);
     }
+    $admission_insert == Request::getArray('admission_insert');
     //aus der Anmelde- oder Warteliste in die Veranstaltung hochstufen / aus der freien Suche als Tutoren oder Autoren eintragen
-    if ((Request::submitted('do_admission_insert') && is_array($_REQUEST['admission_insert'])) || (($cmd ==  "admission_rein" || $cmd == "add_user") && $username)){
+    if ((Request::submitted('do_admission_insert') && !empty($admission_insert)) || (($cmd ==  "admission_rein" || $cmd == "add_user") && $username)){
         //erst mal sehen, ob er hier wirklich Dozent ist...
         if ($rechte) {
             $msgs = array();
             if ($cmd == "admission_rein" || $cmd == "add_user"){
                 $user_add[] = $username;
             } else {
-                $user_add = (is_array($_REQUEST['admission_insert']) ? array_keys($_REQUEST['admission_insert']) : array());
+                $user_add = (!empty($admission_insert) ? array_keys($admission_insert) : array());
             }
 
             $query = "SELECT {$_fullname_sql['full']} AS fullname, user_id, perms
@@ -603,7 +605,7 @@ if (Seminar_Session::check_ticket(Request::option('studipticket')) && !LockRules
                     $status = 'autor';
                 }
 
-                $admission_user = insert_seminar_user($id, $userchange, $status, (Request::int('accepted') || $_REQUEST['consider_contingent'] ? TRUE : FALSE), $_REQUEST['consider_contingent']);
+                $admission_user = insert_seminar_user($id, $userchange, $status, (Request::int('accepted') || Request::option('consider_contingent') ? TRUE : FALSE), Request::option('consider_contingent'));
                 //Only if user was on the waiting list
                 if($admission_user){
                     setTempLanguage($userchange);
@@ -635,7 +637,7 @@ if (Seminar_Session::check_ticket(Request::option('studipticket')) && !LockRules
                         $msg = "msg§" . sprintf(_("NutzerIn %s wurde mit dem Status <b>%s</b> endgültig akzeptiert und damit in die Veranstaltung aufgenommen."), htmlReady(join(', ', $msgs)), $status) . "§";
                     }
                 }
-            } else if($_REQUEST['consider_contingent']){
+            } else if(Request::option('consider_contingent')){
                 $msg = "error§" . _("Es stehen keine weiteren Plätze mehr im Teilnehmerkontingent zur Verfügung.") . "§";
             }
         } else {
@@ -649,25 +651,26 @@ if (Seminar_Session::check_ticket(Request::option('studipticket')) && !LockRules
         $csv_count_insert = 0;
         $csv_count_multiple = 0;
         $df_id = null;
-        if ($_REQUEST['csv_import_format'] && !in_array($_REQUEST['csv_import_format'], words('realname username'))) {
+
+        if (Request::get('csv_import_format') && !in_array(Request::get('csv_import_format'), words('realname username'))) {
             //check accessible datafields for ("user" => 1, "autor" => 2, "tutor" => 4, "dozent" => 8)
             foreach(DataFieldStructure::getDataFieldStructures('user', (1|2|4|8), true) as $df) {
                 if ($df->accessAllowed($perm) && in_array($df->getId(), $TEILNEHMER_IMPORT_DATAFIELDS)
-                    && $df->getId() == $_REQUEST['csv_import_format']) {
+                    && $df->getId() == Request::quoted('csv_import_format')) {
                     $df_id = $df->getId();
                     break;
                 }
             }
         }
-        if ($_REQUEST['csv_import']) {
-            $csv_lines = preg_split('/(\n\r|\r\n|\n|\r)/', trim($_REQUEST['csv_import']));
+        if (Request::get('csv_import')) {
+            $csv_lines = preg_split('/(\n\r|\r\n|\n|\r)/', trim(Request::get('csv_import')));
             foreach ($csv_lines as $csv_line) {
                 $csv_name = preg_split('/[,\t]/', substr($csv_line, 0, 100),-1,PREG_SPLIT_NO_EMPTY);
                 $csv_nachname = trim($csv_name[0]);
                 $csv_vorname = trim($csv_name[1]);
                 if ($csv_nachname){
                     $parameters = array();
-                    if($_REQUEST['csv_import_format'] == 'realname'){
+                    if(Request::quoted('csv_import_format') == 'realname'){
                         $query = "SELECT a.user_id, username, {$_fullname_sql['full_rev']} AS fullname,
                                          perms, b.Seminar_id AS is_present
                                   FROM auth_user_md5 AS a
@@ -679,7 +682,7 @@ if (Seminar_Session::check_ticket(Request::option('studipticket')) && !LockRules
                         $parameters['seminar_id'] = $SessSemName[1];
                         $parameters['nachname']   = $csv_nachname;
                         $parameters['vorname']    = $csv_vorname ?: null;
-                    } elseif ($_REQUEST['csv_import_format'] == 'username') {
+                    } elseif (Request::quoted('csv_import_format') == 'username') {
                         $query = "SELECT a.user_id, username, {$_fullname_sql['full_rev']} AS fullname,
                                          perms, b.Seminar_id AS is_present
                                   FROM auth_user_md5 AS a
@@ -723,7 +726,8 @@ if (Seminar_Session::check_ticket(Request::option('studipticket')) && !LockRules
                     } elseif (count($csv_users) > 0) {
                         $row = reset($csv_users);
                         if(!$row['is_present']){
-                            if(insert_seminar_user($id, $row['user_id'], 'autor', isset($_REQUEST['consider_contingent']), $_REQUEST['consider_contingent'])){
+                            $consider_contingent = Request::option('consider_contingent');
+                            if(insert_seminar_user($id, $row['user_id'], 'autor', isset($consider_contingent), $consider_contingent)){
                                 $csv_count_insert++;
                                 setTempLanguage($userchange);
                                 if ($SEM_CLASS[$SEM_TYPE[$SessSemName["art_num"]]["class"]]["workgroup_mode"]) {
@@ -733,7 +737,7 @@ if (Seminar_Session::check_ticket(Request::option('studipticket')) && !LockRules
                                 }
                                 restoreLanguage();
                                 $messaging->insert_message(mysql_escape_string($message), $row['username'], "____%system%____", FALSE, FALSE, "1", FALSE, _("Systemnachricht:")." "._("Eintragung in Veranstaltung"), TRUE);
-                            } elseif (isset($_REQUEST['consider_contingent'])){
+                            } elseif (isset($consider_contingent)){
                                 $csv_count_contingent_full++;
                             }
                         } else {
@@ -746,10 +750,12 @@ if (Seminar_Session::check_ticket(Request::option('studipticket')) && !LockRules
                 }
             }
         }
-        if (sizeof($_REQUEST['selected_users'])) {
-            foreach ($_REQUEST['selected_users'] as $selected_user) {
+        $consider_contingent = Request::option('consider_contingent');
+        $selected_users = Request::getArray('selected_users');
+        if (sizeof($selected_users)) {
+            foreach ($selected_users as $selected_user) {
                 if ($selected_user) {
-                    if(insert_seminar_user($id, get_userid($selected_user), 'autor', isset($_REQUEST['consider_contingent']), $_REQUEST['consider_contingent'])){
+                    if(insert_seminar_user($id, get_userid($selected_user), 'autor', isset($consider_contingent), $consider_contingent)){
                         $csv_count_insert++;
                         setTempLanguage($userchange);
                         if ($SEM_CLASS[$SEM_TYPE[$SessSemName["art_num"]]["class"]]["workgroup_mode"]) {
@@ -759,7 +765,7 @@ if (Seminar_Session::check_ticket(Request::option('studipticket')) && !LockRules
                         }
                         restoreLanguage();
                         $messaging->insert_message(mysql_escape_string($message), $selected_user, "____%system%____", FALSE, FALSE, "1", FALSE, _("Systemnachricht:")." "._("Eintragung in Veranstaltung"), TRUE);
-                    } elseif (isset($_REQUEST['consider_contingent'])){
+                    } elseif (isset($consider_contingent)){
                         $csv_count_contingent_full++;
                     }
                 }
@@ -769,7 +775,7 @@ if (Seminar_Session::check_ticket(Request::option('studipticket')) && !LockRules
         if (!$csv_count_multiple) {
             $cmd = '';
         }
-        if (!sizeof($csv_lines) && !sizeof($_REQUEST['selected_users'])) {
+        if (!sizeof($csv_lines) && !sizeof($selected_users)) {
             $msg = 'error§' . _("Keine NutzerIn gefunden!") . '§';
             $cmd = '';
         } else {
@@ -1851,7 +1857,7 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
                 echo '<option value="">'._("Kein Kontingent").'</option>';
                 if(is_array($sem->admission_studiengang)){
                     foreach($sem->admission_studiengang as $studiengang => $data){
-                        echo '<option value="'.$studiengang.'" '.($_REQUEST['consider_contingent'] == $studiengang ? 'selected' : '').'>'.htmlReady($data['name'] . ' ' . '('.$sem->getFreeAdmissionSeats($studiengang).')').'</option>';
+                        echo '<option value="'.$studiengang.'" '.(Request::option('consider_contingent') == $studiengang ? 'selected' : '').'>'.htmlReady($data['name'] . ' ' . '('.$sem->getFreeAdmissionSeats($studiengang).')').'</option>';
                     }
                 }
                 echo '</select></label></font>';
@@ -1910,7 +1916,7 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
                 <option value=""><?= _("Kein Kontingent") ?></option>
                 <? if(is_array($sem->admission_studiengang))
                     foreach($sem->admission_studiengang as $studiengang => $data) : ?>
-                    <option value="<?= $studiengang ?>" <?= $_REQUEST['consider_contingent'] == $studiengang ? 'selected' : '' ?>>
+                    <option value="<?= $studiengang ?>" <?= Request::option('consider_contingent') == $studiengang ? 'selected' : '' ?>>
                         <?= htmlReady($data['name'] . ' ' . '('.$sem->getFreeAdmissionSeats($studiengang).')') ?>
                     </option>
                 <? endforeach ?>
@@ -1955,9 +1961,9 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
         echo '<div style="margin-top:10px;margin-bottom:10px;">' . _("Eingabeformat:");
         echo '<select style="margin-left:10px;" name="csv_import_format">';
         echo '<option value="realname">'._("Nachname, Vorname").' &crarr;</option>';
-        echo '<option value="username" '.($_REQUEST['csv_import_format'] == 'username' ? 'selected': '').'>'. _("Nutzername"). '&crarr;</option>';
+        echo '<option value="username" '.(Request::get('csv_import_format') == 'username' ? 'selected': '').'>'. _("Nutzername"). '&crarr;</option>';
         foreach ($accessible_df as $df) {
-            echo '<option value="' . $df->getId() . '" '.($_REQUEST['csv_import_format'] ==  $df->getId()? 'selected': '').'>'. htmlReady($df->getName()) . '&crarr;</option>';
+            echo '<option value="' . $df->getId() . '" '.(Request::get('csv_import_format') ==  $df->getId()? 'selected': '').'>'. htmlReady($df->getName()) . '&crarr;</option>';
         }
         echo '</select></div>';
         echo "<textarea name=\"csv_import\" rows=\"6\" cols=\"50\">";
@@ -1972,7 +1978,7 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
             echo '<option value="">'._("Kein Kontingent").'</option>';
             if(is_array($sem->admission_studiengang)) {
                 foreach($sem->admission_studiengang as $studiengang => $data){
-                    echo '<option value="'.$studiengang.'" '.($_REQUEST['consider_contingent'] == $studiengang ? 'selected' : '').'>'.htmlReady($data['name'] . ' ' . '('.$sem->getFreeAdmissionSeats($studiengang).')').'</option>';
+                    echo '<option value="'.$studiengang.'" '.(Request::option('consider_contingent') == $studiengang ? 'selected' : '').'>'.htmlReady($data['name'] . ' ' . '('.$sem->getFreeAdmissionSeats($studiengang).')').'</option>';
                 }
             }
             echo '</select></label></font>';
@@ -2017,7 +2023,7 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
                 echo '<option value="">'._("Kein Kontingent").'</option>';
                 if(is_array($sem->admission_studiengang)){
                     foreach($sem->admission_studiengang as $studiengang => $data){
-                        echo '<option value="'.$studiengang.'" '.($_REQUEST['consider_contingent'] == $studiengang ? 'selected' : '').'>'.htmlReady($data['name'] . ' ' . '('.$sem->getFreeAdmissionSeats($studiengang).')').'</option>';
+                        echo '<option value="'.$studiengang.'" '.(Request::option('consider_contingent') == $studiengang ? 'selected' : '').'>'.htmlReady($data['name'] . ' ' . '('.$sem->getFreeAdmissionSeats($studiengang).')').'</option>';
                     }
                 }
                 echo '</select></label></font>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ';

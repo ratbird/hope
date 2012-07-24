@@ -34,8 +34,8 @@ if (get_config('CHAT_ENABLE')) {
     include_once $RELATIVE_PATH_CHAT."/chat_func_inc.php";
     $chatServer = ChatServer::GetInstance($GLOBALS['CHAT_SERVER_NAME']);
     $chatServer->caching = true;
-    if ($_REQUEST['kill_chat']){
-        chat_kill_chat($_REQUEST['kill_chat']);
+    if (Request::option('kill_chat')){
+        chat_kill_chat(Request::option('kill_chat'));
     }
     $sms = new messaging();
 } else {
@@ -49,7 +49,7 @@ function print_chat_info($chatids)
 
     for ($i = 0; $i < count($chatids); ++$i) {
         $chat_id = $chatids[$i];
-        if ($chatServer->isActiveUser($_REQUEST['search_user'], $chat_id)) {
+        if ($chatServer->isActiveUser(Request::quoted('search_user'), $chat_id)) {
             $_SESSION['chat_online_id'][$chat_id] = true;
         }
         $chatter = $chatServer->isActiveChat($chat_id);
@@ -76,10 +76,10 @@ Navigation::activateItem('/community/chat');
 SkipLinks::addIndex(_("Allgemeiner Chatraum"), 'chat_studip', 100);
 SkipLinks::addIndex(_('Persönlicher Chatraum'), 'chat_own');
 
-if (!$_REQUEST['chat_id'] && !$_REQUEST['kill_chat']){
+if (!Request::option('chat_id') && !Request::option('kill_chat')){
     $_SESSION['chat_online_id'] = null;
 } else {
-    $_SESSION['chat_online_id'][$_REQUEST['chat_id']] = ($_REQUEST['cmd'] == "open") ? true : false;
+    $_SESSION['chat_online_id'][Request::option('chat_id')] = (Request::option('cmd') == "open") ? true : false;
 }
 $chatter = $chatServer->getAllChatUsers();
 $active_chats = count($chatServer->chatDetail);

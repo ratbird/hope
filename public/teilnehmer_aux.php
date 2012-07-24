@@ -41,7 +41,7 @@ checkObjectModule("participants");
 PageLayout::setTitle($SessSemName["header_line"]. " - " . _("Zusatzangaben"));
 Navigation::activateItem('/course/members/aux_data');
 
-if (!$_REQUEST['display_type']) {
+if (!Request::quoted('display_type')) {
     // Start of Output
     include ("lib/include/html_head.inc.php"); // Output of html head
     include ("lib/include/header.php");   //hier wird der "Kopf" nachgeladen
@@ -336,7 +336,7 @@ function aux_enter_data() {
 $ct = new ContainerTable(array('width' => '100%', 'class' => 'blank', 'role' => 'main'));
 $zt = new ZebraTable(array('width' => '100%', 'padding' => '2', 'id' => 'main_content'));
 
-switch ($_REQUEST['display_type']) {
+switch (Request::quoted('display_type')) {
     case 'rtf':
         aux_rtf();
         page_close(NULL);

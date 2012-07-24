@@ -564,12 +564,12 @@ class InstanceStmControl {
         // FILL_GROUP FORMULAR
         elseif ($this->fill_group_form->IsSended()
         || $this->sem_browse->search_obj->search_button_clicked
-        || $_REQUEST["send_from_search"]) {
+        || Request::get("send_from_search")) {
             if ($this->fill_group_form->IsClicked("continue")) {
                 $vis->showSelElementgroupForm($this->sel_elementgroup_form,$this->abs_stm, $this->inst_stm);
             }
-            elseif($_REQUEST["send_from_search"]) {
-                $this->cur_seminar = Seminar::GetInstance($_REQUEST["sem_id"]);
+            elseif(Request::get("send_from_search")) {
+                $this->cur_seminar = Seminar::GetInstance(Request::option("sem_id"));
                 $vis->showFillGroupForm($this->fill_group_form, $this->sel_group, $this->sem_browse, $this->inst_stm, $_SESSION['stm_inst_data']['sel_group'], $this->cur_seminar);
             }
             else

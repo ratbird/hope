@@ -373,12 +373,12 @@ if(!isset($_SESSION['show_admission']['check_admission'])){
 }
 
 if(Request::submitted('choose_institut')){
-    if(isset($_REQUEST['select_sem'])){
-        $_SESSION['_default_sem'] = $_REQUEST['select_sem'];
+    if(Request::get('select_sem')){
+        $_SESSION['_default_sem'] = Request::get('select_sem');
     }
-    $_SESSION['show_admission']['check_admission'] = isset($_REQUEST['check_admission']);
-    $_SESSION['show_admission']['check_prelim'] = isset($_REQUEST['check_prelim']);
-    $_SESSION['show_admission']['sem_name_prefix'] = trim(stripslashes($_REQUEST['sem_name_prefix']));
+    $_SESSION['show_admission']['check_admission'] = Request::option('check_admission');
+    $_SESSION['show_admission']['check_prelim'] = Request::option('check_prelim');
+    $_SESSION['show_admission']['sem_name_prefix'] = trim(Request::get('sem_name_prefix'));
 }
 
 if ($_SESSION['_default_sem']){
@@ -405,44 +405,46 @@ if (!is_array($_my_inst)){
     if(!$_SESSION['show_admission']['institut_id']){
         $_SESSION['show_admission']['institut_id'] = $_my_inst_arr[0];
     }
-    if($_REQUEST['institut_id']){
-        $_SESSION['show_admission']['institut_id'] = ($_my_inst[$_REQUEST['institut_id']]) ? $_REQUEST['institut_id'] : $_my_inst_arr[0];
+    if(Request::option('institut_id')){
+        $_SESSION['show_admission']['institut_id'] = ($_my_inst[Request::option('institut_id')]) ? Request::option('institut_id') : $_my_inst_arr[0];
     }
 }
-if(Request::submitted('admissiongroupdelete') && isset($_REQUEST['group_id'])){
+if(Request::submitted('admissiongroupdelete') && Request::option('group_id')){
     $msg[] = array('info', _("Wollen Sie die Gruppierung f&uuml;r die ausgew&auml;hlte Gruppe aufl&ouml;sen?")
                             . '<br>' . _("Beachten Sie, dass f&uuml;r bereits eingetragene / auf der Warteliste stehende TeilnehmerInnen keine &Auml;nderungen vorgenommen werden.")
                             . '<form action="'.URLHelper::getLink().'" method="post">'
                             . CSRFProtection::tokenTag()
                             . '<input type="hidden" name="group_sem_x" value="1"><div style="padding:3px;">'
-                            . '<input type="hidden" name="group_id" value="'.$_REQUEST['group_id'].'">'
+                            . '<input type="hidden" name="group_id" value="'.Request::option('group_id').'">'
                             . Button::createAccept(_('JA!'), 'admissiongroupreallydelete', array('title' => _("Gruppe auflösen")))
                             . '&nbsp;'
                             . Button::createCancel(_('NEIN!'), array('title' => _('abbrechen')))
                             . '</div></form>');
 }
-if(Request::submitted('group_sem') && (count($_REQUEST['gruppe']) > 1 || isset($_REQUEST['group_id'])) && !Request::submitted('admissiongroupcancel')){
-    if(isset($_REQUEST['group_id'])){
-            $group_obj = new StudipAdmissionGroup($_REQUEST['group_id']);
+$gruppe = Request::quotedArray('gruppe');
+if(Request::submitted('group_sem') && ($gruppe > 1 || Request::option('group_id')) && !Request::submitted('admissiongroupcancel')){
+    if(Request::option('group_id')){
+            $group_obj = new StudipAdmissionGroup(Request::option('group_id'));
     } else {
         $group_obj = new StudipAdmissionGroup();
-        foreach($_REQUEST['gruppe'] as $sid){
+        
+        foreach($gruppe as $sid){
             $group_obj->addMember($sid);
         }
     }
     if(Request::submitted('admissiongroupchange')){
-        $group_obj->setValue('name', trim(stripslashes($_REQUEST['admission_group_name'])));
-        $group_obj->setValue('status', (int)$_REQUEST['admission_group_status']);
-        $group_obj->setUniqueMemberValue('admission_type', (int)$_REQUEST['admission_group_type']);
+        $group_obj->setValue('name', trim(Request::get('admission_group_name')));
+        $group_obj->setValue('status', (int)Request::int('admission_group_status'));
+        $group_obj->setUniqueMemberValue('admission_type', (int)Request::int('admission_group_type'));
         $group_obj->setUniqueMemberValue('read_level', 3);
         $group_obj->setUniqueMemberValue('write_level', 3);
         $admission_times = array();
         $ok = true;
         $do_admission_update = false;
-        if(isset($_REQUEST['admission_change_enable_quota'])){
-            $group_obj->setUniqueMemberValue('admission_enable_quota', $_REQUEST['admission_enable_quota']);
+        if(Request::get('admission_change_enable_quota')){
+            $group_obj->setUniqueMemberValue('admission_enable_quota', Request::quoted('admission_enable_quota'));
         }
-        if(isset($_REQUEST['admission_change_endtime'])){
+        if(Request::get('admission_change_endtime')){
             $admission_times["admission_endtime"] = '-1';
             if (!check_and_set_date(Request::option('adm_tag'), Request::option('adm_monat'), Request::option('adm_jahr'), Request::option('adm_stunde'), Request::option('adm_minute'), $admission_times, "admission_endtime")) {
                 $msg[] = array("error", _("Bitte geben Sie g&uuml;ltige Zeiten f&uuml;r das Ende Kontingente / Losdatum ein!"));
@@ -474,22 +476,22 @@ if(Request::submitted('group_sem') && (count($_REQUEST['gruppe']) > 1 || isset($
                 }
             }
         }
-        if(isset($_REQUEST['admission_change_starttime'])){
+        if(Request::get('admission_change_starttime')){
             $admission_times["admission_starttime"] = -1;
             if (!check_and_set_date(Request::option('adm_s_tag'), Request::option('adm_s_monat'), Request::option('adm_s_jahr'), Request::option('adm_s_stunde'), Request::option('adm_s_minute'), $admission_times, "admission_starttime")) {
                 $msg[] = array("error", _("Bitte geben Sie g&uuml;ltige Zeiten f&uuml;r das Startdatum für Anmeldungen ein!"));
                 $ok = false;
             }
         }
-        if(isset($_REQUEST['admission_change_endtime_sem'])){
+        if(Request::get('admission_change_endtime_sem')){
             $admission_times["admission_endtime_sem"] = -1;
             if (!check_and_set_date(Request::option('adm_e_tag'), Request::option('adm_e_monat'), Request::option('adm_e_jahr'), Request::option('adm_e_stunde'), Request::option('adm_e_minute'), $admission_times, "admission_endtime_sem")) {
                 $msg[] = array("error", _("Bitte geben Sie g&uuml;ltige Zeiten f&uuml;r das Enddatum für Anmeldungen ein!"));
                 $ok = false;
             }
         }
-        if(isset($_REQUEST['admission_change_turnout'])){
-            if($_REQUEST['admission_turnout'] < 1){
+        if(Request::get('admission_change_turnout')){
+            if(Request::quoted('admission_turnout') < 1){
                 $msg[] = array("error" , _("Wenn Sie die Teilnahmebeschr&auml;nkung benutzen wollen, m&uuml;ssen Sie wenigstens einen Teilnehmer zulassen."));
                 $ok = false;
             }
@@ -507,10 +509,10 @@ if(Request::submitted('group_sem') && (count($_REQUEST['gruppe']) > 1 || isset($
                 $group_obj->setUniqueMemberValue('admission_endtime_sem', $admission_times["admission_endtime_sem"]);
                 $msg[] = array('msg', sprintf(_("Das Enddatum für Anmeldungen wurde in allen Veranstaltungen geändert.")));
             }
-            if(isset($_REQUEST['admission_change_turnout'])){
-                $do_admission_update = (int)$_REQUEST['admission_turnout'] >= $group_obj->getUniqueMemberValue('admission_turnout');
-                $group_obj->setUniqueMemberValue('admission_turnout', (int)$_REQUEST['admission_turnout']);
-                $msg[] = array('msg', sprintf(_("Die Teilnehmeranzahl wurde in allen Veranstaltungen auf %s geändert."),(int)$_REQUEST['admission_turnout']));
+            if(Request::get('admission_change_turnout')){
+                $do_admission_update = (int)Request::int('admission_turnout') >= $group_obj->getUniqueMemberValue('admission_turnout');
+                $group_obj->setUniqueMemberValue('admission_turnout', (int)Request::int('admission_turnout'));
+                $msg[] = array('msg', sprintf(_("Die Teilnehmeranzahl wurde in allen Veranstaltungen auf %s geändert."),(int)Request::int('admission_turnout')));
             }
 
         }
@@ -557,13 +559,13 @@ if(Request::submitted('group_sem') && (count($_REQUEST['gruppe']) > 1 || isset($
     }
 }
 
-if(isset($_REQUEST['sortby'])){
+if(Request::get('sortby')){
     foreach($cols as $col){
-        if($_REQUEST['sortby'] == $col[2]){
-            if($_SESSION['show_admission']['sortby']['field'] == $_REQUEST['sortby']){
+        if(Request::quoted('sortby') == $col[2]){
+            if($_SESSION['show_admission']['sortby']['field'] == Request::quoted('sortby')){
                 $_SESSION['show_admission']['sortby']['direction'] = (int)!$_SESSION['show_admission']['sortby']['direction'];
             } else {
-                $_SESSION['show_admission']['sortby']['field'] = $_REQUEST['sortby'];
+                $_SESSION['show_admission']['sortby']['field'] = Request::quoted('sortby');
                 $_SESSION['show_admission']['sortby']['direction'] = 0;
             }
             break;
@@ -571,7 +573,7 @@ if(isset($_REQUEST['sortby'])){
     }
 }
 
-if ($_REQUEST['cmd'] == 'send_excel_sheet'){
+if (Request::option('cmd') == 'send_excel_sheet'){
     $tmpfile = basename(semadmission_create_result_xls(semadmission_get_data($seminare_condition)));
     if($tmpfile){
         header('Location: ' . getDownloadLink( $tmpfile, _("LaufendeAnmeldeverfahren.xls"), 4));

@@ -54,7 +54,7 @@ if (!$_SESSION['viewModeFilter']) {
 }
 
 if (Request::option('cmd') == 'changeViewMode') {
-    $_SESSION['viewModeFilter'] = $_REQUEST['newFilter'];
+    $_SESSION['viewModeFilter'] = Request::quoted('newFilter');
 }
 
 // expert view enabled ?

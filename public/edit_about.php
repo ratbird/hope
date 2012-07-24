@@ -126,9 +126,9 @@ if (check_ticket(Request::option('studipticket'))) {
     //wozu ??? siehe about::edit_leben()
     //$invalidEntries = parse_datafields($my_about->auth_user['user_id']);
 
-    if ($cmd == "edit_pers" && $_REQUEST['email1'] != '' && $my_about->auth_user["Email"] != $_REQUEST['email1']) {
-        if($_REQUEST['email1'] == $_REQUEST['email2']) {
-            $my_about->edit_email($_REQUEST['email1']);
+    if ($cmd == "edit_pers" && Request::quoted('email1') != '' && $my_about->auth_user["Email"] != Request::quoted('email1')) {
+        if(Request::quoted('email1') == Request::quoted('email2')) {
+            $my_about->edit_email(Request::quoted('email1'));
         } else {
             $my_about->msg.= "info§" . _('Die Wiederholung der E-Mail-Adresse stimmt nicht mit Ihrer Eingabe überein. Bitte überprüfen Sie Ihre Eingabe.'). '§';
         }
@@ -185,7 +185,7 @@ if (check_ticket(Request::option('studipticket'))) {
 
     //Default NICHT von Einrichtung Übernehmen
     if ($cmd == 'unset_default') {
-        $default_entries = DataFieldEntry::getDataFieldEntries($zw = array($my_about->auth_user['user_id'], $_REQUEST['cor_inst_id']));
+        $default_entries = DataFieldEntry::getDataFieldEntries($zw = array($my_about->auth_user['user_id'], Request::option('cor_inst_id')));
 
         $query = "UPDATE datafields_entries
                   SET content = ?
@@ -282,25 +282,25 @@ if (check_ticket(Request::option('studipticket'))) {
     //Veränderungen der pers. Daten
     if ($cmd == "edit_pers") {
         $new_password = '*****'; // ***** as in "don't change password"
-        if($_REQUEST['update_pw'] == 'on') {
-            if($_REQUEST['new_passwd_1'] != $_REQUEST['new_passwd_2']) {
+        if(Request::quoted('update_pw') == 'on') {
+            if(Request::quoted('new_passwd_1') != Request::quoted('new_passwd_2')) {
                 $my_about->msg.= 'info§'. _('Die Wiederholung Ihres Passwords stimmt nicht mit Ihrer Eingabe überrein. Bitte überprüfen Sie Ihre Eingabe.') . '§';
             } else {
-                $new_password = $_REQUEST['new_passwd_1'];
+                $new_password = Request::quoted('new_passwd_1');
             }
-        } else if($_REQUEST['new_passwd_2'] != '' && $_REQUEST['new_passwd_2'] != '*****') {
+        } else if(Request::quoted('new_passwd_2') != '' && Request::quoted('new_passwd_2') != '*****') {
             $my_about->msg.= 'info§'. _('Sie müssen den Haken bei "ändern" setzen, wenn Sie Ihr Passwort ändern wollen.') .'§';
         }
 
-        if($_REQUEST['password'] != $my_about->auth_user["username"])
+        if(Request::quoted('password') != $my_about->auth_user["username"])
             $my_about->edit_pers($new_password,
-                         $_REQUEST['new_username'],
-                         $_REQUEST['vorname'], $_REQUEST['nachname'],
-                         $_REQUEST['email'], $_REQUEST['geschlecht'],
-                         $_REQUEST['title_front'],
-                         $_REQUEST['title_front_chooser'],
-                         $_REQUEST['title_rear'], $_REQUEST['title_rear_chooser'],
-                         $_REQUEST['view']);
+                         Request::quoted('new_username'),
+                         Request::quoted('vorname'), Request::quoted('nachname'),
+                         Request::quoted('email'), Request::quoted('geschlecht'),
+                         Request::quoted('title_front'),
+                         Request::quoted('title_front_chooser'),
+                         Request::quoted('title_rear'), Request::quoted('title_rear_chooser'),
+                         Request::quoted('view'));
 
             if (($my_about->auth_user["username"] != Request::quoted('new_username')) && $my_about->logout_user == TRUE) {
                 $my_about->get_auth_user(Request::quoted('new_username'));   //username wurde geändert!
@@ -312,16 +312,16 @@ if (check_ticket(Request::option('studipticket'))) {
 
     if ($cmd=="edit_leben")  {
         if (get_config("ENABLE_SKYPE_INFO")) {
-            UserConfig::get($my_about->auth_user['user_id'])->store('SKYPE_NAME', preg_replace('/[^a-zA-Z0-9.,_-]/', '', $_REQUEST['skype_name']));
-            UserConfig::get($my_about->auth_user['user_id'])->store('SKYPE_ONLINE_STATUS', (int)$_REQUEST['skype_online_status']);
+            UserConfig::get($my_about->auth_user['user_id'])->store('SKYPE_NAME', preg_replace('/[^a-zA-Z0-9.,_-]/', '', Request::quoted('skype_name')));
+            UserConfig::get($my_about->auth_user['user_id'])->store('SKYPE_ONLINE_STATUS', (int)Request::int('skype_online_status'));
         }
 
         $my_about->edit_private(
-             $_REQUEST['telefon'], $_REQUEST['cell'], $_REQUEST['anschrift'],
-             $_REQUEST['home'], $_REQUEST['motto'], $_REQUEST['hobby']
+             Request::quoted('telefon'), Request::quoted('cell'), Request::quoted('anschrift'),
+             Request::quoted('home'), Request::quoted('motto'), Request::quoted('hobby')
         );
 
-        $invalidEntries = $my_about->edit_leben(Request::quoted('lebenslauf'),Request::quoted('schwerp'),Request::quoted('publi'),$view, $_REQUEST['datafields']);
+        $invalidEntries = $my_about->edit_leben(Request::quoted('lebenslauf'),Request::quoted('schwerp'),Request::quoted('publi'),$view, Request::quotedArray('datafields'));
         if (!empty($invalidEntries)) { // On error, erase other messages and create according error messages
             $my_about->msg = "";
             foreach ($invalidEntries as $entry) {
@@ -1280,16 +1280,16 @@ if ($view == 'Karriere') {
         $locked = false;
     }
     // a group has been chosen to be opened / closed
-    if ($_REQUEST['switch']) {
-        if ($_SESSION['edit_about_data']['open'] == $_REQUEST['switch']) {
+    if (Request::quoted('switch')) {
+        if ($_SESSION['edit_about_data']['open'] == Request::quoted('switch')) {
             $_SESSION['edit_about_data']['open'] = '';
         } else {
-            $_SESSION['edit_about_data']['open'] = $_REQUEST['switch'];
+            $_SESSION['edit_about_data']['open'] = Request::quoted('switch');
         }
     }
 
-    if ($_REQUEST['open']) {
-        $_SESSION['edit_about_data']['open'] = $_REQUEST['open'];
+    if (Request::quoted('open')) {
+        $_SESSION['edit_about_data']['open'] = Request::quoted('open');
     }
 
     echo '<tr><td class=blank>';

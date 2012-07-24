@@ -722,7 +722,7 @@ if ($form == 4 && Request::isPost()) {
 if ($form == 5 && Request::isPost()) {
 
     if(Request::submitted('toggle_admission_quota')){
-        $_SESSION['sem_create_data']["admission_enable_quota"] = (int)(Request::quoted("admission_enable_quota"));
+        $_SESSION['sem_create_data']["admission_enable_quota"] = (int)(Request::int("admission_enable_quota"));
         if(!$_SESSION['sem_create_data']["admission_enable_quota"]){
             $_SESSION['sem_create_data']["sem_admission_date"] = -1;
             $_SESSION['sem_create_data']["sem_admission_ratios_changed"] = false;
@@ -754,7 +754,7 @@ if ($form == 5 && Request::isPost()) {
     $_SESSION['sem_create_data']["sem_paytxt"] = Request::quoted('sem_paytxt');
     $_SESSION['sem_create_data']["sem_datafields"]='';
     $sem_datafields = Request::quotedArray('sem_datafields');
-    if (is_array($sem_datafields)) {
+    if (!empty($sem_datafields)) {
         foreach ($sem_datafields as $id => $df_values) {
             $struct = new DataFieldStructure(array("datafield_id"=>$id));
             $struct->load();

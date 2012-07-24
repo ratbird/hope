@@ -40,14 +40,14 @@ $path = $GLOBALS['STUDIP_BASE_PATH'].'/db/migrations';
 $verbose = false;
 $target = NULL;
 
-if (isset($_REQUEST['target'])) {
-    $target = (int) $_REQUEST['target'];
+if (Request::int('target')) {
+    $target = (int) Request::int('target');
 }
 
 $version = new DBSchemaVersion('studip');
 $migrator = new Migrator($path, $version, $verbose);
 
-if (isset($_REQUEST['start']) || isset($_REQUEST['start_x'])) {
+if (Request::submitted('start')) {
     set_time_limit(0);
     $migrator->migrate_to($target);
 }

@@ -321,7 +321,7 @@ class Course_BasicdataController extends AuthenticatedController
                         'html_value' => $datenfeld->getHTML("datafields"),
                         'display_value' => $datenfeld->getDisplayValue(),
                         'locked' => $locked,
-                        'description' => (!$datenfeld->isEditable()?("Diese Felder werden zentral durch die zuständigen Administratoren erfasst."):$datenfeld->structure->getDescription() )
+                        'description' => (!$datenfeld->isEditable()?("Diese Felder werden zentral durch die zuständigen Administratoren erfasst."):$datenfeld->getDescription() )
                     );
                 }
             }

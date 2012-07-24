@@ -42,6 +42,11 @@ abstract class DataFieldEntry
         $this->rangeID = $rangeID;
         $this->value = $value;
     }
+    
+    function getDescription()
+    {
+    	return $this->structure->getDescription();
+    }
 
     /**
      * Enter description here...

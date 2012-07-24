@@ -53,7 +53,7 @@
                     <b><?= $file['status'] ?: _('unbekannt') ?></b>
                 </div>
                 <div style="margin-bottom: 10px;" align="center">
-                    <?= Studip\LinkButton::create(_('Herunterladen'), '?download_as_zip=' . $file['Seminar_id']) ?>
+                    <?= Studip\LinkButton::create(_('Herunterladen'), '?download_as_zip=' . $file['id']);?>
                 </div>
                 <?= show_documents(get_user_documents($user_id, $file['id']), $open) ?>
             </td>

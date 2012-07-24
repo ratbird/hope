@@ -126,7 +126,7 @@ if ($view=="listall") {
     exportWiki();
 
 } else if ($view=="search") {
-    searchWiki(stripslashes($_REQUEST["searchfor"]), $_REQUEST["searchcurrentversions"], $_REQUEST["keyword"], $_REQUEST["localsearch"]);
+    searchWiki(Request::get('searchfor'), Request::get('searchcurrentversions'), Request::get('keyword'), Request::get('localsearch'));
 
 } else if ($view=="edit") {
     //
@@ -216,7 +216,7 @@ if ($view=="listall") {
     // Show Page
     //
     SkipLinks::addIndex(_("Aktuelle Seite"), 'main_content', 100);
-    showWikiPage($keyword, $version, $special, $show_wiki_comments, stripslashes($_REQUEST["hilight"]));
+    showWikiPage($keyword, $version, $special, $show_wiki_comments, Request::get('hilight'));
 
 } // end default action
 

@@ -657,7 +657,7 @@ if ($form == 4 && Request::isPost()) {
     if ($GLOBALS['RESOURCES_ENABLE']) {
         $room_request_form_attributes = array();
         //Room-Requests
-        $_SESSION['sem_create_data']['skip_room_request'] = (isset($_REQUEST['skip_room_request']));
+        $_SESSION['sem_create_data']['skip_room_request'] = Request::option('skip_room_request');
         if (Request::submitted('room_request_form')) {
             if (Request::option('new_room_request_type')) {
                 if ( $_SESSION['sem_create_data']['room_requests'][Request::option('new_room_request_type')] instanceof RoomRequest) {
@@ -722,7 +722,7 @@ if ($form == 4 && Request::isPost()) {
 if ($form == 5 && Request::isPost()) {
 
     if(Request::submitted('toggle_admission_quota')){
-        $_SESSION['sem_create_data']["admission_enable_quota"] = (int)($_REQUEST["admission_enable_quota"]);
+        $_SESSION['sem_create_data']["admission_enable_quota"] = (int)(Request::quoted("admission_enable_quota"));
         if(!$_SESSION['sem_create_data']["admission_enable_quota"]){
             $_SESSION['sem_create_data']["sem_admission_date"] = -1;
             $_SESSION['sem_create_data']["sem_admission_ratios_changed"] = false;
@@ -753,9 +753,9 @@ if ($form == 5 && Request::isPost()) {
     $_SESSION['sem_create_data']["sem_sonst"] = Request::quoted('sem_sonst');
     $_SESSION['sem_create_data']["sem_paytxt"] = Request::quoted('sem_paytxt');
     $_SESSION['sem_create_data']["sem_datafields"]='';
-
-    if (is_array($_REQUEST['sem_datafields'])) {
-        foreach ($_REQUEST['sem_datafields']as $id => $df_values) {
+    $sem_datafields = Request::quotedArray('sem_datafields');
+    if (is_array($sem_datafields)) {
+        foreach ($sem_datafields as $id => $df_values) {
             $struct = new DataFieldStructure(array("datafield_id"=>$id));
             $struct->load();
             $entry  = DataFieldEntry::createDataFieldEntry($struct);
@@ -767,7 +767,7 @@ if ($form == 5 && Request::isPost()) {
     $dataFieldStructures = DataFieldStructure::getDataFieldStructures('sem', $_SESSION['sem_create_data']['sem_class'], true);
     foreach ((array)$dataFieldStructures as $id=>$struct) {
         if ($struct->accessAllowed($perm) && $perm->have_perm($struct->getEditPerms()) && $struct->getIsRequired() ) {
-           if (! trim($_REQUEST['sem_datafields'][$id]))
+           if (! trim($sem_datafields[$id]))
                $errormsg = $errormsg."error§".sprintf(_("Das Feld %s wurde nicht ausgefüllt"), htmlReady($struct->getName()))."§";
         }
     }
@@ -3083,7 +3083,7 @@ if ($level == 2)
                                 </tr>
                                     <?
                                     $sem_domain = Request::quoted('sem_domain');
-                                    if (Request::submitted('add_domain') && $_REQUEST['sem_domain'] !== '' &&
+                                    if (Request::submitted('add_domain') && Request::quoted('sem_domain') !== '' &&
                                         !in_array($sem_domain, $_SESSION['sem_create_data']["sem_domain"])) {
                                         $_SESSION['sem_create_data']["sem_domain"][]= $sem_domain;
                                     }

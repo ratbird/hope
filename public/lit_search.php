@@ -58,8 +58,8 @@ $_the_search = new StudipLitSearch();
 $_the_clipboard = StudipLitClipBoard::GetInstance();
 $_the_clip_form = $_the_clipboard->getFormObject();
 
-if ($_REQUEST['change_start_result']){
-    $_the_search->start_result = $_REQUEST['change_start_result'];
+if (Request::quoted('change_start_result')){
+    $_the_search->start_result = Request::quoted('change_start_result');
 }
 
 if ($_the_clip_form->isClicked("clip_ok")){
@@ -85,8 +85,8 @@ if ($_the_search->outer_form->isClicked("search")
     $_the_search->start_result = 1;
 }
 
-if ($_REQUEST['cmd'] == "add_to_clipboard"){
-    $catalog_id = $_REQUEST['catalog_id'];
+if (Request::option('cmd') == "add_to_clipboard"){
+    $catalog_id = Request::option('catalog_id');
     if ($catalog_id{0} == "_"){
         $parts = explode("__", $catalog_id);
         if ( ($fields = $GLOBALS[$parts[0]][$parts[1]]) ){

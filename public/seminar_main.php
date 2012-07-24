@@ -46,8 +46,8 @@ require_once 'lib/classes/StudygroupAvatar.class.php';
 
 if (get_config('CHAT_ENABLE')){
     include_once $RELATIVE_PATH_CHAT."/chat_func_inc.php";
-    if ($_REQUEST['kill_chat']){
-        chat_kill_chat($_REQUEST['kill_chat']);
+    if (Request::option('kill_chat')){
+        chat_kill_chat(Request::option('kill_chat'));
     }
 }
 if (get_config('VOTE_ENABLE')) {

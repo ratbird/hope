@@ -51,15 +51,15 @@ if (!preg_match('/^('.preg_quote($CANONICAL_RELATIVE_PATH_STUDIP,'/').')?([a-zA-
 
 if ($send_from_search) $back_msg =_("Zur&uuml;ck zur letzten Auswahl");
 
-$stm_obj = new StudipStmInstance($_REQUEST['stm_instance_id']);
+$stm_obj = new StudipStmInstance(Request::option('stm_instance_id'));
 if (!$stm_obj->isNew()){
-    if ($_REQUEST['cmd'] == 'do_enter'
+    if (Request::option('cmd') == 'do_enter'
         && $stm_obj->isAllowedToEnter($GLOBALS['user']->id)
         && !$stm_obj->isParticipant($GLOBALS['user']->id)
         && Request::submitted('ok')) {
 
-        if (isset($_REQUEST['elgroup']) && is_array($stm_obj->el_struct[$_REQUEST['elgroup']])){
-            $added = $stm_obj->addParticipant($GLOBALS['user']->id, $_REQUEST['elgroup'], $_REQUEST['sem_el']);
+        if (Request::option('elgroup') && is_array($stm_obj->el_struct[Request::option('elgroup')])){
+            $added = $stm_obj->addParticipant($GLOBALS['user']->id, Request::option('elgroup'), Request::OptionArray('sem_el'));
         }
         if ($added) $msg[] = array('msg', _("Ihre gewünschte Belegung wurde eingetragen."));
         else $msg[] = array('error', _("Ihre gewünschte Belegung konnte nicht eingetragen werden."));
@@ -75,7 +75,7 @@ if (!$stm_obj->isNew()){
         echo '<tr><td class="blank" colspan="2">&nbsp;</td></tr>';
         parse_msg_array($msg, "blank", 2, false, false);
     }
-    if ($_REQUEST['cmd'] == 'enter' && $stm_obj->isAllowedToEnter($GLOBALS['user']->id, true) && !$stm_obj->isParticipant($GLOBALS['user']->id)){
+    if (Request::option('cmd') == 'enter' && $stm_obj->isAllowedToEnter($GLOBALS['user']->id, true) && !$stm_obj->isParticipant($GLOBALS['user']->id)){
         $out = _("Sie haben sich entschieden dieses Modul zu belegen.");
         if ($stm_obj->getGroupCount() > 1) $out .= '<br>' . _("Für dieses Modul existieren verschiedene Ausprägungen. Bitte wählen Sie eine davon aus:");
         ?>

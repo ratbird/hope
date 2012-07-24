@@ -52,10 +52,10 @@ if (!$_SESSION['_lit_range']){
     $_SESSION['_lit_range']='';
 }
 
-if ($_REQUEST['_range_id'] == "self"){
+if (Request::option('_range_id') == "self"){
     $_range_id = $auth->auth['uid'];
-} else if (isset($_REQUEST['_range_id'])){
-    $_range_id = $_REQUEST['_range_id'];
+} else if (Request::option('_range_id')){
+    $_range_id = Request::option('_range_id');
 } else {
     $_range_id = $_SESSION['_lit_range'];
 }

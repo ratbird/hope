@@ -245,15 +245,16 @@ if ($cmd=="inst_kill" && $GLOBALS['ALLOW_SELFASSIGN_INSTITUTE']) {
 
 // Update der Gruppen
 if (Request::int('gruppesent') == '1'){
-    $_my_sem_group_field = $_REQUEST['select_group_field'];
-    if (is_array($_REQUEST['gruppe'])){
+    $_my_sem_group_field = Request::quoted('select_group_field');
+    $gruppe = Request::getArray('gruppe');
+    if (!empty($gruppe)){
         $query = "UPDATE seminar_user SET gruppe = ? WHERE Seminar_id = ? AND user_id = ?";
         $user_statement = DBManager::get()->prepare($query);
         
         $query = "UPDATE deputies SET gruppe = ? WHERE range_id = ? AND user_id = ?";
         $deputy_statement = DBManager::get()->prepare($query);
         
-        foreach($_REQUEST['gruppe'] as $key => $value){
+        foreach($gruppe as $key => $value){
             $user_statement->execute(array($value, $key, $user->id));
             $updated = $user_statement->rowCount();
 
@@ -293,9 +294,9 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
     }
     $group_field = $_my_sem_group_field;
 
-    if (isset($_REQUEST['open_my_sem'])) $_my_sem_open[$_REQUEST['open_my_sem']] = true;
+    if (Request::option('open_my_sem')) $_my_sem_open[Request::option('open_my_sem')] = true;
 
-    if (isset($_REQUEST['close_my_sem'])) unset($_my_sem_open[$_REQUEST['close_my_sem']]);
+    if (Request::option('close_my_sem')) unset($_my_sem_open[Request::option('close_my_sem')]);
 
     $groups = array();
 
@@ -618,7 +619,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
 
 elseif ($auth->auth["perm"]=="admin") {
 
-    if(isset($_REQUEST['select_sem'])){
+    if(Request::option('select_sem')){
         $_SESSION['_default_sem'] = Request::option('select_sem');
     }
     if ($_SESSION['_default_sem']){
@@ -686,8 +687,8 @@ elseif ($auth->auth["perm"]=="admin") {
             $_my_admin_inst_id = $_my_inst_arr[0];
             $user->register("_my_admin_inst_id");
         }
-        if($_REQUEST['institut_id']){
-            $_my_admin_inst_id = ($_my_inst[$_REQUEST['institut_id']]) ? $_REQUEST['institut_id'] : $_my_inst_arr[0];
+        if(Request::option('institut_id')){
+            $_my_admin_inst_id = ($_my_inst[Request::quoted('institut_id')]) ? Request::option('institut_id') : $_my_inst_arr[0];
         }
         $sortby = Request::quoted('sortby');
         //tic #650 sortierung in der userconfig merken

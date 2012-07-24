@@ -50,25 +50,25 @@ include ('lib/include/header.php');   // Output of Stud.IP head
 $view = new DbView();
 $the_tree = new StudipRangeTreeView();
 $the_tree->open_ranges['root'] = true;
-if ($_REQUEST['cmd']=="suche"){
-    if ($_REQUEST['search_name'] && strlen($_REQUEST['search_name']) > 1){
-        $view->params[0] = "%" . $_REQUEST['search_name'] . "%";
+if (Request::option('cmd')=="suche"){
+    if (Request::quoted('search_name') && strlen(Request::quoted('search_name')) > 1){
+        $view->params[0] = "%" . Request::quoted('search_name') . "%";
         $rs = $view->get_query("view:TREE_SEARCH_ITEM");
         while($rs->next_record()){
             $found_items[] = htmlReady($the_tree->tree->getItemPath($rs->f("item_id")));
             $the_tree->openItem($rs->f("item_id"));
         }
     }
-    if ($_REQUEST['search_user'] && strlen($_REQUEST['search_user']) > 1){
-        $view->params[0] = "%" . $_REQUEST['search_user'] . "%";
+    if (Request::quoted('search_user') && strlen(Request::quoted('search_user')) > 1){
+        $view->params[0] = "%" . Request::quoted('search_user') . "%";
         $rs = $view->get_query("view:TREE_SEARCH_USER");
         while($rs->next_record()){
             $found_items[] = htmlReady($the_tree->tree->getItemPath($rs->f("item_id")));
             $the_tree->openItem($rs->f("item_id"));
         }
     }
-    if ($_REQUEST['search_sem'] && strlen($_REQUEST['search_sem']) > 1){
-        $view->params[0] = "%" . $_REQUEST['search_sem'] . "%";
+    if (Request::quoted('search_sem') && strlen(Request::quoted('search_sem')) > 1){
+        $view->params[0] = "%" . Request::quoted('search_sem') . "%";
         $rs = $view->get_query("view:TREE_SEARCH_SEM");
         while($rs->next_record()){
             $found_items[] = htmlReady($the_tree->tree->getItemPath($rs->f("item_id")));

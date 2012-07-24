@@ -199,7 +199,7 @@ if ($auth->is_authenticated() && $user->id != 'nobody') {
     $index_nobody_template->set_attribute('num_registered_users', $num_registered_users);
     $index_nobody_template->set_attribute('num_online_users', get_users_online_count(10));
 
-    if ($_REQUEST['logout'])
+    if (Request::get('logout'))
     {
         $index_nobody_template->set_attribute('logout', true);
     }

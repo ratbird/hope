@@ -42,7 +42,7 @@ class SingleDateDB
 
         if ($termin->isExTermin()) {
             $table = 'ex_termine';
-            
+
             $query = "SELECT assign_id FROM resources_assign WHERE assign_user_id = ?";
             $statement = DBManager::get()->prepare($query);
             $statement->execute(array($termin->getTerminID()));
@@ -50,7 +50,7 @@ class SingleDateDB
 
             if ($assign_id) {
                 // delete resource-request, if any
-                if ($request_id = self::getRequestID($id)) {
+                if ($request_id = self::getRequestID($termin->getTerminID())) {
                     $rr = new RoomRequest($request_id);
                     $rr->delete();
                 }
@@ -91,11 +91,11 @@ class SingleDateDB
             $statement->bindValue(':autor_id', $termin->getAuthorID());
             $statement->bindValue(':raum', $termin->getFreeRoomText());
             $statement->bindValue(':content', $termin->getComment());
-            $statement->bindValue(':termin_id', $termin_id);
+            $statement->bindValue(':termin_id',$termin->getTerminID());
             $statement->execute();
 
             if ($statement->rowCount() > 0) {
-                $query = "UPDATE :table SET chate = :chdate WHERE termin_id = :termin_id";
+                $query = "UPDATE :table SET chdate = :chdate WHERE termin_id = :termin_id";
                 $statement = DBManager::get()->prepare($query);
                 $statement->bindValue(':table', $table, StudipPDO::PARAM_COLUMN);
                 $statement->bindValue(':chdate', $termin->getChDate());
@@ -192,10 +192,10 @@ class SingleDateDB
         }
 
         // Prepare query that deletes all entries for a given termin id
-        // from a given table 
+        // from a given table
         $query = "DELETE FROM :table WHERE termin_id = :termin_id";
         $statement = DBManager::get()->prepare($query);
-        $statement->bindValue(':termin_id', $termin_id);
+        $statement->bindValue(':termin_id', $id);
 
         // Execute statement for the termin itself (ex_termin if neccessary)
         $statement->bindValue(':table', $ex_termin ? 'ex_termine' : 'termine', StudipPDO::PARAM_COLUMN);
@@ -206,7 +206,9 @@ class SingleDateDB
         $statement->execute();
 
         // Execute statement for termin_related_persons
-        $statement->bindValue(':table', 'termin_related_persons', StudipPDO::PARAM_COLUMN);
+        $query = "DELETE FROM termin_related_persons WHERE range_id = :termin_id";
+        $statement = DBManager::get()->prepare($query);
+        $statement->bindValue(':termin_id', $id);
         $statement->execute();
 
         return true;
@@ -262,7 +264,7 @@ class SingleDateDB
 
         return true;
     }
-    
+
     static function deleteAllDates($course_id)
     {
         $query = "DELETE FROM ex_termine WHERE range_id = ?";

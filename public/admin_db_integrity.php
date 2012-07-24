@@ -65,19 +65,20 @@ $_csw = new cssClassSwitcher();
 
 <?
 //check, if a plugin is activated
-if($_REQUEST['plugin'] AND in_array($_REQUEST['plugin'],$_integrity_plugins)) {
+$plugin = Request::get('plugin');
+if(!empty($plugin) AND in_array($plugin,$_integrity_plugins)) {
 
-    include_once $RELATIVE_PATH_ADMIN_MODULES."/IntegrityCheck".$_REQUEST['plugin'].".class.php";
-    $plugin_name = "IntegrityCheck".$_REQUEST['plugin'];
+    include_once $RELATIVE_PATH_ADMIN_MODULES."/IntegrityCheck".Request::get('plugin').".class.php";
+    $plugin_name = "IntegrityCheck".Request::get('plugin');
     $plugin_obj = new $plugin_name;
 
     //query the user, if he really wants to delete
-    if($_REQUEST['cmd'] == "assure" AND isset($_REQUEST['checkid'])) {
-        $result = $plugin_obj->doCheck($_REQUEST['checkid']);
+    if(Request::option('cmd') == "assure" AND Request::option('checkid')) {
+        $result = $plugin_obj->doCheck(Request::quoted('checkid'));
         $anzahl = $result->num_rows();
-        $msg = "info§" . sprintf(_("Sie beabsichtigen %s Datens&auml;tze der Tabelle <b>%s</b> zu l&ouml;schen."), $anzahl, $plugin_obj->getCheckDetailTable($_REQUEST['checkid'])) . "<br>"
+        $msg = "info§" . sprintf(_("Sie beabsichtigen %s Datens&auml;tze der Tabelle <b>%s</b> zu l&ouml;schen."), $anzahl, $plugin_obj->getCheckDetailTable(Request::option('checkid'))) . "<br>"
         ._("Dieser Schritt kann <u>nicht</u> r&uuml;ckg&auml;ngig gemacht werden! Sind Sie sicher?") . " <br>\n"
-        ."<br>".LinkButton::createAccept(_('Ja'), URLHelper::getLink('?plugin='.$_REQUEST['plugin'].'&cmd=delete&checkid='.$_REQUEST['checkid'])) . '&nbsp;'
+        ."<br>".LinkButton::createAccept(_('Ja'), URLHelper::getLink('?plugin='.Request::get('plugin').'&cmd=delete&checkid='.Request::quoted('checkid'))) . '&nbsp;'
         .LinkButton::createCancel(_('Nein'))."\n";
         ?><table border="0" width="80%" cellpadding="2" cellspacing="0" class="steel1">
         <tr><td class="blank">&nbsp; </td></tr>
@@ -88,32 +89,32 @@ if($_REQUEST['plugin'] AND in_array($_REQUEST['plugin'],$_integrity_plugins)) {
         </table><?
 
     //delete the rows in the according table
-    } elseif($_REQUEST['cmd'] == "delete" AND isset($_REQUEST['checkid'])) {
-        $result = $plugin_obj->doCheckDelete($_REQUEST['checkid']);
+    } elseif(Request::option('cmd') == "delete" AND (Request::option('checkid'))) {
+        $result = $plugin_obj->doCheckDelete(Request::quoted('checkid'));
         if ($result === false) {
             $msg = "error§" . _("Beim L&ouml;schen der Datens&auml;tze trat ein Fehler auf!");
         } else {
-            $msg = "msg§" . sprintf(_("Es wurden %s Datens&auml;tze der Tabelle <b>%s</b> gelöscht!"), $result, $plugin_obj->getCheckDetailTable($_REQUEST['checkid']));
+            $msg = "msg§" . sprintf(_("Es wurden %s Datens&auml;tze der Tabelle <b>%s</b> gelöscht!"), $result, $plugin_obj->getCheckDetailTable(Request::quoted('checkid')));
         }
-        unset($_REQUEST['plugin']);
+        Request::set('plugin',NULL);
 
     //show the found rows in the according table
-    } elseif($_REQUEST['cmd'] == "show" AND isset($_REQUEST['checkid'])) {
+    } elseif(Request::option('cmd') == "show" AND (Request::option('checkid'))) {
         ?>
         <table border="0" width="80%" cellpadding="2" cellspacing="2">
         <tr><td class="blank" colspan="2">&nbsp; </td></tr>
         <tr><td class="blank"><b>
         <?
-        printf(_("Bereich: <i>%s</i> Datens&auml;tze der Tabelle %s</b></td>"), $_REQUEST['plugin'], $plugin_obj->getCheckDetailTable($_REQUEST['checkid']));
+        printf(_("Bereich: <i>%s</i> Datens&auml;tze der Tabelle %s</b></td>"), Request::get('plugin'), $plugin_obj->getCheckDetailTable(Request::quoted('checkid')));
         print("<td class=\"blank\" align=\"center\">");
-        $link = URLHelper::getURL('?plugin='.Request::quoted('plugin').'&cmd=assure&checkid='.Request::option('checkid'));
+        $link = URLHelper::getURL('?plugin='.Request::get('plugin').'&cmd=assure&checkid='.Request::option('checkid'));
         print(LinkButton::create(_('Löschen'), $link));
         print(LinkButton::createCancel(_('Abbrechen'), URLHelper::getURL()).'</td></tr>');
         ?>
         <tr><td class="blank" colspan="2">&nbsp; </td></tr>
         <tr><td class="steel1" align="center" colspan="2">
         <?
-        $db = $plugin_obj->getCheckDetailResult($_REQUEST['checkid']);
+        $db = $plugin_obj->getCheckDetailResult(Request::option('checkid'));
         ?><table border=1 class="steelgraulight" style="font-size:smaller" align="center"><tr><?
         $meta = $db->metadata();
         for($i = 0;$i < count($meta);++$i){
@@ -138,7 +139,7 @@ if($_REQUEST['plugin'] AND in_array($_REQUEST['plugin'],$_integrity_plugins)) {
         <tr><td class="blank" colspan="3">&nbsp; </td></tr>
         <tr><td class="blank" colspan="2"><b>
         <?
-        printf(_("Bereich: <i>%s</i> der Datenbank wird gepr&uuml;ft!"), $_REQUEST['plugin']);
+        printf(_("Bereich: <i>%s</i> der Datenbank wird gepr&uuml;ft!"), Request::get('plugin'));
         ?>
         </b></td>
         <td class="blank" align="center"><?= LinkButton::createCancel(_('Abbrechen'), URLHelper::getLink()) ?></td> </tr>
@@ -155,8 +156,8 @@ if($_REQUEST['plugin'] AND in_array($_REQUEST['plugin'],$_integrity_plugins)) {
             if( $anzahl == 0 ) {
                 echo "&nbsp;";
             } else {
-                $link_anzeigen = URLHelper::getURL('?plugin='.Request::option('plugin').'&cmd=show&checkid='.$i);
-                $link_loeschen = URLHelper::getURL('?plugin='.Request::option('plugin').'&cmd=assure&checkid='.$i);
+                $link_anzeigen = URLHelper::getURL('?plugin='.Request::get('plugin').'&cmd=show&checkid='.$i);
+                $link_loeschen = URLHelper::getURL('?plugin='.Request::get('plugin').'&cmd=assure&checkid='.$i);
                 $button_anzeigen = LinkButton::create(_('Anzeigen'), $link_anzeigen);
                 $button_loeschen = LinkButton::create(_('Löschen'), $link_loeschen);
                 echo $button_anzeigen.'&nbsp;'.$button_loeschen.'</td></tr>';
@@ -168,7 +169,7 @@ if($_REQUEST['plugin'] AND in_array($_REQUEST['plugin'],$_integrity_plugins)) {
 }
 
 //show all available plugins
-if(!$_REQUEST['plugin']) {
+if(!Request::quoted('plugin')) {
     for($i=0; $i < count($_integrity_plugins); ++$i){
         include_once $RELATIVE_PATH_ADMIN_MODULES."/IntegrityCheck".$_integrity_plugins[$i].".class.php";
     }

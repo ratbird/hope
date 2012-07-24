@@ -68,12 +68,12 @@ $sem->checkFilter();
 $themen =& $sem->getIssues();
 
 function dates_open() {
-    $_SESSION['issue_open'][$_REQUEST['open_close_id']] = true;
+    $_SESSION['issue_open'][Request::option('open_close_id')] = true;
 }
 
 function dates_close() {
-    $_SESSION['issue_open'][$_REQUEST['open_close_id']] = false;
-    unset ($_SESSION['issue_open'][$_REQUEST['open_close_id']]);
+    $_SESSION['issue_open'][Request::option('open_close_id')] = false;
+    unset ($_SESSION['issue_open'][Request::option('open_close_id')]);
 }
 
 $sem->registerCommand('open', 'dates_open');

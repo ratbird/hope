@@ -82,7 +82,6 @@ $tree = new EvaluationTreeShowUser( $evalID );
 $eval = $tree->tree->eval;
 $evalDB = new EvaluationDB();
 
-#$isPreview = $_REQUEST["isPreview"] ? YES : (($eval->getStartdate() == NULL ? YES : NO));
 $isPreview = Request::option('isPreview') ? YES : NO;
 
 $votedEarlier = $eval->hasVoted( $auth->auth["uid"] ) && $isPreview == NO;

@@ -176,7 +176,7 @@ if (!$perm->have_perm("root")){
     $sem_browse_obj->target_url="seminar_main.php";
     $sem_browse_obj->target_id="auswahl";
 }
-if (isset($_REQUEST['send_excel'])){
+if (Request::int('send_excel')){
     $tmpfile = basename($sem_browse_obj->create_result_xls());
     if($tmpfile){
         header('Location: ' . getDownloadLink( $tmpfile, _("ErgebnisVeranstaltungssuche.xls"), 4));

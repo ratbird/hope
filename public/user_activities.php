@@ -179,18 +179,18 @@ if (!is_array($_SESSION['_user_activities'])){
 $queries = array();
 $msg = array();
 
-if ($_REQUEST['username']){
-    $_SESSION['_user_activities']['username'] = $_REQUEST['username'];
+if (Request::quoted('username')){
+    $_SESSION['_user_activities']['username'] = Request::quoted('username');
     $_SESSION['_user_activities']['open'] = array();
     $_SESSION['_user_activities']['details'] = 'files';
 }
-if ($_REQUEST['details']) $_SESSION['_user_activities']['details'] = $_REQUEST['details'];
-if ($_REQUEST['open']) $_SESSION['_user_activities']['open'][$_REQUEST['open']] = time();
-if ($_REQUEST['close']) unset($_SESSION['_user_activities']['open'][$_REQUEST['close']]);
+if (Request::get('details')) $_SESSION['_user_activities']['details'] = Request::quoted('details');
+if (Request::get('open')) $_SESSION['_user_activities']['open'][Request::get('open')] = time();
+if (Request::get('close')) unset($_SESSION['_user_activities']['open'][Request::get('close')]);
 $user_id = get_userid($_SESSION['_user_activities']['username']);
 arsort($_SESSION['_user_activities']['open'], SORT_NUMERIC);
-if ($_REQUEST['download_as_zip']) {
-    $download_ids = $_REQUEST['download_as_zip'] == 'all' ? get_user_documents($user_id) : get_user_documents($user_id, $_REQUEST['download_as_zip']);
+if (Request::get('download_as_zip')) {
+    $download_ids = Request::quoted('download_as_zip') == 'all' ? get_user_documents($user_id) : get_user_documents($user_id, Request::quoted('download_as_zip'));
     if (is_array($download_ids) && count($download_ids)) {
         $zip_file_id = createSelectedZip($download_ids, false);
         $zip_name = prepareFilename($_SESSION['_user_activities']['username'] . '-' . _("Dokumente") . '.zip');
@@ -199,7 +199,7 @@ if ($_REQUEST['download_as_zip']) {
         die;
     }
 }
-if ($_REQUEST['deletepost'] && check_ticket($_REQUEST['ticket'])){
+if (Request::option('deletepost') && check_ticket(Request::option('ticket'))){
     $post_id = Request::option('deletepost');
 
     $query = "DELETE FROM guestbook WHERE post_id = ? LIMIT 1";

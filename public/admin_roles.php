@@ -54,8 +54,8 @@ Navigation::activateItem('/admin/institute/groups');
 //get ID, if a object is open
 if ($SessSemName[1])
   $range_id = $SessSemName[1];
-elseif ($_REQUEST['range_id'])
-  $range_id = $_REQUEST['range_id'];
+elseif (Request::option('range_id'))
+  $range_id = Request::option('range_id');
 
 URLHelper::bindLinkParam('range_id', $range_id);
 
@@ -155,94 +155,96 @@ if ($lockrule->description && LockRules::Check($range_id, 'groups')) {
 }
 
 // a role_id has been submitted, so open that role automatically
-if ($_REQUEST['role_id']) {
-    $open = $_REQUEST['role_id'];
+if (Request::option('role_id')) {
+    $open = Request::option('role_id');
 }
 
 // move a role up or down
-if ($_REQUEST['cmd'] == 'moveUp') {
-    $role = new Statusgruppe($_REQUEST['role_id']);
+if (Request::option('cmd') == 'moveUp') {
+    $role = new Statusgruppe(Request::option('role_id'));
     resortStatusgruppeByRangeId($role->getRange_Id());
-    moveStatusgruppe($_REQUEST['role_id'], 'up');
+    moveStatusgruppe(Request::option('role_id'), 'up');
 }
 
-if ($_REQUEST['cmd'] == 'moveDown') {
-    $role = new Statusgruppe($_REQUEST['role_id']);
+if (Request::option('cmd') == 'moveDown') {
+    $role = new Statusgruppe(Request::option('role_id'));
     resortStatusgruppeByRangeId($role->getRange_Id());
-    moveStatusgruppe($_REQUEST['role_id'], 'down');
+    moveStatusgruppe(Request::option('role_id'), 'down');
 }
 
 
 // change sort-order of a person in a statsgroup
-if ($_REQUEST['cmd'] == 'move_up') {
-    MovePersonPosition ($_REQUEST['username'], $_REQUEST['role_id'], "up");
+if (Request::option('cmd') == 'move_up') {
+    MovePersonPosition (Request::quoted('username'), Request::option('role_id'), "up");
 }
 
-if ($_REQUEST['cmd'] == 'move_down') {
-    MovePersonPosition ($_REQUEST['username'], $_REQUEST['role_id'], "down");
+if (Request::option('cmd') == 'move_down') {
+    MovePersonPosition (Request::quoted('username'), Request::option('role_id'), "down");
 }
 
 // a chosen person is sorted in after a second chosen person - allows to sort arbitrary over long distances
-if ($_REQUEST['cmd'] == 'sort_person') {
-    if (!is_array($_REQUEST['sort_person'])) {
+if (Request::option('cmd') == 'sort_person') {
+    $sort_person = Request::quotedArray('sort_person');
+    if (empty($sort_person)) {
         $msgs['error'][] = _("Bitte wählen Sie die Person aus, die einsortiert werden soll!");
     } else {
-        if (is_array($_REQUEST['do_person_sort'])) {
+        $do_person_sort = Request::quotedArray('do_person_sort');
+        if (!empty ($do_person_sort)) {
             // do_person_sort is an array and we need the key of the first element
-            foreach ($_REQUEST['do_person_sort'] as $zw_uid => $trash) {
+            foreach ($do_person_sort as $zw_uid => $trash) {
                 // the username of the user after which is inserted
                 $u_insert_after = $zw_uid;
                 break;
             }
 
             // the username of the user to be inserted
-            $u_insert = array_shift($_REQUEST['sort_person']);
+            $u_insert = array_shift($sort_person);
 
-            SortPersonInAfter(get_userid($u_insert), get_userid($u_insert_after), $_REQUEST['role_id']);
+            SortPersonInAfter(get_userid($u_insert), get_userid($u_insert_after), Request::option('role_id'));
         }
     }
 
 }
 
 // sort the persons of a statusgroup by their family name
-if ($_REQUEST['cmd'] == 'sortByName') {
-    sortStatusgruppeByName($_REQUEST['role_id']);
+if (Request::option('cmd') == 'sortByName') {
+    sortStatusgruppeByName(Request::option('role_id'));
 }
 
 // add a person to a statusgroup
 // the person is participant (if we administrate a seminar), or the person is member (if we administrate an institute)
-if ($_REQUEST['cmd'] == 'addPersonsToRoleDirect' ) {
+if (Request::option('cmd') == 'addPersonsToRoleDirect' ) {
     $msgs['msg'][]  = _("Die Personen wurden der Gruppe hinzugefügt.");
     $msgs['info'][] = _("Beachten Sie, dass für die Personen die Standarddaten der Einrichtung übernommen wurden!");
 
-    MovePersonStatusgruppe ($range_id, $_REQUEST['role_id'], 'direct', $_REQUEST['persons_to_add'], $workgroup_mode);
+    MovePersonStatusgruppe ($range_id, Request::option('role_id'), 'direct', Request::quotedArray('persons_to_add'), $workgroup_mode);
 }
 
 // only for seminars - the person is member of the institute the seminar is in
-if ($_REQUEST['cmd'] == 'addPersonsToRoleIndirect' ) {
+if (Request::option('cmd') == 'addPersonsToRoleIndirect' ) {
     $msgs['msg'][]  = _("Die Personen wurden der Gruppe hinzugefügt.");
     $msgs['info'][] = _("Beachten Sie, dass für die Personen die Standarddaten der Einrichtung übernommen wurden!");
 
-    MovePersonStatusgruppe ($range_id, $_REQUEST['role_id'], 'indirect', $_REQUEST['persons_to_add'], $workgroup_mode);
+    MovePersonStatusgruppe ($range_id, Request::option('role_id'), 'indirect', Request::quotedArray('persons_to_add'), $workgroup_mode);
 }
 
 // the person shall be added via the free search
-if ($_REQUEST['cmd'] == 'addPersonsToRoleSearch' ) {
+if (Request::option('cmd') == 'addPersonsToRoleSearch' ) {
     $msgs['msg'][]  = _("Die Personen wurden der Gruppe hinzugefügt.");
     $msgs['info'][] = _("Beachten Sie, dass für die Personen die Standarddaten der Einrichtung übernommen wurden!");
 
-    MovePersonStatusgruppe ($range_id, $_REQUEST['role_id'], 'search', $_REQUEST['persons_to_add'], $workgroup_mode);
+    MovePersonStatusgruppe ($range_id, Request::option('role_id'), 'search', Request::quotedArray('persons_to_add'), $workgroup_mode);
 }
 
 // delete a person from a statusgroup
-if ($_REQUEST['cmd'] == 'removePerson') {
+if (Request::option('cmd') == 'removePerson') {
     $msgs['msg'][] = _("Die Person wurde aus der Gruppe entfernt!");
-    RemovePersonStatusgruppe ($_REQUEST['username'], $_REQUEST['role_id']);
+    RemovePersonStatusgruppe (Request::quoted('username'), Request::option('role_id'));
 }
 
 // edit the data of a role
-if ($_REQUEST['cmd'] == 'editRole') {
-    $statusgruppe = new Statusgruppe($_REQUEST['role_id']);
+if (Request::option('cmd') == 'editRole') {
+    $statusgruppe = new Statusgruppe(Request::option('role_id'));
     $name = htmlReady($statusgruppe->getName());
     if ($statusgruppe->checkData()) {
         $msgs['info'][] = sprintf(_("Die Daten der Gruppe %s wurden geändert!"), '<b>'. $name .'</b>');
@@ -252,15 +254,15 @@ if ($_REQUEST['cmd'] == 'editRole') {
 }
 
 // ask, if the user really intends to delete the role
-if ($_REQUEST['cmd'] == 'deleteRole') {
-    $statusgruppe = new Statusgruppe($_REQUEST['role_id']);
-    if ($_REQUEST['really']) {
+if (Request::option('cmd') == 'deleteRole') {
+    $statusgruppe = new Statusgruppe(Request::option('role_id'));
+    if (Request::quoted('really')) {
         $msgs['msg'][] = sprintf(_("Die Gruppe %s wurde gelöscht!"), htmlReady($statusgruppe->getName()));
         $statusgruppe->delete();
     } else {
         echo createQuestion(sprintf(_("Sind Sie sicher, dass Sie die Gruppe **%s** löschen möchten?"), $statusgruppe->getName() ),
-            array('cmd' => 'deleteRole', 'really' => 'true', 'role_id' => $_REQUEST['role_id']),
-            array('role_id' => $_REQUEST['role_id'])
+            array('cmd' => 'deleteRole', 'really' => 'true', 'role_id' => Request::option('role_id')),
+            array('role_id' => Request::option('role_id'))
         );
     }
 }
@@ -268,19 +270,19 @@ if ($_REQUEST['cmd'] == 'deleteRole') {
 // adding a new role
 $displayNewRole = false;
 
-if ($_REQUEST['cmd'] == 'newRole') {
+if (Request::option('cmd') == 'newRole') {
     $displayNewRole = true;
     $new_role = new Statusgruppe();
     $new_role->setRange_Id($range_id);
 }
 
-if ($_REQUEST['cmd'] == 'addRole') {
+if (Request::option('cmd') == 'addRole') {
     // to prevent url-hacking for changing the data of an existing role
-    if (!Statusgruppe::roleExists($_REQUEST['role_id'])) {
+    if (!Statusgruppe::roleExists(Request::option('role_id'))) {
         $new_role = new Statusgruppe();
 
         // this is necessary, because it could be the second try to add after the user has corrected errors
-        $new_role->setStatusgruppe_Id($_REQUEST['role_id']);
+        $new_role->setStatusgruppe_Id(Request::option('role_id'));
         $new_role->setRange_Id($range_id);
 
         if ($new_role->checkData()) {
@@ -346,16 +348,16 @@ else if ($statusgruppen && sizeof($statusgruppen) > 0) {
     // the persons of the institute who can be added directly
     $template->set_attribute('inst_persons', getPersons($range_id));
 
-    if ($_REQUEST['view'] == 'editRole') {
-        $template->set_attribute('editRole', $_REQUEST['role_id']);
+    if (Request::option('view') == 'editRole') {
+        $template->set_attribute('editRole', Request::option('role_id'));
     }
 
-    if ($_REQUEST['view'] == 'startMove') {
+    if (Request::option('view') == 'startMove') {
         $template->set_attribute('move', true);
-        $template->set_attribute('move_id', $_REQUEST['role_id']);
+        $template->set_attribute('move_id', Request::option('role_id'));
     }
 
-    if ($_REQUEST['view'] == 'sort') {
+    if (Request::option('view') == 'sort') {
         $template->set_attribute('sort', true);
     }
 

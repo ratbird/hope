@@ -114,10 +114,10 @@ function print_module_icons ($m_enabled)
 }
 
 
-if (isset($_REQUEST['open_my_sem']))
-    $_my_sem_open[$_REQUEST['open_my_sem']] = true;
-if (isset($_REQUEST['close_my_sem']))
-    unset($_my_sem_open[$_REQUEST['close_my_sem']]);
+if (Request::option('open_my_sem'))
+    $_my_sem_open[Request::option('open_my_sem')] = true;
+if (Request::option('close_my_sem'))
+    unset($_my_sem_open[Request::option('close_my_sem')]);
 
 if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("admin")) {
     if (isset($_my_sem_group_field)) {
@@ -165,9 +165,10 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
 
     $modules = new ModulesNotification();
     // Update der Benachrichtigungsfunktion
-    if ($_REQUEST['cmd'] == 'set_sem_notification') {
-        if (is_array($_REQUEST['m_checked'])) {
-            $modules->setModuleNotification($_REQUEST['m_checked'], 'sem');
+    if (Request::option('cmd') == 'set_sem_notification') {
+        $m_checked = Request::getArray('m_checked');
+        if ($m_checked) {
+            $modules->setModuleNotification($m_checked, 'sem');
 
             echo '<table class="default"><tr><td class="blank">';
             echo MessageBox::success(_('Die Einstellungen wurden gespeichert.'));
@@ -405,7 +406,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
     echo '<tr><td class="blank" align="center" colspan="';
     echo (sizeof($enabled_modules) + 3) . '"><br>';
     echo Button::create(_('Übernehmen'), array('title' => _("Änderungen übernehmen")));
-    if ($_REQUEST['view'] != 'notification') {
+    if (Request::option('view') != 'notification') {
         echo "&nbsp; <a href=\"".URLHelper::getURL()."\">";
     } else {
         echo "&nbsp; <a href=\"".URLHelper::getLink('?view=notification')."\">";
@@ -415,7 +416,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
     echo "</table>\n";
 }
 
-if ($_REQUEST['view'] != 'notification') {
+if (Request::option('view') != 'notification') {
     echo "</td></tr></table>\n";
 
     include ('lib/include/html_end.inc.php');

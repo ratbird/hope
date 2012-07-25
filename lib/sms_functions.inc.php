@@ -994,7 +994,7 @@ function show_chatselector()
         echo "<select name=\"chat_id\" style=\"vertical-align:middle;font-size:9pt;\">";
         foreach($admin_chats as $chat_id => $chat_name) {
             echo "<option value=\"$chat_id\"";
-            if ($_REQUEST['selected_chat_id'] == $chat_id){
+            if (Request::option('selected_chat_id') == $chat_id){
                 echo " selected ";
             }
             echo ">".htmlReady($chat_name)."</option>";

@@ -52,15 +52,15 @@ class EventLogController extends AuthenticatedController
      */
     function show_action ()
     {
-        $this->action_id = $_REQUEST['action_id'];
-        $this->object_id = $_REQUEST['object_id'];
+        $this->action_id = Request::option('action_id');
+        $this->object_id = Request::option('object_id');
         $this->log_actions = $this->event_log->get_used_log_actions();
         $this->types = $this->event_log->get_object_types();
 
         // restrict log events to object scope
-        if (isset($_REQUEST['search']) && $_REQUEST['search'] != '') {
-            $this->type = remove_magic_quotes($_REQUEST['type']);
-            $this->search = remove_magic_quotes($_REQUEST['search']);
+        if (Request::get('search') && Request::get('search') != '') {
+            $this->type = Request::get('type');
+            $this->search =Request::get('search');
             $objects = $this->event_log->find_objects($this->type, $this->search);
 
             if (count($objects) > 0) {
@@ -71,15 +71,15 @@ class EventLogController extends AuthenticatedController
         }
 
         // find all matching log events
-        if ($_REQUEST['search'] === '' || isset($this->object_id)) {
-            $this->start = (int) $_REQUEST['start'];
-            $this->format = $_REQUEST['format'];
+        if (Request::get('search') === '' || isset($this->object_id)) {
+            $this->start = (int) Request::int('start');
+            $this->format = Request::quoted('format');
             $this->num_entries =
                 $this->event_log->count_log_events($this->action_id, $this->object_id);
 
-            if (isset($_REQUEST['back']) || $_REQUEST['back_x']) {
+            if (Request::get('back') || Request::submitted('back')) {
                 $this->start = max(0, $this->start - 50);
-            } else if (isset($_REQUEST['forward']) || $_REQUEST['forward_x']){
+            } else if (Request::get('forward') || Request::submitted('forward') ) {
                 $this->start = min($this->num_entries, $this->start + 50);
             }
 
@@ -111,10 +111,10 @@ class EventLogController extends AuthenticatedController
      */
     function save_action ($action_id)
     {
-        $description = remove_magic_quotes($_REQUEST['description']);
-        $info_template = remove_magic_quotes($_REQUEST['info_template']);
-        $active = $_REQUEST['active'] ? 1 : 0;
-        $expires = (int) $_REQUEST['expires'] * 86400;
+        $description = Request::get('description');
+        $info_template = Request::get('info_template');
+        $active = Request::get('active') ? 1 : 0;
+        $expires = (int) Request::int('expires') * 86400;
 
         try {
             $this->event_log->update_log_action($action_id, $description,

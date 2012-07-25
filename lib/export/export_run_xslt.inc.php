@@ -83,7 +83,7 @@ global $XSLT_ENABLE, $ex_type, $o_mode, $xml_file_id, $page, $format, $output_fo
 
 $export_pagename = _("Download der Ausgabedatei");
 $xslt_process = false;
-$xslt_filename = strlen($_REQUEST['xslt_filename']) ? basename(stripslashes($_REQUEST['xslt_filename'])) : $xslt_filename_default;
+$xslt_filename = strlen(Request::get('xslt_filename')) ? basename(stripslashes(Request::get('xslt_filename'))) : $xslt_filename_default;
 
 if (!CheckParamRUN())
 {

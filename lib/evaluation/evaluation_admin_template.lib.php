@@ -972,7 +972,7 @@ class EvalTemplateGUI {
   function createInfoBox ($command) {
       global $evalID, $rangeID;
 
-      $id = $_REQUEST["itemID"];
+      $id = Request::option("itemID");
 
       $level = EvaluationObjectDB::getType( $id );
 #      echo $level;

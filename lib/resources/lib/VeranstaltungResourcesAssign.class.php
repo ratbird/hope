@@ -1,7 +1,7 @@
 <?
 # Lifter002: TODO
+# Lifter003: TEST
 # Lifter007: TODO
-# Lifter003: TODO
 # Lifter010: TODO
 /**
 * VeranstaltungResourcesAssign.class.php
@@ -51,24 +51,24 @@ class VeranstaltungResourcesAssign {
     var $dont_check;
 
     //Konstruktor
-    function VeranstaltungResourcesAssign ($seminar_id=FALSE) {
+    function VeranstaltungResourcesAssign ($seminar_id=FALSE)
+    {
         global $RELATIVE_PATH_RESOURCES;
         //make shure to load all the classes from resources, if this class is extern used °change if the classes are storen in own scripts
-        $this->db = new DB_Seminar;
-        $this->db2 = new DB_Seminar;
 
         $this->seminar_id = $seminar_id;
         $this->dont_check=FALSE;
     }
 
-    function updateAssign($check_locks = true) {
+    function updateAssign($check_locks = true)
+    {
         global $TERMIN_TYP;
-        $db = new DB_Seminar;
 
-        $query = sprintf("SELECT termin_id, date_typ FROM termine WHERE range_id = '%s' ", $this->seminar_id);
-        $db->query($query);
-        while ($db->next_record()) {
-            $result = array_merge((array)$result, (array)$this->changeDateAssign($db->f("termin_id")));
+        $query = "SELECT termin_id FROM termine WHERE range_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($this->seminar_id));
+        while ($termin_id = $staetment->fetchColumn()) {
+            $result = array_merge((array)$result, (array)$this->changeDateAssign($termin_id));
         }
         //kill all assigned rooms (only roomes and only resources assigned directly to the Veranstaltung, not to a termin!) to create new ones
         $this->deleteAssignedRooms();
@@ -120,25 +120,32 @@ class VeranstaltungResourcesAssign {
     }
 
     //this method creates an assign-object for a seminar-date
-    function getDateAssignObject($termin_id, $resource_id='', $begin=0, $end=0) {
+    function getDateAssignObject($termin_id, $resource_id = '', $begin = 0, $end = 0)
+    {
         if (!$begin) {
-            $query = sprintf("SELECT date, content, end_time, assign_id FROM termine LEFT JOIN resources_assign ON (assign_user_id = termin_id) WHERE termin_id = '%s' ORDER BY date, content", $termin_id);
-            $this->db->query($query);
-            if ($this->db->next_record()) {
-                $assign_id=$this->db->f("assign_id");
-                $begin=$this->db->f("date");
-                $end=$this->db->f("end_time");
+            $query = "SELECT date, end_time, assign_id
+                      FROM termine
+                      LEFT JOIN resources_assign ON (assign_user_id = termin_id)
+                      WHERE termin_id = ?
+                      ORDER BY date, content";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($termin_id));
+            if ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                $assign_id = $row['assign_id'];
+                $begin     = $row['date'];
+                $end       = $row['end_time'];
             }
-        } else {
-            if (!$end)
-                $end=$begin;
+        } else if (!$end) {
+            $end = $begin;
         }
 
         $AssignObject = AssignObject::Factory($assign_id);
-        if ($resource_id)
+        if ($resource_id) {
             $AssignObject->setResourceId($resource_id);
-        if (!$AssignObject->getAssignUserId())
+        }
+        if (!$AssignObject->getAssignUserId()) {
             $AssignObject->setAssignUserId($termin_id);
+        }
 
         $AssignObject->setBegin($begin);
         $AssignObject->setEnd($end);
@@ -149,8 +156,9 @@ class VeranstaltungResourcesAssign {
         $AssignObject->setRepeatDayOfMonth(0);
         $AssignObject->setRepeatWeekOfMonth(0);
         $AssignObject->setRepeatDayOfWeek(0);
-        if (!$AssignObject->getId())
+        if (!$AssignObject->getId()) {
             $AssignObject->createId();
+        }
 
         return $AssignObject;
     }
@@ -184,28 +192,39 @@ class VeranstaltungResourcesAssign {
         return $result;
     }
 
-    function changeDateAssign($termin_id, $resource_id='', $begin='', $end='', $check_only=FALSE, $check_locks = TRUE) {
+    function changeDateAssign($termin_id, $resource_id='', $begin='', $end='', $check_only=FALSE, $check_locks = TRUE)
+    {
         //load data from termin and assign object
-        $query = sprintf("SELECT date, content, end_time, assign_id, resources_assign.begin AS assign_begin, resources_assign.end AS assign_end, resources_assign.resource_id AS assign_resource_id FROM termine LEFT JOIN resources_assign ON (assign_user_id = termin_id) WHERE termin_id = '%s' ORDER BY date, content", $termin_id);
-        $this->db->query($query);
-        if ($this->db->next_record()) {
+        $query = "SELECT date, content, end_time, assign_id,
+                         resources_assign.begin AS assign_begin,
+                         resources_assign.end AS assign_end,
+                         resources_assign.resource_id AS assign_resource_id
+                  FROM termine
+                  LEFT JOIN resources_assign ON (assign_user_id = termin_id)
+                  WHERE termin_id = ?
+                  ORDER BY date, content";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($termin_id));
+
+        if ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
             if (!$begin) {
-                $assign_id=$this->db->f("assign_id");
-                $begin=$this->db->f("date");
-                $end=$this->db->f("end_time");
-            } else {
-                if (!$end)
-                    $end=$begin;
+                $assign_id = $row['assign_id'];
+                $begin     = $row['date'];
+                $end       = $row['end_time'];
+            } else if (!$end) {
+                $end = $begin;
             }
 
-            if (!$resource_id)
-                $resource_id=$this->db->f("assign_resource_id");
+            if (!$resource_id) {
+                $resource_id = $row['assign_resource_id'];
+            }
 
-            $assign_begin = $this->db->f("assign_begin");
-            $assign_end = $this->db->f("assign_end");
-            $assign_resource_id = $this->db->f("assign_resource_id");
-        } else
+            $assign_begin       = $row['assign_begin'];
+            $assign_end         = $row['assign_end'];
+            $assign_resource_id = $row['assign_resource_id'];
+        } else {
             return FALSE;
+        }
 
         //check the saved assign-object-times against the planned times - if the same, no update is needed.
         if (($assign_begin == $begin) && ($assign_end == $end) && (($assign_resource_id == $resource_id))) {
@@ -256,18 +275,19 @@ class VeranstaltungResourcesAssign {
         return $result;
     }
 
-    function insertDateAssign($termin_id, $resource_id, $begin='', $end='', $check_only=FALSE, $check_locks = TRUE) {
+    function insertDateAssign($termin_id, $resource_id, $begin='', $end='', $check_only=FALSE, $check_locks = TRUE)
+    {
         if ($resource_id) {
             if (!$begin) {
-                $query = sprintf("SELECT date, content, end_time FROM termine WHERE termin_id = '%s'", $termin_id);
-                $this->db->query($query);
-                if ($this->db->next_record()) {
-                    $begin=$this->db->f("date");
-                    $end=$this->db->f("end_time");
+                $query = "SELECT date, end_time FROM termine WHERE termin_id = ?";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($termin_id));
+                if ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                    $begin = $row['date'];
+                    $end   = $row['end_time'];
                 }
-            } else {
-                if (!$end)
-                    $end=$begin;
+            } else if (!$end) {
+                $end = $begin;
             }
 
             if ($begin) {
@@ -290,32 +310,49 @@ class VeranstaltungResourcesAssign {
         return $result;
     }
 
-    function killDateAssign($termin_id) {
-        if ($termin_id) {
-            $query = sprintf ("SELECT assign_id FROM resources_assign LEFT JOIN resources_objects USING (resource_id) LEFT JOIN resources_categories USING (category_id) WHERE assign_user_id = '%s' AND resources_categories.is_room = 1 ", $termin_id);
-            $this->db->query($query);
-            while ($this->db->next_record()) {
-                $killAssign = AssignObject::Factory($this->db->f("assign_id"));
-                $killAssign->delete();
-            }
-            $query = sprintf("SELECT request_id FROM resources_requests WHERE termin_id = '%s' ", $termin_id);
-            $this->db->query($query);
-            while ($this->db->next_record()) {
-                $killRequest = new RoomRequest ($this->db->f("request_id"));
-                $killRequest->delete();
-            }
+    function killDateAssign($termin_id)
+    {
+        if (!$termin_id) {
+            return;
+        }
+
+        $query = "SELECT assign_id
+                  FROM resources_assign
+                  LEFT JOIN resources_objects USING (resource_id)
+                  LEFT JOIN resources_categories USING (category_id)
+                  WHERE assign_user_id = ? AND resources_categories.is_room = 1";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($termin_id));
+        while ($assign_id = $statement->fetchColumn()) {
+            AssignObject::Factory($assign_id)->delete();
+        }
+
+        $query = "SELECT request_id FROM resources_requests WHERE termin_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($termin_id));
+        while ($request_id = $statement->fetchColumn()) {
+            $killRequest = new RoomRequest ($request_id);
+            $killRequest->delete();
         }
     }
 
-    function deleteAssignedRooms() {
-        if ($this->seminar_id) {
-            $query = sprintf("SELECT assign_id FROM resources_assign LEFT JOIN resources_objects USING (resource_id) LEFT JOIN resources_categories USING (category_id) WHERE resources_assign.assign_user_id = '%s' AND resources_categories.is_room = 1 ", $this->seminar_id);
-            $this->db->query($query);
-            while ($this->db->next_record()) {
-                $killAssign = AssignObject::Factory($this->db->f("assign_id"));
-                $killAssign->delete();
-            }
+    function deleteAssignedRooms()
+    {
+        if (!$this->seminar_id) {
+            return;
+        }
+
+        $query = "SELECT assign_id
+                  FROM resources_assign
+                  LEFT JOIN resources_objects USING (resource_id)
+                  LEFT JOIN resources_categories USING (category_id)
+                  WHERE resources_assign.assign_user_id = ?
+                    AND resources_categories.is_room = 1";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($this->seminar_id));
+        while ($assign_id = $statement->fetchColumn()) {
+            AssignObject::Factory($assign_id)->delete();
         }
     }
 }
-?>
+

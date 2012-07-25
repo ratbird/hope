@@ -1,6 +1,6 @@
 <?
 # Lifter002: TODO
-# Lifter003: TODO
+# Lifter003: TEST
 # Lifter005: TODO
 # Lifter007: TODO
 # Lifter010: TODO
@@ -38,8 +38,6 @@ require_once ($RELATIVE_PATH_RESOURCES."/views/Msg.class.php");
 $_SESSION['resources_data'] = @unserialize($_SESSION['resources_data']);
 $globalPerm = getGlobalPerms($user->id);
 $msg = new Msg;
-$db=new DB_Seminar;
-$db2=new DB_Seminar;
 
 
 /*****************************************************************************

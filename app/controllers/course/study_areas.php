@@ -113,9 +113,8 @@ class Course_StudyAreasController extends AuthenticatedController
         if (!$this->locked && !$this->areas_not_allowed) {
 
             // renew status
-            $study_areas = isset($_REQUEST['study_area_selection'])
-                ? remove_magic_quotes($_REQUEST['study_area_selection'])
-                : array();
+            $study_areas = Request::getArray('study_area_selection');
+               
 
             if (isset($study_areas['last_selected'])) {
                 $this->selection->setSelected((string) $study_areas['last_selected']);

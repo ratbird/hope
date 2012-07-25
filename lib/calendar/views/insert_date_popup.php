@@ -29,7 +29,7 @@ require_once ('lib/visual.inc.php');
 $atime = Request::int('atime');
 $element_switch = Request::get('element_switch', 0); // Wert für Auswahl der Feldbezeichner
 $element_depending = (!is_null(Request::get('element_depending')) && preg_match('!^[0-9a-z_-]{2,40}$!i', Request::get('element_depending'))) ? Request::get('element_depending') : '';
-$form_name = (!is_null(Request::get('form_name')) && preg_match('!^[0-9a-z_-]{2,40}$!i', Request::get('form_name'))) ? $_REQUEST['form_name'] : '';
+$form_name = (!is_null(Request::get('form_name')) && preg_match('!^[0-9a-z_-]{2,40}$!i', Request::get('form_name'))) ? Request::quoted('form_name') : '';
 $submit = Request::int('submit');
 $c = !is_null(Request::get('c')) ? Request::get('c') : 0;                   // Zaehler wenn mehrere gleiche Eingabefelder im Zielformular
 $mcount = Request::get('mcount', 1);    // Anzahl der anzuzeigenden Monate

@@ -429,11 +429,11 @@ auf diese Nachricht nicht antworten.") . "\n\n";
     $import = new CalendarImportFile(new CalendarParserICalendar(),
                     $_FILES["importfile"]);
 
-    if ($_REQUEST['import_sem_imp']) {
+    if (Request::get('import_sem_imp')) {
         $import->setImportSem(true);
     }
 
-    if ($_REQUEST['import_as_private_imp']) {
+    if (Request::get('import_as_private_imp')) {
         $import->changePublicToPrivate();
     }
 
@@ -475,11 +475,11 @@ auf diese Nachricht nicht antworten.") . "\n\n";
     $import = new CalendarImportFile(new CalendarParserICalendar(),
                     $_FILES["importfile"]);
 
-    if ($_REQUEST['import_sem_sync']) {
+    if (Request::get('import_sem_sync')) {
         $import->setImportSem(true);
     }
 
-    if ($_REQUEST['import_as_private_sync']) {
+    if (Request::get('import_as_private_sync')) {
         $import->changePublicToPrivate();
     }
 

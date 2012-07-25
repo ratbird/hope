@@ -528,7 +528,7 @@ class ELearningUtils
             $output .=  "</table>\n";
             $output .=  "</form>\n";
         }
-//      echo "nas:$new_account_step.cm:$current_module.n:$_REQUEST['next_x'].gb:$_REQUEST['go_back_x'].a:$_REQUEST['assign_x'].<br>";
+//      echo "nas:$new_account_step.cm:$current_module.n:Request::quoted('next_x').gb:Request::quoted('go_back_x').a:Request::quoted('assign_x').<br>";
         return $output;
     }
 
@@ -752,8 +752,8 @@ class ELearningUtils
             $messages["info"] .= CSRFProtection::tokenTag();
             $messages["info"] .= "<table>";
             $messages["info"] .= "<tr><td>&nbsp;</td></tr>";
-            $messages["info"] .= "<tr><td>" . sprintf(_("Durch das L&ouml;schen der Daten zum System mit dem Index \"%s\" werden %s Konfigurationseintr&auml;ge und Verkn&uuml;pfungen von Stud.IP-Veranstaltungen und -User-Accounts unwiederbringlich aus der Stud.IP-Datenbank entfernt. Wollen Sie diese Daten jetzt l&ouml;schen?"), $_REQUEST['delete_cms'], $cmsystems[$_REQUEST['delete_cms']]["accounts"]+$cmsystems[$_REQUEST['delete_cms']]["modules"]+$cmsystems[$_REQUEST['delete_cms']]["config"] ) . "</td></tr>";
-            $messages["info"] .= "<tr><td align=\"center\"><input type=\"hidden\" name=\"delete_cms\" value=\"".$_REQUEST['delete_cms']."\">";
+            $messages["info"] .= "<tr><td>" . sprintf(_("Durch das L&ouml;schen der Daten zum System mit dem Index \"%s\" werden %s Konfigurationseintr&auml;ge und Verkn&uuml;pfungen von Stud.IP-Veranstaltungen und -User-Accounts unwiederbringlich aus der Stud.IP-Datenbank entfernt. Wollen Sie diese Daten jetzt l&ouml;schen?"), Request::quoted('delete_cms'), $cmsystems[Request::quoted('delete_cms')]["accounts"]+$cmsystems[Request::quoted('delete_cms')]["modules"]+$cmsystems[Request::quoted('delete_cms')]["config"] ) . "</td></tr>";
+            $messages["info"] .= "<tr><td align=\"center\"><input type=\"hidden\" name=\"delete_cms\" value=\"".Request::quoted('delete_cms')."\">";
             $messages["info"] .= '<div class="button-group">' . Button::create(_('Alle löschen'), 'confirm_delete') . Button::createCancel(_('Abbrechen'), 'abbruch') . '<div></td></tr>';
             $messages["info"] .= "<tr><td align=\"center\"></td></tr>";
             $messages["info"] .= "</table>";
@@ -761,8 +761,8 @@ class ELearningUtils
         }
 
         if (Request::submitted('confirm_delete')) {
-            unset($cmsystems[$_REQUEST['delete_cms']]);
-//          deleteCMSData($_REQUEST['delete_cms']);
+            unset($cmsystems[Request::quoted('delete_cms')]);
+//          deleteCMSData(Request::quoted('delete_cms'));
             $messages["info"] .= _("Daten wurden gel&ouml;scht.");
         }
 

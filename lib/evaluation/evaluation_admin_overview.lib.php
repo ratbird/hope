@@ -1293,7 +1293,7 @@ class EvalOverview {
                         if ($userid = get_userid($copy_rangeID))
                             $copy_rangeID = $userid;
                         $newEval = $eval->duplicate();
-                        if (Request::quoted("startMode"))
+                        if (Request::option("startMode"))
                             $newEval->setStartdate($startDate);
                         if (Request::quoted("stopMode")) {
                             $newEval->setStopdate($stopDate);
@@ -1411,17 +1411,17 @@ class EvalOverview {
                 }
 
                 if ($eval->isTemplate()) {
-                    if (empty($_REQUEST["link_range"]) && empty($_REQUEST["copy_range"]) && empty($_REQUEST["remove_range"])) {
+                    if (empty($link_range) && empty($copy_range) && empty($remove_range)) {
                         $update_message = sprintf(_("Es wurden keine Ver&auml;nderungen an der Evaluationsvorlage <b>%s</b> gespeichert."), $evalName);
                     }
                 } else {
                     // nothing changed
-                    if (empty($_REQUEST["startMode"]) && empty($_REQUEST["stopMode"]) &&
-                            empty($_REQUEST["link_range"]) && empty($_REQUEST["copy_range"]) && empty($_REQUEST["remove_range"]))
+                    if (! Request::option('startMode') && ! Request::option('stopMode') &&
+                            empty($link_range) && empty($copy_range) && empty($remove_range))
                         $update_message = _("Es wurden keine Ver&auml;nderungen gespeichert.");
 
                     // set new start date
-                    if (Request::quoted("startMode") && !$time_msg) {
+                    if (Request::option("startMode") && !$time_msg) {
                         $eval->setStartDate($startDate);
 
                         if ($startDate != NULL && $startDate <= time() - 1) {

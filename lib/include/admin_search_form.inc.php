@@ -633,7 +633,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                         if(!LockRules::check($seminar_id, 'seminar_visibility')){
                             ?>
                             <input type="hidden" name="all_sem[]" value="<? echo $seminar_id ?>">
-                            <input type="CHECKBOX" name="visibility_sem[<? echo $seminar_id ?>]" <? if (!$_REQUEST['select_none'] && ($_REQUEST['select_all'] || $result['visible'])) echo ' checked'; ?>>
+                            <input type="CHECKBOX" name="visibility_sem[<? echo $seminar_id ?>]" <? if (!Request::get('select_none') && (Request::get('select_all') || $result['visible'])) echo ' checked'; ?>>
                             <?
                         } else {
                             echo $result['visible'] ? _("sichtbar") : _("versteckt");
@@ -645,7 +645,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                         if(!LockRules::check($seminar_id, 'seminar_visibility')){
                             ?>
                             <input type="hidden" name="archiv_sem[]" value="_id_<? echo $seminar_id ?>">
-                            <input type="CHECKBOX" name="archiv_sem[]" <? if ($_REQUEST['select_all']) echo ' checked'; ?>>
+                            <input type="CHECKBOX" name="archiv_sem[]" <? if (Request::get('select_all')) echo ' checked'; ?>>
                             <?
                         } else {
                             echo "&nbsp;";

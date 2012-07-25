@@ -43,11 +43,11 @@ use Studip\Button, Studip\LinkButton;
             <td>
                 <label for="object_class">
                 <? if ($item->getObjectType() == 'sem'): ?>
-                    <?= _('Veranstaltungskategorie') ?>
+                    <?= _('Veranstaltungskategorie') ?>:
                 <? elseif ($item->getObjectType() == 'inst'): ?>
-                    <?= _('Einrichtungstyp') ?>
+                    <?= _('Einrichtungstyp') ?>:
                 <? else: ?>
-                    <?= _('Nutzerstatus') ?>
+                    <?= _('Nutzerstatus') ?>:
                 <? endif; ?>
                 </label>
             </td>
@@ -86,7 +86,7 @@ use Studip\Button, Studip\LinkButton;
         </tr>
         <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
             <td>
-                <label for="edit_perms"><?= _('benötigter Status') ?></label>
+                <label for="edit_perms"><?= _('benötigter Status') ?>:</label>
             </td>
             <td>
                 <select name="edit_perms" id="edit_perms">
@@ -123,7 +123,7 @@ use Studip\Button, Studip\LinkButton;
 	          <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
 	            <td>
 	                <label for="is_required">
-	                    <?= _('Eintrag verpflichtend') ?>
+	                    <?= _('Eintrag verpflichtend') ?>:
 	                </label>
 	            </td>
 	            <td>
@@ -133,7 +133,7 @@ use Studip\Button, Studip\LinkButton;
 	        <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
 	            <td valign="top">
 	                <label for="description">
-	                    <?= _('Beschreibung des Datenfelds') ?>
+	                    <?= _('Beschreibung') ?>:
 	                </label>
 	            </td>
 	            <td>

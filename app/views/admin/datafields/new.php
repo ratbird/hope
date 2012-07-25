@@ -57,7 +57,7 @@ use Studip\Button, Studip\LinkButton;
             </td>
         </tr>
         <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
-            <td><? if ($object_typ == 'sem') echo _('Veranstaltungskategorie'); elseif ($object_typ == 'inst') echo _('Einrichtungstyp'); else echo _('Nutzerstatus'); ?></td>
+            <td><? if ($object_typ == 'sem') echo _('Veranstaltungskategorie'); elseif ($object_typ == 'inst') echo _('Einrichtungstyp'); else echo _('Nutzerstatus'); ?>:</td>
             <td>
                 <? if ($object_typ == 'sem'): ?>
                     <select name="object_class">;
@@ -85,7 +85,7 @@ use Studip\Button, Studip\LinkButton;
             </td>
         </tr>
         <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
-            <td><?= _("benötigter Status") ?></td>
+            <td><?= _("benötigter Status") ?>:</td>
             <td>
                 <select name="edit_perms">
                     <option value="user">user</option>

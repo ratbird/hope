@@ -407,7 +407,11 @@ if (Request::option('group_id')) {
 }
 
 // if send message at single/multiple user coming from teilnehmer.php
-if (Request::getArray('rec_uname')  || Request::get('filter'))
+
+// We expect either an array of the recipients' usernames or the username of 
+// a single recipient or nothing (thus we need array_filter to remove invalid entries)
+$rec_unames = Request::getArray('rec_uname') ?: array_filter(array(Request::get('rec_uname')));
+if (count($rec_unames) > 0  || Request::get('filter'))
 {
     //$sms_data für neue Nachricht vorbereiten
     unset($sms_data['p_rec']);
@@ -483,14 +487,11 @@ if (Request::getArray('rec_uname')  || Request::get('filter'))
         }
     }
     //Nachricht wurde nur an bestimmte User versendet
-    $rec_uname = Request::getArray('rec_uname');
-    if ($rec_uname)
-        foreach ($rec_uname as $var) {
-            if(get_userid($var) != "")
-                $sms_data['p_rec'][] = $var;
+    foreach ($rec_unames as $var) {
+        if (get_userid($var) != '') {
+            $sms_data['p_rec'][] = $var;
         }
-    elseif (Request::get('rec_uname') && get_userid(Request::get('rec_uname')) != "")
-        $sms_data['p_rec'] = array(Request::get('rec_uname'));
+    }
     // append signature
     $sms_data["sig"] = $my_messaging_settings["addsignature"];
 }

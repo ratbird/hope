@@ -193,7 +193,7 @@ function checkdata(){
         echo '&nbsp;<select name="emaildomain">';
         foreach ($email_restriction_parts as $email_restriction_part) {
             echo '<option value="' . trim($email_restriction_part) . '"';
-            if (trim($email_restriction_part) == $_REQUEST['emaildomain']) {
+            if (trim($email_restriction_part) == Request::get('emaildomain')) {
                 echo ' selected="selected"';
             }
             echo '>@' . trim($email_restriction_part) . "</option>\n";

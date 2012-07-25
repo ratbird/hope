@@ -79,7 +79,7 @@ class EvaluationTree extends TreeAbstract {
       if (isset($args['evalID']))
         $this->evalID = $args['evalID'];
       else
-        $this->evalID = $_REQUEST["evalID"];
+        $this->evalID = Request::option("evalID");
       
       $this->load_mode = ($args['load_mode'] ? $args['load_mode'] : EVAL_LOAD_NO_CHILDREN);
       if (empty($this->evalID)){

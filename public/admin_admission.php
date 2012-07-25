@@ -70,7 +70,7 @@ if ($perm->have_perm('admin')) {
 
 $cssSw = new cssClassSwitcher;
 $admin_admission_data = unserialize(base64_decode($_REQUEST['admin_admission_data']));
-$admin_admission_data_original = unserialize(base64_decode($_REQUEST['admin_admission_data_original']));
+$admin_admission_data_original = unserialize(base64_decode($_REQUEST['admin_admission_data']));
 $seminar_id = Request::option('seminar_id',$SessSemName[1]);
 
 if(!$seminar_id && $admin_admission_data["sem_id"]) {
@@ -139,14 +139,14 @@ include 'lib/include/admin_search_form.inc.php';
 
 $messaging = new messaging;
 
-if ($_REQUEST['delete_studg']) {
-    $delete_studg = array_pop(array_keys($_REQUEST['delete_studg']));
-    $_REQUEST['delete_studg'] = $delete_studg;
+if (Request::quotedArray('delete_studg')) {
+    $delete_studg = array_pop(array_keys(Request::quotedArray('delete_studg')));
+    Request::set('delete_studg', $delete_studg);
 }
 
-if ($_REQUEST['delete_domain']) {
-    $delete_domain = array_pop(array_keys($_REQUEST['delete_domain']));
-    $_REQUEST['delete_domain'] = $delete_domain;
+if (Request::quotedArray('delete_domain')) {
+    $delete_domain = array_pop(array_keys(Request::quotedArray('delete_domain')));
+    Request::set('delete_domain', $delete_domain);
 }
 /**
 * This function creates a snapshot for all the values the admin_admission script uses
@@ -188,15 +188,15 @@ if (is_object($group_obj)) { //if so, do not allow to change admission_type
     $is_grouped = FALSE;
 }
 // user domain handling
-if (isset($seminar_id) && !LockRules::check($seminar_id, 'user_domain') && $_REQUEST['add_domain'])
+if (isset($seminar_id) && !LockRules::check($seminar_id, 'user_domain') && Request::quoted('add_domain'))
 {
-    $domain = new UserDomain($_REQUEST['add_domain']);
+    $domain = new UserDomain(Request::quoted('add_domain'));
     $domain->addSeminar($seminar_id);
 }
 
-if (isset($seminar_id) && !LockRules::check($seminar_id, 'user_domain') && $_REQUEST['delete_domain'])
+if (isset($seminar_id) && !LockRules::check($seminar_id, 'user_domain') && Request::quoted('delete_domain'))
 {
-    $domain = new UserDomain($_REQUEST['delete_domain']);
+    $domain = new UserDomain(Request::quoted('delete_domain'));
     $domain->removeSeminar($seminar_id);
 }
 
@@ -242,7 +242,7 @@ if ($seminar_id
         "add_studg", "toggle_admission_quota")
     && !$delete_studg
     && !$delete_domain
-    && !Request::option('add_domain')) {
+    && !Request::get('add_domain')) {
 
     $query = "SELECT * FROM seminare WHERE Seminar_id = ?";
     $statement = DBManager::get()->prepare($query);
@@ -376,8 +376,8 @@ if ($seminar_id
     $admin_admission_data["admission_prelim_txt"]=Request::quoted('admission_prelim_txt');
   }
 
-  if (Request::submitted('uebernehmen') && isset($_REQUEST["admission_waitlist"])) {
-      $admin_admission_data["admission_disable_waitlist"] = (int)(!$_REQUEST["admission_waitlist"]);
+  if (Request::submitted('uebernehmen') && Request::option('admission_waitlist')) {
+      $admin_admission_data["admission_disable_waitlist"] = (int)(!Request::int("admission_waitlist"));
   }
 
 
@@ -393,7 +393,7 @@ if ($seminar_id
 
 
       if (Request::submitted('toggle_admission_quota')){
-            $admin_admission_data["admission_enable_quota"] = (int)($_REQUEST["admission_enable_quota"]);
+            $admin_admission_data["admission_enable_quota"] = (int)(Request::quoted("admission_enable_quota"));
             if(!$admin_admission_data["admission_enable_quota"]){
                 $admin_admission_data["admission_endtime"] = -1;
                 $admin_admission_data["admission_selection_take_place"] = 0;
@@ -516,7 +516,7 @@ if ($seminar_id
 
         //Ende der Anmeldung checken
         if (Request::submitted("uebernehmen") && (!in_array($admin_admission_data["admission_type_org"], array(1,2)) || $perm->have_perm("admin")) ) {
-            if (!check_and_set_date(Request::quoted('adm_tag'), Request::quoted('adm_monat'), Request::quoted('adm_jahr'), Request::quoted('adm_stunde'), Request::quoted('adm_minute'), $admin_admission_data, "admission_endtime") || !$admin_admission_data["admission_endtime"]) {
+            if (!check_and_set_date(Request::get('adm_tag'), Request::get('adm_monat'), Request::get('adm_jahr'), Request::get('adm_stunde'), Request::get('adm_minute'), $admin_admission_data, "admission_endtime") || !$admin_admission_data["admission_endtime"]) {
                 $admin_admission_data["admission_endtime"] = -1;
                 if ($admin_admission_data["admission_type"] == 1) {
                     $errormsg=$errormsg."error§"._("Bitte geben Sie g&uuml;ltige Zeiten f&uuml;r das Losdatum ein!")."§";

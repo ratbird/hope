@@ -1,19 +1,43 @@
 compress: true
 javascripts:
   jquery: &jquery
-    - javascripts/jquery-1.7.js
-    - javascripts/jquery-ui-1.8.14.custom.min.js
-    - javascripts/jquery.metadata.js
-    - javascripts/jquery.placehold-0.3.js
-    - javascripts/validator.min.js
+    - javascripts/jquery/jquery-1.7.js
+    - javascripts/jquery/jquery-ui-1.8.14.custom.min.js
+    - javascripts/jquery/jquery.metadata.js
+    - javascripts/jquery/jquery.placehold-0.3.js
+    - javascripts/jquery/validator.min.js
 
   base:
     - *jquery
     - javascripts/underscore.js
     - javascripts/l10n.js
-    - javascripts/application.js
+    - javascripts/init.js
+    - javascripts/toolbar.js
+    - javascripts/markup.js
+    - javascripts/ajax_notifications.js
+    - javascripts/url_helper.js
+    - javascripts/updater.js
+    - javascripts/study_area_selection.js
+    - javascripts/dialog_box.js
+    - javascripts/file_system.js
+    - javascripts/arbeitsgruppen.js
+    - javascripts/news.js
+    - javascripts/quick_search.js
+    - javascripts/multi_select.js
+    - javascripts/browse.js
     - javascripts/tabs.js
     - javascripts/audio.js
+    - javascripts/calendar.js
+    - javascripts/schedule.js
+    - javascripts/skip_links.js
+    - javascripts/forms.js
+    - javascripts/messaging.js
+    - javascripts/room_request_dialog.js
+    - javascripts/calendar_dialog.js
+    - javascripts/old_upload.js
+    - javascripts/drag_and_drop_upload.js
+    - javascripts/status_group.js
+    - javascripts/application.js
 
   raumzeit:
     - javascripts/raumzeit.js

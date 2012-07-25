@@ -50,6 +50,7 @@ $cmd = Request::option('cmd');
 $edit_news = Request::quoted('edit_news');
 $view_mode = Request::quoted('view_mode');
 $title = Request::quoted('title');
+$view = Request::option('view');
 
 $search = Request::quoted('search');
 

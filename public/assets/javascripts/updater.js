@@ -72,7 +72,7 @@ STUDIP.JSUpdater = {
     nextCall: function (queue_id) {
         var pause_time = STUDIP.JSUpdater.lastAjaxDuration *
             Math.pow(1.33, STUDIP.JSUpdater.currentDelayFactor) *
-            15; //bei 200 ms von einer Anfrage, sind das mindestens 4 Sekunden bis zum n√§chsten Request
+            15; //bei 200 ms von einer Anfrage, sind das mindestens 4 Sekunden bis zum n‰chsten Request
         window.setTimeout(function () {
             STUDIP.JSUpdater.call(queue_id);
         }, pause_time);

@@ -4,7 +4,7 @@
 STUDIP.study_area_selection = {
 
     initialize: function () {
-        // Ein bisschen h√§sslich im Sinne von "DRY", aber wie sonst?
+        // Ein bisschen h‰sslich im Sinne von "DRY", aber wie sonst?
         jQuery('input[name^="study_area_selection[add]"]').live('click', function () {
             var parameters = jQuery(this).metadata();
             if (!(parameters && parameters.id)) {

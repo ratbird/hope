@@ -22,7 +22,7 @@ jQuery(function ($) {
                   if ($.isArray(result)) {
                       if (result.length) {
                           var not_bookable_rooms = _.map(result, function (v) {return $(select).children('option[value=' + v + ']').text();});
-                          select.title = 'Nicht buchbare Räume:' . toLocaleString() + ' ' + not_bookable_rooms.join(', ');
+                          select.title = 'Nicht buchbare RÃ¤ume:' . toLocaleString() + ' ' + not_bookable_rooms.join(', ');
                       } else {
                           select.title = '';
                       }

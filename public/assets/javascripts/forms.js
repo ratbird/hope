@@ -11,11 +11,11 @@ STUDIP.Forms = {
 
         //localized messages
         jQuery.tools.validator.localize('de', {
-            '*'          : 'Bitte Ã¤ndern Sie ihre Eingabe'.toLocaleString(),
-            ':email'     : 'Bitte geben Sie gÃ¼ltige E-Mail-Adresse ein'.toLocaleString(),
+            '*'          : 'Bitte ändern Sie ihre Eingabe'.toLocaleString(),
+            ':email'     : 'Bitte geben Sie gültige E-Mail-Adresse ein'.toLocaleString(),
             ':number'    : 'Bitte geben Sie eine Zahl ein'.toLocaleString(),
-            ':url'       : 'Bitte geben Sie eine gÃ¼ltige Web-Adresse ein'.toLocaleString(),
-            '[max]'      : 'Der eingegebene Wert darf nicht grÃ¶ÃŸer als $1 sein'.toLocaleString(),
+            ':url'       : 'Bitte geben Sie eine gültige Web-Adresse ein'.toLocaleString(),
+            '[max]'      : 'Der eingegebene Wert darf nicht größer als $1 sein'.toLocaleString(),
             '[min]'      : 'Der eingegebene Wert darf nicht kleiner als $1 sein'.toLocaleString(),
             '[required]' : 'Dies ist ein erforderliches Feld'.toLocaleString()
         });

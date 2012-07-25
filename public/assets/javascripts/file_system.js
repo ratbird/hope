@@ -4,16 +4,16 @@
 
 // hier ein paar "globale" Variablen, die nur in Funktionen des Filesystem-Namespace verwendet werden:
 STUDIP.Filesystem = {
-    hover_begin    : 0,             //erste Zeit, dass eine Datei Ã¼ber den Ordner ...hovered_folder bewegt wurde.
-    hovered_folder : '',            //letzter Ordner, Ã¼ber den eine gezogene Datei bewegt wurde.
+    hover_begin    : 0,             //erste Zeit, dass eine Datei über den Ordner ...hovered_folder bewegt wurde.
+    hovered_folder : '',            //letzter Ordner, über den eine gezogene Datei bewegt wurde.
     movelock       : false,         //wenn auf true gesetzt, findet gerade eine Animation statt.
-    sendstop       : false,         //wenn auf true gesetzt, wurde eine Datei in einen Ordner gedropped und die Seite lÃ¤dt sich gerade neu.
+    sendstop       : false,         //wenn auf true gesetzt, wurde eine Datei in einen Ordner gedropped und die Seite lädt sich gerade neu.
     getURL         : function (url) {
         return (url || document.URL).split("#", 1)[0];
     },
     /**
-     * LÃ¤sst die gelben Pfeile verschwinden und ersetzt sie durch Anfassersymbole.
-     * Wichtig fÃ¼r Javascript-Nichtjavascript Behandlung. Nutzer ohne Javascript
+     * Lässt die gelben Pfeile verschwinden und ersetzt sie durch Anfassersymbole.
+     * Wichtig für Javascript-Nichtjavascript Behandlung. Nutzer ohne Javascript
      * sehen nur die gelben Pfeile zum Sortieren.
      */
     unsetarrows     : function () {
@@ -65,7 +65,7 @@ STUDIP.Filesystem.setdraggables = function () {
 };
 
 /**
- * deklariert Ordner als Objekte, in die Dateien gedropped werden kÃ¶nnen
+ * deklariert Ordner als Objekte, in die Dateien gedropped werden können
  */
 STUDIP.Filesystem.setdroppables = function () {
     jQuery("div.droppable").droppable({
@@ -113,7 +113,7 @@ STUDIP.Filesystem.setdroppables = function () {
 };
 
 /**
- * Ã–ffnet einen Dateiordner, wenn eine Datei lange genug drÃ¼ber gehalten wird.
+ * Öffnet einen Dateiordner, wenn eine Datei lange genug drüber gehalten wird.
  */
 STUDIP.Filesystem.openhoveredfolder = function (md5_id) {
     var zeit = new Date();
@@ -131,7 +131,7 @@ STUDIP.Filesystem.openhoveredfolder = function (md5_id) {
 };
 
 /**
- * Ã¶ffnet/schlieÃŸt einen Dateiordner entweder per AJAX oder nur per Animation,
+ * öffnet/schließt einen Dateiordner entweder per AJAX oder nur per Animation,
  * wenn Inhalt schon geladen wurde.
  */
 STUDIP.Filesystem.changefolderbody = function (md5_id) {
@@ -173,7 +173,7 @@ STUDIP.Filesystem.changefolderbody = function (md5_id) {
 };
 
 /**
- * Ã¶ffnet/schlieÃŸt eine Datei entweder per AJAX oder nur per Animation,
+ * öffnet/schließt eine Datei entweder per AJAX oder nur per Animation,
  * wenn Inhalt schon geladen wurde.
  */
 
@@ -199,7 +199,7 @@ STUDIP.Filesystem.changefilebody = function (md5_id) {
                     jQuery("#file_" + md5_id + "_body").slideDown(400);
                 });
             } else {
-                //Falls der DateikÃ¶rper schon geladen ist.
+                //Falls der Dateikörper schon geladen ist.
                 jQuery("#file_" + md5_id + "_body_row").show();
                 jQuery("#file_" + md5_id + "_header").css('fontWeight', 'bold');
                 jQuery("#file_" + md5_id + "_arrow_td").addClass('printhead3')

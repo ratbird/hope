@@ -150,8 +150,8 @@ function show_votes ($rangeID, $userID, $perm, $isHomepage = NO) {
       $haveFullPerm = $haveFullPerm || ($userID == $eval->getAuthorID());
 
       /* Get post and get-variables ---------------------------------------- */
-      $formID = $_REQUEST["voteformID"];
-      $openID = $_REQUEST["voteopenID"];
+      $formID = Request::option("voteformID");
+      $openID = Request::option("voteopenID");
       $open = (($openID == $evalID) || Request::option('openAllVotes')) && (!Request::option('closeVotes'));
       /* ------------------------------------------------------------------- */
 

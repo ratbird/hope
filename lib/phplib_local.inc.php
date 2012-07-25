@@ -513,8 +513,8 @@ class Seminar_Auth extends Auth {
             } else {
                 $actual_perms = $this->db->f('perms');
             }
-        } elseif ($cfg->getValue('MAINTENANCE_MODE_ENABLE') && isset($_REQUEST['loginname'])) {
-            $this->db->query(sprintf("select username,perms from %s where username = '%s' AND perms='root'", $this->database_table, $_REQUEST['loginname']));
+        } elseif ($cfg->getValue('MAINTENANCE_MODE_ENABLE') && Request::quoted('loginname')) {
+            $this->db->query(sprintf("select username,perms from %s where username = '%s' AND perms='root'", $this->database_table, Request::quoted('loginname')));
             $this->db->next_record();
             $this->auth["uname"] = $this->db->f('username');
             $actual_perms = $this->db->f('perms');
@@ -575,7 +575,7 @@ class Seminar_Auth extends Auth {
         // load the default set of plugins
         PluginEngine::loadPlugins();
 
-        if ($_REQUEST['loginname'] && !$_COOKIE[$GLOBALS['sess']->name]){
+        if (Request::quoted('loginname') && !$_COOKIE[$GLOBALS['sess']->name]){
             $login_template = $GLOBALS['template_factory']->open('nocookies');
         } else if (isset($this->need_email_activation)) {
             $login_template = $GLOBALS['template_factory']->open('login_emailactivation');
@@ -604,7 +604,7 @@ class Seminar_Auth extends Auth {
         global $_language_path;
 
         //prevent replay attack
-        if (!Seminar_Session::check_ticket($_REQUEST['login_ticket'])){
+        if (!Seminar_Session::check_ticket(Request::option('login_ticket'))){
             return false;
         }
 
@@ -616,8 +616,8 @@ class Seminar_Auth extends Auth {
         $_language_path = init_i18n($_SESSION['_language']);
 
 
-        $this->auth["uname"] = $_REQUEST['loginname'];   // This provides access for "loginform.ihtml"
-        $this->auth["jscript"] = $_REQUEST['resolution'] != "";
+        $this->auth["uname"] = Request::quoted('loginname');   // This provides access for "loginform.ihtml"
+        $this->auth["jscript"] = Request::quoted('resolution') != "";
 
         $check_auth = StudipAuthAbstract::CheckAuthentication(Request::get('loginname'),Request::get('password'),$this->auth['jscript']);
 
@@ -733,7 +733,7 @@ class Seminar_Register_Auth extends Seminar_Auth {
         $validator=new email_validation_class;  // Klasse zum Ueberpruefen der Eingaben
         $validator->timeout=10;                                 // Wie lange warten wir auf eine Antwort des Mailservers?
 
-        if (!Seminar_Session::check_ticket($_REQUEST['login_ticket'])){
+        if (!Seminar_Session::check_ticket(Request::option('login_ticket'))){
             return false;
         }
 

@@ -289,7 +289,7 @@ function export_sem($inst_id, $ex_sem_id = "all")
 {
     global $range_id, $xml_file, $o_mode, $xml_names_lecture, $xml_groupnames_lecture, $object_counter, $SEM_TYPE, $SEM_CLASS, $filter, $ex_sem, $ex_sem_class,$ex_person_details,$persons;
 
-    $ex_only_homeinst = (int)$_REQUEST['ex_only_homeinst'];
+    $ex_only_homeinst = (int)Request::int('ex_only_homeinst');
 
     $db=new DB_Seminar;
     $db2=new DB_Seminar;

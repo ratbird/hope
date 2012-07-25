@@ -80,10 +80,10 @@ $debug = 0;
 
 $evalAction = $lib->getPageCommand();
 
-$openID = $_REQUEST["openID"];
-$evalID = $_REQUEST["evalID"];
-$search = $_REQUEST["search"]; // range
-$templates_search = $_REQUEST["templates_search"];
+$openID = Request::option("openID");
+$evalID = Request::option("evalID");
+$search = Request::quoted("search"); // range
+$templates_search = Request::quoted("templates_search");
 $search = $templates_search;
 /* ---------------------------------------------------------- end: variables */
 
@@ -262,7 +262,7 @@ $table->addContent ($tr);
 /* ----------------------------------------------------------- end: infoline */
 
 /* Show showrange search results ------------------------------------------- */
-if( $evalAction == "search_showrange" && $_REQUEST["search"] ) {
+if( $evalAction == "search_showrange" && Request::quoted("search") ) {
     $tr = new HTML ("tr");
     $td = new HTML ("td");
     $td->addAttr ("class", "blank");
@@ -276,7 +276,7 @@ if( $evalAction == "search_showrange" && $_REQUEST["search"] ) {
     $b->addContent(_("Suchergebnisse:"));
     $td->addContent ($b);
 
-    $td->addHTMLContent ($lib->createDomainLinks ($_REQUEST["search"]));
+    $td->addHTMLContent ($lib->createDomainLinks (Request::quoted("search")));
     $tr->addContent ($td);
     $table->addContent ($tr);
     $table->addContent ($lib->createClosingRow());

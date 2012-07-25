@@ -508,7 +508,7 @@ class EvalOverview {
         $no_permission = EvaluationObjectDB::getEvalUserRangesWithNoPermission($eval);
 
         if (($globalperm == "root" || $globalperm == "admin") &&
-                !$_REQUEST["search"] && $eval->isTemplate()) {
+                !Request::quoted("search") && $eval->isTemplate()) {
             // no RuntimeSettings and Save-Button for Template if there are no ranges
             $td2->addHTMLContent($this->createDomainSettings($eval, $state, $number % 2 ? "eval_grey_border" : "eval_light_border" ));
         } elseif ($no_permission) {
@@ -1191,17 +1191,17 @@ class EvalOverview {
 
 
                 /* Timesettings ---------------------------------------------------- */
-                if ($_REQUEST["startMode"]) {
+                if (Request::option("startMode")) {
 
 
-                    switch ($_REQUEST["startMode"]) {
+                    switch (Request::option("startMode")) {
 
                         case "manual":
                             $startDate = NULL;
                             break;
 
                         case "timeBased":
-                            $startDate = EvalCommon::date2timestamp($_REQUEST["startDay"], $_REQUEST["startMonth"], $_REQUEST["startYear"], $_REQUEST["startHour"], $_REQUEST["startMinute"]);
+                            $startDate = EvalCommon::date2timestamp(Request::quoted("startDay"), Request::quoted("startMonth"), Request::quoted("startYear"), Request::quoted("startHour"), Request::quoted("startMinute"));
                             break;
 
                         case "immediate":
@@ -1215,22 +1215,22 @@ class EvalOverview {
                     }
                 }
 
-                if ($_REQUEST["stopMode"]) {
+                if (Request::option("stopMode")) {
 
-                    switch ($_REQUEST["stopMode"]) {
+                    switch (Request::option("stopMode")) {
                         case "manual":
                             $stopDate = NULL;
                             $timeSpan = NULL;
                             break;
 
                         case "timeBased":
-                            $stopDate = EvalCommon::date2timestamp($_REQUEST["stopDay"], $_REQUEST["stopMonth"], $_REQUEST["stopYear"], $_REQUEST["stopHour"], $_REQUEST["stopMinute"]);
+                            $stopDate = EvalCommon::date2timestamp(Request::quoted("stopDay"), Request::quoted("stopMonth"), Request::quoted("stopYear"), Request::quoted("stopHour"), Request::quoted("stopMinute"));
                             $timeSpan = NULL;
                             break;
 
                         case "timeSpanBased":
                             $stopDate = NULL;
-                            $timeSpan = $_REQUEST["timeSpan"];
+                            $timeSpan = Request::quoted("timeSpan");
                             break;
                     }
 
@@ -1245,7 +1245,8 @@ class EvalOverview {
 
 
                 /* link eval to ranges --------------------------------------------- */
-                if ($link_range_Array = $_REQUEST["link_range"]) {
+                $link_range_Array = Request::optionArray("link_range");
+                if ($link_range_Array) {
                     $isTemplate = $eval->isTemplate();
                     if ($isTemplate) {
                         $newEval = $eval->duplicate();
@@ -1285,15 +1286,16 @@ class EvalOverview {
 
 
                 /* copy eval to ranges --------------------------------------------- */
-                if ($copy_range_Array = $_REQUEST["copy_range"]) {
+                $copy_range_Array = Request::optionArray("copy_range");
+                if (!empty($copy_range_Array)) {
                     $counter_copy = 0;
                     foreach ($copy_range_Array as $copy_rangeID => $v) {
                         if ($userid = get_userid($copy_rangeID))
                             $copy_rangeID = $userid;
                         $newEval = $eval->duplicate();
-                        if ($_REQUEST["startMode"])
+                        if (Request::quoted("startMode"))
                             $newEval->setStartdate($startDate);
-                        if ($_REQUEST["stopMode"]) {
+                        if (Request::quoted("stopMode")) {
                             $newEval->setStopdate($stopDate);
                             $newEval->setTimespan($timeSpan);
                         }
@@ -1316,7 +1318,8 @@ class EvalOverview {
                 /* ------------------------------------------- end: copy eval to ranges */
 
                 /* unlink ranges ------------------------------------------------------- */
-                if ($remove_range_Array = $_REQUEST["remove_range"]) {
+                $remove_range_Array = Request::optionArray("remove_range");
+                if (!empty($remove_range_Array)) {
 
                     /* if all rangeIDs will be removed, so ask if it should be deleted -- */
                     if (sizeof($remove_range_Array) == $eval->getNumberRanges()) {
@@ -1418,7 +1421,7 @@ class EvalOverview {
                         $update_message = _("Es wurden keine Ver&auml;nderungen gespeichert.");
 
                     // set new start date
-                    if ($_REQUEST["startMode"] && !$time_msg) {
+                    if (Request::quoted("startMode") && !$time_msg) {
                         $eval->setStartDate($startDate);
 
                         if ($startDate != NULL && $startDate <= time() - 1) {
@@ -1428,7 +1431,7 @@ class EvalOverview {
                     }
 
                     // set new stop date
-                    if ($_REQUEST["stopMode"] && !$time_msg) {
+                    if (Request::quoted("stopMode") && !$time_msg) {
                         $eval->setStopDate($stopDate);
                         $eval->setTimeSpan($timeSpan);
 
@@ -1467,7 +1470,7 @@ class EvalOverview {
 
             case "search_showrange":
             case "search_range":
-                $search = $_REQUEST["search"];
+                $search = Request::quoted("search");
 
                 if (EvaluationObjectDB::getGlobalPerm(YES) < 31) {
                     $safeguard = $this->createSafeguard("ausruf", _("Sie besitzen keine Berechtigung eine Suche durchzuführen."));
@@ -1839,8 +1842,8 @@ class EvalOverview {
         $rangeIDs = $eval->getRangeIDs();
 
         // search results
-        if ($_REQUEST["search"])
-            $results = $evalDB->search_range($_REQUEST["search"]);
+        if (Request::quoted("search"))
+            $results = $evalDB->search_range(Request::quoted("search"));
         elseif ($globalperm == "dozent")
             $results = $evalDB->search_range("");
 
@@ -1850,7 +1853,7 @@ class EvalOverview {
             $results[$user->id] = array("type" => "user", "name" => _("Profil"));
         }
 
-        if ($globalperm == "dozent" || $globalperm == "autor" || $_REQUEST["search"])
+        if ($globalperm == "dozent" || $globalperm == "autor" || Request::quoted("search"))
             $showsearchresults = 1;
 
 
@@ -2150,7 +2153,7 @@ class EvalOverview {
 //       $td->addContent(new HTMLempty("hr"));
             $b = new HTML("b");
 #       $b->addContent (_("Suchergebnisse:"));
-            if ($_REQUEST["search"])
+            if (Request::quoted("search"))
                 $b->addContent(_("Sie können die Evaluation folgenden Bereichen zuordnen (Suchergebnisse):"));
             else
                 $b->addContent(_("Sie können die Evaluation folgenden Bereichen zuordnen:"));
@@ -2175,7 +2178,7 @@ class EvalOverview {
             $input->addAttr("type", "text");
             $input->addAttr("name", "search");
             $input->addAttr("style", "vertical-align:middle;");
-            $input->addAttr("value", "" . $_REQUEST["search"] . "");
+            $input->addAttr("value", "" . Request::quoted("search") . "");
             $td->addContent($input);
 
             $td->addContent(Button::create(_('Suchen'), 'search_range_button', array('title' => _('Bereiche suchen'))));
@@ -2361,8 +2364,8 @@ class EvalOverview {
      *
      */
     function getPageCommand() {
-        if (isset($_REQUEST["evalAction"]))
-            return $_REQUEST["evalAction"];
+        if (Request::option("evalAction"))
+            return Request::option("evalAction");
 
         foreach ($_REQUEST as $key => $value) {
             if (preg_match("/(.*)_button(_x)?/", $key, $command))

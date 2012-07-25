@@ -92,7 +92,7 @@ class EvalEdit{
         
         $input = new HTML ("input");
         $input->addAttr ("type","hidden");
-        $input->addAttr ("rangeID",$_REQUEST["rangeID"]);
+        $input->addAttr ("rangeID",Request::option("rangeID"));
         
         return ;
     }

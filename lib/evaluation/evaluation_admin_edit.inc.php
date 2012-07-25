@@ -91,7 +91,7 @@ if (Request::submitted('newButton')){
     // create a new eval
     $eval = new Evaluation ();
     
-    $rangeID = $_REQUEST["rangeID"];
+    $rangeID = Request::option("rangeID");
     if ($rangeID == get_username ($user->id))
         $rangeID = $user->id;
 
@@ -108,9 +108,9 @@ if (Request::submitted('newButton')){
     $groupID = $group->getObjectID();
     $evalID = $eval->getObjectID();
 
-} elseif (isset($_REQUEST["evalID"]) && ($_REQUEST["evalID"] != NULL)) {    
+} elseif (Request::option("evalID") && (Request::option("evalID") != NULL)) {
     $debug .= "isset _REQUTEST[evalID]!<br>";
-    $evalID = $_REQUEST["evalID"];
+    $evalID = Request::option("evalID");
     $eval = new Evaluation ($evalID, NULL, EVAL_LOAD_NO_CHILDREN);
     if ($eval->isError ()) {
         $error = EvalCommon::createReportMessage (
@@ -137,8 +137,8 @@ if (Request::submitted('newButton')){
 
 # check the itemID =========================================================  #
 
-if (isset($_REQUEST['itemID'])) {
-    $_SESSION['itemID'] = $_REQUEST['itemID'];
+if (Request::option('itemID')) {
+    $_SESSION['itemID'] = Request::option('itemID');
 } elseif (Request::submitted('newButton')) {
     $_SESSION['itemID'] = "root";
 }
@@ -146,8 +146,8 @@ if (isset($_REQUEST['itemID'])) {
 
 # check the rangeID ========================================================  #
 
-if (isset($_REQUEST["rangeID"])) {
-    $_SESSION['rangeID'] = $_REQUEST["rangeID"];
+if (Request::option("rangeID")) {
+    $_SESSION['rangeID'] = Request::option("rangeID");
    
 }
 

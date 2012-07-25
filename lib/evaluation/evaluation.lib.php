@@ -254,7 +254,7 @@ class EvalCommon {
    * Returns the rangeID
    */
   function getRangeID () {
-    $rangeID = $_REQUEST['rangeid'] ? $_REQUEST['rangeid'] : 
+    $rangeID = Request::option('range_id') ? Request::option('range_id') : 
       $GLOBALS["SessSemName"][1];
     if (empty ($rangeID) || ($rangeID == get_username ($GLOBALS['user']->id)))
       $rangeID = $GLOBALS['user']->id;

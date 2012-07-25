@@ -59,8 +59,8 @@ if (!$perm->have_studip_perm('tutor', $id)) {
 }
 
 $powerFeatures = true;
-if (isset($_REQUEST['cmd'])) {
-    $cmd = $_REQUEST['cmd'];
+if (Request::option('cmd')) {
+    $cmd = Request::option('cmd');
 }
 $sem = new Seminar($id);
 $sem->checkFilter();
@@ -68,7 +68,7 @@ $themen =& $sem->getIssues();
 
 // if all entries are opened, we parse the submitted results into appropriate arrays
 foreach ($_REQUEST as $key => $val) {
-    if ($_REQUEST['allOpen']) {
+    if (Request::get('allOpen')) {
         if (strstr($key, 'theme_title')) {
             $keys = explode('§', $key);
             $changeTitle[$keys[1]] = $val;

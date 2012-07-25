@@ -4,26 +4,26 @@
 # Lifter003: TODO
 # Lifter010: TODO
 function themen_open() {
-    $_SESSION['issue_open'][$_REQUEST['open_close_id']] = true;
+    $_SESSION['issue_open'][Request::option('open_close_id')] = true;
 }
 
 function themen_close() {
-    $_SESSION['issue_open'][$_REQUEST['open_close_id']] = false;
-    unset ($_SESSION['issue_open'][$_REQUEST['open_close_id']]);
+    $_SESSION['issue_open'][Request::option('open_close_id')] = false;
+    unset ($_SESSION['issue_open'][Request::option('open_close_id')]);
 }
 
 function themen_doAddIssue() {
     global $id, $sem;
 
     $issue = new Issue(array('seminar_id' => $id));
-    $issue->setTitle($_REQUEST['theme_title']);
-    $issue->setDescription($_REQUEST['theme_description']);
-    $issue->setForum(($_REQUEST['forumFolder'] == 'on') ? TRUE : FALSE);
-    $issue->setFile(($_REQUEST['fileFolder'] == 'on') ? TRUE : FALSE);
+    $issue->setTitle(Request::quoted('theme_title'));
+    $issue->setDescription(Request::quoted('theme_description'));
+    $issue->setForum((Request::quoted('forumFolder') == 'on') ? TRUE : FALSE);
+    $issue->setFile((Request::quoted('fileFolder') == 'on') ? TRUE : FALSE);
     $sem->addIssue($issue);     // sets $issue->priority
     $issue->store();
 
-    $termin = new SingleDate($_REQUEST['singledate_id']);
+    $termin = new SingleDate(Request::option('singledate_id'));
     $termin->addIssueID($issue->getIssueID());
     $termin->store();
     $sem->createMessage(_("Folgendes Thema wurde hinzugefügt:") .'<br>'. htmlReady($issue->toString()));
@@ -32,13 +32,13 @@ function themen_doAddIssue() {
 function themen_changeIssue() {
     global $sem, $themen;
 
-    $msg .= sprintf(_("Das Thema \"%s\" wurde geändert."), htmlReady($themen[$_REQUEST['issue_id']]->toString())) . '<br>';
-    $themen[$_REQUEST['issue_id']]->setDescription($_REQUEST['theme_description']);
-    $themen[$_REQUEST['issue_id']]->setTitle($_REQUEST['theme_title']);
-    $themen[$_REQUEST['issue_id']]->setForum(($_REQUEST['forumFolder'] == 'on') ? TRUE : FALSE);
-    $themen[$_REQUEST['issue_id']]->setFile(($_REQUEST['fileFolder'] == 'on') ? TRUE : FALSE);
-    $themen[$_REQUEST['issue_id']]->store();
-    if ($zw = $themen[$_REQUEST['issue_id']]->getMessages()) {
+    $msg .= sprintf(_("Das Thema \"%s\" wurde geändert."), htmlReady($themen[Request::quoted('issue_id')]->toString())) . '<br>';
+    $themen[Request::option('issue_id')]->setDescription(Request::quoted('theme_description'));
+    $themen[Request::option('issue_id')]->setTitle(Request::quoted('theme_title'));
+    $themen[Request::option('issue_id')]->setForum((Request::quoted('forumFolder') == 'on') ? TRUE : FALSE);
+    $themen[Request::option('issue_id')]->setFile((Request::quoted('fileFolder') == 'on') ? TRUE : FALSE);
+    $themen[Request::option('issue_id')]->store();
+    if ($zw = $themen[Request::option('issue_id')]->getMessages()) {
         foreach ($zw as $val) {
             $msg .= $val.'<br>';
         }
@@ -66,7 +66,7 @@ function themen_saveAll() {
     foreach ($changeTitle as $key => $val) {    // we use the changeTitle-array for running through all themes ($key = issue_id and $val = title)
 
         unset($termin);
-        if (($changeTitle[$key] != '') || ($changeDescription[$key] != '') || ($changeForum[$key] == 'on') || ($changeFile[$key] == 'on') || $_REQUEST['createAllFileFolders'] == 'on' || $_REQUEST['createAllForumFolders'] == 'on') {
+        if (($changeTitle[$key] != '') || ($changeDescription[$key] != '') || ($changeForum[$key] == 'on') || ($changeFile[$key] == 'on') || Request::quoted('createAllFileFolders') == 'on' || Request::quoted('createAllForumFolders') == 'on') {
             $termin = new SingleDate($key);
             $issue_ids = $termin->getIssueIDs();
             if (sizeof($issue_ids) == 0) {
@@ -86,8 +86,8 @@ function themen_saveAll() {
                 $forumValue = ($changeForum[$key] == 'on') ? true : false;
                 $fileValue = ($changeFile[$key] == 'on') ? true : false;
 
-                if ($_REQUEST['createAllForumFolders'] == 'on') $forumValue = true;
-                if ($_REQUEST['createAllFileFolders'] == 'on')  $fileValue = true;
+                if (Request::quoted('createAllForumFolders') == 'on') $forumValue = true;
+                if (Request::quoted('createAllFileFolders') == 'on')  $fileValue = true;
 
                 if (    ($themen[$cur_issue_id]->getTitle() != $val) ||
                         ($themen[$cur_issue_id]->getDescription() != $changeDescription[$key]) ||

@@ -54,8 +54,8 @@ define('SELECTED', ' checked');
 define('NOT_SELECTED', '');
 
 $powerFeatures = true;
-if (isset($_REQUEST['cmd'])) {
-    $cmd = $_REQUEST['cmd'];
+if (Request::option('cmd')) {
+    $cmd = Request::option('cmd');
 }
 $sem = new Seminar($id);
 $sem->checkFilter();
@@ -80,7 +80,7 @@ foreach ($_REQUEST as $key => $val) {
         $submitter_id = $keys[0];
         $cycle_id = $keys[1];
     }
-    if ($_REQUEST['allOpen']) {
+    if (Request::quoted('allOpen')) {
         if (strstr($key, 'theme_title')) {
             $keys = explode('§', $key);
             $changeTitle[$keys[1]] = $val;
@@ -104,9 +104,10 @@ if (isset($submitter_id)) {
     if ($submitter_id == 'autoAssign') {
         $cmd = 'autoAssign';
     } else {
-        if (is_array($_REQUEST['themen'])) {
+        $themen = Request::getArray('themen');
+        if (!empty($themen)) {
             $termin =& $sem->getSingleDate($submitter_id, $cycle_id);
-            foreach ($_REQUEST['themen'] as $iss_id) {
+            foreach ($themen as $iss_id) {
                 $termin->addIssueID($iss_id);
             }
             $termin->store();

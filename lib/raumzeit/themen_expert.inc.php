@@ -6,12 +6,12 @@
 function themen_autoAssign() {
     global $sem, $cycle_id;
 
-    $sem->autoAssignIssues($_REQUEST['themen'], $cycle_id);
+    $sem->autoAssignIssues(Request::getArray('themen'), $cycle_id);
 }
 
 function themen_changeChronoGroupedFilter() {
     global $chronoGroupedFilter;
-    $chronoGroupedFilter = $_REQUEST['newFilter'];
+    $chronoGroupedFilter = Request::quoted('newFilter');
 }
 
 function themen_chronoAutoAssign() {
@@ -33,22 +33,22 @@ function themen_chronoAutoAssign() {
 }
 
 function themen_open() {
-   $_SESSION['issue_open'][$_REQUEST['open_close_id']] = true;
+   $_SESSION['issue_open'][Request::option('open_close_id')] = true;
 }
 
 function themen_close() {
-    $_SESSION['issue_open'][$_REQUEST['open_close_id']] = false;
-    unset ($_SESSION['issue_open'][$_REQUEST['open_close_id']]);
+    $_SESSION['issue_open'][Request::option('open_close_id')] = false;
+    unset ($_SESSION['issue_open'][Request::option('open_close_id')]);
 }
 
 function themen_doAddIssue() {
     global $id, $sem;
 
     $issue = new Issue(array('seminar_id' => $id));
-    $issue->setTitle($_REQUEST['theme_title']);
-    $issue->setDescription($_REQUEST['theme_description']);
-    $issue->setForum(($_REQUEST['forumFolder'] == 'on') ? TRUE : FALSE);
-    $issue->setFile(($_REQUEST['fileFolder'] == 'on') ? TRUE : FALSE);
+    $issue->setTitle(Request::get('theme_title'));
+    $issue->setDescription(Request::get('theme_description'));
+    $issue->setForum((Request::get('forumFolder') == 'on') ? TRUE : FALSE);
+    $issue->setFile((Request::get('fileFolder') == 'on') ? TRUE : FALSE);
     $sem->addIssue($issue);     // sets $issue->priority
     $issue->store();
     $sem->createMessage(_("Folgendes Thema wurde hinzugefügt:").'<br><li>'.htmlReady($issue->toString()));
@@ -57,20 +57,20 @@ function themen_doAddIssue() {
 function themen_deleteIssueID() {
     global $sem ;
 
-    $termin = $sem->getSingleDate($_REQUEST['sd_id'], $_REQUEST['cycle_id']);
-    $termin->deleteIssueID($_REQUEST['issue_id']);
+    $termin = $sem->getSingleDate(Request::option('sd_id'), Request::option('cycle_id'));
+    $termin->deleteIssueID(Request::option('issue_id'));
 }
 
 function themen_changeIssue() {
     global $sem, $themen;
     
-    $msg .= sprintf(_("Das Thema \"%s\" wurde geändert."), htmlReady($themen[$_REQUEST['issue_id']]->toString())) . '<br>';
-    $themen[$_REQUEST['issue_id']]->setDescription($_REQUEST['theme_description']);
-    $themen[$_REQUEST['issue_id']]->setTitle($_REQUEST['theme_title']);
-    $themen[$_REQUEST['issue_id']]->setForum(($_REQUEST['forumFolder'] == 'on') ? TRUE : FALSE);
-    $themen[$_REQUEST['issue_id']]->setFile(($_REQUEST['fileFolder'] == 'on') ? TRUE : FALSE);
-    $themen[$_REQUEST['issue_id']]->store();
-    if ($zw = $themen[$_REQUEST['issue_id']]->getMessages()) {
+    $msg .= sprintf(_("Das Thema \"%s\" wurde geändert."), htmlReady($themen[Request::option('issue_id')]->toString())) . '<br>';
+    $themen[Request::option('issue_id')]->setDescription(Request::get('theme_description'));
+    $themen[Request::option('issue_id')]->setTitle(Request::get('theme_title'));
+    $themen[Request::option('issue_id')]->setForum((Request::get('forumFolder') == 'on') ? TRUE : FALSE);
+    $themen[Request::option('issue_id')]->setFile((Request::get('fileFolder') == 'on') ? TRUE : FALSE);
+    $themen[Request::option('issue_id')]->store();
+    if ($zw = $themen[Request::option('issue_id')]->getMessages()) {
         foreach ($zw as $val) {
             $msg .= $val.'<br>';
         }
@@ -80,8 +80,8 @@ function themen_changeIssue() {
 
 function themen_deleteIssue() {
     global $sem, $themen;
-    $sem->createMessage(_("Folgendes Thema wurde gelöscht:").'<br><li>'.htmlReady($themen[$_REQUEST['issue_id']]->toString()));
-    $sem->deleteIssue($_REQUEST['issue_id']);
+    $sem->createMessage(_("Folgendes Thema wurde gelöscht:").'<br><li>'.htmlReady($themen[Request::option('issue_id')]->toString()));
+    $sem->deleteIssue(Request::option('issue_id'));
 }
 
 function themen_addIssue() {
@@ -108,12 +108,12 @@ function themen_addIssue() {
 
 function themen_changePriority() {
     global $sem, $themen;
-    if ($themen[$_REQUEST['issueID']]->getPriority() > $_REQUEST['newPriority']) {
-        $sem->createMessage(sprintf(_("Das Thema \"%s\" wurde um eine Position nach oben verschoben."), htmlReady($themen[$_REQUEST['issueID']]->toString())));
+    if ($themen[Request::option('issueID')]->getPriority() > Request::get('newPriority')) {
+        $sem->createMessage(sprintf(_("Das Thema \"%s\" wurde um eine Position nach oben verschoben."), htmlReady($themen[Request::option('issueID')]->toString())));
     } else {
-        $sem->createMessage(sprintf(_("Das Thema \"%s\" wurde um eine Position nach unten verschoben."), htmlReady($themen[$_REQUEST['issueID']]->toString())));
+        $sem->createMessage(sprintf(_("Das Thema \"%s\" wurde um eine Position nach unten verschoben."), htmlReady($themen[Request::option('issueID')]->toString())));
     }
-    $sem->changeIssuePriority($_REQUEST['issueID'], $_REQUEST['newPriority']);
+    $sem->changeIssuePriority(Request::option('issueID'), Request::get('newPriority'));
 }
 
 function themen_openAll() {
@@ -167,15 +167,17 @@ function themen_checkboxAction() {
             break;
 
         case 'invert':
-            foreach ($_REQUEST['themen'] as $val) {
+            $themen = Request::getArray('themen');
+            foreach ($themen as $val) {
                 $choosen[$val] = TRUE;
             }
             break;
 
         case 'deleteChoosen':
-            if (!$_REQUEST['themen']) break;
+            $themen = Request::getArray('themen');
+            if (empty($themen)) break;
             $msg = _("Folgende Themen wurden gelöscht:").'<br>';
-            foreach ($_REQUEST['themen'] as $val) {
+            foreach ($themen as $val) {
                 $thema =& $sem->getIssue($val);
                 $msg .= '<li>'.htmlReady($thema->toString()).'<br>';
                 unset($thema);

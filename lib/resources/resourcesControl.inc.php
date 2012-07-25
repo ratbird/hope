@@ -165,13 +165,13 @@ include ("$RELATIVE_PATH_RESOURCES/views/page_intros.inc.php");
 /*****************************************************************************
 Kopf der Ausgabe
 /*****************************************************************************/
-if (isset($_REQUEST['print_view'])){
+if (Request::get('print_view')){
     PageLayout::removeStylesheet('style.css');
     PageLayout::addStylesheet('print.css'); // use special stylesheet for printing
 }
 
 include ('lib/include/html_head.inc.php');
-if ($quick_view_mode != "no_nav" && !isset($_REQUEST['print_view'])) {
+if ($quick_view_mode != "no_nav" && !Request::get('print_view')) {
     include ('lib/include/header.php');
 }
 
@@ -188,7 +188,7 @@ function check_opener(obj){
 </script>
 <table width="100%" cellspacing="0" cellpadding="0" border="0">
     <?
-    if (!isset($_REQUEST['print_view'])){
+    if (!Request::get('print_view')){
         if ($infobox) {
     }
     ?>
@@ -449,7 +449,7 @@ if ($view == "view_schedule" || $view == "openobject_schedule") {
                         </table>
                     </td>
                 <?
-                if ($infobox && !isset($_REQUEST['print_view'])) {
+                if ($infobox && !Request::get('print_view')) {
                     ?>
                     <td class="blank" width="270" align="right" valign="top">
                         <? print_infobox ($infobox, $infopic);?>
@@ -486,14 +486,14 @@ if ($view == "view_sem_schedule") {
     if ($_SESSION['resources_data']["actual_object"]) {
         $ViewSchedules = new ShowSemSchedules($_SESSION['resources_data']["actual_object"], $_SESSION['resources_data']['sem_schedule_semester_id'],$_SESSION['resources_data']['sem_schedule_timespan']);
         $ViewSchedules->setUsedView($view);
-        $ViewSchedules->navigator($_REQUEST['print_view']);
+        $ViewSchedules->navigator(Request::option('print_view'));
         $suppress_infobox = TRUE;
         ?>                      </td>
                             </tr>
                         </table>
                     </td>
                 <?
-                if ($infobox && !isset($_REQUEST['print_view'])) {
+                if ($infobox && !Request::get('print_view')) {
                     ?>
                     <td class="blank" width="270" align="right" valign="top">
                         <? print_infobox ($infobox, $infopic);?>
@@ -513,9 +513,9 @@ if ($view == "view_sem_schedule") {
             <?
         if (($_SESSION['resources_data']["sem_schedule_semester_id"]) && ($_SESSION['resources_data']["sem_schedule_timespan"]))
             if ($_SESSION['resources_data']["schedule_mode"] == "list") //view List
-                $ViewSchedules->showScheduleList($_REQUEST['print_view']);
+                $ViewSchedules->showScheduleList(Request::option('print_view'));
             else
-                $ViewSchedules->showScheduleGraphical($_REQUEST['print_view']);
+                $ViewSchedules->showScheduleGraphical(Request::option('print_view'));
     } else {
         echo "</td></tr>";
         $msg->displayMsg(15);
@@ -536,14 +536,14 @@ if ($view == "view_group_schedule" || $view == "view_group_schedule_daily") {
             $ViewSchedules = new ShowGroupSchedulesDaily($_SESSION['resources_data']['actual_room_group'], $_SESSION['resources_data']["schedule_start_time"],$room_group);
         }
         $ViewSchedules->setUsedView($view);
-        $ViewSchedules->navigator($_REQUEST['print_view']);
+        $ViewSchedules->navigator(Request::option('print_view'));
         $suppress_infobox = TRUE;
         ?>                      </td>
                             </tr>
                         </table>
                     </td>
                 <?
-                if ($infobox && !isset($_REQUEST['print_view'])) {
+                if ($infobox && !Request::get('print_view')) {
                     ?>
                     <td class="blank" width="270" align="right" valign="top">
                         <? print_infobox ($infobox, $infopic);?>
@@ -562,7 +562,7 @@ if ($view == "view_group_schedule" || $view == "view_group_schedule_daily") {
                 <td valign ="top">
             <?
         if (isset($_SESSION['resources_data']['actual_room_group']))
-            $ViewSchedules->showScheduleGraphical($_REQUEST['print_view']);
+            $ViewSchedules->showScheduleGraphical(Request::option('print_view'));
     } else {
         echo "</td></tr>";
         $msg->displayMsg(25);
@@ -582,14 +582,14 @@ if ($view == "openobject_group_schedule") {
         require_once $RELATIVE_PATH_RESOURCES."/views/ShowGroupSchedulesDaily.class.php";
         $ViewSchedules = new ShowGroupSchedulesDaily($_SESSION['resources_data']['actual_room_group'], $_SESSION['resources_data']["schedule_start_time"],$resources_groups);
         $ViewSchedules->setUsedView($view);
-        $ViewSchedules->navigator($_REQUEST['print_view']);
+        $ViewSchedules->navigator(Request::option('print_view'));
         $suppress_infobox = TRUE;
         ?>                      </td>
                             </tr>
                         </table>
                     </td>
                 <?
-                if ($infobox && !isset($_REQUEST['print_view'])) {
+                if ($infobox && !Request::get('print_view')) {
                     ?>
                     <td class="blank" width="270" align="right" valign="top">
                         <? print_infobox ($infobox, $infopic);?>
@@ -608,7 +608,7 @@ if ($view == "openobject_group_schedule") {
                 <td valign ="top">
             <?
         if (isset($_SESSION['resources_data']['actual_room_group']))
-            $ViewSchedules->showScheduleGraphical($_REQUEST['print_view']);
+            $ViewSchedules->showScheduleGraphical(Request::option('print_view'));
     } else {
         echo "</td></tr>";
         $msg->displayMsg(25);
@@ -761,7 +761,7 @@ if (!$suppress_infobox) {
 </table>
 <?
 $_SESSION['resources_data'] = serialize($_SESSION['resources_data']);
-if (!isset($_REQUEST['print_view'])){
+if (!Request::get('print_view')){
     include ('lib/include/html_end.inc.php');
 }
 page_close();

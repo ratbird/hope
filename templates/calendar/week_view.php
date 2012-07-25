@@ -30,7 +30,7 @@ SkipLinks::addIndex(_("Wochenansicht"), 'main_content', 100);
     <tr>
         <td style="width:100%;">
             <? //$_calendar->toStringWeek($week_time, $start_time, $end_time, $restrictions = NULL, $sem_ids = NULL) ?>
-            <?= $_calendar->toStringWeek($atime, $st, $et, $_REQUEST['cal_restrict'], Calendar::getBindSeminare($_calendar->getUserId())); ?>
+            <?= $_calendar->toStringWeek($atime, $st, $et, Request::quoted('cal_restrict'), Calendar::getBindSeminare($_calendar->getUserId())); ?>
         </td>
     </tr>
 </table>

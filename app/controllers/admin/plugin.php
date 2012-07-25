@@ -42,7 +42,7 @@ class Admin_PluginController extends AuthenticatedController
 
     /**
      * Validate ticket (passed via request environment).
-     * This method always checks $_REQUEST['ticket'].
+     * This method always checks Request::quoted('ticket').
      *
      * @throws InvalidArgumentException  if ticket is not valid
      */

@@ -40,25 +40,26 @@ class SemBrowse {
             $_SESSION['sem_browse_data'] = $sem_browse_data_init;
         }
         $this->sem_browse_data =& $_SESSION['sem_browse_data'];
-        $level_change = isset($_REQUEST['start_item_id']);
+        $level_change = Request::option('start_item_id');
         for ($i = 0; $i < count($this->persistent_fields); ++$i){
-            if (isset($_REQUEST[$this->persistent_fields[$i]])){
-            $this->sem_browse_data[$this->persistent_fields[$i]] = $_REQUEST[$this->persistent_fields[$i]];
+            $persistend_field=$this->persistent_fields[$i];
+            if (!empty($persistend_field)){
+            $this->sem_browse_data[$this->persistent_fields[$i]] = Request::quoted($this->persistent_fields[$i]);
             }
         }
         $this->search_obj = new StudipSemSearch("search_sem", false, !(is_object($GLOBALS['perm']) && $GLOBALS['perm']->have_perm(get_config('SEM_VISIBILITY_PERM'))),$this->sem_browse_data['show_class']);
 
-        if (isset($_REQUEST[$this->search_obj->form_name . "_scope_choose"])){
-            $this->sem_browse_data["start_item_id"] = $_REQUEST[$this->search_obj->form_name . "_scope_choose"];
+        if (Request::quoted($this->search_obj->form_name . "_scope_choose")){
+            $this->sem_browse_data["start_item_id"] = Request::quoted($this->search_obj->form_name . "_scope_choose");
         }
-        if (isset($_REQUEST[$this->search_obj->form_name . "_range_choose"])){
-            $this->sem_browse_data["start_item_id"] = $_REQUEST[$this->search_obj->form_name . "_range_choose"];
+        if (Request::quoted($this->search_obj->form_name . "_range_choose")){
+            $this->sem_browse_data["start_item_id"] = Request::quoted($this->search_obj->form_name . "_range_choose");
         }
-        if (isset($_REQUEST[$this->search_obj->form_name . "_sem"])){
-            $this->sem_browse_data['default_sem'] = $_REQUEST[$this->search_obj->form_name . "_sem"];
+        if (Request::quoted($this->search_obj->form_name . "_sem")){
+            $this->sem_browse_data['default_sem'] = Request::quoted($this->search_obj->form_name . "_sem");
         }
 
-        if (isset($_REQUEST['keep_result_set']) || $this->sem_browse_data['sset'] || (count($this->sem_browse_data['search_result']) && $this->sem_browse_data['show_entries'])){
+        if (Request::quoted('keep_result_set') || $this->sem_browse_data['sset'] || (count($this->sem_browse_data['search_result']) && $this->sem_browse_data['show_entries'])){
             $this->show_result = true;
         }
 
@@ -89,7 +90,7 @@ class SemBrowse {
             }
             $this->sem_tree = new StudipSemTreeViewSimple($this->sem_browse_data["start_item_id"], $this->sem_number, $sem_status, !(is_object($GLOBALS['perm']) && $GLOBALS['perm']->have_perm(get_config('SEM_VISIBILITY_PERM'))));
             $this->sem_browse_data['cmd'] = "qs";
-            if ($_REQUEST['cmd'] != "show_sem_range" && $level_change && !$this->search_obj->search_button_clicked ){
+            if (Request::option('cmd') != "show_sem_range" && $level_change && !$this->search_obj->search_button_clicked ){
                 $this->get_sem_range($this->sem_browse_data["start_item_id"], false);
                 $this->show_result = true;
                 $this->sem_browse_data['show_entries'] = "level";
@@ -107,7 +108,7 @@ class SemBrowse {
             }
             $this->range_tree = new StudipSemRangeTreeViewSimple($sem_browse_data["start_item_id"],$this->sem_number,$sem_status, !(is_object($GLOBALS['perm']) && $GLOBALS['perm']->have_perm(get_config('SEM_VISIBILITY_PERM'))));
             $this->sem_browse_data['cmd'] = "qs";
-            if ($_REQUEST['cmd'] != "show_sem_range_tree" && $level_change && !$this->search_obj->search_button_clicked ){
+            if (Request::option('cmd') != "show_sem_range_tree" && $level_change && !$this->search_obj->search_button_clicked ){
                 $this->get_sem_range_tree($this->sem_browse_data["start_item_id"], false);
                 $this->show_result = true;
                 $this->sem_browse_data['show_entries'] = "level";
@@ -134,23 +135,23 @@ class SemBrowse {
         }
 
 
-        if ($_REQUEST['cmd'] == "show_sem_range"){
-            $tmp = explode("_",$_REQUEST['item_id']);
+        if (Request::option('cmd') == "show_sem_range"){
+            $tmp = explode("_",Request::option('item_id'));
             $this->get_sem_range($tmp[0],isset($tmp[1]));
             $this->show_result = true;
             $this->sem_browse_data['show_entries'] = (isset($tmp[1])) ? "sublevels" : "level";
             $this->sem_browse_data['sset'] = false;
         }
 
-        if ($_REQUEST['cmd'] == "show_sem_range_tree"){
-            $tmp = explode("_",$_REQUEST['item_id']);
+        if (Request::option('cmd') == "show_sem_range_tree"){
+            $tmp = explode("_",Request::option('item_id'));
             $this->get_sem_range_tree($tmp[0],isset($tmp[1]));
             $this->show_result = true;
             $this->sem_browse_data['show_entries'] = (isset($tmp[1])) ? "sublevels" : "level";
             $this->sem_browse_data['sset'] = false;
         }
 
-        if (isset($_REQUEST['do_show_class']) && count($this->sem_browse_data['sem_status'])){
+        if (Request::option('do_show_class') && count($this->sem_browse_data['sem_status'])){
             $this->get_sem_class();
         }
 

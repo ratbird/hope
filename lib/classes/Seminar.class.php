@@ -1509,7 +1509,7 @@ class Seminar
             }
         }
         
-        if (!isset($cmd) && isset($_REQUEST['cmd'])) $cmd = $_REQUEST['cmd'];
+        if (!isset($cmd) && Request::option('cmd')) $cmd = Request::option('cmd');
         if (!isset($cmd)) return FALSE;
 
         if ($_LOCKED) {
@@ -1580,7 +1580,7 @@ class Seminar
     {
         global $raumzeitFilter, $cmd, $semester;
         if (isset($cmd) && ($cmd == 'applyFilter')) {
-            $_SESSION['raumzeitFilter'] = $_REQUEST['newFilter'];
+            $_SESSION['raumzeitFilter'] = Request::quoted('newFilter');
         }
 
         if ($this->getEndSemester() == 0 && !$this->hasDatesOutOfDuration()) {

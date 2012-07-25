@@ -73,8 +73,8 @@ class StudipSemTreeViewAdmin extends TreeView {
 
         $this->open_ranges[$this->start_item_id] = true;
 
-        if ($_REQUEST['close_item'] || $_REQUEST['open_item']){
-            $toggle_item = ($_REQUEST['close_item']) ? $_REQUEST['close_item'] : $_REQUEST['open_item'];
+        if (Request::option('close_item') || Request::option('open_item')){
+            $toggle_item = (Request::option('close_item')) ? Request::option('close_item') : Request::option('open_item');
             if (!$this->open_items[$toggle_item]){
                 $this->openItem($toggle_item);
             } else {
@@ -82,7 +82,7 @@ class StudipSemTreeViewAdmin extends TreeView {
             }
         }
 
-        if ($_REQUEST['item_id']) $this->anchor = $_REQUEST['item_id'];
+        if (Request::option('item_id')) $this->anchor = Request::option('item_id');
 
     }
 
@@ -106,10 +106,10 @@ class StudipSemTreeViewAdmin extends TreeView {
     }
 
     function parseCommand(){
-        if ($_REQUEST['mode'])
-        $this->mode = $_REQUEST['mode'];
-        if ($_REQUEST['cmd']){
-            $exec_func = "execCommand" . $_REQUEST['cmd'];
+        if (Request::quoted('mode'))
+        $this->mode = Request::quoted('mode');
+        if (Request::option('cmd')){
+            $exec_func = "execCommand" . Request::option('cmd');
             if (method_exists($this,$exec_func)){
                 if ($this->$exec_func()){
                     $this->tree->init();
@@ -121,8 +121,8 @@ class StudipSemTreeViewAdmin extends TreeView {
     }
 
     function execCommandOrderItem(){
-        $direction = $_REQUEST['direction'];
-        $item_id = $_REQUEST['item_id'];
+        $direction = Request::quoted('direction');
+        $item_id = Request::option('item_id');
         $items_to_order = $this->tree->getKids($this->tree->tree_data[$item_id]['parent_id']);
         if (!$this->isParentAdmin($item_id) || !$items_to_order)
         return false;
@@ -148,7 +148,7 @@ class StudipSemTreeViewAdmin extends TreeView {
     }
 
     function execCommandNewItem(){
-        $item_id = $_REQUEST['item_id'];
+        $item_id = Request::option('item_id');
         if ($this->isItemAdmin($item_id)){
             $new_item_id = DbView::get_uniqid();
             $this->tree->storeItem($new_item_id,$item_id,_("Neuer Eintrag") , $this->tree->getNumKids($item_id) +1);
@@ -161,7 +161,7 @@ class StudipSemTreeViewAdmin extends TreeView {
     }
 
     function execCommandEditItem(){
-        $item_id = $_REQUEST['item_id'];
+        $item_id = Request::option('item_id');
         if ($this->isItemAdmin($item_id) || $this->isParentAdmin($item_id)){
             $this->mode = "EditItem";
             $this->anchor = $item_id;
@@ -176,11 +176,11 @@ class StudipSemTreeViewAdmin extends TreeView {
     }
 
     function execCommandInsertItem(){
-        $item_id = $_REQUEST['item_id'];
-        $parent_id = $_REQUEST['parent_id'];
-        $item_name = $_REQUEST['edit_name'];
-        $item_info = $_REQUEST['edit_info'];
-        $item_type = (int)$_REQUEST['edit_type'];
+        $item_id = Request::option('item_id');
+        $parent_id = Request::option('parent_id');
+        $item_name = Request::option('edit_name');
+        $item_info = Request::quoted('edit_info');
+        $item_type = (int)Request::quoted('edit_type');
         if ($this->mode == "NewItem" && $item_id){
             if ($this->isItemAdmin($parent_id)){
                 $priority = count($this->tree->getKids($parent_id));
@@ -208,7 +208,7 @@ class StudipSemTreeViewAdmin extends TreeView {
     }
 
     function execCommandAssertDeleteItem(){
-        $item_id = $_REQUEST['item_id'];
+        $item_id = Request::option('item_id');
         if ($this->isParentAdmin($item_id)){
             $this->mode = "AssertDeleteItem";
             $this->open_items[$item_id] = true;
@@ -227,7 +227,7 @@ class StudipSemTreeViewAdmin extends TreeView {
     }
 
     function execCommandDeleteItem(){
-        $item_id = $_REQUEST['item_id'];
+        $item_id = Request::option('item_id');
         $item_name = $this->tree->tree_data[$item_id]['name'];
         if ($this->isParentAdmin($item_id) && $this->mode == "AssertDeleteItem"){
             $this->openItem($this->tree->tree_data[$item_id]['parent_id']);
@@ -248,7 +248,7 @@ class StudipSemTreeViewAdmin extends TreeView {
     }
 
     function execCommandMoveItem(){
-        $item_id = $_REQUEST['item_id'];
+        $item_id = Request::option('item_id');
         $this->anchor = $item_id;
         $this->marked_item = $item_id;
         $this->mode = "MoveItem";
@@ -256,7 +256,7 @@ class StudipSemTreeViewAdmin extends TreeView {
     }
 
     function execCommandCopyItem(){
-        $item_id = $_REQUEST['item_id'];
+        $item_id = Request::option('item_id');
         $this->anchor = $item_id;
         $this->marked_item = $item_id;
         $this->mode = "CopyItem";
@@ -264,7 +264,7 @@ class StudipSemTreeViewAdmin extends TreeView {
     }
 
     function execCommandDoMoveItem(){
-        $item_id = $_REQUEST['item_id'];
+        $item_id = Request::option('item_id');
         $item_to_move = $this->marked_item;
         if ($this->mode == "MoveItem" && ($this->isItemAdmin($item_id) || $this->isParentAdmin($item_id))
         && ($item_to_move != $item_id) && ($this->tree->tree_data[$item_to_move]['parent_id'] != $item_id)
@@ -285,7 +285,7 @@ class StudipSemTreeViewAdmin extends TreeView {
     }
 
     function execCommandDoCopyItem(){
-        $item_id = $_REQUEST['item_id'];
+        $item_id = Request::option('item_id');
         $item_to_copy = $this->marked_item;
         if ($this->mode == "CopyItem" && ($this->isItemAdmin($item_id) || $this->isParentAdmin($item_id))
         && ($item_to_copy != $item_id) && ($this->tree->tree_data[$item_to_copy]['parent_id'] != $item_id)
@@ -337,10 +337,10 @@ class StudipSemTreeViewAdmin extends TreeView {
     }
 
     function execCommandInsertFak(){
-        if($this->isItemAdmin("root") && $_REQUEST['insert_fak']){
+        if($this->isItemAdmin("root") && Request::quoted('insert_fak')){
             $view = new DbView();
             $item_id = $view->get_uniqid();
-            $view->params = array($item_id,'root','',$this->tree->getNumKids('root')+1,'',$_REQUEST['insert_fak'],0);
+            $view->params = array($item_id,'root','',$this->tree->getNumKids('root')+1,'',Request::quoted('insert_fak'),0);
             $rs = $view->get_query("view:SEM_TREE_INS_ITEM");
             if ($rs->affected_rows()){
                 $this->tree->init();
@@ -353,9 +353,10 @@ class StudipSemTreeViewAdmin extends TreeView {
     }
 
     function execCommandMarkSem(){
-        $item_id = $_REQUEST['item_id'];
-        $marked_sem = array_values(array_unique((array)$_REQUEST['marked_sem']));
-        $sem_aktion = explode("_",$_REQUEST['sem_aktion']);
+        $item_id = Request::option('item_id');
+        $marked_sem_array =  Request::quotedArray('marked_sem');
+        $marked_sem = array_values(array_unique($marked_sem_array));
+        $sem_aktion = explode("_",Request::quoted('sem_aktion'));
         if (($sem_aktion[0] == 'mark' || $sem_aktion[1] == 'mark') && count($marked_sem)){
             $count_mark = 0;
             for ($i = 0; $i < count($marked_sem); ++$i){
@@ -401,7 +402,7 @@ class StudipSemTreeViewAdmin extends TreeView {
     }
 
     function execCommandCancel(){
-        $item_id = $_REQUEST['item_id'];
+        $item_id = Request::option('item_id');
         $this->mode = "";
         $this->anchor = $item_id;
         return false;
@@ -790,7 +791,7 @@ class StudipSemTreeViewAdmin extends TreeView {
 //page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Default_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 //include 'lib/include/html_head.inc.php';
 //include ('lib/seminar_open.php'); // initialise Stud.IP-Session
-//$test = new StudipSemTreeViewAdmin($_REQUEST['start_item_id']);
+//$test = new StudipSemTreeViewAdmin(Request::quoted('start_item_id'));
 //$test->showSemTree();
 //echo "<hr><pre>";
 //print_r($_open_items);

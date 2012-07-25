@@ -34,10 +34,11 @@ class StmBrowse {
             $_SESSION['sem_browse_data'] = $sem_browse_data_init;
         }
         $this->sem_browse_data =& $_SESSION['sem_browse_data'];
-        $level_change = isset($_REQUEST['start_item_id']);
+        $level_change = Request::option('start_item_id');
         for ($i = 0; $i < count($this->persistent_fields); ++$i){
-            if (isset($_REQUEST[$this->persistent_fields[$i]])){
-            $this->sem_browse_data[$this->persistent_fields[$i]] = $_REQUEST[$this->persistent_fields[$i]];
+             $persistend_field=$this->persistent_fields[$i];
+            if (!empty($persistend_field)){
+            $this->sem_browse_data[$this->persistent_fields[$i]] = Request::quoted($this->persistent_fields[$i]);
             }
         }
         
@@ -46,7 +47,7 @@ class StmBrowse {
             $this->sem_browse_data["start_item_id"] = $this->search_obj->form->getFormFieldValue("scope_choose");
         }
         
-        if (isset($_REQUEST['keep_result_set']) || $this->sem_browse_data['sset'] || (count($this->sem_browse_data['search_result']) && $this->sem_browse_data['show_entries'])){
+        if (Request::option('keep_result_set') || $this->sem_browse_data['sset'] || (count($this->sem_browse_data['search_result']) && $this->sem_browse_data['show_entries'])){
             $this->show_result = true;
         }
         
@@ -75,7 +76,7 @@ class StmBrowse {
             
         $this->stm_tree = new StudipStmInstanceTreeViewSimple($this->sem_browse_data["start_item_id"], $this->seminar_id);
         $this->sem_browse_data['cmd'] = "qs";
-        if ($_REQUEST['cmd'] != "show_stm_tree" && $level_change && !$this->search_obj->search_button_clicked ){
+        if (Request::option('cmd') != "show_stm_tree" && $level_change && !$this->search_obj->search_button_clicked ){
             $this->get_stm_range($this->sem_browse_data["start_item_id"], false);
             $this->show_result = true;
             $this->sem_browse_data['show_entries'] = "level";
@@ -94,15 +95,15 @@ class StmBrowse {
             $this->sem_browse_data['sset'] = true;
         }
         
-        if ($_REQUEST['cmd'] == "show_stm_tree"){
-            $tmp = explode("_",$_REQUEST['item_id']);
+        if (Request::option('cmd') == "show_stm_tree"){
+            $tmp = explode("_",Request::option('item_id'));
             $this->get_stm_range($tmp[0],isset($tmp[1]));
             $this->show_result = true;
             $this->sem_browse_data['show_entries'] = (isset($tmp[1])) ? "sublevels" : "level";
             $this->sem_browse_data['sset'] = false;
         }
         
-        if ($_REQUEST['do_show_class'] == 'mod'){
+        if (Request::quoted('do_show_class') == 'mod'){
             $this->get_stm_range('root', true);
             $this->sem_browse_data['sset'] = true;
             $this->show_result = true;

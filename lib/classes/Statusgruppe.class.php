@@ -227,18 +227,18 @@ class Statusgruppe {
         global $datafields, $invalidEntries;
 
         // check the standard role data
-        if (!$_REQUEST['new_name'] && $_REQUEST['presetName'] != 'none') {
-            $this->name = remove_magic_quotes($_REQUEST['presetName']);
+        if (!Request::get('new_name') && Request::get('presetName') != 'none') {
+            $this->name = remove_magic_quotes(Request::get('presetName'));
         } else {
-            $this->name = remove_magic_quotes($_REQUEST['new_name']);
+            $this->name = remove_magic_quotes(Request::get('new_name'));
         }
-        $this->size = (int)$_REQUEST['new_size'];
+        $this->size = (int)Request::int('new_size');
 
         // check if we have to remove the self_assign_exclusive-flag
         
-        $this->selfassign = SetSelfAssign($this->statusgruppe_id, ($_REQUEST['new_selfassign'] ? 1 : 0));
+        $this->selfassign = SetSelfAssign($this->statusgruppe_id, (Request::quoted('new_selfassign') ? 1 : 0));
         
-        /*if ($_REQUEST['new_selfassign']) {
+        /*if (Request::quoted('new_selfassign')) {
             if ($this->selfassign == 0) {
                 $this->selfassign = 1;
             }
@@ -251,7 +251,7 @@ class Statusgruppe {
             $this->selfassign = 0;
         }*/
 
-        if ($_REQUEST['groupfolder']) { 
+        if (Request::get('groupfolder')) {
             // check if there already exists a folder
             $stmt = DBManager::get()->prepare("SELECT COUNT(*) as c FROM folder WHERE range_id = ?");
             $stmt->execute(array($this->statusgruppe_id));
@@ -290,16 +290,16 @@ class Statusgruppe {
             }
 
             // a group cannot be its own vather!
-            if ($_REQUEST['vather'] == $this->statusgruppe_id) {
+            if (Request::get('vather') == $this->statusgruppe_id) {
                 $this->messages['error'][] = _("Sie könne diese Gruppe nicht sich selbst unterordnen!");
             } else
             
             // check if the group shall be moved
-            if ($_REQUEST['vather'] != 'nochange') {
-                if ($_REQUEST['vather'] == 'root') {
+            if (Request::get('vather') != 'nochange') {
+                if (Request::option('vather') == 'root') {
                     $vather_id = $GLOBALS['range_id'];
                 } else {
-                    $vather_id = $_REQUEST['vather'];
+                    $vather_id = Request::option('vather');
                 }
                 if (!isVatherDaughterRelation($this->statusgruppe_id, $vather_id)) {
                     $this->range_id = $vather_id;

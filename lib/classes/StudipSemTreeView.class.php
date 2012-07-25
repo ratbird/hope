@@ -64,20 +64,20 @@ class StudipSemTreeView extends TreeView {
         global $_REQUEST;
 
         $this->open_ranges[$this->start_item_id] = true;
-        if ($_REQUEST['close_item'] || $_REQUEST['open_item']){
-            $toggle_item = ($_REQUEST['close_item']) ? $_REQUEST['close_item'] : $_REQUEST['open_item'];
+        if (Request::option('close_item') || Request::option('open_item')){
+            $toggle_item = (Request::option('close_item')) ? Request::option('close_item') : Request::option('open_item');
             if (!$this->open_items[$toggle_item]){
                 $this->open_items[$toggle_item] = true;
             } else {
                 unset($this->open_items[$toggle_item]);
             }
 
-            if($this->tree->hasKids($_REQUEST['open_item'])){
-                $this->start_item_id = $_REQUEST['open_item'];
+            if($this->tree->hasKids(Request::option('open_item'))){
+                $this->start_item_id = Request::option('open_item');
                 $this->open_ranges = null;
                 $this->open_items = null;
-                $this->open_items[$_REQUEST['open_item']] = true;
-                $this->open_ranges[$_REQUEST['open_item']] = true;
+                $this->open_items[Request::option('open_item')] = true;
+                $this->open_ranges[Request::option('open_item')] = true;
             }
 
             $this->anchor = $toggle_item;

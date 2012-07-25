@@ -129,13 +129,14 @@ class TreeView {
     * @access   private
     */
     function handleOpenRanges(){
-        if ($_REQUEST['close_range']){
-            if ($_REQUEST['close_range'] == 'root'){
+        $close_range = Request::optionArray('close_range');
+        if (!empty($close_range)){
+            if (Request::get('close_range') == 'root'){
                 $this->open_ranges = null;
                 $this->open_items = null;
             } else {
-                $kidskids = $this->tree->getKidsKids($_REQUEST['close_range']);
-                $kidskids[] = $_REQUEST['close_range'];
+                $kidskids = $this->tree->getKidsKids($close_range);
+                $kidskids[] = $close_range;
                 $num_kidskids = count($kidskids);
                 for ($i = 0; $i < $num_kidskids; ++$i){
                     if ($this->open_ranges[$kidskids[$i]]){
@@ -146,23 +147,23 @@ class TreeView {
                     }
                 }
             }
-        $this->anchor = $_REQUEST['close_range'];
+        $this->anchor = $close_range;
         }
-
-        if ($_REQUEST['open_range']){
-            $kidskids = $this->tree->getKidsKids($_REQUEST['open_range']);
-            $kidskids[] = $_REQUEST['open_range'];
+        $open_range = Request::optionArray('open_range');
+        if ($open_range){
+            $kidskids = $this->tree->getKidsKids($open_range);
+            $kidskids[] = $open_range;
             $num_kidskids = count($kidskids);
             for ($i = 0; $i < $num_kidskids; ++$i){
                 if (!$this->open_ranges[$kidskids[$i]]){
                     $this->open_ranges[$kidskids[$i]] = true;
                 }
             }
-        $this->anchor = $_REQUEST['open_range'];
+        $this->anchor = $open_range;
         }
 
-        if ($_REQUEST['close_item'] || $_REQUEST['open_item']){
-            $toggle_item = ($_REQUEST['close_item']) ? $_REQUEST['close_item'] : $_REQUEST['open_item'];
+        if (Request::option('close_item') || Request::option('open_item')){
+            $toggle_item = (Request::option('close_item')) ? Request::option('close_item') : Request::option('open_item');
             if (!$this->open_items[$toggle_item]){
                 $this->open_items[$toggle_item] = true;
                 $this->open_ranges[$toggle_item] = true;
@@ -171,8 +172,8 @@ class TreeView {
             }
         $this->anchor = $toggle_item;
         }
-        if ($_REQUEST['item_id'])
-            $this->anchor = $_REQUEST['item_id'];
+        if (Request::option('item_id'))
+            $this->anchor = Request::option('item_id');
     }
 
     function openItem($item_id){

@@ -132,10 +132,10 @@ class StudipRangeTreeViewAdmin extends TreeView{
     }
 
     function parseCommand(){
-        if ($_REQUEST['mode'])
-            $this->mode = $_REQUEST['mode'];
-        if ($_REQUEST['cmd']){
-            $exec_func = "execCommand" . $_REQUEST['cmd'];
+        if (Request::quoted('mode'))
+            $this->mode = Request::quoted('mode');
+        if (Request::option('cmd')){
+            $exec_func = "execCommand" . Request::option('cmd');
             if (method_exists($this,$exec_func)){
                 if ($this->$exec_func()){
                     $this->tree->init();
@@ -148,8 +148,8 @@ class StudipRangeTreeViewAdmin extends TreeView{
     }
 
     function execCommandOrderItem(){
-        $direction = $_REQUEST['direction'];
-        $item_id = $_REQUEST['item_id'];
+        $direction = Request::quoted('direction');
+        $item_id = Request::option('item_id');
         $items_to_order = $this->tree->getKids($this->tree->tree_data[$item_id]['parent_id']);
         if (!$this->isParentAdmin($item_id) || !$items_to_order)
             return false;
@@ -175,7 +175,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
     }
 
     function execCommandNewItem(){
-        $item_id = $_REQUEST['item_id'];
+        $item_id = Request::option('item_id');
         if ($this->isItemAdmin($item_id)){
             $new_item_id = DbView::get_uniqid();
             $this->tree->storeItem($new_item_id,$item_id,_("Neues Element") , $this->tree->getNumKids($item_id) +1);
@@ -191,9 +191,9 @@ class StudipRangeTreeViewAdmin extends TreeView{
     }
 
     function execCommandSearchStudip(){
-        $item_id = $_REQUEST['item_id'];
-        $parent_id = $_REQUEST['parent_id'];
-        $search_str = $_REQUEST['edit_search'];
+        $item_id = Request::option('item_id');
+        $parent_id = Request::quoted('parent_id');
+        $search_str = Request::quoted('edit_search');
         $view = new DbView();
         if(strlen($search_str) > 1){
             $view->params[0] = $search_str;
@@ -215,7 +215,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
             $search_msg = "error§" . _("Sie haben keinen Suchbegriff eingegeben.");
         }
         if ($this->mode == "NewItem"){
-            $_REQUEST['item_id'] = $parent_id;
+            Request::set('item_id', $parent_id);
             $this->execCommandNewItem();
         } else {
             $this->anchor = $item_id;
@@ -226,7 +226,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
     }
 
     function execCommandEditItem(){
-        $item_id = $_REQUEST['item_id'];
+        $item_id = Request::option('item_id');
         if ($this->isItemAdmin($item_id) || $this->isParentAdmin($item_id)){
             $this->mode = "EditItem";
             $this->anchor = $item_id;
@@ -237,10 +237,10 @@ class StudipRangeTreeViewAdmin extends TreeView{
     }
 
     function execCommandInsertItem(){
-        $item_id = $_REQUEST['item_id'];
-        $parent_id = $_REQUEST['parent_id'];
-        $item_name = $_REQUEST['edit_name'];
-        $tmp = explode(":",$_REQUEST['edit_studip_object']);
+        $item_id = Request::option('item_id');
+        $parent_id = Request::option('parent_id');
+        $item_name = Request::quoted('edit_name');
+        $tmp = explode(":",Request::quoted('edit_studip_object'));
         if ($tmp[1] == "fak" || $tmp[1] == "inst"){
             $studip_object = $tmp[1];
             $studip_object_id = $tmp[0];
@@ -277,7 +277,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
     }
 
     function execCommandInsertFak(){
-        $studip_object_id = $_REQUEST['insert_fak'];
+        $studip_object_id = Request::quoted('insert_fak');
         $parent_id = 'root';
         if ($this->isItemAdmin($parent_id)){
             $item_id = DbView::get_uniqid();
@@ -301,7 +301,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
     }
 
     function execCommandAssertDeleteItem(){
-        $item_id = $_REQUEST['item_id'];
+        $item_id = Request::option('item_id');
         if ($this->isParentAdmin($item_id)){
             $this->mode = "AssertDeleteItem";
             $this->msg[$item_id] = "info§" ._("Sie beabsichtigen dieses Element, inklusive aller Unterelemente, zu l&ouml;schen. ")
@@ -316,7 +316,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
     }
 
     function execCommandDeleteItem(){
-        $item_id = $_REQUEST['item_id'];
+        $item_id = Request::option('item_id');
         $deleted = 0;
         $item_name = $this->tree->tree_data[$item_id]['name'];
         if ($this->isParentAdmin($item_id) && $this->mode == "AssertDeleteItem"){
@@ -339,7 +339,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
     }
 
     function execCommandMoveItem(){
-        $item_id = $_REQUEST['item_id'];
+        $item_id = Request::option('item_id');
         $this->anchor = $item_id;
         $this->marked_item = $item_id;
         $this->mode = "MoveItem";
@@ -347,7 +347,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
     }
 
     function execCommandDoMoveItem(){
-        $item_id = $_REQUEST['item_id'];
+        $item_id = Request::option('item_id');
         $item_to_move = $this->marked_item;
         if ($this->mode == "MoveItem" && ($this->isItemAdmin($item_id) || $this->isParentAdmin($item_id))
             && ($item_to_move != $item_id) && ($this->tree->tree_data[$item_to_move]['parent_id'] != $item_id)
@@ -369,9 +369,9 @@ class StudipRangeTreeViewAdmin extends TreeView{
     }
 
     function execCommandOrderCat(){
-        $item_id = $_REQUEST['item_id'];
-        $direction = $_REQUEST['direction'];
-        $cat_id = $_REQUEST['cat_id'];
+        $item_id = Request::option('item_id');
+        $direction = Request::quoted('direction');
+        $cat_id = Request::option('cat_id');
         $items_to_order = array();
         if ($this->isItemAdmin($item_id)){
             $range_object = RangeTreeObject::GetInstance($item_id);
@@ -402,7 +402,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
     }
 
     function execCommandNewCat(){
-        $item_id = $_REQUEST['item_id'];
+        $item_id = Request::option('item_id');
         if ($this->isItemAdmin($item_id)){
             $range_object = RangeTreeObject::GetInstance($item_id);
             $this->edit_cat_snap =& $range_object->getCategories();
@@ -418,10 +418,10 @@ class StudipRangeTreeViewAdmin extends TreeView{
     }
 
     function execCommandUpdateCat(){
-        $item_id = $_REQUEST['item_id'];
-        $cat_name = $_REQUEST['cat_name'];
-        $cat_content = $_REQUEST['cat_content'];
-        $cat_prio = $_REQUEST['cat_prio'];
+        $item_id = Request::option('item_id');
+        $cat_name = Request::quoted('cat_name');
+        $cat_content = Request::quoted('cat_content');
+        $cat_prio = Request::quoted('cat_prio');
         $inserted = false;
         $updated = 0;
         if ($this->isItemAdmin($item_id)){
@@ -458,8 +458,8 @@ class StudipRangeTreeViewAdmin extends TreeView{
     }
 
     function execCommandDeleteCat(){
-        $item_id = $_REQUEST['item_id'];
-        $cat_id = $_REQUEST['cat_id'];
+        $item_id = Request::option('item_id');
+        $cat_id = Request::option('cat_id');
         if ($this->isItemAdmin($item_id)){
             $view = new DbView();
             $view->params[0] = $cat_id;
@@ -475,7 +475,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
 
 
     function execCommandCancel(){
-        $item_id = $_REQUEST['item_id'];
+        $item_id = Request::option('item_id');
         $this->mode = "";
         $this->anchor = $item_id;
         return false;

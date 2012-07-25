@@ -73,8 +73,8 @@ $chat_entry_level = chat_get_entry_level($chatid);
 $chat_entry_check = $chat_entry_level;
 if ($chat_entry_level != "admin" && $chatServer->isActiveChat($chatid) && ($chatServer->chatDetail[$chatid]["password"] || $chat_entry_level === false)){
     $chat_entry_check = false;
-    if ($_REQUEST['chat_password'] ){
-        if ($chatServer->chatDetail[$chatid]['password'] == $_REQUEST['chat_password']){
+    if (Request::get('chat_password') ){
+        if ($chatServer->chatDetail[$chatid]['password'] == Request::quoted('chat_password')){
             $chat_entry_check = true;
         } else {
             $msg = "error§<font size=\"-1\">". _("Das eingegebene Passwort ist falsch!") . "</font>§";

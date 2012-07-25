@@ -205,11 +205,11 @@ function EvaluationTreeEditView ( $itemID = ROOT_BLOCK, $evalID = NULL ){
 
     # handling the moveItemID =============================================== #
     if ( Request::submitted('create_moveItemID') )
-        $this->moveItemID = $_REQUEST["itemID"];
-    elseif ( $_REQUEST["moveItemID"] )
-        $this->moveItemID = $_REQUEST["moveItemID"];
+        $this->moveItemID = Request::option("itemID");
+    elseif ( Request::option("moveItemID") )
+        $this->moveItemID = Request::quoted("moveItemID");
 
-    if ($_REQUEST["abbort_move"])
+    if (Request::submitted("abbort_move"))
         $this->moveItemID = NULL;
 
     if ($this->moveItemID != NULL){
@@ -1120,7 +1120,7 @@ function getSelf ( $param = "", $with_start_item = true ){
     if ($this->evalID)
         $url .= "&evalID=".$this->evalID;
     else
-        $url .= "&evalID=".$_REQUEST["evalID"];
+        $url .= "&evalID=".Request::option("evalID");
 
     if ($param){
         $url .= (($with_start_item)
@@ -1156,12 +1156,12 @@ function getSelf ( $param = "", $with_start_item = true ){
 */
 function parseCommand(){
 
-    if ($_REQUEST['cmd']){
+    if (Request::option('cmd')){
         # extract the command from Request (array) =========================== #
-        if (is_array($_REQUEST['cmd']))
-            $exec_func = "execCommand" . key($_REQUEST['cmd']);
+        if (is_array(Request::option('cmd')))
+            $exec_func = "execCommand" . key(Request::option('cmd'));
         else
-            $exec_func = "execCommand" . $_REQUEST['cmd'];
+            $exec_func = "execCommand" . Request::option('cmd');
 
     } else {
         # extract the command from the template-site ========================= #
@@ -1203,7 +1203,7 @@ function parseCommand(){
 function execCommandCancel(){
 
 
-    $itemID = $_REQUEST['startItemID'];
+    $itemID = Request::option('startItemID');
 
     $this->anchor = $itemID;
     $this->msg[$this->startItemID] .= "info§"
@@ -1223,10 +1223,10 @@ function execCommandUpdateItem ( $no_delete = false ){
 
     $mode = $this->getInstance($this->itemID);
 
-    $title = $_REQUEST['title'];
+    $title = Request::quoted('title');
     if ($title == "" && $mode != QUESTION_BLOCK)
         $title = _("Kein Titel angegeben.");
-    $text = $_REQUEST['text'];
+    $text = Request::quoted('text');
 
     switch ($mode){
      case ROOT_BLOCK:
@@ -1235,7 +1235,7 @@ function execCommandUpdateItem ( $no_delete = false ){
         $this->tree->eval->setText($text, QUOTED);
 
         //global features
-        $this->tree->eval->setAnonymous($_REQUEST['anonymous']);
+        $this->tree->eval->setAnonymous(Request::quoted('anonymous'));
 
         $this->tree->eval->save();
 
@@ -1265,7 +1265,7 @@ function execCommandUpdateItem ( $no_delete = false ){
         $group = &$this->tree->getGroupObject($this->itemID, true );
         $group->setTitle($title, QUOTED);
         $group->setText($text, QUOTED);
-        $group->setMandatory($_REQUEST['mandatory']);
+        $group->setMandatory(Request::quoted('mandatory'));
         $group->save();
 
         // update the questions
@@ -1481,13 +1481,13 @@ function execCommandAddQGroup(){
     $group->setTitle( NEW_QUESTION_BLOCK_BLOCK_TITLE , QUOTED);
     $group->setText("");
     $group->setChildType("EvaluationQuestion");
-    $group->setTemplateID($_REQUEST["templateID"]);
-    $template = new EvaluationQuestion ($_REQUEST["templateID"],
+    $group->setTemplateID(Request::option("templateID"));
+    $template = new EvaluationQuestion (Request::option("templateID"),
         NULL, EVAL_LOAD_FIRST_CHILDREN);
 
     // add 3 Questions
 /*  for ($i=0;$i<=3;$i++){
-        $template = new EvaluationQuestion ($_REQUEST["templateID"]);
+        $template = new EvaluationQuestion (Request::quoted("templateID"));
         $newquestion = $template->duplicate ();
         $newquestion->setText(_("Bitte eine Frage eingeben."));
         $newquestion->save ();
@@ -1520,7 +1520,7 @@ function execCommandAddQGroup(){
         if ($parentgroup->isError)
             return EvalCommon::showErrorReport ($parentgroup,
                 _("Fehler beim Anlegen eines neuen Blocks."));
-        if ($_REQUEST["templateID"] != "")
+        if (Request::option("templateID") != "")
             $this->msg[$this->itemID] = "msg§"
                 . sprintf(_("Ein neuer Fragenblock mit der Antwortenvorlage <b>%s</b> wurde angelegt."),
                     htmlReady ($template->getText()));
@@ -1546,7 +1546,7 @@ function execCommandChangeTemplate(){
     $this->execCommandUpdateItem();
 
     $group = &$this->tree->getGroupObject($this->itemID);
-    $group->setTemplateID($_REQUEST["templateID"]);
+    $group->setTemplateID(Request::option("templateID"));
     $group->save();
 
     if ($group->isError)
@@ -1578,17 +1578,17 @@ function execCommandChangeTemplate(){
  */
 function execCommandUpdateQuestions ( $no_delete = false ){
 
-    $questions = $_REQUEST['questions'];
-    $deleteQuestions = $_REQUEST['DeleteQuestions'];
+    $questions = Request::quoted('questions');
+    $deleteQuestions = Request::quoted('DeleteQuestions');
 
     // remove any empty questions
     $deletecount = 0;
 
     $qgroup = &$this->tree->getGroupObject($this->itemID);
     $questionsDB = $qgroup->getChildren();
-
-    if (is_array($_REQUEST['cmd']))
-        if (key($_REQUEST['cmd']) == "UpdateItem")
+    $cmd = Request::optionArray('cmd');
+    if (!empty($cmd))
+        if (key($cmd) == "UpdateItem")
             $delete_empty_questions = 1;
 
     for( $i=0; $i<count($questions); $i++ ) {
@@ -1628,7 +1628,7 @@ function execCommandUpdateQuestions ( $no_delete = false ){
  */
 function execCommandAddQuestions(){
 
-    $addquestions = $_REQUEST['newQuestionFields'];
+    $addquestions = Request::quoted('newQuestionFields');
 
     $qgroup = &$this->tree->getGroupObject($this->itemID);
     $templateID = $qgroup->getTemplateID();
@@ -1664,8 +1664,8 @@ function execCommandAddQuestions(){
  */
 function execCommandDeleteQuestions(){
 
-    $questions = $_REQUEST['questions'];
-    $deleteQuestions = $_REQUEST['DeleteQuestions'];
+    $questions = Request::quoted('questions');
+    $deleteQuestions = Request::quoted('DeleteQuestions');
 
     $deletecount = 0;
     for( $i=0; $i<count($questions); $i++ ) {
@@ -1735,7 +1735,7 @@ function execCommandQuestionAnswersCreated(){
 
     $id = $this->itemID;
 
-    $question = new EvaluationQuestion($_REQUEST["questionID"]);
+    $question = new EvaluationQuestion(Request::quoted("questionID"));
     $title = htmlready ($question->getTitle());
 
     $this->msg[$this->itemID] = "msg§"
@@ -1819,13 +1819,13 @@ function execCommandMoveQuestionDown(){
  */
 function execCommandMove(){
 
-    $direction = $_REQUEST['direction'];
+    $direction = Request::quoted('direction');
 
-    $group = &$this->tree->getGroupObject($_REQUEST['groupID']);
+    $group = &$this->tree->getGroupObject(Request::option('groupID'));
     $oldposition = $group->getPosition();
 
-    $this->swapPosition($this->itemID, $_REQUEST['groupID'],
-        $oldposition, $_REQUEST['direction']);
+    $this->swapPosition($this->itemID, Request::option('groupID'),
+        $oldposition, Request::quoted('direction'));
 
     $this->msg[$this->itemID] = "msg§ ";
     if (($this->itemID != ROOT_BLOCK)
@@ -1861,7 +1861,7 @@ function execCommandMove(){
 function execCommandMoveGroup(){
 
 
-    $moveGroupeID = $_REQUEST['moveGroupeID'];
+    $moveGroupeID = Request::option('moveGroupeID');
 
     if (!$this->moveItemID){
         $this->msg[$this->itemID] = "msg§"
@@ -2728,7 +2728,7 @@ function createQuestionForm(){
     if ( preg_match( "/(.*)_#(.*)/", $command[1], $command_parts ) )
         $questionID = $command_parts[2];
     else
-        $questionID = Request::submitted('template_save2_button') ? "" : $_REQUEST["template_id"];
+        $questionID = Request::submitted('template_save2_button') ? "" : Request::quoted("template_id");
 
     if ($question->getObjectID() == $questionID)
         $tr2->addAttr ("class", "eval_highlight");

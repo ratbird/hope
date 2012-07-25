@@ -131,7 +131,7 @@ for ($i = 0; $i < sizeof($args); $i++) {
 }
 */
 foreach ($args as $arg) {
-    $arguments[$arg] = $_REQUEST[$arg];
+    $arguments[$arg] = Request::quoted($arg);
 }
 
 if (Request::option('preview')) {

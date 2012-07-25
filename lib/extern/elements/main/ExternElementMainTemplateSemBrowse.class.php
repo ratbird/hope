@@ -186,8 +186,8 @@ class ExternElementMainTemplateSemBrowse extends ExternElementMain {
         $values = array('0', '1', '2', '3', '4', '5', '6');
         $names = array('0', '1', '2', '3', '4', '5', '6');
         $table .= $edit_form->editOptionGeneric('countshowsublevels', $title, $info, $values, $names);
-        
-        if ($GLOBALS['perm']->have_perm('root') && $_REQUEST['cid'] = 'studip') {
+        $cid = Request::option('cid') ;
+        if ($GLOBALS['perm']->have_perm('root') && $cid = 'studip') {
             $title = _("Start bei Root-Ebene:");
             $info = _("Wird das Modul ohne weitere Parameter aufgerufen startet die Anzeige beim Root-Level (alle Fakultäten).");
             $table .= $edit_form->editCheckboxGeneric('startitem', $title, $info, 'root', '0');
@@ -291,7 +291,7 @@ class ExternElementMainTemplateSemBrowse extends ExternElementMain {
             }
         }
         if ($attribute == 'startitem') {
-            if (!($GLOBALS['perm']->have_perm('root') && $_REQUEST['cid'] == 'studip')) {
+            if (!($GLOBALS['perm']->have_perm('root') && Request::option('cid') == 'studip')) {
                 return false;
             }
             if (!isset($_POST[$this->name . '_' . $attribute])) {

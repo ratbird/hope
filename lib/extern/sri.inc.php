@@ -174,7 +174,7 @@ foreach ($EXTERN_MODULE_TYPES as $type) {
     }
 }
 // drop URL parameters from page_url 
-$page_url = preg_replace('/\?.*/', '', $_REQUEST['page_url']); 
+$page_url = preg_replace('/\?.*/', '', Request::get('page_url'));
  
 $sri_url = $module_obj->config->getValue('Main', 'sriurl'); 
 

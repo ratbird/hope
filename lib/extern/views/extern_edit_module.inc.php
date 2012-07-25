@@ -46,14 +46,14 @@ require_once('lib/msg.inc.php');
 echo "<table class=\"blank\" border=\"0\" width=\"100%\" ";
 echo "align=\"left\" cellspacing=\"0\" cellpadding=\"0\">\n";
 // it's forbidden to use the command "new" with a given config_id
-if ($_REQUEST['com'] == 'new') {
+if (Request::option('com') == 'new') {
     $config_id = '';
 }
 
 $module = FALSE;
-if ($_REQUEST['com'] == 'new') {
+if (Request::option('com') == 'new') {
     foreach ($GLOBALS['EXTERN_MODULE_TYPES'] as $key => $type) {
-        if ($type['module'] == $_REQUEST['mod']) {
+        if ($type['module'] == Request::quoted('mod')) {
             $configurations = ExternConfig::GetAllConfigurations($range_id, $key);
             if (!isset($configurations[$type['module']]) || sizeof($configurations[$type['module']]) < $GLOBALS['EXTERN_MAX_CONFIGURATIONS']) {
                 $module = ExternModule::GetInstance($range_id, $type['module'], '', 'NEW');
@@ -95,15 +95,15 @@ $edit_open = "";
 
 foreach ($elements as $element) {
     if ($edit == $element->getName()) {
-        $edit_open = array("$edit" => ($_REQUEST['com'] != 'close'));
+        $edit_open = array("$edit" => (Request::option('com') != 'close'));
     }
 }
-if ($_REQUEST['com'] == 'new' || $_REQUEST['com'] == 'edit' || $_REQUEST['com'] == 'open' || $_REQUEST['com'] == 'close') {
+if (Request::option('com') == 'new' || Request::option('com') == 'edit' || Request::option('com') == 'open' || Request::option('com') == 'close') {
     echo "<tr><td class=\"blank\" width=\"100%\" valign=\"top\">\n";
     $module->printoutEdit($edit_open, $_POST, "", $edit);
 }
 
-if ($_REQUEST['com'] == 'store') {
+if (Request::option('com') == 'store') {
 
     $faulty_values = $module->checkFormValues($edit);
     $fault = FALSE;

@@ -147,7 +147,7 @@ class ExternElementLitList extends ExternElement {
         if (is_array($args) && isset($args['user_id'])) {
             $tree = TreeAbstract::GetInstance("StudipLitList", $args['user_id']);
         } else {
-            preg_match(':^([a-z_-]{0,50})$:i', $_REQUEST['username'], $matches);
+            preg_match(':^([a-z_-]{0,50})$:i', Request::quoted('username'), $matches);
             $tree = TreeAbstract::GetInstance("StudipLitList", get_userid($matches[1]));
         }
         if ($lists = $tree->getVisibleListIds()) {

@@ -775,14 +775,14 @@ function edit_item($item_id, $type, $name, $description, $protected = 0, $url = 
         if ($GLOBALS['perm']->have_studip_perm('tutor', $SessionSeminar)) {
             if ($folder_tree->permissions_activated) {
                 foreach(array('r' => 'read', 'w' => 'write', 'x' => 'exec') as $p => $v){
-                    if ($_REQUEST['perm_' . $v]) {
+                    if (Request::get('perm_' . $v)) {
                         $folder_tree->setPermission($item_id, $p);
                     } else {
                         $folder_tree->unsetPermission($item_id, $p);
                     }
                 }
             }
-            if ($_REQUEST['perm_folder']) {
+            if (Request::get('perm_folder')) {
                 $folder_tree->setPermission($item_id, 'f');
             } else {
                 $folder_tree->unsetPermission($item_id, 'f');

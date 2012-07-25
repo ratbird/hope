@@ -402,7 +402,7 @@ class Course_BasicdataController extends AuthenticatedController
 		        }
 		    }
             if (count($invalid_datafields)) {
-                $this->msg[] = array("error", _("Die Eingaben für folgende Felder im Bereich 'Beschreibungen' sind ungültig und wurden nicht gespeichert:") . '<br>' . join(', ', array_map('htmlready', $invalid_datafields)));
+                $this->msg[] = array("error",  sprintf(_("%s der Veranstaltung wurde%s falsch angegeben") ,join(', ', array_map('htmlready', $invalid_datafields)), count($invalid_datafields)<=1?'':'n' ).", "._("bitte korrigieren Sie dies unter \"Beschreibungen\"").".");
             }
 
             $sem->store();

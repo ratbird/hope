@@ -1,30 +1,35 @@
 <?
-# Lifter010: TODO
+# Lifter010: TEST
 use Studip\Button, Studip\LinkButton;
 ?>
 <form method="post" action="<?= UrlHelper::getLink('?change_object_perms='. $resObject->getId()) ?>">
 <?= CSRFProtection::tokenTag() ?>
-<table border="0" celpadding="2" cellspacing="0" width="99%" align="center">
-    <tr>
-        <td class="<?= $cssSw->getClass() ?>" width="4%">
-            &nbsp;
-        </td>
-        <td class="<?= $cssSw->getClass() ?>" colspan="2">
-            <?=_("verantwortlich:")?><br>
-            <a href="<?= $resObject->getOwnerLink()?>"><?= htmlReady($resObject->getOwnerName(TRUE)) ?></a>
-        </td>
-        <td class="<? echo $cssSw->getClass() ?>" width="50%">
-        <? if ($owner_perms) : ?>
-            <?=_("verantworlicheN NutzerIn &auml;ndern:") ?><br>
-            <? showSearchForm("search_owner", $search_string_search_owner, FALSE,TRUE);
-        else : ?>
-            <?= MessageBox::info(_("Sie können den/die verantwortlicheN NutzerIn nicht ändern.")) ?>
+<table class="zebra" border="0" celpadding="2" cellspacing="0" width="99%" align="center">
+    <colgroup>
+        <col width="4%">
+        <col width="20%">
+        <col>
+        <col width="50%">
+        <col>
+    </colgroup>
+    <tbody>
+        <tr>
+            <td>&nbsp;</td>
+            <td colspan="2">
+                <?= _('verantwortlich:') ?><br>
+                <a href="<?= $resObject->getOwnerLink()?>"><?= htmlReady($resObject->getOwnerName(TRUE)) ?></a>
+            </td>
+            <td>
+            <? if ($owner_perms) : ?>
+                <?= _('verantworlicheN NutzerIn &auml;ndern:') ?><br>
+                <? showSearchForm('search_owner', $search_string_search_owner, FALSE,TRUE); ?>
+            <? else : ?>
+                <?= MessageBox::info(_('Sie können den/die verantwortlicheN NutzerIn nicht ändern.')) ?>
+            <? endif; ?>
+            </td>
 
-        <? endif; ?>
-        </td>
-
-        <!-- Infobox -->
-        <td rowspan="8" valign="top" style="padding-left: 20px" align="right">
+            <!-- Infobox -->
+            <td rowspan="8" valign="top" style="padding-left: 20px" align="right">
             <?
                 $content[] = array('kategorie' => _("Informationen:"),
                     'eintrag' => array(
@@ -44,117 +49,132 @@ use Studip\Button, Studip\LinkButton;
 
                 $infobox = $GLOBALS['template_factory']->open('infobox/infobox_generic_content.php');
 
-                $infobox->set_attribute('picture', 'infobox/schedules.jpg' );
-                $infobox->set_attribute('content', $content );
+                $infobox->picture = 'infobox/schedules.jpg';
+                $infobox->content = $content;
 
                 echo $infobox->render();
             ?>
-        </td>
+            </td>
 
-    </tr>
-    <tr>
-        <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">
-            &nbsp;
-        </td>
-        <td class="<? echo $cssSw->getClass() ?>" colspan="2" valign="top">
-            <?=_("Berechtigungen:")?>
-        </td>
-        <td class="<? echo $cssSw->getClass() ?>" width="50%" valign="top">
-            <?=_("Berechtigung hinzuf&uuml;gen")?><br>
-            <? showSearchForm("search_perm_user", $search_string_search_perm_user, FALSE, FALSE, FALSE, TRUE) ?>
-        </td>
-    </tr>
-<? if (count($selectPerms) > 0): ?>
-    <? $i=0; foreach ($selectPerms as $user_id => $perm): ?>
-    <tr>
-        <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">
-            &nbsp;
-        </td>
-        <td class="<? echo $cssSw->getClass() ?>" width="20%">
-            <input type="hidden" name="change_user_id[]" value="<?= $user_id ?>">
-            <a href="<?= $resObject->getOwnerLink($user_id)?>"><?= htmlReady($resObject->getOwnerName(TRUE, $user_id)) ?></a>
-        </td>
-        <td class="<? echo $cssSw->getClass() ?>" width="*" nowrap style="padding-right: 20px">
-            &nbsp;
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td colspan="2" valign="top">
+                <?= _('Berechtigungen:') ?>
+            </td>
+            <td valign="top">
+                <?= _('Berechtigung hinzuf&uuml;gen')?><br>
+                <? showSearchForm('search_perm_user', $search_string_search_perm_user, FALSE, FALSE, FALSE, TRUE) ?>
+            </td>
+        </tr>
+    <? if (count($selectPerms) > 0): ?>
+        <? $i=0; foreach ($selectPerms as $user_id => $perm): ?>
+        <tr>
+            <td>&nbsp;</td>
+            <td>
+                <input type="hidden" name="change_user_id[]" value="<?= $user_id ?>">
+                <a href="<?= $resObject->getOwnerLink($user_id) ?>">
+                    <?= htmlReady($resObject->getOwnerName(TRUE, $user_id)) ?>
+                </a>
+            </td>
+            <td nowrap style="padding-right: 20px">
+                &nbsp;
             <!-- admin-perms -->
-            <? if (($resObject->getOwnerType($user_id) == 'user') && $owner_perms) :
-                printf ("<input type=\"RADIO\" name=\"change_user_perms[%s]\" value=\"admin\" %s>admin", $i, ($perm == 'admin') ? "checked" : "");
-            else :
-                printf ("<input type=\"RADIO\" disabled name=\"FALSE\" %s><span color=\"#888888\">admin</span>", ($perm == "admin") ? "checked" : "");
-            endif; ?>
+            <? if (($resObject->getOwnerType($user_id) == 'user') && $owner_perms): ?>
+                <label>
+                    <input type="radio" name="change_user_perms[<?= $i ?>]" value="admin"
+                           <? if ($perm == 'admin') echo 'checked'; ?>>
+                    admin
+                </label>
+            <? else: ?>
+                <label style="color: #888;">
+                    <input type="radio" disabled <? if ($perm == 'admin') echo 'checked'; ?>>
+                    admin
+                </label>
+            <? endif; ?>
 
             <!-- tutor-perms -->
-            <? if (($resObject->getOwnerType($user_id) == 'user') && $admin_perms && (($perm == 'tutor') || $owner_perms)) :
-                printf ("<input type=\"RADIO\" name=\"change_user_perms[%s]\" value=\"tutor\" %s>tutor", $i, ($perm == 'tutor') ? "checked" : "");
-            else :
-                printf ("<input type=\"RADIO\" disabled name=\"FALSE\" %s><span color=\"#888888\">tutor</span>", ($perm == "tutor") ? "checked" : "");
-            endif; ?>
+            <? if (($resObject->getOwnerType($user_id) == 'user') && $admin_perms && (($perm == 'tutor') || $owner_perms)): ?> 
+                <label>
+                    <input type="radio" name="change_user_perms[<?= $i ?>]" value="tutor"
+                           <? if ($perm == 'tutor') echo 'checked'; ?>>
+                    tutor
+                </label>
+            <? else: ?>
+                <label style="color: #888;">
+                    <input type="radio" disabled <? if ($perm == 'tutor') echo 'checked'; ?>>
+                    tutor
+                </label>
+            <? endif; ?>
 
             <!-- autor-perms -->
-            <? if ($admin_perms && (($perm == 'autor') || $owner_perms)) :
-                printf ("<input type=\"RADIO\" name=\"change_user_perms[%s]\" value=\"autor\" %s>autor", $i, ($perm == "autor") ? "checked" : "");
-            else :
-                printf ("<input type=\"RADIO\" disabled name=\"FALSE\" %s><span color=\"#888888\">autor</span>", ($perm == "autor") ? "checked" : "");
-            endif; ?>
+            <? if ($admin_perms && (($perm == 'autor') || $owner_perms)): ?>
+                <label>
+                    <input type="radio" name="change_user_perms[<?= $i ?>]" value="autor"
+                           <? if ($perm == 'autor') echo 'checked'; ?>>
+                    autor
+                </label>
+            <? else: ?>
+                <label style="color: #888;">
+                    <input type="radio" disabled <? if ($perm == 'autor') echo 'checked'; ?>>
+                    autor
+                </label>
+            <? endif; ?>
 
-            &nbsp;
             <!-- Trash  -->
             <? if ($owner_perms || ($admin_perms && $perm == 'autor')) : ?>
                 <a href="<?= UrlHelper::getLink('?change_object_perms='. $resObject->getId() .'&delete_user_perms='. $user_id) ?>">
-                    <?= Assets::img('icons/16/blue/trash.png', array('title' => _("Berechtigung löschen"))) ?>
+                    <?= Assets::img('icons/16/blue/trash.png', tooltip2(_('Berechtigung löschen'))) ?>
                 </a>
             <? else : ?>
-                <?= Assets::img('icons/16/grey/decline/trash.png', array('title' => _("Sie dürfen diese Berechtigung leider nicht löschen"))); ?>
+                <?= Assets::img('icons/16/grey/decline/trash.png', tooltip2(_('Sie dürfen diese Berechtigung leider nicht löschen'))) ?>
             <? endif; ?>
-        </td>
-        <td class="<? echo $cssSw->getClass() ?>" width="50%">
-            <?
-            switch ($perm):
-                case "admin":
-                    print _("Nutzer ist <b>Admin</b> und kann s&auml;mtliche Belegungen und Eigenschaften &auml;ndern und Rechte vergeben.");
-                break;
-                case "tutor":
-                    print _("Nutzer ist <b>Tutor</b> und kann s&auml;mtliche Belegungen &auml;ndern.");
-                break;
-                case "autor":
-                    print _("Nutzer ist <b>Autor</b> und kann nur eigene Belegungen &auml;ndern.");
-                break;
-            endswitch;
-            ?>
-        </td>
-    </tr>
-    <? $i += 1; endforeach; ?>
-<? else : ?>
-    <tr>
-        <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
-        </td>
-        <td class="<? echo $cssSw->getClass() ?>" colspan=3>
-            <?= MessageBox::info(_("Es sind keine weiteren Berechtigungen eingetragen")) ?>
-        </td>
-    </tr>
-<? endif; // selectPerms ?>
+            </td>
+            <td>
+            <? if ($perm == 'admin'): ?>
+                <?= _('Nutzer ist <b>Admin</b> und kann s&auml;mtliche Belegungen und Eigenschaften &auml;ndern und Rechte vergeben.') ?>
+            <? elseif ($perm == 'tutor'): ?>
+                <?= _('Nutzer ist <b>Tutor</b> und kann s&auml;mtliche Belegungen &auml;ndern.') ?>
+            <? elseif ($perm == 'autor'): ?>
+                <?= _('Nutzer ist <b>Autor</b> und kann nur eigene Belegungen &auml;ndern.') ?>
+            <? endif; ?>
+            </td>
+        </tr>
+        <? $i += 1; endforeach; ?>
+    <? else : ?>
+        <tr>
+            <td>&nbsp;</td>
+            <td colspan="3">
+                <?= MessageBox::info(_('Es sind keine weiteren Berechtigungen eingetragen')) ?>
+            </td>
+        </tr>
+    <? endif; // selectPerms ?>
 
-<? if ((getGlobalPerms($user->id) == 'admin') && ($resObject->isRoom())): ?>
-    <tr>
-        <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">
-            &nbsp;
-        </td>
-        <td class="<? echo $cssSw->getClass() ?>" colspan="3">
-            <?=_("Blockierung:")?><br>
-            <?=_("Diesen Raum bei globaler Blockierung gegen eine Bearbeitung durch lokale Administratoren und andere Personen sperren:")?>
-            <input type="CHECKBOX" name="change_lockable" <?=($resObject->isLockable()) ? "checked" : "" ?>> <br>
-            <?print _("<b>aktueller Zustand</b>:")." "; print ($resObject->isLockable()) ? _("Raum <u>kann</u> blockiert werden") : _("Raum kann <u>nicht</u> blockiert werden") ?>
-        </td>
-    </tr>
+    <? if ((getGlobalPerms($user->id) == 'admin') && $resObject->isRoom()): ?>
+        <tr>
+            <td>&nbsp;</td>
+            <td colspan="3">
+                <?= _('Blockierung:') ?><br>
+                <label>
+                    <?= _('Diesen Raum bei globaler Blockierung gegen eine Bearbeitung durch lokale Administratoren und andere Personen sperren:')?>
+                    <input type="checkbox" name="change_lockable" <? if ($resObject->isLockable()) echo 'checked'; ?>>
+                </label><br>
+                <?= _('<b>aktueller Zustand</b>:') ?>
+                <? if ($resObject->isLockable()): ?>
+                    <?= _('Raum <u>kann</u> blockiert werden') ?>
+                <? else: ?>
+                    <?= _('Raum kann <u>nicht</u> blockiert werden') ?>
+                <? endif; ?>
+            </td>
+        </tr>
     <? endif; ?>
 
-    <tr>
-        <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">
-            &nbsp;
-        </td>
-        <td class="<? echo $cssSw->getClass() ?>" colspan=3 align="center">
-            <br><?= Button::create(_('Übernehmen'), array('title' => _('Zuweisen')))?>
-        </td>
-    </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td colspan="3" align="center">
+                <br><?= Button::create(_('Übernehmen'), array('title' => _('Zuweisen'))) ?>
+            </td>
+        </tr>
+    </tbody>
 </table>
 </form>

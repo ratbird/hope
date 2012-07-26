@@ -237,7 +237,7 @@ class EditResourceData {
 
 
     function showPropertiesForms() {
-        global $cssSw, $user;
+        global $user;
 
         $ObjectPerms = ResourceObjectPerms::Factory($this->resObject->getId());
 
@@ -248,12 +248,12 @@ class EditResourceData {
         $template->set_attribute('resObject', $this->resObject);
         $template->set_attribute('EditResourceData', $this);
 
-        echo $template->render(compact( 'ObjectPerms', 'cssSw', 'user' ));
+        echo $template->render(compact( 'ObjectPerms', 'user' ));
     }
 
     function showPermsForms() {
         global $search_owner, $search_perm_user, $search_string_search_perm_user, $search_string_search_owner,
-            $cssSw, $user;
+            $user;
 
         $ObjectPerms = ResourceObjectPerms::Factory($this->resObject->getId());
 
@@ -273,6 +273,6 @@ class EditResourceData {
         $template->set_attribute('resObject', $this->resObject);
 
         echo $template->render(compact( 'search_owner', 'search_perm_user', 'search_string_search_perm_user', 'search_string_search_owner',
-            'cssSw', 'user', 'admin_perms', 'owner_perms', 'ObjectPerms', 'selectPerms' ));
+            'user', 'admin_perms', 'owner_perms', 'ObjectPerms', 'selectPerms' ));
     }
 }

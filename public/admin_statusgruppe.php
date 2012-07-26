@@ -232,21 +232,21 @@ $personsAdded = false;
 
 // the person is participant (if we administrate a seminar), or the person is member (if we administrate an institute)
 $seminarPersons = Request::getArray('seminarPersons');
-if (is_array($seminarPersons)) {
+if (!empty($seminarPersons)) {
     MovePersonStatusgruppe ($range_id, Request::option('role_id'), 'direct', $seminarPersons, $workgroup_mode);
     $personsAdded = true;
 }
 
 // only for seminars - the person is member of the institute the seminar is in
 $institutePersons = Request::getArray('institutePersons');
-if (is_array($institutePersons)) {
+if (!empty($institutePersons)) {
     MovePersonStatusgruppe ($range_id, Request::option('role_id'), 'indirect', $institutePersons, $workgroup_mode);
     $personsAdded = true;
 }
 
 // the person shall be added via the free search
 $searchPersons = Request::getArray('searchPersons');
-if (is_array($searchPersons)) {
+if (!empty($searchPersons)) {
     MovePersonStatusgruppe ($range_id, Request::option('role_id'), 'search', $searchPersons, $workgroup_mode);
     $personsAdded = true;
 }

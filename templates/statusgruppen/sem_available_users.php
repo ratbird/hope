@@ -43,9 +43,9 @@
         <td valign="top">
 
             <?
-            $search_exp = $GLOBALS['search_exp'];
+            $search_exp = Request::get('search_exp');
             if ($search_exp) :
-                $users = getSearchResults(trim($GLOBALS['search_exp']), $range_id, 'sem');
+                $users = getSearchResults(trim($search_exp), $range_id, 'sem');
                 if ($users) :
             ?>
             <select name="searchPersons[]" size="5" multiple style="width: 90%;">

@@ -319,7 +319,7 @@ function group_update_admission($seminar_id, $send_message = TRUE)
 
                 //Studis auswaehlen, die jetzt aufsteigen koennen
                 $statement->execute(array(
-                    $seminar_id->getId(),
+                    $seminar->getId(),
                     $studiengang_id
                 ));
                 while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
@@ -380,7 +380,7 @@ function normal_update_admission($seminar_id, $send_message = TRUE)
                       ORDER BY position
                       LIMIT " . (int)$count;
             $statement = DBManager::get()->prepare($query);
-            $statement->execute(array($seminar_id->getId()));
+            $statement->execute(array($seminar->getId()));
             $temp = $statement->fetchAll(PDO::FETCH_ASSOC);
 
             foreach ($temp as $row) {

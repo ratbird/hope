@@ -102,26 +102,26 @@ tr.cycle_even {
 }
 table.zebra, table.zebra-hover { // bg color alternates with tr
     > tbody > tr { 
-        background-color: @alternating-color-even;
-        &:nth-child(2n+1) { background-color: @alternating-color-odd; }
+        background-color: @alternating-color-odd;
+        &:nth-child(2n+1) { background-color: @alternating-color-even; }
     }
 }
 table.zebra-hover {
     > tbody > tr:hover { 
-        background-color: @alternating-highlight-color-even;
-        &:nth-child(2n+1) { background-color: @alternating-highlight-color-odd; }
+        background-color: @alternating-highlight-color-odd;
+        &:nth-child(2n+1) { background-color: @alternating-highlight-color-even; }
     }
 }
 table.zebra-big, table.zebra-big-hover { // bg color alternates with tbody
     > tbody { 
-        > tr { background-color: @alternating-color-even; }
-        &:nth-child(2n+1) > tr { background-color: @alternating-color-odd; }
+        > tr { background-color: @alternating-color-odd; }
+        &:nth-child(2n+1) > tr { background-color: @alternating-color-even; }
     }
 }
 table.zebra-big-hover {
     > tbody {
-        > tr:hover { background-color: @alternating-highlight-color-even; }
-        &:nth-child(2n+1) > tr:hover { background-color: @alternating-highlight-color-odd; }
+        > tr:hover { background-color: @alternating-highlight-color-odd; }
+        &:nth-child(2n+1) > tr:hover { background-color: @alternating-highlight-color-even; }
     }
 }
 

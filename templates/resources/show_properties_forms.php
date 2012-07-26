@@ -15,27 +15,26 @@ use Studip\Button, Studip\LinkButton;
             <input name="change_name" value="<?= htmlReady($resObject->getName()) ?>" size="60" maxlength="255">
         </td>
         <td class="<?= $cssSw->getClass() ?>" width="40%">
-            <?=_("Typ des Objektes:")?><br>
-            <? if (!$resObject->isAssigned()) : ?>
-                <select name="change_category_id">
-                <?
-                $EditResourceData->selectCategories(allowCreateRooms());
-                if (!$resObject->getCategoryId()) : ?>
-                    <option select value=""><?= _("nicht zugeordnet") ?></option>
-                <? endif;
-                while ($db->next_record()) :
-                    if ($db->f("category_id")==$resObject->getCategoryId()) : ?>
-                        <option selected value="<?= $db->f("category_id") ?>"><?= htmlReady($db->f("name")) ?></option>
-                    <? else : ?>
-                        <option value="<?= $db->f("category_id") ?>"><?= htmlReady($db->f("name")) ?></option>
-                    <? endif;
-                endwhile; ?>
-                </select>
-                <?= Button::create(_("Zuweisen"), 'assign')?>
-            <? else : ?>
-                <b><?=  htmlReady($resObject->getCategoryName()) ?></b>
-                <input type="hidden" name="change_category_id" value="<?= $resObject->getCategoryId() ?>">
-            <? endif; ?>
+            <label>
+                <?= _('Typ des Objektes:') ?><br>
+                <? if (!$resObject->isAssigned()): ?>
+                    <select name="change_category_id">
+                    <? if (!$resObject->getCategoryId()) : ?>
+                        <option value=""><?= _('nicht zugeordnet') ?></option>
+                    <? endif; ?>
+                    <? foreach ($EditResourceData->selectCategories(allowCreateRooms()) as $category_id => $name): ?>
+                        <option value="<?= $category_id ?>"
+                                <? if ($category_id == $resObject->getCategoryId()) echo 'selected'; ?>>
+                            <?= htmlReady($name) ?>
+                        </option>
+                    <? endforeach; ?>
+                    </select>
+                    <?= Button::create(_("Zuweisen"), 'assign')?>
+                <? else : ?>
+                    <b><?=  htmlReady($resObject->getCategoryName()) ?></b>
+                    <input type="hidden" name="change_category_id" value="<?= $resObject->getCategoryId() ?>">
+                <? endif; ?>
+            </label>
         </td>
 
         <!-- Infobox -->
@@ -86,9 +85,7 @@ use Studip\Button, Studip\LinkButton;
             <b><?=_("Eigenschaften")?></b><br>
         </td>
     </tr>
-    <?
-    if (($resObject->isRoom()) && (get_config("RESOURCES_ENABLE_ORGA_CLASSIFY"))) :
-    ?>
+<? if ($resObject->isRoom() && get_config('RESOURCES_ENABLE_ORGA_CLASSIFY')): ?>
     <tr>
         <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">
             &nbsp;
@@ -107,69 +104,64 @@ use Studip\Button, Studip\LinkButton;
         <? if ($ObjectPerms->havePerm("admin")) : ?>
             <br>
             <select name="change_institut_id">
-                <option value="0">&lt;<?=_("keine Zuordnung")?>&gt;</option>
-                <?
-                $EditResourceData->selectFacultys();
-                while ($db->next_record()) :
-                    printf ("<option style=\"font-weight:bold;\" value=\"%s\" %s>%s</option>", $db->f("Institut_id"), ($db->f("Institut_id") == $resObject->getInstitutId()) ? "selected" : "", my_substr($db->f("Name"),0,50));
-                    $EditResourceData->selectInstitutes($db->f("fakultaets_id"));
-                        while ($db2->next_record()) {
-                            printf ("<option value=\"%s\" %s>&nbsp;&nbsp;&nbsp;&nbsp;%s</option>", $db2->f("Institut_id"), ($db2->f("Institut_id") == $resObject->getInstitutId()) ? "selected" : "", my_substr($db2->f("Name"),0,50));
-                        }
-                endwhile; ?>
+                <option value="0">&lt;<?= _('keine Zuordnung') ?>&gt;</option>
+            <? foreach ($EditResourceData->selectFaculties() as $institute_id => $faculty): ?>
+                <option style="font-weight:bold;" value="<?= $institute_id ?>"
+                        <? if ($institute_id == $resObject->getInstitutId()) echo 'selected'; ?>>
+                    <?= my_substr($faculty['Name'], 0, 50) ?>
+                </option>
+                <? foreach ($faculty['institutes'] as $institute_id => $name): ?>
+                    <option style="padding-left: 1.5em;" value="<?= $institute_id ?>"
+                            <? if ($institute_id == $resObject->getInstitutId()) echo 'selected'; ?>>
+                        <?= my_substr($name, 0, 50) ?>
+                    </option>
+                <? endforeach; ?>
+            <? endforeach; ?>
             </select>
         <? else : ?>
             <?= MessageBox::info(_("Sie k&ouml;nnen die Einordnung in die Orga-Struktur nicht &auml;ndern.")) ?>
         <? endif; ?>
         </td>
     </tr>
-    <? endif; ?>
-    <? if ($resObject->getCategoryId()) : ?>
+<? endif; ?>
+<? if ($resObject->getCategoryId()) : ?>
     <tr>
         <td class="<? echo $cssSw->getClass() ?>" width="4%">&nbsp;
         </td>
         <td class="<? echo $cssSw->getClass() ?>" colspan=2 align="center">
         </td>
     </tr>
-        <?
-        $EditResourceData->selectProperties();
-        while ($db->next_record()) : ?>
+    <? foreach ($EditResourceData->selectProperties() as $property): ?>
     <tr>
         <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
         </td>
         <td class="<?= $cssSw->getClass() ?>">
-            <?= htmlReady($db->f("name")); ?>
+            <?= htmlReady($property['name']); ?>
         </td>
         <td class="<? echo $cssSw->getClass() ?>" width="40%">
-        <?
-            $db2->query("SELECT * FROM resources_objects_properties WHERE resource_id = '".$resObject->getId()."' AND property_id = '".$db->f("property_id")."' "); $db2->next_record();
-            printf ("<input type=\"HIDDEN\" name=\"change_property_val[]\" value=\"%s\">", "_id_".$db->f("property_id"));
-            switch ($db->f("type")) :
-                case "bool":
-                    printf ("<input type=\"CHECKBOX\" name=\"change_property_val[]\" %s>&nbsp;%s", ($db2->f("state")) ? "checked":"", htmlReady($db->f("options")));
-                break;
-                case "num":
-                    if ($db->f("system") == 2)
-                        printf ("<input type=\"TEXT\" name=\"change_property_val[]\" value=\"%s\" size=5 maxlength=10>", htmlReady($db2->f("state")));
-                    else
-                        printf ("<input type=\"TEXT\" name=\"change_property_val[]\" value=\"%s\" size=30 maxlength=255>", htmlReady($db2->f("state")));
-                break;
-                case "text":
-                    printf ("<textarea name=\"change_property_val[]\" cols=30 rows=2 >%s</textarea>", htmlReady($db2->f("state")));
-                break;
-                case "select":
-                    $options=explode (";",$db->f("options"));
-                    printf ("<select name=\"change_property_val[]\">");
-                    foreach ($options as $a) :
-                        printf ("<option %s value=\"%s\">%s</option>", ($db2->f("state") == $a) ? "selected":"", $a, htmlReady($a));
-                    endforeach;
-                    printf ("</select>");
-                break;
-            endswitch;
-        ?></td>
+            <input type="hidden" name="change_property_val[]" value="_id_<?= $property['property_id'] ?>">
+        <? if ($property['type'] == 'bool'): ?>
+            <input type='CHECKBOX' name="change_property_val[]" <? if ($property['state']) echo 'checked'; ?>>
+                <?= htmlReady($property['options']) ?>
+        <? elseif ($property['type'] == 'num' && $property['system'] == 2): ?>
+            <input type="text" name="change_property_val[]" value="<?= htmlReady($property['state']) ?>" size="5" maxlength="10">
+        <? elseif ($property['type'] == 'num'): ?>
+            <input type="text" name="change_property_val[]" value="<?= htmlReady($property['state']) ?>" size="30" maxlength="255">
+        <? elseif ($property['type'] == 'text'): ?>
+            <textarea name="change_property_val[]" cols="30" rows="2"><?= htmlReady($property['state']) ?></textarea>
+        <? elseif ($property['type'] == 'select'): ?>
+            <select name="change_property_val[]">
+            <? foreach (explode(';', $property['options']) as $option): ?>
+                <option value="<?= $option ?>" <? if ($property['state'] == $option) echo 'selected'; ?>>
+                    <?= htmlReady($option) ?>
+                </option>
+            <? endforeach; ?>
+            </select>
+        <? endif; ?>
+        </td>
     </tr>
-    <? endwhile;
-    else : ?>
+    <? endforeach; ?>
+<? else : ?>
     <tr>
         <td class="<?= $cssSw->getClass() ?>" width="4%">
             &nbsp;
@@ -180,8 +172,8 @@ use Studip\Button, Studip\LinkButton;
             </span>
         </td>
     </tr>
-    <? endif;
-    if ((getGlobalPerms($user->id) == "admin") && ($resObject->getCategoryId())) : ?>
+<? endif; ?>
+<? if ($resObject->getCategoryId() && getGlobalPerms($user->id) == 'admin') : ?>
     <tr>
         <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">
             &nbsp;

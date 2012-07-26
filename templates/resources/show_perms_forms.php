@@ -64,45 +64,43 @@ use Studip\Button, Studip\LinkButton;
             <? showSearchForm("search_perm_user", $search_string_search_perm_user, FALSE, FALSE, FALSE, TRUE) ?>
         </td>
     </tr>
-    <?
-    $i=0;
-    if ($selectPerms) :
-        while ($db->next_record()) : ?>
+<? if (count($selectPerms) > 0): ?>
+    <? $i=0; foreach ($selectPerms as $user_id => $perm): ?>
     <tr>
         <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">
             &nbsp;
         </td>
         <td class="<? echo $cssSw->getClass() ?>" width="20%">
-            <input type="hidden" name="change_user_id[]" value="<?= $db->f("user_id")?>">
-            <a href="<?= $resObject->getOwnerLink($db->f("user_id"))?>"><?= htmlReady($resObject->getOwnerName(TRUE, $db->f("user_id"))) ?></a>
+            <input type="hidden" name="change_user_id[]" value="<?= $user_id ?>">
+            <a href="<?= $resObject->getOwnerLink($user_id)?>"><?= htmlReady($resObject->getOwnerName(TRUE, $user_id)) ?></a>
         </td>
         <td class="<? echo $cssSw->getClass() ?>" width="*" nowrap style="padding-right: 20px">
             &nbsp;
             <!-- admin-perms -->
-            <? if (($resObject->getOwnerType($db->f("user_id")) == "user") && ($owner_perms)) :
-                printf ("<input type=\"RADIO\" name=\"change_user_perms[%s]\" value=\"admin\" %s>admin", $i, ($db->f("perms") == "admin") ? "checked" : "");
+            <? if (($resObject->getOwnerType($user_id) == 'user') && $owner_perms) :
+                printf ("<input type=\"RADIO\" name=\"change_user_perms[%s]\" value=\"admin\" %s>admin", $i, ($perm == 'admin') ? "checked" : "");
             else :
-                printf ("<input type=\"RADIO\" disabled name=\"FALSE\" %s><span color=\"#888888\">admin</span>", ($db->f("perms") == "admin") ? "checked" : "");
+                printf ("<input type=\"RADIO\" disabled name=\"FALSE\" %s><span color=\"#888888\">admin</span>", ($perm == "admin") ? "checked" : "");
             endif; ?>
 
             <!-- tutor-perms -->
-            <? if (($resObject->getOwnerType($db->f("user_id")) == "user") && ($admin_perms) && ((($db->f("perms") == "tutor") || ($owner_perms)))) :
-                printf ("<input type=\"RADIO\" name=\"change_user_perms[%s]\" value=\"tutor\" %s>tutor", $i, ($db->f("perms") == "tutor") ? "checked" : "");
+            <? if (($resObject->getOwnerType($user_id) == 'user') && $admin_perms && (($perm == 'tutor') || $owner_perms)) :
+                printf ("<input type=\"RADIO\" name=\"change_user_perms[%s]\" value=\"tutor\" %s>tutor", $i, ($perm == 'tutor') ? "checked" : "");
             else :
-                printf ("<input type=\"RADIO\" disabled name=\"FALSE\" %s><span color=\"#888888\">tutor</span>", ($db->f("perms") == "tutor") ? "checked" : "");
+                printf ("<input type=\"RADIO\" disabled name=\"FALSE\" %s><span color=\"#888888\">tutor</span>", ($perm == "tutor") ? "checked" : "");
             endif; ?>
 
             <!-- autor-perms -->
-            <? if (($admin_perms) && ((($db->f("perms") == "autor") || ($owner_perms)))) :
-                printf ("<input type=\"RADIO\" name=\"change_user_perms[%s]\" value=\"autor\" %s>autor", $i, ($db->f("perms") == "autor") ? "checked" : "");
+            <? if ($admin_perms && (($perm == 'autor') || $owner_perms)) :
+                printf ("<input type=\"RADIO\" name=\"change_user_perms[%s]\" value=\"autor\" %s>autor", $i, ($perm == "autor") ? "checked" : "");
             else :
-                printf ("<input type=\"RADIO\" disabled name=\"FALSE\" %s><span color=\"#888888\">autor</span>", ($db->f("perms") == "autor") ? "checked" : "");
+                printf ("<input type=\"RADIO\" disabled name=\"FALSE\" %s><span color=\"#888888\">autor</span>", ($perm == "autor") ? "checked" : "");
             endif; ?>
 
             &nbsp;
             <!-- Trash  -->
-            <? if (($owner_perms) || (($admin_perms) && ($db->f("perms") == "autor"))) : ?>
-                <a href="<?= UrlHelper::getLink('?change_object_perms='. $resObject->getId() .'&delete_user_perms='. $db->f("user_id")) ?>">
+            <? if ($owner_perms || ($admin_perms && $perm == 'autor')) : ?>
+                <a href="<?= UrlHelper::getLink('?change_object_perms='. $resObject->getId() .'&delete_user_perms='. $user_id) ?>">
                     <?= Assets::img('icons/16/blue/trash.png', array('title' => _("Berechtigung löschen"))) ?>
                 </a>
             <? else : ?>
@@ -111,7 +109,7 @@ use Studip\Button, Studip\LinkButton;
         </td>
         <td class="<? echo $cssSw->getClass() ?>" width="50%">
             <?
-            switch ($db->f("perms")) :
+            switch ($perm):
                 case "admin":
                     print _("Nutzer ist <b>Admin</b> und kann s&auml;mtliche Belegungen und Eigenschaften &auml;ndern und Rechte vergeben.");
                 break;
@@ -125,9 +123,8 @@ use Studip\Button, Studip\LinkButton;
             ?>
         </td>
     </tr>
-    <?  $i++;
-        endwhile;
-    else : ?>
+    <? $i += 1; endforeach; ?>
+<? else : ?>
     <tr>
         <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
         </td>
@@ -135,10 +132,9 @@ use Studip\Button, Studip\LinkButton;
             <?= MessageBox::info(_("Es sind keine weiteren Berechtigungen eingetragen")) ?>
         </td>
     </tr>
-    <? endif; // selectPerms
+<? endif; // selectPerms ?>
 
-    if ((getGlobalPerms($user->id) == "admin") && ($resObject->isRoom())) :
-    ?>
+<? if ((getGlobalPerms($user->id) == 'admin') && ($resObject->isRoom())): ?>
     <tr>
         <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">
             &nbsp;

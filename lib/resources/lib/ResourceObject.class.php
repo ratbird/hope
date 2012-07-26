@@ -637,7 +637,7 @@ class ResourceObject {
                     $this->parent_id,
                     $this->category_id,
                     $this->owner_id,
-                    $this->institut_id,
+                    $this->institut_id ?: '',
                     $level,
                     $this->name,
                     $this->description,

@@ -502,7 +502,7 @@ class ResourceObject {
         $statement->execute(array(
             $this->id,
             $property_id,
-            $state
+            $state ?: ''
         ));
         return $statement->rowCount() > 0;
     }

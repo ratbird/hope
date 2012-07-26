@@ -44,11 +44,6 @@ require_once ($RELATIVE_PATH_RESOURCES.'/lib/AssignObject.class.php');
 require_once ($RELATIVE_PATH_RESOURCES.'/lib/AssignObjectPerms.class.php');
 require_once ($RELATIVE_PATH_RESOURCES.'/lib/RoomRequest.class.php');
 
-require_once ('lib/classes/cssClassSwitcher.inc.php');
-
-$cssSw = new cssClassSwitcher;
-
-
 /*****************************************************************************
 EditResourceData, Darstellung der unterschiedlichen Forms zur
 Bearbeitung eines Objects
@@ -137,7 +132,7 @@ class EditResourceData {
 
     function showScheduleForms($assign_id='') {
         global $perm, $user,
-            $CANONICAl_RELATIVE_PATH_STUDIP, $RELATIVE_PATH_RESOURCES, $cssSw;
+            $CANONICAl_RELATIVE_PATH_STUDIP, $RELATIVE_PATH_RESOURCES;
 
         $resReq = new RoomRequest();
 
@@ -230,7 +225,7 @@ class EditResourceData {
         $template = $GLOBALS['template_factory']->open('resources/show_schedule_forms.php');
         $template->set_attribute('used_view', $this->used_view);
         $change_schedule_move_or_copy = Request::option('change_schedule_move_or_copy');
-        echo $template->render(compact( 'resAssign', 'resources_data', 'view_mode', 'cssSw', 'lockedAssign', 'killButton', 
+        echo $template->render(compact( 'resAssign', 'resources_data', 'view_mode', 'lockedAssign', 'killButton', 
             'owner_type', 'perm', 'search_string_search_user', 'ResourceObjectPerms', 'search_exp_room',
             'search_properties_x', 'resReq', 'seminarName', 'seminarID','change_schedule_move_or_copy'));
     }

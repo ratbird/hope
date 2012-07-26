@@ -80,6 +80,7 @@ class StudipCacheFactory {
     static function setConfig($config)
     {
         self::$config = $config;
+        self::$cache = NULL;
     }
 
 

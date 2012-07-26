@@ -45,6 +45,7 @@ class SimpleOrMapNodbTest extends PHPUnit_Framework_TestCase
     {
         $testconfig = new Config(array('cache_class' => 'StudipArrayCache'));
         Config::set($testconfig);
+        StudipCacheFactory::setConfig($testconfig);
         $GLOBALS['CACHING_ENABLE'] = true;
         $cache = StudipCacheFactory::getCache();
         foreach (array('auth_user_md5') as $db_table) {

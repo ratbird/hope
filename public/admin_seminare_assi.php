@@ -534,11 +534,11 @@ if ($form == 3 && Request::isPost())
         for ($i=0; $i<$_SESSION['sem_create_data']["turnus_count"]; $i++) {
 
             $_SESSION['sem_create_data']["term_turnus_date"][$i]=$term_turnus_date[$i];
-            $_SESSION['sem_create_data']["term_turnus_start_stunde"][$i] =  intval($term_turnus_start_stunde[$i]);
-            $_SESSION['sem_create_data']["term_turnus_start_minute"][$i] =  intval($term_turnus_start_minute[$i]);
-            $_SESSION['sem_create_data']["term_turnus_end_stunde"][$i] = intval($term_turnus_end_stunde[$i]);
-            $_SESSION['sem_create_data']["term_turnus_end_minute"][$i] = intval($term_turnus_end_minute[$i]);
-            $_SESSION['sem_create_data']["term_turnus_desc"][$i]=($term_turnus_desc[$i] ? $term_turnus_desc[$i] : $term_turnus_desc_chooser[$i]);
+            $_SESSION['sem_create_data']["term_turnus_start_stunde"][$i] = (strlen($term_turnus_start_stunde[$i]))? intval($term_turnus_start_stunde[$i]) : '';
+            $_SESSION['sem_create_data']["term_turnus_start_minute"][$i] = (strlen($term_turnus_start_minute[$i]))? intval($term_turnus_start_minute[$i]) : '';
+            $_SESSION['sem_create_data']["term_turnus_end_stunde"][$i] = (strlen($term_turnus_end_stunde[$i]))? intval($term_turnus_end_stunde[$i]) : '';
+            $_SESSION['sem_create_data']["term_turnus_end_minute"][$i] = (strlen($term_turnus_end_minute[$i]))? intval($term_turnus_end_minute[$i]) : '';
+            $_SESSION['sem_create_data']["term_turnus_desc"][$i] = $term_turnus_desc[$i] ?: $term_turnus_desc_chooser[$i];
             $_SESSION['sem_create_data']["term_turnus_week_offset"][$i] = (int)$term_turnus_week_offset[$i];
             $_SESSION['sem_create_data']["term_turnus_cycle"][$i] = (int)$term_turnus_cycle[$i];
             $_SESSION['sem_create_data']["term_turnus_sws"][$i] = round(str_replace(',','.',$term_turnus_sws[$i]),1);

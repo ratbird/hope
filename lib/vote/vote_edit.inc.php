@@ -95,7 +95,7 @@ if ( ! ( $perm->have_studip_perm( "tutor", $rangeID ) ||
 /******************** initialization *******************************/
 
 // get and memorize the url, where we came from
-$referer =  Request::option('referer');
+$referer =  Request::get('referer');
 if( ! $referer ) {
     //$referer = $_SERVER['HTTP_REFERER'];
     $referer = $_SESSION['vote_HTTP_REFERER_2']; // workaround for BIEST00082

@@ -883,13 +883,13 @@ if ((Request::quoted('add_type')) || (Request::option('delete_type')) || (Reques
                 $resource_is_room = 1;
             }
             $query = "INSERT INTO resources_categories
-                        (category_id, name, description, is_room)
-                      VALUES (?, ?, ?, ?)";
+                        (category_id, name, is_room)
+                      VALUES (?, ?, ?)";
             $statement = DBManager::get()->prepare($query);
             $statement->execute(array(
                 $id,
                 Request::get('add_type'),
-                Request::get('insert_type_description'),
+#                Request::get('insert_type_description'),
                 $resource_is_room
             ));
             if ($statement->rowCount()) {
@@ -962,8 +962,8 @@ if ((Request::quoted('add_type')) || (Request::option('delete_type')) || (Reques
 }
 
 //Eigenschaften bearbeiten
-if ((Request::option('add_property')) || (Request::option('delete_property')) || (Request::option('change_properties'))) {
-    if ($globalPerm == "admin") { //check for resources root or global root
+if (Request::submittedSome('_add_property', '_send_property_type') || Request::option('delete_property')) {
+    if ($globalPerm == 'admin') { //check for resources root or global root
         if (Request::option('delete_property')) {
             $query = "DELETE FROM resources_properties WHERE property_id = ?";
             $statement = DBManager::get()->prepare($query);
@@ -972,52 +972,56 @@ if ((Request::option('add_property')) || (Request::option('delete_property')) ||
             ));
         }
 
-        if (Request::quoted('add_property')) {
-            if (Request::option('add_property_type')=="bool")
-                $options="vorhanden";
-            if (Request::option('add_property_type')=="select")
-                $options="Option 1;Option 2;Option 3";
-            $id=md5(uniqid("Regen2002",1));
+        if (Request::submitted('_add_property')) {
+            $options = '';
+            if (Request::option('add_property_type') == 'bool') {
+                $options = 'vorhanden';
+            } else if (Request::option('add_property_type') == 'select') {
+                $options = 'Option 1;Option 2;Option 3';
+            }
+            $id = md5(uniqid('Regen2002', 1));
 
             $query = "INSERT INTO resources_properties
-                        (options, property_id, name, description, type)
-                      VALUES (?, ?, ?, ?, ?)";
+                        (property_id, options, name, type)
+                      VALUES (?, ?, ?, ?)";
             $statement = DBManager::get()->prepare($query);
             $statement->execute(array(
-                $options,
                 $id,
+                $options,
                 Request::get('add_property'),
-                Request::get('insert_property_description'),
                 Request::get('add_property_type')
             ));
         }
-        $change_property_name = Request::getArray('change_property_name');
-        $send_property_type = Request::optionArray('send_property_type');
-        $send_property_select_opt = Request::optionArray('send_property_select_opt');
-        $send_property_bool_desc = Request::optionArray('send_property_bool_desc');
+        
+        if (Request::submitted('_send_property_type')) {
+            $change_property_name = Request::getArray('change_property_name');
+            $send_property_type = Request::optionArray('send_property_type');
+            $send_property_select_opt = Request::getArray('send_property_select_opt');
+            $send_property_bool_desc = Request::optionArray('send_property_bool_desc');
 
-        $query = "UPDATE resources_properties
-                  SET name = ?, options = ?, type = ?
-                  WHERE property_id = ?";
-        $statement = DBManager::get()->prepare($query);
+            $query = "UPDATE resources_properties
+                      SET name = ?, options = ?, type = ?
+                      WHERE property_id = ?";
+            $statement = DBManager::get()->prepare($query);
 
-        foreach ($change_property_name as $key => $val) {
-            if ($send_property_type[$key] == 'select') {
-                $tmp_options = explode(';', $send_property_select_opt[$key]);
-                $tmp_options = array_map('trim', $tmp_options);
-                $options = implode(';', $tmp_options);
-            } elseif ($send_property_type[$key] == 'bool') {
-                $options = $send_property_bool_desc[$key];
-            } else {
-                $options='';
+            foreach ($change_property_name as $key => $val) {
+                if ($send_property_type[$key] == 'select') {
+                    $tmp_options = explode(';', $send_property_select_opt[$key]);
+                    $tmp_options = array_map('trim', $tmp_options);
+                    $options = implode(';', $tmp_options);
+                } elseif ($send_property_type[$key] == 'bool') {
+                    $options = $send_property_bool_desc[$key];
+                } else {
+                    $options='';
+                }
+
+                $statement->execute(array(
+                    $change_property_name[$key],
+                    $options,
+                    $send_property_type[$key],
+                    $key
+                ));
             }
-
-            $statement->execute(array(
-                $change_property_name[$key],
-                $options,
-                $send_property_type[$key],
-                $key
-            ));
         }
     } else {
         $msg->addMsg(25);
@@ -1479,8 +1483,8 @@ if (Request::submitted('start_multiple_mode') || (Request::option('single_reques
                 }
             }
         } else {
-            $query = "SELECT a.seminar_id, a.termin_id, a.request_id #, a.resource_id,
-                             # COUNT(b.property_id) AS complexity, MAX(d.state) AS seats
+            $query = "SELECT a.seminar_id, a.termin_id, a.request_id , a.resource_id,
+                             COUNT(b.property_id) AS complexity, MAX(d.state) AS seats
                       FROM resources_requests AS a
                       LEFT JOIN resources_requests_properties AS b USING (request_id)
                       LEFT JOIN resources_properties AS c ON (b.property_id = c.property_id AND c.system = 2)

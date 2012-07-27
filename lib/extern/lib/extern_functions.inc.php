@@ -257,7 +257,7 @@ function sri_is_enabled ($i_id) {
         }
         $query = "SELECT srienabled FROM Institute WHERE Institut_id = ? AND srienabled = 1";
         $statement = DBManager::get()->prepare($query);
-        $statement->execute($parameters);
+        $statement->execute(array( $i_id ));
         $row = $statement->fetchColumn();
         if ($row) {
             return 1;

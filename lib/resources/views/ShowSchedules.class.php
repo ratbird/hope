@@ -1,7 +1,7 @@
 <?php
 # Lifter002: TODO
 # Lifter007: TODO
-# Lifter003: TODO
+# Lifter003: TEST
 # Lifter010: TODO
 /**
 * ShowSchedules.class.php
@@ -63,8 +63,6 @@ class ShowSchedules {
 
     //Konstruktor
     function ShowSchedules ($resource_id='', $user_id='', $range_id='') {
-        $this->db=new DB_Seminar;
-        $this->db2=new DB_Seminar;
         $this->resource_id=$resource_id;
         $this->user_id=$user_id;
         $this->range_id=$range_id;

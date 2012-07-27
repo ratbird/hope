@@ -333,9 +333,7 @@ function show_votes ($rangeID, $userID, $perm, $isHomepage = NO) {
    /* Show all stopped Votes ----------------------------------------------- */
    if (!empty ($stoppedVotes) || (!empty ($stoppedEvals) && $haveFullPerm)) {
 
-      $openStoppedVotes = Request::option('openStoppedVotes');
-      if (!empty($openStoppedVotes))
-     $openStoppedVotes = NO;
+      $openStoppedVotes = Request::int('openStoppedVotes', 0);
 
       echo createBoxLineHeader ();
       echo createStoppedVotesHeadline ($stoppedVotes, $openStoppedVotes, $stoppedEvals);

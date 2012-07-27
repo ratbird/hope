@@ -99,14 +99,6 @@ if(LockRules::Check($range_id, 'groups')) {
         die();
 }
 
-// if we add persons to a statusgroup, we receive a role_id as an array-element
-$role_id = Request::optionArray('role_id');
-if (!empty($role_id)) {
-    $index=key($role_id);
-    Request::set('role_id',$index);
-}
-
-
 
 /* * * * * * * * * * * * * * * * * *
  * H E L P E R   F U N C T I O N S *
@@ -228,33 +220,39 @@ if (Request::option('cmd') == 'sortByName') {
 }
 
 // add a person to a statusgroup
-$personsAdded = false;
+// if we add persons to a statusgroup, we receive a role_id as an array-element
+$role_id_klicked = Request::optionArray('role_id');
+if (!empty($role_id_klicked)) {
+    $index = key($role_id_klicked);
+    Request::set('role_id', $index);
 
-// the person is participant (if we administrate a seminar), or the person is member (if we administrate an institute)
-$seminarPersons = Request::getArray('seminarPersons');
-if (!empty($seminarPersons)) {
-    MovePersonStatusgruppe ($range_id, Request::option('role_id'), 'direct', $seminarPersons, $workgroup_mode);
-    $personsAdded = true;
+    $personsAdded = false;
+
+    // the person is participant (if we administrate a seminar), or the person is member (if we administrate an institute)
+    $seminarPersons = Request::getArray('seminarPersons');
+    if (!empty($seminarPersons)) {
+        MovePersonStatusgruppe ($range_id, Request::option('role_id'), 'direct', $seminarPersons, $workgroup_mode);
+        $personsAdded = true;
+    }
+
+    // only for seminars - the person is member of the institute the seminar is in
+    $institutePersons = Request::getArray('institutePersons');
+    if (!empty($institutePersons)) {
+        MovePersonStatusgruppe ($range_id, Request::option('role_id'), 'indirect', $institutePersons, $workgroup_mode);
+        $personsAdded = true;
+    }
+
+    // the person shall be added via the free search
+    $searchPersons = Request::getArray('searchPersons');
+    if (!empty($searchPersons)) {
+        MovePersonStatusgruppe ($range_id, Request::option('role_id'), 'search', $searchPersons, $workgroup_mode);
+        $personsAdded = true;
+    }
+
+    if ($personsAdded) {
+        $msgs['msg'][] = _("Die Personen wurden der Gruppe hinzugefügt.");
+    }
 }
-
-// only for seminars - the person is member of the institute the seminar is in
-$institutePersons = Request::getArray('institutePersons');
-if (!empty($institutePersons)) {
-    MovePersonStatusgruppe ($range_id, Request::option('role_id'), 'indirect', $institutePersons, $workgroup_mode);
-    $personsAdded = true;
-}
-
-// the person shall be added via the free search
-$searchPersons = Request::getArray('searchPersons');
-if (!empty($searchPersons)) {
-    MovePersonStatusgruppe ($range_id, Request::option('role_id'), 'search', $searchPersons, $workgroup_mode);
-    $personsAdded = true;
-}
-
-if ($personsAdded) {
-    $msgs['msg'][] = _("Die Personen wurden der Gruppe hinzugefügt.");
-}
-
 // delete a person from a statusgroup
 if (Request::option('cmd') == 'removePerson') {
     $msgs['msg'][] = _("Die Person wurde aus der Gruppe entfernt!");

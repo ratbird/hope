@@ -1,7 +1,7 @@
 <?php
 # Lifter002: TODO
 # Lifter007: TODO
-# Lifter003: TODO
+# Lifter003: TODO - only fixed the ugly connection to ShowObject for now
 # Lifter010: TODO
 /**
 * ResourcesBrowse.class.php
@@ -117,24 +117,30 @@ class ResourcesBrowse {
     }
 
     //private
-    function getHistory($id) {
+    function getHistory($id)
+    {
         global $UNI_URL, $UNI_NAME_CLEAN;
-        $top=FALSE;
-        $k=0;
-        while ((!$top) && ($id)) {
-            $k++;
-            $query = sprintf ("SELECT name, parent_id, resource_id, owner_id FROM resources_objects WHERE resource_id = '%s' ", $id);
-            $this->db2->query($query);
-            $this->db2->next_record();
 
-            $result_arr[] = array("id" => $this->db2->f("resource_id"), "name" => $this->db2->f("name"), 'owner_id' => $this->db2->f('owner_id'));
-            $id=$this->db2->f("parent_id");
+        $query = "SELECT name, parent_id, resource_id, owner_id
+                  FROM resources_objects
+                  WHERE resource_id = ?";
+        $statement = DBManager::get()->prepare($query);
 
-            if ($this->db2->f("parent_id") == "0") {
-                $top = TRUE;
-            }
+        $result_arr = array();
+        while ($id) {
+            $statement->execute(array($id));
+            $object = $statement->fetch(PDO::FETCH_ASSOC);
+            $statement->closeCursor();
+
+            $result_arr[] = array(
+                'id'       => $object['resource_id'],
+                'name'     => $object['name'],
+                'owner_id' => $object['owner_id']
+            );
+            $id = $object['parent_id'];
         }
-        if (is_array($result_arr))
+
+        if (count($result_arr) > 0)
             switch (ResourceObject::getOwnerType($result_arr[count($result_arr)-1]["owner_id"])) {
                 case "global":
                     $top_level_name = $UNI_NAME_CLEAN;

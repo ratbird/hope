@@ -98,18 +98,28 @@ tr.cycle_odd {
 }
 tr.cycle_even {
     background-color: #e7ebf1;
-    &:hover { background-color: #B7C2E2; }
+    &:hover { background-color: #b7c2e2; }
 }
 table.zebra, table.zebra-hover { // bg color alternates with tr
     > tbody > tr { 
         background-color: @alternating-color-odd;
         &:nth-child(2n+1) { background-color: @alternating-color-even; }
+
+        .zebra &{ // Don't insert a blank between & and { as it would lead to a wrong rule; seems to be a bug in lessc
+            background-color: #e7ebf1;
+            &:nth-child(2n+1) { background-color: #f3f5f8; }
+        }
     }
 }
 table.zebra-hover {
     > tbody > tr:hover { 
         background-color: @alternating-highlight-color-odd;
         &:nth-child(2n+1) { background-color: @alternating-highlight-color-even; }
+        
+        .zebra &{ // See above
+            background-color: #b7c2e2;
+            &:nth-child(2n+1) { background-color: #ced8f2; }
+        }
     }
 }
 table.zebra-big, table.zebra-big-hover { // bg color alternates with tbody

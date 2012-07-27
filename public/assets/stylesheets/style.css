@@ -208,7 +208,7 @@ tr.cycle_even {
   background-color: #e7ebf1;
 }
 tr.cycle_even:hover {
-  background-color: #B7C2E2;
+  background-color: #b7c2e2;
 }
 table.zebra > tbody > tr,
 table.zebra-hover > tbody > tr {
@@ -218,10 +218,24 @@ table.zebra > tbody > tr:nth-child(2n+1),
 table.zebra-hover > tbody > tr:nth-child(2n+1) {
   background-color: #f2f2f2;
 }
+.zebra table.zebra > tbody > tr,
+.zebra table.zebra-hover > tbody > tr {
+  background-color: #e7ebf1;
+}
+.zebra table.zebra > tbody > tr:nth-child(2n+1),
+.zebra table.zebra-hover > tbody > tr:nth-child(2n+1) {
+  background-color: #f3f5f8;
+}
 table.zebra-hover > tbody > tr:hover {
   background-color: #b7c2e2;
 }
 table.zebra-hover > tbody > tr:hover:nth-child(2n+1) {
+  background-color: #ced8f2;
+}
+.zebra table.zebra-hover > tbody > tr:hover {
+  background-color: #b7c2e2;
+}
+.zebra table.zebra-hover > tbody > tr:hover:nth-child(2n+1) {
   background-color: #ced8f2;
 }
 table.zebra-big > tbody > tr,

@@ -1,7 +1,7 @@
 <?
 # Lifter002: TODO
 # Lifter007: TODO
-# Lifter003: TODO
+# Lifter003: TEST
 # Lifter010: TODO
 /**
 * ShowThread.class.php
@@ -52,29 +52,39 @@ class ShowThread extends ShowTreeRow {
     var $lines;     //Uebersichtsarray der Struktur;
 
     function ShowThread() {
-        $this->db = new DB_Seminar;
-        $this->db2 = new DB_Seminar;
     }
 
-    function showThreadLevel ($root_id, $level=0, $lines='') {
+    function showThreadLevel ($root_id, $level=0, $lines='')
+    {
         global $edit_structure_object, $RELATIVE_PATH_RESOURCES, $ActualObjectPerms;
 
-        $db=new DB_Seminar;
-        $db2=new DB_Seminar;
+        // Prepare statement that obtains all children of a given resource
+        $query = "SELECT resource_id
+                  FROM resources_objects
+                  WHERE parent_id = ?
+                  ORDER BY name";
+        $children_statement = DBManager::get()->prepare($query);
 
         //Daten des Objects holen
-        $db->query("SELECT resource_id FROM resources_objects WHERE resource_id = '$root_id' ");
+        $query = "SELECT resource_id
+                  FROM resources_objects
+                  WHERE resource_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($root_id));
+        $resource_ids = $statement->fetchAll(PDO::FETCH_COLUMN);
 
-        while ($db->next_record()) {
+        foreach ($resource_ids as $resource_id) {
             //Untergeordnete Objekte laden
-            $db2->query("SELECT resource_id FROM resources_objects WHERE parent_id = '".$db->f("resource_id")."' ORDER BY name ");
+            $children_statement->execute(array($resource_id));
+            $children = $children_statement->fetchAll(PDO::FETCH_COLUMN);
+            $children_statement->closeCursor();
 
             //Struktur merken
-            $weitere=$db2->affected_rows();
-            $this->lines[$level+1] = $weitere;
+            $weitere = count($children);
+            $this->lines[$level + 1] = $weitere;
 
             //Object erstellen
-            $resObject = ResourceObject::Factory($db->f("resource_id"));
+            $resObject = ResourceObject::Factory($resource_id);
 
             //Daten vorbereiten
             if (!$resObject->getCategoryIconnr())
@@ -172,9 +182,9 @@ class ShowThread extends ShowTreeRow {
             $this->showRow($icon, $link, $titel, $zusatz, $level, $lines, $weitere, $new, $open, $content, $edit);
 
             //in weitere Ebene abtauchen &nbsp;
-            while ($db2->next_record()) {
-                if ($_SESSION['resources_data']["structure_opens"][$db->f("resource_id")])
-                    $this->showThreadLevel($db2->f("resource_id"), $level+1, $lines);
+            foreach ($children as $child_id) {
+                if ($_SESSION['resources_data']['structure_opens'][$resource_id])
+                    $this->showThreadLevel($child_id, $level + 1, $lines);
             }
         }
     }

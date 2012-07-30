@@ -37,13 +37,10 @@ if ($input['type'] === "multiselect") : ?>
 <? endif;
 
 if ($input['type'] === "datafield"):?>
-    <div style="float:left;  border-bottom:1px dotted #A29276; width:85%;">
-	    <div style="width:97%; float:left;">
+	    <div style="float:left;padding-right:0.5em;">
 	        <?=$input['locked'] ? $input['display_value'] : $input['html_value'];?>
 	    </div>
- 
         <?if($input['description']):?>
             <?=tooltipIcon(_($input['description']))?>
         <?endif?>
-   </div>      
 <?endif?>

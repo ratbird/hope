@@ -890,7 +890,7 @@ function tooltip2($text, $with_alt = TRUE, $with_popup = FALSE) {
  * 
  * @param type $text 
  */
-function tooltipIcon($text)
+function tooltipIcon($text, $important = false)
 {
     // prepare text
     $text = preg_replace("/(\n\r|\r\n|\n|\r)/", " ", $text);
@@ -898,7 +898,7 @@ function tooltipIcon($text)
     
     // render tooltip
     $template = $GLOBALS['template_factory']->open('shared/tooltip');
-    return $template->render(compact('text'));
+    return $template->render(compact('text', 'important'));
 }
 
 /**

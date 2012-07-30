@@ -143,6 +143,8 @@ abstract class StudIPPlugin {
             if (!file_exists($css_file) || (filemtime($css_file) < filemtime($less_file))) {
                 $less  = file_get_contents($GLOBALS['ABSOLUTE_PATH_STUDIP'] . 'assets/stylesheets/mixins.less') . "\n";
                 $less .= file_get_contents($GLOBALS['ABSOLUTE_PATH_STUDIP'] . 'assets/stylesheets/less/colors.less') . "\n";
+                $less .= sprintf('@image-path: "%s";', Assets::url('images')) . "\n";
+                $less .= '@icon-path: "@{image-path}/icons/16";' . "\n";
                 $less .= file_get_contents($less_file);
 
                 require_once 'vendor/lessphp/lessc.inc.php';

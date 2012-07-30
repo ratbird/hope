@@ -64,20 +64,45 @@ use Studip\Button, Studip\LinkButton;
             <input name="inaktiv_tage" type="text" value="<?= htmlReady($user['inaktiv_tage']) ?>" size="10"> Tage
         </td>
     </tr>
-    <? if (count($datafields) > 0) : ?>
     <tbody <?= ($advanced) ? '': 'class="collapsed"' ?>>
     <tr class="steel header-row">
         <td colspan="4" class="toggle-indicator">
             <a class="toggler" href="<?= $controller->url_for('admin/user/')?><?= ($advanced) ? '' : 'index/advanced' ?>" title="<?= _('Zusätzliche Suchfelder ein-/ausblenden') ?>">
-                <b><?= _('Datenfelder für Nutzer')?></b>
+                <b><?= _('Erweiterte Suche')?></b>
             </a>
         </td>
     </tr>
+    <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+        <td align="right" width="15%">
+            <?= _("Nutzerdomäne:")?>
+        </td>
+        <td width="35%">
+            <select name="userdomains">
+                <option value=""><?= _("Alle")?></option>
+                <option value="null-domain" <?= ($user['userdomains'] == 'null-domain') ? 'selected' : ''?>><?= _("Ohne Domäne")?></option>
+                <? foreach($userdomains as $one) : ?>
+                    <option <?= ($user['userdomains'] == $one->getId()) ? 'selected' : ''?> value="<?= htmlReady($one->getId()) ?>"><?= htmlReady($one->getName() ? $one->getName() : $one->getId()) ?></option>
+                <? endforeach ?>
+            </select>
+        </td>
+        <td align="right" width="15%">
+            <?= _("Authentifizierung:")?>
+        </td>
+        <td width="35%">
+            <select name="auth_plugins">
+               <option value=""><?= _("Alle")?></option>
+               <? foreach($available_auth_plugins as $one) : ?>
+                <option <?= ($user['auth_plugins'] == $one) ? 'selected' : ''?>><?= htmlready($one) ?></option>
+                <? endforeach ?>
+            </select>
+        </td>
+    </tr>
+    <? if (count($datafields) > 0) : ?>
         <? $i = 0; foreach($datafields as $datafield) : ?>
             <? if ($i % 2 == 0) : ?>
             <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
             <? endif ?>
-                <td align="right" nowrap><?= htmlReady($datafield->getName()) ?></td>
+                <td align="right" nowrap><?= htmlReady($datafield->getName()) ?>:</td>
                 <td>
                 <? if ($datafield->getType() == 'bool') : ?>
                     <input type="radio" name="<?= $datafield->getID()?>" value="1" <?= ($user[$datafield->getID()] === "1") ? 'checked' : '' ?>> <?= _('ja') ?>
@@ -102,8 +127,8 @@ use Studip\Button, Studip\LinkButton;
             <td></td>
         </tr>
         <? endif ?>
+     <? endif ?>
     </tbody>
-    <? endif ?>
     <tr>
         <td colspan="4" align="center">
             <?= Button::create(_('Suchen'), 'search')?>

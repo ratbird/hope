@@ -14,6 +14,12 @@ $aktionen[] = array(
     "text" => '<a href="'.$controller->url_for('admin/user/migrate').'">'._('Benutzer zusammenführen').'</a>',
     "icon" => "icons/16/black/move_right/persons.png"
 );
+if (count($users) > 0) {
+    $aktionen[] = array(
+    "text" => '<a href="'.$controller->url_for('admin/user?export=1').'">'._('Suchergebnis exportieren').'</a>',
+    "icon" => "icons/16/black/file-xls.png"
+);
+}
 
 $searchform = '<form id="user_search" action="'.$controller->url_for('admin/user/edit').'" method="post">'
             . CSRFProtection::tokenTag()

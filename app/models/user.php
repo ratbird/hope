@@ -121,7 +121,7 @@ class UserModel
      */
     public static function getUsers($username = NULL, $vorname = NULL, $nachname = NULL,
                                     $email = NULL, $inaktiv = NULL, $perms = NULL,
-                                    $locked = NULL, $datafields= NULL, $sort = NULL, $order = 'DESC')
+                                    $locked = NULL, $datafields= NULL, $userdomains = NULL, $auth_plugins = NULL,$sort = NULL, $order = 'DESC')
     {
         // keine suchkriterien
         if (empty($username) && empty($email) && empty($vorname) && empty($nachname)
@@ -131,13 +131,20 @@ class UserModel
 
         $db = DBManager::get();
         foreach (words('username vorname nachname email') as $param) {
-            if ($$param) $$param = $db->quote('%' . $$param . '%');
+            if ($$param) {
+                if (preg_match('/[%_]/', $$param)) {
+                    $$param = $db->quote($$param);
+                } else {
+                    $$param = $db->quote('%' . $$param . '%');
+                }
+            }
         }
         $query = "SELECT DISTINCT au.*,IFNULL(auth_plugin, 'standard') as auth_plugin, UNIX_TIMESTAMP(ud.changed) as changed_timestamp, ui.mkdate "
                 ."FROM auth_user_md5 au "
                 ."LEFT JOIN datafields_entries de ON de.range_id=au.user_id "
                 ."LEFT JOIN user_data ud ON au.user_id = ud.sid "
                 ."LEFT JOIN user_info ui ON (au.user_id = ui.user_id) "
+                ."LEFT JOIN user_userdomains uud ON (au.user_id = uud.user_id) "
                 ."WHERE 1 ";
 
         if ($username) {
@@ -185,6 +192,17 @@ class UserModel
             }
         }
 
+        if ($auth_plugins) {
+            $query .= "AND IFNULL(auth_plugin, 'standard') = " . $db->quote($auth_plugins) . " ";
+        }
+
+        if ($userdomains) {
+            if ($userdomains === 'null-domain') {
+                $query .= "AND userdomain_id IS NULL ";
+            } else {
+                $query .= "AND userdomain_id = " . $db->quote($userdomains) . " ";
+            }
+        }
         //sortieren
         switch ($sort) {
             case "perms":
@@ -557,5 +575,11 @@ class UserModel
             $new_id,
             $items
         ));
+    }
+    
+    public static function getAvailableAuthPlugins()
+    {
+        $query = "SELECT DISTINCT IFNULL(auth_plugin, 'standard') as auth_plugin FROM auth_user_md5 ORDER BY auth_plugin='standard',auth_plugin";
+        return DBManager::get()->query($query)->fetchAll(PDO::FETCH_COLUMN);
     }
 }

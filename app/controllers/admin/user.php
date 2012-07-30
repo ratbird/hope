@@ -113,20 +113,46 @@ class Admin_UserController extends AuthenticatedController
             //Daten abrufen
             $this->users = UserModel::getUsers($request['username'], $request['vorname'],
                 $request['nachname'], $request['email'], $inaktiv, $request['perm'],
-                $request['locked'], $search_datafields, $this->sortby, $this->order);
+                $request['locked'], $search_datafields, $request['userdomains'], $request['auth_plugins'], $this->sortby,  $this->order);
 
             // Fehler abfangen
-            if ($this->users == 0) {
+            if ($this->users === 0) {
                 PageLayout::postMessage(MessageBox::info(_('Sie haben keine Suchkriterien ausgewählt!')));
             } elseif (count($this->users) < 1 && Request::submitted('search')) {
                 PageLayout::postMessage(MessageBox::info(_('Es wurden keine Benutzer mit diesen Suchkriterien gefunden.')));
             } else {
                 $_SESSION['admin']['user']['results'] = true;
             }
+            if (is_array($this->users) && Request::submitted('export')) {
+                $tmpname = md5(uniqid('tmp'));
+                $captions = array('username',
+                                   'vorname', 
+                                   'nachname', 
+                                   'email', 
+                                   'status', 
+                                   'authentifizierung', 
+                                   'registriert seit', 
+                                   'inaktiv seit');
+                $mapper = function ($u) {
+                    return array( $u['username'],
+                                    $u['Vorname'],
+                                    $u['Nachname'], 
+                                    $u['Email'], 
+                                    $u['perms'], 
+                                    $u['auth_plugin'], 
+                                    strftime('%x', $u['mkdate']), 
+                                    strftime('%x', $u['changed_timestamp']));
+                };
+                if (array_to_csv(array_map($mapper, $this->users), $GLOBALS['TMP_PATH'].'/'.$tmpname, $captions)) {
+                    $this->redirect(GetDownloadLink($tmpname, 'nutzer-export.csv', 4, 'force'));
+                }
+            }
         }
-
+        $this->userdomains = UserDomain::getUserDomains();
+        $this->available_auth_plugins = UserModel::getAvailableAuthPlugins();
+        
         //show datafields search
-        if ($advanced || count($search_datafields) > 0) {
+        if ($advanced || $request['auth_plugins'] || $request['userdomains'] || count($search_datafields) > 0) {
             $this->advanced = true;
         }
     }

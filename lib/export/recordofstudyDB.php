@@ -1,113 +1,90 @@
 <?php
-# Lifter002: TODO
-# Lifter007: TODO
-# Lifter003: TODO
-# Lifter010: TODO
+# Lifter002: DONE - not applicable
+# Lifter003: TEST
+# Lifter007: TEST
+# Lifter010: DONE - not applicable
 
 /**
-
  * Creates a record of study and exports the data to pdf (database)
-
  *
-
  * @author      Christian Bauer <alfredhitchcock@gmx.net>
-
  * @version     $Exp
-
  * @copyright   2003 Stud.IP-Project
-
  * @access      public
-
  * @module      recordofstudy
-
  */
-require_once('lib/dates.inc.php');
-require_once('config.inc.php');
-require_once('lib/classes/SemesterData.class.php');
+require_once 'lib/dates.inc.php';
+require_once 'config.inc.php';
+require_once 'lib/classes/SemesterData.class.php';
 
 /**
  * collect the current seminars and concerning semesters from the archiv    
  *
  * @access  private
- * @returns array the semesters
+ * @return  array the semesters
  *
  */
-function getSemesters(){
+function getSemesters()
+{
     global $user;
-    $ret = $sorter = $semester_in_db = array();
+
+    $semester_in_db = array();
+
     // creating the list of avaible semester
-    foreach (SemesterData::GetSemesterArray() as $key => $value){
-        $semestersAR[$key]["beginn"] = $value["beginn"];
-        $semestersAR[$key]["id"] = $key;
-        $semestersAR[$key]["idname"] = $value["name"];
-        $semestersAR[$key]["name"] = convertSemester($value["name"]);
-        $semester_in_db[] = $value["name"];
-        $sorter[$key] = $value["beginn"];
+    foreach (SemesterData::GetSemesterArray() as $key => $value) {
+        $semestersAR[$key] = array(
+            'id'     => $key,
+            'idname' => $value['name'],
+            'name'   => convertSemester($value['name']),
+            'beginn' => $value['beginn'],
+        );
+        $semester_in_db[] = $value['name'];
     }
+
     unset($semestersAR[0]);
-    unset($sorter[0]);
     unset($semester_in_db[0]);
+
     $i = $key + 1;
+
     // adding the semester from avaible archiv-items
-    $db = new DB_Seminar ();
-    $db->query ("SELECT archiv.start_time, archiv.semester, archiv.start_time "
-        . "FROM archiv_user LEFT "
-        . "JOIN archiv  USING (seminar_id) "
-        . "WHERE archiv_user.user_id = '".$user->id."' "
-        . "GROUP BY archiv.semester ORDER BY start_time DESC");
-    while ($db->next_record()) {
-        if (in_array($db->f("semester"), $semester_in_db)){
+    $query = "SELECT start_time, semester
+              FROM archiv_user
+              LEFT JOIN archiv USING (seminar_id)
+              WHERE user_id = ?
+              ORDER BY start_time DESC";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($user->id));
+    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+        if (in_array($row['semester'], $semester_in_db)){
             continue;
         }
-        $semestersAR[$i]["beginn"] = $db->f("start_time");
-        $semestersAR[$i]["id"] = $i;
-        $semestersAR[$i]["idname"] = $db->f("semester");
-        $semestersAR[$i]["name"] = convertSemester($db->f("semester"));
-        $semestersAR[$i]["onlyarchiv"] = 1;
-        $sorter[$i] = $db->f("start_time");
-        $i++;
+        $semestersAR[$i] = array(
+            'id'         => $i,
+            'idname'     => $row['semester'],
+            'name'       => convertSemester($row['semester']),
+            'beginn'     => $row['start_time'],
+            'onlyarchiv' => 1,
+        );
+        $i += 1;
     }
-    asort($sorter);
-    foreach($sorter as $key => $value){
-        $ret[$key] = $semestersAR[$key];
-    }
-    return $ret;
+    
+    uasort ($semestersAR, function ($a, $b) {
+        return $a['beginn'] - $b['beginn'];
+    });
+    return $semestersAR;
 }
 
 /**
  * collects the basic data from the db
  *
  * @access  private
- * @returns array   the basic data
- *
+ * @return  array   the basic data
  */
-function getBasicData(){
-global $user;
-    $db = new DB_Seminar ();
-
-    // get field of study
-    $db->query("SELECT user_studiengang.*,studiengaenge.name "
-        . "FROM user_studiengang LEFT JOIN studiengaenge USING (studiengang_id) "
-        . "WHERE user_id = '".$user->id."' "
-        . "ORDER BY studiengang_id");
-
-    while ($db->next_record()) {
-        $fieldofstudy .= $db->f("name")." ";
-    }
-
-    //get fullname
-    $db->query("SELECT user_info.title_front as tv"
-        .", user_info.title_rear as tr"
-        .", auth_user_md5.Vorname vn"
-        .", auth_user_md5.Nachname as nn"
-        ." FROM auth_user_md5 LEFT JOIN user_info USING (user_id)"
-        ." WHERE auth_user_md5.user_id = '".$user->id."'");
-    $db->next_record();
-    $fullname = htmlReady($db->f("tv")." ".$db->f("tr")." ".$db->f("vn")." ".$db->f("nn"));
-
+function getBasicData()
+{
     return array(
-        "fieldofstudy"  => $fieldofstudy,
-        "studentname"   => $fullname,
+        'fieldofstudy'  => getFieldOfStudy(),
+        'studentname'   => $GLOBALS['user']->getFullName(),
     );
 }
 
@@ -115,152 +92,150 @@ global $user;
  * gets the field of study of the current user from the db
  *
  * @access  private
- * @returns string  the field of study 
- *
+ * @return  string  the field of study 
  */
-function getFieldOfStudy(){
-    global $user;
-    
-    $db = new DB_Seminar ();
-    
-
-    // get field of study
-    $db->query("SELECT user_studiengang.*,studiengaenge.name FROM user_studiengang LEFT JOIN studiengaenge USING (studiengang_id) WHERE user_id = '".$user->id."' ORDER BY studiengang_id");
-
-    while ($db->next_record()) {
-        $fieldofstudy .= $db->f("name")." ";
-    }
-    return $fieldofstudy;
+function getFieldOfStudy()
+{
+    $query = "SELECT GROUP_CONCAT(studiengaenge.name SEPARATOR ' ')
+              FROM user_studiengang
+              LEFT JOIN studiengaenge USING (studiengang_id)
+              WHERE user_id = ?
+              ORDER BY studiengang_id";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($GLOBALS['user']->id));
+    return $statement->fetchColumn() . ' ';
 }
  
 /**
  * gets the complete name of the student
  *
  * @access  private
- * @returns string  the complete name
- *
+ * @return string  the complete name
  */
-function getStudentname(){
-    global $user;
-    
-    $db = new DB_Seminar ();
-    
-    //get fullname
-    $db->query("SELECT user_info.title_front as tv"
-        .", user_info.title_rear as tr"
-        .", auth_user_md5.Vorname vn"
-        .", auth_user_md5.Nachname as nn"
-        ." FROM auth_user_md5 LEFT JOIN user_info USING (user_id)"
-        ." WHERE auth_user_md5.user_id = '".$user->id."'");
-    $db->next_record();
-    $fullname = htmlReady($db->f("tv")." ".$db->f("tr")." ".$db->f("vn")." ".$db->f("nn"));
-
-    return $fullname;
+function getStudentname()
+{
+    return $GLOBALS['user']->getFullName();
 }
 
 /**
  * gets the seminars of the currents user from the db
  *
  * @access  private
- * @param   string $semesterid      the selected semester id
+ * @param   string  $semesterid     the selected semester id
  * @param   boolean $onlyseminars   could reduce the assortment
- * @returns array   the seminars
+ * @return  array   the seminars
  *
  */
- function getSeminare($semesterid,$onlyseminars){
-     global $user,$semestersAR,$SEM_CLASS,$SEM_TYPE,$_fullname_sql;
-     
-     $db = new DB_Seminar ();
-     $i = 0;
-     // if its not an archiv-only-semester, get the current ones
-     if(!$semestersAR[$semesterid]["onlyarchiv"]){
-         
-         // the status the user should have in the seminar
-         $status = "autor";
-         
-         // some stolen code from a.noack :)
-         foreach (SemesterData::GetSemesterArray() as $key => $value){
-             if (isset($value['beginn']) && $value['beginn'])
-             $sem_start_times[] = $value['beginn'];
-         }
-         foreach ($SEM_CLASS as $key => $value){
-             if ($value['bereiche']){
-                 foreach($SEM_TYPE as $type_key => $type_value){
-                     if($type_value['class'] == $key)
-                     $allowed_sem_status[] = $type_key;
-                 }
-             }
-         }  
-         
-         
-         // new seminars
-         $db2 = new DB_Seminar ();
-         
-         $query = "SELECT b.Seminar_id,b.Name,b.Untertitel,b.VeranstaltungsNummer, "
-         . "INTERVAL(start_time," . join(",",$sem_start_times) .") AS sem_number , "
-         . "IF(duration_time=-1,-1,INTERVAL(start_time+duration_time," . join(",",$sem_start_times) .")) AS sem_number_end "
-         . "FROM seminar_user a LEFT JOIN seminare b USING(Seminar_id) WHERE ";
-         
-         if($onlyseminars) $query .= ((is_array($allowed_sem_status)) ? " b.status IN('" . join("','",$allowed_sem_status) . "') AND " : "") ." ";
-         
-         $query .= " a.user_id='".$user->id."' AND a.status='".$status."' "
-         . "HAVING (sem_number <= ".$semestersAR[$semesterid]["id"]." AND (sem_number_end >= ".$semestersAR[$semesterid]["id"]." OR sem_number_end = -1))";
-         $db->query($query);    
-         
-         while ($db->next_record()) {
-             $seminarid = $db->f("Seminar_id");
-             $name = $db->f("Name");
-             $seminarnumber = $db->f("VeranstaltungsNummer");
-             $description = $db->f("Untertitel");
-             if ($description)
-             $name .= ": ".$description;
-             $sem_number_start = $db->f("sem_number");
-             $sem_number_end = $db->f("sem_number_end");
-             
-             $db2->query ("SELECT seminar_user.user_id, " . $_fullname_sql['full'] . " AS fullname, username, status, position FROM seminar_user LEFT JOIN auth_user_md5 USING (user_id)  LEFT JOIN user_info USING(user_id) WHERE seminar_user.Seminar_id = '".$seminarid."' AND status = 'dozent' ORDER BY position, Nachname");
-             $tutor = '';
-             while($db2->next_record()){
-                 if ($tutor) $tutor .= "; ";
-                 $tutor .= $db2->f("fullname");
-             }
-             
-             $seminare[$i] = array(
-             "id"           => $i,
-             "seminarid"    => $seminarid,
-             "seminarnumber" => $seminarnumber,
-             "tutor"        => $tutor,
-             "sws"          => "",
-             "description"  => $name 
-             );
-             $i++;
-         }
-     }
+function getSeminare($semesterid,$onlyseminars)
+{
+    global $user,$semestersAR,$SEM_CLASS,$SEM_TYPE,$_fullname_sql;
+
+    $i = 0;
+    // if its not an archiv-only-semester, get the current ones
+    if (!$semestersAR[$semesterid]['onlyarchiv']) {
+
+        // the status the user should have in the seminar
+        $status = 'autor';
+
+        // some stolen code from a.noack :)
+        foreach (SemesterData::GetSemesterArray() as $key => $value) {
+            if (!empty($value['beginn'])) {
+                $sem_start_times[] = $value['beginn'];
+            }
+        }
+        foreach ($SEM_CLASS as $key => $value) {
+            if ($value['bereiche']) {
+                foreach($SEM_TYPE as $type_key => $type_value) {
+                    if ($type_value['class'] == $key) {
+                        $allowed_sem_status[] = $type_key;
+                    }
+                }
+            }
+        }
+
+        // Prepare tutor statement
+        $query = "SELECT GROUP_CONCAT({$_fullname_sql['full']}, '; ')
+                  FROM seminar_user
+                  LEFT JOIN auth_user_md5 USING (user_id)
+                  LEFT JOIN user_info USING (user_id)
+                  WHERE seminar_user.Seminar_id = ? AND status = 'dozent'
+                  ORDER BY position, Nachname";
+        $tutor_statement = DBManager::get()->prepare($query);
+
+        // Prepare and execute statement that obtains all seminars for the current user
+        $query = "SELECT b.Seminar_id, b.Name, b.Untertitel, b.VeranstaltungsNummer,
+                          INTERVAL(start_time, :sem_start) AS sem_number , 
+                          IF(duration_time = -1, -1, INTERVAL(start_time + duration_time, :sem_start)) AS sem_number_end
+                   FROM seminar_user AS a
+                   LEFT JOIN seminare b USING (Seminar_id)
+                   WHERE (:allowed_status IS NULL OR b.status IN (:allowed_status))
+                     AND a.user_id = :user_id AND a.status = :status
+                   HAVING (sem_number <= :sem_number AND (sem_number_end = -1 OR sem_number_end >= :sem_number))";
+        $statement = DBManager::get()->prepare($query);
+        $statement->bindValue(':sem_start', $sem_start_times);
+        $statement->bindValue(':allowed_status', $onlyseminars ? ($allowed_sem_status ?: null) : null);
+        $statement->bindValue(':user_id', $user->id);
+        $statement->bindValue(':status', $status);
+        $statement->bindValue(':sem_number', $semestersAR[$semesterid]['id']);
+        $statement->execute();
+
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $seminarid        = $row['Seminar_id'];
+            $name             = $row['Name'];
+            $seminarnumber    = $row['VeranstaltungsNummer'];
+
+            if ($row['Untertitel']) {
+                $name .= ': ' . $row['Untertitel'];
+            }
+
+            $tutor_statement->execute(array($seminarid));
+            $tutor = $tutor_statement->fetchColumn() ?: '';
+            $tutor_statement->closeCursor();
+
+            $seminare[$i] = array(
+                'id'            => $i,
+                'seminarid'     => $seminarid,
+                'seminarnumber' => $seminarnumber,
+                'tutor'         => $tutor,
+                'sws'           => '',
+                'description'   => $name 
+            );
+            $i += 1;
+        }
+    }
+
      //archiv seminars
-     $db->query ("SELECT archiv.name, archiv.seminar_id, archiv_user.status, archiv.VeranstaltungsNummer, archiv.name, archiv.semester, archiv.untertitel, archiv.studienbereiche, archiv.dozenten "
-     . "FROM archiv_user LEFT JOIN archiv  USING (seminar_id) "
-     . "WHERE archiv_user.user_id = '".$user->id."' AND archiv.semester = '".$semestersAR[$semesterid]["idname"]."'");
-     while($db->next_record()){
-         
-         $seminarid = $db->f("seminar_id");
-         $name = $db->f("name");
-         $seminarnumber = $db->f("VeranstaltungsNummer");
-         $description = $db->f("untertitel");
-         if ($description)
-         $name .= ": ".$description;    
-         $tutor = $db->f("dozenten");
-         $semesterDB = $db->f("semester");
-         
-         if( (!$onlyseminars) || 
-         ($onlyseminars && $db->f("studienbereiche")))
-         $seminare[$i] = array(
-         "id"           => $i,
-         "seminarid"    => $seminarid,
-         "seminarnumber" => $seminarnumber,
-         "tutor"        => $tutor,
-         "description"  => $name 
-         );
-         $i++;
-     }
- return $seminare;
- }
-?>
+     $query = "SELECT archiv.name, archiv.seminar_id,
+                      archiv.VeranstaltungsNummer,
+                      archiv.untertitel, archiv.studienbereiche, archiv.dozenten
+               FROM archiv_user
+               LEFT JOIN archiv USING (seminar_id)
+               WHERE archiv_user.user_id = ? AND archiv.semester = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array(
+        $user->id,
+        $semestersAR[$semesterid]['idname'],
+    ));
+    while ($row = $statement->fetchColumn()) {
+        $seminarid     = $row['seminar_id'];
+        $name          = $row['name'];
+        $seminarnumber = $row['VeranstaltungsNummer'];
+        $tutor         = $row['dozenten'];
+
+        if ($row['untertitel']) {
+            $name .= ': ' . $row['untertitel'];
+        }
+
+        if (!$onlyseminars || $row['studienbereiche']) {
+            $seminare[$i] = array(
+                'id'            => $i,
+                'seminarid'     => $seminarid,
+                'seminarnumber' => $seminarnumber,
+                'tutor'         => $tutor,
+                'description'   => $name 
+            );
+            $i += 1;
+        }
+    }
+    return $seminare;
+}

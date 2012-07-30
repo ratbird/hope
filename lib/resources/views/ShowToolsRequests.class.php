@@ -1,8 +1,8 @@
 <?
-# Lifter002: TODO
+# Lifter002: TODO - showRequest() left undone (cause it's horrible)
+# Lifter003: TEST
 # Lifter005: TODO
 # Lifter007: TODO
-# Lifter003: TODO
 # Lifter010: TODO
 /**
 * ShowToolsRequests.class.php
@@ -56,8 +56,6 @@ $cssSw = new cssClassSwitcher;
 **/
 class ShowToolsRequests
 {
-    var $db;
-    var $db2;
     var $cssSw;         //the cssClassSwitcher
     var $requests;          //the requests i'am responsibel for
     var $semester_id;
@@ -65,19 +63,14 @@ class ShowToolsRequests
 
     function ShowToolsRequests($semester_id, $resolve_requests_no_time = null)
     {
-        $this->db = new DB_Seminar;
-        $this->db2 = new DB_Seminar;
-        if (!$semester_id){
-            $this->semester_id = SemesterData::GetSemesterIdByDate(time());
-        } else {
-            $this->semester_id = $semester_id;
-        }
-        if(!is_null($resolve_requests_no_time)){
+        $this->semester_id = $semester_id ?: SemesterData::GetSemesterIdByDate(time());
+        if (!is_null($resolve_requests_no_time)) {
             $this->show_requests_no_time = !$resolve_requests_no_time;
         }
     }
 
-    function getMyOpenSemRequests() {
+    function getMyOpenSemRequests()
+    {
         $this->restoreOpenRequests();
         return (int)$this->requests_stats_open['my_sem'];
     }
@@ -109,157 +102,84 @@ class ShowToolsRequests
         }
     }
 
-    function getMyRequestedRooms(){
-        $db = DBManager::get();
-        $ret = array();
-        $res_requests = array_filter($this->requests, create_function('$val', 'return (!$val["closed"] && $val["my_res"] && ($val["have_times"] || ' . (int)$this->show_requests_no_time . '));'));
-        if(count($res_requests)){
-            $ret = $db->query("SELECT ro.resource_id, ro.name, COUNT(ro.resource_id) as anzahl
-                            FROM resources_requests rr
-                            INNER JOIN resources_objects ro
-                            USING ( resource_id )
-                            WHERE rr.request_id
-                            IN (
-                            " . join(',', array_map(array($db, 'quote'), array_keys($res_requests))) . "
-                            ) GROUP BY ro.resource_id ORDER BY ro.name")->fetchAll(PDO::FETCH_ASSOC);
+    function getMyRequestedRooms()
+    {
+        $no_time = (int) $this->show_requests_no_time;
+        $res_requests = array_filter($this->requests, function($val) use ($no_time) {
+           return !$val['closed'] && $val['my_res'] && ($val['have_times'] || $no_time);
+        });
+
+        if (count($res_requests) > 0) {
+            $query = "SELECT ro.resource_id, ro.name, COUNT(ro.resource_id) as anzahl
+                      FROM resources_requests rr
+                      INNER JOIN resources_objects ro USING (resource_id)
+                      WHERE rr.request_id IN (?)
+                      GROUP BY ro.resource_id
+                      ORDER BY ro.name";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                array_keys($res_requests),
+            ));
+            return $statement->fetchAll(PDO::FETCH_ASSOC);
         }
-        return $ret;
+        return array();
     }
 
-    function selectSemInstituteNames($inst_id) {
-        $query = sprintf("SELECT a.Name AS inst_name, b.Name AS fak_name FROM Institute a LEFT JOIN Institute b ON (a.fakultaets_id = b.Institut_id) WHERE a.Institut_id = '%s' ", $inst_id);
-        $this->db->query($query);
-        $this->db->next_record();
-        return;
+    function selectSemInstituteNames($inst_id)
+    {
+        $query = "SELECT a.Name AS inst_name, b.Name AS fak_name
+                  FROM Institute AS a
+                  LEFT JOIN Institute b ON (a.fakultaets_id = b.Institut_id)
+                  WHERE a.Institut_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($inst_id));
+        return $statement->fetch(PDO::FETCH_ASSOC);
     }
 
-    function selectDates($seminar_id, $termin_id = '') {
+    function selectDates($seminar_id, $termin_id = '')
+    {
         if (!$termin_id) {
             if ($GLOBALS['RESOURCES_HIDE_PAST_SINGLE_DATES']) {
-                $query = sprintf("SELECT *, resource_id FROM termine LEFT JOIN resources_assign ra ON (ra.assign_user_id = termine.termin_id) WHERE date >= ".(time()-3600)." AND range_id = '%s' ORDER BY date, content", $seminar_id);
+                $query = "SELECT *, resource_id
+                          FROM termine
+                          LEFT JOIN resources_assign AS ra ON (ra.assign_user_id = termine.termin_id)
+                          WHERE date >= UNIX_TIMESTAMP(NOW() - INTERVAL 1 HOUR)
+                            AND range_id = ?
+                          ORDER BY date, content";
+                $parameters = array($seminar_id);
             } else {
-                $query = sprintf("SELECT *, resource_id FROM termine LEFT JOIN resources_assign ra ON (ra.assign_user_id = termine.termin_id) WHERE range_id = '%s' ORDER BY date, content", $seminar_id);
+                $query = "SELECT *, resource_id
+                          FROM termine
+                          LEFT JOIN resources_assign AS ra ON (ra.assign_user_id = termine.termin_id)
+                          WHERE range_id = ?
+                          ORDER BY date, content";
+                $parameters = array($seminar_id);
             }
         } else {
-            $query = sprintf("SELECT *, resource_id FROM termine LEFT JOIN resources_assign ra ON (ra.assign_user_id = termine.termin_id) WHERE range_id = '%s' %s ORDER BY date, content", $seminar_id, "AND termin_id = '".$termin_id."'");
+            $query = "SELECT *, resource_id
+                      FROM termine
+                      LEFT JOIN resources_assign AS ra ON (ra.assign_user_id = termine.termin_id)
+                      WHERE range_id = ? AND termin_id = ?
+                      ORDER BY date, content";
+            $parameters = array($seminar_id, $termin_id);
         }
-
-        $this->db->query($query);
-        return;
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute($parameters);
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    function showToolStart() {
-        global $cssSw;
-
-        $open_requests = $this->getMyOpenRequests();
-
-        ?>
-        <table border=0 celpadding=2 cellspacing=0 width="99%" align="center">
-            <form method="POST" name="tools_requests_form" action="<?echo URLHelper::getLink('?tools_requests_start=1') ?>">
-            <?= CSRFProtection::tokenTag() ?>
-            <input type="hidden" name="view" value="edit_request">
-            <tr>
-                <td class="<? echo $cssSw->getClass() ?>" width="4%">&nbsp;
-                </td>
-                <td class="<? echo $cssSw->getClass() ?>">
-                <table border="0" cellpadding="2" cellspacing="2">
-                <tr>
-                <td>
-                <?=SemesterData::GetSemesterSelector(array('name' => 'tools_requests_sem_choose', 'onChange' => 'document.tools_requests_form.submit()'), $this->semester_id, 'semester_id',false)?>
-                <?= Button::create(_("Semester auswählen"), 'tools_requests_sem_choose_button') ?>
-                </td>
-                <td class="<? echo $cssSw->getClass() ?>" style="padding-left:10px">
-                <b><?=_("Status:")?></b>
-                <br>
-                    <?
-                    if ($open_requests){
-                        printf (_("Es liegen insgesamt <b>%s</b> nicht aufgel&ouml;ste Anfragen vor - <br>davon <b>%s</b> von Veranstaltungen und <b>%s</b> auf Ressourcen, auf die Sie Zugriff haben."), $open_requests, (int)$this->getMyOpenSemRequests(), (int)$this->getMyOpenResRequests());
-                    } else {
-                        printf (_("Es liegen im Augenblick keine unaufgel&ouml;sten Anfragen vor."));
-                    }
-                    if (($no_time = $this->getMyOpenNoTimeRequests())){
-                        if(!$this->show_requests_no_time){
-                            printf("<br>" . _("(<b>%s</b> weitere Anfragen haben keine Zeiten eingetragen, oder beziehen sich auf vergangene Termine.)"), $no_time);
-                        } else {
-                            printf("<br>" . _("(<b>%s</b> der Anfragen haben keine Zeiten eingetragen, oder beziehen sich auf vergangene Termine.)"), $no_time);
-                        }
-                    }
-                    ?>
-                </td>
-                </tr>
-                <tr>
-                <td colspan="2">
-                    <input onChange="document.tools_requests_form.submit()" name="resolve_requests_no_time" id="resolve_requests_no_time_check" type="checkbox" <?=(!$this->show_requests_no_time ? 'checked' : '')?> value="1">
-                    &nbsp;<label for="resolve_requests_no_time_check"><?=_("Anfragen ohne eingetragene Zeiten oder auf vergangene Termine ausblenden")?></label>
-                </td>
-                </tr>
-                </table>
-                </td>
-            </tr>
-            <? $cssSw->switchClass();
-            if ($open_requests) {
-            ?>
-            <tr>
-                <td class="<? echo $cssSw->getClass() ?>" width="4%">&nbsp;
-                </td>
-                <td class="<? echo $cssSw->getClass() ?>"><font size=-1><b><?=_("Optionen beim Aufl&ouml;sen")?></b><br>
-                    <?
-                    print _("Sie k&ouml;nnen die vorliegenden Anfragen mit folgenden Optionen aufl&ouml;sen:");
-                    ?>
-                    <br><br></font>
-                    <table border="0" cellpadding="2" cellspacing="0">
-                        <tr>
-                            <td width="48%" valign="top">
-                                <font size="-1">
-                                <?
-                                print _("Art der Anfragen:");
-                                print "<br><br><input type=\"RADIO\" name=\"resolve_requests_mode\" value=\"all\" checked>&nbsp;"._("alle Anfragen");
-                                print "<br><input type=\"RADIO\" name=\"resolve_requests_mode\" value=\"sem\">&nbsp;"._("nur Anfragen von meinen Veranstaltungen");
-                                print "<br><input type=\"RADIO\" name=\"resolve_requests_mode\" value=\"res\">&nbsp;"._("nur Anfragen auf meine R&auml;ume");
-                                print "<br><input type=\"RADIO\" id=\"resolve_requests_one_res_check\" name=\"resolve_requests_mode\" value=\"one_res\">&nbsp;"._("nur Anfragen auf einen Raum:");
-                                print "<br><span style=\"padding-left:20px;\"><select onchange=\"$('#resolve_requests_one_res_check').attr('checked', true);\"name=\"resolve_requests_one_res\">";
-                                foreach(array_merge(array(array('resource_id' => '', 'name' => _(" -keine Auswahl - "))), $this->getMyRequestedRooms()) as $one){
-                                    echo '<option value="'.$one['resource_id'].'">'.htmlready($one['name'] . ($one['anzahl'] ? ' (' . $one['anzahl']. ')' : '')).'</option>';
-                                }
-                                print "</select></span>";
-
-                                ?>
-                                </font>
-                            </td>
-                            <td width="4%">
-                            &nbsp;
-                            </td>
-                            <td width="48%">
-                                <font size="-1">
-                                <?
-                                print _("Sortierung der Anfragen:");
-                                print "<br><br><input type=\"RADIO\" name=\"resolve_requests_order\" value=\"complex\" checked>&nbsp;"._("komplexere zuerst (Raumgr&ouml;&szlig;e und  gew&uuml;nschte Eigenschaften)");
-                                print "<br><input type=\"RADIO\" name=\"resolve_requests_order\" value=\"oldest\">&nbsp;"._("&auml;ltere zuerst");
-                                print "<br><input type=\"RADIO\" name=\"resolve_requests_order\" value=\"newest\">&nbsp;"._("neue zuerst");
-                                print "<br><input type=\"RADIO\" name=\"resolve_requests_order\" value=\"urgent\">&nbsp;"._("dringendere zuerst");
-                                ?>
-                                </font>
-                            </td>
-                        </tr>
-
-                    </table>
-                </td>
-            </tr>
-            <? $cssSw->switchClass(); ?>
-            <tr>
-                <td class="<? echo $cssSw->getClass() ?>" width="4%">&nbsp;
-                </td>
-                <td class="<? echo $cssSw->getClass() ?>" align="center">
-                    <?= Button::createAccept(_('Starten'), 'start_multiple_mode') ?>
-            </td>
-            </tr>
-            <?
-            }
-            ?>
-            </form>
-        </table>
-        <br><br>
-        <?
+    function showToolStart()
+    {
+        $template = $GLOBALS['template_factory']->open('resources/planning/start');
+        $template->semester_id = $this->semester_id;
+        $template->open_requests     = $this->getMyOpenRequests();
+        $template->open_sem_requests = $this->getMyOpenSemRequests();
+        $template->open_res_requests = $this->getMyOpenResRequests();
+        $template->no_time           = $this->getMyOpenNoTimeRequests();
+        $template->display_no_time   = $this->show_requests_no_time;
+        $template->rooms             = $this->getMyRequestedRooms();
+        $template->cssSw = $GLOBALS['cssSw'];
+        echo $template->render();
     }
 
     function showRequestList() {
@@ -394,7 +314,7 @@ class ShowToolsRequests
                     <font size="-1">
                         <br>
                         <?
-                        $this->selectSemInstituteNames($semObj->getInstitutId());
+                        $names = $this->selectSemInstituteNames($semObj->getInstitutId());
 
                         print "&nbsp;&nbsp;&nbsp;&nbsp;"._("Art der Anfrage:")." ".$reqObj->getTypeExplained()."<br>";
                         print "&nbsp;&nbsp;&nbsp;&nbsp;"._("Erstellt von:")." <a href=\"".UrlHelper::getLink('about.php?username='.get_username($reqObj->getUserId()))."\">".htmlReady(get_fullname($reqObj->getUserId()))."</a><br>";
@@ -409,8 +329,8 @@ class ShowToolsRequests
                             $dozent = true;
                         }
                         print "<br>";
-                        print "&nbsp;&nbsp;&nbsp;&nbsp;"._("verantwortliche Einrichtung:")." ".htmlReady($this->db->f("inst_name"))."<br>";
-                        print "&nbsp;&nbsp;&nbsp;&nbsp;"._("verantwortliche Fakult&auml;t:")." ".htmlReady($this->db->f("fak_name"))."<br>";
+                        print "&nbsp;&nbsp;&nbsp;&nbsp;"._("verantwortliche Einrichtung:")." ".htmlReady($names['inst_name'])."<br>";
+                        print "&nbsp;&nbsp;&nbsp;&nbsp;"._("verantwortliche Fakult&auml;t:")." ".htmlReady($names['fak_name'])."<br>";
                         print "&nbsp;&nbsp;&nbsp;&nbsp;"._("aktuelle Teilnehmerzahl:")." ".$semObj->getNumberOfParticipants('total').'<br>';
                         ?>
                     </font>
@@ -468,7 +388,9 @@ class ShowToolsRequests
                             if ($request_resource_id = $reqObj->getResourceId()) {
                                 $resObj = ResourceObject::Factory($request_resource_id);
                                 print $resObj->getFormattedLink($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["first_event"]);
-                                print ' <img class="text-top" src="' . Assets::image_path(($resObj->getOwnerId() == 'global') ? 'icons/16/red/info-circle.png' : 'icons/16/grey/info-circle.png') . '" ' . tooltip(_("Der ausgewählte Raum bietet folgende der wünschbaren Eigenschaften:")." \n".$resObj->getPlainProperties(TRUE), TRUE, TRUE). '>';
+                                print tooltipicon(_('Der ausgewählte Raum bietet folgende der wünschbaren Eigenschaften:')
+                                                  . "\n" . $resObj->getPlainProperties(TRUE),
+                                                  $resObj->getOwnerId() == 'global');
                                 if ($resObj->getOwnerId() == 'global') {
                                     print ' [global]';
                                 }

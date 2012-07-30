@@ -1471,8 +1471,10 @@ if (Request::submitted('start_multiple_mode') || (Request::option('single_reques
                            termine AS t
                       WHERE rq.request_id IN (?) AND t.date > UNIX_TIMESTAMP()
                         AND ((t.range_id = rq.seminar_id AND IFNULL(rq.termin_id, '') = '')
-                             OR (IFNULL(rq.termin_id, '') != '' AND rq.termin_id = t.termin_id))
-                      ORDER BY {$order}";
+                             OR (IFNULL(rq.termin_id, '') != '' AND rq.termin_id = t.termin_id))";
+            if ($order) {
+                $query .= " ORDER BY {$order}";
+            }
             $statement = DBManager::get()->prepare($query);
             $statement->execute(array(
                array_keys($selected_requests) ?: ''
@@ -1491,8 +1493,10 @@ if (Request::submitted('start_multiple_mode') || (Request::option('single_reques
                       LEFT JOIN resources_requests_properties AS d
                         ON (c.property_id = d.property_id AND a.request_id = d.request_id)
                       WHERE a.request_id IN (?)
-                      GROUP BY a.request_id
-                      ORDER BY {$order}";
+                      GROUP BY a.request_id";
+            if ($order) {
+                $query .= " ORDER BY {$order}";
+            }
             $statement = DBManager::get()->prepare($query);
             $statement->execute(array(
                 array_keys($selected_requests) ?: ''

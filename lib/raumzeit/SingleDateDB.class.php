@@ -157,7 +157,7 @@ class SingleDateDB
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($termin_id));
         if ($result = $statement->fetch(PDO::FETCH_ASSOC)) {
-            $result['related_persons'] = explode(',', $result['related_persons']);
+            $result['related_persons'] = array_filter(explode(',', $result['related_persons']));
             return $result;
         }
 
@@ -171,7 +171,7 @@ class SingleDateDB
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($termin_id));
         if ($result = $statement->fetch(PDO::FETCH_ASSOC)) {
-            $result['related_persons'] = explode(',', $result['related_persons']);
+            $result['related_persons'] = array_filter(explode(',', $result['related_persons']));
             return $result;
         }
 

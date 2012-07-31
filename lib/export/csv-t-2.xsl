@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="WINDOWS-1252"?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
-	xmlns:exsl="http://exslt.org/common" 
-	xmlns:func="http://exslt.org/functions">
-	
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+	xmlns:exsl="http://exslt.org/common"
+	xmlns:func="http://exslt.org/functions"
+	xmlns:str="http://exslt.org/strings">
+
 	<xsl:output method="text" encoding="WINDOWS-1252"/>
 
 	<xsl:key name="datafields-by-key" match="//datenfeld" use="@key"/>
@@ -47,20 +48,22 @@
 		<xsl:text>Studiengänge;</xsl:text>
 		<xsl:if test="$datafields">
 			<xsl:for-each select="$datafields">
-				<xsl:value-of select="."/>
-				<xsl:text>;</xsl:text>
+			    <xsl:text>"</xsl:text>
+				<xsl:value-of select="str:replace(.,'&quot;','&quot;&quot;')"/>
+				<xsl:text>";</xsl:text>
 			</xsl:for-each>
 		</xsl:if>
 		<xsl:if test="$zusatzangaben">
 			<xsl:for-each select="$zusatzangaben">
-				<xsl:value-of select="."/>
-				<xsl:text>;</xsl:text>
+			    <xsl:text>"</xsl:text>
+				<xsl:value-of select="str:replace(.,'&quot;','&quot;&quot;')"/>
+				<xsl:text>";</xsl:text>
 			</xsl:for-each>
-		</xsl:if>		
+		</xsl:if>
 		<xsl:text>Bemerkung</xsl:text>
 		<xsl:text>
 </xsl:text>
-		
+
 		<xsl:for-each select="studip">
 			<xsl:for-each select="institut">
 				<xsl:for-each select="personen">
@@ -70,67 +73,67 @@
 				</xsl:for-each>
 			</xsl:for-each>
 		</xsl:for-each>
-	
+
 	</xsl:template>
-	
+
 	<xsl:template name="showperson">
 		<xsl:for-each select="person">
 			<xsl:text>"</xsl:text>
-			
+
 			<xsl:if test="position_warteliste">
 				<xsl:value-of select="position_warteliste"/>
 			</xsl:if>
 			<xsl:text>";"</xsl:text>
-			
+
 			<xsl:if test="titel">
-				<xsl:value-of select="titel"/>
+				<xsl:value-of select="str:replace(titel,'&quot;','&quot;&quot;')"/>
 			</xsl:if>
 			<xsl:text>";"</xsl:text>
-			
+
 			<xsl:if test="vorname">
 				<xsl:value-of select="vorname"/>
 			</xsl:if>
 			<xsl:text>";"</xsl:text>
-			
+
 			<xsl:if test="nachname">
 				<xsl:value-of select="nachname"/>
 			</xsl:if>
 			<xsl:text>";"</xsl:text>
-			
+
 			<xsl:if test="titel2">
-				<xsl:value-of select="titel2"/>
+				<xsl:value-of select="str:replace(titel2,'&quot;','&quot;&quot;')"/>
 			</xsl:if>
 			<xsl:text>";"</xsl:text>
-			
+
 			<xsl:if test="username">
 				<xsl:value-of select="username"/>
 			</xsl:if>
 			<xsl:text>";"</xsl:text>
-			
-			<xsl:if test="privadr">
-				<xsl:value-of select="privadr"/>
+
+			<xsl:if test="adresse">
+				<xsl:value-of select="str:replace(adresse,'&quot;','&quot;&quot;')"/>
 			</xsl:if>
 			<xsl:text>";"</xsl:text>
-			
-			<xsl:if test="privatnr">
-				<xsl:value-of select="privatnr"/>
+
+			<xsl:if test="privatnummer">
+				<xsl:value-of select="str:replace(privatnummer,'&quot;','&quot;&quot;')"/>
 			</xsl:if>
 			<xsl:text>";"</xsl:text>
-			
+
 			<xsl:if test="email">
 				<xsl:value-of select="email"/>
 			</xsl:if>
 			<xsl:text>";"</xsl:text>
-			
+
 			<xsl:if test="kontingent">
-				<xsl:value-of select="kontingent"/>
+				<xsl:value-of select="str:replace(kontingent,'&quot;','&quot;&quot;')"/>
 			</xsl:if>
 			<xsl:text>";"</xsl:text>
-			
+
 			<xsl:if test="nutzer_studiengaenge">
-				<xsl:value-of select="nutzer_studiengaenge"/>
+				<xsl:value-of select="str:replace(nutzer_studiengaenge,'&quot;','&quot;&quot;')"/>
 			</xsl:if>
-			
+
 			<xsl:text>";"</xsl:text>
 			<xsl:call-template name="check_datafields">
 				<xsl:with-param name="daten" select="datenfelder"/>
@@ -138,18 +141,18 @@
 
 			<xsl:call-template name="check_zusatzangaben">
 				<xsl:with-param name="daten" select="zusatzangaben"/>
-			</xsl:call-template>			
+			</xsl:call-template>
 
 			<xsl:if test="bemerkung">
-				<xsl:value-of select="translate(bemerkung,'&quot;','&#148;')"/>
+				<xsl:value-of select="str:replace(bemerkung,'&quot;','&quot;&quot;')"/>
 			</xsl:if>
 			<xsl:text>"</xsl:text>
-			
+
 			<xsl:text>
 </xsl:text>
 		</xsl:for-each>
 	</xsl:template>
-	
+
 	<xsl:template name="check_datafields">
 		<xsl:param name="daten"/>
 		<xsl:if test="$datafields">
@@ -162,7 +165,7 @@
 			</xsl:for-each>
 		</xsl:if>
 	</xsl:template>
-	
+
 	<xsl:template name="check_zusatzangaben">
 		<xsl:param name="daten"/>
 		<xsl:if test="$zusatzangaben">
@@ -175,17 +178,17 @@
 			</xsl:for-each>
 		</xsl:if>
 	</xsl:template>
-	
+
 	<xsl:template name="show_datafields">
 		<xsl:param name="daten"/>
 		<xsl:param name="datatitel"/>
-		<xsl:value-of select="normalize-space($daten/datenfeld[@key=$datatitel])"/>
+		<xsl:value-of select="str:replace(normalize-space($daten/datenfeld[@key=$datatitel]),'&quot;','&quot;&quot;')"/>
 	</xsl:template>
 
 	<xsl:template name="show_zusatzangaben">
 		<xsl:param name="daten"/>
 		<xsl:param name="datatitel"/>
-		<xsl:value-of select="normalize-space($daten/zusatzangabe[@key=$datatitel])"/>
+		<xsl:value-of select="str:replace(normalize-space($daten/zusatzangabe[@key=$datatitel]),'&quot;','&quot;&quot;')"/>
 	</xsl:template>
 
 </xsl:stylesheet>

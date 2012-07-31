@@ -402,7 +402,7 @@ class messaging
         // diese user_id schreiben wir in ein tempraeres array
         for ($x=0; $x<sizeof($rec_id); $x++) {
             $tmp_forward_id = $this->get_forward_id($rec_id[$x]);
-            if ($tmp_forward_id) {
+            if ($tmp_forward_id && User::find($tmp_forward_id)) {
                 // Unused?
                 // $tmp_forward_copy = $this->get_forward_copy($rec_id[$x]);
                 $rec_id_tmp[] = $tmp_forward_id;

@@ -276,7 +276,7 @@ class ShowSchedules {
                 $add_info = '(' . join(', ' , $sem_doz_names) . ')';
             }
             $schedule->addEvent($event->getName(get_config('RESOURCES_SCHEDULE_EXPLAIN_USER_NAME')), $event->getBegin(), $event->getEnd(),
-                        URLHelper::getLink('?cancel_edit_assign=1&quick_view=$view&quick_view_mode='.$view_mode.'&edit_assign_object='.$event->getAssignId()), $add_info, $categories[$repeat_mode]);
+                        URLHelper::getLink('?cancel_edit_assign=1&quick_view=' . $view . '&quick_view_mode='.$view_mode.'&edit_assign_object='.$event->getAssignId()), $add_info, $categories[$repeat_mode]);
         }
         ?>
         <table border=0 celpadding=2 cellspacing=0 width="99%" align="center">

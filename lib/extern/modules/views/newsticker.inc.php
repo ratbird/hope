@@ -1,8 +1,8 @@
 <?
 # Lifter002: TODO
+# Lifter003: TEST
 # Lifter005: TODO
 # Lifter007: TODO
-# Lifter003: TODO
 # Lifter010: TODO
 $js_only = $this->config->getValue("Main", "jsonly");
 if (!$js_only)
@@ -20,14 +20,20 @@ function textlist() {
 newsticker_tl = new textlist(";
 
 $topics = array();
-$now = time();
-$db = new DB_Seminar();
-$db->query("SELECT news.topic FROM news_range LEFT JOIN news USING(news_id) WHERE range_id LIKE '{$this->config->range_id}' AND date < $now AND (date+expire) > $now ORDER BY date DESC");
-while ($db->next_record())
-    $topics = "'" . addslashes($db->f("topic")) . "'";
+$query = "SELECT news.topic
+          FROM news_range
+          LEFT JOIN news USING (news_id)
+          WHERE range_id LIKE ? AND UNIX_TIMESTAMP() BETWEEN date AND date + expire
+          ORDER BY date DESC";
+$statement = DBManager::get()->prepare($query);
+$statement->execute(array($this->config->range_id));
+while ($topic = $statement->fetchColumn()) {
+    $topics[] = sprintf("'%s'", addslashes($topic));
+}
 
-if (!$db->num_rows())
+if (count($topics) == 0) {
     $topics[] = "'" . $this->config->getValue("Main", "nodatatext") . "'";
+}
 if ($this->config->getValue("Main", "endtext"))
     $topics[] = "'" . $this->config->getValue("Main", "endtext") . "'";
 

@@ -1,20 +1,21 @@
 <?
 # Lifter002: TODO
+# Lifter003: TEST
 # Lifter007: TODO
-# Lifter003: TODO
 # Lifter010: TODO
 
 require_once('lib/visual.inc.php');
 require_once('lib/classes/StudipNews.class.php');
 
-$db = new DB_Seminar();
 $error_message = "";
 
 // stimmt die übergebene range_id?
-$query = "SELECT Name FROM Institute WHERE Institut_id='" . $this->config->range_id . "'";
-$db->query($query);
-if(!$db->next_record())
+$query = "SELECT 1 FROM Institute WHERE Institut_id = ?";
+$statement = DBManager::get()->prepare($query);
+$statement->execute(array($this->config->range_id));
+if (!$statement->fetchColumn()) {
     $error_message = $GLOBALS["EXTERN_ERROR_MESSAGE"];
+}
 /*
 $sort = $this->config->getValue("Main", "sort");
 
@@ -74,7 +75,14 @@ else {
     $dateform = $this->config->getValue("Main", "dateformat");
     $show_date_author = $this->config->getValue("Main", "showdateauthor");
     $not_author_link = $this->config->getValue("Main", "notauthorlink");
-    
+
+    $query = "SELECT COUNT(*)
+              FROM Institute AS i
+              LEFT JOIN user_inst AS ui USING(Institut_id)
+              LEFT JOIN auth_user_md5 AS aum USING(user_id)
+              WHERE Institut_id = ? AND user_id = ? AND ui.inst_perms IN ('autor','tutor','dozent')";
+    $statement = DBManager::get()->prepare($query);
+
     foreach($news as $news_id => $news_detail){
         list ($content, $admin_msg) = explode("<admin_msg>", $news_detail["body"]);
         if ($admin_msg) {
@@ -83,10 +91,12 @@ else {
         }
 
         // Mitarbeiter/in am Institut
-        $db->query("SELECT i.Institut_id FROM Institute i LEFT JOIN user_inst ui USING(Institut_id) ".
-               "LEFT JOIN auth_user_md5 aum USING(user_id) ".
-               "WHERE i.Institut_id = '".$this->config->range_id."' AND aum.user_id = '".$news_detail['user_id']."' AND ui.inst_perms IN ('autor','tutor','dozent')");
-        $institute_user = $db->num_rows();
+        $statement->execute(array(
+            $this->config->range_id,
+            $news_detail['user_id']
+        ));
+        $institute_user = $statement->fetchColumn() ?: 0;
+        $statement->closeCursor();
 
         // !!! LinkInternSimple is not the type of this element,
         // the type of this element is LinkIntern !!!
@@ -130,5 +140,3 @@ if ($this->config->getValue("Main", "studiplink")) {
     }
     echo "</td></tr></table>\n";
 }
-
-?>

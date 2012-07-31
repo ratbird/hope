@@ -79,6 +79,19 @@ if ($sem_class->getSlotModule("overview") !== "CoreOverview") {
         header('Location: '.URLHelper::getURL($nav->getURL()));
         die;
     }
+} else {
+    $Modules = new Modules();
+    $course_modules = $Modules->getLocalModules($course_id);
+    if (!$modules['overview'] && !$sem_class->isSlotMandatory("overview")) {
+        //Keine Übersichtsseite. Anstatt eines Fehler wird der Nutzer zum ersten
+        //Reiter der Veranstaltung weiter geleitet.
+        if (Navigation::hasItem("/course")) {
+            foreach (Navigation::getItem("/course")->getSubNavigation() as $navigation) {
+                header('Location: '.URLHelper::getURL($navigation->getURL()));
+                die;
+            }
+        }
+    }
 }
 
 if (get_config('NEWS_RSS_EXPORT_ENABLE') && $course_id){

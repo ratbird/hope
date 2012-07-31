@@ -1,16 +1,16 @@
 <?
 # Lifter002: TODO
+# Lifter003: TEST
 # Lifter007: TODO
-# Lifter003: TODO
 # Lifter010: TODO
-define('LANGUAGE_ID',"09c438e63455e3e1b3deabe65fdbc087");
+define('LANGUAGE_ID','09c438e63455e3e1b3deabe65fdbc087');
 
-require_once ("lib/functions.php");
-require_once "lib/classes/SemesterData.class.php";
+require_once 'lib/functions.php';
+require_once 'lib/classes/SemesterData.class.php';
 
 
-class  InstanceStm {
-    
+class  InstanceStm
+{
     var $stm_instance_id;
     var $stm_abstr_id;
     var $title;
@@ -80,95 +80,101 @@ class  InstanceStm {
     * restore the data
     *
     * the complete data of the object will be loaded from the db
-    * @access   publihc
+    * @access   public
     * @return   booelan succesful restore?
     */
     /// TODO noch nicht richtig implementiert
-    function restore() {
-    
-        $db = new DB_Seminar;
-        
-        $db->query("SELECT stm_abstr_id, semester_id, homeinst, creator, responsible, complete,
-                    title, subtitle, topics, hints 
-                    FROM stm_instances NATURAL JOIN stm_instances_text 
-                    WHERE stm_instances.stm_instance_id='$this->stm_instance_id'");
+    function restore() 
+    {
+        $query = "SELECT stm_abstr_id, semester_id, homeinst, creator, responsible, complete,
+                         title, subtitle, topics, hints 
+                  FROM stm_instances
+                  NATURAL JOIN stm_instances_text 
+                  WHERE stm_instances.stm_instance_id = ?";
+        $statemtent = DBManager::get()->prepare($query);
+        $statement->execute(array($this->stm_instance_id));
+        $vals = $statement->fetch(PDO::FETCH_ASSOC);
 
-        if ($db->next_record()) {
-            $vals = array(
-                'stm_abstr_id' => $db->f('stm_abstr_id'), 
-                'semester_id' => $db->f('semester_id'), 
-                'homeinst' => $db->f('homeinst'), 
-                'creator' => $db->f('creator'), 
-                'responsible' => $db->f('responsible'), 
-                'complete' => $db->f('complete'), 
-                'title' => $db->f('title'), 
-                'subtitle' => $db->f('subtitle'), 
-                'topics' => $db->f('topics'), 
-                'hints' => $db->f('hints'), 
-                );
-
+        if ($vals) {
             $this->setValues($vals);
-            
-            $db->query("SELECT elementgroup, position, a.element_id AS element_id, sem_id 
-                FROM stm_instances_elements a INNER JOIN stm_abstract_elements b ON a.element_id=b.element_id
-                WHERE stm_instance_id='$this->stm_instance_id'");
-            if ($db->num_rows()) {
-                while ($db->next_record()) {
-                    $this->addElement(array('element_id' => $db->f("element_id"), 'sem_id' => $db->f('sem_id')),
-                            $db->f('elementgroup'), $db->f('position'));                    
-                }
+
+            $query = "SELECT elementgroup, position, element_id, sem_id 
+                      FROM stm_instances_elements AS a
+                      INNER JOIN stm_abstract_elements AS b USING (element_id)
+                      WHERE stm_instance_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($this->stm_instance_id));
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                $element = array(
+                    'element_id' => $row['element_id'],
+                    'sem_id'     => $row['sem_id']
+                );
+                $this->addElement($element, $row['elementgroup'], $row['position']);                    
             }
         }
         return FALSE;
     }
 
-    function store($replace = false) {
+    function store($replace = false)
+    {
         // leider kein Rollback bei MY_ISAM möglich, also erstmal ohne Sicherheiten ... :(
-        $db = new DB_Seminar;   
         $de_id = LANGUAGE_ID;
 
-        if ($replace)
+        if ($replace) {
             $this->delete();
+        }
         
         if ($this->stm_abstr_id) {
-            $db->query("INSERT INTO stm_instances SET
-                stm_instance_id = '$this->stm_instance_id', 
-                stm_abstr_id = '$this->stm_abstr_id',
-                semester_id = '$this->semester_id',
-                lang_id = '$de_id',
-                homeinst = '$this->homeinst',
-                responsible = '$this->responsible',
-                creator = '$this->creator',
-                complete = '$this->complete'
-                "
-            );
-            if (!$db->affected_rows())
-                $msg[] = array('error', _("DB-Error"));
+            $query = "INSERT INTO stm_instances
+                      SET stm_instance_id = ?, stm_abstr_id = ?, semester_id = ?,
+                          lang_id = ?, homeinst = ?, responsible = ?,
+                          creator = ?, complete = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                $this->stm_instance_id,
+                $this->stm_abstr_id,
+                $this->semester_id,
+                $de_id,
+                $this->homeinst,
+                $this->responsible,
+                $this->creator,
+                $this->complete
+            ));
+            if ($statement->rowCount() == 0) {
+                $msg[] = array('error', _('DB-Error'));
+            }
 
-            $db->query("INSERT INTO stm_instances_text SET
-                stm_instance_id = '$this->stm_instance_id', 
-                lang_id= '$de_id',
-                title = '$this->title',
-                subtitle = '$this->subtitle',
-                topics = '$this->topics',
-                hints = '$this->hints'
-                "
-            );
-            if (!$db->affected_rows())
-                $msg[] = array('error', _("DB-Error"));
+            $query = "INSERT INTO stm_instances_text
+                      SET stm_instance_id = ?, lang_id = ?, title = ?,
+                          subtitle = ?, topics = ?, hints = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                $this->stm_instance_id,
+                $de_id,
+                $this->subtitle,
+                $this->topics,
+                $this->hints
+            ));
+            if ($statement->rowCount() == 0) {
+                $msg[] = array('error', _('DB-Error'));
+            }
             
             if ($this->elements) {
+                $query = "INSERT INTO stm_instances_elements
+                          SET stm_instance_id = ?, element_id = ?, sem_id = ?";
+                $statement = DBManager::get()->prepare($query);
+
                 foreach ($this->elements as $group => $elementgroup) {
                     foreach ($elementgroup as $position => $elements) {
                         foreach ($elements as $element) {
-                            $db->query("INSERT INTO stm_instances_elements SET
-                                    stm_instance_id = '$this->stm_instance_id',
-                                    element_id = '" . $element["element_id"] . "',
-                                    sem_id = '" . $element["sem_id"] . "'
-                                    "
-                                );
-                            if (!$db->affected_rows())
-                                $msg[] = array('error', _("DB-Error"));
+                            $statement->execute(array(
+                                $this->stm_instance_id,
+                                $element['element_id'],
+                                $element['sem_id']
+                            ));
+                            if ($statement->rowCount() == 0) {
+                                $msg[] = array('error', _('DB-Error'));
+                            }
                         }
                     }
                 }
@@ -176,20 +182,27 @@ class  InstanceStm {
         }
         return $msg;
     }
-    
-    function delete() {
-        // leider kein Rollback bei MY_ISAM möglich, also erstmal ohne Sicherheiten ... :(
-        $db = new DB_Seminar;
-            $db->query("DELETE FROM stm_instances_elements WHERE stm_instance_id = '$this->stm_instance_id'");
 
-            $db->query("DELETE FROM stm_instances_text WHERE stm_instance_id = '$this->stm_instance_id'");
-            if (!$db->affected_rows()) {
-                $this->msg[] = array('error', _("DB-Error beim Entfernen der Textfelder"));
-            }
-            $db->query("DELETE FROM stm_instances WHERE stm_instance_id = '$this->stm_instance_id'");
-            if (!$db->affected_rows()) {
-                $this->msg[] = array('error', _("DB-Error beim Entfernen des Moduls"));
-            }   
+    function delete()
+    {
+        // leider kein Rollback bei MY_ISAM möglich, also erstmal ohne Sicherheiten ... :(
+        $query = "DELETE FROM stm_instances_elements WHERE stm_instance_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($this->stm_instance_id));
+
+        $query = "DELETE FROM stm_instances_text WHERE stm_instance_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($this->stm_instance_id));
+        if ($statement->rowCount() == 0) {
+            $this->msg[] = array('error', _('DB-Error beim Entfernen der Textfelder'));
+        }
+
+        $query = "DELETE FROM stm_instances WHERE stm_instance_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($this->stm_instance_id));
+        if ($statement->rowCount() == 0) {
+            $this->msg[] = array('error', _('DB-Error beim Entfernen des Moduls'));
+        }   
     }
     
     function getStmAbstrId() {
@@ -227,14 +240,12 @@ class  InstanceStm {
         return $this->homeinst;
     }
 
-    function getHomeinstName() {
-        $db = new DB_Seminar;   
-        $db->query("SELECT Name FROM Institute WHERE Institut_id = '$this->homeinst'");
-        
-        if($db->next_record())
-            return $db->f("Name");
-        else 
-            return "";
+    function getHomeinstName()
+    {
+        $query = "SELECT Name FROM Institute WHERE Institut_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($this->homeinst));
+        return $statement->fetchColumn() ?: '';
     }
 
     function getResponsible() {
@@ -249,26 +260,16 @@ class  InstanceStm {
         return $this->creator;
     }
 
-    function getResponsibleName() {
-        global $_fullname_sql;
-        $db = new DB_Seminar;   
-        
-        $db->query("SELECT " . $_fullname_sql['full_rev'] . " AS fullname FROM user_info LEFT JOIN auth_user_md5 USING (user_id) WHERE user_info.user_id = '$this->responsible'");
-        if($db->next_record())
-            return $db->f("fullname");
-        else 
-            return "";
+    function getResponsibleName()
+    {
+        $user = User::find($this->responsible);
+        return $user ? $user->getFullName('full_rev') : '';
     }
 
-    function getCreatorName() {
-        global $_fullname_sql;
-        $db = new DB_Seminar;   
-        
-        $db->query("SELECT " . $_fullname_sql['full_rev'] . " AS fullname FROM user_info LEFT JOIN auth_user_md5 USING (user_id) WHERE user_info.user_id = '$this->creator'");
-        if($db->next_record())
-            return $db->f("fullname");
-        else 
-            return "";
+    function getCreatorName()
+    {
+        $user = User::find($this->creator);
+        return $user ? $user->getFullName('full_rev') : '';
     }
 
     function setValues($val_array) {
@@ -316,12 +317,8 @@ class  InstanceStm {
         }
     }   
 
-    function isFilled($block, $position) {
-        if (count($this->elements[$block][$position]) == 0)
-            return false;
-        else 
-            return true;
-        
+    function isFilled($block, $position)
+    {
+        return count($this->elements[$block][$position]) > 0;
     }
 }
-?>

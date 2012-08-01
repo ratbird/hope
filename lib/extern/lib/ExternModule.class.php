@@ -1,7 +1,7 @@
 <?
 # Lifter002: TODO
 # Lifter007: TODO
-# Lifter003: TODO
+# Lifter003: test
 # Lifter010: TODO
 /**
 * ExternModule.class.php
@@ -175,11 +175,12 @@ class ExternModule {
     }
     
     function getRangeDefaultConfig ($range_id = 'global') {
-        $db = new DB_Seminar();
-        
-        $query = "SELECT config_type FROM extern_config WHERE config_id = '" . $this->getName() . "' AND range_id = '$range_id'";
-        $db->query($query);
-        if ($db->num_rows() == 1 && $db->next_record()) {
+        $query = "SELECT config_type FROM extern_config WHERE config_id = ? AND range_id = ?";
+        $parameters = array($this->getName(), $range_id );
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute($parameters);
+        $row = $statement->fetchColumn();
+        if ($row !== false) {
             $config_obj = ExternConfig::GetInstance($range_id, $this->getName(), $this->getName());
             $config = $config_obj->getConfiguration();
             return $config;

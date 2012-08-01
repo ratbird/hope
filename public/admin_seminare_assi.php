@@ -2982,8 +2982,8 @@ if ($level == 2)
                               ->withButton(array('search_button_name' => 'search_tut', 'reset_button_name' => 'reset_search'))
                               ->render();
 
-                        print "<input type=\"text\" name=\"sem_tut_label\" placeholder=\""._("Label festlegen")."\">";
                         ?>
+                        <input type="text" name="sem_tut_label" placeholder="<?= _('Funktion') ?>">
                         <br><font size=-1><?=_("Geben Sie zur Suche den Vor-, Nach- oder Benutzernamen ein.")?></font>
                         </td>
                     </tr>

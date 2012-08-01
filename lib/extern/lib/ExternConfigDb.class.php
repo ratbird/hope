@@ -1,7 +1,7 @@
 <?
 # Lifter002: TODO
 # Lifter007: TODO
-# Lifter003: TODO
+# Lifter003: test
 # Lifter010: TODO
 /**
 * ExternConfigDb.class.php
@@ -44,13 +44,10 @@ require_once($GLOBALS["RELATIVE_PATH_EXTERN"]."/lib/ExternModule.class.php");
 
 class ExternConfigDb extends ExternConfig {
 
-    var $db;
-
     /**
     *
     */
     function ExternConfigDb ($range_id, $module_name, $config_id = '') {
-        $this->db = new DB_Seminar();
         parent::ExternConfig ($range_id, $module_name, $config_id);
     }
 
@@ -79,9 +76,13 @@ class ExternConfigDb extends ExternConfig {
     *
     */
     function parse () {
-        $query = "SELECT * FROM extern_config WHERE config_id = '{$this->id}'";
-        if ($this->db->query($query) && $this->db->next_record()) {
-            $this->config = unserialize(stripslashes($this->db->f('config')));
+        $query = "SELECT config FROM extern_config WHERE config_id = ?";
+        $parameters = array($this->id);
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute($parameters);
+        $row = $statement->fetchColumn();
+        if ($row) {
+            $this->config = unserialize(stripslashes($row));
         } else {
             ExternModule::printError();
         }
@@ -91,21 +92,18 @@ class ExternConfigDb extends ExternConfig {
         if (!parent::insertConfiguration()) {
             return false;
         }
-    
-        $serialized_config = serialize($config_obj->config);
-        $time = time();
-        $query = "INSERT INTO extern_config VALUES (";
-        $query .= "'{$this->id}', '{$this->range_id}', {$this->module_type}, ";
-        $query .= "'{$this->config_name}', 0, '$serialized_config', $time, $time)";
-        $this->db->query($query);
-    
-        if ($this->db->affected_rows() != 1) {
-            return FALSE;
-        }
-    
+         $serialized_config = serialize($config_obj->config);
+         $time = time();
+         $query = "INSERT INTO extern_config VALUES (?,?,?,?,0,?,?,?)";
+         $statement = DBManager::get()->prepare($query);
+         $statement->execute(array($this->id, $this->range_id, $this->module_type,
+                $this->config_name, $serialized_config, $time, $time
+            ));
+            if (!$statement->rowCount()) {
+                return FALSE;
+            }
         return TRUE;
-    }
-    
+    }    
 }
 
 ?>

@@ -1,8 +1,9 @@
 <?
-# Lifter002: TODO
+# Lifter002: DONE - not applicable
+# Lifter003: TEST
 # Lifter007: TODO
-# Lifter003: TODO
-# Lifter010: TODO
+# Lifter010: DONE - not applicable
+
 /**
 * list_assign.inc.php
 *
@@ -41,37 +42,61 @@ require_once $GLOBALS['RELATIVE_PATH_RESOURCES'] . '/lib/AssignEvent.class.php';
 require_once 'lib/dates.inc.php';
 
 
-function list_restore_assign(&$assEvtLst, $resource_id, $begin, $end, $user_id='', $range_id='', $filter = FALSE,$day_of_week = false){
-    $db = new DB_Seminar();
+function list_restore_assign(&$assEvtLst, $resource_id, $begin, $end, $user_id = '', $range_id = '', $filter = FALSE, $day_of_week = false)
+{
 
     $year = date("Y", $begin);
     $month = date("n", $begin);
-    if ($day_of_week){
+    if ($day_of_week) {
         $day_of_week = (++$day_of_week == 8 ? 1 : (int)$day_of_week);
     }
 
     //create the query
-    $query = sprintf("SELECT assign_id, resource_id, begin, end, repeat_end, repeat_quantity, "
-                ."repeat_interval, repeat_month_of_year, repeat_day_of_month, "
-                ."repeat_week_of_month, repeat_day_of_week FROM resources_assign ");
-    if ($range_id) $query.= sprintf("LEFT JOIN  resources_user_resources USING (resource_id) ");
-    $query.= "WHERE ";
-    if ($resource_id) $query.= sprintf("resources_assign.resource_id = '%s' AND ", $resource_id);
-    if ($user_id) $query.= sprintf("resources_assign.assign_user_id = '%s'  AND ", $user_id);
-    if ($range_id) $query.= sprintf("resources_user_resources.user_id = '%s'  AND ", $range_id);
-    $query .= sprintf("(begin BETWEEN %s AND %s OR (begin <= %s AND (repeat_end > %s OR end > %s)))"
-                 . "%s ORDER BY begin ASC", $begin, $end, $end, $begin, $begin,
-                 ($day_of_week ? " AND (DAYOFWEEK(FROM_UNIXTIME(begin)) = $day_of_week OR
-                 (repeat_interval = 0 AND repeat_end > end AND
-                 IF(DAYOFWEEK(FROM_UNIXTIME(begin)) > DAYOFWEEK(FROM_UNIXTIME(repeat_end)), IF($day_of_week < DAYOFWEEK(FROM_UNIXTIME(begin)), $day_of_week + 7, $day_of_week) BETWEEN DAYOFWEEK(FROM_UNIXTIME(begin)) AND DAYOFWEEK(FROM_UNIXTIME(repeat_end)) + 7, $day_of_week BETWEEN DAYOFWEEK(FROM_UNIXTIME(begin)) AND DAYOFWEEK(FROM_UNIXTIME(repeat_end))))
-                 OR (repeat_interval > 0 AND repeat_day_of_week = 0))" : "") );
+    $parameters = array();
 
-    //send the query
-   $db->query($query);
+    $query = "SELECT assign_id
+              FROM resources_assign ";
+    if ($range_id) {
+        $query .= " LEFT JOIN resources_user_resources USING (resource_id)";
+    }
+    $query .= " WHERE";
+    if ($resource_id) {
+        $query .= " resource_id = :resource_id AND";
+        $parameters[':resource_id'] = $resource_id;
+    }
+    if ($user_id) {
+        $query .= " assign_user_id = :user_id AND";
+        $parameters[':user_id'] = $user_id;
+    }
+    if ($range_id) {
+        $query .= " user_id = :range_id AND";
+        $parameters[':range_id'] = $range_id;
+    }
+    $query .= " (begin BETWEEN :begin AND :end OR (begin <= :end AND (repeat_end > :begin OR end > :begin)))";
+    $parameters[':begin'] = $begin;
+    $parameters[':end']   = $end;
+
+    if ($day_of_week) {
+        // For better readability, we'll use DOW() as an alias for the bulky
+        // DAYOFWEEK(FROM_UNIXTIME()) and replace it afterwards
+        $query .= " AND (DOW(begin) = :day_of_week OR
+                         (repeat_interval > 0 AND repeat_day_of_week = 0) OR
+                         (repeat_interval = 0 AND repeat_end > end AND
+                          IF(DOW(begin) > DOW(repeat_end),
+                             IF(:day_of_week < DOW(begin), :day_of_week + 7, :day_of_week) BETWEEN DOW(begin) AND DOW(repeat_end) + 7,
+                             :day_of_week BETWEEN DOW(begin) AND DOW(repeat_end))))";
+        $query = preg_replace('/DOW\((.*?)\)/', 'DAYOFWEEK(FROM_UNIXTIME($1))', $query);
+
+        $parameters[':day_of_week'] = $day_of_week;
+    }
+    $quey .= " ORDER BY begin ASC";
+
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute($parameters);
 
     //handle the assigns und create all the repeated stuff
-    while($db->next_record()) {
-        $assign_object = new AssignObject($db->f("assign_id"));
+    while ($assign_id = $statement->fetchColumn()) {
+        $assign_object = new AssignObject($assign_id);
         create_assigns($assign_object, $assEvtLst, $begin, $end, $filter);
     }
 }
@@ -243,36 +268,58 @@ function create_assigns($assign_object, &$assEvtLst, $begin=0, $end=0, $filter =
                 (($begin == -1) &&($end == -1) &&($ao_r_q ) >0) && ($quantity < $ao_r_q ));
 }
 
-function isFiltered($filter, $mode) {
+function isFiltered($filter, $mode)
+{
     $filters = array(   // filter rules (a filter consists of one or more repeat_modes)
         "all"=>array("na", "sd", "meta", "d", "m", "y", "w"),
         "single"=>array("na", "sd"),
         "repeated"=>array("meta", "d","m", "y", "w"),
         "semschedulesingle" => array('na','sd','d','m','y'));
     if ($filter) {
-        if (in_array($mode, $filters[$filter]))
-            return FALSE;
-        else
-            return TRUE;
-    } else
+        return !in_array($mode, $filters[$filter]);
+    } else {
         return FALSE;
+    }
 }
 
-function createNormalizedAssigns($resource_id, $begin, $end, $explain_user_name = false, $day_of_week = false){
-    $db = DbManager::get();
+function createNormalizedAssigns($resource_id, $begin, $end, $explain_user_name = false, $day_of_week = false)
+{
     $a_obj = new AssignObject(null);
-    $events = array();
+
     if ($day_of_week){
         $day_of_week = (++$day_of_week == 8 ? 1 : $day_of_week);
     }
-    $query.= "SELECT assign_id FROM resources_assign WHERE ";
-    $query.= "resources_assign.resource_id = :resource_id AND ";
-    $query .= "(begin BETWEEN :begin AND :end OR (begin <= :end AND (repeat_end > :begin OR end > :begin)))";
-    $query .= sprintf( " %s ORDER BY begin ASC",
-                 ($day_of_week ? " AND DAYOFWEEK(FROM_UNIXTIME(begin)) = :day_of_week " : "") );
-    $st = $db->prepare($query);
-    $st->execute(array(':resource_id' =>  $resource_id, ':begin' => $begin, ':end' => $end, ':day_of_week' => $day_of_week));
-    while($assign_id = $st->fetchColumn()){
+
+    // Prepare teacher statement
+    $query = "SELECT trp.user_id
+              FROM seminar_cycle_dates AS scd
+              INNER JOIN termine AS t USING(metadate_id)
+              INNER JOIN termin_related_persons AS trp ON trp.range_id = t.termin_id 
+              WHERE scd.metadate_id = ?";
+    $teacher_statement = DBManager::get()->prepare($query);
+
+    // Prepare and execute statement that obtains all assignments for a
+    // given resource
+    $query = "SELECT assign_id
+              FROM resources_assign
+              WHERE resource_id = :resource_id
+                AND (begin BETWEEN :begin AND :end OR (begin <= :end AND (repeat_end > :begin OR end > :begin)))";
+    if ($day_of_week) {
+        $query .= " AND DAYOFWEEK(FROM_UNIXTIME(begin)) = :day_of_week";
+    }
+    $query .= "ORDER BY begin ASC";
+    
+    $statement = DBManager::get()->prepare($query);
+    $statement->bindValue(':resource_id', $resource_id);
+    $statement->bindValue(':begin', $begin);
+    $statement->bindValue(':end', $end);
+    if ($day_of_week) {
+        $statement->bindValue(':day_of_week', $day_of_week);
+    }
+    $statement->execute();
+
+    $events = array();
+    while ($assign_id = $statement->fetchColumn()) {
         if($a_obj->restore($assign_id)) {
             $seminar_id = $sem_doz_names = false;
             unset($sem_obj);
@@ -282,17 +329,19 @@ function createNormalizedAssigns($resource_id, $begin, $end, $explain_user_name 
                 $repmode = 'meta';
                 $seminar_id = $metadate->seminar_id;
                 $sem_obj = Seminar::GetInstance($seminar_id);
-                $r_dozenten = $db->query("SELECT trp.user_id FROM seminar_cycle_dates scd
-                                        INNER JOIN termine t USING(metadate_id)
-                                        INNER JOIN termin_related_persons trp ON trp.range_id = t.termin_id 
-                                        WHERE scd.metadate_id=" . $db->quote($metadate->getId()))
-                            ->fetchAll(PDO::FETCH_COLUMN);
+
+                $teacher_statement->execute(array(
+                    $metadate->getId()
+                ));
+                $r_dozenten = $teacher_statement->fetchAll(PDO::FETCH_COLUMN);
+                $teacher_statement->closeCursor();
+
                 if (count($r_dozenten)) {
                     $dozenten = array_intersect_key($sem_obj->getMembers('dozent'), array_flip($r_dozenten));
                 } else {
                     $dozenten = $sem_obj->getMembers('dozent');
                 }
-                $sem_doz_names = array_map(create_function('$a', 'return $a["Nachname"];'), array_slice($dozenten,0,3, true));
+                $sem_doz_names = array_map(function ($a) { return $a['Nachname']; }, array_slice($dozenten,0,3, true));
                 $sem_doz_names = join(', ' , $sem_doz_names);
             }
             if($repmode == 'meta'){
@@ -332,5 +381,3 @@ function createNormalizedAssigns($resource_id, $begin, $end, $explain_user_name 
 function getNormalizedEventId($begin,$end,$sem_id){
     return md5($sem_id . ':'.date('G', $begin).':'.date('i', $begin).':'.date('s', $begin).':'.date('w',$begin).':'.date('G', $end).':'.date('i', $end).':'.date('s', $end).':'.date('w',$end));
 }
-
-?>

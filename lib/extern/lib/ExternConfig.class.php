@@ -1,7 +1,7 @@
 <?
 # Lifter002: TODO
 # Lifter007: TODO
-# Lifter003: TODO
+# Lifter003: test
 # Lifter010: TODO
 /**
 * ExternConfig.class.php
@@ -366,14 +366,14 @@ class ExternConfig {
     }
     
     function insertConfiguration () {
-        $this->permCheck();
-        
-        $db = new DB_Seminar();
+        $this->permCheck();        
         $query = "SELECT COUNT(config_id) AS count FROM extern_config WHERE ";
-        $query .= "range_id='{$this->range_id}' AND config_type={$this->module_type}";
-        $db->query($query);
-
-        if ($db->next_record() && $db->f('count') > $GLOBALS['EXTERN_MAX_CONFIGURATIONS']) {
+        $query .= "range_id = ? AND config_type = ?";
+        $parameters = array($this->range_id, $this->module_type);
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute($parameters);
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
+        if ($row && $row['count'] > $GLOBALS['EXTERN_MAX_CONFIGURATIONS']) {
             return FALSE;
         }
         
@@ -381,16 +381,18 @@ class ExternConfig {
     }
     
     function deleteConfiguration () {
-        $db = new DB_Seminar();
-        $query = "SELECT config_id FROM extern_config WHERE config_id='{$this->id}' ";
-        $query .= "AND range_id='{$this->range_id}'";
-        $db->query($query);
-        
-        if ($db->next_record()) {
-            $query = "DELETE FROM extern_config WHERE config_id='{$this->id}' ";
-            $query .= "AND range_id='{$this->range_id}'";
-            $db->query($query);
-            
+        $query = "SELECT config_id FROM extern_config WHERE config_id = ? ";
+        $query .= "AND range_id = ?";
+        $parameters = array($this->id ,$this->range_id);
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute($parameters);
+        $row = $statement->fetchColumn();
+        if ($row !== false) {
+            $query = "DELETE FROM extern_config WHERE config_id = ? ";
+            $query .= "AND range_id = ?";
+            $parameters = array($this->id ,$this->range_id);
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute($parameters);
             return TRUE;
         }
         return FALSE;
@@ -416,22 +418,22 @@ class ExternConfig {
     */
     function GetAllConfigurations ($range_id, $type = NULL) {
         $all_configs = array();
-        $db = new DB_Seminar();
-        $query = "SELECT * FROM extern_config WHERE range_id='$range_id' ";
-    
+        $query = "SELECT * FROM extern_config WHERE range_id = ? ";
+
         if ($type) {
-            $query .= "AND config_type=$type ";
+            $query .= "AND config_type = ? ";
         }
         
         $query .= 'ORDER BY name ASC';
-        $db->query($query);
-    
-        while ($db->next_record()) {
+        $parameters = array($range_id,$type);
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute($parameters);
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
             // return registered modules only!
-            $module = $GLOBALS['EXTERN_MODULE_TYPES'][$db->f('config_type')]['module'];
+            $module = $GLOBALS['EXTERN_MODULE_TYPES'][$row['config_type']]['module'];
             if ($module) {
-                $all_configs[$module][$db->f('config_id')] = array('name' => $db->f('name'),
-                        'id' => $db->f('config_id'), 'is_default' => $db->f('is_standard'));
+                $all_configs[$module][$row['config_id']] = array('name' => $row['name'],
+                        'id' => $row['config_id'], 'is_default' => $row['is_standard']);
             }
         }
 
@@ -439,17 +441,18 @@ class ExternConfig {
     }
 
     function GetConfigurationMetaData ($range_id, $config_id) {
-        $db = new DB_Seminar();
-        $query = "SELECT * FROM extern_config WHERE config_id='$config_id' ";
-        $query .= "AND range_id='$range_id'";
-    
-        $db->query($query);
-        if ($db->next_record()) {
-            $module_name = $GLOBALS['EXTERN_MODULE_TYPES'][$db->f('config_type')]['module'];
+        $query = "SELECT * FROM extern_config WHERE config_id = ? ";
+        $query .= "AND range_id = ? ";
+        $parameters = array($config_id, $range_id);
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute($parameters);
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
+        if ($row) {
+            $module_name = $GLOBALS['EXTERN_MODULE_TYPES'][$row['config_type']]['module'];
             if ($module_name) {
-                $config = array('name' => $db->f('name'), 'module_name' => $module_name,
-                        'id' => $db->f('config_id'), 'is_default' => $db->f('is_standard'),
-                        'type' => $db->f('config_type'));
+                $config = array('name' => $row['name'], 'module_name' => $module_name,
+                        'id' => $row['config_id'], 'is_default' => $row['is_standard'],
+                        'type' => $row['config_type']);
             }
         } else {
             return FALSE;
@@ -459,55 +462,61 @@ class ExternConfig {
     }
     
     function ExistConfiguration ($range_id, $config_id) {
-        $db = new DB_Seminar();
-        $query = "SELECT config_id FROM extern_config WHERE config_id='$config_id' ";
-        $query .= "AND range_id='$range_id'";
-    
-        $db->query($query);
-    
-        if ($db->num_rows == 1) {
-            return TRUE;
-        }
-        
+        $query = "SELECT config_id FROM extern_config WHERE config_id = ? ";
+        $query .= "AND range_id = ? ";
+        $parameters = array($config_id, $range_id);
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute($parameters);
+        $row = $statement->fetchColumn();
+        if ($statement->rowCount() == 1) {
+             return TRUE;
+        }        
         return FALSE;
     }
     
     function SetStandardConfiguration ($range_id, $config_id) {
-        $db = new DB_Seminar();
-        $query = "SELECT config_type, is_standard FROM extern_config WHERE config_id='$config_id' ";
-        $query .= " AND range_id='$range_id'";
-        $db->query($query);
+        $query = "SELECT config_type, is_standard FROM extern_config WHERE config_id = ? ";
+        $query .= "AND range_id = ? ";
+        $parameters = array($config_id, $range_id);
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute($parameters);
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
+        if ($row !== false) {
+            if ($row['is_standard'] == 0) {
+                $query = "SELECT config_id FROM extern_config WHERE range_id = ? ";
+                $query .= "AND is_standard=1 AND config_type=" . $row['config_type'];
     
-        if ($db->next_record()) {
-            if ($db->f("is_standard") == 0) {
-                $query = "SELECT config_id FROM extern_config WHERE range_id='$range_id' ";
-                $query .= "AND is_standard=1 AND config_type=" . $db->f('config_type');
-    
-                $db->query($query);
-    
-                if ($db->next_record()) {
+                $params = array($range_id);
+                $state = DBManager::get()->prepare($query);
+                $state->execute($params);
+                $res = $state->fetch(PDO::FETCH_ASSOC);
+                if ($res) {
                     $query = "UPDATE extern_config SET is_standard=0 WHERE config_id='";
-                    $query .= $db->f('config_id') . "'";
+                    $query .= $res['config_id'] . "'";
         
-                    $db->query($query);
-        
-                    if ($db->affected_rows() != 1) {
+                    $state = DBManager::get()->prepare($query);
+                    $state->execute();
+                    if ($state->rowCount() != 1) {
                         return FALSE;
                     }
                 }
             } else {
-                $query = "UPDATE extern_config SET is_standard=0 WHERE config_id='$config_id'";
-                $db->query($query);
-                if ($db->affected_rows() != 1) {
+                $query = "UPDATE extern_config SET is_standard=0 WHERE config_id = ? ";
+                $params = array($config_id);
+                $state = DBManager::get()->prepare($query);
+                $state->execute($params);
+                if ($state->rowCount() != 1) {
                     return FALSE;
                 }
             
                 return TRUE;
             }
         
-            $query = "UPDATE extern_config SET is_standard=1 WHERE config_id='$config_id'";
-            $db->query($query);
-            if ($db->affected_rows() != 1) {
+            $query = "UPDATE extern_config SET is_standard=1 WHERE config_id = ? ";
+            $params = array($config_id);
+            $state = DBManager::get()->prepare($query);
+            $state->execute($params);
+            if ($state->rowCount() != 1) {
                 return FALSE;
             }
         } else {
@@ -518,36 +527,36 @@ class ExternConfig {
     }
     
     function DeleteAllConfigurations ($range_id) {
-        $db = new DB_Seminar();
-        $query = "SELECT config_id FROM extern_config WHERE range_id='$range_id'";
-        $db->query($query);
-        
+        $query = "SELECT config_id FROM extern_config WHERE range_id = ?";
+        $params = array($range_id);
+        $state = DBManager::get()->prepare($query);
+        $state->execute($params);
         $i = 0;
-        while ($db->next_record()) {
-            $config = ExternConfig::getInstance($range_id, '', $db->f('config_id'));
+        while($res = $state->fetch(PDO::FETCH_ASSOC))
+        {
+            $config = ExternConfig::getInstance($range_id, '', $res['config_id']);
             if ($config->deleteConfiguration()) {
                 $i++;
             }
-        }
-    
+        }    
         return $i;
     }
 
     
     function GetInfo ($range_id, $config_id) {
-        $db = new DB_Seminar();
-        $query = "SELECT * FROM extern_config WHERE config_id='$config_id' ";
-        $query .= " AND range_id='$range_id'";
-    
-        $db->query($query);
-    
-        if ($db->next_record()) {
+        $query = "SELECT * FROM extern_config WHERE config_id = ? ";
+        $query .= " AND range_id = ? ";
+        $params = array($config_id, $range_id);
+        $state = DBManager::get()->prepare($query);
+        $state->execute($params);
+        $res = $state->fetch(PDO::FETCH_ASSOC);
+        if ($res) {
             $global_config = ExternConfig::GetGlobalConfiguration($range_id);
-            $module_type = $db->f("config_type");
-            $module = $GLOBALS["EXTERN_MODULE_TYPES"][$db->f("config_type")]["module"];
-            $level = $GLOBALS["EXTERN_MODULE_TYPES"][$db->f("config_type")]["level"];
-            $make = strftime("%x", $db->f("mkdate"));
-            $change = strftime("%x", $db->f("chdate"));
+            $module_type = $res['config_type'];
+            $module = $GLOBALS["EXTERN_MODULE_TYPES"][$res['config_type']]["module"];
+            $level = $GLOBALS["EXTERN_MODULE_TYPES"][$res['config_type']]["level"];
+            $make = strftime("%x", $res['mkdate']);
+            $change = strftime("%x", $res['chdate']);
             $sri = "&lt;studip_remote_include&gt;\n\t&lt;module name=\"$module\" /&gt;";
             $sri .= "\n\t&lt;config id=\"$config_id\" /&gt;\n\t";
             if ($global_config) {
@@ -598,63 +607,68 @@ class ExternConfig {
     }
 
     function GetGlobalConfiguration ($range_id) {
-        $db = new DB_Seminar();
-        $query = "SELECT config_id FROM extern_config WHERE range_id = '$range_id' ";
+        $query = "SELECT config_id FROM extern_config WHERE range_id = ? ";
         $query .= "AND config_type = 0 AND is_standard = 1";
-        $db->query($query);
-    
-        if ($db->next_record()) {
-            return ($db->f('config_id'));
+        $params = array($range_id);
+        $state = DBManager::get()->prepare($query);
+        $state->execute($params);
+        $res = $state->fetchColumn();
+        if ($res) {
+            return ($res);
         }
     
         return FALSE;
     }
 
     function ChangeName ($range_id, $module_type, $config_id, $old_name, $new_name) {
-        $db = new DB_Seminar();
-        $query = "SELECT name FROM extern_config WHERE range_id='$range_id' AND ";
-        $query .= "config_type=$module_type AND name='$new_name'";
-        $db->query($query);
-    
-        if ($db->num_rows()) {
-            return FALSE;
+        $query = "SELECT name FROM extern_config WHERE range_id = ? AND ";
+        $query .= "config_type = ? AND name = ? ";
+
+        $params = array($range_id, $module_type, $new_name);
+        $state = DBManager::get()->prepare($query);
+        $state->execute($params);
+        $res = fetch(PDO::FETCH_ASSOC);
+        if ($res->rowCount()) {
+               return FALSE;
         }
     
-        $changed = time();
-        $query = "UPDATE extern_config SET name='$new_name', chdate=$changed ";
-        $query .= "WHERE config_id='$config_id' AND range_id='$range_id'";
-        $db->query($query);
-    
-        if ($db->affected_rows() != 1) {
-            return FALSE;
+        $query = "UPDATE extern_config SET name = ?, chdate = UNIX_TIMESTAMP()  ";
+        $query .= "WHERE config_id = ? AND range_id = ? ";
+        $params = array($new_name, $config_id, $range_id);
+        $state = DBManager::get()->prepare($query);
+        $state->execute($params);
+        $res = fetch(PDO::FETCH_ASSOC);
+        if ($res->rowCount() != 1) {
+              return FALSE;
         }
         
         return TRUE;
     }
 
     function GetConfigurationByName ($range_id, $module_type, $name) {
-        $db = new DB_Seminar();
-        $query = "SELECT config_id FROM extern_config WHERE range_id='$range_id' AND ";
-        $query .= "config_type=$module_type AND name='$name'";
-        $db->query($query);
-    
-        if ($db->next_record()) {
-            return $db->f('config_id');
+        $query = "SELECT config_id FROM extern_config WHERE range_id = ? AND ";
+        $query .= "config_type = ? AND name = ? ";
+        $params = array($range_id, $module_type, $name);
+        $state = DBManager::get()->prepare($query);
+        $state->execute($params);
+        $res = fetchColumn();
+        if ($res) {
+            return $res;
         }
     
         return FALSE;
     }
     
     function GetStandardConfiguration ($range_id, $type) {
-        $db = new DB_Seminar();
-        $query = "SELECT config_id FROM extern_config WHERE range_id='$range_id' AND ";
-        $query .= "config_type=$type AND is_standard=1";
-        $db->query($query);
-    
-        if ($db->next_record()) {
-            return $db->f('config_id');
+        $query = "SELECT config_id FROM extern_config WHERE range_id = ? AND ";
+        $query .= "config_type = ? AND is_standard = 1";
+        $params = array($range_id, $type);
+        $state = DBManager::get()->prepare($query);
+        $state->execute($params);
+        $res = fetchColumn();
+        if ($res) {
+            return $res;
         }
-    
         return FALSE;
     }
     
@@ -667,11 +681,12 @@ class ExternConfig {
             }
         }
         
-        $db = new DB_Seminar();
         $query = sprintf("SELECT i.Institut_id, i.Name, fakultaets_id FROM Institute i LEFT JOIN extern_config ec ON i.Institut_id = ec.range_id WHERE i.Institut_id = ec.range_id AND ec.config_type IN ('%s') ORDER BY Name", implode("','", $c_types));
-        $db->query($query);
-        while ($db->next_record()) {
-            $inst_array[$db->f('Institut_id')] = array('institut_id' => $db->f('Institut_id'), 'fakultaets_id' => $db->f('fakultaets_id'), 'name' => $db->f('Name'));
+        $state = DBManager::get()->prepare($query);
+        $state->execute();
+
+        while ($row = $state->fetch(PDO::FETCH_ASSOC)) {
+            $inst_array[$row['Institut_id']] = array('institut_id' => $row['Institut_id'], 'fakultaets_id' => $row['fakultaets_id'], 'name' => $row['Name']);
         }
         return $inst_array;
     }

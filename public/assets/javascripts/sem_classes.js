@@ -1,3 +1,6 @@
+/*jslint browser: true, white: true, undef: true, nomen: true, eqeqeq: true, plusplus: true, bitwise: true, newcap: true, immed: true, indent: 4, onevar: false */
+/*global window, $, jQuery, _ */
+
 /* ------------------------------------------------------------------------
  * SemClass administration - only for root-user
  * ------------------------------------------------------------------------ */
@@ -41,7 +44,7 @@ STUDIP.admin_sem_class = {
     },
     'saveData': function () {
         var core_module_slots = {};
-        jQuery.each(['overview','forum','admin','documents','participants','schedule','literature','scm','wiki','calendar','elearning_interface'], function (index, element) {
+        jQuery.each(['overview', 'forum', 'admin', 'documents', 'participants', 'schedule', 'literature', 'scm', 'wiki', 'calendar', 'elearning_interface'], function (index, element) {
             var module = jQuery("div[container=" + element + "] .droparea > div.plugin").attr("id");
             if (module) {
                 module = module.substr(module.indexOf("_") + 1);
@@ -93,7 +96,7 @@ STUDIP.admin_sem_class = {
             },
             'type': "POST",
             'dataType': "json",
-            success: function(data) {
+            success: function (data) {
                 jQuery("#message_below").html(data.html);
             }
         });
@@ -154,7 +157,7 @@ STUDIP.admin_sem_class = {
             }
         });
     }
-}
+};
 jQuery(".sem_type_delete").live("click", STUDIP.admin_sem_class.delete_sem_type_question);
 jQuery(".name_input > input").live("blur", STUDIP.admin_sem_class.rename_sem_type);
 jQuery(STUDIP.admin_sem_class.make_sortable);

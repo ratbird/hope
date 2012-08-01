@@ -37,6 +37,7 @@ javascripts:
     - javascripts/old_upload.js
     - javascripts/drag_and_drop_upload.js
     - javascripts/status_group.js
+    - javascripts/sem_classes.js
     - javascripts/application.js
 
   raumzeit:

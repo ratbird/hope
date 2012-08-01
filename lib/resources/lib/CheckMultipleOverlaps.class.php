@@ -1,13 +1,14 @@
 <?php
-# Lifter002: TODO
-# Lifter007: TODO
-# Lifter003: TODO
-# Lifter010: TODO
+# Lifter002: DONE - not applicable
+# Lifter003: TEST
+# Lifter007: TODO  methods need documentation
+# Lifter010: DONE - not applicable
+
 /**
 * CheckMultipleOverlaps.class.php
 *
 * checks overlaps for multiple resources, seminars and assign objects
-* via the a special table
+* via a special table
 *
 *
 * @author       Cornelis Kater <ckater@gwdg.de>, data-quest GmbH <info@data-quest.de>
@@ -38,76 +39,105 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-require_once $RELATIVE_PATH_RESOURCES."/lib/AssignEventList.class.php";
-require_once $RELATIVE_PATH_RESOURCES."/lib/ResourceObject.class.php";
+require_once $RELATIVE_PATH_RESOURCES . '/lib/AssignEventList.class.php';
+require_once $RELATIVE_PATH_RESOURCES . '/lib/ResourceObject.class.php';
 
-class CheckMultipleOverlaps {
+class CheckMultipleOverlaps
+{
     var $begin;
     var $end;
-    var $db;            //db object
-    var $db1;           //db2 object
     var $resource_ids;      //all the resources in the actual check-set
 
-    //Kontruktor
-    function CheckMultipleOverlaps () {
-        $this->db = new DB_Seminar;
-    }
-
-    function setTimeRange($begin, $end) {
+    function setTimeRange($begin, $end)
+    {
         $this->begin = $begin;
-        $this->end = $end;
+        $this->end   = $end;
     }
 
-    function setAutoTimeRange($assObjs) {
+    function setAutoTimeRange($assObjs)
+    {
         $end = 0;
         foreach ($assObjs as $obj) {
-            if (!$begin)
+            if (!$begin) {
                 $begin = $obj->getBegin();
-            if ($obj->getBegin() < $begin)
+            }
+            if ($obj->getBegin() < $begin) {
                 $begin = $obj->getBegin();
-            if ($obj->getRepeatEnd() > $end)
+            }
+            if ($obj->getRepeatEnd() > $end) {
                 $end = $obj->getRepeatEnd();
+            }
         }
         $this->setTimeRange($begin, $end);
     }
 
-    function addResource($resource_id, $day_of_week = false) {
+    function addResource($resource_id, $day_of_week = false)
+    {
         // check, if the added resources needs to be checked
         $resObj = ResourceObject::Factory($resource_id);
-        
+
         if (!$resObj->getMultipleAssign()) {
             $this->resource_ids[] = $resource_id;
             return true;
         }
-        
+
         return false;
     }
 
-    function checkOverlap ($events, &$result, $index_mode = "assign_id") {
-        if (sizeof($events) == 0) return false;
-        if ($this->resource_ids) {
-            foreach ($events as $obj) {
-                $clause = sprintf ("((begin <= %s AND end > %s) OR (begin >=%s AND end <= %s) OR (begin <= %s AND end >= %s) OR (begin < %s AND end >= %s))", $obj->getBegin(), $obj->getBegin(), $obj->getBegin(), $obj->getEnd(),$obj->getBegin(), $obj->getEnd(), $obj->getEnd(), $obj->getEnd());
-                $cases .= sprintf(" WHEN %s THEN '%s'", $clause, $obj->getId());
-                $assign_ids[] = $obj->assign_id;
-                $clauses[]    = $clause;
-            }
-
-            $clause = join(" OR ",$clauses);
-            $in = "('".join("','",$this->resource_ids)."')";
-
-            $query = sprintf ("SELECT *, CASE %s END AS event_id FROM resources_temporary_events WHERE 1 AND (%s) AND resource_id IN %s
-                AND assign_id NOT IN('%s')
-                ORDER BY begin", $cases, $clause, $in, implode("', '", $assign_ids));
-            $this->db->query($query);
-            while ($this->db->next_record()) {
-                $result[$this->db->f("resource_id")][($index_mode == "assign_id") ? $events[$this->db->f("event_id")]->getAssignId() : $events[$this->db->f("event_id")]->getAssignUserId()][] =
-                    array("begin"=>$this->db->f("begin"), "end"=>$this->db->f("end"), "assign_id" => $this->db->f('assign_id'), "event_id"=>$this->db->f("event_id"),
-                          "own_begin" =>$events[$this->db->f("event_id")]->getBegin(), "own_end" =>$events[$this->db->f("event_id")]->getEnd(),
-                          "lock" =>($this->db->f("type") == "lock") ? TRUE : FALSE);
-            }
+    function checkOverlap ($events, &$result, $index_mode = 'assign_id')
+    {
+        if (count($events) == 0) {
+            return false;
+        }
+        if (count($this->resource_ids) == 0) {
+            $result = array();
             return;
         }
-        $result = array();
+
+        $parameters = $clauses = $assign_ids = array();
+        $cases = '';
+        foreach (array_values($events) as $i => $obj) {
+            $clause = "((begin <= :begin{$i} AND end > :begin{$i}) OR
+                        (begin >= :begin{$i} AND end <= :end{$i}) OR
+                        (begin <= :begin{$i} AND end >= :end{$i}) OR
+                        (begin <  :end{$i} AND end >= :end{$i}))";
+
+            $parameters['begin' . $i] = $obj->getBegin();
+            $parameters['end' . $i]   = $obj->getEnd();
+
+            $cases .= sprintf(" WHEN %s THEN :id{$i}", $clause);
+            $parameters['id' . $i] = $obj->getId();
+
+            $assign_ids[] = $obj->assign_id;
+            $clauses[]    = $clause;
+        }
+
+        $clause = join(' OR ', $clauses);
+
+        $query = "SELECT resource_id, `begin`, end, assign_id, type,
+                         CASE {$cases} END AS event_id
+                  FROM resources_temporary_events
+                  WHERE ({$clause}) AND resource_id IN (:resource_ids)
+                    AND assign_id NOT IN (:assign_ids)
+                  ORDER BY begin";
+        $parameters[':resource_ids'] = $this->resource_ids;
+        $parameters[':assign_ids']   = $assign_ids;
+
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute($parameters);
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $index = ($index_mode == 'assign_id')
+                   ? $events[$row['event_id']]->getAssignId()
+                   : $events[$row['event_id']]->getAssignUserId();
+            $result[$row['resource_id']][$index][] = array(
+                'begin'     => $row['begin'],
+                'end'       => $row['end'],
+                'assign_id' => $row['assign_id'],
+                'event_id'  => $row['event_id'],
+                'own_begin' => $events[$row['event_id']]->getBegin(),
+                'own_end'   => $events[$row['event_id']]->getEnd(),
+                'lock'      => ($row['type'] == 'lock')
+            );
+        }
     }
 }

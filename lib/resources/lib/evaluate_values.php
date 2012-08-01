@@ -875,7 +875,7 @@ if ((Request::quoted('add_type')) || (Request::option('delete_type')) || (Reques
                 Request::option('delete_type')
             ));
         }
-        $resource_is_room = Request::int('resource_is_room');
+        $resource_is_room = Request::int('resource_is_room', 0);
         //$insert_type_description = Request::quoted('insert_type_description');
         if (Request::quoted('add_type') && Request::submitted('_add_type')) {
             $id=md5(uniqid("Sommer2002",1));

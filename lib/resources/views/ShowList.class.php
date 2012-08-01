@@ -1,7 +1,7 @@
 <?
 # Lifter002: TODO
+# Lifter003: TEST
 # Lifter007: TODO
-# Lifter003: TODO
 # Lifter010: TODO
 /**
 * ShowList.class.php
@@ -61,10 +61,6 @@ class ShowList extends ShowTreeRow{
         $this->recurse_levels=-1;
         $this->supress_hierachy_levels=FALSE;
         $this->simple_list=FALSE;
-
-        $this->db = new DB_Seminar;
-        $this->db2 = new DB_Seminar;
-
     }
 
     function setRecurseLevels($levels) {
@@ -206,35 +202,52 @@ class ShowList extends ShowTreeRow{
         return TRUE;
     }
 
-    function showListObjects ($start_id='', $level=0, $result_count=0) {
-
-        $db=new DB_Seminar;
-        $db2=new DB_Seminar;
-
+    function showListObjects ($start_id='', $level=0, $result_count=0)
+    {
         //Let's start and load all the threads
-        $query = sprintf ("SELECT resource_id FROM resources_objects ro LEFT JOIN resources_categories USING (category_id) WHERE parent_id = '%s' %s %s ORDER BY ro.name",
-                        $start_id,
-                        ($this->supress_hierachy_levels) ? "AND ro.category_id != ''" : "",
-                        $this->show_only_rooms ? " AND is_room = 1" : "");
-        $db->query($query);
+        $query = "SELECT resource_id
+                  FROM resources_objects AS ro
+                  LEFT JOIN resources_categories USING (category_id)
+                  WHERE parent_id = ?";
+        if ($this->supress_hierachy_levels) {
+            $query .= " AND ro.category_id != ''";
+        }
+        if ($this->show_only_rooms) {
+            $query .= " AND is_room = 1";
+        }
+        $query .= " ORDER BY ro.name";
+
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($start_id));
+        $resource_ids = $statement->fetchAll(PDO::FETCH_COLUMN);
 
         //if we have an empty result
-        if ((!$db->num_rows()) && ($level==0))
+        if (count($resource_ids) == 0 && $level == 0) {
             return FALSE;
+        }
 
-        while ($db->next_record()) {
-            $this->showListObject($db->f("resource_id"), $this->admin_buttons);
+        $query = "SELECT resource_id
+                  FROM resources_objects
+                  WHERE parent_id = ?
+                  ORDER BY name";
+        $statement = DBManager::get()->prepare($query);
+
+        foreach ($resource_ids as $resource_id) {
+            $this->showListObject($resource_id, $this->admin_buttons);
+
             //in weitere Ebene abtauchen
             if (($this->recurse_levels == -1) || ($level + 1 < $this->recurse_levels)) {
                 //Untergeordnete Objekte laden
-                $db2->query("SELECT resource_id FROM resources_objects WHERE parent_id = '".$db->f("resource_id")."' ORDER BY name");
+                $statement->execute(array($resource_id));
 
-                while ($db2->next_record())
-                    $this->showListObjects($db2->f("resource_id"), $level+1, $result_count);
+                while ($id = $statement->fetchColumn()) {
+                    $this->showListObjects($id, $level + 1, $result_count);
+                }
+                $statement->closeCursor();
             }
-            $result_count++;
+            $result_count += 1;
         }
-    return $result_count;
+        return $result_count;
     }
 
     function showRangeList($range_id) {
@@ -247,69 +260,104 @@ class ShowList extends ShowTreeRow{
         return $count;
     }
 
-    function showSearchList($search_array, $check_assigns = FALSE) {
-        $db=new DB_Seminar;
-
+    function showSearchList($search_array, $check_assigns = FALSE)
+    {
         //create the query
         if ($search_array['resources_search_range']){
             $search_only = $this->getResourcesSearchRange($search_array['resources_search_range']);
         }
 
-        if (!$search_array["properties"])
-            $query = sprintf ("SELECT resource_id FROM resources_objects ro LEFT JOIN resources_categories USING (category_id)
-                                WHERE ro.name LIKE '%%%s%%' %s %s %s ORDER BY ro.name",
-                                $search_array["search_exp"],
-                                $this->supress_hierachy_levels ? "AND ro.category_id != ''" : "",
-                                $this->show_only_rooms ? " AND is_room = 1" : "",
-                                $search_array['resources_search_range'] ? " AND ro.resource_id IN('".join("','", $search_only)."')" : "");
+        $parameters = array();
+        if ($search_array['properties']) {
+            $query = "SELECT a.resource_id, COUNT(a.resource_id) AS resource_id_count
+                      FROM resources_objects_properties AS a
+                      LEFT JOIN resources_objects AS b USING (resource_id)
+                      LEFT JOIN resources_categories USING (category_id)
+                      WHERE ";
 
-
-        if ($search_array["properties"]) {
-            $query = sprintf ("SELECT a.resource_id %s FROM resources_objects_properties a LEFT JOIN resources_objects b USING (resource_id) LEFT JOIN resources_categories USING (category_id) %s ", ($search_array["properties"]) ? ", COUNT(a.resource_id) AS resource_id_count" : "", (($search_array["properties"]) || ($search_array["search_exp"])) ? "WHERE" : "");
-
-            $i=0;
-            foreach ($search_array["properties"] as $key => $val) {
-                //if ($val == "on")
-                //  $val = 1;
+            $conditions = array();
+            $i = 0;
+            foreach ($search_array['properties'] as $key => $val) {
+                // if ($val == 'on') {
+                //     $val = 1;
+                // }
 
                 //let's create some possible wildcards
-                if (preg_match("/<=/", $val)) {
-                    $val = trim(substr($val, strpos($val, "<")+2, strlen($val)));
-                    $linking = "<=";
-                } elseif (preg_match("/>=/", $val)) {
-                    $val = trim(substr($val, strpos($val, "<")+2, strlen($val)));
-                    $linking = ">=";
-                } elseif (preg_match("/</", $val)) {
-                    $val = trim(substr($val, strpos($val, "<")+1, strlen($val)));
-                    $linking = "<";
-                } elseif (preg_match("/>/", $val)) {
-                    $val = trim(substr($val, strpos($val, "<")+1, strlen($val)));
-                    $linking = ">";
-                } else $linking = "=";
+                if (strpos($val, '<=') !== false) {
+                    $val     = trim(substr($val, strpos($val, '<=') + 2));
+                    $linking = '<=';
+                } elseif (strpos($val, '>=') !== false) {
+                    $val     = trim(substr($val, strpos($val, '>=') + 2));
+                    $linking = '>=';
+                } elseif (strpos($val, '<') !== false) {
+                    $val     = trim(substr($val, strpos($val, '<') + 1));
+                    $linking = '<';
+                } elseif (strpos($val, '>') !== false) {
+                    $val     = trim(substr($val, strpos($val, '>') + 1));
+                    $linking = '>';
+                } else {
+                    $linking = '=';
+                }
+                $conditions[] = "(property_id = :key{$i} AND state {$linking} :state{$i})";
+                $parameters[':key' . $i]   = $key;
+                $parameters[':state' . $i] = $val;
 
-                $query.= sprintf(" %s (property_id = '%s' AND state %s %s%s%s) ", ($i) ? "OR" : "", $key, $linking,  (!is_numeric($val)) ? "'" : "", $val, (!is_numeric($val)) ? "'" : "");
-                $i++;
+                $i += 1;
+            }
+            $query .= (count($conditions) > 0)
+                    ? implode(' OR ', $conditions)
+                    : '1';
+
+            $query .= " AND b.name LIKE CONCAT('%', :needle, '%')";
+            $parameters[':needle'] = $search_array['search_exp'];
+
+            if ($this->supress_hierachy_levels) {
+                $query .= " AND b.category_id != ''";
+            }
+            if ($this->show_only_rooms) {
+                $query .= " AND is_room = 1";
+            }
+            if ($search_array['resources_search_range']) {
+                $query .= " AND b.resource_id IN (:resource_ids)";
+                $parameters[':resource_ids'] = $resource_ids;
             }
 
-            $query .= sprintf(" AND b.name LIKE '%%%s%%' ", $search_array["search_exp"]);
-            $query .= $this->supress_hierachy_levels ? " AND b.category_id != ''" : "";
-            $query .= $this->show_only_rooms ? " AND is_room = 1" : "";
-            $query .= $search_array['resources_search_range'] ? " AND b.resource_id IN('".join("','", $search_only)."')" : "";
-            $query .= sprintf (" GROUP BY a.resource_id  HAVING resource_id_count = '%s' ", $i);
+            $query .= " GROUP BY a.resource_id
+                        HAVING resource_id_count = :count";
+            $parameters[':count'] = $i;
 
             $query .=" ORDER BY b.name";
+        } else {
+            $query = "SELECT resource_id
+                      FROM resources_objects AS ro
+                      LEFT JOIN resources_categories USING (category_id)
+                      WHERE ro.name LIKE CONCAT('%', :needle, '%')";
+            $parameters[':needle'] = $search_array['search_exp'];
+
+            if ($this->supress_hierachy_levels) {
+                $query .= " AND ro.category_id != ''";
+            }
+            if ($this->show_only_rooms) {
+                $query .= " AND is_room = 1";
+            }
+            if ($search_array['resources_search_range']) {
+                $query .= " AND ro.resource_id IN (:resource_ids)";
+                $parameters[':resource_ids'] = $search_only;
+            }
+            $query .= " ORDER BY ro.name";
         }
 
-
-        $db->query($query);
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute($parameters);
+        $resource_ids = $statement->fetchAll(PDO::FETCH_COLUMN);
 
         //if we have an empty result
-        if ((!$db->num_rows()) && ($level==0))
+        if (count($resource_ids) == 0 && $level == 0) {
             return FALSE;
+        }
 
-
-        while ($db->next_record()) {
-            $found_resources[$db->f("resource_id")] = TRUE;
+        foreach ($resource_ids as $resource_id) {
+            $found_resources[$resource_id] = TRUE;
         }
         $day_of_week = false;
         //do further checks to determine free resources inthe given time range
@@ -378,18 +426,22 @@ class ShowList extends ShowTreeRow{
     return $result_count;
     }
 
-    function getResourcesSearchRange($resource_id){
+    function getResourcesSearchRange($resource_id)
+    {
         static $children = array();
-        $to_add = array();
-        $this->db->query("SELECT resource_id FROM resources_objects WHERE parent_id='$resource_id' ORDER BY name");
-        while($this->db->next_record()){
-            $to_add[] = $this->db->f(0);
-        }
-        foreach ($to_add as $rid){
+        
+        $query = "SELECT resource_id
+                  FROM resources_objects
+                  WHERE parent_id = ?
+                  ORDER BY name";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($resource_id));
+        $to_add = $statement->fetchAll(PDO::FETCH_COLUMN);
+
+        foreach ($to_add as $rid) {
             $children[] = $rid;
             $this->getResourcesSearchRange($rid);
         }
         return $children;
     }
 }
-?>

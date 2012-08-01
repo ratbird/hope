@@ -1,7 +1,7 @@
 <?
 # Lifter002: TODO
+# Lifter003: TEST
 # Lifter007: TODO
-# Lifter003: TODO
 # Lifter010: TODO
 require_once("lib/classes/StudipSemTreeViewSimple.class.php");
 
@@ -11,13 +11,15 @@ class ExternSemLectureTree extends StudipSemTreeViewSimple {
     var $param;
     var $root_id;
     
-    function ExternSemLectureTree (&$config, $start_item_id = "", $sem_number = FALSE) {
+    function ExternSemLectureTree (&$config, $start_item_id = "", $sem_number = FALSE)
+    {
         $this->config = $config;
-        $db = new DB_Seminar();
-        $query = "SELECT sem_tree_id FROM sem_tree WHERE studip_object_id = '{$this->config->range_id}'";
-        $db->query($query);
-        $db->next_record();
-        $this->root_id = $db->f("sem_tree_id");
+
+        $query = "SELECT sem_tree_id FROM sem_tree WHERE studip_object_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($this->config->range_id));
+        $this->root_id = $statement->fetchColumn();
+
         $this->start_item_id = ($start_item_id) ? $start_item_id : $this->root_id;
         $this->param = "range_id={$this->config->range_id}&module=Semlecturetree&config_id={$this->config->id}&";
         

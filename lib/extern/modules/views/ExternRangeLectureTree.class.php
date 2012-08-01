@@ -1,7 +1,7 @@
 <?
 # Lifter002: TODO
+# Lifter003: TEST
 # Lifter007: TODO
-# Lifter003: TODO
 # Lifter010: TODO
 require_once("lib/classes/StudipRangeTree.class.php");
 require_once ("lib/classes/RangeTreeObject.class.php");
@@ -28,19 +28,21 @@ class ExternRangeLectureTree {
     *
     * @access public
     */
-    function ExternRangeLectureTree (&$config, $start_item_id, $sem_number = false, $sem_status = false) {
+    function ExternRangeLectureTree (&$config, $start_item_id, $sem_number = false, $sem_status = false)
+    {
         $this->config = $config;
-        $db = new DB_Seminar();
-        $query = "SELECT item_id FROM range_tree WHERE studip_object_id = '{$this->config->range_id}'";
-        $db->query($query);
-        $db->next_record();
-        $this->root_id = $db->f("item_id");
-        $this->start_item_id = ($start_item_id) ? $start_item_id : $this->root_id;
+
+        $query = "SELECT item_id FROM range_tree WHERE studip_object_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($this->config->range_id));
+        $this->root_id = $statement->fetchColumn();
+
+        $this->start_item_id = $start_item_id ?: $this->root_id;
         $args = NULL;
-        if ($sem_number !== false){
+        if ($sem_number !== false) {
             $args['sem_number'] = $sem_number;
         }
-        if ($sem_status !== false){
+        if ($sem_status !== false) {
             $args['sem_status'] =  $sem_status;
         }
         $this->param = "range_id={$this->config->range_id}&module=Rangelecturetree&config_id={$this->config->id}&";
@@ -168,4 +170,3 @@ class ExternRangeLectureTree {
         return $url;
     }
 }
-?>

@@ -21,7 +21,7 @@ $id = $sem_type['id'];
         </span>
     </span>
     (<?= sprintf(_("%s Veranstaltungen"), $number_of_seminars ? $number_of_seminars : _("keine")) ?>)
-    <a href="#" class="sem_type_edit" onClick="jQuery(this).closest('li').find('.name_container').children().toggle(); return false;" title="<?= _("Seminartyp umbenennen") ?>"><?= Assets::img("icons/16/blue/edit.png") ?></a>
+    <a href="#" class="sem_type_edit" onClick="jQuery(this).closest('li').find('.name_container').children().toggle().find('input').focus(); return false;" title="<?= _("Seminartyp umbenennen") ?>"><?= Assets::img("icons/16/blue/edit.png") ?></a>
     <? if ($number_of_seminars == 0) : ?>
         <a href="#" class="sem_type_delete" onClick="return false;" title="<?= _("Seminartyp löschen") ?>"><?= Assets::img("icons/16/blue/trash.png") ?></a>
     <? endif ?>

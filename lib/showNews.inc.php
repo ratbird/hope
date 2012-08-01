@@ -266,6 +266,7 @@ function show_news_item($news_item, $cmd_data, $show_admin, $admin_link)
                      URLHelper::getLink($link), $id, $admin_link, $titel);
 
     $template = $GLOBALS['template_factory']->open('news/news');
+    $template->link       = $link;
     $template->news_item  = $news_item;
     $template->icon       = Assets::img('icons/16/grey/news.png', array('class' => 'text-bottom'));
     $template->titel      = $titel;

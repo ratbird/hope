@@ -1,7 +1,7 @@
 <?php
 # Lifter002: TODO
+# Lifter003: TEST
 # Lifter007: TODO
-# Lifter003: TODO - only fixed the ugly connection to ShowObject for now
 # Lifter010: TODO
 /**
 * ResourcesBrowse.class.php
@@ -52,15 +52,9 @@ class ResourcesBrowse {
     var $open_object;       //where we stay
     var $mode;          //the search mode
     var $searchArray;       //the array of search expressions (free search & properties)
-    var $db;
-    var $db2;
-    var $db3;
     var $cssSw;         //the cssClassSwitcher
 
     function ResourcesBrowse() {
-        $this->db = new DB_Seminar();
-        $this->db2 = new DB_Seminar();
-        $this->db3 = new DB_Seminar();
         $this->cssSw = new cssClassSwitcher();
         $this->list = new ShowList;
 
@@ -257,13 +251,7 @@ class ResourcesBrowse {
                     $this_sem = false;
                     foreach($all_semester as $semester)
                     {
-                        if ($selected_semester["semester_id"]==$semester["semester_id"])
-                        {
-                            $this_sem = true;
-                        } else
-                        {
-                            $this_sem = false;
-                        }
+                        $this_sem = $selected_semester["semester_id"] == $semester["semester_id"];
 
                         echo "<option value='".$semester["semester_id"]."' ".($this_sem?" selected=selected ":"").">".$semester["name"]."</option>";
 
@@ -282,7 +270,28 @@ class ResourcesBrowse {
     }
 
     //private
-    function showProperties() {
+    function showProperties()
+    {
+        $query = "SELECT category_id, name FROM resources_categories ORDER BY name";
+        $statement = DBManager::get()->query($query);
+        $categories = $statement->fetchGrouped(PDO::FETCH_ASSOC);
+
+        $query = "SELECT property_id, name, type, options
+                  FROM resources_categories_properties
+                  LEFT JOIN resources_properties USING (property_id)
+                  WHERE category_id = ?";
+        if (get_config('RESOURCES_SEARCH_ONLY_REQUESTABLE_PROPERTY')) {
+            $query .= " AND requestable = 1";
+        }
+        $query .= " ORDER BY name";
+
+        $statement = DBManager::get()->prepare($query);
+
+        foreach (array_keys($categories) as $id) {
+            $statement->execute(array($id));
+            $categories[$id]['properties'] = $statement->fetchAll(PDO::FETCH_ASSOC);
+            $statement->closeCursor();
+        }
         ?>
         <tr>
             <td <? $this->cssSw->switchClass(); echo $this->cssSw->getFullClass() ?> >
@@ -294,44 +303,35 @@ class ResourcesBrowse {
             <td <? $this->cssSw->switchClass(); echo $this->cssSw->getFullClass() ?> >
                 <table width="90%" cellpadding=5 cellspacing=0 border=0 align="center">
                     <?
-                    $query = sprintf("SELECT category_id, name FROM resources_categories ORDER BY name");
-                    $this->db->query($query);
-                    $k=0;
-                    while ($this->db->next_record()) {
-                        $query = sprintf("SELECT resources_properties.property_id, name, type, options
-                                        FROM resources_categories_properties LEFT JOIN resources_properties
-                                        USING (property_id) WHERE category_id = '%s'
-                                        %s ORDER BY name ", $this->db->f("category_id"),
-                                        (get_config('RESOURCES_SEARCH_ONLY_REQUESTABLE_PROPERTY') ? " AND requestable=1 ": ""));
-                        $this->db2->query($query);
-                        if ($this->db2->num_rows()){
+                    foreach ($categories as $id => $category) {
+                        if (count($category['properties']) > 0) {
 
                             print "<tr>\n";
                             print "<td colspan=\"2\"> \n";
                             if ($k)
                                 print "<hr><br>";
-                            printf ("<b>%s:</b>", htmlReady($this->db->f("name")));
+                            printf ("<b>%s:</b>", htmlReady($category['name']));
                             print "</td>\n";
                             print "</tr> \n";
                             print "<tr>\n";
                             print "<td width=\"50%\" valign=\"top\">";
-                            if ($this->db2->num_rows() % 2 == 1)
+                            if (count($category['properties']) % 2 == 1)
                                 $i=0;
                             else
                                 $i=1;
                             $switched = FALSE;
-                            while ($this->db2->next_record()) {
-                                if (($i > ($this->db2->num_rows() /2 )) && (!$switched)) {
+                            foreach ($category['properties'] as $property) {
+                                if (!$switched && $i > count($category['properties']) / 2) {
                                     print "</td><td width=\"50%\" valign=\"top\">";
                                     $switched = TRUE;
                                 }
                                 print "<table width=\"100%\" border=\"0\"><tr>";
-                                printf ("<td width=\"50%%\">%s</td>", htmlReady($this->db2->f("name")));
+                                printf ("<td width=\"50%%\">%s</td>", htmlReady($property['name']));
                                 print "<td width=\"50%\">";
-                                printf ("<input type=\"HIDDEN\" name=\"search_property_val[]\" value=\"%s\">", "_id_".$this->db2->f("property_id"));
-                                switch ($this->db2->f("type")) {
+                                printf ("<input type=\"HIDDEN\" name=\"search_property_val[]\" value=\"%s\">", "_id_".$property['property_id']);
+                                switch ($property['type']) {
                                     case "bool":
-                                        printf ("<input type=\"CHECKBOX\" name=\"search_property_val[]\" %s>&nbsp;%s", ($value) ? "checked":"", htmlReady($this->db2->f("options")));
+                                        printf ("<input type=\"CHECKBOX\" name=\"search_property_val[]\" %s>&nbsp;%s", ($value) ? "checked":"", htmlReady($property['options']));
                                     break;
                                     case "num":
                                         printf ("<input type=\"TEXT\" name=\"search_property_val[]\" value=\"%s\" size=20 maxlength=255>", htmlReady($value));
@@ -340,7 +340,7 @@ class ResourcesBrowse {
                                         printf ("<textarea name=\"search_property_val[]\" cols=20 rows=2 >%s</textarea>", htmlReady($value));
                                     break;
                                     case "select";
-                                        $options=explode (";",$this->db2->f("options"));
+                                        $options=explode (";",$property['options']);
                                         print "<select name=\"search_property_val[]\">";
                                         print   "<option value=\"\">--</option>";
                                         foreach ($options as $a) {
@@ -363,42 +363,59 @@ class ResourcesBrowse {
     }
 
     //private
-    function browseLevels() {
-
+    function browseLevels()
+    {
+        $parameters = array();
         if ($this->open_object) {
-            $query = sprintf ("SELECT a.resource_id, a.name, a.description FROM resources_objects a LEFT JOIN resources_objects b ON (b.parent_id = a.resource_id)  WHERE a.parent_id = '%s' AND (a.category_id IS NULL OR b.resource_id IS NOT NULL) GROUP BY resource_id ORDER BY name", $this->open_object);
-            $query2 = sprintf ("SELECT parent_id FROM resources_objects WHERE resource_id = '%s' ", $this->open_object);
+            $query = "SELECT parent_id FROM resources_objects WHERE resource_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($this->open_object));
+            $temp = $statement->fetchColumn();
+            if ($temp != '0') {
+                $way_back = $temp;
+            }
 
-            $this->db2->query($query2);
-            $this->db2->next_record();
-            if ($this->db2->f("parent_id") != "0")
-                $way_back=$this->db2->f("parent_id");
+            $query = "SELECT a.resource_id, a.name, a.description
+                      FROM resources_objects AS a
+                      LEFT JOIN resources_objects AS b ON (b.parent_id = a.resource_id)
+                      WHERE a.parent_id = :parent_id AND (a.category_id IS NULL OR b.resource_id IS NOT NULL)
+                      GROUP BY resource_id
+                      ORDER BY name";
+            $parameters[':parent_id'] = $this->open_object;
         } else {
-            $resRoots=new ResourcesUserRoots($range_id);
-
-            $roots=$resRoots->getRoots();
-            if (is_array($roots))
-                $clause = "AND resource_id  IN('" . join("','",$roots) . "')";
-            else
-                $clause = "AND 1=2";
-
-            $query = sprintf ("SELECT resource_id, name, description FROM resources_objects WHERE 1 %s ORDER BY name", $clause);
             $way_back=-1;
+
+            $resRoots = new ResourcesUserRoots($range_id);
+            $roots = $resRoots->getRoots();
+
+            if (is_array($roots)) {
+                $query = "SELECT resource_id, name, description
+                          FROM resources_objects
+                          WHERE resource_id IN (:resource_ids)
+                          ORDER BY name";
+                $parameters[':resource_ids'] = $roots;
+            } else {
+                $query = '';
+                $clause = "AND 1=2";
+            }
         }
 
-        $this->db->query($query);
+        if ($query) {
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute($parameters);
+            $elements = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-        //check for sublevels in current level
-        $sublevels = FALSE;
-        while ($this->db->next_record()) {
-            $query2 = sprintf ("SELECT resource_id, name, description FROM resources_objects WHERE parent_id = '%s' ORDER BY name", $this->db->f("resource_id"));
-            $this->db2->query($query2);
-            if ($this->db2->nf() >0)
-                $sublevels = TRUE;
+            //check for sublevels in current level
+            $sublevels = false;
+            if (count($elements)) {
+                $ids = array_map(function ($a) { return $a['resource_id']; }, $elements);
+                
+                $query = "SELECT 1 FROM resources_objects WHERE parent_id IN (?)";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($ids));
+                $sublevels = $statement->fetchColumn() > 0;
+            }
         }
-        if ($sublevels)
-            $this->db->query($query);
-
         ?>
         <tr>
             <td <? $this->cssSw->switchClass(); echo $this->cssSw->getFullClass() ?>>
@@ -410,7 +427,7 @@ class ResourcesBrowse {
                 <?
                 if ($way_back>=0) : ?>
                 <a href="<?= URLHelper::getLink('?view=search&quick_view_mode='. Request::option('view_mode')
-                            . '&' . (!$way_back) ? "reset=TRUE" : "open_level=$way_back") ?>">
+                            . '&' . (!$way_back ? "reset=TRUE" : "open_level=$way_back")) ?>">
                     <?= Assets::img('icons/16/blue/arr_2left.png', array(
                         'class' => 'text-top',
                         'title' =>_('eine Ebene zur&uuml;ck'))) ?>
@@ -421,24 +438,24 @@ class ResourcesBrowse {
         <tr>
             <td <? $this->cssSw->switchClass(); echo $this->cssSw->getFullClass() ?> align="left" colspan="2">
                 <?
-                if ((!$this->db->num_rows()) || (!$sublevels)) { ?>
+                if (count($elements) == 0 || !$sublevels) { ?>
                     <?= MessageBox::info(_("Auf dieser Ebene existieren keine weiteren Unterebenen")) ?>
                 <? } else {
                 ?>
                 <table width="90%" cellpadding=5 cellspacing=0 border=0 align="center">
                     <?
-                    if ($this->db->num_rows() % 2 == 1)
+                    if (count($elements) % 2 == 1)
                         $i=0;
                     else
                         $i=1;
                     print "<td width=\"55%\" valign=\"top\">";
-                    while ($this->db->next_record()) {
-                        if (($i > ($this->db->num_rows() /2 )) && (!$switched)) {
+                    foreach ($elements as $element) {
+                        if (!$switched && $i > count($elements) / 2) {
                             print "</td><td width=\"40%\" valign=\"top\">";
                             $switched = TRUE;
                         } ?>
-                        <a href="<?= URLHelper::getLink('?view=search&quick_view_mode='. Request::option('view_mode') .'&open_level=' . $this->db->f("resource_id")) ?>">
-                            <b><?= htmlReady($this->db->f("name")) ?></b>
+                        <a href="<?= URLHelper::getLink('?view=search&quick_view_mode='. Request::option('view_mode') .'&open_level=' . $element['resource_id']) ?>">
+                            <b><?= htmlReady($element['name']) ?></b>
                         </a><br>
                         <? $i++;
                     }

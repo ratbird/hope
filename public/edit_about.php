@@ -236,7 +236,7 @@ if (check_ticket(Request::option('studipticket'))) {
 
     if ($cmd == "fach_abschluss_edit" && (!StudipAuthAbstract::CheckField("studiengang_id", $my_about->auth_user['auth_plugin'])) && ($ALLOW_SELFASSIGN_STUDYCOURSE || $perm->have_perm('admin')))
     {
-        $my_about->fach_abschluss_edit(Request::optionArray('fach_abschluss_delete'),Request::quoted('new_studiengang'),Request::quoted('new_abschluss'),Request::option('fachsem'),Request::optionArray('change_fachsem'),Request::optionArray('course_id'));
+        $my_about->fach_abschluss_edit(Request::getArray('fach_abschluss_delete'),Request::quoted('new_studiengang'),Request::quoted('new_abschluss'),Request::option('fachsem'),Request::getArray('change_fachsem'),Request::optionArray('course_id'));
     }
 
     //Veränderungen an Nutzer-Domains
@@ -1012,11 +1012,11 @@ if ($view == 'Studium') {
         }
         echo '<table class="default">'."\n";
         echo '<tr><td><table width="100%" border="0" cellspacing="0" cellpadding="2">';
-        reset ($my_about->user_fach_abschluss);
+
         $flag = FALSE;
 
         $i = 0;
-        while (list ($studiengang_id,$details) = each ($my_about->user_fach_abschluss)) {
+        foreach ($my_about->user_fach_abschluss AS $details) {
             if (!$i) {
                 echo '<tr><th>' . _("Fach") . '</th>' ;
                 echo '<th>' . _("Abschluss") . '</th>' ;
@@ -1030,9 +1030,8 @@ if ($view == 'Studium') {
                 <td class="'.$cssSw->getClass().'">' . htmlReady($details['aname']). '</td>';
             if($allow_change_sg){
                 echo '<td class="'.$cssSw->getClass().'">';
-                echo '<input type="hidden" name="course_id[]" value = "'.$studiengang_id.'">';
-                echo '<select name="change_fachsem[]">';
-                for($i = 1; $i < 51; ++$i) {
+                echo '<select name="change_fachsem[' . $details['studiengang_id'] . '][' . $details['abschluss_id'] . ']">';
+                for ($i = 0; $i < 51; ++$i) {
                     echo '<option';
                     if ($i == $details['semester']) {
                         echo ' selected';
@@ -1040,7 +1039,7 @@ if ($view == 'Studium') {
                     echo '>'.$i.'</option>';
                 }
                 echo '</select></td><td class="'. $cssSw->getClass().'" align="center">';
-                echo '<input type="CHECKBOX" name="fach_abschluss_delete[]" value="'.$studiengang_id.'">';
+                echo '<input type="CHECKBOX" name="fach_abschluss_delete[' . $details['studiengang_id'] . ']" value="' . $details['abschluss_id'] . '">';
             } else {
                 echo '<td class="'.$cssSw->getClass().'">' . htmlReady($details['semester']). '</td><td class="' . $cssSw->getClass().'" align="center">';
                 echo Assets::img('icons/16/grey/accept.png', array('class' => 'text-top'));
@@ -1065,7 +1064,7 @@ if ($view == 'Studium') {
             $my_about->select_abschluss();
             echo '<a name="semester">&nbsp;</a>';
             echo '<select name="fachsem" selected="yes">';
-            for ($s=1; $s < 51; $s++) {
+            for ($s=0; $s < 51; $s++) {
                 echo '<option>'.$s.'</option>';
             }
             echo '</select>';

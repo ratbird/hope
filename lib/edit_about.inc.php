@@ -248,10 +248,13 @@ class about extends messaging {
 
        $this->db->query("SELECT user_studiengang.*,studiengaenge.name AS fname, abschluss.name AS aname, semester FROM user_studiengang LEFT JOIN studiengaenge USING (studiengang_id) LEFT JOIN abschluss USING (abschluss_id) WHERE user_id = '".$this->auth_user["user_id"]."' ORDER BY fname,aname");
         while ($this->db->next_record()) {
-            $this->user_fach_abschluss[$this->db->f("studiengang_id")] = array(
-                                                                     "fname" => $this->db->f("fname"),
-                                                                     "semester" => $this->db->f("semester"),
-                                                                     "aname" => $this->db->f("aname"));
+            $this->user_fach_abschluss[] = array(
+                'studiengang_id' => $this->db->f('studiengang_id'),
+                'abschluss_id'   => $this->db->f('abschluss_id'),
+                'fname'          => $this->db->f('fname'),
+                'semester'       => $this->db->f('semester'),
+                'aname'          => $this->db->f('aname')
+            );
         }
 
         $this->user_userdomains = UserDomain::getUserDomainsForUser($this->auth_user['user_id']);
@@ -289,20 +292,24 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
         $any_change = true;
         if (!empty($fach_abschluss_delete)) {
             $any_change = false;
-            for ($i=0; $i < count($fach_abschluss_delete); $i++) {
-                $this->db->query("DELETE FROM user_studiengang WHERE user_id='".$this->auth_user["user_id"]."' AND studiengang_id='$fach_abschluss_delete[$i]'");
-                if ($this->db->affected_rows()) {
-                    $delete = true;
+            foreach ($fach_abschluss_delete as $studiengang_id => $abschluesse) {
+                foreach ($abschluesse as $abschluss_id) {
+                    $this->db->query("DELETE FROM user_studiengang WHERE user_id = '" . $this->auth_user['user_id'] . "' AND studiengang_id = '$studiengang_id' AND abschluss_id = '$abschluss_id'");
+                    if ($this->db->affected_rows()) {
+                        $delete = true;
+                    }
                 }
             }
         }
 
         if ($any_change) {
             if ( is_array($change_fachsem)) {
-                for ($i=0; $i < count($change_fachsem); $i++) {
-                    $this->db->query("UPDATE IGNORE user_studiengang SET user_studiengang.semester = '".$change_fachsem[$i]."' WHERE user_studiengang.user_id='".$this->auth_user["user_id"]."' AND user_studiengang.studiengang_id='$course_id[$i]'");
-                    if ($this->db->affected_rows()) {
-                        $edit_fachsem = true;
+                foreach ($change_fachsem as $studiengang_id => $abschluesse) {
+                    foreach ($abschluesse as $abschluss_id => $semester) {
+                        $this->db->query("UPDATE IGNORE user_studiengang SET semester = '{$semester}' WHERE user_id = '{$this->auth_user['user_id']}' AND studiengang_id = '{$studiengang_id}' AND abschluss_id = '{$abschluss_id}'");
+                        if ($this->db->affected_rows()) {
+                            $edit_fachsem = true;
+                        }
                     }
                 }
             }
@@ -643,7 +650,7 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
     {
         echo '<select name="new_studiengang">'."\n";
         echo '<option selected="selected" value="none">' . _('-- Bitte Fach auswählen --') . '</option>'."\n";
-        $this->db->query("SELECT a.studiengang_id,a.name FROM studiengaenge AS a LEFT JOIN user_studiengang AS b ON (b.user_id='".$this->auth_user["user_id"]."' AND a.studiengang_id=b.studiengang_id) WHERE b.studiengang_id IS NULL ORDER BY a.name");
+        $this->db->query("SELECT studiengang_id, name FROM studiengaenge ORDER BY name");
         while ($this->db->next_record()) {
             echo "<option value=\"".$this->db->f("studiengang_id")."\">".htmlReady(my_substr($this->db->f("name"),0,50))."</option>\n";
         }

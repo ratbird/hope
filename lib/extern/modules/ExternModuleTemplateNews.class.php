@@ -1,7 +1,7 @@
 <?
 # Lifter002: TODO
+# Lifter003: TEST
 # Lifter007: TODO
-# Lifter003: TODO
 # Lifter010: TODO
 /**
 * ExternModuleTemplateNews.class.php
@@ -153,15 +153,16 @@ class ExternModuleTemplateNews extends ExternModule {
         return $markers[$element_name];
     }
     
-    function getContent ($args = NULL, $raw = FALSE) {
+    function getContent ($args = NULL, $raw = FALSE)
+    {
         $content = array();
-        $db = new DB_Seminar();
         $error_message = "";
 
         // stimmt die übergebene range_id?
-        $query = "SELECT Name FROM Institute WHERE Institut_id='" . $this->config->range_id . "'";
-        $db->query($query);
-        if(!$db->next_record()) {
+        $query = "SELECT 1 FROM Institute WHERE Institut_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($this->config->range_id));
+        if (!$statement->fetchColumn()) {
             $error_message = $GLOBALS['EXTERN_ERROR_MESSAGE'];
         }
         
@@ -205,24 +206,31 @@ class ExternModuleTemplateNews extends ExternModule {
                 $content['NEWS']['ALL-NEWS']['SINGLE-NEWS'][$i]['NEWS_TOPIC'] = ExternModule::ExtHtmlReady($news_detail['topic']);
                 $content['NEWS']['ALL-NEWS']['SINGLE-NEWS'][$i]['NEWS_NO'] = $i;
                 
-                $query = "SELECT Nachname, Vorname, title_front, title_rear, {$local_fullname_sql[$nameformat]} AS fullname, username, aum.user_id FROM auth_user_md5 aum LEFT JOIN user_info ui USING (user_id) WHERE aum.user_id = '{$news_detail['user_id']}'";
-                $db->query($query);
-                if ($db->next_record()) {
-                    $content['NEWS']['ALL-NEWS']['SINGLE-NEWS'][$i]['FULLNAME'] = ExternModule::ExtHtmlReady($db->f('fullname'));
-                    $content['NEWS']['ALL-NEWS']['SINGLE-NEWS'][$i]['FIRSTNAME'] = ExternModule::ExtHtmlReady($db->f('Vorname'));
-                    $content['NEWS']['ALL-NEWS']['SINGLE-NEWS'][$i]['LASTNAME'] = ExternModule::ExtHtmlReady($db->f('Nachname'));
-                    $content['NEWS']['ALL-NEWS']['SINGLE-NEWS'][$i]['TITLEFRONT'] = ExternModule::ExtHtmlReady($db->f('title_front'));
-                    $content['NEWS']['ALL-NEWS']['SINGLE-NEWS'][$i]['TITLEREAR'] = ExternModule::ExtHtmlReady($db->f('title_rear'));
-                    $content['NEWS']['ALL-NEWS']['SINGLE-NEWS'][$i]['USERNAME'] = $db->f('username');
-                    $content['NEWS']['ALL-NEWS']['SINGLE-NEWS'][$i]['PERSONDETAIL-HREF'] = $this->elements['TemplateGeneric']->createUrl('Persondetails', array('link_args' => 'username=' . $db->f('username')));
+                $query = "SELECT Nachname, Vorname, title_front, title_rear,
+                                 {$local_fullname_sql[$nameformat]} AS fullname, username,
+                                 aum.user_id
+                          FROM auth_user_md5 AS aum
+                          LEFT JOIN user_info AS ui USING (user_id)
+                          WHERE aum.user_id = ?";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($news_detail['user_id']));
+                $temp = $statement->fetch(PDO::FETCH_ASSOC);
+                if ($temp) {
+                    $content['NEWS']['ALL-NEWS']['SINGLE-NEWS'][$i]['FULLNAME'] = ExternModule::ExtHtmlReady($temp['fullname']);
+                    $content['NEWS']['ALL-NEWS']['SINGLE-NEWS'][$i]['FIRSTNAME'] = ExternModule::ExtHtmlReady($temp['Vorname']);
+                    $content['NEWS']['ALL-NEWS']['SINGLE-NEWS'][$i]['LASTNAME'] = ExternModule::ExtHtmlReady($temp['Nachname']);
+                    $content['NEWS']['ALL-NEWS']['SINGLE-NEWS'][$i]['TITLEFRONT'] = ExternModule::ExtHtmlReady($temp['title_front']);
+                    $content['NEWS']['ALL-NEWS']['SINGLE-NEWS'][$i]['TITLEREAR'] = ExternModule::ExtHtmlReady($temp['title_rear']);
+                    $content['NEWS']['ALL-NEWS']['SINGLE-NEWS'][$i]['USERNAME'] = $temp['username'];
+                    $content['NEWS']['ALL-NEWS']['SINGLE-NEWS'][$i]['PERSONDETAIL-HREF'] = $this->elements['TemplateGeneric']->createUrl('Persondetails', array('link_args' => 'username=' . $temp['username']));
                                     
-                    if (GetAllStatusgruppen($this->config->range_id, $db->f('user_id'), true)) {
-                        $content['NEWS']['ALL-NEWS']['SINGLE-NEWS'][$i]['PERSONDETAIL-LINK']['LINK_PERSONDETAIL-HREF'] = $this->elements['TemplateGeneric']->createUrl('Persondetails', array('link_args' => 'username=' . $db->f('username')));
-                        $content['NEWS']['ALL-NEWS']['SINGLE-NEWS'][$i]['PERSONDETAIL-LINK']['LINK_FULLNAME'] = ExternModule::ExtHtmlReady($db->f('fullname'));
-                        $content['NEWS']['ALL-NEWS']['SINGLE-NEWS'][$i]['PERSONDETAIL-LINK']['LINK_FIRSTNAME'] = ExternModule::ExtHtmlReady($db->f('Vorname'));
-                        $content['NEWS']['ALL-NEWS']['SINGLE-NEWS'][$i]['PERSONDETAIL-LINK']['LINK_LASTNAME'] = ExternModule::ExtHtmlReady($db->f('Nachname'));
-                        $content['NEWS']['ALL-NEWS']['SINGLE-NEWS'][$i]['PERSONDETAIL-LINK']['LINK_TITLEFRONT'] = ExternModule::ExtHtmlReady($db->f('title_front'));
-                        $content['NEWS']['ALL-NEWS']['SINGLE-NEWS'][$i]['PERSONDETAIL-LINK']['LINK_TITLEREAR'] = ExternModule::ExtHtmlReady($db->f('title_rear'));
+                    if (GetAllStatusgruppen($this->config->range_id, $temp['user_id'], true)) {
+                        $content['NEWS']['ALL-NEWS']['SINGLE-NEWS'][$i]['PERSONDETAIL-LINK']['LINK_PERSONDETAIL-HREF'] = $this->elements['TemplateGeneric']->createUrl('Persondetails', array('link_args' => 'username=' . $temp['username']));
+                        $content['NEWS']['ALL-NEWS']['SINGLE-NEWS'][$i]['PERSONDETAIL-LINK']['LINK_FULLNAME'] = ExternModule::ExtHtmlReady($temp['fullname']);
+                        $content['NEWS']['ALL-NEWS']['SINGLE-NEWS'][$i]['PERSONDETAIL-LINK']['LINK_FIRSTNAME'] = ExternModule::ExtHtmlReady($temp['Vorname']);
+                        $content['NEWS']['ALL-NEWS']['SINGLE-NEWS'][$i]['PERSONDETAIL-LINK']['LINK_LASTNAME'] = ExternModule::ExtHtmlReady($temp['Nachname']);
+                        $content['NEWS']['ALL-NEWS']['SINGLE-NEWS'][$i]['PERSONDETAIL-LINK']['LINK_TITLEFRONT'] = ExternModule::ExtHtmlReady($temp['title_front']);
+                        $content['NEWS']['ALL-NEWS']['SINGLE-NEWS'][$i]['PERSONDETAIL-LINK']['LINK_TITLEREAR'] = ExternModule::ExtHtmlReady($temp['title_rear']);
                     }
                 }
                 $i++;
@@ -248,24 +256,31 @@ class ExternModuleTemplateNews extends ExternModule {
                 $content['NEWS']['ALL-ARCHIV-NEWS']['SINGLE-ARCHIVE-NEWS'][$j]['ARCHIV_NEWS_TOPIC'] = ExternModule::ExtHtmlReady($news_detail['topic']);
                 $content['NEWS']['ALL-ARCHIV-NEWS']['SINGLE-ARCHIVE-NEWS'][$j]['ARCHIV_NEWS_NO'] = $j;
                 
-                $query = "SELECT Nachname, Vorname, title_front, title_rear, {$local_fullname_sql[$nameformat]} AS fullname, username, aum.user_id FROM auth_user_md5 aum LEFT JOIN user_info ui USING (user_id) WHERE aum.user_id = '{$news_detail['user_id']}'";
-                $db->query($query);
-                if ($db->next_record()) {
-                    $content['NEWS']['ALL-ARCHIV-NEWS']['SINGLE-ARCHIVE-NEWS'][$j]['ARCHIV_FULLNAME'] = ExternModule::ExtHtmlReady($db->f('fullname'));
-                    $content['NEWS']['ALL-ARCHIV-NEWS']['SINGLE-ARCHIVE-NEWS'][$j]['ARCHIV_FIRSTNAME'] = ExternModule::ExtHtmlReady($db->f('Vorname'));
-                    $content['NEWS']['ALL-ARCHIV-NEWS']['SINGLE-ARCHIVE-NEWS'][$j]['ARCHIV_LASTNAME'] = ExternModule::ExtHtmlReady($db->f('Nachname'));
-                    $content['NEWS']['ALL-ARCHIV-NEWS']['SINGLE-ARCHIVE-NEWS'][$j]['ARCHIV_TITLEFRONT'] = ExternModule::ExtHtmlReady($db->f('title_front'));
-                    $content['NEWS']['ALL-ARCHIV-NEWS']['SINGLE-ARCHIVE-NEWS'][$j]['ARCHIV_TITLEREAR'] = ExternModule::ExtHtmlReady($db->f('title_rear'));
-                    $content['NEWS']['ALL-ARCHIV-NEWS']['SINGLE-ARCHIVE-NEWS'][$j]['ARCHIV_USERNAME'] = $db->f('username');
-                    $content['NEWS']['ALL-ARCHIV-NEWS']['SINGLE-ARCHIVE-NEWS'][$j]['ARCHIV_PERSONDETAIL-HREF'] = $this->elements['TemplateGeneric']->createUrl('Persondetails', array('link_args' => 'username=' . $db->f('username')));
+                $query = "SELECT Nachname, Vorname, title_front, title_rear,
+                                 {$local_fullname_sql[$nameformat]} AS fullname, username,
+                                 aum.user_id
+                          FROM auth_user_md5 AS aum
+                          LEFT JOIN user_info AS ui USING (user_id)
+                          WHERE aum.user_id = ?";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($news_detail['user_id']));
+                $temp = $statement->fetch(PDO::FETCH_ASSOC);
+                if ($temp) {
+                    $content['NEWS']['ALL-ARCHIV-NEWS']['SINGLE-ARCHIVE-NEWS'][$j]['ARCHIV_FULLNAME'] = ExternModule::ExtHtmlReady($temp['fullname']);
+                    $content['NEWS']['ALL-ARCHIV-NEWS']['SINGLE-ARCHIVE-NEWS'][$j]['ARCHIV_FIRSTNAME'] = ExternModule::ExtHtmlReady($temp['Vorname']);
+                    $content['NEWS']['ALL-ARCHIV-NEWS']['SINGLE-ARCHIVE-NEWS'][$j]['ARCHIV_LASTNAME'] = ExternModule::ExtHtmlReady($temp['Nachname']);
+                    $content['NEWS']['ALL-ARCHIV-NEWS']['SINGLE-ARCHIVE-NEWS'][$j]['ARCHIV_TITLEFRONT'] = ExternModule::ExtHtmlReady($temp['title_front']);
+                    $content['NEWS']['ALL-ARCHIV-NEWS']['SINGLE-ARCHIVE-NEWS'][$j]['ARCHIV_TITLEREAR'] = ExternModule::ExtHtmlReady($temp['title_rear']);
+                    $content['NEWS']['ALL-ARCHIV-NEWS']['SINGLE-ARCHIVE-NEWS'][$j]['ARCHIV_USERNAME'] = $temp['username'];
+                    $content['NEWS']['ALL-ARCHIV-NEWS']['SINGLE-ARCHIVE-NEWS'][$j]['ARCHIV_PERSONDETAIL-HREF'] = $this->elements['TemplateGeneric']->createUrl('Persondetails', array('link_args' => 'username=' . $temp['username']));
                                     
-                    if (GetAllStatusgruppen($this->config->range_id, $db->f('user_id'), true)) {
-                        $content['NEWS']['ALL-ARCHIV-NEWS']['SINGLE-ARCHIVE-NEWS'][$j]['ARCHIV_PERSONDETAIL-LINK']['ARCHIV_LINK_PERSONDETAIL-HREF'] = $this->elements['TemplateGeneric']->createUrl('Persondetails', array('link_args' => 'username=' . $db->f('username')));
-                        $content['NEWS']['ALL-ARCHIV-NEWS']['SINGLE-ARCHIVE-NEWS'][$j]['ARCHIV_PERSONDETAIL-LINK']['ARCHIV_LINK_FULLNAME'] = ExternModule::ExtHtmlReady($db->f('fullname'));
-                        $content['NEWS']['ALL-ARCHIV-NEWS']['SINGLE-ARCHIVE-NEWS'][$j]['ARCHIV_PERSONDETAIL-LINK']['ARCHIV_LINK_FIRSTNAME'] = ExternModule::ExtHtmlReady($db->f('Vorname'));
-                        $content['NEWS']['ALL-ARCHIV-NEWS']['SINGLE-ARCHIVE-NEWS'][$j]['ARCHIV_PERSONDETAIL-LINK']['ARCHIV_LINK_LASTNAME'] = ExternModule::ExtHtmlReady($db->f('Nachname'));
-                        $content['NEWS']['ALL-ARCHIV-NEWS']['SINGLE-ARCHIVE-NEWS'][$j]['ARCHIV_PERSONDETAIL-LINK']['ARCHIV_LINK_TITLEFRONT'] = ExternModule::ExtHtmlReady($db->f('title_front'));
-                        $content['NEWS']['ALL-ARCHIV-NEWS']['SINGLE-ARCHIVE-NEWS'][$j]['ARCHIV_PERSONDETAIL-LINK']['ARCHIV_LINK_TITLEREAR'] = ExternModule::ExtHtmlReady($db->f('title_rear'));
+                    if (GetAllStatusgruppen($this->config->range_id, $temp['user_id'], true)) {
+                        $content['NEWS']['ALL-ARCHIV-NEWS']['SINGLE-ARCHIVE-NEWS'][$j]['ARCHIV_PERSONDETAIL-LINK']['ARCHIV_LINK_PERSONDETAIL-HREF'] = $this->elements['TemplateGeneric']->createUrl('Persondetails', array('link_args' => 'username=' . $temp['username']));
+                        $content['NEWS']['ALL-ARCHIV-NEWS']['SINGLE-ARCHIVE-NEWS'][$j]['ARCHIV_PERSONDETAIL-LINK']['ARCHIV_LINK_FULLNAME'] = ExternModule::ExtHtmlReady($temp['fullname']);
+                        $content['NEWS']['ALL-ARCHIV-NEWS']['SINGLE-ARCHIVE-NEWS'][$j]['ARCHIV_PERSONDETAIL-LINK']['ARCHIV_LINK_FIRSTNAME'] = ExternModule::ExtHtmlReady($temp['Vorname']);
+                        $content['NEWS']['ALL-ARCHIV-NEWS']['SINGLE-ARCHIVE-NEWS'][$j]['ARCHIV_PERSONDETAIL-LINK']['ARCHIV_LINK_LASTNAME'] = ExternModule::ExtHtmlReady($temp['Nachname']);
+                        $content['NEWS']['ALL-ARCHIV-NEWS']['SINGLE-ARCHIVE-NEWS'][$j]['ARCHIV_PERSONDETAIL-LINK']['ARCHIV_LINK_TITLEFRONT'] = ExternModule::ExtHtmlReady($temp['title_front']);
+                        $content['NEWS']['ALL-ARCHIV-NEWS']['SINGLE-ARCHIVE-NEWS'][$j]['ARCHIV_PERSONDETAIL-LINK']['ARCHIV_LINK_TITLEREAR'] = ExternModule::ExtHtmlReady($temp['title_rear']);
                     }
                 }
                 $j++;

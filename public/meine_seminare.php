@@ -717,7 +717,7 @@ elseif ($auth->auth["perm"]=="admin") {
 
         // Prepare and execute seminar statement
         $query = "SELECT Institute.Name AS Institut, seminare.VeranstaltungsNummer,
-                         seminare.Seminar_id, Name, seminare.status, seminare.chdate,
+                         seminare.Seminar_id, seminare.Name, seminare.status, seminare.chdate,
                          seminare.start_time, seminare.admission_binding, seminare.visible,
                          seminare.modules, COUNT(seminar_user.user_id) AS teilnehmer,
                          IFNULL(visitdate, 0) AS visitdate,

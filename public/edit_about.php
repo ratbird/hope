@@ -236,7 +236,7 @@ if (check_ticket(Request::option('studipticket'))) {
 
     if ($cmd == "fach_abschluss_edit" && (!StudipAuthAbstract::CheckField("studiengang_id", $my_about->auth_user['auth_plugin'])) && ($ALLOW_SELFASSIGN_STUDYCOURSE || $perm->have_perm('admin')))
     {
-        $my_about->fach_abschluss_edit(Request::getArray('fach_abschluss_delete'),Request::quoted('new_studiengang'),Request::quoted('new_abschluss'),Request::option('fachsem'),Request::getArray('change_fachsem'),Request::optionArray('course_id'));
+        $my_about->fach_abschluss_edit(Request::getArray('fach_abschluss_delete'), Request::option('new_studiengang'), Request::option('new_abschluss'), Request::int('fachsem'), Request::getArray('change_fachsem'));
     }
 
     //Veränderungen an Nutzer-Domains
@@ -258,7 +258,7 @@ if (check_ticket(Request::option('studipticket'))) {
 
     if ($cmd=="special_edit") {
         
-        $invalidEntries = $my_about->special_edit(Request::quotedArray('raum'), Request::quotedArray('sprech'), Request::quotedArray('tel'), Request::quotedArray('fax'), Request::quotedArray('name'), Request::option('default_inst'), Request::optionArray('visible'),
+        $invalidEntries = $my_about->special_edit(Request::getArray('raum'), Request::getArray('sprech'), Request::getArray('tel'), Request::getArray('fax'), Request::getArray('name'), Request::option('default_inst'), Request::optionArray('visible'),
                                         Request::quotedArray('datafields'), Request::optionArray('group_id'), $role_id, array('status' => Request::option('status'), 'inst_id' => Request::option('inst_id')));
 
         if (is_array($invalidEntries))
@@ -282,28 +282,27 @@ if (check_ticket(Request::option('studipticket'))) {
     //Veränderungen der pers. Daten
     if ($cmd == "edit_pers") {
         $new_password = '*****'; // ***** as in "don't change password"
-        if(Request::quoted('update_pw') == 'on') {
-            if(Request::quoted('new_passwd_1') != Request::quoted('new_passwd_2')) {
-                $my_about->msg.= 'info§'. _('Die Wiederholung Ihres Passwords stimmt nicht mit Ihrer Eingabe überrein. Bitte überprüfen Sie Ihre Eingabe.') . '§';
+        if(Request::option('update_pw') == 'on') {
+            if (Request::get('new_passwd_1') != Request::get('new_passwd_2')) {
+                $my_about->msg .= 'info§'. _('Die Wiederholung Ihres Passwords stimmt nicht mit Ihrer Eingabe überrein. Bitte überprüfen Sie Ihre Eingabe.') . '§';
             } else {
-                $new_password = Request::quoted('new_passwd_1');
+                $new_password = Request::get('new_passwd_1');
             }
-        } else if(Request::quoted('new_passwd_2') != '' && Request::quoted('new_passwd_2') != '*****') {
+        } else if (Request::get('new_passwd_2') != '' && Request::get('new_passwd_2') != '*****') {
             $my_about->msg.= 'info§'. _('Sie müssen den Haken bei "ändern" setzen, wenn Sie Ihr Passwort ändern wollen.') .'§';
         }
 
-        if(Request::quoted('password') != $my_about->auth_user["username"])
+        if (Request::get('password') != $my_about->auth_user["username"])
             $my_about->edit_pers($new_password,
-                         Request::quoted('new_username'),
-                         Request::quoted('vorname'), Request::quoted('nachname'),
-                         Request::quoted('email'), Request::quoted('geschlecht'),
-                         Request::quoted('title_front'),
-                         Request::quoted('title_front_chooser'),
-                         Request::quoted('title_rear'), Request::quoted('title_rear_chooser'),
-                         Request::quoted('view'));
+                Request::get('new_username'),
+                Request::get('vorname'), Request::get('nachname'),
+                Request::get('email'), Request::int('geschlecht'),
+                Request::get('title_front'), Request::get('title_front_chooser'),
+                Request::get('title_rear'), Request::get('title_rear_chooser')
+            );
 
-            if (($my_about->auth_user["username"] != Request::quoted('new_username')) && $my_about->logout_user == TRUE) {
-                $my_about->get_auth_user(Request::quoted('new_username'));   //username wurde geändert!
+            if (($my_about->auth_user["username"] != Request::get('new_username')) && $my_about->logout_user == TRUE) {
+                $my_about->get_auth_user(Request::get('new_username'));   //username wurde geändert!
             } else {
                 $my_about->get_auth_user($username);
             }
@@ -312,16 +311,16 @@ if (check_ticket(Request::option('studipticket'))) {
 
     if ($cmd=="edit_leben")  {
         if (get_config("ENABLE_SKYPE_INFO")) {
-            UserConfig::get($my_about->auth_user['user_id'])->store('SKYPE_NAME', preg_replace('/[^a-zA-Z0-9.,_-]/', '', Request::quoted('skype_name')));
+            UserConfig::get($my_about->auth_user['user_id'])->store('SKYPE_NAME', preg_replace('/[^a-zA-Z0-9.,_-]/', '', Request::get('skype_name')));
             UserConfig::get($my_about->auth_user['user_id'])->store('SKYPE_ONLINE_STATUS', (int)Request::int('skype_online_status'));
         }
 
         $my_about->edit_private(
-             Request::quoted('telefon'), Request::quoted('cell'), Request::quoted('anschrift'),
-             Request::quoted('home'), Request::quoted('motto'), Request::quoted('hobby')
+             Request::get('telefon'), Request::get('cell'), Request::get('anschrift'),
+             Request::get('home'), Request::get('motto'), Request::get('hobby')
         );
 
-        $invalidEntries = $my_about->edit_leben(Request::quoted('lebenslauf'),Request::quoted('schwerp'),Request::quoted('publi'),$view, Request::quotedArray('datafields'));
+        $invalidEntries = $my_about->edit_leben(Request::get('lebenslauf'),Request::get('schwerp'),Request::get('publi'),$view, Request::getArray('datafields'));
         if (!empty($invalidEntries)) { // On error, erase other messages and create according error messages
             $my_about->msg = "";
             foreach ($invalidEntries as $entry) {

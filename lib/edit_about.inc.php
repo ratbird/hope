@@ -1,7 +1,7 @@
 <?php
 # Lifter002: TODO
+# Lifter003: TEST
 # Lifter007: TODO
-# Lifter003: TODO
 # Lifter010: TODO
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
@@ -38,11 +38,16 @@ require_once('lib/classes/Avatar.class.php');
 function edit_email($uid, $email, $force=False) {
     $msg = '';
 
-    $db = new DB_Seminar(sprintf("SELECT email, username, auth_plugin FROM auth_user_md5 WHERE user_id='%s'", $uid));
-    $db->next_record();
-    $email_cur = $db->f('email');
-    $username = $db->f('username');
-    $auth_plugin = $db->f('auth_plugin');
+    $query = "SELECT email, username, auth_plugin
+              FROM auth_user_md5
+              WHERE user_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($uid));
+    $row = $statement->fetch(PDO::FETCH_ASSOC);
+
+    $email_cur   = $row['email'];
+    $username    = $row['username'];
+    $auth_plugin = $row['auth_plugin'];
 
     if($email_cur == $email && !$force) {
         return array(True, $msg);
@@ -96,13 +101,20 @@ function edit_email($uid, $email, $force=False) {
         }
     }
 
-    $db->query("SELECT user_id, Email,Vorname,Nachname FROM auth_user_md5 WHERE Email='$email'") ;
-    if ($db->next_record() and $db->f('user_id') != $uid) {
-        $msg.=  "error§" . sprintf(_("Die angegebene E-Mail-Adresse wird bereits von einem anderen Benutzer (%s %s) verwendet. Bitte geben Sie eine andere E-Mail-Adresse an."), htmlReady($db->f("Vorname")), htmlReady($db->f("Nachname"))) . "§";
+    $query = "SELECT Vorname, Nachname
+              FROM auth_user_md5
+              WHERE Email = ? AND user_id != ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($email, $uid));
+    $row = $statement->fetch(PDO::FETCH_ASSOC);
+    if ($row) {
+        $msg.=  "error§" . sprintf(_("Die angegebene E-Mail-Adresse wird bereits von einem anderen Benutzer (%s %s) verwendet. Bitte geben Sie eine andere E-Mail-Adresse an."), htmlReady($row['Vorname']), htmlReady($row['Nachname'])) . "§";
         return array(False, $msg);
     }
 
-    $db->query("UPDATE auth_user_md5 SET Email='$email' WHERE user_id='".$uid."'");
+    $query = "UPDATE auth_user_md5 SET Email = ? WHERE user_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($email, $uid));
 
     if (StudipAuthAbstract::CheckField("auth_user_md5.validation_key", $auth_plugin)) {
         $msg.= "msg§" . _("Ihre E-Mail-Adresse wurde ge&auml;ndert!") . "§";
@@ -139,8 +151,11 @@ function edit_email($uid, $email, $force=False) {
             return array(True, $msg);
         }
 
+        $query = "UPDATE auth_user_md5 SET validation_key = ? WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($key, $uid));
+
         $msg.= "info§<b>" . sprintf(_('An Ihre neue E-Mail-Adresse <b>%s</b> wurde ein Aktivierungslink geschickt, dem Sie folgen müssen bevor Sie sich das nächste mal einloggen können.'), $email). '</b>§';
-        $db->query("UPDATE auth_user_md5 SET validation_key='$key' WHERE user_id='".$uid."'");
         log_event("USER_NEWPWD",$uid); // logging
     }
     return array(True, $msg);
@@ -191,9 +206,9 @@ function parse_datafields($user_id) {
 */
 
 // class definition
-class about extends messaging {
+class about extends messaging
+{
 
-    var $db;     //unsere Datenbankverbindung
     var $auth_user = array();        // assoziatives Array, enthält die Benutzerdaten aus der Tabelle auth_user_md5
     var $user_info = array();        // assoziatives Array, enthält die Benutzerdaten aus der Tabelle user_info
     var $user_inst = array();        // assoziatives Array, enthält die Benutzerdaten aus der Tabelle user_inst
@@ -210,7 +225,6 @@ class about extends messaging {
     function about($username,$msg) {  // Konstruktor, prüft die Rechte
         global $perm;
 
-        $this->db = new DB_Seminar;
         $this->get_auth_user($username);
         $this->dataFieldEntries = DataFieldEntry::getDataFieldEntries($this->auth_user["user_id"], 'user');
         $this->check = $perm->get_profile_perm($this->auth_user['user_id']);
@@ -218,14 +232,17 @@ class about extends messaging {
     }
 
 
-    function get_auth_user($username) {
+    function get_auth_user($username)
+    {
         //ein paar userdaten brauchen wir schon mal
-        $this->db->query("SELECT * FROM auth_user_md5 WHERE username = '$username'");
-        $fields = $this->db->metadata();
-        if ($this->db->next_record()) {
-            for ($i=0; $i<count($fields); $i++) {
-                $field_name = $fields[$i]["name"];
-                $this->auth_user[$field_name] = $this->db->f("$field_name");
+        $query = "SELECT * FROM auth_user_md5 WHERE username = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($username));
+        $temp = $statement->fetch(PDO::FETCH_ASSOC);
+
+        if ($temp) {
+            foreach ($temp as $key => $value) {
+                $this->auth_user[$key] = $value;
             }
         }
         if (!$this->auth_user['auth_plugin']){
@@ -234,48 +251,51 @@ class about extends messaging {
     }
 
     // füllt die arrays  mit Daten
-    function get_user_details() {
-        $this->db->query("SELECT * FROM user_info WHERE user_id = '".$this->auth_user["user_id"]."'");
-        $fields = $this->db->metadata();
-        if ($this->db->next_record()) {
-            for ($i=0; $i<count($fields); $i++) {
-                $field_name = $fields[$i]["name"];
-                $this->user_info[$field_name] = $this->db->f("$field_name");
-                if (!$this->user_info["Home"])
-                    $this->user_info["Home"]=$this->default_url;
+    function get_user_details()
+    {
+        $query = "SELECT * FROM user_info WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($this->auth_user['user_id']));
+        $temp = $statement->fetch(PDO::FETCH_ASSOC);
+
+        if ($temp) {
+            foreach ($temp as $key => $value) {
+                $this->user_info[$key] = $value;
+            }
+            if (!$this->user_info['Home']) {
+                $this->user_info['Home'] = $this->default_url;
             }
         }
 
-       $this->db->query("SELECT user_studiengang.*,studiengaenge.name AS fname, abschluss.name AS aname, semester FROM user_studiengang LEFT JOIN studiengaenge USING (studiengang_id) LEFT JOIN abschluss USING (abschluss_id) WHERE user_id = '".$this->auth_user["user_id"]."' ORDER BY fname,aname");
-        while ($this->db->next_record()) {
-            $this->user_fach_abschluss[] = array(
-                'studiengang_id' => $this->db->f('studiengang_id'),
-                'abschluss_id'   => $this->db->f('abschluss_id'),
-                'fname'          => $this->db->f('fname'),
-                'semester'       => $this->db->f('semester'),
-                'aname'          => $this->db->f('aname')
-            );
-        }
+       $query = "SELECT studiengang_id, abschluss_id, semester,
+                        studiengaenge.name AS fname, abschluss.name AS aname
+                 FROM user_studiengang
+                 LEFT JOIN studiengaenge USING (studiengang_id)
+                 LEFT JOIN abschluss USING (abschluss_id)
+                 WHERE user_id = ?
+                 ORDER BY fname, aname";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($this->auth_user['user_id']));
+        $this->user_fach_abschluss = $statement->fetchAll(PDO::FETCH_ASSOC);
 
         $this->user_userdomains = UserDomain::getUserDomainsForUser($this->auth_user['user_id']);
 
-        $this->db->query("SELECT user_inst.*,Institute.Name FROM user_inst LEFT JOIN Institute USING (Institut_id) WHERE user_id = '".$this->auth_user["user_id"]."' ORDER BY priority ASC, Institut_id ASC");
-        while ($this->db->next_record()) {
-            $this->user_inst[$this->db->f("Institut_id")] =
-                array("inst_perms" => $this->db->f("inst_perms"),
-                        "sprechzeiten" => $this->db->f("sprechzeiten"),
-                        "raum" => $this->db->f("raum"),
-                        "Telefon" => $this->db->f("Telefon"),
-                        "Fax" => $this->db->f("Fax"),
-                        "Name" => $this->db->f("Name"),
-                        "externdefault" => $this->db->f("externdefault"),
-                        "priority" => $this->db->f("priority"),
-                        "visible" => $this->db->f("visible"));
-            if ($this->db->f("inst_perms")!="user")
-                $this->special_user=TRUE;
-        }
+        $query = "SELECT Institut_id, inst_perms, sprechzeiten, raum,
+                         user_inst.Telefon, user_inst.Fax, Institute.Name,
+                         externdefault, priority, visible
+                  FROM user_inst
+                  LEFT JOIN Institute USING (Institut_id)
+                  WHERE user_id = ?
+                  ORDER BY priority ASC, Institut_id ASC";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($this->auth_user['user_id']));
+        $this->user_inst = $statement->fetchGrouped(PDO::FETCH_ASSOC);
 
-        return;
+        // Let's see whether the user is not just a user in any of his
+        // institutes
+        $this->special_user = array_reduce($this->user_inst, function ($result, $item) { 
+            return $result || ($item['inst_perms'] != 'user');
+        }, false);
     }
 
     /**
@@ -285,51 +305,75 @@ class about extends messaging {
      * @param string $new_abschluss
      * @param int $fachsem
      * @param array $change_fachsem
-     * @param array $course_id
      */
-function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschluss,$fachsem,$change_fachsem,$course_id) {
+function fach_abschluss_edit($fach_abschluss_delete, $new_studiengang, $new_abschluss, $fachsem, $change_fachsem)
+{
 
-        $any_change = true;
+        $any_change = false;
         if (!empty($fach_abschluss_delete)) {
-            $any_change = false;
+            $any_change = true;
+
+            $query = "DELETE FROM user_studiengang
+                      WHERE user_id = ? AND studiengang_id = ? AND abschluss_id IN (?)";
+            $statement = DBManager::get()->prepare($query);
+
             foreach ($fach_abschluss_delete as $studiengang_id => $abschluesse) {
-                foreach ($abschluesse as $abschluss_id) {
-                    $this->db->query("DELETE FROM user_studiengang WHERE user_id = '" . $this->auth_user['user_id'] . "' AND studiengang_id = '$studiengang_id' AND abschluss_id = '$abschluss_id'");
-                    if ($this->db->affected_rows()) {
-                        $delete = true;
-                    }
+                $statement->execute(array(
+                    $this->auth_user['user_id'],
+                    $studiengang_id,
+                    $abschluesse
+                ));
+                if ($statement->rowCount() > 0) {
+                    $delete = true;
                 }
             }
         }
 
-        if ($any_change) {
-            if ( is_array($change_fachsem)) {
-                foreach ($change_fachsem as $studiengang_id => $abschluesse) {
-                    foreach ($abschluesse as $abschluss_id => $semester) {
-                        $this->db->query("UPDATE IGNORE user_studiengang SET semester = '{$semester}' WHERE user_id = '{$this->auth_user['user_id']}' AND studiengang_id = '{$studiengang_id}' AND abschluss_id = '{$abschluss_id}'");
-                        if ($this->db->affected_rows()) {
-                            $edit_fachsem = true;
-                        }
+        if (!$any_change) {
+            $query = "UPDATE IGNORE user_studiengang
+                      SET semester = ?
+                      WHERE user_id = ? AND studiengang_id = ? AND abschluss_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            
+            foreach ($change_fachsem as $studiengang_id => $abschluesse) {
+                foreach ($abschluesse as $abschluss_id => $semester) {
+                    $statement->execute(array(
+                        $semester,
+                        $this->auth_user['user_id'],
+                        $studiengang_id,
+                        $abschluss_id
+                    ));
+                    if ($statement->rowCount() > 0) {
+                        $any_change = true;
                     }
                 }
             }
 
             if ($new_studiengang && $new_studiengang != 'none') {
-                $this->db->query("INSERT IGNORE INTO user_studiengang (user_id,studiengang_id,abschluss_id,semester) VALUES ('".$this->auth_user["user_id"]."','$new_studiengang','$new_abschluss','$fachsem')");
-                if ($this->db->affected_rows()) {
-                    $new = true;
+                $query = "INSERT IGNORE INTO user_studiengang
+                            (user_id, studiengang_id, abschluss_id, semester)
+                          VALUES (?, ?, ?, ?)";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array(
+                    $this->auth_user['user_id'],
+                    $new_studiengang,
+                    $new_abschluss,
+                    $fachsem
+                ));
+                if ($statement->rowCount() > 0) {
+                    $any_change = true;
                 }
             }
         }
-        if ( ($new || $delete|| $edit_fachsem) && !$this->msg) {
-            $this->msg = "msg§" . _("Die Zuordnung zu Studiengängen wurde ge&auml;ndert.");
-            setTempLanguage($this->auth_user["user_id"]);
-            $this->priv_msg .= _("Die Zuordnung zu Studiengängen wurde geändert!\n");
+
+        if ($any_change && !$this->msg) {
+            $this->msg = 'msg§' . _('Die Zuordnung zu Studiengängen wurde ge&auml;ndert.');
+            setTempLanguage($this->auth_user['user_id']);
+            $this->priv_msg .= _('Die Zuordnung zu Studiengängen wurde geändert!\n');
             restoreLanguage();
         }
-
-        return;
     }
+ 
     function userdomain_edit ($userdomain_delete, $new_userdomain) {
         if (is_array($userdomain_delete)) {
             for ($i=0; $i < count($userdomain_delete); $i++) {
@@ -352,33 +396,43 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
 
     function inst_edit($inst_delete, $new_inst)
     {
-        if (is_array($inst_delete)) {
-            for ($i=0; $i < count($inst_delete); $i++) {
-                $this->db->query("DELETE FROM user_inst WHERE user_id='".$this->auth_user["user_id"]."' AND Institut_id='$inst_delete[$i]'");
-                if ($this->db->affected_rows()) {
+        if (count($inst_delete) > 0) {
+            $query = "DELETE FROM user_inst WHERE user_id = ? AND Institut_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            
+            foreach ($inst_delete as $institute_id) {
+                $statement->execute(array(
+                    $this->auth_user['user_id'],
+                    $institute_id
+                ));
+                if ($statement->rowCount() > 0) {
                     $delete = true;
-                    log_event('INST_USER_DEL', $inst_delete[$i], $this->auth_user["user_id"]);
+                    log_event('INST_USER_DEL', $institute_id, $this->auth_user['user_id']);
                 }
             }
         }
-
+        
         if ($new_inst) {
-            $this->db->query("INSERT IGNORE INTO user_inst (user_id,Institut_id,inst_perms) VALUES ('".$this->auth_user["user_id"]."','$new_inst','user')");
-            if ($this->db->affected_rows()) {
+            $query = "INSERT IGNORE INTO user_inst
+                        (user_id, Institut_id, inst_perms)
+                      VALUES (?, ?, 'user')";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                $this->auth_user['user_id'],
+                $new_inst
+            ));
+            if ($statement->rowCount() > 0) {
                 log_event('INST_USER_ADD', $new_inst , $this->auth_user['user_id'], 'user');
                 $new = true;
             }
-
         }
 
-        if ( $delete || $new ) {
-            $this->msg = "msg§" . _("Die Zuordnung zu Einrichtungen wurde ge&auml;ndert.");
-            setTempLanguage($this->auth_user["user_id"]);
-            $this->priv_msg .= _("Die Zuordnung zu Einrichtungen wurde geändert!\n");
+        if ($delete || $new) {
+            $this->msg = 'msg§' . _('Die Zuordnung zu Einrichtungen wurde ge&auml;ndert.');
+            setTempLanguage($this->auth_user['user_id']);
+            $this->priv_msg .= _('Die Zuordnung zu Einrichtungen wurde geändert!\n');
             restoreLanguage();
         }
-
-        return;
     }
 
     /**
@@ -406,48 +460,77 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
         return $allowed_status;
     }
 
-    function special_edit ($raum, $sprech, $tel, $fax, $name, $default_inst, $visible, $datafields, $group_id, $role_id, $status) {
+    function special_edit ($raum, $sprech, $tel, $fax, $name, $default_inst, $visible, $datafields, $group_id, $role_id, $status)
+    {
         if (!LockRules::Check($this->auth_user["user_id"], 'institute_data')) {
-            if (is_array($raum)) {
+            if (!empty($raum)) {
                 list($inst_id, $detail) = each($raum);
-                $query = "UPDATE user_inst SET raum='$detail', sprechzeiten='$sprech[$inst_id]', ";
-                $query .= "Telefon='$tel[$inst_id]', Fax='$fax[$inst_id]'";
-                $query .= " WHERE Institut_id='$inst_id' AND user_id='" . $this->auth_user["user_id"] . "'";
-                $this->db->query($query);
-                if ($this->db->affected_rows()) {
-                    $this->msg = $this->msg . "msg§" . sprintf(_("Ihre Daten an der Einrichtung %s wurden ge&auml;ndert"), htmlReady($name[$inst_id])) . "§";
-                    setTempLanguage($this->auth_user["user_id"]);
-                    $this->priv_msg .= $this->priv_msg . sprintf(_("Ihre Daten an der Einrichtung %s wurden geändert.\n"), htmlReady($name[$inst_id]));
+                $query = "UPDATE user_inst
+                          SET raum = ?, sprechzeiten = ?, Telefon = ?, Fax = ?
+                          WHERE Institut_id = ? AND user_id = ?";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array(
+                    $detail,
+                    $sprech[$inst_id],
+                    $tel[$inst_id],
+                    $fax[$inst_id],
+                    $inst_id,
+                    $this->auth_user['user_id']
+                ));
+                if ($statement->rowCount() > 0) {
+                    $this->msg .= 'msg§' . sprintf(_('Ihre Daten an der Einrichtung %s wurden ge&auml;ndert'), htmlReady($name[$inst_id])) . '§';
+                    setTempLanguage($this->auth_user['user_id']);
+                    $this->priv_msg .= sprintf(_('Ihre Daten an der Einrichtung %s wurden geändert.\n'), htmlReady($name[$inst_id]));
                     restoreLanguage();
                 }
             }
         }
+
         $inst_id = $status['inst_id'];
         if ($default_inst == $inst_id) {
-            $this->db->query("UPDATE user_inst SET externdefault = 0 WHERE user_id = '".$this->auth_user['user_id']."'");
+            $query = "UPDATE user_inst SET externdefault = 0 WHERE user_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                $this->auth_user['user_id']
+            ));
         }
-        $query = "UPDATE user_inst SET externdefault=";
-        $query .= $default_inst == $inst_id ? '1' : '0';
-        $query .= ", visible=" . (isset($visible[$inst_id]) ? '0' : '1');
-        $query .= " WHERE Institut_id='$inst_id' AND user_id='" . $this->auth_user["user_id"] . "'";
-        $this->db->query($query);
+        $query = "UPDATE user_inst
+                  SET externdefault = ?, visible = ?
+                  WHERE Institut_id = ? AND user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $default_inst == $inst_id ? 1 : 0,
+            empty($visible[$inst_id]) ? 1 : 0,
+            $inst_id,
+            $this->auth_user['user_id']
+        ));
 
         if ($status['status'] && $status['inst_id']) {
-            $stmt = DBManager::get()->prepare("SELECT inst_perms FROM user_inst WHERE user_id = ? AND Institut_id = ?");
-            if ($stmt->execute(array($this->auth_user['user_id'], $status['inst_id']))) {
-                $data = $stmt->fetch();
-                if ($data['inst_perms'] != $status['status'] && in_array($status['status'], $this->allowedInstitutePerms())) {
-                    $this->msg .= 'msg§'. _("Der Status wurde geändert!") .'§';
+            $query = "SELECT inst_perms FROM user_inst WHERE user_id = ? AND Institut_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                $this->auth_user['user_id'],
+                $status['inst_id']
+            ));
+            $row = $statement->fetch(PDO::FETCH_ASSOC);
+            if ($row) {
+                if ($row['inst_perms'] != $status['status'] && in_array($status['status'], $this->allowedInstitutePerms())) {
+                    $this->msg .= 'msg§'. _('Der Status wurde geändert!') .'§';
 
                     log_event("INST_USER_STATUS", $status['inst_id'], $this->auth_user['user_id'], $GLOBALS['user']->id .' -> '. $status['status']);
 
-                    $stmt = DBManager::get()->prepare("UPDATE user_inst SET inst_perms = ? WHERE user_id = ? AND Institut_id = ?");
-                    $stmt->execute(array($status['status'], $this->auth_user['user_id'], $status['inst_id']));
+                    $query = "UPDATE user_inst SET inst_perms = ? WHERE user_id = ? AND Institut_id = ?";
+                    $statement = DBManager::get()->prepare($query);
+                    $stmt->execute(array(
+                        $status['status'],
+                        $this->auth_user['user_id'],
+                        $status['inst_id']
+                    ));
                 }
             }
         }
         // process user role datafields
-        $sec_range_id = $inst_id ? $inst_id : $role_id;
+        $sec_range_id = $inst_id ?: $role_id;
         if (is_array($datafields)) {
             foreach ($datafields as $id => $data) {
                 $struct = new DataFieldStructure(array("datafield_id"=>$id));
@@ -468,100 +551,170 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
     }
 
 
-    function edit_private($telefon, $cell, $anschrift, $home, $motto, $hobby) {
-        $query = "";
-
+    function edit_private($telefon, $cell, $anschrift, $home, $motto, $hobby)
+    {
         if ($home == $this->default_url) {
             $home = '';
         }
 
-        if (!StudipAuthAbstract::CheckField("user_info.privatnr", $this->auth_user['auth_plugin']) && !LockRules::check($this->auth_user['user_id'], 'privatnr')){
-            $query .= "privatnr='$telefon',";
+        // Prepare check function for better readability
+        $auth_user = $this->auth_user['auth_plugin'];
+        $check = function ($column, $complete = true) use ($auth_user) {
+            return !StudipAuthAbstract::CheckField('user_info.' . $column, $auth_user['auth_plugin'])
+                && (!$complete || !LockRules::check($auth_user['user_id'], strtolower($column)));
+        };
+
+        $columns = array();
+        if ($check('privatnr')) {
+            $columns['privatnr'] = $telefon;
         }
 
-        if (!StudipAuthAbstract::CheckField("user_info.privatcell", $this->auth_user['auth_plugin']) && !LockRules::check($this->auth_user['user_id'], 'privatcell')){
-            $query .= "privatcell='$cell',";
+        if ($check('privatcell')) {
+            $columns['privatcell'] = $cell;
         }
 
-        if (!StudipAuthAbstract::CheckField("user_info.privadr", $this->auth_user['auth_plugin']) && !LockRules::check($this->auth_user['user_id'], 'privadr')){
-            $query .= "privadr='$anschrift',";
+        if ($check('privadr')) {
+            $columns['privadr'] = $anschrift;
         }
-        if (!StudipAuthAbstract::CheckField("user_info.Home", $this->auth_user['auth_plugin']) && !LockRules::check($this->auth_user['user_id'], 'home')){
-            $query .= "Home='$home',";
+        
+        if ($check('Home')) {
+            $columns['Home'] = $home;
         }
-        if (!StudipAuthAbstract::CheckField("user_info.motto", $this->auth_user['auth_plugin'])){
-            $query .= "motto='$motto',";
-        }
-        if (!StudipAuthAbstract::CheckField("user_info.hobby", $this->auth_user['auth_plugin']) && !LockRules::check($this->auth_user['user_id'], 'hobby')){
-            $query .= "hobby='$hobby',";
+        if ($check('motto', false)) {
+            $columns['motto'] = $motto;
         }
 
-        $query = "UPDATE user_info SET " . $query . " chdate='".time()."' WHERE user_id='".$this->auth_user["user_id"]."'";
-        DBManager::get()->query($query);
-        $this->priv_msg .= _("Private Daten wurden geändert.\n");
+        if ($check('hobby')) {
+            $columns['hobby'] = $hobby;
+        }
+
+        if (count($columns) > 0) {
+            $cols = $parameters = array();
+            foreach ($columns as $key => $value) {
+                $cols[] = sprintf('%s = :%s', $key, $key);
+                $parameters[':' . $key] = $value;
+            }
+            $cols = implode(', ', $cols);
+            
+            $query = "UPDATE user_info
+                      SET {$cols}, chdate = UNIX_TIMESTAMP()
+                      WHERE user_id = :user_id";
+            $parameters[':user_id'] = $this->auth_user['user_id'];
+
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute($parameters);
+
+            $this->priv_msg .= _('Private Daten wurden geändert.'. "\n");
+        }
     }
-
 
     function edit_leben($lebenslauf,$schwerp,$publi,$view, $datafields) {
         //Update additional data-fields
         $invalidEntries = array();
-        if (is_array($datafields)) {
-            foreach ($this->dataFieldEntries as $id => $entry) {
-                if(isset($datafields[$id])){
+        foreach ($this->dataFieldEntries as $id => $entry) {
+            if (isset($datafields[$id])){
                 $entry->setValueFromSubmit($datafields[$id]);
-                if ($entry->isValid())
+                if ($entry->isValid()) {
                     $resultDataFields |= $entry->store();
-                else
+                } else {
                     $invalidEntries[$id] = $entry;
                 }
             }
         }
 
         //check ob die blobs verändert wurden...
-        $this->db->query("SELECT  lebenslauf, schwerp, publi FROM user_info WHERE user_id='".$this->auth_user["user_id"]."'");
-        $this->db->next_record();
+        $query = "SELECT lebenslauf, schwerp, publi
+                  FROM user_info
+                  WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $this->auth_user['user_id']
+        ));
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
+
+        $change = false;
         foreach(words('lebenslauf schwerp publi') as $param) {
             if (LockRules::check($this->auth_user['user_id'], $param)) {
-                $$param = $this->db->f($param);
+                $$param = $row[$param];
+            }
+            if ($$param != $row[$param]) {
+                $change = true;
             }
         }
-        if ($lebenslauf!=$this->db->f("lebenslauf") || $schwerp!=$this->db->f("schwerp") || $publi!=$this->db->f("publi") || $resultDataFields) {
-            $this->db->query("UPDATE user_info SET lebenslauf='$lebenslauf', schwerp='$schwerp', publi='$publi', chdate='".time()."' WHERE user_id='".$this->auth_user["user_id"]."'");
-            $this->msg = $this->msg . "msg§" . _("Daten im Lebenslauf u.a. wurden ge&auml;ndert") . "§";
-            setTempLanguage($this->auth_user["user_id"]);
-            $this->priv_msg .= _("Daten im Lebenslauf u.a. wurden geändert.\n");
+        if ($change || $resultDataFields) {
+            $query = "UPDATE user_info
+                      SET lebenslauf = ?, schwerp = ?, publi = ?, chdate = UNIX_TIMESTAMP()
+                      WHERE user_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                $lebenslauf,
+                $schwerp,
+                $publi,
+                $this->auth_user['user_id']
+            ));
+
+            $this->msg .= 'msg§' . _('Daten im Lebenslauf u.a. wurden ge&auml;ndert') . '§';
+            setTempLanguage($this->auth_user['user_id']);
+            $this->priv_msg .= _('Daten im Lebenslauf u.a. wurden geändert.\n');
             restoreLanguage();
         }
         return $invalidEntries;
     }
 
 
-    function edit_pers($password, $new_username, $vorname, $nachname, $email, $geschlecht, $title_front, $title_front_chooser, $title_rear, $title_rear_chooser, $view) {
+    function edit_pers($password, $new_username, $vorname, $nachname, $email,
+                       $geschlecht, $title_front, $title_front_chooser,
+                       $title_rear, $title_rear_chooser)
+    {
         global $UNI_NAME_CLEAN, $_language_path, $auth, $perm;
         global $ALLOW_CHANGE_USERNAME, $ALLOW_CHANGE_EMAIL, $ALLOW_CHANGE_NAME, $ALLOW_CHANGE_TITLE;
 
         //erstmal die "unwichtigen" Daten
-        if($title_front == "")
+        if ($title_front == '') {
             $title_front = $title_front_chooser;
-        if($title_rear == "")
+        }
+        if ($title_rear == '') {
             $title_rear = $title_rear_chooser;
-        $query = "";
-        if (!StudipAuthAbstract::CheckField("user_info.geschlecht", $this->auth_user['auth_plugin']) && !LockRules::check($this->auth_user['user_id'], 'gender')){
-            $query .= "geschlecht='$geschlecht',";
         }
-        if ($ALLOW_CHANGE_TITLE && !StudipAuthAbstract::CheckField("user_info.title_front", $this->auth_user['auth_plugin']) && !LockRules::check($this->auth_user['user_id'], 'title')){
-            $query .= "title_front='$title_front',";
+
+        $columns = array();
+        if (!StudipAuthAbstract::CheckField('user_info.geschlecht', $this->auth_user['auth_plugin'])
+            && !LockRules::check($this->auth_user['user_id'], 'gender')) 
+        {
+            $columns['geschlecht'] = $geschlecht;
         }
-        if ($ALLOW_CHANGE_TITLE && !StudipAuthAbstract::CheckField("user_info.title_rear", $this->auth_user['auth_plugin']) && !LockRules::check($this->auth_user['user_id'], 'title')){
-            $query .= "title_rear='$title_rear',";
+        if ($ALLOW_CHANGE_TITLE
+            && !StudipAuthAbstract::CheckField("user_info.title_front", $this->auth_user['auth_plugin'])
+            && !LockRules::check($this->auth_user['user_id'], 'title'))
+        {
+            $columns['title_front'] = $title_front;
         }
-        if ($query != "") {
-            $query = "UPDATE user_info SET " . $query . " chdate='".time()."' WHERE user_id='".$this->auth_user["user_id"]."'";
-            $this->db->query($query);
-            if ($this->db->affected_rows()) {
-                $this->msg = $this->msg . "msg§" . _("Ihre pers&ouml;nlichen Daten wurden ge&auml;ndert.") . "§";
-                setTempLanguage($this->auth_user["user_id"]);
-                $this->priv_msg .= _("Ihre persönlichen Daten wurden geändert.\n");
+        if ($ALLOW_CHANGE_TITLE
+            && !StudipAuthAbstract::CheckField("user_info.title_rear", $this->auth_user['auth_plugin'])
+            && !LockRules::check($this->auth_user['user_id'], 'title'))
+        {
+            $columns['title_rear'] = $title_rear;
+        }
+
+        if (count($columns) > 0) {
+            $cols = $parameters = array();
+            foreach ($columns as $key => $value) {
+                $cols[] = sprintf('%s = :%s', $key, $key);
+                $parameters[':' . $key] = $value;
+            }
+            $cols = implode(', ', $cols);
+
+            $query = "UPDATE user_info
+                      SET {$cols}, chdate = UNIX_TIMESTAMP()
+                      WHERE user_id = :user_id";
+            $parameters[':user_id'] = $this->auth_user['user_id'];
+
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute($parameters);
+            if ($statement->rowCount() > 0) {
+                $this->msg .= 'msg§' . _('Ihre pers&ouml;nlichen Daten wurden ge&auml;ndert.') . '§';
+                setTempLanguage($this->auth_user['user_id']);
+                $this->priv_msg .= _('Ihre persönlichen Daten wurden geändert.\n');
                 restoreLanguage();
             }
         }
@@ -572,90 +725,123 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
         $email = trim($email);
 
         //nur nötig wenn der user selbst seine daten ändert
-        if ($this->check == "user") {
+        if ($this->check == 'user') {
             //erstmal die Syntax checken $validator wird in der local.inc.php benutzt, sollte also funzen
-            $validator=new email_validation_class; ## Klasse zum Ueberpruefen der Eingaben
+            $validator = new email_validation_class; ## Klasse zum Ueberpruefen der Eingaben
             $validator->timeout=10;
 
-            if (!StudipAuthAbstract::CheckField("auth_user_md5.password", $this->auth_user['auth_plugin']) && $password!="*****" && !LockRules::check($this->auth_user['user_id'], 'password')) {      //Passwort verändert ?
-
+            // Passwort verändert ?
+            if (!StudipAuthAbstract::CheckField('auth_user_md5.password', $this->auth_user['auth_plugin'])
+                && $password != '*****' 
+                && !LockRules::check($this->auth_user['user_id'], 'password'))
+            {      
                 // auf doppelte Vergabe wird weiter unten getestet.
                 if (!$validator->ValidatePassword($password)) {
-                    $this->msg=$this->msg . "error§" . _("Das Passwort ist zu kurz - es sollte mindestens 4 Zeichen lang sein.") . "§";
+                    $this->msg .= 'error§' . _('Das Passwort ist zu kurz - es sollte mindestens 4 Zeichen lang sein.') . '§';
                     return false;
                 }
-                $newpass = md5($password);
 
-                $this->db->query("UPDATE auth_user_md5 SET password='$newpass' WHERE user_id='".$this->auth_user["user_id"]."'");
-                $this->msg=$this->msg . "msg§" . _("Ihr Passwort wurde ge&auml;ndert!") . "§";
+                $query = "UPDATE auth_user_md5 SET password = MD5(?) WHERE user_id = ?";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array(
+                    $password,
+                    $this->auth_user['user_id']
+                ));
+                $this->msg .= 'msg§' . _('Ihr Passwort wurde ge&auml;ndert!') . '§';
             }
 
-            if (!StudipAuthAbstract::CheckField('auth_user_md5.Vorname', $this->auth_user['auth_plugin']) && $vorname != $this->auth_user['Vorname'] && !LockRules::check($this->auth_user['user_id'], 'name')) { //Vornamen verändert ?
-                if ($ALLOW_CHANGE_NAME) {
-                    if (!$validator->ValidateName($vorname)) {
-                        $this->msg=$this->msg . "error§" . _("Der Vorname fehlt oder ist unsinnig!") . "§";
-                        return false;
-                    }   // Vorname nicht korrekt oder fehlend
-                    $this->db->query("UPDATE auth_user_md5 SET Vorname='$vorname' WHERE user_id='".$this->auth_user["user_id"]."'");
-                    $this->msg=$this->msg . "msg§" . _("Ihr Vorname wurde ge&auml;ndert!") . "§";
-                } else $vorname = $this->auth_user['Vorname'];
+            //Vornamen verändert ?
+            if ($ALLOW_CHANGE_NAME
+                && !StudipAuthAbstract::CheckField('auth_user_md5.Vorname', $this->auth_user['auth_plugin'])
+                && $vorname != $this->auth_user['Vorname']
+                && !LockRules::check($this->auth_user['user_id'], 'name'))
+            {
+                // Vorname nicht korrekt oder fehlend
+                if (!$validator->ValidateName($vorname)) {
+                    $this->msg .= 'error§' . _('Der Vorname fehlt oder ist unsinnig!') . '§';
+                    return false;
+                }
+
+                $query = "UPDATE auth_user_md5 SET Vorname = ? WHERE user_id = ?";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array(
+                    $vorname,
+                    $this->auth_user['user_id']
+                ));
+                $this->msg .= 'msg§' . _('Ihr Vorname wurde ge&auml;ndert!') . '§';
             }
 
-            if (!StudipAuthAbstract::CheckField('auth_user_md5.Nachname', $this->auth_user['auth_plugin']) && $nachname != $this->auth_user['Nachname'] && !LockRules::check($this->auth_user['user_id'], 'name')) { //Namen verändert ?
-                if ($ALLOW_CHANGE_NAME) {
-                    if (!$validator->ValidateName($nachname)) {
-                        $this->msg=$this->msg . "error§" . _("Der Nachname fehlt oder ist unsinnig!") . "§";
-                        return false;
-                    }   // Nachname nicht korrekt oder fehlend
-                    $this->db->query("UPDATE auth_user_md5 SET Nachname='$nachname' WHERE user_id='".$this->auth_user["user_id"]."'");
-                    $this->msg=$this->msg . "msg§" . _("Ihr Nachname wurde ge&auml;ndert!") . "§";
-                } else $nachname = $this->auth_user['Nachname'];
+            //Namen verändert ?
+            if ($ALLOW_CHANGE_NAME
+                && !StudipAuthAbstract::CheckField('auth_user_md5.Nachname', $this->auth_user['auth_plugin'])
+                && $nachname != $this->auth_user['Nachname']
+                && !LockRules::check($this->auth_user['user_id'], 'name'))
+            {
+                // Nachname nicht korrekt oder fehlend
+                if (!$validator->ValidateName($nachname)) {
+                    $this->msg .= 'error§' . _('Der Nachname fehlt oder ist unsinnig!') . '§';
+                    return false;
+                }
+
+                $query = "UPDATE auth_user_md5 SET Nachname = ? WHERE user_id = ?";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array(
+                    $nachname,
+                    $this->auth_user['user_id']
+                ));
+                $this->msg .= 'msg§' . _('Ihr Nachname wurde ge&auml;ndert!') . '§';
             }
 
+            if ($ALLOW_CHANGE_USERNAME
+                && !StudipAuthAbstract::CheckField('auth_user_md5.username', $this->auth_user['auth_plugin'])
+                && $this->auth_user['username'] != $new_username
+                && !LockRules::check($this->auth_user['user_id'], 'username'))
+            {
+                if (!$validator->ValidateUsername($new_username)) {
+                    $this->msg .= 'error§' . _('Der gewählte Benutzername ist nicht lang genug!') . '§';
+                    return false;
+                }
+                $check_uname = StudipAuthAbstract::CheckUsername($new_username);
+                if ($check_uname['found']) {
+                    $this->msg .= 'error§' . _('Der Benutzername wird bereits von einem anderen Benutzer verwendet. Bitte wählen Sie einen anderen Usernamen!') . '§';
+                    return false;
+                }
 
-            if (!StudipAuthAbstract::CheckField('auth_user_md5.username', $this->auth_user['auth_plugin']) && $this->auth_user['username'] != $new_username && !LockRules::check($this->auth_user['user_id'], 'username')) {
-                if ($ALLOW_CHANGE_USERNAME) {
-                    if (!$validator->ValidateUsername($new_username)) {
-                        $this->msg=$this->msg . "error§" . _("Der gewählte Benutzername ist nicht lang genug!") . "§";
-                        return false;
-                    }
-                    $check_uname = StudipAuthAbstract::CheckUsername($new_username);
-                    if ($check_uname['found']) {
-                        $this->msg .= "error§" . _("Der Benutzername wird bereits von einem anderen Benutzer verwendet. Bitte wählen Sie einen anderen Usernamen!") . "§";
-                        return false;
-                    } else {
-                        //$this->msg .= "info§" . $check_uname['error'] ."§";
-                    }
-                    $this->db->query("UPDATE auth_user_md5 SET username='$new_username' WHERE user_id='".$this->auth_user["user_id"]."'");
-                    $this->msg=$this->msg . "msg§" . _("Ihr Benutzername wurde ge&auml;ndert!") . "§";
-                    $this->logout_user = TRUE;
-                } else $new_username = $this->auth_user['username'];
+                $query = "UPDATE auth_user_md5 SET username = ? WHERE user_id = ?";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array(
+                    $new_username,
+                    $this->auth_user['user_id']
+                ));
+
+                $this->msg .= 'msg§' . _('Ihr Benutzername wurde ge&auml;ndert!') . '§';
+                $this->logout_user = TRUE;
             }
-
         }
-        return;
     }
 
-    function edit_email($email) {
-        $return = edit_email($this->auth_user["user_id"], $email);
-        $this->msg.= $return[1];
+    function edit_email($email)
+    {
+        $return = edit_email($this->auth_user['user_id'], $email);
+        $this->msg .= $return[1];
         return $return[0];
     }
-
 
     /**
      * Hilfsfunktion, erzeugt eine Auswahlbox mit noch auswählbaren Studiengängen
      */
     public function select_studiengang()
     {
+        $query = "SELECT studiengang_id, name FROM studiengaenge ORDER BY name";
+        $statement = DBManager::get()->query($query);
+        $studiengaenge = $statement->fetchGrouped(PDO::FETCH_COLUMN);
+
         echo '<select name="new_studiengang">'."\n";
-        echo '<option selected="selected" value="none">' . _('-- Bitte Fach auswählen --') . '</option>'."\n";
-        $this->db->query("SELECT studiengang_id, name FROM studiengaenge ORDER BY name");
-        while ($this->db->next_record()) {
-            echo "<option value=\"".$this->db->f("studiengang_id")."\">".htmlReady(my_substr($this->db->f("name"),0,50))."</option>\n";
+        echo '<option selected value="none">' . _('-- Bitte Fach auswählen --') . '</option>'."\n";
+        foreach ($studiengaenge as $id => $name) {
+            printf('<option value="%s">%s</option>' . "\n", $id, htmlReady(my_substr($name, 0, 50)));
         }
         echo "</select>\n";
-        return;
     }
 
     /**
@@ -663,25 +849,29 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
      */
    public function select_abschluss()
    {
+       $query = "SELECT abschluss_id, name FROM abschluss ORDER BY name";
+       $statement = DBManager::get()->query($query);
+       $abschluesse = $statement->fetchGrouped(PDO::FETCH_COLUMN);
+       
         echo '<select name="new_abschluss">'."\n";
-        echo '<option selected="selected" value="none">'. _('-- Bitte Abschluss auswählen --') . '</option>'."\n";
-        $this->db->query("SELECT abschluss_id,name FROM abschluss ORDER BY name");
-        while ($this->db->next_record()) {
-            echo "<option value=\"".$this->db->f("abschluss_id")."\">".htmlReady(my_substr($this->db->f("name"),0,50))."</option>\n";
+        echo '<option selected value="none">'. _('-- Bitte Abschluss auswählen --') . '</option>'."\n";
+        foreach ($abschluesse as $id => $name) {
+            printf('<option value="%s">%s</option>' . "\n", $id, htmlReady(my_substr($name, 0, 50)));
         }
         echo "</select>\n";
-        return;
     }
 
-    function select_userdomain() {  //Hilfsfunktion, erzeugt eine Auswahlbox mit noch auswählbaren Nutzerdomänen
+    //Hilfsfunktion, erzeugt eine Auswahlbox mit noch auswählbaren Nutzerdomänen
+    function select_userdomain()
+    {
+        $user_domains = UserDomain::getUserDomainsForUser($this->auth_user['user_id']);
+        $all_domains  = UserDomain::getUserDomains();
+        $domains      = array_diff($all_domains, $user_domains);
 
         echo '<select name="new_userdomain">'."\n";
-        echo '<option selected="selected" value="none">' . _('-- Bitte Nutzerdomäne auswählen --') . '</option>'."\n";
-        $user_domains = UserDomain::getUserDomainsForUser($this->auth_user['user_id']);
-        $domains = UserDomain::getUserDomains();
-
-        foreach (array_diff($domains, $user_domains) as $domain) {
-            echo "<option value=\"".$domain->getID()."\">".htmlReady(my_substr($domain->getName(),0,50))."</option>\n";
+        echo '<option selected value="none">' . _('-- Bitte Nutzerdomäne auswählen --') . '</option>'."\n";
+        foreach ($domains as $domain) {
+            printf('<option value="%s">%s</option>' . "\n", $domain->getID(), htmlReady(my_substr($domain->getName(), 0, 50)));
         }
         echo "</select>\n";
     }
@@ -691,14 +881,23 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
      */
     function select_inst()
     {
+        $query = "SELECT a.Institut_id, a.Name
+                  FROM Institute AS a
+                  LEFT JOIN user_inst AS b ON (b.user_id = ? AND a.Institut_id = b.Institut_id)
+                  WHERE b.Institut_id IS NULL
+                  ORDER BY a.Name";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $this->auth_user['user_id']
+        ));
+        $institutes = $statement->fetchGrouped(PDO::FETCH_COLUMN);
 
-        echo '<select name="new_inst" id="select_new_inst"><option selected="selected" value=""> ' . _("-- Bitte Einrichtung auswählen --") . ' </option>'."\n";
-        $this->db->query("SELECT a.Institut_id,a.Name FROM Institute AS a LEFT JOIN user_inst AS b ON (b.user_id='".$this->auth_user["user_id"]."' AND a.Institut_id=b.Institut_id) WHERE b.Institut_id IS NULL ORDER BY a.Name");
-        while ($this->db->next_record()) {
-            echo "<option value=\"".$this->db->f("Institut_id")."\">".htmlReady(my_substr($this->db->f("Name"),0,50))."</option>\n";
+        echo '<select name="new_inst" id="select_new_inst">' . "\n";
+        echo '<option selected value=""> ' . _("-- Bitte Einrichtung auswählen --") . ' </option>'."\n";
+        foreach ($institutes as $id => $name) {
+            printf('<option value="%s">%s</option>' . "\n", $id, htmlReady(my_substr($name, 0, 50)));
         }
         echo "</select>\n";
-        return;
     }
 
     //Displays Errosmessages (kritischer Abbruch, Symbol "X")
@@ -744,16 +943,22 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
 
     function move ($inst_id, $direction) {
         if ($this->check == 'user' || $this->check == 'admin') {
-            $db = new DB_Seminar();
-            $query = "SELECT * FROM user_inst WHERE user_id = '{$this->auth_user['user_id']}' ";
-            $query .= "AND inst_perms != 'user' ORDER BY priority ASC";
-            $db->query($query);
+            $query = "SELECT Institut_id
+                      FROM user_inst
+                      WHERE user_id = ? AND inst_perms != 'user'
+                      ORDER BY priority ASC";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                $this->auth_user['user_id']
+            ));
+
             $i = 1;
-            while ($db->next_record()) {
-                $to_order[$i] = $db->f('Institut_id');
-                if ($to_order[$i] == $inst_id)
+            while ($institute_id = $statement->fetchColumn()) {
+                $to_order[$i] = $institut_id;
+                if ($to_order[$i] == $inst_id) {
                     $pos = $i;
-                $i++;
+                }
+                $i += 1;
             }
             if ($direction == 'up') {
                 $a = $to_order[$pos - 1];
@@ -765,11 +970,18 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
                 $to_order[$pos + 1] = $to_order[$pos];
                 $to_order[$pos] = $a;
             }
-            $i--;
-            for (;$i > 0; $i--) {
-                $query = "UPDATE user_inst SET priority = $i WHERE user_id = '{$this->auth_user['user_id']}' ";
-                $query .= "AND Institut_id = '{$to_order[$i]}'";
-                $db->query($query);
+            
+            $query = "UPDATE user_inst
+                      SET priority = ?
+                      WHERE user_id = ? AND Institut_id = ?";
+            $statement = DBManager::get()->prepare($query);
+
+            for ($i -= 1; $i > 0; $i -= 1) {
+                $statement->execute(array(
+                    $i,
+                    $this->auth_user['user_id'],
+                    $to_order[$i]
+                ));
             }
         }
     }
@@ -784,38 +996,49 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
      * @param string $email visibility of the email address
      * @return boolean All settings saved?
      */
-    function change_global_visibility($global, $online, $chat, $search, $email, $foaf_show_identity) {
-        $success = false;
+    function change_global_visibility($global, $online, $chat, $search, $email, $foaf_show_identity)
+    {
         // Globally visible or unknown -> set local visibilities accordingly.
         if ($global != 'no') {
             $online = $online ? 1 : 0;
-            $chat = $chat ? 1 : 0;
+            $chat   = $chat ? 1 : 0;
             $search = $search ? 1 : 0;
-            $email = $email ? 1 : 0;
+            $email  = $email ? 1 : 0;
             $foaf_show_identity = $foaf_show_identity ? 1 : 0;
         // Globally invisible -> set all local fields to invisible.
         } else {
             $online = 0;
-            $chat = 0;
+            $chat   = 0;
             $search = 0;
-            $email = get_config('DOZENT_ALLOW_HIDE_EMAIL') ? 0 : 1;
+            $email  = get_config('DOZENT_ALLOW_HIDE_EMAIL') ? 0 : 1;
             $success1 = $this->change_all_homepage_visibility(VISIBILITY_ME);
             $foaf_show_identity = 0;
         }
         $user_cfg = UserConfig::get($this->auth_user["user_id"]);
         $user_cfg->store("FOAF_SHOW_IDENTITY", $foaf_show_identity);
 
-        $success2 = DBManager::get()->exec("UPDATE auth_user_md5 SET visible='".$global."' WHERE user_id='".$this->auth_user["user_id"]."'");
-        $data = DBManager::get()->query("SELECT `user_id` FROM `user_visibility` WHERE `user_id`='".$this->auth_user["user_id"]."'");
-        if ($data->fetch()) {
-            $success3 = DBManager::get()->exec("UPDATE user_visibility
-                SET online=".$online.", chat=".$chat.", search=".$search.", email=".$email."
-                WHERE user_id='".$this->auth_user["user_id"]."'");
-        } else {
-            $success3 = DBManager::get()->exec("INSERT INTO user_visibility
-                SET `user_id`='".$this->auth_user["user_id"]."', `online`=".$online.", `chat`=".$chat.", `search`=".$search.", `email`=".$email.", `mkdate`=".time());
-        }
-        return true;
+        $query = "UPDATE auth_user_md5 SET visible = ? WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $global,
+            $this->auth_user['user_id']
+        ));
+
+        $query = "INSERT INTO user_visibility
+                    (user_id, online, chat, search, email, mkdate)
+                  VALUES (?, ?, ?, ?, ?, UNIX_TIMESTAMP())
+                  ON DUPLICATE KEY
+                    UPDATE online = VALUES(online), chat = VALUES(chat),
+                           search = VALUES(search), email = VALUES(email)";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $this->auth_user['user_id'],
+            $online,
+            $chat,
+            $search,
+            $email
+        ));
+        return $statement->rowCount() > 0;
     }
 
     /**
@@ -855,22 +1078,19 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
      * @param int $visibility default visibility for new homepage elements
      * @return Number of affected database rows (hopefully 1).
      */
-    function set_default_homepage_visibility($visibility) {
-        $success = false;
-        $existing = DBManager::get()->query(
-            "SELECT `user_id` FROM `user_visibility` WHERE `user_id`='".
-            $this->auth_user["user_id"]."'")->fetch();
-        if ($existing) {
-            $query = "UPDATE `user_visibility` SET `default_homepage_visibility`=".
-                intval($visibility)." WHERE `user_id`='".
-                $this->auth_user["user_id"]."'";
-        } else {
-            $query = "INSERT INTO `user_visibility` SET `user_id`='".
-                $this->auth_user["user_id"]."', `default_homepage_visibility`=".
-                intval($visibility).", `mkdate`=".time();
-        }
-        $success = DBManager::get()->exec($query);
-        return $success;
+    function set_default_homepage_visibility($visibility)
+    {
+        $query = "INSERT INTO user_visibility
+                    (user_id, default_homepage_visibility, mkdate)
+                  VALUES (?, ?, UNIX_TIMESTAMP())
+                  ON DUPLICATE KEY
+                    UPDATE default_homepage_visibility = VALUES(default_homepage_visibility)";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $this->auth_user['user_id'],
+            (int)$visibility
+        ));
+        return $statement->rowCount();
     }
 
     /**
@@ -880,22 +1100,19 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
      * the form $name => $visibility
      * @return int Number of affected database rows (hopefully 1).
      */
-    function change_homepage_visibility($data) {
-        $success = false;
-        $db = DBManager::get();
-        $existing = $db->query(
-            "SELECT `user_id` FROM `user_visibility` WHERE `user_id`=".
-            $db->quote($this->auth_user["user_id"]))->fetch();
-        if ($existing) {
-            $query = "UPDATE `user_visibility` SET `homepage`=".$db->quote(json_encode($data)).
-                " WHERE user_id=".$db->quote($this->auth_user["user_id"]);
-        } else {
-            $query = "INSERT INTO `user_visibility` SET `user_id`=".
-                $db->quote($this->auth_user["user_id"]).", `homepage`=".
-                $db->quote(json_encode($data)).", `mkdate`=".time();
-        }
-        $success = $db->exec($query);
-        return $success;
+    function change_homepage_visibility($data)
+    {
+        $query = "INSERT INTO user_visibility
+                    (user_id, homepage, mkdate)
+                  VALUES (?, ?, UNIX_TIMESTAMP())
+                  ON DUPLICATE KEY
+                    UPDATE homepage = VALUES(homepage)";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $this->auth_user['user_id'],
+            json_encode($data)
+        ));
+        return $statement->rowCount();
     }
 
     /**
@@ -909,11 +1126,19 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
      * together with their visibility settings in the form
      * $name => $visibility.
      */
-    function get_homepage_elements() {
+    function get_homepage_elements()
+    {
         global $NOT_HIDEABLE_FIELDS;
-        $homepage_elements = array();
-        $my_data = DBManager::get()->query("SELECT user_info.*, auth_user_md5.* FROM auth_user_md5 LEFT JOIN user_info USING (user_id) WHERE auth_user_md5.user_id = '".$this->auth_user['user_id']."'");
-        $my_data = $my_data->fetch();
+
+        $query = "SELECT user_info.*, auth_user_md5.*
+                  FROM auth_user_md5
+                  LEFT JOIN user_info USING (user_id)
+                  WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $this->auth_user['user_id']
+        ));
+        $my_data = $statement->fetch(PDO::FETCH_ASSOC);
 
         $homepage_visibility = get_local_visibility_by_id($this->auth_user['user_id'], 'homepage');
         if (is_array(json_decode($homepage_visibility, true))) {
@@ -954,66 +1179,83 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
         // Now join all available elements with visibility settings.
         $homepage_elements = array();
         if (Avatar::getAvatar($this->auth_user['user_id'])->is_customized() && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['picture']) {
-            $homepage_elements["picture"] = array("name" => _("Eigenes Bild"), "visibility" => $homepage_visibility["picture"] ? $homepage_visibility["picture"] : get_default_homepage_visibility($this->auth_user['user_id']), "extern" => true, 'category' => 'Allgemeine Daten');
+            $homepage_elements["picture"] = array("name" => _("Eigenes Bild"), "visibility" => $homepage_visibility["picture"] ?: get_default_homepage_visibility($this->auth_user['user_id']), "extern" => true, 'category' => 'Allgemeine Daten');
         }
         if ($my_data["motto"] && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['motto'])
-            $homepage_elements["motto"] = array("name" => _("Motto"), "visibility" => $homepage_visibility["motto"] ? $homepage_visibility["motto"] : get_default_homepage_visibility($this->auth_user['user_id']), 'category' => 'Private Daten');
+            $homepage_elements["motto"] = array("name" => _("Motto"), "visibility" => $homepage_visibility["motto"] ?: get_default_homepage_visibility($this->auth_user['user_id']), 'category' => 'Private Daten');
         if ($GLOBALS['ENABLE_SKYPE_INFO']) {
             if ($GLOBALS['user']->cfg->getValue('SKYPE_NAME') && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['skype_name']) {
-                $homepage_elements["skype_name"] = array("name" => _("Skype Name"), "visibility" => $homepage_visibility["skype_name"] ? $homepage_visibility["skype_name"] : get_default_homepage_visibility($this->auth_user['user_id']), 'category' => 'Private Daten');
+                $homepage_elements["skype_name"] = array("name" => _("Skype Name"), "visibility" => $homepage_visibility["skype_name"] ?: get_default_homepage_visibility($this->auth_user['user_id']), 'category' => 'Private Daten');
                 if ($GLOBALS['user']->cfg->getValue('SKYPE_ONLINE_STATUS')) {
-                    $homepage_elements["skype_online_status"] = array("name" => _("Skype Online Status"), "visibility" => $homepage_visibility["skype_online_status"] ? $homepage_visibility["skype_online_status"] : get_default_homepage_visibility($this->auth_user['user_id']), 'category' => 'Private Daten');
+                    $homepage_elements["skype_online_status"] = array("name" => _("Skype Online Status"), "visibility" => $homepage_visibility["skype_online_status"] ?: get_default_homepage_visibility($this->auth_user['user_id']), 'category' => 'Private Daten');
                 }
             }
         }
         if ($my_data["privatnr"] && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['Private Daten_phone'])
-            $homepage_elements["private_phone"] = array("name" => _("Private Telefonnummer"), "visibility" => $homepage_visibility["private_phone"] ? $homepage_visibility["private_phone"] : get_default_homepage_visibility($this->auth_user['user_id']), 'category' => 'Private Daten');
+            $homepage_elements["private_phone"] = array("name" => _("Private Telefonnummer"), "visibility" => $homepage_visibility["private_phone"] ?: get_default_homepage_visibility($this->auth_user['user_id']), 'category' => 'Private Daten');
         if ($my_data["privatcell"] && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['private_cell'])
-            $homepage_elements["private_cell"] = array("name" => _("Private Handynummer"), "visibility" => $homepage_visibility["private_cell"] ? $homepage_visibility["private_cell"] : get_default_homepage_visibility($this->auth_user['user_id']), 'category' => 'Private Daten');
+            $homepage_elements["private_cell"] = array("name" => _("Private Handynummer"), "visibility" => $homepage_visibility["private_cell"] ?: get_default_homepage_visibility($this->auth_user['user_id']), 'category' => 'Private Daten');
         if ($my_data["privadr"] && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['privadr'])
-            $homepage_elements["privadr"] = array("name" => _("Private Adresse"), "visibility" => $homepage_visibility["privadr"] ? $homepage_visibility["privadr"] : get_default_homepage_visibility($this->auth_user['user_id']), 'category' => 'Private Daten');
+            $homepage_elements["privadr"] = array("name" => _("Private Adresse"), "visibility" => $homepage_visibility["privadr"] ?: get_default_homepage_visibility($this->auth_user['user_id']), 'category' => 'Private Daten');
         if ($my_data["Home"] && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['homepage'])
-            $homepage_elements["homepage"] = array("name" => _("Homepage-Adresse"), "visibility" => $homepage_visibility["homepage"] ? $homepage_visibility["homepage"] : get_default_homepage_visibility($this->auth_user['user_id']), "extern" => true, 'category' => 'Private Daten');
+            $homepage_elements["homepage"] = array("name" => _("Homepage-Adresse"), "visibility" => $homepage_visibility["homepage"] ?: get_default_homepage_visibility($this->auth_user['user_id']), "extern" => true, 'category' => 'Private Daten');
         if ($news && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['news'])
-            $homepage_elements["news"] = array("name" => _("Ankündigungen"), "visibility" => $homepage_visibility["news"] ? $homepage_visibility["news"] : get_default_homepage_visibility($this->auth_user['user_id']), "extern" => true, 'category' => 'Allgemeine Daten');
+            $homepage_elements["news"] = array("name" => _("Ankündigungen"), "visibility" => $homepage_visibility["news"] ?: get_default_homepage_visibility($this->auth_user['user_id']), "extern" => true, 'category' => 'Allgemeine Daten');
         if ($GLOBALS["CALENDAR_ENABLE"] && $dates && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['dates'])
-            $homepage_elements["termine"] = array("name" => _("Termine"), "visibility" => $homepage_visibility["termine"] ? $homepage_visibility["termine"] : get_default_homepage_visibility($this->auth_user['user_id']), "extern" => true, 'category' => 'Allgemeine Daten');
+            $homepage_elements["termine"] = array("name" => _("Termine"), "visibility" => $homepage_visibility["termine"] ?: get_default_homepage_visibility($this->auth_user['user_id']), "extern" => true, 'category' => 'Allgemeine Daten');
         if (get_config('VOTE_ENABLE') && ($activeVotes || $stoppedVotes || $activeEvals) && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['votes'])
-            $homepage_elements["votes"] = array("name" => _("Umfragen"), "visibility" => $homepage_visibility["votes"] ? $homepage_visibility["votes"] : get_default_homepage_visibility($this->auth_user['user_id']), 'category' => 'Allgemeine Daten');
+            $homepage_elements["votes"] = array("name" => _("Umfragen"), "visibility" => $homepage_visibility["votes"] ?: get_default_homepage_visibility($this->auth_user['user_id']), 'category' => 'Allgemeine Daten');
         if ($my_data["guestbook"] && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['guestbook'])
-            $homepage_elements["guestbook"] = array("name" => _("Gästebuch"), "visibility" => $homepage_visibility["guestbook"] ? $homepage_visibility["guestbook"] : get_default_homepage_visibility($this->auth_user['user_id']), 'category' => 'Allgemeine Daten');
-        $data = DBManager::get()->query("SELECT Institute.* FROM user_inst LEFT JOIN Institute  USING (Institut_id) WHERE user_id = '$user_id' AND inst_perms = 'user'");
-        if ($data->fetch() && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['studying']) {
-            $homepage_elements["studying"] = array("name" => _("Wo ich studiere"), "visibility" => $homepage_visibility["studying"] ? $homepage_visibility["studying"] : get_default_homepage_visibility($this->auth_user['user_id']), 'category' => 'Studien-/Einrichtungsdaten');
+            $homepage_elements["guestbook"] = array("name" => _("Gästebuch"), "visibility" => $homepage_visibility["guestbook"] ?: get_default_homepage_visibility($this->auth_user['user_id']), 'category' => 'Allgemeine Daten');
+
+        $query = "SELECT 1
+                  FROM user_inst
+                  LEFT JOIN Institute USING (Institut_id)
+                  WHERE user_id = ? AND inst_perms = 'user'";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $this->auth_user['user_id']
+        ));
+        if ($statement->fetchColumn() && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['studying']) {
+            $homepage_elements["studying"] = array("name" => _("Wo ich studiere"), "visibility" => $homepage_visibility["studying"] ?: get_default_homepage_visibility($this->auth_user['user_id']), 'category' => 'Studien-/Einrichtungsdaten');
         }
         if ($lit_list && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['literature'])
-            $homepage_elements["literature"] = array("name" => _("Literaturlisten"), "visibility" => $homepage_visibility["literature"] ? $homepage_visibility["literature"] : get_default_homepage_visibility($this->auth_user['user_id']), 'category' => 'Allgemeine Daten');
+            $homepage_elements["literature"] = array("name" => _("Literaturlisten"), "visibility" => $homepage_visibility["literature"] ?: get_default_homepage_visibility($this->auth_user['user_id']), 'category' => 'Allgemeine Daten');
         if ($my_data["lebenslauf"] && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['lebenslauf'])
-            $homepage_elements["lebenslauf"] = array("name" => _("Lebenslauf"), "visibility" => $homepage_visibility["lebenslauf"] ? $homepage_visibility["lebenslauf"] : get_default_homepage_visibility($this->auth_user['user_id']), "extern" => true, 'category' => 'Private Daten');
+            $homepage_elements["lebenslauf"] = array("name" => _("Lebenslauf"), "visibility" => $homepage_visibility["lebenslauf"] ?: get_default_homepage_visibility($this->auth_user['user_id']), "extern" => true, 'category' => 'Private Daten');
         if ($my_data["hobby"] && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['hobby'])
-            $homepage_elements["hobby"] = array("name" => _("Hobbies"), "visibility" => $homepage_visibility["hobby"] ? $homepage_visibility["hobby"] : get_default_homepage_visibility($this->auth_user['user_id']), 'category' => 'Private Daten');
+            $homepage_elements["hobby"] = array("name" => _("Hobbies"), "visibility" => $homepage_visibility["hobby"] ?: get_default_homepage_visibility($this->auth_user['user_id']), 'category' => 'Private Daten');
         if ($my_data["publi"] && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['publi'])
-            $homepage_elements["publi"] = array("name" => _("Publikationen"), "visibility" => $homepage_visibility["publi"] ? $homepage_visibility["publi"] : get_default_homepage_visibility($this->auth_user['user_id']), "extern" => true, 'category' => 'Private Daten');
+            $homepage_elements["publi"] = array("name" => _("Publikationen"), "visibility" => $homepage_visibility["publi"] ?: get_default_homepage_visibility($this->auth_user['user_id']), "extern" => true, 'category' => 'Private Daten');
         if ($my_data["schwerp"] && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['schwerp'])
-            $homepage_elements["schwerp"] = array("name" => _("Arbeitsschwerpunkte"), "visibility" => $homepage_visibility["schwerp"] ? $homepage_visibility["schwerp"] : get_default_homepage_visibility($this->auth_user['user_id']), "extern" => true, 'category' => 'Private Daten');
+            $homepage_elements["schwerp"] = array("name" => _("Arbeitsschwerpunkte"), "visibility" => $homepage_visibility["schwerp"] ?: get_default_homepage_visibility($this->auth_user['user_id']), "extern" => true, 'category' => 'Private Daten');
         if ($data_fields) {
             foreach ($data_fields as $key => $field) {
                 if ($field->structure->accessAllowed($GLOBALS['perm']) && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']][$key]) {
-                    $homepage_elements[$key] = array("name" => _($field->structure->data['name']), "visibility" => $homepage_visibility[$key] ? $homepage_visibility[$key] : get_default_homepage_visibility($this->auth_user['user_id']), "extern" => true, 'category' => 'Zusätzliche Datenfelder');
+                    $homepage_elements[$key] = array("name" => _($field->structure->data['name']), "visibility" => $homepage_visibility[$key] ?: get_default_homepage_visibility($this->auth_user['user_id']), "extern" => true, 'category' => 'Zusätzliche Datenfelder');
                 }
             }
         }
-        $categories = DBManager::get()->query("SELECT * FROM kategorien WHERE range_id = '".$this->auth_user['user_id']."' ORDER BY priority");
-        foreach ($categories as $category) {
-            $homepage_elements["kat_".$category["kategorie_id"]] = array("name" => $category["name"], "visibility" => $homepage_visibility["kat_".$category["kategorie_id"]] ? $homepage_visibility["kat_".$category["kategorie_id"]] : get_default_homepage_visibility($this->auth_user['user_id']), "extern" => true, 'category' => 'Eigene Kategorien');
+
+        $query = "SELECT kategorie_id, name
+                  FROM kategorien
+                  WHERE range_id = ?
+                  ORDER BY priority";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $this->auth_user['user_id']
+        ));
+        while ($category = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $homepage_elements["kat_".$category["kategorie_id"]] = array("name" => $category["name"], "visibility" => $homepage_visibility["kat_".$category["kategorie_id"]] ?: get_default_homepage_visibility($this->auth_user['user_id']), "extern" => true, 'category' => 'Eigene Kategorien');
         }
+
         if ($homepageplugins) {
             foreach ($homepageplugins as $plugin) {
-                $homepage_elements['plugin_'.$plugin->getPluginId()] = array("name" => $plugin->getPluginName(), "visibility" => $homepage_visibility["plugin_".$plugin->getPluginId()] ? $homepage_visibility["plugin_".$plugin->getPluginId()] : get_default_homepage_visibility($this->auth_user['user_id']), 'category' => 'Plugins');
+                $homepage_elements['plugin_'.$plugin->getPluginId()] = array("name" => $plugin->getPluginName(), "visibility" => $homepage_visibility["plugin_".$plugin->getPluginId()] ?: get_default_homepage_visibility($this->auth_user['user_id']), 'category' => 'Plugins');
             }
         }
         return $homepage_elements;
     }
 
 } // end class definition
-?>
+

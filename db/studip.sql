@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 3.4.9
+-- version 3.4.11
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 17. Jan 2012 um 13:11
--- Server Version: 5.1.41
--- PHP-Version: 5.3.2-1ubuntu4.11
+-- Erstellungszeit: 02. Aug 2012 um 17:56
+-- Server Version: 5.1.63
+-- PHP-Version: 5.3.2-1ubuntu4.17
 
 --
 -- Datenbank: `studip_22`
@@ -2291,13 +2291,12 @@ CREATE TABLE IF NOT EXISTS `user_info` (
   `chdate` int(20) NOT NULL DEFAULT '0',
   `title_front` varchar(64) NOT NULL DEFAULT '',
   `title_rear` varchar(64) NOT NULL DEFAULT '',
-  `preferred_language` varchar(6) DEFAULT NULL,
+  `preferred_language` varchar(20) DEFAULT NULL,
   `smsforward_copy` tinyint(1) NOT NULL DEFAULT '1',
   `smsforward_rec` varchar(32) NOT NULL DEFAULT '',
   `guestbook` tinyint(4) NOT NULL DEFAULT '0',
   `email_forward` tinyint(4) NOT NULL DEFAULT '0',
   `smiley_favorite` varchar(255) NOT NULL DEFAULT '',
-  `smiley_favorite_publish` tinyint(1) NOT NULL DEFAULT '0',
   `motto` varchar(255) NOT NULL DEFAULT '',
   `lock_rule` varchar(32) NOT NULL DEFAULT '',
   PRIMARY KEY (`user_id`),

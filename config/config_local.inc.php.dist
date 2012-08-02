@@ -160,48 +160,6 @@ $SOAP_USE_PHP5 = FALSE;
 
 $WEBSERVICES_ENABLE = FALSE;                            //Stud.IP module: webservices
 
-$STUDIP_API_KEY=''; // webservice api key
-
-$ELEARNING_INTERFACE_MODULES = array(
-    "ilias3" => array(
-        "name" => "ILIAS 3",
-        "ABSOLUTE_PATH_ELEARNINGMODULES" => "http://<your Ilias3 installation>/",
-        "ABSOLUTE_PATH_SOAP" => "http://<your Ilias3 installation>/webservice/soap/server.php?wsdl",
-        "CLASS_PREFIX" => "Ilias3",
-        "auth_necessary" => true,
-        "USER_AUTO_CREATE" => false,
-        "USER_PREFIX" => "studip_",
-        "target_file" => "studip_referrer.php",
-        "logo_file" => "assets/images/logos/ilias_logo.png",
-        "soap_data" => array(
-                        "username" => "<username>",     //this credentials are used to communicate with your Ilias 3 installation over SOAP
-                        "password" => "<password>",
-                        "client" => "<ilias client id>"),
-        "types" =>  array(
-                        "htlm" => array("name" => "HTML-Lerneinheit", "icon" => "assets/images/icons/16/grey/learnmodule.png"),
-                        "sahs" => array("name" => "SCORM/AICC-Lerneinheit", "icon" => "assets/images/icons/16/grey/learnmodule.png"),
-                        "lm" => array("name" => "ILIAS-Lerneinheit", "icon" => "assets/images/icons/16/grey/learnmodule.png"),
-                        "glo" => array("name" => "ILIAS-Glossar", "icon" => "assets/images/icons/16/grey/learnmodule.png"),
-                        "tst" => array("name" => "ILIAS-Test", "icon" => "assets/images/icons/16/grey/learnmodule.png")
-                        ),
-        "global_roles" => array(4,5,14), // put here the ilias role-ids for User, Guest and Anonymous
-        "roles" =>  array(
-                        "autor" => "4",
-                        "tutor" => "4",
-                        "dozent" => "4",
-                        "admin" => "4",
-                        "root" => "2"
-                        ),
-        "crs_roles" =>  array(
-                        "autor" => "member",
-                        "tutor" => "tutor",
-                        "dozent" => "admin",
-                        "admin" => "admin",
-                        "root" => "admin"
-                        )
-        )
-    );
-
 $ELEARNING_INTERFACE_MODULES = array(
     "ilias4" => array(
         "name" => "ILIAS 4",
@@ -603,18 +561,6 @@ $LATEX_FORMATS = array(
     Arab font (needs LaTeX package arabtex installed):
         "arab" => array("tag" => "arab", "template" => "\documentclass[12pt]{article}\n \usepackage[latin1]{inputenc}\n \usepackage{arabtex,atrans}\n \pagestyle{empty}\n \begin{document}\n \begin{arabtext}%s\end{arabtext}\n \end{document}\n")
 */
-
-// WIKI PLUGINS
-// - plugins are loaded from the wiki module
-// - plugins can define own wiki markup applied after general markup rules//
-// uncomment/change below to activate
-//
-//$WIKI_PLUGINS=array(
-//  "wiki_lifters.inc.php",  // Lifters Proposal System
-//  "wiki_steps.inc.php",    // Stud.IP Enhancement Proposal System
-//  "wiki_biests.inc.php"    // Bug and Inconsistency Detection System
-//  );
-$WIKI_PLUGINS = array();
 
 /*path generation
 -----------------------------------------------------------------

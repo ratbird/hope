@@ -1,7 +1,7 @@
 <?
 # Lifter002: TODO
+# Lifter003: TEST
 # Lifter007: TODO
-# Lifter003: TODO
 # Lifter010: TODO
 /**
 * Export-Subfile that contains the first page of the export-module.
@@ -42,8 +42,6 @@ require_once ("config.inc.php");   // Stud.IP - Konfigurationsdatei
 require_once ("$PATH_EXPORT/export_xslt_vars.inc.php");   // XSLT-Variablen
 require_once ("lib/classes/SemesterData.class.php");   // Checken des aktuellen Semesters
 
-$db=new DB_Seminar;
-$db2=new DB_Seminar;
 $semester = new SemesterData;
 
 $export_pagename = _("Datenexport - Startseite");
@@ -56,27 +54,39 @@ $export_pagecontent .= CSRFProtection::tokenTag();
 
 $export_pagecontent .="<br><b><font size=\"-1\">". _("Bitte w&auml;hlen Sie eine Einrichtung: ") .  "</font></b><br><select name=\"range_id\">";
 
-$db->query("SELECT Institut_id, Name, fakultaets_id FROM Institute WHERE fakultaets_id = Institut_id ORDER BY Name");
+// Prepare institutes statement for faculty
+$query = "SELECT Institut_id, Name
+          FROM Institute
+          WHERE fakultaets_id = ? AND institut_id != fakultaets_id
+          ORDER BY Name";
+$inst_statement = DBManager::get()->prepare($query);
 
-while ($db->next_record()) {
+// Prepare and execute faculties statement
+$query = "SELECT Institut_id, Name, fakultaets_id
+          FROM Institute
+          WHERE fakultaets_id = Institut_id
+          ORDER BY Name";
+$statement = DBManager::get()->query($query);
+$faculties = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+foreach ($faculties as $faculty) {
     $export_pagecontent .= "<option style=\"font-weight:bold;\" ";
 
-    if ($range_id == $db->f("fakultaets_id")) {
+    if ($range_id == $faculty['fakultaets_id']) {
         $export_pagecontent .= " selected";
     }
 
-    $export_pagecontent .= " value=\"" . $db->f("Institut_id") . "\">" . htmlReady(my_substr($db->f("Name"), 0, 60)) . "</option>";
+    $export_pagecontent .= " value=\"" . $faculty['Institut_id'] . "\">" . htmlReady(my_substr($faculty['Name'], 0, 60)) . "</option>";
 
-    if ($db->f("fakultaets_id") == $db->f("Institut_id")) {
-        $db2->query("SELECT Institut_id, Name FROM Institute WHERE fakultaets_id='" .$db->f("Institut_id") . "' AND institut_id!='" .$db->f("Institut_id") . "' ORDER BY Name");
-        while ($db2->next_record())
-        {
-            $export_pagecontent .= sprintf("<option value=\"%s\"", $db2->f("Institut_id"));
-            if ( ( $range_id == $db2->f("Institut_id") ) AND( $range_id != $db->f("Institut_id")))
-                $export_pagecontent .= " selected";
-            $export_pagecontent .= sprintf(">&nbsp;&nbsp;&nbsp;&nbsp;%s </option>\n", htmlReady(my_substr($db2->f("Name"), 0, 60)));
+    $inst_statement->execute(array($faculty['Institut_id']));
+    while ($institute = $inst_statement->fetch(PDO::FETCH_ASSOC)) {
+        $export_pagecontent .= sprintf("<option value=\"%s\"", $institute['Institut_id']);
+        if ($range_id == $institute['Institut_id'] && $range_id != $faculty['Institut_id']) {
+            $export_pagecontent .= " selected";
         }
+        $export_pagecontent .= sprintf(">&nbsp;&nbsp;&nbsp;&nbsp;%s </option>\n", htmlReady(my_substr($institute['Name'], 0, 60)));
     }
+    $inst_statement->closeCursor();
 }
 
 if ($perm->have_perm("root")) {

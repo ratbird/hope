@@ -1,7 +1,7 @@
 <?php
 # Lifter002: DONE - not applicable
+# Lifter003: TEST
 # Lifter007: TODO
-# Lifter003: TODO - search_range() still undone
 # Lifter010: DONE - not applicable
 /**
  * functions.php
@@ -158,13 +158,15 @@ function selectSem ($sem_id)
 {
     global $perm, $SEM_TYPE, $SEM_TYPE_MISC_NAME, $SessionSeminar, $SessSemName, $SemSecLevelRead, $SemSecLevelWrite, $SemUserStatus, $rechte;
 
-    $db = DBManager::get();
-
     closeObject();
 
-    $st = $db->prepare("SELECT Institut_id, Name, Seminar_id, Untertitel, start_time, status, Lesezugriff, Schreibzugriff, Passwort FROM seminare WHERE Seminar_id = ?");
-    $st->execute(array($sem_id));
-    if ($row = $st->fetch()) {
+    $query = "SELECT Institut_id, Name, Seminar_id, Untertitel, start_time, 
+                     status, Lesezugriff, Schreibzugriff, Passwort
+              FROM seminare
+              WHERE Seminar_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($sem_id));
+    if ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
         $SemSecLevelRead = $row["Lesezugriff"];
         $SemSecLevelWrite = $row["Schreibzugriff"];
         $rechte = $perm->have_studip_perm("tutor", $row["Seminar_id"]);
@@ -225,17 +227,19 @@ function selectInst ($inst_id)
 {
     global $SessionSeminar, $SessSemName, $INST_TYPE, $SemUserStatus, $rechte, $perm;
 
-    $db = DBManager::get();
-
     closeObject();
 
     if (!get_config('ENABLE_FREE_ACCESS') && !$perm->have_perm('user')) {
         throw new AccessDeniedException(_("Keine Berechtigung."));
     }
 
-    $st = $db->prepare("SELECT Name, Institut_id, type,fakultaets_id, IF(Institut_id=fakultaets_id,1,0) AS is_fak FROM Institute WHERE Institut_id = ?");
-    $st->execute(array($inst_id));
-    if ($row = $st->fetch()) {
+    $query = "SELECT Name, Institut_id, type,fakultaets_id,
+                     Institut_id = fakultaets_id AS is_fak
+              FROM Institute
+              WHERE Institut_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($inst_id));
+    if ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
         if ( !($SemUserStatus = $perm->get_studip_perm($row["Institut_id"])) ) {
             $SemUserStatus = 'nobody';
         }
@@ -1316,157 +1320,242 @@ function search_range($search_str = false, $search_user = false, $show_sem = tru
 {
     global $perm, $user, $_fullname_sql;
 
-    $db = new DB_Seminar();
+    // Helper function that obtains the correct name for an entity taking
+    // in account whether the semesters should be displayed or not
+    $formatName = function ($row) use ($show_sem) {
+        $name = $row['Name'];
+        if ($show_sem) {
+            $name = sprintf('%s (%s%s)',
+                            $name,
+                            $row['startsem'],
+                            $row['startsem'] != $row['endsem'] ? ' - ' . $row['endsem'] : '');
+        }
+        return $name;
+    };
 
-    $search_result = null;
+    $search_result = array();
     $show_sem_sql1 = ",s.start_time,sd1.name AS startsem,IF(s.duration_time=-1, '"._("unbegrenzt")."', sd2.name) AS endsem ";
-    $show_sem_sql2 = "LEFT JOIN semester_data sd1 ON ( start_time BETWEEN sd1.beginn AND sd1.ende)
-                    LEFT JOIN semester_data sd2 ON ((start_time + duration_time) BETWEEN sd2.beginn AND sd2.ende)";
+    $show_sem_sql2 = "LEFT JOIN semester_data sd1 ON (start_time BETWEEN sd1.beginn AND sd1.ende)
+                      LEFT JOIN semester_data sd2 ON (start_time + duration_time BETWEEN sd2.beginn AND sd2.ende)";
 
 
-    if ($search_str && $perm->have_perm("root")) {
-
-        if ($search_user){
-            $query = "SELECT a.user_id,". $_fullname_sql['full'] . " AS full_name,username FROM auth_user_md5 a LEFT JOIN user_info USING(user_id) WHERE CONCAT(Vorname,' ',Nachname,' ',username) LIKE '%$search_str%' ORDER BY Nachname, Vorname";
-            $db->query($query);
-            while($db->next_record()) {
-                $search_result[$db->f("user_id")]=array("type"=>"user","name"=>$db->f("full_name")."(".$db->f("username").")");
+    if ($search_str && $perm->have_perm('root')) {
+        if ($search_user) {
+            $query = "SELECT user_id, CONCAT({$_fullname_sql['full']}, ' (', username, ')') AS name
+                      FROM auth_user_md5 AS a
+                      LEFT JOIN user_info USING (user_id)
+                      WHERE CONCAT(Vorname, ' ', Nachname, ' ', username) LIKE CONCAT('%', ?, '%')
+                      ORDER BY Nachname, Vorname";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($search_str));
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                $search_result[$row['user_id']] = array(
+                    'type' => 'user',
+                    'name' => $row['name'],
+                );
             }
         }
 
-        $query = "SELECT Seminar_id,IF(s.visible=0,CONCAT(s.Name, ' "._("(versteckt)")."'), s.Name) AS Name "
-                . ($show_sem ? $show_sem_sql1 : "")
-                ." FROM seminare s "
-                . ($show_sem ? $show_sem_sql2 : "")
-                ." WHERE s.Name LIKE '%$search_str%' ORDER BY start_time DESC, Name";
-        $db->query($query);
-        while($db->next_record()) {
-            $name = $db->f("Name")
-                . ($show_sem ? " (".$db->f('startsem')
-                . ($db->f('startsem') != $db->f('endsem') ? " - ".$db->f('endsem') : "")
-                . ")" : "");
-            $search_result[$db->f("Seminar_id")]=array("type"=>"sem",
-                                                        "starttime"=>$db->f('start_time'),
-                                                        "startsem"=>$db->f('startsem'),
-                                                        "name"=>$name);
+        $_hidden = _('(versteckt)');
+        $query = "SELECT Seminar_id, IF(s.visible = 0, CONCAT(s.Name, ' {$_hidden}'), s.Name) AS Name %s
+                  FROM seminare AS s %s
+                  WHERE s.Name LIKE CONCAT('%%', ?, '%%')
+                  ORDER BY start_time DESC, Name";
+        $query = $show_sem
+               ? sprintf($query, $show_sem_sql1, $show_sem_sql2)
+               : sprintf($query, '', '');
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($search_str));
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $search_result[$row['Seminar_id']] = array(
+                'type'      => 'sem',
+                'name'      => $formatName($row),
+                'starttime' => $row['start_time'],
+                'startsem'  => $row['startsem'],
+            );
         }
-        $query="SELECT Institut_id,Name, IF(Institut_id=fakultaets_id,'fak','inst') AS inst_type FROM Institute WHERE Name LIKE '%$search_str%' ORDER BY Name";
-        $db->query($query);
-        while($db->next_record()) {
-            $search_result[$db->f("Institut_id")]=array("type"=>$db->f("inst_type"),"name"=>$db->f("Name"));
+
+        $query = "SELECT Institut_id, Name, IF(Institut_id = fakultaets_id, 'fak', 'inst') AS type
+                  FROM Institute
+                  WHERE Name LIKE CONCAT('%', ?, '%')
+                  ORDER BY Name";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($search_str));
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $search_result[$row['Institut_id']] = array(
+                'type' => $row['type'],
+                'name' => $row['Name'],
+            );
         }
-    } elseif ($search_str && $perm->have_perm("admin")) {
-        $query="SELECT s.Seminar_id,IF(s.visible=0,CONCAT(s.Name, ' "._("(versteckt)")."'), s.Name) AS Name "
-                . ($show_sem ? $show_sem_sql1 : "")
-                . " FROM user_inst AS a LEFT JOIN  seminare AS s USING (Institut_id) "
-                . ($show_sem ? $show_sem_sql2 : "")
-                . " WHERE a.user_id='$user->id' AND a.inst_perms='admin' AND s.Name LIKE '%$search_str%' ORDER BY start_time DESC, Name";
-        $db->query($query);
-        while($db->next_record()) {
-            $name = $db->f("Name")
-                . ($show_sem ? " (".$db->f('startsem')
-                . ($db->f('startsem') != $db->f('endsem') ? " - ".$db->f('endsem') : "")
-                . ")" : "");
-            $search_result[$db->f("Seminar_id")]=array("type"=>"sem",
-                                                        "starttime"=>$db->f('start_time'),
-                                                        "startsem"=>$db->f('startsem'),
-                                                        "name"=>$name);
+    } elseif ($search_str && $perm->have_perm('admin')) {
+        $_hidden = _('(versteckt)');
+        $query = "SELECT s.Seminar_id, IF(s.visible = 0, CONCAT(s.Name, ' {$_hidden}), s.Name) AS Name %s
+                  FROM user_inst AS a
+                  LEFT JOIN seminare AS s USING (Institut_id) %s
+                  WHERE a.user_id = ? AND a.inst_perms = 'admin' AND s.Name LIKE CONCAT('%%', ?, '%%')
+                  ORDER BY start_time";
+        $query = $show_sem
+               ? sprintf($query, $show_sem_sql1, $show_sem_sql2)
+               : sprintf($query, '', '');
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($user->id, $search_str));
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $search_result[$row['Seminar_id']] = array(
+                'type'      => 'sem',
+                'name'      => $formatName($row),
+                'starttime' => $row['start_time'],
+                'startsem'  => $row['startsem'],
+            );
         }
-        $query="SELECT b.Institut_id,b.Name from user_inst AS a LEFT JOIN   Institute AS b USING (Institut_id) WHERE a.user_id='$user->id' AND a.inst_perms='admin' AND a.institut_id!=b.fakultaets_id AND  b.Name LIKE '%$search_str%' ORDER BY Name";
-        $db->query($query);
-        while($db->next_record()) {
-            $search_result[$db->f("Institut_id")]=array("type"=>"inst","name"=>$db->f("Name"));
+
+        $query = "SELECT b.Institut_id, b.Name
+                  FROM user_inst AS a
+                  LEFT JOIN Institute AS b USING (Institut_id)
+                  WHERE a.user_id = ? AND a.inst_perms = 'admin'
+                    AND a.institut_id != b.fakultaets_id AND b.Name LIKE CONCAT('%', ?, '%')
+                  ORDER BY Name";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($user->id, $search_str));
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $search_result[$row['Institut_id']] = array(
+                'type' => 'inst',
+                'name' => $row['Name'],
+            );
         }
         if ($perm->is_fak_admin()) {
-            $query = "SELECT s.Seminar_id,IF(s.visible=0,CONCAT(s.Name, ' "._("(versteckt)")."'), s.Name) AS Name"
-                . ($show_sem ? $show_sem_sql1 : "")
-                . " FROM user_inst a LEFT JOIN Institute b ON(a.Institut_id=b.Institut_id AND b.Institut_id=b.fakultaets_id)
-                LEFT JOIN Institute c ON(c.fakultaets_id = b.institut_id AND c.fakultaets_id!=c.institut_id)
-                LEFT JOIN seminare s ON(s.institut_id = c.institut_id) "
-                . ($show_sem ? $show_sem_sql2 : "")
-                . " WHERE a.user_id='$user->id' AND a.inst_perms='admin' AND NOT ISNULL(b.Institut_id) AND s.Name LIKE '%$search_str%' ORDER BY start_time DESC, Name";
-            $db->query($query);
-            while($db->next_record()){
-                $name = $db->f("Name")
-                    . ($show_sem ? " (".$db->f('startsem')
-                    . ($db->f('startsem') != $db->f('endsem') ? " - ".$db->f('endsem') : "")
-                    . ")" : "");
-                $search_result[$db->f("Seminar_id")]=array("type"=>"sem",
-                                                        "starttime"=>$db->f('start_time'),
-                                                        "startsem"=>$db->f('startsem'),
-                                                        "name"=>$name);
+            $_hidden = _('(versteckt)');
+            $query = "SELECT s.Seminar_id, IF(s.visible = 0, CONCAT(s.Name, ' {$_hidden}), s.Name) AS Name %s
+                      FROM user_inst AS a
+                      LEFT JOIN Institute AS b ON (a.Institut_id = b.Institut_id AND b.Institut_id = b.fakultaets_id)
+                      LEFT JOIN Institute AS c ON (c.fakultaets_id = b.Institut_id AND c.fakultaets_id = c.Institut_id)
+                      LEFT JOIN seminare AS s ON (s.Institut_id = c.Institut_id) %s
+                      WHERE a.user_id = ? AND a.inst_perms = 'admin'
+                        AND NOT ISNULL(b.Institut_id) AND s.Name LIKE CONCAT('%%', ?, '%%')
+                      ORDER BY start_time DESC, Name";
+            $query = $show_sem
+                   ? sprintf($query, $show_sem_sql1, $show_sem_sql2)
+                   : sprintf($query, '', '');
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($user->id, $search_str));
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                $search_result[$row['Seminar_id']] = array(
+                    'type'      => 'sem',
+                    'name'      => $formatName($row),
+                    'starttime' => $row['start_time'],
+                    'startsem'  => $row['startsem'],
+                );
             }
-            $query = "SELECT c.Institut_id,c.Name FROM user_inst a LEFT JOIN Institute b ON(a.Institut_id=b.Institut_id AND b.Institut_id=b.fakultaets_id)
-            LEFT JOIN Institute c ON(c.fakultaets_id = b.institut_id AND c.fakultaets_id!=c.institut_id)
-            WHERE a.user_id='$user->id' AND a.inst_perms='admin' AND NOT ISNULL(b.Institut_id) AND c.Name LIKE '%$search_str%' ORDER BY Name";
-            $db->query($query);
-            while($db->next_record()){
-                $search_result[$db->f("Institut_id")]=array("type"=>"inst","name"=>$db->f("Name"));
+
+            $query = "SELECT c.Institut_id, c.Name
+                      FROM user_inst AS a
+                      LEFT JOIN Institute AS b ON (a.Institut_id = b.Institut_id AND b.Institut_id = b.fakultaets_id)
+                      LEFT JOIN Institute AS c ON (c.fakultaets_id = b.institut_id AND c.fakultaets_id != c.institut_id)
+                      WHERE a.user_id = ? AND a.inst_perms = 'admin'
+                        AND NOT ISNULL(b.Institut_id) AND c.Name LIKE CONCAT('%', ?, '%')
+                      ORDER BY Name";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($user->id, $search_str));
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                $search_result[$row['Institut_id']] = array(
+                    'type' => 'inst',
+                    'name' => $row['Name'],
+                );
             }
-            $query = "SELECT b.Institut_id,b.Name FROM user_inst a LEFT JOIN Institute b ON(a.Institut_id=b.Institut_id AND b.Institut_id=b.fakultaets_id)
-            WHERE a.user_id='$user->id' AND a.inst_perms='admin' AND NOT ISNULL(b.Institut_id) AND b.Name LIKE '%$search_str%' ORDER BY Name";
-            $db->query($query);
-            while($db->next_record()){
-                $search_result[$db->f("Institut_id")]=array("type"=>"fak","name"=>$db->f("Name"));
+
+            $query = "SELECT b.Institut_id, b.Name
+                      FROM user_inst AS a
+                      LEFT JOIN Institute AS b ON (a.Institut_id = b.Institut_id AND b.Institut_id = b.fakultaets_id)
+                      WHERE a.user_id = = AND a.inst_perms = 'admin'
+                        AND NOT ISNULL(b.Institut_id) AND b.Name LIKE CONCAT('%', ?, '%')
+                      ORDER BY Name";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($user->id, $search_str));
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                $search_result[$row['Institut_id']] = array(
+                    'type' => 'inst',
+                    'name' => $row['Name'],
+                );
             }
+        }
+    } elseif ($perm->have_perm('tutor') || $perm->have_perm('autor')) {
+        // autors my also have evaluations and news in studygroups with proper rights
+        $_hidden = _('(versteckt)');
+        $query = "SELECT s.Seminar_id, IF(s.visible = 0, CONCAT(s.Name, ' {$_hidden}'), s.Name) AS Name %s
+                  FROM seminar_user AS a
+                  LEFT JOIN seminare AS s USING (Seminar_id) %s
+                  WHERE a.user_id = ? AND a.status IN ('tutor', 'dozent')
+                  ORDER BY start_time DESC, Name";
+        $query = $show_sem
+               ? sprintf($query, $show_sem_sql1, $show_sem_sql2)
+               : sprintf($query, '', '');
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($user->id));
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $search_result[$row['Seminar_id']] = array(
+                'type'      => 'sem',
+                'name'      => $formatName($row),
+                'starttime' => $row['start_time'],
+                'startsem'  => $row['startsem'],
+            );
         }
 
-    } elseif ($perm->have_perm("tutor") || $perm->have_perm("autor")) {    // autors my also have evaluations and news in studygroups with proper rights
-        $query="SELECT s.Seminar_id,IF(s.visible=0,CONCAT(s.Name, ' "._("(versteckt)")."'), s.Name) AS Name"
-                . ($show_sem ? $show_sem_sql1 : "")
-                . " FROM seminar_user AS a LEFT JOIN seminare AS s USING (Seminar_id)"
-                . ($show_sem ? $show_sem_sql2 : "")
-                . " WHERE a.user_id='$user->id' AND a.status IN ('dozent','tutor') ORDER BY start_time DESC, Name";
-        $db->query($query);
-        while($db->next_record()) {
-            $name = $db->f("Name")
-                . ($show_sem ? " (".$db->f('startsem')
-                . ($db->f('startsem') != $db->f('endsem') ? " - ".$db->f('endsem') : "")
-                . ")" : "");
-            $search_result[$db->f("Seminar_id")]=array("type"=>"sem",
-                                                        "starttime"=>$db->f('start_time'),
-                                                        "startsem"=>$db->f('startsem'),
-                                                        "name"=>$name);
-        }
-        $query="SELECT b.Institut_id,b.Name,IF(Institut_id=fakultaets_id,'fak','inst') AS inst_type from user_inst AS a LEFT JOIN  Institute AS b USING (Institut_id) WHERE a.user_id='$user->id' AND a.inst_perms IN ('dozent','tutor') ORDER BY Name";
-        $db->query($query);
-        while($db->next_record()) {
-            $search_result[$db->f("Institut_id")]=array("type"=>$db->f("inst_type"),"name"=>$db->f("Name"));
+        $query = "SELECT Institut_id, b.Name AS name,
+                         IF (Institut_id = fakultaets_id, 'fak', 'inst') AS type
+                  FROM user_inst AS a
+                  LEFT JOIN Institute AS b USING (Institut_id)
+                  WHERE a.user_id = ? AND a.inst_perms IN ('dozent','tutor')
+                  ORDER BY Name";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($user->id));
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $search_result[$row['Institut_id']] = array(
+                'name' => $row['Name'],
+                'type' => $row['type'],
+            );
         }
     }
+
     if (get_config('DEPUTIES_ENABLE')) {
-        $query = "SELECT s.Seminar_id, CONCAT(IF(s.visible=0,CONCAT(s.Name, ' "._("(versteckt)")."'), s.Name), ' ["._("Vertretung")."]') AS Name ".
-            ($show_sem ? $show_sem_sql1 : "").
-            "FROM seminare s JOIN deputies d ON (s.Seminar_id=d.range_id) ".
-            ($show_sem ? $show_sem_sql2 : "").
-            "WHERE s.Name LIKE '%$search_str%' AND d.user_id='$user->id'
-            ORDER BY s.start_time DESC, Name";
-        $db->query($query);
-        while ($db->next_record()) {
-            $name = $db->f("Name")
-                . ($show_sem ? " (".$db->f('startsem')
-                . ($db->f('startsem') != $db->f('endsem') ? " - ".$db->f('endsem') : "")
-                . ")" : "");
-            $search_result[$db->f("Seminar_id")] = array("type"=>"sem",
-                                                        "starttime"=>$db->f('start_time'),
-                                                        "startsem"=>$db->f('startsem'),
-                                                        "name"=>$name);
+        $_hidden = _('(versteckt)');
+        $_deputy = _('Vertretung');
+        $query = "SELECT s.Seminar_id,
+                         CONCAT(IF(s.visible = 0, CONCAT(s.Name, ' {$_hidden}'), s.Name), ' [{$_deputy}]') AS Name %s
+                  FROM seminare AS s
+                  JOIN deputies AS d ON (s.Seminar_id = d.range_id) %s
+                  WHERE s.Name LIKE CONCAT('%%', ?, '%%') AND d.user_id = ?
+                  ORDER BY s.start_time DESC, Name";
+        $query = $show_sem
+               ? sprintf($query, $show_sem_sql1, $show_sem_sql2)
+               : sprintf($query, '', '');
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($search_str, $user->id));
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $search_result[$row['Seminar_id']] = array(
+                'type'      => 'sem',
+                'name'      => $formatName($row),
+                'starttime' => $row['start_time'],
+                'startsem'  => $row['startsem'],
+            );
         }
         if (isDeputyEditAboutActivated()) {
-            $query = "SELECT a.user_id, a.username, ".$_fullname_sql['full']." AS name
-                FROM auth_user_md5 a
-                    JOIN user_info USING (user_id)
-                    JOIN deputies d ON (a.user_id=d.range_id)
-                WHERE d.user_id='$user->id' ORDER BY name ASC";
-            $db->query($query);
-            while ($db->next_record()) {
-                $search_result[$db->f("user_id")] = array("type" => "user",
-                    "name" => $db->f("name")." (".$db->f("username").")",
-                    "username" => $db->f("username"));
+            $query = "SELECT a.user_id, a.username, 'user' AS type, 
+                             CONCAT({$_fullname_sql['full']}, ' (', username, ')') AS name
+                      FROM auth_user_md5 AS a
+                      JOIN user_info USING (user_id)
+                      JOIN deputies AS d ON (a.user_id = d.range_id)
+                      WHERE d.user_id = ?
+                      ORDER BY name ASC";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                $user->id
+            ));
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                $search_result[$row['user_id']] = $row;
             }
         }
     }
-    return $search_result;
+
+    return $search_result ?: null;
 }
 
 /**

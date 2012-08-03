@@ -176,8 +176,7 @@ class ExternModuleTemplatePersons extends ExternModule {
             ksort($query_order, SORT_NUMERIC);
             $query_order = ' ORDER BY ' . implode(',', $query_order);
         }
-        
-        $db = new DB_Seminar();
+                
         $grouping = $this->config->getValue("Main", "grouping");
         if (!$nameformat = $this->config->getValue('Main', 'nameformat')) {
             $nameformat = 'full_rev';
@@ -187,25 +186,29 @@ class ExternModuleTemplatePersons extends ExternModule {
         
         
         if(!$grouping) {
-            $groups_ids = implode("','", $this->config->getValue("Main", "groupsvisible"));
-
+            
+            $mrks =  str_repeat('?,', count($this->config->getValue("Main", "groupsvisible")) - 1) . '?';
             $query = "SELECT DISTINCT ui.raum, ui.sprechzeiten, ui.Telefon, inst_perms, Email, aum.user_id, username, ";
             $query .= $GLOBALS['_fullname_sql'][$nameformat] . " AS fullname, aum.Nachname ";
             if ($query_order != '') {
                 $query .= "FROM statusgruppe_user LEFT JOIN auth_user_md5 aum USING(user_id) ";
                 $query .= "LEFT JOIN user_info USING(user_id) LEFT JOIN user_inst ui USING(user_id) ";
-                $query .= "WHERE statusgruppe_id IN ('$groups_ids') AND Institut_id = '" . $this->config->range_id
-                        . "' AND ".get_ext_vis_query()."$query_order";
+                $query .= "WHERE statusgruppe_id IN ($mrks) AND Institut_id = ? AND ".get_ext_vis_query()."$query_order";
             } else {
                 $query .= "FROM statusgruppen s LEFT JOIN statusgruppe_user su USING(statusgruppe_id) ";
                 $query .= "LEFT JOIN auth_user_md5 aum USING(user_id) ";
                 $query .= "LEFT JOIN user_info USING(user_id) LEFT JOIN user_inst ui USING(user_id) ";
-                $query .= "WHERE su.statusgruppe_id IN ('$groups_ids') AND Institut_id = '" . $tis->config->range_id;
+                $query .= "WHERE su.statusgruppe_id IN ($mrks) AND Institut_id = ? ";
                 $query .= "' AND ".get_ext_vis_query()." ORDER BY ";
                 $query .= "s.position ASC, su.position ASC";
             }
-
-            $db->query($query);
+            $parameters = $this->config->getValue("Main", "groupsvisible");
+            $parameters[] = $this->config->range_id;
+            
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute($parameters);
+            $row = $statement->fetch(PDO::FETCH_ASSOC);
+       
             $visible_groups = array("");
         }
         
@@ -214,11 +217,8 @@ class ExternModuleTemplatePersons extends ExternModule {
         
         $data['data_fields'] = $this->data_fields;
         $defaultaddress = $this->config->getValue('Main', 'defaultadr');
-        if ($defaultaddress) {
-            $db_defaultaddress = new DB_Seminar();
-            $db_out =& $db_defaultaddress;
-        } else {
-            $db_out =& $db;
+        if (! $defaultaddress) {
+           $db_out =& $row;
         }
         
         $out = '';
@@ -234,9 +234,12 @@ class ExternModuleTemplatePersons extends ExternModule {
                 $query .= $GLOBALS['_fullname_sql'][$nameformat] . " AS fullname, aum.Nachname ";
                 $query .= 'FROM statusgruppe_user su LEFT JOIN auth_user_md5 aum USING(user_id) ';
                 $query .= 'LEFT JOIN user_info USING(user_id) LEFT JOIN user_inst ui USING(user_id) ';
-                $query .= "WHERE su.statusgruppe_id='$group_id' AND ".get_ext_vis_query()." AND Institut_id = '" . $this->config->range_id . "'$query_order";
+                $query .= "WHERE su.statusgruppe_id = ? AND ".get_ext_vis_query()." AND Institut_id = ? $query_order";
                 
-                $db->query($query);
+                $parameters = array($group_id, $this->config->range_id );
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute($parameters);
+                $row = $statement->fetch(PDO::FETCH_ASSOC);
 
                 $position = array_search($group_id, $all_groups);
                 if($aliases_groups[$position]) {
@@ -245,7 +248,7 @@ class ExternModuleTemplatePersons extends ExternModule {
             }
 
         
-            if ($db->num_rows()) {
+            if ($row !== false) {
                 $aliases_groups = $this->config->getValue('Main', 'groupsalias');
                 if($aliases_groups[$position]) {
                     $content['PERSONS']['GROUP'][$i]['GROUPTITLE-SUBSTITUTE'] = ExternModule::ExtHtmlReady($aliases_groups[$position]);
@@ -254,9 +257,8 @@ class ExternModuleTemplatePersons extends ExternModule {
                 $content['PERSONS']['GROUP'][$i]['GROUP-NO'] = $i + 1;
                 
                 $j = 0;
-                while ($db->next_record()) {
-
-                    $visibilities = get_local_visibility_by_id($db->f('user_id'), 'homepage', true);
+                do{
+                    $visibilities = get_local_visibility_by_id($row['user_id'], 'homepage', true);
                     $user_perm = $visibilities['perms'];
                     $visibilities = json_decode($visibilities['homepage'], true);
 
@@ -266,33 +268,38 @@ class ExternModuleTemplatePersons extends ExternModule {
                         $query .= 'aum.user_id, username, ' . $GLOBALS['_fullname_sql'][$nameformat];
                         $query .= ' AS fullname, aum.Nachname, aum.Vorname FROM auth_user_md5 aum LEFT JOIN ';
                         $query .= 'user_info USING(user_id) LEFT JOIN ';
-                        $query .= "user_inst ui USING(user_id) WHERE aum.user_id = '" . $db->f('user_id');
+                        $query .= "user_inst ui USING(user_id) WHERE aum.user_id = '" . $row['user_id'];
                         $query .= "' AND ".get_ext_vis_query().' AND externdefault = 1';
-                        $db_defaultaddress->query($query);
-                        // no default
-                        if (!$db_defaultaddress->next_record()) {
+
+                        $state = DBManager::get()->prepare($query);
+                        $state->execute();
+                        $db_out = $statement->fetch(PDO::FETCH_ASSOC);
+                        //no default
+                        if ($db_out === false) {
                             $query = 'SELECT ui.raum, ui.sprechzeiten, ui.Telefon, inst_perms,  Email, ';
                             $query .= 'title_front, title_rear, ';
                             $query .= 'aum.user_id, username, ' . $GLOBALS['_fullname_sql'][$nameformat];
                             $query .= ' AS fullname, aum.Nachname, aum.Vorname FROM auth_user_md5 aum LEFT JOIN ';
                             $query .= 'user_info USING(user_id) LEFT JOIN ';
-                            $query .= "user_inst ui USING(user_id) WHERE aum.user_id = '" . $db->f('user_id');
-                            $query .= "' AND ".get_ext_vis_query()." AND Institut_id = '" . $this->config->range_id . "'";
-                            $db_defaultaddress->query($query);
-                            $db_defaultaddress->next_record();
+                            $query .= "user_inst ui USING(user_id) WHERE aum.user_id = '" . $row['user_id'];
+                            $query .= "' AND ".get_ext_vis_query()." AND Institut_id = ? " ;
+                            $state = DBManager::get()->prepare($query);
+                            $params = array($this->config->range_id);
+                            $state->execute($params);
+                            $db_out = $statement->fetch(PDO::FETCH_ASSOC);
                         }
                     }
                     
-                    $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['FULLNAME'] = ExternModule::ExtHtmlReady($db_out->f('fullname'));
-                    $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['LASTNAME'] = ExternModule::ExtHtmlReady($db_out->f('Nachname'));
-                    $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['FIRSTNAME'] = ExternModule::ExtHtmlReady($db_out->f('Vorname'));
-                    $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['TITLEFRONT'] = ExternModule::ExtHtmlReady($db_out->f('title_front'));
-                    $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['TITLEREAR'] = ExternModule::ExtHtmlReady($db_out->f('title_rear'));
-                    $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['PERSONDETAIL-HREF'] = $this->elements['LinkInternTemplate']->createUrl(array('link_args' => 'username=' . $db_out->f('username')));
-                    $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['USERNAME'] = $db_out->f('username');
+                    $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['FULLNAME'] = ExternModule::ExtHtmlReady($db_out['fullname']);
+                    $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['LASTNAME'] = ExternModule::ExtHtmlReady($db_out['Nachname']);
+                    $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['FIRSTNAME'] = ExternModule::ExtHtmlReady($db_out['Vorname']);
+                    $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['TITLEFRONT'] = ExternModule::ExtHtmlReady($db_out['title_front']);
+                    $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['TITLEREAR'] = ExternModule::ExtHtmlReady($db_out['title_rear']);
+                    $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['PERSONDETAIL-HREF'] = $this->elements['LinkInternTemplate']->createUrl(array('link_args' => 'username=' . $db_out['username']));
+                    $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['USERNAME'] = $db_out['username'];
 
-                    if (is_element_visible_externally($db->f('user_id'), $user_perm, 'picture', $visibilities['picture'])) {
-                        $avatar = Avatar::getAvatar($db_out->f('user_id'));
+                    if (is_element_visible_externally( $row['user_id'], $user_perm, 'picture', $visibilities['picture'])) {
+                        $avatar = Avatar::getAvatar($db_out['user_id']);
                     } else {
                         $avatar = Avatar::getNobody();
                     }
@@ -300,23 +307,23 @@ class ExternModuleTemplatePersons extends ExternModule {
                     $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['IMAGE-URL-MEDIUM'] = $avatar->getURL(Avatar::MEDIUM);
                     $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['IMAGE-URL-NORMAL'] = $avatar->getURL(Avatar::NORMAL);
 
-                    $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['PHONE'] = ExternModule::ExtHtmlReady($db_out->f('Telefon'));
-                    $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['ROOM'] = ExternModule::ExtHtmlReady($db_out->f('raum'));
-                    $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['EMAIL'] = get_visible_email($db->f('user_id'));
+                    $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['PHONE'] = ExternModule::ExtHtmlReady($db_out['Telefon']);
+                    $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['ROOM'] = ExternModule::ExtHtmlReady($db_out['raum']);
+                    $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['EMAIL'] = get_visible_email($row['user_id']);
                     $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['EMAIL-LOCAL'] = array_shift(explode('@', $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['EMAIL']));
                     $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['EMAIL-DOMAIN'] = array_pop(explode('@', $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['EMAIL']));
-                    $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['OFFICEHOURS'] = ExternModule::ExtHtmlReady($db_out->f('sprechzeiten'));
+                    $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['OFFICEHOURS'] = ExternModule::ExtHtmlReady($db_out['sprechzeiten']);
                     $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['PERSON-NO'] = $j + 1;
 
                     // generic data fields
                     if (is_array($generic_datafields)) {
-                        $localEntries = DataFieldEntry::getDataFieldEntries($db_out->f('user_id'), 'user');
+                        $localEntries = DataFieldEntry::getDataFieldEntries($db_out['user_id'], 'user');
                         #$datafields = $datafields_obj->getLocalFields($db_out->f('user_id'));
                         $k = 1;
                         foreach ($generic_datafields as $datafield) {
                             if (isset($localEntries[$datafield]) && 
                                     is_object($localEntries[$datafield] && 
-                                    is_element_visible_externally($db_out->f('user_id'), 
+                                    is_element_visible_externally($db_out['user_id'],
                                         $user_perm, $localEntries[$datafield]->getId(), 
                                         $visibilities[$localEntries[$datafield]->getId()]))) {
                                 if ($localEntries[$datafield]->getType() == 'link') {
@@ -332,7 +339,7 @@ class ExternModuleTemplatePersons extends ExternModule {
                         }
                     }
                     $j++;
-                }
+                }while ($row = $statement->fetch(PDO::FETCH_ASSOC));
             }
             $i++;
         }

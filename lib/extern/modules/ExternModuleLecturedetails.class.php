@@ -51,8 +51,7 @@ require_once 'lib/functions.php';
 
 class ExternModuleLecturedetails extends ExternModule {
 
-    // private
-    var $db;
+   
     // private
     var $seminar_id;
 
@@ -141,40 +140,47 @@ class ExternModuleLecturedetails extends ExternModule {
     function toString ($args) {
         $out = "";
         $this->seminar_id = $args["seminar_id"];
-        $this->db = new DB_Seminar();
-        $query = "SELECT * FROM seminare WHERE Seminar_id='$this->seminar_id'";
-        $this->db->query($query);
+        $query = "SELECT * FROM seminare WHERE Seminar_id = ?";
+        $parameters = array($this->seminar_id);
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute($parameters);
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
+        
         $visible = $this->config->getValue("Main", "visible");
-
         $j = -1;
-        if ($this->db->next_record()) {
+        if ($row !== false) {
 
-            $data["name"] = htmlReady($this->db->f("Name"));
+            $data["name"] = htmlReady($row['Name']);
 
-            if ($visible[++$j] && $this->db->f("Untertitel"))
-                $data["subtitle"] = htmlReady($this->db->f("Untertitel"));
+            if ($visible[++$j] && $row['Untertitel'])
+                $data["subtitle"] = htmlReady($row['Untertitel']);
 
             if ($visible[++$j]) {
                 if (!$name_sql = $this->config->getValue("Main", "nameformat"))
                     $name_sql = "full";
                 $name_sql = $GLOBALS['_fullname_sql'][$name_sql];
-                $db_lecturer = new DB_Seminar();
-                $db_lecturer->query("SELECT $name_sql AS name, username, position FROM seminar_user su LEFT JOIN
+
+                $query = "SELECT $name_sql AS name, username, position FROM seminar_user su LEFT JOIN
                         auth_user_md5 USING(user_id) LEFT JOIN user_info USING(user_id)
-                        WHERE su.Seminar_id='{$this->seminar_id}' AND su.status='dozent' ORDER BY position, username");
-                while ($db_lecturer->next_record()) {
+                        WHERE su.Seminar_id = ? AND su.status='dozent' ORDER BY position, username";
+                $parameters = array($this->seminar_id);
+                $state = DBManager::get()->prepare($query);
+                $state->execute($parameters);
+
+
+                while ( $res = $statement->fetch(PDO::FETCH_ASSOC)) {
                     $data["lecturer"][] = $this->elements["LinkInternSimple"]->toString(
                             array("module" => "Persondetails",
-                            "link_args" => "username=" . $db_lecturer->f("username")
+                            "link_args" => "username=" . $res['username']
                             . "&seminar_id=" . $this->seminar_id,
-                            "content" => $db_lecturer->f("name")));
+                            "content" => $res['name'] ));
                 }
                 if (is_array($data["lecturer"]))
                     $data["lecturer"] = implode(", ", $data["lecturer"]);
             }
 
-            if ($visible[++$j] && $this->db->f("art"))
-                $data["art"] = htmlReady($this->db->f("art"));
+            if ($visible[++$j] && $row['art'])
+                $data["art"] = htmlReady($row['art']);
 
             if ($visible[++$j]) {
                 // reorganize the $SEM_TYPE-array
@@ -189,15 +195,15 @@ class ExternModuleLecturedetails extends ExternModule {
                 }
 
                 $aliases_sem_type = $this->config->getValue("ReplaceTextSemType",
-                        "class_" . $GLOBALS["SEM_TYPE"][$this->db->f("status")]['class']);
-                if ($aliases_sem_type[$sem_types_position[$this->db->f("status")] - 1])
-                    $data["status"] =  $aliases_sem_type[$sem_types_position[$this->db->f("status")] - 1];
+                        "class_" . $GLOBALS["SEM_TYPE"][$row['status']]['class']);
+                if ($aliases_sem_type[$sem_types_position[$row['status']] - 1])
+                    $data["status"] =  $aliases_sem_type[$sem_types_position[$row['status']] - 1];
                 else
-                    $data["status"] = htmlReady($GLOBALS["SEM_TYPE"][$this->db->f("status")]["name"]);
+                    $data["status"] = htmlReady($GLOBALS["SEM_TYPE"][$row['status']]["name"]);
             }
 
-            if ($visible[++$j] && $this->db->f("Beschreibung"))
-                $data["description"] = formatLinks($this->db->f("Beschreibung"));
+            if ($visible[++$j] && $row['Beschreibung'])
+                $data["description"] = formatLinks($row['Beschreibung']);
 
             if ($visible[++$j])
                 $data["location"] = htmlReady(Seminar::getInstance($this->seminar_id)->getDatesTemplate('dates/seminar_export_location'));
@@ -215,20 +221,20 @@ class ExternModuleLecturedetails extends ExternModule {
                 }
             }
 
-            if ($visible[++$j] && $this->db->f("VeranstaltungsNummer"))
-                $data["number"] = htmlReady($this->db->f("VeranstaltungsNummer"));
+            if ($visible[++$j] && $row['VeranstaltungsNummer'])
+                $data["number"] = htmlReady($row['VeranstaltungsNummer']);
 
-            if ($visible[++$j] && $this->db->f("teilnehmer"))
-                $data["teilnehmer"] = htmlReady($this->db->f("teilnehmer"));
+            if ($visible[++$j] && $row['teilnehmer'])
+                $data["teilnehmer"] = htmlReady($row['teilnehmer']);
 
-            if ($visible[++$j] && $this->db->f("vorrausetzungen"))
-                $data["requirements"] = htmlReady($this->db->f("vorrausetzungen"));
+            if ($visible[++$j] && $row['vorrausetzungen'])
+                $data["requirements"] = htmlReady($row['vorrausetzungen']);
 
-            if ($visible[++$j] && $this->db->f("lernorga"))
-                $data["lernorga"] = htmlReady($this->db->f("lernorga"));
+            if ($visible[++$j] && $row['lernorga'])
+                $data["lernorga"] = htmlReady($row['lernorga']);
 
-            if ($visible[++$j] && $this->db->f("leistungsnachweis"))
-                $data["leistung"] = htmlReady($this->db->f("leistungsnachweis"));
+            if ($visible[++$j] && $row['leistungsnachweis'])
+                $data["leistung"] = htmlReady($row['leistungsnachweis']);
 
             if ($visible[++$j]) {
                 $range_path_level = $this->config->getValue("Main", "rangepathlevel");
@@ -238,11 +244,11 @@ class ExternModuleLecturedetails extends ExternModule {
                 }
             }
 
-            if ($visible[++$j] && $this->db->f("Sonstiges"))
-                $data["misc"] = formatLinks($this->db->f("Sonstiges"));
+            if ($visible[++$j] && $row['Sonstiges'])
+                $data["misc"] = formatLinks($row['Sonstiges']);
 
-            if ($visible[++$j] && $this->db->f("ects"))
-                $data["ects"] = htmlReady($this->db->f("ects"));
+            if ($visible[++$j] && $row['ects'])
+                $data["ects"] = htmlReady($row['ects']);
 
             // generic data fields
             if ($generic_datafields = $this->config->getValue("Main", "genericdatafields")) {
@@ -502,40 +508,47 @@ class ExternModuleLecturedetails extends ExternModule {
             $studip_info .= "7<br>\n";
         }
         else {
-            $this->db->query("SELECT i.Institut_id, i.Name, i.url FROM seminare LEFT JOIN Institute i
-                                    USING(institut_id) WHERE Seminar_id='{$this->seminar_id}'");
-            $this->db->next_record();
-            $own_inst = $this->db->f("Institut_id");
+            $query="SELECT i.Institut_id, i.Name, i.url FROM seminare LEFT JOIN Institute i
+                                    USING(institut_id) WHERE Seminar_id = ?";
+            $parameters = array($this->seminar_id);
+            $state = DBManager::get()->prepare($query);
+            $state->execute($parameters);
+            $res = $statement->fetch(PDO::FETCH_ASSOC);
+            $own_inst = $res['Institut_id'];
 
             $studip_info = $this->elements["StudipInfo"]->toString(array("content" =>
                     $this->config->getValue("StudipInfo", "homeinst") . "&nbsp;"));
 
-            if ($this->db->f("url")) {
-                $link_inst = htmlReady($this->db->f("url"));
+            if ($res['url']) {
+                $link_inst = htmlReady($res['url']);
                 if (!preg_match('{^https?://.+$}', $link_inst))
                     $link_inst = "http://$link_inst";
                 $studip_info .= sprintf("<a href=\"%s\"%s target=\"_blank\">%s</a>", $link_inst,
                         $this->config->getAttributes("LinkInternSimple", "a"),
-                        htmlReady($this->db->f("Name")));
-            }
-            else
-                $studip_info .= htmlReady($this->db->f("Name"));
+                        htmlReady($res['Name']));
+            }else
+                $studip_info .= htmlReady($res['Name']);
             $studip_info .= "<br>\n";
 
-            $this->db->query("SELECT Name, url FROM seminar_inst LEFT JOIN Institute i USING(institut_id)
-                                    WHERE seminar_id='{$this->seminar_id}' AND i.institut_id!='$own_inst'");
+
+            $query = "SELECT Name, url FROM seminar_inst LEFT JOIN Institute i USING(institut_id)
+                                    WHERE seminar_id = ? AND i.institut_id!='$own_inst'";
+            $parameters = array($this->seminar_id);
+            $state = DBManager::get()->prepare($query);
+            $state->execute($parameters);
+            $res = $statement->fetch(PDO::FETCH_ASSOC);
             $involved_insts = NULL;
-            while ($this->db->next_record()) {
-                if ($this->db->f("url")) {
-                    $link_inst = htmlReady($this->db->f("url"));
+            while ($res) {
+                if ($res['url']) {
+                    $link_inst = htmlReady($res['url']);
                     if (!preg_match('{^https?://.+$}', $link_inst))
                         $link_inst = "http://$link_inst";
-                    $involved_insts[] = sprintf("<a href=\"%s\"%s target=\"_blank\">%s</a>",
-                            $link_inst, $this->config->getAttributes("LinkInternSimple", "a"),
-                            htmlReady($this->db->f("Name")));
+                        $involved_insts[] = sprintf("<a href=\"%s\"%s target=\"_blank\">%s</a>",
+                        $link_inst, $this->config->getAttributes("LinkInternSimple", "a"),
+                        htmlReady($res['Name']));
                 }
                 else
-                    $involved_insts[] = $this->db->f("Name");
+                    $involved_insts[] = $res['Name'];
             }
 
             if ($involved_insts) {
@@ -545,31 +558,41 @@ class ExternModuleLecturedetails extends ExternModule {
                 $studip_info .= $involved_insts . "<br>\n";
             }
 
-            $this->db->query("SELECT count(*) as count_user FROM seminar_user WHERE Seminar_id='{$this->seminar_id}'");
-            $this->db->next_record();
+            $query = "SELECT count(*) as count_user FROM seminar_user WHERE Seminar_id = ?";
+            $parameters = array($this->seminar_id);
+            $state = DBManager::get()->prepare($query);
+            $state->execute($parameters);
+            $res = $statement->fetch(PDO::FETCH_ASSOC);
 
-            if ($this->db->f("count_user")) {
+            if ($res['count_user']) {
                 $studip_info .= $this->elements["StudipInfo"]->toString(array("content" =>
                             $this->config->getValue("StudipInfo", "countuser") . "&nbsp;"));
-                $studip_info .= $this->db->f("count_user") . "<br>\n";
+                $studip_info .= $res['count_user'] . "<br>\n";
             }
 
-            $this->db->query("SELECT count(*) as count_postings FROM px_topics WHERE Seminar_id='{$this->seminar_id}'");
-            $this->db->next_record();
+            $query = "SELECT count(*) as count_postings FROM px_topics WHERE Seminar_id = ?";
+            $parameters = array($this->seminar_id);
+            $state = DBManager::get()->prepare($query);
+            $state->execute($parameters);
+            $res = $statement->fetch(PDO::FETCH_ASSOC);
 
-            if ($this->db->f("count_postings")) {
+
+            if ($res['count_postings']) {
                 $studip_info .= $this->elements["StudipInfo"]->toString(array("content" =>
                             $this->config->getValue("StudipInfo", "countpostings") . "&nbsp;"));
-                $studip_info .= $this->db->f("count_postings") . "<br>\n";
+                $studip_info .= $res['count_postings'] . "<br>\n";
             }
 
-            $this->db->query("SELECT count(*) as count_documents FROM dokumente WHERE seminar_id='{$this->seminar_id}'");
-            $this->db->next_record();
+            $query = "SELECT count(*) as count_documents FROM dokumente WHERE seminar_id = ?";
+            $parameters = array($this->seminar_id);
+            $state = DBManager::get()->prepare($query);
+            $state->execute($parameters);
+            $res = $statement->fetch(PDO::FETCH_ASSOC);
 
-            if ($this->db->f("count_documents")) {
+            if ($res['count_documents']) {
                 $studip_info .= $this->elements["StudipInfo"]->toString(array("content" =>
                             $this->config->getValue("StudipInfo", "countdocuments") . "&nbsp;"));
-                $studip_info .= $this->db->f("count_documents") . "\n";
+                $studip_info .= $res['count_documents'] . "\n";
             }
         }
 

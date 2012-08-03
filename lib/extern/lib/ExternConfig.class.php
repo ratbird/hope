@@ -373,7 +373,7 @@ class ExternConfig {
         $statement = DBManager::get()->prepare($query);
         $statement->execute($parameters);
         $row = $statement->fetch(PDO::FETCH_ASSOC);
-        if ($row && $row['count'] > $GLOBALS['EXTERN_MAX_CONFIGURATIONS']) {
+        if ($row === false && $row['count'] > $GLOBALS['EXTERN_MAX_CONFIGURATIONS']) {
             return FALSE;
         }
         
@@ -419,13 +419,13 @@ class ExternConfig {
     function GetAllConfigurations ($range_id, $type = NULL) {
         $all_configs = array();
         $query = "SELECT * FROM extern_config WHERE range_id = ? ";
-
+        $parameters = array($range_id);
         if ($type) {
             $query .= "AND config_type = ? ";
+            $parameters[] = $type;
         }
         
         $query .= 'ORDER BY name ASC';
-        $parameters = array($range_id,$type);
         $statement = DBManager::get()->prepare($query);
         $statement->execute($parameters);
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
@@ -589,13 +589,13 @@ class ExternConfig {
                 }
             
                 $info = array("module_type" => $module_type, "module_name" => $module,
-                    "name" => $db->f("name"), "make_date" => $make,
+                    "name" => $res['name'], "make_date" => $make,
                     "change_date" => $change, "link" => $link, "link_stucture" => $link_structure,
                     "sri" => $sri, "sri_structure" => $sri_structure, "link_sri" => $link_sri,
                     "level" => $level, "link_br" => $link_br);
             } else {
                 $info = array("module_type" => $module_type, "module_name" => $module_name,
-                    "name" => $db->f("name"), "make_date" => $make,
+                    "name" =>$res['name'], "make_date" => $make,
                     "change_date" => $change,   "sri" => $sri, "link_sri" => $link_sri,
                     "level" => $level);
             }

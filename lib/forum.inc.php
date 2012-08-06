@@ -1481,7 +1481,7 @@ if ($forum["view"]=="search") {
     if ($forum["search"]!="") {
         $addon = " AND (".$forum["search"].")";
     } else {
-        echo forum_search_field()."<br><br>";
+        echo forum_search_field()."<br><br></div></div>";
         include 'lib/include/html_end.inc.php';
         page_close(); //Niemals vergessen, wenn Session oder Benutzervariablen benutzt werden !!!
         die;

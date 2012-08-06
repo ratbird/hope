@@ -913,7 +913,7 @@ function get_additional_data($user_id, $range_id)
     $collected_data = array();
 
     if (is_array($GLOBALS['TEILNEHMER_VIEW'])) {
-        $query = "SELECT status FROM seminare WHERE seminar_id = ";
+        $query = "SELECT status FROM seminare WHERE seminar_id = ?";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($range_id));
         $status = $statement->fetchColumn();

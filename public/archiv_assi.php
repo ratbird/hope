@@ -367,20 +367,20 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
                 $statement->closeCursor();
 
                 printf("<font size=-1><b>" . get_title_for_status('tutor', count($tutors), $seminar['status']) . "</b></font><br>");
-                if (count($teachers) === 0) {
+                if (count($tutors) === 0) {
                     echo '<font size=-1>' . _('keine') . '</font>';
-                } else if (count($teachers) === 1) {
-                    $teacher = reset($teachers);
+                } else if (count($tutors) === 1) {
+                    $tutor = reset($tutors);
                     printf('<font size=-1><a href="%s">%s</a></font>',
-                           URLHelper::getLink('about.php?username=' . $teacher['username']),
-                           htmlReady($teacher['fullname']));
+                           URLHelper::getLink('about.php?username=' . $tutor['username']),
+                           htmlReady($tutor['fullname']));
                 } else {
                     echo '<ul style="margin:0;">';
-                    foreach ($teachers as $teacher) {
+                    foreach ($tutors as $tutor) {
                         echo '<li>';
                         printf('<font size=-1><a href="%s">%s</a></font>',
-                               URLHelper::getLink('about.php?username=' . $teacher['username']),
-                               htmlReady($teacher['fullname']));
+                               URLHelper::getLink('about.php?username=' . $tutor['username']),
+                               htmlReady($tutor['fullname']));
                         echo '</li>';
                     }
                     echo '</ul>';

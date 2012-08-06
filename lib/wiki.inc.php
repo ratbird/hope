@@ -114,6 +114,7 @@ function submitWikiPage($keyword, $version, $body, $user_id, $range_id) {
     //TODO: Die $message Texte klingen fürchterlich. Halbsätze, Denglisch usw...
     if ($latestVersion && ($latestVersion['body'] == $body)) {
         $message = MessageBox::info(_('Keine Änderung vorgenommen.'));
+		PageLayout::postMessage($message);
     } else if ($latestVersion && ($version !== null) && ($lastchange < 30*60) && ($user_id == $latestVersion['user_id'])) {
         // if same author changes again within 30 minutes, no new verison is created
         NotificationCenter::postNotification('WikiPageWillUpdate', array($range_id, $keyword));
@@ -128,7 +129,6 @@ function submitWikiPage($keyword, $version, $body, $user_id, $range_id) {
         $statement->execute(array($body, $keyword, $range_id, $version));
 
         NotificationCenter::postNotification('WikiPageDidUpdate', array($range_id, $keyword));
-        $message = MessageBox::success(_('Update ok, keine neue Version, da erneute Änderung innerhalb 30 Minuten.'));
     } else {
         if ($version === null) {
             $version=0;
@@ -147,11 +147,9 @@ function submitWikiPage($keyword, $version, $body, $user_id, $range_id) {
         $statement->execute(array($range_id, $user_id, $keyword, $body, $version));
 
         NotificationCenter::postNotification('WikiPageDidCreate', array($range_id, $keyword));
-        $message = MessageBox::success(_('Update ok, neue Version angelegt.'));
     }
 
     refreshBacklinks($keyword, $body);
-    PageLayout::postMessage($message);
 }
 
 /**

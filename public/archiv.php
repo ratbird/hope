@@ -150,6 +150,7 @@ if ($delete_id) {
 
 //Loeschen von Archiv-Usern
 if ($delete_user) {
+    $d_sem_id = Request::option('d_sem_id');
     if (archiv_check_perm($d_sem_id) == "admin" || archiv_check_perm($d_sem_id) == "dozent") {
         $query = "DELETE FROM archiv_user WHERE seminar_id  = ? AND user_id = ?";
         $statement = DBManager::get()->prepare($query);

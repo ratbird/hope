@@ -159,8 +159,8 @@ class Admin_DatafieldsController extends AuthenticatedController
                 $struct->setType(Request::get('datafield_typ'));
                 if(in_array($type, array('sem')))
                 {
-                	$struct->setDescription(Request::get('description'));
-                	$struct->setIsRequired(Request::get('mandatory'));
+                    $struct->setDescription(Request::get('description'));
+                    $struct->setIsRequired(Request::get('mandatory'));
                 }
                 $struct->store();
 

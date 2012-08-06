@@ -45,7 +45,7 @@ abstract class DataFieldEntry
     
     function getDescription()
     {
-    	return $this->structure->getDescription();
+        return $this->structure->getDescription();
     }
 
     /**
@@ -369,10 +369,10 @@ abstract class DataFieldEntry
      */
     public function isValid()
     {
-    	if(!trim($this->getValue()) && $this->structure->getIsRequired())
-    	   return false;
-    	else 
-    	   return true;
+        if(!trim($this->getValue()) && $this->structure->getIsRequired())
+           return false;
+        else 
+           return true;
     }
 
     /**

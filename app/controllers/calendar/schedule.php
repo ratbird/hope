@@ -47,7 +47,7 @@ class Calendar_ScheduleController extends AuthenticatedController
         // bind zoom and show_hidden for all actions, even preserving them after redirect
         if (Request::int('zoom')) {
             URLHelper::addLinkParam('zoom', Request::int('zoom'));
-			$GLOBALS['user']->user_vars['my_schedule_settings']['zoom'] = Request::int('zoom');
+            $GLOBALS['user']->user_vars['my_schedule_settings']['zoom'] = Request::int('zoom');
         }
 
         if (Request::int('show_hidden')) {

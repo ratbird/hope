@@ -391,16 +391,16 @@ class Course_BasicdataController extends AuthenticatedController
                     }
                 }
             }
-		         //check if required datafield was not filled out
-		    $sem_data = $sem->getData();
-		    $dataFieldStructures = DataFieldStructure::getDataFieldStructures('sem',$sem_data['status'], true);
-		    foreach ((array)$dataFieldStructures as $id=>$struct) {
-		        if ($struct->accessAllowed($perm) && $perm->have_perm($struct->getEditPerms()) && $struct->getIsRequired() ) {
+                 //check if required datafield was not filled out
+            $sem_data = $sem->getData();
+            $dataFieldStructures = DataFieldStructure::getDataFieldStructures('sem',$sem_data['status'], true);
+            foreach ((array)$dataFieldStructures as $id=>$struct) {
+                if ($struct->accessAllowed($perm) && $perm->have_perm($struct->getEditPerms()) && $struct->getIsRequired() ) {
                             $datafields = Request::getArray('datafields');
-		           if (! trim($datafields[$id])&& !in_array($struct->getName(), $invalid_datafields))
-		              $invalid_datafields[] = $struct->getName();
-		        }
-		    }
+                   if (! trim($datafields[$id])&& !in_array($struct->getName(), $invalid_datafields))
+                      $invalid_datafields[] = $struct->getName();
+                }
+            }
             if (count($invalid_datafields)) {
                 $this->msg[] = array("error",  sprintf(_("%s der Veranstaltung wurde%s falsch angegeben") ,join(', ', array_map('htmlready', $invalid_datafields)), count($invalid_datafields)<=1?'':'n' ).", "._("bitte korrigieren Sie dies unter \"Beschreibungen\"").".");
             }

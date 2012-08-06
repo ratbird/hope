@@ -59,7 +59,7 @@ require_once('lib/datei.inc.php');
 
 {
 // needed session-variables
-		
+        
 if(empty($_SESSION['seminars'])) $_SESSION['seminars'] = "";
 if(empty($_SESSION['semestersAR'])) $_SESSION['semestersAR'] = array();
 if(empty($_SESSION['template'])) $_SESSION['template'] = "";

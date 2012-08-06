@@ -120,26 +120,26 @@ use Studip\Button, Studip\LinkButton;
            </td>
         </tr>
           <? if (in_array($item->getObjectType() , array( 'sem'))): ?>
-	          <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
-	            <td>
-	                <label for="is_required">
-	                    <?= _('Eintrag verpflichtend') ?>:
-	                </label>
-	            </td>
-	            <td>
-	                <input type="checkbox" name="is_required" id="is_required" value="1" <?= $item->getIsRequired() ? 'checked="checked"':'' ?>  >
-	            </td>
-	        </tr>
-	        <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
-	            <td valign="top">
-	                <label for="description">
-	                    <?= _('Beschreibung') ?>:
-	                </label>
-	            </td>
-	            <td>
-	                 <textarea cols="58" rows="3" name="description" id="description"><?= htmlReady($item->getDescription()) ?></textarea>
-	            </td>
-	        </tr>
+              <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+                <td>
+                    <label for="is_required">
+                        <?= _('Eintrag verpflichtend') ?>:
+                    </label>
+                </td>
+                <td>
+                    <input type="checkbox" name="is_required" id="is_required" value="1" <?= $item->getIsRequired() ? 'checked="checked"':'' ?>  >
+                </td>
+            </tr>
+            <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+                <td valign="top">
+                    <label for="description">
+                        <?= _('Beschreibung') ?>:
+                    </label>
+                </td>
+                <td>
+                     <textarea cols="58" rows="3" name="description" id="description"><?= htmlReady($item->getDescription()) ?></textarea>
+                </td>
+            </tr>
         
          <? endif; ?>
          

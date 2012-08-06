@@ -4041,18 +4041,18 @@ if ($level == 5)
                                 </td>
                                 <td class="<?= $cssSw->getClass() ?>" width="90%" colspan=3>
                                     <div style="width:33.8em; float:left;">
-	                                    <?
-	                                    if ($perm->have_perm($struct->getEditPerms())) {
-	                                        $entry = DataFieldEntry::createDataFieldEntry($struct, '', stripslashes($_SESSION['sem_create_data']["sem_datafields"][$id]['value']));
-	                                        print "&nbsp;&nbsp;".$entry->getHTML("sem_datafields");
+                                        <?
+                                        if ($perm->have_perm($struct->getEditPerms())) {
+                                            $entry = DataFieldEntry::createDataFieldEntry($struct, '', stripslashes($_SESSION['sem_create_data']["sem_datafields"][$id]['value']));
+                                            print "&nbsp;&nbsp;".$entry->getHTML("sem_datafields");
 
-	                                    } else {
-	                                    ?>
-	                                    &nbsp;<font size="-1"><?=_("Diese Daten werden von Ihrem zust&auml;ndigen Administrator erfasst.")?></font>
-	                                    <?= tooltipIcon(_("Diese Felder werden zentral durch die zuständigen Administratoren erfasst.")) ?>
-	                                    <?
-	                                    }
-	                                    ?>
+                                        } else {
+                                        ?>
+                                        &nbsp;<font size="-1"><?=_("Diese Daten werden von Ihrem zust&auml;ndigen Administrator erfasst.")?></font>
+                                        <?= tooltipIcon(_("Diese Felder werden zentral durch die zuständigen Administratoren erfasst.")) ?>
+                                        <?
+                                        }
+                                        ?>
                                     </div>
                                     <?if ($perm->have_perm($struct->getEditPerms()) && $struct->getDescription())
                                           echo tooltipIcon(_($struct->getDescription()));

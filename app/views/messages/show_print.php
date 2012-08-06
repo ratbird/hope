@@ -18,13 +18,13 @@
 <?php echo formatReady($msg['message'])?>
 </div>
 <?php if (count($msg['attachments'])) : ?>
-	<hr>
-	<div style="font-weight:bold">
-	<?php echo _("Dateianhänge:")?>
-	</div>
-	<?php foreach($msg['attachments'] as $one) : ?>
-	<div>
-	<?php echo htmlReady($one->filename) . ' (' . round($one->filesize/1024) . ' Kb)' ?>
-	</div>
-	<?php endforeach;?>
+    <hr>
+    <div style="font-weight:bold">
+    <?php echo _("Dateianhänge:")?>
+    </div>
+    <?php foreach($msg['attachments'] as $one) : ?>
+    <div>
+    <?php echo htmlReady($one->filename) . ' (' . round($one->filesize/1024) . ' Kb)' ?>
+    </div>
+    <?php endforeach;?>
 <?php endif;?>

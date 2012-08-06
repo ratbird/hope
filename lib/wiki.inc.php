@@ -114,7 +114,7 @@ function submitWikiPage($keyword, $version, $body, $user_id, $range_id) {
     //TODO: Die $message Texte klingen fürchterlich. Halbsätze, Denglisch usw...
     if ($latestVersion && ($latestVersion['body'] == $body)) {
         $message = MessageBox::info(_('Keine Änderung vorgenommen.'));
-		PageLayout::postMessage($message);
+        PageLayout::postMessage($message);
     } else if ($latestVersion && ($version !== null) && ($lastchange < 30*60) && ($user_id == $latestVersion['user_id'])) {
         // if same author changes again within 30 minutes, no new verison is created
         NotificationCenter::postNotification('WikiPageWillUpdate', array($range_id, $keyword));

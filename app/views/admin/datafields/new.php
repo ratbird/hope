@@ -119,22 +119,22 @@ use Studip\Button, Studip\LinkButton;
            </td>
         </tr>
         <? if (in_array($object_typ, array('sem'))): ?>
-	         <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
-	            <td>
-	               <?= _("Pflichtfeld") ?>:
-	            </td>
-	            <td>
-	                <input type="checkbox" name="mandatory" value="true" <?= ($this->flash['request']['priority']?'checked="checked"':'') ?>>
-	           </td>
-	        </tr>
-	        <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
-	            <td>
-	               <?= _("Beschreibung") ?>:
-	            </td>
-	            <td>
-	                 <textarea cols="58" rows="3" name="description" id="description"><?= htmlReady($this->flash['request']['description']) ?></textarea>
-	           </td>
-	        </tr>
+             <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+                <td>
+                   <?= _("Pflichtfeld") ?>:
+                </td>
+                <td>
+                    <input type="checkbox" name="mandatory" value="true" <?= ($this->flash['request']['priority']?'checked="checked"':'') ?>>
+               </td>
+            </tr>
+            <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+                <td>
+                   <?= _("Beschreibung") ?>:
+                </td>
+                <td>
+                     <textarea cols="58" rows="3" name="description" id="description"><?= htmlReady($this->flash['request']['description']) ?></textarea>
+               </td>
+            </tr>
         <? endif ?>
         <tr>
             <td colspan="2" align="center">

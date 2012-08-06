@@ -983,7 +983,7 @@ function wikiEdit($keyword, $wikiData, $user_id, $backpage=NULL)
     $cont .= "<input type=\"hidden\" name=\"version\" value=\"$version\">";
     $cont .= "<input type=\"hidden\" name=\"submit\" value=\"true\">";
     $cont .= "<input type=\"hidden\" name=\"cmd\" value=\"show\">";
-    $cont .= '<br><br>' . Button::createAccept(_('Abschicken')) . "&nbsp;" . LinkButton::createCancel(_('Abbrechen'),URLHelper::getURL("?cmd=abortedit&keyword=".urlencode($keyword).$lastpage));
+    $cont .= '<br><br>' . Button::createAccept(_('Speichern')) . "&nbsp;" . LinkButton::createCancel(_('Abbrechen'),URLHelper::getURL("?cmd=abortedit&keyword=".urlencode($keyword).$lastpage));
     $cont .= "</form>\n";
     printcontent(0,0,$cont,"");
     $infobox = array ();

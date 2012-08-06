@@ -44,7 +44,7 @@ STUDIP.admin_sem_class = {
     },
     'saveData': function () {
         var core_module_slots = {};
-        jQuery.each(['overview', 'forum', 'admin', 'documents', 'participants', 'schedule', 'literature', 'scm', 'wiki', 'calendar', 'elearning_interface'], function (index, element) {
+        jQuery.each(['overview', 'forum', 'admin', 'documents', 'participants', 'schedule', 'literature', 'scm', 'wiki', 'calendar', 'elearning_interface', 'resources'], function (index, element) {
             var module = jQuery("div[container=" + element + "] .droparea > div.plugin").attr("id");
             if (module) {
                 module = module.substr(module.indexOf("_") + 1);

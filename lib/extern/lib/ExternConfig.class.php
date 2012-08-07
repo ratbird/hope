@@ -627,7 +627,7 @@ class ExternConfig {
         $params = array($range_id, $module_type, $new_name);
         $state = DBManager::get()->prepare($query);
         $state->execute($params);
-        $res = fetch(PDO::FETCH_ASSOC);
+        $res = $state->fetch(PDO::FETCH_ASSOC);
         if ($res->rowCount()) {
                return FALSE;
         }
@@ -637,7 +637,7 @@ class ExternConfig {
         $params = array($new_name, $config_id, $range_id);
         $state = DBManager::get()->prepare($query);
         $state->execute($params);
-        $res = fetch(PDO::FETCH_ASSOC);
+        $res = $state->fetch(PDO::FETCH_ASSOC);
         if ($res->rowCount() != 1) {
               return FALSE;
         }
@@ -651,7 +651,7 @@ class ExternConfig {
         $params = array($range_id, $module_type, $name);
         $state = DBManager::get()->prepare($query);
         $state->execute($params);
-        $res = fetchColumn();
+        $res = $state->fetchColumn();
         if ($res) {
             return $res;
         }
@@ -665,7 +665,7 @@ class ExternConfig {
         $params = array($range_id, $type);
         $state = DBManager::get()->prepare($query);
         $state->execute($params);
-        $res = fetchColumn();
+        $res = $state->fetchColumn();
         if ($res) {
             return $res;
         }

@@ -461,17 +461,14 @@ class ExternConfig {
         return $config;
     }
     
-    function ExistConfiguration ($range_id, $config_id) {
-        $query = "SELECT config_id FROM extern_config WHERE config_id = ? ";
-        $query .= "AND range_id = ? ";
-        $parameters = array($config_id, $range_id);
+    function ExistConfiguration ($range_id, $config_id)
+    {
+        $query = "SELECT config_id
+                  FROM extern_config
+                  WHERE config_id = ? AND range_id = ?";
         $statement = DBManager::get()->prepare($query);
-        $statement->execute($parameters);
-        $row = $statement->fetchColumn();
-        if ($statement->rowCount() == 1) {
-             return TRUE;
-        }        
-        return FALSE;
+        $statement->execute(array($config_id, $range_id));
+        return $statement->fetchColumn() > 0;
     }
     
     function SetStandardConfiguration ($range_id, $config_id) {
@@ -620,29 +617,23 @@ class ExternConfig {
         return FALSE;
     }
 
-    function ChangeName ($range_id, $module_type, $config_id, $old_name, $new_name) {
-        $query = "SELECT name FROM extern_config WHERE range_id = ? AND ";
-        $query .= "config_type = ? AND name = ? ";
-
-        $params = array($range_id, $module_type, $new_name);
-        $state = DBManager::get()->prepare($query);
-        $state->execute($params);
-        $res = $state->fetch(PDO::FETCH_ASSOC);
-        if ($res->rowCount()) {
-               return FALSE;
+    function ChangeName ($range_id, $module_type, $config_id, $old_name, $new_name)
+    {
+        $query = "SELECT 1
+                  FROM extern_config
+                  WHERE range_id = ? AND config_type = ? AND name = ? ";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($range_id, $module_type, $new_name));
+        if ($statement->fetchColumn()) {
+            return FALSE;
         }
     
-        $query = "UPDATE extern_config SET name = ?, chdate = UNIX_TIMESTAMP()  ";
-        $query .= "WHERE config_id = ? AND range_id = ? ";
-        $params = array($new_name, $config_id, $range_id);
-        $state = DBManager::get()->prepare($query);
-        $state->execute($params);
-        $res = $state->fetch(PDO::FETCH_ASSOC);
-        if ($res->rowCount() != 1) {
-              return FALSE;
-        }
-        
-        return TRUE;
+        $query = "UPDATE extern_config
+                  SET name = ?, chdate = UNIX_TIMESTAMP() 
+                  WHERE config_id = ? AND range_id = ? ";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($new_name, $config_id, $range_id));
+        return $statement->rowCount() > 0;
     }
 
     function GetConfigurationByName ($range_id, $module_type, $name) {
@@ -680,12 +671,16 @@ class ExternConfig {
                 $c_types[] = $id;
             }
         }
-        
-        $query = sprintf("SELECT i.Institut_id, i.Name, fakultaets_id FROM Institute i LEFT JOIN extern_config ec ON i.Institut_id = ec.range_id WHERE i.Institut_id = ec.range_id AND ec.config_type IN ('%s') ORDER BY Name", implode("','", $c_types));
-        $state = DBManager::get()->prepare($query);
-        $state->execute();
 
-        while ($row = $state->fetch(PDO::FETCH_ASSOC)) {
+        $query = "SELECT i.Institut_id, i.Name, fakultaets_id
+                  FROM Institute AS i
+                  LEFT JOIN extern_config AS ec ON i.Institut_id = ec.range_id
+                  WHERE i.Institut_id = ec.range_id AND ec.config_type IN (?)
+                  ORDER BY Name";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($c_types ?: ''));
+
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
             $inst_array[$row['Institut_id']] = array('institut_id' => $row['Institut_id'], 'fakultaets_id' => $row['fakultaets_id'], 'name' => $row['Name']);
         }
         return $inst_array;

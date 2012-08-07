@@ -1,7 +1,7 @@
 <?
 # Lifter002: TODO
+# Lifter003: TEST
 # Lifter007: TODO
-# Lifter003: TODO
 # Lifter010: TODO
 
 require_once('config.inc.php');
@@ -30,64 +30,105 @@ if ($this->visibilities) {
     $this->owner_perm = 'user';
 }
 
-$db_inst = new DB_Seminar();
-$db = new DB_Seminar();
-
-if (!$nameformat = $this->config->getValue("Main", "nameformat")) {
-    $nameformat = "full";
-}
-
-$query_user_data = "SELECT i.Institut_id, i.Name, i.Strasse, i.Plz, i.url, ui.*, aum.*, "
-                        . $GLOBALS['_fullname_sql'][$nameformat] . " AS fullname,"
-                        . "uin.user_id, uin.lebenslauf, uin.publi, uin.schwerp, uin.Home "
-                        . "FROM Institute i LEFT JOIN user_inst ui USING(Institut_id) "
-              . "LEFT JOIN auth_user_md5 aum USING(user_id) "
-              . "LEFT JOIN user_info uin USING (user_id) WHERE ui.inst_perms IN ('autor','tutor','dozent') AND "
-              . get_ext_vis_query() . ' AND ';
-
 // Mitarbeiter/in am Institut
-$db_inst->query("SELECT i.Institut_id FROM Institute i LEFT JOIN user_inst ui USING(Institut_id) "
-              ."LEFT JOIN auth_user_md5 aum USING(user_id) "
-              ."WHERE i.Institut_id = '$instituts_id' AND aum.username = '$username' AND ui.inst_perms IN ('autor','tutor','dozent') AND " . get_ext_vis_query());
+$ext_vis_query = get_ext_vis_query();
+$query = "SELECT 1
+          FROM Institute AS 
+          LEFT JOIN user_inst AS ui USING (Institut_id)
+          LEFT JOIN auth_user_md5 AS aum USING (user_id)
+          WHERE Institut_id = ? AND aum.username = ?
+            AND ui.inst_perms IN ('autor', 'tutor', 'dozent') AND {$ext_vis_query}";
+$statement = DBManager::get()->prepare($query);
+$statement->execute(array($instituts_id, $username));
+$temp = $statement->fetchColumn();
 
 // Mitarbeiter/in am Heimatinstitut des Seminars
-if (!$db_inst->num_rows() && $sem_id) {
-    $db_inst->query("SELECT s.Institut_id FROM seminare s LEFT JOIN user_inst ui USING(Institut_id) "
-                   ."LEFT JOIN auth_user_md5 aum USING(user_id) WHERE s.Seminar_id = '$sem_id' "
-                                 ."AND aum.username = '$username' AND ui.inst_perms = 'dozent' AND " . get_ext_vis_query());
-    if($db_inst->num_rows() && $db_inst->next_record())
-        $instituts_id = $db_inst->f("Institut_id");
+if (!$temp && $sem_id) {
+    $query = "SELECT Institut_id
+              FROM seminare AS s
+              LEFT JOIN user_inst AS ui USING (Institut_id)
+              LEFT JOIN auth_user_md5 AS aum USING (user_id)
+              WHERE s.Seminar_id = ? AND aum.username = ?
+                AND ui.inst_perms = 'dozent' AND {$ext_vis_query}";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($sem_id, $username));
+    $temp = $statement->fetchColumn();
+
+    if ($temp) {
+        $instituts_id = $temp;
+    }
 }
 
 // an beteiligtem Institut Dozent(in)
-if (!$db_inst->num_rows() && $sem_id) {
-    $db_inst->query("SELECT si.institut_id FROM seminare s LEFT JOIN seminar_inst si ON(s.Seminar_id = si.seminar_id) "
-                   ."LEFT JOIN user_inst ui ON(si.institut_id = ui.Institut_id) LEFT JOIN auth_user_md5 aum "
-                                 ."USING(user_id) WHERE s.Seminar_id = '$sem_id' AND si.institut_id != '$instituts_id' "
-                                 ."AND ui.inst_perms = 'dozent' AND aum.username = '$username' AND " . get_ext_vis_query());
-    if($db_inst->num_rows() && $db_inst->next_record())
-        $instituts_id = $db_inst->f("institut_id");
+if (!$temp && $sem_id) {
+    $query = "SELECT si.institut_id
+              FROM seminare AS s
+              LEFT JOIN seminar_inst AS si ON (s.Seminar_id = si.seminar_id)
+              LEFT JOIN user_inst AS ui ON (si.institut_id = ui.Institut_id)
+              LEFT JOIN auth_user_md5 AS aum USING (user_id)
+              WHERE s.Seminar_id = ? AND si.institut_id != ?
+                AND ui.inst_perms = 'dozent' AND aum.username = ? AND {$ext_vis_query}";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($sem_id, $instituts_id, $username));
+    $temp = $statement->fetchColumn();
+
+    if ($temp) {
+        $instituts_id = $temp;
+    }
+}
+
+if (!$nameformat = $this->config->getValue('Main', 'nameformat')) {
+    $nameformat = 'full';
 }
 
 // ist zwar global Dozent, aber an keinem Institut eingetragen
-if (!$db_inst->num_rows() && $sem_id) {
-    $query = "SELECT aum.*, ";
-    $query .= $GLOBALS['_fullname_sql'][$nameformat] . " AS fullname ";
-    $query .= "FROM auth_user_md5 aum LEFT JOIN user_info USING(user_id) LEFT JOIN seminar_user su USING(user_id) ";
-    $query .= "WHERE username = '$username' AND perms = 'dozent' AND su.seminar_id = '$sem_id' AND su.status = 'dozent'";
-    $query .= " AND " . get_ext_vis_query();
-    $db->query($query);
-}
-elseif ($this->config->getValue('Contact', 'defaultadr')) {
-    $db->query($query_user_data . " aum.username = '$username' AND ui.externdefault = 1");
-    if (!$db->num_rows())
-        $db->query($query_user_data . " aum.username = '$username' AND i.Institut_id = '$instituts_id' AND ui.inst_perms IN ('autor','tutor','dozent')");
-}
-else
-    $db->query($query_user_data . " aum.username = '$username' AND i.Institut_id = '$instituts_id' AND ui.inst_perms IN ('autor','tutor','dozent')");
+if (!$temp && $sem_id) {
+    $query = "SELECT aum.*, {$GLOBALS['_fullname_sql'][$nameformat]} AS fullname
+              FROM auth_user_md5 AS aum
+              LEFT JOIN user_info USING (user_id)
+              LEFT JOIN seminar_user su USING (user_id) 
+              WHERE username = ? AND perms = 'dozent' AND su.seminar_id = ?
+                AND su.status = 'dozent' AND {$ext_vis_query}";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($username, $sem_id));
+    $row = $statement->fetch(PDO::FETCH_ASSOC);
+} else {
+    $base_query = "SELECT i.Institut_id, i.Name, i.Strasse, i.Plz, i.url, ui.*, aum.*, 
+                          {$GLOBALS['_fullname_sql'][$nameformat]} AS fullname,
+                          uin.user_id, uin.lebenslauf, uin.publi, uin.schwerp, uin.Home
+                   FROM Institute AS i
+                   LEFT JOIN user_inst AS ui USING (Institut_id)
+                   LEFT JOIN auth_user_md5 AS aum USING (user_id)
+                   LEFT JOIN user_info AS uin USING (user_id)
+                   WHERE ui.inst_perms IN ('autor', 'tutor', 'dozent')
+                     AND {$ext_vis_query} AND ";
 
-if (!$db->next_record())
+    if ($this->config->getValue('Contact', 'defaultadr')) {
+        $query  = $base_query;
+        $query .= "aum.username = ? AND ui.externdefault = 1";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($username));
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
+
+        if (!$row) {
+            $query  = $base_query;
+            $query .= "aum.username = ? AND i.Institut_id = ? AND ui.inst_perms IN ('autor', 'tutor', 'dozent')";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($username, $instituts_id));
+            $row = $statement->fetch(PDO::FETCH_ASSOC);
+        }
+    } else {
+        $query  = $base_query;
+        $query .= "aum.username = ? AND i.Institut_id = ? AND ui.inst_perms IN ('autor', 'tutor', 'dozent')";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($username, $instituts_id));
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
+    }
+}
+
+if (!$row) {
     die;
+}
 
 $aliases_content = $this->config->getValue("Main", "aliases");
 $visible_content = $this->config->getValue("Main", "visible");
@@ -114,9 +155,9 @@ if ($this->config->getValue("Main", "studiplink") == "top") {
 
 // generic data fields
 if ($generic_datafields = $this->config->getValue("Main", "genericdatafields")) {
-//  $datafields_obj =& new DataFields($db->f("user_id"));
-    $fieldEntries = DataFieldEntry::getDataFieldEntries($db->f("user_id"));
-//  $datafields = $datafields_obj->getLocalFields($db->f("user_id"));
+//  $datafields_obj =& new DataFields($row['user_id']);
+    $fieldEntries = DataFieldEntry::getDataFieldEntries($row['user_id']);
+//  $datafields = $datafields_obj->getLocalFields($row['user_id']);
 }
 
 $order = $this->config->getValue("Main", "order");
@@ -126,10 +167,10 @@ foreach ($order as $position) {
 
     if ($visible_content[$position]) {
         switch ($data_field) {
-            case "lebenslauf" :
-            case "schwerp" :
-            case "publi" :
-                if ($db->f($data_field) != "" && is_element_visible_externally($db->f("user_id"), $this->owner_perm, $data_field, $this->visibilities[$data_field])) {
+            case 'lebenslauf' :
+            case 'schwerp' :
+            case 'publi' :
+                if ($row[$data_field] != '' && is_element_visible_externally($row['user_id'], $this->owner_perm, $data_field, $this->visibilities[$data_field])) {
                     echo "<tr><td width=\"100%\">\n";
                     echo "<table" . $this->config->getAttributes("TableParagraph", "table") . ">\n";
                     echo "<tr" . $this->config->getAttributes("TableParagraphHeadline", "tr");
@@ -139,20 +180,20 @@ foreach ($order as $position) {
                     echo "<tr" . $this->config->getAttributes("TableParagraphText", "tr") . ">";
                     echo "<td" . $this->config->getAttributes("TableParagraphText", "td") . ">";
                     echo "$text_div<font" . $this->config->getAttributes("TableParagraphText", "font") . ">\n";
-                    echo formatReady($db->f($data_field), TRUE, TRUE);
+                    echo formatReady($row[$data_field], TRUE, TRUE);
                     echo "</font>$text_div_end</td></tr>\n</table>\n</td></tr>\n";
                 }
                 break;
             case "news" :
             case "termine" :
-                if (is_element_visible_externally($db->f("user_id"), $this->owner_perm, $data_field, $this->visibilities[$data_field])) {
-                    $data_field($this, $db, $aliases_content[$position], $text_div, $text_div_end);
+                if (is_element_visible_externally($row['user_id'], $this->owner_perm, $data_field, $this->visibilities[$data_field])) {
+                    $data_field($this, $row, $aliases_content[$position], $text_div, $text_div_end);
                 }
                 break;
             case "kategorien" :
             case "lehre" :
             case "head" :
-                $data_field($this, $db, $aliases_content[$position], $text_div, $text_div_end);
+                $data_field($this, $row, $aliases_content[$position], $text_div, $text_div_end);
                 break;
             /*
             case 'literature' :
@@ -189,8 +230,9 @@ if ($this->config->getValue("Main", "studiplink") == "bottom") {
 
 echo "</table>\n";
 
-function news (&$module, $db, $alias_content, $text_div, $text_div_end) {
-    if (is_element_visible_externally($db->f("user_id"), $module->owner_perm, $data_field, $module->visibilities['news'])) {
+function news (&$module, $row, $alias_content, $text_div, $text_div_end)
+{
+    if (is_element_visible_externally($row['user_id'], $module->owner_perm, $data_field, $module->visibilities['news'])) {
         if ($margin = $module->config->getValue("TableParagraphSubHeadline", "margin")) {
             $subheadline_div = "<div style=\"margin-left:$margin;\">";
             $subheadline_div_end = "</div>";
@@ -200,12 +242,16 @@ function news (&$module, $db, $alias_content, $text_div, $text_div_end) {
             $subheadline_div_end = "";
         }
 
-        $db_news = new DB_Seminar();
-        $query = "SELECT * FROM news_range nr LEFT JOIN news n USING(news_id) WHERE "
-                        . "nr.range_id = '" . $db->f("user_id") . "' AND user_id = '" . $db->f("user_id")
-                        . "' AND date <= " . time() . " AND (date + expire) >= " . time();
-        $db_news->query($query);
-        if ($db_news->num_rows()) {
+        $query = "SELECT topic, body
+                  FROM news_range AS nr
+                  LEFT JOIN news AS n USING (news_id)
+                  WHERE nr.range_id = ? AND user_id = nr.range_id
+                    AND UNIX_TIMESTAMP() BETWEEN date AND date + expire";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($row['user_id']));
+        $news = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+        if (count($news) > 0) {
             echo "<tr><td width=\"100%\">\n";
             echo "<table" . $module->config->getAttributes("TableParagraph", "table") . ">\n";
             echo "<tr" . $module->config->getAttributes("TableParagraphHeadline", "tr") . ">";
@@ -213,15 +259,15 @@ function news (&$module, $db, $alias_content, $text_div, $text_div_end) {
             echo "<font" . $module->config->getAttributes("TableParagraphHeadline", "font") . ">";
             echo "$alias_content</font></td></tr>\n";
 
-            while ($db_news->next_record()) {
+            foreach ($news as $item) {
                 echo "<tr" . $module->config->getAttributes("TableParagraphSubHeadline", "tr") . ">";
                 echo "<td" . $module->config->getAttributes("TableParagraphSubHeadline", "td") . ">";
                 echo $subheadline_div;
                 echo "<font" . $module->config->getAttributes("TableParagraphSubHeadline", "font") . ">";
-                echo htmlReady($db_news->f("topic"));
+                echo htmlReady($item['topic']);
                 echo "</font>$subheadline_div_end</td></tr>\n";
                 echo "<tr" . $module->config->getAttributes("TableParagraphText", "tr") . ">";
-                list ($content, $admin_msg) = explode("<admin_msg>", $db_news->f("body"));
+                list ($content, $admin_msg) = explode("<admin_msg>", $item['body']);
                 echo "<td" . $module->config->getAttributes("TableParagraphText", "td") . ">";
                 echo "$text_div<font" . $module->config->getAttributes("TableParagraphText", "font") . ">";
                 echo formatReady($content, TRUE, TRUE);
@@ -232,8 +278,9 @@ function news (&$module, $db, $alias_content, $text_div, $text_div_end) {
     }
 }
 
-function termine (&$module, $db, $alias_content, $text_div, $text_div_end) {
-    if ($GLOBALS["CALENDAR_ENABLE"] && is_element_visible_externally($db->f("user_id"), $module->owner_perm, $data_field, $module->visibilities['dates'])) {
+function termine (&$module, $row, $alias_content, $text_div, $text_div_end)
+{
+    if ($GLOBALS["CALENDAR_ENABLE"] && is_element_visible_externally($row['user_id'], $module->owner_perm, $data_field, $module->visibilities['dates'])) {
         if ($margin = $module->config->getValue("TableParagraphSubHeadline", "margin")) {
             $subheadline_div = "<div style=\"margin-left:$margin;\">";
             $subheadline_div_end = "</div>";
@@ -243,7 +290,7 @@ function termine (&$module, $db, $alias_content, $text_div, $text_div_end) {
             $subheadline_div_end = "";
         }
 
-        $event_list = new DbCalendarEventList(new SingleCalendar($db->f("user_id")));
+        $event_list = new DbCalendarEventList(new SingleCalendar($row['user_id']));
         if ($event_list->existEvent()) {
             echo "<tr><td width=\"100%\">\n";
             echo "<table" . $module->config->getAttributes("TableParagraph", "table") . ">\n";
@@ -277,55 +324,57 @@ function termine (&$module, $db, $alias_content, $text_div, $text_div_end) {
     }
 }
 
-function kategorien (&$module, $db, $alias_content, $text_div, $text_div_end) {
-    $db_kategorien = new DB_Seminar();
-    $query = "SELECT * FROM auth_user_md5 aum LEFT JOIN kategorien k ON (k.range_id=user_id) "
-           ."WHERE username='" . $db->f("username") . "' ORDER BY priority";
-
-    $db_kategorien->query($query);
-    while ($db_kategorien->next_record()) {
-        if (is_element_visible_externally($db->f("user_id"), $module->owner_perm, 
-                'kat_'.$db_kategorien->f('kategorie_id'), 
-                $module->visibilities['kat_'.$db_kategorien->f('kategorie_id')])) {
+function kategorien (&$module, $row, $alias_content, $text_div, $text_div_end)
+{
+    $query = "SELECT kategorie_id, name, content
+              FROM auth_user_md5 AS aum
+              LEFT JOIN kategorien AS k ON (k.range_id = user_id) 
+              WHERE username = ?
+              ORDER BY priority";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($row['username']));
+    while ($category = $statement->fetch(PDO::FETCH_ASSOC)) {
+        if (is_element_visible_externally($row['user_id'], $module->owner_perm, 
+                'kat_'.$category['kategorie_id'], 
+                $module->visibilities['kat_'.$category['kategorie_id']])) {
             echo "<tr><td width=\"100%\">\n";
             echo "<table" . $module->config->getAttributes("TableParagraph", "table") . ">\n";
             echo "<tr" . $module->config->getAttributes("TableParagraphHeadline", "tr") . ">";
             echo "<td" . $module->config->getAttributes("TableParagraphHeadline", "td") . ">";
             echo "<font" . $module->config->getAttributes("TableParagraphHeadline", "font") . ">";
-            echo htmlReady($db_kategorien->f("name"), TRUE);
+            echo htmlReady($category['name'], TRUE);
             echo "</font></td></tr>\n";
             echo "<tr" . $module->config->getAttributes("TableParagraphText", "tr") . ">";
             echo "<td" . $module->config->getAttributes("TableParagraphText", "td") . ">";
             echo "$text_div<font" . $module->config->getAttributes("TableParagraphText", "font") . ">";
-            echo formatReady($db_kategorien->f("content"), TRUE, TRUE);
+            echo formatReady($category['content'], TRUE, TRUE);
             echo "</font>$text_div_end</td></tr>\n</table>\n</td></tr>\n";
         }
     }
 }
 
-function lehre (&$module, $db, $alias_content, $text_div, $text_div_end) {
+function lehre (&$module, $row, $alias_content, $text_div, $text_div_end)
+{
     global $attr_text_td, $end, $start;
-    $db1 = new DB_Seminar();
+
     $semester = new SemesterData();
     $all_semester = $semester->getAllSemesterData();
     // old hard coded $SEMESTER-array starts with index 1
     array_unshift($all_semester, 0);
 
-    if ($margin = $module->config->getValue("TableParagraphSubHeadline", "margin")) {
-        $subheadline_div = "<div style=\"margin-left:$margin;\">";
-        $subheadline_div_end = "</div>";
+    if ($margin = $module->config->getValue('TableParagraphSubHeadline', 'margin')) {
+        $subheadline_div     = '<div style="margin-left:' . $margin . ';">';
+        $subheadline_div_end = '</div>';
+    } else {
+        $subheadline_div     = '';
+        $subheadline_div_end = '';
     }
-    else {
-        $subheadline_div = "";
-        $subheadline_div_end = "";
-    }
-    if ($margin = $module->config->getValue("List", "margin")) {
-        $list_div = "<div style=\"margin-left:$margin;\">";
-        $list_div_end = "</div>";
-    }
-    else {
-        $list_div = "";
-        $list_div_end = "";
+    if ($margin = $module->config->getValue('List', 'margin')) {
+        $list_div     = '<div style="margin-left:' . $margin . ';">';
+        $list_div_end = '</div>';
+    } else {
+        $list_div     = '';
+        $list_div_end = '';
     }
 
     $types = array();
@@ -333,52 +382,65 @@ function lehre (&$module, $db, $alias_content, $text_div, $text_div_end) {
     if (is_null($semclass)) {
         $semclass = array(1);
     }
-    foreach ($GLOBALS["SEM_TYPE"] as $key => $type) {
-        if (in_array($type["class"], $semclass)) {
+    foreach ($GLOBALS['SEM_TYPE'] as $key => $type) {
+        if (in_array($type['class'], $semclass)) {
             $types[] = $key;
         }
     }
-    $types = implode("','", $types);
 
-    $switch_time = mktime(0, 0, 0, date("m"),
-            date("d") + 7 * $module->config->getValue("PersondetailsLectures", "semswitch"), date("Y"));
+    $switch_time = mktime(0, 0, 0, date('m'),
+            date('d') + 7 * $module->config->getValue('PersondetailsLectures', 'semswitch'), date('Y'));
     // get current semester
     $current_sem = get_sem_num($switch_time) + 1;
 
-    switch ($module->config->getValue("PersondetailsLectures", "semstart")) {
-        case "previous" :
-            if (isset($all_semester[$current_sem - 1]))
-                $current_sem--;
+    switch ($module->config->getValue('PersondetailsLectures', 'semstart')) {
+        case 'previous':
+            if (isset($all_semester[$current_sem - 1])) {
+                $current_sem -= 1;
+            }
             break;
-        case "next" :
-            if (isset($all_semester[$current_sem + 1]))
-                $current_sem++;
+        case 'next':
+            if (isset($all_semester[$current_sem + 1])) {
+                $current_sem += 1;
+            }
             break;
-        case "current" :
+        case 'current':
             break;
-        default :
-            if (isset($all_semester[$module->config->getValue("PersondetailsLectures", "semstart")]))
-                $current_sem = $module->config->getValue("PersondetailsLectures", "semstart");
+        default:
+            if (isset($all_semester[$module->config->getValue('PersondetailsLectures', 'semstart')])) {
+                $current_sem = $module->config->getValue('PersondetailsLectures', 'semstart');
+            }
     }
 
-    $last_sem = $current_sem + $module->config->getValue("PersondetailsLectures", "semrange") - 1;
-    if ($last_sem < $current_sem)
+    $last_sem = $current_sem + $module->config->getValue('PersondetailsLectures', 'semrange') - 1;
+    if ($last_sem < $current_sem) {
         $last_sem = $current_sem;
-    if (!isset($all_semester[$last_sem]))
-        $last_sem = sizeof($all_semester) - 1;
+    }
+    if (!isset($all_semester[$last_sem])) {
+        $last_sem = count($all_semester) - 1;
+    }
 
-    $out = "";
+    // TODO: [tlx] This query seems a bit odd if you look at it's line 5
+    $query = "SELECT *
+              FROM seminar_user AS su
+              LEFT JOIN seminare AS s USING (seminar_id) 
+              WHERE user_id = :user_id AND su.status = 'dozent'
+                AND ((start_time >= :beginn AND start_time <= :beginn) OR
+                     (start_time <= :ende AND duration_time = -1))
+                AND s.status IN (:types) AND s.visible = 1 
+              ORDER BY s.mkdate DESC";
+    $statement = DBManager::get()->prepare($query);
+    $statement->bindValue(':user_id', $row['user_id']);
+    $statement->bindValue(':types', $types ?: '');
+
+    $out = '';
     for (;$current_sem <= $last_sem; $last_sem--) {
-        $query = "SELECT * FROM seminar_user su LEFT JOIN seminare s USING(seminar_id) "
-               ."WHERE user_id='".$db->f("user_id")."' AND "
-                   ."su.status LIKE 'dozent' AND ((start_time >= {$all_semester[$last_sem]['beginn']} "
-                   ."AND start_time <= {$all_semester[$last_sem]['beginn']}) OR (start_time <= {$all_semester[$last_sem]['ende']} "
-                         ."AND duration_time = -1)) AND s.status IN ('$types') AND s.visible = 1 "
-                         ."ORDER BY s.mkdate DESC";
+        $statement->bindValue(':beginn', $all_semester[$last_sem]['beginn']);
+        $statement->bindValue(':ende', $all_semester[$last_sem]['ende']);
+        $statement->execute();
+        $data = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-        $db1->query($query);
-
-        if ($db1->num_rows()) {
+        if (count($data) > 0) {
             if (!($module->config->getValue("PersondetailsLectures", "semstart") == "current"
                     && $module->config->getValue("PersondetailsLectures", "semrange") == 1)) {
                 $out .= "<tr" . $module->config->getAttributes("TableParagraphSubHeadline", "tr") . ">";
@@ -402,14 +464,14 @@ function lehre (&$module, $db, $alias_content, $text_div, $text_div_end) {
 
             if ($module->config->getValue("PersondetailsLectures", "aslist")) {
                 $out .= "$list_div<ul" . $module->config->getAttributes("List", "ul") . ">\n";
-                while ($db1->next_record()) {
+                foreach ($data as $item) {
                     $out .= "<li" . $module->config->getAttributes("List", "li") . ">";
                     $out .= $module->elements["LinkIntern"]->toString(array("module" => "Lecturedetails",
-                            "link_args" => "seminar_id=" . $db1->f("Seminar_id"),
-                            "content" => htmlReady($db1->f("Name"), TRUE)));
-                    if ($db1->f("Untertitel") != "") {
+                            "link_args" => "seminar_id=" . $item['Seminar_id'],
+                            "content" => htmlReady($item['Name'], TRUE)));
+                    if ($item['Untertitel'] != '') {
                         $out .= "<font" . $module->config->getAttributes("TableParagraphText", "font") . "><br>";
-                        $out .= htmlReady($db1->f("Untertitel"), TRUE) . "</font>\n";
+                        $out .= htmlReady($item['Untertitel'], TRUE) . "</font>\n";
                     }
                 }
                 $out .= "</ul>$list_div_end";
@@ -417,14 +479,16 @@ function lehre (&$module, $db, $alias_content, $text_div, $text_div_end) {
             else {
                 $out .= $text_div;
                 $j = 0;
-                while ($db1->next_record()) {
-                    if ($j) $out .= "<br>";
+                foreach ($data as $item) {
+                    if ($j) {
+                        $out .= '<br>';
+                    }
                     $out .= $module->elements['LinkIntern']->toString(array('module' => 'Lecturedetails',
-                            'link_args' => 'seminar_id=' . $db1->f('Seminar_id'),
-                            'content' => htmlReady($db1->f('Name'), TRUE)));
-                    if($db1->f('Untertitel') != '') {
+                            'link_args' => 'seminar_id=' . $item['Seminar_id'],
+                            'content' => htmlReady($item['Name'], TRUE)));
+                    if ($item['Untertitel'] != '') {
                         $out .= "<font" . $module->config->getAttributes("TableParagraphText", "font") . ">";
-                        $out .= "<br>" . htmlReady($db1->f("Untertitel"), TRUE) . "</font>\n";
+                        $out .= "<br>" . htmlReady($item['Untertitel'], TRUE) . "</font>\n";
                     }
                     $j = 1;
                 }
@@ -435,23 +499,25 @@ function lehre (&$module, $db, $alias_content, $text_div, $text_div_end) {
     }
 
     if ($out) {
-        $out_title = "<tr><td width=\"100%\">\n";
-        $out_title .= "<table" . $module->config->getAttributes("TableParagraph", "table") . ">\n";
-        $out_title .= "<tr" . $module->config->getAttributes("TableParagraphHeadline", "tr") . ">";
-        $out_title .= "<td" . $module->config->getAttributes("TableParagraphHeadline", "td") . ">";
-        $out_title .= "<font" . $module->config->getAttributes("TableParagraphHeadline", "font") . ">";
-        $out_title .= $alias_content . "</font></td></tr>\n";
-        echo $out_title . $out . "</table>\n</td></tr>\n";
+        $out_title = '<tr><td width="100%">' . "\n";
+        $out_title .= '<table' . $module->config->getAttributes('TableParagraph', 'table') . '>' . "\n";
+        $out_title .= '<tr' . $module->config->getAttributes('TableParagraphHeadline', 'tr') . '>';
+        $out_title .= '<td' . $module->config->getAttributes('TableParagraphHeadline', 'td') . '>';
+        $out_title .= '<font' . $module->config->getAttributes('TableParagraphHeadline', 'font') . '>';
+        $out_title .= $alias_content . '</font></td></tr>' . "\n";
+        echo $out_title . $out;
+        echo '</table>' . "\n";
+        echo '</td></tr>' . "\n";
     }
 }
 
-function head (&$module, $db, $a) {
+function head (&$module, $row, $a) {
     $pic_max_width = $module->config->getValue("PersondetailsHeader", "img_width");
     $pic_max_height = $module->config->getValue("PersondetailsHeader", "img_height");
 
     // fit size of image
     if ($pic_max_width && $pic_max_height) {
-        $pic_size = @getimagesize(Avatar::getAvatar($db->f("user_id"))->getFilename(Avatar::NORMAL));
+        $pic_size = @getimagesize(Avatar::getAvatar($row['user_id'])->getFilename(Avatar::NORMAL));
 
         if ($pic_size[0] > $pic_max_width || $pic_size[1] > $pic_max_height) {
             $fak_width = $pic_size[0] / $pic_max_width;
@@ -491,7 +557,7 @@ function head (&$module, $db, $a) {
         echo "<td$colspan width=\"100%\"";
         echo $module->config->getAttributes("PersondetailsHeader", "headlinetd") . ">";
         echo "<font" . $module->config->getAttributes("PersondetailsHeader", "font") . ">";
-        echo htmlReady($db->f("fullname"), TRUE);
+        echo htmlReady($row['fullname'], TRUE);
         echo "</font></td></tr>\n";
     }
 
@@ -502,14 +568,14 @@ function head (&$module, $db, $a) {
                 && ($module->config->getValue("Main", "showimage") == "right"
                 || !$module->config->getValue("Main", "showimage"))) {
                 echo "<td" . $module->config->getAttributes("PersondetailsHeader", "contacttd") . ">";
-                echo kontakt($module, $db) . "</td>\n";
+                echo kontakt($module, $row) . "</td>\n";
         }
         if ($module->config->getValue("Main", "showimage")) {
             echo "<td" . $module->config->getAttributes("PersondetailsHeader", "picturetd") . ">";
-            $avatar = Avatar::getAvatar($db->f("user_id"));
-            if ($avatar->is_customized() && is_element_visible_externally($db->f("user_id"), $module->owner_perm, 'picture', $module->visibilities['picture'])) {
+            $avatar = Avatar::getAvatar($row['user_id']);
+            if ($avatar->is_customized() && is_element_visible_externally($row['user_id'], $module->owner_perm, 'picture', $module->visibilities['picture'])) {
                 echo "<img src=\"".$avatar->getURL(Avatar::NORMAL) .
-                     "\" alt=\"Foto " . htmlReady(trim($db->f("fullname"))) . "\"";
+                     "\" alt=\"Foto " . htmlReady(trim($row['fullname'])) . "\"";
                 echo $module->config->getAttributes("PersondetailsHeader", "img") . "></td>";
             }
             else
@@ -519,7 +585,7 @@ function head (&$module, $db, $a) {
         if ($module->config->getValue("Main", "showcontact")
                 && $module->config->getValue("Main", "showimage") == "left") {
             echo "<td" . $module->config->getAttributes("PersondetailsHeader", "contacttd") . ">";
-            echo kontakt($module, $db) . "</td>\n";
+            echo kontakt($module, $row) . "</td>\n";
         }
 
         echo "</tr>\n";
@@ -529,7 +595,7 @@ function head (&$module, $db, $a) {
             if ($module->config->getValue('Main', 'showimage'))
                 echo ' colspan="2"';
             echo $module->config->getAttributes('PersondetailsHeader', 'contacttd') . ">\n";
-            echo kontakt($module, $db, TRUE);
+            echo kontakt($module, $row, TRUE);
             echo "</td></tr>\n";
         }
     }
@@ -537,7 +603,7 @@ function head (&$module, $db, $a) {
     echo  "</table>\n</td></tr>\n";
 }
 
-function kontakt ($module, $db, $separate = FALSE) {
+function kontakt ($module, $row, $separate = FALSE) {
     $attr_table = $module->config->getAttributes("Contact", "table");
     $attr_tr = $module->config->getAttributes("Contact", "table");
     $attr_td = $module->config->getAttributes("Contact", "td");
@@ -557,34 +623,34 @@ function kontakt ($module, $db, $separate = FALSE) {
         $out .= "<font$attr_fontcontent>";
 
         if (!$module->config->getValue("Contact", "hidepersname"))
-            $out .= "<br><br>" . htmlReady($db->f("fullname"), TRUE) . "\n";
+            $out .= "<br><br>" . htmlReady($row['fullname'], TRUE) . "\n";
         if ($module->config->getValue('Contact', 'showinstgroup')) {
-            if ($gruppen = GetRoleNames(GetAllStatusgruppen($module->config->range_id, $db->f('user_id'))))
+            if ($gruppen = GetRoleNames(GetAllStatusgruppen($module->config->range_id, $row['user_id'])))
                 $out .= "<br>" . htmlReady(join(", ", array_values($gruppen)));
         }
         // display name of institution (as link)
-        if ($db->f("Name")) {
+        if ($row['Name']) {
             $br_out = "";
             if ($module->config->getValue("Contact", "hideinstname") != '1') {
-                if ($module->config->getValue("Contact", "hideinstname") == 'link' && $db->f('url')) {
-                    $url = htmlReady(trim($db->f("url")));
+                if ($module->config->getValue("Contact", "hideinstname") == 'link' && $row['url']) {
+                    $url = htmlReady(trim($row['url']));
                     if (!stristr($url, "http://"))
                         $url = "http://$url";
                     $out .= "<br><br><a href=\"$url\" target=\"_blank\">";
-                    $out .= htmlReady($db->f("Name"), TRUE) . "</a><br>";
+                    $out .= htmlReady($row['Name'], TRUE) . "</a><br>";
                 }
                 else
-                    $out .= "<br><br>" . htmlReady($db->f("Name"), TRUE) . "<br>";
+                    $out .= "<br><br>" . htmlReady($row['Name'], TRUE) . "<br>";
             }
             if ($module->config->getValue("Contact", "adradd"))
                 $out .= "<br>" . $module->config->getValue("Contact", "adradd");
         }
 
         $out .= "<br>";
-        if ($db->f("Strasse")) {
-            $out .= "<br>" . htmlReady($db->f("Strasse"), TRUE);
-            if($db->f("Plz"))
-            $out .= "<br>" . htmlReady($db->f("Plz"), TRUE);
+        if ($row['Strasse']) {
+            $out .= "<br>" . htmlReady($row['Strasse'], TRUE);
+            if($row['Plz'])
+            $out .= "<br>" . htmlReady($row['Plz'], TRUE);
         }
       $out .= "<br><br></font></td></tr>\n";
     }
@@ -593,12 +659,12 @@ function kontakt ($module, $db, $separate = FALSE) {
     $alias_contact = $module->config->getValue("Contact", "aliases");
     foreach ($order as $position) {
         $data_field = $module->data_fields["contact"][$position];
-        if (!$visible[$position] || !$db->f($data_field))
+        if (!$visible[$position] || !$row[$data_field])
             continue;
         switch ($data_field) {
             case 'Email' :
                 if ($separate || !$module->config->getValue('Contact', 'separatelinks')) {
-                    $email_address = get_visible_email($db->f("user_id"));
+                    $email_address = get_visible_email($row['user_id']);
                     $out .= "<tr$attr_tr>";
                     $out .= "<td$attr_td>";
                     $out .= "<font$attr_fonttitle>";
@@ -611,14 +677,14 @@ function kontakt ($module, $db, $separate = FALSE) {
                 break;
             case 'Home' :
                 if (($separate || !$module->config->getValue('Contact', 'separatelinks')) && 
-                        is_element_visible_externally($db->f("user_id"), $module->owner_perm, 'homepage', $module->visibilities['homepage'])) {
+                        is_element_visible_externally($row['user_id'], $module->owner_perm, 'homepage', $module->visibilities['homepage'])) {
                     $out .= "<tr$attr_tr>";
                     $out .= "<td$attr_td>";
                     $out .= "<font$attr_fonttitle>";
                     $out .= $alias_contact[$position] . "</font></td>";
                     $out .= "<td$attr_td>";
                     $out .= "<font$attr_fontcontent>";
-                    $out .= formatLinks($db->f("Home"));
+                    $out .= formatLinks($row['Home']);
                 }
                 break;
             default:
@@ -629,10 +695,10 @@ function kontakt ($module, $db, $separate = FALSE) {
                     $out .= $alias_contact[$position] . "</font></td>";
                     $out .= "<td$attr_td>";
                     $out .= "<font$attr_fontcontent>";
-                    $out .= htmlReady($db->f($data_field), TRUE);
+                    $out .= htmlReady($row[$data_field], TRUE);
                 }
         }
-        if ($db->f($data_field))
+        if ($row[$data_field])
             $out .= "</font></td></tr>\n";
     }
     $out .= "</table>\n";
@@ -672,5 +738,3 @@ function literature (&$module, $content, $alias_content, $text_div, $text_div_en
     }
 }
 */
-
-?>

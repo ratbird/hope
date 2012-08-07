@@ -1,8 +1,9 @@
 <?
 # Lifter002: TODO
+# Lifter003: TEST
 # Lifter007: TODO
-# Lifter003: TODO
 # Lifter010: TODO
+
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
 // FoafDisplay.class.php
@@ -23,8 +24,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-require_once('lib/visual.inc.php');
-require_once('lib/classes/Avatar.class.php');
+require_once 'lib/visual.inc.php';
+require_once 'lib/classes/Avatar.class.php';
 
 /**
 * Calculate and display "Friend of a friend lists"
@@ -36,13 +37,14 @@ require_once('lib/classes/Avatar.class.php');
 * @author       Tobias Thelen <tthelen@uni-osnabrueck.de>
 * @author       Michael Riehemann <michael.riehemann@uni-oldenburg.de>
 */
-class FoafDisplay {
-    var $db; // Database connection
+class FoafDisplay
+{
+    var $depth = 4; //max number of hops, 5 is max
+
     var $user_id; // start of connecting chain
     var $target_id; // end of connecting chain
-    var $foaf_list; // steps of connection
+    var $foaf_list = array(); // steps of connection
     var $target_username; // used for open/close link on target user's hp
-    var $depth = 4; //max number of hops, 5 is max
     var $dont_show_anonymous = true;
 
     /**
@@ -52,12 +54,11 @@ class FoafDisplay {
     * @param    user_id Watched user
     * @param    string  Watched user's username (performance saver)
     */
-    function FoafDisplay($user_id, $target_id, $target_username) {
-        $this->db=new DB_Seminar();
-        $this->user_id=$user_id;
-        $this->target_id=$target_id;
-        $this->target_username=$target_username;
-        $this->foaf_list=array();
+    function FoafDisplay($user_id, $target_id, $target_username)
+    {
+        $this->user_id         = $user_id;
+        $this->target_id       = $target_id;
+        $this->target_username = $target_username;
         $this->calculate();
     }
 
@@ -69,21 +70,27 @@ class FoafDisplay {
     *
     * @access   private
     */
-    function calculate() {
+    function calculate()
+    {
+        $query = "SELECT 1
+                  FROM contact
+                  WHERE owner_id = ? AND buddy = 1 AND user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $this->user_id,
+            $this->target_id
+        ));
 
-        $sql="SELECT count(*) FROM contact WHERE owner_id='".$this->user_id."' AND buddy=1 AND user_id='".$this->target_id."'";
-        $this->db->query($sql);
-        $this->db->next_record();
-        $this->foaf_list=array();
+        $this->foaf_list = array();
 
         // check for direct connection
-        if ($this->db->f(0)) {
-            $this->foaf_list=array($this->user_id,$this->target_id);
+        if ($statement->fetchColumn()) {
+            $this->foaf_list = array($this->user_id, $this->target_id);
             return;
         }
 
-        for($i = 2; $i <= $this->depth; ++$i){
-            if ($ret = $this->doCalculate($i)){
+        for ($i = 2; $i <= $this->depth; $i += 1){
+            if ($ret = $this->doCalculate($i)) {
                 $this->foaf_list = $ret;
                 return;
             }
@@ -91,26 +98,47 @@ class FoafDisplay {
         return;
     }
 
-    function doCalculate($depth = 0){
+    function doCalculate($depth = 0)
+    {
         $ret = null;
         if ($depth){
-            $values = "t1.user_id as c1";
-            $from = "contact as t1";
-            for ($i = 2; $i <= $depth; ++$i){
-                if($i > 2 ) $values .= ",t".($i-1).".user_id as c".($i-1)." ";
-                $from .= " INNER JOIN contact as t{$i} ON(t".($i-1).".user_id=t{$i}.owner_id AND t{$i}.buddy=1 "
-                        . ($i == $depth ? " AND t{$i}.user_id='".$this->target_id."'" : "") . ") ";
-                if ($this->dont_show_anonymous){
-                    $from .= " INNER JOIN user_config uc{$i} ON(t{$i}.owner_id = uc{$i}.user_id AND uc{$i}.field='FOAF_SHOW_IDENTITY' AND uc{$i}.value='1') ";
+            $parameters = array();
+            
+            $values = "t1.user_id AS c1";
+            $from = "contact AS t1";
+            for ($i = 2; $i <= $depth; $i += 1) {
+                $j = $i - 1;
+                if ($i > 2) {
+                    $values .= ",t{$j}.user_id AS c{$j} ";
+                }
+
+                $from .= " INNER JOIN contact AS t{$i} ON (t{$j}.user_id = t{$i}.owner_id AND t{$i}.buddy = 1 ";
+                if ($i == $depth) {
+                    $from .= " AND t{$i}.user_id = :t{$i}_user_id";
+                    $parameters[":t{$i}_user_id"] = $this->target_id;
+                }
+                $from .= ") ";
+
+                if ($this->dont_show_anonymous) {
+                    $from .= " INNER JOIN user_config AS uc{$i} ON (t{$i}.owner_id = uc{$i}.user_id AND uc{$i}.field = 'FOAF_SHOW_IDENTITY' AND uc{$i}.value = '1') ";
                 }
             }
-            $sql = "SELECT $values FROM $from WHERE t1.owner_id='".$this->user_id."'
-                    AND t1.buddy=1 LIMIT 1";
-            $this->db->query($sql);
-            if ($this->db->next_record()) {
+            $query = "SELECT {$values}
+                      FROM {$from}
+                      WHERE t1.owner_id = :owner_id AND t1.buddy = 1
+                      LIMIT 1";
+            $parameters[':owner_id'] = $this->user_id;
+
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute($parameters);
+            $row = $statement->fetch(PDO::FETCH_ASSOC);
+
+            if ($row) {
+                $ret = array();
+
                 $ret[] = $this->user_id;
-                for ($i = 1; $i < $depth; ++$i){
-                    $ret[] = $this->db->f("c{$i}");
+                for ($i = 1; $i < $depth; $i += 1){
+                    $ret[] = $row["c{$i}"];
                 }
                 $ret[] = $this->target_id;
             }
@@ -196,24 +224,32 @@ class FoafDisplay {
     * @return   array   "uname"=>username, "fullname"=>Full name,
     *           "link"=>(clickable) Name, "pic"=>HTMl code for picture
     */
-    function user_info($user_id, $ignore_ok) {
+    function user_info($user_id, $ignore_ok)
+    {
         global $_fullname_sql;
-        $ret="";
+
         if ($ignore_ok || UserConfig::get($user_id)->FOAF_SHOW_IDENTITY) {
-            $sql="SELECT username, $_fullname_sql[full] AS fullname FROM auth_user_md5 LEFT JOIN user_info USING (user_id) WHERE auth_user_md5.user_id='$user_id'";
-            $this->db->query($sql);
-            $this->db->next_record();
-            $ret["uname"]=$this->db->f("username");
-            $ret["name"]=$this->db->f("fullname");
-            $ret["pic"] ="<a href=\"about.php?username=".$ret['uname']."\">";
-            $ret["pic"].= Avatar::getAvatar($user_id)->getImageTag(Avatar::MEDIUM);
-            $ret["pic"].= "</a>";
+            $query = "SELECT username AS uname, {$_fullname_sql[full]} AS name
+                      FROM auth_user_md5
+                      LEFT JOIN user_info USING (user_id)
+                      WHERE user_id = ?";
+            $statement = DBManager::get()->preg_filter($query);
+            $statement->execute(array($user_id));
+            $ret = $statement->fetch(PDO::FETCH_ASSOC);
 
-
-            $ret["link"]="<font size=\"-1\"><a href=\"about.php?username=".$ret['uname']."\">".htmlReady($ret['name'])."</a></font>";
+            $ret['pic'] = sprintf('<a href="%s">%s</a>',
+                                  URLHelper::getLink('about.php?username=' . $ret['uname']),
+                                  Avatar::getAvatar($user_id)->getImageTag(Avatar::MEDIUM));
+            $ret['link'] = sprintf('<a href="%s">%s</a>',
+                                   URLHelper::getLink('about.php?username=' . $ret['uname']),
+                                   htmlReady($ret['name']));
         } else {
-            $ret["pic"]="<img border=\"1\" src=\"".Avatar::getNobody()->getUrl(Avatar::MEDIUM)."\" " .tooltip(_("anonyme NutzerIn")).">";
-            $ret["link"]=_("<font size=\"-1\">anonyme NutzerIn</font>");
+            $ret = array(
+                'pic'  => sprintf('<img border="1" src="%s" %s>',
+                                  Avatar::getNobody()->getUrl(Avatar::MEDIUM),
+                                  tooltip(_('anonyme NutzerIn'))),
+                'link' => _('anonyme NutzerIn'),
+            );
         }
         return $ret;
     }
@@ -233,4 +269,3 @@ class FoafDisplay {
     }
 
 }
-?>

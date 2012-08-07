@@ -71,8 +71,9 @@ class ExternEditHtml extends ExternEditGeneric {
         $out .= "</font></td>\n";
         $out .= "<td{$this->width_2} nowrap=\"nowrap\"><input type=\"text\" name=\"$form_name\" size=\"3\"";
         $out .= " maxlength=\"3\" value=\"$value\"><font size=\"2\">&nbsp;Pixel&nbsp; \n";
-        $out .= "</font><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/info-circle.png\"";
-        $out .= tooltip($info, TRUE, TRUE) . ">$error_sign</td></tr>\n</table>\n</td></tr>\n";
+        $out .= "</font>";
+        $out .= tooltipIcon($info);
+        $out .= "$error_sign</td></tr>\n</table>\n</td></tr>\n";
         $this->css->switchClass();
 
         return $out;
@@ -102,8 +103,9 @@ class ExternEditHtml extends ExternEditGeneric {
         $out .= "</font></td>\n";
         $out .= "<td{$this->width_2} nowrap=\"nowrap\"><input type=\"text\" name=\"$form_name\" size=\"2\"";
         $out .= " maxlength=\"2\" value=\"$value\"><font size=\"2\">&nbsp;Pixel&nbsp; \n";
-        $out .= "</font><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/info-circle.png\"";
-        $out .= tooltip($info, TRUE, TRUE) . ">$error_sign</td></tr>\n</table>\n</td></tr>\n";
+        $out .= "</font>";
+        $out .= tooltipIcon($info);
+        $out .= "$error_sign</td></tr>\n</table>\n</td></tr>\n";
         $this->css->switchClass();
 
         return $out;
@@ -321,8 +323,8 @@ class ExternEditHtml extends ExternEditGeneric {
         }
         $out .= "</select>\n";
 
-        $out .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/info-circle.png\"";
-        $out .= tooltip($info, TRUE, TRUE) . ">$error_sign</td></tr>\n</table>\n</td></tr>\n";
+        $out .= tooltipIcon($info);
+        $out .= "$error_sign</td></tr>\n</table>\n</td></tr>\n";
         $this->css->switchClass();
 
         return $out;
@@ -352,8 +354,9 @@ class ExternEditHtml extends ExternEditGeneric {
         $out .= "</font></td>\n";
         $out .= "<td{$this->width_2} nowrap=\"nowrap\"><input type=\"text\" name=\"$form_name\" size=\"2\"";
         $out .= " maxlength=\"2\" value=\"$value\"><font size=\"2\">&nbsp;Pixel&nbsp; \n";
-        $out .= "</font><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/info-circle.png\"";
-        $out .= tooltip($info, TRUE, TRUE) . ">$error_sign</td></tr>\n</table>\n</td></tr>\n";
+        $out .= "</font>";
+        $out .= tooltipIcon($info);
+        $out .= "$error_sign</td></tr>\n</table>\n</td></tr>\n";
         $this->css->switchClass();
 
         return $out;
@@ -383,8 +386,9 @@ class ExternEditHtml extends ExternEditGeneric {
         $out .= "</font></td>\n";
         $out .= "<td{$this->width_2} nowrap=\"nowrap\"><input type=\"text\" name=\"$form_name\" size=\"2\"";
         $out .= " maxlength=\"2\" value=\"$value\"><font size=\"2\">&nbsp;Pixel&nbsp; \n";
-        $out .= "</font><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/info-circle.png\"";
-        $out .= tooltip($info, TRUE, TRUE) . ">$error_sign</td></tr>\n</table>\n</td></tr>\n";
+        $out .= "</font>";
+        $out .= tooltipIcon($info);
+        $out .= "$error_sign</td></tr>\n</table>\n</td></tr>\n";
         $this->css->switchClass();
 
         return $out;
@@ -432,8 +436,8 @@ class ExternEditHtml extends ExternEditGeneric {
         $out .= "><font size=\"2\">";
         $out .= _("Pixel");
         $out .= "&nbsp; &nbsp;</font>\n";
-        $out .= "<img src=\" ".$GLOBALS['ASSETS_URL']."images/icons/16/grey/info-circle.png\"";
-        $out .= tooltip($info, TRUE, TRUE) . ">$error_sign</td></tr>\n</table>\n</td></tr>\n";
+        $out .= tooltipIcon($info);
+        $out .= "$error_sign</td></tr>\n</table>\n</td></tr>\n";
         $this->css->switchClass();
 
         return $out;
@@ -476,8 +480,8 @@ class ExternEditHtml extends ExternEditGeneric {
             $out .= $align_name . "</option>";
         }
         $out .= "</select>\n";
-        $out .= "<img src=\" ".$GLOBALS['ASSETS_URL']."images/icons/16/grey/info-circle.png\"";
-        $out .= tooltip($info, TRUE, TRUE) . ">$error_sign</td></tr>\n</table>\n</td></tr>\n";
+        $out .= tooltipIcon($info);
+        $out .= "$error_sign</td></tr>\n</table>\n</td></tr>\n";
         $this->css->switchClass();
 
         return $out;
@@ -520,8 +524,8 @@ class ExternEditHtml extends ExternEditGeneric {
             $out .= $valign_name . "</option>";
         }
         $out .= "</select>\n";
-        $out .= "<img src=\" ".$GLOBALS['ASSETS_URL']."images/icons/16/grey/info-circle.png\"";
-        $out .= tooltip($info, TRUE, TRUE) . ">$error_sign</td></tr>\n</table>\n</td></tr>\n";
+        $out .= tooltipIcon($info);
+        $out .= "$error_sign</td></tr>\n</table>\n</td></tr>\n";
         $this->css->switchClass();
 
         return $out;

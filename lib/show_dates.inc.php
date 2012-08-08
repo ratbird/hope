@@ -1,8 +1,8 @@
 <?
 # Lifter001: DONE
 # Lifter002: TODO
+# Lifter003: TEST
 # Lifter007: TODO
-# Lifter003: TODO
 # Lifter010: TODO
 /**
  * show_dates.inc.php - Funktionen zum Anzeigen von Terminen
@@ -58,20 +58,22 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
     // wenn man keinen Start und Endtag angibt, soll wohl alles angezeigt werden
     // "0" bedeutet jeweils "open end"
 
+    $parameters = array();
     if (($date_start == 0) && ($date_end == 0)) {
+        $show_whole_time = TRUE;
+        $tmp_query = "";
+    } else if ($date_start == 0) {
+        $show_whole_time = TRUE;
+        $tmp_query = " AND t.date <= :date_end ";
+        $parameters[':date_end'] = $date_end;
+    } else if ($date_end == 0) {
         $show_whole_time=TRUE;
-        $tmp_query="";
-    }
-    else if ($date_start == 0) {
-        $show_whole_time=TRUE;
-        $tmp_query=" AND t.date <= $date_end ";
-    }
-    else if ($date_end == 0) {
-        $show_whole_time=TRUE;
-        $tmp_query=" AND t.date >= $date_start ";
-    }
-    else {
-        $tmp_query=" AND (t.date >= $date_start AND t.date <= $date_end) ";
+        $tmp_query = " AND t.date >= :date_start ";
+        $parameters[':date_start'] = $date_start;
+    } else {
+        $tmp_query = " AND (t.date >= $date_start AND t.date <= $date_end) ";
+        $parameters[':date_start'] = $date_start;
+        $parameters[':date_end']   = $date_end;
     }
 
     if ($show_admin) {
@@ -85,65 +87,64 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
 
     $range_typ = ($range_id != $user->id) ? "sem" : "user";
 
-    $db = new DB_Seminar();
-    $db2 = new DB_Seminar();
-
     if ($show_not) {
-        $k = FALSE;
         // wenn Seminartermine angezeigt werden und show_not =sem
         // zeigen wir nur als Sitzungen definierte Termine
         if ($show_not == "sem") {
-            foreach ($TERMIN_TYP as $key => $type) {
-                if ($type["sitzung"]) {
-                    if (!$k) {
-                        $show_query = " AND t.date_typ IN (";
-                        $k = TRUE;
-                    }
-                    elseif ($k)
-                        $show_query .= ", ";
-                    $show_query .= "'$key'";
-                }
+            $date_types = array_filter($TERMIN_TYP, function ($type) { return $type['sitzung']; });
+            if (count($date_types) > 0) {
+                $show_query = " AND t.date_typ IN (:date_types) ";
+                $parameters[':date_types'] = array_keys($date_types);
             }
         }
 
         //wenn Seminartermine angezeigt werden und show_not =other zeigen wir alles andere an
         if ($show_not == "other") {
-            foreach ($TERMIN_TYP as $key => $type) {
-                if (!$type["sitzung"]) {
-                    if (!$k) {
-                        $show_query = " AND t.date_typ IN (";
-                        $k = TRUE;
-                    }
-                    elseif ($k2)
-                        $show_query .= ", ";
-                    $show_query .= "'$key'";
-                }
+            $date_types = array_filter($TERMIN_TYP, function ($type) { return !$type['sitzung']; });
+            if (count($date_types) > 0) {
+                $show_query = " AND t.date_typ IN (:date_types) ";
+                $parameters[':date_types'] = array_keys($date_types);
             }
         }
-
-        if ($k)
-            $show_query .= ") ";
     }
 
     if (is_array($range_id)) {
-        $query = "SELECT t.*, th.issue_id, th.title as Titel, th.description as Info, s.Name FROM termine t LEFT JOIN themen_termine USING (termin_id) LEFT JOIN themen as th USING (issue_id) LEFT JOIN seminare s ON (range_id = Seminar_id) ";
-        $query .= "WHERE (Seminar_id IN '" . implode(",", $range_id);
-        $query .= "' $show_query $tmp_query ) ORDER BY date";
-    }
-    else if (strlen($range_id))
-        $query = "SELECT t.*, th.issue_id, th.title as Titel, th.description as Info FROM termine t LEFT JOIN themen_termine USING (termin_id) LEFT JOIN themen as th USING (issue_id) WHERE (range_id='$range_id' $show_query $tmp_query ) ORDER BY date";
-    else {
-        $query = "SELECT t.*, th.issue_id, th.title as Titel, th.description as Info, s.Name, su.* FROM termine t ".
-            "LEFT JOIN themen_termine USING (termin_id) ".
-            "LEFT JOIN themen as th USING (issue_id) ".
-            "LEFT JOIN seminare s ON (range_id = s.Seminar_id) ".
-            "LEFT JOIN seminar_user su ON (s.Seminar_id = su.Seminar_id) ".
-            "WHERE (user_id = '" . $user->id . "' $show_query $tmp_query ) ORDER BY date";
+        $query = "SELECT t.*, th.issue_id, th.title AS Titel,
+                         th.description AS Info, s.Name
+                  FROM termine AS t
+                  LEFT JOIN themen_termine USING (termin_id)
+                  LEFT JOIN themen AS th USING (issue_id)
+                  LEFT JOIN seminare AS s ON (range_id = Seminar_id)
+                  WHERE Seminar_id IN (:range_id) {$show_query} {$tmp_query}
+                  ORDER BY date";
+        $parameters[':range_id'] = $range_id;
+    } else if (strlen($range_id)) {
+        $query = "SELECT t.*, th.issue_id, th.title AS Titel,
+                         th.description as Info
+                  FROM termine AS t
+                  LEFT JOIN themen_termine USING (termin_id)
+                  LEFT JOIN themen AS th USING (issue_id)
+                  WHERE range_id = :range_id {$show_query} {$tmp_query}
+                  ORDER BY date";
+        $parameters[':range_id'] = $range_id;
+    } else {
+        $query = "SELECT t.*, th.issue_id, th.title as Titel,
+                         th.description as Info, s.Name, su.*
+                  FROM termine AS t
+                  LEFT JOIN themen_termine USING (termin_id)
+                  LEFT JOIN themen AS th USING (issue_id) 
+                  LEFT JOIN seminare AS s ON (range_id = s.Seminar_id)
+                  LEFT JOIN seminar_user su ON (s.Seminar_id = su.Seminar_id)
+                  WHERE user_id = :user_id {$show_query} {$tmp_query}
+                  ORDER BY date";
+        $parameters[':user_id'] = $user->id;
     }
 
-    $db->query($query);
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute($parameters);
+    $dates = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-    if ($db->num_rows()) {
+    if (count($dates) > 0) {
         // set skip link
         SkipLinks::addIndex(_("Termine"), 'appointments_box');
 
@@ -201,18 +202,17 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
         if ($show_not)
             $add_to_link .= "&show_not=$show_not";
 
-        while ($db->next_record()) {
-
+        foreach ($dates as $date) {
             echo '<div role="article">';
             $zusatz = '';
             if (!$range_id || is_array($range_id)) {
-                $zusatz .= "<a href=\"".URLHelper::getLink("seminar_main.php?auswahl=" . $db->f("range_id"))
-                                . "\"><font size=\"-1\">" . htmlReady(mila($db->f("Name"), 22))
+                $zusatz .= "<a href=\"".URLHelper::getLink("seminar_main.php?auswahl=" . $date['range_id'])
+                                . "\"><font size=\"-1\">" . htmlReady(mila($date['Name'], 22))
                                 . "</font></a>";
-                $current_seminar_id = $db->f("range_id");
+                $current_seminar_id = $date['range_id'];
             }
             else {
-                $termin = new SingleDate($db->f('termin_id'));
+                $termin = new SingleDate($date['termin_id']);
                 if( $termin->hasRoom() ){
                     $zusatz .= _("Ort:") . " " . $termin->getRoom() . " ";
                 }elseif( $freeroomtext = $termin->getFreeRoomText() ){
@@ -227,11 +227,14 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
             $num_docs = 0;
             $folder_id = '';
             if ($show_docs) {
-                $row = DBManager::get()
-                       ->query("SELECT folder_id, issue_id FROM themen_termine
-                                INNER JOIN folder ON issue_id=range_id
-                                WHERE termin_id ='" . $db->f("termin_id") . "' LIMIT 1")
-                       ->fetch(PDO::FETCH_ASSOC);
+                $query = "SELECT folder_id, issue_id
+                          FROM themen_termine
+                          INNER JOIN folder ON (issue_id = range_id)
+                          WHERE termin_id = ?
+                          LIMIT 1";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($date['termin_id']));
+                $row = $statement->fetch(PDO::FETCH_ASSOC);
                 if ($row['folder_id']) {
                     $num_docs = doc_count($row['issue_id'], $current_seminar_id);
                     $folder_id = $row['folder_id'];
@@ -240,22 +243,22 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
 
             $titel = '';
 
-            if ($open == $db->f("termin_id")) {
+            if ($open == $date['termin_id']) {
                 $titel.= "<a name=\"a\"> </a>";
             }
 
-            $titel .= substr(strftime("%a",$db->f("date")),0,2);
-            $titel .= date(". d.m.Y, H:i", $db->f("date"));
-            if ($db->f("date") < $db->f("end_time")) {
-                $titel .= " - " . date("H:i", $db->f("end_time"));
+            $titel .= substr(strftime('%a', $date['date']),0,2);
+            $titel .= date('. d.m.Y, H:i', $date['date']);
+            if ($date['date'] < $date['end_time']) {
+                $titel .= " - " . date("H:i", $date['end_time']);
             }
-            if ($db->f("Titel")) {
+            if ($date['Titel']) {
                 //Beschneiden des Titels
-                $tmp_titel = htmlReady(mila($db->f("Titel"), 60 / (($full_width ? 100 : 70) / 100)));
+                $tmp_titel = htmlReady(mila($date['Titel'], 60 / (($full_width ? 100 : 70) / 100)));
                 $titel .= ", " . $tmp_titel;
             }
 
-            if ($db->f("chdate") > max(object_get_visit($current_seminar_id, "schedule"), object_get_visit($current_seminar_id, "sem"))) {
+            if ($date['chdate'] > max(object_get_visit($current_seminar_id, "schedule"), object_get_visit($current_seminar_id, "sem"))) {
                 $new = false;
             } else {
                 $new = FALSE;
@@ -269,14 +272,14 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
             }
 
             //calendar jump
-            $zusatz .= ' <a href="' . UrlHelper::getLink('calendar.php', array('cmd' =>'showweek', 'atime' => $db->f("date"), 'caluser' => 'self'));
+            $zusatz .= ' <a href="' . UrlHelper::getLink('calendar.php', array('cmd' =>'showweek', 'atime' => $date['date'], 'caluser' => 'self'));
             $zusatz .= '"><img style="vertical-align:bottom" src="' . Assets::image_path('popupcalendar.png') . '" ';
-            $zusatz .= tooltip(sprintf(_("Zum %s in den persönlichen Terminkalender springen"), date("d.m.Y", $db->f("date"))));
+            $zusatz .= tooltip(sprintf(_("Zum %s in den persönlichen Terminkalender springen"), date("d.m.Y", $date['date'])));
             $zusatz .= '></a>';
 
 
-            if ($open != $db->f("termin_id")) {
-                $link=URLHelper::getLink("?dopen=".$db->f("termin_id").$add_to_link."#a");
+            if ($open != $date['termin_id']) {
+                $link=URLHelper::getLink("?dopen=".$date['termin_id'].$add_to_link."#a");
             } else {
                 $link=URLHelper::getLink("?dclose=true".$add_to_link);
             }
@@ -287,22 +290,22 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
             }
             echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr>";
 
-            if (($open == $db->f("termin_id")) || ($open == "all") || ($new)) {
-                printhead(0, 0, $link, "open", $new, $icon, $titel, $zusatz, $db->f("chdate"));
+            if (($open == $date['termin_id']) || ($open == "all") || ($new)) {
+                printhead(0, 0, $link, "open", $new, $icon, $titel, $zusatz, $date['chdate']);
             } else {
-                printhead(0, 0, $link, "close", $new, $icon, $titel, $zusatz, $db->f("chdate"));
+                printhead(0, 0, $link, "close", $new, $icon, $titel, $zusatz, $date['chdate']);
             }
             echo '</tr></table> ';
-            if (($open == $db->f("termin_id")) || ($open == "all") || ($new)) {
-                $termin = new SingleDate($db->f("termin_id"));
+            if (($open == $date['termin_id']) || ($open == "all") || ($new)) {
+                $termin = new SingleDate($date['termin_id']);
                 $content = '';
-                if ($db->f("Info")) {
-                    $content .= formatReady($db->f("Info"), TRUE, FALSE) . "<br><br>";
+                if ($date['Info']) {
+                    $content .= formatReady($date['Info'], TRUE, FALSE) . "<br><br>";
                 } else {
                     $content .= _("Keine Beschreibung vorhanden") . "<br><br>";
                 }
-                $content .= '<b>' . _("Art des Termins:") . '</b> ' . $TERMIN_TYP[$db->f("date_typ")]["name"] . ', ';
-                //$content.="<b>" . _("angelegt von:") . "</b> ".get_fullname($db->f("autor_id"),'full',true)."<br>";
+                $content .= '<b>' . _("Art des Termins:") . '</b> ' . $TERMIN_TYP[$date['date_typ']]["name"] . ', ';
+                //$content.="<b>" . _("angelegt von:") . "</b> ".get_fullname($date['autor_id'],'full',true)."<br>";
                 $content .= "<b>" . _("durchführende Dozenten:") . "</b> ";
                 foreach ($termin->getRelatedPersons() as $key => $dozent_id) {
                     $key < 1 || ($content .= ", ");
@@ -311,7 +314,7 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
                 $content .= "<br>";
 
                 if ($show_admin)
-                    $content .= "<br><div align=\"center\"> ". LinkButton::create(_('Bearbeiten'), URLHelper::getURL("raumzeit.php", array('cmd' => 'open','open_close_id' => $db->f("termin_id") . '#' . $db->f("termin_id")))) . "</div>";
+                    $content .= "<br><div align=\"center\"> ". LinkButton::create(_('Bearbeiten'), URLHelper::getURL("raumzeit.php", array('cmd' => 'open','open_close_id' => $date['termin_id'] . '#' . $date['termin_id']))) . "</div>";
                 echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr>";
                 printcontent(0,0, $content, $edit);
                 echo "</tr></table> ";
@@ -610,12 +613,16 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
             //Dokumente zaehlen
             $num_docs = 0;
             if ($show_docs && strtolower(get_class($termin)) == 'seminarevent') {
-
-                $row = DBManager::get()
-                       ->query("SELECT folder_id, issue_id FROM themen_termine
-                                INNER JOIN folder ON issue_id=range_id
-                                WHERE termin_id ='" . $termin->getId() . "' LIMIT 1")
-                       ->fetch(PDO::FETCH_ASSOC);
+                $query = "SELECT folder_id, issue_id
+                          FROM themen_termine
+                          INNER JOIN folder ON (issue_id = range_id)
+                          WHERE termin_id = ?
+                          LIMIT 1";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array(
+                    $termin->getId()
+                ));
+                $row = $statement->fetch(PDO::FETCH_ASSOC);
                 if ($row['folder_id']) {
                     $num_docs = doc_count($row['issue_id'],  $termin->getSeminarId());
                     if ($num_docs) {
@@ -741,4 +748,3 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
         return FALSE;
     }
 }
-?>

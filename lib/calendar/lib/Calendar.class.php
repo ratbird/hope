@@ -406,16 +406,18 @@ class Calendar
 
         $db = DBManager::get();
         if ($names) {
-            $query = "SELECT su.Seminar_id, s.Name FROM seminar_user su LEFT JOIN seminare s USING(Seminar_id) WHERE user_id = '$user_id'";
+            $query = "SELECT su.Seminar_id, s.Name FROM seminar_user su LEFT JOIN seminare s USING(Seminar_id) WHERE user_id = ?";
         } else {
-            $query = "SELECT Seminar_id FROM seminar_user WHERE user_id = '$user_id'";
+            $query = "SELECT Seminar_id FROM seminar_user WHERE user_id = ?";
         }
         if (is_null($all) || $all === false) {
             $query .= " AND bind_calendar = 1";
         }
         if ($names) {
             $query .= ' ORDER BY Name';
-            $result = $db->query($query)->fetchAll(PDO::FETCH_ASSOC);
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($user_id));
+            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
             foreach ($result as $row) {
                 $bind_seminare[$row['Seminar_id']] = $row['Name'];
             }
@@ -427,7 +429,9 @@ class Calendar
                 }
                 return NULL;
             } else {
-                $result = $db->query($query)->fetchAll(PDO::FETCH_ASSOC);
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($user_id));
+                $result = $statement->fetchAll(PDO::FETCH_ASSOC);
                 foreach ($result as $row) {
                     $bind_seminare[] = $row['Seminar_id'];
                 }

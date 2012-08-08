@@ -1,7 +1,7 @@
 <?php
-# Lifter007: TODO
-# Lifter003: TODO
-# Lifter010: TODO
+# Lifter003: TEST
+# Lifter007: TEST
+# Lifter010: DONE - not applicable
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
 // PDOHandler.class.php
@@ -24,23 +24,22 @@
 
 
 /**
-* Simple wrapper class for mysql based sotrage
-*
-*
+* Simple wrapper class for mysql based storage using PDO
 *
 * @access   public
 * @author   André Noack <andre.noack@gmx.net>
 * @package  Chat
 */
 
-class PDOHandler {
+class PDOHandler
+{
     /**
     * name of db table
     *
     * @access   private
     * @var      string
     */
-    var $table_name;
+    private $table_name;
 
     /**
     * constructor
@@ -49,7 +48,8 @@ class PDOHandler {
     * @param    string  $db_name
     * @param    string  $table_name
     */
-    function PDOHandler($table_name = "chat_data") {
+    public function __construct($table_name = "chat_data")
+    {
         $this->table_name = $table_name;
     }
 
@@ -60,10 +60,15 @@ class PDOHandler {
     * @param    mixed   &$what  variable to store (call by reference)
     * @param    integer $key    the key under which to store
     */
-    function store(&$what,$key) {
-        $db = DBManager::get();
-        $contents = addslashes(serialize($what));
-        $db->exec("REPLACE INTO {$this->table_name} (id, data) VALUES ($key, '$contents')");
+    public function store(&$what, $key)
+    {
+        $query = "REPLACE INTO :table (id, data) VALUES (:key, :content)";
+        $statement = DBManager::get()->prepare($query);
+        $statement->bindValue(':table', $this->table_name, StudipPDO::PARAM_COLUMN);
+        $statement->bindValue(':key', $key);
+        $statement->bindValue(':content', serialize($what));
+        $statement->execute();
+
         return true;
     }
 
@@ -74,14 +79,17 @@ class PDOHandler {
     * @param    mixed   &$what  variable to restore (call by reference)
     * @param    integer $key    the key from which to store
     */
-    function restore(&$what,$key) {
-        $db = DBManager::get();
-        $result = $db->query("SELECT data FROM {$this->table_name} WHERE id=$key");
+    public function restore(&$what,$key)
+    {
+        $query = "SELECT data FROM :table WHERE id = :key";
+        $statement = DBManager::get()->prepare($query);
+        $statement->bindValue(':table', $this->table_name, StudipPDO::PARAM_COLUMN);
+        $statement->bindValue(':key', $key);
+        $statement->execute();
 
-        if (($row = $result->fetch())) {
+        if ($row = $staement->fetch()) {
             $what = unserialize($row['data']);
         }
         return true;
     }
 }
-?>

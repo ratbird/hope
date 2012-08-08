@@ -1,7 +1,7 @@
 <?
 # Lifter002: TODO
-# Lifter007: TODO
 # Lifter003: TODO
+# Lifter007: TODO
 # Lifter010: TODO
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
@@ -52,12 +52,16 @@ class StudipDocumentTree extends TreeAbstract {
     var $group_folders = array();
     
     
-    function ExistsGroupFolders($seminar_id){
-        $db = new DB_Seminar();
-        $db->query("SELECT statusgruppe_id FROM statusgruppen 
-                    INNER JOIN folder ON(statusgruppe_id=folder.range_id)
-                    WHERE statusgruppen.range_id='$seminar_id' LIMIT 1");
-        return $db->next_record();
+    function ExistsGroupFolders($seminar_id)
+    {
+        $query = "SELECT 1
+                  FROM statusgruppen 
+                  INNER JOIN folder ON (statusgruppe_id = folder.range_id)
+                  WHERE statusgruppen.range_id = ?
+                  LIMIT 1";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($seminar_id));
+        return $statement->fetchColumn() > 0;
     }
     
     /**
@@ -66,10 +70,13 @@ class StudipDocumentTree extends TreeAbstract {
     * do not use directly, call TreeAbstract::GetInstance("StudipDocumentTree")
     * @access private
     */ 
-    function StudipDocumentTree($args) {
+    function StudipDocumentTree($args)
+    {
         $this->range_id = $args['range_id'];
-        $this->entity_type = (!$args['entity_type'] ? get_object_type($this->range_id) : $args['entity_type']);
-        if ($args['get_root_name']) list($name,) = array_values(get_object_name($this->range_id, $this->entity_type));
+        $this->entity_type = $args['entity_type'] ?: get_object_type($this->range_id);
+        if ($args['get_root_name']) {
+            list($name,) = array_values(get_object_name($this->range_id, $this->entity_type));
+        }
         $this->root_name = $name;
         $this->must_have_perm = $this->entity_type == 'sem' ? 'tutor' : 'autor';
         $modules = new Modules();
@@ -84,7 +91,8 @@ class StudipDocumentTree extends TreeAbstract {
     * stores all folders in array $tree_data
     * @access public
     */
-    function init(){
+    function init()
+    {
         parent::init();
         $p = 0;
         $top_folders['allgemein'] = array($this->range_id,'FOLDER_GET_DATA_BY_RANGE');

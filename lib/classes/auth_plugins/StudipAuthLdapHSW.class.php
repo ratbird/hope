@@ -79,25 +79,39 @@ class StudipAuthLdapHSW extends StudipAuthLdap {
         $db = $this->dbv->db;
         $ret = false;
         //delete all studycourses for this user
-        $db->query("DELETE FROM user_studiengang WHERE user_id='$uid'");
+        $query = "DELETE FROM user_studiengang WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($uid));
+
         if ($this->user_data[$this->study_course_attribute]['count']){
             for ($i = 0; $i < $this->user_data[$this->study_course_attribute]['count']; ++$i){
                 $s_id = null;
                 $shortcut = utf8_decode($this->user_data[$this->study_course_attribute][$i]);
                 //get the id of existing study course
-                $db->query("SELECT studiengang_id FROM studiengaenge WHERE beschreibung LIKE '($shortcut)%'");
-                if ($db->next_record()){
-                    $s_id = $db->f(0);
+                $query = "SELECT studiengang_id FROM studiengaenge WHERE beschreibung LIKE CONCAT('(', ?, ')%')";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($shortcut));
+                $temp_id = $statement->fetchColumn();
+                if ($tmp_id !== false) {
+                    $s_id = $tmp_id;
                 } else {
                     //insert a new study course, if none is found
                     $s_id = md5(uniqid($shortcut,1));
-                    $db->query("INSERT INTO studiengaenge (studiengang_id, name, beschreibung, mkdate, chdate)
-                                VALUES('$s_id','$shortcut','($shortcut)',UNIX_TIMESTAMP(),UNIX_TIMESTAMP())");
+                    $query = "INSERT INTO studiengaenge (studiengang_id, name, beschreibung, mkdate, chdate)
+                              VALUES(?, ?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())";
+                    $statement = DBManager::get()->prepare($query);
+                    $statement->execute(array(
+                        $s_id,
+                        $shortcut,
+                        '(' . $shortcut . ')',
+                    ));
                 }
                 if ($s_id){
                     //link the found study course id to the user
-                    $db->query("INSERT INTO user_studiengang (user_id, studiengang_id) VALUES ('$uid','$s_id')");
-                    $ret += $db->affected_rows();
+                    $query = "INSERT INTO user_studiengang (user_id, studiengang_id) VALUES (?, ?)";
+                    $statement = DBManager::get()->prepare($query);
+                    $statement->execute(array($uid, $s_id));
+                    $ret += $statement->rowCount();
                 }
             }
         }

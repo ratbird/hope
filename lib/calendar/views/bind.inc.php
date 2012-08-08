@@ -40,12 +40,16 @@ if ($order == 'ASC') {
 $query = "SELECT bind_calendar, visitdate, seminare.Name, seminare.Seminar_id, seminar_user.status, seminar_user.gruppe, count(termin_id) as count,
     sd1.name AS startsem,IF(duration_time=-1, '" . _("unbegrenzt") . "', sd2.name) AS endsem
     FROM seminar_user LEFT JOIN seminare ON seminare.Seminar_id=seminar_user.seminar_id
-    LEFT JOIN object_user_visits  ouv ON ouv.object_id = seminare.Seminar_id AND ouv.user_id = '{$user->id}' AND ouv.type = 'sem'
+    LEFT JOIN object_user_visits  ouv ON ouv.object_id = seminare.Seminar_id AND ouv.user_id = :user_id AND ouv.type = 'sem'
     LEFT JOIN semester_data sd1 ON ( start_time BETWEEN sd1.beginn AND sd1.ende)
     LEFT JOIN semester_data sd2 ON ((start_time + duration_time) BETWEEN sd2.beginn AND sd2.ende)
-    LEFT JOIN termine ON range_id=seminare.Seminar_id WHERE seminar_user.user_id = '"
-    . $user->id . "' GROUP BY Seminar_id ORDER BY $sortby $order";
-$result = $db->query($query)->fetchAll(PDO::FETCH_ASSOC);
+    LEFT JOIN termine ON range_id=seminare.Seminar_id WHERE seminar_user.user_id = :user_id
+    GROUP BY Seminar_id ORDER BY $sortby $order";
+$statement = DBManager::get()->prepare($query);
+$statement->execute(array(
+    ':user_id' => $user->id
+));
+$result = $statement->fetchAll(PDO::FETCH_ASSOC);
 
 echo "<table width=\"100%\" border=\"0\" cellpadding=\"5\" cellspacing=\"0\">\n";
 echo "<tr><td class=\"blank\">\n";

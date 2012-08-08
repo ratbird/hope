@@ -100,33 +100,43 @@ class CalendarDriver
         if ($event_type == 'ALL_EVENTS' || $event_type == 'CALENDAR_EVENTS') {
             $db_cal = DBManager::get();
 
-            $query = "SELECT $select_cal FROM calendar_events WHERE range_id = '{$this->range_id}' "
-                    . "AND (start BETWEEN $start AND $end "
-                    . "OR (start <= $end AND (expire + end - start) >= $start AND rtype != 'SINGLE') "
-                    . "OR ($start BETWEEN start AND end))";
+            $query = "SELECT {$select_cal}
+                      FROM calendar_events
+                      WHERE range_id = :range_id
+                        AND (start BETWEEN :start AND :end OR
+                             (start <= :end AND (expire + end - start) >= :start AND rtype != 'SINGLE')  OR
+                             (:start BETWEEN start AND end))";
+            $parameters = array(
+                ':range_id' => $this->range_id,
+                ':start'    => $start,
+                ':end'      => $end
+            );
             if ($except !== NULL) {
-                $except = implode("','", $except);
-                $query .= " AND NOT IN '$except'";
+                $query .= " AND NOT IN (:except)";
+                $parameters[':except'] = $except;
             }
-            $this->result['cal'] = $db_cal->query($query)->fetchAll(PDO::FETCH_ASSOC);
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute($parameters);
+            $this->result['cal'] = $statement->fetchAll(PDO::FETCH_ASSOC);
         }
 
         if ($event_type == 'ALL_EVENTS' || $event_type == 'SEMINAR_EVENTS') {
-            if (is_array($sem_ids) && count($sem_ids)) {
-                $sem_ids = implode("','", $sem_ids);
-            } else {
-                $sem_ids = '';
-            }
 
             $query = "SELECT $select_semcal FROM calendar_events ce
                 LEFT JOIN seminar_user su ON su.Seminar_id = ce.range_id
                 LEFT JOIN seminare s USING(Seminar_id) WHERE su.user_id = ?
-                AND range_id IN ('$sem_ids') AND su.bind_calendar = 1
+                AND range_id IN (?) AND su.bind_calendar = 1
                 AND (start BETWEEN ? AND ?
                 OR (start <= ? AND (expire + end - start) >= ?
                 AND rtype != 'SINGLE') OR (? BETWEEN start AND end))";
             $db_semcal = DBManager::get()->prepare($query);
-            $db_semcal->execute(array($this->range_id, $start, $end, $end, $start, $start));
+            $db_semcal->execute(array(
+                $this->range_id,
+                $sem_ids ?: '',
+                $start, $end,
+                $end, $start,
+                $start
+            ));
 
             if ($this->range_id == $sem_ids) {
                 $range_id = $GLOBALS['user']->id;
@@ -138,11 +148,14 @@ class CalendarDriver
                     . "FROM termine t LEFT JOIN seminar_user su ON su.Seminar_id=t.range_id "
                     . "LEFT JOIN seminare s USING(Seminar_id) "
                     . "LEFT JOIN resources_assign ON (assign_user_id = termin_id) WHERE "
-                    . "user_id = ? AND range_id IN ('$sem_ids') AND "
+                    . "user_id = ? AND range_id IN (?) AND "
                     . "date BETWEEN ? AND ?";
             $db_sem = DBManager::get()->prepare($query);
-            $db_sem->execute(array($range_id, $start, $end));
-
+            $db_sem->execute(array(
+                $range_id,
+                $sem_ids ?: '',
+                $start, $end
+            ));
 
             $this->result['semcal'] = $db_semcal->fetchAll(PDO::FETCH_ASSOC);
             $this->result['sem'] = $db_sem->fetchAll(PDO::FETCH_ASSOC);

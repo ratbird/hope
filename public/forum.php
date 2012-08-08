@@ -73,46 +73,14 @@ if (Request::option('neuesthema')) {
     }
     PageLayout::setTitle($SessSemName["header_line"]. " - " . _("Forum"));
 }
-ob_start();
-?>
-STUDIP.Forum = {};
 
-STUDIP.Forum.pruefe_name = function(){
- var re_nachname = /^([a-zA-ZÄÖÜ][^0-9"´'`\/\\\(\)\[\]]+)$/;
- var checked = true;
- if (re_nachname.test(document.forumwrite.nobodysname.value)==false) {
- alert("<?=_("Bitte geben Sie Ihren tatsächlichen Namen an.")?>");
- document.forumwrite.nobodysname.focus();
- checked = false;
- }
-  if (document.forumwrite.nobodysname.value=="unbekannt") {
- alert("<?=_("Bitte geben Sie Ihren Namen an.")?>");
- document.forumwrite.nobodysname.focus();
- checked = false;
- }
- return checked;
-}
-
-STUDIP.Forum.rate_template = function (id) {
-  STUDIP.Dialogbox.openBox("Rating_for_<?= $open ?>", "<?= _("Bewertung des Beitrags") ?>",
-'<form method="post" action="<?=URLHelper::getLink("?view=$view&open=$open&flatviewstartposting=$flatviewstartposting#anker")?>">\
-<?= CSRFProtection::tokenTag() ?>\
-<div style="text-align:center">\
-<?=_("Schulnote")?>\
-<br>\
-<span style="color:#009900;font-weight:bold;">1</span>\
-<?php foreach(range(1,5) as $r) :?>
-<input type="radio" name="rate[' + id + ']" value="<?=$r?>">\
-<?php endforeach?>
-<span style="color:#990000;font-weight:bold;">5</span>\
-<br>\
-\<?= Button::create(_("Bewerten"), "sidebar") ?> \
-</form>\
-</div>\
-', "center");
-}
-<?php
-PageLayout::addHeadElement('script', array('type' => 'text/javascript'), ob_get_clean());
+// Create and include js
+$template = $GLOBALS['template_factory']->open('forum/javascript');
+$template->view = $view;
+$template->open = $open;
+$template->flatviewstartposting = $flatviewstartposting;
+$script = $template->render();
+PageLayout::addHeadElement('script', array('type' => 'text/javascript'), $script);
 
 // Start of Output
 if (!Request::option('update')) {
@@ -449,8 +417,8 @@ if ($answer_id) {
 // Update eines Beitrags
 //////////////////////////////////////////////////////////////////////////////////
 
-$titel = Request::quoted('titel');
-$description = Request::quoted('description');
+$titel = Request::get('titel');
+$description = Request::get('description');
 
 if ($update) {
     // check whether we should create a new posting or update an existing one

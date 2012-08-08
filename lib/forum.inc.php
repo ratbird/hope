@@ -1,8 +1,8 @@
 <?
 # Lifter001: DONE
 # Lifter002: TODO
+# Lifter003: TEST
 # Lifter007: TODO
-# Lifter003: TODO
 # Lifter005: TEST
 # Lifter010: TODO
 /**
@@ -64,7 +64,7 @@ function forum_kill_edit ($description) {
  *
  */
 function forum_append_edit ($description) {
-    $edit = "<admin_msg autor=\"".addslashes(get_fullname())."\" chdate=\"".time()."\">";
+    $edit = "<admin_msg autor=\"".get_fullname()."\" chdate=\"".time()."\">";
     //$description = forum_kill_edit($description).$edit;
     return $description . $edit;
 }
@@ -175,14 +175,19 @@ function editarea($forumposting) {
 **/
 function MakeUniqueID ()
 {   // baut eine ID die es noch nicht gibt
+    $hash_secret = 'kertoiisdfgz';
 
-    $hash_secret = "kertoiisdfgz";
-    $db=new DB_Seminar;
-    $tmp_id=md5(uniqid($hash_secret));
+    $query = "SELECT 1 FROM px_topics WHERE topic_id = ?";
+    $statement = DBManager::get()->prepare($query);
 
-    $db->query ("SELECT topic_id FROM px_topics WHERE topic_id = '$tmp_id'");
-    if ($db->next_record())
-        $tmp_id = MakeUniqueID(); //ID gibt es schon, also noch mal
+    do {
+        $tmp_id = md5(uniqid($hash_secret));
+
+        $statement->execute(array($tmp_id));
+        $check = $statement->fetchColumn();
+        $statement->closeCursor();
+    } while ($check);
+
     return $tmp_id;
 }
 
@@ -201,19 +206,33 @@ function move_topic($topic_id, $sem_id, $root, &$verschoben)  //rekursives Versc
 {
     global $rechte;
     if ($rechte) {
-        $db=new DB_Seminar;
-        $db->query("SELECT topic_id FROM px_topics WHERE parent_id='$topic_id'");
-        if ($db->num_rows()) {
-            while ($db->next_record()) {
-                $next_topic=$db->f("topic_id");
-                move_topic($next_topic,$sem_id,$root,$verschoben);
-                }
-            }
-        if ($root == $topic_id)
-            $db->query("UPDATE px_topics SET parent_id=0, root_id='$topic_id', Seminar_id='$sem_id' WHERE topic_id='$topic_id'");
-        else
-            $db->query("UPDATE px_topics SET root_id='$root', Seminar_id='$sem_id' WHERE topic_id='$topic_id'");
-        $verschoben++;
+        $query = "SELECT topic_id FROM px_topics WHERE parent_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($topic_id));
+        while ($id = $statement->fetchColumn()) {
+            move_topic($id, $sem_id, $root, $verschoben);
+        }
+        if ($root == $topic_id) {
+            $query = "UPDATE px_topics
+                      SET parent_id = 0, root_id = :topic_id, Seminar_id= :sem_id
+                      WHERE topic_id = :topic_id";
+            $statement = DBManager::get()->prepare($query);
+            $statement->bindValue(':topic_id', $topic_id);
+            $statement->bindValue(':sem_id', $sem_id);
+            $statement->execute();
+        } else {
+            $query = "UPDATE px_topics
+                      SET root_id = ?, Seminar_id = ?
+                      WHERE topic_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                $root,
+                $sem_id,
+                $topic_id
+            ));
+        }
+
+        $verschoben += 1;
         return $verschoben;
     }
 }
@@ -232,25 +251,35 @@ function move_topic($topic_id, $sem_id, $root, &$verschoben)  //rekursives Versc
 function move_topic2($topic_id, $root, &$verschoben,$thema)  //rekursives Verschieben von topics, diesmal in ein Thema
 {   global $rechte;
     if ($rechte) {
-        $db=new DB_Seminar;
-        $db->query("SELECT topic_id FROM px_topics WHERE parent_id='$topic_id'");
-        if ($db->num_rows()) {
-            while ($db->next_record()) {
-                $next_topic=$db->f("topic_id");
-                move_topic2($next_topic,$root,$verschoben,$thema);
-                }
-            }
-        if ($root == $topic_id)
-            $db->query("UPDATE px_topics SET parent_id='$thema', root_id='$thema' WHERE topic_id='$topic_id'");
-        else
-        $db->query("UPDATE px_topics SET root_id='$thema' WHERE topic_id='$topic_id'");
-        $verschoben++;
+        $query = "SELECT topic_id FROM px_topics WHERE parent_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($topic_id));
+        while ($id = $statement->fetchColumn()) {
+            move_topic2($id, $root, $verschoben, $thema);
+        }
+        if ($root == $topic_id) {
+            $query = "UPDATE px_topics
+                      SET parent_id = :thema, root_id = :thema
+                      WHERE topic_id = :topic_id";
+            $statement = DBManager::get()->prepare($query);
+            $statement->bindValue(':thema', $thema);
+            $statement->bindValue(':topic_id', $topic_id);
+            $statement->execute();
+        } else {
+            $query = "UPDATE px_topics
+                      SET root_id = ?
+                      WHERE topic_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($thema, $topic_id));
+        }
+
+        $verschoben += 1;
         return $verschoben;
     }
 }
 
 /**
-* Checks whether there can be ditet or not (seeks childs an rights)
+* Checks whether there can be edited or not (seeks childs an rights)
 *
 * @param    string topic_id posting to be checked
 *
@@ -258,23 +287,33 @@ function move_topic2($topic_id, $root, &$verschoben,$thema)  //rekursives Versch
 *
 **/
 function lonely($topic_id)  //Sucht nach Kindern und den Rechten (für editieren)
-{   global $user,$auth,$rechte;
-    $lonely=TRUE;
-    $db=new DB_Seminar;
-    $db2=new DB_Seminar;
-    $db2->query("SELECT topic_id FROM px_topics WHERE parent_id='$topic_id'");
-    if (!$db2->num_rows()) {
-        $db->query("SELECT user_id, chdate, mkdate FROM px_topics WHERE topic_id='$topic_id'");
-        if ($db->num_rows())
-            while ($db->next_record()) {
-                if ($db->f("user_id")==$user->id OR $rechte)
-                    $lonely=FALSE;
-                elseif ($user->id=="nobody" AND $db->f("chdate") < $db->f("mkdate"))     // nobody schreibt an seinem anderen Beitrag, nachträgliches editieren nicht möglich
-                    $lonely=FALSE;
-            }
+{
+    global $user, $rechte;
+
+    $query = "SELECT 1 FROM px_topics WHERE parent_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($topic_id));
+    if ($statement->fetchColumn()) {
+        return true;
+    }
+    
+    $query = "SELECT user_id, chdate, mkdate
+              FROM px_topics
+              WHERE topic_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($topic_id));
+    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+        if ($row['user_id'] == $user->id || $rechte) {
+            return false;
+        }
+
+        // nobody schreibt an seinem anderen Beitrag, nachträgliches editieren nicht möglich
+        if ($user->id == 'nobody' && $row['chdate'] < $row['mkdate']) {
+            return false;
+        }
     }
 
-    return $lonely;
+    return true;
 }
 
 /**
@@ -286,16 +325,17 @@ function lonely($topic_id)  //Sucht nach Kindern und den Rechten (für editieren)
 *
 **/
 function suche_kinder($topic_id)  //Sucht alle aufgeklappten Beitraege raus
-{   global $_open;
-    $db=new DB_Seminar;
-    $db->query("SELECT topic_id FROM px_topics WHERE parent_id='$topic_id'");
-    if ($db->num_rows()) {
-        while ($db->next_record()) {
-            $next_topic=$db->f("topic_id");
-            suche_kinder($next_topic);
-            }
-        }
-    $_open .= ";".$topic_id;
+{   
+    global $_open;
+
+    $query = "SELECT topic_id FROM px_topics WHERE parent_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($topic_id));
+    while ($id = $statement->fetchColumn()) {
+        suche_kinder($id);
+    }
+
+    $_open .= ';' . $topic_id;
     return $_open;
 }
 
@@ -342,22 +382,20 @@ function ForumNewPosting ($forumposting) {
 }
 
 /**
-* Ckeck whether a posting has childs or not
+* Ckeck whether a posting has children or not
 *
 * @param    array forumposting contains several data of the actual posting
 *
 * @return   array   forumposting whith additional lonely flag
 *
 **/
-function forum_lonely($forumposting) {  //Sieht nach ob das Posting kinderlos ist
+function forum_lonely($forumposting)
+{  //Sieht nach ob das Posting kinderlos ist
+    $query = "SELECT 1 FROM px_topics WHERE parent_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($forumposting['id']));
+    $forumposting['lonely'] = !$statement->fetchColumn();
 
-    $topic_id = $forumposting["id"];
-    $db=new DB_Seminar;
-    $db->query("SELECT topic_id FROM px_topics WHERE parent_id='$topic_id'");
-        if (!$db->num_rows())
-            $forumposting["lonely"]=TRUE;
-        else
-            $forumposting["lonely"]=FALSE;
     return $forumposting;
 }
 
@@ -369,13 +407,12 @@ function forum_lonely($forumposting) {  //Sieht nach ob das Posting kinderlos is
 * @return   string  root_id the id of the root-posting
 *
 **/
-function ForumGetRoot($id) {  //Holt die ID des Root-Postings
-
-    $db=new DB_Seminar;
-    $db->query("SELECT root_id FROM px_topics WHERE topic_id='$id'");
-    if ($db->next_record())
-        $root_id = $db->f("root_id");
-    return $root_id;
+function ForumGetRoot($id)
+{  //Holt die ID des Root-Postings
+    $query = "SELECT root_id FROM px_topics WHERE topic_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($id));
+    return $statement->fetchColumn() ?: null;
 }
 
 /**
@@ -386,13 +423,12 @@ function ForumGetRoot($id) {  //Holt die ID des Root-Postings
 * @return   string  parent_id the id of the root-posting
 *
 **/
-function ForumGetParent($id) {  //Holt die ID des Parent-Postings (wird für Schreibanzeige gebraucht)
-
-    $db=new DB_Seminar;
-    $db->query("SELECT parent_id FROM px_topics WHERE topic_id='$id'");
-    if ($db->next_record())
-        $parent_id = $db->f("parent_id");
-    return $parent_id;
+function ForumGetParent($id)
+{  //Holt die ID des Parent-Postings (wird für Schreibanzeige gebraucht)
+    $query = "SELECT parent_id FROM px_topics WHERE topic_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($id));
+    return $statement->fetchColumn() ?: null;
 }
 
 /**
@@ -403,15 +439,14 @@ function ForumGetParent($id) {  //Holt die ID des Parent-Postings (wird für Schr
 * @return   bool    fresh indikates freshness
 *
 **/
-function ForumFreshPosting($id) {  //Sieht nach ob das Posting frisch angelegt ist (mkdate ist gleich chdate)
-    $db=new DB_Seminar;
-    $db->query("SELECT chdate, mkdate FROM px_topics WHERE topic_id='$id' AND chdate < mkdate");
-    IF ($db->num_rows()) {
-        $fresh = TRUE;
-    } else {
-        $fesh = FALSE;
-    }
-    return $fresh;
+function ForumFreshPosting($id)
+{  //Sieht nach ob das Posting frisch angelegt ist (mkdate ist gleich chdate)
+    $query = "SELECT 1
+              FROM px_topics
+              WHERE topic_id = ? AND chdate < mkdate";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($id));
+    return $statement->fetchColumn() > 0;
 }
 
 /**
@@ -557,21 +592,28 @@ function ForumIcon ($forumposting) {
 * @return   string zitat is the quoted string
 *
 **/
-function quote($zitat_id)  {
+function quote($zitat_id)
+{
     global $perm;
-// Hilfsfunktion, die sich den zu quotenden Text holt, encodiert und zurueckgibt.
-    $db=new DB_Seminar;
-    $db->query("SELECT description, author, anonymous FROM px_topics WHERE topic_id='$zitat_id'");
-        while ($db->next_record()) {
-            $description = $db->f("description");
-            if (get_config('FORUM_ANONYMOUS_POSTINGS') && ($db->f("anonymous") && !$perm->have_perm("root"))) {
-                $author = _("anonym");
-            } else {
-                $author = $db->f("author");
-            }
+    // Hilfsfunktion, die sich den zu quotenden Text holt, encodiert und zurueckgibt.
+    $query = "SELECT description, author, anonymous
+              FROM px_topics
+              WHERE topic_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($zitat_id));
+    $row = $statement->fetch(PDO::FETCH_ASSOC);
+    
+    if ($row) {
+        $description = $row['description'];
+        if (get_config('FORUM_ANONYMOUS_POSTINGS') && $row['anonymous'] && !$perm->have_perm('root')) {
+            $author = _('anonym');
+        } else {
+            $author = $row['author'];
         }
+    }
     $description = forum_kill_edit($description);
-    $zitat = quotes_encode($description,$author);
+    $zitat = quotes_encode($description, $author);
+
     return $zitat;
 }
 
@@ -583,13 +625,12 @@ function quote($zitat_id)  {
 * @return   $name the name of the posting
 *
 **/
-function ForumGetName($id)  {
-// Hilfsfunktion, die sich den Titel eines Beitrags holt
-    $db=new DB_Seminar;
-    $db->query("SELECT name FROM px_topics WHERE topic_id='$id'");
-        if ($db->next_record())
-            $name = $db->f("name");
-    return $name;
+function ForumGetName($id)
+{ // Hilfsfunktion, die sich den Titel eines Beitrags holt
+    $query = "SELECT name FROM px_topics WHERE topic_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($id));
+    return $statement->fetchColumn() ?: null;
 }
 
 /**
@@ -682,22 +723,25 @@ function forum_get_buttons_authorized($forumposting)
 function forum_get_buttons_nobody($forumposting)
 {
     $edit = '';
-    $db = new DB_Seminar();
-    $db->query("SELECT Seminar_id FROM seminare WHERE Seminar_id='{$_SESSION['SessionSeminar']}' AND Schreibzugriff=0");
-    if ($db->num_rows()) {
+
+    $query = "SELECT 1
+              FROM seminare
+              WHERE Seminar_id = ? AND Schreibzugriff = 0";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($_SESSION['SessionSeminar']));
+    if ($statement->fetchColumn()) {
+        $attributes = array(
+            'answer_id'            => $forumposting['id'],
+            'flatviewstartposting' => 0
+        );
+        $edit .= LinkButton::create(_('Antworten'), URLHelper::getURL('#anker', $attributes));
 
         $attributes = array(
-            "answer_id"            => $forumposting["id"],
-            "flatviewstartposting" => 0
+            'answer_id'            => $forumposting['id'],
+            'zitat'                => 1,
+            'flatviewstartposting' => 0
         );
-        $edit .= LinkButton::create(_("Antworten"), URLHelper::getURL("#anker", $attributes));
-
-        $attributes = array(
-            "answer_id" => $forumposting["id"],
-            "zitat" => 1,
-            "flatviewstartposting" => 0
-        );
-        $edit .= LinkButton::create(_("Zitieren"), URLHelper::getURL("#anker", $attributes));
+        $edit .= LinkButton::create(_('Zitieren'), URLHelper::getURL('#anker', $attributes));
     }
 
     return $edit;
@@ -824,54 +868,69 @@ function CreateTopic ($name="[no name]", $author="[no author]", $description="",
     global $auth, $user, $perm;
     if (!$tmpSessionSeminar)
         $tmpSessionSeminar = $_SESSION['SessionSeminar'];
-    $db=new DB_Seminar;
-    $mkdate = time();
 
+    $mkdate = time();
     $mkdate += $count++; //übler Hack,um Sortierreihenfolge für den DateAssi zu bekommen :)
 
-    if ($writeextern == FALSE) {
-        $chdate = $mkdate-1;    // der Beitrag wird für alle ausser dem Author "versteckt"
+    $chdate = $mkdate;  // normales Anlegen
+    if (!$writeextern) {
+        $chdate -= 1; // der Beitrag wird für alle ausser dem Author "versteckt"
     }
-    else {
-        $chdate = $mkdate;  // normales Anlegen
-    }
+    
     if (!$user_id) {
-        $db->query ("SELECT user_id , username FROM auth_user_md5 WHERE username = '".$auth->auth["uname"]."' ");
-        while ($db->next_record())
-            $user_id = $db->f("user_id");
-    }
-
-    if ($root_id != "0")    {
-        $db->query ("SELECT seminar_id FROM px_topics WHERE topic_id = '$root_id'");
-        if ($db->next_record()){
-            if ($db->f("seminar_id") != $tmpSessionSeminar)
-                $tmpSessionSeminar = $db->f("seminar_id");
-        }
+        $user_id = $user->id;
     }
 
     $topic_id = MakeUniqueID();
-    if ($root_id == "0")    {
+
+    if ($root_id != '0') {
+        $query = "SELECT seminar_id FROM px_topics WHERE topic_id = '$root_id'";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($root_id));
+        $temp = $statement->fetchColumn();
+        if ($temp && $temp != $tmpSessionSeminar) {
+            $tmpSessionSeminar = $temp;
+        }
+    } else {
         $root_id = $topic_id;
-        }
-
-    $query = 'INSERT INTO px_topics (topic_id,name,description, parent_id, root_id , author, author_host, Seminar_id, user_id, mkdate, chdate, anonymous) ';
-    $query .= "values ('$topic_id', '$name', '$description', '$parent_id', '$root_id', '".mysql_escape_string($author)."', '".getenv("REMOTE_ADDR")."', '$tmpSessionSeminar', '$user_id', '$mkdate', '$chdate', ".($anonymous ? 1 : 0).") ";
-    $db=new DB_Seminar;
-
-    if ($user->id == "nobody") {    // darf Nobody hier schreiben?
-        $db->query("SELECT Seminar_id FROM seminare WHERE Seminar_id='{$_SESSION['SessionSeminar']}' AND Schreibzugriff=0");
-        if (!$db->num_rows()) {
-            throw new AccessDeniedException(_("Ihnen fehlen die Rechte, in dieser Veranstaltung zu schreiben."));
-        }
-        else
-            $db->query ($query);
     }
 
-    if ($perm->have_perm("autor"))
-        $db->query ($query);
-    if  ($db->affected_rows() == 0) {
-        throw new Exception(_("Fehler beim Anlegen eines Forenbeitrags."));
+    if ($user->id == 'nobody') {    // darf Nobody hier schreiben?
+        $query = "SELECT 1 FROM seminare WHERE Seminar_id = ? AND Schreibzugriff = 0";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($_SESSION['SessionSeminar']));
+        $may_write = $statement->fetchColumn() > 0;
+    } else {
+        $may_write = $perm->have_perm('autor');
     }
+
+    if (!$may_write) {
+        throw new AccessDeniedException(_('Ihnen fehlen die Rechte, in dieser Veranstaltung zu schreiben.'));
+    }
+
+    $query = "INSERT INTO px_topics
+                (topic_id, name, description, parent_id, root_id, author,
+                 author_host, Seminar_id, user_id, mkdate, chdate, anonymous)
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array(
+        $topic_id,
+        $name,
+        $description,
+        $parent_id,
+        $root_id,
+        $author,
+        getenv('REMOTE_ADDR'),
+        $tmpSessionSeminar,
+        $user_id,
+        $mkdate, 
+        $chdate,
+        $anonymous ? 1 : 0
+    ));
+    if ($statement->rowCount() == 0) {
+        throw new Exception(_('Fehler beim Anlegen eines Forenbeitrags.'));
+    }
+
     return $topic_id;
 }
 
@@ -928,18 +987,24 @@ function CreateNewTopic ($name, $description, $parent_id="0", $root_id="0", $ano
 * @param    boolean anonymous
 *
 **/
-function UpdateTopic ($name="[no name]", $topic_id, $description, $anonymous)
+function UpdateTopic($name = '[no name]', $topic_id, $description, $anonymous)
 {
-    $db=new DB_Seminar;
-    $chdate = time();
-    if (lonely($topic_id)==FALSE) {
-        $query = "UPDATE px_topics SET name = '$name', description = '$description', chdate= '$chdate', anonymous=".($anonymous ? 1 : 0)." WHERE topic_id = '$topic_id'";
-        $db->query ($query);
-        if ($db->affected_rows() == 0) {
-            throw new Exception(_("Aktualisieren des Forenbeitrags fehlgeschlagen."));
-        }
-    } else {
-        throw new AccessDeniedException(_("Ihnen fehlen die Rechte, diesen Forenbeitrag zu bearbeiten."));
+    if (lonely($topic_id)) {
+        throw new AccessDeniedException(_('Ihnen fehlen die Rechte, diesen Forenbeitrag zu bearbeiten.'));
+    }
+
+    $query = "UPDATE px_topics
+              SET name = ?, description = ?, anonymous = ?, chdate= UNIX_TIMESTAMP()
+              WHERE topic_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array(
+        $name,
+        $description,
+        $anonymous ? 1 : 0,
+        $topic_id
+    ));
+    if ($statement->rowCount() == 0) {
+        throw new Exception(_('Aktualisieren des Forenbeitrags fehlgeschlagen.'));
     }
 }
 
@@ -1096,14 +1161,17 @@ function forum_get_index ($forumposting) {
 * @return   string  age is the list of postings not to be shrinked, separated by ;
 *
 **/
-function ForumCheckShrink($id)  {
+function ForumCheckShrink($id)
+{
     global $age;
-    $db=new DB_Seminar;
-    $db->query("SELECT * FROM px_topics WHERE parent_id='$id'");
-    while ($db->next_record()) {
-        $next_topic=$db->f("topic_id");
-        $age .= ";".$db->f("chdate");
-        ForumCheckShrink($next_topic);
+    $query = "SELECT topic_id, chdate
+              FROM px_topics
+              WHERE parent_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($id));
+    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+        $age .= ';' . $row['chdate'];
+        ForumCheckShrink($row['topic_id']);
     }
     return $age;
 }
@@ -1130,35 +1198,42 @@ function forum_check_edit($forumposting) {
 * prints the rating-bar
 *
 **/
-function print_rating($rate, $id, $username) {
+function print_rating($rate, $id, $username)
+{
     global $forum, $user, $auth;
-    if ($rate == "?"){
-        $bar = "<img src=\"".$GLOBALS['ASSETS_URL']."images/rate_leer.gif\" width=\"50\" border=\"0\" height=\"11\">";
+    if ($rate == '?') {
+        $bar = Assets::img('rate_leer.gif', array('width' => 50, 'height' => 11));
     } else {
-        $ratecount = object_return_ratecount ($id);
-        if ($ratecount > 10)
+        $ratecount = object_return_ratecount($id);
+        if ($ratecount > 10) {
             $ratecount = 10;
+        }
         $ratecount = round($ratecount / 2);
         $rate = StringToFloat($rate);
         if ($rate > 3) {
             $grau = (5-$rate)*10;
             $rot = 25 - $grau;
-            $bar = "<img src=\"".$GLOBALS['ASSETS_URL']."images/rate_leer.gif\" width=25 height=11 border=\"0\"><img src=\"".$GLOBALS['ASSETS_URL']."images/rate_rot$ratecount.gif\" width=\"$rot\" border=\"0\" height=\"11\"><img src=\"".$GLOBALS['ASSETS_URL']."images/rate_leer.gif\" width=\"$grau\" border=\"0\" height=11>";
+            $bar  = Assets::img('rate_leer.gif', array('width' => 25, 'height' => 11));
+            $bar .= Assets::img('rate_rot' . $ratecount . '.gif', array('width' => $rot, 'height' => 11));
+            $bar .= Assets::img('rate_leer.gif', array('width' => $grau, 'height' => 11));
         } elseif ($rate < 3) {
             $grau = ($rate-1)*10;
             $gruen = 25 - $grau;
-            $bar = "<img src=\"".$GLOBALS['ASSETS_URL']."images/rate_leer.gif\" width=\"$grau\" height=\"11\" border=\"0\"><img src=\"".$GLOBALS['ASSETS_URL']."images/rate_gruen$ratecount.gif\" border=\"0\" width=\"$gruen\" height=11><img src=\"".$GLOBALS['ASSETS_URL']."images/rate_leer.gif\" border=\"0\" width=25 height=11>";
+            $bar  = Assets::img('rate_leer.gif', array('width' => $grau, 'height' => 11));
+            $bar .= Assets::img('rate_gruen' . $ratecount . '.gif', array('width' => $gruen, 'height' => 11));
+            $bar .= Assets::img('rate_leer.gif', array('width' => 25, 'height' => 11));
         } else {
-            $bar = "<img src=\"".$GLOBALS['ASSETS_URL']."images/rate_neutral$ratecount.gif\" width=\"50\" height=\"11\" border=\"0\">";
+            $bar = Assets::img('rate_neutral' . $ratecount . '.gif', array('width' => 50, 'height' => 11));
         }
     }
     if (object_check_user($id, "rate") == TRUE || get_username($user->id) == $username) { // already rated / my own posting
-        $bar = '<span ' . tooltip(sprintf(_("Bewertung: %s"),$rate), false) . '>' . $bar. '</span>';
+        $bar = '<span class="rating" ' . tooltip(sprintf(_("Bewertung: %s"), $rate), false) . '>' . $bar. '</span>';
     } else {
-            $bar = '<span onClick="STUDIP.Forum.rate_template(\''.$id.'\')" '
-                . tooltip(sprintf(_("Bewertung: %s Zum Abstimmen bitte klicken."),$rate), false) . '>'
-                . $bar
-                . '</span>';
+        $url = URLHelper::getLink('?open=' . $id . '&flatviewstartposting=' . $forum['flatviewstartposting'] . '&sidebar=' . $id . '#anker');
+        $bar = '<a class="rating" href="' . $url . '" onClick="STUDIP.Forum.rate_template(\''.$id.'\'); return false;" '
+            . tooltip(sprintf(_('Bewertung: %s Zum Abstimmen bitte klicken.'),$rate), false) . '>'
+            . $bar
+            . '</a>';
      }
 
 
@@ -1297,7 +1372,7 @@ function printposting ($forumposting) {
 
     // die Favoritenanzeige
 
-        if ($forumposting["fav"]!="0") {
+        if ($forumposting['fav']) {
             $favicon = $GLOBALS['ASSETS_URL']."images/icons/16/red/exclaim.png";
             $favtxt = _("aus den Favoriten entfernen");
         } else {
@@ -1438,6 +1513,22 @@ function printposting ($forumposting) {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+function countTopics($addon = '', $parameters = array())
+{
+    global $user;
+    $query = "SELECT COUNT(*)
+              FROM px_topics x, px_topics y 
+              WHERE x.root_id = y.topic_id AND x.Seminar_id = :seminar_id
+                AND (x.chdate >= x.mkdate OR x.user_id = :user_id OR x.author = 'unbekannt')
+              {$addon}";
+    $parameters[':user_id']    = $user->id;
+    $parameters[':seminar_id'] = $_SESSION['SessionSeminar'];
+
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute($parameters);
+    return $statement->fetchColumn() ?: 0;
+}
+
 /**
 * Builds the Flatview of a Board (for last Postings, New Postings, Search, Flatview)
 *
@@ -1449,203 +1540,182 @@ function printposting ($forumposting) {
 * @param    string  zitat id of the posting to be quoted
 *
 **/
-function flatview ($open=0, $show=0, $update="", $name="", $description="",$zitat="")
+function flatview($open = 0, $show = 0, $update = '', $name = '', $description = '', $zitat = '')
+{
+    global $SessSemName, $rechte, $forum, $user, $new_topic;
 
-{   global $SessSemName,$rechte,$forum,$user;
-    global $new_topic;
+    /////////////////////////////// Konstanten setzen bzw. zuweisen die für die ganze Seite gelten
+    $forum['openlist'] = $open;
+    $forum['zitat']    = $zitat;
+    $forum['update']   = $update;
 
-/////////////////////////////// Konstanten setzen bzw. zuweisen die für die ganze Seite gelten
+    $postingsperside          = (int) get_config('ENTRIES_PER_PAGE');
+    $forum['postingsperside'] = $postingsperside;
 
-$forum["openlist"] = $open;
-$forum["zitat"] = $zitat;
-$forum["update"] = $update;
-$forum["postingsperside"] = get_config('ENTRIES_PER_PAGE');
-$postingsperside = (int) get_config('ENTRIES_PER_PAGE');
-$flatviewstartposting = Request::int('flatviewstartposting', 0);
-$forum["flatviewstartposting"] = $flatviewstartposting;
+    $flatviewstartposting          = Request::int('flatviewstartposting', 0);
+    $forum['flatviewstartposting'] = $flatviewstartposting;
 
-/////////////////////////////// Abfrage der Postings
+    /////////////////////////////// Abfrage der Postings
 
-$db = new DB_Seminar;
+    $addon = '';
+    $parameters= array();
 
-if ($forum["view"]=="flatfolder") {
-    $folder_id = $forum["flatfolder"];
-    $addon = " AND x.root_id = '$folder_id'";
-}
-$order = "DESC";
-
-if (($forum["sort"] == "rating" || $forum["sort"]== "nachname" || $forum["sort"]== "root_name" || $forum["sort"]== "name") && ($forum["view"] != "tree" && $forum["view"] != "mixed"))
-    $order = "ASC";
-
-if ($forum["view"]=="search") {
-    if ($forum["search"]!="") {
-        $addon = " AND (".$forum["search"].")";
-    } else {
-        echo forum_search_field()."<br><br></div></div>";
-        include 'lib/include/html_end.inc.php';
-        page_close(); //Niemals vergessen, wenn Session oder Benutzervariablen benutzt werden !!!
-        die;
+    $order = 'DESC';
+    if (in_array($forum['sort'], words('rating nachname root_name name')) && !in_array($forum['view'], words('tree mixed'))) {
+        $order = 'ASC';
     }
-} elseif ($forum["view"]=="neue") {
-    $datumtmp = object_get_visit($SessSemName[1], "forum");
-    $addon = " AND x.chdate > '$datumtmp'";
-}
 
-function countTopics($db, $addon) {
-    global $user;
-    $query = "SELECT x.topic_id ".
-             "FROM px_topics x, px_topics y ".
-             "WHERE x.root_id = y.topic_id ".
-             "AND x.Seminar_id = '{$_SESSION['SessionSeminar']}' ".
-             "AND (x.chdate>=x.mkdate OR x.user_id='$user->id' OR x.author='unbekannt')".
-             $addon;
-    $db->query($query);
-    return $db->num_rows();
-}
+    if ($forum['view'] == 'flatfolder') {
+        $addon = " AND x.root_id = :flatfolder";
+        $parameters[':flatfolder'] = $forum['flatfolder'];
+    } else if ($forum['view'] == 'search') {
+        if ($forum['search'] != '') {
+            $addon = ' AND (' . $forum['search'] . ')';
+        } else {
+            echo forum_search_field() . '<br><br>';
+            return;
+        }
+    } else if ($forum['view'] == 'neue') {
+        $addon = ' AND x.chdate > :last_visit';
+        $parameters[':last_visit'] = object_get_visit($SessSemName[1], 'forum');
+    }
 
-// Forum ist nicht leer
-if (countTopics($db, $addon) > 0 || isset($new_topic)) {
-    $forum["forumsum"] = $db->num_rows();
-}
 
-// keine neuen, aber alte
-elseif ($forum["view"] === "neue" && countTopics($db, "")) {
-    $forum["view"] = "flat";
-    $addon = "";
+    // Forum ist nicht leer
+    $count = countTopics($addon, $parameters);
+    if ($count > 0 || isset($new_topic)) {
+        $forum['forumsum'] = $count;
+    } else if ($forum['view'] === 'neue' && countTopics()) {
+        // keine neuen, aber alte
+        $forum['view'] = 'flat';
+        $addon = '';
+        ?>
+        <div class="white" style="padding: 0.5em 0;">
+            <?= MessageBox::info(_('Es liegen keine neuen Beiträge vor.')) ?>
+        </div>
+        <?
+    } else {
+        // das Forum ist leer
+        echo '<table class="default">';
+        echo ForumNoPostings();
+        echo '</table>';
+        return;
+    }
+
+    // we proudly present: the longest SQl in Stud.IP :) regards to Suchi+Noack for inspirations
+    $query = "SELECT x.topic_id AS id, x.name, x.author, x.mkdate, x.chdate AS age,
+                     x.chdate,
+                     x.description, x.Seminar_id, x.user_id AS userid,
+                     y.name AS rootname, y.topic_id AS rootid, username,
+                     IFNULL(views, 0) AS viewcount, nachname,
+                     IFNULL(ROUND(AVG(rate), 1), 99) AS rating,
+                     object_user.object_id != '' AS fav,
+                     IF(:allow_anonymous, x.anonymous, 0) AS anonymous,
+                     ((6-(IFNULL(AVG(rate),3))-3)*5)+(IFNULL(views,0)/(((UNIX_TIMESTAMP()-x.mkdate)/604800)+1)) AS score
+              FROM px_topics AS y, px_topics AS x
+              LEFT JOIN object_views ON (object_views.object_id = x.topic_id)
+              LEFT JOIN object_rate ON (object_rate.object_id = x.topic_id) 
+              LEFT JOIN auth_user_md5 ON (auth_user_md5.user_id = x.user_id)
+              LEFT OUTER JOIN object_user
+                ON (object_user.object_id = x.topic_id AND object_user.user_id = :user_id AND flag = 'fav')
+              WHERE x.root_id = y.topic_id AND x.seminar_id = :seminar_id
+                AND (x.chdate >= x.mkdate OR x.user_id = :user_id OR x.author = 'unbekannt')
+                {$addon}
+              GROUP by x.topic_id
+              ORDER BY {$forum['sort']} {$order}, age DESC
+              LIMIT {$flatviewstartposting}, {$postingsperside}";
+    $parameters[':user_id']    = $user->id;
+    $parameters[':seminar_id'] = $_SESSION['SessionSeminar'];
+    $parameters[':allow_anonymous'] = get_config('FORUM_ANONYMOUS_POSTINGS') ? 1 : 0;
+
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute($parameters);
+
+    /////////////////////////////////////// HTML und Navigation
+
     ?>
-    <div class="white" style="padding: 0.5em 0;">
-    <?= MessageBox::info(_("Es liegen keine neuen Beiträge vor.")) ?>
-    </div>
+    <table border=0 width="100%" cellspacing="0" cellpadding="0" align="center" id="main_content"><tr>
+    <td class="steelgraudunkel" align="left" width="45%" style="padding-left: 5px">
     <?
-}
 
-// das Forum ist leer
-else {
-    echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">";
-    echo ForumNoPostings();
-    echo "</table>";
-    include 'lib/include/html_end.inc.php';
-    page_close(); //Niemals vergessen, wenn Session oder Benutzervariablen benutzt werden !!!
-    die;
-}
+    if ($forum["view"]=="flatfolder")
+        echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/folder-full.png\" align=\"baseline\"><font size=\"-1\"><b> Thema:</b> ".mila(ForumGetName($forum["flatfolder"]),40)." / ";
 
-// we proudly present: the longest SQl in Stud.IP :) regards to Suchi+Noack for inspirations
+    if ($forum["search"]!="" && $forum["view"]=="search") {
+        echo "<font size=\"-1\">&nbsp;". _('Suchbegriff:');
+        if ($forum['searchstring'] != '') {
+            echo " '".htmlReady($forum['searchstring'])."' ";
+        } else {
+            echo ' '. _('alles'). ' ';
+        }
 
-$query = "SELECT x.topic_id, x.name , x.author , x.mkdate, x.chdate as age, y.name AS root_name"
-    .", x.description, x.Seminar_id, y.topic_id AS root_id, username, x.user_id, x.anonymous"
-    .", IFNULL(views,0) as viewcount, nachname, IFNULL(ROUND(AVG(rate),1),99) as rating"
-    .", IF(object_user.object_id!='',1,0) as fav"
-    .", ((6-(IFNULL(AVG(rate),3))-3)*5)+(IFNULL(views,0)/(((UNIX_TIMESTAMP()-x.mkdate)/604800)+1)) as score "
-    ."FROM px_topics x LEFT JOIN object_views ON(object_views.object_id=x.topic_id) LEFT JOIN object_rate ON(object_rate.object_id=x.topic_id) "
-    ."LEFT JOIN auth_user_md5 ON(auth_user_md5.user_id = x.user_id) LEFT OUTER JOIN object_user ON(object_user.object_id=x.topic_id AND object_user.user_id='$user->id' AND flag='fav') , px_topics y "
-    ."WHERE x.root_id = y.topic_id AND x.seminar_id = '{$_SESSION['SessionSeminar']}' AND (x.chdate>=x.mkdate OR x.user_id='$user->id' OR x.author='unbekannt')".$addon." "
-    ."GROUP by x.topic_id ORDER BY ".$forum["sort"]." ".$order
-    ." ,age DESC LIMIT $flatviewstartposting,$postingsperside";
-
-$db->query($query);
-
-
-
-/////////////////////////////////////// HTML und Navigation
-
-?>
-<table border=0 width="100%" cellspacing="0" cellpadding="0" align="center" id="main_content"><tr>
-<td class="steelgraudunkel" align="left" width="45%" style="padding-left: 5px">
-<?
-
-if ($forum["view"]=="flatfolder")
-    echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/folder-full.png\" align=\"baseline\"><font size=\"-1\"><b> Thema:</b> ".mila(ForumGetName($forum["flatfolder"]),40)." / ";
-
-if ($forum["search"]!="" && $forum["view"]=="search") {
-    echo "<font size=\"-1\">&nbsp;". _('Suchbegriff:');
-    if ($forum['searchstring'] != '') {
-        echo " '".htmlReady($forum['searchstring'])."' ";
+        if ($forum['searchauthor'] != '') {
+            echo _('von')." '".htmlReady($forum['searchauthor'])."' ";
+        }
+        echo "/ ". _('Treffer: ').$forum["forumsum"]."</font>";
     } else {
-        echo ' '. _('alles'). ' ';
+       echo _('Forenbeiträge: ') . $forum["forumsum"];
+    }
+    echo "</td>";
+
+    echo "<td class=\"steelgraudunkel\" align=\"center\" width=\"10%\">";
+    if ($forum["flatallopen"]=="TRUE")
+        echo "<a href=\"".URLHelper::getLink(
+            "?flatviewstartposting=".$forum["flatviewstartposting"]."&flatallopen=FALSE")."\"><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif' border=0 height='10' align=middle><img src='".$GLOBALS['ASSETS_URL']."images/close_all.png' border=0 " . tooltip(_("Alle zuklappen")) . " align=middle><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif' border=0></a>";
+    else
+        echo "<a href=\"".URLHelper::getLink(
+            "?flatviewstartposting=".$forum["flatviewstartposting"]."&flatallopen=TRUE")."\"><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif' border=0 height='10' align=middle><img src='".$GLOBALS['ASSETS_URL']."images/open_all.png' border=0 " . tooltip(_("Alle aufklappen")) . " align=middle><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif' border=0></a>";
+
+    echo "</td><td class=\"steelgraudunkel\" align=\"right\" width=\"45%\">";
+    echo forum_print_navi($forum)."&nbsp;&nbsp;&nbsp;".forum_get_index($forumposting)."&nbsp;&nbsp;&nbsp;";
+    echo "</td></tr></table>";
+
+    // Antworten-Knopf ganz oben in der Flatview-Ansicht
+    if ($forum['view']=='flatfolder') {
+        echo '<table cellpadding="0" cellspacing="0" border="0" width="100%">';
+        echo '<tr>';
+        echo '<td class="blank" align="center" style="padding-top:12px; padding-bottom:5px;">';
+        echo _("Zu diesem Thema") . " ";
+        echo LinkButton::create(_("Antworten"), URLHelper::getURL("?answer_id=".$folder_id."&flatviewstartposting=0&sort=age#anker"));
+        echo '</td>';
+        echo '</tr>';
+        echo '</table>';
     }
 
-    if ($forum['searchauthor'] != '') {
-        echo _('von')." '".htmlReady($forum['searchauthor'])."' ";
+
+    /////////////////// Konstanten für das gerade auszugebene Posting und Posting ausgeben
+
+    if (isset($new_topic)) {
+        printposting($new_topic);
     }
-    echo "/ ". _('Treffer: ').$forum["forumsum"]."</font>";
-} else {
-   echo _('Forenbeiträge: ') . $forum["forumsum"];
-}
-echo "</td>";
 
-echo "<td class=\"steelgraudunkel\" align=\"center\" width=\"10%\">";
-if ($forum["flatallopen"]=="TRUE")
-    echo "<a href=\"".URLHelper::getLink(
-        "?flatviewstartposting=".$forum["flatviewstartposting"]."&flatallopen=FALSE")."\"><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif' border=0 height='10' align=middle><img src='".$GLOBALS['ASSETS_URL']."images/close_all.png' border=0 " . tooltip(_("Alle zuklappen")) . " align=middle><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif' border=0></a>";
-else
-    echo "<a href=\"".URLHelper::getLink(
-        "?flatviewstartposting=".$forum["flatviewstartposting"]."&flatallopen=TRUE")."\"><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif' border=0 height='10' align=middle><img src='".$GLOBALS['ASSETS_URL']."images/open_all.png' border=0 " . tooltip(_("Alle aufklappen")) . " align=middle><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif' border=0></a>";
+    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+        unset($row['age']);
+        $forumposting = printposting($row);
+    }
 
-echo "</td><td class=\"steelgraudunkel\" align=\"right\" width=\"45%\">";
-echo forum_print_navi($forum)."&nbsp;&nbsp;&nbsp;".forum_get_index($forumposting)."&nbsp;&nbsp;&nbsp;";
-echo "</td></tr></table>";
+    /////////// HTML für den Rest
 
-// Antworten-Knopf ganz oben in der Flatview-Ansicht
-if ($forum['view']=='flatfolder') {
-    echo '<table cellpadding="0" cellspacing="0" border="0" width="100%">';
-    echo '<tr>';
-    echo '<td class="blank" align="center" style="padding-top:12px; padding-bottom:5px;">';
-    echo _("Zu diesem Thema") . " ";
-    echo LinkButton::create(_("Antworten"), URLHelper::getURL("?answer_id=".$folder_id."&flatviewstartposting=0&sort=age#anker"));
-    echo '</td>';
-    echo '</tr>';
-    echo '</table>';
-}
+    echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">";
+    echo "  <tr>";
+    echo "      <td class=\"steelgraudunkel\" align=\"right\" ><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" border=\"0\" height=\"10\" align=\"middle\">";
+    echo forum_print_navi($forum)."&nbsp;&nbsp;&nbsp;".forum_get_index($forumposting);
+    echo "      &nbsp;&nbsp;</td>";
+    echo "  </tr>";
+    echo "</table>";
+    echo "</td>";
+    echo "</tr>";
+    echo "</table><br>";
 
 
-/////////////////// Konstanten für das gerade auszugebene Posting und Posting ausgeben
+    /*
+    echo DebugForum($forum);
+    echo "<hr>";
+    echo DebugForum($forumposting);
+    */
 
-if (isset($new_topic)) {
-    printposting($new_topic);
-}
-
-while($db->next_record()){
-    $forumposting["id"] = $db->f("topic_id");
-    $forumposting["name"] = $db->f("name");
-    $forumposting["description"] = $db->f("description");
-    $forumposting["author"] = $db->f("author");
-    $forumposting["username"] = $db->f("username");
-    $forumposting["userid"] = $db->f("user_id");
-    $forumposting["rootid"] = $db->f("root_id");
-    $forumposting["rootname"] = $db->f("root_name");
-    $forumposting["mkdate"] = $db->f("mkdate");
-    $forumposting["chdate"] = $db->f("age");
-    $forumposting["viewcount"] = $db->f("viewcount");
-    $forumposting["rating"] = $db->f("rating");
-    $forumposting["score"] = $db->f("score");
-    $forumposting["fav"] = $db->f("fav");
-    $forumposting["anonymous"] = get_config('FORUM_ANONYMOUS_POSTINGS') ? $db->f("anonymous") : false;
-
-    $forumposting = printposting($forumposting);
-}
-
-/////////// HTML für den Rest
-
-echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">";
-echo "  <tr>";
-echo "      <td class=\"steelgraudunkel\" align=\"right\" ><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" border=\"0\" height=\"10\" align=\"middle\">";
-echo forum_print_navi($forum)."&nbsp;&nbsp;&nbsp;".forum_get_index($forumposting);
-echo "      &nbsp;&nbsp;</td>";
-echo "  </tr>";
-echo "</table>";
-echo "</td>";
-echo "</tr>";
-echo "</table><br>";
-
-
-/*
-echo DebugForum($forum);
-echo "<hr>";
-echo DebugForum($forumposting);
-*/
-
-if ($update)
-    echo "</form>\n";
+    if ($update)
+        echo "</form>\n";
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -1659,53 +1729,57 @@ if ($update)
 * @param    string  zitat id of the posting to be quoted
 *
 **/
-function DisplayFolders ($open=0, $update="", $zitat="") {
-    global $SessSemName,$rechte, $forum,$auth,$user, $SEM_CLASS, $SEM_TYPE, $perm;
+function DisplayFolders ($open = 0, $update = '', $zitat = '')
+{
+    global $SessSemName, $rechte, $forum, $auth, $user, $SEM_CLASS, $SEM_TYPE, $perm;
     global $new_topic;
 
 //Zeigt im Treeview die Themenordner an
 
-    $forum["update"] = $update;
-    $forum["zitat"] = $zitat;
-    $forum["sort"] = "age";
+    $forum['update'] = $update;
+    $forum['zitat']  = $zitat;
+    $forum['sort']   = 'age';
 
-    $fields = array("topic_id", "parent_id", "root_id", "name"
-        , "description", "author", "author_host", "mkdate"
-        , "chdate", "user_id", "anonymous");
-    $query = "select distinct ";
-    $comma = "";
-
-    if ($forum["sortthemes"] == "last")
-        $order = "last DESC";
-    else
-        $order = "t.mkdate ". ($forum["sortthemes"] == 'asc' ? 'ASC' : 'DESC');
-
-    while (list($key,$val)=each($fields)) {
-        $query .= $comma."t.".$val;
-        $comma = ", ";
+    if ($forum['sortthemes'] == 'last') {
+        $order = 'last DESC';
+    } else {
+        $order = 't.mkdate '. ($forum['sortthemes'] == 'asc' ? 'ASC' : 'DESC');
     }
 
-    $query .= ", count(distinct s.topic_id) as count, max(s.chdate) as last "
-    .", IFNULL(views,0) as viewcount, IFNULL(ROUND(AVG(rate),1),99) as rating "
-    .", ((6-(IFNULL(AVG(rate),3))-3)*5)+(IFNULL(views,0)/(((UNIX_TIMESTAMP()-t.mkdate)/604800)+1)) as score "
-    .", IF(object_user.object_id!='',1,0) as fav "
-    ."FROM px_topics t LEFT JOIN px_topics s ON(s.root_id=t.root_id AND s.chdate >= s.mkdate) "
-    ."LEFT JOIN object_views ON(object_views.object_id=t.topic_id) LEFT JOIN object_rate ON(object_rate.object_id=t.topic_id) "
-    ."LEFT OUTER JOIN object_user ON(object_user.object_id=t.root_id AND object_user.user_id='$user->id' AND flag='fav') "
-    ."WHERE t.topic_id = t.root_id AND t.Seminar_id = '{$_SESSION['SessionSeminar']}' AND (t.chdate>=t.mkdate OR t.user_id='$user->id' OR t.author='unbekannt') GROUP BY t.root_id  ORDER BY $order";
-    $db=new DB_Seminar;
-    $db->query($query);
-    if ($db->num_rows()==0 && !isset($new_topic)) {  // Das Forum ist leer
-        echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">";
+    $query = "SELECT DISTINCT t.topic_id AS id, t.parent_id, t.root_id AS rootid, t.name, t.description,
+                     t.author, t.author_host, t.mkdate, t.chdate, t.user_id AS userid, username, 
+                     IF (:allow_anonymous, t.anonymous, 0) AS anonymous,
+                     COUNT(DISTINCT s.topic_id) AS foldercount, MAX(s.chdate) AS folderlast,
+                     IFNULL(views, 0) AS viewcount,
+                     IFNULL(ROUND(AVG(rate), 1), 99) AS rating,
+                     ((6-(IFNULL(AVG(rate),3))-3)*5)+(IFNULL(views,0)/(((UNIX_TIMESTAMP()-t.mkdate)/604800)+1)) AS score,
+                     object_user.object_id != '' AS fav
+              FROM px_topics AS t
+              LEFT JOIN px_topics AS s ON (s.root_id = t.root_id AND s.chdate >= s.mkdate)
+              LEFT JOIN auth_user_md5 AS aum ON (t.user_id = aum.user_id)
+              LEFT JOIN object_views ON (object_views.object_id = t.topic_id)
+              LEFT JOIN object_rate ON (object_rate.object_id = t.topic_id)
+              LEFT OUTER JOIN object_user
+                ON (object_user.object_id = t.root_id AND object_user.user_id = :user_id AND flag = 'fav')
+              WHERE t.topic_id = t.root_id AND t.Seminar_id = :seminar_id
+                AND (t.chdate >= t.mkdate OR t.user_id = :user_id OR t.author = 'unbekannt')
+              GROUP BY t.root_id
+              ORDER BY {$order}";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array(
+        ':user_id'         => $user->id,
+        ':seminar_id'      => $_SESSION['SessionSeminar'],
+        ':allow_anonymous' => get_config('FORUM_ANONYMOUS_POSTINGS') ? 1 : 0,
+    ));
+    $data = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+    if (count($data) == 0 && !isset($new_topic)) {  // Das Forum ist leer
+        echo '<table class="default">';
         echo ForumEmpty();
-        echo "</table>";
-        include 'lib/include/html_end.inc.php';
-        page_close(); //Niemals vergessen, wenn Session oder Benutzervariablen benutzt werden !!!
-        die;
+        echo '</table>';
+        return;
     } else {
-
         // Berechnung was geöffnet ist
-
         $forum["openlist"] = "";
         if (isset($new_topic)) {
             $root_id = $new_topic['rootid'];
@@ -1733,32 +1807,14 @@ function DisplayFolders ($open=0, $update="", $zitat="") {
         echo "<td class=\"steelgraudunkel\" width=\"33%\" align=\"center\">";
         if ($user->id != "nobody") { // Nobody kriegt nur treeview
             if ($forum["view"] == "tree")
-                echo "<a href=\"".URLHelper::getLink("?view=mixed&themeview=mixed")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumtree.gif\" align=\"middle\"></a>";
+                echo "<a href=\"".URLHelper::getLink("?view=mixed&themeview=mixed")."\">" . Assets::img('forumtree.gif') . "</a>";
             else
-                echo "<a href=\"".URLHelper::getLink("?view=tree&themeview=tree")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumflat.gif\" align=\"middle\"></a>";
+                echo "<a href=\"".URLHelper::getLink("?view=tree&themeview=tree")."\">" . Assets::img('forumflat.gif') . "</a>";
         }
         echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" border=0 height=\"20\" align=\"middle\"></td>";
         echo "<td class=\"steelgraudunkel\" width=\"33%\"align=\"right\">" . _("<b>Forenbeiträge</b> / letzter Eintrag") . " ".forum_get_index($forumposting)." </td></tr></table>\n";
-        while ($db->next_record()) {
-            $forumposting["id"] = $db->f("topic_id");
-            $forumposting["name"] = $db->f("name");
-            $forumposting["description"] = $db->f("description");
-            $forumposting["author"] = $db->f("author");
-            $forumposting["username"] = get_username($db->f("user_id"));
-            $forumposting["userid"] = $db->f("user_id");
-            $forumposting["rootid"] = $db->f("root_id");
-            $forumposting["rootname"] = $db->f("root_name");
-            $forumposting["mkdate"] = $db->f("mkdate");
-            $forumposting["chdate"] = $db->f("chdate");
-            $forumposting["foldercount"] = $db->f("count");
-            $forumposting["folderlast"] = $db->f("last");
-            $forumposting["viewcount"] = $db->f("viewcount");
-            $forumposting["rating"] = $db->f("rating");
-            $forumposting["score"] = $db->f("score");
-            $forumposting["fav"] = $db->f("fav");
-            $forumposting["anonymous"] = get_config('FORUM_ANONYMOUS_POSTINGS') ? $db->f("anonymous") : false;
-
-            $forumposting = printposting($forumposting);
+        foreach ($data as $row) {
+            $forumposting = printposting($row);
 
             if ($forum["view"] == "tree" && $forumposting["openclose"]=="open" && Request::option('cmd') != "move") {
                 DisplayKids ($forumposting);
@@ -1776,14 +1832,13 @@ function DisplayFolders ($open=0, $update="", $zitat="") {
     echo "</td></tr></table>\n";
 
 
-/*
-    echo DebugForum($forum);
-    echo "<hr>";
-    echo DebugForum($forumposting);
-*/
+    // echo DebugForum($forum);
+    // echo "<hr>";
+    // echo DebugForum($forumposting);
 
-    if ($update)
+    if ($update) {
         echo "</form>\n";
+    }
 }
 
 /////////////////////////////////
@@ -1795,21 +1850,31 @@ function indentPosting (&$forumposting, $level)
 {
     echo "<table class=\"blank\" border=0 cellpadding=0 cellspacing=0 width=\"100%\" valign=\"top\"><tr valign=\"top\"><td class=\"blank tree-indent\" nowrap valign=\"top\" ><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif'><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif'>";
 
-    if ($level){
-        $striche = "";
-        for ($i=0;$i<$level;$i++) {
-            if ($i==($level-1)) {
-                if ($forumposting["lines"][$i+1]>1) $striche.= "<img src='".$GLOBALS['ASSETS_URL']."images/forumstrich3.gif'>";         //Kreuzung
-                else $striche.= "<img src='".$GLOBALS['ASSETS_URL']."images/forumstrich2.gif'>";                //abknickend
-                $forumposting["lines"][$i+1] -= 1;
+    if ($level) {
+        $striche = '';
+        for ($i = 0; $i < $level; $i += 1) {
+            if ($i == $level - 1) {
+                if ($forumposting['lines'][$i + 1] > 1) {
+                    //Kreuzung
+                    $striche .= Assets::img('forumstrich3.gif');
+                } else {
+                    //abknickend
+                    $striche .= Assets::img('forumstrich2.gif');
+                }
+                $forumposting['lines'][$i + 1] -= 1;
             } else {
-                if ($forumposting["lines"][$i+1]==0) $striche .= "<img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif'>";      //Leerzelle
-                else $striche .= "<img src='".$GLOBALS['ASSETS_URL']."images/forumstrich.gif'>";                //Strich
+                if ($forumposting['lines'][$i + 1] == 0) {
+                    //Leerzelle
+                    $striche .= Assets::img('forumleer.gif');
+                } else {
+                    //Strich
+                    $striche .= Assets::img('forumstrich.gif');
+                }
             }
         }
         echo $striche;
     }
-    echo "</td>";
+    echo '</td>';
 }
 
 
@@ -1820,46 +1885,48 @@ function indentPosting (&$forumposting, $level)
 * @param    string  level contains the current level of the treeview
 *
 **/
-function DisplayKids ($forumposting, $level=0) {
+function DisplayKids ($forumposting, $level = 0)
+{
     global $SessSemName, $forum,$rechte,$auth,$user, $age;
     global $new_topic;
 
-// stellt im Treeview alle Postings dar, die NICHT Thema sind
-
-    $topic_id = $forumposting["id"];
+    // stellt im Treeview alle Postings dar, die NICHT Thema sind
+    $topic_id = $forumposting['id'];
     $new_topic_here = isset($new_topic) && $new_topic['parent_id'] == $topic_id;
     $forumposting["intree"]="TRUE";
-    $query = "select topic_id, parent_id, name, author "
-        .", px_topics.mkdate, px_topics.chdate, description, root_id, username, px_topics.user_id"
-        .", IFNULL(views,0) as viewcount, IFNULL(ROUND(AVG(rate),1),99) as rating"
-        .", ((6-(IFNULL(AVG(rate),3))-3)*5)+(IFNULL(views,0)/(((UNIX_TIMESTAMP()-px_topics.mkdate)/604800)+1)) as score "
-        .", IF(object_user.object_id!='',1,0) as fav, anonymous"
-        ." FROM px_topics LEFT JOIN auth_user_md5 USING(user_id)"
-        ." LEFT JOIN object_views ON(object_views.object_id=topic_id) LEFT JOIN object_rate ON(object_rate.object_id=topic_id)"
-        ." LEFT OUTER JOIN object_user ON(object_user.object_id=topic_id AND object_user.user_id='$user->id' AND flag='fav')"
-        ." WHERE"
-        ." parent_id = '$topic_id' AND (px_topics.chdate>=px_topics.mkdate OR px_topics.user_id='$user->id' OR px_topics.author='unbekannt')"
-        ." GROUP BY topic_id ORDER by px_topics.mkdate";
-    $db=new DB_Seminar;
-    $db->query($query);
-    $forumposting["lines"][$level] = $db->num_rows() + $new_topic_here;
-    while ($db->next_record()) {
-        $forumposting["id"] = $db->f("topic_id");
-        $forumposting["name"] = $db->f("name");
-        $forumposting["description"] = $db->f("description");
-        $forumposting["author"] = $db->f("author");
-        $forumposting["username"] = $db->f("username");
-        $forumposting["userid"] = $db->f("user_id");
-        $forumposting["rootid"] = $db->f("root_id");
-        $forumposting["rootname"] = $db->f("root_name");
-        $forumposting["mkdate"] = $db->f("mkdate");
-        $forumposting["chdate"] = $db->f("chdate");
+
+    $query = "SELECT topic_id AS id, parent_id, name, author, pt.mkdate, pt.chdate,
+                     description, root_id AS rootid, username, pt.user_id AS userid,
+                     IFNULL(views,0) AS viewcount,
+                     IFNULL(ROUND(AVG(rate),1),99) AS rating,
+                     ((6-(IFNULL(AVG(rate),3))-3)*5)+(IFNULL(views,0)/(((UNIX_TIMESTAMP()-pt.mkdate)/604800)+1)) AS score,
+                     IF(object_user.object_id!='',1,0) AS fav,
+                     IF (:allow_anonymous, anonymous, 0) AS anonymous
+              FROM px_topics AS pt
+              LEFT JOIN auth_user_md5 USING (user_id)
+              LEFT JOIN object_views ON (object_views.object_id = topic_id)
+              LEFT JOIN object_rate ON (object_rate.object_id = topic_id)
+              LEFT OUTER JOIN object_user
+                ON (object_user.object_id = topic_id AND object_user.user_id = '$user->id' AND flag = 'fav')
+              WHERE parent_id = '$topic_id'
+                AND (pt.chdate >= pt.mkdate OR pt.user_id = '$user->id' OR pt.author='unbekannt')
+              GROUP BY topic_id
+              ORDER by pt.mkdate";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array(
+        ':user_id'         => $user->id,
+        ':topic_id'        => $topic_id,
+        ':allow_anonymous' => get_config('FORUM_ANONYMOUS_POSTINGS') ? 1 : 0
+    ));
+    $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+    $forumposting['lines'][$level] = count($rows) + $new_topic_here;
+    foreach ($rows as $row) {
+        foreach ($row as $key => $val) {
+            $forumposting[$key] = $val;
+        }
+
         $forumposting["level"] = $level;
-        $forumposting["viewcount"] = $db->f("viewcount");
-        $forumposting["rating"] = $db->f("rating");
-        $forumposting["score"] = $db->f("score");
-        $forumposting["fav"] = $db->f("fav");
-        $forumposting["anonymous"] = get_config('FORUM_ANONYMOUS_POSTINGS') ? $db->f("anonymous") : false;
 
         indentPosting($forumposting, $level);
 
@@ -1915,47 +1982,10 @@ function DisplayKids ($forumposting, $level=0) {
 * @return   string searchfield contains the complete HTML of the search-page
 *
 **/
-function forum_search_field () {
-$searchfield = "
-<table border=\"0\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" align=\"center\"><tr><td class=\"blank\">
-<table border=\"0\" width=\"604\" cellspacing=\"5\" cellpadding=\"0\" align=\"center\">
-<tr>
-<td class=\"blank\">&nbsp;</td></tr>
-<td class=\"blank\" width=\"302\" align=\"center\">
-   <form name=\"search\" method=\"post\" action=\"".URLHelper::getLink('')."\">
-   ". CSRFProtection::tokenTag() ."
-    <table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" valign=\"top\">
-        <tr class=\"steel1\">
-            <td style=\"vertical-align: top;\">
-                <b><font size=\"-1\"><label for=\"suchbegriff\">"._("Suchbegriff:")."</label></font></b>
-            </td>
-            <td class=\"steel1\" style=\"text-align: right;\">
-                <input  type=\"TEXT\" name=\"suchbegriff\" id=\"suchbegriff\">
-            </td>
-        </tr>
-        <tr class=\"steel1\">
-        <td>
-            <b><font size=\"-1\"><label for=\"author\">"._("Von:")."</label></font></b>
-        </td>
-            <td>
-                <input  type=\"TEXT\" name=\"author\" id=\"author\">
-            </td>
-        </tr>
-        <tr>
-            <td class=\"steelgraulight\" colspan=\"2\" align=\"center\">
-                <input type=\"hidden\" name=\"view\" value=\"search\">
-                <br>
-                ".Button::create(_("Suchen"))."
-                <br><br>
-            </td>
-        </tr>
-    </table>
-   </form>
-</td>
-<td class=\"suche\"><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" height=\"207\" width=\"285\">
-<tr>
-</tr></table><br></td></tr></table>";
-return $searchfield;
+function forum_search_field ()
+{
+    $template = $GLOBALS['template_factory']->open('forum/search');
+    return $template->render();
 }
 
 /////////////////////
@@ -1966,122 +1996,97 @@ return $searchfield;
 * @param    string  topic_id the id of the original posting to be moved
 *
 **/
-function forum_move_navi ($topic_id) {
-    global $perm, $user, $forum;
+function forum_move_navi ($topic_id)
+{
+    global $perm, $user;
 
     $mutter = suche_kinder($topic_id);
-    $mutter = explode (";",$mutter);
-    $count = sizeof($mutter)-2;
+    $mutter = explode(';', $mutter);
+    $count = count($mutter) - 2;
     $check_modules = new Modules;
 
-    // wohin darf ich schieben? Abfragen je nach Rechten
-
-    if ($perm->have_perm("autor"))
-        $query = "SELECT DISTINCT seminare.Seminar_id, seminare.Name FROM seminar_user LEFT JOIN seminare USING(Seminar_id) WHERE user_id ='$user->id ' AND (seminar_user.status = 'tutor' OR seminar_user.status = 'dozent') ORDER BY Name";
-    if ($perm->have_perm("admin"))
-        $query = "SELECT seminare.* FROM user_inst LEFT JOIN Institute USING (Institut_id) LEFT JOIN seminare USING(Institut_id) LEFT OUTER JOIN seminar_user USING(Seminar_id) WHERE user_inst.inst_perms='admin' AND user_inst.user_id='$user->id' AND seminare.Institut_id is not NULL GROUP BY seminare.Seminar_id ORDER BY seminare.Name";
-    if ($perm->have_perm("root"))
+    // Wohin darf ich schieben? Abfragen je nach Rechten
+    
+    // Erst die Veranstaltungen
+    $seminars = array();
+    if ($perm->have_perm('root')) {
         $query = "SELECT Seminar_id, Name FROM seminare ORDER BY Name";
-    $db=new DB_Seminar;
-    $db->query($query);
-
-    if ($perm->have_perm("tutor") OR $perm->have_perm("dozent") OR $perm->have_perm("admin")) {
-        $query2 = "SELECT Institute.Institut_id, Name FROM user_inst LEFT JOIN Institute USING(Institut_id) WHERE user_id = '$user->id' AND (inst_perms = 'tutor' OR inst_perms = 'dozent' OR inst_perms = 'admin') ORDER BY Name";
-        $db2=new DB_Seminar;
-        $db2->query($query2);
+        $seminars = DBManager::get()->query($query)->fetchGrouped(PDO::FETCH_COLUMN);
+    } else if ($perm->have_perm('admin')) {
+        $query = "SELECT seminare.Seminar_id, seminare.Name
+                  FROM user_inst
+                  LEFT JOIN Institute USING (Institut_id)
+                  LEFT JOIN seminare USING (Institut_id)
+                  LEFT OUTER JOIN seminar_user USING (Seminar_id)
+                  WHERE user_inst.inst_perms = 'admin' AND user_inst.user_id = ?
+                    AND seminare.Institut_id IS NOT NULL
+                  GROUP BY seminare.Seminar_id
+                  ORDER BY seminare.Name";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($user->id));
+        $seminars = $statement->fetchGrouped(PDO::FETCH_COLUMN);
+    } else if ($perm->have_perm('autor')) {
+        $query = "SELECT DISTINCT seminare.Seminar_id, seminare.Name
+                  FROM seminar_user
+                  LEFT JOIN seminare USING (Seminar_id)
+                  WHERE user_id = ? AND seminar_user.status IN ('tutor', 'dozent')
+                  ORDER BY Name";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($user->id));
+        $seminars = $statement->fetchGrouped(PDO::FETCH_COLUMN);
     }
-    if ($perm->have_perm("root")) {
-        $query2 = "SELECT Institut_id, Name FROM Institute ORDER BY Name";
-        $db2=new DB_Seminar;
-        $db2->query($query2);
-    }
 
-?>
-            <tr><td class="blank" colspan="2"><br>
-            <table border="0" cellpadding="0" cellspacing="0" width="100%">
-            <tr>
-                <td class="steel2" colspan="2">
-                    &nbsp; <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/yellow/arr_2right.png" border="0">&nbsp;<b><font size="-1"><?=sprintf(_("Als Thema verschieben (zusammen mit %s Antworten):"), $count)?></font></b>
-                </td>
-            </tr>
-            <tr>
-                <td class="steel1" colspan="2">&nbsp;
-                    
-                </td>
-            </tr>
-            <tr>
-                <td class="steel1" align="right" nowrap width="20%" valign="baseline">
-                    <font size="-1"><?=_("in das Forum einer Veranstaltung:")?></font>&nbsp; &nbsp;
-                </td>
-                <td class="steel1" width="80%">
-            <?      echo "<form action=\"".URLHelper::getLink('')."\" method=\"POST\">"; ?>
-                    <?= CSRFProtection::tokenTag() ?>
-                    <input type="image" name="SUBMIT" value="Verschieben" src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/yellow/arr_2right.png" border="0" <?=tooltip(_("dahin verschieben"))?>>&nbsp;
-                    <select Name="sem_id" size="1">
-            <?      while ($db->next_record()) {
-                            if ($check_modules->checkLocal('forum',$db->f("Seminar_id"),'sem')) {
-                                $sem_name=htmlReady(substr($db->f("Name"), 0, 50));
-                                printf ("<option %s value=\"%s\">%s\n", $db->f("Seminar_id") == $SessSemName[1] ? "selected" : "", $db->f("Seminar_id"), $sem_name);
-                            }
-                        }
-            ?>  </select>
-                    <input type="hidden" name="target" value="Seminar">
-                    <input type="hidden" name="topic_id" value="<?echo $topic_id;?>">
-                </form>
-                </td>
-            </tr>
-            <?
-
-        if (is_object($db2) && $db2->num_rows()) {   // Es kann auch in Institute verschoben werden
-        ?>
-            <tr>
-                <td class="steel1" align="right" nowrap width="20%" valign="baseline">
-                    <font size="-1"><?=_("in das Forum einer Einrichtung:")?></font>&nbsp; &nbsp;
-                </td>
-                <td class="steel1" width="80%">
-            <?      echo "<form action=\"".URLHelper::getLink('')."\" method=\"POST\">"; ?>
-                    <?= CSRFProtection::tokenTag() ?>
-                    <input type=image name="SUBMIT" value="Verschieben" src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/yellow/arr_2right.png" border=0 <?=tooltip(_("dahin verschieben"))?>>&nbsp;
-                <select Name="inst_id" size="1">
-            <?      while ($db2->next_record()) {
-                            if ($check_modules->checkLocal('forum',$db2->f("Institut_id"),'inst')) {
-                                $inst_name=htmlReady(substr($db2->f("Name"), 0, 50));
-                                printf ("<option value=\"%s\">%s\n", $db2->f("Institut_id"), $inst_name);
-                            }
-                        }
-            ?>  </select>
-                    <input type="hidden" name="target" value="Institut">
-                    <input type="hidden" name="topic_id" value="<?echo $topic_id;?>">
-                </form>
-                </td>
-            </tr>
-        <?
+    // Prüfen, in welchem der Seminare das Forum aktiviert ist
+    foreach ($seminars as $id => $name) {
+        if (!$check_modules->checkLocal('forum', $id, 'sem')) {
+            unset($seminars[$id]);
         }
-        ?>
-            <tr valign="middle">
-                <td class="steel1" align="right" nowrap width="20%">&nbsp;
-                    
-                </td>
-                <td class="steel1" width="80%">
-                <br>
-                <?= LinkButton::createCancel() ?>
-                </td>
-            </tr>
-        </table></td></tr>
-<?
+    }
+
+    // Nun die Einrichtungen
+    $institutes = array();
+    if ($perm->have_perm('root')) {
+        $query = "SELECT Institut_id, Name FROM Institute ORDER BY Name";
+        $institutes = DBManager::get()->query($query)->fetchGrouped(PDO::FETCH_COLUMN);
+    } else if ($perm->have_perm('tutor') || $perm->have_perm('dozent') || $perm->have_perm('admin')) {
+        $query = "SELECT Institute.Institut_id, Name
+                  FROM user_inst
+                  LEFT JOIN Institute USING (Institut_id)
+                  WHERE user_id = '$user->id' AND inst_perms IN ('tutor', 'dozent', 'admin')
+                  ORDER BY Name";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($user->id));
+        $institutes = $statement->fetchGrouped(PDO::FETCH_COLUMN);
+    }
+    
+    // Prüfen, in welcher der Einrichtungen das Forum aktiviert ist
+    foreach ($institutes as $id => $name) {
+        if (!$check_modules->checkLocal('forum', $id, 'inst')) {
+            unset($institutes[$id]);
+        }
+    }
+
+    $template = $GLOBALS['template_factory']->open('forum/move_navigation');
+    $template->topic_id        = $topic_id;
+    $template->count           = $count;
+    $template->seminars        = $seminars;
+    $template->current_seminar = $GLOBALS['SessSemName'][1];
+    $template->institutes      = $institutes;
+    echo $template->render();
 }
 
-function forum_count($parent_id, $seminar_id = '') {
+function forum_count($parent_id, $seminar_id = '')
+{
     global $SessSemName;
 
     if ($seminar_id == '') {
         $seminar_id = $SessSemName[1];
     }
 
-    $db = new DB_Seminar("SELECT COUNT(*) AS count FROM px_topics WHERE Seminar_id = '$seminar_id' AND parent_id != '0' AND root_id = '$parent_id'");
-    if ($db->next_record()) {
-        return $db->f('count');
-    }
-
-    return false;
+    $query = "SELECT COUNT(*)
+              FROM px_topics
+              WHERE Seminar_id = ? AND parent_id != '0' AND root_id = ?";
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute(array($seminar_id, $parent_id));
+    return $statement->fetchColumn() ?: false;
 }

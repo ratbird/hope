@@ -615,7 +615,7 @@ class Seminar
         $statement->bindValue(':modules', $this->modules);
         $statement->execute();
         if ($statement->rowCount() > 0) {
-            NotificationCenter::postNotification("CourseDidCreatOrUpdate", $this);
+            NotificationCenter::postNotification("CourseDidCreateOrUpdate", $this);
         }
 
         if (($statement->rowCount() > 0 || $metadate_changed) && $trigger_chdate) {

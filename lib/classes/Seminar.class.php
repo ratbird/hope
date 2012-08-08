@@ -583,8 +583,8 @@ class Seminar
         $statement->bindValue(':Institut_id', $this->institut_id);
         $statement->bindValue(':Name', $this->name);
         $statement->bindValue(':Untertitel', $this->subtitle);
-        $statement->bindValue(':status', $this->status);
-        $statement->bindValue(':Beschreibung', $this->description);
+        $statement->bindValue(':status', $this->status ?: '');
+        $statement->bindValue(':Beschreibung', $this->description ?: '');
         $statement->bindValue(':Ort', $this->location);
         $statement->bindValue(':Sonstiges', $this->misc);
         $statement->bindValue(':Passwort', $this->password);

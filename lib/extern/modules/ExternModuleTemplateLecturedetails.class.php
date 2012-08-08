@@ -206,10 +206,13 @@ class ExternModuleTemplateLecturedetails extends ExternModule {
     function getContent ($args = NULL, $raw = FALSE) {
         $this->seminar_id = $args["seminar_id"];
         $seminar = new Seminar($this->seminar_id);
+        
+        $query = "SELECT * FROM seminare WHERE Seminar_id = ?";
+        $parameters = array($this->seminar_id);
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute($parameters);
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
 
-        $this->db = new DB_Seminar();
-        $query = "SELECT * FROM seminare WHERE Seminar_id='$this->seminar_id'";
-        $this->db->query($query);
         $visible = $this->config->getValue("Main", "visible");
 
         $j = -1;
@@ -251,35 +254,43 @@ class ExternModuleTemplateLecturedetails extends ExternModule {
             }
 
             $lecturers = array_keys($seminar->getMembers('dozent'));
-            $db_lecturer = new DB_Seminar();
+            
             $l = 0;
             foreach ($lecturers as $lecturer) {
-                $db_lecturer->query("SELECT {$GLOBALS['_fullname_sql'][$name_sql]} AS name, username, Vorname, Nachname, title_rear, title_front FROM auth_user_md5 aum LEFT JOIN user_info ui USING(user_id) WHERE aum.user_id = '$lecturer'");
-                if ($db_lecturer->next_record()) {
-                    $content['LECTUREDETAILS']['LECTURERS']['LECTURER'][$l]['PERSONDETAILS-HREF'] = $this->elements['LinkInternPersondetails']->createUrl(array('link_args' => 'username=' . $db_lecturer->f('username')));
-                    $content['LECTUREDETAILS']['LECTURERS']['LECTURER'][$l]['FULLNAME'] = ExternModule::ExtHtmlReady($db_lecturer->f('name'));
-                    $content['LECTUREDETAILS']['LECTURERS']['LECTURER'][$l]['FIRSTNAME'] = ExternModule::ExtHtmlReady($db_lecturer->f('Vorname'));
-                    $content['LECTUREDETAILS']['LECTURERS']['LECTURER'][$l]['LASTNAME'] = ExternModule::ExtHtmlReady($db_lecturer->f('Nachname'));
-                    $content['LECTUREDETAILS']['LECTURERS']['LECTURER'][$l]['TITLEFRONT'] = ExternModule::ExtHtmlReady($db_lecturer->f('title_front'));
-                    $content['LECTUREDETAILS']['LECTURERS']['LECTURER'][$l]['TITLEREAR'] = ExternModule::ExtHtmlReady($db_lecturer->f('title_rear'));
-                    $content['LECTUREDETAILS']['LECTURERS']['LECTURER'][$l]['UNAME'] = $db_lecturer->f('username');
+                $query = "SELECT {$GLOBALS['_fullname_sql'][$name_sql]} AS name, username, Vorname, Nachname, title_rear, title_front FROM auth_user_md5 aum LEFT JOIN user_info ui USING(user_id) WHERE aum.user_id = ?";
+                $parameters = array($lecturer);
+                $state = DBManager::get()->prepare($query);
+                $state->execute($parameters);
+                $rowlec = $state->fetch(PDO::FETCH_ASSOC);
+                if ($rowlec !== false) {
+                    $content['LECTUREDETAILS']['LECTURERS']['LECTURER'][$l]['PERSONDETAILS-HREF'] = $this->elements['LinkInternPersondetails']->createUrl(array('link_args' => 'username=' . $rowlec['username']));
+                    $content['LECTUREDETAILS']['LECTURERS']['LECTURER'][$l]['FULLNAME'] = ExternModule::ExtHtmlReady($rowlec['name']);
+                    $content['LECTUREDETAILS']['LECTURERS']['LECTURER'][$l]['FIRSTNAME'] = ExternModule::ExtHtmlReady($rowlec['Vorname']);
+                    $content['LECTUREDETAILS']['LECTURERS']['LECTURER'][$l]['LASTNAME'] = ExternModule::ExtHtmlReady($rowlec['Nachname']);
+                    $content['LECTUREDETAILS']['LECTURERS']['LECTURER'][$l]['TITLEFRONT'] = ExternModule::ExtHtmlReady($rowlec['title_front']);
+                    $content['LECTUREDETAILS']['LECTURERS']['LECTURER'][$l]['TITLEREAR'] = ExternModule::ExtHtmlReady($rowlec['title_rear']);
+                    $content['LECTUREDETAILS']['LECTURERS']['LECTURER'][$l]['UNAME'] = $rowlec['username'];
                     $l++;
                 }
             }
 
             $tutors = array_keys($seminar->getMembers('tutor'));
-            $db_tutor = new DB_Seminar();
+            
             $l = 0;
             foreach ($tutors as $tutor) {
-                $db_tutor->query("SELECT {$GLOBALS['_fullname_sql'][$name_sql]} AS name, username, Vorname, Nachname, title_rear, title_front FROM auth_user_md5 aum LEFT JOIN user_info ui USING(user_id) WHERE aum.user_id = '$tutor'");
-                if ($db_tutor->next_record()) {
-                    $content['LECTUREDETAILS']['TUTORS']['TUTOR'][$l]['TUTOR_PERSONDETAILS-HREF'] = $this->elements['LinkInternPersondetails']->createUrl(array('link_args' => 'username=' . $db_tutor->f('username')));
-                    $content['LECTUREDETAILS']['TUTORS']['TUTOR'][$l]['TUTOR_FULLNAME'] = ExternModule::ExtHtmlReady($db_tutor->f('name'));
-                    $content['LECTUREDETAILS']['TUTORS']['TUTOR'][$l]['TUTOR_FIRSTNAME'] = ExternModule::ExtHtmlReady($db_tutor->f('Vorname'));
-                    $content['LECTUREDETAILS']['TUTORS']['TUTOR'][$l]['TUTOR_LASTNAME'] = ExternModule::ExtHtmlReady($db_tutor->f('Nachname'));
-                    $content['LECTUREDETAILS']['TUTORS']['TUTOR'][$l]['TUTOR_TITLEFRONT'] = ExternModule::ExtHtmlReady($db_tutor->f('title_front'));
-                    $content['LECTUREDETAILS']['TUTORS']['TUTOR'][$l]['TUTOR_TITLEREAR'] = ExternModule::ExtHtmlReady($db_tutor->f('title_rear'));
-                    $content['LECTUREDETAILS']['TUTORS']['TUTOR'][$l]['TUTOR_UNAME'] = $db_tutor->f('username');
+                $query = "SELECT {$GLOBALS['_fullname_sql'][$name_sql]} AS name, username, Vorname, Nachname, title_rear, title_front FROM auth_user_md5 aum LEFT JOIN user_info ui USING(user_id) WHERE aum.user_id = ?";
+                $parameters = array($tutor);
+                $state = DBManager::get()->prepare($query);
+                $state->execute($parameters);
+                $rowtut = $state->fetch(PDO::FETCH_ASSOC);
+                if ($rowtut !== false) {
+                    $content['LECTUREDETAILS']['TUTORS']['TUTOR'][$l]['TUTOR_PERSONDETAILS-HREF'] = $this->elements['LinkInternPersondetails']->createUrl(array('link_args' => 'username=' . $rowtut['username']));
+                    $content['LECTUREDETAILS']['TUTORS']['TUTOR'][$l]['TUTOR_FULLNAME'] = ExternModule::ExtHtmlReady($rowtut['name']);
+                    $content['LECTUREDETAILS']['TUTORS']['TUTOR'][$l]['TUTOR_FIRSTNAME'] = ExternModule::ExtHtmlReady($rowtut['Vorname']);
+                    $content['LECTUREDETAILS']['TUTORS']['TUTOR'][$l]['TUTOR_LASTNAME'] = ExternModule::ExtHtmlReady($rowtut['Nachname']);
+                    $content['LECTUREDETAILS']['TUTORS']['TUTOR'][$l]['TUTOR_TITLEFRONT'] = ExternModule::ExtHtmlReady($rowtut['title_front']);
+                    $content['LECTUREDETAILS']['TUTORS']['TUTOR'][$l]['TUTOR_TITLEREAR'] = ExternModule::ExtHtmlReady($rowtut['title_rear']);
+                    $content['LECTUREDETAILS']['TUTORS']['TUTOR'][$l]['TUTOR_UNAME'] = $rowtut['username'];
                     $l++;
                 }
             }
@@ -348,58 +359,68 @@ class ExternModuleTemplateLecturedetails extends ExternModule {
     }
 
     function getStudipData () {
-        $this->db->query("SELECT i.Institut_id, i.Name, i.url FROM seminare LEFT JOIN Institute i USING(institut_id) WHERE Seminar_id='{$this->seminar_id}'");
-        $this->db->next_record();
-        $own_inst = $this->db->f('Institut_id');
+        $query = "SELECT i.Institut_id, i.Name, i.url FROM seminare LEFT JOIN Institute i USING(institut_id) WHERE Seminar_id = ?";
+        $parameters = array($this->seminar_id);
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute($parameters);
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
+        $own_inst = $row['Institut_id'];
+        $content['STUDIP-DATA']['HOME-INST-NAME'] = ExternModule::ExtHtmlReady($row['Name']);
 
-        $content['STUDIP-DATA']['HOME-INST-NAME'] = ExternModule::ExtHtmlReady($this->db->f('Name'));
-
-        if ($this->db->f("url")) {
-            $link_inst = htmlReady($this->db->f("url"));
+        if ($row['url']) {
+            $link_inst = htmlReady($row['url']);
             if (!preg_match('{^https?://.+$}', $link_inst)) {
                 $link_inst = "http://$link_inst";
             }
             $content['STUDIP-DATA']['HOME-INST-HREF'] = $link_inst;
         }
 
-        $this->db->query("SELECT Name, url FROM seminar_inst LEFT JOIN Institute i USING(institut_id) WHERE seminar_id='{$this->seminar_id}' AND i.institut_id!='$own_inst'");
+        $query = "SELECT Name, url FROM seminar_inst LEFT JOIN Institute i USING(institut_id) WHERE seminar_id='{$this->seminar_id}' AND i.institut_id!='$own_inst'";
         $involved_insts = NULL;
         $i = 0;
-        while ($this->db->next_record()) {
-            if ($this->db->f('url')) {
-                $link_inst = htmlReady($this->db->f('url'));
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute();
+
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            if ($row['url']) {
+                $link_inst = htmlReady($row['url']);
                 if (!preg_match('{^https?://.+$}', $link_inst)) {
                     $link_inst = "http://$link_inst";
                 }
                 $content['STUDIP-DATA']['INVOLVED-INSTITUES']['INVOLVED-INSTITUTE'][$i]['INVOLVED-INSTITUTE_HREF'] = $link_inst;
             }
-            $content['STUDIP-DATA']['INVOLVED-INSTITUTES']['INVOLVED-INSTITUTE'][$i]['INVOLVED-INSTITUTE_NAME'] = ExternModule::ExtHtmlReady($this->db->f('Name'));
+            $content['STUDIP-DATA']['INVOLVED-INSTITUTES']['INVOLVED-INSTITUTE'][$i]['INVOLVED-INSTITUTE_NAME'] = ExternModule::ExtHtmlReady($row['Name']);
             $i++;
         }
 
-        $this->db->query("SELECT count(*) as count_user FROM seminar_user WHERE Seminar_id='{$this->seminar_id}'");
-        $this->db->next_record();
+        $query = "SELECT count(*) as count_user FROM seminar_user WHERE Seminar_id = ?";
+        $parameters = array($this->seminar_id);
+        $statement = DBManager::get()->prepare($query);
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
 
-        if ($this->db->f('count_user')) {
-            $content['STUDIP-DATA']['COUNT-USER'] = $this->db->f('count_user');
+        if ($row['count_user']) {
+            $content['STUDIP-DATA']['COUNT-USER'] = $row['count_user'];
         } else {
             $content['STUDIP-DATA']['COUNT-USER'] = '0';
         }
 
-        $this->db->query("SELECT count(*) as count_postings FROM px_topics WHERE Seminar_id='{$this->seminar_id}'");
-        $this->db->next_record();
+        $query = "SELECT count(*) as count_postings FROM px_topics WHERE Seminar_id = ?";
+        $parameters = array($this->seminar_id);
+        $statement = DBManager::get()->prepare($query);
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
 
-        if ($this->db->f('count_postings')) {
-            $content['STUDIP-DATA']['COUNT-POSTINGS'] = $this->db->f('count_postings');
+        if ($row['count_postings']) {
+            $content['STUDIP-DATA']['COUNT-POSTINGS'] = $row['count_postings'];
         } else {
             $content['STUDIP-DATA']['COUNT-POSTINGS'] = '0';
         }
 
-        $this->db->query("SELECT count(*) as count_documents FROM dokumente WHERE seminar_id='{$this->seminar_id}'");
-        $this->db->next_record();
-
-        if ($this->db->f('count_documents')) {
-            $content['STUDIP-DATA']['COUNT-DOCUMENTS'] = $this->db->f("count_documents");
+        $query = "SELECT count(*) as count_documents FROM dokumente WHERE seminar_id = ?";
+        $parameters = array($this->seminar_id);
+        $statement = DBManager::get()->prepare($query);
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
+        if ($row['count_documents']) {
+            $content['STUDIP-DATA']['COUNT-DOCUMENTS'] = $row['count_documents'];
         } else {
             $content['STUDIP-DATA']['COUNT-DOCUMENTS'] = '0';
         }

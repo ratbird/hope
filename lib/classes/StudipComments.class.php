@@ -55,29 +55,38 @@ class StudipComments extends SimpleORMap
 
     static function NumCommentsForObject($object_id)
     {
-        $query = "SELECT COUNT(*) AS count FROM comments WHERE object_id='$object_id'";
-        return DBManager::get()
-                ->query($query)
-                ->fetchColumn();
+        $query = "SELECT COUNT(*) FROM comments WHERE object_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($object_id));
+        return $statement->fetchColumn();
     }
 
     static function NumCommentsForObjectSinceLastVisit($object_id, $comments_since = 0, $exclude_user_id = null)
-     {
-        $query = "SELECT COUNT(*) AS count FROM comments WHERE object_id='$object_id'";
-        $query .= " AND chdate > " . (int)$comments_since;
-        if ($exclude_user_id) $query .= " AND user_id != '$exclude_user_id'";
-        return DBManager::get()
-                ->query($query)
-                ->fetchColumn();
+    {
+        $query = "SELECT COUNT(*) FROM comments WHERE object_id = ? AND chdate > ?";
+        $parameters = array($object_id, (int)$comments_since);
+        if ($exclude_user_id) {
+            $query .= " AND user_id != ?";
+            $parameters[] = $exclude_user_id;
+        }
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute($parameters);
+        return $statement->fetchColumn();
     }
 
     static function GetCommentsForObject($object_id)
      {
         global $_fullname_sql;
-        $query="SELECT comments.content, " . $_fullname_sql['full'] ." AS fullname, a.username, comments.mkdate,comments.comment_id FROM comments LEFT JOIN auth_user_md5 a USING (user_id) LEFT JOIN user_info USING (user_id) WHERE object_id='$object_id' ORDER BY comments.mkdate";
-        return DBManager::get()
-                ->query($query)
-                ->fetchAll(PDO::FETCH_BOTH);
+        $query = "SELECT comments.content, {$_fullname_sql['full']} AS fullname,
+                         a.username, comments.mkdate, comments.comment_id
+                  FROM comments
+                  LEFT JOIN auth_user_md5 AS a USING (user_id)
+                  LEFT JOIN user_info USING (user_id)
+                  WHERE object_id = ?
+                  ORDER BY comments.mkdate";
+        $static = DBManager::get()->prepare($query);
+        $statement->execute(array($object_id));
+        return $statement->fetchAll(PDO::FETCH_BOTH);
     }
 
     static function DeleteCommentsByObject($object_ids)
@@ -85,6 +94,8 @@ class StudipComments extends SimpleORMap
         if (!is_array($object_ids)) {
             $object_ids = array($object_ids);
         }
+        $object_ids = array_map(array(DBManager::get(), 'quote'), $object_ids);
+
         $where = "object_id IN ('" . join("','", $object_ids). "')";
         return self::deleteBySQL($where);
     }
@@ -99,5 +110,3 @@ class StudipComments extends SimpleORMap
         parent::__construct($id);
     }
 }
-
-?>

@@ -1,7 +1,7 @@
 <?php
 # Lifter002: TODO
 # Lifter007: TODO
-# Lifter003: TODO
+# Lifter003: TEST
 # Lifter010: TODO
 /**
 * StudipModulesInstance.class.php
@@ -11,7 +11,6 @@
 *
 * @author   André Noack <noack@data-quest.de>
 * @access   public
-
 * @package
 */
 
@@ -190,21 +189,34 @@ class StudipStmInstance extends SimpleORMap {
         return $ret;
     }
 
-    function isParticipant($user_id){
-        return
-            DBManager::get()
-            ->query("SELECT mkdate FROM stm_instances_user WHERE user_id='$user_id' AND stm_instance_id='".$this->getId()."' LIMIT 1")
-            ->fetchColumn();
+    function isParticipant($user_id)
+    {
+        $query = "SELECT mkdate
+                  FROM stm_instances_user
+                  WHERE user_id = ? AND stm_instance_id = ?
+                  LIMIT 1";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $user_id,
+            $this->getId()
+        ));
+        return $statement->fetchColumn();
     }
 
-    function isAllowedToEnter($user_id, $check_semester = false){
+    function isAllowedToEnter($user_id, $check_semester = false)
+    {
         $abstr_id = $this->getValue('stm_abstr_id');
-        if ($check_semester) $add = " AND sem BETWEEN earliest AND latest ";
-        return
-            DBManager::get()
-            ->query("SELECT * FROM stm_abstract_assign saa INNER JOIN his_stud_stg hss ON (hss.stg=saa.stg AND hss.abschl=saa.abschl)
-                    WHERE user_id='$user_id' AND stm_abstr_id='$abstr_id' $add LIMIT 1")
-            ->fetchColumn();
+        if ($check_semester) {
+            $add = " AND sem BETWEEN earliest AND latest ";
+        }
+        $query = "SELECT 1
+                  FROM stm_abstract_assign AS saa
+                  INNER JOIN his_stud_stg AS hss USING (stg, abschl)
+                  WHERE user_id = ? AND stm_abstr_id = ? {$add}
+                  LIMIT 1";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($user_id, $abstr_id));
+        return $statement->fetchColumn();
     }
 
     function isAllowedToEdit($user_id){
@@ -217,19 +229,26 @@ class StudipStmInstance extends SimpleORMap {
     function restoreAssigns(){
         $this->assigns = array();
         if ($stm_abstr_id = $this->getValue('stm_abstr_id')){
-            $this->assigns = DBManager::get()->query("SELECT sam.*, his_stg.dtxt as stg_name,his_pvers.dtxt as p_version_name, his_abschl.ltxt as abschl_name, sat.name as type_name FROM stm_abstract_assign sam
-                                INNER JOIN his_stg ON his_stg.stg=sam.stg
-                                INNER JOIN his_abschl ON his_abschl.abint=sam.abschl
-                                INNER JOIN his_pvers ON his_pvers.pvers=sam.pversion
-                                INNER JOIN stm_abstract_types sat ON sat.stm_type_id = sam.stm_type_id AND sat.lang_id='".LANGUAGE_ID."'
-                                WHERE stm_abstr_id='$stm_abstr_id'")->fetchAll(PDO::FETCH_ASSOC);
+            $query = "SELECT sam.*, his_stg.dtxt AS stg_name,
+                             his_pvers.dtxt AS p_version_name,
+                             his_abschl.ltxt AS abschl_name,
+                             sat.name AS type_name
+                      FROM stm_abstract_assign AS sam
+                      INNER JOIN his_stg ON (his_stg.stg = sam.stg)
+                      INNER JOIN his_abschl ON (his_abschl.abint = sam.abschl)
+                      INNER JOIN his_pvers ON (his_pvers.pvers = sam.pversion)
+                      INNER JOIN stm_abstract_types AS sat ON (sat.stm_type_id = sam.stm_type_id AND sat.lang_id = ?)
+                      WHERE stm_abstr_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(LANGUAGE_ID, $stm_abstr_id));
+            $this->assigns = $statement->fetchAll(PDO::FETCH_ASSOC);
         }
         return count($this->assigns);
     }
 
     function restore () {
         $where_query = $this->getWhereQuery();
-        if ($where_query){
+        if ($where_query) {
             $query = "SELECT stm_instances.*,stm_abstract.id_number,stm_abstract.duration,credits,stm_abstract.workload,stm_abstract.turnus, stm_instances_text.*,stm_abstract_text.aims,semester_data.name as sem_name, Institute.Name as homeinst_name FROM stm_instances
                         INNER JOIN stm_abstract ON stm_instances.stm_abstr_id = stm_abstract.stm_abstr_id
                         INNER JOIN stm_instances_text ON stm_instances.stm_instance_id =stm_instances_text.stm_instance_id AND stm_instances_text.lang_id='".LANGUAGE_ID."'

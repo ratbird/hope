@@ -38,9 +38,10 @@ class StudipScmEntry extends SimpleORMap {
 
     public static function GetSCMEntriesForRange($range_id, $as_objects = false){
         $ret = array();
-        $query = "SELECT scm.* FROM scm WHERE range_id='$range_id' ORDER BY mkdate";
-        $rs = DBManager::get()->query($query);
-        while ($row = $rs->fetch(PDO::FETCH_ASSOC)){
+        $query = "SELECT scm.* FROM scm WHERE range_id= ? ORDER BY mkdate";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($range_id));
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)){
             if (!$as_objects){
                 $ret[$row['scm_id']] = $row;
             } else {
@@ -53,18 +54,22 @@ class StudipScmEntry extends SimpleORMap {
     }
 
     public static function GetNumSCMEntriesForRange($range_id){
-        $query = "SELECT COUNT(*) FROM scm WHERE range_id='$range_id'";
-        return DBManager::get()
-                ->query($query)
-                ->fetchColumn();
+        $query = "SELECT COUNT(*) FROM scm WHERE range_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($range_id));
+        return $statement->fetchColumn();
     }
 
     public static function DeleteSCMEntriesForRange($range_ids){
         if (!is_array($range_ids)){
             $range_ids = array($range_ids);
         }
-        $query = "DELETE FROM scm WHERE range_id IN ('" . join("','", $range_ids). "')";
-        return DBManager::get()->exec($query);
+        $query = "DELETE FROM scm WHERE range_id IN (?)";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $range_ids ?: ''
+        ));
+        return $statement->rowCount();
     }
 
     static function find($id)

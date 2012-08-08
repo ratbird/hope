@@ -41,27 +41,34 @@ class StudipNews extends SimpleORMap {
 
     public $ranges = array();
 
-    public static function GetNewsByRange($range_id, $only_visible = false, $as_objects = false){
-        $ret = array();
+    public static function GetNewsByRange($range_id, $only_visible = false, $as_objects = false)
+    {
         if ($only_visible){
             $clause = " AND date < UNIX_TIMESTAMP() AND (date+expire) > UNIX_TIMESTAMP() ";
         }
-        $query = "SELECT news_id as idx,news.* FROM news_range
-                    INNER JOIN news USING(news_id) WHERE range_id='$range_id' "
-                    . $clause . " ORDER BY date DESC, chdate DESC, topic ASC";
-        $rs = DBManager::get()->query($query);
-        $news = $rs->fetchAll(PDO::FETCH_ASSOC|PDO::FETCH_GROUP);
-        $ret = array_map('array_shift', $news);
+        $query = "SELECT news_id AS idx, news.*
+                  FROM news_range
+                  INNER JOIN news USING (news_id)
+                  WHERE range_id = ? {$clause}
+                  ORDER BY date DESC, chdate DESC, topic ASC";
+        $statment = DBManager::get()->prepare($query);
+        $statement->execute(array($range_id));
+        $ret = $statement->fetchGrouped(PDO::FETCH_ASSOC);
 
         return ($as_objects ? StudipNews::GetNewsObjects($ret) : $ret);
     }
 
-    public static function GetNewsByAuthor($user_id, $as_objects = false){
+    public static function GetNewsByAuthor($user_id, $as_objects = false)
+    {
         $ret = array();
-        $query = "SELECT news_id as idx,news.* FROM news WHERE user_id='$user_id' ORDER BY date DESC, chdate DESC";
-        $rs = DBManager::get()->query($query);
-        $news = $rs->fetchAll(PDO::FETCH_ASSOC|PDO::FETCH_GROUP);
-        $ret = array_map('array_shift', $news);
+        $query = "SELECT news_id AS idx, news.*
+                  FROM news
+                  WHERE user_id = ?
+                  ORDER BY date DESC, chdate DESC";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($user_id));
+        $ret = $statement->fetchGrouped(PDO::FETCH_ASSOC);
+
         return ($as_objects ? StudipNews::GetNewsObjects($ret) : $ret);
     }
 
@@ -95,10 +102,14 @@ class StudipNews extends SimpleORMap {
     }
 
     public static function GetRangeFromRssID($rss_id){
-        if ($rss_id){
-            $ret = DBManager::get()
-                ->query("SELECT range_id,range_type FROM news_rss_range WHERE rss_id='$rss_id'")
-                ->fetch(PDO::FETCH_ASSOC);
+        if ($rss_id) {
+            $query = "SELECT range_id ,range_type
+                      FROM news_rss_range
+                      WHERE rss_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($rss_id));
+            $ret = $statement->fetch(PDO::FETCH_ASSOC);
+
             if (count($ret)) return $ret;
         }
         return false;
@@ -109,26 +120,39 @@ class StudipNews extends SimpleORMap {
         return $ret['range_id'];
     }
 
-    public static function GetRssIdFromRangeId($range_id){
-        $query = "SELECT rss_id FROM news_rss_range WHERE range_id='$range_id'";
-        return DBManager::get()
-                ->query($query)
-                ->fetchColumn();
+    public static function GetRssIdFromRangeId($range_id)
+    {
+        $query = "SELECT rss_id FROM news_rss_range WHERE range_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($range_id));
+        return $statement->fetchColumn();
     }
 
-    public static function SetRssId($range_id, $type = false){
+    public static function SetRssId($range_id, $type = false)
+    {
         if (!$type){
             $type = get_object_type($range_id);
             if ($type == 'fak') $type = 'inst';
         }
         $rss_id = md5('StudipRss'.$range_id);
-        $affected_rows = DBManager::get()->exec("REPLACE INTO news_rss_range (range_id,rss_id,range_type) VALUES ('$range_id','$rss_id','$type')");
-        return $affected_rows;
+        
+        $query = "REPLACE INTO news_rss_range (range_id,rss_id,range_type)
+                  VALUES (?, ?, ?)";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $range_id,
+            $rss_id,
+            $type
+        ));
+        return $statement->rowCount();
     }
 
-    public static function  UnsetRssId($range_id){
-        $affected_rows = DBManager::get()->exec("DELETE FROM news_rss_range WHERE range_id='$range_id'");
-        return $affected_rows;
+    public static function UnsetRssId($range_id)
+    {
+        $query = "DELETE FROM news_rss_range WHERE range_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($range_id));
+        return $statement->rowCount();
     }
 
     public static function GetAdminMsg($user_id, $date){
@@ -147,9 +171,15 @@ class StudipNews extends SimpleORMap {
                                 )->fetchAll(PDO::FETCH_COLUMN, 0);
 
             if (is_array($result)) {
-                $kill_news = "('".join("','",$result)."')";
-                $killed = $db->exec("DELETE FROM news WHERE news_id IN $kill_news");
-                $db->exec("DELETE FROM news_range WHERE news_id IN $kill_news");
+                $query = "DELETE FROM news WHERE news_id IN (?)";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($result));
+                $killed = $statement->rowCount();
+
+                $query = "DELETE FROM news_range WHERE news_id IN (?)";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($result));
+
                 object_kill_visits(null, $result);
                 object_kill_views($result);
                 StudipComments::DeleteCommentsByObject($result);
@@ -217,9 +247,12 @@ class StudipNews extends SimpleORMap {
     function restoreRanges(){
         $this->ranges = array();
         if (!$this->isNew()){
-            $ranges = DBManager::get()
-                    ->query("SELECT range_id FROM {$this->db_table}_range WHERE news_id='".$this->getId()."'")
-                    ->fetchAll(PDO::FETCH_COLUMN, 0);
+            $query = "SELECT range_id FROM :table WHERE news_id = :news_id";
+            $statement = DBManager::get()->prepare($query);
+            $statement->bindValue(':table', $this->db_table . '_range', StudipPDO::PARAM_COLUMN);
+            $statement->bindValue(':news_id', $this->getId());
+            $statement->execute();
+            $ranges = $statement->fetchAll(PDO::FETCH_COLUMN);
             $this->ranges = array_flip($ranges);
         }
         return count($this->ranges);
@@ -236,10 +269,22 @@ class StudipNews extends SimpleORMap {
         if (!$this->isNew()){
             $where_query = $this->getWhereQuery();
             if ($where_query){
-                $db->exec("DELETE FROM {$this->db_table}_range WHERE  news_id='".$this->getId()."'");
+                $query = "DELETE FROM :table WHERE news_id = :news_id";
+                $statement = DBManager::get()->prepare($query);
+                $statement->bindValue(':table', $this->db_table . '_range', StudipPDO::PARAM_COLUMN);
+                $statement->bindValue(':news_id', $this->getId());
+                $statement->execute();
+
                 if (count($this->ranges)){
-                    foreach($this->getRanges() as $range_id){
-                        $db->exec("INSERT INTO {$this->db_table}_range SET range_id='$range_id',news_id='".$this->getId()."'");
+                    $query = "INSERT INTO :table (range_id, news_id)
+                              VALUES (:range_id, :news_id)";
+                    $statement = DBManager::get()->prepare($query);
+                    $statement->bindValue(':table', $this->db_table . '_range', StudipPDO::PARAM_COLUMN);
+                    $statement->bindValue(':news_id', $this->getId());
+
+                    foreach ($this->getRanges() as $range_id) {
+                        $statement->bindValue(':range_id', $range_id);
+                        $statement->execute();
                     }
                 }
                 return count($this->ranges);

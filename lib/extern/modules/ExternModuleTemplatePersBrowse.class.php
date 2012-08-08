@@ -446,19 +446,21 @@ class ExternModuleTemplatePersBrowse extends ExternModule {
         $first_levels = $this->range_tree->getKids('root');
     //  var_dump($first_levels);
         $current_semester = get_sem_num(time());
-        $db = new DB_Seminar();
+        
         $db_count = new DB_Seminar();
         $dbv = new DbView();
-        $query = sprintf(
-            "SELECT Institut_id, Name "
+        $mrks = str_repeat('?,', count($selected_item_ids) - 1) . '?';
+        $query = "SELECT Institut_id, Name "
             . "FROM Institute "
-            . "WHERE Institut_id IN ('%s') "
+            . "WHERE Institut_id IN ($mrks) "
             . "AND fakultaets_id != Institut_id "
-            . "ORDER BY Name ASC",
-            implode("','", $selected_item_ids));
-        $db->query($query);
-        
-        while ($db->next_record()) {
+            . "ORDER BY Name ASC";
+        $parameters = $selected_item_ids;
+
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute($parameters);
+
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
             if ($this->config->getValue('Main', 'onlylecturers')) {
                 // get only users with status dozent in an visible seminar in the current semester
                 $query = sprintf("SELECT COUNT(DISTINCT(su.user_id)) AS count_user "
@@ -471,7 +473,7 @@ class ExternModuleTemplatePersBrowse extends ExternModule {
                     . "AND ui.externdefault = 1 "
                     . "AND ui.inst_perms = 'dozent' "
                     . "AND ((%s) = %s OR ((%s) <= %s  AND ((%s) >= %s OR (%s) = -1)))",
-                    $db->f('Institut_id'),
+                    $row['Institut_id'],
                     $dbv->sem_number_sql,
                     $current_semester,
                     $dbv->sem_number_sql,
@@ -486,18 +488,20 @@ class ExternModuleTemplatePersBrowse extends ExternModule {
                     . "WHERE ui.Institut_id = '%s' "
                     . "AND ui.inst_perms IN('%s') "
                     . "AND ui.externdefault = 1 ",
-                    $db->f('Institut_id'),
+                    $row['Institut_id'],
                     implode("','", $this->config->getValue('Main', 'instperms')));
             }
             
-            $db_count->query($query);
+           
+            $state = DBManager::get()->prepare($query);
+            $state->execute($parameters);
+            while ($row_count = $statement->fetch(PDO::FETCH_ASSOC)) {
             
-            while ($db_count->next_record()) {
-                if ($db_count->f('count_user') > 0) {
+                if ($row_count['count_user'] > 0) {
                     $content['LIST_INSTITUTES']['INSTITUTE'][] = array(
                         'INSTITUTE_NAME' => ExternModule::ExtHtmlReady($db->f('Name')),
                         'INSTITUTE_COUNT_USER' => $db_count->f('count_user'),
-                        'URL_LIST_PERSONS' => $this->getLinkToModule('LinkInternListInstitutes', array('item_id' => $db->f('Institut_id'))));
+                        'URL_LIST_PERSONS' => $this->getLinkToModule('LinkInternListInstitutes', array('item_id' => $row['Institut_id'])));
                 }
             }
         }

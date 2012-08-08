@@ -76,13 +76,19 @@ class SeminarSearch extends SearchType
          if (empty($result)) {
              return array();
          }
-         $db = DBManager::get();
-         $style = isset($this->styles[$this->resultstyle]) ?  $this->styles[$this->resultstyle] : $this->styles['name'];
-         return $db->query("SELECT s.Seminar_id, $style, Name FROM seminare s
-                            LEFT JOIN seminar_user su ON su.Seminar_id=s.Seminar_id AND su.status='dozent'
-                            LEFT JOIN auth_user_md5 USING (user_id)
-                            WHERE s.Seminar_id IN ('".join("','", array_slice($result, $offset, $limit))."') GROUP BY s.Seminar_id"
-                          )->fetchAll(PDO::FETCH_NUM);
+         $style = $this->styles[$this->resultstyle] ?: $this->styles['name'];
+
+         $query = "SELECT s.Seminar_id, {$style}, Name
+                   FROM seminare AS s
+                   LEFT JOIN seminar_user AS su ON (su.Seminar_id = s.Seminar_id AND su.status='dozent')
+                   LEFT JOIN auth_user_md5 USING (user_id)
+                   WHERE s.Seminar_id IN (?)
+                   GROUP BY s.Seminar_id";
+         $statement = DBManager::get()->prepare($query);
+         $statement->execute(array(
+            array_slice($result, $offset, $limit) ?: ''
+         ));
+         return $statement->fetchAll(PDO::FETCH_NUM);
      }
 
 

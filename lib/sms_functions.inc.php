@@ -238,16 +238,16 @@ function print_snd_message($psm) {
         }
         if ($x >= 2) { // if more than one receiver add appendix
             $content .= "<br><br>--<br>"._("gesendet an:")."<br>";
-            $query = "
-            SELECT  auth_user_md5.username, " .$_fullname_sql['full'] ." AS fullname
-                FROM message_user
-                LEFT JOIN auth_user_md5 USING(user_id)
-                LEFT JOIN user_info USING(user_id)
-                WHERE message_user.message_id = '".$psm['message_id']."'
-                AND message_user.snd_rec = 'rec'";
-            $res = $db->query($query);
+            $query = "SELECT auth_user_md5.username, {$_fullname_sql['full']} AS fullname
+                      FROM message_user
+                      LEFT JOIN auth_user_md5 USING(user_id)
+                      LEFT JOIN user_info USING(user_id)
+                      WHERE message_user.message_id = ? AND message_user.snd_rec = 'rec'";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($psm['message_id']));
+
             $i = 0;
-            while ($row = $res->fetch()) {
+            while ($row = $statement->fetch()) {
                 if ($row["user_id"] != $user->id && $row["username"] != "") {
                     if ($i > "0") {
                         $content .= ",&nbsp;";

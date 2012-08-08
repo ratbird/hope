@@ -1,7 +1,7 @@
 <?
 # Lifter002: TODO
+# Lifter003: TEST
 # Lifter007: TODO
-# Lifter003: TODO
 # Lifter010: TODO
 /**
 * StartupChecks.class.php
@@ -119,60 +119,87 @@ class StartupChecks {
         $db = DBManager::get();
 
         if (!$perm->have_perm ("root")) {
-            $query = sprintf ("SELECT a.Institut_id, IF(a.Institut_id=fakultaets_id,1,0) AS is_fak,inst_perms FROM user_inst  a LEFT JOIN Institute USING (institut_id) WHERE (user_id = '%s' AND inst_perms = 'admin')", $user->id);
-
-            $result = $db->query($query);
+            $query = "SELECT a.Institut_id, IF(a.Institut_id=fakultaets_id,1,0) AS is_fak, inst_perms
+                      FROM user_inst AS a
+                      LEFT JOIN Institute USING (institut_id)
+                      WHERE user_id = ? AND inst_perms = 'admin'";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($user->id));
+            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
             foreach ($result as $row) {
                 $tmp_inst_ids[]=$row['Institut_id'];
                 if ($row['is_fak']) {
-                    $query2 = sprintf ("SELECT a.Institut_id FROM Institute a WHERE fakultaets_id='%s' AND a.Institut_id!='%s' ", $row['Institut_id'], $row['Institut_id']);
-                    $result2 = $db->query($query2);
-                    foreach ($result2 as $row2) {
-                        $tmp_inst_ids[]=$row2['Institut_id'];
+                    $query = "SELECT Institut_id
+                              FROM Institute
+                              WHERE fakultaets_id = ? AND Institut_id != fakultaets_id";
+                    $statement = DBManager::get()->prepare($query);
+                    $statement->execute(array($row['Institut_id']));
+                    while ($temp_id = $statement->fetchColumn()) {
+                        $tmp_inst_ids[] = $temp_id;
                     }
                 }
             }
 
-            if (is_array($tmp_inst_ids))
+            if (is_array($tmp_inst_ids)) {
                 $clause = implode("', '", $tmp_inst_ids);
+            }
 
-            $query = sprintf ("SELECT studip_object_id FROM user_inst LEFT JOIN Institute USING (Institut_id) LEFT JOIN sem_tree ON (Institute.fakultaets_id = sem_tree.studip_object_id) WHERE user_inst.Institut_id IN ('%s') AND studip_object_id IS NOT NULL ", $clause);
+            $query = "SELECT COUNT(*)
+                      FROM user_inst
+                      LEFT JOIN Institute USING (Institut_id)
+                      LEFT JOIN sem_tree ON (Institute.fakultaets_id = sem_tree.studip_object_id)
+                      WHERE user_inst.Institut_id IN (?) AND studip_object_id IS NOT NULL";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                $tmp_inst_ids ?: ''
+            ));
+            $count = $statement->fetchColumn();
         } else {
-            $query = "SELECT studip_object_id FROM sem_tree LEFT JOIN Institute ON (Institute.fakultaets_id = sem_tree.studip_object_id)";
+            $query = "SELECT COUNT(*)
+                      FROM sem_tree
+                      LEFT JOIN Institute ON (Institute.fakultaets_id = sem_tree.studip_object_id)";
+            $count = DBManager::get()->query($query)->fetchColumn();
         }
 
-        $result = $db->query($query);
-
-        return $result->rowCount() == 0;
+        return $count == 0;
     }
 
-    function myInstituteRange() {
+    function myInstituteRange()
+    {
         global $user;
 
-        $db = DBManager::get();
+        $query = "SELECT COUNT(*)
+                  FROM user_inst
+                  LEFT JOIN Institute USING (Institut_id)
+                  LEFT JOIN sem_tree ON (Institute.fakultaets_id = sem_tree.studip_object_id)
+                  WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($user->id));
+        $count = $statement->fetchColumn();
 
-        $query = sprintf ("SELECT studip_object_id FROM user_inst LEFT JOIN Institute USING (Institut_id) LEFT JOIN sem_tree ON (Institute.fakultaets_id = sem_tree.studip_object_id) WHERE user_id = '%s' ", $user->id);
-        $result = $db->query($query);
-
-        return $result->rowCount() == 0;
+        return $count == 0;
     }
 
-    function myAdminInstitute() {
+    function myAdminInstitute()
+    {
         global $user, $perm;
-
-        $db = DBManager::get();
 
         if ($perm->have_perm ("root")) {
             return FALSE;
         }
 
-        $query = sprintf ("SELECT user_id FROM user_inst WHERE user_id = '%s' AND inst_perms = 'admin' ", $user->id);
-        $result = $db->query($query);
+        $query = "SELECT COUNT(*)
+                  FROM user_inst
+                  WHERE user_id = ? AND inst_perms = 'admin'";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($user->id));
+        $count = $statement->fetchColumn();
 
-        return $result->rowCount() == 0;
+        return $count == 0;
     }
 
-    function dozent() {
+    function dozent()
+    {
         $db = DBManager::get();
 
         $query = "SELECT user_id FROM auth_user_md5 WHERE perms = 'dozent'";
@@ -190,48 +217,60 @@ class StartupChecks {
         return $result->rowCount() == 0;
     }
 
-    function myInstitutesDozent() {
+    function myInstitutesDozent()
+    {
         global $user, $perm;
-
-        $db = DBManager::get();
 
         if ($perm->have_perm ("root")) {
             return FALSE;
-        } else {
-            $query = sprintf ("SELECT a.Institut_id, IF(a.Institut_id=fakultaets_id,1,0) AS is_fak,inst_perms FROM user_inst  a LEFT JOIN Institute USING (institut_id) WHERE (user_id = '%s' AND inst_perms = 'admin')", $user->id);
-
-            $result = $db->query($query);
-            foreach ($result as $row) {
-                $tmp_inst_ids[]=$row['Institut_id'];
-                if ($row['is_fak']) {
-                    $query2 = sprintf ("SELECT a.Institut_id FROM Institute a WHERE fakultaets_id='%s' AND a.Institut_id!='%s' ", $row['Institut_id'], $row['Institut_id']);
-                    $result2 = $db->query($query2);
-                    foreach ($result2 as $row2) {
-                        $tmp_inst_ids[]=$row2['Institut_id'];
-                    }
-                }
-            }
-
-            if (is_array($tmp_inst_ids))
-                $clause = implode("', '", $tmp_inst_ids);
-
-            $query = sprintf ("SELECT user_id FROM user_inst WHERE inst_perms = 'dozent' AND Institut_id IN ('%s')", $clause);
         }
 
-        $result = $db->query($query);
+        $query = "SELECT a.Institut_id, IF (a.Institut_id=fakultaets_id, 1, 0) AS is_fak, inst_perms
+                  FROM user_inst AS a
+                  LEFT JOIN Institute USING (institut_id)
+                  WHERE user_id = ? AND inst_perms = 'admin'";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($user->id));
+        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-        return $result->rowCount() == 0;
+        foreach ($result as $row) {
+            $tmp_inst_ids[]=$row['Institut_id'];
+            if ($row['is_fak']) {
+                $query = "SELECT Institut_id
+                          FROM Institute
+                          WHERE fakultaets_id = ? AND a.Institut_id != fakultaets_id";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array($row['Institut_id']));
+                while ($temp_id = $statement->fetchColumn()) {
+                    $tmp_inst_ids[] = $temp_id;
+                }
+            }
+        }
+
+        $query = "SELECT COUNT(*)
+                  FROM user_inst
+                  WHERE inst_perms = 'dozent' AND Institut_id IN (?)";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $tmp_inst_ids ?: ''
+        ));
+        $count = $statement->fetchColumn();
+
+        return $count == 0;
     }
 
-    function myInstitutes() {
+    function myInstitutes()
+    {
         global $user;
 
-        $db = DBManager::get();
+        $query = "SELECT COUNT(*)
+                  FROM user_inst
+                  WHERE inst_perms = 'dozent' AND user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($user->id));
+        $count = $statement->fetchColumn();
 
-        $query = sprintf ("SELECT user_id FROM user_inst WHERE inst_perms = 'dozent' AND user_id = '%s'", $user->id);
-        $result = $db->query($query);
-
-        return $result->rowCount() == 0;
+        return $count == 0;
     }
 
     function semester() {

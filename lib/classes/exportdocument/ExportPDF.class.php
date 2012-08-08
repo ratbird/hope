@@ -128,12 +128,10 @@ class ExportPDF extends TCPDF implements ExportDocument {
         $doc = new StudipDocument();
         $doc['folder_id'] = $folder_id;
         if ($folder_id) {
-            $doc['seminar_id'] = $db->query(
-                "SELECT range_id " .
-                "FROM folder " .
-                "WHERE folder_id = ".$db->quote($folder_id)." " .
-            "")->fetch(PDO::FETCH_COLUMN, 0);
-            $doc['range_id'] = $folder_id;
+            $query = "SELECT range_id FROM folder WHERE folder_id = ?";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($folder_id));
+            $doc['range_id'] = $statement->fetchColumn();
         }
         $doc['user_id'] = $user->id;
         $doc['name'] = $filename;

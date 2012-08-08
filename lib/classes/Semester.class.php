@@ -257,11 +257,16 @@ class Semester extends SimpleORMap
     {
         $semesterdata = SemesterData::getInstance()->getSemesterData($id);
 
-        $sql = "SELECT COUNT(*) FROM seminare WHERE "
-              ."start_time >= '".$semesterdata["beginn"]."' "
-              ."AND start_time <= '".$semesterdata["ende"]."' "
-              ."AND duration_time = '0'";
-        return DBManager::get()->query($sql)->fetchColumn();
+        $query = "SELECT COUNT(*)
+                  FROM seminare
+                  WHERE start_time BETWEEN ? AND ?
+                    AND duration_time = 0";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $semesterdata['beginn'],
+            $semesterdata['ende']
+        ));
+        return $statement->fetchColumn();
     }
 
     /**

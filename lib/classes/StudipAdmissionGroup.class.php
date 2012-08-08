@@ -83,9 +83,15 @@ class StudipAdmissionGroup extends SimpleORMap
     {
         $this->members = array();
         if (!$this->isNew()){
-            $where_query = $this->getWhereQuery();
-            $rs = DBManager::get()->query(sprintf("SELECT Seminar_id FROM seminare WHERE admission_group='%s' ORDER BY Name", $this->getId()));
-            while($seminar_id = $rs->fetchColumn()){
+            $query = "SELECT Seminar_id
+                      FROM seminare
+                      WHERE admission_group = ?
+                      ORDER BY Name";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                $this->getId()
+            ));
+            while ($seminar_id = $statement->fetchColumn()) {
                 $this->members[$seminar_id] = Seminar::GetInstance($seminar_id);
             }
         }
@@ -215,13 +221,28 @@ class StudipAdmissionGroup extends SimpleORMap
 
     function setMinimumContingent()
     {
+        $query = "SELECT studiengang_id
+                  FROM admission_seminar_studiengang
+                  WHERE seminar_id = ?
+                  LIMIT 1";
+        $select_statement = DBManager::get()->prepare($query);
+
+        $query = "INSERT INTO admission_seminar_studiengang
+                    (studiengang_id, quota, seminar_id)
+                  VALUES ('all', 100, ?)";
+        $insert_statement = DBManager::get()->prepare($query);
+
         $ret = array();
-        $db = DBManager::get();
-        foreach($this->getMemberIds() as $seminar_id){
-            $rs = $db->query("SELECT studiengang_id FROM admission_seminar_studiengang WHERE seminar_id = '$seminar_id' LIMIT 1");
-            if(!$rs->fetchColumn()){
-                $affected_rows = $db->exec("INSERT INTO admission_seminar_studiengang (studiengang_id,quota,seminar_id) VALUES('all', '100', '$seminar_id')");
-                if($affected_rows) $ret[] = $seminar_id;
+        foreach ($this->getMemberIds() as $seminar_id) {
+            $select_statement->execute(array($seminar_id));
+            $check = $select_statement->fetchColumn();
+            $select_statement->closeCursor();
+
+            if (!$check) {
+                $insert_statement->execute(array($seminar_id));
+                if ($insert_statement->rowCount() > 0) {
+                    $ret[] = $seminar_id;
+                }
             }
         }
         return $ret;
@@ -230,10 +251,16 @@ class StudipAdmissionGroup extends SimpleORMap
     function checkUserSubscribedtoGroup($user_id, $waitlist = false)
     {
         $table = $waitlist ? 'admission_seminar_user' : 'seminar_user' ;
-        $seminar_id = DBManager::get()
-                    ->query("SELECT seminar_id FROM $table WHERE seminar_id IN ('".join("','", $this->getMemberIds())."') AND user_id='$user_id'")
-                    ->fetchColumn();
-        return $seminar_id;
+        
+        $query = "SELECT seminar_id
+                  FROM :table
+                  WHERE seminar_id IN (:seminar_ids) AND user_id = :user_id";
+        $statement = DBManager::get()->prepare($query);
+        $statement->bindValue(':table', $table, StudipPDO::PARAM_COLUMN);
+        $statement->bindValue(':seminar_ids', $this->getMemberIds() ?: '');
+        $statement->bindValue(':user_id', $user_id);
+        $statement->execute();
+        return $statement->fetchColumn();
     }
 
     function checkUserSubscribedtoGroupWaitingList($user_id)

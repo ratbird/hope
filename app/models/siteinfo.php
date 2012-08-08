@@ -303,9 +303,8 @@ class SiteinfoMarkupEngine {
 
     function rootlist() {
         $template = $this->template_factory->open('rootlist');
-        $sql = "SELECT ".$GLOBALS['_fullname_sql']['full'] ." AS fullname,
-                       Email,
-                       username
+        $sql = "SELECT {$GLOBALS['_fullname_sql']['full']} AS fullname,
+                       Email, username
                 FROM auth_user_md5
                 LEFT JOIN user_info USING (user_id)
                 WHERE perms='root'
@@ -323,14 +322,13 @@ class SiteinfoMarkupEngine {
     function adminList() {
         $template = $this->template_factory->open('adminList');
         $sql = "SELECT Institute.Name AS institute,
-                ".$GLOBALS['_fullname_sql']['full'] ." AS fullname,
-                auth_user_md5.Email,
-                auth_user_md5.username
+                       {$GLOBALS['_fullname_sql']['full']} AS fullname,
+                       auth_user_md5.Email, auth_user_md5.username
                 FROM user_inst
                 LEFT JOIN Institute ON (user_inst.institut_id = Institute.Institut_id)
                 LEFT JOIN auth_user_md5 USING (user_id)
                 LEFT JOIN user_info USING (user_id)
-                WHERE inst_perms='admin'
+                WHERE inst_perms = 'admin'
                 AND ".get_vis_query()."
                 ORDER BY Institute.Name, auth_user_md5.Nachname, auth_user_md5.Vorname";
         $result = $this->db->query($sql);
@@ -411,9 +409,9 @@ class SiteinfoMarkupEngine {
                 $sql = "SELECT auth_user_md5.user_id,
                                username,
                                views AS count,
-                             ".$GLOBALS['_fullname_sql']['full'] . " AS display
+                               {$GLOBALS['_fullname_sql']['full']} AS display
                         FROM object_views
-                        LEFT JOIN auth_user_md5 ON(object_id=auth_user_md5.user_id)
+                        LEFT JOIN auth_user_md5 ON (object_id = auth_user_md5.user_id)
                         LEFT JOIN user_info USING (user_id)
                         WHERE auth_user_md5.user_id IS NOT NULL
                         ORDER BY count DESC

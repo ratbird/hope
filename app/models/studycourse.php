@@ -56,8 +56,8 @@ class StudycourseModel
               $query3 = "SELECT studiengang_id, count(seminar_id) AS count_sem "
                     . "FROM admission_seminar_studiengang GROUP BY studiengang_id";
             $studycourses = DBManager::get()->query($query1)->fetchAll(PDO::FETCH_ASSOC);
-            $users = DBManager::get()->query($query2)->fetchAll(PDO::FETCH_COLUMN|PDO::FETCH_GROUP);
-            $seminars = DBManager::get()->query($query3)->fetchAll(PDO::FETCH_COLUMN|PDO::FETCH_GROUP);
+            $users = DBManager::get()->query($query2)->fetchGrouped(PDO::FETCH_COLUMN);
+            $seminars = DBManager::get()->query($query3)->fetchGrouped(PDO::FETCH_COLUMN);
             foreach ($studycourses as $index => $course) {
                 $studycourses[$index]['count_user'] = $users[$course['studiengang_id']][0];
                 $studycourses[$index]['count_sem'] = $seminars[$course['studiengang_id']][0];

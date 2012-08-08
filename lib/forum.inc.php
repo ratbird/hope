@@ -1907,9 +1907,9 @@ function DisplayKids ($forumposting, $level = 0)
               LEFT JOIN object_views ON (object_views.object_id = topic_id)
               LEFT JOIN object_rate ON (object_rate.object_id = topic_id)
               LEFT OUTER JOIN object_user
-                ON (object_user.object_id = topic_id AND object_user.user_id = '$user->id' AND flag = 'fav')
-              WHERE parent_id = '$topic_id'
-                AND (pt.chdate >= pt.mkdate OR pt.user_id = '$user->id' OR pt.author='unbekannt')
+                ON (object_user.object_id = topic_id AND object_user.user_id = :user_id AND flag = 'fav')
+              WHERE parent_id = :topic_id
+                AND (pt.chdate >= pt.mkdate OR pt.user_id = :user_id OR pt.author='unbekannt')
               GROUP BY topic_id
               ORDER by pt.mkdate";
     $statement = DBManager::get()->prepare($query);

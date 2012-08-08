@@ -36,15 +36,15 @@ class SemBrowse {
                                         array('name' => _("Typ"), 'group_field' => 'status'),
                                         array('name' => _("Einrichtung"), 'group_field' => 'Institut', 'unique_field' => 'Institut_id'));
 
-        if (!$_SESSION['sem_browse_data'] ){
+        if (!$_SESSION['sem_browse_data']) {
             $_SESSION['sem_browse_data'] = $sem_browse_data_init;
         }
         $this->sem_browse_data =& $_SESSION['sem_browse_data'];
         $level_change = Request::option('start_item_id');
         for ($i = 0; $i < count($this->persistent_fields); ++$i){
-            $persistend_field=$this->persistent_fields[$i];
-            if (!empty($persistend_field)){
-            $this->sem_browse_data[$this->persistent_fields[$i]] = Request::quoted($this->persistent_fields[$i]);
+            $persistend_field = $this->persistent_fields[$i];
+            if (Request::get($persistend_field)) {
+                $this->sem_browse_data[$persistend_field] = Request::get($persistend_field);
             }
         }
         $this->search_obj = new StudipSemSearch("search_sem", false, !(is_object($GLOBALS['perm']) && $GLOBALS['perm']->have_perm(get_config('SEM_VISIBILITY_PERM'))),$this->sem_browse_data['show_class']);

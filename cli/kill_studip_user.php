@@ -1,7 +1,7 @@
 #!/usr/bin/php -q
 <?php
+# Lifter003: TEST
 # Lifter007: TODO
-# Lifter003: TODO
 /**
 * kill_studip_user.php
 * 
@@ -64,11 +64,13 @@ while (!feof($fo)) {
 }
 
 $kill_list = preg_split("/[\s,;]+/", $list, -1, PREG_SPLIT_NO_EMPTY);
-$kill_list = array_map('mysql_escape_string', array_keys(array_flip($kill_list)));
-$db = new DB_Seminar();
-$db->query("SELECT * FROM auth_user_md5 WHERE username IN ('".join("','", $kill_list)."')");
-while($db->next_record()){
-    $kill_user[$db->f('username')] = $db->Record;
+$kill_list = array_unique($kill_list);
+
+$query = "SELECT * FROM auth_user_md5 WHERE username IN (?)";
+$statement = DBManager::get()->prepare($query);
+$statement->execute(array($kill_list ?: ''));
+while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+    $kill_user[$row['username']] = $row;
 }
 if (!is_array($kill_user)) {
     fwrite(STDOUT, 'No user from list found in database.' . chr(10));
@@ -96,4 +98,3 @@ foreach($kill_user as $uname => $udetail){
     }
 }
 exit(1);
-?>

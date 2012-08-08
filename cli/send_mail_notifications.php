@@ -1,7 +1,7 @@
 #!/usr/bin/php -q
 <?php
+# Lifter003: TEST
 # Lifter007: TODO
-# Lifter003: TODO
 /**
 * send_mail_notifications.php
 *
@@ -44,23 +44,27 @@ set_time_limit(60*60*2);
 
 // note: notifications for plugins not implemented
 
-$db = new DB_Seminar();
 $notification = new ModulesNotification();
 
-$query = "SELECT aum.user_id,aum.username,{$GLOBALS['_fullname_sql']['full']} as fullname,Email FROM seminar_user su INNER JOIN auth_user_md5 aum USING(user_id) LEFT JOIN user_info ui USING(user_id) WHERE notification != 0";
+$query = "SELECT user_id, aum.username, Email,
+                 {$GLOBALS['_fullname_sql']['full']} AS fullname
+          FROM seminar_user AS su
+          INNER JOIN auth_user_md5 AS aum USING (user_id)
+          LEFT JOIN user_info AS ui USING (user_id)
+          WHERE notification != 0";
 if (get_config('DEPUTIES_ENABLE')) {
     $query .= " UNION ".getMyDeputySeminarsQuery('notification_cli', '', '', '', '');
 }
 $query .= " GROUP BY user_id";
-$db->query($query);
-while($db->next_record()){
-    $user->start($db->f("user_id"));
-    setTempLanguage($db->f("user_id"));
-    $to = $db->f("Email");
+$statement = DBManager::get()->query($query);
+while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+    $user->start($row['user_id']);
+    setTempLanguage($row['user_id']);
+    $to = $row['Email'];
     $title = "[" . $GLOBALS['UNI_NAME_CLEAN'] . "] " . _("Tägliche Benachrichtigung");
-    $mailmessage = $notification->getAllNotifications($db->f('user_id'));
+    $mailmessage = $notification->getAllNotifications($row['user_id']);
     if ($mailmessage) {
-        $user_cfg = UserConfig::get($db->f("user_id"));
+        $user_cfg = UserConfig::get($row['user_id']);
         if ($user_cfg->getValue('MAIL_AS_HTML')) {
             $smail = new StudipMail();
             $ok = $smail->setSubject($title)
@@ -73,4 +77,3 @@ while($db->next_record()){
         }
     }
 }
-?>

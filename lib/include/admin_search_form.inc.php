@@ -50,9 +50,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
     require_once "lib/classes/AuxLockRules.class.php";
     require_once "lib/classes/AdminList.class.php";
 
-    $db=new DB_Seminar;
-    $db2=new DB_Seminar;
-    $db4=new DB_Seminar;
+  
     $cssSw=new cssClassSwitcher;
     $semester=new SemesterData;
     $aux_rules=new AuxLockRules();
@@ -90,22 +88,28 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                         <td class="steel1">
                         <select name="admin_inst_id" size="1" style="vertical-align:middle">
                         <?
+                        $dbparams = array();
                         if ($auth->auth['perm'] == "root"){
-                            $db->query("SELECT Institut_id, Name, 1 AS is_fak  FROM Institute WHERE Institut_id=fakultaets_id ORDER BY Name");
+                            $dbquery = "SELECT Institut_id, Name, 1 AS is_fak  FROM Institute WHERE Institut_id=fakultaets_id ORDER BY Name";
                         } elseif ($auth->auth['perm'] == "admin") {
-                            $db->query("SELECT a.Institut_id,Name, IF(b.Institut_id=b.fakultaets_id,1,0) AS is_fak FROM user_inst a LEFT JOIN Institute b USING (Institut_id)
-                                        WHERE a.user_id='$user->id' AND a.inst_perms='admin' ORDER BY is_fak,Name");
+                            $dbquery = "SELECT a.Institut_id,Name, IF(b.Institut_id=b.fakultaets_id,1,0) AS is_fak FROM user_inst a LEFT JOIN Institute b USING (Institut_id)
+                                        WHERE a.user_id='$user->id' AND a.inst_perms='admin' ORDER BY is_fak,Name";
                         } else {
-                            $db->query("SELECT a.Institut_id,Name FROM user_inst a LEFT JOIN Institute b USING (Institut_id) WHERE inst_perms IN('tutor','dozent') AND user_id='$user->id' ORDER BY Name");
+                            $dbquery = "SELECT a.Institut_id,Name FROM user_inst a LEFT JOIN Institute b USING (Institut_id) WHERE inst_perms IN('tutor','dozent') AND user_id = ? ORDER BY Name";
+                            $dbparams = array($user->id);
                         }
+                        $dbstatement = DBManager::get()->prepare($dbquery);
+                        $dbstatement->execute($dbparams);
 
                         printf ("<option value=\"NULL\">%s</option>\n", _("-- bitte Einrichtung auswählen --"));
-                        while ($db->next_record()){
-                            printf ("<option value=\"%s\" style=\"%s\">%s </option>\n", $db->f("Institut_id"),($db->f("is_fak") ? "font-weight:bold;" : ""), htmlReady(substr($db->f("Name"), 0, 70)));
-                            if ($db->f("is_fak")){
-                                $db2->query("SELECT Institut_id, Name FROM Institute WHERE fakultaets_id='" .$db->f("Institut_id") . "' AND institut_id!='" .$db->f("Institut_id") . "' ORDER BY Name");
-                                while ($db2->next_record()){
-                                    printf("<option value=\"%s\">&nbsp;&nbsp;&nbsp;&nbsp;%s </option>\n", $db2->f("Institut_id"), htmlReady(substr($db2->f("Name"), 0, 70)));
+                        while ($dbrow = $dbstatement->fetch(PDO::FETCH_ASSOC)){
+                            printf ("<option value=\"%s\" style=\"%s\">%s </option>\n", $dbrow['Institut_id'],($dbrow['is_fak'] ? "font-weight:bold;" : ""), htmlReady(substr($dbrow['Name'], 0, 70)));
+                            if ($dbrow['is_fak']){
+                                $db2query = "SELECT Institut_id, Name FROM Institute WHERE fakultaets_id='" .$dbrow['Institut_id'] . "' AND institut_id!='" .$dbrow['Institut_id'] . "' ORDER BY Name";
+                                $db2statement = DBManager::get()->prepare($db2query);
+                                $db2statement->execute();
+                                while ($db2row = $db2statement->fetch(PDO::FETCH_ASSOC)){
+                                    printf("<option value=\"%s\">&nbsp;&nbsp;&nbsp;&nbsp;%s </option>\n", $db2row['Institut_id'], htmlReady(substr($db2row['Name'], 0, 70)));
                                 }
                             }
                         }
@@ -175,24 +179,29 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                         <td class="steel1">
                         <?
                         if ($perm->have_perm("root")) {
-                            $db->query("SELECT Institut_id, Name FROM Institute WHERE Institut_id!=fakultaets_id ORDER BY Name");
+                            $dbquery = "SELECT Institut_id, Name FROM Institute WHERE Institut_id!=fakultaets_id ORDER BY Name";
+                            $dbparams = array();
                         } else {
-                            $db->query("SELECT a.Institut_id,Name, IF(b.Institut_id=b.fakultaets_id,1,0) AS is_fak FROM user_inst a LEFT JOIN Institute b USING (Institut_id)
-                                WHERE a.user_id='$user->id' AND a.inst_perms='admin' ORDER BY is_fak,Name");
+                            $dbquery = "SELECT a.Institut_id,Name, IF(b.Institut_id=b.fakultaets_id,1,0) AS is_fak FROM user_inst a LEFT JOIN Institute b USING (Institut_id)
+                                WHERE a.user_id=? AND a.inst_perms='admin' ORDER BY is_fak,Name";
+                            $dbparams = array($user->id);
                         }
                         ?>
                         <?=_("Einrichtung:")?><br>
                         <select name="srch_inst">
                             <option value="0"><?=_("alle")?></option>
                             <?
-                            while ($db->next_record()) {
-                                $my_inst[]=$db->f("Institut_id");
-                                if ($_SESSION['links_admin_data']['srch_inst'] == $db->f("Institut_id"))
-                                    echo"<option selected value=\"".$db->f("Institut_id")."\">".substr($db->f("Name"), 0, 30)."</option>";
+                            $dbstatement = DBManager::get()->prepare($dbquery);
+                            $dbstatement->execute($dbparams);
+
+                            while ($dbrow = $dbstatement->fetch(PDO::FETCH_ASSOC)) {
+                                $my_inst[]=$dbrow['Institut_id'];
+                                if ($_SESSION['links_admin_data']['srch_inst'] == $dbrow['Institut_id'])
+                                    echo"<option selected value=\"".$dbrow['Institut_id']."\">".substr($dbrow['Name'], 0, 30)."</option>";
                                 else
-                                    echo"<option value=\"".$db->f("Institut_id")."\">".substr($db->f("Name"), 0, 30)."</option>";
-                                if ($db->f("is_fak")) {
-                                    $db2->query("SELECT Institut_id, Name FROM Institute WHERE fakultaets_id='" .$db->f("Institut_id") . "' AND institut_id!='" .$db->f("Institut_id") . "' ORDER BY Name");
+                                    echo"<option value=\"".$dbrow['Institut_id']."\">".substr($dbrow['Name'], 0, 30)."</option>";
+                                if ($dbrow['is_fak']) {
+                                    $db2query = "SELECT Institut_id, Name FROM Institute WHERE fakultaets_id='" .$dbrow['Institut_id'] . "' AND institut_id!='" .$dbrow['Institut_id'] . "' ORDER BY Name";
                                     while ($db2->next_record()) {
                                         if ($_SESSION['links_admin_data']['srch_inst'] == $db2->f("Institut_id"))
                                             echo"<option selected value=\"".$db2->f("Institut_id")."\">&nbsp;&nbsp;&nbsp;".substr($db2->f("Name"), 0, 30)."</option>";
@@ -219,14 +228,14 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                                 $inst_id_query.= "'";
 
                                 $query="SELECT auth_user_md5.user_id, " . $_fullname_sql['full_rev'] ." AS fullname, Institut_id FROM user_inst  LEFT JOIN auth_user_md5 USING(user_id) LEFT JOIN user_info USING(user_id) WHERE inst_perms='dozent' AND institut_id IN ($inst_id_query) GROUP BY auth_user_md5.user_id ORDER BY Nachname ";
-                                $db->query($query);
-                                if ($db->num_rows()) {
-                                    while ($db->next_record()) {
-                                        if ($_SESSION['links_admin_data']['srch_doz'] == $db->f("user_id"))
-                                            echo"<option selected value=\"".$db->f("user_id")."\">".htmlReady(my_substr($db->f("fullname"),0,35))."</option>";
+                                $db2statement = DBManager::get()->prepare($db2query);
+                                $db2statement->execute();
+                                while ($db2row = $db2statement->fetch(PDO::FETCH_ASSOC)){
+                                            if ($_SESSION['links_admin_data']['srch_doz'] == $dbrow['user_id'])
+                                            echo"<option selected value=\"".$dbrow['user_id']."\">".htmlReady(my_substr($dbrow['fullname'],0,35))."</option>";
                                         else
-                                            echo"<option value=\"".$db->f("user_id")."\">".htmlReady(my_substr($db->f("fullname"),0,35))."</option>";
-                                    }
+                                            echo"<option value=\"".$dbrow['user_id']."\">".htmlReady(my_substr($dbrow['fullname'],0,35))."</option>";
+                                
                                 }
                             }
                             ?>
@@ -235,17 +244,20 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                         }
 
                         if ($perm->have_perm("root")) {
-                            $db->query("SELECT Institut_id,Name FROM Institute WHERE Institut_id=fakultaets_id ORDER BY Name");
+                            $dbquery = "SELECT Institut_id,Name FROM Institute WHERE Institut_id=fakultaets_id ORDER BY Name";
                             ?>
                             <?=_("Fakultät:")?><br>
                             <select name="srch_fak">
                                 <option value="0"><?=_("alle")?></option>
                                 <?
-                                while ($db->next_record()) {
-                                    if ($_SESSION['links_admin_data']['srch_fak'] == $db->f("Institut_id"))
-                                        echo"<option selected value=\"".$db->f("Institut_id")."\">".substr($db->f("Name"), 0, 30)."</option>";
+                                $dbstatement = DBManager::get()->prepare($dbquery);
+                                $dbstatement->execute();
+
+                                while ($dbrow = $dbstatement->fetch(PDO::FETCH_ASSOC)){
+                                    if ($_SESSION['links_admin_data']['srch_fak'] == $dbrow['Institut_id'])
+                                        echo"<option selected value=\"".$dbrow['Institut_id']."\">".substr($dbrow['Name'], 0, 30)."</option>";
                                     else
-                                        echo"<option value=\"".$db->f("Institut_id")."\">".substr($db->f("Name"), 0, 30)."</option>";
+                                        echo"<option value=\"".$dbrow['Institut_id']."\">".substr($dbrow['Name'], 0, 30)."</option>";
                                 }
                                 ?>
                             </select>
@@ -508,20 +520,24 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
             }
 
             echo "<td align=\"center\" class=\"".$cssSw->getClass()."\">";
-            $db4->query("SELECT ". $_fullname_sql['full'] ." AS fullname, username, position FROM seminar_user
+            $db4query = "SELECT ". $_fullname_sql['full'] ." AS fullname, username, position FROM seminar_user
                 LEFT JOIN auth_user_md5 USING (user_id)
                 LEFT JOIN user_info USING (user_id)
-                WHERE Seminar_id = '$seminar_id' and status = 'dozent' ORDER BY position ");
+                WHERE Seminar_id = ? and status = 'dozent' ORDER BY position ";
             $k=0;
-            if (!$db4->num_rows())
+            $db4statement = DBManager::get()->prepare($db4query);
+            $dbparams = array($seminar_id);
+            $db4statement->execute($dbparams);
+            $db4row = $db4statement->fetch(PDO::FETCH_ASSOC);
+            if ($db4row === false)
                 echo "&nbsp; ";
-            while ($db4->next_record()) {
-                if ($db4->f('username')) {
+            do{
+                if ($db4row['username']) {
                     if ($k) echo ', ';
-                    echo "<a href=\"".UrlHelper::GetLink("about.php?username=".$db4->f("username"))."\">".htmlReady($db4->f("fullname"))."</a>";
+                    echo "<a href=\"".UrlHelper::GetLink("about.php?username=".$db4row['username'])."\">".htmlReady($db4row['fullname'])."</a>";
                     $k++;
                 }
-            }
+            }while($db4row = $db4statement->fetch(PDO::FETCH_ASSOC));
             echo "</td>";
             ?>
 
@@ -604,9 +620,13 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                     }
                 break;
                 case "admin_aux.php":
-                    $db5 = new Db_Seminar;
-                    $db5->query("SELECT aux_lock_rule from seminare WHERE Seminar_id='$seminar_id'");
-                    $db5->next_record();
+                   
+                    $db5query = "SELECT aux_lock_rule from seminare WHERE Seminar_id = ?";
+                    $db5params = array($seminar_id);
+                    $db5statement = DBManager::get()->prepare($db5query);
+                    $db5statement->execute($db5params);
+                    $db5row = $db4statement->fetch(PDO::FETCH_ASSOC);
+
                     if ($perm->have_perm("dozent")) {
                         ?>
                         <input type="hidden" name="make_aux" value="1">
@@ -617,7 +637,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                                 echo '<option value="'.$lock_id.'"';
                                 if (Request::option('aux_all') && Request::option('aux_all')==$lock_id) {
                                     echo ' selected ';
-                                } elseif (!Request::option('aux_all') && ($lock_id == $db5->f("aux_lock_rule"))) {
+                                } elseif (!Request::option('aux_all') && ($lock_id == $db5row['aux_lock_rule'])) {
                                     echo ' selected ';
                                 }
                                 echo '>'.htmlReady($data['name']).'</option>';

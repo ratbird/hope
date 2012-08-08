@@ -1373,10 +1373,10 @@ function printposting ($forumposting) {
     // die Favoritenanzeige
 
         if ($forumposting['fav']) {
-            $favicon = $GLOBALS['ASSETS_URL']."images/icons/16/red/exclaim.png";
+            $favicon = $GLOBALS['ASSETS_URL']."images/icons/16/red/star.png";
             $favtxt = _("aus den Favoriten entfernen");
         } else {
-            $favicon = $GLOBALS['ASSETS_URL']."images/icons/16/grey/exclaim.png";
+            $favicon = $GLOBALS['ASSETS_URL']."images/icons/16/grey/star.png";
             $favtxt = _("zu den Favoriten hinzufügen");
         }
         $rand = "&random=".rand();

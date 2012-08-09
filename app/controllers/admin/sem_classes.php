@@ -43,6 +43,7 @@ class Admin_SemClassesController extends AuthenticatedController
                 $sem_class->set('id', $id);
                 $sem_class->store();
             }
+            $this->redirect(URLHelper::getURL($this->url_for('admin/sem_classes/details'), array('id' => $id)));
             PageLayout::postMessage(MessageBox::success(_("Seminarklasse wurde erstellt.")));
             $GLOBALS['SEM_CLASS'] = SemClass::refreshClasses();
         }

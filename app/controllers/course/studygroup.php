@@ -163,7 +163,7 @@ class Course_StudygroupController extends AuthenticatedController {
                           WHERE perms NOT IN ('root', 'admin')
                             AND (username LIKE CONCAT('%', :needle, '%')
                               OR Vorname LIKE CONCAT('%', :needle, '%')
-                              OR Nachname LIKE CONCAT('%', :needle, '%')
+                              OR Nachname LIKE CONCAT('%', :needle, '%'))
                           LIMIT 500";
                 $statement = DBManager::get()->prepare($query);
                 $statement->bindValue(':needle', $search_for_founder);

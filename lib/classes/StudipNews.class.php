@@ -51,7 +51,7 @@ class StudipNews extends SimpleORMap {
                   INNER JOIN news USING (news_id)
                   WHERE range_id = ? {$clause}
                   ORDER BY date DESC, chdate DESC, topic ASC";
-        $statment = DBManager::get()->prepare($query);
+        $statement = DBManager::get()->prepare($query);
         $statement->execute(array($range_id));
         $ret = $statement->fetchGrouped(PDO::FETCH_ASSOC);
 
@@ -135,7 +135,7 @@ class StudipNews extends SimpleORMap {
             if ($type == 'fak') $type = 'inst';
         }
         $rss_id = md5('StudipRss'.$range_id);
-        
+
         $query = "REPLACE INTO news_rss_range (range_id,rss_id,range_type)
                   VALUES (?, ?, ?)";
         $statement = DBManager::get()->prepare($query);

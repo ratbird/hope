@@ -143,7 +143,7 @@ function check_group_new($group_members, $my_obj)
  */
 function correct_group_sem_number(&$groups, &$my_obj)
 {
-    if (is_array($groups)){
+    if (is_array($groups) && is_array($my_obj)) {
         $sem_data = SemesterData::GetSemesterArray();
         //end($sem_data);
         //$max_sem = key($sem_data);
@@ -188,7 +188,7 @@ function add_sem_name(&$my_obj)
 {
     if ($GLOBALS['user']->cfg->getValue('SHOWSEM_ENABLE')) {
         $sem_data = SemesterData::GetSemesterArray();
-        if ($seminar_id != null)
+        if (is_array($my_obj)) {
             foreach ($my_obj as $seminar_id => $values){
                 if ($values['obj_type'] == 'sem' && $values['sem_number'] != $values['sem_number_end']){
                     $sem_name = " (" . $sem_data[$values['sem_number']]['name'] . " - ";
@@ -198,6 +198,7 @@ function add_sem_name(&$my_obj)
                     $my_obj[$seminar_id]['name'] .= " (" . $sem_data[$values['sem_number']]['name'] . ") ";
                 }
             }
+        }
     }
     return true;
 }

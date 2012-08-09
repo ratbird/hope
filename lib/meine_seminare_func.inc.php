@@ -158,7 +158,7 @@ function correct_group_sem_number(&$groups, &$my_obj)
         }
         foreach ($my_obj as $seminar_id => $values){
             if ($values['obj_type'] == 'sem' && $values['sem_number'] != $values['sem_number_end']){
-                if ($values['sem_number_end'] == -1 && $values['sem_number'] != $current_sem){
+                if ($values['sem_number_end'] == -1 && $values['sem_number'] < $current_sem) {
                     unset($groups[$values['sem_number']][$seminar_id]);
                     fill_groups($groups, $current_sem, array('seminar_id' => $seminar_id, 'name' => $values['name'], 'gruppe' => $values['gruppe']));
                     if (!count($groups[$values['sem_number']])) unset($groups[$values['sem_number']]);

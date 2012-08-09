@@ -11,7 +11,7 @@ $infobox['content'] = array(
         'kategorie' => _("Information"),
         'eintrag'   => array(
             array(
-                'text' => 'Hier können Sie angeben, welche Module/Plugins in Studiengruppen verwendet werden dürfen.',
+                'text' => 'Hier können Sie globale Einstellungen zu Studentischen Arbeitsgruppen vornehmen.',
                 "icon" => "icons/16/black/info.png"
             )
         )

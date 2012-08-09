@@ -296,7 +296,7 @@ function lonely($topic_id)  //Sucht nach Kindern und den Rechten (für editieren)
     if ($statement->fetchColumn()) {
         return true;
     }
-    
+
     $query = "SELECT user_id, chdate, mkdate
               FROM px_topics
               WHERE topic_id = ?";
@@ -325,7 +325,7 @@ function lonely($topic_id)  //Sucht nach Kindern und den Rechten (für editieren)
 *
 **/
 function suche_kinder($topic_id)  //Sucht alle aufgeklappten Beitraege raus
-{   
+{
     global $_open;
 
     $query = "SELECT topic_id FROM px_topics WHERE parent_id = ?";
@@ -602,7 +602,7 @@ function quote($zitat_id)
     $statement = DBManager::get()->prepare($query);
     $statement->execute(array($zitat_id));
     $row = $statement->fetch(PDO::FETCH_ASSOC);
-    
+
     if ($row) {
         $description = $row['description'];
         if (get_config('FORUM_ANONYMOUS_POSTINGS') && $row['anonymous'] && !$perm->have_perm('root')) {
@@ -876,7 +876,7 @@ function CreateTopic ($name="[no name]", $author="[no author]", $description="",
     if (!$writeextern) {
         $chdate -= 1; // der Beitrag wird für alle ausser dem Author "versteckt"
     }
-    
+
     if (!$user_id) {
         $user_id = $user->id;
     }
@@ -923,7 +923,7 @@ function CreateTopic ($name="[no name]", $author="[no author]", $description="",
         getenv('REMOTE_ADDR'),
         $tmpSessionSeminar,
         $user_id,
-        $mkdate, 
+        $mkdate,
         $chdate,
         $anonymous ? 1 : 0
     ));
@@ -1135,7 +1135,7 @@ function forum_print_toolbar ($id="") {
 * @return   string  tmp HTML-Output of the Indikator
 *
 **/
-function forum_get_index ($forumposting) {
+function forum_get_index () {
     global $forum, $indexvars;
     $i = 0;
     if ($forum["sort"] == "viewcount" || $forum["sort"] == "rating" || $forum["sort"] == "score") {
@@ -1517,7 +1517,7 @@ function countTopics($addon = '', $parameters = array())
 {
     global $user;
     $query = "SELECT COUNT(*)
-              FROM px_topics x, px_topics y 
+              FROM px_topics x, px_topics y
               WHERE x.root_id = y.topic_id AND x.Seminar_id = :seminar_id
                 AND (x.chdate >= x.mkdate OR x.user_id = :user_id OR x.author = 'unbekannt')
               {$addon}";
@@ -1606,7 +1606,7 @@ function flatview($open = 0, $show = 0, $update = '', $name = '', $description =
     $query = "SELECT x.topic_id AS id, x.name, x.author, x.mkdate, x.chdate AS age,
                      x.chdate,
                      x.description, x.Seminar_id, x.user_id AS userid,
-                     y.name AS rootname, y.topic_id AS rootid, username,
+                     y.name AS root_name, y.topic_id AS rootid, username,
                      IFNULL(views, 0) AS viewcount, nachname,
                      IFNULL(ROUND(AVG(rate), 1), 99) AS rating,
                      object_user.object_id != '' AS fav,
@@ -1614,7 +1614,7 @@ function flatview($open = 0, $show = 0, $update = '', $name = '', $description =
                      ((6-(IFNULL(AVG(rate),3))-3)*5)+(IFNULL(views,0)/(((UNIX_TIMESTAMP()-x.mkdate)/604800)+1)) AS score
               FROM px_topics AS y, px_topics AS x
               LEFT JOIN object_views ON (object_views.object_id = x.topic_id)
-              LEFT JOIN object_rate ON (object_rate.object_id = x.topic_id) 
+              LEFT JOIN object_rate ON (object_rate.object_id = x.topic_id)
               LEFT JOIN auth_user_md5 ON (auth_user_md5.user_id = x.user_id)
               LEFT OUTER JOIN object_user
                 ON (object_user.object_id = x.topic_id AND object_user.user_id = :user_id AND flag = 'fav')
@@ -1667,7 +1667,7 @@ function flatview($open = 0, $show = 0, $update = '', $name = '', $description =
             "?flatviewstartposting=".$forum["flatviewstartposting"]."&flatallopen=TRUE")."\"><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif' border=0 height='10' align=middle><img src='".$GLOBALS['ASSETS_URL']."images/open_all.png' border=0 " . tooltip(_("Alle aufklappen")) . " align=middle><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif' border=0></a>";
 
     echo "</td><td class=\"steelgraudunkel\" align=\"right\" width=\"45%\">";
-    echo forum_print_navi($forum)."&nbsp;&nbsp;&nbsp;".forum_get_index($forumposting)."&nbsp;&nbsp;&nbsp;";
+    echo forum_print_navi($forum)."&nbsp;&nbsp;&nbsp;".forum_get_index()."&nbsp;&nbsp;&nbsp;";
     echo "</td></tr></table>";
 
     // Antworten-Knopf ganz oben in der Flatview-Ansicht
@@ -1676,7 +1676,7 @@ function flatview($open = 0, $show = 0, $update = '', $name = '', $description =
         echo '<tr>';
         echo '<td class="blank" align="center" style="padding-top:12px; padding-bottom:5px;">';
         echo _("Zu diesem Thema") . " ";
-        echo LinkButton::create(_("Antworten"), URLHelper::getURL("?answer_id=".$folder_id."&flatviewstartposting=0&sort=age#anker"));
+        echo LinkButton::create(_("Antworten"), URLHelper::getURL("?answer_id=".$forum['flatfolder']."&flatviewstartposting=0&sort=age#anker"));
         echo '</td>';
         echo '</tr>';
         echo '</table>';
@@ -1741,13 +1741,13 @@ function DisplayFolders ($open = 0, $update = '', $zitat = '')
     $forum['sort']   = 'age';
 
     if ($forum['sortthemes'] == 'last') {
-        $order = 'last DESC';
+        $order = 'folderlast DESC';
     } else {
         $order = 't.mkdate '. ($forum['sortthemes'] == 'asc' ? 'ASC' : 'DESC');
     }
 
     $query = "SELECT DISTINCT t.topic_id AS id, t.parent_id, t.root_id AS rootid, t.name, t.description,
-                     t.author, t.author_host, t.mkdate, t.chdate, t.user_id AS userid, username, 
+                     t.author, t.author_host, t.mkdate, t.chdate, t.user_id AS userid, username,
                      IF (:allow_anonymous, t.anonymous, 0) AS anonymous,
                      COUNT(DISTINCT s.topic_id) AS foldercount, MAX(s.chdate) AS folderlast,
                      IFNULL(views, 0) AS viewcount,
@@ -1812,7 +1812,7 @@ function DisplayFolders ($open = 0, $update = '', $zitat = '')
                 echo "<a href=\"".URLHelper::getLink("?view=tree&themeview=tree")."\">" . Assets::img('forumflat.gif') . "</a>";
         }
         echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" border=0 height=\"20\" align=\"middle\"></td>";
-        echo "<td class=\"steelgraudunkel\" width=\"33%\"align=\"right\">" . _("<b>Forenbeiträge</b> / letzter Eintrag") . " ".forum_get_index($forumposting)." </td></tr></table>\n";
+        echo "<td class=\"steelgraudunkel\" width=\"33%\"align=\"right\">" . _("<b>Forenbeiträge</b> / letzter Eintrag") . " ".forum_get_index()." </td></tr></table>\n";
         foreach ($data as $row) {
             $forumposting = printposting($row);
 
@@ -2006,7 +2006,7 @@ function forum_move_navi ($topic_id)
     $check_modules = new Modules;
 
     // Wohin darf ich schieben? Abfragen je nach Rechten
-    
+
     // Erst die Veranstaltungen
     $seminars = array();
     if ($perm->have_perm('root')) {
@@ -2058,7 +2058,7 @@ function forum_move_navi ($topic_id)
         $statement->execute(array($user->id));
         $institutes = $statement->fetchGrouped(PDO::FETCH_COLUMN);
     }
-    
+
     // Prüfen, in welcher der Einrichtungen das Forum aktiviert ist
     foreach ($institutes as $id => $name) {
         if (!$check_modules->checkLocal('forum', $id, 'inst')) {

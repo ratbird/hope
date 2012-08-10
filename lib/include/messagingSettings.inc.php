@@ -91,14 +91,15 @@ if (Request::option('messaging_cmd')=="change_view_insert" && !Request::submitte
     $my_messaging_settings['changed'] = TRUE;
     $my_messaging_settings['delete_messages_after_logout'] = Request::int('delete_messages_after_logout');
     $my_messaging_settings['start_messenger_at_startup']   = Request::int('start_messenger_at_startup');
-    $my_messaging_settings['sms_sig']           = Request::get('sms_sig');
-    $my_messaging_settings['timefilter']        = Request::option('timefilter');
-    $my_messaging_settings['openall']           = Request::int('openall');
-    $my_messaging_settings['opennew']           = Request::int('opennew', 2);
-    $my_messaging_settings['logout_markreaded'] = Request::int('logout_markreaded');
-    $my_messaging_settings['addsignature']      = Request::int('addsignature');
-    $my_messaging_settings['confirm_reading']   = Request::int('confirm_reading');
-    $my_messaging_settings['save_snd']          = Request::int('save_snd', 2);
+    $my_messaging_settings['sms_sig']              = Request::get('sms_sig');
+    $my_messaging_settings['timefilter']           = Request::option('timefilter');
+    $my_messaging_settings['openall']              = Request::int('openall');
+    $my_messaging_settings['opennew']              = Request::int('opennew', 2);
+    $my_messaging_settings['logout_markreaded']    = Request::int('logout_markreaded');
+    $my_messaging_settings['addsignature']         = Request::int('addsignature');
+    $my_messaging_settings['confirm_reading']      = Request::int('confirm_reading');
+    $my_messaging_settings['save_snd']             = Request::int('save_snd', 2);
+    $my_messaging_settings['request_mail_forward'] = Request::int('request_mail_forward', 0);
 
     $sms_data['sig']  = $my_messaging_settings['addsignature'];
     $sms_data['time'] = $my_messaging_settings['timefilter'];

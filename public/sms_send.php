@@ -61,7 +61,7 @@ if ($cmd == 'new') {
     unset($sms_data["p_rec"]);
     unset($sms_data["tmp_save_snd_folder"]);
     unset($sms_data["tmpreadsnd"]);
-    unset($sms_data["tmpemailsnd"]);
+    $sms_data["tmpemailsnd"] = $my_messaging_settings["request_mail_forward"];
     unset($cmd);
 
     if ($my_messaging_settings["save_snd"] == "1") $sms_data["tmpsavesnd"] = "1";
@@ -207,7 +207,7 @@ if (Request::submitted('cmd_insert')) {
     unset($sms_data["p_rec"]);
     unset($sms_data["tmp_save_snd_folder"]);
     unset($sms_data["tmpreadsnd"]);
-    unset($sms_data["tmpemailsnd"]);
+    $sms_data["tmpemailsnd"] = $my_messaging_settings["request_mail_forward"];
     unset($messagesubject);
     $attachments = array();
 
@@ -408,7 +408,7 @@ if (Request::option('group_id')) {
 
 // if send message at single/multiple user coming from teilnehmer.php
 
-// We expect either an array of the recipients' usernames or the username of 
+// We expect either an array of the recipients' usernames or the username of
 // a single recipient or nothing (thus we need array_filter to remove invalid entries)
 $rec_unames = Request::getArray('rec_uname') ?: array_filter(array(Request::get('rec_uname')));
 if (count($rec_unames) > 0  || Request::get('filter'))
@@ -417,7 +417,7 @@ if (count($rec_unames) > 0  || Request::get('filter'))
     unset($sms_data['p_rec']);
     unset($sms_data['tmp_save_snd_folder']);
     unset($sms_data['tmpreadsnd']);
-    unset($sms_data['tmpemailsnd']);
+    $sms_data["tmpemailsnd"] = $my_messaging_settings["request_mail_forward"];
 
     $course_id = Request::option('course_id');
     $cid = Request::option('cid');

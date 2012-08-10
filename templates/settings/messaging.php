@@ -48,6 +48,17 @@
                                        <? if ($settings['save_snd'] == 1) echo 'checked'; ?>>
                             </td>
                         </tr>
+                    <? if ($GLOBALS['MESSAGING_FORWARD_AS_EMAIL']): ?>
+                        <tr>
+                            <td>
+                                <label for="request_mail_forward"><?= _('Gesendete Nachrichten auch als E-Mail verschicken') ?></label>
+                            </td>
+                            <td>
+                                <input type="checkbox" value="1" name="request_mail_forward" id="request_mail_forward"
+                                       <? if ($settings['request_mail_forward'] == 1) echo 'checked'; ?>>
+                            </td>
+                        </tr>
+                    <? endif ?>
                         <tr>
                             <td>
                                 <label for="delete_messages_after_logout"><?= _('Beim Logout alle Nachrichten löschen') ?></label>
@@ -147,8 +158,8 @@
                                        border="0">
                             <? elseif (count($matches) === 0): // Keine Suchergebnisse ?>
                                 <input type="image" name="reset_serach" class="text-top"
-                                       src="<?= Assets::image_path('icons/16/blue/refresh.png') ?>" 
-                                       value="<?= _('Suche zurücksetzen') ?>" 
+                                       src="<?= Assets::image_path('icons/16/blue/refresh.png') ?>"
+                                       value="<?= _('Suche zurücksetzen') ?>"
                                        <?= tooltip(_('setzt die Suche zurück')) ?>>
                                 &nbsp;<?= _('keine Treffer') ?>
                             <? else: // treffer auswählen ?>

@@ -96,7 +96,7 @@ class StudipComments extends SimpleORMap
         }
         $object_ids = array_map(array(DBManager::get(), 'quote'), $object_ids);
 
-        $where = "object_id IN ('" . join("','", $object_ids). "')";
+        $where = "object_id IN (" . join(',', $object_ids). ")";
         return self::deleteBySQL($where);
     }
 

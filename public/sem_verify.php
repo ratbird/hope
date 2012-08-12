@@ -662,7 +662,7 @@ require_once 'lib/classes/LockRules.class.php';
                     }
                     $query = "SELECT studiengang_id, 1
                               FROM admission_seminar_studiengang AS ass
-                              LEFT JOIN studiengang_id USING (studiengang_id)
+                              LEFT JOIN studiengaenge USING (studiengang_id)
                               LEFT JOIN user_studiengang USING (studiengang_id)
                               WHERE seminar_id = ? AND (user_id = ? OR ass.studiengang_id = 'all')";
                     $statement = DBManager::get()->prepare($query);

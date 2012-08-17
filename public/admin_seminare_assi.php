@@ -67,9 +67,26 @@ if ($GLOBALS['RESOURCES_ENABLE']) {
     $resAssign = new VeranstaltungResourcesAssign();
 }
 
+function redirect_to_course_admin($course_id) {
+    $course = new Seminar($course_id);
+    $sem_type = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$course->status]['class']];
+    if ($sem_type) {
+        $nav = $sem_class->getNavigationForSlot("admin", $course_id);
+        if ($nav) {
+            header("Location: " . UrlHelper::getUrl($nav[0]->getURL()));
+        } else {
+            header("Location: ".UrlHelper::getUrl("seminar_main.php"));
+        }
+    } else {
+        header("Location: " . UrlHelper::getUrl('dispatch.php/course/basicdata/view/' . $course_id));
+    }
+    page_close();
+    die();
+}
+
 //cancel
 if (Request::submitted('cancel')) {
-    header ("Location: " . UrlHelper::getUrl('dispatch.php/course/basicdata/view/' . $SessSemName[1]));
+    redirect_to_course_admin($SessSemName[1]);
 }
 
 // Get a database connection and Stuff
@@ -2139,7 +2156,7 @@ if (($form == 6) && (Request::submitted('jump_next')))
 //Nur der Form halber... es geht weiter zur SCM-Seite
 if (($form == 7) && (Request::submitted('jump_next'))) {
     if (!$_SESSION['sem_create_data']["modules_list"]["scm"] && !$_SESSION['sem_create_data']["modules_list"]["schedule"]) {
-        header ('Location: ' . UrlHelper::getUrl('dispatch.php/course/basicdata/view/'.$_SESSION['sem_create_data']["sem_id"]));
+        redirect_to_course_admin($_SESSION['sem_create_data']["sem_id"]);
         die;
     } elseif (!$_SESSION['sem_create_data']["modules_list"]["scm"]) {
         header ("Location: raumzeit.php?cid=".$_SESSION['sem_create_data']["sem_id"]);
@@ -2183,7 +2200,7 @@ if (($form == 8) && (Request::submitted('jump_next'))) {
             //if ($_SESSION['sem_create_data']["modules_list"]["schedule"]) // ## RAUMZEIT : schedule duerfte veraltet sein, muesste als komplett weg
                 //header ("Location: admin_dates.php?assi=yes&ebene=sem&range_id=".$_SESSION['sem_create_data']["sem_id"]);
             //else
-            header ('Location: ' . UrlHelper::getUrl('dispatch.php/course/basicdata/view/' . $_SESSION['sem_create_data']["sem_id"]));
+            redirect_to_course_admin($_SESSION['sem_create_data']["sem_id"]);
             page_close();
             die;
         } else {
@@ -2196,8 +2213,7 @@ if (($form == 8) && (Request::submitted('jump_next'))) {
         //if ($_SESSION['sem_create_data']["modules_list"]["schedule"]) // ## RAUMZEIT : siehe oben
         //  header ("Location: admin_dates.php?assi=yes&ebene=sem&range_id=".$_SESSION['sem_create_data']["sem_id"]);
         //else
-        header ("Location: " . UrlHelper::getUrl('dispatch.php/course/basicdata/view/' . $_SESSION['sem_create_data']["sem_id"]));
-        page_close();
+        redirect_to_course_admin($_SESSION['sem_create_data']["sem_id"]);
         die;
     }
 }

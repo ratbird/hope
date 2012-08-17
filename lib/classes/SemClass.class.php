@@ -167,7 +167,7 @@ class SemClass implements ArrayAccess
             return $slot;
         }
     }
-    
+
     /**
      * Defines a module for a slot and overwrites previous module.
      * @param string $slot
@@ -286,16 +286,16 @@ class SemClass implements ArrayAccess
      * @param string $slot
      * @return array('navigation_name' => Navigation $nav, ...)
      */
-    public function getNavigationForSlot($slot)
+    public function getNavigationForSlot($slot, $course_id = null)
     {
         $module = $this->getModule($slot);
         if ($module) {
-            return (array) $module->getTabNavigation($_SESSION['SessionSeminar']);
+            return (array) $module->getTabNavigation($course_id ? $course_id : $_SESSION['SessionSeminar']);
         } else {
             return array();
         }
     }
-    
+
     public function getSemTypes()
     {
         $types = array();
@@ -579,6 +579,14 @@ class SemClass implements ArrayAccess
             $arr[$key] = $val;
         }
         return $arr;
+    }
+
+    /**
+     * Returns an array of all slot-names.
+     * @return array of strings
+     */
+    static public function getSlots() {
+        return self::$slots;
     }
     
     /**

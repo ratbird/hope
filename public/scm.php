@@ -250,7 +250,7 @@ function scm_edit_content($range_id, $scm_id) {
     $content.= "<input type=\"HIDDEN\" name=\"i_view\" value=\"change\">";
 
     $edit = Button::create(_('Übernehmen'), 'send_scm', array('title' => _('Änderungen vornehmen')));   
-    $edit.="&nbsp;" . LinkButton::createCancel(_('Abbrechen'));
+    $edit.="&nbsp;" . LinkButton::createCancel(_('Abbrechen'), URLHelper::getURL("", array("show_scm" => $scm_id)));
     $edit .= "<font size=\"-1\">&nbsp;&nbsp;<a href=\"".URLHelper::getLink('dispatch.php/smileys')."\" target=\"_blank\">";
 
     $help_url = format_help_url("Basis.VerschiedenesFormat");

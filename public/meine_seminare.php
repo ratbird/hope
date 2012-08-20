@@ -437,6 +437,8 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
     // Nasty place for an action but since we don't have a model, this is the
     // perfect place to grab all object ids
     if (Request::option('action') === 'tabularasa') {
+        NotificationCenter::postNotification('OverviewWillClear', $GLOBALS['user']->id);
+
         $query = "INSERT INTO object_user_visits "
                .   "(object_id, user_id, type, visitdate, last_visitdate) "
                . "("
@@ -472,6 +474,8 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
 
             // Update object itself
             object_set_visit($id, $object['obj_type']);
+
+            NotificationCenter::postNotification('OverviewDidClear', $GLOBALS['user']->id);
         }
 
         // PageLayout::postMessage(Messagebox::success(_('Alle Markierungen wurden entfernt')));

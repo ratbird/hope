@@ -474,9 +474,9 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
 
             // Update object itself
             object_set_visit($id, $object['obj_type']);
-
-            NotificationCenter::postNotification('OverviewDidClear', $GLOBALS['user']->id);
         }
+
+        NotificationCenter::postNotification('OverviewDidClear', $GLOBALS['user']->id);
 
         // PageLayout::postMessage(Messagebox::success(_('Alle Markierungen wurden entfernt')));
         page_close();

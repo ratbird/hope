@@ -72,8 +72,9 @@ class Admin_RssFeedsController extends AuthenticatedController
         RSSFeed::increasePriorities();
 
         $feed = new RSSFeed();
-        $feed->name = _('neuer Feed');
-        $feed->url  = _('URL');
+        $feed->name   = _('neuer Feed');
+        $feed->url    = _('URL');
+        $feed->hidden = false;
 
         $message = $feed->store()
                  ? Messagebox::success(_('Feed angelegt'))

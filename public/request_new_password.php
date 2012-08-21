@@ -111,7 +111,7 @@ $admin_link = sprintf(_("Leider ist ein Fehler aufgetreten. Bitte fordern Sie ge
     ### Formularauswertung: Eingabe der E-Mail-Adresse ###
     ######################################################
 */
-$email = Request::get($email);
+$email = Request::get('email');
 if( $email != "" ) {
     $email = trim( $email );
     $validator = new email_validation_class();
@@ -139,7 +139,7 @@ if( $email != "" ) {
                 $username = $row['username'];
                 $vorname  = $row['Vorname'];
                 $nachname = $row['Nachname'];
-                $id = md5($username . $GLOBALS('REQUEST_NEW_PASSWORD_SECRET'));
+                $id = md5($username . $GLOBALS['REQUEST_NEW_PASSWORD_SECRET']);
 
                 // include language-specific subject and mailbody
                 $user_language = getUserLanguagePath($row['user_id']);

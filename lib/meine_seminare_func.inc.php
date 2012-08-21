@@ -132,7 +132,18 @@ function check_group_new($group_members, $my_obj)
                 $group_last_modified = $last_modified;
             }
         }
+        foreach (PluginEngine::getPlugins('StandardPlugin', $member['seminar_id']) as $plugin) {
+            $navigation = $plugin->getIconNavigation($member['seminar_id'], $seminar_content['visitdate']);
+            if (isset($navigation) && $navigation->isVisible(true)) {
+                if ($navigation->hasBadgeNumber()) {
+                    if (!$group_last_modified) {
+                        $group_last_modified = true;
+                    }
+                }
+            }
+        }
     }
+    
     return $group_last_modified;
 }
 

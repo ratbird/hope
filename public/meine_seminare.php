@@ -58,11 +58,7 @@ function print_seminar_content($semid, $my_obj_values, $type = 'seminar', $sem_c
         }
     }
 
-    foreach (PluginEngine::getPlugins('StandardPlugin', $semid) as $plugin) {
-        if (!$sem_class || !$sem_class->isSlotModule(get_class($plugin))) {
-        $navigation[] = $plugin->getIconNavigation($semid, $my_obj_values['visitdate']);
-    }
-    }
+    $navigation = array_merge($navigation, getPluginNavigationForSeminar($semid, $sem_class));
 
     foreach ($navigation as $key => $nav) {
         if (isset($nav) && $nav->isVisible(true)) {

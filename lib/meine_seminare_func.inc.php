@@ -132,19 +132,39 @@ function check_group_new($group_members, $my_obj)
                 $group_last_modified = $last_modified;
             }
         }
-        foreach (PluginEngine::getPlugins('StandardPlugin', $member['seminar_id']) as $plugin) {
-            $navigation = $plugin->getIconNavigation($member['seminar_id'], $seminar_content['visitdate']);
-            if (isset($navigation) && $navigation->isVisible(true)) {
-                if ($navigation->hasBadgeNumber()) {
-                    if (!$group_last_modified) {
-                        $group_last_modified = true;
-                    }
+        
+        foreach (getPluginNavigationForSeminar($member['seminar_id']) as $navigation) {
+            if ($navigation && $navigation->isVisible(true) && $navigation->hasBadgeNumber()) {
+                if (!$group_last_modified) {
+                    $group_last_modified = time();
                 }
             }
         }
     }
     
     return $group_last_modified;
+}
+
+function getPluginNavigationForSeminar($seminar_id, $sem_class = null)
+{
+    static $plugin_navigation;
+    
+    if (!$plugin_navigation[$seminar_id]) {
+        $plugin_navigation[$seminar_id] = array();
+
+        foreach (PluginEngine::getPlugins('StandardPlugin', $seminar_id) as $plugin) {
+            $plugin_navigation[$seminar_id][get_class($plugin)] = $plugin->getIconNavigation($seminar_id, $my_obj_values['visitdate']);
+        }
+    }
+    
+    if ($sem_class)
+        foreach ($plugin_navigation[$seminar_id] as $plugin_class => $navigation) {
+            if ($sem_class->isSlotModule($plugin_class)) {
+                unset($plugin_navigation[$seminar_id][$plugin_class]);
+            }
+    }
+
+    return $plugin_navigation[$seminar_id];
 }
 
 /**

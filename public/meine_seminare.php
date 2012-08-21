@@ -437,6 +437,9 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
     // Nasty place for an action but since we don't have a model, this is the
     // perfect place to grab all object ids
     if (Request::option('action') === 'tabularasa') {
+        // load plugins, so they have a chance to register themselves as observers
+        PluginEngine::getPlugins('StandardPlugin');
+
         NotificationCenter::postNotification('OverviewWillClear', $GLOBALS['user']->id);
 
         $query = "INSERT INTO object_user_visits "

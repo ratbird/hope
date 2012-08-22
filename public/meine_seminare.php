@@ -44,21 +44,23 @@ function print_seminar_content($semid, $my_obj_values, $type = 'seminar', $sem_c
         'files' => "documents",
         'elearning' => "elearning_interface"
     );
+    $plugin_navigation = getPluginNavigationForSeminar($semid, $my_obj_values['visitdate']);
     foreach (words('forum participants files news scm schedule wiki vote literature elearning') as $key) {
         if ($sem_class) {
             $slot = isset($slot_mapper[$key]) ? $slot_mapper[$key] : $key;
             $module = $sem_class->getModule($slot);
             if (is_a($module, "StandardPlugin")) {
-                $navigation[$key] = $module->getIconNavigation($semid, $my_obj_values['visitdate']);
+                $navigation[$key] = $plugin_navigation[get_class($module)];
+                unset($plugin_navigation[get_class($module)]);
             } else {
-        $navigation[$key] = $my_obj_values[$key];
-    }
+                $navigation[$key] = $my_obj_values[$key];
+            }
         } else {
             $navigation[$key] = $my_obj_values[$key];
         }
     }
 
-    $navigation = array_merge($navigation, getPluginNavigationForSeminar($semid, $sem_class));
+    $navigation = array_merge($navigation, $plugin_navigation);
 
     foreach ($navigation as $key => $nav) {
         if (isset($nav) && $nav->isVisible(true)) {
@@ -246,10 +248,10 @@ if (Request::int('gruppesent') == '1'){
     if (!empty($gruppe)){
         $query = "UPDATE seminar_user SET gruppe = ? WHERE Seminar_id = ? AND user_id = ?";
         $user_statement = DBManager::get()->prepare($query);
-        
+
         $query = "UPDATE deputies SET gruppe = ? WHERE range_id = ? AND user_id = ?";
         $deputy_statement = DBManager::get()->prepare($query);
-        
+
         foreach($gruppe as $key => $value){
             $user_statement->execute(array($value, $key, $user->id));
             $updated = $user_statement->rowCount();
@@ -503,7 +505,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
 
     // Berechnung der uebrigen Seminare und Einrichtungen
     // (wird für 5 Minuten im Cache gehalten)
- 
+
     $cache = StudipCacheFactory::getCache();
 
     $institute_count = unserialize($cache->read('/meine_seminare/count/institute'));
@@ -519,7 +521,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
         $query = "SELECT COUNT(*) FROM seminare";
         $seminar_count = DBManager::get()->query($query)->fetchColumn();
         $cache->write('/meine_seminare/count/seminare', $seminar_count, 5 * 60);
-    } 
+    }
     $anzahltext = sprintf(_('Es sind noch %s weitere Veranstaltungen sowie %s weitere Einrichtungen vorhanden.'),
                           $seminar_count - $num_my_sem,
                           $anzahlinst);
@@ -632,7 +634,7 @@ elseif ($auth->auth["perm"]=="admin") {
     } else {
         $sem_condition = '';
     }
-    
+
     // Prepare inner statement which obtains all institutes of a faculty
     $query = "SELECT a.Institut_id, a.Name, COUNT(seminar_id) AS num_sem
               FROM Institute AS a
@@ -641,7 +643,7 @@ elseif ($auth->auth["perm"]=="admin") {
               GROUP BY a.Institut_id
               ORDER BY a.Name, num_sem DESC";
     $institute_statement = DBManager::get()->prepare($query);
-    
+
     // Prepare and execute main query which obtains all institutes
     // (regardless whether it's an institute or a faculty)
     $query = "SELECT a.Institut_id, b.Name, b.Institut_id = b.fakultaets_id AS is_fak,

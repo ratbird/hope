@@ -53,6 +53,15 @@ class PluginEngine {
     public static function loadPlugins() {
         global $user, $perm;
 
+        // load system plugins and run background tasks
+        foreach (self::getPlugins('SystemPlugin') as $plugin) {
+            if ($plugin instanceof AbstractStudIPSystemPlugin) {
+                if ($plugin->hasBackgroundTasks()) {
+                    $plugin->doBackgroundTasks();
+                }
+            }
+        }
+        
         // load homepage plugins
         self::getPlugins('HomepagePlugin');
 
@@ -64,15 +73,6 @@ class PluginEngine {
         // load admin plugins
         if (is_object($user) && $perm->have_perm('admin')) {
             self::getPlugins('AdministrationPlugin');
-        }
-
-        // load system plugins and run background tasks
-        foreach (self::getPlugins('SystemPlugin') as $plugin) {
-            if ($plugin instanceof AbstractStudIPSystemPlugin) {
-                if ($plugin->hasBackgroundTasks()) {
-                    $plugin->doBackgroundTasks();
-                }
-            }
         }
     }
 

@@ -10,31 +10,40 @@
  *
  * Usage:
  * @code
- * //instant logging to $GLOBALS['TMP_PATH'] . '/studip.log'
- * StudipLog::_('log this');
- * //use other file for default logging
- * StudipLog::get()->setHandler('/tmp/anotherlog.txt');
+ * //logging to $GLOBALS['TMP_PATH'] . '/studip.log'
+ * StudipLog::get()->setHandler($GLOBALS['TMP_PATH'] . '/studip.log');
+ * StudipLog::warn('log this'); //log a WARNING
+ * StudipLog::warning('log this'); //also log a WARNING
+ * StudipLog::w('log this'); //also log a WARNING
  * //create additional log
  * StudipLog::set('my', '/tmp/mylog.txt');
- * StudipLog::_my('log to my', StudipLog::DEBUG);
+ * StudipLog::debug_my('debug to my');
  * //use self defined log handler
  * StudipLog::get('my')
  * ->setHandler(function ($m) {
  *   return mail( mail('noack@data-quest.de', '['.$m['level_name'].']', $m['formatted']););
  *   });
- * StudipLog::_my('log via mail');
+ * StudipLog::alert_my('log via mail');
  * @endcode
- * 
+ *
  * @author      André Noack <noack@data-quest.de>
  * @copyright   2012 Stud.IP Core-Group
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
+ *
+ * @method mixed FATAL (string $message)
+ * @method mixed ALERT (string $message)
+ * @method mixed CRITICAL (string $message)
+ * @method mixed ERROR (string $message)
+ * @method mixed WARNING (string $message)
+ * @method mixed NOTICE (string $message)
+ * @method mixed INFO (string $message)
+ * @method mixed DEBUG (string $message)
 */
-
 class StudipLog
 {
 
-    const EMERGENCY = 0; // All is lost
+    const FATAL = 0; // All is lost
     const ALERT = 1; // Immediate action required
     const CRITICAL = 2; // Critical conditions
     const ERROR = 3; // An error occurred
@@ -46,14 +55,14 @@ class StudipLog
     /**
      * if string then complete path to logfile
      * if not schould be callable
-     * 
+     *
      * @var mixed
      */
     private $log_handler = null;
 
     /**
      * maximum log level
-     * 
+     *
      * @var integer
      */
     private $log_level = 6;
@@ -67,14 +76,14 @@ class StudipLog
     /**
      * if log_handler is a string
      * the file pointer
-     * 
+     *
      * @var resource
      */
     private $file = null;
 
     /**
      * array of used log instances
-     * 
+     *
      * @var array
      */
     private static $instances = array();
@@ -82,7 +91,7 @@ class StudipLog
     /**
      * returns a log instance, identified by given name
      * if name is omitted, the default logger is returned
-     * 
+     *
      * @param string $name name of log instance
      * @throws InvalidArgumentException
      * @return StudipLog
@@ -102,7 +111,7 @@ class StudipLog
     /**
      * sets a log handler for the named log instance
      * returns the old handler
-     * 
+     *
      * @param string $name
      * @param mixed $log_handler
      * @return mixed
@@ -118,26 +127,24 @@ class StudipLog
     }
 
     /**
-     * magic log getter, intercepts all static method calls if the
-     * method name begins with an underscore
-     * 
+     * magic log, intercepts all static method calls
+     * called method names are splitted by an underscore
+     * first part denotes log level, second name of logger if any
+     *
      * @param string $name
      * @param array $arguments
-     * @return StudipLog
+     * @return mixed number of written bytes or return value from callable handler
      */
     public static function __callStatic($name, $arguments)
     {
-        if ($name[0] === '_') {
-            $log_name = substr($name, 1);
-            $message = $arguments[0];
-            $level = isset($arguments[1]) ? $arguments[1] : self::ERROR;
-            return self::get($log_name)->log($message, $level);
-        }
+        list($level_name, $log_name) = explode('_', $name);
+        $message = $arguments[0];
+        return self::get($log_name)->{$level_name}($message);
     }
 
     /**
      * create new log instance with given handler
-     * 
+     *
      * @param mixed $log_handler
      */
     function __construct($log_handler = null)
@@ -149,7 +156,7 @@ class StudipLog
 
     /**
      * set the maximum log level
-     * 
+     *
      * @param integer $level
      * @return integer
      */
@@ -162,7 +169,7 @@ class StudipLog
 
     /**
      * returns the current maximum log level
-     * 
+     *
      * @return integer
      */
     public function getLogLevel()
@@ -173,7 +180,7 @@ class StudipLog
     /**
      * set the log handler
      * returns the old handler
-     * 
+     *
      * @param mixed $log_handler
      * @return mixed
      */
@@ -189,7 +196,7 @@ class StudipLog
 
     /**
      * returns the current log handler
-     * 
+     *
      * @return mixed
      */
     public function getHandler()
@@ -199,14 +206,14 @@ class StudipLog
 
     /**
      * log a message
-     * 
+     *
      * @param string $message the log message
      * @param integer $level log level, see constants
      * @return mixed number of written bytes or return value from callable handler
      */
     public function log($message, $level = 3)
     {
-        if ($level <= $this->log_level) {
+        if (isset($this->log_handler) && $level <= $this->log_level) {
             $log_level_name = $this->log_level_names[$level];
             $formatted_message = date('c') . ' ['.$this->log_level_names[$level].'] ' . $message;
             if (is_callable($this->log_handler)) {
@@ -218,7 +225,7 @@ class StudipLog
                                             'timestamp' => time()
                                             ));
             } else {
-                $logfile = $this->log_handler ? $this->log_handler : $GLOBALS['TMP_PATH'] . '/studip.log';
+                $logfile = $this->log_handler;
                 $this->file = is_resource($this->file) ? $this->file : @fopen($logfile, 'ab');
                 if ($this->file && flock($this->file , LOCK_EX)) {
                     $ret = fwrite($this->file, date('c') . ' ['.$this->log_level_names[$level].'] ' . $message . "\n");
@@ -229,5 +236,23 @@ class StudipLog
                 }
             }
         }
+    }
+
+    /**
+     * magic log, intercepts all undefined method calls
+     * called method name must be log level name or part of
+     *
+     * @param string $name
+     * @param array $arguments
+     * @return mixed number of written bytes or return value from callable handler
+     */
+    public function __call($name, $arguments)
+    {
+        foreach ($this->log_level_names as $level_num => $level_name) {
+            if (stripos($level_name, $name) === 0) {
+                return $this->log($arguments[0], $level_num);
+            }
+        }
+        throw new BadMethodCallException('Unknown method called: ' . $name);
     }
 }

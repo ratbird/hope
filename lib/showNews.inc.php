@@ -274,6 +274,7 @@ function show_news_item($news_item, $cmd_data, $show_admin, $admin_link)
     $template->cmd_data   = $cmd_data;
     $template->show_admin = $show_admin;
     $template->admin_link = $admin_link;
+    $template->tempnew    = $tempnew;
 
     return $template->render();
 }

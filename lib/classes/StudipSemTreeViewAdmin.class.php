@@ -178,9 +178,9 @@ class StudipSemTreeViewAdmin extends TreeView {
     function execCommandInsertItem(){
         $item_id = Request::option('item_id');
         $parent_id = Request::option('parent_id');
-        $item_name = Request::option('edit_name');
+        $item_name = Request::quoted('edit_name');
         $item_info = Request::quoted('edit_info');
-        $item_type = (int)Request::quoted('edit_type');
+        $item_type = Request::int('edit_type');
         if ($this->mode == "NewItem" && $item_id){
             if ($this->isItemAdmin($parent_id)){
                 $priority = count($this->tree->getKids($parent_id));

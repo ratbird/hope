@@ -95,7 +95,7 @@ $data = array_filter($data);
 
                         <? foreach ($smileys as $smiley): ?>
                             <tr id="smiley<?= $smiley->id ?>" align="center"
-                                class="<?= TextHelper::cycle('cycle_even', 'cycle_odd') ?>">
+                                class="<?= TextHelper::cycle('hover_even', 'hover_odd') ?>">
                                 <td>
                                     <a name="smiley<?= $smiley->id ?>"></a>
                                     <?= $smiley->getImageTag() ?>

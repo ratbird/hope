@@ -28,7 +28,7 @@
         </tr>
 
         <? foreach ($data as $module) : ?>
-        <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+        <tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
           <td>
             <a href="<?= URLHelper::getLink($module['url']) ?>"><?= htmlReady($module['text']) ?></a>
           </td>

@@ -270,7 +270,7 @@ use Studip\Button, Studip\LinkButton;
     <? endif ?>
     <? if (count($studycourses) > 0) : ?>
     <? foreach ($studycourses as $i => $studiengang) : ?>
-    <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+    <tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
         <td>
             <?= $i+1 ?>. <?= _('Studiengang')?>
         </td>
@@ -304,7 +304,7 @@ use Studip\Button, Studip\LinkButton;
     </tr>
     <? if (count($student_institutes) > 0) : ?>
     <? foreach (array_values($student_institutes) as $i => $institute) : ?>
-    <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+    <tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
         <td>
             <?= $i+1 ?>. <?= _('Einrichtung')?>
         </td>
@@ -351,7 +351,7 @@ use Studip\Button, Studip\LinkButton;
     </tr>
     <? if (count($institutes) > 0) : ?>
     <? foreach (array_values($institutes) as $i => $institute) : ?>
-    <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+    <tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
         <td>
             <?= $i+1 ?>. <?= _('Einrichtung')?>
         </td>
@@ -391,7 +391,7 @@ use Studip\Button, Studip\LinkButton;
     </tr>
     <? if (count($userdomains) > 0) : ?>
     <? foreach ($userdomains as $i => $domain) : ?>
-    <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+    <tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
         <td>
             <?= $i+1 ?>. <?= _('Nutzerdomäne')?>
         </td>

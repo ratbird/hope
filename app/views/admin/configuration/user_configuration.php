@@ -25,7 +25,7 @@ use Studip\Button, Studip\LinkButton;
         <th></th>
     </tr>
     <? foreach ($search_users as $search_user): ?>
-    <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+    <tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
         <td>
             <?= htmlReady($search_user['field'])?>
         </td>
@@ -65,7 +65,7 @@ use Studip\Button, Studip\LinkButton;
         <th></th>
     </tr>
     <? foreach ($give_alls as $give_all): ?>
-    <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+    <tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
         <td>
             <?= htmlReady($give_all['field'])?>
         </td>

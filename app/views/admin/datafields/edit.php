@@ -17,7 +17,7 @@ use Studip\Button, Studip\LinkButton;
 <form action="<?= $controller->url_for('admin/datafields/edit/'.$item->getID()) ?>" method=post>
     <?= CSRFProtection::tokenTag() ?>
     <table class="default">
-        <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+        <tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
             <td>
                 <label for="datafield_name"><?= _('Name') ?>:</label>
             </td>
@@ -25,7 +25,7 @@ use Studip\Button, Studip\LinkButton;
                 <input type="text" name="datafield_name" id="datafield_name" size="60" maxlength="254" value="<?= htmlReady($item->getName()) ?>">
             </td>
         </tr>
-        <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+        <tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
             <td>
                 <label for="datafield_type"><?= _('Feldtyp') ?>:</label>
             </td>
@@ -39,7 +39,7 @@ use Studip\Button, Studip\LinkButton;
                 </select>
             </td>
         </tr>
-        <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+        <tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
             <td>
                 <label for="object_class">
                 <? if ($item->getObjectType() == 'sem'): ?>
@@ -84,7 +84,7 @@ use Studip\Button, Studip\LinkButton;
                 </select>
             </td>
         </tr>
-        <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+        <tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
             <td>
                 <label for="edit_perms"><?= _('benˆtigter Status') ?>:</label>
             </td>
@@ -96,7 +96,7 @@ use Studip\Button, Studip\LinkButton;
                 </select>
             </td>
         </tr>
-        <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+        <tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
             <td>
                 <label for="visibility_perms"><?= _('Sichtbarkeit') ?>:</label>
             </td>
@@ -111,7 +111,7 @@ use Studip\Button, Studip\LinkButton;
                 </select>
             </td>
         </tr>
-        <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+        <tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
             <td>
                 <label for="priority"><?= _('Reihenfolge') ?>:</label>
             </td>
@@ -120,7 +120,7 @@ use Studip\Button, Studip\LinkButton;
            </td>
         </tr>
           <? if (in_array($item->getObjectType() , array( 'sem'))): ?>
-              <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+              <tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
                 <td>
                     <label for="is_required">
                         <?= _('Eintrag verpflichtend') ?>:
@@ -130,7 +130,7 @@ use Studip\Button, Studip\LinkButton;
                     <input type="checkbox" name="is_required" id="is_required" value="1" <?= $item->getIsRequired() ? 'checked="checked"':'' ?>  >
                 </td>
             </tr>
-            <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+            <tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
                 <td valign="top">
                     <label for="description">
                         <?= _('Beschreibung') ?>:

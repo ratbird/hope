@@ -1,7 +1,7 @@
 <table id="feed_<?= $id ?>" class="default">
     <tbody>
     <? foreach ($items as $item): ?>
-        <tr class="<?= $cycle = TextHelper::cycle('cycle_even', 'cycle_odd') ?>">
+        <tr class="<?= $cycle = TextHelper::cycle('hover_even', 'hover_odd') ?>">
             <td>
                 <?= Assets::img(sprintf('icons/16/grey/link-%stern.png', $internal ? 'in' : 'ex'), array(
                         'class' => 'text-top',

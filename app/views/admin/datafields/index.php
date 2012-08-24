@@ -49,7 +49,7 @@
             <th style="text-align: right;"><?= _('Aktionen') ?></th>
         </tr>
     <? foreach ($data as $input => $val): ?>
-        <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+        <tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
             <td>
                 <a name="item_<?= $val->getID() ?>"></a>
                 <?= htmlReady($val->getName()) ?>

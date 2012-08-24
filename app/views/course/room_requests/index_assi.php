@@ -4,7 +4,7 @@
         <th style="text-align:center;"><?= _('Bearbeiten') ?></th>
     </tr>
     <? foreach ($options as $key => $one): ?>
-    <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+    <tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
         <td><?=htmlReady($one['name'])?></td>
         <td>
             <div style="width:100px;text-align:right;white-space: nowrap;word-spacing:1em;">

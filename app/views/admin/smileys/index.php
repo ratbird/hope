@@ -41,7 +41,7 @@
     <? else: ?>
         <tbody>
         <? foreach ($smileys as $smiley): ?>
-            <tr id="smiley<?= $smiley->id ?>" class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+            <tr id="smiley<?= $smiley->id ?>" class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
                 <td><input type="checkbox" name="smiley_id[]" value="<?= $smiley->id ?>"></td>
                 <td><?= $smiley->getImageTag() ?></td>
                 <td><?= htmlReady($smiley->name) ?></td>

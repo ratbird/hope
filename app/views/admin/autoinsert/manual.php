@@ -54,7 +54,7 @@ use Studip\Button, Studip\LinkButton;
             </tr>
         </thead>
         <tbody>
-            <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+            <tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
                 <td>
                     <label for="sem_id"><?= _('Veranstaltung:') ?></label>
                 </td>
@@ -69,7 +69,7 @@ use Studip\Button, Studip\LinkButton;
                 </td>
             </tr>
         <? if (count($filtertype) != count($available_filtertypes)): ?>
-            <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+            <tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
                 <td>
                     <legend for="add_filtertype"><?= _('Filterkriterien') ?>:</legend>
                 </td>
@@ -98,7 +98,7 @@ use Studip\Button, Studip\LinkButton;
         <? $index = 0; foreach ($filtertype as $type): ?>
           <? if ($index%2 == 0): ?>
             <? if ($index != 0): ?></tr><? endif ?>
-            <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+            <tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
           <? endif ?>
                 <td colspan="<?= $index % 2 ? 1 : 2 ?>">
                     <label for="<?= $type ?>"><b><?= $available_filtertypes[$type] ?></b></label>

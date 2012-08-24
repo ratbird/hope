@@ -198,16 +198,16 @@ td.tree-elbow-end img {
   display: block;
 }
 /* Zebra styles for tables */
-tr.cycle_odd {
-  background-color: #f3f5f8;
+tr.hover_odd {
+  background-color: #eeeeee;
 }
-tr.cycle_odd:hover {
+tr.hover_odd:hover {
   background-color: #ced8f2;
 }
-tr.cycle_even {
-  background-color: #e7ebf1;
+tr.hover_even {
+  background-color: #f8f8f8;
 }
-tr.cycle_even:hover {
+tr.hover_even:hover {
   background-color: #b7c2e2;
 }
 .table_row_odd {
@@ -542,10 +542,10 @@ tr.sortable th.sortdesc {
   width: 100%;
 }
 #barBottomContainer.fixed {
-    position: fixed;
-    top: 0px;
-    box-shadow: 0px 0px 15px rgba(0,0,0,0.2);
-    z-index: 10000;
+  position: fixed;
+  top: 0px;
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+  z-index: 10000;
 }
 #barBottomLeft,
 #barBottommiddle,

@@ -47,7 +47,7 @@ if ($may_edit_faculty && !$num_institute) {
 
     <table class="default admin-institute">
         <tbody>
-            <tr class="<?= TextHelper::cycle('cycle_even', 'cycle_odd') ?>">
+            <tr class="<?= TextHelper::cycle('hover_even', 'hover_odd') ?>">
                 <td><?= _('Name:') ?></td>
                 <td>
                     <input type="text" <?= $lockCheck('name', 'readonly') ?> name="Name"
@@ -55,7 +55,7 @@ if ($may_edit_faculty && !$num_institute) {
                 </td>
             </tr>
 
-            <tr class="<?= TextHelper::cycle('cycle_even', 'cycle_odd') ?>">
+            <tr class="<?= TextHelper::cycle('hover_even', 'hover_odd') ?>">
                 <td><?= _('Fakultät:') ?></td>
                 <td>
             <? if ($may_edit_faculty): ?>
@@ -90,7 +90,7 @@ if ($may_edit_faculty && !$num_institute) {
                 </td>
             </tr>
 
-            <tr class="<?= TextHelper::cycle('cycle_even', 'cycle_odd') ?>">
+            <tr class="<?= TextHelper::cycle('hover_even', 'hover_odd') ?>">
                 <td><?= _('Bezeichnung:') ?></td>
                 <td>
                 <? if (!$lockCheck('type')): ?>
@@ -109,42 +109,42 @@ if ($may_edit_faculty && !$num_institute) {
                 </td>
             </tr>
 
-            <tr class="<?= TextHelper::cycle('cycle_even', 'cycle_odd') ?>">
+            <tr class="<?= TextHelper::cycle('hover_even', 'hover_odd') ?>">
                 <td><?= _('Straße:') ?></td>
                 <td>
                     <input type="text" <?= $lockCheck('strasse', 'readonly') ?> name="strasse"
                            value="<?= htmlReady(Request::get('strasse', $institute['Strasse'])) ?>">
                 </td>
             </tr>
-            <tr class="<?= TextHelper::cycle('cycle_even', 'cycle_odd') ?>">
+            <tr class="<?= TextHelper::cycle('hover_even', 'hover_odd') ?>">
                 <td><?= _('Ort:') ?></td>
                 <td>
                     <input type="text" <?= $lockCheck('plz', 'readonly') ?> name="plz"
                            value="<?= htmlReady(Request::get('plz', $institute['Plz'])) ?>">
                 </td>
             </tr>
-            <tr class="<?= TextHelper::cycle('cycle_even', 'cycle_odd') ?>">
+            <tr class="<?= TextHelper::cycle('hover_even', 'hover_odd') ?>">
                 <td><?= _('Telefonnummer:') ?></td>
                 <td>
                     <input type="tel" <?= $lockCheck('telefon', 'readonly') ?> name="telefon" maxlength=32
                            value="<?= htmlReady(Request::get('telefon', $institute['telefon'])) ?>">
                 </td>
             </tr>
-            <tr class="<?= TextHelper::cycle('cycle_even', 'cycle_odd') ?>">
+            <tr class="<?= TextHelper::cycle('hover_even', 'hover_odd') ?>">
                 <td><?=_("Faxnummer:")?></td>
                 <td>
                     <input type="tel" <?= $lockCheck('fax', 'readonly') ?> name="fax" maxlength=32
                            value="<?= htmlReady(Request::get('fax', $institute['fax'])) ?>">
                 </td>
             </tr>
-            <tr class="<?= TextHelper::cycle('cycle_even', 'cycle_odd') ?>">
+            <tr class="<?= TextHelper::cycle('hover_even', 'hover_odd') ?>">
                 <td><?= _('E-Mail-Adresse:') ?></td>
                 <td>
                     <input type="email" <?= $lockCheck('email', 'readonly') ?> name="email"
                            value="<?= htmlReady(Request::get('email', $institute['email'])) ?>">
                 </td>
             </tr>
-            <tr class="<?= TextHelper::cycle('cycle_even', 'cycle_odd') ?>">
+            <tr class="<?= TextHelper::cycle('hover_even', 'hover_odd') ?>">
                 <td><?= _('Homepage:') ?></td>
                 <td>
                     <input type="url" <?= $lockCheck('url', 'readonly') ?> name="home" 
@@ -154,7 +154,7 @@ if ($may_edit_faculty && !$num_institute) {
 
         <? if (get_config('LITERATURE_ENABLE') && $institute['Institut_id'] == $institute['fakultaets_id']):
            // choose preferred lit plugin ?>
-            <tr class="<?= TextHelper::cycle('cycle_even', 'cycle_odd') ?>">
+            <tr class="<?= TextHelper::cycle('hover_even', 'hover_odd') ?>">
                 <td><?= _('Bevorzugter Bibliothekskatalog:') ?></td>
                 <td>
                     <select name="lit_plugin_name">
@@ -172,7 +172,7 @@ if ($may_edit_faculty && !$num_institute) {
 
         <? if ($GLOBALS['perm']->have_perm('root')):
            // Select lockrule to apply ?>
-            <tr class="<?= TextHelper::cycle('cycle_even', 'cycle_odd') ?>">
+            <tr class="<?= TextHelper::cycle('hover_even', 'hover_odd') ?>">
                 <td><?= _('Sperrebene') ?></td>
                 <td>
                     <select name="lock_rule">
@@ -190,7 +190,7 @@ if ($may_edit_faculty && !$num_institute) {
         <? endif; ?>
 
         <? foreach ($datafields as $datafield): ?>
-            <tr class="<?= TextHelper::cycle('cycle_even', 'cycle_odd') ?>">
+            <tr class="<?= TextHelper::cycle('hover_even', 'hover_odd') ?>">
                 <td style="color: <?= $datafield['color'] ?>">
                     <?= htmlReady($datafield['title']) ?>
                 </td>

@@ -408,7 +408,7 @@ class EvaluationTreeShowUser {
 
 
         /* Question and Answer Widgets ---------------- */
-        $class = $question->getPosition() % 2 ? "steel3" : "table_row_odd";
+        $class = $question->getPosition() % 2 ? "table_row_even" : "table_row_odd";
         $extraStyle = ($question->getPosition() == $group->getNumberChildren() - 1
                ? "border-bottom: $answerBorder"
                : "");
@@ -453,7 +453,7 @@ class EvaluationTreeShowUser {
 
     /* Normal (question with long answers) ----------------------------- */
     else {
-        $class = $question->getPosition() % 2 ? "steel3" : "table_row_odd";
+        $class = $question->getPosition() % 2 ? "table_row_even" : "table_row_odd";
 
         /* Question ----------------------------------- */
         $html .=

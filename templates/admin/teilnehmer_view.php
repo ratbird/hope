@@ -22,7 +22,7 @@
         </thead>
         <tbody>
         <? foreach ($GLOBALS['TEILNEHMER_VIEW'] as $data): ?>
-            <tr class="<?= TextHelper::cycle('cycle_even', 'cycle_odd') ?>">
+            <tr class="<?= TextHelper::cycle('hover_even', 'hover_odd') ?>">
                 <td><?= htmlReady($data['name']) ?></td>
                 <td>
                 <? if ($active[$key][ $data['field'] ]): ?>

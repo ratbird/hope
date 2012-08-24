@@ -10,7 +10,7 @@ use Studip\Button, Studip\LinkButton;
 <form action="<?= $controller->url_for('admin/configuration/user_configuration/update') ?>" method=post>
     <?= CSRFProtection::tokenTag() ?>
     <table class="default">
-        <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+        <tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
             <td><?=_("Name:")?>(<em>field</em>) </td>
             <td>
                 <input type="hidden" name = "field" value = "<?= htmlReady($search_user['field'])?>">
@@ -18,15 +18,15 @@ use Studip\Button, Studip\LinkButton;
                 <?= htmlReady($search_user['field']) ?>
             </td>
         </tr>
-        <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+        <tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
             <td><?=_("Inhalt:")?>(<em>value</em>) </td>
             <td><textarea cols="55" rows="4" name="value"><?= htmlReady($search_user['value'])?></textarea></td>
         </tr>
-        <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+        <tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
             <td><?=_("Beschreibung:")?>(<em>description</em>) </td>
             <td><?= htmlReady($search_user['description'])?></td>
         </tr>
-        <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+        <tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
             <td>&nbsp;</td>
             <td>
                 <?= Button::createAccept(_('Übernehmen'),'uebernehmen', array('title' => _('Änderungen übernehmen')))?>

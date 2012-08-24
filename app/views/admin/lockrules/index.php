@@ -15,7 +15,7 @@ echo $message;
             <th><?= _('Aktionen') ?></th>
         </tr>
     <? foreach ($lock_rules as $rule): ?>
-        <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+        <tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
         <td>
         <?=htmlReady($rule['name'])?>
         </td>

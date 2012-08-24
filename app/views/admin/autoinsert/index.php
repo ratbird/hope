@@ -35,7 +35,7 @@ use Studip\Button, Studip\LinkButton;
             </tr>
         </thead>
         <tbody>
-            <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+            <tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
                 <td width="30%">
                     <label for="sem_id"><?= _('Veranstaltung:') ?></label>
                 </td>
@@ -49,7 +49,7 @@ use Studip\Button, Studip\LinkButton;
                     </select>
                 </td>
             </tr>
-            <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+            <tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
                 <td>
                     <?= _('Automatisches Eintragen mit Nutzerstatus:') ?>
                 </td>
@@ -93,7 +93,7 @@ use Studip\Button, Studip\LinkButton;
     </thead>
     <tbody>
     <? foreach ($auto_sems as $auto_sem): ?>
-        <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+        <tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
             <td>
                 <a href="<?= URLHelper::getLink('seminar_main.php?auswahl='.$auto_sem['seminar_id']) ?>">
                     <?= htmlReady($auto_sem['Name'])?>

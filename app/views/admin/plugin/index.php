@@ -48,7 +48,7 @@ use Studip\Button, Studip\LinkButton;
 
             <? foreach ($plugins as $plugin): ?>
                 <? $pluginid = $plugin['id'] ?>
-                <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+                <tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
                     <td style="padding-left: 1ex;" width="30">
                         <input type="checkbox" name="enabled_<?= $pluginid ?>" value="1" <?= $plugin['enabled'] ? 'checked' : '' ?>>
                     </td>

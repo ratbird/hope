@@ -14,7 +14,7 @@
     <th></th>
 </tr>
 <? foreach ($persons as $index=>$person): ?>
-<tr class="<?=TextHelper::cycle('cycle_odd', 'cycle_even')?>">
+<tr class="<?=TextHelper::cycle('hover_odd', 'hover_even')?>">
     <td align="right"><?= $index+(($page-1)*get_config('ENTRIES_PER_PAGE'))+1 ?>. </td>
     <td> <?=$person['avatar']?></td>
     <td>

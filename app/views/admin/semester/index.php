@@ -22,7 +22,7 @@
     <th colspan="2" width="2%"></th>
 </tr>
 <? foreach ($semesters as $single): ?>
-<tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+<tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
     <td title="<?= htmlReady($single["description"]) ?>"><?= htmlReady($single["name"]) ?></td>
     <td><?= date("d.m.Y", $single["beginn"]) ?></td>
     <td><?= date("d.m.Y", $single["ende"]) ?></td>
@@ -46,7 +46,7 @@
     </td>
 </tr>
 <? endforeach ?>
-<tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+<tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
     <td></td>
     <td></td>
     <td></td>
@@ -72,7 +72,7 @@
     <th></th>
 </tr>
 <? foreach ($holidays as $single): ?>
-<tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+<tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
     <td title="<?= htmlReady($single["description"]) ?>"><?= htmlReady($single["name"]) ?></td>
     <td><?= date("d.m.Y", $single["beginn"]) ?></td>
     <td><?= date("d.m.Y", $single["ende"]) ?></td>
@@ -86,7 +86,7 @@
     </td>
 </tr>
 <? endforeach ?>
-<tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+<tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
     <td></td>
     <td></td>
     <td></td>

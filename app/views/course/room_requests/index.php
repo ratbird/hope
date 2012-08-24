@@ -13,7 +13,7 @@ echo $flash['message'];
             <th style="text-align:center"><?= _('Aktionen') ?></th>
         </tr>
     <? foreach ($room_requests as $rr): ?>
-        <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+        <tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
         <td>
         <?=htmlReady($rr->getTypeExplained(),1,1)?>
         </td>

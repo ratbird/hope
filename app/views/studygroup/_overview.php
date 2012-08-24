@@ -24,7 +24,7 @@
             </th>
         </tr>
         <? foreach ($groups as $group) : ?>
-            <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+            <tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
                 <td>
                    <?=StudygroupAvatar::getAvatar($group['Seminar_id'])->getImageTag(Avatar::SMALL)?>
                 </td>

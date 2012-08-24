@@ -33,7 +33,7 @@ use Studip\Button, Studip\LinkButton;
         </tr>
 
         <? foreach ($search_results as $name => $plugin): ?>
-            <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+            <tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
                 <td class="plugin_image">
                     <? if ($plugin['image']): ?>
                         <? if ($plugin['plugin_url']): ?>

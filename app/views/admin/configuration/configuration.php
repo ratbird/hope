@@ -39,7 +39,7 @@
             </td>
         </tr>
     <? foreach ($config['data'] as $index => $conf): ?>
-        <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+        <tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
             <td class="label-cell">
                 <?=$conf['field']?>
             </td>

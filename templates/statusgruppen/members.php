@@ -51,7 +51,7 @@
 <? if ($open): ?>
     <tbody>
     <? foreach ($data as $row): ?>
-        <tr class="<?= TextHelper::cycle('cycle_even', 'cycle_odd') ?>">
+        <tr class="<?= TextHelper::cycle('hover_even', 'hover_odd') ?>">
             <td>&nbsp;</td>
             <td>
             <? if ($row['visible'] || $row['user_id'] == $GLOBALS['user']->id || $rechte): ?>

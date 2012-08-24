@@ -21,7 +21,7 @@
             <th><?= _('Aktion') ?></th>
         </tr>
         <?foreach ($search_filter as $config): ?>
-            <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+            <tr class="<?= TextHelper::cycle('hover_odd', 'hover_even') ?>">
                 <td>
                     <?=$config['field']?>
                 </td>

@@ -62,7 +62,10 @@ class AbstractStudIPHomepagePlugin extends AbstractStudIPLegacyPlugin implements
         $navigation->insertSubNavigation('self', $navigation_copy, $item_names[0]);
         $navigation->setTitle($this->getDisplayTitle());
 
-        if (Navigation::hasItem('/profile') && is_object($this->getRequestedUser()) && $GLOBALS['perm']->have_profile_perm('user', $this->getRequestedUser()->getUserid())) {
+        // Check activation for user and display if appropriate.
+        if (Navigation::hasItem('/profile') && 
+            is_object($this->getRequestedUser()) && $GLOBALS['perm']->have_profile_perm('user', $this->getRequestedUser()->getUserid()) &&
+            PluginManager::isPluginActivatedForUser($this->pluginid, $this->getRequestedUser()->getUserid())) {
             Navigation::addItem('/profile/' . $this->getPluginclassname(), $navigation);
         }
     }

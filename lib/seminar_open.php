@@ -269,6 +269,13 @@ if (Navigation::hasItem('/course/admin')
     $plus_nav->setDescription(_("Inhaltselemente konfigurieren"));
     Navigation::addItem('/course/modules', $plus_nav);
 }
+// add navigation item for profile: add modules
+if (Navigation::hasItem('/profile')
+    && (!Request::option('username') || Request::option('username') == $auth->auth['uname'] || $perm->have_perm('root'))) {
+    $plus_nav = new Navigation('+', 'dispatch.php/profilemodules');
+    $plus_nav->setDescription(_("Inhaltselemente konfigurieren"));
+    Navigation::addItem('/profile/modules', $plus_nav);
+}
 if ($user_did_login) {
     NotificationCenter::postNotification('UserDidLogin', $user->id);
 }

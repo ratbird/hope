@@ -189,19 +189,46 @@ class PluginManager
     }
     
     /**
+     * Get the activation status of a plugin for the given user.
+     * This also checks the plugin default activations and sem_class-settings.
+     *
+     * @param $pluginId  id of the plugin
+     * @param $userId    id of the user
+     */
+    public function isPluginActivatedForUser($pluginId, $userId)
+    {
+        $plugin_class = $this->plugins[$pluginId]['class'];
+        
+        $query = "SELECT state "
+               . "FROM plugins_activated "
+               . "WHERE pluginid = ? AND poiid = CONCAT('user', ?)";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($pluginId, $userId));
+        $state = $statement->fetchColumn();
+        if (!$state) {
+            $activated = get_config('HOMEPAGEPLUGIN_DEFAULT_ACTIVATION') ? true : false;
+        } else {
+            $activated = ($state !== 'off' || $state === 'on');
+        }
+        
+        return $activated;
+    }
+    
+        /**
      * Sets the activation status of a plugin in the given context.
      *
      * @param $id        id of the plugin
-     * @param $context   context range id
+     * @param $rangeId   context range id
      * @param $active    plugin status (true or false)
+     * @param $context   context of plugin activation
      */
-    public function setPluginActivated ($id, $context, $active)
+    public function setPluginActivated ($id, $rangeId, $active, $context='sem')
     {
         $db = DBManager::get();
         $state = $active ? 'on' : 'off';
 
-        $db->exec("REPLACE INTO plugins_activated (pluginid, poiid, state)
-                   VALUES ('$id', 'sem$context', '$state')");
+        return $db->exec("REPLACE INTO plugins_activated (pluginid, poiid, state)
+                   VALUES ('$id', '$context$rangeId', '$state')");
     }
 
     /**

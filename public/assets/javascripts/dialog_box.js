@@ -57,42 +57,5 @@ STUDIP.Dialogbox = {
         } else {
             jQuery("#Dialogbox_" + id).attr("id", "#Dialogbox_" + id + "_dragged");
         }
-    },
-
-    openForumPosting: function (id, element) {
-        var coord = "center", //coordinates to give to dialogbox - "center" means center of window
-        data = STUDIP.Dialogbox.cache["forum_" + id];
-
-        if (element) {
-            coord = jQuery(element).position();
-            coord = [coord.left + jQuery(element).width() + 2, coord.top - jQuery(window).scrollTop()];
-        }
-
-        STUDIP.Dialogbox.closeForumPosting(id);
-        STUDIP.Dialogbox.forumTimeout = window.setTimeout(function () {
-            if (!data) {
-                jQuery.getJSON("dispatch.php/content_element/get_formatted/forum/" + id, function (new_data) {
-                    STUDIP.Dialogbox.cache["forum_" + id] = new_data;
-                    STUDIP.Dialogbox.openBox(id, new_data.title, new_data.content, coord, "forum");
-                });
-            } else {
-                STUDIP.Dialogbox.openBox(id, data.title, data.content, coord, "forum");
-            }
-        }, 300);
-    },
-
-    closeForumPosting: function () {
-        window.clearTimeout(STUDIP.Dialogbox.forumTimeout);
-        STUDIP.Dialogbox.forumTimeout = null;
-
-        STUDIP.Dialogbox.closeScope("forum");
     }
 };
-
-
-/* setup event handler */
-jQuery('.forum-icon').live('mouseenter', function () {
-    STUDIP.Dialogbox.openForumPosting(jQuery(this).metadata().forumid, this);
-}).live('mouseleave', function () {
-    STUDIP.Dialogbox.closeForumPosting();
-});

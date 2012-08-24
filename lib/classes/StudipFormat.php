@@ -473,6 +473,27 @@ class StudipFormat extends TextFormat
             'video' => '<video src="%s" style="%s" title="%s" alt="%s" controls></video>'
         );
         
+        //Mediaproxy?
+        $pu = @parse_url($url);
+        if (($pu['scheme'] == 'http' || $pu['scheme'] == 'https')
+                && ($pu['host'] == $_SERVER['HTTP_HOST'] || $pu['host'].':'.$pu['port'] == $_SERVER['HTTP_HOST'])
+                && strpos($pu['path'], $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP']) === 0) {
+            $intern = true;
+            list($pu['first_target']) = explode('/',substr($pu['path'],strlen($GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'])));
+        }
+        $LOAD_EXTERNAL_MEDIA = Config::GetInstance()->getValue('LOAD_EXTERNAL_MEDIA');
+        if ($intern && !in_array($pu['first_target'], array('sendfile.php','download','assets','pictures'))) {
+            return $matches[0];
+        } elseif ((!$LOAD_EXTERNAL_MEDIA || $LOAD_EXTERNAL_MEDIA === 'deny') && !$intern) {
+            return $matches[0];
+        }
+        
+        if (!$intern && $LOAD_EXTERNAL_MEDIA === "proxy" && Seminar_Session::is_current_session_authenticated()) {
+            $media_url = $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'dispatch.php/media_proxy?url=' . urlencode(idna_link($url));
+        } else {
+            $media_url = idna_link($url);
+        }
+        
         if ($tag === "flash") {
             $width = $width ? $width : 200;
             $height = round($width * 0.75);
@@ -480,12 +501,12 @@ class StudipFormat extends TextFormat
             $media = '<object type="application/x-shockwave-flash" id="FlashPlayer" data="'.Assets::url().'flash/player_flv.swf" width="'.$width.'" height="'.$height.'">
                         <param name="movie" value="'.Assets::url().'flash/player_flv.swf">
                         <param name="allowFullScreen" value="true">
-                        <param name="FlashVars" value="flv='.urlencode(idna_link($url)).'&amp;startimage='.$link.$flash_config.'">
-                        <embed src="'.Assets::url().'flash/player_flv.swf" movie="$media_url" type="application/x-shockwave-flash" FlashVars="flv='.urlencode(idna_link($url)).'&amp;startimage='.$link.$flash_config.'">
+                        <param name="FlashVars" value="flv='.urlencode($media_url).'&amp;startimage='.$link.$flash_config.'">
+                        <embed src="'.Assets::url().'flash/player_flv.swf" movie="$media_url" type="application/x-shockwave-flash" FlashVars="flv='.urlencode($media_url).'&amp;startimage='.$link.$flash_config.'">
                         </object>';
         } else {
             $media = sprintf($format_strings[$tag],
-                idna_link($url),
+                $media_url,
                 isset($width) ? "width: ".$width."px;" : "",
                 $title,
                 $title
@@ -499,7 +520,7 @@ class StudipFormat extends TextFormat
         
         if ($link && $tag === "img") {
             $media = sprintf('<a href="%s"%s>%s</a>',
-                idna_link($link),
+                $media_url,
                 !isLinkIntern($link) ? ' target="_blank"' : "",
                 $media
             );

@@ -26,5 +26,5 @@ STUDIP.HeaderMagic = {
 
 // obere Leiste
 jQuery(function () {
-    jQuery(window.document).bind("scroll", STUDIP.HeaderMagic.scroll);
+    jQuery(window.document).bind("scroll", STUDIP.HeaderMagic.scroll).trigger('scroll');
 });

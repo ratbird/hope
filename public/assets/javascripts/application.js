@@ -195,3 +195,23 @@ jQuery(function ($) {
         return false;
     });
 });
+
+STUDIP.barBottomContainer = {
+    top: null,
+    scroll: function () {
+        if (STUDIP.barBottomContainer.top === null) {
+            STUDIP.barBottomContainer.top = jQuery("#barBottomContainer").offset().top;
+        }
+        if (STUDIP.barBottomContainer.top < jQuery(window.document).scrollTop()) {
+            //static
+            jQuery("#barBottomContainer").addClass("fixed");
+        } else {
+            jQuery("#barBottomContainer").removeClass("fixed");
+        }
+    }
+}
+
+// obere Leiste
+jQuery(function () {
+    jQuery(window.document).bind("scroll", STUDIP.barBottomContainer.scroll);
+});

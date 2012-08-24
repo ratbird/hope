@@ -521,17 +521,17 @@ tr.sortable th.sortdesc {
   text-align: right;
 }
 /* --- header.css ----------------------------------------------------------- */
-div#wrap2 {
+#wrap2 {
   position: absolute;
   top: 150px;
 }
-div#barBottom {
+#barBottom {
   background-color: #899ab9;
   left: 0;
   position: absolute;
   top: 100px;
 }
-div#barBottomContainer {
+#barBottomContainer {
   background-color: #899ab9;
   border: 1px #1e3e70;
   border-top-style: solid;
@@ -540,6 +540,12 @@ div#barBottomContainer {
   margin-bottom: 1.5em;
   position: relative;
   width: 100%;
+}
+#barBottomContainer.fixed {
+    position: fixed;
+    top: 0px;
+    box-shadow: 0px 0px 15px rgba(0,0,0,0.2);
+    z-index: 10000;
 }
 #barBottomLeft,
 #barBottommiddle,

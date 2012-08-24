@@ -565,18 +565,12 @@ function ForumIcon ($forumposting) {
             $bild = $GLOBALS['ASSETS_URL']."images/icons/16/blue/forum.png";
     }
 
-    if ($forum["jshover"]==1 AND $auth->auth["jscript"] AND $forumposting["description"]!="" && $forumposting["openclose"]=="close") {
-        $forumposting["icon"] = "<img class=\"forum-icon\" src=\"".$bild."\" border=0 data-forumid=\"'".$forumposting["id"]."'\">";
-        if ($forum["view"]=="tree" && $forumposting["type"]=="folder") { // wir kommen aus der Themenansicht
-            $forumposting["icon"] = "<a href=\"".URLHelper::getLink("?open=".$forumposting["id"]."&openall=TRUE#anker")."\">"
-              . $forumposting["icon"] . "</a>";
-        }
+    if ($forum["view"]=="tree" && $forumposting["type"]=="folder") {
+        $forumposting["icon"] = "<a href=\"".URLHelper::getLink("?open=".$forumposting["id"]."&folderopen=".$forumposting["id"]."&openall=TRUE#anker")."\"><img src=\"".$bild."\" border=0 " . tooltip(_("Alle Forenbeiträge im Thema öffnen")) . "></a>";
     } else {
-        if ($forum["view"]=="tree" && $forumposting["type"]=="folder")
-            $forumposting["icon"] = "<a href=\"".URLHelper::getLink("?open=".$forumposting["id"]."&folderopen=".$forumposting["id"]."&openall=TRUE#anker")."\"><img src=\"".$bild."\" border=0 " . tooltip(_("Alle Forenbeiträge im Thema öffnen")) . "></a>";
-        else
-            $forumposting["icon"] = "<img src=\"".$bild."\" $addon>";
+        $forumposting["icon"] = "<img src=\"".$bild."\" $addon>";
     }
+
     if (Request::option('cmd') == "move" && $rechte && $topic_id != $forumposting["id"] )  // ein Beitrag wird verschoben, gelbe Pfeile davor
         $forumposting["icon"] =  "<a href=\"".URLHelper::getLink("?target=Thema&move_id=".$topic_id."&parent_id=".$forumposting["id"])."\">"
                     ."<img src=\"" . Assets::image_path('icons/16/yellow/arr_2right.png') . "\" " . tooltip(_("Forenbeiträge in dieses Thema verschieben")) . "></a>"

@@ -68,7 +68,7 @@ SkipLinks::addIndex(_("Tagesansicht"), 'main_content', 100);
                             $js_events[] = $calendar->view->events[$adapted['day_map'][$i]];
                         endfor; ?>
                         <? if (sizeof($js_events)) : ?>
-                            <td width="<?= $width1 ?>%" class="lightmonth" align="right" style="background-image: url('<?= Assets::url('images/calendar/category5_small.jpg') ?>" <?= js_hover_group($js_events, $calendar->view->getStart(), $calendar->view->getEnd(), $calendar->getUserId()); ?>>
+                            <td width="<?= $width1 ?>%" class="lightmonth" align="right" style="background-image: url('<?= Assets::url('images/calendar/category5_small.jpg') ?>">
                         <? else : ?>
                             <td width="<?= $width1 ?>%" class="lightmonth" align="right">
                         <? endif ?>
@@ -95,7 +95,7 @@ SkipLinks::addIndex(_("Tagesansicht"), 'main_content', 100);
                             <? endfor ?>
 
                             <? if (sizeof($js_events)) : ?>
-                                <td width="<?= $width1 ?>%" align="right" style="background-image: url('<?= Assets::url('/images/calendar/category5_small.jpg') ?>" <?= js_hover_group($js_events, $i, $i + $step_day, $calendar->getUserId()); ?>>
+                                <td width="<?= $width1 ?>%" align="right" style="background-image: url('<?= Assets::url('/images/calendar/category5_small.jpg') ?>">
                             <? else: ?>
                                 <td width="<?= $width1 ?>%" align="right" class="<?= (($k % 2) ? 'month' : 'lightmonth') ?>">
                             <? endif ?>

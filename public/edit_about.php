@@ -330,7 +330,7 @@ if (check_ticket(Request::option('studipticket'))) {
         $my_about->get_auth_user($username);
     }
 
-    // general settings from mystudip: language, jshover, accesskey
+    // general settings from mystudip: language, accesskey
     if ($cmd=="change_general") {
         if(array_key_exists(Request::get('forced_language'), $GLOBALS['INSTALLED_LANGUAGES'])) {
             $query = "UPDATE user_info SET preferred_language = ? WHERE user_id = ?";
@@ -342,7 +342,6 @@ if (check_ticket(Request::option('studipticket'))) {
             $_SESSION['_language'] = $_language = Request::get('forced_language');
         }
 
-        $forum["jshover"] = Request::int('jshover');
         $my_studip_settings["startpage_redirect"] = Request::int('personal_startpage');
         UserConfig::get($user->id)->store('ACCESSKEY_ENABLE', Request::int('accesskey_enable'));
         UserConfig::get($user->id)->store('SHOWSEM_ENABLE', Request::int('showsem_enable'));

@@ -1343,7 +1343,7 @@ function printposting ($forumposting) {
             $forumhead[] =  "<a href=\"".URLHelper::getLink("?open=".$forumposting["id"]
                     ."&folderopen=".$forumposting["rootid"]
                     ."&view=tree"
-                    ."#anker")."\" class=\"printhead\">".htmlReady(mila($forumposting["rootname"],20))
+                    ."#anker")."\" class=\"printhead\">".htmlReady(mila($forumposting["root_name"],20))
                     ."</a>"
                     ."&nbsp; ";
 

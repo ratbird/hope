@@ -454,7 +454,7 @@ class Course_StudygroupController extends AuthenticatedController {
                     $mods = new Modules();
                     $admin_mods = new AdminModules();
                     $bitmask = $sem->modules;
-                    foreach ($this->flash['deactivate_modules'] as $key) {
+                    foreach ($modules as $key) {
                         $mods->clearBit($bitmask, $mods->registered_modules[$key]["id"]);
                         $methodDeactivate = "module".ucfirst($key)."Deactivate";
                         if (method_exists($admin_mods, $methodDeactivate)) {

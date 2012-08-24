@@ -209,7 +209,12 @@ STUDIP.barBottomContainer = {
         if (STUDIP.barBottomContainer.top < jQuery(window.document).scrollTop()) {
             //static
             jQuery("#barBottomContainer").addClass("fixed");
-            jQuery("#header").css("height", (jQuery("#barBottomContainer").height() + STUDIP.barBottomContainer.headerHeight) + "px");
+            jQuery("#header").css("height", 
+                (jQuery("#barBottomContainer").height() 
+                    + parseInt(jQuery("#barBottomContainer").css("border-top-width"), 10)
+                    + parseInt(jQuery("#barBottomContainer").css("border-bottom-width"), 10)
+                    + STUDIP.barBottomContainer.headerHeight
+                ) + "px");
         } else {
             jQuery("#barBottomContainer").removeClass("fixed");
             jQuery("#header").css("height", STUDIP.barBottomContainer.headerHeight + "px");

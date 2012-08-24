@@ -19,7 +19,7 @@ $current_page = _('Kein Objekt gewählt')
         <p>
             <?= _('Folgender von Ihnen eingegebene Text konnte nicht gespeichert werden:') ?>
         </p>
-        <div class="steel1" style="padding: 5px; border: 1px solid;">
+        <div class="table_row_even" style="padding: 5px; border: 1px solid;">
             <?= htmlentities($last_edited) ?>
         </div>
     <? endif ?>

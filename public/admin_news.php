@@ -277,7 +277,7 @@ if (!$cmd OR $cmd=="show") {
             echo "<table width=\"50%\" cellspacing=0 cellpadding=2 border=0>";
             echo "<form action=\"". URLHelper::getLink("?cmd=search") ."\" method=\"POST\">";
             echo CSRFProtection::tokenTag();
-            echo "<tr><td class=\"steel1\">";
+            echo "<tr><td class=\"table_row_even\">";
             echo "&nbsp; <font size=-1>" . _("Geben Sie einen Suchbegriff ein, um weitere Bereiche zu finden!") . "</font><br><br>";
             echo "&nbsp; <input type=\"TEXT\" style=\"vertical-align:middle;\" name=\"search\" size=\"20\">&nbsp;&nbsp;";
             echo Button::create(_('Suchen'), 'submit', array('style' => 'vertical-align:middle;'));
@@ -319,7 +319,7 @@ if (!$cmd OR $cmd=="show") {
             while (list($typen_key,$typen_value)=each ($typen)) {
                 if (!$perm->have_perm("root") AND $typen_key=="user")
                     continue;
-                echo "\n".'<td class="steel1" width="'.floor(100/$my_cols).'%" align="center" valign="top"><b>'.$typen_value['name'].'</b><br><div style="font-size:smaller;text-align:left;"><ul>';
+                echo "\n".'<td class="table_row_even" width="'.floor(100/$my_cols).'%" align="center" valign="top"><b>'.$typen_value['name'].'</b><br><div style="font-size:smaller;text-align:left;"><ul>';
                 reset($news->search_result);
                 while (list ($range,$details) = each ($news->search_result)) {
                     $link_view_mode = $perm->have_perm('admin') ? $typen_value['view_mode'] : 'user';

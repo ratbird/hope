@@ -27,14 +27,14 @@ use Studip\Button, Studip\LinkButton;
         </colgroup>
         <tbody>
         <? if (empty($feeds)): ?>
-            <tr class="<?= TextHelper::cycle('steelgraulight', 'steel1') ?>">
+            <tr class="<?= TextHelper::cycle('table_row_odd', 'table_row_even') ?>">
                 <td colspan="4" style="font-weight: bold;">
                     <?= _('Es existieren zur Zeit keine eigenen RSS-Feeds.') ?>
                 </td>
             </tr>
         <? endif; ?>
         <? foreach ($feeds as $index => $feed): ?>
-            <tr class="<?= $cycle = TextHelper::cycle('steelgraulight', 'steel1') ?>">
+            <tr class="<?= $cycle = TextHelper::cycle('table_row_odd', 'table_row_even') ?>">
                 <td>
                     <input type="hidden" name="feeds[<?= $index ?>][id]" value="<?= $feed->id ?>">
                     <label for="rss_name_<?= $index ?>"><?= _('Name:') ?></label>

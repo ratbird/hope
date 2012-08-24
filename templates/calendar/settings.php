@@ -20,7 +20,7 @@ $css_switcher->switchClass();
                     <th align="center"><?=_("Auswahl")?></th>
                 </tr>
                 <tr <? $css_switcher->switchClass() ?>>
-                    <td colspan="2" align="center" class="steelgraulight" style="border-bottom:1px dotted black;border-top:1px dotted black;">
+                    <td colspan="2" align="center" class="table_row_odd" style="border-bottom:1px dotted black;border-top:1px dotted black;">
                         <b><?=_("Allgemeine Optionen")?></b>
                     </td>
                 </tr>
@@ -61,7 +61,7 @@ $css_switcher->switchClass();
                 </tr>
                 <? if (get_config('CALENDAR_GROUP_ENABLE')) : ?>
                 <tr <? $css_switcher->switchClass() ?>>
-                    <td colspan="2" align="center" class="steelgraulight" style="border-bottom:1px dotted black;border-top:1px dotted black;">
+                    <td colspan="2" align="center" class="table_row_odd" style="border-bottom:1px dotted black;border-top:1px dotted black;">
                         <b><?=_("Einzelterminkalender")?></b>
                     </td>
                 </tr>
@@ -166,7 +166,7 @@ $css_switcher->switchClass();
             if (get_config('CALENDAR_GROUP_ENABLE')) :
             ?>
                 <tr <? $css_switcher->switchClass() ?>>
-                    <td colspan="2" align="center" class="steelgraulight" style="border-bottom:1px dotted black;border-top:1px dotted black;">
+                    <td colspan="2" align="center" class="table_row_odd" style="border-bottom:1px dotted black;border-top:1px dotted black;">
                         <b><?= _("Gruppenterminkalender") ?></b>
                     </td>
                 </tr>

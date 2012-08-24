@@ -48,7 +48,7 @@ class EvalShow
 
       $tr = new HTM( "tr" );
       $td = new HTM( "td" );
-      $td->attr( "class", "steel1" );
+      $td->attr( "class", "table_row_even" );
 
       $table2 = new HTM( "table" );
       $table2->attr( "width", "100%" );
@@ -130,7 +130,7 @@ class EvalShow
   function createEvaluation( $tree ) {
       $tr = new HTM( "tr" );
       $td = new HTM( "td" );
-      $td->attr( "class", "steel1" );
+      $td->attr( "class", "table_row_even" );
       $td->html( "<hr noshade=\"noshade\" size=\"1\">\n" );
 
       ob_start();
@@ -295,7 +295,7 @@ class EvalShow
 
       $tr = new HTM( "tr" );
       $td = new HTM( "td" );
-      $td->attr( "class", "steelkante" );
+      $td->attr( "class", "content_body" );
       $td->attr( "align", "center" );
       $td->cont( $br );
 

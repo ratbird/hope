@@ -221,15 +221,15 @@ class ShowToolsRequests
         $zt = new ZebraTable(array('width' => '99%', 'padding' => '1', 'align' => 'center'));
         $zt->switchClass();
         echo $zt->openRow();
-        echo $zt->cell("&nbsp;", array("class" => "steelkante"));
-        echo $zt->cell("<font size=\"-1\"><b>" . _("Z&auml;hler") . "</b></font>", array("class" => "steelkante", 'colspan' => '3'));
-        echo $zt->cell("<font size=\"-1\"><b>" . _("V.-Nummer") . "</b></font>", array("class" => "steelkante"));
-        echo $zt->cell("<font size=\"-1\"><b>" . _("Titel") . "</b></font>", array("class" => "steelkante"));
-        echo $zt->cell("<font size=\"-1\"><b>" . _("Dozenten") . "</b></font>", array("class" => "steelkante"));
-        echo $zt->cell("<font size=\"-1\"><b>" . _("Anfrager") . "</b></font>", array("class" => "steelkante"));
-        echo $zt->cell("<font size=\"-1\"><b>" . _("Start-Semester") . "<b></font>", array("class" => "steelkante"));
+        echo $zt->cell("&nbsp;", array("class" => "content_seperator"));
+        echo $zt->cell("<font size=\"-1\"><b>" . _("Z&auml;hler") . "</b></font>", array("class" => "content_seperator", 'colspan' => '3'));
+        echo $zt->cell("<font size=\"-1\"><b>" . _("V.-Nummer") . "</b></font>", array("class" => "content_seperator"));
+        echo $zt->cell("<font size=\"-1\"><b>" . _("Titel") . "</b></font>", array("class" => "content_seperator"));
+        echo $zt->cell("<font size=\"-1\"><b>" . _("Dozenten") . "</b></font>", array("class" => "content_seperator"));
+        echo $zt->cell("<font size=\"-1\"><b>" . _("Anfrager") . "</b></font>", array("class" => "content_seperator"));
+        echo $zt->cell("<font size=\"-1\"><b>" . _("Start-Semester") . "<b></font>", array("class" => "content_seperator"));
         if ($license_to_kill){
-            echo $zt->cell("<font size=\"-1\"><b>" . _("l&ouml;schen") . "<b></font>", array("class" => "steelkante", 'width' => '5%'));
+            echo $zt->cell("<font size=\"-1\"><b>" . _("l&ouml;schen") . "<b></font>", array("class" => "content_seperator", 'width' => '5%'));
         }
         echo $zt->closeRow();
         ?>

@@ -55,7 +55,7 @@
 </tr>
 <? if ($issue_open[$tpl['sd_id']] || $tpl['openall']) { ?>
 <tr class="dates_content">
-    <td colspan="8" class="steel1">
+    <td colspan="8" class="table_row_even">
 
         <b><?=($tpl['theme_title']) ? htmlReady($tpl['theme_title']) : _("Keine Titel vorhanden.")?></b><BR/>
         <?=($tpl['theme_description']) ? formatReady($tpl['theme_description']) : _("Keine Beschreibung vorhanden.")?><BR/>
@@ -82,20 +82,20 @@
 <? } ?>
 <? else:    // Gelöschter Termin... ?>
 <tr>
-    <td id="<?=$tpl['sd_id']?>" width="1%" align="right" valign="top" class="steelred" nowrap>
+    <td id="<?=$tpl['sd_id']?>" width="1%" align="right" valign="top" class="content_title_red" nowrap>
     </td>
 
-    <td width="1%" align="right" valign="top" class="steelred" nowrap>
+    <td width="1%" align="right" valign="top" class="content_title_red" nowrap>
         <img src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/blue/date.png" class="middle">
     </td>
 
-    <td nowrap class="steelred">
+    <td nowrap class="content_title_red">
         <a class="tree" href="<?=URLHelper::getLink("?cmd=".(($issue_open[$tpl['sd_id']]) ? 'close' : 'open')."&open_close_id=".$tpl['sd_id']."#".$tpl['sd_id'])?>">
             <?=$tpl['date']?>
         </a>
     </td>
 
-    <td width="80%" colspan="5" class="steelred">
+    <td width="80%" colspan="5" class="content_title_red">
         <span style="text-color: red">
             <b><?=_("Dieser Termin findet nicht statt!")?></b>
         </span>

@@ -8,13 +8,13 @@ use Studip\Button, Studip\LinkButton;
         <input type="hidden" name="cmd" value="import_lit_list">
         <table border="0" cellspacing="0" cellpadding="0">
             <tr>
-                <td class="steelkante" height="20"><b><?= _("Literaturlisten importieren:") ?></b></td>
+                <td class="content_seperator" height="20"><b><?= _("Literaturlisten importieren:") ?></b></td>
             </tr>
             <tr>
-                <td class="steel1">&nbsp;</td>
+                <td class="table_row_even">&nbsp;</td>
             </tr>
             <tr>
-          <td class="steel1" style="padding-left: 10px">
+          <td class="table_row_even" style="padding-left: 10px">
                     <?= _("Bitte w&auml;hlen Sie eine Literaturverwaltung aus:"); ?>
             <select name="plugin_name" size="1" onChange="this.form.cmd='';this.form.submit();">
                     <? foreach ($GLOBALS['LIT_IMPORT_PLUGINS'] as $p) : ?>

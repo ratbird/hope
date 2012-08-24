@@ -33,7 +33,7 @@
 */
 class cssClassSwitcher {
     
-    var $class = array("steelgraulight", "steel1");                 //Klassen
+    var $class = array("table_row_odd", "table_row_even");                 //Klassen
     var $headerClass = "steel";
     var $classcnt = 0;                //Counter
     var $hovercolor = array("#B7C2E2","#CED8F2");

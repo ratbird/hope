@@ -86,7 +86,7 @@ use Studip\Button, Studip\LinkButton;
         </tr>
         <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
             <td>
-                <label for="edit_perms"><?= _('benötigter Status') ?>:</label>
+                <label for="edit_perms"><?= _('benˆtigter Status') ?>:</label>
             </td>
             <td>
                 <select name="edit_perms" id="edit_perms">
@@ -143,11 +143,11 @@ use Studip\Button, Studip\LinkButton;
         
          <? endif; ?>
          
-        <tr class="steel2">
+        <tr class="table_footer">
             <td>&nbsp;</td>
             <td>
-                <?= Button::createAccept(_('Übernehmen'),'uebernehmen', array('title' => _('Änderungen übernehmen')))?>
-                <?= LinkButton::createCancel(_('Abbrechen'), $controller->url_for('admin/datafields/index/'.$item->getType().'#'.$item->getType()), array('title' => _('Zurück zur Übersicht')))?>
+                <?= Button::createAccept(_('‹bernehmen'),'uebernehmen', array('title' => _('ƒnderungen ¸bernehmen')))?>
+                <?= LinkButton::createCancel(_('Abbrechen'), $controller->url_for('admin/datafields/index/'.$item->getType().'#'.$item->getType()), array('title' => _('Zur¸ck zur ‹bersicht')))?>
             </td>
         </tr>
     </table>
@@ -174,7 +174,7 @@ $infobox = array(
             'kategorie' => _("Information"),
             'eintrag'   => array(
                 array(
-                   "text" => _("Hier haben Sie die Möglichkeit, ein neues Datenfeld im gewählten Bereich anzulegen."),
+                   "text" => _("Hier haben Sie die Mˆglichkeit, ein neues Datenfeld im gew‰hlten Bereich anzulegen."),
                    "icon" => "icons/16/black/info.png"
                 )
             )

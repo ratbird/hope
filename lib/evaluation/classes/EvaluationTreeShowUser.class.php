@@ -188,7 +188,7 @@ class EvaluationTreeShowUser {
         if( $parent->x_instanceof() == "Evaluation" && $group->getPosition() != 0 )
         echo "<td colspan=\"2\" width=\"100%\"><br></td><tr>";
 
-        echo "<td align=\"left\" width=\"100%\" valign=\"bottom\" class=\"steelkante\" style=\"padding:1px;\">\n";
+        echo "<td align=\"left\" width=\"100%\" valign=\"bottom\" class=\"content_body\" style=\"padding:1px;\">\n";
         $parent_id = $group_id;
         while( $parent_id != "root" ) {
         $chapter_num = ($this->tree->tree_data[$parent_id]['priority'] + 1) .".". $chapter_num;
@@ -385,7 +385,7 @@ class EvaluationTreeShowUser {
             if( $answer->isResidual() ) {
                 $extraStyle = "border-left: $residualBorder;";
                 $html .=
-#               "<td align=\"center\" class=\"steelgraudunkel\" ".
+#               "<td align=\"center\" class=\"content_seperator\" ".
 #               "style=\"border-left: 1px solid black; border-top: 1px solid black;\" ".
 #               "style=\"border-left: $answerBorder; border-top: $answerBorder;\" ".
 #               "width=\"2\">x</td>";
@@ -408,7 +408,7 @@ class EvaluationTreeShowUser {
 
 
         /* Question and Answer Widgets ---------------- */
-        $class = $question->getPosition() % 2 ? "steel3" : "steelgraulight";
+        $class = $question->getPosition() % 2 ? "steel3" : "table_row_odd";
         $extraStyle = ($question->getPosition() == $group->getNumberChildren() - 1
                ? "border-bottom: $answerBorder"
                : "");
@@ -426,7 +426,7 @@ class EvaluationTreeShowUser {
             if( $answer->isResidual() ) {
             $extraStyle = "border-left: $residualBorder;";
             $html .=
-#               "<td align=\"center\" class=\"steelgraudunkel\" ".
+#               "<td align=\"center\" class=\"content_seperator\" ".
 #               "style=\"border-left: $answerBorder; border-top: $answerBorder;\" ".
 #               "width=\"2\"></td>";
                 "<td align=\"center\" class=\"steelgroup7\" style=\"$extraStyle\" ".
@@ -453,7 +453,7 @@ class EvaluationTreeShowUser {
 
     /* Normal (question with long answers) ----------------------------- */
     else {
-        $class = $question->getPosition() % 2 ? "steel3" : "steelgraulight";
+        $class = $question->getPosition() % 2 ? "steel3" : "table_row_odd";
 
         /* Question ----------------------------------- */
         $html .=

@@ -78,14 +78,14 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                 <?= CSRFProtection::tokenTag() ?>
                 <table cellpadding="0" cellspacing="0" border="0" width="99%" align="center">
                     <tr>
-                        <td class="steel1">
+                        <td class="table_row_even">
                             <br>
                             <b><?=_("Bitte wählen Sie die Einrichtung aus, die Sie bearbeiten wollen:")?></b><br>
                             <br>
                         </td>
                     </tr>
                     <tr>
-                        <td class="steel1">
+                        <td class="table_row_even">
                         <select name="admin_inst_id" size="1" style="vertical-align:middle">
                         <?
                         $dbparams = array();
@@ -119,7 +119,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                     </td>
                 </tr>
                 <tr>
-                    <td class="steel1">&nbsp;
+                    <td class="table_row_even">&nbsp;
 
                     </td>
                 </tr>
@@ -164,19 +164,19 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                 <?= CSRFProtection::tokenTag() ?>
                 <table cellpadding="0" cellspacing="0" border="0" width="99%" align="center">
                     <tr>
-                        <td class="steel1" colspan=5>
+                        <td class="table_row_even" colspan=5>
                                <br>
                                <b><?=_("Sie können die Auswahl der Veranstaltungen eingrenzen:")?></b><br>
                                <br>
                         </td>
                     </tr>
                     <tr>
-                        <td class="steel1">
+                        <td class="table_row_even">
                             <?=_("Semester:")?><br>
                             <?=SemesterData::GetSemesterSelector(array('name'=>'srch_sem'), $_SESSION['links_admin_data']['srch_sem'])?>
                         </td>
 
-                        <td class="steel1">
+                        <td class="table_row_even">
                         <?
                         if ($perm->have_perm("root")) {
                             $dbquery = "SELECT Institut_id, Name FROM Institute WHERE Institut_id!=fakultaets_id ORDER BY Name";
@@ -214,7 +214,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                             ?>
                         </select>
                         </td>
-                        <td class="steel1">
+                        <td class="table_row_even">
                         <?
                         if (($perm->have_perm("admin")) && (!$perm->have_perm("root"))) {
                             ?>
@@ -265,12 +265,12 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                         }
                         ?>&nbsp;
                         </td>
-                        <td class="steel1">
+                        <td class="table_row_even">
                             <?=_("freie Suche:")?><br>
                             <input type="text" name="srch_exp" maxlength=255 size=20 value="<? echo htmlReady($_SESSION['links_admin_data']['srch_exp']) ?>">
                             <input type="hidden" name="srch_send" value="TRUE">
                         </td>
-                        <td class="steel1" valign="bottom" width="20%" nowrap="nowrap">
+                        <td class="table_row_even" valign="bottom" width="20%" nowrap="nowrap">
                             <?= Button::create(_("Anzeigen"), 'anzeigen'); ?>
                             <?
                             if ($_SESSION['links_admin_data']['srch_on']){
@@ -281,7 +281,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                         </td>
                     </tr>
                 <tr>
-                    <td class="steel1" colspan="5">
+                    <td class="table_row_even" colspan="5">
                         <br>
                         <label>
                             <input type="checkbox" name="show_rooms_check" value="on" <? if ($show_rooms_check == 'on') echo 'checked'; ?> >&nbsp; <?=_("Raumdaten einblenden")?>
@@ -294,7 +294,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                     if ($i_page == "archiv_assi.php") {
                         ?>
                         <tr>
-                            <td class="steel1" colspan=6>
+                            <td class="table_row_even" colspan=6>
                                 <br>
                                 <input type="CHECKBOX" name="select_old" <? if ($_SESSION['links_admin_data']['select_old']) echo ' checked' ?>>&nbsp;<?=_("keine zukünftigen Veranstaltungen anzeigen - Beginn des (letzten) Veranstaltungssemesters ist verstrichen")?><br>
                                 <!-- <input type="CHECKBOX" name="select_inactive" <? if ($_SESSION['links_admin_data']['select_inactive']) echo ' checked' ?>>&nbsp;<?=_("nur inaktive Veranstaltungen auswählen (letzte Aktion vor mehr als sechs Monaten)")?> -->
@@ -309,7 +309,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                     }
                     ?>
                     <tr>
-                        <td class="steel1" colspan=5>&nbsp;
+                        <td class="table_row_even" colspan=5>&nbsp;
 
                         </td>
                     </tr>
@@ -390,7 +390,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
             //more Options for archiving
             if ($i_page == "archiv_assi.php") {
                 ?>
-                <tr class="steel2">
+                <tr class="table_footer">
                     <td colspan="3">
                     </td>
                     <td colspan="<?= $show_rooms_check == 'on' ? 4 : 3 ?>" align="right">
@@ -407,7 +407,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
             //more Options for visibility changing
             if ($i_page == "admin_visibility.php") {
                 ?>
-                <tr class="steel2">
+                <tr class="table_footer">
                     <td colspan="3">
                     </td>
                     <td colspan="<?= $show_rooms_check == 'on' ? 4 : 3 ?>" align="right">
@@ -425,7 +425,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
         if ($i_page == "admin_lock.php") {
             $seminar_lock_rules = LockRules::getAvailableSeminarRules($GLOBALS['user']->id);
             ?>
-            <tr class="steel2">
+            <tr class="table_footer">
                 <td colspan="3">
                 </td>
                 <td colspan="4" align="right">
@@ -454,7 +454,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
         //more Options for aux data
             if ($i_page == "admin_aux.php") {
                 ?>
-                <tr class="steel2">
+                <tr class="table_footer">
                     <td colspan="3" nowrap>
                     </td>
                     <td colspan="4" align="right">
@@ -694,7 +694,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
         //more Options for visibility changing
             if ($i_page == "admin_visibility.php" || $i_page == "admin_aux.php" || $i_page == "admin_lock.php") {
                 ?>
-                <tr class="steel2">
+                <tr class="table_footer">
                     <td colspan="<?= $show_rooms_check == 'on' ? 7 : 6 ?>" align="right">
                     <?= _("Änderungen") ?> <?= Button::createAccept(_('Speichern')) ?>
                     </td>
@@ -703,7 +703,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                 <?
             }
             if ($i_page == "archiv_assi.php"){ ?>
-                <tr class="steel2">
+                <tr class="table_footer">
                     <td colspan="<?= $show_rooms_check == 'on' ? 7 : 6 ?>" align="right">
                         <?=_("Alle ausgewählten Veranstaltungen")?>
                         <?=Button::create(_("Archivieren"))?><br>

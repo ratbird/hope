@@ -331,7 +331,7 @@ jQuery(function () {
                             <?= CSRFProtection::tokenTag() ?>
                             <input type="hidden" name="cycle_id" value="<?=$metadate_id?>">
                 <tr>
-                    <td align="center" colspan="9" class="steel1">
+                    <td align="center" colspan="9" class="table_row_even">
                         <table cellpadding="1" cellspacing="0" border="0" width="90%">
                             <?
                             $every2nd = 1;
@@ -343,7 +343,7 @@ jQuery(function () {
                                         $sem_name = $val['name'];break;
                                     }
                                 }
-                                parse_msg('error§'.sprintf(_("Für das %s gibt es für diese regelmäßige Zeit keine Termine!"), '<b>'.$sem_name.'</b>').'§', '§', 'steel1');
+                                parse_msg('error§'.sprintf(_("Für das %s gibt es für diese regelmäßige Zeit keine Termine!"), '<b>'.$sem_name.'</b>').'§', '§', 'table_row_even');
                             } else foreach ($termine as $singledate_id => $val) {
                                 if ( ($grenze == 0) || ($grenze < $val->getStartTime()) ) {
                                     foreach ($all_semester as $zwsem) {
@@ -351,7 +351,7 @@ jQuery(function () {
                                             $grenze = $zwsem['ende'];
                                             ?>
                                             <tr>
-                                                <td class="steelgraulight" align="center" colspan="9">
+                                                <td class="table_row_odd" align="center" colspan="9">
                                                     <b><?=$zwsem['name']?></b>
                                                 </td>
                                             </tr>
@@ -380,7 +380,7 @@ jQuery(function () {
                 </tr>
                 <? if (sizeof($termine) > 0) : ?>
                 <tr>
-                    <td class="steel1" colspan="9" align="center">
+                    <td class="table_row_even" colspan="9" align="center">
                         <?
                             $tpl['width'] = '90%';
                             $tpl['cycle_id'] = $metadate_id;
@@ -433,7 +433,7 @@ jQuery(function () {
                 </tr>
                 <? if ($termine =& $sem->getSingleDates(true, true)) { ?>
                 <tr>
-                    <td align="left" colspan="9" class="steel1">
+                    <td align="left" colspan="9" class="table_row_even">
                         <form action="<?= URLHelper::getLink() ?>" method="post" name="Formular">
                         <?= CSRFProtection::tokenTag() ?>
                         <table cellpadding="1" cellspacing="0" border="0" width="100%">
@@ -451,7 +451,7 @@ jQuery(function () {
                                             $grenze = $zwsem['ende'];
                                             ?>
                                             <tr>
-                                                <td class="steelgraulight" align="center" colspan="9">
+                                                <td class="table_row_odd" align="center" colspan="9">
                                                     <b><?=$zwsem['name']?></b>
                                                 </td>
                                             </tr>
@@ -489,7 +489,7 @@ jQuery(function () {
                 <? if (!$_LOCKED) { ?>
                 <? if (isset($cmd) && ($cmd == 'createNewSingleDate')) {
                     if ($GLOBALS['RESOURCES_ENABLE_BOOKINGSTATUS_COLORING']) {
-                        $tpl['class'] = 'steelred';
+                        $tpl['class'] = 'content_title_red';
                     } else {
                         $tpl['class'] = 'printhead';
                     }

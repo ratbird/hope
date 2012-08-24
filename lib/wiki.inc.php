@@ -708,7 +708,7 @@ function listPages($mode, $sortby = NULL) {
 
         $c=1;
         foreach ($pages as $page) {
-            $class = ($c++ % 2) ? "steel1" : "steelgraulight";
+            $class = ($c++ % 2) ? "table_row_even" : "table_row_odd";
 
             $keyword    = $page['keyword'];
             $lastchange = $page['lastchange'];
@@ -853,7 +853,7 @@ function searchWiki($searchfor, $searchcurrentversions, $keyword, $localsearch) 
             $last_keyword_count=0;
         }
 
-        $class = ($c++ % 2) ? "steel1" : "steelgraulight";
+        $class = ($c++ % 2) ? "table_row_even" : "table_row_odd";
         $tdheadleft="<td class=\"$class\" align=\"left\" valign=\"top\"><font size=\"-1\">";
         $tdheadcenter="<td class=\"$class\" align=\"center\"><font size=\"-1\">";
         $tdtail="</font></td>";
@@ -1618,7 +1618,7 @@ function showComboDiff($keyword, $db=NULL) {
             $count++;
         }
     }
-    echo "<tr><td class=\"steel1\" colspan=2>";
+    echo "<tr><td class=\"table_row_even\" colspan=2>";
     echo "<p><font size=-1>&nbsp;<br>";
     echo _("Legende der AutorInnenfarben:");
     echo "<table cellpadding=6 cellspacing=6>$content</table>\n";

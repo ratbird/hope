@@ -534,18 +534,18 @@ if ($inst_id != '' && $inst_id != '0') {
                     <?= CSRFProtection::tokenTag() ?>
                     <table width="90%" border="0" cellpadding="2" cellspacing="0">
                         <tr>
-                            <td class="steelkante">
+                            <td class="content_seperator">
                                 <font size=-1>
                                     <b>&nbsp;<?=_("Neue Person der Einrichtung zuordnen")?></b>
                                 </font>
                         </tr>
                         <tr>
-                            <td class="steel1">
+                            <td class="table_row_even">
                                 <?= _("Suchen Sie im folgenden Feld nach Nutzern und klicken Sie anschließend 'hinzufügen', um den Nutzer als Personal einzutragen.") ?>
                             </td>
                         </tr>
                         <tr>
-                            <td class="steel1">
+                            <td class="table_row_even">
                             <?php
                             print QuickSearch::get("u_id", $InstituteUser)
                                     ->withButton()
@@ -568,13 +568,13 @@ if ($inst_id != '' && $inst_id != '0') {
             ?><!-- Mail an alle MitarbeiterInnen -->
                 <table width="90%" border="0" cellpadding="2" cellspacing="0">
                     <tr>
-                        <td class="steelkante">
+                        <td class="content_seperator">
                             <font size="-1">
                                 <b>&nbsp;<?=_("Nachricht an alle MitarbeiterInnen verschicken")?></b>
                         </td>
                     </tr>
                     <tr>
-                        <td class="steel1">
+                        <td class="table_row_even">
                             <font size="-1">
                                 <br>
                                 <?=sprintf(_("Klicken Sie auf %s%s Rundmail an alle MitarbeiterInnen%s, um eine E-Mail an alle MitarbeiterInnen zu verschicken."), "<a href=\"mailto:" . join(",",$mail_list) . "?subject=" . urlencode(_("MitarbeiterInnen-Rundmail")) .  "\">",  '<img src="'.$GLOBALS['ASSETS_URL'].'images/icons/16/blue/mail.png" border="0">', "</a>");?>
@@ -583,7 +583,7 @@ if ($inst_id != '' && $inst_id != '0') {
                     </tr>
 
                     <tr>
-                        <td class="steel1">
+                        <td class="table_row_even">
                             <font size="-1">
                                 <br>
                                 <?=sprintf(_("Klicken Sie auf %s%s Stud.IP Nachricht an alle MitarbeiterInnen%s, um eine interne Nachricht an alle MitarbeiterInnen zu verschicken."),
@@ -810,7 +810,7 @@ SkipLinks::addIndex(_("Mitarbeiterliste"), 'list_institute_members');
 
 echo "<table border=\"0\" width=\"99%\" cellpadding=\"4\" cellspacing=\"0\" align=\"center\">\n";
 echo "<tr>\n";
-echo "<td class=\"steel1\" width=\"60%\">\n";
+echo "<td class=\"table_row_even\" width=\"60%\">\n";
 
 // Admins can choose between different grouping functions
 if ($perm->have_perm("admin")) {
@@ -835,9 +835,9 @@ else {
     }
 }
 
-echo "</td><td class=\"steel1\" width=\"30%\">\n";
+echo "</td><td class=\"table_row_even\" width=\"30%\">\n";
 printf("<font size=\"-1\">" . _("<b>%s</b> MitarbeiterInnen gefunden") . "</font>", $count);
-echo "</td><td class=\"steel1\" width=\"10%\">\n";
+echo "</td><td class=\"table_row_even\" width=\"10%\">\n";
 
 if ($extend == "yes") {
     echo LinkButton::create(_('Normale Ansicht'), URLHelper::getURL('?extend=no'));
@@ -905,15 +905,15 @@ if ($show == "funktion") {
                     // StEP 154: Nachricht an alle Mitglieder der Gruppe
                     if ($perm->have_studip_perm('autor', $SessSemName[1]) AND $GLOBALS["ENABLE_EMAIL_TO_STATUSGROUP"] == true) {
                         $group_colspan = $colspan - 2;
-                        echo "<tr><td class=\"steelkante\" colspan=\"$group_colspan\" height=\"20\">";
+                        echo "<tr><td class=\"content_seperator\" colspan=\"$group_colspan\" height=\"20\">";
                         echo "<font size=\"-1\"><b>&nbsp;";
                         echo htmlReady($zw_title);
-                        echo "<b></font>"."</td><td class=\"steelkante\" colspan=\"2\" height=\"20\">";
+                        echo "<b></font>"."</td><td class=\"content_seperator\" colspan=\"2\" height=\"20\">";
                         echo "<a href=\"".URLHelper::getLink("sms_send.php?sms_source_page=" . ($admin_view == true ? "inst_admin.php" : "institut_members.php") . "&group_id=".$role_id."&subject=".rawurlencode($SessSemName[0]))."\"><img src=\"" . Assets::image_path('icons/16/blue/mail.png') . "\" " . tooltip(sprintf(_("Nachricht an alle Mitglieder der Gruppe %s verschicken"), $zw_title)) . " border=\"0\"></a>&nbsp;";
                         echo "</td></tr>\n";
                     }
                     else {
-                        echo "<tr><td class=\"steelkante\" colspan=\"$colspan\" height=\"20\">";
+                        echo "<tr><td class=\"content_seperator\" colspan=\"$colspan\" height=\"20\">";
                         echo "<font size=\"-1\"><b>&nbsp;";
                         echo htmlReady($zw_title);
                         echo "<b></font></td></tr>\n";
@@ -960,7 +960,7 @@ if ($show == "funktion") {
         $institut_members = $statement->fetchAll(PDO::FETCH_ASSOC);
 
         if (count($institut_members) > 0) {
-            echo "<tr><td class=\"steelkante\" colspan=\"$colspan\" height=\"20\">";
+            echo "<tr><td class=\"content_seperator\" colspan=\"$colspan\" height=\"20\">";
             echo "<font size=\"-1\"><b>&nbsp;";
             echo _("keiner Funktion zugeordnet") . "<b></font></td></tr>\n";
             table_body($institut_members, $auswahl, $table_structure);
@@ -997,10 +997,10 @@ if ($show == "funktion") {
 
         if (count($institut_members) > 0) {
             $group_colspan = $colspan - 2;
-            echo "<tr><td class=\"steelkante\" colspan=\"$group_colspan\" height=\"20\">";
+            echo "<tr><td class=\"content_seperator\" colspan=\"$group_colspan\" height=\"20\">";
             echo "<font size=\"-1\"><b>&nbsp;";
             echo $permission;
-            echo "<b></font>"."</td><td class=\"steelkante\" colspan=\"2\" height=\"20\">";
+            echo "<b></font>"."</td><td class=\"content_seperator\" colspan=\"2\" height=\"20\">";
             echo "<a href=\"".URLHelper::getLink("sms_send.php?sms_source_page=inst_admin.php&filter=inst_status&who=".$key . "&group_id=" .$role_id."&subject=".rawurlencode($SessSemName[0]))."\"><img src=\"" . Assets::image_path('icons/16/blue/mail.png')
                 ."\" " . tooltip(sprintf(_("Nachricht an alle Mitglieder mit dem Status %s verschicken"), $permission)) .
                  " border=\"0\"></a>&nbsp;";

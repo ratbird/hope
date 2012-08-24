@@ -175,12 +175,12 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
             <?= CSRFProtection::tokenTag() ?>
             <table cellpadding="0" cellspacing="0" border="0" width="99%" align="center">
                 <tr>
-                    <td class="steel1">
+                    <td class="table_row_even">
                         <font size=-1><br><b><?=_("Bitte w&auml;hlen Sie die Einrichtung und das Semester aus, f&uuml;r die Sie die Literaturliste anschauen wollen:")?></b><br>&nbsp; </font>
                     </td>
                 </tr>
                 <tr>
-                    <td class="steel1">
+                    <td class="table_row_even">
                     <font size=-1><select name="_inst_id" size="1" style="vertical-align:middle">
                     <?
                     // Prepare inner statement that obtains all institutes
@@ -277,7 +277,7 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
                 </td>
             </tr>
             <tr>
-                <td class="steel1">
+                <td class="table_row_even">
                     &nbsp;
                 </td>
             </tr>
@@ -285,7 +285,7 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
             <form name="check_elements" action="<?=URLHelper::getLink('?cmd=check')?>" method="POST">
             <?= CSRFProtection::tokenTag() ?>
             <tr>
-                <td class="steel1" align="right">
+                <td class="table_row_even" align="right">
                     <select name="_check_plugin" style="vertical-align:middle">
                     <?
                     foreach($_search_plugins as $sp){

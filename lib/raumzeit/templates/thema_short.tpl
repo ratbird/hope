@@ -2,12 +2,12 @@
 # Lifter010: TODO
 ?>
 <TR>
-    <TD height="3" class="steel1">
+    <TD height="3" class="table_row_even">
     </TD>
 </TR>
 <TR>
     <? if ($tpl['space']) { ?>
-    <TD width="10%" class="steel1">
+    <TD width="10%" class="table_row_even">
         &nbsp;
     </TD>
     <? } ?>

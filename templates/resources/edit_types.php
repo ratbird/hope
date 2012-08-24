@@ -40,8 +40,8 @@
     </tbody>
     <tfoot>
         <tr>
-            <td class="steel2">&nbsp;</td>
-            <td colspan="2" class="steel2">
+            <td class="table_footer">&nbsp;</td>
+            <td colspan="2" class="table_footer">
                 <?= Button::create(_('Anlegen'), '_add_type') ?>
             </td>
         </tr>
@@ -200,7 +200,7 @@
     </tbody>
     <tfoot>
         <tr>
-            <td colspan="4" class="steel2" style="text-align: center">
+            <td colspan="4" class="table_footer" style="text-align: center">
                 <?= Button::createAccept(_('Übernehmen'), 'change_types') ?>
             </td>
         </tr>

@@ -72,7 +72,7 @@ function createReportMessage ($text, $imgURL, $color) {
 function createBoxHeader ($title, $width, $extraTitle = "",
               $imgURL = "", $imgTitle = "",
               $adminURL = "", $adminImgURL = "", $adminTitle = "",
-              $cssClass = "steel1")
+              $cssClass = "table_row_even")
 {
     SkipLinks::addIndex(_("Umfragen"), 'votes_box');
    $html =

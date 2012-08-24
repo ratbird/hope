@@ -29,11 +29,11 @@
     <table cellspacing="0" cellpadding="0" border="0" width="95%" style="margin: auto;padding-top:10px;padding-bottom:10px;">
         <!-- Person assigned to this role - Heading -->
         <tr>
-            <td colspan="2" class="steelkante">&nbsp;<b><?= $range_type == 'sem' ? _("Personen in dieser Gruppe") : _("Personen in dieser Rolle") ?></b>
+            <td colspan="2" class="content_seperator">&nbsp;<b><?= $range_type == 'sem' ? _("Personen in dieser Gruppe") : _("Personen in dieser Rolle") ?></b>
             </td>
-            <td class="steelkante" width="5%" nowrap><?= ($role->getSize()) ? sizeof($persons) .' '._("von").' '. $role->getSize() : '' ?>
+            <td class="content_seperator" width="5%" nowrap><?= ($role->getSize()) ? sizeof($persons) .' '._("von").' '. $role->getSize() : '' ?>
             &nbsp;</td>
-            <td class="steelkante" width="1%" nowrap><?= ($role->getSelfassign()) ? Assets::img('icons/16/grey/info-circle.png', array('title' => _("Personen können sich dieser Gruppe selbst zuordnen"))) : '' ?>
+            <td class="content_seperator" width="1%" nowrap><?= ($role->getSelfassign()) ? Assets::img('icons/16/grey/info-circle.png', array('title' => _("Personen können sich dieser Gruppe selbst zuordnen"))) : '' ?>
             </td>
         </tr>
         <!-- Persons assigned to this role -->

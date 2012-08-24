@@ -8,7 +8,7 @@ use Studip\Button, Studip\LinkButton;
 <form method="post" action="<?= $controller->url_for('admin/user/new') ?>">
 <?= CSRFProtection::tokenTag() ?>
 <table class="default">
-    <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td width="25%">
             <?= _("Benutzername:") ?>
             <span style="color: red; font-size: 1.6em">*</span>
@@ -17,7 +17,7 @@ use Studip\Button, Studip\LinkButton;
             <input class="user_form" type="text" name="username" value="<?= $user['username'] ?>" required >
         </td>
     </tr>
-    <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td>
             <?= _("globaler Status:") ?>
             <span style="color: red; font-size: 1.6em">*</span>
@@ -33,7 +33,7 @@ use Studip\Button, Studip\LinkButton;
             </select>
         </td>
     </tr>
-    <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td>
             <?= _("Sichtbarkeit:") ?>
         </td>
@@ -41,7 +41,7 @@ use Studip\Button, Studip\LinkButton;
             <?= vis_chooser($user['visible'], true) ?>
         </td>
     </tr>
-    <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td>
             <?= _("Vorname:") ?>
             <span style="color: red; font-size: 1.6em">*</span>
@@ -50,7 +50,7 @@ use Studip\Button, Studip\LinkButton;
             <input class="user_form" type="text" name="Vorname" value="<?= htmlReady($user['Vorname']) ?>" required>
         </td>
     </tr>
-    <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td>
             <?= _("Nachname:") ?>
             <span style="color: red; font-size: 1.6em">*</span>
@@ -59,7 +59,7 @@ use Studip\Button, Studip\LinkButton;
             <input class="user_form" type="text" name="Nachname" value="<?= htmlReady($user['Nachname']) ?>" required>
         </td>
     </tr>
-    <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td>
             <?= _("Geschlecht:") ?>
         </td>
@@ -72,7 +72,7 @@ use Studip\Button, Studip\LinkButton;
             <label for="female"><?= _("weiblich") ?></label>
         </td>
     </tr>
-    <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td>
             <?= _("Titel:") ?>
         </td>
@@ -85,7 +85,7 @@ use Studip\Button, Studip\LinkButton;
             <input class="user_form" type="text" name="title_front" value="<?= htmlReady($user['title_front']) ?>">
         </td>
     </tr>
-    <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td>
             <?=_("Titel nachgestellt:") ?>
         </td>
@@ -98,7 +98,7 @@ use Studip\Button, Studip\LinkButton;
             <input class="user_form" type="text" name="title_rear" value="<?= htmlReady($user['title_rear']) ?>">
         </td>
     </tr>
-    <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td>
             <?= _("E-Mail:") ?>
             <span style="color: red; font-size: 1.6em">*</span>
@@ -111,7 +111,7 @@ use Studip\Button, Studip\LinkButton;
             <? endif ?>
         </td>
     </tr>
-    <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td>
             <?= _("Einrichtung:") ?>
         </td>
@@ -134,7 +134,7 @@ use Studip\Button, Studip\LinkButton;
         </td>
     </tr>
 <? if (count($domains) > 0) : ?>
-    <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td>
             <?= _("Nutzerdomäne:") ?>
         </td>

@@ -91,7 +91,7 @@ class SemGroupScheduleDayOfWeek extends ScheduleView {
     function getAddLink($l, $i){
         $add_link_timestamp = $this->base_date + ($i * 60 * 60);
         $add_link_timestamp .= "&show_object=" . $this->show_columns[$l];
-        return sprintf ("class=\"steel1\" align=\"right\" valign=\"bottom\"><a href=\"%s%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/calplus.gif\" %s border=\"0\"></a></td>",
+        return sprintf ("class=\"table_row_even\" align=\"right\" valign=\"bottom\"><a href=\"%s%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/calplus.gif\" %s border=\"0\"></a></td>",
                         $this->add_link, $add_link_timestamp, tooltip(sprintf(_("Eine neue Belegung von %s bis %s Uhr anlegen"), date ("H:i", $add_link_timestamp), date ("H:i", $add_link_timestamp + (2 * 60 * 60)))));
     }
 }

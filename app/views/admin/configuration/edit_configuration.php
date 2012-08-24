@@ -79,7 +79,7 @@ use Studip\Button, Studip\LinkButton;
                 (<em><?= _('Bitte die neue Kategorie eingeben')?></em>)
            </td>
         </tr>
-        <tr class="steel2">
+        <tr class="table_footer">
             <td>&nbsp;</td>
             <td>
                 <?= Button::createAccept(_('Übernehmen'),'uebernehmen', array('title' => _('Änderungen übernehmen')))?>

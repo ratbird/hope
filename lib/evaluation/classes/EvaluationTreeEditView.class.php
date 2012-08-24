@@ -272,7 +272,7 @@ function showEvalTree(){
     if ( $this->startItemID != ROOT_BLOCK ){
 
     $html .= " <tr>\n"
-        . "  <td class=\"steelgraulight\" align=\"left\" valign=\"top\" "
+        . "  <td class=\"table_row_odd\" align=\"left\" valign=\"top\" "
         . "colspan=\"";
     $html .= ($this->moveItemID) ? "1" : "1";
     $html .="\""
@@ -2250,7 +2250,7 @@ function createFormNew($show = ARRANGMENT_BLOCK){
     $tr = new HTML ("tr");
 
     $td = new HTML ("td");
-    $td->addAttr ("class","steelkante");
+    $td->addAttr ("class","content_body");
 #   $td->addAttr ("class","steelgrau");
     $td->addAttr ("align","center");
 
@@ -2466,7 +2466,7 @@ function createGlobalFeatures (){
     $tr = new HTML ("tr");
 
     $td = new HTML ("td");
-    $td->addAttr ("class","steelgraulight");
+    $td->addAttr ("class","table_row_odd");
     $td->addAttr ("colspan","2");
 
     $b = new HTML ("b");
@@ -2546,7 +2546,7 @@ function createQuestionFeatures(){
     $tr = new HTML ("tr");
 
     $td = new HTMl ("td");
-    $td->addAttr ("class","steelgraulight");
+    $td->addAttr ("class","table_row_odd");
     $td->addAttr ("colspan","2");
 
     $b = new HTML ("b");
@@ -2653,7 +2653,7 @@ function createQuestionForm(){
     // captions
     $tr2 = new HTML ("tr");
 
-    $showclass = "steelgraulight";
+    $showclass = "table_row_odd";
 
     $td2 = new HTML ("td");
     $td2->addAttr ("class",$showclass);
@@ -2733,7 +2733,7 @@ function createQuestionForm(){
     if ($question->getObjectID() == $questionID)
         $tr2->addAttr ("class", "eval_highlight");
     else
-        $tr2->addAttr ("class", ($i%2 == 1 ? "steelgraulight" : "steel1"));
+        $tr2->addAttr ("class", ($i%2 == 1 ? "table_row_odd" : "table_row_even"));
 
     $td2 = new HTML ("td");
     $td2->addAttr ("align","center");
@@ -2888,7 +2888,7 @@ function createQuestionForm(){
    if (sizeof($questions) == 0){
 
     $tr2 = new HTML ("tr");
-    $td2->addAttr ("class","steel1");
+    $td2->addAttr ("class","table_row_even");
 
     $td2 = new HTML ("td");
     $td2->addAttr ("align","center");
@@ -2921,8 +2921,8 @@ function createQuestionForm(){
     $table2->addAttr ("border","0");
     $table2->addAttr ("class",
         ( $i%2 == 6 )
-            ? "steelkante"
-            : "steelkante");
+            ? "content_body"
+            : "content_body");
     $table2->addAttr ("cellspacing", "0");
     $table2->addAttr ("cellpadding", "2");
 

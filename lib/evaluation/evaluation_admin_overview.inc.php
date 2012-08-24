@@ -226,7 +226,7 @@ if( empty($openID) ) {
 $table->addContent ($lib->createClosingRow());
 $tr = new HTML ("tr");
 $td = new HTML ("td");
-$td->addAttr ("class", "steel1");
+$td->addAttr ("class", "table_row_even");
 $td->addContent (new HTMLempty ("br"));
 $tr->addContent($td);
 $table->addContent($tr);

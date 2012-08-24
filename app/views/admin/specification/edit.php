@@ -18,13 +18,13 @@ use Studip\Button, Studip\LinkButton;
 <form action="<?= $controller->url_for('admin/specification/edit') ?><?= ($rule) ? '/' . $rule['lock_id'] : '' ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
     <table class="default">
-        <tr class="steelgraulight">
+        <tr class="table_row_odd">
             <td><?= _("Name der Regel:") ?> <span style="color: red; font-size: 1.6em">*</span></td>
             <td colspan="2">
                 <input type="text" name="rulename" value="<?= htmlReady(Request::get('rulename', $rule['name'])) ?>" style="width: 350px;" required="required">
             </td>
         </tr>
-        <tr class="steel1">
+        <tr class="table_row_even">
             <td><?= _("Beschreibung:") ?> </td>
             <td colspan="2">
                 <textarea cols="60" rows="5" name="description"" style="width: 350px;"><?= htmlReady(Request::get('description', $rule['description'])) ?></textarea>

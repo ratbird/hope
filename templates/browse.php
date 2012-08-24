@@ -16,7 +16,7 @@ use Studip\Button, Studip\LinkButton;
 <div style="width: 100%;">
 <table width="100%" cellpadding="2" cellspacing="0">
     <? if (count($institutes)): ?>
-    <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td style="white-space: nowrap;">
             <b><?=_("in Einrichtungen:")?></b>
         </td>
@@ -32,7 +32,7 @@ use Studip\Button, Studip\LinkButton;
     <? endif ?>
     <!-- form zur wahl der seminare -->
     <? if (count($courses)): ?>
-    <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td style="white-space: nowrap;">
             <b><?=_("in Veranstaltungen:")?></b>
         </td>
@@ -47,7 +47,7 @@ use Studip\Button, Studip\LinkButton;
     </tr>
     <? endif ?>
     <!-- form zur freien Suche -->
-    <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td>
             <b><?=_("Name:")?></b>
         </td>
@@ -60,7 +60,7 @@ use Studip\Button, Studip\LinkButton;
                     ->render() ?>
         </td>
     </tr>
-    <tr class="steel2">
+    <tr class="table_footer">
         <td colspan="2" align="center">
             <?= Button::create(_('Suchen'), 'send')?>
             <?= Button::create(_('Zurücksetzen'), 'reset')?>

@@ -35,7 +35,7 @@ function getTemplateDataForSingleDate($val, $cycle_id = '') {
 
     $tpl['cycle_id'] = $cycle_id;                           // CycleData-ID (entspricht einer einzelnen regelmäßigen Veranstaltungszeit
     $tpl['date'] = $val->toString();    // Text-String für Datum
-    $tpl['class'] = 'steelgreen';                           // Standardklasse
+    $tpl['class'] = 'content_title_green';                           // Standardklasse
     $tpl['sd_id'] = $val->getSingleDateID();    // Die ID des aktuellen Einzeltermins (kann an CycleData oder Seminar hängen)
     $tpl['type'] = $val->getDateType();
     $tpl['art'] = $val->getTypeName();
@@ -47,10 +47,10 @@ function getTemplateDataForSingleDate($val, $cycle_id = '') {
    * je nachdem ob es sich um einen gelöschten Termin handelt oder nicht */
     if ($val->isExTermin()) {
         $tpl['deleted'] = true;
-        $tpl['class'] = 'steelred';
+        $tpl['class'] = 'content_title_red';
     } else {
         $tpl['deleted'] = false;
-        $tpl['class'] = 'steelgreen';
+        $tpl['class'] = 'content_title_green';
     }
 
     /* Aging */
@@ -111,7 +111,7 @@ function getTemplateDataForSingleDate($val, $cycle_id = '') {
             $resObj = ResourceObject::Factory($val->getResourceID());
             $tpl['room'] = _("Raum: ");
             $tpl['room'] .= $resObj->getFormattedLink(TRUE, TRUE, TRUE);
-            $tpl['class'] = 'steelgreen';
+            $tpl['class'] = 'content_title_green';
         } else {
             if ($GLOBALS['RESOURCES_SHOW_ROOM_NOT_BOOKED_HINT']) {
                 $tpl['room'] = '('._("kein gebuchter Raum").')';
@@ -132,7 +132,7 @@ function getTemplateDataForSingleDate($val, $cycle_id = '') {
                     $tpl['room'] .= '&nbsp;('._($name).')';
                 }
             }
-            $tpl['class'] = 'steelred';
+            $tpl['class'] = 'content_title_red';
         }
     } else {
         $tpl['room'] = '';

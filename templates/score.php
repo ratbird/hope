@@ -31,7 +31,7 @@
 <? endforeach ?>
 </table>
 <? if (ceil($numberOfPersons / get_config('ENTRIES_PER_PAGE')) > 1) : ?>
-<div style="text-align:right; padding-top: 2px; padding-bottom: 2px" class="steelgraudunkel"><?= $this->render_partial("shared/pagechooser", array("perPage" => get_config('ENTRIES_PER_PAGE'), "num_postings" => $numberOfPersons,
+<div style="text-align:right; padding-top: 2px; padding-bottom: 2px" class="content_seperator"><?= $this->render_partial("shared/pagechooser", array("perPage" => get_config('ENTRIES_PER_PAGE'), "num_postings" => $numberOfPersons,
     "page"=>$page, "pagelink" => "score.php?page=%s"));
 ?></div>
 <? endif ?>

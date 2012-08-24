@@ -226,7 +226,7 @@ class SemBrowse {
         //Quicksort Formular... fuer die eiligen oder die DAUs....
         echo $this->search_obj->getFormStart(UrlHelper::getLink());
         echo "<table id=\"search_sem_qs\" border=\"0\" align=\"center\" cellspacing=0 cellpadding=2 width = \"99%\">\n";
-        echo "<tr><td class=\"steel1\" align=\"center\" valign=\"middle\"><font size=\"-1\">";
+        echo "<tr><td class=\"table_row_even\" align=\"center\" valign=\"middle\"><font size=\"-1\">";
         echo '<label for="search_sem_qs_choose">' . _("Schnellsuche:") . "</label>&nbsp;";
         echo $this->search_obj->getSearchField("qs_choose",array('style' => 'vertical-align:middle;font-size:9pt;', 'id' => 'search_sem_qs_choose'));
         if ($this->sem_browse_data['level'] == "vv"){
@@ -249,7 +249,7 @@ class SemBrowse {
         echo $this->search_obj->getSearchField("sem",array('style' => 'vertical-align:middle;font-size:9pt;', 'id' => 'search_sem_sem'),$this->sem_browse_data['default_sem']);
         echo "&nbsp;";
         echo $this->search_obj->getSemChangeButton(array('style' => 'vertical-align:middle'));
-        echo "</font></td></tr><tr><td class=\"steel1\" align=\"center\" valign=\"middle\">";
+        echo "</font></td></tr><tr><td class=\"table_row_even\" align=\"center\" valign=\"middle\">";
         $quicksearch = QuickSearch::get($this->search_obj->form_name . "_quick_search", new SeminarSearch('number-name-lecturer'))
                     ->setAttributes(array('aria-label' => _("Suchbegriff")))
                     ->setInputStyle("vertical-align:middle;font-size:9pt;width:50%;")
@@ -274,41 +274,41 @@ class SemBrowse {
         $this->search_obj->search_fields['type']['size'] = 40 ;
         echo "<table id=\"search_sem_xts\" border=\"0\" align=\"center\" cellspacing=0 cellpadding=2 width = \"99%\">\n";
         echo $this->search_obj->getFormStart(URLHelper::getLink("?send=yes"));
-        echo "<tr><td class=\"steel1\" align=\"right\" width=\"15%\"><label for=\"search_sem_title\">" . _("Titel:") . "</label> </td>";
-        echo "<td class=\"steel1\" align=\"left\" width=\"35%\">";
+        echo "<tr><td class=\"table_row_even\" align=\"right\" width=\"15%\"><label for=\"search_sem_title\">" . _("Titel:") . "</label> </td>";
+        echo "<td class=\"table_row_even\" align=\"left\" width=\"35%\">";
         echo $this->search_obj->getSearchField("title", array('id' => 'search_sem_title', 'style' => 'width:100%;font-size:10pt;'));
-        echo "</td><td class=\"steel1\" align=\"right\" width=\"15%\"><label for=\"search_sem_type\">" . _("Typ:") . "</label></td><td class=\"steel1\" align=\"left\" width=\"35%\">";
+        echo "</td><td class=\"table_row_even\" align=\"right\" width=\"15%\"><label for=\"search_sem_type\">" . _("Typ:") . "</label></td><td class=\"table_row_even\" align=\"left\" width=\"35%\">";
         echo $this->search_obj->getSearchField("type",array('style' => 'width:*;font-size:10pt;', 'id' => 'search_sem_type'));
         echo "</td></tr>\n";
-        echo "<tr><td class=\"steel1\" align=\"right\" width=\"15%\"><label for=\"search_sem_sub_title\">" . _("Untertitel:") . "</label> </td>";
-        echo "<td  class=\"steel1\" align=\"left\" width=\"35%\">";
+        echo "<tr><td class=\"table_row_even\" align=\"right\" width=\"15%\"><label for=\"search_sem_sub_title\">" . _("Untertitel:") . "</label> </td>";
+        echo "<td  class=\"table_row_even\" align=\"left\" width=\"35%\">";
         echo $this->search_obj->getSearchField("sub_title", array('id' => 'search_sem_sub_title', 'style' => 'width:100%;font-size:10pt;'));
-        echo "</td><td class=\"steel1\" align=\"right\" width=\"15%\"><label for=\"search_sem_sem\">" . _("Semester:") . "</label> </td>";
-        echo "<td class=\"steel1\" align=\"left\" width=\"35%\">";
+        echo "</td><td class=\"table_row_even\" align=\"right\" width=\"15%\"><label for=\"search_sem_sem\">" . _("Semester:") . "</label> </td>";
+        echo "<td class=\"table_row_even\" align=\"left\" width=\"35%\">";
         echo $this->search_obj->getSearchField("sem",array('style' => 'width:*;font-size:10pt;', 'id' => 'search_sem_sem'),$this->sem_browse_data['default_sem']);
         echo "</td></tr>";
-        echo "<tr><td class=\"steel1\" align=\"right\" width=\"15%\"><label for=\"search_sem_number\">" . _("Nummer:") . "</label> </td>";
-        echo "<td class=\"steel1\" align=\"left\" width=\"35%\">";
+        echo "<tr><td class=\"table_row_even\" align=\"right\" width=\"15%\"><label for=\"search_sem_number\">" . _("Nummer:") . "</label> </td>";
+        echo "<td class=\"table_row_even\" align=\"left\" width=\"35%\">";
         echo $this->search_obj->getSearchField("number", array('id' => 'search_sem_number', 'style' => 'width:100%;font-size:10pt;'));
-        echo "</td><td class=\"steel1\" align=\"right\" width=\"15%\">&nbsp;</td><td class=\"steel1\" align=\"left\" width=\"35%\">&nbsp; </td></tr>\n";
-        echo "<tr><td class=\"steel1\" align=\"right\" width=\"15%\"><label for=\"search_sem_comment\">" . _("Kommentar:") . "</label> </td>";
-        echo "<td class=\"steel1\" align=\"left\" width=\"35%\">";
+        echo "</td><td class=\"table_row_even\" align=\"right\" width=\"15%\">&nbsp;</td><td class=\"table_row_even\" align=\"left\" width=\"35%\">&nbsp; </td></tr>\n";
+        echo "<tr><td class=\"table_row_even\" align=\"right\" width=\"15%\"><label for=\"search_sem_comment\">" . _("Kommentar:") . "</label> </td>";
+        echo "<td class=\"table_row_even\" align=\"left\" width=\"35%\">";
         echo $this->search_obj->getSearchField("comment", array('id' => 'search_sem_comment', 'style' => 'width:100%;font-size:10pt;'));
-        echo "</td><td class=\"steel1\" align=\"right\" width=\"15%\">&nbsp;</td><td class=\"steel1\" align=\"left\" width=\"35%\">&nbsp; </td></tr>\n";
-        echo "<tr><td class=\"steel1\" align=\"right\" width=\"15%\"><label for=\"search_sem_lecturer\">" . _("DozentIn:") . "</label> </td>";
-        echo "<td class=\"steel1\" align=\"left\" width=\"35%\">";
+        echo "</td><td class=\"table_row_even\" align=\"right\" width=\"15%\">&nbsp;</td><td class=\"table_row_even\" align=\"left\" width=\"35%\">&nbsp; </td></tr>\n";
+        echo "<tr><td class=\"table_row_even\" align=\"right\" width=\"15%\"><label for=\"search_sem_lecturer\">" . _("DozentIn:") . "</label> </td>";
+        echo "<td class=\"table_row_even\" align=\"left\" width=\"35%\">";
         echo $this->search_obj->getSearchField("lecturer", array('id' => 'search_sem_lecturer', 'style' => 'width:100%;font-size:10pt;'));
-        echo "</td><td class=\"steel1\" align=\"right\" width=\"15%\"><label for=\"search_sem_combination\">" . _("Verkn&uuml;pfung:") . "</label> </td>";
-        echo "<td class=\"steel1\" align=\"left\" width=\"35%\">";
+        echo "</td><td class=\"table_row_even\" align=\"right\" width=\"15%\"><label for=\"search_sem_combination\">" . _("Verkn&uuml;pfung:") . "</label> </td>";
+        echo "<td class=\"table_row_even\" align=\"left\" width=\"35%\">";
         echo $this->search_obj->getSearchField("combination",array('style' => 'width:*;font-size:10pt;', 'id' => 'search_sem_combination'));
         echo "</td></tr>\n";
         if ($this->show_class()) {
-            echo "<tr><td class=\"steel1\" align=\"right\" width=\"15%\"><label for=\"search_sem_scope\">" . _("Bereich:") . "</label> </td>";
-            echo "<td class=\"steel1\" align=\"left\" width\"35%\">";
+            echo "<tr><td class=\"table_row_even\" align=\"right\" width=\"15%\"><label for=\"search_sem_scope\">" . _("Bereich:") . "</label> </td>";
+            echo "<td class=\"table_row_even\" align=\"left\" width\"35%\">";
             echo $this->search_obj->getSearchField("scope", array('id' => 'search_sem_scope', 'style' => 'width:100%;font-size:10pt;'));
-            echo "</td><td class=\"steel1\" colspan=\"2\">&nbsp</td></tr>";
+            echo "</td><td class=\"table_row_even\" colspan=\"2\">&nbsp</td></tr>";
         }
-        echo "<tr><td class=\"steel1\" align=\"center\" colspan=\"4\">";
+        echo "<tr><td class=\"table_row_even\" align=\"center\" colspan=\"4\">";
         echo $this->search_obj->getSearchButton();
         echo "&nbsp;";
         echo $this->search_obj->getNewSearchButton();
@@ -337,7 +337,7 @@ class SemBrowse {
         echo "\n<table id=\"sem_search_level\" border=\"0\" align=\"center\" cellspacing=0 cellpadding=0 width = \"99%\">\n";
         if ($this->sem_browse_data['level'] == "f"){
 
-            echo "\n<tr><td align=\"center\" class=\"steelgraulight\" height=\"40\" valign=\"middle\"><div style=\"margin-top:10px;margin-bottom:10px;\"><font size=\"-1\">";
+            echo "\n<tr><td align=\"center\" class=\"table_row_odd\" height=\"40\" valign=\"middle\"><div style=\"margin-top:10px;margin-bottom:10px;\"><font size=\"-1\">";
             if (($this->show_result && count($this->sem_browse_data['search_result'])) || $this->sem_browse_data['cmd'] == "xts") {
                 printf(_("Suche im %sEinrichtungsverzeichnis%s"),"<a href=\"".URLHelper::getLink('?level=ev&cmd=qs&sset=0')."\">","</a>");
                 if ($this->show_class()){
@@ -385,14 +385,14 @@ class SemBrowse {
 
             list($group_by_data, $sem_data) = $this->get_result();
             echo "\n<table id=\"sem_search_result\" border=\"0\" align=\"center\" cellspacing=0 cellpadding=2 width = \"99%\">\n";
-            echo "\n<tr><td class=\"steelgraulight\" colspan=\"4\"><div style=\"margin-top:10px;margin-bottom:10px;\"><font size=\"-1\"><b>&nbsp;"
+            echo "\n<tr><td class=\"table_row_odd\" colspan=\"4\"><div style=\"margin-top:10px;margin-bottom:10px;\"><font size=\"-1\"><b>&nbsp;"
                 . sprintf(_(" %s Veranstaltungen gefunden %s, Gruppierung: %s"),count($sem_data),
                 (($this->sem_browse_data['sset']) ? _("(Suchergebnis)") : ""),
                 $this->group_by_fields[$this->sem_browse_data['group_by']]['name'])
                 . "</b></font></div></td></tr>";
 
             foreach ($group_by_data as $group_field => $sem_ids){
-                echo "\n<tr><td class=\"steelkante\" colspan=\"4\"><font size=-1><b>";
+                echo "\n<tr><td class=\"content_seperator\" colspan=\"4\"><font size=-1><b>";
                 switch ($this->sem_browse_data["group_by"]){
                     case 0:
                     echo $this->search_obj->sem_dates[$group_field]['name'];
@@ -438,7 +438,7 @@ class SemBrowse {
                             $sem_name .= ' ('. _("Studiengruppe");
                             if ($seminar_obj->admission_prelim) $sem_name .= ', '. _("Zutritt auf Anfrage");
                             $sem_name .= ')';
-                            echo '<td width="1%" class="steel1">';
+                            echo '<td width="1%" class="table_row_even">';
                             echo StudygroupAvatar::getAvatar($seminar_id)->getImageTag(Avatar::SMALL, array('title' => htmlReady($seminar_obj->getName())));
                             echo '</td>';
                         } else {
@@ -450,13 +450,13 @@ class SemBrowse {
                             } elseif ($this->sem_browse_data["group_by"]) {
                                 $sem_name .= " (" . $this->search_obj->sem_dates[$sem_number_start]['name'] . ")";
                             }
-                            echo '<td width="1%" class="steel1">';
+                            echo '<td width="1%" class="table_row_even">';
                             echo CourseAvatar::getAvatar($seminar_id)->getImageTag(Avatar::SMALL, array('title' => htmlReady($seminar_obj->getName())));
                             echo '</td>';
 
                         }
 
-                        echo '<td class="steel1" width="66%" colspan="2">';
+                        echo '<td class="table_row_even" width="66%" colspan="2">';
                         echo "<a href=\"{$this->target_url}?{$this->target_id}={$seminar_id}&send_from_search=1&send_from_search_page=";
                         echo URLHelper::getLink('?keep_result_set=1')."\">", htmlReady($sem_name), "</a><br>";
 
@@ -476,7 +476,7 @@ class SemBrowse {
                             echo "<div style=\"margin-left:5px;font-size:smaller\">" . $temp_turnus_string . "</div>";
                         }
                         echo '</td>';
-                        echo "<td class=\"steel1\" align=\"right\">(";
+                        echo "<td class=\"table_row_even\" align=\"right\">(";
                         $doz_name = array();
                         $c = 0;
                         reset($sem_data[$seminar_id]['fullname']);

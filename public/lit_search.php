@@ -182,7 +182,7 @@ for ($i = 0 ; $i < $_the_search->term_count; ++$i){
 ?>
 
 <tr>
-<td colspan="3" class="steel2" align="center">&nbsp;
+<td colspan="3" class="table_footer" align="center">&nbsp;
 <?=$_the_search->outer_form->getFormButton('search',$_attributes['button']);?>
 &nbsp;
 <?=$_the_search->outer_form->getFormButton('reset',$_attributes['button']);?>
@@ -199,9 +199,9 @@ if (($num_hits = $_the_search->getNumHits())){
 ?>
 <table width="99%" border="0" cellpadding="2" cellspacing="0" style="font-size:10pt">
 <tr>
-<td class="steel2" align="left">
+<td class="table_footer" align="left">
 <?printf(_("%s Treffer in Ihrem Suchergebnis."), $num_hits);?>
-</td><td class="steel2" align="right">
+</td><td class="table_footer" align="right">
 <?
 echo _("Anzeige: ");
 if ($_the_search->start_result > 1) {
@@ -265,9 +265,9 @@ for ($i = $_the_search->start_result; $i <= $end_result; ++$i){
 ?>
 </td></tr>
 <tr>
-<td class="steel2" align="left">
+<td class="table_footer" align="left">
 <?printf(_("%s Treffer in Ihrem Suchergebnis."), $num_hits);?>
-</td><td class="steel2" align="right">
+</td><td class="table_footer" align="right">
 <?
 echo _("Anzeige: ");
 if ($_the_search->start_result > 1) {

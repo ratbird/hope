@@ -28,7 +28,7 @@
             <? endif; ?>
             </td>
         </tr>
-        <tr class="steel2" style="text-align: center;">
+        <tr class="table_footer" style="text-align: center;">
             <th style="text-align: left;"><?=_("Name")?></th>
             <th><?=_("Feldtyp")?></th>
             <th>

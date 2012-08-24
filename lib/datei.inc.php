@@ -858,14 +858,14 @@ function form($refresh = FALSE)
     else
         $print .= "\n<br><br>" . _("Sie haben diese Datei zum Aktualisieren ausgew&auml;hlt. Sie <b>&uuml;berschreiben</b> damit die vorhandene Datei durch eine neue Version!") . "<br><br><center><table width=\"90%\" style=\"border: 1px solid #000000;\" border=0 cellpadding=2 cellspacing=3 id=\"upload_form\">";
     $print.="\n";
-    $print.="\n<tr><td class=\"steel1\" width=\"20%\"><font size=-1><b>";
+    $print.="\n<tr><td class=\"table_row_even\" width=\"20%\"><font size=-1><b>";
 
     //erlaubte Upload-Typen aus Regelliste der Config.inc.php auslesen
     if (!$folder_system_data['zipupload']) {
         if ($UPLOAD_TYPES[$SessSemName["art_num"]]) {
             if ($UPLOAD_TYPES[$SessSemName["art_num"]]["type"] == "allow") {
                 $i=1;
-                $print.= _("Unzul&auml;ssige Dateitypen:") . "</b><font></td><td class=\"steel1\" width=\"80%\"><font size=-1>";
+                $print.= _("Unzul&auml;ssige Dateitypen:") . "</b><font></td><td class=\"table_row_even\" width=\"80%\"><font size=-1>";
                 foreach ($UPLOAD_TYPES[$SessSemName["art_num"]]["file_types"] as $ft) {
                     if ($i !=1)
                         $print.= ", ";
@@ -875,7 +875,7 @@ function form($refresh = FALSE)
                 }
             else {
                 $i=1;
-                $print.= _("Zul&auml;ssige Dateitypen:") . "</b><font></td><td class=\"steel1\" width=\"80%\"><font size=-1>";
+                $print.= _("Zul&auml;ssige Dateitypen:") . "</b><font></td><td class=\"table_row_even\" width=\"80%\"><font size=-1>";
                 foreach ($UPLOAD_TYPES[$SessSemName["art_num"]]["file_types"] as $ft) {
                     if ($i !=1)
                         $print.= ", ";
@@ -887,7 +887,7 @@ function form($refresh = FALSE)
         else {
             if ($UPLOAD_TYPES["default"]["type"] == "allow") {
                 $i=1;
-                $print.= _("Unzul&auml;ssige Dateitypen:") . "</b><font></td><td class=\"steel1\" width=\"80%\"><font size=-1>";
+                $print.= _("Unzul&auml;ssige Dateitypen:") . "</b><font></td><td class=\"table_row_even\" width=\"80%\"><font size=-1>";
                 foreach ($UPLOAD_TYPES["default"]["file_types"] as $ft) {
                     if ($i !=1)
                         $print.= ", ";
@@ -897,7 +897,7 @@ function form($refresh = FALSE)
                 }
             else {
                 $i=1;
-                $print.= _("Zul&auml;ssige Dateitypen:") . "</b></td><font><td class=\"steel1\" width=\"80%\"><font size=-1>";
+                $print.= _("Zul&auml;ssige Dateitypen:") . "</b></td><font><td class=\"table_row_even\" width=\"80%\"><font size=-1>";
                 foreach ($UPLOAD_TYPES["default"]["file_types"] as $ft) {
                     if ($i !=1)
                         $print.= ", ";
@@ -907,41 +907,41 @@ function form($refresh = FALSE)
                 }
             }
     } else {
-        $print.= _("Zul&auml;ssige Dateitypen:") . "</b></td><font><td class=\"steel1\" width=\"80%\"><font size=-1>";
+        $print.= _("Zul&auml;ssige Dateitypen:") . "</b></td><font><td class=\"table_row_even\" width=\"80%\"><font size=-1>";
         $print .= 'ZIP';
     }
     $print.="</font></td></tr>";
-    $print.="\n<tr><td class=\"steel1\" width=\"20%\"><font size=-1><b>" . _("Maximale Gr&ouml;&szlig;e:") . "</b></font></td><td class=\"steel1\" width=\"80%\"><font size=-1><b>".($max_filesize / 1048576)." </b>" . _("Megabyte") . "</font></td></tr>";
+    $print.="\n<tr><td class=\"table_row_even\" width=\"20%\"><font size=-1><b>" . _("Maximale Gr&ouml;&szlig;e:") . "</b></font></td><td class=\"table_row_even\" width=\"80%\"><font size=-1><b>".($max_filesize / 1048576)." </b>" . _("Megabyte") . "</font></td></tr>";
     if ($folder_system_data['zipupload']) {
-        $print.="\n<tr><td class=\"steel1\" width=\"20%\"><font size=-1><b>" . _("Maximaler Inhalt des Ziparchivs:")
-            . "</b></font></td><td class=\"steel1\" width=\"80%\"><font size=-1>"
+        $print.="\n<tr><td class=\"table_row_even\" width=\"20%\"><font size=-1><b>" . _("Maximaler Inhalt des Ziparchivs:")
+            . "</b></font></td><td class=\"table_row_even\" width=\"80%\"><font size=-1>"
             . sprintf(_("<b>%d</b> Dateien und <b>%d</b> Ordner"),get_config('ZIP_UPLOAD_MAX_FILES'), get_config('ZIP_UPLOAD_MAX_DIRS'))
             . "</font></td></tr>";
     }
-    $print.= "<tr><td class=\"steelgraudunkel\" colspan=2><font size=-1>" . _("1. Klicken Sie auf <b>'Durchsuchen...'</b>, um eine Datei auszuw&auml;hlen.") . " </font></td></tr>";
+    $print.= "<tr><td class=\"content_seperator\" colspan=2><font size=-1>" . _("1. Klicken Sie auf <b>'Durchsuchen...'</b>, um eine Datei auszuw&auml;hlen.") . " </font></td></tr>";
     $print.= "\n<tr>";
-    $print.= "\n<td class=\"steel1\" colspan=2 align=\"left\" valign=\"center\"><font size=-1>&nbsp;<label for=\"the_file\">" . _("Dateipfad:") . "</label>&nbsp;</font><br>";
+    $print.= "\n<td class=\"table_row_even\" colspan=2 align=\"left\" valign=\"center\"><font size=-1>&nbsp;<label for=\"the_file\">" . _("Dateipfad:") . "</label>&nbsp;</font><br>";
     $print.= "&nbsp;<input name=\"the_file\" id=\"the_file\" aria-required=\"true\" type=\"file\"  style=\"width: 70%\" size=\"30\">&nbsp;</td></td>";
     $print.= "\n</tr>";
     if (!$refresh && !$folder_system_data['zipupload']) {
-        $print.= "<tr><td class=\"steelgraudunkel\" colspan=2><font size=-1>" . _("2. Schutz gem&auml;&szlig; Urhebberecht.") . "</font></td></tr>";
-        $print.= "\n<tr><td class=\"steel1\" colspan=2 align=\"left\" valign=\"center\"><font size=-1>";
+        $print.= "<tr><td class=\"content_seperator\" colspan=2><font size=-1>" . _("2. Schutz gem&auml;&szlig; Urhebberecht.") . "</font></td></tr>";
+        $print.= "\n<tr><td class=\"table_row_even\" colspan=2 align=\"left\" valign=\"center\"><font size=-1>";
         $print.= "\n&nbsp;<label><input type=\"RADIO\" name=\"protected\" value=\"0\"".(!$protect ? "checked" :"") .'>'._("Ja, dieses Dokument ist frei von Rechten Dritter") ;
         $print.= "</label>\n&nbsp;<label><input type=\"RADIO\" name=\"protected\" value=\"1\"".($protect ? "checked" :"") .'>'._("Nein, dieses Dokument ist <u>nicht</u> frei von Rechten Dritter");
         $print.= "</label></td></tr>";
 
-        $print.= "<tr><td class=\"steelgraudunkel\" colspan=2><font size=-1>" . _("3. Geben Sie eine kurze Beschreibung und einen Namen f&uuml;r die Datei ein.") . "</font></td></tr>";
-        $print.= "\n<tr><td class=\"steel1\" colspan=2 align=\"left\" valign=\"center\"><label><font size=-1>&nbsp;" . _("Name:") . "&nbsp;</font><br>";
+        $print.= "<tr><td class=\"content_seperator\" colspan=2><font size=-1>" . _("3. Geben Sie eine kurze Beschreibung und einen Namen f&uuml;r die Datei ein.") . "</font></td></tr>";
+        $print.= "\n<tr><td class=\"table_row_even\" colspan=2 align=\"left\" valign=\"center\"><label><font size=-1>&nbsp;" . _("Name:") . "&nbsp;</font><br>";
         $print.= "\n&nbsp;<input type=\"TEXT\" name=\"name\" style=\"width: 70%\" size=\"40\" maxlength\"255\"></label></td></tr>";
-        $print.= "\n<tr><td class=\"steel1\" colspan=2 align=\"left\" valign=\"center\"><label><font size=-1>&nbsp;" . _("Beschreibung:") . "&nbsp;</font><br>";
+        $print.= "\n<tr><td class=\"table_row_even\" colspan=2 align=\"left\" valign=\"center\"><label><font size=-1>&nbsp;" . _("Beschreibung:") . "&nbsp;</font><br>";
         $print.= "\n&nbsp;<textarea name=\"description\" style=\"width: 70%\" COLS=40 ROWS=3 WRAP=PHYSICAL></textarea></label>&nbsp;</td></tr>";
-        $print.= "\n<tr><td class=\"steelgraudunkel\" colspan=2 ><font size=-1>" . _("4. Klicken Sie auf <b>'absenden'</b>, um die Datei hochzuladen") . "</font></td></tr>";
+        $print.= "\n<tr><td class=\"content_seperator\" colspan=2 ><font size=-1>" . _("4. Klicken Sie auf <b>'absenden'</b>, um die Datei hochzuladen") . "</font></td></tr>";
     } else if ($folder_system_data['zipupload']) {
-        $print.= "\n<tr><td class=\"steelgraudunkel\" colspan=2 ><font size=-1>" . _("3. Klicken Sie auf <b>'absenden'</b>, um das Ziparchiv hochzuladen und in diesem Ordner zu entpacken.") . "</font></td></tr>";
+        $print.= "\n<tr><td class=\"content_seperator\" colspan=2 ><font size=-1>" . _("3. Klicken Sie auf <b>'absenden'</b>, um das Ziparchiv hochzuladen und in diesem Ordner zu entpacken.") . "</font></td></tr>";
     } else {
-        $print.= "\n<tr><td class=\"steelgraudunkel\" colspan=2 ><font size=-1>" . _("3. Klicken Sie auf <b>'absenden'</b>, um die Datei hochzuladen und damit die alte Version zu &uuml;berschreiben.") . "</font></td></tr>";
+        $print.= "\n<tr><td class=\"content_seperator\" colspan=2 ><font size=-1>" . _("3. Klicken Sie auf <b>'absenden'</b>, um die Datei hochzuladen und damit die alte Version zu &uuml;berschreiben.") . "</font></td></tr>";
     }
-    $print.= "\n<tr><td class=\"steel1\" colspan=2 align=\"center\" valign=\"center\">";
+    $print.= "\n<tr><td class=\"table_row_even\" colspan=2 align=\"center\" valign=\"center\">";
 
     $print .= '<div class="button-group">';
     $print .= Button::createAccept(_("Absenden"), "create", array('onClick' => 'return STUDIP.OldUpload.upload_start(jQuery(this).closest("form"));'));
@@ -1355,9 +1355,9 @@ function link_form ($range_id, $updating=FALSE)
     $print.="</font></td></tr>";
     $print.= "\n<form enctype=\"multipart/form-data\" name=\"link_form\" action=\"" . URLHelper::getLink('#anker') . "\" method=\"post\">";
     $print.= CSRFProtection::tokenTag();
-    $print.= "<tr><td class=\"steelgraudunkel\" colspan=2><font size=-1>" . _("1. Geben Sie hier den <b>vollständigen Pfad</b> zu der Datei an, die Sie verlinken wollen.") . " </font></td></tr>";
+    $print.= "<tr><td class=\"content_seperator\" colspan=2><font size=-1>" . _("1. Geben Sie hier den <b>vollständigen Pfad</b> zu der Datei an, die Sie verlinken wollen.") . " </font></td></tr>";
     $print.= "\n<tr>";
-    $print.= "\n<td class=\"steel1\" colspan=2 align=\"left\" valign=\"center\"><label><font size=-1>&nbsp;" . _("Dateipfad:") . "&nbsp;</font><br>";
+    $print.= "\n<td class=\"table_row_even\" colspan=2 align=\"left\" valign=\"center\"><label><font size=-1>&nbsp;" . _("Dateipfad:") . "&nbsp;</font><br>";
     if ($hiddenurl)
         $print.= "&nbsp;<input name=\"the_link\" type=\"text\"  style=\"width: 70%\" size=\"30\" value=\"***\"></label>&nbsp;</td></td>";
     else
@@ -1365,21 +1365,21 @@ function link_form ($range_id, $updating=FALSE)
     $print.= "\n</tr>";
     if (!$refresh) {
 
-        $print.= "<tr><td class=\"steelgraudunkel\" colspan=2><font size=-1>" . _("2. Schutz gem&auml;&szlig; Urhebberecht.") . "</font></td></tr>";
-        $print.= "\n<tr><td class=\"steel1\" colspan=2 align=\"left\" valign=\"center\"><font size=-1>&nbsp;" . _("Dieses Dokument ist frei von Rechten Dritter:") . "&nbsp;";
+        $print.= "<tr><td class=\"content_seperator\" colspan=2><font size=-1>" . _("2. Schutz gem&auml;&szlig; Urhebberecht.") . "</font></td></tr>";
+        $print.= "\n<tr><td class=\"table_row_even\" colspan=2 align=\"left\" valign=\"center\"><font size=-1>&nbsp;" . _("Dieses Dokument ist frei von Rechten Dritter:") . "&nbsp;";
         $print.= "\n&nbsp;<label><input type=\"RADIO\" name=\"protect\" value=\"0\"".(!$protect ? "checked" :"") .'>'._("Ja");
         $print.= "</label>\n&nbsp;<label><input type=\"RADIO\" name=\"protect\" value=\"1\"".($protect ? "checked" :"") .'>'._("Nein");
 
-        $print.= "</label><tr><td class=\"steelgraudunkel\" colspan=2><font size=-1>" . _("3. Geben Sie eine kurze Beschreibung und einen Namen für die Datei ein.") . "</font></td></tr>";
-        $print.= "\n<tr><td class=\"steel1\" colspan=2 align=\"left\" valign=\"center\"><label><font size=-1>&nbsp;" . _("Name:") . "&nbsp;</font><br>";
+        $print.= "</label><tr><td class=\"content_seperator\" colspan=2><font size=-1>" . _("3. Geben Sie eine kurze Beschreibung und einen Namen für die Datei ein.") . "</font></td></tr>";
+        $print.= "\n<tr><td class=\"table_row_even\" colspan=2 align=\"left\" valign=\"center\"><label><font size=-1>&nbsp;" . _("Name:") . "&nbsp;</font><br>";
         $print.= "\n".'&nbsp;<input type="text" name="name" id="name" style="width: 70%" size="40" maxlength"255" value="'.$name.'"></label></td></tr>';
 
-        $print.= "\n<tr><td class=\"steel1\" colspan=2 align=\"left\" valign=\"center\"><label><font size=-1>&nbsp;" . _("Beschreibung:") . "&nbsp;</font><br>";
+        $print.= "\n<tr><td class=\"table_row_even\" colspan=2 align=\"left\" valign=\"center\"><label><font size=-1>&nbsp;" . _("Beschreibung:") . "&nbsp;</font><br>";
         $print.= "\n&nbsp;<textarea name=\"description\" id=\"description\" style=\"width: 70%\" COLS=40 ROWS=3 WRAP=PHYSICAL>$description</textarea></label>&nbsp;</td></tr>";
-        $print.= "\n<tr><td class=\"steelgraudunkel\"colspan=2 ><font size=-1>" . _("4. Klicken Sie auf <b>'absenden'</b>, um die Datei zu verlinken") . "</font></td></tr>";
+        $print.= "\n<tr><td class=\"content_seperator\"colspan=2 ><font size=-1>" . _("4. Klicken Sie auf <b>'absenden'</b>, um die Datei zu verlinken") . "</font></td></tr>";
     } else
-        $print.= "\n<tr><td class=\"steelgraudunkel\"colspan=2 ><font size=-1>" . _("2. Klicken Sie auf <b>'absenden'</b>, um die Datei hochzuladen und damit die alte Version zu &uuml;berschreiben.") . "</font></td></tr>";
-    $print.= "\n<tr><td class=\"steel1\" colspan=2 align=\"center\" valign=\"center\">";
+        $print.= "\n<tr><td class=\"content_seperator\"colspan=2 ><font size=-1>" . _("2. Klicken Sie auf <b>'absenden'</b>, um die Datei hochzuladen und damit die alte Version zu &uuml;berschreiben.") . "</font></td></tr>";
+    $print.= "\n<tr><td class=\"table_row_even\" colspan=2 align=\"center\" valign=\"center\">";
 
     $print .= '<div class="button-group">';
     $print .= Button::createAccept(_("Absenden"), "create");

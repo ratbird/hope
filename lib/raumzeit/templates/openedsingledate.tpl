@@ -32,7 +32,7 @@ use Studip\Button,
                     <?=Termin_Eingabe_javascript(1,0,mktime(12,0,0,$tpl['month'],$tpl['day'],$tpl['year']),$tpl['start_stunde'],$tpl['start_minute'],$tpl['end_stunde'],$tpl['end_minute']);?>
                 </TD>
                 <TD width="45%" nowrap class="<?=$tpl['class']?>">
-                  <FONT size="-1"<?=($tpl['class'] == 'steelred') ? ' color="#000000"' : ''?>>
+                  <FONT size="-1"<?=($tpl['class'] == 'content_title_red') ? ' color="#000000"' : ''?>>
                   <?=$tpl['room']?>
                 </FONT>
                     <? if ($tpl['ausruf']) { ?>

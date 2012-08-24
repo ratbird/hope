@@ -93,7 +93,7 @@ use Studip\Button, Studip\LinkButton;
     </tr>
     <? endforeach ?>
 
-    <tr class="steel2">
+    <tr class="table_footer">
         <td colspan="10" align="right">
             <?= Button::create(_('Löschen'), array('title' => _('Alle ausgewählten Benutzer löschen')))?>
             <input class="middle" type="checkbox" name="check_all" title="<?= _('Alle Benutzer auswählen') ?>">

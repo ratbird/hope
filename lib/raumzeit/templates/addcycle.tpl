@@ -6,13 +6,13 @@ use Studip\Button, Studip\LinkButton;
 <?
 define('SELECTED', ' checked');
 if ($GLOBALS['RESOURCES_ENABLE'] && $GLOBALS['RESOURCES_ENABLE_BOOKINGSTATUS_COLORING']) {
-    $class = 'steelred';
+    $class = 'content_title_red';
 } else {
     $class = 'printhead';
 }
 ?>
 <TR>
-    <TD class="steel1" colspan="9">
+    <TD class="table_row_even" colspan="9">
         <a name="newCycle"></a>
         <FORM action="<?= URLHelper::getLink() ?>" method="post" name="Formular">
         <?= CSRFProtection::tokenTag() ?>
@@ -60,7 +60,7 @@ if ($GLOBALS['RESOURCES_ENABLE'] && $GLOBALS['RESOURCES_ENABLE_BOOKINGSTATUS_COL
                 </TD>
             </TR>
             <TR>
-                <TD colspan="9" class="steel1" align="center">
+                <TD colspan="9" class="table_row_even" align="center">
                     <BR/>
                     <INPUT type="hidden" name="cmd" value="doAddCycle">
                     <?= Button::create(_('Übernehmen')) ?>

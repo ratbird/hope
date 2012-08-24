@@ -38,7 +38,7 @@
         </td>
     </tr>
     <?php foreach ($studydegree['profession'] as $index => $studycourse): ?>
-    <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td class="label-cell">
            <?=$abschluss_id + 1 ?>.<?=$index + 1 ?>
            <?= htmlReady($studycourse['name']) ?>

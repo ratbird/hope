@@ -32,7 +32,7 @@
     <tbody>
     <? if ($semester): ?>
         <tr>
-            <td class="steelkante" colspan="3">
+            <td class="content_seperator" colspan="3">
                 <strong><?= htmlReady($semester) ?></strong>
             </td>
         </tr>

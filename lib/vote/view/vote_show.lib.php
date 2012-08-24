@@ -287,7 +287,7 @@ function createOpeningOrClosingArrow($eval = FALSE)
    $html .= "<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\"".
       " width=\"100%\">\n";
    $html .= " <tr>\n";
-   $html .= "  <td colspan=\"4\" class=\"steel1\" align=\"center\">\n";
+   $html .= "  <td colspan=\"4\" class=\"table_row_even\" align=\"center\">\n";
    $html .= "   <a href=\"";
 
    /* If we are on a homepage ---------------------------------------------- */
@@ -456,7 +456,7 @@ function createStoppedVoteHeader(&$vote, $evalDB = NULL)
     $html .= "</td>\n";
     $html .= "</tr>\n";
     $html .= "<tr>\n";
-    $html .= "<td class=steelgraulight style=\"border:1px solid black; padding-top:8px; ".
+    $html .= "<td class=table_row_odd style=\"border:1px solid black; padding-top:8px; ".
               "padding-left:6px; padding-right:6px;\" colspan=2>\n";
 
     return $html;

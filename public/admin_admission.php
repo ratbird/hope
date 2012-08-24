@@ -1679,7 +1679,7 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
         <? endif; ?>
         <!-- Hier gehts normal weiter -->
         <tr>
-            <td class="steel2" align="center" colspan="3">
+            <td class="table_footer" align="center" colspan="3">
                 <?= Button::createAccept(_("Übernehmen"), "uebernehmen") ?>
             </td>
         </tr>

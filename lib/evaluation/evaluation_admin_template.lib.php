@@ -130,7 +130,7 @@ class EvalTemplateGUI {
      /* Likertskalen ------------------------------------------------- */
      $td = new HTML ("td");
      $td->addAttr("align","right");
-     $td->addAttr("class","steelkante");
+     $td->addAttr("class","content_body");
      $tr = new HTML ("tr");
 
      $b = new HTM( "b" );
@@ -139,7 +139,7 @@ class EvalTemplateGUI {
      $tr->addContent($td);
 
      $td = new HTML ("td");
-     $td->addAttr("class","steelkante");
+     $td->addAttr("class","content_body");
 
      /* create button ------------------------------------ */
      $input = new HTMpty( "input" );
@@ -192,7 +192,7 @@ class EvalTemplateGUI {
 
      /* Normale / Multiplechoice ---------------------------------------- */
      $td = new HTML ("td");
-     $td->addAttr("class","steelkante");
+     $td->addAttr("class","content_body");
      $tr = new HTML ("tr");
      $td->addAttr("align","right");
 
@@ -202,7 +202,7 @@ class EvalTemplateGUI {
      $tr->addContent($td);
 
      $td = new HTML ("td");
-     $td->addAttr("class","steelkante");
+     $td->addAttr("class","content_body");
 
      /* create button ------------------------------------ */
      $input = new HTMpty( "input" );
@@ -257,7 +257,7 @@ class EvalTemplateGUI {
      /* Freitext ----------------------------------------------------- */
 
     $td = new HTML ("td");
-    $td->addAttr("class","steelkante");
+    $td->addAttr("class","content_body");
     $tr = new HTML ("tr");
     $td->addAttr("align","right");
 
@@ -267,7 +267,7 @@ class EvalTemplateGUI {
     $tr->addContent($td);
 
     $td = new HTML ("td");
-    $td->addAttr("class","steelkante");
+    $td->addAttr("class","content_body");
     $input = new HTMpty( "input" );
     $input->attr( "type", "image" );
     $input->attr( "name", "template_createfree_scale_button" );
@@ -773,14 +773,14 @@ class EvalTemplateGUI {
     $table->attr ("width", "100%");
     $tr = new HTM( "tr" );
     $td = new HTM( "td" );
-    $td->attr( "class", "steelkante" );
+    $td->attr( "class", "content_body" );
     $td->attr( "align", "center" );
     $td->cont( $input );
     $tr->cont( $td );
 
     if( $showDelete ) {
        $td = new HTM( "td" );
-       $td->attr( "class", "steelkante" );
+       $td->attr( "class", "content_body" );
        $td->attr( "align", "center" );
        $td->cont( $input2 );
        $tr->cont( $td );
@@ -917,14 +917,14 @@ class EvalTemplateGUI {
     $table->attr ("width", "100%");
     $tr = new HTM( "tr" );
     $td = new HTM( "td" );
-    $td->attr( "class", "steelkante" );
+    $td->attr( "class", "content_body" );
     $td->attr( "align", "center" );
     $td->cont( $input );
     $tr->cont( $td );
 
     if( $showDelete ) {
    $td = new HTM( "td" );
-   $td->attr( "class", "steelkante" );
+   $td->attr( "class", "content_body" );
    $td->attr( "align", "center" );
    $td->cont( $input2 );
    $tr->cont( $td );

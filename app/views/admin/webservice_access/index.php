@@ -23,7 +23,7 @@
   </th>
 </tr>
 <? foreach ($ws_rules as $rule): ?>
-  <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+  <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
     <? if (isset($edit) && $edit == $rule->id) :?>
         <td>
             <a name="edit"></a>

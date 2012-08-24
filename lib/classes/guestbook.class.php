@@ -121,12 +121,12 @@ class Guestbook
 
             printcontent ("100%",$formposting,$content,$buttons,TRUE,"");
             echo "</td></tr></table>";
-            echo "<table width=\"100%\" border=0 cellpadding=3 cellspacing=0 align=center><tr><td class=\"steel2\">";
+            echo "<table width=\"100%\" border=0 cellpadding=3 cellspacing=0 align=center><tr><td class=\"table_footer\">";
             if ($this->rights == TRUE)
                 $buttons = $this->buttonsGuestbook();
             else
                 $buttons = "";
-            echo "$buttons</td><td class= \"steel2\" align=\"right\">$zusatz&nbsp;</td></tr></table>";
+            echo "$buttons</td><td class= \"table_footer\" align=\"right\">$zusatz&nbsp;</td></tr></table>";
 
         }
         echo "</td></tr></table></td></tr></table>";
@@ -186,10 +186,10 @@ class Guestbook
         $statement->execute(array($this->user_id));
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
             $position = $this->number - ($this->guestpage+$i);
-            $output .= "<tr><td class=\"steel2\"><b><font size=\"-1\">#$position - <a href=\"".URLHelper::getLink('?username='.get_username($row['user_id']))."\">";
+            $output .= "<tr><td class=\"table_footer\"><b><font size=\"-1\">#$position - <a href=\"".URLHelper::getLink('?username='.get_username($row['user_id']))."\">";
             $output .= sprintf(_('%s hat am %s geschrieben:'), get_fullname($row['user_id'], 'full', true)."</a>", date('d.m.Y - H:i', $row['mkdate']));
             $output .= "</font></b></td></tr>"
-                . "<tr><td class=\"steelgraulight\"><font size=\"-1\">".formatready($row['content'])."</font><p align=\"right\">";
+                . "<tr><td class=\"table_row_odd\"><font size=\"-1\">".formatready($row['content'])."</font><p align=\"right\">";
             if ($this->rights == TRUE)
                 $addon = LinkButton::create(_('Löschen'), URLHelper::getURL("?guestbook=delete&guestpage=". $this->guestpage . "&deletepost=" . $row['post_id'] . "&username="
                             . $this->username . "&studipticket=" . get_ticket() . "#guest"));
@@ -198,7 +198,7 @@ class Guestbook
 
             $output .= $addon
                 ."</p></td></tr>"
-                . "<tr><td class=\"steel1\">&nbsp;</td></tr>";
+                . "<tr><td class=\"table_row_even\">&nbsp;</td></tr>";
             $i++;
         }
         $output .= "</table>";

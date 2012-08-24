@@ -1321,14 +1321,14 @@ class Seminar
         $stat = $this->getStatOfNotBookedRooms($cycle_id);
         if ($GLOBALS['RESOURCES_ENABLE'] && $GLOBALS['RESOURCES_ENABLE_BOOKINGSTATUS_COLORING']) {
             if (!$this->metadate->hasDates($cycle_id, $this->filterStart, $this->filterEnd)) {
-                $return = 'steelred';
+                $return = 'content_title_red';
             } else {
                 if (($stat['open'] > 0) && ($stat['open'] == $stat['all'])) {
-                    $return = 'steelred';
+                    $return = 'content_title_red';
                 } else if ($stat['open'] > 0) {
-                    $return = 'steelgelb';
+                    $return = 'content_title_yellow ';
                 } else {
-                    $return = 'steelgreen';
+                    $return = 'content_title_green ';
                 }
             }
         } else {

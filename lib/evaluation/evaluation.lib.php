@@ -69,7 +69,7 @@ class EvalCommon {
     if ($iconURL) {
        $tdTitle->addAttr ("class","topic");
     } else {
-       $tdTitle->addAttr ("class","steel3");
+       $tdTitle->addAttr ("class","content_body");
     }
     $tdTitle->addAttr ("colspan","2");
     $tdTitle->addAttr ("align","left");

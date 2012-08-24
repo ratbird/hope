@@ -21,7 +21,7 @@ foreach ($show_entry['seminars'] as $sem_id) {
             </thead>
             <tbody>
                 <? foreach ($seminars as $seminar) : ?>
-                    <tr class="<?= TextHelper::cycle('steelgraulight', 'steel1') ?>">
+                    <tr class="<?= TextHelper::cycle('table_row_odd', 'table_row_even') ?>">
                         <td width="15%"><?= htmlReady($seminar->getNumber()) ?></td>
                         <td width="60%">
                             <a href="<?= URLHelper::getLink('details.php?sem_id='. $seminar->getId()) ?>">

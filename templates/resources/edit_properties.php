@@ -51,7 +51,7 @@ $types = array(
         </tr>
     </tbody>
     <tfoot>
-        <tr class="steel2">
+        <tr class="table_footer">
             <td>&nbsp;</td>
             <td colspan="2">
                 <?= Button::create(_('Anlegen'), '_add_property') ?>
@@ -160,7 +160,7 @@ $types = array(
     <? endforeach; ?>
     </tbody>
     <tfoot>
-        <tr class="steel2">
+        <tr class="table_footer">
             <td colspan="5" style="text-align: center;">
                 <?= Button::createAccept(_('Übernehmen'), '_send_property_type') ?>
             </td>

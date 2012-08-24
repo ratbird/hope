@@ -208,9 +208,9 @@ function PrintAktualStatusgruppen($range_id, $view, $edit_id = '')
                 }
 
                 if ($k % 2) {
-                    $class = 'steel1';
+                    $class = 'table_row_even';
                 } else {
-                    $class = 'steelgraulight';
+                    $class = 'table_row_odd';
                 }
                 echo "\n<tr>\n\t\t<td><font color=\"#AAAAAA\">$k</font></td>";
                 ?>
@@ -533,7 +533,7 @@ if (is_array($msgs)) {
     <?= CSRFProtection::tokenTag() ?>
         <table width="100%" border="0" cellspacing="0">
             <tr>
-                <td class="steel1" valign="top" width="50%">
+                <td class="table_row_even" valign="top" width="50%">
                     <br>
     <?
     echo"<input type=\"HIDDEN\" name=\"range_id\" value=\"$range_id\">\n";

@@ -50,28 +50,28 @@
         <td class="blank" align="right" nowrap valign="middle">
             <table cellspacing="0" cellpadding="0">
                 <tr>
-                    <td class="steel1">
+                    <td class="table_row_even">
                     <font size="2" color="#555555">&nbsp; <?=_("Aktive Veranstaltungen")?>:</font>
                     </td>
-                    <td class="steel1" align="right">
+                    <td class="table_row_even" align="right">
                     <font size="2" color="#555555">&nbsp; <?=$num_active_courses?>&nbsp;</font>
                     </td>
                     <td class="blank">&nbsp; &nbsp; </td>
                 </tr>
                 <tr>
-                    <td class="steel1">
+                    <td class="table_row_even">
                     <font size="2" color="#555555">&nbsp; <?=_("Registrierte NutzerInnen")?>:</font>
                     </td>
-                    <td class="steel1" align="right">
+                    <td class="table_row_even" align="right">
                     <font size="2" color="#555555">&nbsp; <?=$num_registered_users?>&nbsp; </font>
                     </td>
                     <td class="blank">&nbsp; &nbsp; </td>
                 </tr>
                 <tr>
-                    <td class="steel1">
+                    <td class="table_row_even">
                     <font size="2" color="#555555">&nbsp; <?=_("Davon online")?>:</font>
                     </td>
-                    <td class="steel1" align="right">
+                    <td class="table_row_even" align="right">
                     <font size="2" color="#555555">&nbsp; <?=$num_online_users?>&nbsp; </font>
                     </td>
                     <td class="blank">&nbsp; &nbsp; </td>

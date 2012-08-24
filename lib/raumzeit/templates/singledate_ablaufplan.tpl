@@ -34,14 +34,14 @@ use Studip\Button, Studip\LinkButton;
 </tr>
 <? if ($_SESSION['issue_open'][$tpl['sd_id']] || $openAll) { ?>
 <TR>
-    <TD colspan="6" class="steel1" align="center">
+    <TD colspan="6" class="table_row_even" align="center">
         <? if (!$openAll) { ?>
         <FORM action="<?= URLHelper::getLink() ?>" method="post">
         <?= CSRFProtection::tokenTag() ?>
         <? } ?>
         <TABLE border="0" cellspacing="0" cellpadding="1" width="99%">
             <TR>
-                <TD width="70%" class="steel1">
+                <TD width="70%" class="table_row_even">
                     <FONT size="-1">
                         <B><?=("Thema:")?></B><br>
                         <INPUT type="text" name="theme_title<?=$openAll ? '§'.$tpl['sd_id']: ''?>" maxlength="255" size="50" value="<?= htmlReady($tpl['theme_title']) ?>" style="width: 98%"><br>
@@ -49,7 +49,7 @@ use Studip\Button, Studip\LinkButton;
                         <textarea class="add_toolbar" name="theme_description<?=$openAll ? '§'.$tpl['sd_id']: ''?>" rows="5" cols="50" style="width: 98%"><?= htmlReady($tpl['theme_description']) ?></textarea><br>
                     </FONT>
                 </TD>
-                <TD class="steel1" valign="top" nowrap="nowrap">
+                <TD class="table_row_even" valign="top" nowrap="nowrap">
                     <font size="-1">
                         <? if ($modules['forum'] || $modules['documents']) : ?>
                         <b><?=_("Verknüpfungen mit diesem Termin:")?></b><br>
@@ -81,7 +81,7 @@ use Studip\Button, Studip\LinkButton;
                 </TD>
             </TR>
             <TR>
-                <TD class="steel1" align="center" colspan="2">
+                <TD class="table_row_even" align="center" colspan="2">
                     <? if (!$openAll) { ?>
                     <? if ($tpl['issue_id']) { ?>
                     <INPUT type="hidden" name="issue_id" value="<?=$tpl['issue_id']?>">

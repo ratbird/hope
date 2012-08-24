@@ -20,7 +20,7 @@ class StmAbstractAssiVisualization {
 
         $table = new Table($styles);
 
-        echo $table->open(array('class' => 'steelgraulight'));
+        echo $table->open(array('class' => 'table_row_odd'));
         $table->setCellColspan(1);
         echo $table->openRow();
             echo $table->cell(
@@ -30,7 +30,7 @@ class StmAbstractAssiVisualization {
             echo $table->cell(Assets::img('infobox/archiv.jpg'));
         echo $table->close();
 
-        echo $table->open(array('class' => 'steelgraulight'));
+        echo $table->open(array('class' => 'table_row_odd'));
         echo $form->getFormStart();
         echo $table->blankRow();
         $table->setCellColspan(4);
@@ -46,7 +46,7 @@ class StmAbstractAssiVisualization {
             echo $table->closeRow();
         }
         echo $table->close();
-        echo $table->open(array('class' => 'steelgraulight'));
+        echo $table->open(array('class' => 'table_row_odd'));
 
         echo $form->getFormStart();
 
@@ -65,7 +65,7 @@ class StmAbstractAssiVisualization {
 
         $star = "";
 
-        echo $table->open(array('class' => 'steelgraulight'));
+        echo $table->open(array('class' => 'table_row_odd'));
         $table->setCellColspan(1);
         echo $table->openRow();
             echo $table->cell(
@@ -74,12 +74,12 @@ class StmAbstractAssiVisualization {
             , array('align' => 'center', 'width' => '50%', 'class' => 'blank'));
             echo $table->cell('<img src="'.$GLOBALS['ASSETS_URL'].'images/hands01_04.jpg" border="0" align=right">', array('align' => 'right', 'width' => '70%', 'class' => 'blank'));
         echo $table->openRow();
-        echo $table->cell('<font size=-1>Alle mit einem Sternchen <font size=+1 color="red"><b>*</b></font> markierten Felder <b>m&uuml;ssen</b> ausgef&uuml;llt werden.</font>', array('align => right', 'colspan' => '2', 'class'=>'steel1'));
+        echo $table->cell('<font size=-1>Alle mit einem Sternchen <font size=+1 color="red"><b>*</b></font> markierten Felder <b>m&uuml;ssen</b> ausgef&uuml;llt werden.</font>', array('align => right', 'colspan' => '2', 'class'=>'table_row_even'));
         echo $table->closeRow();
         echo $table->blankRow();
 
         echo $table->close();
-        echo $table->open(array('class' => 'steelgraulight'));
+        echo $table->open(array('class' => 'table_row_odd'));
 
         echo $form->getFormStart();
         $infobox = array ();
@@ -149,7 +149,7 @@ class StmAbstractAssiVisualization {
 
         $table = new Table($styles);
 
-        echo $table->open(array('class' => 'steelgraulight'));
+        echo $table->open(array('class' => 'table_row_odd'));
         $table->setCellColspan(1);
         echo $table->openRow();
             echo $table->cell(
@@ -160,15 +160,15 @@ class StmAbstractAssiVisualization {
             echo $table->cell('<img src="'.$GLOBALS['ASSETS_URL'].'images/hands02_04.jpg" border="0" align=right">', array('align' => 'right', 'class' => 'blank'));
         echo $table->close();
 
-        echo $table->open(array('class' => 'steelgraulight'));
+        echo $table->open(array('class' => 'table_row_odd'));
         $table->setCellColspan(5);
-        echo $table->openRow(array('class' => 'steel1'));
+        echo $table->openRow(array('class' => 'table_row_even'));
             echo $table->cell("<font size=-1>Bitte f&uuml;gen Sie erst alle Zeilen mit dem entsprechenden Knopf zu den Kombinationen hinzu, bevor Sie auf \"weiter\" klicken.</font>");
         echo $form->getFormStart();
 
         for ($i=0; $i<$blocks; $i++) {
             $table->setCellColspan(1);
-            echo $table->openRow(array('align' => 'center',  'class' => 'steelgraudunkel'));
+            echo $table->openRow(array('align' => 'center',  'class' => 'content_seperator'));
                 echo $table->cell($form->getFormFieldCaption('sws_' . $i) , array('style' =>  'font-weight: bold'));
                 echo $table->cell($form->getFormFieldCaption('element_type_id_' . $i) , array('style' =>  'font-weight: bold'));
                 echo $table->cell($form->getFormFieldCaption('workload_' . $i) , array('style' =>  'font-weight: bold'));
@@ -193,13 +193,13 @@ class StmAbstractAssiVisualization {
             echo $table->row(array($table->cell($form->getFormButton('add_elem_' . $i), array('style' => 'text-align: center'))));
             echo $table->blankRow();
             if ($i !=0)
-                echo $table->row(array($table->cell('&nbsp;' . $form->getFormButton('remove_block_' . $i), array('style' => 'text-align: left', 'class' => 'steel1'))));
+                echo $table->row(array($table->cell('&nbsp;' . $form->getFormButton('remove_block_' . $i), array('style' => 'text-align: left', 'class' => 'table_row_even'))));
             else
-            echo $table->blankRow(array('class' => 'steel1'));
+            echo $table->blankRow(array('class' => 'table_row_even'));
         }
 
-        echo $table->row(array($table->cell('&nbsp;' . $form->getFormButton('add_block'), array('style' => 'text-align: left', 'class' => 'steel1'))));
-        echo $table->blankRow(array('class' => 'steel1'));
+        echo $table->row(array($table->cell('&nbsp;' . $form->getFormButton('add_block'), array('style' => 'text-align: left', 'class' => 'table_row_even'))));
+        echo $table->blankRow(array('class' => 'table_row_even'));
         echo $table->openRow();
             echo $table->cell('<h3>Neue Lehr- und Lernform anlegen</h3>');
         $table->setCellColspan(5);
@@ -216,7 +216,7 @@ class StmAbstractAssiVisualization {
 
 
         $table->setCellColspan(5);
-        echo $table->openRow(array('class' => 'steel1'));
+        echo $table->openRow(array('class' => 'table_row_even'));
         $table->setCellAlign('center');
         echo $table->openCell();
             echo $form->getFormButton('back');
@@ -245,7 +245,7 @@ class StmAbstractAssiVisualization {
 
         $table = new Table($styles);
 
-        echo $table->open(array('class' => 'steelgraulight'));
+        echo $table->open(array('class' => 'table_row_odd'));
         $table->setCellColspan(1);
         echo $table->openRow();
             echo $table->cell(
@@ -255,14 +255,14 @@ class StmAbstractAssiVisualization {
         echo $form->getFormStart();
         echo $table->close();
 
-        echo $table->open(array('class' => 'steelgraulight'));
+        echo $table->open(array('class' => 'table_row_odd'));
         $table->setCellColspan(8);
-        echo $table->openRow(array('class' => 'steel1'));
+        echo $table->openRow(array('class' => 'table_row_even'));
             echo $table->cell("<font size=-1>Bitte f&uuml;gen Sie erst alle Zeilen mit dem entsprechenden Knopf hinzu, bevor Sie auf \"weiter\" klicken.</font>");
         echo $form->getFormStart();
 
         $table->setCellColspan(1);
-        echo $table->openRow(array('align' => 'center',  'class' => 'steelgraudunkel'));
+        echo $table->openRow(array('align' => 'center',  'class' => 'content_seperator'));
             echo $table->cell($form->getFormFieldCaption('abschl_list') , array('style' =>  'font-weight: bold'));
             echo $table->cell($form->getFormFieldCaption('stg_list') , array('style' =>  'font-weight: bold'));
             echo $table->cell($form->getFormFieldCaption('type_list') , array('style' =>  'font-weight: bold'));
@@ -304,8 +304,8 @@ class StmAbstractAssiVisualization {
         }
         $table->setCellColspan(8);
         echo $table->blankRow();
-        echo $table->blankRow(array('class' => 'steel1'));
-        echo $table->openRow(array('class' => 'steel1'));
+        echo $table->blankRow(array('class' => 'table_row_even'));
+        echo $table->openRow(array('class' => 'table_row_even'));
         $table->setCellAlign('center');
         echo $table->openCell();
             echo $form->getFormButton('back');
@@ -344,10 +344,10 @@ class StmAbstractAssiVisualization {
             echo $table->cell('<img src="'.$GLOBALS['ASSETS_URL'].'images/hands04_04.jpg" border="0" align=right">', array('align' => 'right', 'class' => 'blank'));
         echo $form->getFormStart();
         echo $table->setCellColspan(2);
-        echo $table->openRow(array('class' => 'steel1'));
+        echo $table->openRow(array('class' => 'table_row_even'));
             echo $table->blankCell();
         echo $table->close();
-        echo $table->open(array('class' => 'steelgraulight'));
+        echo $table->open(array('class' => 'table_row_odd'));
         echo $table->blankRow();
         echo $table->openRow();
             echo $table->cell("&nbsp;&nbsp;<b>" . $form1->getFormFieldCaption('title') . "</b>&nbsp;", array('align' => 'left', 'style' => 'width:12%'));
@@ -392,9 +392,9 @@ class StmAbstractAssiVisualization {
             echo $table->cell(wikiReady($stm->getHints()), array('style' => 'width:35%'));
         echo $table->blankRow();
         echo $table->close();
-        echo $table->open(array('class' => 'steelgraulight'));
+        echo $table->open(array('class' => 'table_row_odd'));
         $table->setCellColspan(1);
-        echo $table->openRow(array('align' => 'center',  'class' => 'steelgraudunkel'));
+        echo $table->openRow(array('align' => 'center',  'class' => 'content_seperator'));
             echo $table->cell($form2->getFormFieldCaption('element_type_id_0') , array('style' =>  'font-weight: bold'));
             echo $table->cell($form2->getFormFieldCaption('sws_0') , array('style' =>  'font-weight: bold'));
             echo $table->cell($form2->getFormFieldCaption('workload_0') , array('style' =>  'font-weight: bold'));
@@ -412,9 +412,9 @@ class StmAbstractAssiVisualization {
         }
         echo $table->blankRow();
         echo $table->close();
-        echo $table->open(array('class' => 'steelgraulight'));
+        echo $table->open(array('class' => 'table_row_odd'));
         $table->setCellColspan(1);
-        echo $table->openRow(array('align' => 'center',  'class' => 'steelgraudunkel'));
+        echo $table->openRow(array('align' => 'center',  'class' => 'content_seperator'));
             echo $table->cell($form3->getFormFieldCaption('abschl_list') , array('style' =>  'font-weight: bold'));
             echo $table->cell($form3->getFormFieldCaption('stg_list') , array('style' =>  'font-weight: bold'));
             echo $table->cell($form3->getFormFieldCaption('type_list') , array('style' =>  'font-weight: bold'));
@@ -438,7 +438,7 @@ class StmAbstractAssiVisualization {
         }
 
         echo $table->close();
-        echo $table->open(array('class' => 'steel1'));
+        echo $table->open(array('class' => 'table_row_even'));
         echo $table->blankRow();
         echo $table->openRow();
         $table->setCellAlign('center');

@@ -497,12 +497,12 @@ if ($_SESSION['archiv_data']["perform_search"]) {
             $view = 0;
             if ($_SESSION['archiv_data']['open']) {
                 if ($_SESSION['archiv_data']['open'] == $result['seminar_id']) {
-                    $class = 'steelgraulight';
+                    $class = 'table_row_odd';
                 } else {
-                    $class = 'steel1';
+                    $class = 'table_row_even';
                 }
             } else {
-                $class = ($c % 2) ? 'steelgraulight' : 'steel1';
+                $class = ($c % 2) ? 'table_row_odd' : 'table_row_even';
                 $c++;
             }
 
@@ -536,7 +536,7 @@ if ($_SESSION['archiv_data']["perform_search"]) {
                 echo "<td class=\"$class\" width=\"9%\" colspan=\"3\">&nbsp;</td>";
 
             if ($_SESSION['archiv_data']["open"] == $result['seminar_id']) {
-                echo "</tr><tr><td class=\"steelgraulight\" colspan=8><blockquote>";
+                echo "</tr><tr><td class=\"table_row_odd\" colspan=8><blockquote>";
                 if (!$result['untertitel']=='')
                     echo "<li><font size=\"-1\"><b>" . _("Untertitel:") . " </b>".htmlReady($result['untertitel'])."</font></li>";
                 if (!$result['beschreibung']=='')

@@ -1,13 +1,13 @@
 <?
 if ($calendar->view instanceof DbCalendarDay) {
     $title_length = 70;
-    $style_cell = 'steel1';
+    $style_cell = 'table_row_even';
 } else {
     // emphesize the current day if $compact is FALSE (this means week-view)
     if (date('Ymd', $day->getStart()) == date('Ymd')) {
         $style_cell = 'celltoday';
     } else {
-        $style_cell = 'steel1';
+        $style_cell = 'table_row_even';
     }
     $title_length = ceil(125 / $calendar->view->getType());
 }

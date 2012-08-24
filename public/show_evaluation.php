@@ -111,7 +111,7 @@ $table->attr( "align", "center" );
 $table->attr( "cellspacing", "0" );
 $table->attr( "cellpadding", "3" );
 $table->attr( "width", "100%" );
-$table->attr( "class", "steel1" );
+$table->attr( "class", "table_row_even" );
 
 /* count mandatory items */
 $mandatories = checkMandatoryItems( $eval );

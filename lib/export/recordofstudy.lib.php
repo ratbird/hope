@@ -135,11 +135,11 @@ function printRecordOfStudies($infobox, $basicdata, $seminare, $notice = NULL){
     }
 
 
-    $html .=createInputBox(_("Hochschule: "), $basicdata["university"], "university", "steelgraulight",     "60")
-          . createInputBox(_("Studienfach: "), $basicdata["fieldofstudy"],   "fieldofstudy",  "steelgraulight",     "60")
-          . createInputBox(_("Name (Vor- und Zuname): "), $basicdata["studentname"],     "studentname",   "steelgraulight",     "60")
-          . createInputBox(_("Semester: "), $basicdata["semester"],      "semester",      "steelkante",        "30")
-          . createInputBox(_("Fachsemester: "), $basicdata["semesternumber"],"semesternumber","steel1",             "2", "tes Fachsemester");
+    $html .=createInputBox(_("Hochschule: "), $basicdata["university"], "university", "table_row_odd",     "60")
+          . createInputBox(_("Studienfach: "), $basicdata["fieldofstudy"],   "fieldofstudy",  "table_row_odd",     "60")
+          . createInputBox(_("Name (Vor- und Zuname): "), $basicdata["studentname"],     "studentname",   "table_row_odd",     "60")
+          . createInputBox(_("Semester: "), $basicdata["semester"],      "semester",      "content_seperator",        "30")
+          . createInputBox(_("Fachsemester: "), $basicdata["semesternumber"],"semesternumber","table_row_even",             "2", "tes Fachsemester");
 
     $html .="       <tr>\n"
           . "        <td colspan=\"4\"><font size=\"-1\"><b><br>\n"
@@ -155,8 +155,8 @@ function printRecordOfStudies($infobox, $basicdata, $seminare, $notice = NULL){
 
   if (!empty($seminare)){
     for($i=0;$i+1<=sizeof($seminare);$i++){
-        if (($i % 2) == 0)  $displayclass = "steel1";
-        else                $displayclass = "steelgraulight";
+        if (($i % 2) == 0)  $displayclass = "table_row_even";
+        else                $displayclass = "table_row_odd";
     $html .="       <tr>\n"
           . "        <td class=\"$displayclass\" height=\"40\"><font size=\"-1\">\n"
           . "         &nbsp;<input name=\"seminarnumber$i\" type=\"text\" size=\"6\" maxlength=\"6\" value=\"".$seminare[$i]["seminarnumber"]."\">\n"

@@ -104,7 +104,7 @@ if ($calendar->view->getType() == 7) {
         if (date('Ymd', $calendar->view->wdays[$i]->getStart()) == date('Ymd')) {
             $style_cell = 'celltoday';
         } else {
-            $style_cell = 'steel1';
+            $style_cell = 'table_row_even';
         }
         ?>
         <td class="<?= $style_cell ?>" style="text-align:right; vertical-align:top;"<?= (($tab_arr[$i]['max_cols'] > 0) ? ' colspan="' . ($tab_arr[$i]['max_cols'] + 1) . '"' : '') ?>>

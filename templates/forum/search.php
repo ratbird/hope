@@ -11,15 +11,15 @@
                             <?= CSRFProtection::tokenTag() ?>
 
                             <table cellpadding="2" cellspacing="0" border="0">
-                                <tr class="steel1">
+                                <tr class="table_row_even">
                                     <td style="font-weight: bold;">
                                         <label for="suchbegriff"><?= _('Suchbegriff:') ?></label>
                                     </td>
-                                    <td class="steel1" style="text-align: right;">
+                                    <td class="table_row_even" style="text-align: right;">
                                         <input type="text" name="suchbegriff" id="suchbegriff">
                                     </td>
                                 </tr>
-                                <tr class="steel1">
+                                <tr class="table_row_even">
                                     <td style="font-weight: bold;">
                                         <label for="author"><?= _('Von:') ?></label>
                                     </td>
@@ -28,7 +28,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="steelgraulight" colspan="2" align="center">
+                                    <td class="table_row_odd" colspan="2" align="center">
                                         <input type="hidden" name="view" value="search">
                                         <br>
                                         <?= Button::create(_('Suchen')) ?>

@@ -387,7 +387,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
     }
     echo "</tr>\n";
     if ($GLOBALS['auth']->auth['jscript']) {
-        echo '<tr class="steel2"><td colspan="2" align="right">';
+        echo '<tr class="table_footer"><td colspan="2" align="right">';
         echo _("Benachrichtigung für alle aufgelisteten Veranstaltungen:") . '</td>';
         for ($i = 0; $i < sizeof($enabled_modules); $i++) {
             echo "<td><input type=\"checkbox\" id=\"mod_row_$i\" ";

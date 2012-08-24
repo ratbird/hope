@@ -302,7 +302,7 @@ function print_snd_message($psm) {
     $message_hovericon['picture'] = 'icons/16/blue/mail.png';
     $icon = MessageIcon($message_hovericon);
     // print message_header
-    echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"99%\" align=\"center\" class=\"steel1\"><tr>";
+    echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"99%\" align=\"center\" class=\"table_row_even\"><tr>";
     if ($psm['count'] == "0" || sizeof($sms_data['tmp']['move_to_folder']) == "1" || $psm['count_2'] == "0") {
         $tmp_line1 = "forumstrich2.gif";
         $tmp_line2 = "blank.gif";
@@ -473,12 +473,12 @@ function print_rec_message($prm) {
         $tmp_line1 = "forumstrich3.gif";
         $tmp_line2 = "forumstrich.gif";
     }
-    echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"99%\" align=\"center\" class=\"steel1\"><tr>";
+    echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"99%\" align=\"center\" class=\"table_row_even\"><tr>";
     echo "<td class=\"blank tree-indent\">".Assets::img($tmp_line1, array('class' => 'text-bottom'))."</td>";
 
-    // if messages with priority are enabled, we pass a steelred css-class
+    // if messages with priority are enabled, we pass a content_title_red css-class
     if ($GLOBALS['MESSAGE_PRIORITY'] && ($prm['priority'] == 'high')) {
-        printhead(0, 0, $link.'" class="'.$ajax_classes.'" '.$custom_data, $open, $red, $icon, $titel, $zusatz, $prm['mkdate'], '', 'age', 'steelred');
+        printhead(0, 0, $link.'" class="'.$ajax_classes.'" '.$custom_data, $open, $red, $icon, $titel, $zusatz, $prm['mkdate'], '', 'age', 'content_title_red');
     } else {
         printhead(0, 0, $link.'" class="'.$ajax_classes.'" '.$custom_data, $open, $red, $icon, $titel, $zusatz, $prm['mkdate'], TRUE, "");
     }
@@ -591,7 +591,7 @@ function print_messages() {
     if (!$n) { // wenn keine nachrichten zum anzeigen
         echo "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"99%\" align=\"center\">";
         $srch_result = "info§".$no_message_text;
-        parse_msg ($srch_result, "§", "steel1", 2, FALSE);
+        parse_msg ($srch_result, "§", "table_row_even", 2, FALSE);
         echo "</td></tr></table>";
     }
 }
@@ -989,7 +989,7 @@ function show_chatselector()
     global $admin_chats, $cmd;
 
     if ($cmd == "write_chatinv") {
-        echo "<td class=\"steel1\" width=\"100%\" valign=\"left\"><div align=\"left\">";
+        echo "<td class=\"table_row_even\" width=\"100%\" valign=\"left\"><div align=\"left\">";
         echo "<font size=\"-1\"><b>"._("Chatraum ausw&auml;hlen:")."</b>&nbsp;&nbsp;</font>";
         echo "<select name=\"chat_id\" style=\"vertical-align:middle;font-size:9pt;\">";
         foreach($admin_chats as $chat_id => $chat_name) {

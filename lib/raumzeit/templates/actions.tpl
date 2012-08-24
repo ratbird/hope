@@ -6,7 +6,7 @@ use Studip\Button, Studip\LinkButton;
 <? if (!$_LOCKED) { ?>
 <TABLE cellpadding="1" cellspacing="0" border="0" width="<?=$tpl['width']?>">
     <TR>
-        <TD class="steel1" colspan="2">
+        <TD class="table_row_even" colspan="2">
             &nbsp;&nbsp;&nbsp;
             <SELECT name="checkboxActionCmd">
                 <OPTION value="noSelection">-- <?=_("Aktion ausw&auml;hlen")?> --</OPTION>
@@ -22,20 +22,20 @@ use Studip\Button, Studip\LinkButton;
         </TD>
     </TR>
     <TR>
-        <TD colspan="2" class="steel1">
+        <TD colspan="2" class="table_row_even">
             &nbsp;
         </TD>
     </TR>
     <TR>
-        <TD align="left" class="steelgraulight">&nbsp;</TD>
-        <TD align="left" class="steelgraulight">
+        <TD align="left" class="table_row_odd">&nbsp;</TD>
+        <TD align="left" class="table_row_odd">
             <FONT size="-1">
                 <B><?=_("Ausgewählten Terminen Dozenten hinzufügen oder entfernen.")?>&nbsp;</B>
             </FONT><BR/>
     </TR>
     <TR>
-        <TD align="left" class="steelgraulight">&nbsp;</TD>
-        <TD colspan="8" class="steelgraulight" align="left">
+        <TD align="left" class="table_row_odd">&nbsp;</TD>
+        <TD colspan="8" class="table_row_odd" align="left">
             <select name="related_persons_action" aria-label="<?= _("Wählen Sie aus, ob Dozenten den ausgewählten regelmäßigen Terminen hinzugefügt, von diesen entfernt oder für diese Termine definiert werden sollen.") ?>">
                 <option value=""><?= _("-- Aktion auswählen --") ?></option>
                 <option value="add" title="<?= _("Die ausgewählten Dozenten werden den ausgewählten Terminen hinzugefügt. Die zuvor schon durchführenden Dozenten bleiben aber weiterhin zusätzlich eingetragen.") ?>"><?= _("durchführende Dozenten hinzufügen") ?></option>
@@ -51,20 +51,20 @@ use Studip\Button, Studip\LinkButton;
         </TD>
     </TR>
     <TR>
-        <TD colspan="2" class="steel1">
+        <TD colspan="2" class="table_row_even">
             &nbsp;
         </TD>
     </TR>
     <TR>
-        <TD align="left" class="steelgraulight">&nbsp;</TD>
-        <TD align="left" class="steelgraulight">
+        <TD align="left" class="table_row_odd">&nbsp;</TD>
+        <TD align="left" class="table_row_odd">
             <FONT size="-1">
                 <B><?=_("ausgew&auml;hlte Termine")?>&nbsp;</B>
             </FONT><BR/>
     </TR>
     <TR>
-        <TD align="left" class="steelgraulight">&nbsp;</TD>
-        <TD colspan="8" class="steelgraulight" align="left">
+        <TD align="left" class="table_row_odd">&nbsp;</TD>
+        <TD colspan="8" class="table_row_odd" align="left">
             <FONT size="-1">
             <?
                 if ($GLOBALS['RESOURCES_ENABLE'] && $resList->numberOfRooms()) :

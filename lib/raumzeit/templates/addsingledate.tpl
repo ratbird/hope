@@ -4,14 +4,14 @@ use Studip\Button,
     Studip\LinkButton;
 ?>
 <TR>
-    <TD colspan="9" class="steelgraulight">
+    <TD colspan="9" class="table_row_odd">
         <FONT size="-1">
             &nbsp;<B><?=_("Neuer Termin:")?></B>
         </FONT>
     </TD>
 </TR>
 <TR>
-    <TD class="steelgraulight" colspan="9">
+    <TD class="table_row_odd" colspan="9">
         <a name="newSingleDate"></a>
         <FORM action="<?= URLHelper::getLink() ?>" method="post">
         <?= CSRFProtection::tokenTag() ?>
@@ -36,8 +36,8 @@ use Studip\Button,
                 </TD>
             </TR>
             <TR>
-                <TD class="steelgraulight">&nbsp;</TD>
-                <TD class="steelgraulight" colspan="2" valign="top">
+                <TD class="table_row_odd">&nbsp;</TD>
+                <TD class="table_row_odd" colspan="2" valign="top">
                     <FONT size="-1">
                     <? if ($GLOBALS['RESOURCES_ENABLE']) { ?>
                     <?=_("Raum:")?>
@@ -60,7 +60,7 @@ use Studip\Button,
                     <?=$GLOBALS['RESOURCES_ENABLE']? _("(f&uuml;hrt <em>nicht</em> zu einer Raumbuchung)") : ''?>
                     </FONT>
                 </TD>
-                <TD class="steelgraulight" colspan="2" valign="top" nowrap>
+                <TD class="table_row_odd" colspan="2" valign="top" nowrap>
                     <FONT size="-1">
                     <?=_("Art:");?>
                     <SELECT name="dateType">
@@ -77,8 +77,8 @@ use Studip\Button,
                 </TD>
             </TR>
             <TR>
-                <TD class="steelgraulight">&nbsp;</TD>
-                <TD class="steelgraulight">
+                <TD class="table_row_odd">&nbsp;</TD>
+                <TD class="table_row_odd">
                     <label><?= _("Durchführende Dozenten:") ?>
                     <SELECT name="related_teachers[]" multiple>
                     <? foreach ($sem->getMembers('dozent') as $dozent) : ?>
@@ -87,10 +87,10 @@ use Studip\Button,
                     </SELECT>
                     </label>
                 </TD>
-                <TD class="steelgraulight">&nbsp;</TD>
+                <TD class="table_row_odd">&nbsp;</TD>
             </TR>
             <TR>
-                <TD colspan="9" class="steelgraulight" align="center">
+                <TD colspan="9" class="table_row_odd" align="center">
                     <INPUT type="hidden" name="cmd" value="doAddSingleDate">
                     <?= Button::createAccept(_('Übernehmen')) ?>
                     <?= LinkButton::createCancel(_('Abbrechen'), URLHelper::getURL()) ?>
@@ -101,7 +101,7 @@ use Studip\Button,
     </TD>
 </TR>
 <TR>
-    <TD colspan="9" class="steel1" height="10"></TD>
+    <TD colspan="9" class="table_row_even" height="10"></TD>
 </TR>
 <?
 unset($tpl)

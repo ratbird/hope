@@ -9,7 +9,7 @@ use Studip\Button, Studip\LinkButton;
 <form action="<?= $controller->url_for('admin/user/migrate') ?>" method="post">
 <?= CSRFProtection::tokenTag() ?>
 <table class="default">
-    <tr class="steel1">
+    <tr class="table_row_even">
         <td>
             <?= _('Alter Benutzer:') ?>
         </td>
@@ -17,7 +17,7 @@ use Studip\Button, Studip\LinkButton;
         <?= QuickSearch::get('old_id', new StandardSearch('user_id'))->render() ?>
         </td>
     </tr>
-    <tr class="steelgraulight">
+    <tr class="table_row_odd">
         <td nowrap>
             <?= _('Neuer zusammengeführter Benutzer:') ?>
         </td>
@@ -25,7 +25,7 @@ use Studip\Button, Studip\LinkButton;
         <?= QuickSearch::get('new_id', new StandardSearch('user_id'))->render() ?>
         </td>
     </tr>
-    <tr class="steel1">
+    <tr class="table_row_even">
         <td nowrap>
             <?= _('Identitätsrelevante Daten migrieren:') ?>
         </td>
@@ -36,7 +36,7 @@ use Studip\Button, Studip\LinkButton;
             </i>
         </td>
     </tr>
-    <tr class="steelgraulight">
+    <tr class="table_row_odd">
         <td nowrap>
             <?= _('Den alten Benutzer löschen:') ?>
         </td>

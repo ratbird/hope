@@ -169,7 +169,7 @@ function chat_show_info($chatid)
 function chat_get_content($chatid, $chatter, $chatinv, $password, $is_active, $chat_user)
 {
     $pic_path = $GLOBALS['ASSETS_URL']."images/";
-    $ret = "\n<tr><td class=\"steel1\" width=\"50%\" valign=\"center\"><p class=\"info\">";
+    $ret = "\n<tr><td class=\"table_row_even\" width=\"50%\" valign=\"center\"><p class=\"info\">";
     if (($entry_level = chat_get_entry_level($chatid)) || $chatinv){
         if (!$is_active){
             $ret .= "<a href=\"#\" onClick=\"javascript:return open_chat('$chatid');\">";
@@ -208,7 +208,7 @@ function chat_get_content($chatid, $chatter, $chatinv, $password, $is_active, $c
         $ret .=  Assets::img('icons/16/grey/decline/chat.png', array('class' => 'text-top'));
         $ret .= "&nbsp;&nbsp;". _("Um diesen Chatraum zu betreten, brauchen Sie eine g&uuml;ltige Einladung.");
     }
-    $ret .= "</p></td><td class=\"steel1\" width=\"50%\" valign=\"center\"><p class=\"info\">";
+    $ret .= "</p></td><td class=\"table_row_even\" width=\"50%\" valign=\"center\"><p class=\"info\">";
     if (!$chatter){
         $ret .= _("Dieser Chatraum ist leer.");
     } else {

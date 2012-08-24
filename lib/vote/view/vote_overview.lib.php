@@ -115,12 +115,12 @@ $html = "\n" . $cssSw->GetHoverJSFunction() . "\n";
         $html .="   </tr>\n"
               . "   <tr ".$cssSw->getHover().">\n";
         if ($searchString == NULL){
-            $html .="    <td class=\"steelkante\">\n"
+            $html .="    <td class=\"content_body\">\n"
                   . "     <br><font size=\"-1\">\n"
                   . $label["searchresults_no_string"]."<br><br>\n";
         }
         else{
-            $html .="    <td class=\"steelkante\">\n"
+            $html .="    <td class=\"content_body\">\n"
                   . "     <br><font size=\"-1\">\n"
                   . $label["searchresults_no_results"]."<br><br>\n";
         }
@@ -151,9 +151,9 @@ $html = "\n" . $cssSw->GetHoverJSFunction() . "\n";
         $html .="    <tr><td class=\"steel\" style=\"vertical-align:bottom;\" align=\"left\" colspan=\"4\" height=\"26\"><font size=\"-1\"><b>$typen_value:</b></font></td></tr>\n";
         if ($ranges["$typen_key"]){
             foreach ($ranges["$typen_key"] as $range) {
-                if ($counter == 0)          $displayclass = "steelkante";
-                elseif (($counter % 2) == 0)    $displayclass = "steel1";
-                else                            $displayclass = "steelgraulight";
+                if ($counter == 0)          $displayclass = "content_body";
+                elseif (($counter % 2) == 0)    $displayclass = "table_row_even";
+                else                            $displayclass = "table_row_odd";
                 $html .="   <tr ".$cssSw->getHover().">"
                       . "<td class=\"".$cssSw->getClass()."\"><font size=\"-1\">".htmlReady($range["name"])."</td>"
                       . "<td class=\"".$cssSw->getClass()."\"><font size=\"-1\"><a href=\"".URLHelper::getLink(VOTE_FILE_ADMIN."?page=edit&rangeID=".$range["id"]."&type=vote&showrangeID=".$range["id"])."\" alt=\"Umfrage erstellen.\">Umfrage erstellen</a></font></td>"
@@ -166,7 +166,7 @@ $html = "\n" . $cssSw->GetHoverJSFunction() . "\n";
         }
         else{
                 $html .="   <tr>"
-                      . "<td class=\"steelkante\" colspan=\"4\"><font size=\"-1\">".$label["searchresults_no_results_range"]."</font></td>"
+                      . "<td class=\"content_body\" colspan=\"4\"><font size=\"-1\">".$label["searchresults_no_results_range"]."</font></td>"
                       . "   </tr>\n";
         }
         reset($ranges);
@@ -342,9 +342,9 @@ function printVoteTable($mode, $votes = NULL, $openID = NULL)
 
      // print tablerows until all votedata is plotted
      while($counter < $arraysize){
-        if ($counter == 0)              $displayclass = "steelkante";
-        elseif (($counter % 2) == 0)    $displayclass = "steel1";
-        else                            $displayclass = "steelgraulight";
+        if ($counter == 0)              $displayclass = "content_body";
+        elseif (($counter % 2) == 0)    $displayclass = "table_row_even";
+        else                            $displayclass = "table_row_odd";
 
       $html.="  <tr>\n";
     //     . "   <td class=$displayclass width=\"10\" align=\"center\">\n";
@@ -452,7 +452,7 @@ function printVoteTable($mode, $votes = NULL, $openID = NULL)
         (($mode == "active") && ($openID == "openallactive")) ||
         (($mode == "stopped") && ($openID == "openallstopped"))
         ){
-        if ($counter == 0)          $displayclass = "steel1";
+        if ($counter == 0)          $displayclass = "table_row_even";
         if ($votes[$counter]["type"] == INSTANCEOF_VOTE)
             $vote = new Vote($votes[$counter]["voteID"]);
         else
@@ -473,8 +473,8 @@ reset($votes);
 // open/close all
     if (($mode != VOTE_STATE_NEW) && (!empty($votes))){
         $html .="   <tr>\n";
-        if (($counter % 2) == 0)    $html .="    <td class=\"steelkante\" colspan=\"9\">\n";
-        else                        $html .="    <td class=\"steelkante\" colspan=\"9\">\n";
+        if (($counter % 2) == 0)    $html .="    <td class=\"content_body\" colspan=\"9\">\n";
+        else                        $html .="    <td class=\"content_body\" colspan=\"9\">\n";
         $html .="    <center>\n";
         if (($mode == VOTE_STATE_ACTIVE) && ($openID == ("openallactive")))
             $html .="     <a href=\"".URLHelper::getLink("?showrangeID=$showrangeID")."\"><img src=\"".Assets::image_path('icons/16/blue/arr_1up.png')."\" alt=\"".$label["arrow_close_all"]."\" title=\"".$label["arrow_close_all"]."\" border=0></a> \n";
@@ -494,15 +494,15 @@ reset($votes);
 //** displays empty data-cells **
    else {
       $html .= "    <tr>\n"
-     . makeTableDataCell("blindgif","steelkante","center","10","1")
-     . makeTableDataCell("blindgif","steelkante","center","18","1")
-     . makeTableDataCell($fontstart.$no_votes_message.$fontend,"steelkante","left","","1")
-     . makeTableDataCell("blindgif","steelkante","center","120")
-     . makeTableDataCell("blindgif","steelkante","center","93")
-     . makeTableDataCell("blindgif","steelkante","center","93")
-     . makeTableDataCell("blindgif","steelkante","center","93")
-     . makeTableDataCell("blindgif","steelkante","center","93")
-     . makeTableDataCell("blindgif","steelkante","center","93")
+     . makeTableDataCell("blindgif","content_body","center","10","1")
+     . makeTableDataCell("blindgif","content_body","center","18","1")
+     . makeTableDataCell($fontstart.$no_votes_message.$fontend,"content_body","left","","1")
+     . makeTableDataCell("blindgif","content_body","center","120")
+     . makeTableDataCell("blindgif","content_body","center","93")
+     . makeTableDataCell("blindgif","content_body","center","93")
+     . makeTableDataCell("blindgif","content_body","center","93")
+     . makeTableDataCell("blindgif","content_body","center","93")
+     . makeTableDataCell("blindgif","content_body","center","93")
      . "    </tr>\n"
      . "   </table>\n"
      . "  </td>\n"
@@ -546,7 +546,7 @@ function makeTableHeaderCell($text = "&nbsp;", $width = "5%", $align = "center",
  * @param width         string        width (optional)
  * @return string a string with a table-head
 */
-function makeTableDataCell($text = "&nbsp;", $class = "steel1", $align = "center", $width = "5%", $colspan = "1"){
+function makeTableDataCell($text = "&nbsp;", $class = "table_row_even", $align = "center", $width = "5%", $colspan = "1"){
     if ($text == "blindgif") $text = "<img width=\"$width\" height=\"1\" src=\"".Assets::image_path('blank.gif')."\" alt=\"\">";
     $html = "    <td class=\"$class\" align=\"$align\" width=\"$width\" colspan=\"$colspan\">\n"
           . "     <font size=\"-1\">$text</font>\n"
@@ -564,7 +564,7 @@ function makeTableDataCell($text = "&nbsp;", $class = "steel1", $align = "center
  * @return string a string with a table-head
 */
 function makeTableDataCellLink ($username, $text = "&nbsp;",
-                $class = "steel1", $align = "center",
+                $class = "table_row_even", $align = "center",
                 $width = "5%", $colspan = "1") {
    $link = "{$CANONICAL_RELATIVE_PATH_STUDIP}about.php?username=".$username;
    $html = "     <td class=\"$class\" align=\"$align\" width=\"$width\" colspan=\"$colspan\">\n"
@@ -593,7 +593,7 @@ function makeTableDataCellLink ($username, $text = "&nbsp;",
  * @param hidden3_value         string        value of hidden button3 (optinal)
  * @return string a string with a table-data-cell and a form
  */
-function makeTableDataCellForm( $displayclass = "steel1",
+function makeTableDataCellForm( $displayclass = "table_row_even",
                                 $action = "overview",
                                 $button_name = "ok",
                                 $button_tooltip = "Tooltip",
@@ -642,7 +642,7 @@ function makeTableDataCellForm( $displayclass = "steel1",
 function makeNewVoteSelectForm($action){
     global $rangemode, $label,$range, $showrangeID;
     $arraysize = count($range);
-    $html = "    <td class=\"steel1\" style=\"vertical-align:middle;\" nowrap>\n"
+    $html = "    <td class=\"table_row_even\" style=\"vertical-align:middle;\" nowrap>\n"
           . "     <form action=\"".URLHelper::getLink($action)."\" method=post><br>&nbsp;\n"
           .       CSRFProtection::tokenTag()
 
@@ -694,7 +694,7 @@ function makeNewVoteSelectForm($action){
 function makeDisplaySelectForm($action){
     global $rangemode, $label,  $range, $showrangeID;
     $arraysize = count($range);
-    $html .="     <td class=\"steelkante\" style=\"vertical-align:middle;\" nowrap>\n"
+    $html .="     <td class=\"content_body\" style=\"vertical-align:middle;\" nowrap>\n"
           . "       <form action=\"".URLHelper::getLink($action)."\" method=post>"
           . CSRFProtection::tokenTag()
           . "<font size=\"-1\"><br>&nbsp;\n"
@@ -731,7 +731,7 @@ function makeDisplaySelectForm($action){
 */
 function makeSearchForm(){
     global $label, $searchRange;
-    $html .="     <td class=\"steelgraulight\" style=\"vertical-align:middle;\" nowrap>\n"
+    $html .="     <td class=\"table_row_odd\" style=\"vertical-align:middle;\" nowrap>\n"
           . "       <form action=\"".URLHelper::getLink($action)."\" method=post>"
           .          CSRFProtection::tokenTag()
           . "        <font size=\"-1\" style=\"vertical-align:middle;\"><br>&nbsp;\n"

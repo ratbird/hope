@@ -186,10 +186,10 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
         if (!$show_as_window) {
             echo "\n<table id=\"appointments_box\" role=\"article\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" align=\"center\">"; //WTF?
             print "\n<tr>";
-            print "\n<td width=\"5%\" class=\"steelgraulight\" align=\"left\"> ";
+            print "\n<td width=\"5%\" class=\"table_row_odd\" align=\"left\"> ";
             if ($rechte)
                 print '<a href="' . URLHelper::getLink('raumzeit.php?cmd=createNewSingleDate#newSingleDate') . '"><img class="middle" src="' . Assets::image_path('icons/16/blue/plus.png') . '" ' . tooltip(_("Einen neuen Termin anlegen")) . '></a></td>';
-            print "\n<td class=\"steelgraulight\" align=\"center\">";
+            print "\n<td class=\"table_row_odd\" align=\"center\">";
             if ($open == "all")
                 print '<a href="' . URLHelper::getLink('?dclose=1') . '"><img style="vertical-align:middle;" src="' . Assets::image_path('close_all.png') . '" ' . tooltip(_("Alle schließen")) . '></a>';
             else
@@ -334,7 +334,7 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
         printf("\n<td align =\"right\" class=\"topic\"> %s<img src=\"".Assets::image_path('icons/16/white/admin.png')."\" %s></a> </td></tr>", $admin_link, tooltip(_("Termine einstellen")));
         ?>
         <tr>
-            <td class="steel1" colspan="2">
+            <td class="table_row_even" colspan="2">
                 <p class="info">
                     <?= _("Es sind keine aktuellen Termine vorhanden. Um neue Termine zu erstellen, klicken Sie rechts auf die Zahnräder.") ?>
                 </p>
@@ -516,7 +516,7 @@ function show_personal_dates ($range_id, $date_start, $date_end, $show_docs = FA
         ?>
 
         <tr>
-            <td class="steel1" colspan="2">
+            <td class="table_row_even" colspan="2">
                 <p class="info">
                     <?= _("Es sind keine aktuellen Termine vorhanden. Um neue Termine zu erstellen, klicken Sie rechts auf die Zahnräder.") ?>
                 </p>
@@ -733,7 +733,7 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
         echo "\n<td align=\"right\" class=\"topic\"> $admin_link<img src=\"" . Assets::image_path('icons/16/white/admin.png') . '" ' . tooltip(_("Termine einstellen")) . '></a> </td></tr>';
         ?>
         <tr>
-            <td class="steel1" colspan="2">
+            <td class="table_row_even" colspan="2">
                 <p class="info">
                     <?= _("Es sind keine aktuellen Termine vorhanden. Um neue Termine zu erstellen, klicken Sie rechts auf die Zahnräder.") ?>
                 </p>

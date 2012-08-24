@@ -73,7 +73,7 @@
                 </tr>
                 <? endforeach; ?>
                 <tr>
-                    <td class="steel1" align="right" colspan="2">
+                    <td class="table_row_even" align="right" colspan="2">
                         <br>
                         
                         <?= LinkButton::create('<< ' . _('Zurück'), URLHelper::getURL('', array('role_id' => $role->getId())) . '#' . $role->getId()) ?>

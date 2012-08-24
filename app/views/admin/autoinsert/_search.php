@@ -5,13 +5,13 @@ use Studip\Button, Studip\LinkButton;
 ?>
 <table class="default">
     <tbody>
-        <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+        <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
             <td><label for="sem_select"><?= _('Semester:') ?></label></td>
             <td>
             <?=SemesterData::GetSemesterSelector(array('name' => 'sem_select', 'id' => 'sem_select', 'class' => 'user_form'), $sem_select, 'key', true)?>
             </td>
         </tr>
-        <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+        <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
             <td><label for="sem_search"><?= _('Veranstaltung:') ?></label></td>
             <td>
                 <input type="text" name="sem_search" value="<?= htmlReady($sem_search) ?>" id="sem_search" class="user_form" required>

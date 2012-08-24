@@ -3,7 +3,7 @@
 use Studip\Button, Studip\LinkButton;
 ?>
 <tr>
-    <td class="steelkante">&nbsp;<b><?=_("Person einer Gruppe zuordnen")?></b></td>
+    <td class="content_seperator">&nbsp;<b><?=_("Person einer Gruppe zuordnen")?></b></td>
 </tr>
 <tr>
     <td class="blank" valign="top">

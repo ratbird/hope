@@ -37,7 +37,7 @@
     </tr>
 
     <? foreach ($log_actions as $log_action): ?>
-      <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+      <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td style="font-size: smaller;">
           <?= htmlReady($log_action['name']) ?>
         </td>

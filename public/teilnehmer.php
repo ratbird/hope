@@ -1003,18 +1003,18 @@ $anzahl_teilnehmer_kontingent += $temp['teilnehmer_kontingent'];
                         <td class="blank">&nbsp;</td>
                     </tr>
                     <tr>
-                <td class="steelkante" valign="middle">
+                <td class="content_seperator" valign="middle">
                             <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" height="22" width="5">
                         </td>
-                <td class="steelkante" valign="middle">
+                <td class="content_seperator" valign="middle">
                             <font size="-1"><?=_("Sortierung:")?>&nbsp;</font>
                         </td>
                         <? if (!(Request::option('view_order')) || (Request::option('view_order') == "abc")) { ?>
-                        <td nowrap class="steelgraulight_shadow" valign="middle">
+                        <td nowrap class="table_row_odd_shadow" valign="middle">
                             <?= Assets::img('icons/16/red/arr_1right.png', array('class' => 'text-top')) ?>
                             <font size="-1"><?=_("Alphabetisch")?></font>&nbsp;
                         <? } else { ?>
-                        <td nowrap class="steelkante" valign="middle">
+                        <td nowrap class="content_seperator" valign="middle">
                             &nbsp;
                             <a href="<?= URLHelper::getLink('?view_order=abc') ?>">
                                 <?= Assets::img('icons/16/grey/arr_1right.png', array('class' => 'text-top')) ?>
@@ -1024,11 +1024,11 @@ $anzahl_teilnehmer_kontingent += $temp['teilnehmer_kontingent'];
                         <? } ?>
                         </td>
                         <? if ((Request::option('view_order')) && (Request::option('view_order') == "date")) { ?>
-                        <td nowrap class="steelgraulight_shadow" valign="middle">
+                        <td nowrap class="table_row_odd_shadow" valign="middle">
                             <?= Assets::img('icons/16/red/arr_1right.png', array('class' => 'text-top')) ?>
                             <font size="-1"><?=_("Anmeldedatum")?></font>&nbsp;
                         <? } else { ?>
-                        <td nowrap class="steelkante" valign="middle">
+                        <td nowrap class="content_seperator" valign="middle">
                             &nbsp;
                             <a href="<?= URLHelper::getLink('?view_order=date') ?>">
                                 <?= Assets::img('icons/16/grey/arr_1right.png', array('class' => 'text-top')) ?>
@@ -1038,11 +1038,11 @@ $anzahl_teilnehmer_kontingent += $temp['teilnehmer_kontingent'];
                         <? } ?>
                         </td>
                         <? if ((Request::option('view_order')) && (Request::option('view_order') == "active")) { ?>
-                        <td nowrap class="steelgraulight_shadow" valign="middle">
+                        <td nowrap class="table_row_odd_shadow" valign="middle">
                             <?= Assets::img('icons/16/red/arr_1right.png', array('class' => 'text-top')) ?>
                             <font size="-1"><?=_("Aktivität")?></font>&nbsp;
                         <? } else { ?>
-                        <td nowrap class="steelkante" valign="middle">
+                        <td nowrap class="content_seperator" valign="middle">
                             &nbsp;
                             <a href="<?= URLHelper::getLink('?view_order=active') ?>">
                                 <?= Assets::img('icons/16/grey/arr_1right.png', array('class' => 'text-top')) ?>
@@ -1052,7 +1052,7 @@ $anzahl_teilnehmer_kontingent += $temp['teilnehmer_kontingent'];
                         <? } ?>
                         </td>
 
-                            <td nowrap align="right" class="steelkante" valign="middle"> <?
+                            <td nowrap align="right" class="content_seperator" valign="middle"> <?
 
             $query = "SELECT showscore FROM seminare WHERE Seminar_id = ?";
             $statement = DBManager::get()->prepare($query);
@@ -1787,8 +1787,8 @@ if (!LockRules::Check($id, 'participants') && $rechte
     <?= CSRFProtection::tokenTag() ?>
     <input type="hidden" name="studipticket" value="<?=$studipticket?>">
     <tr>
-        <td class="steel1" width="40%" align="left">&nbsp; <font size="-1"><b><?=_("MitarbeiterInnen der Einrichtung(en)")?></b></font></td>
-        <td class="steel1" width="40%" align="left"><select name="u_id" size="1">
+        <td class="table_row_even" width="40%" align="left">&nbsp; <font size="-1"><b><?=_("MitarbeiterInnen der Einrichtung(en)")?></b></font></td>
+        <td class="table_row_even" width="40%" align="left"><select name="u_id" size="1">
         <?
         printf('<option value="0">- -  %s - -</option>' . "\n", _('bitte ausw&auml;hlen'));
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
@@ -1799,7 +1799,7 @@ if (!LockRules::Check($id, 'participants') && $rechte
         }
         ?>
         </select></td>
-        <td class="steel1" width="20%" align="center"><font size=-1><?= sprintf(_("als %s"), get_title_for_status('tutor', 1)) ?></font><br>
+        <td class="table_row_even" width="20%" align="center"><font size=-1><?= sprintf(_("als %s"), get_title_for_status('tutor', 1)) ?></font><br>
                  <?= Button::create(_('Eintragen'),'add_tutor' ,array('value'=> sprintf(_("als %s berufen"), get_title_for_status('tutor', 1)) )) ?></td>
 
           </tr></form></table>
@@ -1839,8 +1839,8 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
     <input type="hidden" name="studipticket" value="<?=$studipticket?>">
     <table width="99%" border="0" cellpadding="2" cellspacing="0" border=0 align="center">
         <tr>
-            <td class="steel1" width="40%" align="left">&nbsp; <font size="-1"><b><?=_("Gefundene Nutzer")?></b></font></td>
-            <td class="steel1" width="40%" align="left"><select name="username" size="1">
+            <td class="table_row_even" width="40%" align="left">&nbsp; <font size="-1"><b><?=_("Gefundene Nutzer")?></b></font></td>
+            <td class="table_row_even" width="40%" align="left"><select name="username" size="1">
             <?
             printf("<option value=\"0\">- -  %s - -\n", _("bitte ausw&auml;hlen"));
             while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
@@ -1864,7 +1864,7 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
             }
             ?>
             </td>
-            <td class="steel1" width="20%" align="center"><font size=-1>
+            <td class="table_row_even" width="20%" align="center"><font size=-1>
             <?
             if (!$SEM_CLASS[$SEM_TYPE[$SessSemName["art_num"]]["class"]]["only_inst_user"] && $perm->have_studip_perm("dozent",$SessSemName[1])){
                 printf(_("als %s / %s"), get_title_for_status('tutor', 1), get_title_for_status('autor', 1));
@@ -1889,10 +1889,10 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
     <?= CSRFProtection::tokenTag() ?>
     <table width="99%" border="0" cellpadding="2" cellspacing="0" border=0 align="center">
     <tr>
-        <td class="steel1" width="40%" align="left">&nbsp; <font size=-1><b><?=_("Nutzer in die Veranstaltung eintragen")?></b></font>
+        <td class="table_row_even" width="40%" align="left">&nbsp; <font size=-1><b><?=_("Nutzer in die Veranstaltung eintragen")?></b></font>
             <a name="suchergebnisse"></a>
             <br><font size=-1>&nbsp; <? printf(_("Bitte geben Sie den Vornamen, Nachnamen %s oder Benutzernamen zur Suche ein"), "<br>&nbsp;")?> </font></td>
-        <td class="steel1" width="20%" align="left">
+        <td class="table_row_even" width="20%" align="left">
         <input type="hidden" name="studipticket" value="<?=$studipticket?>">
         <?php
         $NutzerSuchen = new SQLSearch("SELECT auth_user_md5.username, CONCAT(auth_user_md5.Nachname, \", \", auth_user_md5.Vorname, \" (\", auth_user_md5.username, \") - \" , auth_user_md5.perms) " .
@@ -1910,7 +1910,7 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
         ?>
         <input type="hidden" name="seminar_id" value="<?= $SessSemName[1] ?>">
         </td>
-        <td class="steel1" width="20%" align="center">
+        <td class="table_row_even" width="20%" align="center">
             <? if($sem->isAdmissionEnabled()) : ?>
             <select name="consider_contingent">
                 <option value=""><?= _("Kein Kontingent") ?></option>
@@ -1923,7 +1923,7 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
             </select>
             <? endif ?>
         </td>
-        <td class="steel1" width="20%" align="center">
+        <td class="table_row_even" width="20%" align="center">
              <?= Button::create(_('Eintragen'),'add_user',array('value'=>_("eintragen"))) ?>  </td>
 
        
@@ -1948,7 +1948,7 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
                 $accessible_df[] = $df;
             }
         }
-        echo "<tr><td width=\"40%\" class=\"steel1\">\n<div style=\"font-size: small; margin-left:6px; width:300px;\">";
+        echo "<tr><td width=\"40%\" class=\"table_row_even\">\n<div style=\"font-size: small; margin-left:6px; width:300px;\">";
         echo '<b>' . _("Teilnehmerliste übernehmen") . '</b><br>';
         echo _("In das nebenstehende Textfeld können Sie eine Liste mit Namen von NutzerInnen eingeben, die in die Veranstaltung aufgenommen werden sollen.");
         echo '<br>' . _("Wählen Sie in der Auswahlbox das gewünschte Format, in dem Sie die Namen eingeben möchten:");
@@ -1957,7 +1957,7 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
         echo '<br>' . _("<b>Eingabeformat: Nutzername &crarr;</b>");
         echo '<br>' . _("Geben Sie dazu in jede Zeile den Stud.IP Nutzernamen ein.");
         echo "</div></td>\n";
-        echo '<td width="40%" colspan="2" class="steel1">';
+        echo '<td width="40%" colspan="2" class="table_row_even">';
         echo '<div style="margin-top:10px;margin-bottom:10px;">' . _("Eingabeformat:");
         echo '<select style="margin-left:10px;" name="csv_import_format">';
         echo '<option value="realname">'._("Nachname, Vorname").' &crarr;</option>';
@@ -1984,7 +1984,7 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
             echo '</select></label></font>';
         }
         echo "</td>\n";
-        echo "<td width=\"20%\" class=\"steel1\" align=\"center\"> ";
+        echo "<td width=\"20%\" class=\"table_row_even\" align=\"center\"> ";
         echo Button::create(_('Eintragen'),'submit') ;
         if (sizeof($csv_not_found)) {
            echo "<img border=\"0\" " . LinkButton::create(_('Löschen'),URLHelper::getURL());
@@ -1992,7 +1992,7 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
         echo "\n</td></tr>\n";
     } else {
     //  if (sizeof($csv_mult_founds)) {
-            echo "<tr><td class=\"steel1\" colspan=\"2\">";
+            echo "<tr><td class=\"table_row_even\" colspan=\"2\">";
             echo "<div style=\"font-size: small; margin-left:8px; width:350px;\">";
             echo '<b>' . _("Manuelle Zuordnung") . '</b><br>';
             echo _("Folgende NutzerInnen konnten <b>nicht eindeutig</b> zugewiesen werden. Bitte wählen Sie aus der jeweiligen Trefferliste:");
@@ -2015,7 +2015,7 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
 
                 echo "</select>\n</td></tr>\n";
             }
-            echo "<tr><td class=\"steel1\" colspan=\"2\" align=\"right\" nowrap=\"nowrap\">";
+            echo "<tr><td class=\"table_row_even\" colspan=\"2\" align=\"right\" nowrap=\"nowrap\">";
             if($sem->isAdmissionEnabled()){
                 echo '<img src="'.$GLOBALS['ASSETS_URL'].'images/icons/16/grey/info-circle.png" align="absmiddle" hspace="3" border="0" '.tooltip(_("Mit dieser Einstellung beeinflussen Sie, ob Teilnehmer die Sie hinzufügen auf die Kontingentplätze angerechnet werden."),1,1).' >';
                 echo '<font size="-1"><label for="kontingent2">'._("Kontingent berücksichtigen:");
@@ -2034,15 +2034,15 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
             echo "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </td></tr>\n";
 
         if (sizeof($csv_not_found)) {
-            echo "<tr><td width=\"40%\" class=\"steel1\">\n<div style=\"font-size: small; margin-left:8px; width:250px;\">";
+            echo "<tr><td width=\"40%\" class=\"table_row_even\">\n<div style=\"font-size: small; margin-left:8px; width:250px;\">";
             echo '<b>' . _("Nicht gefundene NutzerInnen") . '</b><br>';
             echo _("Im nebenstehende Textfeld sehen Sie eine Auflistung der Suchanfragen, zu denen <b>keine</b> NutzerInnen gefunden wurden.");
             echo "</div></td>\n";
-            echo "<td width=\"40%\" class=\"steel1\">";
+            echo "<td width=\"40%\" class=\"table_row_even\">";
             echo "<textarea name=\"csv_import\" rows=\"6\" cols=\"40\">";
             foreach($csv_not_found as $line) echo htmlReady($line) . chr(10);
             echo "</textarea></td>\n";
-            echo "<td width=\"20%\" class=\"steel1\" align=\"center\">&nbsp;";
+            echo "<td width=\"20%\" class=\"table_row_even\" align=\"center\">&nbsp;";
             echo "\n</td></tr>\n";
         }
     }

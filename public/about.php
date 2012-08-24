@@ -233,7 +233,7 @@ if (isset($current_user)) {
             <?= parse_msg($msg) ?>
         <? endif ?>
         <tr>
-            <td class="steel1" valign="top">
+            <td class="table_row_even" valign="top">
                 <br>
                 <?php $avatar_user_id = is_element_visible_for_user($user->id, $user_id, $visibilities['picture']) ? $user_id : 'nobody'; ?>
                 <?= Avatar::getAvatar($avatar_user_id)->getImageTag(Avatar::NORMAL) ?>
@@ -289,7 +289,7 @@ if (isset($current_user)) {
                 <br>
             </td>
 
-            <td class="steel1" width="99%" valign="top" style="padding: 10px;">
+            <td class="table_row_even" width="99%" valign="top" style="padding: 10px;">
                 <h1><?= htmlReady($current_user->getFullName()) ?></h1>
                     <? if ($current_user['motto'] &&
                             is_element_visible_for_user($user->id, $user_id, $visibilities['motto'])) : ?>

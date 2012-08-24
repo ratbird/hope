@@ -3,15 +3,15 @@
 <form action="<?=$controller->url_for('admin/webservice_access/test')?>" method="post">
 <?=CSRFProtection::tokenTag()?>
 <table class="default">
-  <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+  <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
   <td style="width:200px;"><?= _('API KEY') ?></td>
   <td><input type="text" name="test_api_key" size="50" required value="<?=htmlReady(Request::get("test_api_key"))?>"></td>
   </tr>
-  <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+  <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
   <td><?= _('Methode') ?></td>
   <td><input type="text" name="test_method" size="50" required value="<?=htmlReady(Request::get("test_method"))?>"></td>
   </tr>
-  <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+  <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
   <td><?= _('IP Adresse') ?></td>
   <td><input type="text" name="test_ip" size="50" required value="<?=htmlReady(Request::get("test_ip"))?>"></td>
   </tr>

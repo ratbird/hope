@@ -6,7 +6,7 @@
         <th width="50%"><?= _('Hauptnavigation') ?></th>
         <th width="50%"><?= _('Zusatznavigation') ?></th>
     </tr>
-    <tr class="steel1">
+    <tr class="table_row_even">
         <td valign="top">
             <?= $this->render_partial('sitemap/navigation',
                     array('navigation' => $navigation, 'needs_image' => true, 'style' => 'bold')) ?>

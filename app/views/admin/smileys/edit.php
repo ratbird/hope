@@ -11,11 +11,11 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="steel1">
+            <tr class="table_row_even">
                 <td><?= _('Smiley:')?></td>
                 <td align="center"><?= $smiley->getImageTag() ?></td>
             </tr>
-            <tr class="steelgraulight">
+            <tr class="table_row_odd">
                 <td>
                     <label for="name"><?= _('Name')?></label>
                 </td>
@@ -26,7 +26,7 @@
                     <small><?= _('Erlaubte Zeichen:') ?> a-z 0-9 &ndash; _</small>
                 </td>
             </tr>
-            <tr class="steel1">
+            <tr class="table_row_even">
                 <td>
                     <label for="short"><?= _('Kürzel')?></label>
                 </td>
@@ -35,11 +35,11 @@
                            value="<?= Request::option('short', $smiley->short) ?>">
                 </td>
             </tr>
-            <tr class="steelgraulight">
+            <tr class="table_row_odd">
                 <td><?= _('Erstellt') ?></td>
                 <td><?= date('d.m.Y H:i:s', $smiley->mkdate) ?></td>
             </tr>
-            <tr class="steel1">
+            <tr class="table_row_even">
                 <td><?= _('Geändert') ?></td>
                 <td><?= date('d.m.Y H:i:s', $smiley->chdate) ?></td>
             </tr>

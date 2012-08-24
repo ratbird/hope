@@ -136,7 +136,7 @@ if (!$stm_obj->isNew()){
                 printf ("<font size=-1>%s</font>",htmlReady($stm_obj->getValue('sub_title')));
                 ?>
             </td>
-            <td class="steel1" width="26%" rowspan="7" valign="top">
+            <td class="table_row_even" width="26%" rowspan="7" valign="top">
 
             <? // Infobox
 

@@ -2,7 +2,7 @@ BODY {font-family: Arial, Helvetica, sans-serif}
 
 TD.rahmen_white {border-style: solid; border-color: #000000;  border-width: 1px; background-color: #FFFFFF; background-image: url('pictures/blank.gif');}
 TD.rahmen_steel {border-style: solid; border-color: #000000;  border-width: 1px; background-color: #f3f5f8;}
-TD.rahmen_steelgraulight {border-style: solid; border-color: #000000;  border-width: 1px; background-color: #ebebeb;}
+TD.rahmen_table_row_odd {border-style: solid; border-color: #000000;  border-width: 1px; background-color: #ebebeb;}
 
 div.tree {padding:2px;font-size:90%;}
 div.sem_chooser {text-align:center;font-size:90%;}

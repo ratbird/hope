@@ -17,7 +17,7 @@ class StmInstanceAssiVisualization{
 
         $table = new Table($styles);
 
-        echo $table->open(array('class' => 'steelgraulight'));
+        echo $table->open(array('class' => 'table_row_odd'));
         $table->setCellColspan(1);
         echo $table->openRow();
             echo $table->cell(
@@ -27,7 +27,7 @@ class StmInstanceAssiVisualization{
             echo $table->cell(Assets::img('infobox/archiv.jpg'));
         echo $table->close();
 
-        echo $table->open(array('class' => 'steelgraulight'));
+        echo $table->open(array('class' => 'table_row_odd'));
         echo $form->getFormStart();
         echo $table->blankRow();
         if($form->form_buttons['neuanlegen']){
@@ -48,7 +48,7 @@ class StmInstanceAssiVisualization{
         }
         echo $table->blankRow();
         echo $table->close();
-        echo $table->open(array('class' => 'steelgraulight'));
+        echo $table->open(array('class' => 'table_row_odd'));
 
         echo $form->getFormEnd();
         echo $table->close();
@@ -68,7 +68,7 @@ class StmInstanceAssiVisualization{
 
         $table = new Table($styles);
 
-        echo $table->open(array('class' => 'steelgraulight'));
+        echo $table->open(array('class' => 'table_row_odd'));
         $table->setCellColspan(1);
         echo $table->openRow();
             echo $table->cell(
@@ -78,14 +78,14 @@ class StmInstanceAssiVisualization{
             echo $table->cell('<img src="'.$GLOBALS['ASSETS_URL'].'images/hands01_04.jpg" border="0" align=right">', array('align' => 'right','class' => 'blank'));
         echo $table->close();
 
-        echo $table->open(array('class' => 'steelgraulight'));
+        echo $table->open(array('class' => 'table_row_odd'));
         $table->setCellColspan(3);
-        echo $table->openRow(array('class' => 'steel1'));
+        echo $table->openRow(array('class' => 'table_row_even'));
             echo $table->cell("<font size=-1></font>");
         echo $form->getFormStart();
 
         $table->setCellColspan(1);
-        echo $table->openRow(array('align' => 'center',  'class' => 'steelgraudunkel'));
+        echo $table->openRow(array('align' => 'center',  'class' => 'content_seperator'));
             echo $table->cell($form->getFormFieldCaption('abschl_list') , array('style' =>  'font-weight: bold'));
             echo $table->cell($form->getFormFieldCaption('stg_list') , array('style' =>  'font-weight: bold'));
             echo $table->cell($form->getFormFieldCaption('abs_stm_list') , array('style' =>  'font-weight: bold'));
@@ -100,8 +100,8 @@ class StmInstanceAssiVisualization{
         $table->setCellColspan(8);
 //      echo $table->row(array($table->cell($form->getFormButton('add'), array('style' => 'text-align: center'))));
         echo $table->blankRow();
-        echo $table->blankRow(array('class' => 'steel1'));
-        echo $table->openRow(array('class' => 'steel1'));
+        echo $table->blankRow(array('class' => 'table_row_even'));
+        echo $table->openRow(array('class' => 'table_row_even'));
         $table->setCellAlign('center');
         echo $table->openCell();
             echo $form->getFormButton('back') ;
@@ -125,7 +125,7 @@ class StmInstanceAssiVisualization{
 
         $star = "";
 
-        echo $table->open(array('class' => 'steelgraulight'));
+        echo $table->open(array('class' => 'table_row_odd'));
         $table->setCellColspan(1);
         echo $table->openRow();
             echo $table->cell(
@@ -134,11 +134,11 @@ class StmInstanceAssiVisualization{
             , array('align' => 'center', 'width' => '50%', 'class' => 'blank'));
             echo $table->cell('<img src="'.$GLOBALS['ASSETS_URL'].'images/hands02_04.jpg" border="0" align=right">', array('align' => 'right', 'class' => 'blank'));
         echo $table->openRow();
-        echo $table->cell('<font size=-1></font>', array('align => right', 'colspan' => '2', 'class'=>'steel1'));
+        echo $table->cell('<font size=-1></font>', array('align => right', 'colspan' => '2', 'class'=>'table_row_even'));
         echo $table->closeRow();
         echo $table->close();
 
-        echo $table->open(array('class' => 'steelgraulight'));
+        echo $table->open(array('class' => 'table_row_odd'));
         echo $form->getFormStart();
         $infobox = array ();
         $infobox[] = array("kategorie" => _("Information"), "eintrag" => array(array("icon"=>"icons/16/black/info.png",
@@ -253,7 +253,7 @@ class StmInstanceAssiVisualization{
 
         $star = "";
 
-        echo $table->open(array('class' => 'steelgraulight'));
+        echo $table->open(array('class' => 'table_row_odd'));
         $table->setCellColspan(1);
         echo $table->openRow();
             echo $table->cell(
@@ -262,16 +262,16 @@ class StmInstanceAssiVisualization{
             , array('align' => 'center', 'width' => '50%', 'class' => 'blank'));
             echo $table->cell('<img src="'.$GLOBALS['ASSETS_URL'].'images/hands03_04.jpg" border="0" align=right">', array('align' => 'right', 'class' => 'blank'));
         echo $table->openRow();
-        echo $table->cell('<font size=-1></font>', array('align => right', 'colspan' => '2', 'class'=>'steel1'));
+        echo $table->cell('<font size=-1></font>', array('align => right', 'colspan' => '2', 'class'=>'table_row_even'));
         echo $table->closeRow();
         echo $table->close();
 
-        echo $table->open(array('class' => 'steelgraulight'));
+        echo $table->open(array('class' => 'table_row_odd'));
         echo $table->blankRow();
         echo $form->getFormStart();
 
         $table->setCellColspan(1);
-        echo $table->openRow(array('align' => 'center',  'class' => 'steelgraudunkel'));
+        echo $table->openRow(array('align' => 'center',  'class' => 'content_seperator'));
         echo $table->cell("Lehr- und Lernformen" , array('style' =>  'font-weight: bold'));
         echo $table->cell("SWS" , array('style' =>  'font-weight: bold'));
         echo $table->cell("Studentische Arbeitszeit in Stunden" , array('style' =>  'font-weight: bold'));
@@ -323,7 +323,7 @@ class StmInstanceAssiVisualization{
 
         $star = "";
 
-        echo $table->open(array('class' => 'steelgraulight'));
+        echo $table->open(array('class' => 'table_row_odd'));
         $table->setCellColspan(1);
         echo $table->openRow();
             echo $table->cell(
@@ -332,16 +332,16 @@ class StmInstanceAssiVisualization{
             , array('align' => 'center', 'width' => '75%', 'class' => 'blank'));
             echo $table->cell('<img src="'.$GLOBALS['ASSETS_URL'].'images/hands03_04.jpg" border="0" align=right">', array('align' => 'right', 'class' => 'blank'));
         echo $table->openRow();
-        echo $table->cell('<font size=-1></font>', array('align => right', 'colspan' => '2', 'class'=>'steel1'));
+        echo $table->cell('<font size=-1></font>', array('align => right', 'colspan' => '2', 'class'=>'table_row_even'));
         echo $table->closeRow();
         echo $table->close();
 
-        echo $table->open(array('class' => 'steelgraulight'));
+        echo $table->open(array('class' => 'table_row_odd'));
         echo $table->blankRow();
         echo $form->getFormStart();
 
         $table->setCellColspan(1);
-        echo $table->openRow(array('align' => 'center',  'class' => 'steelgraudunkel'));
+        echo $table->openRow(array('align' => 'center',  'class' => 'content_seperator'));
         echo $table->cell("Lehr- und Lernformen" , array('style' =>  'font-weight: bold'));
         echo $table->cell("SWS" , array('style' =>  'font-weight: bold'));
         echo $table->cell("Studentische Arbeitszeit in Stunden" , array('style' =>  'font-weight: bold'));
@@ -373,7 +373,7 @@ class StmInstanceAssiVisualization{
         if ($cur_sem) {
             echo $table->openRow();
             echo $table->cell("Veranstaltung im Fokus:" , array('style' =>  'font-weight: bold'));
-            echo $table->openRow(array('align' => 'center',  'class' => 'steelgraudunkel'));
+            echo $table->openRow(array('align' => 'center',  'class' => 'content_seperator'));
             $table->setCellColspan(2);
             echo $table->cell("Titel" , array('style' =>  'font-weight: bold'));
             echo $table->cell("Beginn" , array('style' =>  'font-weight: bold'));
@@ -436,10 +436,10 @@ class StmInstanceAssiVisualization{
                 echo $table->blankCell(array('class' => 'blank'));
         echo $form->getFormStart();
         echo $table->setCellColspan(2);
-        echo $table->blankRow(array('class' => 'steel1'));
+        echo $table->blankRow(array('class' => 'table_row_even'));
         echo $table->setCellColspan(1);
         echo $table->close();
-        echo $table->open(array('class' => 'steelgraulight'));
+        echo $table->open(array('class' => 'table_row_odd'));
         echo $table->blankRow();
         echo $table->openRow();
             if ($is_new) {
@@ -484,8 +484,8 @@ class StmInstanceAssiVisualization{
         echo $table->blankRow();
         echo $table->close();
 
-        echo $table->open(array('class' => 'steelgraulight'));
-        echo $table->openRow(array('align' => 'center',  'class' => 'steelgraudunkel'));
+        echo $table->open(array('class' => 'table_row_odd'));
+        echo $table->openRow(array('align' => 'center',  'class' => 'content_seperator'));
         echo $table->cell("Lehr- und Lernformen" , array('style' =>  'font-weight: bold'));
         echo $table->cell("SWS" , array('style' =>  'font-weight: bold'));
         echo $table->cell("Studentische Arbeitszeit in Stunden" , array('style' =>  'font-weight: bold'));
@@ -512,7 +512,7 @@ class StmInstanceAssiVisualization{
             echo $table->row(array($table->cell("<hr>", array('colspan' => '5'))));
         }
         echo $table->close();
-        echo $table->open(array('class' => 'steel1'));
+        echo $table->open(array('class' => 'table_row_even'));
         echo $table->blankRow();
         echo $table->openRow();
         $table->setCellAlign('center');
@@ -551,11 +551,11 @@ class StmInstanceAssiVisualization{
             echo $table->cell('<img src="'.$GLOBALS['ASSETS_URL'].'images/hands01_04.jpg" border="0" align=right">', array('align' => 'right', 'class' => 'blank'));
         echo $form->getFormStart();
         echo $table->setCellColspan(2);
-        echo $table->openRow(array('class' => 'steel1'));
+        echo $table->openRow(array('class' => 'table_row_even'));
             echo $table->blankCell();
         echo $table->close();
 
-        echo $table->open(array('class' => 'steelgraulight'));
+        echo $table->open(array('class' => 'table_row_odd'));
         echo $table->blankRow();
         echo $table->openRow();
             echo $table->cell("&nbsp;&nbsp;<b> Titel </b>&nbsp;", array('align' => 'left', 'style' => 'width:12%'));
@@ -602,9 +602,9 @@ class StmInstanceAssiVisualization{
         echo $table->blankRow();
         echo $table->close();
 
-        echo $table->open(array('class' => 'steelgraulight'));
+        echo $table->open(array('class' => 'table_row_odd'));
         $table->setCellColspan(1);
-        echo $table->openRow(array('align' => 'center',  'class' => 'steelgraudunkel'));
+        echo $table->openRow(array('align' => 'center',  'class' => 'content_seperator'));
             echo $table->cell("Lehr- und Lernformen" , array('style' =>  'font-weight: bold'));
             echo $table->cell("SWS" , array('style' =>  'font-weight: bold'));
             echo $table->cell("Studentische Arbeitszeit" , array('style' =>  'font-weight: bold'));
@@ -622,9 +622,9 @@ class StmInstanceAssiVisualization{
         }
         echo $table->blankRow();
         echo $table->close();
-        echo $table->open(array('class' => 'steelgraulight'));
+        echo $table->open(array('class' => 'table_row_odd'));
         $table->setCellColspan(1);
-        echo $table->openRow(array('align' => 'center',  'class' => 'steelgraudunkel'));
+        echo $table->openRow(array('align' => 'center',  'class' => 'content_seperator'));
             echo $table->cell("Studiengang" , array('style' =>  'font-weight: bold'));
             echo $table->cell("Studienprogramm" , array('style' =>  'font-weight: bold'));
             echo $table->cell("Modulart" , array('style' =>  'font-weight: bold'));
@@ -645,7 +645,7 @@ class StmInstanceAssiVisualization{
         }
 
         echo $table->close();
-        echo $table->open(array('class' => 'steel1'));
+        echo $table->open(array('class' => 'table_row_even'));
         echo $table->blankRow();
         echo $table->openRow();
         $table->setCellAlign('center');

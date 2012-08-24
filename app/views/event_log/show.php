@@ -84,7 +84,7 @@ use Studip\Button, Studip\LinkButton;
       </tr>
 
       <? foreach ($log_events as $log_event): ?>
-        <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+        <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
           <td style="font-size: smaller; white-space: nowrap;">
             <?= date('d.m.Y H:i:s', $log_event['time']) ?>
           </td>

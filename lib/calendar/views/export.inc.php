@@ -330,7 +330,7 @@ auf diese Nachricht nicht antworten.") . "\n\n";
 
             echo "<tr><th align=\"left\">\n";
             echo _("Einbinden Ihrer Termine in externe Kalender")."</th></tr>\n";
-            echo "<tr><td class=\"steel1\" id=\"calendar_include\">\n";
+            echo "<tr><td class=\"table_row_even\" id=\"calendar_include\">\n";
             if ($short_id) {
                 echo _("Die folgende Adresse können Sie in externe Terminkalenderanwendungen eintragen, um Ihre Termine dort anzuzeigen:");
                 $url = URLHelper::getLink($GLOBALS['ABSOLUTE_URI_STUDIP'] . 'dispatch.php/ical/index/' . $short_id);
@@ -528,7 +528,7 @@ auf diese Nachricht nicht antworten.") . "\n\n";
 function print_cell($params)
 {
 
-    echo "<tr><td width=\"100%\" class=\"steel1\">\n";
+    echo "<tr><td width=\"100%\" class=\"table_row_even\">\n";
     echo $params['form'];
     echo '<div>';
     echo $params['content'];

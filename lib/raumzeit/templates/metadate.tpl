@@ -6,7 +6,7 @@ use Studip\Button,
 <?
 if (!$sd_open[$tpl['md_id']] || $_LOCKED) { ?>
 <TR>
-    <TD class="steel1" colspan="9">
+    <TD class="table_row_even" colspan="9">
         <A name="<?=$tpl['md_id']?>"></A>
         <TABLE cellpadding="2" cellspacing="0" border="0" width="100%">
             <TR>
@@ -76,7 +76,7 @@ if (!$sd_open[$tpl['md_id']] || $_LOCKED) { ?>
 <?
 } else { ?>
 <TR>
-    <TD class="steel1" colspan="9">
+    <TD class="table_row_even" colspan="9">
         <A name="<?=$tpl['md_id']?>"></A>
         <TABLE cellpadding="2" cellspacing="0" border="0" width="100%">
             <TR>

@@ -52,7 +52,7 @@ use Studip\Button, Studip\LinkButton;
                     <th width="<?php echo ($edit_about_enabled ? '20%' : '25%') ?>"><?php echo _('löschen'); ?></th>
                 </tr>
                 <?php foreach ($deputies as $deputy) { ?>
-                <tr class="<?=TextHelper::cycle('steelgraulight', 'steel1')?>">
+                <tr class="<?=TextHelper::cycle('table_row_odd', 'table_row_even')?>">
                     <td>
                         <?php echo Avatar::getAvatar($boss['user_id'])->getImageTag(Avatar::SMALL); ?>
                         <?php echo htmlReady($deputy['fullname'].' ('.$deputy['username'].', '._('Status').': '.$deputy['perms'].')'); ?>
@@ -74,7 +74,7 @@ use Studip\Button, Studip\LinkButton;
                     </td>
                 </tr>
                 <?php } ?>
-                <tr class="<?=TextHelper::cycle('steelgraulight', 'steel1')?>">
+                <tr class="<?=TextHelper::cycle('table_row_odd', 'table_row_even')?>">
                     <td colspan="3" align="center">
                         <?= Button::create(_('Übernehmen'), 'change_deputies', array('title' =>  _('Änderungen speichern')))?>
                     </td>

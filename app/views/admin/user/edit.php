@@ -23,7 +23,7 @@ use Studip\Button, Studip\LinkButton;
             <a class="toggler"><b><?= _('Allgemeine Daten') ?></b></a>
         </td>
     </tr>
-    <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td width="25%">
             <?= _("Benutzername:") ?>
             <span style="color: red; font-size: 1.6em">*</span>
@@ -36,7 +36,7 @@ use Studip\Button, Studip\LinkButton;
         <? endif ?>
         </td>
     </tr>
-    <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td>
             <?= _("globaler Status:") ?>
         </td>
@@ -44,7 +44,7 @@ use Studip\Button, Studip\LinkButton;
             <?= (StudipAuthAbstract::CheckField("auth_user_md5.perms", $user['auth_plugin'])) ? $user['perms'] : $perm->perm_sel("perms", $user['perms']) ?>
         </td>
     </tr>
-    <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td>
             <?= _("Sichtbarkeit:") ?>
         </td>
@@ -52,7 +52,7 @@ use Studip\Button, Studip\LinkButton;
             <?= vis_chooser($user['visible']) ?> <small>(<?= $user['visible'] ?>)</small>
         </td>
     </tr>
-    <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td>
             <?= _("Vorname:") ?>
             <span style="color: red; font-size: 1.6em">*</span>
@@ -65,7 +65,7 @@ use Studip\Button, Studip\LinkButton;
         <? endif ?>
         </td>
     </tr>
-    <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td>
             <?= _("Nachname:") ?>
             <span style="color: red; font-size: 1.6em">*</span>
@@ -78,7 +78,7 @@ use Studip\Button, Studip\LinkButton;
         <? endif ?>
         </td>
     </tr>
-    <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td>
             <?= _("Geschlecht:") ?>
         </td>
@@ -92,7 +92,7 @@ use Studip\Button, Studip\LinkButton;
         <? endif ?>
         </td>
     </tr>
-    <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td>
             <?= _("Titel:") ?>
         </td>
@@ -109,7 +109,7 @@ use Studip\Button, Studip\LinkButton;
         <? endif ?>
         </td>
     </tr>
-    <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td>
             <?=_("Titel nachgestellt:") ?>
         </td>
@@ -135,7 +135,7 @@ use Studip\Button, Studip\LinkButton;
     </tr>
 
     <? if (!$user['locked']) : ?>
-    <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td width="25%">
             <?= _("Benutzer sperren:") ?>
         </td>
@@ -147,7 +147,7 @@ use Studip\Button, Studip\LinkButton;
     <? endif ?>
 
     <? if ($perm->have_perm('root') && get_config('ALLOW_ADMIN_USERACCESS') && !StudipAuthAbstract::CheckField("auth_user_md5.password", $user['auth_plugin'])) : ?>
-    <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td>
             <?= _("Neues Passwort:") ?>
         </td>
@@ -155,7 +155,7 @@ use Studip\Button, Studip\LinkButton;
             <input class="user_form" name="pass_1" type="password" id="pass_1">
         </td>
     </tr>
-    <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td>
             <?= _("Passwortwiederholung:") ?>
         </td>
@@ -166,7 +166,7 @@ use Studip\Button, Studip\LinkButton;
     </tr>
     <? endif ?>
 
-    <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td>
             <?= _("E-Mail:") ?>
             <span style="color: red; font-size: 1.6em">*</span>
@@ -183,7 +183,7 @@ use Studip\Button, Studip\LinkButton;
         <? endif ?>
         </td>
     </tr>
-    <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td>
             <?= _("inaktiv seit:") ?>
         </td>
@@ -201,7 +201,7 @@ use Studip\Button, Studip\LinkButton;
         <?= $inactive ?>
         </td>
     </tr>
-    <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td>
             <?= _("registriert seit:") ?>
         </td>
@@ -209,7 +209,7 @@ use Studip\Button, Studip\LinkButton;
             <?= ($user["mkdate"]) ? date("d.m.Y", $user["mkdate"]) : _('unbekannt') ?>
         </td>
     </tr>
-    <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td>
             <?= _("Authentifizierung:") ?>
         </td>
@@ -223,7 +223,7 @@ use Studip\Button, Studip\LinkButton;
     </tr>
 
     <? if ($user['validation_key']) : ?>
-    <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td>
             <?=_("Validation-Key:")?>
         </td>
@@ -234,7 +234,7 @@ use Studip\Button, Studip\LinkButton;
     </tr>
     <? endif ?>
 
-    <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td>
             <?= _("Ablaufdatum:") ?>
         </td>
@@ -253,7 +253,7 @@ use Studip\Button, Studip\LinkButton;
         </td>
     </tr>
     <? if (!StudipAuthAbstract::CheckField("studiengang_id", $auth_plugin)) : ?>
-    <tr class="steel1">
+    <tr class="table_row_even">
         <td width="25%">
             <?= _('Neuer Studiengang')?>
         </td>
@@ -287,7 +287,7 @@ use Studip\Button, Studip\LinkButton;
     </tr>
     <? endforeach ?>
     <? endif ?>
-    <tr class="steel1">
+    <tr class="table_row_even">
         <td>
             <?= _('Neue Einrichtung')?>
         </td>
@@ -331,7 +331,7 @@ use Studip\Button, Studip\LinkButton;
             <a class="toggler"><b><?= _('Einrichtungsdaten') ?></b></a>
         </td>
     </tr>
-    <tr class="steel1">
+    <tr class="table_row_even">
         <td width="25%">
             <?= _('Neue Einrichtung')?>
         </td>
@@ -381,7 +381,7 @@ use Studip\Button, Studip\LinkButton;
             <a class="toggler"><b><?= _('Nutzerdomänen') ?></b></a>
         </td>
     </tr>
-    <tr class="steel1">
+    <tr class="table_row_even">
         <td width="25%">
             <?= _('Neue Nutzerdomäne')?>
         </td>
@@ -416,7 +416,7 @@ use Studip\Button, Studip\LinkButton;
             <a class="toggler"><b><?= _('Sperrebene') ?></b></a>
         </td>
     </tr>
-    <tr class="steel1">
+    <tr class="table_row_even">
        <td width="25%">
             <?= _('Sperrebene')?>
         </td>
@@ -441,7 +441,7 @@ use Studip\Button, Studip\LinkButton;
     </tr>
 <? foreach ($userfields as $entry) : ?>
     <? if ($entry->isVisible()) : ?>
-        <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+        <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
             <td width="25%">
                 <?= htmlReady($entry->getName()) ?>:
             </td>

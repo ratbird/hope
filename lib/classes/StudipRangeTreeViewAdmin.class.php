@@ -640,17 +640,17 @@ class StudipRangeTreeViewAdmin extends TreeView{
         $content .= "\n<input type=\"HIDDEN\" name=\"parent_id\" value=\"{$this->tree->tree_data[$this->edit_item_id]['parent_id']}\">";
         $content .= "\n<table width=\"90%\" border =\"0\" style=\"border-style: solid; border-color: #000000;  border-width: 1px;font-size: 10pt;\" cellpadding=\"2\" cellspacing=\"2\" align=\"center\">";
         $content .=  $this->getItemMessage($this->edit_item_id,2);
-        $content .= "\n<tr><td colspan=\"2\" class=\"steelgraudunkel\" ><b>". _("Element bearbeiten") . "</b></td></tr>";
-        $content .= "\n<tr><td class=\"steel1\" width=\"60%\">". _("Name des Elements:") . "&nbsp;"
+        $content .= "\n<tr><td colspan=\"2\" class=\"content_seperator\" ><b>". _("Element bearbeiten") . "</b></td></tr>";
+        $content .= "\n<tr><td class=\"table_row_even\" width=\"60%\">". _("Name des Elements:") . "&nbsp;"
                 . "<input type=\"TEXT\" name=\"edit_name\" size=\"50\" value=\"" . htmlReady($this->tree->tree_data[$this->edit_item_id]['name'])
-                . "\"></td><td class=\"steel1\" align=\"left\">";
+                . "\"></td><td class=\"table_row_even\" align=\"left\">";
 
         $content .= Button::createAccept(_("Absenden"));
         $content .= LinkButton::createCancel(_("Abbrechen"), URLHelper::getURL($this->getSelf("cmd=Cancel&item_id=" . ($this->mode == "NewItem" ? $this->tree->tree_data[$this->edit_item_id]['parent_id'] : $this->edit_item_id))));
 
         $content .= "</td></tr>";
-        $content .= "\n<tr><td colspan=\"2\" class=\"steelgraudunkel\"><b>". _("Element mit einer Stud.IP-Einrichtung verlinken") . "</b></td></tr>";
-        $content .= "\n<tr><td colspan=\"2\" class=\"steel1\">" . _("Stud.IP-Einrichtung:") . "&nbsp;";
+        $content .= "\n<tr><td colspan=\"2\" class=\"content_seperator\"><b>". _("Element mit einer Stud.IP-Einrichtung verlinken") . "</b></td></tr>";
+        $content .= "\n<tr><td colspan=\"2\" class=\"table_row_even\">" . _("Stud.IP-Einrichtung:") . "&nbsp;";
         $content .= "\n<select name=\"edit_studip_object\" onChange=\"document.item_form.edit_name.value=document.item_form.edit_studip_object.options[document.item_form.edit_studip_object.selectedIndex].text;\">";
         $content .= "\n<option value=\"none\" ";
         $content .= ($this->tree->tree_data[$this->edit_item_id]['studip_object']) ? ">" : "selected >";
@@ -666,10 +666,10 @@ class StudipRangeTreeViewAdmin extends TreeView{
             }
         }
         $content .= "</select></td></tr></form>";
-        $content .= "\n<form name=\"link_form\" action=\"" . URLHelper::getLink($this->getSelf("cmd=SearchStudIP&item_id={$this->edit_item_id}")) . "\" method=\"POST\"><tr><td class=\"steel1\">" . _("Stud.IP-Einrichtung suchen:") . "&nbsp;";
+        $content .= "\n<form name=\"link_form\" action=\"" . URLHelper::getLink($this->getSelf("cmd=SearchStudIP&item_id={$this->edit_item_id}")) . "\" method=\"POST\"><tr><td class=\"table_row_even\">" . _("Stud.IP-Einrichtung suchen:") . "&nbsp;";
         $content .= CSRFProtection::tokenTag();
         $content .= "\n<input type=\"HIDDEN\" name=\"parent_id\" value=\"{$this->tree->tree_data[$this->edit_item_id]['parent_id']}\">";
-        $content .= "\n<input type=\"TEXT\" name=\"edit_search\" size=\"30\"></td><td class=\"steel1\" align=\"left\">";
+        $content .= "\n<input type=\"TEXT\" name=\"edit_search\" size=\"30\"></td><td class=\"table_row_even\" align=\"left\">";
 
         $content .= Button::create(_("Suchen"));
 

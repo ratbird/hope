@@ -692,44 +692,44 @@ $txt['008'] = _("Lesebestätigung");
 
                     <table cellpadding="5" cellspacing="0" border="0" height="10" width="100%">
                         <tr>
-                            <td valign="top" class="steelgraudunkel">
+                            <td valign="top" class="content_seperator">
                                 <font size="-1" color="#FFFFFF"><b><?=$txt['001']?></b></font>
                             </td>
                         </tr>
                         <tr>
-                            <td valign="top" class="steelgraulight">
+                            <td valign="top" class="table_row_odd">
                                 <?=show_precform()?>
                             </td>
                         </tr>
                         <tr>
-                            <td valign="top" class="steelgraudunkel">
+                            <td valign="top" class="content_seperator">
                                 <font size="-1" color="#FFFFFF"><b><?=$txt['002']?></b></font>
                             </td>
                         </tr>
                         <tr>
-                            <td valign="top" class="steelgraulight">
+                            <td valign="top" class="table_row_odd">
                                 <?=show_addrform()?>
                             </td>
                         </tr>
                         <tr>
-                            <td valign="top" class="steelgraudunkel">
+                            <td valign="top" class="content_seperator">
                                 <font size="-1" color="#FFFFFF"><b><?= _('Optionen') ?></b></font>
                             </td>
                         </tr>
                         <tr>
-                            <td valign="top" class="steelgraulight">
+                            <td valign="top" class="table_row_odd">
                                 <?=show_msgsaveoptionsform()?>
                             </td>
                         </tr>
                         <? if ($GLOBALS["MESSAGING_FORWARD_AS_EMAIL"]) { ?>
                         <tr>
-                            <td valign="top" class="steelgraulight">
+                            <td valign="top" class="table_row_odd">
                                 <?=show_msgemailoptionsform()?>
                             </td>
                         </tr>
                         <? } ?>
                         <tr>
-                            <td valign="top" class="steelgraulight">
+                            <td valign="top" class="table_row_odd">
                                 <?=show_msgreadconfirmoptionsform()?>
                             </td>
                         </tr>
@@ -741,12 +741,12 @@ $txt['008'] = _("Lesebestätigung");
                     <table cellpadding="5" cellspacing="0" border="0" height="10" width="100%">
                         <?=show_chatselector()?>
                         <tr>
-                            <td valign="top" class="steelgraudunkel">
+                            <td valign="top" class="content_seperator">
                                 <font size="-1" color="#FFFFFF"><b><?=$txt['005']?></b></font>
                             </td>
                         </tr>
                         <tr>
-                            <td valign="top" class="steelgraulight">
+                            <td valign="top" class="table_row_odd">
                                 <?=show_msgform()?>
                             </td>
                         </tr>
@@ -754,7 +754,7 @@ $txt['008'] = _("Lesebestätigung");
                         if ($GLOBALS["ENABLE_EMAIL_ATTACHMENTS"] == true) {
                             ?>
                             <tr>
-                                <td valign="top" class="steelgraudunkel">
+                                <td valign="top" class="content_seperator">
                                     <font size="-1" color="#FFFFFF"><b><?=$txt['attachment']?></b></font>
                                 </td>
                             </tr>
@@ -767,7 +767,7 @@ $txt['008'] = _("Lesebestätigung");
                         }
                         ?>
                         <tr>
-                            <td valign="top" class="steelgraudunkel">
+                            <td valign="top" class="content_seperator">
                                 <font size="-1" color="#FFFFFF"><b><?=$txt['003']?></b></font>
                             </td>
                         </tr>
@@ -777,7 +777,7 @@ $txt['008'] = _("Lesebestätigung");
                             </td>
                         </tr>
                         <tr>
-                            <td valign="top" class="steelgraudunkel">
+                            <td valign="top" class="content_seperator">
                                 <font size="-1" color="#FFFFFF"><b><?=$txt['004']?></b></font>
                             </td>
                         </tr>

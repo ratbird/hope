@@ -17,7 +17,7 @@ use Studip\Button, Studip\LinkButton;
          <th colspan="5"><?= _("Semester neu anlegen") ?></th>
     <? endif ?>
     </tr>
-    <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td>
             <?= _("Name des Semesters:") ?>
         </td>
@@ -25,7 +25,7 @@ use Studip\Button, Studip\LinkButton;
             <input type="text" size="60" value="<?= ($semester['name']) ? htmlReady($semester['name']) : '' ?>" name="name" style="width: 350px;" required>
         </td>
     </tr>
-    <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td>
             <?= _("Beschreibung:") ?>
         </td>
@@ -33,7 +33,7 @@ use Studip\Button, Studip\LinkButton;
             <textarea name="description" rows="4" cols="50" style="width: 350px;"><?= ($semester['description']) ? htmlReady($semester['description']) : '' ?></textarea>
         </td>
     </tr>
-    <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td>
             <?= _("Semesterzeitraum:") ?>
         </td>
@@ -50,7 +50,7 @@ use Studip\Button, Studip\LinkButton;
             <input id="ende" type="text" name="ende" value="<?= ($semester['ende']) ? date('d.m.Y', $semester['ende']) : '' ?>" required>
         </td>
     </tr>
-    <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td>
             <?= _("Vorlesungszeitraum:") ?>
         </td>

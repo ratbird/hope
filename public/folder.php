@@ -1221,7 +1221,7 @@ div.droppable.hover {
             $dreieck_hoch = "dreieck_up.png";
             print "<tr><td></td><td><table border=0 cellpadding=0 cellspacing=0 width=\"100%\">" .
                     "<tr>" .
-                    "<td class=\"steelgraudunkel\">&nbsp;&nbsp;&nbsp;";
+                    "<td class=\"content_seperator\">&nbsp;&nbsp;&nbsp;";
 
             print "<a href=\"".URLHelper::getLink((($folder_system_data['orderby'] != "type") ? "?orderby=type" : "?orderby=type_rev"))."\">";
             print "<b>"._("Typ")."</b>".
@@ -1252,7 +1252,7 @@ div.droppable.hover {
                     : ($folder_system_data['orderby'] == "downloads_rev" ? "<img style=\"vertical-align:middle\" border=0 src=\"".$GLOBALS['ASSETS_URL']."images/$dreieck_runter\">" : "")).
                 "</a>&nbsp;&nbsp; ";
 
-            print "</td><td class=\"steelgraudunkel\" align=right>";
+            print "</td><td class=\"content_seperator\" align=right>";
 
             print "<a href=\"".URLHelper::getLink((($folder_system_data['orderby'] != "autor") ? "?orderby=autor" : "?orderby=autor_rev"))."\">";
             print "<b>"._("Autor")."</b>".
@@ -1320,8 +1320,8 @@ div.droppable.hover {
             print "<tr><td class=\"blank\">&nbsp;</td><td>";
             print " <table border=0 cellpadding=0 cellspacing=0 width=\"100%\">";
             print " <tr><td class=\"blank\"></td><td class=\"blank\" style=\"font-size: 4px;\">&nbsp;</td><td class=\"blank\"></td></tr>";
-            print " <tr><td class=\"steelgraudunkel\">&nbsp;";
-            print " </td><td class=\"steelgraudunkel\" align=right>";
+            print " <tr><td class=\"content_seperator\">&nbsp;";
+            print " </td><td class=\"content_seperator\" align=right>";
             print " &nbsp;</td></tr></table>";
             print "</td><td class=\"blank\">&nbsp;</td></tr>";
             print "<tr><td class=\"blank\"></td><td class=\"blank\"><div align=\"right\"><br>";

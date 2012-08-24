@@ -4,7 +4,7 @@
 <? if (!$tpl['deleted']) { ?>
 <TR>
     <? if ($tpl['space']) { ?>
-    <TD width="4%" class="steel1">
+    <TD width="4%" class="table_row_even">
         &nbsp;
     </TD>
     <? } ?>
@@ -19,11 +19,11 @@
 <? if ($tpl['art']) { ?>
 <TR>
     <? if ($tpl['space']) { ?>
-    <TD width="4%" class="steel1">
+    <TD width="4%" class="table_row_even">
         &nbsp;
     </TD>
     <? } ?>
-    <TD width="90%" nowrap class="steelgraulight"<?=!$tpl['space'] ? ' colspan="3"' : ' colspan="2"'?>>
+    <TD width="90%" nowrap class="table_row_odd"<?=!$tpl['space'] ? ' colspan="3"' : ' colspan="2"'?>>
         <FONT size="-1">
             <I>&nbsp;<?=_("Terminart:")?>&nbsp;<?=$tpl['art'];?></I>
         </FONT>
@@ -33,7 +33,7 @@
 <? } else { ?>
 <TR>
     <? if ($tpl['space']) { ?>
-    <TD width="2%" class="steel1">
+    <TD width="2%" class="table_row_even">
         &nbsp;
     </TD>
     <? } ?>

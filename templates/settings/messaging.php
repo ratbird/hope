@@ -254,7 +254,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td class="steelgraulight" colspan="2" align="center">
+                            <td class="table_row_odd" colspan="2" align="center">
                                 <input type="hidden" name="view" value="Messaging">
                                 <?=Button::create(_('Übernehmen'), 'newmsgset', array('title' => _("Änderungen übernehmen")))?>
                                 &nbsp;

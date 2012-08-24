@@ -41,7 +41,7 @@ use Studip\Button, Studip\LinkButton;
                 <th></th>
                 <th><?= _('Verfügbare Rollen') ?></th>
             </tr>
-            <tr class="steel1">
+            <tr class="table_row_even">
                 <td style="text-align: right;">
                     <select multiple name="assignedroles[]" size="10" style="width: 300px;">
                         <? foreach ($assignedroles as $assignedrole): ?>

@@ -253,7 +253,7 @@ if (is_array($non_group_buddies))
         <td width="50%" valign="top">
             <table width="100%" cellspacing="0" cellpadding="1" border="0">
                 <tr>
-                    <td class="steel1" width="50%" align="center">
+                    <td class="table_row_even" width="50%" align="center">
                             <?= _("Sie haben keine Buddies ausgew&auml;hlt.") ?>
                             <br>
                             <? printf(_("Zum Adressbuch (%d Eintr&auml;ge) klicken Sie %shier%s"),
@@ -279,7 +279,7 @@ if (is_array($non_group_buddies))
                     </tr>
                 <? } else { // gar keine Buddies online ?>
                     <tr>
-                        <td class="steel1" width="50%" align="center" colspan="7">
+                        <td class="table_row_even" width="50%" align="center" colspan="7">
                             <?= _("Es sind keine Ihrer Buddies online.") ?>
                         </td>
                     </tr>
@@ -295,7 +295,7 @@ if (is_array($non_group_buddies))
                         list($position,$gruppe,$fullname,$zeit,$tmp_online_uname,$statusgruppe_id,$tmp_user_id)=$group_buddies[$index];
                         //list($fullname, $zeit, $tmp_online_uname, $tmp_user_id) = $n_buddies[$index];
                         if ($gruppe != $lastgroup) {// Ueberschrift fuer andere Gruppe
-                            printf("\n<tr><td colspan=\"7\" align=\"middle\" class=\"steelkante\"><a href=\"contact.php?view=gruppen&filter=%s\"><font size=\"2\" color=\"#555555\">%s</font></a></td></tr>",$statusgruppe_id, htmlready($gruppe));
+                            printf("\n<tr><td colspan=\"7\" align=\"middle\" class=\"content_seperator\"><a href=\"contact.php?view=gruppen&filter=%s\"><font size=\"2\" color=\"#555555\">%s</font></a></td></tr>",$statusgruppe_id, htmlready($gruppe));
                             $groupcount++;
                             if ($groupcount > 10) //irgendwann gehen uns die Farben aus
                                 $groupcount = 1;
@@ -311,7 +311,7 @@ if (is_array($non_group_buddies))
                 }
 
                 if (sizeof($non_group_buddies)) {
-                    echo "\n<tr><td colspan=7 class=\"steelkante\" align=\"center\"><font size=-1 color=\"#555555\"><a href=\"contact.php?view=gruppen&filter=all\"><font size=-1 color=\"#555555\">"._("Buddies ohne Gruppenzuordnung").":</font></a></font></td></tr>";
+                    echo "\n<tr><td colspan=7 class=\"content_seperator\" align=\"center\"><font size=-1 color=\"#555555\"><a href=\"contact.php?view=gruppen&filter=all\"><font size=-1 color=\"#555555\">"._("Buddies ohne Gruppenzuordnung").":</font></a></font></td></tr>";
                     reset ($non_group_buddies);
                     $template = $GLOBALS['template_factory']->open('online/user');
                     while (list($index)=each($non_group_buddies)) {
@@ -363,14 +363,14 @@ if (is_array($non_group_buddies))
             if ($weitere > 0) {
             ?>
             <tr>
-                <td class="steel1" align="center">
+                <td class="table_row_even" align="center">
                     <?=_("Keine sichtbaren Nutzer online.")?>
                 </td>
             </tr>
             <?
             } else {
             ?>
-                <td class="steel1" width="50%" align="center">
+                <td class="table_row_even" width="50%" align="center">
                     <?=_("Kein anderer Nutzer ist online.")?>
                 </td>
             </tr>
@@ -381,7 +381,7 @@ if (is_array($non_group_buddies))
     }
 ?>
         <? if ($user_count > 25) : ?>
-            <div style="text-align:right; padding-top: 2px; padding-bottom: 2px" class="steelgraudunkel">
+            <div style="text-align:right; padding-top: 2px; padding-bottom: 2px" class="content_seperator">
             <?
             $pagination = $GLOBALS['template_factory']->open('shared/pagechooser');
             $pagination->clear_attributes();

@@ -16,7 +16,7 @@
     </thead>
 <? foreach($my_stm as $stm_id => $sems): ?>
     <tbody>
-        <tr class="steelgraudunkel" style="font-weight: bold;">
+        <tr class="content_seperator" style="font-weight: bold;">
             <td>
                 <a href="<?= URLHelper::getLink('stm_details.php?stm_instance_id=' . $stms[$stm_id]['id']) ?>" class="tree">
                     <?= htmlReady($stms[$stm_id]['displayname']) ?>

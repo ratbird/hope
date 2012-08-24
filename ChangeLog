@@ -1247,7 +1247,7 @@ http://develop.studip.de/trac/query?milestone=Stud.IP+1.9
 - Passwortfelder bei LDAP-Accounts [#509]
 - Fehlender Seitentitel bei Studienbereichsauswahl [#518]
 - Keine Veranstaltungen beim Durchklicken durch den Einrichtungsbaum gefunden [#526]
-- steelkante2 ist deprecated [#532]
+- content_seperator2 ist deprecated [#532]
 - Reste des alten Impressums [#537]
 - JavaScript und Bildschirmauflösung bei SSO [#95]
 - Spezialbehandlung für lighttpd verbessern [#389]

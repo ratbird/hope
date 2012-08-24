@@ -38,10 +38,10 @@ function export_form($range_id, $ex_type = "", $filename = "", $format = "", $fi
     require_once ($PATH_EXPORT . "/export_xslt_vars.inc.php");
     $export_string .= "<form action=\"" . "export.php\" method=\"post\">";
     $export_string .= CSRFProtection::tokenTag();
-    $export_string .= "<table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\"><tr><td class=\"steel1\"> &nbsp; &nbsp; &nbsp; ";
+    $export_string .= "<table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\"><tr><td class=\"table_row_even\"> &nbsp; &nbsp; &nbsp; ";
 
     $export_string .= "<font size=\"-1\"><b> "._("Diese Daten exportieren: ") .  "</b></font>";
-    $export_string .= "</td><td align=\"center\" class=\"steel1\">";
+    $export_string .= "</td><td align=\"center\" class=\"table_row_even\">";
     $export_string .= "<select name=\"format\">";
     while (list($key, $val) = each($output_formats))
     {
@@ -51,7 +51,7 @@ function export_form($range_id, $ex_type = "", $filename = "", $format = "", $fi
     }
     $export_string .= "</select>";
 
-    $export_string .= "</td><td align=\"right\" class=\"steel1\">";
+    $export_string .= "</td><td align=\"right\" class=\"table_row_even\">";
     $export_string .= Button::create(_('Export'), 'export', array('title' => _('Diese Daten Exportieren')));
 
     $export_string .= "<input type=\"hidden\" name=\"range_id\" value=\"$range_id\">";

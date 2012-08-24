@@ -6,7 +6,7 @@ use Studip\Button, Studip\LinkButton;
 <form action="<?=$action?>" method="post">
 <?=CSRFProtection::tokenTag();?>
 <table class="default">
-<tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+<tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
 <td width="30%">
 <?= _("Name")?>
 </td>
@@ -14,7 +14,7 @@ use Studip\Button, Studip\LinkButton;
 <input type="text" style="width:90%" required name="lockdata_name" value="<?=htmlReady($lock_rule['name'])?>">
 </td>
 </tr>
-<tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+<tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
 <td width="30%">
 <?= _("Beschreibung")?>
 <div style="font-size:80%"><?=_("(dieser Text wird auf allen Seiten mit gesperrtem Inhalt angezeigt)")?></div>
@@ -22,7 +22,7 @@ use Studip\Button, Studip\LinkButton;
 <td>
 <textarea name="lockdata_description" rows="5" style="width:90%"><?=htmlReady($lock_rule["description"])?></textarea>
 </tr>
-<tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+<tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
 <td width="30%">
 <?= _("Nutzerstatus")?>
 <div style="font-size:80%"><?=_("(die Einstellungen dieser Sperrebene gelten für Nutzer bis zu dieser Berechtigung)")?></div>
@@ -43,7 +43,7 @@ foreach($lock_config['groups'] as $group => $group_title) {
     $attributes = array_filter(array_map(create_function('$a', 'return $a["group"]=="' . $group . '" ? $a["name"] : null;'), $lock_config['attributes']));
     if (count($attributes)) {
         ?>
-        <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+        <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td width="70%">
         <span style="font-weight:bold"><?=htmlready($group_title)?></span>
         </td>
@@ -57,7 +57,7 @@ foreach($lock_config['groups'] as $group => $group_title) {
         <?
         foreach ($attributes as $attr => $attr_name) {
              ?>
-            <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+            <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
             <td width="70%">
             <?=htmlready($attr_name)?>
             </td>

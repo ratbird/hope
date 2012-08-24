@@ -193,7 +193,7 @@ function scm_show_content($range_id, $msg, $scm_id) {
         echo $printcontent_table->close();
         echo $content_table->closeRow();
     } else {
-        parse_msg("info§<font size=-1><b>". _("In diesem Bereich wurden noch keine Inhalte erstellt.") . "</b></font>", "§", "steel1", 2, FALSE);
+        parse_msg("info§<font size=-1><b>". _("In diesem Bereich wurden noch keine Inhalte erstellt.") . "</b></font>", "§", "table_row_even", 2, FALSE);
     }
     echo $content_table->close();
     echo $frame_table->row(array("&nbsp;"));

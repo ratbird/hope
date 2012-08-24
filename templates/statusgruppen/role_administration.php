@@ -34,7 +34,7 @@
                 <br>
                 <table cellspacing="0" cellpadding="0" border="0" width="90%" style="margin: auto;">
                     <tr>
-                        <td class="steelkante" colspan="6">
+                        <td class="content_seperator" colspan="6">
                             &nbsp;<b><?= $range_type == 'sem' ? _("Gruppe bearbeiten") : _("Rollendaten bearbeiten") ?></b>
                         </td>
                     </tr>
@@ -56,14 +56,14 @@
                 <table cellspacing="0" cellpadding="0" border="0" width="95%" style="margin: auto;">
                     <!-- Person assigned to this role - Heading -->
                     <tr>
-                        <td class="steelkante" colspan="6">
+                        <td class="content_seperator" colspan="6">
                             &nbsp;<b><?= $range_type == 'sem' ? _("Personen in dieser Gruppe") : _("Personen in dieser Rolle") ?></b>
                         </td>
-                        <td class="steelkante" width="5%" nowrap>
+                        <td class="content_seperator" width="5%" nowrap>
                             <?= ($role->getSize()) ? sizeof($persons) .' '._("von").' '. $role->getSize() : '' ?>
                             &nbsp;
                         </td>
-                        <td class="steelkante" width="1%" nowrap>
+                        <td class="content_seperator" width="1%" nowrap>
                             <?= ($role->getSelfassign()) ? Assets::img('icons/16/grey/info-circle.png', array('title' => _("Personen können sich dieser Gruppe selbst zuordnen"))) : '' ?>
                             <a href="<?= URLHelper::getLink('?cmd=sortByName&role_id='. $role_id ) ?>"><?= Assets::img('icons/16/blue/arr_eol-down.png') ?></a>
                         </td>
@@ -127,13 +127,13 @@
             <table cellspacing="0" cellpadding="0" border="0" width="95%" style="margin: auto;">
                 <tr>
                     <? if ($seminar_persons) : ?>
-                    <td class="steelkante">&nbsp;<?= _("VeranstaltungsteilnehmerInnen") ?></td>
+                    <td class="content_seperator">&nbsp;<?= _("VeranstaltungsteilnehmerInnen") ?></td>
                     <td>&nbsp;&nbsp;</td>
                     <? endif; ?>
 
-                    <td class="steelkante">&nbsp;<?= _("Mitarbeiterliste") ?></td>
+                    <td class="content_seperator">&nbsp;<?= _("Mitarbeiterliste") ?></td>
                     <td>&nbsp;&nbsp;</td>
-                    <td class="steelkante" nowrap>&nbsp;<?= _("freie Personensuche") ?></td>
+                    <td class="content_seperator" nowrap>&nbsp;<?= _("freie Personensuche") ?></td>
                 </tr>
                 <tr>
                     <? if ($seminar_persons) : ?>

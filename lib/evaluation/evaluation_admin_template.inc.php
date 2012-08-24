@@ -353,7 +353,7 @@ $table->attr ("width", "100%");
 
 $tr = new HTM( "tr" );
 $td = new HTM( "td" );
-$td->attr( "class", "steel1" );
+$td->attr( "class", "table_row_even" );
 
 if( !$command || $command == "back" ) {
     /* the template selection lists --------------------------------------- */
@@ -457,7 +457,7 @@ if( $command ) {
 
     $tr = new HTM( "tr" );
     $td = new HTM( "td" );
-    $td->attr( "class", "steelgraulight" );
+    $td->attr( "class", "table_row_odd" );
 
       /*übergebe an create Form das template, dass verändert werden soll*/
 

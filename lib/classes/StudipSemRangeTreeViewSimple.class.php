@@ -68,10 +68,10 @@ class StudipSemRangeTreeViewSimple {
 
     function showSemRangeTree(){
         echo "\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">";
-        echo "\n<tr><td class=\"steelgraulight\" align=\"left\" valign=\"top\" style=\"font-size:10pt;\">"
+        echo "\n<tr><td class=\"table_row_odd\" align=\"left\" valign=\"top\" style=\"font-size:10pt;\">"
             . "<div style=\"font-size:10pt;margin-left:10px\"><b>" . _("Einrichtungen:"). "</b><br>". $this->getSemPath();
         echo "</div></td>";
-        echo "<td nowrap class=\"steelgraulight\" align=\"right\" valign=\"bottom\" style=\"font-size:10pt;\">";
+        echo "<td nowrap class=\"table_row_odd\" align=\"right\" valign=\"bottom\" style=\"font-size:10pt;\">";
         if ($this->start_item_id != "root"){
             echo "\n<a href=\"" .URLHelper::getLink($this->getSelf("start_item_id={$this->tree->tree_data[$this->start_item_id]['parent_id']}", false)) . "\">".
             Assets::img('icons/16/blue/arr_2left.png', array('class' => 'text-top', 'title' =>_('eine Ebene zur&uuml;ck'))). "</a>";
@@ -79,9 +79,9 @@ class StudipSemRangeTreeViewSimple {
             echo "&nbsp;";
         }
         echo "</td></tr>";
-        echo "\n<tr><td class=\"steel1\" colspan=\"2\" align=\"center\" valign=\"center\">";
+        echo "\n<tr><td class=\"table_row_even\" colspan=\"2\" align=\"center\" valign=\"center\">";
         $this->showKids($this->start_item_id);
-        echo "\n</td><tr><td class=\"steelgraulight\" colspan=\"2\" align=\"left\" valign=\"center\">";
+        echo "\n</td><tr><td class=\"table_row_odd\" colspan=\"2\" align=\"left\" valign=\"center\">";
         $this->showContent($this->start_item_id);
         echo "\n</td></tr></table>";
     }
@@ -89,7 +89,7 @@ class StudipSemRangeTreeViewSimple {
     function showKids($item_id){
         $num_kids = $this->tree->getNumKids($item_id);
         $kids = $this->tree->getKids($item_id);
-        echo "\n<table width=\"95%\" border=\"0\" cellpadding=\"0\" cellspacing=\"10\"><tr>\n<td class=\"steel1\" width=\"50%\" align=\"left\" valign=\"top\"><ul class=\"semtree\">";
+        echo "\n<table width=\"95%\" border=\"0\" cellpadding=\"0\" cellspacing=\"10\"><tr>\n<td class=\"table_row_even\" width=\"50%\" align=\"left\" valign=\"top\"><ul class=\"semtree\">";
         for ($i = 0; $i < $num_kids; ++$i){
             $num_entries = $this->tree->getNumEntries($kids[$i],true);
             echo "<li><a " . tooltip(sprintf(_("%s Einträge in allen Unterebenen vorhanden"), $num_entries)) . " href=\"" .URLHelper::getLink($this->getSelf("start_item_id={$kids[$i]}", false)) . "\">";
@@ -97,7 +97,7 @@ class StudipSemRangeTreeViewSimple {
             echo " ($num_entries)";
             echo "</a></li>";
             if ($i == ceil($num_kids / 2)-1){
-                echo "</ul></td>\n<td class=\"steel1\" align=\"left\" valign=\"top\"><ul class=\"semtree\">";
+                echo "</ul></td>\n<td class=\"table_row_even\" align=\"left\" valign=\"top\"><ul class=\"semtree\">";
             }
         }
         if (!$num_kids){

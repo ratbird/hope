@@ -127,7 +127,7 @@ class EvalOverview {
         $tr = new HTML("tr");
 
         if ($state == "user_template")
-            $style = "steel_with_steel1_bg";
+            $style = "steel_with_table_row_even_bg";
         elseif ($state == "public_template")
             $style = "eval_grey_border";
         else
@@ -205,7 +205,7 @@ class EvalOverview {
         if ($eval->getAuthor() != $user->id && $no_permissons)
             $no_buttons = 1;
 
-        $style = ($number % 2) ? "steelgraulight" : ($number == 0 ? "steelkante" : "steel1");
+        $style = ($number % 2) ? "table_row_odd" : ($number == 0 ? "content_body" : "table_row_even");
 
         $startDate = $eval->getStartdate() == NULL ? " " : date("d.m.Y", $eval->getStartdate());
 
@@ -438,7 +438,7 @@ class EvalOverview {
         /* initialize variables -------- */
         $evalID = $eval->getObjectID();
 
-        $style = ($number % 2) ? "steelgraulight" : "steel1";
+        $style = ($number % 2) ? "table_row_odd" : "table_row_even";
 
         $startDate = $eval->getStartdate() == NULL ? " " : date("d.m.Y", $eval->getStartdate());
 
@@ -499,7 +499,7 @@ class EvalOverview {
         $td2->addAttr("colspan", "2");
 #$td2->addAttr ("style", "padding-bottom:0; border-top:1px solid black;");
         $td2->addAttr("align", "center");
-        $td2->addAttr("class", ($number % 2 ? "steelgraulight" : "steel1"));
+        $td2->addAttr("class", ($number % 2 ? "table_row_odd" : "table_row_even"));
 
         $td2->addHTMLContent($safeguard);
 
@@ -585,7 +585,7 @@ class EvalOverview {
 
         /* create new ---------------------------------------------------------- */
         $td = new HTML("td");
-        $td->addAttr("class", "steel1");
+        $td->addAttr("class", "table_row_even");
         $td->addAttr("valign", "top");
         $td->addAttr("width", "100%");
 
@@ -599,7 +599,7 @@ class EvalOverview {
         /* Show logo ----------------------------------------------------------- */
         $td = new HTML("td");
         $td->addAttr("align", "right");
-        $td->addAttr("class", "steel1");
+        $td->addAttr("class", "table_row_even");
         $td->addAttr("valign", "top");
         $rows = 5;
         if ($foundTable)
@@ -619,14 +619,14 @@ class EvalOverview {
           if ($this->db->getGlobalPerm() != "autor") {
           $tr = new HTML ("tr");
           $td = new HTML ("td");
-          $td->addAttr ("class", "steelkante");
+          $td->addAttr ("class", "content_body");
           $td->addContent (" ");
           $tr->addContent ($td);
           $table->addContent ($tr);
 
           $tr = new HTML ("tr");
           $td = new HTML ("td");
-          $td->addAttr ("class", "steelgraulight");
+          $td->addAttr ("class", "table_row_odd");
           $td->addAttr ("valign", "top");
           $td->addContent (new HTMLempty ("br"));
           $td->addContent (EvalOverview::createShowRangeForm ());
@@ -639,14 +639,14 @@ class EvalOverview {
         /* search template ----------------------------------------------------- */
         $tr = new HTML("tr");
         $td = new HTML("td");
-        $td->addAttr("class", "steelkante");
+        $td->addAttr("class", "content_body");
         $td->addAttr("valign", "top");
         $td->addContent(" ");
         $tr->addContent($td);
         $table->addContent($tr);
         $tr = new HTML("tr");
         $td = new HTML("td");
-        $td->addAttr("class", "steelgraulight");
+        $td->addAttr("class", "table_row_odd");
         $td->addAttr("valign", "top");
         $td->addContent(new HTMLempty("br"));
         $td->addContent(EvalOverview::createSearchTemplateForm());
@@ -658,7 +658,7 @@ class EvalOverview {
         if ($foundTable) {
             $tr = new HTML("tr");
             $td = new HTML("td");
-            $td->addAttr("class", "steelgraulight");
+            $td->addAttr("class", "table_row_odd");
             $td->addContent($foundTable);
             $tr->addContent($td);
             $table->addContent($tr);
@@ -668,14 +668,14 @@ class EvalOverview {
         /* Show templates ------------------------------------------------------ */
         $tr = new HTML("tr");
         $td = new HTML("td");
-        $td->addAttr("class", "steelkante");
+        $td->addAttr("class", "content_body");
         $td->addContent(" ");
         $tr->addContent($td);
         $table->addContent($tr);
         $tr = new HTML("tr");
         $td = new HTML("td");
         $td->addAttr("valign", "top");
-        $td->addAttr("class", "steel1");
+        $td->addAttr("class", "table_row_even");
         $td->addContent($templates ? $templates : " ");
         $tr->addContent($td);
         $table->addContent($tr);
@@ -845,7 +845,7 @@ class EvalOverview {
         $tr = new HTML("tr");
 
         $td = new HTML("td");
-        $td->addAttr("class", "steelkante");
+        $td->addAttr("class", "content_body");
         $td->addContent($text);
 
         $tr->addContent($td);
@@ -862,7 +862,7 @@ class EvalOverview {
         $tr = new HTML("tr");
         $tr->addAttr("height", "2");
         $td = new HTML("td");
-        $td->addAttr("class", "steelkante");
+        $td->addAttr("class", "content_body");
         $td->addContent("");
         $tr->addContent($td);
 
@@ -1569,7 +1569,7 @@ class EvalOverview {
             "cancel" => _("Abbrechen.")
         );
 
-        $html = "   <table align=\"center\" width=\"100%\" border=0 cellpadding=3 cellspacing=0>\n" // class=\"steel1\"
+        $html = "   <table align=\"center\" width=\"100%\" border=0 cellpadding=3 cellspacing=0>\n" // class=\"table_row_even\"
                 . "   <tr>\n"
                 . "    <td width=\"34\" valign=\"middle\" style=\"vertical-align:middle;\">\n";
 
@@ -1711,12 +1711,12 @@ class EvalOverview {
 
         /* Eval has NOT started yet --- */
         if ($state == EVAL_STATE_NEW || $eval->isTemplate()) {
-            $html .= "<tr><td class=\"steel1\">";
+            $html .= "<tr><td class=\"table_row_even\">";
             $html .= "<input type=radio name=\"startMode\" value=\"manual\" " . ($startMode == "manual" ? "checked" : "") . ">&nbsp;";
             $html .= _("sp&auml;ter manuell starten");
             $html .= "</td></tr>";
 
-            $html .= "<tr><td class=steelgraulight>";
+            $html .= "<tr><td class=table_row_odd>";
             $html .= "<input type=radio name=\"startMode\" value=\"timeBased\" " . ($startMode == "timeBased" ? "checked" : "") . ">&nbsp;";
             $html .= _("Startzeitpunkt:");
             $html .= "&nbsp;&nbsp;<input type=text name=\"startDay\" size=3 maxlength=2 value=\"" . $startDay . "\">&nbsp;.&nbsp;"
@@ -1726,7 +1726,7 @@ class EvalOverview {
                             "&nbsp;<input type=text name=\"startMinute\" size=3 maxlength=2 value=\"" . $startMinute . "\">&nbsp;");
             $html .= "</td></tr>";
 
-            $html .= "<tr><td class=steel1 valign=middle>";
+            $html .= "<tr><td class=table_row_even valign=middle>";
             $html .= "<input type=radio name=\"startMode\" value=\"immediate\">&nbsp;";
             $html .= _("sofort");
             $html .= "</td></tr>";
@@ -1757,11 +1757,11 @@ class EvalOverview {
 
         /* Eval has NOT finished yet --- */
         if ($state != EVAL_STATE_STOPPED) {
-            $html .= "<tr><td class=steel1>\n"
+            $html .= "<tr><td class=table_row_even>\n"
                     . "<input type=radio name=\"stopMode\" value=\"manual\" " . ($stopMode == "manual" ? "checked" : "") . ">&nbsp;"
                     . _("manuell beenden")
                     . "</td></tr>"
-                    . "<tr><td class=steelgraulight>\n"
+                    . "<tr><td class=table_row_odd>\n"
                     . "<input type=radio name=\"stopMode\" value=\"timeBased\" " . ($stopMode == "timeBased" ? "checked" : "") . ">&nbsp;"
                     . _("Endzeitpunkt:");
 
@@ -1774,7 +1774,7 @@ class EvalOverview {
             $html .= "&nbsp;"
 #       . "<input type=hidden name=\"stopDate\" value=\"".$stopDate."\">"
                     . "</td></tr>"
-                    . "<tr><td class=steel1 valign=middle>"
+                    . "<tr><td class=table_row_even valign=middle>"
                     . "<input type=radio name=\"stopMode\" value=\"timeSpanBased\" " . ($stopMode == "timeSpanBased" ? "checked" : "")
 #       . " onClick=\"document.settingsForm.submit()\""
                     . ">&nbsp;"
@@ -1962,7 +1962,7 @@ class EvalOverview {
             }
         } else {
             $td_r = new HTML("td");
-            $td_r->addAttr("class", "steelkante");
+            $td_r->addAttr("class", "content_body");
             $td_r->addAttr("width", "40");
             $td_r->addAttr("align", "center");
             $td_r->addAttr("style", "vertical-align:bottom;");
@@ -2073,11 +2073,11 @@ class EvalOverview {
                     foreach ($ranges["$type_key"] as $range) {
 
                         if ($counter == 0)
-                            $displayclass = "steelkante";
+                            $displayclass = "content_body";
                         elseif (($counter % 2) == 0)
-                            $displayclass = "steel1";
+                            $displayclass = "table_row_even";
                         else
-                            $displayclass = "steelgraulight";
+                            $displayclass = "table_row_odd";
 
                         $cssClass = $cssSw->getFullClass();
 
@@ -2136,7 +2136,7 @@ class EvalOverview {
                 } elseif ($globalperm == "root" || $globalperm == "admin") {
                     $tr_s = new HTML("tr");
                     $td_s = new HTML("td");
-                    $td_s->addAttr("class", "steelkante");
+                    $td_s->addAttr("class", "content_body");
                     $td_s->addAttr("colspan", "4");
                     $td_s->addHTMLContent("&nbsp;");
                     $td_s->addContent(_("Es wurden keine Ergebnisse aus diesem Bereich gefunden."));
@@ -2296,11 +2296,11 @@ class EvalOverview {
                     foreach ($ranges["$type_key"] as $range) {
 
                         if ($counter == 0)
-                            $displayclass = "steelkante";
+                            $displayclass = "content_body";
                         elseif (($counter % 2) == 0)
-                            $displayclass = "steel1";
+                            $displayclass = "table_row_even";
                         else
-                            $displayclass = "steelgraulight";
+                            $displayclass = "table_row_odd";
 
                         $cssClass = $cssSw->getFullClass();
 
@@ -2342,7 +2342,7 @@ class EvalOverview {
                 } elseif ($globalperm == "root" || $globalperm == "admin") {
                     $tr = new HTML("tr");
                     $td = new HTML("td");
-                    $td->addAttr("class", "steelkante");
+                    $td->addAttr("class", "content_body");
                     $td->addAttr("colspan", "4");
                     $td->addHTMLContent("&nbsp;");
                     $td->addContent(_("Es wurden keine Ergebnisse aus diesem Bereich gefunden."));

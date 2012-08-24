@@ -1169,7 +1169,7 @@ if ($view == 'userdomains') {
     $i = 0;
     foreach ($my_about->user_userdomains as $domain) {
         if (!$i) {
-            echo '<tr><td class="steelgraudunkel" width="80%">' . _("Nutzerdomäne") . '</td><td class="steelgraudunkel" width="30%">' ;
+            echo '<tr><td class="content_seperator" width="80%">' . _("Nutzerdomäne") . '</td><td class="content_seperator" width="30%">' ;
             echo (($allow_change_ud)?  _("austragen") : '&nbsp;');
             echo '</td></tr>';
         }

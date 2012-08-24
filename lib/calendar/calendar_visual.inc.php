@@ -689,7 +689,7 @@ function includeMonth($imt, $href, $mod = '', $js_include = '', $ptime = '')
             $ret .= "</td>\n";
 
             if ($mod != 'NOKW') {
-                $ret .= " <td class=\"steel1\" align=\"center\" width=\"$width\" height=\"$height\">";
+                $ret .= " <td class=\"table_row_even\" align=\"center\" width=\"$width\" height=\"$height\">";
                 if ($mod != 'NONAV')
                     $ret .= "<a href=\"./calendar.php?cmd=showweek&atime=$i\">";
                 $ret .= "<font class=\"kwmin\">" . strftime("%V", $i) . "</font>";

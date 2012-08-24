@@ -25,7 +25,7 @@ use Studip\Button, Studip\LinkButton;
     </tr>
     <? foreach ($roles as $role): ?>
         <? $role_id = $role->getRoleid() ?>
-        <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+        <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
             <td>
                 <a href="<?= $controller->url_for('admin/role/show_role', $role_id) ?>">
                     <?= htmlReady($role->getRolename()) ?>

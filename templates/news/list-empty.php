@@ -16,7 +16,7 @@
         </td>
     </tr>
     <tr>
-        <td class="steel1" colspan="2">
+        <td class="table_row_even" colspan="2">
             <p class="info">
                 <?= _('Es sind keine aktuellen Ankündigungen vorhanden. '
                      .'Um neue Ankündigungen zu erstellen, klicken Sie rechts auf die Zahnräder.') ?>

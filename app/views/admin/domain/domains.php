@@ -17,7 +17,7 @@
 </tr>
 
 <? foreach ($domains as $domain): ?>
-  <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+  <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
     <td>
       <? if (isset($edit_id) && $edit_id === $domain->getID()): ?>
         <input type="hidden" name="id" value="<?= $edit_id ?>">

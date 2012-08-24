@@ -146,27 +146,27 @@ class StudipSemTreeView extends TreeView {
         $content = "\n<table width=\"90%\" cellpadding=\"2\" cellspacing=\"0\" align=\"center\" style=\"font-size:10pt\">";
         if ($item_id == "root"){
             $content .= "\n<tr><td class=\"topic\" align=\"left\">" . htmlReady($this->tree->root_name) ." </td></tr>";
-            $content .= "\n<tr><td class=\"steel1\" align=\"left\">" . htmlReady($this->root_content) ." </td></tr>";
+            $content .= "\n<tr><td class=\"table_row_even\" align=\"left\">" . htmlReady($this->root_content) ." </td></tr>";
             $content .= "\n</table>";
             return $content;
         }
         if ($this->tree->tree_data[$item_id]['info']){
-            $content .= "\n<tr><td class=\"steel1\" align=\"left\" colspan=\"2\">";
+            $content .= "\n<tr><td class=\"table_row_even\" align=\"left\" colspan=\"2\">";
             $content .= formatReady($this->tree->tree_data[$item_id]['info']) . "</td></tr>";
         }
-        $content .= "<tr><td colspan=\"2\" class=\"steel1\">" . sprintf(_("Alle Veranstaltungen innerhalb dieses Bereiches in der %s&Uuml;bersicht%s"),
+        $content .= "<tr><td colspan=\"2\" class=\"table_row_even\">" . sprintf(_("Alle Veranstaltungen innerhalb dieses Bereiches in der %s&Uuml;bersicht%s"),
                 "<a href=\"" . URLHelper::getLink($this->getSelf("cmd=show_sem_range&item_id=$item_id")) ."\">","</a>") . "</td></tr>";
         $content .= "<tr><td colspan=\"2\">&nbsp;</td></tr>";
         if ($this->tree->getNumEntries($item_id) - $this->tree->tree_data[$item_id]['lonely_sem']){
-            $content .= "<tr><td class=\"steel1\" align=\"left\" colspan=\"2\"><b>" . _("Eintr&auml;ge auf dieser Ebene:");
+            $content .= "<tr><td class=\"table_row_even\" align=\"left\" colspan=\"2\"><b>" . _("Eintr&auml;ge auf dieser Ebene:");
             $content .= "</b>\n</td></tr>";
             $entries = $this->tree->getSemData($item_id);
             $content .= $this->getSemDetails($entries->getGroupedResult("seminar_id"));
         } else {
-            $content .= "\n<tr><td class=\"steel1\" colspan=\"2\">" . _("Keine Eintr&auml;ge auf dieser Ebene vorhanden!") . "</td></tr>";
+            $content .= "\n<tr><td class=\"table_row_even\" colspan=\"2\">" . _("Keine Eintr&auml;ge auf dieser Ebene vorhanden!") . "</td></tr>";
         }
         if ($this->tree->tree_data[$item_id]['lonely_sem']){
-            $content .= "<tr><td class=\"steel1\" align=\"left\" colspan=\"2\"><b>" . _("Nicht zugeordnete Veranstaltungen auf dieser Ebene:");
+            $content .= "<tr><td class=\"table_row_even\" align=\"left\" colspan=\"2\"><b>" . _("Nicht zugeordnete Veranstaltungen auf dieser Ebene:");
             $content .= "</b>\n</td></tr>";
             $entries = $this->tree->getLonelySemData($item_id);
             $content .= $this->getSemDetails($entries->getGroupedResult("seminar_id"));
@@ -181,7 +181,7 @@ class StudipSemTreeView extends TreeView {
         foreach($sem_data as $seminar_id => $data){
             if (key($data['sem_number']) != $sem_number){
                 $sem_number = key($data['sem_number']);
-                $content .= "\n<tr><td class=\"steelkante\" colspan=\"2\">" . $this->tree->sem_dates[$sem_number]['name'] . "</td></tr>";
+                $content .= "\n<tr><td class=\"content_seperator\" colspan=\"2\">" . $this->tree->sem_dates[$sem_number]['name'] . "</td></tr>";
             }
             $sem_name = key($data["Name"]);
             $sem_number_end = key($data["sem_number_end"]);
@@ -189,9 +189,9 @@ class StudipSemTreeView extends TreeView {
                 $sem_name .= " (" . $this->tree->sem_dates[$sem_number]['name'] . " - ";
                 $sem_name .= (($sem_number_end == -1) ? _("unbegrenzt") : $this->tree->sem_dates[$sem_number_end]['name']) . ")";
             }
-            $content .= "<tr><td class=\"steel1\"><a href=\"details.php?sem_id=". $seminar_id
+            $content .= "<tr><td class=\"table_row_even\"><a href=\"details.php?sem_id=". $seminar_id
             ."&send_from_search=true&send_from_search_page=" . rawurlencode(URLHelper::getLink($this->getSelf())) . "\">" . htmlReady($sem_name) . "</a>
-            </td><td class=\"steel1\" align=\"right\">(";
+            </td><td class=\"table_row_even\" align=\"right\">(";
             for ($i = 0; $i < count($data["doz_name"]); ++$i){
                 $content .= "<a href=\"about.php?username=" . key($data["doz_uname"]) ."\">" . htmlReady(key($data["doz_name"])) . "</a>";
                 if($i != count($data["doz_name"])-1){

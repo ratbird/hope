@@ -16,7 +16,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr class="steel1">
+                <tr class="table_row_even">
                     <td align="right">
                         <label for="seminars">
                             <?= _('in das Forum einer Veranstaltung:') ?>
@@ -43,7 +43,7 @@
                     </td>
                 </tr>
             <? if (count($institutes) > 0): ?>   
-                <tr class="steel1">
+                <tr class="table_row_even">
                     <td align="right">
                         <label for="institutes">
                             <?= _('in das Forum einer Einrichtung:') ?>
@@ -71,7 +71,7 @@
             <? endif; ?>
             </tbody>
             <tfoot>
-                <tr class="steel2" valign="middle">
+                <tr class="table_footer" valign="middle">
                     <td>&nbsp;</td>
                     <td><?= LinkButton::createCancel() ?></td>
                 </tr>

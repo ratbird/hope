@@ -1059,29 +1059,29 @@ function forum_print_toolbar ($id="") {
                 $print .= CSRFProtection::tokenTag();
             }
             $print .= "<table class=\"blank\" width=\"100%\" border=0 cellpadding=0 cellspacing=0><tr><td class=\"blank\">&nbsp;</td></tr><tr>";
-            $print .= "<td class=\"steelkante\" valign=\"middle\"><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" height=\"22\" width=\"5\"></td>";
-            $print .= "<td class=\"steelkante\" valign=\"middle\"><font size=\"-1\">"._("Indikator:")."&nbsp;</font>";
+            $print .= "<td class=\"content_seperator\" valign=\"middle\"><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" height=\"22\" width=\"5\"></td>";
+            $print .= "<td class=\"content_seperator\" valign=\"middle\"><font size=\"-1\">"._("Indikator:")."&nbsp;</font>";
 
             if ($forum["indikator"] == "age")
-                $print .=  "</td><td nowrap class=\"steelgraulight_shadow\" valign=\"middle\">&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/red/arr_1right.png\" align=\"absmiddle\"><font size=\"-1\">".$indexvars["age"]["name"]." </font>&nbsp;";
+                $print .=  "</td><td nowrap class=\"table_row_odd_shadow\" valign=\"middle\">&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/red/arr_1right.png\" align=\"absmiddle\"><font size=\"-1\">".$indexvars["age"]["name"]." </font>&nbsp;";
             else
-                $print .=  "</td><td nowrap class=\"steelkante\" valign=\"middle\">&nbsp;<a href=\"".URLHelper::getLink("?flatviewstartposting=$flatviewstartposting&open=$open&indikator=age")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/arr_1right.png\" border=\"0\" align=\"absmiddle\"><font size=\"-1\" color=\"#555555\">".$indexvars["age"]["name"]."</font></a> &nbsp;";
+                $print .=  "</td><td nowrap class=\"content_seperator\" valign=\"middle\">&nbsp;<a href=\"".URLHelper::getLink("?flatviewstartposting=$flatviewstartposting&open=$open&indikator=age")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/arr_1right.png\" border=\"0\" align=\"absmiddle\"><font size=\"-1\" color=\"#555555\">".$indexvars["age"]["name"]."</font></a> &nbsp;";
             if ($forum["indikator"] == "viewcount")
-                $print .=  "</td><td nowrap class=\"steelgraulight_shadow\" valign=\"middle\">&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/green/arr_1right.png\" align=\"absmiddle\"><font size=\"-1\">".$indexvars["viewcount"]["name"]." </font>&nbsp;";
+                $print .=  "</td><td nowrap class=\"table_row_odd_shadow\" valign=\"middle\">&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/green/arr_1right.png\" align=\"absmiddle\"><font size=\"-1\">".$indexvars["viewcount"]["name"]." </font>&nbsp;";
             else
-                $print .=  "</td><td nowrap class=\"steelkante\" valign=\"middle\">&nbsp;<a href=\"".URLHelper::getLink("?flatviewstartposting=$flatviewstartposting&open=$open&indikator=viewcount")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/arr_1right.png\" border=\"0\" align=\"absmiddle\"><font size=\"-1\" color=\"#555555\">".$indexvars["viewcount"]["name"]."</font></a> &nbsp;";
+                $print .=  "</td><td nowrap class=\"content_seperator\" valign=\"middle\">&nbsp;<a href=\"".URLHelper::getLink("?flatviewstartposting=$flatviewstartposting&open=$open&indikator=viewcount")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/arr_1right.png\" border=\"0\" align=\"absmiddle\"><font size=\"-1\" color=\"#555555\">".$indexvars["viewcount"]["name"]."</font></a> &nbsp;";
             if ($forum["indikator"] == "rating")
-                $print .=  "</td><td nowrap class=\"steelgraulight_shadow\" valign=\"middle\">&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/yellow/arr_1right.png\" align=\"absmiddle\"><font size=\"-1\">".$indexvars["rating"]["name"]." </font>&nbsp;";
+                $print .=  "</td><td nowrap class=\"table_row_odd_shadow\" valign=\"middle\">&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/yellow/arr_1right.png\" align=\"absmiddle\"><font size=\"-1\">".$indexvars["rating"]["name"]." </font>&nbsp;";
             else
-                $print .=  "</td><td nowrap class=\"steelkante\" valign=\"middle\">&nbsp;<a href=\"".URLHelper::getLink("?flatviewstartposting=$flatviewstartposting&open=$open&indikator=rating")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/arr_1right.png\" border=\"0\" align=\"absmiddle\"><font size=\"-1\" color=\"#555555\">".$indexvars["rating"]["name"]."</font></a> &nbsp;";
+                $print .=  "</td><td nowrap class=\"content_seperator\" valign=\"middle\">&nbsp;<a href=\"".URLHelper::getLink("?flatviewstartposting=$flatviewstartposting&open=$open&indikator=rating")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/arr_1right.png\" border=\"0\" align=\"absmiddle\"><font size=\"-1\" color=\"#555555\">".$indexvars["rating"]["name"]."</font></a> &nbsp;";
             if ($forum["indikator"] == "score")
-                $print .=  "</td><td nowrap class=\"steelgraulight_shadow\" valign=\"middle\">&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/arr_1right.png\" align=\"absmiddle\"><font size=\"-1\">".$indexvars["score"]["name"]." </font>&nbsp;";
+                $print .=  "</td><td nowrap class=\"table_row_odd_shadow\" valign=\"middle\">&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/arr_1right.png\" align=\"absmiddle\"><font size=\"-1\">".$indexvars["score"]["name"]." </font>&nbsp;";
             else
-                $print .=  "</td><td nowrap class=\"steelkante\" valign=\"middle\">&nbsp;<a href=\"".URLHelper::getLink("?flatviewstartposting=$flatviewstartposting&open=$open&indikator=score")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/arr_1right.png\" border=\"0\" align=\"absmiddle\"><font size=\"-1\" color=\"#555555\">".$indexvars["score"]["name"]."</font></a> &nbsp;";
+                $print .=  "</td><td nowrap class=\"content_seperator\" valign=\"middle\">&nbsp;<a href=\"".URLHelper::getLink("?flatviewstartposting=$flatviewstartposting&open=$open&indikator=score")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/arr_1right.png\" border=\"0\" align=\"absmiddle\"><font size=\"-1\" color=\"#555555\">".$indexvars["score"]["name"]."</font></a> &nbsp;";
 
             if ($forum["view"] != "tree" && $forum["view"] != "mixed") { // Anzeige der Sortierung nicht in der Themenansicht
-                $print .= "</td><td nowrap class=\"steelkante\" valign=\"middle\">&nbsp;|&nbsp;&nbsp;<font size=\"-1\">Sortierung:&nbsp;&nbsp;</font>";
-                $print .= "</td><td nowrap class=\"steelkante\" valign=\"middle\"><select name=\"sort\" size=\"1\">";
+                $print .= "</td><td nowrap class=\"content_seperator\" valign=\"middle\">&nbsp;|&nbsp;&nbsp;<font size=\"-1\">Sortierung:&nbsp;&nbsp;</font>";
+                $print .= "</td><td nowrap class=\"content_seperator\" valign=\"middle\"><select name=\"sort\" size=\"1\">";
                 $tmp["age"] = "Alter";
                 $tmp["viewcount"] = $indexvars["viewcount"]["name"];
                 $tmp["rating"] = $indexvars["rating"]["name"];
@@ -1629,7 +1629,7 @@ function flatview($open = 0, $show = 0, $update = '', $name = '', $description =
 
     ?>
     <table border=0 width="100%" cellspacing="0" cellpadding="0" align="center" id="main_content"><tr>
-    <td class="steelgraudunkel" align="left" width="45%" style="padding-left: 5px">
+    <td class="content_seperator" align="left" width="45%" style="padding-left: 5px">
     <?
 
     if ($forum["view"]=="flatfolder")
@@ -1652,7 +1652,7 @@ function flatview($open = 0, $show = 0, $update = '', $name = '', $description =
     }
     echo "</td>";
 
-    echo "<td class=\"steelgraudunkel\" align=\"center\" width=\"10%\">";
+    echo "<td class=\"content_seperator\" align=\"center\" width=\"10%\">";
     if ($forum["flatallopen"]=="TRUE")
         echo "<a href=\"".URLHelper::getLink(
             "?flatviewstartposting=".$forum["flatviewstartposting"]."&flatallopen=FALSE")."\"><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif' border=0 height='10' align=middle><img src='".$GLOBALS['ASSETS_URL']."images/close_all.png' border=0 " . tooltip(_("Alle zuklappen")) . " align=middle><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif' border=0></a>";
@@ -1660,7 +1660,7 @@ function flatview($open = 0, $show = 0, $update = '', $name = '', $description =
         echo "<a href=\"".URLHelper::getLink(
             "?flatviewstartposting=".$forum["flatviewstartposting"]."&flatallopen=TRUE")."\"><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif' border=0 height='10' align=middle><img src='".$GLOBALS['ASSETS_URL']."images/open_all.png' border=0 " . tooltip(_("Alle aufklappen")) . " align=middle><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif' border=0></a>";
 
-    echo "</td><td class=\"steelgraudunkel\" align=\"right\" width=\"45%\">";
+    echo "</td><td class=\"content_seperator\" align=\"right\" width=\"45%\">";
     echo forum_print_navi($forum)."&nbsp;&nbsp;&nbsp;".forum_get_index()."&nbsp;&nbsp;&nbsp;";
     echo "</td></tr></table>";
 
@@ -1692,7 +1692,7 @@ function flatview($open = 0, $show = 0, $update = '', $name = '', $description =
 
     echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">";
     echo "  <tr>";
-    echo "      <td class=\"steelgraudunkel\" align=\"right\" ><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" border=\"0\" height=\"10\" align=\"middle\">";
+    echo "      <td class=\"content_seperator\" align=\"right\" ><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" border=\"0\" height=\"10\" align=\"middle\">";
     echo forum_print_navi($forum)."&nbsp;&nbsp;&nbsp;".forum_get_index($forumposting);
     echo "      &nbsp;&nbsp;</td>";
     echo "  </tr>";
@@ -1797,8 +1797,8 @@ function DisplayFolders ($open = 0, $update = '', $zitat = '')
         // HTML
 
         echo "<table class=\"blank\" width=\"100%\" border=0 cellpadding=0 cellspacing=0><tr>";
-        echo "<td class=\"steelgraudunkel\" width=\"33%\"><b><font size=\"-1\">&nbsp;" . _("Thema") . "</font></b></td>";
-        echo "<td class=\"steelgraudunkel\" width=\"33%\" align=\"center\">";
+        echo "<td class=\"content_seperator\" width=\"33%\"><b><font size=\"-1\">&nbsp;" . _("Thema") . "</font></b></td>";
+        echo "<td class=\"content_seperator\" width=\"33%\" align=\"center\">";
         if ($user->id != "nobody") { // Nobody kriegt nur treeview
             if ($forum["view"] == "tree")
                 echo "<a href=\"".URLHelper::getLink("?view=mixed&themeview=mixed")."\">" . Assets::img('forumtree.gif') . "</a>";
@@ -1806,7 +1806,7 @@ function DisplayFolders ($open = 0, $update = '', $zitat = '')
                 echo "<a href=\"".URLHelper::getLink("?view=tree&themeview=tree")."\">" . Assets::img('forumflat.gif') . "</a>";
         }
         echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" border=0 height=\"20\" align=\"middle\"></td>";
-        echo "<td class=\"steelgraudunkel\" width=\"33%\"align=\"right\">" . _("<b>Forenbeiträge</b> / letzter Eintrag") . " ".forum_get_index()." </td></tr></table>\n";
+        echo "<td class=\"content_seperator\" width=\"33%\"align=\"right\">" . _("<b>Forenbeiträge</b> / letzter Eintrag") . " ".forum_get_index()." </td></tr></table>\n";
         foreach ($data as $row) {
             $forumposting = printposting($row);
 
@@ -1820,7 +1820,7 @@ function DisplayFolders ($open = 0, $update = '', $zitat = '')
         }
     }
     echo '<table border="0" cellpadding="0" cellspacing="0" width="100%"><tr>';
-    echo "<td align=center class=steelgraudunkel><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif' border=0 height='20' align=middle>";
+    echo "<td align=center class=content_seperator><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif' border=0 height='20' align=middle>";
     if (($perm->have_perm("autor")) && (($rechte) || ($SEM_CLASS[$SEM_TYPE[$SessSemName["art_num"]]["class"]]["topic_create_autor"])))
         echo "<a href='".URLHelper::getLink("?neuesthema=TRUE#anker")."'><img src='".$GLOBALS['ASSETS_URL']."images/icons/16/blue/arr_1down.png' align=middle " . tooltip(_("Neues Thema anlegen")) . "><img src='".$GLOBALS['ASSETS_URL']."images/icons/16/blue/add/folder-empty.png' " . tooltip(_("Neues Thema anlegen")) . " border=0 align=middle></a>";
     echo "</td></tr></table>\n";

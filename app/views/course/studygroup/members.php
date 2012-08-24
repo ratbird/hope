@@ -142,7 +142,7 @@ list-style-position:outside;list-style-type:none;">
             </tr>
 
             <? foreach($accepted as $p) : ?>
-            <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+            <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
                 <td>
                     <a href="<?= URLHelper::getLink('about.php?username=' . $p['username']) ?>">
                         <?= Avatar::getAvatar($p['user_id'])->getImageTag(Avatar::SMALL) ?>

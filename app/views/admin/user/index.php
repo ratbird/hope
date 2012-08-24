@@ -12,7 +12,7 @@ use Studip\Button, Studip\LinkButton;
 <form action="<?= $controller->url_for('admin/user/') ?>" method="post">
 <?= CSRFProtection::tokenTag() ?>
 <table class="default collapsable">
-    <tr class="steel1">
+    <tr class="table_row_even">
         <td align="right" width="15%">
             <?= _("Benutzername:") ?>
         </td>
@@ -26,7 +26,7 @@ use Studip\Button, Studip\LinkButton;
             <input name="vorname" type="text" value="<?= htmlReady($user['vorname']) ?>">
         </td>
     </tr>
-    <tr class="steelgraulight">
+    <tr class="table_row_odd">
         <td align="right" width="15%">
             <?= _("E-Mail:")?>
         </td>
@@ -40,7 +40,7 @@ use Studip\Button, Studip\LinkButton;
             <input name="nachname" type="text" value="<?= htmlReady($user['nachname']) ?>">
         </td>
     </tr>
-    <tr class="steel1">
+    <tr class="table_row_even">
         <td align="right" width="15%">
             <?= _("Status:")?>
         </td>
@@ -72,7 +72,7 @@ use Studip\Button, Studip\LinkButton;
             </a>
         </td>
     </tr>
-    <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td align="right" width="15%">
             <?= _("Nutzerdomäne:")?>
         </td>
@@ -100,7 +100,7 @@ use Studip\Button, Studip\LinkButton;
     <? if (count($datafields) > 0) : ?>
         <? $i = 0; foreach($datafields as $datafield) : ?>
             <? if ($i % 2 == 0) : ?>
-            <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+            <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
             <? endif ?>
                 <td align="right" nowrap><?= htmlReady($datafield->getName()) ?>:</td>
                 <td>

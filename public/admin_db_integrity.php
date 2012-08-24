@@ -80,10 +80,10 @@ if(!empty($plugin) AND in_array($plugin,$_integrity_plugins)) {
         ._("Dieser Schritt kann <u>nicht</u> r&uuml;ckg&auml;ngig gemacht werden! Sind Sie sicher?") . " <br>\n"
         ."<br>".LinkButton::createAccept(_('Ja'), URLHelper::getLink('?plugin='.Request::get('plugin').'&cmd=delete&checkid='.Request::quoted('checkid'))) . '&nbsp;'
         .LinkButton::createCancel(_('Nein'))."\n";
-        ?><table border="0" width="80%" cellpadding="2" cellspacing="0" class="steel1">
+        ?><table border="0" width="80%" cellpadding="2" cellspacing="0" class="table_row_even">
         <tr><td class="blank">&nbsp; </td></tr>
         <?
-        parse_msg($msg,"§","steel1",1,FALSE);
+        parse_msg($msg,"§","table_row_even",1,FALSE);
         ?>
         <tr><td class="blank">&nbsp; </td></tr>
         </table><?
@@ -112,10 +112,10 @@ if(!empty($plugin) AND in_array($plugin,$_integrity_plugins)) {
         print(LinkButton::createCancel(_('Abbrechen'), URLHelper::getURL()).'</td></tr>');
         ?>
         <tr><td class="blank" colspan="2">&nbsp; </td></tr>
-        <tr><td class="steel1" align="center" colspan="2">
+        <tr><td class="table_row_even" align="center" colspan="2">
         <?
         $db = $plugin_obj->getCheckDetailResult(Request::option('checkid'));
-        ?><table border=1 class="steelgraulight" style="font-size:smaller" align="center"><tr><?
+        ?><table border=1 class="table_row_odd" style="font-size:smaller" align="center"><tr><?
         $meta = $db->metadata();
         for($i = 0;$i < count($meta);++$i){
             echo "<th>" . $meta[$i]['name'] . "</th>";

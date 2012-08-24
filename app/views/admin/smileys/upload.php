@@ -11,7 +11,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="steelgraulight">
+            <tr class="table_row_odd">
                 <td>
                     <label for="replace"><?= _('existierende Datei überschreiben') ?></label>
                 </td>
@@ -19,7 +19,7 @@
                     <input type="checkbox" id="replace" name="replace" value="1">
                 </td>
             </tr>
-            <tr class="steel1">
+            <tr class="table_row_even">
                 <td>
                     <label for="file"><?= _('Bilddatei auswählen') ?></label>
                 </td>

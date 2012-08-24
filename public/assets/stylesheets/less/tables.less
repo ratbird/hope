@@ -50,7 +50,7 @@ td {
         background-color: #f3f5f8;
         border: 1px solid #000;
     }
-    &.rahmen_steelgraulight {
+    &.rahmen_table_row_odd {
         background-color: #e7ebf1;
         border: 1px solid #000;
     }
@@ -100,6 +100,11 @@ tr.cycle_even {
     background-color: #e7ebf1;
     &:hover { background-color: #b7c2e2; }
 }
+
+.table_row_odd { background-color: #eeeeee; }
+.table_row_even { background-color: #f8f8f8; } 
+
+
 table.zebra, table.zebra-hover { // bg color alternates with tr
     > tbody > tr { 
         background-color: @alternating-color-odd;
@@ -249,4 +254,9 @@ tr.sortable {
         }
         tr:last-child td:first-child { border-bottom: 0; }
     }
+}
+
+.table_footer, .table_footer td {
+    background-color: #e9e9e9;
+    border-top: 1px solid #c8c8c8;
 }

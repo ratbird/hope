@@ -37,7 +37,7 @@ use Studip\Button, Studip\LinkButton;
             </tr>
 
             <? foreach ($users as $user): ?>
-                <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+                <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
                     <td style="text-align: right;">
                         <?= ++$index ?>.
                     </td>
@@ -70,7 +70,7 @@ use Studip\Button, Studip\LinkButton;
             </tr>
 
             <? foreach ($plugins as $plugin): ?>
-                <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+                <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
                     <td style="text-align: right;">
                         <?= ++$index ?>.
                     </td>

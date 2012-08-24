@@ -7,12 +7,12 @@
 ?>
     <tbody>
         <tr>
-            <td class="steel2" style="font-weight: bold;">
+            <td class="table_footer" style="font-weight: bold;">
                 <?= sprintf(_('%s hat am %s geschrieben:'), $user_link, date('d.m.Y - H:i', $post['mkdate'])) ?>
             </td>
         </tr>
         <tr>
-            <td class="steelgraulight">
+            <td class="table_row_odd">
                 <?= formatready($post['content']) ?>
                 <p align="right">
                     <?= Studip\LinkButton::create(_('Löschen'), $delete_link) ?>
@@ -20,7 +20,7 @@
             </td>
         </tr>
         <tr>
-            <td class="steel1">&nbsp;</td>
+            <td class="table_row_even">&nbsp;</td>
         </tr>
     </tbody>
 <? endforeach; ?>

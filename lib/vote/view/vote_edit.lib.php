@@ -236,7 +236,7 @@ function printQuestionField ( $question = "" ) {
     if( $pageMode != MODE_RESTRICTED ) {
     $html .= "<textarea class=\"add_toolbar\" cols=50 rows=2 style=\"width:100%;\" name=\"question\" ".$js." tabindex=2>".htmlReady($question)."</textarea>";
     } else {
-       $html .= "<div class=steelgraulight style=\"padding:2px;\">"
+       $html .= "<div class=table_row_odd style=\"padding:2px;\">"
       . "<font size=-1>".formatReady($question)."</font>"
       . "</div>";
     }
@@ -293,7 +293,7 @@ function printAnswerFields ( $answers ) {
     for( $i=0; $i < count($answers); $i++ ) {
 
     if( $i%2 == 1 )
-        $html .= "<tr class=steelgraulight>";
+        $html .= "<tr class=table_row_odd>";
     else
         $html .= "<tr>";
 
@@ -555,7 +555,7 @@ function printRuntimeSettings ( $startMode = "manual",
     . ">";
     $html .= "</td></tr>";
 
-    $html .= "<tr><td class=steel1 width=\"50%\" valign=top>"
+    $html .= "<tr><td class=table_row_even width=\"50%\" valign=top>"
     . "<table width=\"100%\" cellpadding=2 cellspacing=0 border=0>\n"
     . "<tr><th>" . _("Anfang") . "</th></tr>";
 
@@ -564,7 +564,7 @@ function printRuntimeSettings ( $startMode = "manual",
     $html .= "<font size=-1>" . _("sp&auml;ter manuell starten") . "</font>";
     $html .= "</td></tr>";
 
-    $html .=  "<tr><td class=steelgraulight>";
+    $html .=  "<tr><td class=table_row_odd>";
     $html .= "<input type=radio name=startMode value=timeBased".$checkTimeStart.">&nbsp;";
     $html .= "<font size=-1>" . _("Startzeitpunkt:") . "</font>";
     $html .= "&nbsp;&nbsp;<input type=text name=startDay size=3 maxlength=2 value=\"".$startDay."\">&nbsp;.&nbsp;"
@@ -592,14 +592,14 @@ function printRuntimeSettings ( $startMode = "manual",
 
     $html .= "</table></td>";
 
-    $html .= "<td class=steel1 width=\"50%\">"
+    $html .= "<td class=table_row_even width=\"50%\">"
 
     . "<table width=\"100%\" cellpadding=2 cellspacing=0 border=0>\n"
     . "<tr><th>" . _("Ende") . "</th></tr>"
     . "<tr><td><input type=radio name=stopMode value=manual".$checkManualStop.">&nbsp;"
     . "<font size=-1>" . _("manuell beenden") . "</font>"
     . "</td></tr>"
-    . "<tr><td class=steelgraulight><input type=radio name=stopMode value=timeBased".$checkTimeStop.">&nbsp;"
+    . "<tr><td class=table_row_odd><input type=radio name=stopMode value=timeBased".$checkTimeStop.">&nbsp;"
     . "<font size=-1>" . _("Endzeitpunkt:") . "</font>";
 
     $html .= "&nbsp;&nbsp;<input type=text name=stopDay size=3 maxlength=2 value=\"".$stopDay."\">&nbsp;.&nbsp;"
@@ -675,7 +675,7 @@ function printProperties ( $multipleChoice,
     $html .= "<b><font size=-1>" . _("Weitere Eigenschaften:") . "</font></b>"
     . "</td></tr>";
 
-    $html .= "<tr><td class=steel1 width=\"100%\" valign=top>"
+    $html .= "<tr><td class=table_row_even width=\"100%\" valign=top>"
     . "<table width=\"100%\" cellpadding=2 cellspacing=0 border=0>\n"
     . "<tr><th width=\"50%\" align=center>" . _("Option") . "&nbsp; </th>"
     . "<th align=center> &nbsp;" . _("Auswahl") . "</th></tr>";
@@ -714,7 +714,7 @@ function printProperties ( $multipleChoice,
     $html .= "<font size=-1>";
     $html .= _("Der Teilnehmer sieht die (Zwischen-)Ergebnisse:");
     $html .= "</font>";
-    $html .= "&nbsp;&nbsp;</td><td align=left class=steelgraulight><font size=-1>";
+    $html .= "&nbsp;&nbsp;</td><td align=left class=table_row_odd><font size=-1>";
 
 #    if( $pageMode != MODE_RESTRICTED ) {
     $line1 = "<input type=radio value=" . VOTE_RESULTS_ALWAYS . " name=resultVisibility ".
@@ -746,7 +746,7 @@ function printProperties ( $multipleChoice,
         . "<font size=-1>"
         . _("Der Teilnehmer sieht, ob seine Antwort(en) richtig war(en):")
         . "</font>"
-        . "&nbsp;&nbsp;</td><td align=left class=steel1>"
+        . "&nbsp;&nbsp;</td><td align=left class=table_row_even>"
         . "<font size=-1>";
 
     if( $pageMode != MODE_RESTRICTED ) {
@@ -776,8 +776,8 @@ function printProperties ( $multipleChoice,
 
     $html .= "<font size=-1>";
     $html .= ($type=="test")
-    ? _("Die Auswertung des Tests l&auml;uft:") . "</font>&nbsp;&nbsp;</td><td align=left class=steelgraulight>"
-    : _("Die Auswertung der Umfrage l&auml;uft:") . "</font>&nbsp;&nbsp;</td><td align=left class=steel1>";
+    ? _("Die Auswertung des Tests l&auml;uft:") . "</font>&nbsp;&nbsp;</td><td align=left class=table_row_odd>"
+    : _("Die Auswertung der Umfrage l&auml;uft:") . "</font>&nbsp;&nbsp;</td><td align=left class=table_row_even>";
     $html .= "<font size=-1>";
 
     if( $pageMode != MODE_RESTRICTED ) {
@@ -805,8 +805,8 @@ function printProperties ( $multipleChoice,
     $html .= "<font size=-1>";
     $html .= _("Die Namen der Teilnehmer werden &ouml;ffentlich sichtbar gemacht:") . "</font>&nbsp;&nbsp;";
     $html .= ($type == "test")
-    ? "</td><td align=left class=steel1>"
-    : "</td><td align=left class=steelgraulight>";
+    ? "</td><td align=left class=table_row_even>"
+    : "</td><td align=left class=table_row_odd>";
     $html .= "<font size=-1>";
 
     $line1 = "<input type=radio value=\"".YES."\" name=namesVisibility ".( $namesVisibility ? "checked" : "" )."> ";
@@ -833,8 +833,8 @@ function printProperties ( $multipleChoice,
     $html .= "</font>&nbsp;&nbsp;";
 
     $html .= ($type == "test")
-        ? "</td><td align=left class=steelgraulight>"
-        : "</td><td align=left class=steel1>";
+        ? "</td><td align=left class=table_row_odd>"
+        : "</td><td align=left class=table_row_even>";
     $html .= "<font size=-1>";
 
     $line1 = "<input type=radio value=\"".NO."\" name=changeable ".

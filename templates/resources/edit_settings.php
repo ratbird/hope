@@ -192,7 +192,7 @@
     </tbody>
     <tfoot>
         <tr>
-            <td class="steel2" colspan="2" style="text-align:center">
+            <td class="table_footer" colspan="2" style="text-align:center">
                 <?= Button::create(_('Übernehmen'), '_send_settings') ?>
             </td>
         </tr>

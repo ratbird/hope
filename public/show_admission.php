@@ -647,7 +647,7 @@ if(is_object($group_obj)){
         <td class="blank" width="100%">
         <form action="<?=URLHelper::getLink()?>" name="Formular" method="post">
         <?= CSRFProtection::tokenTag() ?>
-        <div class="steel1" style="margin:10px;padding:5px;border: 1px solid;">
+        <div class="table_row_even" style="margin:10px;padding:5px;border: 1px solid;">
         <div style="font-weight:bold;"><?=_("Gruppierte Veranstaltungen bearbeiten")?></div>
         <div>
         <?=_("Gruppierte Veranstaltungen müssen ein identisches Anmeldeverfahren benutzen.")?>
@@ -914,7 +914,7 @@ if(is_object($group_obj)){
         echo CSRFProtection::tokenTag();
     } elseif ($institut_id) {
         echo "\n<table width=\"99%\" align=\"center\" border=\"0\" cellspacing=\"2\" cellpadding=\"2\">";
-        parse_msg ("info§"._("Im gew&auml;hlten Bereich existieren keine teilnahmebeschr&auml;nkten Veranstaltungen")."§", "§", "steel1",2, FALSE);
+        parse_msg ("info§"._("Im gew&auml;hlten Bereich existieren keine teilnahmebeschr&auml;nkten Veranstaltungen")."§", "§", "table_row_even",2, FALSE);
     }
     foreach($data as $seminar_id => $semdata) {
         $teilnehmer = $semdata['count_teilnehmer'];

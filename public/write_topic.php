@@ -86,7 +86,7 @@ if (!(have_sem_write_perm()) OR $pass==TRUE) {
             }
             foreach ($rows as $row) {
                 $name = $row['name'];
-                echo"<td class=steel2 colspan=2>&nbsp; &nbsp; <b><font size=2>".htmlReady($name)."</font></b></td>";
+                echo"<td class=table_footer colspan=2>&nbsp; &nbsp; <b><font size=2>".htmlReady($name)."</font></b></td>";
                 echo "\n</tr><tr>";
                 // $parent_description = formatReady($db->f("description"));
                 $parent_description = $row['description'];
@@ -96,11 +96,11 @@ if (!(have_sem_write_perm()) OR $pass==TRUE) {
                 printcontent ("100%","",$parent_description,"");
                 echo "\n</tr>";
                 echo "  <tr>";
-                echo "      <td colspan=2 class=steel1 align=center>";
+                echo "      <td colspan=2 class=table_row_even align=center>";
                 echo LinkButton::create(_("Zitieren"), URLHelper::getURL("?write=1&root_id=$root_id&topic_id=$topic_id&quote=TRUE"));
                 echo "      </td>";
                 echo "  </tr>";
-                echo "<tr><td colspan=2 class=steel>&nbsp; </td></tr><tr><td colspan=2 class=steel1><blockquote>";
+                echo "<tr><td colspan=2 class=steel>&nbsp; </td></tr><tr><td colspan=2 class=table_row_even><blockquote>";
             
             }
             print "<br><b>" . _("Hierzu antworten:") . "</b><br><br>\n";

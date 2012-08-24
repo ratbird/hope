@@ -817,7 +817,7 @@ function display_roles_recursive($roles, $level = 0, $pred = '') {
         } else {
             $title = $data['name'];
         }
-        echo '<tr><td colspan="2" class="steelkante"><b>'.$title.'</b></td></tr>';
+        echo '<tr><td colspan="2" class="content_seperator"><b>'.$title.'</b></td></tr>';
         if ($persons = getPersonsForRole($role_id)) {
             $z = 1;
             if (is_array($persons))

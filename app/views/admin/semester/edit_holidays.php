@@ -13,8 +13,8 @@ use Studip\Button, Studip\LinkButton;
          <th colspan="5"><?= _("Ferien neu anlegen") ?></th>
     <? endif ?>
     </tr>
-    <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
-    <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
+    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td>
             <?= _("Name der Ferien:") ?>
         </td>
@@ -22,7 +22,7 @@ use Studip\Button, Studip\LinkButton;
             <input type="text" size="60" value="<?= ($holiday['name']) ? htmlReady($holiday['name']) : '' ?>" name="name" style="width: 350px;" required>
         </td>
     </tr>
-    <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td>
             <?= _("Beschreibung:") ?>
         </td>
@@ -30,7 +30,7 @@ use Studip\Button, Studip\LinkButton;
             <textarea name="description" rows="4" cols="50" style="width: 350px;"><?= ($holiday['description']) ? htmlReady($holiday['description']) : '' ?></textarea>
         </td>
     </tr>
-    <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+    <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
         <td>
             <?= _("Ferienzeitraum:") ?>
         </td>

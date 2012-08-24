@@ -151,7 +151,7 @@
     </tbody>
 <? if (count($open_requests) > 0): ?>
     <tfoot>
-        <tr class="steel2">
+        <tr class="table_footer">
             <td>&nbsp;</td>
             <td style="text-align: center">
                 <?= Button::createAccept(_('Starten'), 'start_multiple_mode') ?>

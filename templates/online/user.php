@@ -1,7 +1,7 @@
 <?
 # Lifter010: TODO
 ?>
-<tr class="<?= $background ? $background : 'steel1' ?>">
+<tr class="<?= $background ? $background : 'table_row_even' ?>">
 
     <td width="1%" <?= $gruppe ? "class=\"$gruppe\"" : '' ?>>
         <? if (!$is_buddy) : ?>

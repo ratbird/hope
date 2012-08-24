@@ -114,7 +114,7 @@ class ELearningUtils
         $output .=  "<form method=\"POST\" action=\"" . URLHelper::getLink() . "#anker\">\n";
         $output .= CSRFProtection::tokenTag();
         $output .= "<table border=\"0\" cellspacing=0 cellpadding=0 width = \"99%\">";
-        $output .= "<tr><td class=\"steel1\" align=\"center\" valign=\"middle\" ><font size=\"-1\">";
+        $output .= "<tr><td class=\"table_row_even\" align=\"center\" valign=\"middle\" ><font size=\"-1\">";
         $output .=  ELearningUtils::getHeader(_("Angebundenes System"));
         $output .= "<br>\n";
         $output .= $message;
@@ -196,7 +196,7 @@ class ELearningUtils
         $output .=  "<form method=\"POST\" action=\"" . URLHelper::getLink('#anker')."\">\n";
         $output .= CSRFProtection::tokenTag();
         $output .= "<table border=\"0\" cellspacing=0 cellpadding=0 width = \"99%\">";
-        $output .= "<tr><td class=\"steel1\" align=\"center\" valign=\"middle\" ><font size=\"-1\">";
+        $output .= "<tr><td class=\"table_row_even\" align=\"center\" valign=\"middle\" ><font size=\"-1\">";
         $output .= "<br>\n";
         $output .= $message;
         $output .= "<br>\n";
@@ -381,29 +381,29 @@ class ELearningUtils
             $output .=  "<form method=\"POST\" action=\"" . URLHelper::getLink('#anker')."\">\n";
             $output .= CSRFProtection::tokenTag();
             $output .= "<table border=\"0\" cellspacing=0 cellpadding=6 width = \"99%\">";
-            $output .= "<tr><td class=\"steel1\" align=\"left\" valign=\"middle\" colspan=\"2\"><br>\n";
+            $output .= "<tr><td class=\"table_row_even\" align=\"left\" valign=\"middle\" colspan=\"2\"><br>\n";
             $output .= "<font size=\"-1\">";
             $output .= sprintf(_("Geben Sie nun Benutzernamen und Passwort Ihres Benutzeraccounts in %s ein."),  $connected_cms[$new_account_cms]->getName()) . "";
             $output .= "</font>";
             $output .= "<br></td></tr>\n";
-            $output .=  "<tr><td class=\"steel1\" align=\"right\" valign=\"middle\" colspan=\"2\">";
+            $output .=  "<tr><td class=\"table_row_even\" align=\"right\" valign=\"middle\" colspan=\"2\">";
             $output .= "<br></td></tr>\n";
-            $output .=  "<tr><td class=\"steel1\" align=\"right\" valign=\"middle\" width=\"20%\">";
+            $output .=  "<tr><td class=\"table_row_even\" align=\"right\" valign=\"middle\" width=\"20%\">";
             $output .= "<font size=\"-1\">";
             $output .= "&nbsp;" . _("Benutzername: ") . "&nbsp;\n";
             $output .= "</font>";
-            $output .= "</td><td class=\"steel1\" align=\"left\" valign=\"middle\">";
+            $output .= "</td><td class=\"table_row_even\" align=\"left\" valign=\"middle\">";
             $output .= "" . "<input name=\"ext_username\" size=\"30\" style=\"vertical-align:middle;font-size:9pt;\" value=\"" . $ext_username . "\">";
             $output .= "</td></tr>";
-            $output .=  "<tr><td class=\"steel1\" align=\"right\" valign=\"middle\" colspan=\"2\">";
+            $output .=  "<tr><td class=\"table_row_even\" align=\"right\" valign=\"middle\" colspan=\"2\">";
             $output .= "<br></td></tr>\n";
-            $output .=  "<tr><td class=\"steel1\" align=\"right\" valign=\"middle\" width=\"20%\">";
+            $output .=  "<tr><td class=\"table_row_even\" align=\"right\" valign=\"middle\" width=\"20%\">";
             $output .= "<font size=\"-1\">";
             $output .= "&nbsp;" . _("Passwort: ") . "&nbsp;\n";
             $output .= "</font>";
-            $output .= "</td><td class=\"steel1\" align=\"left\" valign=\"middle\">";
+            $output .= "</td><td class=\"table_row_even\" align=\"left\" valign=\"middle\">";
             $output .= "" . "<input name=\"ext_password\" type=\"PASSWORD\" size=\"30\" style=\"vertical-align:middle;font-size:9pt;\" value=\"" ."\">";
-            $output .= "</td></tr><tr><td class=\"steel1\">&nbsp;</td><td class=\"steel1\" align=\"left\" valign=\"middle\">";
+            $output .= "</td></tr><tr><td class=\"table_row_even\">&nbsp;</td><td class=\"table_row_even\" align=\"left\" valign=\"middle\">";
             $output .=  "<br>&nbsp;". Button::createAccept(_('Bestätigen'), 'next') . "<br>";
             $output .= "</td></tr>";
             $output .=  "<tr><td align=\"center\" valign=\"middle\" colspan=\"2\"><br>";
@@ -429,29 +429,29 @@ class ELearningUtils
             $output .=  "<form method=\"POST\" action=\"" . URLHelper::getLink('#anker')."\">\n";
             $output .= CSRFProtection::tokenTag();
             $output .= "<table border=\"0\" cellspacing=0 cellpadding=6 width = \"99%\">";
-            $output .= "<tr><td class=\"steel1\" align=\"left\" valign=\"middle\" colspan=\"2\"><br>\n";
+            $output .= "<tr><td class=\"table_row_even\" align=\"left\" valign=\"middle\" colspan=\"2\"><br>\n";
             $output .= "<font size=\"-1\">";
             $output .= sprintf(_("Geben Sie nun ein Passwort f&uuml;r Ihren neuen Benutzeraccount in %s ein."),  $connected_cms[$new_account_cms]->getName());
             $output .= "</font>";
             $output .= "<br></td></tr>\n";
-            $output .=  "<tr><td class=\"steel1\" align=\"right\" valign=\"middle\" colspan=\"2\">";
+            $output .=  "<tr><td class=\"table_row_even\" align=\"right\" valign=\"middle\" colspan=\"2\">";
             $output .= "<br></td></tr>\n";
-            $output .=  "<tr><td class=\"steel1\" align=\"right\" valign=\"middle\" width=\"20%\">";
+            $output .=  "<tr><td class=\"table_row_even\" align=\"right\" valign=\"middle\" width=\"20%\">";
             $output .= "<font size=\"-1\">";
             $output .= "&nbsp;" . _("Passwort:") . "\n";
             $output .= "</font>";
-            $output .= "</td><td class=\"steel1\" align=\"left\" valign=\"middle\">";
+            $output .= "</td><td class=\"table_row_even\" align=\"left\" valign=\"middle\">";
             $output .= "" . "&nbsp;<input name=\"ext_password\" type=\"PASSWORD\" size=\"30\" style=\"vertical-align:middle;font-size:9pt;\" value=\"" ."\">";
             $output .= "</td></tr>";
-            $output .=  "<tr><td class=\"steel1\" align=\"right\" valign=\"middle\" colspan=\"2\">";
+            $output .=  "<tr><td class=\"table_row_even\" align=\"right\" valign=\"middle\" colspan=\"2\">";
             $output .= "<br></td></tr>\n";
-            $output .=  "<tr><td class=\"steel1\" align=\"right\" valign=\"middle\" width=\"20%\" nowrap>";
+            $output .=  "<tr><td class=\"table_row_even\" align=\"right\" valign=\"middle\" width=\"20%\" nowrap>";
             $output .= "<font size=\"-1\">";
             $output .= "&nbsp;" . _("Passwort-Wiederholung:") . "\n";
             $output .= "</font>";
-            $output .= "</td><td class=\"steel1\" align=\"left\" valign=\"middle\">";
+            $output .= "</td><td class=\"table_row_even\" align=\"left\" valign=\"middle\">";
             $output .= "" . "&nbsp;<input name=\"ext_password_2\" type=\"PASSWORD\" size=\"30\" style=\"vertical-align:middle;font-size:9pt;\" value=\"" ."\">";
-            $output .= "</td></tr><tr><td class=\"steel1\">&nbsp;</td><td class=\"steel1\" align=\"left\" valign=\"middle\">";
+            $output .= "</td></tr><tr><td class=\"table_row_even\">&nbsp;</td><td class=\"table_row_even\" align=\"left\" valign=\"middle\">";
             $output .=  "<br>&nbsp;" . Button::createAccept(_('Bestätigen'), 'next') ."<br>";
             $output .= "</td></tr>";
             $output .=  "<tr><td align=\"center\" valign=\"middle\" colspan=\"2\"><br>";
@@ -549,7 +549,7 @@ class ELearningUtils
         $output .= $title;
         $output .= "</b>";
 //      $output .= "</font>";
-        $output .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" height=\"25\"></td></tr><tr><td class=\"steel1\" width=\"1%\">&nbsp</td><td class=\"steel1\"  align=\"left\"  valign=\"top\" colspan=\"1\">";
+        $output .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" height=\"25\"></td></tr><tr><td class=\"table_row_even\" width=\"1%\">&nbsp</td><td class=\"table_row_even\"  align=\"left\"  valign=\"top\" colspan=\"1\">";
         return $output;
     }
 
@@ -563,7 +563,7 @@ class ELearningUtils
     */
     function getCMSFooter($logo)
     {
-        $output .= "</td><td class=\"steel1\" width=\"1%\">&nbsp</td><td class=\"steelblau_schatten\" align=\"center\" valign=\"top\" width=\"10%\" colspan=\"1\">";
+        $output .= "</td><td class=\"table_row_even\" width=\"1%\">&nbsp</td><td class=\"content_body_panel\" align=\"center\" valign=\"top\" width=\"10%\" colspan=\"1\">";
 //      $output .= "<br>\n";
         $output .= $logo;
         $output .= "&nbsp;<br>\n";
@@ -585,11 +585,11 @@ class ELearningUtils
     {
         global $view, $cms_select, $search_key;
         $output .= "<table class=\"blank\"  align=\"center\" valign=\"top\" width=\"100%\" border=\"0\" cellpadding=\"1\" cellspacing=\"0\">";
-        $output .= "<tr valign=\"top\"><td class=\"steelgraulight\" align=\"left\" width=\"40%\">&nbsp;";
+        $output .= "<tr valign=\"top\"><td class=\"table_row_odd\" align=\"left\" width=\"40%\">&nbsp;";
         $output .= "<font size=\"-1\"><b>";
         $output .= $title;
         $output .= "</b></font>";
-        $output .= "</td><td class=\"steelgraulight\" align=\"left\" width=\"40%\">";
+        $output .= "</td><td class=\"table_row_odd\" align=\"left\" width=\"40%\">";
         if ($_SESSION['elearning_open_close']["all open"] != "")
             $output .= "<a href=\"" . URLHelper::getLink('?close_all=1&view='.$view.'&cms_select='.$cms_select.'&search_key='.$search_key)."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/close_all.png\" alt=\"" . _("Alle Module schlie&szlig;en") . "\" title=\"" . _("Alle Module schlie&szlig;en") . "\"  border=\"0\">";
         else
@@ -610,7 +610,7 @@ class ELearningUtils
     function getHeader($title)
     {
         $output .= "<table class=\"blank\"  align=\"center\" valign=\"top\" width=\"100%\" border=\"0\" cellpadding=\"1\" cellspacing=\"0\">";
-        $output .= "<tr valign=\"top\"><td class=\"steelgraulight\" align=\"left\">&nbsp;";
+        $output .= "<tr valign=\"top\"><td class=\"table_row_odd\" align=\"left\">&nbsp;";
         $output .= "<font size=\"-1\"><b>";
         $output .= $title;
         $output .= "</b></font>";

@@ -198,15 +198,21 @@ jQuery(function ($) {
 
 STUDIP.barBottomContainer = {
     top: null,
+    headerHeight: null,
     scroll: function () {
         if (STUDIP.barBottomContainer.top === null) {
             STUDIP.barBottomContainer.top = jQuery("#barBottomContainer").offset().top;
         }
+        if (STUDIP.barBottomContainer.headerHeight === null) {
+            STUDIP.barBottomContainer.headerHeight = jQuery("#header").height();
+        }
         if (STUDIP.barBottomContainer.top < jQuery(window.document).scrollTop()) {
             //static
             jQuery("#barBottomContainer").addClass("fixed");
+            jQuery("#header").css("height", (jQuery("#barBottomContainer").height() + STUDIP.barBottomContainer.headerHeight) + "px");
         } else {
             jQuery("#barBottomContainer").removeClass("fixed");
+            jQuery("#header").css("height", STUDIP.barBottomContainer.headerHeight + "px");
         }
     }
 }

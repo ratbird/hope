@@ -612,7 +612,7 @@ div#barBottomright ul,
 }
 div#barBottomright li,
 #layout_footer li {
-  display: inline;
+  display: inline-block;
   height: 24px;
   line-height: 24px;
   list-style-type: none;

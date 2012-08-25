@@ -14,7 +14,6 @@
 
 class PersonalNotifications extends SimpleORMap {
     
-    protected $db_table = "personal_notifications";
     
     static public function add($user_ids, $url, $text, $html_id = null, $avatar = null) {
         if (!is_array($user_ids) && !count($user_ids)) {
@@ -24,6 +23,7 @@ class PersonalNotifications extends SimpleORMap {
         $notification['html_id'] = $html_id;
         $notification['url'] = $url;
         $notification['text'] = $text;
+        $notification['avatar'] = $avatar;
         $notification->store();
         
         foreach ($user_ids as $user_id) {
@@ -105,4 +105,26 @@ class PersonalNotifications extends SimpleORMap {
                 ->render(array('notification' => $this));
     }
     
+    function __construct($id = null)
+    {
+        $this->db_table = "personal_notifications";
+        $this->default_values['text'] = '';
+        parent::__construct($id);
+    }
+    
+    function getNewId()
+    {
+        return 0;
+    }
+    
+    function store()
+    {
+        $is_new = $this->isNew();
+        $ret = parent::store();
+        if ($is_new) {
+            $this->setId(DBManager::get()->query("SELECT LAST_INSERT_ID()")->fetchColumn());
+            $this->restore();
+        }
+        return $ret;
+    }
 }

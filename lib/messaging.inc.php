@@ -417,7 +417,9 @@ class messaging
         $query  = "INSERT INTO message_user (message_id, user_id, snd_rec, mkdate)
                    VALUES (?, ?, 'rec', UNIX_TIMESTAMP())";
         $insert = DBManager::get()->prepare($query); 
-        
+        $snd_name = ($user_id != '____%system%____')
+            ? User::find($user_id)->getFullName() . ' (' . User::find($user_id)->username . ')'
+            : 'Stud.IP-System';
         for ($x=0; $x<sizeof($rec_id); $x++) {
             $insert->execute(array($tmp_message_id, $rec_id[$x]));
             if ($GLOBALS['MESSAGING_FORWARD_AS_EMAIL']) {
@@ -428,15 +430,12 @@ class messaging
                 }
             }
             //Benachrichtigung in alle Chaträume schicken
-            $snd_name = ($user_id != '____%system%____')
-                      ? User::find($user_id)->getFullName() . ' (' . User::find($user_id)->username . ')'
-                      : 'Stud.IP-System';
             if (get_config('CHAT_ENABLE')) {
                 $chatServer = ChatServer::GetInstance($GLOBALS['CHAT_SERVER_NAME']);
-                setTempLanguage($rec_id[$x]);
-                $chatMsg = sprintf(_('Sie haben eine Nachricht von <b>%s</b> erhalten!'), htmlReady($snd_name));
-                restoreLanguage();
-                $chatMsg .= '<br></i>' . formatReady(stripslashes($message)) . '<i>';
+            setTempLanguage($rec_id[$x]);
+            $chatMsg = sprintf(_('Sie haben eine Nachricht von <b>%s</b> erhalten!'), htmlReady($snd_name));
+            restoreLanguage();
+            $chatMsg .= '<br></i>' . formatReady(stripslashes($message)) . '<i>';
                 foreach ($chatServer->chatDetail as $chatid => $wert) {
                     if ($wert['users'][$rec_id[$x]]) {
                         $chatServer->addMsg('system:' . $rec_id[$x], $chatid, $chatMsg);
@@ -444,6 +443,8 @@ class messaging
                 }
             }
         }
+        PersonalNotifications::add($rec_id, UrlHelper::getUrl("sms_box.php?mopen=$tmp_message_id#$tmp_message_id"), sprintf(_('Sie haben eine Nachricht von %s erhalten!'), $snd_name),'message_'.$tmp_message_id);
+        
 
         return sizeof($rec_id);
     }

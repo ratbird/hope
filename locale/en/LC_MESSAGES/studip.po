@@ -9709,32 +9709,32 @@ msgstr "Check database integrity"
 #: ../public/admin_db_integrity.php:76
 #, php-format
 msgid ""
-"Sie beabsichtigen %s Datens&auml;tze der Tabelle <b>%s</b> zu l&ouml;schen."
-msgstr "You are about to remove %s data records from table <b>%s</b>."
+"Sie beabsichtigen %s Datensätze der Tabelle %s zu löschen."
+msgstr "You are about to remove %s data records from table %s."
 
 #: ../public/admin_db_integrity.php:77
 msgid ""
-"Dieser Schritt kann <u>nicht</u> r&uuml;ckg&auml;ngig gemacht werden! Sind "
+"Dieser Schritt kann nicht rückgängig gemacht werden! Sind "
 "Sie sicher?"
-msgstr "This step can <u>not</u> be undone! Are you sure to proceed?"
+msgstr "This step can not be undone! Are you sure to proceed?"
 
 #: ../public/admin_db_integrity.php:92
-msgid "Beim L&ouml;schen der Datens&auml;tze trat ein Fehler auf!"
+msgid "Beim Läschen der Datensätze trat ein Fehler auf!"
 msgstr "Deleting data records failed!"
 
 #: ../public/admin_db_integrity.php:94
 #, php-format
-msgid "Es wurden %s Datens&auml;tze der Tabelle <b>%s</b> gelöscht!"
+msgid "Es wurden %s Datensätze der Tabelle <b>%s</b> gelöscht!"
 msgstr "%s data records deleted from table <b>%s</b>!"
 
 #: ../public/admin_db_integrity.php:105
 #, php-format
-msgid "Bereich: <i>%s</i> Datens&auml;tze der Tabelle %s</b></td>"
-msgstr "Area: <i>%s</i> data records of the table %s</b></td>"
+msgid "Bereich: <i>%s</i> Datensätze der Tabelle %s"
+msgstr "Area: <i>%s</i> data records of the table %s"
 
 #: ../public/admin_db_integrity.php:139
 #, php-format
-msgid "Bereich: <i>%s</i> der Datenbank wird gepr&uuml;ft!"
+msgid "Bereich: <i>%s</i> der Datenbank wird geprüft!"
 msgstr "Area <i>%s</i> of the database is being verified!"
 
 #: ../public/admin_db_integrity.php:144
@@ -9747,7 +9747,7 @@ msgid "%s Datensätze gefunden"
 msgstr "%s data records found"
 
 #: ../public/admin_db_integrity.php:176
-msgid "Folgende Bereiche der Datenbank k&ouml;nnen gepr&uuml;ft werden:"
+msgid "Folgende Bereiche der Datenbank können geprüft werden:"
 msgstr "The following areas of the database can be verified:"
 
 #: ../public/admin_db_integrity.php:177 ../lib/classes/SemBrowse.class.php:34
@@ -9780,7 +9780,7 @@ msgid "Anzahl"
 msgstr "Number"
 
 #: ../public/admin_db_integrity.php:183
-msgid "&Uuml;berpr&uuml;ft Tabelle:"
+msgid "Überprüft Tabelle:"
 msgstr "Verify table:"
 
 #: ../public/admin_db_integrity.php:184

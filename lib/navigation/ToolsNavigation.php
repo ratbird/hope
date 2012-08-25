@@ -91,7 +91,7 @@ class ToolsNavigation extends Navigation
         }
 
         if ($perm->have_perm('root')) {
-            $this->addSubNavigation('db_integrity', new Navigation(_('DB Integrität'), 'admin_db_integrity.php'));
+            $this->addSubNavigation('db_integrity_new', new Navigation(_('DB Integrität'), 'dispatch.php/admin/db_integrity_check'));
         }
     }
 }

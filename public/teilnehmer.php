@@ -1201,7 +1201,7 @@ while (list ($key, $val) = each ($gruppe)) {
         }
         if ($key == 'accepted') echo '<input type="hidden" name="accepted" value="1">';
 
-        echo "<tbody><tr height=28>";
+        echo "<tbody><tr>";
         if ($showscore==TRUE)
             echo "<td class=\"table_header\" width=\"1%\">&nbsp; </td>";
         print "<td class=\"table_header\" width=\"1%\" align=\"center\" valign=\"middle\">";
@@ -1225,7 +1225,6 @@ while (list ($key, $val) = each ($gruppe)) {
         SkipLinks::addIndex($val, 'member_group_' . $key);
 
         echo '<td class="table_header" width="19%" align="left" id="member_group_' . $key . '">'.
-               '<img src="'.$GLOBALS['ASSETS_URL'].'images/blank.gif" width="1" height="20">'.
                '<font size="-1"><b>' . $val . '</b></font>'.
              '</td>';
 
@@ -1708,8 +1707,8 @@ if ($rechte) {
         echo CSRFProtection::tokenTag();
         echo "<tr><td class=\"blank\" colspan=\"2\">";
         echo "<table width=\"99%\" border=\"0\"  cellpadding=\"2\" cellspacing=\"0\" align=\"center\">";
-        echo "<tr height=\"28\">";
-        printf ("<td class=\"table_header\" width=\"%s%%\" align=\"left\"><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"1\" height=\"20\"><font size=\"-1\"><b>%s</b></font></td>", ($sem->admission_type == 1 && $sem->admission_selection_take_place !=1) ? "40" : "30",  ($sem->admission_type == 2 || $sem->admission_selection_take_place==1) ? _("Warteliste") : _("Anmeldeliste"));
+        echo "<tr>";
+        printf ("<td class=\"table_header\" width=\"%s%%\" align=\"left\"><b>%s</b></td>", ($sem->admission_type == 1 && $sem->admission_selection_take_place !=1) ? "40" : "30",  ($sem->admission_type == 2 || $sem->admission_selection_take_place==1) ? _("Warteliste") : _("Anmeldeliste"));
         if ($sem->admission_type == 2 || $sem->admission_selection_take_place==1)
             printf("<td class=\"table_header\" width=\"10%%\" align=\"center\"><font size=\"-1\"><b>%s</b></font></td>", _("Position"));
         printf("<td class=\"table_header\" width=\"10%%\" align=\"center\">&nbsp; </td>");

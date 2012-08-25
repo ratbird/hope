@@ -6,7 +6,7 @@ use Studip\Button, Studip\LinkButton;
 <!-- SEARCHBOX -->
 <form action="<?= URLHelper::getLink() ?>" method="post">
 <?= CSRFProtection::tokenTag() ?>
-<div class="table_header_bold"><b><?=_("Suche nach Personen")?></b></div>
+<div class="table_header"><b><?=_("Suche nach Personen")?></b></div>
 
 <? if($sms_msg):?>
 <? parse_msg($sms_msg); ?>

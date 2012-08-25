@@ -147,7 +147,7 @@ function PrintAktualStatusgruppen($range_id, $view, $edit_id = '')
         echo ">&nbsp; </td>";
 
         $cal_group = get_config('CALENDAR_GROUP_ENABLE') && $row['calendar_group'];
-        echo '<td width="' . ($cal_group ? '80%' : '85%') . '" class="table_header_bold';
+        echo '<td width="' . ($cal_group ? '80%' : '85%') . '" class="table_header';
         echo ($edit_id == $statusgruppe_id ? ' table_header_bold_red' : '') . '" style="cursor: move">';
         ?>
 
@@ -163,21 +163,21 @@ function PrintAktualStatusgruppen($range_id, $view, $edit_id = '')
             </a>
         </td>
 
-        <td class="table_header_bold<?= $edit_id == $statusgruppe_id ? ' table_header_bold_red' : '' ?>" style="width: 1%; white-space: nowrap">
+        <td class="table_header<?= $edit_id == $statusgruppe_id ? ' table_header_bold_red' : '' ?>" style="width: 1%; white-space: nowrap">
             <?= $row['count']?>
         </td>
 
         <?
-        echo '<td class="table_header_bold' . ($edit_id == $statusgruppe_id ? ' table_header_bold_red' : '') . '" width="1%">';
+        echo '<td class="table_header' . ($edit_id == $statusgruppe_id ? ' table_header_bold_red' : '') . '" width="1%">';
         if ($cal_group) {
-            echo '<img src="' . Assets::image_path('icons/16/white/schedule.png') . '" ' . tooltip(_('Kalendergruppe')) . '>';
-            echo '</td><td class="table_header_bold ' . ($edit_id == $statusgruppe_id ? ' table_header_bold_red' : '') . '" style="whitespace: width="5%">';
+            echo '<img src="' . Assets::image_path('icons/16/blue/schedule.png') . '" ' . tooltip(_('Kalendergruppe')) . '>';
+            echo '</td><td class="table_header ' . ($edit_id == $statusgruppe_id ? ' table_header_bold_red' : '') . '" style="whitespace: width="5%">';
         }
         echo '<a href="' . URLHelper::getLink('', array('edit_id' => $statusgruppe_id, 'range_id' => $range_id, 'view' => $view, 'cmd' => 'edit_statusgruppe')) . '">';
-        echo '<img src="' . Assets::image_path('icons/16/white/edit.png') . '" ';
+        echo '<img src="' . Assets::image_path('icons/16/blue/edit.png') . '" ';
         echo tooltip(_("Gruppenname oder -größe anpassen")) . '></a></td>';
 
-        printf("<td align=\"right\" width=\"1%%\" class=\"table_header_bold%s\"><a href=\"%s\"><img src=\"" . Assets::image_path('icons/16/white/trash.png') . "\" %s></a></td>", ($edit_id == $statusgruppe_id ? " table_header_bold_red" : ''), URLHelper::getLink("?cmd=verify_remove_statusgruppe&statusgruppe_id=" . $statusgruppe_id . "&range_id=" . $range_id . "&view=" . $view . "&name=" . $row['name']), tooltip(_("Gruppe mit Personenzuordnung entfernen")));
+        printf("<td align=\"right\" width=\"1%%\" class=\"table_header%s\"><a href=\"%s\"><img src=\"" . Assets::image_path('icons/16/blue/trash.png') . "\" %s></a></td>", ($edit_id == $statusgruppe_id ? " table_header_bold_red" : ''), URLHelper::getLink("?cmd=verify_remove_statusgruppe&statusgruppe_id=" . $statusgruppe_id . "&range_id=" . $range_id . "&view=" . $view . "&name=" . $row['name']), tooltip(_("Gruppe mit Personenzuordnung entfernen")));
         echo "\n</tr>";
 
         // if the current statusgroup is opened, display associated users

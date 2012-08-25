@@ -55,8 +55,6 @@ class Svg2pngController extends Trails_Controller
 
             $extras = $this->convert(self::EXTRAS_FILE, $this->size, $color);
             foreach ($extras as $file => $icon) {
-                unset($extras[$file]);
-                $file = str_replace('-' . $this->size . '.png', '', $file);
                 $extras[$file] = $this->border($icon);
             }
         }
@@ -91,11 +89,11 @@ class Svg2pngController extends Trails_Controller
 
         $icons = array();
         foreach ($converter->extractItems(true) as $id => $icon) {
-            $file = sprintf('%s-%u.png', $id ?: 'icon', $size ?: $viewbox);
+            $file = sprintf('%s.png', $id ?: 'icon');
 
             $i = 1;
             while (isset($files[$file])) {
-                $file = sprintf('%s-%u-%u.png', $id ?: 'icon', $size ?: $viewbox, $i++);
+                $file = sprintf('%s-%u.png', $id ?: 'icon', $i++);
             }
 
             $icons[$file] = $icon;

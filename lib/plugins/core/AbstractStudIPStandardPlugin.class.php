@@ -59,7 +59,7 @@ class AbstractStudIPStandardPlugin extends AbstractStudIPLegacyPlugin
      *
      * @return object   navigation item to render or NULL
      */
-    function getIconNavigation($course_id, $last_visit) {
+    function getIconNavigation($course_id, $last_visit, $user_id) {
         $this->setId($course_id);
 
         // $sem_type = get_object_type($course_id);
@@ -99,6 +99,10 @@ class AbstractStudIPStandardPlugin extends AbstractStudIPLegacyPlugin
         }
     }
 
+    function getNotificationObjects($course_id, $since, $user_id) {
+        return null;
+    }
+    
     /**
      * Gehen beim Deaktivieren des Plugins Daten verloren?
      *

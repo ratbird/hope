@@ -12,6 +12,12 @@ require_once 'PluginManager.class.php';
 require_once 'PluginNotFoundException.php';
 
 class PluginEngine {
+
+    /*
+     * cache for visit-dates for plugins
+     */
+    private static $visits_data = array();
+
     /**
      * @deprecated
      *
@@ -199,4 +205,98 @@ class PluginEngine {
     public static function getValueFromSession($plugin,$key) {
         return unserialize($_SESSION["PLUGIN_SESSION_SPACE"][strtolower(get_class($plugin))][$key]);
     }
+
+    /**
+     * Set the visitdate for the passed plugin. You can pass a type to track
+     * multiple visitdates in the same plugin
+     *
+     * @param object $plugin the plugin-object to set the visit-date for
+     * @param string $type an optional string denoting the type of the visitdate
+     */
+    public static function setVisit($plugin, $object_id = null, $type = null, $user_id = null)
+    {
+        // if no object-id is given, use the id of the passed plugin (special case)
+        if(!$object_id) $object_id = $plugin->getId();
+        
+        if(!$user_id) $user_id = $GLOBALS['user']->id;
+        $pluginname = $plugin->getPluginclassname();
+
+        $last_visit = (int)self::getLastVisit($plugin, $object_id, $type, $user_id, false);
+            if($last_visit < object_get_visit($plugin->getId(), 'sem', false, false)){
+                $key = join('-', array($pluginname, $object_id, $user_id, $type));
+                unset(self::$visits_data[$key]);
+                
+                $stmt = DBManager::get()->prepare("REPLACE INTO plugins_object_user_visits 
+                    (pluginname,object_id,user_id,type,visitdate,last_visitdate)
+                    VALUES (?,?,?,?,UNIX_TIMESTAMP(),?)");
+                return $stmt->execute(array($pluginname, $object_id, $user_id, $type, $last_visit));
+        }
+
+        return false;
+    }
+
+    /**
+     * get the visitdate for the passed plugin. You can pass a type to track
+     * multiple visitdates in the same plugin
+     *
+     * @param object $plugin the plugin-object to set the visit-date for
+     * @param string $object_id optional, the id of the object to set the visit-date for, defaults to the plugin-id
+     * @param string $type an optional string denoting the type of the visitdate, defaults to "plugin"
+     * @param string $user_id optional, defaults to $GLOBALS['user']->id     
+     *
+     * @return int the visitdate for the passed plugin and the passed type
+     */
+    public static function getVisit($plugin, $object_id = null, $type = null, $user_id = null)
+    {
+        $visitdate = self::getVisitDates();
+        return (int)$visitdate['visitdate'];
+    }
+
+    /**
+     * get the last_visitdate for the passed plugin. You can pass a type to track
+     * multiple visitdates in the same plugin
+     *
+     * @param object $plugin the plugin-object to get the visit-date for
+     * @param string $object_id optional, the id of the object to get the visit-date for, defaults to plugin-id
+     * @param string $type optional, a string denoting the type of the visitdate, defaults to "plugin"
+     * @param string $user_id optional, defaults to $GLOBALS['user']->id
+     *
+     * @return int the last_visitdate for the passed plugin and the passed type
+     */
+    public static function getLastVisit($plugin, $object_id = null, $type = null, $user_id = null)
+    {
+        $visitdate = self::getVisitDates();
+        return (int)$visitdate['last_visitdate'];
+    }
+
+    /**
+     * get the visitdate and the last_visitdate for the passed plugin. You can pass a type to track
+     * multiple visitdates in the same plugin
+     *
+     * @param object $plugin the plugin-object to get the visit-date for
+     * @param string $object_id optional, the id of the object to get the visit-date for, defaults to plugin-id
+     * @param string $type optional, a string denoting the type of the visitdate, defaults to "plugin"
+     * @param string $user_id optional, defaults to $GLOBALS['user']->id
+     *
+     * @return array contains the whole table row, including visit and last_visit
+     */
+    private static function getVisitDates($plugin, $object_id = null, $type = null, $user_id = null)
+    {
+        // if no object-id is given, use the id of the passed plugin (special case)
+        if(!$object_id) $object_id = $plugin->getId();
+        
+        if(!$user_id) $user_id = $GLOBALS['user']->id;
+        $pluginname = $plugin->getPluginclassname();
+
+        $key = join('-', array($pluginname, $object_id, $user_id, $type));
+
+        if(!isset(self::$visits_data[$key])){
+            $stmt = DBManager::get()->prepare("SELECT * FROM plugins_object_user_visits 
+                WHERE pluginname=? AND object_id=? AND user_id=? AND type=?");
+            $stmt->execute(array($pluginname, $object_id, $user_id, $type));
+            self::$visits_data[$key] = $stmt->fetch();
+        }
+        return self::$visits_data[$key];
+    }
+
 }

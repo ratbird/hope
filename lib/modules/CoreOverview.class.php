@@ -13,7 +13,7 @@ require_once 'lib/modules/StudipModule.class.php';
 
 class CoreOverview implements StudipModule {
     
-    function getIconNavigation($course_id, $last_visit) {
+    function getIconNavigation($course_id, $last_visit, $user_id) {
         return null;
     }
     
@@ -62,5 +62,9 @@ class CoreOverview implements StudipModule {
         }
         return array('main' => $navigation);
     }
-    
+
+    function getNotificationObjects($course_id, $since, $user_id)
+    {
+        return null;
+    }
 }

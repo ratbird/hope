@@ -13,7 +13,7 @@ require_once 'lib/modules/StudipModule.class.php';
 
 class CoreLiterature implements StudipModule {
     
-    function getIconNavigation($course_id, $last_visit) {
+    function getIconNavigation($course_id, $last_visit, $user_id) {
         if (get_config('LITERATURE_ENABLE')) {
             $navigation = new Navigation(_('TeilnehmerInnen'), "seminar_main.php?auswahl=".$course_id."&redirect_to=teilnehmer.php");
             $navigation->setImage('icons/16/grey/persons.png');
@@ -42,5 +42,9 @@ class CoreLiterature implements StudipModule {
             return null;
         }
     }
-    
+
+    function getNotificationObjects($course_id, $since, $user_id)
+    {
+        return null;
+    }
 }

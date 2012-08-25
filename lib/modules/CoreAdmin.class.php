@@ -13,7 +13,7 @@ require_once 'lib/modules/StudipModule.class.php';
 
 class CoreAdmin implements StudipModule {
     
-    function getIconNavigation($course_id, $last_visit) {
+    function getIconNavigation($course_id, $last_visit, $user_id) {
         $navigation = new Navigation(_('Verwaltung'), 'dispatch.php/course/management');
         $navigation->setImage('icons/16/grey/admin.png');
         return $navigation;
@@ -104,5 +104,9 @@ class CoreAdmin implements StudipModule {
             return array();
         }
     }
-    
+
+    function getNotificationObjects($course_id, $since, $user_id)
+    {
+        return null;
+    }
 }

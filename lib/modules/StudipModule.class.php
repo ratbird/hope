@@ -1,5 +1,4 @@
 <?php
-
 /*
  *  Copyright (c) 2012  Rasmus Fuhse <fuhse@data-quest.de>
  * 
@@ -20,12 +19,25 @@ interface StudipModule {
      * By convention, new or changed plugin content is indicated
      * by a different icon and a corresponding tooltip.
      *
-     * @param  string   course or institute range id
-     * @param  int      time of user's last visit
+     * @param  string   $course_id   course or institute range id
+     * @param  int      $last_visit  time of user's last visit
+     * @param  string   $user_id     the user to get the navigation for
      *
      * @return object   navigation item to render or NULL
      */
-    function getIconNavigation($course_id, $last_visit);
+    function getIconNavigation($course_id, $last_visit, $user_id);
     
     function getTabNavigation($course_id);
+
+    /**
+     * return a list of ContentElement-objects, conatinging 
+     * everything new in this module
+     *
+     * @param  string   $course_id   the course-id to get the new stuff for
+     * @param  int      $last_visit  when was the last time the user visited this module
+     * @param  string   $user_id     the user to get the notifcation-objects for
+     *
+     * @return array an array of ContentElement-objects
+     */
+    function getNotificationObjects($course_id, $since, $user_id);
 }

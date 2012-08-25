@@ -38,6 +38,7 @@ class Navigation implements IteratorAggregate
 
     protected $active_image;
     protected $badgeNumber;
+    protected $badgeTimestamp;
     protected $description;
     protected $image;
     protected $params;
@@ -237,6 +238,16 @@ class Navigation implements IteratorAggregate
     {
         return $this->badgeNumber;
     }
+    
+    /**
+     * Return the badge number of this navigation item.
+     *
+     * @return int  the badge number
+     */
+    public function getBadgeTimestamp()
+    {
+        return $this->badgeTimestamp;
+    }   
 
     /**
      * Determines whether this navigation item has a badge number.
@@ -385,6 +396,16 @@ class Navigation implements IteratorAggregate
     public function setBadgeNumber($badgeNumber)
     {
         $this->badgeNumber = $badgeNumber;
+    }
+    
+    /**
+     * Set the badge number of this navigation item.
+     *
+     * @param string $badgeNumber    the badge number
+     */
+    public function setBadgeTimestamp($badgeTimestamp)
+    {
+        $this->badgeTimestamp = $badgeTimestamp;
     }
 
     /**

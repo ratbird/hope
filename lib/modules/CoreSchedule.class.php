@@ -13,7 +13,7 @@ require_once 'lib/modules/StudipModule.class.php';
 
 class CoreSchedule implements StudipModule {
     
-    function getIconNavigation($course_id, $last_visit) {
+    function getIconNavigation($course_id, $last_visit, $user_id) {
         $navigation = new Navigation(_('Ablaufplan'), "seminar_main.php?auswahl=$course_id&redirect_to=dates.php&date_type=all");
         $navigation->setImage('icons/16/grey/schedule.png');
         return $navigation;
@@ -35,5 +35,9 @@ class CoreSchedule implements StudipModule {
 
         return array('schedule' => $navigation);
     }
-    
+
+    function getNotificationObjects($course_id, $since, $user_id)
+    {
+        return null;
+    }
 }

@@ -13,7 +13,7 @@ require_once 'lib/modules/StudipModule.class.php';
 
 class CoreForum implements StudipModule {
     
-    function getIconNavigation($course_id, $last_visit) {
+    function getIconNavigation($course_id, $last_visit, $user_id) {
         $navigation = new Navigation(_('Forum'), "seminar_main.php?auswahl=$course_id&redirect_to=forum.php&view=reset&sort=age");
         $navigation->setImage('icons/16/grey/forum.png');
 
@@ -42,5 +42,9 @@ class CoreForum implements StudipModule {
         }
         return array('forum' => $navigation);
     }
-    
+
+    function getNotificationObjects($course_id, $since, $user_id)
+    {
+        return null;
+    }
 }

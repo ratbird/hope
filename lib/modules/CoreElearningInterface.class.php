@@ -13,7 +13,7 @@ require_once 'lib/modules/StudipModule.class.php';
 
 class CoreElearningInterface implements StudipModule {
     
-    function getIconNavigation($course_id, $last_visit) {
+    function getIconNavigation($course_id, $last_visit, $user_id) {
         if (get_config('ELEARNING_INTERFACE_ENABLE')) {
             $navigation = new Navigation(_('Lernmodule'), "seminar_main.php?auswahl=".$course_id."&redirect_to=elearning_interface.php&view=show");
             $navigation->setImage('icons/16/grey/wiki.png');
@@ -49,5 +49,9 @@ class CoreElearningInterface implements StudipModule {
             return null;
         }
     }
-    
+
+    function getNotificationObjects($course_id, $since, $user_id)
+    {
+        return null;
+    }
 }

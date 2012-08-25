@@ -153,7 +153,7 @@ function getPluginNavigationForSeminar($seminar_id, $visitdate)
         $plugin_navigation[$seminar_id] = array();
 
         foreach (PluginEngine::getPlugins('StandardPlugin', $seminar_id) as $plugin) {
-            $plugin_navigation[$seminar_id][get_class($plugin)] = $plugin->getIconNavigation($seminar_id, $visitdate);
+            $plugin_navigation[$seminar_id][get_class($plugin)] = $plugin->getIconNavigation($seminar_id, $visitdate, $GLOBALS['user']->id);
         }
     }
     return $plugin_navigation[$seminar_id];

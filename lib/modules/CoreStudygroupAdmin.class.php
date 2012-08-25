@@ -13,7 +13,7 @@ require_once 'lib/modules/StudipModule.class.php';
 
 class CoreStudygroupAdmin implements StudipModule {
     
-    function getIconNavigation($course_id, $last_visit) {
+    function getIconNavigation($course_id, $last_visit, $user_id) {
         $navigation = new Navigation(_('Verwaltung'), 'dispatch.php/course/studygroup/edit/'.$course_id);
         $navigation->setImage('icons/16/grey/admin.png');
         return $navigation;
@@ -47,5 +47,9 @@ class CoreStudygroupAdmin implements StudipModule {
             return array();
         }
     }
-    
+ 
+    function getNotificationObjects($course_id, $since, $user_id)
+    {
+        return null;
+    }   
 }

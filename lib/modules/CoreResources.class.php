@@ -14,7 +14,7 @@ require_once 'lib/resources/resourcesFunc.inc.php';
 
 class CoreResources implements StudipModule {
     
-    function getIconNavigation($course_id, $last_visit) {
+    function getIconNavigation($course_id, $last_visit, $user_id) {
         $navigation = new Navigation(_('Ressourcen'), "seminar_main.php?auswahl=".$course_id."&redirect_to=wiki.php");
         $navigation->setImage('icons/16/grey/resources.png');
 
@@ -37,5 +37,9 @@ class CoreResources implements StudipModule {
             return null;
         }
     }
-    
+
+    function getNotificationObjects($course_id, $since, $user_id)
+    {
+        return null;
+    }
 }

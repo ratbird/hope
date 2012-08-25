@@ -1,0 +1,73 @@
+html, body {
+    height: auto;
+}
+fieldset {
+    border: 0;
+}
+fieldset label:first-child {
+    display: inline-block;
+    width: 100px;
+}
+input[type=text], input[type=color], input[type=number], select {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 150px;
+}
+input[disabled] {
+    color: #888;
+}
+
+
+.files {
+    background-color: #aaa;
+    margin: 0;
+    padding: 0.5em;
+    text-align: center;
+}
+.files label {
+    background-color: #ccc;
+    display: inline-block;
+    line-height: 0;
+    margin: 2px;
+    padding: 0;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    transition: all 0.5s;    
+}
+.files label img {
+    border: 1px solid #ccc;
+    padding: 5px;
+    -webkit-transition: all 1s;
+    -moz-transition: all 1s;
+    transition: all 1s;
+}
+.files label:hover {
+    background-color: #fff;
+    box-shadow: 0 0 5px #fff;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    transition: all 0.5s;    
+}
+.files label:hover img {
+    border-color: #000;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    transition: all 0.5s;        
+}
+
+.files label input[type=checkbox] {
+    left: -9999px;
+    position: absolute;
+    visibility: hidden;
+}
+.files label input[type=checkbox] ~ img {
+    border: 1px solid none;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    transition: all 0.5s;        
+}
+.files input[type=checkbox]:checked ~ img {
+    border-color: #f00;
+    box-shadow: 0px 0px 5px #f00;
+}

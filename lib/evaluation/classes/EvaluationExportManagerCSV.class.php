@@ -228,11 +228,12 @@ class EvaluationExportManagerCSV extends EvaluationExportManager {
       $counter = 0;
       $answers = array();
       $db = DBManager::get();
-      $stmt = $db->prepare("SELECT user_id,text,value,position,residual
+      $stmt = $db->prepare("SELECT user_id,text,value,position,residual,
+                    GROUP_CONCAT(evalanswer_id) as evalanswer_id
                     FROM evalanswer
-                    LEFT JOIN evalanswer_user
+                    INNER JOIN evalanswer_user
                     USING ( evalanswer_id )
-                    WHERE parent_id = ?");
+                    WHERE parent_id = ? GROUP BY user_id");
       foreach ($this->evalquestions as $evalquestion) {
           $stmt->execute(array($evalquestion->getObjectID()));
           $answers[$evalquestion->getObjectID()] = $stmt->fetchGrouped();
@@ -291,7 +292,10 @@ class EvaluationExportManagerCSV extends EvaluationExportManager {
             /* Questiontype: multiple chioice ------------------------------ */
             elseif ($type == EVALQUESTION_TYPE_MC) {
                 if ($evalquestion->isMultiplechoice ()) {
-                    $this->addCol ((int)isset($answers[$evalquestion->getObjectID()][$userID]));
+                    $mc_answers = explode(',', $answers[$evalquestion->getObjectID()][$userID]['evalanswer_id']);
+                    while ($answer = &$evalquestion->getNextChild ()) {
+                        $this->addCol ((int)in_array($answer->getObjectID(), $mc_answers));
+                    }
                 } else {
                     $entry = "";
                     if ($answer = $answers[$evalquestion->getObjectID()][$userID]) {

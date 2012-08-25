@@ -83,7 +83,7 @@ foreach ($group_members as $member) {
                 <?
                 $adminmodule = $sem_class->getModule("admin");
                 if ($adminmodule) {
-                    $adminnavigation = $adminmodule->getIconNavigation($semid, 0);
+                    $adminnavigation = $adminmodule->getIconNavigation($semid, 0, $GLOBALS['user']->id);
                 }
                 if ($adminnavigation) : ?>
                 <a href="<?= URLHelper::getLink($adminnavigation->getURL(), array('cid' => $semid)) ?>">

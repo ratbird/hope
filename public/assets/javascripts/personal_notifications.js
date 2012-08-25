@@ -42,7 +42,6 @@ STUDIP.PersonalNotifications = {
                 }
             }
         });
-        return false;
     }
 };
 

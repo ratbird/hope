@@ -16,7 +16,7 @@ class PersonalNotifications extends SimpleORMap {
     
     protected $db_table = "personal_notifications";
     
-    static public function add($user_ids, $url, $text, $html_id) {
+    static public function add($user_ids, $url, $text, $html_id = null, $avatar = null) {
         if (!is_array($user_ids) && !count($user_ids)) {
             return false;
         }
@@ -28,8 +28,9 @@ class PersonalNotifications extends SimpleORMap {
         
         foreach ($user_ids as $user_id) {
             if (self::isActivated($user_id)) {
+                $db = DBManager::get();
                 $statement = $db->prepare(
-                    "INSERT INTO personal_notification_user " .
+                    "INSERT INTO personal_notifications_user " .
                     "SET user_id = :user_id, " .
                         "personal_notification_id = :id, " .
                         "seen = '0' " .

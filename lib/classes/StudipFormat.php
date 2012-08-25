@@ -480,6 +480,7 @@ class StudipFormat extends TextFormat
                 && strpos($pu['path'], $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP']) === 0) {
             $intern = true;
             list($pu['first_target']) = explode('/',substr($pu['path'],strlen($GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'])));
+            $url = TransformInternalLinks($url);
         }
         $LOAD_EXTERNAL_MEDIA = Config::GetInstance()->getValue('LOAD_EXTERNAL_MEDIA');
         if ($intern && !in_array($pu['first_target'], array('sendfile.php','download','assets','pictures'))) {

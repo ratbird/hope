@@ -345,6 +345,7 @@ if (check_ticket(Request::option('studipticket'))) {
         $my_studip_settings["startpage_redirect"] = Request::int('personal_startpage');
         UserConfig::get($user->id)->store('ACCESSKEY_ENABLE', Request::int('accesskey_enable'));
         UserConfig::get($user->id)->store('SHOWSEM_ENABLE', Request::int('showsem_enable'));
+        UserConfig::get($user->id)->store('PERSONAL_NOTIFICATIONS_ACTIVATED', Request::int('PERSONAL_NOTIFICATIONS_ACTIVATED'));
         UserConfig::get($user->id)->store('SKIPLINKS_ENABLE', Request::int('skiplinks_enable'));
     }
 

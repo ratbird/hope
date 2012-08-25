@@ -10,6 +10,7 @@
 
 require_once 'app/controllers/authenticated_controller.php';
 require_once 'lib/classes/UpdateInformation.class.php';
+require_once 'lib/classes/PersonalNotifications.class.php';
 
 /**
  * Controller called by the main periodical ajax-request. It collects data,
@@ -33,6 +34,11 @@ class JsupdaterController extends AuthenticatedController {
         $data = $this->recursive_studip_utf8encode($data);
         $this->render_text(json_encode($data));
     }
+    
+    public function mark_notification_read_action() {
+        PersonalNotifications::markAsRead(Request::option("id"));
+        $this->render_nothing();
+    }
 
     /**
      * SystemPlugins may call UpdateInformation::setInformation to set information
@@ -42,6 +48,20 @@ class JsupdaterController extends AuthenticatedController {
      */
     protected function coreInformation() {
         $data = array();
+        if (PersonalNotifications::isActivated()) {
+            $notifications = PersonalNotifications::getMyNotifications();
+            if ($notifications && count($notifications)) {
+                $ret = array();
+                foreach ($notifications as $notification) {
+                    $info = $notification->toArray();
+                    $info['html'] = $notification->getLiElement();
+                    $ret[] = $info;
+                }
+                $data['PersonalNotifications.newNotifications'] = $ret;
+            } else {
+                $data['PersonalNotifications.newNotifications'] = array();
+            }
+        }
         return $data;
     }
 

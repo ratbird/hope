@@ -189,6 +189,24 @@ function change_general_view() {
                         </font><br><br>
                     </td>
                 </tr>
+                <tr  <? $cssSw->switchClass() ?>>
+                    <td  align="right" class="blank" style="border-bottom:1px dotted black;">
+                        <label for="PERSONAL_NOTIFICATIONS_ACTIVATED"><?print _("Benachrichtigungen über Javascript");?></label><br>
+                        <br><div id="PERSONAL_NOTIFICATIONS_ACTIVATED_DESCRIPTION" class="setting_info">
+                        <?print _("Hiermit wird in der Kopfzeile dargestellt, wenn es Benachrichtigungen für Sie gibt. Die Benachrichtigungen werden auch angezeigt, wenn Sie nicht die Seite neuladen.");?>
+                        </div>
+                    </td>
+                    <td <?=$cssSw->getFullClass()?>>
+                        <?
+                        echo "<input type=\"CHECKBOX\" name=\"PERSONAL_NOTIFICATIONS_ACTIVATED\" id=\"PERSONAL_NOTIFICATIONS_ACTIVATED\" aria-describedby=\"PERSONAL_NOTIFICATIONS_ACTIVATED_DESCRIPTION\" value=\"1\"";
+                        IF ($user->cfg->getValue("PERSONAL_NOTIFICATIONS_ACTIVATED")) {
+                            echo " checked";
+                        }
+                        echo ">";
+                        ?>
+                        </font><br><br>
+                    </td>
+                </tr>
                 <tr <? $cssSw->switchClass() ?>>
                     <td <?=$cssSw->getFullClass()?> colspan=2 align="center">
                         <?=Button::create(_("Übernehmen"), array('title' => _("Änderungen übernehmen"))) ?>&nbsp;

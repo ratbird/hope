@@ -39,6 +39,7 @@ javascripts:
     - javascripts/status_group.js
     - javascripts/sem_classes.js
     - javascripts/header.js
+    - javascripts/personal_notifications.js
     - javascripts/application.js
 
   raumzeit:

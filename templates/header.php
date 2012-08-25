@@ -59,6 +59,21 @@
     <!-- Dynamische Links ohne Icons -->
     <div id="barBottomright">
         <ul>
+            <? if (PersonalNotifications::isActivated()) : ?>
+            <? $notifications = PersonalNotifications::getMyNotifications() ?>
+            <li id="notification_container">
+                <div id="notification_marker"<?= count($notifications) > 0 ? ' class="alert"' : "" ?> title="<?= _("Benachrichtigungen") ?>">
+                <?= count($notifications) ?>
+                </div>
+                <div id="notification_list">
+                    <ul>
+                        <? foreach ($notifications as $notification) : ?>
+                        <?= $notification->getLiElement() ?>
+                        <? endforeach ?>
+                    </ul>
+                </div>
+            </li>
+            <? endif ?>
             <? if (isset($search_semester_nr)) : ?>
             <li>
             <form id="quicksearch" role="search" action="<?= URLHelper::getLink('sem_portal.php', array('send' => 'yes', 'group_by' => '0') + $link_params) ?>" method="post">

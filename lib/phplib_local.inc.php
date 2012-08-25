@@ -616,8 +616,9 @@ class Seminar_Auth extends Auth {
         $_language_path = init_i18n($_SESSION['_language']);
 
 
-        $this->auth["uname"] = Request::quoted('loginname');   // This provides access for "loginform.ihtml"
-        $this->auth["jscript"] = Request::quoted('resolution') != "";
+        $this->auth["uname"] = Request::get('loginname');   // This provides access for "loginform.ihtml"
+        $this->auth["jscript"] = Request::get('resolution') != "";
+        $this->auth['devicePixelRatio'] = Request::int('device_pixel_ratio');
 
         $check_auth = StudipAuthAbstract::CheckAuthentication(Request::get('loginname'),Request::get('password'),$this->auth['jscript']);
 

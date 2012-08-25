@@ -1,13 +1,13 @@
 <?
 # Lifter010: TODO
 use Studip\Button, Studip\LinkButton;
-
 ?>
 <script type="text/javascript" language="javascript">
 //<![CDATA[
 $(function () {
   $('form[name=login]').submit(function () {
     $('input[name=resolution]', this).val( screen.width + 'x' + screen.height );
+    $('input[name=device_pixel_ratio]').val(window.devicePixelRatio || 1);
   });
 });
 // -->
@@ -35,6 +35,7 @@ $(function () {
           <?= CSRFProtection::tokenTag() ?>
           <input type="hidden" name="login_ticket" value="<?=Seminar_Session::get_ticket();?>">
           <input type="hidden" name="resolution"  value="">
+          <input type="hidden" name="device_pixel_ratio" value="1">
           <table border="0" cellspacing="0" cellpadding="4">
             <tr valign=top align=left>
               <td><label for="loginname"><?=_("Benutzername:")?></label></td>

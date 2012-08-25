@@ -612,68 +612,64 @@ div#barBottomright ul,
 }
 div#barBottomright li,
 #layout_footer li {
-  display: inline-block;
+  display: inline;
   height: 24px;
   line-height: 24px;
   list-style-type: none;
 }
-
-
 #notification_marker {
-    width: 18px;
-    margin-top: 0px;
-    height: 16px;
-    font-size: 0.8em;
-    border: thin solid white;
-    text-align: center;
-    line-height: 19px;
-    vertical-align: text-top;
-    opacity: 0.5;
+  width: 18px;
+  margin-top: 0px;
+  height: 16px;
+  font-size: 0.8em;
+  border: thin solid white;
+  text-align: center;
+  line-height: 19px;
+  vertical-align: text-top;
+  opacity: 0.5;
 }
 #notification_marker.alert {
-    opacity: 1;
-    background-color: #f33;
-    font-weight: bold;
+  opacity: 1;
+  background-color: #f33;
+  font-weight: bold;
 }
 #notification_list {
-    display: none;
-    left: -85px;
-    position: absolute;
-    width: 200px;
-    max-width: 200px;
-    padding: 3px;
-    background-color: #eeeeee;
-    opacity: 0.0;
-    transition-property: opacity;
-    transition-duration: 0.8s;
-    border: thin solid #333333;
-    border-top: none;
-    color: #333333;
+  display: none;
+  left: -85px;
+  position: absolute;
+  width: 200px;
+  max-width: 200px;
+  padding: 3px;
+  background-color: #eeeeee;
+  opacity: 0.0;
+  transition-property: opacity;
+  transition-duration: 0.8s;
+  border: thin solid #333333;
+  border-top: none;
+  color: #333333;
 }
 #notification_list > ul > li {
-    display: block;
-    padding: 4px;
+  display: block;
+  padding: 4px;
 }
 #notification_list > ul > li:hover {
-    background-color: #ffffff;
+  background-color: #ffffff;
 }
 #barBottomright #notification_list a {
-    color: #24437c;
+  color: #24437c;
 }
 #barBottomright #notification_list a:hover {
-    color: #f33;
+  color: #f33;
 }
 #notification_list .mark_as_read {
-    float: right;
+  float: right;
 }
 #notification_container.alert:hover > #notification_list {
-    display: block;
-    opacity: 1.0;
-    transition-property: opacity;
-    transition-duration: 0.8s;
+  display: block;
+  opacity: 1.0;
+  transition-property: opacity;
+  transition-duration: 0.8s;
 }
-
-
 div#barTopFont {
   color: #cccccc;
   font-size: 16pt;

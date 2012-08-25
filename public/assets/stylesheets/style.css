@@ -172,8 +172,9 @@ td.rahmen_white {
 }
 td.table_header_bold_red {
   border: none;
-  background-color: #c02a2a;
-  color: #fff;
+  background-color: #fdc6c6;
+  border-bottom: 1px solid #990000;
+  color: #000;
   height: 20px;
 }
 table.blank,
@@ -2093,17 +2094,6 @@ h1.topic {
 h2.topic,
 h3.topic {
   font-size: 1.2em;
-}
-.topic {
-  border: 0;
-  border-bottom: 1px solid #1e3e70;
-  background-color: #899ab9;
-  color: #FFFFFF;
-  font-size: 12pt;
-  padding: 3px 5px;
-}
-.topic img {
-  vertical-align: middle;
 }
 /* --- media preview -------------------------------------------------------- */
 .preview img,

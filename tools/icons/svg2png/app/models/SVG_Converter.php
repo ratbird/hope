@@ -65,6 +65,7 @@ class SVG_Converter
         
         $files = array();
         foreach ($icons as $file => $icon) {
+            $icon = str_replace(' display="none"', '', $icon);
             if ($color && strpos($icon, 'fill=') === false) {
                 $icon = preg_replace('/<(circle|path|polygon|rect) /', '<$1 fill="' . $color . '" ', $icon);
             } else if ($color) {

@@ -392,7 +392,7 @@ class SemBrowse {
                 . "</b></font></div></td></tr>";
 
             foreach ($group_by_data as $group_field => $sem_ids){
-                echo "\n<tr><td class=\"content_seperator\" colspan=\"4\"><font size=-1><b>";
+                echo "\n<tr><td class=\"table_header\" colspan=\"4\"><font size=-1><b>";
                 switch ($this->sem_browse_data["group_by"]){
                     case 0:
                     echo $this->search_obj->sem_dates[$group_field]['name'];

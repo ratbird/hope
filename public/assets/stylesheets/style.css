@@ -84,7 +84,7 @@ th,
 table.header,
 .table_header {
   background-color: #d1d1d1;
-  border-bottom: 1px solid #aaa;
+  border-bottom: 1px solid #575757;
   color: #000;
   padding: 4px;
 }
@@ -353,7 +353,6 @@ table.zebra-big-hover > tbody:nth-child(2n+1) > tr:hover {
   background-image: linear-gradient(#b8c6db, #cedbef 60%, #cedbef);
   background-repeat: no-repeat;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#b8c6db', endColorstr='#cedbef', GradientType=0);
-  border-top: 2px solid #97a6cf;
 }
 .red_gradient {
   background-color: #e8b6b9;

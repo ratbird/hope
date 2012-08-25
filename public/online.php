@@ -311,7 +311,7 @@ if (is_array($non_group_buddies))
                 }
 
                 if (sizeof($non_group_buddies)) {
-                    echo "\n<tr><td colspan=7 class=\"content_seperator\" align=\"center\"><font size=-1 color=\"#555555\"><a href=\"contact.php?view=gruppen&filter=all\"><font size=-1 color=\"#555555\">"._("Buddies ohne Gruppenzuordnung").":</font></a></font></td></tr>";
+                    echo "\n<tr><td colspan=7 class=\"blue_gradient\" align=\"center\"><a href=\"contact.php?view=gruppen&filter=all\">"._("Buddies ohne Gruppenzuordnung").":</a></font></td></tr>";
                     reset ($non_group_buddies);
                     $template = $GLOBALS['template_factory']->open('online/user');
                     while (list($index)=each($non_group_buddies)) {

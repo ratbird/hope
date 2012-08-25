@@ -539,11 +539,11 @@ function ShowContact ($contact_id)
         }
         $output .= "<table border=\"0\" cellspacing=\"0\" width=\"280\" class=\"blank\">
                     <tr>
-                        <td class=\"blue_gradient\" width=\"99%\" style=\"font-weight:bold;\">"
+                        <td class=\"table_header_bold\" width=\"99%\" style=\"font-weight:bold;\">"
                             . get_fullname($temp['user_id'], $format = "full_rev",true ) . '</td>'
-                            . "<td class=\"blue_gradient\">"
+                            . "<td class=\"table_header_bold\">"
                             // export to vcf
-                            . '<a href="' . URLHelper::getLink('sms_send.php', array('sms_source_page' => 'contact.php', 'rec_uname' => get_username($temp['user_id']))) . '">' . Assets::img('icons/16/blue/mail.png', array('class' => 'text-top', 'title' =>_('Nachricht schreiben'))) . '</a>'
+                            . '<a href="' . URLHelper::getLink('sms_send.php', array('sms_source_page' => 'contact.php', 'rec_uname' => get_username($temp['user_id']))) . '">' . Assets::img('icons/16/white/mail.png', array('class' => 'text-top', 'title' =>_('Nachricht schreiben'))) . '</a>'
                             . '</td>'
                             . "
                         </td>
@@ -609,7 +609,7 @@ function ShowEditContact ($contact_id)
         $css_switcher = new cssClassSwitcher();
         $output = "<table cellspacing=\"0\" cellpadding=\"3\" width=\"700\" class=\"blank\">
                     <tr>
-                        <td class=\"topicwrite\" colspan=\"3\">"
+                        <td class=\"table_header_bold_red\" colspan=\"3\">"
                             .get_fullname($result['user_id'], $format = "full_rev",true )."</td>"
                             ."
                         </td>

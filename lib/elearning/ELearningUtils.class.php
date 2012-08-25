@@ -543,7 +543,7 @@ class ELearningUtils
     function getCMSHeader($title)
     {
         $output .= "<table border=\"0\" cellspacing=0 cellpadding=0 width = \"99%\">";
-        $output .= "<tr><td class=\"steel\" align=\"left\" valign=\"middle\" colspan=\"4\">";
+        $output .= "<tr><td class=\"table_header\" align=\"left\" valign=\"middle\" colspan=\"4\">";
 //      $output .= "<font size=\"-1\">";
         $output .= "<b>&nbsp;";
         $output .= $title;

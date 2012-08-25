@@ -10,7 +10,7 @@ use Studip\Button, Studip\LinkButton;
 <?endif;?>
 <table class="index_box logintable">
 <tr>
-    <td class="topic">
+    <td class="table_header_bold">
     <img src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/white/door-enter.png" border="0">
     <b>&nbsp;<?=sprintf(_("Stud.IP - Neues Passwort anfordern (Schritt %s von 5)"), $step)?></b>
     </td>

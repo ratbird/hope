@@ -532,7 +532,7 @@ class StudipSemTreeViewAdmin extends TreeView {
 
         $content .= "\n<table border=\"0\" width=\"90%\" cellpadding=\"2\" cellspacing=\"0\" align=\"center\" style=\"font-size:10pt\">";
         if ($item_id == "root"){
-            $content .= "\n<tr><td  class=\"topic\" align=\"left\" style=\"font-size:10pt;\">" . htmlReady($this->tree->root_name) ." </td></tr>";
+            $content .= "\n<tr><td  class=\"table_header_bold\" align=\"left\" style=\"font-size:10pt;\">" . htmlReady($this->tree->root_name) ." </td></tr>";
             $content .= "\n<tr><td  class=\"table_row_even\" align=\"left\" style=\"font-size:10pt;\">" . htmlReady($this->root_content) ." </td></tr>";
             $content .= "\n</table>";
             return $content;

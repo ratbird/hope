@@ -100,7 +100,7 @@ if (!(have_sem_write_perm()) OR $pass==TRUE) {
                 echo LinkButton::create(_("Zitieren"), URLHelper::getURL("?write=1&root_id=$root_id&topic_id=$topic_id&quote=TRUE"));
                 echo "      </td>";
                 echo "  </tr>";
-                echo "<tr><td colspan=2 class=steel>&nbsp; </td></tr><tr><td colspan=2 class=table_row_even><blockquote>";
+                echo "<tr><td colspan=2 class=content_title>&nbsp; </td></tr><tr><td colspan=2 class=table_row_even><blockquote>";
             
             }
             print "<br><b>" . _("Hierzu antworten:") . "</b><br><br>\n";

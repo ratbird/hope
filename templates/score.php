@@ -1,7 +1,7 @@
 <?
 # Lifter010: TODO
 ?>
-<div class="topic"><b><?=_("Stud.IP-Rangliste")?></b></div>
+<div class="table_header_bold"><b><?=_("Stud.IP-Rangliste")?></b></div>
 <? if(count($persons)>0) : ?>
 <table class="default">
 <tr>

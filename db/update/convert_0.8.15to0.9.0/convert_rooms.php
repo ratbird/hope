@@ -51,7 +51,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 <table border=0 bgcolor="#000000" align="center" cellspacing=0 cellpadding=0 width=100%>
 <tr valign=top align=middle>
-    <td class="topic"colspan=2 align="left"><b>&nbsp;Umwandeln der Eintr&auml;ge f&uuml;r R&auml;ume in neues Format</b></td>
+    <td class="table_header_bold"colspan=2 align="left"><b>&nbsp;Umwandeln der Eintr&auml;ge f&uuml;r R&auml;ume in neues Format</b></td>
 </tr>
 
 <?

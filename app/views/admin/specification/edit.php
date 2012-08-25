@@ -36,7 +36,7 @@ use Studip\Button, Studip\LinkButton;
             <th><?= _("aktivieren:") ?></th>
         </tr>
         <? if (count($entries_semdata) > 0) : ?>
-        <tr class="steel">
+        <tr class="table_header">
             <td colspan="3"><b><?= _("Zusatzinformationen") ?></b></td>
         </tr>
         <? foreach ($entries_semdata as $id => $entry) : ?>
@@ -44,7 +44,7 @@ use Studip\Button, Studip\LinkButton;
         <? endforeach ?>
         <? endif ?>
         <? if (count($semFields) > 0) : ?>
-        <tr class="steel">
+        <tr class="table_header">
             <td colspan="3"><b><?= _("Veranstaltungsinformationen") ?></b></td>
         </tr>
         <? foreach ($semFields as $id => $name) : ?>
@@ -52,7 +52,7 @@ use Studip\Button, Studip\LinkButton;
         <? endforeach ?>
         <? endif ?>
         <? if(count($entries_user) > 0) : ?>
-        <tr class="steel">
+        <tr class="table_header">
             <td colspan="3"><b><?= _("Personenbezogene Informationen") ?></b></td>
         </tr>
         <? foreach ($entries_user as $id => $entry) : ?>

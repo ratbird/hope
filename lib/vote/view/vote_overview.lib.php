@@ -148,7 +148,7 @@ $html = "\n" . $cssSw->GetHoverJSFunction() . "\n";
     reset($typen);
     while(list($typen_key,$typen_value)=each ($typen)){
         $counter = 0;
-        $html .="    <tr><td class=\"steel\" style=\"vertical-align:bottom;\" align=\"left\" colspan=\"4\" height=\"26\"><font size=\"-1\"><b>$typen_value:</b></font></td></tr>\n";
+        $html .="    <tr><td class=\"table_header\" colspan=\"4\"><b>$typen_value:</b></font></td></tr>\n";
         if ($ranges["$typen_key"]){
             foreach ($ranges["$typen_key"] as $range) {
                 if ($counter == 0)          $displayclass = "content_body";
@@ -532,7 +532,7 @@ reset($votes);
 
 function makeTableHeaderCell($text = "&nbsp;", $width = "5%", $align = "center", $colspan = "1"){
    if ($text == "blindgif") $text = "<img width=\"$width\" align=\"middle\" height=\"1\" src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" alt=\"\">";
-   $html = "     <td class=\"steel\" style=\"vertical-align:bottom;\" colspan=\"$colspan\" align=\"$align\" width=\"$width\" height=\"26\">\n"
+   $html = "     <td class=\"table_header\" style=\"vertical-align:bottom;\" colspan=\"$colspan\" align=\"$align\" width=\"$width\">\n"
       . "     <font size=-1><b>$text</b></font>\n"
       . "    </td>\n";
    return $html;

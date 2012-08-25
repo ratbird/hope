@@ -65,7 +65,7 @@ use Studip\Button, Studip\LinkButton;
         </td>
     </tr>
     <tbody <?= ($advanced) ? '': 'class="collapsed"' ?>>
-    <tr class="steel header-row">
+    <tr class="table_header header-row">
         <td colspan="4" class="toggle-indicator">
             <a class="toggler" href="<?= $controller->url_for('admin/user/')?><?= ($advanced) ? '' : 'index/advanced' ?>" title="<?= _('Zusätzliche Suchfelder ein-/ausblenden') ?>">
                 <b><?= _('Erweiterte Suche')?></b>

@@ -1,6 +1,6 @@
 <table class="default">
     <tr>
-        <td class="topic" colspan="3" style="font-weight: bold">
+        <td class="table_header_bold" colspan="3" style="font-weight: bold">
             <?= _('Informationen zu einem Nutzer:') ?>
 
             <?= htmlReady($user->getFullName()) ?>

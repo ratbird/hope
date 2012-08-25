@@ -1,7 +1,7 @@
 <table class="default">
     <thead>
         <tr>
-            <td class="topic" colspan="4"><?= _('Übersicht Gästebucheinträge') ?></td>
+            <td class="table_header_bold" colspan="4"><?= _('Übersicht Gästebucheinträge') ?></td>
         </tr>
     </thead>
     <tbody>

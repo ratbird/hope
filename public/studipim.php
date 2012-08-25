@@ -140,7 +140,7 @@ if ($new_msgs[0] OR $cmd)  print ("self.focus();\n");
 
 <table width="100%" border=0 cellpadding=2 cellspacing=0>
 <tr>
-    <td class="topic" colspan=2><?=Assets::img('icons/16/grey/person.png', array('class' => 'text-top')) ?><b>&nbsp;Stud.IP-Messenger (<?=$auth->auth["uname"]?>)</b></td>
+    <td class="table_header_bold" colspan=2><?=Assets::img('icons/16/grey/person.png', array('class' => 'text-top')) ?><b>&nbsp;Stud.IP-Messenger (<?=$auth->auth["uname"]?>)</b></td>
 </tr>
 <tr><td class="blank" width="50%" valign="top"><br><table width="100%" border=0 cellpadding=1 cellspacing=0 valign="top">
 <?php

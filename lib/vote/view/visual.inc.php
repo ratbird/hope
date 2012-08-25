@@ -81,7 +81,7 @@ function createBoxHeader ($title, $width, $extraTitle = "",
    if ($title) {
 
       $html .=   " <tr>\n".
-      "  <td class=\"topic\" colspan=\"2\">";
+      "  <td class=\"table_header_bold\" colspan=\"2\">";
 
       if ($imgURL) {
           $html .=
@@ -98,7 +98,7 @@ function createBoxHeader ($title, $width, $extraTitle = "",
 
        $html .=
           "</td>".
-          "<td align=\"right\" class=\"topic\">";
+          "<td align=\"right\" class=\"table_header_bold\">";
 
        if ($adminURL) {
           $html .=

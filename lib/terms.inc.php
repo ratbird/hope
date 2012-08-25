@@ -50,7 +50,7 @@ function check_terms($userid, $_language_path) {
 
 <table align="center" border="0" cellpadding="1" cellspacing="0">
     <tr>
-        <td class="topic">
+        <td class="table_header_bold">
             <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/white/door-enter.png" border="0" align="absmiddle"> <b><?=_("Nutzungsbedingungen")?></b>
         </td>
     </tr>

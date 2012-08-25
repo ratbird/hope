@@ -83,7 +83,7 @@ if (!$chatServer->isActiveUser($user->id,$chatid)) {
     <td align="center">
         <table align="center" border="0" cellpadding="1" cellspacing="1" width="100%">
             <tr>
-                <td class="topic" align="center"><b>Nicklist</b></td>
+                <td class="table_header_bold" align="center"><b>Nicklist</b></td>
             </tr>
             <?
             $is_admin = $chatServer->getPerm($user->id,$chatid);

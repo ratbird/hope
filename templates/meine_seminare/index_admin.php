@@ -54,7 +54,7 @@ global $SEM_TYPE;
                     <table class="zebra-hover" border="0" cellpadding="0" cellspacing="0" width="99%" align="center">
                         <thead>
                             <tr>
-                                <td class="topic" colspan="8">
+                                <td class="table_header_bold" colspan="8">
                                     <b>
                                         <?=_("Veranstaltungen an meinen Einrichtungen") ?>
                                         <?= $_my_admin_inst_id ? " - " . htmlReady($_my_inst[$_my_admin_inst_id]['name']) : "" ?>

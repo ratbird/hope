@@ -20,7 +20,7 @@
 <table class="default">
     <thead>
         <tr>
-            <td colspan="4" class="topic"><?= $section['title'] ?></td>
+            <td colspan="4" class="table_header_bold"><?= $section['title'] ?></td>
         </tr>
     </thead>
     <tbody>

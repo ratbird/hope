@@ -17,7 +17,7 @@
 <table class="collapsable default" cellspacing="0" cellpadding="2">
 <? foreach ($datafields_list as $key => $data): ?>
     <tbody class="<?= ((!is_null($current_class) && $current_class == $key) || !is_null($class_filter)) ? '': 'collapsed' ?> <? if (empty($datafields_list[$key])): ?>empty<? endif ?>">
-        <tr class="steel header-row">
+        <tr class="table_header header-row">
             <td class="toggle-indicator" colspan="10">
             <? if (empty($datafields_list[$key])): ?>
                 <?= sprintf(_('Datenfelder für %s'), $allclasses[$key]) ?>

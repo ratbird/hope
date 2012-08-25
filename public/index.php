@@ -121,7 +121,7 @@ if ($auth->is_authenticated() && $user->id != 'nobody') {
     <div class="index_container">
         <table class="index_box">
             <tr>
-                <td class="topic" style="font-weight: bold;" colspan="2">
+                <td class="table_header_bold" style="font-weight: bold;" colspan="2">
                     <?= Assets::img('icons/16/white/home.png', array('class' => 'middle')) ?>
                     <?= htmlReady($ueberschrift) ?>
                 </td>

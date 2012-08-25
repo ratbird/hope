@@ -1,23 +1,34 @@
 /* --- Tabellen ------------------------------------------------------------- */
-th {
-    background-color: #d1d1d1;
+th, table.header, .table_header { //normale Tabellenheader
+    background-color:  @table-header-color;
     border-bottom: 1px solid #aaa;
     color: #000;
     padding: 4px;
 
-    a, a:link, a:visited { color: #000000; }
 }
-table.header { background-color: @brand-color-lighter; }
+
+.table_header_bold { //formerly known as topic(-header)
+	background-color: @brand-color-lighter;
+	border: 0;
+    border-bottom: 1px solid @brand-color-darker;
+    color: #FFFFFF;
+    font-size: 12pt;
+    padding: 3px 5px;
+
+    img { vertical-align: middle; } // for the topic-icons
+}
+
+
 table.links1 { background-color: #fff; }
 table.logintable { background-image: url("@{image-path}/login.jpg"); }
 
-table.toolbar, td.toolbar, td.printhead, .steel {
+table.toolbar, td.toolbar, td.printhead {
     #gradient > .vertical-three-colors(#cdd9ed, #e3eaf6, 40%, #e3eaf6);
     border-top: 1px solid @brand-color-lighter;
     line-height: 17pt;
     height: 25px;
 }
-td.toolbar, td.printhead, .steel {
+td.toolbar, td.printhead {
     &:last-child { padding-right: 5px; }
 
     img {
@@ -58,7 +69,7 @@ td {
         background: #fff;
         border: 1px solid #000;
     }
-    &.topicwrite {
+    &.table_header_bold_red {
         border: none;
         background-color: #c02a2a;
         color: #fff;

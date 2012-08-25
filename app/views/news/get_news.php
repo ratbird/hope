@@ -3,7 +3,7 @@ if (!Request::isXhr()) :
     global $template_factory;
     $this->set_layout($template_factory->open('layouts/base_without_infobox'));
     ?>
-    <div class="topic" style="clear:both">
+    <div class="table_header_bold" style="clear:both">
         <div style="float:left">
             <?= Assets::img('icons/16/white/breaking-news.png') ?>
             <span style="padding-left:2px;"><?= htmlReady($news['topic']); ?></span>

@@ -53,7 +53,7 @@ class StudipRangeTreeView extends TreeView{
     function getItemContent($item_id){
         $content = "\n<table width=\"90%\" cellpadding=\"2\" cellspacing=\"2\" align=\"center\" style=\"font-size:10pt\">";
         if ($item_id == "root"){
-            $content .= "\n<tr><td class=\"topic\" align=\"left\">" . htmlReady($this->tree->root_name) ." </td></tr>";
+            $content .= "\n<tr><td class=\"table_header_bold\" align=\"left\">" . htmlReady($this->tree->root_name) ." </td></tr>";
             $content .= "\n<tr><td class=\"blank\" align=\"left\">" . htmlReady($this->root_content) ." </td></tr>";
             $content .= "\n</table>";
             return $content;
@@ -61,7 +61,7 @@ class StudipRangeTreeView extends TreeView{
         $range_object = RangeTreeObject::GetInstance($item_id);
         $name = ($range_object->item_data['type']) ? $range_object->item_data['type'] . ": " : "";
         $name .= $range_object->item_data['name'];
-        $content .= "\n<tr><td class=\"topic\" align=\"left\">" . htmlReady($name) ." </td></tr>";
+        $content .= "\n<tr><td class=\"table_header_bold\" align=\"left\">" . htmlReady($name) ." </td></tr>";
         if (is_array($range_object->item_data_mapping)){
             $content .= "\n<tr><td class=\"blank\" align=\"left\">";
             foreach ($range_object->item_data_mapping as $key => $value){
@@ -85,7 +85,7 @@ class StudipRangeTreeView extends TreeView{
         $kategorien =& $range_object->getCategories();
         if ($kategorien->numRows){
             while($kategorien->nextRow()){
-                $content .= "\n<tr><td class=\"topic\">" . htmlReady($kategorien->getField("name")) . "</td></tr>";
+                $content .= "\n<tr><td class=\"table_header_bold\">" . htmlReady($kategorien->getField("name")) . "</td></tr>";
                 $content .= "\n<tr><td class=\"blank\">" . formatReady($kategorien->getField("content")) . "</td></tr>";
             }
         } else {

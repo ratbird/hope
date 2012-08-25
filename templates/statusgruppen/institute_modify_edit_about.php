@@ -31,7 +31,7 @@ $style = "style=\"background-image: url('". Assets::image_path('forumstrich') ."
             <input type="hidden" name="view" value=<?=$view?>>
             <table cellspacing="0" cellpadding="0" border="0" class="blank" width="90%">
             <tr>
-                <td width="100%" colspan="4" class="topic">&nbsp;<?= _("Einrichtungsdaten") ?></td>
+                <td width="100%" colspan="4" class="table_header_bold">&nbsp;<?= _("Einrichtungsdaten") ?></td>
             </tr>
             <?
             $status = $data['inst_perms'];

@@ -133,7 +133,7 @@ if (!$chat_entry_check){
     <body>
     <table border=0 bgcolor="#000000" align="center" cellspacing=0 cellpadding=0 width=70%>
     <tr valign=top align=middle>
-        <td class="topic" align="left"><b>&nbsp;<?=_("Zugriff verweigert")?></b></td>
+        <td class="table_header_bold" align="left"><b>&nbsp;<?=_("Zugriff verweigert")?></b></td>
         </tr>
         <tr><td class="blank">&nbsp;</td></tr>
         <?

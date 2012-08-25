@@ -1203,8 +1203,8 @@ while (list ($key, $val) = each ($gruppe)) {
 
         echo "<tbody><tr height=28>";
         if ($showscore==TRUE)
-            echo "<td class=\"steel\" width=\"1%\">&nbsp; </td>";
-        print "<td class=\"steel\" width=\"1%\" align=\"center\" valign=\"middle\">";
+            echo "<td class=\"table_header\" width=\"1%\">&nbsp; </td>";
+        print "<td class=\"table_header\" width=\"1%\" align=\"center\" valign=\"middle\">";
         if ($rechte) {
             if (in_array($key, $open_areas)) {
                 $image = "icons/16/blue/arr_1down.png";
@@ -1224,14 +1224,14 @@ while (list ($key, $val) = each ($gruppe)) {
         // add skip link
         SkipLinks::addIndex($val, 'member_group_' . $key);
 
-        echo '<td class="steel" width="19%" align="left" id="member_group_' . $key . '">'.
+        echo '<td class="table_header" width="19%" align="left" id="member_group_' . $key . '">'.
                '<img src="'.$GLOBALS['ASSETS_URL'].'images/blank.gif" width="1" height="20">'.
                '<font size="-1"><b>' . $val . '</b></font>'.
              '</td>';
 
         // mail button einfügen
         if ($rechte) {
-            echo '<td class="steel" width="10%">';
+            echo '<td class="table_header" width="10%">';
             // hier kann ne flag setzen um mail extern zu nutzen
             if ($ENABLE_EMAIL_TO_STATUSGROUP) {
                 $seminar_user_table =
@@ -1264,19 +1264,19 @@ while (list ($key, $val) = each ($gruppe)) {
             echo '</a>';
             echo '</td>';
         } else {
-            echo '<td class="steel">&nbsp;</td>';
+            echo '<td class="table_header">&nbsp;</td>';
         }
 
         echo "</b></font></td>";
 
         if ($key != "dozent" && $rechte) {
-            printf("<td class=\"steel\" width=\"1%%\" align=\"center\" valign=\"bottom\"><font size=\"-1\"><b>%s</b></font></td>", _("Anmeldedatum"));
+            printf("<td class=\"table_header\" width=\"1%%\" align=\"center\" valign=\"bottom\"><font size=\"-1\"><b>%s</b></font></td>", _("Anmeldedatum"));
         } else if ($key == "dozent" && $rechte) {
-            printf("<td class=\"steel\" width=\"9%%\" align=\"center\" valign=\"bottom\">&nbsp;</td>");
+            printf("<td class=\"table_header\" width=\"9%%\" align=\"center\" valign=\"bottom\">&nbsp;</td>");
         }
-        printf("<td class=\"steel\" width=\"10%%\" align=\"center\" valign=\"bottom\"><font size=\"-1\"><b>%s</b></font></td>", _("Forenbeiträge"));
-        printf("<td class=\"steel\" width=\"10%%\" align=\"center\" valign=\"bottom\"><font size=\"-1\"><b>%s</b></font></td>", _("Dokumente"));
-        printf("<td class=\"steel\" width=\"9%%\" align=\"center\" valign=\"bottom\"><font size=\"-1\"><b>%s</b></font></td>", _("Nachricht"));
+        printf("<td class=\"table_header\" width=\"10%%\" align=\"center\" valign=\"bottom\"><font size=\"-1\"><b>%s</b></font></td>", _("Forenbeiträge"));
+        printf("<td class=\"table_header\" width=\"10%%\" align=\"center\" valign=\"bottom\"><font size=\"-1\"><b>%s</b></font></td>", _("Dokumente"));
+        printf("<td class=\"table_header\" width=\"9%%\" align=\"center\" valign=\"bottom\"><font size=\"-1\"><b>%s</b></font></td>", _("Nachricht"));
 
 
         if ($rechte && !LockRules::Check($id, 'participants')) {
@@ -1287,38 +1287,38 @@ while (list ($key, $val) = each ($gruppe)) {
                 $width=20;
 
             if ($key == "dozent") {
-                printf ("<td class=\"steel\" width=\"%s%%\" align=\"center\"><b>&nbsp;</b></td>", $width);
-                printf ("<td class=\"steel\" width=\"%s%%\" align=\"center\"><b>&nbsp;</b></td>", $width);
+                printf ("<td class=\"table_header\" width=\"%s%%\" align=\"center\"><b>&nbsp;</b></td>", $width);
+                printf ("<td class=\"table_header\" width=\"%s%%\" align=\"center\"><b>&nbsp;</b></td>", $width);
                 if ($sem->isAdmissionEnabled())
-                    echo"<td class=\"steel\" width=\"10%\" align=\"center\" colspan=\"2\"><b>&nbsp;</b></td>";
+                    echo"<td class=\"table_header\" width=\"10%\" align=\"center\" colspan=\"2\"><b>&nbsp;</b></td>";
             }
 
             if ($key == "tutor") {
-                printf ("<td class=\"steel\" width=\"%s%%\" align=\"center\"><font size=\"-1\"><b>&nbsp;</b></font></td>", $width);
-                printf ("<td class=\"steel\" width=\"%s%%\" align=\"center\" valign=\"bottom\"><font size=\"-1\"><a name=\"tutor_to_autor\" onClick=\"return invert_selection('tutor_to_autor','%s');\" %s><b>%s</b></a></font></td>", $width, $key, $tooltip, sprintf(_("%s entlassen"), get_title_for_status('tutor', 1)));
+                printf ("<td class=\"table_header\" width=\"%s%%\" align=\"center\"><font size=\"-1\"><b>&nbsp;</b></font></td>", $width);
+                printf ("<td class=\"table_header\" width=\"%s%%\" align=\"center\" valign=\"bottom\"><font size=\"-1\"><a name=\"tutor_to_autor\" onClick=\"return invert_selection('tutor_to_autor','%s');\" %s><b>%s</b></a></font></td>", $width, $key, $tooltip, sprintf(_("%s entlassen"), get_title_for_status('tutor', 1)));
                 if ($sem->isAdmissionEnabled())
-                    echo"<td class=\"steel\" width=\"10%\" align=\"center\"><b>&nbsp;</b></td>";
+                    echo"<td class=\"table_header\" width=\"10%\" align=\"center\"><b>&nbsp;</b></td>";
             }
 
             if ($key == "autor") {
-                printf ("<td class=\"steel\" width=\"%s%%\" align=\"center\" valign=\"bottom\"><font size=\"-1\"><a name=\"autor_to_tutor\" onClick=\"return invert_selection('autor_to_tutor','%s');\" %s><b>%s</b></a></font></td>",  $width, $key, $tooltip, sprintf(_("als %s eintragen"), get_title_for_status('tutor', 1)));
-                printf ("<td class=\"steel\" width=\"%s%%\" align=\"center\" valign=\"bottom\"><font size=\"-1\"><a name=\"autor_to_user\" onClick=\"return invert_selection('autor_to_user','%s');\" %s><b>%s</b></a></font></td>",  $width, $key, $tooltip, _("Schreibrecht entziehen"));
+                printf ("<td class=\"table_header\" width=\"%s%%\" align=\"center\" valign=\"bottom\"><font size=\"-1\"><a name=\"autor_to_tutor\" onClick=\"return invert_selection('autor_to_tutor','%s');\" %s><b>%s</b></a></font></td>",  $width, $key, $tooltip, sprintf(_("als %s eintragen"), get_title_for_status('tutor', 1)));
+                printf ("<td class=\"table_header\" width=\"%s%%\" align=\"center\" valign=\"bottom\"><font size=\"-1\"><a name=\"autor_to_user\" onClick=\"return invert_selection('autor_to_user','%s');\" %s><b>%s</b></a></font></td>",  $width, $key, $tooltip, _("Schreibrecht entziehen"));
                 if ($sem->isAdmissionEnabled())
-                    printf("<td class=\"steel\" width=\"10%%\" align=\"center\" valign=\"bottom\"><font size=\"-1\"><b>%s</b></font></td>", _("Kontingent"));
+                    printf("<td class=\"table_header\" width=\"10%%\" align=\"center\" valign=\"bottom\"><font size=\"-1\"><b>%s</b></font></td>", _("Kontingent"));
             }
 
             if ($key == "user") {
-                printf ("<td class=\"steel\" width=\"%s%%\" align=\"center\" valign=\"bottom\"><font size=\"-1\"><a name=\"user_to_autor\" onClick=\"return invert_selection('user_to_autor','%s');\" %s><b>%s</b></a></font></td>",  $width, $key, $tooltip, _("Schreibrecht erteilen"));
-                printf ("<td class=\"steel\" width=\"%s%%\" align=\"center\" valign=\"bottom\"><font size=\"-1\"><a name=\"user_to_null\" onClick=\"return invert_selection('user_to_null','%s');\" %s><b>%s</b></a></font></td>",  $width, $key, $tooltip, _("BenutzerIn entfernen"));
+                printf ("<td class=\"table_header\" width=\"%s%%\" align=\"center\" valign=\"bottom\"><font size=\"-1\"><a name=\"user_to_autor\" onClick=\"return invert_selection('user_to_autor','%s');\" %s><b>%s</b></a></font></td>",  $width, $key, $tooltip, _("Schreibrecht erteilen"));
+                printf ("<td class=\"table_header\" width=\"%s%%\" align=\"center\" valign=\"bottom\"><font size=\"-1\"><a name=\"user_to_null\" onClick=\"return invert_selection('user_to_null','%s');\" %s><b>%s</b></a></font></td>",  $width, $key, $tooltip, _("BenutzerIn entfernen"));
                 if ($sem->isAdmissionEnabled())
-                    print"<td class=\"steel\" width=\"10%\" align=\"center\"><b>&nbsp;</b></td>";
+                    print"<td class=\"table_header\" width=\"10%\" align=\"center\"><b>&nbsp;</b></td>";
             }
 
             if ($key == "accepted") {
-                printf ("<td class=\"steel\" width=\"%s%%\" align=\"center\" valign=\"bottom\"><font size=\"-1\"><a name=\"admission_insert\" onClick=\"return invert_selection('admission_insert','%s');\" %s><b>%s</b></a></font></td>",  $width, $key, $tooltip,  _("Akzeptieren"));
-                printf ("<td class=\"steel\" width=\"%s%%\" align=\"center\" valign=\"bottom\"><font size=\"-1\"><a name=\"admission_delete\" onClick=\"return invert_selection('admission_delete','%s');\" %s><b>%s</b></a></font></td>",  $width, $key, $tooltip, _("BenutzerIn entfernen"));
+                printf ("<td class=\"table_header\" width=\"%s%%\" align=\"center\" valign=\"bottom\"><font size=\"-1\"><a name=\"admission_insert\" onClick=\"return invert_selection('admission_insert','%s');\" %s><b>%s</b></a></font></td>",  $width, $key, $tooltip,  _("Akzeptieren"));
+                printf ("<td class=\"table_header\" width=\"%s%%\" align=\"center\" valign=\"bottom\"><font size=\"-1\"><a name=\"admission_delete\" onClick=\"return invert_selection('admission_delete','%s');\" %s><b>%s</b></a></font></td>",  $width, $key, $tooltip, _("BenutzerIn entfernen"));
                 if ($sem->isAdmissionEnabled())
-                    printf("<td class=\"steel\" width=\"10%%\" align=\"center\" valign=\"bottom\"><font size=\"-1\"><b>%s</b></font></td>", _("Kontingent"));
+                    printf("<td class=\"table_header\" width=\"10%%\" align=\"center\" valign=\"bottom\"><font size=\"-1\"><b>%s</b></font></td>", _("Kontingent"));
             }
         }
 
@@ -1709,16 +1709,16 @@ if ($rechte) {
         echo "<tr><td class=\"blank\" colspan=\"2\">";
         echo "<table width=\"99%\" border=\"0\"  cellpadding=\"2\" cellspacing=\"0\" align=\"center\">";
         echo "<tr height=\"28\">";
-        printf ("<td class=\"steel\" width=\"%s%%\" align=\"left\"><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"1\" height=\"20\"><font size=\"-1\"><b>%s</b></font></td>", ($sem->admission_type == 1 && $sem->admission_selection_take_place !=1) ? "40" : "30",  ($sem->admission_type == 2 || $sem->admission_selection_take_place==1) ? _("Warteliste") : _("Anmeldeliste"));
+        printf ("<td class=\"table_header\" width=\"%s%%\" align=\"left\"><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"1\" height=\"20\"><font size=\"-1\"><b>%s</b></font></td>", ($sem->admission_type == 1 && $sem->admission_selection_take_place !=1) ? "40" : "30",  ($sem->admission_type == 2 || $sem->admission_selection_take_place==1) ? _("Warteliste") : _("Anmeldeliste"));
         if ($sem->admission_type == 2 || $sem->admission_selection_take_place==1)
-            printf("<td class=\"steel\" width=\"10%%\" align=\"center\"><font size=\"-1\"><b>%s</b></font></td>", _("Position"));
-        printf("<td class=\"steel\" width=\"10%%\" align=\"center\">&nbsp; </td>");
-        printf("<td class=\"steel\" width=\"10%%\" align=\"center\"><font size=\"-1\"><b>%s</b></font></td>", _("Nachricht"));
+            printf("<td class=\"table_header\" width=\"10%%\" align=\"center\"><font size=\"-1\"><b>%s</b></font></td>", _("Position"));
+        printf("<td class=\"table_header\" width=\"10%%\" align=\"center\">&nbsp; </td>");
+        printf("<td class=\"table_header\" width=\"10%%\" align=\"center\"><font size=\"-1\"><b>%s</b></font></td>", _("Nachricht"));
         if(!LockRules::Check($id, 'participants')){
-            printf("<td class=\"steel\" width=\"15%%\" align=\"center\"><font size=\"-1\"><a name=\"blubb\" onClick=\"return invert_selection('admission_insert','waitlist');\" %s><b>%s</b></a></font></td>", tooltip(_("Klicken, um Auswahl umzukehren"),false), _("eintragen"));
-            printf("<td class=\"steel\" width=\"15%%\" align=\"center\"><font size=\"-1\"><a name=\"bla\" onClick=\"return invert_selection('admission_delete','waitlist');\" %s><b>%s</b></a></font></td>", tooltip(_("Klicken, um Auswahl umzukehren"),false), _("entfernen"));
+            printf("<td class=\"table_header\" width=\"15%%\" align=\"center\"><font size=\"-1\"><a name=\"blubb\" onClick=\"return invert_selection('admission_insert','waitlist');\" %s><b>%s</b></a></font></td>", tooltip(_("Klicken, um Auswahl umzukehren"),false), _("eintragen"));
+            printf("<td class=\"table_header\" width=\"15%%\" align=\"center\"><font size=\"-1\"><a name=\"bla\" onClick=\"return invert_selection('admission_delete','waitlist');\" %s><b>%s</b></a></font></td>", tooltip(_("Klicken, um Auswahl umzukehren"),false), _("entfernen"));
         }
-        printf("<td class=\"steel\" width=\"10%%\" align=\"center\"><font size=\"-1\"><b>%s</b></font></td></tr>\n", _("Kontingent"));
+        printf("<td class=\"table_header\" width=\"10%%\" align=\"center\"><font size=\"-1\"><b>%s</b></font></td></tr>\n", _("Kontingent"));
 
 
         foreach ($waiting_users as $waiting_user) {

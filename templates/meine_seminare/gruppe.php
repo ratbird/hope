@@ -28,6 +28,9 @@ $groupables = array(
             </colgroup>
             <tr>
                 <td class="blank" align="right">
+                </td>
+                <td class="blank" align="right" colspan="9">
+                    <?= Button::createAccept() ?><br />
                     <label>
                         <?= _('Kategorie zur Gliederung:') ?>
                         <select name="select_group_field">
@@ -44,29 +47,15 @@ $groupables = array(
                         </select>
                     </label>
                 </td>
-                <td class="blank" align="center" colspan="9">
-                    <?= Button::createAccept() ?>
-                </td>
             </tr>
-            <tr>
-                <td class="blank" align="right" colspan="10">&nbsp;</td>
-            </tr>
-            <tr valign="top" align="center">
-                <th style="text-align: center;">
-                    &nbsp;<br>
-                    <?= _('Veranstaltung') ?>
-                </th>
-            <? for ($i = 0; $i < 9; $i++): ?>
-                <th class="gruppe<?= $i ?>">&nbsp;</th>
-            <? endfor; ?>
-            </tr>
+
 <? foreach ($groups as $group_id => $group_members): ?>
         <? if ($group_field != 'not_grouped'): ?>
             <tr>
                 <td class="blank" colspan="10">&nbsp;</td>
             </tr>
             <tr>
-                <td class="blue_gradient" valign="middle" height="20" colspan="10">
+                <td class="table_header" valign="middle" height="20" colspan="10">
                 <? if (isset($_my_sem_open[$group_id])): ?>
                     <a class="tree" style="font-weight:bold" name="<?= $group_id ?>" href="<?= URLHelper::getLink('?close_my_sem=' . $group_id . '#' .$group_id) ?>" <?= tooltip(_('Gruppierung schließen'), true) ?>>
                         <?= Assets::img('icons/16/blue/arr_1down') ?>
@@ -106,7 +95,7 @@ $groupables = array(
 <? endforeach; ?>
             <tr>
                 <td class="blank">&nbsp;</td>
-                <td class="blank" align="center" colspan="9">
+                <td class="blank" align="right" colspan="9">
                     <br>
                     <?= Button::createAccept() ?>
                     <input type="hidden" name="gruppesent" value="1">

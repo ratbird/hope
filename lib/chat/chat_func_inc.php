@@ -155,7 +155,7 @@ function chat_show_info($chatid)
             //Ausgabe der Kopfzeile
             chat_get_javascript();
             echo "\n<table class=\"index_box\" role=\"article\" style=\"width: 100%;\" id=\"chat_show_info\">";
-            echo "\n<tr><td class=\"topic\" colspan=\"2\">";
+            echo "\n<tr><td class=\"table_header_bold\" colspan=\"2\">";
             echo "\n" . chat_get_chat_icon($chatter, $chatinv, $is_active, false, 'white', 'white');
             echo "\n <b>" . _("Chatraum:") . " " . htmlReady($chatname) . "</b></td></tr>";
             echo chat_get_content($chatid,$chatter,$chatinv,$chatServer->chatDetail[$chatid]['password'],$is_active,$chatServer->getUsers($chatid));

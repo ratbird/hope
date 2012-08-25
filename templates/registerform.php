@@ -109,7 +109,7 @@ function checkdata(){
 <?endif;?>
 <table class="index_box logintable">
 <tr>
-    <td class="topic"> <b><?=_("Stud.IP - Registrierung")?></b> </td>
+    <td class="table_header_bold"> <b><?=_("Stud.IP - Registrierung")?></b> </td>
 </tr>
 <tr>
     <td class="blank" style="padding: 1em;">

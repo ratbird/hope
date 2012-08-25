@@ -40,7 +40,7 @@
 </table>
 
 <? if ($truncated): ?>
-<div class="topic">
+<div class="table_header_bold">
     <a href="<?= URLHelper::getLink('?more=' . $id . '#feed_' . $id) ?>" style="display: block;text-align: center;color:#fff;font-weight:bold;">
         <?= Assets::img('icons/16/white/arr_1down', array('class' => 'text-bottom')) ?>
         <?= sprintf(_('%u weitere Einträge...'), $truncated) ?>

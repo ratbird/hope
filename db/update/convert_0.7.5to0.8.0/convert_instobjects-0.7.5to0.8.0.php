@@ -52,7 +52,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 <table border=0 bgcolor="#000000" align="center" cellspacing=0 cellpadding=0 width=100%>
 <tr><td class="blank" colspan=2>&nbsp;</td></tr>
 <tr valign=top align=middle>
-    <td class="topic"colspan=2 align="left"><b>&nbsp;Nachtragen von Diskussionsordner und Dateiordner f&uuml;r Institute</b></td>
+    <td class="table_header_bold"colspan=2 align="left"><b>&nbsp;Nachtragen von Diskussionsordner und Dateiordner f&uuml;r Institute</b></td>
 </tr>
 <tr><td class="blank" colspan=2>&nbsp;</td></tr>
 

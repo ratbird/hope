@@ -18,7 +18,7 @@ use Studip\Button, Studip\LinkButton;
 <?= CSRFProtection::tokenTag() ?>
 <table class="default collapsable">
 <tbody>
-    <tr class="steel header-row">
+    <tr class="table_header header-row">
         <td colspan="3" class="toggle-indicator">
             <a class="toggler"><b><?= _('Allgemeine Daten') ?></b></a>
         </td>
@@ -128,7 +128,7 @@ use Studip\Button, Studip\LinkButton;
     </tr>
 </tbody>
 <tbody>
-    <tr class="steel header-row">
+    <tr class="table_header header-row">
         <td colspan="3" class="toggle-indicator">
             <a class="toggler"><b><?= _('Registrierungsdaten') ?></b></a>
         </td>
@@ -247,7 +247,7 @@ use Studip\Button, Studip\LinkButton;
 
 <? if (in_array($user['perms'], array('autor', 'tutor', 'dozent'))) : ?>
 <tbody>
-    <tr class="steel header-row">
+    <tr class="table_header header-row">
         <td colspan="3" class="toggle-indicator">
             <a class="toggler"><b><?= _('Studiendaten') ?></b></a>
         </td>
@@ -326,7 +326,7 @@ use Studip\Button, Studip\LinkButton;
 
 <? if ($user['perms'] != 'root') : ?>
 <tbody>
-    <tr class="steel header-row">
+    <tr class="table_header header-row">
         <td colspan="3" class="toggle-indicator">
             <a class="toggler"><b><?= _('Einrichtungsdaten') ?></b></a>
         </td>
@@ -376,7 +376,7 @@ use Studip\Button, Studip\LinkButton;
 
 <? if ($user['perms'] != 'root') : ?>
 <tbody>
-    <tr class="steel header-row">
+    <tr class="table_header header-row">
         <td colspan="3" class="toggle-indicator">
             <a class="toggler"><b><?= _('Nutzerdomänen') ?></b></a>
         </td>
@@ -411,7 +411,7 @@ use Studip\Button, Studip\LinkButton;
 
 <? if ($GLOBALS['perm']->have_perm('root') && count(LockRule::findAllByType('user')) > 0) : ?>
 <tbody>
-    <tr class="steel header-row">
+    <tr class="table_header header-row">
         <td colspan="3" class="toggle-indicator">
             <a class="toggler"><b><?= _('Sperrebene') ?></b></a>
         </td>
@@ -434,7 +434,7 @@ use Studip\Button, Studip\LinkButton;
 
 <? if (count($userfields) > 0) : ?>
 <tbody>
-    <tr class="steel header-row">
+    <tr class="table_header header-row">
         <td colspan="3" class="toggle-indicator">
             <a class="toggler"><b><?= _('Datenfelder') ?></b></a>
         </td>

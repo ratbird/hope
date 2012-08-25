@@ -178,7 +178,7 @@ else
     <?
     if ($SessSemName[1] != $sem_id) {
     ?>
-<div class="topic">&nbsp;</div>
+<div class="table_header_bold">&nbsp;</div>
     <?
     }
     if ($msg)

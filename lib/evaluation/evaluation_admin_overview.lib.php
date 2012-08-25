@@ -131,7 +131,7 @@ class EvalOverview {
         elseif ($state == "public_template")
             $style = "eval_grey_border";
         else
-            $style = "steel";
+            $style = "table_header";
 
         for ($i = 0; $rowTitles != NULL; $i++) {
 
@@ -2254,7 +2254,7 @@ class EvalOverview {
                 // Typ
                 $td = new HTML("td");
                 $td->addAttr("colspan", "1");
-                $td->addAttr("class", "steel");
+                $td->addAttr("class", "table_header");
                 $td->addAttr("height", "22");
                 $td->addAttr("width", "50%");
                 $td->addAttr("style", "vertical-align:bottom;");
@@ -2266,7 +2266,7 @@ class EvalOverview {
 
                 // Typ
                 $td = new HTML("td");
-                $td->addAttr("class", "steel");
+                $td->addAttr("class", "table_header");
                 $td->addAttr("height", "22");
                 $td->addAttr("align", "center");
                 $td->addAttr("style", "vertical-align:bottom;");
@@ -2277,7 +2277,7 @@ class EvalOverview {
 
                 // Typ
                 $td = new HTML("td");
-                $td->addAttr("class", "steel");
+                $td->addAttr("class", "table_header");
                 $td->addAttr("height", "22");
                 $td->addAttr("align", "center");
                 $td->addAttr("style", "vertical-align:bottom;");

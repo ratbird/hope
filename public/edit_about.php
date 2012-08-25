@@ -85,7 +85,7 @@ if ($logout && $auth->auth["uid"] == "nobody")  // wir wurden gerade ausgeloggt.
     include ('lib/include/header.php');   // Output of Stud.IP head
 
     echo '<table cellspacing="0" cellpadding="0" border="0" width="100%">';
-    echo '<tr><td class="topic" colspan="2"><b>&nbsp;'. _("Daten ge&auml;ndert!") .'</b></td></tr>';
+    echo '<tr><td class="table_header_bold" colspan="2"><b>&nbsp;'. _("Daten ge&auml;ndert!") .'</b></td></tr>';
     $temp_string = '<br><font color="black">'
         . sprintf(_("Um eine korrekte Authentifizierung mit Ihren neuen Daten sicherzustellen, wurden Sie automatisch ausgeloggt.<br>Wenn Sie Ihre E-Mail-Adresse ge&auml;ndert haben, m&uuml;ssen Sie das Ihnen an diese Adresse zugesandte Passwort verwenden!<br><br>Ihr aktueller Benutzername ist: %s"), '<b>'. htmlReady($username). '</b>')
         . '<br>---&gt; <a href="index.php?again=yes">' . _("Login") . '</a> &lt;---</font>';
@@ -739,7 +739,7 @@ if ($view != 'Forum'
     echo '<table class="blank" cellspacing=0 cellpadding=0 border=0 width="100%">'."\n";
 
     if ($username != $auth->auth['uname']) {
-        echo '<tr><td class="topicwrite" colspan="2"> &nbsp; &nbsp; <b><font size="-1">';
+        echo '<tr><td class="table_header_bold_red" colspan="2"> &nbsp; &nbsp; <b><font size="-1">';
         printf(_("Daten von: %s %s (%s), Status: %s"), htmlReady($my_about->auth_user['Vorname']), htmlReady($my_about->auth_user['Nachname']), $username, $my_about->auth_user['perms']);
         echo '</font>';
     echo "</b></td></tr>\n";

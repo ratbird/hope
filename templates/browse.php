@@ -6,7 +6,7 @@ use Studip\Button, Studip\LinkButton;
 <!-- SEARCHBOX -->
 <form action="<?= URLHelper::getLink() ?>" method="post">
 <?= CSRFProtection::tokenTag() ?>
-<div class="topic"><b><?=_("Suche nach Personen")?></b></div>
+<div class="table_header_bold"><b><?=_("Suche nach Personen")?></b></div>
 
 <? if($sms_msg):?>
 <? parse_msg($sms_msg); ?>
@@ -73,7 +73,7 @@ use Studip\Button, Studip\LinkButton;
 
 <!-- RESULTS -->
 <? if (isset($users)):?>
-<div class="topic"><b><?=_("Ergebnisse:")?></b></div>
+<div class="table_header_bold"><b><?=_("Ergebnisse:")?></b></div>
 
 <div style="width: 100%;">
 <table width="100%" cellpadding="2" cellspacing="0">

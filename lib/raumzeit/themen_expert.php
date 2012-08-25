@@ -264,7 +264,7 @@ $themen =& $sem->getIssues(true);   // read again, so we have the actual sort or
                     }
 
                     $tpl['theme_title'] = htmlReady($thema->getTitle());
-                    $tpl['class'] = 'steel';
+                    $tpl['class'] = 'table_header';
                     $tpl['issue_id'] = $thema->getIssueID();
                     $tpl['priority'] = $thema->getPriority();
 

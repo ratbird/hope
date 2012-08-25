@@ -58,7 +58,7 @@ if ($auth->is_authenticated() && $user->id != "nobody") {
 ?>
 
 <table width="80%" align="center" border=0 cellpadding=0 cellspacing=0>
-<tr><td class="topic"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/white/door-enter.png" border="0"><b>&nbsp;<?=_("Nutzungsbedingungen")?></b></td></tr>
+<tr><td class="table_header_bold"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/white/door-enter.png" border="0"><b>&nbsp;<?=_("Nutzungsbedingungen")?></b></td></tr>
 <tr><td class="blank">
 <blockquote><br><br>
 <?=_("Stud.IP ist ein Open Source Projekt und steht unter der Gnu General Public License (GPL). Das System befindet sich in der st&auml;ndigen Weiterentwicklung.")?>

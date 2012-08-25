@@ -147,9 +147,9 @@ class FoafDisplay
     }
 
     /**
-    * Show Topic bar and header/content for foaf display.
+    * Show header bar and header/content for foaf display.
     *
-    * Prints a topic bar and a printhead line (with active link for
+    * Prints a bold header bar and a printhead line (with active link for
     * opening/closing content) and content, if opened.
     *
     * @access   public
@@ -200,7 +200,7 @@ class FoafDisplay
         // kopfzeile
         echo '<a name="foaf"></a>';
         echo "\n<table border=\"0\" cellpadding=\"2\" cellspacing=\"0\" width=\"100%\" align=\"center\">";
-        echo "\n<tr>\n<td class=\"topic\"><img src=\"".Assets::image_path('icons/16/white/guestbook.png')."\" align=\"texttop\"><b>";
+        echo "\n<tr>\n<td class=\"table_header_bold\"><img src=\"".Assets::image_path('icons/16/white/guestbook.png')."\" align=\"texttop\"><b>";
         echo sprintf(_("Verbindung zu %s"),htmlReady(get_fullname($this->target_id)));
         echo "</b></td>\n</tr>";
 

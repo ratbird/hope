@@ -240,7 +240,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
     foreach ($groups as $group_id => $group_members){
         if ($group_field != 'not_grouped') {
             $out .= '<tr><td class="blank" colspan="'.(sizeof($enabled_modules) + 3).'"><img src="'.$GLOBALS['ASSETS_URL'].'images/blank.gif" width="1px" height="5px"></td></tr>';
-            $out .= '<tr><td class="blue_gradient" valign="top" height="20" colspan="';
+            $out .= '<tr><td class="table_header_bold" valign="top" height="20" colspan="';
             $out .= (sizeof($enabled_modules) + 3) . '">';
             if (isset($_my_sem_open[$group_id])){
                 $out .= '<a class="tree" style="font-weight:bold" name="' . $group_id;

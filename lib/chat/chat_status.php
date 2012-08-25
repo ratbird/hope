@@ -116,7 +116,7 @@ if (!$chatServer->isActiveUser($user->id,$chatid)) {
 <div align="center">
     <table width="98%" border="0" bgcolor="white" cellspacing="0" cellpadding="0" align="center">
         <tr>
-            <td width="80%" align="left" class="topic" >
+            <td width="80%" align="left" class="table_header_bold" >
             <?
             if ($chatServer->getPerm($user->id,$chatid)) {
                 if ($chatServer->chatDetail[$chatid]['password']) {
@@ -143,7 +143,7 @@ if (!$chatServer->isActiveUser($user->id,$chatid)) {
             ?>
             <b>Chat - <?=htmlReady($chatServer->chatDetail[$chatid]["name"])?></b>
             </td>
-            <td width="20%" align="right" class="topic" >
+            <td width="20%" align="right" class="table_header_bold" >
             <?
             if ($chatServer->getPerm($user->id,$chatid)){
                 if ($chatServer->chatDetail[$chatid]['users'][$user->id]['log']){

@@ -553,7 +553,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
                     ."</form>";
                 $content .= " </td></tr>";
             }
-            $content .= "\n<tr><td class=\"topic\" align=\"left\">" . htmlReady($this->tree->root_name) ." </td></tr>";
+            $content .= "\n<tr><td class=\"table_header_bold\" align=\"left\">" . htmlReady($this->tree->root_name) ." </td></tr>";
             $content .= "\n<tr><td class=\"blank\" align=\"left\">" . htmlReady($this->root_content) ." </td></tr>";
             $content .= "\n</table>";
             return $content;
@@ -561,7 +561,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
         $range_object = RangeTreeObject::GetInstance($item_id);
         $name = ($range_object->item_data['type']) ? $range_object->item_data['type'] . ": " : "";
         $name .= $range_object->item_data['name'];
-        $content .= "\n<tr><td class=\"topic\" align=\"left\" style=\"font-size:10pt\">" . htmlReady($name) ." </td></tr>";
+        $content .= "\n<tr><td class=\"table_header_bold\" align=\"left\" style=\"font-size:10pt\">" . htmlReady($name) ." </td></tr>";
         if (is_array($range_object->item_data_mapping)){
             $content .= "\n<tr><td class=\"blank\" align=\"left\" style=\"font-size:10pt\">";
             foreach ($range_object->item_data_mapping as $key => $value){
@@ -595,7 +595,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
         if (!$this->isItemAdmin($item_id)){
             if ($categories->numRows){
                 while($categories->nextRow()){
-                    $content .= "\n<tr><td class=\"topic\" style=\"font-size:10pt\">" . formatReady($categories->getField("name")) . "</td></tr>";
+                    $content .= "\n<tr><td class=\"table_header_bold\" style=\"font-size:10pt\">" . formatReady($categories->getField("name")) . "</td></tr>";
                     $content .= "\n<tr><td class=\"blank\" style=\"font-size:10pt\">" . formatReady($categories->getField("content")) . "</td></tr>";
                 }
             } else {
@@ -690,10 +690,10 @@ class StudipRangeTreeViewAdmin extends TreeView{
             $content .= "\n<form name=\"cat_form_$item_id\" action=\"" . URLHelper::getLink($this->getSelf("cmd=UpdateCat&item_id=$item_id")) . "\" method=\"POST\">";
             $content .= CSRFProtection::tokenTag();
             while($cat_snap->nextRow()){
-                $content .= "\n<tr><td class=\"topic\"><input type=\"TEXT\" style=\"width:90%;font-size:8pt;border:0px\" size=\"30\"  name=\"cat_name[". $cat_snap->getField("kategorie_id")
+                $content .= "\n<tr><td class=\"table_header_bold\"><input type=\"TEXT\" style=\"width:90%;font-size:8pt;border:0px\" size=\"30\"  name=\"cat_name[". $cat_snap->getField("kategorie_id")
                         . "]\" value=\"" . htmlReady($cat_snap->getField("name")) . "\"><input type=\"HIDDEN\" name=\"cat_prio["
                         . $cat_snap->getField("kategorie_id"). "]\" value=\"" . htmlReady($cat_snap->getField("priority")) . "\"></td>"
-                        . "<td class=\"topic\" width=\"10%\" align=\"right\">";
+                        . "<td class=\"table_header_bold\" width=\"10%\" align=\"right\">";
                 if ($cat_snap->pos && $cat_snap->getField("kategorie_id") != "new_entry"){
                     $content .= "<a href=\"". URLHelper::getLink($this->getSelf("cmd=OrderCat&direction=up&item_id=$item_id&cat_id=" . $cat_snap->getField("kategorie_id")))
                             . "\">" . Assets::img('icons/16/yellow/arr_2up.png', array('class' => 'text-top', 'title' => _("Datenfeld nach oben"))) .

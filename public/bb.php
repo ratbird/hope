@@ -40,7 +40,7 @@ include ('lib/include/header.php');   // Output of Stud.IP head
      ?>
 
     <table cellspacing="0" cellpadding="0" border="0" width="100%">
-    <tr><td class="topic" colspan=2><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" width="5" height="5" border="0"><b><?=_("Der geheime Bilderbrowser")?></b></td></tr>
+    <tr><td class="table_header_bold" colspan=2><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" width="5" height="5" border="0"><b><?=_("Der geheime Bilderbrowser")?></b></td></tr>
     <tr><td class="blank" colspan=2><br><br><?=_("Unsch&ouml;n dass wir uns hier sehen... diese Seite ist das geheime Easteregg von Stud.IP. Wenn es jemand hierher geschafft hat, der nicht zum Team geh&ouml;rt, dann k&uuml;ndige ich.")?><br><br>
     <i>Cornelis</i><br><br>
     <?

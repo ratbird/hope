@@ -93,7 +93,7 @@ list-style-position:outside;list-style-type:none;">
         <noscript>
             <div id="user_<?= $m['user_id']?>" style="float:left; margin-right: 10px; width: 110px;" align="left" valign="top">
                 <div id="user_opt_<?= $m['user_id'] ?>">
-                    <div class="blue_gradient" style="text-align: center"><?= _('Optionen') ?></div>
+                    <div class="table_header_bold" style="text-align: center"><?= _('Optionen') ?></div>
                     <?= $this->render_partial('course/studygroup/_members_options.php') ?>
                 </div>
             </div>
@@ -101,7 +101,7 @@ list-style-position:outside;list-style-type:none;">
 
         <div id="user_<?= $m['user_id'] ?>" style="float:left; margin-right: 10px; width: 0px;" align="left" valign="top">
             <div id="user_opt_<?= $m['user_id'] ?>" style="display: none">
-                <div class="blue_gradient" style="text-align: center"><?= _('Optionen') ?></div>
+                <div class="table_header_bold" style="text-align: center"><?= _('Optionen') ?></div>
                 <?= $this->render_partial('course/studygroup/_members_options.php') ?>
             </div>
         </div>

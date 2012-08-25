@@ -4,7 +4,7 @@
 
 <table class="default">
     <tr>
-        <td class="topic" >
+        <td class="table_header_bold" >
             <?= _('Allgemeiner Chatraum') ?></b>
         </td>
     </tr>
@@ -17,7 +17,7 @@
         <td class="blank">&nbsp;</td>
     </tr>
     <tr>
-        <td class="topic" >
+        <td class="table_header_bold" >
             <?= _('Persönlicher Chatraum') ?>
         </td>
     </tr>
@@ -33,7 +33,7 @@
 <? if (!empty($active_user_chats) || !empty($hidden_user_chats)): ?>
     <? SkipLinks::addIndex(_('Chaträume anderer NutzerInnen'), 'chat_user'); ?>
     <tr>
-        <td class="topic" >
+        <td class="table_header_bold" >
             <?= _('Chaträume anderer NutzerInnen') ?>
         </td>
     </tr>
@@ -55,7 +55,7 @@
 <? if (!empty($active_sem_chats)): ?>
     <? SkipLinks::addIndex(_('Chaträume für Veranstaltungen'), 'chat_sem'); ?>
     <tr>
-        <td class="topic" >
+        <td class="table_header_bold" >
             <?= _('Chaträume für Veranstaltungen') ?>
         </td>
     </tr>
@@ -72,7 +72,7 @@
 <? if (!empty($active_inst_chats)): ?>
     <? SkipLinks::addIndex(_('Chaträume für Einrichtungen'), 'chat_inst'); ?>
     <tr>
-        <td class="topic" >
+        <td class="table_header_bold" >
             <?= _('Chaträume für Einrichtungen') ?>
         </td>
     </tr>

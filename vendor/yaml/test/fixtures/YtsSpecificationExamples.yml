@@ -943,7 +943,7 @@ yaml: |
     color: black 
   --- 
   bearing: !!ball 
-    material: steel 
+    material: table_header 
 ruby: | 
   y = YAML::Stream.new 
   y.add( { 'pool' => 
@@ -952,7 +952,7 @@ ruby: |
   ) 
   y.add( { 'bearing' =>  
     YAML::PrivateType.new( 'ball', 
-      { 'material' => 'steel' } ) } 
+      { 'material' => 'table_header' } ) } 
   ) 
 documents: 2 
  

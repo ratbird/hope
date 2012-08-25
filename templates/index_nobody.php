@@ -7,7 +7,7 @@
 <? endif; ?>
 <table class="index_box">
     <tr>
-        <td colspan="2" class="topic">
+        <td colspan="2" class="table_header_bold">
             &nbsp;<b><?= htmlentities($GLOBALS['UNI_NAME_CLEAN']) ?></b>
         </td>
     </tr>

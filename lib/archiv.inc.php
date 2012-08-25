@@ -62,8 +62,8 @@ function dump_sem($sem_id, $print_view = false)
     $sem = Seminar::getInstance($sem_id);
 
     $dump  = '<table width="100%" border="1" cellpadding="2" cellspacing="0">';
-    $dump .= '<tr><td colspan="2" align="left" class="topic">';
-    $dump .= '<h1 class="topic">&nbsp;' . htmlReady($seminar['Name'], 1, 1) . '</h1>';
+    $dump .= '<tr><td colspan="2" align="left" class="table_header_bold">';
+    $dump .= '<h1 class="table_header_bold">&nbsp;' . htmlReady($seminar['Name'], 1, 1) . '</h1>';
     $dump .= '</td></tr>' . "\n";
 
     // Helper function that dumps into a single table row
@@ -241,8 +241,8 @@ function dump_sem($sem_id, $print_view = false)
             if (!empty($scm['content'])) {
                 $dump .= '<br>';
                 $dump .= '<table width="100%" border="1" cellpadding="2" cellspacing="0">';
-                $dump .= ' <tr><td align="left" class="topic">';
-                $dump .= '<h2 class="topic">&nbsp;' . htmlReady($scm['tab_name']) . '</h2>';
+                $dump .= ' <tr><td align="left" class="table_header_bold">';
+                $dump .= '<h2 class="table_header_bold">&nbsp;' . htmlReady($scm['tab_name']) . '</h2>';
                 $dump .= '</td></tr>' . "\n";
                 $dump .= '<tr><td align="left" width="100%"><br>'. formatReady($scm['content'], 1, 1) .'<br></td></tr>' . "\n";
                 $dump .= '</table>' . "\n";
@@ -255,8 +255,8 @@ function dump_sem($sem_id, $print_view = false)
         if ($lit) {
             $dump .= '<br>';
             $dump .= '<table width="100%" border="1" cellpadding="2" cellspacing="0">';
-            $dump .= '<tr><td align="left" class="topic">';
-            $dump .= '<h2 class="topic">&nbsp;' . _('Literaturlisten') . '</h2>';
+            $dump .= '<tr><td align="left" class="table_header_bold">';
+            $dump .= '<h2 class="table_header_bold">&nbsp;' . _('Literaturlisten') . '</h2>';
             $dump .= '</td></tr>' . "\n";
             $dump .= '<tr><td align="left" width="100%"><br>'. $lit .'<br></td></tr>' . "\n";
             $dump .= '</table>' . "\n";
@@ -296,8 +296,8 @@ function dump_sem($sem_id, $print_view = false)
         if (count($dbresult) > 0) {
             $dump .= '<br>';
             $dump .= '<table width="100%" border="1" cellpadding="2" cellspacing="0">';
-            $dump .= '<tr><td align="left" colspan="3" class="topic">';
-            $dump .= '<h2 class="topic">&nbsp;' . _('Dateien:') . '</h2>';
+            $dump .= '<tr><td align="left" colspan="3" class="table_header_bold">';
+            $dump .= '<h2 class="table_header_bold">&nbsp;' . _('Dateien:') . '</h2>';
             $dump .= '</td></tr>' . "\n";
 
             foreach ($dbresult as $row) {
@@ -351,8 +351,8 @@ function dump_sem($sem_id, $print_view = false)
             //haben wir in der Personengattung ueberhaupt einen Eintrag?
             if (count($users) > 0) {
                 $dump .= '<table width="100%" border="1" cellpadding="2" cellspacing="0">';
-                $dump .= '<tr><td align="left" colspan="3" class="topic">';
-                $dump .= '<h2 class="topic">&nbsp;' . get_title_for_status($key, count($users), $sem_type) . '</h2>';
+                $dump .= '<tr><td align="left" colspan="3" class="table_header_bold">';
+                $dump .= '<h2 class="table_header_bold">&nbsp;' . get_title_for_status($key, count($users), $sem_type) . '</h2>';
                 $dump .= '</td></tr>' . "\n";
                 $dump .= '<th width="30%">' . _('Name') . '</th>';
                 $dump .= '<th width="10%">' . _('Forenbeiträge') . '</th>';
@@ -448,8 +448,8 @@ function dumpScheduleTable($data, $title)
  */
 function dumpDateTableHeader($title)
 {
-    $dump  = '<tr><td colspan="2" align="left" class="topic">';
-    $dump .= '<h2 class="topic">&nbsp;' . htmlReady($title) . '</h2>';
+    $dump  = '<tr><td colspan="2" align="left" class="table_header_bold">';
+    $dump .= '<h2 class="table_header_bold">&nbsp;' . htmlReady($title) . '</h2>';
     $dump .= '</td></tr>' . "\n";
 
     return $dump;

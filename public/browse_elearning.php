@@ -93,7 +93,7 @@ if ($ELEARNING_INTERFACE_ENABLE)
     ?>
     <table cellspacing="0" cellpadding="0" border="0" width="100%">
         <tr>
-            <td class="topic" colspan="3">&nbsp;</td>
+            <td class="table_header_bold" colspan="3">&nbsp;</td>
         </tr>
         <tr>
             <td class="blank" colspan="3">&nbsp;

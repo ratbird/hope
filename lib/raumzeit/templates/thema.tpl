@@ -4,7 +4,7 @@
 use Studip\Button, Studip\LinkButton;
 ?>
 <TR>
-    <TD width="10%" class="steel" nowrap>
+    <TD width="10%" class="table_header" nowrap>
         <A name="<?=$tpl['issue_id']?>" />
         <INPUT type="checkbox" name="themen[]" value="<?=$tpl['issue_id']?>"<?=$tpl['selected']?>>
         <? if ($_SESSION['issue_open'][$tpl['issue_id']]) { ?>
@@ -16,7 +16,7 @@ use Studip\Button, Studip\LinkButton;
         <? } ?>
         </A>
     </TD>
-    <TD width="70%" nowrap class="steel">
+    <TD width="70%" nowrap class="table_header">
         <FONT size="-1">
         <? if ($_SESSION['issue_open'][$tpl['issue_id']]) { ?>
             <A class="tree" href="<?= URLHelper::getLink('?cmd=close&open_close_id='. $tpl['issue_id'] .'#'. $tpl['issue_id']) ?>">
@@ -27,7 +27,7 @@ use Studip\Button, Studip\LinkButton;
             </A>
         </FONT>
     </TD>
-    <TD width="20%" align="right" class="steel" nowrap>
+    <TD width="20%" align="right" class="table_header" nowrap>
         <? if (!$tpl['first']) { ?>
         <A href="<?= URLHelper::getLink('?newPriority='. ($tpl['priority'] - 1) .'&issueID='. $tpl['issue_id'] .'&cmd=changePriority') ?>">
             <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/yellow/arr_2up.png" border="0" class="text-bottom">

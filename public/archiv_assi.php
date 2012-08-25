@@ -223,7 +223,7 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
 <table width="100%" border=0 cellpadding=0 cellspacing=0>
     <? if($perm->have_perm('admin')) : ?>
     <tr>
-        <td class="topic" colspan=2><b>&nbsp;
+        <td class="table_header_bold" colspan=2><b>&nbsp;
         <?
         echo $SEM_TYPE[$seminar['status']]["name"], ": ", htmlReady(substr($seminar['Name'], 0, 60));
         if (strlen($seminar['Name']) > 60)
@@ -527,7 +527,7 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
 
     <table width="100%" border="0" cellpadding="0" cellspacing="0">
     <tr>
-        <td class="topic" colspan=2> <b><?=_("Die Veranstaltung wurde archiviert.")?></b>
+        <td class="table_header_bold" colspan=2> <b><?=_("Die Veranstaltung wurde archiviert.")?></b>
         </td>
     </tr>
     <tr>
@@ -545,7 +545,7 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
     ?>
     <table width="100%" border="0" cellpadding="0" cellspacing="0">
     <tr>
-        <td class="topic" colspan=2><b><?=_("Keine Veranstaltung zum Archivieren gew&auml;hlt")?></b>
+        <td class="table_header_bold" colspan=2><b><?=_("Keine Veranstaltung zum Archivieren gew&auml;hlt")?></b>
         </td>
     </tr>
     <tr>

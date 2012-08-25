@@ -18,7 +18,7 @@
 
     <table class="default">
       <? foreach ($news as $sem_titel => $data) : ?>
-        <tr class="blue_gradient">
+        <tr class="table_header_bold">
           <td colspan="2" style="font-weight: bold;">
             <a href="<?= URLHelper::getLink('seminar_main.php?again=yes&auswahl=' . $data[0]['range_id']) ?>">
               <?= htmlReady($sem_titel) ?>

@@ -18,7 +18,7 @@
     </tr>
     <? foreach ($studydegrees as $abschluss_id => $studydegree) : ?>
     <tbody class="<?= count($studydegree['profession'])?'':'empty' ?> collapsed ">
-    <tr class="steel header-row">
+    <tr class="table_header header-row">
         <td class="toggle-indicator"><? if (count($studydegree['profession']) < 1): ?><?=$abschluss_id+1 ?>. <?= htmlReady($studydegree['name']) ?> <? else: ?> <a class="toggler" href="#"><?=$abschluss_id+1 ?>. <?= htmlReady($studydegree['name']) ?> </a><? endif; ?></td>
         <td> <?= $studydegree['count_user'] ?> </td>
         <td width="20">

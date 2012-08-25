@@ -34,7 +34,7 @@ use Studip\Button, Studip\LinkButton;
 function printSiteTitle($semester = NULL){
     $html = "<table border=0 class=blank align=center cellspacing=0 cellpadding=0 width=\"100%\">\n"
           . "   <tr valign=top align=center>\n"
-          . "    <td class=topic align=left colspan=\"2\">\n"
+          . "    <td class=table_header_bold align=left colspan=\"2\">\n"
           . "     " . Assets::img('icons/16/white/seminar.png', array('class' => 'text-top', 'title' =>_('Veranstaltungsübersicht erstellen'))) . "\n"
           . "     &nbsp;<b>"._("Veranstaltungsübersicht erstellen:")."</b>\n"
           . "     <font size=\"-1\">$semester</font>\n"
@@ -318,7 +318,7 @@ function createInputBox($text, $value, $name, $class, $size, $additionaltext = N
  * @returns string          the <td> head
  */
 function createSeminarHeadTD($text, $align = "left"){
-    $html = "        <td class=\"steel\" height=\"26\" align=\"".$align."\" style=\"vertical-align:bottom;\" ><font size=\"-1\"><b>\n"
+    $html = "        <td class=\"table_header\" height=\"26\" align=\"".$align."\" style=\"vertical-align:bottom;\" ><font size=\"-1\"><b>\n"
           . "         &nbsp;".$text."\n"
           . "        </font></b></td>\n";
     return $html;

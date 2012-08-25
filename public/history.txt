@@ -368,7 +368,7 @@ __01.10.2001 v 0.6.0 beta 4__
 - freies Verwalten von Kategorien auf der persönlichen Homepage (Codename Extrawurst) eingefügt
 - mystudip eingefügt
 - Stud.IP Messenger eingefügt (beta)
-- Fluid 'n' Steel Optik eingeführt
+- Fluid 'n' table_header Optik eingeführt
 - Ersetzen von Buttons durch Grafikbuttons begonnen
 - Detailverbesserungen am Seminar-Browser
 - Neue Reiteroptik

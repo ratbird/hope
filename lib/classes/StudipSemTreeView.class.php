@@ -145,7 +145,7 @@ class StudipSemTreeView extends TreeView {
     function getItemContent($item_id){
         $content = "\n<table width=\"90%\" cellpadding=\"2\" cellspacing=\"0\" align=\"center\" style=\"font-size:10pt\">";
         if ($item_id == "root"){
-            $content .= "\n<tr><td class=\"topic\" align=\"left\">" . htmlReady($this->tree->root_name) ." </td></tr>";
+            $content .= "\n<tr><td class=\"table_header_bold\" align=\"left\">" . htmlReady($this->tree->root_name) ." </td></tr>";
             $content .= "\n<tr><td class=\"table_row_even\" align=\"left\">" . htmlReady($this->root_content) ." </td></tr>";
             $content .= "\n</table>";
             return $content;

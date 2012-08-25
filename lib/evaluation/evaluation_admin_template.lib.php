@@ -333,7 +333,7 @@ class EvalTemplateGUI {
 
      $trA = new HTM( "tr" );
      $tdA = new HTM( "td" );
-     $tdA->attr( "class", "topic" );
+     $tdA->attr( "class", "table_header_bold" );
      $tdA->attr ("align","left");
      if( $onthefly ) {
     $tdA->html( _("<b>Freie Antworten definieren</b>") );
@@ -815,7 +815,7 @@ class EvalTemplateGUI {
 
      $trA = new HTM( "tr" );
      $tdA = new HTM( "td" );
-     $tdA->attr( "class", "topic" );
+     $tdA->attr( "class", "table_header_bold" );
      $tdA->attr( "align","left" );
      $tdA->html( "<b>" . ( strstr($this->getPageCommand(), "create")
                ? _("Freitextvorlage erstellen")

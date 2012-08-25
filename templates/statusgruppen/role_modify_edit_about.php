@@ -33,11 +33,11 @@ $style = "style=\"background-image: url('". Assets::image_path('forumstrich.gif'
             ?>
         <table cellspacing="0" cellpadding="1" border="0" class="blank" width="90%">
             <tr>
-                <td align="left" colspan="4" class="topic">
+                <td align="left" colspan="4" class="table_header_bold">
                     &nbsp;<b><?= _("Daten für diese Funktion") ?></b>
                 </td>
                 <td class="blank">&nbsp;</td>
-                <td class="topic">
+                <td class="table_header_bold">
                     &nbsp;<b><?=_("Standarddaten")?></b>
                 </td>
             <?

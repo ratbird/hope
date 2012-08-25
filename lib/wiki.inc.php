@@ -693,7 +693,7 @@ function listPages($mode, $sortby = NULL) {
         echo "<tr><td class=\"blank\" colspan=\"2\">";
         echo "<table id=\"main_content\" role=\"main\" width=\"99%\" border=\"0\"  cellpadding=\"2\" cellspacing=\"0\" align=\"center\">";
         echo "<tr height=28>";
-        $s = "<td class=\"steel\" width=\"%d%%\" align=\"%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"1\" height=\"20\">%s</td>";
+        $s = "<td class=\"content_title\" width=\"%d%%\" align=\"%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"1\" height=\"20\">%s</td>";
         printf($s, 3, "left", "&nbsp;");
         printf($s, 39,"left",  "<font size=-1><b><a href=\"".URLHelper::getLink("$selfurl&sortby=$titlesortlink")."\">"._("Titel")."</a></b></font>");
         printf($s, 10,"center",  "<font size=-1><b><a href=\"".URLHelper::getLink("$selfurl&sortby=$versionsortlink")."\">"._("Änderungen")."</a></b></font>");
@@ -820,7 +820,7 @@ function searchWiki($searchfor, $searchcurrentversions, $keyword, $localsearch) 
     }
     echo "</font></td></tr>";
     echo "<tr height=28>";
-    $s = "<td class=\"steel\" width=\"%d%%\" align=\"%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"1\" height=\"20\"><font size=-1><b>%s</b></font></td>";
+    $s = "<td class=\"table_header\" width=\"%d%%\" align=\"%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"1\" height=\"20\"><font size=-1><b>%s</b></font></td>";
     printf($s, 1, "left", "&nbsp;");
     printf($s, 10,"left",  _("Seite"));
     printf($s, 64,"left",  _("Treffer"));

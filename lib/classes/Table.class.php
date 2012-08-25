@@ -456,7 +456,7 @@ class Table {
 *
 * The container table usually contains:
 * - a 100%-width blank table
-* - An header (class topic) with name of seminar, name of admin area etc.
+* - An header (class table_header_bold) with name of seminar, name of admin area etc.
 * - The content area
 * - a blank footer row
 *
@@ -482,7 +482,7 @@ class ContainerTable extends Table {
 
     function headerRow($header, $styles=array()) {
         if (!$styles["class"]) {
-            $styles["class"]="topic";
+            $styles["class"]="table_header_bold";
         }
         if (!$styles["colspan"]) {
             $styles["colspan"]="2";

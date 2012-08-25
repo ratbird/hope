@@ -61,7 +61,7 @@ $graphtypes = array(
         </colgroup>
         <thead>
             <tr>
-                <th class="topic" colspan="3">
+                <th class="table_header_bold" colspan="3">
                     <?= Assets::img('icons/16/white/test.png') ?>
                     <?= _('Auswertungskonfiguration') ?>
                 </th>

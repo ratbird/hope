@@ -1,7 +1,7 @@
 <table class="default">
     <thead>
         <tr>
-            <td colspan="4" class="topic"><?= $description ?></td>
+            <td colspan="4" class="table_header_bold"><?= $description ?></td>
         </tr>
     </thead>
     <tbody>

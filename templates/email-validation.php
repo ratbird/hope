@@ -1,3 +1,3 @@
-<div class="topic"><b><?= _('Bestätigung der E-Mail-Adresse') ?></b></div>
+<div class="table_header_bold"><b><?= _('Bestätigung der E-Mail-Adresse') ?></b></div>
 
 <?= $message ?>

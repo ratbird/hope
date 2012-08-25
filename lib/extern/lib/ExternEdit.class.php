@@ -59,7 +59,7 @@ class ExternEdit {
     function ExternEdit (&$config, $form_values = "", $faulty_values = "",
              $edit_element = "") {
 
-        $this->css = new CssClassSwitcher("", "topic");
+        $this->css = new CssClassSwitcher("", "table_header_bold");
         $this->config =& $config;
         $this->form_values = $form_values;
         $this->edit_element = $edit_element;

@@ -14,11 +14,11 @@ page_open(array('sess' => 'Seminar_Session', 'auth' => 'Seminar_Default_Auth', '
 function head($headline, $red=False) {
 $class = '';
 if($red)
-    $class = 'write';
+    $class = '_red';
 ?>
 <div align="center">
 <table width="70%" border=0 cellpadding=0 cellspacing=0>
-<tr><td class="topic<?=$class ?>" colspan=3 align="left">
+<tr><td class="table_header_bold<?=$class ?>" colspan=3 align="left">
  <?=Assets::img('icons/16/white/mail.png', array('class' => 'text-top')) ?>
  <b>&nbsp;<?= $headline; ?></b>
 </td></tr>

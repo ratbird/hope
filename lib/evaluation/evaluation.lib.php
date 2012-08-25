@@ -67,7 +67,7 @@ class EvalCommon {
 
     $tdTitle = new HTML("td");
     if ($iconURL) {
-       $tdTitle->addAttr ("class","topic");
+       $tdTitle->addAttr ("class","table_header_bold");
     } else {
        $tdTitle->addAttr ("class","content_body");
     }

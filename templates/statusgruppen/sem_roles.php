@@ -6,7 +6,7 @@
 $roles_pos = 1;
 if (!isset($all_roles)) $all_roles = $roles;
 if (is_array($roles)) foreach ($roles as $id => $role) :
-    $topic_class = 'blue_gradient';
+    $topic_class = 'table_header_bold';
     if ($edit_role == $id) $topic_class = 'red_gradient';
 ?>
 <a name="<?= $id ?>" ></a>

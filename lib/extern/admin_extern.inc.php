@@ -351,7 +351,7 @@ if (!$have_config) {
     echo ">&nbsp;&nbsp;&nbsp;&nbsp;</td>\n";
     echo "<td" . $css_switcher->getFullClass() . ">\n";
 
-    $css_switcher_2 = new CssClassSwitcher("", "topic");
+    $css_switcher_2 = new CssClassSwitcher("", "table_header_bold");
 
     foreach ($module_types_ordered as $order) {
         $module_type = $GLOBALS['EXTERN_MODULE_TYPES'][$order];

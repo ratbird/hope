@@ -241,9 +241,9 @@ if (is_array($non_group_buddies))
 
 <?  //Kopfzeile
     if ($my_messaging_settings["show_only_buddys"])
-        echo "\n<td class=\"topic\" width=\"50%\" align=\"center\"><b>" . _("Kontakte") . "</b></td></tr>\n";
+        echo "\n<td class=\"table_header_bold\" width=\"50%\" align=\"center\"><b>" . _("Kontakte") . "</b></td></tr>\n";
     else
-        echo "\n<td class=\"topic\" width=\"50%\" align=\"center\"><b>" . _("Kontakte") . "</b></td><td class=\"topic\" width=\"50%\" align=\"center\"><b>" . _("andere Nutzer") . "</b></td></tr>\n";
+        echo "\n<td class=\"table_header_bold\" width=\"50%\" align=\"center\"><b>" . _("Kontakte") . "</b></td><td class=\"table_header_bold\" width=\"50%\" align=\"center\"><b>" . _("andere Nutzer") . "</b></td></tr>\n";
     echo "<tr>";
 
     //Buddiespalte

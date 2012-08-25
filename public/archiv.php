@@ -484,12 +484,12 @@ if ($_SESSION['archiv_data']["perform_search"]) {
 
 
         echo "<br><br><table class=\"blank\"  width=99% align=center cellspacing=0 border=0>\n";
-    echo "<tr height=28><td  width=\"1%\" class=\"steel\"><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=1 height=20>&nbsp; </td>\n";
-        echo "<td  width=\"29%\" class=\"steel\" align=center valign=bottom><b><a href=\"". URLHelper::getLink("?sortby=Name") ."\">" . _("Name") . "</a></b></td>\n";
-        echo "<td  width=\"20%\" class=\"steel\" align=center valign=bottom><b><a href=\"". URLHelper::getLink("?sortby=dozenten") ."\">" . _("DozentIn") . "</a></b></td>\n";
-        echo "<td  width=\"20%\" class=\"steel\" align=center valign=bottom><b><a href=\"". URLHelper::getLink("?sortby=institute") ."\">" . _("Einrichtungen") . "</a></b></td>\n";
-        echo "<td  width=\"20%\" class=\"steel\" align=center valign=bottom><b><a href=\"". URLHelper::getLink("?sortby=semester") ."\">" . _("Semester") . "</a></b></td>\n";
-        echo "<td  width=\"10%\" class=\"steel\" colspan=3 align=center valign=bottom><b>" . _("Aktion") . "</b></td></tr>\n";
+    echo "<tr height=28><td  width=\"1%\" class=\"table_header\"><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=1 height=20>&nbsp; </td>\n";
+        echo "<td  width=\"29%\" class=\"table_header\" align=center valign=bottom><b><a href=\"". URLHelper::getLink("?sortby=Name") ."\">" . _("Name") . "</a></b></td>\n";
+        echo "<td  width=\"20%\" class=\"table_header\" align=center valign=bottom><b><a href=\"". URLHelper::getLink("?sortby=dozenten") ."\">" . _("DozentIn") . "</a></b></td>\n";
+        echo "<td  width=\"20%\" class=\"table_header\" align=center valign=bottom><b><a href=\"". URLHelper::getLink("?sortby=institute") ."\">" . _("Einrichtungen") . "</a></b></td>\n";
+        echo "<td  width=\"20%\" class=\"table_header\" align=center valign=bottom><b><a href=\"". URLHelper::getLink("?sortby=semester") ."\">" . _("Semester") . "</a></b></td>\n";
+        echo "<td  width=\"10%\" class=\"table_header\" colspan=3 align=center valign=bottom><b>" . _("Aktion") . "</b></td></tr>\n";
 
         $c=0;
         foreach ($results as $result) {

@@ -91,7 +91,7 @@ function parse_window($long_msg, $separator="§", $titel, $add_msg="")
     ?>
     <table border="0" bgcolor="#000000" align="center" cellspacing="0" cellpadding="2" width="70%">
         <tr>
-            <td class="topic"><b><? echo $titel?></b></td>
+            <td class="table_header_bold"><b><? echo $titel?></b></td>
         </tr>
        <tr>
            <td class="blank">&nbsp;</td>

@@ -6,7 +6,7 @@ use Studip\Button, Studip\LinkButton;
 <div align="center">
   <table style="width: 80%;">
     <tr>
-      <td class="topic">
+      <td class="table_header_bold">
         <?= Assets::img('icons/16/white/info.png') ?>
         <b>
           <?= _('Stud.IP Web-Migrator') ?>

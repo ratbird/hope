@@ -78,7 +78,7 @@ function get_chat_status($chatid){
     ?>
     <table width="98%" border="0" bgcolor="white" cellspacing="0" cellpadding="0" align="center">
         <tr>
-            <td width="80%" align="left" class="topic">
+            <td width="80%" align="left" class="table_header_bold">
             <?
             if ($chatServer->getPerm($user->id,$chatid)){
                 ?>
@@ -95,7 +95,7 @@ function get_chat_status($chatid){
             ?>
             <b>Chat - <?=htmlReady($chatServer->chatDetail[$chatid]["name"])?></b>
             </td>
-            <td width="20%" align="right" class="topic" >
+            <td width="20%" align="right" class="table_header_bold" >
             <?
             if ($chatServer->getPerm($user->id,$chatid)){
                 $chat_log = $_SESSION['chat_logs'][$chatid][count($_SESSION['chat_logs'][$chatid])-1];
@@ -136,7 +136,7 @@ function get_chat_nicklist($chatid){
         <td align="center">
             <table align="center" border="0" cellpadding="1" cellspacing="1" width="100%">
                 <tr>
-                    <td class="topic" align="center"><b>Nicklist</b></td>
+                    <td class="table_header_bold" align="center"><b>Nicklist</b></td>
                 </tr>
                 <?
                 $is_admin = $chatServer->getPerm($user->id,$chatid);

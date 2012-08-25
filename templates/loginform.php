@@ -22,7 +22,7 @@ $(function () {
 <table class="index_box logintable">
   <tbody>
     <tr>
-      <td class="topic">
+      <td class="table_header_bold">
         <?= Assets::img('icons/16/white/door-enter.png', array('alt' => _('Anmelden'))) ?>
         <strong><?=_("Stud.IP - Login")?></strong>
       </td>

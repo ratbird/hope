@@ -63,7 +63,7 @@ include ('lib/include/header.php');   // Output of Stud.IP head
 ?>
 <table width ="100%" border="0" cellspacing="0" cellpadding="0">
 <tr>
-    <td class="topic"><b>&nbsp;<?=_("Herzlich Willkommen")?></b>
+    <td class="table_header_bold"><b>&nbsp;<?=_("Herzlich Willkommen")?></b>
     </td>
 </tr>
 

@@ -30,10 +30,10 @@ class StudIPTemplateEngine
         }
         // echo "\n<tr><td>";
         if (strlen($img) > 0){
-            printf("\n<tr><td class=\"topic\" width=\"99%%\">&nbsp;<img src=\"$img\" border=\"0\" align=\"texttop\"><b>&nbsp;&nbsp;");
+            printf("\n<tr><td class=\"table_header_bold\" width=\"99%%\">&nbsp;<img src=\"$img\" border=\"0\" align=\"texttop\"><b>&nbsp;&nbsp;");
         }
         else {
-            print("\n<tr><td class=\"topic\" width=\"99%%\">&nbsp;<b>&nbsp;&nbsp;");
+            print("\n<tr><td class=\"table_header_bold\" width=\"99%%\">&nbsp;<b>&nbsp;&nbsp;");
         }
         printf($title);
         printf("</b></td></tr></table>");

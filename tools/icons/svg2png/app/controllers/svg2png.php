@@ -56,6 +56,8 @@ class Svg2pngController extends Trails_Controller
 
             $extras = $this->convert(self::EXTRAS_FILE, $this->size, $color);
             foreach ($extras as $file => $icon) {
+                unset($extras[$file]);
+                $file = reset(explode('.', $file));
                 $extras[$file] = $this->border($icon);
             }
         }

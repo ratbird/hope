@@ -23,7 +23,7 @@ class Svg2pngController extends Trails_Controller
         if (Request::isPost()) {
             $this->input = $this->inputs[Request::int('input')];
 
-            $this->size  = Request::int('size');
+            $this->size  = Request::int('size') ?: 16;
             $this->color = Request::get('color', false);
             if ($this->color && $this->color[0] != '#') {
                 $this->color = '#' . $this->color;
@@ -118,15 +118,17 @@ class Svg2pngController extends Trails_Controller
         imagesavealpha($ovl, true);
         imagealphablending($ovl, true);
 
-        for ($y = 0; $y < imagesy($img); $y++) {
-            for ($x = 0; $x < imagesx($img); $x++) {
-                $pixel = imagecolorat($ovl, $x, $y);
-                $alpha = ($pixel & 0x7f000000) >> 24;
-                if ($alpha != 127) {
-                    imagesetpixel($img, $x, $y, $pixel);
-                }
-            }
-        }
+        imagecopy($img, $ovl, 0, 0, 0, 0, imagesx($img), imagesy($img));
+
+        // for ($y = 0; $y < imagesy($img); $y++) {
+        //     for ($x = 0; $x < imagesx($img); $x++) {
+        //         $pixel = imagecolorat($ovl, $x, $y);
+        //         $alpha = ($pixel & 0x7f000000) >> 24;
+        //         if ($alpha != 127) {
+        //             imagesetpixel($img, $x, $y, $pixel);
+        //         }
+        //     }
+        // }
 
         ob_start();
         imagepng($img);

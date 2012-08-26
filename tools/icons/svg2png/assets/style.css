@@ -56,7 +56,7 @@ input[disabled] {
     transition: all 0.5s;        
 }
 
-.files label input[type=checkbox] {
+.files label input[name="extras[]"][type=checkbox] {
     left: -9999px;
     position: absolute;
     visibility: hidden;

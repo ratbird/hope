@@ -46,6 +46,13 @@
         <label for="extra-color">Zusatz-Farbe</label>
         <input type="color" name="extra-color" id="extra-color" value="<?= @$extra_color ?>">
     </div>
+    
+    <div>
+        <label>
+            <input type="checkbox" id="all">
+            Alle markieren
+        </label>
+    </div>
 
     <div class="files">
     <? foreach ($files as $file => $png): ?>

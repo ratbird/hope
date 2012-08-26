@@ -14,4 +14,8 @@ jQuery(function ($) {
         var value = $(this).val().replace(/\D/, '');
         $(this).val(value);
     });
+
+    $('#all').click(function () {
+        $('.files input:checkbox').attr('checked', this.checked);
+    });
 });

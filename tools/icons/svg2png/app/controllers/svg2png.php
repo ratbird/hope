@@ -11,7 +11,8 @@ class Svg2pngController extends Trails_Controller
 
         $this->inputs = array(
             1 => '../Vektor/16px/Vector-Iconset 16x16.svg',
-            2 => '../Vektor/32px/Vector-Iconset 32x32.svg',
+            2 => '../Vektor/16px/Vector-Pfeile 16x16.svg',
+            3 => '../Vektor/32px/Vector-Iconset 32x32.svg',
         );
 
         $this->extra_color = Request::get('extra-color', '#f00');
@@ -59,11 +60,13 @@ class Svg2pngController extends Trails_Controller
             }
         }
 
+        $directory = $this->size . '/' . $this->color . '/';
+
         foreach ($this->files as $file => $png) {
-            $zip->addFromString($file, $png);
+            $zip->addFromString($directory . $file, $png);
             if (in_array($file, $selected)) {
                 foreach ($extras as $prefix => $extra) {
-                    $zip->addFromString($prefix . '/' . $file, $this->overlay($png, $extra));
+                    $zip->addFromString($directory . $prefix . '/' . $file, $this->overlay($png, $extra));
                 }
             }
         }
@@ -89,6 +92,7 @@ class Svg2pngController extends Trails_Controller
 
         $icons = array();
         foreach ($converter->extractItems(true) as $id => $icon) {
+            $id = str_replace('_x5F_', '_', $id);
             $file = sprintf('%s.png', $id ?: 'icon');
 
             $i = 1;

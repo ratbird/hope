@@ -32,7 +32,7 @@ a.toolbar, a:link.toolbar, a:visited.toolbar {
   font-size:9px;
 }
 a:hover, a:active, a:hover.index, a:active.index, a:hover.tree {
-  color:#ff3333;
+  color:;
   text-decoration:none;
 }
 a:hover.toolbar { color:#eeeeee; }
@@ -321,7 +321,7 @@ tr.sortable th.sortdesc {
 #layout_infobox { width:250px; }
 #layout_wrapper {
   clear:both;
-  min-width:900px;
+  min-width:800px;
   min-height:100%;
   height:auto !important;
   height:100%;
@@ -1520,6 +1520,37 @@ div.wikitoc_editlink {
 }
 span.wikitoc_editlink { font-size:75%; }
 span.wikitoc_toggler { font-size:0.8em; }
+@media only screen and (max-width: 640px) {
+  #layout_wrapper { min-width:0; }
+  .index_container {
+    margin:none;
+    width:auto !important;
+  }
+  .logintable {
+    background:#e2e2e2 !important;
+    margin:0 auto;
+    text-align:center;
+    width:auto !important;
+  }
+  .logintable > tbody > tr > td { padding:5px !important; }
+  .logintable tr:first-child td {
+    padding:3px 5px !important;
+    text-align:left;
+  }
+  .logintable table { width:100%; }
+  .logintable table td:first-child { text-align:right; }
+  .logintable table td[colspan="2"] { text-align:center; }
+}
+@media only screen and (max-width: 320px) {
+  #barTopStudip img {
+    height:33px;
+    margin-top:5px;
+    width:153px;
+  }
+  #layout_page { margin:15px 5px; }
+  .logintable { width:auto !important; }
+  .logintable h1, .logintable p { display:none; }
+}
 body, input, textarea {
   color:#000000;
   font-family:"Helvetica Neue", "Helvetica", Arial, sans-serif;

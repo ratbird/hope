@@ -1,0 +1,45 @@
+@media only screen and (max-width : 640px) {
+    #layout_wrapper { min-width: 0; }
+    .index_container {
+        margin: none;
+        width: auto !important;
+    }
+    .logintable {
+        background: @alternating-color-odd !important;
+        margin: 0 auto;
+        text-align: center;
+        width: auto !important;
+    }
+    .logintable > tbody > tr > td {
+        padding: 5px !important;
+    }
+    .logintable tr:first-child td {
+        padding: 3px 5px !important;
+        text-align: left;
+    }
+    .logintable table {
+        width: 100%;
+    }
+    .logintable table td:first-child {
+        text-align: right;
+    }
+    .logintable table td[colspan="2"] {
+        text-align: center;
+    }
+}
+@media only screen and (max-width : 320px) {
+    #barTopStudip img {
+        height: 33px;
+        margin-top: 5px;
+        width: 153px;
+    }
+    #layout_page {
+        margin: 15px 5px;
+    }
+    .logintable {
+        width: auto !important;
+    }
+    .logintable h1, .logintable p {
+        display: none;
+    }
+}

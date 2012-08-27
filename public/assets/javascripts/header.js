@@ -1,7 +1,16 @@
 STUDIP.HeaderMagic = {
     top: null,
     headerHeight: null,
+    lastScrollEvent: Date.now(),
+
     scroll: function () {
+        // throttle scroll handler
+        var now = Date.now();
+        if (now - STUDIP.HeaderMagic.lastScrollEvent < 30) {
+            return;
+        }
+        STUDIP.HeaderMagic.lastScrollEvent = now;
+
         if (STUDIP.HeaderMagic.top === null) {
             STUDIP.HeaderMagic.top = jQuery("#barBottomContainer").offset().top;
         }

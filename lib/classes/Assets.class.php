@@ -138,9 +138,24 @@ class Assets {
     if (!$source)
       return '';
 
+    $parts = explode('/', $source);
+
+    if ($parts[0] == "icons") {
+    	//$parts[1] = "32";
+    	$opt['size'] = $parts[1];
+    	if ($GLOBALS['auth']->auth['devicePixelRatio'] == 2) 
+    		$parts[1] = $parts[1] * 2;
+    	$source = implode("/", $parts);
+    }
+  
     $opt = Assets::parse_attributes($opt);
 
     $opt['src'] = Assets::image_path($source);
+
+    if ((isset($opt['@2x'])) && ($GLOBALS['auth']->auth['devicePixelRatio'] == 2)) {
+    	 $opt['src'] = preg_replace('/\.[^.]+$/', '@2x$0', $opt['src']);
+    	 unset ($opt['@2x']);
+    }
 
     if (!isset($opt['alt']))
       $opt['alt'] = ucfirst(current(explode('.', basename($opt['src']))));
@@ -150,9 +165,12 @@ class Assets {
       list($opt['width'], $opt['height']) = explode('@', $opt['size'], 2);
       unset($opt['size']);
     }
-
+   
     return Assets::tag('img', $opt);
   }
+
+
+
 
 
   /**

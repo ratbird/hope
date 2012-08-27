@@ -295,7 +295,7 @@ if (is_array($non_group_buddies))
                         list($position,$gruppe,$fullname,$zeit,$tmp_online_uname,$statusgruppe_id,$tmp_user_id)=$group_buddies[$index];
                         //list($fullname, $zeit, $tmp_online_uname, $tmp_user_id) = $n_buddies[$index];
                         if ($gruppe != $lastgroup) {// Ueberschrift fuer andere Gruppe
-                            printf("\n<tr><td colspan=\"7\" align=\"middle\" class=\"content_seperator\"><a href=\"contact.php?view=gruppen&filter=%s\"><font size=\"2\" color=\"#555555\">%s</font></a></td></tr>",$statusgruppe_id, htmlready($gruppe));
+                            printf("\n<tr><td colspan=\"7\" align=\"middle\" class=\"blue_gradient\"><a href=\"contact.php?view=gruppen&filter=%s\"><font size=\"2\" color=\"#555555\">%s</font></a></td></tr>",$statusgruppe_id, htmlready($gruppe));
                             $groupcount++;
                             if ($groupcount > 10) //irgendwann gehen uns die Farben aus
                                 $groupcount = 1;

@@ -141,10 +141,9 @@ class Assets {
     $parts = explode('/', $source);
 
     if ($parts[0] == "icons") {
-    	//$parts[1] = "32";
     	$opt['size'] = $parts[1];
     	if ($GLOBALS['auth']->auth['devicePixelRatio'] == 2) 
-    		$parts[1] = $parts[1] * 2;
+    		$parts[1] = $parts[1] * 1;
     	$source = implode("/", $parts);
     }
   

@@ -21,10 +21,6 @@
         <div>
             <label for="color">Farbe</label>
             <input type="color" name="color" id="color" value="<?= @$color ?>">
-            <label>
-                <input type="checkbox" name="color-trigger" <? if (empty($color)) echo 'checked'; ?>>
-                Keine Änderung
-            </label>
         </div>
 
         <div>

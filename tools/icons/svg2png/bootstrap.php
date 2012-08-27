@@ -1,4 +1,11 @@
 <?
+function invert_color($color) {
+    return sprintf('#%06X', 0xffffff - hexdec(substr($color, 1)));
+}
+function split_color($color) {
+    return array_map('hexdec', str_split(substr($color, 1), 2));
+}
+
 set_include_path(get_include_path() . PATH_SEPARATOR . realpath('../../../'));
 
 require 'vendor/trails/trails.php';

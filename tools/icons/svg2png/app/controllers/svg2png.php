@@ -20,16 +20,17 @@ class Svg2pngController extends Trails_Controller
             $this->extra_color = '#' . $this->extra_color;
         }
 
+        $this->size  = Request::int('size') ?: 16;
+        $this->color = Request::get('color') ?: '#000000';
+        if ($this->color[0] != '#') {
+            $this->color = '#' . $this->color;
+        }
+        $this->bgcolor = invert_color($this->color);
+
         if (Request::isPost()) {
             $this->input = $this->inputs[Request::int('input')];
 
-            $this->size  = Request::int('size') ?: 16;
-            $this->color = Request::get('color', false);
-            if ($this->color && $this->color[0] != '#') {
-                $this->color = '#' . $this->color;
-            }
-
-            $this->files = $this->convert($this->input, $this->size, $this->color);
+            $this->files = $this->convert($this->input, $this->size, $this->color, $action === 'download' ? $this->bgcolor : false);
         }
     }
 
@@ -54,7 +55,7 @@ class Svg2pngController extends Trails_Controller
                 $color = '#' . $color;
             }
 
-            $extras = $this->convert(self::EXTRAS_FILE, $this->size, $color);
+            $extras = $this->convert(self::EXTRAS_FILE, $this->size, $color, false);
             foreach ($extras as $file => $icon) {
                 unset($extras[$file]);
                 $file = reset(explode('.', $file));
@@ -87,7 +88,7 @@ class Svg2pngController extends Trails_Controller
         unlink($zip_name);
     }
 
-    private function convert($svg, $size, $color)
+    private function convert($svg, $size, $color, $transparent = false)
     {
         $converter = SVG_Converter::CreateFrom($svg);
         $viewbox   = $converter->getViewBox();
@@ -105,7 +106,7 @@ class Svg2pngController extends Trails_Controller
             $icons[$file] = $icon;
         }
 
-        $files = $converter->convertItems($icons, $size ?: $viewbox, $color);
+        $files = $converter->convertItems($icons, $size ?: $viewbox, $color, $transparent);
 
         return $files;
     }
@@ -132,6 +133,10 @@ class Svg2pngController extends Trails_Controller
         //     }
         // }
 
+        imagetruecolortopalette($img, false, 256);
+        $rgb = split_color($this->bgcolor);
+        imagecolortransparent($img, imagecolorclosestalpha($img, $rgb[0], $rgb[1], $rgb[2], 0x7e));
+
         ob_start();
         imagepng($img);
         $result = ob_get_clean();
@@ -149,31 +154,36 @@ class Svg2pngController extends Trails_Controller
         imagesavealpha($new, true);
         imagealphablending($new, true);
         imagefill($new, 0, 0, IMG_COLOR_TRANSPARENT);
-        $white = imagecolorallocate($new, 0xff, 0xff, 0xff);
 
-        for ($y = 0; $y < imagesy($image); $y++) {
-            for ($x = 0; $x < imagesx($image); $x++) {
+        $rgb = split_color($this->bgcolor);
+        $white  = imagecolorallocatealpha($new, $rgb[0], $rgb[1], $rgb[2], 0x01);
+        $width  = imagesx($image);
+        $height = imagesy($image);
+
+        $w    = 1; // ceil($width / 32);
+        $mask = array();
+        for ($y = -$w; $y <= $w; $y += 1) {
+            for ($v = $w - abs($y), $x = -$v; $x <= $v; $x += 1) {
+                $mask[] = array($x, $y);
+            }
+        }
+
+        for ($y = 0; $y < $height; $y++) {
+            for ($x = 0; $x < $width; $x++) {
                 $pixel = imagecolorat($image, $x, $y);
                 $alpha = ($pixel & 0x7f000000) >> 24;
                 if ($alpha != 127) {
-                    if ($x > 0) {
-                        imagesetpixel($new, $x - 1, $y, $white);
-                    }
-                    if ($x < imagesx($image) - 1) {
-                        imagesetpixel($new, $x + 1, $y, $white);
-                    }
-                    if ($y > 0 ) {
-                        imagesetpixel($new, $x, $y - 1, $white);
-                    }
-                    if ($y < imagesy($image) - 1) {
-                        imagesetpixel($new, $x, $y + 1, $white);
+                    foreach ($mask as $v) {
+                        if (($x + $v[0] >= 0 && $x + $v[0] < $width) && ($y + $v[1] >= 0 && $y + $v[1] < $height)) {
+                            imagesetpixel($new, $x + $v[0], $y + $v[1], $white);
+                        }
                     }
                 }
             }
         }
 
-        for ($y = 0; $y < imagesy($image); $y++) {
-            for ($x = 0; $x < imagesx($image); $x++) {
+        for ($y = 0; $y < $height; $y++) {
+            for ($x = 0; $x < $width; $x++) {
                 $pixel = imagecolorat($image, $x, $y);
                 $alpha = ($pixel & 0x7f000000) >> 24;
                 if ($alpha != 127) {

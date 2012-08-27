@@ -1,16 +1,8 @@
 STUDIP.HeaderMagic = {
     top: null,
     headerHeight: null,
-    lastScrollEvent: Date.now(),
 
     scroll: function () {
-        // throttle scroll handler
-        var now = Date.now();
-        if (now - STUDIP.HeaderMagic.lastScrollEvent < 30) {
-            return;
-        }
-        STUDIP.HeaderMagic.lastScrollEvent = now;
-
         if (STUDIP.HeaderMagic.top === null) {
             STUDIP.HeaderMagic.top = jQuery("#barBottomContainer").offset().top;
         }
@@ -34,6 +26,7 @@ STUDIP.HeaderMagic = {
 }
 
 // obere Leiste
-jQuery(function () {
-    jQuery(window.document).bind("scroll", STUDIP.HeaderMagic.scroll).trigger('scroll');
+jQuery(function ($) {
+    var throttled = _.throttle(STUDIP.HeaderMagic.scroll, 30);
+    $(window.document).scroll(throttled).trigger('scroll');
 });

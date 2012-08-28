@@ -3,19 +3,25 @@
 var stack = {},
     originalTitle, favicon_url;
 
-var process_notifications = function (notifications) {
-    stack = {};
+var process_notifications = function (notifications) {    
+    var ul        = $('<ul/>'),
+        changed   = false,
+        new_stack = {};
 
-    $("#notification_list .notification").remove();
     $.each(notifications, function (index, notification) {
-        $("#notification_list > ul").append(notification.html);
+        ul.append(notification.html);
 
-        var id = $('#notification_list .notification:last').data().id;
-        stack[id] = notification;
-
+        var id = $('.notification:last', ul).data().id;
+        new_stack[id] = notification;
+        
+        changed = (changed || !(id in stack));
     });
 
-    STUDIP.PersonalNotifications.update();
+    if (changed || _.values(stack).length !== _values(new_stack).length) {
+        stack = new_stack;
+        $('#notification_list > ul').replaceWith(ul);
+        STUDIP.PersonalNotifications.update();
+    }
 };
 
 STUDIP.PersonalNotifications = {

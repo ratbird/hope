@@ -16,7 +16,10 @@ class PersonalNotifications extends SimpleORMap {
     
     
     static public function add($user_ids, $url, $text, $html_id = null, $avatar = null) {
-        if (!is_array($user_ids) && !count($user_ids)) {
+        if (!is_array($user_ids)) {
+            $user_ids = array($user_ids);
+        }
+        if (!count($user_ids)) {
             return false;
         }
         $notification = new PersonalNotifications();

@@ -47,7 +47,7 @@
         STUDIP.ABSOLUTE_URI_STUDIP = "<?= $GLOBALS['ABSOLUTE_URI_STUDIP'] ?>";
         STUDIP.ASSETS_URL = "<?= $GLOBALS['ASSETS_URL'] ?>";
         String.locale = "<?= htmlReady(strtr($_SESSION['_language'], '_', '-')) ?>";
-        <? if (PersonalNotifications::isActivated()) : ?>
+        <? if (PersonalNotifications::isActivated() && $GLOBALS['perm']->have_perm("autor")) : ?>
         STUDIP.jsupdate_enable = true;
         <? endif ?>
     </script>

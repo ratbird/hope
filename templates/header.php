@@ -59,7 +59,7 @@
     <!-- Dynamische Links ohne Icons -->
     <div id="barBottomright">
         <ul>
-            <? if (PersonalNotifications::isActivated()) : ?>
+            <? if (PersonalNotifications::isActivated() && $GLOBALS['perm']->have_perm("autor")) : ?>
             <? $notifications = PersonalNotifications::getMyNotifications() ?>
             <li id="notification_container">
                 <div id="notification_marker"<?= count($notifications) > 0 ? ' class="alert"' : "" ?> title="<?= _("Benachrichtigungen") ?>">

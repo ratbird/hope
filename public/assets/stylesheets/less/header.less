@@ -87,6 +87,8 @@ div#barBottomright, #layout_footer {
 }
 
 #notification_marker {
+    .border-radius(2px);
+    .transition(all 1s);
     width: 18px;
     margin-top: 0px;
     height: 16px;
@@ -96,51 +98,67 @@ div#barBottomright, #layout_footer {
     line-height: 19px;
     vertical-align: text-top;
     opacity: 0.5;
+    
+    &.alert {
+        opacity: 1;
+        background-color: #f33;
+        font-weight: bold;
+    }
 }
-#notification_marker.alert {
-    opacity: 1;
-    background-color: #f33;
-    font-weight: bold;
-}
-#notification_list {
+div#notification_list {
     display: none;
     left: -155px;
     position: absolute;
     width: 320px;
     max-width: 320px;
-    padding: 3px;
     background-color: #eeeeee;
-    opacity: 0.0;
-    transition-property: opacity;
-    transition-duration: 0.8s;
-    border: thin solid #333333;
-    border-top: none;
+    border-collapse: collapse;
     color: #333333;
     font-size: 0.8em;
+
+    .notification {
+        border: thin solid #333333;
+        border-top: 0;
+        display: block;
+        overflow: hidden;
+        padding: 4px;
+        width: 312px;
+        height: auto;
+        .transition(opacity 0.8s);
+        opacity: 0;
+        
+        &:hover {
+            background-color: #ffffff;
+            .mark_as_read { display: block; }
+        }
+    }
+    img {
+        float: left;
+        margin-right: 0.5em;
+    }
+    a {
+        color: #24437c;
+        display: block;
+        padding: 3px;
+        &:hover { color: #f33; }
+    }
+
+    .mark_as_read {
+        cursor: pointer;
+        display: none;
+        float: right;
+    }
 }
-#notification_list > ul > li {
-    display: block;
-    padding: 4px;
-    width: 300px;
-    max-width: 300px;
-}
-#notification_list > ul > li:hover {
-    background-color: #ffffff;
-}
-#barBottomright #notification_list a {
-    color: #24437c;
-}
-#barBottomright #notification_list a:hover {
-    color: #f33;
-}
-#notification_list .mark_as_read {
-    float: right;
-}
-#notification_container.alert:hover > #notification_list {
-    display: block;
-    opacity: 1.0;
-    transition-property: opacity;
-    transition-duration: 0.8s;
+
+#notification_container.alert:hover {
+    #notification_list {
+        display: block;
+
+        .notification {
+            .transition(opacity 0.3s);
+            opacity: 1;
+        }
+    }
 }
 
 div#barTopFont {

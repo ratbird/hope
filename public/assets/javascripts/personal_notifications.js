@@ -1,49 +1,69 @@
+(function ($) {
+
+var stack = {},
+    originalTitle, favicon_url;
+
+var process_notifications = function (notifications) {
+    stack = {};
+
+    $("#notification_list .notification").remove();
+    $.each(notifications, function (index, notification) {
+        $("#notification_list > ul").append(notification.html);
+
+        var id = $('#notification_list .notification:last').data().id;
+        stack[id] = notification;
+
+    });
+
+    STUDIP.PersonalNotifications.update();
+};
+
 STUDIP.PersonalNotifications = {
-    originalTitle: null,
-    stack: [],
-    newNotifications: function (notifications) {
-        if (STUDIP.PersonalNotifications.originalTitle === null) {
-            STUDIP.PersonalNotifications.originalTitle = window.document.title;
-        }
-        if (jQuery("#notification_marker").length > 0) {
-            jQuery("#notification_marker").text(notifications.length);
-            if (notifications.length > 0) {
-                jQuery("#notification_marker, #notification_container").addClass("alert");
-                window.document.title = "(!) " + STUDIP.PersonalNotifications.originalTitle;
-            } else {
-                jQuery("#notification_marker, #notification_container").removeClass("alert");
-                window.document.title = STUDIP.PersonalNotifications.originalTitle;
-            }
-            jQuery("#notification_list > ul > li").remove();
-            jQuery.each(notifications, function (index, notification) {
-                jQuery("#notification_list > ul").append(notification.html);
-            });
-            STUDIP.PersonalNotifications.stack = notifications;
-        }
-    },
+    newNotifications: function () {},
     checkHTMLids: function () {
-        jQuery.each(STUDIP.PersonalNotifications.stack, function (index, notification) {
+        $.each(stack, function (index, notification) {
             
         });
     },
     markAsRead: function (event) {
-        var id = jQuery(this).attr("id");
-        id = id.substr(id.lastIndexOf("_") + 1);
-        jQuery.ajax({
+        var notification = $(this),
+            id = notification.data().id;
+        $.ajax({
             'url': STUDIP.ABSOLUTE_URI_STUDIP + "dispatch.php/jsupdater/mark_notification_read",
             'data': {
                 'id': id
             },
             'success': function () {
-                jQuery("#notification_" + id).remove();
-                jQuery("#notification_marker").text(jQuery("#notification_list > ul > li").length);
-                if (jQuery("#notification_list > ul > li").length === 0) {
-                    jQuery("#notification_marker, #notification_container").removeClass("alert");
-                }
+                notification.toggle('blind', 'fast', function () {
+                    delete stack[id];
+                    STUDIP.PersonalNotifications.update();
+                });
             }
         });
+    },
+    update: function () {
+        var count = _.values(stack).length;
+        $('#notification_marker').text(count);
+        Notificon(count || '', {favicon: favicon_url});
+        if (count > 0) {
+            $("#notification_marker, #notification_container").addClass("alert");
+            window.document.title = "(!) " + originalTitle;
+        } else {
+            $("#notification_marker, #notification_container").removeClass("alert");
+            window.document.title = originalTitle;
+        }
     }
 };
 
-jQuery(document).bind("mouseover", STUDIP.PersonalNotifications.checkHTMLids);
-jQuery("#notification_list > ul > li").live("click", STUDIP.PersonalNotifications.markAsRead);
+// $(document).bind("mouseover", STUDIP.PersonalNotifications.checkHTMLids);
+$("#notification_list .notification").live('click', STUDIP.PersonalNotifications.markAsRead);
+
+$(document).ready(function () {
+    if ($("#notification_marker").length > 0) {
+        originalTitle = window.document.title;
+        favicon_url = $('link[rel="shortcut icon"]').attr('href');
+        STUDIP.PersonalNotifications.newNotifications = process_notifications;
+    }
+});
+
+}(jQuery));

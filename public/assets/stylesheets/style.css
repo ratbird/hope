@@ -643,7 +643,6 @@ div#barBottomright li,
   font-weight: bold;
 }
 div#notification_list {
-  display: none;
   left: -155px;
   position: absolute;
   width: 320px;
@@ -657,7 +656,6 @@ div#notification_list .notification {
   border: thin solid #333333;
   border-top: 0;
   display: block;
-  overflow: hidden;
   padding: 4px;
   width: 312px;
   height: auto;
@@ -666,7 +664,7 @@ div#notification_list .notification {
   -ms-transition: opacity 0.8s;
   -o-transition: opacity 0.8s;
   transition: opacity 0.8s;
-  opacity: 0;
+  white-space: normal;
 }
 div#notification_list .notification:hover {
   background-color: #ffffff;
@@ -682,6 +680,7 @@ div#notification_list a {
   color: #24437c;
   display: block;
   padding: 3px;
+  margin-right: 20px;
 }
 div#notification_list a:hover {
   color: #f33;
@@ -690,6 +689,9 @@ div#notification_list .mark_as_read {
   cursor: pointer;
   display: none;
   float: right;
+  width: 20px;
+  margin: 0;
+  padding: 2px;
 }
 #notification_container.alert:hover #notification_list {
   display: block;

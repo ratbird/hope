@@ -106,7 +106,7 @@ div#barBottomright, #layout_footer {
     }
 }
 div#notification_list {
-    display: none;
+//    display: none;
     left: -155px;
     position: absolute;
     width: 320px;
@@ -120,12 +120,12 @@ div#notification_list {
         border: thin solid #333333;
         border-top: 0;
         display: block;
-        overflow: hidden;
         padding: 4px;
         width: 312px;
         height: auto;
         .transition(opacity 0.8s);
-        opacity: 0;
+//        opacity: 0;
+        white-space: normal;
         
         &:hover {
             background-color: #ffffff;
@@ -140,6 +140,7 @@ div#notification_list {
         color: #24437c;
         display: block;
         padding: 3px;
+        margin-right: 20px;
         &:hover { color: #f33; }
     }
 
@@ -147,6 +148,9 @@ div#notification_list {
         cursor: pointer;
         display: none;
         float: right;
+        width: 20px;
+        margin: 0;
+        padding: 2px;
     }
 }
 

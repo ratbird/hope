@@ -150,69 +150,71 @@ if (($cmd == "write_chatinv") && (!is_array($admin_chats))) $cmd='';
 
 // send message
 if (Request::submitted('cmd_insert')) {
-
-    $count = 0;
-    if (!empty($sms_data["p_rec"])) {
-        $time = date("U");
-        $tmp_message_id = md5(uniqid("321losgehtes"));
-        if (Request::option('chat_id')) {
-            $count = $msging->insert_chatinv($message, $sms_data["p_rec"], Request::option('chat_id'));
-        } else {
-            $msging->provisonal_attachment_id = Request::option('attachment_message_id');
-            $count = $msging->insert_message($message, $sms_data["p_rec"], FALSE, $time, $tmp_message_id, FALSE, $signature, $messagesubject);
+    if (empty($messagesubject)) {
+        $msg = 'error§' . _('Sie können keine leere Nachricht versenden. Bitte geben Sie zumindest einen Betreff an.');
+    } else {
+        $count = 0;
+        if (!empty($sms_data["p_rec"])) {
+            $time = date("U");
+            $tmp_message_id = md5(uniqid("321losgehtes"));
+            if (Request::option('chat_id')) {
+                $count = $msging->insert_chatinv($message, $sms_data["p_rec"], Request::option('chat_id'));
+            } else {
+                $msging->provisonal_attachment_id = Request::option('attachment_message_id');
+                $count = $msging->insert_message($message, $sms_data["p_rec"], FALSE, $time, $tmp_message_id, FALSE, $signature, $messagesubject);
+            }
         }
-    }
 
-    if ($count) {
+        if ($count) {
 
-        $msg = "msg§";
-        if ($count == "1") $msg .= sprintf(_("Ihre Nachricht an %s wurde verschickt!"), get_fullname_from_uname($sms_data["p_rec"][0],'full',true))."<br>";
-        if ($count >= "2") $msg .= sprintf(_("Ihre Nachricht wurde an %s Empfänger verschickt!"), $count)."<br>";
-        unset($signature);
-        unset($message);
-        $sms_data["sig"] = $my_messaging_settings["addsignature"];
+            $msg = "msg§";
+            if ($count == "1") $msg .= sprintf(_("Ihre Nachricht an %s wurde verschickt!"), get_fullname_from_uname($sms_data["p_rec"][0],'full',true))."<br>";
+            if ($count >= "2") $msg .= sprintf(_("Ihre Nachricht wurde an %s Empfänger verschickt!"), $count)."<br>";
+            unset($signature);
+            unset($message);
+            $sms_data["sig"] = $my_messaging_settings["addsignature"];
 
-        if (Request::option('answer_to')) {
-            $query = "UPDATE message_user
-                      SET answered = 1
-                      WHERE message_id = ? AND user_id = ? AND snd_rec = 'rec'";
-            $statement = DBManager::get()->prepare($query);
-            $statement->execute(array(
-                Request::option('answer_to'), $user->id,
-            ));
+            if (Request::option('answer_to')) {
+                $query = "UPDATE message_user
+                          SET answered = 1
+                          WHERE message_id = ? AND user_id = ? AND snd_rec = 'rec'";
+                $statement = DBManager::get()->prepare($query);
+                $statement->execute(array(
+                    Request::option('answer_to'), $user->id,
+                ));
+            }
         }
-    }
 
-    if ($count < 0) {
-        $msg = 'error§' . _('Ihre Nachricht konnte nicht gesendet werden. Die Nachricht enthält keinen Text.');
-    } else if ((!$count) && (!$group_count)) {
-        $msg = 'error§' . _('Ihre Nachricht konnte nicht gesendet werden.');
-    }
-
-    // redirect to source_page if set
-    $sms_source_page = Request::get('sms_source_page');
-    if (!preg_match('§^([a-zA-Z0-9_-]+\.php)([a-zA-Z0-9/#_?&=-]*)$§',$sms_source_page)) $sms_source_page = '';
-
-    if ($sms_source_page) {
-        $_SESSION['sms_msg'] = $msg;
-        if ($sms_source_page == "about.php") {
-            $header_info = "Location: ".$sms_source_page."?username=".$sms_data["p_rec"][0];
-        } else {
-            $header_info = "Location: ".$sms_source_page;
+        if ($count < 0) {
+            $msg = 'error§' . _('Ihre Nachricht konnte nicht gesendet werden. Die Nachricht enthält keinen Text.');
+        } else if ((!$count) && (!$group_count)) {
+            $msg = 'error§' . _('Ihre Nachricht konnte nicht gesendet werden.');
         }
-        header ($header_info);
-        die;
+
+        // redirect to source_page if set
+        $sms_source_page = Request::get('sms_source_page');
+        if (!preg_match('§^([a-zA-Z0-9_-]+\.php)([a-zA-Z0-9/#_?&=-]*)$§',$sms_source_page)) $sms_source_page = '';
+
+        if ($sms_source_page) {
+            $_SESSION['sms_msg'] = $msg;
+            if ($sms_source_page == "about.php") {
+                $header_info = "Location: ".$sms_source_page."?username=".$sms_data["p_rec"][0];
+            } else {
+                $header_info = "Location: ".$sms_source_page;
+            }
+            header ($header_info);
+            die;
+        }
+
+        unset($sms_data["p_rec"]);
+        unset($sms_data["tmp_save_snd_folder"]);
+        unset($sms_data["tmpreadsnd"]);
+        $sms_data["tmpemailsnd"] = $my_messaging_settings["request_mail_forward"];
+        unset($messagesubject);
+        $attachments = array();
+
+        if($my_messaging_settings["save_snd"] == "1") $sms_data["tmpsavesnd"]  = "1";
     }
-
-    unset($sms_data["p_rec"]);
-    unset($sms_data["tmp_save_snd_folder"]);
-    unset($sms_data["tmpreadsnd"]);
-    $sms_data["tmpemailsnd"] = $my_messaging_settings["request_mail_forward"];
-    unset($messagesubject);
-    $attachments = array();
-
-    if($my_messaging_settings["save_snd"] == "1") $sms_data["tmpsavesnd"]  = "1";
-
 }
 
 // do we answer someone and did we came from somewhere != sms-page

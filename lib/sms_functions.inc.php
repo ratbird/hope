@@ -852,32 +852,24 @@ function show_addrform()
 
 function show_msgform() {
 
-    global $sms_data, $user, $tmp_sms_content, $messagesubject, $message, $quote_username, $quote, $cmd ;
+    global $sms_data, $tmp_sms_content, $messagesubject, $message, $quote_username, $quote, $cmd;
 
-
-
-    $tmp = "&nbsp;<font size=\"-1\"><b>"._("Betreff:")."</b></font>";
-    $tmp .= "<div align=\"center\"><input type=\"text\" ". ($cmd == "write_chatinv" ? "disabled" : "") ." name=\"messagesubject\" value=\"".trim(htmlready($messagesubject))."\"style=\"width: 99%\"></div>";
-
-    $tmp .= "<br>&nbsp;<font size=\"-1\"><b>"._("Nachricht:")."</b></font>";
-    $tmp .= "<textarea class=\"add_toolbar\" name=\"message\" style=\"width: 99%\" cols=80 rows=10 wrap=\"virtual\">\n";
-    if ($quote) { $tmp .= quotes_encode(htmlReady($tmp_sms_content), get_fullname_from_uname($quote_username)); }
-    if ($message) { $tmp .= htmlReady($message); }
-    $tmp .= '</textarea><br><br><div style="text-align: center"><div class="button-group">';
-    // send/ break-button
-    if (sizeof($sms_data["p_rec"]) > "0") {
-        $tmp .= Button::createAccept(_('Abschicken'), 'cmd_insert');
+    $temp_message = '';
+    if ($quote) {
+        $temp_message = quotes_encode(htmlReady($tmp_sms_content), get_fullname_from_uname($quote_username));
+    }
+    if ($message) {
+        $temp_message .= htmlReady($message);
     }
 
-    // cancel redirects to inbox or source-page if set
-    $tmp .= LinkButton::createCancel(_('Abbrechen'), Request::get('sms_source_page')
-        ? URLHelper::getURL(Request::get('sms_source_page'))
-        : URLHelper::getURL('sms_box.php'));
-
-    $tmp .= Button::create(_('Vorschau'), 'cmd');
-    $tmp .= "</div><br><br>";
-    $tmp .= "</div>";
-    return $tmp;
+    $template = $GLOBALS['template_factory']->open('messaging/message_form');
+    $template->cmd            = $cmd;
+    $template->messagesubject = $messagesubject;
+    $template->message        = $temp_message;
+    $template->show_submit    = count($sms_data['p_rec']) > 0;
+    // Redirect to specified page, defaults to message inbox
+    $template->return_to      = Request::get('sms_source_page', 'sms_box.php');
+    return $template->render();
 
 }
 

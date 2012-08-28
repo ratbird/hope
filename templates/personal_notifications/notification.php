@@ -4,7 +4,7 @@
     </a>
     <a href="<?= URLHelper::getLink($notification['url']) ?>">
     <? if ($notification['avatar']): ?>
-        <img src="<?= $notification['avatar'] ?>" alt="">
+        <div class="avatar" style="background-image: url('<?= $notification['avatar'] ?>');"></div>
     <? endif; ?>
         <?= htmlReady($notification['text']) ?>
     </a>

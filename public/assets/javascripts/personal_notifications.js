@@ -17,7 +17,7 @@ var process_notifications = function (notifications) {
         changed = (changed || !(id in stack));
     });
 
-    if (changed || _.values(stack).length !== _values(new_stack).length) {
+    if (changed || _.values(stack).length !== _.values(new_stack).length) {
         stack = new_stack;
         $('#notification_list > ul').replaceWith(ul);
         STUDIP.PersonalNotifications.update();

@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Standard-Stylesheet für Stud.IP im Safire-Design
+  Standard-Stylesheet fï¿½r Stud.IP im Safire-Design
   - use http://www.colorzilla.com/gradient-editor/ for gradients
 *******************************************************************************/
 .clearfix {
@@ -70,11 +70,11 @@ a:hover.toolbar {
 }
 a.link-intern {
   padding-left: 18px;
-  background: url("less/less/../images/icons/16/blue/link-intern.png") no-repeat;
+  background: url("../images/icons/16/blue/link-intern.png") no-repeat;
 }
 a.link-extern {
   padding-left: 18px;
-  background: url("less/less/../images/icons/16/blue/link-extern.png") no-repeat;
+  background: url("../images/icons/16/blue/link-extern.png") no-repeat;
 }
 a img {
   border: 0;
@@ -103,7 +103,7 @@ table.links1 {
   background-color: #fff;
 }
 table.logintable {
-  background-image: url("less/less/../images/login.jpg");
+  background-image: url("../images/login.jpg");
 }
 table.toolbar,
 td.toolbar,
@@ -148,7 +148,7 @@ td.angemeldet {
   border: 1px solid #000;
 }
 td.indexpage {
-  background: #ffffff url("less/less/../images/indexpage.jpg") no-repeat;
+  background: #ffffff url("../images/indexpage.jpg") no-repeat;
   text-align: left;
 }
 td.nix {
@@ -187,7 +187,7 @@ td.tree-indent img {
   vertical-align: bottom;
 }
 td.tree-elbow-line {
-  background: url("less/less/../images/datatree_1.gif") repeat-y;
+  background: url("../images/datatree_1.gif") repeat-y;
   vertical-align: bottom;
   width: 5px;
 }
@@ -271,15 +271,15 @@ table.zebra-big-hover > tbody:nth-child(2n+1) > tr:hover {
   font-weight: bold;
 }
 .collapsable .toggle-indicator a {
-  background: url("less/less/../images/icons/16/blue/arr_1down.png") left center no-repeat;
+  background: url("../images/icons/16/blue/arr_1down.png") left center no-repeat;
   color: #000;
   cursor: pointer;
 }
 .collapsable .empty .toggle-indicator a {
-  background-image: url("less/less/../images/icons/16/grey/arr_1right.png");
+  background-image: url("../images/icons/16/grey/arr_1right.png");
 }
 .collapsable .collapsed .toggle-indicator a {
-  background-image: url("less/less/../images/icons/16/blue/arr_1right.png");
+  background-image: url("../images/icons/16/blue/arr_1right.png");
 }
 .collapsable td.label-cell,
 .collapsable .toggle-indicator a,
@@ -342,7 +342,7 @@ table.zebra-big-hover > tbody:nth-child(2n+1) > tr:hover {
 }
 .category_divider {
   border-top: 1px solid #d0d0d0;
-  background-image: url("less/less/../images/background_stripes.jpg");
+  background-image: url("../images/background_stripes.jpg");
 }
 .blue_gradient {
   background-color: #cedbef;
@@ -373,12 +373,12 @@ table td.printcontent {
   text-align: left;
 }
 table td.printhead2 {
-  background-image: url("less/less/../images/content_object_arr-right.png");
+  background-image: url("../images/content_object_arr-right.png");
   border-top: 1px solid #899ab9;
   padding: 0;
 }
 table td.printhead3 {
-  background-image: url("less/less/../images/content_object_arr-down.png");
+  background-image: url("../images/content_object_arr-down.png");
   border-top: 1px solid #899ab9;
   padding: 0;
 }
@@ -387,11 +387,11 @@ tr.sortable {
   background-color: #d1d1d1;
 }
 tr.sortable th.sortasc {
-  background: transparent url("less/less/../images/dreieck_up.png") no-repeat center left;
+  background: transparent url("../images/dreieck_up.png") no-repeat center left;
   padding-left: 17px;
 }
 tr.sortable th.sortdesc {
-  background: transparent url("less/less/../images/dreieck_down.png") no-repeat center left;
+  background: transparent url("../images/dreieck_down.png") no-repeat center left;
   padding-left: 17px;
 }
 /* styles for settings tables */
@@ -438,13 +438,13 @@ tr.sortable th.sortdesc {
   border-left: 1px solid #ccc;
 }
 .content_title_yellow {
-  background-image: url("less/less/../images/plastic_yellow.jpg");
+  background-image: url("../images/plastic_yellow.jpg");
 }
 .content_title_green {
-  background-image: url("less/less/../images/plastic_green.jpg");
+  background-image: url("../images/plastic_green.jpg");
 }
 .content_title_red {
-  background-image: url("less/less/../images/plastic_red.jpg");
+  background-image: url("../images/plastic_red.jpg");
 }
 .content_seperator,
 .content_seperator td {
@@ -566,7 +566,7 @@ div#barBottomLeft {
   white-space: nowrap;
 }
 div#barBottommiddle {
-  background: url("less/less/../images/header/header_bottom_isolator.png") no-repeat;
+  background: url("../images/header/header_bottom_isolator.png") no-repeat;
   font-weight: bold;
   overflow: hidden;
   padding-left: 40px;
@@ -643,6 +643,7 @@ div#barBottomright li,
   font-weight: bold;
 }
 div#notification_list {
+  display: none;
   left: -155px;
   position: absolute;
   width: 320px;
@@ -665,6 +666,7 @@ div#notification_list .notification {
   -o-transition: opacity 0.8s;
   transition: opacity 0.8s;
   *zoom: 1;
+  opacity: 0;
   white-space: normal;
 }
 div#notification_list .notification:before,
@@ -761,7 +763,7 @@ div#header {
   background-color: #c53d3d;
 }
 #barBottomContainer.public_course div#barBottommiddle {
-  background-image: url('less/less/../images/header/header_bottom_isolator_public.png');
+  background-image: url('../images/header/header_bottom_isolator_public.png');
 }
 #barBottomContainer.public_course #barBottomright:before {
   background: #c53d3d;
@@ -863,7 +865,7 @@ td.infoboxrahmen {
   position: relative;
 }
 .ajax_notification .notification {
-  background: rgba(255, 255, 255, 0.5) url("less/less/../images/ajax_indicator_small.gif") center center no-repeat;
+  background: rgba(255, 255, 255, 0.5) url("../images/ajax_indicator_small.gif") center center no-repeat;
   border: 1px solid #ccc;
   -webkit-border-radius: 8px;
   -moz-border-radius: 8px;
@@ -1035,10 +1037,10 @@ button.button[disabled] {
   width: 16px;
 }
 .button.accept:before {
-  background: url("less/less/../images/icons/16/white/accept.png") no-repeat;
+  background: url("../images/icons/16/white/accept.png") no-repeat;
 }
 .button.cancel:before {
-  background: url("less/less/../images/icons/16/white/decline.png") no-repeat;
+  background: url("../images/icons/16/white/decline.png") no-repeat;
 }
 /****************************************************************************/
 /* Grouped Buttons                                                          */
@@ -1110,13 +1112,13 @@ div.messagebox .messagebox_buttons a.details span {
   display: none;
 }
 div.messagebox .messagebox_buttons a.close {
-  background-image: url("less/less/../images/messagebox/cross_inv.png");
+  background-image: url("../images/messagebox/cross_inv.png");
 }
 div.messagebox .messagebox_buttons a.details {
-  background-image: url("less/less/../images/messagebox/minimize_inv.png");
+  background-image: url("../images/messagebox/minimize_inv.png");
 }
 div.messagebox.details_hidden .messagebox_buttons a.details {
-  background-image: url("less/less/../images/messagebox/maximize_inv.png");
+  background-image: url("../images/messagebox/maximize_inv.png");
 }
 div.messagebox.details_hidden .messagebox_details {
   height: 0;
@@ -1128,37 +1130,37 @@ div.messagebox_details {
 div.messagebox_info {
   color: #000000;
   background-color: #d8e3fc;
-  background-image: url("less/less/less/less/../images/messagebox/info.png");
+  background-image: url("../images/messagebox/info.png");
   border-color: #4b6fcb;
 }
 div.messagebox_success {
   color: #000000;
   background-color: #dcf1da;
-  background-image: url("less/less/less/less/../images/messagebox/success.png");
+  background-image: url("../images/messagebox/success.png");
   border-color: #4b8847;
 }
 div.messagebox_error {
   color: #000000;
   background-color: #ffdddc;
-  background-image: url("less/less/less/less/../images/messagebox/error.png");
+  background-image: url("../images/messagebox/error.png");
   border-color: #c74039;
 }
 div.messagebox_exception {
   color: #d8000c;
   background-color: #ffbaba;
-  background-image: url("less/less/less/less/../images/messagebox/exception.png");
+  background-image: url("../images/messagebox/exception.png");
   border-color: #d8000c;
 }
 div.messagebox_warning {
   color: #b06500;
   background-color: #f7e98e;
-  background-image: url("less/less/less/../images/messagebox/advice.png");
+  background-image: url("../images/messagebox/advice.png");
   border-color: #b06500;
 }
 div.messagebox_modal {
   color: #000;
   background-color: #f3e180;
-  background-image: url("less/less/../images/messagebox/question.png");
+  background-image: url("../images/messagebox/question.png");
   margin: -8px 8px 8px -8px;
 }
 div.messagebox_modal div {
@@ -1307,17 +1309,17 @@ div.clear {
   width: 100%;
 }
 #tabs2 li {
-  background: url("less/less/../images/icons/16/grey/arr_1right.png") no-repeat left center;
+  background: url("../images/icons/16/grey/arr_1right.png") no-repeat left center;
   cursor: pointer;
   line-height: 20pt;
   margin-left: 1em;
   padding-left: 20px;
 }
 #tabs2 li:hover {
-  background-image: url("less/less/../images/icons/16/black/arr_1right.png");
+  background-image: url("../images/icons/16/black/arr_1right.png");
 }
 #tabs2 li.current {
-  background-image: url("less/less/../images/icons/16/red/arr_1down.png");
+  background-image: url("../images/icons/16/red/arr_1down.png");
 }
 #tabs2 a {
   color: #6e6e6e;
@@ -1561,7 +1563,7 @@ table.attribute_table div[container]#deactivated_modules .plugin > div {
   color: #fff;
 }
 #archiv th {
-  background: #b5b5b5 url('less/less/../images/content_seperator.gif');
+  background: #b5b5b5 url('../images/content_seperator.gif');
 }
 /* --- Styles fuer Terminkalender ------------------------------------------- */
 a.day {
@@ -1674,7 +1676,7 @@ td.current {
 }
 td.currenttoday {
   border: 2px solid #DD0000;
-  background-image: url('less/less/../images/celltoday.png');
+  background-image: url('../images/celltoday.png');
 }
 td.month {
   background-color: #f0f0f0;
@@ -1839,7 +1841,7 @@ div.schedule_entry.clickable {
   cursor: pointer;
 }
 div.schedule_entry dl {
-  background: url("less/less/../images/calendar/category_neutral.png") repeat-y top left;
+  background: url("../images/calendar/category_neutral.png") repeat-y top left;
   color: white;
   height: 100%;
   margin: 0;
@@ -1885,7 +1887,7 @@ div.snatch div {
 }
 #schedule_entry_new dl {
   border: 1px solid #5c2d64;
-  background: #7c5783 url("less/less/../images/calendar/category_neutral.png");
+  background: #7c5783 url("../images/calendar/category_neutral.png");
 }
 #schedule_entry_new dt {
   background-color: #5c2d64;
@@ -2096,7 +2098,7 @@ span.wikitoc_toggler {
     display: none;
   }
 }
-/* --- Schrift (Vorgaben: Typ, Größe, Farbe) -------------------------------- */
+/* --- Schrift (Vorgaben: Typ, Grï¿½ï¿½e, Farbe) -------------------------------- */
 body,
 input,
 textarea {
@@ -2147,7 +2149,7 @@ input.placeholder {
 ::-webkit-input-placeholder {
   color: rgba(0, 0, 0, 0.7);
 }
-/* --- Überschriften -------------------------------------------------------- */
+/* --- ï¿½berschriften -------------------------------------------------------- */
 h1.content,
 h2.content,
 h3.content {

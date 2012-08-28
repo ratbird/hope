@@ -199,7 +199,7 @@ function change_general_view() {
                     <td <?=$cssSw->getFullClass()?>>
                         <?
                         echo "<input type=\"CHECKBOX\" name=\"PERSONAL_NOTIFICATIONS_ACTIVATED\" id=\"PERSONAL_NOTIFICATIONS_ACTIVATED\" aria-describedby=\"PERSONAL_NOTIFICATIONS_ACTIVATED_DESCRIPTION\" value=\"1\"";
-                        IF ($user->cfg->getValue("PERSONAL_NOTIFICATIONS_ACTIVATED")) {
+                        IF (PersonalNotifications::isActivated($user->id)) {
                             echo " checked";
                         }
                         echo ">";

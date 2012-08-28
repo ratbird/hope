@@ -346,6 +346,7 @@ if (check_ticket(Request::option('studipticket'))) {
         UserConfig::get($user->id)->store('ACCESSKEY_ENABLE', Request::int('accesskey_enable'));
         UserConfig::get($user->id)->store('SHOWSEM_ENABLE', Request::int('showsem_enable'));
         UserConfig::get($user->id)->store('PERSONAL_NOTIFICATIONS_ACTIVATED', Request::int('PERSONAL_NOTIFICATIONS_ACTIVATED'));
+        Request::int('PERSONAL_NOTIFICATIONS_ACTIVATED') ? PersonalNotifications::activate(): PersonalNotifications::deactivate();
         UserConfig::get($user->id)->store('SKIPLINKS_ENABLE', Request::int('skiplinks_enable'));
     }
 

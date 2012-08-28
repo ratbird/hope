@@ -343,7 +343,7 @@ function releaseLocks($keyword) {
     // Prepare and execute statement that reads all locks
     $query = "SELECT range_id, keyword, chdate
               FROM wiki_locks
-              WHERE range_id = ? AND keyword = ? AND chdate < NOW() - INTERVAL 30 MINUTE";
+              WHERE range_id = ? AND keyword = ? AND chdate < UNIX_TIMESTAMP(NOW() - INTERVAL 30 MINUTE)";
     $statement = DBManager::get()->prepare($query);
     $statement->execute(array($SessSemName[1], $keyword));
 

@@ -664,7 +664,16 @@ div#notification_list .notification {
   -ms-transition: opacity 0.8s;
   -o-transition: opacity 0.8s;
   transition: opacity 0.8s;
+  *zoom: 1;
   white-space: normal;
+}
+div#notification_list .notification:before,
+div#notification_list .notification:after {
+  display: table;
+  content: "";
+}
+div#notification_list .notification:after {
+  clear: both;
 }
 div#notification_list .notification:hover {
   background-color: #ffffff;

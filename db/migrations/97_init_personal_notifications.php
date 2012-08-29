@@ -29,6 +29,15 @@ class InitPersonalNotifications extends Migration
              PRIMARY KEY (`personal_notification_id`,`user_id`),
              KEY `user_id` (`user_id`,`seen`)
         ) ENGINE=MyISAM");
+        
+        $db->execute("
+            INSERT IGNORE INTO `config`
+                (`config_id`, `parent_id`, `field`, `value`, `is_default`,
+                 `type`, `range`, `section`, `position`, `mkdate`, `chdate`,
+                 `description`, `comment`, `message_template`)
+            VALUES
+                (MD5('PERSONAL_NOTIFICATIONS_ACTIVATED'), '', 'PERSONAL_NOTIFICATIONS_ACTIVATED', 1, '1', 'boolean', 'global', 'privacy', '0', UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 'Sollen persönliche Benachrichtigungen aktiviert sein?', '', '')
+        ");
     }
 
     function down()

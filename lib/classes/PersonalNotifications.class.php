@@ -96,6 +96,11 @@ class PersonalNotifications extends SimpleORMap {
     }
     
     static public function isActivated($user_id = null) {
+        $config = Config::GetInstance();
+        if (!$config['PERSONAL_NOTIFICATIONS_ACTIVATED']) {
+            return false;
+        }
+        
         if (!$user_id) {
             $user_id = $GLOBALS['user']->id;
         }

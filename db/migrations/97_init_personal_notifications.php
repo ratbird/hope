@@ -45,5 +45,7 @@ class InitPersonalNotifications extends Migration
         $db = DBManager::get();
         $db->exec("DROP TABLE IF EXISTS `personal_notifications` ");
         $db->exec("DROP TABLE IF EXISTS `personal_notifications_user` ");
+        
+        $db->exec("DELETE FROM `config` WHERE `field` = 'PERSONAL_NOTIFICATIONS_ACTIVATED'");
     }
 }

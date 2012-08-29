@@ -62,7 +62,7 @@ STUDIP.PersonalNotifications = {
 };
 
 // $(document).bind("mouseover", STUDIP.PersonalNotifications.checkHTMLids);
-$("#notification_list .notification").live('click', STUDIP.PersonalNotifications.markAsRead);
+$("#notification_list .notification").live('mousedown', STUDIP.PersonalNotifications.markAsRead);
 
 $(document).ready(function () {
     if ($("#notification_marker").length > 0) {

@@ -32,13 +32,10 @@ STUDIP.PersonalNotifications = {
         });
     },
     markAsRead: function (event) {
-        var notification = $(this),
+        var notification = $(this).closest('.notification'),
             id = notification.data().id;
         $.ajax({
-            'url': STUDIP.ABSOLUTE_URI_STUDIP + "dispatch.php/jsupdater/mark_notification_read",
-            'data': {
-                'id': id
-            },
+            'url': STUDIP.ABSOLUTE_URI_STUDIP + "dispatch.php/jsupdater/mark_notification_read/" + id,
             'success': function () {
                 notification.toggle('blind', 'fast', function () {
                     delete stack[id];
@@ -62,7 +59,7 @@ STUDIP.PersonalNotifications = {
 };
 
 // $(document).bind("mouseover", STUDIP.PersonalNotifications.checkHTMLids);
-$("#notification_list .notification").live('mousedown', STUDIP.PersonalNotifications.markAsRead);
+$("#notification_list .mark_as_read").live('click', STUDIP.PersonalNotifications.markAsRead);
 
 $(document).ready(function () {
     if ($("#notification_marker").length > 0) {

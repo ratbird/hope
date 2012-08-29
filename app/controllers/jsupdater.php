@@ -35,9 +35,13 @@ class JsupdaterController extends AuthenticatedController {
         $this->render_text(json_encode($data));
     }
     
-    public function mark_notification_read_action() {
-        PersonalNotifications::markAsRead(Request::option("id"));
-        $this->render_nothing();
+    public function mark_notification_read_action($id) {
+        PersonalNotifications::markAsRead($id);
+        if (Request::isXhr()) {
+            $this->render_nothing();
+        } else {
+            $this->redirect(Request::get('redirect'));
+        }
     }
 
     /**

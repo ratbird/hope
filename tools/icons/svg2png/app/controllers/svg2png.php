@@ -95,7 +95,7 @@ class Svg2pngController extends Trails_Controller
 
         $icons = array();
         foreach ($converter->extractItems(true) as $id => $icon) {
-            $id = str_replace('_x5F_', '_', $id);
+            $id = str_ireplace('_x5f_', '_', $id);
             $file = sprintf('%s.png', $id ?: 'icon');
 
             $i = 1;

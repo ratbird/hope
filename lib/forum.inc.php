@@ -1059,25 +1059,25 @@ function forum_print_toolbar ($id="") {
                 $print .= CSRFProtection::tokenTag();
             }
             $print .= "<table class=\"blank\" width=\"100%\" border=0 cellpadding=0 cellspacing=0><tr><td class=\"blank\">&nbsp;</td></tr><tr>";
-            $print .= "<td class=\"content_seperator\" valign=\"middle\"><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" height=\"22\" width=\"5\"></td>";
-            $print .= "<td class=\"content_seperator\" valign=\"middle\"><font size=\"-1\">"._("Indikator:")."&nbsp;</font>";
+            $print .= "<td class=\"table_header\" valign=\"middle\"><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" height=\"22\" width=\"5\"></td>";
+            $print .= "<td class=\"table_header\" valign=\"middle\"><font size=\"-1\">"._("Indikator:")."&nbsp;</font>";
 
             if ($forum["indikator"] == "age")
-                $print .=  "</td><td nowrap class=\"table_row_odd_shadow\" valign=\"middle\">&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/red/arr_1right.png\" align=\"absmiddle\"><font size=\"-1\">".$indexvars["age"]["name"]." </font>&nbsp;";
+                $print .=  "</td><td nowrap class=\"table_header_bold\" valign=\"middle\">&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/red/arr_1right.png\" align=\"absmiddle\"><font size=\"-1\">".$indexvars["age"]["name"]." </font>&nbsp;";
             else
-                $print .=  "</td><td nowrap class=\"content_seperator\" valign=\"middle\">&nbsp;<a href=\"".URLHelper::getLink("?flatviewstartposting=$flatviewstartposting&open=$open&indikator=age")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/arr_1right.png\" border=\"0\" align=\"absmiddle\"><font size=\"-1\" color=\"#555555\">".$indexvars["age"]["name"]."</font></a> &nbsp;";
+                $print .=  "</td><td nowrap class=\"table_header\" valign=\"middle\">&nbsp;<a href=\"".URLHelper::getLink("?flatviewstartposting=$flatviewstartposting&open=$open&indikator=age")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/arr_1right.png\" border=\"0\" align=\"absmiddle\"><font size=\"-1\" color=\"#555555\">".$indexvars["age"]["name"]."</font></a> &nbsp;";
             if ($forum["indikator"] == "viewcount")
-                $print .=  "</td><td nowrap class=\"table_row_odd_shadow\" valign=\"middle\">&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/green/arr_1right.png\" align=\"absmiddle\"><font size=\"-1\">".$indexvars["viewcount"]["name"]." </font>&nbsp;";
+                $print .=  "</td><td nowrap class=\"table_header_bold\" valign=\"middle\">&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/green/arr_1right.png\" align=\"absmiddle\"><font size=\"-1\">".$indexvars["viewcount"]["name"]." </font>&nbsp;";
             else
-                $print .=  "</td><td nowrap class=\"content_seperator\" valign=\"middle\">&nbsp;<a href=\"".URLHelper::getLink("?flatviewstartposting=$flatviewstartposting&open=$open&indikator=viewcount")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/arr_1right.png\" border=\"0\" align=\"absmiddle\"><font size=\"-1\" color=\"#555555\">".$indexvars["viewcount"]["name"]."</font></a> &nbsp;";
+                $print .=  "</td><td nowrap class=\"table_header\" valign=\"middle\">&nbsp;<a href=\"".URLHelper::getLink("?flatviewstartposting=$flatviewstartposting&open=$open&indikator=viewcount")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/arr_1right.png\" border=\"0\" align=\"absmiddle\"><font size=\"-1\" color=\"#555555\">".$indexvars["viewcount"]["name"]."</font></a> &nbsp;";
             if ($forum["indikator"] == "rating")
-                $print .=  "</td><td nowrap class=\"table_row_odd_shadow\" valign=\"middle\">&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/yellow/arr_1right.png\" align=\"absmiddle\"><font size=\"-1\">".$indexvars["rating"]["name"]." </font>&nbsp;";
+                $print .=  "</td><td nowrap class=\"table_header_bold\" valign=\"middle\">&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/yellow/arr_1right.png\" align=\"absmiddle\"><font size=\"-1\">".$indexvars["rating"]["name"]." </font>&nbsp;";
             else
-                $print .=  "</td><td nowrap class=\"content_seperator\" valign=\"middle\">&nbsp;<a href=\"".URLHelper::getLink("?flatviewstartposting=$flatviewstartposting&open=$open&indikator=rating")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/arr_1right.png\" border=\"0\" align=\"absmiddle\"><font size=\"-1\" color=\"#555555\">".$indexvars["rating"]["name"]."</font></a> &nbsp;";
+                $print .=  "</td><td nowrap class=\"table_header\" valign=\"middle\">&nbsp;<a href=\"".URLHelper::getLink("?flatviewstartposting=$flatviewstartposting&open=$open&indikator=rating")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/arr_1right.png\" border=\"0\" align=\"absmiddle\"><font size=\"-1\" color=\"#555555\">".$indexvars["rating"]["name"]."</font></a> &nbsp;";
             if ($forum["indikator"] == "score")
-                $print .=  "</td><td nowrap class=\"table_row_odd_shadow\" valign=\"middle\">&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/arr_1right.png\" align=\"absmiddle\"><font size=\"-1\">".$indexvars["score"]["name"]." </font>&nbsp;";
+                $print .=  "</td><td nowrap class=\"table_header_bold\" valign=\"middle\">&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/arr_1right.png\" align=\"absmiddle\"><font size=\"-1\">".$indexvars["score"]["name"]." </font>&nbsp;";
             else
-                $print .=  "</td><td nowrap class=\"content_seperator\" valign=\"middle\">&nbsp;<a href=\"".URLHelper::getLink("?flatviewstartposting=$flatviewstartposting&open=$open&indikator=score")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/arr_1right.png\" border=\"0\" align=\"absmiddle\"><font size=\"-1\" color=\"#555555\">".$indexvars["score"]["name"]."</font></a> &nbsp;";
+                $print .=  "</td><td nowrap class=\"table_header\" valign=\"middle\">&nbsp;<a href=\"".URLHelper::getLink("?flatviewstartposting=$flatviewstartposting&open=$open&indikator=score")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/arr_1right.png\" border=\"0\" align=\"absmiddle\"><font size=\"-1\" color=\"#555555\">".$indexvars["score"]["name"]."</font></a> &nbsp;";
 
             if ($forum["view"] != "tree" && $forum["view"] != "mixed") { // Anzeige der Sortierung nicht in der Themenansicht
                 $print .= "</td><td nowrap class=\"content_seperator\" valign=\"middle\">&nbsp;|&nbsp;&nbsp;<font size=\"-1\">Sortierung:&nbsp;&nbsp;</font>";

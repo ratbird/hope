@@ -1003,18 +1003,18 @@ $anzahl_teilnehmer_kontingent += $temp['teilnehmer_kontingent'];
                         <td class="blank">&nbsp;</td>
                     </tr>
                     <tr>
-                <td class="content_seperator" valign="middle">
+                <td class="table_header" valign="middle">
                             <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" height="22" width="5">
                         </td>
-                <td class="content_seperator" valign="middle">
+                <td class="table_header" valign="middle">
                             <font size="-1"><?=_("Sortierung:")?>&nbsp;</font>
                         </td>
                         <? if (!(Request::option('view_order')) || (Request::option('view_order') == "abc")) { ?>
-                        <td nowrap class="table_row_odd_shadow" valign="middle">
+                        <td nowrap class="table_header_bold" valign="middle">
                             <?= Assets::img('icons/16/red/arr_1right.png', array('class' => 'text-top')) ?>
                             <font size="-1"><?=_("Alphabetisch")?></font>&nbsp;
                         <? } else { ?>
-                        <td nowrap class="content_seperator" valign="middle">
+                        <td nowrap class="table_header" valign="middle">
                             &nbsp;
                             <a href="<?= URLHelper::getLink('?view_order=abc') ?>">
                                 <?= Assets::img('icons/16/grey/arr_1right.png', array('class' => 'text-top')) ?>
@@ -1024,11 +1024,11 @@ $anzahl_teilnehmer_kontingent += $temp['teilnehmer_kontingent'];
                         <? } ?>
                         </td>
                         <? if ((Request::option('view_order')) && (Request::option('view_order') == "date")) { ?>
-                        <td nowrap class="table_row_odd_shadow" valign="middle">
+                        <td nowrap class="table_header_bold" valign="middle">
                             <?= Assets::img('icons/16/red/arr_1right.png', array('class' => 'text-top')) ?>
                             <font size="-1"><?=_("Anmeldedatum")?></font>&nbsp;
                         <? } else { ?>
-                        <td nowrap class="content_seperator" valign="middle">
+                        <td nowrap class="table_header" valign="middle">
                             &nbsp;
                             <a href="<?= URLHelper::getLink('?view_order=date') ?>">
                                 <?= Assets::img('icons/16/grey/arr_1right.png', array('class' => 'text-top')) ?>
@@ -1038,11 +1038,11 @@ $anzahl_teilnehmer_kontingent += $temp['teilnehmer_kontingent'];
                         <? } ?>
                         </td>
                         <? if ((Request::option('view_order')) && (Request::option('view_order') == "active")) { ?>
-                        <td nowrap class="table_row_odd_shadow" valign="middle">
+                        <td nowrap class="table_header_bold" valign="middle">
                             <?= Assets::img('icons/16/red/arr_1right.png', array('class' => 'text-top')) ?>
                             <font size="-1"><?=_("Aktivität")?></font>&nbsp;
                         <? } else { ?>
-                        <td nowrap class="content_seperator" valign="middle">
+                        <td nowrap class="table_header" valign="middle">
                             &nbsp;
                             <a href="<?= URLHelper::getLink('?view_order=active') ?>">
                                 <?= Assets::img('icons/16/grey/arr_1right.png', array('class' => 'text-top')) ?>
@@ -1052,7 +1052,7 @@ $anzahl_teilnehmer_kontingent += $temp['teilnehmer_kontingent'];
                         <? } ?>
                         </td>
 
-                            <td nowrap align="right" class="content_seperator" valign="middle"> <?
+                            <td nowrap align="right" class="table_header" valign="middle"> <?
 
             $query = "SELECT showscore FROM seminare WHERE Seminar_id = ?";
             $statement = DBManager::get()->prepare($query);
@@ -1074,14 +1074,13 @@ $anzahl_teilnehmer_kontingent += $temp['teilnehmer_kontingent'];
             }
         ?>
         </td>
-
-<td><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/balken.jpg"></td>
                     <tr>
                 </table>
         </td>
     </tr>
     <tr>
         <td class="blank" width="100%" colspan="2">
+        <br />
         <a href="<?= URLHelper::getLink('sms_send.php', array('sms_source_page' => 'teilnehmer.php?cid=' . $_SESSION['SessionSeminar'], 'course_id' => $SessSemName[1], 'emailrequest' => 1, 'subject' => $subject, 'filter' => 'all')) ?>">
         <?= Assets::img('icons/16/blue/move_right/mail.png', array('class' => 'text-top')) ?>
         <?=_("Systemnachricht mit Emailweiterleitung an alle Teilnehmer verschicken")?>

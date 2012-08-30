@@ -85,14 +85,14 @@ class PersonalNotifications extends SimpleORMap {
         if (!$user_id) {
             $user_id = $GLOBALS['user']->id;
         }
-        UserConfig::get($user_id)->store("PERSONAL_NOTIFICATIONS_ACTIVATED", "0");
+        UserConfig::get($user_id)->store("PERSONAL_NOTIFICATIONS_DEACTIVATED", "0");
     }
     
     static public function deactivate($user_id = null) {
         if (!$user_id) {
             $user_id = $GLOBALS['user']->id;
         }
-        UserConfig::get($user_id)->store("PERSONAL_NOTIFICATIONS_ACTIVATED", "1");
+        UserConfig::get($user_id)->store("PERSONAL_NOTIFICATIONS_DEACTIVATED", "1");
     }
     
     static public function isActivated($user_id = null) {
@@ -104,7 +104,7 @@ class PersonalNotifications extends SimpleORMap {
         if (!$user_id) {
             $user_id = $GLOBALS['user']->id;
         }
-        return UserConfig::get($user_id)->getValue("PERSONAL_NOTIFICATIONS_ACTIVATED") ? false : true;
+        return UserConfig::get($user_id)->getValue("PERSONAL_NOTIFICATIONS_DEACTIVATED") ? false : true;
     }
     
     public function getLiElement() {

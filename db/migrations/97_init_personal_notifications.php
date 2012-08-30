@@ -30,7 +30,7 @@ class InitPersonalNotifications extends Migration
              KEY `user_id` (`user_id`,`seen`)
         ) ENGINE=MyISAM");
         
-        $db->execute("
+        $db->exec("
             INSERT IGNORE INTO `config`
                 (`config_id`, `parent_id`, `field`, `value`, `is_default`,
                  `type`, `range`, `section`, `position`, `mkdate`, `chdate`,

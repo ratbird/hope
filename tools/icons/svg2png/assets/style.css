@@ -1,8 +1,14 @@
 html, body {
     height: auto;
 }
+h1, h2 {
+    margin: 0;
+    padding: 0;
+}
 fieldset {
     border: 0;
+    margin: 0;
+    padding: 0;
 }
 fieldset label:first-child {
     display: inline-block;
@@ -12,6 +18,9 @@ input[type=text], input[type=color], input[type=number], select {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
+    margin: 1px;
+    padding: 1px;
+    vertical-align: middle;
     width: 150px;
 }
 input[disabled] {

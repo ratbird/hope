@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Standard-Stylesheet fï¿½r Stud.IP im Safire-Design
+  Standard-Stylesheet für Stud.IP im Safire-Design
   - use http://www.colorzilla.com/gradient-editor/ for gradients
 *******************************************************************************/
 .clearfix {
@@ -598,9 +598,6 @@ div#barBottomright:before {
 div#barBottomright ul {
   padding-left: 0;
 }
-div#barBottomright li input {
-  vertical-align: text-bottom;
-}
 div#barBottomright a,
 #layout_footer a {
   color: #dfdfdf;
@@ -621,6 +618,7 @@ div#barBottomright li,
   height: 24px;
   line-height: 24px;
   list-style-type: none;
+  vertical-align: text-bottom;
 }
 #notification_marker {
   -webkit-border-radius: 2px;
@@ -632,13 +630,13 @@ div#barBottomright li,
   -o-transition: all 1s;
   transition: all 1s;
   width: 18px;
-  margin-top: 0px;
+  margin-top: 3px;
   height: 16px;
   font-size: 0.8em;
   border: thin solid white;
   text-align: center;
   line-height: 19px;
-  vertical-align: text-top;
+  vertical-align: text-bottom;
   opacity: 0.5;
 }
 #notification_marker.alert {
@@ -1182,16 +1180,17 @@ input.quicksearchbox {
   border: 1px solid #485979;
   color: #abb7ce;
   font-size: 11px;
-  margin-top: -1px;
   padding-left: 2px;
-  vertical-align: top;
+  vertical-align: text-bottom;
   width: 130px;
+  margin-top: 3px;
+  height: 14px;
 }
 input.quicksearchbutton {
   border: 0;
   margin-right: 10px;
   padding: 0;
-  vertical-align: text-top;
+  vertical-align: text-bottom;
 }
 div.quicksearch_frame {
   background-color: #fff;
@@ -2102,7 +2101,7 @@ span.wikitoc_toggler {
     display: none;
   }
 }
-/* --- Schrift (Vorgaben: Typ, Grï¿½ï¿½e, Farbe) -------------------------------- */
+/* --- Schrift (Vorgaben: Typ, Größe, Farbe) -------------------------------- */
 body,
 input,
 textarea {
@@ -2153,7 +2152,7 @@ input.placeholder {
 ::-webkit-input-placeholder {
   color: rgba(0, 0, 0, 0.7);
 }
-/* --- ï¿½berschriften -------------------------------------------------------- */
+/* --- Überschriften -------------------------------------------------------- */
 h1.content,
 h2.content,
 h3.content {

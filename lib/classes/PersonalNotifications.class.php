@@ -95,9 +95,14 @@ class PersonalNotifications extends SimpleORMap {
         UserConfig::get($user_id)->store("PERSONAL_NOTIFICATIONS_DEACTIVATED", "1");
     }
     
-    static public function isActivated($user_id = null) {
+    static public function isGloballyActivated()
+    {
         $config = Config::GetInstance();
-        if (!$config['PERSONAL_NOTIFICATIONS_ACTIVATED']) {
+        return !empty($config['PERSONAL_NOTIFICATIONS_ACTIVATED']);
+    }
+    
+    static public function isActivated($user_id = null) {
+        if (!PersonalNotifications::isGloballyActivated()) {
             return false;
         }
         

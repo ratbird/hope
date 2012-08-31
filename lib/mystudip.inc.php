@@ -189,6 +189,7 @@ function change_general_view() {
                         </font><br><br>
                     </td>
                 </tr>
+            <? if (PersonalNotifications::isGloballyActivated()): ?>
                 <tr  <? $cssSw->switchClass() ?>>
                     <td  align="right" class="blank" style="border-bottom:1px dotted black;">
                         <label for="PERSONAL_NOTIFICATIONS_ACTIVATED"><?print _("Benachrichtigungen über Javascript");?></label><br>
@@ -207,6 +208,7 @@ function change_general_view() {
                         </font><br><br>
                     </td>
                 </tr>
+            <? endif; ?>
                 <tr <? $cssSw->switchClass() ?>>
                     <td <?=$cssSw->getFullClass()?> colspan=2 align="center">
                         <?=Button::create(_("Übernehmen"), array('title' => _("Änderungen übernehmen"))) ?>&nbsp;

@@ -138,7 +138,7 @@ class Siteinfo {
         switch ($type) {
             case 'update_detail':
                 $query = "UPDATE siteinfo_details
-                          SET rubric_id = :rubric_id, name = :name, :content = :content
+                          SET rubric_id = :rubric_id, name = :name, content = :content
                           WHERE detail_id = :detail_id";
                 $statement = DBManager::get()->prepare($query);
                 $statement->bindValue(':rubric_id', $input['rubric_id'], PDO::PARAM_INT);

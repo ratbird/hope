@@ -545,12 +545,15 @@ class StudipFormat extends TextFormat
         $intern = isLinkIntern($url);
         
         $url = TransformInternalLinks($url);
+
+        $linkmarkup = clone $markup;
+        $linkmarkup->removeMarkup("links");
         
         return sprintf('<a class="%s" href="%s"%s>%s</a>',
             $intern ? "link-intern" : "link-extern",
             $url,
             $intern ? "" : ' target="_blank"',
-            $markup->format($title)
+            $linkmarkup->format($title)
         );
     }
     

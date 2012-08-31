@@ -1,5 +1,5 @@
 <?php
-/* 
+/*
  * Copyright (c) 2011  Rasmus Fuhse
  *
  * This program is free software; you can redistribute it and/or
@@ -34,13 +34,18 @@ class JsupdaterController extends AuthenticatedController {
         $data = $this->recursive_studip_utf8encode($data);
         $this->render_text(json_encode($data));
     }
-    
+
     public function mark_notification_read_action($id) {
         PersonalNotifications::markAsRead($id);
         if (Request::isXhr()) {
             $this->render_nothing();
         } else {
-            $this->redirect(Request::get('redirect'));
+            $notification = new PersonalNotifications($id);
+            if ($notification->url) {
+                $this->redirect(UrlHelper::getUrl($notification->url));
+            } else {
+                $this->render_nothing();
+            }
         }
     }
 

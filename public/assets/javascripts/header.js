@@ -1,32 +1,28 @@
-STUDIP.HeaderMagic = {
-    top: null,
-    headerHeight: null,
+(function ($, document) {
 
-    scroll: function () {
-        if (STUDIP.HeaderMagic.top === null) {
-            STUDIP.HeaderMagic.top = jQuery("#barBottomContainer").offset().top;
-        }
-        if (STUDIP.HeaderMagic.headerHeight === null) {
-            STUDIP.HeaderMagic.headerHeight = jQuery("#header").height();
-        }
-        if (STUDIP.HeaderMagic.top < jQuery(window.document).scrollTop()) {
-            //static
-            jQuery("#barBottomContainer").addClass("fixed");
-            jQuery("#header").css("height", 
-                (jQuery("#barBottomContainer").height() 
-                    + parseInt(jQuery("#barBottomContainer").css("border-top-width"), 10)
-                    + parseInt(jQuery("#barBottomContainer").css("border-bottom-width"), 10)
-                    + STUDIP.HeaderMagic.headerHeight
-                ) + "px");
-        } else {
-            jQuery("#barBottomContainer").removeClass("fixed");
-            jQuery("#header").css("height", STUDIP.HeaderMagic.headerHeight + "px");
-        }
-    }
-}
+    var fold = null,
+        was_below_the_fold = false,
+        scroll = _.throttle(function () {
+            var is_below_the_fold = $(document).scrollTop() > fold;
+            if (is_below_the_fold !== was_below_the_fold) {
+                $('body').toggleClass('fixed', is_below_the_fold);
+                was_below_the_fold = is_below_the_fold;
+            }
+        }, 30);
 
-// obere Leiste
-jQuery(function ($) {
-    var throttled = _.throttle(STUDIP.HeaderMagic.scroll, 30);
-    $(window.document).scroll(throttled).trigger('scroll');
-});
+    STUDIP.HeaderMagic = {
+        enable: function () {
+            $(document).bind('scroll.studip', scroll).trigger('scroll.studip');
+        },
+        disable : function () {
+            $(document).unbind('scroll.studip');
+            $('body').removeClass('fixed');
+        }
+    };
+
+    $(document).ready(function () {
+        fold = $('#barBottomContainer').offset().top;
+        STUDIP.HeaderMagic.enable();
+    });
+
+}(jQuery, window.document));

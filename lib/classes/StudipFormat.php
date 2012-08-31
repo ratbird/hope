@@ -550,7 +550,7 @@ class StudipFormat extends TextFormat
             $intern ? "link-intern" : "link-extern",
             $url,
             $intern ? "" : ' target="_blank"',
-            $title
+            $markup->format($title)
         );
     }
     

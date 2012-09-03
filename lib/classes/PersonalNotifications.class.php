@@ -32,13 +32,13 @@ class PersonalNotifications extends SimpleORMap {
         foreach ($user_ids as $user_id) {
             if (self::isActivated($user_id)) {
                 $db = DBManager::get();
-                $statement = $db->prepare(
+                $insert_statement = $db->prepare(
                     "INSERT INTO personal_notifications_user " .
                     "SET user_id = :user_id, " .
                         "personal_notification_id = :id, " .
                         "seen = '0' " .
                 "");
-                $statement->execute(array(
+                $insert_statement->execute(array(
                     'id' => $notification->getId(), 
                     'user_id' => $user_id
                 ));
@@ -72,13 +72,18 @@ class PersonalNotifications extends SimpleORMap {
         if (!$user_id) {
             $user_id = $GLOBALS['user']->id;
         }
+        $pn = new PersonalNotifications($notification_id);
         $statement = DBManager::get()->prepare(
-            "UPDATE personal_notifications_user " .
-            "SET seen = '1' " .
-            "WHERE user_id = :user_id " .
-                "AND personal_notification_id = :pnid " .
+            "UPDATE personal_notifications_user AS pnu " .
+                "INNER JOIN personal_notifications AS pn ON (pn.personal_notification_id = pnu.personal_notification_id) " .
+            "SET pnu.seen = '1' " .
+            "WHERE pnu.user_id = :user_id " .
+                "AND pn.url = :url " .
         "");
-        return $statement->execute(array('user_id' => $user_id, 'pnid' => $notification_id));
+        return $statement->execute(array(
+            'user_id' => $user_id,
+            'url' => $pn['url']
+        ));
     }
     
     static public function activate($user_id = null) {

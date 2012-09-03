@@ -23,7 +23,7 @@ $available_colors = array(
 <form action="<?= $controller->url_for('svg2png/index') ?>" method="post">
     <fieldset>
         <h2>Einstellungen</h2>
-        
+
         <div>
             <label for="input">Datei</label>
             <select name="input" id="input" required>
@@ -40,6 +40,11 @@ $available_colors = array(
             <label for="size">Größe</label>
             <input type="number" name="size" id="size" value="<?= @$size ?>">
         </div>
+        
+        <div>
+            <label for="suffix">Suffix</label>
+            <input type="text" name="suffix" id="suffix" value="<?= @$suffix ?>">
+        </div>
     </fieldset>
     <fieldset>
         <h2>Farben</h2>
@@ -51,7 +56,7 @@ $available_colors = array(
         </div>
     <? endforeach; ?>
     </fieldset>
-    
+
     <fieldset>
         <div>
             <?= Studip\Button::createAccept('Weiter', 'display') ?>
@@ -85,6 +90,7 @@ $available_colors = array(
 <form action="<?= $controller->url_for('svg2png/download') ?>" method="post">
     <input type="hidden" name="input" value="<?= Request::int('input') ?>">
     <input type="hidden" name="size" value="<?= $size ?>">
+    <input type="hidden" name="suffix" value="<?= $suffix ?>">
 <? foreach ($color['color'] as $index => $col): ?>
     <input type="hidden" name="color[color][<?= $index ?>]" value="<?= $col ?>">
     <input type="hidden" name="color[name][<?= $index ?>]" value="<?= $color['name'][$index] ?>">
@@ -95,7 +101,7 @@ $available_colors = array(
         <label for="extra-color">Zusatz-Farbe</label>
         <input type="color" name="extra-color" id="extra-color" value="<?= @$extra_color ?>">
     </div>
-    
+
     <div>
         <label>
             <input type="checkbox" id="all">

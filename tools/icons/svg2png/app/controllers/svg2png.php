@@ -42,6 +42,7 @@ class Svg2pngController extends Trails_Controller
         }
 
         $this->size  = Request::int('size') ?: 16;
+        $this->suffix = Request::get('suffix', '');
         $this->color = Request::getArray('color') ?: array('name' => array('black'), 'color' => array('#000000'));
         foreach ($this->color['color'] as $index => $color) {
             if ($color[0] != '#') {
@@ -76,13 +77,14 @@ class Svg2pngController extends Trails_Controller
         
         $input = $this->inputs[Request::int('input')];
 
-        $zip_name = sprintf('/tmp/%1$s-%2$ux%2$u%3$s.zip',
+        $zip_name = sprintf('%1$s-%2$ux%2$u%3$s.zip',
                             reset(explode(' ', basename($input, '.svg'))),
                             $this->size,
                             count($this->color['color']) === 1 ? '-' . $this->color['color'][0] : '');
+        $tmp_zip = '/tmp/' . md5($zip_name . uniqid('zip', true));
 
         $zip = new ZipArchive();
-        $zip->open($zip_name, ZipArchive::CREATE);
+        $zip->open($tmp_zip, ZipArchive::CREATE);
 
         $selected = Request::getArray('extras');
         if (!empty($selected)) {
@@ -120,14 +122,14 @@ class Svg2pngController extends Trails_Controller
 
         $this->get_response()
               ->add_header('Content-Type', 'application/zip')
-              ->add_header('Content-Disposition', 'attachment; filename="' . basename($zip_name) . '"')
+              ->add_header('Content-Disposition', 'attachment; filename="' . $zip_name . '"')
               ->add_header('Expires', '0')
               ->add_header('Cache-Control', 'must-revalidate')
               ->add_header('Pragma', 'public')
-              ->add_header('Content-Length', filesize($zip_name));
-        $this->render_text(file_get_contents($zip_name));
+              ->add_header('Content-Length', filesize($tmp_zip));
+        $this->render_text(file_get_contents($tmp_zip));
 
-        unlink($zip_name);
+        unlink($tmp_zip);
     }
 
     private function convert($svg, $size, $color, $transparent = false)
@@ -138,7 +140,7 @@ class Svg2pngController extends Trails_Controller
         $icons = array();
         foreach ($converter->extractItems(true) as $id => $icon) {
             $id = str_ireplace('_x5f_', '_', $id);
-            $file = sprintf('%s.png', $id ?: 'icon');
+            $file = sprintf('%s%s.png', $id ?: 'icon', $this->suffix ?: '');
 
             $i = 1;
             while (isset($files[$file])) {

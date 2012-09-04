@@ -84,7 +84,7 @@ class StudipComments extends SimpleORMap
                   LEFT JOIN user_info USING (user_id)
                   WHERE object_id = ?
                   ORDER BY comments.mkdate";
-        $static = DBManager::get()->prepare($query);
+        $statement = DBManager::get()->prepare($query);
         $statement->execute(array($object_id));
         return $statement->fetchAll(PDO::FETCH_BOTH);
     }

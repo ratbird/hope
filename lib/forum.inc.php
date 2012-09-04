@@ -1080,8 +1080,8 @@ function forum_print_toolbar ($id="") {
                 $print .=  "</td><td nowrap class=\"table_header\" valign=\"middle\">&nbsp;<a href=\"".URLHelper::getLink("?flatviewstartposting=$flatviewstartposting&open=$open&indikator=score")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/arr_1right.png\" border=\"0\" align=\"absmiddle\"><font size=\"-1\" color=\"#555555\">".$indexvars["score"]["name"]."</font></a> &nbsp;";
 
             if ($forum["view"] != "tree" && $forum["view"] != "mixed") { // Anzeige der Sortierung nicht in der Themenansicht
-                $print .= "</td><td nowrap class=\"content_seperator\" valign=\"middle\">&nbsp;|&nbsp;&nbsp;<font size=\"-1\">Sortierung:&nbsp;&nbsp;</font>";
-                $print .= "</td><td nowrap class=\"content_seperator\" valign=\"middle\"><select name=\"sort\" size=\"1\">";
+                $print .= "</td><td nowrap class=\"table_header\" valign=\"middle\">&nbsp;|&nbsp;&nbsp;<font size=\"-1\">Sortierung:&nbsp;&nbsp;</font>";
+                $print .= "</td><td nowrap class=\"table_header\" valign=\"middle\"><select name=\"sort\" size=\"1\">";
                 $tmp["age"] = "Alter";
                 $tmp["viewcount"] = $indexvars["viewcount"]["name"];
                 $tmp["rating"] = $indexvars["rating"]["name"];

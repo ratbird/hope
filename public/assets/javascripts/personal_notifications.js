@@ -20,14 +20,14 @@ var process_notifications = function (notifications) {
     if (changed || _.values(stack).length !== _.values(new_stack).length) {
         stack = new_stack;
         $('#notification_list > ul').replaceWith(ul);
-        STUDIP.PersonalNotifications.update();
     }
+    STUDIP.PersonalNotifications.update();
 };
 
 STUDIP.PersonalNotifications = {
     newNotifications: function () {},
     checkHTMLids: function () {
-        $.each(stack, function (index, notification) {
+        $.each(stack, function (id, notification) {
             
         });
     },

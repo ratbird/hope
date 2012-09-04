@@ -345,8 +345,8 @@ if (check_ticket(Request::option('studipticket'))) {
         $my_studip_settings["startpage_redirect"] = Request::int('personal_startpage');
         UserConfig::get($user->id)->store('ACCESSKEY_ENABLE', Request::int('accesskey_enable'));
         UserConfig::get($user->id)->store('SHOWSEM_ENABLE', Request::int('showsem_enable'));
-        UserConfig::get($user->id)->store('PERSONAL_NOTIFICATIONS_ACTIVATED', Request::int('PERSONAL_NOTIFICATIONS_ACTIVATED'));
-        Request::int('PERSONAL_NOTIFICATIONS_ACTIVATED') ? PersonalNotifications::activate() : PersonalNotifications::deactivate();
+        UserConfig::get($user->id)->store('PERSONAL_NOTIFICATIONS_ACTIVATED', Request::int('personal_notifications_activated'));
+        Request::int('personal_notifications_activated') ? PersonalNotifications::activate() : PersonalNotifications::deactivate();
         UserConfig::get($user->id)->store('SKIPLINKS_ENABLE', Request::int('skiplinks_enable'));
     }
 
@@ -1491,8 +1491,30 @@ if($view == "allgemein") {
     change_general_view();
 }
 
-if($view == "Forum") {
-    require_once('lib/include/forumsettings.inc.php');
+if ($view == 'Forum') {
+    $forumsend = Request::option('forumsend');
+    if ($forumsend=="bla"){
+        $presetview = Request::option('presetview');
+        if ($presetview == 'theme') {
+            $presetview = Request::option('themeview');
+        }
+
+        $forum['neuauf']      = Request::int('neuauf');
+        $forum['rateallopen'] = Request::option('rateallopen');
+        $forum['showimages']  = Request::option('showimages');
+        $forum['sortthemes']  = Request::option('sortthemes');
+        $forum['themeview']   = Request::option('themeview');
+        $forum['presetview']  = $presetview;
+        $forum['shrink']      = Request::int('shrink') * 7 * 24 * 60 * 60; // = 1 Woche
+        $forum['changed']     = 'TRUE';
+    }
+
+    $template = $GLOBALS['template_factory']->open('settings/forum');
+    $template->view  = $view;
+    $template->forum = $forum;
+    echo $template->render();
+
+#    require_once('lib/include/forumsettings.inc.php');
 }
 
 if($view == 'calendar' && get_config('CALENDAR_ENABLE')) {

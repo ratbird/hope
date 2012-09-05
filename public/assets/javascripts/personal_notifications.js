@@ -46,15 +46,18 @@ STUDIP.PersonalNotifications = {
     },
     update: function () {
         var count = _.values(stack).length;
-        $('#notification_marker').text(count);
-        Notificon(count || '', {favicon: favicon_url});
         if (count > 0) {
+            if (count > $('#notification_marker').text() && $("#audio_notification").length > 0) {
+                document.getElementById("audio_notification").play();
+            }
             $("#notification_marker, #notification_container").addClass("alert");
             window.document.title = "(!) " + originalTitle;
         } else {
             $("#notification_marker, #notification_container").removeClass("alert");
             window.document.title = originalTitle;
         }
+        $('#notification_marker').text(count);
+        Notificon(count || '', {favicon: favicon_url});
     }
 };
 

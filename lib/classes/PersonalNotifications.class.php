@@ -100,6 +100,20 @@ class PersonalNotifications extends SimpleORMap {
         UserConfig::get($user_id)->store("PERSONAL_NOTIFICATIONS_DEACTIVATED", "1");
     }
     
+    static public function activateAudioFeedback($user_id = null) {
+        if (!$user_id) {
+            $user_id = $GLOBALS['user']->id;
+        }
+        UserConfig::get($user_id)->store("PERSONAL_NOTIFICATIONS_AUDIO_DEACTIVATED", "0");
+    }
+    
+    static public function deactivateAudioFeedback($user_id = null) {
+        if (!$user_id) {
+            $user_id = $GLOBALS['user']->id;
+        }
+        UserConfig::get($user_id)->store("PERSONAL_NOTIFICATIONS_AUDIO_DEACTIVATED", "1");
+    }
+    
     static public function isGloballyActivated()
     {
         $config = Config::GetInstance();
@@ -115,6 +129,16 @@ class PersonalNotifications extends SimpleORMap {
             $user_id = $GLOBALS['user']->id;
         }
         return UserConfig::get($user_id)->getValue("PERSONAL_NOTIFICATIONS_DEACTIVATED") ? false : true;
+    }
+    
+    static public function isAudioActivated($user_id = null) {
+        if (!PersonalNotifications::isGloballyActivated()) {
+            return false;
+        }
+        if (!$user_id) {
+            $user_id = $GLOBALS['user']->id;
+        }
+        return UserConfig::get($user_id)->getValue("PERSONAL_NOTIFICATIONS_AUDIO_DEACTIVATED") ? false : true;
     }
     
     public function getLiElement() {

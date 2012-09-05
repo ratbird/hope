@@ -72,7 +72,9 @@
                         <? endforeach ?>
                     </ul>
                 </div>
+                <? if (PersonalNotifications::isAudioActivated()) : ?>
                 <audio id="audio_notification" preload="none" src="<?= Assets::url('sounds/30341__junggle__waterdrop24.ogg') ?>"></audio>
+                <? endif ?>
             </li>
             <? endif ?>
             <? if (isset($search_semester_nr)) : ?>

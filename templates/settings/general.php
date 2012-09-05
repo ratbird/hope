@@ -135,6 +135,23 @@ $start_pages = array(
                                        <? if (PersonalNotifications::isActivated($GLOBALS['user']->id)) echo 'checked'; ?>>
                             </td>
                         </tr>
+                        <tr>
+                            <td>
+                                <label for="personal_notifications_audio_activated"><?= _('Audio-Feedback zu Benachrichtigungen') ?></label><br>
+                                <br>
+                                <div id="personal_notifications_audio_activated_description" class="setting_info">
+                                    <?= _('Wenn eine neue Benachrichtigung für Sie rein kommt, ' .
+                                          'werden Sie mittels eines kleinen Plopps darüber in Kenntnis gesetzt ' .
+                                          '- auch wenn Sie gerade einen anderen Browsertab anschauen. Der Plopp ist ' .
+                                          'nur zu hören, wenn Sie die Benachrichtigungen über Javascript aktiviert haben.') ?>
+                                </div>
+                            </td>
+                            <td>
+                                <input type="checkbox" name="personal_notifications_audio_activated" id="personal_notifications_audio_activated"
+                                       aria-describedby="personal_notifications_audio_activated_description" value="1"
+                                       <? if (PersonalNotifications::isAudioActivated($GLOBALS['user']->id)) echo 'checked'; ?>>
+                            </td>
+                        </tr>
                     <? endif; ?>
                     </tbody>
                     <tfoot>

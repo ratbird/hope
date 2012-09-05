@@ -346,7 +346,12 @@ if (check_ticket(Request::option('studipticket'))) {
         UserConfig::get($user->id)->store('ACCESSKEY_ENABLE', Request::int('accesskey_enable'));
         UserConfig::get($user->id)->store('SHOWSEM_ENABLE', Request::int('showsem_enable'));
         UserConfig::get($user->id)->store('PERSONAL_NOTIFICATIONS_ACTIVATED', Request::int('personal_notifications_activated'));
-        Request::int('personal_notifications_activated') ? PersonalNotifications::activate() : PersonalNotifications::deactivate();
+        Request::int('personal_notifications_activated') 
+            ? PersonalNotifications::activate() 
+            : PersonalNotifications::deactivate();
+        Request::int('personal_notifications_audio_activated') 
+            ? PersonalNotifications::activateAudioFeedback() 
+            : PersonalNotifications::deactivateAudioFeedback();
         UserConfig::get($user->id)->store('SKIPLINKS_ENABLE', Request::int('skiplinks_enable'));
     }
 

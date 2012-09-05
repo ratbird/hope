@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Standard-Stylesheet für Stud.IP im Safire-Design
+  Standard-Stylesheet fï¿½r Stud.IP im Safire-Design
   - use http://www.colorzilla.com/gradient-editor/ for gradients
 *******************************************************************************/
 .clearfix {
@@ -2084,7 +2084,7 @@ span.wikitoc_toggler {
     text-align: center;
   }
 }
-@media only screen and (max-width: 320px) {
+@media only screen and (max-width: 480px) {
   #barTopStudip img {
     height: 33px;
     margin-top: 5px;
@@ -2101,7 +2101,7 @@ span.wikitoc_toggler {
     display: none;
   }
 }
-/* --- Schrift (Vorgaben: Typ, Größe, Farbe) -------------------------------- */
+/* --- Schrift (Vorgaben: Typ, Grï¿½ï¿½e, Farbe) -------------------------------- */
 body,
 input,
 textarea {
@@ -2152,7 +2152,7 @@ input.placeholder {
 ::-webkit-input-placeholder {
   color: rgba(0, 0, 0, 0.7);
 }
-/* --- Überschriften -------------------------------------------------------- */
+/* --- ï¿½berschriften -------------------------------------------------------- */
 h1.content,
 h2.content,
 h3.content {

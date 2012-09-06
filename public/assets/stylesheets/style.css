@@ -825,6 +825,9 @@ div#header {
   background-position: -96px 0;
 }
 /* --- Infobox -------------------------------------------------------------- */
+#infobox_content {
+  width: 100%;
+}
 table.infobox td {
   background-color: #dee2e8;
   text-align: left;

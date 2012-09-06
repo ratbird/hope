@@ -43,6 +43,7 @@ STUDIP.PersonalNotifications = {
                 });
             }
         });
+        return false;
     },
     update: function () {
         var count = _.values(stack).length;

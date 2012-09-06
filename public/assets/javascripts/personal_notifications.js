@@ -1,7 +1,9 @@
 (function ($) {
 
 var stack = {},
-    originalTitle, favicon_url;
+    originalTitle,
+    favicon_url,
+    audio_notification = false;
 
 var process_notifications = function (notifications) {    
     var ul        = $('<ul/>'),
@@ -46,10 +48,11 @@ STUDIP.PersonalNotifications = {
         return false;
     },
     update: function () {
-        var count = _.values(stack).length;
+        var count     = _.values(stack).length,
+            old_count = parseInt($('#notification_marker').text(), 10);
         if (count > 0) {
-            if (count > $('#notification_marker').text() && $("#audio_notification").length > 0) {
-                document.getElementById("audio_notification").play();
+            if (count > old_count && audio_notification !== false) {
+                audio_notification.play();
             }
             $("#notification_marker, #notification_container").addClass("alert");
             window.document.title = "(!) " + originalTitle;
@@ -70,6 +73,11 @@ $(document).ready(function () {
         originalTitle = window.document.title;
         favicon_url = $('link[rel="shortcut icon"]').attr('href');
         STUDIP.PersonalNotifications.newNotifications = process_notifications;
+
+        if ($('#audio_notification').length > 0) {
+            audio_notification = $('#audio_notification').get(0);
+            audio_notification.load();
+        }
     }
 });
 

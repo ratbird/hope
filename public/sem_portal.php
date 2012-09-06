@@ -227,7 +227,7 @@ if ($sem_browse_obj->show_result && count($_SESSION['sem_browse_data']['search_r
     $group_by_links = "";
     for ($i = 0; $i < count($sem_browse_obj->group_by_fields); ++$i){
         if($_SESSION['sem_browse_data']['group_by'] != $i){
-            $group_by_links .= "<a href=\"".URLHelper::getLink('?group_by=$i&keep_result_set=1')."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"16\" height=\"20\" border=\"0\">";
+            $group_by_links .= "<a href=\"".URLHelper::getLink('?group_by='.$i.'&keep_result_set=1')."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"16\" height=\"20\" border=\"0\">";
         } else {
             $group_by_links .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/red/arr_1right.png\" border=\"0\" align=\"bottom\">";
         }

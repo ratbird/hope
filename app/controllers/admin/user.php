@@ -338,8 +338,7 @@ class Admin_UserController extends AuthenticatedController
                     if (strlen(Request::get('pass_1')) < 4) {
                         $details[] = _("Das Passwort ist zu kurz. Es sollte mindestens 4 Zeichen lang sein.");
                     } else {
-                        $um->changePassword(Request::get('pass_1'));
-                        $details = explode('§', str_replace(array('msg§', 'info§', 'error§'), '', substr($um->msg, 0, -1)));
+                        $um->changePassword(Request::get('pass_1'));                      
                     }
                 } else {
                     $details[] = _("Bei der Wiederholung des Passwortes ist ein Fehler aufgetreten! Bitte geben Sie das exakte Passwort ein!");
@@ -453,7 +452,7 @@ class Admin_UserController extends AuthenticatedController
             }
             //get message
             $umdetails = explode('§', str_replace(array('msg§', 'info§', 'error§'), '', substr($um->msg, 0, -1)));
-            $details = array_reverse(array_merge((array)$details,(array)$umdetails));
+            $details = array_reverse(array_merge((array)$details,(array)$umdetails));          
             PageLayout::postMessage(Messagebox::info(_('Hinweise:'), $details));
         }
 

@@ -54,7 +54,7 @@ class ProfileNavigation extends Navigation
 
         $hp_txt .= sprintf(' (%s, %s)', $auth->auth['uname'], $auth->auth['perm']);
         $this->setURL($hp_link);
-        $this->setImage('header/profile.png', array('title' => $hp_txt, 'class' => $hp_class));
+        $this->setImage('header/profile.png', array('title' => $hp_txt, 'class' => $hp_class, "@2x" => TRUE));
     }
 
     /**

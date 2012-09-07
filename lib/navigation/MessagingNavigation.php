@@ -47,7 +47,7 @@ class MessagingNavigation extends Navigation
             $tip = _('Sie haben keine alten empfangenen Nachrichten');
         }
 
-        $this->setImage('header/mail.png', array('title' => $tip, 'class' => $mailclass));
+        $this->setImage('header/mail.png', array('title' => $tip, 'class' => $mailclass, "@2x" => TRUE));
     }
 
     /**

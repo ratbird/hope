@@ -28,7 +28,7 @@ class CalendarNavigation extends Navigation
             $planerinfo = _('Stundenplan');
         }
 
-        $this->setImage('header/schedule.png', array('title' => $planerinfo));
+        $this->setImage('header/schedule.png', array('title' => $planerinfo, "@2x" => TRUE));
     }
 
     /**

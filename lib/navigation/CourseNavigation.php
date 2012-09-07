@@ -66,7 +66,7 @@ class CourseNavigation extends Navigation
         parent::__construct($coursetext, $courselink);
 
         if (is_object($user) && !$perm->have_perm('root')) {
-            $this->setImage('header/seminar.png', array('title' => $courseinfo));
+            $this->setImage('header/seminar.png', array('title' => $courseinfo, "@2x" => TRUE));
         }
     }
 

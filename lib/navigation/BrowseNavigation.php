@@ -35,7 +35,7 @@ class BrowseNavigation extends Navigation
         parent::__construct($coursetext, $courselink);
 
         if (!$_SESSION['SessionSeminar']) {
-            $this->setImage('header/seminar.png', array('title' => $courseinfo));
+            $this->setImage('header/seminar.png', array('title' => $courseinfo, "@2x" => TRUE));
         }
     }
 

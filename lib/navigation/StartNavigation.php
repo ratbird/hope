@@ -54,7 +54,7 @@ class StartNavigation extends Navigation
         $homeclass = $vote + $news ? 'new' : '';
         $this->setBadgeNumber($vote + $news);
 
-        $this->setImage('header/home.png', array('title' => $homeinfo, 'class' => $homeclass));
+        $this->setImage('header/home.png', array('title' => $homeinfo, 'class' => $homeclass, "@2x" => TRUE));
     }
 
     /**

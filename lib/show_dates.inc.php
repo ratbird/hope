@@ -574,11 +574,18 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
         while ($termin = $list->nextEvent()) {
             echo '<div role="article">';
             $icon = Assets::img('icons/16/grey/date.png', array('class' => 'text-bottom'));
-            $have_write_permission = ((strtolower(get_class($termin)) == 'seminarevent' && $termin->haveWritePermission())
-                    || (strtolower(get_class($termin)) != 'seminarevent'));
+            $have_write_permission = true;
 
             $zusatz = '';
             if(strtolower(get_class($termin)) == 'seminarevent') {
+                $have_write_permission = $GLOBALS['perm']->have_studip_perm('tutor', $termin->getSeminarId());
+                $singledate = new SingleDate($termin->id);
+                $issues = array_map(array('IssueDB', 'restoreIssue'), (array)$singledate->getIssueIDs());
+                $issue_titles = join('; ', array_map(create_function('$a', 'return $a["title"];'), $issues));
+                if (!$issue_titles) {
+                    $issue_titles = _("Ohne Titel");
+                }
+                $issue_descriptions = join("\n\n", array_map(create_function('$a', 'return $a["description"];'), $issues));
                 $zusatz .= '<a href="'.URLHelper::getLink("seminar_main.php?auswahl=" . $termin->getSeminarId())
                                 . "\"><font size=\"-1\">".htmlReady(mila($termin->getSemName(), 22))
                                 . ' </font></a>';
@@ -604,7 +611,7 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
 
             if (strtolower(get_class($termin)) == 'seminarevent') {
                 //Beschneiden des Titels
-                $titel .= ', ' . htmlReady(mila($termin->getTitle(), $length - 10));
+                $titel .= ', ' . htmlReady(mila($issue_titles, $length));
             } else {
                 //Beschneiden des Titels
                 $titel .= ', ' . htmlReady(mila($termin->getTitle(), $length));
@@ -664,8 +671,13 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
                 echo "<a name=\"a\"></a>";
 
                 $content = "";
-                if($termin->getDescription()) {
-                    $content .= sprintf("%s<br><br>", formatReady($termin->getDescription(), TRUE, TRUE));
+                if (strtolower(get_class($termin)) == 'seminarevent') {
+                    $description = $issue_descriptions;
+                } else {
+                    $description = $termin->getDescription();
+                }
+                if($description) {
+                    $content .= sprintf("%s<br><br>", formatReady($description, TRUE, TRUE));
                 } else {
                     $content .= _("Keine Beschreibung vorhanden") . "<br><br>";
                 }
@@ -678,21 +690,20 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
                 if (sizeof($PERS_TERMIN_KAT) > 1 && strtolower(get_class($termin)) != 'seminarevent') {
                     $content .= "<b>" . _("Kategorie:") . "</b> " . htmlReady($termin->toStringCategories());
                 } elseif (sizeof($TERMIN_TYP) > 1 && strtolower(get_class($termin)) == 'seminarevent') {
-                    $content .= "<b>" . _("Art des Termins:") . "</b> " . htmlReady($termin->toStringCategories());
+                    $content .= "<b>" . _("Art des Termins:") . "</b> " . htmlReady($singledate->getTypeName());
                 }
 
-                $singledate = new SingleDate($termin->id);
-                if ($singledate->getRoom()) {
-                    $content .= "&nbsp; &nbsp; &nbsp; &nbsp; ";
-                    $content .= "<b>" . _("Raum:") . " </b>";
-                    $content .= htmlReady(mila($singledate->getRoom(), 25));
-                } else if ($singledate->getFreeRoomText()) {
-                    $content .= "&nbsp; &nbsp; &nbsp; &nbsp; ";
-                    $content .= "<b>" . _("Ort:") . " </b>";
-                    $content .= htmlReady(mila($singledate->getFreeRoomText(), 25));
-                }
-
-                if (strtolower(get_class($termin)) != 'seminarevent') {
+                if (strtolower(get_class($termin)) == 'seminarevent') {
+                    if ($singledate->getRoom()) {
+                        $content .= "&nbsp; &nbsp; &nbsp; &nbsp; ";
+                        $content .= "<b>" . _("Raum:") . " </b>";
+                        $content .= htmlReady(mila($singledate->getRoom(), 25));
+                    } else if ($singledate->getFreeRoomText()) {
+                        $content .= "&nbsp; &nbsp; &nbsp; &nbsp; ";
+                        $content .= "<b>" . _("Ort:") . " </b>";
+                        $content .= htmlReady(mila($singledate->getFreeRoomText(), 25));
+                    }
+                } else {
                     $content .= '<br><b>' . _("Priorit&auml;t:") . ' </b>'
                             . htmlReady($termin->toStringPriority());
                     $content .= '&nbsp; &nbsp; &nbsp; &nbsp; ';

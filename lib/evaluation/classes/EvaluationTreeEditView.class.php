@@ -1953,14 +1953,7 @@ function execCommandMoveGroup(){
                     return false;
                 }
             }
-
-            $newgroup = $move_group->duplicate ();
-
-            $group->addChild ($newgroup);
-            $group->save ();
-
             if ($oldparentID == $this->evalID){
-
                 $grouptodelete = $this->tree->eval->getChild ($move_group->getObjectID());
                 $grouptodelete->delete ();
                 $this->tree->eval->save ();
@@ -1977,6 +1970,12 @@ function execCommandMoveGroup(){
                     return EvalCommon::showErrorReport ($newgroup,
                         _("Fehler beim Verschieben eines Blocks."));
             }
+            $newgroup = $move_group->duplicate ();
+
+            $group->addChild ($newgroup);
+            $group->save ();
+
+            
 
             if ($group->isError)
                 return EvalCommon::showErrorReport ($group,

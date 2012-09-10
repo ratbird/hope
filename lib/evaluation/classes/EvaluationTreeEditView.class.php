@@ -1155,15 +1155,17 @@ function getSelf ( $param = "", $with_start_item = true ){
 * @access  private
 */
 function parseCommand(){
-
-    if (Request::option('cmd')){
+    
+    if (Request::option('cmd') || Request::optionArray('cmd')){
         # extract the command from Request (array) =========================== #
-        if (is_array(Request::option('cmd')))
-            $exec_func = "execCommand" . key(Request::option('cmd'));
+       
+        if (Request::optionArray('cmd'))
+            $exec_func = "execCommand" . key(Request::optionArray('cmd'));
         else
             $exec_func = "execCommand" . Request::option('cmd');
 
     } else {
+        
         # extract the command from the template-site ========================= #
         foreach( $_REQUEST as $key => $value ) {
             if( preg_match( "/template_(.*)_#(.*)_button?/", $key, $command ) ){
@@ -1178,6 +1180,7 @@ function parseCommand(){
                 break;
         }
        }
+       
 
         if ($command[1] == "create_question_answers")
             $exec_func = "execCommandQuestionAnswersCreate";
@@ -1436,7 +1439,7 @@ function execCommandDeleteItem(){
  */
 function execCommandAddGroup(){
 
-
+   
     $group = new EvaluationGroup();
     $group->setTitle( NEW_ARRANGMENT_BLOCK_TITLE , QUOTED);
     $group->setText("");

@@ -11,7 +11,7 @@ jQuery(function ($) {
 
     if (!type_is_supported('number')) {
         $('input[type=number]').keyup(function (event) {
-            var value = $(this).val().replace(/\D/, '');
+            var value = $(this).val().replace(/[^-\d]/, '');
             $(this).val(value);
         });
     }

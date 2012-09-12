@@ -79,7 +79,7 @@ class SVG_Converter
         return $result;
     }
 
-    public function convertItems($icons, $size = false, $color = false, $border = 0)
+    public function convertItems($icons, $size = false, $color = false, $border = 0, $offsets = array())
     {
         $tmp_dir = '/tmp/' . md5(uniqid('svg', true));
         mkdir($tmp_dir) or die('Could not create temp directory');
@@ -96,25 +96,31 @@ class SVG_Converter
             }
 
             $svg = sprintf('<?xml version="1.0" encoding="utf-8"?>'
-                          .'<svg version="1.1" xmlns="http://www.w3.org/2000/svg">'
-                          .'<g transform="translate(%1$u %1$u)">%2$s</g>'
+                          .'<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"'
+                          .' width="%3$u" height="%3$u"'
+                          .' viewBox="0 0 %2$u %2$u">'
+                          .'<g transform="translate(%4$u %5$u) scale(%6$u)">%1$s</g>'
                           .'</svg>',
-                           $border,
-                           $icon);
+                           $icon,
+                           $size + $border * 2,
+                           ($this->getViewBox() ?: $size) + $border * 2,
+                           $border + ($offsets['x'] ?: 0),
+                           $border + ($offsets['y'] ?: 0),
+                           $size / ($this->getViewBox() ?: $size));
 
             $tmp_file = $tmp_dir . '/' . md5(uniqid('svg-file', true)) . '.svg';
             file_put_contents($tmp_file, $svg);
             $files[$file] = $tmp_file;
         }
 
-        $command = sprintf('java -jar vendor/batik/batik-rasterizer.jar -w %1$u -h %1$u -m image/png -d %2$s %2$s/*.svg', $size + $border * 2, $tmp_dir);
+        $command = sprintf('java -jar vendor/batik/batik-rasterizer.jar -w %1$u -h %1$u -cssMedia image/png -d %2$s %2$s/*.svg', $size + $border * 2, $tmp_dir);
         exec($command);
 
         $result = array();
         foreach ($files as $file => $temp) {
             $result[$file] = file_get_contents(preg_replace('/\.svg$/', '.png', $temp));
         }
-
+        
         array_map('unlink', glob($tmp_dir . '/*'));
         rmdir($tmp_dir);
 

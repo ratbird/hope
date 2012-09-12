@@ -40,6 +40,8 @@ class Svg2pngController extends Trails_Controller
         if ($this->extra_color && $this->extra_color[0] != '#') {
             $this->extra_color = '#' . $this->extra_color;
         }
+        $this->extra_offsets = Request::intArray('extra-offset') ?: array('x' => 0, 'y' => 0);
+        $this->extra_distance = Request::int('extra-distance') ?: 1;
 
         $this->size  = Request::int('size') ?: 16;
         $this->border = Request::get('border') ?: '';
@@ -94,13 +96,13 @@ class Svg2pngController extends Trails_Controller
                 $color = '#' . $color;
             }
 
-            $extras = $this->convert(self::EXTRAS_FILE, $this->size, $this->border, $color);
+            $extras = $this->convert(self::EXTRAS_FILE, $this->size, $this->border, $color, $this->extra_offsets);
             foreach ($extras as $file => $icon) {
                 unset($extras[$file]);
                 $file = reset(explode('.', $file));
                 $extras[$file] = array(
                     'icon'  => $icon,
-                    'punch' => $this->border($icon),
+                    'punch' => $this->border($icon, $this->extra_distance),
                 );
             }
         }
@@ -133,7 +135,7 @@ class Svg2pngController extends Trails_Controller
         unlink($tmp_zip);
     }
 
-    private function convert($svg, $size, $border = 0, $color = '#000000')
+    private function convert($svg, $size, $border = 0, $color = '#000000', $offsets = array())
     {
         $converter = SVG_Converter::CreateFrom($svg);
 //        $viewbox   = $converter->getViewBox();
@@ -151,7 +153,7 @@ class Svg2pngController extends Trails_Controller
             $icons[$file] = $icon;
         }
 
-        $files = $converter->convertItems($icons, $size, $color, $border);
+        $files = $converter->convertItems($icons, $size, $color, $border, $offsets);
 
         return $files;
     }
@@ -183,7 +185,7 @@ class Svg2pngController extends Trails_Controller
         return $result;
     }
 
-    private function border($img)
+    private function border($img, $distance = 1)
     {
         $image = imagecreatefromstring($img);
         $width  = imagesx($image);
@@ -199,10 +201,9 @@ class Svg2pngController extends Trails_Controller
             $color[$i] = imagecolorallocatealpha($new, 0x00, 0x00, 0x00, $i);
         }
 
-        $w    = 1; // ceil($width / 32);
         $mask = array();
-        for ($y = -$w; $y <= $w; $y += 1) {
-            for ($x = -$w; $x <= $w; $x += 1) {
+        for ($y = -$distance; $y <= $distance; $y += 1) {
+            for ($x = -$distance; $x <= $distance; $x += 1) {
                 $mask[] = array($x, $y);
             }
         }

@@ -103,10 +103,28 @@ $available_colors = array(
 <? endforeach; ?>
 
 <? if ($imagick): ?>
-    <div>
-        <label for="extra-color">Zusatz-Farbe</label>
-        <input type="color" name="extra-color" id="extra-color" value="<?= @$extra_color ?>">
-    </div>
+    <fieldset>
+        <div>
+            <label for="extra-color">Zusatz-Farbe</label>
+            <input type="color" name="extra-color" id="extra-color" value="<?= @$extra_color ?>">
+        </div>
+    
+        <div>
+            <label for="extra-offset-x">X-Offset</label>
+            <input type="number" name="extra-offset[x]" id="extra-offset-x" value="<?= @$extra_offsets['x'] ?>">
+            <small>(positiv = nach rechts, negativ = nach links)</small>
+        </div>
+    
+        <div>
+            <label for="extra-offset-y">Y-Offset</label>
+            <input type="number" name="extra-offset[y]" id="extra-offset-y" value="<?= @$extra_offsets['y'] ?>">
+            <small>(positiv = nach unten, negativ = nach oben)</small>
+        </div>
+
+        <div>
+            <label for="extra-distance">Abstand</label>
+            <input type="number" name="extra-distance" id="extra-distance" value="<?= @$extra_distance ?>">
+    </fieldset>
 
     <div>
         <label>

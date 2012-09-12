@@ -90,7 +90,7 @@ class Svg2pngController extends Trails_Controller
         $zip->open($tmp_zip, ZipArchive::CREATE);
 
         $selected = Request::getArray('extras');
-        if (!empty($selected)) {
+        if (!empty($selected) && !Request::submitted('download_selected')) {
             $color = Request::get('extra-color', '#cb1800');
             if ($color[0] != '#') {
                 $color = '#' . $color;
@@ -112,8 +112,12 @@ class Svg2pngController extends Trails_Controller
             $directory = $this->size . '/' . $this->color['name'][$index] . '/';
 
             foreach ($files as $file => $png) {
+                if (Request::submittedSome('download_selected', 'download_selected_extras') && !in_array($file, $selected)) {
+                    continue;
+                } 
                 $zip->addFromString($directory . $file, $png);
-                if (in_array($file, $selected)) {
+
+                if (!Request::submitted('download_selected') && in_array($file, $selected)) {
                     foreach ($extras as $prefix => $extra) {
                         $zip->addFromString($directory . $prefix . '/' . $file, $this->combine($png, $extra['icon'], $extra['punch']));
                     }

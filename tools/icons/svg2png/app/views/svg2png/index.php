@@ -2,7 +2,7 @@
 
 <? if (!$imagick): ?>
 <div class="messagebox messagebox_error">
-    ImageMagick ist nicht als PHP-Modul verfÃ¼gbar. Dadurch kÃ¶nnen keine ZusÃ¤tze auf die Icons gerendert werden!
+    ImageMagick ist nicht als PHP-Modul verfügbar. Dadurch können keine Zusätze auf die Icons gerendert werden!
 </div>
 <? endif; ?>
 
@@ -27,7 +27,7 @@ $available_colors = array(
         <div>
             <label for="input">Datei</label>
             <select name="input" id="input" required>
-                <option value="">- Bitte auswÃ¤hlen -</option>
+                <option value="">- Bitte auswählen -</option>
             <? foreach ($inputs as $index => $input): ?>
                 <option value="<?= $index ?>" <? if (Request::int('input') == $index) echo 'selected'; ?>>
                     <?= basename($input) ?>
@@ -37,7 +37,7 @@ $available_colors = array(
         </div>
 
         <div>
-            <label for="size">GrÃ¶ÃŸe</label>
+            <label for="size">Größe</label>
             <input type="number" name="size" id="size" value="<?= @$size ?>">
         </div>
 
@@ -89,7 +89,7 @@ $available_colors = array(
 <h1 class="topic">
     Icons anzeigen
 <? if ($imagick): ?>
-    (klicken, um ZusÃ¤tze zu aktivieren)
+    (klicken, um Zusätze zu aktivieren)
 <? endif; ?>
 </h1>
 <form action="<?= $controller->url_for('svg2png/download') ?>" method="post">
@@ -145,7 +145,9 @@ $available_colors = array(
     <? endforeach; ?>
     </div>
     <div>
-        <?= Studip\Button::create('Herunterladen', 'download') ?>
+        <?= Studip\Button::createAccept('Herunterladen', 'download') ?>
+        <?= Studip\Button::create('Markierte herunterladen', 'download_selected') ?>
+        <?= Studip\Button::create('Markierte herunterladen (mit Zusätzen)', 'download_selected_extras') ?>
     </div>
 </form>
 <? endif; ?>

@@ -42,6 +42,7 @@ class Svg2pngController extends Trails_Controller
         }
 
         $this->size  = Request::int('size') ?: 16;
+        $this->border = Request::get('border') ?: '';
         $this->suffix = Request::get('suffix', '');
         $this->color = Request::getArray('color') ?: array('name' => array('black'), 'color' => array('#000000'));
         foreach ($this->color['color'] as $index => $color) {
@@ -55,7 +56,7 @@ class Svg2pngController extends Trails_Controller
     {
         if (Request::submitted('display')) {
             $this->input = $this->inputs[Request::int('input')];
-            $this->files = $this->convert($this->input, $this->size, '#000000');
+            $this->files = $this->convert($this->input, $this->size, $this->border);
         }
 
         if (Request::submitted('add-color')) {
@@ -93,7 +94,7 @@ class Svg2pngController extends Trails_Controller
                 $color = '#' . $color;
             }
 
-            $extras = $this->convert(self::EXTRAS_FILE, $this->size, $color);
+            $extras = $this->convert(self::EXTRAS_FILE, $this->size, $this->border, $color);
             foreach ($extras as $file => $icon) {
                 unset($extras[$file]);
                 $file = reset(explode('.', $file));
@@ -105,7 +106,7 @@ class Svg2pngController extends Trails_Controller
         }
 
         foreach ($this->color['color'] as $index => $color) {
-            $files = $this->convert($input, $this->size, $color);
+            $files = $this->convert($input, $this->size, $this->border, $color);
             $directory = $this->size . '/' . $this->color['name'][$index] . '/';
 
             foreach ($files as $file => $png) {
@@ -132,7 +133,7 @@ class Svg2pngController extends Trails_Controller
         unlink($tmp_zip);
     }
 
-    private function convert($svg, $size, $color, $transparent = false)
+    private function convert($svg, $size, $border = 0, $color = '#000000')
     {
         $converter = SVG_Converter::CreateFrom($svg);
 //        $viewbox   = $converter->getViewBox();
@@ -150,22 +151,22 @@ class Svg2pngController extends Trails_Controller
             $icons[$file] = $icon;
         }
 
-        $files = $converter->convertItems($icons, $size, $color);
+        $files = $converter->convertItems($icons, $size, $color, $border);
 
         return $files;
     }
 
-    private function combine($image, $overlay, $border = false)
+    private function combine($image, $overlay, $punch = false)
     {
         $img = new Imagick();
         $img->readImageBlob($image);
 
-        if ($border !== false) {
-            $brd = new Imagick();
-            $brd->readImageBlob($border);
+        if ($punch !== false) {
+            $pnch = new Imagick();
+            $pnch->readImageBlob($punch);
             
-            $img->compositeImage($brd, IMagick::COMPOSITE_DSTOUT, 0, 0);
-            $brd->destroy();
+            $img->compositeImage($pnch, IMagick::COMPOSITE_DSTOUT, 0, 0);
+            $pnch->destroy();
         }
 
         $ovl = new IMagick();

@@ -79,7 +79,7 @@ class SVG_Converter
         return $result;
     }
 
-    public function convertItems($icons, $size = false, $color = false)
+    public function convertItems($icons, $size = false, $color = false, $border = 0)
     {
         $tmp_dir = '/tmp/' . md5(uniqid('svg', true));
         mkdir($tmp_dir) or die('Could not create temp directory');
@@ -96,23 +96,18 @@ class SVG_Converter
             }
 
             $svg = sprintf('<?xml version="1.0" encoding="utf-8"?>'
-                          .'<svg version="1.1" xmlns="http://www.w3.org/2000/svg"'
-                          .' xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve"'
-                          .' x="0px" y="0px"'
-                          .' width="%1$upx" height="%1$upx"'
-                          .' viewBox="0 0 %3$u %3$u"'
-#                          .' enable-background="new 0 0 %3$u %3$u"'
-                          .'><g scale="100">%2$s</g></svg>',
-                           $size,
-                           $icon,
-                           $this->getViewBox() ?: $size);
+                          .'<svg version="1.1" xmlns="http://www.w3.org/2000/svg">'
+                          .'<g transform="translate(%1$u %1$u)">%2$s</g>'
+                          .'</svg>',
+                           $border,
+                           $icon);
 
             $tmp_file = $tmp_dir . '/' . md5(uniqid('svg-file', true)) . '.svg';
             file_put_contents($tmp_file, $svg);
             $files[$file] = $tmp_file;
         }
 
-        $command = sprintf('java -jar vendor/batik/batik-rasterizer.jar -w %1$u -h %1$u -cssMedia image/png -d %2$s %2$s/*.svg', $size, $tmp_dir);
+        $command = sprintf('java -jar vendor/batik/batik-rasterizer.jar -w %1$u -h %1$u -m image/png -d %2$s %2$s/*.svg', $size + $border * 2, $tmp_dir);
         exec($command);
 
         $result = array();

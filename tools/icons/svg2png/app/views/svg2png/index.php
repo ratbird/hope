@@ -40,7 +40,12 @@ $available_colors = array(
             <label for="size">Größe</label>
             <input type="number" name="size" id="size" value="<?= @$size ?>">
         </div>
-        
+
+        <div>
+            <label for="border">Rahmen</label>
+            <input type="number" name="border" id="border" value="<?= @$border ?>">
+        </div>
+
         <div>
             <label for="suffix">Suffix</label>
             <input type="text" name="suffix" id="suffix" value="<?= @$suffix ?>">
@@ -91,6 +96,7 @@ $available_colors = array(
     <input type="hidden" name="input" value="<?= Request::int('input') ?>">
     <input type="hidden" name="size" value="<?= $size ?>">
     <input type="hidden" name="suffix" value="<?= $suffix ?>">
+    <input type="hidden" name="border" value="<?= $border ?>">
 <? foreach ($color['color'] as $index => $col): ?>
     <input type="hidden" name="color[color][<?= $index ?>]" value="<?= $col ?>">
     <input type="hidden" name="color[name][<?= $index ?>]" value="<?= $color['name'][$index] ?>">

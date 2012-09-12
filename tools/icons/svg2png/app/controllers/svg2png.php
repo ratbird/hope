@@ -36,7 +36,7 @@ class Svg2pngController extends Trails_Controller
             3 => '../Vektor/32px/Vector-Iconset 32x32.svg',
         );
 
-        $this->extra_color = Request::get('extra-color', '#ff0000');
+        $this->extra_color = Request::get('extra-color', '#cb1800');
         if ($this->extra_color && $this->extra_color[0] != '#') {
             $this->extra_color = '#' . $this->extra_color;
         }
@@ -88,7 +88,7 @@ class Svg2pngController extends Trails_Controller
 
         $selected = Request::getArray('extras');
         if (!empty($selected)) {
-            $color = Request::get('extra-color', '#ff0000');
+            $color = Request::get('extra-color', '#cb1800');
             if ($color[0] != '#') {
                 $color = '#' . $color;
             }

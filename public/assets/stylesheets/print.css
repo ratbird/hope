@@ -193,3 +193,45 @@ div.window_heading {
     cursor: move;
     padding: 2pt;
 }
+
+/* aus style.css */
+h1.content, h2.content, h3.content { color:#24437c; }
+hr.content {
+  margin:0 1em;
+  background-color:#555555;
+  border-radius:5px;
+  height:1px;
+  border:none;
+}
+table.content { border-collapse:collapse; }
+table.content td {
+  border:thin solid #666666;
+  font-size:smaller;
+  padding:3px;
+}
+div.content {
+  background-color:#f3f5f8;
+  clear:both;
+  margin:0;
+  overflow:hidden;
+  padding:2px;
+}
+.quote {
+  background:#eeeeee none;
+  border:1px solid black;
+  margin-left:20px;
+  margin-right:20px;
+  padding:3px;
+}
+td.quote {
+  border:1px solid #000000;
+  font-size:8px;
+}
+a.link-intern {
+  padding-left:18px;
+  background:url("../images/icons/16/blue/link-intern.png") no-repeat;
+}
+a.link-extern {
+  padding-left:18px;
+  background:url("../images/icons/16/blue/link-extern.png") no-repeat;
+}

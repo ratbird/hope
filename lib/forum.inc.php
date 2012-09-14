@@ -1098,7 +1098,7 @@ function forum_print_toolbar ($id="") {
                 $print .= "</select>&nbsp;&nbsp;";
                 $print .= "<input type=hidden name=flatviewstartposting value='".$flatviewstartposting."'>";
                 $print .= "<input type=hidden name=view value='".$forum["view"]."'>";
-                $print .= "<input type=image name=create value=\"abschicken\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/accept.png\" border=\"0\"".tooltip(_("Sortierung durchführen")).">";
+                $print .= "<input type=image name=create value=\"abschicken\" class=\"text-top\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/accept.png\" border=\"0\"".tooltip(_("Sortierung durchführen")).">";
             }
             $print .= "&nbsp;&nbsp;</td><td class=\"blank\"><a href=\"".URLHelper::getLink("?flatviewstartposting=$flatviewstartposting&toolbar=close&open=$open")."\" ".tooltip(_("Toolbar einfahren"))."><img src=\"".$GLOBALS['ASSETS_URL']."images/griff.png\" class=\"middle\"></a>";
 

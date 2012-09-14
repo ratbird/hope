@@ -67,6 +67,7 @@ $st->execute(array($_SESSION['SessionSeminar']));
 /* ---------------------------------- */
 $username = Request::quoted('username');
 $cmd = Request::option('cmd');
+$open_areas = Request::optionArray('open_areas');
 
 if ($cmd == "make_me_visible" && !$perm->have_studip_perm('tutor',$SessSemName[1])) {
     if (Request::option('mode') == "participant") {

@@ -50,7 +50,7 @@ function getWikiPage($keyword, $version, $db = NULL) {
 
     if (!$row) {
         if ($keyword == 'WikiWikiWeb') {
-            $body = _('Dieses Wiki ist noch leer. Bearbeiten Sie es!\nNeue Seiten oder Links werden einfach durch Eingeben von WikiNamen angelegt.');
+            $body = _("Dieses Wiki ist noch leer. Bearbeiten Sie es!\nNeue Seiten oder Links werden einfach durch Eingeben von WikiNamen angelegt.");
             $wikidata = array('body' => $body, 'user_id' => 'nobody',  'version' => 0);
         } else {
             return NULL;

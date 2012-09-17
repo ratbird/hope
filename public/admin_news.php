@@ -246,10 +246,11 @@ if ($cmd=="edit") {
     $news->edit_news($edit_news);
 }
 
-// unregister globals
-$kill_news = Request::optionArray('kill_news');
-
 if ($cmd=="kill") {
+    $kill_news = is_array($_REQUEST['kill_news'])
+               ? Request::optionArray('kill_news')
+               : Request::option('kill_news');
+
     $news->kill_news($kill_news);
     $cmd="";
 }

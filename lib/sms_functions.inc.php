@@ -856,10 +856,10 @@ function show_msgform() {
 
     $temp_message = '';
     if ($quote) {
-        $temp_message = quotes_encode(htmlReady($tmp_sms_content), get_fullname_from_uname($quote_username));
+        $temp_message = quotes_encode($tmp_sms_content, get_fullname_from_uname($quote_username));
     }
     if ($message) {
-        $temp_message .= htmlReady($message);
+        $temp_message .= $message;
     }
 
     $template = $GLOBALS['template_factory']->open('messaging/message_form');

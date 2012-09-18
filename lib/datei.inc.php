@@ -566,7 +566,7 @@ function move_item($item_id, $new_parent, $change_sem_to = false)
             if (!$target_is_child){
                 $query = "UPDATE folder SET range_id = ? WHERE folder_id = ?";
                 $statement = DBManager::get()->prepare($query);
-                $statement->exexute(array($new_parent, $item_id));
+                $statement->execute(array($new_parent, $item_id));
 
                 if ($change_sem_to) {
                     $folder[] = $item_id;

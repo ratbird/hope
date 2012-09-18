@@ -76,8 +76,8 @@
                     'overview' => array('name' => _("Übersicht")),
                     'admin' => array('name' => _("Verwaltung")),
                     'forum' => array('name' => _("Forum")),
-                    'documents' => array('name' => _("Dateibereich")),
                     'participants' => array('name' => _("Teilnehmerseite")),
+                    'documents' => array('name' => _("Dateibereich")),
                     'schedule' => array('name' => _("Terminseite")),
                     'literature' => array('name' => _("Literaturübersicht")),
                     'scm' => array('name' => _("Freie Informationen")),
@@ -237,13 +237,13 @@
             <td></td>
             <td>
                 <div id="message_below"></div>
-                <?= Studip\Button::create(_("Speichern"), "save", array('onClick' => "STUDIP.admin_sem_class.saveData();"))?>
-                <? if ($sem_class->countSeminars() === 0) : ?>
                 <form action="<?= URLHelper::getLink($overview_url) ?>" method="post">
+                <?= Studip\Button::create(_("Speichern"), "save", array('onClick' => "STUDIP.admin_sem_class.saveData(); return false;"))?>
+                <? if ($sem_class->countSeminars() === 0) : ?>
                     <input type="hidden" name="delete_sem_class" value="<?= Request::int("id") ?>">
                     <?= Studip\Button::create(_("Löschen"), "delete", array('onClick' => "return window.confirm('"._("Wirklich löschen?")."');"))?>
-                </form>
                 <? endif ?>
+                </form>
             </td>
         </tr>
     </tbody>

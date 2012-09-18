@@ -53,7 +53,7 @@ use Studip\Button, Studip\LinkButton;
             </td>
             <td>
                 <? if ($item->getObjectType() == 'sem'): ?>
-                <select name="object_class" id="object_class">
+                <select name="object_class[]" id="object_class">
                     <option value="NULL">
                         <?= _('alle') ?>
                     </option>
@@ -63,7 +63,7 @@ use Studip\Button, Studip\LinkButton;
                     </option>
                     <? endforeach; ?>
                 <? elseif ($item->getObjectType() == 'inst'): ?>
-                <select name="object_class" id="object_class">
+                <select name="object_class[]" id="object_class">
                     <option value="NULL">
                         <?= _('alle') ?>
                     </option>

@@ -635,8 +635,8 @@ div#barBottomright li,
   font-size: 0.8em;
   border: thin solid white;
   text-align: center;
-  line-height: 19px;
-  vertical-align: text-bottom;
+  line-height: 17px;
+  vertical-align: top;
   opacity: 0.5;
 }
 #notification_marker.alert {

@@ -60,7 +60,9 @@ STUDIP.PersonalNotifications = {
             $("#notification_marker, #notification_container").removeClass("alert");
             window.document.title = originalTitle;
         }
-        $('#notification_marker').text(count);
+        if (old_count !== count) {
+            $('#notification_marker').text(count);
+        }
         Notificon(count || '', {favicon: favicon_url});
     }
 };

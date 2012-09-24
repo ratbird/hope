@@ -62,7 +62,7 @@ jQuery(function () {
     STUDIP.ajax_indicator = true;
     STUDIP.URLHelper.base_url = STUDIP.ABSOLUTE_URI_STUDIP;
 
-    jQuery('.add_toolbar').addToolbar(STUDIP.Markup.buttonSet);
+    jQuery('.add_toolbar').addToolbar();
 
     STUDIP.study_area_selection.initialize();
 

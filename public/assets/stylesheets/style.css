@@ -636,7 +636,7 @@ div#barBottomright li,
   border: thin solid white;
   text-align: center;
   line-height: 17px;
-  vertical-align: top;
+  vertical-align: text-bottom;
   opacity: 0.5;
 }
 #notification_marker.alert {
@@ -2310,12 +2310,36 @@ div.modalshadow {
   z-index: 1001;
 }
 /* --- Editor Toolbar ------------------------------------------------------- */
-.editor_toolbar {
-  width: 70%;
-  text-align: left;
-  padding-bottom: 0.5em;
+.add_toolbar {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
 }
-.editor_toolbar button {
+.editor_toolbar {
+  *zoom: 1;
+  padding: 0.5em 0;
+  text-align: left;
+}
+.editor_toolbar:before,
+.editor_toolbar:after {
+  display: table;
+  content: "";
+}
+.editor_toolbar:after {
+  clear: both;
+}
+.editor_toolbar > div {
+  float: right;
+}
+.editor_toolbar > div button {
+  margin-left: 0.25em;
+}
+.editor_toolbar > div:first-child {
+  float: left;
+}
+.editor_toolbar > div:first-child button {
+  margin-left: 0;
   margin-right: 0.25em;
 }
 /* --- Plugin Administration ------------------------------------------------ */

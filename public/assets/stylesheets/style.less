@@ -222,12 +222,24 @@ div.modalshadow {
 }
 
 /* --- Editor Toolbar ------------------------------------------------------- */
+.add_toolbar {
+    .box-sizing(border-box);
+}
 .editor_toolbar {
-    width: 70%;
+    .clearfix();
+    padding: 0.5em 0;
     text-align: left;
-    padding-bottom: 0.5em;
 
-    button { margin-right: 0.25em; }
+    // float all divs right (actually we just want the second)
+    > div {
+        float: right;
+        button { margin-left: 0.25em; }
+    }
+    // float first div left (which leaves the second one to the right)
+    > div:first-child {
+        float: left;
+        button { margin-left: 0; margin-right: 0.25em; }
+    }
 }
 
 /* --- Plugin Administration ------------------------------------------------ */

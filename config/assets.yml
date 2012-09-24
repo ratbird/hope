@@ -18,7 +18,7 @@ javascripts:
     - javascripts/l10n.js
     - javascripts/init.js
     - javascripts/toolbar.js
-    - javascripts/markup.js
+    - javascripts/toolbar-buttonset.js
     - javascripts/ajax_notifications.js
     - javascripts/url_helper.js
     - javascripts/updater.js

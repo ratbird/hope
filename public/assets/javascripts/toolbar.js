@@ -29,7 +29,7 @@
             $element.data('toolbar-added', true);
 
             // Create toolbar element
-            toolbar = $('<div class="editor_toolbar" />').width($element.outerWidth());
+            toolbar = $('<div class="editor_toolbar" />').width($element.outerWidth(true));
 
             // Assemble toolbar
             _.each(['left', 'right'], function (position) {

@@ -647,20 +647,20 @@ function listPages($mode, $sortby = NULL) {
             $sort = " ORDER BY keyword DESC";
             break;
         case 'version':
-            $sort = " ORDER BY lastversion DESC";
+            $sort = " ORDER BY lastversion DESC, keyword ASC";
             $versionsortlink = "versiondesc";
             break;
         case 'versiondesc':
-            $sort = " ORDER BY lastversion";
+            $sort = " ORDER BY lastversion, keyword ASC";
             break;
         case 'lastchange':
             // sort by change date, default: newest first
-            $sort = " ORDER BY lastchange DESC";
+            $sort = " ORDER BY lastchange DESC, keyword ASC";
             $changesortlink = "lastchangedesc";
             break;
         case 'lastchangedesc':
             // sort by change date, oldest first
-            $sort = " ORDER BY lastchange";
+            $sort = " ORDER BY lastchange, keyword ASC";
             break;
     }
 
@@ -737,7 +737,28 @@ function listPages($mode, $sortby = NULL) {
         }
     }
     echo "</table><p>&nbsp;</p>";
+    
+    $infobox = array ();
+    if ($mode=="all"){
+        $help_url = format_help_url("Basis.VerschiedenesFormat");
+        $infobox[] = array("kategorie" => _("Ansicht"), 
+                            "eintrag" => array(
+                                array(
+                                    'icon' => "icons/16/black/file-pdf.png", 
+                                    "text" => "<a href=\"".
+                                    URLHelper::getLink("?keyword=" . urlencode($keyword) . "&view=exportall_pdf&version=$version&sortby=$sortby") .
+                                    "\" target=\"_blank\">PDF-Ausgabe aller Wiki-Seiten</a>"),
+                                array(
+                                    'icon' => "icons/16/black/print.png",
+                                    "text" => "<a href=\"".
+                                    URLHelper::getLink("?keyword=" . urlencode($keyword) . "&view=wikiprintall&version=$version") .
+                                    "\" target=\"_blank\">Druckansicht aller Wiki-Seiten</a>"),
+                                array("text" => _("Die Sortierung der Tabelle kann durch Klicken auf die Headerüberschriften geändert werden"))
+                                )
+                    );
+    }
     end_blank_table();
+    showPageFrameEnd($infobox);
 }
 
 /**
@@ -1032,6 +1053,63 @@ function exportWikiPagePDF($keyword, $version) {
     $document->dispatch($SessSemName[header_line]." - ".$keyword);
 }
 
+function exportAllWikiPagesPDF($mode, $sortby) {
+    global $SessSemName;
+
+    $titlesortlink = "title";
+    $versionsortlink = "version";
+    $changesortlink = "lastchange";
+
+    switch ($sortby) {
+        case 'title':
+            // sort by keyword, prepare link for descending sorting
+            $sort = " ORDER BY keyword";
+            break;
+        case 'titledesc':
+            // sort descending by keyword, prep link for asc. sort
+            $sort = " ORDER BY keyword DESC";
+            break;
+        case 'version':
+            $sort = " ORDER BY versions DESC, keyword ASC";
+            break;
+        case 'versiondesc':
+            $sort = " ORDER BY versions, keyword ASC";
+            break;
+        case 'lastchange':
+            // sort by change date, default: newest first
+            $sort = " ORDER BY lastchange DESC, keyword ASC";
+            break;
+        case 'lastchangedesc':
+            // sort by change date, oldest first
+            $sort = " ORDER BY lastchange, keyword ASC";
+            break;
+    }
+
+    $query = "SELECT keyword, MAX(chdate) AS lastchange, COUNT(*) AS versions
+              FROM wiki
+              WHERE range_id = ?
+              GROUP BY keyword
+              {$sort}";
+
+    $parameters = array($SessSemName[1]);
+    
+    $statement = DBManager::get()->prepare($query);
+    $statement->execute($parameters);
+
+    $document = new ExportPDF();
+    $document->SetTitle(_('Wiki: ').htmlReady($wikiData["keyword"]));
+    $document->setHeaderTitle(sprintf(_("Wiki von \"%s\""), $SessSemName[0]));
+
+    while ($wikiData = $statement->fetch(PDO::FETCH_ASSOC)) {
+        $pagedata = getLatestVersion($wikiData["keyword"], $SessSemName[1]);
+        $document->setHeaderSubtitle(sprintf(_("Seite: %s"), $wikiData["keyword"]));
+        $document->addPage();
+        $document->addContent(deleteWikiLinks($pagedata["body"]));
+    }
+
+    $document->dispatch($SessSemName[header_line]." - ".$wikiData["keyword"]);
+} 
+
 function deleteWikiLinks($keyword){
     $keyword = preg_replace('/\[\[[^|\]]*\|([^]]*)\]\]/', '$1', $keyword);
     $keyword = preg_replace('/\[\[([^|\]]*)\]\]/', '$1', $keyword);
@@ -1063,6 +1141,9 @@ function exportWiki() {
 **/
 function printAllWikiPages($range_id, $header) {
     echo getAllWikiPages($range_id, $header, TRUE);
+    $infobox = array();
+    $infobox[] = array("kategorie" => _("Information"), "eintrag" => array(array('icon' => "icons/16/black/info.png", "text"=>_("Die Wiki-Seiten werden als eine zusammenhängende HTML-Datei ohne Links exportiert."))));
+    showPageFrameEnd($infobox);
 }
 
 /**

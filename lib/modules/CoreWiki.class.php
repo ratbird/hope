@@ -32,7 +32,6 @@ class CoreWiki implements StudipModule {
             $navigation->addSubNavigation('show', new Navigation(_('WikiWikiWeb'), 'wiki.php?view=show'));
             $navigation->addSubNavigation('listnew', new Navigation(_('Neue Seiten'), 'wiki.php?view=listnew'));
             $navigation->addSubNavigation('listall', new Navigation(_('Alle Seiten'), 'wiki.php?view=listall'));
-            $navigation->addSubNavigation('export', new Navigation(_('Export'), 'wiki.php?view=export'));
             return array('wiki' => $navigation);
         } else {
             return null;

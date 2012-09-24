@@ -61,6 +61,9 @@ if ($view=="wikiprint") {
 } elseif ($view=="export_pdf") {
     include_once 'lib/classes/exportdocument/ExportPDF.class.php';
     exportWikiPagePDF($keyword, $version);
+} elseif ($view=="exportall_pdf") {
+    include_once 'lib/classes/exportdocument/ExportPDF.class.php';
+    exportAllWikiPagesPDF("all", Request::option('sortby'));
 }
 
 checkObject(); // do we have an open object?

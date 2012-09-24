@@ -82,7 +82,7 @@ class PageLayout
         self::addHeadElement('meta', array('name' => 'viewport', 'content' => 'width=device-width; initial-scale=1.0;'));
 
         // include jQuery + UI
-        self::addStylesheet('jquery-ui-1.8.14.custom.css', array('media' => 'screen, print'));
+        self::addStylesheet('jquery-ui-1.8.23.custom.css', array('media' => 'screen, print'));
         self::addStylesheet('jquery-ui-studip.css', array('media' => 'screen, print'));
         // include default CSS
         self::addStylesheet('style.css', array('media' => 'screen'));

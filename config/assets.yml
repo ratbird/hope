@@ -5,7 +5,7 @@ javascripts:
     - javascripts/jquery/jquery-ui-1.8.14.custom.min.js
     - javascripts/jquery/jquery.metadata.js
     - javascripts/jquery/jquery.placehold-0.3.js
-    - javascripts/jquery/validator.min.js
+    - javascripts/jquery/validator.js
 
   header: &header
     - javascripts/vendor/notificon.js

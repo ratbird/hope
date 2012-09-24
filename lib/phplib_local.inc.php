@@ -120,6 +120,7 @@ DBManager::getInstance()
                   ';dbname='.$GLOBALS['DB_STUDIP_DATABASE'],
                   $GLOBALS['DB_STUDIP_USER'],
                   $GLOBALS['DB_STUDIP_PASSWORD']);
+DBManager::get()->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
 
 // set slave connection
 if (isset($GLOBALS['DB_STUDIP_SLAVE_HOST'])) {
@@ -150,6 +151,8 @@ class DB_Seminar extends DB_Sql {
         parent::DB_Sql($query);
     }
 }
+
+require_once 'lib/functions.php';
 require_once 'lib/classes/URLHelper.php';
 require_once 'lib/navigation/Navigation.php';
 require_once 'lib/navigation/AutoNavigation.php';

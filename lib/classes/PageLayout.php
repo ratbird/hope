@@ -92,6 +92,13 @@ class PageLayout
 
         // include ie-specific CSS
         self::addComment('[if IE]>' . Assets::stylesheet('ie.css', array('media' => 'screen,print')) . '<![endif]');
+        
+        self::addHeadElement('link', array(
+            'rel'   => 'help',
+            'href'  => format_help_url('Basis.VerschiedenesFormat'),
+            'class' => 'text-format',
+            'title' => _('Hilfe zur Textformatierung')
+        ));
 
         self::setSqueezePackages("base");
         self::addScript("mathjax/MathJax.js?config=TeX-AMS_HTML,default");

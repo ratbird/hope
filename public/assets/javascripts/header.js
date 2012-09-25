@@ -21,8 +21,11 @@
     };
 
     $(document).ready(function () {
-        fold = $('#barBottomContainer').offset().top;
-        STUDIP.HeaderMagic.enable();
+        // Test if the header is actually present
+        if ($('#barBottomContainer').length > 0) {
+            fold = $('#barBottomContainer').offset().top;
+            STUDIP.HeaderMagic.enable();
+        }
     });
 
 }(jQuery, window.document));

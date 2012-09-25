@@ -159,9 +159,9 @@ if (!(have_sem_write_perm()) OR $pass==TRUE) {
                 die;
             }
         }
-        if (Request::quoted('nobodysname')) $author = Request::quoted('nobodysname');
+        if (Request::get('nobodysname')) $author = Request::get('nobodysname');
         $writeextern = TRUE;
-        $topic_id = CreateTopic ( Request::quoted('name'), Request::quoted('author'), Request::quoted('description'), $parent_id, $root_id);
+        $topic_id = CreateTopic ( Request::get('name'), Request::get('author'), Request::get('description'), $parent_id, $root_id);
         parse_window( "msg§" . _("Ihr Beitrag wurde erfolgreich ins System &uuml;bernommen") . "§info§" . _("Sie k&ouml;nnen dieses Fenster jetzt schliessen.<br>Um Ihr neues Posting zu sehen, m&uuml;ssen Sie das Hauptfenster aktualisieren!") . "§", "§", "Schreiben erfolgreich", "&nbsp;");
     }
 } else {

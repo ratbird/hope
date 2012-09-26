@@ -551,7 +551,7 @@ function print_messages() {
         $query = "SELECT message.*, message_user.folder, message_user.dont_delete ,
                          auth_user_md5.user_id AS rec_uid, auth_user_md5.vorname AS rec_vorname,
                          auth_user_md5.nachname AS rec_nachname, auth_user_md5.username AS rec_uname,
-                         COUNT(mu.message_id) AS num_rec, COUNT(dokument_id) AS num_attachments
+                         COUNT(DISTINCT mu.user_id) AS num_rec, COUNT(dokument_id) AS num_attachments
                   FROM message_user
                   LEFT JOIN message_user AS mu ON (message_user.message_id = mu.message_id AND mu.snd_rec = 'rec')
                   LEFT JOIN message ON (message.message_id = message_user.message_id)

@@ -2,6 +2,7 @@ PHP = php
 PLESSC = $(PHP) vendor/lessphp/plessc
 JLESSC = $(shell which lessc)
 STYLES = public/assets/stylesheets
+JAVA   = $(shell which java)
 
 ifneq ($(wildcard $(JLESSC)),)
 	LESSC = $(JLESSC)
@@ -28,6 +29,11 @@ $(STYLES)/smiley.css: $(STYLES)/smiley.less
 
 %.css: %.less
 	$(LESSC) $< $@
+	if [ -x $(JAVA) ]; then \
+		mv $@ $@.temp; \
+		$(JAVA) -jar vendor/yuicompressor/yuicompressor-2.4.7.jar --type css -o $@ $@.temp; \
+		rm $@.temp; \
+	fi
 
 # dummy target to force update of "doc" target
 force_update:

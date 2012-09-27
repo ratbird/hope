@@ -1468,24 +1468,26 @@ function printposting ($forumposting) {
                 $addon .= _("Noch nicht bewertet")."<br><br>";
             }
 
-            if (get_username($user->id) == $forumposting["username"]) {
-                $addon .= "<font size=\"-1\">&nbsp;&nbsp;Sie können sich&nbsp;<br>&nbsp;&nbsp;nicht selbst bewerten.&nbsp;";
-            } else {
-                if (object_check_user($forumposting["id"], "rate") == FALSE) {  // wenn er noch nicht bewertet hat
-                    $addon .= "<div align=\"center\"><font size=\"-1\">Dieser Beitrag war<br><font size=\"-2\">(Schulnote)</font><br><form method=post action=".URLHelper::getLink("#anker").">";
-                    $addon .= CSRFProtection::tokenTag();
-                    $addon .= "<b>&nbsp;<font size=\"2\" color=\"009900\">1";
-                    $addon .= "<input type=radio name=rate[".$forumposting["id"]."] value=1>";
-                    $addon .= "<input type=radio name=rate[".$forumposting["id"]."] value=2>";
-                    $addon .= "<input type=radio name=rate[".$forumposting["id"]."] value=3>";
-                    $addon .= "<input type=radio name=rate[".$forumposting["id"]."] value=4>";
-                    $addon .= "<input type=radio name=rate[".$forumposting["id"]."] value=5><font size=\"2\" color=\"990000\">5&nbsp;";
-                    $addon .= "<br><br>";
-                    $addon .= "<input type=hidden name=open value='".$forumposting["id"]."'>";
-                    $addon .= "<input type=hidden name=flatviewstartposting value='".$forum["flatviewstartposting"]."'>";
-                    $addon .= Button::create(_("Bewerten"), "sidebar", array('value' => $forumposting["id"]));
+            if (!Request::option('edit_id') && !Request::option('answer_id')) {
+                if (get_username($user->id) == $forumposting["username"]) {
+                    $addon .= "<font size=\"-1\">&nbsp;&nbsp;Sie können sich&nbsp;<br>&nbsp;&nbsp;nicht selbst bewerten.&nbsp;";
                 } else {
-                    $addon .= "<font size=\"-1\">&nbsp;&nbsp;". sprintf(_("Sie haben diesen%sBeitrag bewertet."),'&nbsp;<br>&nbsp;&nbsp;');
+                    if (object_check_user($forumposting["id"], "rate") == FALSE) {  // wenn er noch nicht bewertet hat
+                        $addon .= "<div align=\"center\"><font size=\"-1\">Dieser Beitrag war<br><font size=\"-2\">(Schulnote)</font><br><form method=post action=".URLHelper::getLink("#anker").">";
+                        $addon .= CSRFProtection::tokenTag();
+                        $addon .= "<b>&nbsp;<font size=\"2\" color=\"009900\">1";
+                        $addon .= "<input type=radio name=rate[".$forumposting["id"]."] value=1>";
+                        $addon .= "<input type=radio name=rate[".$forumposting["id"]."] value=2>";
+                        $addon .= "<input type=radio name=rate[".$forumposting["id"]."] value=3>";
+                        $addon .= "<input type=radio name=rate[".$forumposting["id"]."] value=4>";
+                        $addon .= "<input type=radio name=rate[".$forumposting["id"]."] value=5><font size=\"2\" color=\"990000\">5&nbsp;";
+                        $addon .= "<br><br>";
+                        $addon .= "<input type=hidden name=open value='".$forumposting["id"]."'>";
+                        $addon .= "<input type=hidden name=flatviewstartposting value='".$forum["flatviewstartposting"]."'>";
+                        $addon .= Button::create(_("Bewerten"), "sidebar", array('value' => $forumposting["id"]));
+                    } else {
+                        $addon .= "<font size=\"-1\">&nbsp;&nbsp;". sprintf(_("Sie haben diesen%sBeitrag bewertet."),'&nbsp;<br>&nbsp;&nbsp;');
+                    }
                 }
             }
         } elseif ($user->id != "nobody" && !Request::option('delete_id'))  // nur Aufklapppfeil

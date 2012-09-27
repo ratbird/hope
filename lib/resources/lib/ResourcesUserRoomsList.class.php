@@ -66,19 +66,30 @@ class ResourcesUserRoomsList {
     
     // Konstruktor
     function ResourcesUserRoomsList ($user_id ='', $sort= TRUE, $return_objects = TRUE, $only_rooms = TRUE) {
-        global $RELATIVE_PATH_RESOURCES, $user;
-
         $this->user_id = $user_id;
         if (!$this->user_id)
-            $this->user_id = $user->id;
+            $this->user_id = $GLOBALS['user']->id;
+
         $this->global_perms = getGlobalPerms($this->user_id);
         $this->return_objects = $return_objects;
         $this->only_rooms = $only_rooms;
-        //$this->category_id = $category_id;
         $this->restore();
         
-        if($sort)
+        if ($sort) {
             $this->sort();
+        }
+    }
+    
+    static function getInstance($user_id, $sort = true, $return_objects = true, $only_rooms = true)
+    {
+        static $resources_users_rooms_list;
+        
+        if (!$resources_users_rooms_list[$user_id]) {
+            $resources_users_rooms_list[$user_id] = 
+                new ResourcesUserRoomsList($user_id, $sort, $return_objects, $only_rooms);
+        }
+        
+        return $resources_users_rooms_list[$user_id];
     }
     
     //public
@@ -132,6 +143,7 @@ class ResourcesUserRoomsList {
                           FROM resources_categories
                           LEFT JOIN resources_objects USING (category_id)
                           WHERE resources_categories.is_room = 1
+                            AND resource_id IS NOT NULL
                           ORDER BY resources_objects.name";
             } else {
                 $query = "SELECT resource_id, resources_objects.name

@@ -355,16 +355,36 @@ class SingleDate {
 
     function bookRoom($roomID) {
         if ($this->ex_termin || !$roomID) return false;
-        $this->raum = '';
-        $this->store();
-        if ($this->resource_id != '') {
-            return $this->changeAssign($roomID);
-        } else {
-            return $this->insertAssign($roomID);
+
+        // create a resource-object of the passed room
+        $resObj = ResourceObject::Factory($roomID);
+        
+        // there is no room with the passed id
+        if (!$resObj->id) {
+            return false;
         }
+        
+        // check permissions (is current user allowed to book the passed room?)
+        $resList = ResourcesUserRoomsList::getInstance($user_id, true, false, true);
+        if (in_array($roomID, array_keys($resList->resources)) === false) {
+            return false;
+        }
+
+        // clear the freetext-field, if we book a room
+        $this->setFreeRoomText('');
+        $this->store();
+
+        // if there is already a room assigned, change the assignment, else create a new one
+        if ($this->resource_id != '') {
+            $this->changeAssign($roomID);
+        } else {
+            $this->insertAssign($roomID);
+        }
+
+        return $resObj;
     }
 
-    function insertAssign($roomID) {
+    private function insertAssign($roomID) {
         $createAssign = AssignObject::Factory(FALSE, $roomID, $this->termin_id, '',
                 $this->date, $this->end_time, $this->end_time,
                 0, 0, 0, 0, 0, 0);
@@ -395,7 +415,7 @@ class SingleDate {
         return FALSE;
     }
 
-    function changeAssign($roomID) {
+    private function changeAssign($roomID) {
         if ($assign_id = SingleDateDB::getAssignID($this->termin_id)) {
             $changeAssign = AssignObject::Factory($assign_id);
             $changeAssign->setResourceId($roomID);

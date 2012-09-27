@@ -72,7 +72,10 @@ class SeminarDB
 
         $ret = array();
         while ($data = $statement->fetch(PDO::FETCH_ASSOC)) {
-            $data['related_persons'] = explode(',', $data['related_persons']);
+            if ($data['related_persons']) {
+                $data['related_persons'] = explode(',', $data['related_persons']);
+            }
+            
             $ret[] = $data;
         }
 

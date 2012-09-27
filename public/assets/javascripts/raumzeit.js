@@ -119,3 +119,58 @@ jQuery(function ($) {
         }
     };
 });
+
+STUDIP.Raumzeit = {
+	toggleCheckboxes: function(cycle_id) {
+		var checked = false;
+		jQuery('table[data-cycleid='+ cycle_id + '] input[name^=singledate]').each(function() {
+			if (jQuery(this).attr('checked')) {
+				checked = true;
+			}
+		});
+		
+		jQuery('table[data-cycleid='+ cycle_id + '] input[name*=singledate]').attr('checked', !checked);
+	},
+	
+    addLecturer: function() {
+		jQuery('select[name=teachers] option:selected').each(function() {
+			var lecturer_id = jQuery(this).val();
+			if (lecturer_id == 'none') return;
+			
+			jQuery('li[data-lecturerid=' + lecturer_id + ']').show();
+			//jQuery('li[data-lecturerid=' + lecturer_id + '] input').val('1');
+			jQuery('select[name=teachers] option[value=' + lecturer_id + ']').hide();
+			jQuery('select[name=teachers] option[value=none]').attr('selected', 'selected');
+		});
+        
+        STUDIP.Raumzeit.addFormLecturers();
+	},
+	
+    removeLecturer: function(lecturer_id) {
+        if (jQuery('ul.teachers li:visible').size() > 1) {
+            jQuery('li[data-lecturerid=' + lecturer_id + ']').hide();
+            //jQuery('li[data-lecturerid=' + lecturer_id + '] input').val('0');
+            jQuery('select[name=teachers] option[value=' + lecturer_id + ']').show();
+        } else {
+            if (jQuery('div.at_least_one_teacher').size() == 0) {
+                jQuery('ul.teachers').before('<div class="at_least_one_teacher" style="display: none"><i>Jeder Termin muss mindestens eine Person haben, die ihn durchführt!</i><div>');
+                jQuery('div.at_least_one_teacher').slideDown().delay(3000).fadeOut(400, function(){
+                    jQuery(this).remove();
+                });
+                jQuery('li[data-lecturerid=' + lecturer_id + ']').effect('shake', 100);
+            }
+        }
+        
+        STUDIP.Raumzeit.addFormLecturers();
+    },
+    
+    addFormLecturers: function() {
+        var data = Array();
+        
+        jQuery('ul.teachers li:visible').each(function(){
+            data.push(jQuery(this).attr('data-lecturerid'));
+        });
+        
+        jQuery('input[name=related_teachers]').val(data.join(','));
+    }
+}

@@ -1221,46 +1221,30 @@ class Seminar
 
     function bookRoomForSingleDate($singleDateID, $roomID, $cycle_id = '', $append_messages = true)
     {
-        if ($roomID == '') {
-            //$this->createError('Seminar::bookRoomForSingleDate: missing roomID!');
-            return FALSE;
+        if (!$roomID) {
+            return false;
         }
-        if ($roomID == 'nochange') return FALSE;
+
         if ($cycle_id != '') {  // SingleDate of an MetaDate
             $this->readSingleDatesForCycle($cycle_id, $this->filterStart, $this->filterEnd);    // Let the cycle-object read in all of his single dates
 
-            if ($roomID == 'retreat' || $roomID == 'nothing') { // remove room bookment
-                if (isset($this->metadate->cycles[$cycle_id]->termine[$singleDateID])) {    // check, if the specified singleDate exists
-                    $this->metadate->cycles[$cycle_id]->termine[$singleDateID]->killAssign();   // delete bookment for this singledate
-                } else {
-                    return FALSE;       // otherwise return FALSE, meaning : 'No Success'; optional could be placed an error message here
-                }
-                return TRUE;
-            }
-
             if (isset($this->metadate->cycles[$cycle_id]->termine[$singleDateID])) {
-                if (!$this->metadate->cycles[$cycle_id]->termine[$singleDateID]->bookRoom($roomID)) {
+                if (!$return = $this->metadate->cycles[$cycle_id]->termine[$singleDateID]->bookRoom($roomID)) {
                     $this->appendMessages($this->metadate->cycles[$cycle_id]->termine[$singleDateID]->getMessages());
-                    return FALSE;
+                    return false;
                 }
             }
         } else {    // an irregular SingleDate
             $this->readSingleDates();
-            if ($roomID == 'retreat' || $roomID == 'nothing') {
-                if (isset($this->irregularSingleDates[$singleDateID])) {
-                    $this->irregularSingleDates[$singleDateID]->killAssign();
-                }
-                return TRUE;
-            }
 
             if (isset($this->irregularSingleDates[$singleDateID])) {
-                if (!$this->irregularSingleDates[$singleDateID]->bookRoom($roomID)) {
+                if (!$return = $this->irregularSingleDates[$singleDateID]->bookRoom($roomID)) {
                     $this->appendMessages($this->irregularSingleDates[$singleDateID]->getMessages());
-                    return FALSE;
+                    return false;
                 }
             }
         }
-        return TRUE;
+        return $return;
     }
 
     function getStatOfNotBookedRooms($cycle_id)
@@ -1500,7 +1484,7 @@ class Seminar
 
     function processCommands()
     {
-        global $_LOCKED, $cmd;
+        global $cmd;
 
         // workaround for multiple submit-buttons with new Button-API
         foreach ($this->commands as $r_cmd => $func) {
@@ -1512,16 +1496,8 @@ class Seminar
         if (!isset($cmd) && Request::option('cmd')) $cmd = Request::option('cmd');
         if (!isset($cmd)) return FALSE;
 
-        if ($_LOCKED) {
-            if (($cmd == 'open') || ($cmd == 'close')) {
-                if (isset($this->commands[$cmd])) {
-                    call_user_func($this->commands[$cmd]);
-                }
-            }
-        } else {
-            if (isset($this->commands[$cmd])) {
-                call_user_func($this->commands[$cmd]);
-            }
+        if (isset($this->commands[$cmd])) {
+            call_user_func($this->commands[$cmd], $this);
         }
     }
 

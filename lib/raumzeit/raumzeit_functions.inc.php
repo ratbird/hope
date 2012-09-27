@@ -68,40 +68,12 @@ function getTemplateDataForSingleDate($val, $cycle_id = '') {
 
     $tpl['aging_color'] = $timecolor;
 
-    /* entscheidet, ob der aktuelle Termin ausgewählt ist oder nicht,
-   * je nachdem, welche Auswahlart aktiviert wurde */
-    $tpl['checked'] = '';
-
+    // entscheidet, ob der aktuelle Termin ausgewählt ist oder nicht
     if (Request::option('cycle_id') == $cycle_id) {
-        switch (Request::option('checkboxActionCmd')) {
-            case 'chooseAll':
-                $tpl['checked'] = 'checked';
-                break;
-            case 'chooseNone':
-                $tpl['checked'] = '';
-                break;
-            case 'invert':
-                if ($choosen[$val->getTerminID()]) {
-                    $tpl['checked'] = '';
-                } else {
-                    $tpl['checked'] = 'checked';
-                }
-                break;
-            case 'deleteChoosen':
-                break;
-            case 'deleteAll':
-                break;
-            case 'chooseEvery2nd':
-                if ($every2nd) {
-                    $tpl['checked'] = 'checked';
-                } else {
-                    $tpl['checked'] = '';
-                }
-                break;
-        }
+        $tpl['checked'] = in_array($val->getSingleDateId(), Request::optionArray('singledate'));
     } else if ($cycle_id != '') {
         if ($val->getStartTime() >= time()) {
-            $tpl['checked'] = 'checked';
+            $tpl['checked'] = true;
         }
     }
 
@@ -109,9 +81,10 @@ function getTemplateDataForSingleDate($val, $cycle_id = '') {
     if ($GLOBALS['RESOURCES_ENABLE']) {
         if ($val->getResourceID()) {
             $resObj = ResourceObject::Factory($val->getResourceID());
-            $tpl['room'] = _("Raum: ");
-            $tpl['room'] .= $resObj->getFormattedLink(TRUE, TRUE, TRUE);
-            $tpl['class'] = 'content_title_green';
+            $tpl['room']        = _("Raum: ");
+            $tpl['room']       .= $resObj->getFormattedLink(TRUE, TRUE, TRUE);
+            $tpl['class']       = 'content_title_green';
+            $tpl['resource_id'] = $val->getResourceID();
         } else {
             if ($GLOBALS['RESOURCES_SHOW_ROOM_NOT_BOOKED_HINT']) {
                 $tpl['room'] = '('._("kein gebuchter Raum").')';
@@ -122,7 +95,7 @@ function getTemplateDataForSingleDate($val, $cycle_id = '') {
                 if ($name = $val->isHoliday()) {
                     $tpl['room'] = '('._($name).')';
                 } else {
-                    $tpl['room'] = '('._("wurde gel&ouml;scht").')';
+                    $tpl['room'] = '('._('fällt aus').')';
                 }
             } else {
                 if ($val->getFreeRoomText()) {

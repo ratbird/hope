@@ -3,28 +3,31 @@
 use Studip\Button,
     Studip\LinkButton;
 ?>
-<?
-if (!$sd_open[$tpl['md_id']] || $_LOCKED) { ?>
-<TR>
-    <TD class="table_row_even" colspan="9">
+<tr>
+    <td class="table_row_even" colspan="9">
         <A name="<?=$tpl['md_id']?>"></A>
         <TABLE cellpadding="2" cellspacing="0" border="0" width="100%">
             <TR>
-                <TD width="2%" align="right" valign="center" class="<?=$tpl['class']?>">
-                    <A href="<?= URLHelper::getLink('?cmd=open&open_close_id=' . $tpl['md_id'] .'#'. $tpl['md_id']) ?>">
-                    <?= Assets::img('icons/16/blue/arr_1right.png', array('class' => 'text-top')) ?>
+                <TD width="2%" align="right" valign="center" class="<?=$tpl['class']?>" style="height: 27px">
+                    <? if (Request::option('cycle_id') == $tpl['md_id']) : ?>
+                    <a href="<?= URLHelper::getLink('?#' . $tpl['md_id']) ?>">
+                        <?= Assets::img('icons/16/blue/arr_1down.png', array('class' => 'text-top')) ?>
+                    </a>
+                    <? else : ?>
+                    <a href="<?= URLHelper::getLink('?cycle_id=' . $tpl['md_id'] .'#'. $tpl['md_id']) ?>">
+                        <?= Assets::img('icons/16/blue/arr_1right.png', array('class' => 'text-top')) ?>
+                    </a>
+                    <? endif ?>
                     </A>
                 </TD>
-                <TD width="23%" nowrap="nowrap" class="<?=$tpl['class']?>">
-                    <? if (!$_LOCKED || !$sd_open[$tpl['md_id']]) { ?>
-                    <A class="tree" href="<?= URLHelper::getLink('?cmd=open&open_close_id='. $tpl['md_id'] .'#'. $tpl['md_id']) ?>">
-                    <? } else { ?>
-                    <A class="tree" href="<?= URLHelper::getLink('?cmd=close&open_close_id='. $tpl['md_id'] .'#'. $tpl['md_id']) ?>">
-                    <? } ?>
-                        <FONT size="-1" <?=tooltip($tpl['date_tooltip'], false)?>>
-                            <?=htmlready($tpl['date'])?>
-                        </FONT>
-                    </A>
+                <TD width="23%" nowrap="nowrap" class="<?=$tpl['class']?>" <?=tooltip($tpl['date_tooltip'], false)?>>
+                    <? if (Request::option('cycle_id') == $tpl['md_id']) : ?>
+                    <a class="tree" href="<?= URLHelper::getLink('?#'. $tpl['md_id']) ?>">
+                    <? else : ?>
+                    <a class="tree" href="<?= URLHelper::getLink('?cycle_id='. $tpl['md_id'] .'#'. $tpl['md_id']) ?>">
+                    <? endif ?>
+                        <?=htmlready($tpl['date'])?>
+                    </a>
                 </TD>
                 <? if ($GLOBALS['RESOURCES_ENABLE']) { ?>
                 <TD width="35%" nowrap="nowrap" class="<?=$tpl['class']?>">
@@ -65,6 +68,11 @@ if (!$sd_open[$tpl['md_id']] || $_LOCKED) { ?>
                             <?= Assets::img('icons/16/yellow/arr_2down.png', array('align' => 'absmiddle'))?>
                             </a>
                         <? endif;?>
+
+                    <a href="<?= URLHelper::getLink('?editCycleId='. $tpl['md_id']) ?>" style="margin-right: 10px">
+                        <?=Assets::img('icons/16/blue/edit.png', array('class' => 'text-top', 'title' => _('Regelmäßigen Termin bearbeiten.'))) ?>
+                    </a>
+
                     <A href="<?= URLHelper::getLink('?cmd=deleteCycle&cycle_id='. $tpl['md_id']) ?>">
                         <?=Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _('Regelmäßige Zeit inklusive aller zugehörigen Termine löschen!'))) ?>
                     </A>
@@ -73,38 +81,32 @@ if (!$sd_open[$tpl['md_id']] || $_LOCKED) { ?>
             </TR>
         </TABLE>
     </TD>
-<?
-} else { ?>
-<TR>
-    <TD class="table_row_even" colspan="9">
+</tr>    
+<? if (Request::option('editCycleId') == $tpl['md_id']) : ?>
+<tr>
+    <td class="table_row_even" colspan="9" style="padding-left: 10px">
         <A name="<?=$tpl['md_id']?>"></A>
-        <TABLE cellpadding="2" cellspacing="0" border="0" width="100%">
-            <TR>
-                <TD width="2%" align="left" valign="top" class="<?=$tpl['class']?>" nowrap="nowrap">
-                    <A href="<?= URLHelper::getLink('?cmd=close&open_close_id='. $tpl['md_id'] .'#'. $tpl['md_id']) ?>">
-                        <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/blue/arr_1down.png" border="0" valign="absmiddle">
-                    </A>
-                </TD>
-                <TD width="93%" nowrap="nowrap" class="<?=$tpl['class']?>">
+        
                     <FORM action="<?= URLHelper::getLink() ?>" method="post" name="EditCycle" style="display: inline">
                         <?= CSRFProtection::tokenTag() ?>
-                        <FONT size="-1"><B>
-                            <SELECT name="day">
+                        <SELECT name="day">
                             <? foreach(array_merge(range(1,6), array(0)) as $d) : ?>
                                 <OPTION value="<?=$d?>"<?=($tpl['mdDayNumber']==$d) ? 'selected="selected"' : ''?>><?=getWeekday($d, false)?></OPTION>
                             <? endforeach; ?>
-                            </SELECT>,
-                            <INPUT type="text" name="start_stunde" maxlength="2" size="2" value="<?=leadingZero($tpl['mdStartHour'])?>"> :
-                            <INPUT type="text" name="start_minute" maxlength="2" size="2" value="<?=leadingZero($tpl['mdStartMinute'])?>">
-                            <?=_("bis")?>
-                            <INPUT type="text" name="end_stunde" maxlength="2" size="2" value="<?=leadingZero($tpl['mdEndHour'])?>"> :
-                            <INPUT type="text" name="end_minute" maxlength="2" size="2" value="<?=leadingZero($tpl['mdEndMinute'])?>"> Uhr
-                            <?=Termin_Eingabe_javascript(2,0,0,$tpl['mdStartHour'],$tpl['mdStartMinute'],$tpl['mdEndHour'],$tpl['mdEndMinute']);?>
-                            <?=_("Beschreibung:")?> <INPUT type="text" name="description" value="<?=$tpl['mdDescription']?>">
-                            <?= Button::createAccept(_('Übernehmen'), 'editCycle') ?>
-                            <INPUT type="hidden" name="cycle_id" value="<?=$tpl['md_id']?>">
-                        </B></FONT>
-                         <br>
+                        </SELECT>,
+                        <INPUT type="text" name="start_stunde" maxlength="2" size="2" value="<?=leadingZero($tpl['mdStartHour'])?>"> :
+                        <INPUT type="text" name="start_minute" maxlength="2" size="2" value="<?=leadingZero($tpl['mdStartMinute'])?>">
+                        <?=_("bis")?>
+                        <INPUT type="text" name="end_stunde" maxlength="2" size="2" value="<?=leadingZero($tpl['mdEndHour'])?>"> :
+                        <INPUT type="text" name="end_minute" maxlength="2" size="2" value="<?=leadingZero($tpl['mdEndMinute'])?>"> Uhr
+                        <?=Termin_Eingabe_javascript(2,0,0,$tpl['mdStartHour'],$tpl['mdStartMinute'],$tpl['mdEndHour'],$tpl['mdEndMinute']);?>
+                        
+                        <span style="padding-left: 15px">
+                            <?=_("SWS:")?>
+                            <input type="text" name="sws" maxlength="3" size="1" value="<?=$tpl['sws']?>">
+                        </span>
+                        <br><br>
+
                         <?=_("Turnus")?>:
                         <select name="turnus">
                         <option value="0"<?=$tpl['cycle'] == 0 ? 'selected' : ''?>><?=_("wöchentlich");?></option>
@@ -121,43 +123,33 @@ if (!$sd_open[$tpl['md_id']] || $_LOCKED) { ?>
                             endforeach;
                         ?>
                         </select>
-                        &nbsp;&nbsp;
-                        <?=_("SWS Dozent:")?>
-                        &nbsp;
-                        <INPUT type="text" name="sws" maxlength="3" size="1" value="<?=$tpl['sws']?>">
-                        <? if($GLOBALS['RESOURCES_ENABLE'] && $GLOBALS['RESOURCES_ALLOW_ROOM_REQUESTS']) : ?>
-                        <div style="padding-top:2px">
-                        <?=_("Raumanfrage")?>
-                        <?= LinkButton::create($tpl['room_request'] ? _('Bearbeiten') : _('Erstellen'),
-                                URLHelper::getURL('dispatch.php/course/room_requests/edit/' .$tpl['seminar_id'], $tpl['room_request'] ? array('request_id' => $tpl['room_request']->request_id) : array('new_room_request_type' => 'cycle_' . $tpl['md_id'])),
-                                array('onClick' => "STUDIP.RoomRequestDialog.initialize(this.href.replace('edit','edit_dialog'));return false;")) ?>
+                        <br><br>
 
-                        <? if ($tpl['room_request']) : ?>
-                            <?=_("oder")?>
-                            <?= LinkButton::create(_('Zurückziehen'), URLHelper::getURL('?cmd=removeMetadateRequest&metadate_id='. $tpl['md_id'])) ?>
-                        <? endif ?>
+                        <?=_("Beschreibung:")?> <input type="text" name="description" value="<?=$tpl['mdDescription']?>" style="width: 450px">
+                        <input type="hidden" name="cycle_id" value="<?=$tpl['md_id']?>">
+                        <br><br>
+                        
+                        <div style="text-align: center">
+                            <div class="button-group">
+                                <?= Button::createAccept(_('Übernehmen'), 'editCycle') ?>
+                                <?= LinkButton::createCancel(_('Abbrechen'), URLHelper::getUrl()) ?>
+                            </div>
+                            
+                            <div class="button-group">
+                                <? if($GLOBALS['RESOURCES_ENABLE'] && $GLOBALS['RESOURCES_ALLOW_ROOM_REQUESTS']) : ?>
+                                    <?= LinkButton::create($tpl['room_request'] ? _('Raumanfrage bearbeiten') : _('Raumanfrage erstellen'),
+                                        URLHelper::getURL('dispatch.php/course/room_requests/edit/' .$tpl['seminar_id'], $tpl['room_request'] ? array('request_id' => $tpl['room_request']->request_id) : array('new_room_request_type' => 'cycle_' . $tpl['md_id'])),
+                                        array('onClick' => "STUDIP.RoomRequestDialog.initialize(this.href.replace('edit','edit_dialog'));return false;")) ?>
 
-                        </div>                            
-                        <? endif?>
-                    </FORM></TD>
-                <TD width="5%" nowrap="nowrap" class="<?=$tpl['class']?>" align="right">
-                    <? if ($show_sorter) : ?>
-                        <a href="<?=URLHelper::getLink('?cmd=moveCycle&direction=up&cycle_id='. $tpl['md_id']) ?>">
-                        <?= Assets::img('icons/16/yellow/arr_2up.png', array('align' => 'absmiddle'))?>
-                        </a>
-                        <a href="<?=URLHelper::getLink('?cmd=moveCycle&direction=down&cycle_id='. $tpl['md_id']) ?>">
-                        <?= Assets::img('icons/16/yellow/arr_2down.png', array('align' => 'absmiddle'))?>
-                        </a>
-                    <? endif; ?>
-                    <A href="<?= URLHelper::getLink('?cmd=deleteCycle&cycle_id='. $tpl['md_id']) ?>">
-                        <?=Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _('Regelmäßige Zeit inklusive aller zugehörigen Termine löschen!'))) ?>
-                    </A>
-
-                </TD>
-            </TR>
-
-        </TABLE>
-    </TD>
-<?
-}
-unset($tpl);
+                                    <? if ($tpl['room_request']) : ?>
+                                        <?=_("oder")?>
+                                        <?= LinkButton::create(_('Raumfrage zurückziehen'), URLHelper::getURL('?cmd=removeMetadateRequest&metadate_id='. $tpl['md_id'])) ?>
+                                    <? endif ?>
+                                <? endif ?>
+                            </div>
+                        </div>
+                    </FORM>
+    </td>
+</tr>
+<? endif ?>
+<? unset($tpl); ?>

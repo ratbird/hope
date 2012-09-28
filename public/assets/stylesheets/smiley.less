@@ -1,4 +1,5 @@
 @import "mixins.less";
+@import "less/colors.less";
 
 @image-path: "../images";
 @icon-path: "@{image-path}/icons/16";
@@ -66,5 +67,67 @@
         font-weight: 700;
         margin: 0;
         text-align: right;
+    }
+}
+
+.smiley-picker {
+    width: 420px;
+    .smileys {
+        text-align: center;
+        width: 100%;
+        padding: 5px 0;
+    }
+
+    .smiley, .empty {
+        display: inline-block;
+        height: 80px;
+        vertical-align: middle;
+        width: 80px;
+    }
+    .smiley {
+        .box-sizing(border-box);
+        cursor: pointer;
+        max-height: 80px;
+        max-width: 80px;
+        text-align: center;
+
+        // see http://css-tricks.com/centering-in-the-unknown/
+        &:before {
+            content: '';
+            display: inline-block;
+            height: 100%;
+            vertical-align: middle;
+            margin-right: -0.25em;
+        }
+        img {
+            vertical-align: middle;
+            max-height: 76px;
+            max-width: 72px;
+            margin-right: 0.25em;
+        }
+
+        &:hover {
+            background-color: fade(@active-color, 10%);
+            .border-radius(20px);
+            .box-shadow(0 -1px 4px fade(@active-color, 10%), 0 2px 5px #888);
+        }
+    }
+
+    .navigation {
+        border-collapse: collapse;
+        width: 100%;
+        img { vertical-align: text-top; }
+        td { padding: 2px; }
+        &.top td { border-bottom: 1px solid @brand-color-dark; }
+        &.bottom td { border-top: 1px solid @brand-color-dark; }
+        .active a {
+            color: @active-color;
+            font-weight: bold;
+        }
+    }
+}
+.smiley-picker-dialog {
+    .ui-dialog-content {
+        padding: 0;
     }
 }

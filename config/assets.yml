@@ -12,13 +12,16 @@ javascripts:
     - javascripts/header.js
     - javascripts/personal_notifications.js
 
+  toolbar: &toolbar
+    - javascripts/toolbar.js
+    - javascripts/toolbar-buttonset.js
+    - javascripts/smiley-picker.js
+
   base:
     - *jquery
     - javascripts/underscore.js
     - javascripts/l10n.js
     - javascripts/init.js
-    - javascripts/toolbar.js
-    - javascripts/toolbar-buttonset.js
     - javascripts/ajax_notifications.js
     - javascripts/url_helper.js
     - javascripts/updater.js
@@ -44,6 +47,7 @@ javascripts:
     - javascripts/status_group.js
     - javascripts/sem_classes.js
     - *header
+    - *toolbar
     - javascripts/application.js
 
   raumzeit:

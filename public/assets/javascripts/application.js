@@ -62,8 +62,6 @@ jQuery(function () {
     STUDIP.ajax_indicator = true;
     STUDIP.URLHelper.base_url = STUDIP.ABSOLUTE_URI_STUDIP;
 
-    jQuery('.add_toolbar').addToolbar();
-
     STUDIP.study_area_selection.initialize();
 
     // validate forms
@@ -78,6 +76,8 @@ jQuery(function () {
         handles: 's',
         minHeight: 50
     });
+
+    jQuery('.add_toolbar').addToolbar();
 });
 
 

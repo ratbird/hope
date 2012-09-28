@@ -43,7 +43,7 @@
                     }
                     button.click(function () {
                         var selection = $element.getSelection(),
-                            result    = format.evaluate(selection) || selection;
+                            result    = format.evaluate(selection, $element, this) || selection;
                         $element.replaceSelection(result);
                         return false;
                     });
@@ -53,7 +53,7 @@
             });
 
             // Attach toolbar to the specified element
-            toolbar.insertBefore($element);
+            $element.before(toolbar);
         }
     };
 
@@ -93,7 +93,7 @@
                     this.value = this.value.substring(0, selection_start) +
                         replacement +
                         this.value.substring(this.selectionEnd);
-                    this.setSelectionRange(selection_start,
+                    this.setSelectionRange(selection_start + replacement.length,
                                            selection_start + replacement.length);
                 }
                 this.focus();

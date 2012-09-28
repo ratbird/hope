@@ -1,7 +1,4 @@
 <?php
-require_once 'app/controllers/authenticated_controller.php';
-require_once 'app/models/smiley.php';
-
 /**
  * smileys.php - controller class for the smileys
  *
@@ -18,8 +15,15 @@ require_once 'app/models/smiley.php';
  * @package  smiley
  * @since    2.3
  */
+
+require_once 'app/controllers/authenticated_controller.php';
+require_once 'app/models/smiley.php';
+
 class SmileysController extends AuthenticatedController
 {
+    const GRID_WIDTH  = 5;
+    const GRID_HEIGHT = 2;
+    
     /**
      * Common tasks for all actions.
      */
@@ -31,28 +35,32 @@ class SmileysController extends AuthenticatedController
         PageLayout::addSqueezePackage('smileys');
 
         $this->set_layout(null);
+
+
+        $this->favorites_activated = SmileyFavorites::isEnabled()
+                                     && $GLOBALS['user']->id != nobody;
+
+        if ($this->favorites_activated) {
+            $this->favorites = new SmileyFavorites($GLOBALS['user']->id);
+            $this->default   = count($this->favorites->get()) > 0
+                             ? 'favorites'
+                             : Smiley::getFirstUsedCharacter();
+        } else {
+            $this->default   = Smiley::getFirstUsedCharacter();
+        }
     }
 
     /**
      * Displays (a subset of) the smileys in the system
      *
-     * @param mixed $view Subset to display, defaults to favorites for logged in users
+     * @param mixed $view Subset to display, defaults to favorites if enabled
      */
     function index_action($view = null)
     {
-        $this->characters          = Smiley::getUsedCharacters();
-        $this->statistics          = Smiley::getStatistics();
+        $this->view = $view ?: $this->default;
 
-        $this->favorites_activated = SmileyFavorites::isEnabled()
-                                     && $GLOBALS['user']->id != nobody;
-        if ($this->favorites_activated) {
-            $this->favorites = new SmileyFavorites($GLOBALS['user']->id);
-            $default = 'favorites';
-        } else {
-            $default = Smiley::getFirstUsedCharacter();
-        }
-
-        $this->view = $view ?: $default;
+        $this->characters = Smiley::getUsedCharacters();
+        $this->statistics = Smiley::getStatistics();
 
         // Redirect to index if favorites is selected but user is not logged in
         if (!$this->favorites_activated and $this->view == 'favorites') {
@@ -72,15 +80,14 @@ class SmileysController extends AuthenticatedController
      */
     function favor_action($id, $view) {
         try {
-            $favorites = new SmileyFavorites($GLOBALS['user']->id);
-            $state = $favorites->toggle($id);
+            $state = $this->favorites->toggle($id);
 
             $message = $state
                      ? _('Der Smiley wurde zu Ihren Favoriten hinzugefügt.')
                      : _('Der Smiley gehört nicht mehr zu Ihren Favoriten.');
             $msg_box = MessageBox::success($message);
         } catch (OutOfBoundsException $e) {
-            $state = $favorites->contain($id);
+            $state = $this->favorites->contain($id);
             $message = _('Maximale Favoritenzahl erreicht. Vielleicht sollten Sie mal ausmisten? :)');
             $msg_box = Messagebox::error($message);
         }
@@ -95,5 +102,34 @@ class SmileysController extends AuthenticatedController
             PageLayout::postMessage($msg_box);
             $this->redirect('smileys/index/' . $view . '#smiley' . $id);
         }
+    }
+
+    /**
+     * Back end for the smiley picker javascript module.
+     * Renders a list of smileys very similar to the index action but
+     * unfortunately still to different to be combined.
+     *
+     * @param mixed $view Subset to display, defaults to favorites if enabled
+     * @param int   $page Section of subset to display
+     */
+    function picker_action($view = null, $page = 0)
+    {
+        $per_page = self::GRID_WIDTH * self::GRID_HEIGHT;
+
+        $this->view = $view ?: ($this->default === 'favorites' ? 'favorites' : 'all');
+        $smileys = $this->view == 'favorites'
+                 ? Smiley::getByIds($this->favorites->get())
+                 : Smiley::getGrouped($this->view);
+
+        $this->page       = $page;
+        $this->pages      = floor(count($smileys) / $per_page);
+
+        array_walk($smileys, function ($smiley) {
+            $smiley->link = Smiley::getURL($smiley->name);
+            $smiley->html = Smiley::img($smiley->name);
+        });
+        $this->smileys    = array_slice($smileys, $page * $per_page, $per_page);
+
+        $this->characters = Smiley::getUsedCharacters();
     }
 }

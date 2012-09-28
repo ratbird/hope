@@ -11,7 +11,7 @@
     // by the prefix.
     // Be aware that the wrap function will not wrap a string twice.
     function createWrap(prefix, suffix) {
-        if (suffix === "undefined") {
+        if (suffix === undefined) {
             suffix = prefix;
         }
         return function (string) {
@@ -28,7 +28,7 @@
             italic:         {label: "<em>i</em>",           evaluate: createWrap("%%")},
             underline:      {label: "<u>u</u>",             evaluate: createWrap("__")},
             strikethrough:  {label: "<del>u</del>",         evaluate: createWrap("{-", "-}")},
-            code:           {label: "<code>code</code>",                 evaluate: createWrap("[code]", "[/code]")},
+            code:           {label: "<code>code</code>",    evaluate: createWrap("[code]", "[/code]")},
             larger:         {label: "A+",                   evaluate: createWrap("++")},
             smaller:        {label: "A-",                   evaluate: createWrap("--")},
             signature:      {label: "signature",            evaluate: createWrap("", "\u2013~~~")},
@@ -55,8 +55,10 @@
         right: {
             smilies: {
                 label: ":)",
-                evaluate: function () {
-                    window.open(STUDIP.URLHelper.getURL("dispatch.php/smileys"), "_blank");
+                evaluate: function (string, textarea, button) {
+                    STUDIP.SmileyPicker.toggle(button, function (code) {
+                        textarea.replaceSelection(code + ' ');
+                    });
                 }
             },
             help: {
@@ -68,5 +70,4 @@
             }
         }
     };
-
 }(jQuery));

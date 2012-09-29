@@ -105,8 +105,18 @@ use Studip\Button, Studip\LinkButton;
                 <td align="right" nowrap><?= htmlReady($datafield->getName()) ?>:</td>
                 <td>
                 <? if ($datafield->getType() == 'bool') : ?>
-                    <input type="radio" name="<?= $datafield->getID()?>" value="1" <?= ($user[$datafield->getID()] === "1") ? 'checked' : '' ?>> <?= _('ja') ?>
-                    <input type="radio" name="<?= $datafield->getID()?>" value="0" <?= ($user[$datafield->getID()] === "0") ? 'checked' : '' ?>> <?= _('nein') ?>
+                    <label>
+                        <input type="radio" name="<?= $datafield->getID() ?>" value="" <?= strlen($user[$datafield->getID()]) === 0 ? 'checked' : '' ?>>
+                        <?= _('egal') ?>
+                    </label>
+                    <label>
+                        <input type="radio" name="<?= $datafield->getID()?>" value="1" <?= ($user[$datafield->getID()] === "1") ? 'checked' : '' ?>>
+                        <?= _('ja') ?>
+                    </label>
+                    <label>
+                        <input type="radio" name="<?= $datafield->getID()?>" value="0" <?= ($user[$datafield->getID()] === "0") ? 'checked' : '' ?>>
+                        <?= _('nein') ?>
+                    </label>
                 <? elseif ($datafield->getType() == 'selectbox') : ?>
                     <select name="<?= $datafield->getID()?>">
                         <option value="alle"><?= _('alle') ?></option>

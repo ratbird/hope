@@ -114,6 +114,7 @@ div#barBottomright, #layout_footer {
     }
 }
 div#notification_list {
+    border: thin solid #333333;
     display: none;
     left: -155px;
     position: absolute;
@@ -123,10 +124,26 @@ div#notification_list {
     border-collapse: collapse;
     color: #333333;
     font-size: 0.8em;
+    margin-top: 10px;
+    .box-shadow(0 2px 5px #444);
+    .border-radius(5px);
+
+    &:before {
+        content:'';
+        border-left: 11px solid transparent;
+        border-right: 11px solid transparent;
+        border-bottom: 11px solid #eeeeee;
+        height: 0;
+        width: 0;
+        position: absolute;
+        left: 50%;
+        top: -10px;
+        margin-left: -6px;
+        z-index: 100;
+    }
 
     .notification {
-        border: thin solid #333333;
-        border-top: 0;
+        border-top: thin solid #333;
         display: block;
         padding: 4px;
         width: 312px;
@@ -135,6 +152,14 @@ div#notification_list {
         .clearfix();
         opacity: 0;
         white-space: normal;
+        
+        &:first-child {
+            border-top: 0;
+            .border-top-radius(5px);
+        }
+        &:last-child {
+            .border-bottom-radius(5px);
+        }
         
         &:hover {
             background-color: #ffffff;

@@ -72,12 +72,13 @@ jQuery(function () {
         jQuery('[autofocus]').first().focus();
     }
 
+    jQuery('.add_toolbar').addToolbar();
+
     jQuery('textarea.resizable').resizable({
         handles: 's',
         minHeight: 50
     });
 
-    jQuery('.add_toolbar').addToolbar();
 });
 
 

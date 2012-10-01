@@ -1,4 +1,4 @@
-<? use Studip\Button; ?>
+<? use Studip\Button, Studip\LinkButton; ?>
 <table border="0" width="100%" cellspacing="0" cellpadding="0" align="center">
     <tr>
         <td class="blank">
@@ -16,7 +16,7 @@
                                         <label for="suchbegriff"><?= _('Suchbegriff:') ?></label>
                                     </td>
                                     <td class="table_row_even" style="text-align: right;">
-                                        <input type="text" name="suchbegriff" id="suchbegriff">
+                                        <input type="text" name="suchbegriff" id="suchbegriff" value="<?= _(Request::get('suchbegriff')) ?>">
                                     </td>
                                 </tr>
                                 <tr class="table_row_even">
@@ -24,11 +24,11 @@
                                         <label for="author"><?= _('Von:') ?></label>
                                     </td>
                                     <td>
-                                        <input type="text" name="author" id="author">
+                                        <input type="text" name="author" id="author" value="<?= _(Request::get('author')) ?>">
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="table_row_odd" colspan="2" align="center">
+                                    <td class="steelgraulight" align="center" colspan="2">
                                         <input type="hidden" name="view" value="search">
                                         <br>
                                         <?= Button::create(_('Suchen')) ?>

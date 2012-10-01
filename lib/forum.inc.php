@@ -791,9 +791,9 @@ function ForumNoPostings () {
     if ($forum["view"] != "search")
         $text = _("In dieser Ansicht gibt es derzeit keine Forenbeiträge.");
     else
-        $text = sprintf(_("Zu Ihrem Suchbegriff '%s' gibt es keine Treffer."), htmlReady($forum['searchstring'])) .
-            "<br><a href=\"".URLHelper::getLink("?view=search&reset=1")."\">" . _("Neue Suche") . "</a>";
+        $text = _("Zu Ihren gewählten Suchkriterien wurden keine Beiträge gefunden.");
     $empty .= parse_msg("info§$text");
+	//$empty .= forum_search_field() . '<br><br>';
     return $empty;
 }
 
@@ -1567,6 +1567,7 @@ function flatview($open = 0, $show = 0, $update = '', $name = '', $description =
     } else if ($forum['view'] == 'search') {
         if ($forum['search'] != '') {
             $addon = ' AND (' . $forum['search'] . ')';
+			echo forum_search_field() . '<br><br>';
         } else {
             echo forum_search_field() . '<br><br>';
             return;

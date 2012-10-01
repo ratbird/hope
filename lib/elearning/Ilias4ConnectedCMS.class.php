@@ -65,7 +65,7 @@ class Ilias4ConnectedCMS extends Ilias3ConnectedCMS
         // Workaround: getTreeChilds() liefert ALLE Referenzen der beteiligten Objekte, hier sollen aber nur die aus dem Kurs geprüft werden. Deshalb Abgleich der Pfade aller gefundenen Objekt-Referenzen.
         $result = $this->soap_client->getObjectByReference($course_id);
         if ($result) {
-            $course_path = $this->soap_client->getPath($course_id) . $this->soap_client->seperator_string . $result["title"];
+            $course_path = $this->soap_client->getRawPath($course_id) . '_' . $result["ref_id"];
         }
 
         $result = $this->soap_client->getTreeChilds($course_id, $types, $this->user->getId());
@@ -73,7 +73,7 @@ class Ilias4ConnectedCMS extends Ilias3ConnectedCMS
         if ($result) {
             $messages["info"] .= "<b>".sprintf(_("Aktualisierung der Zuordnungen zum System \"%s\":"), $this->getName()) . "</b><br>";
             foreach($result as $ref_id => $data) {
-                if (($data["accessInfo"] == "granted") AND ($this->soap_client->getPath($ref_id) == $course_path)) {
+                if (($data["accessInfo"] == "granted") AND ($this->soap_client->getRawPath($ref_id) == $course_path)) {
                     $rs = $db->query("SELECT * FROM object_contentmodules WHERE object_id = '" . $SessSemName[1] . "' AND module_id = '" . $ref_id . "' AND system_type = '" . $this->cms_type . "' AND module_type = '" . $data["type"] . "'");
                     if (! $rs->fetch()) {
                         $messages["info"] .= sprintf(_("Zuordnung zur Lerneinheit \"%s\" wurde hinzugefügt."), ($data["title"])) . "<br>";

@@ -151,4 +151,36 @@ class Ilias4Soap extends Ilias3Soap
             return false;
         }
     }
+
+     /**
+     *
+     * returns repository-path to ilias-object
+     *
+     * @access public
+     * @param string source_id reference-id
+     * @param string target_id reference-id
+     * @return string result
+     */
+    function getRawPath($ref_id)
+    {
+        $param = array(
+            'sid' => $this->getSID(),
+            'ref_id' => $ref_id
+        );
+        $result = $this->call('getPathForRefId', $param);
+
+        if ($result) {
+            $s = simplexml_load_string(studip_utf8encode($result));
+
+            foreach ($s->rows->row as $row) {
+                $path[] = (string)$row->column[0];
+            }
+        }
+
+        if (is_array($path)) {
+            return implode($path, '_');
+        } else {
+            return false;
+        }
+    }
 }

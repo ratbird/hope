@@ -16,19 +16,23 @@
                 }
 
                 $(this).wrap('<span class="ajax_notification" />');
-                var notification = $('<span class="notification" />').hide().insertBefore(this),
-                changes = {marginLeft: 0, marginRight: 0};
+                var that = this,
+                    notification = $('<span class="notification" />').hide().insertBefore(this),
+                    changes = {
+                        marginLeft: 0,
+                        marginRight: 0
+                    };
 
-                changes[position === 'right' ? 'marginRight' : 'marginLeft'] = notification.outerWidth(true) + 'px';
+                changes[position === 'right' ? 'marginRight' : 'marginLeft'] = notification.outerWidth(true);
 
                 $(this).data({
                     ajax_notification: notification
                 }).parent().animate(changes, 'fast', function () {
-                    var offset = $(this).children(':not(.notification)').position(),
-                    styles = {
-                        left: offset.left - notification.outerWidth(true),
-                        top: offset.top + Math.floor(($(this).height() - notification.outerHeight(true)) / 2)
-                    };
+                    var offset = $(that).position(),
+                        styles = {
+                            left: offset.left - notification.outerWidth(true),
+                            top: offset.top + Math.max(0, Math.floor(($(that).height() - notification.outerHeight(true)) / 2))
+                        };
                     if (position === 'right') {
                         styles.left += $(this).outerWidth(true);
                     }

@@ -66,13 +66,33 @@ div.messagebox_details {
 .messagebox("warning",   #b06500, #f7e98e, #b06500, "advice");
 
 // Define modal messagebox
-div.messagebox_modal {
-    color: #000;
-    background-color: #f3e180;
-    background-image: url("@{image-path}/messagebox/question.png");
-    margin: -8px 8px 8px -8px;
+.modaloverlay {
+    background: fade(#000000, 50%);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
 
-    div { text-align: center; }
+    .messagebox {
+        .box-sizing(border-box);
+        position: fixed;
+        max-width: 50%;
+        width: 50%;
+        left: 25%;
+        top: 40%;
+
+        color: #000;
+        background-color: #f3e180;
+        background-image: url("@{image-path}/messagebox/question.png");
+        .box-shadow(8px 8px 0 fade(#000, 50%));
+
+        div {
+            margin-top: 1em;
+            text-align: center;
+        }
+    }
 }
 
 // Specific adjustments

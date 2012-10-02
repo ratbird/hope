@@ -351,8 +351,6 @@ function outputLoop($chatid){
 
         if ($newMsg) {
             foreach($newMsg as $msg){
-                var_dump('newxx');
-                var_dump($newMsg);
                 $output = "";
                 if (substr($msg[0],0,6) == "system") {
                     $output = chatSystemMsg($msg);

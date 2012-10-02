@@ -134,11 +134,7 @@ if (!$chatServer->isActiveUser($user->id,$chatid)) {
 
 //neue chatnachricht einfügen
 if ($chatInput) {
-    var_dump($chatInput);
-    var_dump('inpv');
     if ($chatServer->isActiveUser($user->id,$chatid)){
-       var_dump($chatInput);
-       var_dump('inpnactive');
         $chatServer->addMsg($user->id,$chatid,$chatInput);
         //evtl Farbe umstellen
         $cmdStr = trim(substr($chatInput." ",1,strpos($chatInput," ")-1));

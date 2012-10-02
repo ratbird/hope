@@ -15,46 +15,53 @@
             suffix = prefix;
         }
         return function (string) {
-            return (string.substr(0, prefix.length) === prefix && string.substr(-suffix.length) === suffix)
-                ? string
-                : prefix + string + suffix;
+            if (string.substr(0, prefix.length) === prefix && string.substr(-suffix.length) === suffix) {
+                return string;
+            }
+            if (string) {
+                return prefix + string + suffix;
+            }
+            return {
+                replacement: prefix + suffix,
+                offset: prefix.length
+            };
         };
     }
 
     // Define default stud.ip button set
     STUDIP.Toolbar.buttonSet = {
         left: {
-            bold:           {label: "<strong>B</strong>",   evaluate: createWrap("**")},
-            italic:         {label: "<em>i</em>",           evaluate: createWrap("%%")},
-            underline:      {label: "<u>u</u>",             evaluate: createWrap("__")},
-            strikethrough:  {label: "<del>u</del>",         evaluate: createWrap("{-", "-}")},
-            code:           {label: "<code>code</code>",    evaluate: createWrap("[code]", "[/code]")},
-            larger:         {label: "A+",                   evaluate: createWrap("++")},
-            smaller:        {label: "A-",                   evaluate: createWrap("--")},
-            signature:      {label: "signature",            evaluate: createWrap("", "\u2013~~~")},
+            bold:           {label: '<strong>B</strong>',   evaluate: createWrap('**')},
+            italic:         {label: '<em>i</em>',           evaluate: createWrap('%%')},
+            underline:      {label: '<u>u</u>',             evaluate: createWrap('__')},
+            strikethrough:  {label: '<del>u</del>',         evaluate: createWrap('{-', '-}')},
+            code:           {label: '<code>code</code>',    evaluate: createWrap('[code]', '[/code]')},
+            larger:         {label: 'A+',                   evaluate: createWrap('++')},
+            smaller:        {label: 'A-',                   evaluate: createWrap('--')},
+            signature:      {label: 'signature',            evaluate: createWrap('', '\u2013~~~')},
             link: {
-                label: "link",
+                label: 'link',
                 evaluate: function (string) {
-                    string = string || (window.prompt("Text:"));
-                    if (string === null) {
+                    string = string || window.prompt('Text:') || '';
+                    if (string.length === 0) {
                         return string;
                     }
 
-                    var url = window.prompt("URL:");
-                    return url === null ? string : "[" + string + "]" + url;
+                    var url = window.prompt('URL:') || '';
+                    return url.length === 0 ? string : '[' + string + ']' + url;
                 }
             },
             image: {
-                label: "img",
+                label: 'img',
                 evaluate: function (string) {
-                    var url = window.prompt("URL:");
-                    return url === null ? string : "[img=" + string + "]" + url;
+                    var url = window.prompt('URL:') || '';
+                    return url.length === 0 ? string : '[img=' + string + ']' + url;
                 }
             }
         },
         right: {
             smilies: {
-                label: ":)",
+                label: ':)',
                 evaluate: function (string, textarea, button) {
                     STUDIP.SmileyPicker.toggle(button, function (code) {
                         textarea.replaceSelection(code + ' ');
@@ -62,10 +69,10 @@
                 }
             },
             help: {
-                label: "?",
+                label: '?',
                 evaluate: function () {
-                    var url = $("link[rel=help].text-format").attr("href");
-                    window.open(url, "_blank");
+                    var url = $('link[rel=help].text-format').attr('href');
+                    window.open(url, '_blank');
                 }
             }
         }

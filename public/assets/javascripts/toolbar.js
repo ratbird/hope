@@ -15,6 +15,8 @@
         // Initializes (adds) a toolbar the passed textarea element
         initialize: function (element, button_set) {
             var $element = $(element),
+                width    = $element.width(),
+                wrap,
                 toolbar;
 
             // Bail out if the element is not a tetarea or a toolbar has already
@@ -29,36 +31,56 @@
             $element.data('toolbar-added', true);
 
             // Create toolbar element
-            toolbar = $('<div class="editor_toolbar" />').width($element.outerWidth(true));
+            toolbar = $('<div class="buttons" />');
 
             // Assemble toolbar
             _.each(['left', 'right'], function (position) {
-                var buttons = $('<div/>');
+                var buttons = $('<span/>').addClass(position);
                 _.each(button_set[position], function (format, name) {
-                    var button = $('<button tabindex="-1" />').addClass(name);
+                    var button = $('<span />').addClass(name),
+                        label  = format.label || name;
+
                     if (format.icon) {
-                        $("<img/>").attr("alt", format.label || name).attr("src", STUDIP.ASSETS_URL + "images/icons/16/blue/" + format.icon + ".png").appendTo(button);
-                    } else {
-                        button.html(format.label || name);
+                        label = $('<img/>').attr('alt', format.label || name)
+                                           .attr('src', STUDIP.ASSETS_URL + "images/icons/16/blue/" + format.icon + '.png');
                     }
-                    button.click(function () {
-                        var selection = $element.getSelection(),
-                            result    = format.evaluate(selection, $element, this) || selection;
-                        $element.replaceSelection(result);
+
+                    button.html(label).button().click(function () {
+                        var selection   = $element.getSelection(),
+                            result      = format.evaluate(selection, $element, this) || selection,
+                            replacement = _.isObject(result)
+                                        ? result.replacement
+                                        : (_.isUndefined(result) ? selection : result),
+                            offset      = _.isObject(result)
+                                        ? result.offset
+                                        : (result || '').length;
+                        $element.replaceSelection(replacement, offset);
                         return false;
                     });
+
                     buttons.append(button);
                 });
                 toolbar.append(buttons);
             });
+            
+            // lock element width
+            $element.lockWidth();
 
             // Attach toolbar to the specified element
-            $element.before(toolbar);
+            wrap = $('<div class="editor_toolbar"/>');
+            $element.wrap(wrap).before(toolbar).css('margin-top', '+=' + toolbar.height());
         }
     };
 
     // Add functionality as jQuery extensions
     $.fn.extend({
+        // Locks an element's width
+        lockWidth: function (width) {
+            return this.each(function () {
+                var this_width = width = $(this).width();
+                $(this).width(width).removeAttr('width cols');
+            });
+        },
         // Adds the toolbar to an element
         addToolbar: function (button_set) {
             return this.each(function () {
@@ -78,7 +100,7 @@
         },
         // Replaces the currently selected text of an element with the given
         // replacement
-        replaceSelection: function (replacement) {
+        replaceSelection: function (replacement, cursor_position) {
             return this.each(function () {
                 var scroll_top = this.scrollTop,
                     range,
@@ -93,8 +115,8 @@
                     this.value = this.value.substring(0, selection_start) +
                         replacement +
                         this.value.substring(this.selectionEnd);
-                    this.setSelectionRange(selection_start + replacement.length,
-                                           selection_start + replacement.length);
+                    this.setSelectionRange(selection_start + (cursor_position || replacement.length),
+                                           selection_start + (cursor_position || replacement.length));
                 }
                 this.focus();
                 this.scrollTop = scroll_top;

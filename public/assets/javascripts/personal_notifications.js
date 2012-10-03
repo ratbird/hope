@@ -5,7 +5,7 @@ var stack = {},
     favicon_url,
     audio_notification = false;
 
-var process_notifications = function (notifications) {    
+var process_notifications = function (notifications) {
     var ul        = $('<ul/>'),
         changed   = false,
         new_stack = {};
@@ -15,6 +15,9 @@ var process_notifications = function (notifications) {
 
         var id = $('.notification:last', ul).data().id;
         new_stack[id] = notification;
+        if (notification.html_id) {
+            $("#" + notification.html_id).bind("mouseenter", STUDIP.PersonalNotifications.isVisited);
+        }
         
         changed = (changed || !(id in stack));
     });
@@ -28,24 +31,24 @@ var process_notifications = function (notifications) {
 
 STUDIP.PersonalNotifications = {
     newNotifications: function () {},
-    checkHTMLids: function () {
-        $.each(stack, function (id, notification) {
-            
-        });
-    },
     markAsRead: function (event) {
         var notification = $(this).closest('.notification'),
             id = notification.data().id;
+        STUDIP.PersonalNotifications.sendReadInfo(id, notification);
+        return false;
+    },
+    sendReadInfo: function (id, notification) {
         $.ajax({
             'url': STUDIP.ABSOLUTE_URI_STUDIP + "dispatch.php/jsupdater/mark_notification_read/" + id,
             'success': function () {
-                notification.toggle('blind', 'fast', function () {
-                    delete stack[id];
-                    STUDIP.PersonalNotifications.update();
-                });
+                if (notification) {
+                    notification.toggle('blind', 'fast', function () {
+                        delete stack[id];
+                        STUDIP.PersonalNotifications.update();
+                    });
+                }
             }
         });
-        return false;
     },
     update: function () {
         var count     = _.values(stack).length,
@@ -64,6 +67,14 @@ STUDIP.PersonalNotifications = {
             $('#notification_marker').text(count);
         }
         Notificon(count || '', {favicon: favicon_url});
+    },
+    isVisited: function () {
+        var id = this.id;
+        $.each(stack, function (index, notification) {
+            if (notification.html_id === id) {
+                STUDIP.PersonalNotifications.sendReadInfo(notification.personal_notification_id);
+            }
+        });
     }
 };
 

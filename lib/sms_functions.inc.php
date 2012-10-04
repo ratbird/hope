@@ -66,8 +66,6 @@ function return_val_from_key($array, $key) {
  */
 function MessageIcon($message_hovericon)
 {
-    global $my_messaging_settings, $auth, $forum;
-
     $hovericon = "<a href=\"".$message_hovericon['link']."\">".Assets::img($message_hovericon["picture"], array('class' => 'text-bottom'))."</a>";
     return $hovericon;
 }
@@ -178,7 +176,7 @@ function folder_openclose($folder, $x) {
 
 // print_snd_message
 function print_snd_message($psm) {
-    global $n, $LastLogin, $my_messaging_settings, $msging, $sms_data, $user, $_fullname_sql, $cmd_show, $cmd;
+    global $n, $my_messaging_settings, $msging, $sms_data, $user, $_fullname_sql, $cmd_show, $cmd;
 
     $db = DBManager::get();
 
@@ -325,7 +323,7 @@ function print_snd_message($psm) {
 
 // print_rec_message
 function print_rec_message($prm) {
-    global $n, $LastLogin, $my_messaging_settings, $msging, $sms_show, $sms_data, $user, $cmd_show, $cmd;
+    global $n, $my_messaging_settings, $msging, $sms_show, $sms_data, $user, $cmd_show, $cmd;
 
     // build
     if ($prm['readed'] != "1" && $my_messaging_settings["opennew"] == "1") { // open if unread

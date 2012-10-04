@@ -1,7 +1,6 @@
 <?
 # Lifter010: TODO
-$zoom = $GLOBALS['user']->user_vars['my_schedule_settings']['zoom'];
-
+$zoom = $my_schedule_settings['zoom'];
 if ($inst_mode) {
     $text  = _("Der Stundenplan zeigt die regelm‰ﬂigen Veranstaltungen dieser '
         . 'Einrichtung sowie von Ihnen selbst erstellte Belegungen.");
@@ -97,7 +96,7 @@ $infobox['content'][3]['eintrag'] = array (
     <?= $current_semester['name'] ?>
 </div>
 <? if (Request::get('show_settings')) : ?>
-    <?= $this->render_partial('calendar/schedule/settings', array('settings' => $GLOBALS['my_schedule_settings']));?>
+    <?= $this->render_partial('calendar/schedule/settings', array('settings' => $my_schedule_settings)) ?>
 <? endif ?>
 
 <?= $calendar_view->render(array('show_hidden' => $show_hidden)) ?>

@@ -606,7 +606,7 @@ function createSuccessReport (&$vote, $firstTime = YES, $changed = NO)
  */
 function createVoteResult ($vote, $preview = NO)
 {
-   global $auth, $forum, $perm;
+   global $auth, $perm;
 
    $haveFullPerm = $perm->have_studip_perm ("tutor", $vote->getRangeID()) ||
        $auth->auth["uid"] == $vote->getAuthorID ();

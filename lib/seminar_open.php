@@ -34,8 +34,7 @@ require_once 'lib/classes/SemesterData.class.php';
 require_once 'lib/functions.php';
 
 // set default Values for messaging
-function check_messaging_default() {
-    global $my_messaging_settings;
+function check_messaging_default($my_messaging_settings) {
 
     if (!$my_messaging_settings['show_only_buddys'])
         $my_messaging_settings['show_only_buddys'] = FALSE;
@@ -71,47 +70,10 @@ function check_messaging_default() {
         $my_messaging_settings['folder']['out'][0] = "dummy";
     if (!$my_messaging_settings['confirm_reading'])
         $my_messaging_settings['confirm_reading'] = 3;
+    return $my_messaging_settings;
 }
 
-// set default Values for schedule (timetable)
-function check_schedule_default() {
-    global $my_schedule_settings;
 
-    if (!$my_schedule_settings ||
-        $my_schedule_settings['glb_start_time'] === NULL ||
-        $my_schedule_settings['glb_end_time'] === NULL ) {
-        $my_schedule_settings=array(
-            "glb_start_time"=>8,
-            "glb_end_time"=>19,
-            "glb_days"=>array(
-                "mo"=>"TRUE",
-                "di"=>"TRUE",
-                "mi"=>"TRUE",
-                "do"=>"TRUE",
-                "fr"=>"TRUE",
-                "sa"=>"",
-                "so"=>""
-            ),
-            "default_setted"=>time()
-        );
-    }
-}
-
-function check_forum_default() {
-    global $forum;
-
-    $default_values = array(
-        'sortthemes'    => 'asc',
-        'themeview'     => 'tree',
-        'presetview'    => 'tree'
-    );
-
-    foreach ($default_values as $key => $value) {
-        if (!isset($forum[$key])) {
-            $forum[$key] = $value;
-        }
-    }
-}
 
 // set default Values for calendar
 function check_calendar_default(){
@@ -172,9 +134,6 @@ require_once('lib/language.inc.php');
 global $i_page,
        $DEFAULT_LANGUAGE, $SessSemName, $SessionSeminar,
        $sess, $auth, $user, $perm,
-       $forum,$LastLogin, $CurrentLogin,
-       $my_messaging_settings, $my_schedule_settings,
-       $my_personal_sems, $my_studip_settings, $homepage_cache_own,
        $CALENDAR_ENABLE, $_language_path;
 
 //get the name of the current page in $i_page
@@ -198,32 +157,21 @@ if ($_SESSION['SessionStart'] == 0) {
 
 // user init starts here
 if ($auth->is_authenticated() && is_object($user) && $user->id != "nobody") {
-    if ($_SESSION['SessionStart'] > $CurrentLogin) {      // just logged in
+    if ($_SESSION['SessionStart'] > UserConfig::get($user->id)->__get('CurrentLogin')) {      // just logged in
         // register all user variables
         //TODO: was wird hier noch gebraucht? was kann in UserConfig?
         $LastLogin = $CurrentLogin;
         $CurrentLogin = $_SESSION['SessionStart'];
-        $user->register("CurrentLogin");
-        $user->register("LastLogin");
-        $user->register("forum");
-        $user->register("my_messaging_settings");
-        $user->register("my_schedule_settings");
-        $user->register("my_personal_sems");
-        $user->register("my_studip_settings");
-        $user->register("homepage_cache_own");
-
-
-        // call default functions
-        check_messaging_default();
-        check_schedule_default();
+        UserConfig::get($user->id)->store('CurrentLogin', $CurrentLogin);
+        UserConfig::get($user->id)->store('LastLogin', $LastLogin);
+               // call default functions
         check_semester_default();
-        check_forum_default();
 
         if($CALENDAR_ENABLE){
             $user->register("calendar_user_control_data");
             check_calendar_default();
         }
-
+        $my_studip_settings = UserConfig::get($user->id)->__get('my_studip_settings');
         //redirect user to another page if he want to
         if (($my_studip_settings["startpage_redirect"]) && ($i_page == "index.php") && (!$perm->have_perm("root"))){
             $seminar_open_redirected = TRUE;
@@ -232,6 +180,8 @@ if ($auth->is_authenticated() && is_object($user) && $user->id != "nobody") {
     }
 
     // lauch stud.ip messenger after login
+    $my_messaging_settings = json_decode( UserConfig::get($user->id)->__get('my_messaging_settings'), true );
+    $my_messaging_settings = check_messaging_default($my_messaging_settings);
     if ($my_messaging_settings['start_messenger_at_startup'] && $auth->auth['jscript'] &&
         !$seminar_open_redirected && !$_SESSION['messenger_started']) {
         PageLayout::addHeadElement('script', array('type' => 'text/javascript'),

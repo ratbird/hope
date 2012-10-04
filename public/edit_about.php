@@ -329,7 +329,7 @@ if (check_ticket(Request::option('studipticket'))) {
         }
         $my_about->get_auth_user($username);
     }
-
+    
     // general settings from mystudip: language, accesskey
     if ($cmd=="change_general") {
         if(array_key_exists(Request::get('forced_language'), $GLOBALS['INSTALLED_LANGUAGES'])) {
@@ -341,8 +341,7 @@ if (check_ticket(Request::option('studipticket'))) {
             ));
             $_SESSION['_language'] = $_language = Request::get('forced_language');
         }
-
-        $my_studip_settings["startpage_redirect"] = Request::int('personal_startpage');
+        UserConfig::get($user->id)->store('startpage_redirect', Request::int('personal_startpage'));
         UserConfig::get($user->id)->store('ACCESSKEY_ENABLE', Request::int('accesskey_enable'));
         UserConfig::get($user->id)->store('SHOWSEM_ENABLE', Request::int('showsem_enable'));
         UserConfig::get($user->id)->store('PERSONAL_NOTIFICATIONS_ACTIVATED', Request::int('personal_notifications_activated'));
@@ -1503,7 +1502,7 @@ if ($view == 'Forum') {
         if ($presetview == 'theme') {
             $presetview = Request::option('themeview');
         }
-
+        $forum = array();
         $forum['neuauf']      = Request::int('neuauf');
         $forum['rateallopen'] = Request::option('rateallopen');
         $forum['showimages']  = Request::option('showimages');
@@ -1512,8 +1511,18 @@ if ($view == 'Forum') {
         $forum['presetview']  = $presetview;
         $forum['shrink']      = Request::int('shrink') * 7 * 24 * 60 * 60; // = 1 Woche
         $forum['changed']     = 'TRUE';
+        UserConfig::get($my_about->auth_user['user_id'])->store('forum', json_encode($forum));
+    }else{
+        $forum = json_decode(UserConfig::get($my_about->auth_user['user_id'])->__get('forum'), true);
+        if(!isset ($forum)){
+            $forum =  array(  'sortthemes'    => 'asc',
+                          'themeview'     => 'tree',
+                          'presetview'    => 'tree' );
+            
+        }
+             
     }
-
+    
     $template = $GLOBALS['template_factory']->open('settings/forum');
     $template->view  = $view;
     $template->forum = $forum;
@@ -1528,8 +1537,8 @@ if($view == 'calendar' && get_config('CALENDAR_ENABLE')) {
 
 if ($view == "Messaging") {
     require_once('lib/include/messagingSettings.inc.php');
-    check_messaging_default();
-    change_messaging_view();
+    
+    change_messaging_view($my_messaging_settings);
 }
 
 if ($view == 'notification') {

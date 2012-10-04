@@ -14,27 +14,29 @@ class UserDataToConfig extends Migration
     
         $conf = Config::get();
 
-        $conf->create('my_messaging_settings');   
-        $conf->create('forum');
-        $conf->create('my_schedule_settings');   
-        $conf->create('homepage_cache_own');
-        $conf->create('my_studip_settings');
-        $conf->create('CurrentLogin');    
-        $conf->create('LastLogin');
+        $conf->create('my_messaging_settings',array('range'=>'user'));   
+        $conf->create('forum',array('range'=>'user'));
+        $conf->create('my_schedule_settings',array('range'=>'user'));   
+        $conf->create('homepage_cache_own',array('range'=>'user'));
+        $conf->create('my_studip_settings',array('range'=>'user'));
+        $conf->create('CurrentLogin',array('range'=>'user'));    
+        $conf->create('LastLogin',array('range'=>'user'));
 
        //for all users:
         $string = "SELECT user_id FROM auth_user_md5";
         $statement = DBManager::get()->prepare($string);
         $statement->execute();
         while ($val = $statement->fetch(PDO::FETCH_ASSOC)) {
-        
+         	$user = new Seminar_User();
+         	$user->fake_user = true;
+         	$user->start($val['user_id']);
         	UserConfig::get($val['user_id'])->store("forum",json_encode($user->user_vars["forum"]));
         	UserConfig::get($val['user_id'])->store("my_messaging_settings",json_encode($user->user_vars["my_messaging_settings"])); 
         	UserConfig::get($val['user_id'])->store("my_schedule_settings",json_encode($user->user_vars["my_schedule_settings"])); 
-        	UserConfig::get($val['user_id'])->store("my_schedule_settings",($user->user_vars["homepage_cache_own"])); 
-        	UserConfig::get($val['user_id'])->store("my_schedule_settings",($user->user_vars["my_studip_settings"])); 
-        	UserConfig::get($val['user_id'])->store("my_schedule_settings",($user->user_vars["LastLogin"])); 
-        	UserConfig::get($val['user_id'])->store("my_schedule_settings",($user->user_vars["CurrentLogin"])); 
+        	UserConfig::get($val['user_id'])->store("homepage_cache_own",($user->user_vars["homepage_cache_own"])); 
+        	UserConfig::get($val['user_id'])->store("my_studip_settings",($user->user_vars["my_studip_settings"])); 
+        	UserConfig::get($val['user_id'])->store("LastLogin",($user->user_vars["LastLogin"])); 
+        	UserConfig::get($val['user_id'])->store("CurrentLogin",($user->user_vars["CurrentLogin"])); 
        }
     }
 

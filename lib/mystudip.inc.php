@@ -79,7 +79,8 @@ function select_language($selected_language = "") {
 */
 function change_general_view()
 {
+    global $user;
     $template = $GLOBALS['template_factory']->open('settings/general');
-    $template->my_studip_settings = $GLOBALS['my_studip_settings'];
+    $template->my_studip_settings = UserConfig::get($user->id)->__get('my_studip_settings');
     echo $template->render();
 }

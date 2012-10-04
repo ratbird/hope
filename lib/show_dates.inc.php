@@ -373,7 +373,7 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
 function show_personal_dates ($range_id, $date_start, $date_end, $show_docs = FALSE, $show_admin = FALSE, $open)
 {
     global $SessSemName, $user, $TERMIN_TYP;
-    global $PERS_TERMIN_KAT, $username, $LastLogin;
+    global $PERS_TERMIN_KAT, $username;
 
     if ($show_admin && $range_id == $user->id) {
         $admin_link = '<a href="'.URLHelper::getLink('calendar.php', array('cmd' => 'edit', 'source_page' => URLHelper::getURL())).'">';
@@ -442,7 +442,7 @@ function show_personal_dates ($range_id, $date_start, $date_end, $show_docs = FA
                 $tmp_titel = htmlReady(mila($termin->getTitle())); //Beschneiden des Titels
                 $titel .= ", ".$tmp_titel;
             }
-
+            $LastLogin = UserConfig::get($user->id)->_get('LastLogin');
             $new = ($termin->getChangeDate() > $LastLogin);
 
             // Zur Identifikation von auf- bzw. zugeklappten Terminen muss zusaetzlich
@@ -543,7 +543,7 @@ function show_personal_dates ($range_id, $date_start, $date_end, $show_docs = FA
 function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TRUE, $open)
 {
     global $RELATIVE_PATH_CALENDAR, $SessSemName, $user, $TERMIN_TYP;
-    global $PERS_TERMIN_KAT, $username, $CALENDAR_DRIVER, $LastLogin, $calendar_user_control_data;
+    global $PERS_TERMIN_KAT, $username, $CALENDAR_DRIVER, $calendar_user_control_data;
 
     $admin_link = '<a href="'.URLHelper::getLink('calendar.php', array('cmd' => 'edit', 'source_page' => URLHelper::getURL())).'">';
 
@@ -640,7 +640,7 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
                     }
                 }
             }
-
+            $LastLogin = UserConfig::get($user->id)->_get('LastLogin');
             $new = ($termin->getChangeDate() > $LastLogin);
 
             // Zur Identifikation von auf- bzw. zugeklappten Terminen muss zusätzlich

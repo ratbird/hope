@@ -39,6 +39,14 @@ $txt = $message = $count = $verschoben = '';
 $flatviewstartposting = Request::int('flatviewstartposting', 0);
 $view = Request::option('view');
 $open = Request::option('open');
+if(empty($forum)){
+    $forum = json_decode(UserConfig::get($user->id)->__get('forum'),true);
+    if(!is_array($forum)){
+        $forum =  array(  'sortthemes'    => 'asc',
+                          'themeview'     => 'tree',
+                          'presetview'    => 'tree' );
+    }
+}
 
 checkObject();
 checkObjectModule("forum");
@@ -111,7 +119,6 @@ function getMsTime(){
 //////////////////////////////////////////////////////////////////////////////////
 // Anzeige und View-Logik
 //////////////////////////////////////////////////////////////////////////////////
-
 
 if ($forum["view"]=="mixed" && $open) {
     $forum["flatfolder"] = $open;

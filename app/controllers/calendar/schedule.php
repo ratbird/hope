@@ -42,14 +42,19 @@ class Calendar_ScheduleController extends AuthenticatedController
      * @return bool
      */
     function before_filter(&$action, &$args) {
+        global $user;
+
         parent::before_filter($action, $args);
-
+        $zoom = Request::int('zoom');
         // bind zoom and show_hidden for all actions, even preserving them after redirect
-        if (Request::int('zoom')) {
+        if (isset($zoom)) {
             URLHelper::addLinkParam('zoom', Request::int('zoom'));
-            $GLOBALS['user']->user_vars['my_schedule_settings']['zoom'] = Request::int('zoom');
+            $my_schedule_settings = json_decode( UserConfig::get($user->id)->__get('my_schedule_settings'), true );
+            $my_schedule_settings = $this->check_schedule_default($my_schedule_settings);
+            $my_schedule_settings['zoom'] = Request::int('zoom');
+            UserConfig::get($user->id)->store('my_schedule_settings', json_encode($my_schedule_settings));
         }
-
+        
         if (Request::int('show_hidden')) {
             URLHelper::addLinkParam('show_hidden', Request::int('show_hidden'));
         }
@@ -65,8 +70,10 @@ class Calendar_ScheduleController extends AuthenticatedController
      */
     function index_action($days = false)
     {
-        global $my_schedule_settings;
-
+        global $user;
+        
+        $my_schedule_settings = json_decode(UserConfig::get($user->id)->__get('my_schedule_settings'),true);
+        $my_schedule_settings = $this->check_schedule_default($my_schedule_settings);
         if ($GLOBALS['perm']->have_perm('admin')) $inst_mode = true;
 
         if ($inst_mode) {
@@ -80,10 +87,10 @@ class Calendar_ScheduleController extends AuthenticatedController
             if (!$institute_id) {
                 $institute_id = $GLOBALS['_my_admin_inst_id']
                               ? $GLOBALS['_my_admin_inst_id']
-                              : $GLOBALS['my_schedule_settings']["glb_inst_id"];
+                              : $my_schedule_settings['glb_inst_id'];
 
-                if (!$GLOBALS['my_schedule_settings']["glb_inst_id"]) {
-                    $GLOBALS['my_schedule_settings']["glb_inst_id"] = $GLOBALS['_my_admin_inst_id'];
+                if (!$my_schedule_settings['glb_inst_id']) {
+                    $my_schedule_settings['glb_inst_id'] = $GLOBALS['_my_admin_inst_id'];
                 }
             }
 
@@ -179,7 +186,7 @@ class Calendar_ScheduleController extends AuthenticatedController
 
         $this->controller = $this;
         $this->calendar_view = new CalendarWeekView($this->entries, 'schedule');
-        $this->calendar_view->setHeight(40 + (20 * $GLOBALS['user']->user_vars['my_schedule_settings']['zoom']));
+        $this->calendar_view->setHeight(40 + (20 * $my_schedule_settings['zoom']));
         $this->calendar_view->setRange($my_schedule_settings['glb_start_time'], $my_schedule_settings['glb_end_time']);
 
         if ($inst_mode) {
@@ -209,9 +216,11 @@ class Calendar_ScheduleController extends AuthenticatedController
         $this->show_hidden    = $show_hidden;
 
         $inst = get_object_name($institute_id, 'inst');
+        $this->my_schedule_settings = $my_schedule_settings;
         $this->inst_mode      = $inst_mode;
         $this->institute_name = $inst['name'];
         $this->institute_id   = $institute_id;
+        UserConfig::get($user->id)->store('my_schedule_settings', json_encode($my_schedule_settings));
     }
 
 
@@ -482,22 +491,47 @@ class Calendar_ScheduleController extends AuthenticatedController
      */
     function storesettings_action($start_hour = false, $end_hour = false, $days = false, $semester_id = false)
     {
-        global $my_schedule_settings;
+        global $user;
 
         if ($start_hour === false) {
             $start_hour  = Request::int('start_hour');
             $end_hour    = Request::int('end_hour');
             $days        = Request::getArray('days');
         }
-
+        $my_schedule_settings_id = json_decode( UserConfig::get($user->id)->__get('my_schedule_settings'), true);
         $my_schedule_settings = array(
             'glb_start_time' => $start_hour,
             'glb_end_time'   => $end_hour,
             'glb_days'       => $days,
-            'glb_inst_id'    => $GLOBALS['my_schedule_settings']["glb_inst_id"],
+            'glb_inst_id'    => $my_schedule_settings_id['glb_inst_id'],
             'converted'      => true
         );
 
+        UserConfig::get($user->id)->store('my_schedule_settings', json_encode( $my_schedule_settings));
+        
         $this->redirect('calendar/schedule');
     }
+
+    function check_schedule_default($my_schedule_settings) {
+
+    if (!$my_schedule_settings ||
+        $my_schedule_settings['glb_start_time'] === NULL ||
+        $my_schedule_settings['glb_end_time'] === NULL ) {
+        $my_schedule_settings=array(
+            "glb_start_time"=>8,
+            "glb_end_time"=>19,
+            "glb_days"=>array(
+                "mo"=>"TRUE",
+                "di"=>"TRUE",
+                "mi"=>"TRUE",
+                "do"=>"TRUE",
+                "fr"=>"TRUE",
+                "sa"=>"",
+                "so"=>""
+            ),
+            "default_setted"=>time()
+        );
+    }
+    return $my_schedule_settings;
+}
 }

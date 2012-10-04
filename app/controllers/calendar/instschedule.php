@@ -34,7 +34,8 @@ class Calendar_InstscheduleController extends AuthenticatedController
      */
     function index_action($days = false)
     {
-        global $my_schedule_settings;
+        $my_schedule_settings = json_decode(UserConfig::get($user->id)->__get('my_schedule_settings'),true);
+        $my_schedule_settings = $this->check_schedule_default($my_schedule_settings);
 
         if ($GLOBALS['perm']->have_perm('admin')) $inst_mode = true;
 
@@ -55,10 +56,10 @@ class Calendar_InstscheduleController extends AuthenticatedController
         if (!$institute_id) {
             $institute_id = $GLOBALS['_my_admin_inst_id'] 
                           ? $GLOBALS['_my_admin_inst_id'] 
-                          : $GLOBALS['my_schedule_settings']["glb_inst_id"];
+                          : $my_schedule_settings["glb_inst_id"];
 
-            if (!$GLOBALS['my_schedule_settings']["glb_inst_id"]) {
-                $GLOBALS['my_schedule_settings']["glb_inst_id"] = $GLOBALS['_my_admin_inst_id'];
+            if (!$my_schedule_settings["glb_inst_id"]["glb_inst_id"]) {
+               $my_schedule_settings["glb_inst_id"] = $GLOBALS['_my_admin_inst_id'];
             }
 
             $myschedule = true;
@@ -93,7 +94,7 @@ class Calendar_InstscheduleController extends AuthenticatedController
 
         $this->controller = $this;
         $this->calendar_view = new CalendarWeekView($this->entries, 'instschedule');
-        $this->calendar_view->setHeight(40 + (20 * Request::option('zoom', 0)));
+        $this->calendar_view->setHeight(40 + (20 * Request::int('zoom', 0)));
         $this->calendar_view->setRange($my_schedule_settings['glb_start_time'], $my_schedule_settings['glb_end_time']);
         $this->calendar_view->setReadOnly();
         $this->calendar_view->groupEntries();  // if enabled, group entries with same start- and end-date
@@ -152,4 +153,26 @@ class Calendar_InstscheduleController extends AuthenticatedController
             $this->redirect('calendar/instschedule/');
         }
     }
+    function check_schedule_default($my_schedule_settings) {
+
+        if (!$my_schedule_settings ||
+            $my_schedule_settings['glb_start_time'] === NULL ||
+            $my_schedule_settings['glb_end_time'] === NULL ) {
+            $my_schedule_settings=array(
+            "glb_start_time"=>8,
+            "glb_end_time"=>19,
+            "glb_days"=>array(
+                "mo"=>"TRUE",
+                "di"=>"TRUE",
+                "mi"=>"TRUE",
+                "do"=>"TRUE",
+                "fr"=>"TRUE",
+                "sa"=>"",
+                "so"=>""
+            ),
+            "default_setted"=>time()
+            );
+        }
+        return $my_schedule_settings;
+   }
 }

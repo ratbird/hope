@@ -531,8 +531,6 @@ function create_year_view(&$calendar)
 
 function javascript_hover_year(&$calendar, $day_time)
 {
-    global $forum;
-
     $out = '';
     $event_count_txt = array();
     if ($calendar instanceof GroupCalendar) {

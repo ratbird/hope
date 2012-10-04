@@ -30,7 +30,6 @@ require_once ('lib/contact.inc.php');
 // access to user's config setting
 $user_cfg = UserConfig::get($GLOBALS['user']->id);
 
-check_messaging_default();
 $reset_txt = '';
 
 ## ACTION ##
@@ -104,6 +103,7 @@ if (Request::option('messaging_cmd')=="change_view_insert" && !Request::submitte
     $sms_data['sig']  = $my_messaging_settings['addsignature'];
     $sms_data['time'] = $my_messaging_settings['timefilter'];
 
+    UserConfig::get($GLOBALS['user']->id)->store("my_messaging_settings",json_encode($my_messaging_settings));
     if ($smsforward['rec']) {
         if (Request::int('smsforward_copy') && !$smsforward['copy'])  {
             $query = "UPDATE user_info SET smsforward_copy = 1 WHERE user_id = ?";
@@ -123,8 +123,41 @@ if (Request::option('messaging_cmd')=="change_view_insert" && !Request::submitte
 if (Request::option('messaging_cmd') == "reset_msg_settings") {
     $user_id = $user->id;
     unset($my_messaging_settings);
-    check_messaging_default();
-
+    if (!$my_messaging_settings['show_only_buddys'])
+        $my_messaging_settings['show_only_buddys'] = FALSE;
+    if (!$my_messaging_settings['delete_messages_after_logout'])
+        $my_messaging_settings['delete_messages_after_logout'] = FALSE;
+    if (!$my_messaging_settings['start_messenger_at_startup'])
+        $my_messaging_settings['start_messenger_at_startup'] = FALSE;
+    if (!$my_messaging_settings['default_setted'])
+        $my_messaging_settings['default_setted'] = time();
+    if (!$my_messaging_settings['last_login'])
+        $my_messaging_settings['last_login'] = FALSE;
+    if (!$my_messaging_settings['timefilter'])
+        $my_messaging_settings['timefilter'] = "30d";
+    if (!$my_messaging_settings['opennew'])
+        $my_messaging_settings['opennew'] = 1;
+    if (!$my_messaging_settings['logout_markreaded'])
+        $my_messaging_settings['logout_markreaded'] = FALSE;
+    if (!$my_messaging_settings['openall'])
+        $my_messaging_settings['openall'] = FALSE;
+    if (!$my_messaging_settings['addsignature'])
+        $my_messaging_settings['addsignature'] = FALSE;
+    if (!$my_messaging_settings['save_snd'])
+        $my_messaging_settings['save_snd'] = 1;
+    if (!$my_messaging_settings['sms_sig'])
+        $my_messaging_settings['sms_sig'] = FALSE;
+    if (!$my_messaging_settings['send_view'])
+        $my_messaging_settings['send_view'] = FALSE;
+    if (!$my_messaging_settings['last_box_visit'])
+        $my_messaging_settings['last_box_visit'] = 1;
+    if (!$my_messaging_settings['folder']['in'])
+        $my_messaging_settings['folder']['in'][0] = "dummy";
+    if (!$my_messaging_settings['folder']['out'])
+        $my_messaging_settings['folder']['out'][0] = "dummy";
+    if (!$my_messaging_settings['confirm_reading'])
+        $my_messaging_settings['confirm_reading'] = 3;
+    UserConfig::get($GLOBALS['user']->id)->store("my_messaging_settings",json_encode($my_messaging_settings));
     $query = "UPDATE user_info
               SET smsforward_copy = 0, smsforward_rec = ''
               WHERE user_id = ?";
@@ -144,9 +177,9 @@ if (Request::submitted('do_add_user')) {
 
 ## FUNCTION ##
 
-function change_messaging_view()
+function change_messaging_view($my_messaging_settings)
 {
-    global $_fullname_sql, $my_messaging_settings, $user,
+    global $_fullname_sql, $user,
            $reset_txt, $email_forward, $user_cfg;
 
     if ($reset_txt) {

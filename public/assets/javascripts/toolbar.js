@@ -15,9 +15,11 @@
         // Initializes (adds) a toolbar the passed textarea element
         initialize: function (element, button_set) {
             var $element = $(element),
-                width    = $element.width(),
+                width = $element.css('width') || $element.width(),
                 wrap,
-                toolbar;
+                toolbar,
+                temp,
+                height;
 
             // Bail out if the element is not a tetarea or a toolbar has already
             // been applied
@@ -62,25 +64,23 @@
                 });
                 toolbar.append(buttons);
             });
-            
-            // lock element width
-            $element.lockWidth();
+
+            // Render toolbar offscreen in order to obtain it's height
+            temp = $('<div class="editor_toolbar" style="position: absolute; left: -999px; top: -999px;"/>')
+                        .css('width', width)
+                        .html(toolbar.clone().css('position', 'relative'))
+                        .appendTo('body');
+            height = temp.height();
+            temp.remove();
 
             // Attach toolbar to the specified element
-            wrap = $('<div class="editor_toolbar"/>');
-            $element.wrap(wrap).before(toolbar).css('margin-top', '+=' + toolbar.height());
+            wrap = $('<div class="editor_toolbar"/>').css('width', width);
+            $element.css('width', '100%').wrap(wrap).before(toolbar).css('margin-top', '+=' + height);
         }
     };
 
     // Add functionality as jQuery extensions
     $.fn.extend({
-        // Locks an element's width
-        lockWidth: function (width) {
-            return this.each(function () {
-                var this_width = width = $(this).width();
-                $(this).width(width).removeAttr('width cols');
-            });
-        },
         // Adds the toolbar to an element
         addToolbar: function (button_set) {
             return this.each(function () {
@@ -123,4 +123,5 @@
             });
         }
     });
+
 }(jQuery));

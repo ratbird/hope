@@ -210,7 +210,10 @@ div.overdiv {
 
     .buttons {
         .clearfix();
-        position: absolute;
+        margin: 0 !important;  // Locked since .buttons is pretty generic
+        padding: 0 !important; // and other styles could easily interfere
+
+        position: absolute;    // Stretch the buttons above the element
         left: 0;
         right: 0;
         top: 0;

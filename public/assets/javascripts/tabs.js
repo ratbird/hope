@@ -56,7 +56,7 @@
     };
 
     needsCompression = function(list) {
-      return list.height() > _.max(_.map(list.children(), function(kid) {
+      return list.length > 0 && list.height() > _.max(_.map(list.children(), function(kid) {
         return $(kid).outerHeight(true);
       }));
     };

@@ -79,7 +79,7 @@ class SeminarEvent extends Event
         global $TERMIN_TYP;
 
         if ($this->havePermission(Event::PERMISSION_READABLE)) {
-            return $TERMIN_TYP[$this->getProperty('STUDIP_CATEGORY') - 1]['name'];
+            return $TERMIN_TYP[$this->getProperty('STUDIP_CATEGORY')]['name'];
         }
         return '';
     }

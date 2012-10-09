@@ -132,7 +132,7 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
                          th.description as Info, s.Name, su.*
                   FROM termine AS t
                   LEFT JOIN themen_termine USING (termin_id)
-                  LEFT JOIN themen AS th USING (issue_id) 
+                  LEFT JOIN themen AS th USING (issue_id)
                   LEFT JOIN seminare AS s ON (range_id = s.Seminar_id)
                   LEFT JOIN seminar_user su ON (s.Seminar_id = su.Seminar_id)
                   WHERE user_id = :user_id {$show_query} {$tmp_query}
@@ -442,7 +442,7 @@ function show_personal_dates ($range_id, $date_start, $date_end, $show_docs = FA
                 $tmp_titel = htmlReady(mila($termin->getTitle())); //Beschneiden des Titels
                 $titel .= ", ".$tmp_titel;
             }
-            $LastLogin = UserConfig::get($user->id)->_get('LastLogin');
+            $LastLogin = UserConfig::get($user->id)->getValue('LastLogin');
             $new = ($termin->getChangeDate() > $LastLogin);
 
             // Zur Identifikation von auf- bzw. zugeklappten Terminen muss zusaetzlich
@@ -640,7 +640,7 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
                     }
                 }
             }
-            $LastLogin = UserConfig::get($user->id)->_get('LastLogin');
+            $LastLogin = UserConfig::get($user->id)->getValue('LastLogin');
             $new = ($termin->getChangeDate() > $LastLogin);
 
             // Zur Identifikation von auf- bzw. zugeklappten Terminen muss zusätzlich
@@ -719,7 +719,7 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
                         $edit = LinkButton::create(_('Bearbeiten'), URLHelper::getURL('raumzeit.php', array('cid' => $termin->getSeminarId(), 'cmd' => 'open', 'open_close_id' => $termin->getId())) . '#' . $termin->getId());
                     } else {
                         // Personal appointment
-                        $edit = LinkButton::create(_('Bearbeiten'), URLHelper::getURL('calendar.php', array('cmd' => 'edit', 'termin_id' => $termin->getId(), 'atime' => $termin->getStart(), 'source_page' => URLHelper::getURL())));                                    
+                        $edit = LinkButton::create(_('Bearbeiten'), URLHelper::getURL('calendar.php', array('cmd' => 'edit', 'termin_id' => $termin->getId(), 'atime' => $termin->getStart(), 'source_page' => URLHelper::getURL())));
                     }
                 } else {
                     $content .= "<br>";

@@ -170,7 +170,7 @@ class StudipNews extends SimpleORMap {
                                 SELECT news.news_id FROM news LEFT JOIN news_range USING (news_id) WHERE range_id IS NULL"
                                 )->fetchAll(PDO::FETCH_COLUMN, 0);
 
-            if (is_array($result)) {
+            if (count($result) > 0) {
                 $query = "DELETE FROM news WHERE news_id IN (?)";
                 $statement = DBManager::get()->prepare($query);
                 $statement->execute(array($result));

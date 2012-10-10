@@ -431,7 +431,7 @@ class SemBrowse {
                         // is this sem a studygroup?
                         $studygroup_mode = SeminarCategories::GetByTypeId($seminar_obj->getStatus())->studygroup_mode;
 
-                        $sem_name = key($sem_data[$seminar_id]["Name"]);
+                        $sem_name = $SEM_TYPE[key($sem_data[$seminar_id]["status"])]["name"] . ": "  . key($sem_data[$seminar_id]["Name"]);
                         $seminar_number = key($sem_data[$seminar_id]['VeranstaltungsNummer']);
 
                         if ($studygroup_mode) {

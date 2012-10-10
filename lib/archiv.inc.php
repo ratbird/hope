@@ -705,8 +705,10 @@ function in_archiv ($sem_id)
         }
         if (is_array($list) && count($list) > 0) {
             //copy documents in the temporary folder-system
+            //PS #2936: Test if files are readable and visible for students, rwx = 7, r-x = 5
             $query = "SELECT folder_id, name
                       FROM folder WHERE range_id IN (?)
+                      AND permission IN(5,7) 
                       ORDER BY name";
             $statement = DBManager::get()->prepare($query);
             $statement->execute(array($list));

@@ -1993,7 +1993,7 @@ if (($form == 6) && (Request::submitted('jump_next')))
                         $insert_statement->execute(array(
                             $_SESSION['sem_create_data']['sem_id'],
                             $key,
-                            $_SESSION['sem_create_data']['sem_tut_label'][$key],
+                            $_SESSION['sem_create_data']['sem_tut_label'][$key] ?: '', 
                             $group, $next_pos
                         ));
 

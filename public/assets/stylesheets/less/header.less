@@ -114,19 +114,19 @@ div#barBottomright, #layout_footer {
     }
 }
 div#notification_list {
-    border: thin solid #333333;
+    border: thin solid #666666;
     display: none;
-    left: -155px;
+    left: -197px;
     position: absolute;
-    width: 320px;
-    max-width: 320px;
+    width: 400px;
+    max-width: 400px;
     background-color: #eeeeee;
     border-collapse: collapse;
     color: #333333;
     font-size: 0.8em;
     margin-top: 10px;
-    .box-shadow(0 2px 5px #444);
-    .border-radius(5px);
+    .box-shadow(0 0px 8px rgba(0, 0, 0, 0.5));
+    .border-radius(3px);
 
     // Without this, buttons or message boxes will appear on top of the
     // notification list
@@ -150,7 +150,7 @@ div#notification_list {
         border-top: thin solid #333;
         display: block;
         padding: 4px;
-        width: 312px;
+        width: 392px;
         height: auto;
         .transition(opacity 0.8s);
         .clearfix();
@@ -167,7 +167,6 @@ div#notification_list {
         
         &:hover {
             background-color: #ffffff;
-            .mark_as_read { display: block; }
         }
     }
     .avatar {
@@ -188,7 +187,6 @@ div#notification_list {
 
     .mark_as_read {
         cursor: pointer;
-        display: none;
         float: right;
         width: 20px;
         margin: 0;

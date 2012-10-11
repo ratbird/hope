@@ -112,7 +112,7 @@
             </tr>
             <? endforeach; ?>
             <tr>
-                <td class="blank" align="right" colspan="2">
+                <td class="blank" align="center" colspan="2">
                     <br>
                     
                     <?= Button::createAccept(_('Speichern'), 'speichern') ?>

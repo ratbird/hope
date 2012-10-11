@@ -660,7 +660,7 @@ function export_teilis($inst_id, $ex_sem_id = "no")
                       FROM seminar_user AS su
                       LEFT JOIN auth_user_md5 AS aum USING ( user_id )
                       LEFT JOIN user_info AS ui USING ( user_id )
-                      LEFT JOIN user_studiengang AS  USING(user_id)
+                      LEFT JOIN user_studiengang AS us USING(user_id)
                       LEFT JOIN studiengaenge AS sg USING (studiengang_id)
                       LEFT JOIN abschluss AS a USING (abschluss_id)
                       WHERE seminar_id = :seminar_id AND su.status = :status

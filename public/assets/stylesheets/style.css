@@ -2565,7 +2565,7 @@ p.info {
 .admin-institute input[type=tel],
 .admin-institute input[type=url],
 .admin-institute input[type=email],
-.admin-institute select {
+.admin-institute select:first-child {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   -ms-box-sizing: border-box;

@@ -31,7 +31,7 @@ class JsupdaterController extends AuthenticatedController {
     public function get_action() {
         $data = UpdateInformation::getInformation();
         $data = array_merge($data, $this->coreInformation());
-        $data = $this->recursive_studip_utf8encode($data);
+        $data = studip_utf8encode($data);
         $this->render_text(json_encode($data));
     }
 

@@ -45,7 +45,7 @@ require_once 'lib/admin_search.inc.php';
 
 PageLayout::setHelpKeyword("Basis.VeranstaltungenVerwaltenGruppen");
 
-PageLayout::setTitle(_("Verwaltung von Gruppen und Funktionen"));
+PageLayout::setTitle(_("Verwaltung von Funktionen und Gruppen"));
 
 if ($perm->have_perm('admin')) {
     Navigation::activateItem('/admin/course/groups');

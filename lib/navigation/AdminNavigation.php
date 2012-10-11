@@ -78,7 +78,7 @@ class AdminNavigation extends Navigation
         }
 
         $navigation->addSubNavigation('admission', new Navigation(_('Zugangsberechtigungen'), 'admin_admission.php?list=TRUE'));
-        $navigation->addSubNavigation('groups', new Navigation(_('Gruppen / Funktionen'), 'admin_statusgruppe.php?list=TRUE'));
+        $navigation->addSubNavigation('groups', new Navigation(_('Funktionen / Gruppen'), 'admin_statusgruppe.php?list=TRUE'));
         $navigation->addSubNavigation('modules', new Navigation(_('Inhaltselemente'), 'dispatch.php/course/plus/index?list=TRUE'));
 
         if ($perm->have_perm($sem_create_perm)) {
@@ -99,7 +99,7 @@ class AdminNavigation extends Navigation
         $navigation->setURL('admin_institut.php?list=TRUE&quit=1');
         $navigation->addSubNavigation('details', new Navigation(_('Grunddaten'), 'admin_institut.php?list=TRUE'));
         $navigation->addSubNavigation('faculty', new Navigation(_('Mitarbeiter'), 'inst_admin.php?list=TRUE&admin_view=1'));
-        $navigation->addSubNavigation('groups', new Navigation(_('Gruppen / Funktionen'), 'admin_roles.php?list=TRUE'));
+        $navigation->addSubNavigation('groups', new Navigation(_('Funktionen und Gruppen'), 'admin_roles.php?list=TRUE'));
         $navigation->addSubNavigation('news', new Navigation(_('Ankündigungen'), 'admin_news.php?list=TRUE&view=news_inst'));
 
         if (get_config('VOTE_ENABLE')) {

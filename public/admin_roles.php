@@ -47,7 +47,7 @@ require_once 'lib/admin_search.inc.php';
  * PageLayout::setHelpKeyword("Basis.EinrichtungenVerwaltenGruppen");
  */
 PageLayout::setHelpKeyword("Basis.Allgemeines");
-PageLayout::setTitle(_("Verwaltung von Gruppen und Funktionen"));
+PageLayout::setTitle(_("Verwaltung von Funktionen und Gruppen"));
 
 Navigation::activateItem('/admin/institute/groups');
 

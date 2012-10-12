@@ -237,7 +237,7 @@ class Calendar_ScheduleController extends AuthenticatedController
         }
 
         $error = false;
-        if (Request::int('start_hour') && Request::int('day') && Request::int('end_hour')) {
+        if (Request::int('start_hour') !== null && Request::int('day') !== null && Request::int('end_hour') !== null) {
             $data['start']   = Request::int('start_hour') * 100;
             $data['end']     = Request::int('end_hour')   * 100;
             $data['day']     = Request::int('day') + 1;

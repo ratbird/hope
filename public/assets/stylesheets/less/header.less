@@ -94,6 +94,120 @@ div#barBottomright, #layout_footer {
     }
 }
 
+// "Generic" (for elements in #barBottomright) list style
+#barBottomright {
+    li {
+        position: relative;  // So the list can be properly aligned
+        &:hover .list {
+            display: block;
+            .item { opacity: 1; }
+        }
+    }
+    .list {
+        @width: 400px;
+        @arrow-height: 10px;
+
+        background-color: #eeeeee;
+        border: thin solid #666;
+        border-collapse: collapse;
+        .border-radius(3px);
+        color: #333333;
+        display: none;
+        font-size: 0.8em;
+        margin-top: 10px;
+        position: absolute;
+        width: @width;
+        max-width: @width;
+        .box-shadow(0 0 8px rgba(0, 0, 0, 0.5));
+
+        // Without this, buttons or message boxes would appear on top of the list
+        z-index: 1;
+
+        // Creates an arrow pointing from the list to the triggering element
+        &:before {
+            content:'';
+            border-left: (@arrow-height + 1) solid transparent;
+            border-right: (@arrow-height + 1) solid transparent;
+            border-bottom: (@arrow-height + 1) solid #eeeeee;
+            height: 0;
+            width: 0;
+            position: absolute;
+            top: -@arrow-height;
+            margin-left: -(@arrow-height / 2);
+            z-index: 1;
+        }
+
+        // Insert invisible padding on top of the arrow in order to try to
+        // close the "mouse trap gap" created by the arrow
+        &:after {
+            content: "";
+            display: block;
+            position: absolute;
+            top: -@arrow-height;
+            left: 0;
+            right: 0;
+            height: @arrow-height;
+            opacity: 0;
+        }
+
+        // Positions: below or left'ish or right'ish to the triggering element
+        &.below {
+            left: -(@width / 2 - 3);
+            &:before {
+                left: 50%;
+            }
+        }
+        &.left {
+            right: 0px;
+            &:before { right: 4px; }
+        }
+        &.right {
+            left: 0px;
+            &:before { left: 4px; }
+        }
+
+        // List item
+        .item {
+            @padding: 4px;
+            .clearfix();
+            border-top: thin solid #333;
+            display: block;
+            height: auto;
+            opacity: 0;
+            .transition(~"background-color 0.5s, opacity 0.8s");
+            padding: @padding;
+            white-space: normal;
+            width: @width - @padding * 2;
+
+            &:hover { background-color: #ffffff; }
+
+            // First child: no top-border and but rounded corners
+            &:first-child {
+                border-top: 0;
+                .border-top-radius(5px);
+            }
+            // Last child: rounded corners
+            &:last-child { .border-bottom-radius(5px); }
+        }
+
+        a {
+            color: @brand-color-dark;
+            display: block;
+            padding: 3px;
+            &:hover { color: @active-color; }
+        }
+
+        .options {
+            cursor: pointer;
+            float: right;
+            margin: 0;
+
+            &.hidden { visibility: hidden; }
+        }
+        .item:hover .options.hidden { visibility: visible; }
+    }
+}
+
 #notification_marker {
     .border-radius(2px);
     .transition(all 1s);
@@ -113,62 +227,8 @@ div#barBottomright, #layout_footer {
         font-weight: bold;
     }
 }
-div#notification_list {
-    border: thin solid #666666;
-    display: none;
-    left: -197px;
-    position: absolute;
-    width: 400px;
-    max-width: 400px;
-    background-color: #eeeeee;
-    border-collapse: collapse;
-    color: #333333;
-    font-size: 0.8em;
-    margin-top: 10px;
-    .box-shadow(0 0px 8px rgba(0, 0, 0, 0.5));
-    .border-radius(3px);
 
-    // Without this, buttons or message boxes will appear on top of the
-    // notification list
-    z-index: 1;
-
-    &:before {
-        content:'';
-        border-left: 11px solid transparent;
-        border-right: 11px solid transparent;
-        border-bottom: 11px solid #eeeeee;
-        height: 0;
-        width: 0;
-        position: absolute;
-        left: 50%;
-        top: -10px;
-        margin-left: -6px;
-        z-index: 1;
-    }
-
-    .notification {
-        border-top: thin solid #333;
-        display: block;
-        padding: 4px;
-        width: 392px;
-        height: auto;
-        .transition(opacity 0.8s);
-        .clearfix();
-        opacity: 0;
-        white-space: normal;
-        
-        &:first-child {
-            border-top: 0;
-            .border-top-radius(5px);
-        }
-        &:last-child {
-            .border-bottom-radius(5px);
-        }
-        
-        &:hover {
-            background-color: #ffffff;
-        }
-    }
+#notification_container {
     .avatar {
         float: left;
         margin-right: 0.5em;
@@ -176,32 +236,6 @@ div#notification_list {
         background-size: 100%;
         width: 40px;
         height: 40px;
-    }
-    a {
-        color: #24437c;
-        display: block;
-        padding: 3px;
-        margin-right: 20px;
-        &:hover { color: #f33; }
-    }
-
-    .mark_as_read {
-        cursor: pointer;
-        float: right;
-        width: 20px;
-        margin: 0;
-        padding: 2px;
-    }
-}
-
-#notification_container.alert:hover {
-    #notification_list {
-        display: block;
-
-        .notification {
-            .transition(opacity 0.3s);
-            opacity: 1;
-        }
     }
 }
 

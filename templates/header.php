@@ -65,7 +65,7 @@
                 <div id="notification_marker"<?= count($notifications) > 0 ? ' class="alert"' : "" ?> title="<?= _("Benachrichtigungen") ?>">
                 <?= count($notifications) ?>
                 </div>
-                <div id="notification_list">
+                <div class="list below" id="notification_list">
                     <ul>
                         <? foreach ($notifications as $notification) : ?>
                         <?= $notification->getLiElement() ?>

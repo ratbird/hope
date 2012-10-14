@@ -12,7 +12,7 @@ endif
 
 build: less squeeze
 
-squeeze: force_update
+squeeze: less force_update
 	php cli/squeeze.php
 
 doc: force_update
@@ -25,9 +25,8 @@ test: force_update
 less: $(STYLES)/style.css $(STYLES)/smiley.css
 
 $(STYLES)/style.css: $(wildcard $(STYLES)/less/*.less)
-$(STYLES)/smiley.css: $(STYLES)/less/colors.less
 
-%.css: %.less $(STYLES)/mixins.less
+%.css: %.less $(STYLES)/mixins.less $(wildcard $(STYLES)/mixins/*.less) 
 	$(LESSC) $< $@
 
 # dummy target to force update of "doc" target

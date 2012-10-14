@@ -645,8 +645,8 @@ div#barBottomright li,
   display: none;
   font-size: 0.8em;
   position: absolute;
-  width: 300px;
-  max-width: 300px;
+  width: 400px;
+  max-width: 400px;
   -webkit-box-shadow: 0 0 8px rgba(0,0,0,0.5);
   -moz-box-shadow: 0 0 8px rgba(0,0,0,0.5);
   box-shadow: 0 0 8px rgba(0,0,0,0.5);
@@ -675,7 +675,7 @@ div#barBottomright li,
   opacity: 0;
 }
 #barBottomright .list.below {
-  left: -141px;
+  left: -191px;
 }
 #barBottomright .list.below:before {
   left: 50%;
@@ -705,7 +705,7 @@ div#barBottomright li,
   transition: background-color 0.5s, opacity 0.8s;
   padding: 4px;
   white-space: normal;
-  width: 292px;
+  width: 392px;
 }
 #barBottomright .list .item:before,
 #barBottomright .list .item:after {

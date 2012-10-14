@@ -1,0 +1,102 @@
+/*
+ * arrow.less - CSS arrows mixin
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * @author      Jan-Hendrik Willms <tleilax+studip@gmail.com>
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+ * @since       2.4
+ */
+
+#arrow {
+    .init() {
+        position: relative;
+        display: inline-block;
+    }
+
+    .pseudo(@width, @color) {
+        border: @width solid fadeout(@color, 100%);
+        content: "";
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+    }
+
+    // Top
+    .top-pseudo(@width, @color) {
+        #arrow > .pseudo(@width, @color);
+        border-bottom-color: @color;
+        bottom: 100%;
+        left: 50%;
+        margin-left: -@width;
+    }
+    .top(@width, @color, @margin: @width) {
+        #arrow > .init();
+        &:before { #arrow > .top-pseudo(@width, @color); }
+        margin-top: @margin;
+
+    }
+    .top-border(@width, @color, @border-width, @border-color, @margin: @width) {
+        #arrow > .top(@width, @border-color, @margin);
+        &:after { #arrow > .top-pseudo(@width - @border-width, @color); }
+    }
+
+    // Right
+    .right-pseudo(@width, @color) {
+        #arrow > .pseudo(@width, @color);
+        border-left-color: @color;
+        left: 100%;
+        top: 50%;
+        margin-top: -@width;
+    }
+    .right(@width, @color, @margin: @width) {
+        #arrow > .init();
+        &:before { #arrow > .right-pseudo(@width, @color); }
+        margin-right: @margin;
+    }
+    .right-border(@width, @color, @border-width, @border-color, @margin: @width) {
+        #arrow > .right(@width, @border-color, @margin);
+        &:after { #arrow > .right-pseudo(@width - @border-width, @color); }
+    }
+
+    // Bottom
+    .bottom-pseudo(@width, @color) {
+        #arrow > .pseudo(@width, @color);
+        border-top-color: @color;
+        top: 100%;
+        left: 50%;
+        margin-left: -@width;
+    }
+    .bottom(@width, @color, @margin: @width) {
+        #arrow > .init();
+        &:before { #arrow > .bottom-pseudo(@width, @color); }
+        margin-bottom: @margin;
+    }
+    .bottom-border(@width, @color, @border-width, @border-color, @margin: @width) {
+        #arrow > .bottom(@width, @border-color, @margin);
+        &:after { #arrow > .bottom-pseudo(@width - @border-width, @color); }
+    }
+
+    // Left
+    .left-pseudo(@width, @color) {
+        #arrow > .pseudo(@width, @color);
+        border-right-color: @color;
+        right: 100%;
+        top: 50%;
+        margin-top: -@width;
+    }
+    .left(@width, @color, @margin: @width) {
+        #arrow > .init();
+        &:before { #arrow > .left-pseudo(@width, @color); }
+        margin-left: @margin;
+    }
+    .left-border(@width, @color, @border-width, @border-color, @margin: @width) {
+        #arrow > .left(@width, @border-color, @margin);
+        &:after { #arrow > .left-pseudo(@width - @border-width, @color); }
+    }
+}

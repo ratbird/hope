@@ -610,7 +610,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
     if (get_config('MAIL_NOTIFICATION_ENABLE')){
         $infobox[count($infobox)-1]['eintrag'][] = array(   'icon' => 'icons/16/black/mail.png',
                                                             'text' => sprintf(_("Benachrichtigung über neue Inhalte %sanpassen%s."),
-                                                                    '<a href="' . URLHelper::getLink('dispatch.php/settings/notification'). '">', '</a>'));
+                                                                    '<a href="sem_notification.php">', '</a>'));
     }
 
 

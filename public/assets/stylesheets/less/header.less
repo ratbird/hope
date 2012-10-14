@@ -48,20 +48,14 @@
 div#barBottomLeft {
     float: left;
     padding-left: 15px;
-    padding-right: 15px;
     white-space: nowrap;
-
-    // Adds an arrow in front
-    #arrow > .right(12px, @brand-color-lighter, 0);
 }
 
 div#barBottommiddle {
+    background: url("@{image-path}/header/header_bottom_isolator.png") no-repeat;
     font-weight: bold;
     overflow: hidden;
-    padding-left: 30px;
-
-    // Adds the fading background to the left
-    #gradient > .directional-with-stop(@brand-color-light, @brand-color-lighter, 25px);
+    padding-left: 40px;
 }
 
 div#barBottomright {
@@ -72,7 +66,7 @@ div#barBottomright {
 
     &:before {
         #gradient > .directional(@brand-color-lighter, fadeout(@brand-color-lighter, 100%), 180deg);
-        content: "";
+        content: " ";
         left: -40px;
         height: 24px;
         position: absolute;
@@ -110,10 +104,7 @@ div#barBottomright, #layout_footer {
         }
     }
     .list {
-        // Creates an arrow pointing from the list to the triggering element
-        #arrow > .top(10px, #eee);
-
-        @width: 300px;
+        @width: 400px;
         @arrow-height: 10px;
 
         background-color: #eeeeee;
@@ -123,6 +114,7 @@ div#barBottomright, #layout_footer {
         color: #333333;
         display: none;
         font-size: 0.8em;
+        margin-top: 10px;
         position: absolute;
         width: @width;
         max-width: @width;
@@ -130,6 +122,20 @@ div#barBottomright, #layout_footer {
 
         // Without this, buttons or message boxes would appear on top of the list
         z-index: 1;
+
+        // Creates an arrow pointing from the list to the triggering element
+        &:before {
+            content:'';
+            border-left: (@arrow-height + 1) solid transparent;
+            border-right: (@arrow-height + 1) solid transparent;
+            border-bottom: (@arrow-height + 1) solid #eeeeee;
+            height: 0;
+            width: 0;
+            position: absolute;
+            top: -@arrow-height;
+            margin-left: -(@arrow-height / 2);
+            z-index: 1;
+        }
 
         // Insert invisible padding on top of the arrow in order to try to
         // close the "mouse trap gap" created by the arrow
@@ -146,17 +152,14 @@ div#barBottomright, #layout_footer {
 
         // Positions: below or left'ish or right'ish to the triggering element
         &.below {
-            left: -(@width / 2 - 9);
+            left: -(@width / 2 - 3);
             &:before {
                 left: 50%;
             }
         }
         &.left {
             right: 0px;
-            &:before {
-                left: auto; 
-                right: 4px;
-            }
+            &:before { right: 4px; }
         }
         &.right {
             left: 0px;
@@ -267,21 +270,16 @@ div#header {
 /* --- public course marker ------------------------------------------------ */
 #barBottomContainer.public_course {
     @bgcolor: #c53d3d;
-
     background-color: @bgcolor;
 
     div#barBottommiddle, div#barBottomright, div#barBottomLeft {
         background-color: @bgcolor;
     }
-    div#barBottomLeft {
-        // Adds an arrow in front
-        #arrow > .right(12px, @bgcolor, 0);
-    }
     div#barBottommiddle { 
-        // Adds the fading background to the left
-        #gradient > .directional-with-stop(darken(@bgcolor, 10%), @bgcolor, 20px);
+        background-image: url('@{image-path}/header/header_bottom_isolator_public.png');
     }
     #barBottomright:before {
+        background: @bgcolor;
         #gradient > .directional(@bgcolor, fadeout(@bgcolor, 100%), 180deg);
     }
 }

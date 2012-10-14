@@ -81,15 +81,6 @@ class PageLayout
         // set initial width for mobile devices
         self::addHeadElement('meta', array('name' => 'viewport', 'content' => 'width=device-width; initial-scale=1.0;'));
 
-        // include jQuery + UI
-        self::addStylesheet('jquery-ui-1.8.23.custom.css', array('media' => 'screen, print'));
-        self::addStylesheet('jquery-ui-studip.css', array('media' => 'screen, print'));
-        // include default CSS
-        self::addStylesheet('style.css', array('media' => 'screen'));
-        self::addStylesheet('smiley.css', array('media' => 'screen, print'));
-        //include print CSS
-        self::addStylesheet('print.css', array('media' => 'print'));
-
         // include ie-specific CSS
         self::addComment('[if IE]>' . Assets::stylesheet('ie.css', array('media' => 'screen,print')) . '<![endif]');
         
@@ -326,12 +317,14 @@ class PageLayout
     {
         $result = '';
 
+        $package_elements = self::includeSqueezePackages();
+
         if (isset($GLOBALS['_include_stylesheet'])) {
-            self::removeStylesheet('style.css');
+            unset($package_elements['base-style.css']);
             self::addStylesheet($GLOBALS['_include_stylesheet'], array('media' => 'screen, print'));
         }
 
-        $head_elements = array_merge(self::includeSqueezePackages(), self::$head_elements);
+        $head_elements = array_merge($package_elements, self::$head_elements);
 
         foreach ($head_elements as $element) {
             $result .= '<' . $element['name'];
@@ -505,7 +498,27 @@ class PageLayout
         $config_path   = "$STUDIP_BASE_PATH/config/assets.yml";
         $configuration = Configuration::load($config_path);
         $packager      = new Packager($configuration);
+        $javascripts   = \Studip\Squeeze\includePackages($packager, self::getSqueezePackages());
 
-        return \Studip\Squeeze\includePackages($packager, self::getSqueezePackages());
+        $css = array();
+        foreach (self::getSqueezePackages() as $package) {
+            if (isset($configuration['css'][$package])) {
+                foreach ($configuration['css'][$package] as $filename => $media) {
+                    $attributes = array(
+                        'rel' => 'stylesheet',
+                        'href' => \Studip\Squeeze\shouldPackage()
+                             ? $configuration['package_url'] . '/' . $package . '-' . $filename
+                             : Assets::stylesheet_path($filename),
+                        'media' => $media
+                    );
+                    $css[$package . '-' . $filename] = array(
+                        'name'       => 'link',
+                        'attributes' => $attributes
+                    );
+                }
+            }
+        }
+
+        return array_merge($css, $javascripts);
     }
 }

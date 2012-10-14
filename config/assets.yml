@@ -55,3 +55,11 @@ javascripts:
 
   smileys:
     - javascripts/smiley.js
+css:
+  base:
+    # filname : media
+    jquery-ui-1.8.23.custom.css: screen, print
+    jquery-ui-studip.css: screen, print
+    style.css:  screen
+    smiley.css: screen, print
+    print.css:  print

@@ -44,6 +44,22 @@ namespace Studip\Squeeze {
         $packager = new Packager($configuration);
 
         $packager->cacheAll($outputDir);
+
+        $compressor = new Compressor($configuration);
+        if ($compressor->shouldCompress() && $compressor->hasJava()) {
+            $config_time = filemtime($configFile);
+
+            foreach ($configuration['css'] as $package => $files) {
+                foreach (array_keys($files) as $file) {
+                    $src  = $configuration['assets_root'] . '/stylesheets/' . $file;
+                    $dest = $configuration['package_path'] . '/' . $package . '-' . $file;
+                    if (!file_exists($dest) || (max($config_time, filemtime($src)) > filemtime($dest))) {
+                        $contents = $compressor->callCompressor(file_get_contents($src), 'css');
+                        file_put_contents($dest, $contents);
+                    }
+                }
+            }
+        }
     }
 
 

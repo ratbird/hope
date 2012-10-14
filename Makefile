@@ -12,7 +12,7 @@ endif
 
 build: less squeeze
 
-squeeze: force_update
+squeeze: less force_update
 	php cli/squeeze.php
 
 doc: force_update
@@ -29,11 +29,6 @@ $(STYLES)/smiley.css: $(STYLES)/smiley.less
 
 %.css: %.less
 	$(LESSC) $< $@
-	if [ -x $(JAVA) ]; then \
-		mv $@ $@.temp; \
-		$(JAVA) -jar vendor/yuicompressor/yuicompressor-2.4.7.jar --type css -o $@ $@.temp; \
-		rm $@.temp; \
-	fi
 
 # dummy target to force update of "doc" target
 force_update:

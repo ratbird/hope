@@ -72,12 +72,12 @@ class Compressor
         return FALSE;
     }
 
-    function callCompressor($js)
+    function callCompressor($js, $type = 'js')
     {
         $java = $this->pathToJava();
         $jar  = $this->pathToJar();
 
-        return $this->procOpen("$java -jar $jar --type js", $js);
+        return $this->procOpen("$java -jar $jar --type $type", $js);
     }
 
     function pathToJava()

@@ -15,6 +15,7 @@ STUDIP.Forms = {
         //localized messages
         jQuery.tools.validator.localize('de', {
             '*'          : 'Bitte ändern Sie ihre Eingabe'.toLocaleString(),
+            ':radio'     : 'Bitte wählen Sie einen Wert aus.'.toLocaleString(),
             ':email'     : 'Bitte geben Sie gültige E-Mail-Adresse ein'.toLocaleString(),
             ':number'    : 'Bitte geben Sie eine Zahl ein'.toLocaleString(),
             ':url'       : 'Bitte geben Sie eine gültige Web-Adresse ein'.toLocaleString(),

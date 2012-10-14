@@ -61,7 +61,7 @@ STUDIP.QuickSearch = {
                                     //the hidden ID of the item
                                     item_id: val.item_id,
                                     //what is inserted in the visible input box
-                                    value: val.item_search_name !== null ? val.item_search_name : jQuery("<div/>").html(val.item_name.replace(stripTags, "")).text()
+                                    value: val.item_search_name !== null ? val.item_search_name : jQuery("<div/>").html((val.item_name || '').replace(stripTags, "")).text()
                                 };
                             });
                             //pass it to the function of UI-widget:

@@ -141,8 +141,13 @@ abstract class StudIPPlugin {
                        . substr($filename, 0, -5) . '.css';
 
             if (!file_exists($css_file) || (filemtime($css_file) < filemtime($less_file))) {
-                $less  = file_get_contents($GLOBALS['ABSOLUTE_PATH_STUDIP'] . 'assets/stylesheets/mixins.less') . "\n";
-                $less .= file_get_contents($GLOBALS['ABSOLUTE_PATH_STUDIP'] . 'assets/stylesheets/less/colors.less') . "\n";
+                $less  = '';
+                foreach (file($GLOBALS['ABSOLUTE_PATH_STUDIP'] . 'assets/stylesheets/mixins.less') as $mixin) {
+                    if (!preg_match('/@import "(.*)";/', $mixin, $match)) {
+                        continue;
+                    }
+                    $less .= file_get_contents($GLOBALS['ABSOLUTE_PATH_STUDIP'] . 'assets/stylesheets/' . $match[1]) . "\n";
+                }
                 $less .= sprintf('@image-path: "%s";', Assets::url('images')) . "\n";
                 $less .= '@icon-path: "@{image-path}/icons/16";' . "\n";
                 $less .= file_get_contents($less_file);

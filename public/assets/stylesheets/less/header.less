@@ -5,14 +5,14 @@
 }
 
 #barBottom {
-    background-color: #899ab9;
+    background-color: @brand-color-lighter;
     left: 0;
     position: absolute;
     top: 100px;
 }
 
 #barBottomContainer {
-    background-color: #899ab9;
+    background-color: @brand-color-lighter;
     border: 1px #1e3e70;
 //    border-top-style: solid;
     border-bottom-style: solid;
@@ -37,7 +37,7 @@
 }
 
 #barBottomLeft, #barBottommiddle, #barBottomright {
-    background-color: #899ab9;
+    background-color: @brand-color-lighter;
     color: #fff;
     height: 24px;
     line-height: 24px;
@@ -55,7 +55,7 @@ div#barBottommiddle {
     background: url("@{image-path}/header/header_bottom_isolator.png") no-repeat;
     font-weight: bold;
     overflow: hidden;
-    padding-left: 40px;    
+    padding-left: 40px;
 }
 
 div#barBottomright {
@@ -65,7 +65,7 @@ div#barBottomright {
     white-space: nowrap;
 
     &:before {
-        #gradient > .directional(#899ab9, fade(#899ab9, 0%), 180deg);
+        #gradient > .directional(@brand-color-lighter, fadeout(@brand-color-lighter, 100%), 180deg);
         content: " ";
         left: -40px;
         height: 24px;
@@ -263,23 +263,23 @@ div#barTopLogo {
 }
 
 div#header {
-    #gradient > .vertical(#1e3e70, #36598f);
-//    background: url("@{image-path}/background_header.png") repeat-x;
+    #gradient > .vertical(@brand-color-darker, @brand-color-light);
     height: 100px;
 }
 
 /* --- public course marker ------------------------------------------------ */
 #barBottomContainer.public_course {
-    background-color: #c53d3d;
+    @bgcolor: #c53d3d;
+    background-color: @bgcolor;
 
     div#barBottommiddle, div#barBottomright, div#barBottomLeft {
-        background-color: #c53d3d;
+        background-color: @bgcolor;
     }
     div#barBottommiddle { 
         background-image: url('@{image-path}/header/header_bottom_isolator_public.png');
     }
     #barBottomright:before {
-        background: #c53d3d;
-        #gradient > .vertical(rgba(197, 61, 61, 0), rgba(197, 61, 61, 1));
+        background: @bgcolor;
+        #gradient > .directional(@bgcolor, fadeout(@bgcolor, 100%), 180deg);
     }
 }

@@ -786,6 +786,13 @@ div#barBottomright li,
   width: 40px;
   height: 40px;
 }
+#notification_container .list,
+li#notification_container:hover .list {
+  display: none;
+}
+#notification_container.alert:hover .list {
+  display: block;
+}
 div#barTopFont {
   color: #cccccc;
   font-size: 16pt;

@@ -8,11 +8,13 @@ a.tooltip {
     text-decoration: none;
 
     span {
+        #arrow > .bottom-border(9px, #ddd, 1px, #ccc);
+
         #gradient > .vertical(fade(#fff, 50%), fade(#fff, 0%));
         background-color: #ddd;
         border: 2px solid #ccc;
         .border-radius(4px);
-        bottom: 30px;
+        bottom: 100%;
         .box-shadow(0 1px 2px rgba(0,0,0,.4), 0 1px 0 rgba(255,255,255,.5) inset);
         font-size: 10pt;
         left: 50%;
@@ -25,23 +27,6 @@ a.tooltip {
         white-space: normal;
         width: 230px;
         z-index: 999;
-
-        &:before, &:after {
-            border-bottom: 0;
-            border-left: 8px solid transparent;
-            border-right: 8px solid transparent;
-            border-top: 8px solid #ddd;
-            bottom: -7px;
-            content: "";
-            left: 50%;
-            margin-left: -8px;
-            position: absolute;
-            z-index: 1000;
-        }
-        &:before {
-            border-top-color: #ccc;
-            bottom: -8px;
-        }
     }
     &:hover span { visibility: visible; }
 }

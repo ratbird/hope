@@ -69,8 +69,8 @@ if ($GLOBALS['RESOURCES_ENABLE']) {
 
 function redirect_to_course_admin($course_id) {
     $course = new Seminar($course_id);
-    $sem_type = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$course->status]['class']];
-    if ($sem_type) {
+    $sem_class = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$course->status]['class']];
+    if ($sem_class) {
         $nav = $sem_class->getNavigationForSlot("admin", $course_id);
         if ($nav) {
             header("Location: " . UrlHelper::getUrl($nav[0]->getURL()));
@@ -622,6 +622,15 @@ if ($form == 3 && Request::isPost())
                 }
             }
         }
+
+        // Extract variables from request
+        $term_tag   = Request::getArray('term_tag');
+        $term_monat = Request::getArray('term_monat');
+        $term_jahr  = Request::getArray('term_jahr');
+        $term_start_stunde = Request::getArray('term_start_stunde');
+        $term_start_minute = Request::getArray('term_start_minute');
+        $term_end_stunde   = Request::getArray('term_end_stunde');
+        $term_end_minute   = Request::getArray('term_end_minute');
 
         //Alle eingegebenen Termin-Daten in Sessionvariable uebernehmen
         for ($i=0; $i<$_SESSION['sem_create_data']["term_count"]; $i++) {

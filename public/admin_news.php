@@ -154,30 +154,25 @@ if ($cmd=="news_submit") {
         $topic = addslashes(substr(trim(stripslashes($body)),0,30) . '...');
     }
 
-    //Maximale Gültigkeitsdauer von News auf 24 Wochen festgelegt
-    $max_expire = 24 * 7 * 24 * 60 * 60;
-
-    if (Request::quoted('startdate') && Request::quoted('enddate')) {
-        if (preg_match('/^(\d{2}).(\d{2}).(\d{4})$/',Request::quoted('startdate'))
-            && preg_match('/^(\d{2}).(\d{2}).(\d{4})$/',Request::quoted('enddate'))) {
-
-            $start_array = explode(".", Request::quoted('startdate'));
-            $starttime = mktime(0, 0, 0, $start_array[1], $start_array[0], $start_array[2]);
-            $end_array = explode(".", Request::quoted('enddate'));
-            $endtime = mktime(23, 59, 59, $end_array[1], $end_array[0], $end_array[2]);
-            $expire = $endtime - $starttime;
-        }
+    if (preg_match('/^(\d{2}).(\d{2}).(\d{4})$/',Request::get('startdate'))
+        && preg_match('/^(\d{2}).(\d{2}).(\d{4})$/',Request::get('enddate')))
+    {
+        $start_array = explode(".", Request::get('startdate'));
+        $starttime = mktime(0, 0, 0, $start_array[1], $start_array[0], $start_array[2]);
+        $end_array = explode(".", Request::get('enddate'));
+        $endtime = mktime(23, 59, 59, $end_array[1], $end_array[0], $end_array[2]);
+        $expire = $endtime - $starttime;
     }
 
-// unregister globals
-        $author = Request::option('author');
-        $user_id = Request::option('user_id');
-        $add_range = Request::optionArray('add_range');
-        $news_id = Request::option('news_id');
-        $allow_comments = Request::option('allow_comments');
+    // unregister globals
+    $author = Request::option('author');
+    $user_id = Request::option('user_id');
+    $add_range = Request::optionArray('add_range');
+    $news_id = Request::option('news_id');
+    $allow_comments = Request::option('allow_comments');
     
     $max_endtime = $starttime + $expire;
-    if ($topic != "" && $add_range && $expire > 0 && $expire <= $max_expire) {
+    if ($topic != "" && $add_range && $expire > 0) {
         $edit_news = $news->update_news($news_id, $author, $topic, $body, $user_id, $starttime, $expire, $add_range, $allow_comments);
         if ($edit_news) {
             $cmd = "edit";
@@ -192,10 +187,6 @@ if ($cmd=="news_submit") {
         $cmd = "edit";
         $edit_news = Request::option('news_id');
         $news->msg .= "error§"._("Das Einstelldatum muss vor dem Ablaufdatum liegen!")."§";
-    } else if ($expire > $max_expire) {
-        $cmd = "edit";
-        $edit_news = Request::option('news_id');
-        $news->msg .= "error§".sprintf(_("Sie können Ankündigungen maximal bis zum %s einstellen!")."§", strftime('%x', $starttime + $max_expire));
     } else if (!$add_range) {
         $cmd = "edit";
         $edit_news = Request::option('news_id');

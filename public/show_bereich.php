@@ -69,12 +69,6 @@ switch ($level) {
 case "sbb":
     $sem_browse_obj->sem_browse_data['start_item_id'] = $id;
     $sem_browse_obj->get_sem_range($id, false);
-    /*
-    if (is_array($sem_ids)) {
-        $sem_browse_obj->sem_browse_data['search_result'] = array_flip($sem_ids);
-    } else {
-        $sem_browse_obj->sem_browse_data['search_result'] = array();
-    }*/
     $sem_browse_obj->show_result = true;
     $sem_browse_obj->sem_browse_data['sset'] = false;
 

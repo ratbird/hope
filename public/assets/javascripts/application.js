@@ -76,7 +76,8 @@ jQuery(function () {
 
     jQuery('textarea.resizable').resizable({
         handles: 's',
-        minHeight: 50
+        minHeight: 50,
+        zIndex: 1
     });
 
 });

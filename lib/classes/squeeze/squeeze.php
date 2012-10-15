@@ -46,7 +46,7 @@ namespace Studip\Squeeze {
         $packager->cacheAll($outputDir);
 
         $compressor = new Compressor($configuration);
-        if ($compressor->shouldCompress() && $compressor->hasJava()) {
+        if (is_array($configuration['css']) && $compressor->shouldCompress() && $compressor->hasJava()) {
             $config_time = filemtime($configFile);
 
             foreach ($configuration['css'] as $package => $files) {

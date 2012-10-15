@@ -67,21 +67,23 @@ if ($show_semester) {
 
 switch ($level) {
 case "sbb":
-    $the_tree = TreeAbstract::GetInstance("StudipSemTree", array('visible_only' => !$GLOBALS['perm']->have_perm(get_config('SEM_VISIBILITY_PERM'))));
+    $sem_browse_obj->sem_browse_data['start_item_id'] = $id;
+    $sem_browse_obj->get_sem_range($id, false);
+    /*
+    if (is_array($sem_ids)) {
+        $sem_browse_obj->sem_browse_data['search_result'] = array_flip($sem_ids);
+    } else {
+        $sem_browse_obj->sem_browse_data['search_result'] = array();
+    }*/
+    $sem_browse_obj->show_result = true;
+    $sem_browse_obj->sem_browse_data['sset'] = false;
+
+    $the_tree = $sem_browse_obj->sem_tree->tree;
     $bereich_typ = _("Studienbereich");
     $head_text = _("Übersicht aller Veranstaltungen eines Studienbereichs");
     $intro_text = sprintf(_("Alle Veranstaltungen, die dem Studienbereich: <br><b>%s</b><br> zugeordnet wurden."),
         htmlReady($the_tree->getShortPath($id)));
     $excel_text = strip_tags(DecodeHtml($intro_text));
-    $sem_ids = $the_tree->getSemIds($id, false);
-    if (is_array($sem_ids)) {
-        $sem_browse_obj->sem_browse_data['search_result'] = array_flip($sem_ids);
-    } else {
-        $sem_browse_obj->sem_browse_data['search_result'] = array();
-    }
-    $sem_browse_obj->show_result = true;
-    $sem_browse_obj->sem_browse_data['sset'] = false;
-    $sem_browse_obj->sem_browse_data['start_item_id'] = $id;
     break;
 case "s":
     $db = DbManager::get();
@@ -183,7 +185,7 @@ if (get_config('EXPORT_ENABLE') && $perm->have_perm("tutor")) {
     <?= \Studip\Button::create(_("Auswählen"), 'choose_sem', array('title' => _("anderes Semester auswählen"))); ?>
     </form>
 </div>
-<?= $sem_browse_obj->print_result(); ?>
+<? $sem_browse_obj->print_result(); ?>
 
 <?php
 $layout = $GLOBALS['template_factory']->open('layouts/base.php');

@@ -1,5 +1,11 @@
 // TODO: LESSify
 
+@infobox-width: 250px;
+@infobox-margin: 20px;
+@infobox-padding: 20px;
+@infobox-border-width: 1px;
+
+
 /* --- Layouts -------------------------------------------------------------- */
 #layout_page {
     .border-radius(0 0 2px 2px);
@@ -29,19 +35,19 @@
 
 #layout_content {
     .clearfix();
-    margin-right: 291px; // #sidebar(border + margin + padding) + #infobox(width)
-//    overflow: auto;
+    margin-right: @infobox-width + @infobox-margin + @infobox-padding + @infobox-border-width;
 }
 
 #layout_sidebar {
-    border-left: 1px dashed #1e3e70;
+    border-left: 1px dashed @brand-color-darker;
     float: right;
-    margin-left: 20px;
-    padding-left: 20px;
+    margin-left: @infobox-margin;
+    padding-left: @infobox-padding;
+    max-width: @infobox-width;
 }
 
 #layout_infobox {
-    width: 250px;
+    width: @infobox-width;
 }
 
 #layout_wrapper {
@@ -59,8 +65,8 @@
 }
 
 #layout_footer {
-    background-color: #899ab9;
-    border-top: 1px solid #1e3e70;
+    background-color: @brand-color-lighter;
+    border-top: 1px solid @brand-color-darker;
     clear: both;
     color: #fff;
     height: 24px;
@@ -68,4 +74,3 @@
     padding: 0 15px 0 0;
     text-align: right;
 }
-

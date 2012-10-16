@@ -20,12 +20,14 @@ class CalendarNavigation extends Navigation
      */
     public function __construct()
     {
+        global $perm;
+        
         parent::__construct(_('Planer'));
 
-        if (get_config('CALENDAR_ENABLE')) {
-            $planerinfo = _('Termine');
-        } else {
+        if (!$perm->have_perm('admin') && get_config('SCHEDULE_ENABLE')) {
             $planerinfo = _('Stundenplan');
+        } else {
+            $planerinfo = _('Termine');
         }
 
         $this->setImage('header/schedule.png', array('title' => $planerinfo, "@2x" => TRUE));
@@ -40,6 +42,12 @@ class CalendarNavigation extends Navigation
         global $perm, $atime;
 
         parent::initSubNavigation();
+
+        // schedule
+        if (!$perm->have_perm('admin') && get_config('SCHEDULE_ENABLE')) {
+            $navigation = new Navigation(_('Stundenplan'), 'dispatch.php/calendar/schedule');
+            $this->addSubNavigation('schedule', $navigation);
+        }
 
         // calendar
         $atime = $atime ? intval($atime) : Request::int($atime);
@@ -56,12 +64,6 @@ class CalendarNavigation extends Navigation
                 $navigation->addSubNavigation('admin_groups', new Navigation(_('Kalendergruppen'), 'contact_statusgruppen.php', array('nav' => 'calendar')));
             }
             $this->addSubNavigation('calendar', $navigation);
-        }
-
-        // schedule
-        if (!$perm->have_perm('admin') && get_config('SCHEDULE_ENABLE')) {
-            $navigation = new Navigation(_('Stundenplan'), 'dispatch.php/calendar/schedule');
-            $this->addSubNavigation('schedule', $navigation);
         }
     }
 }

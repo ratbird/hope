@@ -30,36 +30,35 @@
 
     <? include 'lib/include/header.php' ?>
 
-    <div id="layout_container">
-      <div id="layout_sidebar">
-      <? if ($infobox) : ?>
-      <div id="layout_infobox">
-            <?= $this->render_partial('infobox/infobox_generic_content', $infobox) ?>
-      </div>
-      <? endif ?>
-      </div>
-      <div id="layout_content">
-        <?= implode(PageLayout::getMessages()) ?>
-        <?= $content_for_layout ?>
-        <div class="clear"></div>
-      </div>
-      <div class="clear"></div>
-    </div>
-</div>
-    <script>
-    jQuery(function () {
-        if(jQuery('#layout_sidebar').height() < jQuery('#layout_content').height()) {
-            jQuery('#layout_sidebar').css("height", jQuery('#layout_content').height());
-        }
-    });
-    </script>
-<!-- Ende Page -->
+        <div id="layout_container">
+          <div id="layout_sidebar">
+          <? if ($infobox) : ?>
+              <div id="layout_infobox">
+                    <?= $this->render_partial('infobox/infobox_generic_content', $infobox) ?>
+              </div>
+          <? endif ?>
+          </div>
+          <div id="layout_content">
+            <?= implode(PageLayout::getMessages()) ?>
+            <?= $content_for_layout ?>
+          </div>
+        </div>
+    </div> <? // Closes #layout_page opened in included templates/header.php ?>
+
+    <!-- Ende Page -->
     <div id="layout_push"></div>
-</div>
+</div> 
 
     <? include 'templates/footer.php'; ?>
 
     <?= SkipLinks::getHTML() ?>
 
+    <script>
+    jQuery(function ($) {
+        if($('#layout_sidebar').height() < $('#layout_content').height()) {
+            $('#layout_sidebar').css('height', $('#layout_content').height());
+        }
+    });
+    </script>
 </body>
 </html>

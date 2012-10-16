@@ -30,13 +30,13 @@
 
     <? include 'lib/include/header.php' ?>
 
-    <div id="layout_container">
-        <?= implode(PageLayout::getMessages()) ?>
-        <?= $content_for_layout ?>
-        <div class="clear"></div>
-    </div>
-</div>
-<!-- Ende Page -->
+        <div id="layout_container">
+            <?= implode(PageLayout::getMessages()) ?>
+            <?= $content_for_layout ?>
+        </div>
+        </div> <? // Closes #layout_page opened in included templates/header.php ?>
+
+    <!-- Ende Page -->
     <div id="layout_push"></div>
 </div>
 

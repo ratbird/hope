@@ -7,19 +7,6 @@
     margin: 15px;
 }
 
-#layout_container {
-    background-color: white;
-    .border-radius(0 0 2px 2px);
-    .box-shadow(3px 3px 5px rgba(0, 0, 0, 0.5));
-    margin: 0;
-    padding: 20px;
-}
-
-#layout_content {
-//    margin-right: 291px;
-    overflow: auto;
-}
-
 // for old pages without template layout
 #layout_table {
     background-color: #fff;
@@ -29,6 +16,21 @@
     width: 100%;
 
     td { vertical-align: top; }
+}
+
+#layout_container {
+    .clearfix();
+    background-color: white;
+    .border-radius(0 0 2px 2px);
+    .box-shadow(3px 3px 5px rgba(0, 0, 0, 0.5));
+    margin: 0;
+    padding: 20px;
+}
+
+#layout_content {
+    .clearfix();
+    margin-right: 291px; // #sidebar(border + margin + padding) + #infobox(width)
+//    overflow: auto;
 }
 
 #layout_sidebar {

@@ -129,8 +129,7 @@ if (Request::submitted('do_send_msg') && Request::intArray('send_msg') && Semina
 }
 
     // Start  of Output
-    include ('lib/include/html_head.inc.php'); // Output of html head
-    include ('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
+    ob_start();
 
 $messaging=new messaging;
 
@@ -2049,20 +2048,6 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
     echo "</table>\n</form>";
 } // end insert autor
 
-if (get_config('EXPORT_ENABLE') AND $perm->have_studip_perm("tutor", $SessSemName[1])) {
-    include_once($PATH_EXPORT . "/export_linking_func.inc.php");
-    echo chr(10) . '<tr>';
-    echo chr(10) . "<td class=\"blank\"><b>" . export_link($SessSemName[1], "person", _("TeilnehmerInnen") . ' '. $SessSemName[0], "rtf", "rtf-teiln", "", Assets::img('icons/16/blue/file-text.png', array('class' => 'text-top')) . ' ' . _("TeilnehmerInnen exportieren als rtf Dokument"), 'passthrough'). "</b></td>";
-    echo chr(10) . "<td class=\"blank\"><b>" . export_link($SessSemName[1], "person", _("TeilnehmerInnen") . ' '. $SessSemName[0], "csv", "csv-teiln", "", Assets::img('icons/16/blue/file-xls.png', array('class' => 'text-top')) . ' ' . _("TeilnehmerInnen exportieren als csv Dokument"), 'passthrough') . "</b></td>";
-    echo chr(10) . '</tr>';
-
-    if ($awaiting) {
-        echo chr(10) . '<tr>';
-        echo chr(10) . "<td class=\"blank\"><b>" . export_link($SessSemName[1], "person", _("Warteliste") .' ' . $SessSemName[0], "rtf", "rtf-warteliste", "awaiting", Assets::img('icons/16/blue/file-text.png', array('class' => 'text-top')) . ' ' . _("Warteliste exportieren als rtf Dokument"), 'passthrough') . "</b></td>";
-        echo chr(10) . "<td class=\"blank\"><b>" . export_link($SessSemName[1], "person", _("Warteliste") .' ' . $SessSemName[0], "csv", "csv-warteliste", "awaiting", Assets::img('icons/16/blue/file-xls.png', array('class' => 'text-top')) . ' ' . _("Warteliste exportieren csv Dokument"), 'passthrough') . "</b></td>";
-        echo chr(10) . '</tr>';
-    }
-}
 ?>
         </table>
         </td>
@@ -2070,6 +2055,48 @@ if (get_config('EXPORT_ENABLE') AND $perm->have_studip_perm("tutor", $SessSemNam
 </table>
 
 <?php
-    include ('lib/include/html_end.inc.php');
+    if (get_config('EXPORT_ENABLE') AND $perm->have_studip_perm("tutor", $SessSemName[1])) {
+        include_once($PATH_EXPORT . "/export_linking_func.inc.php");
+        
+        $infobox[1] = array(
+                "eintrag" => array(
+                    array(
+                        'icon' => "icons/16/black/file-text.png",
+                        'text' => export_link($SessSemName[1], "person", _("TeilnehmerInnen") . ' '. $SessSemName[0], "rtf", "rtf-teiln", "", 
+                                  _("TeilnehmerInnen exportieren als rtf Dokument"), 'passthrough')
+                    ),
+                    array(
+                        'icon' => 'icons/16/black/file-xls.png',
+                        'text' => export_link($SessSemName[1], "person", _("TeilnehmerInnen") . ' '. $SessSemName[0], "csv", "csv-teiln", "", 
+                                  _("TeilnehmerInnen exportieren als csv Dokument"), 'passthrough')
+                    )
+                )
+            );
+    
+        if ($awaiting) {
+            $infobox[2] = array(
+                "eintrag" => array(
+                    array(
+                        'icon' => "icons/16/blue/file-text.png",
+                        'text' => export_link($SessSemName[1], "person", _("Warteliste") .' ' . $SessSemName[0], "rtf", "rtf-warteliste", "awaiting", 
+                                  _("Warteliste exportieren als rtf Dokument"), 'passthrough')
+                    ),
+                    array(
+                        'icon' => 'icons/16/blue/file-xls.png',
+                        'text' => export_link($SessSemName[1], "person", _("Warteliste") .' ' . $SessSemName[0], "csv", "csv-warteliste", "awaiting", 
+                                  _("Warteliste exportieren csv Dokument"), 'passthrough')
+                    )
+                )
+            );
+        }
+        $layout = $GLOBALS['template_factory']->open('layouts/base.php');
+        $layout->infobox = array('content' => $infobox, 'picture' => "infobox/groups.jpg");
+    } else {
+        $layout = $GLOBALS['template_factory']->open('layouts/base_without_infobox.php');
+    }
+
+    $layout->content_for_layout = ob_get_clean();
+    
+    echo $layout->render();
     page_close();
 ?>

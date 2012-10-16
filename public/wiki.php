@@ -46,7 +46,7 @@ require_once 'lib/functions.php';
 require_once 'lib/visual.inc.php';
 
 $view = Request::get('view');
-$keyword = Request::quoted('keyword');
+$keyword = Request::get('keyword');
 $version = Request::int('version');
 $cmd = Request::option('cmd');
 

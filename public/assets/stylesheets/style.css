@@ -496,6 +496,7 @@ tr.sortable th.sortdesc {
   clear: both;
 }
 #layout_sidebar {
+  *zoom: 1;
   background: inherit;
   border-left: 1px dashed #1e3e70;
   float: right;
@@ -504,6 +505,15 @@ tr.sortable th.sortdesc {
   max-width: 250px;
   position: relative;
   z-index: 1;
+}
+#layout_sidebar:before,
+#layout_sidebar:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+#layout_sidebar:after {
+  clear: both;
 }
 #layout_infobox {
   width: 250px;

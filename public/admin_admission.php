@@ -649,7 +649,7 @@ if ($seminar_id
 
                     $message=sprintf(_('Sie wurden in der Veranstaltung **%s** in den Status **vorläufig akzeptiert** befördert, da das Anmeldeverfahren geändert wurde.'), $admin_admission_data['name']);
                     $messaging->insert_message(addslashes($message), $row['username'], '____%system%____', FALSE, FALSE, '1', FALSE, _('Systemnachricht:').' '._('vorläufig akzeptiert'), TRUE);
-                    RemovePersonStatusgruppeSeminar($row['username'], $admin_admission_data['sem_id']);
+                    RemovePersonStatusgruppe($row['username'], $admin_admission_data['sem_id']);
                 }
 
                 // Prepare and execute statement that obtains all users
@@ -674,7 +674,7 @@ if ($seminar_id
                     foreach ($usernames as $username) {
                         $message = sprintf(_('Ihr Abonnement der Veranstaltung **%s** wurde aufgehoben, da die Veranstaltung mit einem teilnahmebeschränkten Anmeldeverfahren versehen wurde. \nWenn Sie einen Platz in der Veranstaltung bekommen wollen, melden Sie sich bitte erneut an.'), $admin_admission_data['name']);
                         $messaging->insert_message(addslashes($message), $username, '____%system%____', FALSE, FALSE, '1', FALSE, _('Systemnachricht:').' '._('Abonnement aufgehoben'), TRUE);
-                         RemovePersonStatusgruppeSeminar($username, $admin_admission_data['sem_id']);
+                         RemovePersonStatusgruppe($username, $admin_admission_data['sem_id']);
                     }
                 }
 
@@ -848,7 +848,7 @@ if ($seminar_id
                 foreach ($usernames as $username) {
                     $message = sprintf(_("Ihr Abonnement der Veranstaltung **%s** wurde aufgehoben, da die Veranstaltung mit einem teilnahmebeschränkten Anmeldeverfahren versehen wurde. \nWenn Sie einen Platz in der Veranstaltung bekommen wollen, melden Sie sich bitte erneut an."), $admin_admission_data['name']);
                     $messaging->insert_message (addslashes($message), $username, '____%system%____', FALSE, FALSE, '1', FALSE, _('Systemnachricht:').' '._('Abonnement aufgehoben'), TRUE);
-                    RemovePersonStatusgruppeSeminar($username, $admin_admission_data['sem_id']);
+                    RemovePersonStatusgruppe($username, $admin_admission_data['sem_id']);
                 }
             }
 

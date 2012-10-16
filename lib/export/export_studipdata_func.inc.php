@@ -635,7 +635,7 @@ function export_teilis($inst_id, $ex_sem_id = "no")
                       LEFT JOIN user_info AS ui USING (user_id)
                       LEFT JOIN auth_user_md5 AS aum USING (user_id)
                       LEFT JOIN user_studiengang USING (user_id)
-                      LEFT JOIN studiengaenge AS sg USING (studiengang_id)
+                      LEFT JOIN studiengaenge AS sg ON (user_studiengang.studiengang_id = sg.studiengang_id)
                       LEFT JOIN abschluss AS a USING (abschluss_id)
                       WHERE seminar_id = :seminar_id AND asu.status = 'accepted'
                       GROUP BY aum.user_id
@@ -649,7 +649,7 @@ function export_teilis($inst_id, $ex_sem_id = "no")
                         LEFT JOIN user_info AS ui USING(user_id)
                         LEFT JOIN auth_user_md5 AS aum USING(user_id)
                         LEFT JOIN user_studiengang USING(user_id)
-                        LEFT JOIN studiengaenge AS sg USING (studiengang_id)
+                        LEFT JOIN studiengaenge AS sg ON (user_studiengang.studiengang_id = sg.studiengang_id)
                         LEFT JOIN abschluss AS a USING (abschluss_id)
                         WHERE asu.seminar_id = :seminar_id AND asu.status != 'accepted'
                         GROUP BY aum.user_id ORDER BY position";

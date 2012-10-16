@@ -35,7 +35,8 @@
 
 #layout_content {
     .clearfix();
-    margin-right: @infobox-width + @infobox-margin + @infobox-padding + @infobox-border-width;
+    // Without the +1 zooming out would break the layout (weird behaviour, i know)
+    margin-right: @infobox-width + @infobox-margin + @infobox-padding + @infobox-border-width + 1;
 }
 
 #layout_sidebar {

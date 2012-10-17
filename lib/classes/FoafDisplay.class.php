@@ -190,7 +190,7 @@ class FoafDisplay
         } else {
             $titel=sprintf(_("Es besteht eine Verbindung über %d andere NutzerInnen."),count($this->foaf_list)-2);
         }
-        $link="about.php?username=".$this->target_username."& =".($open=="open" ? "close":"open")."#foaf";
+        $link="about.php?username=".$this->target_username."&foaf_open=".($open=="open" ? "close":"open")."#foaf";
         $titel="<a href=\"$link\" class=\"tree\">$titel</a>";
 
         // AB HIER AUSGABE
@@ -233,7 +233,7 @@ class FoafDisplay
                       FROM auth_user_md5
                       LEFT JOIN user_info USING (user_id)
                       WHERE user_id = ?";
-            $statement = DBManager::get()->preg_filter($query);
+            $statement = DBManager::get()->prepare($query);
             $statement->execute(array($user_id));
             $ret = $statement->fetch(PDO::FETCH_ASSOC);
 

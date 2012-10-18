@@ -140,12 +140,13 @@ class URLHelper
      *
      * @param string $url    relative or absolute URL
      * @param array  $params array of additional link parameters to add
+     * @param bool $ignore_registered_params do not add registered params
      *
      * @return string modified URL (entity encoded)
      */
-    static function getLink ($url = '', $params = NULL)
+    static function getLink ($url = '', $params = NULL, $ignore_registered_params = false)
     {
-        return htmlspecialchars(self::getURL($url, $params));
+        return htmlspecialchars(self::getURL($url, $params, $ignore_registered_params));
     }
 
     /**
@@ -158,12 +159,13 @@ class URLHelper
      *
      * @param string $url    relative or absolute URL
      * @param array  $params array of additional link parameters to add
+     * @param bool $ignore_registered_params do not add registered params
      *
      * @return string modified URL
      */
-    static function getURL ($url = '', $params = NULL)
+    static function getURL ($url = '', $params = NULL, $ignore_registered_params = false)
     {
-        $link_params = self::$params;
+        $link_params = $ignore_registered_params ? array() : self::$params;
 
         list($url, $fragment) = explode('#', $url);
         list($url, $query)    = explode('?', $url);
@@ -193,6 +195,34 @@ class URLHelper
         }
 
         return $url;
+    }
+
+    /**
+     * Augment the given URL by adding URL parameters from the second parameter,
+     * without bound parameters
+     *
+     * @param string $url    relative or absolute URL
+     * @param array  $params array of additional link parameters to add
+     *
+     * @return string modified URL
+     */
+    static function getScriptURL ($url = '', $params = NULL)
+    {
+        return self::getURL($url, $params, true);
+    }
+
+    /**
+     * This method is identical to getScriptURL() except that it
+     * returns an entity encoded URL suitable for use in HTML attributes.
+     *
+     * @param string $url    relative or absolute URL
+     * @param array  $params array of additional link parameters to add
+     *
+     * @return string modified URL (entity encoded)
+     */
+    static function getScriptLink ($url = '', $params = NULL)
+    {
+        return self::getLink($url, $params, true);
     }
 }
 ?>

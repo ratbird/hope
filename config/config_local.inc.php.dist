@@ -316,6 +316,8 @@ $USER_VISIBILITY_CHECK = FALSE;             // enable presentation of visibility
 
 $CONVERT_IDNA_URL = TRUE;                   //if true, urls with german "umlauts" are converted
 
+$USERNAME_REGULAR_EXPRESSION = '/^([a-zA-Z0-9_@.-]{4,})$/'; //regex for allowed characters in usernames
+
 /*language settings
 ----------------------------------------------------------------*/
 

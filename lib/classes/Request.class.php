@@ -241,6 +241,26 @@ class Request implements ArrayAccess, IteratorAggregate
     }
 
     /**
+     * Return the value of the selected query parameter as a string
+     * consisting only of allowed characters for usernames.
+     *
+     * @param string $param    parameter name
+     * @param string  $default  default value if parameter is not set
+     *
+     * @return string   parameter value (if set), else NULL
+     */
+    public static function username ($param, $default = NULL)
+    {
+        $value = self::get($param, $default);
+
+        if (!isset($value) || !preg_match($GLOBALS['USERNAME_REGULAR_EXPRESSION'], $value)) {
+            $value = $default;
+        }
+
+        return $value;
+    }
+
+    /**
      * Return the value of the selected query parameter as an array.
      *
      * @param string $param    parameter name
@@ -332,6 +352,26 @@ class Request implements ArrayAccess, IteratorAggregate
         return $array;
     }
 
+    /**
+     * Return the value of the selected query parameter as an array of
+     * strings consisting only of allowed characters for usernames.
+     *
+     * @param string $param    parameter name
+     *
+     * @return array  parameter value as array (if set), else an empty array
+     */
+    public static function usernameArray ($param)
+    {
+        $array = self::getArray($param);
+
+        foreach ($array as $key => $value) {
+            if (!preg_match($GLOBALS['USERNAME_REGULAR_EXPRESSION'], $value)) {
+                unset($array[$key]);
+            }
+        }
+
+        return $array;
+    }
     /**
      * Check whether a form submit button has been pressed. This works for
      * both image and text submit buttons.

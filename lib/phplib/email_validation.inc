@@ -25,7 +25,12 @@ class email_validation_class
 
     var $next_token="";
 
-        Function Tokenize($string,$separator="")
+    function __construct()
+    {
+        $this->username_regular_expression = $GLOBALS['USERNAME_REGULAR_EXPRESSION'];
+    }
+
+    Function Tokenize($string,$separator="")
     {
         if(!strcmp($separator,""))
         {

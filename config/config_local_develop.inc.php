@@ -223,6 +223,8 @@ $SHOW_TERMS_ON_FIRST_LOGIN = FALSE;                         //if true, the user 
 
 $CONVERT_IDNA_URL = TRUE;                               //if true, urls with german "umlauts" are converted
 
+$USERNAME_REGULAR_EXPRESSION = '/^([a-zA-Z0-9_@.-]{4,})$/'; //regex for allowed characters in usernames
+
 /*language settings
 ----------------------------------------------------------------*/
 

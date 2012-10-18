@@ -25,8 +25,8 @@ require '../lib/bootstrap.php';
 unregister_globals();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $perm->check("user");
-$_SESSION['sms_data'] = $sms_data;
-$sms_show = $_SESSION['sms_show'];
+$sms_data =& $_SESSION['sms_data'];
+$sms_show =& $_SESSION['sms_show'];
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 if(empty ($my_messaging_settings)){
     $my_messaging_settings = json_decode(UserConfig::get($user->id)->__get('my_messaging_settings'),true);
@@ -254,7 +254,7 @@ if (Request::submitted('cmd_insert')) {
 }
 
 // do we answer someone and did we came from somewhere != sms-page
-if (Request::option('answer_to')) {
+if (Request::option('answer_to') && Request::isGet()) {
     $query = "SELECT username
               FROM message
               JOIN auth_user_md5 ON (message.autor_id = auth_user_md5.user_id)
@@ -273,7 +273,7 @@ if (Request::option('answer_to')) {
     $sms_data['sig'] = $my_messaging_settings['addsignature'];
 }
 
-$rec_uname=Request::get('rec_uname');
+$rec_uname=Request::username('rec_uname');
 if (isset($rec_uname)) {
     if (!get_visibility_by_username($rec_uname)) {
         if ($perm->get_perm() == "dozent") {
@@ -448,7 +448,7 @@ if (Request::option('group_id')) {
 
 // We expect either an array of the recipients' usernames or the username of
 // a single recipient or nothing (thus we need array_filter to remove invalid entries)
-$rec_unames = Request::getArray('rec_uname') ?: array_filter(array(Request::get('rec_uname')));
+$rec_unames = Request::usernameArray('rec_uname') ?: array_filter(array(Request::username('rec_uname')));
 if (count($rec_unames) > 0  || Request::get('filter'))
 {
     //$sms_data für neue Nachricht vorbereiten
@@ -572,11 +572,10 @@ if (!isset($sms_data["sig"])) {
     $sms_data["sig"] = "0";
 }
 // add a reciever from adress-members
-if (Request::submitted('add_receiver_button') && Request::getArray('add_receiver')) {
-    $sms_data["p_rec"] = array_add_value(Request::getArray('add_receiver'), $sms_data["p_rec"]);
+if (Request::submitted('add_receiver_button') && Request::usernameArray('add_receiver')) {
+    $sms_data["p_rec"] = array_add_value(Request::usernameArray('add_receiver'), $sms_data["p_rec"]);
 
 }
-
 
 // add all reciever from adress-members
 if (Request::submitted('add_allreceiver_button')) {
@@ -602,8 +601,8 @@ if (Request::submitted('add_allreceiver_button')) {
 
 
 // add receiver from freesearch
-if (Request::submitted('add_freesearch') && Request::get("adressee")) {
-    $sms_data["p_rec"] = array_add_value(array(Request::get("adressee")), $sms_data["p_rec"]);
+if (Request::submitted('add_freesearch') && Request::username("adressee")) {
+    $sms_data["p_rec"] = array_add_value(array(Request::username("adressee")), $sms_data["p_rec"]);
 }
 
 
@@ -612,8 +611,8 @@ if (Request::submitted('del_allreceiver_button')) { unset($sms_data["p_rec"]); }
 
 
 // aus empfaengerliste loeschen
-if (Request::submitted('del_receiver_button') && Request::optionArray('del_receiver')) {
-    foreach (Request::optionArray('del_receiver') as $a) {
+if (Request::submitted('del_receiver_button')) {
+    foreach (Request::usernameArray('del_receiver') as $a) {
         $sms_data["p_rec"] = array_delete_value($sms_data["p_rec"], $a);
     }
 }
@@ -665,8 +664,8 @@ $txt['008'] = _("Lesebestätigung");
 
     echo '<form enctype="multipart/form-data" name="upload_form" action="'.URLHelper::getURL().'" method="post">';
     echo CSRFProtection::tokenTag();
-    if(Request::quoted('answer_to')) {
-         echo '<input type="hidden" name="answer_to" value="'. htmlReady(Request::get('answer_to')). '">';
+    if(Request::option('answer_to')) {
+         echo '<input type="hidden" name="answer_to" value="'. htmlReady(Request::option('answer_to')). '">';
     }
 
     echo '<input type="hidden" name="sms_source_page" value="'. htmlReady(Request::get('sms_source_page')) .'">';

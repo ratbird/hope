@@ -252,7 +252,7 @@ if (Seminar_Session::check_ticket(Request::option('studipticket')) && !LockRules
     }
 
     // Hier will jemand die Karriereleiter rauf...
-    $autor_to_tutor = Request::getArray('autor_to_tutor');
+    $autor_to_tutor = Request::usernameArray('autor_to_tutor');
     if ( ($cmd == "pleasure" && $username) || (Request::submitted('do_autor_to_tutor') && !empty($autor_to_tutor)) ){
         //erst mal sehen, ob er hier wirklich Dozent ist... Tutoren d&uuml;rfen andere nicht zu Tutoren befoerdern!
         if ($rechte AND $SemUserStatus != "tutor")  {
@@ -260,28 +260,19 @@ if (Seminar_Session::check_ticket(Request::option('studipticket')) && !LockRules
             if ($cmd == "pleasure"){
                 $pleasure = array($username);
             } else {
-                $pleasure = (!empty($autor_to_tutor) ? array_keys($autor_to_tutor) : array());
+                $pleasure = $autor_to_tutor;
             }
-
-            $query = "SELECT {$_fullname_sql['full']} AS fullname, user_id
-                      FROM auth_user_md5
-                      LEFT JOIN user_info USING (user_id)
-                      WHERE username = ? AND perms NOT IN ('user', 'autor')";
-            $data_statement = DBManager::get()->prepare($query);
 
             $query = "UPDATE seminar_user
                       SET status = 'tutor', position = ?, visible = 'yes'
                       WHERE Seminar_id = ? AND user_id = ? AND status = 'autor'";
             $pleasure_statement = DBManager::get()->prepare($query);
 
-            foreach($pleasure as $username){
-                $data_statement->execute(array($username));
-                $data = $data_statement->fetch(PDO::FETCH_ASSOC);
-                $data_statement->closeCursor();
-
-                if ($data) {
-                    $userchange = $data['user_id'];
-                    $fullname   = $data['fullname'];
+            foreach($pleasure as $username) {
+                $temp_user = User::findByUsername($username);
+                if ($temp_user && !in_array($temp_user->perms, words('user autor'))) {
+                    $userchange = $temp_user['user_id'];
+                    $fullname   = $temp_user->getFullName();
                     $next_pos   = get_next_position('tutor', $id);
 
                     $pleasure_statement->execute(array($next_pos, $id, $userchange));
@@ -1471,7 +1462,7 @@ while (list ($key, $val) = each ($gruppe)) {
                                 ++$tutor_count;
                                 echo "<td align=\"center\">";
                                 echo "<a href=\"".URLHelper::getLink("?cmd=pleasure&username=$username&studipticket=$studipticket")."\"><img border=\"0\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/yellow/arr_2up.png\"></a>";
-                                echo "<input type=\"checkbox\" name=\"autor_to_tutor[$username]\" value=\"1\">";
+                                echo "<input type=\"checkbox\" name=\"autor_to_tutor[]\" value=\"$username\">";
                                 echo "</td>";
                             } else echo "<td>&nbsp;</td>";
                         } else echo "<td>&nbsp;</td>";

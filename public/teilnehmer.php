@@ -335,7 +335,7 @@ if (Seminar_Session::check_ticket(Request::option('studipticket')) && !LockRules
     }
 
     // jemand ist zu bloede, sein Seminar selbst zu abbonieren...
-    $user_to_autor = Request::getArray('user_to_autor');
+    $user_to_autor = Request::usernameArray('user_to_autor');
     if ( ($cmd == "schreiben" && $username) || (Request::submitted('do_user_to_autor') && !empty($user_to_autor)) ){
         //erst mal sehen, ob er hier wirklich Dozent ist...
         if ($rechte) {
@@ -343,14 +343,8 @@ if (Seminar_Session::check_ticket(Request::option('studipticket')) && !LockRules
             if ($cmd == "schreiben"){
                 $schreiben = array($username);
             } else {
-                $schreiben = (!empty($user_to_autor) ? array_keys($user_to_autor) : array());
+                $schreiben = $user_to_autor;
             }
-
-            $query = "SELECT {$_fullname_sql['full']} AS fullname, user_id
-                      FROM auth_user_md5
-                      LEFT JOIN user_info USING (user_id)
-                      WHERE username = ? AND perms != 'user'";
-            $data_statement = DBManager::get()->prepare($query);
 
             $query = "UPDATE seminar_user
                       SET status = 'autor'
@@ -358,13 +352,11 @@ if (Seminar_Session::check_ticket(Request::option('studipticket')) && !LockRules
             $schreiben_statement = DBManager::get()->prepare($query);
 
             foreach ($schreiben as $username) {
-                $data_statement->execute(array($username));
-                $data = $data_statement->fetch(PDO::FETCH_ASSOC);
-                $data_statement->closeCursor();
+                $temp_user = User::findByUsername($username);
 
-                if ($data) {
-                    $userchange = $data['user_id'];
-                    $fullname   = $data['fullname'];
+                if ($temp_user && $temp_user->perms !== 'user') {
+                    $userchange = $temp_user['user_id'];
+                    $fullname   = $temp_user->getFullName();
 
                     $schreiben_statement->execute(array($id, $userchange));
                     if ($schreiben_statement->rowCount()) {
@@ -1483,7 +1475,7 @@ while (list ($key, $val) = each ($gruppe)) {
                         if ($check) { // Leute, die sich nicht zurueckgemeldet haben duerfen auch nicht schreiben!
                             echo "<td align=\"center\">";
                             echo "<a href=\"".URLHelper::getLink("?cmd=schreiben&username=$username&studipticket=$studipticket")."\"><img border=\"0\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/yellow/arr_2up.png\"></a>";
-                            echo "<input type=\"checkbox\" name=\"user_to_autor[$username]\" value=\"1\">";
+                            echo "<input type=\"checkbox\" name=\"user_to_autor[]\" value=\"$username\">";
                             echo "</td>";
                         } else echo "<td>&nbsp;</td>";
                         // aus dem Seminar werfen

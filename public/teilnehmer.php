@@ -401,12 +401,6 @@ if (Seminar_Session::check_ticket(Request::option('studipticket')) && !LockRules
                 $lesen = $autor_to_user;
             }
 
-            $query = "SELECT {$_fullname_sql['full']} AS fullname, user_id
-                      FROM auth_user_md5
-                      LEFT JOIN user_info USING (user_id)
-                      WHERE username = ?";
-            $data_statement = DBManager::get()->prepare($query);
-
             $query = "UPDATE seminar_user
                       SET status = 'user'
                       WHERE Seminar_id = ? AND user_id = ? AND status = 'autor'";

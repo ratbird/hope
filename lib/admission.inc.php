@@ -708,7 +708,7 @@ function check_admission ($send_message=TRUE)
             //Warteposition ablegen
             $position = 1;
             foreach ($user_ids as $user_id) {
-                $position_statement-execute(array(
+                $position_statement->execute(array(
                     $position,
                     $user_id,
                     $seminar->getId()

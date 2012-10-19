@@ -11,7 +11,7 @@ $lockCheck = function ($field, $return = true) use ($institute) {
 };
 
 // Indicates whether the current user is allowed to delete the institute
-$may_delete = $i_view != 'new' && !($institute['number'] || $num_institute)
+$may_delete = $i_view != 'new' && !($institute['number'] || $num_institutes)
             && ($GLOBALS['perm']->have_perm('root')
                 || ($GLOBALS['perm']->is_fak_admin() && get_config('INST_FAK_ADMIN_PERMS') == 'all'));
 
@@ -19,27 +19,6 @@ $may_delete = $i_view != 'new' && !($institute['number'] || $num_institute)
 $may_edit_faculty = $perm->is_fak_admin()
                   && !$lockCheck('fakultaets_id')
                   && ($perm->have_studip_perm('admin', $institute['fakultaets_id']) || $i_view == 'new');
-
-// Read faculties if neccessary
-if ($may_edit_faculty && !$num_institute) {
-    if ($perm->have_perm('root')) {
-        $query = "SELECT Institut_id, Name
-                  FROM Institute
-                  WHERE Institut_id = fakultaets_id AND fakultaets_id != ?
-                  ORDER BY Name";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($institute['Institut_id'] ?: ''));
-    } else {
-        $query = "SELECT a.Institut_id, Name
-                  FROM user_inst AS a
-                  LEFT JOIN Institute USING (Institut_id)
-                  WHERE user_id = ? AND inst_perms = 'admin' AND fakultaets_id = ?
-                  ORDER BY Name";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($user->id, $institute['Institut_id'] ?: ''));
-    }
-    $faculties = $statement->fetchGrouped(PDO::FETCH_COLUMN);
-}
 
 ?>
 <form method="POST" name="edit" action="<?= UrlHelper::getLink() ?>">
@@ -50,7 +29,7 @@ if ($may_edit_faculty && !$num_institute) {
             <tr class="<?= TextHelper::cycle('hover_even', 'hover_odd') ?>">
                 <td><?= _('Name:') ?></td>
                 <td>
-                    <input type="text" <?= $lockCheck('name', 'readonly') ?> name="Name"
+                    <input type="text" <?= $lockCheck('name', 'readonly disabled') ?> name="Name"
                            value="<?= htmlReady(Request::get('Name', $institute['Name'])) ?>">
                 </td>
             </tr>
@@ -58,15 +37,14 @@ if ($may_edit_faculty && !$num_institute) {
             <tr class="<?= TextHelper::cycle('hover_even', 'hover_odd') ?>">
                 <td><?= _('Fakultät:') ?></td>
                 <td>
-            <? if ($may_edit_faculty): ?>
-                <? if ($num_institute): ?>
+                <? if ($num_institutes): ?>
                     <small>
                         <?= _('Diese Einrichtung hat den Status einer Fakultät.') ?><br>
-                        <?= sprintf(_('Es wurden bereits %u andere Einrichtungen zugeordnet.'), $num_institute) ?>
+                        <?= sprintf(_('Es wurden bereits %u andere Einrichtungen zugeordnet.'), $num_institutes) ?>
                     </small>
                     <input type="hidden" name="Fakultaet" value="<?= $institute['Institut_id'] ?>">
                 <? else: ?>
-                    <select name="Fakultaet">
+                    <select <?= !$may_edit_faculty ? 'readonly disabled' : '' ?> name="Fakultaet">
                     <? if ($perm->have_perm('root')): ?>
                         <option value="<?= $institute['Institut_id'] ?>"
                             <? if ($institute['fakultaets_id'] == Request::option('Fakultaet', $institute['Institut_id'])) echo 'selected'; ?>
@@ -83,18 +61,13 @@ if ($may_edit_faculty && !$num_institute) {
                     <? endforeach; ?>
                     </select>
                 <? endif; ?>
-            <? else: ?>
-                    <?= htmlReady($institute['fak_name']) ?>
-                    <input type="hidden" name="Fakultaet" value="<?= $institute['fakultaets_id'] ?>">
-            <? endif; ?>
                 </td>
             </tr>
 
             <tr class="<?= TextHelper::cycle('hover_even', 'hover_odd') ?>">
                 <td><?= _('Bezeichnung:') ?></td>
                 <td>
-                <? if (!$lockCheck('type')): ?>
-                    <select name="type">
+                    <select name="type" <?= $lockCheck('type', 'readonly disabled') ?> >
                     <? foreach ($GLOBALS['INST_TYPE'] as $i => $inst_type): ?>
                         <option value="<?= $i ?>"
                                 <? if (Request::int('type', $institute['type']) == $i) echo 'selected'; ?>
@@ -102,52 +75,48 @@ if ($may_edit_faculty && !$num_institute) {
                             <?= htmlReady($inst_type['name']) ?>
                         </option>
                     <? endforeach; ?>
-                <? else :?>
-                    <?= htmlReady($GLOBALS['INST_TYPE'][$institute['type']]['name']) ?>
-                    <input type="hidden" name="type" value="<?= (int)$institute['type'] ?>">
-                <? endif;?>
                 </td>
             </tr>
 
             <tr class="<?= TextHelper::cycle('hover_even', 'hover_odd') ?>">
                 <td><?= _('Straße:') ?></td>
                 <td>
-                    <input type="text" <?= $lockCheck('strasse', 'readonly') ?> name="strasse"
+                    <input type="text" <?= $lockCheck('strasse', 'readonly disabled') ?> name="strasse"
                            value="<?= htmlReady(Request::get('strasse', $institute['Strasse'])) ?>">
                 </td>
             </tr>
             <tr class="<?= TextHelper::cycle('hover_even', 'hover_odd') ?>">
                 <td><?= _('Ort:') ?></td>
                 <td>
-                    <input type="text" <?= $lockCheck('plz', 'readonly') ?> name="plz"
+                    <input type="text" <?= $lockCheck('plz', 'readonly disabled') ?> name="plz"
                            value="<?= htmlReady(Request::get('plz', $institute['Plz'])) ?>">
                 </td>
             </tr>
             <tr class="<?= TextHelper::cycle('hover_even', 'hover_odd') ?>">
                 <td><?= _('Telefonnummer:') ?></td>
                 <td>
-                    <input type="tel" <?= $lockCheck('telefon', 'readonly') ?> name="telefon" maxlength=32
+                    <input type="tel" <?= $lockCheck('telefon', 'readonly disabled') ?> name="telefon" maxlength=32
                            value="<?= htmlReady(Request::get('telefon', $institute['telefon'])) ?>">
                 </td>
             </tr>
             <tr class="<?= TextHelper::cycle('hover_even', 'hover_odd') ?>">
                 <td><?=_("Faxnummer:")?></td>
                 <td>
-                    <input type="tel" <?= $lockCheck('fax', 'readonly') ?> name="fax" maxlength=32
+                    <input type="tel" <?= $lockCheck('fax', 'readonly disabled') ?> name="fax" maxlength=32
                            value="<?= htmlReady(Request::get('fax', $institute['fax'])) ?>">
                 </td>
             </tr>
             <tr class="<?= TextHelper::cycle('hover_even', 'hover_odd') ?>">
                 <td><?= _('E-Mail-Adresse:') ?></td>
                 <td>
-                    <input type="email" <?= $lockCheck('email', 'readonly') ?> name="email"
+                    <input type="email" <?= $lockCheck('email', 'readonly disabled') ?> name="email"
                            value="<?= htmlReady(Request::get('email', $institute['email'])) ?>">
                 </td>
             </tr>
             <tr class="<?= TextHelper::cycle('hover_even', 'hover_odd') ?>">
                 <td><?= _('Homepage:') ?></td>
                 <td>
-                    <input type="url" <?= $lockCheck('url', 'readonly') ?> name="home" 
+                    <input type="url" <?= $lockCheck('url', 'readonly disabled') ?> name="home"
                            value="<?= htmlReady(Request::get('home', $institute['url'])) ?>">
                 </td>
             </tr>
@@ -159,8 +128,8 @@ if ($may_edit_faculty && !$num_institute) {
                 <td>
                     <select name="lit_plugin_name">
                     <? foreach (StudipLitSearch::GetAvailablePlugins() as $name => $title): ?>
-                        <option value="<?= $name ?>" 
-                                <? if ($name == Request::get('lit_plugin_name', $institute['lit_plugin_name'])) echo 'selected'; ?> 
+                        <option value="<?= $name ?>"
+                                <? if ($name == Request::get('lit_plugin_name', $institute['lit_plugin_name'])) echo 'selected'; ?>
                         >
                             <?= htmlReady($title) ?>
                         </option>

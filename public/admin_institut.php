@@ -55,7 +55,6 @@ if (Request::option('cancel')) {
 }
 
 require_once 'lib/visual.inc.php';
-require_once 'config.inc.php';
 require_once 'lib/forum.inc.php';
 require_once 'lib/datei.inc.php';
 require_once 'lib/statusgruppe.inc.php';
@@ -68,7 +67,7 @@ require_once 'lib/classes/StudipNews.class.php';
 require_once 'lib/log_events.inc.php';
 require_once 'lib/classes/InstituteAvatar.class.php';
 require_once 'lib/classes/LockRules.class.php';
-// require_once 'lib/classes/Institute.class.php';
+require_once 'lib/classes/Institute.class.php';
 
 if (get_config('RESOURCES_ENABLE')) {
     include_once($RELATIVE_PATH_RESOURCES . '/lib/DeleteResourcesUser.class.php');
@@ -97,7 +96,7 @@ switch ($submitted_task) {
             break;
         }
         // Do we have all necessary data?
-        if (!Request::quoted('Name')) {
+        if (!Request::get('Name')) {
             PageLayout::postMessage(Messagebox::error(_('Bitte geben Sie eine Bezeichnung für die Einrichtung ein!')));
             $i_view = 'new';
             break;
@@ -123,8 +122,6 @@ switch ($submitted_task) {
             break;
         }
 
-        // Create an id
-        $i_id = md5(uniqid('Institute', true));
         if (!$Fakultaet) {
             if ($perm->have_perm('root')) {
                 $Fakultaet = $i_id;
@@ -134,49 +131,51 @@ switch ($submitted_task) {
             }
         }
 
-        $query = "INSERT INTO Institute
-                      (Institut_id, Name, fakultaets_id, Strasse, Plz, url, telefon, email,
-                       fax, type, lit_plugin_name, lock_rule, mkdate, chdate)
-                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array(
-            $i_id,
-            Request::get('Name'),
-            $Fakultaet,
-            Request::get('strasse'),
-            Request::get('plz'), // Beware: Despite the name, this contains both zip code AND city name
-            Request::get('home'),
-            Request::get('telefon'),
-            Request::get('email'),
-            Request::get('fax'),
-            Request::int('type'),
-            Request::get('lit_plugin_name'),
-            Request::option('lock_rule'),
-        ));
-
-        if ($statement->rowCount() == 0) {
-            PageLayout::postMessage(Messagebox::error(_('Datenbankoperation gescheitert:') . " $query"));
-            break;
-        }
-
-        log_event("INST_CREATE", $i_id, NULL, NULL, $query); // logging
+        $data = array('name' => Request::get('Name'),
+                      'fakultaets_id' => $Fakultaet,
+                      'strasse' => Request::get('strasse'),
+                      'plz' => Request::get('plz'), // Beware: Despite the name, this contains both zip code AND city name
+                      'url' => Request::get('home'),
+                      'telefon' => Request::get('telefon'),
+                      'email' => Request::get('email'),
+                      'fax' => Request::get('fax'),
+                      'type' => Request::int('type'),
+                      'lit_plugin_name' => Request::get('lit_plugin_name'),
+                      'lock_rule' => Request::option('lock_rule'));
 
         // Set the default list of modules
         $Modules = new Modules;
-        $Modules->writeDefaultStatus($i_id);
+        $data['modules'] = $Modules->getDefaultBinValue('', 'inst', $data['type']);
+
+        $institute = new Institute();
+        $institute->setData($data, true);
+
+        if (!$institute->store()) {
+            PageLayout::postMessage(Messagebox::error(_('Die Einrichtung konnte nicht angelegt werden.')));
+            break;
+        }
+
+        $i_id = $institute->getId();
+
+        log_event("INST_CREATE", $i_id, NULL, NULL, ''); // logging
+
+        $module_list = $Modules->getLocalModules($i_id, 'inst', $institute->modules, $institute->type);
 
         // Create default folder and discussion
-        CreateTopic(_('Allgemeine Diskussionen'), ' ', _('Hier ist Raum für allgemeine Diskussionen'), 0, 0, $i_id, 0);
-
-        $query = "INSERT INTO folder (folder_id, range_id, name, description, mkdate, chdate)
-                  VALUES (?, ?, ?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array(
-            md5(uniqid('folder')),
-            $i_id,
-            _('Allgemeiner Dateiordner'),
-            _('Ablage für allgemeine Ordner und Dokumente der Einrichtung'),
-        ));
+        if (isset($module_list['forum'])) {
+            CreateTopic(_('Allgemeine Diskussionen'), ' ', _('Hier ist Raum für allgemeine Diskussionen'), 0, 0, $i_id, 0);
+        }
+            if (isset($module_list['documents'])) {
+            $query = "INSERT INTO folder (folder_id, range_id, name, description, mkdate, chdate)
+                      VALUES (?, ?, ?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array(
+                md5(uniqid('folder')),
+                $i_id,
+                _('Allgemeiner Dateiordner'),
+                _('Ablage für allgemeine Ordner und Dokumente der Einrichtung'),
+            ));
+        }
 
         $message = sprintf(_('Die Einrichtung "%s" wurde erfolgreich angelegt.'), htmlReady(Request::get('Name')));
         PageLayout::postMessage(Messagebox::success($message));
@@ -197,56 +196,60 @@ switch ($submitted_task) {
         }
 
         //do we have all necessary data?
-        if (!(Request::quoted('Name'))) {
+        if (Request::get('Name') !== null && !strlen(Request::get('Name'))) {
             PageLayout::postMessage(Messagebox::error(_('Bitte geben Sie einen Namen für die Einrichtung ein!')));
             break;
         }
 
+        $data = array('name' => Request::get('Name'),
+                      'fakultaets_id' => Request::option('Fakultaet'),
+                      'strasse' => Request::get('strasse'),
+                      'plz' => Request::get('plz'), // Beware: Despite the name, this contains both zip code AND city name
+                      'url' => Request::get('home'),
+                      'telefon' => Request::get('telefon'),
+                      'email' => Request::get('email'),
+                      'fax' => Request::get('fax'),
+                      'type' => Request::int('type'),
+                      'lit_plugin_name' => Request::get('lit_plugin_name'),
+                      'lock_rule' => Request::option('lock_rule'));
+        $data = array_filter($data, function ($v) {return $v !== null;});
         //update Institut information.
-        $query = "UPDATE Institute
-                  SET Name = ?, fakultaets_id = ?, Strasse = ?, Plz = ?, url = ?, telefon = ?, fax = ?,
-                      email = ?, type = ?, lit_plugin_name = ?, lock_rule = ?, chdate = UNIX_TIMESTAMP()
-                  WHERE Institut_id = ?";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array(
-            Request::get('Name'),
-            Request::option('Fakultaet'),
-            Request::get('strasse'),
-            Request::get('plz'),
-            Request::get('home'),
-            Request::get('telefon'),
-            Request::get('fax'),
-            Request::get('email'),
-            Request::int('type'),
-            Request::get('lit_plugin_name'),
-            Request::option('lock_rule'),
-            Request::option('i_id'),
-        ));
-        if ($statement->rowCount() == 0) {
-            PageLayout::postMessage(Messagebox::error(_('Datenbankoperation gescheitert:') . " $query"));
-            break;
-        } else {
-            $message = sprintf(_('Die Änderung der Einrichtung "%s" wurde erfolgreich gespeichert.'), htmlReady(Request::get('Name')));
-            PageLayout::postMessage(Messagebox::success($message));
-        }
-        // update additional datafields
-        $datafields = Request::getArray('datafields');
-        if (is_array($datafields)) {
-            $invalidEntries = array();
-            foreach (DataFieldEntry::getDataFieldEntries(Request::option('i_id'), 'inst') as $entry) {
-                if(isset($datafields[$entry->getId()])){
-                    $entry->setValueFromSubmit($datafields[$entry->getId()]);
-                    if ($entry->isValid())
-                        $entry->store();
-                    else
-                        $invalidEntries[$entry->getId()] = $entry;
-                }
-            }
-            if (count($invalidEntries)  > 0) {
-                PageLayout::postMessage(Messagebox::error(_('ungültige Eingaben (s.u.) wurden nicht gespeichert')));
-            } else {
-                $message = sprintf(_('Die Daten der Einrichtung "%s" wurden verändert.'), htmlReady(Request::get('Name')));
+        $institute = Institute::find(Request::option('i_id'));
+        if ($institute) {
+            $institute->setData($data, false);
+            $ok = $institute->store();
+            if ($ok === false) {
+                PageLayout::postMessage(Messagebox::error(_('Die Änderungen konnten nicht gespeichert werden.')));
+                break;
+            } elseif ($ok) {
+                $message = sprintf(_('Die Änderung der Einrichtung "%s" wurde erfolgreich gespeichert.'), htmlReady($institute->name));
                 PageLayout::postMessage(Messagebox::success($message));
+            }
+
+            // update additional datafields
+            $datafields = Request::getArray('datafields');
+            if (is_array($datafields)) {
+                $invalidEntries = array();
+                foreach (DataFieldEntry::getDataFieldEntries(Request::option('i_id'), 'inst') as $entry) {
+                    if(isset($datafields[$entry->getId()])){
+                        $valueBefore = $entry->getValue();
+                        $entry->setValueFromSubmit($datafields[$entry->getId()]);
+                        if ($valueBefore != $entry->getValue()) {
+                            if ($entry->isValid()) {
+                                $df_stored++;
+                                $entry->store();
+                            } else {
+                                $invalidEntries[$entry->getId()] = $entry;
+                            }
+                        }
+                    }
+                }
+                if (count($invalidEntries)  > 0) {
+                    PageLayout::postMessage(Messagebox::error(_('ungültige Eingaben (s.u.) wurden nicht gespeichert')));
+                } elseif ($df_stored) {
+                    $message = sprintf(_('Die Daten der Einrichtung "%s" wurden verändert.'), htmlReady($institute->name));
+                    PageLayout::postMessage(Messagebox::success($message));
+                }
             }
         }
         break;
@@ -428,7 +431,7 @@ switch ($submitted_task) {
         $message              = _('Sind Sie sicher, dass Sie diese Einrichtung löschen wollen?');
         $post['i_id']         = Request::option('i_id');
         $post['i_kill']       = 1;
-        $post['Name']         = Request::quoted('Name');
+        $post['Name']         = Request::get('Name');
         $post['studipticket'] = get_ticket();
         echo createQuestion($message, $post);
         break;
@@ -463,7 +466,7 @@ if ((!$SessSemName[1] || $SessSemName['class'] == 'sem') && Request::option('lis
 
     if ($deleted = Request::get('deleted')) {
         $message = sprintf(_('Die Einrichtung "%s" wurde gelöscht!'), htmlReady(Request::get('deleted')));
-        echo '<table class="default blank"><tr><td>' . Messagebox::success($message) . '</td></tr></table>'; 
+        echo '<table class="default blank"><tr><td>' . Messagebox::success($message) . '</td></tr></table>';
     }
 
     include 'lib/include/admin_search_form.inc.php';
@@ -506,6 +509,27 @@ if ($i_view != 'new') {
     $_num_inst = $statement->fetchColumn();
 }
 
+// Read faculties if neccessary
+if (!$_num_inst) {
+    if ($perm->have_perm('root')) {
+        $query = "SELECT Institut_id, Name
+                  FROM Institute
+                  WHERE Institut_id = fakultaets_id AND fakultaets_id != ?
+                  ORDER BY Name";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($i_view ?: ''));
+    } else {
+        $query = "SELECT a.Institut_id, Name
+                  FROM user_inst AS a
+                  LEFT JOIN Institute USING (Institut_id)
+                  WHERE user_id = ? AND inst_perms = 'admin' AND fakultaets_id = ?
+                  ORDER BY Name";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($user->id, $i_view ?: ''));
+    }
+    $faculties = $statement->fetchGrouped(PDO::FETCH_COLUMN);
+}
+
 //add the free administrable datafields
 $datafields = array();
 
@@ -539,6 +563,7 @@ $template->institute      = $institute;
 $template->i_view         = $i_view;
 $template->num_institutes = $_num_inst;
 $template->datafields     = $datafields;
+$template->faculties      = $faculties;
 
 // Select correct layout and create infobox if neccessary
 if ($i_view != 'new') {

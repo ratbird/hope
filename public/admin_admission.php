@@ -1375,7 +1375,7 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
                     <font size=-1><b><?=_("maximale Teilnehmeranzahl:")?> </b></font><br>
                     <font size=-1><?=_("Diese Teilnehmeranzahl dient als Grundlage zur Berechnung der Pl&auml;tze pro Kontingent.")?></font><br><br>
                     <? if(! LockRules::Check($seminar_id, 'admission_binding')) : ?>
-                        <font size=-1><input type="text" name="admission_turnout" size=2 maxlength=5 value="<? echo $admin_admission_data["admission_turnout"]; ?>"> <?=_("Teilnehmende")?></font>
+                        <font size=-1><input type="number" name="admission_turnout" size=2 maxlength=5 value="<? echo $admin_admission_data["admission_turnout"]; ?>" min="1"> <?=_("Teilnehmende")?></font>
                     <? else : ?>
                         <font size=-1><input disabled readonly type="text" name="admission_turnout" size=2 maxlength=5 value="<? echo $admin_admission_data["admission_turnout"]; ?>"> <?=_("Teilnehmende")?></font>
                     <?endif; ?>

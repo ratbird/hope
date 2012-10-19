@@ -153,10 +153,11 @@ class Course_BasicdataController extends AuthenticatedController
         $this->attributes[] = array(
             'title' => _("max. Teilnehmerzahl"),
             'name' => "course_admission_turnout",
-            'must' => true,
-            'type' => 'text',
+            'must' => false,
+            'type' => 'number',
             'value' => htmlReady($data['admission_turnout']),
-            'locked' => LockRules::Check($this->course_id, 'admission_turnout')
+            'locked' => LockRules::Check($this->course_id, 'admission_turnout'),
+            'min' => '0'
         );
         $this->attributes[] = array(
             'title' => _("Beschreibung"),

@@ -27,16 +27,19 @@ class UserDataToConfig extends Migration
         $statement = DBManager::get()->prepare($string);
         $statement->execute();
         while ($val = $statement->fetch(PDO::FETCH_ASSOC)) {
-         	$user = new Seminar_User();
-         	$user->fake_user = true;
-         	$user->start($val['user_id']);
-        	UserConfig::get($val['user_id'])->store("forum",json_encode($user->user_vars["forum"]));
-        	UserConfig::get($val['user_id'])->store("my_messaging_settings",json_encode($user->user_vars["my_messaging_settings"])); 
-        	UserConfig::get($val['user_id'])->store("my_schedule_settings",json_encode($user->user_vars["my_schedule_settings"])); 
-        	UserConfig::get($val['user_id'])->store("homepage_cache_own",($user->user_vars["homepage_cache_own"])); 
-        	UserConfig::get($val['user_id'])->store("my_studip_settings",($user->user_vars["my_studip_settings"])); 
-        	UserConfig::get($val['user_id'])->store("LastLogin",($user->user_vars["LastLogin"])); 
-        	UserConfig::get($val['user_id'])->store("CurrentLogin",($user->user_vars["CurrentLogin"])); 
+            $user = new Seminar_User();
+            $user->fake_user = true;
+            $user->start($val['user_id']);
+            UserConfig::get($val['user_id'])->store("forum",json_encode($user->user_vars["forum"]));
+            UserConfig::get($val['user_id'])->store("my_messaging_settings",json_encode($user->user_vars["my_messaging_settings"])); 
+            UserConfig::get($val['user_id'])->store("my_schedule_settings",json_encode($user->user_vars["my_schedule_settings"])); 
+            UserConfig::get($val['user_id'])->store("homepage_cache_own",($user->user_vars["homepage_cache_own"])); 
+            UserConfig::get($val['user_id'])->store("my_studip_settings",($user->user_vars["my_studip_settings"])); 
+            UserConfig::get($val['user_id'])->store("LastLogin",($user->user_vars["LastLogin"])); 
+            UserConfig::get($val['user_id'])->store("CurrentLogin",($user->user_vars["CurrentLogin"])); 
+            UserConfig::set($val['user_id'], null);
+            unset($user->cfg);
+            unset($user);
        }
     }
 

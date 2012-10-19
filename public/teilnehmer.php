@@ -65,7 +65,7 @@ $st = DBManager::get()->prepare("UPDATE seminar_user su INNER JOIN auth_user_md5
 $st->execute(array($_SESSION['SessionSeminar']));
 
 /* ---------------------------------- */
-$username = Request::quoted('username');
+$username = Request::username('username');
 $cmd = Request::option('cmd');
 $open_areas = Request::optionArray('open_areas');
 

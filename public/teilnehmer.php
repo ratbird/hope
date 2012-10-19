@@ -398,15 +398,15 @@ if (Seminar_Session::check_ticket(Request::option('studipticket')) && !LockRules
     }
 
     // jemand sollte erst mal das Maul halten...
-
-    if ( ($cmd == "lesen" && $username) || (Request::submitted('do_autor_to_user') && !empty($user_to_autor)) ){
+    $autor_to_user = Request::usernameArray('autor_to_user');
+    if ( ($cmd == "lesen" && $username) || (Request::submitted('do_autor_to_user') && !empty($autor_to_user)) ){
         //erst mal sehen, ob er hier wirklich Dozent ist...
         if ($rechte) {
             $msgs = array();
             if ($cmd == "lesen"){
                 $lesen = array($username);
             } else {
-                $lesen = (!empty($user_to_autor) ? array_keys($user_to_autor) : array());
+                $lesen = $autor_to_user;
             }
 
             $query = "SELECT {$_fullname_sql['full']} AS fullname, user_id
@@ -421,12 +421,10 @@ if (Seminar_Session::check_ticket(Request::option('studipticket')) && !LockRules
             $lesen_statement = DBManager::get()->prepare($query);
 
             foreach ($lesen as $username) {
-                $data_statement->execute(array($username));
-                $data = $data_statement->fetch(PDO::FETCH_ASSOC);
-                $data_statement->closeCursor();
+                $temp_user = User::findByUsername($username);
 
-                $userchange = $data['user_id'];
-                $fullname   = $data['fullname'];
+                $userchange = $temp_user['user_id'];
+                $fullname   = $temp_user->getFullName();
 
                 $lesen_statement->execute(array($id, $userchange));
                 if ($lesen_statement->rowCount()) {
@@ -1494,7 +1492,7 @@ while (list ($key, $val) = each ($gruppe)) {
                         // Schreibrecht entziehen
                         echo "<td align=\"center\">";
                         echo "<a href=\"".URLHelper::getLink("?cmd=lesen&username=$username&studipticket=$studipticket")."\"><img border=\"0\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/yellow/arr_2down.png\"></a>";
-                        echo "<input type=\"checkbox\" name=\"autor_to_user[$username]\" value=\"1\">";
+                        echo "<input type=\"checkbox\" name=\"autor_to_user[]\" value=\"$username\">";
                         echo "</td>";
                     }
 

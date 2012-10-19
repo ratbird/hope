@@ -300,22 +300,16 @@ if (Seminar_Session::check_ticket(Request::option('studipticket')) && !LockRules
     }
 
     // jemand ist der anspruchsvollen Aufgabe eines Tutors nicht gerecht geworden...
-
-    if ( ($cmd == "pain" && $username) || (Request::submitted('do_tutor_to_autor') && !empty($autor_to_tutor)) ){
+    $tutor_to_autor = Request::usernameArray('tutor_to_autor');
+    if ( ($cmd == "pain" && $username) || (Request::submitted('do_tutor_to_autor') && !empty($tutor_to_autor)) ){
         //erst mal sehen, ob er hier wirklich Dozent ist... Tutoren d&uuml;rfen andere Tutoren nicht rauskicken!
         if ($rechte AND $SemUserStatus != "tutor") {
             $msgs = array();
             if ($cmd == "pain"){
                 $pain = array($username);
             } else {
-                $pain = (!empty($autor_to_tutor) ? array_keys($autor_to_tutor) : array());
+                $pain = $tutor_to_autor;
             }
-
-            $query = "SELECT {$_fullname_sql['full']} AS fullname, user_id
-                      FROM auth_user_md5
-                      LEFT JOIN user_info USING (user_id)
-                      WHERE username = ?";
-            $data_statement = DBManager::get()->prepare($query);
 
             $query = "SELECT position FROM seminar_user WHERE user_id = ?";
             $position_statement = DBManager::get()->prepare($query);
@@ -325,13 +319,11 @@ if (Seminar_Session::check_ticket(Request::option('studipticket')) && !LockRules
                       WHERE Seminar_id = ? AND user_id = ? AND status = 'tutor'";
             $pain_statement = DBManager::get()->prepare($query);
 
-            foreach($pain as $username){
-                $data_statement->execute(array($username));
-                $data = $data_statement->fetch(PDO::FETCH_ASSOC);
-                $data_statement->closeCursor();
+            foreach($pain as $username) {
+                $temp_user = User::findByUsername($username);
 
-                $userchange = $data['user_id'];
-                $fullname   = $data['fullname'];
+                $userchange = $temp_user['user_id'];
+                $fullname   = $temp_user->getFullName();
 
                 $position_statement->execute(array($userchange));
                 $pos = $position_statement->fetchColumn();
@@ -1458,7 +1450,7 @@ while (list ($key, $val) = each ($gruppe)) {
                         echo "<td>&nbsp</td>";
                         echo "<td align=\"center\">";
                         echo "<a href=\"".URLHelper::getLink("?cmd=pain&username=$username&studipticket=$studipticket")."\"><img border=\"0\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/yellow/arr_2down.png\"></a>";
-                        echo "<input type=\"checkbox\" name=\"tutor_to_autor[$username]\" value=\"1\">";
+                        echo "<input type=\"checkbox\" name=\"tutor_to_autor[]\" value=\"$username\">";
                         echo "</td>";
                     }
 

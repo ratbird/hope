@@ -33,7 +33,7 @@ if ($this->visibilities) {
 // Mitarbeiter/in am Institut
 $ext_vis_query = get_ext_vis_query();
 $query = "SELECT 1
-          FROM Institute AS 
+          FROM Institute
           LEFT JOIN user_inst AS ui USING (Institut_id)
           LEFT JOIN auth_user_md5 AS aum USING (user_id)
           WHERE Institut_id = ? AND aum.username = ?
@@ -86,14 +86,14 @@ if (!$temp && $sem_id) {
     $query = "SELECT aum.*, {$GLOBALS['_fullname_sql'][$nameformat]} AS fullname
               FROM auth_user_md5 AS aum
               LEFT JOIN user_info USING (user_id)
-              LEFT JOIN seminar_user su USING (user_id) 
+              LEFT JOIN seminar_user su USING (user_id)
               WHERE username = ? AND perms = 'dozent' AND su.seminar_id = ?
                 AND su.status = 'dozent' AND {$ext_vis_query}";
     $statement = DBManager::get()->prepare($query);
     $statement->execute(array($username, $sem_id));
     $row = $statement->fetch(PDO::FETCH_ASSOC);
 } else {
-    $base_query = "SELECT i.Institut_id, i.Name, i.Strasse, i.Plz, i.url, ui.*, aum.*, 
+    $base_query = "SELECT i.Institut_id, i.Name, i.Strasse, i.Plz, i.url, ui.*, aum.*,
                           {$GLOBALS['_fullname_sql'][$nameformat]} AS fullname,
                           uin.user_id, uin.lebenslauf, uin.publi, uin.schwerp, uin.Home
                    FROM Institute AS i
@@ -328,14 +328,14 @@ function kategorien (&$module, $row, $alias_content, $text_div, $text_div_end)
 {
     $query = "SELECT kategorie_id, name, content
               FROM auth_user_md5 AS aum
-              LEFT JOIN kategorien AS k ON (k.range_id = user_id) 
+              LEFT JOIN kategorien AS k ON (k.range_id = user_id)
               WHERE username = ?
               ORDER BY priority";
     $statement = DBManager::get()->prepare($query);
     $statement->execute(array($row['username']));
     while ($category = $statement->fetch(PDO::FETCH_ASSOC)) {
-        if (is_element_visible_externally($row['user_id'], $module->owner_perm, 
-                'kat_'.$category['kategorie_id'], 
+        if (is_element_visible_externally($row['user_id'], $module->owner_perm,
+                'kat_'.$category['kategorie_id'],
                 $module->visibilities['kat_'.$category['kategorie_id']])) {
             echo "<tr><td width=\"100%\">\n";
             echo "<table" . $module->config->getAttributes("TableParagraph", "table") . ">\n";
@@ -423,11 +423,11 @@ function lehre (&$module, $row, $alias_content, $text_div, $text_div_end)
     // TODO: [tlx] This query seems a bit odd if you look at it's line 5
     $query = "SELECT *
               FROM seminar_user AS su
-              LEFT JOIN seminare AS s USING (seminar_id) 
+              LEFT JOIN seminare AS s USING (seminar_id)
               WHERE user_id = :user_id AND su.status = 'dozent'
                 AND ((start_time >= :beginn AND start_time <= :beginn) OR
                      (start_time <= :ende AND duration_time = -1))
-                AND s.status IN (:types) AND s.visible = 1 
+                AND s.status IN (:types) AND s.visible = 1
               ORDER BY s.mkdate DESC";
     $statement = DBManager::get()->prepare($query);
     $statement->bindValue(':user_id', $row['user_id']);
@@ -676,7 +676,7 @@ function kontakt ($module, $row, $separate = FALSE) {
                 }
                 break;
             case 'Home' :
-                if (($separate || !$module->config->getValue('Contact', 'separatelinks')) && 
+                if (($separate || !$module->config->getValue('Contact', 'separatelinks')) &&
                         is_element_visible_externally($row['user_id'], $module->owner_perm, 'homepage', $module->visibilities['homepage'])) {
                     $out .= "<tr$attr_tr>";
                     $out .= "<td$attr_td>";

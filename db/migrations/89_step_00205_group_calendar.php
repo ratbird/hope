@@ -76,6 +76,12 @@ class Step00205GroupCalendar extends Migration
         $db->exec("ALTER TABLE `calendar_events` ADD `importdate` INT( 11 ) NOT NULL DEFAULT '0'");
         $db->exec("ALTER TABLE `contact` ADD `calpermission` TINYINT( 2 ) UNSIGNED NOT NULL DEFAULT '1'");
         $db->exec("ALTER TABLE `statusgruppen` ADD `calendar_group` TINYINT( 2 ) UNSIGNED NOT NULL DEFAULT '0'");
+        $db->exec("CREATE TABLE IF NOT EXISTS `calendar_sync` (
+            `range_id` varchar(32) NOT NULL default '',
+            `client_identifier` varchar(255) NOT NULL default '',
+            `last_sync` int(11) NOT NULL default '0',
+            PRIMARY KEY (`range_id`,`client_identifier`)
+            ) ENGINE=MyISAM");
         $this->insertConfig($this->options_new);
     }
 
@@ -91,6 +97,7 @@ class Step00205GroupCalendar extends Migration
         $db->exec("ALTER TABLE `calendar_events` DROP `importdate`");
         $db->exec("ALTER TABLE `contact` DROP `calpermission`");
         $db->exec("ALTER TABLE `statusgruppen` DROP `calendar_group`");
+        $db->exec("DROP TABLE `calendar_sync`");
         $this->deleteConfig($this->options_new);
     }
 }

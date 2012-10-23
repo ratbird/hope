@@ -87,7 +87,7 @@ switch ($view) {
                             ? sprintf(_("Nur Räume %sanzeigen%s"),
                                 '<a href="'. URLHelper::getLink('?view=search&quick_view_mode=' . $view_mode . '&search_only_rooms=1') . '">',
                                 '</a>')
-                            : sprintf(_("Alle Ressourcen %sanzeigen%s"), 
+                            : sprintf(_("Alle Ressourcen %sanzeigen%s"),
                                 '<a href="'. URLHelper::getLink('?view=search&quick_view_mode=' . $view_mode . '&search_only_rooms=0') . '">',
                                 '</a>')
                     ),
@@ -143,6 +143,10 @@ switch ($view) {
             );
         } else {
             $infobox[0]["kategorie"] = _("Aktionen:");
+            if (($ActualObjectPerms->havePerm("autor")) && ($currentObject->getCategoryId()))
+            $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/add/date.png",
+                                    "text"  =>sprintf (_("Eine neue Belegung %serstellen%s"), ($view_mode == "oobj") ? "<a href=\"".URLHelper::getLink('?cancel_edit_assign=1&quick_view=openobject_assign&quick_view_mode='.$view_mode)."\">" : "<a href=\"".URLHelper::getLink('?cancel_edit_assign=1&quick_view=edit_object_assign&quick_view_mode='.$view_mode)."\">", "</a>"));
+
             $infobox[0]['eintrag'][] = array(
                 'icon' => 'icons/16/black/search.png',
                 'text' => '<a href="'. URLHelper::getLink('resources.php?view=search&quick_view_mode=' . $view_mode) .'">'

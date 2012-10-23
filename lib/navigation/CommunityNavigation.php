@@ -26,8 +26,7 @@ class CommunityNavigation extends Navigation
         parent::__construct(_('Community'));
 
         $onlinetip = _('Nur Sie sind online');
-        $active_time = 5;
-        $user_count = get_users_online_count($active_time);
+        $user_count = get_users_online_count(10); // Should be the same value as in public/index.php
 
         if ($user_count) {
 

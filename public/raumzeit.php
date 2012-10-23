@@ -63,6 +63,28 @@ if (get_config('RESOURCES_ENABLE')) {
     include_once ($GLOBALS['RELATIVE_PATH_RESOURCES'] ."/lib/VeranstaltungResourcesAssign.class.php");
     include_once ($GLOBALS['RELATIVE_PATH_RESOURCES'] ."/lib/ResourceObjectPerms.class.php");
     $resList = ResourcesUserRoomsList::getInstance($user->id, true, false, true);
+    
+    // fetch the number of seats each room has
+    if ($resList->numberOfRooms()) {
+        $resList->reset();
+        $resource_ids = array();
+
+        // collect all resource_ids
+        while ($res = $resList->next()) {
+            $resource_ids[] = $res['resource_id'];
+        }
+        
+        // get seats in a single query
+        $db = DBManager::get()->query("SELECT ro.resource_id, a.state
+            FROM resources_objects AS ro
+            LEFT JOIN resources_objects_properties AS a USING (resource_id)
+            LEFT JOIN resources_properties AS b USING (property_id)
+            LEFT JOIN resources_categories_properties AS c USING (property_id)
+            WHERE resource_id IN ('". implode("', '", $resource_ids) ."') AND c.category_id = ro.category_id AND b.system = 2
+            ORDER BY b.name");
+        
+        $seats = $db->fetchAll(PDO::FETCH_KEY_PAIR);
+    }
 }
 
 PageLayout::addSqueezePackage('raumzeit');

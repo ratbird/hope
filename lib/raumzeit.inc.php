@@ -74,7 +74,10 @@ function raumzeit_undelete_singledate($sem) {
 }
 
 function raumzeit_checkboxAction($sem) {
-    // global $choosen;
+    // close any opened singledate, if we do a checkbox action    
+    if (Request::get('checkboxAction')) {
+        Request::set('singleDateID', null);
+    }
 
     switch (Request::option('checkboxAction')) {
         case 'cancel':

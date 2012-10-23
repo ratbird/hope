@@ -122,16 +122,18 @@ use Studip\Button,
 					<input type="radio" name="action" value="room" checked="checked">
 					<?= _("Raum:"); ?>
 				</label>
-				
+
 				<select name="room_sd" onFocus="jQuery('input[type=radio][name=action][value=room]').attr('checked', 'checked')">
 					<option value="">-- kein Raum gebucht --</value>
 					<? while ($res = $resList->next()) : ?>
 						<option value="<?= $res['resource_id'] ?>" <?= $res['resource_id'] == $tpl['resource_id'] ? 'selected="selected"' : '' ?>>
-							<?= my_substr(htmlReady($res["name"]), 0, 30) ?>
+							<?= my_substr(htmlReady($res["name"]), 0, 30) ?> <?= $seats[$res['resource_id']] ? '('. $seats[$res['resource_id']] .' '. _('Sitzplätze') .')' : '' ?>
 						</option>
 					<? endwhile; ?>
 				</select>
 
+                <?= Assets::img('icons/16/grey/room_clear.png', array('class' => 'bookable_rooms_action', 'title' => _("Nur buchbare Räume anzeigen"))) ?>
+                
                 <br>
                 <br>
 

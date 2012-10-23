@@ -177,9 +177,6 @@ function sort_termine($a, $b) {
 }
 
 function getAllSortedSingleDates(&$sem) {
-    define('FILTER', 'TRUE');
-    define('NO_FILTER', 'FALSE');
-
     $turnus = $sem->getFormattedTurnusDates();
 
     $termine = array();
@@ -187,7 +184,7 @@ function getAllSortedSingleDates(&$sem) {
         $termine = array_merge($termine, $sem->getSingleDatesForCycle($metadate_id));
     }
 
-    $termine = array_merge($termine, $sem->getSingleDates(FILTER));
+    $termine = array_merge($termine, $sem->getSingleDates(true));
     uasort ($termine, 'sort_termine');
 
     return $termine;

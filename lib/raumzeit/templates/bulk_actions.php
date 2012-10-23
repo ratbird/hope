@@ -48,10 +48,16 @@ use Studip\Button, Studip\LinkButton;
         <option value="">-- <?= _('Raum auswählen') ?> --</value>
         <? while ($res = $resList->next()) : ?>
             <option value="<?= $res['resource_id'] ?>">
-                <?= my_substr(htmlReady($res["name"]), 0, 30) ?>
+                <?= my_substr(htmlReady($res["name"]), 0, 30) ?> <?= $seats[$res['resource_id']] ? '('. $seats[$res['resource_id']] .' '. _('Sitzplätze') .')' : '' ?>
             </option>
         <? endwhile; ?>
     </select>
+
+    <?= Assets::img('icons/16/grey/room_clear.png', array(
+        'class'     => 'bookable_rooms_action',
+        'title'     => _("Nur buchbare Räume anzeigen"),
+        'data-name' => 'bulk_action'
+    )) ?>
 
     <br>
     <br>

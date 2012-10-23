@@ -101,7 +101,7 @@ include ('lib/include/header.php');   // Output of Stud.IP head
 
 ob_start();
 
-$kompletter_datensatz= get_users_online(5, $user->cfg->getValue("ONLINE_NAME_FORMAT"));
+$kompletter_datensatz= get_users_online(10, $user->cfg->getValue("ONLINE_NAME_FORMAT"));
 $alle=count($kompletter_datensatz);
 /*
  * Start to filter

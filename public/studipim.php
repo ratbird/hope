@@ -50,7 +50,7 @@ if ($auth->auth["uid"] != "nobody"){
 
     $sms= new messaging;
 
-    $online = get_users_online(5, 'no_title');
+    $online = get_users_online(10, 'no_title');
 
     //Count new and old msg's
     $old_msg = count_messages_from_user('in', " AND message_user.readed = 1 ");

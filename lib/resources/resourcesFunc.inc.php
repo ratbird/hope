@@ -994,7 +994,7 @@ function search_admin_user ($search_string='')
     global $_fullname_sql;
 
     //In allen Admins suchen...
-    $query = "SELECT a.user_id, {$_fullname_sql['full_rev']} AS fullname, username
+    $query = "SELECT a.user_id, CONCAT({$_fullname_sql['full_rev']}, ' (', username, ')') AS name, :art AS art
               FROM auth_user_md5 AS a
               LEFT JOIN user_info USING (user_id)
               WHERE username LIKE CONCAT('%', :needle, '%')
@@ -1004,6 +1004,8 @@ function search_admin_user ($search_string='')
               ORDER BY Nachname";
     $statement = DBManager::get()->prepare($query);
     $statement->bindValue(':needle', $search_string);
+    $statement->bindValue(':art', _('Personen'));
+    $statement->execute();
     return $statement->fetchGrouped(PDO::FETCH_ASSOC);
 }
 

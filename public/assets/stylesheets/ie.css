@@ -4,8 +4,7 @@ body {
 }
 
 div.modaloverlay {
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
-    filter: alpha(opacity = 50);
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#7F000000,endColorstr=#7F000000); 
 }
 
 div.schedule_entry dl.hover:hover {

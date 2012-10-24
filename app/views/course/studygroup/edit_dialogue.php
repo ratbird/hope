@@ -2,11 +2,13 @@
 use Studip\Button, Studip\LinkButton;
 ?>
 
-<div class="modalshadow">
-    <div class="messagebox messagebox_modal">
-        <?= formatReady(_("Möchten Sie folgende Inhaltselemente wirklich deaktivieren?")
+<div class="modaloverlay">
+    <div class="messagebox">
+        <span id="modalquestion">
+            <?= formatReady(_("Möchten Sie folgende Inhaltselemente wirklich deaktivieren?")
                     . "\n" . $deactivate_modules_names) ?>
-        <div style="margin-top: 1em;">
+        </span>
+        <div>
             <form action="<?= $controller->url_for('course/studygroup/update/'.$sem_id) ?>" method=post>
                 <?= CSRFProtection::tokenTag() ?>
                 <? foreach($this->flash['deactivate_modules'] as $module) :?>
@@ -15,7 +17,7 @@ use Studip\Button, Studip\LinkButton;
                 <? foreach($this->flash['deactivate_plugins'] as $plugin) :?>
                      <input type="hidden" name="deactivate_plugins[]" value="<?=$plugin?>">
                 <? endforeach ?>
-          
+
                 <input type="hidden" name="really_deactivate" value="1">
                 <?= Button::createAccept(_('JA!')); ?>
                 <?= LinkButton::createCancel(_('NEIN!'), $controller->url_for('course/studygroup/update/'.$sem_id . '?abort_deactivate=1')); ?>

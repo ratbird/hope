@@ -1,10 +1,12 @@
 <?
 # Lifter010: TODO
 ?>
-<div class="modalshadow">
-    <div class="messagebox messagebox_modal">
-        <?= formatReady($question) ?>
-        <div style="margin-top: 0.5em;">
+<div class="modaloverlay">
+    <div class="messagebox">
+        <span id="modalquestion">
+            <?= formatReady($question) ?>
+        </span>
+        <div>
             <form action="<?= $action ?>" method="post">
                 <?= CSRFProtection::tokenTag() ?>
                 <?foreach($elements as $e) :?>

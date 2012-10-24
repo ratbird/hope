@@ -3,10 +3,12 @@
 use Studip\Button, Studip\LinkButton;
 
 ?>
-<div class="modalshadow">
-    <div class="messagebox messagebox_modal">
-        <?= formatReady($data['question']) ?>
-        <div style="margin-top: 0.5em;">
+<div class="modaloverlay">
+    <div class="messagebox">
+        <span id="modalquestion">
+            <?= formatReady($data['question']) ?>
+        </span>
+        <div>
             <form action="<?= $data['action'] ?>" method="post">
             <?= CSRFProtection::tokenTag() ?>
                 <? if($data['users']) :?>

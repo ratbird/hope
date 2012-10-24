@@ -8,7 +8,7 @@ th, table.header, .table_header { //normale Tabellenheader
 }
 
 .table_header_bold { //formerly known as topic(-header)
-	background-color: @brand-color-lighter;
+    background-color: @brand-color-lighter;
 	border: 0;
     border-bottom: 1px solid @brand-color-darker;
     color: #FFFFFF;
@@ -118,7 +118,7 @@ tr.hover_even {
 
 
 table.zebra, table.zebra-hover { // bg color alternates with tr
-    > tbody > tr { 
+    > tbody > tr {
         background-color: @alternating-color-odd;
         &:nth-child(2n+1) { background-color: @alternating-color-even; }
 
@@ -129,7 +129,7 @@ table.zebra, table.zebra-hover { // bg color alternates with tr
     }
 }
 table.zebra-hover {
-    > tbody > tr:hover { 
+    > tbody > tr:hover {
         background-color: @alternating-highlight-color-odd;
         &:nth-child(2n+1) { background-color: @alternating-highlight-color-even; }
         
@@ -251,20 +251,126 @@ tr.sortable {
 
 /* styles for settings tables */
 .settings {
-    th { text-align: center; }
-    tbody {
-        td:first-child {
-            background-color: #fff;
-            border-bottom: 1px dotted #000;
-            text-align: right;
+    border-collapse: collapse;
+    margin: auto;
+    width: 80%;
 
-            &[colspan="2"] {
-                background-color: #e7ebf1;
-                border-top: 1px dotted #000;
-                text-align: center;
+    thead th, tbody th { 
+        .table_header_bold;
+        text-align: center;
+    }
+    td, th {
+        padding: 8px;
+    }
+    tbody {
+        &.maxed {
+            input[type=email], input[type=password], input[type=tel], input[type=text], input[type=url], select, textarea {
+                .box-sizing(border-box);
+                width: 100%;
             }
         }
-        tr:last-child td:first-child { border-bottom: 0; }
+        &.privacy td:first-child ~ td {
+            font-style: italic;
+            text-align: center;
+        }
+        &.labeled {
+            td:first-child {
+                background-color: #fff;
+                border-bottom: 1px dotted #000;
+                font-weight: bold;
+                text-align: right;
+                vertical-align: top;
+
+                label {
+                    display: block;
+                }
+
+                &[colspan] {
+                    background-color: #e7ebf1;
+                    border-top: 1px dotted #000;
+                    text-align: center;
+                }
+            }
+            tr:last-child td:first-child { border-bottom: 0; }            
+        }
+    }
+
+    &.zebra-hover .labeled tr:hover td:first-child {
+        background-color: #fff0d8;
+        label { text-shadow: 1px 1px 0 #fff; }
+    }
+
+    dfn, small {
+        display: block;
+        font-weight: normal;
+    }
+    dfn {
+        font-size: 0.8em;
+        font-style: italic;
+        padding-top: 0.5em;
+    }
+    tfoot {
+        td {
+            background: @table-footer-color;
+            text-align: center;
+        }
+        tr:first-child td {
+            border-top: 1px solid #575757;
+        }
+    }
+    label.required:after {
+        color: red;
+        content:'*';
+        font-size: 1.5em;
+        padding-left: 5px;
+        vertical-align: middle;
+    }
+    &.notification tbody td {
+        text-align: center;
+        &:first-child:not([colspan]) { padding-left: 0; padding-right: 0; font-size: small; }
+        &:nth-child(-n+2) { text-align: left; }
+    }
+    .bordered {
+        &.left  { border-left: 1px solid @brand-color-lighter; }
+        &.right { border-right: 1px solid @brand-color-lighter; }
+    }
+}
+
+table.tree {
+    .header > td {
+        td.printhead;
+
+        a.link {
+            padding-left: 5px;
+            &.open   { 
+                background: url("@{icon-path}/blue/arr_1down.png") left center no-repeat;
+                padding-left: 20px;
+            }
+            &.closed {
+                background: url("@{icon-path}/blue/arr_1right.png") left center no-repeat;
+                padding-left: 20px;
+            }
+        }
+    }
+    td.blank {
+        background: #fff;
+        border: 0;
+    }
+    td.in-between {
+        background: #fff url("@{image-path}/tree-line.gif") center repeat-y;
+        border: 0;
+    }
+    td.leaf {
+        background: #fff url("@{image-path}/tree-leaf.gif") center no-repeat;
+        border: 0;
+    }
+    td.end {
+        background: #fff url("@{image-path}/tree-end.gif") center no-repeat;
+        border: 0;
+    }
+    .centered {
+        text-align: center;
+        table { margin: auto; text-align: left; }
     }
 }
 

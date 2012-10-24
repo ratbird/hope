@@ -55,6 +55,9 @@ javascripts:
 
   smileys:
     - javascripts/smiley.js
+
+  settings:
+    - javascripts/settings.js
 css:
   base:
     # filname : media

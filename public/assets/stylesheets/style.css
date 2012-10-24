@@ -379,21 +379,163 @@ tr.sortable th.sortdesc {
   background: transparent url("../images/dreieck_down.png") no-repeat center left;
   padding-left: 17px;
 }
-.settings th {
+.settings {
+  border-collapse: collapse;
+  margin: auto;
+  width: 80%;
+}
+.settings thead th,
+.settings tbody th {
+  background-color: #899ab9;
+  border: 0;
+  border-bottom: 1px solid #1e3e70;
+  color: #FFFFFF;
+  font-size: 12pt;
+  padding: 3px 5px;
   text-align: center;
 }
-.settings tbody td:first-child {
+.settings thead th img,
+.settings tbody th img {
+  vertical-align: middle;
+}
+.settings td,
+.settings th {
+  padding: 8px;
+}
+.settings tbody.maxed input[type=email],
+.settings tbody.maxed input[type=password],
+.settings tbody.maxed input[type=tel],
+.settings tbody.maxed input[type=text],
+.settings tbody.maxed input[type=url],
+.settings tbody.maxed select,
+.settings tbody.maxed textarea {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%;
+}
+.settings tbody.privacy td:first-child ~ td {
+  font-style: italic;
+  text-align: center;
+}
+.settings tbody.labeled td:first-child {
   background-color: #fff;
   border-bottom: 1px dotted #000;
+  font-weight: bold;
   text-align: right;
+  vertical-align: top;
 }
-.settings tbody td:first-child[colspan="2"] {
+.settings tbody.labeled td:first-child label {
+  display: block;
+}
+.settings tbody.labeled td:first-child[colspan] {
   background-color: #e7ebf1;
   border-top: 1px dotted #000;
   text-align: center;
 }
-.settings tbody tr:last-child td:first-child {
+.settings tbody.labeled tr:last-child td:first-child {
   border-bottom: 0;
+}
+.settings.zebra-hover .labeled tr:hover td:first-child {
+  background-color: #fff0d8;
+}
+.settings.zebra-hover .labeled tr:hover td:first-child label {
+  text-shadow: 1px 1px 0 #fff;
+}
+.settings dfn,
+.settings small {
+  display: block;
+  font-weight: normal;
+}
+.settings dfn {
+  font-size: 0.8em;
+  font-style: italic;
+  padding-top: 0.5em;
+}
+.settings tfoot td {
+  background: #d1d1d1;
+  text-align: center;
+}
+.settings tfoot tr:first-child td {
+  border-top: 1px solid #575757;
+}
+.settings label.required:after {
+  color: red;
+  content: '*';
+  font-size: 1.5em;
+  padding-left: 5px;
+  vertical-align: middle;
+}
+.settings.notification tbody td {
+  text-align: center;
+}
+.settings.notification tbody td:first-child:not([colspan]) {
+  padding-left: 0;
+  padding-right: 0;
+  font-size: small;
+}
+.settings.notification tbody td:nth-child(-n+2) {
+  text-align: left;
+}
+.settings .bordered.left {
+  border-left: 1px solid #899ab9;
+}
+.settings .bordered.right {
+  border-right: 1px solid #899ab9;
+}
+table.tree .header > td {
+  background-color: #e3eaf6;
+  background-image: -webkit-gradient(linear,0 0,0 100%,from(#cdd9ed),color-stop(40%,#e3eaf6),to(#e3eaf6));
+  background-image: -webkit-linear-gradient(#cdd9ed,#e3eaf6 40%,#e3eaf6);
+  background-image: -moz-linear-gradient(top,#cdd9ed,#e3eaf6 40%,#e3eaf6);
+  background-image: -o-linear-gradient(#cdd9ed,#e3eaf6 40%,#e3eaf6);
+  background-image: linear-gradient(#cdd9ed,#e3eaf6 40%,#e3eaf6);
+  background-repeat: no-repeat;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffcdd9ed', endColorstr='#ffe3eaf6', GradientType=0);
+  border-top: 1px solid #899ab9;
+  line-height: 17pt;
+  height: 25px;
+}
+table.tree .header > td:last-child {
+  padding-right: 5px;
+}
+table.tree .header > td img {
+  padding: 0 2px;
+  vertical-align: text-bottom;
+}
+table.tree .header > td a.link {
+  padding-left: 5px;
+}
+table.tree .header > td a.link.open {
+  background: url("../images/icons/16/blue/arr_1down.png") left center no-repeat;
+  padding-left: 20px;
+}
+table.tree .header > td a.link.closed {
+  background: url("../images/icons/16/blue/arr_1right.png") left center no-repeat;
+  padding-left: 20px;
+}
+table.tree td.blank {
+  background: #fff;
+  border: 0;
+}
+table.tree td.in-between {
+  background: #fff url("../images/tree-line.gif") center repeat-y;
+  border: 0;
+}
+table.tree td.leaf {
+  background: #fff url("../images/tree-leaf.gif") center no-repeat;
+  border: 0;
+}
+table.tree td.end {
+  background: #fff url("../images/tree-end.gif") center no-repeat;
+  border: 0;
+}
+table.tree .centered {
+  text-align: center;
+}
+table.tree .centered table {
+  margin: auto;
+  text-align: left;
 }
 .table_footer,
 .table_footer td {

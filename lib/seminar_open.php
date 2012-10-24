@@ -40,8 +40,6 @@ function check_messaging_default($my_messaging_settings) {
         $my_messaging_settings['show_only_buddys'] = FALSE;
     if (!$my_messaging_settings['delete_messages_after_logout'])
         $my_messaging_settings['delete_messages_after_logout'] = FALSE;
-    if (!$my_messaging_settings['start_messenger_at_startup'])
-        $my_messaging_settings['start_messenger_at_startup'] = FALSE;
     if (!$my_messaging_settings['default_setted'])
         $my_messaging_settings['default_setted'] = time();
     if (!$my_messaging_settings['last_login'])
@@ -173,20 +171,10 @@ if ($auth->is_authenticated() && is_object($user) && $user->id != "nobody") {
         }
         $my_studip_settings = UserConfig::get($user->id)->__get('my_studip_settings');
         //redirect user to another page if he want to
-        if (($my_studip_settings["startpage_redirect"]) && ($i_page == "index.php") && (!$perm->have_perm("root"))){
+        if ((int)$my_studip_settings["startpage_redirect"] && ($i_page == "index.php") && (!$perm->have_perm("root"))){
             $seminar_open_redirected = TRUE;
         }
         $user_did_login = true;
-    }
-
-    // lauch stud.ip messenger after login
-    $my_messaging_settings = json_decode( UserConfig::get($user->id)->__get('my_messaging_settings'), true );
-    $my_messaging_settings = check_messaging_default($my_messaging_settings);
-    if ($my_messaging_settings['start_messenger_at_startup'] && $auth->auth['jscript'] &&
-        !$seminar_open_redirected && !$_SESSION['messenger_started']) {
-        PageLayout::addHeadElement('script', array('type' => 'text/javascript'),
-                'fenster = window.open("'.URLHelper::getURL('studipim.php').'", "im_'.$user->id.'", "scrollbars=yes,width=400,height=300", "resizable=no");');
-        $_SESSION['messenger_started'] = true;
     }
 }
 

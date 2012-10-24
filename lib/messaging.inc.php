@@ -233,7 +233,7 @@ class messaging
         $receiver     = User::find($rec_user_id);
         $to           = $receiver->Email;
         $rec_fullname = $receiver->getFullName();
-        
+
         setTempLanguage($rec_user_id);
 
         $title = "[Stud.IP - " . $GLOBALS['UNI_NAME_CLEAN'] . "] ".stripslashes(kill_format(str_replace(array("\r","\n"), '', $subject)));
@@ -322,8 +322,6 @@ class messaging
                   $my_messaging_settings['show_only_buddys'] = FALSE;
              if (!$my_messaging_settings['delete_messages_after_logout'])
                   $my_messaging_settings['delete_messages_after_logout'] = FALSE;
-             if (!$my_messaging_settings['start_messenger_at_startup'])
-                  $my_messaging_settings['start_messenger_at_startup'] = FALSE;
              if (!$my_messaging_settings['default_setted'])
                   $my_messaging_settings['default_setted'] = time();
              if (!$my_messaging_settings['last_login'])
@@ -453,7 +451,7 @@ class messaging
         // hier gehen wir alle empfaenger durch, schreiben das in die db und schicken eine mail
         $query  = "INSERT INTO message_user (message_id, user_id, snd_rec, mkdate)
                    VALUES (?, ?, 'rec', UNIX_TIMESTAMP())";
-        $insert = DBManager::get()->prepare($query); 
+        $insert = DBManager::get()->prepare($query);
         $snd_name = ($user_id != '____%system%____')
             ? User::find($user_id)->getFullName() . ' (' . User::find($user_id)->username . ')'
             : 'Stud.IP-System';
@@ -481,7 +479,7 @@ class messaging
             }
         }
         PersonalNotifications::add($rec_id, UrlHelper::getUrl("sms_box.php?mopen=$tmp_message_id#$tmp_message_id"), sprintf(_('Sie haben eine Nachricht von %s erhalten!'), $snd_name),'message_'.$tmp_message_id);
-        
+
 
         return sizeof($rec_id);
     }
@@ -518,7 +516,7 @@ class messaging
      */
     function insert_chatinv($msg, $rec_uname, $chat_id, $user_id = false)
     {
-        if (!get_config('CHAT_ENABLE')) { 
+        if (!get_config('CHAT_ENABLE')) {
             return false;
         }
 
@@ -618,7 +616,7 @@ class messaging
         $statement->bindParam(':user_id', $user_id);
         if (!empty($active_chats)) {
             $statement->bindParam(':chat_ids', $active_chats, StudipPDO::PARAM_ARRAY);
-        }        
+        }
         $statement->execute();
         $message_ids = $statement->fetchAll(PDO::FETCH_COLUMN);
 

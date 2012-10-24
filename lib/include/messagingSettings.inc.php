@@ -20,7 +20,6 @@
 use Studip\Button, Studip\LinkButton;
 
 require_once ('lib/language.inc.php');
-require_once ('config.inc.php');
 require_once 'lib/functions.php';
 require_once ('lib/visual.inc.php');
 require_once ('lib/user_visible.inc.php');
@@ -89,7 +88,6 @@ if (Request::option('messaging_cmd')=="change_view_insert" && !Request::submitte
 
     $my_messaging_settings['changed'] = TRUE;
     $my_messaging_settings['delete_messages_after_logout'] = Request::int('delete_messages_after_logout');
-    $my_messaging_settings['start_messenger_at_startup']   = Request::int('start_messenger_at_startup');
     $my_messaging_settings['sms_sig']              = Request::get('sms_sig');
     $my_messaging_settings['timefilter']           = Request::option('timefilter');
     $my_messaging_settings['openall']              = Request::int('openall');
@@ -127,8 +125,6 @@ if (Request::option('messaging_cmd') == "reset_msg_settings") {
         $my_messaging_settings['show_only_buddys'] = FALSE;
     if (!$my_messaging_settings['delete_messages_after_logout'])
         $my_messaging_settings['delete_messages_after_logout'] = FALSE;
-    if (!$my_messaging_settings['start_messenger_at_startup'])
-        $my_messaging_settings['start_messenger_at_startup'] = FALSE;
     if (!$my_messaging_settings['default_setted'])
         $my_messaging_settings['default_setted'] = time();
     if (!$my_messaging_settings['last_login'])

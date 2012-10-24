@@ -216,23 +216,6 @@
                     <tbody>
                         <tr>
                             <td colspan="2">
-                                <b><?= _('Stud.IP-Messenger') ?></b>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label for="start_messenger_at_startup"><?= _('Stud.IP-Messenger automatisch nach dem Login starten') ?></label>
-                            </td>
-                            <td>
-                                <input type="checkbox" id="start_messenger_at_startup" name="start_messenger_at_startup"
-                                       value="1"
-                                       <? if ($settings['start_messenger_at_startup'] == 1) echo 'checked'; ?> >
-                            </td>
-                        </tr>
-                    </tbody>
-                    <tbody>
-                        <tr>
-                            <td colspan="2">
                                 <b><?= _('Buddies/ Wer ist online?') ?></b>
                             </td>
                         </tr>

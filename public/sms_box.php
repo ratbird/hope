@@ -45,8 +45,6 @@ if(empty ($my_messaging_settings)){
         $my_messaging_settings['show_only_buddys'] = FALSE;
     if (!$my_messaging_settings['delete_messages_after_logout'])
         $my_messaging_settings['delete_messages_after_logout'] = FALSE;
-    if (!$my_messaging_settings['start_messenger_at_startup'])
-        $my_messaging_settings['start_messenger_at_startup'] = FALSE;
     if (!$my_messaging_settings['default_setted'])
         $my_messaging_settings['default_setted'] = time();
     if (!$my_messaging_settings['last_login'])
@@ -176,7 +174,7 @@ if ($cmd == "mark_allsmsreaded") {
 $count_newsms = count_messages_from_user($sms_data['view'], "AND deleted='0' AND readed='0'");
 $show_folder = Request::option('show_folder');
 // open default folder if there are new messages
-//$neux -> global from lib/Navigation/MessagingNavigation.php 
+//$neux -> global from lib/Navigation/MessagingNavigation.php
 if ($neux && !$show_folder) {
     $show_folder = "all";
 }
@@ -291,7 +289,7 @@ if (Request::option('sel_lock')) {
         $tmp_dont_delete = "0";
         $msg = "msg§"._("Der Lösch-Schutz wurde für die gewählte Nachricht aufgehoben.");
     }
-    
+
     $query = "UPDATE message_user
               SET dont_delete = ?
               WHERE user_id = ? AND message_id = ? AND snd_rec = ?";
@@ -440,7 +438,7 @@ $query_time = $query_time_sort;
             $content_content .= Button::create(_('Übernehmen'), $tmp[2], array('align' => 'absmiddle'));
             $content_content .= Button::createCancel(_('Abbrechen'), 'a', array('align' => 'absmiddle'));
             $content_content .= " <div>";
-            
+
             echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"99%\" align=\"center\"><tr>";
             printcontent("99%",0, $content_content, FALSE);
             echo "</form></tr></table>";
@@ -471,12 +469,12 @@ $query_time = $query_time_sort;
                 <form action=\"".URLHelper::getURL()."\" method=\"post\" style=\"display: inline\">" .
                 CSRFProtection::tokenTag() .
                 "<div class=\"button-group\"><input type=\"hidden\" name=\"cmd\" value=\"select_all\">"
-                . Button::create(_('Alle auswählen'), 'select', array('align' => 'absmiddle')) .    
+                . Button::create(_('Alle auswählen'), 'select', array('align' => 'absmiddle')) .
                 "</form>
                 <form action=\"".URLHelper::getURL()."\" method=\"post\" style=\"display: inline\">".
                 CSRFProtection::tokenTag() .
                 Button::create(_('Löschen'), 'delete_selected_button', array('align' => 'absmiddle'));
-                if (have_msgfolder($sms_data['view']) == TRUE) {                    
+                if (have_msgfolder($sms_data['view']) == TRUE) {
                     $content_content .= Button::create(_('Verschieben'), 'move_selected_button', array('align' => 'absmiddle'));
                 }
                 $content_content .= "</div><br></div>";
@@ -512,7 +510,7 @@ $query_time = $query_time_sort;
                     if (!$sms_data['tmp']['move_to_folder']) {
                          $link = folder_makelink($x);
                          $link_add = "&cmd_show=openall";
-                        
+
                     }
                     // titel
                     $titel = "<a href=\"".$link."\" class=\"tree\" >".htmlready(stripslashes($my_messaging_settings["folder"][$sms_data['view']][$x]))."</a>";

@@ -49,8 +49,6 @@ if ($auth->auth["uid"]!="nobody")
         $my_messaging_settings['show_only_buddys'] = FALSE;
     if (!$my_messaging_settings['delete_messages_after_logout'])
         $my_messaging_settings['delete_messages_after_logout'] = FALSE;
-    if (!$my_messaging_settings['start_messenger_at_startup'])
-        $my_messaging_settings['start_messenger_at_startup'] = FALSE;
     if (!$my_messaging_settings['default_setted'])
         $my_messaging_settings['default_setted'] = time();
     if (!$my_messaging_settings['last_login'])

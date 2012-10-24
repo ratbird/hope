@@ -1,7 +1,6 @@
 <?php
 # Lifter001: TEST
 # Lifter002: TODO
-# Lifter005: TODO - studipim
 # Lifter007: TODO
 # Lifter003: TODO
 # Lifter010: TODO
@@ -220,15 +219,6 @@ if (isset($current_user)) {
     }
 
     ?>
-    <script language="Javascript">
-    function open_im() {
-      fenster = window.open("<?= URLHelper::getURL('studipim.php') ?>",
-                            "im_<?= $GLOBALS['user']->id ?>",
-                            "scrollbars=yes,width=400,height=300",
-                            "resizable=no");
-    }
-    </script>
-
     <table id="user_profile" width="100%" border="0" cellpadding="1" cellspacing="0">
         <? if ($msg) : ?>
             <?= parse_msg($msg) ?>
@@ -263,11 +253,7 @@ if (isset($current_user)) {
                          . _("Rang:") . " ".$title."</a></font><br>";
                 }
 
-                if ($username==$auth->auth["uname"]) {
-                    if ($auth->auth["jscript"]) {
-                        echo "<br><a href='javascript:open_im();'>" . _("Stud.IP Messenger starten") . "</a>";
-                    }
-                } else {
+                if ($username != $auth->auth["uname"]) {
                     if (CheckBuddy($username)==FALSE) {
                         echo "<br><a href=\"". URLHelper::getLink("?cmd=add_user&add_uname=".$username) ."\">"
                              . Assets::img('icons/16/blue/person.png', array('title' =>_("zu den Kontakten hinzufügen"), 'class' => 'middle'))

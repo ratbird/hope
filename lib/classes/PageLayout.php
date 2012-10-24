@@ -411,9 +411,13 @@ class PageLayout
      *
      * @param MessageBox  message object to display
      */
-    public static function postMessage(MessageBox $message)
+    public static function postMessage(MessageBox $message, $id = null)
     {
-        $_SESSION['messages'][] = $message;
+        if ($id === null ) {
+            $_SESSION['messages'][] = $message;
+        } else {
+            $_SESSION['messages'][$id] = $message;
+        }
     }
 
     /**

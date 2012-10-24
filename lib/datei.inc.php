@@ -354,9 +354,11 @@ function createTempFolder($folder_id, $tmp_full_path, $perm_check = TRUE, $in_re
         fclose ($fp);
     }
 
+    //PS #2936: Test if files are readable and visible for students, rwx = 7, r-x = 5
     $query = "SELECT folder_id, name
               FROM folder
               WHERE range_id = ?
+              AND permission IN(5,7)
               ORDER BY name";
     $statement = DBManager::get()->prepare($query);
     $statement->execute(array($folder_id));

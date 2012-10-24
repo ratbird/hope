@@ -40,7 +40,6 @@ global  $_fullname_sql,
 
 if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
 
-    require_once 'config.inc.php';
     require_once 'lib/dates.inc.php';
     require_once 'lib/msg.inc.php';
     require_once 'lib/visual.inc.php';
@@ -222,19 +221,15 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                             <select name="srch_doz">
                             <option value="0"><?=_("alle")?></option>
                             <?
-                            if (is_array($my_inst)) {
-                                $inst_id_query = "'";
-                                $inst_id_query.= join ("', '",$my_inst);
-                                $inst_id_query.= "'";
-
-                                $query="SELECT auth_user_md5.user_id, " . $_fullname_sql['full_rev'] ." AS fullname, Institut_id FROM user_inst  LEFT JOIN auth_user_md5 USING(user_id) LEFT JOIN user_info USING(user_id) WHERE inst_perms='dozent' AND institut_id IN ($inst_id_query) GROUP BY auth_user_md5.user_id ORDER BY Nachname ";
+                            if (is_array($my_inst) && count($my_inst)) {
+                                $db2query="SELECT auth_user_md5.user_id, " . $_fullname_sql['full_rev'] ." AS fullname, Institut_id FROM user_inst  LEFT JOIN auth_user_md5 USING(user_id) LEFT JOIN user_info USING(user_id) WHERE inst_perms='dozent' AND institut_id IN (?) GROUP BY auth_user_md5.user_id ORDER BY Nachname";
                                 $db2statement = DBManager::get()->prepare($db2query);
-                                $db2statement->execute();
+                                $db2statement->execute(array($my_inst));
                                 while ($db2row = $db2statement->fetch(PDO::FETCH_ASSOC)){
-                                            if ($_SESSION['links_admin_data']['srch_doz'] == $dbrow['user_id'])
-                                            echo"<option selected value=\"".$dbrow['user_id']."\">".htmlReady(my_substr($dbrow['fullname'],0,35))."</option>";
+                                            if ($_SESSION['links_admin_data']['srch_doz'] == $db2row['user_id'])
+                                            echo"<option selected value=\"".$db2row['user_id']."\">".htmlReady(my_substr($db2row['fullname'],0,35))."</option>";
                                         else
-                                            echo"<option value=\"".$dbrow['user_id']."\">".htmlReady(my_substr($dbrow['fullname'],0,35))."</option>";
+                                            echo"<option value=\"".$db2row['user_id']."\">".htmlReady(my_substr($db2row['fullname'],0,35))."</option>";
 
                                 }
                             }

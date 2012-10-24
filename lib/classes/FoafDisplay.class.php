@@ -263,7 +263,7 @@ class FoafDisplay
         $msg="<table width=\"95%\" align=\"center\">\n<tr>\n<td>";
         $msg.="<font size=\"-1\">";
         $msg.=sprintf(_("Die Verbindungskette (Friend-of-a-Friend-Liste) wertet Buddy-Listen-Einträge aus, um festzustellen, über wieviele Stufen (maximal %s) sich zwei BenutzerInnen direkt oder indirekt \"kennen\"."), $this->depth);
-        $msg.=" ".sprintf(_("Die Zwischenglieder werden nur nach Zustimmung mit Namen und Bild ausgegeben. Sie selbst erscheinen derzeit in solchen Ketten %s. Klicken Sie %shier%s, um die Einstellung zu ändern."), "<b>".($vis ? _("nicht anonym") : ($this->dont_show_anonymous ? _("überhaupt nicht") :  _("anonym")))."</b>", "<a href=\"edit_about.php?view=privacy\">","</a>");
+        $msg.=" ".sprintf(_("Die Zwischenglieder werden nur nach Zustimmung mit Namen und Bild ausgegeben. Sie selbst erscheinen derzeit in solchen Ketten %s. Klicken Sie %shier%s, um die Einstellung zu ändern."), "<b>".($vis ? _("nicht anonym") : ($this->dont_show_anonymous ? _("überhaupt nicht") :  _("anonym")))."</b>", "<a href=\"dispatch.php/settings/privacy\">","</a>");
         $msg.="</font></td></tr></table>";
         return $msg;
     }

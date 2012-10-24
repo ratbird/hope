@@ -103,23 +103,22 @@ class StudipNavigation extends Navigation
         // settings
         if (is_object($user) && $perm->have_perm('autor')) {
             $navigation = new Navigation(_('Einstellungen'));
-            $navigation->addSubNavigation('general', new Navigation(_('Allgemeines'), 'edit_about.php', array('view' => 'allgemein')));
-            $navigation->addSubNavigation('privacy', new Navigation(_('Privatsphäre'), 'edit_about.php', array('view' => 'privacy')));
-            $navigation->addSubNavigation('messaging', new Navigation(_('Nachrichten'), 'edit_about.php', array('view' => 'Messaging')));
-            $navigation->addSubNavigation('forum', new Navigation(_('Forum'), 'edit_about.php', array('view' => 'Forum')));
+
+            $navigation->addSubNavigation('general', new Navigation(_('Allgemeines'), 'dispatch.php/settings/general'));
+            $navigation->addSubNavigation('privacy', new Navigation(_('Privatsphäre'), 'dispatch.php/settings/privacy'));
+            $navigation->addSubNavigation('messaging', new Navigation(_('Nachrichten'), 'dispatch.php/settings/messaging'));
+            $navigation->addSubNavigation('forum', new Navigation(_('Forum'), 'dispatch.php/settings/forum'));
 
             if (get_config('CALENDAR_ENABLE')) {
                 $navigation->addSubNavigation('calendar', new Navigation(_('Terminkalender'), 'edit_about.php', array('view' => 'calendar')));
             }
 
-            if (!$perm->have_perm('admin')) {
-                if (get_config('MAIL_NOTIFICATION_ENABLE')) {
-                    $navigation->addSubNavigation('notification', new Navigation(_('Benachrichtigung'), 'sem_notification.php'));
-                }
+            if (!$perm->have_perm('admin') and get_config('MAIL_NOTIFICATION_ENABLE')) {
+                $navigation->addSubNavigation('notification', new Navigation(_('Benachrichtigung'), 'dispatch.php/settings/notification'));
             }
 
             if (isDefaultDeputyActivated() && $perm->get_perm() == 'dozent') {
-                $navigation->addSubNavigation('deputies', new Navigation(_('Standardvertretung'), 'edit_about.php', array('view' => 'deputies')));
+                $navigation->addSubNavigation('deputies', new Navigation(_('Standardvertretung'), 'dispatch.php/settings/deputies'));
             }
 
             $links->addSubNavigation('settings', $navigation);

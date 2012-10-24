@@ -6,7 +6,7 @@
         <div class="content">
             <?= formatReady($question) ?>
         </div>
-        <div>
+        <div class="content">
             <form action="<?= $action ?>" method="post">
                 <?= CSRFProtection::tokenTag() ?>
                 <?foreach($elements as $e) :?>
@@ -14,7 +14,7 @@
                         <?= $e?>
                     </div>
                 <?endforeach?>
-                <div style="margin-top: 0.5em;">
+                <div class="buttons">
                     <?= $approvalbutton ?>
                     <span style="margin-left: 1em;">
                         <?= $disapprovalbutton ?>

@@ -11,6 +11,7 @@ $translations = array(
   , "Freitag" => _("Freitag")
   , "Samstag" => _("Samstag")
   , "Bitte ändern Sie ihre Eingabe" => _("Bitte ändern Sie ihre Eingabe")
+  , "Bitte wählen Sie einen Wert aus" => _("Bitte wählen Sie einen Wert aus")
   , "Bitte geben Sie eine gültige E-Mail-Adresse ein" => _("Bitte geben Sie eine gültige E-Mail-Adresse ein")
   , "Bitte geben Sie eine Zahl ein" => _("Bitte geben Sie eine Zahl ein")
   , "Bitte geben Sie eine gültige Web-Adresse ein" => _("Bitte geben Sie eine gültige Web-Adresse ein")

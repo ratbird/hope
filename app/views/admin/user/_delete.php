@@ -5,9 +5,9 @@ use Studip\Button, Studip\LinkButton;
 ?>
 <div class="modaloverlay">
     <div class="messagebox">
-        <span id="modalquestion">
+        <div class="content">
             <?= formatReady($data['question']) ?>
-        </span>
+        </div>
         <div>
             <form action="<?= $data['action'] ?>" method="post">
             <?= CSRFProtection::tokenTag() ?>

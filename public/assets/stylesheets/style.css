@@ -1298,16 +1298,27 @@ div.messagebox_warning {
   right: 0;
   bottom: 0;
   z-index: 9999;
+  text-align: center;
+}
+.modaloverlay:before {
+  content: "";
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+  zoom: 1;
 }
 .modaloverlay .messagebox {
+  display: inline-block;
+  zoom: 1;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  position: fixed;
+  vertical-align: middle;
+  margin: auto;
+  position: relative;
+  max-height: 50%;
   max-width: 50%;
   width: 50%;
-  left: 25%;
-  top: 40%;
   color: #000;
   background-color: #f3e180;
   background-image: url("../images/messagebox/question.png");
@@ -1315,7 +1326,12 @@ div.messagebox_warning {
   -moz-box-shadow: 8px 8px 0 rgba(0,0,0,0.5);
   box-shadow: 8px 8px 0 rgba(0,0,0,0.5);
 }
-.modaloverlay .messagebox div {
+.modaloverlay .messagebox .content {
+  max-height: 200px;
+  overflow: auto;
+  text-align: left;
+}
+.modaloverlay .messagebox .buttons {
   margin-top: 1em;
   text-align: center;
 }

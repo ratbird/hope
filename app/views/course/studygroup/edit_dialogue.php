@@ -4,11 +4,11 @@ use Studip\Button, Studip\LinkButton;
 
 <div class="modaloverlay">
     <div class="messagebox">
-        <span id="modalquestion">
+        <div class="content">
             <?= formatReady(_("Möchten Sie folgende Inhaltselemente wirklich deaktivieren?")
                     . "\n" . $deactivate_modules_names) ?>
-        </span>
-        <div>
+        </div>
+        <div class="buttons">
             <form action="<?= $controller->url_for('course/studygroup/update/'.$sem_id) ?>" method=post>
                 <?= CSRFProtection::tokenTag() ?>
                 <? foreach($this->flash['deactivate_modules'] as $module) :?>

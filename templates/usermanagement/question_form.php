@@ -3,9 +3,9 @@
 ?>
 <div class="modaloverlay">
     <div class="messagebox">
-        <span id="modalquestion">
+        <div class="content">
             <?= formatReady($question) ?>
-        </span>
+        </div>
         <div>
             <form action="<?= $action ?>" method="post">
                 <?= CSRFProtection::tokenTag() ?>

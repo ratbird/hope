@@ -35,7 +35,6 @@ include ('lib/seminar_open.php');
 require_once 'lib/functions.php';
 require_once ('lib/msg.inc.php');
 require_once ('lib/visual.inc.php');
-require_once ('lib/include/messagingSettings.inc.php');
 require_once ('lib/messaging.inc.php');
 require_once ('lib/statusgruppe.inc.php');
 require_once ('lib/sms_functions.inc.php');

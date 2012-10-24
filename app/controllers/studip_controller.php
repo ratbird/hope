@@ -75,7 +75,7 @@ abstract class StudipController extends Trails_Controller
      *
      * @since Stud.IP 2.3
      **/
-    private function populateInfobox() {
+    protected function populateInfobox() {
         if (!isset($this->infobox)) {
             $this->infobox = array(
                 'picture' => 'blank.gif',

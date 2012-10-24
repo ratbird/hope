@@ -4,10 +4,10 @@
 ?>
 <div class="modaloverlay">
     <div class="messagebox">
-        <span id="modalquestion">
+        <div class="content">
             <?= formatReady($question) ?>
-        </span>
-        <div>
+        </div>
+        <div class="buttons">
             <?= LinkButton::createAccept(_('JA!'), $approvalLink) ?>
             <?= LinkButton::createCancel(_('NEIN!'), $disapprovalLink) ?>
         </div>

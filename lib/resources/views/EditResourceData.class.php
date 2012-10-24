@@ -151,6 +151,7 @@ class EditResourceData {
             $resAssign->setResourceId($_SESSION['resources_data']['actual_object']);
         }
 
+        $add_ts = Request::int('add_ts');
         if (($add_ts) && ($resAssign->isNew())) {
             $resAssign->setBegin($add_ts);
             $resAssign->setEnd($add_ts + (2 * 60 * 60));
@@ -215,7 +216,6 @@ class EditResourceData {
         $search_string_search_user = Request::quoted('search_string_search_user');
         $view_mode = Request::option('view_mode');
         $quick_view = Request::option('quick_view');
-        $add_ts = Request::option('add_ts');
         $search_exp_room = Request::quoted('search_exp_room');
         $search_properties = Request::submitted('search_properties');
 

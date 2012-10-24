@@ -50,7 +50,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
     require_once "lib/classes/AuxLockRules.class.php";
     require_once "lib/classes/AdminList.class.php";
 
-  
+
     $cssSw=new cssClassSwitcher;
     $semester=new SemesterData;
     $aux_rules=new AuxLockRules();
@@ -202,12 +202,12 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                                     echo"<option value=\"".$dbrow['Institut_id']."\">".substr($dbrow['Name'], 0, 30)."</option>";
                                 if ($dbrow['is_fak']) {
                                     $db2query = "SELECT Institut_id, Name FROM Institute WHERE fakultaets_id='" .$dbrow['Institut_id'] . "' AND institut_id!='" .$dbrow['Institut_id'] . "' ORDER BY Name";
-                                    while ($db2->next_record()) {
-                                        if ($_SESSION['links_admin_data']['srch_inst'] == $db2->f("Institut_id"))
-                                            echo"<option selected value=\"".$db2->f("Institut_id")."\">&nbsp;&nbsp;&nbsp;".substr($db2->f("Name"), 0, 30)."</option>";
+                                    foreach (DBManager::get()->query($db2query) as $dbrow2) {
+                                        if ($_SESSION['links_admin_data']['srch_inst'] == $dbrow2['Institut_id'])
+                                            echo"<option selected value=\"".$dbrow2['Institut_id']."\">&nbsp;&nbsp;&nbsp;".substr($dbrow2['Name'], 0, 30)."</option>";
                                         else
-                                            echo"<option value=\"".$db2->f("Institut_id")."\">&nbsp;&nbsp;&nbsp;".substr($db2->f("Name"), 0, 30)."</option>";
-                                        $my_inst[]=$db2->f("Institut_id");
+                                            echo"<option value=\"".$dbrow2['Institut_id']."\">&nbsp;&nbsp;&nbsp;".substr($dbrow2['Name'], 0, 30)."</option>";
+                                        $my_inst[]=$dbrow2['Institut_id'];
                                     }
                                 }
                             }
@@ -235,7 +235,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                                             echo"<option selected value=\"".$dbrow['user_id']."\">".htmlReady(my_substr($dbrow['fullname'],0,35))."</option>";
                                         else
                                             echo"<option value=\"".$dbrow['user_id']."\">".htmlReady(my_substr($dbrow['fullname'],0,35))."</option>";
-                                
+
                                 }
                             }
                             ?>
@@ -620,7 +620,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                     }
                 break;
                 case "admin_aux.php":
-                   
+
                     $db5query = "SELECT aux_lock_rule from seminare WHERE Seminar_id = ?";
                     $db5params = array($seminar_id);
                     $db5statement = DBManager::get()->prepare($db5query);

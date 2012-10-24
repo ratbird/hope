@@ -88,7 +88,7 @@ class Settings_SettingsController extends AuthenticatedController
     /**
      *
      */
-    private function check_ticket()
+    protected function check_ticket()
     {
         $ticket = Request::get('studipticket');
         if (!$ticket || !check_ticket($ticket)) {

@@ -67,7 +67,7 @@ class Settings_CategoriesController extends Settings_SettingsController
                                     _('Neue Kategorie anlegen')),
                             'icons/16/black/plus');
         $this->addToInfobox(_('Informationen'), _('Hier können Sie beliebige eigene Kategorien anlegen. Diese Kategorien erscheinen je nach eingestellter Sichtbarkeit auf Ihrer Profilseite. Mit den Pfeilsymbolen k&ouml;nnen Sie die Reihenfolge, in der die Kategorien angezeigt werden, ver&auml;ndern.'), 'icons/16/black/info');
-        $this->addToInfobox(_('Informationen'), sprintf(_('Für wen Ihre angelegten Kategorien genau sichtbar sein sollen, können Sie in Ihren %sPrivatsphäre-Einstellungen%s festlegen.'), '<a href="'.URLHelper::getURL('dispatch.php/settings/account/privacy').'">', '</a>'), 'icons/16/black/visibility-invisible');
+        $this->addToInfobox(_('Informationen'), sprintf(_('Für wen Ihre angelegten Kategorien genau sichtbar sein sollen, können Sie in Ihren %sPrivatsphäre-Einstellungen%s festlegen.'), '<a href="'.URLHelper::getURL('dispatch.php/settings/privacy').'">', '</a>'), 'icons/16/black/visibility-invisible');
     }
 
     public function create_action()
@@ -105,8 +105,6 @@ class Settings_CategoriesController extends Settings_SettingsController
             return;
         }
 
-        $this->check_ticket();
-
         if ($category->delete()) {
             $this->reportSuccess(_('Kategorie "%s" gelöscht!'), $name);
         } else {
@@ -118,8 +116,6 @@ class Settings_CategoriesController extends Settings_SettingsController
 
     public function store_action()
     {
-        $this->check_ticket();
-
         $request = Request::getInstance();
         $categories = $request['categories'];
         foreach ($categories as $id => $data) {

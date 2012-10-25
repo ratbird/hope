@@ -270,6 +270,14 @@ if (isset($current_user)) {
                      . Assets::img('icons/16/blue/vcard.png', array('title' => _("vCard herunterladen"), 'class' => 'middle'))
                      . " " . _("vCard herunterladen") ."</a>";
 
+                if (($username != $auth->auth['uname']) && $GLOBALS['perm']->have_perm('root')) {
+                    echo '<br>';
+                    printf('<a href="%s">%s %s</a>',
+                           URLHelper::getLink('dispatch.php/admin/user/edit/' . $user_id),
+                           Assets::img('icons/16/blue/edit', array('title' => _('Diesen Benutzer bearbeiten'), 'class' => 'middle')),
+                           _('Diesen Benutzer bearbeiten'));
+                }
+
                 ?>
 
                 <br>

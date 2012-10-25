@@ -771,13 +771,13 @@ if ($change_object_properties) {
     $ObjectPerms = ResourceObjectPerms::Factory($change_object_properties);
     if ($ObjectPerms->getUserPerm () == "admin") {
         $changeObject = ResourceObject::Factory($change_object_properties);
-        $changeObject->setName(Request::quoted('change_name'));
-        $changeObject->setDescription(Request::quoted('change_description'));
+        $changeObject->setName(Request::get('change_name'));
+        $changeObject->setDescription(Request::get('change_description'));
         $changeObject->setCategoryId(Request::option('change_category_id'));
         $changeObject->setInstitutId(Request::option('change_institut_id'));
 
         if (getGlobalPerms($user->id) == "admin") {
-            $changeObject->setMultipleAssign($change_multiple_assign);
+            $changeObject->setMultipleAssign(Request::int('change_multiple_assign'));
         }
 
         //Properties loeschen
@@ -785,7 +785,7 @@ if ($change_object_properties) {
 
         //Eigenschaften neu schreiben
         $props_changed=FALSE;
-        $change_property_val = Request::quotedArray('change_property_val');
+        $change_property_val = Request::getArray('change_property_val');
         if (is_array($change_property_val))
             foreach ($change_property_val as $key=>$val) {
                 if ((substr($val, 0, 4) == "_id_") && (substr($change_property_val[$key+1], 0, 4) != "_id_"))

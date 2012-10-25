@@ -186,7 +186,7 @@ use Studip\Button, Studip\LinkButton;
                 </label>
             </td>
             <td>
-                <input type="checkbox" id="change_multiple_assign" name="change_multiple_assign"
+                <input type="checkbox" id="change_multiple_assign" name="change_multiple_assign" value="1"
                        <? if ($resObject->getMultipleAssign()) echo 'checked'; ?>>
             </td>
         </tr>

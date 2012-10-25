@@ -112,9 +112,10 @@ function edit_email($uid, $email, $force=False) {
         return array(False, $msg);
     }
 
-    $query = "UPDATE auth_user_md5 SET Email = ? WHERE user_id = ?";
-    $statement = DBManager::get()->prepare($query);
-    $statement->execute(array($email, $uid));
+    // This already moved to the controller
+//    $query = "UPDATE auth_user_md5 SET Email = ? WHERE user_id = ?";
+//    $statement = DBManager::get()->prepare($query);
+//    $statement->execute(array($email, $uid));
 
     if (StudipAuthAbstract::CheckField("auth_user_md5.validation_key", $auth_plugin)) {
         $msg.= "msg§" . _("Ihre E-Mail-Adresse wurde ge&auml;ndert!") . "§";

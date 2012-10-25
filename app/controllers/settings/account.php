@@ -128,8 +128,17 @@ class Settings_AccountController extends Settings_SettingsController
                 } else {
                     $result   = edit_email($this->user->user_id, $email1);
                     $messages = explode('§', $result[1]);
+
+                    if ($result[0]) {
+                        $this->user->Email = $email1;
+
+                        if (count($messages) < 2) {
+                            $success[] = _('Ihre E-Mail-Adresse wurde ge&auml;ndert!');
+                        }
+                    }
+
                     for ($i = 0; $i < count($messages); $i += 2) {
-                        $type      = $messages[$i];
+                        $type = $messages[$i];
                         if ($type === 'msg') {
                             $type = 'success';
                         } else if ($type === 'error') {

@@ -516,10 +516,8 @@ class AssignObject {
     }
 
     function setCommentInternal($value) {
-        if ($value != '') {
-            $this->comment_internal = $value;
-            $this->chng_flag = TRUE;
-        }
+        $this->comment_internal = $value;
+        $this->chng_flag = TRUE;
     }
 
     function getCommentInternal() {
@@ -577,26 +575,25 @@ class AssignObject {
                 $tmp_assign_user_id = "'$this->assign_user_id'";
 
             if($create) {
-                $query = sprintf("INSERT INTO resources_assign SET assign_id='%s', resource_id='%s', "
-                    ."assign_user_id=%s, user_free_name='%s', begin='%s', end='%s', repeat_end='%s', "
-                    ."repeat_quantity='%s', repeat_interval='%s', repeat_month_of_year='%s', repeat_day_of_month='%s',  "
-                    ."repeat_week_of_month='%s', repeat_day_of_week='%s', mkdate='%s', comment_internal ='%s'  "
-                             , $this->id, $this->resource_id, $tmp_assign_user_id, $this->user_free_name, $this->begin
-                             , $this->end, $this->repeat_end, $this->repeat_quantity, $this->repeat_interval
-                             , $this->repeat_month_of_year, $this->repeat_day_of_month, $this->repeat_week_of_month
-                             , $this->repeat_day_of_week, $mkdate,$this->comment_internal);
+                $stmt = $db->prepare("INSERT INTO resources_assign SET resource_id = ?,
+                    assign_user_id = ?, user_free_name = ?, begin = ?, end = ?, repeat_end = ?,
+                    repeat_quantity = ?, repeat_interval = ?, repeat_month_of_year = ?, repeat_day_of_month = ?,
+                    repeat_week_of_month = ?, repeat_day_of_week = ?, mkdate = ?, comment_internal = ?, assign_id = ?");
             } else {
-                $query = sprintf("UPDATE resources_assign SET resource_id='%s', "
-                    ."assign_user_id=%s, user_free_name='%s', begin='%s', end='%s', repeat_end='%s', "
-                    ."repeat_quantity='%s', repeat_interval='%s', repeat_month_of_year='%s', repeat_day_of_month='%s',  "
-                    ."repeat_week_of_month='%s', repeat_day_of_week='%s', comment_internal = '%s' WHERE assign_id='%s' "
-                             , $this->resource_id, $tmp_assign_user_id, $this->user_free_name, $this->begin
-                             , $this->end, $this->repeat_end, $this->repeat_quantity, $this->repeat_interval
-                             , $this->repeat_month_of_year, $this->repeat_day_of_month, $this->repeat_week_of_month
-                             , $this->repeat_day_of_week, $this->comment_internal, $this->id);
+                $stmt = $db->prepare("UPDATE resources_assign SET resource_id = ?,
+                        assign_user_id = ?, user_free_name = ?, begin = ?, end = ?, repeat_end = ?,
+                        repeat_quantity = ?, repeat_interval = ?, repeat_month_of_year = ?, repeat_day_of_month = ?,
+                        repeat_week_of_month = ?, repeat_day_of_week = ?, mkdate = ?, comment_internal = ?
+                    WHERE assign_id = ?");
+
             }
-            $result = $db->exec($query);
-            if ($result > 0 ) {
+            
+            $result = $stmt->execute(array($this->resource_id, $tmp_assign_user_id, $this->user_free_name, $this->begin,
+                $this->end, $this->repeat_end, $this->repeat_quantity, $this->repeat_interval,
+                $this->repeat_month_of_year, $this->repeat_day_of_month, $this->repeat_week_of_month,
+                $this->repeat_day_of_week, $mkdate, $this->comment_internal, $this->id));
+
+            if ($result > 0) {
                 // LOGGING
                 if ($this->assign_user_id) {
                     $type = $this->getOwnerType();

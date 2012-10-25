@@ -383,8 +383,9 @@ if ($view == "edit_object_assign" || $view == "openobject_assign") {
     if ($_SESSION['resources_data']["actual_object"]) {
         $editObject=new EditResourceData($_SESSION['resources_data']["actual_object"]);
         $editObject->setUsedView($view);
-        if ($edit_assign_object){
-            $_SESSION['resources_data']["actual_assign"]=$edit_assign_object;
+        
+        if (Request::option('edit_assign_object')){
+            $_SESSION['resources_data']["actual_assign"] = Request::option('edit_assign_object');
         }
         $editObject->showScheduleForms($_SESSION['resources_data']["actual_assign"]);
     } else {

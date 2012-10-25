@@ -135,7 +135,7 @@ else
 if (((sizeof($_POST) + sizeof($_GET)) == 2) && (($view == "edit_object_assign") || ($view == "openobject_assign"))) {
     $_SESSION['new_assign_object']=FALSE;
 }
-if (((sizeof($_POST) + sizeof($_GET)) == 3) && ($edit_assign_object) && (($view == "edit_object_assign") || ($view == "openobject_assign"))) {
+if (((sizeof($_POST) + sizeof($_GET)) == 3) && (Request::option('edit_assign_object')) && (($view == "edit_object_assign") || ($view == "openobject_assign"))) {
     $_SESSION['new_assign_object']=FALSE;
 }
 if (Request::option('cancel_edit_assign')) {
@@ -413,27 +413,32 @@ if ($change_object_schedules) {
     }
     $select_change_resource = Request::quotedArray('select_change_resource');
     if ($ObjectPerms->havePerm("admin") && Request::submitted('send_change_resource') && !empty($select_change_resource)) {
-        if(!is_array($select_change_resource)){
-        $ChangeObjectPerms = ResourceObjectPerms::Factory($select_change_resource);
-        if ($ChangeObjectPerms->havePerm("tutor")) {
+        if (!is_array($select_change_resource)) {
+            $ChangeObjectPerms = ResourceObjectPerms::Factory($select_change_resource);
+            if ($ChangeObjectPerms->havePerm("tutor")) {
                 $changeAssign = AssignObject::Factory($change_object_schedules);
                 $changeAssign->setResourceId($$select_change_resource);
-            $overlaps = $changeAssign->checkOverlap();
-            if ($overlaps) {
-                $msg->addMsg(11);
+                $changeAssign->setCommentInternal(Request::get('comment_internal'));
+
+                $overlaps = $changeAssign->checkOverlap();
+                if ($overlaps) {
+                    $msg->addMsg(11);
+                } else {
+                    $changeAssign->store();
+                    $return_schedule = TRUE;
+                    $msg->addMsg(50);
+                    header (sprintf("Location:resources.php?quick_view=%s&quick_view_mode=%s&show_msg=38&msg_resource_id=%s", ($view_mode == "oobj") ? "openobject_schedule" : "view_schedule", $view_mode, $select_change_resource));
+                }
             } else {
-                $changeAssign->store();
-                $return_schedule = TRUE;
-                header (sprintf("Location:resources.php?quick_view=%s&quick_view_mode=%s&show_msg=38&msg_resource_id=%s", ($view_mode == "oobj") ? "openobject_schedule" : "view_schedule", $view_mode, $select_change_resource));
+                $msg->addMsg(2);
             }
-        } else
-            $msg->addMsg(2);
         } else {
             $original_assign = AssignObject::Factory(Request::quoted('change_object_schedules'));
             foreach($select_change_resource as $copy_to_resource_id){
                 $ChangeObjectPerms = ResourceObjectPerms::Factory($copy_to_resource_id);
                 if ($ChangeObjectPerms->havePerm("tutor")) {
                     $new_assign = $original_assign->getCopyForResource($copy_to_resource_id);
+                    $new_assign->setCommentInternal(Request::get('comment_internal'));
                     $overlaps = $new_assign->checkOverlap();
                     if ($overlaps) {
                         $bad_msg = _("Nicht buchbare Belegungszeiten:");
@@ -451,13 +456,6 @@ if ($change_object_schedules) {
     
     }
 
-    if (($ObjectPerms->havePerm("admin")) && (Request::submitted('change_comment_internal'))) {
-        $changeAssign =& AssignObject::Factory($change_object_schedules);
-        $changeAssign->setCommentInternal(Request::quoted('comment_internal'));
-        $changeAssign->store();
-        $msg->addMsg(50);
-    }
-
     if ($ObjectPerms->havePerm("autor")) {
         if (Request::submitted('kill_assign')) {
             $killAssign = AssignObject::Factory($change_object_schedules);
@@ -466,7 +464,7 @@ if ($change_object_schedules) {
             $msg->addMsg(5);
             $change_schedule_id = $change_object_schedules = $_SESSION['resources_data']['actual_assign'] = FALSE;
         } elseif (!$return_schedule && !Request::submitted('search_room') 
-            && !Request::submitted('reset_room_search') && !Request::submitted('change_comment_internal')) {
+            && !Request::submitted('reset_room_search')) {
             if ($change_object_schedules == "NEW")
                 $change_schedule_id=FALSE;
             else
@@ -613,7 +611,7 @@ if ($change_object_schedules) {
                     $change_schedule_id,
                     Request::option('change_schedule_resource_id'),
                     Request::option('change_schedule_assign_user_id'),
-                    Request::quoted('change_schedule_user_free_name'),
+                    Request::get('change_schedule_user_free_name'),
                     $change_schedule_begin,
                     $change_schedule_end,
                     $change_schedule_repeat_end,
@@ -622,11 +620,12 @@ if ($change_object_schedules) {
                     $change_schedule_repeat_month_of_year,
                     $change_schedule_repeat_day_of_month,
                     $change_schedule_repeat_week_of_month,
-                    $change_schedule_repeat_day_of_week);
+                    $change_schedule_repeat_day_of_week,
+                    Request::get('comment_internal'));
             } else {
                 $changeAssign = AssignObject::Factory($change_schedule_id);
                 $changeAssign->setResourceId(Request::option('change_schedule_resource_id'));
-                $changeAssign->setUserFreeName(Request::quoted('change_schedule_user_free_name'));
+                $changeAssign->setUserFreeName(Request::get('change_schedule_user_free_name'));
                 $changeAssign->setAssignUserId(Request::option('change_schedule_assign_user_id'));
                 $changeAssign->setBegin($change_schedule_begin);
                 $changeAssign->setEnd($change_schedule_end);
@@ -637,6 +636,7 @@ if ($change_object_schedules) {
                 $changeAssign->setRepeatDayOfMonth($change_schedule_repeat_day_of_month);
                 $changeAssign->setRepeatWeekOfMonth($change_schedule_repeat_week_of_month);
                 $changeAssign->setRepeatDayOfWeek($change_schedule_repeat_day_of_week);
+                $changeAssign->setCommentInternal(Request::get('comment_internal'));
             }
 
             //if isset quantity, we calculate the correct end date
@@ -693,7 +693,7 @@ if ($change_object_schedules) {
             // create a new assign
             elseif ( ($change_object_schedules == "NEW" || $_SESSION['new_assign_object'])){
 
-                if ((Request::option('change_schedule_assign_user_id')) || (Request::quoted('change_schedule_user_free_name'))) {
+                if ((Request::option('change_schedule_assign_user_id')) || (Request::get('change_schedule_user_free_name'))) {
                     $overlaps = $changeAssign->checkOverlap(FALSE);
                     $locks = $changeAssign->checkLock();
                 }
@@ -711,7 +711,7 @@ if ($change_object_schedules) {
                         $_SESSION['new_assign_object']=serialize($changeAssign);  // store the submitted form-data
 
                         if ( $storeAssign && !Request::submitted('do_search_user') && !Request::submitted('reset_search_user')
-                            && !Request::option('change_schedule_assign_user_id') && Request::quoted('change_schedule_user_free_name')) {
+                            && !Request::option('change_schedule_assign_user_id') && Request::get('change_schedule_user_free_name')) {
                                 $msg->addMsg(10);
                         }
                     }
@@ -735,7 +735,7 @@ if ($change_object_schedules) {
 
             // change an existing assign
             else {
-                if ((Request::option('change_schedule_assign_user_id')) || (Request::quoted('change_schedule_user_free_name'))) {
+                if ((Request::option('change_schedule_assign_user_id')) || (Request::get('change_schedule_user_free_name'))) {
                     $overlaps = $changeAssign->checkOverlap(FALSE);
                     $locks = $changeAssign->checkLock();
                 }

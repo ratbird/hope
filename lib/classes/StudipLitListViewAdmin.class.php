@@ -264,14 +264,14 @@ class StudipLitListViewAdmin extends TreeView
     function execCommandAssertDeleteItem(){
         $item_id = Request::option('item_id');
         $this->mode = "AssertDeleteItem";
-        
+
         $template = $GLOBALS['template_factory']->open('shared/question');
         $question = _("Sie beabsichtigen, diese Liste inklusive aller Einträge zu löschen. ")
                     . sprintf(_("Es werden insgesamt %s Einträge gelöscht!"), count($this->tree->getKidsKids($item_id)))
                     . "\n" . _("Wollen Sie diese Liste wirklich löschen?");
-        
-        $template->set_attribute('approvalLink', URLHelper::getLink($this->getSelf("cmd=DeleteItem&item_id=$item_id")));
-        $template->set_attribute('disapprovalLink', URLHelper::getLink($this->getSelf("cmd=Cancel&item_id=$item_id")));
+
+        $template->set_attribute('approvalLink', URLHelper::getUrl($this->getSelf("cmd=DeleteItem&item_id=$item_id")));
+        $template->set_attribute('disapprovalLink', URLHelper::getUrl($this->getSelf("cmd=Cancel&item_id=$item_id")));
         $template->set_attribute('question', $question);
 
         echo $template->render();
@@ -357,7 +357,7 @@ class StudipLitListViewAdmin extends TreeView
                 $content .= $this->getSubTitleRowForTableBox(_("Sichtbarkeit:"));
                 $content .= $this->getVisibilityStatusRowForTableBox($item_id);
                 $content .= $this->getBottomRowForTableBox($item_id);
-            }          
+            }
         }
 
         $content .= "</table>";
@@ -390,7 +390,7 @@ class StudipLitListViewAdmin extends TreeView
                     }
                 }
             }
-            
+
             $content .= "</form></td></tr></table>";
         }
 
@@ -462,14 +462,14 @@ class StudipLitListViewAdmin extends TreeView
 
 
     function getSubTitleRowForTableBox($title){
-        $content .= "\n<tr><td class=\"table_row_odd\" align=\"left\" style=\"border-left: 1px solid black;border-right: 1px solid black;\">"; 
+        $content .= "\n<tr><td class=\"table_row_odd\" align=\"left\" style=\"border-left: 1px solid black;border-right: 1px solid black;\">";
         $content .= $title;
         $content .= "</td></tr>";
 
         return $content;
     }
 
-    
+
     function getBottomRowForTableBox($item_id){
         $content .= "\n<tr><td class=\"table_row_odd\" align=\"right\" style=\"border-bottom: 1px solid black;border-left: 1px solid black;border-right: 1px solid black;\">";
         $content .= _("Letzte &Auml;nderung:");
@@ -482,7 +482,7 @@ class StudipLitListViewAdmin extends TreeView
     }
 
     function getNewLiteratureButton($item_id){
-        $content = LinkButton::create(_('neue Literaturliste'), 
+        $content = LinkButton::create(_('neue Literaturliste'),
                     URLHelper::getURL($this->getSelf('cmd=NewItem&item_id='.$item_id)),
                     array('title' => _('Eine neue Literaturliste anlegen')));
         $content .= "&nbsp;";
@@ -491,7 +491,7 @@ class StudipLitListViewAdmin extends TreeView
     }
 
     function getEditFormatingButton($item_id){
-        $content = LinkButton::create(_('bearbeiten'), 
+        $content = LinkButton::create(_('bearbeiten'),
                     URLHelper::getURL($this->getSelf('cmd=EditItem&item_id='.$item_id)),
                     array('title' => _("Dieses Element bearbeiten")));
         $content .= "&nbsp;";
@@ -500,7 +500,7 @@ class StudipLitListViewAdmin extends TreeView
     }
 
     function getEditLiteratureEntryButton($item_id){
-        $content = LinkButton::create(_('Anmerkung'), 
+        $content = LinkButton::create(_('Anmerkung'),
                     URLHelper::getURL($this->getSelf('cmd=EditItem&item_id='. $item_id)),
                     array('title' => _('Dieses Element bearbeiten')));
         $content .= "&nbsp;";
@@ -519,7 +519,7 @@ class StudipLitListViewAdmin extends TreeView
 
     function getCopyListButton($item_id){
         $content = LinkButton::create(_('Kopie erstellen'),
-                    URLHelper::getURL($this->getSelf('cmd=CopyList&item_0id='.$item_id)),
+                    URLHelper::getURL($this->getSelf('cmd=CopyList&item_id='.$item_id)),
                     array('title' => _('Eine Kopie dieser Liste erstellen')));
         $content .= "&nbsp;";
 
@@ -545,7 +545,7 @@ class StudipLitListViewAdmin extends TreeView
     }
 
     function getDeleteButton($item_id, $cmd){
-        $content = LinkButton::create(_('Löschen'), 
+        $content = LinkButton::create(_('Löschen'),
                     URLHelper::getURL($this->getSelf('cmd='.$cmd.'&item_id='.$item_id)),
                     array('title' => _('Dieses Element löschen')));
         $content .= '&nbsp;';
@@ -554,7 +554,7 @@ class StudipLitListViewAdmin extends TreeView
     }
 
     function getToClipboardButton($item_id){
-         $content = LinkButton::create(_('Merkliste'), 
+         $content = LinkButton::create(_('Merkliste'),
                     URLHelper::getURL($this->getSelf('cmd=InClipboard&item_id='.$item_id)),
                     array('title' => _('Eintrag in Merkliste aufnehmen')));
         $content .= '&nbsp;';
@@ -663,10 +663,10 @@ class StudipLitListViewAdmin extends TreeView
 
         }
         $content .= "<tr><td class=\"table_row_even\">&nbsp;</td></tr><tr><td class=\"table_row_even\" align=\"center\">" .
-                Button::createAccept(_('Speichern'), 
+                Button::createAccept(_('Speichern'),
                         array('title' => _("Einstellungen speichern"))) .
                 "&nbsp;" .
-                LinkButton::createCancel(_('Abbrechen'), 
+                LinkButton::createCancel(_('Abbrechen'),
                         URLHelper::getURL($this->getSelf("cmd=Cancel&item_id=".$this->edit_item_id)),
                         array('Aktion abbrechen' => _('Aktion abbrechen'))) .
                 '</td></tr>';

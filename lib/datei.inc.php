@@ -273,7 +273,7 @@ function createSelectedZip ($file_ids, $perm_check = TRUE, $size_check = false) 
  * @return string filename(id) of the created zip without path
  */
 function createFolderZip ($folder_id, $perm_check = TRUE, $size_check = false) {
-    global $TMP_PATH, $ZIP_PATH;
+    global $TMP_PATH, $ZIP_PATH, $SessSemName;
     $zip_file_id = false;
     $max_files = Config::GetInstance()->getValue('ZIP_DOWNLOAD_MAX_FILES');
     $max_size = Config::GetInstance()->getValue('ZIP_DOWNLOAD_MAX_SIZE') * 1024 * 1024;
@@ -287,7 +287,7 @@ function createFolderZip ($folder_id, $perm_check = TRUE, $size_check = false) {
         mkdir($tmp_full_path,0700);
 
         //create folder content
-        $filelist = createTempFolder($folder_id, $tmp_full_path, $perm_check);
+        $filelist = createTempFolder($folder_id, $tmp_full_path, $SessSemName[1], $perm_check);
 
         $caption = array('filename' => _("Dateiname"), 'filesize' => _("Größe"), 'author_name' => _("Ersteller"), 'chdate' => _("Datum"), 'name' =>  _("Name"), 'description' => _("Beschreibung"), 'path' => _("Pfad"));
         array_to_csv($filelist, $tmp_full_path . '/' . _("dateiliste.csv"), $caption);
@@ -309,9 +309,8 @@ function createFolderZip ($folder_id, $perm_check = TRUE, $size_check = false) {
  * @param bool $in_recursion used internally to indicate recursive call
  * @return array assoc array with metadata from zipped files
  */
-function createTempFolder($folder_id, $tmp_full_path, $perm_check = TRUE, $in_recursion = false)
+function createTempFolder($folder_id, $tmp_full_path, $sem_id, $perm_check = TRUE, $in_recursion = false)
 {
-    global $SessSemName;
     static $filelist;
 
     if ($in_recursion === false) {
@@ -320,8 +319,10 @@ function createTempFolder($folder_id, $tmp_full_path, $perm_check = TRUE, $in_re
     }
 
     if ($perm_check){
-        $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessSemName[1]));
-        if (!$folder_tree->isDownloadFolder($folder_id, $GLOBALS['user']->id)) return false;
+        $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $sem_id));
+        
+        $check_for = $perm_check === true ? $GLOBALS['user']->id : $perm_check;
+        if (!$folder_tree->isDownloadFolder($folder_id, $check_for)) return false;
     }
     //copy all documents from this folder to the temporary folder
     $linkinfo = FALSE;
@@ -334,7 +335,7 @@ function createTempFolder($folder_id, $tmp_full_path, $perm_check = TRUE, $in_re
     $statement = DBManager::get()->prepare($query);
     $statement->execute(array(
         $folder_id,
-        $perm_check ? $SessSemName[1] : null
+        $perm_check ? $sem_id : null
     ));
     while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
         if ($row['url'] != '') {  // just a linked file
@@ -354,11 +355,9 @@ function createTempFolder($folder_id, $tmp_full_path, $perm_check = TRUE, $in_re
         fclose ($fp);
     }
 
-    //PS #2936: Test if files are readable and visible for students, rwx = 7, r-x = 5
     $query = "SELECT folder_id, name
               FROM folder
               WHERE range_id = ?
-              AND permission IN(5,7)
               ORDER BY name";
     $statement = DBManager::get()->prepare($query);
     $statement->execute(array($folder_id));
@@ -366,7 +365,7 @@ function createTempFolder($folder_id, $tmp_full_path, $perm_check = TRUE, $in_re
         $foldername = prepareFilename($row['name'], FALSE, $tmp_full_path);
         $tmp_sub_full_path = $tmp_full_path . '/' . $foldername;
         mkdir($tmp_sub_full_path, 0700);
-        createTempFolder($row['folder_id'], $tmp_sub_full_path, $perm_check, true);
+        createTempFolder($row['folder_id'], $tmp_sub_full_path, $sem_id, $perm_check, true);
     }
     if ($in_recursion === false) {
        array_walk($filelist, create_function('&$a', '$a["path"] = substr($a["path"], ' . (int)strlen($tmp_path) . ');'));

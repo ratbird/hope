@@ -133,19 +133,14 @@ if ($sem_id) {
                 $abo_msg = _("Schreibrechte aktivieren");
             }
         }
-
-        $query = "SELECT COUNT(*) FROM schedule_seminare WHERE seminar_id = ? AND user_id = ?";
-        $statement = DBManager::Get()->prepare($query);
-        $statement->execute(array($sem_id, $GLOBALS['user']->id));
-        $sem_user_schedule = $statement->fetchColumn();
-
-        $query = "SELECT COUNT(*) FROM seminar_user WHERE Seminar_id = ? AND user_id = ?";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($sem_id, $auth->auth['uid']));
-        $sem_user = $statement->fetchColumn();
-
-        if (!$sem_user && !$sem_user_schedule && get_config('SCHEDULE_ENABLE')) {
-            $plan_msg = "<a href=\"".URLHelper::getLink("dispatch.php/calendar/schedule/addvirtual/$sem_id")."\">"._("Nur im Stundenplan vormerken")."</a>";
+        if (get_config('SCHEDULE_ENABLE') && !$status && Seminar::getInstance($sem_id)->getMetaDateCount()) {
+            $query = "SELECT COUNT(*) FROM schedule_seminare WHERE seminar_id = ? AND user_id = ?";
+            $statement = DBManager::Get()->prepare($query);
+            $statement->execute(array($sem_id, $GLOBALS['user']->id));
+            $sem_user_schedule = $statement->fetchColumn();
+            if (!$sem_user_schedule) {
+                $plan_msg = "<a href=\"".URLHelper::getLink("dispatch.php/calendar/schedule/addvirtual/$sem_id")."\">"._("Nur im Stundenplan vormerken")."</a>";
+            }
         }
 
     }
@@ -207,7 +202,7 @@ else
             <? // Infobox
 
             $user_id = $auth->auth["uid"];
-            
+
             $query = "SELECT status FROM seminar_user WHERE Seminar_id = ? AND user_id = ?";
             $statement = DBManager::get()->prepare($query);
             $statement->execute(array($sem_id, $user_id));
@@ -408,7 +403,7 @@ echo $template_factory->render(
                                 'link' => 'about.php?username=' . $entry['username']
                             );
                         }
-                        
+
                         // set config-defined title for this status
                         $title = get_title_for_status($status, sizeof($data), $sem->getStatus()) . ':';
 
@@ -614,7 +609,7 @@ echo $template_factory->render(
                 if (is_array($sem_path) && count($sem_path)){
                     // set pluralized title if necessary
                     $title = ngettext('Studienbereich:', 'Studienbereiche:', count($sem_path));
-    
+
                     // fill data for template
                     $data = array();
                     foreach ($sem_path as $sem_tree_id => $path_name) {
@@ -661,7 +656,7 @@ echo $template_factory->render(
                     foreach ($entries as $entry) {
                         $data[] = array(
                             'name' => $entry['Name'],
-                            'link' => 'institut_main.php?auswahl=' . $entry['Institut_id'] 
+                            'link' => 'institut_main.php?auswahl=' . $entry['Institut_id']
                         );
                     }
 
@@ -690,12 +685,12 @@ echo $template_factory->render(
         echo "<font size=-1>";
         print(_("Die Auswahl der Teilnehmenden wird nach der Eintragung manuell vorgenommen."));
         echo "<br>";
-        
+
         $query = "SELECT 1 FROM admission_seminar_user WHERE user_id = ? AND seminar_id = ?";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($user->id, $sem_id));
         $present = $statement->fetchColumn();
-        
+
         if ($present) {
             echo "<table width=\"100%\">";
             printf ("<tr><td width=\"%s\">&nbsp;</td><td><font size=-1>%s</font><br></td></tr></table>", "2%", formatReady($seminar['admission_prelim_txt']));

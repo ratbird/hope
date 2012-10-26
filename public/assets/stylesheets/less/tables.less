@@ -71,7 +71,7 @@ td {
     }
     &.table_header_bold_red {
         border: none;
-        background-color: #fdc6c6;    
+        background-color: #fdc6c6;
         border-bottom: 1px solid #990000;
         color: #000;
         height: 20px;
@@ -114,7 +114,7 @@ tr.hover_even {
 }
 
 .table_row_odd { background-color: #eeeeee; }
-.table_row_even { background-color: #f8f8f8; } 
+.table_row_even { background-color: #f8f8f8; }
 
 
 table.zebra, table.zebra-hover { // bg color alternates with tr
@@ -132,7 +132,7 @@ table.zebra-hover {
     > tbody > tr:hover {
         background-color: @alternating-highlight-color-odd;
         &:nth-child(2n+1) { background-color: @alternating-highlight-color-even; }
-        
+
         .zebra &{ // See above
             background-color: #b7c2e2;
             &:nth-child(2n+1) { background-color: #ced8f2; }
@@ -140,7 +140,7 @@ table.zebra-hover {
     }
 }
 table.zebra-big, table.zebra-big-hover { // bg color alternates with tbody
-    > tbody { 
+    > tbody {
         > tr { background-color: @alternating-color-odd; }
         &:nth-child(2n+1) > tr { background-color: @alternating-color-even; }
     }
@@ -185,7 +185,7 @@ table.zebra-big-hover {
     table {
         border: 1px solid #888;
         border-top: 0;
-    }    
+    }
 }
 
 /* --- Sonstige ------------------------------------------------------------- */
@@ -255,7 +255,7 @@ tr.sortable {
     margin: auto;
     width: 80%;
 
-    thead th, tbody th { 
+    thead th, tbody th {
         .table_header_bold;
         text-align: center;
     }
@@ -291,12 +291,15 @@ tr.sortable {
                     text-align: center;
                 }
             }
-            tr:last-child td:first-child { border-bottom: 0; }            
+            tr:hover td[colspan] { // prevent header rows from bgcolor change
+                background: #e7ebf1 !important; // ugly but unfortunately neccessary
+            }
+            tr:last-child td:first-child { border-bottom: 0; }
         }
     }
 
     &.zebra-hover .labeled tr:hover td:first-child {
-        background-color: #fff0d8;
+        #gradient > .vertical(#fff0d8, #fff);
         label { text-shadow: 1px 1px 0 #fff; }
     }
 
@@ -342,7 +345,7 @@ table.tree {
 
         a.link {
             padding-left: 5px;
-            &.open   { 
+            &.open   {
                 background: url("@{icon-path}/blue/arr_1down.png") left center no-repeat;
                 padding-left: 20px;
             }

@@ -433,11 +433,21 @@ tr.sortable th.sortdesc {
   border-top: 1px dotted #000;
   text-align: center;
 }
+.settings tbody.labeled tr:hover td[colspan] {
+  background: #e7ebf1 !important;
+}
 .settings tbody.labeled tr:last-child td:first-child {
   border-bottom: 0;
 }
 .settings.zebra-hover .labeled tr:hover td:first-child {
-  background-color: #fff0d8;
+  background-color: #fff6e8;
+  background-image: -moz-linear-gradient(top,#fff0d8,#fff);
+  background-image: -webkit-gradient(linear,0 0,0 100%,from(#fff0d8),to(#fff));
+  background-image: -webkit-linear-gradient(top,#fff0d8,#fff);
+  background-image: -o-linear-gradient(top,#fff0d8,#fff);
+  background-image: linear-gradient(to bottom,#fff0d8,#fff);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fffff0d8', endColorstr='#ffffffff', GradientType=0);
 }
 .settings.zebra-hover .labeled tr:hover td:first-child label {
   text-shadow: 1px 1px 0 #fff;

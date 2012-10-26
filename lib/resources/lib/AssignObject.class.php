@@ -570,9 +570,9 @@ class AssignObject {
 
             //insert NULL instead of nothing
             if (!$this->assign_user_id)
-                $tmp_assign_user_id = "NULL";
+                $tmp_assign_user_id = 'NULL';
             else
-                $tmp_assign_user_id = "'$this->assign_user_id'";
+                $tmp_assign_user_id = $this->assign_user_id;
 
             if($create) {
                 $stmt = $db->prepare("INSERT INTO resources_assign SET resource_id = ?,
@@ -585,7 +585,6 @@ class AssignObject {
                         repeat_quantity = ?, repeat_interval = ?, repeat_month_of_year = ?, repeat_day_of_month = ?,
                         repeat_week_of_month = ?, repeat_day_of_week = ?, mkdate = ?, comment_internal = ?
                     WHERE assign_id = ?");
-
             }
             
             $result = $stmt->execute(array($this->resource_id, $tmp_assign_user_id, $this->user_free_name, $this->begin,

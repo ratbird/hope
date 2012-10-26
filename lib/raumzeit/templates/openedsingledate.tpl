@@ -173,7 +173,6 @@ use Studip\Button,
                             URLHelper::getURL('dispatch.php/course/room_requests/edit/' .$tpl['seminar_id'], $tpl['room_request'] ? array('request_id' => $tpl['room_request']->getId()) : array('new_room_request_type' => 'date_' . $tpl['sd_id'])),
                             array('onClick' => "STUDIP.RoomRequestDialog.initialize(this.href.replace('edit','edit_dialog'));return false")) ?>
                     <? if ($tpl['room_request']) : ?>
-                    <?=_("oder")?>
                     <?= LinkButton::create(_('Raumanfrage zurückziehen'), 
                             URLHelper::getURL('?cmd=removeRequest&cycle_id='. $tpl['cycle_id'] .'&singleDateID='. $tpl['sd_id'])) ?>
                     <? endif ?>

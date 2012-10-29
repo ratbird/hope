@@ -623,7 +623,7 @@ require_once 'lib/classes/LockRules.class.php';
                     $statement = DBManager::get()->prepare($query);
                     $statement->execute(array($user->id));
                     if (!$statement->fetchColumn()) { //Es sind gar keine vorhanden! Hinweis wie man das eintragen kann
-                        parse_msg ('info§' . sprintf(_("Die Veranstaltung %s ist teilnahmebeschr&auml;nkt. Um sich f&uuml;r teilnahmebeschr&auml;nkte Veranstaltungen eintragen zu k&ouml;nnen, m&uuml;ssen Sie einmalig Ihre Studieng&auml;nge angeben! <br> Bitte tragen Sie Ihre Studieng&auml;nge auf Ihrer %sProfilseite%s ein!"), '<b>'.$SeminarName .'</b>', '<a href="edit_about.php?view=Studium#studiengaenge">','</a>'));
+                        parse_msg ('info§' . sprintf(_("Die Veranstaltung %s ist teilnahmebeschr&auml;nkt. Um sich f&uuml;r teilnahmebeschr&auml;nkte Veranstaltungen eintragen zu k&ouml;nnen, m&uuml;ssen Sie einmalig Ihre Studieng&auml;nge angeben! <br> Bitte tragen Sie Ihre Studieng&auml;nge auf Ihrer %sProfilseite%s ein!"), '<b>'.$SeminarName .'</b>', '<a href="dispatch.php/settings/studies#studiengaenge">','</a>'));
                         echo "<tr><td class=\"blank\" colspan=2><a href=\"index.php\">&nbsp;&nbsp; "._("Zur&uuml;ck zur Startseite")."</a>";
                         if ($send_from_search)
                             echo "&nbsp; |&nbsp;<a href=\"$send_from_search_page\">"._("Zur&uuml;ck zur letzten Auswahl")."</a>";

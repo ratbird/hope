@@ -183,7 +183,7 @@ class StartNavigation extends Navigation
             $navigation = new Navigation(_('Mein Profil'), 'about.php');
 
             if ($perm->have_perm('autor')) {
-                $navigation->addSubNavigation('settings', new Navigation(_('Einstellungen'), 'edit_about.php?view=allgemein'));
+                $navigation->addSubNavigation('settings', new Navigation(_('Einstellungen'), 'dispatch.php/settings/general'));
             }
 
             $this->addSubNavigation('profile', $navigation);

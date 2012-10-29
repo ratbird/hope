@@ -208,7 +208,7 @@ function table_body ($members, $range_id, $structure) {
             echo '<font size="-1">';
             if ($admin_view) {
                 printf("<a href=\"%s\">%s</a>\n",
-                URLHelper::getLink("edit_about.php?view=Karriere&open=".$range_id."&username=".$member['username']."#".$range_id), htmlReady($member['fullname']));
+                URLHelper::getLink("dispatch.php/settings/statusgruppen?username={$member['username']}&open={$range_id}#{$range_id}"), htmlReady($member['fullname']));
             } else {
                 echo '<a href="'.URLHelper::getLink('about.php?username='.$member['username']).'">'. htmlReady($member['fullname']) .'</a>';
             }
@@ -320,7 +320,7 @@ function table_body ($members, $range_id, $structure) {
                     }
                     if ($admin_view && !LockRules::Check($range_id, 'participants')) {
                         echo '<td>';
-                        echo '<a href="'.URLHelper::getLink('edit_about.php?view=Karriere&username='.$member['username'].'&switch='.$id).'"><font size="-1">';
+                        echo '<a href="'.URLHelper::getLink('dispatch.php/settings/statusgruppen/switch/' . $id . '?username='.$member['username']).'"><font size="-1">';
                         echo Assets::img('icons/16/blue/edit.png');
                         echo '</font></a></td>';
 

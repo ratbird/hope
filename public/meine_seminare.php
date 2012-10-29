@@ -578,7 +578,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
                                         "text"  => sprintf(_("Um Einrichtungen zu suchen und sich Informationen anzeigen zu lassen, nutzen Sie die %sEinrichtungssuche%s."), "<a href=\"institut_browse.php\">", "</a>")
                     ),
                     array    (  "icon" => 'icons/16/black/institute.png',
-                                        "text"  => sprintf(_("Wenn Sie weitere Einrichtungen in Ihre pers&ouml;nliche Auswahl aufnehmen m&ouml;chten, k&ouml;nnen Sie sich hier %szuordnen%s."), "<a href=\"edit_about.php?view=Studium#einrichtungen\">", "</a>")
+                                        "text"  => sprintf(_("Wenn Sie weitere Einrichtungen in Ihre pers&ouml;nliche Auswahl aufnehmen m&ouml;chten, k&ouml;nnen Sie sich hier %szuordnen%s."), "<a href=\"dispatch.php/settings/studies#einrichtungen\">", "</a>")
                     )
                 )
             )

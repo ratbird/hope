@@ -455,7 +455,7 @@ class ExternModuleTemplatePersondetails extends ExternModule {
         $this->user_perm = $visibilities['perms'];
         $this->visibilities = json_decode($visibilities['homepage'], true);
 
-        $content['__GLOBAL__']['STUDIP-EDIT-HREF'] = "{$GLOBALS['ABSOLUTE_URI_STUDIP']}edit_about.php?login=yes&view=Daten&username=$username";
+        $content['__GLOBAL__']['STUDIP-EDIT-HREF'] = "{$GLOBALS['ABSOLUTE_URI_STUDIP']}dispatch.php/settings/account?username=$username&login=yes";
 
         $content['PERSONDETAILS']['FULLNAME'] = ExternModule::ExtHtmlReady($row['fullname']);
         $content['PERSONDETAILS']['LASTNAME'] = ExternModule::ExtHtmlReady($row['Nachname']);

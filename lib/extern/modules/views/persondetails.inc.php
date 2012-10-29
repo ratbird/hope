@@ -144,8 +144,8 @@ else {
 
 echo "<table" . $this->config->getAttributes("TableHeader", "table") . ">\n";
 
-$studip_link = $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'edit_about.php';
-$studip_link .= "?login=yes&view=Daten&username=$username";
+$studip_link = $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'dispatch.php/settings/account';
+$studip_link .= "?username=$username&login=yes";
 if ($this->config->getValue("Main", "studiplink") == "top") {
     $args = array("width" => "100%", "height" => "40", "link" => $studip_link);
     echo "<tr><td width=\"100%\">\n";

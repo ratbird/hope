@@ -110,7 +110,7 @@ class StudipNavigation extends Navigation
             $navigation->addSubNavigation('forum', new Navigation(_('Forum'), 'dispatch.php/settings/forum'));
 
             if (get_config('CALENDAR_ENABLE')) {
-                $navigation->addSubNavigation('calendar', new Navigation(_('Terminkalender'), 'edit_about.php', array('view' => 'calendar')));
+                $navigation->addSubNavigation('calendar_new', new Navigation(_('Terminkalender'), 'dispatch.php/settings/calendar'));
             }
 
             if (!$perm->have_perm('admin') and get_config('MAIL_NOTIFICATION_ENABLE')) {

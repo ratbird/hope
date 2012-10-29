@@ -108,7 +108,7 @@
                             <? if ($range_type == 'sem') : ?>
                             <a href="about.php?username=<?= $person['username'] ?>">
                             <? else: ?>
-                            <a href="edit_about.php?view=Karriere&open=<?= $role_id ?>&username=<?= $person['username'] ?>#<?= $role_id ?>">
+                            <a href="dispatch.php/settings/statusgruppen/switch/<?= $role_id ?>/1?username=<?= $person['username'] ?>#<?= $role_id ?>">
                             <? endif; ?>
                                 <?= htmlReady($person['fullname']) ?>
                             </a>

@@ -1,3 +1,6 @@
+/*jslint browser: true, white: true, undef: true, nomen: true, eqeqeq: true, plusplus: true, bitwise: true, newcap: true, immed: true, indent: 4, onevar: false */
+/*global window, $, jQuery, _ */
+
 /**
  * smiley-picker.js - Smiley Picker
  *
@@ -39,13 +42,17 @@
                     image   = new Image();
                 this.src = STUDIP.ASSETS_URL + 'images/ajax_indicator_small.gif';
 
-                image.onload = image.onerror = function () { that.src = src; };
+                image.onload = image.onerror = function () { 
+                    that.src = src;
+                };
                 image.src = src;
             });
 
             picker_element.html(response);
 
-            if ($.isFunction(callback)) { callback(); }
+            if ($.isFunction(callback)) { 
+                callback();
+            }
         });
     }
 

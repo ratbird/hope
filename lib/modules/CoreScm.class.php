@@ -84,7 +84,7 @@ class CoreScm implements StudipModule {
             }
 
             $items[] = new ContentElement(
-                'Info: ' . $row['tab_name'], $summary, $row['content'], $row['user_id'], $row['fullname'],
+                'Info: ' . $row['tab_name'], $summary, ($row['content'] ?: ''), $row['user_id'], $row['fullname'],
                 URLHelper::getLink('scm.php',
                     array('cid' => $row['range_id'], 'show_scm' => $row['scm_id'])),
                 $row['chdate']

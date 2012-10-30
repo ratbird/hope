@@ -32,6 +32,9 @@ $cmd = Request::option('cmd');
 $cmd_cal = Request::option('cmd_cal');
 $mod_prv = Request::option('mod_prv');
 $mod = Request::option('mod');
+if(!isset ($calendar_user_control_data)){
+    $calendar_user_control_data = json_decode(UserConfig::get($user->id)->getValue('calendar_user_control_data'), true);
+}
 // switch to own calendar if called from header
 if (!get_config('CALENDAR_GROUP_ENABLE') || Request::get('caluser') == 'self') {
     closeObject();
@@ -93,9 +96,11 @@ if (Request::option('cmd') == 'export'
 if ($_calendar->getRange() == Calendar::RANGE_USER) {
     if (is_array($calendar_user_control_data['bind_seminare'])) {
         unset($calendar_user_control_data['bind_seminare']);
+        UserConfig::get($user->id)->store("calendar_user_control_data", json_encode($calendar_user_control_data));
     }
     if (isset($calendar_user_control_data['ts_bind_seminare'])) {
         unset($calendar_user_control_data['ts_bind_seminare']);
+        UserConfig::get($user->id)->store("calendar_user_control_data", json_encode($calendar_user_control_data));
     }
 }
 
@@ -114,6 +119,7 @@ if ($cmd_cal == 'chng_cal_settings') {
         'step_week_group' => Request::option('cal_step_week_group'),
         'step_day_group' => Request::option('cal_step_day_group')
     );
+    UserConfig::get($user->id)->store("calendar_user_control_data", json_encode($calendar_user_control_data));
 }
 
 // use current timestamp if no timestamp is given

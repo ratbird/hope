@@ -202,12 +202,21 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
         if ($show_not)
             $add_to_link .= "&show_not=$show_not";
 
-        foreach ($dates as $date) {
+        foreach ($dates as $date ) {
+            if($open == $date['termin_id'])
+                $date['open'] = true;
             echo '<div role="article">';
             $zusatz = '';
             if (!$range_id || is_array($range_id)) {
-                $zusatz .= "<a href=\"".URLHelper::getLink("seminar_main.php?auswahl=" . $date['range_id'])
-                                . "\"><font size=\"-1\">" . htmlReady(mila($date['Name'], 22))
+                
+                 $titel = "<a href=\"$link\" class=\"tree\" onclick=\"STUDIP.Termine.opencloseSem('"
+                .$date['termin_id']."','".$show_admin."','".$date['date_typ']."','"
+                .$date['info']."'); return false;\" >".$titel."</a>";
+                 $zusatz .= "<a href=\"".URLHelper::getLink("seminar_main.php?auswahl=" . $date['range_id'])
+                                . "onclick=\"STUDIP.Termine.opencloseSem('"
+                 .$date['termin_id']."','".$show_admin."','".$date['date_typ']."','"
+                 .$date['info']."','"
+                .False."','".FALSE."'); return false;\" ><font size=\"-1\">" . htmlReady(mila($date['Name'], 22))
                                 . "</font></a>";
                 $current_seminar_id = $date['range_id'];
             }
@@ -283,43 +292,13 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
             } else {
                 $link=URLHelper::getLink("?dclose=true".$add_to_link);
             }
-            $icon = Assets::img('icons/16/grey/date.png', array('class' => 'text-bottom'));
 
             if ($link) {
-                $titel = "<a href=\"$link\" class=\"tree\" >".$titel."</a>";
+                $titel = "<a href=\"$link\" class=\"tree\" onclick=\"STUDIP.Termine.openclose('".$date['termin_id']."','"
+                .$show_admin."','".$date['date_typ']."','".$date['info']."','"
+                .False."','".FALSE."','".False."','".False."','".False."','".False."','".False."','".False."','".$date['autor_id']."'); return false;\" >".$titel."</a>";
             }
-            echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr>";
-
-            if (($open == $date['termin_id']) || ($open == "all") || ($new)) {
-                printhead(0, 0, $link, "open", $new, $icon, $titel, $zusatz, $date['chdate']);
-            } else {
-                printhead(0, 0, $link, "close", $new, $icon, $titel, $zusatz, $date['chdate']);
-            }
-            echo '</tr></table> ';
-            if (($open == $date['termin_id']) || ($open == "all") || ($new)) {
-                $termin = new SingleDate($date['termin_id']);
-                $content = '';
-                if ($date['Info']) {
-                    $content .= formatReady($date['Info'], TRUE, FALSE) . "<br><br>";
-                } else {
-                    $content .= _("Keine Beschreibung vorhanden") . "<br><br>";
-                }
-                $content .= '<b>' . _("Art des Termins:") . '</b> ' . $TERMIN_TYP[$date['date_typ']]["name"] . ', ';
-                //$content.="<b>" . _("angelegt von:") . "</b> ".get_fullname($date['autor_id'],'full',true)."<br>";
-                $content .= "<b>" . _("durchführende Dozenten:") . "</b> ";
-                foreach ($termin->getRelatedPersons() as $key => $dozent_id) {
-                    $key < 1 || ($content .= ", ");
-                    $content .= htmlReady(get_fullname($dozent_id));
-                }
-                $content .= "<br>";
-
-                if ($show_admin)
-                    $content .= "<br><div align=\"center\"> ". LinkButton::create(_('Bearbeiten'), URLHelper::getURL("raumzeit.php", array('cmd' => 'open','open_close_id' => $date['termin_id'] . '#' . $date['termin_id']))) . "</div>";
-                echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr>";
-                printcontent(0,0, $content, $edit);
-                echo "</tr></table> ";
-                }
-            echo '</div>';
+            echo show_termin_item($date, $open, $new, $link, $zusatz, $titel, $range_id, $show_not, $show_admin);
         }
         echo "</td></tr></table>";
         return TRUE;
@@ -360,7 +339,34 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
         return FALSE;
     }
 }
+function show_termin_item($termin_item, $open, $new, $link, $zusatz, $titel, $range_id = "", $show_not = 0, $show_admin = FALSE )
+{
+    
+            $template = $GLOBALS['template_factory']->open('dates/seminar_date');
+            $template->termin_item = $termin_item;            
+            $template->range_id = $range_id;
+            $template->show_not = $show_not;
+            $template->show_admin = $show_admin;
+            $template->new = $new;
+            $template->link = $link;
+            $template->zusatz = $zusatz;
+            $template->titel = $titel;
+            $template->icon = Assets::img('icons/16/grey/date.png', array('class' => 'text-bottom'));
+            
+            return $template->render();
+}
 
+function show_termin_item_content($termin_item, $new = FALSE, $range_id = "", $show_admin = FALSE )
+{
+            global $TERMIN_TYP;   
+            $template = $GLOBALS['template_factory']->open('dates/seminar_date-content');
+            $template->termin_item = $termin_item;            
+            $template->range_id = $range_id;
+            
+            $template->show_admin = $show_admin;
+            $template->new = $new;            
+            return $template->render();
+}
 /**
  *
  * @param unknown_type $range_id
@@ -374,7 +380,7 @@ function show_personal_dates ($range_id, $date_start, $date_end, $show_docs = FA
 {
     global $SessSemName, $user, $TERMIN_TYP;
     global $PERS_TERMIN_KAT, $username;
-
+    
     if ($show_admin && $range_id == $user->id) {
         $admin_link = '<a href="'.URLHelper::getLink('calendar.php', array('cmd' => 'edit', 'source_page' => URLHelper::getURL())).'">';
     }
@@ -458,49 +464,58 @@ function show_personal_dates ($range_id, $date_start, $date_end, $show_docs = FA
             echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr>";
 
             if ($link) {
-                $titel = "<a href=\"$link\" class=\"tree\" >$titel</a>";
+                $titel = "<a href=\"$link\"  onclick=\"STUDIP.Termine.openclose('".$termin->getId()."'); return false;\" class=\"tree\" >$titel</a>";
             }
-
-            if ($open == $app_ident) {
-                // Ebenso muss hier als letzer Parameter eine Methode getMkdate o.ae. angefuegt werden
-                printhead(0, 0, $link, "open", $new, $icon, $titel, $zusatz, $termin->getChangeDate());
+            if (strtolower(get_class($termin)) == 'seminarevent') {
+                    $description = $issue_descriptions;
             } else {
-                // hier auch.....
-                printhead(0, 0, $link, "close", $new, $icon, $titel, $zusatz, $termin->getChangeDate());
+                    $description = $termin->getDescription();
+            }
+            $kat = false;
+            if (sizeof($PERS_TERMIN_KAT) > 1 && strtolower(get_class($termin)) != 'seminarevent') {
+                    $kat = htmlReady($termin->toStringCategories());
             }
 
-            echo "</tr></table> ";
+            if (strtolower(get_class($termin)) == 'seminarcalendarevent') {
+                    $sem =  htmlReady($termin->getSemName());
+            }
 
-            if ($open == $app_ident) {
-                echo "<a name=\"a\"></a>";
+            if (strtolower(get_class($termin)) == 'seminarevent') {
+                    if ($termin->getRoom()) {
 
-                $content = '';
-                if ($termin->getDescription()) {
-                    $content .= sprintf("%s<br><br>", formatReady($termin->getDescription(), TRUE, TRUE));
-                } else {
-                    $content .= _("Keine Beschreibung vorhanden") . "<br><br>";
-                }
+                        $raum= htmlReady(mila($singledate->getRoom(), 25));
+                    } else if ($termin->getFreeRoomText()) {
 
-                if (sizeof($PERS_TERMIN_KAT) > 1) {
-                    $content .= sprintf("<b>%s</b> %s", _("Kategorie:"),
-                            htmlReady($termin->toStringCategories()));
-                }
+                        $ort=htmlReady(mila($singledate->getFreeRoomText(), 25));
+                    }
+             } else {
+                    $pri =  htmlReady($termin->toStringPriority());
 
-                $content .= '<br><b>' . _("Priorit&auml;t:") . ' </b>' . htmlReady($termin->toStringPriority());
-                $content .= '&nbsp; &nbsp; &nbsp; &nbsp; ';
-                $content .= '<b>' . _("Sichtbarkeit:") . ' </b>' . htmlReady($termin->toStringAccessibility());
-                $content .= '<br>' . htmlReady($termin->toStringRecurrence());
+                    $sicht = htmlReady($termin->toStringAccessibility());
+                    $res = htmlReady($termin->toStringRecurrence());
+             }
+             $edit = FALSE;
+             if ($have_write_permission && strtolower(get_class($termin)) != 'seminarevent')  {
+                        // Personal appointment
+                        $edit = true;
+             }
 
-                if ($show_admin) {
-                    $content .= '<div align="center">' . LinkButton::create(_('Bearbeiten'), URLHelper::getURL('calendar.php', array('cmd' => 'edit', 'termin_id' => $termin->getId(), 'atime' => $termin->getStart(), 'source_page' => URLHelper::getURL('about.php'))))
-                             . '</div>';
-                }
+             
 
-                echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr>";
-                printcontent(0, 0, $content, $edit);
-                echo "</tr></table> ";
-                }
-            echo '</div>';
+
+
+           $termin_item = array('termin_id'=>$termin->getId(),"chdate"=>$termin->getChangeDate(),
+            'info'=>$description,
+            'kat'=>$kat,'cont'=>$cont,'edit'=>$edit,
+            'sem'=>$sem,'raum'=>$raum,'ort'=>$ort,'pri'=>$pri,'sicht'=>$sicht,'res'=>$res,
+            'autor'=>$autor);
+
+           if ($open == $app_ident) {
+                $termin_item['open'] = "open";
+            }
+            echo show_termin_item($termin_item, $open, $new, $link, $zusatz, $titel);
+
+           
         }
         echo "</td></tr></table></td></tr></table>";
         return TRUE;
@@ -543,10 +558,10 @@ function show_personal_dates ($range_id, $date_start, $date_end, $show_docs = FA
 function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TRUE, $open)
 {
     global $RELATIVE_PATH_CALENDAR, $SessSemName, $user, $TERMIN_TYP;
-    global $PERS_TERMIN_KAT, $username, $CALENDAR_DRIVER, $calendar_user_control_data;
+    global $PERS_TERMIN_KAT, $username, $CALENDAR_DRIVER;
 
     $admin_link = '<a href="'.URLHelper::getLink('calendar.php', array('cmd' => 'edit', 'source_page' => URLHelper::getURL())).'">';
-
+    $calendar_user_control_data = json_decode(UserConfig::get($user->id)->getValue('calendar_user_control_data'), true);
     if (is_array($calendar_user_control_data["bind_seminare"]))
         $bind_seminare = array_keys($calendar_user_control_data["bind_seminare"], "TRUE");
     else
@@ -573,6 +588,7 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
 
         while ($termin = $list->nextEvent()) {
             echo '<div role="article">';
+          
             $icon = Assets::img('icons/16/grey/date.png', array('class' => 'text-bottom'));
             $have_write_permission = true;
 
@@ -652,84 +668,63 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
             } else {
                 $link = URLHelper::getLink("?dclose=true");
             }
-
-            if ($link) {
-                $titel = "<a href=\"$link\" class=\"tree\" >".$titel."</a>";
-            }
-
-            echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr>";
-
-            if ($open == $app_ident) {
-                printhead(0, 0, $link, "open", $new, $icon, $titel, $zusatz, $termin->getChangeDate());
-            } else {
-                printhead(0, 0, $link, "close", $new, $icon, $titel, $zusatz, $termin->getChangeDate());
-            }
-
-            echo "</tr></table> ";
-
-            if ($open == $app_ident) {
-                echo "<a name=\"a\"></a>";
-
-                $content = "";
-                if (strtolower(get_class($termin)) == 'seminarevent') {
+           
+           if (strtolower(get_class($termin)) == 'seminarevent') {
                     $description = $issue_descriptions;
-                } else {
+            } else {
                     $description = $termin->getDescription();
-                }
-                if($description) {
-                    $content .= sprintf("%s<br><br>", formatReady($description, TRUE, TRUE));
-                } else {
-                    $content .= _("Keine Beschreibung vorhanden") . "<br><br>";
-                }
-
-                if (strtolower(get_class($termin)) == 'seminarcalendarevent') {
-                    $content .= '<b>' . _("Seminar:") . '</b>' . htmlReady($termin->getSemName()) . '<br>';
-                }
-
-                $have_category = FALSE;
-                if (sizeof($PERS_TERMIN_KAT) > 1 && strtolower(get_class($termin)) != 'seminarevent') {
-                    $content .= "<b>" . _("Kategorie:") . "</b> " . htmlReady($termin->toStringCategories());
-                } elseif (sizeof($TERMIN_TYP) > 1 && strtolower(get_class($termin)) == 'seminarevent') {
-                    $content .= "<b>" . _("Art des Termins:") . "</b> " . htmlReady($singledate->getTypeName());
-                }
-
-                if (strtolower(get_class($termin)) == 'seminarevent') {
-                    if ($singledate->getRoom()) {
-                        $content .= "&nbsp; &nbsp; &nbsp; &nbsp; ";
-                        $content .= "<b>" . _("Raum:") . " </b>";
-                        $content .= htmlReady(mila($singledate->getRoom(), 25));
-                    } else if ($singledate->getFreeRoomText()) {
-                        $content .= "&nbsp; &nbsp; &nbsp; &nbsp; ";
-                        $content .= "<b>" . _("Ort:") . " </b>";
-                        $content .= htmlReady(mila($singledate->getFreeRoomText(), 25));
-                    }
-                } else {
-                    $content .= '<br><b>' . _("Priorit&auml;t:") . ' </b>'
-                            . htmlReady($termin->toStringPriority());
-                    $content .= '&nbsp; &nbsp; &nbsp; &nbsp; ';
-                    $content .= '<b>' . _("Sichtbarkeit:") . ' </b>'
-                            . htmlReady($termin->toStringAccessibility());
-                    $content .= '<br>' . htmlReady($termin->toStringRecurrence());
-                }
-
-                $edit = FALSE;
-                if ($have_write_permission) {
-                    // Seminar appointment
-                    if (strtolower(get_class($termin)) == 'seminarevent') {
-                        $edit = LinkButton::create(_('Bearbeiten'), URLHelper::getURL('raumzeit.php', array('cid' => $termin->getSeminarId(), 'cmd' => 'open', 'open_close_id' => $termin->getId())) . '#' . $termin->getId());
-                    } else {
-                        // Personal appointment
-                        $edit = LinkButton::create(_('Bearbeiten'), URLHelper::getURL('calendar.php', array('cmd' => 'edit', 'termin_id' => $termin->getId(), 'atime' => $termin->getStart(), 'source_page' => URLHelper::getURL())));
-                    }
-                } else {
-                    $content .= "<br>";
-                }
-
-                echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr>";
-                printcontent(0, FALSE, $content, $edit);
-                echo "</tr></table> ";
             }
-            echo '</div>';
+            $kat = false;
+            if (sizeof($PERS_TERMIN_KAT) > 1 && strtolower(get_class($termin)) != 'seminarevent') {
+                    $kat = htmlReady($termin->toStringCategories());
+            }
+
+            if (strtolower(get_class($termin)) == 'seminarcalendarevent') {
+                    $sem =  htmlReady($termin->getSemName());
+            }
+
+            if (strtolower(get_class($termin)) == 'seminarevent') {
+                    $type=$singledate->getTypeName();
+                    if ($singledate->getRoom()) {
+                       
+                        $raum= htmlReady(mila($singledate->getRoom(), 25));
+                    } else if ($singledate->getFreeRoomText()) {
+                       
+                        $ort=htmlReady(mila($singledate->getFreeRoomText(), 25));
+                    }
+             } else {
+                    $pri =  htmlReady($termin->toStringPriority());
+                    
+                    $sicht = htmlReady($termin->toStringAccessibility());
+                    $res = htmlReady($termin->toStringRecurrence());
+             }
+             $edit = FALSE;
+             if ($have_write_permission && strtolower(get_class($termin)) != 'seminarevent')  {
+                        // Personal appointment
+                        $edit = true;                  
+             }
+       
+             if ($link) {
+           
+                $titel = "<a href=\"$link\" class=\"tree\"  "
+                 ."onclick=\"STUDIP.Termine.openclose('".$termin->getId()."'); return false;\">".$titel."</a>";
+             }
+
+
+           
+           
+           $termin_item = array('termin_id'=>$termin->getId(),"chdate"=>$termin->getChangeDate(),
+            'date_type'=>$type,'info'=>$description,
+            'kat'=>$kat,'cont'=>$cont,'edit'=>$edit,
+            'sem'=>$sem,'raum'=>$raum,'ort'=>$ort,'pri'=>$pri,'sicht'=>$sicht,'res'=>$res,
+            'autor'=>$autor);
+          
+           if ($open == $app_ident) {
+                $termin_item['open'] = "open";
+            } 
+            echo show_termin_item($termin_item, $open, $new, $link, $zusatz, $titel);
+
+           //contend
         }
         echo "\n</td></tr>\n</table>";
         return TRUE;

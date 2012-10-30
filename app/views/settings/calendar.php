@@ -1,6 +1,6 @@
 <?
 use Studip\Button, Studip\LinkButton;
-
+$calendar_user_control_data = json_decode(UserConfig::get($user->id)->getValue('calendar_user_control_data'), true);
 $cal_views = array(
     'showday'   => _('Tagesansicht'),
     'showweek'  => _('Wochenansicht'),

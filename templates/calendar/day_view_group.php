@@ -7,7 +7,7 @@ $width1 = floor(90 / $cells);
 $width2 = 10 + (90 - $width1 * $cells);
 $start = $group_calendar->getUserSettings('start') * 3600;
 $end = ($group_calendar->getUserSettings('end') + 1) * 3600;
-
+$calendar_user_control_data = json_decode(UserConfig::get($user->id)->getValue('calendar_user_control_data'), true);
 // add skip link
 SkipLinks::addIndex(_("Tagesansicht"), 'main_content', 100);
 ?>

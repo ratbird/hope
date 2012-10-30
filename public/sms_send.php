@@ -70,7 +70,6 @@ require_once ('lib/visual.inc.php');
 if ($GLOBALS["ENABLE_EMAIL_ATTACHMENTS"]) {
     require_once ('lib/datei.inc.php');
 }
-require_once ('lib/include/messagingSettings.inc.php');
 require_once ('lib/messaging.inc.php');
 require_once ('lib/statusgruppe.inc.php');
 require_once ('lib/sms_functions.inc.php');

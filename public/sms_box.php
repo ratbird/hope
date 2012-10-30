@@ -366,10 +366,10 @@ if ($sms_data["time"] == "all") {
     $no_message_text = sprintf(_("Es liegen keine systeminternen Nachrichten%s %s vor."), $infotext_folder, $no_message_text_box);
 } else if ($sms_data["time"] == "new") {
     if ($sms_data["view"] == "in") {
-        $LastLogin = UserConfig::get($user->id)->_get('LastLogin');
+        $LastLogin = UserConfig::get($user->id)->__get('LastLogin');
         $query_time_sort = " AND message_user.mkdate > ".(int)$LastLogin;
     } else {
-        $CurrentLogin = UserConfig::get($user->id)->_get('CurrentLogin');
+        $CurrentLogin = UserConfig::get($user->id)->__get('CurrentLogin');
         $query_time_sort = " AND message_user.mkdate > ".(int)$CurrentLogin;
     }
     $no_message_text = sprintf(_("Es liegen keine neuen systeminternen Nachrichten%s %s vor."), $infotext_folder, $no_message_text_box);

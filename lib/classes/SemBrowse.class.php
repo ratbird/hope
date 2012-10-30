@@ -43,7 +43,7 @@ class SemBrowse {
         $level_change = Request::option('start_item_id');
         for ($i = 0; $i < count($this->persistent_fields); ++$i){
             $persistend_field = $this->persistent_fields[$i];
-            if (Request::get($persistend_field)) {
+            if (Request::get($persistend_field) != null) {
                 $this->sem_browse_data[$persistend_field] = Request::get($persistend_field);
             }
         }

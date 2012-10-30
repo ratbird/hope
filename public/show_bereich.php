@@ -49,10 +49,10 @@ if ($id) {
 
 $group_by = Request::int('group_by', 0);
 
-if (Request::option('select_sem') !== null && Request::option('select_sem') !== '0') {
+if (Request::option('select_sem') !== null) { // store the seleced semester in the session, all semesters as well
     $_SESSION['_default_sem'] = Request::option('select_sem');
 }
-$show_semester = Request::option('select_sem') !== null ? Request::option('select_sem') : $_SESSION['_default_sem'];
+$show_semester = Request::option('select_sem', $_SESSION['_default_sem']);
 $sem_browse_obj = new SemBrowse(array('group_by' => 0));
 $sem_browse_obj->sem_browse_data['default_sem'] = "all";
 $sem_browse_obj->sem_number = false;

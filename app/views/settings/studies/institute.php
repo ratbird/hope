@@ -1,4 +1,10 @@
-<? use Studip\Button; ?>
+<?
+    use Studip\Button;
+
+    $institutes = array_filter($about->user_inst, function ($item) {
+        return $item['inst_perms'] === 'user';
+    });
+?>
 
 <h3 style="text-align: center;"><?= _('Ich studiere an folgenden Einrichtungen:') ?></h3>
 
@@ -24,7 +30,7 @@
         </th>
     </thead>
     <tbody>
-    <? if (count($about->user_inst) === 0 && $allow_change['in']): ?>
+    <? if (count($institutes) === 0 && $allow_change['in']): ?>
         <tr>
             <td colspan="2">
                 <strong><?= _('Sie haben sich noch keinen Einrichtungen zugeordnet.') ?></strong><br>
@@ -34,7 +40,7 @@
             </td>
         </tr>
     <? endif; ?>
-    <? foreach ($about->user_inst as $inst_id => $details): ?>
+    <? foreach ($institutes as $inst_id => $details): ?>
         <tr>
             <td><?= htmlReady($details['Name']) ?></td>
             <td style="text-align:center">

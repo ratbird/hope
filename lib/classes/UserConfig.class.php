@@ -144,7 +144,10 @@ class UserConfig extends Config
             trigger_error('deprecated use of ' . __METHOD__, E_USER_NOTICE);
             return $ret;
         }
-        return parent::getValue($field);
+        if (array_key_exists($field, $this->data)) {
+            return $this->data[$field];
+        }
+        return null;
     }
 
     /** old style usage with $value, $user_id, $key as params

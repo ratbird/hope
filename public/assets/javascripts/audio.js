@@ -1,3 +1,6 @@
+/*jslint browser: true, white: true, undef: true, nomen: true, eqeqeq: true, plusplus: true, bitwise: true, newcap: true, immed: true, indent: 4, onevar: false */
+/*global window, $, jQuery, _, AudioPlayer */
+
 (function (STUDIP) {
 
     var initialised = false,
@@ -12,9 +15,10 @@
             loaded = true;
 
             // Process queue
-            var item;
-            while (item = queue.shift()) {
+            var item = queue.shift();
+            while (item) {
                 STUDIP.Audio.handle(item);
+                item = queue.shift();
             }
         },
         initialise = function () {

@@ -74,8 +74,7 @@ function check_messaging_default($my_messaging_settings) {
 
 
 // set default Values for calendar
-function check_calendar_default(){
-    global $calendar_user_control_data;
+function check_calendar_default($calendar_user_control_data){
 
     if(!$calendar_user_control_data){
         $calendar_user_control_data = array(
@@ -92,6 +91,7 @@ function check_calendar_default(){
             "ts_bind_seminare" => 0,
             "delete"           => 0
         );
+        UserConfig::get($user->id)->store("calendar_user_control_data", json_encode($calendar_user_control_data));
     }
 }
 
@@ -166,8 +166,8 @@ if ($auth->is_authenticated() && is_object($user) && $user->id != "nobody") {
         check_semester_default();
 
         if($CALENDAR_ENABLE){
-            $user->register("calendar_user_control_data");
-            check_calendar_default();
+            $calendar_user_control_data = json_decode(UserConfig::get($user->id)->getValue('calendar_user_control_data'), true);
+            check_calendar_default($calendar_user_control_data);
         }
         $my_studip_settings = UserConfig::get($user->id)->__get('my_studip_settings');
         //redirect user to another page if he want to

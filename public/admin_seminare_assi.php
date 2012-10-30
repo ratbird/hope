@@ -71,9 +71,9 @@ function redirect_to_course_admin($course_id) {
     $course = new Seminar($course_id);
     $sem_class = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$course->status]['class']];
     if ($sem_class) {
-        $nav = $sem_class->getNavigationForSlot("admin", $course_id);
+        $nav = array_shift($sem_class->getNavigationForSlot("admin", $course_id));
         if ($nav) {
-            header("Location: " . UrlHelper::getUrl($nav[0]->getURL()));
+            header("Location: " . UrlHelper::getUrl($nav->getURL()));
         } else {
             header("Location: ".UrlHelper::getUrl("seminar_main.php"));
         }

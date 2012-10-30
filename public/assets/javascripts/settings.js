@@ -1,7 +1,10 @@
+/*jslint browser: true, white: true, undef: true, nomen: true, eqeqeq: true, plusplus: true, bitwise: true, newcap: true, immed: true, indent: 4, onevar: false */
+/*global window, $, jQuery, _ */
+
 (function ($) {
 
     // 
-    $.tools.validator.fn('input[data-must-equal]', function(el, value) {
+    $.tools.validator.fn('input[data-must-equal]', function (el, value) {
         var target = $(el).data().mustEqual,
             labels = $.map([target, el], function (element) { 
                 var label = $(element).closest('label').text();
@@ -11,7 +14,7 @@
             error_message = 'Die beiden Werte "$1" und "$2" stimmen nicht überein. '.toLocaleString(),
             matches = error_message.match(/\$\d/g);
 
-        $.each(matches, function(i) {
+        $.each(matches, function (i) {
             error_message = error_message.replace(this, labels[i]);
         });
 

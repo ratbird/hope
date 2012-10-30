@@ -1,17 +1,20 @@
+/*jslint browser: true, white: true, undef: true, nomen: true, eqeqeq: true, plusplus: true, bitwise: true, newcap: true, immed: true, indent: 4, onevar: false */
+/*global window, $, jQuery, _ */
+
 // created from coffeescript located at https://gist.github.com/1719669
-jQuery(function($) {
-    $('.smiley-select select').change(function() {
+jQuery(function ($) {
+    $('.smiley-select select').change(function () {
         $(this).closest('form').submit();
     });
 
-    $('.smiley-toggle').on('click', function(event) {
+    $('.smiley-toggle').on('click', function (event) {
         var element;
         element = $(this);
         element.attr({
             'disabled': true
         });
         element.addClass('ajax');
-        $.getJSON(element.attr('href'), function(json) {
+        $.getJSON(element.attr('href'), function (json) {
             $('#layout_container .messagebox').remove();
             $('#layout_container').prepend(json.message);
 
@@ -24,10 +27,10 @@ jQuery(function($) {
         event.preventDefault();
     });
 
-    $('a[href*="admin/smileys/edit"], a[href*="admin/smileys/upload"]').on('click', function(event) {
+    $('a[href*="admin/smileys/edit"], a[href*="admin/smileys/upload"]').on('click', function (event) {
         var href;
         href = $(this).attr('href');
-        $('<div class="smiley-modal"/>').load(href, function() {
+        $('<div class="smiley-modal"/>').load(href, function () {
             var options;
             $(this).hide().appendTo('body');
             options = {
@@ -35,7 +38,7 @@ jQuery(function($) {
                 width: $(this).outerWidth() + 50,
                 height: $(this).outerHeight() + 50,
                 title: $('thead', this).remove().text(),
-                close: function() {
+                close: function () {
                     $(this).remove();
                 }
             };
@@ -44,7 +47,7 @@ jQuery(function($) {
         event.preventDefault();
     });
 
-    $('.smiley-modal .button.cancel').on('click', function(event) {
+    $('.smiley-modal .button.cancel').on('click', function (event) {
         $(this).closest('.smiley-modal').dialog('close');
         event.preventDefault();
     });

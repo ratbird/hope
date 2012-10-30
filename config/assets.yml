@@ -30,6 +30,7 @@ javascripts:
     - javascripts/file_system.js
     - javascripts/arbeitsgruppen.js
     - javascripts/news.js
+    - javascripts/termine.js
     - javascripts/quick_search.js
     - javascripts/multi_select.js
     - javascripts/browse.js

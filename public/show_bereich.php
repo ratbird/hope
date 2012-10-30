@@ -50,7 +50,7 @@ if ($id) {
 $group_by = Request::int('group_by', 0);
 
  // store the seleced semester in the session
-if (Request::option('select_sem') !== null && Request::option('select_sem') !== '0') {
+if (Request::option('select_sem')) {
     $_SESSION['_default_sem'] = Request::option('select_sem');
 }
 

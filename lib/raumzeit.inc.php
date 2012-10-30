@@ -356,8 +356,8 @@ function raumzeit_editSingleDate($sem) {
             if (Request::option('action') == 'room') {
                 if ($resObj = $termin->bookRoom(Request::option('room_sd'))) {
                     $sem->createMessage(sprintf(_("Der Termin %s wurde geändert und der Raum %s gebucht, etwaige freie Ortsangaben wurden entfernt."),
-                        '<b>'. $resObj->getName() .'</b>',
-                        '<b>'. $termin->toString() .'</b>'));
+                        '<b>'. $termin->toString() .'</b>',
+                        '<b>'. $resObj->getName() .'</b>'));
                 } else {
                     $sem->createError(sprintf(_("Der angegebene Raum konnte für den Termin %s nicht gebucht werden!"),
                         '<b>'. $termin->toString() .'</b>'));

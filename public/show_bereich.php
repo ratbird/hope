@@ -49,9 +49,11 @@ if ($id) {
 
 $group_by = Request::int('group_by', 0);
 
-if (Request::option('select_sem') !== null) { // store the seleced semester in the session, all semesters as well
+ // store the seleced semester in the session
+if (Request::option('select_sem') !== null && Request::option('select_sem') !== '0') {
     $_SESSION['_default_sem'] = Request::option('select_sem');
 }
+
 $show_semester = Request::option('select_sem', $_SESSION['_default_sem']);
 $sem_browse_obj = new SemBrowse(array('group_by' => 0));
 $sem_browse_obj->sem_browse_data['default_sem'] = "all";
@@ -175,7 +177,7 @@ if (get_config('EXPORT_ENABLE') && $perm->have_perm("tutor")) {
 <div style="text-align:right">
     <form method="post" name="sem_form">
     <?= _("Semester:") ?>
-    <?= SemesterData::GetSemesterSelector(array('name'=>'select_sem'), $show_semester) ?>
+    <?= SemesterData::GetSemesterSelector(array('name'=>'select_sem'), $show_semester, 'semester_id', false) ?>
     <?= \Studip\Button::create(_("Auswählen"), 'choose_sem', array('title' => _("anderes Semester auswählen"))); ?>
     </form>
 </div>

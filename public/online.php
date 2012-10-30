@@ -31,7 +31,7 @@ page_open(array(
 $perm->check("user");
 
 if(empty ($my_messaging_settings)){
-    $my_messaging_settings = json_decode(UserConfig::get($user->id)->__get('my_messaging_settings'));
+    $my_messaging_settings = json_decode(UserConfig::get($user->id)->__get('my_messaging_settings'), true);
     if (!$my_messaging_settings['show_only_buddys'])
         $my_messaging_settings['show_only_buddys'] = FALSE;
     if (!$my_messaging_settings['delete_messages_after_logout'])

@@ -80,15 +80,12 @@ if (get_config('CHAT_ENABLE')){
     $admin_chats = $chatServer->getAdminChats($auth->auth['uid']);
 }
 
-// let's register some ...
-$_SESSION['sms_data'] = $sms_data;
-$_SESSION['sms_show'] = $sms_show;
 $msging = new messaging;
 $query_showfolder = $query_time_sort = $query_movetofolder = $query_time = '';
 $cmd = Request::option('cmd');
 $cmd_show = Request::option('cmd_show');
-$sms_data = $_SESSION['sms_data'];
-$sms_show = $_SESSION['sms_show'];
+$sms_data =& $_SESSION['sms_data'];
+$sms_show =& $_SESSION['sms_show'];
 
 // determine view
 if (Request::option('sms_inout')) {

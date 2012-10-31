@@ -12,14 +12,17 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       2.4
-*/
+ */
 
 require_once 'settings.php';
 
 /**
  */
-class Settings_CalendarController extends Settings_SettingsController {
-    public function before_filter(&$action, &$args) {
+
+class Settings_CalendarController extends Settings_SettingsController
+{
+    public function before_filter(&$action, &$args)
+    {
         if (!get_config('CALENDAR_ENABLE')) {
             throw new AccessDeniedException(_('Der Kalender ist nicht aktiviert.'));
         }
@@ -36,13 +39,15 @@ class Settings_CalendarController extends Settings_SettingsController {
     /**
      *
      */
-    public function index_action() {
+    public function index_action()
+    {
         foreach ($GLOBALS['calendar_user_control_data'] as $key => $value) {
             $this->$key = $value;
         }
     }
 
-    public function store_action() {
+    public function store_action()
+    {
         $this->check_ticket();
 
         $GLOBALS['calendar_user_control_data'] = array(
@@ -59,9 +64,9 @@ class Settings_CalendarController extends Settings_SettingsController {
                 'step_day_group'  => Request::option('cal_step_day_group')
         );
 
+        UserConfig::get($GLOBALS['user']->id)->store("calendar_user_control_data", json_encode($GLOBALS['calendar_user_control_data']));
+
         $this->reportSuccess(_('Ihre Einstellungen wurden gespeichert'));
         $this->redirect('settings/calendar');
-
-        UserConfig::get($GLOBALS['user']->id)->store("calendar_user_control_data", json_encode($GLOBALS['calendar_user_control_data']));
     }
 }

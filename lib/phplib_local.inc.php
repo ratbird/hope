@@ -689,6 +689,7 @@ class Seminar_Register_Auth extends Seminar_Auth {
         if($GLOBALS['user']->id !== 'nobody') {
             $GLOBALS['user'] = new Seminar_User('nobody');
             $GLOBALS['perm'] = new Seminar_Perm();
+            $GLOBALS['auth'] = $this;
         }
         // set up user session
         include 'lib/seminar_open.php';

@@ -50,21 +50,21 @@ class Settings_CalendarController extends Settings_SettingsController
     {
         $this->check_ticket();
 
-        $GLOBALS['calendar_user_control_data'] = array(
-                'view'            => Request::option('cal_view'),
-                'start'           => Request::option('cal_start'),
-                'end'             => Request::option('cal_end'),
-                'step_day'        => Request::option('cal_step_day'),
-                'step_week'       => Request::option('cal_step_week'),
-                'type_week'       => Request::option('cal_type_week'),
-                'holidays'        => Request::option('cal_holidays'),
-                'sem_data'        => Request::option('cal_sem_data'),
-                'delete'          => Request::option('cal_delete'),
-                'step_week_group' => Request::option('cal_step_week_group'),
-                'step_day_group'  => Request::option('cal_step_day_group')
+        $data = array(
+            'view'            => Request::option('cal_view'),
+            'start'           => Request::option('cal_start'),
+            'end'             => Request::option('cal_end'),
+            'step_day'        => Request::option('cal_step_day'),
+            'step_week'       => Request::option('cal_step_week'),
+            'type_week'       => Request::option('cal_type_week'),
+            'holidays'        => Request::option('cal_holidays'),
+            'sem_data'        => Request::option('cal_sem_data'),
+            'delete'          => Request::option('cal_delete'),
+            'step_week_group' => Request::option('cal_step_week_group'),
+            'step_day_group'  => Request::option('cal_step_day_group')
         );
 
-        UserConfig::get($GLOBALS['user']->id)->store("calendar_user_control_data", json_encode($GLOBALS['calendar_user_control_data']));
+        $this->config->store('calendar_user_control_data', json_encode($data));
 
         $this->reportSuccess(_('Ihre Einstellungen wurden gespeichert'));
         $this->redirect('settings/calendar');

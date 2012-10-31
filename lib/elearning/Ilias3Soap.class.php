@@ -78,7 +78,7 @@ class Ilias3Soap extends StudipSoapClient
         {
             if ($this->user_sid == false)
                 $this->login();
-            echo "u";
+//            echo "u";
             return $this->user_sid;
         }
         return false;
@@ -172,7 +172,7 @@ class Ilias3Soap extends StudipSoapClient
     {
         $this->soap_cache = "";
         $_SESSION["cache_data"][$this->cms_type] = "";
-        
+
     }
 
     /**
@@ -184,7 +184,7 @@ class Ilias3Soap extends StudipSoapClient
     function saveCacheData()
     {
        $_SESSION["cache_data"][$this->cms_type] = $this->soap_cache;
-        
+
     }
 
     /**

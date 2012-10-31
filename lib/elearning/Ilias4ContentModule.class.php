@@ -64,9 +64,10 @@ class Ilias4ContentModule extends Ilias3ContentModule
         if ($crs_id == false) return false;
 
         $ref_id = $this->getId();
-
         if (Request::get("copy_object") == "1") {
+            $connected_cms[$this->cms_type]->soap_client->user_type = 'user';
             $ref_id = $connected_cms[$this->cms_type]->soap_client->copyObject($this->id, $crs_id);
+            $connected_cms[$this->cms_type]->soap_client->user_type = 'admin';
         } else {
             $ref_id = $connected_cms[$this->cms_type]->soap_client->addReference($this->id, $crs_id);
         }

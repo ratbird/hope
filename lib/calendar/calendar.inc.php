@@ -32,9 +32,29 @@ $cmd = Request::option('cmd');
 $cmd_cal = Request::option('cmd_cal');
 $mod_prv = Request::option('mod_prv');
 $mod = Request::option('mod');
-if(!isset ($calendar_user_control_data)){
-    $calendar_user_control_data = json_decode(UserConfig::get($user->id)->getValue('calendar_user_control_data'), true);
+
+// if the calendar-settings are not loaded yet, get them from the UserConfig
+if (!isset ($calendar_user_control_data)) {
+    if (!$calendar_user_control_data = json_decode(UserConfig::get($user->id)->getValue('calendar_user_control_data'), true)) {
+        // if there are no settings yet, generate some defaults
+        $calendar_user_control_data = array(
+            'view'            => 'showweek',
+            'start'           => '6',
+            'end'             => '22',
+            'step_day'        => '600',
+            'step_week'       => '1800',
+            'type_week'       => 'LONG',
+            'holidays'        => null,
+            'sem_data'        => null,
+            'delete'          => '0',
+            'step_week_group' => '1800',
+            'step_day_group'  => '600'
+        );
+
+        UserConfig::get($user->id)->store('calendar_user_control_data', json_encode($calendar_user_control_data));
+    }
 }
+
 // switch to own calendar if called from header
 if (!get_config('CALENDAR_GROUP_ENABLE') || Request::get('caluser') == 'self') {
     closeObject();

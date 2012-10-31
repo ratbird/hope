@@ -62,6 +62,6 @@ class Settings_CalendarController extends Settings_SettingsController {
         $this->reportSuccess(_('Ihre Einstellungen wurden gespeichert'));
         $this->redirect('settings/calendar');
 
-        UserConfig::get($user->id)->store("calendar_user_control_data", json_encode($calendar_user_control_data));
+        UserConfig::get($GLOBALS['user']->id)->store("calendar_user_control_data", json_encode($GLOBALS['calendar_user_control_data']));
     }
 }

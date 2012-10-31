@@ -61,13 +61,6 @@ class Auth {
   function start() {
     global $sess;
 
-    ## This is for performance, I guess but I'm not sure if it could
-    ## be safely removed -- negro
-    if (! $this->in) {
-      $sess->register("auth");
-      $this->in = true;
-    }
-
     ## back compatibility: if database_class is set, create db object
     if(isset($this->database_class)) {
       $this->db = new $this->database_class;
@@ -239,6 +232,7 @@ class Auth {
 
 
   function unauth($nobody = false) {
+    $this->auth = array();
     $this->auth["uid"]   = "";
     $this->auth["perm"]  = "";
     $this->auth["exp"]   = 0;
@@ -256,9 +250,10 @@ class Auth {
   function logout($nobody = "") {
     global $sess;
 
-    $sess->unregister("auth");
+    $_SESSION['auth'] = null;
     unset($this->auth["uname"]);
     $this->unauth($nobody == "" ? $this->nobody : $nobody);
+    $GLOBALS['auth'] = $this;
   }
 
   function is_authenticated() {

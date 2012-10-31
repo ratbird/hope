@@ -29,7 +29,6 @@ abstract class AuthenticatedController extends StudipController {
    * @return bool
    */
   function before_filter(&$action, &$args) {
-    global $auth;
 
     # open session
     page_open(array('sess' => 'Seminar_Session',
@@ -38,7 +37,7 @@ abstract class AuthenticatedController extends StudipController {
                     'user' => 'Seminar_User'));
 
     // show login-screen, if authentication is "nobody"
-    $auth->login_if($auth->auth["uid"] == "nobody"); 
+    $GLOBALS['auth']->login_if($auth->auth["uid"] == "nobody");
 
     $this->flash = Trails_Flash::instance();
 

@@ -205,15 +205,6 @@ class Session {
     $ok = session_start();
     $this->id = session_id();
 
-    // If register_globals is off -> restore session variables to global scope
-    if(!(bool) ini_get('register_globals')) {
-      if(is_array($_SESSION)) {
-        foreach ($_SESSION as $key => $value) {
-          $GLOBALS[$key] = $value;
-        }
-      }
-    }
-
     return $ok;
   } // end func start
 
@@ -240,78 +231,6 @@ class Session {
 
     return $ok;
   } // end func name
-
-
-  /**
-  * Register the variable(s) that should become persistent.
-  *
-  * @param   mixed String with the name of one or more variables seperated by comma
-  *                 or a list of variables names: "foo"/"foo,bar,baz"/{"foo","bar","baz"}
-  * @access public
-  */
-  function register ($var_names) {
-    if (!is_array($var_names)) {
-      // spaces spoil everything
-      $var_names = trim($var_names);
-      $var_names=explode(",", $var_names);
-    }
-
-    // If register_globals is off -> store session variables values
-    if(!(bool) ini_get('register_globals')) {
-      foreach ($var_names as $key => $value ) {
-        global $$value;
-        if (!isset($_SESSION[$value])){
-           $_SESSION[$value]= $$value;
-        }
-      }
-    }
-   else {
-      return session_register($var_names);
-    }
-  } // end func register
-
-  /**
-  * see if a variable is registered in the current session
-  *
-  * @param  $var_name a string with the variable name
-  * @return false if variable not registered true on success.
-  * @access public
-  */
-  function is_registered ($var_name) {
-   $var_name = trim($var_name);  // to be sure
-    if(!(bool) ini_get('register_globals')) {
-       return isset($_SESSION[$var_name]);
-    } else {
-       return session_is_registered($var_name);
-    }
-  } // end func is_registered
-
-
-
-  /**
-  * Recall the session registration for named variable(s)
-  *
-  * @param    mixed   String with the name of one or more variables seperated by comma
-  *                   or a list of variables names: "foo"/"foo,bar,baz"/{"foo","bar","baz"}
-  * @access public
-  */
-
-  function unregister ($var_names) {
-
-    $ok = true;
-
-    foreach (explode (',', $var_names) as $var_name) {
-      $var_name=trim($var_name);
-      if(!(bool) ini_get('register_globals')) {
-        unset($_SESSION[$var_name]);  ## unset is no more a function in php4
-      } else {
-      $ok = $ok && session_unregister ($var_name);
-      }
-    }
-
-    return $ok;
-  } // end func unregister
-
 
   /**
   * Delete the cookie holding the session id.
@@ -346,7 +265,7 @@ class Session {
   function delete() {
 
     $this->put_id();
-
+    $_SESSION = array();
     return session_destroy();
   } // end func delete
 
@@ -533,38 +452,47 @@ class Session {
 
   } // end func set_container
 
-  function url($url){
-      return $url;
-  }
-
-  function self_url(){
-      return $_SERVER['PHP_SELF'] . ($_SERVER['QUERY_STRING'] ? '?'.$_SERVER['QUERY_STRING'] : '');
-  }
-
-  function pself_url() {
-    print $this->self_url();
-  } // end func pself_url
-
   function regenerate_session_id($keep_session_vars = array())
   {
       if (is_array($_SESSION)) {
           foreach(array_keys($_SESSION) as $k) {
-              if (ini_get('register_globals')) {
-                  unset($GLOBALS[$k]);
-              }
               if (in_array($k, $keep_session_vars)) {
                   $keep[$k] = $_SESSION[$k];
               }
           }
+          $_SESSION = array();
       }
       session_destroy();
       $this->start();
       foreach($keep_session_vars as $k) {
           $_SESSION[$k] = $keep[$k];
-          if (ini_get('register_globals')) {
-              $GLOBALS[$k] = $_SESSION[$k];
-          }
       }
+  }
+
+  /**
+  *
+  * @deprecated
+  */
+  function register()
+  {
+    trigger_error('deprecated use of ' . __METHOD__, E_USER_NOTICE);
+  }
+
+  /**
+  *
+  * @deprecated
+  */
+  function is_registered()
+  {
+    trigger_error('deprecated use of ' . __METHOD__, E_USER_NOTICE);
+  }
+  /**
+  *
+  * @deprecated
+  */
+  function unregister()
+  {
+    trigger_error('deprecated use of ' . __METHOD__, E_USER_NOTICE);
   }
 } // end class Session4_Custom
 ?>

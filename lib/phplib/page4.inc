@@ -1,91 +1,60 @@
 <?php
 /*
- * Session Management for PHP3
- *
- * Copyright (c) 1998-2000 NetUSE AG
- *                    Boris Erdmann, Kristian Koehntopp
- *
- *
- */
+* Session Management for PHP3
+*
+* Copyright (c) 1998-2000 NetUSE AG
+*                    Boris Erdmann, Kristian Koehntopp
+*
+*
+*/
 
 function page_open($feature) {
-  global $_PHPLIB;
 
-  # enable sess and all dependent features.
-  if (isset($feature["sess"])) {
-    global $sess;
-    $sess = new $feature["sess"];
-    $sess->start();
+    # enable sess and all dependent features.
+    if (isset($feature["sess"])) {
+        $GLOBALS['sess'] = new $feature["sess"];
+        $GLOBALS['sess']->start();
 
-    # the auth feature depends on sess
-    if (isset($feature["auth"])) {
-      global $auth;
+        # the auth feature depends on sess
+        if (isset($feature["auth"])) {
 
-      if (is_object($auth)) {
-        $auth= $auth->check_feature($feature["auth"]);
-      } else {
-        $auth = new $feature["auth"];
-      }
-      $auth->start();
+            if (is_object($_SESSION['auth'])) {
+                $_SESSION['auth'] = $_SESSION['auth']->check_feature($feature["auth"]);
+            } else {
+                $_SESSION['auth'] = new $feature["auth"];
+            }
+            $_SESSION['auth']->start();
 
+            $GLOBALS['auth'] =& $_SESSION['auth'];
 
-      # the perm feature depends on auth and sess
-      if (isset($feature["perm"])) {
-        global $perm;
+            # the perm feature depends on auth and sess
+            if (isset($feature["perm"])) {
 
-        if (!is_object($perm)) {
-          $perm = new $feature["perm"];
+                if (!is_object($GLOBALS['perm'])) {
+                    $GLOBALS['perm'] = new $feature["perm"];
+                }
+            }
+
+            # the user feature depends on auth and sess
+            if (isset($feature["user"])) {
+
+                if (!is_object($GLOBALS['user'])) {
+                    $GLOBALS['user'] = new $feature["user"];
+                }
+                $GLOBALS['user']->start($GLOBALS['auth']->auth["uid"]);
+            }
         }
-      }
-
-      # the user feature depends on auth and sess
-      if (isset($feature["user"])) {
-        global $user;
-
-        if (!is_object($user)) {
-          $user = new $feature["user"];
-        }
-        $user->start($auth->auth["uid"]);
-      }
     }
-
-    ## Load the auto_init-File, if one is specified.
-    if (($sess->auto_init != "") && !$sess->in) {
-      $sess->in = 1;
-      include($_PHPLIB["libdir"] . $sess->auto_init);
-      if ($sess->secure_auto_init != "") {
-        $sess->freeze();
-      }
-    }
-  }
-
 }
 
 function page_close() {
-  global $sess, $user;
 
-  if (is_object($sess)) {
-    @session_write_close();
-  }
+    if (is_object($GLOBALS['sess'])) {
+        @session_write_close();
+    }
 
-  if (is_object($user)) {
-      $user->freeze();
-  }
+    if (is_object($GLOBALS['user'])) {
+        $GLOBALS['user']->freeze();
+    }
 
 }
-
-function sess_load($session) {
-  reset($session);
-  while (list($k,$v) = each($session)) {
-    $GLOBALS[$k] = new $v;
-    $GLOBALS[$k]->start();
-  }
-}
-
-function sess_save($session) {
-  reset($session);
-  while (list(,$v) = each($session)) {
-    $GLOBALS[$v]->freeze();
-  }
-}
-?>

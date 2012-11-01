@@ -71,14 +71,14 @@ class StudipFormat extends TextFormat
             'callback' => 'StudipFormat::markupText'
         ),
         'big' => array(
-            'start'    => '\+\+',
-            'end'      => '\+\+',
-            'callback' => 'StudipFormat::markupText'
+            'start'    => '(\+\+)([^\n]*)\+\+',
+            'end'      => '',
+            'callback' => 'StudipFormat::markupGreedyText'
         ),
         'small' => array(
-            'start'    => '--',
+            'start'    => '(--)([^\n]*)--',
             'end'      => '--',
-            'callback' => 'StudipFormat::markupText'
+            'callback' => 'StudipFormat::markupGreedyText'
         ),
         'super' => array(
             'start'    => '&gt;&gt;',
@@ -276,8 +276,6 @@ class StudipFormat extends TextFormat
             '%%' => 'i',
             '__' => 'u',
             '##' => 'tt',
-            '++' => 'big',
-            '--' => 'small',
             '&gt;&gt;' => 'sup',
             '&lt;&lt;' => 'sub',
             '{-' => 'strike',
@@ -287,6 +285,21 @@ class StudipFormat extends TextFormat
         $key = $matches[0];
 
         return sprintf('<%s>%s</%s>', $tag[$key], $contents, $tag[$key]);
+    }
+
+    /**
+     * Basic text formatting: bold, italics, underline, big, small etc.
+     */
+    protected static function markupGreedyText($markup, $matches)
+    {
+        static $tag = array(
+            '++' => 'big',
+            '--' => 'small'
+        );
+
+        $key = $matches[1];
+
+        return sprintf('<%s>%s</%s>', $tag[$key], $markup->format($matches[2]), $tag[$key]);
     }
 
     /**

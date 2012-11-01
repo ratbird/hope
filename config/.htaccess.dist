@@ -1,8 +1,15 @@
 #für rewrite wird die Option FollowSymLinks oder SymLinksIfOwnerMatch benötigt ...
-#Options SymLinksIfOwnerMatch
-#RewriteEngine on
-#RewriteRule ^download/(normal|force_download|zip)/([0-467])/([^/]+)/(.+)$ sendfile.php?$1=1&type=$2&file_id=$3&file_name=$4 [L]
-#RewriteRule ^download/(normal|force_download|zip)/5/([^/]+)/([^/]+)/(.+)$ sendfile.php?$1=1&type=5&range_id=$2&list_id=$3&file_name=$4 [L]
+Options SymLinksIfOwnerMatch
+RewriteEngine on
+RewriteBase /Users/Rasmus/Stud.IP-Workspace/studip_trunk/public
+RewriteCond %{REQUEST_FILENAME} !-s 
+RewriteCond %{REQUEST_FILENAME} !-l 
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^.*$ /studip/router.php [L]
+
+#RewriteRule ^download/(normal|force_download|zip)/([0-467])/([^/]+)/(.+)$ /studip/sendfile.php?$1=1&type=$2&file_id=$3&file_name=$4 [L]
+#RewriteRule ^download/(normal|force_download|zip)/5/([^/]+)/([^/]+)/(.+)$ /studip/sendfile.php?$1=1&type=5&range_id=$2&list_id=$3&file_name=$4 [L]
 
 Order Allow,Deny
 Allow from all

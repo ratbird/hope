@@ -292,14 +292,14 @@ class StudipFormat extends TextFormat
      */
     protected static function markupGreedyText($markup, $matches)
     {
-        static $tag = array(
+        static $greedytag = array(
             '++' => 'big',
             '--' => 'small'
         );
 
         $key = $matches[1];
 
-        return sprintf('<%s>%s</%s>', $tag[$key], $markup->format($matches[2]), $tag[$key]);
+        return sprintf('<%s>%s</%s>', $greedytag[$key], $markup->format($matches[2]), $greedytag[$key]);
     }
 
     /**

@@ -72,12 +72,10 @@ class StudipFormat extends TextFormat
         ),
         'big' => array(
             'start'    => '(\+\+)([^\n]*)\+\+',
-            'end'      => '',
             'callback' => 'StudipFormat::markupGreedyText'
         ),
         'small' => array(
             'start'    => '(--)([^\n]*)--',
-            'end'      => '',
             'callback' => 'StudipFormat::markupGreedyText'
         ),
         'super' => array(
@@ -274,6 +272,8 @@ class StudipFormat extends TextFormat
         static $tag = array(
             '**' => 'b',
             '%%' => 'i',
+            '++' => 'big',
+            '--' => 'small',
             '__' => 'u',
             '##' => 'tt',
             '&gt;&gt;' => 'sup',

@@ -35,7 +35,7 @@ $mod = Request::option('mod');
 
 // if the calendar-settings are not loaded yet, get them from the UserConfig
 if (!isset ($calendar_user_control_data)) {
-    if (!$calendar_user_control_data = json_decode(UserConfig::get($user->id)->getValue('calendar_user_control_data'), true)) {
+    if (!$calendar_user_control_data = json_decode(UserConfig::get($GLOBALS['user']->id)->getValue('calendar_user_control_data'), true)) {
         // if there are no settings yet, generate some defaults
         $calendar_user_control_data = array(
             'view'            => 'showweek',
@@ -116,11 +116,11 @@ if (Request::option('cmd') == 'export'
 if ($_calendar->getRange() == Calendar::RANGE_USER) {
     if (is_array($calendar_user_control_data['bind_seminare'])) {
         unset($calendar_user_control_data['bind_seminare']);
-        UserConfig::get($user->id)->store("calendar_user_control_data", json_encode($calendar_user_control_data));
+        UserConfig::get($GLOBALS['user']->id)->store("calendar_user_control_data", json_encode($calendar_user_control_data));
     }
     if (isset($calendar_user_control_data['ts_bind_seminare'])) {
         unset($calendar_user_control_data['ts_bind_seminare']);
-        UserConfig::get($user->id)->store("calendar_user_control_data", json_encode($calendar_user_control_data));
+        UserConfig::get($GLOBALS['user']->id)->store("calendar_user_control_data", json_encode($calendar_user_control_data));
     }
 }
 
@@ -139,7 +139,7 @@ if ($cmd_cal == 'chng_cal_settings') {
         'step_week_group' => Request::option('cal_step_week_group'),
         'step_day_group' => Request::option('cal_step_day_group')
     );
-    UserConfig::get($user->id)->store("calendar_user_control_data", json_encode($calendar_user_control_data));
+    UserConfig::get($GLOBALS['user']->id)->store("calendar_user_control_data", json_encode($calendar_user_control_data));
 }
 
 // use current timestamp if no timestamp is given

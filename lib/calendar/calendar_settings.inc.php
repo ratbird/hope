@@ -43,7 +43,7 @@ if (Request::option('cmd_cal') == 'chng_cal_settings') {
         'step_week_group' => Request::option('cal_step_week_group'),
         'step_day_group' => Request::option('cal_step_day_group')
     );
-    UserConfig::get($user->id)->store("calendar_user_control_data", json_encode($calendar_user_control_data));
+    UserConfig::get($GLOBALS['user']->id)->store("calendar_user_control_data", json_encode($calendar_user_control_data));
 }
 
 echo $GLOBALS['template_factory']->render('calendar/settings', compact('calendar_user_control_data', 'calendar_sess_control_data', 'atime'));

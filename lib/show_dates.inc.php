@@ -561,7 +561,7 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
     global $PERS_TERMIN_KAT, $username, $CALENDAR_DRIVER;
 
     $admin_link = '<a href="'.URLHelper::getLink('calendar.php', array('cmd' => 'edit', 'source_page' => URLHelper::getURL())).'">';
-    $calendar_user_control_data = json_decode(UserConfig::get($user->id)->getValue('calendar_user_control_data'), true);
+    $calendar_user_control_data = json_decode(UserConfig::get($GLOBALS['user']->id)->getValue('calendar_user_control_data'), true);
     if (is_array($calendar_user_control_data["bind_seminare"]))
         $bind_seminare = array_keys($calendar_user_control_data["bind_seminare"], "TRUE");
     else

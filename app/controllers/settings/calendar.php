@@ -41,7 +41,26 @@ class Settings_CalendarController extends Settings_SettingsController
      */
     public function index_action()
     {
-        foreach ($GLOBALS['calendar_user_control_data'] as $key => $value) {
+
+         $calendar_user_control_data = json_decode(UserConfig::get($GLOBALS['user']->id)->getValue('calendar_user_control_data'), true);
+
+         if(!$calendar_user_control_data){
+             $calendar_user_control_data = array(
+              "view"             => "showweek",
+              "start"            => 9,
+              "end"              => 20,
+              "step_day"         => 900,
+              "step_week"        => 3600,
+              "type_week"        => "LONG",
+              "holidays"         => TRUE,
+              "sem_data"         => TRUE,
+              "link_edit"        => TRUE,
+              "bind_seminare"    => "",
+              "ts_bind_seminare" => 0,
+              "delete"           => 0
+            );
+        }
+        foreach ($calendar_user_control_data as $key => $value) {
             $this->$key = $value;
         }
     }
@@ -65,7 +84,6 @@ class Settings_CalendarController extends Settings_SettingsController
         );
 
         $this->config->store('calendar_user_control_data', json_encode($data));
-
         $this->reportSuccess(_('Ihre Einstellungen wurden gespeichert'));
         $this->redirect('settings/calendar');
     }

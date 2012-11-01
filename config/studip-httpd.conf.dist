@@ -3,7 +3,7 @@
     # für rewrite wird die Option FollowSymLinks oder SymLinksIfOwnerMatch benötigt ...
     Options SymLinksIfOwnerMatch
     RewriteEngine on
-    RewriteBase /Users/Rasmus/Stud.IP-Workspace/studip_trunk/public
+    RewriteBase /usr/local/studip/public
     RewriteCond %{REQUEST_FILENAME} !-s 
     RewriteCond %{REQUEST_FILENAME} !-l 
     RewriteCond %{REQUEST_FILENAME} !-f

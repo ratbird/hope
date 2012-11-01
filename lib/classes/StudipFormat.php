@@ -77,7 +77,7 @@ class StudipFormat extends TextFormat
         ),
         'small' => array(
             'start'    => '(--)([^\n]*)--',
-            'end'      => '--',
+            'end'      => '',
             'callback' => 'StudipFormat::markupGreedyText'
         ),
         'super' => array(

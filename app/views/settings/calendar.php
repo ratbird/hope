@@ -1,22 +1,6 @@
 <?
 use Studip\Button, Studip\LinkButton;
-$calendar_user_control_data = json_decode(UserConfig::get($GLOBALS['user']->id)->getValue('calendar_user_control_data'), true);
-if(!$calendar_user_control_data){
-             $calendar_user_control_data = array(
-              "view"             => "showweek",
-              "start"            => 9,
-              "end"              => 20,
-              "step_day"         => 900,
-              "step_week"        => 3600,
-              "type_week"        => "LONG",
-              "holidays"         => TRUE,
-              "sem_data"         => TRUE,
-              "link_edit"        => TRUE,
-              "bind_seminare"    => "",
-              "ts_bind_seminare" => 0,
-              "delete"           => 0
-            );
-}
+
 $cal_views = array(
     'showday'   => _('Tagesansicht'),
     'showweek'  => _('Wochenansicht'),

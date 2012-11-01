@@ -728,6 +728,8 @@ function search_administrable_objects($search_string='', $user_id='', $sem=TRUE)
     }
 
     $user_global_perm = $perm->get_perm($user_id);
+    $my_objects = array();
+    $my_inst_ids = array();
 
     $search_sql = array();
     if (!$search_string) {
@@ -745,13 +747,21 @@ function search_administrable_objects($search_string='', $user_id='', $sem=TRUE)
         $search_sql['seminar']  = "Name LIKE CONCAT('%', :needle, '%') OR
                                    Untertitel LIKE CONCAT('%', :needle, '%') OR
                                    seminare.Seminar_id = :needle";
+       if ($user_global_perm == 'admin') {
+           $tmp_objects = search_administrable_objects(false, $user_id, false);
+           if (is_array($tmp_objects)) {
+               foreach ($tmp_objects as $id => $detail){
+                   if ($detail['inst_perms']) {
+                       $my_inst_ids[$id] = $detail['inst_perms'];
+                   }
+               }
+           }
+        }
     }
 
     if ($caching && isset($my_object_cache[$user_id][$sem])) {
         return $my_object_cache[$user_id][$sem];
     }
-
-    $my_objects = array();
 
     if (getGlobalPerms($user_id) == 'admin') {
         $my_objects['global'] = array(
@@ -767,17 +777,6 @@ function search_administrable_objects($search_string='', $user_id='', $sem=TRUE)
     );
 
     if ($user_global_perm == 'admin') {
-        $my_inst_ids = array();
-
-        $tmp_objects = search_administrable_objects(false,$user_id,false);
-        if (is_array($tmp_objects)) {
-            foreach ($tmp_objects as $id => $detail){
-                if ($detail['inst_perms']) {
-                    $my_inst_ids[$id] = $detail['inst_perms'];
-                }
-            }
-        }
-
         //Alle meine Institute (Suche)...
         $type = _('Einrichtungen');
         $query = "SELECT Institute.Institut_id AS id, Name AS name,

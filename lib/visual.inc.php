@@ -5,20 +5,21 @@
 # Lifter010: TODO
 
 
-require_once('config.inc.php');
+require_once 'config.inc.php';
 require_once 'lib/classes/StudipFormat.php';
 require_once 'lib/classes/WikiFormat.php';
 require_once 'lib/classes/StudipTransformFormat.php';
-require_once('lib/classes/cssClassSwitcher.inc.php');
-include_once('vendor/idna_convert/idna_convert.class.php');
-include_once('lib/classes/QuickSearch.class.php');
-include_once('lib/classes/searchtypes/SQLSearch.class.php');
-include_once('lib/classes/searchtypes/StandardSearch.class.php');
-include_once('lib/classes/searchtypes/PermissionSearch.class.php');
-require_once('lib/classes/LinkButton.class.php');
-require_once('lib/classes/Button.class.php');
+require_once 'lib/classes/cssClassSwitcher.inc.php';
+include_once 'vendor/idna_convert/idna_convert.class.php';
+include_once 'lib/classes/QuickSearch.class.php';
+include_once 'lib/classes/searchtypes/SQLSearch.class.php';
+include_once 'lib/classes/searchtypes/StandardSearch.class.php';
+include_once 'lib/classes/searchtypes/PermissionSearch.class.php';
+require_once 'lib/classes/LinkButton.class.php';
+require_once 'lib/classes/Button.class.php';
 require_once 'lib/classes/ResetButton.class.php';
 require_once 'lib/classes/SmileyFormat.php';
+require_once 'lib/wiki.inc.php';
 
 /**
  * get_ampel_state is a helper function for get_ampel_write and get_ampel_read.

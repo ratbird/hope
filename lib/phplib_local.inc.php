@@ -36,26 +36,6 @@ namespace {
 require_once('lib/classes/SkipLinks.php');
 require_once('lib/deputies_functions.inc.php');
 
-$_never_globalize_request_params = array(
-    '_html_head_title',
-    '_include_additional_header',
-    '_include_additional_html',
-    '_include_extra_stylesheet',
-    '_include_stylesheet',
-    '_msg',
-    'DB_STUDIP_SLAVE_HOST',
-    'errormsg',
-    'meldung',
-    'msg',
-    'sms_msg'
-);
-
-foreach($_never_globalize_request_params as $one_param){
-    if (isset($_REQUEST[$one_param])){
-        unset($GLOBALS[$one_param]);
-    }
-}
-
 // set default time zone
 date_default_timezone_set(@date_default_timezone_get());
 

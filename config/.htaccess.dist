@@ -2,8 +2,8 @@
 Options SymLinksIfOwnerMatch
 RewriteEngine on
 RewriteBase /usr/local/studip/public
-RewriteCond %{REQUEST_FILENAME} !-s 
-RewriteCond %{REQUEST_FILENAME} !-l 
+RewriteCond %{REQUEST_FILENAME} !-s
+RewriteCond %{REQUEST_FILENAME} !-l
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^.*$ /studip/router.php [L]
@@ -19,11 +19,9 @@ php_value post_max_size 8M
 php_value memory_limit 40M
 php_value max_execution_time 300
 php_flag short_open_tag On
-php_flag register_globals On
 php_flag session.use_trans_sid Off
 php_flag magic_quotes_gpc On
 #PHP Konstanten sind hier nicht verfügbar
-# 6135 = E_ALL & ~E_NOTICE PHP 5.2.x
 # 22519 = E_ALL & ~(E_NOTICE|E_DEPRECATED) PHP 5.3.x
 php_value error_reporting 22519
 #Wenn die suhosin extension benutzt wird, sind diese Optionen notwendig

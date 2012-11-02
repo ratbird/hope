@@ -9,10 +9,6 @@
  * the License, or (at your option) any later version.
  */
 
-if (isset($_REQUEST['GLOBALS'])) {
-  die('Setting the $GLOBALS array is not tolerated!');
-}
-
 $PHP_SELF = $_SERVER['PHP_SELF'] = $_SERVER['SCRIPT_NAME'];
 $STUDIP_BASE_PATH = realpath(dirname(__FILE__) . '/..');
 
@@ -21,6 +17,7 @@ set_include_path(
     . PATH_SEPARATOR . $STUDIP_BASE_PATH . DIRECTORY_SEPARATOR . 'config'
     . PATH_SEPARATOR . get_include_path()
 );
+!ini_get('register_globals') OR require 'templates/register_globals_on.php';
 
 define('PHPLIB_SESSIONDATA_TABLE', 'session_data');
 define('PHPLIB_USERDATA_TABLE', 'user_data');
@@ -34,7 +31,6 @@ require 'lib/phplib/user4.inc';
 
 
 require 'lib/phplib/email_validation.inc';
-require 'init_config_arrays.inc.php';
 require 'config_local.inc.php';
 require_once 'lib/phplib_local.inc.php';
 

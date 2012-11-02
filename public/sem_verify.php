@@ -58,8 +58,8 @@ unregister_globals();
 require_once 'app/models/studygroup.php';
 
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
-$send_from_search_page = Request::quoted('send_from_search_page');
-$send_from_search = Request::option('send_from_search');
+$send_from_search_page = Request::get('send_from_search_page');
+$send_from_search = Request::get('send_from_search') !== null;
 if (!preg_match('/^('.preg_quote($CANONICAL_RELATIVE_PATH_STUDIP,'/').')?([a-zA-Z0-9_-]+\.php)([a-zA-Z0-9_?&=-]*)$/', $send_from_search_page)) $send_from_search_page = '';
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
@@ -191,7 +191,7 @@ require_once 'lib/classes/LockRules.class.php';
     if (empty($ask)) {
         $ask = "TRUE";
     }
-    $temp_url = $sess->self_url();
+    $temp_url = UrlHelper::getLink('?' . $_SERVER['QUERY_STRING']);
 
     // admins und roots haben hier nix verloren
     if ($perm->have_perm("admin")) {
@@ -542,7 +542,7 @@ require_once 'lib/classes/LockRules.class.php';
                         ?>
                         </td></tr>
                         <tr><td class="blank" colspan=2>
-                        <form name="details" action="<? echo $sess->pself_url(); ?>" method="POST">
+                        <form name="details" action="<? echo $temp_url; ?>" method="POST">
                         <?= CSRFProtection::tokenTag() ?>
                         &nbsp; &nbsp; <input type="PASSWORD" name="pass" size="12">
                         <input type="hidden" name="id" value="<? echo $id;?>">
@@ -573,7 +573,7 @@ require_once 'lib/classes/LockRules.class.php';
                         $query = "UPDATE seminar_user SET status = 'autor' WHERE Seminar_id = ? AND user_id = ?";
                         $statement = DBManager::get()->prepare($query);
                         $statement->execute(array($id, $user->id));
-                        
+
                         // LOGGING
                         log_event('SEM_USER_ADD', $id, $user->id, 'autor', 'Hochgestuft auf autor');
 
@@ -677,7 +677,7 @@ require_once 'lib/classes/LockRules.class.php';
                             print "<tr><td class=\"blank\" colspan=2>&nbsp; &nbsp; "._("Sie k&ouml;nnen sich f&uuml;r <b>eines</b> der m&ouml;glichen Kontingente anmelden.")."<br><br>&nbsp; &nbsp; "._("Bitte w&auml;hlen Sie das f&uuml;r Sie am besten geeignete Kontingent aus:")." <br><br></td></tr>";
                             ?>
                             <tr><td class="blank" colspan=2>
-                            <form action="<? echo $sess->pself_url(); ?>" method="POST" >
+                            <form action="<? echo $temp_url; ?>" method="POST" >
                                 <?= CSRFProtection::tokenTag() ?>
                                 <input type="hidden" name="sem_verify_selection_send" value="TRUE">
                                    <?
@@ -827,7 +827,7 @@ require_once 'lib/classes/LockRules.class.php';
                     ?>
                     </td></tr>
                     <tr><td class="blank" colspan=2>
-                    <form name="details" action="<? echo $sess->pself_url(); ?>" method="POST">
+                    <form name="details" action="<? echo $temp_url; ?>" method="POST">
                     <?= CSRFProtection::tokenTag() ?>
                     &nbsp; &nbsp; <input type="PASSWORD" name="pass" size="12">
                     <input type="hidden" name="id" value="<? echo $id;?>">
@@ -847,7 +847,7 @@ require_once 'lib/classes/LockRules.class.php';
                     die;
                 }
                 elseif ($SemSecLevelWrite==2) {//nur passwort fuer Schreiben, User koennte ohne Passwort als 'User' in das Seminar
-                    print "<form name=\"details\" action=\"".$sess->self_url()."\" method=\"POST\">";
+                    print "<form name=\"details\" action=\"".$temp_url."\" method=\"POST\">";
                     echo CSRFProtection::tokenTag();
                     print "<tr><td class=\"blank\" colspan=\"2\">";
                     print "<table width=\"97%\" align=\"center\" border=\"0\" cellapdding=\"2\" cellspacing=\"0\">";

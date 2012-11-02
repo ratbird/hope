@@ -456,6 +456,13 @@ if ($change_object_schedules) {
     
     }
 
+    if ($ObjectPerms->havePerm('admin') && Request::submitted('change_comment_internal')) { 
+        $changeAssign =& AssignObject::Factory($change_object_schedules); 
+        $changeAssign->setCommentInternal(Request::get('comment_internal')); 
+        $changeAssign->store(); 
+        $msg->addMsg(50); 
+    }
+
     if ($ObjectPerms->havePerm("autor")) {
         if (Request::submitted('kill_assign')) {
             $killAssign = AssignObject::Factory($change_object_schedules);
@@ -464,7 +471,7 @@ if ($change_object_schedules) {
             $msg->addMsg(5);
             $change_schedule_id = $change_object_schedules = $_SESSION['resources_data']['actual_assign'] = FALSE;
         } elseif (!$return_schedule && !Request::submitted('search_room') 
-            && !Request::submitted('reset_room_search')) {
+            && !Request::submitted('reset_room_search') && !Request::submitted('change_comment_internal')) {
             if ($change_object_schedules == "NEW")
                 $change_schedule_id=FALSE;
             else

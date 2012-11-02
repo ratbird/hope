@@ -569,10 +569,7 @@ class AssignObject {
             $mkdate = time();
 
             //insert NULL instead of nothing
-            if (!$this->assign_user_id)
-                $tmp_assign_user_id = 'NULL';
-            else
-                $tmp_assign_user_id = $this->assign_user_id;
+            $tmp_assign_user_id = $this->assign_user_id ?: null;
 
             if($create) {
                 $stmt = $db->prepare("INSERT INTO resources_assign SET resource_id = ?,

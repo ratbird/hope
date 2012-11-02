@@ -331,11 +331,9 @@ class Calendar
 
     function addEvent($event_id = '', $selected_users = NULL)
     {
-        global $calendar_sess_forms_data;
-
         $this->event = new DbCalendarEvent($this, $event_id);
         if ($this->havePermission(Calendar::PERMISSION_WRITABLE)) {
-            $this->setEventProperties($calendar_sess_forms_data, $calendar_sess_forms_data['mod_prv']);
+            $this->setEventProperties($_SESSION['calendar_sess_forms_data'], $_SESSION['calendar_sess_forms_data']['mod_prv']);
 
             $this->addEventObj($this->event, ($event_id == '' ? false : true), $selected_users);
         }

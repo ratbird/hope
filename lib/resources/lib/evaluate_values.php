@@ -1429,7 +1429,7 @@ if (Request::submitted('start_multiple_mode') || (Request::option('single_reques
     $selected_requests = array();
     //filter the requests
     foreach($requests as $key => $val) {
-        if (!$val["closed"] && !($resolve_requests_no_time && !$val['have_times'])) {
+        if (!$val["closed"] && !(Request::option('resolve_requests_no_time') && !$val['have_times'])) {
             if ($resolve_requests_mode == "sem") {
                 if ($val["my_sem"])
                     $selected_requests[$key] = TRUE;

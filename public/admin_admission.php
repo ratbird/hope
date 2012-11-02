@@ -369,11 +369,11 @@ if ($seminar_id
         $admin_admission_data["admission_binding"]=TRUE;
     settype($admin_admission_data["admission_binding"], 'integer');
 
-    if(Request::quoted('admission_turnout')) $admin_admission_data["admission_turnout"] = Request::quoted('admission_turnout');
+    if(Request::get('admission_turnout') !== null) $admin_admission_data["admission_turnout"] = Request::int('admission_turnout', 0);
 
-  if (Request::quoted('admission_prelim_txt'))
+  if (Request::get('admission_prelim_txt') !== null)
   {
-    $admin_admission_data["admission_prelim_txt"]=Request::quoted('admission_prelim_txt');
+    $admin_admission_data["admission_prelim_txt"]=Request::get('admission_prelim_txt');
   }
 
   if (Request::submitted('uebernehmen') && Request::option('admission_waitlist')) {
@@ -680,7 +680,7 @@ if ($seminar_id
 
                 // Prepare and execute statement that updates the admission
                 // setting for a given seminar
-                $query = "UPDATE seminar SET admission_prelim = 1 WHERE Seminar_id = ?";
+                $query = "UPDATE seminare SET admission_prelim = 1 WHERE Seminar_id = ?";
                 $statement = DBManager::get()->prepare($query);
                 $statement->execute(array($admin_admission_data['sem_id']));
 
@@ -731,7 +731,7 @@ if ($seminar_id
 
                     // Prepare and execute statement that updates the admission
                     // setting for a given seminar
-                    $query = "UPDATE seminar SET admission_prelim = 0 WHERE Seminar_id = ?";
+                    $query = "UPDATE seminare SET admission_prelim = 0 WHERE Seminar_id = ?";
                     $statement = DBManager::get()->prepare($query);
                     $statement->execute(array($admin_admission_data['sem_id']));
 
@@ -927,7 +927,7 @@ if ($seminar_id
                     $statement->execute(array(
                         $admin_admission_data['sem_id'],
                         $key,
-                        $val['ratio'],
+                        (int)$val['ratio'],
                     ));
                 }
             }

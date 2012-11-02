@@ -85,7 +85,7 @@ class EventLog
      */
     function count_log_events ($action_id, $object_id)
     {
-        $query = "SELECT COUNT(*) FROM log_events";
+        $query = "SELECT COUNT(*) FROM log_events ";
         $query .= $this->sql_event_filter($action_id, $object_id, $parameters);
 
         $statement = DBManager::get()->prepare($query);

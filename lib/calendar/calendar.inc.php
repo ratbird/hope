@@ -203,7 +203,7 @@ if (Request::get('jmp_month') && check_date(Request::int('jmp_month'), Request::
 }
 
 // delete all expired events and count events
-$db_control = CalendarDriver::getInstance($user->id);
+$db_control = CalendarDriver::getInstance($GLOBALS['user']->id);
 if ($cmd == 'add' && $calendar_user_control_data['delete'] > 0) {
     $expire_delete = mktime(date('G', time()), date('i', time()), 0, date('n', time()) - $calendar_user_control_data['delete'], date('j', time()), date('Y', time()));
     $db_control->deleteFromDatabase('EXPIRED', '', 0, $expire_delete);
@@ -239,7 +239,7 @@ if ($cmd == 'add' || $cmd == 'edit') {
         $_SESSION['calendar_sess_forms_data'] = array();
     }
     
-    if (!empty($_POST)) {
+    if (Request::isPost()) {
         // Formulardaten uebernehmen
         foreach ($accepted_vars as $key) {
             if (!is_null(Request::get($key))) {
@@ -454,7 +454,7 @@ switch ($cmd) {
                 PageLayout::setTitle(sprintf(_("Terminkalender von %s %s - Termin anlegen"), get_fullname($_calendar->getUserId()), $text_permission));
             }
             // call from dayview for new event -> set default values
-            if ($atime && empty($_POST)) {
+            if ($atime && !Request::isPost()) {
                 if (Request::option('devent')) {
                     $properties = array(
                         'DTSTART' => mktime(0, 0, 0, date('n', $atime), date('j', $atime), date('Y', $atime)),
@@ -489,7 +489,7 @@ switch ($cmd) {
             exit;
         }
         if ($_calendar->havePermission(Calendar::PERMISSION_READABLE)) {
-            if (empty($_POST)) {
+            if (!Request::isPost()) {
                 $_calendar->getEventProperties($_SESSION['calendar_sess_forms_data']);
             } else {
                 $err = Calendar::checkFormData($_SESSION['calendar_sess_forms_data']);

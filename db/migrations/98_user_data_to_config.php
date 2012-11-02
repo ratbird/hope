@@ -21,7 +21,7 @@ class UserDataToConfig extends Migration
         $conf->create('my_studip_settings',array('range'=>'user'));
         $conf->create('CurrentLogin',array('range'=>'user'));    
         $conf->create('LastLogin',array('range'=>'user'));
-
+        $conf->create('calendar_user_control_data',array('range'=>'user'));  
        //for all users:
         $string = "SELECT user_id FROM auth_user_md5";
         $statement = DBManager::get()->prepare($string);
@@ -37,6 +37,7 @@ class UserDataToConfig extends Migration
             UserConfig::get($val['user_id'])->store("my_studip_settings",($user->user_vars["my_studip_settings"])); 
             UserConfig::get($val['user_id'])->store("LastLogin",($user->user_vars["LastLogin"])); 
             UserConfig::get($val['user_id'])->store("CurrentLogin",($user->user_vars["CurrentLogin"])); 
+            UserConfig::get($val['user_id'])->store("calendar_user_control_data",json_encode($user->user_vars["calendar_user_control_data"]));
             UserConfig::set($val['user_id'], null);
             unset($user->cfg);
             unset($user);

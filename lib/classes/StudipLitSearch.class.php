@@ -48,11 +48,7 @@ class StudipLitSearch {
     function StudipLitSearch(){
         global $sess, $_lit_search_plugins;
 
-        #if (!$sess->is_registered("_start_result")){
-        #   $sess->register("_start_result");
-        #}
         URLHelper::bindLinkParam("_start_result",$this->start_result);
-        #$this->start_result =& $GLOBALS['_start_result'];
 
         $this->form_template = array('search_term'  =>  array('type' => 'text', 'caption' => _("Suchbegriff"), 'info' => _("Bitte geben Sie hier einen beliebigen Suchbegriff ein.")),
                                     'search_field'  =>  array('type' => 'select', 'caption' => _("Suchfeld"), 'info' => _("Mögliche Suchfelder"),

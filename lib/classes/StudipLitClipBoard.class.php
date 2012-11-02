@@ -57,10 +57,7 @@ class StudipLitClipBoard {
 
     function StudipLitClipBoard(){
         $this->dbv = new DbView();
-        if (!$GLOBALS['sess']->is_registered("_lit_clipboard_elements")){
-                $GLOBALS['sess']->register("_lit_clipboard_elements");
-            }
-        $this->elements =& $GLOBALS["_lit_clipboard_elements"];
+        $this->elements =& $_SESSION["_lit_clipboard_elements"];
     }
 
     function insertElement($id_to_insert){

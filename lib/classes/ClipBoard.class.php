@@ -74,10 +74,7 @@ class ClipBoard {
     function ClipBoard($name){
         $this->form_name = $name."_clipboard_form";
         $this->db = new DB_Seminar();
-        if (!$GLOBALS['sess']->is_registered("_".$this->form_name)){
-                $GLOBALS['sess']->register("_".$this->form_name);
-            }
-        $this->elements =& $GLOBALS["_".$this->form_name];
+        $this->elements =& $_SESSION["_".$this->form_name];
     }
 
     function insertElement($id_to_insert, $object_type){

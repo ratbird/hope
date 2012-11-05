@@ -16,7 +16,13 @@
         </colgroup>
         <thead>
             <tr>
-                <th colspan="3"><?= _('Lebenslauf bearbeiten') ?></th>
+                <th colspan="3">
+                    <?= sprintf(_('Lebenslauf von %s %s (%s - Status: %s) bearbeiten'),
+                        htmlReady($this->user->Vorname),
+                        htmlReady($this->user->Nachname),
+                        $this->user->username,
+                        $this->user->perms) ?>                
+                </th>
             </tr>
         </thead>
         <tbody class="labeled maxed">

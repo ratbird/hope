@@ -278,13 +278,14 @@ use Studip\Button,
 
         <? if ($perm->have_perm('admin')) : ?>
         <tr>
-            <td colspan="2" align="left">
+            <td align="left">
                 <?=_("Kommentar (intern)")?>:<br>
-                <textarea name="comment_internal" cols="30" rows="2"><?= $resAssign->getCommentInternal() ?></textarea>
-            <? if ($lockedAssign): ?>
-                <?= Button::createAccept('Übernehmen', 'change_comment_internal') ?>
-            <? endif; ?>
+                <textarea name="comment_internal" rows="4" style="width: 98%;"><?= $resAssign->getCommentInternal() ?></textarea>
+                <? if ($lockedAssign): ?>
+                    <?= Button::createAccept('Übernehmen', 'change_comment_internal') ?>
+                <? endif; ?>
             </td>
+            <td></td>
         </tr>
         <? else : ?>
         <tr>

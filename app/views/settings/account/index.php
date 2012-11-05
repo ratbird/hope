@@ -32,19 +32,13 @@
         </colgroup>
         <thead>
             <tr>
-                <th colspan="3">
-                    <?= sprintf(_('Benutzerkonto von %s %s (%s - Status: %s) bearbeiten'),
-                        htmlReady($this->user->Vorname),
-                        htmlReady($this->user->Nachname),
-                        $this->user->username,
-                        $this->user->perms) ?>
-                </th>
+                <th colspan="3"><?= _('Benutzerkonto bearbeiten') ?></th>
             </tr>
         </thead>
         <tbody class="labeled maxed">
             <tr>
                 <td>
-                    <label <?= !$restricted ? 'class="required"' : '' ?> for="new_username">
+                    <label for="new_username" <? if (!$restricted) echo 'class="required"'; ?>>
                         <?= _('Username:') ?>
                         <? if ($restricted) : ?>
                             <?= tooltipIcon('Dieses Feld dürfen Sie nicht ändern, Adminzugriff ist hier nicht erlaubt!') ?>
@@ -52,18 +46,18 @@
                     </label>
                 </td>
                 <td>
-                    <input <?= $restricted ? 'disabled="disabled"': '' ?> required type="text" name="new_username" id="new_username"
+                    <input required type="text" name="new_username" id="new_username"
                            pattern="<?= htmlReady(trim($validator->username_regular_expression, '/i^$()')) ?>"
                            data-message="<?= _('Der Benutzername ist unzulässig. Er muss mindestens 4 Zeichen lang sein und darf keine Sonderzeichen oder Leerzeichen enthalten.') ?>"
                            value="<?= $user['username'] ?>"
                            autocorrect="off" autocapitalize="off"
-                           <? if (!$controller->shallChange('auth_user_md5.username')) echo 'disabled'; ?>>
+                           <? if ($restricted || !$controller->shallChange('auth_user_md5.username')) echo 'disabled'; ?>>
                 </td>
                 <td>&nbsp;</td>
             </tr>
             <tr>
                 <td>
-                    <label <?= !$restricted ? 'class="required"' : '' ?>>
+                    <label <? if (!$restricted) echo 'class="required"'; ?>>
                         <?= _('Name:') ?>
                         <? if ($restricted) : ?>
                             <?= tooltipIcon('Dieses Feld dürfen Sie nicht ändern, Adminzugriff ist hier nicht erlaubt!') ?>
@@ -74,26 +68,26 @@
                     <label>
                         <?= _('Vorname:') ?>
                         <br>
-                        <input <?= $restricted ? 'disabled="disabled"': '' ?> required type="text" name="vorname"
+                        <input required type="text" name="vorname"
                                pattern="<?= htmlReady(trim($validator->name_regular_expression, '/i^$()')) ?>"
                                value="<?= htmlReady($user['Vorname']) ?>"
-                               <? if (!$controller->shallChange('auth_user_md5.Vorname', 'name')) echo 'disabled'; ?>>
+                               <? if ($restricted || !$controller->shallChange('auth_user_md5.Vorname', 'name')) echo 'disabled'; ?>>
                     </label>
                 </td>
                 <td>
                     <label>
                         <?= _('Nachname:') ?><br>
-                        <input <?= $restricted ? 'disabled="disabled"': '' ?> required type="text" name="nachname"
+                        <input required type="text" name="nachname"
                                pattern="<?= htmlReady(trim($validator->name_regular_expression, '/i^$()')) ?>"
                                data-message="<?= _('Bitte geben Sie Ihren tatsächlichen Nachnamen an.') ?>"
                                value="<?= htmlReady($user['Nachname']) ?>"
-                               <? if (!$controller->shallChange('auth_user_md5.Nachname', 'name')) echo 'disabled'; ?>>
+                               <? if ($restricted || !$controller->shallChange('auth_user_md5.Nachname', 'name')) echo 'disabled'; ?>>
                     </label>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <label <?= !$restricted ? 'class="required"' : '' ?>>
+                    <label <? if (!$restricted) echo 'class="required"'; ?>>
                         <?= _('E-Mail:') ?>
                         <? if ($restricted) : ?>
                             <?= tooltipIcon('Dieses Feld dürfen Sie nicht ändern, Adminzugriff ist hier nicht erlaubt!') ?>
@@ -103,18 +97,18 @@
                 <td>
                     <label>
                         <?= _('E-Mail:') ?><br>
-                        <input <?= $restricted ? 'disabled="disabled"': '' ?> required type="email" name="email1" id="email1"
+                        <input required type="email" name="email1" id="email1"
                                value="<?= htmlReady($user['Email']) ?>"
-                               <? if (!$controller->shallChange('auth_user_md5.Email')) echo 'disabled'; ?>>
+                               <? if ($restricted || !$controller->shallChange('auth_user_md5.Email')) echo 'disabled'; ?>>
                     </label>
                 </td>
                 <td>
                     <label>
                         <?= _('E-Mail Wiederholung:') ?><br>
-                        <input <?= $restricted ? 'disabled="disabled"': '' ?> required type="email" name="email2" id="email2"
+                        <input required type="email" name="email2" id="email2"
                                value="<?= htmlReady($user['Email']) ?>"
                                data-must-equal="#email1"
-                               <? if (!$controller->shallChange('auth_user_md5.Email')) echo 'disabled'; ?>>
+                               <? if ($restricted || !$controller->shallChange('auth_user_md5.Email')) echo 'disabled'; ?>>
                     </label>
                 </td>
             </tr>

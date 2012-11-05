@@ -14,7 +14,7 @@
                 <th colspan="2"><?= _('Passwort ändern') ?></th>
             </tr>
         </thead>
-        <tbody class="labeled maxed">
+        <tbody class="maxed">
             <tr>
                 <td>
                     <label for="password"><?= _('Aktuelles Passwort') ?></label>

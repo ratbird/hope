@@ -12,7 +12,7 @@
             </th>
         </tr>
     </thead>
-    <tbody class="labeled">
+    <tbody>
         <tr>
             <td style="text-align: center;">
                 <?= _("Aktuell angezeigtes Bild:") ?><br><br>

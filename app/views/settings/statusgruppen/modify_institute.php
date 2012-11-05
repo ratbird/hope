@@ -27,9 +27,11 @@
                         </th>
                     </tr>
                 </thead>
-                <tbody class="labeled maxed">
+                <tbody class="maxed">
                     <tr>
-                        <td><?= _('Status') ?>:</td>
+                        <td>
+                            <label><?= _('Status') ?>:</label>
+                        </td>
                         <td>
                         <? if ($GLOBALS['perm']->have_studip_perm('admin', $inst_id) && $institute['inst_perms'] != 'admin' && !$locked): ?>
                             <select name="status">
@@ -43,7 +45,9 @@
                         </td>
                     </tr>
                     <tr>
-                        <td><?= _('Raum:') ?></td>
+                        <td>
+                            <label><?= _('Raum:') ?></label>
+                        </td>
                         <td>
                             <input type="text" name="raum"
                                    value="<?= htmlReady($institute['raum']) ?>"
@@ -51,7 +55,9 @@
                         </td>
                     </tr>
                     <tr>
-                        <td><?= _('Sprechzeit:') ?></td>
+                        <td>
+                            <label><?= _('Sprechzeit:') ?></label>
+                        </td>
                         <td>
                             <input type="text" name="sprech"
                                    value="<?= htmlReady($institute['sprechzeiten']) ?>"
@@ -59,7 +65,9 @@
                         </td>
                     </tr>
                     <tr>
-                        <td><?= _('Telefon:') ?></td>
+                        <td>
+                            <label><?= _('Telefon:') ?></label>
+                        </td>
                         <td>
                             <input type="tel" name="tel"
                                    value="<?= htmlReady($institute['Telefon']) ?>"
@@ -67,7 +75,9 @@
                         </td>
                     </tr>
                     <tr>
-                        <td><?= _('Fax:') ?></td>
+                        <td>
+                            <label><?= _('Fax:') ?></label>
+                        </td>
                         <td>
                             <input type="tel" name="fax"
                                    value="<?= htmlReady($institute['Fax']) ?>"
@@ -76,7 +86,9 @@
                     </tr>
                 <? foreach ($entries as $id => $entry): ?>
                     <tr>
-                        <td><?= $entry->getName() ?>:</td>
+                        <td>
+                            <label><?= $entry->getName() ?>:</label>
+                        </td>
                         <td>
                         <? if ($locked): ?>
                             <?= $entry->getDisplayValue() ?>

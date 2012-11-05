@@ -44,7 +44,7 @@ $cal_step_weeks = array(
             <th><?= _('Auswahl') ?></th>
         </tr>
     </thead>
-    <tbody class="labeled">
+    <tbody>
         <tr>
             <td colspan="2"><?= _('Allgemeine Optionen') ?></td>
         </tr>
@@ -63,7 +63,9 @@ $cal_step_weeks = array(
             </td>
         </tr>
         <tr>
-            <td><?= _('Wochenansicht anpassen') ?></td>
+            <td>
+                <label><?= _('Wochenansicht anpassen') ?></label>
+            </td>
             <td>
                 <label>
                     <input type="radio" name="cal_type_week" value="LONG"
@@ -95,13 +97,15 @@ $cal_step_weeks = array(
         </tr>
 <? if (get_config('CALENDAR_GROUP_ENABLE')): ?>
     </tbody>
-    <tbody class="labeled">
+    <tbody>
         <tr>
             <td colspan="2"><?= _('Einzelterminkalender') ?></td>
         </tr>
 <? endif ?>
         <tr>
-            <td><?= _('Zeitraum der Tages- und Wochenansicht') ?></td>
+            <td>
+                <label><?= _('Zeitraum der Tages- und Wochenansicht') ?></label>
+            </td>
             <td>
                 <select name="cal_start" aria-label="<?= _('Startzeit der Tages- und Wochenansicht') ?>">
                 <? for ($i = 0; $i < 24; $i += 1): ?>
@@ -170,7 +174,7 @@ $cal_step_weeks = array(
 */?>
 <? if (get_config('CALENDAR_GROUP_ENABLE')): ?>
     </tbody>
-    <tbody class="labeled">
+    <tbody>
         <tr>
             <td colspan="2"><?= _('Gruppenterminkalender') ?></td>
         </tr>

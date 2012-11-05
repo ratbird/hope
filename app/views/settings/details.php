@@ -19,9 +19,11 @@
                 <th colspan="3"><?= _('Lebenslauf bearbeiten') ?></th>
             </tr>
         </thead>
-        <tbody class="labeled maxed">
+        <tbody class="maxed">
             <tr>
-                <td><?= _('Telefon (privat):') ?></td>
+                <td>
+                    <label><?= _('Telefon (privat):') ?></label>
+                </td>
                 <td>
                     <label>
                         <?= _('Festnetz') ?>:<br>
@@ -53,7 +55,9 @@
             </tr>
         <? if ($GLOBALS['ENABLE_SKYPE_INFO']): ?>
             <tr>
-                <td><?= _('Skype:') ?></td>
+                <td>
+                    <label><?= _('Skype:') ?></label>
+                </td>
                 <td>
                     <label>
                         <?= _('Skype Name:') ?><br>
@@ -96,6 +100,7 @@
                 </td>
                 <td colspan="2">
                     <textarea name="hobby" id="hobbies" style="height:100px;"
+                              class="add_toolbar"
                               <? if (!$controller->shallChange('user_info.hobby')) echo 'disabled'; ?>
                     ><?= htmlReady($user->hobby) ?></textarea>
                 </td>
@@ -107,6 +112,7 @@
                 </td>
                 <td colspan="2">
                     <textarea id="lebenslauf" name="lebenslauf" style="height:100px;"
+                              class="add_toolbar"
                               <? if (!$controller->shallChange('user_info.lebenslauf')) echo 'disabled'; ?>
                     ><?= htmlReady($user->lebenslauf) ?></textarea>
                 </td>
@@ -119,6 +125,7 @@
                 </td>
                 <td colspan="2">
                     <textarea id="schwerp" name="schwerp" style="height:100px;"
+                              class="add_toolbar"
                               <? if (!$controller->shallChange('user_info.schwerp')) echo 'disabled'; ?>
                     ><?= htmlReady($user->schwerp) ?></textarea>
                 </td>
@@ -130,11 +137,20 @@
                 </td>
                 <td colspan="2">
                     <textarea id="publi" name="publi" style="height:100px;"
+                              class="add_toolbar"
                               <? if (!$controller->shallChange('user_info.publi')) echo 'disabled'; ?>
                     ><?= htmlReady($user->publi) ?></textarea>
                 </td>
             </tr>
         <? endif; ?>
+        </tbody>
+    <? if (count($user_entries) > 0): ?>
+        <tbody>
+            <tr>
+                <td colspan="3">
+                    <?= _('Zusätzliche Datenfelder') ?>
+                </td>
+            </tr>
         <? foreach ($user_entries as $id => $entry): ?>
             <tr>
             <? if (isset($invalid_entries[$id])): ?>
@@ -143,7 +159,7 @@
             <? else: ?>
                 <td>
             <? endif; ?>
-                    <?= htmlReady($entry->getName()) ?>
+                    <label><?= htmlReady($entry->getName()) ?></label>
                 </td>
                 <td colspan="2">
                 <? if ($entry->isEditable() && !LockRules::check($user->user_id, $entry->getId())): ?>
@@ -158,6 +174,7 @@
             </tr>
         <? endforeach; ?>
         </tbody>
+    <? endif; ?>
         <tfoot>
             <tr>
                 <td colspan="3">

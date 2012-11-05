@@ -30,7 +30,7 @@ if (!$user_domains) {
                 <th><?= _('Auswahl') ?></th>
             </tr>
         </thead>
-        <tbody class="labeled">
+        <tbody>
             <tr>
                 <td>
                     <label for="global_vis">
@@ -82,14 +82,16 @@ if (!$user_domains) {
     ?>
             <tr>
                 <td>
-                    <?= _('Erweiterte Einstellungen') ?><br>
-                    <dfn>
-                        <?= _('Stellen Sie hier ein, in welchen Bereichen des Systems Sie erscheinen wollen.') ?>
-                    <? if (!$NOT_HIDEABLE_FIELDS[$user_perm]['email']): ?>
-                        <br>
-                        <?=  _('Wenn Sie hier Ihre E-Mail-Adresse verstecken, wird stattdessen die E-Mail-Adresse Ihrer (Standard-)Einrichtung angezeigt.') ?>
-                    <? endif; ?>
-                    </dfn>
+                    <label>
+                        <?= _('Erweiterte Einstellungen') ?>
+                        <dfn>
+                            <?= _('Stellen Sie hier ein, in welchen Bereichen des Systems Sie erscheinen wollen.') ?>
+                        <? if (!$NOT_HIDEABLE_FIELDS[$user_perm]['email']): ?>
+                            <br>
+                            <?=  _('Wenn Sie hier Ihre E-Mail-Adresse verstecken, wird stattdessen die E-Mail-Adresse Ihrer (Standard-)Einrichtung angezeigt.') ?>
+                        <? endif; ?>
+                        </dfn>
+                    </label>
                 </td>
                 <td>
                 <? if (!$NOT_HIDEABLE_FIELDS[$user_perm]['online']): ?>
@@ -178,7 +180,7 @@ if (!$user_domains) {
                 <th colspan="<?= count($visibilities) ?>"><?= _('sichtbar für'); ?></th>
             </tr>
         </thead>
-        <tbody class="labeled privacy">
+        <tbody class="privacy">
             <tr>
                 <td>&nbsp;</td>
             <? foreach ($visibilities as $visibility): ?>

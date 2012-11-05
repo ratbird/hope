@@ -23,7 +23,7 @@
                 <th><?= _('Auswahl') ?></th>
             </tr>
         </thead>
-        <tbody class="labeled">
+        <tbody>
             <tr>
                 <td>
                     <label for="neuauf"><?= _('Neue Beiträge immer aufgeklappt') ?></label>
@@ -56,7 +56,7 @@
             </tr>
             <tr>
                 <td>
-                    <?= _('Sortierung der Themenanzeige') ?>
+                    <label><?= _('Sortierung der Themenanzeige') ?></label>
                 </td>
                 <td>
                     <label>
@@ -80,7 +80,7 @@
             </tr>
             <tr>
                 <td>
-                    <?= _('Anzeigemodus der Themenanzeige') ?>
+                    <label><?= _('Anzeigemodus der Themenanzeige') ?></label>
                 </td>
                 <td>
                     <label>
@@ -98,7 +98,7 @@
             </tr>
             <tr>
                 <td>
-                    <?= _('Standardansicht') ?>
+                    <label><?= _('Standardansicht') ?></label>
                 </td>
                 <td>
                     <label>

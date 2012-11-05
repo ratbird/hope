@@ -25,7 +25,7 @@ $start_pages = array(
                 <th><?= _('Auswahl') ?></th>
             </tr>
         </thead>
-        <tbody class="labeled">
+        <tbody>
             <tr>
                 <td>
                     <label for="forced_language"><?= _('Sprache') ?></label>

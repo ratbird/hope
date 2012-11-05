@@ -252,8 +252,7 @@ tr.sortable {
 /* styles for settings tables */
 .settings {
     border-collapse: collapse;
-    margin: auto;
-    width: 80%;
+    width: 100%;
 
     thead th, tbody th {
         .table_header_bold;
@@ -261,6 +260,7 @@ tr.sortable {
     }
     td, th {
         padding: 8px;
+        vertical-align: top;
     }
     tbody {
         &.maxed {
@@ -273,34 +273,17 @@ tr.sortable {
             font-style: italic;
             text-align: center;
         }
-        &.labeled {
-            td:first-child {
-                background-color: #fff;
-                border-bottom: 1px dotted #000;
-                font-weight: bold;
-                text-align: right;
-                vertical-align: top;
-
-                label {
-                    display: block;
-                }
-
-                &[colspan] {
-                    background-color: #e7ebf1;
-                    border-top: 1px dotted #000;
-                    text-align: center;
-                }
-            }
-            tr:hover td[colspan] { // prevent header rows from bgcolor change
-                background: #e7ebf1 !important; // ugly but unfortunately neccessary
-            }
-            tr:last-child td:first-child { border-bottom: 0; }
+        td:first-child label {
+            display: block;
+            font-weight: bold;
         }
-    }
-
-    &.zebra-hover .labeled tr:hover td:first-child {
-        #gradient > .vertical(#fff0d8, #fff);
-        label { text-shadow: 1px 1px 0 #fff; }
+        td:first-child[colspan] {
+            background-color: lighten(@brand-color-lighter, 20%);
+            border-bottom: 1px solid #444;
+            border-top: 1px solid #444;
+            font-weight: bold;
+            text-align: center;
+        }
     }
 
     dfn, small {

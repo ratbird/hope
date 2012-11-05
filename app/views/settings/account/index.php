@@ -26,20 +26,20 @@
 
     <table class="zebra-hover settings">
         <colgroup>
-            <col width="33%">
-            <col width="33%">
-            <col width="33%">
+            <col width="20%">
+            <col width="40%">
+            <col width="40%">
         </colgroup>
         <thead>
             <tr>
                 <th colspan="3"><?= _('Benutzerkonto bearbeiten') ?></th>
             </tr>
         </thead>
-        <tbody class="labeled maxed">
+        <tbody class="maxed">
             <tr>
                 <td>
                     <label for="new_username" <? if (!$restricted) echo 'class="required"'; ?>>
-                        <?= _('Username:') ?>
+                        <?= _('Nutzername:') ?>
                         <? if ($restricted) : ?>
                             <?= tooltipIcon('Dieses Feld dürfen Sie nicht ändern, Adminzugriff ist hier nicht erlaubt!') ?>
                         <? endif ?>
@@ -159,7 +159,9 @@
                 </td>
             </tr>
             <tr>
-                <td><?= _('Geschlecht') ?></td>
+                <td>
+                    <label><?= _('Geschlecht') ?></label>
+                </td>
                 <td colspan="2">
                 <? foreach ($genders as $index => $gender): ?>
                     <label>

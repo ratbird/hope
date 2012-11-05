@@ -56,7 +56,7 @@
                 <th><?= _('Auswahl') ?></th>
             </tr>
         </thead>
-        <tbody class="labeled">
+        <tbody>
             <tr>
                 <td>
                     <label for="opennew"><?= _('Neue Nachrichten immer aufgeklappt') ?></label>
@@ -117,7 +117,7 @@
         <? if ($GLOBALS['MESSAGING_FORWARD_AS_EMAIL']): ?>
             <tr>
                 <td>
-                    <?= _('Kopie empfangener Nachrichten an eigene E-Mail-Adresse schicken') ?>
+                    <label><?= _('Kopie empfangener Nachrichten an eigene E-Mail-Adresse schicken') ?></label>
                 </td>
                 <td>
                 <? foreach ($send_as_email as $key => $label): ?>
@@ -132,7 +132,7 @@
             </tr>
             <tr>
                 <td>
-                    <?= _('E-Mail in folgendem Format versenden') ?>
+                    <label><?= _('E-Mail in folgendem Format versenden') ?></label>
                 </td>
                 <td>
                 <? foreach ($mail_formats as $key => $label): ?>
@@ -148,7 +148,7 @@
         <? endif; ?>
             <tr>
                 <td>
-                   <?= _('Umgang mit angeforderter Lesebestätigung') ?>
+                    <label><?= _('Umgang mit angeforderter Lesebestätigung') ?></label>
                 </td>
                 <td>
                 <? foreach ($confirmation_types as $key => $label): ?>
@@ -202,7 +202,7 @@
                 </td>
             </tr>
         </tbody>
-        <tbody class="labeled">
+        <tbody>
             <tr>
                 <td colspan="2">
                     <?= _('Signatur') ?>
@@ -230,7 +230,7 @@
                 </td>
             </tr>
         </tbody>
-        <tbody class="labeled">
+        <tbody>
             <tr>
                 <td colspan="2">
                     <?= _('Buddies/ Wer ist online?') ?>

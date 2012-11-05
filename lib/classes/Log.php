@@ -1,6 +1,6 @@
 <?php
 /**
- * StudipLog.php
+ * Log.php
  *
  *
  * This program is free software; you can redistribute it and/or
@@ -11,19 +11,19 @@
  * Usage:
  * @code
  * //logging to $GLOBALS['TMP_PATH'] . '/studip.log'
- * StudipLog::get()->setHandler($GLOBALS['TMP_PATH'] . '/studip.log');
- * StudipLog::warn('log this'); //log a WARNING
- * StudipLog::warning('log this'); //also log a WARNING
- * StudipLog::w('log this'); //also log a WARNING
+ * Log::get()->setHandler($GLOBALS['TMP_PATH'] . '/studip.log');
+ * Log::warn('log this'); //log a WARNING
+ * Log::warning('log this'); //also log a WARNING
+ * Log::w('log this'); //also log a WARNING
  * //create additional log
- * StudipLog::set('my', '/tmp/mylog.txt');
- * StudipLog::debug_my('debug to my');
+ * Log::set('my', '/tmp/mylog.txt');
+ * Log::debug_my('debug to my');
  * //use self defined log handler
- * StudipLog::get('my')
+ * Log::get('my')
  * ->setHandler(function ($m) {
  *   return mail( mail('noack@data-quest.de', '['.$m['level_name'].']', $m['formatted']););
  *   });
- * StudipLog::alert_my('log via mail');
+ * Log::alert_my('log via mail');
  * @endcode
  *
  * @author      André Noack <noack@data-quest.de>
@@ -40,7 +40,7 @@
  * @method mixed INFO (string $message)
  * @method mixed DEBUG (string $message)
 */
-class StudipLog
+class Log
 {
 
     const FATAL = 0; // All is lost
@@ -94,7 +94,7 @@ class StudipLog
      *
      * @param string $name name of log instance
      * @throws InvalidArgumentException
-     * @return StudipLog
+     * @return Log
      */
     public static function get($name = '')
     {
@@ -122,7 +122,7 @@ class StudipLog
         if (isset(self::$instances[$name])) {
             $old = self::$instances[$name];
         }
-        self::$instances[$name] = new StudipLog($log_handler);
+        self::$instances[$name] = new Log($log_handler);
         return $old;
     }
 
@@ -211,7 +211,7 @@ class StudipLog
      * @param integer $level log level, see constants
      * @return mixed number of written bytes or return value from callable handler
      */
-    public function log($message, $level = 3)
+    public function log($message, $level = Log::ERROR)
     {
         if (isset($this->log_handler) && $level <= $this->log_level) {
             $log_level_name = $this->log_level_names[$level];
@@ -219,11 +219,11 @@ class StudipLog
             if (is_callable($this->log_handler)) {
                 $log_handler = $this->log_handler;
                 return $log_handler(array('formatted' => $formatted_message,
-                                            'message' => $message,
-                                            'level' => $level,
-                                            'level_name' => $this->log_level_names[$level],
-                                            'timestamp' => time()
-                                            ));
+                                          'message' => $message,
+                                          'level' => $level,
+                                          'level_name' => $this->log_level_names[$level],
+                                          'timestamp' => time()
+                                          ));
             } else {
                 $logfile = $this->log_handler;
                 $this->file = is_resource($this->file) ? $this->file : @fopen($logfile, 'ab');

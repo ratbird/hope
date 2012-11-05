@@ -33,8 +33,17 @@ namespace Studip {
 // use default namespace for the remaining lines
 namespace {
 
+require_once('lib/classes/Log.php');
 require_once('lib/classes/SkipLinks.php');
 require_once('lib/deputies_functions.inc.php');
+
+//setup default logger
+Log::get()->setHandler($GLOBALS['TMP_PATH'] . '/studip.log');
+if (Studip\ENV == 'development') {
+    Log::get()->setLogLevel(Log::DEBUG);
+} else {
+    Log::get()->setLogLevel(Log::ERROR);
+}
 
 // set default time zone
 date_default_timezone_set(@date_default_timezone_get());

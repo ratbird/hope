@@ -8,7 +8,8 @@
 * the License, or (at your option) any later version.
 */
 
-require_once "Log.php";
+require_once "lib/classes/Log.php";
+@include "FirePHPCore/fb.php";
 
 class StudipDebug {
 
@@ -17,17 +18,28 @@ class StudipDebug {
 
     public static function log($msg) {
         if(is_null(self::$logger)){
-            self::$logger = Log::factory('file', $GLOBALS['TMP_PATH'] . '/studip-debug.log', '', array('append' => false));
-            self::$logger->log('Logging started: ' . realpath($_SERVER['SCRIPT_FILENAME']));
-            self::$logger->log('$_REQUEST:'.print_r($_REQUEST,1));
+            $logger = function($m)
+            {
+                return file_put_contents($GLOBALS['TMP_PATH'] . '/studip-debug.sql', $m['message'], FILE_APPEND);
+            };
+            file_put_contents($GLOBALS['TMP_PATH'] . '/studip-debug.sql', '');
+            Log::set('query', $logger);
+            self::$logger = Log::get('query');
+            self::log('-- Logging started: ' . realpath($_SERVER['SCRIPT_FILENAME']));
+            self::log('-- $_REQUEST:'. join("\n-- ", explode("\n",print_r($_REQUEST,1))));
         }
-        self::$logger->log($msg);
+        self::$logger->info($msg."\n");
     }
 
     public static function log_query($query_string, $starttime) {
         $query_time = microtime(true) - $starttime;
         self::$total_query_time += $query_time;
-        StudipDebug::log($query_string."\nquery time: ".round($query_time, 4)."; total query time: " .round(self::$total_query_time, 4) . "; memory: ". (int)(memory_get_usage() / 1024) ." KB");
+        StudipDebug::log($query_string."\n-- query time: ".round($query_time, 4)."; total query time: " .round(self::$total_query_time, 4) . "; memory: ". (int)(memory_get_usage(true) / 1024) ." KB; total memory: ". (int)(memory_get_peak_usage(true) / 1024) ." KB");
+    }
+
+    public static function log_time($msg, $starttime) {
+        $query_time = microtime(true) - $starttime;
+        StudipDebug::log($msg."\n-- query time: ".round($query_time, 4)."; memory: ". (int)(memory_get_usage(true) / 1024) ." KB; total memory: ". (int)(memory_get_peak_usage(true) / 1024) ." KB");
     }
 
     public static function get_backtrace($NL = "\n") {

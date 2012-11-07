@@ -13,7 +13,7 @@
     <? SkipLinks::addIndex(_("Hauptnavigation"), 'barTopMenu', 1); ?>
     <ul id="barTopMenu" role="navigation">
     <? $accesskey = 0 ?>
-    <? foreach (Navigation::getItem('/') as $nav) : ?>
+    <? foreach (Navigation::getItem('/') as $path => $nav) : ?>
         <? if ($nav->isVisible(true)) : ?>
             <?
             $accesskey_attr = '';
@@ -31,7 +31,7 @@
             }
 
             ?>
-            <li<? if ($nav->isActive()) : ?> class="active"<? endif ?>>
+            <li id="nav_<?= $path ?>"<? if ($nav->isActive()) : ?> class="active"<? endif ?>>
                 <a href="<?= URLHelper::getLink($nav->getURL(), $link_params) ?>" title="<?= $image['title'] ?>" <?= $accesskey_attr ?><?= $badge_attr ?>>
                    <span style="background-image: url('<?= $image['src'] ?>'); background-size: auto 32px;" class="<?= $image['class'] ?>"> </span><br>
                    <?= htmlReady($nav->getTitle()) ?>

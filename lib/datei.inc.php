@@ -1670,7 +1670,7 @@ function display_file_line ($datei, $folder_id, $open, $change, $move, $upload, 
  * Displays the body of a folder including the description, changeform, subfolder and files
  *
  */
-function display_folder_body($folder_id, $open, $change, $move, $upload, $refresh=FALSE, $filelink="", $anchor_id) {
+function display_folder_body($folder_id, $open, $change, $move, $upload, $refresh=FALSE, $filelink="", $anchor_id, $level = 0) {
     global $_fullname_sql, $SessionSeminar, $SemUserStatus, $SessSemName, $user, $perm, $rechte, $countfolder;
     $db = DBManager::get();
     //Einbinden einer Klasse, die Informationen über den ganzen Baum enthält
@@ -2136,7 +2136,7 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
     if ($open[$folder_id]) {
         print "<div id=\"folder_".$folder_id."_body\">";
         //Der ganze Teil des Unterbaus wurde in die folgende Funktion outsourced:
-        display_folder_body($folder_id, $open, $change, $move, $upload, $refresh, $filelink, $anchor_id);
+        display_folder_body($folder_id, $open, $change, $move, $upload, $refresh, $filelink, $anchor_id, $depth - 3);
     } else {
         print "<div id=\"folder_".$folder_id."_body\" style=\"display: none\">";
     }

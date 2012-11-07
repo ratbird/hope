@@ -235,11 +235,14 @@ class Config implements ArrayAccess, Countable, IteratorAggregate
                     case 'boolean':
                         $value = (bool)$row['value'];
                         break;
+                    case 'array':
+                        $value = studip_utf8decode((array)json_decode($row['value'], true));
+                        break;
                     default:
                         $value = (string)$row['value'];
                         $row['type'] = 'string';
                 }
-                $this->data[$row['field']] = $row['value'];
+                $this->data[$row['field']] = $value;
                 $this->metadata[$row['field']] = array_intersect_key($row, array_flip(words('type section range description is_default comment')));
                 $this->metadata[$row['field']]['field'] = $row['field'];
             }
@@ -256,10 +259,21 @@ class Config implements ArrayAccess, Countable, IteratorAggregate
      */
     function store($field, $data)
     {
-        if (!is_array($data)) {
+        if (!is_array($data) || !isset($data['value'])) {
             $values['value'] = $data;
         } else {
             $values = $data;
+        }
+        switch ($this->metadata[$field]['type']) {
+            case 'integer':
+            case 'boolean':
+                $values['value'] = (int)$values['value'];
+            break;
+            case 'array' :
+                 $values['value'] = json_encode(studip_utf8encode($values['value']));
+            break;
+            default:
+                $values['value'] = (string)$values['value'];
         }
         $entries = ConfigEntry::findByField($field);
         if (count($entries)) {
@@ -286,7 +300,7 @@ class Config implements ArrayAccess, Countable, IteratorAggregate
             if ($ret) {
                 $this->fetchData();
                 if (isset($value_entry)) {
-                   NotificationCenter::postNotification('ConfigValueChanged', $this, array('field' => $field, 'old_value' => $old_value, 'new_value' => $value_entry->value));
+                   NotificationCenter::postNotification('ConfigValueDidChange', $this, array('field' => $field, 'old_value' => $old_value, 'new_value' => $value_entry->value));
                 }
            }
             return $ret > 0;

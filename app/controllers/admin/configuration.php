@@ -101,10 +101,11 @@ class Admin_ConfigurationController extends AuthenticatedController
                 if (!empty($conf_sec_new)) {
                     $conf_sec = $conf_sec_new;
                 }
-
                 $config  = ConfigurationModel::getConfigInfo($config_id);
                 if($config['type'] == 'integer' && !is_numeric($conf_value)) {
                     $this->flash['error'] = _("Bitte geben Sie bei Parametern vom Typ 'integer' nur Zahlen ein!");
+                } elseif ($config['type'] == 'array' && !is_array($conf_value = json_decode(studip_utf8encode($conf_value),true)) ) {
+                    $this->flash['error'] = _("Bitte geben Sie bei Parametern vom Typ 'array' ein Array oder Objekt in korrekter JSON Notation ein!");
                 } else {
                     Config::get()->store($config_id, array(
                                                            'value'   => $conf_value,
@@ -141,8 +142,20 @@ class Admin_ConfigurationController extends AuthenticatedController
     {
 
         if ($give_all == 'update') {
-            UserConfig::get(Request::get('user_id'))->store(Request::get('field'), Request::get('value'));
-            $this->flash['success'] = sprintf(_("Der Konfigurationseintrag: %s wurde erfolgreich geändert!"), Request::get('field'));
+
+            $config = Config::get()->getMetadata(Request::get('field'));
+            $conf_value = Request::get('value');
+            if ($config['type'] == 'integer' && !is_numeric($conf_value)) {
+                $this->flash['error'] = _("Bitte geben Sie bei Parametern vom Typ 'integer' nur Zahlen ein!");
+            } elseif ($config['type'] == 'array' && !is_array($conf_value = json_decode(studip_utf8encode($conf_value),true)) ) {
+                $this->flash['error'] = _("Bitte geben Sie bei Parametern vom Typ 'array' ein Array oder Objekt in korrekter JSON Notation ein!");
+            } else {
+                UserConfig::get(Request::get('user_id'))->store(Request::get('field'), $conf_value);
+                $this->flash['success'] = sprintf(_("Der Konfigurationseintrag: %s wurde erfolgreich geändert!"), Request::get('field'));
+            }
+            if ($this->flash['error']) {
+                return $this->redirect($this->url_for('admin/configuration/edit_user_config/'.Request::get('user_id').'/'.Request::get('field')));
+            }
         }
 
         if (Request::submitted('user_id')) {

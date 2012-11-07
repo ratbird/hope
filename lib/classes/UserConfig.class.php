@@ -81,7 +81,7 @@ class UserConfig extends Config
             $this->data = $data;
         } else {
             $this->data = array();
-            foreach(Config::get()->getFields('user') as $field){
+            foreach(Config::get()->getFields('user') as $field) {
                 $this->data[$field] = Config::get()->$field;
                 $metadata[$field] = Config::get()->getMetadata($field);
             }
@@ -95,10 +95,13 @@ class UserConfig extends Config
                     case 'boolean':
                         $value = (bool)$row['value'];
                         break;
+                    case 'array':
+                        $value = studip_utf8decode((array)json_decode($row['value'], true));
+                        break;
                     default:
                         $value = $row['value'];
                 }
-                $this->data[$row['field']] = $row['value'];
+                $this->data[$row['field']] = $value ;
             }
         }
     }
@@ -209,10 +212,14 @@ class UserConfig extends Config
             $entry->comment = '';
         }
         $metadata = Config::get()->getMetadata($field);
+
         switch ($metadata['type']) {
             case 'integer':
             case 'boolean':
                 $value = (int)$value;
+            break;
+            case 'array' :
+                $value = json_encode(studip_utf8encode($value));
             break;
             default:
                 $value = (string)$value;

@@ -35,6 +35,8 @@ use Studip\Button, Studip\LinkButton;
                         FALSE
                     </option>
                 </select>
+            <? elseif ($edit['type'] == 'array') : ?>
+                <textarea cols="80" rows="5" name="value"><?= htmlReady(json_encode(studip_utf8encode($edit['value'])),true,true)?></textarea>
             <? else : ?>
                 <textarea cols="80" rows="3" name="value"><?= htmlReady($edit['value'])?></textarea>
             <? endif; ?>

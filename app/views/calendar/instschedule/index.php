@@ -31,7 +31,9 @@ $infobox['content'] = array(
 );
 
 $infobox['content'][1]['eintrag'][] = array (
-    'text' => '<a href="'. $controller->url_for('calendar/instschedule/index/'. implode(',', $days) .'?printview=true') .'" target="_blank">'._("Druckansicht") .'</a>',
+    'text' => '<a href="'. $controller->url_for('calendar/instschedule/index/'. implode(',', $days) 
+           . '?printview=true&semester_id=' . $current_semester['semester_id']) 
+           . '" target="_blank">'._("Druckansicht") .'</a>',
     'icon' => 'icons/16/black/print.png'
 );
 

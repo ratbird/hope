@@ -56,7 +56,7 @@ if (!$inst_mode) {
 
 $infobox['content'][2]['eintrag'][] = array (
     'text' => '<a href="'. $controller->url_for('calendar/schedule/index/'. implode(',', $days)
-           .  '?printview=true')
+           .  '?printview=true&semester_id=' . $current_semester['semester_id'])
            .  '" target="_blank">'._("Druckansicht") .'</a>',
     'icon' => "icons/16/black/print.png"
 );

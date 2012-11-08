@@ -124,7 +124,12 @@ $start_pages = array(
                            <? if ($config->SHOWSEM_ENABLE) echo 'checked'; ?>
                 </td>
             </tr>
+        </tbody>
         <? if (PersonalNotifications::isGloballyActivated()): ?>
+        <tbody>
+            <tr>
+                <td colspan="2"><?= _('Benachrichtigungen') ?></td>
+            </tr>
             <tr>
                 <td>
                     <label for="personal_notifications_activated">
@@ -160,8 +165,8 @@ $start_pages = array(
                            <? if (PersonalNotifications::isAudioActivated($user->user_id)) echo 'checked'; ?>>
                 </td>
             </tr>
-        <? endif; ?>
         </tbody>
+        <? endif; ?>
         <tfoot>
             <tr>
                 <td class="table_row_odd" colspan="2" align="center">

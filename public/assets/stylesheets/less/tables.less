@@ -279,13 +279,14 @@ tr.sortable {
             display: block;
             font-weight: bold;
         }
-        td:first-child[colspan] {
-            background-color: lighten(@brand-color-lighter, 20%);
-            border-bottom: 1px solid #444;
-            border-top: 1px solid #444;
-            font-weight: bold;
-            text-align: center;
-        }
+    }
+    td:first-child[colspan], .divider > th, .divider > td {
+        background-color: lighten(@brand-color-lighter, 20%);
+        border-bottom: 1px solid #444;
+        border-top: 1px solid #444;
+        color: #000;
+        font-weight: bold;
+        text-align: center;
     }
 
     dfn, small {

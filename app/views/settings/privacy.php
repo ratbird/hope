@@ -176,14 +176,14 @@ if (!$user_domains) {
         </colgroup>
         <thead>
             <tr>
-                <th colspan="<?= 5 + (int)$user_domains ?>" style="border-bottom: 0;">
+                <th colspan="<?= 5 + (int)$user_domains ?>">
                     <?= _('Privatsphäre') ?>:
                     <?= _('Eigenes Profil') ?>
                 </th>
             </tr>
-            <tr>
-                <th style="text-align: left"><?= _('Profil-Element'); ?></th>
-                <th colspan="<?= count($visibilities) ?>"><?= _('sichtbar für'); ?></th>
+            <tr class="divider">
+                <th style="text-align: left; font-size: 10pt"><?= _('Profil-Element'); ?></th>
+                <th style="font-size: 10pt;" colspan="<?= count($visibilities) ?>"><?= _('sichtbar für'); ?></th>
             </tr>
         </thead>
         <tbody class="privacy">
@@ -194,7 +194,7 @@ if (!$user_domains) {
             <? endforeach; ?>
             </tr>
     <? foreach ($homepage_elements as $category => $elements): ?>
-            <tr class="blue_gradient">
+            <tr>
                 <td colspan="<?= 1 + count($visibilities) ?>">
                     <?= htmlReady($category) ?>
                 </td>

@@ -425,10 +425,13 @@ tr.sortable th.sortdesc {
   display: block;
   font-weight: bold;
 }
-.settings tbody td:first-child[colspan] {
+.settings td:first-child[colspan],
+.settings .divider > th,
+.settings .divider > td {
   background-color: #c9d1df;
   border-bottom: 1px solid #444;
   border-top: 1px solid #444;
+  color: #000;
   font-weight: bold;
   text-align: center;
 }

@@ -84,8 +84,9 @@ table.header,
 }
 .table_header_bold {
   background-color: #899ab9;
-  border: 0;
-  border-bottom: 1px solid #1e3e70;
+  border-color: #1e3e70;
+  border-style: solid;
+  border-width: 0 0 1px 0;
   color: #FFFFFF;
   font-size: 12pt;
   padding: 3px 5px;
@@ -381,13 +382,15 @@ tr.sortable th.sortdesc {
 }
 .settings {
   border-collapse: collapse;
+  margin-bottom: 2em;
   width: 100%;
 }
 .settings thead th,
 .settings tbody th {
   background-color: #899ab9;
-  border: 0;
-  border-bottom: 1px solid #1e3e70;
+  border-color: #1e3e70;
+  border-style: solid;
+  border-width: 0 0 1px 0;
   color: #FFFFFF;
   font-size: 12pt;
   padding: 3px 5px;

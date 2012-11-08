@@ -27,8 +27,6 @@ $cal_step_weeks = array(
 );
 ?>
 
-<h3 style="text-align: center;"><?= _('Hier k&ouml;nnen Sie die Ansicht Ihres pers&ouml;nlichen Terminkalenders anpassen.'); ?></h3>
-
 <form method="post" action="<?= $controller->url_for('settings/calendar/store') ?>">
     <input type="hidden" name="studipticket" value="<?= get_ticket() ?>">
     <?= CSRFProtection::tokenTag() ?>
@@ -40,8 +38,7 @@ $cal_step_weeks = array(
     </colgroup>
     <thead>
         <tr>
-            <th><?= _('Option') ?></th>
-            <th><?= _('Auswahl') ?></th>
+            <th colspan="2"><?= _('Einstellungen des Terminkalenders anpassen') ?></th>
         </tr>
     </thead>
     <tbody>

@@ -52,8 +52,7 @@
         </colgroup>
         <thead>
             <tr>
-                <th><?= _('Option') ?></th>
-                <th><?= _('Auswahl') ?></th>
+                <th colspan="2"><?= _('Einstellungen des Nachrichtensystems anpassen') ?></th>
             </tr>
         </thead>
         <tbody>

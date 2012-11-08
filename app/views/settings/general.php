@@ -21,8 +21,7 @@ $start_pages = array(
         </colgroup>
         <thead>
             <tr>
-                <th><?= _('Option') ?></th>
-                <th><?= _('Auswahl') ?></th>
+                <th colspan="2"><?= _('Allgemeine Einstellungen anpassen') ?></th>
             </tr>
         </thead>
         <tbody>

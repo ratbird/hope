@@ -19,41 +19,10 @@
         </colgroup>
         <thead>
             <tr>
-                <th><?= _('Option') ?></th>
-                <th><?= _('Auswahl') ?></th>
+                <th colspan="2"><?= _('Einstellungen des Forums anpassen') ?></th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>
-                    <label for="neuauf"><?= _('Neue Beiträge immer aufgeklappt') ?></label>
-                </td>
-                <td>
-                    <input type="checkbox" name="neuauf" id="neuauf" value="1"
-                           <? if ($settings['neuauf']) echo 'checked'; ?>>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="rateallopen"><?= _('Bewertungsbereich bei geöffneten Postings immer anzeigen') ?></label>
-                    <dfn>
-                        <?= _('Die Aktivierung dieser Einstellung blendet ein Kästchen neben den Forenbeiträgen ein, mit dem Sie Beiträge bewerten können.') ?>
-                    </dfn>
-                </td>
-                <td>
-                    <input type="checkbox" name="rateallopen" id="rateallopen" value="TRUE"
-                           <? if($settings['rateallopen']) echo 'checked'; ?>>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="showimages"><?= _('Bilder im Bewertungsbereich anzeigen') ?></label>
-                </td>
-                <td>
-                    <input type="checkbox" name="showimages" id="showimages" value="TRUE"
-                           <? if ($settings['showimages']) echo 'checked'; ?>>
-                </td>
-            </tr>
             <tr>
                 <td>
                     <label><?= _('Sortierung der Themenanzeige') ?></label>
@@ -122,6 +91,15 @@
             </tr>
             <tr>
                 <td>
+                    <label for="neuauf"><?= _('Neue Beiträge immer aufgeklappt') ?></label>
+                </td>
+                <td>
+                    <input type="checkbox" name="neuauf" id="neuauf" value="1"
+                           <? if ($settings['neuauf']) echo 'checked'; ?>>
+                </td>
+            </tr>
+            <tr>
+                <td>
                     <label for="shrink"><?= _('Alte Beiträge standardmäßig zuklappen nach') ?></label>
                 </td>
                 <td>
@@ -133,6 +111,32 @@
                         </option>
                     <? endfor; ?>
                     </select>
+                </td>
+            </tr>
+        </tbody>
+        <tbody>
+            <tr>
+                <td colspan="2"><?= _('Bewertungen') ?></td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="rateallopen"><?= _('Bewertungsbereich bei geöffneten Postings immer anzeigen') ?></label>
+                    <dfn>
+                        <?= _('Die Aktivierung dieser Einstellung blendet ein Kästchen neben den Forenbeiträgen ein, mit dem Sie Beiträge bewerten können.') ?>
+                    </dfn>
+                </td>
+                <td>
+                    <input type="checkbox" name="rateallopen" id="rateallopen" value="TRUE"
+                           <? if($settings['rateallopen']) echo 'checked'; ?>>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="showimages"><?= _('Bilder im Bewertungsbereich anzeigen') ?></label>
+                </td>
+                <td>
+                    <input type="checkbox" name="showimages" id="showimages" value="TRUE"
+                           <? if ($settings['showimages']) echo 'checked'; ?>>
                 </td>
             </tr>
         </tbody>

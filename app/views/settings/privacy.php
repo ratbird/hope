@@ -18,16 +18,17 @@ if (!$user_domains) {
     <?= CSRFProtection::tokenTag() ?>
     <input type="hidden" name="studipticket" value="<?= get_ticket() ?>">
     
-    <h3 style="text-align: center;"><?= _('Globale Einstellungen'); ?></h3>
     <table id="main_content" class="settings zebra-hover">
         <colgroup>
-            <col width="34%">
-            <col width="66%">
+            <col width="50%">
+            <col width="50%">
         </colgroup>
         <thead>
             <tr>
-                <th><?= _('Option') ?></th>
-                <th><?= _('Auswahl') ?></th>
+                <th colspan="2">
+                    <?= _('Privatsphäre') ?>:
+                    <?= _('Globale Einstellungen') ?>
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -157,7 +158,6 @@ if (!$user_domains) {
     <?= CSRFProtection::tokenTag() ?>
     <input type="hidden" name="studipticket" value="<?= get_ticket() ?>">
     
-    <h3 style="text-align: center;"><?= _('Eigenes Profil'); ?></h3>
     <table class="settings zebra-hover">
         <colgroup>
             <col width="34%">
@@ -176,7 +176,13 @@ if (!$user_domains) {
         </colgroup>
         <thead>
             <tr>
-                <th><?= _('Profil-Element'); ?></th>
+                <th colspan="<?= 5 + (int)$user_domains ?>" style="border-bottom: 0;">
+                    <?= _('Privatsphäre') ?>:
+                    <?= _('Eigenes Profil') ?>
+                </th>
+            </tr>
+            <tr>
+                <th style="text-align: left"><?= _('Profil-Element'); ?></th>
                 <th colspan="<?= count($visibilities) ?>"><?= _('sichtbar für'); ?></th>
             </tr>
         </thead>

@@ -1,5 +1,5 @@
 /*jslint browser: true, white: true, undef: true, nomen: true, eqeqeq: true, plusplus: true, bitwise: true, newcap: true, immed: true, indent: 4, onevar: false */
-/*global window, $, jQuery, _ */
+/*global window, $, jQuery, _, STUDIP */
 
 jQuery(function ($) {
     $('.bookable_rooms_action').bind('click', function (event) {
@@ -32,7 +32,7 @@ jQuery(function ($) {
                                 var not_bookable_rooms = _.map(result, function (v) {
                                     return $(select).children('option[value=' + v + ']').text().trim();
                                 });
-                                select.title = 'Nicht buchbare R\u00e4ume:'.toLocaleString() + ' ' + not_bookable_rooms.join(', ');
+                                select.title = 'Nicht buchbare Räume:'.toLocaleString() + ' ' + not_bookable_rooms.join(', ');
                             } else {
                                 select.title = '';
                             }
@@ -43,7 +43,7 @@ jQuery(function ($) {
                             select.title = '';
                         }
                         me.attr('src', STUDIP.ASSETS_URL + 'images/icons/16/blue/room_clear.png');
-                        me.attr('title', 'Alle R\u00e4ume anzeigen'.toLocaleString());
+                        me.attr('title', 'Alle Räume anzeigen'.toLocaleString());
                         me.attr('data-state', 'enabled');
                     }
                 });
@@ -176,7 +176,7 @@ STUDIP.Raumzeit = {
             jQuery('select[name=teachers] option[value=' + lecturer_id + ']').show();
         } else {
             if (jQuery('div.at_least_one_teacher').size() === 0) {
-                jQuery('ul.teachers').before('<div class="at_least_one_teacher" style="display: none"><i>Jeder Termin muss mindestens eine Person haben, die ihn durchf\u00fchrt!</i><div>');
+                jQuery('ul.teachers').before('<div class="at_least_one_teacher" style="display: none"><i>Jeder Termin muss mindestens eine Person haben, die ihn durchführt!</i><div>');
                 jQuery('div.at_least_one_teacher').slideDown().delay(3000).fadeOut(400, function () {
                     jQuery(this).remove();
                 });
@@ -207,6 +207,6 @@ STUDIP.Raumzeit = {
 
         me.attr('data-state', false);
         me.attr('src', STUDIP.ASSETS_URL + 'images/icons/16/grey/room_clear.png');
-        me.attr('title', 'Nur buchbare R\u00e4ume anzeigen'.toLocaleString());
+        me.attr('title', 'Nur buchbare Räume anzeigen'.toLocaleString());
     }
 };

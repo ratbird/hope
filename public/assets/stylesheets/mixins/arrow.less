@@ -67,7 +67,7 @@
     .right(@width, @color) {
         #arrow > .right(@width, @color, @width);
     }
-    .right-border(@width, @color, @border-width, @border-color, @margin: @width) {
+    .right-border(@width, @color, @border-width, @border-color, @margin) {
         #arrow > .right(@width, @border-color, @margin);
         &:after { #arrow > .right-pseudo(@width - @border-width, @color); }
     }

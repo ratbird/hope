@@ -407,15 +407,14 @@ if ($start_level) { //create defaults
     }
 }
 
-if ($form == 1 && Request::isPost())
-    {
+if ($form == 1 && Request::isPost()) {
     $_SESSION['sem_create_data']["sem_name"]=Request::quoted('sem_name');
     $_SESSION['sem_create_data']["sem_untert"]=Request::quoted('sem_untert');
     $_SESSION['sem_create_data']["sem_nummer"]=Request::quoted('sem_nummer');
     $_SESSION['sem_create_data']["sem_ects"]=Request::quoted('sem_ects');
     $_SESSION['sem_create_data']["sem_desc"]=Request::quoted('sem_desc');
     $_SESSION['sem_create_data']["sem_inst_id"]=Request::option('sem_inst_id');
-    $_SESSION['sem_create_data']["term_art"]=Request::option('term_art');
+    $_SESSION['sem_create_data']["term_art"]=Request::int('term_art');
     $_SESSION['sem_create_data']["sem_start_time"]=Request::option('sem_start_time');
     $_SESSION['sem_create_data']["sem_domain"] = array();
 

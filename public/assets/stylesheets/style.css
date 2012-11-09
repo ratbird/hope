@@ -1283,23 +1283,22 @@ div.autocomplete {
 }
 a.button,
 button.button {
-  background-color: #36598f;
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#c4d1e9), color-stop(20%, #36598f), to(#36598f));
-  background-image: -webkit-linear-gradient(#c4d1e9, #36598f 20%, #36598f);
-  background-image: -moz-linear-gradient(top, #c4d1e9, #36598f 20%, #36598f);
-  background-image: -o-linear-gradient(#c4d1e9, #36598f 20%, #36598f);
-  background-image: linear-gradient(#c4d1e9, #36598f 20%, #36598f);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), color-stop(20%, #ccd4e1), to(#ccd4e1));
+  background-image: -webkit-linear-gradient(#ffffff, #ccd4e1 20%, #ccd4e1);
+  background-image: -moz-linear-gradient(top, #ffffff, #ccd4e1 20%, #ccd4e1);
+  background-image: -o-linear-gradient(#ffffff, #ccd4e1 20%, #ccd4e1);
+  background-image: linear-gradient(#ffffff, #ccd4e1 20%, #ccd4e1);
   background-repeat: no-repeat;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffc4d1e9', endColorstr='#ff36598f', GradientType=0);
-  background-color: #cddae4;
-  border: 1px solid #1e3e70;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#ffccd4e1', GradientType=0);
+  background-color: #ccd4e1;
+  border: 1px solid #899ab9;
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
   border-radius: 2px;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  color: #fff;
+  color: #000;
   cursor: pointer;
   display: inline-block;
   font-family: "Helvetica Neue", "Helvetica", Arial, sans-serif;
@@ -1312,32 +1311,23 @@ button.button {
   position: relative;
   text-align: center;
   text-decoration: none;
-  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
+  text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.3);
   vertical-align: middle;
   white-space: nowrap;
   width: auto;
 }
 a.button:hover,
 button.button:hover {
-  background-color: #7890bc;
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#c4d1e9), color-stop(20%, #7890bc), to(#7890bc));
-  background-image: -webkit-linear-gradient(#c4d1e9, #7890bc 20%, #7890bc);
-  background-image: -moz-linear-gradient(top, #c4d1e9, #7890bc 20%, #7890bc);
-  background-image: -o-linear-gradient(#c4d1e9, #7890bc 20%, #7890bc);
-  background-image: linear-gradient(#c4d1e9, #7890bc 20%, #7890bc);
-  background-repeat: no-repeat;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffc4d1e9', endColorstr='#ff7890bc', GradientType=0);
+  background-position: 0 -15px;
+  text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.6);
 }
 a.button:active,
 button.button:active {
-  background-color: #c4d1e9;
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#7890bc), color-stop(20%, #c4d1e9), to(#c4d1e9));
-  background-image: -webkit-linear-gradient(#7890bc, #c4d1e9 20%, #c4d1e9);
-  background-image: -moz-linear-gradient(top, #7890bc, #c4d1e9 20%, #c4d1e9);
-  background-image: -o-linear-gradient(#7890bc, #c4d1e9 20%, #c4d1e9);
-  background-image: linear-gradient(#7890bc, #c4d1e9 20%, #c4d1e9);
-  background-repeat: no-repeat;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff7890bc', endColorstr='#ffc4d1e9', GradientType=0);
+  background-image: none;
+  outline: 0;
+  -webkit-box-shadow: inset 0 2px 4px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
+  -moz-box-shadow: inset 0 2px 4px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
 }
 a.button:focus,
 button.button:focus {
@@ -1372,10 +1362,10 @@ button.button[disabled] {
   width: 16px;
 }
 .button.accept:before {
-  background: url("../images/icons/16/white/accept.png") no-repeat;
+  background: url("../images/icons/16/black/accept.png") no-repeat;
 }
 .button.cancel:before {
-  background: url("../images/icons/16/white/decline.png") no-repeat;
+  background: url("../images/icons/16/blue/decline.png") no-repeat;
 }
 /****************************************************************************/
 /* Grouped Buttons                                                          */
@@ -1388,7 +1378,7 @@ button.button[disabled] {
 }
 .button-group button,
 .button-group .button {
-  border-left: 1px solid #1e3e70;
+  border-left: 1px solid #899ab9;
   float: left;
   margin-left: -1px;
   margin-right: 0;
@@ -1401,7 +1391,7 @@ button.button[disabled] {
   -moz-border-radius-topright: 2px;
   border-bottom-right-radius: 2px;
   border-top-right-radius: 2px;
-  border-left: 1px solid #1e3e70;
+  border-left: 1px solid #899ab9;
   margin-left: 0;
 }
 .button-group > button:not(:first-child):not(:last-child),

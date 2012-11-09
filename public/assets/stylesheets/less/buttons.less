@@ -1,10 +1,10 @@
 a.button, button.button {
-    #gradient > .vertical-three-colors(#c4d1e9, @brand-color-light, 20%, @brand-color-light);
-    background-color: #cddae4;
-    border: 1px solid @brand-color-darker;
+    #gradient > .vertical-three-colors(lighten(@brand-color-lighter, 50%), lighten(@brand-color-lighter, 21%), 20%, lighten(@brand-color-lighter, 21%));
+    background-color: lighten(@brand-color-lighter, 21%);
+    border: 1px solid @brand-color-lighter;
     .border-radius(2px);
     .box-sizing(border-box);
-    color: #fff;
+    color: #000;
     cursor: pointer;
     display: inline-block;
     font-family: @font-family;
@@ -17,13 +17,20 @@ a.button, button.button {
     position: relative;
     text-align: center;
     text-decoration: none;
-    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
+    text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.3);
     vertical-align: middle;
     white-space: nowrap;
     width: auto;
 
-    &:hover  { #gradient > .vertical-three-colors(#c4d1e9, #7890bc, 20%, #7890bc); }
-    &:active { #gradient > .vertical-three-colors(#7890bc, #c4d1e9, 20%, #c4d1e9); }
+    &:hover  {
+      background-position: 0 -15px;
+      text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.6);
+    }
+    &:active {
+      background-image: none;
+      outline: 0;
+      .box-shadow(~"inset 0 2px 4px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05)");
+    }
     &:focus  { outline: dotted 1px #000; }
     &::-moz-focus-inner { border: 0; }
 
@@ -49,11 +56,11 @@ a.button, button.button {
 }
 
 .button.accept {
-    &:before { background: url("@{icon-path}/white/accept.png") no-repeat; }
+    &:before { background: url("@{icon-path}/blue/accept.png") no-repeat; }
 }
 
 .button.cancel {
-    &:before { background: url("@{icon-path}/white/decline.png") no-repeat; }
+    &:before { background: url("@{icon-path}/blue/decline.png") no-repeat; }
 }
 
 /****************************************************************************/
@@ -66,7 +73,7 @@ a.button, button.button {
     padding: 0;
 
     button, .button {
-        border-left: 1px solid @brand-color-darker;
+        border-left: 1px solid @brand-color-lighter;
         float: left;
         margin-left: -1px;
         margin-right: 0;
@@ -81,7 +88,7 @@ a.button, button.button {
             border-bottom-right-radius: 2px;
             border-top-right-radius: 2px;
 
-            border-left: 1px solid @brand-color-darker;
+            border-left: 1px solid @brand-color-lighter;
             margin-left: 0;
         }
         &:not(:first-child):not(:last-child) {

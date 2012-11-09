@@ -1706,7 +1706,7 @@ if ($rechte) {
             printf ("<td width=\"10%%\" align=\"center\"><font size=\"-1\">%s</font></td></tr>\n", ($waiting_user['studiengang_id'] == "all") ? _("alle Studieng&auml;nge") : $waiting_user['name']);
         }
         if(!LockRules::Check($id, 'participants')){
-            echo '<tr><td class="blank" colspan="3" align="right"><font size="-1">';
+            echo '<tr><td class="blank" colspan="4" align="right"><font size="-1">';
             echo '<img src="'.$GLOBALS['ASSETS_URL'].'images/icons/16/black/info.png" align="absmiddle" hspace="3" border="0" '.tooltip(_("Mit dieser Einstellung beeinflussen Sie, ob Teilnehmer die Sie hinzufügen auf die Kontingentplätze angerechnet werden."),1,1).' >';
             echo '<label for="kontingent">'._("Kontingent berücksichtigen:");
             echo '<input id="kontingent" type="checkbox" checked name="consider_contingent" value="1" style="vertical-align:middle"></label>';

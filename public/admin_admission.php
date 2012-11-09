@@ -878,7 +878,7 @@ if ($seminar_id
 
             $inserted = 0;
             while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-                $group = select_group($admin_admission_data['start_time'], $row['user_id']);
+                $group = select_group($admin_admission_data['start_time']);
 
                 $insert_statement->execute(array(
                     $row['user_id'],

@@ -385,7 +385,7 @@ function normal_update_admission($seminar_id, $send_message = TRUE)
 
             foreach ($temp as $row) {
                 //ok, here ist the "colored-group" meant (for grouping on meine_seminare), not the grouped seminars as above!
-                $group = select_group($seminar->getSemesterStartTime(), $row['user_id']); 
+                $group = select_group($seminar->getSemesterStartTime()); 
 
                 if (!$sem_preliminary) {
                     $query = "INSERT INTO seminar_user
@@ -485,7 +485,7 @@ function normal_update_admission($seminar_id, $send_message = TRUE)
 
                 foreach ($temp as $row) {
                     //ok, here ist the "colored-group" meant (for grouping on meine_seminare), not the grouped seminars as above!
-                    $group = select_group ($seminar->getSemesterStartTime(), $row['user_id']);
+                    $group = select_group ($seminar->getSemesterStartTime());
 
                     if (!$sem_preliminary) {
                         $insert_statement->bindValue(':user_id', $row['user_id']);
@@ -675,7 +675,7 @@ function check_admission ($send_message=TRUE)
                         $messaging->insert_message(addslashes($message), $winner['username'], '____%system%____', FALSE, FALSE, '1', FALSE, sprintf(_('Teilnahme an der Veranstaltung %s'), $seminar->getName())); 
                     }
                 } else {
-                    $group = select_group($seminar->getSemesterStartTime(), $winner['user_id']);
+                    $group = select_group($seminar->getSemesterStartTime());
                     $insert_statement->execute(array(
                         $seminar->getId(),
                         $winner['user_id'],

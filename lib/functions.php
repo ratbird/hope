@@ -506,20 +506,19 @@ function get_object_type($id, $check_only = array())
 }
 
 /**
- * The function calculate one of the group colors unique for the Semester of the Veranstaltung
+ * This function calculates one of the group colors unique for the semester of
+ * the passed timestamp
  *
- * It calculate a unique color number to create the initial entry for a new user in a Veranstaltung.
- * It will create a unique number for every Semester and will start over, if the max. number
+ * It calculates a unique color number to create the initial entry for a new user in a seminar.
+ * It will create a unique number for every semester and will start over, if the max. number
  * (7) is reached.
  *
  * @param integer $sem_start_time the timestamp of the start time from the Semester
- * @param string  $user_id        this field is not necessary anymore and remains
- *                                for compatibilty reasons only
  * 
  * @return integer  the color number
  *
  */
-function select_group($sem_start_time, $user_id='')
+function select_group($sem_start_time)
 {
     //Farben Algorhytmus, erzeugt eindeutige Farbe fuer jedes Semester. Funktioniert ab 2001 die naechsten 1000 Jahre.....
     $year_of_millenium=date ("Y", $sem_start_time) % 1000;

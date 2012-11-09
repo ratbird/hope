@@ -23,19 +23,27 @@ th, table.header, .table_header { //normale Tabellenheader
 table.links1 { background-color: #fff; }
 table.logintable { background-image: url("@{image-path}/login.jpg"); }
 
-table.toolbar, td.toolbar, td.printhead {
+
+.gradient-bar(@flow-content: true) {
     #gradient > .vertical-three-colors(#cdd9ed, #e3eaf6, 40%, #e3eaf6);
     border-top: 1px solid @brand-color-lighter;
     line-height: 17pt;
     height: 25px;
 }
-td.toolbar, td.printhead {
+.gradient-bar(@flow-content: true) when (@flow-content) {
     &:last-child { padding-right: 5px; }
 
     img {
         padding: 0 2px;
         vertical-align: text-bottom;
     }
+}
+
+table.toolbar {
+  .gradient-bar(false);
+}
+td.toolbar, td.printhead {
+  .gradient-bar();
 }
 
 table.default {
@@ -327,7 +335,7 @@ tr.sortable {
 
 table.tree {
     .header > td {
-        td.printhead;
+        .gradient-bar();
 
         a.link {
             padding-left: 5px;

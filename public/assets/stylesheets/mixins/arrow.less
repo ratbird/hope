@@ -35,15 +35,20 @@
         left: 50%;
         margin-left: -@width;
     }
-    .top(@width, @color, @margin: @width) {
+    .top(@width, @color, @margin) {
         #arrow > .init();
         &:before { #arrow > .top-pseudo(@width, @color); }
         margin-top: @margin;
-
     }
-    .top-border(@width, @color, @border-width, @border-color, @margin: @width) {
+    .top(@width, @color) {
+        #arrow > .top(@width, @color, @width);
+    }
+    .top-border(@width, @color, @border-width, @border-color, @margin) {
         #arrow > .top(@width, @border-color, @margin);
         &:after { #arrow > .top-pseudo(@width - @border-width, @color); }
+    }
+    .top-border(@width, @color, @border-width, @border-color) {
+        #arrow > .top-border(@width, @color, @border-width, @border-color, @width);
     }
 
     // Right
@@ -54,14 +59,20 @@
         top: 50%;
         margin-top: -@width;
     }
-    .right(@width, @color, @margin: @width) {
+    .right(@width, @color, @margin) {
         #arrow > .init();
         &:before { #arrow > .right-pseudo(@width, @color); }
         margin-right: @margin;
     }
+    .right(@width, @color) {
+        #arrow > .right(@width, @color, @width);
+    }
     .right-border(@width, @color, @border-width, @border-color, @margin: @width) {
         #arrow > .right(@width, @border-color, @margin);
         &:after { #arrow > .right-pseudo(@width - @border-width, @color); }
+    }
+    .right-border(@width, @color, @border-width, @border-color) {
+        #arrow > .right-border(@width, @color, @border-width, @border-color, @width);
     }
 
     // Bottom
@@ -72,14 +83,20 @@
         left: 50%;
         margin-left: -@width;
     }
-    .bottom(@width, @color, @margin: @width) {
+    .bottom(@width, @color, @margin) {
         #arrow > .init();
         &:before { #arrow > .bottom-pseudo(@width, @color); }
         margin-bottom: @margin;
     }
-    .bottom-border(@width, @color, @border-width, @border-color, @margin: @width) {
+    .bottom(@width, @color) {
+        #arrow > .bottom(@width, @color, @width);
+    }
+    .bottom-border(@width, @color, @border-width, @border-color, @margin) {
         #arrow > .bottom(@width, @border-color, @margin);
         &:after { #arrow > .bottom-pseudo(@width - @border-width, @color); }
+    }
+    .bottom-border(@width, @color, @border-width, @border-color) {
+        #arrow > .bottom-border(@width, @color, @border-width, @border-color, @width);
     }
 
     // Left
@@ -90,13 +107,19 @@
         top: 50%;
         margin-top: -@width;
     }
-    .left(@width, @color, @margin: @width) {
+    .left(@width, @color, @margin) {
         #arrow > .init();
         &:before { #arrow > .left-pseudo(@width, @color); }
         margin-left: @margin;
     }
-    .left-border(@width, @color, @border-width, @border-color, @margin: @width) {
+    .left(@width, @color) {
+        #arrow > .left(@width, @color, @width);
+    }
+    .left-border(@width, @color, @border-width, @border-color, @margin) {
         #arrow > .left(@width, @border-color, @margin);
         &:after { #arrow > .left-pseudo(@width - @border-width, @color); }
+    }
+    .left-border(@width, @color, @border-width, @border-color) {
+        #arrow > .left-border(@width, @color, @border-width, @border-color, @width);
     }
 }

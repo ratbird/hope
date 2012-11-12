@@ -1276,6 +1276,7 @@ function get_users_online_count($active_time = 5)
     try {
         $statement->execute(array(time() - $active_time * 60));
     } catch (PDOException $e) {
+        require_once 'lib/migrations/db_schema_version.php';
         $version = new DBSchemaVersion('studip');
         if ($version->get() < 98) {
             Log::ALERT('Seminar_User::set_last_action() failed. Check migration no. 98!');
@@ -1287,7 +1288,7 @@ function get_users_online_count($active_time = 5)
     if ($GLOBALS['user']->id && $GLOBALS['user']->id != 'nobody') {
         --$count;
     }
-    return $count > 0 ? : 0;
+    return $count > 0 ? $count : 0;
 }
 
 /**

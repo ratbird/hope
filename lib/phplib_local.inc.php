@@ -33,9 +33,15 @@ namespace Studip {
 // use default namespace for the remaining lines
 namespace {
 
-require_once('lib/classes/Log.php');
-require_once('lib/classes/SkipLinks.php');
-require_once('lib/deputies_functions.inc.php');
+require_once 'lib/classes/Log.php';
+require_once 'lib/classes/SkipLinks.php';
+require_once 'lib/deputies_functions.inc.php';
+require_once 'lib/functions.php';
+require_once 'lib/classes/URLHelper.php';
+require_once 'lib/navigation/Navigation.php';
+require_once 'lib/navigation/AutoNavigation.php';
+require_once 'lib/classes/PageLayout.php';
+require_once 'lib/classes/PersonalNotifications.class.php';
 
 //setup default logger
 Log::get()->setHandler($GLOBALS['TMP_PATH'] . '/studip.log');
@@ -139,12 +145,6 @@ class DB_Seminar extends DB_Sql {
         parent::DB_Sql($query);
     }
 }
-
-require_once 'lib/functions.php';
-require_once 'lib/classes/URLHelper.php';
-require_once 'lib/navigation/Navigation.php';
-require_once 'lib/navigation/AutoNavigation.php';
-require_once 'lib/classes/PageLayout.php';
 
 //software version - please leave it as it is!
 $SOFTWARE_VERSION = '2.4.alpha-svn';
@@ -415,6 +415,7 @@ class Seminar_User {
                 $stmt = DBManager::get()->prepare("REPLACE INTO user_online (user_id,last_lifesign) VALUES (?,?)");
                 $stmt->execute(array($this->id, $timestamp));
             } catch (PDOException $e) {
+                require_once 'lib/migrations/db_schema_version.php';
                 $version = new DBSchemaVersion('studip');
                 if ($version->get() < 98) {
                     Log::ALERT('Seminar_User::set_last_action() failed. Check migration no. 98!');

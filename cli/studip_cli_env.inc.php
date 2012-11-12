@@ -70,9 +70,6 @@ $auth->auth = array('uid' => 'cli',
                     'perm' => 'root');
 
 $user = new Seminar_User();
-$user->fake_user = true;
-$user->register_globals = false;
-$user->start('cli');
 
 $perm = new Seminar_Perm();
 ?>

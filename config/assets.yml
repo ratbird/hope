@@ -2,7 +2,7 @@ compress: true
 javascripts:
   jquery: &jquery
     - javascripts/jquery/jquery-1.8.2.js
-    - javascripts/jquery/jquery-ui-1.8.23.custom.js
+    - javascripts/jquery/jquery-ui-1.9.1.custom.js
     - javascripts/jquery/jquery.metadata.js
     - javascripts/jquery/jquery.placehold-0.3.js
     - javascripts/jquery/validator.js
@@ -62,7 +62,7 @@ javascripts:
 css:
   base:
     # filname : media
-    jquery-ui-1.8.23.custom.css: screen, print
+    jquery-ui-1.9.1.custom.css: screen, print
     jquery-ui-studip.css: screen, print
     style.css:  screen
     smiley.css: screen, print

@@ -46,7 +46,7 @@ class Settings_NotificationController extends Settings_SettingsController
 
     public function index_action($action = null, $id = null)
     {
-        $group_field = $GLOBALS['_my_sem_group_field'] ?: 'not_grouped';
+        $group_field = UserConfig::get($this->user->user_id)->MY_COURSES_GROUPING ?: 'not_grouped';
 
         if ($group_field == 'sem_tree_id'){
             $add_fields = ',sem_tree_id';
@@ -83,7 +83,7 @@ class Settings_NotificationController extends Settings_SettingsController
             $this->render_nothing();
             return;
         }
-        
+
         $modules = new ModulesNotification();
         $enabled_modules = $modules->getGlobalEnabledNotificationModules('sem');
 
@@ -117,10 +117,10 @@ class Settings_NotificationController extends Settings_SettingsController
         sort_groups($group_field, $groups);
         $group_names = get_group_names($group_field, $groups);
         $notifications = $modules->getModuleNotification();
-
+        $open = UserConfig::get($this->user->user_id)->MY_COURSES_OPEN_GROUPS;
         $checked = array();
         foreach ($groups as $group_id => $group_members){
-            if (!isset($GLOBALS['_my_sem_open'][$group_id])) {
+            if (!isset($open[$group_id])) {
                 continue;
             }
             foreach ($group_members as $member){
@@ -136,7 +136,7 @@ class Settings_NotificationController extends Settings_SettingsController
         $this->groups        = $groups;
         $this->group_names   = $group_names;
         $this->group_field   = $group_field;
-        $this->open          = $GLOBALS['_my_sem_open'];
+        $this->open          = $open;
         $this->seminars      = $my_sem;
         $this->notifications = $modules->getModuleNotification();
         $this->checked       = $checked;
@@ -155,13 +155,17 @@ class Settings_NotificationController extends Settings_SettingsController
 
     public function open_action($id)
     {
-        $GLOBALS['_my_sem_open'][$id] = true;
+        $open = UserConfig::get($this->user->user_id)->MY_COURSES_OPEN_GROUPS;
+        $open[$id] = true;
+        UserConfig::get($this->user->user_id)->store('MY_COURSES_OPEN_GROUPS', $open);
         $this->redirect('settings/notification');
     }
 
     public function close_action($id)
     {
-        unset($GLOBALS['_my_sem_open'][$id]);
+        $open = UserConfig::get($this->user->user_id)->MY_COURSES_OPEN_GROUPS;
+        unset($open[$id]);
+        UserConfig::get($this->user->user_id)->store('MY_COURSES_OPEN_GROUPS', $open);
         $this->redirect('settings/notification');
     }
 }

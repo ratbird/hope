@@ -179,7 +179,7 @@ class UserDataToConfig extends Migration
     {
         $db = DBManager::get();
         $db->exec("ALTER TABLE `config` MODIFY `type` enum('boolean','integer','string') NOT NULL DEFAULT 'boolean'");
-        $db->exec("DROP TABLE IF EXISTS `user_config`");
+        $db->exec("DROP TABLE IF EXISTS `user_online`");
         $db->exec("CREATE TABLE IF NOT EXISTS `user_data` (
                   `sid` varchar(32) NOT NULL DEFAULT '',
                   `val` mediumtext NOT NULL,

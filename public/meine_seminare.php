@@ -86,7 +86,6 @@ function print_seminar_content($semid, $my_obj_values, $type = 'seminar', $sem_c
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
 // -- here you have to put initialisations for the current page
-require_once ('config.inc.php');            // Klarnamen fuer den VeranstaltungsstatusUserConfig::get($user->id)->LAST_LOGIN_TIMESTAMP
 require_once ('lib/visual.inc.php');            // htmlReady fuer die Veranstaltungsnamen
 require_once ('lib/dates.inc.php');         // Semester-Namen fuer Admins
 require_once ('lib/admission.inc.php');     // Funktionen der Teilnehmerbegrenzung

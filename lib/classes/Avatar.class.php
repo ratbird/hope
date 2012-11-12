@@ -380,8 +380,8 @@ class Avatar {
 
         # resize image if needed
         if ($height > $thumb_height || $width > $thumb_width) {
-            $factor = min($thumb_width / $width, $thumb_height / $height);
-            $resized_width    = round($width    * $factor);
+            $factor = max($thumb_width / $width, $thumb_height / $height);
+            $resized_width = round($width * $factor);
             $resized_height = round($height * $factor);
         }
 

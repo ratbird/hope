@@ -48,20 +48,25 @@ PageLayout::setTitle(_('Meine Veranstaltungen') . ' - ' . _('Gruppenzuordnung'))
 PageLayout::setHelpKeyword('Basis.VeranstaltungenOrdnen');
 Navigation::activateItem('/browse/my_courses/group');
 
-if (Request::int('open_my_sem')) {
-    $_my_sem_open[Request::int('open_my_sem')] = true;
-}
-if (Request::int('close_my_sem')) {
-    unset($_my_sem_open[Request::int('close_my_sem')]);
-}
+
 
 $forced_grouping     = get_config('MY_COURSES_FORCE_GROUPING');
 $no_grouping_allowed = ($forced_grouping == 'not_grouped' || !in_array($forced_grouping, getValidGroupingFields()));
 
-$group_field = $_my_sem_group_field;
+$group_field = $user->cfg->MY_COURSES_GROUPING;
+$_my_sem_open = $user->cfg->MY_COURSES_OPEN_GROUPS;
 $groups = array();
 $add_fields = '';
 $add_query = '';
+
+if (Request::option('open_my_sem')) {
+    $_my_sem_open[Request::option('open_my_sem')] = true;
+    $user->cfg->store('MY_COURSES_OPEN_GROUPS', $_my_sem_open);
+}
+if (Request::option('close_my_sem')) {
+    unset($_my_sem_open[Request::option('close_my_sem')]);
+    $user->cfg->store('MY_COURSES_OPEN_GROUPS', $_my_sem_open);
+}
 
 if ($group_field == 'sem_tree_id'){
     $add_fields = ', sem_tree_id';

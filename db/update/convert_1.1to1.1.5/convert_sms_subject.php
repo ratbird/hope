@@ -31,7 +31,7 @@ if ($auth->auth["jscript"]) {
 }
 
 if (($change_view) || ($delete_user) || ($view=="Messaging")) {
-    $my_messaging_settings = json_decode(UserConfig::get($user->id)->__get('my_messaging_settings'),true);
+    $my_messaging_settings = UserConfig::get($user->id)->__get('my_messaging_settings');
     $my_messaging_settings = check_messaging_default($my_messaging_settings);
     change_messaging_view($my_messaging_settings);
     echo "</td></tr></table>";

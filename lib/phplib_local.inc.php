@@ -380,69 +380,66 @@ class Seminar_Session extends Session {
     }
 }
 
-class Seminar_User_CT_Sql extends CT_Sql {
-    var $database_table = PHPLIB_USERDATA_TABLE;
-}
-
-class Seminar_User extends PhpLibUser {
-    var $classname = "Seminar_User";
-    var $magic    = "dsfgakdfld";     // ID seed
-    var $that_class     = "Seminar_User_CT_Sql"; // data storage container
-    var $fake_user = false;
-    var $cfg = null; //UserConfig object
+class Seminar_User {
+    public $cfg = null; //UserConfig object
     private $user = null; //User object
 
-    function Seminar_User($uid = null){
-        if ($uid){
-            if (!is_object($GLOBALS['auth']) ||
-            (is_object($GLOBALS['auth']) && $uid != $GLOBALS['auth']->auth['uid'])){
-                $this->fake_user = ($uid !== 'nobody');
-                $this->register_globals = false;
-                $this->start($uid);
+    function __construct($uid = null)
+    {
+        if ($uid) {
+            $this->user = User::find($uid);
+            $this->cfg = UserConfig::get($uid);
+            if (!isset($this->user)) {
+                $this->user = new User();
+                $this->user->user_id = 'nobody';
             }
         }
     }
 
-    function start($uid){
-        parent::start($uid);
-        $this->user = User::find($uid);
-        $this->cfg = UserConfig::get($uid);
-        if (!isset($this->user)) {
-            $this->user = new User();
-            $this->user->user_id = 'nobody';
+    function get_last_action()
+    {
+        if ($this->id && $this->id != 'nobody') {
+            $stmt = DBManager::get()->prepare("SELECT last_lifesign FROM user_online WHERE user_id = ?");
+            $stmt->execute(array($this->id));
+            return $stmt->fetchColumn();
         }
     }
 
-    function freeze(){
-        if ($this->fake_user){
-            $this->fake_freeze();
-            return true;
-        } else {
-            return parent::freeze();
+    function set_last_action($timestamp = 0)
+    {
+        if ($this->id && $this->id != 'nobody') {
+            if ($timestamp <= 0) {
+                $timestamp = time();
+            }
+            try {
+                $stmt = DBManager::get()->prepare("REPLACE INTO user_online (user_id,last_lifesign) VALUES (?,?)");
+                $stmt->execute(array($this->id, $timestamp));
+            } catch (PDOException $e) {
+                $version = new DBSchemaVersion('studip');
+                if ($version->get() < 98) {
+                    Log::ALERT('Seminar_User::set_last_action() failed. Check migration no. 98!');
+                } else {
+                    throw $e;
+                }
+            }
+            return $stmt->rowCount();
         }
     }
 
-    function fake_freeze(){
-        $changed = $this->get_last_action();
-        if(!$this->that->ac_store($this->id, $this->name, $this->serialize())){
-            $this->that->ac_halt("User: freeze() failed.");
+    function delete()
+    {
+        if ($this->id && $this->id != 'nobody') {
+            $stmt = DBManager::get()->prepare("DELETE FROM user_online WHERE user_id = ?");
+            $stmt->execute(array($this->id));
+            return $stmt->rowCount();
         }
-        $this->set_last_action($changed);
-    }
-
-    function get_last_action(){
-        return $this->that->ac_get_changed($this->id, $this->name);
-    }
-
-    function set_last_action($timestamp = 0){
-        if ($timestamp <= 0){
-            $timestamp = time();
-        }
-        $this->that->ac_set_changed($this->id, $this->name, $timestamp);
     }
 
     function __get($field)
     {
+        if ($field == 'id') {
+            return $this->user->user_id;
+        }
         return $this->user->$field;
     }
 
@@ -459,6 +456,31 @@ class Seminar_User extends PhpLibUser {
     function getFullName($format = 'full')
     {
         return $this->user->getFullName($format);
+    }
+    /**
+     *
+     * @deprecated
+     */
+    function register()
+    {
+        trigger_error('deprecated use of ' . __METHOD__, E_USER_NOTICE);
+    }
+
+    /**
+     *
+     * @deprecated
+     */
+    function is_registered()
+    {
+        trigger_error('deprecated use of ' . __METHOD__, E_USER_NOTICE);
+    }
+    /**
+     *
+     * @deprecated
+     */
+    function unregister()
+    {
+        trigger_error('deprecated use of ' . __METHOD__, E_USER_NOTICE);
     }
 }
 

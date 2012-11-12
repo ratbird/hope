@@ -21,8 +21,6 @@ class CommunityNavigation extends Navigation
 {
     public function __construct()
     {
-        global $my_messaging_settings;
-
         parent::__construct(_('Community'));
 
         $onlinetip = _('Nur Sie sind online');

@@ -30,7 +30,7 @@
         _('Durch das Zurücksetzen werden die persönliche Messaging-Einstellungen '
          .'auf die Startwerte zurückgesetzt und die persönlichen Nachrichten-Ordner '
          .'gelöscht. ' . "\n\n" . 'Nachrichten werden nicht entfernt.'),
-        array('settings/messaging/reset/all', true),
+        array('settings/messaging/reset/reset', true),
         array('settings/messaging')
     ) ?>
 <? elseif ($verify_action === 'forward_receiver'): ?>

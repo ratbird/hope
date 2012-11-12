@@ -108,7 +108,6 @@ class Guestbook
         echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr>";
         if ($this->active == TRUE && $this->pages_total>1)
             $zusatz .= $this->guest_navi();
-        $forum = json_decode(UserConfig::get($this->user_id)->__get('forum'),true);
         printhead ("100%","0",$link,$this->openclose,$new,"<img class=\"middle\" src=\"".Assets::image_path('icons/16/grey/comment.png')."\">",$titel,$zusatz,$forumposting["chdate"],"TRUE",$index,$forum["indikator"]);
 
         echo "</tr></table>";
@@ -172,7 +171,7 @@ class Guestbook
 
     function showPostsGuestbook()
     {
-        
+
         $i = 0;
         $output = "<table class=\"blank\" width=\"98%%\" border=\"0\" cellpadding=\"5\" cellspacing=\"0\">";
 

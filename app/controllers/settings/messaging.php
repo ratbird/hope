@@ -12,7 +12,7 @@
  * @category    Stud.IP
  * @since       2.4
  */
- 
+
 require_once 'settings.php';
 
 class Settings_MessagingController extends Settings_SettingsController
@@ -31,36 +31,9 @@ class Settings_MessagingController extends Settings_SettingsController
         Navigation::activateItem('/links/settings/messaging');
         SkipLinks::addIndex(_('Einstellungen des Nachrichtensystems anpassen'), 'layout_content', 100);
 
-        $this->defaults = array(
-            'show_only_buddys'             => false,
-            'delete_messages_after_logout' => false,
-            'default_setted'               => time(),
-            'last_login'                   => false,
-            'timefilter'                   => '30d',
-            'opennew'                      => true,
-            'logout_markreaded'            => false,
-            'openall'                      => false,
-            'addsignature'                 => false,
-            'save_snd'                     => true,
-            'sms_sig'                      => false,
-            'send_view'                    => false,
-            'last_box_visit'               => 1,
-            'confirm_reading'              => 3,
-            'folder'                       => array(
-                'in'  => array('dummy'),
-                'out' => array('dummy')
-            )
-        );
-
-        $settings = json_decode($this->config->my_messaging_settings, true) ?: array();
-        foreach ($this->defaults as $key => $value) {
-            if (!isset($settings[$key])) {
-                $settings[$key] = $value;
-            }
-        }
-        $this->settings = $settings;
+        $this->settings = $this->config->MESSAGING_SETTINGS;
     }
-    
+
     public function index_action($verify_action = null)
     {
         if (Request::submitted('store')) {
@@ -74,7 +47,7 @@ class Settings_MessagingController extends Settings_SettingsController
             } else if (!Request::int('smsforward_copy') && $this->user->smsforward_copy) {
                 $this->user->smsforward_copy = 0;
             }
-            
+
             $this->user->email_forward = Request::int('send_as_email');
             $this->user->store();
 
@@ -84,7 +57,6 @@ class Settings_MessagingController extends Settings_SettingsController
 
             $settings = $this->settings;
 
-            $settings['changed'] = TRUE;
             $settings['delete_messages_after_logout'] = Request::int('delete_messages_after_logout');
             $settings['sms_sig']              = Request::get('sms_sig');
             $settings['timefilter']           = Request::option('timefilter');
@@ -96,10 +68,10 @@ class Settings_MessagingController extends Settings_SettingsController
             $settings['save_snd']             = Request::int('save_snd', 2);
             $settings['request_mail_forward'] = Request::int('request_mail_forward', 0);
 
-            $this->config->store('my_messaging_settings', json_encode($settings));
+            $this->config->store('MESSAGING_SETTINGS', $settings);
 
-            $GLOBALS['sms_data']['sig']  = $settings['addsignature'];
-            $GLOBALS['sms_data']['time'] = $settings['timefilter'];
+            $_SESSION['sms_data']['sig']  = $settings['addsignature'];
+            $_SESSION['sms_data']['time'] = $settings['timefilter'];
 
             $this->reportSuccess(_('Ihre Einstellungen wurden erfolgreich gespeichert.'));
             $this->redirect('settings/messaging');
@@ -127,7 +99,7 @@ class Settings_MessagingController extends Settings_SettingsController
         $this->matches       = $matches;
         $this->verify_action = $verify_action;
     }
-    
+
     public function reset_action($action = 'reset', $verified = false)
     {
         if ($verified) {
@@ -142,10 +114,10 @@ class Settings_MessagingController extends Settings_SettingsController
                 $statement = DBManager::get()->prepare($query);
                 $statement->execute(array($this->user->user_id));
 
-                $this->config->store('my_messaging_settings', json_encode($this->defaults));
+                $this->config->delete('MESSAGING_SETTINGS');
 
-                $GLOBALS['sms_data']['sig']  = $this->defaults['addsignature'];
-                $GLOBALS['sms_data']['time'] = $this->defaults['timefilter'];
+                unset($_SESSION['sms_data']['sig']);
+                unset($_SESSION['sms_data']['time']);
 
                 $this->reportSuccess(_('Ihre Einstellungen wurden erfolgreich zurückgesetzt.'));
             } else if ($action === 'forward_receiver') {

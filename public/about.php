@@ -179,8 +179,7 @@ if (isset($current_user)) {
     if ($user_id != $user->id) {
         object_add_view($user_id);
     } else {
-        $homepage_cache_own = time();
-        UserConfig::get($user_id)->store('homepage_cache_own', $homepage_cache_own);
+        UserConfig::get($user_id)->store('PROFILE_LAST_VISIT', time());
     }
 
     //Wenn er noch nicht in user_info eingetragen ist, kommt er ohne Werte rein

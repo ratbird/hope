@@ -47,9 +47,9 @@ class UserModel
         // all fields + optional user_info and user_data
         } else {
             if ($full) {
-                $dbquery = "SELECT ui.*,au.*, UNIX_TIMESTAMP(ud.changed) as changed_timestamp,IFNULL(auth_plugin, 'standard') as auth_plugin FROM auth_user_md5 au"
+                $dbquery = "SELECT ui.*,au.*, last_lifesign as changed_timestamp,IFNULL(auth_plugin, 'standard') as auth_plugin FROM auth_user_md5 au"
                          . " LEFT JOIN user_info ui ON (au.user_id = ui.user_id)"
-                         . " LEFT JOIN user_data ud ON au.user_id = ud.sid";
+                         . " LEFT JOIN user_online uo ON au.user_id = uo.user_id";
             } else {
                 $dbquery = "SELECT * FROM auth_user_md5 au";
             }
@@ -139,10 +139,10 @@ class UserModel
                 }
             }
         }
-        $query = "SELECT DISTINCT au.*,IFNULL(auth_plugin, 'standard') as auth_plugin, UNIX_TIMESTAMP(ud.changed) as changed_timestamp, ui.mkdate "
+        $query = "SELECT DISTINCT au.*,IFNULL(auth_plugin, 'standard') as auth_plugin, uo.last_lifesign as changed_timestamp, ui.mkdate "
                 ."FROM auth_user_md5 au "
                 ."LEFT JOIN datafields_entries de ON de.range_id=au.user_id "
-                ."LEFT JOIN user_data ud ON au.user_id = ud.sid "
+                ."LEFT JOIN user_online uo ON au.user_id = uo.user_id "
                 ."LEFT JOIN user_info ui ON (au.user_id = ui.user_id) "
                 ."LEFT JOIN user_userdomains uud ON (au.user_id = uud.user_id) "
                 ."WHERE 1 ";
@@ -180,9 +180,9 @@ class UserModel
         if (!is_null($inaktiv) && $inaktiv[0] != 'nie') {
             $comp = in_array(trim($inaktiv[0]), array('=', '>', '<=')) ? $inaktiv[0] : '=';
             $days = (int)$inaktiv[1];
-            $query .= "AND ud.changed {$comp} TIMESTAMPADD(DAY, -{$days}, NOW()) ";
+            $query .= "AND FROM_UNIXTIME(uo.last_lifesign) {$comp} TIMESTAMPADD(DAY, -{$days}, NOW()) ";
         } elseif (!is_null($inaktiv)) {
-            $query .= "AND ud.changed IS NULL ";
+            $query .= "AND uo.changed IS NULL ";
         }
 
         //datafields
@@ -218,7 +218,7 @@ class UserModel
                 $query .= "ORDER BY au.Email {$order}, au.username";
                 break;
             case "changed":
-                $query .= "ORDER BY ud.changed {$order}, au.username";
+                $query .= "ORDER BY uo.last_lifesign {$order}, au.username";
                 break;
             case "mkdate":
                 $query .= "ORDER BY ui.mkdate {$order}, au.username";

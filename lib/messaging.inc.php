@@ -314,43 +314,10 @@ class messaging
      */
     function insert_message($message, $rec_uname, $user_id='', $time='', $tmp_message_id='', $set_deleted='', $signature='', $subject='', $force_email='', $priority='normal')
     {
-        global $user, $my_messaging_settings;
+        global $user;
 
-        if(empty ($my_messaging_settings)){
-             $my_messaging_settings = json_decode( UserConfig::get($user->id)->__get('my_messaging_settings'), true);
-             if (!$my_messaging_settings['show_only_buddys'])
-                  $my_messaging_settings['show_only_buddys'] = FALSE;
-             if (!$my_messaging_settings['delete_messages_after_logout'])
-                  $my_messaging_settings['delete_messages_after_logout'] = FALSE;
-             if (!$my_messaging_settings['default_setted'])
-                  $my_messaging_settings['default_setted'] = time();
-             if (!$my_messaging_settings['last_login'])
-                  $my_messaging_settings['last_login'] = FALSE;
-             if (!$my_messaging_settings['timefilter'])
-                  $my_messaging_settings['timefilter'] = "30d";
-             if (!$my_messaging_settings['opennew'])
-                  $my_messaging_settings['opennew'] = 1;
-             if (!$my_messaging_settings['logout_markreaded'])
-                  $my_messaging_settings['logout_markreaded'] = FALSE;
-             if (!$my_messaging_settings['openall'])
-                  $my_messaging_settings['openall'] = FALSE;
-             if (!$my_messaging_settings['addsignature'])
-                  $my_messaging_settings['addsignature'] = FALSE;
-             if (!$my_messaging_settings['save_snd'])
-                  $my_messaging_settings['save_snd'] = 1;
-             if (!$my_messaging_settings['sms_sig'])
-                  $my_messaging_settings['sms_sig'] = FALSE;
-             if (!$my_messaging_settings['send_view'])
-                  $my_messaging_settings['send_view'] = FALSE;
-             if (!$my_messaging_settings['last_box_visit'])
-                  $my_messaging_settings['last_box_visit'] = 1;
-             if (!$my_messaging_settings['folder']['in'])
-                  $my_messaging_settings['folder']['in'][0] = "dummy";
-             if (!$my_messaging_settings['folder']['out'])
-                  $my_messaging_settings['folder']['out'][0] = "dummy";
-             if (!$my_messaging_settings['confirm_reading'])
-                  $my_messaging_settings['confirm_reading'] = 3;
-       }
+        $my_messaging_settings = UserConfig::get($user->id)->MESSAGING_SETTINGS;
+
         if (basename($_SERVER['PHP_SELF']) == 'sms_send.php'){
             $sms_data = $_SESSION['sms_data'];
         } else {

@@ -7,30 +7,13 @@ $width1 = floor(90 / $cells);
 $width2 = 10 + (90 - $width1 * $cells);
 $start = $group_calendar->getUserSettings('start') * 3600;
 $end = ($group_calendar->getUserSettings('end') + 1) * 3600;
-$calendar_user_control_data = json_decode(UserConfig::get($GLOBALS['user']->id)->getValue('calendar_user_control_data'), true);
-if(!$calendar_user_control_data){
-             $calendar_user_control_data = array(
-              "view"             => "showweek",
-              "start"            => 9,
-              "end"              => 20,
-              "step_day"         => 900,
-              "step_week"        => 3600,
-              "type_week"        => "LONG",
-              "holidays"         => TRUE,
-              "sem_data"         => TRUE,
-              "link_edit"        => TRUE,
-              "bind_seminare"    => "",
-              "ts_bind_seminare" => 0,
-              "delete"           => 0
-            );
-}
 // add skip link
 SkipLinks::addIndex(_("Tagesansicht"), 'main_content', 100);
 ?>
 <table id="main_content" class="steelgroup0" style="width:100%; table-layout:fixed;" border="0" cellpadding="0" cellspacing="0">
     <tr>
         <td align="center" width="10%" height="40">
-            <a href="<?= URLHelper::getLink('', array('cmd' => 'showday', 'atime' => $group_calendar->view->getStart() + $calendar_user_control_data['start'] * 3600 - 86400)) ?>">
+            <a href="<?= URLHelper::getLink('', array('cmd' => 'showday', 'atime' => $group_calendar->view->getStart() + $GLOBALS['calendar_user_control_data']['start'] * 3600 - 86400)) ?>">
                 <?= Assets::img('icons/16/blue/arr_1left.png', tooltip2(_("zurück"))) ?>
             </a>
         </td>
@@ -42,7 +25,7 @@ SkipLinks::addIndex(_("Tagesansicht"), 'main_content', 100);
             </b>
         </td>
         <td align="center" width="10%">
-            <a href="<?= URLHelper::getLink('', array('cmd' => 'showday', 'atime' => $group_calendar->view->getStart() + $calendar_user_control_data['start'] * 3600  + 86400)) ?>">
+            <a href="<?= URLHelper::getLink('', array('cmd' => 'showday', 'atime' => $group_calendar->view->getStart() + $GLOBALS['calendar_user_control_data']['start'] * 3600  + 86400)) ?>">
                 <?= Assets::img('icons/16/blue/arr_1right.png', tooltip2(_("vor"))) ?>
             </a>
         </td>

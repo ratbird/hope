@@ -26,12 +26,13 @@ class ProfileNavigation extends Navigation
      */
     public function __construct()
     {
-        global $user, $auth, $homepage_cache_own, $LastLogin;
+        global $user, $auth;
 
         parent::__construct(_('Profil'));
 
         $db = DBManager::get();
-        $time = $homepage_cache_own ? $homepage_cache_own : $LastLogin;
+
+        $time = $user->cfg->PROFILE_LAST_VISIT ? $user->cfg->PROFILE_LAST_VISIT : $user->cfg->LAST_LOGIN_TIMESTAMP;
 
         $result = $db->query("SELECT COUNT(post_id) AS count FROM guestbook
                                 WHERE range_id = '".$user->id."'
@@ -102,7 +103,7 @@ class ProfileNavigation extends Navigation
             $navigation = new Navigation(_('Nutzerdaten'));
             $navigation->addSubNavigation('profile', new Navigation(_('Grunddaten'), 'dispatch.php/settings/account'));
             if ($my_about->check == 'user' && !LockRules::check($my_about->auth_user['user_id'], 'password')) {
-                $navigation->addSubNavigation('password', new Navigation(_('Passwort ändern'), 'dispatch.php/settings/password'));                
+                $navigation->addSubNavigation('password', new Navigation(_('Passwort ändern'), 'dispatch.php/settings/password'));
             }
             $navigation->addSubNavigation('details', new Navigation(_('Weitere Daten'), 'dispatch.php/settings/details'));
 

@@ -18,6 +18,8 @@ class MessagesController extends AuthenticatedController {
   function before_filter(&$action, &$args) {
     parent::before_filter($action, $args);
     $this->set_layout(NULL);
+    $GLOBALS['sms_data'] =& $_SESSION['sms_data'];
+    $GLOBALS['my_messaging_settings'] = UserConfig::get($GLOBALS['user']->id)->MESSAGING_SETTINGS;
   }
 
   /**
@@ -34,7 +36,6 @@ class MessagesController extends AuthenticatedController {
     global $count, $msging;
     $msging = new messaging();
     $count = $n;
-    $GLOBALS['sms_data'] =& $_SESSION['sms_data'];
     if (is_null($id) || is_null($open) || is_null($n)) {
       $this->set_status(400);
       return $this->render_nothing();

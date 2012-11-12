@@ -39,9 +39,6 @@ $_views["USER_ARCHIVUSER"]= array("pk"=>"user_id","temp_table_type"=>"HEAP",
                             "query"=>"SELECT   a.user_id FROM archiv_user a LEFT JOIN auth_user_md5 b USING(user_id) WHERE ISNULL(b.user_id)");
 $_views["USER_ADMISSIONUSER"]= array("pk"=>"user_id","temp_table_type"=>"HEAP",
                             "query"=>"SELECT   a.user_id FROM admission_seminar_user a LEFT JOIN auth_user_md5 b USING(user_id) WHERE ISNULL(b.user_id)");
-$_views["USER_SESSION"]= array("pk"=>"sid","temp_table_type"=>"HEAP",
-                            "query"=>"SELECT a.sid FROM " . PHPLIB_USERDATA_TABLE . " a LEFT JOIN auth_user_md5 b ON(a.sid=b.user_id) WHERE ISNULL(b.user_id) 
-                                        AND a.sid NOT LIKE 'nobody'" . ('active_sessions' == PHPLIB_USERDATA_TABLE ? " AND name='Seminar_User'" : ""));
 $_views["USER_STATUSGRUPPEUSER"]= array("pk"=>"user_id","temp_table_type"=>"HEAP",
                             "query"=>"SELECT   a.user_id FROM statusgruppe_user a LEFT JOIN auth_user_md5 b USING(user_id) WHERE ISNULL(b.user_id)");
 $_views["USER_OBJECT_USER_VISIT"]= array("pk"=>"user_id","temp_table_type"=>"HEAP",

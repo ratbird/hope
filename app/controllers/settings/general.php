@@ -12,7 +12,7 @@
  * @category    Stud.IP
  * @since       2.4
  */
- 
+
 require_once 'settings.php';
 
 class Settings_GeneralController extends Settings_SettingsController
@@ -26,14 +26,14 @@ class Settings_GeneralController extends Settings_SettingsController
         Navigation::activateItem('/links/settings/general');
         SkipLinks::addIndex(_('Allgemeine Einstellungen anpassen'), 'layout_content', 100);
     }
-    
+
     /**
      */
     public function index_action()
     {
         $this->user_language = $_SESSION['_language'] ?: $GLOBALS['DEFAULT_LANGUAGE'];
     }
-    
+
     public function store_action()
     {
         $this->check_ticket();
@@ -44,7 +44,7 @@ class Settings_GeneralController extends Settings_SettingsController
             $this->user->store();
         }
 
-        $this->config->store('startpage_redirect', Request::int('personal_startpage'));
+        $this->config->store('PERSONAL_STARTPAGE', Request::int('personal_startpage'));
         $this->config->store('ACCESSKEY_ENABLE', Request::int('accesskey_enable'));
         $this->config->store('SHOWSEM_ENABLE', Request::int('showsem_enable'));
         $this->config->store('SKIPLINKS_ENABLE', Request::int('skiplinks_enable'));

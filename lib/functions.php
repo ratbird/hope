@@ -94,7 +94,7 @@ function getHeaderLine($id, $object_name = null)
  *
  * @param string $range_id    the id of the object
  * @param string $object_type the type of the object
- * 
+ *
  * @return array  an array containing name and type of the object
  */
 function get_object_name($range_id, $object_type)
@@ -160,7 +160,7 @@ function selectSem ($sem_id)
 
     closeObject();
 
-    $query = "SELECT Institut_id, Name, Seminar_id, Untertitel, start_time, 
+    $query = "SELECT Institut_id, Name, Seminar_id, Untertitel, start_time,
                      status, Lesezugriff, Schreibzugriff, Passwort
               FROM seminare
               WHERE Seminar_id = ?";
@@ -273,7 +273,7 @@ function selectInst ($inst_id)
  * as selectSem() but also sets the visit date.
  *
  * @param string $sem_id the id of the course
- * 
+ *
  * @return boolean  true if successful
  */
 function openSem ($sem_id)
@@ -290,7 +290,7 @@ function openSem ($sem_id)
  * as selectInst() but also sets the visit date.
  *
  * @param string $inst_id the id of the institute
- * 
+ *
  * @return boolean  true if successful
  */
 function openInst ($inst_id)
@@ -514,7 +514,7 @@ function get_object_type($id, $check_only = array())
  * (7) is reached.
  *
  * @param integer $sem_start_time the timestamp of the start time from the Semester
- * 
+ *
  * @return integer  the color number
  *
  */
@@ -633,7 +633,7 @@ function get_global_perm($user_id = "")
  *
  * @param string $range_id an id a Veranstaltung, Einrichtung or Fakultaet
  * @param string $user_id  if omitted,current user_id is used
- * 
+ *
  * @return string  the perm level
  */
 function get_perm($range_id, $user_id = "")
@@ -761,7 +761,7 @@ function get_nachname($user_id = "")
  * @staticvar array $cache
  *
  * @param string $user_id if omitted, current username will be returned
- * 
+ *
  * @return string
  *
  */
@@ -1091,7 +1091,7 @@ function get_seminar_tutor($seminar_id)
               ORDER BY position";
     $statement = DBManager::get()->prepare($query);
     $result = $statement->execute(array($seminar_id));
-    
+
     if (!$result) {
         echo 'Fehler bei DB-Abfrage in get_seminar_user!';
         return 0;
@@ -1106,7 +1106,7 @@ function get_seminar_tutor($seminar_id)
  * return all sem_tree-entries for the passed seminar
  *
  * @param string $seminar_id the seminar
- * 
+ *
  * @return array  a list of sem_tree_id's
  */
 function get_seminar_sem_tree_entries($seminar_id)
@@ -1241,19 +1241,19 @@ function get_users_online($active_time = 5, $name_format = 'full_rev')
     }
 
     $query = "SELECT a.username, {$_fullname_sql[$name_format]} AS name,
-                     UNIX_TIMESTAMP() - UNIX_TIMESTAMP(changed) AS last_action,
+                     UNIX_TIMESTAMP() - last_lifesign AS last_action,
                      a.user_id, contact_id AS is_buddy, " . get_vis_query('a', 'online') . " AS is_visible
-              FROM " . PHPLIB_USERDATA_TABLE . "
-              LEFT JOIN auth_user_md5 a ON (a.user_id = sid)
-              LEFT JOIN user_info USING (user_id)
-              LEFT JOIN user_visibility USING (user_id)
+              FROM user_online uo
+              LEFT JOIN auth_user_md5 a ON (a.user_id = uo.user_id)
+              LEFT JOIN user_info ON (user_info.user_id = uo.user_id)
+              LEFT JOIN user_visibility ON (user_visibility.user_id = uo.user_id)
               LEFT JOIN contact ON (owner_id = ? AND contact.user_id = a.user_id AND buddy = 1)
-              WHERE changed > ? AND sid NOT IN ('nobody', ?)
+              WHERE last_lifesign > ? AND uo.user_id <> ?
               ORDER BY a.Nachname ASC, a.Vorname ASC";
     $statement = DBManager::get()->prepare($query);
     $statement->execute(array(
         $user->id,
-        date('YmdHis', time() - $active_time * 60),
+        time() - $active_time * 60,
         $user->id,
     ));
     $online = $statement->fetchGrouped();
@@ -1265,19 +1265,29 @@ function get_users_online($active_time = 5, $name_format = 'full_rev')
  * get the number of currently online users
  *
  * @param int $active_time filter: the time in minutes until last life-sign
- * 
+ *
  * @return int
  */
 function get_users_online_count($active_time = 5)
 {
-    $query = "SELECT COUNT(*) FROM " . PHPLIB_USERDATA_TABLE . "
-              WHERE changed > ? AND sid NOT IN ('nobody', ?)";
+    $query = "SELECT COUNT(*) FROM user_online
+              WHERE last_lifesign > ?";
     $statement = DBManager::get()->prepare($query);
-    $statement->execute(array(
-        date('YmdHis', time() - $active_time * 60),
-        $GLOBALS['user']->id,
-    ));
-    return $statement->fetchColumn();
+    try {
+        $statement->execute(array(time() - $active_time * 60));
+    } catch (PDOException $e) {
+        $version = new DBSchemaVersion('studip');
+        if ($version->get() < 98) {
+            Log::ALERT('Seminar_User::set_last_action() failed. Check migration no. 98!');
+        } else {
+            throw $e;
+        }
+    }
+    $count = $statement->fetchColumn();
+    if ($GLOBALS['user']->id && $GLOBALS['user']->id != 'nobody') {
+        --$count;
+    }
+    return $count > 0 ? : 0;
 }
 
 /**
@@ -1294,7 +1304,7 @@ function get_ticket()
  * check if the passed ticket is valid
  *
  * @param string $studipticket the ticket-id to check
- * 
+ *
  * @return bool
  */
 function check_ticket($studipticket)
@@ -1537,7 +1547,7 @@ function search_range($search_str = false, $search_user = false, $show_sem = tru
             );
         }
         if (isDeputyEditAboutActivated()) {
-            $query = "SELECT a.user_id, a.username, 'user' AS type, 
+            $query = "SELECT a.user_id, a.username, 'user' AS type,
                              CONCAT({$_fullname_sql['full']}, ' (', username, ')') AS name
                       FROM auth_user_md5 AS a
                       JOIN user_info USING (user_id)
@@ -1728,7 +1738,7 @@ function studip_utf8encode($data)
         } else {
             return mb_decode_numericentity(
                 mb_convert_encoding($data,'UTF-8', 'WINDOWS-1252'),
-                array(0x100, 0xffff, 0, 0xffff), 
+                array(0x100, 0xffff, 0, 0xffff),
                 'UTF-8'
             );
         }
@@ -1868,7 +1878,7 @@ function studip_substr($string, $offset, $length = false)
  * use only if really necessary
  *
  * @param string $string the string to measure
- * 
+ *
  * @return integer  the number of characters in string
  */
 function studip_strlen($string)

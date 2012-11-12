@@ -33,45 +33,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 require_once 'lib/classes/SemesterData.class.php';
 require_once 'lib/functions.php';
 
-// set default Values for messaging
-function check_messaging_default($my_messaging_settings) {
-
-    if (!$my_messaging_settings['show_only_buddys'])
-        $my_messaging_settings['show_only_buddys'] = FALSE;
-    if (!$my_messaging_settings['delete_messages_after_logout'])
-        $my_messaging_settings['delete_messages_after_logout'] = FALSE;
-    if (!$my_messaging_settings['default_setted'])
-        $my_messaging_settings['default_setted'] = time();
-    if (!$my_messaging_settings['last_login'])
-        $my_messaging_settings['last_login'] = FALSE;
-    if (!$my_messaging_settings['timefilter'])
-        $my_messaging_settings['timefilter'] = "30d";
-    if (!$my_messaging_settings['opennew'])
-        $my_messaging_settings['opennew'] = 1;
-    if (!$my_messaging_settings['logout_markreaded'])
-        $my_messaging_settings['logout_markreaded'] = FALSE;
-    if (!$my_messaging_settings['openall'])
-        $my_messaging_settings['openall'] = FALSE;
-    if (!$my_messaging_settings['addsignature'])
-        $my_messaging_settings['addsignature'] = FALSE;
-    if (!$my_messaging_settings['save_snd'])
-        $my_messaging_settings['save_snd'] = 1;
-    if (!$my_messaging_settings['sms_sig'])
-        $my_messaging_settings['sms_sig'] = FALSE;
-    if (!$my_messaging_settings['send_view'])
-        $my_messaging_settings['send_view'] = FALSE;
-    if (!$my_messaging_settings['last_box_visit'])
-        $my_messaging_settings['last_box_visit'] = 1;
-    if (!$my_messaging_settings['folder']['in'])
-        $my_messaging_settings['folder']['in'][0] = "dummy";
-    if (!$my_messaging_settings['folder']['out'])
-        $my_messaging_settings['folder']['out'][0] = "dummy";
-    if (!$my_messaging_settings['confirm_reading'])
-        $my_messaging_settings['confirm_reading'] = 3;
-    return $my_messaging_settings;
-}
-
-
 function check_semester_default(){
     if ($GLOBALS['perm']->have_perm('user')){
         $semester = SemesterData::GetInstance();
@@ -103,7 +64,6 @@ function startpage_redirect($page_code) {
     exit;
 }
 
-
 require_once('lib/language.inc.php');
 
 global $i_page,
@@ -132,26 +92,21 @@ if ($_SESSION['SessionStart'] == 0) {
 
 // user init starts here
 if ($auth->is_authenticated() && is_object($user) && $user->id != "nobody") {
-    if ($_SESSION['SessionStart'] > UserConfig::get($user->id)->__get('CurrentLogin')) {      // just logged in
-        // register all user variables
-        //TODO: was wird hier noch gebraucht? was kann in UserConfig?
-        $LastLogin = $CurrentLogin;
-        $CurrentLogin = $_SESSION['SessionStart'];
-        UserConfig::get($user->id)->store('CurrentLogin', $CurrentLogin);
-        UserConfig::get($user->id)->store('LastLogin', $LastLogin);
-               // call default functions
-        check_semester_default();
-
-        
-        $my_studip_settings = UserConfig::get($user->id)->__get('my_studip_settings');
-        //redirect user to another page if he want to
-        if ((int)$my_studip_settings["startpage_redirect"] && ($i_page == "index.php") && (!$perm->have_perm("root"))){
+    if ($_SESSION['SessionStart'] > UserConfig::get($user->id)->CURRENT_LOGIN_TIMESTAMP) {      // just logged in
+        // store old CURRENT_LOGIN in LAST_LOGIN and set CURRENT_LOGIN to start of session
+        UserConfig::get($user->id)->store('LAST_LOGIN_TIMESTAMP', UserConfig::get($user->id)->CURRENT_LOGIN_TIMESTAMP);
+        UserConfig::get($user->id)->store('CURRENT_LOGIN_TIMESTAMP', $_SESSION['SessionStart']);
+        //find current semester and store it in $_SESSION['_default_sem']
+        $current_sem = Semester::findByTimestamp(time() + get_config('SEMESTER_TIME_SWITCH') * 7 * 24 * 60 * 60);
+        if (!$current_sem ) $current_sem = Semester::findCurrent();
+        $_SESSION['_default_sem'] = $current_sem->semester_id;
+        //redirect user to another page if he want to, redirect is deferred to allow plugins to catch the UserDidLogin notification
+        if (UserConfig::get($user->id)->PERSONAL_STARTPAGE > 0 && $i_page == "index.php" && !$perm->have_perm("root")) {
             $seminar_open_redirected = TRUE;
         }
         $user_did_login = true;
     }
 }
-
 
 // init of output via I18N
 $_language_path = init_i18n($_SESSION['_language']);
@@ -183,7 +138,7 @@ if (Navigation::hasItem('/course/admin')
 }
 // add navigation item for profile: add modules
 if (Navigation::hasItem('/profile')
-    && (!Request::option('username') || Request::option('username') == $auth->auth['uname'] || $perm->have_perm('root'))) {
+    && (!Request::username('username') || Request::username('username') == $user->username || $perm->have_perm('root'))) {
     $plus_nav = new Navigation('+', 'dispatch.php/profilemodules');
     $plus_nav->setDescription(_("Inhaltselemente konfigurieren"));
     Navigation::addItem('/profile/modules', $plus_nav);
@@ -192,5 +147,5 @@ if ($user_did_login) {
     NotificationCenter::postNotification('UserDidLogin', $user->id);
 }
 if ($seminar_open_redirected) {
-    startpage_redirect($my_studip_settings["startpage_redirect"]);
+    startpage_redirect(UserConfig::get($user->id)->PERSONAL_STARTPAGE);
 }

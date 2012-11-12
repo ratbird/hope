@@ -208,7 +208,7 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
             echo '<div role="article">';
             $zusatz = '';
             if (!$range_id || is_array($range_id)) {
-                
+
                  $titel = "<a href=\"$link\" class=\"tree\" onclick=\"STUDIP.Termine.opencloseSem('"
                 .$date['termin_id']."','".$show_admin."','".$date['date_typ']."','"
                 .$date['info']."'); return false;\" >".$titel."</a>";
@@ -341,9 +341,9 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
 }
 function show_termin_item($termin_item, $open, $new, $link, $zusatz, $titel, $range_id = "", $show_not = 0, $show_admin = FALSE )
 {
-    
+
             $template = $GLOBALS['template_factory']->open('dates/seminar_date');
-            $template->termin_item = $termin_item;            
+            $template->termin_item = $termin_item;
             $template->range_id = $range_id;
             $template->show_not = $show_not;
             $template->show_admin = $show_admin;
@@ -352,19 +352,19 @@ function show_termin_item($termin_item, $open, $new, $link, $zusatz, $titel, $ra
             $template->zusatz = $zusatz;
             $template->titel = $titel;
             $template->icon = Assets::img('icons/16/grey/date.png', array('class' => 'text-bottom'));
-            
+
             return $template->render();
 }
 
 function show_termin_item_content($termin_item, $new = FALSE, $range_id = "", $show_admin = FALSE )
 {
-            global $TERMIN_TYP;   
+            global $TERMIN_TYP;
             $template = $GLOBALS['template_factory']->open('dates/seminar_date-content');
-            $template->termin_item = $termin_item;            
+            $template->termin_item = $termin_item;
             $template->range_id = $range_id;
-            
+
             $template->show_admin = $show_admin;
-            $template->new = $new;            
+            $template->new = $new;
             return $template->render();
 }
 /**
@@ -380,7 +380,7 @@ function show_personal_dates ($range_id, $date_start, $date_end, $show_docs = FA
 {
     global $SessSemName, $user, $TERMIN_TYP;
     global $PERS_TERMIN_KAT, $username;
-    
+
     if ($show_admin && $range_id == $user->id) {
         $admin_link = '<a href="'.URLHelper::getLink('calendar.php', array('cmd' => 'edit', 'source_page' => URLHelper::getURL())).'">';
     }
@@ -448,8 +448,7 @@ function show_personal_dates ($range_id, $date_start, $date_end, $show_docs = FA
                 $tmp_titel = htmlReady(mila($termin->getTitle())); //Beschneiden des Titels
                 $titel .= ", ".$tmp_titel;
             }
-            $LastLogin = UserConfig::get($user->id)->getValue('LastLogin');
-            $new = ($termin->getChangeDate() > $LastLogin);
+            $new = ($termin->getChangeDate() > UserConfig::get($user->id)->LAST_LOGIN_TIMESTAMP);
 
             // Zur Identifikation von auf- bzw. zugeklappten Terminen muss zusaetzlich
             // die Startzeit ueberprueft werden, da die Wiederholung eines Termins die
@@ -500,7 +499,7 @@ function show_personal_dates ($range_id, $date_start, $date_end, $show_docs = FA
                         $edit = true;
              }
 
-             
+
 
 
 
@@ -515,7 +514,7 @@ function show_personal_dates ($range_id, $date_start, $date_end, $show_docs = FA
             }
             echo show_termin_item($termin_item, $open, $new, $link, $zusatz, $titel);
 
-           
+
         }
         echo "</td></tr></table></td></tr></table>";
         return TRUE;
@@ -561,11 +560,6 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
     global $PERS_TERMIN_KAT, $username, $CALENDAR_DRIVER;
 
     $admin_link = '<a href="'.URLHelper::getLink('calendar.php', array('cmd' => 'edit', 'source_page' => URLHelper::getURL())).'">';
-    $calendar_user_control_data = json_decode(UserConfig::get($GLOBALS['user']->id)->getValue('calendar_user_control_data'), true);
-    if (is_array($calendar_user_control_data["bind_seminare"]))
-        $bind_seminare = array_keys($calendar_user_control_data["bind_seminare"], "TRUE");
-    else
-        $bind_seminare = "";
 
     $list = new DbCalendarEventList(new SingleCalendar($user->id, Calendar::PERMISSION_OWN), $date_start, $date_end, TRUE, Calendar::getBindSeminare());
 
@@ -588,7 +582,7 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
 
         while ($termin = $list->nextEvent()) {
             echo '<div role="article">';
-          
+
             $icon = Assets::img('icons/16/grey/date.png', array('class' => 'text-bottom'));
             $have_write_permission = true;
 
@@ -656,8 +650,7 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
                     }
                 }
             }
-            $LastLogin = UserConfig::get($user->id)->getValue('LastLogin');
-            $new = ($termin->getChangeDate() > $LastLogin);
+            $new = ($termin->getChangeDate() > UserConfig::get($user->id)->LAST_LOGIN_TIMESTAMP);
 
             // Zur Identifikation von auf- bzw. zugeklappten Terminen muss zusätzlich
             // die Startzeit überprüft werden, da die Wiederholung eines Termins die
@@ -668,7 +661,7 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
             } else {
                 $link = URLHelper::getLink("?dclose=true");
             }
-           
+
            if (strtolower(get_class($termin)) == 'seminarevent') {
                     $description = $issue_descriptions;
             } else {
@@ -686,42 +679,42 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
             if (strtolower(get_class($termin)) == 'seminarevent') {
                     $type=$singledate->getTypeName();
                     if ($singledate->getRoom()) {
-                       
+
                         $raum= htmlReady(mila($singledate->getRoom(), 25));
                     } else if ($singledate->getFreeRoomText()) {
-                       
+
                         $ort=htmlReady(mila($singledate->getFreeRoomText(), 25));
                     }
              } else {
                     $pri =  htmlReady($termin->toStringPriority());
-                    
+
                     $sicht = htmlReady($termin->toStringAccessibility());
                     $res = htmlReady($termin->toStringRecurrence());
              }
              $edit = FALSE;
              if ($have_write_permission && strtolower(get_class($termin)) != 'seminarevent')  {
                         // Personal appointment
-                        $edit = true;                  
+                        $edit = true;
              }
-       
+
              if ($link) {
-           
+
                 $titel = "<a href=\"$link\" class=\"tree\"  "
                  ."onclick=\"STUDIP.Termine.openclose('".$termin->getId()."'); return false;\">".$titel."</a>";
              }
 
 
-           
-           
+
+
            $termin_item = array('termin_id'=>$termin->getId(),"chdate"=>$termin->getChangeDate(),
             'date_type'=>$type,'info'=>$description,
             'kat'=>$kat,'cont'=>$cont,'edit'=>$edit,
             'sem'=>$sem,'raum'=>$raum,'ort'=>$ort,'pri'=>$pri,'sicht'=>$sicht,'res'=>$res,
             'autor'=>$autor);
-          
+
            if ($open == $app_ident) {
                 $termin_item['open'] = "open";
-            } 
+            }
             echo show_termin_item($termin_item, $open, $new, $link, $zusatz, $titel);
 
            //contend

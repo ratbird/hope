@@ -32,7 +32,7 @@ class Settings_ForumController extends Settings_SettingsController
 
         SkipLinks::addIndex(_('Einstellungen des Forums anpassen'), 'layout_content', 100);
 
-        $settings = json_decode($this->config->forum, true) ?: array();
+        $settings = $this->config->FORUM_SETTINGS ?: array();
 
         $this->defaults = array(
             'sortthemes' => 'asc',
@@ -70,10 +70,9 @@ class Settings_ForumController extends Settings_SettingsController
             'themeview'   => Request::option('themeview'),
             'presetview'  => $presetview,
             'shrink'      => Request::int('shrink') * 7 * 24 * 60 * 60, // = 1 Woche
-            'changed'     => 'TRUE',
         );
 
-        $this->config->store('forum', json_encode($forum));
+        $this->config->store('FORUM_SETTINGS', $forum);
         $this->reportSuccess(_('Ihre Einstellungen wurden gespeichert.'));
         $this->redirect('settings/forum');
     }
@@ -83,7 +82,7 @@ class Settings_ForumController extends Settings_SettingsController
         if ($verified) {
             $this->check_ticket();
 
-            $this->config->store('forum', json_encode($this->defaults));
+            $this->config->delete('FORUM_SETTINGS');
 
             $this->reportSuccess(_('Ihre Einstellungen wurden zurückgesetzt.'));
         }

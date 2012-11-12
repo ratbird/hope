@@ -13,7 +13,7 @@ $start_pages = array(
 <form method="post" action="<?= $controller->url_for('settings/general/store') ?>">
     <?= CSRFProtection::tokenTag() ?>
     <input type="hidden" name="studipticket" value="<?= get_ticket() ?>">
-    
+
     <table id="main_content" class="zebra-hover settings">
         <colgroup>
             <col width="50%">
@@ -56,7 +56,7 @@ $start_pages = array(
                 <td>
                     <select name="personal_startpage" id="personal_startpage" aria-describedby="personal_startpage_description">
                     <? foreach ($start_pages as $index => $label): ?>
-                        <option value="<?= $index ?>" <? if ($config->startpage_redirect == $index) echo 'selected'; ?>>
+                        <option value="<?= $index ?>" <? if ($config->PERSONAL_STARTPAGE == $index) echo 'selected'; ?>>
                             <?= htmlReady($label) ?>
                         </option>
                     <? endforeach; ?>

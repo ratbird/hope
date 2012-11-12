@@ -34,26 +34,7 @@ $mod_prv = Request::option('mod_prv');
 $mod = Request::option('mod');
 
 // if the calendar-settings are not loaded yet, get them from the UserConfig
-if (!isset ($calendar_user_control_data)) {
-    if (!$calendar_user_control_data = json_decode(UserConfig::get($GLOBALS['user']->id)->getValue('calendar_user_control_data'), true)) {
-        // if there are no settings yet, generate some defaults
-        $calendar_user_control_data = array(
-            'view'            => 'showweek',
-            'start'           => '6',
-            'end'             => '22',
-            'step_day'        => '600',
-            'step_week'       => '1800',
-            'type_week'       => 'LONG',
-            'holidays'        => null,
-            'sem_data'        => null,
-            'delete'          => '0',
-            'step_week_group' => '1800',
-            'step_day_group'  => '600'
-        );
-
-        UserConfig::get($user->id)->store('calendar_user_control_data', json_encode($calendar_user_control_data));
-    }
-}
+$calendar_user_control_data = UserConfig::get($GLOBALS['user']->id)->CALENDAR_SETTINGS ;
 
 // switch to own calendar if called from header
 if (!get_config('CALENDAR_GROUP_ENABLE') || Request::get('caluser') == 'self') {
@@ -110,36 +91,6 @@ if (Request::option('cmd') == 'export'
     $_calendar = Calendar::getInstance(Calendar::RANGE_USER, $GLOBALS['user']->id);
 } else {
     $_calendar = Calendar::getInstance($cal_select_id);
-}
-
-// remove user setting (bind_seminare)
-if ($_calendar->getRange() == Calendar::RANGE_USER) {
-    if (is_array($calendar_user_control_data['bind_seminare'])) {
-        unset($calendar_user_control_data['bind_seminare']);
-        UserConfig::get($GLOBALS['user']->id)->store("calendar_user_control_data", json_encode($calendar_user_control_data));
-    }
-    if (isset($calendar_user_control_data['ts_bind_seminare'])) {
-        unset($calendar_user_control_data['ts_bind_seminare']);
-        UserConfig::get($GLOBALS['user']->id)->store("calendar_user_control_data", json_encode($calendar_user_control_data));
-    }
-}
-
-// restore user defined settings
-if ($cmd_cal == 'chng_cal_settings') {
-    $calendar_user_control_data = array(
-        'view' => Request::option('cal_view'),
-        'start' => Request::option('cal_start'),
-        'end' => Request::option('cal_end'),
-        'step_day' => Request::option('cal_step_day'),
-        'step_week' => Request::option('cal_step_week'),
-        'type_week' => Request::option('cal_type_week'),
-        'holidays' => Request::option('cal_holidays'),
-        'sem_data' => Request::option('cal_sem_data'),
-        'delete' => Request::option('cal_delete'),
-        'step_week_group' => Request::option('cal_step_week_group'),
-        'step_day_group' => Request::option('cal_step_day_group')
-    );
-    UserConfig::get($GLOBALS['user']->id)->store("calendar_user_control_data", json_encode($calendar_user_control_data));
 }
 
 // use current timestamp if no timestamp is given
@@ -238,7 +189,7 @@ if ($cmd == 'add' || $cmd == 'edit') {
     if (!isset($_SESSION['calendar_sess_forms_data'])) {
         $_SESSION['calendar_sess_forms_data'] = array();
     }
-    
+
     if (Request::isPost()) {
         // Formulardaten uebernehmen
         foreach ($accepted_vars as $key) {
@@ -652,13 +603,6 @@ if ($cmd == 'bind') {
 if ($cmd == 'export') {
 
     include $RELATIVE_PATH_CALENDAR . '/views/export.inc.php';
-}
-
-// Ansicht anpassen **********************************************************
-
-if ($cmd == 'changeview') {
-
-    include $RELATIVE_PATH_CALENDAR . '/calendar_settings.inc.php';
 }
 
 echo "</td></tr>\n</table>\n";

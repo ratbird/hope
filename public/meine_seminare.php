@@ -86,7 +86,7 @@ function print_seminar_content($semid, $my_obj_values, $type = 'seminar', $sem_c
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
 // -- here you have to put initialisations for the current page
-require_once ('config.inc.php');            // Klarnamen fuer den Veranstaltungsstatus
+require_once ('config.inc.php');            // Klarnamen fuer den VeranstaltungsstatusUserConfig::get($user->id)->LAST_LOGIN_TIMESTAMP
 require_once ('lib/visual.inc.php');            // htmlReady fuer die Veranstaltungsnamen
 require_once ('lib/dates.inc.php');         // Semester-Namen fuer Admins
 require_once ('lib/admission.inc.php');     // Funktionen der Teilnehmerbegrenzung
@@ -243,7 +243,7 @@ if ($cmd=="inst_kill" && $GLOBALS['ALLOW_SELFASSIGN_INSTITUTE']) {
 
 // Update der Gruppen
 if (Request::int('gruppesent') == '1'){
-    $_my_sem_group_field = Request::quoted('select_group_field');
+    $user->cfg->store('MY_COURSES_GROUPING', Request::get('select_group_field'));
     $gruppe = Request::getArray('gruppe');
     if (!empty($gruppe)){
         $query = "UPDATE seminar_user SET gruppe = ? WHERE Seminar_id = ? AND user_id = ?";
@@ -268,9 +268,8 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
 
     //Alle fuer das Losen anstehenden Veranstaltungen bearbeiten (wenn keine anstehen wird hier nahezu keine Performance verbraten!)
     check_admission();
-    if (!$user->is_registered('_my_sem_open')){
-        $user->register('_my_sem_open');
-    }
+    $_my_sem_group_field = $user->cfg->MY_COURSES_GROUPING;
+    $_my_sem_open = $user->cfg->MY_COURSES_OPEN_GROUPS;
     /*
      * Get and check the global configuration for forced grouping.
      * If the global configuration specifies an unknown field, don't
@@ -279,8 +278,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
     $forced_grouping = in_array(get_config('MY_COURSES_FORCE_GROUPING'), getValidGroupingFields()) ?
         get_config('MY_COURSES_FORCE_GROUPING') :
         'not_grouped';
-    if (!$user->is_registered('_my_sem_group_field')){
-        $user->register('_my_sem_group_field');
+    if (!$_my_sem_group_field) {
         $_my_sem_group_field = 'not_grouped';
         $_my_sem_open['not_grouped'] = true;
     }
@@ -292,9 +290,14 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
     }
     $group_field = $_my_sem_group_field;
 
-    if (Request::option('open_my_sem')) $_my_sem_open[Request::option('open_my_sem')] = true;
-
-    if (Request::option('close_my_sem')) unset($_my_sem_open[Request::option('close_my_sem')]);
+    if (Request::option('open_my_sem')) {
+        $_my_sem_open[Request::option('open_my_sem')] = true;
+        $user->cfg->store('MY_COURSES_OPEN_GROUPS', $_my_sem_open);
+    }
+    if (Request::option('close_my_sem')) {
+        unset($_my_sem_open[Request::option('close_my_sem')]);
+        $user->cfg->store('MY_COURSES_OPEN_GROUPS', $_my_sem_open);
+    }
 
     $groups = array();
 
@@ -688,13 +691,10 @@ elseif ($auth->auth["perm"]=="admin") {
         $meldung="info§" . sprintf(_("Sie wurden noch keinen Einrichtungen zugeordnet. Bitte wenden Sie sich an einen der zust&auml;ndigen %sAdministratoren%s."), "<a href=\"dispatch.php/siteinfo/show\">", "</a>") . "§".$meldung;
     else {
         $_my_inst_arr = array_keys($_my_inst);
-        if(!$user->is_registered("_my_admin_inst_id")){
-            $_my_admin_inst_id = $_my_inst_arr[0];
-            $user->register("_my_admin_inst_id");
-        }
         if(Request::option('institut_id')){
-            $_my_admin_inst_id = ($_my_inst[Request::quoted('institut_id')]) ? Request::option('institut_id') : $_my_inst_arr[0];
+            $user->cfg->store('MY_INSTITUTES_DEFAULT', isset($_my_inst[Request::option('institut_id')]) ? Request::option('institut_id') : $_my_inst_arr[0]);
         }
+        $_my_admin_inst_id = $user->cfg->MY_INSTITUTES_DEFAULT ? : $_my_inst_arr[0];
         $sortby = Request::quoted('sortby');
         //tic #650 sortierung in der userconfig merken
         if (!empty($sortby) && in_array($sortby, words('VeranstaltungsNummer Name status teilnehmer'))) {

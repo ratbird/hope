@@ -62,8 +62,6 @@ class IntegrityCheckUser extends IntegrityCheckAbstract {
                                     'query' => 'view:USER_ARCHIVUSER:');
         $this->checklist[] = array('detail_table' => 'admission_seminar_user',
                                     'query' => 'view:USER_ADMISSIONUSER:');
-        $this->checklist[] = array('detail_table' => PHPLIB_USERDATA_TABLE,
-                                    'query' => 'view:USER_SESSION:');
         $this->checklist[] = array('detail_table' => 'contact',
                                     'query' => 'view:USER_CONTACT:');
         $this->checklist[] = array('detail_table' => 'statusgruppe_user',

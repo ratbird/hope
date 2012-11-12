@@ -39,22 +39,26 @@ function page_open($feature) {
             if (isset($feature["user"])) {
 
                 if (!is_object($GLOBALS['user'])) {
-                    $GLOBALS['user'] = new $feature["user"];
+
+                    $GLOBALS['user'] = new $feature["user"]($GLOBALS['auth']->auth["uid"]);
                 }
-                $GLOBALS['user']->start($GLOBALS['auth']->auth["uid"]);
             }
         }
     }
 }
 
 function page_close() {
-
+    try {
+        NotificationCenter::postNotification('PageCloseWillExecute', null);
+    } catch (NotificationVetoException $e) {
+        return;
+    }
     if (is_object($GLOBALS['sess'])) {
         @session_write_close();
     }
 
     if (is_object($GLOBALS['user'])) {
-        $GLOBALS['user']->freeze();
+        $GLOBALS['user']->set_last_action();
     }
-
+    NotificationCenter::postNotification('PageCloseDidExecute', null);
 }

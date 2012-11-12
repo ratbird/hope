@@ -38,41 +38,7 @@ require_once ('lib/visual.inc.php');
 require_once ('lib/messaging.inc.php');
 require_once ('lib/statusgruppe.inc.php');
 require_once ('lib/sms_functions.inc.php');
-if(empty ($my_messaging_settings)){
-    $my_messaging_settings = json_decode(UserConfig::get($user->id)->__get('my_messaging_settings'),true);
-    if (!$my_messaging_settings['show_only_buddys'])
-        $my_messaging_settings['show_only_buddys'] = FALSE;
-    if (!$my_messaging_settings['delete_messages_after_logout'])
-        $my_messaging_settings['delete_messages_after_logout'] = FALSE;
-    if (!$my_messaging_settings['default_setted'])
-        $my_messaging_settings['default_setted'] = time();
-    if (!$my_messaging_settings['last_login'])
-        $my_messaging_settings['last_login'] = FALSE;
-    if (!$my_messaging_settings['timefilter'])
-        $my_messaging_settings['timefilter'] = "30d";
-    if (!$my_messaging_settings['opennew'])
-        $my_messaging_settings['opennew'] = 1;
-    if (!$my_messaging_settings['logout_markreaded'])
-        $my_messaging_settings['logout_markreaded'] = FALSE;
-    if (!$my_messaging_settings['openall'])
-        $my_messaging_settings['openall'] = FALSE;
-    if (!$my_messaging_settings['addsignature'])
-        $my_messaging_settings['addsignature'] = FALSE;
-    if (!$my_messaging_settings['save_snd'])
-        $my_messaging_settings['save_snd'] = 1;
-    if (!$my_messaging_settings['sms_sig'])
-        $my_messaging_settings['sms_sig'] = FALSE;
-    if (!$my_messaging_settings['send_view'])
-        $my_messaging_settings['send_view'] = FALSE;
-    if (!$my_messaging_settings['last_box_visit'])
-        $my_messaging_settings['last_box_visit'] = 1;
-    if (!$my_messaging_settings['folder']['in'])
-        $my_messaging_settings['folder']['in'][0] = "dummy";
-    if (!$my_messaging_settings['folder']['out'])
-        $my_messaging_settings['folder']['out'][0] = "dummy";
-    if (!$my_messaging_settings['confirm_reading'])
-        $my_messaging_settings['confirm_reading'] = 3;
-}
+
 if (get_config('CHAT_ENABLE')){
     include_once $RELATIVE_PATH_CHAT."/chat_func_inc.php";
     $chatServer = ChatServer::GetInstance($GLOBALS['CHAT_SERVER_NAME']);
@@ -86,7 +52,15 @@ $cmd = Request::option('cmd');
 $cmd_show = Request::option('cmd_show');
 $sms_data =& $_SESSION['sms_data'];
 $sms_show =& $_SESSION['sms_show'];
-
+$my_messaging_settings = UserConfig::get($user->id)->MESSAGING_SETTINGS;
+$my_messaging_hash = md5(serialize($my_messaging_settings));
+$my_messaging_observer =
+function () use (&$my_messaging_settings, $my_messaging_hash, $user) {
+    if ($my_messaging_hash != md5(serialize($my_messaging_settings))) {
+            UserConfig::get($user->id)->store('MESSAGING_SETTINGS', $my_messaging_settings);
+    }
+};
+NotificationCenter::addObserver($my_messaging_observer, '__invoke', 'PageCloseDidExecute');
 // determine view
 if (Request::option('sms_inout')) {
     $sms_data["view"] = Request::option('sms_inout');
@@ -363,11 +337,9 @@ if ($sms_data["time"] == "all") {
     $no_message_text = sprintf(_("Es liegen keine systeminternen Nachrichten%s %s vor."), $infotext_folder, $no_message_text_box);
 } else if ($sms_data["time"] == "new") {
     if ($sms_data["view"] == "in") {
-        $LastLogin = UserConfig::get($user->id)->__get('LastLogin');
-        $query_time_sort = " AND message_user.mkdate > ".(int)$LastLogin;
+        $query_time_sort = " AND message_user.mkdate > ".(int)UserConfig::get($user->id)->LAST_LOGIN_TIMESTAMP;
     } else {
-        $CurrentLogin = UserConfig::get($user->id)->__get('CurrentLogin');
-        $query_time_sort = " AND message_user.mkdate > ".(int)$CurrentLogin;
+        $query_time_sort = " AND message_user.mkdate > ".(int)UserConfig::get($user->id)->CURRENT_LOGIN_TIMESTAMP;
     }
     $no_message_text = sprintf(_("Es liegen keine neuen systeminternen Nachrichten%s %s vor."), $infotext_folder, $no_message_text_box);
 } else if ($sms_data["time"] == "24h") {

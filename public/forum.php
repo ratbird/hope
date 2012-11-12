@@ -39,15 +39,10 @@ $txt = $message = $count = $verschoben = '';
 $flatviewstartposting = Request::int('flatviewstartposting', 0);
 $view = Request::option('view');
 $open = Request::option('open');
-if(empty($forum)){
-    $forum = json_decode(UserConfig::get($user->id)->__get('forum'),true);
-    if(!is_array($forum)){
-        $forum =  array(  'sortthemes'    => 'asc',
-                          'themeview'     => 'tree',
-                          'presetview'    => 'tree' );
-    }
+if (!isset($_SESSION['forum'])) {
+    $_SESSION['forum'] = UserConfig::get($user->id)->FORUM_SETTINGS;
 }
-
+$forum =& $_SESSION['forum'];
 checkObject();
 checkObjectModule("forum");
 object_set_visit_module("forum");
@@ -152,7 +147,7 @@ if ($view) {
         $forum["view"] = $view;
 }
 
-if (!$forum["view"]) {
+if (!$forum["view"] || $view === '') {
     $view = $forum["themeview"];
     $forum["view"] = $view;
 }
@@ -299,7 +294,7 @@ if ($delete_id) {
     $statement = DBManager::get()->prepare($query);
     $statement->execute(array($delete_id, $SessSemName[1]));
     $temp = $statement->fetch(PDO::FETCH_ASSOC);
-    
+
     if ($temp) {
         if ($rechte || (($temp['user_id'] == $user->id) && $count == 0)) {  // noch mal checken ob alles o.k.
             $root = $temp['rootid'];
@@ -541,7 +536,6 @@ echo '</div></div>';
 //////////////////////////////////////////////////////////////////////////////////
 // Rest
 //////////////////////////////////////////////////////////////////////////////////
-
 
 // echo "Zeit:".(getMsTime()-$stoppuhr);
     include ('lib/include/html_end.inc.php');

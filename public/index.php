@@ -191,10 +191,10 @@ if ($auth->is_authenticated() && $user->id != 'nobody') {
     }
 } else { //displaymodul for nobody
     $index_nobody_template = $GLOBALS['template_factory']->open('index_nobody');
-    
+
     $num_active_courses = DBManager::get()->query("SELECT COUNT(*) FROM seminare")->fetchColumn();
     $index_nobody_template->set_attribute('num_active_courses', $num_active_courses);
-    
+
     $num_registered_users = DBManager::get()->query("SELECT COUNT(*) FROM auth_user_md5")->fetchColumn();
     $index_nobody_template->set_attribute('num_registered_users', $num_registered_users);
 

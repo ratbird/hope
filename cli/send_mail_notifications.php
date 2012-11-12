@@ -58,7 +58,7 @@ if (get_config('DEPUTIES_ENABLE')) {
 $query .= " GROUP BY user_id";
 $statement = DBManager::get()->query($query);
 while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-    $user->start($row['user_id']);
+    $user = new Seminar_User($row['user_id']);
     setTempLanguage($row['user_id']);
     $to = $row['Email'];
     $title = "[" . $GLOBALS['UNI_NAME_CLEAN'] . "] " . _("Tägliche Benachrichtigung");

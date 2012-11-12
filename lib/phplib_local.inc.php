@@ -507,9 +507,10 @@ class Seminar_Auth extends Auth {
 
     function login_if($ok){
         if ($ok){
+            fb($ok);
             parent::login_if($ok);
             if (is_object($GLOBALS['user'])){
-                $GLOBALS['user']->start($this->auth['uid']);
+                $GLOBALS['user'] = new Seminar_User($this->auth['uid']);
             }
         }
         return true;

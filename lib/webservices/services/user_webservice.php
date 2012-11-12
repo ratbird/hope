@@ -91,9 +91,6 @@ class UserService extends AccessControlledService {
           'perm' => 'root');
 
        $user = new Seminar_User();
-       $user->fake_user = true;
-       $user->register_globals = false;
-       $user->start('ws');
        $perm = new Seminar_Perm();
        $GLOBALS['MAIL_VALIDATE_BOX'] = false;
 

@@ -30,18 +30,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  * transmitted as subject of the notification.
  */
 
-require_once 'lib/classes/SemesterData.class.php';
 require_once 'lib/functions.php';
 
-function check_semester_default(){
-    if ($GLOBALS['perm']->have_perm('user')){
-        $semester = SemesterData::GetInstance();
-        $cfg = Config::GetInstance();
-        $actual_sem = $semester->getSemesterDataByDate(time() + $cfg->getValue('SEMESTER_TIME_SWITCH') * 7 * 24 * 60 * 60);
-        if (!is_array($actual_sem)) $actual_sem = $semester->getCurrentSemesterData();
-        $_SESSION['_default_sem'] = $actual_sem['semester_id'];
-    }
-}
 //redirect the user where he want to go today....
 function startpage_redirect($page_code) {
     switch ($page_code) {

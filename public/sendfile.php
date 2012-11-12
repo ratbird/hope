@@ -55,7 +55,7 @@ init_i18n($_SESSION['_language']);
 
 $file_id = escapeshellcmd(basename(Request::get('file_id')));
 $type = Request::int('type');
-if($type < 0 || $type > 8) $type = 0;
+if($type < 0 || $type > 7) $type = 0;
 
 $document = new StudipDocument($file_id);
 
@@ -87,12 +87,6 @@ if ($type == 5){
 //download ad hoc created files, always allowed
 if(in_array($type, array(2,3,4))){
     $no_access = false;
-}
-if ($type === 8) {
-    $range_object = get_object_type($object_id, array("sem","inst","user"));
-    if ($range_object === "user") {
-        $no_access = false;
-    }
 }
 
 //if download not allowed throw exception to terminate script
@@ -127,10 +121,6 @@ switch ($type) {
     break;
     //we want to download a file attached to a system message (this mode performs perm checks)
     case 7:
-        $path_file = get_upload_file_path($file_id);
-    break;
-    //we want to download a file from a user's personal directory
-    case 8:
         $path_file = get_upload_file_path($file_id);
     break;
     //we want to download from the regular upload-folder (this mode performs perm checks)

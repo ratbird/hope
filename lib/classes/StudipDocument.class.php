@@ -139,8 +139,8 @@ class StudipDocument extends SimpleORMap {
         $object_type = get_object_type($this->getValue('seminar_id'));
         $access = false;
 
-        if ($object_type == 'inst' || $object_type == 'fak') {
-            //download from institute is always allowed
+        if (in_array($object_type, array('inst', 'fak', 'user'))) {
+            //download from institute and user is always allowed
             if (get_config('ENABLE_FREE_ACCESS') || $GLOBALS['perm']->have_perm('user', $user_id)) {
                 $access = true;
             } else { //check external download module (types 6 and 10)

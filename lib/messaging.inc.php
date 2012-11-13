@@ -232,6 +232,12 @@ class messaging
     {
         $receiver     = User::find($rec_user_id);
         $to           = $receiver->Email;
+        
+        // do not try to send mails to users without a mail address
+        if (!$to) {
+            return;
+        }
+        
         $rec_fullname = $receiver->getFullName();
 
         setTempLanguage($rec_user_id);

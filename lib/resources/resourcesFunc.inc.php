@@ -799,7 +799,7 @@ function search_administrable_objects($search_string='', $user_id='', $sem=TRUE)
 
         if ($perm->is_fak_admin($user_id) && count($my_inst_ids) > 0) {
             $type = _('Einrichtungen');
-            $query = "SELECT Institut_id AS id, Name AS name
+            $query = "SELECT Institut_id AS id, Name AS name,
                              '{$type}' AS art, 'admin' AS perms
                       FROM Institute
                       WHERE Institut_id != fakultaets_id AND fakultaets_id IN (:inst_ids)

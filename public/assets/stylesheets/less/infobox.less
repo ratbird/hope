@@ -8,8 +8,16 @@ table.infobox td {
 }
 
 // prevent line box gap, see https://developer.mozilla.org/en/Images%2c_Tables%2c_and_Mysterious_Gaps
-td.infobox-img img {
-    display: block;
+table.infobox td.infobox-img {
+    background-color: white;
+}
+.infobox-img > div {
+    min-height: 108px;
+    min-width: 250px; 
+    border-top-left-radius: 16px;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: center center;
 }
 
 td.infobox-avatar {

@@ -153,32 +153,7 @@ if (GetNumberOfBuddies()) {
 }
 ?>
 
-<div id="layout_container">
-    <div id="layout_sidebar">
-    <?
-    $infobox = array(
-        array("kategorie" => _("Information:"),
-                "eintrag" => array(
-                    array("icon" => 'icons/16/black/info.png',
-                          "text"  => _("Hier können Sie sehen, wer au&szlig;er Ihnen im Moment online ist.")
-                    ),
-                    array("icon" => 'icons/16/black/mail.png',
-                          "text"  => _("Sie können diesen Benutzern eine Nachricht schicken oder sie zum Chatten einladen.")
-                    ),
-                    array("icon" => 'icons/16/black/person.png',
-                          "text"  => _("Wenn Sie auf den Namen klicken, kommen Sie zur Homepage des Benutzers.")
-                    )
-            )
-        ), $newInfoboxPart
-    );
-
-    print_infobox($infobox, 'infobox/online.jpg');
-    #if ($SessSemName[0] && $SessSemName["class"] == "inst")
-    #    echo "<br><br><a href=\"institut_main.php\">" . _("Zur&uuml;ck zur ausgew&auml;hlten Einrichtung") . "</a>";
-    #elseif ($SessSemName[0])
-    #    echo "<br><br><a href=\"seminar_main.php\">" . _("Zur&uuml;ck zur ausgew&auml;hlten Veranstaltung") . "</a>";
-    ?>
-    </div>
+<div id="layout_container"><div>
     <div id="layout_content">
 <? if ($_SESSION['sms_msg']) {
     parse_msg($_SESSION['sms_msg']);
@@ -402,9 +377,35 @@ if (is_array($non_group_buddies))
         </td>
         </tr>
         </table>
-    </div>
-    <div class="clear"></div>
-</div>
+    
+    </div><!- layout_content ->
+        
+    <div id="layout_sidebar">
+    <?
+    $infobox = array(
+        array("kategorie" => _("Information:"),
+                "eintrag" => array(
+                    array("icon" => 'icons/16/black/info.png',
+                          "text"  => _("Hier können Sie sehen, wer au&szlig;er Ihnen im Moment online ist.")
+                    ),
+                    array("icon" => 'icons/16/black/mail.png',
+                          "text"  => _("Sie können diesen Benutzern eine Nachricht schicken oder sie zum Chatten einladen.")
+                    ),
+                    array("icon" => 'icons/16/black/person.png',
+                          "text"  => _("Wenn Sie auf den Namen klicken, kommen Sie zur Homepage des Benutzers.")
+                    )
+            )
+        ), $newInfoboxPart
+    );
+
+    print_infobox($infobox, 'infobox/online.jpg');
+    #if ($SessSemName[0] && $SessSemName["class"] == "inst")
+    #    echo "<br><br><a href=\"institut_main.php\">" . _("Zur&uuml;ck zur ausgew&auml;hlten Einrichtung") . "</a>";
+    #elseif ($SessSemName[0])
+    #    echo "<br><br><a href=\"seminar_main.php\">" . _("Zur&uuml;ck zur ausgew&auml;hlten Veranstaltung") . "</a>";
+    ?>
+    </div><!- layout_sidebar ->
+</div></div> <!- layout_container ->
 <?php
     ob_end_flush();
     include ('lib/include/html_end.inc.php');

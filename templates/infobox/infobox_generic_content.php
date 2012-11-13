@@ -14,8 +14,14 @@
     <? if ($picture) : ?>
 
       <tr>
+          <?
+          $image_url = Assets::image_path($picture);
+          $image_size = getimagesize($image_url);
+          $height = floor($image_size[1] / $image_size[0] * 250);
+          $height = $height > 250 ? 250 : $height;
+          ?>
         <td class="infobox-img">
-          <?= Assets::img($picture) ?>
+            <div style="background-image: url('<?= Assets::image_path($picture) ?>'); min-height: <?= $height ?>px;"></div>
         </td>
       </tr>
 

@@ -30,19 +30,19 @@
 
     <? include 'lib/include/header.php' ?>
 
-        <div id="layout_container">
-          <div id="layout_sidebar">
-          <? if ($infobox) : ?>
-              <div id="layout_infobox">
-                    <?= $this->render_partial('infobox/infobox_generic_content', $infobox) ?>
-              </div>
-          <? endif ?>
-          </div>
+        <div id="layout_container"><div>
           <div id="layout_content">
             <?= implode(PageLayout::getMessages()) ?>
             <?= $content_for_layout ?>
           </div>
-        </div>
+          <? if ($infobox) : ?>
+          <div id="layout_sidebar">
+              <div id="layout_infobox">
+                    <?= $this->render_partial('infobox/infobox_generic_content', $infobox) ?>
+              </div>
+          </div>
+          <? endif ?>
+        </div></div>
     </div> <? // Closes #layout_page opened in included templates/header.php ?>
 
     <!-- Ende Page -->

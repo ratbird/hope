@@ -25,30 +25,33 @@
 }
 
 #layout_container {
-    .clearfix();
     background-color: white;
     .border-radius(0 0 2px 2px);
     .box-shadow(3px 3px 5px rgba(0, 0, 0, 0.5));
     margin: 0;
-    padding: 20px;
+    display: table;
+    width: 100%;
+}
+#layout_container > div {
+    display: table-row;
 }
 
 #layout_content {
-    .clearfix();
     // Without the +1 zooming out would break the layout (weird behaviour, i know)
-    margin-right: @infobox-width + @infobox-margin + @infobox-padding + @infobox-border-width + 1;
+    display: table-cell;
+    padding: 12px;
+    vertical-align: top;
 }
 
 #layout_sidebar {
-    .clearfix();
     background: inherit;
     border-left: 1px dashed @brand-color-darker;
-    float: right;
-    margin-left: @infobox-margin;
-    padding-left: @infobox-padding;
     max-width: @infobox-width;
+    width: @infobox-width;
     position: relative;
-    z-index: 1;
+    display: table-cell;
+    vertical-align: top;
+    padding: 12px;
 }
 
 #layout_infobox {

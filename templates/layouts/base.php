@@ -52,13 +52,5 @@
     <? include 'templates/footer.php'; ?>
 
     <?= SkipLinks::getHTML() ?>
-
-    <script>
-    jQuery(function ($) {
-        if($('#layout_sidebar').height() < $('#layout_content').height()) {
-            $('#layout_sidebar').css('height', $('#layout_content').height());
-        }
-    });
-    </script>
 </body>
 </html>

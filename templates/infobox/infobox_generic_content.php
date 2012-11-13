@@ -15,13 +15,18 @@
 
       <tr>
           <?
-          $image_url = Assets::image_path($picture);
-          $image_size = getimagesize($image_url);
-          $height = floor($image_size[1] / $image_size[0] * 250);
-          $height = $height > 250 ? 250 : $height;
+            $image_url = Assets::image_path($picture);
+            $image_path = str_replace($GLOBALS['ABSOLUTE_URI_STUDIP'], "", $image_url);
+            $image_size = getimagesize($GLOBALS['STUDIP_BASE_PATH']."/public/".$image_path);
+            if ($image_size) {
+                $height = floor($image_size[1] / $image_size[0] * 250);
+                $height = $height > 250 ? 250 : $height;
+            } else {
+                $height = 250;
+            }
           ?>
         <td class="infobox-img">
-            <div style="background-image: url('<?= Assets::image_path($picture) ?>'); min-height: <?= $height ?>px;"></div>
+            <div style="background-image: url('<?= Assets::image_path($image_url) ?>'); min-height: <?= $height ?>px;"></div>
         </td>
       </tr>
 

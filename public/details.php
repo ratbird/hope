@@ -316,7 +316,7 @@ if ($seminar['admission_binding']) {
 
 // print the info_box
 echo $template_factory->render(
-    'infobox/infobox_avatar',
+    'infobox/infobox_generic_content',
     array(
         'content' => $infobox,
         'picture' => CourseAvatar::getAvatar($sem_id)->getUrl(Avatar::NORMAL)

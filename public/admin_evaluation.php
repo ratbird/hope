@@ -59,9 +59,11 @@ require_once 'lib/functions.php';
 include_once 'lib/seminar_open.php';
 
 PageLayout::setHelpKeyword("Basis.Evaluationen");
-if ($SessSemName[1])
-    PageLayout::setTitle(getHeaderLine($SessSemName[1])." - ");
-PageLayout::setTitle(_("Verwaltung von Evaluationen"));
+$title = _('Verwaltung von Evaluationen');
+if ($GLOBALS['SessSemName'][1]) {
+    $title = getHeaderLine($GLOBALS['SessSemName'][1]) . ' - ' . $title;
+}
+PageLayout::setTitle($title);
 
 require_once 'lib/evaluation/evaluation.config.php';
 require_once 'lib/admin_search.inc.php';

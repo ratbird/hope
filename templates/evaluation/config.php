@@ -82,7 +82,7 @@ $graphtypes = array(
                 </td>
                 <td style="text-align: center;">
                     <input type="radio" name="<?= $option ?>" value="0"
-                           <? if ($has_template && !$templates[$option]) echo 'checked'; ?>
+                           <? if ($has_template && !$templates[$option]) echo 'checked'; ?>>
                 </td>
             </tr>
         <? endforeach; ?>

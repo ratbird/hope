@@ -33,6 +33,13 @@
     </div>
 </div>
 <h3>
+<?=_("Mehrere Termine parallel anlegen")?>:
+</h3>
+<div style="border: 1px solid; padding: 5px; margin: 5px;">
+    <?= $form->getFormFieldCaption('date_count', array('style' => 'float:left;width:100px;'))?>
+    <?= $form->getFormField('date_count')?>
+</div>
+<h3>
 <?=_("Die Veranstaltung findet an folgenden Tagen statt")?>:
 </h3>
 <?= $form->getFormField('days') ?>

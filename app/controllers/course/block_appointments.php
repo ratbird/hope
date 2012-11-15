@@ -54,6 +54,7 @@ class Course_BlockAppointmentsController extends AuthenticatedController
             $form_fields['termin_typ']['options'] = array_map(function($v, $k){return array('name' => $v['name'], 'value' => $k);}, $GLOBALS['TERMIN_TYP'], array_keys($GLOBALS['TERMIN_TYP']));
             $form_fields['days'] = array('type' => 'selectbox', 'multiple' => true, 'default_value' => '0');
             $form_fields['days']['options'][0] = array('name' => _("Jeden Tag") , 'value' => 0);
+            $form_fields['date_count'] = array('type' => 'select', 'caption' => _("Anzahl"), 'options' => range(1,5));
             $start_ts = strtotime('this monday');
             foreach (range(0,6) as $d) {
                 $form_fields['days']['options'][] = array('name' => strftime('%A', strtotime("+$d day", $start_ts)) , 'value' => $d + 1);
@@ -75,7 +76,7 @@ class Course_BlockAppointmentsController extends AuthenticatedController
                 } else {
                     $start_time = strtotime($form->getFormFieldValue('start_time'), $start_day);
                     $end_time = strtotime($form->getFormFieldValue('end_time'), $start_day);
-                    if (!($start_time && $end_time && $start_time <= $end_time)) {
+                    if (!($start_time && $end_time && $start_time < $end_time)) {
                         $errors[] = _("Bitte geben Sie korrekte Werte für Start- und Endzeit an!");
                     }
                 }
@@ -88,26 +89,37 @@ class Course_BlockAppointmentsController extends AuthenticatedController
                     PageLayout::postMessage(MessageBox::error(_("Bitte korrigieren Sie Ihre Eingaben:"), $errors));
                 } else {
                     $dates = array();
+                    $date_count = $form->getFormFieldValue('date_count');
                     $delta = $end_time - $start_time;
                     $last_day = strtotime($form->getFormFieldValue('start_time'), $end_day);
                     $every_day = in_array(0, $days);
                     for ($t = $start_time; $t <= $last_day; $t = strtotime('+1 day', $t)) {
                         if ($every_day || in_array(strftime('%u',$t), $days)) {
-                            $date = new SingleDate();
-                            $date->setDateType($termin_typ);
-                            $date->setSeminarID($this->course_id);
-                            $date->date = $t;
-                            $date->end_time = $t + $delta;
-                            $dates[] = $date;
+                            for ($i = 1; $i <= $date_count; $i++) {
+                                $date = new SingleDate();
+                                $date->setDateType($termin_typ);
+                                $date->setSeminarID($this->course_id);
+                                $date->date = $t;
+                                $date->end_time = $t + $delta;
+                                $dates[] = $date;
+                            }
                         }
                     }
                     if (count($dates)) {
                         if ($form->isClicked('preview')) {
                             $dates_created = array_map(function($d){return $d->toString();}, $dates);
-                            PageLayout::postMessage(MessageBox::info(_("Folgende Termine ergeben sich aus Ihren Angaben:"), $dates_created));
+                            if ($date_count > 1) {
+                                $dates_created = array_count_values($dates_created);
+                                $dates_created = array_map(function($k,$v){return $k . ' (' . $v . 'x)';}, array_keys($dates_created), array_values($dates_created));
+                            }
+                            PageLayout::postMessage(MessageBox::info(_("Folgende Termine ergeben sich aus Ihren Angaben:"), $dates_created ));
                         }
                         if ($form->isClicked('save_close')) {
                             $dates_created = array_filter(array_map(function($d){return $d->store() ? $d->toString() : null;}, $dates));
+                            if ($date_count > 1) {
+                            	$dates_created = array_count_values($dates_created);
+                            	$dates_created = array_map(function($k,$v){return $k . ' (' . $v . 'x)';}, array_keys($dates_created), array_values($dates_created));
+                            }
                             PageLayout::postMessage(MessageBox::success(_("Folgende Termine wurden erstellt:"), $dates_created));
                             return $this->render_json(array('auto_close' => true,
                                                             'auto_reload' => true));

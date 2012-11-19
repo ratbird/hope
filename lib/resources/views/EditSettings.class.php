@@ -112,7 +112,11 @@ class EditSettings
     function showPermsForms()
     {
         $template = $GLOBALS['template_factory']->open('resources/edit_perms');
-        $template->search_string_search_root_user = $GLOBALS['search_string_search_root_user'];
+
+        if (!Request::submitted('reset_search_root_user')) {
+            $template->search_string_search_root_user = Request::get('search_string_search_root_user');
+        }
+        
         $template->users = $this->selectRootUser();
         $template->resObject = ResourceObject::Factory();
         echo $template->render();

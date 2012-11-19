@@ -226,7 +226,7 @@ class EditResourceData {
         $template->set_attribute('used_view', $this->used_view);
         $change_schedule_move_or_copy = Request::option('change_schedule_move_or_copy');
         echo $template->render(compact( 'resAssign', 'resources_data', 'view_mode', 'lockedAssign', 'killButton', 
-            'owner_type', 'perm', 'search_string_search_user', 'ResourceObjectPerms', 'search_exp_room',
+            'owner_type', 'perm', 'search_string_search_user', 'ResourceObjectPerms', 'ObjectPerms', 'search_exp_room',
             'search_properties_x', 'resReq', 'seminarName', 'seminarID','change_schedule_move_or_copy'));
     }
 
@@ -247,27 +247,36 @@ class EditResourceData {
     }
 
     function showPermsForms() {
-        global $search_owner, $search_perm_user, $search_string_search_perm_user, $search_string_search_owner,
-            $user;
-
+        $template = $GLOBALS['template_factory']->open('resources/show_perms_forms.php');
+        
+        if (!Request::submitted('reset_search_perm_user')) {
+            $template->set_attribute('search_string_search_perm_user', Request::get('search_string_search_perm_user'));
+        }
+        
+        if (!Request::submitted('reset_search_owner')) {
+           $template->set_attribute('search_string_search_owner', Request::get('search_string_search_owner'));
+        }
+        
         $ObjectPerms = ResourceObjectPerms::Factory($this->resObject->getId());
+        $owner_perms = checkObjektAdministrablePerms($this->resObject->getOwnerId());
 
-        $owner_perms = checkObjektAdministrablePerms ($this->resObject->getOwnerId());
-
-        if ($owner_perms)
-            $admin_perms = TRUE;
-        else
-            $admin_perms = ($ObjectPerms->havePerm("admin")) ? TRUE : FALSE;
+        if ($owner_perms) {
+            $admin_perms = true;
+        } else {
+            $admin_perms = ($ObjectPerms->havePerm("admin")) ? true : false;
+        }
 
         $selectPerms = $this->selectPerms();
 
         /* * * * * * * * * * * * * * * *
          * * * * T E M P L A T E * * * *
          * * * * * * * * * * * * * * * */
-        $template = $GLOBALS['template_factory']->open('resources/show_perms_forms.php');
-        $template->set_attribute('resObject', $this->resObject);
+        
+        $template->set_attributes(array(
+            'resObject' => $this->resObject,
+            'user'      => $GLOBALS['user']
+        ));
 
-        echo $template->render(compact( 'search_owner', 'search_perm_user', 'search_string_search_perm_user', 'search_string_search_owner',
-            'user', 'admin_perms', 'owner_perms', 'ObjectPerms', 'selectPerms' ));
+        echo $template->render(compact('admin_perms', 'owner_perms', 'ObjectPerms', 'selectPerms' ));
     }
 }

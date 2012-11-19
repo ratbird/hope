@@ -828,12 +828,6 @@ if (Request::option('change_object_perms')) {
             if ($changeObject->deletePerms(Request::option('delete_user_perms')))
                 $perms_changed=TRUE;
 
-        if (Request::submitted('reset_search_owner'))
-            $search_string_search_owner=FALSE;
-
-        if (Request::submitted('reset_search_perm_user'))
-            $search_string_search_perm_user=FALSE;
-
         if ((Request::submitted('send_search_owner')) && (Request::option('submit_search_owner') !="FALSE") && (!Request::submitted('reset_search_owner')))
             $changeObject->setOwnerId(Request::option('submit_search_owner'));
 
@@ -1038,10 +1032,6 @@ if (Request::submittedSome('_add_property', '_send_property_type') || Request::o
 //Globale Perms bearbeiten
 if ((Request::option('add_root_user')) || (Request::option('delete_root_user_id'))){
     if ($globalPerm == "admin") { //check for resources root or global root
-        if (Request::submitted('reset_search_root_user')) {
-            $search_string_search_root_user=FALSE;
-        }
-
         if ((Request::submitted('send_search_root_user')) && (Request::option('submit_search_root_user') !="FALSE") && (!Request::submitted('reset_search_root_user'))) {
             $query = "INSERT INTO resources_user_resources (user_id, resource_id, perms)
                       VALUES (?, 'all', 'admin')";

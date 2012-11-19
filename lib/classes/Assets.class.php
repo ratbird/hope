@@ -141,10 +141,11 @@ class Assets {
     $parts = explode('/', $source);
 
     if ($parts[0] == "icons") {
-    	$opt['size'] = $parts[1];
-    	if ($GLOBALS['auth']->auth['devicePixelRatio'] == 2) 
-    		$parts[1] = $parts[1] * 1;
-    	$source = implode("/", $parts);
+        $opt['size'] = $parts[1];
+        if ($GLOBALS['auth']->auth['devicePixelRatio'] == 2) {
+            $parts[1] = $parts[1] * 1;
+        }
+        $source = implode("/", $parts);
     }
   
     $opt = Assets::parse_attributes($opt);
@@ -152,8 +153,8 @@ class Assets {
     $opt['src'] = Assets::image_path($source);
 
     if ((isset($opt['@2x'])) && ($GLOBALS['auth']->auth['devicePixelRatio'] == 2)) {
-    	 $opt['src'] = preg_replace('/\.[^.]+$/', '@2x$0', $opt['src']);
-    	 unset ($opt['@2x']);
+        $opt['src'] = preg_replace('/\.[^.]+$/', '@2x$0', $opt['src']);
+        unset ($opt['@2x']);
     }
 
     if (!isset($opt['alt']))

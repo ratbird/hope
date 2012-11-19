@@ -117,8 +117,8 @@ class Course_BlockAppointmentsController extends AuthenticatedController
                         if ($form->isClicked('save_close')) {
                             $dates_created = array_filter(array_map(function($d){return $d->store() ? $d->toString() : null;}, $dates));
                             if ($date_count > 1) {
-                            	$dates_created = array_count_values($dates_created);
-                            	$dates_created = array_map(function($k,$v){return $k . ' (' . $v . 'x)';}, array_keys($dates_created), array_values($dates_created));
+                                $dates_created = array_count_values($dates_created);
+                                $dates_created = array_map(function($k,$v){return $k . ' (' . $v . 'x)';}, array_keys($dates_created), array_values($dates_created));
                             }
                             PageLayout::postMessage(MessageBox::success(_("Folgende Termine wurden erstellt:"), $dates_created));
                             return $this->render_json(array('auto_close' => true,

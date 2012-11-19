@@ -792,9 +792,8 @@ function ForumNoPostings () {
         $text = _("In dieser Ansicht gibt es derzeit keine Forenbeiträge.");
     else
         $text = _("Zu Ihren gewählten Suchkriterien wurden keine Beiträge gefunden.");
-    $empty .= parse_msg("info§$text");
-	//$empty .= forum_search_field() . '<br><br>';
-    return $empty;
+
+    return parse_msg("info§$text");
 }
 
 // Berechnung und Ausgabe der Blätternavigation
@@ -1567,7 +1566,7 @@ function flatview($open = 0, $show = 0, $update = '', $name = '', $description =
     } else if ($forum['view'] == 'search') {
         if ($forum['search'] != '') {
             $addon = ' AND (' . $forum['search'] . ')';
-			echo forum_search_field() . '<br><br>';
+            echo forum_search_field() . '<br><br>';
         } else {
             echo forum_search_field() . '<br><br>';
             return;

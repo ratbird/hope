@@ -1174,12 +1174,16 @@ class Seminar
                     log_event("SEM_CHANGE_CYCLE", $this->getId(), NULL, $change_from .' -> '. $cycle->toString());
                     NotificationCenter::postNotification("CourseDidChangeSchedule", $this);
                     // logging <<<<<<
-                    $this->createMessage(sprintf(_("Die regelmäßige Veranstaltungszeit wurde auf \"%s\" für alle in der Zukunft liegenden Termine geändert!"), '<b>'.$cycle->toString().'</b>'));
+                    $this->createMessage(sprintf(_("Die regelmäßige Veranstaltungszeit wurde auf \"%s\" für alle in der Zukunft liegenden Termine geändert!"), 
+                        '<b>'.getWeekday($data['day'], false) . ', ' . $data['start_stunde'] . ':' . $data['start_minute'].' - '. 
+                        $data['end_stunde'] . ':' . $data['end_minute'] . '</b>'));
                     $message = true;
                 }
             } else {
                 if (!$same_time) {
-                    $this->createInfo(sprintf(_("Die regelmäßige Veranstaltungszeit wurde auf \"%s\" geändert, jedoch gab es keine Termine die davon betroffen waren."), '<b>'.$cycle->toString().'</b>'));
+                    $this->createInfo(sprintf(_("Die regelmäßige Veranstaltungszeit wurde auf \"%s\" geändert, jedoch gab es keine Termine die davon betroffen waren."), 
+                        '<b>'.getWeekday($data['day'], false) . ', ' . $data['start_stunde'] . ':' . $data['start_minute'].' - '.
+                        $data['end_stunde'] . ':' . $data['end_minute'] . '</b>'));
                     $message = true;
                 }
             }

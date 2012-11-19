@@ -104,7 +104,7 @@ class Calendar_ScheduleController extends AuthenticatedController
         URLHelper::addLinkParam('semester_id', $this->current_semester['semester_id']);
 
         // convert old settings, if necessary (mein_stundenplan.php)
-        if (!$my_schedule_settings['converted']) {
+        if (!$this->my_schedule_settings['converted']) {
             $c = 1;
             foreach ($this->my_schedule_settings['glb_days'] as $show) {
                 if ($c == 7) $c = 0;

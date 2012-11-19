@@ -43,7 +43,7 @@ class Compressor
         $content = file_get_contents(
             $this->configuration['assets_root'] . "/$path");
 
-        if (mb_check_encoding($content, 'WINDOWS-1252')) {
+        if (!mb_check_encoding($content, 'UTF-8')) {
             $content = mb_convert_encoding($content, 'UTF-8', 'WINDOWS-1252');
         }
 

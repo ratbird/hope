@@ -2014,8 +2014,8 @@ if (Request::submitted('inc_request') || Request::submitted('dec_request')
                             $result[$room][$ovl_termin_id] = $ovl_termine;
                             foreach ($ovl_termine as $termin) {
                                 foreach($events as $an_event) {
-                                    if ( ($termin['begin'] > $an_event->begin && $termin['begin'] < $an_event->end)
-                                    ||  ($termin['begin'] < $an_event->begin && $termin['end'] > $an_event->begin) ) {
+                                    if ( ($termin['begin'] >= $an_event->begin && $termin['begin'] < $an_event->end)
+                                    ||  ($termin['begin'] <= $an_event->begin && $termin['end'] > $an_event->begin) ) {
                                         $tmp_overlap_count++;
                                     }
                                 }

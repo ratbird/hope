@@ -42,7 +42,7 @@ class Settings_CalendarController extends Settings_SettingsController
     public function index_action()
     {
 
-        $calendar_user_control_data = UserConfig::get($GLOBALS['user']->id)->getValue('CALENDAR_SETTINGS');
+        $calendar_user_control_data = (array) UserConfig::get($GLOBALS['user']->id)->getValue('CALENDAR_SETTINGS');
         foreach ($calendar_user_control_data as $key => $value) {
             $this->$key = $value;
         }

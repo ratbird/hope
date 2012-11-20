@@ -251,7 +251,7 @@ jQuery(function () {
                             <?
                             //if ($perm->have_perm("admin")) {      // admins or higher may do everything
                                 foreach ($all_semester as $val) {
-                                    if ($val['beginn'] > $sem->getStartSemester()) {        // can be removed, if we always need all Semesters
+                                    if ($val['beginn'] >= $sem->getStartSemester()) {        // can be removed, if we always need all Semesters
                                         echo '<option value="'.$val['beginn'].'"';
                                         if ($sem->getEndSemester() == $val['beginn']) {
                                             echo ' selected';

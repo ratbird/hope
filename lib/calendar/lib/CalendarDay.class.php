@@ -30,7 +30,7 @@ class CalendarDay extends CalendarMonth
     {
 
         $date = getdate($tmstamp);
-        $this->dow = strftime("%u", $tmstamp);
+        $this->dow = date('N', $tmstamp);
         $this->dom = $date["mday"];
         $this->year = $date["year"];
         $this->mon = $date["mon"];

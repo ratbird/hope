@@ -1611,6 +1611,13 @@ if (Request::submitted('save_state')) {
                 $booked_entries = sizeof($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["selected_resources"]);
                 $bookable_entries = sizeof($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]['groups']);
 
+                // count the entries, that are any entries which are already completely booked
+                foreach ($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]['groups'] as $key => $group) {
+                    if ($group['complete'] && !isset($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]["selected_resources"][$key])) {
+                        $booked_entries++;
+                    }
+                }
+
                 if ($booked_entries == $bookable_entries ) {
                     $close_request = TRUE;
                 }

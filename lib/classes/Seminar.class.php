@@ -1683,6 +1683,7 @@ class Seminar
                             $info[$i]['name'] .= '<br>&nbsp;&nbsp;&nbsp;&nbsp;'.$raum;
                             $room_stat = $this->getStatOfNotBookedRooms($cycle->getMetadateId());
                             $info[$i]['name'] .= sprintf(_(" (%s von %s belegt)"), $room_stat['all'] - $room_stat['open'] , $room_stat['all']);
+                            $groups[$i]['complete'] = ($room_stat['all'] - $room_stat['open'] >= sizeof($groups[$i]['termin_ids'])) ? true : false;
                         }
                         if (!$single) unset($info[$i]['raum']);
                         $i++;

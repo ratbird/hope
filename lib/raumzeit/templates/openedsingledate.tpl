@@ -22,7 +22,7 @@ use Studip\Button,
             
             <div style="text-align: center">
                 <div class="button-group">
-                    <?= Button::createAccept(_('Übernehmen')) ?>
+                    <?= Button::createAccept(_('Übernehmen'), 'editDeletedSingleDate') ?>
                     <?= LinkButton::createCancel(_('Abbrechen'),
                             URLHelper::getURL('?#' . $tpl['sd_id'])) ?>
                 </div>

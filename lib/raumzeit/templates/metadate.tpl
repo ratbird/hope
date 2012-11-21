@@ -142,7 +142,6 @@ use Studip\Button,
                                         array('onClick' => "STUDIP.RoomRequestDialog.initialize(this.href.replace('edit','edit_dialog'));return false;")) ?>
 
                                     <? if ($tpl['room_request']) : ?>
-                                        <?=_("oder")?>
                                         <?= LinkButton::create(_('Raumfrage zurückziehen'), URLHelper::getURL('?cmd=removeMetadateRequest&metadate_id='. $tpl['md_id'])) ?>
                                     <? endif ?>
                                 <? endif ?>

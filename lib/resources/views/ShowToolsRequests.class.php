@@ -363,7 +363,7 @@ class ShowToolsRequests
                     ?>
                     </font>
                 </td>
-                <td style="border-left:1px dotted black; background-color: #f3f5f8" width="51%" rowspan="3" valign="top">
+                <td style="border-left:1px dotted black; background-color: #f3f5f8" width="51%" rowspan="4" valign="top">
                     <table cellpadding="2" cellspacing="0" border="0" width="90%">
                         <tr>
                             <td width="70%">
@@ -755,9 +755,8 @@ class ShowToolsRequests
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="35%" valign="top">
-                    <font size="-1"><b><?=_("Kommentar (intern):")?></b><br /><br />
-                    <textarea name="comment_internal" cols="30" rows="2"></textarea>
-                    </font>
+                    <b><?=_("Kommentar (intern):")?></b><br><br>
+                    <textarea name="comment_internal" style="width: 90%" rows="2"></textarea>
                 </td>
             </tr>
 

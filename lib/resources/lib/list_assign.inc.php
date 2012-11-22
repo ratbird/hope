@@ -305,7 +305,7 @@ function createNormalizedAssigns($resource_id, $begin, $end, $explain_user_name 
               WHERE resource_id = :resource_id
                 AND (begin BETWEEN :begin AND :end OR (begin <= :end AND (repeat_end > :begin OR end > :begin)))";
     if ($day_of_week) {
-        $query .= " AND DAYOFWEEK(FROM_UNIXTIME(begin)) = :day_of_week";
+        $query .= " AND DAYOFWEEK(FROM_UNIXTIME(begin)) = :day_of_week ";
     }
     $query .= "ORDER BY begin ASC";
     

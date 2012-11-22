@@ -18,8 +18,7 @@ class WikiFormat extends StudipFormat
 {
     private static $wiki_rules = array(
         'wiki-comments' => array(
-            'start'    => '\[comment(=.*?)\]',
-            'end'      => '\[\/comment\]',
+            'start'    => '\[comment(=.*?)\](.*?)\[\/comment\]',
             'callback' => 'WikiFormat::markupWikiComments'
         ),
         'wiki-links-short' => array(
@@ -111,9 +110,10 @@ class WikiFormat extends StudipFormat
     /**
      * Stud.IP markup for wiki-comments
      */
-    protected static function markupWikiComments($markup, $matches, $comment)
+    protected static function markupWikiComments($markup, $matches)
     {
         $from = substr($matches[1], 1);
+        $comment = $matches[2];
         
         if (Request::get("wiki_comments") === "all") {
             $commenttmpl = "<table style=\"border:thin solid;margin: 5px;\" bgcolor=\"#ffff88\"><tr><td><font size=-1><b>"._("Kommentar von")." %1\$s:</b>&nbsp;</font></td></tr><tr class=steelgrau><td class=steelgrau><font size=-1>%2\$s</font></td></tr></table>";

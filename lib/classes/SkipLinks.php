@@ -40,7 +40,7 @@ class SkipLinks
     {
         if (UserConfig::get($GLOBALS['user']->id)->getValue('SKIPLINKS_ENABLE')) {
             PageLayout::addBodyElements('<style> *:focus, .focus_box, a.button:focus, button.button:focus { outline: 2px dashed #ff6600; }</style>');
-            if ($GLOBALS['auth']->is_authenticated()) {
+            if (is_object($GLOBALS['auth']) && $GLOBALS['auth']->is_authenticated()) {
                 PageLayout::addBodyElements('<div id="skip_link_navigation" aria-busy="true"></div>');
             }
         }

@@ -88,7 +88,7 @@ class StudipLitImportPluginAbstract {
     // Kann bei Bedarf ueberschrieben werden
     // function upload_file($xmlfile, $xmlfile_size, $xmlfile_name) {
     function upload_file() {
-        global $TMP_PATH, $CONVERT_PATH, $auth;
+        global $TMP_PATH, $auth;
 
 
                 if (!$this->xmlfile_name) {

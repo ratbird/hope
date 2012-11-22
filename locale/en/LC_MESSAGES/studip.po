@@ -16349,28 +16349,6 @@ msgstr "God"
 msgid "G&ouml;ttin"
 msgstr "Goddess"
 
-#: ../lib/classes/latexrender.class.php:155
-msgid "Latexfehler: Formel zu lang."
-msgstr "Latex error: formula too long"
-
-#: ../lib/classes/latexrender.class.php:162
-#, php-format
-msgid "Latexfehler: nicht erlaubtes Element: '%s'"
-msgstr "Latex error: element '%s' not allowed"
-
-#: ../lib/classes/latexrender.class.php:248
-#, php-format
-msgid "Latexfehler: Aktion fehlgeschlagen: '%s'."
-msgstr "Latex error: action failed: %s'."
-
-#: ../lib/classes/latexrender.class.php:268
-msgid "Latexfehler: Grafik zu gro&szlig;."
-msgstr "Latex error: graphic too big; "
-
-#: ../lib/classes/latexrender.class.php:283
-msgid "Latexfehler: Kopieren fehlgeschlagen."
-msgstr "Latex error: copying failed."
-
 #: ../lib/classes/StudipLitList.class.php:167
 msgid "Kopie von: "
 msgstr "Copy of: "

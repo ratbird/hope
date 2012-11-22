@@ -89,7 +89,7 @@ class ExportPDF extends TCPDF implements ExportDocument {
             }
         }
         $content = preg_replace("#\[comment(=.*)?\](.*)\[/comment\]#emsU", '$this->addEndnote("//1", "//2")', $content);
-        $content = latex(formatReady($content, true, true, true, null));
+        $content = formatReady($content, true, true, true, null);
         $content = str_replace("<table", "<table border=\"1\"", $content);
         $this->writeHTML($content.$endnote);
     }

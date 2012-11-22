@@ -371,58 +371,6 @@ function transformBeforeSave($what)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-
-function latex($text, $extern = FALSE) {
-    global $LATEXRENDER_ENABLE,
-           $LATEX_PATH,
-           $DVIPS_PATH,
-           $CONVERT_PATH,
-           $IDENTIFY_PATH,
-           $TMP_PATH,
-           $LATEX_FORMATS;
-
-    if ($LATEXRENDER_ENABLE && isset($LATEX_FORMATS)) {
-        include_once("lib/classes/latexrender.class.php");
-        $latex = new LatexRender($GLOBALS['DYNAMIC_CONTENT_PATH'].'/tex', $GLOBALS['DYNAMIC_CONTENT_URL'].'/tex');
-        $latex->_latex_path = $LATEX_PATH;
-        $latex->_dvips_path = $DVIPS_PATH;
-        $latex->_convert_path = $CONVERT_PATH;
-        $latex->_identify_path = $IDENTIFY_PATH;
-        $latex->_tmp_dir = $TMP_PATH;
-
-        // There can be many formatting tags that are
-        // handled by the latex renderer
-        // The tags and their LaTex templates are set in the
-        // variable $LATEX_FORMATS (in local.inc)
-        //
-        foreach( $LATEX_FORMATS as $formatname => $format) {
-            $latex->setFormat($formatname, $format["template"]);
-            $to_match=sprintf("#\[%s\](.*?)\[/%s\]#si", $format["tag"], $format["tag"]);
-            preg_match_all($to_match,$text,$tex_matches);
-
-            for ($i=0; $i < count($tex_matches[0]); $i++) {
-                $pos = strpos($text, $tex_matches[0][$i]);
-                $latex_formula = decodeHTML($tex_matches[1][$i]);
-
-                $url = $latex->getFormulaURL($latex_formula);
-
-                if ($url != false) {
-                    $text = substr_replace($text, "<img src=\"".$url."\">",$pos,strlen($tex_matches[0][$i]));
-                } else {
-                    if ($extern) {
-                        $text = '';
-                    } else {
-                        $errtxt = $latex->getErrorString();
-                        if (!$errtxt) $errtxt = _("Nicht interpretierbare oder möglicherweise gefährliche Latex Formel");
-                        $text = substr_replace($text, '['.$errtxt.']',$pos,strlen($tex_matches[0][$i]));
-                    }
-                }
-            }
-        }
-    }
-    return $text;
-}
-
 /**
 * decodes html entities to normal characters
 *

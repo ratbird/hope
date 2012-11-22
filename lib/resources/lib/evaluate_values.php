@@ -1368,7 +1368,7 @@ if ($view == "view_requests_schedule") {
     }
     elseif (Request::quoted('navigate')) {
         $_SESSION['resources_data']["schedule_week_offset"] = 0;
-        $_SESSION['resources_data']["schedule_start_time"] = mktime (0,0,0,(int)Request::int('schedule_begin_month'), (int)Request::int('schedule_begin_day'), (int)Request::int('schedule_begin_year'));
+        $_SESSION['resources_data']["schedule_start_time"] = mktime (0,0,0, Request::int('schedule_begin_month'), Request::int('schedule_begin_day'), Request::int('schedule_begin_year'));
     } else {
         if($_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]['first_event']){
             $_SESSION['resources_data']["schedule_start_time"] = $_SESSION['resources_data']["requests_working_on"][$_SESSION['resources_data']["requests_working_pos"]]['first_event'];
@@ -2167,30 +2167,30 @@ if ($view == "view_sem_schedule" || $view == "view_group_schedule" || $view == "
     }
     if($view == "view_group_schedule_daily" || $view == 'openobject_group_schedule'){
         if(Request::submitted('jump')) {
-            $_SESSION['resources_data']["schedule_start_time"] = mktime (0, 0, 0, (int)Request::quoted('schedule_begin_month'), (int)Request::quoted('schedule_begin_day'), (int)Request::quoted('schedule_begin_year'));
+            $_SESSION['resources_data']["schedule_start_time"] = mktime (0, 0, 0, Request::int('schedule_begin_month'), Request::int('schedule_begin_day'), Request::int('schedule_begin_year'));
         }
         if(!$_SESSION['resources_data']["schedule_start_time"]) $_SESSION['resources_data']["schedule_start_time"] = strtotime('today');
-        if (Request::quoted('previous_day')){
+        if (Request::option('previous_day')){
             $_SESSION['resources_data']["schedule_start_time"] = strtotime('yesterday', $_SESSION['resources_data']["schedule_start_time"]);
         }
-        if (Request::quoted('next_day')){
+        if (Request::option('next_day')){
             $_SESSION['resources_data']["schedule_start_time"] = strtotime('tomorrow', $_SESSION['resources_data']["schedule_start_time"]);
         }
     }
     if($view == "view_group_schedule"){
-    if (Request::quoted('previous_day')){
+    if (Request::option('previous_day')){
         $_SESSION['resources_data']['group_schedule_dow'] = (--$_SESSION['resources_data']['group_schedule_dow'] == 0 ? 7 : $_SESSION['resources_data']['group_schedule_dow']);
     }
-    if (Request::quoted('next_day')){
+    if (Request::option('next_day')){
         $_SESSION['resources_data']['group_schedule_dow'] = (++$_SESSION['resources_data']['group_schedule_dow'] == 8 ? 1 : $_SESSION['resources_data']['group_schedule_dow']);
     }
     }
-    if (Request::quoted('navigate')) {
+    if (Request::option('navigate')) {
         if (Request::get('sem_time_choose')){
-            $_SESSION['resources_data']['sem_schedule_timespan'] = Request::quoted('sem_time_choose');
+            $_SESSION['resources_data']['sem_schedule_timespan'] = Request::get('sem_time_choose');
         }
         if (Request::get('sem_schedule_choose')){
-            $_SESSION['resources_data']['sem_schedule_semester_id'] = Request::quoted('sem_schedule_choose');
+            $_SESSION['resources_data']['sem_schedule_semester_id'] = Request::option('sem_schedule_choose');
         }
         if (Request::submitted('sem_schedule_start_list') || (Request::submitted('jump') && ($_SESSION['resources_data']["schedule_mode"] == "list"))){
             $_SESSION['resources_data']["schedule_mode"] = "list";
@@ -2199,7 +2199,7 @@ if ($view == "view_sem_schedule" || $view == "view_group_schedule" || $view == "
         }
 
         if (Request::get('group_schedule_choose_group')){
-            $_SESSION['resources_data']['actual_room_group'] = (int)Request::quoted('group_schedule_choose_group');
+            $_SESSION['resources_data']['actual_room_group'] = Request::int('group_schedule_choose_group');
         }
     }
     if (!$_SESSION['resources_data']['sem_schedule_semester_id']){

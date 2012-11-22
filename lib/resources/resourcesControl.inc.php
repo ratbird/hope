@@ -36,6 +36,15 @@ require_once ($RELATIVE_PATH_RESOURCES."/lib/ResourcesUserRoomsList.class.php");
 require_once ($RELATIVE_PATH_RESOURCES."/views/Msg.class.php");
 
 $_SESSION['resources_data'] = @unserialize($_SESSION['resources_data']);
+if (empty($_SESSION['resources_data'])) {
+    $temp_semester = SemesterData::getCurrentSemesterData() ?: end(SemesterData::getAllSemesterData());
+    $_SESSION['resources_data'] = array(
+        'view'                     => 'search',
+        'view_mode'                => false,
+        'sem_schedule_semester_id' => $temp_semester['semester_id'],
+    );
+}
+
 $globalPerm = getGlobalPerms($user->id);
 $msg = new Msg;
 

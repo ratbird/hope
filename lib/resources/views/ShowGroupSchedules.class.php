@@ -62,7 +62,7 @@ class ShowGroupSchedules extends ShowSemSchedules {
         if (!$print_view){
         ?>
         <table border="0" celpadding="2" cellspacing="0" width="99%" align="center">
-        <form method="POST" name="schedule_form" action="<?URLHelper::getLink('?navigate=TRUE&quick_view=view_group_schedule&quick_view_mode='.$view_mode) ?>">
+        <form method="POST" name="schedule_form" action="<?= URLHelper::getLink('?navigate=TRUE&quick_view=view_group_schedule&quick_view_mode='.$view_mode) ?>">
             <?= CSRFProtection::tokenTag() ?>
             <tr>
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
@@ -222,7 +222,7 @@ class ShowGroupSchedules extends ShowSemSchedules {
                     <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" height="35" border="0">
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>"  width="10%" align="left">&nbsp;
-                    <a href="<? URLHelper::getLink('?quick_view='.$this->used_view.'&quick_view_mode='.$view_mode.'&previous_day=1') ?>"><img class="middle" src="<?= Assets::image_path('icons/16/blue/arr_2left.png') ?>" <? echo tooltip (_("Vorherigen Tag anzeigen")) ?>></a>
+                    <a href="<?= URLHelper::getLink('?quick_view='.$this->used_view.'&quick_view_mode='.$view_mode.'&previous_day=1') ?>"><img class="middle" src="<?= Assets::image_path('icons/16/blue/arr_2left.png') ?>" <? echo tooltip (_("Vorherigen Tag anzeigen")) ?>></a>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="76%" align="center">
                 <b>
@@ -234,7 +234,7 @@ class ShowGroupSchedules extends ShowSemSchedules {
                 <br>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="10%" align="center">&nbsp;
-                    <a href="<? URLHelper::getLink('?quick_view='.$this->used_view.'&quick_view_mode='.$view_mode.'&next_day=1') ?>"><img  class="middle"  src="<?= Assets::image_path('icons/16/blue/arr_2right.png') ?>" <? echo tooltip (_("Nächsten Tag anzeigen")) ?>></a>
+                    <a href="<?= URLHelper::getLink('?quick_view='.$this->used_view.'&quick_view_mode='.$view_mode.'&next_day=1') ?>"><img  class="middle"  src="<?= Assets::image_path('icons/16/blue/arr_2right.png') ?>" <? echo tooltip (_("Nächsten Tag anzeigen")) ?>></a>
                 </td>
             </tr>
             <tr>

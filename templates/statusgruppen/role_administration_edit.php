@@ -49,7 +49,7 @@
                     <td class="<?= $cssSw->getClass() ?>" width="50%" nowrap>
                         <font size="-1">
                             <?= _("Gruppengröße") ?>:
-                            <?=tooltipicon(_("Mit dem Feld 'Gruppengröße' haben Sie die Möglichkeit, die Sollstärke für eine Gruppe festzulegen. Dieser Wert wird nur für die Anzeige benutzt - es können auch mehr Personen eingetragen werden.")) ?>
+                            <?=tooltipicon(_("Mit dem Feld 'Gruppengröße' haben Sie die Möglichkeit, die Sollstärke für eine Gruppe festzulegen. Dieser Wert ist nur aus Teilnehmersicht relevant - verantwortliche Personen (Tutoren, Lehrende) können auch mehr Gruppenmitglieder eintragen.")) ?>
                         </font>
                     </td>
                     <td class="<?= $cssSw->getClass() ?>" width="50%" nowrap>
@@ -75,7 +75,7 @@
                 <tr>
                     <td class="table_row_even" align="center" colspan="2">
                         <br>
-                        
+
                         <?= Button::createAccept(_('Speichern'), 'speichern') ?>
                         <?= LinkButton::createCancel(_('Abbrechen'), URLHelper::getURL('', array('role_id' => $role->getId())) . '#' . $role->getId()) ?>
                     </td>

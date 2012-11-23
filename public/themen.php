@@ -54,7 +54,7 @@ if (!$_SESSION['viewModeFilter']) {
 }
 
 if (Request::option('cmd') == 'changeViewMode') {
-    $_SESSION['viewModeFilter'] = Request::quoted('newFilter');
+    $_SESSION['viewModeFilter'] = Request::option('newFilter');
 }
 
 // expert view enabled ?
@@ -75,7 +75,7 @@ $header_line = getHeaderLine($id);
 if ($header_line)
     PageLayout::setTitle($header_line." - ".PageLayout::getTitle());
 
-switch ($viewModeFilter) {
+switch ($_SESSION['viewModeFilter']) {
     case 'expert':
         PageLayout::setHelpKeyword("Basis.VeranstaltungenVerwaltenAblaufplanExpertenansicht");        
         include('lib/raumzeit/themen_expert.php');

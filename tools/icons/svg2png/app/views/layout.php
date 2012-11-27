@@ -16,7 +16,7 @@
         </div>
     </div>
 
-    <script type="text/javascript" src="<?= URLHelper::getLink('assets.php') ?>?javascripts/jquery/jquery-1.7.js"></script>
+    <script type="text/javascript" src="<?= URLHelper::getLink('assets.php') ?>?javascripts/jquery/jquery-1.8.2.js"></script>
     <script type="text/javascript" src="<?= URLHelper::getLink('assets/jquery.miniColors.min.js') ?>"></script>
     <script type="text/javascript" src="<?= URLHelper::getLink('assets/script.js') ?>"></script>
 </body>

@@ -136,9 +136,9 @@ if (Request::submitted('newButton')){
 # ===================================================== END: check the evalID #
 
 # check the itemID =========================================================  #
-
-if (Request::option('itemID')) {
-    $_SESSION['itemID'] = Request::option('itemID');
+$itemID = Request::option('itemID');
+if ($itemID) {
+    $_SESSION['itemID'] = $itemID;
 } elseif (Request::submitted('newButton')) {
     $_SESSION['itemID'] = "root";
 }

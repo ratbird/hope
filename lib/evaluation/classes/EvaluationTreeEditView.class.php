@@ -1581,8 +1581,8 @@ function execCommandChangeTemplate(){
  */
 function execCommandUpdateQuestions ( $no_delete = false ){
 
-    $questions = Request::quoted('questions');
-    $deleteQuestions = Request::quoted('DeleteQuestions');
+    $questions = Request::getArray('questions');
+    $deleteQuestions = Request::getArray('DeleteQuestions');
 
     // remove any empty questions
     $deletecount = 0;
@@ -1667,8 +1667,8 @@ function execCommandAddQuestions(){
  */
 function execCommandDeleteQuestions(){
 
-    $questions = Request::quoted('questions');
-    $deleteQuestions = Request::quoted('DeleteQuestions');
+    $questions = Request::getArray('questions');
+    $deleteQuestions = Request::getArray('DeleteQuestions');
 
     $deletecount = 0;
     for( $i=0; $i<count($questions); $i++ ) {

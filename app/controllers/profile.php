@@ -14,7 +14,7 @@
  */
 
 global $RELATIVE_PATH_CALENDAR;
-global $RELATIVE_PATH_CHAT;
+
 
 require_once 'app/controllers/authenticated_controller.php';
 require_once 'app/models/user.php';
@@ -42,7 +42,7 @@ class ProfileController extends AuthenticatedController
     function before_filter(&$action, &$args)
     {
         parent::before_filter($action, $args);
-        
+        global $RELATIVE_PATH_CHAT;
         // Checks if user is logged in
         $GLOBALS['auth']->login_if(($GLOBALS['auth']->auth['uid'] === 'nobody'));
         
@@ -53,7 +53,7 @@ class ProfileController extends AuthenticatedController
         
         // Checks if chat is enabled
         if (get_config('CHAT_ENABLE')) {
-            include_once $RELATIVE_PATH_CHAT.'/chat_func_inc.php';
+            include_once $GLOBALS['RELATIVE_PATH_CHAT'].'/chat_func_inc.php';
             
             if (Request::get('kill_chat')) {
                 chat_kill_chat(Request::option('kill_chat'));
@@ -281,7 +281,7 @@ class ProfileController extends AuthenticatedController
         
         // CHAT-Info
         if (get_config('CHAT_ENABLE')) {
-            $this->chat_info = chat_show_info($this->current_user->user_id);
+            $this->chat_info = true;
         }
         
         // show literature info

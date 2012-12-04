@@ -23,7 +23,7 @@
             <td class="printcontent" colspan="3">
                 <div style="margin-bottom: 10px;">
                     <b>
-                        <a href="<?= URLHelper::getLink('dispatch.php/about?guestbook=open#guest', array('username' => $post['user']->username)) ?>">
+                        <a href="<?= URLHelper::getLink('dispatch.php/profile?guestbook=open#guest', array('username' => $post['user']->username)) ?>">
                             <?= Assets::img('icons/16/blue/guestbook') ?>
                             <?= _('Gästebuch') ?>:
                             <?= htmlReady($post['user']->getFullName()) ?>

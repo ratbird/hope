@@ -25,7 +25,7 @@ $all_mods = $studygroup->getMembers('dozent') + $studygroup->getMembers('tutor')
 
 $mods = array();
 foreach($all_mods as $mod) {
-    $mods[] = '<a href="'.URLHelper::getLink("dispatch.php/about?username=".$mod['username']).'">'.htmlready($mod['fullname']).'</a>';
+    $mods[] = '<a href="'.URLHelper::getLink("dispatch.php/profile?username=".$mod['username']).'">'.htmlready($mod['fullname']).'</a>';
 }
 
 /* * * * * * * * * * * * *

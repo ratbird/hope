@@ -97,7 +97,7 @@ use Studip\Button, Studip\LinkButton;
     <? foreach ($users as $user): ?>
     <tr class="<?=TextHelper::cycle('hover_odd', 'hover_even')?>">
         <td>
-            <a href="<?= URLHelper::getLink('dispatch.php/about', array('username' => $user['username'])) ?>">
+            <a href="<?= URLHelper::getLink('dispatch.php/profile', array('username' => $user['username'])) ?>">
                 <?= Avatar::getAvatar($user['user_id'], $user['username'])->getImageTag(Avatar::SMALL) ?>
                 <?= htmlReady($user['fullname']) ?>
             </a>

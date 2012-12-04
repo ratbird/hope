@@ -123,7 +123,7 @@ function show_documents($documents, $open = null)
 
         // Create additional information
         $addon = sprintf('<a href="%s">%s</a> %s',
-                         URLHelper::getLink('dispatch.php/about', array('username' => $document['username'])),
+                         URLHelper::getLink('dispatch.php/profile', array('username' => $document['username'])),
                          $document['fullname'],
                          date('d.m.Y H:i', $document['chdate']));
         if ($document['protected']) {

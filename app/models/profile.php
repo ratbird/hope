@@ -1,6 +1,6 @@
 <?php
 /*
- * AboutModel
+ * ProfileModel
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -13,7 +13,7 @@
  * @since       2.4
  */
 
-class AboutModel {
+class ProfileModel {
     protected $perm;
     /**
      * Internal current selected user id
@@ -160,19 +160,23 @@ class AboutModel {
 
                 if (!empty($entries)) {
                     foreach ($entries as $entry) {
-                        $view = DataFieldStructure::permMask($this->perm) >= DataFieldStructure::permMask($entry->structure->getViewPerms());
-                        $show_star = false;
+                        $perms = $entry->structure->getViewPerms();
+                        
+                        if($perms) {
+                            $view = DataFieldStructure::permMask($this->user->perm) >= DataFieldStructure::permMask($perms);
+                            $show_star = false;
 
-                        if (!$view && ($this->current_user->user_id == $this->user->user_id)) {
-                            $view = true;
-                            $show_star = true;
-                        }
+                            if (!$view && ($this->current_user->user_id == $this->user->user_id)) {
+                                $view = true;
+                                $show_star = true;
+                            }
 
-                        if (trim($entry->getValue()) && $view) {
-                            $institutes[$id]['datafield'][]['name']  = $entry->getName();
-                            $institutes[$id]['datafield'][]['value'] = $entry->getDisplayValue();
+                            if (trim($entry->getValue()) && $view) {
+                                $institutes[$id]['datafield'][]['name']  = $entry->getName();
+                                $institutes[$id]['datafield'][]['value'] = $entry->getDisplayValue();
 
-                            if ($show_star) $institutes[$id]['datafield'][]['show_star'] = true;
+                                if ($show_star) $institutes[$id]['datafield'][]['show_star'] = true;
+                            }
                         }
                     }
                 }

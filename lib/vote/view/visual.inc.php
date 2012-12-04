@@ -185,7 +185,7 @@ function createBoxLine ($title, $imgURL, $userName, $userID, $date) {
    $htmlUser =
       "<td align=\"right\" class=\"printhead\" width=\"99%\" ".
       "    valign=\"bottom\">\n".
-      " <a href=\"dispatch.php/about?username=".$userID."\">\n".
+      " <a href=\"dispatch.php/profile?username=".$userID."\">\n".
       "  <font size=\"-1\" color=\"#333399\">".$userName."</font>\n".
       " </a>\n".
       " <font size=\"-1\">&nbsp;".date ("d.m.Y", $date)."</font>&nbsp;".

@@ -180,7 +180,7 @@ class StartNavigation extends Navigation
 
         // calendar / home page
         if (!$perm->have_perm('admin')) {
-            $navigation = new Navigation(_('Mein Profil'), 'dispatch.php/about');
+            $navigation = new Navigation(_('Mein Profil'), 'dispatch.php/profile');
 
             if ($perm->have_perm('autor')) {
                 $navigation->addSubNavigation('settings', new Navigation(_('Einstellungen'), 'dispatch.php/settings/general'));

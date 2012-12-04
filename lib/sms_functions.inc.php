@@ -207,7 +207,7 @@ function print_snd_message($psm) {
     }
 
     if ($x == 1) { // if only one receiver
-        $zusatz .= sprintf(_("an %s, %s"), "</font><a href=\"dispatch.php/about?username=".$psm['rec_uname']."\"><font size=-1 color=\"#333399\">".htmlReady($psm['rec_vorname'])."&nbsp;".htmlReady($psm['rec_nachname'])."</font></a><font size=-1>", date("d.m.y, H:i",$psm['mkdate']));
+        $zusatz .= sprintf(_("an %s, %s"), "</font><a href=\"dispatch.php/profile?username=".$psm['rec_uname']."\"><font size=-1 color=\"#333399\">".htmlReady($psm['rec_vorname'])."&nbsp;".htmlReady($psm['rec_nachname'])."</font></a><font size=-1>", date("d.m.y, H:i",$psm['mkdate']));
         $zusatz .= "&nbsp;";
         $zusatz .= "<a href=\"".URLHelper::getLink('?cmd='.$tmp_cmd.'&sel_lock='.$psm['message_id'].'#'.$psm['message_id'])."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".$tmp_picture."\" ".$tmp_tooltip."></a> ".$trash." <input type=\"checkbox\" name=\"sel_sms[]\" value=\"".$psm['message_id']."\" ".CheckChecked($cmd, "select_all").">";
     } else if ($x >= "2") { // if more than one receiver
@@ -250,7 +250,7 @@ function print_snd_message($psm) {
                     if ($i > "0") {
                         $content .= ",&nbsp;";
                     }
-                    $content .= "<a href=\"dispatch.php/about?username=".$row["username"]."\"><font size=-1 color=\"#333399\">".htmlReady($row["fullname"])."</font></a>";
+                    $content .= "<a href=\"dispatch.php/profile?username=".$row["username"]."\"><font size=-1 color=\"#333399\">".htmlReady($row["fullname"])."</font></a>";
                     ++$i;
                 } else {
                     $msg_sndnote = _("und an Sie selbst");
@@ -371,7 +371,7 @@ function print_rec_message($prm) {
     if ($prm['user_id_snd'] == "____%system%____") {
         $zusatz .= _("automatische Systemnachricht, ");
     } else {
-        $zusatz .= sprintf(_("von %s, "), "</font><a href=\"dispatch.php/about?username=".$prm['uname_snd']."\"><font size=-1 color=\"#333399\">".htmlReady($prm['vorname'])."&nbsp;".htmlReady($prm['nachname'])."</font></a><font size=-1>");
+        $zusatz .= sprintf(_("von %s, "), "</font><a href=\"dispatch.php/profile?username=".$prm['uname_snd']."\"><font size=-1 color=\"#333399\">".htmlReady($prm['vorname'])."&nbsp;".htmlReady($prm['nachname'])."</font></a><font size=-1>");
     }
     $zusatz .= date("d.m.y, H:i", $prm['mkdate']);
     $zusatz .= " ".$move_option."<a href=\"".URLHelper::getLink('?cmd='.$tmp_cmd.'&sel_lock='.$prm['message_id'].'#'.$prm['message_id'])."\"><img class=\"text-top\" src=\"".$GLOBALS['ASSETS_URL']."images/".$tmp_picture."\" ".$tmp_tooltip."></a> ".$trash." <input type=\"checkbox\" name=\"sel_sms[]\" value=\"".$prm['message_id']."\" ".CheckChecked($cmd, "select_all").">";

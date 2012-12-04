@@ -462,7 +462,7 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
                     $content .= "<br>";
                     $content .= "<b>" . _("Dozenten:") . "</b>&nbsp;&nbsp;";
                     foreach ($_SESSION['_lit_data'][$cid]['doz_data'] as $doz_data){
-                        $content .= '<a href="dispatch.php/about?username=' . $doz_data['username'] . '">' . htmlReady($doz_data["Nachname"]) . "</a>, ";
+                        $content .= '<a href="dispatch.php/profile?username=' . $doz_data['username'] . '">' . htmlReady($doz_data["Nachname"]) . "</a>, ";
                     }
                     $content = substr($content,0,-2);
                     $content .= "<br>";

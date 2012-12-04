@@ -1318,7 +1318,7 @@ function printposting ($forumposting) {
                 $forumhead[] = htmlReady($forumposting["author"]);
             else {
                 $authortext = $forumposting["anonymous"] ? htmlReady($forumposting["author"])." ("._("anonym").")" : htmlReady($forumposting["author"]);
-                $forumhead[] = "<a class=\"printhead\" href=\"".URLHelper::getLink("dispatch.php/about?username=".$forumposting["username"])."\">".$authortext."&nbsp;</a>";
+                $forumhead[] = "<a class=\"printhead\" href=\"".URLHelper::getLink("dispatch.php/profile?username=".$forumposting["username"])."\">".$authortext."&nbsp;</a>";
             }
         } else {
             $forumhead[] = _("anonym");

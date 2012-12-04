@@ -1049,7 +1049,7 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
                     }
                     printf ("<input type=\"HIDDEN\" name=\"commit_no_admission_data\" value=\"TRUE\">");
                     foreach ($users as $one_user) {
-                        echo "<li><font size=-1><a href=\"". URLHelper::getLink('dispatch.php/about?username='.$one_user['username']) ."\">". htmlReady($one_user['fullname']) ."</a></font></li>";
+                        echo "<li><font size=-1><a href=\"". URLHelper::getLink('dispatch.php/profile?username='.$one_user['username']) ."\">". htmlReady($one_user['fullname']) ."</a></font></li>";
                     }
                 } else { ?>
           <? if (LockRules::Check($seminar_id, 'admission_type')) : ?>
@@ -1200,7 +1200,7 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
                         }
                         printf ("<input type=\"HIDDEN\" name=\"commit_no_admission_data\" value=\"TRUE\">");
                         foreach ($users as $one_user) {
-                            echo "<li><font size=-1><a href=\"". URLHelper::getLink('dispatch.php/about?username='.$one_user['username']) ."\">". htmlReady($one_user['fullname']) ."</a></font></li>";
+                            echo "<li><font size=-1><a href=\"". URLHelper::getLink('dispatch.php/profile?username='.$one_user['username']) ."\">". htmlReady($one_user['fullname']) ."</a></font></li>";
                         }
                     } else { ?>
                         <b><?=_("Anmeldemodus:")?></b><br>

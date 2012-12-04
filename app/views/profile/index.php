@@ -26,7 +26,7 @@
                 <? endif?>
 
                 <br />
-                <a href="<?=URLHelper::getLink('sms_send.php', array('sms_source_page'=>'dispatch.php/about','rec_uname'=>$current_user->username))?>">
+                <a href="<?=URLHelper::getLink('sms_send.php', array('sms_source_page'=>'dispatch.php/profile','rec_uname'=>$current_user->username))?>">
                     <?=Assets::img('icons/16/blue/mail.png', array('title' => _("Nachricht an Nutzer verschicken"), 'class' => 'middle'))?>
                     <?=_("Nachricht an Nutzer")?>
                 </a>
@@ -123,7 +123,7 @@
             <?endif?>
 
             <? if(count($institutes) > 0) : ?>
-                <?= $this->render_partial("about/working_place") ?>
+                <?= $this->render_partial("profile/working_place") ?>
             <? endif?>
 
             <? if($has_denoted_fields): ?>
@@ -168,7 +168,7 @@
 <? endif?>
 
 <? if ($current_user['perms'] == 'dozent' && !empty($seminare)) : ?>
-    <?= $this->render_partial("about/seminare") ?>
+    <?= $this->render_partial("profile/seminare") ?>
 <? endif?>
 
 <? if($chat_info) echo $chat_info ?>

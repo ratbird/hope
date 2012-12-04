@@ -12,7 +12,7 @@
                                                                 'send_from_search_page' => $view));
                 break;
             case "user":
-                $link = URLHelper::getLink('dispatch.php/about', array('username' => $line["username"]));
+                $link = URLHelper::getLink('dispatch.php/profile', array('username' => $line["username"]));
                 break;
             default:
                 $link = $view;

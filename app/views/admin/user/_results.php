@@ -39,12 +39,12 @@ use Studip\Button, Studip\LinkButton;
     <? foreach ($users as $user) : ?>
     <tr class="<?= TextHelper::cycle('hover_odd', 'hover_even')?>">
         <td>
-            <a href="<?= URLHelper::getLink('dispatch.php/about', array('username' => $user['username'])) ?>" title="<?= _('Profil des Benutzers anzeigen')?>">
+            <a href="<?= URLHelper::getLink('dispatch.php/profile', array('username' => $user['username'])) ?>" title="<?= _('Profil des Benutzers anzeigen')?>">
                  <?= Avatar::getAvatar($user['user_id'], $user['username'])->getImageTag(Avatar::SMALL, array('title' => htmlReady($user['Vorname'] . ' ' . $user['Nachname']))) ?>
             </a>
         </td>
         <td>
-            <a href="<?= URLHelper::getLink('dispatch.php/about', array('username' => $user['username'])) ?>" title="<?= _('Profil des Benutzers anzeigen')?>">
+            <a href="<?= URLHelper::getLink('dispatch.php/profile', array('username' => $user['username'])) ?>" title="<?= _('Profil des Benutzers anzeigen')?>">
                 <?= $user['username'] ?>
             </a>
             <?= ($user['locked'] == '1') ?

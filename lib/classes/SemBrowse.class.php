@@ -500,7 +500,7 @@ class SemBrowse {
                                         echo "... <a href=\"".$this->target_url."?".$this->target_id."=".$seminar_id."&send_from_search=1&send_from_search_page={$_SERVER['PHP_SELF']}?keep_result_set=1\">("._("mehr").")</a>";
                                         break;
                                     }
-                                    echo "<a href=\"dispatch.php/about?username=" . $doz_uname[$index] ."\">" . htmlReady($value) . "</a>";
+                                    echo "<a href=\"dispatch.php/profile?username=" . $doz_uname[$index] ."\">" . htmlReady($value) . "</a>";
                                     if($i != count($doz_name)-1){
                                         echo ", ";
                                     }

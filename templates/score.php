@@ -18,7 +18,7 @@
     <td align="right"><?= $index+(($page-1)*get_config('ENTRIES_PER_PAGE'))+1 ?>. </td>
     <td> <?=$person['avatar']?></td>
     <td>
-        <a href="<?=URLHelper::getLink("dispatch.php/about?username=". $person['username'])?>"><?=$person['name']?></a>
+        <a href="<?=URLHelper::getLink("dispatch.php/profile?username=". $person['username'])?>"><?=$person['name']?></a>
         <? foreach ($person['is_king'] as $type => $text) : ?>
             <?= Assets::img("icons/16/yellow/crown.png", array('alt' => $text, 'title' => $text, 'class' => 'text-top')) ?>
         <? endforeach ?>

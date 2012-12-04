@@ -106,7 +106,7 @@ list-style-position:outside;list-style-type:none;">
         <? endif ?>
 
         <div style="clear: both; margin-right: 25px;">
-        <a href="<?= URLHelper::getLink('dispatch.php/about?username=' . $m['username']) ?>">
+        <a href="<?= URLHelper::getLink('dispatch.php/profile?username=' . $m['username']) ?>">
             <?= htmlReady($m['fullname']) ?>
             <?  if (isset($moderators[$m['user_id']])) : ?>
               <em><?= _("GruppengründerIn") ?></em>
@@ -142,12 +142,12 @@ list-style-position:outside;list-style-type:none;">
             <? foreach($accepted as $p) : ?>
             <tr class="<?= TextHelper::cycle('table_row_even', 'table_row_odd') ?>">
                 <td>
-                    <a href="<?= URLHelper::getLink('dispatch.php/about?username=' . $p['username']) ?>">
+                    <a href="<?= URLHelper::getLink('dispatch.php/profile?username=' . $p['username']) ?>">
                         <?= Avatar::getAvatar($p['user_id'])->getImageTag(Avatar::SMALL) ?>
                     </a>
                 </td>
                 <td>
-                    <a href="<?= URLHelper::getLink('dispatch.php/about?username=' . $p['username']) ?>">
+                    <a href="<?= URLHelper::getLink('dispatch.php/profile?username=' . $p['username']) ?>">
                         <?= htmlReady($p['fullname']) ?>
                     </a>
                 </td>

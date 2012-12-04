@@ -62,7 +62,7 @@ function banner_show() {
             $template = '<a href="details.php?sem_id=%s">%s</a>';
             break;
         case 'user': // links to user
-            $template = '<a href="dispatch.php/about?username=%s">%s</a>';
+            $template = '<a href="dispatch.php/profile?username=%s">%s</a>';
             break;
         case 'inst': // links to institute
             $link='<a href="institut_main.php?auswahl=%s">%s</a>';

@@ -45,7 +45,7 @@
                     <? $founders = StudygroupModel::getFounder($group['Seminar_id']);
                     foreach ($founders as $founder) : ?>
                     <?=Avatar::getAvatar($founder['user_id'])->getImageTag(Avatar::SMALL)?>
-                    <a href="<?=URLHelper::getlink('dispatch.php/about?username='.$founder['uname'])?>"><?=htmlready($founder['fullname'])?></a>
+                    <a href="<?=URLHelper::getlink('dispatch.php/profile?username='.$founder['uname'])?>"><?=htmlready($founder['fullname'])?></a>
                     <br>
                     <? endforeach; ?>
                 </td>

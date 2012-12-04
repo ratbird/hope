@@ -167,7 +167,7 @@
                 <td>
                 <? if ($user->smsforward_rec):  // empfaenger ausgewaehlt ?>
                     <?= _('Empfänger') ?>
-                    <a href="<?= URLHelper::getLink('dispatch.php/about?username=' . get_username($user->smsforward_rec)) ?>">
+                    <a href="<?= URLHelper::getLink('dispatch.php/profile?username=' . get_username($user->smsforward_rec)) ?>">
                         <?= Avatar::getAvatar($user->smsforward_rec)->getImageTag(Avatar::SMALL) ?>
                         <?= get_fullname($user->smsforward_rec, 'full', true) ?>
                     </a>

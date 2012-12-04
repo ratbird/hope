@@ -1373,7 +1373,7 @@ while (list ($key, $val) = each ($gruppe)) {
                 }
                 ?>
                     <span style="position: relative">
-                        <a href="<?= URLHelper::getLink('dispatch.php/about?username='.$one_user['username']) ?>">
+                        <a href="<?= URLHelper::getLink('dispatch.php/profile?username='.$one_user['username']) ?>">
                             <? if (!$GLOBALS['perm']->have_studip_perm('tutor', $_SESSION['SessionSeminar'])) :
                                 $last_visitdate = time()+10;
                             endif ?>
@@ -1691,7 +1691,7 @@ if ($rechte) {
                 $admission_chance = $sem->getAdmissionChance($waiting_user['studiengang_id']);
             }
 
-            printf ("<tr><td width=\"%s\" align=\"left\"><font size=\"-1\"><a name=\"%s\" href=\"%s\">%s</a></font></td>",  ($sem->admission_type == 1 && $sem->admission_selection_take_place !=1) ? "40%" : "30%", $waiting_user['username'], URLHelper::getLink('dispatch.php/about?username='.$waiting_user['username']), htmlReady($waiting_user['fullname']));
+            printf ("<tr><td width=\"%s\" align=\"left\"><font size=\"-1\"><a name=\"%s\" href=\"%s\">%s</a></font></td>",  ($sem->admission_type == 1 && $sem->admission_selection_take_place !=1) ? "40%" : "30%", $waiting_user['username'], URLHelper::getLink('dispatch.php/profile?username='.$waiting_user['username']), htmlReady($waiting_user['fullname']));
             if ($sem->admission_type == 2 || $sem->admission_selection_take_place==1)
                 printf ("<td width=\"10%%\" align=\"center\"><font size=\"-1\">%s</font></td>", $waiting_user['position']);
             echo "<td width=\"10%%\" align=\"center\">&nbsp; </td>";

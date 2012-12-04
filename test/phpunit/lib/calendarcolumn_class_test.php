@@ -57,7 +57,7 @@ class CalendarColumnCase extends PHPUnit_Framework_TestCase {
     }
 
     function test_set_url() {
-        $url = URLHelper::getURL("dispatch.php/about", array("username" => get_username()));
+        $url = URLHelper::getURL("dispatch.php/profile", array("username" => get_username()));
         $column = CalendarColumn::create()->setURL($url);
         $this->assertEquals($url, $column->getURL());
     }

@@ -340,14 +340,14 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
                 if (count($teachers) === 1) {
                     $teacher = reset($teachers);
                     printf('<font size=-1><a href="%s">%s</a></font>',
-                           URLHelper::getLink('dispatch.php/about?username=' . $teacher['username']),
+                           URLHelper::getLink('dispatch.php/profile?username=' . $teacher['username']),
                            htmlReady($teacher['fullname']));
                 } else {
                     echo '<ul style="margin:0;">';
                     foreach ($teachers as $teacher) {
                         echo '<li>';
                         printf('<font size=-1><a href="%s">%s</a></font>',
-                               URLHelper::getLink('dispatch.php/about?username=' . $teacher['username']),
+                               URLHelper::getLink('dispatch.php/profile?username=' . $teacher['username']),
                                htmlReady($teacher['fullname']));
                         echo '</li>';
                     }
@@ -372,14 +372,14 @@ if (($_SESSION['archiv_assi_data']["sems"]) && (sizeof($_SESSION['archiv_assi_da
                 } else if (count($tutors) === 1) {
                     $tutor = reset($tutors);
                     printf('<font size=-1><a href="%s">%s</a></font>',
-                           URLHelper::getLink('dispatch.php/about?username=' . $tutor['username']),
+                           URLHelper::getLink('dispatch.php/profile?username=' . $tutor['username']),
                            htmlReady($tutor['fullname']));
                 } else {
                     echo '<ul style="margin:0;">';
                     foreach ($tutors as $tutor) {
                         echo '<li>';
                         printf('<font size=-1><a href="%s">%s</a></font>',
-                               URLHelper::getLink('dispatch.php/about?username=' . $tutor['username']),
+                               URLHelper::getLink('dispatch.php/profile?username=' . $tutor['username']),
                                htmlReady($tutor['fullname']));
                         echo '</li>';
                     }

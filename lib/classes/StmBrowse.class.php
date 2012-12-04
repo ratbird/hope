@@ -303,7 +303,7 @@ class StmBrowse {
                             $dozenten = '';
                             foreach($stm_obj->elements[$element_id]->getValue('dozenten') as $dozent){
                                 if ($dozenten) $dozenten .= ', ';
-                                $dozenten .= sprintf("<a href=\"dispatch.php/about?username=%s\">%s</a>", $dozent['username'], htmlReady($dozent['Nachname'] . ', ' . $dozent['Vorname']{0} . '.'));
+                                $dozenten .= sprintf("<a href=\"dispatch.php/profile?username=%s\">%s</a>", $dozent['username'], htmlReady($dozent['Nachname'] . ', ' . $dozent['Vorname']{0} . '.'));
                             }
                             if($stm_obj->elements[$element_id]->getValue('sem_id')){
                             echo "<div style=\"margin-left:10px;margin-right:10px\"><font size=-2><a href=\"{$this->target_url}?{$this->target_id}=".$stm_obj->elements[$element_id]->getValue('sem_id')."&send_from_search=1&send_from_search_page="

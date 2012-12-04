@@ -210,7 +210,7 @@ function table_body ($members, $range_id, $structure) {
                 printf("<a href=\"%s\">%s</a>\n",
                 URLHelper::getLink("dispatch.php/settings/statusgruppen?username={$member['username']}&open={$range_id}#{$range_id}"), htmlReady($member['fullname']));
             } else {
-                echo '<a href="'.URLHelper::getLink('dispatch.php/about?username='.$member['username']).'">'. htmlReady($member['fullname']) .'</a>';
+                echo '<a href="'.URLHelper::getLink('dispatch.php/profile?username='.$member['username']).'">'. htmlReady($member['fullname']) .'</a>';
             }
             echo '</font></td>';
         }

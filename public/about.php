@@ -60,4 +60,4 @@ require_once('lib/classes/Avatar.class.php');
 require_once('lib/classes/StudipKing.class.php');
 
 
-header('Location:'.URLHelper::getLink('dispatch.php/about', array('username' => Request::get('username'))));
+header('Location:'.URLHelper::getLink('dispatch.php/profile', array('username' => Request::get('username'))));

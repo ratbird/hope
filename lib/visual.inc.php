@@ -390,7 +390,7 @@ function decodeHTML ($string) {
 function preg_call_format_signature($username, $timestamp) {
     $fullname = get_fullname_from_uname($username);
     $date = strftime('%x, %X', $timestamp);
-    return '<span style="font-size: 75%">-- <a href="'.URLHelper::getLink('dispatch.php/about', array('username' => $username)).'">'.htmlReady($fullname).'</a> '.htmlReady($date).'</span>';
+    return '<span style="font-size: 75%">-- <a href="'.URLHelper::getLink('dispatch.php/profile', array('username' => $username)).'">'.htmlReady($fullname).'</a> '.htmlReady($date).'</span>';
 }
 
 

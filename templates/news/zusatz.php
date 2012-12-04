@@ -1,4 +1,4 @@
-<a href="<?= URLHelper::getLink('dispatch.php/about?username=' . $user->username) ?>">
+<a href="<?= URLHelper::getLink('dispatch.php/profile?username=' . $user->username) ?>">
     <span style="color: #339;">
         <?= htmlReady($user->getFullName()) ?>
     </span>

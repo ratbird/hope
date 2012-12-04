@@ -160,7 +160,7 @@ $message_types = array('msg' => "success", 'error' => "error", 'info' => "info")
               <? endif ?>
               </td>
               <td>
-                  <a href="<?= URLHelper::getLink("dispatch.php/about", array('username' => $dozent['username']))?>">
+                  <a href="<?= URLHelper::getLink("dispatch.php/profile", array('username' => $dozent['username']))?>">
                       <?= Avatar::getAvatar($dozent["user_id"], $dozent['username'])->getImageTag(Avatar::SMALL) ?>
                   </a>
               </td>
@@ -258,7 +258,7 @@ $message_types = array('msg' => "success", 'error' => "error", 'info' => "info")
               <? endif ?>
               </td>
               <td>
-                  <a href="<?= URLHelper::getLink("dispatch.php/about", array('username' => $tutor['username']))?>">
+                  <a href="<?= URLHelper::getLink("dispatch.php/profile", array('username' => $tutor['username']))?>">
                       <?= Avatar::getAvatar($tutor["user_id"], $tutor['username'])->getImageTag(Avatar::SMALL) ?>
                   </a>
               </td>

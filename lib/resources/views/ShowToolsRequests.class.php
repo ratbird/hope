@@ -254,7 +254,7 @@ class ShowToolsRequests
                     $k = false;
                     foreach ($semObj->getMembers('dozent') as $doz) {
                         if ($k) echo ", ";
-                        echo "<a href=\"dispatch.php/about?username={$doz['username']}\">".HtmlReady($doz['fullname'])."</a>";
+                        echo "<a href=\"dispatch.php/profile?username={$doz['username']}\">".HtmlReady($doz['fullname'])."</a>";
                         $k = true;
                     }
                     echo "</font>";
@@ -270,7 +270,7 @@ class ShowToolsRequests
                     }
 
                     echo $zt->closeCell();
-                    echo $zt->cell("<font size=\"-1\"><a href=\"dispatch.php/about?username=".get_username($reqObj->user_id)."\">".get_fullname($reqObj->user_id)."</a></font>");
+                    echo $zt->cell("<font size=\"-1\"><a href=\"dispatch.php/profile?username=".get_username($reqObj->user_id)."\">".get_fullname($reqObj->user_id)."</a></font>");
                     echo $zt->cell("<font size=\"-1\">$cursem</font>");
                     if ($license_to_kill){
                         echo $zt->cell("<font size=\"-1\"><input type=\"checkbox\" name=\"requests_marked_to_kill[]\" value=\"{$val['request_id']}\"></font>", array('align' => 'center'));
@@ -317,7 +317,7 @@ class ShowToolsRequests
                         $names = $this->selectSemInstituteNames($semObj->getInstitutId());
 
                         print "&nbsp;&nbsp;&nbsp;&nbsp;"._("Art der Anfrage:")." ".$reqObj->getTypeExplained()."<br>";
-                        print "&nbsp;&nbsp;&nbsp;&nbsp;"._("Erstellt von:")." <a href=\"".UrlHelper::getLink('dispatch.php/about?username='.get_username($reqObj->getUserId()))."\">".htmlReady(get_fullname($reqObj->getUserId()))."</a><br>";
+                        print "&nbsp;&nbsp;&nbsp;&nbsp;"._("Erstellt von:")." <a href=\"".UrlHelper::getLink('dispatch.php/profile?username='.get_username($reqObj->getUserId()))."\">".htmlReady(get_fullname($reqObj->getUserId()))."</a><br>";
                         print "&nbsp;&nbsp;&nbsp;&nbsp;"._("Erstellt am:") ." ". strftime('%x %H:%M', $reqObj->mkdate) . '<br>';
                         print "&nbsp;&nbsp;&nbsp;&nbsp;"._("Letzte Änderung:") ." ". strftime('%x %H:%M', $reqObj->chdate) . '<br>';
                         print "&nbsp;&nbsp;&nbsp;&nbsp;"._("Lehrende: ");
@@ -325,7 +325,7 @@ class ShowToolsRequests
                             if ($dozent){
                                 echo ", ";
                             }
-                            echo '<a href ="'. URLHelper::getLink('dispatch.php/about?username='.$doz['username']). '">'.HtmlReady($doz['fullname'])."</a>";
+                            echo '<a href ="'. URLHelper::getLink('dispatch.php/profile?username='.$doz['username']). '">'.HtmlReady($doz['fullname'])."</a>";
                             $dozent = true;
                         }
                         print "<br>";

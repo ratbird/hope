@@ -1,6 +1,6 @@
 <?php
 /*
- * AboutController
+ * ProfileController
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -19,7 +19,7 @@ global $RELATIVE_PATH_CHAT;
 require_once 'app/controllers/authenticated_controller.php';
 require_once 'app/models/user.php';
 require_once 'app/models/kategorie.php';
-require_once 'app/models/about.php';
+require_once 'app/models/profile.php';
 
 require_once 'lib/messaging.inc.php';
 require_once('lib/object.inc.php');
@@ -37,7 +37,7 @@ require_once('lib/classes/DataFieldEntry.class.php');
 require_once('lib/classes/StudipKing.class.php');
 
 
-class AboutController extends AuthenticatedController
+class ProfileController extends AuthenticatedController
 {
     function before_filter(&$action, &$args)
     {
@@ -71,7 +71,7 @@ class AboutController extends AuthenticatedController
         $this->perm         = $GLOBALS['perm']; // perms of current logged in user
         $this->current_user = User::findByUsername(Request::get('username', $this->user->username)); // current selected user
         // get additional informations to selected user
-        $this->about        = new AboutModel($this->current_user->user_id, $this->user->user_id);
+        $this->profile        = new ProfileModel($this->current_user->user_id, $this->user->user_id);
         
         // set the page title depending on user selection
         if($this->current_user['user_id'] == $this->user->id && !$this->current_user['locked']) {
@@ -139,7 +139,7 @@ class AboutController extends AuthenticatedController
 
 
         // Get Avatar
-        $avatar_user_id = $this->about->checkVisibility('picture') ? $this->current_user->user_id : 'nobody';
+        $avatar_user_id = $this->profile->checkVisibility('picture') ? $this->current_user->user_id : 'nobody';
         $this->avatar   = Avatar::getAvatar($avatar_user_id)->getImageTag(Avatar::NORMAL);
 
         // GetScroreList
@@ -154,31 +154,31 @@ class AboutController extends AuthenticatedController
         
         // Additional user information
         $this->public_email = get_visible_email($this->current_user->user_id);
-        $this->motto        = $this->about->getVisibilityValue('motto');
-        $this->private_nr   = $this->about->getVisibilityValue('privatnr','private_phone');
-        $this->private_cell = $this->about->getVisibilityValue('privatcell','private_cell');
-        $this->privadr      = $this->about->getVisibilityValue('privadr','privadr');
-        $this->homepage     = $this->about->getVisibilityValue('Home','homepage');
+        $this->motto        = $this->profile->getVisibilityValue('motto');
+        $this->private_nr   = $this->profile->getVisibilityValue('privatnr','private_phone');
+        $this->private_cell = $this->profile->getVisibilityValue('privatcell','private_cell');
+        $this->privadr      = $this->profile->getVisibilityValue('privadr','privadr');
+        $this->homepage     = $this->profile->getVisibilityValue('Home','homepage');
         
 
         // skypein formations
-        if (get_config('ENABLE_SKYPE_INFO') && $this->about->checkVisibility('skype_name')) { 
+        if (get_config('ENABLE_SKYPE_INFO') && $this->profile->checkVisibility('skype_name')) { 
             $this->skype_name   = UserConfig::get($this->current_user->user_id)->SKYPE_NAME;
-            $this->skype_status = UserConfig::get($this->current_user->user_id)->SKYPE_ONLINE_STATUS && $this->about->checkVisibility('skype_online_status');
+            $this->skype_status = UserConfig::get($this->current_user->user_id)->SKYPE_ONLINE_STATUS && $this->profile->checkVisibility('skype_online_status');
         }
 
         // get generic datafield entries
-        $this->shortDatafields  = $this->about->getShortDatafields();
-        $this->longDatafields   = $this->about->getLongDatafields();
+        $this->shortDatafields  = $this->profile->getShortDatafields();
+        $this->longDatafields   = $this->profile->getLongDatafields();
         
         // get working station of an user (institutes)
-        $this->institutes = $this->about->getInstitutInformations();
+        $this->institutes = $this->profile->getInstitutInformations();
         
         // get studying informations of an user
         if($this->current_user->perms != 'dozent') {
             $study_institutes = UserModel::getUserInstitute($this->current_user->user_id, true);
 
-            if (count($study_institutes) > 0 && $this->about->checkVisibility('studying')) {
+            if (count($study_institutes) > 0 && $this->profile->checkVisibility('studying')) {
                 $this->study_institutes = $study_institutes;
             }
         }
@@ -189,7 +189,7 @@ class AboutController extends AuthenticatedController
         
         // get kings informations
         if ($score->IsMyScore() || $score->ReturnPublik()) {
-            $kings = $this->about->getKingsInformations();
+            $kings = $this->profile->getKingsInformations();
 
             if($kings != null) {
                 $this->kings = $kings;
@@ -199,23 +199,23 @@ class AboutController extends AuthenticatedController
         // show news on profile page
         $show_admin = ($this->perm->have_perm('autor') && $this->user->user_id == $this->current_user->user_id) ||
             (isDeputyEditAboutActivated() && isDeputy($this->user->user_id, $this->current_user->user_id, true));
-        if (($this->show_news   = $this->about->checkVisibility('news')) === true) {
-            $this->about_data   = $about_data;
+        if (($this->show_news   = $this->profile->checkVisibility('news')) === true) {
+            $this->profile_data   = $about_data;
             $this->show_admin   = $show_admin;
         }
 
         // calendar
         if (get_config('CALENDAR_ENABLE')) {
             if ($this->current_user->perms != "root" && $this->current_user->perms != "admin") {
-                if (($this->terms       = $this->about->checkVisibility('termine'))) {
+                if (($this->terms       = $this->profile->checkVisibility('termine'))) {
                     $this->show_admin   = ($this->perm->have_perm("autor") && $this->user->user_id == $this->current_user->user_id);
-                    $this->about_data   = $about_data;
+                    $this->profile_data   = $about_data;
                 }
             }
         }
 
         // include and show votes and tests
-        $this->show_votes = get_config('VOTE_ENABLE') && $this->about->checkVisibility('votes');
+        $this->show_votes = get_config('VOTE_ENABLE') && $this->profile->checkVisibility('votes');
       
         // include and show friend-of-a-friend list
         // (direct/indirect connection via buddy list   
@@ -230,7 +230,7 @@ class AboutController extends AuthenticatedController
         // show Guestbook
         $guest = new Guestbook($this->current_user->user_id, Request::int('guestpage', 0));
 
-        if (($guest->active == true || $guest->rights == true) && $this->about->checkVisibility('guestbook')) {
+        if (($guest->active == true || $guest->rights == true) && $this->profile->checkVisibility('guestbook')) {
             if (Request::quoted('guestbook') && $this->perm->have_perm('autor')) {
                 $guestbook      = Request::quoted('guestbook');
                 $post           = Request::quoted('post');
@@ -252,7 +252,7 @@ class AboutController extends AuthenticatedController
         );
 
         foreach ($ausgabe_felder as $key => $value) {
-            if ($this->about->checkVisibility($key)) {
+            if ($this->profile->checkVisibility($key)) {
                 $ausgabe_inhalt[$value] = $this->current_user[$key];
             }
         }
@@ -261,7 +261,7 @@ class AboutController extends AuthenticatedController
 
         // Anzeige der Seminare, falls User = dozent
         if ($this->current_user['perms'] == 'dozent') {
-            $this->seminare = $this->about->getDozentSeminars();
+            $this->seminare = $this->profile->getDozentSeminars();
         }
 
         // Hompageplugins
@@ -292,7 +292,7 @@ class AboutController extends AuthenticatedController
                 $this->admin_title  = _('Literaturlisten bearbeiten');
             }
 
-            if ($this->about->checkVisibility('literature')) {
+            if ($this->profile->checkVisibility('literature')) {
                 $this->show_lit     = true;
                 $this->lit_list     = $lit_list;
             }
@@ -307,7 +307,7 @@ class AboutController extends AuthenticatedController
             unset($vis_text);
             
             if ($this->user->user_id == $this->current_user->user_id) {
-                $visibility = $this->about->getSpecificVisibilityValue('kat_' . $cat->kategorie_id);
+                $visibility = $this->profile->getSpecificVisibilityValue('kat_' . $cat->kategorie_id);
                 
                 if($visibility) {
                     $vis_text .= '( ';
@@ -330,7 +330,7 @@ class AboutController extends AuthenticatedController
                 }
             }
             
-            if($this->about->checkVisibility('kat_'.$cat->kategorie_id)) {
+            if($this->profile->checkVisibility('kat_'.$cat->kategorie_id)) {
                 $categories[$cat->kategorie_id]['head']             = $head;
                 $categories[$cat->kategorie_id]['zusatz']           = $vis_text;
                 $categories[$cat->kategorie_id]['content']          = $body;

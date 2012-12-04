@@ -69,7 +69,7 @@ include ('lib/include/header.php');   // Output of Stud.IP head
         $result = $sth->fetch();
   
         $usame = $result['username'];
-        echo '<td class="angemeldet" width="25%" align="center" valign="center"><a href="dispatch.php/about?username='. $usame. '"><img border="0" src="'.$GLOBALS['DYNAMIC_CONTENT_URL'] . '/user/' . $file[$i-5]['file'].'"></a><br>';
+        echo '<td class="angemeldet" width="25%" align="center" valign="center"><a href="dispatch.php/profile?username='. $usame. '"><img border="0" src="'.$GLOBALS['DYNAMIC_CONTENT_URL'] . '/user/' . $file[$i-5]['file'].'"></a><br>';
         echo '<font size="-1">'.get_fullname($usid,'full',true).'<br>'.date('d.m.Y', $file [$i-5]['time']).'</font></td>'."\n";
         if ((($i % 4) ==0)  && (!$i==0))  echo "</tr><tr>\n";
         }

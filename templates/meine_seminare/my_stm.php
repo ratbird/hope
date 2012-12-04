@@ -23,7 +23,7 @@
                 </a>
             </td>
             <td>
-                <a href="<?= URLHelper::getLink('dispatch.php/about?username=' . get_username($stms[$stm_id]['responsible'])) ?>" class="tree">
+                <a href="<?= URLHelper::getLink('dispatch.php/profile?username=' . get_username($stms[$stm_id]['responsible'])) ?>" class="tree">
                     <?= htmlReady(get_fullname($stms[$stm_id]['responsible'], 'no_title_short')) ?>
                 </a>
             </td>

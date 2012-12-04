@@ -205,7 +205,7 @@ if (Request::submitted('cmd_insert')) {
 
         if ($sms_source_page) {
             $_SESSION['sms_msg'] = $msg;
-            if ($sms_source_page == "about.php") {
+            if ($sms_source_page == "dispatch.php/about") {
                 $header_info = "Location: ".$sms_source_page."?username=".$sms_data["p_rec"][0];
             } else {
                 $header_info = "Location: ".$sms_source_page;

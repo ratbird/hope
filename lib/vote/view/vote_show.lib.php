@@ -370,7 +370,7 @@ function createVoteHeadline(&$vote, $open, $openID, $evalDB = "", $isHomepage = 
    if ($vote->x_instanceof () == INSTANCEOF_EVAL)
      $icon = EVAL_PIC_ICON;
    $icon = Assets::img($icon, array('class' => 'text-bottom'));
-   $voteInfo = $number." / <a href=\"".URLHelper::getLink("about.php?username=".$authorUsername)."\">\n"
+   $voteInfo = $number." / <a href=\"".URLHelper::getLink("dispatch.php/about?username=".$authorUsername)."\">\n"
       . "  <font size=\"-1\" color=\"#333399\">".htmlReady($authorName)."</font>\n"
       . " </a>\n"
       . " <font size=\"-1\">&nbsp;".date ("d.m.Y", $date)."</font>&nbsp;";
@@ -449,7 +449,7 @@ function createStoppedVoteHeader(&$vote, $evalDB = NULL)
     $html .= "</b></font>";
     $html .= "</td>";
     $html .= "<td class=toolbar align=\"right\" valign=\"bottom\">\n";
-    $html .= "<a href=\"".URLHelper::getLink("about.php?username=".$authorUsername)."\">\n";
+    $html .= "<a href=\"".URLHelper::getLink("dispatch.php/about?username=".$authorUsername)."\">\n";
     $html .= "<font size=\"-1\" color=\"#333333\">".htmlReady($authorName)."</font>";
     $html .= "</a>\n";
     $html .= "<font size=\"-1\">&nbsp;".date ("d.m.Y", $date)."</font>&nbsp;";
@@ -723,7 +723,7 @@ function createVoteResult ($vote, $preview = NO)
      if ( ! empty($associatedUsers)) {
          usort( $associatedUsers, "sortBySurname" );
          foreach ($associatedUsers as $uid) {
-         $html .= "<a href=\"".URLHelper::getLink("about.php?username=".
+         $html .= "<a href=\"".URLHelper::getLink("dispatch.php/about?username=".
              $vote->voteDB->getAuthorUsername($uid))."\">".
              $vote->voteDB->getAuthorRealname($uid)."</a>".
              ", ";

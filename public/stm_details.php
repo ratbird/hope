@@ -219,7 +219,7 @@ print_infobox ($infobox, "infobox/contract.jpg");
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" valign="top" width="45%">
                 <?
-                 printf ("<font size=-1><b>" . _("Modulverantwortlicher:") . "</b></font><br><font size=-1><a href=\"about.php?username=%s\">%s</a></font>",get_username($stm_obj->getValue('responsible')), htmlReady(get_fullname($stm_obj->getValue('responsible'))));
+                 printf ("<font size=-1><b>" . _("Modulverantwortlicher:") . "</b></font><br><font size=-1><a href=\"dispatch.php/about?username=%s\">%s</a></font>",get_username($stm_obj->getValue('responsible')), htmlReady(get_fullname($stm_obj->getValue('responsible'))));
                 ?>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" valign="top" width="25%">
@@ -332,7 +332,7 @@ print_infobox ($infobox, "infobox/contract.jpg");
                     $dozenten = '';
                     foreach($stm_obj->elements[$element_id]->getValue('dozenten') as $dozent){
                         if ($dozenten) $dozenten .= ', ';
-                        $dozenten .= sprintf("<a href=\"about.php?username=%s\">%s</a>", $dozent['username'], htmlReady($dozent['Nachname'] . ', ' . $dozent['Vorname']{0} . '.'));
+                        $dozenten .= sprintf("<a href=\"dispatch.php/about?username=%s\">%s</a>", $dozent['username'], htmlReady($dozent['Nachname'] . ', ' . $dozent['Vorname']{0} . '.'));
                     }
                     ?>
                     <tr>

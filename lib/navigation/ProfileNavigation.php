@@ -47,10 +47,10 @@ class ProfileNavigation extends Navigation
                 sprintf(ngettext('Sie haben %d neuen Eintrag im Gästebuch.',
                                  'Sie haben %d neue Einträge im Gästebuch.', $count), $count);
             $hp_class = 'new';
-            $hp_link = 'about.php?guestbook=open#guest';
+            $hp_link = 'dispatch.php/about?guestbook=open#guest';
         } else {
             $hp_txt = _('Zu Ihrer Profilseite');
-            $hp_link = 'about.php';
+            $hp_link = 'dispatch.php/about';
         }
 
         $hp_txt .= sprintf(' (%s, %s)', $auth->auth['uname'], $auth->auth['perm']);
@@ -91,8 +91,8 @@ class ProfileNavigation extends Navigation
         $my_about->get_user_details();
 
         // profile
-        $navigation = new Navigation(_('Profil'), 'about.php');
-        $this->addSubNavigation('view', $navigation);
+        $navigation = new Navigation(_('Profil'), 'dispatch.php/about/index');
+        $this->addSubNavigation('index', $navigation);
 
         if ($perm->have_profile_perm('user', $my_about->auth_user['user_id'])) {
             // avatar

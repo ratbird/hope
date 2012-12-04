@@ -193,7 +193,7 @@ class StudipSemTreeView extends TreeView {
             ."&send_from_search=true&send_from_search_page=" . rawurlencode(URLHelper::getLink($this->getSelf())) . "\">" . htmlReady($sem_name) . "</a>
             </td><td class=\"table_row_even\" align=\"right\">(";
             for ($i = 0; $i < count($data["doz_name"]); ++$i){
-                $content .= "<a href=\"about.php?username=" . key($data["doz_uname"]) ."\">" . htmlReady(key($data["doz_name"])) . "</a>";
+                $content .= "<a href=\"dispatch.php/about?username=" . key($data["doz_uname"]) ."\">" . htmlReady(key($data["doz_name"])) . "</a>";
                 if($i != count($data["doz_name"])-1){
                     $content .= ", ";
                 }

@@ -24,7 +24,7 @@ STUDIP.URLHelper = {
     base_url: null,
 
     /**
-     * method to extend short URLs like "about.php" to "http://.../about.php"
+     * method to extend short URLs like "dispatch.php/about" to "http://.../dispatch.php/about"
      */
     resolveURL: function (url) {
         if (!_.isString(this.base_url) ||

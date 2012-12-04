@@ -640,7 +640,7 @@ class StudipSemTreeViewAdmin extends TreeView {
                                 ."&send_from_search=true&send_from_search_page=" . rawurlencode(URLHelper::getLink($this->getSelf())) . "\">("._("mehr").")</a>";
                                 break;
                             }
-                            $content .= "<a href=\"about.php?username=" . $doz_uname[$index] ."\">" . htmlReady($value) . "</a>";
+                            $content .= "<a href=\"dispatch.php/about?username=" . $doz_uname[$index] ."\">" . htmlReady($value) . "</a>";
                             if($i != count($doz_name)-1){
                                 $content .= ", ";
                             }

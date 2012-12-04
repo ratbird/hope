@@ -1,0 +1,1 @@
+<?=Messagebox::error($message, $info)?>

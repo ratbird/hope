@@ -182,7 +182,7 @@ $quarter_year = 60 * 60 * 24 * 90;
     $num_dozenten = count($dozenten);
     $show_dozenten = array();
     foreach($dozenten as $dozent) {
-        $show_dozenten[] = '<a href="'.URLHelper::getLink("about.php?username=".$dozent['username']).'">'
+        $show_dozenten[] = '<a href="'.URLHelper::getLink("dispatch.php/about?username=".$dozent['username']).'">'
                             . htmlready($num_dozenten > 10 ? get_fullname($dozent['user_id'], 'no_title_short') : $dozent['fullname'])
                             . '</a>';
     }
@@ -228,7 +228,7 @@ $quarter_year = 60 * 60 * 24 * 90;
         $all_mods = $sem->getMembers('dozent') + $sem->getMembers('tutor');
         $mods = array();
         foreach($all_mods as $mod) {
-            $mods[] = '<a href="'.URLHelper::getLink("about.php?username=".$mod['username']).'">'.htmlready($mod['fullname']).'</a>';
+            $mods[] = '<a href="'.URLHelper::getLink("dispatch.php/about?username=".$mod['username']).'">'.htmlready($mod['fullname']).'</a>';
         }
         echo implode(', ', $mods);
     }

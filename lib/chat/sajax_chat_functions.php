@@ -146,7 +146,7 @@ function get_chat_nicklist($chatid){
                             echo "\n<tr><td><span style=\"font-size:10pt\">";
                             if ($chatUserDetail["perm"])  echo "<b>";
                             echo "<a href=\"#\" ". tooltip(_("Profil aufrufen"),false)
-                                . "onClick=\"return coming_home('{$CANONICAL_RELATIVE_PATH_STUDIP}about.php?username=".$chatUserDetail["nick"]."')\">"
+                                . "onClick=\"return coming_home('{$CANONICAL_RELATIVE_PATH_STUDIP}dispatch.php/about?username=".$chatUserDetail["nick"]."')\">"
                                 . htmlReady($chatUserDetail["fullname"])."</a><br>";
                             if ($chatUserId != $user->id){
                                 if ($is_admin){

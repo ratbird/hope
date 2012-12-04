@@ -216,7 +216,7 @@ function PrintAktualStatusgruppen($range_id, $view, $edit_id = '')
                 ?>
 
                 <td class="<?= $class ?>" colspan="2">
-                    <a href="<?= URLHelper::getLink('about.php?username=' . $identifier) ?>"
+                    <a href="<?= URLHelper::getLink('dispatch.php/about?username=' . $identifier) ?>"
                        <? if ($color) echo 'style="color:' . $color . '"'; ?>>
                         <?= htmlReady($fullname) ?>
                     </a>

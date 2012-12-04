@@ -7,7 +7,7 @@
     <ul>
         <? foreach($users as $user) : ?>
             <li>
-                <a href="<?= URLHelper::getLink('about.php',
+                <a href="<?= URLHelper::getLink('dispatch.php/about',
                                                  array('username' => $user['username']))
                           ?>"><?= htmlReady($user['fullname']) ?></a>, E-Mail:
                 <?= formatLinks($user['Email']) ?>

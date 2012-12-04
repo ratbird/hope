@@ -32,7 +32,7 @@ $sem = Seminar::getInstance($show_entry['id']);
         <b><?= _("Dozenten") ?>:</b>
         <? $pos = 0;foreach ($sem->getMembers('dozent') as $dozent) :
             if ($pos > 0) echo ', ';
-            ?><a href="<?= URLHelper::getLink('about.php?username=' . $dozent['username']) ?>"><?= htmlReady($dozent['fullname']) ?></a><?
+            ?><a href="<?= URLHelper::getLink('dispatch.php/about?username=' . $dozent['username']) ?>"><?= htmlReady($dozent['fullname']) ?></a><?
             $pos++;
         endforeach ?>
         <br><br>

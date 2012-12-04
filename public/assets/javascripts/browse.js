@@ -6,6 +6,6 @@
  * ------------------------------------------------------------------------ */
 STUDIP.Browse = {
     selectUser: function (username) {
-        window.location.href = STUDIP.URLHelper.getURL("about.php", {"username": username});
+        window.location.href = STUDIP.URLHelper.getURL("dispatch.php/about", {"username": username});
     }
 };

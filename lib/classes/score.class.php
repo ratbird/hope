@@ -213,7 +213,7 @@ class Score
                 $tmp = _("Gästebuch mit einem Eintrag");
             else
                 $tmp = sprintf(_("Gästebuch mit %s Einträgen"), $gaeste);
-            $content .= "<a href=\"about.php?username=$username&guestbook=open#guest\"><img src=\"".Assets::image_path('icons/16/blue/guestbook.png')."\" ".tooltip("$tmp")."></a> ";
+            $content .= "<a href=\"dispatch.php/about?username=$username&guestbook=open#guest\"><img src=\"".Assets::image_path('icons/16/blue/guestbook.png')."\" ".tooltip("$tmp")."></a> ";
         } else {
             $content .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"16\"> ";
         }
@@ -224,7 +224,7 @@ class Score
             } else {
                 $tmp = sprintf(_("%s persönliche Ankündigungen"), $news);
             }
-            $content .= "<a href=\"about.php?username=$username\"><img src=\"".Assets::image_path('icons/16/blue/breaking-news.png')."\" ".tooltip($tmp)."></a> ";
+            $content .= "<a href=\"dispatch.php/about?username=$username\"><img src=\"".Assets::image_path('icons/16/blue/breaking-news.png')."\" ".tooltip($tmp)."></a> ";
         } else {
             $content .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"16\"> ";
         }
@@ -234,7 +234,7 @@ class Score
             } else {
                 $tmp = sprintf(_("%s Umfragen"), $vote);
             }
-            $content .= "<a href=\"about.php?username=$username\"><img src=\"".Assets::image_path('icons/16/blue/vote.png')."\" ".tooltip($tmp)."></a> ";
+            $content .= "<a href=\"dispatch.php/about?username=$username\"><img src=\"".Assets::image_path('icons/16/blue/vote.png')."\" ".tooltip($tmp)."></a> ";
         } else {
             $content .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"16\"> ";
         }
@@ -244,7 +244,7 @@ class Score
                 $tmp = _("Termin");
             else
                 $tmp = _("Termine");
-            $content .= "<a href=\"about.php?username=$username#a\"><img src=\"".Assets::image_path('icons/16/blue/schedule.png')."\" ".tooltip("$termin $tmp")."></a> ";
+            $content .= "<a href=\"dispatch.php/about?username=$username#a\"><img src=\"".Assets::image_path('icons/16/blue/schedule.png')."\" ".tooltip("$termin $tmp")."></a> ";
         } else {
             $content .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"16\"> ";
         }
@@ -254,7 +254,7 @@ class Score
                 $tmp = _("Literaturangabe");
             else
                 $tmp = _("Literaturangaben");
-            $content .= "<a href=\"about.php?username=$username\"><img src=\"".Assets::image_path('icons/16/blue/literature.png')."\" ".tooltip("$lit $tmp")."></a> ";
+            $content .= "<a href=\"dispatch.php/about?username=$username\"><img src=\"".Assets::image_path('icons/16/blue/literature.png')."\" ".tooltip("$lit $tmp")."></a> ";
         } else {
             $content .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"16\"> ";
         }

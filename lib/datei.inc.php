@@ -1633,7 +1633,7 @@ function display_file_line ($datei, $folder_id, $open, $change, $move, $upload, 
     //So und jetzt die rechtsbündigen Sachen:
     print "</a></td><td align=\"right\" class=\"printhead\" valign=\"bottom\">";
     if ($datei['username']) {
-        print "<a href=\"".URLHelper::getLink('about.php?username='.$datei['username'])."\">".htmlReady($datei['fullname'])."</a> ";
+        print "<a href=\"".URLHelper::getLink('dispatch.php/about?username='.$datei['username'])."\">".htmlReady($datei['fullname'])."</a> ";
     } else {
         print htmlReady($datei['author_name']);
     }
@@ -2122,7 +2122,7 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
     //So und jetzt die rechtsbündigen Sachen:
     print "</td><td align=right class=\"printhead\" valign=\"bottom\">";
 
-    print "<a href=\"".URLHelper::getLink('about.php?username='.$result['username'])."\">".htmlReady($result['fullname'])."</a> ";
+    print "<a href=\"".URLHelper::getLink('dispatch.php/about?username='.$result['username'])."\">".htmlReady($result['fullname'])."</a> ";
 
     print $bewegeflaeche." ";
 

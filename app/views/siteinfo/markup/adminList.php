@@ -20,7 +20,7 @@
                 <? endif ?>
                 <h4><?= htmlReady($current_head) ?></h4>
             <? endif ?>
-            <a href="<?= URLHelper::getLink('about.php',
+            <a href="<?= URLHelper::getLink('dispatch.php/about',
                                              array('username' => $admin['username']))
                       ?>"><?= htmlReady($admin['fullname'])?></a>, E-Mail:<?= formatLinks($admin['Email']) ?><br>
             <? $i++ ?>

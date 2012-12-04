@@ -166,7 +166,7 @@ function show_rss_news($range_id, $type)
 
     switch ($type){
         case 'user':
-            $studip_url = $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'about.php?again=yes&username=' . get_username($range_id);
+            $studip_url = $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'dispatch.php/about?again=yes&username=' . get_username($range_id);
             $title = get_fullname($range_id) . ' (Stud.IP - ' . $GLOBALS['UNI_NAME_CLEAN'] . ')';
             $description = _('Persönliche Neuigkeiten') . ' ' . $title;
         break;

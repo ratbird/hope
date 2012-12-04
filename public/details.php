@@ -400,7 +400,7 @@ echo $template_factory->render(
                         foreach ($users as $entry) {
                             $data[] = array(
                                 'name' => $entry['fullname'].($entry['label'] ? " (".$entry['label'].")" : ""),
-                                'link' => 'about.php?username=' . $entry['username']
+                                'link' => 'dispatch.php/about?username=' . $entry['username']
                             );
                         }
 

@@ -1,7 +1,7 @@
 <table class="default">
 <? foreach ($posts as $post): 
      $user_link = sprintf('<a href="%s">%s</a>',
-                          URLHelper::getLink('about.php', array('username' => get_username($post['user_id']))),
+                          URLHelper::getLink('dispatch.php/about', array('username' => get_username($post['user_id']))),
                           htmlReady(get_fullname($post['user_id'])));
     $delete_link = URLHelper::getURL('', array('deletepost' => $post['post_id'], 'ticket' => get_ticket()));
 ?>

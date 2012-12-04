@@ -55,7 +55,7 @@
             <td>&nbsp;</td>
             <td>
             <? if ($row['visible'] || $row['user_id'] == $GLOBALS['user']->id || $rechte): ?>
-                <a href="<?= URLHelper::getLink('about.php', array('username' => $row['username'])) ?>">
+                <a href="<?= URLHelper::getLink('dispatch.php/about', array('username' => $row['username'])) ?>">
                     <?= htmlReady($row['fullname']) ?>
                 </a>
                 <? if ($row['user_id'] == $GLOBALS['user']->id && !$row['visible'] && !$rechte): ?>

@@ -363,7 +363,7 @@ class ResourceObject {
                 return '#a';
             break;
             case "user":
-                return  sprintf ("about.php?username=%s",get_username($id));
+                return  sprintf ("dispatch.php/about?username=%s",get_username($id));
             break;
             case "inst":
                 return  sprintf ("institut_main.php?auswahl=%s",$id);

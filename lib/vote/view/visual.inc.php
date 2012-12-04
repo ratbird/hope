@@ -101,9 +101,9 @@ function createBoxHeader ($title, $width, $extraTitle = "",
           "<td align=\"right\" class=\"table_header_bold\">";
 
        if ($adminURL) {
-          $html .=
-          "<a href=\"".$adminURL."\"><img src=\"".$adminImgURL."\" border=\"0\" ".
-          " alt=\"".$adminTitle."\" title=\"".$adminTitle."\"></a>";
+            $html .= 
+            "<a href=\"".URLHelper::getLink($adminURL)."\">
+            ".Assets::img($adminImgURL, array('title' => $adminTitle))."</a>";    
        }
 
        $html .=
@@ -185,7 +185,7 @@ function createBoxLine ($title, $imgURL, $userName, $userID, $date) {
    $htmlUser =
       "<td align=\"right\" class=\"printhead\" width=\"99%\" ".
       "    valign=\"bottom\">\n".
-      " <a href=\"about.php?username=".$userID."\">\n".
+      " <a href=\"dispatch.php/about?username=".$userID."\">\n".
       "  <font size=\"-1\" color=\"#333399\">".$userName."</font>\n".
       " </a>\n".
       " <font size=\"-1\">&nbsp;".date ("d.m.Y", $date)."</font>&nbsp;".

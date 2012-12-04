@@ -237,7 +237,7 @@ function aux_html() {
     // einzelne Nutzerdaten ausgeben
     foreach ($data['aux'] as $uid => $cur_user) {
         echo $zt->openRow();
-        echo $zt->cell(' <a href="'.URLHelper::getLink('about.php?username='.$cur_user['username']).'">'.htmlReady($cur_user['fullname']).'</a>');
+        echo $zt->cell(' <a href="'.URLHelper::getLink('dispatch.php/about?username='.$cur_user['username']).'">'.htmlReady($cur_user['fullname']).'</a>');
         foreach ($data['header'] as $showkey => $dontcare) {
             echo $zt->cell(htmlReady($cur_user['entry'][$showkey]), array('align' => 'left'));
         }

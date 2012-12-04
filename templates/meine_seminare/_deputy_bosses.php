@@ -17,7 +17,7 @@
                 <?php
                 $name_text = '';
                 if ($boss['edit_about'] && $deputies_edit_about_enabled) {
-                    $name_text .= '<a href="'.URLHelper::getLink('about.php', array('username' => $boss['username'])).'">';
+                    $name_text .= '<a href="'.URLHelper::getLink('dispatch.php/about', array('username' => $boss['username'])).'">';
                 }
                 $name_text .= $boss['fullname'];
                 if ($boss['edit_about'] && $deputies_edit_about_enabled) {

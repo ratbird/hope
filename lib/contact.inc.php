@@ -427,7 +427,7 @@ function ShowUserInfo ($contact_id)
 
     if ($temp) {
         $basicinfo[_('E-Mail')] = sprintf('<a href="mailto:%1$s">%1$s</a>', $temp['Email']);
-        $basicinfo['Stud.IP']   = sprintf('<a href="about.php?username=%1$s">%1$s (%2$s)</a>',
+        $basicinfo['Stud.IP']   = sprintf('<a href="dispatch.php/about?username=%1$s">%1$s (%2$s)</a>',
                                           $temp['username'], get_global_perm($user_id));
     }
 

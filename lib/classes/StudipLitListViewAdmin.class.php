@@ -474,7 +474,7 @@ class StudipLitListViewAdmin extends TreeView
         $content .= "\n<tr><td class=\"table_row_odd\" align=\"right\" style=\"border-bottom: 1px solid black;border-left: 1px solid black;border-right: 1px solid black;\">";
         $content .= _("Letzte &Auml;nderung:");
         $content .= strftime(" %d.%m.%Y ", $this->tree->tree_data[$item_id]['chdate']);
-        $content .= "(<a href=\"about.php?username=";
+        $content .= "(<a href=\"dispatch.php/about?username=";
         $content .= $this->tree->tree_data[$item_id]['username'];
         $content .= "\">" . htmlReady($this->tree->tree_data[$item_id]['fullname']) . "</a>) </td></tr>";
 

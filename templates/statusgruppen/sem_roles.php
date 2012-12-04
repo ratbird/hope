@@ -58,7 +58,7 @@ if (is_array($roles)) foreach ($roles as $id => $role) :
     </td>
 
     <td class="<?= $cssSw->getClass() ?>">
-        <a href="<?= URLHelper::getLink('about.php?username='. $person['username'] ) ?>">
+        <a href="<?= URLHelper::getLink('dispatch.php/about?username='. $person['username'] ) ?>">
             <?= htmlReady($person['fullname']) ?>
         </a>
     </td>

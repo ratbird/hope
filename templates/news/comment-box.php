@@ -2,7 +2,7 @@
     <tr style="background: #ffc;">
         <td align="left" style="border-bottom: 1px black dotted">
             #<?= $index + 1 ?> - 
-            <a href="<?= URLHelper::getLink('about.php?username=' . $comment[2]) ?>">
+            <a href="<?= URLHelper::getLink('dispatch.php/about?username=' . $comment[2]) ?>">
                 <?= htmlReady($comment[1]) ?>
             </a>
             <?= sprintf(_('hat am %s geschrieben:'), strftime('%x - %H:%M', $comment[3])) ?>

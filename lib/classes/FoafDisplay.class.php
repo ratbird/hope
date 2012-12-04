@@ -153,7 +153,7 @@ class FoafDisplay
     * opening/closing content) and content, if opened.
     *
     * @access   public
-    * @param    string  open/close indication (passed by about.php)
+    * @param    string  open/close indication (passed by about)
     */
     function show($open="close")
     {
@@ -190,7 +190,7 @@ class FoafDisplay
         } else {
             $titel=sprintf(_("Es besteht eine Verbindung über %d andere NutzerInnen."),count($this->foaf_list)-2);
         }
-        $link="about.php?username=".$this->target_username."&foaf_open=".($open=="open" ? "close":"open")."#foaf";
+        $link="about?username=".$this->target_username."&foaf_open=".($open=="open" ? "close":"open")."#foaf";
         $titel="<a href=\"$link\" class=\"tree\">$titel</a>";
 
         // AB HIER AUSGABE
@@ -238,10 +238,10 @@ class FoafDisplay
             $ret = $statement->fetch(PDO::FETCH_ASSOC);
 
             $ret['pic'] = sprintf('<a href="%s">%s</a>',
-                                  URLHelper::getLink('about.php?username=' . $ret['uname']),
+                                  URLHelper::getLink('about?username=' . $ret['uname']),
                                   Avatar::getAvatar($user_id)->getImageTag(Avatar::MEDIUM));
             $ret['link'] = sprintf('<a href="%s">%s</a>',
-                                   URLHelper::getLink('about.php?username=' . $ret['uname']),
+                                   URLHelper::getLink('about?username=' . $ret['uname']),
                                    htmlReady($ret['name']));
         } else {
             $ret = array(

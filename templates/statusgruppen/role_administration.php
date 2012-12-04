@@ -106,7 +106,7 @@
 
                         <td class="<?= $cssSw->getClass() ?>">
                             <? if ($range_type == 'sem') : ?>
-                            <a href="about.php?username=<?= $person['username'] ?>">
+                            <a href="dispatch.php/about?username=<?= $person['username'] ?>">
                             <? else: ?>
                             <a href="dispatch.php/settings/statusgruppen/switch/<?= $role_id ?>/1?username=<?= $person['username'] ?>#<?= $role_id ?>">
                             <? endif; ?>

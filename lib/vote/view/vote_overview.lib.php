@@ -566,7 +566,7 @@ function makeTableDataCell($text = "&nbsp;", $class = "table_row_even", $align =
 function makeTableDataCellLink ($username, $text = "&nbsp;",
                 $class = "table_row_even", $align = "center",
                 $width = "5%", $colspan = "1") {
-   $link = "{$CANONICAL_RELATIVE_PATH_STUDIP}about.php?username=".$username;
+   $link = "{$CANONICAL_RELATIVE_PATH_STUDIP}dispatch.php/about?username=".$username;
    $html = "     <td class=\"$class\" align=\"$align\" width=\"$width\" colspan=\"$colspan\">\n"
       . "     <font size=\"-1\"><a href=\"".URLHelper::getLink($link)."\" title=\"".$text."\">$text</a></font>\n"
       . "    </td>\n";

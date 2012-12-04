@@ -216,7 +216,7 @@ function chat_get_content($chatid, $chatter, $chatinv, $password, $is_active, $c
         $ret .= "<br>(";
         $c = 0;
         foreach ($chat_user as $chat_user_id => $detail){
-            $ret .= "<a href=\"{$GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP']}about.php?username={$detail['nick']}\">"
+            $ret .= "<a href=\"{$GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP']}dispatch.php/about?username={$detail['nick']}\">"
             . htmlReady($detail['fullname']) . "</a>";
             if (++$c != $chatter){
                 $ret .= ", ";

@@ -826,7 +826,7 @@ function display_roles_recursive($roles, $level = 0, $pred = '') {
                 $class = 'class="'.$css_rec->getClass().'"';
                 //echo '<tr><td '.$class.' width="20" align="center">'.$p['position'].'</td>';
                 echo '<tr><td '.$class.' width="20" align="center">'.$z.'&nbsp;</td>';
-                echo '<td '.$class.'><a href="'.URLHelper::getLink('about.php?username='.$p['username']).'">'.$p['fullname'].'</a></td>';
+                echo '<td '.$class.'><a href="'.URLHelper::getLink('dispatch.php/about?username='.$p['username']).'">'.$p['fullname'].'</a></td>';
                 $z++;
             }
         }

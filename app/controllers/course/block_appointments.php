@@ -45,7 +45,7 @@ class Course_BlockAppointmentsController extends AuthenticatedController
 
             $title = PageLayout::getTitle();
             $form_fields['start_day'] = array('type' => 'text', 'size' => '10', 'required' => true, 'caption' => _("Startdatum"));
-            $form_fields['start_day']['attributes'] = array('class' => 'hasDatePicker');
+            $form_fields['start_day']['attributes'] = array('class' => 'hasDatePicker', 'onChange' => 'if (jQuery("#block_appointments_end_day").val() == "") jQuery("#block_appointments_end_day").val(jQuery(this).val());');
             $form_fields['end_day'] = array('type' => 'text', 'size' => '10', 'required' => true, 'caption' => _("Enddatum"));
             $form_fields['end_day']['attributes'] = array('class' => 'hasDatePicker');
             $form_fields['start_time'] = array('type' => 'time', 'separator' => ':', 'required' => true,'caption' => _("Start"));
@@ -53,7 +53,8 @@ class Course_BlockAppointmentsController extends AuthenticatedController
             $form_fields['termin_typ'] = array('type' => 'select', 'caption' => _("Art der Termine"));
             $form_fields['termin_typ']['options'] = array_map(function($v, $k){return array('name' => $v['name'], 'value' => $k);}, $GLOBALS['TERMIN_TYP'], array_keys($GLOBALS['TERMIN_TYP']));
             $form_fields['days'] = array('type' => 'selectbox', 'multiple' => true, 'default_value' => '0');
-            $form_fields['days']['options'][0] = array('name' => _("Jeden Tag") , 'value' => 0);
+            $form_fields['days']['options'][] = array('name' => _("Jeden Tag") , 'value' => 'everyday');
+            $form_fields['days']['options'][] = array('name' => _("Mo - Fr") , 'value' => 'weekdays');
             $form_fields['date_count'] = array('type' => 'select', 'caption' => _("Anzahl"), 'options' => range(1,5));
             $start_ts = strtotime('this monday');
             foreach (range(0,6) as $d) {
@@ -92,9 +93,14 @@ class Course_BlockAppointmentsController extends AuthenticatedController
                     $date_count = $form->getFormFieldValue('date_count');
                     $delta = $end_time - $start_time;
                     $last_day = strtotime($form->getFormFieldValue('start_time'), $end_day);
-                    $every_day = in_array(0, $days);
+                    if (in_array('everyday', $days)) {
+                        $days = range(1,7);
+                    }
+                    if (in_array('weekdays', $days)) {
+                        $days = range(1,5);
+                    }
                     for ($t = $start_time; $t <= $last_day; $t = strtotime('+1 day', $t)) {
-                        if ($every_day || in_array(strftime('%u',$t), $days)) {
+                        if (in_array(strftime('%u',$t), $days)) {
                             for ($i = 1; $i <= $date_count; $i++) {
                                 $date = new SingleDate();
                                 $date->setDateType($termin_typ);

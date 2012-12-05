@@ -98,12 +98,14 @@ jQuery(function ($) {
             $('form[name$=block_appointments] .hasDatePicker').datepicker();
             $('form[name$=block_appointments] .hasDatePicker').blur();
             $('#block_appointments_days input:checkbox').click(function () {
-                if (this.id === 'block_appointments_days_0') {
+            	var clicked_id = parseInt(this.id.split('_').pop(), 10);
+                if (clicked_id === 0 || clicked_id === 1) {
                     $('#block_appointments_days input:checkbox').attr('checked', function (i) {
-                        return i === 0;
+                        return i === clicked_id;
                     });
                 } else {
                     $('#block_appointments_days_0').attr('checked', false);
+                    $('#block_appointments_days_1').attr('checked', false);
                 }
             });
         },

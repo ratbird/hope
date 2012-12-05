@@ -1134,7 +1134,7 @@ while (list ($key, $val) = each ($gruppe)) {
             $sem->admission_turnout, $anzahl_teilnehmer_kontingent, $anzahl_teilnehmer - $anzahl_teilnehmer_kontingent);
         echo '</font></td></tr>';
     }
-    
+
     $query = "SELECT :table.visible, :table.mkdate, comment, :table.user_id,
                      {$_fullname_sql['full']} AS fullname, username, status, COUNT(DISTINCT topic_id) AS doll,
                      studiengaenge.name, :table.:column AS studiengang_id,
@@ -1239,8 +1239,12 @@ while (list ($key, $val) = each ($gruppe)) {
         } else if ($key == "dozent" && $rechte) {
             printf("<td class=\"table_header\" width=\"9%%\" align=\"center\" valign=\"bottom\">&nbsp;</td>");
         }
-        printf("<td class=\"table_header\" width=\"10%%\" align=\"center\" valign=\"bottom\"><font size=\"-1\"><b>%s</b></font></td>", _("Forenbeiträge"));
-        printf("<td class=\"table_header\" width=\"10%%\" align=\"center\" valign=\"bottom\"><font size=\"-1\"><b>%s</b></font></td>", _("Dokumente"));
+
+        if ($showscore) { //Einblenden wenn Aktivitätsanzeige aktiviert wurde
+            printf("<td class=\"table_header\" width=\"10%%\" align=\"center\" valign=\"bottom\"><font size=\"-1\"><b>%s</b></font></td>", _("Forenbeiträge"));
+            printf("<td class=\"table_header\" width=\"10%%\" align=\"center\" valign=\"bottom\"><font size=\"-1\"><b>%s</b></font></td>", _("Dokumente"));
+        }
+
         printf("<td class=\"table_header\" width=\"9%%\" align=\"center\" valign=\"bottom\"><font size=\"-1\"><b>%s</b></font></td>", _("Nachricht"));
 
 
@@ -1400,9 +1404,10 @@ while (list ($key, $val) = each ($gruppe)) {
                 } else if ($key == "dozent" && $rechte) {
                     echo "<td align=\"center\">&nbsp;</td>";
                 }
+                if ($showscore) { //Einblenden wenn Aktivitätsanzeige aktiviert wurde
                 echo "<td align=\"center\"><font size=\"-1\">".$one_user['doll']."</font></td>";
                 echo "<td align=\"center\"><font size=\"-1\">".$Dokumente."</font></td>";
-
+                } 
                 echo "<td align=\"center\">";
 
                 $username=$one_user['username'];
@@ -1604,7 +1609,7 @@ while (list ($key, $val) = each ($gruppe)) {
         }
 
         if($key != 'dozent' && $rechte && !$info_is_open) {
-            echo '<tr><td class="blank" colspan="'.($showscore ? 7 : 6).'">&nbsp;</td>';
+            echo '<tr><td class="blank" colspan="'.($showscore ? 7 : 4).'">&nbsp;</td>';
 
             if (isset($multiaction[$key]['send'][0]))
                 echo '<td class="blank" align="center">' . Button::create(_('Neue Nachricht'),'do_' . $multiaction[$key]['send'][0],array('title'=> $multiaction[$key]['send'][1])) . '</td>';
@@ -1654,7 +1659,7 @@ if ($rechte) {
               ORDER BY position, name";
     $statement = DBManager::get()->prepare($query);
     $statement->execute(array($_SESSION['SessionSeminar']));
-    $waiting_users = $statement->fetchAll(PDO::FETCH_ASSOC); 
+    $waiting_users = $statement->fetchAll(PDO::FETCH_ASSOC);
 
     if (count($waiting_users)) { //Only if Users were found...
         $awaiting = true;
@@ -1782,7 +1787,7 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
                   FROM auth_user_md5 AS a
                   LEFT JOIN user_info USING^(user_id)
                   LEFT JOIN seminar_user b ON (b.user_id = a.user_id AND b.seminar_id = :seminar_id)
-                  WHERE perms IN ('autor','tutor','dozent') AND ISNULL(b.seminar_id) 
+                  WHERE perms IN ('autor','tutor','dozent') AND ISNULL(b.seminar_id)
                     AND (username LIKE CONCAT('%', :needle, '%') OR
                          Vorname LIKE CONCAT('%', :needle, '%') OR
                          Nachname LIKE CONCAT('%', :needle, '%')
@@ -1790,7 +1795,7 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
         $statement = DBManager::get()->prepare($query);
         $statement->bindParam(':seminar_id', $SessSemName[1]);
         $statement->bindParam(':needle', $search_exp);
-        $statement->execute(); 
+        $statement->execute();
         ?>
 
     <tr>
@@ -1891,7 +1896,7 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
         <td class="table_row_even" width="20%" align="center">
              <?= Button::create(_('Eintragen'),'add_user',array('value'=>_("eintragen"))) ?>  </td>
 
-       
+
     </tr></table></form></tr>
     <?
 }
@@ -2024,33 +2029,33 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
 <?php
     if (get_config('EXPORT_ENABLE') AND $perm->have_studip_perm("tutor", $SessSemName[1])) {
         include_once($PATH_EXPORT . "/export_linking_func.inc.php");
-        
+
         $infobox[1] = array(
                 "eintrag" => array(
                     array(
                         'icon' => "icons/16/black/file-text.png",
-                        'text' => export_link($SessSemName[1], "person", _("TeilnehmerInnen") . ' '. $SessSemName[0], "rtf", "rtf-teiln", "", 
+                        'text' => export_link($SessSemName[1], "person", _("TeilnehmerInnen") . ' '. $SessSemName[0], "rtf", "rtf-teiln", "",
                                   _("TeilnehmerInnen exportieren als rtf Dokument"), 'passthrough')
                     ),
                     array(
                         'icon' => 'icons/16/black/file-xls.png',
-                        'text' => export_link($SessSemName[1], "person", _("TeilnehmerInnen") . ' '. $SessSemName[0], "csv", "csv-teiln", "", 
+                        'text' => export_link($SessSemName[1], "person", _("TeilnehmerInnen") . ' '. $SessSemName[0], "csv", "csv-teiln", "",
                                   _("TeilnehmerInnen exportieren als csv Dokument"), 'passthrough')
                     )
                 )
             );
-    
+
         if ($awaiting) {
             $infobox[2] = array(
                 "eintrag" => array(
                     array(
                         'icon' => "icons/16/blue/file-text.png",
-                        'text' => export_link($SessSemName[1], "person", _("Warteliste") .' ' . $SessSemName[0], "rtf", "rtf-warteliste", "awaiting", 
+                        'text' => export_link($SessSemName[1], "person", _("Warteliste") .' ' . $SessSemName[0], "rtf", "rtf-warteliste", "awaiting",
                                   _("Warteliste exportieren als rtf Dokument"), 'passthrough')
                     ),
                     array(
                         'icon' => 'icons/16/blue/file-xls.png',
-                        'text' => export_link($SessSemName[1], "person", _("Warteliste") .' ' . $SessSemName[0], "csv", "csv-warteliste", "awaiting", 
+                        'text' => export_link($SessSemName[1], "person", _("Warteliste") .' ' . $SessSemName[0], "csv", "csv-warteliste", "awaiting",
                                   _("Warteliste exportieren csv Dokument"), 'passthrough')
                     )
                 )
@@ -2063,7 +2068,7 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
     }
 
     $layout->content_for_layout = ob_get_clean();
-    
+
     echo $layout->render();
     page_close();
 ?>

@@ -23,7 +23,7 @@ global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
 
                         <tr align="center" valign="top">
                             <th width="2%" colspan="2" nowrap="nowrap" align="center">
-                                <a href="gruppe.php">
+                                <a href="<?= URLHelper::getLink('dispatch.php/meine_seminare/groups') ?>">
                                     <?= Assets::img('icons/16/blue/group.png', array('title' => _("Gruppe ändern"), 'class' => 'middle')) ?>
                                 </a>
                             </th>

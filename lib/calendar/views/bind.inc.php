@@ -63,7 +63,7 @@ if (!empty($calendar_sess_control_data["view_prv"])) {
 echo CSRFProtection::tokenTag();
 echo "\n<tr>\n";
 echo "<th width=\"2%\" nowrap colspan=\"2\" align=\"center\">";
-echo "&nbsp;<a href=\"gruppe.php\">";
+echo "&nbsp;<a href=\"" . URLHelper::getLink('dispatch.php/meine_seminare/groups') . "\">";
 $tooltip = tooltip(_("Gruppe ändern"));
 echo "<img src=\"" . Assets::image_path('icons/16/blue/group.png') . "\" {$tooltip}>";
 echo "</a></th>\n";

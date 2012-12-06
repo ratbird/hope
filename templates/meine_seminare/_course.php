@@ -14,7 +14,7 @@ foreach ($group_members as $member) {
         ?>
         <tr>
             <td class="gruppe<?= $values['gruppe'] ?>">
-                <a href='gruppe.php'>
+                <a href="<?= URLHelper::getLink('dispatch.php/meine_seminare/groups') ?>">
                     <?= Assets::img('blank.gif', array('size' => '7@12') + tooltip2(_("Gruppe ändern"))) ?>
                 </a>
             </td>

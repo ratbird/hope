@@ -607,7 +607,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
                     'eintrag' => array(array("icon" => 'icons/16/black/group.png',
                                                 "text"  => sprintf(
                                                 _("Gruppierung der angezeigten Veranstaltungen %s&auml;ndern%s."),
-                                                "<a href=\"dispatch.php/meine_seminare/groups\">", "</a>")
+                                                "<a href=\"" . URLHelper::getLink('dispatch.php/meine_seminare/groups') . "\">", "</a>")
                                                 )));
     if (get_config('MAIL_NOTIFICATION_ENABLE')){
         $infobox[count($infobox)-1]['eintrag'][] = array(   'icon' => 'icons/16/black/mail.png',

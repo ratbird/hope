@@ -58,7 +58,7 @@ class BrowseNavigation extends Navigation
             if ($perm->have_perm('admin')) {
                 $navigation->addSubNavigation('schedule', new Navigation(_('Veranstaltungs-Stundenplan'), 'dispatch.php/calendar/schedule'));
             } else {
-                $navigation->addSubNavigation('group_new', new Navigation(_('Gruppenzuordnung'), 'dispatch.php/meine_seminare/groups'));
+                $navigation->addSubNavigation('groups', new Navigation(_('Gruppenzuordnung'), 'dispatch.php/meine_seminare/groups'));
 
                 if (get_config('STM_ENABLE') && $perm->have_perm('dozent')) {
                     $navigation->addSubNavigation('modules', new Navigation(_('Meine Studienmodule'), 'my_stm.php'));

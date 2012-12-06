@@ -47,7 +47,7 @@ class MeineSeminareController extends AuthenticatedController
     {
         PageLayout::setTitle(_('Meine Veranstaltungen') . ' - ' . _('Gruppenzuordnung'));
         PageLayout::setHelpKeyword('Basis.VeranstaltungenOrdnen');
-        Navigation::activateItem('/browse/my_courses/group_new');
+        Navigation::activateItem('/browse/my_courses/groups');
 
         $forced_grouping     = get_config('MY_COURSES_FORCE_GROUPING');
         $no_grouping_allowed = ($forced_grouping == 'not_grouped' || !in_array($forced_grouping, getValidGroupingFields()));

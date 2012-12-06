@@ -6,16 +6,17 @@
     </tr>
 
     <tr>
-        <td class="index_box_cell">
-            <? foreach($seminare AS $semester => $seminar) :?>
-            <? if(!empty($seminar)):?><b><?=$semester?></b>
-                <br><br>
-                
-                <?foreach($seminar AS $id => $inhalt) :?>
-                    <b><a href="<?=URLHelper::getLink("details.php?", array('sem_id' =>$id))?>"><?=htmlReady($inhalt)?></a></b><br>
-                <?endforeach?>
-            <?endif?>
-            <?endforeach?>
+        <td class="index_box_cell" style="font-weight: bold;">
+    <? foreach ($seminare as $semester => $seminar) :?>
+            <?= $semester ?><br>
+            <br>
+
+        <? foreach ($seminar as $id => $inhalt) :?>
+            <a href="<?= URLHelper::getLink('details.php', array('sem_id' => $id))?>">
+                <?= htmlReady($inhalt) ?>
+            </a><br>
+        <?endforeach?>
+    <?endforeach?>
         </td>
     </tr>
 </table>

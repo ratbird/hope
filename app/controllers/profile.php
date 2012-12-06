@@ -74,18 +74,13 @@ class ProfileController extends AuthenticatedController
         // set the page title depending on user selection
         if ($this->current_user['user_id'] == $this->user->id && !$this->current_user['locked']) {
             PageLayout::setTitle(_('Mein Profil'));
+            $this->user->cfg->store('PROFILE_LAST_VISIT', time());
         } elseif ($this->current_user['user_id'] && ($this->perm->have_perm('root') || (!$this->current_user['locked'] && get_visibility_by_id($this->current_user['user_id'])))) {
             PageLayout::setTitle(_('Profil')  .' - ' . $this->current_user->getFullname());
+            object_add_view($this->current_user->user_id);
         } else {
             PageLayout::setTitle(_('Profil'));
             $action = 'not_available';
-        }
-
-        // count views of Page
-        if ($this->current_user->user_id != $this->user->id) {
-            object_add_view($this->current_user->user_id);
-        } else {
-            UserConfig::get($this->current_user->user_id)->store('PROFILE_LAST_VISIT', time());
         }
     }
 

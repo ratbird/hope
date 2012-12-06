@@ -109,8 +109,8 @@ if ($auth->is_authenticated() && $user->id != 'nobody') {
 
     // Display banner ad
     if (get_config('BANNER_ADS_ENABLE')) {
-        require_once 'lib/banner_show.inc.php';
-        banner_show();
+        require_once 'app/models/banner.php';
+        echo Banner::getRandomBanner()->toHTML();
     }
 
     // add skip link

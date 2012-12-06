@@ -155,7 +155,7 @@ class AdminNavigation extends Navigation
             $navigation->addSubNavigation('auto_insert', new Navigation(_('Automatisiertes Eintragen'), 'dispatch.php/admin/autoinsert'));
 
             if (get_config('BANNER_ADS_ENABLE'))  {
-                $navigation->addSubNavigation('banner_ads', new Navigation(_('Werbebanner'), 'admin_banner_ads.php'));
+                $navigation->addSubNavigation('banner', new Navigation(_('Werbebanner'), 'dispatch.php/admin/banner'));
             }
 
             if (get_config('SEMESTER_ADMINISTRATION_ENABLE')) {

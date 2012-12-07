@@ -39,8 +39,9 @@ class ScoreController extends AuthenticatedController
      */
     public function before_filter(&$action, &$args)
     {
-        // Interpret every action other than 'index' as page number
-        if ($action !== 'index') {
+        // Interpret every action other than 'index', 'publish' or 'unpublish'
+        // as page number
+        if (!in_array($action, words('index publish unpublish'))) {
             array_unshift($args, (int)$action);
             $action = 'index';
         }

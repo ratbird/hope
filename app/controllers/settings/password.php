@@ -1,6 +1,6 @@
 <?php
-/*
- * SettingsController - Administration of all user profile related
+/**
+ * Settings_PasswordController - Administration of all user and password related
  * settings
  *
  * This program is free software; you can redistribute it and/or
@@ -16,10 +16,16 @@
 
 require_once 'settings.php';
 
-/**
- */
 class Settings_PasswordController extends Settings_SettingsController
 {
+    /**
+     * Set up this controller.
+     *
+     * @param String $action Name of the action to be invoked
+     * @param Array  $args   Arguments to be passed to the action method
+     * @throws AccessDeniedException if the current user is not allowed to
+     *                               change the password
+     */
     public function before_filter(&$action, &$args)
     {
         parent::before_filter($action, $args);
@@ -35,12 +41,15 @@ class Settings_PasswordController extends Settings_SettingsController
     }
 
     /**
-     *
+     * Displays the password change form.
      */
     public function index_action()
     {
     }
 
+    /**
+     * Stores a new password for a user.
+     */
     public function store_action()
     {
         $this->check_ticket();

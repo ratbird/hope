@@ -1,6 +1,6 @@
 <?php
-/*
- * SettingsController - Administration of all user profile related
+/**
+ * Settings_CalendarController - Administration of all user calendar related
  * settings
  *
  * This program is free software; you can redistribute it and/or
@@ -16,11 +16,15 @@
 
 require_once 'settings.php';
 
-/**
- */
-
 class Settings_CalendarController extends Settings_SettingsController
 {
+    /**
+     * Set up this controller
+     *
+     * @param String $action Name of the action to be invoked
+     * @param Array  $args   Arguments to be passed to the action method
+     * @throws AccessDeniedException if the calendar is not globally enabled
+     */
     public function before_filter(&$action, &$args)
     {
         if (!get_config('CALENDAR_ENABLE')) {
@@ -37,22 +41,24 @@ class Settings_CalendarController extends Settings_SettingsController
     }
 
     /**
-     *
+     * Display a user's calendar settings
      */
     public function index_action()
     {
-
         $calendar_user_control_data = (array) UserConfig::get($GLOBALS['user']->id)->getValue('CALENDAR_SETTINGS');
         foreach ($calendar_user_control_data as $key => $value) {
             $this->$key = $value;
         }
     }
 
+    /**
+     * Stores a user's calendar settings
+     */
     public function store_action()
     {
         $this->check_ticket();
 
-        $data = array(
+        $this->config->store('CALENDAR_SETTINGS', array(
             'view'            => Request::option('cal_view'),
             'start'           => Request::option('cal_start'),
             'end'             => Request::option('cal_end'),
@@ -64,9 +70,8 @@ class Settings_CalendarController extends Settings_SettingsController
             'delete'          => Request::option('cal_delete'),
             'step_week_group' => Request::option('cal_step_week_group'),
             'step_day_group'  => Request::option('cal_step_day_group')
-        );
+        ));
 
-        $ret = $this->config->store('CALENDAR_SETTINGS', $data);
         $this->reportSuccess(_('Ihre Einstellungen wurden gespeichert'));
         $this->redirect('settings/calendar');
     }

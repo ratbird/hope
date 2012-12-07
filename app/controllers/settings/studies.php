@@ -1,6 +1,7 @@
 <?php
-/*
- * Settings/StudiesController
+/**
+ * Settings_StudiesController - Administration of all user studies related
+ * settings
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -15,14 +16,18 @@
 
 require_once 'settings.php';
 
-/**
- */
 class Settings_StudiesController extends Settings_SettingsController
 {
+    /**
+     * Set up this controller.
+     *
+     * @param String $action Name of the action to be invoked
+     * @param Array  $args   Arguments to be passed to the action method
+     */
     public function before_filter(&$action, &$args)
     {
         parent::before_filter($action, $args);
-        
+
         if (!in_array($this->user->perms, words('autor tutor dozent'))) {
             throw new AccessDeniedException(_('Sie haben keinen Zugriff auf diesen Bereich.'));
         }
@@ -39,14 +44,20 @@ class Settings_StudiesController extends Settings_SettingsController
             'in' => $GLOBALS['ALLOW_SELFASSIGN_INSTITUTE'] || $GLOBALS['perm']->have_perm('admin'),
         );
     }
-    
+
+    /**
+     * Displays the study information of a user.
+     */
     public function index_action()
     {
         $infobox_message = _('Hier können Sie Angaben &uuml;ber Ihre Studienkarriere machen.');
         $this->setInfoBoxImage('infobox/groups.jpg');
         $this->addToInfobox(_('Informationen'), $infobox_message, 'icons/16/black/info.png');
     }
-    
+
+    /**
+     * Stores the study information of a user (subject and degree-wise).
+     */
     public function store_sg_action()
     {
         $this->check_ticket();
@@ -76,7 +87,7 @@ class Settings_StudiesController extends Settings_SettingsController
                       SET semester = ?
                       WHERE user_id = ? AND studiengang_id = ? AND abschluss_id = ?";
             $statement = DBManager::get()->prepare($query);
-            
+
             $change_fachsem = Request::getArray('change_fachsem');
             foreach ($change_fachsem as $studiengang_id => $abschluesse) {
                 foreach ($abschluesse as $abschluss_id => $semester) {
@@ -120,7 +131,10 @@ class Settings_StudiesController extends Settings_SettingsController
 
         $this->redirect('settings/studies');
     }
-    
+
+    /**
+     * Stores the study information of a user (institute-wise).
+     */
     public function store_in_action()
     {
         $this->check_ticket();
@@ -129,7 +143,7 @@ class Settings_StudiesController extends Settings_SettingsController
         if (count($inst_delete) > 0) {
             $query = "DELETE FROM user_inst WHERE user_id = ? AND Institut_id = ?";
             $statement = DBManager::get()->prepare($query);
-            
+
             foreach ($inst_delete as $institute_id) {
                 $statement->execute(array(
                     $this->user->user_id,

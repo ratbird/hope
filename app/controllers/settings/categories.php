@@ -1,6 +1,7 @@
 <?php
-/*
- * Settings/CategoriesController
+/**
+ * Settings_CategoriesController - Administration of all user categories
+ * related settings
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -17,6 +18,12 @@ require_once 'settings.php';
 
 class Settings_CategoriesController extends Settings_SettingsController
 {
+    /**
+     * Set up this controller. Rewrites $action on verification.
+     *
+     * @param String $action Name of the action to be invoked
+     * @param Array  $args   Arguments to be passed to the action method
+     */
     public function before_filter(&$action, &$args)
     {
         parent::before_filter($action, $args);
@@ -33,6 +40,13 @@ class Settings_CategoriesController extends Settings_SettingsController
         }
     }
 
+    /**
+     * Display the categories of a user.
+     *
+     * @param mixed $verify_action Optional name of an action to be verified
+     * @param mixed $verify_id     Optional id that belongs to the action to
+     *                             be verified
+     */
     public function index_action($verify_action = null, $verify_id = null)
     {
         $categories = Kategorie::findByUserId($this->user->user_id);
@@ -59,7 +73,7 @@ class Settings_CategoriesController extends Settings_SettingsController
         $this->verify       = $verify_action
                             ? array('action' => $verify_action, 'id' => $verify_id)
                             : false;
-        
+
         $this->setInfoboxImage('infobox/groups.jpg');
         $this->addToInfobox(_('Aktionen'),
                             sprintf('<a href="%s">%s</a>',
@@ -70,6 +84,9 @@ class Settings_CategoriesController extends Settings_SettingsController
         $this->addToInfobox(_('Informationen'), sprintf(_('Für wen Ihre angelegten Kategorien genau sichtbar sein sollen, können Sie in Ihren %sPrivatsphäre-Einstellungen%s festlegen.'), '<a href="'.URLHelper::getURL('dispatch.php/settings/privacy').'">', '</a>'), 'icons/16/black/visibility-invisible');
     }
 
+    /**
+     * Creates a new category
+     */
     public function create_action()
     {
         Kategorie::increatePrioritiesByUserId($this->user->user_id);
@@ -89,6 +106,13 @@ class Settings_CategoriesController extends Settings_SettingsController
         $this->redirect('settings/categories');
     }
 
+    /**
+     * Deletes a given category.
+     *
+     * @param String $id Id of the category to be deleted
+     * @param bool $verified Indicates whether the delete action has been
+     *                       verfified
+     */
     public function delete_action($id, $verified = false)
     {
         $category = Kategorie::find($id);
@@ -114,6 +138,9 @@ class Settings_CategoriesController extends Settings_SettingsController
         $this->redirect('settings/categories');
     }
 
+    /**
+     * Stores all categories
+     */
     public function store_action()
     {
         $request = Request::getInstance();
@@ -133,7 +160,13 @@ class Settings_CategoriesController extends Settings_SettingsController
 
         $this->redirect('settings/categories');
     }
-    
+
+    /**
+     * Swaps the position of two categories
+     *
+     * @param String $id0 Id of the category to be swapped
+     * @param String $id1 Id of the other category to be swapped
+     */
     public function swap_action($id0, $id1)
     {
         $category0  = Kategorie::find($id0);

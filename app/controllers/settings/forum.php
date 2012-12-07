@@ -1,6 +1,7 @@
 <?php
-/*
- * SettingsController - Controller for all setting related pages (formerly edit_about)
+/**
+ * SettingsController - Administration of all user forum related
+ * settings
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -17,6 +18,12 @@ require_once 'settings.php';
 
 class Settings_ForumController extends Settings_SettingsController
 {
+    /**
+     * Set up this controller. Rewrites $action on verification.
+     *
+     * @param String $action Name of the action to be invoked
+     * @param Array  $args   Arguments to be passed to the action method
+     */
     public function before_filter(&$action, &$args)
     {
         if ($action === 'verify') {
@@ -48,11 +55,19 @@ class Settings_ForumController extends Settings_SettingsController
         $this->settings = $settings;
     }
 
+    /**
+     * Displays the forum settings of a user.
+     *
+     * @param mixed $verify_action Optional name of an action to be verified
+     */
     public function index_action($verify_action = null)
     {
         $this->verify_action = $verify_action;
     }
 
+    /**
+     * Stores the forum settings of a user.
+     */
     public function store_action()
     {
         $this->check_ticket();
@@ -77,6 +92,11 @@ class Settings_ForumController extends Settings_SettingsController
         $this->redirect('settings/forum');
     }
 
+    /**
+     * Resets the forum settings of a user.
+     *
+     * @param bool $verified Indicates whether the action has been verified.
+     */
     public function reset_action($verified = true)
     {
         if ($verified) {
@@ -88,6 +108,5 @@ class Settings_ForumController extends Settings_SettingsController
         }
 
         $this->redirect('settings/forum');
-
     }
 }

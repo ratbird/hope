@@ -1,6 +1,6 @@
 <?php
-/*
- * SettingsController - Administration of all user profile related
+/**
+ * Settings_AccountController - Administration of all user account related
  * settings
  *
  * This program is free software; you can redistribute it and/or
@@ -16,10 +16,14 @@
 
 require_once 'settings.php';
 
-/**
- */
 class Settings_AccountController extends Settings_SettingsController
 {
+    /**
+     * Set up this controller and define the infobox
+     *
+     * @param String $action Name of the action to be invoked
+     * @param Array  $args   Arguments to be passed to the action method
+     */
     public function before_filter(&$action, &$args)
     {
         parent::before_filter($action, $args);
@@ -37,7 +41,7 @@ class Settings_AccountController extends Settings_SettingsController
     }
 
     /**
-     *
+     * Display the account information of a user
      */
     public function index_action()
     {
@@ -46,6 +50,9 @@ class Settings_AccountController extends Settings_SettingsController
                            : false;
     }
 
+    /**
+     * Stores the account informations of a user
+     */
     public function store_action()
     {
         $this->check_ticket();
@@ -167,7 +174,7 @@ class Settings_AccountController extends Settings_SettingsController
     }
 
     /**
-     *
+     * Display an information page that the user has been logged out
      */
     public function logout_action()
     {

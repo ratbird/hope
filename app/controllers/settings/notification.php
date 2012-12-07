@@ -1,6 +1,7 @@
 <?php
-/*
- * SettingsController - Controller for all setting related pages (formerly edit_about)
+/**
+ * Settings_NotificataionController - Administration of all user notification
+ * related settings
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -18,6 +19,15 @@ require_once 'lib/classes/ModulesNotification.class.php';
 
 class Settings_NotificationController extends Settings_SettingsController
 {
+    /**
+     * Set up this controller and define the infobox
+     *
+     * @param String $action Name of the action to be invoked
+     * @param Array  $args   Arguments to be passed to the action method
+     * @throws AccessDeniedException if notifications are not globally enabled
+     *                               or if the user has no access to these
+     *                               notifications (admin or root accounts).
+     */
     public function before_filter(&$action, &$args)
     {
         parent::before_filter($action, $args);
@@ -44,7 +54,10 @@ class Settings_NotificationController extends Settings_SettingsController
         $this->addToInfobox(_('Informationen'), $infobox_message, 'icons/16/black/info');
     }
 
-    public function index_action($action = null, $id = null)
+    /**
+     * Display the notification settings of a user.
+     */
+    public function index_action()
     {
         $group_field = UserConfig::get($this->user->user_id)->MY_COURSES_GROUPING ?: 'not_grouped';
 
@@ -142,6 +155,9 @@ class Settings_NotificationController extends Settings_SettingsController
         $this->checked       = $checked;
     }
 
+    /**
+     * Stores the notification settings of a user.
+     */
     public function store_action()
     {
         $this->check_ticket();
@@ -153,19 +169,31 @@ class Settings_NotificationController extends Settings_SettingsController
         $this->redirect('settings/notification');
     }
 
+    /**
+     * Opens a specific area.
+     *
+     * @param String $id Id of the area to be opened
+     */
     public function open_action($id)
     {
-        $open = UserConfig::get($this->user->user_id)->MY_COURSES_OPEN_GROUPS;
+        $open = $this->config->MY_COURSES_OPEN_GROUPS;
         $open[$id] = true;
-        UserConfig::get($this->user->user_id)->store('MY_COURSES_OPEN_GROUPS', $open);
+        $this->config->store('MY_COURSES_OPEN_GROUPS', $open);
+
         $this->redirect('settings/notification');
     }
 
+    /**
+     * Closes a specific area.
+     *
+     * @param String $id Id of the area to be closed
+     */
     public function close_action($id)
     {
-        $open = UserConfig::get($this->user->user_id)->MY_COURSES_OPEN_GROUPS;
+        $open = $this->config->MY_COURSES_OPEN_GROUPS;
         unset($open[$id]);
-        UserConfig::get($this->user->user_id)->store('MY_COURSES_OPEN_GROUPS', $open);
+        $this->config->store('MY_COURSES_OPEN_GROUPS', $open);
+
         $this->redirect('settings/notification');
     }
 }

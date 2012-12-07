@@ -1,6 +1,7 @@
 <?php
-/*
- * Settings/StatusgruppenController
+/**
+ * Settings_StatusgruppenController - Administration of all user and
+ * statusgruppen related settings
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -17,6 +18,12 @@ require_once 'settings.php';
 
 class Settings_StatusgruppenController extends Settings_SettingsController
 {
+    /**
+     * Set up this controller and define the infobox
+     *
+     * @param String $action Name of the action to be invoked
+     * @param Array  $args   Arguments to be passed to the action method
+     */
     public function before_filter(&$action, &$args)
     {
         if ($action === 'verify') {
@@ -39,6 +46,13 @@ class Settings_StatusgruppenController extends Settings_SettingsController
                             'icons/16/black/info');
     }
 
+    /**
+     * Displays the statusgruppen of a user.
+     *
+     * @param mixed $verify_action Optional name of an action to be verified
+     * @param mixed $verify_id     Optional id that belongs to the action to
+     *                             be verified
+     */
     public function index_action($verify_action = null, $verify_id = null)
     {
         $all_rights = false;
@@ -137,6 +151,14 @@ class Settings_StatusgruppenController extends Settings_SettingsController
         }
     }
 
+    /**
+     * Set defaults for a single datafield of a statusgruppe.
+     *
+     * @param String $inst_id Id of the institute in question
+     * @param String $role_id Id of the statusgruppe in question
+     * @param String $datafield_id Id of the datafield in question
+     * @param bool $state Indicates whether the defaults should be used or not
+     */
     public function default_action($inst_id, $role_id, $datafield_id, $state)
     {
         $value = 'default_value';
@@ -159,6 +181,12 @@ class Settings_StatusgruppenController extends Settings_SettingsController
         $this->redirect('settings/statusgruppen#' . $role_id);
     }
 
+    /**
+     * Set defaults for all datafields of a statusgruppe.
+     *
+     * @param String $role_id Id of the statusgruppe in question
+     * @param bool $state Indicates whether the defaults should be used or not
+     */
     public function defaults_action($role_id, $state)
     {
         MakeDatafieldsDefault($this->user->user_id, $role_id, $state ? 'default_value' : '');
@@ -166,6 +194,9 @@ class Settings_StatusgruppenController extends Settings_SettingsController
         $this->redirect('settings/statusgruppen#' . $role_id);
     }
 
+    /**
+     * Assign/add a user to a statusgruppe.
+     */
     public function assign_action()
     {
         $this->check_ticket();
@@ -208,6 +239,12 @@ class Settings_StatusgruppenController extends Settings_SettingsController
         $this->redirect('settings/statusgruppen#' . $role_id);
     }
 
+    /**
+     * Removes a user from a statusgruppe.
+     *
+     * @param String $id Id of the statusgruppe in question
+     * @param bool $verified Indicates whether the action has been verified
+     */
     public function delete_action($id, $verified = false)
     {
         if ($verified) {
@@ -225,6 +262,12 @@ class Settings_StatusgruppenController extends Settings_SettingsController
         $this->redirect('settings/statusgruppen');
     }
 
+    /**
+     * Moves a specific statusgruppe into the given direction.
+     *
+     * @param String $id Id of the statusgruppe in question
+     * @param String $direction Either 'up' or 'down'
+     */
     public function move_action($id, $direction)
     {
         if (in_array($this->about->check, words('user admin'))) {
@@ -268,6 +311,12 @@ class Settings_StatusgruppenController extends Settings_SettingsController
         $this->redirect('settings/statusgruppen#' . $id);
     }
 
+    /**
+     * Toggles whether a certain statusgruppe is open or not.
+     *
+     * @param String $id Id of the statusgruppe to be toggled.
+     * @param mixed $open Optional new state (otherwise it's toggled)
+     */
     public function switch_action($id, $open = null)
     {
         if ($open === null) {
@@ -278,6 +327,9 @@ class Settings_StatusgruppenController extends Settings_SettingsController
         $this->redirect('settings/statusgruppen#' . $id);
     }
 
+    /**
+     * Stores the statusgruppen of a user.
+     */
     public function store_action($type, $id)
     {
         if ($type === 'institute') {

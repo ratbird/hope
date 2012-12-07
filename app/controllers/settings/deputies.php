@@ -1,6 +1,7 @@
 <?php
-/*
- * Settings/DeputiesController
+/**
+ * Settings_DeputiesController - Administration of all user deputy
+ * related settings
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -12,11 +13,17 @@
  * @category    Stud.IP
  * @since       2.4
  */
- 
+
 require_once 'settings.php';
 
 class Settings_DeputiesController extends Settings_SettingsController
 {
+    /**
+     * Set up this controller.
+     *
+     * @param String $action Name of the action to be invoked
+     * @param Array  $args   Arguments to be passed to the action method
+     */
     public function before_filter(&$action, &$args)
     {
         parent::before_filter($action, $args);
@@ -36,7 +43,10 @@ class Settings_DeputiesController extends Settings_SettingsController
             $_SESSION['deputy_id_parameter'] = Request::get('deputy_id_parameter');
         }
     }
-    
+
+    /**
+     * Displays the deputy information of a user.
+     */
     public function index_action()
     {
         if (Request::submitted('add_deputy') && $deputy_id = Request::option('deputy_id')) {
@@ -54,11 +64,10 @@ class Settings_DeputiesController extends Settings_SettingsController
             $this->redirect('settings/deputies');
             return;
         }
-        
+
         if ($_SESSION['deputy_id_parameter']) {
             Request::set('deputy_id_parameter', $_SESSION['deputy_id_parameter']);
         }
-        
 
         $deputies = getDeputies($this->user->user_id, true);
 
@@ -75,7 +84,10 @@ class Settings_DeputiesController extends Settings_SettingsController
         $this->setInfoboxImage('infobox/groups.jpg');
         $this->addToInfobox(_('Informationen'), _('Legen Sie hier fest, wer standardmäßig als Vertretung in Ihren Veranstaltungen eingetragen sein soll.'), 'icons/16/black/info');
     }
-    
+
+    /**
+     * Stores the deputy settings of a user.
+     */
     public function store_action()
     {
         $this->check_ticket();
@@ -110,7 +122,7 @@ class Settings_DeputiesController extends Settings_SettingsController
                 $this->reportSuccess(_('Die Einstellungen wurden gespeichert.'));
             } else if ($changed > 0) {
                 $this->reportErorr(_('Fehler beim Speichern der Einstellungen.'));
-            }            
+            }
         }
 
         $this->redirect('settings/deputies');

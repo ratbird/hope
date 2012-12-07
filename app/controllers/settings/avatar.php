@@ -1,6 +1,6 @@
 <?php
-/*
- * SettingsController - Administration of all user profile related
+/**
+ * Settings_AvatarController - Administration of all user avatar related
  * settings
  *
  * This program is free software; you can redistribute it and/or
@@ -16,10 +16,14 @@
 
 require_once 'settings.php';
 
-/**
- */
 class Settings_AvatarController extends Settings_SettingsController
 {
+    /**
+     * Set up this controller
+     *
+     * @param String $action Name of the action to be invoked
+     * @param Array  $args   Arguments to be passed to the action method
+     */
     public function before_filter(&$action, &$args)
     {
         parent::before_filter($action, $args);
@@ -35,10 +39,18 @@ class Settings_AvatarController extends Settings_SettingsController
         }
     }
 
+    /**
+     * Display the avatar information of a user
+     */
     public function index_action()
     {
     }
 
+    /**
+     * Upload a new avatar.
+     * Sends an information email to the user if the action was not invoked
+     * by himself.
+     */
     public function upload_action()
     {
         $this->check_ticket();
@@ -64,6 +76,9 @@ class Settings_AvatarController extends Settings_SettingsController
         $this->redirect('settings/avatar');
     }
 
+    /**
+     * Resets/removes a user's avatar.
+     */
     public function reset_action()
     {
         $this->check_ticket();

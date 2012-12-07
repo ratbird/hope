@@ -1,6 +1,7 @@
 <?php
-/*
- * SettingsController - Controller for all setting related pages (formerly edit_about)
+/**
+ * Settings_PrivacyController - Administration of all user privacy related
+ * settings
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -17,6 +18,12 @@ require_once 'settings.php';
 
 class Settings_PrivacyController extends Settings_SettingsController
 {
+    /**
+     * Set up this controller.
+     *
+     * @param String $action Name of the action to be invoked
+     * @param Array  $args   Arguments to be passed to the action method
+     */
     public function before_filter(&$action, &$args)
     {
         parent::before_filter($action, $args);
@@ -31,6 +38,7 @@ class Settings_PrivacyController extends Settings_SettingsController
     }
     
     /**
+     * Displays the privacy settings of a user.
      */
     public function index_action()
     {
@@ -59,7 +67,11 @@ class Settings_PrivacyController extends Settings_SettingsController
         $this->user_domains        = UserDomain::getUserDomains();
         $this->FOAF_ENABLE         = $GLOBALS['FOAF_ENABLE'];
     }
-    
+
+    /**
+     * Stores the privacy settings concerning the appearance of a user inside
+     * the system.
+     */
     public function global_action()
     {
         $this->check_ticket();
@@ -105,7 +117,11 @@ class Settings_PrivacyController extends Settings_SettingsController
 
         $this->redirect('settings/privacy');
     }
-    
+
+    /**
+     * Stores the privacy settings concerning the homepage / profile of a
+     * user.
+     */
     public function homepage_action()
     {
         $this->check_ticket();
@@ -126,6 +142,11 @@ class Settings_PrivacyController extends Settings_SettingsController
         $this->redirect('settings/privacy');
     }
     
+    /**
+     * Performs bulk actions on the privacy settings of a user. This can be
+     * either the setting of new default values or the changing of all privacy
+     * values at once.
+     */
     public function bulk_action()
     {
         $this->check_ticket();

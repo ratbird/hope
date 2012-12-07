@@ -1,6 +1,7 @@
 <?php
-/*
- * SettingsController - Controller for all setting related pages (formerly edit_about)
+/**
+ * SettingsController - Administration of all general user related
+ * settings
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -17,6 +18,12 @@ require_once 'settings.php';
 
 class Settings_GeneralController extends Settings_SettingsController
 {
+    /**
+     * Set up this controller.
+     *
+     * @param String $action Name of the action to be invoked
+     * @param Array  $args   Arguments to be passed to the action method
+     */
     public function before_filter(&$action, &$args)
     {
         parent::before_filter($action, $args);
@@ -28,12 +35,16 @@ class Settings_GeneralController extends Settings_SettingsController
     }
 
     /**
+     * Displays the general settings of a user.
      */
     public function index_action()
     {
         $this->user_language = $_SESSION['_language'] ?: $GLOBALS['DEFAULT_LANGUAGE'];
     }
 
+    /**
+     * Stores the general settings of a user.
+     */
     public function store_action()
     {
         $this->check_ticket();

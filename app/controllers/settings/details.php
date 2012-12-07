@@ -1,6 +1,6 @@
 <?php
-/*
- * SettingsController - Administration of all user profile related
+/**
+ * SettingsController - Administration of all user details related
  * settings
  *
  * This program is free software; you can redistribute it and/or
@@ -20,6 +20,12 @@ require_once 'settings.php';
  */
 class Settings_DetailsController extends Settings_SettingsController
 {
+    /**
+     * Set up this controller and define the infobox.
+     *
+     * @param String $action Name of the action to be invoked
+     * @param Array  $args   Arguments to be passed to the action method
+     */
     public function before_filter(&$action, &$args)
     {
         parent::before_filter($action, $args);
@@ -39,7 +45,7 @@ class Settings_DetailsController extends Settings_SettingsController
     }
 
     /**
-     *
+     * Display a user's details.
      */
     public function index_action()
     {
@@ -56,7 +62,7 @@ class Settings_DetailsController extends Settings_SettingsController
     }
 
     /**
-     *
+     * Stores a user's details.
      */
     public function store_action()
     {

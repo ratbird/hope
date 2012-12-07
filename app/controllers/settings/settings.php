@@ -1,6 +1,6 @@
 <?php
-/*
- * SettingsController
+/**
+ * SettingsController - Base controller for all setting related pages
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -18,10 +18,14 @@ require_once 'lib/messaging.inc.php';
 
 class Settings_SettingsController extends AuthenticatedController
 {
+    // Stores message which shall be send to the user via email
     protected $private_messages = array();
 
     /**
+     * Sets up the controller
      *
+     * @param String $action Which action shall be invoked
+     * @param Array $args Arguments passed to the action method
      */
     public function before_filter(&$action, &$args)
     {
@@ -32,6 +36,7 @@ class Settings_SettingsController extends AuthenticatedController
 
         parent::before_filter($action, $args);
 
+        // Ensure user is logged in
         $GLOBALS['auth']->login_if(($action !== 'logout') && ($GLOBALS['auth']->auth['uid'] === 'nobody'));
 
         // extract username
@@ -77,6 +82,7 @@ class Settings_SettingsController extends AuthenticatedController
 
         PageLayout::addSqueezePackage('settings');
 
+        // Show info message if user is not on his own profile
         if ($username != $GLOBALS['user']->username) {
             $message = sprintf(_('Daten von: %s %s (%s), Status: %s'),
                                htmlReady($this->user->Vorname),
@@ -90,7 +96,9 @@ class Settings_SettingsController extends AuthenticatedController
     }
 
     /**
+     * Generic ticket check
      *
+     * @throws AccessDeniedException if ticket is missing or invalid
      */
     protected function check_ticket()
     {
@@ -101,7 +109,7 @@ class Settings_SettingsController extends AuthenticatedController
     }
 
     /**
-     *
+     * Switch layout if an infobox is used
      */
     protected function populateInfobox()
     {
@@ -112,7 +120,13 @@ class Settings_SettingsController extends AuthenticatedController
     }
 
     /**
+     * Adjust url_for so it imitates the parameters behaviour of URLHelper.
+     * This way you can add parameters by adding an associative array as last
+     * argument.
      *
+     * @param mixed $to Path segments of the url (String) or url parameters
+     *                  (Array)
+     * @return String Generated url
      */
     public function url_for($to/*, ...*/)
     {
@@ -123,7 +137,10 @@ class Settings_SettingsController extends AuthenticatedController
     }
 
     /**
+     * Gets the default template for an action.
      *
+     * @param String $action Which action was invoked
+     * @return String File name of the template
      */
     public function get_default_template($action)
     {
@@ -135,7 +152,10 @@ class Settings_SettingsController extends AuthenticatedController
     }
 
     /**
-     * 
+     * Render nothing but with a layout
+     *
+     * @param String $text Optional nothing text
+     * @return String Rendered output
      */
     public function render_nothing($text = '')
     {
@@ -150,7 +170,15 @@ class Settings_SettingsController extends AuthenticatedController
     }
 
     /**
+     * Determines whether a user is permitted to change a certain value
+     * and if provided, whether the value has actually changed.
      *
+     * @param String $field Which db field shall change
+     * @param mixed $attribute Which attribute is related (optional,
+     *                         automatically guessedif missing)
+     * @param mixed $value Optional new value of the field (used to determine
+     *                     whether the value has actually changed)
+     * @return bool Indicates whether the value shall actually change
      */
     public function shallChange($field, $attribute = null, $value = null)
     {
@@ -174,7 +202,14 @@ class Settings_SettingsController extends AuthenticatedController
     }
 
     /**
+     * Generic verififcation dialog
      *
+     * @param String $message  Message to be displayed to the user
+     * @param mixed  $approved Arguments to pass to url_for if the user
+     *                         approves the question
+     * @param mixed  $rejected Arguments to pass to url_for if the user
+     *                         disapproves the question
+     * @return String Rendered output of the verification dialog.
      */
     public function verifyDialog($message, $approved, $rejected)
     {
@@ -193,7 +228,13 @@ class Settings_SettingsController extends AuthenticatedController
     }
 
     /**
+     * Enables methods like reportError, reportInfo or reportSuccess as
+     * a shortcut to post messages to the layout.
      *
+     * @param String $method    Name of the called method
+     * @param Array  $arguments Arguments passed to the method
+     * @return Object Returns $this to allow chaining
+     * @throws BadMethodCallException when an unhandled method was called
      */
     public function __call($method, $arguments)
     {
@@ -217,9 +258,12 @@ class Settings_SettingsController extends AuthenticatedController
     }
 
     /**
+     * Add to the private messages
      *
+     * @param String $message Message to store
+     * @return Object Returns $this to allow chaining
      */
-    protected function postPrivateMessage($message)
+    protected function postPrivateMessage($message/*, $args */)
     {
         $message = vsprintf($message, array_slice(func_get_args(), 1));
 
@@ -228,7 +272,12 @@ class Settings_SettingsController extends AuthenticatedController
     }
 
     /**
+     * The after filter handles the sending of private messages via email, if
+     * present. Also, if an action requires the user to be logged out, this is
+     * accomplished here.
      *
+     * @param String $action Name of the action that has been invoked
+     * @param Array  $args   Arguments of the action
      */
     public function after_filter($action, $args)
     {

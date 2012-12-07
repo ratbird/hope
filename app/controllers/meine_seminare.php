@@ -175,7 +175,7 @@ class MeineSeminareController extends AuthenticatedController
                             sprintf(_('Es befinden sich zur Zeit %s Veranstaltungen im Archiv.'), $count),
                             'icons/16/black/info.png');
         $this->addToInfobox(_('Aktionen:'),
-                            sprintf(_('Um Informationen über andere archivierte Veranstaltungen'
+                            sprintf(_('Um Informationen über andere archivierte Veranstaltungen '
                                      .'anzuzeigen nutzen Sie die %sSuche im Archiv%s.'),
                                     '<a href="' . URLHelper::getLink('archiv.php') . '">',
                                     '</a>'),

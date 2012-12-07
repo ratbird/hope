@@ -136,7 +136,7 @@
                 <? foreach ($shortDatafields as $name => $entry) : ?>
                     <strong><?= htmlReady($name) ?>:</strong>
                     <?= $entry['content'] ?>
-                    <span class="minor">(<?= $entry['visible'] ?>)</span>
+                    <span class="minor"><?= $entry['visible'] ?></span>
                     <br>
                 <? endforeach ?>
             <?endif?>

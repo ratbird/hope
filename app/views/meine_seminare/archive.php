@@ -16,13 +16,13 @@
     <thead>
         <tr>
             <th>
-                <a href="<?= URLHelper::getLink('?sortby=name') ?>">
+                <a href="<?= $controller->url_for('meine_seminare/archive?sortby=name') ?>">
                     <?= _('Name') ?>
                 </a>
             </th>
             <th style="text-align: center"><?= _('Inhalt') ?></th>
             <th style="text-align: center">
-                <a href="<?= URLHelper::getLink('?sortby=status') ?>">
+                <a href="<?= $controller->url_for('meine_seminare/archive?sortby=status') ?>">
                     <?= _('Status') ?>
                 </a>
             </th>
@@ -55,7 +55,6 @@
 
             <? if ($row['archiv_file_id']):
                   $filename = _('Dateisammlung') . '-' . substr($row['name'], 0, 200) . '.zip';
-                  
             ?>
                 <a href="<?= URLHelper::getLink(GetDownloadLink($row['archiv_file_id'], $filename, 1)) ?>">
                     <?= Assets::img('icons/16/blue/download', tooltip2(_('Dateisammlung der Veranstaltung herunterladen'))) ?>
@@ -66,7 +65,7 @@
             
             <? if ($row['wikidump']): ?>
                 <a href="<?= URLHelper::getLink('archiv.php?wiki_dump_id=' . $row['seminar_id']) ?>" target="_blank">
-                    <?= Assets::img('icons/16/grey/wiki', tooltip2(_('Beiträge des Wikis der Veranstaltung'))) ?>
+                    <?= Assets::img('icons/16/blue/wiki', tooltip2(_('Beiträge des Wikis der Veranstaltung'))) ?>
                 </a>
             <? else: ?>
                 <?= Assets::img('icons/16/grey/wiki', array('style' => 'visibility: hidden;')) ?>

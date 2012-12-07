@@ -64,7 +64,7 @@ class BrowseNavigation extends Navigation
                     $navigation->addSubNavigation('modules', new Navigation(_('Meine Studienmodule'), 'my_stm.php'));
                 }
 
-                $navigation->addSubNavigation('archive', new Navigation(_('Meine archivierten Veranstaltungen'), 'my_archiv.php'));
+                $navigation->addSubNavigation('archive', new Navigation(_('Meine archivierten Veranstaltungen'), 'dispatch.php/meine_seminare/archive'));
 
                 if (get_config('EXPORT_ENABLE')) {
                     $navigation->addSubNavigation('record_of_study', new Navigation(_('Druckansicht'), 'recordofstudy.php'));

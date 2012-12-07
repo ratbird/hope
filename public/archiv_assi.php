@@ -166,7 +166,7 @@ if (Request::option('archive_kill')) {
         // redirect non-admin users to overview page, since the course is gone now
         if (!$perm->have_perm('admin')) {
             $_SESSION['archive_message'] = $msg;
-            header('Location: ' . URLHelper::getURL('my_archiv.php'));
+            header('Location: ' . URLHelper::getURL('dispatch.php/meine_seminare/archive'));
             page_close();
             die();
         }

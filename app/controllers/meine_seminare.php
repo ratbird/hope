@@ -138,4 +138,53 @@ class MeineSeminareController extends AuthenticatedController
                             _('Die Darstellung unter <b>meine Veranstaltungen</b> wird entsprechend '
                              .'den Gruppen sortiert bzw. entsprechend der gewählten Kategorie gegliedert.'));
     }
+
+    /**
+     * Overview for achived courses
+     */
+    public function archive_action()
+    {
+        // Auch im Adminbereich gesetzte Veranstaltungen muessen geloescht werden.
+        $_SESSION['links_admin_data'] = ''; // TODO: Still neccessary?
+
+        PageLayout::setTitle(_('Meine archivierten Veranstaltungen'));
+        PageLayout::setHelpKeyword('Basis.MeinArchiv');
+        Navigation::activateItem('/browse/my_courses/archive');
+        SkipLinks::addIndex(_('Hauptinhalt'), 'layout_content', 100);
+
+        $sortby = Request::option('sortby', 'name');
+
+        $query = "SELECT semester, name, seminar_id, status, archiv_file_id,
+                         LENGTH(forumdump) > 0 AS forumdump, # Test for existence
+                         LENGTH(wikidump) > 0 AS wikidump    # Test for existence
+                  FROM archiv_user
+                  LEFT JOIN archiv USING (seminar_id)
+                  WHERE user_id = :user_id
+                  GROUP BY seminar_id
+                  ORDER BY start_time DESC, :sortby";
+        $statement = DBManager::get()->prepare($query);
+        $statement->bindValue(':user_id', $GLOBALS['user']->id);
+        $statement->bindValue(':sortby', $sortby, StudipPDO::PARAM_COLUMN);
+        $statement->execute();
+        $this->seminars = $statement->fetchAll(PDO::FETCH_GROUP | PDO::FETCH_ASSOC); // Groups by semester
+
+        $count = DBManager::get()->query("SELECT COUNT(*) FROM archiv")->fetchColumn();
+
+        $this->setInfoboxImage('infobox/archiv.jpg');
+        $this->addToInfobox(_('Information:'),
+                            sprintf(_('Es befinden sich zur Zeit %s Veranstaltungen im Archiv.'), $count),
+                            'icons/16/black/info.png');
+        $this->addToInfobox(_('Aktionen:'),
+                            sprintf(_('Um Informationen über andere archivierte Veranstaltungen'
+                                     .'anzuzeigen nutzen Sie die %sSuche im Archiv%s.'),
+                                    '<a href="' . URLHelper::getLink('archiv.php') . '">',
+                                    '</a>'),
+                            'icons/16/black/search.png');
+
+        // TODO: This should be removed as soon as archive_assi uses PageLayout::postMessage() 
+        if (isset($_SESSION['archive_message'])) {
+            $this->message = $_SESSION['archive_message'];
+            unset($_SESSION['archive_message']);
+        }
+    }
 }

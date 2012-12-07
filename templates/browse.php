@@ -145,7 +145,7 @@ $infobox = array(
             "eintrag" => array(
                 array(
                     "icon" => 'icons/16/black/crown.png',
-                    "text" => '<a href="'.URLHelper::getLink('score.php').'">'._("Zur Stud.IP-Rangliste").'</a>'
+                    "text" => '<a href="'.URLHelper::getLink('dispatch.php/score').'">'._("Zur Stud.IP-Rangliste").'</a>'
                 )
             )
         )

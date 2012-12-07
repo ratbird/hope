@@ -75,7 +75,7 @@ class CommunityNavigation extends Navigation
         }
 
         // ranking
-        $navigation = new Navigation(_('Rangliste'), 'score.php');
+        $navigation = new Navigation(_('Rangliste'), 'dispatch.php/score');
         $this->addSubNavigation('score', $navigation);
     }
 }

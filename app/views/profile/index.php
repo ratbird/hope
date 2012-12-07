@@ -11,7 +11,7 @@
             <br />
             <? if(!empty($score) && !empty($score_title)) :?>
                 <br />
-                <a href="<?=URLhelper::getLink("score.php")?>" <?=tooltip(_("Zur Rangliste"))?>><?=_("Stud.IP-Punkte:")?> <?=$score?><br>
+                <a href="<?=URLhelper::getLink("dispatch.php/score")?>" <?=tooltip(_("Zur Rangliste"))?>><?=_("Stud.IP-Punkte:")?> <?=$score?><br>
                     <?=_("Rang:")?> <?=$score_title?>
                 </a>
             <? endif?>

@@ -175,7 +175,7 @@ class StartNavigation extends Navigation
             $navigation->addSubNavigation('browse',new Navigation(_('Studiengruppen'), 'dispatch.php/studygroup/browse'));
         }
         // ranking
-        $navigation->addSubNavigation('score', new Navigation(_('Rangliste'), 'score.php'));
+        $navigation->addSubNavigation('score', new Navigation(_('Rangliste'), 'dispatch.php/score'));
         $this->addSubNavigation('community', $navigation);
 
         // calendar / home page

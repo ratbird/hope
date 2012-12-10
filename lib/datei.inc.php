@@ -1171,6 +1171,11 @@ function getUploadMetadata($range_id, $refresh = FALSE) {
 
 
 function JS_for_upload() {
+    if ($GLOBALS['i_page'] == "sms_send.php") {
+        $active_upload_type = "attachments";
+    } else {
+        $active_upload_type = $GLOBALS['SessSemName']["art_num"];
+    }
     //displays the templates for upload windows now
     //for upload code see application.js : STUDIP.OldUpload
     ?>
@@ -1189,10 +1194,10 @@ function JS_for_upload() {
     ?></div>
     <div id="upload_file_types" style="display: none;"><?=
         json_encode(
-            $GLOBALS['UPLOAD_TYPES'][$GLOBALS['SessSemName']["art_num"]]
+            $GLOBALS['UPLOAD_TYPES'][$active_upload_type]
             ? array(
-                'allow' => $GLOBALS['UPLOAD_TYPES'][$GLOBALS['SessSemName']["art_num"]]["type"] === "allow" ? 1 : 0,
-                'types' => $GLOBALS['UPLOAD_TYPES'][$GLOBALS['SessSemName']["art_num"]]["file_types"]
+                'allow' => $GLOBALS['UPLOAD_TYPES'][$active_upload_type]["type"] === "allow" ? 1 : 0,
+                'types' => $GLOBALS['UPLOAD_TYPES'][$active_upload_type]["file_types"]
             )
             : array(
                 'allow' => $GLOBALS['UPLOAD_TYPES']["default"]["type"] === "allow" ? 1 : 0,

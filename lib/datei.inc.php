@@ -320,13 +320,13 @@ function createTempFolder($folder_id, $tmp_full_path, $sem_id, $perm_check = TRU
 
     if ($perm_check){
         $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $sem_id));
-        
+
         $check_for = $perm_check === true ? $GLOBALS['user']->id : $perm_check;
         if (!$folder_tree->isDownloadFolder($folder_id, $check_for)) return false;
     }
     //copy all documents from this folder to the temporary folder
     $linkinfo = FALSE;
-    
+
     $query = "SELECT dokument_id, filename, url, author_name, filesize, name,
                      description, FROM_UNIXTIME(chdate) AS chdate
               FROM dokumente
@@ -1103,7 +1103,7 @@ function validate_upload($the_file, $real_file_name='') {
 
     if ($emsg) {
         $msg .= $emsg;
-        return true;
+        return false;
     } else {
         return true;
     }

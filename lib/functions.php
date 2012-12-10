@@ -1279,7 +1279,7 @@ function get_users_online_count($active_time = 5)
         require_once 'lib/migrations/db_schema_version.php';
         $version = new DBSchemaVersion('studip');
         if ($version->get() < 98) {
-            Log::ALERT('Seminar_User::set_last_action() failed. Check migration no. 98!');
+            Log::ALERT('get_users_online_count() failed. Check migration no. 98!');
         } else {
             throw $e;
         }

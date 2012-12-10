@@ -82,10 +82,7 @@ class ProfileNavigation extends Navigation
 
         parent::initSubNavigation();
 
-        $username = Request::get('username', $auth->auth['uname']);
-
-        // this really should not be here
-        $username = preg_replace('/[^\w@.-]/', '', $username);
+        $username = Request::username('username', $auth->auth['uname']);
 
         $my_about = new about($username, NULL);
         $my_about->get_user_details();

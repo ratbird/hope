@@ -566,7 +566,7 @@ class UserManagement
     }
 
 
-    private function logInstUserDel($user_id, $condition = NULL) 
+    private function logInstUserDel($user_id, $condition = NULL)
     {
         $query = "SELECT Institut_id FROM user_inst WHERE user_id = ?";
         if (isset($condition)) {
@@ -754,7 +754,7 @@ class UserManagement
 
             // delete empty folders of this user
             $temp_count = 0;
-            
+
             $query = "SELECT COUNT(*) FROM folder WHERE range_id = ?";
             $count_content = DBManager::get()->prepare($query);
 
@@ -901,7 +901,8 @@ class UserManagement
         DBManager::get()->prepare($query)->execute(array($this->user_data['auth_user_md5.user_id']));
         $query = "DELETE FROM user_visibility WHERE user_id = ?";
         DBManager::get()->prepare($query)->execute(array($this->user_data['auth_user_md5.user_id']));
-        $GLOBALS['user']->that->ac_delete($this->user_data['auth_user_md5.user_id'], $GLOBALS['user']->name);
+        $query = "DELETE FROM user_online WHERE user_id = ?";
+        DBManager::get()->prepare($query)->execute(array($this->user_data['auth_user_md5.user_id']));
         object_kill_visits($this->user_data['auth_user_md5.user_id']);
         object_kill_views($this->user_data['auth_user_md5.user_id']);
 
@@ -968,7 +969,7 @@ class UserManagement
         return TRUE;
 
     }
-    
+
     private function adminOK()
     {
         static $ok = null;

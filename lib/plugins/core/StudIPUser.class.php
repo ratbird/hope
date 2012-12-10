@@ -50,14 +50,14 @@ class StudIPUser
     {
         $this->userid = $id;
         $this->permission = new Permission ( $id );
-        $stmt = DBManager::get ()->prepare ( "SELECT Vorname, Nachname, username " . "FROM auth_user_md5 " . "WHERE user_id=?" );
-        $stmt->execute ( array ($id ) );
-        if (($row = $stmt->fetch ()) !== FALSE)
-        {
-            $this->givenname = $row ['Vorname'];
-            $this->surname = $row ['Nachname'];
-            $this->username = $row ['username'];
+        if ($GLOBALS['user']->id == $id) {
+            $user = $GLOBALS['user'];
+        } else {
+            $user = User::find($id);
         }
+        $this->givenname = $user->vorname;
+        $this->surname = $user->nachname;
+        $this->username = $user->username;
     }
 
     /**

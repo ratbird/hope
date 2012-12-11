@@ -519,21 +519,15 @@ class Seminar_Auth extends Auth {
 
         $cfg = Config::GetInstance();
         //check if the user got kicked meanwhile, or if user is locked out
-        if ($this->auth['uid'] && !in_array($this->auth['uid'], array('form','nobody'))){
-            $this->db->query(sprintf("select username,perms,locked from %s where user_id = '%s'", $this->database_table, $this->auth['uid']));
-            $this->db->next_record();
-            if (!$this->db->f('username') || $this->db->f('locked')){
+        if ($this->auth['uid'] && !in_array($this->auth['uid'], array('form','nobody'))) {
+            $user = $GLOBALS['user']->id == $this->auth['uid'] ? $GLOBALS['user'] : User::find($this->auth['uid']);
+            if (!$user->username || $user->locked) {
                 $this->unauth();
-            } else {
-                $actual_perms = $this->db->f('perms');
             }
-        } elseif ($cfg->getValue('MAINTENANCE_MODE_ENABLE') && Request::quoted('loginname')) {
-            $this->db->query(sprintf("select username,perms from %s where username = '%s' AND perms='root'", $this->database_table, Request::quoted('loginname')));
-            $this->db->next_record();
-            $this->auth["uname"] = $this->db->f('username');
-            $actual_perms = $this->db->f('perms');
+        } elseif ($cfg->getValue('MAINTENANCE_MODE_ENABLE') && Request::username('loginname')) {
+            $user = User::findByUsername(Request::username('loginname'));
         }
-        if ($cfg->getValue('MAINTENANCE_MODE_ENABLE') && $actual_perms != 'root'){
+        if ($cfg->getValue('MAINTENANCE_MODE_ENABLE') && $user->perms != 'root') {
             $this->unauth();
             throw new AccessDeniedException(_("Das System befindet sich im Wartungsmodus. Zur Zeit ist kein Zugriff möglich."));
         }
@@ -548,13 +542,12 @@ class Seminar_Auth extends Auth {
                 $authplugin->authenticateUser("","","");
                 if ($authplugin->getUser()){
                     $uid = $authplugin->getStudipUserid($authplugin->getUser());
-                    $this->db->query(sprintf("select username,perms,auth_plugin from %s where user_id = '%s'",$this->database_table,$uid));
-                    $this->db->next_record();
+                    $user = User::find($uid);
                     $this->auth["jscript"] = true;
-                    $this->auth["perm"]  = $this->db->f("perms");
-                    $this->auth["uname"] = $this->db->f("username");
-                    $this->auth["auth_plugin"]  = $this->db->f("auth_plugin");
-                    $this->auth_set_user_settings($uid);
+                    $this->auth["perm"]  = $user->perms;
+                    $this->auth["uname"] = $user->username;
+                    $this->auth["auth_plugin"]  = $user->auth_plugin;
+                    $this->auth_set_user_settings($user);
                     return $uid;
                 }
             } else {
@@ -575,6 +568,7 @@ class Seminar_Auth extends Auth {
         if($GLOBALS['user']->id !== 'nobody') {
             $GLOBALS['user'] = new Seminar_User('nobody');
             $GLOBALS['perm'] = new Seminar_Perm();
+            $GLOBALS['auth'] = $this;
         }
 
         if (!($_SESSION['_language'])) {
@@ -589,7 +583,7 @@ class Seminar_Auth extends Auth {
         // load the default set of plugins
         PluginEngine::loadPlugins();
 
-        if (Request::quoted('loginname') && !$_COOKIE[$GLOBALS['sess']->name]){
+        if (Request::get('loginname') && !$_COOKIE[$GLOBALS['sess']->name]) {
             $login_template = $GLOBALS['template_factory']->open('nocookies');
         } else if (isset($this->need_email_activation)) {
             $login_template = $GLOBALS['template_factory']->open('login_emailactivation');
@@ -599,7 +593,7 @@ class Seminar_Auth extends Auth {
             $login_template = $GLOBALS['template_factory']->open('loginform');
             $login_template->set_attribute('loginerror', (isset($this->auth["uname"]) && $this->error_msg));
             $login_template->set_attribute('error_msg', $this->error_msg);
-            $login_template->set_attribute('uname', (isset($this->auth["uname"]) ? $this->auth["uname"] : ''));
+            $login_template->set_attribute('uname', (isset($this->auth["uname"]) ? $this->auth["uname"] : Request::username('loginname')));
             $login_template->set_attribute('self_registration_activated', $GLOBALS['ENABLE_SELF_REGISTRATION']);
         }
         PageLayout::setHelpKeyword('Basis.AnmeldungLogin');
@@ -638,17 +632,16 @@ class Seminar_Auth extends Auth {
 
         if ($check_auth['uid']) {
             $uid = $check_auth['uid'];
-            $this->db->query(sprintf("select * from %s where user_id = '%s'",$this->database_table,$uid));
-            $this->db->next_record();
-            if($check_auth['need_email_activation'] == $uid){
+            if ($check_auth['need_email_activation'] == $uid) {
                 $this->need_email_activation = $uid;
                 $_SESSION['semi_logged_in'] = $uid;
                 return false;
             }
-            $this->auth["perm"]  = $this->db->f("perms");
-            $this->auth["uname"] = $this->db->f("username");
-            $this->auth["auth_plugin"]  = $this->db->f("auth_plugin");
-            $this->auth_set_user_settings($uid);
+            $user = User::find($uid);
+            $this->auth["perm"]  = $user->perms;
+            $this->auth["uname"] = $user->username;
+            $this->auth["auth_plugin"]  = $user->auth_plugin;
+            $this->auth_set_user_settings($user);
             return $uid;
         } else {
             $this->error_msg = $check_auth['error'];
@@ -656,21 +649,19 @@ class Seminar_Auth extends Auth {
         }
     }
 
-    function auth_set_user_settings($uid){
-        $divided = explode("x",Request::get('resolution'));
+    function auth_set_user_settings($user) {
+        $divided = explode("x", Request::get('resolution'));
         $this->auth["xres"] = ($divided[0] != 0) ? (int)$divided[0] : 1024; //default
         $this->auth["yres"] = ($divided[1] != 0) ? (int)$divided[1] : 768; //default
         // Change X-Resulotion on Multi-Screen Systems (as Matrox Graphic-Adapters are)
         if (($this ->auth["xres"] / $this ->auth["yres"]) > 2){
             $this->auth["xres"] = $this->auth["xres"] /2;
         }
+        $user = User::toObject($user);
         //restore user-specific language preference
-        $db = new DB_Seminar("SELECT preferred_language FROM user_info WHERE user_id='$uid'");
-        if ($db->next_record()) {
-            if ($db->f("preferred_language")) {
-                // we found a stored setting for preferred language
-                $_SESSION['_language'] = $db->f("preferred_language");
-            }
+        if ($user->preferred_language) {
+            // we found a stored setting for preferred language
+            $_SESSION['_language'] = $user->preferred_language;
         }
     }
 }
@@ -712,13 +703,13 @@ class Seminar_Register_Auth extends Seminar_Auth {
             $register_template = $GLOBALS['template_factory']->open('registerform');
             $register_template->set_attribute('validator',  new email_validation_class());
             $register_template->set_attribute('error_msg', $this->error_msg);
-            $register_template->set_attribute('username', Request::quoted('username'));
-            $register_template->set_attribute('Vorname', Request::quoted('Vorname'));
-            $register_template->set_attribute('Nachname', Request::quoted('Nachname'));
-            $register_template->set_attribute('Email', Request::quoted('Email'));
-            $register_template->set_attribute('title_front', Request::quoted('title_front'));
-            $register_template->set_attribute('title_rear', Request::quoted('title_rear'));
-            $register_template->set_attribute('geschlecht', Request::quoted('geschlecht'));
+            $register_template->set_attribute('username', Request::get('username'));
+            $register_template->set_attribute('Vorname', Request::get('Vorname'));
+            $register_template->set_attribute('Nachname', Request::get('Nachname'));
+            $register_template->set_attribute('Email', Request::get('Email'));
+            $register_template->set_attribute('title_front', Request::get('title_front'));
+            $register_template->set_attribute('title_rear', Request::get('title_rear'));
+            $register_template->set_attribute('geschlecht', Request::int('geschlecht', 0));
         }
         PageLayout::setHelpKeyword('Basis.AnmeldungRegistrierung');
         $header_template = $GLOBALS['template_factory']->open('header');
@@ -731,8 +722,6 @@ class Seminar_Register_Auth extends Seminar_Auth {
     }
 
     function auth_doregister() {
-        global $title_front_chooser,$title_rear_chooser, $DEFAULT_LANGUAGE;
-
         global $_language_path;
 
         $this->error_msg = "";
@@ -744,7 +733,7 @@ class Seminar_Register_Auth extends Seminar_Auth {
 
         $_language_path = init_i18n($_SESSION['_language']);
 
-        $this->auth["uname"]=Request::quoted('username');                 // This provides access for "crcregister.ihtml"
+        $this->auth["uname"] = Request::username('username');                 // This provides access for "crcregister.ihtml"
 
         $validator=new email_validation_class;  // Klasse zum Ueberpruefen der Eingaben
         $validator->timeout=10;                                 // Wie lange warten wir auf eine Antwort des Mailservers?
@@ -753,17 +742,17 @@ class Seminar_Register_Auth extends Seminar_Auth {
             return false;
         }
 
-        $username = trim(Request::quoted('username'));
-        $Vorname = trim(Request::quoted('Vorname'));
-        $Nachname = trim(Request::quoted('Nachname'));
+        $username = trim(Request::get('username'));
+        $Vorname = trim(Request::get('Vorname'));
+        $Nachname = trim(Request::get('Nachname'));
 
         // accept only registered domains if set
         $cfg = Config::GetInstance();
         $email_restriction = $cfg->getValue('EMAIL_DOMAIN_RESTRICTION');
         if ($email_restriction) {
-            $Email = trim(Request::quoted('Email')) . '@' . trim(Request::quoted('emaildomain'));
+            $Email = trim(Request::get('Email')) . '@' . trim(Request::get('emaildomain'));
         } else {
-            $Email = trim(Request::quoted('Email'));
+            $Email = trim(Request::get('Email'));
         }
 
         if (!$validator->ValidateUsername($username))
@@ -819,52 +808,39 @@ class Seminar_Register_Auth extends Seminar_Auth {
             return false;                  // username schon vorhanden
         }
 
-        $this->db->query(sprintf("select user_id ".
-        "from %s where Email = '%s'",
-        $this->database_table,
-        addslashes($Email)));
-
-        while($this->db->next_record()) {
-            //error_log("E-Mail schon vorhanden", 0);
+        if (count(User::findBySQL("Email LIKE " . DbManager::get()->quote($Email)))) {
             $this->error_msg=$this->error_msg. _("Die angegebene E-Mail-Adresse wird bereits von einem anderen Benutzer verwendet. Sie müssen eine andere E-Mail-Adresse angeben!") . "<br>";
             return false;                  // Email schon vorhanden
         }
 
         // alle Checks ok, Benutzer registrieren...
-        $newpass = md5(Request::quoted('password'));
-        $uid = md5(uniqid($this->magic));
-        $perm = "user";
-        $this->db->query(sprintf("insert into %s (user_id, username, perms, password, Vorname, Nachname, Email) ".
-        "values ('%s', '%s', '%s', '%s', '%s', '%s', '%s')",
-        $this->database_table, $uid, addslashes($username), $perm, $newpass,
-        addslashes($Vorname), addslashes($Nachname), addslashes($Email)));
-        $this->auth["perm"] = $perm;
-
-        $geschlecht = Request::int('geschlecht');
-        $title_front = Request::quoted('title_front');
-        $title_rear = Request::quoted('title_rear');
-        if($title_front == "")
-            $title_front = $title_front_chooser;
-
-        if($title_rear == "")
-            $title_rear = $title_rear_chooser;
-
-        // Anlegen eines korespondierenden Eintrags in der user_info
-        $this->db->query("INSERT INTO user_info SET user_id='$uid', mkdate='".time()."', geschlecht='$geschlecht', title_front='$title_front', title_rear='$title_rear'");
-
-        // Abschicken der Bestaetigungsmail
-        $to = $Email;
-        $secret= md5("$uid:$this->magic");
-        $url = $GLOBALS['ABSOLUTE_URI_STUDIP'] . "email_validation.php?secret=" . $secret;
-        $mail = new StudipMail();
-        $abuse = $mail->getReplyToEmail();
-        // include language-specific subject and mailbody
-        include_once("locale/$_language_path/LC_MAILS/register_mail.inc.php");
-        $mail->setSubject($subject)
+        $new_user = new User();
+        $new_user->username = $username;
+        $new_user->perms = 'user';
+        $new_user->password = md5(Request::get('password'));
+        $new_user->vorname = $Vorname;
+        $new_user->nachname = $Nachname;
+        $new_user->email = $Email;
+        $new_user->geschlecht = Request::int('geschlecht');
+        $new_user->title_front = trim(Request::get('title_front', Request::get('title_front_chooser')));
+        $new_user->title_rear = trim(Request::get('title_rear', Request::get('title_rear_chooser')));
+        $new_user->store();
+        if ($new_user->user_id) {
+            // Abschicken der Bestaetigungsmail
+            $to = $Email;
+            $secret= md5("$new_user->user_id:$this->magic");
+            $url = $GLOBALS['ABSOLUTE_URI_STUDIP'] . "email_validation.php?secret=" . $secret;
+            $mail = new StudipMail();
+            $abuse = $mail->getReplyToEmail();
+            // include language-specific subject and mailbody
+            include_once("locale/$_language_path/LC_MAILS/register_mail.inc.php");
+            $mail->setSubject($subject)
             ->addRecipient($to)
             ->setBodyText($mailbody)
             ->send();
-        return $uid;
+            $this->auth["perm"] = $new_user->perms;
+            return $new_user->user_id;
+        }
     }
 }
 
@@ -893,20 +869,17 @@ class Seminar_Perm extends Perm {
         throw new AccessDeniedException($message);
     }
 
-    function get_perm($user_id = false){
-        global $auth,$user;
+    function get_perm($user_id = false) {
+        global $user;
         if (!$user_id) $user_id = $user->id;
-        if ($user_id && $user_id == $auth->auth['uid']){
-            return $auth->auth['perm'];
-        } else if ($user_id && $this->studip_perms['studip'][$user_id]){
+        if ($user_id && $user_id == $user->id) {
+            return $user->perms;
+        } else if ($user_id && isset($this->studip_perms['studip'][$user_id])) {
             return $this->studip_perms['studip'][$user_id];
         } else if ($user_id && $user_id !== 'nobody') {
-            $db = new DB_Seminar("SELECT perms FROM auth_user_md5 WHERE user_id = '$user_id'");
-            if (!$db->next_record()){
-                return false;
-            } else {
-                return $this->studip_perms['studip'][$user_id] = $db->f(0);
-            }
+            $db = DbManager::get();
+            $perms = $db->query("SELECT perms FROM auth_user_md5 WHERE user_id = " . $db->quote($user_id))->fetchColumn();
+            return $this->studip_perms['studip'][$user_id] = $perms;
         }
     }
 
@@ -940,34 +913,43 @@ class Seminar_Perm extends Perm {
     }
 
     function get_uncached_studip_perm($range_id, $user_id) {
-        global $auth, $user;
-        $db = new DB_Seminar;
+        global $user;
+        $db = DBManager::get();
         $status = false;
-        if ($user_id && $user_id == $auth->auth['uid']){
-            $user_perm = $auth->auth["perm"];
+        if ($user_id && $user_id == $user->id) {
+            $user_perm = $user->perms;
         } else {
             $user_perm = $this->get_perm($user_id);
-            if (!$user_perm){
+            if (!$user_perm) {
                 return false;
             }
         }
         if ($user_perm == "root") {
             return "root";
         } elseif ($user_perm == "admin") {
-            $db->query("SELECT seminare.Seminar_id FROM user_inst
-                        LEFT JOIN seminare USING (Institut_id)
-                        WHERE inst_perms='admin' AND user_id='$user_id' AND seminare.Seminar_id='$range_id'");
-            if ($db->num_rows()) {
+            $st = $db->prepare("SELECT seminare.Seminar_id
+                          FROM user_inst
+                          LEFT JOIN seminare USING (Institut_id)
+                          WHERE inst_perms='admin' AND user_id = ? AND seminare.Seminar_id = ? LIMIT 1");
+            $st->execute(array($user_id, $range_id));
+            if ($st->fetchColumn()) {
                 $status = "admin";
             } else {
-                $db->query("SELECT Seminar_id FROM user_inst a LEFT JOIN Institute b ON(a.Institut_id=b.Institut_id AND b.Institut_id=b.fakultaets_id)
-                            LEFT JOIN Institute c ON (b.Institut_id=c.fakultaets_id) LEFT JOIN seminare d ON (d.Institut_id=c.Institut_id) WHERE a.user_id='$user_id' AND a.inst_perms='admin' AND d.Seminar_id='$range_id'");
-                if ($db->num_rows()) {
+               $st = $db->prepare("SELECT Seminar_id FROM user_inst a
+                            LEFT JOIN Institute b ON(a.Institut_id=b.Institut_id AND b.Institut_id=b.fakultaets_id)
+                            LEFT JOIN Institute c ON (b.Institut_id=c.fakultaets_id)
+                            LEFT JOIN seminare d ON (d.Institut_id=c.Institut_id)
+                            WHERE a.user_id = ? AND a.inst_perms='admin' AND d.Seminar_id = ? LIMIT 1");
+               $st->execute(array($user_id, $range_id));
+                if ($st->fetchColumn()) {
                     $status = "admin";
                 } else {
-                    $db->query("SELECT a.Institut_id FROM user_inst a LEFT JOIN Institute b ON(a.Institut_id=b.fakultaets_id) WHERE user_id='$user_id' AND a.inst_perms='admin'
-                                AND b.Institut_id='$range_id'");
-                    if ($db->num_rows()) {
+                    $st = $db->prepare("SELECT a.Institut_id FROM user_inst a
+                                LEFT JOIN Institute b ON(a.Institut_id=b.fakultaets_id)
+                                WHERE user_id = ? AND a.inst_perms='admin'
+                                AND b.Institut_id = ? LIMIT 1");
+                    $st->execute(array($user_id, $range_id));
+                    if ($st->fetchColumn()) {
                         $status = "admin";
                     }
                 }
@@ -985,18 +967,18 @@ class Seminar_Perm extends Perm {
                 $status = 'dozent';
             }
         } else {
-            $db->query("SELECT status FROM seminar_user WHERE user_id='$user_id' AND Seminar_id='$range_id'");
-            if ($db->next_record()){
-                $status=$db->f("status");
+            $st = $db->prepare("SELECT status FROM seminar_user
+                          WHERE user_id = ? AND Seminar_id = ?");
+            $st->execute(array($user_id, $range_id));
+            if ($status = $st->fetchColumn()) {
                 if (in_array($status, words('dozent tutor')) && isset($_SESSION['seminar_change_view_'.$range_id])) {
                     $status = $_SESSION['seminar_change_view_'.$range_id];
                 }
             } else {
-
-                $db->query("SELECT inst_perms FROM user_inst WHERE user_id='$user_id' AND Institut_id='$range_id'");
-                if ($db->next_record()){
-                    $status=$db->f("inst_perms");
-                }
+                $st = $db->prepare("SELECT inst_perms FROM user_inst
+                              WHERE user_id = ? AND Institut_id = ?");
+                $st->execute(array($user_id, $range_id));
+                $status = $st->fetchColumn();
             }
         }
         return $status;
@@ -1099,19 +1081,33 @@ class Seminar_Perm extends Perm {
         if ($user_perm != "admin"){
             return false;
         }
-        if (isset($this->fak_admins[$user_id])){
+        if (isset($this->fak_admins[$user_id])) {
             return $this->fak_admins[$user_id];
         } else {
-            $db = new DB_Seminar("SELECT a.Institut_id FROM user_inst a LEFT JOIN Institute b ON(a.Institut_id=b.Institut_id AND b.Institut_id=b.fakultaets_id)
-                                    WHERE a.user_id='$user_id' AND a.inst_perms='admin' AND NOT ISNULL(b.Institut_id)");
-            if ($db->next_record()){
-                $this->fak_admins[$user_id] = true;
-                return true;
-            } else {
-                $this->fak_admins[$user_id] = false;
-                return false;
-            }
+            $db = DBManager::get();
+            $st = $db->prepare("SELECT a.Institut_id FROM user_inst a
+                          LEFT JOIN Institute b ON(a.Institut_id=b.Institut_id AND b.Institut_id=b.fakultaets_id)
+                          WHERE a.user_id = ? AND a.inst_perms='admin' AND NOT ISNULL(b.Institut_id) LIMIT 1");
+            $st->execute(array($user_id));
+            return $this->fak_admins[$user_id] = (bool)$st->fetchColumn();
         }
+    }
+
+    function is_staff_member($user_id = false) {
+        global $user;
+        if (!$user_id) $user_id = $user->id;
+        $user_perm = $this->get_perm($user_id);
+        if ($user_perm == "root") {
+            return true;
+        }
+        if (!$this->have_perm('autor', $user_id)) {
+            return false;
+        }
+        $db = DBManager::get();
+        $st = $db->prepare("SELECT 1 FROM user_inst
+                            WHERE user_id = ? AND inst_perms <> 'user' LIMIT 1");
+        $st->execute(array($user_id));
+        return (bool)$st->fetchColumn();
     }
 }
 

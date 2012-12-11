@@ -102,7 +102,6 @@ function checkdata(){
 }
 // -->
 </SCRIPT>
-<div class="index_container" style="width: 750px;">
 
 <?if (isset($username)): ?>
     <?= MessageBox::error(_("Bei der Registrierung ist ein Fehler aufgetreten!"), array($error_msg, _("Bitte korrigieren Sie Ihre Eingaben und versuchen Sie es erneut"))) ?>
@@ -185,9 +184,10 @@ function checkdata(){
 <tr valign=top align=left>
   <td colspan="2"><?=_("E-Mail:")?></td>
     <?
-    echo '<td nowrap="nowrap"><input type="email" name="Email" onchange="checkEmail()"  value="';
+    echo '<td nowrap="nowrap">';
     if (trim($email_restriction)) {
-        echo (isset($Email) ? preg_replace('|@.*|', '', trim($Email)) : '' );
+        echo '<input name="Email" onchange="checkEmail()"  value="';
+        echo htmlReady(isset($Email) ? preg_replace('|@.*|', '', trim($Email)) : '' );
         echo "\" size=20 maxlength=63>\n";
         $email_restriction_parts = explode(',', $email_restriction);
         echo '&nbsp;<select name="emaildomain">';
@@ -200,7 +200,8 @@ function checkdata(){
         }
         echo '</select>';
     } else {
-        echo (isset($Email) ? trim($Email) : '' ) ."\" size=32 maxlength=63>\n" ; 
+        echo '<input type="email" name="Email" onchange="checkEmail()"  value="';
+        echo htmlReady(isset($Email) ? trim($Email) : '' ) ."\" size=32 maxlength=63>\n" ;
     }
     ?>
     </td>
@@ -217,11 +218,9 @@ function checkdata(){
 
 <input type="hidden" name="login_ticket" value="<?=Seminar_Session::get_ticket();?>">
 </form>
-
         </td>
     </tr>
 </table>
-</div>
 
 <script language="JavaScript">
 <!--

@@ -78,20 +78,18 @@ class ProfileNavigation extends Navigation
      */
     public function initSubNavigation()
     {
-        global $auth, $perm;
+        global $user, $perm;
 
         parent::initSubNavigation();
 
-        $username = Request::username('username', $auth->auth['uname']);
-
-        $my_about = new about($username, NULL);
-        $my_about->get_user_details();
+        $username = Request::username('username', $user->username);
+        $current_user = $username == $user->username ? $user : User::findByUsername($username);
 
         // profile
         $navigation = new Navigation(_('Profil'), 'dispatch.php/profile/index');
         $this->addSubNavigation('index', $navigation);
 
-        if ($perm->have_profile_perm('user', $my_about->auth_user['user_id'])) {
+        if ($perm->have_profile_perm('user', $current_user->user_id)) {
             // avatar
             $navigation = new Navigation(_('Bild'), 'dispatch.php/settings/avatar');
             $this->addSubNavigation('avatar', $navigation);
@@ -99,21 +97,23 @@ class ProfileNavigation extends Navigation
             // profile data
             $navigation = new Navigation(_('Nutzerdaten'));
             $navigation->addSubNavigation('profile', new Navigation(_('Grunddaten'), 'dispatch.php/settings/account'));
-            if ($my_about->check == 'user' && !LockRules::check($my_about->auth_user['user_id'], 'password')) {
+            if (($perm->get_profile_perm($current_user->user_id) == 'user'
+                || ($perm->have_perm('root') && Config::get()->ALLOW_ADMIN_USERACCESS))
+                && !LockRules::check($current_user->user_id, 'password')) {
                 $navigation->addSubNavigation('password', new Navigation(_('Passwort ändern'), 'dispatch.php/settings/password'));
             }
             $navigation->addSubNavigation('details', new Navigation(_('Weitere Daten'), 'dispatch.php/settings/details'));
 
-            if ($my_about->auth_user['perms'] != 'admin' && $my_about->auth_user['perms'] != 'root') {
+            if ($current_user->perms != 'admin' && $current_user->perms != 'root') {
                 $navigation->addSubNavigation('studies', new Navigation(_('Studiendaten'), 'dispatch.php/settings/studies'));
             }
 
-            if ($my_about->auth_user['perms'] != 'root') {
+            if ($current_user->perms != 'root') {
                 if (count(UserDomain::getUserDomains())) {
                     $navigation->addSubNavigation('userdomains', new Navigation(_('Nutzerdomänen'), 'dispatch.php/settings/userdomains'));
                 }
 
-                if ($my_about->special_user) {
+                if ($perm->is_staff_member($current_user->user_id)) {
                     $navigation->addSubNavigation('statusgruppen', new Navigation(_('Einrichtungsdaten'), 'dispatch.php/settings/statusgruppen'));
                 }
             }

@@ -20,7 +20,7 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @access      public
- * @package     studip_core
+ * @package     studip_cores
  * @modulegroup library
  * @module      functions.php
  */
@@ -1509,7 +1509,7 @@ function search_range($search_str = false, $search_user = false, $show_sem = tru
             );
         }
 
-        $query = "SELECT Institut_id, b.Name AS name,
+        $query = "SELECT Institut_id, b.Name,
                          IF (Institut_id = fakultaets_id, 'fak', 'inst') AS type
                   FROM user_inst AS a
                   LEFT JOIN Institute AS b USING (Institut_id)

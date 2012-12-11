@@ -28,8 +28,6 @@ class Settings_CategoriesController extends Settings_SettingsController
     {
         parent::before_filter($action, $args);
 
-        require_once 'app/models/kategorie.php';
-
         Navigation::activateItem('/profile/categories');
         PageLayout::setHelpKeyword('Basis.HomepageSonstiges');
         PageLayout::setTitle(_('Eigene Kategorien bearbeiten'));

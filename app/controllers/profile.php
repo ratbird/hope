@@ -17,7 +17,6 @@ global $RELATIVE_PATH_CALENDAR;
 
 require_once 'app/controllers/authenticated_controller.php';
 require_once 'app/models/user.php';
-require_once 'app/models/kategorie.php';
 require_once 'app/models/profile.php';
 
 require_once 'lib/messaging.inc.php';
@@ -31,7 +30,6 @@ require_once 'lib/dates.inc.php';
 require_once 'lib/classes/score.class.php';
 require_once 'lib/classes/StudipLitList.class.php';
 require_once 'lib/classes/Avatar.class.php';
-require_once 'lib/classes/Institute.class.php';
 require_once 'lib/classes/DataFieldEntry.class.php';
 require_once 'lib/classes/StudipKing.class.php';
 

@@ -29,9 +29,9 @@ require 'lib/phplib/perm.inc';
 
 require 'lib/phplib/email_validation.inc';
 require 'config_local.inc.php';
-require_once 'lib/phplib_local.inc.php';
-
-require_once 'lib/classes/CSRFProtection.php';
+require 'lib/models/SimpleORMap.class.php';
+SimpleORMap::registerAutoloadPath($STUDIP_BASE_PATH . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'models');
+require 'lib/phplib_local.inc.php';
+require 'lib/classes/CSRFProtection.php';
 require 'lib/phplib/page4.inc';
-require_once 'lib/classes/SkipLinks.php';
-require_once 'lib/classes/PersonalNotifications.class.php';
+

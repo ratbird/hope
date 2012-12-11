@@ -15,22 +15,13 @@
 
 class Kategorie extends SimpleORMap
 {
-    protected $db_table = 'kategorien';
-
-    /**
-     *
-     */
-    public static function find($id)
-    {
-        return SimpleORMap::find(__CLASS__, $id);
-    }
 
     /**
      *
      */
     public static function findByUserId($user_id)
     {
-        return self::findBySql(__CLASS__, 'range_id = ' . DBManager::get()->quote($user_id));
+        return self::findByRange_id($user_id);
     }
 
     /**
@@ -45,13 +36,13 @@ class Kategorie extends SimpleORMap
     }
 
     /**
-     * 
+     *
+     * @param string $id primary key of table
      */
-    public function getValue($field)
+    function __construct($id = null)
     {
-        if ($field === 'id') {
-            $field = 'kategorie_id';
-        }
-        return parent::getValue($field);
+        $this->db_table = 'kategorien';
+        $this->default_values['content'] = '';
+        parent::__construct($id);
     }
 }

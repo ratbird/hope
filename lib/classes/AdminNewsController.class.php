@@ -549,7 +549,7 @@ class AdminNewsController {
 
     function list_range_details($type) {
         global $perm, $_fullname_sql;
-        
+
         $ranges = array();
 
         switch ($type) {

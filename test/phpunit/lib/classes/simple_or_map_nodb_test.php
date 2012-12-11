@@ -13,7 +13,7 @@
  */
 
 require_once dirname(__FILE__) . '/../../bootstrap.php';
-require_once 'lib/classes/SimpleORMap.class.php';
+require_once 'lib/models/SimpleORMap.class.php';
 require_once 'lib/classes/Config.class.php';
 require_once 'lib/classes/StudipCache.class.php';
 
@@ -53,10 +53,9 @@ class SimpleOrMapNodbTest extends PHPUnit_Framework_TestCase
             foreach ($result as $rs) {
                 $db_fields[strtolower($rs['Field'])] = array(
                                                             'name' => $rs['Field'],
-                                                            'type' => $rs['Type'],
-                                                            'key'  => $rs['Key'],
                                                             'null' => $rs['Null'],
-                                                            'default' => $rs['Default']
+                                                            'default' => $rs['Default'],
+                                                            'extra' => $rs['Extra']
                 );
                 if ($rs['Key'] == 'PRI'){
                     $pk[] = strtolower($rs['Field']);

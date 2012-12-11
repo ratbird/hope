@@ -153,20 +153,4 @@ class PersonalNotifications extends SimpleORMap {
         $this->default_values['text'] = '';
         parent::__construct($id);
     }
-    
-    function getNewId()
-    {
-        return 0;
-    }
-    
-    function store()
-    {
-        $is_new = $this->isNew();
-        $ret = parent::store();
-        if ($is_new) {
-            $this->setId(DBManager::get()->query("SELECT LAST_INSERT_ID()")->fetchColumn());
-            $this->restore();
-        }
-        return $ret;
-    }
 }

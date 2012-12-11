@@ -15,9 +15,6 @@
  * @category    Stud.IP
 */
 
-require_once 'SimpleORMap.class.php';
-require_once 'ConfigEntry.class.php';
-
 class Config implements ArrayAccess, Countable, IteratorAggregate
 {
 

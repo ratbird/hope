@@ -17,15 +17,6 @@
 
 class Banner extends SimpleORMap
 {
-    protected $db_table = 'banner_ads';
-
-    /**
-     *
-     */
-    public static function find($id)
-    {
-        return SimpleORMap::find(__CLASS__, $id);
-    }
 
     /**
      * Returns a random banner
@@ -85,6 +76,12 @@ class Banner extends SimpleORMap
             $banners[$id] = new Banner($id);
         }
         return $banners;
+    }
+
+    function __construct($id = null)
+    {
+        $this->db_table = 'banner_ads';
+        parent::__construct($id);
     }
 
     /**

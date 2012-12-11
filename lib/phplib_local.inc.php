@@ -497,8 +497,6 @@ class Seminar_Auth extends Auth {
     var $lifetime       =  0;
 
     var $magic    = "Fdfglkdfsg";  // Challenge seed
-    var $database_class = "DB_Seminar";
-    var $database_table = "auth_user_md5";
     var $error_msg = "";
 
     //constructor

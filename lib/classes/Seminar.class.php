@@ -298,7 +298,7 @@ class Seminar
             }
 
             $ret['regular']['turnus_data'] = $cycles;
-            
+
             // the irregular single-dates
             foreach ($dates as $val) {
                 $zw = array(
@@ -1166,7 +1166,7 @@ class Seminar
                 $message = true;
                 $do_changes = true;
             }
-        
+
             $change_from = $cycle->toString();
             if ($this->metadate->editCycle($data)) {
                 if (!$same_time) {
@@ -1174,14 +1174,14 @@ class Seminar
                     log_event("SEM_CHANGE_CYCLE", $this->getId(), NULL, $change_from .' -> '. $cycle->toString());
                     NotificationCenter::postNotification("CourseDidChangeSchedule", $this);
                     // logging <<<<<<
-                    $this->createMessage(sprintf(_("Die regelmäßige Veranstaltungszeit wurde auf \"%s\" für alle in der Zukunft liegenden Termine geändert!"), 
-                        '<b>'.getWeekday($data['day'], false) . ', ' . $data['start_stunde'] . ':' . $data['start_minute'].' - '. 
+                    $this->createMessage(sprintf(_("Die regelmäßige Veranstaltungszeit wurde auf \"%s\" für alle in der Zukunft liegenden Termine geändert!"),
+                        '<b>'.getWeekday($data['day'], false) . ', ' . $data['start_stunde'] . ':' . $data['start_minute'].' - '.
                         $data['end_stunde'] . ':' . $data['end_minute'] . '</b>'));
                     $message = true;
                 }
             } else {
                 if (!$same_time) {
-                    $this->createInfo(sprintf(_("Die regelmäßige Veranstaltungszeit wurde auf \"%s\" geändert, jedoch gab es keine Termine die davon betroffen waren."), 
+                    $this->createInfo(sprintf(_("Die regelmäßige Veranstaltungszeit wurde auf \"%s\" geändert, jedoch gab es keine Termine die davon betroffen waren."),
                         '<b>'.getWeekday($data['day'], false) . ', ' . $data['start_stunde'] . ':' . $data['start_minute'].' - '.
                         $data['end_stunde'] . ':' . $data['end_minute'] . '</b>'));
                     $message = true;
@@ -1444,7 +1444,7 @@ class Seminar
         // room-request found, parse int-status and return string-status
         if (!$this->room_request) {
             $this->room_request = new RoomRequest($this->request_id);
-            if ($this->room_request->isNewObject) {
+            if ($this->room_request->isNew()) {
                 throw new Exception("Room-Request with the id {$this->request_id} does not exists!");
             }
         }
@@ -1496,7 +1496,7 @@ class Seminar
                 $cmd = $r_cmd;
             }
         }
-        
+
         if (!isset($cmd) && Request::option('cmd')) $cmd = Request::option('cmd');
         if (!isset($cmd)) return FALSE;
 
@@ -1943,7 +1943,7 @@ class Seminar
         $count = 0;
         $admission_turnout = $this->admission_turnout;
         $dont_check_quota = !$this->isAdmissionQuotaEnabled();
-        
+
         $query = "SELECT quota, name, ass.studiengang_id
                   FROM admission_seminar_studiengang AS ass
                   LEFT JOIN studiengaenge AS st USING (studiengang_id)
@@ -1966,14 +1966,14 @@ class Seminar
         }
         if (is_array($ret)) foreach($ret as $studiengang_id => $data){
             $ret[$studiengang_id]['num_occupied'] = 0;
-            
+
             $query = "SELECT COUNT(user_id)
                       FROM seminar_user
                       WHERE seminar_id = ? AND admission_studiengang_id = ? AND status != 'dozent'";
             $statement = DBManager::get()->prepare($query);
             $statement->execute(array($this->getId(), $studiengang_id));
             $ret[$studiengang_id]['num_occupied'] += $statement->fetchColumn();
-            
+
             $query = "SELECT SUM(status = 'accepted') AS accepted,
                              SUM(status = 'claiming') AS claiming,
                              SUM(status = 'awaiting') AS awaiting
@@ -2541,7 +2541,7 @@ class Seminar
 
                 $query = "DELETE FROM termin_related_persons WHERE range_id = ? AND user_id = ?";
                 $statement = DBManager::get()->prepare($query);
-                
+
                 foreach ($termine as $termin_id) {
                     $statement->execute(array($termin_id, $user_id));
                 }

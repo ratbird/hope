@@ -163,7 +163,7 @@ class ProfileModel
                         $perms = $entry->structure->getViewPerms();
 
                         if($perms) {
-                            $view = DataFieldStructure::permMask($this->user->perm) >= DataFieldStructure::permMask($perms);
+                            $view = DataFieldStructure::permMask($this->user->perms) >= DataFieldStructure::permMask($perms);
                             $show_star = false;
 
                             if (!$view && ($this->current_user->user_id == $this->user->user_id)) {

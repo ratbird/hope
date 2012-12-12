@@ -10,7 +10,6 @@
 
 require_once 'app/controllers/authenticated_controller.php';
 require_once 'lib/classes/UpdateInformation.class.php';
-require_once 'lib/classes/PersonalNotifications.class.php';
 
 /**
  * Controller called by the main periodical ajax-request. It collects data,

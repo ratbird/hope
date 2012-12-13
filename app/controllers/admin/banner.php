@@ -1,6 +1,6 @@
 <?php
 require_once 'app/controllers/authenticated_controller.php';
-require_once 'app/models/banner.php';
+//require_once 'app/models/banner.php';
 
 /**
  * banner.php - controller class for the banner administration

@@ -528,12 +528,13 @@ if ($change_object_schedules) {
 
             //repeat = none
 
-                $change_schedule_repeat_month_of_year=Request::quoted('change_schedule_repeat_month_of_year');
-                $change_schedule_repeat_day_of_month=Request::quoted('change_schedule_repeat_day_of_month');
-                $change_schedule_repeat_week_of_month=Request::quoted('change_schedule_repeat_week_of_month');
-                $change_schedule_repeat_day_of_week=Request::quoted('change_schedule_repeat_quantity');
-                
-                $change_schedule_repeat_interval=Request::option('change_schedule_repeat_interval');
+            $change_schedule_repeat_month_of_year = Request::int('change_schedule_repeat_month_of_year');
+            $change_schedule_repeat_day_of_month  = Request::int('change_schedule_repeat_day_of_month');
+            $change_schedule_repeat_week_of_month = Request::int('change_schedule_repeat_week_of_month');
+            $change_schedule_repeat_day_of_week   = Request::int('change_schedule_repeat_day_of_week');
+            $change_schedule_repeat_day_quantity  = Request::int('change_schedule_repeat_quantity');
+            $change_schedule_repeat_interval      = Request::int('change_schedule_repeat_interval');
+
             if (Request::submitted('change_schedule_repeat_none')) {
                 $change_schedule_repeat_end='';
                 $change_schedule_repeat_month_of_year='';
@@ -593,7 +594,7 @@ if ($change_object_schedules) {
                 $change_schedule_repeat_quantity='';
                 if (!$change_schedule_repeat_day_of_week)
                     $change_schedule_repeat_day_of_week=1;
-                if (!$change_schedule_repeat_quantity   )
+                if (!$change_schedule_repeat_quantity)
                     $change_schedule_repeat_quantity=-1;
                 if (!$change_schedule_repeat_interval)
                     $change_schedule_repeat_interval=1;

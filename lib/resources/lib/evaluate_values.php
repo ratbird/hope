@@ -411,13 +411,15 @@ if ($change_object_schedules) {
             }
         }
     }
-    $select_change_resource = Request::quotedArray('select_change_resource');
+    $select_change_resource = is_array($_REQUEST['select_change_resource'])
+                            ? Request::optionArray('select_change_resource')
+                            : Request::option('select_change_resource');
     if ($ObjectPerms->havePerm("admin") && Request::submitted('send_change_resource') && !empty($select_change_resource)) {
         if (!is_array($select_change_resource)) {
             $ChangeObjectPerms = ResourceObjectPerms::Factory($select_change_resource);
             if ($ChangeObjectPerms->havePerm("tutor")) {
                 $changeAssign = AssignObject::Factory($change_object_schedules);
-                $changeAssign->setResourceId($$select_change_resource);
+                $changeAssign->setResourceId($select_change_resource);
                 $changeAssign->setCommentInternal(Request::get('comment_internal'));
 
                 $overlaps = $changeAssign->checkOverlap();
@@ -2249,9 +2251,10 @@ if (Request::option('show_object'))
     $_SESSION['resources_data']["actual_object"]=Request::option('show_object');
 
 if (Request::option('show_msg')) {
-    if (Request::option('msg_resource_id'))
+    if ($msg_resource_id = Request::option('msg_resource_id')) {
         $msgResourceObj = ResourceObject::Factory($msg_resource_id);
-    $msg->addMsg(Request::option('show_msg'), (Request::option('msg_resource_id')) ? array(htmlReady($msgResourceObj->getName())) : FALSE);
+    }
+    $msg->addMsg(Request::option('show_msg'), $msg_resource_id ? array(htmlReady($msgResourceObj->getName())) : FALSE);
 }
 
 //if ObjectPerms for actual user and actual object are not loaded, load them!

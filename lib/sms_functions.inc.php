@@ -974,27 +974,6 @@ function show_msgreadconfirmoptionsform()
     return $tmp;
 }
 
-function show_chatselector()
-{
-    global $admin_chats, $cmd;
-
-    if ($cmd == "write_chatinv") {
-        echo "<td class=\"table_row_even\" width=\"100%\" valign=\"left\"><div align=\"left\">";
-        echo "<font size=\"-1\"><b>"._("Chatraum ausw&auml;hlen:")."</b>&nbsp;&nbsp;</font>";
-        echo "<select name=\"chat_id\" style=\"vertical-align:middle;font-size:9pt;\">";
-        foreach($admin_chats as $chat_id => $chat_name) {
-            echo "<option value=\"$chat_id\"";
-            if (Request::option('selected_chat_id') == $chat_id){
-                echo " selected ";
-            }
-            echo ">".htmlReady($chat_name)."</option>";
-        }
-        echo "</select>";
-        echo "</div><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" height=\"6\" border=\"0\">";
-        echo "</td></tr>";
-    }
-}
-
 //Ausgabe des Formulars für Nachrichtenanhänge
 function show_attachmentform()
 {

@@ -15,7 +15,7 @@
 
 /**
  * Navigation for the community page used for user interaction.
- * It includes the contacts, study groups, chat and ranking.
+ * It includes the contacts, study groups and ranking.
  */
 class CommunityNavigation extends Navigation
 {
@@ -59,12 +59,6 @@ class CommunityNavigation extends Navigation
         $navigation->addSubNavigation('admin_groups', new Navigation(_('Gruppenverwaltung'), 'contact_statusgruppen.php'));
         $navigation->addSubNavigation('export', new Navigation(_('vCard-Export'), 'contact_export.php'));
         $this->addSubNavigation('contacts', $navigation);
-
-        // chat
-        if (get_config('CHAT_ENABLE')) {
-            $navigation = new Navigation(_('Chat'), 'chat_online.php');
-            $this->addSubNavigation('chat', $navigation);
-        }
 
         // study groups
         if (get_config('STUDYGROUPS_ENABLE')) {

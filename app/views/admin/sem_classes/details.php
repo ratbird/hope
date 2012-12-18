@@ -164,10 +164,6 @@
             </td>
         </tr>
         <tr>
-            <td><label for="chat"><?= _("Chat ist erlaubt") ?></label></td>
-            <td><input type="checkbox" id="chat" value="1"<?= $sem_class['chat'] ? " checked" : "" ?>></td>
-        </tr>
-        <tr>
             <td><label for="compact_mode"><?= _("Kompaktmodus für den Veranstaltungsassistenten") ?></label></td>
             <td><input type="checkbox" id="compact_mode" value="1"<?= $sem_class['compact_mode'] ? " checked" : "" ?>></td>
         </tr>

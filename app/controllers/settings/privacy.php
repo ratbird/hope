@@ -45,7 +45,6 @@ class Settings_PrivacyController extends Settings_SettingsController
         // Get visibility settings from database.
         $this->global_visibility = get_global_visibility_by_id($this->user->user_id);
         $this->online_visibility = get_local_visibility_by_id($this->user->user_id, 'online');
-        $this->chat_visibility   = get_local_visibility_by_id($this->user->user_id, 'chat');
         $this->search_visibility = get_local_visibility_by_id($this->user->user_id, 'search');
         $this->email_visibility  = get_local_visibility_by_id($this->user->user_id, 'email');
 
@@ -81,13 +80,12 @@ class Settings_PrivacyController extends Settings_SettingsController
         // Globally visible or unknown -> set local visibilities accordingly.
         if ($visibility != 'no') {
             $online = Request::int('online') ?: 0;
-            $chat   = Request::int('chat') ?: 0;
             $search = Request::int('search') ?: 0;
             $email  = Request::int('email') ?: 0;
             $foaf_show_identity = Request::int('foaf_show_identity') ?: 0;
         // Globally invisible -> set all local fields to invisible.
         } else {
-            $online  = $chat = $search = $foaf_show_identity = 0;
+            $online  = $search = $foaf_show_identity = 0;
             $email   = get_config('DOZENT_ALLOW_HIDE_EMAIL') ? 0 : 1;
             $success = $this->about->change_all_homepage_visibility(VISIBILITY_ME);
         }
@@ -98,15 +96,15 @@ class Settings_PrivacyController extends Settings_SettingsController
         $this->user->store();
 
         $query = "INSERT INTO user_visibility
-                    (user_id, online, chat, search, email, mkdate)
-                  VALUES (?, ?, ?, ?, ?, UNIX_TIMESTAMP())
+                    (user_id, online, search, email, mkdate)
+                  VALUES (?, ?, ?, ?, UNIX_TIMESTAMP())
                   ON DUPLICATE KEY
-                    UPDATE online = VALUES(online), chat = VALUES(chat),
+                    UPDATE online = VALUES(online),
                            search = VALUES(search), email = VALUES(email)";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array(
             $this->user->user_id,
-            $online, $chat, $search, $email
+            $online, $search, $email
         ));
 
         if ($success || ($statement->rowCount() > 0)) {

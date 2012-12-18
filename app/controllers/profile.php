@@ -48,15 +48,6 @@ class ProfileController extends AuthenticatedController
             include_once ("lib/vote/vote_show.inc.php");
         }
 
-        // Checks if chat is enabled
-        if (get_config('CHAT_ENABLE')) {
-            include_once $GLOBALS['RELATIVE_PATH_CHAT'].'/chat_func_inc.php';
-
-            if (Request::get('kill_chat')) {
-                chat_kill_chat(Request::option('kill_chat'));
-            }
-        }
-
         $this->set_layout($GLOBALS['template_factory']->open('layouts/base_without_infobox'));
 
         Navigation::activateItem('/profile/index');
@@ -270,11 +261,6 @@ class ProfileController extends AuthenticatedController
         }
 
         $this->hompage_plugin = $render;
-
-        // CHAT-Info
-        if (get_config('CHAT_ENABLE')) {
-            $this->chat_info = true;
-        }
 
         // show literature info
         if (get_config('LITERATURE_ENABLE')) {

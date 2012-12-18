@@ -104,7 +104,6 @@ $MEDIA_CACHE_MAX_FILES = 3000;
 //path to Stud.IP modules (this folders only have to exist, if the corresponcing module is active)
 $RELATIVE_PATH_RESOURCES = "lib/resources";                         //Stud.IP module: resourge management
 $RELATIVE_PATH_CALENDAR = "lib/calendar";                           //Stud.IP module: calendar
-$RELATIVE_PATH_CHAT = "lib/chat";                               //Stud.IP module: chat
 $RELATIVE_PATH_ADMIN_MODULES = "lib/admin";                         //Stud.IP module: admin tools
 $RELATIVE_PATH_EXTERN = "lib/extern";                           //Stud.IP module: SRI-System for including Stud.IP data in other websites
 $RELATIVE_PATH_ELEARNING_INTERFACE = "lib/elearning";                   //Stud.IP module: Ilias 3 lerningmodules-connection / general E-Learning-interface
@@ -122,8 +121,6 @@ $CACHING_FILECACHE_PATH = $TMP_PATH . '/studip_cache';
 enable or disable the Stud.IP internal modules, set and basic settings*/
 
 $CALENDAR_DRIVER = "MySQL";                                 //calendar driver: database to use (MySQL in default installation)*/
-
-$CHAT_SERVER_NAME = "ChatShmServer";
 
 $XSLT_ENABLE = TRUE;
 $FOP_ENABLE = TRUE;

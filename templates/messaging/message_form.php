@@ -7,7 +7,6 @@
     <br>
     <input type="text" id="subject" name="messagesubject" style="width: 99%"
            value="<?= trim(htmlready($messagesubject)) ?>"
-           <? if ($cmd == 'write_chatinv') echo 'disabled'; ?>>
     </label>
 </div>
 

@@ -41,14 +41,6 @@ require_once ('lib/sms_functions.inc.php');
 require_once ('lib/user_visible.inc.php');
 
 
-// wofür wird das hier benötigt?
-if (get_config('CHAT_ENABLE')) {
-    include_once $RELATIVE_PATH_CHAT.'/chat_func_inc.php';
-    $chatServer = ChatServer::GetInstance($GLOBALS['CHAT_SERVER_NAME']);
-    $chatServer->caching = true;
-    $admin_chats = $chatServer->getAdminChats($auth->auth['uid']);
-}
-
 $msging=new messaging;
 
 $my_messaging_settings = UserConfig::get($user->id)->MESSAGING_SETTINGS;
@@ -75,13 +67,11 @@ if ($cmd == 'new') {
     if ($my_messaging_settings["save_snd"] == "1") $sms_data["tmpsavesnd"] = "1";
 }
 
-// write a chat-invitation, so predefine the messagesubject
    $messagesubject = Request::get('messagesubject');
    $message = Request::get('message');
    $quote = Request::option('quote');
    $signature = Request::get('signature');
    $forward = Request::option('forward');
-if ($cmd == "write_chatinv" && empty($messagesubject)) $messagesubject = _("Chateinladung");
 
 //wurde eine Datei hochgeladen?
 if($GLOBALS["ENABLE_EMAIL_ATTACHMENTS"]){
@@ -153,9 +143,6 @@ if (Request::submitted('rmv_tmpreadsnd_button')) $sms_data["tmpreadsnd"] = "";
 if (Request::submitted('add_tmpreadsnd_button')) $sms_data["tmpreadsnd"] = 1;
 
 
-// check if active chat avaiable
-if (($cmd == "write_chatinv") && (!is_array($admin_chats))) $cmd='';
-
 // send message
 if (Request::submitted('cmd_insert')) {
     if (empty($messagesubject)) {
@@ -165,12 +152,8 @@ if (Request::submitted('cmd_insert')) {
         if (!empty($sms_data["p_rec"])) {
             $time = date("U");
             $tmp_message_id = md5(uniqid("321losgehtes"));
-            if (Request::option('chat_id')) {
-                $count = $msging->insert_chatinv($message, $sms_data["p_rec"], Request::option('chat_id'));
-            } else {
-                $msging->provisonal_attachment_id = Request::option('attachment_message_id');
-                $count = $msging->insert_message($message, $sms_data["p_rec"], FALSE, $time, $tmp_message_id, FALSE, $signature, $messagesubject);
-            }
+            $msging->provisonal_attachment_id = Request::option('attachment_message_id');
+            $count = $msging->insert_message($message, $sms_data["p_rec"], FALSE, $time, $tmp_message_id, FALSE, $signature, $messagesubject);
         }
 
         if ($count) {
@@ -619,7 +602,7 @@ $txt['002'] = _("m&ouml;gliche Empf&auml;ngerInnen");
 $txt['attachment'] = _("Dateianhang");
 $txt['003'] = _("Signatur");
 $txt['004'] = _("Vorschau");
-$txt['005'] = (($cmd=="write_chatinv") ? _("Chateinladung") : _("Nachricht"));
+$txt['005'] = _("Nachricht");
 $txt['006'] = _("Nachricht speichern");
 $txt['007'] = _("als Email senden");
 $txt['008'] = _("Lesebestätigung");
@@ -748,7 +731,6 @@ $txt['008'] = _("Lesebestätigung");
                 <td colspan="2" valign="top" width="70%" class="blank">
 
                     <table cellpadding="5" cellspacing="0" border="0" height="10" width="100%">
-                        <?=show_chatselector()?>
                         <tr>
                             <td valign="top" class="content_seperator">
                                 <font size="-1" color="#FFFFFF"><b><?=$txt['005']?></b></font>

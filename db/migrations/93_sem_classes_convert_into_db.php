@@ -40,7 +40,6 @@ class SemClassesConvertIntoDb extends Migration
                 `schedule` varchar(64) DEFAULT NULL,
                 `participants` varchar(64) DEFAULT NULL,
                 `literature` varchar(64) DEFAULT NULL,
-                `chat` tinyint(4) NOT NULL,
                 `scm` varchar(64) DEFAULT NULL,
                 `wiki` varchar(64) DEFAULT NULL,
                 `resources` varchar(64) DEFAULT NULL,
@@ -84,7 +83,6 @@ class SemClassesConvertIntoDb extends Migration
                 "default_read_level = :default_read_level, " .
                 "default_write_level = :default_write_level, " .
                 "bereiche = :bereiche, " .
-                "chat = :chat, " .
                 "show_browse = :show_browse, " .
                 "write_access_nobody = :write_access_nobody, " .
                 "topic_create_autor = :topic_create_autor, " .
@@ -179,7 +177,6 @@ class SemClassesConvertIntoDb extends Migration
                 'default_read_level' => $sem_class['default_read_level'],
                 'default_write_level' => $sem_class['default_write_level'],
                 'bereiche' => $sem_class['bereiche'],
-                'chat' => $sem_class['chat'] && (!$sem_class['studygroup_mode'] || $studygroup_modules['chat']),
                 'show_browse' => $sem_class['show_browse'],
                 'write_access_nobody' => $sem_class['write_access_nobody'],
                 'topic_create_autor' => $sem_class['topic_create_autor'],

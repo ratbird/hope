@@ -69,7 +69,7 @@ $infobox['content'] = array(
   <td style='text-align:right; vertical-align:top;'><?= _('Module:') ?></td>
   <td>
     <? foreach($available_modules as $key => $name) : ?>
-        <? if (($key === "chat" && $sem_class['chat']) || $key === "documents_folder_permissions") : ?>
+        <? if ($key === "documents_folder_permissions") : ?>
         <label>
                 <input name="groupplugin[<?= $key ?>]" type="checkbox" <?= ($modules->getStatus($key, $sem_id, 'sem')) ? 'checked="checked"' : '' ?>>
                 <?= htmlReady($name) ?>

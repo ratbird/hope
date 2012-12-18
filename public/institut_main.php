@@ -45,13 +45,6 @@ require_once 'lib/classes/DataFieldEntry.class.php';
 require_once 'lib/classes/InstituteAvatar.class.php';
 require_once 'lib/classes/Institute.class.php';
 
-if (get_config('CHAT_ENABLE')){
-    include_once $RELATIVE_PATH_CHAT."/chat_func_inc.php";
-    if (Request::option('kill_chat')){
-        chat_kill_chat(Request::option('kill_chat'));
-    }
-
-}
 if (get_config('VOTE_ENABLE')) {
     include_once ("lib/vote/vote_show.inc.php");
 }
@@ -184,11 +177,6 @@ foreach ($plugins as $plugin) {
         echo $template->render(NULL, $layout);
         $layout->clear_attributes();
     }
-}
-
-//show chat info
-if (get_config('CHAT_ENABLE') && $modules["chat"]) {
-    chat_show_info($institute_id);
 }
 
 include ('lib/include/html_end.inc.php');

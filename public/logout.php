@@ -30,19 +30,10 @@ page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Default_Auth", "
 
 require_once 'lib/messaging.inc.php';
 
-if (get_config('CHAT_ENABLE')){
-    include_once $RELATIVE_PATH_CHAT."/ChatServer.class.php"; //wird für Nachrichten im chat benötigt
-}
-
 //nur wenn wir angemeldet sind sollten wir dies tun!
 if ($auth->auth["uid"]!="nobody")
 {
     $sms = new messaging();
-    //User aus allen Chatraeumen entfernen
-    if ($CHAT_ENABLE) {
-        $chatServer = ChatServer::GetInstance($CHAT_SERVER_NAME);
-        $chatServer->logoutUser($user->id);
-    }
 
     $my_messaging_settings = UserConfig::get($user->id)->MESSAGING_SETTINGS;
 

@@ -160,7 +160,6 @@ $SEM_CLASS[1]=array("name"=>_("Lehre"),                         //the name of th
                     "schedule"=>TRUE,
                     "participants"=>TRUE,
                     "literature"=>TRUE,
-                    "chat"=>TRUE,               //chat, only, if the modul is global activated; see local.inc
                     "support"=>FALSE,           //support, only, if the modul is global activated; see local.inc (this modul is not part of the main distribution)
                     "scm"=>TRUE,
                     //descriptions
@@ -184,7 +183,6 @@ $SEM_CLASS[2]=array("name"=>_("Forschung"),
                     "schedule"=>TRUE,
                     "participants"=>TRUE,
                     "literature"=>TRUE,
-                    "chat"=>TRUE,
                     "description"=>_("Hier finden Sie virtuelle Veranstaltungen zum Thema Forschung an der Universit&auml;t"),
                     "create_description"=>_("In dieser Kategorie k&ouml;nnen Sie virtuelle Veranstaltungen f&uuml;r Forschungsprojekte anlegen."));
 
@@ -205,7 +203,6 @@ $SEM_CLASS[3]=array("name"=>_("Organisation"),
                     "schedule"=>TRUE,
                     "participants"=>TRUE,
                     "literature"=>TRUE,
-                    "chat"=>TRUE,
                     "description"=>_("Hier finden Sie virtuelle Veranstaltungen zu verschiedenen Gremien an der Universit&auml;t"),
                     "create_description"=>_("Um virtuelle Veranstaltungen f&uuml;r Uni-Gremien anzulegen, verwenden Sie diese Kategorie"));
 
@@ -224,7 +221,6 @@ $SEM_CLASS[4]=array("name"=>_("Community"),
                     "documents"=>TRUE,
                     "schedule"=>TRUE,
                     "participants"=>TRUE,
-                    "chat"=>TRUE,
                     "description"=>_("Hier finden Sie virtuelle Veranstaltungen zu unterschiedlichen Themen"),
                     "create_description"=>_("Wenn Sie Veranstaltungen als Diskussiongruppen zu unterschiedlichen Themen anlegen m&ouml;chten, verwenden Sie diese Kategorie."));
 
@@ -245,7 +241,6 @@ $SEM_CLASS[5]=array("name"=>_("Arbeitsgruppen"),
                     "schedule"=>TRUE,
                     "participants"=>TRUE,
                     "literature"=>TRUE,
-                    "chat"=>TRUE,
                     "description"=>sprintf(_("Hier finden Sie verschiedene Arbeitsgruppen an der %s"), htmlentities($GLOBALS['UNI_NAME_CLEAN'])),
                     "create_description"=>_("Verwenden Sie diese Kategorie, um unterschiedliche Arbeitsgruppen anzulegen."));
 
@@ -267,7 +262,6 @@ $SEM_CLASS[6]=array("name"=>_("importierte Kurse"),
                     "schedule"=>TRUE,
                     "participants"=>TRUE,
                     "literature"=>TRUE,
-                    "chat"=>TRUE,
                     "description"=> "Hier finden Sie importierte Kurse",
                     "create_description"=> "Sie sollten diesen Text garnicht sehen.");
 //weitere Klassen koennen hier angefuegt werden. Bitte Struktur wie oben exakt uebernehmen.
@@ -478,7 +472,6 @@ $INST_MODULES["default"] = array(
             "personal"=>TRUE,           //personal, this module is stud_ip core; always available
             "literature"=>TRUE,         //literature, this module is stud_ip core; always available
             "scm"=>FALSE,               //simple content module, this modul is stud_ip core; always available
-            "chat"=>TRUE,               //chat, only, if the module is global activated; see config_local.inc.php
             "wiki"=>FALSE,              //wikiwiki-web, this module is stud_ip core; always available
             );
 //you can add more specific presets for the different types

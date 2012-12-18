@@ -171,8 +171,6 @@
     <?= $this->render_partial("profile/seminare") ?>
 <? endif?>
 
-<? if($chat_info) chat_show_info($current_user->user_id); ?>
-
 <?if($show_lit) :?>
     <?=$this->render_partial($shared_box, array('title' => _('Literaturlisten'), 'content_for_layout' => $lit_list));?>
     <? $shared_box->clear_attributes()?>

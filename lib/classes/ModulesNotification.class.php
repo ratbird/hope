@@ -63,7 +63,6 @@ class ModulesNotification extends Modules {
                 "participants" => array('mes' => TRUE, 'name' => _("TeilnehmerInnen")),
                 "personal" => array('mes' => FALSE, 'name' => _("Personal")),
                 "literature" => array('mes' => TRUE, 'name' => _("Literatur")),
-                "chat" => array('mes' => FALSE, 'name' => _("Chat")),
                 "wiki" => array('mes' => TRUE, 'name' => _("Wiki-Web")),
                 "scm" => array('mes' => TRUE, 'name' => _("Freie Informationsseite")),
                 "elearning_interface" => array('mes' => TRUE, 'name' => _("Lernmodule")));

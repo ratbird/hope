@@ -82,9 +82,6 @@ class AdminModules extends ModulesNotification {
         $this->registered_modules["literature"]["msg_activate"] = _("Die Literaturverwaltung kann jederzeit aktiviert werden.");
         $this->registered_modules["literature"]["msg_deactivate"] = _("Die Literaturverwaltung kann jederzeit deaktiviert werden.");
 
-        $this->registered_modules["chat"]["msg_activate"] = _("Der Chat kann jederzeit aktiviert werden.");
-        $this->registered_modules["chat"]["msg_deactivate"] = _("Der Chat kann jederzeit deaktiviert werden.");
-
         $this->registered_modules["wiki"]["msg_warning"] = _("Wollen Sie wirklich das Wiki deaktivieren?");
         //$this->registered_modules["wiki"]["msg_pre_warning"] = _("Achtung: Beim Deaktivieren des Wiki-Webs werden <b>%s</b> Seitenversionen ebenfalls gel&ouml;scht!");
         $this->registered_modules["wiki"]["msg_activate"] = _("Das Wiki-Web kann jederzeit aktiviert werden.");

@@ -94,7 +94,6 @@ class Admin_SemClassesController extends AuthenticatedController
         $sem_class->set('title_tutor_plural', Request::get("title_tutor_plural") ? studip_utf8decode(Request::get("title_tutor_plural")) : null);
         $sem_class->set('title_autor', Request::get("title_autor") ? studip_utf8decode(Request::get("title_autor")) : null);
         $sem_class->set('title_autor_plural', Request::get("title_autor_plural") ? studip_utf8decode(Request::get("title_autor_plural")) : null);
-        $sem_class->set('chat', Request::int("chat"));
         $sem_class->set('compact_mode', Request::int("compact_mode"));
         $sem_class->set('workgroup_mode', Request::int("workgroup_mode"));
         $sem_class->set('only_inst_user', Request::int("only_inst_user"));

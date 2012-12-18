@@ -170,19 +170,9 @@ global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
 
                                 <td align="right" nowrap="nowrap">
                                 <?  if ($GLOBALS['ALLOW_SELFASSIGN_INSTITUTE'] && $values['status'] == 'user') { ?>
-                                    <? if (get_config('CHAT_ENABLE') && $values["modules"]["chat"]) { ?>
-
-                                        <a href="<?= !$auth->auth['jscript'] ? 'chat_online.php' : '#' ?>"
-                                           onClick="return open_chat(<?= $chat_info[$instid]['is_active'] ? 'false' : "'$instid'" ?>);">
-                                            <?= chat_get_chat_icon($chat_info[$instid]['chatter'], $chat_invs[$chat_info[$instid]['chatuniqid']], $chat_info[$instid]['is_active'], true, 'grey', 'red', '') ?>
-                                        </a>
-                                    <? } else { ?>
-                                        <?= Assets::img("blank.gif", array('size' => '16')) ?>
-                                    <? } ?>
-
-                                        <a href="<?= URLHelper::getLink('', array('auswahl' => $instid, 'cmd' => 'inst_kill')) ?>">
-                                            <?= Assets::img('icons/16/grey/door-leave.png', tooltip2(_("aus der Einrichtung austragen"))) ?>
-                                        </a>
+                                    <a href="<?= URLHelper::getLink('', array('auswahl' => $instid, 'cmd' => 'inst_kill')) ?>">
+                                        <?= Assets::img('icons/16/grey/door-leave.png', tooltip2(_("aus der Einrichtung austragen"))) ?>
+                                    </a>
                                 <? } else { ?>
                                         <?= Assets::img('blank.gif', array('size' => '16')) ?>
                                 <? } ?>

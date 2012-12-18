@@ -106,7 +106,6 @@ use Studip\Button, Studip\LinkButton;
             <?= htmlReady($user['status']) ?>
         </td>
         <td align="right">
-            <?= $user['chat'] ?>
             <a href="<?= URLHelper::getLink('sms_send.php', array('sms_source_page' => 'browse.php', 'rec_uname' => $user['username'])) ?>">
                 <?= Assets::img('icons/16/blue/mail.png', array('class' => 'text-top', 'title' =>_('Nachricht an Benutzer verschicken')))?>
             </a>

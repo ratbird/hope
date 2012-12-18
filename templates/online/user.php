@@ -35,11 +35,7 @@
     </td>
 
     <td width="3%" align="center">
-        <? if (get_config('CHAT_ENABLE')) : ?>
-            <?= chat_get_online_icon($tmp_user_id, $tmp_online_uname) ?>
-        <? else : ?>
             &nbsp;
-        <? endif ?>
     </td>
 
     <td width="3%" align="center">

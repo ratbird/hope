@@ -77,7 +77,6 @@ if (!$user_domains) {
             ($global_visibility == 'unknown' && get_config('USER_VISIBILITY_UNKNOWN')) ||
            ($user_perm == 'dozent' && get_config('DOZENT_ALWAYS_VISIBLE'))) &&
            (!$NOT_HIDEABLE_FIELDS[$user_perm]['online'] ||
-            !$NOT_HIDEABLE_FIELDS[$user_perm]['chat'] ||
             !$NOT_HIDEABLE_FIELDS[$user_perm]['search'] ||
             !$NOT_HIDEABLE_FIELDS[$user_perm]['email'])):
     ?>
@@ -100,14 +99,6 @@ if (!$user_domains) {
                         <input type="checkbox" name="online" value="1"
                                <? if ($online_visibility) echo 'checked'; ?>>
                         <?= _('sichtbar in "Wer ist online"') ?>
-                    </label>
-                    <br>
-                <? endif; ?>
-                <? if (!$NOT_HIDEABLE_FIELDS[$user_perm]['chat'] && get_config('CHAT_ENABLE')): ?>
-                    <label>
-                        <input type="checkbox" name="chat" value="1"
-                               <? if ($chat_visibility) echo 'checked'; ?>>
-                        <?= _('eigener Chatraum sichtbar') ?>
                     </label>
                     <br>
                 <? endif; ?>

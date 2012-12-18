@@ -49,7 +49,6 @@ class Modules {
         'participants' => array('id' => 3, 'const' => '', 'sem' => true, 'inst' => false),
         'personal' => array('id' => 4, 'const' => '', 'sem' => false, 'inst' => true),
         'literature' => array('id' => 5, 'const' => 'LITERATURE_ENABLE', 'sem' => true, 'inst' => true),
-        'chat' => array('id' => 7, 'const' => 'CHAT_ENABLE', 'sem' => true, 'inst' => true),
         'wiki' => array('id' => 8, 'const' => 'WIKI_ENABLE', 'sem' => true, 'inst' => true),
         'scm' => array('id' => 12, 'const' => 'SCM_ENABLE', 'sem' => true, 'inst' => true),
         'elearning_interface' => array('id' => 13, 'const' => 'ELEARNING_INTERFACE_ENABLE', 'sem' => true, 'inst' => true),

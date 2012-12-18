@@ -97,13 +97,6 @@ require_once ('lib/object.inc.php');
 require_once ('lib/meine_seminare_func.inc.php');
 require_once ('lib/classes/LockRules.class.php');
 
-if (get_config('CHAT_ENABLE')){
-    include_once $RELATIVE_PATH_CHAT."/chat_func_inc.php";
-    $chatServer = ChatServer::GetInstance($GLOBALS['CHAT_SERVER_NAME']);
-    $chatServer->caching = true;
-    $sms = new messaging();
-}
-
 $deputies_enabled = get_config('DEPUTIES_ENABLE');
 $default_deputies_enabled = get_config('DEPUTIES_DEFAULTENTRY_ENABLE');
 $Modules = new Modules();
@@ -129,10 +122,6 @@ if (!$perm->have_perm("root")) {
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
-
-if (get_config('CHAT_ENABLE')){
-    chat_get_javascript();
-}
 
 $cmd = Request::option('cmd');
 if(in_array($cmd, words('no_kill suppose_to_kill suppose_to_kill_admission kill kill_admission'))){
@@ -358,17 +347,6 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
             'sem_number'     => $seminar['sem_number'],
             'sem_number_end' => $seminar['sem_number_end']
         );
-        if ((get_config('CHAT_ENABLE')) && ($my_obj[$seminar['Seminar_id']]['modules']['chat'])) {
-            $chatter = $chatServer->isActiveChat($seminar['Seminar_id']);
-            $chat_info[$seminar['Seminar_id']] = array(
-                'chatter'    => $chatter,
-                'chatuniqid' => $chatServer->chatDetail[$seminar['Seminar_id']]['id'],
-                'is_active'  => $chatServer->isActiveUser($user->id, $seminar['Seminar_id'])
-            );
-            if ($chatter){
-                $active_chats[$chatServer->chatDetail[$seminar['Seminar_id']]['id']] = $seminar['Seminar_id'];
-            }
-        }
         if ($group_field){
             fill_groups($groups, $seminar[$group_field], array(
                 'seminar_id' => $seminar['Seminar_id'],
@@ -410,26 +388,10 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
             'obj_type'  => 'inst',
             'visitdate' => $institute['visitdate']
         );
-        if ((get_config('CHAT_ENABLE')) && ($my_obj[$institute['Institut_id']]['modules']['chat'])) {
-            $chatter = $chatServer->isActiveChat($institute['Institut_id']);
-            $chat_info[$institute['Institut_id']] = array(
-                'chatter'    => $chatter,
-                'chatuniqid' => $chatServer->chatDetail[$institute['Institut_id']]["id"],
-                'is_active'  => $chatServer->isActiveUser($user->id, $institute['Institut_id'])
-            );
-            if ($chatter){
-                $active_chats[$chatServer->chatDetail[$institute['Institut_id']]['id']] = $institute['Institut_id'];
-            }
-        }
         $num_my_inst += 1;
     }
     if (($num_my_sem + $num_my_inst) > 0){
         get_my_obj_values($my_obj, $GLOBALS['user']->id);
-    }
-    if (get_config('CHAT_ENABLE')){
-        if (is_array($active_chats)){
-            $chat_invs = $sms->check_list_of_chatinv(array_keys($active_chats));
-        }
     }
 
     // "Mark all as read"
@@ -620,7 +582,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
 
     $my_bosses = $default_deputies_enabled ? getDeputyBosses($user->id) : array();
 
-    echo $template->render(compact(words("num_my_sem meldung group_field groups my_obj view _my_sem_open meldung chat_info chat_invs waitlists ".($deputies_enabled && $default_deputies_enabled && $perm->have_perm(getValidDeputyPerms(true)) ? "my_bosses " : "")."num_my_inst infobox")));
+    echo $template->render(compact(words("num_my_sem meldung group_field groups my_obj view _my_sem_open meldung waitlists ".($deputies_enabled && $default_deputies_enabled && $perm->have_perm(getValidDeputyPerms(true)) ? "my_bosses " : "")."num_my_inst infobox")));
 }
 
 

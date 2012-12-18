@@ -174,7 +174,7 @@ class SingleCalendar extends Calendar
 
     function addEventObj(&$event, $updated, $selected_users = NULL)
     {
-        global $ABSOLUTE_PATH_STUDIP, $RELATIVE_PATH_CHAT;
+        global $ABSOLUTE_PATH_STUDIP;
 
         if ($this->havePermission(Calendar::PERMISSION_WRITABLE)) {
             $this->event = $event;
@@ -215,7 +215,7 @@ class SingleCalendar extends Calendar
 
     function deleteEvent($event_id)
     {
-        global $ABSOLUTE_PATH_STUDIP, $RELATIVE_PATH_CHAT;
+        global $ABSOLUTE_PATH_STUDIP;
 
         if ($this->havePermission(Calendar::PERMISSION_WRITABLE)) {
 

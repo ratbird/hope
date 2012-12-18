@@ -443,24 +443,21 @@ class about extends messaging
      *
      * @param string $global global visibility of the account in Stud.IP
      * @param string $online visiblity in "Who is online" list
-     * @param string $chat visibility of the private chatroom in active chats list
      * @param string $search visiblity in user search
      * @param string $email visibility of the email address
      * @return boolean All settings saved?
      */
-    function change_global_visibility($global, $online, $chat, $search, $email, $foaf_show_identity)
+    function change_global_visibility($global, $online, $search, $email, $foaf_show_identity)
     {
         // Globally visible or unknown -> set local visibilities accordingly.
         if ($global != 'no') {
             $online = $online ? 1 : 0;
-            $chat   = $chat ? 1 : 0;
             $search = $search ? 1 : 0;
             $email  = $email ? 1 : 0;
             $foaf_show_identity = $foaf_show_identity ? 1 : 0;
         // Globally invisible -> set all local fields to invisible.
         } else {
             $online = 0;
-            $chat   = 0;
             $search = 0;
             $email  = get_config('DOZENT_ALLOW_HIDE_EMAIL') ? 0 : 1;
             $success1 = $this->change_all_homepage_visibility(VISIBILITY_ME);
@@ -477,16 +474,15 @@ class about extends messaging
         ));
 
         $query = "INSERT INTO user_visibility
-                    (user_id, online, chat, search, email, mkdate)
+                    (user_id, online, search, email, mkdate)
                   VALUES (?, ?, ?, ?, ?, UNIX_TIMESTAMP())
                   ON DUPLICATE KEY
-                    UPDATE online = VALUES(online), chat = VALUES(chat),
+                    UPDATE online = VALUES(online),
                            search = VALUES(search), email = VALUES(email)";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array(
             $this->auth_user['user_id'],
             $online,
-            $chat,
             $search,
             $email
         ));

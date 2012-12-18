@@ -336,7 +336,6 @@ class SemClass implements ArrayAccess
                 "schedule = :schedule, " .
                 "participants = :participants, " .
                 "literature = :literature, " .
-                "chat = :chat, " .
                 "scm = :scm, " .
                 "wiki = :wiki, " .
                 "resources = :resources, " .
@@ -374,7 +373,6 @@ class SemClass implements ArrayAccess
             'schedule' => $this->data['schedule'],
             'participants' => $this->data['participants'],
             'literature' => $this->data['literature'],
-            'chat' => (int) $this->data['chat'],
             'scm' => $this->data['scm'],
             'wiki' => $this->data['wiki'],
             'resources' => $this->data['resources'],
@@ -492,8 +490,6 @@ class SemClass implements ArrayAccess
                 return $this->data['participants'] !== null;
             case "literature":
                 return $this->data['literature'] !== null;
-            case "chat":
-                return $this->data['chat'] !== null;
             case "scm":
                 return $this->data['scm'] !== null;
             case "studygroup_mode":

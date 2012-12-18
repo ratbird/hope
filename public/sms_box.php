@@ -39,13 +39,6 @@ require_once ('lib/messaging.inc.php');
 require_once ('lib/statusgruppe.inc.php');
 require_once ('lib/sms_functions.inc.php');
 
-if (get_config('CHAT_ENABLE')){
-    include_once $RELATIVE_PATH_CHAT."/chat_func_inc.php";
-    $chatServer = ChatServer::GetInstance($GLOBALS['CHAT_SERVER_NAME']);
-    $chatServer->caching = true;
-    $admin_chats = $chatServer->getAdminChats($auth->auth['uid']);
-}
-
 $msging = new messaging;
 $query_showfolder = $query_time_sort = $query_movetofolder = $query_time = '';
 $cmd = Request::option('cmd');

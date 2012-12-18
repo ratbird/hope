@@ -47,10 +47,6 @@ require_once ('lib/export/export_studipdata_func.inc.php');
 require_once ('lib/classes/Avatar.class.php');
 require_once ('lib/classes/LockRules.class.php');
 
-if (get_config('CHAT_ENABLE')){
-    include_once $RELATIVE_PATH_CHAT."/chat_func_inc.php";
-}
-
 $show_user_picture = false;
 /*
 * set the user_visibility of all unkowns to their global visibility
@@ -1412,9 +1408,6 @@ while (list ($key, $val) = each ($gruppe)) {
 
                 $username=$one_user['username'];
                 if ($one_user['visible'] == 'yes' || $i_see_everybody) {
-                    if (get_config('CHAT_ENABLE')){
-                        echo chat_get_online_icon($one_user['user_id'],$one_user['username'],$SessSemName[1]) . " ";
-                    }
 
                     printf ("<a href=\"%s\"><img class=\"text-top\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/mail.png\" %s ></a>", URLHelper::getLink("sms_send.php", array("sms_source_page" => 'teilnehmer.php?cid=' . $_SESSION['SessionSeminar'], "subject" => $subject, "rec_uname" => $one_user['username'])), tooltip(_("Nachricht an Benutzer verschicken")));
 

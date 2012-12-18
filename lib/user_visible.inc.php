@@ -265,7 +265,6 @@ function get_global_visibility_by_username($username) {
  * at the moment:
  * <ul>
  * <li><b>online</b>: Visibility in "Who is online" list</li>
- * <li><b>chat</b>: Visibility of private chatroom in active chats list</li>
  * <li><b>search</b>: Can the user be found via person search?</li>
  * <li><b>email</b>: Is user's email address shown?</li>
  * <li><b>homepage</b>: Visibility of all user homepage elements, stored as 

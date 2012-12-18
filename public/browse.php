@@ -29,7 +29,6 @@ require_once 'lib/functions.php';
 require_once 'lib/statusgruppe.inc.php';
 require_once 'lib/user_visible.inc.php';
 require_once 'lib/classes/Avatar.class.php';
-require_once $RELATIVE_PATH_CHAT.'/chat_func_inc.php';
 
 //Basics
 PageLayout::setHelpKeyword('Basis.SuchenPersonen');
@@ -202,10 +201,6 @@ if (count($filter)) {
             if (isset($row['inst_perms'])) {
                 $gruppen = GetRoleNames(GetAllStatusgruppen($inst_id, $row['user_id']));
                 $userinfo['status'] = is_array($gruppen) ? join(', ', array_values($gruppen)) : _('keiner Funktion zugeordnet');
-            }
-
-            if (get_config('CHAT_ENABLE')) {
-                $userinfo['chat'] = chat_get_online_icon($row['user_id'], $row['username']);
             }
 
             $users[] = $userinfo;

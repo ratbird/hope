@@ -37,7 +37,31 @@ class StudipArrayCache implements StudipCache {
 }
 
 class auth_user_md5 extends SimpleORMap
-{}
+{
+    public $additional_data = null;
+
+    function __construct($id = null)
+    {
+        $this->additional_fields['additional']['get'] = function ($record, $field) {return $record->additional_data;};
+        $this->additional_fields['additional']['set'] = function ($record, $field, $data) {return $record->additional_data = $data;};
+        parent::__construct($id);
+    }
+
+    function getPerms()
+    {
+        return 'ok:' . $this->content['perms'];
+    }
+
+    function setPerms($perm)
+    {
+        return $this->content['perms'] = strtolower($perm);
+    }
+    
+    public function registerCallback($types, $cb)
+    {
+        return parent::registerCallback($types, $cb);
+    }
+}
 
 class SimpleOrMapNodbTest extends PHPUnit_Framework_TestCase
 {
@@ -65,6 +89,13 @@ class SimpleOrMapNodbTest extends PHPUnit_Framework_TestCase
             $schemes[$db_table]['pk'] = $pk;
         }
         $cache->write('DB_TABLE_SCHEMES', serialize($schemes));
+    }
+    
+    function tearDown()
+    {
+        Config::set(null);
+        StudipCacheFactory::setConfig(null);
+        $GLOBALS['CACHING_ENABLE'] = false;
     }
 
     public function testConstruct()
@@ -97,6 +128,8 @@ class SimpleOrMapNodbTest extends PHPUnit_Framework_TestCase
         $mail = 'anoack@data-quest';
         $a['email'] = $mail;
         $this->assertEquals($mail, $a['email']);
+        $a->perms = 'ADMIN';
+        $this->assertEquals('ok:admin', $a['perms']);
     }
 
     /**
@@ -115,6 +148,7 @@ class SimpleOrMapNodbTest extends PHPUnit_Framework_TestCase
     public function testRevert($a)
     {
         $a->revertValue('email');
+        $a->revertValue('perms');
         $this->assertEquals(false, $a->isDirty());
         $this->assertEquals(false, $a->isFieldDirty('email'));
     }
@@ -144,5 +178,81 @@ class SimpleOrMapNodbTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($data['nachname'], $a->nachname);
         $this->assertEquals($data['email'], $a->email);
         $this->assertEquals(true, $a->isDirty());
+    }
+
+    /**
+     * @depends testConstruct
+     */
+    public function testPrimaryKey($a)
+    {
+        $a->setId(1);
+        $this->assertEquals(1, $a->user_id);
+        $this->assertEquals(1, $a->id);
+        $this->assertEquals(1, $a->getId());
+        $a->id = 2;
+        $this->assertEquals(2, $a->user_id);
+        $this->assertEquals(2, $a->id);
+        $this->assertEquals(2, $a->getId());
+    }
+
+    /**
+     * @depends testConstruct
+     */
+    public function testAdditional($a)
+    {
+        $this->assertNull($a->additional);
+        $a->additional = 'test';
+        $this->assertEquals($a->additional_data, $a->additional);
+    }
+
+    /**
+     * @depends testConstruct
+     */
+    public function testToArray($a)
+    {
+        $to_array = $a->toArray();
+        $this->assertEquals(2, $to_array['id']);
+        $this->assertEquals(2, $to_array['user_id']);
+        $this->assertEquals('test', $to_array['additional']);
+        $this->assertEquals('ok:', $to_array['perms']);
+        $this->assertArrayHasKey('visible', $to_array);
+        $this->assertCount(15, $to_array);
+
+        $to_array = $a->toArray('id user_id additional perms');
+        $this->assertEquals(2, $to_array['id']);
+        $this->assertEquals(2, $to_array['user_id']);
+        $this->assertEquals('test', $to_array['additional']);
+        $this->assertEquals('ok:', $to_array['perms']);
+        $this->assertArrayNotHasKey('visible', $to_array);
+        $this->assertCount(4, $to_array);
+    }
+
+    /**
+     * @depends testConstruct
+     * @expectedException        InvalidArgumentException
+     * @expectedExceptionMessage unknown not found.
+     */
+    public function testInvalidColumnException($a)
+    {
+        $a->unknown = 1;
+    }
+
+    /**
+     * @depends testConstruct
+     */
+    public function testCallback($a)
+    {
+        $callback_was_here = null;
+        $cb = function ($record, $type) use (&$callback_was_here)
+        {
+            $callback_was_here = $type;
+            $record->id = 3;
+            return false;
+        };
+        $a->registerCallback('before_store', $cb);
+        $stored = $a->store();
+        $this->assertFalse($stored);
+        $this->assertEquals(3, $a->id);
+        $this->assertEquals('before_store', $callback_was_here);
     }
 }

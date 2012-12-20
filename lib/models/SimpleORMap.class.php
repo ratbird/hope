@@ -1374,10 +1374,10 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
     {
         $ret = false;
         foreach (array_keys($this->relations) as $relation) {
+            $options = $this->getRelationOptions($relation);
             if ($options['type'] === 'has_one' || $options['type'] === 'has_many') {
                 $this->initRelation($relation);
             }
-            $options = $this->getRelationOptions($relation);
             if (isset($options['on_delete']) &&
             ($options['type'] === 'has_one' ||
             $options['type'] === 'has_many' ||

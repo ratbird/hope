@@ -828,10 +828,25 @@ class Seminar
         }
     }
 
-    function &getSingleDates($filter = false, $force = false)
+    function &getSingleDates($filter = false, $force = false, $include_deleted_dates = false)
     {
         $this->readSingleDates($force, $filter);
-        return $this->irregularSingleDates;
+        if (!$include_deleted_dates) {
+            return $this->irregularSingleDates;
+        } else {
+            $deleted_dates = array();
+            foreach (SeminarDB::getDeletedSingleDates($this->getId(), $this->filterStart, $this->filterEnd) as $val) {
+                $termin = new SingleDate();
+                $termin->fillValuesFromArray($val);
+                $deleted_dates[$val['termin_id']] = $termin;
+            }
+            $dates = array_merge($this->irregularSingleDates, $deleted_dates);
+            uasort($dates, function($a,$b) {
+                if ($a->getStartTime() == $b->getStartTime()) return 0;
+                return $a->getStartTime() < $b->getStartTime() ? -1 : 1;}
+            );
+            return $dates;
+        }
     }
 
     function getCycles()
@@ -909,8 +924,7 @@ class Seminar
         log_event("SEM_DELETE_SINGLEDATE",$date_id, $this->getId(), 'Cycle_id: '.$cycle_id);
         // logging <<<<<<
         if ($cycle_id == '') {
-            $this->irregularSingleDates[$date_id]->setExTermin(true);
-            $this->irregularSingleDates[$date_id]->store();
+            $this->irregularSingleDates[$date_id]->delete(true);
             unset ($this->irregularSingleDates[$date_id]);
             NotificationCenter::postNotification("CourseDidChangeSchedule", $this);
             return TRUE;
@@ -920,6 +934,22 @@ class Seminar
             return TRUE;
         }
     }
+    
+    function cancelSingleDate($date_id, $cycle_id = '')
+    {
+        if ($cycle_id) {
+            return $this->deleteSingleDate($date_id, $cycle_id);
+        }
+        $this->readSingleDates();
+        // logging >>>>>>
+        log_event("SEM_DELETE_SINGLEDATE",$date_id, $this->getId(), 'appointment cancelled');
+        // logging <<<<<<
+        $this->irregularSingleDates[$date_id]->setExTermin(true);
+        $this->irregularSingleDates[$date_id]->store();
+        unset ($this->irregularSingleDates[$date_id]);
+        NotificationCenter::postNotification("CourseDidChangeSchedule", $this);
+        return TRUE;
+    }
 
     function unDeleteSingleDate($date_id, $cycle_id = '')
     {
@@ -928,13 +958,12 @@ class Seminar
         NotificationCenter::postNotification("CourseDidChangeSchedule", $this);
         // logging <<<<<<
         if ($cycle_id == '') {
-            $this->readSingleDates();
-
-            if (!$this->irregularSingleDates[$date_id]->isExTermin()) {
+            $termin = new SingleDate($date_id);
+            if (!$termin->isExTermin()) {
                 return false;
             }
-
-            $this->irregularSingleDates[$date_id]->setExTermin(false);
+            $termin->setExTermin(false);
+            $termin->store();
             return true;
         } else {
             return $this->metadate->unDeleteSingleDate($cycle_id, $date_id, $this->filterStart, $this->filterEnd);

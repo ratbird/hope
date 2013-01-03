@@ -256,10 +256,6 @@ class SingleDate {
         if ($this->ex_termin) {
             $this->killAssign();
             $this->killIssue();
-            if (!$this->metadate_id) {
-                SingleDateDB::deleteSingleDate($this->termin_id, $this->orig_ex);
-                return true;
-            }
         }
 
         // date_typ = 0 defaults to TERMIN_TYP[1] because there never exists one with zero

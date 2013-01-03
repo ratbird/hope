@@ -40,7 +40,7 @@ function getTemplateDataForSingleDate($val, $cycle_id = '') {
     $tpl['type'] = $val->getDateType();
     $tpl['art'] = $val->getTypeName();
     $tpl['freeRoomText'] = htmlReady($val->getFreeRoomText());
-    $tpl['comment'] = htmlReady($val->getComment());
+    $tpl['comment'] = $val->getComment();
     $tpl['start_time'] = $val->getStartTime();
 
     /* css-Klasse und deleted-Status für das Template festlegen,
@@ -184,7 +184,7 @@ function getAllSortedSingleDates(&$sem) {
         $termine = array_merge($termine, $sem->getSingleDatesForCycle($metadate_id));
     }
 
-    $termine = array_merge($termine, $sem->getSingleDates(true));
+    $termine = array_merge($termine, $sem->getSingleDates(true, false, true));
     uasort ($termine, 'sort_termine');
 
     return $termine;
@@ -280,4 +280,31 @@ function raumzeit_get_semesters(&$sem, &$semester, $filter) {
     }
 
     return $selectionlist;
+}
+
+/**
+ * @param string $comment
+ * @param array $dates SingleDate
+ */
+function raumzeit_send_cancel_message($comment, $dates)
+{
+    if (!is_array($dates)) {
+        $dates = array($dates);
+    }
+    $course = Course::find($dates[0]->range_id);
+    if ($course) {
+        $subject = sprintf(_("[%s] Terminausfall"), $course->name);
+        $recipients = $course->members->pluck('username');
+        $lecturers = $course->members->findBy('status', 'dozent')->pluck('nachname');
+        $message = sprintf(_("In der Veranstaltung %s fällt der/die folgende(n) Termine aus:"),
+                 $course->name . ' ('. join(',', $lecturers) .') ' . $course->start_semester->name);
+        $message .= "\n\n- ";
+        $message .= join("\n- " , array_map(function($a) {return $a->toString();}, $dates));
+        if ($comment) {
+            $message .= "\n\n" . $comment;
+        }
+        $msg = new messaging();
+        return $msg->insert_message($message, $recipients, '____%system%____', '', '', '', '', $subject, true);
+    }
+    
 }

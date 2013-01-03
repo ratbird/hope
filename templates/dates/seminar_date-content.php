@@ -1,10 +1,8 @@
 <? use Studip\Button, Studip\LinkButton;
 
-
-$termin = new SingleDate($termin_item['termin_id']);
 $content = '';
 if ($termin_item['info']) {
-    $content .= formatReady($termin_item['info'], TRUE, FALSE) ."blahcont". "<br><br>";
+    $content .= formatReady($termin_item['info'], TRUE, FALSE) . "<br><br>";
 } else {
     $content .= _("Keine Beschreibung vorhanden") . "<br><br>";
 }
@@ -52,17 +50,23 @@ if($termin_item['autor_id']) {
 
     $content.="<b>" . _("angelegt von:") . "</b> ".get_fullname($termin_item['autor_id'],'full',true)."<br>";
 }
-$persons = ($termin->getRelatedPersons());
-if(($persons)) {
+
+if($termin_item['seminar_date'] instanceof SingleDate) {
     $content .= "<b>" . _("durchführende Dozenten:") . "</b> ";
-    foreach ($persons as $key => $dozent_id) {
+    foreach ($termin_item['seminar_date']->getRelatedPersons() as $key => $dozent_id) {
         $key < 1 || ($content .= ", ");
         $content .= htmlReady(get_fullname($dozent_id));
     }
+    $content .= "<br>";
+    if ($show_admin) {
+        $content .= '<div style="text-align:center">';
+        $content .= LinkButton::create(_('Bearbeiten'), URLHelper::getURL("raumzeit.php", array('cmd' => 'open','open_close_id' => $termin_item['termin_id'] . '#' . $termin_item['termin_id'])));
+        if (!$termin_item['seminar_date']->isExTermin()) {
+            $content .= LinkButton::create(_('Ausfallen lassen'), "javascript:STUDIP.CancelDatesDialog.initialize('".UrlHelper::getScriptURL('dispatch.php/course/cancel_dates', array('termin_id' =>  $termin_item['termin_id']))."');");
+        }
+        $content .= '</div>';
+    }
 }
-$content .= "<br>";
-if ($show_admin && !$termin_item['edit'])
-    $content .= "<br><div align=\"center\"> ". LinkButton::create(_('Bearbeiten'), URLHelper::getURL("raumzeit.php", array('cmd' => 'open','open_close_id' => $termin_item['termin_id'] . '#' . $termin_item['termin_id']))) . "</div>";
 if($termin_item['edit'])
     $content .= "<br><div align=\"center\"> " . LinkButton::create(_('Bearbeiten'), URLHelper::getURL('calendar.php', array('cmd' => 'edit', 'termin_id' => $termin_item['termin_id'], 'atime' => $termin->date, 'source_page' => URLHelper::getURL()))) ."</div>";
 echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr>";

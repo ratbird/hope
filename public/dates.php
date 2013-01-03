@@ -113,10 +113,19 @@ if (Request::get('export') && $rechte) {
 
     echo $GLOBALS['template_factory']->open('dates_export')->render(compact('dates'));
 } else {
+    PageLayout::addSqueezePackage('raumzeit');
+    $pmessages = PageLayout::getMessages();
     // Start of Output
     include ('lib/include/html_head.inc.php'); // Output of html head
     include ('lib/include/header.php');   // Output of Stud.IP head
-   
+    echo '<div style="background-color: white;padding:0px;">' . join("\n", $pmessages) . '</div>';
+    ?>
+    <script>
+    jQuery(function () {
+        STUDIP.CancelDatesDialog.reloadUrlOnClose = '<?= UrlHelper::getUrl()?>';
+    });
+    </script>
+    <?
     if ($cmd == 'openAll') $openAll = true;
     $dates = array();
 

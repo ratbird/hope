@@ -291,5 +291,40 @@ class SeminarDB
 
         return true;
     }
+    
+    function getDeletedSingleDates($seminar_id, $start = 0, $end = 0)
+    {
+        $ret = array();
+        if (($start != 0) || ($end != 0)) {
+            $query = "SELECT ex_termine.*, GROUP_CONCAT(trp.user_id) AS related_persons
+                      FROM ex_termine
+                      LEFT JOIN termin_related_persons AS trp ON (termin_id = trp.range_id)
+                      WHERE ex_termine.range_id = ?
+                        AND (metadate_id IS NULL OR metadate_id = '')
+                      AND `date` BETWEEN ? AND ?
+                      GROUP BY termin_id
+                      ORDER BY date";
+            $parameters = array($seminar_id, $start, $end);
+        } else {
+            $query = "SELECT ex_termine.*, GROUP_CONCAT(trp.user_id) AS related_persons
+                      FROM ex_termine
+                      LEFT JOIN termin_related_persons AS trp ON (termin_id = trp.range_id)
+                      WHERE ex_termine.range_id = ?
+                        AND (metadate_id IS NULL OR metadate_id = '')
+                      GROUP BY termin_id
+                      ORDER BY date";
+            $parameters = array($seminar_id);
+        }
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute($parameters);
+
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $zw = $row;
+            $zw['ex_termin'] = TRUE;
+            $zw['related_persons'] = explode(',', $zw['related_persons']);
+            $ret[] = $zw;
+        }
+        return $ret;
+    }
 
 }

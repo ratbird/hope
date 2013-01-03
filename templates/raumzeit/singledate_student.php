@@ -87,6 +87,13 @@
         <?  }
             }
         ?>
+        <div style="text-align:center">
+        <?
+        if ($rechte) {
+            echo \Studip\LinkButton::create(_('Ausfallen lassen'), "javascript:STUDIP.CancelDatesDialog.initialize('".UrlHelper::getScriptURL('dispatch.php/course/cancel_dates', array('termin_id' =>  $tpl['sd_id']))."');");
+        }
+        ?>
+        </div>
     </td>
 </tr>
 <? } ?>
@@ -109,7 +116,7 @@
         <span style="text-color: red">
             <b><?=_("Dieser Termin findet nicht statt!")?></b>
         </span>
-        (<?=_("Kommentar")?>: <?=$tpl['comment']?>)
+        (<?=_("Kommentar")?>: <?=htmlready($tpl['comment'])?>)
     </td>
 </tr>
 <?

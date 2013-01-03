@@ -417,6 +417,8 @@ jQuery(function () {
                             $tpl['cycle_id'] = $metadate_id;
                             if (Request::option('checkboxAction') == 'edit') :
                                 include('lib/raumzeit/templates/bulk_actions.php');
+                            elseif (Request::option('checkboxAction') == 'preparecancel') :
+                                include('lib/raumzeit/templates/bulk_cancel_action.php');
                             else :
                                 include('lib/raumzeit/templates/actions.php');
                             endif;
@@ -471,7 +473,7 @@ jQuery(function () {
                 </tr>
 
                 
-                <? if ($termine =& $sem->getSingleDates(true, true)) { ?>
+                <? if ($termine =& $sem->getSingleDates(true, true, true)) { ?>
                 <tr>
                     <td align="left" colspan="9" class="table_row_even">
                         <form action="<?= URLHelper::getLink() ?>#Stapelaktionen" method="post" name="Formular">
@@ -512,13 +514,16 @@ jQuery(function () {
                 <? } ?>
                 <? if ($count) : ?>
                         <?
+                            $tpl = array();
                             $tpl['width'] = '100%';
                             if (Request::option('checkboxAction') == 'edit') :
                                 include('lib/raumzeit/templates/bulk_actions.php');
+                            elseif (Request::option('checkboxAction') == 'preparecancel') :
+                                include('lib/raumzeit/templates/bulk_cancel_action.php');
                             else :
                                 include('lib/raumzeit/templates/actions.php');
                             endif;
-                        ?>
+                            ?>
                         </form>
                     </td>
                 </tr>

@@ -111,7 +111,10 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
     if (is_array($range_id)) {
         $query = "SELECT t.*, th.issue_id, th.title AS Titel,
                          th.description AS Info, s.Name
-                  FROM termine AS t
+                  FROM (SELECT termin_id,range_id,date,end_time,chdate,date_typ,content, 0 as ex_termin
+                        FROM termine
+                        UNION SELECT termin_id,range_id,date,end_time,chdate,date_typ,content, 1 as ex_termin
+                        FROM ex_termine WHERE content <> '') AS t
                   LEFT JOIN themen_termine USING (termin_id)
                   LEFT JOIN themen AS th USING (issue_id)
                   LEFT JOIN seminare AS s ON (range_id = Seminar_id)
@@ -121,7 +124,10 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
     } else if (strlen($range_id)) {
         $query = "SELECT t.*, th.issue_id, th.title AS Titel,
                          th.description as Info
-                  FROM termine AS t
+                  FROM (SELECT termin_id,range_id,date,end_time,chdate,date_typ,content, 0 as ex_termin
+                        FROM termine
+                        UNION SELECT termin_id,range_id,date,end_time,chdate,date_typ,content, 1 as ex_termin
+                        FROM ex_termine WHERE content <> '') AS t
                   LEFT JOIN themen_termine USING (termin_id)
                   LEFT JOIN themen AS th USING (issue_id)
                   WHERE range_id = :range_id {$show_query} {$tmp_query}
@@ -130,7 +136,10 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
     } else {
         $query = "SELECT t.*, th.issue_id, th.title as Titel,
                          th.description as Info, s.Name, su.*
-                  FROM termine AS t
+                  FROM (SELECT termin_id,range_id,date,end_time,chdate,date_typ,content, 0 as ex_termin
+                        FROM termine
+                        UNION SELECT termin_id,range_id,date,end_time,chdate,date_typ,content, 1 as ex_termin
+                        FROM ex_termine WHERE content <> '') AS t
                   LEFT JOIN themen_termine USING (termin_id)
                   LEFT JOIN themen AS th USING (issue_id)
                   LEFT JOIN seminare AS s ON (range_id = s.Seminar_id)
@@ -208,7 +217,7 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
             echo '<div role="article">';
             $zusatz = '';
             if (!$range_id || is_array($range_id)) {
-
+                die('wirklich tot?');
                  $titel = "<a href=\"$link\" class=\"tree\" onclick=\"STUDIP.Termine.opencloseSem('"
                 .$date['termin_id']."','".$show_admin."','".$date['date_typ']."','"
                 .$date['info']."'); return false;\" >".$titel."</a>";
@@ -228,6 +237,9 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
                     $zusatz .= " (" . htmlReady($freeroomtext) . ") ";
                 }else{
                     $zusatz .= _("Ort:").' '._("k.A.") . " ";
+                }
+                if ($termin->isExTermin()) {
+                    $zusatz = _("fällt aus");
                 }
                 $current_seminar_id = $range_id;
             }
@@ -266,6 +278,10 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
                 $tmp_titel = htmlReady(mila($date['Titel'], 60 / (($full_width ? 100 : 70) / 100)));
                 $titel .= ", " . $tmp_titel;
             }
+            if ($date['ex_termin']) {
+                $titel .= '&nbsp;<i>' . _("Dieser Termin findet nicht statt!").'</i>';
+                $titel .= tooltipIcon($date['content'], true);
+            }
 
             if ($date['chdate'] > max(object_get_visit($current_seminar_id, "schedule"), object_get_visit($current_seminar_id, "sem"))) {
                 $new = false;
@@ -292,7 +308,8 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
             } else {
                 $link=URLHelper::getLink("?dclose=true".$add_to_link);
             }
-
+            $date['seminar_date'] = new SingleDate($date['termin_id']);
+            
             if ($link) {
                 $titel = "<a href=\"$link\" class=\"tree\" onclick=\"STUDIP.Termine.openclose('".$date['termin_id']."','"
                 .$show_admin."','".$date['date_typ']."','".$date['info']."','"
@@ -360,6 +377,7 @@ function show_termin_item_content($termin_item, $new = FALSE, $range_id = "", $s
 {
             global $TERMIN_TYP;
             $template = $GLOBALS['template_factory']->open('dates/seminar_date-content');
+            
             $template->termin_item = $termin_item;
             $template->range_id = $range_id;
 
@@ -587,6 +605,8 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
             $have_write_permission = true;
 
             $zusatz = '';
+            $singledate = null;
+            
             if(strtolower(get_class($termin)) == 'seminarevent') {
                 $have_write_permission = $GLOBALS['perm']->have_studip_perm('tutor', $termin->getSeminarId());
                 $singledate = new SingleDate($termin->id);
@@ -621,7 +641,12 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
 
             if (strtolower(get_class($termin)) == 'seminarevent') {
                 //Beschneiden des Titels
-                $titel .= ', ' . htmlReady(mila($issue_titles, $length));
+                if ($singledate->isExTermin()) {
+                    $titel .= ', <i>' . _("Dieser Termin findet nicht statt!") . '</i>';
+                    $titel .= tooltipIcon($singledate->getComment(), true);
+                } else {
+                    $titel .= ', ' . htmlReady(mila($issue_titles, $length));
+                }
             } else {
                 //Beschneiden des Titels
                 $titel .= ', ' . htmlReady(mila($termin->getTitle(), $length));
@@ -707,11 +732,10 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
 
 
            $termin_item = array('termin_id'=>$termin->getId(),"chdate"=>$termin->getChangeDate(),
-            'date_type'=>$type,'info'=>$description,
+            'type'=>$type,'info'=>$description,
             'kat'=>$kat,'cont'=>$cont,'edit'=>$edit,
             'sem'=>$sem,'raum'=>$raum,'ort'=>$ort,'pri'=>$pri,'sicht'=>$sicht,'res'=>$res,
-            'autor'=>$autor);
-
+            'autor'=>$autor, 'seminar_date' => $singledate);
            if ($open == $app_ident) {
                 $termin_item['open'] = "open";
             }

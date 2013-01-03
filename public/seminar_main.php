@@ -103,12 +103,15 @@ checkObject();
 PageLayout::setHelpKeyword("Basis.InVeranstaltungKurzinfo");
 PageLayout::setTitle($GLOBALS['SessSemName']["header_line"]. " - " . _("Kurzinfo"));
 Navigation::activateItem('/course/main/info');
+PageLayout::addSqueezePackage('raumzeit');
 // add skip link
 SkipLinks::addIndex(Navigation::getItem('/course/main/info')->getTitle(), 'main_content', 100);
 
+$pmessages = PageLayout::getMessages();
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
+echo '<div style="background-color: white;padding:0px;">' . join("\n", $pmessages) . '</div>';
 
 include 'lib/showNews.inc.php';
 include 'lib/show_dates.inc.php';
@@ -137,6 +140,11 @@ process_news_commands($smain_data);
 $quarter_year = 60 * 60 * 24 * 90;
 
 ?>
+<script>
+    jQuery(function () {
+        STUDIP.CancelDatesDialog.reloadUrlOnClose = '<?= UrlHelper::getUrl()?>';
+    });
+</script>
 <table width="100%" border=0 cellpadding=0 cellspacing=0>
     <tr>
         <td class="blank" valign="top" id="main_content">

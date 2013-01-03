@@ -31,7 +31,7 @@
     <td width="30%" nowrap class="<?=$tpl['class']?>" style="padding: 0;">
         <? if ($tpl['deleted']) : ?>
             <? if ($tpl['comment']) : ?>
-                <i><?=_("Kommentar")?>: <?=$tpl['comment']?></i>
+                <i><?=_("(fällt aus)")?> <?=tooltipIcon($tpl['comment'], false)?></i>
             <? else : ?>
             <span style="color: #666666">
                 <?=$tpl['room']?>

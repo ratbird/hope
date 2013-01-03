@@ -35,11 +35,13 @@ function raumzeit_delete_singledate($sem) {
     if (!Request::get('approveDelete') && sizeof($warning) > 0) {
             $params = array(
                 'cmd' => 'delete_singledate',
+                'subcmd' => Request::option('subcmd'),
                 'cycle_id' => Request::option('cycle_id'),
                 'sd_id' => Request::option('sd_id'),
                 'approveDelete' => 'TRUE'
             );
-            echo createQuestion( implode("\n", $warning) . "\n". _("Wollen Sie diesen Termin wirklich löschen?"), $params);
+            $base_url = Request::option('subcmd') == 'cancel' ? '?#' . Request::option('sd_id') : '?';
+            echo createQuestion( implode("\n", $warning) . "\n". _("Wollen Sie diesen Termin wirklich löschen?"), $params, array(), $base_url);
     }
 
     // no approval needed or already approved
@@ -63,14 +65,20 @@ function raumzeit_delete_singledate($sem) {
         else {
             $sem->createMessage(sprintf(_("Der Termin %s wurde gelöscht!"), $termin->toString()));
         }
-        $sem->deleteSingleDate(Request::option('sd_id'), Request::option('cycle_id'));
+        if (Request::option('subcmd') == 'cancel') {
+            $sem->cancelSingleDate(Request::option('sd_id'), Request::option('cycle_id'));
+            Request::set('singleDateID', Request::option('sd_id'));
+        } else {
+            $sem->deleteSingleDate(Request::option('sd_id'), Request::option('cycle_id'));
+        }
     }
 }
 
 function raumzeit_undelete_singledate($sem) {
-    $termin = $sem->getSingleDate(Request::option('sd_id'), Request::option('cycle_id'));
-    $sem->createMessage(sprintf(_("Der Termin %s wurde wiederhergestellt!"), $termin->toString()));
-    $sem->unDeleteSingleDate(Request::option('sd_id'), Request::option('cycle_id'));
+    if ($sem->unDeleteSingleDate(Request::option('sd_id'), Request::option('cycle_id'))) {
+        $termin = new SingleDate(Request::option('sd_id'));
+        $sem->createMessage(sprintf(_("Der Termin %s wurde wiederhergestellt!"), $termin->toString()));
+    }
 }
 
 function raumzeit_checkboxAction($sem) {
@@ -85,13 +93,27 @@ function raumzeit_checkboxAction($sem) {
             $singledate = Request::getArray('singledate');
             if (empty($singledate)) break;
             $msg = _("Folgende Termine wurden gelöscht:").'<br>';
+            $deleted_dates = array();
             foreach ($singledate as $val) {
                 $termin = $sem->getSingleDate($val, Request::option('cycle_id'));
                 $msg .= '<li>'.$termin->toString().'<br>';
-                unset($termin);
-                $sem->deleteSingleDate($val, Request::option('cycle_id'));
+                if (Request::get('cancel_comment') !== null) {
+                    $sem->cancelSingleDate($val, Request::option('cycle_id'));
+                    $termin = new SingleDate($val);
+                    $termin->setComment(Request::get('cancel_comment'));
+                    $termin->store();
+                    $deleted_dates[] = $termin;
+                } else {
+                    $sem->deleteSingleDate($val, Request::option('cycle_id'));
+                }
             }
             $sem->createMessage($msg);
+            if (Request::int('cancel_send_message') && count($deleted_dates)) {
+                $snd_messages = raumzeit_send_cancel_message(Request::get('cancel_comment'), $deleted_dates);
+                if ($snd_messages) {
+                    $sem->createMessage(sprintf(_("Es wurden %s Benachrichtigungen gesendet."), $snd_messages));
+                }
+            }
             break;
 
         case 'delete':
@@ -113,7 +135,7 @@ function raumzeit_checkboxAction($sem) {
             $msg = _("Folgende Termine wurden wieder hergestellt:").'<br>';
             foreach ($singledate as $val) {
                 if ($sem->unDeleteSingleDate($val, Request::option('cycle_id'))) {        // undelete retrieved singleDate
-                    $termin = $sem->getSingleDate($val, Request::option('cycle_id'));     // retrieve singleDate
+                    $termin = new SingleDate($val);                                       // retrieve singleDate
                     $msg .= $termin->toString().'<br>';                                   // add string representation to message
                     unset($termin);                                                       // we never know, if the variable persists...
                 }
@@ -284,11 +306,11 @@ function raumzeit_editDeletedSingleDate($sem) {
         $termin =& $sem->getSingleDate(Request::option('singleDateID'), Request::option('cycle_id'));
     } else {
         // the choosen singleDate is irregular, so we can edit it directly
-        $termin =& $sem->getSingleDate(Request::option('singleDateID'));
+       $termin = new SingleDate(Request::option('singleDateID'));
     }
 
     $old_comment = $termin->getComment();
-    $termin->setComment(Request::get('comment'));
+    $termin->setComment(Request::get('cancel_comment'));
     if($termin->getComment() != $old_comment) {
         $sem->createMessage(sprintf(_("Der Kommtentar des gelöschten Termins %s wurde geändert."), '<b>'.$termin->toString().'</b>'));
     } else {
@@ -296,6 +318,14 @@ function raumzeit_editDeletedSingleDate($sem) {
     }
 
     $termin->store();
+
+    if (Request::int('cancel_send_message')) {
+        $snd_messages = raumzeit_send_cancel_message(Request::get('cancel_comment'), $termin);
+        if ($snd_messages) {
+            $sem->createInfo(sprintf(_("Es wurden %s Benachrichtigungen gesendet."), $snd_messages));
+        }
+    }
+    Request::set('singleDateID', null);
 }
 
 function raumzeit_editSingleDate($sem) {

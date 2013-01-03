@@ -170,7 +170,7 @@ class SeminarEvent extends Event
         if (!$this->havePermission(Event::PERMISSION_READABLE)) {
             return _("Keine Berechtigung.");
         }
-        if ($this->properties['SUMMARY'] == '') {
+        if ($this->properties['SUMMARY'] == '' || $this->getProperty('SUMMARY') == _('Ohne Titel')) {
             return $this->getSemName();
         }
 
@@ -210,7 +210,7 @@ class SeminarEvent extends Event
 
     function getCategoryStyle($image_size = 'small')
     {
-        global $TERMIN_TYP, $CANONICAL_RELATIVE_PATH_STUDIP, $PERS_TERMIN_KAT;
+        global $TERMIN_TYP, $PERS_TERMIN_KAT;
 
         $index = $this->getCategory();
         if ($index == 255) {
@@ -231,4 +231,8 @@ class SeminarEvent extends Event
         return null;
     }
 
+    function isDayEvent()
+    {
+        return (($this->getEnd() - $this->getStart()) / 60 / 60) > 23;
+    }
 }

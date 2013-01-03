@@ -11,23 +11,14 @@ use Studip\Button,
     <td class="printcontent" colspan="9" style="padding-left: 10px; padding-top: 0.5em;">
         <a name="<?=$tpl['sd_id']?>"></a>
         <? if ($tpl['deleted']) : ?>   
-            <br>
-            <?=_("Der hier eingegebene Kommentar wird im Ablaufplan und auf der Kurzinfo-Seite der Veranstaltung angezeigt.")?><br>
-            <br>
-            <b><?=_("Kommentar")?>:<br></b>
-            <input type="text" name="comment" size="50" value="<?=$tpl['comment']?>">
-            <br>
-            <!--<input type="checkbox">Mail an alle Teilnehmenden verschicken<br>
-            <br>-->
-            
+            <? include('lib/raumzeit/templates/cancel_action.php'); ?>
             <div style="text-align: center">
-                <div class="button-group">
-                    <?= Button::createAccept(_('Übernehmen'), 'editDeletedSingleDate') ?>
-                    <?= LinkButton::createCancel(_('Abbrechen'),
+            <div class="button-group">
+                <?= Button::createAccept(_('Übernehmen'), 'editDeletedSingleDate') ?>
+                <?= LinkButton::createCancel(_('Abbrechen'),
                             URLHelper::getURL('?#' . $tpl['sd_id'])) ?>
                 </div>
             </div>
-
             <input type="hidden" name="cmd" value="editDeletedSingleDate">
             <input type="hidden" name="singleDateID" value="<?=$tpl['sd_id']?>">
             <? if ($tpl['cycle_id']) : ?>
@@ -166,6 +157,10 @@ use Studip\Button,
                     <?= Button::createAccept(_('Übernehmen'), 'editSingleDate_button') ?>
                     <?= LinkButton::createCancel(_('Abbrechen'),
                             URLHelper::getURL('?cycle_id=' . $tpl['cycle_id'] . '#' . $tpl['sd_id'])) ?>
+                </div>
+                <div class="button-group">
+                <?= LinkButton::create(_('Ausfallen lassen'),
+                            URLHelper::getURL('?cmd=delete_singledate&subcmd=cancel&cycle_id=' . $tpl['cycle_id'] . '&sd_id='. $tpl['sd_id'] . '#' . $tpl['sd_id'])) ?>
                 </div>
                 <div class="button-group">
                 <? if ($GLOBALS['RESOURCES_ENABLE'] && $GLOBALS['RESOURCES_ALLOW_ROOM_REQUESTS']) : ?>

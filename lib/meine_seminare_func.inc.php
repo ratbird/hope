@@ -445,6 +445,17 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
     }
 
     //Termine?
+    $db2->query(get_obj_clause('ex_termine a','range_id','termin_id',"(chdate > IFNULL(b.visitdate,0) AND autor_id !='$user_id')", 'schedule', false, " AND a.content <> '' "));
+    while($db2->next_record()) {
+        $object_id = $db2->f('object_id');
+        if ($my_obj[$object_id]["modules"]["schedule"]) {
+            $my_obj[$object_id]["neueausfalltermine"] = $db2->f("neue");
+            $my_obj[$object_id]["ausfalltermine"] = $db2->f("count");
+            if ($my_obj[$object_id]['last_modified'] < $db2->f('last_modified')){
+                $my_obj[$object_id]['last_modified'] = $db2->f('last_modified');
+            }
+        }
+    }
     $db2->query(get_obj_clause('termine a','range_id','termin_id',"(chdate > IFNULL(b.visitdate,0) AND autor_id !='$user_id')", 'schedule'));
     while($db2->next_record()) {
         $object_id = $db2->f('object_id');
@@ -456,13 +467,14 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
             }
 
             $nav = new Navigation('schedule', 'dates.php');
-
-            if ($db2->f('neue')) {
+            $neue = $my_obj[$object_id]["neuetermine"] + $my_obj[$object_id]["neueausfalltermine"];
+            $count = $my_obj[$object_id]["termine"] + $my_obj[$object_id]["ausfalltermine"];
+            if ($neue) {
                 $nav->setImage('icons/16/red/new/schedule.png', array('title' =>
-                    sprintf(_('%s Termine, %s neue'), $db2->f('count'), $db2->f('neue'))));
-                $nav->setBadgeNumber($db2->f('neue'));
-            } else if ($db2->f('count')) {
-                $nav->setImage('icons/16/grey/schedule.png', array('title' => sprintf(_('%s Termine'), $db2->f('count'))));
+                    sprintf(_('%s Termine, %s neue'), $count, $neue)));
+                $nav->setBadgeNumber($neue);
+            } else if ($count) {
+                $nav->setImage('icons/16/grey/schedule.png', array('title' => sprintf(_('%s Termine'), $count)));
             }
 
             $my_obj[$object_id]['schedule'] = $nav;

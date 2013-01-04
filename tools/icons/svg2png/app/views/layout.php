@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="content-type" content="text/html;charset=UTF-8">
     <title>Stud.IP: Icon SVG to PNG</title>
     <link href="<?= URLHelper::getLink('assets.php') ?>?stylesheets/style.css" rel="stylesheet" type="text/css">
     <link href="<?= URLHelper::getLink('assets/style.css') ?>" rel="stylesheet" type="text/css">

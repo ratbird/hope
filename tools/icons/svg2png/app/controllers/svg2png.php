@@ -72,12 +72,13 @@ class Svg2pngController extends Trails_Controller
                 $this->color['name'][]  = '';
             }
         }
+        $this->set_content_type('text/html;charset=windows-1252');
     }
 
     public function download_action()
     {
         ini_set('max_execution_time', 0);
-        
+
         $input = $this->inputs[Request::int('input')];
 
         $zip_name = sprintf('%1$s-%2$ux%2$u%3$s.zip',
@@ -114,7 +115,7 @@ class Svg2pngController extends Trails_Controller
             foreach ($files as $file => $png) {
                 if (Request::submittedSome('download_selected', 'download_selected_extras') && !in_array($file, $selected)) {
                     continue;
-                } 
+                }
                 $zip->addFromString($directory . $file, $png);
 
                 if (!Request::submitted('download_selected') && in_array($file, $selected)) {
@@ -170,7 +171,7 @@ class Svg2pngController extends Trails_Controller
         if ($punch !== false) {
             $pnch = new Imagick();
             $pnch->readImageBlob($punch);
-            
+
             $img->compositeImage($pnch, IMagick::COMPOSITE_DSTOUT, 0, 0);
             $pnch->destroy();
         }

@@ -24,6 +24,7 @@ class SVG_Converter
 {
     private $filename;
     private $xml;
+    private $viewbox = false;
 
     private static $output_directory = '.';
 
@@ -45,12 +46,11 @@ class SVG_Converter
 
     public function getViewBox()
     {
-        static $viewbox;
-        if (!$viewbox) {
+        if ($this->viewbox === false) {
             $attributes = (array)$this->xml->attributes();
-            $viewbox = max(explode(' ', $attributes['@attributes']['viewBox']));
+            $this->viewbox = max(explode(' ', $attributes['@attributes']['viewBox']));
         }
-        return $viewbox;
+        return $this->viewbox;
     }
 
     public function extractItems($encode_umlauts = true)

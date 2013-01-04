@@ -61,7 +61,7 @@ if($termin_item['seminar_date'] instanceof SingleDate) {
     if ($show_admin) {
         $content .= '<div style="text-align:center">';
         $content .= LinkButton::create(_('Bearbeiten'), URLHelper::getURL("raumzeit.php", array('cmd' => 'open','open_close_id' => $termin_item['termin_id'] . '#' . $termin_item['termin_id'])));
-        if (!$termin_item['seminar_date']->isExTermin()) {
+        if (!$termin_item['seminar_date']->isExTermin() && !LockRules::Check($range_id, 'cancelled_dates')) {
             $content .= LinkButton::create(_('Ausfallen lassen'), "javascript:STUDIP.CancelDatesDialog.initialize('".UrlHelper::getScriptURL('dispatch.php/course/cancel_dates', array('termin_id' =>  $termin_item['termin_id']))."');");
         }
         $content .= '</div>';

@@ -17,6 +17,7 @@
 require '../lib/bootstrap.php';
 
 unregister_globals();
+
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 
 $_SESSION['issue_open'] = array();
@@ -39,7 +40,7 @@ if ($RESOURCES_ENABLE) {
     include_once ($RELATIVE_PATH_RESOURCES."/lib/VeranstaltungResourcesAssign.class.php");
     include_once ($RELATIVE_PATH_RESOURCES."/lib/ResourceObjectPerms.class.php");
 }
- $cmd = Request::option('cmd');
+$cmd = Request::option('cmd');
 $sem = new Seminar($SessionSeminar);
 
 checkObject();
@@ -114,18 +115,10 @@ if (Request::get('export') && $rechte) {
     echo $GLOBALS['template_factory']->open('dates_export')->render(compact('dates'));
 } else {
     PageLayout::addSqueezePackage('raumzeit');
-    $pmessages = PageLayout::getMessages();
-    // Start of Output
-    include ('lib/include/html_head.inc.php'); // Output of html head
-    include ('lib/include/header.php');   // Output of Stud.IP head
-    echo '<div style="background-color: white;padding:0px;">' . join("\n", $pmessages) . '</div>';
-    ?>
-    <script>
+    PageLayout::addHeadElement('script', array(), "
     jQuery(function () {
-        STUDIP.CancelDatesDialog.reloadUrlOnClose = '<?= UrlHelper::getUrl()?>';
-    });
-    </script>
-    <?
+        STUDIP.CancelDatesDialog.reloadUrlOnClose = '" . UrlHelper::getUrl() ."';
+    });");
     if ($cmd == 'openAll') $openAll = true;
     $dates = array();
 
@@ -213,9 +206,19 @@ if (Request::get('export') && $rechte) {
 
 
     $template = $GLOBALS['template_factory']->open('dates');
+    $infobox = $GLOBALS['template_factory']->open('infobox/infobox_dates');
+    
     $issue_open = $_SESSION['issue_open'];
-    echo $template->render(compact('dates', 'sem', 'rechte', 'openAll', 'issue_open', 'raumzeitFilter'));
-
+    $cancelled_dates_locked = LockRules::Check($sem->getId(), 'cancelled_dates');
+    
+    $semester_selectionlist = raumzeit_get_semesters($sem, $semester, $raumzeitFilter);
+    $picture = 'infobox/schedules.jpg';
+    $selectionlist_title = _("Semesterauswahl");
+    $selectionlist = $semester_selectionlist;
+    $layout = $GLOBALS['template_factory']->open('layouts/base.php');
+    $layout->infobox = $infobox->render(compact('picture', 'selectionlist_title', 'selectionlist', 'rechte', 'raumzeitFilter'));
+    $layout->content_for_layout = $template->render(compact('dates', 'sem', 'rechte', 'openAll', 'issue_open', 'raumzeitFilter', 'cancelled_dates_locked'));
+    
+    echo $layout->render();
 }
-include ('lib/include/html_end.inc.php');
 page_close();

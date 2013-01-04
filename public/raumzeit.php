@@ -133,6 +133,7 @@ if (LockRules::Check($id, 'room_time')) {
     $sem->createInfo(_("Diese Seite ist für die Bearbeitung gesperrt. Sie können die Daten einsehen, jedoch nicht verändern.")
     . ($data['description'] ? '<br>'.formatLinks($data['description']) : ''));
 }
+$cancelled_dates_locked = LockRules::Check($id, 'cancelled_dates');
 
 if (!$_LOCKED) {
     $sem->registerCommand('checkboxAction', 'raumzeit_checkboxAction');
@@ -186,6 +187,7 @@ if ($perm->have_studip_perm("admin",$sem->getId())) {
 jQuery(function () {
     STUDIP.RoomRequestDialog.reloadUrlOnClose = '<?= UrlHelper::getUrl()?>';
     STUDIP.BlockAppointmentsDialog.reloadUrlOnClose = '<?= UrlHelper::getUrl()?>';
+    STUDIP.CancelDatesDialog.reloadUrlOnClose = '<?= UrlHelper::getUrl()?>';
 });
 </script>
 <table width="100%" border="0" cellpadding="0" cellspacing="0" id="raumzeit">
@@ -464,14 +466,14 @@ jQuery(function () {
                         <b><?=_("Unregelm&auml;&szlig;ige Termine/Blocktermine")?></b>
                     </td>
                 </tr>
-
+                <? if (!$_LOCKED) : ?>
                 <tr>
                     <td colspan="9" class="blank">
                         <?= LinkButton::create(_('Einzeltermin hinzufügen'), URLHelper::getURL('', array('cmd' => 'createNewSingleDate')) . '#newSingleDate') ?>
                         <?= LinkButton::create(_('Blocktermine hinzufügen'), 'javascript:STUDIP.BlockAppointmentsDialog.initialize("'.UrlHelper::getURL('dispatch.php/course/block_appointments').'")'); ?>
                     </td>
                 </tr>
-
+                <? endif ?>
                 
                 <? if ($termine =& $sem->getSingleDates(true, true, true)) { ?>
                 <tr>
@@ -512,7 +514,7 @@ jQuery(function () {
                             ?>
                         </table>
                 <? } ?>
-                <? if ($count) : ?>
+                <? if ($count && !$_LOCKED) : ?>
                         <?
                             $tpl = array();
                             $tpl['width'] = '100%';

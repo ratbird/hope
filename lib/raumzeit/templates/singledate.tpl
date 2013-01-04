@@ -20,13 +20,17 @@
         <? endif ?>
     </td>
     <td width="44%" nowrap class="<?=$tpl['class']?>" style="padding: 0;">
+        <? if (!$_LOCKED) : ?>
         <a class="tree" href="<?= URLHelper::getLink('?cycle_id=' . $tpl['cycle_id'] . '&singleDateID='. $tpl['sd_id'] .'#'. $tpl['sd_id']) ?>">
+        <? endif ?>
             <? if ($tpl['deleted']) : ?>
                 <span style="color: #666666"><?= $tpl['date'] ?></span>
             <? else : ?>
                 <?=$tpl['date']?>
             <? endif ?>
+        <? if (!$_LOCKED) : ?>
         </a>
+        <? endif ?>
     </td>
     <td width="30%" nowrap class="<?=$tpl['class']?>" style="padding: 0;">
         <? if ($tpl['deleted']) : ?>
@@ -62,6 +66,12 @@
             <? else : ?>
                 <a href="<?= URLHelper::getLink('?cmd=delete_singledate&sd_id='. $tpl['sd_id'] .'&cycle_id='. $tpl['cycle_id'] .'#'. $tpl['sd_id'])?>">
                     <?= Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _("Termin löschen")))?>
+                </a>
+            <? endif ?>
+        <? elseif(!$cancelled_dates_locked) : ?>
+            <? if (!$tpl['deleted']) : ?>
+                <a href="javascript:STUDIP.CancelDatesDialog.initialize('<?=UrlHelper::getScriptURL('dispatch.php/course/cancel_dates', array('termin_id' =>  $tpl['sd_id']))?>')">
+                    <?= Assets::img('icons/16/blue/visibility/calendar-visible.png', array('class' => 'text-top', 'title' => _("Termin ausfallen lassen")))?>
                 </a>
             <? endif ?>
         <? endif ?>

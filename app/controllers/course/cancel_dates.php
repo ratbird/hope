@@ -73,14 +73,15 @@ class Course_CancelDatesController extends AuthenticatedController
 
             if ($form->isClicked('save_close')) {
                 $sem = Seminar::getInstance($this->course_id);
+                $comment = studip_utf8decode($form->getFormFieldValue('comment'));
                 foreach ($this->dates as $date) {
                     $sem->cancelSingleDate($date->getTerminId(), $date->getMetadateId());
-                    $date->setComment($form->getFormFieldValue('comment'));
+                    $date->setComment($comment);
                     $date->setExTermin(true);
                     $date->store();
                 }
                 if ($form->getFormFieldValue('snd_message') && count($this->dates)) {
-                    $snd_messages = raumzeit_send_cancel_message($form->getFormFieldValue('comment'), $this->dates);
+                    $snd_messages = raumzeit_send_cancel_message($comment, $this->dates);
                     if ($snd_messages) {
                         $msg = sprintf(_("Es wurden %s Benachrichtigungen gesendet."), $snd_messages);
                     }

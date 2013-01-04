@@ -89,7 +89,7 @@
         ?>
         <div style="text-align:center">
         <?
-        if ($rechte) {
+        if ($rechte && !$cancelled_dates_locked) {
             echo \Studip\LinkButton::create(_('Ausfallen lassen'), "javascript:STUDIP.CancelDatesDialog.initialize('".UrlHelper::getScriptURL('dispatch.php/course/cancel_dates', array('termin_id' =>  $tpl['sd_id']))."');");
         }
         ?>

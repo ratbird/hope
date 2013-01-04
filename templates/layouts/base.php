@@ -38,7 +38,7 @@
           <? if ($infobox) : ?>
           <div id="layout_sidebar">
               <div id="layout_infobox">
-                    <?= $this->render_partial('infobox/infobox_generic_content', $infobox) ?>
+                    <?= is_array($infobox) ? $this->render_partial('infobox/infobox_generic_content', $infobox) : $infobox ?>
               </div>
           </div>
           <? endif ?>

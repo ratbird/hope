@@ -27,7 +27,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 require '../lib/bootstrap.php';
 
 unregister_globals();
-
+ob_start();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Default_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $auth->login_if(Request::get('again') && ($auth->auth["uid"] == "nobody"));
 
@@ -103,15 +103,8 @@ checkObject();
 PageLayout::setHelpKeyword("Basis.InVeranstaltungKurzinfo");
 PageLayout::setTitle($GLOBALS['SessSemName']["header_line"]. " - " . _("Kurzinfo"));
 Navigation::activateItem('/course/main/info');
-PageLayout::addSqueezePackage('raumzeit');
 // add skip link
 SkipLinks::addIndex(Navigation::getItem('/course/main/info')->getTitle(), 'main_content', 100);
-
-$pmessages = PageLayout::getMessages();
-// Start of Output
-include ('lib/include/html_head.inc.php'); // Output of html head
-include ('lib/include/header.php');   // Output of Stud.IP head
-echo '<div style="background-color: white;padding:0px;">' . join("\n", $pmessages) . '</div>';
 
 include 'lib/showNews.inc.php';
 include 'lib/show_dates.inc.php';
@@ -140,15 +133,9 @@ process_news_commands($smain_data);
 $quarter_year = 60 * 60 * 24 * 90;
 
 ?>
-<script>
-    jQuery(function () {
-        STUDIP.CancelDatesDialog.reloadUrlOnClose = '<?= UrlHelper::getUrl()?>';
-    });
-</script>
 <table width="100%" border=0 cellpadding=0 cellspacing=0>
     <tr>
         <td class="blank" valign="top" id="main_content">
-        <div style="padding:0 1.5em 1.5em 1.5em">
     <?
     echo "<h3>".htmlReady($GLOBALS['SessSemName']["header_line"]). "</h3>";
     if ($GLOBALS['SessSemName'][3]) {
@@ -235,7 +222,6 @@ $quarter_year = 60 * 60 * 24 * 90;
         echo implode(', ', $mods);
     }
 ?>
-        </div>
         </td>
         <td class="blank" align="right" valign="top">
             <? if ($studygroup_mode) : ?>
@@ -246,7 +232,6 @@ $quarter_year = 60 * 60 * 24 * 90;
         </td>
     </tr>
     </table>
-<br>
 
 <?php
 
@@ -256,9 +241,16 @@ show_news($course_id, $rechte, 0, $smain_data["nopen"], "100%", object_get_visit
 // Anzeige von Terminen
 $start_zeit=time();
 $end_zeit=$start_zeit+1210000;
-
-($rechte) ? $show_admin=URLHelper::getLink("admin_dates.php?range_id=".$course_id."&ebene=sem&new_sem=TRUE") : $show_admin=FALSE;
+$show_admin = false;
 if (!$studygroup_mode) {
+    if ($rechte) {
+        $show_admin = URLHelper::getLink("admin_dates.php?range_id=".$course_id."&ebene=sem&new_sem=TRUE");
+        PageLayout::addSqueezePackage('raumzeit');
+        PageLayout::addHeadElement('script', array(), "
+        jQuery(function () {
+            STUDIP.CancelDatesDialog.reloadUrlOnClose = '" . UrlHelper::getUrl() ."';
+        });");
+    }
     show_dates($start_zeit, $end_zeit, $smain_data["dopen"], $course_id, 0, TRUE, $show_admin);
 }
 
@@ -280,5 +272,7 @@ foreach ($plugins as $plugin) {
     }
 }
 
-include ('lib/include/html_end.inc.php');
+$layout = $GLOBALS['template_factory']->open('layouts/base.php');
+$layout->content_for_layout = ob_get_clean();
+echo $layout->render();
 page_close();

@@ -112,25 +112,25 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
         $query = "SELECT t.*, th.issue_id, th.title AS Titel,
                          th.description AS Info, s.Name
                   FROM (SELECT termin_id,range_id,date,end_time,chdate,date_typ,content, 0 as ex_termin
-                        FROM termine
+                        FROM termine WHERE range_id IN(:range_id)
                         UNION SELECT termin_id,range_id,date,end_time,chdate,date_typ,content, 1 as ex_termin
-                        FROM ex_termine WHERE content <> '') AS t
+                        FROM ex_termine WHERE content <> '' AND range_id IN(:range_id)) AS t
                   LEFT JOIN themen_termine USING (termin_id)
                   LEFT JOIN themen AS th USING (issue_id)
-                  LEFT JOIN seminare AS s ON (range_id = Seminar_id)
-                  WHERE Seminar_id IN (:range_id) {$show_query} {$tmp_query}
+                  INNER JOIN seminare AS s ON (range_id = Seminar_id)
+                  WHERE 1 {$show_query} {$tmp_query}
                   ORDER BY date";
         $parameters[':range_id'] = $range_id;
     } else if (strlen($range_id)) {
         $query = "SELECT t.*, th.issue_id, th.title AS Titel,
                          th.description as Info
                   FROM (SELECT termin_id,range_id,date,end_time,chdate,date_typ,content, 0 as ex_termin
-                        FROM termine
+                        FROM termine WHERE range_id = :range_id
                         UNION SELECT termin_id,range_id,date,end_time,chdate,date_typ,content, 1 as ex_termin
-                        FROM ex_termine WHERE content <> '') AS t
+                        FROM ex_termine WHERE content <> '' AND range_id = :range_id) AS t
                   LEFT JOIN themen_termine USING (termin_id)
                   LEFT JOIN themen AS th USING (issue_id)
-                  WHERE range_id = :range_id {$show_query} {$tmp_query}
+                  WHERE 1 {$show_query} {$tmp_query}
                   ORDER BY date";
         $parameters[':range_id'] = $range_id;
     } else {

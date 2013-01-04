@@ -344,6 +344,8 @@ class SingleDate {
     function toString() {
         if (!$this->date) {
             return null;
+        } elseif ((($this->end_time - $this->date) / 60 / 60) > 23) {
+            return getWeekDay(date('w', $this->date)).'., '.date('d.m.Y', $this->date). ' ('._('ganztägig') .')';
         } else {
             return getWeekDay(date('w', $this->date)).'., '.date('d.m.Y, H:i', $this->date).' - '.date('H:i', $this->end_time);
         }
@@ -354,12 +356,12 @@ class SingleDate {
 
         // create a resource-object of the passed room
         $resObj = ResourceObject::Factory($roomID);
-        
+
         // there is no room with the passed id
         if (!$resObj->id) {
             return false;
         }
-        
+
         // check permissions (is current user allowed to book the passed room?)
         $resList = ResourcesUserRoomsList::getInstance($user_id, true, false, true);
         if (in_array($roomID, array_keys($resList->resources)) === false) {

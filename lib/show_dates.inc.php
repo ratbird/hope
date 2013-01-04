@@ -268,11 +268,8 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
                 $titel.= "<a name=\"a\"> </a>";
             }
 
-            $titel .= substr(strftime('%a', $date['date']),0,2);
-            $titel .= date('. d.m.Y, H:i', $date['date']);
-            if ($date['date'] < $date['end_time']) {
-                $titel .= " - " . date("H:i", $date['end_time']);
-            }
+            $titel .= $termin->toString();
+
             if ($date['Titel']) {
                 //Beschneiden des Titels
                 $tmp_titel = htmlReady(mila($date['Titel'], 60 / (($full_width ? 100 : 70) / 100)));
@@ -308,8 +305,8 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
             } else {
                 $link=URLHelper::getLink("?dclose=true".$add_to_link);
             }
-            $date['seminar_date'] = new SingleDate($date['termin_id']);
-            
+            $date['seminar_date'] = $termin;
+
             if ($link) {
                 $titel = "<a href=\"$link\" class=\"tree\" onclick=\"STUDIP.Termine.openclose('".$date['termin_id']."','"
                 .$show_admin."','".$date['date_typ']."','".$date['info']."','"
@@ -377,7 +374,7 @@ function show_termin_item_content($termin_item, $new = FALSE, $range_id = "", $s
 {
             global $TERMIN_TYP;
             $template = $GLOBALS['template_factory']->open('dates/seminar_date-content');
-            
+
             $template->termin_item = $termin_item;
             $template->range_id = $range_id;
 
@@ -606,7 +603,7 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
 
             $zusatz = '';
             $singledate = null;
-            
+
             if(strtolower(get_class($termin)) == 'seminarevent') {
                 $have_write_permission = $GLOBALS['perm']->have_studip_perm('tutor', $termin->getSeminarId());
                 $singledate = new SingleDate($termin->id);

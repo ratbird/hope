@@ -100,14 +100,14 @@ function veranstaltung_beginn_from_metadata($reg_irreg, $sem_begin, $start_woche
     $semester = SemesterData::GetInstance()->getSemesterDataByDate($sem_begin);
     $dow = date("w", $semester['vorles_beginn']);
     if ($dow <= 5)
-        $corr = ($dow -1) * -1;     
+        $corr = ($dow -1) * -1;
     elseif ($dow == 6)
         $corr = 2;
     elseif ($dow == 0)
         $corr = 1;
     else
     $corr = 0;
-    
+
     if(is_array($turnus_data)){
         foreach ($turnus_data as $key => $val) {
             $start_time = mktime ((int)$val['start_stunde'], (int)$val['start_minute'], 0, date("n", $semester['vorles_beginn']), (date("j", $semester['vorles_beginn'])+$corr) + ($val['day'] -1) + ($start_woche * 7), date("Y", $semester['vorles_beginn']));
@@ -116,7 +116,7 @@ function veranstaltung_beginn_from_metadata($reg_irreg, $sem_begin, $start_woche
             }
         }
     }
-    
+
     return $ret_time;
 }
 
@@ -178,12 +178,16 @@ function shrink_dates($dates) {
         }
 
         if (!$dates[$i+1]["time_match"]) {
-            $return_string .= ' ' . date("H:i", $dates[$i]["start_time"]);
-            if (date("H:i", $dates[$i]["start_time"]) != date("H:i", $dates[$i]["end_time"])) {
-                $return_string .= ' - ' . date("H:i", $dates[$i]["end_time"]);
+            if ((($dates[$i]["end_time"] - $dates[$i]["start_time"]) / 60 / 60) > 23) {
+                $return_string .= ' ('._('ganztägig') . ')';
+            } else {
+                $return_string .= ' ' . date("H:i", $dates[$i]["start_time"]);
+                if (date("H:i", $dates[$i]["start_time"]) != date("H:i", $dates[$i]["end_time"])) {
+                    $return_string .= ' - ' . date("H:i", $dates[$i]["end_time"]);
+                }
             }
         }
-        
+
         if ($return_string != '' && !$dates[$i+1]['conjuncted'] && !$dates[$i+1]['time_match']) {
             $ret[] = $return_string;
             $return_string = '';
@@ -471,7 +475,7 @@ function isSchedule ($sem_id, $presence_dates_only = TRUE, $clearcache = FALSE)
 
     $statement = DBManager::get()->prepare($query);
     $statement->execute(array($sem_id));
-    
+
     return $statement->fetchColumn();
 }
 
@@ -631,7 +635,7 @@ function Termin_Eingabe_javascript ($t = 0, $n = 0, $atime=0, $ss = '', $sm = ''
     $txt .= '></a>';
 
     return  $txt;
-}                                                                                               
+}
 
 /**
  * Return an array of room snippets, possibly linked

@@ -19,7 +19,7 @@
             <?if ($current_user->username != $user->username) : ?>
                 <?if (!CheckBuddy($current_user->username)) : ?>
                     <br />
-                    <a href="<?=URLHelper::getLink($controller->url_for('about/index'),array('cmd' => 'add_user', 'add_uname' => $current_user->username))?>">
+                    <a href="<?= URLHelper::getLink($controller->url_for('profile/add_buddy?username=' . urlencode($current_user->username))) ?>">
                         <?=Assets::img('icons/16/blue/person.png', array('title' =>_("zu den Kontakten hinzufügen"), 'class' => 'middle'))?>
                         <?=_("zu den Kontakten hinzufügen")?>
                     </a>

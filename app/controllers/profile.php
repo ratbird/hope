@@ -113,12 +113,6 @@ class ProfileController extends AuthenticatedController
             }
         }
 
-        $msging = new messaging;
-        //Buddie hinzufuegen
-        if (Request::option('cmd') == 'add_user') {
-            $msging->add_buddy (Request::get('add_uname'), 0);
-        }
-
         // Get Avatar
         $avatar_user_id = $this->profile->checkVisibility('picture') ? $this->current_user->user_id : 'nobody';
         $this->avatar   = Avatar::getAvatar($avatar_user_id)->getImageTag(Avatar::NORMAL);
@@ -334,5 +328,21 @@ class ProfileController extends AuthenticatedController
     public function not_available_action()
     {
         Navigation::getItem('/profile')->setActive(false);
+    }
+
+    /**
+     * Adds the user identified by the variable username to the current user's
+     * contacts.
+     */
+    public function add_buddy_action()
+    {
+        $username = Request::username('username');
+        
+        $msging = new messaging;
+        //Buddie hinzufuegen
+        $msging->add_buddy($username, 0);
+
+        PageLayout::postMessage(MessageBox::success(_('Der Nutzer wurde zu Ihren Kontakten hinzugefügt.')));
+        $this->redirect('profile/index?username=' . $username);
     }
 }

@@ -404,23 +404,24 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
 
         NotificationCenter::postNotification('OverviewWillClear', $GLOBALS['user']->id);
 
-        $query = "INSERT INTO object_user_visits "
-               .   "(object_id, user_id, type, visitdate, last_visitdate) "
-               . "("
-               .  "SELECT news_id, ?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP() "
-               .   "FROM news_range "
-               .   "WHERE range_id = ? "
-               . ") UNION ("
-               .   "SELECT vote_id, ?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP() "
-               .   "FROM vote "
-               .   "WHERE range_id = ?"
-               . ") UNION ("
-               .   "SELECT eval_id, ?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP() "
-               .   "FROM eval_range "
-               .   "WHERE range_id = ?"
-               . ") "
-               . "ON DUPLICATE KEY UPDATE visitdate = UNIX_TIMESTAMP()";
+        $query = "INSERT INTO object_user_visits
+                    (object_id, user_id, type, visitdate, last_visitdate)
+                  (
+                    SELECT news_id, :user_id, 'news', UNIX_TIMESTAMP(), UNIX_TIMESTAMP()
+                    FROM news_range
+                    WHERE range_id = :id
+                  ) UNION (
+                    SELECT vote_id, :user_id, 'vote', UNIX_TIMESTAMP(), UNIX_TIMESTAMP()
+                    FROM vote
+                    WHERE range_id = :id
+                  ) UNION (
+                    SELECT eval_id, :user_id, 'eval', UNIX_TIMESTAMP(), UNIX_TIMESTAMP()
+                    FROM eval_range
+                    WHERE range_id = :id
+                  )
+                  ON DUPLICATE KEY UPDATE visitdate = UNIX_TIMESTAMP()";
         $statement = DBManager::get()->prepare($query);
+        $statement->bindValue('user_id', $GLOBALS['user']->id);
 
         foreach ($my_obj as $id => $object) {
             // Update all activated modules
@@ -430,12 +431,9 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
                 }
             }
 
-            // Update news and votes
-            $statement->execute(array(
-                $GLOBALS['auth']->auth['uid'], 'news', $id,
-                $GLOBALS['auth']->auth['uid'], 'vote', $id,
-                $GLOBALS['auth']->auth['uid'], 'eval', $id,
-             ));
+            // Update news, votes and evaluations
+            $statement->bindValue('id', $id);
+            $statement->execute();
 
             // Update object itself
             object_set_visit($id, $object['obj_type']);
@@ -557,12 +555,12 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
 
     // Only display link to "mark all as read" if there is anything new
     if (count(array_filter($temp))) {
-        $infobox[count($infobox) - 1]['eintrag'][] = array(
+        array_unshift($infobox[count($infobox) - 1]['eintrag'], array(
             'icon' => 'icons/16/black/refresh.png',
             'text' => '<a href="' . URLHelper::getURL('?action=tabularasa') . '">'
                     . _('Alles als gelesen markieren')
                     . '</a>',
-        );
+        ));
     }
 
     $infobox[] = array('kategorie' => _("Einstellungen:"),

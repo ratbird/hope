@@ -40,7 +40,9 @@ class SemBrowse {
             $_SESSION['sem_browse_data'] = $sem_browse_data_init;
         }
         $this->sem_browse_data =& $_SESSION['sem_browse_data'];
-        $level_change = Request::option('start_item_id');
+
+        $level_change = Request::option('start_item_id') || Request::submitted('search_sem_sem_change');
+
         for ($i = 0; $i < count($this->persistent_fields); ++$i){
             $persistend_field = $this->persistent_fields[$i];
             if (Request::get($persistend_field) != null) {

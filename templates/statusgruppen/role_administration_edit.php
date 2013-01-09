@@ -1,89 +1,75 @@
 <?
-# Lifter010: TODO
-    use Studip\Button, Studip\LinkButton;
+# Lifter010: TEST
+use Studip\Button, Studip\LinkButton;
+$group_data = $role->getData();
 ?>
-<?
-    $cssSw = new cssClassSwitcher();
-    $cssSw->switchClass();
-    $num = 0;
-    $group_data = $role->getData();
-?>
-    <tr>
-        <td colspan="5" class="printcontent">
-            <form action="<?= URLHelper::getLink('#'. $role->getId()) ?>" method="post">
-            <?= CSRFProtection::tokenTag() ?>
-            <table cellspacing="0" cellpadding="1" border="0" width="100%">
+<tr>
+    <td colspan="5" class="printcontent">
+        <form action="<?= URLHelper::getLink('#'. $role->getId()) ?>" method="post">
+        <?= CSRFProtection::tokenTag() ?>
+        <table class="default zebra">
+            <colgroup>
+                <col width="50%">
+                <col width="50%">
+            </colgroup>
+            <tbody>
                 <tr>
-                    <td class="<?= $cssSw->getClass() ?>" width="50%" nowrap>
-                        <font size="-1">
-                            <?= _("Gruppenname") ?>:
-                        </font>
+                    <td>
+                        <label for="new_name"><?= _("Gruppenname") ?>:</label>
                     </td>
-                    <td class="<?= $cssSw->getClass() ?>" width="50%" nowrap>
-                        <font size="-1">
-                            <input type="text" name="new_name" value="<?=htmlReady($group_data['name'])?>">
-                    </font>
+                    <td>
+                        <input type="text" name="new_name" id="new_name"
+                               value="<?=htmlReady($group_data['name'])?>">
                     </td>
                 </tr>
-                <? $cssSw->switchClass() ?>
 
                 <tr>
-                    <td class="<?= $cssSw->getClass() ?>" width="50%" nowrap>
-                        <font size="-1">
-                            <?= _("Übergeordnete Gruppe") ?>:
-                        </font>
+                    <td>
+                        <label for="vather"><?= _("Übergeordnete Gruppe") ?>:</label>
                     </td>
-                    <td class="<?= $cssSw->getClass() ?>" width="50%" nowrap>
-                        <font size="-1">
-                            <select name="vather">
-                                <option value="nochange"> -- <?= _("Keine Änderung") ?> -- </option>
-                                <option value="root"> -- <?= _("Hauptebene") ?> -- </option>
-                                <? Statusgruppe::displayOptionsForRoles($all_roles, $role->getId()); ?>
-                            </select>
-                        </font>
+                    <td>
+                        <select name="vather" id="vather">
+                            <option value="nochange"> -- <?= _("Keine Änderung") ?> -- </option>
+                            <option value="root"> -- <?= _("Hauptebene") ?> -- </option>
+                            <? Statusgruppe::displayOptionsForRoles($all_roles, $role->getId()); ?>
+                        </select>
                     </td>
                 </tr>
-                <? $cssSw->switchClass() ?>
 
                 <tr>
-                    <td class="<?= $cssSw->getClass() ?>" width="50%" nowrap>
-                        <font size="-1">
-                            <?= _("Gruppengröße") ?>:
-                            <?=tooltipicon(_("Mit dem Feld 'Gruppengröße' haben Sie die Möglichkeit, die Sollstärke für eine Gruppe festzulegen. Dieser Wert ist nur aus Teilnehmersicht relevant - verantwortliche Personen (Tutoren, Lehrende) können auch mehr Gruppenmitglieder eintragen.")) ?>
-                        </font>
+                    <td>
+                        <label for="new_size"><?= _("Gruppengröße") ?>:</label>
+                        <?=tooltipicon(_("Mit dem Feld 'Gruppengröße' haben Sie die Möglichkeit, die Sollstärke für eine Gruppe festzulegen. Dieser Wert ist nur aus Teilnehmersicht relevant - verantwortliche Personen (Tutoren, Lehrende) können auch mehr Gruppenmitglieder eintragen.")) ?>
                     </td>
-                    <td class="<?= $cssSw->getClass() ?>" width="50%" nowrap>
-                        <input type="text" name="new_size" value="<?=$group_data['size']?>"><br>
+                    <td>
+                        <input type="text" name="new_size" id="new_size"
+                               value="<?=$group_data['size']?>"><br>
                     </td>
                 </tr>
 
                 <? if (is_array($group_data['datafields'])) foreach ($group_data['datafields'] as $field) : ?>
-                <? $cssSw->switchClass() ?>
                 <tr>
-                    <td class="<?= $cssSw->getClass() ?>" width="50%" nowrap>
-                        <?=$field['invalid']?'<font color="red" size="-1"><b>':'<font size="-1">'?>
+                    <td <?= $field['invalid'] ? 'style="color: red; font-weight: bold;"' : '' ?>>
                         <?=$field['name']?>
-                        <?=$field['invalid']?'</b></font>':'</font>'?>
                     </td>
-                    <td class="<?= $cssSw->getClass() ?>" width="50%" nowrap>
-                        <font size="-1">
-                            <?=$field['html']?>
-                        </font>
+                    <td>
+                        <?=$field['html']?>
                     </td>
                 </tr>
                 <? endforeach; ?>
+            </tbody>
+            <tfoot>
                 <tr>
                     <td class="table_row_even" align="center" colspan="2">
-                        <br>
-
                         <?= Button::createAccept(_('Speichern'), 'speichern') ?>
                         <?= LinkButton::createCancel(_('Abbrechen'), URLHelper::getURL('', array('role_id' => $role->getId())) . '#' . $role->getId()) ?>
                     </td>
                 </tr>
-            </table>
-            <input type="hidden" name="view" value="editRole">
-            <input type="hidden" name="cmd" value="editRole">
-            <input type="hidden" name="role_id" value="<?= $role->getId() ?>">
-            </form>
-        </td>
-    </tr>
+            </tfoot>
+        </table>
+        <input type="hidden" name="view" value="editRole">
+        <input type="hidden" name="cmd" value="editRole">
+        <input type="hidden" name="role_id" value="<?= $role->getId() ?>">
+        </form>
+    </td>
+</tr>

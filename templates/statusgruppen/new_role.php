@@ -2,124 +2,103 @@
 # Lifter010: TODO
     use Studip\Button, Studip\LinkButton;
 ?>
-<?
-    $cssSw = new cssClassSwitcher();
-    $num = 0;
-?>
 <tr>
     <td colspan="5" class="blank">
         <form action="<?= URLHelper::getLink('#'. $role_data['id']) ?>" method="post">
         <?= CSRFProtection::tokenTag() ?>
-        <table cellspacing="0" cellpadding="1" border="0" width="100%">
-            <tr>
-                <td class="printhead" colspan="2">
-                    &nbsp;<b><?= _("Neue Gruppe anlegen") ?></b>
-                </td>
-            </tr>
-            <tr>
-                <td class="<?= $cssSw->getClass() ?>" width="30%" nowrap>
-                    <font size="-1">
-                        <?= _("Gruppenname") ?>:
-                    </font>
-                </td>
-                <td class="<?= $cssSw->getClass() ?>" width="70%" nowrap>
-                    <font size="-1">
+        <table class="default zebra">
+            <colgroup>
+                <col width="30%">
+                <col width="70%">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th class="printhead" colspan="2">
+                        <?= _("Neue Gruppe anlegen") ?>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><?= _("Gruppenname") ?>:</font>
+                    </td>
+                    <td>
                         <input type="text" name="new_name" value="<?= htmlReady($role_data['name']) ?>">
-                    </font>
-                    <?= _("oder Vorlage") ?>:
-                    <select name="presetName">
-                        <option value="none"> -- <?= _("wählen") ?> -- </option>
+                        <?= _("oder Vorlage") ?>:
+                        <select name="presetName">
+                            <option value="none"> -- <?= _("wählen") ?> -- </option>
                         <? for ($i = 0; $i < sizeof($GLOBALS['INST_STATUS_GROUPS']["default"]); $i++) : ?>
-                        <option><?= $GLOBALS['INST_STATUS_GROUPS']["default"][$i] ?></option>
+                            <option><?= $GLOBALS['INST_STATUS_GROUPS']["default"][$i] ?></option>
                         <? endfor; ?>
-
-                    </select>
-                </td>
-            </tr>
-            <? if ($range_type != 'sem') : ?>
-            <? $cssSw->switchClass() ?>
-            <tr>
-                <td class="<?= $cssSw->getClass() ?>" width="30%" nowrap>
-                    <font size="-1">
-                        <?= _("Übergeordnete Gruppe") ?>:
-                    </font>
-                </td>
-                <td class="<?= $cssSw->getClass() ?>" width="70%" nowrap>
-                    <font size="-1">
+                        </select>
+                    </td>
+                </tr>
+                <? if ($range_type != 'sem') : ?>
+                <tr>
+                    <td><?= _("Übergeordnete Gruppe") ?>:</td>
+                    <td>
                         <select name="vather">
                             <option value="root"> -- <?= _("Hauptebene") ?> -- </option>
                             <? Statusgruppe::displayOptionsForRoles($all_roles); ?>
                         </select>
-                    </font>
-                </td>
-            </tr>
-            <? endif; ?>
+                    </td>
+                </tr>
+                <? endif; ?>
 
-            <? $cssSw->switchClass() ?>
-            <tr>
-                <td class="<?= $cssSw->getClass() ?>" width="30%" nowrap>
-                    <font size="-1">
+                <tr>
+                    <td>
                         <?= _("Gruppengröße") ?>:
                         <?=tooltipicon(_("Mit dem Feld 'Gruppengröße' haben Sie die Möglichkeit, die Sollstärke für eine Gruppe festzulegen. Dieser Wert ist nur aus Teilnehmersicht relevant - verantwortliche Personen (Tutoren, Lehrende) können auch mehr Gruppenmitglieder eintragen.")) ?>
-                    </font>
-                </td>
-                <td class="<?= $cssSw->getClass() ?>" width="70%" nowrap>
-                    <input type="text" name="new_size" value="<?= $role_data['size'] ?>"><br>
-                </td>
-            </tr>
+                    </td>
+                    <td>
+                        <input type="text" name="new_size" value="<?= $role_data['size'] ?>">
+                    </td>
+                </tr>
 
-            <? if ($range_type == 'sem') : ?>
-            <? $cssSw->switchClass() ?>
-            <tr>
-                <td class="<?= $cssSw->getClass() ?>" width="30%" nowrap>
-                    <font size="-1">
+                <? if ($range_type == 'sem') : ?>
+                <tr>
+                    <td>
                         <?=_("Selbsteintrag") ?>:
-                    </font>
-                </td>
-                <td class="<?= $cssSw->getClass() ?>" width="70%" nowrap>
-                    <input type="checkbox" name="new_selfassign" value="1" <?= $role_data['selfassign']? 'checked="checked"' : '' ?>>
-                    <input type="hidden" name="vather" value="root">
-                </td>
-            </tr>
+                    </td>
+                    <td>
+                        <input type="checkbox" name="new_selfassign" value="1" <?= $role_data['selfassign']? 'checked' : '' ?>>
+                        <input type="hidden" name="vather" value="root">
+                    </td>
+                </tr>
 
-            <? $cssSw->switchClass() ?>
-            <tr>
-                <td class="<?= $cssSw->getClass() ?>" width="30%" nowrap>
-                    <font size="-1">
+                <tr>
+                    <td>
                         <?=_("Gruppenordner:") ?>:
-                    </font>
-                </td>
-                <td class="<?= $cssSw->getClass() ?>" width="70%" nowrap>
-                    <input type="checkbox" name="groupfolder" value="1">
-                </td>
-            </tr>
+                    </td>
+                    <td>
+                        <input type="checkbox" name="groupfolder" value="1">
+                    </td>
+                </tr>
 
-            <? endif; ?>
+                <? endif; ?>
 
-            <? if ($range_type != 'sem' && is_array($role_data['datafields'])) foreach ($role_data['datafields'] as $field) : ?>
-            <? $cssSw->switchClass() ?>
-            <tr>
-                <td class="<?= $cssSw->getClass() ?>" width="30%" nowrap>
-                    <?=$field['invalid']?'<font color="red" size="-1"><b>':'<font size="-1">'?>
-                    <?=$field['name']?>
-                    <?=$field['invalid']?'</b></font>':'</font>'?>
-                </td>
-                <td class="<?= $cssSw->getClass() ?>" width="70%" nowrap>
-                    <font size="-1">
+                <? if ($range_type != 'sem' && is_array($role_data['datafields'])) foreach ($role_data['datafields'] as $field) : ?>
+                <tr>
+                    <td <?= $field['invalid'] ? 'style="color: red; font-weight: bold;"' : '' ?>>
+                        <?=$field['name']?>
+                    </td>
+                    <td>
                         <?=$field['html']?>
-                    </font>
-                </td>
-            </tr>
+                    </td>
+                </tr>
             <? endforeach; ?>
-            <tr>
-                <td class="blank" align="center" colspan="2">
-                    <br>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td class="blank" align="center" colspan="2">
+                        <br>
 
-                    <?= Button::createAccept(_('Speichern'), 'speichern') ?>
-                    &nbsp;
-                    <?= LinkButton::createCancel(_('Abbrechen'), URLHelper::getURL('', compact('range_id'))) ?>
-                </td>
-            </tr>
+                        <?= Button::createAccept(_('Speichern'), 'speichern') ?>
+                        &nbsp;
+                        <?= LinkButton::createCancel(_('Abbrechen'), URLHelper::getURL('', compact('range_id'))) ?>
+                    </td>
+                </tr>
+            </tfoot>
         </table>
         <input type="hidden" name="cmd" value="addRole">
         <input type="hidden" name="role_id" value="<?= $role->getId() ?>">

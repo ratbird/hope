@@ -157,7 +157,9 @@ function create_assigns($assign_object, &$assEvtLst, $begin=0, $end=0, $filter =
                 $assEvtLst->events[] = $assEvt;
         }
         //in between days
-        for ($d=date("j",$ao_begin)+1; $d < date("j",$ao_begin) + date("z",$ao_r_end) - date("z",$ao_begin); $d++) {
+        $date_ao_r_end = new DateTime("@$ao_r_end");
+        $num_days = $date_ao_r_end->diff(new DateTime("@$ao_begin"))->days;
+        for ($d=date("j",$ao_begin)+1; $d < date("j",$ao_begin) + $num_days; $d++) {
             $temp_ts=mktime(0, 0, 0,
                     date("n",$ao_begin),
                     $d,
@@ -294,7 +296,7 @@ function createNormalizedAssigns($resource_id, $begin, $end, $explain_user_name 
     $query = "SELECT trp.user_id
               FROM seminar_cycle_dates AS scd
               INNER JOIN termine AS t USING(metadate_id)
-              INNER JOIN termin_related_persons AS trp ON trp.range_id = t.termin_id 
+              INNER JOIN termin_related_persons AS trp ON trp.range_id = t.termin_id
               WHERE scd.metadate_id = ?";
     $teacher_statement = DBManager::get()->prepare($query);
 
@@ -308,7 +310,7 @@ function createNormalizedAssigns($resource_id, $begin, $end, $explain_user_name 
         $query .= " AND DAYOFWEEK(FROM_UNIXTIME(begin)) = :day_of_week ";
     }
     $query .= "ORDER BY begin ASC";
-    
+
     $statement = DBManager::get()->prepare($query);
     $statement->bindValue(':resource_id', $resource_id);
     $statement->bindValue(':begin', $begin);

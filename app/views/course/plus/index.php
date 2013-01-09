@@ -11,9 +11,13 @@
 use Studip\Button, Studip\LinkButton;
 ?>
 
-<? if (isset($msg)) {
-    parse_msg($msg);
-} ?>
+<? if (isset($msg)): ?>
+    <?= parse_msg($msg) ?>
+<? endif; ?>
+
+<? if ($_SESSION['admin_modules_data']["orig_bin"] != $_SESSION['admin_modules_data']["changed_bin"]): ?>
+    <?= MessageBox::info(_("Diese Daten sind noch nicht gespeichert.")) ?>
+<? endif; ?>
 
 <form action="<?= URLHelper::getLink($save_url) ?>" method="post">
 <?= CSRFProtection::tokenTag() ?>
@@ -124,9 +128,6 @@ foreach ($available_plugins as $plugin) {
         <tr>
             <td align="center" colspan="3">
                 <?= Button::create(_('Übernehmen'), 'uebernehmen') ?>
-                <? if ($_SESSION['admin_modules_data']["orig_bin"] != $_SESSION['admin_modules_data']["changed_bin"]) {?>
-                    <?= MessageBox::info(_("Diese Daten sind noch nicht gespeichert.")) ?>
-                <? } ?>
             </td>
         </tr>
     </tfoot>

@@ -120,7 +120,7 @@ class EvalCommon {
       $html .= 
       "<script type=\"text/javascript\" language=\"JavaScript\">".
       "  function openEval( evalID ) {" .
-      "    evalwin = window.open('show_evaluation.php?evalID=' + evalID + '&isPreview=".$isPreview."', " .
+      "    evalwin = window.open(STUDIP.URLHelper.getURL('show_evaluation.php?evalID=' + evalID + '&isPreview=".$isPreview."'), " .
       "                          evalID, 'width=790,height=500,scrollbars=yes,resizable=yes');" .
       "    evalwin.focus();".
       "  }\n".

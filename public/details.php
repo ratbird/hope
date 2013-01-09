@@ -50,7 +50,6 @@ if (empty($sem_id)) {
     $sem_id = $SessionSeminar;
 }
 //Inits
-$cssSw=new cssClassSwitcher;
 $info_msg = $abo_msg = $delete_msg = $back_msg = '';
 $send_from_search = Request::quoted('send_from_search');
 $send_from_search_page = Request::quoted('send_from_search_page');
@@ -186,11 +185,11 @@ else
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
     <tr>
         <td class="blank">
-        <table   id="main_content" align="center" width="100%" border="0" cellpadding="2" cellspacing="0">
+        <table class="zebra" id="main_content" align="center" width="100%" border="0" cellpadding="2" cellspacing="0">
         <tr>
-            <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="1%">&nbsp; <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" width="25" height="10" border="0">
+            <td width="1%">&nbsp; <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" width="25" height="10" border="0">
             </td>
-            <td class="<? echo $cssSw->getClass() ?>" valign="top" colspan="2" valign="top">
+            <td valign="top" colspan="2" valign="top">
                 <?
                 //Titel und Untertitel der Veranstaltung
                 printf ("<b>%s</b><br> ",htmlReady($seminar['Name']));
@@ -327,8 +326,8 @@ echo $template_factory->render(
                 </td>
             </tr>
             <tr>
-                <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="1%">&nbsp;</td>
-                <td class="<? echo $cssSw->getClass() ?>" valign="top">
+                <td width="1%">&nbsp;</td>
+                <td valign="top">
                     <font size="-1">
                     <b><?= _("Zeit:") ?></b><br>
                     <? if (($mein_status || $perm->have_studip_perm("admin", $sem_id)) && $modules->getStatus('schedule', $sem_id)) :
@@ -337,15 +336,15 @@ echo $template_factory->render(
                     <?= $sem->getDatesHTML(array('link_to_dates' => $show_link)) ?>
                     </font>
                 </td>
-                <td class="<? echo $cssSw->getClass() ?>" valign="top">
+                <td valign="top">
                 <?
                 printf ("<font size=-1><b>" . _("Semester:") . "</b></font><br><font size=-1>%s</font>",get_semester($sem_id));
                 ?>
                 </td>
             </tr>
             <tr>
-                <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="1%">&nbsp;</td>
-                <td class="<? echo $cssSw->getClass() ?>" valign="top">
+                <td width="1%">&nbsp;</td>
+                <td valign="top">
                     <font size="-1">
                     <?
 
@@ -364,22 +363,22 @@ echo $template_factory->render(
                 ?>
                     </font>
                 </td>
-                <td class="<? echo $cssSw->getClass() ?>" valign="top">
+                <td valign="top">
                 <?
                 printf ("<font size=-1><b>" . _("Vorbesprechung:") . "</b></font><br><font size=-1>%s</font>", (vorbesprechung($sem_id)) ? vorbesprechung($sem_id) : _("keine"));
                 ?>
                 </td>
             </tr>
             <tr>
-                <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="1%">&nbsp;</td>
-                <td class="<? echo $cssSw->getClass() ?>" valign="top">
+                <td width="1%">&nbsp;</td>
+                <td valign="top">
                     <font size="-1">
                     <b><?= _("Veranstaltungsort:") ?></b>
                     <br>
                     <?= $sem->getDatesTemplate('dates/seminar_html_location', array('ort' => $seminar['Ort'])) ?>
                     </font>
                 </td>
-                <td class="<? echo $cssSw->getClass() ?>" valign="top">
+                <td valign="top">
                 <?
                 if ($seminar['VeranstaltungsNummer'])
                     printf ("<font size=-1><b>" . _("Veranstaltungsnummer:") . "</b></font><br><font size=-1>%s</font>",htmlReady($seminar['VeranstaltungsNummer']));
@@ -389,9 +388,9 @@ echo $template_factory->render(
                 </td>
             </tr>
             <tr>
-                <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="1%">&nbsp;</td>
+                <td width="1%">&nbsp;</td>
                 <? foreach (array('dozent', 'tutor') as $status) { ?>
-                    <td class="<? echo $cssSw->getClass() ?>" valign="top">
+                    <td valign="top">
                     <font size="-1">
                     <?
                     $data = array();
@@ -418,15 +417,15 @@ echo $template_factory->render(
         </table>
         <table width="100%" border="0" cellpadding="2" cellspacing="0">
             <tr>
-                <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="%">&nbsp;
+                <td width="%">&nbsp;
                 <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" width="25" height="10" border="0">
                 </td>
-                <td class="<? echo $cssSw->getClass() ?>" colspan=2 width="51%" valign="top">
+                <td colspan=2 width="51%" valign="top">
                 <?
                 printf ("<font size=-1><b>" . _("Veranstaltungstyp:") . "</b></font><br><font size=-1>" . _("%s in der Kategorie %s") . "</font>",$SEM_TYPE[$seminar['status']]["name"], $SEM_CLASS[$SEM_TYPE[$seminar['status']]["class"]]["name"]);
                 ?>
                 </td>
-                <td class="<? echo $cssSw->getClass() ?>" colspan=2 width="48%" valign="top">
+                <td colspan=2 width="48%" valign="top">
                 <?
                 if ($seminar['art'])
                     printf ("<font size=-1><b>" . _("Art/Form:") . "</b></font><br><font size=-1>%s</font>",htmlReady($seminar['art']));
@@ -438,8 +437,8 @@ echo $template_factory->render(
             <? if ($seminar['Beschreibung'] !="") {
             ?>
             <tr>
-                <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="1%">&nbsp;</td>
-                <td class="<? echo $cssSw->getClass() ?>" colspan=4 width="99%" valign="top">
+                <td width="1%">&nbsp;</td>
+                <td colspan=4 width="99%" valign="top">
                 <?
                 printf ("<font size=-1><b>" . _("Kommentar/Beschreibung:") . "</b></font><br><font size=-1>%s</font>",formatLinks($seminar['Beschreibung']));
                 ?>
@@ -449,8 +448,8 @@ echo $template_factory->render(
             if ($seminar['teilnehmer'] !="") {
             ?>
             <tr>
-                <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="1%">&nbsp;</td>
-                <td class="<? echo $cssSw->getClass() ?>" colspan=4 width="99%" valign="top">
+                <td width="1%">&nbsp;</td>
+                <td colspan=4 width="99%" valign="top">
                 <?
                 printf ("<font size=-1><b>" . _("Teilnehmende:") . "</b></font><br><font size=-1>%s</font>",htmlReady($seminar['teilnehmer'], TRUE, TRUE));
                 ?>
@@ -460,9 +459,8 @@ echo $template_factory->render(
             if ($seminar['vorrausetzungen'] !="") {
             ?>
             <tr>
-                <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="1%">&nbsp;
-                </td>
-                <td class="<? echo $cssSw->getClass() ?>" colspan=4 width="99%" valign="top">
+                <td width="1%">&nbsp;</td>
+                <td colspan=4 width="99%" valign="top">
                 <?
                 printf ("<font size=-1><b>" . _("Voraussetzungen:") . "</b></font><br><font size=-1>%s</font>",htmlReady($seminar['vorrausetzungen'], TRUE, TRUE));
                 ?>
@@ -472,9 +470,8 @@ echo $template_factory->render(
             if ($seminar['lernorga'] !="") {
             ?>
             <tr>
-                <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="1%">&nbsp;
-                </td>
-                <td class="<? echo $cssSw->getClass() ?>" colspan=4 width="99%" valign="top">
+                <td width="1%">&nbsp;</td>
+                <td colspan=4 width="99%" valign="top">
                 <?
                 printf ("<font size=-1><b>" . _("Lernorganisation:") . "</b></font><br><font size=-1>%s</font>",htmlReady($seminar['lernorga'], TRUE, TRUE));
                 ?>
@@ -484,9 +481,8 @@ echo $template_factory->render(
             if ($seminar['leistungsnachweis'] !="") {
             ?>
             <tr>
-                <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="1%">&nbsp;
-                </td>
-                <td class="<? echo $cssSw->getClass() ?>" colspan=4 width="99%" valign="top">
+                <td width="1%">&nbsp;</td>
+                <td colspan=4 width="99%" valign="top">
                 <?
                 printf ("<font size=-1><b>" . _("Leistungsnachweis:") . "</b></font><br><font size=-1>%s</font>",htmlReady($seminar['leistungsnachweis'], TRUE, TRUE));
                 ?>
@@ -501,9 +497,8 @@ echo $template_factory->render(
                     if ($entry->getValue()) {
                  ?>
                  <tr>
-                     <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="1%">&nbsp;
-                     </td>
-                     <td class="<? echo $cssSw->getClass() ?>" colspan=4 width="99%" valign="top">
+                     <td width="1%">&nbsp;</td>
+                     <td colspan=4 width="99%" valign="top">
                      <?
                      printf ("<font size=-1><b>" . htmlReady($entry->getName()) . ":</b></font><br><font size=-1>%s</font>", $entry->getDisplayValue());
                      ?>
@@ -516,9 +511,8 @@ echo $template_factory->render(
             if ($seminar['Sonstiges'] !="") {
             ?>
             <tr>
-                <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="1%">&nbsp;
-                </td>
-                <td class="<? echo $cssSw->getClass() ?>" colspan=4 width="99%" valign="top">
+                <td width="1%">&nbsp;</td>
+                <td colspan=4 width="99%" valign="top">
                 <?
                 printf ("<font size=-1><b>" . _("Sonstiges:") . "</b></font><br><font size=-1>%s</font>",formatLinks($seminar['Sonstiges']));
                 ?>
@@ -528,9 +522,8 @@ echo $template_factory->render(
             if ($seminar['ects']) {
             ?>
             <tr>
-                <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="1%">&nbsp;
-                </td>
-                <td class="<? echo $cssSw->getClass() ?>" colspan=4 width="99%" valign="top">
+                <td width="1%">&nbsp;</td>
+                <td valign="top">
                 <?
                 printf ("<font size=-1><b>" . _("ECTS-Punkte:") . "</b></font><br><font size=-1>%s</font>",htmlReady($seminar['ects'], TRUE, TRUE));
                 ?>
@@ -549,9 +542,8 @@ echo $template_factory->render(
                     }
                     ?>
             <tr>
-                <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="1%">&nbsp;
-                </td>
-                <td class="<? echo $cssSw->getClass() ?>" colspan=4 width="99%" valign="top">
+                <td width="1%">&nbsp;</td>
+                <td colspan=4 width="99%" valign="top">
                 <?
                 printf ("<font size=-1><b>" . _("Studienmodule:") . "</b></font><br><font size=-1>%s</font>",
                         join("<br>\n", $stm_out));
@@ -580,9 +572,8 @@ echo $template_factory->render(
                     }
                     ?>
             <tr>
-                <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="1%">&nbsp;
-                </td>
-                <td class="<? echo $cssSw->getClass() ?>" colspan=4 width="99%" valign="top">
+                <td width="1%">&nbsp;</td>
+                <td colspan=4 width="99%" valign="top">
                 <?
                 printf ("<font size=-1><b>" . _("Studienmodule:") . "</b></font><br><font size=-1><ul><li>%s</li></ul></font>",
                         join("</li>\n<li>", $stm_out));
@@ -600,9 +591,8 @@ echo $template_factory->render(
                 }
             ?>
             <tr>
-                <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="1%">&nbsp;
-                </td>
-                <td class="<? echo $cssSw->getClass() ?>" colspan=4 width="99%" valign="top">
+                <td width="1%">&nbsp;</td>
+                <td colspan=4 width="99%" valign="top">
                     <font size="-1">
                 <?
                 // show the studyareas
@@ -630,9 +620,8 @@ echo $template_factory->render(
             </tr>
             <? } ?>
             <tr>
-                <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="1%">&nbsp;
-                </td>
-                <td class="<? echo $cssSw->getClass() ?>" colspan=2 width="51%" valign="top">
+                <td width="1%">&nbsp;</td>
+                <td colspan=2 width="51%" valign="top">
                 <?
                     $query = "SELECT Name, url FROM Institute WHERE Institut_id = ?";
                     $statement = DBManager::get()->prepare($query);
@@ -643,7 +632,7 @@ echo $template_factory->render(
                     }
                 ?>
                 </td>
-                <td class="<? echo $cssSw->getClass() ?>" colspan=2 width="48%" valign="top">
+                <td colspan=2 width="48%" valign="top">
                     <font size="-1">
                 <?
                 // fetch associated institutes and/or faculties
@@ -675,9 +664,8 @@ echo $template_factory->render(
             if ($seminar['admission_type'] || ($seminar['admission_prelim'] == 1) || ($seminar['admission_starttime'] > time()) || ($seminar['admission_endtime_sem'] != -1)) {
             ?>
             <tr>
-                <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="1%">&nbsp;
-                </td>
-                <td class="<? echo $cssSw->getClass() ?>" colspan=2 width="51%" valign="top">
+                <td width="1%">&nbsp;</td>
+                <td colspan=2 width="51%" valign="top">
                 <font size=-1><b><?=_("Anmeldeverfahren:")?></b></font><br>
                 <?
     }
@@ -722,7 +710,7 @@ echo $template_factory->render(
     }
     if ($seminar['admission_type'] == 3) {
                 echo '<font size="-1" color="red">'. _("Diese Veranstaltung ist gesperrt, Sie k&ouml;nnen sich nicht selbst eintragen!");
-                echo "<td class=\"".$cssSw->getClass()."\" colspan=2 width=\"48%\" valign=\"top\"><td>";
+                echo "<td colspan=2 width=\"48%\" valign=\"top\"><td>";
         } elseif ($seminar['admission_type']) {
         if ($seminar['admission_selection_take_place'] == 1) {
             if ($seminar['admission_type'] == 1) {
@@ -786,7 +774,7 @@ echo $template_factory->render(
                 </div>
             <?}?>
             </td>
-            <td class="<? echo $cssSw->getClass() ?>" colspan=2 width="48%" valign="top">
+            <td colspan=2 width="48%" valign="top">
             <?
                 $all_cont_user = false;
                 $admission_sem = Seminar::GetInstance($sem_id);
@@ -814,13 +802,13 @@ echo $template_factory->render(
         </tr>
         <?
         } elseif (($seminar['admission_starttime'] > time()) || ($seminar['admission_prelim'] == 1) || ($seminar['admission_endtime_sem'] != -1)) {
-            echo "<td class=\"".$cssSw->getClass()."\" colspan=2 width=\"48%\" valign=\"top\"><td>";
+            echo "<td colspan=2 width=\"48%\" valign=\"top\"><td>";
         }
         ?>
         <? if (count($seminar_domains)): ?>
             <tr>
-                <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="1%">&nbsp;</td>
-                <td class="<?= $cssSw->getClass() ?>" colspan="4" valign="top">
+                <td width="1%">&nbsp;</td>
+                <td colspan="4" valign="top">
                 <font size="-1"><b><?= _("Zugelassenene Nutzerdomänen:") ?></b></font><br>
                 <? foreach ($seminar_domains as $domain): ?>
                     <font size="-1"><?= htmlReady($domain->getName()) ?></font><br>
@@ -829,8 +817,8 @@ echo $template_factory->render(
             </tr>
         <? endif ?>
         <tr>
-            <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="1%">&nbsp;</td>
-            <td class="<? echo $cssSw->getClass() ?>" width="24%" valign="top">
+            <td width="1%">&nbsp;</td>
+            <td width="24%" valign="top">
             <?
                 //Statistikfunktionen
                 $query = "SELECT COUNT(*) AS anzahl, SUM(status = 'dozent') AS anz_dozent,
@@ -857,7 +845,7 @@ echo $template_factory->render(
                 printf("<br><font size=-1><b>" . _("Sonstige") . ":&nbsp;</b></font><font size=-1>%s </font>", (($seminar_counts['anz_autor'] + $seminar_counts['anz_user'] + $admission_count) ?: _('keine')));
             ?>
             </td>
-            <td class="<? echo $cssSw->getClass() ?>" width="25%" valign="top">
+            <td width="25%" valign="top">
             <?
             if ($seminar['admission_turnout']){
                     if($seminar['admission_type']) {
@@ -876,7 +864,7 @@ echo $template_factory->render(
             }
             ?>
             </td>
-            <td class="<? echo $cssSw->getClass() ?>" width="25%" valign="top">
+            <td width="25%" valign="top">
             <?
                 $query = "SELECT COUNT(*) FROM px_topics WHERE Seminar_id = ?";
                 $statement = DBManager::get()->prepare($query);
@@ -885,7 +873,7 @@ echo $template_factory->render(
                 printf ("<font size=-1><b>" . _("Forenbeiträge:") . "&nbsp;</b></font><font size=-1>%s </font>", $count ?: _('keine'));
             ?>
             </td>
-            <td class="<? echo $cssSw->getClass() ?>" width="25%" valign="top">
+            <td width="25%" valign="top">
             <?
                 $query = "SELECT COUNT(*) FROM dokumente WHERE Seminar_id = ?";
                 $statement = DBManager::get()->prepare($query);

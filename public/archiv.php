@@ -57,7 +57,6 @@ require_once 'lib/functions.php';
 require_once('lib/datei.inc.php');
 require_once('lib/log_events.inc.php');
 
-$cssSw=new cssClassSwitcher;
 $delete_id = Request::option('delete_id');
 $open = Request::option('open');
 $delete_user = Request::option('delete_user');
@@ -250,41 +249,41 @@ include('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
     <? if ($msg) { parse_msg($msg); } ?>
     <tr>
         <td class="blank" >
-                <? if (isset($message)) : ?>
-                    <?= MessageBox::success($message, $details) ?>
-                <? endif ?>
-                <form  name="search" method="post" action="<?= URLHelper::getLink() ?>" >
-                    <?= CSRFProtection::tokenTag() ?>
-                    <table border=0 cellspacing=0 cellpadding=2>
-                        <tr <? $cssSw->switchClass() ?>>
-                            <td class="<? echo $cssSw->getClass() ?>" colspan=2>
-                            <b><font size=-1><?=_("Bitte geben Sie hier Ihre Suchkriterien ein:")?></font></b><br>
+        <? if (isset($message)) : ?>
+            <?= MessageBox::success($message, $details) ?>
+        <? endif ?>
+            <form  name="search" method="post" action="<?= URLHelper::getLink() ?>" >
+                <?= CSRFProtection::tokenTag() ?>
+                <table class="zebra" border=0 cellspacing=0 cellpadding=2>
+                    <colgroup>
+                        <col width="10%">
+                        <col width="90%">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <td colspan=2>
+                                <?= _('Bitte geben Sie hier Ihre Suchkriterien ein:') ?>
                             </td>
                         </tr>
-                        <tr <? $cssSw->switchClass() ?>>
-                            <td class="<? echo $cssSw->getClass() ?>" width="10%">
-                                <font size=-1><?=_("Name der Veranstaltung:")?></font>
-                            </td>
-                            <td class="<? echo $cssSw->getClass() ?>" width="90%">
-                                <input  type="text"  size=30 maxlength=255 name="name" value="<? echo htmlReady(stripslashes($_SESSION['archiv_data']["name"])) ?>">
-                            </td>
-                        </tr>
-                        <tr <? $cssSw->switchClass() ?>>
-                            <td class="<? echo $cssSw->getClass() ?>" width="10%">
-                                <font size=-1><?=_("DozentIn der Veranstaltung:")?></font>
-                            </td>
-                            <td  class="<? echo $cssSw->getClass() ?>" width="90%">
-                                <input  type="text"  size=30 maxlength=255 name="doz" value="<? echo htmlReady(stripslashes($_SESSION['archiv_data']["doz"])) ?>">
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><?= _('Name der Veranstaltung:') ?></td>
+                            <td>
+                                <input type="text" size=30 maxlength=255 name="name" value="<? echo htmlReady(stripslashes($_SESSION['archiv_data']["name"])) ?>">
                             </td>
                         </tr>
-                        <tr <? $cssSw->switchClass() ?>>
-                            <td class="<? echo $cssSw->getClass() ?>"  width="10%">
-                                <font size=-1><?=_("Semester")?> </font>
+                        <tr>
+                            <td><?= _('DozentIn der Veranstaltung:') ?></td>
+                            <td>
+                                <input type="text" size=30 maxlength=255 name="doz" value="<? echo htmlReady(stripslashes($_SESSION['archiv_data']["doz"])) ?>">
                             </td>
-                            <td class="<? echo $cssSw->getClass() ?>"  width="90%">
-                                <font size=-1>
+                        </tr>
+                        <tr>
+                            <td><?= _('Semester') ?></td>
+                            <td>
                                 <select name="sem">
-                                <option selected value=0><?=_("alle")?></option>
+                                <option value=0><?=_("alle")?></option>
                             <?
                                 $query = "SELECT DISTINCT semester FROM archiv WHERE semester != '' ORDER BY start_time";
                                 $statement = DBManager::get()->query($query);
@@ -295,17 +294,13 @@ include('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
                                 }
                             ?>
                                 </select>
-                                </font>
                             </td>
                         </tr>
-                        <tr <? $cssSw->switchClass() ?>>
-                            <td class="<? echo $cssSw->getClass() ?>" width="10%">
-                                <font size=-1><?=_("Heimat-Einrichtung")?> </font>
-                            </td>
-                            <td class="<? echo $cssSw->getClass() ?>"  width="90%">
-                                <font size=-1>
+                        <tr>
+                            <td><?= _('Heimat-Einrichtung') ?></td>
+                            <td>
                                 <select name="inst">
-                                <option selected value=0><?=_("alle")?></option>
+                                <option value=0><?=_("alle")?></option>
                             <?
                                 $query = "SELECT DISTINCT heimat_inst_id, Institute.Name "
                                        . "FROM archiv "
@@ -321,17 +316,13 @@ include('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
                                 }
                             ?>
                                 </select>
-                                </font>
                             </td>
                         </tr>
-                        <tr <? $cssSw->switchClass() ?>>
-                            <td class="<? echo $cssSw->getClass() ?>" width="10%">
-                                <font size=-1><?=_("Fakultät")?> </font>
-                            </td>
-                            <td class="<? echo $cssSw->getClass() ?>"  width="90%">
-                                <font size=-1>
+                        <tr>
+                            <td><?= _('Fakultät') ?></td>
+                            <td>
                                 <select name="fak">
-                                <option selected value=0><?=_("alle")?></option>
+                                <option value=0><?=_("alle")?></option>
                             <?
                                 $query = "SELECT DISTINCT fakultaet FROM archiv WHERE fakultaet != '' ORDER BY fakultaet";
                                 $statement = DBManager::get()->query($query);
@@ -343,48 +334,40 @@ include('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
                                 }
                             ?>
                                 </select>
-                                </font>
                             </td>
                         </tr>
-                        <tr <? $cssSw->switchClass() ?>>
-                            <td class="<? echo $cssSw->getClass() ?>" width="10%">
-                                <font size=-1><?=_("Beschreibung:")?></font>
-                            </td>
-                            <td class="<? echo $cssSw->getClass() ?>" width="90%">
-                                <input  type="text"  size=30 maxlength=255 name="desc" value="<?echo htmlReady(stripslashes($_SESSION['archiv_data']["desc"])) ?>">
+                        <tr>
+                            <td><?= _('Beschreibung:') ?></td>
+                            <td>
+                                <input type="text" size=30 maxlength=255 name="desc" value="<?echo htmlReady(stripslashes($_SESSION['archiv_data']["desc"])) ?>">
                             </td>
                         </tr>
-                        <tr <? $cssSw->switchClass() ?>>
-                            <td class="<? echo $cssSw->getClass() ?>" width="10%">
-                                <font size=-1><?=_("Suche &uuml;ber <b>alle</b> Felder:")?></font>
-                            </td>
-                            <td class="<? echo $cssSw->getClass() ?>" width="90%">
-                                <input  type="text"  size=30 maxlength=255 name="all" value="<? echo htmlReady(stripslashes($_SESSION['archiv_data']["all"])) ?>">
+                        <tr>
+                            <td><?= _('Suche &uuml;ber <b>alle</b> Felder:') ?></td>
+                            <td>
+                                <input type="text" size=30 maxlength=255 name="all" value="<? echo htmlReady(stripslashes($_SESSION['archiv_data']["all"])) ?>">
                             </td>
                         </tr>
-                        <tr <? $cssSw->switchClass() ?>>
-                            <td class="<? echo $cssSw->getClass() ?>" width="10%">
-                                &nbsp;
-                            </td>
-                            <td class="<? echo $cssSw->getClass() ?>" width="90%">
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td>
                                 <input  type="checkbox" name="pers" <? if ($_SESSION['archiv_data']["pers"]) echo "checked" ?>>
-                                <font size=-1><?=_("Nur Veranstaltungen anzeigen, an denen ich teilgenommen habe")?></font>
+                                <?=_("Nur Veranstaltungen anzeigen, an denen ich teilgenommen habe")?>
                             </td>
                         </tr>
-                        <tr <? $cssSw->switchClass() ?>>
-                            <td class="<? echo $cssSw->getClass() ?>" width="10%">
-                                &nbsp;
-                            </td>
-                            <td class="<? echo $cssSw->getClass() ?>" width="90%">
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td>
                                 <center>
                                 <?= Button::create(_("Suchen")) ?>
                                 </center>
                             </td>
                         </tr>
-                    </table>
-                    <br>
-                    <input type="hidden" name="suche" value="yes">
-                </form>
+                    </tbody>
+                </table>
+                <br>
+                <input type="hidden" name="suche" value="yes">
+            </form>
         </td>
         <td class="blank" align="right" valign="top" width="270">
             <?= print_infobox(array(), 'infobox/archiv.jpg') ?>

@@ -67,27 +67,23 @@ if ($evtype == 'semcal' || (isset($_calendar->event) && ($_calendar->event insta
 
 echo '<form name="edit_event" action="' . URLHelper::getLink('', array('cmd' => 'edit')) . '" method="post">';
 echo CSRFProtection::tokenTag();
-echo "<table class=\"blank\" width=\"99%\" border=\"0\" cellspacing=\"0\" cellpadding=\"10\">\n";
-echo "<tr><th width=\"100%\" align=\"left\">";
+echo "<table class=\"blank zebra\" width=\"99%\" border=\"0\" cellspacing=\"0\" cellpadding=\"10\">\n";
+echo "<thead><tr><th width=\"100%\" align=\"left\">";
 echo $edit_mode_out;
-echo "\n</th></tr>\n";
-
-$css_switcher = new cssClassSwitcher();
-$css_switcher->switchClass();
+echo "\n</th></tr></thead>\n";
 
 ########################################################################################
 
 if (!$set_recur_x) {
     if (isset($_calendar->event) && ($_calendar->event instanceof SeminarEvent
             || $_calendar->event instanceof SeminarCalendarEvent)) {
-        echo "<tr>\n<td class=\"" . $css_switcher->getClass() . "\" width=\"100%\">\n";
+        echo "<tr>\n<td width=\"100%\">\n";
         echo _("Veranstaltung") . ":&nbsp; ";
         echo htmlReady($_calendar->event->getSemName());
         echo "</td>\n</tr>\n";
-        $css_switcher->switchClass();
     }
 
-    echo "<tr>\n<td class=\"" . $css_switcher->getClass() . "\" width=\"100%\">\n";
+    echo "<tr>\n<td width=\"100%\">\n";
     echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n";
     echo "<tr>\n<td>";
     echo _("Beginn:") . " </td>\n<td> &nbsp;";
@@ -197,8 +193,7 @@ if (!$set_recur_x) {
     echo "</td>\n</tr>\n</table>\n</td>\n</tr>\n";
 
     if ($_calendar->event->havePermission(Event::PERMISSION_READABLE)) {
-        $css_switcher->switchClass();
-        echo "<tr><td class=\"" . $css_switcher->getClass() . "\">\n";
+        echo "<tr><td>\n";
         echo "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\">";
         echo '<tr><td>';
         echo _("Zusammenfassung:") . "&nbsp;&nbsp;</td>\n";
@@ -214,8 +209,7 @@ if (!$set_recur_x) {
         echo "</textarea></td>\n";
         echo "</tr>\n</table>\n</td>\n</tr>\n";
 
-        $css_switcher->switchClass();
-        echo "<tr><td class=\"" . $css_switcher->getClass() . "\">\n";
+        echo "<tr><td>\n";
         echo _("Kategorie:") . '&nbsp;&nbsp;';
         echo "<select name=\"cat\" size=\"1\"$disabled>\n";
 
@@ -247,8 +241,7 @@ if (!$set_recur_x) {
         }
         echo "</td>\n</tr>\n";
 
-        $css_switcher->switchClass();
-        echo "<tr><td class=\"" . $css_switcher->getClass() . "\">\n";
+        echo "<tr><td>\n";
         echo _("Raum:") . "&nbsp;&nbsp;";
         echo '<input type="text" name="loc" size="30" maxlength="255" value="' . htmlReady($loc) . '"' . $disabled . '>';
         echo "</td>\n</tr>\n";
@@ -256,8 +249,7 @@ if (!$set_recur_x) {
 
     if (!($_calendar->event instanceof SeminarEvent)) {
         if ($_calendar->event->havePermission(Event::PERMISSION_WRITABLE) && !($_calendar->event instanceof SeminarCalendarEvent)) {
-            $css_switcher->switchClass();
-            echo "<tr><td class=\"" . $css_switcher->getClass() . "\">\n";
+            echo "<tr><td>\n";
             echo _("Zugriff:") . "&nbsp;&nbsp;\n";
             echo "<select name=\"via\" size=\"1\"$disabled>\n";
             if ($_calendar->checkPermission(Calendar::PERMISSION_OWN)) {
@@ -303,8 +295,7 @@ if (!$set_recur_x) {
         }
 
         if ($_calendar->event instanceof SeminarCalendarEvent) {
-            $css_switcher->switchClass();
-            echo "<tr><td class=\"" . $css_switcher->getClass() . "\">\n";
+            echo "<tr><td>\n";
             echo _("Priorit&auml;t:") . "&nbsp;&nbsp;<select $disabled name=\"priority\" size=\"1\">\n";
             $priority_names = array(
                 _("keine Angabe"),
@@ -324,15 +315,13 @@ if (!$set_recur_x) {
         }
 
         if ($_calendar instanceof GroupCalendar) {
-            $css_switcher->switchClass();
-            echo "<tr><td class=\"" . $css_switcher->getClass() . "\" valign=\"baseline\">";
+            echo "<tr><td valign=\"baseline\">";
             echo _("Eintragen in Kalender:") . '<br>&nbsp;&nbsp;';
             echo $GLOBALS['template_factory']->render('calendar/select_members', compact('_calendar'));
             echo "</td>\n</tr>\n";
         }
 
-        $css_switcher->switchClass();
-        echo "<tr><td class=\"" . $css_switcher->getClass() . "\">";
+        echo "<tr><td>";
         if ($_calendar->event)
             echo htmlReady($_calendar->event->toStringRecurrence());
         echo "&nbsp; &nbsp; &nbsp;";
@@ -356,8 +345,7 @@ else {
 
     if ($_calendar->havePermission(Calendar::PERMISSION_READABLE)) {
         if (!isset($_calendar->event) || !($_calendar->event instanceof SeminarEvent) || $evtype != 'semcal') {
-            echo "<tr><td align=\"center\" class=\"" . $css_switcher->getClass();
-            echo "\" colspan=\"2\" nowrap=\"nowrap\">\n&nbsp;";
+            echo "<tr><td align=\"center\" colspan=\"2\" nowrap=\"nowrap\">\n&nbsp;";
 
             if ($_calendar->event->havePermission(Event::PERMISSION_WRITABLE) && $evtype != 'semcal') {
 
@@ -454,8 +442,7 @@ else {
 
     switch ($mod) {
         case "DAILY":
-            $css_switcher->switchClass();
-            echo "<tr>\n<td nowrap=\"nowrap\" class=\"" . $css_switcher->getClass() . "\">\n";
+            echo "<tr>\n<td nowrap=\"nowrap\">\n";
             echo "&nbsp; <input type=\"radio\" name=\"type_d\" value=\"daily\"";
             if ($type_d == "daily" || $type_d == "")
                 echo " checked";
@@ -476,8 +463,7 @@ else {
             if (!is_array($wdays)) {
                 $wdays = array(strftime('%u', mktime(0, 0, 0, $start_month, $start_day, $start_year)));
             }
-            $css_switcher->switchClass();
-            echo "<tr><td nowrap=\"nowrap\" class=\"" . $css_switcher->getClass() . "\">\n";
+            echo "<tr><td nowrap=\"nowrap\">\n";
             echo "&nbsp; <label>";
             $out_1 = '<input type="text" name="linterval_w" size="3" maxlength="3" value="';
             $out_1 .= ( $linterval_w ? $linterval_w : "1");
@@ -511,8 +497,7 @@ else {
             break;
 
         case "MONTHLY":
-            $css_switcher->switchClass();
-            echo "<tr><td nowrap=\"nowrap\" class=\"" . $css_switcher->getClass() . "\">\n";
+            echo "<tr><td nowrap=\"nowrap\">\n";
             echo "&nbsp; <input type=\"radio\" name=\"type_m\" value=\"day\"";
             if ($type_m == "day" || $type_m == "")
                 echo " checked";
@@ -563,8 +548,7 @@ else {
             if (!$month_y2)
                 $month_y2 = $start_month;
 
-            $css_switcher->switchClass();
-            echo "<tr><td nowrap=\"nowrap\" class=\"" . $css_switcher->getClass() . "\">\n";
+            echo "<tr><td nowrap>\n";
             echo "&nbsp; <input type=\"radio\" name=\"type_y\" value=\"day\"";
             if ($type_y == "day" || $type_y == "")
                 echo " checked";
@@ -620,8 +604,7 @@ else {
             break;
     }
 
-    $css_switcher->switchClass();
-    echo "<tr><td class=\"" . $css_switcher->getClass() . "\">";
+    echo "<tr><td>";
 
     if ($mod != 'SINGLE') {
         // end of recurrence
@@ -671,8 +654,7 @@ else {
         echo "</td>\n</tr>\n";
 
         // exceptions
-        $css_switcher->switchClass();
-        echo "<tr><td class=\"" . $css_switcher->getClass() . "\">";
+        echo "<tr><td>";
         echo "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
         echo "<tr><td valign=\"middle\">\n";
         echo "<br>&nbsp; ";
@@ -733,8 +715,7 @@ else {
 #######################################################################################
 
 if ($editor_id = $_calendar->event->getEditorId()) {
-    $css_switcher->switchClass();
-    echo "<tr><td class=\"" . $css_switcher->getClass() . "\">";
+    echo "<tr><td>";
     echo sprintf(_("Termin geändert am %s von %s"), get_fullname($editor_id), strftime('%c', $_calendar->event->properties['LAST-MODIFIED']));
     echo "</td></tr>";
 }
@@ -800,10 +781,7 @@ if (isset($_calendar->event) && ($_calendar->event instanceof SeminarEvent || $_
         $info_box['all'][1]['eintrag'][] = $info_box['export'];
     }
 
-
-
-    $css_switcher->switchClass();
-    echo "<tr><td class=\"" . $css_switcher->getClass() . "\" align=\"center\" nowrap=\"nowrap\">\n";
+    echo "<tr><td align=\"center\" nowrap>\n";
     echo "<input type=\"hidden\" name=\"atime\" value=\"$atime\">\n";
     echo "<input type=\"hidden\" name=\"mod_err\" value=\"$mod_err\">\n";
     echo "<input type=\"hidden\" name=\"mod_prv\" value=\"$mod\">\n";
@@ -819,8 +797,7 @@ if (isset($_calendar->event) && ($_calendar->event instanceof SeminarEvent || $_
 
     echo Button::create('<< '._('Zurück'), 'cancel');
 } else {
-    $css_switcher->switchClass();
-    echo "<tr><td class=\"" . $css_switcher->getClass() . "\" align=\"center\" nowrap=\"nowrap\">\n";
+    echo "<tr><td align=\"center\" nowrap>\n";
     echo "<input type=\"hidden\" name=\"atime\" value=\"$atime\">\n";
     echo "<input type=\"hidden\" name=\"mod_err\" value=\"$mod_err\">\n";
     echo "<input type=\"hidden\" name=\"mod_prv\" value=\"$mod\">\n";

@@ -98,22 +98,18 @@ function printSafeguard($sign,$text,$mode = NULL, $voteID = NULL, $showrangeID =
 function printSearchResults($rangeAR,$searchString){
     global $label,$typen;
 
-$cssSw = new cssClassSwitcher;                                  // Klasse für Zebra-Design
-$cssSw->enableHover();
-$html = "\n" . $cssSw->GetHoverJSFunction() . "\n";
-
-    $html.= "<table class=\"blank\" cellspacing=0 cellpadding=0 border=0 width=\"100%\">\n"
+    $html.= "<table class=\"blank\" cellspacing=\"4\" cellpadding=0 border=0 width=\"100%\">\n"
           . " <tr>\n"
           . "  <td class=blank>\n"
-          . "   <table align=\"center\" width=99% class=blank border=0 cellpadding=2 cellspacing=0>\n"
+          . "   <table align=\"center\" width=99% class=\"blank\" border=0 cellpadding=2 cellspacing=0>\n"
           . "   <tr>\n"
           . "    <td colspan=\"9\" align=\"left\" valign=\"top\" class=\"blank\">\n"
-          . "     <br><font size=\"2\"><b>".$label["searchresults_title"]." <". htmlReady($searchString) .">:</b>\n"
-          . "    </td>\n";
+          . "     <br><font size=\"2\"><b>".$label["searchresults_title"]." \"". htmlReady($searchString) ."\":</b>\n"
+          . "    </td>\n"
+          . "   </tr>\n";
 
     if ((empty($rangeAR)) || ($searchString == NULL )){
-        $html .="   </tr>\n"
-              . "   <tr ".$cssSw->getHover().">\n";
+        $html .= "   <tr>\n";
         if ($searchString == NULL){
             $html .="    <td class=\"content_body\">\n"
                   . "     <br><font size=\"-1\">\n"
@@ -134,6 +130,7 @@ $html = "\n" . $cssSw->GetHoverJSFunction() . "\n";
         echo $html;
         return;
     }
+    $html .= '</table>';
 
     foreach ($rangeAR as $k => $v) {
         while (list($typen_key,$typen_value)=each ($typen)) {
@@ -148,27 +145,27 @@ $html = "\n" . $cssSw->GetHoverJSFunction() . "\n";
     reset($typen);
     while(list($typen_key,$typen_value)=each ($typen)){
         $counter = 0;
-        $html .="    <tr><td class=\"table_header\" colspan=\"4\"><b>$typen_value:</b></font></td></tr>\n";
+        $html .= "<table class=\"default zebra-hover\">\n";
+        $html .= "<colgroup><col><col width=\"10%\"><col width=\"10%\"><col width=\"10%\"></colgroup>";
+        $html .="<thead><tr><th align=\"left\" colspan=\"4\">$typen_value:</th></tr></thead>\n";
+        $html .= '<tbody>';
         if ($ranges["$typen_key"]){
             foreach ($ranges["$typen_key"] as $range) {
-                if ($counter == 0)          $displayclass = "content_body";
-                elseif (($counter % 2) == 0)    $displayclass = "table_row_even";
-                else                            $displayclass = "table_row_odd";
-                $html .="   <tr ".$cssSw->getHover().">"
-                      . "<td class=\"".$cssSw->getClass()."\"><font size=\"-1\">".htmlReady($range["name"])."</td>"
-                      . "<td class=\"".$cssSw->getClass()."\"><font size=\"-1\"><a href=\"".URLHelper::getLink(VOTE_FILE_ADMIN."?page=edit&rangeID=".$range["id"]."&type=vote&showrangeID=".$range["id"])."\" alt=\"Umfrage erstellen.\">Umfrage erstellen</a></font></td>"
-                      . "<td class=\"".$cssSw->getClass()."\"><font size=\"-1\"><a href=\"".URLHelper::getLink(VOTE_FILE_ADMIN."?page=edit&rangeID=".$range["id"]."&type=test&showrangeID=".$range["id"])."\" alt=\"Test erstellen.\">Test erstellen</a></font></td>"
-                      . "<td class=\"".$cssSw->getClass()."\"><font size=\"-1\"><a href=\"".URLHelper::getLink(VOTE_FILE_ADMIN."?page=overview&showrangeID=".$range["id"])."\" alt=\"Diesen Bereich anzeigen.\">Bereich Anzeigen</a></font></td>"
+                $html .="   <tr>"
+                      . "<td>".htmlReady($range["name"])."</td>"
+                      . "<td align=\"center\"><a href=\"".URLHelper::getLink(VOTE_FILE_ADMIN."?page=edit&rangeID=".$range["id"]."&type=vote&showrangeID=".$range["id"])."\">" . _('Umfrage erstellen') . "</a></td>"
+                      . "<td align=\"center\"><a href=\"".URLHelper::getLink(VOTE_FILE_ADMIN."?page=edit&rangeID=".$range["id"]."&type=test&showrangeID=".$range["id"])."\">" . _('Test erstellen') . "</a></td>"
+                      . "<td align=\"center\"><a href=\"".URLHelper::getLink(VOTE_FILE_ADMIN."?page=overview&showrangeID=".$range["id"])."\">" . _('Bereich Anzeigen') . "</a></td>"
                       . "   </tr>\n";
             $counter++;
-            $cssSw->switchClass();
             }
         }
         else{
                 $html .="   <tr>"
-                      . "<td class=\"content_body\" colspan=\"4\"><font size=\"-1\">".$label["searchresults_no_results_range"]."</font></td>"
+                      . "<td class=\"content_body\" colspan=\"4\">".$label["searchresults_no_results_range"]."</td>"
                       . "   </tr>\n";
         }
+        $html .= '</tbody></table>';
         reset($ranges);
     }
 

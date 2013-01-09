@@ -42,8 +42,6 @@ require_once ('lib/user_visible.inc.php');
 require_once ('lib/contact.inc.php');
 require_once ('lib/visual.inc.php');
 
-$cssSw = new cssClassSwitcher;                                  // Klasse für Zebra-Design
-$cssSw->enableHover();
 PageLayout::setTitle(_("Mein Adressbuch"));
 Navigation::activateItem('/community/contacts/' . Request::get('view', 'alpha'));
 // add skip links

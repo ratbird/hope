@@ -44,10 +44,6 @@ $perm->check("tutor");
 require_once ($PATH_EXPORT.'/export_xslt_vars.inc.php');   // Liste der XSLT-Skripts
 require_once ('lib/dates.inc.php');   // Datumsfunktionen
 
-$cssSw = new cssClassSwitcher;                                  // Klasse für Zebra-Design
-$cssSw->enableHover();
-
-
 /**
 * Checks given parameters
 *
@@ -183,32 +179,35 @@ elseif ($page == 1) // Seite 2 : Auswahl des XSLT-Scripts
     $export_pagecontent .= "<form method=\"POST\" action=\"" . URLHelper::getLink() . "\">";
     $export_pagecontent .= CSRFProtection::tokenTag();
     $export_pagecontent .= "";
-    $export_pagecontent .= "<table cellspacing=\"0\" cellpadding=\"1\" border=\"0\" width=\"100%\">";
+    $export_pagecontent .= "<table class=\"zebra-hover\" cellspacing=\"0\" cellpadding=\"1\" border=\"0\" width=\"100%\">";
+    $export_pagecontent .= "<thead>";
     $export_pagecontent .= "<tr align=\"center\" valign=\"top\">";
     $export_pagecontent .= "<th width=\"5%\"><b>&nbsp;</b></th>";
     $export_pagecontent .= "<th width=\"15%\" align=\"left\">" . _("Ausgabemodul") . "</th>";
     $export_pagecontent .= "<th width=\"80%\"><b>" . _("Beschreibung") . "</b></th>";
     $export_pagecontent .= "</tr>";
+    $export_pagecontent .= "</thead>";
+    $export_pagecontent .= "<tbody>";
 
     $opt_num = 0;
     while (list($key, $val) = each($xslt_files))
     {
         if ($val[$ex_type] AND $val[$format])
         {
-            $cssSw->switchClass();
-            $export_pagecontent .= "<tr " . $cssSw->getHover() . ">";
-            $export_pagecontent .= "<td class=\"" . $cssSw->getClass() . "\">&nbsp;<input type=\"radio\" name=\"choose\" value=\"" . $key . "\"";
+            $export_pagecontent .= "<tr>";
+            $export_pagecontent .= "<td>&nbsp;<input type=\"radio\" name=\"choose\" value=\"" . $key . "\"";
             if (($key == $choose) OR ( ($choose == "") AND ($opt_num == 0) ) ) $export_pagecontent .= " checked";
             $export_pagecontent .= ">&nbsp;</td>";
-            $export_pagecontent .= "<td class=\"" . $cssSw->getClass() . "\">" . $val["name"] . "&nbsp;</td>";
-            $export_pagecontent .= "<td class=\"" . $cssSw->getClass() . "\">" . $val["desc"] . "</td>";
+            $export_pagecontent .= "<td>" . $val["name"] . "&nbsp;</td>";
+            $export_pagecontent .= "<td>" . $val["desc"] . "</td>";
             $export_pagecontent .= "</tr>";
             $opt_num++;
         }
     }
 
-    $export_pagecontent .= "<br>";
+    $export_pagecontent .= "</tbody>";
     $export_pagecontent .= "</table>";
+    $export_pagecontent .= "<br>";
     $export_pagecontent .= "<input type=\"hidden\" name=\"page\" value=\"2\">";
     $export_pagecontent .= "<input type=\"hidden\" name=\"format\" value=\"" . htmlReady($format) . "\">";
     $export_pagecontent .= "<input type=\"hidden\" name=\"o_mode\" value=\"" . htmlReady($o_mode) . "\">";

@@ -350,7 +350,6 @@ function semadmission_get_institute($seminare_condition) {
 
 $sem_condition = '';
 $admission_condition = array();
-$cssSw = new cssClassSwitcher();
 
 $cols = array();
 if ($ALLOW_GROUPING_SEMINARS) {
@@ -891,27 +890,28 @@ if(is_object($group_obj)){
         </tr>
 <?}?>
     <tr>
-        <td class="blank">
+        <td class="blank" style="padding: 5px;">
 <?
     $data = semadmission_get_data($seminare_condition);
     $tag = 0;
     if (count($data)) {
-        echo "\n<table width=\"99%\" align=\"center\" border=\"0\" cellspacing=\"2\" cellpadding=\"2\">";
-        echo "\n<tr style=\"font-size:80%\">";
-                foreach($cols as $col){
-                    echo "\n<th width=\"{$col[0]}%\" style=\"white-space:nowrap;\">";
-                    if($col[1]){
-                        echo '<a class="tree" href="' . URLHelper::getLink('?sortby='. $col[2]). '">'.$col[1];
-                        if($col[2] == $_SESSION['show_admission']['sortby']['field']){
-                            echo Assets::img($_SESSION['show_admission']['sortby']['direction'] ? 'dreieck_up.png' : 'dreieck_down.png', array('style' => 'vertical-align:middle;'));
-                        }
-                        echo '</a>';
-                    }
-                    echo "\n</th>";
-                }
-                echo "\n</tr>";
         printf("\n<form action=\"%s\" method=\"post\">\n",URLHelper::getLink());
         echo CSRFProtection::tokenTag();
+
+        echo "\n<table class=\"default zebra\">";
+        echo "\n<thead><tr style=\"font-size:80%\">";
+        foreach($cols as $col){
+            echo "\n<th width=\"{$col[0]}%\" style=\"white-space:nowrap;\">";
+            if($col[1]){
+                echo '<a class="tree" href="' . URLHelper::getLink('?sortby='. $col[2]). '">'.$col[1];
+                if($col[2] == $_SESSION['show_admission']['sortby']['field']){
+                    echo Assets::img($_SESSION['show_admission']['sortby']['direction'] ? 'dreieck_up.png' : 'dreieck_down.png', array('style' => 'vertical-align:middle;'));
+                }
+                echo '</a>';
+            }
+            echo "\n</th>";
+        }
+        echo "\n</tr></thead><tbody>";
     } elseif ($institut_id) {
         echo "\n<table width=\"99%\" align=\"center\" border=\"0\" cellspacing=\"2\" cellpadding=\"2\">";
         parse_msg ("info§"._("Im gew&auml;hlten Bereich existieren keine teilnahmebeschr&auml;nkten Veranstaltungen")."§", "§", "table_row_even",2, FALSE);
@@ -922,7 +922,6 @@ if(is_object($group_obj)){
             $teilnehmer .= '&nbsp;<a href="'.URLHelper::getLink('export.php', array('range_id' => $seminar_id, 'ex_type' => 'person', 'xslt_filename' => _("TeilnehmerInnen") . ' '. $semdata['Name'],'format' => 'csv', 'choose' => 'csv-teiln', 'o_mode'=> 'passthrough')).'">';
             $teilnehmer .= Assets::img('icons/16/blue/download.png', tooltip(_("Teilnehmerliste downloaden"))) .'</a>';
         }
-        $cssSw->switchClass();
         $teilnehmer_aux = $semdata['count_teilnehmer_aux'];
         $quota = $semdata['admission_turnout'];
         $count2 = $semdata['count_anmeldung'];
@@ -941,12 +940,12 @@ if(is_object($group_obj)){
         echo "<tr>";
         if ($ALLOW_GROUPING_SEMINARS) {
             if (!$semdata['admission_group']) {
-                printf("<td class=\"%s\" align=\"center\">",$cssSw->getClass());
+                echo "<td align=\"center\">";
                 unset($last_group);
                 printf("<input type=\"checkbox\" name=\"gruppe[]\" value=\"%s\">",$seminar_id);
                 echo '</td>';
             } else {
-                echo '<td class="'.$cssSw->getClass().'" align="center">';
+                echo '<td align="center">';
                 printf("<a title=\"%s\" href=\"".URLHelper::getLink('show_admission.php',array('group_id' => $semdata['admission_group'], 'group_sem_x'=>1))."\">%s</a>",
                     _("Gruppe bearbeiten"), htmlReady($semdata['groupname']));
                 echo '</td>';
@@ -955,54 +954,49 @@ if(is_object($group_obj)){
 
         $url = getUrlToSeminar($semdata);
 
-        printf ("<td class=\"%s\">
+        printf ("<td>
         <a title=\"%s\" href=\"$url\">
                 %s%s%s
                 </a></td>
-                <td class=\"%s\" align=\"center\">
+                <td align=\"center\">
                 <a title=\"%s\" href=\"".URLHelper::getLink('admin_admission.php?select_sem_id=%s')."\">%s</a></td>
-                <td class=\"%s\" align=\"center\">%s</td>
-                <td class=\"%s\" align=\"center\">%s</td>
-                <td class=\"%s\" align=\"center\">%s</td>
-                <td class=\"%s\" align=\"center\">%s</td>
-                <td class=\"%s\" align=\"center\">%s</td>
+                <td align=\"center\">%s</td>
+                <td align=\"center\">%s</td>
+                <td align=\"center\">%s</td>
+                <td align=\"center\">%s</td>
+                <td align=\"center\">%s</td>
                 <td class=\"%s\" align=\"center\">%s</td>
                 <td class=\"%s\" align=\"center\">%s</td>
                 <td class=\"%s\" align=\"center\">%s</td>",
-                $cssSw->getClass(),
                 _("Teilnehmerliste aufrufen"),
                 $semdata['VeranstaltungsNummer'] ? htmlready('('. $semdata['VeranstaltungsNummer'] . ')') .' ' : '',
                 htmlready(substr($semdata['Name'], 0, 50)), (strlen($semdata['Name'])>50) ? "..." : "",
-                $cssSw->getClass(),
                 _("Zugangsbeschränkungen aufrufen"),
                 $seminar_id,
                 $status,
-                $cssSw->getClass(),
                 $teilnehmer,
-                $cssSw->getClass(),
                 $teilnehmer_aux,
-                $cssSw->getClass(),
                 $quota,
-                $cssSw->getClass(),
                 $count2,
-                $cssSw->getClass(),
                 $count3,
-                ($datum != -1) ? ($datum < time() ? "steelgroup4" : "steelgroup1") : $cssSw->getClass(),
+                ($datum != -1) ? ($datum < time() ? "steelgroup4" : "steelgroup1") : '',
                 ($datum != -1) ? date("d.m.Y, G:i", $datum) : "",
-                ($semdata['admission_starttime'] != -1) ? ($semdata['admission_starttime'] < time() ? "steelgroup4" : "steelgroup1") : $cssSw->getClass(),
+                ($semdata['admission_starttime'] != -1) ? ($semdata['admission_starttime'] < time() ? "steelgroup4" : "steelgroup1") : '',
                 ($semdata['admission_starttime'] != -1) ? date("d.m.Y, G:i", $semdata['admission_starttime']) : "",
-                ($semdata['admission_endtime_sem']!= -1) ? ($semdata['admission_endtime_sem'] < time() ? "steelgroup4" : "steelgroup1") : $cssSw->getClass(),
+                ($semdata['admission_endtime_sem']!= -1) ? ($semdata['admission_endtime_sem'] < time() ? "steelgroup4" : "steelgroup1") : '',
                 ($semdata['admission_endtime_sem'] != -1) ? date("d.m.Y, G:i", $semdata['admission_endtime_sem']) : "");
         print ("</tr>");
     }
 
     if (count($data) && $ALLOW_GROUPING_SEMINARS) {
-        echo '<tr><td align="left" colspan="2">'. "\n";
+        echo '</tbody><tfoot><tr><td align="left" colspan="11">'. "\n";
         echo Button::create(_('Gruppieren'), 'group_sem', array('title' => _("Markierte Veranstaltungen gruppieren")));
+        echo "</td></tr></tfoot>\n";
+        echo "</table>";
         echo "</form>\n";
-        echo "</td></tr>\n";
+    } else {
+        echo "</table>";
     }
-    echo "</table>";
 }
 ?>
 <br>&nbsp;

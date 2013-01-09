@@ -1880,11 +1880,6 @@ class EvalOverview {
                 "system" => _("System"));
 
 
-        // Klasse für Zebra-Design
-        $cssSw = new cssClassSwitcher;
-        $cssSw->enableHover();
-        $html = "\n" . $cssSw->GetHoverJSFunction() . "\n";
-
         // zugewiesene Bereiche
         $table_r = new HTML("table");
 #   $table_r->addAttr ("class","white");
@@ -1893,6 +1888,7 @@ class EvalOverview {
         $table_r->addAttr("cellspacing", "0");
         $table_r->addAttr("cellpadding", "0");
         $table_r->addAttr("width", "100%");
+        $table_r->addAttr('class', 'zebra');
 
         // Überschriften
         $tr_r = new HTML("tr");
@@ -1921,17 +1917,12 @@ class EvalOverview {
 
         if ($rangeIDs) {
 
-            $cssSw->switchClass();
             // die verknüpften bereiche
             foreach ($rangeIDs as $k => $assigned_rangeID) {
-                $cssClass = $cssSw->getFullClass();
-
                 $tr_r = new HTML("tr");
-                $tr_r->addString($cssSw->getHover());
 
                 // title
                 $td_r = new HTML("td");
-                $td_r->addString($cssClass);
                 $td_r->addHTMLContent("&nbsp;");
                 $td_r->addHTMLContent(($db->getRangename($assigned_rangeID, NO)));
 #         $td_r->addContent ($db->getRangename($assigned_rangeID));
@@ -1942,7 +1933,6 @@ class EvalOverview {
                     // link
                     $td_r = new HTML("td");
                     $td_r->addAttr("align", "center");
-                    $td_r->addString($cssClass);
                     $input = new HTMLempty("input");
                     $input->addAttr("type", "checkbox");
                     $input->addAttr("name", "remove_range[$assigned_rangeID]");
@@ -1952,13 +1942,10 @@ class EvalOverview {
                     // no permission
                     $td_r = new HTML("td");
                     $td_r->addAttr("align", "center");
-                    $td_r->addString($cssClass);
                     $td_r->addContent(_("Sie haben keine Berechtigung die Evaluation aus diesem Bereich auszuhängen."));
                 }
                 $tr_r->addContent($td_r);
                 $table_r->addContent($tr_r);
-
-                $cssSw->switchClass();
             }
         } else {
             $td_r = new HTML("td");
@@ -2066,8 +2053,6 @@ class EvalOverview {
                 $table_s->addContent($tr_s);
 
                 $counter = 0;
-                $cssSw->resetClass();
-                $cssSw->switchClass();
 
                 if ($ranges["$type_key"]) {
                     foreach ($ranges["$type_key"] as $range) {
@@ -2079,14 +2064,10 @@ class EvalOverview {
                         else
                             $displayclass = "table_row_odd";
 
-                        $cssClass = $cssSw->getFullClass();
-
                         $tr_s = new HTML("tr");
-                        $tr_s->addString($cssSw->getHover());
 
                         // name
                         $td_s = new HTML("td");
-                        $td_s->addString($cssClass);
                         $td_s->addHTMLContent("&nbsp;");
                         $td_s->addHTMLContent(htmlready($range["name"]));
                         $tr_s->addContent($td_s);
@@ -2099,7 +2080,6 @@ class EvalOverview {
                             // link
                             $td_s = new HTML("td");
                             $td_s->addAttr("align", "center");
-                            $td_s->addString($cssClass);
                             $input = new HTMLempty("input");
                             $input->addAttr("type", "checkbox");
                             $input->addAttr("name", "link_range[{$range['id']}]");
@@ -2112,7 +2092,6 @@ class EvalOverview {
                             $td_s = new HTML("td");
                             $td_s->addAttr("align", "center");
                             $td_s->addAttr("colspan", "1");
-                            $td_s->addString($cssClass);
                             $input = new HTMLempty("input");
                             $td_s->addContent(_("Die Evaluation ist bereits diesem Bereich zugeordnet."));
                             $tr_s->addContent($td_s);
@@ -2121,7 +2100,6 @@ class EvalOverview {
                         // copy
                         $td_s = new HTML("td");
                         $td_s->addAttr("align", "center");
-                        $td_s->addString($cssClass);
                         $input = new HTMLempty("input");
                         $input->addAttr("type", "checkbox");
                         $input->addAttr("name", "copy_range[{$range['id']}]");
@@ -2131,7 +2109,6 @@ class EvalOverview {
 
                         $table_s->addContent($tr_s);
                         $counter++;
-                        $cssSw->switchClass();
                     }
                 } elseif ($globalperm == "root" || $globalperm == "admin") {
                     $tr_s = new HTML("tr");
@@ -2187,7 +2164,7 @@ class EvalOverview {
             $table->addContent($tr);
         }
 
-        return $html . $table->createContent();
+        return $table->createContent();
     }
 
     function createDomainLinks($search) {
@@ -2223,11 +2200,6 @@ class EvalOverview {
                 "fak" => _("Fakultät"),
                 "system" => _("System"));
 
-        // Klasse für Zebra-Design
-        $cssSw = new cssClassSwitcher;
-        $cssSw->enableHover();
-        $html = "\n" . $cssSw->GetHoverJSFunction() . "\n";
-
         // display search_results
         if ($results) {
             foreach ($results as $k => $v) {
@@ -2239,7 +2211,7 @@ class EvalOverview {
             }
 
             $table = new HTML("table");
-            $table->addAttr("class", "white");
+            $table->addAttr("class", "zebra white");
             $table->addAttr("border", "0");
             $table->addAttr("align", "center");
             $table->addAttr("cellspacing", "0");
@@ -2289,8 +2261,6 @@ class EvalOverview {
                 $table->addContent($tr);
 
                 $counter = 0;
-                $cssSw->resetClass();
-                $cssSw->switchClass();
 
                 if ($ranges["$type_key"]) {
                     foreach ($ranges["$type_key"] as $range) {
@@ -2302,14 +2272,10 @@ class EvalOverview {
                         else
                             $displayclass = "table_row_odd";
 
-                        $cssClass = $cssSw->getFullClass();
-
                         $tr = new HTML("tr");
-                        $tr->addString($cssSw->getHover());
 
                         // name
                         $td = new HTML("td");
-                        $td->addString($cssClass);
                         $td->addHTMLContent("&nbsp;");
                         $td->addContent($range["name"]);
                         $tr->addContent($td);
@@ -2321,7 +2287,6 @@ class EvalOverview {
                         // link
                         $td = new HTML("td");
                         $td->addAttr("align", "center");
-                        $td->addString($cssClass);
                         $link = new HTML("a");
                         $link->addAttr("href", UrlHelper::getLink(EVAL_FILE_ADMIN . "?rangeID=" . $range['id']));
                         $link->addContent(_("Diesen Bereich anzeigen."));
@@ -2331,13 +2296,11 @@ class EvalOverview {
                         // copy
                         $td = new HTML("td");
                         $td->addAttr("align", "center");
-                        $td->addString($cssClass);
                         $td->addContent(" ");
                         $tr->addContent($td);
 
                         $table->addContent($tr);
                         $counter++;
-                        $cssSw->switchClass();
                     }
                 } elseif ($globalperm == "root" || $globalperm == "admin") {
                     $tr = new HTML("tr");
@@ -2353,7 +2316,7 @@ class EvalOverview {
             }
         }
 
-        return $html . $table->createContent();
+        return $table->createContent();
     }
 
     /**
@@ -2376,5 +2339,3 @@ class EvalOverview {
 
 # ===================================================== end: public functions #
 }
-
-?>

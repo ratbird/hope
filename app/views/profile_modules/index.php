@@ -16,8 +16,6 @@
  */
 
 //Standard herstellen
-$cssSw = new cssClassSwitcher;
-
 if ($flash->flash['message']) {
     echo MessageBox::success($flash->flash['message']);
 } else if ($flash->flash['error']) {
@@ -44,32 +42,41 @@ $infobox = array(
 
 <form action="profilemodules/update" method="post">
     <?= CSRFProtection::tokenTag() ?>
-    <table width="70%" align="center" cellpadding="8" cellspacing="0" border="0" id="main_content">
-        <tr>
-            <th width="50%" align="center"><?= _("Plugin") ?></th>
-            <th align="center"><?= _("Aktiv") ?></th>
-        </tr>
-        <? foreach ($this->controller->modules as $id => $module) { ?>
-            <tr  <? $cssSw->switchClass() ?>>
-                <td  align="right" class="blank" style="border-bottom:1px dotted black;">
+    <table class="zebra" width="70%" align="center" cellpadding="8" cellspacing="0" border="0" id="main_content">
+        <colgroup>
+            <col width="50%">
+            <col width="50%">
+        </colgroup>
+        <thead>
+            <tr>
+                <th align="center"><?= _("Plugin") ?></th>
+                <th align="center"><?= _("Aktiv") ?></th>
+            </tr>
+        </thead>
+        <tbody>
+        <? foreach ($this->controller->modules as $id => $module): ?>
+            <tr>
+                <td align="right" class="blank" style="border-bottom:1px dotted black;">
                     <label for="module_<?= $id ?>">
-                        <?= _($module['name']) ?></label>
+                        <?= _($module['name']) ?>
+                    </label>
                     <div class="setting_info">
                         <?= _($module['description']) ?>
                     </div>
                 </td>
-                <td <?= $cssSw->getFullClass() ?>>
+                <td>
                     <input type="checkbox" name="module_<?= $id ?>" <?= $module['activated'] ? ' checked="checked"' : '' ?>>
                 </td>
             </tr>
-            <?
-        }
-        ?>
-        <tr <? $cssSw->switchClass() ?>>
-        <td  <?= $cssSw->getFullClass() ?> colspan="2" align="middle">
-            <input type="hidden" name="username" value="<?= get_username($this->controller->user_id); ?>"/>
-            <?= makeButton("uebernehmen", "input", _("Änderungen übernehmen")) ?>&nbsp;
-        </td>
-        </tr>
+        <? endforeach; ?>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="2" align="middle">
+                    <input type="hidden" name="username" value="<?= get_username($this->controller->user_id) ?>">
+                    <?= makeButton("uebernehmen", "input", _("Änderungen übernehmen")) ?>
+                </td>
+            </tr>
+        </tfoot>
     </table>
 </form>

@@ -269,8 +269,6 @@ function answers($parent_id, $anz_nutzer, $question_type)
 
     $summary = array ();
 
-    $css=new cssClassSwitcher;
-
     $query = "SELECT COUNT(*)
               FROM evalanswer
               JOIN evalanswer_user USING (evalanswer_id)
@@ -292,7 +290,6 @@ function answers($parent_id, $anz_nutzer, $question_type)
     $statement = DBManager::get()->prepare($query);
     $statement->execute(array($parent_id));
     while ($answer = $statement->fetch(PDO::FETCH_ASSOC)) {
-        $css->switchClass();
         $antwort_nummer++;
         $answer_counter = user_answers($answer['evalanswer_id']);
         if ($answer['residual'] == 0) {
@@ -303,7 +300,7 @@ function answers($parent_id, $anz_nutzer, $question_type)
         if ($has_residual && ($answers_sum - $has_residual)>0) $prozente_wo_residual = ROUND($answer_counter*100/($anz_nutzer-$has_residual));
         $prozente = 0;
         if ($answers_sum > 0) $prozente = ROUND($answer_counter*100/$anz_nutzer);
-        $edit .= "<tr class=\"".($i==1?"content_body":$css->getClass())."\"><td width=\"1%\"><font size=\"-1\"><b>".$antwort_nummer.".&nbsp;</b></font></td><td width=\"70%\"><font size=\"-1\">".($answer['text'] != '' ? formatReady($answer['text']) : $answer['value'])."</font></td>";
+        $edit .= "<tr ".($i==1?'class="content_body"':'')."><td width=\"1%\"><font size=\"-1\"><b>".$antwort_nummer.".&nbsp;</b></font></td><td width=\"70%\"><font size=\"-1\">".($answer['text'] != '' ? formatReady($answer['text']) : $answer['value'])."</font></td>";
         if ($has_residual) $edit .= "<td width=\"29%\"><font size=\"-1\">".$answer_counter." (".$prozente."%) ".($answer['residual'] == 0 ? "(".$prozente_wo_residual."%)<b>*</b>" : "" )."</font></td></tr>\n";
         else $edit .= "<td width=\"29%\"><font size=\"-1\">".$answer_counter." (".$prozente."%)</font></td></tr>\n";
         array_push($summary, array($antwort_nummer."(".$prozente."%)",$answer_counter));
@@ -450,10 +447,7 @@ function groups($parent_id)
                 $antworten_angezeigt = FALSE;
                 $i = 0;
                 $has_residual = 0;
-                $css=new cssClassSwitcher;
                 foreach ($answer_arr as $k1=>$questions) { // Oberste Ebene, hier sind die Questions abgelegt
-
-                    $css->switchClass();
 
                     if (!($antworten_angezeigt)) {
                         $i = 1;
@@ -466,10 +460,10 @@ function groups($parent_id)
                                             $antworten_angezeigt = TRUE;
                                         }
 
-                    echo "<tr class=\"". ($i==1?"content_body":$css->getClass())."\">";
+                    echo "<tr ". ($i==1?'class="content_body"':'').">";
                     echo "  <td><font size=\"-1\">".$questions["frage"]."</font></td>";
                     foreach ($questions["auswertung"] as $k3=>$v3) {
-                        echo "<td width=\"10%\" valign=\"TOP\" ".($i!=1?"CLASS=\"".$css->getClass()."\"":"")."><font size=\"-1\">";
+                        echo "<td width=\"10%\" valign=\"TOP\"><font size=\"-1\">";
                         echo $v3[0]." (".$v3[1]."%)"; // 2. Unterebene, hier sind die Zahlen abgelegt
                         if ($v3[2]) echo " (".$v3[2]."%)<b>*</b>";
                         echo "</font></td>";

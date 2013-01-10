@@ -70,11 +70,11 @@ $author_name = $author->getName();
             }
         }
     ?>
-    <div class="contextinfo" title="<?= htmlReady($title) ?>" style="background-image: url('<?= $GLOBALS['ABSOLUTE_URI_STUDIP'] ?>/plugins_packages/data-quest/Blubber/assets/images/private.png');">
+    <div class="contextinfo" title="<?= htmlReady($title) ?>" style="background-image: url('<?= $GLOBALS['ABSOLUTE_URI_STUDIP'] ?>/plugins_packages/core/Blubber/assets/images/private.png');">
     </div>
     <div class="related_users"></div>
     <? else : ?>
-    <div class="contextinfo" title="<?= _("Öffentlich") ?>" style="background-image: url('<?= $GLOBALS['ABSOLUTE_URI_STUDIP'] ?>/plugins_packages/data-quest/Blubber/assets/images/public.png');">
+    <div class="contextinfo" title="<?= _("Öffentlich") ?>" style="background-image: url('<?= $GLOBALS['ABSOLUTE_URI_STUDIP'] ?>/plugins_packages/core/Blubber/assets/images/public.png');">
     </div>
     <? endif ?>
     <div class="avatar_column">

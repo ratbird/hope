@@ -401,6 +401,11 @@ if ($view == "edit_object_assign" || $view == "openobject_assign") {
         echo "</td></tr>";
         $msg->displayMsg(15);
     }
+    ?>
+                </td>
+            </tr>
+            </table>
+        <?
 }
 
 /*****************************************************************************
@@ -474,13 +479,17 @@ if ($view == "view_schedule" || $view == "openobject_schedule") {
             <table width="100%" cellspacing="0" cellpadding="0" border="0">
             <tr>
                 <td valign ="top">
+                <? if (($_SESSION['resources_data']["schedule_start_time"]) && ($_SESSION['resources_data']["schedule_end_time"]))
+                    if ($_SESSION['resources_data']["schedule_mode"] == "list") //view List
+                        $ViewSchedules->showScheduleList((bool)Request::get('print_view'));
+                    else
+                        $ViewSchedules->showScheduleGraphical((bool)Request::get('print_view'));
+                ?>
+                </td>
+            </tr>
+            </table>
             <?
-        if (($_SESSION['resources_data']["schedule_start_time"]) && ($_SESSION['resources_data']["schedule_end_time"]))
-            if ($_SESSION['resources_data']["schedule_mode"] == "list") //view List
-                $ViewSchedules->showScheduleList((Request::get('print_view'))?true:false);
-            else
-                $ViewSchedules->showScheduleGraphical((Request::get('print_view'))?true:false);
-    } else {
+                } else {
         echo "</td></tr>";
         $msg->displayMsg(15);
     }
@@ -518,12 +527,16 @@ if ($view == "view_sem_schedule") {
             <table width="100%" cellspacing="0" cellpadding="0" border="0">
             <tr>
                 <td valign ="top">
-            <?
-        if (($_SESSION['resources_data']["sem_schedule_semester_id"]) && ($_SESSION['resources_data']["sem_schedule_timespan"]))
-            if ($_SESSION['resources_data']["schedule_mode"] == "list") //view List
-                $ViewSchedules->showScheduleList(Request::option('print_view'));
-            else
-                $ViewSchedules->showScheduleGraphical(Request::option('print_view'));
+            <? if (($_SESSION['resources_data']["sem_schedule_semester_id"]) && ($_SESSION['resources_data']["sem_schedule_timespan"]))
+                if ($_SESSION['resources_data']["schedule_mode"] == "list") //view List
+                    $ViewSchedules->showScheduleList(Request::option('print_view'));
+                else
+                    $ViewSchedules->showScheduleGraphical(Request::option('print_view'));
+            ?>
+                </td>
+            </tr>
+            </table>
+        <?
     } else {
         echo "</td></tr>";
         $msg->displayMsg(15);
@@ -568,14 +581,16 @@ if ($view == "view_group_schedule" || $view == "view_group_schedule_daily") {
             <table width="100%" cellspacing="0" cellpadding="0" border="0">
             <tr>
                 <td valign ="top">
-            <?
-        if (isset($_SESSION['resources_data']['actual_room_group']))
-            $ViewSchedules->showScheduleGraphical(Request::option('print_view'));
-    } else {
-        echo "</td></tr>";
-        $msg->displayMsg(25);
-        $suppress_infobox = TRUE;
-    }
+                <? if (isset($_SESSION['resources_data']['actual_room_group']))
+                    $ViewSchedules->showScheduleGraphical(Request::option('print_view'));
+                } else {
+                    $msg->displayMsg(25);
+                    $suppress_infobox = TRUE;
+                }?> 
+                </td>
+            </tr>
+        </table>
+<?
 }
 
 if ($view == "openobject_group_schedule") {

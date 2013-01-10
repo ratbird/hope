@@ -171,6 +171,12 @@ class UserManagement
         $visibility_update = DBManager::get()->prepare($query);
 
         $changed = 0;
+        $nperms = array(
+            'user' => 0,
+            'autor' => 1,
+            'tutor' => 2,
+            'dozent' => 3
+        );
         foreach ($this->user_data as $key => $value) {
             // update changed fields only
             if ($this->original_user_data[$key] != $value) {
@@ -187,6 +193,27 @@ class UserManagement
                     if (get_config('DOZENT_ALWAYS_VISIBLE')) {
                         $visibility_update->execute(array($this->user_data['auth_user_md5.user_id']));
                     }
+                }
+                if ($field == 'perms' && $nperms[$this->user_data['auth_user_md5.perms']] < $nperms[$this->original_user_data['auth_user_md5.perms']]) {
+                    $downgrade = DBManager::get()->prepare(
+                        "UPDATE seminar_user " .
+                            "INNER JOIN seminare ON (seminare.Seminar_id = seminar_user.Seminar_id) " .
+                        "SET seminar_user.status = :new_max_status " .
+                        "WHERE seminar_user.user_id = :user_id " .
+                            "AND seminar_user.status IN (:old_status) " .
+                            "AND seminare.status NOT IN (:studygroups) " .
+                    "");
+                    $old_status = array();
+                    foreach ($nperms as $status => $n) {
+                        if ($n > $nperms[$this->user_data['auth_user_md5.perms']] && $n <= $nperms[$this->original_user_data['auth_user_md5.perms']]) {
+                            $old_status[] = $status;
+                        }
+                    }
+                    $downgrade->execute(array(
+                        'user_id' => $this->user_data['auth_user_md5.user_id'],
+                        'old_status' => $old_status,
+                        'studygroups' => studygroup_sem_types()
+                    ));
                 }
 
                 // logging
@@ -407,8 +434,11 @@ class UserManagement
         } else {
             $query = "SELECT COUNT(*)
                       FROM seminar_user AS su
-                      LEFT JOIN seminare AS s USING (Seminar_id)
-                      WHERE su.user_id = ? AND s.status NOT IN (?) AND su.status = 'dozent'
+                          LEFT JOIN seminare AS s USING (Seminar_id)
+                      WHERE su.user_id = ? 
+                          AND s.status NOT IN (?) 
+                          AND su.status = 'dozent' 
+                          AND (SELECT COUNT(*) FROM seminar_user su2 WHERE Seminar_id = su.Seminar_id AND su2.status = 'dozent') = 1 
                       GROUP BY user_id";
             $statement = DBManager::get()->prepare($query);
             $statement->execute(array(
@@ -418,7 +448,7 @@ class UserManagement
             $count = $statement->fetchColumn();
         }
         if ($count && isset($newuser['auth_user_md5.perms']) && $newuser['auth_user_md5.perms'] != "dozent") {
-            $this->msg .= sprintf("error§" . _("Der Benutzer <em>%s</em> ist Dozent in %s aktiven Veranstaltungen und kann daher nicht in einen anderen Status versetzt werden!") . "§", $this->user_data['auth_user_md5.username'], $count);
+            $this->msg .= sprintf("error§" . _("Der Benutzer <em>%s</em> ist alleiniger Dozent in %s aktiven Veranstaltungen und kann daher nicht in einen anderen Status versetzt werden!") . "§", $this->user_data['auth_user_md5.username'], $count);
             return FALSE;
         }
 
@@ -500,7 +530,7 @@ class UserManagement
         // Upgrade to admin or root?
         if ($newuser['auth_user_md5.perms'] == "admin" || $newuser['auth_user_md5.perms'] == "root") {
 
-         $this->re_sort_position_in_seminar_user();
+            $this->re_sort_position_in_seminar_user();
 
             // delete all seminar entries
             $query = "SELECT seminar_id FROM seminar_user WHERE user_id = ?";

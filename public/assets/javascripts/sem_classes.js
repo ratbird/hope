@@ -37,7 +37,7 @@ STUDIP.admin_sem_class = {
             'update': after_update
         });
         jQuery("#deactivated_modules .droparea").sortable({
-            'connectWith': ".droparea:not(.full, #activated_plugins .droparea, #nonactivated_plugins .droparea,)",
+            'connectWith': ".droparea:not(.full, #activated_plugins .droparea, #nonactivated_plugins .droparea)",
             'revert': 200,
             'update': after_update
         });

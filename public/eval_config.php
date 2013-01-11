@@ -66,22 +66,11 @@
     $eval_id     = Request::option('eval_id');
     $template_id = Request::option('template_id');
 
-    if (empty($eval_id)) {
-        throw new InvalidArgumentException(_('Ungültiger Zugriff, fehlende eval_id'));
-    }
-
-    // Gehoert die benutzende Person zum Seminar-Stab (Dozenten, Tutoren) oder ist es ein ROOT?
-    $staff_member = $perm->have_studip_perm('tutor', $SessSemName[1]); // TODO: Seminar id should not be read from session
-
-    // Pruefen, ob die Person wirklich berechtigt ist, hier etwas zu aendern...
-    $query = "SELECT 1 FROM eval WHERE eval_id = ? AND author_id = IFNULL(?, author_id)";
-    $statement = DBManager::get()->prepare($query);
-    $statement->execute(array(
-        $eval_id,
-        $staff_member ? null : $GLOBALS['user']->id
-    ));
-    if (!$statement->fetchColumn()) {
-        throw new AccessDeniedException(_('Ungültiger oder unberechtigter Zugriff'));
+    // Überprüfen, ob die Evaluation existiert oder der Benutzer genügend Rechte hat
+    $eval = new Evaluation($eval_id);
+    $eval->check();
+    if (EvaluationObjectDB::getEvalUserRangesWithNoPermission($eval) == YES || count($eval->errorArray) > 0) {
+        throw new Exception(_("Diese Evaluation ist nicht vorhanden oder Sie haben nicht ausreichend Rechte!"));
     }
 
     // Store settings

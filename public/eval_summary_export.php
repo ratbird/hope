@@ -58,17 +58,12 @@ require_once 'lib/classes/Institute.class.php';
 // Start of Output
 $eval_id = Request::option('eval_id');
 
-$no_permission = YES;
+// Überprüfen, ob die Evaluation existiert oder der Benutzer genügend Rechte hat
 $eval = new Evaluation($eval_id);
-$no_permissons = EvaluationObjectDB::getEvalUserRangesWithNoPermission ($eval);
-if ($no_permissons == YES) {
-  // Evaluation existiert nicht...
-  echo "&nbsp;"._("Evaluation NICHT vorhanden oder keine Rechte vorhanden!");
-  die();
+$eval->check();
+if (EvaluationObjectDB::getEvalUserRangesWithNoPermission($eval) == YES || count($eval->errorArray) > 0) {
+    throw new Exception(_("Diese Evaluation ist nicht vorhanden oder Sie haben nicht ausreichend Rechte!"));
 }
-
-// Gehoert die benutzende Person zum Seminar-Stab (Dozenten, Tutoren) oder ist es ein ROOT?
-$staff_member = $perm->have_studip_perm("tutor",$SessSemName[1]);
 
 $tmp_path_export = $GLOBALS['TMP_PATH']. '/export/';
 export_tmp_gc();
@@ -240,10 +235,10 @@ function groups ($parent_id) {
 
     $query = "SELECT LOCATE('Freitext', `text`) > 0 FROM evalquestion WHERE evalquestion_id = ?";
     $freetext_statement = DBManager::get()->prepare($query);
-    
+
     $query = "SELECT evalquestion_id, `text`, type FROM evalquestion WHERE parent_id = ? ORDER BY position";
     $questions_statement = DBManager::get()->prepare($query);
-    
+
     $query = "SELECT COUNT(DISTINCT user_id)
               FROM evalanswer
               JOIN evalanswer_user USING(evalanswer_id)
@@ -461,11 +456,10 @@ function groups ($parent_id) {
 
 $query = "SELECT eval_id, title, author_id, anonymous
           FROM eval
-          WHERE eval_id = ? AND author_id = IFNULL(?, author_id)";
+          WHERE eval_id = ?";
 $statement = DBManager::get()->prepare($query);
 $statement->execute(array(
-    $eval_id,
-    $staff_member ? null : $GLOBALS['user']->id
+    $eval_id
 ));
 
 if ($evaluation = $statement->fetch(PDO::FETCH_ASSOC)) {

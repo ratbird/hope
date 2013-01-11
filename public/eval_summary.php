@@ -57,9 +57,6 @@ if (EvaluationObjectDB::getEvalUserRangesWithNoPermission($eval) == YES || count
     throw new Exception(_("Diese Evaluation ist nicht vorhanden oder Sie haben nicht ausreichend Rechte!"));
 }
 
-// Gehoert die benutzende Person zum Seminar-Stab (Dozenten, Tutoren) oder ist es ein ROOT?
-$staff_member = $perm->have_studip_perm("tutor", $SessSemName[1]);
-
 // Template vorhanden?
 $has_template   = 0;
 $eval_templates = array();
@@ -86,20 +83,10 @@ if (isset($cmd)) {
                 $statement->execute(array($group_type, $evalgroup_id, $GLOBALS['user']->id));
             }
         } else { // Datensatz nicht vorhanden --> INSERT
-            // Ist der Benutzer auch wirklich der Eigentuemer der Eval?
-            $valid = $staff_member;
-            if (!$valid) {
-                $query = "SELECT 1 FROM eval WHERE eval_id = ? AND author_id = ?";
-                $statement = DBManager::get()->prepare($query);
-                $statement->execute(array($eval_id, $GLOBALS['user']->id));
-                $valid = $statement->fetchColumn();
-            }
-            if ($valid) {
-                $query = "INSERT INTO eval_group_template (evalgroup_id, user_id, group_type)
-                          VALUES (?, ?, ?)";
-                $statement = DBManager::get()->prepare($query);
-                $statement->execute(array($evalgroup_id, $GLOBALS['user']->id, $group_type));
-            }
+            $query = "INSERT INTO eval_group_template (evalgroup_id, user_id, group_type)
+            VALUES (?, ?, ?)";
+            $statement = DBManager::get()->prepare($query);
+            $statement->execute(array($evalgroup_id, $GLOBALS['user']->id, $group_type));
         }
     }
 }
@@ -210,7 +197,7 @@ function freetype_answers($parent_id, $anz_nutzer)
               ORDER BY position";
     $statement = DBManager::get()->prepare($query);
     $statement->execute(array($parent_id));
-    
+
     echo "  <tr>\n";
     echo "    <td colspan=\"2\">\n";
     echo "      <table border=\"0\" width=\"100%\">\n";
@@ -358,10 +345,10 @@ function groups($parent_id)
 
     $query = "SELECT LOCATE('Freitext', `text`) > 0 FROM evalquestion WHERE evalquestion_id = ?";
     $freetext_statement = DBManager::get()->prepare($query);
-    
+
     $query = "SELECT evalquestion_id, `text`, type FROM evalquestion WHERE parent_id = ? ORDER BY position";
     $questions_statement = DBManager::get()->prepare($query);
-    
+
     $query = "SELECT COUNT(DISTINCT user_id)
               FROM evalanswer
               JOIN evalanswer_user USING(evalanswer_id)
@@ -408,7 +395,7 @@ function groups($parent_id)
 
         if ($group['child_type'] == 'EvaluationQuestion') {
             echo "  <tr><td class=\"blank\" colspan=\"2\">\n";
-            
+
             echo "<table border=\"". ($group_type=="normal" || $ausgabeformat==1 ? "0" : "1") ."\" width=\"100%\" cellspacing=\"0\">\n";
 
             $local_question_counter = 0;
@@ -417,7 +404,7 @@ function groups($parent_id)
             $questions_statement->execute(array($group['evalgroup_id']));
             while ($question = $questions_statement->fetch(PDO::FETCH_ASSOC)) {
                 $question_type = $question['type'];
-                
+
                 $question_users_statement->execute(array($question['evalquestion_id']));
                 $question_users = $question_users_statement->fetchColumn();
                 $question_users_statement->closeCursor();
@@ -488,11 +475,10 @@ function groups($parent_id)
 
 $query = "SELECT eval_id, title, author_id, anonymous
           FROM eval
-          WHERE eval_id = ? AND author_id = IFNULL(?, author_id)";
+          WHERE eval_id = ?";
 $statement = DBManager::get()->prepare($query);
 $statement->execute(array(
-    $eval_id,
-    $staff_member ? null : $GLOBALS['user']->id
+    $eval_id
 ));
 
 if ($evaluation = $statement->fetch(PDO::FETCH_ASSOC)) {
@@ -503,7 +489,7 @@ if ($evaluation = $statement->fetch(PDO::FETCH_ASSOC)) {
   $statement = DBManager::get()->prepare($query);
   $statement->execute(array($eval_id));
   $eval_templates = $statement->fetch(PDO::FETCH_ASSOC);
-  
+
   $has_template = !empty($eval_templates);
 
   $db_owner = User::find($evaluation['author_id'])->getFullName('no_title');

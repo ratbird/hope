@@ -35,7 +35,11 @@
     </td>
 
     <td width="3%" align="center">
-            &nbsp;
+        <? if (class_exists("Blubber")) : ?>
+        <a href="<?= URLHelper::getLink('plugins.php/blubber/streams/global', array('mention' => $tmp_online_uname)) ?>">
+            <?= Assets::img('icons/16/blue/blubber.png', array('title' => _("Blubber diesen Nutzer an"), 'class' => 'text-bottom')) ?>
+        </a>
+        <? endif ?>
     </td>
 
     <td width="3%" align="center">

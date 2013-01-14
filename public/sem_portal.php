@@ -129,23 +129,9 @@ function getToplist($rubrik, $query, $type = 'count', $parameters = array()) {
 }
 
 if ($_SESSION['sem_portal']['bereich'] != "all" && $_SESSION['sem_portal']['bereich'] != "mod") {
-    $_sem_status = array();
-    foreach ($SEM_CLASS as $key => $value){
-        if ($key == $_SESSION['sem_portal']['bereich']){
-            foreach($SEM_TYPE as $type_key => $type_value){
-                if($type_value['class'] == $key)
-                $_sem_status[] = $type_key;
-            }
-        }
-    }
-
-    $query = "SELECT COUNT(*) FROM seminare WHERE status IN (?)";
-    if (!$GLOBALS['perm']->have_perm(get_config('SEM_VISIBILITY_PERM'))) {
-        $query .= " AND visible = 1";
-    }
-    $statement = DBManager::get()->prepare($query);
-    $statement->execute(array($_sem_status));
-    $anzahl_seminare_class = $statement->fetchColumn();
+    $class = $SEM_CLASS[$_SESSION['sem_portal']['bereich']];
+    $anzahl_seminare_class = $class->countSeminars();
+    $_sem_status = array_keys($class->getSemTypes());
 } else {
     $_sem_status = false;
 }
@@ -257,7 +243,7 @@ if ($sem_browse_obj->show_result && count($_SESSION['sem_browse_data']['search_r
         $sql_where_query_seminare .= " AND seminare.visible = 1 ";
     }
 
-    if ($_SESSION['sem_portal']['bereich'] != 'all') {
+    if ($_SESSION['sem_portal']['bereich'] != 'all' && count($_sem_status)) {
         $sql_where_query_seminare .= " AND seminare.status IN (?) ";
         $parameters[] = $_sem_status;
     }

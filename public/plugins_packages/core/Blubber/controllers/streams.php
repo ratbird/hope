@@ -58,7 +58,7 @@ class StreamsController extends ApplicationController {
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/blubberforum.js"), "");
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/formdata.js"), "");
         PageLayout::setTitle($GLOBALS['SessSemName']["header_line"]." - ".$this->plugin->getDisplayTitle());
-        Navigation::getItem("/course/blubberforum")->setImage($this->plugin->getPluginURL()."/assets/images/blubber.png");
+        Navigation::getItem("/course/blubberforum")->setImage(Assets::image_path("icons/16/black/blubber"));
         Navigation::activateItem("/course/blubberforum");
         $parameter = array(
             'seminar_id' => $_SESSION['SessionSeminar'],

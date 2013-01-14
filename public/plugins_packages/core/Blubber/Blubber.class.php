@@ -95,7 +95,7 @@ class Blubber extends StudIPPlugin implements StandardPlugin, SystemPlugin {
 
     public function getTabNavigation($course_id) {
         $tab = new AutoNavigation($this->getDisplayTitle(), PluginEngine::getLink($this, array(), "streams/forum"));
-        $tab->setImage($this->getPluginURL()."/assets/images/blubber_white.png");
+        $tab->setImage(Assets::image_path("icons/16/white/blubber"));
         return array('blubberforum' => $tab);
     }
 
@@ -120,10 +120,10 @@ class Blubber extends StudIPPlugin implements StandardPlugin, SystemPlugin {
         "")->fetch(PDO::FETCH_COLUMN, 0);
         if ($new_ones) {
             $title = $new_ones > 1 ? sprintf(_("%s neue Blubber"), $new_ones) : _("1 neuer Blubber");
-            $icon->setImage($this->getPluginURL()."/assets/images/blubber_red.png", array('title' => $title));
+            $icon->setImage(Assets::image_path("icons/16/red/blubber"), array('title' => $title));
             $icon->setTitle($title);
         } else {
-            $icon->setImage($this->getPluginURL()."/assets/images/blubber_grey.png", array('title' => $this->getDisplayTitle()));
+            $icon->setImage(Assets::image_path("icons/16/grey/blubber"), array('title' => $this->getDisplayTitle()));
         }
         return $icon;
     }

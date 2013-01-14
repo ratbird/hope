@@ -111,7 +111,7 @@
 
 
 <div id="context_background">
-<ul id="forum_threads" class="globalstream">
+<ul id="forum_threads" class="globalstream" aria-live="polite" aria-relevant="additions">
     <? foreach ($threads as $thread) : ?>
     <?= $this->render_partial("streams/thread.php", array('thread' => $thread)) ?>
     <? endforeach ?>

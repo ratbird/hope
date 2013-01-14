@@ -42,7 +42,7 @@ $author_name = $author->getName();
     </a>
 </p>
 
-<ul id="forum_threads" class="coursestream singlethread">
+<ul id="forum_threads" class="coursestream singlethread" aria-live="polite" aria-relevant="additions">
 <? endif; ?>
 <li id="posting_<?= htmlReady($thread->getId()) ?>" mkdate="<?= htmlReady($thread['discussion_time']) ?>" class="thread posting<?= $last_visit < $thread['mkdate'] ? " new" : "" ?>" data-autor="<?= htmlReady($thread['user_id']) ?>">
     <div class="hiddeninfo">

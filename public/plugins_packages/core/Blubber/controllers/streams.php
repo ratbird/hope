@@ -89,12 +89,6 @@ class StreamsController extends ApplicationController {
             $this->user = new BlubberUser(Request::get("user_id"));
         }
         PageLayout::setTitle(htmlReady($this->user->getName())." - Blubber");
-        PageLayout::addHeadElement("link", array(
-            'rel' => "alternate",
-            'type' => "application/atom+xml",
-            'href' => PluginEngine::getLink($this->plugin, array(), "streams/feed/".$this->user->getId()),
-            'title' => "Blubber von ".get_fullname($user_id)
-        ));
         
         $this->threads = BlubberPosting::getThreads(array(
             'user_id' => $this->user->getId(),
@@ -565,12 +559,6 @@ class StreamsController extends ApplicationController {
         $this->course_id     = $_SESSION['SessionSeminar'];
         $this->single_thread = true;
         BlubberPosting::$course_hashes = ($thread['user_id'] !== $thread['Seminar_id'] ? $thread['Seminar_id'] : false);
-    }
-    
-    public function feed_action($user_id) {
-        $this->layout = null;
-        $this->set_content_type("application/xml+atom");
-        $this->postings = BlubberPosting::getThreads(array('user_id' => $user_id));
     }
 
 }

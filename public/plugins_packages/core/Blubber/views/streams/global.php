@@ -31,7 +31,7 @@
             <?= Assets::img("icons/16/blue/seminar", array('class' => "seminar")) ?>
             <?= Assets::img("icons/16/blue/community", array('class' => "community")) ?>
         </div>
-        <textarea id="new_posting" placeholder="<?= _("Schreib was, frag was.") ?>"><?= ($search ? htmlReady($search)." " : "").(Request::get("mention") ? htmlReady(Request::get("mention"))." " : "") ?></textarea>
+        <textarea id="new_posting" placeholder="<?= _("Schreib was, frag was.") ?>"><?= ($search ? htmlReady($search)." " : "").(Request::get("mention") ? "@".htmlReady(Request::username("mention")).", " : "") ?></textarea>
     </div>
     <div id="context_selector_title" style="display: none;"><?= _("Kontext auswählen") ?></div>
     <div id="context_selector" style="display: none;">

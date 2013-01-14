@@ -301,7 +301,7 @@ class BlubberPosting extends SimpleORMap {
     public function delete() {
         $id = $this->getId();
         NotificationCenter::postNotification("PostingWillDelete", $this);
-        foreach ((array) self::findBySQL(__class__, "parent_id = ".DBManager::get()->quote($this->getId())) as $child_posting) {
+        foreach ((array) self::findBySQL("parent_id = ".DBManager::get()->quote($id)) as $child_posting) {
             $child_posting->delete();
         }
         $success = parent::delete();

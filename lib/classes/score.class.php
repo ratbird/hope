@@ -416,6 +416,11 @@ class Score
             $wiki = $statement->fetchColumn();
         }
 
+        $query = "SELECT COUNT(*) FROM blubber WHERE user_id = ? AND context_type IN ('public','course')";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($user_id));
+        $blubber = $statement->fetchColumn();
+
         $visits = object_return_views($user_id);
 
         $scoreplugins = PluginEngine::getPlugins('SystemPlugin') + PluginEngine::getPlugins('StandardPlugin');
@@ -435,7 +440,7 @@ class Score
 
 
         // Die HOCHGEHEIME Formel:
-        $score = (5*$postings) + (5*$news) + (20*$dokumente) + (2*$institut) + (10*$archiv*$age) + (10*$contact) + (20*$katcount) + (5*$seminare) + (1*$gaeste) + (5*$vote) + (5*$wiki) + (3*$visits);
+        $score = (5*$postings) + (5*$news) + (20*$dokumente) + (2*$institut) + (10*$archiv*$age) + (10*$contact) + (20*$katcount) + (5*$seminare) + (1*$gaeste) + (5*$vote) + (5*$wiki) + (5*$blubber) + (3*$visits);
         $score += $pluginscore;
         $score = round($score/$age);
 

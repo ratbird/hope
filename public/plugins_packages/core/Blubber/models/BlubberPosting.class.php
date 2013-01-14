@@ -50,7 +50,7 @@ class BlubberPosting extends SimpleORMap {
         if (!$thread->isNew() && $user_id && $user_id !== $GLOBALS['user']->id) {
             $user = new User($user_id);
             $messaging = new messaging();
-            $url = $GLOBALS['ABSOLUTE_URI_STUDIP']."plugins.php/blubber/forum/thread/"
+            $url = $GLOBALS['ABSOLUTE_URI_STUDIP']."plugins.php/blubber/streams/thread/"
                 . $thread_id.($thread['context_type'] === "course" ? '?cid='.$thread['Seminar_id'] : "");
             $messaging->insert_message(
                 sprintf(

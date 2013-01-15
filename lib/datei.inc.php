@@ -2169,16 +2169,14 @@ function GetFileIcon($ext, $with_img_tag = false){
         break;
         case 'xls':
         case 'csv':
-            $icon = 'icons/16/blue/file-xls.png';
+        case 'ppt':
+            $icon = 'icons/16/blue/file-office.png';
         break;
         case 'zip':
         case 'tgz':
         case 'gz':
         case 'bz2':
             $icon = 'icons/16/blue/file-archive.png';
-        break;
-        case 'ppt':
-            $icon = 'icons/16/blue/file-presentation.png';
         break;
         case 'pdf':
             $icon = 'icons/16/blue/file-pdf.png';

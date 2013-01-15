@@ -11,14 +11,11 @@
 .pagination {
     li {
         display: inline-block;
-        vertical-align: middle;
         &:before {
             content:" | ";
             font-weight: normal;
         }
-        &:first-child:before { content: ""; }
-
-        a { vertical-align: middle; }
+        &:first-child:before { content: " "; }
     }
     .current {
         font-weight: bold;
@@ -31,6 +28,7 @@
         display: inline-block;
         height: 16px;
         width: 16px;
+        vertical-align: top;
     }
     .prev a {
         background-image: url("@{icon-path}/blue/arr_1left.png")

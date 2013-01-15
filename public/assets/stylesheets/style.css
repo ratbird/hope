@@ -2472,17 +2472,13 @@ span.wikitoc_toggler {
 }
 .pagination li {
   display: inline-block;
-  vertical-align: middle;
 }
 .pagination li:before {
   content: " | ";
   font-weight: normal;
 }
 .pagination li:first-child:before {
-  content: "";
-}
-.pagination li a {
-  vertical-align: middle;
+  content: " ";
 }
 .pagination .current {
   font-weight: bold;
@@ -2502,6 +2498,7 @@ span.wikitoc_toggler {
   display: inline-block;
   height: 16px;
   width: 16px;
+  vertical-align: top;
 }
 .pagination .prev a {
   background-image: url("../images/icons/16/blue/arr_1left.png");

@@ -34,25 +34,9 @@ class ProfileNavigation extends Navigation
 
         $time = $user->cfg->PROFILE_LAST_VISIT ? $user->cfg->PROFILE_LAST_VISIT : $user->cfg->LAST_LOGIN_TIMESTAMP;
 
-        $result = $db->query("SELECT COUNT(post_id) AS count FROM guestbook
-                                WHERE range_id = '".$user->id."'
-                                AND user_id != '".$user->id."'
-                                AND mkdate > '".$time."'");
-
-        $count = $result->fetchColumn();
-        $this->setBadgeNumber($count);
-
-        if ($count > 0) {
-            $hp_txt = _('Zu Ihrer Profilseite') . ', ' .
-                sprintf(ngettext('Sie haben %d neuen Eintrag im Gästebuch.',
-                                 'Sie haben %d neue Einträge im Gästebuch.', $count), $count);
-            $hp_class = 'new';
-            $hp_link = 'dispatch.php/profile?guestbook=open#guest';
-        } else {
-            $hp_txt = _('Zu Ihrer Profilseite');
-            $hp_link = 'dispatch.php/profile';
-        }
-
+        $hp_txt = _('Zu Ihrer Profilseite');
+        $hp_link = 'dispatch.php/profile';
+        
         $hp_txt .= sprintf(' (%s, %s)', $auth->auth['uname'], $auth->auth['perm']);
         $this->setURL($hp_link);
         $this->setImage('header/profile.png', array('title' => $hp_txt, 'class' => $hp_class, "@2x" => TRUE));

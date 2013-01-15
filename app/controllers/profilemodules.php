@@ -17,7 +17,6 @@ class ProfileModulesController extends AuthenticatedController {
 
     var $user_id = '';
     var $modules = array();
-    var $guestbook = null;
     var $plugins = array();
 
     // Global initializations and actions.
@@ -35,14 +34,6 @@ class ProfileModulesController extends AuthenticatedController {
         PageLayout::setHelpKeyword("Basis.ProfileModules");
         PageLayout::setTitle(_("Inhaltselemente konfigurieren"));
         Navigation::activateItem('/profile/modules');
-
-        // Personal guestbook.
-        $this->guestbook = new Guestbook($this->user_id, false);
-        // Guestbook status.
-        $this->modules['guestbook']['name'] = _('Gästebuch');
-        $this->modules['guestbook']['description'] = _('Im Gästebuch können andere Nutzerinnen und Nutzer Ihnen Beiträge hinterlassen.');
-        // Set checked status if necessary.
-        $this->modules['guestbook']['activated'] = $this->guestbook->active ? true : false;
 
         // Get homepage plugins from database.
         $this->plugins = PluginEngine::getPlugins('HomepagePlugin');
@@ -64,13 +55,6 @@ class ProfileModulesController extends AuthenticatedController {
     function update_action() {
         $success = '';
 
-        // Guestbook
-        if (($this->modules['guestbook']['activated'] && !Request::get('module_guestbook')) 
-            || (!$this->modules['guestbook']['activated'] && Request::get('module_guestbook'))) {
-            $this->guestbook = new Guestbook($this->user_id, false);
-            $this->guestbook->switchGuestbook();
-            $this->modules['guestbook']['activated'] = !$this->modules['guestbook']['activated'];
-        }
         // Plugins
         foreach ($this->plugins as $plugin) {
             // Check local activation status.

@@ -909,12 +909,12 @@ class UserManagement
             $this->msg .= "info§" . $msg . "§";
         }
 
-        // delete all guestbook entrys
-        $query = "DELETE FROM guestbook WHERE range_id = ?";
+        // delete all blubber entrys
+        $query = "DELETE FROM blubber WHERE user_id = ?";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($this->user_data['auth_user_md5.user_id']));
         if (($db_ar = $statement->rowCount()) > 0) {
-            $this->msg .= "info§" . sprintf(_("%s Eintr&auml;ge aus dem Gästebuch gel&ouml;scht."), $db_ar) . "§";
+            $this->msg .= "info§" . sprintf(_("%s Blubber gelöscht."), $db_ar) . "§";
         }
 
         // delete the datafields

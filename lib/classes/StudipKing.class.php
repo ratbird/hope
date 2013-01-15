@@ -81,7 +81,7 @@ class StudipKing {
 
     private static function get_kings_uncached()
     {
-        $types = words('files forum guestbook_entry guestbook_writer news voter votes wiki');
+        $types = words('files forum news voter votes wiki');
         $kings = array();
         foreach ($types as $type) {
             $method = "{$type}_kings";
@@ -120,16 +120,6 @@ class StudipKing {
         return self::select_kings("SELECT user_id AS id, COUNT(*) AS num FROM dokumente GROUP BY user_id");
     }
 
-    private static function guestbook_entry_kings()
-    {
-        return self::select_kings("SELECT range_id AS id, COUNT(*) AS num FROM guestbook GROUP BY range_id");
-    }
-
-    private static function guestbook_writer_kings()
-    {
-        return self::select_kings("SELECT user_id AS id, COUNT(*) AS num FROM guestbook GROUP BY user_id");
-    }
-
     private static function votes_kings()
     {
         return self::select_kings("SELECT author_id AS id, COUNT(*) AS num FROM vote ".
@@ -153,8 +143,6 @@ class StudipKing {
             'files'            => "%d hochgeladene Dateien",
             'forum'            => "%d Forums-Beiträge",
             'wiki'             => "%d Wiki-Beiträge",
-            'guestbook_writer' => "%d geschriebene Gästebucheinträge",
-            'guestbook_entry'  => "%d bekommene Gästebucheinträge",
             'voter'            => "%d abgegebene Stimmen",
             'votes'            => "%d bekommene Stimmen",
             'news'             => "%d eingestellte Ankündigungen"

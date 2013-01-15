@@ -204,22 +204,6 @@ class ProfileController extends AuthenticatedController
             $this->foaf = $foaf;
         }
 
-        // show Guestbook
-        $guestbook = new Guestbook($this->current_user->user_id, Request::int('guestpage', 0));
-
-        if (($guestbook->active || $guestbook->rights) && $this->profile->checkVisibility('guestbook')) {
-            if (Request::option('guestbook') && $this->perm->have_perm('autor')) {
-                $action       = Request::option('guestbook');
-                $post         = Request::get('post');
-                $deletepost   = Request::option('deletepost');
-                $studipticket = Request::option('studipticket');
-
-                $guestbook->actionsGuestbook($action, $post, $deletepost, $studipticket);
-            }
-
-            $this->guestbook = $guestbook;
-        }
-
         // Hier werden Lebenslauf, Hobbys, Publikationen und Arbeitsschwerpunkte ausgegeben:
         $ausgabe_felder = array(
             'lebenslauf' => _('Lebenslauf'),

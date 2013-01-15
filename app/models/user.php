@@ -351,15 +351,6 @@ class UserModel
             $statement = DBManager::get()->prepare($query);
             $statement->execute(array($new_id, $old_id));
 
-            // Gästebuch
-            $query = "UPDATE IGNORE guestbook SET user_id = ? WHERE user_id = ?";
-            $statement = DBManager::get()->prepare($query);
-            $statement->execute(array($new_id, $old_id));
-
-            $query = "UPDATE IGNORE guestbook SET range_id = ? WHERE range_id = ?";
-            $statement = DBManager::get()->prepare($query);
-            $statement->execute(array($new_id, $old_id));
-
             // Eigene Kategorien
             $query = "UPDATE IGNORE kategorien SET range_id = ? WHERE range_id = ?";
             $statement = DBManager::get()->prepare($query);

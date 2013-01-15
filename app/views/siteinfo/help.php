@@ -57,7 +57,6 @@
                 <li>litlist</li>
                 <li>termin</li>
                 <li>news</li>
-                <li>guestbook</li>
                 <li>vote</li>
                 <li>test</li>
                 <li>evaluation</li>

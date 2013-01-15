@@ -373,7 +373,6 @@ class Smiley
         // Tabellen, die nach Smileys durchsucht werden sollen
         // Format: array( array (Tabelle, Feld), array (Tabelle, Feld), ... )
         $table_data = array(
-            array('guestbook', 'content'),
             array('datafields_entries','content'),
             array('kategorien', 'content'),
             array('message', 'message'),

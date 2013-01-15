@@ -129,18 +129,6 @@ class Score
         }
 
         if ($s) {
-            // Guestbook
-            $query = "SELECT u.user_id, COUNT(u.user_id) AS guestcount
-                      FROM user_info AS u
-                      INNER JOIN guestbook ON (range_id = u.user_id)
-                      WHERE score > 0 AND guestbook = 1
-                      GROUP BY u.user_id
-                      ORDER BY NULL"; // <- see http://stackoverflow.com/questions/5231907/order-by-null-in-mysql
-            $statement = DBManager::get()->query($query);
-            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-                $this->score_content_cache[$row['user_id']]['guestcount'] = $row['guestcount'];
-            }
-
             // News
             $query = "SELECT u.user_id, COUNT(u.user_id) AS newscount
                       FROM user_info AS u
@@ -208,15 +196,7 @@ class Score
             $this->doRefreshScoreContentCache();
         }
         $username = $this->score_content_cache[$user_id]['username'];
-        if ( ($gaeste = $this->score_content_cache[$user_id]['guestcount']) !== null ) {
-            if ($gaeste == 1)
-                $tmp = _("Gästebuch mit einem Eintrag");
-            else
-                $tmp = sprintf(_("Gästebuch mit %s Einträgen"), $gaeste);
-            $content .= "<a href=\"dispatch.php/profile?username=$username&guestbook=open#guest\"><img src=\"".Assets::image_path('icons/16/blue/guestbook.png')."\" ".tooltip("$tmp")."></a> ";
-        } else {
-            $content .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"16\"> ";
-        }
+        $content .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"16\"> ";
 
         if ( ($news = $this->score_content_cache[$user_id]['newscount']) ) {
             if ($news == 1) {
@@ -346,11 +326,6 @@ class Score
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($user_id));
         $news = $statement->fetchColumn();
-
-        $query = "SELECT COUNT(*) FROM guestbook WHERE range_id = ?";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($user_id));
-        $gaeste = $statement->fetchColumn();
 
         $query = "SELECT COUNT(contact_id) FROM contact WHERE user_id = ?";
         $statement = DBManager::get()->prepare($query);

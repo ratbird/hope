@@ -154,11 +154,6 @@
 
 <? if($foaf) $foaf->show(Request::option ('foaf_open'))?>
 
-<? if(isset($guestbook)) :?>
-    <? $guestbook->showGuestbook();?>
-<? endif; ?>
-
-
 
 <? if(!empty($ausgabe_inhalt)) : ?>
     <? foreach($ausgabe_inhalt as $key => $inhalt) :?>

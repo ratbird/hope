@@ -37,28 +37,6 @@ PageLayout::setTitle(_('Informationen zu einem Nutzer'));
 Navigation::activateItem('/admin/config/user');
 
 /**
- * Returns the posts of a certain user in a certain guestbook
- *
- * @param String $user_id   Id of the user in question
- * @param String $range_id  Range id of the guestbook in question
- * @return string List of posts as html, ready to be displayed
- */
-function show_posts_guestbook($user_id, $range_id)
-{
-    $query = "SELECT user_id, mkdate, content, post_id
-              FROM guestbook
-              WHERE user_id = ? AND range_id = ?
-              ORDER BY mkdate DESC";
-    $statement = DBManager::get()->prepare($query);
-    $statement->execute(array($user_id, $range_id));
-    $posts = $statement->fetchAll(PDO::FETCH_ASSOC);
-
-    $template = $GLOBALS['template_factory']->open('user_activities/guestbook-posts');
-    $template->posts = $posts;
-    return $template->render();
-}
-
-/**
  * Returns an overview of certain documents
  *
  * @param Array $documents Ids of the documents in question
@@ -199,16 +177,6 @@ if (Request::get('download_as_zip')) {
         die;
     }
 }
-if (Request::option('deletepost') && check_ticket(Request::option('ticket'))){
-    $post_id = Request::option('deletepost');
-
-    $query = "DELETE FROM guestbook WHERE post_id = ? LIMIT 1";
-    $statement = DBManager::get()->prepare($query);
-    $statement->execute(array($post_id));
-    if ($statement->rowCount()){
-        PageLayout::postMessage(Messagebox::success(_('Ein Gästebucheintrag wurde gelöscht.')));
-    }
-}
 
 reset($_SESSION['_user_activities']['open']);
 $ank = key($_SESSION['_user_activities']['open']);
@@ -248,11 +216,6 @@ $queries[] = array(
                   FROM user_inst
                   WHERE user_id = ?
                   GROUP BY user_id",
-);
-$queries[] = array(
-    'desc'    => _("Anzahl der Gästebucheinträge"),
-    'query'   => "SELECT COUNT(*) FROM guestbook WHERE user_id = ? GROUP BY user_id",
-    'details' => "details=guestbook",
 );
 $queries[] = array(
     'desc'  => _("Anzahl der Forenpostings"),
@@ -374,38 +337,6 @@ if ($_SESSION['_user_activities']['details'] == 'files') {
     $template = $GLOBALS['template_factory']->open('user_activities/files');
     $template->files   = $files;
     $template->open    = $_SESSION['_user_activities']['open'];
-    $template->user_id = $user_id;
-    $details = $template->render();
-} elseif ($_SESSION['_user_activities']['details'] == 'guestbook') {
-    $query = "SELECT range_id, COUNT(post_id) AS count, MAX(mkdate) AS newest
-              FROM guestbook
-              WHERE user_id = ?
-              GROUP BY range_id
-              ORDER BY mkdate DESC";
-    $statement = DBManager::get()->prepare($query);
-    $statement->execute(array($user_id));
-    $posts = $statement->fetchAll(PDO::FETCH_ASSOC);
-    
-    foreach ($posts as $index => $post) {
-        $other_user = User::find($post['range_id']);
-
-        $is_open = $_SESSION['_user_activities']['open'][$post['range_id']] ? 'open' : 'close';        
-        $title = sprintf('<a href="%s"%s class="tree">%s</a>',
-                         URLHelper::getLink('?' . ($is_open == 'open' ? 'close' : 'open') . '=' . $post['range_id'] . '#guest_anker'),
-                         $ank == $post['range_id'] ? ' name="guest_anker"' : '',
-                         $other_user->getFullName());
-        
-        $posts[$index]['user']    = $other_user;
-        $posts[$index]['title']   = $title;
-        $posts[$index]['is_open'] = $is_open;
-        $posts[$index]['addon']   = sprintf('(%s %d Letzter: %s)',
-                                            _('Anzahl:'),
-                                            $post['count'],
-                                            date('d.m.Y H:i:s', $post['newest']));
-    }
-    
-    $template = $GLOBALS['template_factory']->open('user_activities/guestbook');
-    $template->posts   = $posts;
     $template->user_id = $user_id;
     $details = $template->render();
 } elseif (in_array($_SESSION['_user_activities']['details'], words('seminar seminar_closed seminar_wait'))) {

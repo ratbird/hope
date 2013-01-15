@@ -476,9 +476,6 @@ class SiteinfoMarkupEngine {
         $indicator['news'] = array("query" => "SELECT COUNT(*) FROM news",
                                    "title" => _("Ankündigungen"),
                                    "detail" => "");
-        $indicator['guestbook'] = array("query" => "SELECT COUNT(*) FROM user_info WHERE guestbook='1'",
-                                        "title" => _("Gästebücher"),
-                                        "detail" => "");
         $indicator['vote'] = array("query" => "SELECT COUNT(*) FROM vote WHERE type='vote'",
                                    "title" => _("Umfragen"),
                                    "detail" => "",

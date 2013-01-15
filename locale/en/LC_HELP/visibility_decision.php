@@ -25,7 +25,7 @@ You <em>now</em> have the possibility to decide whether to be visible as usual a
         <li>cannot be found via "user search"</li>
         <li>don't appear in the "who is online"-list</li>
         <li>cannot use your Stud.IP-homepage anymore</li>
-        <li>don't give the opportunity to other users for reaching your e-mail address, your guestbook, your Stud.IP-score, etc.</li>
+        <li>don't give the opportunity to other users for reaching your e-mail address, your Stud.IP-score, etc.</li>
         <li>cannot be listed into the address-books of other users </li>
       </ul></td>
   </tr>

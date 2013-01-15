@@ -32,7 +32,6 @@ require_once('lib/calendar/lib/DbCalendarEventList.class.php');
 require_once('lib/vote/VoteDB.class.php');
 require_once('lib/evaluation/classes/db/EvaluationDB.class.php');
 require_once('lib/classes/StudipLitList.class.php');
-require_once('lib/classes/guestbook.class.php');
 require_once('lib/classes/Avatar.class.php');
 
 function edit_email($uid, $email, $force=False) {
@@ -615,8 +614,6 @@ class about extends messaging
         $lit_list = StudipLitList::GetFormattedListsByRange($this->auth_user['user_id']);
         // Free datafields
         $data_fields = DataFieldEntry::getDataFieldEntries($this->auth_user['user_id']);
-        $guestbook = new Guestbook($this->auth_user['user_id'], 1);
-        $guestbook = $guestbook->checkGuestbook();
         // Homepage plugins
         //$homepageplugins = PluginEngine::getPlugins('HomepagePlugin');
         // Deactivate plugin visibility settings because they aren't working now.
@@ -653,9 +650,7 @@ class about extends messaging
             $homepage_elements["termine"] = array("name" => _("Termine"), "visibility" => $homepage_visibility["termine"] ?: get_default_homepage_visibility($this->auth_user['user_id']), "extern" => true, 'category' => 'Allgemeine Daten');
         if (get_config('VOTE_ENABLE') && ($activeVotes || $stoppedVotes || $activeEvals) && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['votes'])
             $homepage_elements["votes"] = array("name" => _("Umfragen"), "visibility" => $homepage_visibility["votes"] ?: get_default_homepage_visibility($this->auth_user['user_id']), 'category' => 'Allgemeine Daten');
-        if ($my_data["guestbook"] && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['guestbook'])
-            $homepage_elements["guestbook"] = array("name" => _("Gästebuch"), "visibility" => $homepage_visibility["guestbook"] ?: get_default_homepage_visibility($this->auth_user['user_id']), 'category' => 'Allgemeine Daten');
-
+        
         $query = "SELECT 1
                   FROM user_inst
                   LEFT JOIN Institute USING (Institut_id)

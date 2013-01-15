@@ -82,7 +82,6 @@ class Step00246Blubber extends Migration
             "SELECT * FROM plugins WHERE pluginclassname = 'Blubber' " .
         "")->fetch(PDO::FETCH_ASSOC);
         
-        $plugin_id = $db->lastInsertId();
         if ($old_blubber) {
             //Umschreiben des Ortes von Blubber
             $db->exec("
@@ -107,6 +106,7 @@ class Step00246Blubber extends Migration
                     enabled = 'yes',
                     navigationpos = '1'
             ");
+            $plugin_id = $db->lastInsertId();
             $db->exec("
                 INSERT IGNORE INTO roles_plugins (roleid, pluginid)
                     SELECT roleid, ".$db->quote($plugin_id)." FROM roles WHERE system = 'y'

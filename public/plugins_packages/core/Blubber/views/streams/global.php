@@ -76,6 +76,8 @@
                         <?= _("Fügen Sie einzelne Personen mittels @Nutzernamen im Text der Nachricht oder der Kommentare hinzu.") ?>
                     </td>
                 </tr>
+                <? $mycourses = BlubberPosting::getMyBlubberCourses() ?>
+                <? if (count($mycourses)) : ?>
                 <tr>
                     <td colspan="2"><hr></td>
                 </tr>
@@ -97,6 +99,7 @@
                         </select>
                     </td>
                 </tr>
+                <? endif ?>
             </tbody>
         </table>
         <div>

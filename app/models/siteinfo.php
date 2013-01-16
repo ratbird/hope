@@ -533,9 +533,8 @@ function language_filter($input) {
 }
 
 function stripforeignlanguage($language, $text) {
-    global $_language;
-    list($primary, $sub) = explode('_',$_language);
-    if (($language==$primary) || ($language==$_language)) {
+    list($primary, $sub) = explode('_',$_SESSION['_language']);
+    if (($language==$primary) || ($language==$_SESSION['_language'])) {
         return str_replace('\"', '"', $text);
     } else {
         return '';

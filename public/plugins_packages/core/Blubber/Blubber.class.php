@@ -107,16 +107,19 @@ class Blubber extends StudIPPlugin implements StandardPlugin, SystemPlugin {
         $db = DBManager::get();
         $last_own_posting_time = (int) $db->query(
             "SELECT mkdate " .
-            "FROM px_topics " .
+            "FROM blubber " .
             "WHERE user_id = ".$db->quote($user_id)." " .
                 "AND Seminar_id = ".$db->quote($course_id)." " .
+                "AND context_type = 'course' " .
+            "ORDER BY mkdate DESC " .
         "")->fetch(PDO::FETCH_COLUMN, 0);
         $new_ones = $db->query(
             "SELECT COUNT(*) " .
-            "FROM px_topics " .
+            "FROM blubber " .
             "WHERE chdate > ".$db->quote(max($last_visit, $last_own_posting_time))." " .
                 "AND user_id != ".$db->quote($user_id)." " .
                 "AND Seminar_id = ".$db->quote($course_id)." " .
+                "AND context_type = 'course' " .
         "")->fetch(PDO::FETCH_COLUMN, 0);
         if ($new_ones) {
             $title = $new_ones > 1 ? sprintf(_("%s neue Blubber"), $new_ones) : _("1 neuer Blubber");

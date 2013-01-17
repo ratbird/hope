@@ -106,7 +106,6 @@ if (isset($_SERVER['REQUEST_METHOD'])) {
 }
 
 // set default pdo connection
-require_once('lib/classes/DBManager.class.php');
 DBManager::getInstance()
   ->setConnection('studip',
                   'mysql:host='.$GLOBALS['DB_STUDIP_HOST'].

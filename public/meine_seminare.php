@@ -92,7 +92,6 @@ require_once ('lib/classes/ModulesNotification.class.php');
 require_once ('lib/statusgruppe.inc.php');      // Funktionen für Statusgruppen
 require_once ('lib/object.inc.php');
 require_once ('lib/meine_seminare_func.inc.php');
-require_once ('lib/classes/LockRules.class.php');
 
 $deputies_enabled = get_config('DEPUTIES_ENABLE');
 $default_deputies_enabled = get_config('DEPUTIES_DEFAULTENTRY_ENABLE');

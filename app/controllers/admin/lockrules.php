@@ -14,7 +14,6 @@
  * @package     admin
  */
 
-require_once 'lib/classes/LockRules.class.php';
 require_once 'app/controllers/authenticated_controller.php';
 
 class Admin_LockrulesController extends AuthenticatedController

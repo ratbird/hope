@@ -44,7 +44,6 @@ require_once ('lib/messaging.inc.php'); //Funktionen des Nachrichtensystems
 require_once ('config.inc.php');    //We need the config for some parameters of the class of the Veranstaltung
 require_once ('lib/user_visible.inc.php');
 require_once ('lib/export/export_studipdata_func.inc.php');
-require_once ('lib/classes/LockRules.class.php');
 
 $show_user_picture = false;
 /*

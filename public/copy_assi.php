@@ -33,7 +33,6 @@ $perm->check("dozent");
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 require_once 'lib/functions.php';
-require_once ('lib/classes/LockRules.class.php');
 require_once 'lib/admin_search.inc.php';
 
 // -- here you have to put initialisations for the current page

@@ -45,7 +45,6 @@ require_once ('lib/classes/Modules.class.php');
 require_once ('lib/classes/DataFieldEntry.class.php');
 require_once ('lib/classes/UserDomain.php'); // Nutzerdomänen
 require_once ('lib/classes/SeminarCategories.class.php');
-require_once ('lib/classes/LockRules.class.php');
 require_once 'lib/classes/Seminar.class.php';
 require_once 'lib/classes/StudipStudyAreaSelection.class.php';
 require_once ('lib/deputies_functions.inc.php');

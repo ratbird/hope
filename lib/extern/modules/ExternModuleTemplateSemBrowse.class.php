@@ -1170,7 +1170,7 @@ function getResultSearch ($level_id = null) {
         if (!$db->num_rows()) {
             return array(array(), array());
         }
-        $snap = new DbSnapShot($db);
+        $snap = new DbSnapshot($db);
         $group_field = $this->group_by_fields[$this->sem_browse_data['group_by']]['group_field'];
         $data_fields[0] = 'Seminar_id';
         if ($this->group_by_fields[$this->sem_browse_data['group_by']]['unique_field']) {
@@ -1187,7 +1187,7 @@ function getResultSearch ($level_id = null) {
 
         $db2 = DBManager::get();
         $stm = $db2->query($query);
-        $snap_dozent = new DbSnapShot(array('resultSet' => $stm));
+        $snap_dozent = new DbSnapshot(array('resultSet' => $stm));
         $snap_dozent_grouped = $snap_dozent->getGroupedResult('Seminar_id');
         $sem_data = array_merge_recursive($sem_data, $snap_dozent_grouped);
 
@@ -1361,7 +1361,7 @@ function getResultSearch ($level_id = null) {
         if (!$db->num_rows()) {
             return array(array(), array());
         }
-        $snap = new DbSnapShot($db);
+        $snap = new DbSnapshot($db);
         $group_field = $this->group_by_fields[$this->sem_browse_data['group_by']]['group_field'];
         $data_fields[0] = 'Seminar_id';
         if ($this->group_by_fields[$this->sem_browse_data['group_by']]['unique_field']) {

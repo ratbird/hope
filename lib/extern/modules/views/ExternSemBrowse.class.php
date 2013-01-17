@@ -187,7 +187,7 @@ class ExternSemBrowse extends SemBrowse {
                  . "')$sem_inst_query $sem_range_query $sem_types_query";
             
             $db = new DB_Seminar($query);
-            $snap = new DbSnapShot($db);
+            $snap = new DbSnapshot($db);
             if (isset($args['group']) && $args['group'] >= 0 && $args['group'] < 5) {
                 $this->sem_browse_data['group_by'] = $args['group'];
             }

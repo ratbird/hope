@@ -725,7 +725,7 @@ class SemBrowse {
                 $add_query
                 WHERE seminare.Seminar_id IN('" . join("','", array_keys($this->sem_browse_data['search_result'])) . "')");
         $db = new DB_Seminar($query);
-        $snap = new DbSnapShot($db);
+        $snap = new DbSnapshot($db);
         $group_field = $this->group_by_fields[$this->sem_browse_data['group_by']]['group_field'];
         $data_fields[0] = "Seminar_id";
         if ($this->group_by_fields[$this->sem_browse_data['group_by']]['unique_field']){

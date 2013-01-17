@@ -245,7 +245,7 @@ class StmBrowse {
                 INNER JOIN stm_abstract_assign sam ON stm_instances.stm_abstr_id=sam.stm_abstr_id AND $constraint
                 WHERE stm_instances.stm_instance_id IN('" . join("','", $this->sem_browse_data['search_result']) . "') ORDER BY title");
             $db = new DB_Seminar($query);
-            $snap = new DbSnapShot($db);
+            $snap = new DbSnapshot($db);
             $group_field = $this->group_by_fields[$this->sem_browse_data['group_by']]['group_field'];
             $data_fields[0] = "stm_instance_id";
             $data_fields[1] = "sem_name";

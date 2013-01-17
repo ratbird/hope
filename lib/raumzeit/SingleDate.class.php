@@ -19,7 +19,6 @@
  */
 require_once('lib/raumzeit/SingleDateDB.class.php');
 require_once('lib/dates.inc.php');
-require_once('lib/classes/HolidayData.class.php');
 require_once($GLOBALS['RELATIVE_PATH_RESOURCES'].'/lib/RoomRequest.class.php');
 //require_once($RELATIVE_PATH_RESOURCES.'/lib/VeranstaltungResourcesAssign.class.php');
 

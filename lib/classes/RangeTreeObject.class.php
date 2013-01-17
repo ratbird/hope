@@ -27,7 +27,6 @@
 
 require_once ("lib/classes/StudipRangeTree.class.php");
 require_once ("lib/classes/RangeTreeObjectInst.class.php");
-require_once ("lib/classes/RangeTreeObjectFak.class.php");
 
 /**
 * base class for items in the "range tree"

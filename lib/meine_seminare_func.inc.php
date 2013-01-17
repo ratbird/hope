@@ -498,11 +498,11 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
                 if ($db2->f('neue')) {
                     $nav->setURL('wiki.php?view=listnew');
                     $nav->setImage('icons/16/red/new/wiki.png', array('title' =>
-                        sprintf(_('%s WikiSeiten, %s Änderungen'), $db2->f('count'), $db2->f('neue'))));
+                        sprintf(_('%s WikiSeiten, %s Änderungen'), $db2->f('count_d'), $db2->f('neue'))));
                     $nav->setBadgeNumber($db2->f('neue'));
                 } else if ($db2->f('count')) {
                     $nav->setURL('wiki.php');
-                    $nav->setImage('icons/16/grey/wiki.png', array('title' => sprintf(_('%s WikiSeiten'), $db2->f('count'))));
+                    $nav->setImage('icons/16/grey/wiki.png', array('title' => sprintf(_('%s WikiSeiten'), $db2->f('count_d'))));
                 }
 
                 $my_obj[$object_id]['wiki'] = $nav;

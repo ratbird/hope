@@ -1839,7 +1839,7 @@ function get_title_for_status($type, $count, $sem_type = NULL)
 
     $atype = 'title_'.$type;
 
-    if (isset($SEM_TYPE[$sem_type][$atype])) {
+    if (is_array($SEM_TYPE[$sem_type][$atype])) {
         $title = $SEM_TYPE[$sem_type][$atype];
     } else if (isset($DEFAULT_TITLE_FOR_STATUS[$type])) {
         $title = $DEFAULT_TITLE_FOR_STATUS[$type];

@@ -54,7 +54,6 @@ if (Studip\ENV == 'development') {
 date_default_timezone_set(@date_default_timezone_get());
 
 // set assets url
-require_once('lib/classes/Assets.class.php');
 Assets::set_assets_url($GLOBALS['ASSETS_URL']);
 
 // globale template factory anlegen

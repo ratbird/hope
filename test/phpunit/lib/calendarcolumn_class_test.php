@@ -11,9 +11,10 @@
 
 
 require_once dirname(__FILE__) . '/../bootstrap.php';
+require_once 'lib/classes/DbView.class.php';
 require_once 'lib/calendar/CalendarColumn.class.php';
 require_once 'lib/functions.php';
-require_once 'lib/classes/URLHelper.php';
+
 
 
 

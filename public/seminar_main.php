@@ -183,7 +183,6 @@ $quarter_year = 60 * 60 * 24 * 90;
     <?
         // Ticket #68
         if (!$perm->have_studip_perm('dozent', $course_id)) {
-            require_once('lib/classes/AuxLockRules.class.php');
             $rule = AuxLockRules::getLockRuleBySemId($course_id);
             if (isset($rule)) {
                 $show = false;

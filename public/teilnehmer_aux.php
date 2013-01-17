@@ -32,7 +32,6 @@ include "lib/seminar_open.php"; //hier werden die sessions initialisiert
 
 require_once('lib/classes/DataFieldEntry.class.php');
 require_once('lib/classes/ZebraTable.class.php');
-require_once('lib/classes/AuxLockRules.class.php');
 require_once('lib/dates.inc.php');
 
 checkObject();

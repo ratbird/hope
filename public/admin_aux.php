@@ -40,7 +40,6 @@ require_once("lib/functions.php");
 require_once("lib/visual.inc.php");
 require_once("lib/classes/Table.class.php");
 require_once("lib/classes/ZebraTable.class.php");
-require_once("lib/classes/AuxLockRules.class.php");
 require_once 'lib/admin_search.inc.php';
 
 if (Request::submitted('aux_rule')) {

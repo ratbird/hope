@@ -17,7 +17,6 @@ require_once 'lib/functions.php';
 require_once 'lib/classes/Modules.class.php';
 require_once 'lib/classes/StudipScmEntry.class.php';
 require_once 'lib/classes/LockRules.class.php';
-require_once 'lib/classes/AuxLockRules.class.php';
 
 require_once 'lib/modules/CoreAdmin.class.php';
 require_once 'lib/modules/CoreStudygroupAdmin.class.php';

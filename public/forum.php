@@ -96,7 +96,6 @@ require_once ('lib/visual.inc.php');
 require_once ('lib/forum.inc.php');
 require_once ('lib/object.inc.php');
 require_once ('lib/msg.inc.php');
-require_once 'lib/classes/NotificationCenter.class.php';
 require_once ('lib/dates.inc.php');
 
 //////////////////////////////////////////////////////////////////////////////////

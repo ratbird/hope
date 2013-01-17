@@ -27,7 +27,6 @@
 require_once("lib/classes/TreeAbstract.class.php");
 require_once("lib/classes/SemesterData.class.php");
 require_once("lib/classes/StudipStudyArea.class.php");
-require_once "lib/classes/NotificationCenter.class.php";
 require_once("config.inc.php");
 
 DbView::addView('sem_tree');

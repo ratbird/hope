@@ -15,8 +15,6 @@
  * @category    Stud.IP
 */
 
-require_once 'lib/classes/LockRule.class.php';
-
 /**
 * LockRules.class.php
 *

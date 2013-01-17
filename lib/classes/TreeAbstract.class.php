@@ -375,7 +375,7 @@ class TreeAbstract {
         array_shift($parents);
         array_push($parents, $item_id);
         $that = $this;
-        $parents_names = array_map(function($i) use ($that) {return $that->tree_data[$i]['name'];}, array_slice($parents, $offset, $length));
+        $parents_names = array_map(function($i) use ($that) {return $that->tree_data[$i]['name'];}, array_slice($parents, $offset, $length ? $length : null));
         return join(" $delimeter ", $parents_names);
     }
 

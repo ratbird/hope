@@ -190,7 +190,10 @@ class FoafDisplay
         } else {
             $titel=sprintf(_("Es besteht eine Verbindung über %d andere NutzerInnen."),count($this->foaf_list)-2);
         }
-        $link="about?username=".$this->target_username."&foaf_open=".($open=="open" ? "close":"open")."#foaf";
+        $link = URLHelper::getLink('dispatch.php/profile#foaf', array(
+            'username'  => $this->target_username,
+            'foaf_open' => $open == 'open' ? 'close' : 'open',
+        ));
         $titel="<a href=\"$link\" class=\"tree\">$titel</a>";
 
         // AB HIER AUSGABE

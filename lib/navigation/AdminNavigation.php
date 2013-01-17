@@ -187,7 +187,7 @@ class AdminNavigation extends Navigation
             if (get_config('WEBSERVICES_ENABLE')) {
                 $navigation->addSubNavigation('webservice_access', new Navigation(_('Webservice'), 'dispatch.php/admin/webservice_access'));
             }
-            $navigation->addSubNavigation('sem_classes', new Navigation(_('Seminarklassen'), 'dispatch.php/admin/sem_classes/overview'));
+            $navigation->addSubNavigation('sem_classes', new Navigation(_('Veranstaltungskategorien'), 'dispatch.php/admin/sem_classes/overview'));
         }
 
         $this->addSubNavigation('config', $navigation);

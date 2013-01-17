@@ -1789,6 +1789,12 @@ table.attribute_table > tbody > tr > td {
   padding-top: 15px;
   padding-bottom: 15px;
 }
+table.attribute_table > tbody > tr.sub > td {
+  border-top: none;
+  border-bottom: none;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
 table.attribute_table ul {
   margin: 0px;
 }

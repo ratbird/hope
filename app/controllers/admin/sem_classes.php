@@ -108,7 +108,7 @@ class Admin_SemClassesController extends AuthenticatedController
         $sem_class->set('course_creation_forbidden', Request::int("course_creation_forbidden"));
         $sem_class->store();
         $output = array(
-            'html' => studip_utf8encode((string) MessageBox::success(_("Änderungen wurden gespeichert.")))
+            'html' => studip_utf8encode((string) MessageBox::success(_("Änderungen wurden gespeichert."." ".'<a href="'.URLHelper::getLink("dispatch.php/admin/sem_classes/overview").'">'._("Zurück zur Übersichtsseite.").'</a>')))
         );
         echo json_encode($output);
         $this->render_nothing();

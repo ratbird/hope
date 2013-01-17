@@ -9,32 +9,15 @@
  *  the License, or (at your option) any later version.
  */
 ?>
-<style>
-    table.selecttable {
-        border-collapse: collapse;
-        width: 100%;
-    }
-    table.selecttable > thead > tr > td {
-        text-align: center;
-        font-weight: bold;
-        background-color: #dddddd;
-    }
-    table.selecttable > thead > tr > td, table.selecttable > tbody > tr > td {
-        padding: 5px;
-        border: thin solid #aaaaaa;
-    }
-    table.selecttable > tbody > tr:hover > td {
-        cursor: pointer;
-        background-color: #eeeeee;
-    } 
-</style>
-<table class="selecttable">
+<table class="default zebra-hover">
     <thead>
         <tr>
-            <td><?= _("ID") ?></td>
-            <td><?= _("Seminarklasse") ?></td>
-            <td><?= _("Anzahl Veranstaltungen") ?></td>
-            <td><?= _("Zuletzt geändert") ?></td>
+            <th><?= _("ID") ?></th>
+            <th><?= _("Veranstaltungskategorie") ?></th>
+            <th><?= _("Anzahl Veranstaltungstypen") ?></th>
+            <th><?= _("Anzahl Veranstaltungen") ?></th>
+            <th><?= _("Zuletzt geändert") ?></th>
+            <th></td>
         </tr>
     </thead>
     <tbody>
@@ -42,14 +25,20 @@
         <tr>
             <td class="id"><?= htmlReady($id) ?></td>
             <td><?= htmlReady($sem_class['name']) ?></td>
+            <td><?= count($sem_class->getSemTypes()) ?></td>
             <td><?= $sem_class->countSeminars() ?></td>
             <td><?= date("j.n.Y G:i", $sem_class['chdate']) ?> <?= _("Uhr") ?></td>
+            <td>
+                <a href="<?= URLHelper::getLink("dispatch.php/admin/sem_classes/details", array('id' => $id)) ?>" title="<?= _("Editieren dieser Veranstaltungskategorie") ?>">
+                <?= Assets::img("icons/16/blue/edit", array('class' => "text-bottom")) ?>
+                </a>
+            </td>
         </tr>
     <? endforeach ?>
     </tbody>
 </table>
 
-<div id="add_sem_class_window_title" style="display: none;"><?= _("Neue Seminarklasse") ?></div>
+<div id="add_sem_class_window_title" style="display: none;"><?= _("Neue Veranstaltungskategorie") ?></div>
 <div id="add_sem_class_window" style="display: none;">
     <form action="?" method="post">
     <table>
@@ -59,7 +48,7 @@
                 <td><input type="text" name="add_name" id="add_name" required></td>
             </tr>
             <tr>
-                <td><label for="add_like"><?= _("Attribute kopieren von Seminarklasse") ?></label></td>
+                <td><label for="add_like"><?= _("Attribute kopieren von Veranstaltungskategorie") ?></label></td>
                 <td>
                     <select name="add_like" id="add_like">
                         <option value=""><?= _("keine") ?></option>
@@ -90,12 +79,6 @@ STUDIP.sem_classes = {
         });
     }
 };
-jQuery(function () {
-    jQuery("table.selecttable > tbody > tr").bind("click", function () {
-        var id = jQuery.trim(jQuery(this).find("td:first-child").text());
-        location.href = STUDIP.URLHelper.getURL("dispatch.php/admin/sem_classes/details", { 'id': id });
-    });
-})
 </script>
 <?
 $infobox = array(
@@ -104,7 +87,7 @@ $infobox = array(
         'eintrag'   => array(
             array(
                 'icon' => 'icons/16/black/exclaim.png',
-                'text' => _("ACHTUNG! Änderungen an dieser Seite können alle Veranstaltungen in Stud.IP verändern. Alle Änderungen sind zwar rückgängig machbar, aber bitte ändern sie nur, wenn sie wissen, was Sie tun.")
+                'text' => _("Änderungen an dieser Seite können alle Veranstaltungen (auch bestehende) in Stud.IP verändern.")
             )
         )
     ),
@@ -113,7 +96,7 @@ $infobox = array(
         'eintrag'   => array(
             array(
                 'icon' => 'icons/16/black/plus.png',
-                'text' => '<a href="#" onClick="STUDIP.sem_classes.add(); return false;">'._("Fügen Sie eine neue Seminarklasse hinzu.").'</a>'
+                'text' => '<a href="#" onClick="STUDIP.sem_classes.add(); return false;">'._("Fügen Sie eine neue Veranstaltungskategorie hinzu.").'</a>'
             )
         )
     )

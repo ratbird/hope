@@ -25,7 +25,6 @@
 // +---------------------------------------------------------------------------+
 
 require_once("DbView.class.php");
-require_once("DbSnapshot.class.php");
 
 /**
 * Class to provide simple Cross Table Views

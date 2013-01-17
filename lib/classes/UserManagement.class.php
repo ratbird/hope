@@ -39,7 +39,6 @@ require_once 'lib/object.inc.php';
 require_once 'lib/log_events.inc.php';  // Event logging
 require_once 'lib/classes/Avatar.class.php'; // remove Avatarture
 require_once 'app/models/studygroup.php';
-require_once 'lib/classes/AutoInsert.class.php'; // automatic Insert for user in seminars
 
 if ($GLOBALS['RESOURCES_ENABLE']) {
     include_once ($GLOBALS['RELATIVE_PATH_RESOURCES']."/lib/DeleteResourcesUser.class.php");

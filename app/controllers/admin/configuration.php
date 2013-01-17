@@ -22,8 +22,6 @@ require_once 'app/models/configuration.php';
 require_once 'lib/messaging.inc.php';
 require_once 'lib/user_visible.inc.php';
 
-// classes required for global-module-settings
-require_once('lib/classes/Config.class.php');
 
 class Admin_ConfigurationController extends AuthenticatedController
 {

@@ -17,7 +17,6 @@
  */
 
 require_once 'lib/calendar/CalendarColumn.class.php';
-require_once 'lib/classes/Color.class.php';
 
 /**
  * Kind of bean class for the calendar view.

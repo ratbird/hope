@@ -39,7 +39,6 @@ require_once 'lib/functions.php';
 require_once 'lib/classes/URLHelper.php';
 require_once 'lib/navigation/Navigation.php';
 require_once 'lib/navigation/AutoNavigation.php';
-require_once 'lib/classes/PageLayout.php';
 
 //setup default logger
 Log::get()->setHandler($GLOBALS['TMP_PATH'] . '/studip.log');

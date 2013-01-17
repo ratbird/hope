@@ -40,7 +40,6 @@ require_once("lib/visual.inc.php"); //htmlReady
 require_once ("lib/statusgruppe.inc.php");  //Funktionen der Statusgruppen
 require_once ("lib/classes/DataFieldEntry.class.php");
 require_once('lib/classes/searchtypes/SQLSearch.class.php');
-require_once('lib/classes/QuickSearch.class.php');
 
 // if we are not in admin_view, we get the proper set variable from institut_members.php
 $admin_view = Request::option('admin_view',false);

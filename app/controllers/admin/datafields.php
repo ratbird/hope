@@ -18,7 +18,6 @@
 
 //Imports
 require_once 'app/controllers/authenticated_controller.php';
-require_once 'lib/classes/DataFieldStructure.class.php';
 require_once 'lib/classes/DataFieldEntry.class.php';
 
 class Admin_DatafieldsController extends AuthenticatedController

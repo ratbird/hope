@@ -367,21 +367,16 @@ class TreeAbstract {
         return $ret;
     }
 
-    function getShortPath($item_id, $depth = false, $delimeter = ">"){
+    function getShortPath($item_id, $length = null, $delimeter = ">", $offset = 0){
         if (!$this->tree_data[$item_id]){
             return false;
         }
-        $parents = $this->getParents($item_id);
-        if ($depth){
-            $d = count($parents) - $depth;
-        } else {
-            $d = count($parents)-1;
-        }
-        for ($i = 0; $i < $d;++$i){
-            $ret = $this->tree_data[$parents[$i]]['name'] . " " . $delimeter . " " . $ret;
-        }
-        $ret .= $this->tree_data[$item_id]['name'];
-        return $ret;
+        $parents = array_reverse($this->getParents($item_id));
+        array_shift($parents);
+        array_push($parents, $item_id);
+        $that = $this;
+        $parents_names = array_map(function($i) use ($that) {return $that->tree_data[$i]['name'];}, array_slice($parents, $offset, $length));
+        return join(" $delimeter ", $parents_names);
     }
 
     /**

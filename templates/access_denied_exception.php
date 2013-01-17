@@ -1,8 +1,6 @@
 <?php
 # Lifter010: DONE - no form elements in this page
 
-require_once 'lib/classes/MessageBox.class.php';
-
 include 'lib/include/html_head.inc.php';
 
 $current_page = _('Zugriff verweigert');

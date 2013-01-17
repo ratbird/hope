@@ -23,7 +23,6 @@
 
 
 # Include all required files ================================================ #
-require_once("lib/classes/DatabaseObject.class.php");
 require_once("lib/evaluation/evaluation.config.php");
 require_once 'lib/functions.php';
 # ====================================================== end: including files #

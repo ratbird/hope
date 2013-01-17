@@ -8,7 +8,6 @@
  *  the License, or (at your option) any later version.
  */
 
-require_once 'lib/classes/Avatar.class.php';
 require_once dirname(__file__)."/BlubberExternalContact.class.php";
 
 class BlubberContactAvatar extends Avatar {

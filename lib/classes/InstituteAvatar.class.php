@@ -11,10 +11,6 @@
  * the License, or (at your option) any later version.
  */
 
-
-require_once 'lib/classes/CourseAvatar.class.php';
-
-
 /**
  * This class represents the avatar of a institute.
  *

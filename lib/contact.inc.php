@@ -35,7 +35,6 @@
 
 use Studip\Button, Studip\LinkButton;
 
-require_once('lib/classes/Avatar.class.php');
 if (Config::get()->getValue('CALENDAR_GROUP_ENABLE')) {
     require_once('lib/calendar/lib/Calendar.class.php');
 }

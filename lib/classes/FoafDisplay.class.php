@@ -25,7 +25,6 @@
 // +---------------------------------------------------------------------------+
 
 require_once 'lib/visual.inc.php';
-require_once 'lib/classes/Avatar.class.php';
 
 /**
 * Calculate and display "Friend of a friend lists"

@@ -65,7 +65,6 @@ require_once 'lib/classes/StudipLitList.class.php';
 require_once 'lib/classes/StudipLitSearch.class.php';
 require_once 'lib/classes/StudipNews.class.php';
 require_once 'lib/log_events.inc.php';
-require_once 'lib/classes/InstituteAvatar.class.php';
 require_once 'lib/classes/LockRules.class.php';
 require_once 'lib/classes/Institute.class.php';
 

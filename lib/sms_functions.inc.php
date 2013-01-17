@@ -34,7 +34,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 use Studip\Button, Studip\LinkButton;
 
-require_once 'lib/classes/Avatar.class.php';
 
 /**
  * returns the key from a val

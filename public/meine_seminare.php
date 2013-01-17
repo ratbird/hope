@@ -20,9 +20,6 @@
 require '../lib/bootstrap.php';
 
 unregister_globals();
-require_once 'lib/classes/CourseAvatar.class.php';
-require_once 'lib/classes/StudygroupAvatar.class.php';
-require_once 'lib/classes/InstituteAvatar.class.php';
 
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $perm->check("user");

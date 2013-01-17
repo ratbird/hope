@@ -28,7 +28,6 @@ require_once 'lib/visual.inc.php';
 require_once 'lib/functions.php';
 require_once 'lib/statusgruppe.inc.php';
 require_once 'lib/user_visible.inc.php';
-require_once 'lib/classes/Avatar.class.php';
 
 //Basics
 PageLayout::setHelpKeyword('Basis.SuchenPersonen');

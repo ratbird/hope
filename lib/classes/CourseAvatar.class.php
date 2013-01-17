@@ -11,9 +11,6 @@
  */
 
 
-require_once 'lib/classes/Avatar.class.php';
-
-
 /**
  * This class represents the avatar of a course.
  *

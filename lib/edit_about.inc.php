@@ -32,7 +32,6 @@ require_once('lib/calendar/lib/DbCalendarEventList.class.php');
 require_once('lib/vote/VoteDB.class.php');
 require_once('lib/evaluation/classes/db/EvaluationDB.class.php');
 require_once('lib/classes/StudipLitList.class.php');
-require_once('lib/classes/Avatar.class.php');
 
 function edit_email($uid, $email, $force=False) {
     $msg = '';

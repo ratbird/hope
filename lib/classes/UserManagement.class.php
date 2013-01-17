@@ -37,7 +37,6 @@ require_once 'lib/classes/auth_plugins/StudipAuthAbstract.class.php';
 require_once 'lib/classes/StudipNews.class.php';
 require_once 'lib/object.inc.php';
 require_once 'lib/log_events.inc.php';  // Event logging
-require_once 'lib/classes/Avatar.class.php'; // remove Avatarture
 require_once 'app/models/studygroup.php';
 
 if ($GLOBALS['RESOURCES_ENABLE']) {

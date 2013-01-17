@@ -19,7 +19,6 @@
 require_once 'app/controllers/authenticated_controller.php';
 require_once 'lib/classes/Seminar.class.php';
 require_once 'lib/classes/Modules.class.php';
-require_once 'lib/classes/StudygroupAvatar.class.php';
 require_once 'app/models/studygroup.php';
 require_once 'lib/messaging.inc.php';
 require_once 'lib/user_visible.inc.php';

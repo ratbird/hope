@@ -37,7 +37,6 @@
 
 use Studip\Button, Studip\LinkButton;
 
-require_once 'lib/classes/Avatar.class.php';
 require_once 'lib/classes/Modules.class.php';
 
 /**

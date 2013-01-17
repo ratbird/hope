@@ -16,9 +16,6 @@
 require_once 'lib/classes/searchtypes/SearchType.class.php';
 
 require_once 'app/controllers/authenticated_controller.php';
-require_once 'lib/classes/Avatar.class.php';
-require_once 'lib/classes/CourseAvatar.class.php';
-require_once 'lib/classes/InstituteAvatar.class.php';
 
 /**
  * Controller for the ajax-response of the QuickSearch class found in

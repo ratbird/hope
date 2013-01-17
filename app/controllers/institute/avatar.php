@@ -12,7 +12,6 @@
  */
 
 require_once 'app/controllers/authenticated_controller.php';
-require_once 'lib/classes/InstituteAvatar.class.php';
 
 /**
  * This controller is used to manipulate the avatar of a course.

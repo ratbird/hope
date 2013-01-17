@@ -2,9 +2,6 @@
 # Lifter010: TODO
 use Studip\Button, Studip\LinkButton;
 
-require_once 'lib/classes/StudygroupAvatar.class.php';
-
-
 $infobox['picture'] = 'infobox/studygroup.jpg';
 $infobox['content'] = array(
     array(

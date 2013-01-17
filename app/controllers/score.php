@@ -26,7 +26,7 @@
 
 require_once 'app/controllers/authenticated_controller.php';
 require_once 'lib/classes/score.class.php';
-require_once 'lib/classes/Avatar.class.php';
+
 require_once 'lib/classes/StudipKing.class.php';
 
 class ScoreController extends AuthenticatedController

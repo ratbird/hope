@@ -29,7 +29,6 @@ require_once 'lib/dates.inc.php';
 
 require_once 'lib/classes/score.class.php';
 require_once 'lib/classes/StudipLitList.class.php';
-require_once 'lib/classes/Avatar.class.php';
 require_once 'lib/classes/DataFieldEntry.class.php';
 require_once 'lib/classes/StudipKing.class.php';
 

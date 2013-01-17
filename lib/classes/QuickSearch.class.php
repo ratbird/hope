@@ -13,10 +13,6 @@
  * @category    Stud.IP
  */
 
-require_once 'lib/classes/Avatar.class.php';
-require_once 'lib/classes/CourseAvatar.class.php';
-require_once 'lib/classes/InstituteAvatar.class.php';
-
 require_once 'lib/classes/searchtypes/SeminarSearch.class.php';
 
 

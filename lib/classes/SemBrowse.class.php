@@ -11,8 +11,6 @@ require_once ('lib/dates.inc.php');
 require_once ('lib/classes/StudipSemSearch.class.php');
 require_once ('lib/classes/StudipSemTreeViewSimple.class.php');
 require_once ('lib/classes/StudipSemRangeTreeViewSimple.class.php');
-require_once ('lib/classes/CourseAvatar.class.php');
-require_once ('lib/classes/StudygroupAvatar.class.php');
 
 class SemBrowse {
 

@@ -53,7 +53,6 @@ require_once ('lib/raumzeit/raumzeit_functions.inc.php');
 require_once ('lib/dates.inc.php');
 require_once 'lib/admin_search.inc.php';
 require_once 'lib/classes/LockRules.class.php';
-require_once 'lib/classes/AdminList.class.php';
 require_once('lib/raumzeit.inc.php');
 
 

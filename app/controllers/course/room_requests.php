@@ -16,7 +16,6 @@
 
 require_once 'lib/resources/lib/RoomRequest.class.php';
 require_once 'app/controllers/authenticated_controller.php';
-require_once 'lib/classes/AdminList.class.php';
 
 class Course_RoomRequestsController extends AuthenticatedController
 {

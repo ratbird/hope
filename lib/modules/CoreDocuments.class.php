@@ -10,7 +10,6 @@
  */
 
 require_once 'lib/modules/StudipModule.class.php';
-require_once 'lib/classes/ContentElement.php';
 
 class CoreDocuments implements StudipModule {
     

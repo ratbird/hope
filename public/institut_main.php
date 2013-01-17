@@ -42,7 +42,6 @@ require_once 'lib/dates.inc.php'; //Funktionen zur Anzeige der Terminstruktur
 require_once 'lib/visual.inc.php';
 require_once 'lib/functions.php';
 require_once 'lib/classes/DataFieldEntry.class.php';
-require_once 'lib/classes/Institute.class.php';
 
 if (get_config('VOTE_ENABLE')) {
     include_once ("lib/vote/vote_show.inc.php");

@@ -34,7 +34,6 @@ include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
 require_once('lib/visual.inc.php');
 require_once 'lib/classes/SemBrowse.class.php';
-require_once 'lib/classes/Institute.class.php';
 require_once 'lib/export/export_linking_func.inc.php';
 
 $intro_text = $head_text = '';

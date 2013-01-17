@@ -5,7 +5,6 @@
 # Lifter010: TODO
 require_once("Ilias3ConnectedCMS.class.php");
 require_once("lib/classes/Seminar.class.php");
-require_once("lib/classes/Institute.class.php");
 
 /**
  * main-class for connection to ILIAS 4

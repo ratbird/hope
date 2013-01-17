@@ -14,7 +14,6 @@
  */
 
 require_once 'lib/classes/Semester.class.php';
-require_once 'lib/classes/Institute.class.php';
 
 /**
  * Singleton class for the admin search list. This is a singleton-class because

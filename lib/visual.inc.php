@@ -893,3 +893,33 @@ function createQuestion($question, $approveParams, $disapproveParams = array(), 
 
     return $template->render();
 }
+
+/**
+ * Displays the provided exception in a more readable fashion.
+ *
+ * @param Exception $exception The exception to be displayed
+ * @param bool $as_html Indicates whether the exception shall be displayed as
+ *                      plain text or html (optional, defaults to plain text)
+ * @param bool $deep    Indicates whether any previous exception should be
+ *                      included in the output (optional, defaults to false)
+ * @return String The exception display either as plain text or html
+ */
+function display_exception(Exception $exception, $as_html = false, $deep = false) {
+    $result  = '';
+    $result .= sprintf("%s: %s\n", _('Typ'), get_class($exception));
+    $result .= sprintf("%s: %s\n", _('Nachricht'), $exception->getMessage());
+    $result .= sprintf("%s: %d\n", _('Code'), $exception->getCode());
+
+    $trace = sprintf("  #$ %s(%u)\n", $exception->getFile(), $exception->getLine())
+           . '  '  . str_replace("\n", "\n  ", $exception->getTraceAsString());
+    $trace = str_replace($GLOBALS['STUDIP_BASE_PATH'] . '/', '', $trace);
+    $result .= sprintf("%s:\n%s\n", _('Stack trace'), $trace);
+    
+    if ($deep && $exception->getPrevious()) {
+        $result .= "\n";
+        $result .= _('Vorherige Exception:') . "\n";
+        $result .= display_exception($exception->getPrevious(), false, $deep);
+    }
+    
+    return $as_html ? nl2br(htmlReady($result)) : $result;
+}

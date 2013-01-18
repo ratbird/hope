@@ -303,6 +303,12 @@ table.zebra-big-hover > tbody > tr:hover {
 table.zebra-big-hover > tbody:nth-child(2n+1) > tr:hover {
   background-color: #ced8f2;
 }
+table.zebra-horizontal > tbody > tr > td {
+  background-color: #e2e2e2;
+}
+table.zebra-horizontal > tbody > tr > td:nth-child(2n+1) {
+  background-color: #f2f2f2;
+}
 /* --- table.collapsable ---------------------------------------------------- */
 .collapsable .header-row > td {
   border-bottom: 0;
@@ -1190,6 +1196,20 @@ td.infoboxrahmen {
   opacity: 1;
   position: absolute;
   width: 16px;
+}
+.ajaxing {
+  background: url("../images/ajax_indicator_small.gif") center no-repeat;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  font: 0/0 a;
+  color: transparent;
+  text-shadow: none;
+  background-color: transparent;
+  border: 0;
+}
+.ajaxing img {
+  display: none;
 }
 /* --- Autocompleter -------------------------------------------------------- */
 div.autocomplete {
@@ -2111,6 +2131,122 @@ table.contact-header td.active a {
 }
 table.contact-header td.empty a {
   color: #999;
+}
+/* CSS */
+.cron-task label {
+  cursor: pointer;
+  display: block;
+  padding: 5px;
+}
+.cron-task td {
+  padding: 0;
+  vertical-align: middle;
+}
+.cron-task tr ~ tr {
+  display: none;
+}
+.cron-task .selected td {
+  background-color: rgba(255, 51, 51, 0.25);
+}
+.cron-task .selected tr ~ tr {
+  display: table-row;
+}
+.cron-task .selected tr ~ tr td {
+  background-color: #fff;
+}
+.cron-task .selected tr ~ tr td[colspan] {
+  background-color: inherit;
+  padding: 0;
+}
+.cron-task .parameters,
+.cron-task .parameters li {
+  list-style: square;
+  margin: 0;
+  padding: 0;
+}
+.cron-task .parameters {
+  border: 1px solid #888;
+  border-bottom: 0;
+  border-top: 0;
+  padding: 0.5em;
+}
+.cron-task .parameters h3 {
+  margin: 0;
+  padding: 0;
+}
+.cron-task .parameters input[type=text],
+.cron-task .parameters input[type=number],
+.cron-task .parameters select,
+.cron-task .parameters textarea {
+  width: 200px;
+}
+.cron-task .parameter.required {
+  font-weight: bold;
+}
+.cron-task .parameter label {
+  padding: 0;
+}
+.cron-task tbody:last-child .parameters {
+  border-bottom: 1px solid #888;
+  -webkit-border-bottom-right-radius: 3px;
+  -moz-border-radius-bottomright: 3px;
+  border-bottom-right-radius: 3px;
+  -webkit-border-bottom-left-radius: 3px;
+  -moz-border-radius-bottomleft: 3px;
+  border-bottom-left-radius: 3px;
+}
+.cronjob-filters label {
+  display: block;
+}
+.cronjob-filters select {
+  width: 100%;
+}
+.crontab,
+.crontab li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.crontab li {
+  display: inline-block;
+  padding-right: 5px;
+  text-align: center;
+}
+.crontab span {
+  display: block;
+  text-align: right;
+}
+.inactivatible td {
+  color: #888;
+}
+.cronjobs-edit h1 {
+  margin: 0 0 0.5em;
+}
+.cronjobs-edit > table > thead > tr > th {
+  background-color: #899ab9;
+  border-color: #1e3e70;
+  border-style: solid;
+  border-width: 0 0 1px 0;
+  color: #FFFFFF;
+  font-size: 12pt;
+  padding: 3px 5px;
+}
+.cronjobs-edit > table > thead > tr > th img {
+  vertical-align: middle;
+}
+.cronjobs-edit > table {
+  margin-bottom: 1em;
+}
+.cronjobs-edit td {
+  vertical-align: top;
+}
+.cron-schedule tbody tr td label {
+  display: inline;
+  font-weight: normal;
+  white-space: nowrap;
+}
+.cron-item input[type=number] {
+  width: 2em;
 }
 /* classes for the evaluation modules in Stud.IP ---------------------------- */
 .eval_title {

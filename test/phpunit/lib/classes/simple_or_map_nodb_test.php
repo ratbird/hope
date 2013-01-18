@@ -17,22 +17,24 @@ require_once 'lib/models/SimpleORMap.class.php';
 require_once 'lib/classes/Config.class.php';
 require_once 'lib/classes/StudipCache.class.php';
 
-class StudipArrayCache implements StudipCache {
-    public $data = array();
+if (!class_exists('StudipArrayCache')) {
+    class StudipArrayCache implements StudipCache {
+        public $data = array();
 
-    function expire($key)
-    {
-        unset($this->data);
-    }
+        function expire($key)
+        {
+            unset($this->data);
+        }
 
-    function read($key)
-    {
-        return $this->data[$key];
-    }
+        function read($key)
+        {
+            return $this->data[$key];
+        }
 
-    function write($name, $content, $expire = 43200)
-    {
-        return ($this->data[$name] = $content);
+        function write($name, $content, $expire = 43200)
+        {
+            return ($this->data[$name] = $content);
+        }
     }
 }
 
@@ -93,6 +95,7 @@ class SimpleOrMapNodbTest extends PHPUnit_Framework_TestCase
     
     function tearDown()
     {
+        SimpleORMap::expireTableScheme();
         Config::set(null);
         StudipCacheFactory::setConfig(null);
         $GLOBALS['CACHING_ENABLE'] = false;

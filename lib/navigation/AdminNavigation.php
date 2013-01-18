@@ -188,6 +188,10 @@ class AdminNavigation extends Navigation
                 $navigation->addSubNavigation('webservice_access', new Navigation(_('Webservice'), 'dispatch.php/admin/webservice_access'));
             }
             $navigation->addSubNavigation('sem_classes', new Navigation(_('Veranstaltungskategorien'), 'dispatch.php/admin/sem_classes/overview'));
+            
+            if (Config::get()->CRONJOBS_ENABLE) {
+                $navigation->addSubNavigation('cronjobs', new Navigation(_('Cronjobs'), 'dispatch.php/admin/cronjobs/schedules'));
+            }
         }
 
         $this->addSubNavigation('config', $navigation);

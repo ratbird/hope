@@ -22,6 +22,13 @@ class VisualFunctionsTest extends PHPUnit_Framework_TestCase
         );
 
         Config::set(new Config($config));
+        
+        $GLOBALS['SMILEY_NO_DB'] = true;
+    }
+    
+    public function tearDown()
+    {
+        $GLOBALS['SMILEY_NO_DB'] = false;
     }
 
     public function testFormatReady()

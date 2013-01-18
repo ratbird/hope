@@ -161,6 +161,13 @@ table.zebra-big-hover {
     }
 }
 
+table.zebra-horizontal > tbody > tr > td {
+    background-color: @alternating-color-odd;
+    &:nth-child(2n+1) {
+        background-color: @alternating-color-even;
+    }
+}
+
 /* --- table.collapsable ---------------------------------------------------- */
 // TODO: This is pretty hard to understand and should be replaced with an easier,
 // better structured solution

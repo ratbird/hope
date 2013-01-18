@@ -684,6 +684,7 @@ function listPages($mode, $sortby = NULL) {
     $pages = $statement->fetchAll(PDO::FETCH_ASSOC);
 
     // show pages
+    showPageFrameStart();
     begin_blank_table();
 
     if (count($pages) == 0) {
@@ -757,7 +758,7 @@ function listPages($mode, $sortby = NULL) {
                                 )
                     );
     }
-    end_blank_table();
+#    end_blank_table();
     showPageFrameEnd($infobox);
 }
 

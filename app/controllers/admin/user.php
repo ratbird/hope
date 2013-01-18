@@ -750,6 +750,8 @@ class Admin_UserController extends AuthenticatedController
     {
         $UserManagement = new UserManagement($user_id);
         if ($UserManagement->setPassword()) {
+            // mail address did not change, so skip this check
+            $GLOBALS['MAIL_VALIDATE_BOX'] = false;
             PageLayout::postMessage(Messagebox::success(_('Das Passwort wurde neu gesetzt.')));
         } else {
             $details = explode('§', str_replace(array('msg§', 'info§', 'error§'), '', substr($UserManagement->msg, 0, -1)));

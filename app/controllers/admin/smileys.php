@@ -73,14 +73,14 @@ class Admin_SmileysController extends AuthenticatedController
             if ($smiley->name != $name) { // rename smiley
                 if (Smiley::getByName($name)->id) {
                     $error = sprintf(_('Es existiert bereits eine Datei mit dem Namen "%s".'), $name . '.gif');
-                    PageLayout::postMessage(Messagebox::error($error));
+                    PageLayout::postMessage(MessageBox::error($error));
                     $success = false;
                 } elseif (!$smiley->rename($name)) {
                     $error = sprintf(_('Die Datei "%s" konnte nicht umbenannt werden.'), $smiley->name . '.gif');
-                    PageLayout::postMessage(Messagebox::error($error));
+                    PageLayout::postMessage(MessageBox::error($error));
                     $success = false;
                 } else {
-                    PageLayout::postMessage(Messagebox::success(_('Smiley erfolgreich umbenannt.')));
+                    PageLayout::postMessage(MessageBox::success(_('Smiley erfolgreich umbenannt.')));
                 }
             }
 
@@ -88,12 +88,12 @@ class Admin_SmileysController extends AuthenticatedController
             if (!$message and $smiley->short != $short) { // rename short
                 if (Smiley::getByShort($short)->id) {
                     $error = sprintf(_('Es gibt bereits einen Smileys mit dem Kürzel "%s".'), $short);
-                    PageLayout::postMessage(Messagebox::error($error));
+                    PageLayout::postMessage(MessageBox::error($error));
                     $success = false;
                 } else {
                     $smiley->short = $short;
                     $smiley->store();
-                    PageLayout::postMessage(Messagebox::success(_('Kürzel erfolgreich geändert.')));
+                    PageLayout::postMessage(MessageBox::success(_('Kürzel erfolgreich geändert.')));
                 }
             }
 
@@ -128,7 +128,7 @@ class Admin_SmileysController extends AuthenticatedController
 
             $message = sprintf( _('Smiley "%s" erfolgreich gelöscht.'), $name);
         }
-        PageLayout::postMessage(Messagebox::success($message));
+        PageLayout::postMessage(MessageBox::success($message));
 
         $this->redirect('admin/smileys?view=' . $view);
     }
@@ -143,8 +143,8 @@ class Admin_SmileysController extends AuthenticatedController
 
         $message  = sprintf(_('%d Zählerstände aktualisiert'), $updated);
         $msg = $updated > 0
-            ? Messagebox::success($message)
-            : Messagebox::info($message);
+            ? MessageBox::success($message)
+            : MessageBox::info($message);
         PageLayout::postMessage($msg);
 
         $this->redirect('admin/smileys?view=' . $view);
@@ -168,8 +168,8 @@ class Admin_SmileysController extends AuthenticatedController
             $details[] = sprintf(_('%d Favoriten geändert'), $result['favorites']);
         }
         $msg = array_sum($result) > 0
-            ? Messagebox::success($message, $details, true)
-            : Messagebox::info($message, $details, true);
+            ? MessageBox::success($message, $details, true)
+            : MessageBox::info($message, $details, true);
         PageLayout::postMessage($msg);
 
         $this->redirect('admin/smileys?view=' . $view);
@@ -190,14 +190,14 @@ class Admin_SmileysController extends AuthenticatedController
         $upload = $_FILES['smiley_file'];
         if (empty($upload) or empty($upload['name'])) {
             $error = _('Sie haben keine Datei zum Hochladen ausgewählt!');
-            PageLayout::postMessage(Messagebox::error($error));
+            PageLayout::postMessage(MessageBox::error($error));
             return;
         }
 
         // Error upon upload?
         if ($upload['error']) {
             $error = _('Es gab einen Fehler beim Upload. Bitte versuchen Sie es erneut.');
-            PageLayout::postMessage(Messagebox::error($error));
+            PageLayout::postMessage(MessageBox::error($error));
             return;
         }
 
@@ -210,7 +210,7 @@ class Admin_SmileysController extends AuthenticatedController
         if ($no_gif) {
             $error = sprintf(_('Der Dateityp der Bilddatei ist falsch (%s).<br>'
                               .'Es ist nur die Dateiendung .gif erlaubt!'), $upload['type']);
-            PageLayout::postMessage(Messagebox::error($error));
+            PageLayout::postMessage(MessageBox::error($error));
             return;
         }
 
@@ -223,7 +223,7 @@ class Admin_SmileysController extends AuthenticatedController
         $replace = Request::int('replace');
         if ($smiley->id && !$replace) {
             $error = sprintf(_('Es ist bereits eine Bildatei mit dem Namen "%s" vorhanden.'), $smiley_file);
-            PageLayout::postMessage(Messagebox::error($error));
+            PageLayout::postMessage(MessageBox::error($error));
             return;
         }
 
@@ -231,7 +231,7 @@ class Admin_SmileysController extends AuthenticatedController
         $destination = Smiley::getFilename(basename($smiley_file, '.gif'));
         if (!move_uploaded_file($upload['tmp_name'], $destination)) {
             $error = _('Es ist ein Fehler beim Kopieren der Datei aufgetreten. Das Bild wurde nicht hochgeladen!');
-            PageLayout::postMessage(Messagebox::error($error));
+            PageLayout::postMessage(MessageBox::error($error));
             return;
         }
 
@@ -245,7 +245,7 @@ class Admin_SmileysController extends AuthenticatedController
         $message = $replace
                  ? sprintf(_('Die Bilddatei "%s" wurde erfolgreich ersetzt.'), $smiley_file)
                  : sprintf(_('Die Bilddatei "%s" wurde erfolgreich hochgeladen.'), $smiley_file);
-        PageLayout::postMessage(Messagebox::success($message));
+        PageLayout::postMessage(MessageBox::success($message));
 
         // Return to index and display the view the uploaded smiley is in
         $this->redirect('admin/smileys?view=' . $smiley_file{0});

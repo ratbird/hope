@@ -4,7 +4,7 @@
 ?>
 
 <? if (empty($seminars)): ?>
-    <?= Messagebox::info(_('Es befinden sich zur Zeit keine Veranstaltungen im Archiv, an denen Sie teilgenommen haben.')) ?>
+    <?= MessageBox::info(_('Es befinden sich zur Zeit keine Veranstaltungen im Archiv, an denen Sie teilgenommen haben.')) ?>
 <? else: ?>
 
 <table class="default zebra-hover">

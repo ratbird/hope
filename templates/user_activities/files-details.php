@@ -15,7 +15,7 @@
             <?= sprintf(_('<b>Dateiname:</b> %s '), $document['filename']) ?>
 
         <? if ($document['protected']): ?>
-            <?= Messagebox::info(_('Diese Datei ist urheberrechtlich geschützt'), array(
+            <?= MessageBox::info(_('Diese Datei ist urheberrechtlich geschützt'), array(
                                  _('Sie darf nur im Rahmen dieser Veranstaltung verwendet werden, jede weitere '
                                   .'Verbreitung ist strafbar!')))?>
         <? endif; ?>

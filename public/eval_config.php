@@ -116,7 +116,7 @@
             $polscale_gfx_type, $likertscale_gfx_type, $mchoice_scale_gfx_type
         ));
 
-        PageLayout::postMessage(Messagebox::success(_('Die Auswertungskonfiguration wurde gespeichert.')));
+        PageLayout::postMessage(MessageBox::success(_('Die Auswertungskonfiguration wurde gespeichert.')));
     }
 
     // Read template setting from db

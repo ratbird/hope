@@ -437,7 +437,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
 
         NotificationCenter::postNotification('OverviewDidClear', $GLOBALS['user']->id);
 
-        // PageLayout::postMessage(Messagebox::success(_('Alle Markierungen wurden entfernt')));
+        // PageLayout::postMessage(MessageBox::success(_('Alle Markierungen wurden entfernt')));
         page_close();
 
         header('Location: ' . URLHelper::getURL());

@@ -91,7 +91,7 @@ class Settings_NotificationController extends Settings_SettingsController
         if (!count($seminars)) {
             $message = sprintf(_('Sie haben zur Zeit keine Veranstaltungen abonniert, an denen Sie teilnehmen k&ouml;nnen. Bitte nutzen Sie %s<b>Veranstaltung suchen / hinzuf&uuml;gen</b>%s um neue Veranstaltungen aufzunehmen.'),
                                '<a href="sem_portal.php">', '</a>');
-            PageLayout::postMessage(Messagebox::info($message));
+            PageLayout::postMessage(MessageBox::info($message));
             $this->set_layout($GLOBALS['template_factory']->open('layouts/base_without_infobox'));
             $this->render_nothing();
             return;

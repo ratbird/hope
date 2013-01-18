@@ -89,7 +89,7 @@ class SmileysController extends AuthenticatedController
         } catch (OutOfBoundsException $e) {
             $state = $this->favorites->contain($id);
             $message = _('Maximale Favoritenzahl erreicht. Vielleicht sollten Sie mal ausmisten? :)');
-            $msg_box = Messagebox::error($message);
+            $msg_box = MessageBox::error($message);
         }
 
         if (Request::isXhr()) {

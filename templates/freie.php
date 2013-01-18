@@ -20,7 +20,7 @@
 </blockquote>
 
 <? if (empty($seminars)): ?>
-    <?= Messagebox::info(_('Es gibt keine Veranstaltungen, die einen freien Zugriff erlauben!'))?>
+    <?= MessageBox::info(_('Es gibt keine Veranstaltungen, die einen freien Zugriff erlauben!'))?>
 <? endif; ?>
 
 <? if (!empty($seminars)): ?>

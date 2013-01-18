@@ -1,5 +1,5 @@
 <? if (!count($my_stm)): ?>
-    <?= Messagebox::info(_('Es sind zur Zeit keine Ihrer Veranstaltungen zu Modulen zugeordnet.')) ?>
+    <?= MessageBox::info(_('Es sind zur Zeit keine Ihrer Veranstaltungen zu Modulen zugeordnet.')) ?>
 <? else: ?>
 <table class="default zebra-big-hover">
     <colgroup>

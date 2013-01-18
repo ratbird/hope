@@ -592,7 +592,7 @@ if (is_array($msgs)) {
                         sprintf(_("Lesen Sie weitere Bedienungshinweise in der %sHilfe%s nach!"), "<a href=\"" . $help_url . "\">", "</a>")
                     );
 
-                    echo Messagebox::info(_("Es sind noch keine Gruppen oder Funktionen angelegt worden."), $zusatz);
+                    echo MessageBox::info(_("Es sind noch keine Gruppen oder Funktionen angelegt worden."), $zusatz);
                     ?>
             </td></tr>
     </table>

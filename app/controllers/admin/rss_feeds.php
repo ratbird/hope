@@ -77,8 +77,8 @@ class Admin_RssFeedsController extends AuthenticatedController
         $feed->hidden = false;
 
         $message = $feed->store()
-                 ? Messagebox::success(_('Feed angelegt'))
-                 : Messagebox::error(_('Anlegen fehlgeschlagen'));
+                 ? MessageBox::success(_('Feed angelegt'))
+                 : MessageBox::error(_('Anlegen fehlgeschlagen'));
 
         PageLayout::postmessage($message);
         $this->redirect('admin/rss_feeds');
@@ -101,7 +101,7 @@ class Admin_RssFeedsController extends AuthenticatedController
             $feed->store();
         }
 
-        $message = Messagebox::info(sprintf(_('Es wurden %u ungültige Feeds deaktiviert.'), $hidden));
+        $message = MessageBox::info(sprintf(_('Es wurden %u ungültige Feeds deaktiviert.'), $hidden));
         PageLayout::postMessage($message);
         $this->redirect('admin/rss_feeds');
     }
@@ -143,12 +143,12 @@ class Admin_RssFeedsController extends AuthenticatedController
         }
 
         if (!empty($success)) {
-            $message = Messagebox::success(_('RSS-Feeds geändert!'), $success, true);
+            $message = MessageBox::success(_('RSS-Feeds geändert!'), $success, true);
             PageLayout::postMessage($message);
         }
 
         if (!empty($errors)) {
-            $message = Messagebox::error(_('Folgende Fehler sind aufgetreten:'), $errors);
+            $message = MessageBox::error(_('Folgende Fehler sind aufgetreten:'), $errors);
             PageLayout::postMessage($message);
         }
 
@@ -170,7 +170,7 @@ class Admin_RssFeedsController extends AuthenticatedController
             throw new InvalidArgumentException('Invalid direction passed');
         }
 
-        $message = Messagebox::success(_('RSS-Feeds wurden neu geordnet'));
+        $message = MessageBox::success(_('RSS-Feeds wurden neu geordnet'));
         PageLayout::postMessage($message);
         $this->redirect('admin/rss_feeds');
     }
@@ -184,8 +184,8 @@ class Admin_RssFeedsController extends AuthenticatedController
         $deleted = $feed->delete();
 
         $message = $deleted
-                 ? Messagebox::success(_('RSS-Feed gelöscht!'))
-                 : Messagebox::error(_('Löschen fehlgeschlagen!'));
+                 ? MessageBox::success(_('RSS-Feed gelöscht!'))
+                 : MessageBox::error(_('Löschen fehlgeschlagen!'));
         PageLayout::postMessage($message);
         $this->redirect('admin/rss_feeds');
     }
@@ -197,7 +197,7 @@ class Admin_RssFeedsController extends AuthenticatedController
     {
         RSSFeed::setLimit(Request::int('limit', RSSFeed::DEFAULT_LIMIT));
 
-        $message = Messagebox::success(_('Die Einstellung wurde gespeichert'));
+        $message = MessageBox::success(_('Die Einstellung wurde gespeichert'));
         PageLayout::postMessage($message);
         $this->redirect('admin/rss_feeds');
     }

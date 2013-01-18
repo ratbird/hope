@@ -329,7 +329,7 @@ class Admin_BannerController extends AuthenticatedController
         $banner->store();
 
         $message = _('Die Klick- und Viewzahlen des Banners wurden zurückgesetzt');
-        PageLayout::postMessage(Messagebox::success($message));
+        PageLayout::postMessage(MessageBox::success($message));
         $this->redirect('admin/banner');
     }
 

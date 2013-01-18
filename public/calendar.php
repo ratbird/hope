@@ -37,6 +37,6 @@ if (get_config('CALENDAR_ENABLE')) {
                 .'wurde in den Systemeinstellungen nicht freigeschaltet. Wenden '
                 .'Sie sich bitte an die zuständigen Administratoren.');
     $template = $GLOBALS['template_factory']->open('layouts/base_without_infobox');
-    $template->content_for_layout = Messagebox::error($message);
+    $template->content_for_layout = MessageBox::error($message);
     echo $template->render();
 }

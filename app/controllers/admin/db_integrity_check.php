@@ -78,12 +78,12 @@ class Admin_DbIntegrityCheckController extends AuthenticatedController
                 } else {
                     $result = $plugin->doCheckDelete($id);
                     if ($result === false) {
-                        $mbox = Messagebox::error(_('Beim Löschen der Datensätze trat ein Fehler auf!'));
+                        $mbox = MessageBox::error(_('Beim Löschen der Datensätze trat ein Fehler auf!'));
                     } else {
                         $message = sprintf(_('Es wurden %s Datensätze der Tabelle <b>%s</b> gelöscht!'),
                                            $result,
                                            $plugin->getCheckDetailTable($id));
-                        $mbox = Messagebox::success($message);
+                        $mbox = MessageBox::success($message);
                     }
                     PageLayout::postMessage($mbox);
 

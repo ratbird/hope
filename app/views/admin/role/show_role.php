@@ -53,7 +53,7 @@ use Studip\Button, Studip\LinkButton;
             <? endforeach ?>
         </table>
     <? else: ?>
-        <?= Messagebox::info(_('Es wurden keine Benutzer gefunden.')) ?>
+        <?= MessageBox::info(_('Es wurden keine Benutzer gefunden.')) ?>
     <? endif ?>
 
     <h3>
@@ -86,7 +86,7 @@ use Studip\Button, Studip\LinkButton;
             <? endforeach ?>
         </table>
     <? else: ?>
-        <?= Messagebox::info(_('Es wurden keine Plugins gefunden.')) ?>
+        <?= MessageBox::info(_('Es wurden keine Plugins gefunden.')) ?>
     <? endif ?>
 <? endif ?>
 

@@ -260,7 +260,7 @@ class Admin_Cronjobs_SchedulesController extends AuthenticatedController
         CronjobSchedule::find($id)->activate();
 
         if (!Request::isXhr()) {
-            PageLayout::postMessage(Messagebox::success(_('Der Cronjob wurde aktiviert.')));
+            PageLayout::postMessage(MessageBox::success(_('Der Cronjob wurde aktiviert.')));
         }
         $this->redirect('admin/cronjobs/schedules/index/' . $page . '#job-' . $id);
     }
@@ -276,7 +276,7 @@ class Admin_Cronjobs_SchedulesController extends AuthenticatedController
         CronjobSchedule::find($id)->deactivate();
 
         if (!Request::isXhr()) {
-            PageLayout::postMessage(Messagebox::success(_('Der Cronjob wurde deaktiviert.')));
+            PageLayout::postMessage(MessageBox::success(_('Der Cronjob wurde deaktiviert.')));
         }
         $this->redirect('admin/cronjobs/schedules/index/' . $page . '#job-' . $id);
     }
@@ -291,7 +291,7 @@ class Admin_Cronjobs_SchedulesController extends AuthenticatedController
     {
         CronjobSchedule::find($id)->delete();
 
-        PageLayout::postMessage(Messagebox::success(_('Der Cronjob wurde gelöscht.')));
+        PageLayout::postMessage(MessageBox::success(_('Der Cronjob wurde gelöscht.')));
         $this->redirect('admin/cronjobs/schedules/index/' . $page);
     }
 

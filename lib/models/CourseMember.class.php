@@ -29,12 +29,17 @@ class CourseMember extends SimpleORMap
     function __construct($id = array())
     {
         $this->db_table = 'seminar_user';
-        $this->belongs_to = array('user' => array('class_name' => 'User',
-                                                    'foreign_key' => 'user_id'),
-                                   'course' => array('class_name' => 'Course',
-                                                    'foreign_key' => 'seminar_id')
+        $this->belongs_to = array(
+                'user' => array(
+                        'class_name' => 'User',
+                        'foreign_key' => 'user_id'),
+                'course' => array(
+                        'class_name' => 'Course',
+                        'foreign_key' => 'seminar_id')
         );
-        $user_getter = function ($record, $field) { return $record->getRelationValue('user', $field);};
+        $user_getter = function ($record, $field) {
+            return $record->getRelationValue('user', $field);
+        };
         $this->additional_fields['vorname'] = array('get' => $user_getter);
         $this->additional_fields['nachname'] = array('get' => $user_getter);
         $this->additional_fields['username'] = array('get' => $user_getter);

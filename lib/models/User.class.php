@@ -68,25 +68,41 @@ class User extends AuthUserMd5
      */
     function __construct($id = null)
     {
-        $this->has_many = array('course_memberships' => array('class_name' => 'CourseMember',
-                                                     'on_delete' => 'delete',
-                                                     'on_store' => 'store'),
-                                 'institute_memberships' => array('class_name' => 'InstituteMember',
-                                                     'on_delete' => 'delete',
-                                                     'on_store' => 'store'),
-                                 'admission_applications' => array('class_name' => 'AdmissionApplication',
-                                                     'on_delete' => 'delete',
-                                                     'on_store' => 'store'),
-                                 'datafields' => array('class_name' => 'DatafieldEntryModel',
-                                                       'assoc_foreign_key' => function($model,$params) {$model->setValue('range_id', $params[0]->id);},
-                                                       'assoc_func' => 'findByModel',
-                                                       'on_delete' => 'delete',
-                                                       'on_store' => 'store',
-                                                       'foreign_key' => function($model) {return array($model);})
+        $this->has_many = array(
+                'course_memberships' => array(
+                        'class_name' => 'CourseMember',
+                        'on_delete' => 'delete',
+                        'on_store' => 'store'),
+                'institute_memberships' => array(
+                        'class_name' => 'InstituteMember',
+                        'on_delete' => 'delete',
+                        'on_store' => 'store'),
+                'admission_applications' => array(
+                        'class_name' => 'AdmissionApplication',
+                        'on_delete' => 'delete',
+                        'on_store' => 'store'),
+                'archived_course_memberships' => array(
+                        'class_name' => 'ArchivedCourseMember',
+                        'on_delete' => 'delete',
+                        'on_store' => 'store'),
+                'datafields' => array(
+                        'class_name' => 'DatafieldEntryModel',
+                        'assoc_foreign_key' =>
+                        function($model,$params) {
+                            $model->setValue('range_id', $params[0]->id);
+                        },
+                'assoc_func' => 'findByModel',
+                'on_delete' => 'delete',
+                'on_store' => 'store',
+                'foreign_key' =>
+                    function($model) {
+                        return array($model);
+                    })
         );
-        $this->has_one['info'] = array('class_name' => 'UserInfo',
-                                        'on_delete' => 'delete',
-                                        'on_store' => 'store');
+        $this->has_one['info'] = array(
+                'class_name' => 'UserInfo',
+                'on_delete' => 'delete',
+                'on_store' => 'store');
         $info_getter = function ($record, $field) { return $record->info->getValue($field);};
         $info_setter = function ($record, $field, $value) { return $record->info->setValue($field, $value);};
         $info = new UserInfo();

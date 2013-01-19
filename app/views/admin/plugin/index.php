@@ -55,6 +55,7 @@ use Studip\Button, Studip\LinkButton;
                     <td>
                         <a href="<?= $controller->url_for('admin/plugin/manifest', $pluginid) ?>">
                             <?= htmlspecialchars($plugin['name']) ?>
+                            <?= $plugin['core'] ? '<i>('. _('Kern-Plugin') . ')</i>' : '' ?>
                         </a>
                     </td>
                     <td <?= $plugin['enabled'] ? '' : 'class="quiet"' ?>>
@@ -79,14 +80,14 @@ use Studip\Button, Studip\LinkButton;
                         </a>
                     </td>
                     <td width="20">
-                        <? if (!$plugin['depends'] && isset($update_info[$pluginid]['version'])): ?>
+                        <? if (!$plugin['depends'] && isset($update_info[$pluginid]['version']) && !$plugin['core']): ?>
                             <a href="<?= $controller->url_for('admin/plugin/download', $pluginid) ?>">
                                 <?= Assets::img('icons/16/blue/download.png', array('title' => _('Herunterladen'))) ?>
                             </a>
                         <? endif ?>
                     </td>
                     <td width="20">
-                        <? if (!$plugin['depends']): ?>
+                        <? if (!$plugin['depends'] && !$plugin['core']): ?>
                             <a href="<?= $controller->url_for('admin/plugin/ask_delete', $pluginid) ?>">
                                 <?= Assets::img('icons/16/blue/trash.png', array('title' => _('Deinstallieren'))) ?>
                             </a>

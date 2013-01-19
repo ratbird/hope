@@ -38,14 +38,21 @@
         <?=$tpl['room']?>
     </td>
 
-    <td width="1%" class="<?=$tpl['class']?>" nowrap="nowrap">
-    <? if ($tpl['forumCount'] > 0) :
-            if ($tpl['forumCount'] == 1) $txt = _("%s Foreneintrag vorhanden"); else $txt = _("%s Foreinträge vorhanden");
+    <td width="1%" class="<?=$tpl['class']?>" nowrap="nowrap" style="padding-left: 5px;">
+    <? if ($tpl['issue_id']) :
+        $forum_slot = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$sem->status]['class']]->getSlotModule('forum');
+
+        foreach (PluginEngine::getPlugins('ForumModule') as $plugin) :
+            if (get_class($plugin) == $forum_slot) :
+                if ($count = $plugin->getNumberOfPostingsForIssue($tpl['issue_id'])) : ?>
+                <a href="<?= $plugin->getLinkToThread($tpl['issue_id']) ?>">
+                    <img src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/blue/forum.png" <?= tooltip(sprintf(_("%s Foreneinträge vorhanden"), $count)) ?>>
+                </a>
+            <? endif;
+            endif;
+        endforeach;
+    endif;
     ?>
-        <a href="<?=URLHelper::getLink("forum.php?open=".$tpl['issue_id']."&treeviewstartposting=&view=#anker")?>">
-            <img src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/blue/forum.png" <?=tooltip(sprintf($txt, $tpl['forumCount']))?>>
-        </a>
-    <? endif; ?>
     </td>
 
     <td width="1%" class="<?=$tpl['class']?>" nowrap="nowrap">

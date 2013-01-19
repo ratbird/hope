@@ -39,10 +39,9 @@ class SeminarDB
 {
     function getIssues($seminar_id)
     {
-        $query = "SELECT themen.*, folder.range_id, folder.folder_id, px_topics.topic_id
+        $query = "SELECT themen.*, folder.range_id, folder.folder_id
                   FROM themen
                   LEFT JOIN folder ON (range_id = issue_id)
-                  LEFT JOIN px_topics ON (px_topics.topic_id = issue_id)
                   WHERE themen.seminar_id = ?
                   ORDER BY priority";
         $statement = DBManager::get()->prepare($query);

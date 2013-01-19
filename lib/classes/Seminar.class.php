@@ -2184,13 +2184,15 @@ class Seminar
         //Cycles
         SeminarCycleDate::deleteBySQL('seminar_id = ' . DBManager::get()->quote($s_id));
 
-        // Alle weiteren Postings zu diesem Seminar loeschen.
-        $query = "DELETE from px_topics where Seminar_id = ?";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($s_id));
-        if (($db_ar = $statement->rowCount()) > 0) {
-            $this->createMessage(sprintf(_("%s Postings archiviert."), $db_ar));
-        }
+        // Alle weiteren Postings zu diesem Seminar in den Forums-Modulen löschen
+        foreach (PluginEngine::getPlugins('ForumModule') as $plugin) {
+            $plugin->deleteContents($s_id);  // delete content irrespective of plugin-activation in the seminar
+            
+            if ($plugin->isActivated()) {   // only show a message, if the plugin is activated, to not confuse the user
+                $this->createMessage(sprintf(_('Einträge in %s archiviert.'), $plugin->getPluginName()));
+            }
+        }        
+            
 
         // Alle Dokumente zu diesem Seminar loeschen.
         if (($db_ar = delete_all_documents($s_id)) > 0) {

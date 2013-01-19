@@ -297,10 +297,12 @@ class Score
         $user_id = $user->id; //damit keiner schummelt...
 
         // Werte holen...
-        $query = "SELECT COUNT(*) FROM px_topics WHERE user_id = ?";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($user_id));
-        $postings = $statement->fetchColumn();
+
+        // Foren
+        $postings = 0;
+        foreach (PluginEngine::getPlugins('ForumModule') as $plugin) {
+            $postings += $plugin->getNumberOfPostingsForUser($user_id);
+        }
 
         $query = "SELECT COUNT(*) FROM dokumente WHERE user_id = ? AND range_id <> 'provisional'";
         $statement = DBManager::get()->prepare($query);

@@ -99,7 +99,11 @@ function getToplist($rubrik, $query, $type = 'count', $parameters = array()) {
     if (empty($top_list)) {
         return '';
     }
+    
+    return getToplistOutput($top_list, $type, $rubrik);
+}
 
+function getToplistOutput($top_list, $type, $rubrik) {
     $result .= "<table cellpadding=\"0\" cellspacing=\"2\" border=\"0\">";
     $result .= "<tr><td colspan=\"2\"><font size=\"-1\"><b>$rubrik</b></font></td></tr>";
     $i=1;
@@ -280,14 +284,43 @@ if ($sem_browse_obj->show_result && count($_SESSION['sem_browse_data']['search_r
             $toplist =  getToplist(_('die meisten Materialien'), $query, 'count', $parameters);
         break;
         case 3:
-            $query = "SELECT px_topics.seminar_id, seminare.name, COUNT(px_topics.seminar_id) AS count
-                      FROM px_topics
-                      INNER JOIN seminare USING (seminar_id)
-                      {$sql_where_query_seminare} AND px_topics.mkdate > UNIX_TIMESTAMP(NOW() - INTERVAL 14 DAY)
-                      GROUP BY px_topics.seminar_id
-                      ORDER BY count DESC
-                      LIMIT 5";
-            $toplist =  getToplist(_("aktivste Veranstaltungen"), $query, 'count', $parameters);
+            $cache = StudipCacheFactory::getCache();
+            $hash  = '/sem_portal/most_active';
+    
+            $top_list = unserialize($cache->read($hash));
+            if (!$top_list) {
+                // get TopTen of seminars from all ForumModules and add up the 
+                // count for seminars with more than one active ForumModule 
+                // to get a combined toplist 
+                foreach (PluginEngine::getPlugins('ForumModule') as $plugin) { 
+                    $new_seminars = $plugin->getTopTenSeminars(); 
+                    foreach ($new_seminars as $sem) { 
+                        if (!isset($seminars[$sem['seminar_id']])) { 
+                            $seminars[$sem['seminar_id']] = $sem; 
+                            $seminars[$sem['seminar_id']]['name'] = $seminars[$sem['seminar_id']]['display']; 
+                        } else { 
+                            $seminars[$sem['seminar_id']]['count'] += $sem['count']; 
+                        } 
+                    } 
+                } 
+
+                // sort the seminars by the number of combined postings 
+                usort($seminars, function($a, $b) { 
+                    if ($a['count'] == $b['count']) { 
+                        return 0; 
+                    } 
+                    return ($a['count'] > $b['count']) ? -1 : 1; 
+                });
+                
+                $top_list = $seminars;
+                
+                // use only the first five seminars
+                $top_list = array_slice($top_list, 0, 5);
+
+                $cache->write($hash, serialize($top_list), 5 * 60);
+            }
+            
+            $toplist = getToplistOutput($top_list, 'count', _("aktivste Veranstaltungen"));
         break;
     }
 

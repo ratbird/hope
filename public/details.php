@@ -865,10 +865,10 @@ echo $template_factory->render(
             </td>
             <td width="25%" valign="top">
             <?
-                $query = "SELECT COUNT(*) FROM px_topics WHERE Seminar_id = ?";
-                $statement = DBManager::get()->prepare($query);
-                $statement->execute(array($sem_id));
-                $count = $statement->fetchColumn();
+                $count = 0;
+                foreach (PluginEngine::getPlugins('ForumModule') as $plugin) {
+                    $count += $plugin->getNumberOfPostingsForSeminar($sem_id);
+                }
                 printf ("<font size=-1><b>" . _("Forenbeiträge:") . "&nbsp;</b></font><font size=-1>%s </font>", $count ?: _('keine'));
             ?>
             </td>

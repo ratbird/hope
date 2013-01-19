@@ -62,9 +62,12 @@ $powerFeatures = true;
 if (Request::option('cmd')) {
     $cmd = Request::option('cmd');
 }
-$sem = new Seminar($id);
+$sem = Seminar::getInstance($id);
 $sem->checkFilter();
 $themen =& $sem->getIssues();
+
+// get slot for default forum (if any)
+$forum_slot = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$sem->status]['class']]->getSlotModule('forum');
 
 // if all entries are opened, we parse the submitted results into appropriate arrays
 foreach ($_REQUEST as $key => $val) {
@@ -249,7 +252,6 @@ $termine = getAllSortedSingleDates($sem);
                                 $thema =& $themen[$issue_id];
                                 $tpl['theme_title'] = $thema->getTitle();
                                 $tpl['theme_description'] = $thema->getDescription();
-                                $tpl['forumEntry'] = ($thema->hasForum()) ? SELECTED : NOT_SELECTED;
                                 $tpl['fileEntry'] = ($thema->hasFile()) ? SELECTED : NOT_SELECTED;
                             } else {
                                 $tpl['theme_title'] = '';

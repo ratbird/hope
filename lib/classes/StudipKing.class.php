@@ -67,7 +67,7 @@ class StudipKing {
 
             # read cache (unserializing a cache miss - FALSE - does not matter)
             $kings = unserialize($cache->read(self::CACHE_KEY));
-
+            
             # cache miss, retrieve from database
             if ($kings === FALSE) {
                 $kings = self::get_kings_uncached();
@@ -112,7 +112,23 @@ class StudipKing {
 
     private static function forum_kings()
     {
-        return self::select_kings("SELECT user_id AS id, COUNT(*) AS num FROM px_topics WHERE parent_id != '0' GROUP BY user_id");
+        $kings = array();
+
+        // sum up postings for all users from all ForumModules available
+        foreach (PluginEngine::getPlugins('ForumModule') as $plugin) {
+            $table = $plugin->getEntryTableInfo();
+            $query = "SELECT user_id AS id, COUNT(*) AS num FROM ". $table['table'] ." GROUP BY user_id";
+            $new_kings = self::select_kings($query);
+            foreach ($new_kings as $user_id => $num) {
+                if (!isset($kings[$user_id])) {
+                    $kings[$user_id] = $num;
+                } else {
+                    $kings[$user_id] += $num;
+                }
+            }
+        }
+        
+        return $kings;
     }
 
     private static function files_kings()

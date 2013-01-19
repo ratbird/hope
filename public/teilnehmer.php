@@ -998,22 +998,8 @@ $anzahl_teilnehmer_kontingent += $temp['teilnehmer_kontingent'];
                             &nbsp;
                         <? } ?>
                         </td>
-                        <? if ((Request::option('view_order')) && (Request::option('view_order') == "active")) { ?>
-                        <td nowrap class="table_header_bold" valign="middle">
-                            <?= Assets::img('icons/16/red/arr_1right.png', array('class' => 'text-top')) ?>
-                            <font size="-1"><?=_("Aktivität")?></font>&nbsp;
-                        <? } else { ?>
-                        <td nowrap class="table_header" valign="middle">
-                            &nbsp;
-                            <a href="<?= URLHelper::getLink('?view_order=active') ?>">
-                                <?= Assets::img('icons/16/grey/arr_1right.png', array('class' => 'text-top')) ?>
-                                <font size="-1" color="#555555"><?=_("Aktivität")?></font>
-                            </a>
-                            &nbsp;
-                        <? } ?>
-                        </td>
 
-                            <td nowrap align="right" class="table_header" valign="middle"> <?
+                        <td nowrap align="right" class="table_header" valign="middle"> <?
 
             $query = "SELECT showscore FROM seminare WHERE Seminar_id = ?";
             $statement = DBManager::get()->prepare($query);
@@ -1071,10 +1057,9 @@ $statement = DBManager::get()->prepare($query);
 $statement->execute(array($_SESSION['SessionSeminar']));
 $aktivity_index_seminar = 5 * $statement->fetchColumn();
 
-$query = "SELECT COUNT(*) FROM px_topics WHERE Seminar_id = ?";
-$statement = DBManager::get()->prepare($query);
-$statement->execute(array($_SESSION['SessionSeminar']));
-$aktivity_index_seminar += $statement->fetchColumn();
+foreach (PluginEngine::getPlugins('ForumModule') as $plugin) {
+    $aktivity_index_seminar += $plugin->getNumberOfPostingsForSeminar($_SESSION['SessionSeminar']);
+}
 
 $query = "SELECT COUNT(*) FROM seminar_user WHERE Seminar_id = ?";
 $statement = DBManager::get()->prepare($query);
@@ -1099,10 +1084,6 @@ if ($showscore==TRUE) $colspan++;
 switch (Request::option('view_order')) {
     case "date":
         $sortby = "mkdate";
-        break;
-
-    case "active":
-        $sortby = "doll DESC";
         break;
 
     default:
@@ -1130,12 +1111,11 @@ while (list ($key, $val) = each ($gruppe)) {
     }
 
     $query = "SELECT :table.visible, :table.mkdate, comment, :table.user_id,
-                     {$_fullname_sql['full']} AS fullname, username, status, COUNT(DISTINCT topic_id) AS doll,
+                     {$_fullname_sql['full']} AS fullname, username, status,
                      studiengaenge.name, :table.:column AS studiengang_id,
                      COUNT(DISTINCT dokument_id) AS documents
              FROM :table
              LEFT JOIN dokumente AS docs ON (docs.user_id = :table.user_id AND docs.seminar_id = :table.Seminar_id)
-             LEFT JOIN px_topics AS pt ON (pt.user_id = :table.user_id AND pt.Seminar_id = :table.Seminar_id AND pt.anonymous = 0)
              LEFT JOIN auth_user_md5 ON (:table.user_id = auth_user_md5.user_id)
              LEFT JOIN user_info ON (auth_user_md5.user_id = user_info.user_id)
              LEFT JOIN studiengaenge ON (:table.:column = studiengaenge.studiengang_id)
@@ -1305,8 +1285,11 @@ while (list ($key, $val) = each ($gruppe)) {
                 $Dokumente = $statement->fetchColumn() ?: 0;
             }
 
-            $postings_user = $one_user['doll'];
-
+            $postings_user = 0;
+            foreach (PluginEngine::getPlugins('ForumModule') as $plugin) {
+                $postings_user += $plugin->getNumberOfPostingsForUser($one_user['user_id']);
+            }
+            
             // Aktivitaet berechnen
             if ($showscore == TRUE) {
                 if ($aktivity_index_seminar == 0){
@@ -1398,9 +1381,10 @@ while (list ($key, $val) = each ($gruppe)) {
                 } else if ($key == "dozent" && $rechte) {
                     echo "<td align=\"center\">&nbsp;</td>";
                 }
+
                 if ($showscore) { //Einblenden wenn Aktivitätsanzeige aktiviert wurde
-                echo "<td align=\"center\"><font size=\"-1\">".$one_user['doll']."</font></td>";
-                echo "<td align=\"center\"><font size=\"-1\">".$Dokumente."</font></td>";
+                    echo '<td align="center">' . $postings_user . '</td>';
+                    echo '<td align="center">' . $Dokumente . '</td>';
                 } 
                 echo "<td align=\"center\">";
 

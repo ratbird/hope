@@ -311,33 +311,6 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
     $db2->query("CREATE TEMPORARY TABLE IF NOT EXISTS myobj_".$user_id." ( object_id char(32) NOT NULL, PRIMARY KEY (object_id)) ENGINE = MEMORY");
     $db2->query("REPLACE INTO  myobj_" . $user_id . " (object_id) VALUES ('" . join("'),('", array_keys($my_obj)) . "')");
 
-    // Postings
-    $db2->query(get_obj_clause('px_topics a','Seminar_id','topic_id',"(chdate > IFNULL(b.visitdate,0) AND chdate >= mkdate AND a.user_id !='$user_id')", 'forum', false, false, false, $user_id));
-    while($db2->next_record()) {
-        $object_id = $db2->f('object_id');
-        if ($my_obj[$object_id]["modules"]["forum"]) {
-            $my_obj[$object_id]["neuepostings"] = $db2->f("neue");
-            $my_obj[$object_id]["postings"] = $db2->f("count");
-            if ($my_obj[$object_id]['last_modified'] < $db2->f('last_modified')){
-                $my_obj[$object_id]['last_modified'] = $db2->f('last_modified');
-            }
-
-            $nav = new Navigation('forum');
-
-            if ($db2->f('neue')) {
-                $nav->setURL('forum.php?view=neue&sort=age');
-                $nav->setImage('icons/16/red/new/forum.png', array('title' =>
-                    sprintf(_('%s Forenbeiträge, %s neue'), $db2->f('count'), $db2->f('neue'))));
-                $nav->setBadgeNumber($db2->f('neue'));
-            } else if ($db2->f('count')) {
-                $nav->setURL('forum.php?view=reset&sort=age');
-                $nav->setImage('icons/16/grey/forum.png', array('title' => sprintf(_('%s Forenbeiträge'), $db2->f('count'))));
-            }
-
-            $my_obj[$object_id]['forum'] = $nav;
-        }
-    }
-
     //dokumente
     $unreadable_folders = array();
     if (!$GLOBALS['perm']->have_perm('admin')){

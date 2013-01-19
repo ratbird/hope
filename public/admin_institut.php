@@ -55,7 +55,6 @@ if (Request::option('cancel')) {
 }
 
 require_once 'lib/visual.inc.php';
-require_once 'lib/forum.inc.php';
 require_once 'lib/datei.inc.php';
 require_once 'lib/statusgruppe.inc.php';
 require_once 'lib/functions.php';
@@ -158,11 +157,7 @@ switch ($submitted_task) {
 
         $module_list = $Modules->getLocalModules($i_id, 'inst', $institute->modules, $institute->type);
 
-        // Create default folder and discussion
-        if (isset($module_list['forum'])) {
-            CreateTopic(_('Allgemeine Diskussionen'), ' ', _('Hier ist Raum für allgemeine Diskussionen'), 0, 0, $i_id, 0);
-        }
-            if (isset($module_list['documents'])) {
+        if (isset($module_list['documents'])) {
             $query = "INSERT INTO folder (folder_id, range_id, name, description, mkdate, chdate)
                       VALUES (?, ?, ?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())";
             $statement = DBManager::get()->prepare($query);
@@ -382,14 +377,15 @@ switch ($submitted_task) {
             }
         }
 
-        // delete folders and discussions
-        $query = "DELETE FROM px_topics WHERE Seminar_id = ?";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($i_id));
-        if (($db_ar = $statement->rowCount()) > 0) {
-            $message = sprintf(_('%s Postings aus dem Forum der Einrichtung gelöscht.'), $db_ar);
-            PageLayout::postMessage(MessageBox::success($message));
-        }
+        // delete all contents in forum-modules
+        foreach (PluginEngine::getPlugins('ForumModule') as $plugin) {
+            $plugin->deleteContents($i_id);  // delete content irrespective of plugin-activation in the seminar
+            
+            if ($plugin->isActivated()) {   // only show a message, if the plugin is activated, to not confuse the user
+                $message = sprintf(_('Einträge in %s gelöscht.'), $plugin->getPluginName());
+                PageLayout::postMessage(MessageBox::success($message));
+            }
+        }                
 
         $db_ar = delete_all_documents($i_id);
         if ($db_ar > 0) {

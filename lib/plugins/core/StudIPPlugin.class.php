@@ -58,6 +58,16 @@ abstract class StudIPPlugin {
     }
 
     /**
+     * Checks if the plugin is a core-plugin. Returns true if this is the case.
+     * 
+     * @return booelan
+     */
+    public function isCorePlugin()
+    {
+       return $this->plugin_info['core'];
+    }
+    
+    /**
      * Get the activation status of this plugin in the given context.
      * This also checks the plugin default activations.
      *

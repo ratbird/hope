@@ -132,7 +132,7 @@ function themen_saveAll() {
         $fileValue = ($changeFile[$key] == 'on') ? TRUE : FALSE;
         if (    ($themen[$key]->getTitle() != $val) ||
                 ($themen[$key]->getDescription() != $changeDescription[$key]) ||
-                ($themen[$key]->hasForum() != $forumValue) ||
+                $forumValue ||
                 ($themen[$key]->hasFile() != $fileValue)
              ) {
             $msg .= '<li>'.htmlReady($themen[$key]->toString()).'<br>';

@@ -382,21 +382,30 @@ class Smiley
             array('user_info', 'lebenslauf'),
             array('user_info', 'publi'),
             array('user_info', 'schwerp'),
-            array('px_topics', 'description'),
             array('wiki', 'body')
         );
-
+        
+        // add tables from ForumModules to count for
+        foreach (PluginEngine::getPlugins('ForumModule') as $plugin) {
+            $table = $plugin->getEntryTableInfo();
+            $table_data[] = array($table['table'], $table['content']);
+        }
+        
         // search in all tables
         $usage = array();
         foreach ($table_data as $table) {
-            $query = "SELECT ? AS txt FROM ?"; // $table1, $table0
+            // only fetch entries which have some content, otherwise the while-loop will fail
+            $query = "SELECT ? AS txt FROM ? WHERE LENGTH(?) > 0"; // $table1, $table0
             if ($table[0] == 'wiki') {  // only the actual wiki page ...
                 $sqltxt = "SELECT MAX(CONCAT(LPAD(version, 5, '0'),' ', ?)) AS txt FROM ? GROUP BY range_id, keyword";
             }
+
             $statement = DBManager::get()->prepare($query);
             $statement->bindParam(1, $table[1], StudipPDO::PARAM_COLUMN);
             $statement->bindParam(2, $table[0], StudipPDO::PARAM_COLUMN);
+            $statement->bindParam(3, $table[1], StudipPDO::PARAM_COLUMN);
             $statement->execute(array());
+            
             // and all entrys
             while ($txt = $statement->fetchColumn()) {
                 // extract all smileys

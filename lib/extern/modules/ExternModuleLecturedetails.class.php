@@ -570,17 +570,16 @@ class ExternModuleLecturedetails extends ExternModule {
                 $studip_info .= $res['count_user'] . "<br>\n";
             }
 
-            $query = "SELECT count(*) as count_postings FROM px_topics WHERE Seminar_id = ?";
-            $parameters = array($this->seminar_id);
-            $state = DBManager::get()->prepare($query);
-            $state->execute($parameters);
-            $res = $statement->fetch(PDO::FETCH_ASSOC);
 
-
-            if ($res['count_postings']) {
+            // get postings for all ForumModules
+            foreach (PluginEngine::getPlugins('ForumModule') as $plugin) {
+                $postings += $plugin->getNumberOfPostingsForSeminar($this->seminar_id);
+            }
+            
+            if ($postings) {
                 $studip_info .= $this->elements["StudipInfo"]->toString(array("content" =>
                             $this->config->getValue("StudipInfo", "countpostings") . "&nbsp;"));
-                $studip_info .= $res['count_postings'] . "<br>\n";
+                $studip_info .= $postings . "<br>\n";
             }
 
             $query = "SELECT count(*) as count_documents FROM dokumente WHERE seminar_id = ?";

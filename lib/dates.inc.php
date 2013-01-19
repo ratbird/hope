@@ -323,41 +323,6 @@ function getCorrectedSemesterVorlesBegin ($semester_num) {
 }
 
 /*
-Die Funktion delete_topic löscht rekursiv alle Postings ab der übergebenen topic_id, der zweite Parameter
-muss(!) eine Variable sein, diese wird für jedes gelöschte Posting um eins erhöht
-*/
-
-function delete_topic($topic_id, &$deleted)  //rekursives löschen von topics VORSICHT!
-{
-    if (!$topic_id){ // if topic_id is 0, ALL postings would be deleted !
-        return;
-    }
-
-    $query = "SELECT topic_id FROM px_topics WHERE parent_id = ?";
-    $statement = DBManager::get()->prepare($query);
-    $statement->execute(array($topic_id));
-
-    while ($next_topic = $statement->fetchColumn()) {
-        delete_topic($next_topic, $deleted);
-    }
-
-    NotificationCenter::postNotification('PostingWillDelete', $topic_id);
-
-    $query = "DELETE FROM px_topics WHERE topic_id = ?";
-    $statement = DBManager::get()->prepare($query);
-    $statement->execute(array($topic_id));
-
-    NotificationCenter::postNotification('PostingDidDelete', $topic_id);
-    $deleted++;
-
-    // gehoerte dieses Posting zu einem Termin?
-    // dann Verknuepfung loesen...
-    $query = "UPDATE termine SET topic_id = '' WHERE topic_id = ?";
-    $statement = DBManager::get()->prepare($query);
-    $statement->execute(array($topic_id));
-}
-
-/*
 Die function delete_date löscht einen Termin und verschiebt daran haegende
 Ordner in den allgemeinen Ordner.
 Der erste Parameter ist die termin_id des zu löschenden Termins.
@@ -380,18 +345,6 @@ function delete_date($termin_id, $topic_delete = TRUE, $folder_move = TRUE, $sem
     if ($RESOURCES_ENABLE) {
         include_once ($RELATIVE_PATH_RESOURCES."/lib/VeranstaltungResourcesAssign.class.php");
     }
-
-    // Eventuell rekursiv Postings loeschen
-    /*if ($topic_delete) { //deprecated at the moment because of bad usabilty (delete date kill whole topic in forum without a notice, that's bad...)
-        $query = "SELECT topic_id FROM termine WHERE termin_id = ?";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($termin_id));
-        $topic_id = $statement->fetchColumn();
-
-        if ($topic_id) {
-            delete_topic($topic_id, $count);
-        }
-    }*/
 
     if (!$folder_move) {
         ## Dateiordner muessen weg!

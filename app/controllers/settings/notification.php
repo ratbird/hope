@@ -99,6 +99,9 @@ class Settings_NotificationController extends Settings_SettingsController
 
         $modules = new ModulesNotification();
         $enabled_modules = $modules->getGlobalEnabledNotificationModules('sem');
+        
+        // the new forum-modules have to handle this on their own
+        unset($enabled_modules['forum']);
 
         $groups = array();
         $my_sem = array();

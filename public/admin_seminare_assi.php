@@ -36,7 +36,6 @@ page_open(array('sess' => 'Seminar_Session', 'auth' => 'Seminar_Auth', 'perm' =>
 
 require_once ('lib/msg.inc.php');       //Funktionen fuer Nachrichtenmeldungen
 require_once 'lib/functions.php';       //noch mehr Stuff
-require_once ('lib/forum.inc.php');     //damit wir Themen anlegen koennen
 require_once ('lib/visual.inc.php');        //Aufbereitungsfunktionen
 require_once ('lib/dates.inc.php');     //Terminfunktionen
 require_once ('lib/log_events.inc.php');
@@ -2063,10 +2062,6 @@ if (($form == 6) && (Request::submitted('jump_next')))
                 $_SESSION['sem_create_data']['sem_id'],
                 $_SESSION['sem_create_data']['sem_inst_id']
             ));
-
-            //Standard Thema im Forum anlegen, damit Studis auch ohne Zutun des Dozenten diskutieren koennen
-            if ($_SESSION['sem_create_data']["modules_list"]["forum"])
-                CreateTopic(_("Allgemeine Diskussionen"), get_fullname($user_id), _("Hier ist Raum für allgemeine Diskussionen"), 0, 0, $_SESSION['sem_create_data']["sem_id"]);
 
             //Standard Ordner im Foldersystem anlegen, damit Studis auch ohne Zutun des Dozenten Uploaden k&ouml;nnen
             if ($_SESSION['sem_create_data']["modules_list"]["documents"]) {

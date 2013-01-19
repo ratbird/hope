@@ -81,7 +81,7 @@ class ScoreController extends AuthenticatedController
             $page = $max_pages;
         }
 
-        $offset = ($page - 1) * $max_per_page;
+        $offset = max(0, ($page - 1) * $max_per_page);
 
         // Liste aller die mutig (oder eitel?) genug sind
         $query = "SELECT a.user_id,username,score,geschlecht, {$GLOBALS['_fullname_sql']['full']} AS fullname

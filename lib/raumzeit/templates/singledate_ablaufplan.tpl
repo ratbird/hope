@@ -53,22 +53,26 @@ use Studip\Button, Studip\LinkButton;
                     <font size="-1">
                         <? if ($modules['forum'] || $modules['documents']) : ?>
                         <b><?=_("Verknüpfungen mit diesem Termin:")?></b><br>
+                        <? foreach (PluginEngine::getPlugins('ForumModule') as $plugin) : ?>
+                            <? if (get_class($plugin) == $forum_slot) : ?>
+                                <? if ($tpl['issue_id'] && $plugin->getLinkToThread($tpl['issue_id'])) : ?>
+                                    <?= Assets::img('icons/16/green/accept.png') ?>
+                                    <?= _("Forenthema vorhanden") ?><br>
+                                    <input type="hidden" name="forumFolder" value="on">
+                                <? else : ?>                                    
+                                    <input type="checkbox" name="forumFolder<?= ($openAll ? '§'.$tpl['sd_id']: '') ?>">
+                                    <?= _("Thema im Forum anlegen") ?><br>
+                                <? endif ?>
+                            <? endif ?>
+                        <? endforeach ?>
+                        
                         <?
-                        if ($modules['forum']) :
-                            if ($tpl['forumEntry']) :
-                                echo _("Forenthema vorhanden").'<br>';
-                                echo '<INPUT type="hidden" name="forumFolder" value="on">';
-                            else :
-                                echo '<input type="checkbox" name="forumFolder'.($openAll ? '§'.$tpl['sd_id']: '').'"> ';
-                                echo _("Thema im Forum anlegen"). '<br>';
-                            endif;
-                        endif;
-
                         if ($modules['documents']) :
-                            if ($tpl['fileEntry']) :
-                                echo _("Dateiordner vorhanden");
-                                echo '<INPUT type="hidden" name="fileFolder" value="on">';
-                            else :
+                            if ($tpl['fileEntry']) : ?>
+                                <?= Assets::img('icons/16/green/accept.png') ?>
+                                <?= _("Dateiordner vorhanden"); ?>
+                                <input type="hidden" name="fileFolder" value="on">
+                            <? else :
                                 echo '<input type="checkbox" name="fileFolder'.($openAll ? '§'.$tpl['sd_id']: '').'"'.$tpl['fileEntry'].'> ';
                                 echo _("Dateiordner anlegen");
                             endif;

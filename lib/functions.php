@@ -383,7 +383,6 @@ function lastActivity ($sem_id)
         // Veranstaltungs-data
         "SELECT chdate FROM seminare WHERE Seminar_id = ?",
         // Postings
-        "SELECT MAX(chdate) FROM px_topics WHERE Seminar_id = ?",
         // Folder
         "SELECT MAX(chdate) FROM folder WHERE range_id = ?",
         // Dokuments
@@ -406,6 +405,11 @@ function lastActivity ($sem_id)
     // Wiki
     if (get_config('WIKI_ENABLE')) {
         $queries[] = "SELECT MAX(chdate) FROM wiki WHERE range_id = ?";
+    }
+
+    foreach (PluginEngine::getPlugins('ForumModule') as $plugin) {
+        $table = $plugin->getEntryTableInfo();
+        $queries[] = 'SELECT MAX(`'. $table['chdate'] .'`) FROM `'. $table['table'] .'` WHERE `'. $table['seminar_id'] .'` = ?';
     }
 
     $timestamp = false;

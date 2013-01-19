@@ -31,7 +31,6 @@ include ("lib/seminar_open.php"); // initialise Stud.IP-Session
 
 require_once ('lib/classes/Seminar.class.php');
 require_once ('lib/datei.inc.php');
-require_once ('lib/forum.inc.php');
 require_once ('lib/raumzeit/raumzeit_functions.inc.php');
 
 if ($RESOURCES_ENABLE) {
@@ -185,13 +184,7 @@ if (Request::get('export') && $rechte) {
                     $tpl['theme_title'] = $thema->getTitle();
                     $tpl['theme_description'] = $thema->getDescription();
                     $tpl['folder_id'] = $thema->getFolderID();
-                    $tpl['forumEntry'] = $thema->hasForum();
                     $tpl['fileEntry'] = $thema->hasFile();
-                    if($tpl['forumEntry']) {
-                        $tpl['forumCount'] = forum_count($thema->getIssueId(), $sem->getId());
-                    } else {
-                        $tpl['forumCount'] = 0;
-                    }
                     if($tpl['fileEntry']){
                         $tpl['fileCountAll'] = doc_count($thema->getFolderId());
                     } else {

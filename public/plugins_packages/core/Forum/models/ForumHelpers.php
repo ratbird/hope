@@ -1,0 +1,227 @@
+<?php
+
+class ForumHelpers {
+
+    static $page = 1;
+
+    /**
+     * helper_function for highlight($text, $highlight)
+     *
+     * @param  string  $text
+     * @param  array   $highlight
+     * @return string
+     */
+    static function do_highlight($text, $highlight)
+    {
+        $text = preg_replace($highlight, '####${1}####', $text);
+        $text = preg_replace('/####(.*)####/U', '<span class="highlight">${1}</span>', $text);
+        return $text;
+    }
+
+    /**
+     * This function highlights Text HTML-safe
+     * (tags or words in tags are not highlighted, words between tags ARE highlighted)
+     *
+     * @param string $text the text where to words shall be highlighted, may contain tags
+     * @param array $highlight an array of words to be highlighted
+     * @return string the highlighted text
+     */
+    function highlight($text, $highlight)
+    {
+        if (empty($highlight)) return $text;
+
+        $unsafe_symbols = array('/\./', '/\*/', '/\?/', '/\+/');
+        $unsafe_replace = array('\\.', '\\*', '\\?', '\\+');
+
+        foreach ($highlight as $key => $val) {
+            $highlight[$key] = '/(' . preg_replace($unsafe_symbols, $unsafe_replace, $val) . ')/i';
+        }
+
+        $data = array();
+        $treffer = array();
+
+        // split text at every tag
+        $pattern = '/<[^<]*>/U';
+        preg_match_all($pattern, $text, $treffer, PREG_OFFSET_CAPTURE);
+
+        if (sizeof($treffer[0]) == 0) {
+            return self::do_highlight($text, $highlight);
+        }
+
+        // cycle trough the text between the tags and highlight all hits
+        $last_pos = 0;
+        foreach ($treffer[0] as $taginfo) {
+            $size = strlen($taginfo[0]);
+            if ($taginfo[1] != 0) {
+                $data[] = self::do_highlight(substr($text, $last_pos, $taginfo[1] - $last_pos), $highlight);
+            }
+
+            $data[] = substr($text, $taginfo[1], $size);
+            $last_pos = $taginfo[1] + $size;
+        }
+
+        // don't miss the last portion of a posting
+        if ($last_pos < strlen($text)) {
+            $data[] = self::do_highlight(substr($text, $last_pos, strlen($text) - $last_pos), $highlight);
+        }
+
+        return implode('', $data);
+    }
+
+    /**
+     * Returns a human-readable version of the passed global Stud.IP permission.
+     *
+     * @param  string  $perm
+     * @return string
+     */
+    static function translate_perm($perm)
+    {
+        switch ($perm) {
+            case 'root':
+                return _('Chef im Ring');
+                break;
+
+            case 'admin':
+                return _('Administrator/in');
+                break;
+
+            case 'dozent':
+                return _('Dozent/in');
+                break;
+
+            case 'tutor':
+                return _('Tutor/in');
+                break;
+
+            case 'autor':
+                return _('Autor/in');
+                break;
+
+            case 'user':
+                return _('Leser/in');
+                break;
+
+            default:
+                return '';
+                break;
+        }
+    }
+
+    /**
+     * return the currently chosen page
+     *
+     * @return  int
+     */
+    static function getPage()
+    {
+        return self::$page - 1;
+    }
+
+    /**
+     * set the current page
+     *
+     * @param int $page_num the page
+     */
+    static function setPage($page_num) 
+    {
+        self::$page = $page_num;
+    }
+    
+    static function getVisitText($num_entries, $topic_id)
+    {
+        if ($num_entries > 0) {
+            $text = sprintf(_('Seit ihrem letzten Besuch gibt es %s neue Beiträge'), $num_entries);
+        } else {
+            $all_entries = max(ForumEntry::countEntries($topic_id) - 1, 0);
+            if ($all_entries == 0) {
+                $text = sprintf(_('Es gibt bisher keine Beiträge.'));
+            } else if ($all_entries == 1) {
+                $text = sprintf(_('Seit ihrem letzten Besuch gab es nichts neues.'
+                      . ' Es ist ein alter Beitrag vorhanden.'));
+            } else {
+                $text = sprintf(_('Seit ihrem letzten Besuch gab es nichts neues.'
+                      . ' Es sind %s alte Beiträge vorhanden.'), $all_entries);
+            }
+        }
+        
+        return $text;
+    }
+
+    /**
+     * return the online status of the passed user, one of three possible
+     * states is returned:
+     *  - available
+     *  - away
+     *  - offline
+     * 
+     * @staticvar type $online_status
+     * 
+     * @param string $user_id
+     * 
+     * @return string
+     */
+    static function getOnlineStatus($user_id)
+    {
+        static $online_status;
+
+        if ($GLOBALS['user']->id == $user_id) {
+            return 'available';
+        }
+
+        if (!$online_status) {
+            $online_users = get_users_online(15);
+            foreach ($online_users as $username => $data) {
+                if ($data['last_action'] >= 300) {
+                    $online_status[$data['userid']] = 'away';
+                } else {
+                    $online_status[$data['userid']] = 'available';
+                }
+            }
+        }
+
+        return $online_status[$user_id] ?: 'offline';
+    }
+    
+    static function createPdf($seminar_id, $parent_id = null)
+    {
+        $seminar_name = get_object_name($seminar_id, 'sem');
+        $data = ForumEntry::getList('dump', $parent_id ?: $seminar_id);
+        $first_page = true;
+
+        $document = new ExportPDF();
+        $document->SetTitle(_('Forum'));
+        $document->setHeaderTitle(sprintf(_("Forum \"%s\""), $seminar_name['name']));
+
+        foreach ($data['list'] as $entry) {
+            if ($entry['depth'] == 1) {
+                $document->addContent($content);
+                $document->addPage();
+                $first_page = false;
+                $content = '';
+
+                $content .= '++++**'. _('Bereich') .': '. $entry['name_raw'] .'**++++' . "\n";
+                $content .= $entry['content_raw'] ."\n\n";
+            } else if ($entry['depth'] == 2) {
+                $content .= '++**'. _('Thema') .': '. $entry['name_raw'] .'**++' . "\n";
+                $content .= '%%' . sprintf(_('erstellt von %s am %s'), htmlReady($entry['author']), 
+                    strftime('%A %d. %B %Y, %H:%M', (int)$entry['mkdate'])) . '%%' . "\n";
+                $content .= $entry['content_raw'] ."\n\n";
+            } else if ($entry['depth'] == 3) {
+                $content .= '**'.$entry['name_raw'] .'**' . "\n";
+                $content .= '%%' . sprintf(_('erstellt von %s am %s'), htmlReady($entry['author']), 
+                    strftime('%A %d. %B %Y, %H:%M', (int)$entry['mkdate'])) . '%%' . "\n";
+                $content .= $entry['content_raw'] ."\n--\n";
+            }
+        }
+
+        if ($content) {
+            if ($first_page) {
+                $document->addPage();
+            }
+            $document->addContent($content);
+        }
+
+        $document->dispatch($seminar_name['name'] ." - Forum");
+        die;
+    }
+}

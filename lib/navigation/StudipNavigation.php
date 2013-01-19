@@ -107,7 +107,6 @@ class StudipNavigation extends Navigation
             $navigation->addSubNavigation('general', new Navigation(_('Allgemeines'), 'dispatch.php/settings/general'));
             $navigation->addSubNavigation('privacy', new Navigation(_('Privatsphäre'), 'dispatch.php/settings/privacy'));
             $navigation->addSubNavigation('messaging', new Navigation(_('Nachrichten'), 'dispatch.php/settings/messaging'));
-            $navigation->addSubNavigation('forum', new Navigation(_('Forum'), 'dispatch.php/settings/forum'));
 
             if (get_config('CALENDAR_ENABLE')) {
                 $navigation->addSubNavigation('calendar_new', new Navigation(_('Terminkalender'), 'dispatch.php/settings/calendar'));

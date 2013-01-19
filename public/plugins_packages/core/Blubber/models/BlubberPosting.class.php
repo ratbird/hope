@@ -9,7 +9,6 @@
  */
 
 require_once 'lib/classes/SimpleORMap.class.php';
-require_once 'lib/forum.inc.php';
 
 class BlubberPosting extends SimpleORMap {
 

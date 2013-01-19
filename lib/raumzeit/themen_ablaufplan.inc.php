@@ -66,7 +66,8 @@ function themen_saveAll() {
     foreach ($changeTitle as $key => $val) {    // we use the changeTitle-array for running through all themes ($key = issue_id and $val = title)
 
         unset($termin);
-        if (($changeTitle[$key] != '') || ($changeDescription[$key] != '') || ($changeForum[$key] == 'on') || ($changeFile[$key] == 'on') || Request::quoted('createAllFileFolders') == 'on' || Request::quoted('createAllForumFolders') == 'on') {
+        if (($changeTitle[$key] != '') || ($changeDescription[$key] != '') || ($changeForum[$key] == 'on') || ($changeFile[$key] == 'on') 
+                || Request::quoted('createAllFileFolders') == 'on' || Request::quoted('createAllForumFolders') == 'on') {
             $termin = new SingleDate($key);
             $issue_ids = $termin->getIssueIDs();
             if (sizeof($issue_ids) == 0) {
@@ -91,7 +92,7 @@ function themen_saveAll() {
 
                 if (    ($themen[$cur_issue_id]->getTitle() != $val) ||
                         ($themen[$cur_issue_id]->getDescription() != $changeDescription[$key]) ||
-                        ($themen[$cur_issue_id]->hasForum() != $forumValue) ||
+                        $forumValue ||
                         ($themen[$cur_issue_id]->hasFile() != $fileValue)
                      ) {
                     $msg .= $termin->toString() .'<br>';

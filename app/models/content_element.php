@@ -35,58 +35,6 @@ abstract class StudipContentElement {
     }
 }
 
-class StudipContentElementForum extends StudipContentElement {
-    
-    function restore(){
-        $query = "SELECT * FROM px_topics WHERE topic_id = ?";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($this->id));
-        $data = $statement->fetch(PDO::FETCH_ASSOC);
-
-        if($data){
-            $this->data = $data;
-            $this->id = $data['topic_id'];
-        } else {
-            $this->id = null;
-        }
-        return $this->exists();
-    }
-    
-    function isAccessible($user_id){
-        if($this->exists()){
-            $type = get_object_type($this->data['Seminar_id']);
-            if($type == 'sem'){
-                $seminar = Seminar::GetInstance($this->data['Seminar_id']);
-                if ($seminar->isPublic()) {
-                    return true;
-                } else if ($seminar->read_level == 1){
-                    return $user_id && $user_id != 'nobody';
-                } else {
-                    return is_object($GLOBALS['perm']) && $GLOBALS['perm']->have_studip_perm('user', $this->data['Seminar_id'], $user_id);
-                }
-            } else {
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    function getAbstract(){
-        return $this->data['description'];
-    }
-    
-    function getTitle(){
-        return $this->data['name'];
-    }
-    
-    function getAbstractHtml(){
-        include_once 'lib/forum.inc.php';
-        $this->data['id'] = $this->id;
-        return formatready(forum_parse_edit($this->getAbstract(), true)).
-            "<div>".forum_get_buttons($this->data)."</div>";
-    }
-}
-
 class StudipContentElementMessage extends StudipContentElement {
     
     function restore(){

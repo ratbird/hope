@@ -218,10 +218,6 @@ $queries[] = array(
                   GROUP BY user_id",
 );
 $queries[] = array(
-    'desc'  => _("Anzahl der Forenpostings"),
-    'query' => "SELECT COUNT(*) FROM px_topics WHERE user_id = ? GROUP BY user_id",
-);
-$queries[] = array(
     'desc'  => _("Anzahl der Ankündigungen"),
     'query' => "SELECT COUNT(*) FROM news WHERE user_id = ? GROUP BY user_id",
 );
@@ -261,6 +257,17 @@ $queries[] = array(
                   GROUP BY user_id",
     'details' => "details=files",
 );
+
+
+foreach (PluginEngine::getPlugins('ForumModule') as $plugin) {
+    $table = $plugin->getEntryTableInfo();
+    $queries[] = array(
+        'desc'  => $plugin->getPluginName() .' - ' . _("Anzahl der Postings"),
+        'query' => 'SELECT COUNT(*) FROM `'. $table['table'] .'` 
+            WHERE `'. $table['user_id'] .'` = ?
+            GROUP BY `'. $table['user_id'] .'`'
+    );
+}
 
 // Evaluate queries
 foreach ($queries as $index => $query) {

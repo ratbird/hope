@@ -37,7 +37,6 @@ require_once 'lib/classes/SemesterData.class.php';
 require_once 'lib/classes/StudipScmEntry.class.php';
 require_once 'lib/classes/StudipDocumentTree.class.php';
 require_once 'lib/user_visible.inc.php';
-require_once 'forum.inc.php';
 
 // Liefert den dump des Seminars
 function dump_sem($sem_id, $print_view = false)
@@ -200,10 +199,11 @@ function dump_sem($sem_id, $print_view = false)
     $count = $statement->fetchColumn();
     $dumpRow(_('Anzahl der angemeldeten TeilnehmerInnen:'), $count);
 
-    $query = "SELECT COUNT(*) FROM px_topics WHERE Seminar_id = ?";
-    $statement = DBManager::get()->prepare($query);
-    $statement->execute(array($sem_id));
-    $count = $statement->fetchColumn();
+    // number of postings for all forum-modules in this seminar
+    $count = 0;
+    foreach (PluginEngine::getPlugins('ForumModule') as $plugin) {
+        $count += $plugin->getNumberOfPostingsForSeminar($sem_id);
+    }
     $dumpRow(_('Forenbeiträge:'), $count);
 
     if ($Modules['documents']) {
@@ -331,9 +331,8 @@ function dump_sem($sem_id, $print_view = false)
         // seminar with a specific status
         $ext_vis_query = get_ext_vis_query('seminar_user');
         $query = "SELECT user_id, {$_fullname_sql['full']} AS fullname,
-                         COUNT(topic_id) AS doll, {$ext_vis_query} AS user_is_visible
+                         {$ext_vis_query} AS user_is_visible
                     FROM seminar_user
-                    LEFT JOIN px_topics USING (user_id,Seminar_id)
                     LEFT JOIN auth_user_md5 USING (user_id)
                     LEFT JOIN user_info USING (user_id)
                     WHERE Seminar_id = ? AND status = ?
@@ -362,11 +361,16 @@ function dump_sem($sem_id, $print_view = false)
                     $documents_statement->execute(array($sem_id, $user['user_id']));
                     $count = $documents_statement->fetchColumn() ?: 0;
                     $documents_statement->closeCursor();
+                    
+                    // get number of postings for this user from all forum-modules
+                    $postings = 0;
+                    foreach (PluginEngine::getPlugins('ForumModule') as $plugin) {
+                        $postings += $plugin->getNumberOfPostingsForUser($user['user_id']);
+                    }
 
                     $dump .= sprintf('<tr><td>%s</td><td align="center">%u</td><td align="center">%u</td></tr>' . "\n",
                                      $user['user_is_visible'] ? htmlReady($user['fullname']) : _('(unsichtbareR NutzerIn)'),
-                                     $user['doll'],
-                                     $count);
+                                     $postings, $count);
                 } // eine Zeile zuende
 
                 $dump.= '</table>' . "\n";
@@ -499,82 +503,6 @@ function dumpDateTableRows($data)
 
 /////// die beiden Funktionen um das Forum zu exportieren
 
-function Export_Kids ($topic_id = 0, $level = 0)
-{
-    // stellt im Treeview alle Postings dar, die NICHT Thema sind
-    $dump = '';
-
-    $query = "SELECT topic_id, name, author, mkdate, description, anonymous
-              FROM px_topics
-              LEFT JOIN auth_user_md5 USING (user_id)
-              WHERE parent_id = ?
-              ORDER BY mkdate";
-    $statement = DBManager::get()->prepare($query);
-    $statement->execute(array($topic_id));
-    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-        if ($row['topic_id'] != $topic_id) {
-            $author = (get_config('FORUM_ANONYMOUS_POSTINGS') && $row['anonymous'])
-                    ? _('anonym')
-                    : $row['author'];
-            $dump .= sprintf('<tr><td class="blank"><hr><b>%s</b> %s %s %s %s</td></tr>'
-                            .'<tr><td class="blank">%s</td></tr>' . "\n",
-                             htmlReady($row['name']),
-                             _('von'),
-                             $author,
-                             _('am'),
-                             date('d.m.Y - H:i', $row['mkdate']),
-                             formatReady($row['description']));
-        }
-        $dump .= Export_Kids($row['topic_id'], $level + 1);
-    }
-    return $dump;
-}
-
-function Export_Topic ($sem_id)
-{
-    $query = "SELECT DISTINCT t.topic_id, t.name, t.description, t.author, t.anonymous,
-                     COUNT(*) AS count, MAX(s.chdate) AS last
-              FROM px_topics AS t
-              LEFT JOIN px_topics AS s USING (root_id)
-              WHERE t.topic_id = t.root_id AND t.Seminar_id = ?
-              GROUP by t.root_id
-              ORDER by t.mkdate";
-    $statement = DBManager::get()->prepare($query);
-    $statement->execute(array($sem_id));
-
-    $dump = '';
-
-    $count = 0;
-    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-        $author = (get_config('FORUM_ANONYMOUS_POSTINGS') && $row['anonymous'])
-                ? _('anonym')
-                : $row['author'];
-
-        $dump .= sprintf('<table class="blank" width="100%%" border="0" cellpadding="5" cellspacing="0">'
-                        .'<tr><td><h3>%s</h3> %s %s / <b>%u</b> / %s</td></tr>'
-                        .'<tr><td class="blank">%s</td></tr>',
-                         htmlReady($row['name']),
-                         _('von'),
-                         htmlReady($author),
-                         $row['count'] - 1,
-                         date("d.m.Y - H:i", $row['last']),
-                         formatReady(forum_parse_edit($row['description'], $row['anonymous'])));
-        $dump .= Export_Kids($row['topic_id']);
-        $dump .= '</table><br><br>';
-        
-        $count += 1;
-    }
-
-    if ($count == 0) {  // Das Forum ist leer
-        $text = _('Das Forum ist leer');
-        $dump ="<table width=\"100%\" border=0 cellpadding=0 cellspacing=0>".$text."</table>";
-    }
-
-    return $dump;
-}
-
-
-
 //Funktion zum archivieren eines Seminars, sollte in der Regel vor dem Loeschen ausgfuehrt werden.
 function in_archiv ($sem_id)
 {
@@ -662,7 +590,9 @@ function in_archiv ($sem_id)
     $dump = dump_sem($sem_id);
 
     //Forumdump holen
-    $forumdump = export_topic($sem_id);
+    foreach (PluginEngine::getPlugins('ForumModule') as $plugin) {
+        $forumdump .= $plugin->getDump($sem_id);
+    }
 
     // Wikidump holen
     $wikidump = getAllWikiPages($sem_id, $name, FALSE);

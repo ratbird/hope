@@ -285,7 +285,6 @@ $themen =& $sem->getIssues(true);   // read again, so we have the actual sort or
                     if (($_SESSION['issue_open'][$themen_id] && Request::option('open_close_id') == $themen_id) || Request::option('openAll')) {
                         $tpl['submit_name'] = 'changeIssue';
                         $tpl['theme_description'] = htmlReady($thema->getDescription());
-                        $tpl['forumEntry'] = ($thema->hasForum()) ? SELECTED : NOT_SELECTED;
                         $tpl['fileEntry'] = ($thema->hasFile()) ? SELECTED : NOT_SELECTED;
                         include('lib/raumzeit/templates/thema.tpl');
                     } else {

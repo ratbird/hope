@@ -20,7 +20,6 @@ require_once 'lib/classes/StudipScmEntry.class.php';
 require_once 'lib/modules/CoreAdmin.class.php';
 require_once 'lib/modules/CoreStudygroupAdmin.class.php';
 require_once 'lib/modules/CoreOverview.class.php';
-require_once 'lib/modules/CoreForum.class.php';
 require_once 'lib/modules/CoreParticipants.class.php';
 require_once 'lib/modules/CoreStudygroupParticipants.class.php';
 require_once 'lib/modules/CoreDocuments.class.php';

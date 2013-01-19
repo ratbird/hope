@@ -250,15 +250,6 @@ class ModulesNotification extends Modules {
     function getModuleText ($m_name, $range_id, $r_data, $range) {
         $text = '';
         switch ($m_name) {
-            case 'forum' :
-                if ($r_data['neuepostings'] > 1) {
-                    $text = sprintf(_("%s neue Beiträge im Forum:"), $r_data['neuepostings']);
-                } else if ($r_data['neuepostings'] > 0) {
-                    $text = _("1 neuer Beitrag im Forum:");
-                }
-                $redirect = '&redirect_to=forum.php&view=neue&sort=age';
-                $icon = "icons/16/blue/forum.png";
-                break;
             case 'participants' :
                 if ($r_data['new_accepted_participants'] > 1) {
                     $text = sprintf(_("%s neue vorläufige TeilnehmerInnen, "), $r_data['newparticipants']);

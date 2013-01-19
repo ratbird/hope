@@ -39,10 +39,9 @@ class IssueDB {
 
     function restoreIssue($issue_id)
     {
-        $query = "SELECT themen.*, folder.range_id, folder.folder_id, px_topics.topic_id
+        $query = "SELECT themen.*, folder.range_id, folder.folder_id
                   FROM themen
                   LEFT JOIN folder ON (range_id = issue_id)
-                  LEFT JOIN px_topics ON (px_topics.topic_id = issue_id)
                   WHERE issue_id = ?";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($issue_id));
@@ -79,38 +78,6 @@ class IssueDB {
             }
         } else {
             //$db->query("DELETE FROM folder WHERE range_id = '{$issue->issue_id}'");
-        }
-
-        if ($issue->forum) {
-            $query = "SELECT 1 FROM px_topics WHERE topic_id = ?";
-            $statement = DBManager::get()->prepare($query);
-            $statement->execute(array($issue->issue_id));
-            $check = $statement->fetchColumn();
-
-            if ($check) {
-                $query = "UPDATE px_topics SET name = ? WHERE topic_id = ?";
-                $statement = DBManager::get()->prepare($query);
-                $statement->execute(array(
-                    $issue->toString(),
-                    $issue->issue_id
-                ));
-            } else {
-                $query = "INSERT INTO px_topics
-                            (topic_id, root_id, parent_id, name, description, mkdate, chdate, author, Seminar_id, user_id)
-                          VALUES (?, ?, '0', ?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), ?, ?, ?)";
-                $statement = DBManager::get()->prepare($query);
-                $statement->execute(array(
-                    $issue->issue_id,
-                    $issue->issue_id,
-                    $issue->toString(),
-                    _('Themenbezogene Diskussionen'),
-                    get_fullname($user->id),
-                    $issue->seminar_id,
-                    $user->id
-                ));
-            }
-        } else {
-            //$db->query("DELETE FROM px_topics WHERE topic_id = '{$issue->issue_id}'");
         }
         
         if ($issue->new) {

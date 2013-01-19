@@ -48,10 +48,10 @@ class Issue {
     var $chdate = 0;
     var $priority = 0;
     var $file = FALSE;
-    var $forum = FALSE;
     var $folder_id = '';
     var $messages = array();
     var $new = false;
+    var $hasForum = false;
 
     /**
      * Constructor for class Issue
@@ -153,6 +153,17 @@ class Issue {
             $this->setTitle(_("Ohne Titel"));
         }
 
+        if ($this->hasForum) {
+            $sem = Seminar::getInstance($this->seminar_id);
+            $forum_slot = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$sem->status]['class']]->getSlotModule('forum');
+            
+            foreach (PluginEngine::getPlugins('ForumModule') as $plugin) {
+                if (get_class($plugin) == $forum_slot) {
+                    $plugin->setThreadForIssue($this->issue_id, $this->title, $this->description);
+                }
+            }
+        }
+        
         IssueDB::storeIssue($this);
         $this->new = false;
     }
@@ -195,20 +206,26 @@ class Issue {
         $this->chdate = $data['chdate'];
         $this->priority = $data['priority'];
         $this->file = ($data['range_id'] == '') ? FALSE : TRUE;
-        $this->forum = ($data['topic_id'] == '') ? FALSE : TRUE;
         if ($this->file) {
             $this->folder_id = $data['folder_id'];      
         }
         $this->new = false;
+
+        // check, if there is a forums-connection
+        $sem = Seminar::getInstance($this->seminar_id);
+        $forum_slot = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$sem->status]['class']]->getSlotModule('forum');
+            
+        foreach (PluginEngine::getPlugins('ForumModule') as $plugin) {
+            if (get_class($plugin) == $forum_slot) {
+                $this->hasForum = $plugin->getLinkToThread($this->issue_id) ? true : false;
+            }
+        }
+
         $this->readSingleDates();
     }
 
     function toString() {
         return $this->title;
-    }
-
-    function hasForum() {
-        return $this->forum;
     }
 
     function getFolderID() {
@@ -235,14 +252,24 @@ class Issue {
     }
 
     function setForum($newForumValue) {
-        if ($newForumValue != $this->forum) {
-            if ($newForumValue) {
-                $this->messages[] = sprintf(_("Ordner im Forum für das Thema \"%s\" angelegt."),$this->toString());
-            } else {
-                //$this->messages[] = sprintf(_("Ordner im Forum für das Thema \"%s\" gelöscht!"),$this->toString());
+        // only do something, if we enable the link to a thread in a forum
+        if ($newForumValue) {
+
+            // find the ForumModule which takes the role of the CoreForum in the current Seminar
+            $sem = Seminar::getInstance($this->seminar_id);
+            $forum_slot = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$sem->status]['class']]->getSlotModule('forum');
+            
+            foreach (PluginEngine::getPlugins('ForumModule') as $plugin) {
+                if (get_class($plugin) == $forum_slot) {
+                    
+                    // only link if there is none yet
+                    if (!$plugin->getLinkToThread($this->issue_id)) {
+                        $plugin->setThreadForIssue($this->issue_id, $this->title, $this->description);
+                        $this->messages[] = sprintf(_("Ordner im Forum für das Thema \"%s\" angelegt."), $this->toString());
+                    }
+                }
             }
         }
-        $this->forum = $newForumValue;
     }
 
     function getMessages() {

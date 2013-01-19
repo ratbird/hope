@@ -392,17 +392,35 @@ class SiteinfoMarkupEngine {
                 break;
             case "mostpostings":
                 $template->heading = _("die aktivsten Veranstaltungen (Postings der letzten zwei Wochen)");
-                $sql = " SELECT a.seminar_id,
-                                b.name AS display,
-                                count( a.seminar_id ) AS count
-                         FROM px_topics a
-                         INNER JOIN seminare b USING ( seminar_id )
-                         WHERE b.visible = 1
-                         AND a.mkdate > UNIX_TIMESTAMP( NOW( ) - INTERVAL 2 WEEK )
-                         GROUP BY a.seminar_id
-                         ORDER BY count DESC
-                         LIMIT 10 ";
+                $seminars = array();
+
+                // get TopTen of seminars from all ForumModules and add up the
+                // count for seminars with more than one active ForumModule
+                // to get a combined toplist
+                foreach (PluginEngine::getPlugins('ForumModule') as $plugin) {
+                    $new_seminars = $plugin->getTopTenSeminars();
+                    foreach ($new_seminars as $sem) {
+                        if (!isset($seminars[$sem['seminar_id']])) {
+                            $seminars[$sem['seminar_id']] = $sem;
+                        } else {
+                            $seminars[$sem['seminar_id']]['count'] += $sem['count'];
+                        }
+                    }
+                }
+                
+                // sort the seminars by the number of combined postings
+                usort($seminars, function($a, $b) {
+                    if ($a['count'] == $b['count']) {
+                        return 0;
+                    }
+                    return ($a['count'] > $b['count']) ? -1 : 1;
+                });
+  
+                // fill the template and returned the rendered code
+                $template->lines = $seminars;
                 $template->type = "seminar";
+
+                return $template->render();
                 break;
             case "mostvisitedhomepages":
                 $template->heading = _("die beliebtesten Profile (Besucher)");
@@ -458,9 +476,6 @@ class SiteinfoMarkupEngine {
         $indicator['user_autor'] = array("query" => "SELECT COUNT(*) FROM auth_user_md5 WHERE perms='autor'",
                                          "title" => _("registrierte Autoren"),
                                          "detail" => "");
-        $indicator['posting'] = array("query" => "SELECT COUNT(*) FROM px_topics",
-                                      "title" => _("Forenbeiträge"),
-                                      "detail" => "");
         $indicator['document'] = array("query" => "SELECT COUNT(*) FROM dokumente WHERE url = ''",
                                        "title" => _("Dokumente"),
                                        "detail" => "");
@@ -496,20 +511,35 @@ class SiteinfoMarkupEngine {
                                        "title" => _("Ressourcen-Objekte"),
                                        "detail" => _("von Stud.IP verwaltete Ressourcen wie Räume oder Geräte"),
                                        "constraint" => $RESOURCES_ENABLE);
-        if (in_array($key,array_keys($indicator))) {
-            if (!isset($indicator[$key]['constraint']) || $indicator[$key]['constraint']) {
-                $result = $this->db->query($indicator[$key]['query']);
-                $rows = $result->fetch(PDO::FETCH_NUM);
-                $template->title = $indicator[$key]['title'];
-                if ($indicator[$key]['detail']) {
-                    $template->detail = $indicator[$key]['detail'];
+        
+        if ($key == 'posting') {
+            $count = 0;
+
+            // sum up number of postings for all availabe ForumModules
+            foreach (PluginEngine::getPlugins('ForumModule') as $plugin) {
+                $count += $plugin->getNumberOfPostings();
+            }        
+            
+            $template->title  = _('Forenbeiträge');
+            $template->detail = _('Anzahl Beiträge aller verwendeten Foren');
+            $template->count = $count;
+        } else {
+            // iterate over the other indicators
+            if (in_array($key,array_keys($indicator))) {
+                if (!isset($indicator[$key]['constraint']) || $indicator[$key]['constraint']) {
+                    $result = $this->db->query($indicator[$key]['query']);
+                    $rows = $result->fetch(PDO::FETCH_NUM);
+                    $template->title = $indicator[$key]['title'];
+                    if ($indicator[$key]['detail']) {
+                        $template->detail = $indicator[$key]['detail'];
+                    }
+                    $template->count = $rows[0];
+                } else {
+                    return "";
                 }
-                $template->count = $rows[0];
             } else {
                 return "";
             }
-        } else {
-            return "";
         }
         return $template->render();
     }

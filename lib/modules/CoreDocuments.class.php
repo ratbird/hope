@@ -14,7 +14,7 @@ require_once 'lib/modules/StudipModule.class.php';
 class CoreDocuments implements StudipModule {
     
     function getIconNavigation($course_id, $last_visit, $user_id) {
-        $navigation = new Navigation(_('Dateibereich'), "seminar_main.php?auswahl=$course_id&redirect_to=forum.php&view=reset&sort=age");
+        $navigation = new Navigation(_('Dateibereich'), "seminar_main.php?auswahl=$course_id&redirect_to=folder.php");
         $navigation->setImage('icons/16/grey/forum.png');
 
         return $navigation;

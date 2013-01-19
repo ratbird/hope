@@ -39,7 +39,6 @@
 global $RELATIVE_PATH_ELEARNING_INTERFACE;
 
 require_once 'lib/functions.php';
-require_once ('lib/forum.inc.php');
 require_once ('config.inc.php');
 require_once ('lib/datei.inc.php');
 require_once ('lib/dates.inc.php');
@@ -124,43 +123,6 @@ class AdminModules extends ModulesNotification {
         $this->registered_modules["resources"]["msg_activate"] = _("Sie können die Ressourcenseite der Studiengruppen jederzeit aktivieren.");
         $this->registered_modules["resources"]["msg_deactivate"] = _("Sie können die Ressourcenseite der Studiengruppen jederzeit deaktivieren.");
     }
-    
-    function getForumExistingItems($range_id) { //getModuleForumExistingItems
-        $query = "SELECT COUNT(topic_id) FROM px_topics WHERE Seminar_id = ?";
-        $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($range_id));
-        return $statement->fetchColumn();
-    }
-
-    /*function moduleForumDeactivate($range_id) {
-        $db = DBManager::get();
-        
-        // Prepare "delete topic" statement
-        $query = "DELETE FROM px_topics WHERE topic_id = ?";
-        $delete = $db->prepare($query);
-
-        // Prepare "update termine" statement
-        $query = "UPDATE termine SET topic_id = NULL WHERE topic_id = ?";
-        $update = $db->prepare($query);
-        
-        // Load all topic ids for range_id
-        $query = "SELECT topic_id FROM px_topics WHERE Seminar_id = ?";
-        $statement = $db->prepare($query);
-        $statement->execute(array($range_id));        
-        while ($topic_id = $statement->fetchColumn()) {
-            $delete->execute(array($topic_id));
-            $update->execute(array($topic_id));
-        }
-    }*/
-    
-    function moduleForumActivate($range_id) {
-        global $user;
-        if ($this->getForumExistingItems($range_id)) {
-            return;
-        }
-        //create a default folder
-        CreateTopic(_("Allgemeine Diskussionen"), get_fullname($user->id), _("Hier ist Raum für allgemeine Diskussionen"), 0, 0, $range_id);
-    }   
     
     function getDocumentsExistingItems($range_id) { //getModuleDocumentsExistingItems
         $query = "SELECT COUNT(dokument_id) FROM dokumente WHERE seminar_id = ?";

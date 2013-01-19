@@ -49,18 +49,7 @@ function get_my_sem_values(&$my_sem) {
     }
 
     $my_semids = array_keys($my_sem);
-// Postings
-    $query = "SELECT Seminar_id, COUNT(*) AS count
-              FROM px_topics
-              WHERE Seminar_id IN (?)
-              GROUP BY Seminar_id";
-    $statement = DBManager::get()->prepare($query);
-    $statement->execute(array($my_semids));
-    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-        $nav = new Navigation('forum', 'forum.php?view=reset');
-        $nav->setImage('icons/16/grey/forum.png', array('title' => sprintf(_('%s Postings'), $row['count'])));
-        $my_sem[$row['Seminar_id']]['forum'] = $nav;
-    }
+
 //dokumente
     $query = "SELECT seminar_id, COUNT(*) AS count
               FROM dokumente

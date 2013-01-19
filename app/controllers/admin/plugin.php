@@ -217,10 +217,15 @@ class Admin_PluginController extends AuthenticatedController
     {
         $plugin_manager = PluginManager::getInstance();
 
+        $plugin = $plugin_manager->getPluginInfoById($plugin_id);
+
         $this->plugins       = $plugin_manager->getPluginInfos();
         $this->plugin_types  = $this->plugin_admin->getPluginTypes();
         $this->update_info   = $this->get_update_info($this->plugins);
-        $this->delete_plugin = $this->plugins[$plugin_id];
+
+        if (!$plugin['core']) {
+            $this->delete_plugin = $this->plugins[$plugin_id];
+        }
 
         $this->render_action('index');
     }
@@ -238,7 +243,7 @@ class Admin_PluginController extends AuthenticatedController
 
         $this->check_ticket();
 
-        if (isset($plugin)) {
+        if (isset($plugin) && !$plugin['core']) {
             $this->plugin_admin->uninstallPlugin($plugin);
         }
 

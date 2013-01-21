@@ -158,8 +158,7 @@ class Admin_Cronjobs_LogsController extends AuthenticatedController
      */
     public function schedule_action($schedule_id)
     {
-        $_SESSION['cronlog-filter'] = compact('schedule_id');
-        $this->redirect('admin/cronjobs/logs');
+        $this->redirect('admin/cronjobs/filter?filter[schedule_id]=' . $schedule_id);
     }
 
     /**
@@ -169,8 +168,7 @@ class Admin_Cronjobs_LogsController extends AuthenticatedController
      */
     public function task_action($task_id)
     {
-        $_SESSION['cronlog-filter'] = compact('task_id');
-        $this->redirect('admin/cronjobs/logs');
+        $this->redirect('admin/cronjobs/filter?filter[task_id]=' . $task_id);
     }
 
     /**

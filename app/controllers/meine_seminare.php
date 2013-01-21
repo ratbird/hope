@@ -52,7 +52,7 @@ class MeineSeminareController extends AuthenticatedController
         $forced_grouping     = get_config('MY_COURSES_FORCE_GROUPING');
         $no_grouping_allowed = ($forced_grouping == 'not_grouped' || !in_array($forced_grouping, getValidGroupingFields()));
 
-        $group_field  = $GLOBALS['user']->cfg->MY_COURSES_GROUPING;
+        $group_field  = $GLOBALS['user']->cfg->MY_COURSES_GROUPING ?: $forced_grouping;
         $_my_sem_open = $GLOBALS['user']->cfg->MY_COURSES_OPEN_GROUPS;
 
         $groups = array();

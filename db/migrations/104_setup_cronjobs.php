@@ -56,9 +56,9 @@ class SetupCronjobs extends Migration
 
         // Add config entries
         $query = "INSERT IGNORE INTO `config`
-                    (`config_id`, `field`, `value`, `is_default`, `type`,
-                     `range`, `mkdate`, `chdate`, `description`)
-                  VALUES (MD5(:field), :field, :value, 1, :type, 'global',
+                    (`config_id`, `field`, `value`, `is_default`, `type`, `range`, `section`,
+                     `mkdate`, `chdate`, `description`)
+                  VALUES (MD5(:field), :field, :value, 1, :type, 'global', 'global',
                           UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), :description)";
         $statement = DBManager::get()->prepare($query);
 

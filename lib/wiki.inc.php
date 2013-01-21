@@ -736,6 +736,7 @@ function listPages($mode, $sortby = NULL) {
             print($tdtail);
             print($tdheadleft.get_fullname($user_id,'full',TRUE).$tdtail."</tr>");
         }
+        echo '</tr></table>';
     }
     echo "</table><p>&nbsp;</p>";
     

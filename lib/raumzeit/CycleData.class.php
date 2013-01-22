@@ -27,7 +27,6 @@
 require_once 'lib/raumzeit/CycleDataDB.class.php';
 require_once 'lib/raumzeit/SingleDate.class.php';
 require_once 'lib/raumzeit/IssueDB.class.php';
-require_once 'lib/classes/SeminarCycleDate.class.php';
 
 /**
  * This class is subject to change, for now it wraps getter

@@ -203,7 +203,6 @@ if (Request::option('nrecurse_list'))
 
 //Create ClipBoard-Class, if needed
 if (($view == "search") || ($view == "edit_request")) {
-    require_once ("lib/classes/ClipBoard.class.php");
 
     $clipObj =  ClipBoard::GetInstance("search");
     $clipFormObj =& $clipObj->getFormObject();

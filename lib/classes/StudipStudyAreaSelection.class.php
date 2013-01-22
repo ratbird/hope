@@ -12,9 +12,6 @@
  * the License, or (at your option) any later version.
  */
 
-require_once 'lib/classes/StudipStudyArea.class.php';
-
-
 /**
  * Objects of this class represent the state of the study area selection form.
  *
@@ -332,4 +329,3 @@ class StudipStudyAreaSelection {
         return array_reverse($trail, TRUE);
     }
 }
-

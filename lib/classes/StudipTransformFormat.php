@@ -10,8 +10,6 @@
  * @category    Stud.IP
  */
 
-require_once 'TextFormat.php';
-
 class StudipTransformFormat extends TextFormat
 {
     /**

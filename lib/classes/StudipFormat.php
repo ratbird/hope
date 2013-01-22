@@ -12,8 +12,6 @@
  * @category    Stud.IP
  */
 
-require_once 'TextFormat.php';
-
 class StudipFormat extends TextFormat
 {
     /**

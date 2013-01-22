@@ -158,7 +158,7 @@ class Admin_Cronjobs_LogsController extends AuthenticatedController
      */
     public function schedule_action($schedule_id)
     {
-        $this->redirect('admin/cronjobs/filter?filter[schedule_id]=' . $schedule_id);
+        $this->redirect('admin/cronjobs/logs/filter?filter[schedule_id]=' . $schedule_id);
     }
 
     /**
@@ -168,7 +168,7 @@ class Admin_Cronjobs_LogsController extends AuthenticatedController
      */
     public function task_action($task_id)
     {
-        $this->redirect('admin/cronjobs/filter?filter[task_id]=' . $task_id);
+        $this->redirect('admin/cronjobs/logs/filter?filter[task_id]=' . $task_id);
     }
 
     /**

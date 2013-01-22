@@ -13,7 +13,6 @@
  * the License, or (at your option) any later version.
  */
 
-require_once 'StudipCache.class.php';
 require_once 'StudipNullCache.class.php';
 require_once 'StudipFileCache.class.php';
 
@@ -232,4 +231,3 @@ class StudipCacheFactory {
                : $reflection_class->newInstance();
     }
 }
-

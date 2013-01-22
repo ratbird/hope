@@ -154,7 +154,6 @@ require_once 'lib/msg.inc.php';
 require_once('lib/language.inc.php');
 require_once('lib/classes/auth_plugins/StudipAuthAbstract.class.php');
 require_once('lib/classes/UserConfig.class.php');
-require_once 'lib/classes/User.class.php';
 
 //Besser hier globale Variablen definieren...
 $GLOBALS['_fullname_sql'] = array();

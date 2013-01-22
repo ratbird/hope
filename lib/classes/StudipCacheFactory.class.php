@@ -14,7 +14,6 @@
  */
 
 require_once 'StudipNullCache.class.php';
-require_once 'StudipFileCache.class.php';
 
 /**
  * This factory retrieves the instance of StudipCache configured for use in

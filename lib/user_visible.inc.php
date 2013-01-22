@@ -23,7 +23,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 require_once 'functions.php';
-require_once 'lib/classes/UserDomain.php';
 
 // Define constants for visibility states.
 define("VISIBILITY_ME", 1);

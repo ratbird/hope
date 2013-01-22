@@ -52,7 +52,6 @@ require_once 'lib/functions.php';   //basale Funktionen
 require_once('lib/visual.inc.php'); //Darstellungsfunktionen
 require_once('lib/messaging.inc.php');  //Nachrichtenfunktionen
 require_once('lib/admission.inc.php');  //load functions from admission system
-require_once('lib/classes/UserDomain.php'); // Nutzerdomänen
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 require_once 'lib/admin_search.inc.php';

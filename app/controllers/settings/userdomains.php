@@ -28,8 +28,6 @@ class Settings_UserdomainsController extends Settings_SettingsController
     {
         parent::before_filter($action, $args);
 
-        require_once 'lib/classes/UserDomain.php';
-
         PageLayout::setHelpKeyword('Basis.HomepageNutzerdomänen');
         PageLayout::setTitle(_('Nutzerdomänen bearbeiten'));
         Navigation::activateItem('/profile/edit/userdomains');

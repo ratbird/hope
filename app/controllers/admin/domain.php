@@ -17,7 +17,6 @@
 //Imports
 require_once 'lib/functions.php';
 require_once 'lib/visual.inc.php';
-require_once 'lib/classes/UserDomain.php';
 require_once 'app/controllers/authenticated_controller.php';
 
 class Admin_DomainController extends AuthenticatedController

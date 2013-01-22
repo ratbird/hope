@@ -12,7 +12,7 @@
     <dd><?= date('d.m.Y H:i:s', $log->executed) ?></dd>
 
     <dt><?= _('Ausführungsdauer') ?></dt>
-    <dd><?= number_format($log->duration, 6, ',', '.') ?></dd>
+    <dd><?= number_format($log->duration, 6, ',', '.') ?> <?= _('Sekunden') ?></dd>
 
 <? if (!empty($log->output)): ?>
     <dt><?= _('Ausgabe') ?></dt>

@@ -524,19 +524,15 @@ class ForumEntry {
 
                 // purpose of the following query is to retrieve the threads
                 // for an area ordered by the mkdate of their latest posting
-                $stmt = DBManager::get()->prepare("SELECT fe.topic_id as en_topic_id,
-                        IF (
+                $stmt = DBManager::get()->prepare("SELECT
+                        IFNULL (
                             (SELECT MAX(f1.mkdate) FROM forum_entries as f1
-                                WHERE fe.seminar_id = :seminar_id
-                                AND f1.lft > fe.lft AND f1.rgt < fe.rgt) IS NULL,
-                            fe.mkdate, (SELECT MAX(f1.mkdate)
-                                FROM forum_entries as f1
-                                WHERE fe.seminar_id = :seminar_id
-                                    AND f1.lft > fe.lft AND f1.rgt < fe.rgt)
-                            ) as en_mkdate, f2.*, IF(ou.topic_id IS NOT NULL, 'fav', NULL) as fav
+                                WHERE f1.seminar_id = :seminar_id
+                                AND f1.lft > fe.lft AND f1.rgt < fe.rgt),
+                            fe.mkdate
+                            ) as en_mkdate, fe.*, IF(ou.topic_id IS NOT NULL, 'fav', NULL) as fav
                     FROM forum_entries AS fe
-                    LEFT JOIN forum_entries f2 USING (topic_id)
-                    LEFT JOIN forum_favorites as ou ON (ou.topic_id = f2.topic_id AND ou.user_id = :user_id)
+                    LEFT JOIN forum_favorites as ou ON (ou.topic_id = fe.topic_id AND ou.user_id = :user_id)
                     WHERE fe.seminar_id = :seminar_id AND fe.lft > :left
                         AND fe.rgt < :right AND fe.depth = 2
                     ORDER BY en_mkdate DESC

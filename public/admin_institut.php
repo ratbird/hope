@@ -62,7 +62,6 @@ require_once 'lib/classes/Modules.class.php';
 require_once 'lib/classes/DataFieldEntry.class.php';
 require_once 'lib/classes/StudipLitList.class.php';
 require_once 'lib/classes/StudipLitSearch.class.php';
-require_once 'lib/classes/StudipNews.class.php';
 require_once 'lib/log_events.inc.php';
 
 if (get_config('RESOURCES_ENABLE')) {

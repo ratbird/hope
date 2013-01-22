@@ -26,7 +26,6 @@ require_once 'lib/functions.php';
 require_once 'lib/visual.inc.php';
 require_once 'lib/language.inc.php';
 require_once 'lib/object.inc.php';
-require_once 'lib/classes/StudipNews.class.php';
 require_once 'lib/classes/Seminar.class.php';
 
 /**

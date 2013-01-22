@@ -34,7 +34,6 @@ require_once 'lib/messaging.inc.php';   // remove messages send or recieved by u
 require_once 'lib/contact.inc.php'; // remove user from adressbooks
 require_once 'lib/classes/DataFieldEntry.class.php';    // remove extra data of user
 require_once 'lib/classes/auth_plugins/StudipAuthAbstract.class.php';
-require_once 'lib/classes/StudipNews.class.php';
 require_once 'lib/object.inc.php';
 require_once 'lib/log_events.inc.php';  // Event logging
 require_once 'app/models/studygroup.php';

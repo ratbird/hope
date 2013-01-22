@@ -37,7 +37,6 @@ require_once('lib/statusgruppe.inc.php'); //Enthaelt Funktionen fuer Statusgrupp
 require_once('lib/log_events.inc.php'); // Logging
 require_once('lib/classes/DataFieldEntry.class.php'); //Enthaelt Funktionen fuer Statusgruppen
 require_once('lib/classes/StudipLitList.class.php');
-require_once('lib/classes/StudipNews.class.php');
 require_once ($RELATIVE_PATH_ELEARNING_INTERFACE . "/ObjectConnections.class.php");
 require_once ($RELATIVE_PATH_ELEARNING_INTERFACE . "/ELearningUtils.class.php");
 require_once 'lib/classes/Seminar.class.php';

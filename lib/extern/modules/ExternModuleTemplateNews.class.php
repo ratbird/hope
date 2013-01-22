@@ -40,7 +40,6 @@
 
 require_once($GLOBALS['RELATIVE_PATH_EXTERN'].'/lib/ExternModule.class.php');
 require_once($GLOBALS['RELATIVE_PATH_EXTERN'].'/views/extern_html_templates.inc.php');
-require_once('lib/classes/StudipNews.class.php');
 require_once('lib/visual.inc.php');
 require_once('lib/user_visible.inc.php');
 require_once('lib/statusgruppe.inc.php');

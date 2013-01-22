@@ -33,7 +33,6 @@ namespace Studip {
 // use default namespace for the remaining lines
 namespace {
 
-require_once 'lib/classes/SkipLinks.php';
 require_once 'lib/deputies_functions.inc.php';
 require_once 'lib/functions.php';
 require_once 'lib/classes/URLHelper.php';

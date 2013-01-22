@@ -39,7 +39,6 @@ require_once 'lib/visual.inc.php';
 require_once 'lib/messaging.inc.php';
 require_once 'lib/contact.inc.php';
 require_once 'lib/user_visible.inc.php';
-require_once 'lib/classes/StudipKing.class.php';
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 

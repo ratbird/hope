@@ -29,7 +29,6 @@
 // +--------------------------------------------------------------------------+
 
 // Including all needed files
-require_once 'lib/classes/StudipObject.class.php';
 require_once 'lib/functions.php'; // <- für getHeaderLine
 
 /**

@@ -37,8 +37,6 @@ include ("lib/seminar_open.php"); // initialise Stud.IP-Session
 require_once ("lib/msg.inc.php");
 require_once ("lib/visual.inc.php"); // wir brauchen htmlReady
 require_once ("lib/functions.php");
-require_once ("lib/classes/StudipStmInstance.class.php");
-
 
 include ("lib/include/html_head.inc.php"); // Output of html head
 

@@ -37,7 +37,6 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-require_once 'lib/classes/StudipStmInstance.class.php';
 require_once 'lib/classes/Seminar.class.php';
 
 class StudipStmInstanceUsers

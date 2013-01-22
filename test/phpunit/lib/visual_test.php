@@ -12,6 +12,7 @@
 require_once dirname(__FILE__) . '/../bootstrap.php';
 require_once 'lib/visual.inc.php';
 require_once 'lib/classes/Config.class.php';
+require_once 'lib/classes/SmileyFormat.php';
 
 class VisualFunctionsTest extends PHPUnit_Framework_TestCase
 {

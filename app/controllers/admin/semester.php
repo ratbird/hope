@@ -17,7 +17,6 @@
  */
 require_once 'app/controllers/authenticated_controller.php';
 require_once 'lib/classes/SemesterHoliday.class.php';
-require_once 'lib/classes/Semester.class.php';
 
 class Admin_SemesterController extends AuthenticatedController
 {

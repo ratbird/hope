@@ -13,7 +13,6 @@
  * @category    Stud.IP
  */
 
-require_once 'lib/classes/Semester.class.php';
 
 class SemesterData
 {

@@ -13,7 +13,6 @@
  * @since       2.2
  */
 
-require_once 'lib/classes/Semester.class.php';
 
 /**
  * Singleton class for the admin search list. This is a singleton-class because

@@ -4,8 +4,6 @@
 # Lifter003: TODO
 # Lifter010: TODO
 
-//global $RELATIVE_PATH_CALENDAR;
-require_once("lib/classes/SemesterData.class.php");
 
 global $SEM_TYPE,$SEM_CLASS ;
 $semester = new SemesterData;

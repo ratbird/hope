@@ -41,7 +41,6 @@
 global $RELATIVE_PATH_CALENDAR;
 require_once('lib/classes/SemBrowse.class.php');
 require_once('lib/classes/DataFieldEntry.class.php');
-require_once('lib/classes/SemesterData.class.php');
 require_once('lib/dates.inc.php');
 
 

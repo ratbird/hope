@@ -15,7 +15,6 @@
  */
 require_once 'lib/dates.inc.php';
 require_once 'config.inc.php';
-require_once 'lib/classes/SemesterData.class.php';
 
 /**
  * collect the current seminars and concerning semesters from the archiv    

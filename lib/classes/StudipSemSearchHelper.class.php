@@ -26,7 +26,6 @@
 
 require_once('lib/classes/StudipSemTree.class.php');
 require_once('lib/classes/RangeTreeObject.class.php');
-require_once('lib/classes/SemesterData.class.php');
 
 class StudipSemSearchHelper {
     

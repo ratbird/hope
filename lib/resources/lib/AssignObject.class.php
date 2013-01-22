@@ -36,7 +36,6 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-require_once ("lib/classes/SemesterData.class.php");
 require_once $GLOBALS['RELATIVE_PATH_RESOURCES'] . "/lib/list_assign.inc.php";
 require_once $GLOBALS['RELATIVE_PATH_RESOURCES'] . "/resourcesFunc.inc.php";
 require_once('lib/log_events.inc.php');

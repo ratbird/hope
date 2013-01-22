@@ -20,7 +20,6 @@
 require_once 'app/controllers/authenticated_controller.php';
 
 // classes required for global-specification-settings
-require_once 'lib/classes/SemesterData.class.php';
 require_once 'lib/classes/searchtypes/SeminarSearch.class.php';
 require_once 'lib/classes/UserLookup.class.php';
 

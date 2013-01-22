@@ -17,7 +17,6 @@ require_once "config.inc.php";      //wir brauchen die Seminar-Typen
 require_once "lib/visual.inc.php";      //wir brauchen die Seminar-Typen
 require_once "lib/classes/SemBrowse.class.php";
 require_once "lib/classes/Seminar.class.php";
-require_once "lib/classes/SemesterData.class.php";
 require_once "lib/classes/AbstractStm.class.php";
 require_once "lib/classes/AbstractStmElement.class.php";
 require_once "lib/classes/InstanceStm.class.php";

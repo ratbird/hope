@@ -44,7 +44,6 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
     require_once 'lib/msg.inc.php';
     require_once 'lib/visual.inc.php';
     require_once 'lib/functions.php';
-    require_once 'lib/classes/SemesterData.class.php';
 
     $cssSw=new cssClassSwitcher;
     $semester=new SemesterData;

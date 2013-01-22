@@ -28,7 +28,6 @@ require_once 'lib/raumzeit/MetaDate.class.php';
 require_once 'lib/raumzeit/SeminarDB.class.php';
 require_once 'lib/raumzeit/Issue.class.php';
 require_once 'lib/raumzeit/SingleDate.class.php';
-require_once 'lib/classes/SemesterData.class.php';
 require_once 'lib/log_events.inc.php';
 require_once $GLOBALS['RELATIVE_PATH_RESOURCES'].'/lib/ResourceObject.class.php';
 require_once $GLOBALS['RELATIVE_PATH_RESOURCES'].'/lib/DeleteResourcesUser.class.php';

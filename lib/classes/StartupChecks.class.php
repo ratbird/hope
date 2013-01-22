@@ -38,7 +38,6 @@
 
 require_once 'lib/functions.php';
 require_once ("config.inc.php");
-require_once('lib/classes/SemesterData.class.php');
 
 class StartupChecks {
     var $registered_checks = array (

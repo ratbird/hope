@@ -49,7 +49,6 @@
 require_once ('lib/classes/StudipSemTree.class.php');
 require_once ('lib/classes/StudipRangeTree.class.php');
 require_once ('lib/classes/Modules.class.php');
-require_once ('lib/classes/SemesterData.class.php');
 require_once ('lib/visual.inc.php');
 require_once ('lib/object.inc.php');
 require_once ('lib/user_visible.inc.php');

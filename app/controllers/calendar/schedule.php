@@ -19,7 +19,6 @@ require_once 'app/controllers/authenticated_controller.php';
 require_once 'app/models/calendar/schedule.php';
 require_once 'lib/calendar/CalendarColumn.class.php';
 require_once 'lib/calendar/CalendarWeekView.class.php';
-require_once 'lib/classes/SemesterData.class.php';
 
 /**
  * Personal schedule controller.

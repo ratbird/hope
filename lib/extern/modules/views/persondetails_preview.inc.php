@@ -5,7 +5,6 @@
 # Lifter010: TODO
 
 require_once('config.inc.php');
-require_once('lib/classes/SemesterData.class.php');
 require_once('lib/visual.inc.php');
 require_once($GLOBALS["RELATIVE_PATH_EXTERN"]
         . "/lib/extern_functions.inc.php");

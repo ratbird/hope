@@ -40,7 +40,6 @@
 global $RELATIVE_PATH_EXTERN, $RELATIVE_PATH_CALENDAR;
 require_once($RELATIVE_PATH_EXTERN.'/lib/ExternElementMain.class.php');
 require_once('lib/dates.inc.php');
-require_once('lib/classes/SemesterData.class.php');
 
 class ExternElementMainLectures extends ExternElementMain {
 

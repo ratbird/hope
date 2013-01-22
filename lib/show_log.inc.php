@@ -158,7 +158,6 @@ function showlog_format_plugin($plugin_id) {
 }
 
 function showlog_format_semester($sem_start_time) {
-    require_once('lib/classes/SemesterData.class.php');
     $semester = new SemesterData();
     $all_semester = $semester->getAllSemesterData();
     foreach ($all_semester as $val) {

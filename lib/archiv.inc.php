@@ -31,7 +31,6 @@ require_once 'lib/visual.inc.php';
 require_once 'lib/functions.php';
 require_once 'lib/language.inc.php';
 require_once 'lib/classes/DataFieldEntry.class.php';
-require_once 'lib/classes/Modules.class.php';
 require_once 'lib/classes/StudipLitList.class.php';
 require_once 'lib/classes/StudipDocumentTree.class.php';
 require_once 'lib/user_visible.inc.php';

@@ -22,7 +22,6 @@
 
 require_once 'lib/functions.php';
 require_once 'lib/admission.inc.php';
-require_once 'lib/classes/Modules.class.php';
 require_once 'lib/dates.inc.php';
 require_once 'lib/raumzeit/MetaDate.class.php';
 require_once 'lib/raumzeit/SeminarDB.class.php';

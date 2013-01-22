@@ -87,7 +87,6 @@ require_once ('lib/visual.inc.php');            // htmlReady fuer die Veranstalt
 require_once ('lib/dates.inc.php');         // Semester-Namen fuer Admins
 require_once ('lib/admission.inc.php');     // Funktionen der Teilnehmerbegrenzung
 require_once ('lib/messaging.inc.php');
-require_once ('lib/classes/Modules.class.php'); // modul-config class
 require_once ('lib/classes/ModulesNotification.class.php');
 require_once ('lib/statusgruppe.inc.php');      // Funktionen für Statusgruppen
 require_once ('lib/object.inc.php');

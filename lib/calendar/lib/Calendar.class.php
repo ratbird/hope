@@ -25,7 +25,6 @@ require_once($RELATIVE_PATH_CALENDAR . '/lib/CalendarEvent.class.php');
 require_once($RELATIVE_PATH_CALENDAR . '/lib/SeminarCalendarEvent.class.php');
 require_once($RELATIVE_PATH_CALENDAR . '/lib/SingleCalendar.class.php');
 require_once($RELATIVE_PATH_CALENDAR . '/lib/GroupCalendar.class.php');
-require_once('lib/classes/Modules.class.php');
 
 class Calendar
 {

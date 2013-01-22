@@ -40,7 +40,6 @@ require_once ('lib/visual.inc.php');        //Aufbereitungsfunktionen
 require_once ('lib/dates.inc.php');     //Terminfunktionen
 require_once ('lib/log_events.inc.php');
 require_once ('lib/classes/StudipSemTreeSearch.class.php');
-require_once ('lib/classes/Modules.class.php');
 require_once ('lib/classes/DataFieldEntry.class.php');
 require_once ('lib/classes/SeminarCategories.class.php');
 require_once 'lib/classes/Seminar.class.php';

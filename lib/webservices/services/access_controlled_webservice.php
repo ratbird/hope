@@ -13,8 +13,6 @@
  * @category    Stud.IP
 */
 
-require_once 'lib/classes/WebserviceAccessRule.class.php';
-
 /**
  * Abstract class, implementing access check in the before_filter(). All
  * webservices classes should be derived from this.

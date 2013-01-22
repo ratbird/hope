@@ -1,6 +1,5 @@
 <?php
 require_once 'app/models/smiley_favorites.php';
-require_once 'lib/classes/SmileyFormat.php';
 
 /**
  * smiley.php - model class for a smiley

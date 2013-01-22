@@ -10,8 +10,6 @@
  * the License, or (at your option) any later version.
  */
 
-require_once 'lib/classes/StudipPDO.class.php';
-
 /**
  * This class provides a singleton instance that is used to manage PDO database
  * connections.

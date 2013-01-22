@@ -394,6 +394,9 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
     // Nasty place for an action but since we don't have a model, this is the
     // perfect place to grab all object ids
     if (Request::option('action') === 'tabularasa') {
+        // Extract timestamp from request
+        $timestamp = Request::int('timestamp', time());
+        
         // load plugins, so they have a chance to register themselves as observers
         PluginEngine::getPlugins('StandardPlugin');
 
@@ -402,21 +405,22 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
         $query = "INSERT INTO object_user_visits
                     (object_id, user_id, type, visitdate, last_visitdate)
                   (
-                    SELECT news_id, :user_id, 'news', UNIX_TIMESTAMP(), UNIX_TIMESTAMP()
+                    SELECT news_id, :user_id, 'news', :timestamp, 0
                     FROM news_range
                     WHERE range_id = :id
                   ) UNION (
-                    SELECT vote_id, :user_id, 'vote', UNIX_TIMESTAMP(), UNIX_TIMESTAMP()
+                    SELECT vote_id, :user_id, 'vote', :timestamp, 0
                     FROM vote
                     WHERE range_id = :id
                   ) UNION (
-                    SELECT eval_id, :user_id, 'eval', UNIX_TIMESTAMP(), UNIX_TIMESTAMP()
+                    SELECT eval_id, :user_id, 'eval', :timestamp, 0
                     FROM eval_range
                     WHERE range_id = :id
                   )
-                  ON DUPLICATE KEY UPDATE visitdate = UNIX_TIMESTAMP()";
+                  ON DUPLICATE KEY UPDATE last_visitdate = IFNULL(visitdate, 0), visitdate = :timestamp";
         $statement = DBManager::get()->prepare($query);
         $statement->bindValue('user_id', $GLOBALS['user']->id);
+        $statement->bindValue('timestamp', $timestamp);
 
         foreach ($my_obj as $id => $object) {
             // Update all activated modules
@@ -550,9 +554,10 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
 
     // Only display link to "mark all as read" if there is anything new
     if (count(array_filter($temp))) {
+        $url = URLHelper::getURL('?action=tabularasa&timestamp=' . time());
         $infobox[0]['eintrag'][] = array(
             'icon' => 'icons/16/black/refresh.png',
-            'text' => '<a href="' . URLHelper::getURL('?action=tabularasa') . '">'
+            'text' => '<a href="' . $url . '">'
                     . _('Alles als gelesen markieren')
                     . '</a>',
         );

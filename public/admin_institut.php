@@ -60,7 +60,6 @@ require_once 'lib/statusgruppe.inc.php';
 require_once 'lib/functions.php';
 require_once 'lib/classes/DataFieldEntry.class.php';
 require_once 'lib/classes/StudipLitList.class.php';
-require_once 'lib/classes/StudipLitSearch.class.php';
 require_once 'lib/log_events.inc.php';
 
 if (get_config('RESOURCES_ENABLE')) {

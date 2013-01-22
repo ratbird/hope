@@ -24,7 +24,6 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-require_once("lib/classes/StudipLitSearch.class.php");
 require_once("lib/classes/StudipLitList.class.php");
 
 DbView::addView('literatur');

@@ -33,7 +33,6 @@ require_once('lib/datei.inc.php'); // Funktionen zum Loeschen von Dokumenten
 require_once 'lib/functions.php';
 require_once('lib/visual.inc.php');
 require_once('lib/log_events.inc.php');
-require_once('lib/classes/Table.class.php');
 
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", 'user' => "Seminar_User"));
 $auth->login_if($auth->auth["uid"] == "nobody");

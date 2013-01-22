@@ -38,7 +38,6 @@ require_once("lib/dates.inc.php"); // Funktionen zum Loeschen von Terminen
 require_once("lib/datei.inc.php"); // Funktionen zum Loeschen von Dokumenten
 require_once("lib/functions.php");
 require_once("lib/visual.inc.php");
-require_once("lib/classes/Table.class.php");
 require_once 'lib/admin_search.inc.php';
 
 if (Request::submitted('aux_rule')) {

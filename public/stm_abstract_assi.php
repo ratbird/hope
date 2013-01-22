@@ -12,7 +12,6 @@ page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" =>
 include ("lib/seminar_open.php"); // initialise Stud.IP-Session
 
 require_once('lib/classes/StudipForm.class.php');
-require_once('lib/classes/Table.class.php');
 
 require_once("lib/classes/StmAbstractAssiVisualization.class.php");
 require_once("lib/classes/AbstractStm.class.php");

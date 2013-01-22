@@ -11,7 +11,6 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  */
-require_once 'lib/classes/SemesterHoliday.class.php';
 
 /**
  * old model class for table semester_holiday

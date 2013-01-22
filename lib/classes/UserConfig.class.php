@@ -15,8 +15,6 @@
  * @category    Stud.IP
 */
 
-require_once 'UserConfigEntry.class.php';
-
 class UserConfig extends Config
 {
     /**

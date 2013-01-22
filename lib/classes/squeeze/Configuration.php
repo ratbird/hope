@@ -11,8 +11,6 @@
 
 namespace Studip\Squeeze;
 
-require_once 'lib/classes/StudipCacheFactory.class.php';
-
 /**
  * This class is used to configure the Squeeze packager. You can
  * either use a yaml file or a plain PHP array.

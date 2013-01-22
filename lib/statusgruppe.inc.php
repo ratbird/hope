@@ -35,7 +35,6 @@
 // +---------------------------------------------------------------------------+
 
 require_once('lib/classes/DataFieldEntry.class.php');
-require_once('lib/classes/Statusgruppe.class.php');
 
 /**
 * built a not existing ID

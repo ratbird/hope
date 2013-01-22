@@ -33,7 +33,6 @@ class Settings_StatusgruppenController extends Settings_SettingsController
         parent::before_filter($action, $args);
 
         require_once 'lib/statusgruppe.inc.php';
-        require_once 'lib/classes/Statusgruppe.class.php';
 
         PageLayout::setHelpKeyword('Basis.HomepageUniversitäreDaten');
         PageLayout::setTitle(_('Einrichtungsdaten bearbeiten'));

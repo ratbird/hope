@@ -47,7 +47,6 @@ Navigation::activateItem('/tools/show_admission');
 
 require_once('config.inc.php'); //Grunddaten laden
 require_once('lib/visual.inc.php'); //htmlReady
-require_once('lib/classes/StudipAdmissionGroup.class.php');
 require_once('lib/admission.inc.php');
 
 function semadmission_get_data($seminare_condition){

@@ -175,7 +175,6 @@ require_once ('lib/dates.inc.php');
 require_once 'lib/msg.inc.php';
 require_once 'lib/functions.php';
 require_once 'lib/admission.inc.php';
-require_once 'lib/classes/StudipAdmissionGroup.class.php';
 require_once 'lib/classes/UserDomain.php';
 
 

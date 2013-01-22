@@ -13,8 +13,6 @@
  * @category    Stud.IP
  */
 
-require_once 'lib/classes/UserConfig.class.php';
-
 /**
  * The SkipLinks class provides utility functions to handle
  * the integration of skip links.

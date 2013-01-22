@@ -6,7 +6,6 @@
 
 
 require_once 'config.inc.php';
-require_once 'lib/classes/StudipFormat.php';
 require_once 'lib/classes/WikiFormat.php';
 require_once 'lib/classes/StudipTransformFormat.php';
 require_once 'lib/classes/cssClassSwitcher.inc.php';

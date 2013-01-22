@@ -12,8 +12,6 @@
  * @category    Stud.IP
  */
 
-require_once 'StudipFormat.php';
-
 class WikiFormat extends StudipFormat
 {
     private static $wiki_rules = array(

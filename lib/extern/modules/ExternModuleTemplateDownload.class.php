@@ -43,7 +43,6 @@ require_once($GLOBALS['RELATIVE_PATH_EXTERN'].'/views/extern_html_templates.inc.
 require_once('lib/visual.inc.php');
 require_once('lib/user_visible.inc.php');
 require_once('lib/statusgruppe.inc.php');
-require_once('lib/classes/StudipDocument.class.php');
 require_once('lib/classes/StudipDocumentTree.class.php');
 require_once('lib/datei.inc.php');
 require_once($GLOBALS['RELATIVE_PATH_EXTERN'].'/lib/extern_functions.inc.php');

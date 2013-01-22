@@ -184,7 +184,6 @@ class ShowToolsRequests
 
     function showRequestList() {
         global $_fullname_sql, $CANONICAL_RELATIVE_PATH_STUDIP;
-        require_once("lib/classes/ZebraTable.class.php");
 
         $license_to_kill = (get_config('RESOURCES_ALLOW_DELETE_REQUESTS') && getGlobalPerms($GLOBALS['user']->id) == 'admin');
         if ($license_to_kill){

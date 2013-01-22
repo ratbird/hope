@@ -13,8 +13,6 @@
  * the License, or (at your option) any later version.
  */
 
-require_once 'StudipNullCache.class.php';
-
 /**
  * This factory retrieves the instance of StudipCache configured for use in
  * this Stud.IP installation.

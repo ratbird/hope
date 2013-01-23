@@ -34,14 +34,14 @@
                     <?= ForumHelpers::highlight(ForumEntry::killFormat(implode(' &gt;&gt; ', ForumEntry::getFlatPathToPosting($post['topic_id']))), $highlight) ?>
                 <? else : ?>
                 <span data-topic-name="<?= $post['topic_id'] ?>">
-                    <?= ($post['name']) ? ForumHelpers::highlight($post['name'], $highlight) : ''?>
+                    <?= ($post['name_raw']) ? ForumHelpers::highlight($post['name_raw'], $highlight) : ''?>
                 </span>
                 <? endif ?>
                 </a>
             </span>
 
             <p class="author">
-                <? if ($is_new && !trim(ForumEntry::killFormat($post['name']))): ?>
+                <? if ($is_new && !trim(ForumEntry::killFormat($post['name_raw']))): ?>
                     <?= Assets::img('icons/16/red/new/forum.png', array(
                         'title' => _("Dieser Beitrag ist seit Ihrem letzten Besuch hinzugekommen.")
                     )) ?>

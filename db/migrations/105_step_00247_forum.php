@@ -53,15 +53,5 @@ class Step00247Forum extends Migration
 
     function down()
     {
-        $plugin_manager = PluginManager::getInstance();
-        $plugins = $plugin_manager->getPluginInfos();
-
-        foreach ($plugins as $plugin) {
-            if ('forum' == strtolower($plugin['name'])) {
-                $plugin_manager->unregisterPlugin($plugin['id']);
-                
-                DBManager::get()->exec("DELETE FROM `plugins_default_activations` WHERE pluginid = ". $plugin['id']);
-            }
-        }
     }
 }

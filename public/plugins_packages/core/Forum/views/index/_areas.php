@@ -77,6 +77,7 @@
             <img src="<?= $picturepath ?>/anfasser_48.png" class="handle" id="tutorMoveArea">
             <? endif ?>
 
+            <a href="<?= PluginEngine::getLink('coreforum/index/index/'. $jump_to_topic_id .'#'. $jump_to_topic_id) ?>">
             <? if ($entry['chdate'] >= $visitdate && $entry['owner_id'] != $GLOBALS['user']->id): ?>
                 <?= Assets::img('icons/16/red/new/forum.png', array(
                     'title' => _('Dieser Eintrag ist neu!'),
@@ -100,12 +101,13 @@
                     )) ?>
                 <? endif ?>
             <? endif ?>
+            </a>
         </td>
         <td class="areaentry">
             <div style="position: relative;">
                 <span class="areadata">
                     <a href="<?= PluginEngine::getLink('coreforum/index/index/'. $jump_to_topic_id .'#'. $jump_to_topic_id) ?>">
-                        <span class="areaname"><?= $entry['name'] ?></span>
+                        <span class="areaname"><?= htmlReady($entry['name_raw']) ?></span>
                         <br>
                     </a>
                     <div class="areacontent"><?= htmlReady(ForumEntry::killEdit($entry['content_raw'])) ?></div>

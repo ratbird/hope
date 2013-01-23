@@ -38,6 +38,7 @@
         <td class="areaborder"> </td>
 
         <td class="areaentry icon">
+            <a href="<?= PluginEngine::getLink('coreforum/index/index/'. $jump_to_topic_id .'#'. $jump_to_topic_id) ?>">
             <? if ($entry['chdate'] >= $visitdate && $entry['owner_id'] != $GLOBALS['user']->id): ?>
                 <? $jump_to_topic_id = $entry['topic_id'] ?>
                 <?= Assets::img('icons/16/red/new/forum.png', array(
@@ -56,12 +57,13 @@
                     )) ?>
                 <? endif ?>
             <? endif ?>
+            </a>
         </td>
 
         <td class="areaentry">
             <div style="position: relative;">
                 <a href="<?= PluginEngine::getLink('coreforum/index/index/'. $jump_to_topic_id .'#'. $jump_to_topic_id) ?>">
-                    <span class="areaname"><?= $entry['name'] ?></span>
+                    <span class="areaname"><?= htmlReady($entry['name_raw']) ?></span>
                 </a>
 
                 <span class="action-icons">

@@ -58,7 +58,7 @@ class ForumPerm {
         }
         
         // check the status and the passed permission
-        if ($status == 'dozent' && in_array($perm,
+        if (($status == 'dozent' || $status = 'tutor') && in_array($perm,
             words('edit_category add_category remove_category sort_category '
             . 'edit_area add_area remove_area sort_area '
             . 'search edit_entry add_entry remove_entry fav_entry like_entry move_thread '

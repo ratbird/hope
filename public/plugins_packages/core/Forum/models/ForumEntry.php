@@ -524,11 +524,12 @@ class ForumEntry {
 
                 // purpose of the following query is to retrieve the threads
                 // for an area ordered by the mkdate of their latest posting
-                $stmt = DBManager::get()->prepare("SELECT
+                $stmt = DBManager::get()->prepare("SELECT SQL_CALC_FOUND_ROWS
                         IFNULL (
                             (SELECT MAX(f1.mkdate) FROM forum_entries as f1
                                 WHERE f1.seminar_id = :seminar_id
-                                AND f1.lft > fe.lft AND f1.rgt < fe.rgt),
+                                AND f1.lft > fe.lft AND f1.rgt < fe.rgt
+                                AND f1.lft > :left  AND f1.rgt < :right ),
                             fe.mkdate
                             ) as en_mkdate, fe.*, IF(ou.topic_id IS NOT NULL, 'fav', NULL) as fav
                     FROM forum_entries AS fe
@@ -538,21 +539,17 @@ class ForumEntry {
                     ORDER BY en_mkdate DESC
                     LIMIT $start, ". ForumEntry::POSTINGS_PER_PAGE);
                 $stmt->bindParam(':seminar_id', $constraint['seminar_id']);
-                $stmt->bindParam(':left', $constraint['lft']);
-                $stmt->bindParam(':right', $constraint['rgt']);
+                $stmt->bindParam(':left', $constraint['lft'], PDO::PARAM_INT);
+                $stmt->bindParam(':right', $constraint['rgt'], PDO::PARAM_INT);
                 $stmt->bindParam(':user_id', $GLOBALS['user']->id);
                 $stmt->execute();
 
                 $postings = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+                $count = DBManager::get()->query("SELECT FOUND_ROWS()")->fetchColumn();
                 $postings = ForumEntry::parseEntries($postings);
                 $postings = ForumEntry::getLastPostings($postings);
 
-                $stmt_count = DBManager::get()->prepare("SELECT COUNT(*) FROM forum_entries
-                    WHERE seminar_id = ? AND lft > ? AND rgt < ? AND depth = 2");
-                $stmt_count->execute(array($constraint['seminar_id'], $constraint['lft'], $constraint['rgt']));
-
-                return array('list' => $postings, 'count' => $stmt_count->fetchColumn());
+                return array('list' => $postings, 'count' => $count);
                 break;
 
             case 'postings':

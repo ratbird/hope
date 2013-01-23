@@ -31,10 +31,10 @@
             <span data-show-topic="<?= $post['topic_id'] ?>">
                 <a href="<?= PluginEngine::getLink('coreforum/index/index/' . $post['topic_id'] .'?'. http_build_query(array('highlight' => $highlight)) ) ?>#<?= $post['topic_id'] ?>">
                 <? if ($show_full_path) : ?>
-                    <?= ForumHelpers::highlight(ForumEntry::killFormat(implode(' &gt;&gt; ', ForumEntry::getFlatPathToPosting($post['topic_id']))), $highlight) ?>
+                    <?= ForumHelpers::highlight(htmlReady(implode(' >> ', ForumEntry::getFlatPathToPosting($post['topic_id']))), $highlight) ?>
                 <? else : ?>
                 <span data-topic-name="<?= $post['topic_id'] ?>">
-                    <?= ($post['name_raw']) ? ForumHelpers::highlight($post['name_raw'], $highlight) : ''?>
+                    <?= ($post['name_raw']) ? ForumHelpers::highlight(htmlReady($post['name_raw']), $highlight) : ''?>
                 </span>
                 <? endif ?>
                 </a>

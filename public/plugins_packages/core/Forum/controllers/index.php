@@ -447,7 +447,7 @@ class IndexController extends StudipController
             $this->redirect(PluginEngine::getLink('coreforum/index/index/' . $topic_id .'#'. $topic_id));
         } else {
             $this->render_text(json_encode(array(
-                'name'    => formatReady($name),
+                'name'    => htmlReady($name),
                 'content' => formatReady($content)
             )));
         }

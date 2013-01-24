@@ -283,7 +283,7 @@ class StreamsController extends ApplicationController {
                 or ($thread['context_type'] === "private" && !$thread->isRelated())) {
             throw new AccessDeniedException("Kein Zugriff");
         }
-        echo studip_utf8encode(forum_kill_edit($posting['description']));
+        echo studip_utf8encode($posting['description']);
         $this->render_nothing();
     }
 

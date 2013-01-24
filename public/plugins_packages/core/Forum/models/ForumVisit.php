@@ -34,31 +34,23 @@ class ForumVisit {
             $visitdate = time() - ForumVisit::LAST_VISIT_MAX;
         }
 
-        $cache = StudipCacheFactory::getCache();
-        $cache_key = 'forum/count/'. $parent_id .'/'. $visitdate;
+        $constraints = ForumEntry::getConstraints($parent_id);
 
-        if (!$count = unserialize($cache->read($cache_key))) {
-            $constraints = ForumEntry::getConstraints($parent_id);
+        $stmt = DBManager::get()->prepare("SELECT COUNT(*) FROM forum_entries
+            WHERE lft >= :lft AND rgt <= :rgt AND user_id != :user_id
+                AND seminar_id = :seminar_id
+                AND topic_id != seminar_id
+                AND chdate > :lastvisit");
 
-            $stmt = DBManager::get()->prepare("SELECT COUNT(*) FROM forum_entries
-                WHERE lft >= :lft AND rgt <= :rgt AND user_id != :user_id
-                    AND seminar_id = :seminar_id
-                    AND topic_id != seminar_id
-                    AND chdate > :lastvisit");
-            
-            $stmt->bindParam(':user_id', $GLOBALS['user']->id);
-            $stmt->bindParam(':lft', $constraints['lft']);
-            $stmt->bindParam(':rgt', $constraints['rgt']);
-            $stmt->bindParam(':seminar_id', $constraints['seminar_id']);
-            $stmt->bindParam(':lastvisit', $visitdate);
-            
-            $stmt->execute();
-            
-            $count['count'] = $stmt->fetchColumn();
-            $cache->write($cache_key, serialize($count), 860000);
-        }
+        $stmt->bindParam(':user_id', $GLOBALS['user']->id);
+        $stmt->bindParam(':lft', $constraints['lft']);
+        $stmt->bindParam(':rgt', $constraints['rgt']);
+        $stmt->bindParam(':seminar_id', $constraints['seminar_id']);
+        $stmt->bindParam(':lastvisit', $visitdate);
 
-        return $count['count'];
+        $stmt->execute();
+            
+        return $stmt->fetchColumn();
     }
     
     static function setVisit($seminar_id) {

@@ -12,7 +12,7 @@
         <? endif ?>
     </td>
     <? endif ?>
-    
+
     <td width="1%" align="left" valign="top" bgcolor="<?=$tpl['aging_color']?>" class="<?=$tpl['class']?><?=($issue_open[$tpl['sd_id']] || $tpl['openall']) ? '3' : '2'?>" nowrap>
         <a href="<?=URLHelper::getLink("?cmd=".($issue_open[$tpl['sd_id']] ? 'close' : 'open')."&open_close_id=".$tpl['sd_id']."#".$tpl['sd_id'])?>">
             <?=($issue_open[$tpl['sd_id']] || $tpl['openall']) ? Assets::img('forumgraurunt2.png') : Assets::img('forumgrau2.png') ?>
@@ -121,7 +121,7 @@
 
     <td width="80%" colspan="5" class="content_title_red">
         <span style="text-color: red">
-            <b><?=_("Dieser Termin findet nicht statt!")?></b>
+            <b><?=_("fällt aus")?></b>
         </span>
         (<?=_("Kommentar")?>: <?=htmlready($tpl['comment'])?>)
     </td>

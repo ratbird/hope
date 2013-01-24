@@ -276,7 +276,7 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
                 $titel .= ", " . $tmp_titel;
             }
             if ($date['ex_termin']) {
-                $titel .= '&nbsp;<i>' . _("Dieser Termin findet nicht statt!").'</i>';
+                $titel .= '&nbsp;<i>' . _("fällt aus").'</i>';
                 $titel .= tooltipIcon($date['content'], true);
             }
 
@@ -639,7 +639,7 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
             if (strtolower(get_class($termin)) == 'seminarevent') {
                 //Beschneiden des Titels
                 if ($singledate->isExTermin()) {
-                    $titel .= ', <i>' . _("Dieser Termin findet nicht statt!") . '</i>';
+                    $titel .= ', <i>' . _("fällt aus") . '</i>';
                     $titel .= tooltipIcon($singledate->getComment(), true);
                 } else {
                     $titel .= ', ' . htmlReady(mila($issue_titles, $length));

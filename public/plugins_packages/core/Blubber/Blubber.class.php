@@ -93,12 +93,25 @@ class Blubber extends StudIPPlugin implements StandardPlugin, SystemPlugin {
         }
     }
 
+    /**
+     * Returns a navigation for the tab displayed in the course.
+     * @param string $course_id of the course
+     * @return \AutoNavigation
+     */
     public function getTabNavigation($course_id) {
         $tab = new AutoNavigation($this->getDisplayTitle(), PluginEngine::getLink($this, array(), "streams/forum"));
         $tab->setImage(Assets::image_path("icons/16/white/blubber"));
         return array('blubberforum' => $tab);
     }
 
+    /**
+     * Returns a navigation-object with the grey/red icon for displaying in the
+     * meine_seminare.php page.
+     * @param string  $course_id
+     * @param int $last_visit
+     * @param string|null  $user_id
+     * @return \AutoNavigation
+     */
     public function getIconNavigation($course_id, $last_visit, $user_id = null) {
         if (!$user_id) {
             $user_id = $GLOBALS['user']->id;
@@ -131,15 +144,32 @@ class Blubber extends StudIPPlugin implements StandardPlugin, SystemPlugin {
         return $icon;
     }
 
+    /**
+     * Needed function to return notification-objects. Not yet implemented.
+     * @param string $course_id
+     * @param int $since
+     * @param string $user_id
+     * @return array
+     */
     public function getNotificationObjects($course_id, $since, $user_id)
     {
         return array();
     }
 
+    /**
+     * Returns no template, because this plugin doesn't want to insert an
+     * info-template in the course-overview.
+     * @param string $course_id
+     * @return null
+     */
     public function getInfoTemplate($course_id)  {
         return null;
     }
 
+    /**
+     * Returns localized title of this plugin.
+     * @return type
+     */
     public function getDisplayTitle() {
         return _("Blubbern");
     }

@@ -65,11 +65,11 @@ class BlubberContactAvatar extends Avatar {
             $email_hash = md5(strtolower(trim($email)));
             $width = $this->getDimension($size);
             return URLHelper::getURL(
-                "http://www.gravatar.com/avatar/".$email_hash, 
+                "http://www.gravatar.com/avatar/".$email_hash,
                 array(
                     's' => max(array($width[0], $width[1])),
                     'd' => $this->getNobody()->getCustomAvatarUrl($size, $ext)
-                ), 
+                ),
                 true
             );
         }

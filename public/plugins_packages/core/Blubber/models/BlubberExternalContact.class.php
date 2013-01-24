@@ -55,16 +55,6 @@ class BlubberExternalContact extends SimpleORMap implements BlubberContact {
         parent::__construct($id);
     }
     
-    public function restore() {
-        parent::restore();
-        $this->cbUnserializeData();
-    }
-    
-    public function store() {
-        $this->cbSerializeData();
-        parent::store();
-    }
-
     function cbSerializeData()
     {
         $this->content['data'] = serialize($this->content['data']);

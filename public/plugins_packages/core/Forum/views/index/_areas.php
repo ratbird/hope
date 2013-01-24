@@ -110,7 +110,7 @@
                         <span class="areaname"><?= htmlReady($entry['name_raw']) ?></span>
                         <br>
                     </a>
-                    <div class="areacontent"><?= htmlReady(ForumEntry::killEdit($entry['content_raw'])) ?></div>
+                    <div class="areacontent"><?= htmlReady(mila(ForumEntry::killEdit($entry['content_raw']), 200)) ?></div>
                 </span>
 
                 <? if (ForumPerm::has('edit_area', $seminar_id)) : ?>

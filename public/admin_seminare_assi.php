@@ -1996,7 +1996,7 @@ if (($form == 6) && (Request::submitted('jump_next')))
                         $insert_statement->execute(array(
                             $_SESSION['sem_create_data']['sem_id'],
                             $key,
-                            $_SESSION['sem_create_data']['sem_tut_label'][$key] ?: '', 
+                            $_SESSION['sem_create_data']['sem_tut_label'][$key] ?: '',
                             $group, $next_pos
                         ));
 
@@ -3076,7 +3076,7 @@ if ($level == 2)
                             ?>
                                 <input type="radio" name="sem_sec_schreib" value="1" <?php print $_SESSION['sem_create_data']["sem_sec_schreib"] == 1 ? "checked" : ""?>> <?=_("in Stud.IP angemeldet"); ?> &nbsp;
                                 <input type="radio" name="sem_sec_schreib" value="2" <?php print $_SESSION['sem_create_data']["sem_sec_schreib"] == 2 ? "checked" : ""?>> <?=_("nur mit Passwort"); ?> &nbsp;
-                                <?= tooltipIcon(_("Hier geben Sie an, ob der Schreibzugriff auf die Veranstaltung frei (jeder), normal beschränkt (nur registrierte Stud.IP-User) oder nur mit einem speziellen Passwort möglich ist."), TRUE, TRUE) ?>
+                                <?= tooltipIcon(_("Hier geben Sie an, ob der Schreibzugriff auf die Veranstaltung frei (jeder), normal beschränkt (nur registrierte Stud.IP-User) oder nur mit einem speziellen Passwort möglich ist.")) ?>
                             <?
                             } else
                                 print "&nbsp; <font size=-1>"._("Schreibberechtigung nach erfolgreichem Anmeldeprozess")."</font>"
@@ -4142,7 +4142,7 @@ if ($level == 6)
                 <form method="POST" action="<? echo URLHelper::getLink() ?>">
                     <?= CSRFProtection::tokenTag() ?>
                     <input type="hidden" name="form" value=6>
-                    <?= LinkButton::create('<< '._('Zurück'), UrlHelper::getUrl('?jump_back=1&form=' . $level)) ?>&nbsp;<?= Button::create(_('Weiter').' >>', 'jump_next') ?>
+                    <?= LinkButton::create('<< '._('Zurück'), UrlHelper::getUrl('?jump_back=1&form=' . $level)) ?>&nbsp;<?= Button::create(_('Anlegen'), 'jump_next') ?>
                 </form>
                 </div>
             </td>

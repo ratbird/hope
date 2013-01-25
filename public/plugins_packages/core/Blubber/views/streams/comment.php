@@ -13,15 +13,16 @@ if (!$last_visit) {
 }
 $author = $posting->getUser();
 $author_name = $author->getName();
+$author_url = $author->getURL();
 ?>
 <li class="comment posting<?= $posting['mkdate'] > $last_visit ? " new" : "" ?>" id="posting_<?= $posting->getId() ?>" mkdate="<?= htmlReady($posting['mkdate']) ?>" data-autor="<?= htmlReady($posting['user_id']) ?>">
     <div class="avatar_column">
         <div class="avatar">
-            <? if (!$author->isNew()) : ?>
-            <a href="<?= URLHelper::getLink($author->getURL(), array(), true) ?>">
+            <? if ($author_url) : ?>
+            <a href="<?= URLHelper::getLink($author_url, array(), true) ?>">
             <? endif ?>
                 <div style="background-image: url('<?= $author->getAvatar()->getURL(Avatar::MEDIUM)?>');" class="avatar_image"<?= $author->isNew() ? ' title="'._("Nicht registrierter Nutzer").'"' : "" ?>></div>
-            <? if (!$author->isNew()) : ?>
+            <? if ($author_url) : ?>
             </a>
             <? endif ?>
         </div>
@@ -36,11 +37,11 @@ $author_name = $author->getName();
             <? endif ?>
         </div>
         <div class="name">
-            <? if (!$author->isNew()) : ?>
-            <a href="<?= URLHelper::getLink($author->getURL(), array(), true) ?>">
+            <? if ($author_url) : ?>
+            <a href="<?= URLHelper::getLink($author_url, array(), true) ?>">
             <? endif ?>
                 <?= htmlReady($author_name) ?>
-            <? if (!$author->isNew()) : ?>
+            <? if ($author_url) : ?>
             </a>
             <? endif ?>
         </div>

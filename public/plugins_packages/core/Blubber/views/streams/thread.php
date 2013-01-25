@@ -14,6 +14,7 @@ BlubberPosting::$course_hashes = ($thread['context_type'] === "course" ? $thread
 $related_users = $thread['context_type'] === "private" ? $thread->getRelatedUsers() : array();
 $author = $thread->getUser();
 $author_name = $author->getName();
+$author_url = $author->getURL();
 ?>
 <? if (@$single_thread): ?>
 <input type="hidden" id="base_url" value="plugins.php/blubber/streams/">
@@ -79,11 +80,11 @@ $author_name = $author->getName();
     <? endif ?>
     <div class="avatar_column">
         <div class="avatar">
-            <? if (!$author->isNew()) : ?>
-            <a href="<?= URLHelper::getLink($author->getURL(), array(), true) ?>">
+            <? if ($author_url) : ?>
+            <a href="<?= URLHelper::getLink($author_url, array(), true) ?>">
             <? endif ?>
                 <div style="background-image: url('<?= $author->getAvatar()->getURL(Avatar::MEDIUM)?>');" class="avatar_image"<?= $author->isNew() ? ' title="'._("Nicht registrierter Nutzer").'"' : "" ?>></div>
-            <? if (!$author->isNew()) : ?>
+            <? if ($author_url) : ?>
             </a>
             <? endif ?>
         </div>
@@ -101,11 +102,11 @@ $author_name = $author->getName();
             <? endif ?>
         </div>
         <div class="name">
-            <? if (!$author->isNew()) : ?>
-            <a href="<?= URLHelper::getLink($author->getURL(), array(), true) ?>">
+            <? if ($author_url) : ?>
+            <a href="<?= URLHelper::getLink($author_url, array(), true) ?>">
             <? endif ?>
                 <?= htmlReady($author_name) ?>
-            <? if (!$author->isNew()) : ?>
+            <? if ($author_url) : ?>
             </a>
             <? endif ?>
         </div>

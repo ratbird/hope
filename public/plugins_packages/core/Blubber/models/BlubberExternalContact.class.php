@@ -17,7 +17,7 @@ class BlubberExternalContact extends SimpleORMap implements BlubberContact {
         $user = parent::find($user_id);
         if (class_exists($user['contact_type'])) {
             $new_user = new $user['contact_type']();
-            $new_user->setData($user->getData());
+            $new_user->setData($user->toArray());
             return $new_user;
         } else {
             return $user;
@@ -58,14 +58,12 @@ class BlubberExternalContact extends SimpleORMap implements BlubberContact {
     function cbSerializeData()
     {
         $this->content['data'] = serialize($this->content['data']);
-        //$this->content_db['data'] = serialize($this->content_db['data']);
         return true;
     }
 
     function cbUnserializeData()
     {
         $this->content['data'] = (array) unserialize($this->content['data']);
-        //$this->content_db['data'] = (array)unserialize($this->content_db['data']);
         return true;
     }
 }

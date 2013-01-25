@@ -82,23 +82,23 @@ class ForumHelpers {
                 break;
 
             case 'admin':
-                return _('Administrator/in');
+                return _('Administrator/-in');
                 break;
 
             case 'dozent':
-                return _('Dozent/in');
+                return _('Lehrende/-r');
                 break;
 
             case 'tutor':
-                return _('Tutor/in');
+                return _('Tutor/-in');
                 break;
 
             case 'autor':
-                return _('Autor/in');
+                return _('Autor/-in');
                 break;
 
             case 'user':
-                return _('Leser/in');
+                return _('Leser/-in');
                 break;
 
             default:
@@ -172,13 +172,13 @@ class ForumHelpers {
             $online_users = get_users_online(15);
             foreach ($online_users as $username => $data) {
                 if ($data['last_action'] >= 300) {
-                    $online_status[$data['userid']] = 'away';
+                    $online_status[$data['user_id']] = 'away';
                 } else {
-                    $online_status[$data['userid']] = 'available';
+                    $online_status[$data['user_id']] = 'available';
                 }
             }
         }
-
+        
         return $online_status[$user_id] ?: 'offline';
     }
     

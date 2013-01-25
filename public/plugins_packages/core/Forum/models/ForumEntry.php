@@ -766,8 +766,12 @@ class ForumEntry {
      */
     static function update($topic_id, $name, $content)
     {
-        $content = ForumEntry::appendEdit($content);
-        
+        $topic = ForumEntry::getConstraints($topic_id);
+
+        if (time() - $topic['mkdate'] > 5 * 60) {
+            $content = ForumEntry::appendEdit($content);
+        }
+
         $stmt = DBManager::get()->prepare("UPDATE forum_entries
             SET name = ?, content = ?
             WHERE topic_id = ?");

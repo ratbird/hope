@@ -145,7 +145,7 @@
     <span data-show-topic="<?= $post['topic_id'] ?>">
         <!-- Aktions-Buttons für diesen Beitrag -->
             
-        <? if ($section == 'index' && ForumPerm::has('add_entry', $seminar_id)) : ?>
+        <? if (ForumPerm::has('add_entry', $seminar_id)) : ?>
         <?= Studip\LinkButton::create('Beitrag zitieren', "javascript:STUDIP.Forum.citeEntry('". $post['topic_id'] ."')") ?>
         <? endif ?>
 

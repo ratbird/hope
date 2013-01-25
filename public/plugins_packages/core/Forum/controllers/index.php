@@ -105,8 +105,14 @@ class IndexController extends StudipController
             $this->has_rights = $this->writable;
         }
 
-        $this->topic_id     = $topic_id ? $topic_id : $this->getId();
-        $this->constraint   = ForumEntry::getConstraints($this->topic_id);
+        $this->topic_id   = $topic_id ? $topic_id : $this->getId();
+        $this->constraint = ForumEntry::getConstraints($this->topic_id);
+        
+        // check if there has been submitted an invalid id and use seminar_id in case
+        if (!$this->constraint) {
+            $this->topic_id   = $this->getId();
+            $this->constraint = ForumEntry::getConstraints($this->topic_id);
+        }
 
         // set page to which we shall jump
         if ($page) {
@@ -809,5 +815,20 @@ class IndexController extends StudipController
         $this->POSTINGS_PER_PAGE = $this->FEED_POSTINGS;
 
         // $this->loadView();
+    }
+    
+    function moderator_action()
+    {
+        ForumPerm::check('moderator', $this->getId());
+    }
+    
+    function moderator_getchilds($parent_id)
+    {
+        
+    }
+
+    function moderator_move_action($from, $to)
+    {
+        ForumPerm::check('moderator', $this->getId());
     }
 }

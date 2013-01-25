@@ -198,8 +198,10 @@ class PluginManager
      */
     public function isPluginActivatedForUser($pluginId, $userId)
     {
-        $plugin_class = $this->plugins[$pluginId]['class'];
-        
+        if (!$userId) {
+            $userId = $GLOBALS['user']->id;
+        }
+
         $query = "SELECT state "
                . "FROM plugins_activated "
                . "WHERE pluginid = ? AND poiid = CONCAT('user', ?)";
@@ -209,7 +211,7 @@ class PluginManager
         if (!$state) {
             $activated = get_config('HOMEPAGEPLUGIN_DEFAULT_ACTIVATION') ? true : false;
         } else {
-            $activated = ($state !== 'off' || $state === 'on');
+            $activated = ($state === 'on');
         }
         
         return $activated;

@@ -21,34 +21,42 @@ class ProfileModulesController extends AuthenticatedController {
 
     // Global initializations and actions.
     function before_filter(&$action, &$args) {
-        global $perm, $user;
+        global $user;
 
         parent::before_filter($action, $args);
 
-        $this->user_id = $user->id;
-        if ($perm->have_perm('root') && Request::option('username')) {
-            $this->user_id = get_userid(Request::option('username'));
-        }
+        $this->modules = array();
 
         // Set Navigation
         PageLayout::setHelpKeyword("Basis.ProfileModules");
         PageLayout::setTitle(_("Inhaltselemente konfigurieren"));
         Navigation::activateItem('/profile/modules');
 
+        // Get current user.
+        $this->user_id = get_userid(Request::username('username', $user->username));
+        $this->username = Request::username('username', $user->username);
+
+        $this->plugins = array();
+        $blubber = PluginEngine::getPlugin('Blubber');
+        // Add blubber to plugin list so status can be updated.
+        $this->plugins[] = $blubber;
         // Get homepage plugins from database.
-        $this->plugins = PluginEngine::getPlugins('HomepagePlugin');
-        // Now loop through all found plugins.
-        foreach ($this->plugins as $plugin) {
-            // Check local activation status.
-            $activated = PluginManager::isPluginActivatedForUser($plugin->pluginid, $this->user_id);
-            $this->modules[$plugin->pluginid]['name'] = $plugin->pluginname;
-            $this->modules[$plugin->pluginid]['description'] = $plugin->description;
-            // Set checked status if necessary.
-            $this->modules[$plugin->pluginid]['activated'] = $activated;
-        }
+        $this->plugins = array_merge($this->plugins, PluginEngine::getPlugins('HomepagePlugin'));
     }
 
     function index_action() {
+        // Now loop through all found plugins.
+        foreach ($this->plugins as $plugin) {
+            // Check local activation status.
+            $id = $plugin->getPluginId();
+            $activated = PluginManager::isPluginActivatedForUser($id, $this->user_id);
+            $this->modules[$id] = array(
+                    'id' => $id,
+                    'name' => $plugin->getPluginName(),
+                    'description' => $plugin->description,
+                    'activated' => $activated
+                );
+        }
     }
 
     // Update activation status.
@@ -58,13 +66,13 @@ class ProfileModulesController extends AuthenticatedController {
         // Plugins
         foreach ($this->plugins as $plugin) {
             // Check local activation status.
-            $activated = PluginManager::isPluginActivatedForUser($plugin->pluginid, $this->user_id);
-
-            if ((!$activated && Request::get('module_'.$plugin->pluginid)) || ($activated && !Request::get('module_'.$plugin->pluginid))) {
-                $updated = PluginManager::setPluginActivated($plugin->pluginid, $this->user_id, Request::get('module_'.$plugin->pluginid), 'user');
+            $id = $plugin->getPluginId();
+            $activated = PluginManager::isPluginActivatedForUser($id, $this->user_id);
+            if ((!$activated && Request::get('module_'.$id)) || ($activated && !Request::get('module_'.$id))) {
+                $updated = PluginManager::setPluginActivated($id, $this->user_id, Request::get('module_'.$id), 'user');
                 $success = ($success === '' ? true : $success) && $updated;
                 if ($updated) {
-                    $this->modules[$plugin->pluginid]['activated'] = Request::get('module_'.$plugin->pluginid);
+                    $this->modules[$id]['activated'] = Request::get('module_'.$id);
                 }
             }
         }
@@ -76,7 +84,7 @@ class ProfileModulesController extends AuthenticatedController {
                 $this->flash['error'] = _("Ihre Änderungen konnten nicht gespeichert werden.");
             }
         }
-        $this->redirect(URLHelper::getUrl('dispatch.php/profilemodules', array('username' => get_username($this->user_id))));
+        $this->redirect(URLHelper::getURL('dispatch.php/profilemodules/index', array('username' => $this->username)));
     }
 
 }

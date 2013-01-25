@@ -129,7 +129,8 @@ if (Navigation::hasItem('/course/admin')
 // add navigation item for profile: add modules
 if (Navigation::hasItem('/profile')
     && (!Request::username('username') || Request::username('username') == $user->username || $perm->have_perm('root'))) {
-    $plus_nav = new Navigation('+', 'dispatch.php/profilemodules');
+    $username = Request::username('username', $user->username);
+    $plus_nav = new Navigation('+', URLHelper::getURL('dispatch.php/profilemodules/index', array('username' => $username)));
     $plus_nav->setDescription(_("Inhaltselemente konfigurieren"));
     Navigation::addItem('/profile/modules', $plus_nav);
 }

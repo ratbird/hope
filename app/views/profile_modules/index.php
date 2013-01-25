@@ -40,7 +40,7 @@ $infobox = array(
 );
 ?>
 
-<form action="profilemodules/update" method="post">
+<form action="<?= URLHelper::getURL('dispatch.php/profilemodules/update', array('username' => $username)) ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
     <table class="zebra" width="70%" align="center" cellpadding="8" cellspacing="0" border="0" id="main_content">
         <colgroup>
@@ -54,10 +54,10 @@ $infobox = array(
             </tr>
         </thead>
         <tbody>
-        <? foreach ($this->controller->modules as $id => $module): ?>
+        <? foreach ($this->controller->modules as $module): ?>
             <tr>
                 <td align="right" class="blank" style="border-bottom:1px dotted black;">
-                    <label for="module_<?= $id ?>">
+                    <label for="module_<?= $module['id'] ?>">
                         <?= _($module['name']) ?>
                     </label>
                     <div class="setting_info">
@@ -65,7 +65,7 @@ $infobox = array(
                     </div>
                 </td>
                 <td>
-                    <input type="checkbox" name="module_<?= $id ?>" <?= $module['activated'] ? ' checked="checked"' : '' ?>>
+                    <input type="checkbox" name="module_<?= $module['id'] ?>" <?= $module['activated'] ? ' checked="checked"' : '' ?>>
                 </td>
             </tr>
         <? endforeach; ?>
@@ -73,7 +73,6 @@ $infobox = array(
         <tfoot>
             <tr>
                 <td colspan="2" align="middle">
-                    <input type="hidden" name="username" value="<?= get_username($this->controller->user_id) ?>">
                     <?= makeButton("uebernehmen", "input", _("Änderungen übernehmen")) ?>
                 </td>
             </tr>

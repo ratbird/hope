@@ -81,7 +81,13 @@ abstract class StudIPPlugin {
             $context = $_SESSION['SessionSeminar'];
         }
 
-        return $plugin_manager->isPluginActivated($plugin_id, $context);
+        if (Navigation::hasItem('/profile')) {
+            $activated = $plugin_manager->isPluginActivatedForUser($plugin_id, $context);
+        } else {
+            $activated = $plugin_manager->isPluginActivated($plugin_id, $context);
+        }
+
+        return $activated;
     }
 
     /**

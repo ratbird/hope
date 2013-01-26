@@ -47,6 +47,23 @@ class BlubberExternalContact extends SimpleORMap implements BlubberContact {
         return BlubberContactAvatar::getAvatar($this->getId());
     }
     
+    /**
+     * This sends an email to the user to recognize him/her that he/she was 
+     * mentioned in a blubber.
+     * @param type $posting 
+     */
+    public function mention($posting) {
+        $url = $GLOBALS['ABSOLUTE_URI_STUDIP']."plugins.php/blubber/streams/thread/"
+            . $posting['root_id']
+            . ($posting['context_type'] === "course" ? '?cid='.$posting['Seminar_id'] : "");
+        $message = sprintf(
+            _("%s hat Sie in einem Blubber erwähnt. Zum Beantworten klicken auf Sie auf folgenen Link:\n\n%s\n"),
+            get_fullname(), 
+            $url
+        );
+        StudipMail::sendMessage($this['mail_identifier'], _("Sie wurden erwähnt."), $message);
+    }
+    
     function __construct($id = null)
     {
         $this->db_table = 'blubber_external_contact';

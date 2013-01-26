@@ -18,7 +18,7 @@ class BlubberPosting extends SimpleORMap {
 
     protected $db_table = "blubber";
     static public $course_hashes = false;
-    static public $mention_thread_id = false;
+    static public $mention_posting_id = false;
 
     /**
      * Special format-function that adds hashtags to the common formatReady-markup.
@@ -57,10 +57,10 @@ class BlubberPosting extends SimpleORMap {
      */
     static public function mention($markup, $matches) {
         $mention = $matches[0];
-        $thread_id = self::$mention_thread_id;
+        $posting = new BlubberPosting(self::$mention_posting_id);
         $username = stripslashes(substr($mention, 1));
         if ($username[0] !== '"') {
-            $user_id = get_userid($username);
+            $user = new BlubberUser(get_userid($username));
         } else {
             $name = substr($username, 1, strlen($username) -2);
             $statement = DBManager::get()->prepare(
@@ -68,31 +68,32 @@ class BlubberPosting extends SimpleORMap {
             "");
             $statement->execute(array('name' => $name));
             $user_id = $statement->fetch(PDO::FETCH_COLUMN, 0);
+            if ($user_id) {
+                $user = new BlubberUser($user_id);
+            } else {
+                $statement = DBManager::get()->prepare(
+                    "SELECT external_contact_id FROM blubber_external_cotact WHERE name = ? " .
+                "");
+                $statement->execute(array($name));
+                $user_id = $statement->fetch(PDO::FETCH_COLUMN, 0);
+                $user = BlubberExternalContact::find($user_id);
+            }
         }
-        $thread = new BlubberPosting($thread_id);
-        if (!$thread->isNew() && $user_id && $user_id !== $GLOBALS['user']->id) {
-            $user = new User($user_id);
-            $messaging = new messaging();
-            $url = $GLOBALS['ABSOLUTE_URI_STUDIP']."plugins.php/blubber/streams/thread/"
-                . $thread_id.($thread['context_type'] === "course" ? '?cid='.$thread['Seminar_id'] : "");
-            $messaging->insert_message(
-                sprintf(
-                    _("%s hat Sie in einem Blubber erwähnt. Zum Beantworten klicken auf Sie auf folgenen Link:\n\n%s\n"),
-                    get_fullname(), $url
-                ),
-                get_username($user_id),
-                $GLOBALS['user']->id,
-                null, null, null, null,
-                _("Sie wurden erwähnt.")
-            );
+        if (!$posting->isNew() && $user->getId() && $user->getId() !== $GLOBALS['user']->id) {
+            $user->mention($posting);
             $statement = DBManager::get()->prepare(
                 "INSERT IGNORE INTO blubber_mentions " .
-                "SET user_id = :uder_id, " .
+                "SET user_id = :user_id, " .
                     "topic_id = :topic_id, " .
+                    "external_contact = :extern, " .
                     "mkdate = UNIX_TIMESTAMP() " .
             "");
-            $statement->execute(array('user_id' => $user_id, 'topic_id' => $thread_id));
-            return '['.$user['Vorname']." ".$user['Nachname'].']'.$GLOBALS['ABSOLUTE_URI_STUDIP']."about.php?username=".$user['username'].' ';
+            $statement->execute(array(
+                'user_id' => $user_id,
+                'topic_id' => $posting['root_id'],
+                'extern' => is_a($user, "BlubberExternalContact") ? 1 : 0
+            ));
+            return '['.$user->getName().']'.$user->getURL().' ';
         } else {
             return stripslashes($mention);
         }

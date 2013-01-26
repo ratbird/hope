@@ -14,6 +14,8 @@ interface BlubberContact {
     public function getURL();
     
     public function getAvatar();
+    
+    public function mention($posting);
 }
 
 class BlubberUser extends User implements BlubberContact {
@@ -23,10 +25,28 @@ class BlubberUser extends User implements BlubberContact {
     }
     
     public function getURL() {
-        return URLHelper::getURL("about.php", array('username' => $this['username']), true);
+        return $GLOBALS['ABSOLUTE_URI_STUDIP']."about.php?username=".$this['username'];
     }
     
     public function getAvatar() {
         return Avatar::getAvatar($this->getId());
+    }
+    
+    public function mention($posting) {
+        $messaging = new messaging();
+        $url = $GLOBALS['ABSOLUTE_URI_STUDIP']."plugins.php/blubber/streams/thread/"
+            . $posting['root_id']
+            . ($posting['context_type'] === "course" ? '?cid='.$posting['Seminar_id'] : "");
+        $messaging->insert_message(
+            sprintf(
+                _("%s hat Sie in einem Blubber erwähnt. Zum Beantworten klicken auf Sie auf folgenen Link:\n\n%s\n"),
+                get_fullname(),
+                $url
+            ),
+            $this['username'],
+            $GLOBALS['user']->id,
+            null, null, null, null,
+            _("Sie wurden erwähnt.")
+        );
     }
 }

@@ -203,7 +203,7 @@ class StreamsController extends ApplicationController {
         if ($thread->isNew() && !$thread->getId()) {
             $thread->store();
         }
-        BlubberPosting::$mention_thread_id = $thread->getId();
+        BlubberPosting::$mention_posting_id = $thread->getId();
         StudipTransformFormat::addStudipMarkup("mention1", '@\"[^\n\"]*\"', "", "BlubberPosting::mention");
         StudipTransformFormat::addStudipMarkup("mention2", '@[^\s]*[\d\w_]+', "", "BlubberPosting::mention");
         $content = transformBeforeSave(studip_utf8decode(Request::get("content")));
@@ -296,12 +296,10 @@ class StreamsController extends ApplicationController {
         }
         $old_content = $posting['description'];
         $messaging = new messaging();
-        BlubberPosting::$mention_thread_id = $thread->getId();
+        BlubberPosting::$mention_posting_id = $posting->getId();
         StudipTransformFormat::addStudipMarkup("mention1", '@\"[^\n\"]*\"', "", "BlubberPosting::mention");
         StudipTransformFormat::addStudipMarkup("mention2", '@[^\s]*[\d\w_]+', "", "BlubberPosting::mention");
         $new_content = transformBeforeSave(studip_utf8decode(Request::get("content")));
-        //$new_content = preg_replace("/(@\"[^\n\"]*\")/e", "BlubberPosting::mention('\\1', '".$thread->getId()."')", $new_content);
-        //$new_content = preg_replace("/(@[^\s]+)/e", "BlubberPosting::mention('\\1', '".$thread->getId()."')", $new_content);
         
         if ($new_content && $old_content !== $new_content) {
             $posting['description'] = $new_content;
@@ -369,11 +367,16 @@ class StreamsController extends ApplicationController {
             }
         }
         BlubberPosting::$course_hashes = ($thread['context_type'] === "course" ? $thread['Seminar_id'] : false);
-        if (Request::option("thread") && $thread['Seminar_id'] === $context) {
+        if (!$thread->isNew() && $thread['Seminar_id'] === $context) {
             $output = array();
             $posting = new BlubberPosting();
+            $posting['context_type'] = $thread['context_type'];
+            $posting['seminar_id'] = $thread['Seminar_id'];
+            $posting['root_id'] = $posting['parent_id'] = $thread->getId();
+            $posting['name'] = "Re: ".$thread['name'];
+            $posting->store();
             
-            BlubberPosting::$mention_thread_id = $thread->getId();
+            BlubberPosting::$mention_posting_id = $posting->getId();
             StudipTransformFormat::addStudipMarkup("mention1", '@\"[^\n\"]*\"', "", "BlubberPosting::mention");
             StudipTransformFormat::addStudipMarkup("mention2", '@[^\s]*[\d\w_]+', "", "BlubberPosting::mention");
             $content = transformBeforeSave(studip_utf8decode(Request::get("content")));
@@ -383,10 +386,6 @@ class StreamsController extends ApplicationController {
             $content = preg_replace("/(@[^\s]+)/e", "BlubberPosting::mention('\\1', '".$thread->getId()."')", $content);
             
             $posting['description'] = $content;
-            $posting['context_type'] = $thread['context_type'];
-            $posting['seminar_id'] = $thread['Seminar_id'];
-            $posting['root_id'] = $posting['parent_id'] = Request::option("thread");
-            $posting['name'] = "Re: ".$thread['name'];
             if ($GLOBALS['user']->id !== "nobody") {
                 $posting['user_id'] = $GLOBALS['user']->id;
             } else {

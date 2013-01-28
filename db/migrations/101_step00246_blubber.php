@@ -40,7 +40,9 @@ class Step00246Blubber extends Migration
             CREATE TABLE IF NOT EXISTS `blubber_events_queue` (
                 `event_type` varchar(32) NOT NULL,
                 `item_id` varchar(32) NOT NULL,
-                `mkdate` int(11) NOT NULL
+                `mkdate` int(11) NOT NULL,
+                PRIMARY KEY (`event_type`,`item_id`,`mkdate`),
+                KEY `item_id` (`item_id`)
             ) ENGINE=MyISAM
         ");
         //Blubberautoren, die nicht in Stud.IP angemeldet sind wie anonyme
@@ -53,7 +55,9 @@ class Step00246Blubber extends Migration
                 `data` text,
                 `chdate` bigint(20) NOT NULL,
                 `mkdate` bigint(20) NOT NULL,
-                PRIMARY KEY (`external_contact_id`)
+                PRIMARY KEY (`external_contact_id`),
+                KEY `mail_identifier` (`mail_identifier`),
+                KEY `contact_type` (`contact_type`)
             ) ENGINE=MyISAM
         ");
         $db->exec("

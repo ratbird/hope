@@ -19,7 +19,6 @@ class Step00247ForumDataMigration extends Migration
         
         while($seminar_id = $stmt->fetch(PDO::FETCH_COLUMN)) // for each seminar_id ... migrate data
         {
-            if ($seminar_id != '30e0b89dcc9173d5fccf9f22b13b87bd') {    // FOR DEVELOPER-BOARD ONLY. REMOVE AFTER MIGRATION SUCCESSFULLY RUN.
             // prepare seminar for new forum
             self::checkRootEntry($seminar_id);
             
@@ -31,7 +30,6 @@ class Step00247ForumDataMigration extends Migration
 
             // migrate the connections with issues
             self::migrateIssues($seminar_id);
-            }
         }   
     }
 
@@ -58,7 +56,9 @@ class Step00247ForumDataMigration extends Migration
             WHERE object_id = ? AND type = 'forum'");
         $stmt->execute(array($seminar_id));
         
-        $stmt_insert = DBManager::get()->prepare("REPLACE INTO forum_visits
+        // do not overwrite any existing visit-timestamps, they are more
+        //  accuarate than the one from object_user_visits
+        $stmt_insert = DBManager::get()->prepare("INSERT IGNORE INTO forum_visits
             (user_id, seminar_id, visitdate, last_visitdate)
             VALUES (?, ?, ?, ?)");
         

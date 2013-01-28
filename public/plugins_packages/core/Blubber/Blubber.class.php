@@ -17,6 +17,9 @@ class Blubber extends StudIPPlugin implements StandardPlugin, SystemPlugin {
 
     public $config = array();
 
+    /**
+     * Constructor of Plugin : adds Navigation and collects information for javascript-update.
+     */
     public function __construct() {
         parent::__construct();
         if (UpdateInformation::isCollecting()) {

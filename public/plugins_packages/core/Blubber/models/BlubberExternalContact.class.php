@@ -11,8 +11,19 @@
 require_once dirname(__file__)."/BlubberUser.class.php";
 require_once dirname(__file__)."/BlubberContactAvatar.class.php";
 
+/**
+ * Entity for external contacts that write something in blubber. In most cases
+ * this is for anonymous writers.
+ */
 class BlubberExternalContact extends SimpleORMap implements BlubberContact {
-    
+
+    /**
+     * Finds a user by it's ID, but returns a class BlubberExternalContact or
+     * an object of the class contact_type. If such a class exists, this means
+     * that another plugin wants to handle the contact.
+     * @param string $user_id
+     * @return BlubberContact-object
+     */
     static public function find($user_id) {
         $user = parent::find($user_id);
         if (class_exists($user['contact_type'])) {
@@ -23,7 +34,12 @@ class BlubberExternalContact extends SimpleORMap implements BlubberContact {
             return $user;
         }
     }
-    
+
+    /**
+     * finds user by email and returns an instance of BlubberExternalContact
+     * @param string $email
+     * @return BlubberExternalContact
+     */
     static public function findByEmail($email) {
         $email = strtolower($email);
         $user = self::findBySQL("mail_identifier = ".DBManager::get()->quote($email));
@@ -34,15 +50,27 @@ class BlubberExternalContact extends SimpleORMap implements BlubberContact {
         }
         return $user[0];
     }
-    
+
+    /**
+     * Returns the name that should be displayed.
+     * @return string name
+     */
     public function getName() {
         return $this->content['name'];
     }
-    
+
+    /**
+     * Returns an URL to the user, which is a mailto-link.
+     * @return type
+     */
     public function getURL() {
         return $this['mail_identifier'] ? "mailto:".$this['mail_identifier'] : null;
     }
-    
+
+    /**
+     * Returns an BlubberContactAvatar-object.
+     * @return BlubberContactAvatar
+     */
     public function getAvatar() {
         return BlubberContactAvatar::getAvatar($this->getId());
     }
@@ -63,7 +91,11 @@ class BlubberExternalContact extends SimpleORMap implements BlubberContact {
         );
         StudipMail::sendMessage($this['mail_identifier'], _("Sie wurden erwähnt."), $message);
     }
-    
+
+    /**
+     * Constructor of SimpleORMap. Defines the table-name and (un)serializes the $this->data
+     * @param string|null $id
+     */
     function __construct($id = null)
     {
         $this->db_table = 'blubber_external_contact';
@@ -71,13 +103,21 @@ class BlubberExternalContact extends SimpleORMap implements BlubberContact {
         $this->registerCallback('after_store after_initialize', 'cbUnserializeData');
         parent::__construct($id);
     }
-    
+
+    /**
+     * Serializes $this->data so it is saves as string in the database.
+     * @return boolean
+     */
     function cbSerializeData()
     {
         $this->content['data'] = serialize($this->content['data']);
         return true;
     }
 
+    /**
+     * Unserializes $this->data so it can be used as an array or something else.
+     * @return boolean
+     */
     function cbUnserializeData()
     {
         $this->content['data'] = (array) unserialize($this->content['data']);

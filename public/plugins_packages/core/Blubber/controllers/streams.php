@@ -10,15 +10,16 @@
 
 require_once dirname(__file__)."/application.php";
 
+/**
+ * Controller for displaying streams in Blubber and write and edit Blubber-postings
+ */
 class StreamsController extends ApplicationController {
 
-    protected $max_threads = 10;
+    protected $max_threads = 10; //how many threads should be displayed in infinity-scroll-stream before it should reload
 
-    public function before_filter(&$action, &$args)
-    {
-        parent::before_filter($action, $args);
-    }
-
+    /**
+     * Displays global-stream
+     */
     public function global_action() {
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/autoresize.jquery.min.js"), "");
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/blubberforum.js"), "");
@@ -48,6 +49,10 @@ class StreamsController extends ApplicationController {
         "")->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    /**
+     * Displays a blubber-stream for a course.
+     * @throws AccessDeniedException if user has no access to course
+     */
     public function forum_action() {
         object_set_visit($_SESSION['SessionSeminar'], "forum");
         $seminar = new Seminar($_SESSION['SessionSeminar']);
@@ -78,6 +83,9 @@ class StreamsController extends ApplicationController {
         }
     }
 
+    /**
+     * Displays the profile-stream with all threads by the given user.
+     */
     public function profile_action() {
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/autoresize.jquery.min.js"), "");
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/blubberforum.js"), "");
@@ -101,6 +109,10 @@ class StreamsController extends ApplicationController {
         }
     }
 
+    /**
+     * Displays more comments (up to 20), rendered within a json-object.
+     * @throws AccessDeniedException if context is a thread to which the user as no access
+     */
     public function more_comments_action() {
         $thread = new BlubberPosting(Request::option("thread_id"));
         if ($thread['context_type'] === "course") {
@@ -143,6 +155,12 @@ class StreamsController extends ApplicationController {
         $this->render_json($output);
     }
 
+    /**
+     * Displays more postings in the same stream (global, forum oder profile-stream).
+     * This action is used by infinity-scroll and displays a maximum of
+     * $this->max_threads threads.
+     * @throws AccessDeniedException
+     */
     public function more_postings_action() {
         $context_id = Request::option("context_id");
         if (Request::get("stream") === "course") {
@@ -184,6 +202,9 @@ class StreamsController extends ApplicationController {
         $this->render_json($output);
     }
 
+    /**
+     * Writes a new thread and returns the metadata of the new posting as json.
+     */
     public function new_posting_action() {
         $context = Request::option("context");
         $context_type = Request::option("context_type");
@@ -276,6 +297,9 @@ class StreamsController extends ApplicationController {
         $this->render_json($output);
     }
 
+    /**
+     * Returns the source-description of a blubber-posting, so it can be edited.
+     */
     public function get_source_action() {
         $posting = new BlubberPosting(Request::get("topic_id"));
         $thread = new BlubberPosting($posting['root_id']);
@@ -287,6 +311,10 @@ class StreamsController extends ApplicationController {
         $this->render_nothing();
     }
 
+    /**
+     * Edits a given posting and returns the new metadata as json.
+     * @throws AccessDeniedException
+     */
     public function edit_posting_action () {
         $posting = new BlubberPosting(Request::get("topic_id"));
         $thread = new BlubberPosting($posting['root_id']);
@@ -346,6 +374,10 @@ class StreamsController extends ApplicationController {
         $this->render_text(studip_utf8encode(BlubberPosting::format($posting['description'])));
     }
 
+    /**
+     * Outputs the metadata for a posting. Used if a user cancels editing a posting.
+     * @throws AccessDeniedException
+     */
     public function refresh_posting_action() {
         $posting = new BlubberPosting(Request::get("topic_id"));
         $thread = new BlubberPosting($posting['root_id']);
@@ -357,6 +389,10 @@ class StreamsController extends ApplicationController {
         $this->render_text(studip_utf8encode(BlubberPosting::format($posting['description'])));
     }
 
+    /**
+     * Writes a comment on a thread and outputs the metadata of new comment as json.
+     * @throws AccessDeniedException
+     */
     public function comment_action() {
         $context = Request::option("context");
         $thread = new BlubberPosting(Request::option("thread"));
@@ -443,6 +479,11 @@ class StreamsController extends ApplicationController {
         }
     }
 
+    /**
+     * Saves given files (dragged into the textarea) and returns the link to the
+     * file to the user as json.
+     * @throws AccessDeniedException
+     */
     public function post_files_action() {
         $context = Request::option("context") ? Request::get("context") : $GLOBALS['user']->id;
         $context_type = Request::option("context_type");
@@ -530,7 +571,11 @@ class StreamsController extends ApplicationController {
         }
         $this->render_json($output);
     }
-    
+
+    /**
+     * Displays a single thread.
+     * @param string $thread_id
+     */
     public function thread_action($thread_id)
     {
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/autoresize.jquery.min.js"), "");

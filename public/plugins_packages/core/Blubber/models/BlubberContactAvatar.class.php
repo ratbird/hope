@@ -10,6 +10,11 @@
 
 require_once dirname(__file__)."/BlubberExternalContact.class.php";
 
+/**
+ * Avatar for external blubber-authors who are most likely anonymous accounts.
+ * If there is a given email to the user, it displays a gravatar. Since the clean
+ * email of the user is not sent to gravatar, this service seems secure.
+ */
 class BlubberContactAvatar extends Avatar {
     
     static function getAvatar($user_id) {
@@ -54,7 +59,14 @@ class BlubberContactAvatar extends Avatar {
         //no special conditions for visibility of blubber-contact-avatars
         return true;
     }
-    
+
+    /**
+     * URL to given avatar, if there is a customized avatar. And for anonymous
+     * authors this geturns a url to gravatar.
+     * @param Avatar-sizes (constan, see there) $size
+     * @param string $ext
+     * @return string url
+     */
     function getURL($size, $ext = 'png') {
         $this->checkAvatarVisibility();
         if ($this->is_customized()) {

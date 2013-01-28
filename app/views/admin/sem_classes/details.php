@@ -80,7 +80,7 @@
                 <select id="turnus_default">
                     <option value="0"<?= $sem_class['turnus_default'] == 0 ? " selected" : "" ?>><?= _("Regelmäßige Termine") ?></option>
                     <option value="1"<?= $sem_class['turnus_default'] == 1 ? " selected" : "" ?>><?= _("Unregelmäßige Termine") ?></option>
-                    <option value="2"<?= $sem_class['turnus_default'] == -1 ? " selected" : "" ?>><?= _("Keine Termine") ?></option>
+                    <option value="-1"<?= $sem_class['turnus_default'] == -1 ? " selected" : "" ?>><?= _("Keine Termine") ?></option>
                 </select>
             </td>
         </tr>

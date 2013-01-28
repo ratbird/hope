@@ -118,12 +118,6 @@ class Step00247Forum extends Migration
         DBManager::get()->exec("ALTER TABLE `forum_entries` ADD INDEX (  `user_id` )");
         DBManager::get()->exec("ALTER TABLE `forum_categories` ADD INDEX (  `seminar_id` )");        
 
-
-        /*
-        $plugin_manager->setDefaultActivations($plugin_id,
-            DBManager::get()->query("SELECT Institut_id FROM Institute")->fetchAll(PDO::FETCH_COLUMN));
-         */
-        
         // get highest position
         $navpos = DBManager::get()->query("SELECT navigationpos FROM plugins
             ORDER BY navigationpos DESC")->fetchColumn() + 1;

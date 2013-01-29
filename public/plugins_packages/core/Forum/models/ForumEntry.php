@@ -898,6 +898,25 @@ class ForumEntry {
         $stmt = DBManager::get()->prepare("REPLACE INTO forum_categories
             (category_id, seminar_id, entry_name) VALUES (?, ?, 'Allgemein')");
         $stmt->execute(array($seminar_id, $seminar_id));
+        
+        // make sure that the default area "Allgemeine Diskussionen" exists, if there is nothing else present
+        $stmt = DBManager::get()->prepare("SELECT COUNT(*) FROM forum_entries 
+            WHERE seminar_id = ? AND depth = 1");
+        $stmt->execute(array($seminar_id));
+        
+        // add default area
+        if ($stmt->fetchColumn() == 0) {
+            $data = array(
+                'topic_id'    => md5(uniqid()),
+                'seminar_id'  => $seminar_id,
+                'user_id'     => '',
+                'name'        => 'Allgemeine Diskussion',
+                'content'     => 'Hier ist Raum für allgemeine Diskussionen',
+                'author'      => '',
+                'author_host' => ''
+            );
+            ForumEntry::insert($data, $seminar_id);
+        }
     }
     
     /**

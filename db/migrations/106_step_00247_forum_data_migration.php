@@ -16,9 +16,12 @@ class Step00247ForumDataMigration extends Migration
             WHERE topic_id = root_id
             ORDER BY mkdate ASC");
         $stmt->execute(); 
-        
-        while($seminar_id = $stmt->fetch(PDO::FETCH_COLUMN)) // for each seminar_id ... migrate data
-        {
+
+        // first, fetch all seminar_ids (When used inline at foreach, this does not work, must be a strange php-bug)
+        $seminar_ids = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+        // then migrate the data for each seminar_id
+        foreach ($seminar_ids as $seminar_id) {
             // prepare seminar for new forum
             self::checkRootEntry($seminar_id);
             
@@ -30,7 +33,7 @@ class Step00247ForumDataMigration extends Migration
 
             // migrate the connections with issues
             self::migrateIssues($seminar_id);
-        }   
+        }
     }
 
     static function migrateIssues($seminar_id)
@@ -71,7 +74,7 @@ class Step00247ForumDataMigration extends Migration
     static function getList($seminar_id, $get_childs = true)
     {
         $ret = array();
-        
+
         $stmt = DBManager::get()->prepare("SELECT * FROM px_topics
             WHERE Seminar_id = ? AND topic_id = root_id
             ORDER BY mkdate ASC");
@@ -113,19 +116,34 @@ class Step00247ForumDataMigration extends Migration
             WHERE Seminar_id = ? AND parent_id = ?
             ORDER BY mkdate ASC");
         $stmt->execute(array($seminar_id, $parent_id));
-        
-        while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            // set depth-level
-            $data['level'] = $level;
+        $entries = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($entries as $data)  {
+            // use a queue to prevent max-nesting problems
+            $queue = array();
+            $queue[] = $data;
             $ret[] = $data;
-            
-            // get childs
-            $childs = self::getChilds($seminar_id, $data['topic_id'], $level + 1);
-            
-            if (!empty($childs)) {
-                $ret = array_merge($ret, $childs);
+
+            while (!empty($queue)) {
+                // get first element of queue
+                $checkfor = array_shift($queue);
+
+                // get childs (if any)
+                $stmt->execute(array($seminar_id, $checkfor['topic_id']));
+                $childs = $stmt->fetchAll();
+
+                if (!empty($childs)) {
+                    $ret   = array_merge($ret, $childs);
+                    $queue = array_merge($queue, $childs);         // append childs to queue to check them for childs as well
+                }
             }
         }
+
+        // sort the entries by mkdate
+        usort($ret, function($a, $b) {
+            if ($a['mkdate'] == $b['mkdate']) return 0;
+            return ($a['mkdate'] < $b['mkdate']) ? -1 : 1;
+        });
         
         return $ret;
     }

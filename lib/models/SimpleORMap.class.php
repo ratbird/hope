@@ -1215,7 +1215,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
                         return false;
                     }
                 } else {
-                    if ($this->applyCallbacks('before_update')=== false) {
+                    if ($this->applyCallbacks('before_update') === false) {
                         return false;
                     }
                 }
@@ -1225,8 +1225,10 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
                         $value = time();
                     }
                     if ($field == 'mkdate') {
-                        if($this->isNew()) {
-                            $value = time();
+                        if ($this->isNew()) {
+                            if (!$this->isFieldDirty($field)) {
+                                $value = time();
+                            }
                         } else {
                             continue;
                         }

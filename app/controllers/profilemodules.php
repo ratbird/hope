@@ -1,25 +1,39 @@
 <?php
 
-/*
- * homepageplugins.php - 
- *
- * Copyright (C) 2011 - Florian Bieringer, Thomas Hackl <thomas.hackl@uni-passau.de>
+/**
+ * ProfileModulesController
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
+ *
+ * @author      Thomas Hackl <thomas.hackl@uni-passau.de>
+ * @author      Florian Bieringer
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+ * @since       2.4
  */
 
+ 
 require_once 'app/controllers/authenticated_controller.php';
 
+/**
+ * Controller for the (de-)activation of homepage plugins for every user.
+ */
 class ProfileModulesController extends AuthenticatedController {
 
     var $user_id = '';
     var $modules = array();
     var $plugins = array();
 
-    // Global initializations and actions.
+    /**
+     * This function is called before any output is generated or any other
+     * actions are performed. Initializations happen here.
+     * 
+     * @param $action Name of the action to perform
+     * @param $args   Arguments for the given action
+     */
     function before_filter(&$action, &$args) {
         global $user;
 
@@ -44,6 +58,10 @@ class ProfileModulesController extends AuthenticatedController {
         $this->plugins = array_merge($this->plugins, PluginEngine::getPlugins('HomepagePlugin'));
     }
 
+    /**
+     * Generates an overview of installed plugins and provides the possibility
+     * to (de-)activate each of them.
+     */
     function index_action() {
         // Now loop through all found plugins.
         foreach ($this->plugins as $plugin) {
@@ -59,7 +77,9 @@ class ProfileModulesController extends AuthenticatedController {
         }
     }
 
-    // Update activation status.
+    /**
+     * Updates the activation status of user's homepage plugins.
+     */
     function update_action() {
         $success = '';
 

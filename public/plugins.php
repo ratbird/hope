@@ -18,7 +18,6 @@ require '../lib/bootstrap.php';
 unregister_globals();
 
 require_once 'lib/functions.php';
-require_once 'lib/exceptions/AccessDeniedException.php';
 require_once 'vendor/trails/trails.php';
 
 # set base url for URLHelper class

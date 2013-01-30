@@ -1,5 +1,5 @@
 <?php
-# Lifter010: TODO
+# Lifter010: DONE
 
 /**
  * CSRFProtection.php - protect from request forgery
@@ -204,38 +204,4 @@ class CSRFProtection
         $bytes = substr($bytes, $count);
         return $output;
     }
-}
-
-/**
- * This exception is thrown when a request does not verify its authenticity.
- */
-class InvalidSecurityTokenException extends AccessDeniedException
-{
-    /**
-     * @param string this parameter is ignored but required by PHP
-     */
-    function __construct($message = NULL) {
-        parent::__construct(_("Ungültiges oder fehlendes Sicherheits-Token."));
-    }
-}
-
-/**
- * This exception is thrown when a token should have been stored in a
- * non-existant session.
- */
-class SessionRequiredException extends Exception
-{
-    /**
-     * @param string this parameter is ignored but required by PHP
-     */
-    function __construct($message = NULL) {
-        parent::__construct(_("Fehlende Session."));
-    }
-}
-
-/**
- * This exceptions is thrown when a request's method is not allowed.
- */
-class MethodNotAllowedException extends Exception
-{
 }

@@ -54,8 +54,6 @@ require_once ('lib/classes/StudipRangeTree.class.php');
 
 require_once ('lib/object.inc.php');
 require_once ('lib/user_visible.inc.php');
-require_once ('lib/exceptions/AccessDeniedException.php');
-require_once ('lib/exceptions/CheckObjectException.php');
 
 /**
  * This function creates the header line for studip-objects

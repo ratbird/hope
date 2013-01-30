@@ -210,12 +210,12 @@ class ProfileController extends AuthenticatedController
             'schwerp'    => _('Arbeitsschwerpunkte')
         );
 
+        $ausgabe_inhalt = array();
         foreach ($ausgabe_felder as $key => $value) {
             if ($this->profile->checkVisibility($key)) {
                 $ausgabe_inhalt[$value] = $this->current_user[$key];
             }
         }
-
         $this->ausgabe_inhalt = array_filter($ausgabe_inhalt);
 
         // Anzeige der Seminare, falls User = dozent

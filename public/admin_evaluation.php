@@ -82,16 +82,19 @@ if ($list || $view) {
     Navigation::activateItem('/tools/evaluation');
 }
 
-if (($SessSemName[1]) && ($view == "eval_sem") || ($view == "eval_inst"))
+if (($SessSemName[1]) && ($view == "eval_sem") || ($view == "eval_inst")) {
     $the_range = $SessSemName[1];
-else
-    $the_range = Request::option('range_id');
+} else {
+    $the_range = Request::option('rangeID');
+}
 
-if ($the_range){
-    if (get_Username($the_range))
+if ($the_range) {
+    if (get_Username($the_range)) {
         $the_range = get_Username($the_range);
-    if (get_Userid($the_range))
+    }
+    if (get_Userid($the_range)) {
         $isUserrange = 1;
+    }
 } elseif ($view) {
     $the_range = $SessSemName[1];
 }

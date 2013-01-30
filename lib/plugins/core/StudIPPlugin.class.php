@@ -81,7 +81,7 @@ abstract class StudIPPlugin {
             $context = $_SESSION['SessionSeminar'];
         }
 
-        if (Navigation::hasItem('/profile')) {
+        if (Navigation::hasItem('/profile') && Navigation::getItem('/profile')->isActive()) {
             $activated = $plugin_manager->isPluginActivatedForUser($plugin_id, $context);
         } else {
             $activated = $plugin_manager->isPluginActivated($plugin_id, $context);

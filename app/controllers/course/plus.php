@@ -35,7 +35,7 @@ class Course_PlusController extends AuthenticatedController
 
         PageLayout::setTitle(_("Verwaltung verwendeter Inhaltselemente und Plugins"));
 
-        $id = $range_id ? $range_id : $_SESSION['SessionSeminar'];
+        $id = $range_id ?: $_SESSION['SessionSeminar'];
 
         if (!$id) {
             include 'lib/include/html_head.inc.php';
@@ -239,14 +239,9 @@ class Course_PlusController extends AuthenticatedController
                 $_SESSION['plugin_toggle'] = array();
             }
             if( $changes ){
-                $_SESSION['admin_modules_data']['msg'] = 'msg§'._('Die veränderte Konfiguration wurde übernommen.');
-                header('Location: ' . URLHelper::getURL());
-                page_close();
-                die();
+                PageLayout::postMessage(MessageBox::success(_('Die veränderte Konfiguration wurde übernommen.')));
+                $this->redirect('course/plus');
             }
         }
     }
-
-
-
 }

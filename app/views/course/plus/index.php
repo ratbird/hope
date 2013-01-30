@@ -24,8 +24,8 @@ use Studip\Button, Studip\LinkButton;
 <table class="default zebra">
     <colgroup>
         <col width="15%">
-        <col width="15%">
-        <col width="70%">
+        <col width="100px">
+        <col>
     </colgroup>
     <tbody>
 <?
@@ -58,11 +58,11 @@ foreach ($modules->registered_modules as $key => $val) {
             <br>
         </td>
         <td>
-            <label>
+            <label class="no-break">
                 <input type="radio" <?=($pre_check ? 'disabled' : '')?> name="<?=$key?>_value" value="TRUE" <?=($modules->isBit($_SESSION['admin_modules_data']["changed_bin"], $val["id"])) ? "checked" : "" ?>>
                 <?=_("an")?>
             </label>
-            <label>
+            <label class="no-break">
                 <input type="radio" <?=($pre_check ? 'disabled' : '')?> name="<?=$key?>_value" value="FALSE" <?=($modules->isBit($_SESSION['admin_modules_data']["changed_bin"], $val["id"])) ? "" : "checked" ?>>
                 <?=_("aus")?>
             </label>
@@ -99,11 +99,11 @@ foreach ($available_plugins as $plugin) {
             </td>
             <td>
                 <!-- mark old state -->
-                <label>
+                <label class="no-break">
                     <input type="radio" name="plugin_<?=$plugin->getPluginId()?>" value="TRUE" <?= $plugin_activated ? "checked" : "" ?>>
                     <?=_("an")?>
                 </label>
-                <label>
+                <label class="no-break">
                     <input type="radio" name="plugin_<?=$plugin->getPluginId()?>" value="FALSE" <?= $plugin_activated ? "" : "checked" ?>>
                     <?=_("aus")?>
                 </label>

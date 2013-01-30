@@ -119,7 +119,7 @@ if (isset($course_id)) {
 PluginEngine::loadPlugins();
 
 // add navigation item: add modules
-if (Navigation::hasItem('/course/admin')
+if ((Navigation::hasItem('/course/admin') || $GLOBALS['perm']->have_perm('root'))
     && ($perm->have_studip_perm('tutor', $SessSemName[1]) && $SessSemName['class'] == 'sem')
     && ($SessSemName['class'] != 'sem' || !$GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$SessSemName['art_num']]['class']]['studygroup_mode'])) {
     $plus_nav = new Navigation('+', 'dispatch.php/course/plus/index');

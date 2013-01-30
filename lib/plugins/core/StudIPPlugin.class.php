@@ -72,16 +72,28 @@ abstract class StudIPPlugin {
      * This also checks the plugin default activations.
      *
      * @param $context   context range id (optional)
+     * @param $type      type of activation (optional), can be set to 'profile'
+     *                   in order to point to a homepage plugin
      */
-    public function isActivated($context = NULL) {
+    public function isActivated($context = NULL, $type='sem') {
+        global $user;
+
         $plugin_id = $this->getPluginId();
         $plugin_manager = PluginManager::getInstance();
 
+        /*
+         * Context can be a Seminar ID or the current user ID if not set.
+         * Identification is done via the "username" parameter.
+         */
         if (!isset($context)) {
-            $context = $_SESSION['SessionSeminar'];
+            if ($type == 'profile') {
+                $context = get_userid(Request::username('username', $user->username));
+            } else {
+                $context = $_SESSION['SessionSeminar'];
+            }
         }
 
-        if (Navigation::hasItem('/profile') && Navigation::getItem('/profile')->isActive()) {
+        if ($type=='profile') {
             $activated = $plugin_manager->isPluginActivatedForUser($plugin_id, $context);
         } else {
             $activated = $plugin_manager->isPluginActivated($plugin_id, $context);

@@ -53,7 +53,9 @@ class ProfileModulesController extends AuthenticatedController {
         $this->plugins = array();
         $blubber = PluginEngine::getPlugin('Blubber');
         // Add blubber to plugin list so status can be updated.
-        $this->plugins[] = $blubber;
+        if ($blubber) {
+            $this->plugins[] = $blubber;
+        }
         // Get homepage plugins from database.
         $this->plugins = array_merge($this->plugins, PluginEngine::getPlugins('HomepagePlugin'));
     }

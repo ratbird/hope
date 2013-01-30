@@ -12,6 +12,8 @@
 
 require_once dirname(__FILE__) . '/../../bootstrap.php';
 require_once 'lib/exceptions/AccessDeniedException.php';
+require_once 'lib/exceptions/InvalidSecurityTokenException.php';
+require_once 'lib/exceptions/MethodNotAllowedException.php';
 require_once 'lib/classes/CSRFProtection.php';
 
 class CSRFProtectionTokenTest extends PHPUnit_Framework_TestCase

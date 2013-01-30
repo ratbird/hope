@@ -155,10 +155,12 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
     }
 
     /**
-     * fetch table metadata from db ro from local cache
+     * fetch table metadata from db or from local cache
+     * 
      * @param string $db_table
+     * @return bool true if metadata could be fetched
      */
-    protected static function TableScheme($db_table)
+    protected static function tableScheme($db_table)
     {
         if (self::$schemes === null) {
             $cache = StudipCacheFactory::getCache();
@@ -839,6 +841,9 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
 
     /**
      * returns value of a column
+     * 
+     * @throws InvalidArgumentException
+     * @throws BadMethodCallException
      * @param string $field
      * @return null|string
      */
@@ -860,7 +865,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
                 } elseif (method_exists($this, $this->additional_fields[$field]['get'])) {
                     return call_user_func(array($this, $this->additional_fields[$field]['get']), $field);
                 } else {
-                    throw new MethodNotAllowedException('Did not find getter for' . $field);
+                    throw new BadMethodCallException('Did not find getter for' . $field);
                 }
             }
         } else {
@@ -891,6 +896,9 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
 
     /**
      * sets value of a column
+     * 
+     * @throws InvalidArgumentException
+     * @throws BadMethodCallException
      * @param string $field
      * @param string $value
      * @return string
@@ -911,7 +919,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
                  } elseif (method_exists($this, $this->additional_fields[$field]['set'])) {
                      return call_user_func(array($this, $this->additional_fields[$field]['set']), $field, $value);
                  } else {
-                     throw new MethodNotAllowedException('Did not find setter for' . $field);
+                     throw new BadMethodCallException('Did not find setter for' . $field);
                  }
              } elseif (array_key_exists($field, $this->relations)) {
                  $options = $this->getRelationOptions($field);

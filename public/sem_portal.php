@@ -200,7 +200,7 @@ ob_end_flush();
         }
         echo "</td>\n";
         echo "<td class=\"blank\" align=\"right\">";
-        echo LinkButton::create(_('Zurücksetzen'), URLHelper::getLink('?reset_all=1'), array('title' => _("zurücksetzen")));
+        echo LinkButton::create(_('Zurücksetzen'), URLHelper::getURL('?reset_all=1'), array('title' => _("zurücksetzen")));
         echo "</td></tr>\n";
 
 

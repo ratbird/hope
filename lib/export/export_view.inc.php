@@ -24,11 +24,6 @@ if (($o_mode != "direct") AND ($o_mode != "passthrough"))
     Navigation::activateItem('/tools/export');
     include ('lib/include/html_head.inc.php'); // Output of html head
     include ('lib/include/header.php');   // Output of Stud.IP head
-    if ($page == 1)
-        echo "\n" . $cssSw->GetHoverJSFunction() . "\n";
-    if ($page == 1)
-        $cssSw->enableHover();
-
  ?>
 <table cellspacing="0" cellpadding="0" border="0" width="100%">
     <tr valign="top">

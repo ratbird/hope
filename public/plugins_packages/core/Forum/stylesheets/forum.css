@@ -184,6 +184,9 @@
   height: 50px;
   overflow: hidden;
 }
+#forum td.selected {
+  background-color: #ffcccc;
+}
 #forum td.postings {
   border-left: 1px solid #ffffff;
   border-right: 1px solid #ffffff;

@@ -610,6 +610,19 @@ class ForumEntry {
             case 'dump':
                 return ForumEntry::getEntries($parent_id, ForumEntry::WITH_CHILDS, '', 'ASC', 0, false);
                 break;
+            
+            case 'flat':
+                $constraint = ForumEntry::getConstraints($parent_id);
+                
+                $stmt = DBManager::get()->prepare("SELECT SQL_CALC_FOUND_ROWS * FROM forum_entries
+                    WHERE lft > ? AND rgt < ? AND seminar_id = ? AND depth = ?
+                    ORDER BY name ASC");
+                $stmt->execute(array($constraint['lft'], $constraint['rgt'], $constraint['seminar_id'], $constraint['depth'] + 1));
+                
+                $count = DBManager::get()->query("SELECT FOUND_ROWS()")->fetchColumn();
+
+                return array('list' => ForumEntry::parseEntries($stmt->fetchAll(PDO::FETCH_ASSOC)), 'count' => $count);
+                break;
         }
     }
 

@@ -377,7 +377,13 @@ STUDIP.Forum = {
     },
 
     moveThreadDialog: function (topic_id) {
-        jQuery('#dialog_' + topic_id).dialog();
+        $('tr[data-area-id=' + topic_id +'] td.areaentry').addClass('selected');
+        jQuery('#dialog_' + topic_id).dialog({ 
+            height: 300,
+            beforeClose: function() {
+                $('tr[data-area-id=' + topic_id +'] td.areaentry').removeClass('selected');
+            }
+        });
     },
 
     preview: function (text_element_id, preview_id) {

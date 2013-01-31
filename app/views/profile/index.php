@@ -103,7 +103,7 @@
             <?endif?>
 
             <? if(!empty($homepage)) : ?>
-                <b><?= _("Adresse (privat):") ?></b>
+                <b><?= _("Homepage:") ?></b>
                 <?= formatLinks($homepage) ?>
                 <br />
             <?endif?>

@@ -204,7 +204,7 @@ class ProfileModel
         // generische Datenfelder aufsammeln
         $short_datafields = array();
         $long_datafields  = array();
-        foreach (DataFieldEntry::getDataFieldEntries($this->user->user_id, 'user') as $entry) {
+        foreach (DataFieldEntry::getDataFieldEntries($this->current_user->user_id, 'user') as $entry) {
             if ($entry->structure->accessAllowed($this->perm, $this->user->user_id, $this->current_user->user_id) &&
                 $entry->getDisplayValue()) {
                 if ($entry instanceof DataFieldTextareaEntry) {

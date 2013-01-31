@@ -103,13 +103,13 @@ endif;
 
     <div style="text-align: center">
         <div class="button-group">
-            <? if (ForumPerm::has('abo', $seminar_id)) : ?>
+            <? if (ForumPerm::has('abo', $seminar_id) && $section == 'index') : ?>
             <span id="abolink">
                 <?= $this->render_partial('index/_abo_link', compact('constraint')) ?>
             </span>
             <? endif ?>
 
-            <? if (ForumPerm::has('pdfexport', $seminar_id)) : ?>
+            <? if (ForumPerm::has('pdfexport', $seminar_id) && $section == 'index') : ?>
                 <?= Studip\LinkButton::create('Beiträge als PDF exportieren', PluginEngine::getLink('coreforum/index/pdfexport')) ?>
             <? endif ?>
         </div>
@@ -135,14 +135,14 @@ endif;
             </div>
         </div>
 
-        <div id="new_entry_box" <?= $this->flash['new_entry_title'] ? '' : 'style="display: none"' ?>>
-            <br style="clear: both">
-            <?= $this->render_partial('index/_new_entry') ?>
-        </div>
     </div>
     <? endif ?>
 
 <? endif ?>
+
+    <? if (ForumPerm::has('add_entry', $seminar_id)): ?>
+        <?= $this->render_partial('index/_new_entry') ?>
+    <? endif ?>
 </div>
 
 <!-- Mail-Notifikationen verschicken (soweit am Ende der Seite wie möglich!) -->

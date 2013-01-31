@@ -188,9 +188,12 @@ class ForumEntry {
       * @param  string  $topic_id
       * @return  int
       */
-    static function getPostingPage($topic_id)
+    static function getPostingPage($topic_id, $constraint = null)
     {
-        $constraint = ForumEntry::getConstraints($topic_id);
+        if (!$constraint) {
+            $constraint = ForumEntry::getConstraints($topic_id);
+        }
+
         if ($parent_id = ForumEntry::getParentTopicId($topic_id)) {
             $parent_constraint = ForumEntry::getConstraints($parent_id);
 
@@ -296,7 +299,8 @@ class ForumEntry {
      */    
     static function getFlatPathToPosting($topic_id)
     {
-        $postings = self::getPathToPosting($topic_id);
+        // use only the part of the path until the thread, no posting title
+        $postings = array_slice(self::getPathToPosting($topic_id), 0, 3);
         
         // var_dump($postings);
         

@@ -106,9 +106,6 @@
 #layout_content {
   width: 100%;
 }
-#forum {
-  overflow: auto;
-}
 #forum img.button,
 #forum input[type=image] {
   vertical-align: middle;
@@ -188,8 +185,6 @@
   background-color: #ffcccc;
 }
 #forum td.postings {
-  border-left: 1px solid #ffffff;
-  border-right: 1px solid #ffffff;
   vertical-align: middle;
   text-align: center;
   width: 80px;
@@ -264,16 +259,14 @@
   background-color: #4d6b9d;
   color: #ffffff;
 }
-#forum .bg1 {
-  background-color: #ecf3f7;
-}
-#forum .bg2 {
-  background-color: #dee2e8;
+#forum .cite_box {
+  margin: 0 4em;
 }
 #forum .posting {
   height: 100%;
   margin: 0 0 0.5em 0;
   padding: 0;
+  background-color: #ecf3f7;
 }
 #forum .postbody {
   position: relative;

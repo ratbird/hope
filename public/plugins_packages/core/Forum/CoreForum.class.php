@@ -44,18 +44,12 @@ class CoreForum extends StudipPlugin implements ForumModule
         }
 
         // TODO: remove development-rand from poduction-code
-        PageLayout::addScript($this->getPluginURL() . '/javascript/forum.js?rand='. floor(time() / 100));
-        PageLayout::addStylesheet($this->getPluginURL() . '/stylesheets/forum.css?rand='. floor(time() / 100));
+        PageLayout::addScript($this->getPluginURL() . '/javascript/forum.js');
+        PageLayout::addStylesheet($this->getPluginURL() . '/stylesheets/forum.css');
         
         // JQuery-Tutor JoyRide JS and CSS
         PageLayout::addScript($this->getPluginURL() . '/javascript/jquery.joyride.js');
         PageLayout::addStylesheet($this->getPluginURL() . '/stylesheets/joyride.css');
-
-        if (Navigation::hasItem("/course")) {
-            $navigation = $this->getTabNavigation(Request::get('cid', $GLOBALS['SessSemName'][1]));
-            Navigation::insertItem('/course/forum2', $navigation['forum2'], 'members'); 
-        }
-        
     }
 
     /**
@@ -66,7 +60,7 @@ class CoreForum extends StudipPlugin implements ForumModule
     function perform($unconsumed_path)
     {
         $trails_root = $this->getPluginPath();
-        $dispatcher = new Trails_Dispatcher($trails_root, PluginEngine::getUrl('coreforum/index'), 'index');
+        $dispatcher = new Trails_Dispatcher($trails_root, PluginEngine::getUrl($this, array(), 'index'), 'index');
         $dispatcher->dispatch($unconsumed_path);
 
     }
@@ -74,16 +68,16 @@ class CoreForum extends StudipPlugin implements ForumModule
     /* interface method */
     public function getTabNavigation($course_id)
     {
-        $navigation = new Navigation(_('Forum'), PluginEngine::getLink('coreforum/index'));
+        $navigation = new Navigation(_('Forum'), PluginEngine::getLink($this, array(), 'index'));
         $navigation->setImage('icons/16/white/forum.png');
 
         // add main third-level navigation-item
-        $navigation->addSubNavigation('index', new Navigation(_('Beiträge'), PluginEngine::getLink('coreforum/index')));
+        $navigation->addSubNavigation('index', new Navigation(_('Übersicht'), PluginEngine::getLink($this, array(), 'index')));
         
         if (ForumPerm::has('fav_entry', $course_id)) {
-            $navigation->addSubNavigation('newest', new Navigation(_("Neue Beiträge"), PluginEngine::getLink('coreforum/index/newest')));
-            $navigation->addSubNavigation('latest', new Navigation(_("Letzte Beiträge"), PluginEngine::getLink('coreforum/index/latest')));
-            $navigation->addSubNavigation('favorites', new Navigation(_('Gemerkte Beiträge'), PluginEngine::getLink('coreforum/index/favorites')));
+            $navigation->addSubNavigation('newest', new Navigation(_("Neue Beiträge"), PluginEngine::getLink($this, array(), 'index/newest')));
+            $navigation->addSubNavigation('latest', new Navigation(_("Letzte Beiträge"), PluginEngine::getLink($this, array(), 'index/latest')));
+            $navigation->addSubNavigation('favorites', new Navigation(_('Gemerkte Beiträge'), PluginEngine::getLink($this, array(), 'index/favorites')));
         }
 
         return array('forum2' => $navigation);
@@ -98,7 +92,7 @@ class CoreForum extends StudipPlugin implements ForumModule
 
         $num_entries = ForumVisit::getCount($course_id, ForumVisit::getVisit($course_id));
         
-        $navigation = new Navigation('forum', PluginEngine::getLink('coreforum/index/enter_seminar'));
+        $navigation = new Navigation('forum', PluginEngine::getLink($this, array(), 'index/enter_seminar'));
         #$navigation->setBadgeNumber($num_entries);
 
         $text = ForumHelpers::getVisitText($num_entries, $course_id);
@@ -140,7 +134,7 @@ class CoreForum extends StudipPlugin implements ForumModule
     function getLinkToThread($issue_id)
     {
         if ($topic_id = ForumIssue::getThreadIdForIssue($issue_id)) {
-            return PluginEngine::getLink('coreforum/index/index/' . $topic_id);
+            return PluginEngine::getLink($this, array(), '/index/index/' . $topic_id);
         }
         
         return false;

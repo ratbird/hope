@@ -121,7 +121,7 @@ class IndexController extends StudipController
 
         // we do not crawl deeper than level 2, we show a page chooser instead
         if ($this->constraint['depth'] > 2) {
-            ForumHelpers::setPage(ForumEntry::getPostingPage($this->topic_id));
+            ForumHelpers::setPage(ForumEntry::getPostingPage($this->topic_id, $this->constraint));
 
             $path               = ForumEntry::getPathToPosting($this->topic_id);
             array_shift($path);array_shift($path);$path_element = array_shift($path);
@@ -371,13 +371,21 @@ class IndexController extends StudipController
         }
     }
 
-    function add_entry_action($topic_id)
+    function add_entry_action()
     {
-        if (!Request::option('parent')) {
+        if (!$parent_id = Request::option('parent')) {
             throw new Exception('missing seminar_id/topic_id while adding a new entry!');
         }
         
         ForumPerm::check('add_entry', $this->getId());
+        
+        $constraints = ForumEntry::getConstraints($parent_id);
+        
+        // if we are answering/citing a posting, we want to add it to the thread
+        // (which is the parent of passed posting id)
+        if ($constraints['depth'] == 3) {
+            $parent_id = ForumEntry::getParentTopicId($parent_id);
+        }
 
         $new_id = md5(uniqid(rand()));
 
@@ -385,11 +393,11 @@ class IndexController extends StudipController
             'topic_id'    => $new_id,
             'seminar_id'  => $this->getId(),
             'user_id'     => $GLOBALS['user']->id,
-            'name'        => Request::get('name') ?: _('Kein Titel'),
+            'name'        => Request::get('name') ?: '',
             'content'     => Request::get('content'),
             'author'      => get_fullname($GLOBALS['user']->id),
             'author_host' => getenv('REMOTE_ADDR')
-        ), Request::option('parent'));
+        ), $parent_id);
 
         $this->flash['notify'] = $new_id;
 

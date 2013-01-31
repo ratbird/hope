@@ -93,13 +93,6 @@ STUDIP.Forum = {
         jQuery('textarea[data-textarea=' + textarea_id + ']').insertAtCaret(jQuery(element).attr('data-smiley'));
     },
     
-    newEntry: function() {
-        jQuery('#new_entry_button').hide();
-        jQuery('#new_entry_box').show();
-        jQuery('body').animate({scrollTop: jQuery(document).height()}, 'slow');
-        jQuery('html').animate({scrollTop: jQuery(document).height()}, 'slow');
-    },
-
     approveDelete: function () {
         if (STUDIP.Forum.current_area_id) {
             // hide the area in the dom
@@ -303,45 +296,43 @@ STUDIP.Forum = {
         jQuery('span[data-show-topic=' + topic_id +']').show();  
     },
 
+    newEntry: function() {
+        jQuery('#new_entry_button').hide();
+        jQuery('#new_entry_box').show();
+        jQuery('body').animate({scrollTop: jQuery('#new_entry_box').offset().top - 40}, 'slow');
+        jQuery('html').animate({scrollTop: jQuery('#new_entry_box').offset().top - 40}, 'slow');
+    },
+
     cancelNewEntry: function() {
         jQuery('#new_entry_button').show();
         jQuery('#new_entry_box').hide();
         
         jQuery('#new_entry_box textarea, #new_entry_box input[name=name]').val('');
         jQuery('#forum_new_entry').data('validator').reset();
+        
+        // hide and clear preview-window (if any);
+        jQuery('#new_entry_preview').parent().hide();
+        jQuery('#new_entry_preview').html('');
         return false;
     },
-    
-    citeEntry: function(topic_id) {
-        var name    = jQuery('span.username[data-profile=' + topic_id +']').text().trim();
-        var title   = jQuery('span[data-edit-topic=' + topic_id +'] input[name=name]').val();
 
-        if (title) {
-            title = 'Re: ' + title;
-            // sum the Re's and display them as Re^x:
-            var count   = title.match(/Re:/g).length;       // number of Re: occurrences
-            var matches = title.match(/Re:?\^(\d+):?/);     // check for occurrence of Re^x
+    citeEntryb: function(topic_id) {
+        // hide and clear preview-window (if any);
+        jQuery('#new_entry_preview').parent().hide();
+        jQuery('#new_entry_preview').html('');
 
-            title = title.replace(/Re:\ ?/g, '');           // remove all simple Re:
-
-            if (matches) {                                  // add the x of Re^x if any
-                title = title.replace(matches[0], 'Re^' + (count + parseInt(matches[1])) + ':');
-            } else {                                        // otherwise create a new one
-                if (count > 1) {
-                    title = 'Re^' + count + ': ' + title;
-                } else {
-                    title = 'Re: ' + title;
-                }
-            }
-        }
-      
+        var name = jQuery('span.username[data-profile=' + topic_id +']').text().trim();
+        
         // add content from cited posting in [quote]-tags
         var content = '[quote=' + name + ']' + "\n"
             + jQuery('span[data-edit-topic=' + topic_id +'] textarea[name=content]').val()
             + "\n[/quote]"
-        
+
         jQuery('#new_entry_box textarea').val(content);
-        jQuery('#new_entry_box input[name=name]').val(title);
+        jQuery('#new_entry_box').insertAfter('form[data-topicid=' + topic_id + ']');
+        jQuery('#new_entry_box').addClass('cite_box');
+        
+        jQuery('input[type=hidden][name=parent]').val(topic_id);
         STUDIP.Forum.newEntry();
     },
     

@@ -4,7 +4,7 @@
 <table class="forum <?= $has_perms && $category_id != $seminar_id ? 'movable' : '' ?>" data-category-id="<?= $category_id ?>">
     <thead id="tutorCategory">
     <tr>
-        <td class="forum_header <?= ForumPerm::has('sort_category', $seminar_id) && $category_id != $seminar_id ? 'handle' : '' ?>" colspan="3">
+        <td class="forum_header <?= ForumPerm::has('sort_category', $seminar_id) && $category_id != $seminar_id ? 'handle' : '' ?>" colspan="2">
             <a name="cat_<?= $category_id ?>"></a>
             <span class="corners-top"></span>
             <span class="heading">
@@ -29,26 +29,24 @@
             <span class="heading"><?= _("Beiträge") ?></span>
         </td>
 
-        <td class="forum_header" colspan="3" data-type="last_posting">
+        <td class="forum_header" colspan="2" data-type="last_posting">
             <span class="corners-top-right"></span>
             <span class="heading" style="float: left"><?= _("letzte Antwort") ?></span>
             <? if (ForumPerm::has('edit_category', $seminar_id) || ForumPerm::has('remove_category', $seminar_id)) : ?>
             <span style="float: right; padding-right: 5px;" id="tutorCategoryIcons">
                 <? if ($category_id == $seminar_id) : ?>
-                <?= Assets::img('icons/16/blue/info.png', array(
-                    'onClick' => "alert('" . _('Vordefinierte Kategorie, kann nicht bearbeitet oder gelöscht werden.' . '\n'
-                        . 'Für Nutzer/innen ohne Moderationsrechte taucht diese Kategorie nur auf, wenn sie Bereiche enthält.') . "')",
-                    'style'   => 'cursor: pointer')) ?>
+                <?= tooltipIcon(_('Vordefinierte Kategorie, kann nicht bearbeitet oder gelöscht werden.'
+                        . 'Für Nutzer/innen ohne Rechte taucht diese Kategorie nur auf, wenn sie Bereiche enthält.'), true) ?>
                 <? else : ?>
                     <? if (ForumPerm::has('edit_category', $seminar_id)) : ?>
                     <a href="javascript:STUDIP.Forum.editCategoryName('<?= $category_id ?>')">
-                        <?= Assets::img('icons/16/blue/edit.png', array('title' => 'Name der Kategorie ändern')) ?>
+                        <?= Assets::img('icons/16/white/edit.png', array('title' => 'Name der Kategorie ändern')) ?>
                     </a>
                     <? endif ?>
 
                     <? if(ForumPerm::has('remove_category', $seminar_id)) : ?>
                     <a href="javascript:STUDIP.Forum.deleteCategory('<?= $category_id ?>', '<?= $categories[$category_id] ?>')">
-                        <?= Assets::img('icons/16/blue/trash.png', array('title' => 'Kategorie entfernen')) ?>
+                        <?= Assets::img('icons/16/white/trash.png', array('title' => 'Kategorie entfernen')) ?>
                     </a>
                     <? endif ?>
                 <? endif ?>
@@ -69,9 +67,6 @@
         $jump_to_topic_id = $entry['topic_id']; ?>
 
     <tr id="tutorArea" data-area-id="<?= $entry['topic_id'] ?>" <?= ($has_perms) ? 'class="movable"' : '' ?>>
-
-        <td class="areaborder"> </td>
-
         <td class="areaentry icon">
             <? if (ForumPerm::has('sort_area', $seminar_id)) : ?>
             <img src="<?= $picturepath ?>/anfasser_48.png" class="handle" id="tutorMoveArea">
@@ -110,7 +105,7 @@
                         <span class="areaname"><?= htmlReady($entry['name_raw']) ?></span>
                         <br>
                     </a>
-                    <div class="areacontent"><?= htmlReady(mila(ForumEntry::killEdit($entry['content_raw']), 200)) ?></div>
+                    <div class="areacontent"><?= htmlReady(ForumEntry::killEdit($entry['content_raw'])) ?></div>
                 </span>
 
                 <? if (ForumPerm::has('edit_area', $seminar_id)) : ?>
@@ -185,7 +180,6 @@
             <? endif ?>
         </td>
 
-        <td class="areaborder"> </td>
     </tr>
     <? endforeach; ?>
     </tbody>
@@ -193,15 +187,14 @@
     <tfoot>
     <? if ($category_id && ForumPerm::has('add_area', $seminar_id)) : ?>
     <tr class="add_area">
-        <td class="areaborder" colspan="7">
+        <td class="areaborder" colspan="5">
             <div class="add_area" title="<?= _('Neuen Bereich zu dieser Kategorie hinzufügen.') ?>">
-                <?= Assets::img('icons/16/black/plus.png', array('id' => 'tutorAddArea')) ?>
+                <?= Assets::img('icons/16/white/plus.png', array('id' => 'tutorAddArea')) ?>
             </div>
         </td>
     </tr>
 
     <tr style="display: none" class="new_area">
-        <td class="areaborder"></td>
         <td class="areaentry"></td>
         <td class="areaentry">
             <form class="add_area_form" style="display: bgnone" method="post" action="<?= PluginEngine::getLink('coreforum/index/add_area/' . $category_id) ?>">
@@ -214,15 +207,14 @@
             </form>
         </td>
         <td class="areaentry postings">0</td>
-        <td class="areaentry answer"><br><?= _('keine Antworten') ?></td>
-        <td class="areaborder"></td>
+        <td class="areaentry answer" colspan="2"><br><?= _('keine Antworten') ?></td>
     </tr>
     <? endif ?>
 
 
     <!-- bottom border -->
     <tr>
-        <td class="areaborder" colspan="7">
+        <td class="areaborder" colspan="5">
             <span class="corners-bottom"><span></span></span>
         </td>
     </tr>

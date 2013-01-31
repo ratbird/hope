@@ -4,7 +4,7 @@
 <table class="forum" data-category-id="<?= $category_id ?>">
     <thead>
     <tr>
-        <td class="forum_header" colspan="3">
+        <td class="forum_header" colspan="2">
             <span class="corners-top"></span>
             <span class="heading">
                 <?= _('Themen') ?>
@@ -16,7 +16,7 @@
             <span class="heading"><?= _("Beiträge") ?></span>
         </td>
 
-        <td class="forum_header" colspan="2" data-type="last_posting">
+        <td class="forum_header" data-type="last_posting">
             <span class="corners-top-right"></span>
             <span class="heading" style="float: left"><?= _("letzte Antwort") ?></span>
         </td>
@@ -27,15 +27,13 @@
     <tbody class="sortable">
     <!-- this row allows dropping on otherwise empty categories -->
     <tr class="sort-disabled">
-        <td class="areaborder" style="height: 5px"colspan="7"> </td>
+        <td class="areaborder" style="height: 5px"colspan="5"> </td>
     </tr>
 
     <? if (!empty($entries)) foreach ($entries as $entry) :
         $jump_to_topic_id = ($entry['last_unread'] ?: $entry['topic_id']); ?>
  
     <tr data-area-id="<?= $entry['topic_id'] ?>">
-
-        <td class="areaborder"> </td>
 
         <td class="areaentry icon">
             <a href="<?= PluginEngine::getLink('coreforum/index/index/'. $jump_to_topic_id .'#'. $jump_to_topic_id) ?>">
@@ -135,7 +133,6 @@
             <?= _('keine Antworten') ?>
             <? endif; ?>
         </td>
-        <td class="areaborder"> </td>
     </tr>
     <? endforeach; ?>
     </tbody>
@@ -143,7 +140,7 @@
     <tfoot>
         <!-- bottom border -->
         <tr>
-            <td class="areaborder" colspan="7">
+            <td class="areaborder" colspan="5">
                 <span class="corners-bottom"><span></span></span>
             </td>
         </tr>

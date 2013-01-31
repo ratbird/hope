@@ -6,7 +6,7 @@
 <form method="post" data-topicid="<?= $post['topic_id'] ?>">
     <?= CSRFProtection::tokenTag() ?>
     
-<div class="posting <?=($zebra) ? 'bg1' : 'bg2'?>" style="position: relative;">
+<div class="posting" style="position: relative;">
     <span class="corners-top"><span></span></span>
 
     <? if ($post['fav']) : ?>
@@ -23,10 +23,11 @@
                 )) ?>
             </span>
             <? endif ?>
-
+            <? if ($post['name_raw'] && $post['depth'] < 3) : ?>
             <span data-edit-topic="<?= $post['topic_id'] ?>" style="display: none">
                 <input type="text" name="name" value="<?= htmlReady($post['name_raw']) ?>" data-reset="<?= htmlReady($post['name_raw']) ?>" style="width: 100%">
             </span>
+            <? endif ?>
             
             <span data-show-topic="<?= $post['topic_id'] ?>">
                 <a href="<?= PluginEngine::getLink('coreforum/index/index/' . $post['topic_id'] .'?'. http_build_query(array('highlight' => $highlight)) ) ?>#<?= $post['topic_id'] ?>">
@@ -34,7 +35,7 @@
                     <?= ForumHelpers::highlight(htmlReady(implode(' >> ', ForumEntry::getFlatPathToPosting($post['topic_id']))), $highlight) ?>
                 <? else : ?>
                 <span data-topic-name="<?= $post['topic_id'] ?>">
-                    <?= ($post['name_raw']) ? ForumHelpers::highlight(htmlReady($post['name_raw']), $highlight) : ''?>
+                    <?= ($post['name_raw'] && $post['depth'] < 3) ? ForumHelpers::highlight(htmlReady($post['name_raw']), $highlight) : ''?>
                 </span>
                 <? endif ?>
                 </a>
@@ -46,7 +47,7 @@
                         'title' => _("Dieser Beitrag ist seit Ihrem letzten Besuch hinzugekommen.")
                     )) ?>
                 <? endif ?>
-                von <strong><a href="<?= URLHelper::getLink('about.php?username='. get_username($post['owner_id'])) ?>">
+                <strong><a href="<?= URLHelper::getLink('about.php?username='. get_username($post['owner_id'])) ?>">
                     <?= ForumHelpers::highlight(htmlReady($post['author']), $highlight) ?>
                 </a></strong>
                 am <?= strftime($time_format_string, (int)$post['mkdate']) ?>
@@ -146,7 +147,7 @@
         <!-- Aktions-Buttons für diesen Beitrag -->
             
         <? if (ForumPerm::has('add_entry', $seminar_id)) : ?>
-        <?= Studip\LinkButton::create('Beitrag zitieren', "javascript:STUDIP.Forum.citeEntry('". $post['topic_id'] ."')") ?>
+        <?= Studip\LinkButton::create('Beitrag zitieren', "javascript:STUDIP.Forum.citeEntryb('". $post['topic_id'] ."')") ?>
         <? endif ?>
 
         <? if ($section == 'index' && ForumPerm::hasEditPerms($post['topic_id'])) : ?>

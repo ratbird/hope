@@ -26,7 +26,6 @@ require_once 'models/ForumVisit.php';
 
 // Notifications
 NotificationCenter::addObserver('CoreForum', 'overviewDidClear', "OverviewDidClear");
-NotificationCenter::addObserver('ForumIssue', 'unlinkIssue', 'ForumBeforeDelete');
 
 class CoreForum extends StudipPlugin implements ForumModule
 {
@@ -55,7 +54,7 @@ class CoreForum extends StudipPlugin implements ForumModule
     /**
      * This method dispatches all actions.
      *
-     * @param string   part of the dispatch path that was not consumed
+     * @param string $unconsumed_path  part of the dispatch path that was not consumed
      */
     function perform($unconsumed_path)
     {
@@ -113,7 +112,13 @@ class CoreForum extends StudipPlugin implements ForumModule
     }
 
  
-    /* notification */
+    /**
+     * This method is called, whenever an user clicked to clear the visit timestamps
+     * and set everything as visited
+     * 
+     * @param object $notification
+     * @param string $user_id
+     */
     function overviewDidClear($notification, $user_id)
     {
         $stmt = DBManager::get()->prepare("UPDATE forum_visits 

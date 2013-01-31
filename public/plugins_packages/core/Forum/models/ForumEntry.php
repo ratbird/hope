@@ -227,7 +227,7 @@ class ForumEntry {
         return $last_unread ? $last_unread['topic_id'] : null;
     }
 
-    /*
+    /**
      * retrieve the the latest posting under $parent_id
      * or false if the postings itself is the latest
      *

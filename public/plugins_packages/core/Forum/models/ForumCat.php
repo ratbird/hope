@@ -15,7 +15,7 @@
 class ForumCat {
     
     /**
-     * return a list of all available categories. Empty categories are excluded 
+     * Return a list of all available categories. Empty categories are excluded 
      * by default
      * 
      * @param string $seminar_id    the seminar_id the retrieve the categories for
@@ -35,6 +35,13 @@ class ForumCat {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
+    /**
+     * Returns the name of the associated category for an area denoted by the
+     * passed topic_id
+     * 
+     * @param string $topic_id
+     * @return string  the name of the category
+     */
     static function getCategoryNameForArea($topic_id)
     {
         $stmt = DBManager::get()->prepare("SELECT fc.entry_name FROM forum_categories AS fc
@@ -47,10 +54,12 @@ class ForumCat {
 
 
     /**
+     * Adds a new category with the passed name to the passed seminar and
+     * returns the id of the newly created category
      * 
-     * @param type $seminar_id
-     * @param type $name
-     * @return type
+     * @param string $seminar_id
+     * @param string $name  the name of the new category
+     * @return string  the id of the newly created category
      */
     static function add($seminar_id, $name)
     {
@@ -67,9 +76,11 @@ class ForumCat {
 
 
     /**
+     * Remove the category with the passed id. The seminar_id is used only
+     * to be certain.
      * 
-     * @param type $category_id
-     * @param type $seminar_id
+     * @param string $category_id  The ID of the category to be deleted
+     * @param string $seminar_id  Seminar-ID the category belongs to
      */
     static function remove($category_id, $seminar_id)
     {
@@ -89,9 +100,10 @@ class ForumCat {
 
     
     /**
+     * Set the position for the passed category to the passed value
      * 
-     * @param type $category_id
-     * @param type $pos
+     * @param string $category_id  the ID of the category to update
+     * @param int $pos             the new position
      */
     static function setPosition($category_id, $pos)
     {
@@ -103,9 +115,11 @@ class ForumCat {
 
     
     /**
+     * Add the passed area to the passed category and remove it from all
+     * other categories.
      * 
-     * @param type $category_id
-     * @param type $area_id
+     * @param string $category_id  the ID of the category
+     * @param string $area_id      the ID of the area to add the category to
      */
     static function addArea($category_id, $area_id)
     {
@@ -130,8 +144,9 @@ class ForumCat {
     
     
     /**
+     * Remove the passed area from all categories.
      * 
-     * @param type $area_id
+     * @param string $area_id  the ID of the area to be removed
      */
     static function removeArea($area_id)
     {
@@ -143,9 +158,10 @@ class ForumCat {
 
     
     /**
+     * Set the position for the passed category to the passed value
      * 
-     * @param type $area_id
-     * @param type $pos
+     * @param string $area_id  the ID of the area to update
+     * @param int    $pos      the new position
      */
     static function setAreaPosition($area_id, $pos)
     {
@@ -157,9 +173,10 @@ class ForumCat {
     
     
     /**
+     * Set the name for the passed category
      * 
-     * @param type $category_id
-     * @param type $name
+     * @param string $category_id  the ID of the category to update
+     * @param string $name         the name to set
      */
     static function setName($category_id, $name)
     {

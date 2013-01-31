@@ -1,9 +1,7 @@
 <?php
 
 /**
- * filename - Short description for file
- *
- * Long description for file (if any)...
+ * ForumAbo.php - Handle abonnements of areas/threads or even the whole forum
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -18,6 +16,13 @@
 require_once('lib/messaging.inc.php');
 
 class ForumAbo {
+    /**
+     * add the passed user as a watcher for the passed topic (including all 
+     * current and future childs)
+     * 
+     * @param string $topic_id
+     * @param string $user_id
+     */
     static function add($topic_id, $user_id = null)
     {
         if (!$user_id) $user_id = $GLOBALS['user']->id;
@@ -27,6 +32,13 @@ class ForumAbo {
         $stmt->execute(array($topic_id, $user_id));
     }
     
+    /**
+     * remove the passed user as a watcher from the passed topic (including all
+     * current and future childs)
+     * 
+     * @param string $topic_id
+     * @param string $user_id
+     */
     static function delete($topic_id, $user_id = null)
     {
         if (!$user_id) $user_id = $GLOBALS['user']->id;
@@ -36,6 +48,15 @@ class ForumAbo {
         $stmt->execute(array($topic_id, $user_id));
     }
     
+    /**
+     * check, if the passed user watches the passed topic. If no user_id is passed,
+     * the currently logged in user is used
+     * 
+     * @param string $topic_id
+     * @param string $user_id
+     * 
+     * @return boolean returns true if user is watching, false otherwise
+     */
     static function has($topic_id, $user_id = null) {
         if (!$user_id) $user_id = $GLOBALS['user']->id;
         
@@ -46,6 +67,12 @@ class ForumAbo {
         return $stmt->fetchColumn() > 0 ? true : false;
     }
 
+    /**
+     * send out the notification messages for the passed topic. The contents
+     * and a link directly to the topic are added to the messages.
+     * 
+     * @param string $topic_id
+     */
     static function notify($topic_id)
     {
         // send message to all abo-users

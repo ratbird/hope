@@ -14,10 +14,35 @@
  * @category    Stud.IP
  */
 
-#require_once 'lib/statusgruppe.inc.php';
-
 class ForumPerm {
 
+    /**
+     * Check, if the a user has the passed permission in a seminar.
+     * Possible permissions are:
+     *   edit_category      Editing the name of a category
+     *   add_category       Adding a new category
+     *   remove_category    Removing an existing category
+     *   sort_category      Sorting categories
+     *   edit_area          Editing an area (title + content)
+     *   add_area           Adding a new area
+     *   remove_area        Removing an area and all belonging threads
+     *   sort_area          Sorting of areas in categories and between categories
+     *   search             Searching in postings
+     *   edit_entry         Editing of foreign threads/postings
+     *   add_entry          Creating a new thread/posting
+     *   remove_entry       Removing of foreign threads/postings
+     *   fav_entry          Marking a Posting as "favorite"
+     *   like_entry         Liking a posting
+     *   move_thread        Moving a thrad between ares
+     *   abo                Signing up for mail-notifications for new entries
+     *   forward_entry      Forwarding an existing entry as a message
+     *   pdfexport          Exporting parts of the forum as PDF
+     * 
+     * @param string $perm        one of the modular permissions
+     * @param string $seminar_id  the seminar to check for
+     * @param string $user_id     the user to check for
+     * @return boolean  true, if the user has the perms, false otherwise
+     */
     static function has($perm, $seminar_id, $user_id = null)
     {
         static $permissions = array();
@@ -79,6 +104,17 @@ class ForumPerm {
         return false;
     }
 
+    /**
+     * If the user has not the passed perm in a seminar, an AccessDeniedException
+     * is thrown. The user_id is optional, if none is given, the currently 
+     * logged in user is checked.
+     * 
+     * @param string $perm        for the list of possible perms and their function see @ForumPerm::hasPerm()
+     * @param string $seminar_id  the seminar to check for
+     * @param string $user_id     the user_id to check
+     * 
+     * @throws AccessDeniedException
+     */
     function check($perm, $seminar_id, $user_id = null)
     {
         if (!self::has($perm, $seminar_id, $user_id)) {
@@ -90,7 +126,8 @@ class ForumPerm {
     }
     
     /**
-     * check, if the current user is allowed the edit the topic denoted by the passed id
+     * Check if the current user is allowed to edit the topic
+     *  denoted by the passed id
      * 
      * @staticvar array $perms
      * 

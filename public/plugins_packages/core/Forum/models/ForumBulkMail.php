@@ -17,6 +17,20 @@ require_once 'lib/messaging.inc.php';
 class ForumBulkMail extends Messaging {
     var $bulk_mail;
 
+    /**
+     * Overwrites the parent method. This method combines messages with the same
+     * content and prepares them for sending them as a mail with multiple 
+     * recepients instead of one mail for each recipient.
+     * The actual sending task is done bulkSend().
+     * 
+     * @global object $user
+     * 
+     * @param string $rec_user_id  user_id of recipient
+     * @param string $snd_user_id  user_id of sender
+     * @param string $message      the message
+     * @param string $subject      subject for the message
+     * @param string $message_id   the message_id in the database
+     */
     function sendingEmail($rec_user_id, $snd_user_id, $message, $subject, $message_id)
     {
         global $user;
@@ -68,6 +82,9 @@ class ForumBulkMail extends Messaging {
     }
     
 
+    /**
+     * Sends the collected messages from sendingMail as e-mail.
+     */
     function bulkSend()
     {
         // if nothing to do, return

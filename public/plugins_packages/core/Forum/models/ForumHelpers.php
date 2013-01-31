@@ -1,7 +1,23 @@
 <?php
+/**
+ * ForumHelpers.php - Some useful helpers for the forum
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * @author      Till Glöggler <tgloeggl@uos.de>
+ * @license     http://www.gnu.org/licenses/gpl-3.0.html GPL version 3
+ * @category    Stud.IP
+ */
 
 class ForumHelpers {
 
+    /**
+     * The page for the current script run, modified by a global page-handle
+     * @var int
+     */
     static $page = 1;
 
     /**
@@ -127,6 +143,15 @@ class ForumHelpers {
         self::$page = $page_num;
     }
     
+    /**
+     * Return an info-text explaining the visit-status of the passed topic_di
+     * which has the passed number of new entries.
+     * 
+     * @param string $num_entries  the number of new entries
+     * @param string $topic_id     the id of the topic 
+     * 
+     * @return string  a human readable, localized text
+     */
     static function getVisitText($num_entries, $topic_id)
     {
         if ($num_entries > 0) {
@@ -181,7 +206,17 @@ class ForumHelpers {
         
         return $online_status[$user_id] ?: 'offline';
     }
-    
+
+    /**
+     * Create a pdf of all postings belonging to the passed seminar located
+     * under the passed topic_id. The PDF is dispatched automatically.
+     * 
+     * BEWARE: This function never returns, it dies after the PDF has been 
+     * (succesfully or not) dispatched.
+     * 
+     * @param string $seminar_id
+     * @param string $parent_id
+     */
     static function createPdf($seminar_id, $parent_id = null)
     {
         $seminar_name = get_object_name($seminar_id, 'sem');

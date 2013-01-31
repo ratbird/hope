@@ -53,6 +53,12 @@ class ForumVisit {
         return $stmt->fetchColumn();
     }
     
+    /**
+     * Set the seminar denoted by the passed id as visited by the currently 
+     * logged in user
+     * 
+     * @param string $seminar_id
+     */
     static function setVisit($seminar_id) {
         if (self::getVisit($seminar_id) < object_get_visit($seminar_id, 'sem', false, false)) {
             self::setVisitdates($seminar_id);

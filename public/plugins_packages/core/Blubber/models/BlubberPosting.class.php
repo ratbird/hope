@@ -26,7 +26,7 @@ class BlubberPosting extends SimpleORMap {
      * @return string : formatted text
      */
     static public function format($text) {
-        StudipFormat::addStudipMarkup("blubberhashtag", "(^|\s)#([\w\d_\.\-]*[\w\d])", "", "BlubberPosting::markupHashtags");
+        StudipFormat::addStudipMarkup("blubberhashtag", "(^|\s)#([\w\d_\.\-]*[\w\d])", null, "BlubberPosting::markupHashtags");
         $output = formatReady($text);
         StudipFormat::removeStudipMarkup("blubberhashtag");
         return $output;

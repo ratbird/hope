@@ -40,9 +40,9 @@ class BlubberPosting extends SimpleORMap {
      */
     static public function markupHashtags($markup, $matches) {
         if (self::$course_hashes) {
-            $url = URLHelper::getLink("plugins.php/Blubber/forum/forum", array('hash' => $matches[2], 'cid' => self::$course_hashes));
+            $url = URLHelper::getLink("plugins.php/Blubber/streams/forum", array('hash' => $matches[2], 'cid' => self::$course_hashes));
         } else {
-            $url = URLHelper::getLink("plugins.php/Blubber/forum/globalstream", array('hash' => $matches[2]));
+            $url = URLHelper::getLink("plugins.php/Blubber/streams/global", array('hash' => $matches[2]));
         }
         return $matches[1].'<a href="'.$url.'" class="hashtag">#'.$markup->quote($matches[2]).'</a>';
     }

@@ -790,7 +790,7 @@ class ForumEntry {
         }
 
         $stmt = DBManager::get()->prepare("UPDATE forum_entries
-            SET name = ?, content = ?
+            SET name = ?, content = ?, chdate = UNIX_TIMESTAMP()
             WHERE topic_id = ?");
         $stmt->execute(array($name, transformBeforeSave($content), $topic_id));
     }

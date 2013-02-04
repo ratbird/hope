@@ -592,7 +592,7 @@ class StreamsController extends ApplicationController {
         }
 
         if ($this->thread['context_type'] === "course") {
-            Navigation::getItem("/course/blubberforum")->setImage($this->plugin->getPluginURL()."/assets/images/blubber.png");
+            Navigation::getItem("/course/blubberforum")->setImage(Assets::image_path("icons/16/black/blubber"));
             Navigation::activateItem('/course/blubberforum');
         } elseif($this->thread['context_type'] === "public") {
             Navigation::activateItem('/profile/blubber');

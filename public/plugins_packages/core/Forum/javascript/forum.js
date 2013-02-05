@@ -5,8 +5,7 @@
 var STUDIP = STUDIP || {};
 
 STUDIP.Forum = {
-    deleteAreaTemplate : null,
-    deleteCategoryTemplate: null,
+    confirmDialog: null,
     current_area_id: null,
     current_category_id: null,
     seminar_id: null,
@@ -85,8 +84,11 @@ STUDIP.Forum = {
         });
 
         // compile template
-        STUDIP.Forum.deleteAreaTemplate     = _.template(jQuery('#question_delete_area').text());
-        STUDIP.Forum.deleteCategoryTemplate = _.template(jQuery('#question_delete_category').text());
+        var getTemplate = _.memoize(function(name) {
+            return _.template(jQuery("#" + name).html());
+        })
+        
+        STUDIP.Forum.confirmDialog = getTemplate('confirm_dialog');
     },
 
     insertSmiley: function(textarea_id, element) {
@@ -97,7 +99,7 @@ STUDIP.Forum = {
         if (STUDIP.Forum.current_area_id) {
             // hide the area in the dom
             jQuery('tr[data-area-id=' + STUDIP.Forum.current_area_id + ']').remove();
-            jQuery('#question').hide();
+            STUDIP.Forum.closeDialog();
 
             // ajax call to make the deletion permanent
             jQuery.ajax(STUDIP.URLHelper.getURL('plugins.php/coreforum/index/delete_entry/'
@@ -113,7 +115,7 @@ STUDIP.Forum = {
         if (STUDIP.Forum.current_category_id) {
             // hide the table in the dom
             jQuery('table[data-category-id=' + STUDIP.Forum.current_category_id + ']').fadeOut();
-            jQuery('#question').hide();
+            STUDIP.Forum.closeDialog();
 
             // move all areas to the default category
             jQuery('table[data-category-id=' + STUDIP.Forum.current_category_id + '] tr.movable').each(function () {
@@ -140,18 +142,13 @@ STUDIP.Forum = {
         }
     },
     
-    disapproveDelete: function () {
-        jQuery('#question').hide();
-    },
-
     deleteArea: function (element, area_id) {
-        jQuery('.messagebox .content:first-child, #modalquestion').text(STUDIP.Forum.deleteAreaTemplate({
-            area: jQuery(element).parent().parent().find('span.areaname').text()
-        }));
+        STUDIP.Forum.showDialog('Sind sie sicher, dass Sie diesen Bereich löschen möchten? ' 
+            + 'Es werden auch alle Beiträge in diesem Bereich gelöscht!'.toLocaleString(),
+            'javascript:STUDIP.Forum.approveDelete()',
+            'tr[data-area-id=' + area_id +'] td.areaentry');
 
         STUDIP.Forum.current_area_id = area_id;
-
-        jQuery('#question').show();
     },
 
     addArea: function (element) {
@@ -165,12 +162,12 @@ STUDIP.Forum = {
     },
 
     deleteCategory: function (category_id, name) {
-        jQuery('.messagebox .content:first-child, #modalquestion').text(STUDIP.Forum.deleteCategoryTemplate({
-            category: name
-        }));
+        STUDIP.Forum.showDialog('Sind sie sicher, dass Sie diese Kategorie entfernen möchten? ' 
+            + 'Alle Bereiche werden dann nach "Allgemein" verschoben!'.toLocaleString(),
+            'javascript:STUDIP.Forum.approveDelete()',
+            'table[data-category-id=' + category_id +'] td.areaentry');
 
         STUDIP.Forum.current_category_id = category_id;
-        jQuery('#question').show();
     },
 
     editCategoryName: function (category_id) {
@@ -316,7 +313,7 @@ STUDIP.Forum = {
         return false;
     },
 
-    citeEntryb: function(topic_id) {
+    citeEntry: function(topic_id) {
         // hide and clear preview-window (if any);
         jQuery('#new_entry_preview').parent().hide();
         jQuery('#new_entry_preview').html('');
@@ -370,7 +367,8 @@ STUDIP.Forum = {
     moveThreadDialog: function (topic_id) {
         $('tr[data-area-id=' + topic_id +'] td.areaentry').addClass('selected');
         jQuery('#dialog_' + topic_id).dialog({ 
-            height: 300,
+            height: 400,
+            width: 400,
             beforeClose: function() {
                 $('tr[data-area-id=' + topic_id +'] td.areaentry').removeClass('selected');
             }
@@ -398,6 +396,24 @@ STUDIP.Forum = {
     
     startTour: function() {
         $('#joyRideTipContent').joyride();
+    },
+    
+    showDialog: function(question, confirm, highlight_element) {
+        if (highlight_element !== null) {
+            // STUDIP.Forum.highlightedElement = highlight_element;
+            jQuery(highlight_element).addClass('selected');
+            console.log(highlight_element);
+        }
+        
+        jQuery('body').append(STUDIP.Forum.confirmDialog({
+            question: question,
+            confirm: confirm
+        }));
+    },
+    
+    closeDialog: function() {
+        jQuery('#forum td.selected').removeClass('selected');
+        jQuery('div.modaloverlay').remove();
     }
 };
 

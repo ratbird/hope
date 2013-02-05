@@ -7,6 +7,12 @@
     -webkit-border-radius: @radius;
 }
 
+@forum_light: #ecf3f7;
+@forum_dark: #dee2e8;
+@forum_header: #899ab9;
+@forum_highlight: #ffffcc;
+@shadow: 3px 3px 4px rgba(0, 0, 0, 0.3);
+
 @media screen and (min-width: 401px) {
     #forum .small_screen, #forum .searchbar {
         display: none;
@@ -141,6 +147,10 @@
     width: 100%;
 }
 
+.ui-dialog {
+    box-shadow: @shadow
+}
+
 #forum {
     img.button, input[type=image] {
         vertical-align: middle;
@@ -179,21 +189,12 @@
     }
 
     .forum_header {
-        background-color: #899ab9;
+        background-color: @forum_header;
         color: #ffffff;
         margin: 0pt;
         padding: 0pt;
         .button {
             margin: 0px;
-        }
-
-    }
-
-    .listheader {
-        background-color: #d9e1f2;
-        padding: 0pt;
-        strong {
-            margin: 0pt 5px 0pt 5px;
         }
 
     }
@@ -208,29 +209,27 @@
         border-collapse: collapse;
         width: 100%;
         td.areaborder {
-            background-color: #899ab9;
+            background-color: @forum_header;
             width: 5px;
             padding: 0pt;
             margin: 0pt;
         }
 
-    }
-
-    .areaentry {
-        border-top: 1px solid #ffffff;
-        border-bottom: 1px solid #000000;
-        background-color: #dee2e8;
-        vertical-align: top;
-        padding-left: 5px;
-        > div {
-            height: 50px;
-            overflow: hidden;
+        td.areaentry {
+             border-top: 1px solid #ffffff;
+             border-bottom: 1px solid #000000;
+             background-color: @forum_dark;
+             vertical-align: top;
+             padding-left: 5px;
+             > div {
+                 height: 50px;
+                 overflow: hidden;
+             }
         }
 
-    }
-
-    td.selected {
-        background-color: #ffcccc;
+        td.selected {
+            background-color: @forum_highlight
+        }
     }
 
     td.postings {
@@ -290,37 +289,14 @@
     }
 
     span.areaname {
+        display: block;
+        margin-right: 55px;
         font-weight: bold;
-        width: 100%;
     }
 
     span.threadauthor {
         float: left;
         width: 70%;
-    }
-
-    span.pagechooser {
-        float: right;
-        min-width: 15%;
-    }
-
-    span.pagechooser_thread {
-        float: right;
-        width: 160px;
-        padding-bottom: 2px;
-        white-space: nowrap;
-    }
-
-    span.page {
-        border: 1px solid #aaaaaa;
-        background-color: #dddddd;
-        padding: 1px 3px 0px 3px;
-        font-weight: bold;
-    }
-
-    span.selected {
-        background-color: #4d6b9d;
-        color: #ffffff;
     }
 
     .cite_box {
@@ -329,9 +305,10 @@
 
     .posting {
         height: 100%;
-        margin: 0 0 0.5em 0;
+        margin: 0 0 1em 0;
         padding: 0;
-        background-color: #ecf3f7;
+        background-color: @forum_light;
+        box-shadow: @shadow
     }
 
     .postbody {
@@ -445,6 +422,11 @@
         position: absolute;
         right: 10px;
         top: 0px;
+        visibility: hidden;
+    }
+
+    tr:hover .action-icons {
+        visibility: visible;
     }
 
     .likes {

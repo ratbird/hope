@@ -106,6 +106,9 @@
 #layout_content {
   width: 100%;
 }
+.ui-dialog {
+  box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.3);
+}
 #forum img.button,
 #forum input[type=image] {
   vertical-align: middle;
@@ -148,13 +151,6 @@
 #forum .forum_header .button {
   margin: 0px;
 }
-#forum .listheader {
-  background-color: #d9e1f2;
-  padding: 0pt;
-}
-#forum .listheader strong {
-  margin: 0pt 5px 0pt 5px;
-}
 #forum .heading {
   display: block;
   margin: 1px 4px 4px 6px;
@@ -170,19 +166,19 @@
   padding: 0pt;
   margin: 0pt;
 }
-#forum .areaentry {
+#forum table.forum td.areaentry {
   border-top: 1px solid #ffffff;
   border-bottom: 1px solid #000000;
   background-color: #dee2e8;
   vertical-align: top;
   padding-left: 5px;
 }
-#forum .areaentry > div {
+#forum table.forum td.areaentry > div {
   height: 50px;
   overflow: hidden;
 }
-#forum td.selected {
-  background-color: #ffcccc;
+#forum table.forum td.selected {
+  background-color: #ffffcc;
 }
 #forum td.postings {
   vertical-align: middle;
@@ -232,41 +228,23 @@
   height: 30px;
 }
 #forum span.areaname {
+  display: block;
+  margin-right: 55px;
   font-weight: bold;
-  width: 100%;
 }
 #forum span.threadauthor {
   float: left;
   width: 70%;
-}
-#forum span.pagechooser {
-  float: right;
-  min-width: 15%;
-}
-#forum span.pagechooser_thread {
-  float: right;
-  width: 160px;
-  padding-bottom: 2px;
-  white-space: nowrap;
-}
-#forum span.page {
-  border: 1px solid #aaaaaa;
-  background-color: #dddddd;
-  padding: 1px 3px 0px 3px;
-  font-weight: bold;
-}
-#forum span.selected {
-  background-color: #4d6b9d;
-  color: #ffffff;
 }
 #forum .cite_box {
   margin: 0 4em;
 }
 #forum .posting {
   height: 100%;
-  margin: 0 0 0.5em 0;
+  margin: 0 0 1em 0;
   padding: 0;
   background-color: #ecf3f7;
+  box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.3);
 }
 #forum .postbody {
   position: relative;
@@ -363,6 +341,10 @@
   position: absolute;
   right: 10px;
   top: 0px;
+  visibility: hidden;
+}
+#forum tr:hover .action-icons {
+  visibility: visible;
 }
 #forum .likes {
   max-width: 270px;

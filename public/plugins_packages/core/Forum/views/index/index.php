@@ -6,9 +6,23 @@
     });
 </script>
 
+<?= $this->render_partial('index/_confirm_dialog') ?>
+
 <!-- set a CSS "namespace" for Forum -->
 <div id="forum">
 <? 
+
+$infobox_content[] = array(
+    'kategorie' => _('Informationen'),
+    'eintrag'   => array(
+        array(
+            'icon' => 'icons/16/black/info.png',
+            'text' => sprintf(_('Sie befinden sich hier im Forum. Ausführliche Hilfe finden sie in der %sDokumentation%s'),
+                '<a href="'. format_help_url(PageLayout::getHelpKeyword()) .'" target="_blank">', '</a>')
+        )
+    )
+);
+
 if (ForumPerm::has('search', $seminar_id)) :
     $infobox_content[] = array(
         'kategorie' => _('Suche'),
@@ -19,8 +33,9 @@ if (ForumPerm::has('search', $seminar_id)) :
             )
         )
     );
+endif;
 
-    if ($constraint['depth'] == 0) :
+if ($constraint['depth'] == 0) :
     $infobox_content[] = array(
         'kategorie' => _('Tour'),
         'eintrag'   => array(
@@ -30,8 +45,29 @@ if (ForumPerm::has('search', $seminar_id)) :
             )
         )
     );
-    endif;
 endif;
+
+if (ForumAbo::has($constraint['topic_id'])) :
+    $abo_text = _('Nicht mehr abonnieren');
+    $abo_url = PluginEngine::getLink('coreforum/index/remove_abo/' . $constraint['topic_id']);
+else :
+    $abo_text = _('Komplettes Forum abonnieren');
+    $abo_url = PluginEngine::getLink('coreforum/index/abo/' . $constraint['topic_id']);
+endif;
+
+$infobox_content[] = array(
+    'kategorie' => _('Aktionen'),
+    'eintrag'   => array(
+        array(
+            'icon' => 'icons/16/black/link-intern.png',
+            'text' => '<a href="'. $abo_url .'">' . $abo_text .'</a>'
+        ),
+        array(
+            'icon' => 'icons/16/black/link-intern.png',
+            'text' => '<a href="">' . _('Beiträge als PDF exportieren') .'</a>'
+        )        
+    )
+);
 
 // show the infobox only if it contains elements
 if (!empty($infobox_content)) :

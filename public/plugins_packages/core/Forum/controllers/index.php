@@ -634,9 +634,13 @@ class IndexController extends StudipController
         ForumPerm::check('abo', $this->getId());
             
         ForumAbo::add($topic_id);
-        $this->constraint = ForumEntry::getConstraints($topic_id);
         
-        $this->render_template('index/_abo_link');
+        if (Request::isXhr()) {
+            $this->constraint = ForumEntry::getConstraints($topic_id);
+            $this->render_template('index/_abo_link');
+        } else {
+            $this->redirect(PluginEngine::getLink('coreforum/index/index/' . $topic_id));
+        }
     }
 
     function remove_abo_action($topic_id)
@@ -644,9 +648,13 @@ class IndexController extends StudipController
         ForumPerm::check('abo', $this->getId());
 
         ForumAbo::delete($topic_id);
-        $this->constraint = ForumEntry::getConstraints($topic_id);
         
-        $this->render_template('index/_abo_link');
+        if (Request::isXhr()) {
+            $this->constraint = ForumEntry::getConstraints($topic_id);
+            $this->render_template('index/_abo_link');
+        } else {
+            $this->redirect(PluginEngine::getLink('coreforum/index/index/' . $topic_id));
+        }
     }
 
     function pdfexport_action($parent_id = null)

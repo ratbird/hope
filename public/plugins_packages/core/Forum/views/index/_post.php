@@ -147,7 +147,7 @@
         <!-- Aktions-Buttons für diesen Beitrag -->
             
         <? if (ForumPerm::has('add_entry', $seminar_id)) : ?>
-        <?= Studip\LinkButton::create('Beitrag zitieren', "javascript:STUDIP.Forum.citeEntryb('". $post['topic_id'] ."')") ?>
+        <?= Studip\LinkButton::create('Beitrag zitieren', "javascript:STUDIP.Forum.citeEntry('". $post['topic_id'] ."')") ?>
         <? endif ?>
 
         <? if ($section == 'index' && ForumPerm::hasEditPerms($post['topic_id'])) : ?>
@@ -155,14 +155,13 @@
         <? endif ?>
 
         <? if ($section == 'index' && (ForumPerm::hasEditPerms($post['topic_id']) || ForumPerm::has('remove_entry', $seminar_id))) : ?>
+            <? $confirmLink = PluginEngine::getURL('coreforum/index/delete_entry/' . $post['topic_id'])  ?>
             <? if ($constraint['depth'] == $post['depth']) : /* this is not only a posting, but a thread */ ?>
-                <?= Studip\LinkButton::create('Thema löschen', PluginEngine::getURL('coreforum/index/delete_entry/' . $post['topic_id']),
-                    array('onClick' => "return confirm('". _('Wenn Sie diesen Beitrag löschen wird ebenfalls das gesamte Thema gelöscht.\n'
-                            . ' Sind Sie sicher, dass Sie das tun möchten?') ."')")) ?>
+                <? $confirmText = _('Wenn Sie diesen Beitrag löschen wird ebenfalls das gesamte Thema gelöscht. Sind Sie sicher, dass Sie das tun möchten?')  ?>
+                <?= Studip\LinkButton::create('Thema löschen', "javascript:STUDIP.Forum.showDialog('$confirmText', '$confirmLink')") ?>
             <? else : ?>
-                <?= Studip\LinkButton::create('Beitrag löschen', PluginEngine::getURL('coreforum/index/delete_entry/' . $post['topic_id']),
-                    array('onClick' => "return confirm('". _('Möchten Sie diesen Beitrag wirklich löschen?') ."')")) ?>
-            <? /* "javascript:STUDIP.Forum.deleteEntry('{$post['topic_id']}');" */ ?>
+                <? $confirmText = _('Möchten Sie diesen Beitrag wirklich löschen?') ?>
+                <?= Studip\LinkButton::create('Beitrag löschen', "javascript:STUDIP.Forum.showDialog('$confirmText', '$confirmLink')") ?>
             <? endif ?>
         <? endif ?>
 

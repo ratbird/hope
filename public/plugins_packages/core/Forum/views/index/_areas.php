@@ -100,13 +100,14 @@
         </td>
         <td class="areaentry">
             <div style="position: relative;">
+                
                 <span class="areadata">
                     <a href="<?= PluginEngine::getLink('coreforum/index/index/'. $jump_to_topic_id .'#'. $jump_to_topic_id) ?>">
                         <span class="areaname"><?= htmlReady($entry['name_raw']) ?></span>
-                        <br>
                     </a>
                     <div class="areacontent"><?= htmlReady(ForumEntry::killEdit($entry['content_raw'])) ?></div>
                 </span>
+                
 
                 <? if (ForumPerm::has('edit_area', $seminar_id)) : ?>
                 <span class="areaname_edit" style="display: none; text-align: center;">
@@ -132,7 +133,6 @@
                     </div>
                 </span>
                 <? endif ?>
-
                 
                 <span class="action-icons" <? if(ForumPerm::has('edit_area', $seminar_id)) : ?> id="tutorAreaIcons"<? endif ?>>
                     <? if (ForumPerm::has('edit_area', $seminar_id)) : ?>
@@ -224,19 +224,6 @@
     </tfoot>
 </table>
 <? endforeach ?>
-</div>
-
-<div id="question" style="display: none">
-    <span id="question_delete_area" style="display: none"><?= _('Sind sie sicher, dass Sie den Bereich <%- area %> löschen möchten? '
-         . 'Es werden auch alle Beiträge in diesem Bereich gelöscht!') ?></span>
-    <span id="question_delete_category" style="display: none"><?= _('Sind sie sicher, dass Sie die Kategorie <%- category %> entfernen möchten? '
-         . 'Alle Bereiche werden dann nach "Allgemein" verschoben!') ?></span>
-    <?= $GLOBALS['template_factory']->open('shared/question')->render(array(
-        'question'        => '',
-        'approvalLink'    => "javascript:STUDIP.Forum.approveDelete()",
-        'disapprovalLink' => "javascript:STUDIP.Forum.disapproveDelete()"
-    )) ?>
-    <? /* createQuestion() */ ?>
 </div>
 
 <?= $this->render_partial('joyride/areas.php') ?>

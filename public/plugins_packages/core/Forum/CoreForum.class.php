@@ -49,6 +49,8 @@ class CoreForum extends StudipPlugin implements ForumModule
         // JQuery-Tutor JoyRide JS and CSS
         PageLayout::addScript($this->getPluginURL() . '/javascript/jquery.joyride.js');
         PageLayout::addStylesheet($this->getPluginURL() . '/stylesheets/joyride.css');
+        
+        PageLayout::setHelpKeyword('Basis.Forum');
     }
 
     /**

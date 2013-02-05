@@ -122,7 +122,7 @@ class Admin_SemesterController extends AuthenticatedController
                 $semester->setData($data);
                 //check parameters
                 if(!$this->validateSemester($semester)) {
-                    PageLayout::postMessage(MessageBox::error(_("Ihre eingegeben Daten sind ungültig.")));
+                    PageLayout::postMessage(MessageBox::error(_("Ihre eingegebenen Daten sind ungültig.")));
                 } elseif (!$this->checkOverlap($semester)) {
                     if (($ok = $semester->store()) !== false) {
                         if ($ok > 0) {
@@ -151,7 +151,7 @@ class Admin_SemesterController extends AuthenticatedController
 
             //check parameters
             if(!$this->validateSemester($this->semester)) {
-                PageLayout::postMessage(MessageBox::error(_("Ihre eingegeben Daten sind ungültig.")));
+                PageLayout::postMessage(MessageBox::error(_("Ihre eingegebenen Daten sind ungültig.")));
             } elseif (!$this->checkOverlap($this->semester)) {
                 $semester = new Semester();
                 $semester->setData($this->semester);
@@ -204,7 +204,7 @@ class Admin_SemesterController extends AuthenticatedController
                     if ($holiday['beginn'] > $holiday['ende']) {
                         $details[] = _("Das Ferienende liegt vor dem Beginn.");
                     }
-                    PageLayout::postMessage(MessageBox::error(_("Ihre eingegeben Daten sind ungültig."), $details));
+                    PageLayout::postMessage(MessageBox::error(_("Ihre eingegebenen Daten sind ungültig."), $details));
 
                 } elseif ($this->holiday->store() !== false) {
                     PageLayout::postMessage(MessageBox::success(_("Die Ferien wurden erfolgreich gespeichert.")));
@@ -237,9 +237,9 @@ class Admin_SemesterController extends AuthenticatedController
                     $details[] = _("Bitte geben Sie einen Namen ein.");
                 }
                 if ($holiday['beginn'] > $holiday['ende']) {
-                    $details[] = _("Das Ferienende leigt vor dem Beginn.");
+                    $details[] = _("Das Ferienende liegt vor dem Beginn.");
                 }
-                PageLayout::postMessage(MessageBox::error(_("Ihre eingegeben Daten sind ungültig."), $details));
+                PageLayout::postMessage(MessageBox::error(_("Ihre eingegebenen Daten sind ungültig."), $details));
             } elseif ($this->holiday->store()) {
                 PageLayout::postMessage(MessageBox::success(_("Die Ferien wurden erfolgreich gespeichert.")));
                 $this->redirect('admin/semester');

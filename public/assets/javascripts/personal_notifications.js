@@ -48,6 +48,7 @@
                         notification.toggle('blind', 'fast', function () {
                             delete stack[id];
                             STUDIP.PersonalNotifications.update();
+                            $(this).remove();
                         });
                     }
                 }

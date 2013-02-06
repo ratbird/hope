@@ -98,8 +98,6 @@
                     <? endif ?>
                 </span>
 
-                <br/>
-
                 <?= _("von") ?>
                 <a href="<?= UrlHelper::getLink('about.php?username='. get_username($entry['owner_id'])) ?>">
                     <?= htmlReady($entry['author']) ?>

@@ -107,7 +107,7 @@
   width: 100%;
 }
 .ui-dialog {
-  box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.3);
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
 }
 #forum img.button,
 #forum input[type=image] {
@@ -241,10 +241,10 @@
 }
 #forum .posting {
   height: 100%;
-  margin: 0 0 1em 0;
+  margin: 0 0 0.75em 0;
   padding: 0;
   background-color: #ecf3f7;
-  box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.3);
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
 }
 #forum .postbody {
   position: relative;
@@ -337,10 +337,13 @@
   display: block;
   height: 5px;
 }
-#forum .action-icons {
+#forum .action-icons,
+#forum .likes {
   position: absolute;
   right: 10px;
   top: 0px;
+}
+#forum .action-icons {
   visibility: hidden;
 }
 #forum tr:hover .action-icons {

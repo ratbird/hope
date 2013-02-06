@@ -19,24 +19,24 @@ class ForumPerm {
     /**
      * Check, if the a user has the passed permission in a seminar.
      * Possible permissions are:
-     *   edit_category      Editing the name of a category
-     *   add_category       Adding a new category
-     *   remove_category    Removing an existing category
-     *   sort_category      Sorting categories
-     *   edit_area          Editing an area (title + content)
-     *   add_area           Adding a new area
-     *   remove_area        Removing an area and all belonging threads
-     *   sort_area          Sorting of areas in categories and between categories
-     *   search             Searching in postings
-     *   edit_entry         Editing of foreign threads/postings
-     *   add_entry          Creating a new thread/posting
-     *   remove_entry       Removing of foreign threads/postings
-     *   fav_entry          Marking a Posting as "favorite"
-     *   like_entry         Liking a posting
-     *   move_thread        Moving a thrad between ares
-     *   abo                Signing up for mail-notifications for new entries
-     *   forward_entry      Forwarding an existing entry as a message
-     *   pdfexport          Exporting parts of the forum as PDF
+     *   edit_category     - Editing the name of a category<br>
+     *   add_category      - Adding a new category<br>
+     *   remove_category   - Removing an existing category<br>
+     *   sort_category     - Sorting categories<br>
+     *   edit_area         - Editing an area (title + content)<br>
+     *   add_area          - Adding a new area<br>
+     *   remove_area       - Removing an area and all belonging threads<br>
+     *   sort_area         - Sorting of areas in categories and between categories<br>
+     *   search            - Searching in postings<br>
+     *   edit_entry        - Editing of foreign threads/postings<br>
+     *   add_entry         - Creating a new thread/posting<br>
+     *   remove_entry      - Removing of foreign threads/postings<br>
+     *   fav_entry         - Marking a Posting as "favorite"<br>
+     *   like_entry        - Liking a posting<br>
+     *   move_thread       - Moving a thrad between ares<br>
+     *   abo               - Signing up for mail-notifications for new entries<br>
+     *   forward_entry     - Forwarding an existing entry as a message<br>
+     *   pdfexport         - Exporting parts of the forum as PDF<br>
      * 
      * @param string $perm        one of the modular permissions
      * @param string $seminar_id  the seminar to check for

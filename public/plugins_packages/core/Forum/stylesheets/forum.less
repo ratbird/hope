@@ -11,7 +11,7 @@
 @forum_dark: #dee2e8;
 @forum_header: #899ab9;
 @forum_highlight: #ffffcc;
-@shadow: 3px 3px 4px rgba(0, 0, 0, 0.3);
+@shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
 
 @media screen and (min-width: 401px) {
     #forum .small_screen, #forum .searchbar {
@@ -305,7 +305,7 @@
 
     .posting {
         height: 100%;
-        margin: 0 0 1em 0;
+        margin: 0 0 0.75em 0;
         padding: 0;
         background-color: @forum_light;
         box-shadow: @shadow
@@ -418,10 +418,13 @@
         height: 5px;
     }
 
-    .action-icons {
+    .action-icons, .likes {
         position: absolute;
         right: 10px;
         top: 0px;
+    }
+
+    .action-icons {
         visibility: hidden;
     }
 

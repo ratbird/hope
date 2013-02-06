@@ -869,6 +869,7 @@ div#barBottomright li,
   position: absolute;
   width: 400px;
   max-width: 400px;
+  padding: 4px;
   -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
   -moz-box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
@@ -925,9 +926,9 @@ div#barBottomright li,
   -moz-transition: background-color 0.5s, opacity 0.8s;
   -o-transition: background-color 0.5s, opacity 0.8s;
   transition: background-color 0.5s, opacity 0.8s;
-  padding: 4px;
+  padding-top: 4px;
+  padding-bottom: 4px;
   white-space: normal;
-  width: 392px;
 }
 #barBottomright .list .item:before,
 #barBottomright .list .item:after {
@@ -961,7 +962,7 @@ div#barBottomright li,
 #barBottomright .list a {
   color: #24437c;
   display: block;
-  padding: 3px;
+  padding: 0px;
 }
 #barBottomright .list a:hover {
   color: #ff3333;
@@ -969,7 +970,7 @@ div#barBottomright li,
 #barBottomright .list .options {
   cursor: pointer;
   float: right;
-  margin: 0;
+  padding-top: 4px;
 }
 #barBottomright .list .options.hidden {
   visibility: hidden;
@@ -989,20 +990,23 @@ div#barBottomright li,
   margin-top: 3px;
   height: 16px;
   font-size: 0.8em;
-  border: thin solid white;
+  border: thin solid #cccccc;
+  color: #cccccc;
   text-align: center;
   line-height: 17px;
   vertical-align: text-bottom;
-  opacity: 0.5;
+  background-color: #899ab9;
 }
 #notification_marker.alert {
-  opacity: 1;
-  background-color: #f33;
+  border: thin solid white;
+  background-color: #c53d3d;
   font-weight: bold;
+  color: white;
 }
 #notification_container .avatar {
   float: left;
-  margin-right: 0.5em;
+  margin-right: 10px;
+  margin-left: 0px;
   background-position: center center;
   background-size: 100%;
   width: 40px;

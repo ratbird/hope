@@ -136,7 +136,9 @@ div#barBottomright, #layout_footer {
         position: absolute;
         width: @width;
         max-width: @width;
+        padding: 4px;
         .box-shadow(0 0 8px rgba(0, 0, 0, 0.5));
+        
 
         // Without this, buttons or message boxes would appear on top of the list
         z-index: 2;
@@ -182,10 +184,10 @@ div#barBottomright, #layout_footer {
             height: auto;
             opacity: 0;
             .transition(~"background-color 0.5s, opacity 0.8s");
-            padding: @padding;
+            padding-top: @padding;
+            padding-bottom: @padding;
             white-space: normal;
-            width: @width - @padding * 2;
-
+            
             &:hover { background-color: #ffffff; }
 
             // First child: no top-border and but rounded corners
@@ -200,14 +202,14 @@ div#barBottomright, #layout_footer {
         a {
             color: @brand-color-dark;
             display: block;
-            padding: 3px;
+            padding: 0px;
             &:hover { color: @active-color; }
         }
 
         .options {
             cursor: pointer;
             float: right;
-            margin: 0;
+            padding-top: 4px;
 
             &.hidden { visibility: hidden; }
         }
@@ -222,23 +224,26 @@ div#barBottomright, #layout_footer {
     margin-top: 3px;
     height: 16px;
     font-size: 0.8em;
-    border: thin solid white;
+    border: thin solid #cccccc;
+    color: #cccccc;
     text-align: center;
     line-height: 17px;
     vertical-align: text-bottom;
-    opacity: 0.5;
+    background-color: @brand-color-lighter;
     
     &.alert {
-        opacity: 1;
-        background-color: #f33;
+        border: thin solid white;
+        background-color: @public_course_bgcolor;
         font-weight: bold;
+        color: white;
     }
 }
 
 #notification_container {
     .avatar {
         float: left;
-        margin-right: 0.5em;
+        margin-right: 10px;
+        margin-left: 0px;
         background-position: center center;
         background-size: 100%;
         width: 40px;
@@ -280,23 +285,22 @@ div#header {
 
 /* --- public course marker ------------------------------------------------ */
 #barBottomContainer.public_course {
-    @bgcolor: #c53d3d;
 
-    background-color: @bgcolor;
+    background-color: @public_course_bgcolor;
 
     div#barBottommiddle, div#barBottomright, div#barBottomLeft {
-        background-color: @bgcolor;
+        background-color: @public_course_bgcolor;
     }
     div#barBottomLeft {
         // Adds an arrow at the end
-        #arrow > .right(12px, @bgcolor, 0);
+        #arrow > .right(12px, @public_course_bgcolor, 0);
     }
     div#barBottommiddle:before { 
         // Adds the fading background to the left
-        #gradient > .horizontal(darken(@bgcolor, 10%), @bgcolor);
+        #gradient > .horizontal(darken(@public_course_bgcolor, 10%), @public_course_bgcolor);
     }
     #barBottomright:before {
-        #gradient > .horizontal(fadeout(@bgcolor, 100%), @bgcolor);
-        background-color: fadeout(@bgcolor, 100%);
+        #gradient > .horizontal(fadeout(@public_course_bgcolor, 100%), @public_course_bgcolor);
+        background-color: fadeout(@public_course_bgcolor, 100%);
     }
 }

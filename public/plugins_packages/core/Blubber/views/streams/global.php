@@ -90,7 +90,7 @@
                         </label>
                     </td>
                     <td>
-                        <?= _("Im Kurs") ?>
+                        <?= _("In Veranstaltung") ?>
                         <select name="context">
                             <? foreach (BlubberPosting::getMyBlubberCourses() as $course_id) : ?>
                             <? $seminar = new Seminar($course_id) ?>

@@ -98,7 +98,7 @@ $author_url = $author->getURL();
             </a>
             <? if (($thread['Seminar_id'] !== $thread['user_id'] && $GLOBALS['perm']->have_studip_perm("tutor", $thread['Seminar_id']))
                     or ($thread['user_id'] === $GLOBALS['user']->id)) : ?>
-            <a href="#" class="edit icon" title="<?= _("Bearbeiten") ?>" onClick="return false;" style="background-image: url('<?= Assets::image_path("icons/16/grey/tools") ?>');"></a>
+            <a href="#" class="edit icon" alt="<?= _("Bearbeiten") ?>" title="<?= _("Bearbeiten") ?>" onClick="return false;" style="background-image: url('<?= Assets::image_path("icons/16/grey/tools") ?>');"></a>
             <? endif ?>
         </div>
         <div class="name">
@@ -125,8 +125,7 @@ $author_url = $author->getURL();
     <? if ($postings) : ?>
         <? if (count($postings) > 3) : ?>
         <li class="more">
-            <?= sprintf(ngettext('%u weiterer Kommentar', '%u weitere Kommentare', count($postings) - 3), count($postings) - 3)?>
-            ...
+            <?= sprintf(ngettext('%u weiterer Kommentar anzeigen', '%u weitere Kommentare anzeigen', count($postings) - 3), count($postings) - 3)?>
         </li>
         <? endif; ?>
         <? foreach (array_slice($postings, -3) as $posting) : ?>

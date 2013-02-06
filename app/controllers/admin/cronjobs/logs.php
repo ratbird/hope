@@ -78,6 +78,11 @@ class Admin_Cronjobs_LogsController extends AuthenticatedController
         $limit = sprintf(" LIMIT %u, %u", ($this->page - 1) * $this->max_per_page, $this->max_per_page);
         $this->logs = CronjobLog::findBySQL($filter['where'] . $order . $limit);
 
+        // Filters
+        $this->schedules  = CronjobSchedule::findBySql('1');
+        $this->tasks      = CronjobTask::findBySql('1');
+        $this->filter     = $filter['values'];
+
         // Infobox image was produced from an image by Robbert van der Steeg
         // http://www.flickr.com/photos/robbie73/5924985913/
         $this->setInfoboxImage(Assets::image_path('infobox/time.jpg'));
@@ -97,25 +102,6 @@ class Admin_Cronjobs_LogsController extends AuthenticatedController
                         $this->url_for('admin/cronjobs/logs'),
                         _('Logs anzeigen'));
         $this->addToInfobox(_('Navigation'), $logs, 'icons/16/red/arr_1right');
-
-        // Filters
-        $template = $this->get_template_factory()->open('admin/cronjobs/logs/infobox-filter');
-        $template->controller = $this;
-        $template->schedules  = CronjobSchedule::findBySql('1');
-        $template->tasks      = CronjobTask::findBySql('1');
-        $template->filter     = $filter['values'];
-        $filters = $template->render();
-        $this->addToInfobox(_('Darstellung einschränken'), $filters);
-
-        $this->addToInfobox(_('Darstellung einschränken'),
-                            sprintf(_('Passend: %u / %u Logeinträge'), $this->total_filtered, $this->total));
-
-        // Actions
-        // TODO: Clean logs
-        // $register = sprintf('<a href="%s">%s</a>',
-        //                     $this->url_for('task/register'),
-        //                     _('Neue Aufgabe registrieren'));
-        // $this->addToInfobox(_('Aktionen'), $register, 'icons/16/black/plus');
     }
 
     /**

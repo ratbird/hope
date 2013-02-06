@@ -2195,11 +2195,24 @@ table.contact-header td.empty a {
   -moz-border-radius-bottomleft: 3px;
   border-bottom-left-radius: 3px;
 }
+.cronjob-filters {
+  margin-bottom: 1em;
+}
 .cronjob-filters label {
   display: block;
+  font-weight: bold;
 }
 .cronjob-filters select {
   width: 100%;
+}
+.cronjob-filters thead th {
+  text-align: right;
+}
+.cronjob-filters thead th:first-child {
+  text-align: left;
+}
+.cronjob-filters tfoot td {
+  text-align: center;
 }
 .crontab,
 .crontab li {

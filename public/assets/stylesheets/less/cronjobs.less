@@ -61,8 +61,18 @@
 }
 
 .cronjob-filters {
-    label { display: block; }
+    margin-bottom: 1em;
+    
+    label {
+        display: block;
+        font-weight: bold;
+    }
     select { width: 100%; }
+    thead th {
+        text-align: right;
+        &:first-child { text-align: left; }
+    }
+    tfoot td { text-align: center; }
 }
 .crontab, .crontab li {
     list-style: none;

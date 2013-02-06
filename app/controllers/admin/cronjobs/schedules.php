@@ -78,6 +78,10 @@ class Admin_Cronjobs_SchedulesController extends AuthenticatedController
         $limit = sprintf(" LIMIT %u, %u", ($this->page - 1) * $this->max_per_page, $this->max_per_page);
         $this->schedules = CronjobSchedule::findBySQL($filter['where'] . $limit);
 
+        // Filters
+        $this->tasks  = CronjobTask::findBySql('1');
+        $this->filter = $filter['values'];
+
         // Infobox image was produced from an image by Robbert van der Steeg
         // http://www.flickr.com/photos/robbie73/5924985913/
         $this->setInfoboxImage(Assets::image_path('infobox/time.jpg'));
@@ -103,19 +107,6 @@ class Admin_Cronjobs_SchedulesController extends AuthenticatedController
                             $this->url_for('admin/cronjobs/schedules/edit'),
                             _('Neuen Cronjob registrieren'));
         $this->addToInfobox(_('Aktionen'), $register, 'icons/16/black/plus');
-
-        // Filters
-        $template = $this->get_template_factory()->open('admin/cronjobs/schedules/infobox-filter');
-        $template->controller = $this;
-        $template->tasks      = CronjobTask::findBySql('1');
-        $template->filter     = $filter['values'];
-        $filters = $template->render();
-        $this->addToInfobox(_('Darstellung einschränken'), $filters);
-
-        if ($this->total_filtered != $this->total) {
-            $this->addToInfobox(_('Darstellung einschränken'),
-                                sprintf(_('Passend: %u / %u Cronjobs'), $this->total_filtered, $this->total));
-        }
     }
 
     /**

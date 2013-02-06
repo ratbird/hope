@@ -90,13 +90,27 @@
         }
     });
 
+    // Miscellaneous filters:
+    // Submit surrounding form on change
+    $('.cronjob-filters select').live('change', function () {
+        $(this).closest('form').submit();
+    })
+    
+    $('.cronjobs tfoot select').live('change', function () {
+        var value  = $(this).val(),
+            button = $(this).next('button');
+        button.attr('disabled', value.length === 0);
+    });
+    
+
     // Active date and time picker as well as the Cron item selector on
     // document ready / page load.
     $(document).ready(function () {
-        $('.cronjobs-edit input[type=date]').datepicker();
-        $('.cronjobs-edit input[type=time]').timepicker();
+        $('.cronjobs-edit input.has-date-picker').datepicker();
+        $('.cronjobs-edit input.has-time-picker').timepicker();
 
         $('.cron-item select').change();
+        $('.cronjobs tfoot select').change();
     })
 
 

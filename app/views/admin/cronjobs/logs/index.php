@@ -1,7 +1,7 @@
 <? use Studip\Button, Studip\LinkButton; ?>
 
 <form action="<?= $controller->url_for('admin/cronjobs/logs/filter') ?>"
-      method="post" class="cronjob-filters" onchange="this.submit()">
+      method="post" class="cronjob-filters">
 <table class="default">
     <colgroup>
         <col width="33.3%">

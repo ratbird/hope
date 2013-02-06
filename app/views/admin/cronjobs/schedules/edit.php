@@ -99,7 +99,7 @@
         </thead>
     <? foreach ($tasks as $task): ?>
         <? if (!$schedule->isNew() && $task->task_id != $schedule->task_id) continue; ?>
-        <tbody <? if ($task->task_id === $schedule->task_id) echo 'class="selected"'; ?>>
+        <tbody <? if ($schedule->isNew() && $task->task_id === $schedule->task_id) echo 'class="selected"'; ?>>
             <tr>
                 <td>
                 <? if ($schedule->isNew()): ?>
@@ -269,12 +269,14 @@
                 <td>
                     <label>
                         <?= _('Datum') ?>
-                        <input type="date" name="once[date]" value="<? if ($schedule->type === 'once' && $schedule->next_execution) echo date('d.m.Y', $schedule->next_execution); ?>">
+                        <input type="text" name="once[date]" class="has-date-picker"
+                               value="<? if ($schedule->type === 'once' && $schedule->next_execution) echo date('d.m.Y', $schedule->next_execution); ?>">
                     </label>
 
                     <label>
                         <?= _('Uhrzeit') ?>
-                        <input type="time" name="once[time]" value="<? if ($schedule->type === 'once' && $schedule->next_execution) echo date('H:i', $schedule->next_execution) ?>">
+                        <input type="text" name="once[time]" class="has-time-picker"
+                               value="<? if ($schedule->type === 'once' && $schedule->next_execution) echo date('H:i', $schedule->next_execution) ?>">
                     </label>
                 </td>
             </tr>

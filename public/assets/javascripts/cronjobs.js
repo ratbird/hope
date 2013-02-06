@@ -96,6 +96,8 @@
         $(this).closest('form').submit();
     })
     
+    // Cronjob tables:
+    // Disable bulk action unless a valid action has been selected
     $('.cronjobs tfoot select').live('change', function () {
         var value  = $(this).val(),
             button = $(this).next('button');

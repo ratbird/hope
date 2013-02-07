@@ -239,11 +239,17 @@
 }
 
 #context_selector table > tbody > tr {
-    opacity: 0.3;
-}
-#context_selector table > tbody > tr:hover {
     opacity: 0.5;
+}
+#context_selector table > tbody > tr img.check {
+    display: none;
 }
 #context_selector table > tbody > tr.selected {
     opacity: 1;
+}
+#context_selector table > tbody > tr.selected img.check {
+    display: block;
+}
+#context_selector table > tbody > tr.selected img.uncheck {
+    display: none;
 }

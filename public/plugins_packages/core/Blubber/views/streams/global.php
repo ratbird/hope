@@ -39,24 +39,28 @@
         <table style="width: 100%">
             <tbody>
                 <tr onMousedown="$('#context_type').val('public'); $(this).parent().find('.selected').removeClass('selected'); $(this).addClass('selected'); ">
-                    <td style="text-align: center; width: 25%">
+                    <td style="text-align: center; width: 15%">
                         <label>
-                            <?= Assets::img("icons/16/black/rss", array('class' => "text-bottom")) ?>
+                            <img src="<?= $GLOBALS['ABSOLUTE_URI_STUDIP'] ?>/plugins_packages/core/Blubber/assets/images/public_32.png" class="text-bottom">
                             <br>
                             <?= _("Öffentlich") ?>
                         </label>
                     </td>
-                    <td style="width: 75%">
+                    <td style="width: 70%">
                         <?= _("Dein Beitrag wird allen angezeigt, die Dich als Buddy hinzugefügt haben.") ?>
+                    </td>
+                    <td style="width: 15%">
+                        <?= Assets::img("icons/16/black/checkbox-checked", array('class' => "text-bottom check")) ?>
+                        <?= Assets::img("icons/16/black/checkbox-unchecked", array('class' => "text-bottom uncheck")) ?>
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="2"><hr></td>
+                    <td colspan="3"><hr></td>
                 </tr>
                 <tr onMousedown="$('#context_type').val('private'); $(this).parent().find('.selected').removeClass('selected'); $(this).addClass('selected'); ">
                     <td style="text-align: center;">
                         <label>
-                            <?= Assets::img("icons/16/black/mail", array('class' => "text-bottom")) ?>
+                            <?= Assets::img("icons/32/black/group2", array('class' => "text-bottom")) ?>
                             <br>
                             <?= _("Privat") ?>
                         </label>
@@ -75,16 +79,20 @@
                         <br>
                         <?= _("Fügen Sie einzelne Personen mittels @Nutzernamen im Text der Nachricht oder der Kommentare hinzu.") ?>
                     </td>
+                    <td style="width: 15%">
+                        <?= Assets::img("icons/16/black/checkbox-checked", array('class' => "text-bottom check")) ?>
+                        <?= Assets::img("icons/16/black/checkbox-unchecked", array('class' => "text-bottom uncheck")) ?>
+                    </td>
                 </tr>
                 <? $mycourses = BlubberPosting::getMyBlubberCourses() ?>
                 <? if (count($mycourses)) : ?>
                 <tr>
-                    <td colspan="2"><hr></td>
+                    <td colspan="3"><hr></td>
                 </tr>
                 <tr onMousedown="$('#context_type').val('course'); $(this).parent().find('.selected').removeClass('selected'); $(this).addClass('selected'); ">
                     <td style="text-align: center;">
                         <label>
-                            <?= Assets::img("icons/16/black/seminar", array('class' => "text-bottom")) ?>
+                            <?= Assets::img("icons/32/black/seminar", array('class' => "text-bottom")) ?>
                             <br>
                             <?= _("Veranstaltung") ?>
                         </label>
@@ -97,6 +105,10 @@
                             <option value="<?= htmlReady($course_id) ?>"><?= htmlReady($seminar->getName()) ?></option>
                             <? endforeach ?>
                         </select>
+                    </td>
+                    <td style="width: 15%">
+                        <?= Assets::img("icons/16/black/checkbox-checked", array('class' => "text-bottom check")) ?>
+                        <?= Assets::img("icons/16/black/checkbox-unchecked", array('class' => "text-bottom uncheck")) ?>
                     </td>
                 </tr>
                 <? endif ?>

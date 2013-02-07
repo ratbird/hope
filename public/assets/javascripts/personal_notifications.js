@@ -79,7 +79,7 @@
                 $("#notification_container").removeClass("hoverable");
             }
             if (old_count !== count) {
-                $('#notification_marker').text(count).addClass("hoverable");
+                $('#notification_marker').text(count);
             }
             Notificon(count || '', {favicon: favicon_url});
         },

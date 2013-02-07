@@ -1,4 +1,4 @@
-<li class="notification item" data-id="<?= $notification['personal_notification_id'] ?>">
+<li class="notification item" data-id="<?= $notification['personal_notification_id'] ?>" data-timestamp="<?= (int) $notification['mkdate'] ?>">
     <a class="options mark_as_read" href="#">
         <?= Assets::img("icons/16/blue/accept", array('title' => _("Als gelesen markieren"))) ?>
     </a>

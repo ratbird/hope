@@ -973,6 +973,9 @@ div#barBottomright li,
   float: right;
   padding-top: 4px;
 }
+#barBottomright .list .options > img {
+  vertical-align: top;
+}
 #barBottomright .list .options.hidden {
   visibility: hidden;
 }

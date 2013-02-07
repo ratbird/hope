@@ -99,7 +99,7 @@ class SVG_Converter
                           .'<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"'
                           .' width="%3$u" height="%3$u"'
                           .' viewBox="0 0 %2$u %2$u">'
-                          .'<g transform="translate(%4$u %5$u) scale(%6$u)">%1$s</g>'
+                          .'<g transform="translate(%4$u %5$u) scale(%6$f)">%1$s</g>'
                           .'</svg>',
                            $icon,
                            $size + $border * 2,

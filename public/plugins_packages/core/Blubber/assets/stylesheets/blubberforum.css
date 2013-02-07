@@ -233,9 +233,13 @@
 }
 #threadwriter .context_selector img {
     cursor: pointer;
-}
-#threadwriter .context_selector .seminar {
     display: none;
+}
+#threadwriter .context_selector.select img.select,
+#threadwriter .context_selector.public img.public,
+#threadwriter .context_selector.private img.private,
+#threadwriter .context_selector.seminar img.seminar {
+    display: inline;
 }
 
 #context_selector table > tbody > tr {

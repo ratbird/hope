@@ -376,6 +376,7 @@ STUDIP.Blubber = {
             STUDIP.Blubber.newPosting();
             jQuery("#context_type").val("");
             jQuery("#context_selector table > tbody > tr").removeClass("selected");
+            $('#threadwriter .context_selector').removeAttr('class').addClass('select context_selector');
             jQuery("#context_selector").dialog("close");
         } else {
             jQuery("#submit_button").show();

@@ -47,6 +47,11 @@ class JsupdaterController extends AuthenticatedController {
         }
     }
 
+    public function notifications_seen_action() {
+        UserConfig::get($GLOBALS['user']->id)->store('NOTIFICATIONS_SEEN_LAST_DATE', time());
+        $this->render_text(time());
+    }
+
     /**
      * SystemPlugins may call UpdateInformation::setInformation to set information
      * to be sent via ajax to the main request. Core-functionality-data should be

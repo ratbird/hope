@@ -55,20 +55,31 @@
             });
         },
         update: function () {
-            var count     = _.values(stack).length,
-                old_count = parseInt($('#notification_marker').text(), 10);
-            if (count > 0) {
+            var count      = _.values(stack).length,
+                old_count  = parseInt($('#notification_marker').text(), 10),
+                really_new = 0;
+            $('#notification_list > ul > li').each(function () {
+                if (parseInt($(this).attr("data-timestamp"), 10) > parseInt($('#notification_marker').attr("data-lastvisit"))) {
+                    really_new++;
+                }
+            });
+            if (really_new > 0) {
+                $("#notification_marker").addClass("alert");
+                window.document.title = "(!) " + originalTitle;
+            } else {
+                $("#notification_marker").removeClass("alert");
+                window.document.title = originalTitle;
+            }
+            if (count) {
+                $("#notification_container").addClass("hoverable");
                 if (count > old_count && audio_notification !== false) {
                     audio_notification.play();
                 }
-                $("#notification_marker, #notification_container").addClass("alert");
-                window.document.title = "(!) " + originalTitle;
             } else {
-                $("#notification_marker, #notification_container").removeClass("alert");
-                window.document.title = originalTitle;
+                $("#notification_container").removeClass("hoverable");
             }
             if (old_count !== count) {
-                $('#notification_marker').text(count);
+                $('#notification_marker').text(count).addClass("hoverable");
             }
             Notificon(count || '', {favicon: favicon_url});
         },
@@ -79,11 +90,19 @@
                     STUDIP.PersonalNotifications.sendReadInfo(notification.personal_notification_id);
                 }
             });
+        },
+        setSeen: function () {
+            $.ajax({
+                'url': STUDIP.ABSOLUTE_URI_STUDIP + "dispatch.php/jsupdater/notifications_seen",
+                'success': function (time) {
+                    $("#notification_marker").removeClass("alert").attr("data-lastvisit", time);
+                }
+            });
         }
     };
 
-    // $(document).bind("mouseover", STUDIP.PersonalNotifications.checkHTMLids);
     $("#notification_list .mark_as_read").live('click', STUDIP.PersonalNotifications.markAsRead);
+    $("#notification_list").live('mouseover', STUDIP.PersonalNotifications.setSeen);
 
     $(document).ready(function () {
         if ($("#notification_marker").length > 0) {

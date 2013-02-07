@@ -1020,7 +1020,7 @@ div#barBottomright li,
 li#notification_container:hover .list {
   display: none;
 }
-#notification_container.alert:hover .list {
+#notification_container.hoverable:hover .list {
   display: block;
 }
 div#barTopFont {

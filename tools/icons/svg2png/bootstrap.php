@@ -22,13 +22,9 @@
 
 set_include_path(get_include_path() . PATH_SEPARATOR . realpath('../../../'));
 
+require 'lib/bootstrap.php';
 require 'vendor/trails/trails.php';
 require 'vendor/flexi/lib/flexi.php';
-require 'lib/classes/Request.class.php';
-require 'lib/classes/Assets.class.php';
-require 'lib/classes/Button.class.php';
-require 'lib/classes/URLHelper.php';
-require 'lib/visual.inc.php';
 
 spl_autoload_register(function ($class) {
     $filename = sprintf('./app/models/%s.php', $class);
@@ -45,4 +41,4 @@ $uri = sprintf('http%s://%s%s%s/',
 
 URLHelper::setBaseURL($uri);
 Assets::set_assets_url($uri . '../../../public/assets/');
-SVG_Converter::setOutputDirectory(dirname(__FILE__));
+SVG_Converter::setOutputDirectory(__DIR__);

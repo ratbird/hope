@@ -15,6 +15,8 @@
   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+use Studip\Button, Studip\LinkButton;
+
 //Standard herstellen
 if ($flash->flash['message']) {
     echo MessageBox::success($flash->flash['message']);
@@ -28,7 +30,21 @@ $infobox = array(
         'eintrag'   => array(
             array(
                 'icon' => "icons/16/black/info",
-                'text' => _("Sie können hier einzelne Inhaltselemente nachträglich aktivieren oder deaktivieren.")
+                'text' => _("Sie können hier einzelne Inhaltselemente ".
+                            "nachträglich aktivieren oder deaktivieren.")
+            ),
+            array(
+                'icon' => "icons/16/black/plugin",
+                'text' => _("Aktivierte Inhaltselemente fügen neue Funktionen ".
+                            "zu Ihrem Profil hinzu. Diese werden meist als ".
+                            "neuer Reiter im Menü erscheinen.")
+            ),
+            array(
+                'icon' => "icons/16/black/info",
+                'text' => _("Wenn Sie bestimmte dieser Funktionalitäten nicht ".
+                            "benötigen, können Sie sie einfach hier ".
+                            "deaktivieren, die entsprechenden Menüpunkte ".
+                            "werden dann ausgeblendet.")
             )
         )
     )
@@ -49,7 +65,7 @@ $infobox = array(
         </colgroup>
         <thead>
             <tr>
-                <th align="center"><?= _("Plugin") ?></th>
+                <th align="center"><?= _("Inhaltselement") ?></th>
                 <th align="center"><?= _("Aktiv") ?></th>
             </tr>
         </thead>
@@ -73,7 +89,7 @@ $infobox = array(
         <tfoot>
             <tr>
                 <td colspan="2" align="middle">
-                    <?= makeButton("uebernehmen", "input", _("Änderungen übernehmen")) ?>
+                    <?= Button::createAccept(_('Speichern'), 'submit') ?>
                 </td>
             </tr>
         </tfoot>

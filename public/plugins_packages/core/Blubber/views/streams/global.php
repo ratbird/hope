@@ -29,7 +29,7 @@
     <div class="row">
         <div class="context_selector" title="<?= _("Kontext der Nachricht auswählen") ?>">
             <?= Assets::img("icons/32/blue/seminar", array('class' => "seminar")) ?>
-            <?= Assets::img("icons/32/blue/group1", array('class' => "community")) ?>
+            <?= Assets::img("icons/32/blue/group2", array('class' => "community")) ?>
         </div>
         <textarea style="margin-top: 7px;" id="new_posting" placeholder="<?= _("Schreib was, frag was.") ?>"><?= ($search ? htmlReady($search)." " : "").(Request::get("mention") ? "@".htmlReady(Request::username("mention")).", " : "") ?></textarea>
     </div>

@@ -33,6 +33,11 @@ class JsupdaterController extends AuthenticatedController {
         $this->render_text(json_encode($data));
     }
 
+    /**
+     * Marks a personal notification as read by the user so it won't be displayed
+     * in the list in the header.
+     * @param string $id : hash-id of the notification
+     */
     public function mark_notification_read_action($id) {
         PersonalNotifications::markAsRead($id);
         if (Request::isXhr()) {
@@ -47,6 +52,11 @@ class JsupdaterController extends AuthenticatedController {
         }
     }
 
+    /**
+     * Sets the background-color of the notification-number to blue, so it does
+     * not annoy the user anymore. But he/she is still able to see the notificaion-list.
+     * Just sets a unix-timestamp in the user-config NOTIFICATIONS_SEEN_LAST_DATE.
+     */
     public function notifications_seen_action() {
         UserConfig::get($GLOBALS['user']->id)->store('NOTIFICATIONS_SEEN_LAST_DATE', time());
         $this->render_text(time());

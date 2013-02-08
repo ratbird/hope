@@ -61,8 +61,14 @@
         <ul>
             <? if (PersonalNotifications::isActivated() && $GLOBALS['perm']->have_perm("autor")) : ?>
             <? $notifications = PersonalNotifications::getMyNotifications() ?>
-            <li id="notification_container">
-                <div id="notification_marker"<?= count($notifications) > 0 ? ' class="alert"' : "" ?> title="<?= _("Benachrichtigungen") ?>">
+            <? $lastvisit = (int) UserConfig::get($GLOBALS['user']->id)->getValue('NOTIFICATIONS_SEEN_LAST_DATE') ?>
+            <li id="notification_container"<?= count($notifications) > 0 ? ' class="hoverable"' : "" ?>>
+                <? foreach ($notifications as $notification) {
+                    if ($notification['mkdate'] > $lastvisit) {
+                        $alert = true;
+                    }
+                } ?>
+                <div id="notification_marker"<?= $alert ? ' class="alert"' : "" ?> title="<?= _("Benachrichtigungen") ?>" data-lastvisit="<?= $lastvisit ?>">
                 <?= count($notifications) ?>
                 </div>
                 <div class="list below" id="notification_list">

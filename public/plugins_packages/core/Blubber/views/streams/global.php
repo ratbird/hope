@@ -120,9 +120,6 @@
             <button class="button" id="submit_button" style="display: none;" onClick="STUDIP.Blubber.prepareSubmitGlobalPosting();">
                 <?= _("abschicken") ?>
             </button>
-            <button class="button" id="ok_button" onClick="jQuery('#context_selector').dialog('close');">
-                <?= _("OK") ?>
-            </button>
         </div>
         <br>
     </div>

@@ -64,7 +64,7 @@
                 }
             });
             if (really_new > 0) {
-                $("#notification_marker").addClass("alert");
+                $("#notification_marker").data('seen', false).addClass("alert");
                 window.document.title = "(!) " + originalTitle;
             } else {
                 $("#notification_marker").removeClass("alert");
@@ -92,6 +92,11 @@
             });
         },
         setSeen: function () {
+            if ($('#notification_marker').data('seen')) {
+                return;
+            }
+            $('#notification_marker').data('seen', true);
+
             $.ajax({
                 'url': STUDIP.ABSOLUTE_URI_STUDIP + "dispatch.php/jsupdater/notifications_seen",
                 'success': function (time) {
@@ -102,7 +107,7 @@
     };
 
     $("#notification_list .mark_as_read").live('click', STUDIP.PersonalNotifications.markAsRead);
-    $("#notification_list").live('mouseover', STUDIP.PersonalNotifications.setSeen);
+    $("#notification_list").live('mouseenter', STUDIP.PersonalNotifications.setSeen);
 
     $(document).ready(function () {
         if ($("#notification_marker").length > 0) {

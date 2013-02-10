@@ -98,7 +98,7 @@ class SimpleORMapCollection extends ArrayObject
      * checks if the value is an object of specified class
      *
      * @see ArrayObject::offsetSet()
-     * @throws InvalidArgumentException
+     * @throws InvalidArgumentException if the given model does not fit (wrong type or id)
      */
     function offsetSet($index, $newval)
     {

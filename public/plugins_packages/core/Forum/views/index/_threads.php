@@ -89,9 +89,10 @@
                     <? endif ?>
                     
                     <? if (ForumPerm::has('remove_entry', $seminar_id)) : ?>
-                    <a href="javascript:STUDIP.Forum.showDialog('<?= _('Möchten Sie dieses Thema wirklich löschen?') ?>',
-                       '<?= PluginEngine::getURL('coreforum/index/delete_entry/' . $entry['topic_id']) ?>',
-                       'tr[data-area-id=<?= $entry['topic_id'] ?>] td.areaentry')">
+                    <a href="<?= PluginEngine::getURL('coreforum/index/delete_entry/' . $entry['topic_id']) ?>"
+                        onClick="STUDIP.Forum.showDialog('<?= _('Möchten Sie dieses Thema wirklich löschen?') ?>',
+                       '<?= PluginEngine::getURL('coreforum/index/delete_entry/' . $entry['topic_id'] .'?approve_delete=1&page='. (ForumHelpers::getPage() + 1)) ?>',
+                       'tr[data-area-id=<?= $entry['topic_id'] ?>] td.areaentry'); return false;">
                         <?= Assets::img('icons/16/blue/trash.png', 
                             array('class' => 'move-thread', 'title' => 'Dieses Thema löschen')) ?>
                     </a>

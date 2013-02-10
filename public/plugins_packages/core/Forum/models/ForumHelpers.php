@@ -29,8 +29,9 @@ class ForumHelpers {
      */
     static function do_highlight($text, $highlight)
     {
-        $text = preg_replace($highlight, '####${1}####', $text);
-        $text = preg_replace('/####(.*)####/U', '<span class="highlight">${1}</span>', $text);
+        foreach ($highlight as $hl) {
+            $text = str_ireplace(htmlReady($hl), '<span class="highlight">'. htmlReady($hl) .'</span>', $text);
+        }
         return $text;
     }
 
@@ -45,13 +46,6 @@ class ForumHelpers {
     function highlight($text, $highlight)
     {
         if (empty($highlight)) return $text;
-
-        $unsafe_symbols = array('/\./', '/\*/', '/\?/', '/\+/');
-        $unsafe_replace = array('\\.', '\\*', '\\?', '\\+');
-
-        foreach ($highlight as $key => $val) {
-            $highlight[$key] = '/(' . preg_replace($unsafe_symbols, $unsafe_replace, $val) . ')/i';
-        }
 
         $data = array();
         $treffer = array();

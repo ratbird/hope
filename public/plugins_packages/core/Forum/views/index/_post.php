@@ -3,18 +3,20 @@
 <!-- Anker, um zu diesem Posting springen zu können -->
 <a name="<?= $post['topic_id'] ?>"></a>
 
-<form method="post" data-topicid="<?= $post['topic_id'] ?>">
+<form method="post" data-topicid="<?= $post['topic_id'] ?>" action="<?= PluginEngine::getLink('coreforum/index/update_entry/' . $post['topic_id']) ?>">
     <?= CSRFProtection::tokenTag() ?>
     
 <div class="posting" style="position: relative;">
     <span class="corners-top"><span></span></span>
 
-    <? if ($post['fav']) : ?>
-    <div class="marked"></div>
-    <? endif ?>
+    <a class="marked" href="<?= PluginEngine::getLink('coreforum/index/unset_favorite/'. $post['topic_id']) ?>"
+            onClick="STUDIP.Forum.unsetFavorite('<?= $post['topic_id'] ?>'); return false;" title="<?= _('Beitrag nicht mehr merken') ?>"
+            <?= ($post['fav']) ?: 'style="display: none;"' ?> data-topic-id="<?= $post['topic_id'] ?>">
+        <div></div>
+    </a>
 
     <div class="postbody">
-        <div class="title">
+        <div class="title" style="min-width: 50%;">
 
             <? if ($is_new && trim(ForumEntry::killFormat($post['name']))): ?>
             <span class="new_posting">
@@ -24,7 +26,7 @@
             </span>
             <? endif ?>
             <? if ($post['name_raw'] && $post['depth'] < 3) : ?>
-            <span data-edit-topic="<?= $post['topic_id'] ?>" style="display: none">
+            <span data-edit-topic="<?= $post['topic_id'] ?>" <?= Request::get('edit_posting') == $post['topic_id'] ? '' : 'style="display: none;"' ?>>
                 <input type="text" name="name" value="<?= htmlReady($post['name_raw']) ?>" data-reset="<?= htmlReady($post['name_raw']) ?>" style="width: 100%">
             </span>
             <? endif ?>
@@ -35,7 +37,9 @@
                     <?= ForumHelpers::highlight(htmlReady(implode(' >> ', ForumEntry::getFlatPathToPosting($post['topic_id']))), $highlight) ?>
                 <? else : ?>
                 <span data-topic-name="<?= $post['topic_id'] ?>">
+                    <? if (Request::get('edit_posting') != $post['topic_id']) : ?>
                     <?= ($post['name_raw'] && $post['depth'] < 3) ? ForumHelpers::highlight(htmlReady($post['name_raw']), $highlight) : ''?>
+                    <? endif ?>
                 </span>
                 <? endif ?>
                 </a>
@@ -47,32 +51,23 @@
                         'title' => _("Dieser Beitrag ist seit Ihrem letzten Besuch hinzugekommen.")
                     )) ?>
                 <? endif ?>
-                <strong><a href="<?= URLHelper::getLink('about.php?username='. get_username($post['owner_id'])) ?>">
-                    <?= ForumHelpers::highlight(htmlReady($post['author']), $highlight) ?>
-                </a></strong>
-                am <?= strftime($time_format_string, (int)$post['mkdate']) ?>
             </p>
         </div>
 
-        <!-- Aktionsicons -->
-        <span class="likes" id="like_<?= $post['topic_id'] ?>">
-            <?= $this->render_partial('index/_like', array('topic_id' => $post['topic_id'])) ?>
-        </span>
-
         <!-- Postinginhalt -->
         <div class="content">
-            <span data-edit-topic="<?= $post['topic_id'] ?>" style="display: none">
+            <span data-edit-topic="<?= $post['topic_id'] ?>" <?= Request::get('edit_posting') == $post['topic_id'] ? '' : 'style="display: none;"' ?>>
                 <textarea data-textarea="<?= $post['topic_id'] ?>" data-reset="<?= htmlReady($post['content_raw']) ?>" name="content" class="add_toolbar"><?= htmlReady($post['content_raw']) ?></textarea>
             </span>
             
-            <span data-show-topic="<?= $post['topic_id'] ?>" data-topic-content="<?= $post['topic_id'] ?>">
+            <span data-show-topic="<?= $post['topic_id'] ?>" data-topic-content="<?= $post['topic_id'] ?>" <?= Request::get('edit_posting') != $post['topic_id'] ? '' : 'style="display: none;"' ?>>
                 <?= ForumHelpers::highlight($post['content'], $highlight) ?>
             </span>
         </div>
     </div>
 
     <? if (ForumPerm::hasEditPerms($post['topic_id'])) : ?>
-    <span data-edit-topic="<?= $post['topic_id'] ?>" style="display: none">
+    <span data-edit-topic="<?= $post['topic_id'] ?>" <?= Request::get('edit_posting') == $post['topic_id'] ? '' : 'style="display: none;"' ?>>
         <dl class="postprofile">
             <dt>
                 <?= $this->render_partial('index/_smiley_favorites', array('textarea_id' => $post['topic_id'])) ?>
@@ -82,43 +77,54 @@
     <? endif ?>
 
     <!-- Infobox rechts neben jedem Posting -->
-    <span data-show-topic="<?= $post['topic_id'] ?>">
+    <span data-show-topic="<?= $post['topic_id'] ?>" <?= Request::get('edit_posting') != $post['topic_id'] ? '' : 'style="display: none;"' ?>>
         <dl class="postprofile">
             <dt>
                 <a href="<?= URLHelper::getLink('about.php?username='. get_username($post['owner_id'])) ?>">
                     <?= Avatar::getAvatar($post['owner_id'])->getImageTag(Avatar::MEDIUM,
                         array('title' => get_username($post['owner_id']))) ?>
-                    <br>
+                </a>
+            
+                <br>
+
+                <!-- Online-Status -->
+                <? $status = ForumHelpers::getOnlineStatus($post['owner_id']) ?>
+                <? if ($status == 'available') : ?>
+                    <img src="<?= $picturepath ?>/community.png" title="<?= _('Online') ?>">
+                <? elseif ($status == 'away') : ?>
+                    <?= Assets::img('icons/16/grey/community.png', array('title' => _('Abwesend'))) ?>
+                <? elseif ($status == 'offline') : ?>
+                    <?= Assets::img('icons/16/black/community.png', array('title' => _('Offline'))) ?>
+                <? endif ?>
+
+                <a href="<?= URLHelper::getLink('about.php?username='. get_username($post['owner_id'])) ?>">
                     <span class="username" data-profile="<?= $post['topic_id'] ?>">
                         <?= htmlReady(get_fullname($post['owner_id'])) ?>
                     </span>
                 </a>
+                </a>
             </dt>
             <dd>
-                <?= ForumHelpers::translate_perm($GLOBALS['perm']->get_studip_perm($constraint['seminar_id'], $post['owner_id']))?>
+                <?= _('am') ?> <?= strftime($time_format_string_short, (int)$post['mkdate']) ?>
             </dd>
-            <dd class="online-status">
-                <? switch(ForumHelpers::getOnlineStatus($post['owner_id'])) :
-                    case 'available': ?>
-                        <img src="<?= $picturepath ?>/community.png">
-                        <?= _('Online') ?>
-                    <? break; ?>
-
-                    <? case 'away': ?>
-                        <?= Assets::img('icons/16/grey/community.png') ?>
-                        <?= _('Abwesend') ?>                        
-                    <? break; ?>
-
-                    <? case 'offline': ?>
-                        <?= Assets::img('icons/16/black/community.png') ?>
-                        <?= _('Offline') ?>
-                    <? break; ?>
-                <? endswitch ?>
+            <dd>
+                <?= ForumHelpers::translate_perm($GLOBALS['perm']->get_studip_perm($constraint['seminar_id'], $post['owner_id']))?>
             </dd>
             <dd>
                 Beiträge:
                 <?= ForumEntry::countUserEntries($post['owner_id']) ?>
             </dd>
+            <dd class="posting_icons">
+                <!-- Favorit -->
+                <span id="favorite_<?= $post['topic_id'] ?>">
+                    <?= $this->render_partial('index/_favorite', array('topic_id' => $post['topic_id'], 'favorite' => $post['fav'])) ?>
+                </span>
+                    
+                <!-- Permalink -->
+                <a href="<?= PluginEngine::getLink('coreforum/index/index/' . $post['topic_id'] .'#'. $post['topic_id']) ?>">
+                    <?= Assets::img('icons/16/blue/group.png', array('title' => _('Link zu diesem Beitrag'))) ?>
+                </a>
+
             <? foreach (PluginEngine::sendMessage('PostingApplet', 'getHTML', $post['name_raw'], $post['content_raw'],
                     PluginEngine::getLink('coreforum/index/index/' . $post['topic_id'] .'#'. $post['topic_id']),
                     $post['owner_id']) as $applet_data) : ?>
@@ -126,6 +132,11 @@
                 <?= $applet_data ?>
             </dd>
             <? endforeach ?>
+
+            <!-- Like -->
+            <span class="likes" id="like_<?= $post['topic_id'] ?>">
+                <?= $this->render_partial('index/_like', array('topic_id' => $post['topic_id'])) ?>
+            </span>
         </dl>
     </span>
 
@@ -133,48 +144,46 @@
     <div class="buttons">
         <div class="button-group">
     <? if (ForumPerm::hasEditPerms($post['topic_id'])) : ?>
-    <span data-edit-topic="<?= $post['topic_id'] ?>" style="display: none">
+    <span data-edit-topic="<?= $post['topic_id'] ?>" <?= Request::get('edit_posting') == $post['topic_id'] ? '' : 'style="display: none;"' ?>>
         <!-- Buttons für den Bearbeitungsmodus -->
-        <?= Studip\LinkButton::createAccept('Änderungen speichern', "javascript:STUDIP.Forum.saveEntry('". $post['topic_id'] ."')") ?>
+        <?= Studip\Button::createAccept('Änderungen speichern', '',
+            array('onClick' => "STUDIP.Forum.saveEntry('". $post['topic_id'] ."'); return false;")) ?>
 
-        <?= Studip\LinkButton::createCancel('Abbrechen', "javascript:STUDIP.Forum.cancelEditEntry('". $post['topic_id'] ."')") ?>
+        <?= Studip\LinkButton::createCancel('Abbrechen', PluginEngine::getLink('coreforum/index/index/'. $post['topic_id'] .'#'. $post['topic_id']),
+            array('onClick' => "STUDIP.Forum.cancelEditEntry('". $post['topic_id'] ."'); return false;")) ?>
         
         <?= Studip\LinkButton::create('Vorschau', "javascript:STUDIP.Forum.preview('". $post['topic_id'] ."', 'preview_". $post['topic_id'] ."');") ?>
     </span>
     <? endif ?>
             
-    <span data-show-topic="<?= $post['topic_id'] ?>">
+    <span data-show-topic="<?= $post['topic_id'] ?>" <?= Request::get('edit_posting') != $post['topic_id'] ? '' : 'style="display: none;"' ?>>
         <!-- Aktions-Buttons für diesen Beitrag -->
             
         <? if (ForumPerm::has('add_entry', $seminar_id)) : ?>
-        <?= Studip\LinkButton::create('Beitrag zitieren', "javascript:STUDIP.Forum.citeEntry('". $post['topic_id'] ."')") ?>
+        <?= Studip\LinkButton::create('Beitrag zitieren', PluginEngine::getLink('coreforum/index/cite/' . $post['topic_id']),
+            array('onClick' => "javascript:STUDIP.Forum.citeEntry('". $post['topic_id'] ."'); return false;")) ?>
         <? endif ?>
 
         <? if ($section == 'index' && ForumPerm::hasEditPerms($post['topic_id'])) : ?>
-            <?= Studip\LinkButton::create('Beitrag bearbeiten', "javascript:STUDIP.Forum.editEntry('". $post['topic_id'] ."')") ?>
+            <?= Studip\LinkButton::create('Beitrag bearbeiten', PluginEngine::getUrl('coreforum/index/index/' . $post['topic_id'] .'/?edit_posting=' . $post['topic_id']), 
+                array('onClick' => "STUDIP.Forum.editEntry('". $post['topic_id'] ."'); return false;")) ?>
         <? endif ?>
 
         <? if ($section == 'index' && (ForumPerm::hasEditPerms($post['topic_id']) || ForumPerm::has('remove_entry', $seminar_id))) : ?>
             <? $confirmLink = PluginEngine::getURL('coreforum/index/delete_entry/' . $post['topic_id'])  ?>
             <? if ($constraint['depth'] == $post['depth']) : /* this is not only a posting, but a thread */ ?>
                 <? $confirmText = _('Wenn Sie diesen Beitrag löschen wird ebenfalls das gesamte Thema gelöscht. Sind Sie sicher, dass Sie das tun möchten?')  ?>
-                <?= Studip\LinkButton::create('Thema löschen', "javascript:STUDIP.Forum.showDialog('$confirmText', '$confirmLink')") ?>
+                <?= Studip\LinkButton::create('Thema löschen', $confirmLink,
+                    array('onClick' => "STUDIP.Forum.showDialog('$confirmText', '$confirmLink'); return false;")) ?>
             <? else : ?>
                 <? $confirmText = _('Möchten Sie diesen Beitrag wirklich löschen?') ?>
-                <?= Studip\LinkButton::create('Beitrag löschen', "javascript:STUDIP.Forum.showDialog('$confirmText', '$confirmLink')") ?>
+                <?= Studip\LinkButton::create('Beitrag löschen', $confirmLink,
+                    array('onClick' => "STUDIP.Forum.showDialog('$confirmText', '$confirmLink'); return false;")) ?>
             <? endif ?>
         <? endif ?>
 
-        <? if (ForumPerm::has('fav_entry', $seminar_id)) : ?>
-            <? if (!$post['fav']) : ?>
-                <?= Studip\LinkButton::create('Beitrag merken', PluginEngine::getURL('coreforum/index/set_favorite/' . $post['topic_id'])) ?>
-            <? else : ?>
-                <?= Studip\LinkButton::create('Beitrag vernachlässigen', PluginEngine::getURL('coreforum/index/unset_favorite/' . $post['topic_id'])) ?>
-            <? endif ?>
-        <? endif ?>
-        
         <? if (ForumPerm::has('forward_entry', $seminar_id)) : ?>
-        <?= Studip\LinkButton::create('Beitrag weiterleiten', "javascript:STUDIP.Forum.forwardEntry('". $post['topic_id'] ."')") ?>
+        <?= Studip\LinkButton::create('Beitrag weiterleiten', "javascript:STUDIP.Forum.forwardEntry('". $post['topic_id'] ."')", array('class' => 'js')) ?>
         <? endif ?>
     </span>
         </div>

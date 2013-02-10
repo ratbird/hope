@@ -8,47 +8,32 @@ shuffle($likes);
 <!-- the likes for this post -->
 <? if (!empty($likes)) : ?>
     <? // set the current user to the front
-    $pos = array_search($GLOBALS['user']->id, $likes);
-    if ($pos !== false) :
-        unset($likes[$pos]);
-        array_unshift($likes, $GLOBALS['user']->id);
-    endif;
-
-    $i = 0;
-    foreach ($likes as $user_id) :
-        if ($i > 4) break;
-
-        if ($user_id == $GLOBALS['user']->id) :
-            $name = 'Dir';
-        else :
-            $name = get_fullname($user_id);
-        endif;
-
-        $username = get_username($user_id);
-        $links[] = '<a href="'. URLHelper::getLink('about.php?username='. $username) .'">'. $name .'</a>';
-        $i++;
-    endforeach ?>
-
-    <span data-type="persons_like">
-    <? if (sizeof($likes) > 4) : ?>
-        <?= implode(', ', $links) ?>
-        <? if ((sizeof($likes) - 4) > 1) : ?>
-        und <?= sizeof($likes) - 4 ?> weiteren
-        <? else: ?>
-        und einem weiteren
-        <? endif ?>
-    <? else : ?>
-        <? if (sizeof($links) > 1) : ?>
-        <?= implode(', ', array_slice($links, 0, sizeof($links) - 1)) ?>
-        und
-        <? endif ?>
-
-        <?= end($links) ?>
-    <? endif ?>
-
-    <?= _('gefällt das.') ?> |
-    </span>
-<? endif ?>
+    $text = '';
+    if (array_search($GLOBALS['user']->id, $likes) !== false) {
+        if (sizeof($likes) > 1) {
+            $text = '<a class="tooltip">' . sprintf(_('Dir und %s weiteren gefällt das.'), (sizeof($likes) - 1));
+            $text .= '<span>';
+            foreach ($likes as $user_id) {
+                if ($user_id != $GLOBALS['user']->id) {
+                    $text .= get_fullname($user_id) .'<br>';
+                }
+            }
+            $text .= '</span></a>';
+        } else {
+            $text = _('Dir gefällt das.');
+        }
+    } else {
+        $text = '<a class="tooltip">' . sprintf(_('%s Nutzer/innen gefällt das.'), sizeof($likes));
+        $text .= '<span>';
+        foreach ($likes as $user_id) {
+            $text .= get_fullname($user_id) .'<br>';
+        }
+        $text .= '</span></a>';
+    }
+    
+    $text .= ' <br>';
+endif ?>
+<?= $text ?>
 
 <!-- like/dislike links -->
 <? if (!in_array($GLOBALS['user']->id, $likes)) : ?>

@@ -194,6 +194,9 @@ class ForumEntry {
             $constraint = ForumEntry::getConstraints($topic_id);
         }
 
+        // this calculation only works for postings
+        if ($constraint['depth'] <= 2) return (ForumHelpers::getPage() + 1);
+
         if ($parent_id = ForumEntry::getParentTopicId($topic_id)) {
             $parent_constraint = ForumEntry::getConstraints($parent_id);
 
@@ -645,12 +648,25 @@ class ForumEntry {
         // if there are quoted parts, they should not be separated
         $suchmuster = '/".*"/U';
         preg_match_all($suchmuster, $_searchfor, $treffer);
+        array_walk($treffer[0], function(&$value) { $value = trim($value, '"'); });
 
         // remove the quoted parts from $_searchfor
-        $_searchfor = preg_replace($suchmuster, '', $_searchfor);
+        $_searchfor = trim(preg_replace($suchmuster, '', $_searchfor));
 
         // split the searchstring $_searchfor at every space
-        $_searchfor = array_merge(explode(' ', trim($_searchfor)), $treffer[0]);
+        $parts = explode(' ', $_searchfor);
+
+        foreach ($parts as $key => $val) {
+            if ($val == '') {
+                unset($parts[$key]);
+            }
+        }
+
+        if (!empty($parts)) {
+            $_searchfor = array_merge($parts, $treffer[0]);
+        } else  {
+            $_searchfor = $treffer[0];
+        }
 
         // make an SQL-statement out of the searchstring
         $search_string = array();
@@ -680,6 +696,7 @@ class ForumEntry {
                 ForumEntry::getEntries($parent_id, ForumEntry::WITH_CHILDS, $add, 'DESC', $start)
             );
         }
+
         return array('num_postings' => 0, 'list' => array());
     }
 
@@ -815,7 +832,7 @@ class ForumEntry {
         $stmt->execute(array($constraints['seminar_id'], $constraints['lft'], $constraints['rgt']));
         $ids = $stmt->fetch(PDO::FETCH_COLUMN);
 
-        if (strlen($ids) == 32 && !is_array($ids)) $ids = array($ids);        
+        if (strlen($ids) == 32 && !is_array($ids)) $ids = array($ids);
 
         if (!empty($ids)) {
             $stmt = DBManager::get()->prepare("DELETE FROM forum_categories_entries

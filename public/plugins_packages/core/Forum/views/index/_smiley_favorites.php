@@ -8,9 +8,18 @@ $sm = new SmileyFavorites($GLOBALS['user']->id);
     <? $smileys = Smiley::getByIds($sm->get()) ?>
     <? if (!empty($smileys)) : ?>
         <? foreach ($smileys as $smiley) : ?>
-            <img src="<?= $smiley->getUrl() ?>" data-smiley=" :<?= $smiley->name ?>: "
+            <img class="js" src="<?= $smiley->getUrl() ?>" data-smiley=" :<?= $smiley->name ?>: "
                 style="cursor: pointer;" onClick="STUDIP.Forum.insertSmiley('<?= $textarea_id ?>', this)">
         <? endforeach ?>
+    <? else : ?>
+        <span style="font-size: 1.2em" class="js">
+            <br>
+            <?= _('Sie haben noch keine Smiley-Favoriten.') ?><br>
+            <br>
+            <a href="<?= URLHelper::getLink('dispatch.php/smileys') ?>" target="new">
+                <?= _('Fügen Sie welche hinzu!') ?>
+            </a>
+        </span>
     <? endif ?>
     <br>
 </div>

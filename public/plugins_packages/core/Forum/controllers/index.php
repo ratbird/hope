@@ -349,12 +349,6 @@ class IndexController extends StudipController
         $this->render_action('index');
     }
 
-    function delete_cache_action()
-    {
-        ForumVisit::updateAllCaches($this->getId());
-        $this->render_text('cache deleted...');
-    }
-
     /* * * * * * * * * * * * * * * * * * * * * * * * * */
     /* * * *   P O S T I N G - A C T I O N S     * * * */
     /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -429,14 +423,28 @@ class IndexController extends StudipController
     {
         // get the page of the posting to be able to jump there again
         $page = ForumEntry::getPostingPage($topic_id);
+        URLHelper::addLinkParam('page', $page);
         
         if (ForumPerm::hasEditPerms($topic_id) || ForumPerm::has('remove_entry', $seminar_id)) {
             $path = ForumEntry::getPathToPosting($topic_id);
             $topic  = array_pop($path);
             $parent = array_pop($path);
-            ForumEntry::delete($topic_id);
 
-            $this->flash['messages'] = array('success' => sprintf(_('Der Eintrag %s wurde gelöscht!'), $topic['name']));
+            if ($topic_id != $this->getId()) {
+                // only delete directly if passed by ajax, otherwise ask for confirmation
+                if (Request::isXhr() || Request::get('approve_delete')) {
+                    ForumEntry::delete($topic_id);
+                    $this->flash['messages'] = array('success' => sprintf(_('Der Eintrag %s wurde gelöscht!'), $topic['name']));
+                } else {
+                    $this->flash['messages'] = array('info' => 
+                        sprintf(_('Sind sie sicher dass Sie den Eintrag %s löschen möchten?'), $topic['name'])
+                        . '<br>'. \Studip\LinkButton::createAccept(_('Ja'), PluginEngine::getUrl('coreforum/index/delete_entry/'. $topic_id .'?approve_delete=1'))
+                        . \Studip\LinkButton::createCancel(_('Nein'), PluginEngine::getUrl('coreforum/index/index/'. $topic_id .'/'. $page))
+                    );
+                }
+            } else {
+                $this->flash['messages'] = array('success' => _('Sie können nicht die gesamte Veranstaltung löschen!'));
+            }
         }
 
         if (Request::isAjax()) {
@@ -479,14 +487,29 @@ class IndexController extends StudipController
 
     function set_favorite_action($topic_id)
     {
-        
         ForumFavorite::set($topic_id);
-        $this->redirect(PluginEngine::getLink('coreforum/index/index/' . $topic_id .'#'. $topic_id));
+        
+        if (Request::isXhr()) {
+            $this->topic_id = $topic_id;
+            $this->seminar_id = $this->getId();
+            $this->favorite = true;
+            $this->render_template('index/_favorite');
+        } else {
+            $this->redirect(PluginEngine::getLink('coreforum/index/index/' . $topic_id .'#'. $topic_id));
+        }
     }
     
     function unset_favorite_action($topic_id) {
         ForumFavorite::remove($topic_id);
-        $this->redirect(PluginEngine::getLink('coreforum/index/index/' . $topic_id .'#'. $topic_id));
+        
+        if (Request::isXhr()) {
+            $this->topic_id = $topic_id;
+            $this->seminar_id = $this->getId();
+            $this->favorite = false;
+            $this->render_template('index/_favorite');
+        } else {
+            $this->redirect(PluginEngine::getLink('coreforum/index/index/' . $topic_id .'#'. $topic_id));
+        }
     }
 
     function goto_page_action($topic_id, $section, $page)
@@ -545,6 +568,27 @@ class IndexController extends StudipController
     /* * * *     C O N F I G - A C T I O N S     * * * */
     /* * * * * * * * * * * * * * * * * * * * * * * * * */
 
+    function cite_action($topic_id)
+    {
+        ForumPerm::check('add_entry', $this->getId());
+
+        $topic = ForumEntry::getConstraints($topic_id);
+
+        $this->flash['edit_entry'] = true;
+        $this->flash['new_entry_title'] = $topic['name'];
+        $this->flash['new_entry_content'] = "[quote=". $topic['author'] ."]\n" . $topic['content'] . "\n[/quote]\n\n";
+
+        $this->redirect(PluginEngine::getLink('coreforum/index/index/'. $topic_id .'#create'));
+    }
+
+    function new_entry_action($topic_id)
+    {
+        ForumPerm::check('add_entry', $this->getId());
+
+        $this->flash['edit_entry'] = true;
+        $this->redirect(PluginEngine::getLink('coreforum/index/index/'. $topic_id .'#create'));
+    }
+
     function add_category_action()
     {
         ForumPerm::check('add_category', $this->getId());
@@ -575,29 +619,28 @@ class IndexController extends StudipController
         ForumPerm::check('edit_area', $this->getId());
 
         if (Request::isAjax()) {
-            $name    = utf8_decode(Request::get('name'));
-            $content = utf8_decode(Request::get('content'));
+            ForumEntry::update($area_id, utf8_decode(Request::get('name')), utf8_decode(Request::get('content')));
+            $this->render_nothing();
         } else {
-            $name    = Request::get('name');
-            $content = Request::get('content');
+            ForumEntry::update($area_id, Request::get('name'), Request::get('content'));
+            $this->flash['messages'] = array('success' => _('Die Änderungen am Bereich wurden gespeichert.'));
+            $this->redirect(PluginEngine::getLink('coreforum/index/index'));
         }
 
-        ForumEntry::update($area_id, $name, $content);
-
-        $this->render_nothing();
     }
 
     function edit_category_action($category_id) {
         ForumPerm::check('edit_category', $this->getId());
         
         if (Request::isAjax()) {
-            $name = utf8_decode(Request::get('name'));
+            ForumCat::setName($category_id, utf8_decode(Request::get('name')));
+            $this->render_nothing();
         } else {
-            $name = Request::get('name');
+            ForumCat::setName($category_id, Request::get('name'));
+            $this->flash['messages'] = array('success' => _('Der Name der Kategorie wurde geändert.'));
+            $this->redirect(PluginEngine::getLink('coreforum/index/index#cat_' . $category_id));
         }
 
-        ForumCat::setName($category_id, $name);
-        $this->render_nothing();
     }
 
     function savecats_action()
@@ -634,11 +677,17 @@ class IndexController extends StudipController
         ForumPerm::check('abo', $this->getId());
             
         ForumAbo::add($topic_id);
-        
+        $this->constraint = ForumEntry::getConstraints($topic_id);
+
         if (Request::isXhr()) {
-            $this->constraint = ForumEntry::getConstraints($topic_id);
             $this->render_template('index/_abo_link');
         } else {
+            switch ($constraint['depth']) {
+                case 0:  $msg = _('Sie haben das gesamte Forum abonniert!');break;
+                case 1:  $msg = _('Sie haben diesen Bereich abonniert.');break;
+                default: $msg = _('Sie haben dieses Thema abonniert');break;
+            }
+            $this->flash['messages'] = array('success' => $msg .' '. _('Jeder neue Beitrag wird Ihnen nun als Nachricht zugestellt.'));
             $this->redirect(PluginEngine::getLink('coreforum/index/index/' . $topic_id));
         }
     }
@@ -653,6 +702,7 @@ class IndexController extends StudipController
             $this->constraint = ForumEntry::getConstraints($topic_id);
             $this->render_template('index/_abo_link');
         } else {
+            $this->flash['messages'] = array('success' => _('Ihr Abonnement wurde aufgehoben.'));
             $this->redirect(PluginEngine::getLink('coreforum/index/index/' . $topic_id));
         }
     }
@@ -717,8 +767,8 @@ class IndexController extends StudipController
         setlocale(LC_TIME, 'de_DE@euro', 'de_DE', 'de', 'ge');
 
         // the default for displaying timestamps
-        $this->time_format_string = "%A %d. %B %Y, %H:%M";
-        $this->time_format_string_short = "%a %d. %B %Y, %H:%M";
+        $this->time_format_string = "%a %d. %B %Y, %H:%M";
+        $this->time_format_string_short = "%d.%m.%Y, %H:%M";
 
         $this->rechte = $GLOBALS['perm']->have_studip_perm('tutor', $this->getId());
 
@@ -729,6 +779,9 @@ class IndexController extends StudipController
         $this->check_write_and_edit();
 
         ForumVisit::setVisit($this->getId());
+        if (Request::int('page')) {
+            ForumHelpers::setPage(Request::int('page'));
+        }
     }
 
     function check_write_and_edit()

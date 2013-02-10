@@ -17,16 +17,7 @@ STUDIP.Forum = {
         STUDIP.Forum.checkWindowSize();
         $(window).resize(STUDIP.Forum.checkWindowSize);
         
-        // bind click events on add-area at bottom row of each category
-        jQuery('div.add_area').bind('click', function () {
-            STUDIP.Forum.addArea(this);
-        });
-        
-        jQuery('#new_entry_button button').bind('click', function() {
-            STUDIP.Forum.newEntry();
-            return false;
-        });
-
+       
         // make categories and areas sortable
         jQuery('#sortable_areas').sortable({
             axis: 'y',
@@ -151,9 +142,10 @@ STUDIP.Forum = {
         STUDIP.Forum.current_area_id = area_id;
     },
 
-    addArea: function (element) {
+    addArea: function (category_id) {
         this.cancelAddArea();
-        jQuery(element).parent().parent().hide().parent().find("tr.new_area").show();
+        jQuery('table[data-category-id=' + category_id + ']').find("tr.new_area").show();
+        jQuery('table[data-category-id=' + category_id + ']').find("tr.add_area").hide();
     },
 
     cancelAddArea: function () {
@@ -414,7 +406,21 @@ STUDIP.Forum = {
     closeDialog: function() {
         jQuery('#forum td.selected').removeClass('selected');
         jQuery('div.modaloverlay').remove();
-    }
+    },
+    
+    setFavorite: function(topic_id) {
+        jQuery('#favorite_' + topic_id).load(STUDIP.URLHelper.getURL('plugins.php/coreforum/index/set_favorite/'
+            + topic_id + '?cid=' + STUDIP.Forum.seminar_id));
+        jQuery('a.marked[data-topic-id=' + topic_id +']').show();
+        return false;
+    },
+    
+    unsetFavorite: function(topic_id) {
+        jQuery('#favorite_' + topic_id).load(STUDIP.URLHelper.getURL('plugins.php/coreforum/index/unset_favorite/'
+            + topic_id + '?cid=' + STUDIP.Forum.seminar_id));
+        jQuery('a.marked[data-topic-id=' + topic_id +']').hide();
+        return false;
+    }    
 };
 
 

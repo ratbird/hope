@@ -1,5 +1,5 @@
 <?/*  $this->flash['new_entry_title'] */ ?>
-<div id="new_entry_box" style="display: none;">
+<div id="new_entry_box" <?= $this->flash['edit_entry'] ? '' : 'style="display: none;"' ?>>
     <a name="create"></a>
     <form action="<?= PluginEngine::getLink('coreforum/index/add_entry') ?>" method="post" id="forum_new_entry">
         <div class="posting bg2">
@@ -38,7 +38,7 @@
                         'onClick' => "STUDIP.Forum.cancelNewEntry();",
                         'tabindex' => '4')) ?>
 
-                    <?= Studip\LinkButton::create('Vorschau', "javascript:STUDIP.Forum.preview('new_entry', 'new_entry_preview');", array('tabindex' => '5')) ?>
+                    <?= Studip\LinkButton::create('Vorschau', "javascript:STUDIP.Forum.preview('new_entry', 'new_entry_preview');", array('tabindex' => '5', 'class' => 'js')) ?>
                 </div>
             </div>
 

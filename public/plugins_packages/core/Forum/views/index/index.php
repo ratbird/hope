@@ -170,7 +170,8 @@ endif;
     <div style="text-align: center">
         <div id="new_entry_button" <?= $this->flash['new_entry_title'] ? 'style="display: none"' : '' ?>>
             <div class="button-group">
-                <?= Studip\Button::create($button_face) ?>
+                <?= Studip\LinkButton::create($button_face, PluginEngine::getLink('coreforum/index/new_entry/' . $topic_id),
+                    array('onClick' => 'STUDIP.Forum.newEntry(); return false;')) ?>
             
                 <? if ($constraint['depth'] > 0 && ForumPerm::has('abo', $seminar_id)) : ?>
                 <span id="abolink">

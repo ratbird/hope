@@ -97,8 +97,8 @@ class ForumVisit {
     {
         static $visit = array();
         
-        // no costly checking for root necessary
-        if ($GLOBALS['perm']->have_perm('root')) {
+        // no costly checking for root or nobody necessary
+        if ($GLOBALS['perm']->have_perm('root') || $GLOBALS['user']->id == 'nobody') {
             $tstamp = mktime(23, 59, 00, date('m'), 31, date('y'));
             return array('visit' => $tstamp, 'last_visitdate' => $tstamp);
         }

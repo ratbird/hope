@@ -772,9 +772,9 @@ class ForumEntry {
             WHERE rgt >= '. $constraint['rgt'] ." AND seminar_id = '". $constraint['seminar_id'] ."'");
 
         $stmt = DBManager::get()->prepare("INSERT INTO forum_entries
-            (topic_id, seminar_id, user_id, name, content, mkdate, chdate, author,
-                author_host, lft, rgt, depth, anonymous)
-            VALUES (? ,?, ?, ?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), ?, ?, ?, ?, ?, ?)");
+            (topic_id, seminar_id, user_id, name, content, mkdate, latest_chdate,
+                chdate, author, author_host, lft, rgt, depth, anonymous)
+            VALUES (? ,?, ?, ?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), ?, ?, ?, ?, ?, ?)");
         $stmt->execute(array($data['topic_id'], $data['seminar_id'], $data['user_id'],
             $data['name'], transformBeforeSave($data['content']), $data['author'], $data['author_host'],
             $constraint['rgt'], $constraint['rgt'] + 1, $constraint['depth'] + 1, 0));
@@ -805,7 +805,7 @@ class ForumEntry {
         }
 
         $stmt = DBManager::get()->prepare("UPDATE forum_entries
-            SET name = ?, content = ?, chdate = UNIX_TIMESTAMP()
+            SET name = ?, content = ?, chdate = UNIX_TIMESTAMP(), latest_chdate = UNIX_TIMESTAMP()
             WHERE topic_id = ?");
         $stmt->execute(array($name, transformBeforeSave($content), $topic_id));
 

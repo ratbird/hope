@@ -80,29 +80,36 @@
     <span data-show-topic="<?= $post['topic_id'] ?>" <?= Request::get('edit_posting') != $post['topic_id'] ? '' : 'style="display: none;"' ?>>
         <dl class="postprofile">
             <dt>
+                <? if ($post['owner_id'] != 'nobody') : ?>
                 <a href="<?= URLHelper::getLink('about.php?username='. get_username($post['owner_id'])) ?>">
                     <?= Avatar::getAvatar($post['owner_id'])->getImageTag(Avatar::MEDIUM,
                         array('title' => get_username($post['owner_id']))) ?>
                 </a>
-            
                 <br>
-
-                <!-- Online-Status -->
-                <? $status = ForumHelpers::getOnlineStatus($post['owner_id']) ?>
-                <? if ($status == 'available') : ?>
-                    <img src="<?= $picturepath ?>/community.png" title="<?= _('Online') ?>">
-                <? elseif ($status == 'away') : ?>
-                    <?= Assets::img('icons/16/grey/community.png', array('title' => _('Abwesend'))) ?>
-                <? elseif ($status == 'offline') : ?>
-                    <?= Assets::img('icons/16/black/community.png', array('title' => _('Offline'))) ?>
                 <? endif ?>
 
-                <a href="<?= URLHelper::getLink('about.php?username='. get_username($post['owner_id'])) ?>">
+                <? if ($post['owner_id'] == 'nobody') : ?>
                     <span class="username" data-profile="<?= $post['topic_id'] ?>">
-                        <?= htmlReady(get_fullname($post['owner_id'])) ?>
+                        <?= htmlReady($post['author']) ?>
                     </span>
-                </a>
-                </a>
+                <? else : ?>
+
+                    <!-- Online-Status -->
+                    <? $status = ForumHelpers::getOnlineStatus($post['owner_id']) ?>
+                    <? if ($status == 'available') : ?>
+                        <img src="<?= $picturepath ?>/community.png" title="<?= _('Online') ?>">
+                    <? elseif ($status == 'away') : ?>
+                        <?= Assets::img('icons/16/grey/community.png', array('title' => _('Abwesend'))) ?>
+                    <? elseif ($status == 'offline') : ?>
+                        <?= Assets::img('icons/16/black/community.png', array('title' => _('Offline'))) ?>
+                    <? endif ?>
+
+                    <a href="<?= URLHelper::getLink('about.php?username='. get_username($post['owner_id'])) ?>">
+                        <span class="username" data-profile="<?= $post['topic_id'] ?>">
+                            <?= htmlReady(get_fullname($post['owner_id'])) ?>
+                        </span>
+                    </a>
+                <? endif ?>
             </dt>
             <dd>
                 <?= _('am') ?> <?= strftime($time_format_string_short, (int)$post['mkdate']) ?>

@@ -367,6 +367,12 @@ class IndexController extends StudipController
 
     function add_entry_action()
     {
+        // Schutz vor Spambots - diese füllen meistens alle Felder aus, auch "versteckte".
+        // Ist dieses Feld gefüllt, war das vermutlich kein Mensch
+        if (Request::get('nixda')) {
+            throw new Exception('Access denied!');
+        }
+
         if (!$parent_id = Request::option('parent')) {
             throw new Exception('missing seminar_id/topic_id while adding a new entry!');
         }
@@ -383,13 +389,19 @@ class IndexController extends StudipController
 
         $new_id = md5(uniqid(rand()));
 
+        if ($GLOBALS['user']->id == 'nobody') {
+            $fullname = Request::get('author', 'unbekannt');
+        } else {
+            $fullname = get_fullname($GLOBALS['user']->id);
+        }
+
         ForumEntry::insert(array(
             'topic_id'    => $new_id,
             'seminar_id'  => $this->getId(),
             'user_id'     => $GLOBALS['user']->id,
             'name'        => Request::get('name') ?: '',
             'content'     => Request::get('content'),
-            'author'      => get_fullname($GLOBALS['user']->id),
+            'author'      => $fullname,
             'author_host' => getenv('REMOTE_ADDR')
         ), $parent_id);
 

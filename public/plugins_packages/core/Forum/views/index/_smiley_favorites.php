@@ -11,7 +11,7 @@ $sm = new SmileyFavorites($GLOBALS['user']->id);
             <img class="js" src="<?= $smiley->getUrl() ?>" data-smiley=" :<?= $smiley->name ?>: "
                 style="cursor: pointer;" onClick="STUDIP.Forum.insertSmiley('<?= $textarea_id ?>', this)">
         <? endforeach ?>
-    <? else : ?>
+    <? elseif ($GLOBALS['user']->id != 'nobody') : ?>
         <span style="font-size: 1.2em" class="js">
             <br>
             <?= _('Sie haben noch keine Smiley-Favoriten.') ?><br>

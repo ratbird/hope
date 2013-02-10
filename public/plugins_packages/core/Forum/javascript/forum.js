@@ -305,6 +305,13 @@ STUDIP.Forum = {
         return false;
     },
 
+    answerEntry: function() {
+        // move the new-entry-boy to the end of the page (may be displaced by citing-attempts)
+        jQuery('#new_entry_box').insertAfter('#new_entry_button');
+
+        STUDIP.Forum.newEntry();
+    },
+
     citeEntry: function(topic_id) {
         // hide and clear preview-window (if any);
         jQuery('#new_entry_preview').parent().hide();

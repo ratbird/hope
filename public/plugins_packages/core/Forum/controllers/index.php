@@ -467,13 +467,13 @@ class IndexController extends StudipController
             return;
         }
 
-        if (!Request::isAjax()) {
-            $this->redirect(PluginEngine::getLink('coreforum/index/index/' . $topic_id .'#'. $topic_id));
-        } else {
+        if (Request::isXhr()) {
             $this->render_text(json_encode(array(
                 'name'    => htmlReady($name),
                 'content' => formatReady($content)
             )));
+        } else {
+            $this->redirect(PluginEngine::getLink('coreforum/index/index/' . $topic_id .'#'. $topic_id));
         }
     }
 

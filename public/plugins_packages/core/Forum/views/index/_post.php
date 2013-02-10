@@ -171,14 +171,15 @@
 
         <? if ($section == 'index' && (ForumPerm::hasEditPerms($post['topic_id']) || ForumPerm::has('remove_entry', $seminar_id))) : ?>
             <? $confirmLink = PluginEngine::getURL('coreforum/index/delete_entry/' . $post['topic_id'])  ?>
+            <? $confirmLinkApproved = PluginEngine::getURL('coreforum/index/delete_entry/' . $post['topic_id'] . '?approve_delete=1')  ?>
             <? if ($constraint['depth'] == $post['depth']) : /* this is not only a posting, but a thread */ ?>
                 <? $confirmText = _('Wenn Sie diesen Beitrag löschen wird ebenfalls das gesamte Thema gelöscht. Sind Sie sicher, dass Sie das tun möchten?')  ?>
                 <?= Studip\LinkButton::create('Thema löschen', $confirmLink,
-                    array('onClick' => "STUDIP.Forum.showDialog('$confirmText', '$confirmLink'); return false;")) ?>
+                    array('onClick' => "STUDIP.Forum.showDialog('$confirmText', '$confirmLinkApproved'); return false;")) ?>
             <? else : ?>
                 <? $confirmText = _('Möchten Sie diesen Beitrag wirklich löschen?') ?>
                 <?= Studip\LinkButton::create('Beitrag löschen', $confirmLink,
-                    array('onClick' => "STUDIP.Forum.showDialog('$confirmText', '$confirmLink'); return false;")) ?>
+                    array('onClick' => "STUDIP.Forum.showDialog('$confirmText', '$confirmLinkApproved'); return false;")) ?>
             <? endif ?>
         <? endif ?>
 

@@ -532,18 +532,12 @@ class ForumEntry {
                 // purpose of the following query is to retrieve the threads
                 // for an area ordered by the mkdate of their latest posting
                 $stmt = DBManager::get()->prepare("SELECT SQL_CALC_FOUND_ROWS
-                        IFNULL (
-                            (SELECT MAX(f1.mkdate) FROM forum_entries as f1
-                                WHERE f1.seminar_id = :seminar_id
-                                AND f1.lft > fe.lft AND f1.rgt < fe.rgt
-                                AND f1.lft > :left  AND f1.rgt < :right ),
-                            fe.mkdate
-                            ) as en_mkdate, fe.*, IF(ou.topic_id IS NOT NULL, 'fav', NULL) as fav
+                        fe.*, IF(ou.topic_id IS NOT NULL, 'fav', NULL) as fav
                     FROM forum_entries AS fe
                     LEFT JOIN forum_favorites as ou ON (ou.topic_id = fe.topic_id AND ou.user_id = :user_id)
                     WHERE fe.seminar_id = :seminar_id AND fe.lft > :left
                         AND fe.rgt < :right AND fe.depth = 2
-                    ORDER BY en_mkdate DESC
+                    ORDER BY latest_chdate DESC
                     LIMIT $start, ". ForumEntry::POSTINGS_PER_PAGE);
                 $stmt->bindParam(':seminar_id', $constraint['seminar_id']);
                 $stmt->bindParam(':left', $constraint['lft'], PDO::PARAM_INT);
@@ -784,6 +778,10 @@ class ForumEntry {
         $stmt->execute(array($data['topic_id'], $data['seminar_id'], $data['user_id'],
             $data['name'], transformBeforeSave($data['content']), $data['author'], $data['author_host'],
             $constraint['rgt'], $constraint['rgt'] + 1, $constraint['depth'] + 1, 0));
+
+        // update "latest_chdate" for easier sorting of actual threads
+        DBManager::get()->exec("UPDATE forum_entries SET latest_chdate = UNIX_TIMESTAMP()
+            WHERE topic_id = '" . $constraint['topic_id'] . "'");
         
         NotificationCenter::postNotification('ForumAfterInsert', $data['topic_id'], $data);
     }
@@ -810,6 +808,11 @@ class ForumEntry {
             SET name = ?, content = ?, chdate = UNIX_TIMESTAMP()
             WHERE topic_id = ?");
         $stmt->execute(array($name, transformBeforeSave($content), $topic_id));
+
+        // update "latest_chdate" for easier sorting of actual threads
+        $parent_id = ForumEntry::getParentTopicId($topic_id);
+        DBManager::get()->exec("UPDATE forum_entries SET latest_chdate = UNIX_TIMESTAMP()
+            WHERE topic_id = '" . $parent_id . "'");
     }
 
     /**
@@ -824,6 +827,7 @@ class ForumEntry {
         NotificationCenter::postNotification('ForumBeforeDelete', $topic_id);
         
         $constraints = ForumEntry::getConstraints($topic_id);
+        $parent      = ForumEntry::getConstraints(ForumEntry::getParentTopicId($topic_id));
 
         // #TODO: Zusammenfassen in eine Transaktion!!!
         // get all entry-ids to delete them from the category-reference-table
@@ -856,6 +860,22 @@ class ForumEntry {
         $stmt = DBManager::get()->prepare("UPDATE forum_entries SET rgt = rgt - $diff
             WHERE rgt > ? AND seminar_id = ?");
         $stmt->execute(array($constraints['rgt'], $constraints['seminar_id']));
+
+
+        // set the latest_chdate to the latest child's chdate
+        $stmt = DBManager::get()->prepare("SELECT chdate FROM forum_entries
+            WHERE lft > ? AND rgt < ? AND seminar_id = ?
+            ORDER BY chdate DESC LIMIT 1");
+        $stmt->execute(array($parent['lft'], $parent['rgt'], $parent['seminar_id']));
+        $chdate = $stmt->fetchColumn();
+
+        $stmt_insert = DBManager::get()->prepare("UPDATE forum_entries
+            SET latest_chdate = ? WHERE topic_id = ?");
+        if ($chdate) {
+            $stmt_insert->execute(array($chdate, $parent['topic_id']));
+        } else {
+            $stmt_insert->execute(array($parent['chdate'], $parent['topic_id']));
+        }
     }
 
     /**

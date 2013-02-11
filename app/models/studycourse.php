@@ -125,6 +125,7 @@ class StudycourseModel
                   WHERE user_studiengang.abschluss_id = ?
                   GROUP BY studiengang_id
                   ORDER BY name";
+        $statement = DBManager::get()->prepare($query);
         foreach ($studydegrees as $index => $row) {
             // one degree with all professions
             $statement->execute(array($row['abschluss_id']));

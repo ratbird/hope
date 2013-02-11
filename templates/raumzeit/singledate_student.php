@@ -105,24 +105,21 @@
 </tr>
 <? } ?>
 <? else:    // Gelöschter Termin... ?>
-<tr>
-    <td id="<?=$tpl['sd_id']?>" width="1%" align="right" valign="top" class="content_title_red" nowrap>
-    </td>
+<tr style="height: 1.8em">
+    <TD width="1%" align="right" valign="bottom" class="content_title_red" nowrap="nowrap">
+        <IMG class="middle" src="<?=$GLOBALS['ASSETS_URL']. 'images/icons/16/blue/arr_1right.png'?>">
+    </TD>
+    <TD width="1%" align="right" valign="bottom" class="content_title_red" nowrap="nowrap">
+        <A name="<?=$tpl['sd_id']?>" />
+        <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/blue/date.png" class="middle">&nbsp;
+    </TD>
+    <TD nowrap="nowrap" class="content_title_red" valign="bottom">
+                <i><?= htmlReady($tpl['art']) ?>:&nbsp;</i>
+                <?=$tpl['date']?>&nbsp;
+    </TD>
 
-    <td width="1%" align="right" valign="top" class="content_title_red" nowrap>
-        <img src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/blue/date.png" class="middle">
-    </td>
-
-    <td nowrap class="content_title_red">
-        <a class="tree" href="<?=URLHelper::getLink("?cmd=".(($issue_open[$tpl['sd_id']]) ? 'close' : 'open')."&open_close_id=".$tpl['sd_id']."#".$tpl['sd_id'])?>">
-            <?=$tpl['date']?>
-        </a>
-    </td>
-
-    <td width="80%" colspan="5" class="content_title_red">
-        <span style="text-color: red">
-            <b><?=_("fällt aus")?></b>
-        </span>
+    <td width="80%" nowrap="nowrap" colspan="5" class="content_title_red" valign="bottom" align="left">
+        <b><?=_("fällt aus")?></b>
         (<?=_("Kommentar")?>: <?=htmlready($tpl['comment'])?>)
     </td>
 </tr>

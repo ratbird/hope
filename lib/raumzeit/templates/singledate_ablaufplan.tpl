@@ -3,6 +3,7 @@
 
 use Studip\Button, Studip\LinkButton;
 ?>
+<? if (!$tpl['deleted']) : ?>
 <TR style="height: 1.8em">
     <TD width="1%" align="right" valign="bottom" class="<?=$tpl['class']?>" nowrap="nowrap">
         <A href="<?= URLHelper::getLink('?cmd='. ($_SESSION['issue_open'][$tpl['sd_id']] ? 'close' : 'open') .'&open_close_id='. $tpl['sd_id'] .'#'. $tpl['sd_id'])?>">
@@ -59,13 +60,13 @@ use Studip\Button, Studip\LinkButton;
                                     <?= Assets::img('icons/16/green/accept.png') ?>
                                     <?= _("Forenthema vorhanden") ?><br>
                                     <input type="hidden" name="forumFolder" value="on">
-                                <? else : ?>                                    
+                                <? else : ?>
                                     <input type="checkbox" name="forumFolder<?= ($openAll ? '§'.$tpl['sd_id']: '') ?>">
                                     <?= _("Thema im Forum anlegen") ?><br>
                                 <? endif ?>
                             <? endif ?>
                         <? endforeach ?>
-                        
+
                         <?
                         if ($modules['documents']) :
                             if ($tpl['fileEntry']) : ?>
@@ -92,6 +93,11 @@ use Studip\Button, Studip\LinkButton;
                     <? } ?>
                     <INPUT type="hidden" name="singledate_id" value="<?=$tpl['sd_id']?>">
                     <?= Button::create(_('Übernehmen'), $tpl['submit_name']) ?>
+                    <?
+                    if (!$cancelled_dates_locked) {
+                        echo LinkButton::create(_('Ausfallen lassen'), "javascript:STUDIP.CancelDatesDialog.initialize('".UrlHelper::getScriptURL('dispatch.php/course/cancel_dates', array('termin_id' =>  $tpl['sd_id']))."');");
+                    }
+                    ?>
                     <?= LinkButton::createCancel(_('Abbrechen'), URLHelper::getURL('', array('cmd' => 'close', 'open_close_id' => $tpl['sd_id']))) ?>
                     <? } ?>
                 </TD>
@@ -102,4 +108,26 @@ use Studip\Button, Studip\LinkButton;
 </TR>
 <?
 }
+?>
+<? elseif ($tpl['comment']) : ?>
+<tr style="height: 1.8em">
+    <TD width="1%" align="right" valign="bottom" class="content_title_red" nowrap="nowrap">
+        <IMG class="middle" src="<?=$GLOBALS['ASSETS_URL']. 'images/icons/16/blue/arr_1right.png'?>">
+    </TD>
+    <TD width="1%" align="right" valign="bottom" class="content_title_red" nowrap="nowrap">
+        <A name="<?=$tpl['sd_id']?>" />
+        <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/blue/date.png" class="middle">&nbsp;
+    </TD>
+    <TD nowrap="nowrap" class="content_title_red" valign="bottom">
+                <i><?= htmlReady($tpl['art']) ?>:&nbsp;</i>
+                <?=$tpl['date']?>&nbsp;
+    </TD>
+
+    <td width="80%" nowrap="nowrap" colspan="3" class="content_title_red" valign="bottom" align="left">
+        <b><?=_("fällt aus")?></b>
+        (<?=_("Kommentar")?>: <?=htmlready($tpl['comment'])?>)
+    </td>
+</tr>
+<? endif ?>
+<?
 unset($tpl);

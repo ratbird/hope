@@ -47,6 +47,11 @@ if (get_config('RESOURCES_ENABLE')) {
 $moduleClass = new Modules();
 $modules = $moduleClass->getLocalModules($id);
 
+PageLayout::addSqueezePackage('raumzeit');
+PageLayout::addHeadElement('script', array(), "
+        jQuery(function () {
+        STUDIP.CancelDatesDialog.reloadUrlOnClose = '" . UrlHelper::getUrl() ."';
+});");
 //Output starts here
 
 include ('lib/include/html_head.inc.php'); // Output of html head
@@ -135,6 +140,7 @@ $themen =& $sem->getIssues(true);   // read again, so we have the actual sort or
 $semester = new SemesterData();
 $all_semester = $semester->getAllSemesterData();
 $grenze = 0;
+$cancelled_dates_locked = LockRules::Check($sem->getId(), 'cancelled_dates');
 
 $termine = getAllSortedSingleDates($sem);
 
@@ -257,9 +263,9 @@ $termine = getAllSortedSingleDates($sem);
                                 $tpl['theme_description'] = '';
                             }
                         }
-
-                        include('lib/raumzeit/templates/singledate_ablaufplan.tpl');
+                    } else {
                     }
+                    include('lib/raumzeit/templates/singledate_ablaufplan.tpl');
                 }
 
             if ($openAll) {

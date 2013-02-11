@@ -144,14 +144,14 @@ if (Request::get('export') && $rechte) {
                         break;
 
                     case 'other':
-                        if ($tpl['type'] == 1) {
-                            $tpl['deleted'] = true;
+                        if ($TERMIN_TYP[$tpl['type']]['sitzung'] || $tpl['deleted']) {
+                            continue 2;
                         }
                         break;
 
                     default:
-                        if ($tpl['type'] != Request::get('date_type')) {
-                            $tpl['deleted'] = true;
+                        if (!$TERMIN_TYP[$tpl['type']]['sitzung'] || $tpl['deleted']) {
+                            continue 2;
                         }
                         break;
                 }

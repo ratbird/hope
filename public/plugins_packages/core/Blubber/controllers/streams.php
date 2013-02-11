@@ -595,7 +595,9 @@ class StreamsController extends ApplicationController {
             Navigation::getItem("/course/blubberforum")->setImage(Assets::image_path("icons/16/black/blubber"));
             Navigation::activateItem('/course/blubberforum');
         } elseif($this->thread['context_type'] === "public") {
-            Navigation::activateItem('/profile/blubber');
+            if (Navigation::hasItem('/profile')) {
+                Navigation::activateItem('/profile/blubber');
+            }
         } else {
             Navigation::activateItem('/community/blubber');
         }

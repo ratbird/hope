@@ -81,6 +81,11 @@ class ForumPerm {
         if (in_array($status, words('root admin')) !== false) {
             return true;
         }
+
+        // eCULT Notlösung
+        if ($status == 'tutor' && $seminar_id == '30e0b89dcc9173d5fccf9f22b13b87bd') {
+            $status = 'autor';
+        }
         
         // check the status and the passed permission
         if (($status == 'dozent' || $status == 'tutor') && in_array($perm,

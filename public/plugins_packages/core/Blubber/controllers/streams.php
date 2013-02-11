@@ -56,7 +56,8 @@ class StreamsController extends ApplicationController {
     public function forum_action() {
         object_set_visit($_SESSION['SessionSeminar'], "forum");
         $seminar = new Seminar($_SESSION['SessionSeminar']);
-        if ($seminar->read_level > 0 && !$GLOBALS['perm']->have_studip_perm("autor", $_SESSION['SessionSeminar'])) {
+        $this->commentable = ($seminar->read_level == 0 || $GLOBALS['perm']->have_studip_perm("autor", $_SESSION['SessionSeminar']));
+        if (!$this->commentable) {
             throw new AccessDeniedException("Kein Zugriff");
         }
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/autoresize.jquery.min.js"), "");

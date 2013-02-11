@@ -15,6 +15,7 @@ $related_users = $thread['context_type'] === "private" ? $thread->getRelatedUser
 $author = $thread->getUser();
 $author_name = $author->getName();
 $author_url = $author->getURL();
+$commentable = $GLOBALS['perm']->have_perm("autor") ? true : (bool) $commentable;
 ?>
 <? if (@$single_thread): ?>
 <input type="hidden" id="base_url" value="plugins.php/blubber/streams/">
@@ -133,9 +134,11 @@ $author_url = $author->getURL();
         <? endforeach ?>
     <? endif ?>
     </ul>
+    <? if ($commentable) : ?>
     <div class="writer">
         <textarea placeholder="<?= _("Kommentiere dies") ?>" id="writer_<?= md5(uniqid()) ?>"></textarea>
     </div>
+    <? endif ?>
 </li>
 
 <? if (@$single_thread): ?>

@@ -16,17 +16,20 @@
 interface BlubberContact {
     /**
      * Returns the name that should be displayed.
+     * @return string name
      */
     public function getName();
 
     /**
      * Returns the URL of the user. If this returns an empty string or null,
      * there won't be any link to the user, so that's okay, too. Needs an absolute URL.
+     * @return null|string : absolute URL
      */
     public function getURL();
 
     /**
      * Returns an instance of Avatar or any superclass of it.
+     * @return Avatar or superclass of Avatar
      */
     public function getAvatar();
 

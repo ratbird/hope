@@ -16,8 +16,9 @@ require_once 'lib/classes/SimpleORMap.class.php';
  */
 class BlubberPosting extends SimpleORMap {
 
-    protected $db_table = "blubber";
+    //One-time variable that is set right before markup
     static public $course_hashes = false;
+    //One-time variable that is set right before markup
     static public $mention_posting_id = false;
 
     /**
@@ -382,6 +383,7 @@ class BlubberPosting extends SimpleORMap {
                 return $posting['mkdate'];
             }
         };
+        $this->db_table = "blubber";
         parent::__construct($id);
     }
 

@@ -16,7 +16,10 @@ require_once dirname(__file__)."/BlubberExternalContact.class.php";
  * email of the user is not sent to gravatar, this service seems secure.
  */
 class BlubberContactAvatar extends Avatar {
-    
+
+    /**
+     * Gets an BlubberContactAvatar-object for that user.
+     */
     static function getAvatar($user_id) {
         return new BlubberContactAvatar($user_id);
     }

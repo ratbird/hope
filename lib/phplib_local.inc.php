@@ -88,9 +88,10 @@ function studip_default_exception_handler($exception) {
 
     try {
         $args = compact('exception', 'status');
+        ob_start();
         echo $GLOBALS['template_factory']->render($template, $args);
-
     } catch (Exception $e) {
+        ob_end_clean();
         echo 'Error: ' . htmlspecialchars($e->getMessage());
     }
     exit;

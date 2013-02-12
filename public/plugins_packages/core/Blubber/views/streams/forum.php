@@ -92,7 +92,7 @@ $infobox = array(
             array(
                 "icon" => "icons/16/black/smiley",
                 "text" => sprintf(_("Verwende beim Tippen %sTextformatierungen%s und %sSmileys.%s"),
-                        '<a href="http://docs.studip.de/help/2.2/de/Basis/VerschiedenesFormat" target="_blank">', '</a>',
+                        '<a href="'.htmlspecialchars(format_help_url("Basis/VerschiedenesFormat")).'" target="_blank">', '</a>',
                         '<a href="'.URLHelper::getLink("dispatch.php/smileys").'" target="_blank">', '</a>')
             ),
             array(

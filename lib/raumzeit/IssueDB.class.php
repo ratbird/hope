@@ -147,11 +147,11 @@ class IssueDB {
         }
 
         $query = "DELETE FROM themen WHERE issue_id = ?";
-        $statement = DBManager::get()->prepare($query);$
+        $statement = DBManager::get()->prepare($query);
         $statement->execute(array($issue_id));
 
         $query = "DELETE FROM themen_termine WHERE issue_id = ?";
-        $statement = DBManager::get()->prepare($query);$
+        $statement = DBManager::get()->prepare($query);
         $statement->execute(array($issue_id));
     }
 

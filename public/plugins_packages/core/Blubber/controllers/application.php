@@ -39,6 +39,7 @@ class ApplicationController extends Trails_Controller{
                 "rel" => "stylesheet"
             ),
         "");
+        PageLayout::setHelpKeyword("Basis/InteraktionBlubber");
     }
 
     /**

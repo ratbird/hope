@@ -341,7 +341,7 @@ class Settings_StatusgruppenController extends Settings_SettingsController
                 if (($status != $perms) && in_array($status, $this->about->allowedInstitutePerms())) {
                     $query = "UPDATE user_inst SET inst_perms = ? WHERE user_id = ? AND Institut_id = ?";
                     $statement = DBManager::get()->prepare($query);
-                    $stmt->execute(array(
+                    $statement->execute(array(
                         $status,
                         $this->user->user_id,
                         $id

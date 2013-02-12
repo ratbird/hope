@@ -1,5 +1,9 @@
 STUDIP.jsupdate_enable = true;
 STUDIP.Blubber = {
+    /**
+     * Hands data of the current stream to the JSUpdater so that we can get
+     * the right new postings, if there are any.
+     */
     periodicalPushData: function () {
         return {
             'context_id': jQuery("#context_id").val(),
@@ -9,6 +13,10 @@ STUDIP.Blubber = {
             'search': jQuery("#search").val()
         };
     },
+    /**
+     * Once the JSUpdater receives data from Stud.IP they will be handled here
+     * in order to display new postings.
+     */
     getNewPosts: function (data) {
         if (data.postings) {
             jQuery.each(data.postings, function (index, posting) {
@@ -24,6 +32,10 @@ STUDIP.Blubber = {
         }
         STUDIP.Blubber.updateTimestamps();
     },
+    /**
+     * Once the JSUpdater receives data from Stud.IP they will be handled here
+     * in order to delete deleted postings.
+     */
     blubberEvents: function (events) {
         jQuery.each(events, function (index, event) {
             if (event.event_type === "delete") {
@@ -31,7 +43,11 @@ STUDIP.Blubber = {
             }
         });
     },
+    //variable to prevent multiple clicks
     alreadyThreadWriting: false,
+    /**
+     * writes a new posting to the database and displays it on success
+     */
     newPosting: function () {
         if (STUDIP.Blubber.alreadyThreadWriting) {
             return;
@@ -67,7 +83,11 @@ STUDIP.Blubber = {
             });
         }
     },
+    //variable to prevent multiple clicks
     alreadyWriting: false,
+    /**
+     * writes a new comment to database and displays it on success
+     */
     write: function (textarea) {
         var content = jQuery(textarea).val();
         var thread = jQuery(textarea).closest("li").attr("id");
@@ -100,6 +120,10 @@ STUDIP.Blubber = {
             }
         });
     },
+    /**
+     * Inserts any new comments if the posting to the comment in the correct order
+     * if the original thread is visible.
+     */
     insertComment: function (thread, posting_id, mkdate, comment) {
         if (jQuery("#posting_" + posting_id).length) {
             if (jQuery("#posting_" + posting_id + " textarea.corrector").length === 0) {
@@ -134,6 +158,9 @@ STUDIP.Blubber = {
         STUDIP.Markup.element("#posting_" + posting_id);
         STUDIP.Blubber.updateTimestamps();
     },
+    /**
+     * Inserts any new thread-postings in the correct order
+     */
     insertThread: function (posting_id, mkdate, comment) {
         if (jQuery("#posting_" + posting_id).length) {
             if (jQuery("#posting_" + posting_id + " > .content_column textarea.corrector").length === 0) {
@@ -169,6 +196,10 @@ STUDIP.Blubber = {
         STUDIP.Blubber.makeTextareasAutoresizable();
         STUDIP.Blubber.updateTimestamps();
     },
+    /**
+     * Fetches the original (non-formatted) text of a posting from database and
+     * displays the textarea so the user can start editing it.
+     */
     startEditingComment: function () {
         var id = jQuery(this).closest("li").attr("id");
         id = id.substr(id.lastIndexOf("_") + 1);
@@ -189,7 +220,11 @@ STUDIP.Blubber = {
         });
 
     },
+    //variable to prevent multiple clicks
     submittingEditedPostingStarted: false,
+    /**
+     * Submits an edited posting and displays its new content on success
+     */
     submitEditedPosting: function (textarea) {
         var id = jQuery(textarea).closest("li").attr("id");
         id = id.substr(id.lastIndexOf("_") + 1);
@@ -232,6 +267,10 @@ STUDIP.Blubber = {
             });
         }
     },
+    /**
+     * All textareas in blubber are autoresizable and able to receive dropped
+     * files. This function initializes the autoresizer and file-dropper functions.
+     */
     makeTextareasAutoresizable: function () {
         jQuery("#forum_threads textarea:not(.autoresize), #new_posting:not(.autoresize)").autoResize({
             // On resize:
@@ -251,6 +290,7 @@ STUDIP.Blubber = {
             jQuery(this).toggleClass('hovered', event.type === 'dragover');
             return false;
         }).each(function (index, textarea) {
+            //and here the file-dropping function:
             textarea.addEventListener("drop", function (event) {
                 event.preventDefault();
                 var files = 0;
@@ -317,13 +357,18 @@ STUDIP.Blubber = {
             }, false);
         });
     },
+    /**
+     * Every few seconds this function updates all timestamps of all postings
+     * on the page, so that they always display the correct relative time since
+     * mkdate of that posting.
+     */
     updateTimestamps: function () {
         var now_seconds = Math.floor(new Date().getTime() / 1000);
         now_seconds = now_seconds - parseInt(jQuery("#browser_start_time").val(), 10) 
             + parseInt(jQuery("#stream_time").val(), 10);
         jQuery("#forum_threads .posting .time").each(function () {
             var new_text = "";
-            var posting_time = parseInt(jQuery(this).attr("data-timestamp"));
+            var posting_time = parseInt(jQuery(this).attr("data-timestamp"), 10);
             var diff = now_seconds - posting_time;
             if (diff < 86400) {
                 if (diff < 2 * 60 * 60) {
@@ -362,6 +407,9 @@ STUDIP.Blubber = {
             });
         }
     },
+    /**
+     * In global stream display the context-selector window
+     */
     showContextWindow: function () {
         jQuery("#context_selector").dialog({
             'title': jQuery("#context_selector_title").text(),
@@ -371,6 +419,9 @@ STUDIP.Blubber = {
             'width': "60%"
         });
     },
+    /**
+     * In global stream: if context is set, submit posting, else show context-selector.
+     */
     prepareSubmitGlobalPosting: function () {
         if ($('#context_type').val()) {
             STUDIP.Blubber.newPosting();
@@ -383,6 +434,9 @@ STUDIP.Blubber = {
             STUDIP.Blubber.showContextWindow();
         }
     },
+    /**
+     * Submits a posting or comment by an anonymous user.
+     */
     submitAnonymousPosting: function () {
         if (jQuery('#identity_window_textarea_id').val() === "new_posting") {
             STUDIP.Blubber.newPosting();
@@ -394,6 +448,7 @@ STUDIP.Blubber = {
 
 jQuery(STUDIP.Blubber.updateTimestamps);
 
+//initialize submit by pressing enter
 jQuery("#threadwriter > textarea").live("keydown", function (event) {
     if (event.keyCode === 13 && !event.altKey && !event.ctrlKey && !event.shiftKey) {
         if (jQuery('#user_id').val() !== "nobody") {
@@ -409,18 +464,21 @@ jQuery("#threadwriter > textarea").live("keydown", function (event) {
         event.preventDefault();
     }
 });
+//initialize submit by pressing enter
 jQuery("#threadwriter.globalstream textarea").live("keydown", function (event) {
     if (event.keyCode === 13 && !event.altKey && !event.ctrlKey && !event.shiftKey) {
         STUDIP.Blubber.prepareSubmitGlobalPosting();
         event.preventDefault();
     }
 });
+//initialize submit by pressing enter
 jQuery("#forum_threads textarea.corrector").live("keydown", function (event) {
     if (event.keyCode === 13 && !event.altKey && !event.ctrlKey && !event.shiftKey) {
         STUDIP.Blubber.submitEditedPosting(this);
         event.preventDefault();
     }
 });
+//initialize submit by pressing enter
 jQuery(".writer > textarea").live("keydown", function (event) {
     if (event.keyCode === 13 && !event.altKey && !event.ctrlKey && !event.shiftKey) {
         if (jQuery('#user_id').val() !== "nobody") {
@@ -436,6 +494,7 @@ jQuery(".writer > textarea").live("keydown", function (event) {
         event.preventDefault();
     }
 });
+//initialize click-events on "show more" links to show more comments
 jQuery("#forum_threads > li > ul.comments > li.more").live("click", function () {
     var thread_id = jQuery(this).closest("li[id]").attr("id").split("_").pop(),
         last    = jQuery(this).next("li"),
@@ -458,6 +517,7 @@ jQuery("#forum_threads > li > ul.comments > li.more").live("click", function () 
         }
     });
 });
+//initialize autoresizer, file-dropper and events
 jQuery(function () {
     STUDIP.Blubber.makeTextareasAutoresizable();
     jQuery("#new_title").focus(function () {
@@ -470,6 +530,7 @@ jQuery(function () {
     jQuery("#threadwriter .context_selector img").bind("click", STUDIP.Blubber.showContextWindow);
 });
 
+//Infinity-scroll:
 jQuery(window.document).bind('scroll', _.throttle(function (event) {
     if ((jQuery(window).scrollTop() + jQuery(window).height() > jQuery(window.document).height() - 500)
             && (jQuery("#forum_threads > li.more").length > 0)) {

@@ -40,7 +40,7 @@ or implied, of Matt Williams.
     }
     if (!document.createElement('canvas').getContext) {
       unsupported = true;
-      if (console) {
+      if (typeof console !== "undefined") {
         console.log('Notificon: requires canvas support');
       }
       return false;
@@ -155,14 +155,14 @@ or implied, of Matt Williams.
       try {
         return changeFavicon(canvas.toDataURL("image/png"));
       } catch(e) {
-        if (console) {
+        if (typeof console !== "undefined") {
           console.log('Notificon: cannot use icons located on a different domain (' + favicon + ')');
           return false;
         }
       }
     };
     img.onerror = function() {
-      if (console) {
+      if (typeof console !== "undefined") {
         console.log('Notificon: image not found (' + options.favicon + ')');
         return false;
       }

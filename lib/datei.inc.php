@@ -633,9 +633,9 @@ function copy_item($item_id, $new_parent, $change_sem_to = false)
                 }
                 $folder[] = $item_id;
 
-                $query = "SELECT dokument_id, range_id FROM dokument_id WHERE range_id IN (?)";
+                $query = "SELECT dokument_id, range_id FROM dokumente WHERE range_id IN (?)";
                 $statement = DBManager::get()->prepare($query);
-                $statement->execute(array($folder));
+                $statement->execute(array($folder ?: ''));
                 while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
                     $doc_count += copy_doc($row['dokument_id'], md5($row['range_id'] . $seed), $change_sem_to);
                 }

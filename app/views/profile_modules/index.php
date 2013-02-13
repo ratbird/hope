@@ -36,8 +36,9 @@ $infobox = array(
             array(
                 'icon' => "icons/16/black/plugin",
                 'text' => _("Aktivierte Inhaltselemente fügen neue Funktionen ".
-                            "zu Ihrem Profil hinzu. Diese werden meist als ".
-                            "neuer Reiter im Menü erscheinen.")
+                            "zu Ihrem Profil oder Ihren Einstellungen hinzu.
+                            Diese werden meist als neuer Reiter im Menü ".
+                            "erscheinen.")
             ),
             array(
                 'icon' => "icons/16/black/info",

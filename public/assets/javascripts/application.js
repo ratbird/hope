@@ -46,7 +46,7 @@ jQuery('[data-behaviour="\'ajaxContent\'"]').live('click', function () {
 jQuery('a[rel~="lightbox"]').live('click', function (event) {
     var $that     = jQuery(this),
         href      = $that.attr('href'),
-        container = $jQuery'<div/>');
+        container = jQuery('<div/>');
 
     // Load response into a helper container, open dialog after loading
     // has finished.

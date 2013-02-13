@@ -58,6 +58,16 @@ class ProfileModulesController extends AuthenticatedController {
         }
         // Get homepage plugins from database.
         $this->plugins = array_merge($this->plugins, PluginEngine::getPlugins('HomepagePlugin'));
+        // Show info message if user is not on his own profile
+        if ($this->user_id != $GLOBALS['user']->id) {
+            $current_user = User::find($this->user_id);
+            $message = sprintf(_('Daten von: %s %s (%s), Status: %s'),
+                    htmlReady($current_user->Vorname),
+                    htmlReady($current_user->Nachname),
+                    $current_user->username,
+                    $current_user->perms);
+            PageLayout::postMessage(MessageBox::info($message));
+        }
     }
 
     /**
@@ -83,8 +93,11 @@ class ProfileModulesController extends AuthenticatedController {
      * Updates the activation status of user's homepage plugins.
      */
     function update_action() {
-        $success = '';
 
+        CSRFProtection::verifyUnsafeRequest();
+        PageLayout::clearMessages();
+
+        $success = '';
         // Plugins
         foreach ($this->plugins as $plugin) {
             // Check local activation status.

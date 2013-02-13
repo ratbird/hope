@@ -227,7 +227,7 @@ class ProfileController extends AuthenticatedController
         $homepageplugins = PluginEngine::getPlugins('HomepagePlugin');
 
         foreach ($homepageplugins as $homepageplugin) {
-            if ($homepageplugin->isActivated($this->current_user->user_id, 'profile')) {
+            if ($homepageplugin->isActivated($this->current_user->user_id, 'user')) {
                 // get homepageplugin tempaltes
                 $template = $homepageplugin->getHomepageTemplate($this->current_user->user_id);
                 // create output of the plugins

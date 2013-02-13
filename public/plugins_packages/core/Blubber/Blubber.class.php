@@ -92,7 +92,7 @@ class Blubber extends StudIPPlugin implements StandardPlugin, SystemPlugin {
         
         if (Navigation::hasItem("/profile") && 
                 $this->isActivated(get_userid(Request::username('username', 
-                $GLOBALS['auth']->auth['uname'])), 'profile')) {
+                $GLOBALS['auth']->auth['uname'])), 'user')) {
             $nav = new AutoNavigation(_("Blubber"), PluginEngine::getURL($this, 
                 array('user_id' => get_userid(Request::get("username"))), 
                 "streams/profile"));

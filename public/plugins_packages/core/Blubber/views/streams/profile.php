@@ -9,6 +9,7 @@
  *  the License, or (at your option) any later version.
  */
 ?>
+<div id="messageboxes"></div>
 <input type="hidden" id="last_check" value="<?= time() ?>">
 <input type="hidden" id="base_url" value="plugins.php/blubber/streams/">
 <input type="hidden" id="user_id" value="<?= htmlReady($GLOBALS['user']->id) ?>">
@@ -62,7 +63,7 @@ $infobox = array(
         array(
             array(
                 "icon" => "icons/16/black/add/person",
-                "text" => '<a href="" onClick="STUDIP.Blubber.followUser(); return false;">'._("Füge diesen Kontakt als Buddy hinzu und erhalte seine Nachrichten im globalen Blubberstream").'</a>'
+                "text" => '<a id="blubber_add_buddy" href="" onClick="STUDIP.Blubber.followUser(); return false;">'._("Füge diesen Kontakt als Buddy hinzu und erhalte seine Nachrichten im globalen Blubberstream").'</a>'
             )
         )
     ),

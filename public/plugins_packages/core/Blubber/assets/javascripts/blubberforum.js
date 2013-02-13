@@ -457,7 +457,10 @@ STUDIP.Blubber = {
             'dataType': "json",
             'success': function (data) {
                 if (data.success) {
-                    
+                    jQuery("#messageboxes").html(data.message);
+                    jQuery("#blubber_add_buddy")
+                        .closest("tr").fadeOut(function () { jQuery(this).remove(); })
+                        .prev("tr").fadeOut(function () { jQuery(this).remove(); });
                 }
             }
         });

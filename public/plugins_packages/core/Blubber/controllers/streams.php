@@ -642,10 +642,14 @@ class StreamsController extends ApplicationController {
                     NotificationCenter::postNotification('BlubberExternalContactDidAdd', $user);
                 }
             } else {
+                AddNewContact($user->getId());
                 AddBuddy($user['username']);
             }
         }
-        $this->render_json(array('success' => 1));
+        $this->render_json(array(
+            'success' => 1,
+            'message' => studip_utf8encode((string)MessageBox::success(_("Kontakt hinzugefügt")))
+        ));
     }
 
 }

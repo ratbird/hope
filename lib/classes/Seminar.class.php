@@ -2185,7 +2185,7 @@ class Seminar
         foreach (PluginEngine::getPlugins('ForumModule') as $plugin) {
             $plugin->deleteContents($s_id);  // delete content irrespective of plugin-activation in the seminar
             
-            if ($plugin->isActivated()) {   // only show a message, if the plugin is activated, to not confuse the user
+            if ($plugin->isActivated($s_id)) {   // only show a message, if the plugin is activated, to not confuse the user
                 $this->createMessage(sprintf(_('Einträge in %s archiviert.'), $plugin->getPluginName()));
             }
         }        

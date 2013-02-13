@@ -378,7 +378,7 @@ switch ($submitted_task) {
         foreach (PluginEngine::getPlugins('ForumModule') as $plugin) {
             $plugin->deleteContents($i_id);  // delete content irrespective of plugin-activation in the seminar
             
-            if ($plugin->isActivated()) {   // only show a message, if the plugin is activated, to not confuse the user
+            if ($plugin->isActivated($i_id)) {   // only show a message, if the plugin is activated, to not confuse the user
                 $message = sprintf(_('Einträge in %s gelöscht.'), $plugin->getPluginName());
                 PageLayout::postMessage(MessageBox::success($message));
             }

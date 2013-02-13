@@ -227,13 +227,15 @@ class ProfileController extends AuthenticatedController
         $homepageplugins = PluginEngine::getPlugins('HomepagePlugin');
 
         foreach ($homepageplugins as $homepageplugin) {
-            // get homepageplugin tempaltes
-            $template = $homepageplugin->getHomepageTemplate($this->current_user->user_id);
-            // create output of the plugins
-            if(!empty($template)) {
-                $render .= $template->render(null, $layout);
+            if ($homepageplugin->isActivated($this->current_user->user_id, 'profile')) {
+                // get homepageplugin tempaltes
+                $template = $homepageplugin->getHomepageTemplate($this->current_user->user_id);
+                // create output of the plugins
+                if(!empty($template)) {
+                    $render .= $template->render(null, $layout);
+                }
+                $layout->clear_attributes();
             }
-            $layout->clear_attributes();
         }
 
         $this->hompage_plugin = $render;

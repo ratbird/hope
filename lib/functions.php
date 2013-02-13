@@ -441,7 +441,7 @@ function lastActivity ($sem_id)
  *
  * @param string $id         the id of the object
  * @param array  $check_only an array to narrow the search, may contain
- *                            'sem', 'fak', 'group' or 'dokument' (optional)
+ *                            'sem', 'inst', 'fak', 'group' or 'dokument' (optional)
  *
  * @return string  return "inst" (Einrichtung), "sem" (Veranstaltung),
  *                 "fak" (Fakultaeten), "group" (Statusgruppe), "dokument" (Dateien)
@@ -492,7 +492,7 @@ function get_object_type($id, $check_only = array())
     }
 
     // Institute or faculty?
-    if ($check_all || in_array('inst', $check_only)) {
+    if ($check_all || in_array('inst', $check_only) || in_array('fak', $check_only)) {
         $query = "SELECT Institut_id = fakultaets_id FROM Institute WHERE Institut_id = ?";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($id));
@@ -504,7 +504,7 @@ function get_object_type($id, $check_only = array())
     }
 
     // None of the above
-    return false;
+    return $object_type_cache[$id] = false;
 }
 
 /**

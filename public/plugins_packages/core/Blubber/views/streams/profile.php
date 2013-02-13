@@ -56,6 +56,16 @@ $infobox = array(
             )
         )
     ),
+    ($isBuddy or !isset($isBuddy)) ? null : array(
+        "kategorie" => _("Aktionen"),
+          "eintrag"   =>
+        array(
+            array(
+                "icon" => "icons/16/black/add/person",
+                "text" => '<a href="" onClick="STUDIP.Blubber.followUser(); return false;">'._("Füge diesen Kontakt als Buddy hinzu und erhalte seine Nachrichten im globalen Blubberstream").'</a>'
+            )
+        )
+    ),
     array("kategorie" => _("Profifunktionen"),
           "eintrag"   =>
         array(

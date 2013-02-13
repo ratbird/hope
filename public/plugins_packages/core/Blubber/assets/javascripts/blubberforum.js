@@ -443,6 +443,24 @@ STUDIP.Blubber = {
         } else {
             STUDIP.Blubber.write('#' + jQuery('#identity_window_textarea_id').val());
         }
+    },
+    /**
+     * Adds the current user as a buddy - works for internal and external contacts
+     */
+    followUser: function () {
+        jQuery.ajax({
+            'url': STUDIP.ABSOLUTE_URI_STUDIP + jQuery("#base_url").val() + "/follow_user",
+            'data': {
+                'user_id': jQuery("#context_id").val(),
+                'external_contact': jQuery("#extern").val()
+            },
+            'dataType': "json",
+            'success': function (data) {
+                if (data.success) {
+                    
+                }
+            }
+        });
     }
 };
 

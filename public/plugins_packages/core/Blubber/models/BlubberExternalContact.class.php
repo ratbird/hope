@@ -29,6 +29,7 @@ class BlubberExternalContact extends SimpleORMap implements BlubberContact {
         if (class_exists($user['contact_type'])) {
             $new_user = new $user['contact_type']();
             $new_user->setData($user->toArray());
+            $new_user->setNew(false);
             return $new_user;
         } else {
             return $user;
@@ -122,5 +123,26 @@ class BlubberExternalContact extends SimpleORMap implements BlubberContact {
     {
         $this->content['data'] = (array) unserialize($this->content['data']);
         return true;
+    }
+    
+    /**
+     * Returns if the given user is following the BlubberExternalContact
+     * @param string|null $user_id
+     * @return boolean 
+     */
+    public function isFollowed($user_id = null) {
+        $user_id or $user_id = $GLOBALS['user']->id;
+        $statement = DBManager::get()->prepare(
+            "SELECT 1 " .
+            "FROM blubber_follower " .
+            "WHERE studip_user_id = :user_id " .
+                "AND external_contact_id = :contact_id " .
+                "AND left_follows_right = '1' " .
+        "");
+        $statement->execute(array(
+            'user_id' => $user_id,
+            'contact_id' => $this->getId()
+        ));
+        return (bool) $statement->fetch(PDO::FETCH_COLUMN, 0);
     }
 }

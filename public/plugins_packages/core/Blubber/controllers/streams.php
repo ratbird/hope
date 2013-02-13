@@ -9,6 +9,7 @@
  */
 
 require_once dirname(__file__)."/application.php";
+require_once 'lib/contact.inc.php';
 
 /**
  * Controller for displaying streams in Blubber and write and edit Blubber-postings
@@ -107,6 +108,9 @@ class StreamsController extends ApplicationController {
         $this->course_id = $_SESSION['SessionSeminar'];
         if ($this->more_threads) {
             $this->threads = array_slice($this->threads, 0, $this->max_threads);
+        }
+        if (Request::get("user_id") !== $GLOBALS['user']->id) {
+            $this->isBuddy = is_a($this->user, "BlubberExternalContact") ? $this->user->isFollowed() : CheckBuddy($this->user['username']) ;
         }
     }
 
@@ -606,6 +610,42 @@ class StreamsController extends ApplicationController {
         $this->course_id     = $_SESSION['SessionSeminar'];
         $this->single_thread = true;
         BlubberPosting::$course_hashes = ($thread['user_id'] !== $thread['Seminar_id'] ? $thread['Seminar_id'] : false);
+    }
+    
+    /**
+     * Current user is going to follow (add as buddy) the given user, who could
+     * also be an external contact. 
+     */
+    public function follow_user_action() {
+        if (!$GLOBALS['perm']->have_perm("autor")) {
+            throw new AccessDeniedException("Unerlaubte Methode");
+        }
+        if (Request::get("external_contact")) {
+            $user = BlubberExternalContact::find(Request::option("user_id"));
+            echo "hjgjhg";
+        } else {
+            $user = new BlubberUser(Request::option("user_id"));
+        }
+        if (!$user->isNew()) {
+            if (is_a($user, "BlubberExternalContact")) {
+                $statement = DBManager::get()->prepare(
+                    "INSERT IGNORE INTO blubber_follower " .
+                    "SET studip_user_id = :user_id, " .
+                        "external_contact_id = :contact_id, " .
+                        "left_follows_right = '1' " .
+                "");
+                $success = $statement->execute(array(
+                    'user_id' => $GLOBALS['user']->id,
+                    'contact_id' => $user->getId()
+                ));
+                if ($success) {
+                    NotificationCenter::postNotification('BlubberExternalContactDidAdd', $user);
+                }
+            } else {
+                AddBuddy($user['username']);
+            }
+        }
+        $this->render_json(array('success' => 1));
     }
 
 }

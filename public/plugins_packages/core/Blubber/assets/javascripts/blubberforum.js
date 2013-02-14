@@ -147,7 +147,7 @@ STUDIP.Blubber = {
                     var top = jQuery(document).scrollTop();
                     jQuery(comment).appendTo("#posting_" + thread + " ul.comments").hide().fadeIn();
                     var comment_top = jQuery("#posting_" + posting_id).offset().top;
-                    var height = jQuery("#posting_" + posting_id).height() + 
+                    var height = jQuery("#posting_" + posting_id).height() +
                         + 15; //2 * padding + 1 wegen des Border
                     if (comment_top < top) {
                         jQuery(document).scrollTop(top + height);
@@ -291,10 +291,10 @@ STUDIP.Blubber = {
             return false;
         }).each(function (index, textarea) {
             //and here the file-dropping function:
-            textarea.addEventListener("drop", function (event) {
+            jQuery(textarea).on("drop", function (event) {
                 event.preventDefault();
                 var files = 0;
-                var file_info = event.dataTransfer.files;
+                var file_info = event.originalEvent.dataTransfer.files || {};
                 var data = new FormData();
 
                 var thread = jQuery(textarea).closest("li.thread");
@@ -354,7 +354,7 @@ STUDIP.Blubber = {
                         }
                     });
                 }
-            }, false);
+            });
         });
     },
     /**
@@ -364,7 +364,7 @@ STUDIP.Blubber = {
      */
     updateTimestamps: function () {
         var now_seconds = Math.floor(new Date().getTime() / 1000);
-        now_seconds = now_seconds - parseInt(jQuery("#browser_start_time").val(), 10) 
+        now_seconds = now_seconds - parseInt(jQuery("#browser_start_time").val(), 10)
             + parseInt(jQuery("#stream_time").val(), 10);
         jQuery("#forum_threads .posting .time").each(function () {
             var new_text = "";

@@ -1458,10 +1458,11 @@ function display_file_body($datei, $folder_id, $open, $change, $move, $upload, $
         $content .=  "<br><br>" . sprintf(_("<b>Dateigr&ouml;&szlig;e:</b> %s kB"), round ($datei["filesize"] / 1024));
         $content .=  "&nbsp; " . sprintf(_("<b>Dateiname:</b> %s "),htmlReady($datei['filename']));
         if ($all) {
-            $content .= "<br>" . sprintf(_("<b>Ordner:</b> <a class=\"link-intern\" title=\"%s\" href=\"%s\">%s</a> "),
-                _("Diesen Ordner in der Ordneransicht öffnen"),
-                UrlHelper::getLink('folder.php#anker', array('open' => $datei['range_id'], 'data' => null, 'cmd' => 'tree')),
-                htmlReady($folder_tree->getShortPath($datei['range_id'], null, '/', 1)));
+            $content .= "<br>" . sprintf("<b>%s</b> <a class=\"link-intern\" title=\"%s\" href=\"%s\">%s</a>",
+                    _("Ordner:"),
+                    _("Diesen Ordner in der Ordneransicht öffnen"),
+                    UrlHelper::getLink('folder.php#anker', array('open' => $datei['range_id'], 'data' => null, 'cmd' => 'tree')),
+                    htmlReady($folder_tree->getShortPath($datei['range_id'], null, '/', 1)));
         }
     }
 

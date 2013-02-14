@@ -79,7 +79,7 @@ class PageLayout
         self::addHeadElement('link', array('rel' => 'shortcut icon', 'href' => Assets::image_path('favicon.png')));
 
         // set initial width for mobile devices
-        self::addHeadElement('meta', array('name' => 'viewport', 'content' => 'width=device-width; initial-scale=1.0;'));
+        self::addHeadElement('meta', array('name' => 'viewport', 'content' => 'width=device-width, initial-scale=1.0'));
 
         // include ie-specific CSS
         self::addComment('[if IE]>' . Assets::stylesheet('ie.css', array('media' => 'screen,print')) . '<![endif]');

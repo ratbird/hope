@@ -56,8 +56,8 @@ class Calendar_InstscheduleController extends AuthenticatedController
         }
 
         if (!$institute_id || (in_array(get_object_type($institute_id), words('inst fak')) === false)) {
-            throw new Exception(sprintf_('Kann Einrichtungskalendar nicht anzeigen!'
-                . 'Es wurde eine ungültige Instituts-Id übergeben (%s)!', $institute_id));
+            throw new Exception(sprintf(_('Kann Einrichtungskalendar nicht anzeigen!'
+                . 'Es wurde eine ungültige Instituts-Id übergeben (%s)!', $institute_id)));
         }
 
         // load semester-data and current semester

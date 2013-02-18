@@ -98,7 +98,7 @@ class StreamsController extends ApplicationController {
         } else {
             $this->user = new BlubberUser(Request::get("user_id"));
         }
-        PageLayout::setTitle(htmlReady($this->user->getName())." - Blubber");
+        PageLayout::setTitle($this->user->getName()." - Blubber");
         
         $this->threads = BlubberPosting::getThreads(array(
             'user_id' => $this->user->getId(),

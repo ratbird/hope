@@ -28,7 +28,7 @@ $wiki_extended_link_regex = "\[\[(([\w\.\-\:\(\)_§\/@# ]|&[AOUaou]uml;|&szlig;)+
 function getWikiPage($keyword, $version, $db = NULL) {
     global $SessSemName;
 
-    $query = "SELECT * 
+    $query = "SELECT *
               FROM wiki
               WHERE keyword = :keyword AND range_id = :range_id";
     $parameters = array(
@@ -61,29 +61,6 @@ function getWikiPage($keyword, $version, $db = NULL) {
     return $wikidata;
 }
 
-/**
-* Fill in username in comments
-*
-* @param    string  body    WikiPage text
-*
-**/
-function completeWikiComments($body) {
-    global $auth;
-    return preg_replace("/\[comment\]/","\[comment=".addslashes(get_fullname($auth->auth['uid'],'full',false))."\]",$body);
-}
-
-/**
- * Fill in signature markup in signatures
- *
- * @param string $body WikiPage text
- * @return string text with signature
- */
-function completeWikiSignatures($body)
-{
-    global $auth;
-    return preg_replace("/ ~~~~/"," [sig ".$auth->auth['uname']." ".time()."]", $body);
-}
-
 
 /**
 * Write a new/edited wiki page to database
@@ -102,14 +79,10 @@ function submitWikiPage($keyword, $version, $body, $user_id, $range_id) {
     $latestVersion=getWikiPage($keyword,false);
     if ($latestVersion) {
         $date=time();
-        $lastchange = $date - $latestVersion[chdate];
+        $lastchange = $date - $latestVersion['chdate'];
     }
 
-    // complete username in comments
-    $body=completeWikiComments($body);
-
-    // complete signature from ~~~~
-    $body=completeWikiSignatures($body);
+    StudipTransformFormat::addStudipMarkup('wiki-comments', '(\[comment\])', null, function(){return sprintf('[comment=%s]', get_fullname());});
 
     //TODO: Die $message Texte klingen fürchterlich. Halbsätze, Denglisch usw...
     if ($latestVersion && ($latestVersion['body'] == $body)) {
@@ -148,7 +121,7 @@ function submitWikiPage($keyword, $version, $body, $user_id, $range_id) {
 
         NotificationCenter::postNotification('WikiPageDidCreate', array($range_id, $keyword));
     }
-
+    StudipTransformFormat::removeStudipMarkup('wiki-comments');
     refreshBacklinks($keyword, $body);
 }
 
@@ -196,7 +169,7 @@ function getFirstVersion($keyword, $range_id) {
 **/
 function getWikiPageVersions($keyword, $limit=10, $getfirst=0) {
     global $SessSemName;
-    
+
     $query = "SELECT version, chdate
               FROM wiki
               WHERE keyword = ? AND range_id = ?
@@ -292,7 +265,7 @@ function getLock($keyword, $user_id) {
     $statement->execute(array($SessSemName[1], $keyword, $user_id));
     $locks = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-    $lockstring = '';    
+    $lockstring = '';
     foreach ($locks as $index => $lock) {
         if ($index) {
             if ($index == count($locks) - 1) {
@@ -302,7 +275,7 @@ function getLock($keyword, $user_id) {
             }
         }
         $duration = ceil((time() - $lock['chdate']) / 60);
-        
+
         $lockstring .= get_fullname($lock['user_id'], 'full', true);
         $lockstring .= sprintf(_(' (seit %d Minuten)'), $duration);
     }
@@ -555,7 +528,7 @@ function deleteWikiPage($keyword, $version, $range_id) {
     if ($lv["version"] != $version) {
         throw new InvalidArgumentException(_('Die Version, die Sie löschen wollen, ist nicht die aktuellste. Überprüfen Sie, ob inzwischen eine aktuellere Version erstellt wurde.'));
     }
-    
+
     NotificationCenter::postNotification('WikiPageWillDelete', array($range_id, $keyword));
 
     $query = "DELETE FROM wiki WHERE keyword = ? AND version = ? AND range_id = ?";
@@ -597,7 +570,7 @@ function deleteAllWikiPage($keyword, $range_id) {
     if (!$perm->have_studip_perm("tutor", $SessSemName[1])) {
         throw new AccessDeniedException(_('Sie haben keine Berechtigung, Seiten zu löschen.'));
     }
-    
+
     $query = "DELETE FROM wiki WHERE keyword = ? AND range_id = ?";
     $statement = DBManager::get()->prepare($query);
     $statement->execute(array($keyword, $range_id));
@@ -739,14 +712,14 @@ function listPages($mode, $sortby = NULL) {
         echo '</tr></table>';
     }
     echo "</table><p>&nbsp;</p>";
-    
+
     $infobox = array ();
     if ($mode=="all"){
         $help_url = format_help_url("Basis.VerschiedenesFormat");
-        $infobox[] = array("kategorie" => _("Ansicht"), 
+        $infobox[] = array("kategorie" => _("Ansicht"),
                             "eintrag" => array(
                                 array(
-                                    'icon' => "icons/16/black/file-pdf.png", 
+                                    'icon' => "icons/16/black/file-pdf.png",
                                     "text" => "<a href=\"".
                                     URLHelper::getLink("?keyword=" . urlencode($keyword) . "&view=exportall_pdf&version=$version&sortby=$sortby") .
                                     "\" target=\"_blank\">PDF-Ausgabe aller Wiki-Seiten</a>"),
@@ -1031,7 +1004,7 @@ function printWikiPage($keyword, $version) {
     echo "<p><em>$SessSemName[header_line]</em></p>";
     echo "<h1>$keyword</h1>";
     echo "<p><em>";
-    echo sprintf(_("Version %s, letzte Änderung %s von %s."), $wikiData['version'], 
+    echo sprintf(_("Version %s, letzte Änderung %s von %s."), $wikiData['version'],
     date("d.m.Y, H:i", $wikiData['chdate']), get_fullname($wikiData['user_id'], 'full', 1));
     echo "</em></p>";
     echo "<hr>";
@@ -1045,7 +1018,7 @@ function printWikiPage($keyword, $version) {
 function exportWikiPagePDF($keyword, $version) {
     global $SessSemName;
     $wikiData=getWikiPage($keyword,$version);
-    
+
     $document = new ExportPDF();
     $document->SetTitle(_('Wiki: ').htmlReady($keyword));
     $document->setHeaderTitle(sprintf(_("Wiki von \"%s\""), $SessSemName[0]));
@@ -1094,7 +1067,7 @@ function exportAllWikiPagesPDF($mode, $sortby) {
               {$sort}";
 
     $parameters = array($SessSemName[1]);
-    
+
     $statement = DBManager::get()->prepare($query);
     $statement->execute($parameters);
 
@@ -1110,7 +1083,7 @@ function exportAllWikiPagesPDF($mode, $sortby) {
     }
 
     $document->dispatch($SessSemName[header_line]." - ".$wikiData["keyword"]);
-} 
+}
 
 function deleteWikiLinks($keyword){
     $keyword = preg_replace('/\[\[[^|\]]*\|([^]]*)\]\]/', '$1', $keyword);
@@ -1159,7 +1132,7 @@ function printAllWikiPages($range_id, $header) {
 **/
 function getAllWikiPages($range_id, $header, $fullhtml=TRUE) {
     global $SessSemName;
-    
+
     $query = "SELECT DISTINCT keyword FROM wiki WHERE range_id = ? ORDER BY keyword DESC";
     $statement = DBManager::get()->prepare($query);
     $statement->execute(array($SessSemName[1]));
@@ -1577,7 +1550,7 @@ function end_blank_table() {
 **/
 function showDiffs($keyword, $versions_since) {
     global $SessSemName;
-    
+
     $query = "SELECT *
               FROM wiki
               WHERE keyword = ? AND range_id = ?

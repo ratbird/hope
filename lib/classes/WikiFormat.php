@@ -20,7 +20,7 @@ class WikiFormat extends StudipFormat
             'callback' => 'WikiFormat::markupWikiComments'
         ),
         'wiki-links-short' => array(
-            'start'    => '(?<=\s|^|\A|\>|\()((?:[A-ZÄÖÜ]|&[AOU]uml;)(?:[a-z\däöüß]|&[aou]uml;|&szlig;)+(?:[A-ZÄÖÜ]|&[AOU]uml;)(?:[\w\däöüß]|&[aou]uml;|&szlig;)*)',
+            'start'    => '(?<=\b)((?:[A-ZÄÖÜ]|&[AOU]uml;)(?:[a-z\däöüß]|&[aou]uml;|&szlig;)+(?:[A-ZÄÖÜ]|&[AOU]uml;)(?:[\w\däöüß]|&[aou]uml;|&szlig;)*)',
             'callback' => 'WikiFormat::markupWikiLinks',
             'before'   => 'links'
         ),
@@ -30,7 +30,7 @@ class WikiFormat extends StudipFormat
             'before'   => 'links'
         ),
     );
-    
+
     /**
      * Adds a new markup rule to the wiki markup set. This can
      * also be used to replace an existing markup rule. The end regular
@@ -41,7 +41,7 @@ class WikiFormat extends StudipFormat
      * - $markup    the markup parser object
      * - $matches   match results of preg_match for $start
      * - $contents  (parsed) contents of this markup rule
-     * 
+     *
      * Sometimes you may want your rule to apply before another specific rule
      * will apply. For this case the parameter $before defines a rulename of
      * existing markup, before which your rule should apply.
@@ -69,7 +69,7 @@ class WikiFormat extends StudipFormat
             self::$wiki_rules[$name] = compact('start', 'end', 'callback');
         }
     }
-    
+
     /**
      * Returns a single markup-rule if it exists.
      * @return array: array('start' => "...", 'end' => "...", 'callback' => "...")
@@ -96,10 +96,10 @@ class WikiFormat extends StudipFormat
         parent::__construct();
         foreach (self::$wiki_rules as $name => $rule) {
             $this->addMarkup(
-                $name, 
-                $rule['start'], 
-                $rule['end'], 
-                $rule['callback'], 
+                $name,
+                $rule['start'],
+                $rule['end'],
+                $rule['callback'],
                 $rule['before'] ? $rule['before'] : null
             );
         }
@@ -112,11 +112,11 @@ class WikiFormat extends StudipFormat
     {
         $from = substr($matches[1], 1);
         $comment = $matches[2];
-        
+
         if (Request::get("wiki_comments") === "all") {
             $commenttmpl = "<table style=\"border:thin solid;margin: 5px;\" bgcolor=\"#ffff88\"><tr><td><font size=-1><b>"._("Kommentar von")." %1\$s:</b>&nbsp;</font></td></tr><tr class=steelgrau><td class=steelgrau><font size=-1>%2\$s</font></td></tr></table>";
             return sprintf($commenttmpl,
-                $from, 
+                $from,
                 $comment
             );
         } elseif(Request::get("wiki_comments") !== "none") {
@@ -131,13 +131,13 @@ class WikiFormat extends StudipFormat
         } else {
             return "";
         }
-        
+
     }
-    
+
     protected static function markupWikiLinks($markup, $matches) {
         $page = decodeHTML($matches[1]);
-        $display_page = $matches[2] ? $markup->format(decodeHTML($matches[2])) : $page;
-        
+        $display_page = $matches[2] ? $markup->format($matches[2]) : $page;
+
         if (keywordExists($page, $_SESSION['SessionSeminar'])) {
             return sprintf('<a href="%s">%s</a>',
                 URLHelper::getLink("wiki.php", array('keyword' => $page)),
@@ -146,12 +146,12 @@ class WikiFormat extends StudipFormat
         } else {
             return sprintf('<a href="%s">%s(?)</a>',
                 URLHelper::getLink("wiki.php", array(
-                    'keyword' => $page, 
+                    'keyword' => $page,
                     'view' => 'editnew'
                 )),
                 $display_page
             );
         }
     }
-    
+
 }

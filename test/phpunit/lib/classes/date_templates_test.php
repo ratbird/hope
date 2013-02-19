@@ -103,8 +103,8 @@ class DateTemplatesTests extends PHPUnit_Framework_TestCase
         $data = renderTemplate('dates/seminar_html', $this->testData, array('show_room' => true));
         $compare = 'Montag: 10:00 - 12:00 (ab 10/18/10), <i>Vorlesung</i>, Ort: '
                  . '<a onclick="window.open(...)">Hörsaal 1</a>, '
-                 . '(&lt;script&gt;alert(&quot;b&ouml;se&quot;);&lt;/script&gt;)<br>'
-                 . 'Termine am 12.05. 09:00 - 13:00, Ort: (&lt;script&gt;alert(&quot;b&ouml;se&quot;);&lt;/script&gt;)';
+                 . '(&lt;script&gt;alert(&quot;böse&quot;);&lt;/script&gt;)<br>'
+                 . 'Termine am 12.05. 09:00 - 13:00, Ort: (&lt;script&gt;alert(&quot;böse&quot;);&lt;/script&gt;)';
         $this->assertEquals($compare, $data);
 
 
@@ -115,7 +115,7 @@ class DateTemplatesTests extends PHPUnit_Framework_TestCase
         <td style="padding: 0px;">Mo. 10:00 - 12:00 (2x)</td>
     </tr>
         <tr>
-        <td style="vertical-align: top; padding: 0 10px 0 0;">(&lt;script&gt;alert(&quot;b&ouml;se&quot;);&lt;/script&gt;)</td>
+        <td style="vertical-align: top; padding: 0 10px 0 0;">(&lt;script&gt;alert(&quot;böse&quot;);&lt;/script&gt;)</td>
         <td style="padding: 0px;">Mo. 10:00 - 12:00 (16x)<br> 12.05. 09:00 - 13:00</td>
     </tr>
     </table>';
@@ -136,20 +136,20 @@ class DateTemplatesTests extends PHPUnit_Framework_TestCase
     public function testHTMLTemplatesWithoutLink()
     {
         $data = renderTemplate('dates/seminar_html', $this->testData, array('link' => false, 'show_room' => true));
-        $compare = 'Montag: 10:00 - 12:00 (ab 10/18/10), <i>Vorlesung</i>, Ort: H&ouml;rsaal 1 &lt;br&gt;, '
-                 . '(&lt;script&gt;alert(&quot;b&ouml;se&quot;);&lt;/script&gt;)<br>'
-                 . 'Termine am 12.05. 09:00 - 13:00, Ort: (&lt;script&gt;alert(&quot;b&ouml;se&quot;);&lt;/script&gt;)';
+        $compare = 'Montag: 10:00 - 12:00 (ab 10/18/10), <i>Vorlesung</i>, Ort: Hörsaal 1 &lt;br&gt;, '
+                 . '(&lt;script&gt;alert(&quot;böse&quot;);&lt;/script&gt;)<br>'
+                 . 'Termine am 12.05. 09:00 - 13:00, Ort: (&lt;script&gt;alert(&quot;böse&quot;);&lt;/script&gt;)';
         $this->assertEquals($compare, $data);
 
 
         $data = renderTemplate('dates/seminar_html_location', $this->testData, array('link' => false));
         $compare = '<table class="default" style="width: auto;">
         <tr>
-        <td style="vertical-align: top; padding: 0 10px 0 0;">H&ouml;rsaal 1 &lt;br&gt;</td>
+        <td style="vertical-align: top; padding: 0 10px 0 0;">Hörsaal 1 &lt;br&gt;</td>
         <td style="padding: 0px;">Mo. 10:00 - 12:00 (2x)</td>
     </tr>
         <tr>
-        <td style="vertical-align: top; padding: 0 10px 0 0;">(&lt;script&gt;alert(&quot;b&ouml;se&quot;);&lt;/script&gt;)</td>
+        <td style="vertical-align: top; padding: 0 10px 0 0;">(&lt;script&gt;alert(&quot;böse&quot;);&lt;/script&gt;)</td>
         <td style="padding: 0px;">Mo. 10:00 - 12:00 (16x)<br> 12.05. 09:00 - 13:00</td>
     </tr>
     </table>';
@@ -158,19 +158,19 @@ class DateTemplatesTests extends PHPUnit_Framework_TestCase
 
         $data = renderTemplate('dates/seminar_predominant_html', $this->testData, array(
             'cycle_id' => '0', 'link' => false));
-        $compare = 'H&ouml;rsaal 1 &lt;br&gt;';
+        $compare = 'Hörsaal 1 &lt;br&gt;';
         $this->assertEquals($compare, $data);
 
 
         $data = renderTemplate('dates/date_html', $this->testData, array('date' => new SingleDate(), 'link' => false));
-        $compare = 'Mo., 11.11.2010 12:00 - 14:00, Ort: H&ouml;rsaal 1 &lt;br&gt;';
+        $compare = 'Mo., 11.11.2010 12:00 - 14:00, Ort: Hörsaal 1 &lt;br&gt;';
         $this->assertEquals($compare, $data);
 
         // test single date with freetext
         $singledate = new SingleDate();
         $singledate->resource_id = NULL;
         $data = renderTemplate('dates/date_html', $this->testData, array('date' => $singledate));
-        $compare = 'Mo., 11.11.2010 12:00 - 14:00, Ort: (&lt;script&gt;alert(&quot;b&ouml;se&quot;);&lt;/script&gt;)';
+        $compare = 'Mo., 11.11.2010 12:00 - 14:00, Ort: (&lt;script&gt;alert(&quot;böse&quot;);&lt;/script&gt;)';
         $this->assertEquals($compare, $data);
     }
 

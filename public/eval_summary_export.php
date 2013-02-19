@@ -35,7 +35,7 @@
 require '../lib/bootstrap.php';
 unregister_globals();
 
-if (!isset($EVAL_AUSWERTUNG_GRAPH_FORMAT)) $EVAL_AUSWERTUNG_GRAPH_FORMAT = 'jpg';
+if (!isset($EVAL_AUSWERTUNG_GRAPH_FORMAT)) $EVAL_AUSWERTUNG_GRAPH_FORMAT = 'gif';
 
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 
@@ -93,11 +93,11 @@ function freetype_answers ($parent_id, $anz_nutzer) {
     $statement->execute(array($parent_id));
 
     while ($answer = $statement->fetchColumn()) {
+        $counter++;
         fputs($fo_file,"                <fo:table-row>\n");
         // fputs($fo_file,"                  <fo:table-cell ><fo:block font-size=\"8pt\">".$counter.". ".htmlspecialchars($db_answers->f("text"))."</fo:block></fo:table-cell>\n");
         fputs($fo_file,"                  <fo:table-cell ><fo:block font-size=\"8pt\">".$counter.". ".preg_replace($pattern,$replace,smile(htmlspecialchars($answer),TRUE))."</fo:block></fo:table-cell>\n");
         fputs($fo_file,"                </fo:table-row>\n");
-        $counter++;
     }
     fputs($fo_file,"                <fo:table-row>\n");
     fputs($fo_file,"                  <fo:table-cell ><fo:block font-size=\"8pt\">"._("Anzahl der Teilnehmer").": ".$anz_nutzer."</fo:block></fo:table-cell>\n");
@@ -603,7 +603,7 @@ if ($evaluation = $statement->fetch(PDO::FETCH_ASSOC)) {
     $err = exec($str);
 
     if (file_exists($pdffile) && filesize($pdffile)) {
-        header('Location: ' . getDownloadLink( basename($pdffile), "evaluation.pdf", 2));
+        header('Location: ' . getDownloadLink( basename($pdffile), "evaluation.pdf", 2, 'force'));
         unlink($tmp_path_export."/evalsum".$evaluation['eval_id'].$auth->auth["uid"].".fo");
     } else {
         echo "Fehler beim PDF-Export!<BR>".$err;

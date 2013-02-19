@@ -22,6 +22,8 @@ require '../lib/bootstrap.php';
 
 unregister_globals();
 
+if (!isset($EVAL_AUSWERTUNG_GRAPH_FORMAT)) $EVAL_AUSWERTUNG_GRAPH_FORMAT = 'gif';
+
 require_once 'lib/visual.inc.php';
 require_once "vendor/phplot/phplot.php";
 require_once 'lib/msg.inc.php';
@@ -157,11 +159,6 @@ function do_graph($data, $evalquestion_id)
         $graph->SetLegend($legend);
     }
 
-    //png sieht besser aus, mriehe
-    if (!isset($GLOBALS['EVAL_AUSWERTUNG_GRAPH_FORMAT'])) {
-        $GLOBALS['EVAL_AUSWERTUNG_GRAPH_FORMAT'] = 'png';
-    }
-
     //Data Colors
     $graph->SetDataColors(
         array("blue", "green", "yellow", "red", "PeachPuff", "orange", "pink", "lavender",
@@ -169,9 +166,10 @@ function do_graph($data, $evalquestion_id)
         array("black") //Border Colors
     );
 
+    $max_x = max(array_map('next',$data));
     $graph->SetPlotAreaWorld(NULL, 0); // y-achse bei 0 starten
     $graph->SetPrecisionY(0); //anzahl kommastellen y-achse
-
+    $graph->SetYTickIncrement($max_x < 10 ? 1 : round($max_x/10));
     $graph->SetPlotBgColor(array(222,222,222));
     $graph->SetDataType("text-data");
     $graph->SetFileFormat($GLOBALS['EVAL_AUSWERTUNG_GRAPH_FORMAT']);
@@ -179,7 +177,7 @@ function do_graph($data, $evalquestion_id)
     $graph->SetIsInline(true);
     $graph->SetDataValues($data);
     $graph->SetPlotType($type);
-    $graph->SetXLabelAngle(0);
+    $graph->SetXLabelAngle(count($data) < 10 ? 0 : 90);
     //$graph->SetShading(0); // kein 3D
 
     $graph->SetLineWidth(1);

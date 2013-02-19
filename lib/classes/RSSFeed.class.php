@@ -213,7 +213,7 @@ class RSSFeed
             // Adjust content
             $content = $item['description'] ?: $item['summary'];
             $content = studip_utf8decode($content);
-            $content = html_entity_decode($content);
+            $content = decodeHTML($content);
             $content = strip_tags($content);
 
             $result = array(

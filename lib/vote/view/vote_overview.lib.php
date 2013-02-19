@@ -57,7 +57,7 @@ function printSafeguard($sign,$text,$mode = NULL, $voteID = NULL, $showrangeID =
                 'showrangeID' => $showrangeID,
                 'referer'     => $referer
             );
-            $html = createQuestion(html_entity_decode($text), $approval, $abort);
+            $html = createQuestion(decodeHTML($text), $approval, $abort);
             break;
 
         case "NeverResultvisibility":

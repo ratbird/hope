@@ -430,7 +430,7 @@ class StudipFormat extends TextFormat
      */
     protected static function markupCode($markup, $matches)
     {
-        return highlight_string(html_entity_decode(trim($matches[1]), ENT_QUOTES), true);
+        return highlight_string(decodeHTML(trim($matches[1]), ENT_QUOTES), true);
     }
     
     /**

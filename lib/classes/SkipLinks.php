@@ -55,7 +55,7 @@ class SkipLinks
     public static function addLink($name, $url, $position = null, $overwriteable = false)
     {
         $position = (is_null($position) || $position < 1) ? sizeof(self::$links) + 100 : intval($position);
-        $new_link = array('name' => $name, 'url' => html_entity_decode($url), 'position' => $position, 'overwriteable' => $overwriteable);
+        $new_link = array('name' => $name, 'url' => decodeHTML($url), 'position' => $position, 'overwriteable' => $overwriteable);
         if (self::checkOverwrite($new_link)) {
             self::$links[$new_link['url']] = $new_link;
         }

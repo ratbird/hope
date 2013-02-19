@@ -318,7 +318,7 @@ class Calendar
 
     function getHeadline()
     {
-        return html_entity_decode($this->headline);
+        return decodeHTML($this->headline);
     }
 
     function createEvent($properties = NULL)
@@ -476,12 +476,12 @@ class Calendar
             $this->event->properties['DTSTART'] = mktime($calendar_form_data['start_h'], $calendar_form_data['start_m'], 0, $calendar_form_data['start_month'], $calendar_form_data['start_day'], $calendar_form_data['start_year']);
             $this->event->properties['DTEND'] = mktime($calendar_form_data['end_h'], $calendar_form_data['end_m'], 0, $calendar_form_data['end_month'], $calendar_form_data['end_day'], $calendar_form_data['end_year']);
         }
-        $this->event->properties['SUMMARY'] = html_entity_decode($calendar_form_data['txt']);
-        $this->event->properties['CATEGORIES'] = html_entity_decode($calendar_form_data['cat_text']);
+        $this->event->properties['SUMMARY'] = decodeHTML($calendar_form_data['txt']);
+        $this->event->properties['CATEGORIES'] = decodeHTML($calendar_form_data['cat_text']);
         $this->event->properties['STUDIP_CATEGORY'] = $calendar_form_data['cat'];
         $this->event->properties['PRIORITY'] = $calendar_form_data['priority'];
-        $this->event->properties['LOCATION'] = html_entity_decode($calendar_form_data['loc']);
-        $this->event->properties['DESCRIPTION'] = html_entity_decode($calendar_form_data['content']);
+        $this->event->properties['LOCATION'] = decodeHTML($calendar_form_data['loc']);
+        $this->event->properties['DESCRIPTION'] = decodeHTML($calendar_form_data['content']);
 
         switch ($calendar_form_data['via']) {
             case 'PUBLIC':

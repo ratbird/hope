@@ -547,7 +547,7 @@ class StreamsController extends ApplicationController {
             if ($context_type === "course") {
                 validate_upload($file);
                 if ($GLOBALS['msg']) {
-                    $output['errors'][] = $file['name'] . ': ' . studip_utf8encode(html_entity_decode(trim(substr($GLOBALS['msg'],6), '§')));
+                    $output['errors'][] = $file['name'] . ': ' . studip_utf8encode(decodeHTML(trim(substr($GLOBALS['msg'],6), '§')));
                     continue;
                 }
             }

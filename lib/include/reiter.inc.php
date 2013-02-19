@@ -88,7 +88,7 @@ class reiter {
 
         foreach ($structure as $key => $item) {
             $navigation = new Navigation($item['name'],
-                html_entity_decode($item['link']));
+                decodeHTML($item['link']));
 
             if ($item['disabled']) {
                 $navigation->setEnabled(false);

@@ -20,7 +20,7 @@ class WikiFormat extends StudipFormat
             'callback' => 'WikiFormat::markupWikiComments'
         ),
         'wiki-links-short' => array(
-            'start'    => '(?<=\b)((?:[A-ZÄÖÜ]|&[AOU]uml;)(?:[a-z\däöüß]|&[aou]uml;|&szlig;)+(?:[A-ZÄÖÜ]|&[AOU]uml;)(?:[\w\däöüß]|&[aou]uml;|&szlig;)*)',
+            'start'    => '\b((?:[A-ZÄÖÜ]|&[AOU]uml;)(?:[a-z\däöüß]|&[aou]uml;|&szlig;)+(?:[A-ZÄÖÜ]|&[AOU]uml;)(?:[\w\däöüß]|&[aou]uml;|&szlig;)*)',
             'callback' => 'WikiFormat::markupWikiLinks',
             'before'   => 'links'
         ),

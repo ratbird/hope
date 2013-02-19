@@ -215,16 +215,13 @@ function get_ampel_read ($mein_status, $admission_status, $read_level, $print="T
 
 function htmlReady ($what, $trim = TRUE, $br = FALSE) {
     if ($trim) {
-        $what = trim(htmlspecialchars($what, ENT_QUOTES, 'cp1252'));
+        $what = trim(htmlspecialchars($what, ENT_QUOTES, 'cp1252', false));
     } else {
-        $what = htmlspecialchars($what,ENT_QUOTES, 'cp1252');
+        $what = htmlspecialchars($what,ENT_QUOTES, 'cp1252', false);
     }
 
-    // workaround zur Darstellung von Zeichen in der Form &#x268F oder &#283;
-    $what = preg_replace('/&amp;#(x[0-9a-f]+|[0-9]+);/i', '&#$1;', $what);
-
     if ($br) { // fix newlines
-        $what = preg_replace("/(\n\r|\r\n|\n|\r)/", "<br>", $what); 
+        $what = nl2br($what, false);
     }
 
     return $what;
@@ -383,7 +380,7 @@ function transformBeforeSave($what)
 * @return   string
 */
 function decodeHTML ($string) {
-    return html_entity_decode($string, ENT_QUOTES);
+    return html_entity_decode($string, ENT_QUOTES, 'cp1252');
 }
 
 /**
@@ -501,11 +498,11 @@ function idna_link($link, $mail = false){
         $out = false;
         if ($mail){
             if (preg_match('#^([^@]*)@(.*)$#i',$link, $matches)) {
-                $out = $IDN->encode(utf8_encode(html_entity_decode($matches[2], ENT_NOQUOTES))); // false by error
+                $out = $IDN->encode(utf8_encode(decodeHTML($matches[2], ENT_NOQUOTES))); // false by error
                 $out = ($out)? $matches[1].'@'.$out : $link;
             }
         }elseif (preg_match('#^([^/]*)//([^/?]*)(((/|\?).*$)|$)#i',$link, $matches)) {
-            $out = $IDN->encode(utf8_encode(html_entity_decode($matches[2], ENT_NOQUOTES))); // false by error
+            $out = $IDN->encode(utf8_encode(decodeHTML($matches[2], ENT_NOQUOTES))); // false by error
             $out = ($out)? $matches[1].'//'.$out.$matches[3] : $link;
         }
         return ($out)? $out:$link;

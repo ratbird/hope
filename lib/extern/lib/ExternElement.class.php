@@ -320,10 +320,10 @@ class ExternElement {
 
         $fault = array();
         
-        $_POST['Main_copyright'] = htmlentities(decodeHTML(
-                $_POST['Main_copyright'], ENT_QUOTES), ENT_QUOTES);
-        $_POST['Main_author'] = htmlentities(decodeHTML(
-                $_POST['Main_author'], ENT_QUOTES), ENT_QUOTES);
+        $_POST['Main_copyright'] = htmlReady(decodeHTML(
+                $_POST['Main_copyright']));
+        $_POST['Main_author'] = htmlReady(decodeHTML(
+                $_POST['Main_author']));
         
         foreach ($this->attributes as $attribute) {
             $form_name = $this->name . "_" . $attribute;

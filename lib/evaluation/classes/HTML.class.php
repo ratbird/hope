@@ -84,7 +84,7 @@ echo "Fehler in HTML.class.php: Es fehlt ein addHTMLContent-Element für ein Elem
     if (is_object($_content))
       $this->addHTMLContent ($_content);
     elseif (is_scalar ($_content))
-      $this->addHTMLContent (htmlentities (((string)$_content)));
+      $this->addHTMLContent (htmlReady (((string)$_content)));
 #     $this->addHTMLContent (htmlspecialchars (((string)$_content)));
     else
       $this->addHTMLContent ("");

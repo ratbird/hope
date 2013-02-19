@@ -236,7 +236,7 @@ function create_month_view(&$calendar, $atime, $step = NULL)
     $out .= Assets::img('icons/16/blue/arr_1left.png', tooltip2(_("einen Monat zurück"))) . "</a>&nbsp;</td>\n";
     $out .= sprintf("<td colspan=\"%s\" class=\"calhead\">\n", $mod == "nokw" ? "5" : "6");
     $out .= '<font size="+2">';
-    $out .= htmlentities(strftime("%B ", $month->getStart()), ENT_QUOTES) . $month->getYear();
+    $out .= htmlReady(strftime("%B ", $month->getStart())) . $month->getYear();
     $out .= "</font></td>\n";
     $out .= '<td align="center">&nbsp;<a href="' . URLHelper::getLink('', array('cmd' => 'showmonth', 'atime' => $month->getEnd() + 1)) . '">';
     $out .= Assets::img('icons/16/blue/arr_1right.png', tooltip2(_("einen Monat vor"))) . '</a>';
@@ -432,7 +432,7 @@ function create_year_view(&$calendar)
         $out .= '<td align="center" width="8%">';
         $out .= '<a class="calhead" href="' . URLHelper::getLink('', array('cmd' => 'showmonth', 'atime' => $year->getStart() + $ts_month)) . '">';
         $out .= '<font size="-1"><b>';
-        $out .= htmlentities(strftime("%B", $ts_month), ENT_QUOTES);
+        $out .= htmlReady(strftime("%B", $ts_month));
         $out .= "</b></font></a></td>\n";
     }
     $out .= "</tr>\n";
@@ -521,7 +521,7 @@ function create_year_view(&$calendar)
         $out .= "<td align=\"center\" width=\"8%%\">";
         $out .= '<a class="calhead" href="' . URLHelper::getLink('', array('cmd' => 'showmonth', 'atime' => $year->getStart() + $ts_month)) . '">';
         $out .= "<font size=\"-1\"><b>";
-        $out .= htmlentities(strftime("%B", $ts_month), ENT_QUOTES);
+        $out .= htmlReady(strftime("%B", $ts_month));
         $out .= "</b></font></a></td>\n";
     }
     $out .= "</tr></table>\n</td></tr></table>\n";
@@ -599,7 +599,7 @@ function includeMonth($imt, $href, $mod = '', $js_include = '', $ptime = '')
     $ret .= '</div><div class="precol1w" style="float:left; text-align:center; width:70%;">';
 
     // month and year
-    $ret .= sprintf("%s %s\n", htmlentities(strftime("%B", $amonth->getStart()), ENT_QUOTES), $amonth->getYear());
+    $ret .= sprintf("%s %s\n", htmlReady(strftime("%B", $amonth->getStart())), $amonth->getYear());
     $ret .= '</div><div style="float:right; width:15%;">';
     // navigation arrows right
     if ($mod == 'NONAV' || $mod == 'NONAVARROWS') {
@@ -737,7 +737,7 @@ function fit_title($title, $cols, $rows, $max_length, $end_str = "...", $pad = T
     if (strlen($new_title) < $title_length)
         $new_title = substr($new_title, 0, - (strlen($end_str))) . $end_str;
 
-    $new_title = htmlentities(chunk_split($new_title, $length, "\n"), ENT_QUOTES);
+    $new_title = htmlReady(chunk_split($new_title, $length, "\n"));
     $new_title = substr(str_replace("\n", '<br>', $new_title), 0, -4);
 
     if ($pad && $title_length < $length)

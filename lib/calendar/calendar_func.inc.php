@@ -56,8 +56,8 @@ function wday($tmstamp = "", $mode = "LONG", $day_german = "")
 
     // For the rest of the world strftime() should be OK ;-)
     if ($mode == "SHORT")
-        return htmlentities(strftime("%a", $tmstamp), ENT_QUOTES);
-    return htmlentities(strftime("%A", $tmstamp), ENT_QUOTES);
+        return htmlReady(strftime("%a", $tmstamp));
+    return htmlReady(strftime("%A", $tmstamp));
 }
 
 // Gibt fuer einen Unix-Timestamp folgende Werte zurueck:
@@ -91,7 +91,7 @@ function sem($tmstamp)
 function ldate($tmstamp)
 {
     return wday($tmstamp) . ", " . date("j. ", $tmstamp)
-    . htmlentities(strftime("%B %Y", $tmstamp), ENT_QUOTES);
+    . htmlReady(strftime("%B %Y", $tmstamp));
 }
 
 // Hier jezt die ultimative Feiertags-"Berechnung"

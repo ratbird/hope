@@ -41,7 +41,7 @@ class CalendarMonth extends CalendarYear
     // public
     function toString()
     {
-        return htmlentities(strftime("%B", $this->ts), ENT_QUOTES);
+        return htmlReady(strftime("%B", $this->ts));
     }
 
     // public

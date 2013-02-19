@@ -533,5 +533,5 @@ $ENABLE_FREE_ACCESS = TRUE;                 //if true, courses with public acces
 
 
 //create the html-version of $UNI_NAME clean
-$UNI_NAME=htmlentities($UNI_NAME_CLEAN, ENT_QUOTES);
+$UNI_NAME = htmlspecialchars($UNI_NAME_CLEAN, ENT_QUOTES, 'cp1252');
 

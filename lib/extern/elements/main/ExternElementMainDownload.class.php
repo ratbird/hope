@@ -90,8 +90,8 @@ class ExternElementMainDownload extends ExternElementMain {
             "iconrtf" => "",
             "iconzip" => "",
             "icondefault" => "",
-            "copyright" => htmlentities($GLOBALS['UNI_NAME_CLEAN']
-                    . " ({$GLOBALS['UNI_CONTACT']})", ENT_QUOTES),
+            "copyright" => htmlReady($GLOBALS['UNI_NAME_CLEAN']
+                    . " ({$GLOBALS['UNI_CONTACT']})"),
             "author" => ""
         );
         

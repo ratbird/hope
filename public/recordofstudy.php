@@ -121,7 +121,7 @@ elseif ($mode == "edit"){
     };
 
     $university = htmlReady(stripslashes(Request::get('university')));
-    if (empty($university)) $university = htmlentities($GLOBALS['UNI_NAME_CLEAN']);
+    if (empty($university)) $university = htmlReady($GLOBALS['UNI_NAME_CLEAN']);
     $fieldofstudy = htmlReady(stripslashes(Request::get('fieldofstudy')));
     if (empty($fieldofstudy)) $fieldofstudy = getFieldOfStudy();
     $studentname = htmlReady(stripslashes(Request::get('studentname')));

@@ -6,7 +6,7 @@ include 'lib/include/html_head.inc.php';
 $current_page = _('Fehler');
 
 $title = _('Fehler! Bitte wenden Sie sich an Ihren Systemadministrator.');
-$details = array(htmlentities($exception->getMessage()));
+$details = array(htmlReady($exception->getMessage()));
 
 if (Studip\ENV == 'development') {
     $title = "Houston, we've got a problem.";

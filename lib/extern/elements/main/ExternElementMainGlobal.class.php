@@ -73,8 +73,8 @@ class ExternElementMainGlobal extends ExternElementMain {
             "nameformat" => "",
             "language" => "",
             "urlcss" => "",
-            "copyright" => htmlentities($GLOBALS['UNI_NAME_CLEAN']
-                    . " ({$GLOBALS['UNI_CONTACT']})", ENT_QUOTES),
+            "copyright" => htmlReady($GLOBALS['UNI_NAME_CLEAN']
+                    . " ({$GLOBALS['UNI_CONTACT']})"),
             "author" => '',
             "defaultadr" => '0'
         );

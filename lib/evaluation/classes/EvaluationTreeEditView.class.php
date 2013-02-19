@@ -2342,26 +2342,26 @@ function createTitleInput($mode = ROOT_BLOCK){
 
         case ROOT_BLOCK:
             $title_label = _("Titel der Evaluation");
-            $title       = htmlentities ($this->tree->eval->getTitle());
+            $title       = htmlReady ($this->tree->eval->getTitle());
             $text_label  = _("Zusätzlicher Text");
-            $text        = htmlentities ($this->tree->eval->getText());
+            $text        = htmlReady ($this->tree->eval->getText());
             break;
 
         case ARRANGMENT_BLOCK:
             $title_label = _("Titel des Gruppierungsblocks");
             $group       =  &$this->tree->getGroupObject($this->itemID);
-            $title       = htmlentities ($group->getTitle());
+            $title       = htmlReady ($group->getTitle());
             $text_label  = _("Zusätzlicher Text");
-            $text        = htmlentities ($group->getText());
+            $text        = htmlReady ($group->getText());
             break;
 
         case QUESTION_BLOCK:
             $title_label = _("Titel des Fragenblocks");
             $title_info  = _("Die Angabe des Titels ist bei einem Fragenblock optional.");
             $group       =  &$this->tree->getGroupObject($this->itemID);
-            $title       = htmlentities ($group->getTitle());
+            $title       = htmlReady ($group->getTitle());
             $text_label  = _("Zusätzlicher Text");
-            $text        = htmlentities ($group->getText());
+            $text        = htmlReady ($group->getText());
             break;
     }
     $text_info = _("Die Angabe des zusätzlichen Textes ist optional.");

@@ -79,8 +79,8 @@ class ExternElementMainNews extends ExternElementMain {
             "urlcss" => "",
             "title" => _("News"),
             "nodatatext" => _("Keine aktuellen News"),
-            "copyright" => htmlentities($GLOBALS['UNI_NAME_CLEAN']
-                    . " ({$GLOBALS['UNI_CONTACT']})", ENT_QUOTES),
+            "copyright" => htmlReady($GLOBALS['UNI_NAME_CLEAN']
+                    . " ({$GLOBALS['UNI_CONTACT']})"),
             "author" => "",
             "showdateauthor" => "0",
             "notauthorlink" => ""

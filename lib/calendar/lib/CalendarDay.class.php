@@ -80,7 +80,7 @@ class CalendarDay extends CalendarMonth
             return $date . $this->year;
         }
         else
-            return $this->dom . htmlentities(strftime(". %B ", $this->ts), ENT_QUOTES) . $this->year;
+            return $this->dom . htmlReady(strftime(". %B ", $this->ts)) . $this->year;
     }
 
     // public

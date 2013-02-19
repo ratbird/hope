@@ -245,11 +245,11 @@ class SiteinfoMarkupEngine {
     }
 
     function version() {
-        return htmlentities($GLOBALS['SOFTWARE_VERSION']);
+        return htmlReady($GLOBALS['SOFTWARE_VERSION']);
     }
 
     function uniName() {
-        return htmlentities($GLOBALS['UNI_NAME_CLEAN']);
+        return htmlReady($GLOBALS['UNI_NAME_CLEAN']);
     }
 
     function uniContact() {

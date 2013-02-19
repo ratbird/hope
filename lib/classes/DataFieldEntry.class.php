@@ -660,7 +660,7 @@ class DataFieldComboEntry extends DataFieldEntry
         $ret .= sprintf('<select onFocus="$(\'#combo_%s_select\').attr(\'checked\', true);" name="%s">', $id, $field_name . '[select]');
         foreach($values as $val)
         {
-            $val = trim(htmlentities($val, ENT_QUOTES));
+            $val = trim(htmlReady($val));
             $sel = $val == $this->getValue() ? 'selected' : '';
             $ret .= "<option value=\"$val\" $sel>$val</option>";
         }
@@ -723,7 +723,7 @@ class DataFieldPhoneEntry extends DataFieldEntry
         foreach($parts as $i => $part)
         {
             //      $part = preg_replace('/^0+(.*)$/', '\1', $part);
-            $ret .= sprintf('%s<input type="tel" name="%s" maxlength="%d" size="%d" value="%s" title="%s">', $prefix[$i], $name, $size[$i], $size[$i] - 1, htmlentities($part, ENT_QUOTES), $title[$i]);
+            $ret .= sprintf('%s<input type="tel" name="%s" maxlength="%d" size="%d" value="%s" title="%s">', $prefix[$i], $name, $size[$i], $size[$i] - 1, htmlReady($part), $title[$i]);
         }
         $ret .= '<font size="-1">';
         $ret .= ' ' . _('z.B.:') . ' +<span style="border-style:inset; border-width:2px;"> 49 </span>';

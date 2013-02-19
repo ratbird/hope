@@ -214,11 +214,19 @@ function get_ampel_read ($mein_status, $admission_status, $read_level, $print="T
 }
 
 function htmlReady ($what, $trim = TRUE, $br = FALSE) {
-    if ($trim) $what = trim(htmlentities($what,ENT_QUOTES));
-    else $what = htmlentities($what,ENT_QUOTES);
+    if ($trim) {
+        $what = trim(htmlspecialchars($what, ENT_QUOTES, 'cp1252'));
+    } else {
+        $what = htmlspecialchars($what,ENT_QUOTES, 'cp1252');
+    }
+
     // workaround zur Darstellung von Zeichen in der Form &#x268F oder &#283;
     $what = preg_replace('/&amp;#(x[0-9a-f]+|[0-9]+);/i', '&#$1;', $what);
-    if ($br) $what = preg_replace("/(\n\r|\r\n|\n|\r)/", "<br>", $what); // newline fixen
+
+    if ($br) { // fix newlines
+        $what = preg_replace("/(\n\r|\r\n|\n|\r)/", "<br>", $what); 
+    }
+
     return $what;
 }
 
@@ -242,14 +250,14 @@ function jsReady ($what = "", $target = "overlib") {
     break;
 
     case "contact" :
-        $what = htmlentities($what,ENT_COMPAT);
+        $what = htmlReady($what);
         $what = str_replace("\n","<br>",$what);
         $what = str_replace("\r","",$what);
         return $what;
     break;
 
     case "alert" :
-        $what = addslashes(htmlentities($what,ENT_COMPAT));
+        $what = addslashes(htmlReady($what));
         $what = str_replace("\r","",$what);
         $what = str_replace("\n","\\n",$what); // alert boxen stellen keine html tags dar
         return $what;
@@ -258,12 +266,12 @@ function jsReady ($what = "", $target = "overlib") {
     case 'forum' :
         $what = str_replace("\r",'',formatReady($what));
         $what = '<p width="100%"class="printcontent">' . $what . '</p>';
-        return addslashes(htmlentities($what,ENT_COMPAT));
+        return addslashes(htmlReady($what));
         break;
 
     case "overlib" :
     default :
-        $what = addslashes(htmlentities(htmlentities($what,ENT_COMPAT),ENT_COMPAT));
+        $what = addslashes(htmlReady(htmlReady($what)));
         $what = str_replace("\n","<br>",$what);
         $what = str_replace("\r","",$what);
         return $what;

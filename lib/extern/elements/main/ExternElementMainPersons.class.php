@@ -86,8 +86,8 @@ class ExternElementMainPersons extends ExternElementMain {
             "nodatatext" => "",
             "config" => "",
             "srilink" => "",
-            "copyright" => htmlentities($GLOBALS['UNI_NAME_CLEAN']
-                    . " ({$GLOBALS['UNI_CONTACT']})", ENT_QUOTES),
+            "copyright" => htmlReady($GLOBALS['UNI_NAME_CLEAN']
+                    . " ({$GLOBALS['UNI_CONTACT']})"),
             "author" => "",
             "defaultadr" => ''
         );

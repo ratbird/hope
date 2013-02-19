@@ -241,7 +241,7 @@ $SEM_CLASS[5]=array("name"=>_("Arbeitsgruppen"),
                     "schedule"=>TRUE,
                     "participants"=>TRUE,
                     "literature"=>TRUE,
-                    "description"=>sprintf(_("Hier finden Sie verschiedene Arbeitsgruppen an der %s"), htmlentities($GLOBALS['UNI_NAME_CLEAN'])),
+                    "description"=>sprintf(_("Hier finden Sie verschiedene Arbeitsgruppen an der %s"), htmlspecialchars($GLOBALS['UNI_NAME_CLEAN'], ENT_COMPAT, 'cp1252')),
                     "create_description"=>_("Verwenden Sie diese Kategorie, um unterschiedliche Arbeitsgruppen anzulegen."));
 
 $SEM_CLASS[6]=array("name"=>_("importierte Kurse"),

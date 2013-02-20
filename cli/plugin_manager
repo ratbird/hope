@@ -22,7 +22,7 @@ if ($args) {
     $command = $args[1];
 
      if (!$command) {
-        echo 'Usage: '. $args[0] .' {install|register|unregister|migrate}' . "\n";
+        echo 'Usage: '. $args[0] .' {install|register|unregister|migrate|activate|deactivate|info}' . "\n";
     }
 
     switch ($command) {
@@ -34,7 +34,7 @@ if ($args) {
                 exit(1);
             }
 
-            $plugin_admin = new PluginAdministration(); 
+            $plugin_admin = new PluginAdministration();
 
             // make sure file exists
             if (!file_exists($zipfile)) {
@@ -51,7 +51,7 @@ if ($args) {
 
             exit(0);
         break;
-        
+
         case 'register':
             $plugindir = $args[2];
 
@@ -65,7 +65,7 @@ if ($args) {
 
             # $options = getopts(':f'); // if f is set, try to execute the plugins sql-scripts (if any)
 
-            $plugin_admin = new PluginAdministration(); 
+            $plugin_admin = new PluginAdministration();
             $manifest = $plugin_admin->getPluginManifest($plugindir);
 
             if (!$manifest) {
@@ -105,8 +105,8 @@ if ($args) {
                 $db = DBManager::get();
                 foreach ($statements as $statement) {
                     $db->exec($statement);
-                }   
-            } 
+                }
+            }
 
             // check for migrations
             if (is_dir($plugindir.'/migrations')) {
@@ -137,7 +137,7 @@ if ($args) {
             // show usage
             if (!$pluginname) {
                 echo 'Usage: '. $args[0] .' migrate PLUGINNAME [-l] [-t] [-v]' . "\n";
-                exit(1); 
+                exit(1);
             }
 
             // parse options
@@ -175,7 +175,7 @@ if ($args) {
                                     $migration->description() : '(no description)';
 
                                 printf("%3d %-20s %s\n", $number, get_class($migration), $description);
-                            }   
+                            }
                         } else {
                             $migrator->migrate_to($target);
                         }
@@ -199,7 +199,7 @@ if ($args) {
             // show usage
             if (!$pluginname) {
                 echo 'Usage: '. $args[0] .' unregister PLUGINNAME' . "\n";
-                exit(1); 
+                exit(1);
             }
 
             $plugin_manager = PluginManager::getInstance();
@@ -224,6 +224,48 @@ if ($args) {
             echo 'Konnte kein Plugin mit dem Namen '. $pluginname .' finden.' . "\n";
             echo 'Überprüfen sie bitte den Namen (auch auf Groß-/Kleinschreibung!)' ."\n";
             exit(1);
+        break;
+
+        case 'activate':
+        case 'deactivate':
+            $pluginname  = $args[2];
+
+            // show usage
+            if (!$pluginname) {
+                echo 'Usage: '. $args[0] .' '. $command .' PLUGINNAME' . "\n";
+                exit(1);
+            }
+
+            $plugin_manager = PluginManager::getInstance();
+            $plugins = $plugin_manager->getPluginInfos();
+            foreach ($plugins as $plugin) {
+                if (strtolower($pluginname) == strtolower($plugin['name'])) {
+                    $plugin_manager->setPluginEnabled($plugin['id'], ($command == 'activate'));
+                    echo 'Das Plugin '. $plugin['name'] .' wurde ' . ($command == 'activate' ? 'aktiviert' : 'deaktiviert') . '.' . "\n";
+                    exit(0);
+                }
+            }
+
+            echo 'Konnte kein Plugin mit dem Namen '. $pluginname .' finden.' . "\n";
+            echo 'Überprüfen sie bitte den Namen (auch auf Groß-/Kleinschreibung!)' ."\n";
+            exit(1);
+        break;
+
+        case 'info':
+            $pluginname  = $args[2];
+
+            $plugin_manager = PluginManager::getInstance();
+            $plugins = $plugin_manager->getPluginInfos();
+            if ($pluginname) {
+                $plugins = array_filter($plugins, function($p) use ($pluginname) {return strtolower($pluginname) == strtolower($p['name']);});
+            }
+            foreach ($plugins as $plugin) {
+                echo "\n";
+                $plugin['type'] = join(',' , $plugin['type']);
+                echo join("\n", array_filter(array_map(function($p){if ($p[0] == ' ') return trim($p);},explode("\n", print_r($plugin,1)))));
+                echo "\n";
+            }
+            exit(0);
         break;
     }
 

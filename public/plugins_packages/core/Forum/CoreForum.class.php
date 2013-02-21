@@ -37,12 +37,7 @@ class CoreForum extends StudipPlugin implements ForumModule
     {
         parent::__construct();
 
-        // do nothing if plugin is deactivated in this seminar/institute
-        if (!$this->isActivated()) {
-            return;
-        }
-
-        // TODO: remove development-rand from poduction-code
+        // Add JS and StyleSheet to header
         PageLayout::addScript($this->getPluginURL() . '/javascript/forum.js');
         PageLayout::addStylesheet($this->getPluginURL() . '/stylesheets/forum.css');
         
@@ -50,6 +45,7 @@ class CoreForum extends StudipPlugin implements ForumModule
         PageLayout::addScript($this->getPluginURL() . '/javascript/jquery.joyride.js');
         PageLayout::addStylesheet($this->getPluginURL() . '/stylesheets/joyride.css');
         
+        // Set helpkeyword for Stud.IP's user-documentation
         PageLayout::setHelpKeyword('Basis.Forum');
     }
 

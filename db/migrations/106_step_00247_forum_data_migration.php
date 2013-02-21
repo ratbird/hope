@@ -232,7 +232,7 @@ class Step00247ForumDataMigration extends Migration
         DBManager::get()->exec('UPDATE forum_entries SET rgt = rgt + 2
             WHERE rgt >= '. $constraint['rgt'] ." AND seminar_id = '". $constraint['seminar_id'] ."'");
         
-        $stmt = DBManager::get()->prepare("INSERT INTO forum_entries
+        $stmt = DBManager::get()->prepare("INSERT IGNORE INTO forum_entries
             (topic_id, seminar_id, user_id, name, content, mkdate, chdate, author,
                 author_host, lft, rgt, depth, anonymous)
             VALUES (? ,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
@@ -261,8 +261,8 @@ class Step00247ForumDataMigration extends Migration
     static function checkRootEntry($seminar_id) {
         // check, if the root entry in the topic tree exists
         $stmt = DBManager::get()->prepare("SELECT COUNT(*) FROM forum_entries
-            WHERE topic_id = ? AND seminar_id = ?");
-        $stmt->execute(array($seminar_id, $seminar_id));
+            WHERE topic_id = ?");
+        $stmt->execute(array($seminar_id));
         if ($stmt->fetchColumn() == 0) {
             $stmt = DBManager::get()->prepare("INSERT INTO forum_entries
                 (topic_id, seminar_id, name, mkdate, chdate, lft, rgt, depth)

@@ -481,8 +481,8 @@ class IndexController extends StudipController
 
         if (Request::isXhr()) {
             $this->render_text(json_encode(array(
-                'name'    => htmlReady($name),
-                'content' => formatReady($content)
+                'name'    => utf8_encode(htmlReady($name)),
+                'content' => utf8_encode(formatReady($content))
             )));
         } else {
             $this->redirect(PluginEngine::getLink('coreforum/index/index/' . $topic_id .'#'. $topic_id));

@@ -16,16 +16,9 @@
     </a>
 
     <div class="postbody">
-        <div class="title" style="min-width: 50%;">
+        <div class="title">
 
-            <? if ($is_new && trim(ForumEntry::killFormat($post['name']))): ?>
-            <span class="new_posting">
-                <?= Assets::img('icons/16/red/new/forum.png', array(
-                    'title' => _("Dieser Beitrag ist seit Ihrem letzten Besuch hinzugekommen.")
-                )) ?>
-            </span>
-            <? endif ?>
-            <? if ($post['name_raw'] && $post['depth'] < 3) : ?>
+            <? if ($post['name_raw'] && $post['depth'] < 3) : ?>  
             <span data-edit-topic="<?= $post['topic_id'] ?>" <?= Request::get('edit_posting') == $post['topic_id'] ? '' : 'style="display: none;"' ?>>
                 <input type="text" name="name" value="<?= htmlReady($post['name_raw']) ?>" data-reset="<?= htmlReady($post['name_raw']) ?>" style="width: 100%">
             </span>
@@ -35,7 +28,7 @@
                 <a href="<?= PluginEngine::getLink('coreforum/index/index/' . $post['topic_id'] .'?'. http_build_query(array('highlight' => $highlight)) ) ?>#<?= $post['topic_id'] ?>">
                 <? if ($show_full_path) : ?>
                     <?= ForumHelpers::highlight(htmlReady(implode(' >> ', ForumEntry::getFlatPathToPosting($post['topic_id']))), $highlight) ?>
-                <? else : ?>
+                <? elseif ($post['depth'] < 3) : ?>
                 <span data-topic-name="<?= $post['topic_id'] ?>">
                     <? if (Request::get('edit_posting') != $post['topic_id']) : ?>
                     <?= ($post['name_raw'] && $post['depth'] < 3) ? ForumHelpers::highlight(htmlReady($post['name_raw']), $highlight) : ''?>
@@ -44,14 +37,6 @@
                 <? endif ?>
                 </a>
             </span>
-
-            <p class="author">
-                <? if ($is_new && !trim(ForumEntry::killFormat($post['name_raw']))): ?>
-                    <?= Assets::img('icons/16/red/new/forum.png', array(
-                        'title' => _("Dieser Beitrag ist seit Ihrem letzten Besuch hinzugekommen.")
-                    )) ?>
-                <? endif ?>
-            </p>
         </div>
 
         <!-- Postinginhalt -->
@@ -145,6 +130,14 @@
                 <?= $this->render_partial('index/_like', array('topic_id' => $post['topic_id'])) ?>
             </span>
         </dl>
+        
+        <? if ($is_new): ?>
+        <span class="new_posting">
+            <?= Assets::img('icons/16/red/new/forum.png', array(
+                'title' => _("Dieser Beitrag ist seit Ihrem letzten Besuch hinzugekommen.")
+            )) ?>
+        </span>
+        <? endif ?>  
     </span>
 
     <!-- Buttons for this Posting -->

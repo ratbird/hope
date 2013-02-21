@@ -104,7 +104,9 @@ class ForumAbo {
 
             // create subject and content
             setTempLanguage(get_userid($user_id));
-            $subject = addslashes(_('[Forum]') . ' ' . ($topic['name'] ? $topic['name'] : _('Neuer Eintrag')));
+            $title = implode(' >> ', ForumEntry::getFlatPathToPosting($topic_id));
+            
+            $subject = addslashes(_('[Forum]') . ' ' . ($title ?: _('Neuer Beitrag')));
             $message = addslashes($template->render(compact('user_id', 'topic', 'path')));
             restoreLanguage();
             

@@ -225,9 +225,27 @@ class StreamsController extends ApplicationController {
         $thread['seminar_id'] = $context_type === "course" ? $context : $GLOBALS['user']->id;
         $thread['context_type'] = $context_type;
         $thread['parent_id'] = 0;
+        $thread['author_host'] = $_SERVER['REMOTE_ADDR'];
         
         if ($thread->isNew() && !$thread->getId()) {
             $thread->store();
+            $thread['root_id'] = $thread->getId();
+            $thread->store();
+            
+        }
+        if ($GLOBALS['user']->id !== "nobody") {
+            $thread['user_id'] = $GLOBALS['user']->id;
+        } else {
+            if (Request::get("anonymous_security") === $_SESSION['blubber_anonymous_security']) {
+                $contact_user = BlubberExternalContact::findByEmail(Request::get("anonymous_email"));
+                $_SESSION['anonymous_email'] = Request::get("anonymous_email");
+                $_SESSION['anonymous_name'] = $contact_user['name'] = Request::get("anonymous_name");
+                $contact_user->store();
+                $thread['user_id'] = $contact_user->getId();
+                $thread['external_contact'] = 1;
+            } else {
+                throw new AccessDeniedException("No permission to write posting.");
+            }
         }
         BlubberPosting::$mention_posting_id = $thread->getId();
         StudipTransformFormat::addStudipMarkup("mention1", '@\"[^\n\"]*\"', "", "BlubberPosting::mention");
@@ -245,22 +263,6 @@ class StreamsController extends ApplicationController {
             }
             $thread['description'] = $content;
         }
-        if ($GLOBALS['user']->id !== "nobody") {
-            $thread['user_id'] = $GLOBALS['user']->id;
-        } else {
-            if (Request::get("anonymous_security") === $_SESSION['blubber_anonymous_security']) {
-                $contact_user = BlubberExternalContact::findByEmail(Request::get("anonymous_email"));
-                $_SESSION['anonymous_email'] = Request::get("anonymous_email");
-                $_SESSION['anonymous_name'] = $contact_user['name'] = Request::get("anonymous_name");
-                $contact_user->store();
-                $thread['user_id'] = $contact_user->getId();
-                $thread['external_contact'] = 1;
-            } else {
-                throw new AccessDeniedException("No permission to write posting.");
-            }
-        }
-        $thread['author_host'] = $_SERVER['REMOTE_ADDR'];
-        $thread['root_id'] = $thread->getId();
         if ($thread->store()) {
             if ($context_type === "private") {
                 $statement = DBManager::get()->prepare(
@@ -298,6 +300,8 @@ class StreamsController extends ApplicationController {
             $output['content'] = studip_utf8encode($template->render());
             $output['mkdate'] = time();
             $output['posting_id'] = $thread->getId();
+        } else {
+            $thread->delete();
         }
         $this->render_json($output);
     }

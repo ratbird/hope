@@ -90,7 +90,7 @@ class BlubberPosting extends SimpleORMap {
                     "mkdate = UNIX_TIMESTAMP() " .
             "");
             $statement->execute(array(
-                'user_id' => $user_id,
+                'user_id' => $user->getId(),
                 'topic_id' => $posting['root_id'],
                 'extern' => is_a($user, "BlubberExternalContact") ? 1 : 0
             ));

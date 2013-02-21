@@ -8,7 +8,7 @@ use Studip\Button, Studip\LinkButton;
 <? endif ?>
 
 <h3>
-    <?= _('Standard-Aktivierung in Veranstaltungen') ?>: <?= htmlspecialchars($plugin_name) ?>
+    <?= _('Standard-Aktivierung in Veranstaltungen') ?>: <?= htmlReady($plugin_name) ?>
 </h3>
 
 <form action="<?= $controller->url_for('admin/plugin/save_default_activation', $plugin_id) ?>" method="post">

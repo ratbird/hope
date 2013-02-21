@@ -161,7 +161,7 @@ class PluginEngine {
     * @return a link to the current plugin with the additional $params
     */
     public static function getLink($plugin, $params = array(), $cmd = 'show') {
-        return htmlspecialchars(self::getURL($plugin, $params, $cmd));
+        return htmlReady(self::getURL($plugin, $params, $cmd));
     }
 
     /**

@@ -37,28 +37,28 @@ use Studip\Button, Studip\LinkButton;
                 <td class="plugin_image">
                     <? if ($plugin['image']): ?>
                         <? if ($plugin['plugin_url']): ?>
-                            <a href="<?= htmlspecialchars($plugin['plugin_url']) ?>" target="_blank">
-                                <img src="<?= htmlspecialchars($plugin['image']) ?>" class="plugin_preview">
+                            <a href="<?= htmlReady($plugin['plugin_url']) ?>" target="_blank">
+                                <img src="<?= htmlReady($plugin['image']) ?>" class="plugin_preview">
                             </a>
                         <? else: ?>
-                            <img src="<?= htmlspecialchars($plugin['image']) ?>" class="plugin_preview">
+                            <img src="<?= htmlReady($plugin['image']) ?>" class="plugin_preview">
                         <? endif ?>
                     <? endif ?>
                 </td>
                 <td>
                     <? if ($plugin['plugin_url']): ?>
-                        <a href="<?= htmlspecialchars($plugin['plugin_url']) ?>" target="_blank">
-                            <b><?= htmlspecialchars($name) ?></b>
+                        <a href="<?= htmlReady($plugin['plugin_url']) ?>" target="_blank">
+                            <b><?= htmlReady($name) ?></b>
                         </a>
                     <? else: ?>
-                        <b><?= htmlspecialchars($name) ?></b>
+                        <b><?= htmlReady($name) ?></b>
                     <? endif ?>
                     <p>
-                        <?= htmlspecialchars($plugin['description']) ?>
+                        <?= htmlReady($plugin['description']) ?>
                     </p>
                 </td>
                 <td>
-                    <?= htmlspecialchars($plugin['version']) ?>
+                    <?= htmlReady($plugin['version']) ?>
                 </td>
                 <td class="plugin_score">
                     <? for ($i = 0; $i < $plugin['score']; ++$i): ?>

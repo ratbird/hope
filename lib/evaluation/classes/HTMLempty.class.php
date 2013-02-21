@@ -166,7 +166,7 @@ class HTMLempty {
     $str .= "<".$this->getName();
     $attrib = $this->getAttr();
     foreach($attrib as $name => $value) {
-      $str .= ' '.$name.'="'.htmlspecialchars($value).'"';
+      $str .= ' '.$name.'="'.htmlReady($value).'"';
     }
     $str .= $this->_string;
     $str .= ">\n";

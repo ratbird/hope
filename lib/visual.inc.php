@@ -239,11 +239,11 @@ function jsReady ($what = "", $target = "overlib") {
     break;
 
     case "inline-single" :
-        return htmlspecialchars(addcslashes($what, "\\'\n\r"));
+        return htmlReady(addcslashes($what, "\\'\n\r"));
     break;
 
     case "inline-double" :
-        return htmlspecialchars(addcslashes($what, "\\\"\n\r"));
+        return htmlReady(addcslashes($what, "\\\"\n\r"));
     break;
 
     case "contact" :

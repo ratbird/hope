@@ -54,7 +54,7 @@ use Studip\Button, Studip\LinkButton;
                     </td>
                     <td>
                         <a href="<?= $controller->url_for('admin/plugin/manifest', $pluginid) ?>">
-                            <?= htmlspecialchars($plugin['name']) ?>
+                            <?= htmlReady($plugin['name']) ?>
                             <?= $plugin['core'] ? '<i>('. _('Kern-Plugin') . ')</i>' : '' ?>
                         </a>
                     </td>
@@ -62,7 +62,7 @@ use Studip\Button, Studip\LinkButton;
                         <?= join(', ', $plugin['type']) ?>
                     </td>
                     <td <?= $plugin['enabled'] ? '' : 'class="quiet"' ?>>
-                        <?= htmlspecialchars($update_info[$pluginid]['version']) ?>
+                        <?= htmlReady($update_info[$pluginid]['version']) ?>
                     </td>
                     <td>
                         <input name="position_<?= $pluginid ?>" type="text" size="2" value="<?= $plugin['position'] ?>" <?= $plugin['enabled'] ? '' : 'disabled' ?>>

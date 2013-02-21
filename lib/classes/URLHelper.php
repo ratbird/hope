@@ -145,7 +145,7 @@ class URLHelper
      */
     static function getLink ($url = '', $params = NULL, $ignore_registered_params = false)
     {
-        return htmlspecialchars(self::getURL($url, $params, $ignore_registered_params));
+        return htmlReady(self::getURL($url, $params, $ignore_registered_params));
     }
 
     /**

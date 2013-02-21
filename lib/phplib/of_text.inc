@@ -27,9 +27,9 @@ class of_text extends of_element {
     $str = "";
     
     if (is_array($this->value))
-      $v = htmlspecialchars($this->value[$which]);
+      $v = htmlReady($this->value[$which]);
     else 
-      $v = htmlspecialchars($this->value);
+      $v = htmlReady($this->value);
     $n = $this->name . ($this->multiple ? "[]" : "");
     $str .= "<input name='$n' value=\"$v\"";
     $str .= ($this->pass)? " type='password'" : " type='text'";

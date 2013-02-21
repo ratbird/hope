@@ -24,7 +24,7 @@ class of_textarea extends of_element {
       $str .= " wrap='$this->wrap'";
     if ($this->extrahtml) 
       $str .= " $this->extrahtml";
-    $str .= ">" . htmlspecialchars($this->value) ."</textarea>";
+    $str .= ">" . htmlReady($this->value) ."</textarea>";
     
     $count = 1;
     return $str;

@@ -14,7 +14,7 @@ use Studip\Button, Studip\LinkButton;
     <select name="pluginid" style="min-width: 300px;">
         <? foreach ($plugins as $plugin): ?>
             <option value="<?= $plugin['id'] ?>" <?= $plugin['id'] == $pluginid ? 'selected' : '' ?>>
-                <?= htmlspecialchars($plugin['name']) ?>
+                <?= htmlReady($plugin['name']) ?>
             </option>
         <? endforeach ?>
     </select>

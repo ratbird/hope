@@ -668,7 +668,7 @@ class Layout {
         if ($HVSPACE) {
             $r.=sprintf($this->picture['HVSPACE'],$HVSPACE,$HVSPACE);
         }
-        $r.=sprintf($this->picture['ALT'],HTMLSpecialChars($ALT));
+        $r.=sprintf($this->picture['ALT'],htmlReady($ALT));
         $r.=sprintf($this->picture['WIDTH'],$WH[0]);
         $r.=sprintf($this->picture['HEIGHT'],$WH[1]);
 
@@ -845,7 +845,7 @@ $js
     function _debug ($fnname,&$val) {
         if ($this->Debug) {
             echo "<B>$fnname</B>:<BR><TT>".
-                 nl2br(HTMLSpecialChars($val)) .
+                 nl2br(htmlReady($val)) .
                  "</TT><BR>";
         }
     }

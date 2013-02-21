@@ -92,7 +92,7 @@ function studip_default_exception_handler($exception) {
         echo $GLOBALS['template_factory']->render($template, $args);
     } catch (Exception $e) {
         ob_end_clean();
-        echo 'Error: ' . htmlspecialchars($e->getMessage());
+        echo 'Error: ' . htmlReady($e->getMessage());
     }
     exit;
 }

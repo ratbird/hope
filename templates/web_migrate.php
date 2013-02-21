@@ -48,7 +48,7 @@ use Studip\Button, Studip\LinkButton;
                 </td>
                 <td>
                   <? if ($migration->description()): ?>
-                    <?= htmlspecialchars($migration->description()) ?>
+                    <?= htmlReady($migration->description()) ?>
                   <? else: ?>
                     <i>
                       <?= _('keine Beschreibung vorhanden') ?>

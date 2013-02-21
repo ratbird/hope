@@ -12,7 +12,7 @@
             <? if (is_internal_url($url)) : ?>
                 <a href="<?= URLHelper::getLink($url) ?>" tabindex="<?= $i++ ?>"><?= htmlReady($nav->getTitle()) ?></a>
             <? else : ?>
-                <a href="<?= htmlspecialchars($url) ?>" tabindex="<?= $i++ ?>"><?= htmlReady($nav->getTitle()) ?></a>
+                <a href="<?= htmlReady($url) ?>" tabindex="<?= $i++ ?>"><?= htmlReady($nav->getTitle()) ?></a>
             <? endif ?>
         <? endif ?>
         </li>

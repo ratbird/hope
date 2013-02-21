@@ -20,7 +20,7 @@
                         <? if (is_internal_url($url = $nav->getURL())) : ?>
                             <a class="index" href="<?= URLHelper::getLink($url) ?>">
                         <? else : ?>
-                            <a class="index" href="<?= htmlspecialchars($url) ?>" target="_blank">
+                            <a class="index" href="<?= htmlReady($url) ?>" target="_blank">
                         <? endif ?>
                         <? SkipLinks::addLink($name, $url) ?>
                         <font size="4"><b><?= htmlReady($name) ?></b></font>

@@ -31,7 +31,7 @@ class ContentElementController extends AuthenticatedController {
 
   function get_formatted_action(){
       return $this->render_json(array(
-                                    'title' => studip_utf8encode(htmlspecialchars($this->element->getTitle())),
+                                    'title' => studip_utf8encode(htmlReady($this->element->getTitle())),
                                     'content' => studip_utf8encode($this->element->getAbstractHtml())
                                     )
                                 );

@@ -76,7 +76,7 @@ use Studip\Button, Studip\LinkButton;
                     </td>
                     <td>
                         <a href="<?= $controller->url_for('admin/role/assign_plugin_role', $plugin['id']) ?>">
-                            <?= htmlspecialchars($plugin['name']) ?>
+                            <?= htmlReady($plugin['name']) ?>
                         </a>
                     </td>
                     <td>

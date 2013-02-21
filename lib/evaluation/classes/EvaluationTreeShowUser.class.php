@@ -521,7 +521,7 @@ class EvaluationTreeShowUser {
                     "<textarea".
                     " name=\"freetexts[".$question->getObjectID()."]\"".
                     " cols=\"60\" rows=\"".$answer->getRows()."\">".
-                    htmlspecialchars($freetexts[$question->getObjectID()]).
+                    htmlReady($freetexts[$question->getObjectID()]).
                     "</textarea>".
                     "</td>\n";
             }

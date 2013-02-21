@@ -67,7 +67,7 @@ function print_seminar_content($semid, $my_obj_values, $type = 'seminar', $sem_c
                    $nav->hasBadgeNumber()
                    ? 'class="badge" data-badge-number="' . intval($nav->getBadgeNumber())  . '"'
                    : '',
-                   htmlspecialchars($url));
+                   htmlReady($url));
             foreach ($nav->getImage() as $key => $value) {
                 printf('%s="%s" ', $key, htmlReady($value));
             }

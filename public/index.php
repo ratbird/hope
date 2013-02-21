@@ -142,7 +142,7 @@ if ($auth->is_authenticated() && $user->id != 'nobody') {
                         <? if (is_internal_url($url = $nav->getURL())) : ?>
                             <a href="<?= URLHelper::getLink($url) ?>">
                         <? else : ?>
-                            <a href="<?= htmlspecialchars($url) ?>" target="_blank">
+                            <a href="<?= htmlReady($url) ?>" target="_blank">
                         <? endif ?>
                         <?= htmlReady($nav->getTitle()) ?></a>
                         <? $pos = 0 ?>
@@ -153,7 +153,7 @@ if ($auth->is_authenticated() && $user->id != 'nobody') {
                                 <? if (is_internal_url($url = $subnav->getURL())) : ?>
                                     <a href="<?= URLHelper::getLink($url) ?>">
                                 <? else : ?>
-                                    <a href="<?= htmlspecialchars($url) ?>" target="_blank">
+                                    <a href="<?= htmlReady($url) ?>" target="_blank">
                                 <? endif ?>
                                 <?= htmlReady($subnav->getTitle()) ?></a>
                                 </font>

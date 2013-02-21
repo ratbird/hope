@@ -122,7 +122,7 @@
                     <? if (is_internal_url($url = $nav->getURL())) : ?>
                         href="<?= URLHelper::getLink($url, $link_params) ?>"
                     <? else : ?>
-                        href="<?= htmlspecialchars($url) ?>" target="_blank"
+                        href="<?= htmlReady($url) ?>" target="_blank"
                     <? endif ?>
                     <? if ($nav->getDescription()): ?>
                         title="<?= htmlReady($nav->getDescription()) ?>"

@@ -10,7 +10,7 @@ use Studip\Button, Studip\LinkButton;
 <table>
     <tr>
         <td>Name:</td>
-        <td><?= htmlspecialchars($plugin['name']) ?></td>
+        <td><?= htmlReady($plugin['name']) ?></td>
     </tr>
     <tr>
         <td>Klasse:</td>
@@ -22,15 +22,15 @@ use Studip\Button, Studip\LinkButton;
     </tr>
     <tr>
         <td>Origin:</td>
-        <td><?= htmlspecialchars($manifest['origin']) ?></td>
+        <td><?= htmlReady($manifest['origin']) ?></td>
     </tr>
     <tr>
         <td>Version:</td>
-        <td><?= htmlspecialchars($manifest['version']) ?></td>
+        <td><?= htmlReady($manifest['version']) ?></td>
     </tr>
     <tr>
         <td>Beschreibung:</td>
-        <td><?= htmlspecialchars($manifest['description']) ?></td>
+        <td><?= htmlReady($manifest['description']) ?></td>
     </tr>
 </table>
 

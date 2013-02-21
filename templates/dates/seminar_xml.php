@@ -26,8 +26,8 @@ if (is_array($cycle['assigned_rooms'])){
     <wochentag><?= getWeekDay($cycle['day']) ?></wochentag>
     <zeit><?= $cycle['start_hour'] ?>:<?= $cycle['start_minute'] ?>-<?= $cycle['end_hour'] ?>:<?= $cycle['end_minute'] ?></zeit>
     <raum>
-        <gebucht><?= htmlspecialchars($plainRooms) ?></gebucht>
-        <freitext><?= htmlspecialchars($freitext) ?></freitext>
+        <gebucht><?= htmlReady($plainRooms) ?></gebucht>
+        <freitext><?= htmlReady($freitext) ?></freitext>
     </raum>
 </raumzeit>
 <? endforeach ?>
@@ -38,8 +38,8 @@ if (is_array($cycle['assigned_rooms'])){
     <wochentag><?= getWeekDay(date('w', $date['start_time'])) ?></wochentag>
     <zeit><?= date('H:i', $date['start_time']) ?>-<?= date('H:i', $date['end_time']) ?></zeit>
     <raum>
-        <gebucht><?= htmlspecialchars(implode(', ', getPlainRooms(array($date['resource_id'] => 1)))) ?></gebucht>
-        <freitext><?= htmlspecialchars($date['raum']) ?></freitext>
+        <gebucht><?= htmlReady(implode(', ', getPlainRooms(array($date['resource_id'] => 1)))) ?></gebucht>
+        <freitext><?= htmlReady($date['raum']) ?></freitext>
     </raum>
 </raumzeit>
 <? endforeach ?>

@@ -442,8 +442,8 @@ class Ilias3Soap extends StudipSoapClient
     function addObject($object_data, $ref_id)
     {
     $type = $object_data["type"];
-    $title = htmlspecialchars(studip_utf8encode($object_data["title"]));
-    $description = htmlspecialchars(studip_utf8encode($object_data["description"]));
+    $title = htmlReady(studip_utf8encode($object_data["title"]));
+    $description = htmlReady(studip_utf8encode($object_data["description"]));
 
     $xml = "<!DOCTYPE Objects SYSTEM \"http://www.ilias.uni-koeln.de/download/dtd/ilias_object_0_1.dtd\">
 <Objects>
@@ -655,8 +655,8 @@ class Ilias3Soap extends StudipSoapClient
     function addRole($role_data, $ref_id)
     {
     $type = "role";
-    $title = htmlspecialchars(studip_utf8encode($role_data["title"]));
-    $description = htmlspecialchars(studip_utf8encode($role_data["description"]));
+    $title = htmlReady(studip_utf8encode($role_data["title"]));
+    $description = htmlReady(studip_utf8encode($role_data["description"]));
 
     $xml = "<!DOCTYPE Objects SYSTEM \"http://www.ilias.uni-koeln.de/download/dtd/ilias_object_0_1.dtd\">
 <Objects>
@@ -695,8 +695,8 @@ class Ilias3Soap extends StudipSoapClient
     function addRoleFromTemplate($role_data, $ref_id, $role_id)
     {
     $type = "role";
-    $title = htmlspecialchars(studip_utf8encode($role_data["title"]));
-    $description = htmlspecialchars(studip_utf8encode($role_data["description"]));
+    $title = htmlReady(studip_utf8encode($role_data["title"]));
+    $description = htmlReady(studip_utf8encode($role_data["description"]));
 
     $xml = "<!DOCTYPE Objects SYSTEM \"http://www.ilias.uni-koeln.de/download/dtd/ilias_object_0_1.dtd\">
 <Objects>
@@ -978,7 +978,7 @@ class Ilias3Soap extends StudipSoapClient
     function addCourse($course_data, $ref_id)
     {
         foreach($course_data as $key => $value)
-            $course_data[$key] = htmlspecialchars(studip_utf8encode($course_data[$key]));
+            $course_data[$key] = htmlReady(studip_utf8encode($course_data[$key]));
 
         $xml = $this->getCourseXML($course_data);
         $param = array(

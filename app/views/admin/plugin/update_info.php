@@ -15,7 +15,7 @@ use Studip\Button, Studip\LinkButton;
                 <div>
                     <label>
                         <input type="checkbox" name="update[]" value="<?= $pluginid ?>" checked>
-                        <?= htmlspecialchars(sprintf(_('%s: Version %s installieren'), $plugin['name'], $update_info[$pluginid]['update']['version'])) ?>
+                        <?= htmlReady(sprintf(_('%s: Version %s installieren'), $plugin['name'], $update_info[$pluginid]['update']['version'])) ?>
                     </label>
                 </div>
             <? endif ?>

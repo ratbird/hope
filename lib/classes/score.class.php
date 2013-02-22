@@ -196,48 +196,48 @@ class Score
             $this->doRefreshScoreContentCache();
         }
         $username = $this->score_content_cache[$user_id]['username'];
-        $content .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"16\"> ";
+        $content .= Assets::img('blank.gif', array('width' => 16)) . ' ';
 
-        if ( ($news = $this->score_content_cache[$user_id]['newscount']) ) {
-            if ($news == 1) {
-                $tmp = _("Eine persönliche Ankündigung");
-            } else {
-                $tmp = sprintf(_("%s persönliche Ankündigungen"), $news);
-            }
-            $content .= "<a href=\"dispatch.php/profile?username=$username\"><img src=\"".Assets::image_path('icons/16/blue/breaking-news.png')."\" ".tooltip($tmp)."></a> ";
+        // News
+        if ($news = $this->score_content_cache[$user_id]['newscount']) {
+            $tmp = sprintf(ngettext('Eine persönliche Ankündigung', '%s persönliche Ankündigungen', $news), $news);
+            $content .= sprintf('<a href="%s">%s</a> ',
+                                URLHelper::getLink('dispatch.php/profile', compact('username')),
+                                Assets::img('icons/16/blue/breaking-news.png', tooltip2($tmp)));
         } else {
-            $content .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"16\"> ";
-        }
-        if ( ($vote = $this->score_content_cache[$user_id]['votecount']) ) {
-            if ($vote == 1) {
-                $tmp = _("Eine Umfrage");
-            } else {
-                $tmp = sprintf(_("%s Umfragen"), $vote);
-            }
-            $content .= "<a href=\"dispatch.php/profile?username=$username\"><img src=\"".Assets::image_path('icons/16/blue/vote.png')."\" ".tooltip($tmp)."></a> ";
-        } else {
-            $content .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"16\"> ";
+            $content .= Assets::img('blank.gif', array('width' => 16)) . ' ';
         }
 
-        if ( ($termin = $this->score_content_cache[$user_id]['eventcount']) ) {
-            if ($termin == 1)
-                $tmp = _("Termin");
-            else
-                $tmp = _("Termine");
-            $content .= "<a href=\"dispatch.php/profile?username=$username#a\"><img src=\"".Assets::image_path('icons/16/blue/schedule.png')."\" ".tooltip("$termin $tmp")."></a> ";
+        // Votes
+        if ($vote = $this->score_content_cache[$user_id]['votecount']) {
+            $tmp = sprintf(ngettext('Eine Umfrage', '%s Umfragen', $vote), $vote);
+            $content .= sprintf('<a href="%s">%s</a> ',
+                                URLHelper::getLink('dispatch.php/profile', compact('username')),
+                                Assets::img('icons/16/blue/vote.png', tooltip2($tmp)));
         } else {
-            $content .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"16\"> ";
+            $content .= Assets::img('blank.gif', array('width' => 16)) . ' ';
         }
 
-        if ( ($lit = $this->score_content_cache[$user_id]['litcount']) ) {
-            if ($lit == 1)
-                $tmp = _("Literaturangabe");
-            else
-                $tmp = _("Literaturangaben");
-            $content .= "<a href=\"dispatch.php/profile?username=$username\"><img src=\"".Assets::image_path('icons/16/blue/literature.png')."\" ".tooltip("$lit $tmp")."></a> ";
+        // Termine
+        if ($termin = $this->score_content_cache[$user_id]['eventcount']) {
+            $tmp = sprintf(ngettext('Ein Termin', '%s Termine', $termin), $termin);
+            $content .= sprintf('<a href="%s">%s</a> ',
+                                URLHelper::getLink('dispatch.php/profile#a', compact('username')),
+                                Assets::img('icons/16/blue/schedule.png', tooltip2($tmp)));
         } else {
-            $content .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"16\"> ";
+            $content .= Assets::img('blank.gif', array('width' => 16)) . ' ';
         }
+
+        // Literaturangaben
+        if ($lit = $this->score_content_cache[$user_id]['litcount']) {
+            $tmp = sprintf(ngettext('Eine Literaturangabe', '%s Literaturangaben', $lit), $lit);
+            $content .= sprintf('<a href="%s">%s</a> ',
+                                URLHelper::getLink('dispatch.php/profile', compact('username')),
+                                Assets::img('icons/16/blue/literature.png', tooltip2($tmp)));
+        } else {
+            $content .= Assets::img('blank.gif', array('width' => 16)) . ' ';
+        }
+
         return $content;
     }
 

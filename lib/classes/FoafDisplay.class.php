@@ -240,10 +240,10 @@ class FoafDisplay
             $ret = $statement->fetch(PDO::FETCH_ASSOC);
 
             $ret['pic'] = sprintf('<a href="%s">%s</a>',
-                                  URLHelper::getLink('about?username=' . $ret['uname']),
+                                  URLHelper::getLink('dispatch.php/profile?username=' . $ret['uname']),
                                   Avatar::getAvatar($user_id)->getImageTag(Avatar::MEDIUM));
             $ret['link'] = sprintf('<a href="%s">%s</a>',
-                                   URLHelper::getLink('about?username=' . $ret['uname']),
+                                   URLHelper::getLink('dispatch.php/profile?username=' . $ret['uname']),
                                    htmlReady($ret['name']));
         } else {
             $ret = array(

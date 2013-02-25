@@ -401,7 +401,12 @@ class Course_BasicdataController extends AuthenticatedController
                 }
             }
             if (count($invalid_datafields)) {
-                $this->msg[] = array("error",  sprintf(_("%s der Veranstaltung wurde%s falsch angegeben") ,join(', ', array_map('htmlready', $invalid_datafields)), count($invalid_datafields)<=1?'':'n' ).", "._("bitte korrigieren Sie dies unter \"Beschreibungen\"").".");
+                $message = ngettext(_('%s der Veranstaltung wurde falsch angegeben'),
+                                    _('%s der Veranstaltung wurden falsch angegeben'),
+                                    count($invalid_datafields));
+                $message .= ', ' . _('bitte korrigieren Sie dies unter "Beschreibungen"') . '.';
+                $message = sprintf($message, join(', ', array_map('htmlReady', $invalid_datafields)));
+                $this->msg[] = array('error',  $message);
             }
 
             $sem->store();

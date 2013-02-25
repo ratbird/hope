@@ -1221,7 +1221,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
                     }
                 }
                 foreach ($this->db_fields as $field => $meta) {
-                    $value = $this->getValue($field);
+                    $value = $this->content[$field];
                     if ($field == 'chdate' && !$this->isFieldDirty($field) && $this->isDirty()) {
                         $value = time();
                     }

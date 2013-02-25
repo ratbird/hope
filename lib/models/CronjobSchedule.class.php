@@ -68,18 +68,13 @@ class CronjobSchedule extends SimpleORMap
     }
 
     /**
-     * Proxy function for setting a field. Passes all calls to parent method
-     * and afterwards replaces title with task name if title is empty.
+     * replaces title with task name if title is empty.
      *
-     * @param String $field The name of the field in question
-     * @return mixed The value for the the field
+     * @return string the title or the task name
      */
-    public function __get($field)
+    public function getTitle()
     {
-        $value = parent::__get($field);
-        return $field === 'title'
-            ? ($value ?: $this->task->name)
-            : $value;
+        return $this->content['title'] ?: $this->task->name;
     }
 
     /**
@@ -117,7 +112,7 @@ class CronjobSchedule extends SimpleORMap
     /**
      * Stores the schedule in database. Will bail out with an exception if
      * the provided task does not exists. Will also nullify the title if it
-     * matches the task name (see CronjobSchedule::__get()).
+     * matches the task name (see CronjobSchedule::getTitle()).
      *
      * @return CronjobSchedule Returns itself to allow chaining
      */

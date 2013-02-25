@@ -45,7 +45,12 @@ class Admin_Cronjobs_TasksController extends AuthenticatedController
         Navigation::activateItem('/admin/config/cronjobs');
         PageLayout::setTitle(_('Cronjob-Verwaltung') . ' - ' . _('Aufgaben'));
 
-        $this->set_layout($GLOBALS['template_factory']->open('layouts/base'));
+        if (Request::isXhr()) {
+            $this->set_layout(null);
+            $this->set_content_type('text/html;charset=windows-1252');
+        } else {
+            $this->set_layout($GLOBALS['template_factory']->open('layouts/base'));
+        }
     }
 
     /**

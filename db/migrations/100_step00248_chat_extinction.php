@@ -17,7 +17,7 @@ class Step00248ChatExtinction extends Migration
         $db->exec("DELETE FROM config WHERE field = 'CHAT_USE_AJAX_CLIENT'");
         $db->exec("DELETE FROM config WHERE field = 'CHAT_ENABLE'");
         $db->exec("DELETE FROM config WHERE field = 'CHAT_VISIBILITY_DEFAULT'");
-        
+        $db->exec("DELETE FROM user_config WHERE field = 'CHAT_USE_AJAX_CLIENT'");
     }
 
     function down()

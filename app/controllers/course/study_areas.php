@@ -287,9 +287,9 @@ class Course_StudyAreasController extends AuthenticatedController
         else {
 
             $areas = array();
-            if (isset($GLOBALS['sem_create_data']) &&
-                isset($GLOBALS['sem_create_data']['sem_bereich'])) {
-                $areas = $GLOBALS['sem_create_data']['sem_bereich'];
+            if (isset($_SESSION['sem_create_data']) &&
+                isset($_SESSION['sem_create_data']['sem_bereich'])) {
+                $areas = $_SESSION['sem_create_data']['sem_bereich'];
             }
 
             $selection = new StudipStudyAreaSelection();
@@ -312,7 +312,7 @@ class Course_StudyAreasController extends AuthenticatedController
         // w/o a course ID, insert all the areas IDs into the session variable of
         // admin_seminare_assi.php
         else {
-            $GLOBALS['sem_create_data']['sem_bereich'] = $selection->getAreaIDs();
+            $_SESSION['sem_create_data']['sem_bereich'] = $selection->getAreaIDs();
         }
     }
 
@@ -324,7 +324,7 @@ class Course_StudyAreasController extends AuthenticatedController
             $this->course = Seminar::getInstance($course_id);
             $this->semester_id = SemesterData::GetSemesterIdByDate($this->course->getSemesterStartTime());
         } else {
-            $this->semester_id = SemesterData::GetSemesterIdByDate($GLOBALS['sem_create_data']['sem_start_time']);
+            $this->semester_id = SemesterData::GetSemesterIdByDate($_SESSION['sem_create_data']['sem_start_time']);
         }
     }
 }

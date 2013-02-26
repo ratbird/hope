@@ -481,8 +481,8 @@ class IndexController extends StudipController
 
         if (Request::isXhr()) {
             $this->render_text(json_encode(array(
-                'name'    => utf8_encode(htmlReady($name)),
-                'content' => utf8_encode(formatReady($content))
+                'name'    => studip_utf8encode(htmlReady($name)),
+                'content' => studip_utf8encode(formatReady($content))
             )));
         } else {
             $this->redirect(PluginEngine::getLink('coreforum/index/index/' . $topic_id .'#'. $topic_id));
@@ -631,7 +631,7 @@ class IndexController extends StudipController
         ForumPerm::check('edit_area', $this->getId());
 
         if (Request::isAjax()) {
-            ForumEntry::update($area_id, utf8_decode(Request::get('name')), utf8_decode(Request::get('content')));
+            ForumEntry::update($area_id, studip_utf8decode(Request::get('name')), studip_utf8decode(Request::get('content')));
             $this->render_nothing();
         } else {
             ForumEntry::update($area_id, Request::get('name'), Request::get('content'));
@@ -645,7 +645,7 @@ class IndexController extends StudipController
         ForumPerm::check('edit_category', $this->getId());
         
         if (Request::isAjax()) {
-            ForumCat::setName($category_id, utf8_decode(Request::get('name')));
+            ForumCat::setName($category_id, studip_utf8decode(Request::get('name')));
             $this->render_nothing();
         } else {
             ForumCat::setName($category_id, Request::get('name'));

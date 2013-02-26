@@ -37,6 +37,7 @@ class Course_StudyAreasController extends AuthenticatedController
             $this->set_status(403);
             return FALSE;
         }
+        $this->set_content_type('text/html; charset=windows-1252');
     }
 
     /**
@@ -110,7 +111,7 @@ class Course_StudyAreasController extends AuthenticatedController
 
             // renew status
             $study_areas = Request::getArray('study_area_selection');
-               
+
 
             if (isset($study_areas['last_selected'])) {
                 $this->selection->setSelected((string) $study_areas['last_selected']);

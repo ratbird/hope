@@ -538,8 +538,11 @@ class Ilias3Soap extends StudipSoapClient
                             $all_objects[$ref_data["ref_id"]]["accessInfo"] = $ref_data["accessInfo"];
                             $all_objects[$ref_data["ref_id"]]["operations"] = $ref_data["operations"];
                         }
-            if (sizeof($all_objects) > 0)
+            if (sizeof($all_objects) > 0) {
                 return $all_objects;
+            } else {
+                return array();
+            }
         }
         return false;
     }

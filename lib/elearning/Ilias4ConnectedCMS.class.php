@@ -63,26 +63,40 @@ class Ilias4ConnectedCMS extends Ilias3ConnectedCMS
 
         // Workaround: getTreeChilds() liefert ALLE Referenzen der beteiligten Objekte, hier sollen aber nur die aus dem Kurs geprüft werden. Deshalb Abgleich der Pfade aller gefundenen Objekt-Referenzen.
         $result = $this->soap_client->getObjectByReference($course_id);
+
         if ($result) {
             $course_path = $this->soap_client->getRawPath($course_id) . '_' . $result["ref_id"];
         }
 
         $result = $this->soap_client->getTreeChilds($course_id, $types, $this->user->getId());
 
-        if ($result) {
+        if (is_array($result)) {
+            $check = $db->prepare("SELECT 1 FROM object_contentmodules WHERE object_id = ? AND module_id = ? AND system_type = ? AND module_type = ?");
+            $found = array();
+            $added = 0;
+            $deleted = 0;
             $messages["info"] .= "<b>".sprintf(_("Aktualisierung der Zuordnungen zum System \"%s\":"), $this->getName()) . "</b><br>";
             foreach($result as $ref_id => $data) {
                 if (($data["accessInfo"] == "granted") AND ($this->soap_client->getRawPath($ref_id) == $course_path)) {
-                    $rs = $db->query("SELECT * FROM object_contentmodules WHERE object_id = '" . $SessSemName[1] . "' AND module_id = '" . $ref_id . "' AND system_type = '" . $this->cms_type . "' AND module_type = '" . $data["type"] . "'");
-                    if (! $rs->fetch()) {
+                    $check->execute(array($SessSemName[1], $ref_id, $this->cms_type, $data["type"]));
+                    if (!$check->fetch()) {
                         $messages["info"] .= sprintf(_("Zuordnung zur Lerneinheit \"%s\" wurde hinzugefügt."), ($data["title"])) . "<br>";
-                        $counter++;
                         ObjectConnections::setConnection($SessSemName[1], $ref_id, $data["type"], $this->cms_type);
+                        $added++;
                     }
+                    $found[] = $ref_id . '_' . $data["type"];
                 }
             }
-            if ($counter < 1)
-            $messages["info"] .= _("Die Zuordnungen sind bereits auf dem aktuellen Stand.") . "<br>";
+            $to_delete = $db->prepare("SELECT module_id,module_type FROM object_contentmodules WHERE module_type <> 'crs' AND object_id = ? AND system_type = ? AND CONCAT_WS('_', module_id,module_type) NOT IN (?)");
+            $to_delete->execute(array($SessSemName[1], $this->cms_type, count($found) ? $found : array('')));
+            while ($row = $to_delete->fetch(PDO::FETCH_ASSOC)) {
+                ObjectConnections::unsetConnection($SessSemName[1], $row["module_id"], $row["module_type"], $this->cms_type);
+                $deleted++;
+                $messages["info"] .= sprintf(_("Zuordnung zu \"%s\" wurde entfernt."), $row["module_id"]  . '_' . $row["module_type"]) . "<br>";
+            }
+            if (($added + $deleted) < 1) {
+                $messages["info"] .= _("Die Zuordnungen sind bereits auf dem aktuellen Stand.") . "<br>";
+            }
         }
         ELearningUtils::bench("update connections");
     }

@@ -310,7 +310,7 @@ class ELearningUtils
         $ext_username = Request::get('ext_username');
         $ref_id = Request::option('ref_id');
         $module_type = Request::option('module_type');
-        
+
         ELearningUtils::loadClass($new_account_cms);
 
 //      echo "nas:$new_account_step.cm:$current_module.n:$next.gb:$go_back.a:$assign.<br>";

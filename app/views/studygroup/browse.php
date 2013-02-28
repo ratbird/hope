@@ -20,7 +20,7 @@ $link = "dispatch.php/studygroup/browse/%s/".$sort;
 <form action="<?= $controller->url_for('studygroup/browse') ?>" method=post>
     <?= CSRFProtection::tokenTag() ?>
     <div class="search_box" align="center">
-        <input name="searchtext" type="text" size="45" style="vertical-align: middle;" value="<?= htmlReady($search) ?>" />
+        <input name="searchtext" aria-label="<?= _("Geben Sie einen Suchbegriff für Studiengruppen ein.") ?>" type="text" size="45" style="vertical-align: middle;" value="<?= htmlReady($search) ?>" />
         <?= Button::create(_('Suchen'))?>
         <?= LinkButton::create(_('Zurücksetzen'), URLHelper::getURL('',array('action' => 'deny')), array('title' => _('Suche zurücksetzen')))?>
     </div>

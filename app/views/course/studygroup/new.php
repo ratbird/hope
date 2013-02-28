@@ -25,13 +25,13 @@ $infobox['content'] = array(
 
 <table class="blank" width="85%" cellspacing="5" cellpadding="0" border="0">
 <tr>
-  <td style='text-align:right; font-size:150%;'><?= _("Name:") ?></td>
-  <td style='font-size:150%;'><input type='text' name='groupname' size='25' value="<?= htmlReady($this->flash['request']['groupname'])?>" style='font-size:100%'></td>
+  <td style='text-align:right; font-size:150%;'><label for="groupname"><?= _("Name:") ?></label></td>
+  <td style='font-size:150%;'><input type='text' name='groupname' id='groupname' size='25' value="<?= htmlReady($this->flash['request']['groupname'])?>" style='font-size:100%'></td>
 </tr>
 
 <tr>
-  <td style='text-align:right; vertical-align:top;'><?= _("Beschreibung:") ?></td>
-  <td><textarea name='groupdescription' rows=5 cols=50><?= ($this->flash['request']['groupdescription'] ? htmlReady($this->flash['request']['groupdescription']) : _("Hier aussagekräftige Beschreibung eingeben.")) ?></textarea></td>
+  <td style='text-align:right; vertical-align:top;'><label for="groupdescription"><?= _("Beschreibung:") ?></label></td>
+  <td><textarea name='groupdescription' id='groupdescription' rows=5 cols=50><?= ($this->flash['request']['groupdescription'] ? htmlReady($this->flash['request']['groupdescription']) : _("Hier aussagekräftige Beschreibung eingeben.")) ?></textarea></td>
 </tr>
 
 <? if ($GLOBALS['perm']->have_perm('admin')) : ?>
@@ -72,9 +72,9 @@ $infobox['content'] = array(
 </tr>
 
 <tr>
-  <td style='text-align:right;'><?= _("Zugang:") ?></td>
+  <td style='text-align:right;'><label for="groupaccess"><?= _("Zugang:") ?></label></td>
   <td>
-      <select name="groupaccess">
+      <select name="groupaccess" id="groupaccess">
          <option <?= ($groupaccess == 'all') ? 'selected="selected"':'' ?> value="all"><?= _("Offen für alle") ?></option>
          <option <?= ($groupaccess == 'invite') ? 'selected="selected"':'' ?> value="invite"><?= _("Auf Anfrage") ?></option>
       </select>

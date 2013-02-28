@@ -136,7 +136,7 @@ $commentable = $GLOBALS['perm']->have_perm("autor") ? true : (bool) $commentable
     </ul>
     <? if ($commentable) : ?>
     <div class="writer">
-        <textarea placeholder="<?= _("Kommentiere dies") ?>" id="writer_<?= md5(uniqid()) ?>"></textarea>
+        <textarea placeholder="<?= _("Kommentiere dies") ?>" aria-label="<?= _("Kommentiere dies") ?>" id="writer_<?= md5(uniqid()) ?>"></textarea>
     </div>
     <? endif ?>
 </li>

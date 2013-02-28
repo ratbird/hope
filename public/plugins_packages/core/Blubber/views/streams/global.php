@@ -33,7 +33,7 @@
             <?= Assets::img("icons/32/blue/group3", array('class' => "private")) ?>
             <?= Assets::img("icons/32/blue/seminar", array('class' => "seminar")) ?>
         </div>
-        <textarea style="margin-top: 7px;" id="new_posting" placeholder="<?= _("Schreib was, frag was.") ?>"><?= ($search ? htmlReady($search)." " : "").(Request::get("mention") ? "@".htmlReady(Request::username("mention")).", " : "") ?></textarea>
+        <textarea style="margin-top: 7px;" id="new_posting" placeholder="<?= _("Schreib was, frag was.") ?>" aria-label="<?= _("Schreib was, frag was.") ?>"><?= ($search ? htmlReady($search)." " : "").(Request::get("mention") ? "@".htmlReady(Request::username("mention")).", " : "") ?></textarea>
     </div>
     <div id="context_selector_title" style="display: none;"><?= _("Kontext auswählen") ?></div>
     <div id="context_selector" style="display: none;">
@@ -69,12 +69,14 @@
                     </td>
                     <td>
                         <? if (count($contact_groups)) : ?>
+                        <label>
                         <?= _("An Kontaktgruppe(n)") ?><br>
                         <select multiple name="contact_group[]" id="contact_groups" style="width: 100%" size="<?= count($contact_groups) <= 4 ? count($contact_groups) : "4"  ?>">
                             <? foreach ($contact_groups as $group) : ?>
                             <option value="<?= htmlReady($group['statusgruppe_id']) ?>"><?= htmlReady($group['name']) ?></option>
                             <? endforeach ?>
                         </select>
+                        </label>
                         <? else : ?>
                         <a href="<?= URLHelper::getLink("contact_statusgruppen.php") ?>"><?= _("Legen Sie eine Kontaktgruppe an, um an mehrere Kontakte zugleich zu blubbern.") ?></a>
                         <? endif ?>
@@ -100,6 +102,7 @@
                         </label>
                     </td>
                     <td>
+                        <label>
                         <?= _("In Veranstaltung") ?>
                         <select name="context">
                             <? foreach (BlubberPosting::getMyBlubberCourses() as $course_id) : ?>
@@ -107,6 +110,7 @@
                             <option value="<?= htmlReady($course_id) ?>"><?= htmlReady($seminar->getName()) ?></option>
                             <? endforeach ?>
                         </select>
+                        </label>
                     </td>
                     <td style="width: 15%">
                         <?= Assets::img("icons/16/black/checkbox-checked", array('class' => "text-bottom check")) ?>

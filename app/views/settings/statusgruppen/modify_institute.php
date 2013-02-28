@@ -46,20 +46,20 @@
                     </tr>
                     <tr>
                         <td>
-                            <label><?= _('Raum:') ?></label>
+                            <label for="raum"><?= _('Raum:') ?></label>
                         </td>
                         <td>
-                            <input type="text" name="raum"
+                            <input type="text" name="raum" id="raum"
                                    value="<?= htmlReady($institute['raum']) ?>"
                                    <? if ($locked) echo 'disabled'; ?>>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <label><?= _('Sprechzeit:') ?></label>
+                            <label for="sprech"><?= _('Sprechzeit:') ?></label>
                         </td>
                         <td>
-                            <input type="text" name="sprech"
+                            <input type="text" name="sprech" id="sprech"
                                    value="<?= htmlReady($institute['sprechzeiten']) ?>"
                                    <? if ($locked) echo 'disabled'; ?>>
                         </td>

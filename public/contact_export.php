@@ -157,10 +157,10 @@ function printSelectGroup($infobox, $groups)
         . "  <table width=\"100%\" class=\"blank\" border=\"0\" cellpadding=\"2\" cellspacing=\"0\">\n"
         . "  <tr>"
         . "   <td valign=\"top\" id=\"main_content\"><font size=\"-1\">\n"
-        . _("Bitte wählen Sie ein Gruppe aus, deren Daten Sie in eine vCard-Datei exportieren möchten:")."\n"
+        . "<label for=\"groupid\">"._("Bitte wählen Sie ein Gruppe aus, deren Daten Sie in eine vCard-Datei exportieren möchten:")."</label>\n"
         . "    <form action=\"".URLHelper::getURL()."\" method=post>\n"
         . CSRFProtection::tokenTag()
-        . "       &nbsp;<select name=\"groupid\" style=\"vertical-align:middle;\">\n";
+        . "       &nbsp;<select name=\"groupid\" id=\"groupid\" style=\"vertical-align:middle;\">\n";
     // the groups
     for ($i=0;$i<=sizeof($groups)-1;$i++){
         $html .= "        <option value=\"".$groups[$i]["id"]."\">".$groups[$i]["name"]."</option>\n";

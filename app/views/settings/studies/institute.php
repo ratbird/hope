@@ -42,10 +42,10 @@
     <? endif; ?>
     <? foreach ($institutes as $inst_id => $details): ?>
         <tr>
-            <td><?= htmlReady($details['Name']) ?></td>
+            <td><label for="inst_delete_<?= $inst_id?>"><?= htmlReady($details['Name']) ?></label></td>
             <td style="text-align:center">
             <? if ($allow_change['in']): ?>
-                <input type="checkbox" name="inst_delete[]" value="<?= $inst_id ?>">
+                <input type="checkbox" name="inst_delete[]" id="inst_delete_<?= $inst_id?>" value="<?= $inst_id ?>">
             <? else: ?>
                 <?= Assets::img('icons/16/grey/accept.png', array('class' => 'text-top')) ?>
             <? endif; ?>

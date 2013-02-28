@@ -18,8 +18,8 @@
         <tr>
             <th><?= _('Fach') ?></th>
             <th><?= _('Abschluss') ?></th>
-            <th><?= _('Fachsemester') ?></th>
-            <th style="text-align:center;">
+            <th id="fachsemester_label"><?= _('Fachsemester') ?></th>
+            <th style="text-align:center;" id="austragen_label">
             <? if ($allow_change['sg']): ?>
                 <?= _('austragen') ?>
             <? else: ?>
@@ -44,14 +44,14 @@
             <td><?= htmlReady($details['aname']) ?></td>
         <? if ($allow_change['sg']): ?>
             <td>
-                <select name="change_fachsem[<?= $details['studiengang_id'] ?>][<?= $details['abschluss_id'] ?>]">
+                <select name="change_fachsem[<?= $details['studiengang_id'] ?>][<?= $details['abschluss_id'] ?>]" aria-labelledby="fachsemester_label">
                 <? for ($i = 0; $i <= 50; $i += 1): ?>
                     <option <? if ($i == $details['semester']) echo 'selected'; ?>><?= $i ?></option>
                 <? endfor; ?>
                 </select>
             </td>
             <td style="text-align:center">
-                <input type="checkbox" name="fach_abschluss_delete[<?= $details['studiengang_id'] ?>]" value="<?= $details['abschluss_id'] ?>">
+                <input type="checkbox" aria-labelledby="austragen_label" name="fach_abschluss_delete[<?= $details['studiengang_id'] ?>]" value="<?= $details['abschluss_id'] ?>">
             </td>
         <? else: ?>
             <td><?= htmlReady($details['semester']) ?></td>
@@ -78,7 +78,7 @@
                     <?= $about->select_abschluss() ?>
 
                     <a name="semester"></a>
-                    <select name="fachsem">
+                    <select name="fachsem" aria-label="<?= _("Bitte Fachsemester wählen") ?>">
                     <? for ($i = 0; $i <= 50; $i += 1): ?>
                         <option><?= $i ?></option>
                     <? endfor; ?>

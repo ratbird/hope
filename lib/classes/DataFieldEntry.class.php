@@ -448,10 +448,11 @@ class DataFieldBoolEntry extends DataFieldEntry
     function getHTML($name)
     {
         $field_name = $name . '[' . $this->structure->getID() . ']';
+        $field_id = $name . '_' . $this->structure->getID();
         if($this->getValue())
             $checked = 'checked';
         return "<input type=\"hidden\" name=\"$field_name\" value=\"0\">
-        <input type=\"checkbox\" name=\"$field_name\" value=\"1\" $checked>";
+        <input type=\"checkbox\" name=\"$field_name\" id=\"$field_id\" value=\"1\" $checked>";
     }
 
     function getDisplayValue($entities = true) //wofür ist $entities? wird nicht benutzt?!?
@@ -471,8 +472,9 @@ class DataFieldTextlineEntry extends DataFieldEntry
     function getHTML($name)
     {
         $field_name = $name . '[' . $this->structure->getID() . ']';
+        $field_id = $name . '_' . $this->structure->getID();
         $valattr = 'value="' . $this->getDisplayValue() . '"';
-        return "<input type=\"text\" name=\"$field_name\" $valattr>";
+        return "<input type=\"text\" name=\"$field_name\" id=\"$field_id\" $valattr>";
     }
 }
 
@@ -490,7 +492,8 @@ class DataFieldTextareaEntry extends DataFieldEntry
     function getHTML($name)
     {
         $field_name = $name . '[' . $this->structure->getID() . ']';
-        return sprintf('<textarea name="%s" rows="6" cols="58">%s</textarea>', $field_name, htmlReady($this->getValue()));
+        $field_id = $name . '_' . $this->structure->getID();
+        return sprintf('<textarea name="%s" id="%s" rows="6" cols="58">%s</textarea>', $field_name, $field_id, htmlReady($this->getValue()));
     }
    
 }
@@ -501,7 +504,8 @@ class DataFieldEmailEntry extends DataFieldEntry
     function getHTML($name)
     {
         $field_name = $name . '[' . $this->structure->getID() . ']';
-        return sprintf('<input type="email" name="%s" value="%s" size="30">', $field_name, $this->getDisplayValue());
+        $field_id = $name . '_' . $this->structure->getID();
+        return sprintf('<input type="email" name="%s" id="%s" value="%s" size="30">', $field_name, $field_id, $this->getDisplayValue());
     }
 
     function isValid()
@@ -518,7 +522,8 @@ class DataFieldLinkEntry extends DataFieldEntry
     public function getHTML($name)
     {
         $field_name = $name . '[' . $this->structure->getID() . ']';
-        return sprintf('<input type="url" name="%s" value="%s" size="30" placeholder="http://">', $field_name, htmlready($this->getValue()));
+        $field_id = $name . '_' . $this->structure->getID();
+        return sprintf('<input type="url" name="%s" id="%s" value="%s" size="30" placeholder="http://">', $field_name, $field_id, htmlready($this->getValue()));
     }
 
     public function getDisplayValue($entities = true)
@@ -573,7 +578,8 @@ class DataFieldSelectboxEntry extends DataFieldEntry
     function getHTML($name)
     {
         $field_name = $name . '[' . $this->structure->getID() . ']';
-        $ret = "<select name=\"$field_name\">";
+        $field_id = $name . '_' . $this->structure->getID();
+        $ret = "<select name=\"$field_name\" name=\"$field_id\">";
         foreach($this->type_param as $pkey => $pval)
         {
             $value = $this->is_assoc_param ? (string) $pkey : $pval;
@@ -614,6 +620,10 @@ class DataFieldSelectboxEntry extends DataFieldEntry
 
 class DataFieldRadioEntry extends DataFieldSelectboxEntry
 {
+    function numberOfHTMLFields()
+    {
+        return count($this->type_param);
+    }
 
     function getHTML($name)
     {
@@ -622,7 +632,7 @@ class DataFieldRadioEntry extends DataFieldSelectboxEntry
         foreach($this->type_param as $pkey => $pval)
         {
             $value = $this->is_assoc_param ? (string) $pkey : $pval;
-            $ret .= sprintf('<input type="radio" value="%s" name="%s"%s> %s', htmlReady($value), $field_name, $value == $this->getValue() ? ' checked="checked"' : '', htmlReady($pval));
+            $ret .= "<label>".sprintf('<input type="radio" value="%s" name="%s"%s> %s', htmlReady($value), $field_name, $value == $this->getValue() ? ' checked="checked"' : '', htmlReady($pval))."</label>";
         }
         return $ret;
     }
@@ -654,6 +664,7 @@ class DataFieldComboEntry extends DataFieldEntry
     function getHTML($name)
     {
         $field_name = $name . '[' . $this->structure->getID() . ']';
+        $field_id = $name . '_' . $this->structure->getID();
         $values = array_map('trim', explode("\n", $this->structure->getTypeParam()));
         $id = $this->structure->getID();
         $ret = sprintf('<input type="radio" value="select" id="combo_%s_select" name="%s"%s>', $id, $field_name . '[combo]', ($select = in_array($this->value, $values)) ? ' checked="checked"' : '');

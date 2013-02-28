@@ -159,7 +159,13 @@
             <? else: ?>
                 <td>
             <? endif; ?>
-                    <label><?= htmlReady($entry->getName()) ?></label>
+                    <? if ($entry->isEditable() && !LockRules::check($user->user_id, $entry->getId()) && $entry->numberOfHTMLFields() == 1) : ?>
+                    <label for="datafields_<?= $entry->getId() ?>">
+                    <? endif ?>
+                    <?= htmlReady($entry->getName()) ?>
+                    <? if ($entry->isEditable() && !LockRules::check($user->user_id, $entry->getId()) && $entry->numberOfHTMLFields() == 1) : ?>
+                    </label>
+                    <? endif ?>
                 </td>
                 <td colspan="2">
                 <? if ($entry->isEditable() && !LockRules::check($user->user_id, $entry->getId())): ?>

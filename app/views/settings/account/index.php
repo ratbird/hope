@@ -142,6 +142,7 @@
                 </td>
                 <td>
                     <select name="title_rear_chooser" id="title_rear_chooser"
+                            aria-label="<?= _('Titel nachgestellt auswählen') ?>"
                             data-target="#title_rear"
                             <? if (!$controller->shallChange('auth_user_md5.title_rear', 'title')) echo 'disabled'; ?>>
                     <? foreach ($GLOBALS['TITLE_REAR_TEMPLATE'] as $title): ?>

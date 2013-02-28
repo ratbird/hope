@@ -344,7 +344,7 @@ function PrintAktualContacts($range_id)
     
     $size = (count($contacts) > 10) ? 25 : 10;
 
-    echo "<font size=\"-1\">&nbsp; " . _("Personen im Adressbuch") . "</font><br>";
+    echo "<label><font size=\"-1\">&nbsp; " . _("Personen im Adressbuch") . "</font><br>";
     echo "&nbsp; <select size=\"$size\" name=\"AktualMembers[]\" multiple>";
 
     foreach ($contacts as $contact) {
@@ -369,7 +369,7 @@ function PrintAktualContacts($range_id)
         echo htmlReady(my_substr($contact['fullname'], 0, 35) . " (" . $contact['username'] . ")");
         echo " - " . $contact['perms'] . "</option>\n";
     }
-    echo "</select>";
+    echo "</select></label>";
 }
 
 // Ende Funktionen
@@ -551,16 +551,16 @@ if (is_array($msgs)) {
         $search_exp = str_replace("_", "\_", $search_exp);
         if (strlen(trim($search_exp)) < 3) {
             echo "&nbsp; <font size=\"-1\">" . _("Ihr Suchbegriff muss mindestens 3 Zeichen umfassen!");
-            echo "<br><br><font size=\"-1\">&nbsp; " . _("freie Personensuche (wird in Adressbuch übernommen)") . "</font><br>";
-            echo "&nbsp; <input type=\"text\" name=\"search_exp\" value=\"\">";
+            echo "<br><br><label for=\"search_exp\"><font size=\"-1\">&nbsp; " . _("freie Personensuche (wird in Adressbuch übernommen)") . "</font></label><br>";
+            echo "&nbsp; <input type=\"text\" name=\"search_exp\" id=\"search_exp\" value=\"\">";
             printf(" <input class=\"middle\" type=\"IMAGE\" name=\"search\" src=\"" . Assets::image_path('icons/16/blue/search.png') . "\"  value=\" %s \" %s>&nbsp;  ", _("Person suchen"), tooltip(_("Person suchen")));
         } else {
             PrintSearchResults($search_exp, $range_id);
             printf("<input type=\"IMAGE\" name=\"search\" src=\"" . Assets::image_path('icons/16/blue/refresh.png') . "\"  value=\" %s \" %s>&nbsp;  ", _("neue Suche"), tooltip(_("neue Suche")));
         }
     } else {
-        echo _("freie Personensuche (wird in Adressbuch &uuml;bernommen)") . "<br>";
-        echo "&nbsp; <input type=\"text\" name=\"search_exp\" value=\"\">";
+        echo "<label for=\"search_exp\">"._("freie Personensuche (wird in Adressbuch &uuml;bernommen)") . "</label><br>";
+        echo "&nbsp; <input type=\"text\" name=\"search_exp\" id=\"search_exp\" value=\"\">";
         printf(" <input class=\"middle\" type=\"IMAGE\" name=\"search\" src=\"" . Assets::image_path('icons/16/blue/search.png') . "\"  value=\" %s \" %s>&nbsp;  ", _("Person suchen"), tooltip(_("Person suchen")));
     }
     echo "<br><br>\n";

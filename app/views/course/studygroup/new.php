@@ -31,7 +31,7 @@ $infobox['content'] = array(
 
 <tr>
   <td style='text-align:right; vertical-align:top;'><label for="groupdescription"><?= _("Beschreibung:") ?></label></td>
-  <td><textarea name='groupdescription' id='groupdescription' rows=5 cols=50><?= ($this->flash['request']['groupdescription'] ? htmlReady($this->flash['request']['groupdescription']) : _("Hier aussagekräftige Beschreibung eingeben.")) ?></textarea></td>
+  <td><textarea name='groupdescription' id='groupdescription' rows=5 cols=50 placeholder="<?= _("Hier aussagekräftige Beschreibung eingeben.") ?>"><?= htmlReady($this->flash['request']['groupdescription']) ?></textarea></td>
 </tr>
 
 <? if ($GLOBALS['perm']->have_perm('admin')) : ?>

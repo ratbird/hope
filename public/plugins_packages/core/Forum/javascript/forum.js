@@ -153,7 +153,7 @@ STUDIP.Forum = {
         jQuery('tr.add_area').show();
     },
 
-    deleteCategory: function (category_id, name) {
+    deleteCategory: function (category_id) {
         STUDIP.Forum.showDialog('Sind sie sicher, dass Sie diese Kategorie entfernen möchten? ' 
             + 'Alle Bereiche werden dann nach "Allgemein" verschoben!'.toLocaleString(),
             'javascript:STUDIP.Forum.approveDelete()',

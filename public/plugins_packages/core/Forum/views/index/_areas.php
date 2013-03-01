@@ -9,12 +9,12 @@
             <span class="corners-top"></span>
             <span class="heading">
                 <span class="category_name" <?= Request::get('edit_category') != $category_id ? '' : 'style="display: none;"' ?>>
-                    <?= $categories[$category_id] ?>
+                    <?= htmlReady($categories[$category_id]) ?>
                 </span>
             </span>
             <span class="heading_edit" style="<?= Request::get('edit_category') == $category_id ? '' : 'display: none;' ?> margin-left: 5px;">
                 <form method="post" action="<?= PluginEngine::getLink('coreforum/index/edit_category/' . $category_id) ?>">
-                    <input type="text" name="name" size="40" value="<?= $categories[$category_id] ?>">
+                    <input type="text" name="name" size="40" value="<?= htmlReady($categories[$category_id]) ?>">
 
                     <?= Studip\Button::createAccept('Kategorie speichern', '', 
                         array('onClick' => "javascript:STUDIP.Forum.saveCategoryName('". $category_id ."'); return false;")) ?>
@@ -47,7 +47,7 @@
 
                     <? if(ForumPerm::has('remove_category', $seminar_id)) : ?>
                     <a href="<?= PluginEngine::getLink('coreforum/index/remove_category/' . $category_id) ?>"
-                        onClick="STUDIP.Forum.deleteCategory('<?= $category_id ?>', '<?= $categories[$category_id] ?>'); return false;">
+                        onClick="STUDIP.Forum.deleteCategory('<?= $category_id ?>'); return false;">
                         <?= Assets::img('icons/16/white/trash.png', array('title' => 'Kategorie entfernen')) ?>
                     </a>
                     <? endif ?>

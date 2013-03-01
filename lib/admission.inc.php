@@ -541,6 +541,15 @@ function normal_update_admission($seminar_id, $send_message = TRUE)
 */
 function check_admission ($send_message=TRUE)
 {
+
+    //bail out if cronjob activated and not called in cli context
+    if (Config::getInstance()->getValue('CRONJOBS_ENABLE')
+            && ($task = array_pop(CronjobTask::findByClass('CheckAdmissionJob')))
+            && count($task->schedules->findBy('active', 1))
+            && PHP_SAPI !== 'cli') {
+            return false;
+     }
+
     $messaging = new messaging;
 
     //Daten holen / Abfrage ob ueberhaupt begrenzt

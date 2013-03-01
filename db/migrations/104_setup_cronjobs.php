@@ -99,6 +99,27 @@ class SetupCronjobs extends Migration
                 'hour'        => 1,
                 'minute'      => 7,
             ),
+            array(
+                'filename'    => 'lib/cronjobs/check_admission.class.php',
+                'class'       => 'CheckAdmissionJob',
+                'priority'    => 'normal',
+                'hour'        => null,
+                'minute'      => -30,
+            ),
+            array(
+                'filename'    => 'lib/cronjobs/garbage_collector.class.php',
+                'class'       => 'GarbageCollectorJob',
+                'priority'    => 'normal',
+                'hour'        => 2,
+                'minute'      => 33,
+            ),
+            array(
+                'filename'    => 'lib/cronjobs/session_gc.class.php',
+                'class'       => 'SessionGcJob',
+                'priority'    => 'normal',
+                'hour'        => 3,
+                'minute'      => 13,
+            ),
         );
         
         $query = "INSERT IGNORE INTO `cronjobs_tasks`

@@ -126,7 +126,6 @@ if (isset($GLOBALS['DB_STUDIP_SLAVE_HOST'])) {
 } else {
     DBManager::getInstance()->aliasConnection('studip', 'studip-slave');
 }
-
 /**
  * @deprecated
  */
@@ -328,42 +327,15 @@ class Seminar_Session extends Session {
     }
 
     //erweiterter Garbage Collector
-    function gc(){
-        mt_srand((double)microtime()*1000000);
-        $zufall = mt_rand();
-        if (($zufall % 100) < $this->gc_probability){
-            StudipNews::DoGarbageCollect();
-        }
-        if (($zufall % 1000) < $this->gc_probability){
-            $db = new DB_Seminar();
-            //messages aufräumen
-            $db->query("SELECT message_id, count( message_id ) AS gesamt, count(IF (deleted =0, NULL , 1) ) AS geloescht
-                        FROM message_user GROUP BY message_id HAVING gesamt = geloescht");
-            $result = array();
-            $i = 0;
-            while($db->next_record()) {
-                $result[floor($i / 100)][] = $db->Record[0];
-                ++$i;
-            }
-            for ($i = 0; $i < count($result); ++$i){
-                $ids =  join("','", $result[$i]);
-                $db->query("DELETE FROM message_user WHERE message_id IN('$ids')");
-                $db->query("DELETE FROM message WHERE message_id IN('$ids')");
-                $db->query("SELECT dokument_id FROM dokumente WHERE range_id IN('$ids')");
-                while ($db->next_record())
-                    delete_document($db->f("dokument_id"));
-            }
-            //Attachments von nicht versendeten Messages aufräumen
-            $db->query("SELECT dokument_id FROM dokumente WHERE range_id = 'provisional' AND chdate < UNIX_TIMESTAMP(DATE_ADD(NOW(),INTERVAL -2 HOUR))");
-                while($db->next_record()) {
-                    delete_document($db->f("dokument_id"));
-                }
-
-            unset($result);
-
-        }
-    //weiter mit gc() in der Super Klasse
-    parent::gc();
+    function gc() {
+        //bail out if cronjob activated and not called in cli context
+        if (Config::getInstance()->getValue('CRONJOBS_ENABLE')
+                && ($task = array_pop(CronjobTask::findByClass('SessionGcJob')))
+                && count($task->schedules->findBy('active', 1))
+                && PHP_SAPI !== 'cli') {
+            return false;
+        }    //weiter mit gc() in der Super Klasse
+        parent::gc();
     }
 }
 

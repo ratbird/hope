@@ -243,7 +243,7 @@ class SimpleORMapCollection extends ArrayObject
      */
     function findBy($key, $values)
     {
-        if (is_string($values)) {
+        if (!is_array($values)) {
             $values = words($values);
         }
         return $this->filter(function($record) use ($key, $values) {return in_array($record->$key, $values);});
@@ -308,7 +308,7 @@ class SimpleORMapCollection extends ArrayObject
      */
     function pluck($columns)
     {
-        if (is_string($columns)) {
+        if (!is_array($columns)) {
             $columns = words($columns);
         }
         $func = function($r) use ($columns) {
@@ -408,7 +408,7 @@ class SimpleORMapCollection extends ArrayObject
     function unsetBy($key, $values)
     {
         $ret = false;
-        if (is_string($values)) {
+        if (!is_array($values)) {
             $values = words($values);
         }
         foreach ($this as $k => $record) {

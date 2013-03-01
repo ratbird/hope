@@ -65,7 +65,7 @@
     <span data-show-topic="<?= $post['topic_id'] ?>" <?= Request::get('edit_posting') != $post['topic_id'] ? '' : 'style="display: none;"' ?>>
         <dl class="postprofile">
             <dt>
-                <? if ($post['owner_id'] != 'nobody') : ?>
+                <? if ($post['owner_id'] != 'nobody' && $post['owner_id']) : ?>
                 <a href="<?= URLHelper::getLink('about.php?username='. get_username($post['owner_id'])) ?>">
                     <?= Avatar::getAvatar($post['owner_id'])->getImageTag(Avatar::MEDIUM,
                         array('title' => get_username($post['owner_id']))) ?>
@@ -74,10 +74,11 @@
                 <? endif ?>
 
                 <? if ($post['owner_id'] == 'nobody') : ?>
+                    <?= Assets::img('icons/16/black/community.png') ?>
                     <span class="username" data-profile="<?= $post['topic_id'] ?>">
                         <?= htmlReady($post['author']) ?>
                     </span>
-                <? else : ?>
+                <? elseif ($post['owner_id']) : ?>
 
                     <!-- Online-Status -->
                     <? $status = ForumHelpers::getOnlineStatus($post['owner_id']) ?>
@@ -97,15 +98,20 @@
                 <? endif ?>
             </dt>
             <dd>
+                <? if (!$post['owner_id']) : ?>
+                <?= _('von Stud.IP erstellt') ?><br>
+                <? endif ?>
                 <?= _('am') ?> <?= strftime($time_format_string_short, (int)$post['mkdate']) ?>
             </dd>
             <dd>
                 <?= ForumHelpers::translate_perm($GLOBALS['perm']->get_studip_perm($constraint['seminar_id'], $post['owner_id']))?>
             </dd>
+            <? if ($post['owner_id']) : ?>
             <dd>
                 Beiträge:
                 <?= ForumEntry::countUserEntries($post['owner_id']) ?>
             </dd>
+            <? endif ?>
             <dd class="posting_icons">
                 <!-- Favorit -->
                 <span id="favorite_<?= $post['topic_id'] ?>">

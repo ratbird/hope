@@ -227,12 +227,6 @@ class StreamsController extends ApplicationController {
         $thread['parent_id'] = 0;
         $thread['author_host'] = $_SERVER['REMOTE_ADDR'];
         
-        if ($thread->isNew() && !$thread->getId()) {
-            $thread->store();
-            $thread['root_id'] = $thread->getId();
-            $thread->store();
-            
-        }
         if ($GLOBALS['user']->id !== "nobody") {
             $thread['user_id'] = $GLOBALS['user']->id;
         } else {
@@ -247,6 +241,15 @@ class StreamsController extends ApplicationController {
                 throw new AccessDeniedException("No permission to write posting.");
             }
         }
+        
+
+        if ($thread->isNew() && !$thread->getId()) {
+            $thread->store();
+            $thread['root_id'] = $thread->getId();
+            $thread->store();
+            
+        }
+
         BlubberPosting::$mention_posting_id = $thread->getId();
         StudipTransformFormat::addStudipMarkup("mention1", '@\"[^\n\"]*\"', "", "BlubberPosting::mention");
         StudipTransformFormat::addStudipMarkup("mention2", '@[^\s]*[\d\w_]+', "", "BlubberPosting::mention");

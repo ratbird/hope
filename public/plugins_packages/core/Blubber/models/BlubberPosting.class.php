@@ -73,14 +73,14 @@ class BlubberPosting extends SimpleORMap {
                 $user = new BlubberUser($user_id);
             } else {
                 $statement = DBManager::get()->prepare(
-                    "SELECT external_contact_id FROM blubber_external_cotact WHERE name = ? " .
+                    "SELECT external_contact_id FROM blubber_external_contact WHERE name = ? " .
                 "");
                 $statement->execute(array($name));
                 $user_id = $statement->fetch(PDO::FETCH_COLUMN, 0);
                 $user = BlubberExternalContact::find($user_id);
             }
         }
-        if (!$posting->isNew() && $user->getId() && $user->getId() !== $GLOBALS['user']->id) {
+        if (!$posting->isNew() && $user && $user->getId() !== $GLOBALS['user']->id) {
             $user->mention($posting);
             $statement = DBManager::get()->prepare(
                 "INSERT IGNORE INTO blubber_mentions " .
@@ -96,7 +96,7 @@ class BlubberPosting extends SimpleORMap {
             ));
             return '['.$user->getName().']'.$user->getURL().' ';
         } else {
-            return stripslashes($mention);
+            return $markup->quote($matches[0]);
         }
     }
 

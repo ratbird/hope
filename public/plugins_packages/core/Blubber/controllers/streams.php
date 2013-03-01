@@ -316,8 +316,8 @@ class StreamsController extends ApplicationController {
                 or ($thread['context_type'] === "private" && !$thread->isRelated())) {
             throw new AccessDeniedException("Kein Zugriff");
         }
-        echo studip_utf8encode($posting['description']);
-        $this->render_nothing();
+        $this->set_content_type('text/text');
+        $this->render_text(studip_utf8encode($posting['description']));
     }
 
     /**
@@ -425,10 +425,6 @@ class StreamsController extends ApplicationController {
             StudipTransformFormat::addStudipMarkup("mention1", '@\"[^\n\"]*\"', "", "BlubberPosting::mention");
             StudipTransformFormat::addStudipMarkup("mention2", '@[^\s]*[\d\w_]+', "", "BlubberPosting::mention");
             $content = transformBeforeSave(studip_utf8decode(Request::get("content")));
-            
-            //mentions einbauen:
-            $content = preg_replace("/(@\"[^\n\"]*\")/e", "BlubberPosting::mention('\\1', '".$thread->getId()."')", $content);
-            $content = preg_replace("/(@[^\s]+)/e", "BlubberPosting::mention('\\1', '".$thread->getId()."')", $content);
             
             $posting['description'] = $content;
             if ($GLOBALS['user']->id !== "nobody") {

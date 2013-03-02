@@ -75,6 +75,11 @@ class CoreForum extends StudipPlugin implements ForumModule
             $navigation->addSubNavigation('newest', new Navigation(_("Neue Beiträge"), PluginEngine::getLink($this, array(), 'index/newest')));
             $navigation->addSubNavigation('latest', new Navigation(_("Letzte Beiträge"), PluginEngine::getLink($this, array(), 'index/latest')));
             $navigation->addSubNavigation('favorites', new Navigation(_('Gemerkte Beiträge'), PluginEngine::getLink($this, array(), 'index/favorites')));
+            
+            // mass-administrate the forum
+            if (ForumPerm::has('admin', $course_id)) {
+                $navigation->addSubNavigation('admin', new Navigation(_('Administration'), PluginEngine::getLink($this, array(), 'index/admin')));
+            }
         }
 
         return array('forum2' => $navigation);

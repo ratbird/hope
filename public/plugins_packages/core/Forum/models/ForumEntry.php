@@ -508,7 +508,7 @@ class ForumEntry {
     /**
      * get a list of postings of a special type
      * 
-     * @param string $type one of 'area', 'list', 'postings', 'latest', 'favorites'
+     * @param string $type one of 'area', 'list', 'postings', 'latest', 'favorites', 'dump', 'flat'
      * @param string $parent_id the are to fetch from
      * @return array array('list' => ..., 'count' => ...);
      */
@@ -622,7 +622,27 @@ class ForumEntry {
                 
                 $count = DBManager::get()->query("SELECT FOUND_ROWS()")->fetchColumn();
 
-                return array('list' => ForumEntry::parseEntries($stmt->fetchAll(PDO::FETCH_ASSOC)), 'count' => $count);
+                $posting_list = array();
+
+                // speed up things a bit by leaving out the formatReady fields
+                foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $data) {
+                    $posting_list[$data['topic_id']] = array(
+                        'author'          => $data['author'],
+                        'topic_id'        => $data['topic_id'],
+                        'name_raw'        => $data['name'],
+                        'content_raw'     => ForumEntry::killEdit($data['content']),
+                        'content_short'   => $desc_short,
+                        'chdate'          => $data['chdate'],
+                        'mkdate'          => $data['mkdate'],
+                        'owner_id'        => $data['user_id'],
+                        'raw_title'       => $data['name'],
+                        'raw_description' => ForumEntry::killEdit($data['content']),
+                        'fav'             => ($data['fav'] == 'fav'),
+                        'depth'           => $data['depth']
+                    );
+                }
+
+                return array('list' => $posting_list, 'count' => $count);
                 break;
         }
     }

@@ -9,6 +9,7 @@ STUDIP.Forum = {
     current_area_id: null,
     current_category_id: null,
     seminar_id: null,
+    clipboard: {},
 
     init: function () {
         $('html').addClass('forum');
@@ -427,7 +428,109 @@ STUDIP.Forum = {
             + topic_id + '?cid=' + STUDIP.Forum.seminar_id));
         jQuery('a.marked[data-topic-id=' + topic_id +']').hide();
         return false;
-    }    
+    },
+
+    adminLoadChilds: function(topic_id) {
+        // if there is already data present, remove it (to "close" the current node in the tree)
+        if (jQuery('li[data-id=' + topic_id + '] ul').length) {
+            jQuery('li[data-id=' + topic_id + '] ul').remove();
+            return;
+        }
+
+        // load children from server and show them
+        jQuery.ajax(STUDIP.URLHelper.getURL('plugins.php/coreforum/index/admin_getchilds/' + topic_id), {
+            dataType: 'html',
+            success: function(response) {
+                jQuery('li[data-id=' + topic_id + ']').append(response);
+
+                // clean up icons
+                STUDIP.Forum.checkCutPaste();
+            }
+        });
+    },
+
+    cut : function(topic_id) {
+        // remove all childs from clipboard
+        jQuery('li[data-id=' + topic_id +'] li.selected').each(function(){
+            var tid = jQuery(this).attr('data-id');
+            jQuery(this).removeClass('selected');
+            delete STUDIP.Forum.clipboard[tid];
+        });
+
+        // add this element to clipboard and mark it as selected
+        jQuery('li[data-id=' + topic_id +']').addClass('selected');
+        jQuery('li[data-id=' + topic_id + '] > a[data-role=cut]').hide();
+        jQuery('li[data-id=' + topic_id + '] > a[data-role=cancel_cut]').show();
+        STUDIP.Forum.clipboard[topic_id] = topic_id;
+
+        // iterate over every li and remove the paste icon from all li's in the clipboard'
+        jQuery('#forum li').each(function() {
+            var tid = jQuery(this).attr('data-id');
+            if (tid !== null && !STUDIP.Forum.clipboard[tid]) {
+                jQuery(this).find('a[data-role=paste]').show();
+            } else {
+                jQuery(this).find('a[data-role=paste]').hide();
+            }
+        });
+
+        // clean up icons (if necessary)
+        STUDIP.Forum.checkCutPaste();
+    },
+
+    cancelCut: function(topic_id) {
+        // remove the selected element from the clipboard and unmark it
+        jQuery('li[data-id=' + topic_id +']').removeClass('selected');
+        jQuery('li[data-id=' + topic_id + '] a[data-role=cut]').show();
+        jQuery('li[data-id=' + topic_id + '] > a[data-role=cancel_cut]').hide();
+        
+        delete STUDIP.Forum.clipboard[topic_id];
+
+        // all children are now valid paste-targets again
+        jQuery('li[data-id=' + topic_id + '] a[data-role=paste]').show();
+
+        if (Object.keys(STUDIP.Forum.clipboard).length == 0) {
+            jQuery('a[data-role=paste]').hide();
+        }
+
+        // clean up icons (if necessary)
+        STUDIP.Forum.checkCutPaste();
+    },
+
+    paste: function(topic_id) {
+        jQuery.ajax(STUDIP.URLHelper.getURL('plugins.php/coreforum/index/admin_move/' + topic_id), {
+            data : {
+                'topics' : STUDIP.Forum.clipboard
+            },
+            success: function(response) {
+                // remove all pasted entries, the are now elsewhere
+                for (id in STUDIP.Forum.clipboard) {
+                    jQuery('li[data-id=' + id + ']').remove();
+                }
+
+                // reload childs after succesful moving
+                jQuery('li[data-id=' + topic_id + '] ul').remove();
+                STUDIP.Forum.adminLoadChilds(topic_id);
+                // reset icons after succesful moving
+                STUDIP.Forum.clipboard = {};
+                jQuery('a[data-role=cut]').show();
+                jQuery('a[data-role=cancel_cut]').hide();
+                jQuery('a[data-role=paste]').hide();
+                jQuery('li.selected').removeClass('selected');
+            }
+        });
+    },
+
+    checkCutPaste: function() {
+        jQuery('li.selected').find('li').each(function(){
+            var tid = jQuery(this).attr('data-id');
+            delete STUDIP.Forum.clipboard[tid];
+
+            jQuery(this).removeClass('selected');
+            jQuery(this).find('a[data-role=cut]').hide();
+            jQuery(this).find('a[data-role=cancel_cut]').hide();
+            jQuery(this).find('a[data-role=paste]').hide();
+        });
+    }
 };
 
 

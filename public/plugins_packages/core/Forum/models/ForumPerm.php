@@ -37,6 +37,7 @@ class ForumPerm {
      *   abo               - Signing up for mail-notifications for new entries<br>
      *   forward_entry     - Forwarding an existing entry as a message<br>
      *   pdfexport         - Exporting parts of the forum as PDF<br>
+     *   admin             - Allowed to mass-administrate the forum<br>
      * 
      * @param string $perm        one of the modular permissions
      * @param string $seminar_id  the seminar to check for
@@ -46,6 +47,9 @@ class ForumPerm {
     static function has($perm, $seminar_id, $user_id = null)
     {
         static $permissions = array();
+        
+        // TODO: remove the the following line when multi-move-administration is completed
+        if ($perm == 'admin') return false;
 
         // if no user-id is passed, use the current user (for your convenience)
         if (!$user_id) {
@@ -92,7 +96,7 @@ class ForumPerm {
             words('edit_category add_category remove_category sort_category '
             . 'edit_area add_area remove_area sort_area '
             . 'search edit_entry add_entry remove_entry fav_entry like_entry move_thread '
-            . 'abo forward_entry pdfexport')
+            . 'abo forward_entry pdfexport admin')
         ) !== false) {
             return true;
         } else if ($status == 'autor' && in_array($perm, words('search add_entry fav_entry like_entry forward_entry abo pdfexport')) !== false) {

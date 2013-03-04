@@ -65,6 +65,10 @@ class CoreForum extends StudipPlugin implements ForumModule
     /* interface method */
     public function getTabNavigation($course_id)
     {
+        if (!$this->isActivated($course_id)) {
+            return;
+        }
+
         $navigation = new Navigation(_('Forum'), PluginEngine::getLink($this, array(), 'index'));
         $navigation->setImage('icons/16/white/forum.png');
 
@@ -92,12 +96,16 @@ class CoreForum extends StudipPlugin implements ForumModule
             return;
         }
 
-        $num_entries = ForumVisit::getCount($course_id, ForumVisit::getVisit($course_id));
+        if ($GLOBALS['perm']->have_studip_perm('user', $course_id)) {
+            $num_entries = ForumVisit::getCount($course_id, ForumVisit::getVisit($course_id));
+            $text = ForumHelpers::getVisitText($num_entries, $course_id);
+        } else {
+            $num_entries = 0;
+            $text = 'Forum';
+        }
         
         $navigation = new Navigation('forum', PluginEngine::getLink($this, array(), 'index/enter_seminar'));
         #$navigation->setBadgeNumber($num_entries);
-
-        $text = ForumHelpers::getVisitText($num_entries, $course_id);
 
         if ($num_entries > 0) {
             $navigation->setImage('icons/16/red/new/forum.png', array('title' => $text));

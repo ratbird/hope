@@ -84,9 +84,13 @@ function parse_link($link, $level=0) {
         return FALSE;
     if ($link == "***" && $link_update)
         $link = getLinkPath($link_update);
+
+    $url_parts = @parse_url( $link );
+    if (strtolower($url_parts["host"]) === 'localhost' || strpos($url_parts["host"],'127') === 0) {
+        return array('response' => 'HTTP/1.0 400 Bad Request', 'response_code' => 400);
+    }
     if (substr($link,0,6) == "ftp://") {
         // Parsing an FTF-Adress
-        $url_parts = @parse_url( $link );
         $documentpath = $url_parts["path"];
 
         if (strpos($url_parts["host"],"@")) {
@@ -124,7 +128,6 @@ function parse_link($link, $level=0) {
         return $parsed_link;
 
     } else {
-        $url_parts = @parse_url( $link );
         if (!empty( $url_parts["path"])){
             $documentpath = $url_parts["path"];
         } else {
@@ -135,8 +138,11 @@ function parse_link($link, $level=0) {
         }
         $host = $url_parts["host"];
         $port = $url_parts["port"];
-
-        if (substr($link,0,8) == "https://") {
+        $scheme = strtolower($url_parts['scheme']);
+        if (!in_array($scheme , words('http https'))) {
+            return array('response' => 'HTTP/1.0 400 Bad Request', 'response_code' => 400);
+        }
+        if ($scheme == "https") {
             $ssl = TRUE;
             if (empty($port)) $port = 443;
         } else {

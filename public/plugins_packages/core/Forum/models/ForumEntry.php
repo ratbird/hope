@@ -136,11 +136,14 @@ class ForumEntry {
             // throw new Exception("Could not find entry with id >>$topic_id<< in forum_entries, " . __FILE__ . " on line " . __LINE__);
         }
 
+        /*
         // security check: only return topics belonging to the currently preselected seminar
         $seminar_id = ForumHelpers::getSeminarId();
         if ($data['seminar_id'] != $seminar_id) {
             throw new AccessDeniedException('Zugriff verweigert!');
         }
+         * 
+         */
 
         if ($data['depth'] == 1) {
             $data['area'] = 1;

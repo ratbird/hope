@@ -135,7 +135,13 @@ class ForumEntry {
             return false;
             // throw new Exception("Could not find entry with id >>$topic_id<< in forum_entries, " . __FILE__ . " on line " . __LINE__);
         }
-        
+
+        // security check: only return topics belonging to the currently preselected seminar
+        $seminar_id = ForumHelpers::getSeminarId();
+        if ($data['seminar_id'] != $seminar_id) {
+            throw new AccessDeniedException('Zugriff verweigert!');
+        }
+
         if ($data['depth'] == 1) {
             $data['area'] = 1;
         }
@@ -172,8 +178,9 @@ class ForumEntry {
         $constraints = ForumEntry::getConstraints($topic_id);
         
         $stmt = DBManager::get()->prepare("SELECT topic_id
-            FROM forum_entries WHERE lft >= ? AND rgt <= ?");
-        $stmt->execute(array($constraints['lft'], $constraints['rgt']));
+            FROM forum_entries WHERE lft >= ? AND rgt <= ?
+                AND seminar_id = ?");
+        $stmt->execute(array($constraints['lft'], $constraints['rgt'], $constraints['seminar_id']));
         
         return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
@@ -561,7 +568,7 @@ class ForumEntry {
                 $constraint = ForumEntry::getConstraints($parent_id);
 
                 // get postings
-                $stmt = DBManager::get()->prepare($query = "SELECT forum_entries.*, IF(ou.topic_id IS NOT NULL, 'fav', NULL) as fav
+                $stmt = DBManager::get()->prepare("SELECT forum_entries.*, IF(ou.topic_id IS NOT NULL, 'fav', NULL) as fav
                     FROM forum_entries
                     LEFT JOIN forum_favorites as ou ON (ou.topic_id = forum_entries.topic_id AND ou.user_id = :user_id)
                     WHERE seminar_id = :seminar_id AND lft > :left

@@ -253,4 +253,25 @@ class ForumHelpers {
         $document->dispatch($seminar_name['name'] ." - Forum");
         die;
     }
+
+
+    /**
+     * Returns the id of the currently selected seminar or false, if no seminar
+     * is selected
+     * 
+     * @return mixed  seminar_id or false
+     */
+    static function getSeminarId()
+    {
+        if (!Request::option('cid')) {
+            if ($GLOBALS['SessionSeminar']) {
+                URLHelper::bindLinkParam('cid', $GLOBALS['SessionSeminar']);
+                return $GLOBALS['SessionSeminar'];
+            }
+
+            return false;
+        }
+
+        return Request::option('cid');
+    }
 }

@@ -50,8 +50,8 @@ function createFormHeader(&$vote)
       "<form action=\"";
 
    $unamelink="";
-   if (Request::get('username'))
-      $unamelink = "?username=".Request::get('username');
+   if (Request::username('username'))
+      $unamelink = "?username=".Request::username('username');
 
    $html .= URLHelper::getLink($unamelink."#openvote")."\" method=post>\n".
       " <input type=\"hidden\" name=\"voteformID\" ".
@@ -101,7 +101,7 @@ function createFormFooter (&$vote, $userID, $perm, $rangeID) {
    $link .= (Request::option('openStoppedVotes')) ? "&openStoppedVotes=".YES : "";
    $link .= (Request::option('showrangeID')) ? "&showrangeID=".Request::option('showrangeID') : "";
    $link .= ($isPreview) ? "&previewResults=".YES : "";
-   $link .= (Request::get('username')) ? "&username=".Request::get('username') : "";
+   $link .= (Request::username('username')) ? "&username=".Request::username('username') : "";
 
    /* Meta-information about the vote -------------------------------------- */
    $html .= createVoteInfo ($vote, $isAssociated);
@@ -292,8 +292,8 @@ function createOpeningOrClosingArrow($eval = FALSE)
 
    /* If we are on a homepage ---------------------------------------------- */
    $arrowlink="";
-   if (Request::get('username')) {
-      $arrowlink = "?username=".Request::get('username');
+   if (Request::username('username')) {
+      $arrowlink = "?username=".Request::username('username');
       $isHomepage = YES;
    }
    /* ---------------------------------------------------------------------- */
@@ -377,13 +377,13 @@ function createVoteHeadline(&$vote, $open, $openID, $evalDB = "", $isHomepage = 
 
    if ($open) {
       $link = "?closeVotes=1";
-      if (Request::get('username'))
-     $link .= "&username=".Request::get('username');
+      if (Request::username('username'))
+     $link .= "&username=".Request::username('username');
       $link .= "#votetop";
    } else {
       $link = "?voteopenID=".$vote->getObjectID();
-      if (Request::get('username'))
-     $link .= "&username=".Request::get('username');
+      if (Request::username('username'))
+     $link .= "&username=".Request::username('username');
       $link .= "#openvote";
    }
    $link=URLHelper::getLink($link);
@@ -408,8 +408,8 @@ function createStoppedVotesHeadline($stoppedVotes, $openStoppedVotes, $stoppedEv
 {
    $link = "?openStoppedVotes=" .
        ($openStoppedVotes ? NO : YES);
-   if (Request::get('username'))
-       $link .= "&username=".Request::get('username');
+   if (Request::username('username'))
+       $link .= "&username=".Request::username('username');
    $link .= "#stoppedvotes";
    $link=URLHelper::getLink($link);
 

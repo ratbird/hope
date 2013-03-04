@@ -50,7 +50,7 @@ class ProfileNavigation extends Navigation
         $active = parent::isActive();
 
         if ($active) {
-            URLHelper::addLinkParam('username', Request::get('username'));
+            URLHelper::addLinkParam('username', Request::username('username'));
         }
 
         return $active;

@@ -54,7 +54,7 @@ class ProfileController extends AuthenticatedController
 
         $this->user         = $GLOBALS['user']; // current logged in user
         $this->perm         = $GLOBALS['perm']; // perms of current logged in user
-        $this->current_user = User::findByUsername(Request::get('username', $this->user->username)); // current selected user
+        $this->current_user = User::findByUsername(Request::username('username', $this->user->username)); // current selected user
         // get additional informations to selected user
         $this->profile      = new ProfileModel($this->current_user->user_id, $this->user->user_id);
 

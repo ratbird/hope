@@ -40,12 +40,13 @@ class Settings_SettingsController extends AuthenticatedController
         $GLOBALS['auth']->login_if(($action !== 'logout') && ($GLOBALS['auth']->auth['uid'] === 'nobody'));
 
         // extract username
-        $username = Request::get('username', $GLOBALS['user']->username);
+        $username = Request::username('username', $GLOBALS['user']->username);
         $user     = User::findByUsername($username);
 
         if (!$GLOBALS['perm']->have_profile_perm('user', $user->user_id)) {
             $username = $GLOBALS['user']->username;
         } else {
+            $username = $user->username;
             URLHelper::addLinkParam('username', $username);
         }
 

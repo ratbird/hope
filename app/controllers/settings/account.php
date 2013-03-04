@@ -178,6 +178,6 @@ class Settings_AccountController extends Settings_SettingsController
      */
     public function logout_action()
     {
-        $this->username = Request::get('username', $GLOBALS['user']->username);
+        $this->username = Request::username('username', $GLOBALS['user']->username);
     }
 }

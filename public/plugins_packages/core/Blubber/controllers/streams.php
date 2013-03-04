@@ -94,9 +94,9 @@ class StreamsController extends ApplicationController {
         PageLayout::addHeadElement("script", array('src' => $this->assets_url."/javascripts/formdata.js"), "");
 
         if (Request::get("extern")) {
-            $this->user = BlubberExternalContact::find(Request::get("user_id"));
+            $this->user = BlubberExternalContact::find(Request::option("user_id"));
         } else {
-            $this->user = new BlubberUser(Request::get("user_id"));
+            $this->user = new BlubberUser(Request::option("user_id"));
         }
         PageLayout::setTitle($this->user->getName()." - Blubber");
         
@@ -241,7 +241,6 @@ class StreamsController extends ApplicationController {
                 throw new AccessDeniedException("No permission to write posting.");
             }
         }
-        
 
         if ($thread->isNew() && !$thread->getId()) {
             $thread->store();

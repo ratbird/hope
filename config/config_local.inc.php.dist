@@ -421,8 +421,9 @@ all uppercase each item of the configuration array will become a member of your 
 $STUDIP_AUTH_PLUGIN[] = "Standard";
 // $STUDIP_AUTH_PLUGIN[] = "CAS";
 // $STUDIP_AUTH_PLUGIN[] = "Shib";
-/*
 
+$STUDIP_AUTH_CONFIG_STANDARD = array("error_head" => "intern");
+/*
 $STUDIP_AUTH_CONFIG_LDAPREADANDBIND = array("host" => "localhost",
                                         "base_dn" => "dc=studip,dc=de",
                                         "protocol_version" => 3,

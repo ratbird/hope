@@ -124,7 +124,7 @@ if (Request::get('zipnewest')) {
 }
 
 if (Request::submitted('download_selected')) {
-    $download_ids = Request::getArray('download_ids');
+    $download_ids = Request::optionArray('download_ids');
     if (count($download_ids)  > 0) {
         $zip_file_id = createSelectedZip($download_ids, true, true);
         if($zip_file_id){

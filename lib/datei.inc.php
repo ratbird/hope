@@ -213,21 +213,21 @@ function createSelectedZip ($file_ids, $perm_check = TRUE, $size_check = false) 
     $max_files = Config::GetInstance()->getValue('ZIP_DOWNLOAD_MAX_FILES');
     $max_size = Config::GetInstance()->getValue('ZIP_DOWNLOAD_MAX_SIZE') * 1024 * 1024;
     if(!$max_files && !$max_size) $size_check = false;
-
-    if ( is_array($file_ids) && !($size_check && count($file_ids) > $max_files)){
+    $db = DBManager::get();
+    if ( is_array($file_ids) && !($size_check && count($file_ids) > $max_files)) {
         $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessSemName[1]));
-        if ($perm_check){
+        if ($perm_check) {
+            $folders_cond = "AND seminar_id = " . $db->quote($SessSemName[1]);
             $allowed_folders = $folder_tree->getReadableFolders($GLOBALS['user']->id);
-            if (is_array($allowed_folders)) {
-                $folders_cond = " AND range_id IN ('".join("','",$allowed_folders)."')";
+            if (is_array($allowed_folders) && count($allowed_folders)) {
+                $folders_cond .= " AND range_id IN (" . $db->quote($allowed_folders) . ") ";
             } else {
-                $folders_cond = " AND 0 ";
+                $folders_cond .= " AND 0 ";
             }
         }
-        $db = DBManager::get();
-        $in = "('".join("','",$file_ids)."')";
-        $query = sprintf ("SELECT SUM(filesize) FROM dokumente WHERE url='' AND dokument_id IN %s %s", $in, ($perm_check) ? "AND seminar_id = '".$SessSemName[1]."' $folders_cond" : "");
-        $zip_size = $db->query($query)->fetch(PDO::FETCH_COLUMN, 0);
+        $query = $db->prepare("SELECT SUM(filesize) FROM dokumente WHERE url='' AND dokument_id IN(?) " . $folders_cond);
+        $query->execute(array($file_ids));
+        $zip_size = $query->fetch(PDO::FETCH_COLUMN, 0);
         if(!($size_check && $zip_size > $max_size)) {
             $zip_file_id = md5(uniqid("jabba",1));
 
@@ -236,13 +236,13 @@ function createSelectedZip ($file_ids, $perm_check = TRUE, $size_check = false) 
             mkdir($tmp_full_path,0700);
             $filelist = array();
             //create folder content
-            $files = $db->query(
+            $files = $db->prepare(
                 "SELECT dokument_id, filename, author_name, filesize, name, description, FROM_UNIXTIME(chdate) as chdate " .
                 "FROM dokumente " .
-                "WHERE dokument_id IN ('".join("','",$file_ids)."') " .
-                    ($perm_check ? "AND seminar_id = '".$SessSemName[1]."' $folders_cond " : "") .
-                "ORDER BY chdate, name, filename " .
-            "")->fetchAll(PDO::FETCH_ASSOC);
+                "WHERE dokument_id IN (?) " .
+                    $folders_cond .
+                "ORDER BY chdate, name, filename ");
+            $files->execute(array($file_ids));
             foreach ($files as $file) {
                 if(check_protected_download($file['dokument_id'])) {
                     $filename = prepareFilename($file['filename'], FALSE, $tmp_full_path);

@@ -426,8 +426,8 @@ function getZusatz($wikiData) {
         return "";
     }
     $s = "<font size=-1>";
-    $s .=  _("Version ") . $wikiData[version];
-    $s .= sprintf(_(", ge&auml;ndert von %s am %s"), "</font><a href=\"".URLHelper::getLink("dispatch.php/profile?username=".get_username ($wikiData[user_id]))."\"><font size=-1 color=\"#333399\">".get_fullname($wikiData[user_id],'full',1)."</font></a><font size=-1>", date("d.m.Y, H:i",$wikiData[chdate])."<font size=-1>&nbsp;"."</font>");
+    $s .=  _("Version ") . $wikiData['version'];
+    $s .= sprintf(_(", ge&auml;ndert von %s am %s"), "</font><a href=\"".URLHelper::getLink("dispatch.php/profile?username=".get_username ($wikiData['user_id']))."\"><font size=-1 color=\"#333399\">".get_fullname($wikiData['user_id'],'full',1)."</font></a><font size=-1>", date("d.m.Y, H:i",$wikiData['chdate'])."<font size=-1>&nbsp;"."</font>");
     return $s;
 }
 
@@ -459,7 +459,7 @@ function showDeleteDialog($keyword, $version) {
     if (!$islatest) {
         throw new InvalidArgumentException(_('Die Version, die Sie löschen wollen, ist nicht die Aktuellste. Überprüfen Sie, ob inzwischen eine aktuellere Version erstellt wurde.'));
     }
-    $msg= sprintf(_("Wollen Sie die untenstehende Version %s der Seite %s wirklich löschen?"), "<b>".$version."</b>", "<b>".$keyword."</b>") . "<br>\n";
+    $msg= sprintf(_("Wollen Sie die untenstehende Version %s der Seite %s wirklich löschen?"), "<b>".htmlReady($version)."</b>", "<b>".htmlReady($keyword)."</b>") . "<br>\n";
     if (!$willvanish) {
         $msg .= _("Diese Version ist derzeit aktuell. Nach dem Löschen wird die nächstältere Version aktuell.") . "<br>";
     } else {
@@ -486,7 +486,7 @@ function showDeleteAllDialog($keyword) {
     if (!$perm->have_studip_perm("tutor", $SessSemName[1])) {
         throw new AccessDeniedException(_('Sie haben keine Berechtigung, Seiten zu löschen.'));
     }
-    $msg= sprintf(_("Wollen Sie die Seite %s wirklich vollständig - mit allen Versionen - löschen?"), "<b>".$keyword."</b>") . "<br>\n";
+    $msg= sprintf(_("Wollen Sie die Seite %s wirklich vollständig - mit allen Versionen - löschen?"), "<b>".htmlReady($keyword)."</b>") . "<br>\n";
     if ($keyword=="WikiWikiWeb") {
         $msg .= "<p>" . _("Sie sind im Begriff die Startseite zu löschen, die dann durch einen leeren Text ersetzt wird. Damit wären auch alle anderen Seiten nicht mehr direkt erreichbar.") . "</p>";
     } else {
@@ -538,13 +538,13 @@ function deleteWikiPage($keyword, $version, $range_id) {
     NotificationCenter::postNotification('WikiPageDidDelete', array($range_id, $keyword));
 
     if (!keywordExists($keyword)) { // all versions have gone
-        $addmsg = '<br>' . sprintf(_("Damit ist die Seite %s mit allen Versionen gelöscht."),'<b>'.$keyword.'</b>');
+        $addmsg = '<br>' . sprintf(_("Damit ist die Seite %s mit allen Versionen gelöscht."),'<b>'.htmlReady($keyword).'</b>');
         $newkeyword = "WikiWikiWeb";
     } else {
         $newkeyword = $keyword;
         $addmsg = "";
     }
-    $message = MessageBox::info(sprintf(_('Version %s der Seite %s gelöscht.'), $version, '<b>'.$keyword.'</b>') . $addmsg);
+    $message = MessageBox::info(sprintf(_('Version %s der Seite %s gelöscht.'), htmlReady($version), '<b>'.htmlReady($keyword).'</b>') . $addmsg);
     PageLayout::postMessage($message);
     if ($dellatest) {
         $lv=getLatestVersion($keyword, $SessSemName[1]);
@@ -575,7 +575,7 @@ function deleteAllWikiPage($keyword, $range_id) {
     $statement = DBManager::get()->prepare($query);
     $statement->execute(array($keyword, $range_id));
 
-    $message = MessageBox::info(sprintf(_('Die Seite %s wurde mit allen Versionen gelöscht.'), '<b>'.$keyword.'</b>'));
+    $message = MessageBox::info(sprintf(_('Die Seite %s wurde mit allen Versionen gelöscht.'), '<b>'.htmlReady($keyword).'</b>'));
     PageLayout::postMessage($message);
     refreshBacklinks($keyword, "");
     return "WikiWikiWeb";
@@ -808,7 +808,7 @@ function searchWiki($searchfor, $searchcurrentversions, $keyword, $localsearch) 
     echo "<table width=\"99%\" border=\"0\"  cellpadding=\"2\" cellspacing=\"0\" align=\"center\">";
     echo "<tr><td colspan=3><font size=+1>"._("Treffer für Suche nach")."&nbsp;&raquo;".htmlReady($searchfor)."&laquo;";
     if ($localsearch) {
-        echo "&nbsp;".sprintf(_("in allen Versionen der Seite &raquo;%s&laquo;"),$keyword);
+        echo "&nbsp;".sprintf(_("in allen Versionen der Seite &raquo;%s&laquo;"),htmlReady($keyword));
     } else if ($searchcurrentversions) {
         echo "&nbsp;"._("in aktuellen Versionen");
     } else {
@@ -930,7 +930,7 @@ function wikiSinglePageHeader($wikiData, $keyword) {
     $zusatz=getZusatz($wikiData);
 
     begin_blank_table();
-    printhead(0, 0, FALSE, "icon-wiki", FALSE, "", "<b>$keyword</b>", $zusatz);
+    printhead(0, 0, FALSE, "icon-wiki", FALSE, "", "<b>" . htmlReady($keyword) ."</b>", $zusatz);
     end_blank_table();
 }
 
@@ -961,7 +961,7 @@ function wikiEdit($keyword, $wikiData, $user_id, $backpage=NULL)
     $locks=getLock($keyword, $user_id);
     $cont="";
     if ($locks && $lock["user_id"]!=$user_id) {
-        $message = MessageBox::info(sprintf(_("Die Seite wird eventuell von %s bearbeitet."), $locks), array(_("Wenn Sie die Seite trotzdem &auml;ndern, kann ein Versionskonflikt entstehen."), _("Es werden dann beide Versionen eingetragen und m&uuml;ssen von Hand zusammengef&uuml;hrt werden."),  _("Klicken Sie auf Abbrechen, um zurückzukehren.")));
+        $message = MessageBox::info(sprintf(_("Die Seite wird eventuell von %s bearbeitet."), htmlReady($locks)), array(_("Wenn Sie die Seite trotzdem &auml;ndern, kann ein Versionskonflikt entstehen."), _("Es werden dann beide Versionen eingetragen und m&uuml;ssen von Hand zusammengef&uuml;hrt werden."),  _("Klicken Sie auf Abbrechen, um zurückzukehren.")));
         PageLayout::postMessage($message);
     }
     if ($keyword=='toc') {
@@ -973,8 +973,8 @@ function wikiEdit($keyword, $wikiData, $user_id, $backpage=NULL)
     $cont .= "<p><form method=\"post\" action=\"".URLHelper::getLink("?keyword=".urlencode($keyword)."&cmd=edit")."\">";
     $cont .= CSRFProtection::tokenTag();
     $cont .= "<textarea name=\"body\" class=\"add_toolbar resizable\" cols=\"80\" rows=\"15\">".htmlready($body)."</textarea>\n";
-    $cont .= "<input type=\"hidden\" name=\"wiki\" value=\"".urlencode($keyword)."\">";
-    $cont .= "<input type=\"hidden\" name=\"version\" value=\"$version\">";
+    $cont .= "<input type=\"hidden\" name=\"wiki\" value=\"".htmlReady($keyword)."\">";
+    $cont .= "<input type=\"hidden\" name=\"version\" value=\"".htmlReady($version)."\">";
     $cont .= "<input type=\"hidden\" name=\"submit\" value=\"true\">";
     $cont .= "<input type=\"hidden\" name=\"cmd\" value=\"show\">";
     $cont .= '<br><br>' . Button::createAccept(_('Speichern')) . "&nbsp;" . LinkButton::createCancel(_('Abbrechen'),URLHelper::getURL("?cmd=abortedit&keyword=".urlencode($keyword).$lastpage));
@@ -1001,8 +1001,8 @@ function printWikiPage($keyword, $version) {
     PageLayout::removeStylesheet('style.css');
     PageLayout::addStylesheet('print.css'); // use special stylesheet for printing
     include ('lib/include/html_head.inc.php'); // Output of html head
-    echo "<p><em>$SessSemName[header_line]</em></p>";
-    echo "<h1>$keyword</h1>";
+    echo "<p><em>" . htmlReady($SessSemName['header_line']) ."</em></p>";
+    echo "<h1>" . htmlReady($keyword) ."</h1>";
     echo "<p><em>";
     echo sprintf(_("Version %s, letzte Änderung %s von %s."), $wikiData['version'],
     date("d.m.Y, H:i", $wikiData['chdate']), get_fullname($wikiData['user_id'], 'full', 1));
@@ -1020,12 +1020,12 @@ function exportWikiPagePDF($keyword, $version) {
     $wikiData=getWikiPage($keyword,$version);
 
     $document = new ExportPDF();
-    $document->SetTitle(_('Wiki: ').htmlReady($keyword));
+    $document->SetTitle(_('Wiki: ') . $keyword);
     $document->setHeaderTitle(sprintf(_("Wiki von \"%s\""), $SessSemName[0]));
     $document->setHeaderSubtitle(sprintf(_("Seite: %s"), $keyword));
     $document->addPage();
     $document->addContent(deleteWikiLinks($wikiData["body"]));
-    $document->dispatch($SessSemName[header_line]." - ".$keyword);
+    $document->dispatch($SessSemName['header_line']." - ".$keyword);
 }
 
 function exportAllWikiPagesPDF($mode, $sortby) {
@@ -1143,9 +1143,9 @@ function getAllWikiPages($range_id, $header, $fullhtml=TRUE) {
     $visited=array(); // holds names of already visited pages
     $tovisit=array(); // holds names of pages yetto visit/expand
     $tovisit[]="WikiWikiWeb"; // start with top level page
-    if ($fullhtml) $out[]="<html><head><title>$header</title></head>";
+    if ($fullhtml) $out[]="<html><head><title>" . htmlReady($header) ."</title></head>";
     if ($fullhtml) $out[]="<body>";
-    $out[]="<p><a name=\"top\"></a><em>$header</em></p>";
+    $out[]="<p><a name=\"top\"></a><em>" . htmlReady($header) ."</em></p>";
     while (! empty($tovisit)) { // while there are still pages left to visit
         $pagename=array_shift($tovisit);
         if (!in_array($pagename,$visited)){
@@ -1323,7 +1323,7 @@ function getShowPageInfobox($keyword, $latest_version)
     $infobox[] = array("kategorie"  => _("Ansicht:"), "eintrag" => $views);
 
     // search
-    $infobox[]= getSearchBox(stripslashes(Request::get('searchfor')), $keyword);
+    $infobox[]= getSearchBox(Request::get('searchfor'), $keyword);
 
     if ($latest_version) {
         // no backlinks for old versions!

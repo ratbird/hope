@@ -136,7 +136,7 @@ class WikiFormat extends StudipFormat
 
     protected static function markupWikiLinks($markup, $matches) {
         $page = decodeHTML($matches[1]);
-        $display_page = $matches[2] ? $markup->format($matches[2]) : $page;
+        $display_page = $matches[2] ? $markup->format($matches[2]) : htmlReady($page);
 
         if (keywordExists($page, $_SESSION['SessionSeminar'])) {
             return sprintf('<a href="%s">%s</a>',

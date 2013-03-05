@@ -273,11 +273,11 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
     }
     $group_field = $_my_sem_group_field;
 
-    if (Request::option('open_my_sem')) {
+    if (Request::submitted('open_my_sem')) {
         $_my_sem_open[Request::option('open_my_sem')] = true;
         $user->cfg->store('MY_COURSES_OPEN_GROUPS', $_my_sem_open);
     }
-    if (Request::option('close_my_sem')) {
+    if (Request::submitted('close_my_sem')) {
         unset($_my_sem_open[Request::option('close_my_sem')]);
         $user->cfg->store('MY_COURSES_OPEN_GROUPS', $_my_sem_open);
     }

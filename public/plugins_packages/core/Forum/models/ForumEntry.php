@@ -137,6 +137,7 @@ class ForumEntry {
         }
 
         // security check: only return topics belonging to the currently preselected seminar
+        /*
         $seminar_id = ForumHelpers::getSeminarId();
         
         if (!$seminar_id) { // if no seminar is preselected, check at least the studip-perms
@@ -148,6 +149,8 @@ class ForumEntry {
                 throw new AccessDeniedException('Zugriff verweigert!');
             }
         }
+        */
+        // CONSTRAINS TO MUCH AT THE MOMENT - NEEDS FURTHER REFINEMENT
 
         if ($data['depth'] == 1) {
             $data['area'] = 1;

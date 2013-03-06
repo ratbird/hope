@@ -106,15 +106,6 @@ use Studip\Button, Studip\LinkButton;
 <?
 $infobox_content = array(
     array(
-        'kategorie' => _('Aktionen:'),
-        'eintrag'   => array(
-            array(
-                'icon' => 'icons/16/black/add/plugin.png',
-                'text' => '<a href="'.$controller->url_for('admin/plugin/search').'">'._('Weitere Plugins installieren').'</a>'
-                          . $this->render_partial('admin/plugin/upload-drag-and-drop')
-            )
-        )
-    ), array(
         'kategorie' => _('Anzeigefilter:'),
         'eintrag'   => array(
             array(
@@ -136,5 +127,17 @@ $infobox_content = array(
     )
 );
 
+if (get_config('PLUGINS_UPLOAD_ENABLE')) {
+    array_unshift($infobox_content, array(
+        'kategorie' => _('Aktionen:'),
+        'eintrag'   => array(
+            array(
+                'icon' => 'icons/16/black/add/plugin.png',
+                'text' => '<a href="'.$controller->url_for('admin/plugin/search').'">'._('Weitere Plugins installieren').'</a>'
+                          . $this->render_partial('admin/plugin/upload-drag-and-drop')
+            )
+        )
+    ));
+}
+
 $infobox = array('picture' => 'infobox/modules.jpg', 'content' => $infobox_content);
-?>

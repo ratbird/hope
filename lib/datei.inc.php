@@ -86,7 +86,14 @@ function parse_link($link, $level=0) {
         $link = getLinkPath($link_update);
 
     $url_parts = @parse_url( $link );
-    if (strtolower($url_parts["host"]) === 'localhost' || strpos($url_parts["host"],'127') === 0) {
+    //filter out localhost and reserved or private IPs
+    if (stripos($url_parts["host"], 'localhost') !== false
+        || stripos($url_parts["host"], 'loopback') !== false
+        || (filter_var($url_parts["host"], FILTER_VALIDATE_IP) !== false
+            && (strpos($url_parts["host"],'127') === 0
+                || filter_var($url_parts["host"], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false)
+            )
+        ) {
         return array('response' => 'HTTP/1.0 400 Bad Request', 'response_code' => 400);
     }
     if (substr($link,0,6) == "ftp://") {
@@ -159,7 +166,7 @@ function parse_link($link, $level=0) {
         }
         $socket = @fsockopen( ($ssl? 'ssl://':'').$host, $port, $errno, $errstr, 10 );
         if (!$socket) {
-            //echo "$errstr ($errno)<br>\n";
+            return array('response' => 'HTTP/1.0 400 Bad Request', 'response_code' => 400);
         } else {
             $urlString = "GET ".$documentpath." HTTP/1.0\r\nHost: $host\r\n";
             if ($url_parts["user"] && $url_parts["pass"]) {

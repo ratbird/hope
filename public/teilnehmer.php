@@ -1189,7 +1189,7 @@ while (list ($key, $val) = each ($gruppe)) {
                 $all_user = $statement->fetchColumn();
                 $text = sprintf(_('E-Mail an alle %s schicken'), $val);
                 echo '<a href="mailto:'.$all_user.'" title="'.$text.'">';
-                echo Assets::img('icons/16/blue/move_right/mail.png', array('title' => $text,'alt'=>$text, 'align' => 'absmiddle'));
+                echo Assets::img('icons/16/blue/move_right/mail.png', array('alt'=>$text, 'align' => 'absmiddle'));
                 echo '</a>&nbsp;';
             }
 
@@ -1200,7 +1200,7 @@ while (list ($key, $val) = each ($gruppe)) {
             }
             $text = sprintf(_('Nachricht an alle %s schicken'), $val);
             echo '<a href="'.URLHelper::getLink('sms_send.php', $msg_params).'" title="'.$text.'">';
-            echo Assets::img('icons/16/blue/mail.png', array('title' => $text,'alt'=>$text, 'align' => 'absmiddle'));
+            echo Assets::img('icons/16/blue/mail.png', array('alt'=>$text, 'align' => 'absmiddle'));
             echo '</a>';
             echo '</td>';
         } else {

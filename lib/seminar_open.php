@@ -100,6 +100,10 @@ if ($auth->is_authenticated() && is_object($user) && $user->id != "nobody") {
 
 // init of output via I18N
 $_language_path = init_i18n($_SESSION['_language']);
+//force reload of config to get translated data
+list($save_sem_class, $save_sem_type) = array($GLOBALS['SEM_CLASS'], $GLOBALS['SEM_TYPE']);
+include 'config.inc.php';
+list($GLOBALS['SEM_CLASS'], $GLOBALS['SEM_TYPE']) = array($save_sem_class, $save_sem_type);
 
 // Try to select the course or institute given by the parameter 'cid'
 // in the current request. For compatibility reasons there is a fallback to

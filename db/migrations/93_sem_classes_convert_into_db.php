@@ -49,6 +49,8 @@ class SemClassesConvertIntoDb extends Migration
                 `description` text NOT NULL,
                 `create_description` text NOT NULL,
                 `studygroup_mode` tinyint(4) NOT NULL,
+                `admission_prelim_default` tinyint(4) NOT NULL DEFAULT 0,
+                `admission_type_default` tinyint(4) NOT NULL DEFAULT 0,
                 `title_dozent` VARCHAR(64) NULL,
                 `title_dozent_plural` VARCHAR(64) NULL,
                 `title_tutor` VARCHAR(64) NULL,
@@ -89,6 +91,8 @@ class SemClassesConvertIntoDb extends Migration
                 "visible = :visible, " .
                 "course_creation_forbidden = :course_creation_forbidden, " .
                 "studygroup_mode = :studygroup_mode, " .
+                "admission_prelim_default = :admission_prelim_default, " .
+                "admission_type_default = :admission_type_default, " .
                 "overview = :overview, " .
                 "admin = :admin, " .
                 "forum = :forum, " .
@@ -112,7 +116,9 @@ class SemClassesConvertIntoDb extends Migration
                 "mkdate = UNIX_TIMESTAMP(), " .
                 "chdate = UNIX_TIMESTAMP() " .
         "");
-
+        
+        //import default language version
+        setTempLanguage();
         include 'config.inc.php';
 
         $studygroup_settings = $this->getStudygroupSettings();
@@ -200,6 +206,8 @@ class SemClassesConvertIntoDb extends Migration
                 'description' => $sem_class['description'],
                 'create_description' => $sem_class['create_description'],
                 'studygroup_mode' => $sem_class['studygroup_mode'],
+                'admission_prelim_default' => (int)$sem_class['admission_prelim_default'],
+                'admission_type_default' => (int)$sem_class['admission_type_default'],
                 'title_dozent' => $title_dozent ? $title_dozent : null,
                 'title_dozent_plural' => $title_dozent_plural ? $title_dozent_plural : null,
                 'title_tutor' => $title_tutor ? $title_tutor : null,

@@ -135,7 +135,7 @@ class SemType implements ArrayAccess
                 return gettext($this->data['name']);
             case in_array($offset, array("title_dozent", "title_tutor", "title_autor")):
                 $sem_class = $this->getClass();
-                $title = array(gettext($sem_class[$offset]), gettext($sem_class[$offset.'_plural']));
+                $title = array($sem_class[$offset], $sem_class[$offset.'_plural']);
                 return $title[0] || $title[1] ? $title : $this->data[$offset];
         }
         //ansonsten

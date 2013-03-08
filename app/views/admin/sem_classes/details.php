@@ -104,7 +104,26 @@
                 </select>
             </td>
         </tr>
-
+        <tr class="sub">
+            <td><label for="admission_prelim_default"><?= _("Anmeldemodus") ?></label></td>
+            <td>
+                <select id="admission_prelim_default">
+                    <option value="0"<?= $sem_class['admission_prelim_default'] == 0 ? " selected" : "" ?>><?= _("direkter Eintrag") ?></option>
+                    <option value="1"<?= $sem_class['admission_prelim_default'] == 1 ? " selected" : "" ?>><?= _("vorläufiger Eintrag") ?></option>
+                </select>
+            </td>
+        </tr>
+        <tr class="sub">
+            <td><label for="admission_type_default"><?= _("Teilnahmebeschränkung") ?></label></td>
+            <td>
+                <select id="admission_type_default">
+                    <option value="0"<?= $sem_class['admission_type_default'] == 0 ? " selected" : "" ?>><?= _("keine") ?></option>
+                    <option value="1"<?= $sem_class['admission_type_default'] == 1 ? " selected" : "" ?>><?= _("nach Anmeldereihenfolge") ?></option>
+                    <option value="2"<?= $sem_class['admission_type_default'] == 2 ? " selected" : "" ?>><?= _("per Losverfahren") ?></option>
+                    <option value="3"<?= $sem_class['admission_type_default'] == 3 ? " selected" : "" ?>><?= _("gesperrt") ?></option>
+                </select>
+            </td>
+        </tr>
         <tr>
             <td colspan="2"><h3><?= _("Forum") ?></h3></td>
         </tr>

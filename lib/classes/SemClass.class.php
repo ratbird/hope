@@ -346,6 +346,8 @@ class SemClass implements ArrayAccess
                 "title_tutor_plural = :title_tutor_plural, " .
                 "title_autor = :title_autor, " .
                 "title_autor_plural = :title_autor_plural, " .
+                "admission_prelim_default = :admission_prelim_default, " .
+                "admission_type_default = :admission_type_default, " .
                 "chdate = UNIX_TIMESTAMP() " .
             "WHERE id = :id ".
         "");
@@ -394,7 +396,9 @@ class SemClass implements ArrayAccess
                 : null,
             'title_autor_plural' => $this->data['title_autor_plural'] 
                 ? $this->data['title_autor_plural'] 
-                : null
+                : null,
+            'admission_prelim_default' => (int)$this->data['admission_prelim_default'],
+            'admission_type_default' => (int)$this->data['admission_type_default']
         ));
     }
 
@@ -492,6 +496,10 @@ class SemClass implements ArrayAccess
                 return $this->data['scm'] !== null;
             case "studygroup_mode":
                 return (bool) $this->data['studygroup_mode'];
+            case "admission_prelim_default":
+               return (int) $this->data['admission_prelim_default'];
+            case "admission_type_default":
+               return (int) $this->data['admission_type_default'];
         }
         //ansonsten
         return $this->data[$offset];

@@ -73,7 +73,8 @@ global
   $xslt_filename_default,
   $SEM_TREE_TYPES,
   $NOT_HIDEABLE_FIELDS,
-  $TEILNEHMER_IMPORT_DATAFIELDS;
+  $TEILNEHMER_IMPORT_DATAFIELDS,
+  $DEFAULT_TITLE_FOR_STATUS;
 
 /*basic settings for Stud.IP
 ----------------------------------------------------------------

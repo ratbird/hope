@@ -75,7 +75,8 @@ global
   $username_prefix,
   $xml_filename,
   $xslt_filename,
-  $SEM_TREE_TYPES;
+  $SEM_TREE_TYPES,
+  $DEFAULT_TITLE_FOR_STATUS;
 
 //Daten ueber die Uni
     // der Name wird in der local.inc festgelegt
@@ -241,6 +242,8 @@ $SEM_CLASS[5]=array("name"=>_("Arbeitsgruppen"),
                     "schedule"=>TRUE,
                     "participants"=>TRUE,
                     "literature"=>TRUE,
+                    "admission_prelim_default" => 0,     //default for direct (0) or provisional(1) entry
+                    "admission_type_default" => 3,
                     "description"=>sprintf(_("Hier finden Sie verschiedene Arbeitsgruppen an der %s"), htmlspecialchars($GLOBALS['UNI_NAME_CLEAN'], ENT_COMPAT, 'cp1252')),
                     "create_description"=>_("Verwenden Sie diese Kategorie, um unterschiedliche Arbeitsgruppen anzulegen."));
 

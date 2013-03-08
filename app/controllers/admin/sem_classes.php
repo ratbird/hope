@@ -111,6 +111,8 @@ class Admin_SemClassesController extends AuthenticatedController
         $sem_class->set('topic_create_autor', Request::int("topic_create_autor"));
         $sem_class->set('visible', Request::int("visible"));
         $sem_class->set('course_creation_forbidden', Request::int("course_creation_forbidden"));
+        $sem_class->set('admission_prelim_default', Request::int("admission_prelim_default"));
+        $sem_class->set('admission_type_default', Request::int("admission_type_default"));
         $sem_class->store();
         $output = array(
             'html' => studip_utf8encode((string) MessageBox::success(_("Änderungen wurden gespeichert."." ".'<a href="'.URLHelper::getLink("dispatch.php/admin/sem_classes/overview").'">'._("Zurück zur Übersichtsseite.").'</a>')))

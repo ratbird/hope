@@ -18,95 +18,97 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
 {
     /**
      * table row data
-     * @var array
+     * @var array $content
      */
     protected $content = array();
     /**
      * table row data
-     * @var array
+     * @var array $content_db
      */
     protected $content_db = array();
     /**
      * new state of entry
-     * @var boolean
+     * @var boolean $is_new
      */
     protected $is_new = true;
 
     /**
      * name of db table
-     * @var string
+     * @var string $db_table
      */
     protected $db_table = '';
     /**
      * table columns
-     * @var array
+     * @var array $db_fields
      */
     protected $db_fields = null;
     /**
      * primary key columns
-     * @var array
+     * @var array $pk
      */
     protected $pk = null;
 
     /**
      * default values for columns
-     * @var array
+     * @var array $default_values
      */
     protected $default_values = array();
 
      /**
      * db table metadata
-     * @var array
+     * @var array $schemes;
+
+
      */
     protected static $schemes;
 
     /**
      * aliases for columns
      * alias => column
-     * @var array
+     * @var array $alias_fields
      */
     protected $alias_fields = array();
 
     /**
      * additional computed fields
      * name => callable
-     * @var array
+     * @var array $additional_fields
      */
     protected $additional_fields = array();
 
     /**
      * stores instantiated related objects
-     * @var array
+     * @var array $relations
      */
     protected $relations = array();
 
     /**
      * 1:n relation
-     * @var array
+     * @var array $has_many
      */
     protected $has_many = array();
 
     /**
      * 1:1 relation
-     * @var array
+     * @var array $has_one
      */
     protected $has_one = array();
 
     /**
      * n:1 relations
-     * @var array
+     * @var array $belongs_to
      */
     protected $belongs_to = array();
 
     /**
      * n:m relations
-     * @var array
+     * @var array $has_and_belongs_to_many
      */
     protected $has_and_belongs_to_many = array();
 
     /**
      * callbacks
-     * @var array
+     * @var array $registered_callbacks
      */
     protected $registered_callbacks = array('before_create' => array(),
                                               'before_update' => array(),
@@ -121,13 +123,13 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
     /**
      * contains an array of all used identifiers for fields
      * (db columns + aliased columns + additional columns + relations)
-     * @var array
+     * @var array $known_slots
      */
     protected $known_slots = array();
 
     /**
      * reserved indentifiers, fields with those names must not have an explicit getXXX() method 
-     * @var array
+     * @var array $reserved_slots
      */
     protected $reserved_slots = array('value','newid','iterator','tablemetadata', 'relationvalue','wherequery','relationoptions','data','new','id');
 

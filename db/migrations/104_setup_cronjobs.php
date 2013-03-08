@@ -16,7 +16,7 @@ class SetupCronjobs extends Migration
             `execution_count` BIGINT(20) UNSIGNED NOT NULL DEFAULT 0,
             `assigned_count` INT(11) UNSIGNED NOT NULL DEFAULT 0,
             PRIMARY KEY (`task_id`)
-        )");
+        ) ENGINE=MyISAM");
 
         DBManager::get()->query("CREATE TABLE IF NOT EXISTS `cronjobs_schedules` (
             `schedule_id` CHAR(32) NOT NULL DEFAULT '',
@@ -40,7 +40,7 @@ class SetupCronjobs extends Migration
             `chdate` INT(11) UNSIGNED NOT NULL,
             PRIMARY KEY (`schedule_id`),
             KEY `task_id` (`task_id`)
-        )");
+        ) ENGINE=MyISAM");
 
         DBManager::get()->query("CREATE TABLE IF NOT EXISTS `cronjobs_logs` (
             `log_id` CHAR(32) NOT NULL DEFAULT '',
@@ -52,7 +52,7 @@ class SetupCronjobs extends Migration
             `duration` FLOAT NOT NULL,
             PRIMARY KEY (`log_id`),
             KEY `schedule_id` (`schedule_id`)
-        )");
+        ) ENGINE=MyISAM");
 
         // Add config entries
         $query = "INSERT IGNORE INTO `config`
@@ -75,7 +75,7 @@ class SetupCronjobs extends Migration
             ':type'  => 'integer',
             ':description' => 'Gibt an, nach wievielen Sekunden ein Cronjob als steckengeblieben angesehen wird',
         ));
-        
+
         // Add default cron tasks and schedules
         $default_data = array(
             array(
@@ -121,7 +121,7 @@ class SetupCronjobs extends Migration
                 'minute'      => 13,
             ),
         );
-        
+
         $query = "INSERT IGNORE INTO `cronjobs_tasks`
                     (`task_id`, `filename`, `class`, `active`)
                   VALUES (:task_id, :filename, :class, 1)";

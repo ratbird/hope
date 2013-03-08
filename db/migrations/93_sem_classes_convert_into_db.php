@@ -116,13 +116,13 @@ class SemClassesConvertIntoDb extends Migration
                 "mkdate = UNIX_TIMESTAMP(), " .
                 "chdate = UNIX_TIMESTAMP() " .
         "");
-        
+
         //import default language version
         setTempLanguage();
         include 'config.inc.php';
 
         $studygroup_settings = $this->getStudygroupSettings();
-        $core_modules = array('forum','documents','literature','wiki','documents_folder_permission','participants','schedule');
+        $core_modules = array('forum','documents','literature','wiki','documents_folder_permissions','participants','schedule','scm','elearning_interface','calendar');
 
         foreach ($SEM_CLASS as $id => $sem_class) {
             $modules = array(
@@ -162,6 +162,15 @@ class SemClassesConvertIntoDb extends Migration
             $wiki = $sem_class['studygroup_mode'] || $studygroup_settings['wiki'] || !isset($studygroup_settings['wiki'])
                 ? "CoreWiki"
                 : null;
+            $resources = get_config('RESOURCES_ENABLE') && $this->checkModule("resources", $sem_class, $studygroup_settings)
+                ? "CoreResources"
+                : null;
+            $calendar = get_config('CALENDAR_GROUP_ENABLE') && $this->checkModule("calendar", $sem_class, $studygroup_settings)
+                ? "CoreCalendar"
+                : null;
+            $elearning_interface = get_config('ELEARNING_INTERFACE_ENABLE') && $this->checkModule("elearning_interface", $sem_class, $studygroup_settings)
+                ? "CoreElearningInterface"
+                : null;
 
             $title_dozent = $title_tutor = $title_autor = null;
             $title_dozent_plural = $title_tutor_plural = $title_autor_plural = null;
@@ -199,9 +208,9 @@ class SemClassesConvertIntoDb extends Migration
                 'literature' => $literature,
                 'scm' => $scm,
                 'wiki' => $wiki,
-                'resources' => null,
-                'calendar' => null,
-                'elearning_interface' => null,
+                'resources' => $resources,
+                'calendar' => $calendar,
+                'elearning_interface' => $elearning_interface,
                 'modules' => json_encode($modules),
                 'description' => $sem_class['description'],
                 'create_description' => $sem_class['create_description'],

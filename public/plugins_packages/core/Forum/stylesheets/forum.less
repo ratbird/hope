@@ -320,6 +320,17 @@ html.no-js #forum .js {
         background-color: @forum_light;
     }
 
+    @keyframes border-pulsate {
+        0%   { border-color: rgba(255, 255, 153, 1); }
+        50%  { border-color: rgba(255, 255, 153, 0); }
+        100% { border-color: rgba(255, 255, 153, 1); }
+    }
+
+    div.highlight {
+        border: 4px solid #FFFF99;
+        animation: border-pulsate 2s 5;
+    }
+
     .postbody {
         position: relative;
         padding: 0pt 5px;

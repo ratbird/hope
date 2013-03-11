@@ -105,6 +105,7 @@ class IndexController extends StudipController
             $this->has_rights = $this->writable;
         }
 
+        
         $this->topic_id   = $topic_id ? $topic_id : $this->getId();
         $this->constraint = ForumEntry::getConstraints($this->topic_id);
         
@@ -113,6 +114,8 @@ class IndexController extends StudipController
             $this->topic_id   = $this->getId();
             $this->constraint = ForumEntry::getConstraints($this->topic_id);
         }
+
+        $this->highlight_topic = Request::option('highlight_topic', null);
 
         // set page to which we shall jump
         if ($page) {

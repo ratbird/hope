@@ -25,6 +25,16 @@ class ForumLike {
             forum_likes (topic_id, user_id)
             VALUES (?, ?)");
         $stmt->execute(array($topic_id, $GLOBALS['user']->id));
+    
+        // get posting owner
+        $data = ForumEntry::getConstraints($topic_id);
+        
+        // notify owner of posting about the like
+        PersonalNotifications::add(
+            $data['user_id'], PluginEngine::getURL('coreforum/index/index/' . $topic_id .'?highlight_topic='. $topic_id .'#'. $topic_id),
+            get_fullname($GLOBALS['user']->id) . _(' gefällt einer deiner Forenbeiträge!'), $topic_id,
+            Assets::image_path("icons/40/blue/forum.png")
+        );
     }
     
     /**

@@ -17,7 +17,7 @@
             <th style="font-weight: bold;" colspan="2">
                 <a href="<?= URLHelper::getLink('?toggle_group=non_members#anker', array('r' => rand())) ?>" class="tree">
                     <?= _('keiner Funktion oder Gruppe zugeordnet') ?>
-                    (<?= count($data) ?>)
+                    (<?= $non_members ?>)
                 </a>
             </th>
         </tr>

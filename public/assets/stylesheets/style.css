@@ -3036,6 +3036,7 @@ img.bookable_rooms_action {
   border: 1px solid black;
   margin-left: 20px;
   margin-right: 20px;
+  overflow-x: auto;
   padding: 3px;
 }
 .semtree li {

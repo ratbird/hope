@@ -145,7 +145,7 @@
 </table>
 <br />
 <? if ($show_news): ?>
-    <? show_news($current_user->user_id, $show_admin, 0, $about_data["nopen"], "100%", 0, $about_data) ?>
+    <? show_news($current_user->user_id, $show_admin, 0, $profile_data["nopen"], "100%", 0, $about_data) ?>
 <? endif; ?>
 
 <? if ($terms) show_personal_dates($current_user->user_id, time(), -1, FALSE, $show_admin, $about_data["dopen"]) ?>

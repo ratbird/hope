@@ -77,6 +77,8 @@ class ProfileController extends AuthenticatedController
      */
     public function index_action()
     {
+        process_news_commands($about_data);
+
         //opening and closing for dates
         if (Request::option('dopen')) {
             $about_data['dopen'] = Request::option('dopen');

@@ -30076,8 +30076,8 @@ msgid "Umfrage oder Test erstellen."
 msgstr "Create survey or test."
 
 #: ../lib/vote/vote_overview.inc.php:563
-msgid "Umfragen und Tests aus "
-msgstr "Surveys and tests out of"
+msgid "Umfragen und Tests aus dem Bereich"
+msgstr "Surveys and tests out of the area"
 
 #: ../lib/vote/vote_overview.inc.php:564
 msgid "allen Bereichen"

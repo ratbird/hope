@@ -92,23 +92,25 @@ class Config implements ArrayAccess, Countable, IteratorAggregate
      */
     function getFields($range = null, $section = null, $name = null)
     {
-        $filter = array();
+        $temp = $this->metadata;
+
         if (in_array($range, words('global user'))) {
-            $filter[] = '$a["range"]=="'.$range.'"';
+            $temp = array_filter($temp, function ($a) use ($range) {
+                return $a['range'] === $range;
+            });
         }
         if ($section) {
-            $filter[] = '$a["section"]=="'.$section.'"';
+            $temp = array_filter($temp, function ($a) use ($section) {
+                return $a['section'] === $section;
+            });
         }
         if ($name) {
-            $filter[] = 'preg_match("/'.preg_quote($name, '/').'/i", $a["field"])';
+            $temp = array_filter($temp, function ($a) use ($name) {
+                return stripos($a['field'], $name) !== false;
+            });
         }
-        if (count($filter)) {
-            $filterfunc = create_function('$a', 'return ' . join(' && ', $filter) .  ';');
-            $ret = array_keys(array_filter($this->metadata, $filterfunc));
-        } else {
-            $ret = array_keys($this->metadata);
-        }
-        return $ret;
+
+        return array_keys($temp);
     }
 
     /**

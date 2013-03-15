@@ -270,8 +270,7 @@ class Avatar {
 
             // passende Endung ?
             if (!in_array($ext, words('jpg jpeg gif png'))) {
-                throw new Exception(sprintf(_("Der Dateityp der Bilddatei ist falsch (%s). Es sind nur die Dateiendungen .gif, .png, .jpeg und .jpg erlaubt!"),
-                                                                        $ext));
+                throw new Exception(sprintf(_("Der Dateityp der Bilddatei ist falsch (%s). Es sind nur die Dateiendungen .gif, .png, .jpeg und .jpg erlaubt!"), htmlReady($ext)));
             }
 
             // na dann kopieren wir mal...

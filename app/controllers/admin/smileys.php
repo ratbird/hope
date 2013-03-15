@@ -209,7 +209,7 @@ class Admin_SmileysController extends AuthenticatedController
         }
         if ($no_gif) {
             $error = sprintf(_('Der Dateityp der Bilddatei ist falsch (%s).<br>'
-                              .'Es ist nur die Dateiendung .gif erlaubt!'), $upload['type']);
+                              .'Es ist nur die Dateiendung .gif erlaubt!'), htmlReady($upload['type']));
             PageLayout::postMessage(MessageBox::error($error));
             return;
         }

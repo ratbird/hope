@@ -34,16 +34,16 @@
 require_once ("lib/classes/lit_import_plugins/StudipLitImportPluginAbstract.class.php");
 
 function do_lit_import() {
-    global $_msg, $cmd, $xmlfile, $xmlfile_size, $xmlfile_name, $username, $_range_id,$plugin_name;
-    $cmd = Request::option('cmd');
-    $xmlfile = $_FILES['xmlfile']['name'];
-    $plugin_name = Request::quoted('plugin_name');
-    if ($cmd) {
-        if ($cmd=="import_lit_list" && $xmlfile) {
-            StudipLitImportPluginAbstract::use_lit_import_plugins($xmlfile, $xmlfile_size, $xmlfile_name, $plugin_name, $_range_id);
-            //header("Location: $PHP_SELF?_range_id=$_range_id&username=$username&_msg=".urlencode($_msg));
-            //wozu dieses???
-        }
+    global $_range_id;
+    $cmd          = Request::option('cmd');
+    $xmlfile      = $_FILES['xmlfile']['tmp_name'];
+    $xmlfile_name = $_FILES['xmlfile']['name'];
+    $xmlfile_size = $_FILES['xmlfile']['size'];
+    $plugin_name  = Request::get('plugin_name');
+    if ($cmd=="import_lit_list" && $xmlfile) {
+        StudipLitImportPluginAbstract::use_lit_import_plugins($xmlfile, $xmlfile_size, $xmlfile_name, $plugin_name, $_range_id);
+        //header("Location: $PHP_SELF?_range_id=$_range_id&username=$username&_msg=".urlencode($_msg));
+        //wozu dieses???
     }
 }
 

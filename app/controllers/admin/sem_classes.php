@@ -33,19 +33,31 @@ class Admin_SemClassesController extends AuthenticatedController
         }
         if (count($_POST) && Request::get("add_name")) {
             $statement = DBManager::get()->prepare(
-                "INSERT INTO sem_classes SET name = :name, mkdate = UNIX_TIMESTAMP(), chdate = UNIX_TIMESTAMP() " .
-            "");
+                "SELECT 1 FROM sem_classes WHERE name = :name"
+            );
             $statement->execute(array('name' => Request::get("add_name")));
-            $id = DBManager::get()->lastInsertId();
-            if (Request::get("add_like")) {
-                $sem_class = clone $GLOBALS['SEM_CLASS'][Request::get("add_like")];
-                $sem_class->set('name', Request::get("add_name"));
-                $sem_class->set('id', $id);
-                $sem_class->store();
+            $duplicate = $statement->fetchColumn();
+            if ($duplicate) {
+                $message = sprintf(_("Es existiert bereits eine Veranstaltungskategorie mit dem Namen \"%s\""),
+                                   Request::get("add_name"));
+                PageLayout::postMessage(MessageBox::error($message));
+                $this->redirect('admin/sem_classes/overview');
+            } else {
+                $statement = DBManager::get()->prepare(
+                    "INSERT INTO sem_classes SET name = :name, mkdate = UNIX_TIMESTAMP(), chdate = UNIX_TIMESTAMP() " .
+                "");
+                $statement->execute(array('name' => Request::get("add_name")));
+                $id = DBManager::get()->lastInsertId();
+                if (Request::get("add_like")) {
+                    $sem_class = clone $GLOBALS['SEM_CLASS'][Request::get("add_like")];
+                    $sem_class->set('name', Request::get("add_name"));
+                    $sem_class->set('id', $id);
+                    $sem_class->store();
+                }
+                $this->redirect(URLHelper::getURL($this->url_for('admin/sem_classes/details'), array('id' => $id)));
+                PageLayout::postMessage(MessageBox::success(_("Seminarklasse wurde erstellt.")));
+                $GLOBALS['SEM_CLASS'] = SemClass::refreshClasses();
             }
-            $this->redirect(URLHelper::getURL($this->url_for('admin/sem_classes/details'), array('id' => $id)));
-            PageLayout::postMessage(MessageBox::success(_("Seminarklasse wurde erstellt.")));
-            $GLOBALS['SEM_CLASS'] = SemClass::refreshClasses();
         }
     }
     

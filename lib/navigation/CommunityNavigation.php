@@ -52,6 +52,9 @@ class CommunityNavigation extends Navigation
         $navigation = new Navigation(_('Wer ist online?'), 'online.php');
         $this->addSubNavigation('online', $navigation);
 
+        $navigation = new Navigation(_('Wer ist online?'), URLHelper::getLink('dispatch.php/online'));
+        $this->addSubNavigation('online_new', $navigation);
+
         // contacts
         $navigation = new Navigation(_('Kontakte'));
         $navigation->addSubNavigation('alpha', new Navigation(_('Meine Kontakte'), 'contact.php', array('view' => 'alpha')));

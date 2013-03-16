@@ -60,9 +60,9 @@ if ($SessionSeminar != $sem_id && !$sem->isVisible() && !$perm->have_perm(get_co
 // redirect, if sem is a studygroup
 if ( $sem->isStudygroup() ) {
     if ($perm->have_studip_perm('autor', $sem_id)) {    // participants may see seminar_main
-        $link = UrlHelper::getUrl('seminar_main.php?auswahl='. $sem_id);
+        $link = URLHelper::getUrl('seminar_main.php?auswahl='. $sem_id);
     } else {   // all other get a special details-page
-        $link = UrlHelper::getUrl('dispatch.php/course/studygroup/details/'. $sem_id, array('send_from_search_page' => $send_from_search_page));
+        $link = URLHelper::getUrl('dispatch.php/course/studygroup/details/'. $sem_id, array('send_from_search_page' => $send_from_search_page));
     }
     header('Location: '. $link);
     die;

@@ -372,7 +372,7 @@ class Course_RoomRequestsController extends AuthenticatedController
         } else {
             $whereto .=  $to;
         }
-        $url = UrlHelper::getURL($this->dispatcher->trails_uri . '/' . $whereto, $params);
+        $url = URLHelper::getURL($this->dispatcher->trails_uri . '/' . $whereto, $params);
         return $url;
     }
 
@@ -384,7 +384,7 @@ class Course_RoomRequestsController extends AuthenticatedController
         } else {
             $whereto .=  $to;
         }
-        $link = UrlHelper::getLink($this->dispatcher->trails_uri . '/' . $whereto, $params);
+        $link = URLHelper::getLink($this->dispatcher->trails_uri . '/' . $whereto, $params);
         return $link;
     }
 

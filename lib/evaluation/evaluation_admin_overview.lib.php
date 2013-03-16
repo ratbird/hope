@@ -216,9 +216,9 @@ class EvalOverview {
             $link .= '&openID=' . $evalID . '#open';
 
         $titleLink = new HTML('a');
-        $titleLink->addAttr('href', UrlHelper::getLink($link));
+        $titleLink->addAttr('href', URLHelper::getLink($link));
         $arrowLink = new HTML('a');
-        $arrowLink->addAttr('href', UrlHelper::getLink($link));
+        $arrowLink->addAttr('href', URLHelper::getLink($link));
 
         $titleLink->addContent(($eval->getTitle()) ? $eval->getTitle() : ' ' );
 
@@ -230,7 +230,7 @@ class EvalOverview {
                 $content[0] = $eval->getFullname() ? $eval->getFullname() : " ";
                 $content[1] = $eval->getChangedate() == NULL ? " " : date("d.m.Y", $eval->getChangedate());
 
-                $button = LinkButton::create(_('Vorschau'), UrlHelper::getURL('show_evaluation.php?evalID=' . $evalID . '&isPreview=' . YES), array('title' => _('Vorschau dieser öffentlichen Evaluationsvorlage.'),
+                $button = LinkButton::create(_('Vorschau'), URLHelper::getURL('show_evaluation.php?evalID=' . $evalID . '&isPreview=' . YES), array('title' => _('Vorschau dieser öffentlichen Evaluationsvorlage.'),
                             'onClick' => 'openEval(\'' . $evalID . '\'); return false;'));
                 $div = new HTML("div");
                 $div->addHTMLContent($button);
@@ -265,7 +265,7 @@ class EvalOverview {
                 $content[0] = $shareButton;
                 $content[3] = Button::create(_('kopie erstellen'), 'copy_own_template_button', array('title' => _('Evaluationsvorlage kopieren')));
 
-                $content[4] = LinkButton::create(_('Bearbeiten'), UrlHelper::getURL("admin_evaluation.php?page=edit&evalID=" . $evalID), array('title' => _('Evaluation bearbeiten')));
+                $content[4] = LinkButton::create(_('Bearbeiten'), URLHelper::getURL("admin_evaluation.php?page=edit&evalID=" . $evalID), array('title' => _('Evaluation bearbeiten')));
 
                 $content[5] = Button::create(_('Löschen'), 'delete_request_button', array('title' => _('Evaluation löschen')));
                 break;
@@ -277,7 +277,7 @@ class EvalOverview {
                 if (!$no_buttons) {
                     $content[2] = Button::create(_('Start'), 'start_button', array('title' => _('Evaluation starten')));
 
-                    $content[4] = LinkButton::create(_('Bearbeiten'), UrlHelper::getURL("admin_evaluation.php?page=edit&evalID=" . $evalID), array('title' => _('Evaluation bearbeiten')));
+                    $content[4] = LinkButton::create(_('Bearbeiten'), URLHelper::getURL("admin_evaluation.php?page=edit&evalID=" . $evalID), array('title' => _('Evaluation bearbeiten')));
 
                     $content[5] = Button::create(_('Löschen'), 'delete_request_button', array('title' => _('Evaluation löschen')));
                 }
@@ -295,7 +295,7 @@ class EvalOverview {
                     $content[4] = Button::create(_('Export'), 'export_request_button', array('title' => _('Evaluation exportieren')));
                     $content[5] = Button::create(_('Löschen'), 'delete_request_button', array('title' => _('Evaluation löschen')));
                     //$content[6] = EvalCommon::createSubmitButton ("auswertung", _("Auswertung"), "export_gfx_request_button");
-                    $content[6] = LinkButton::create(_('Auswertung'), UrlHelper::getURL("eval_summary.php?eval_id=" . $evalID), array('title' => _('Auswertung')));
+                    $content[6] = LinkButton::create(_('Auswertung'), URLHelper::getURL("eval_summary.php?eval_id=" . $evalID), array('title' => _('Auswertung')));
                 }
                 break;
 
@@ -309,13 +309,13 @@ class EvalOverview {
                     $content[4] = Button::create(_('Export'), 'export_request_button', array('title' => _('Evaluation exportieren')));
                     $content[5] = Button::create(_('Löschen'), 'delete_request_button', array('title' => _('Evaluation löschen')));
                     //$content[6] = EvalCommon::createSubmitButton ("auswertung", _("Auswertung"), "export_gfx_request_button");
-                    $content[6] = LinkButton::create(_('Auswertung'), UrlHelper::getURL("eval_summary.php?eval_id=" . $evalID), array('title' => _('Auswertung')));
+                    $content[6] = LinkButton::create(_('Auswertung'), URLHelper::getURL("eval_summary.php?eval_id=" . $evalID), array('title' => _('Auswertung')));
                 }
                 break;
         }
 
         $form = new HTML("form");
-        $form->addAttr("action", UrlHelper::getLink("?rangeID=" . $_SESSION["rangeID"]));
+        $form->addAttr("action", URLHelper::getLink("?rangeID=" . $_SESSION["rangeID"]));
         $form->addAttr("method", "post");
         $form->addAttr("style", "display:inline;");
         $form->addHTMLContent(CSRFProtection::tokenTag());
@@ -458,7 +458,7 @@ class EvalOverview {
 
         $form = new HTML("form");
         $form->addAttr("name", "settingsForm");
-        $form->addAttr("action", UrlHelper::getLink("?rangeID=" .
+        $form->addAttr("action", URLHelper::getLink("?rangeID=" .
                         $_SESSION["rangeID"] . "&openID=" . $evalID . "#open"));
         $form->addAttr("method", "post");
         $form->addAttr("style", "display:inline;");
@@ -700,7 +700,7 @@ class EvalOverview {
 
         $form = new HTML("form");
         $form->addAttr("method", "post");
-        $form->addAttr("action", UrlHelper::getLink());
+        $form->addAttr("action", URLHelper::getLink());
         $form->addHTMLContent(CSRFProtection::tokenTag());
 
         $hidden = new HTMLempty("input");
@@ -752,7 +752,7 @@ class EvalOverview {
 
         $form = new HTML("form");
         $form->addAttr("method", "post");
-        $form->addAttr("action", UrlHelper::getLink());
+        $form->addAttr("action", URLHelper::getLink());
         $form->addHTMLContent(CSRFProtection::tokenTag());
 
         $form->addContent(_("Evaluationen aus dem Bereich "));
@@ -809,7 +809,7 @@ class EvalOverview {
     function createSearchTemplateForm() {
         $form = new HTML("form");
         $form->addAttr("method", "post");
-        $form->addAttr("action", UrlHelper::getLink("?rangeID=" . $_SESSION["rangeID"]));
+        $form->addAttr("action", URLHelper::getLink("?rangeID=" . $_SESSION["rangeID"]));
         $form->addHTMLContent(CSRFProtection::tokenTag());
 
         $form->addContent(_("Öffentliche Evaluationsvorlage suchen: "));
@@ -1601,14 +1601,14 @@ class EvalOverview {
         }
 
         if ($referer)
-            UrlHelper::bindLinkParam('referer', $referer);
+            URLHelper::bindLinkParam('referer', $referer);
 
         if ($request) {
-            $html .="<a href=\"" . UrlHelper::getLink('admin_evaluation.php?evalAction=' . $value1
+            $html .="<a href=\"" . URLHelper::getLink('admin_evaluation.php?evalAction=' . $value1
                             . '&evalID=' . $evalID . '&rangeID=' . $showrangeID);
 
             $html .="\" title=\"" . $label["yes"] . "\"><img src=\"" . localeButtonUrl('ja2-button.png') . "\" width=\"93\" alt=\"" . $label["yes"] . "\" title=\"" . $label["yes"] . "\" border=\"0\" align=\"middle\"></a>\n";
-            $html .="<a href=\"" . UrlHelper::getLink('admin_evaluation.php?evalAction=' . $value2
+            $html .="<a href=\"" . URLHelper::getLink('admin_evaluation.php?evalAction=' . $value2
                             . '&evalID=' . $evalID . '&rangeID=' . $showrangeID);
 
             $html .="\" title=\"" . $label["no"] . "\"><img src=\"" . localeButtonUrl('nein-button.png') . "\" width=\"93\" alt=\"" . $label["no"] . "\" title=\"" . $label["no"] . "\" border=\"0\" align=\"middle\"></a>\n";
@@ -1617,9 +1617,9 @@ class EvalOverview {
         if ($mode == "unlink_delete_request") {
             $add_cancel = !$referer ? : "&referer=" . $referer;
             $links = array(
-                UrlHelper::getURL('admin_evaluation.php?evalAction=delete_confirmed&evalID=' . $evalID . '&rangeID=' . $showrangeID),
-                UrlHelper::getURL('admin_evaluation.php?evalAction=unlink_delete_aborted&evalID=' . $evalID . '&rangeID=' . $showrangeID),
-                UrlHelper::getURL('admin_evaluation.php?evalAction=unlink_and_move&evalID=' . $evalID . '&rangeID=' . $showrangeID . $add_cancel)
+                URLHelper::getURL('admin_evaluation.php?evalAction=delete_confirmed&evalID=' . $evalID . '&rangeID=' . $showrangeID),
+                URLHelper::getURL('admin_evaluation.php?evalAction=unlink_delete_aborted&evalID=' . $evalID . '&rangeID=' . $showrangeID),
+                URLHelper::getURL('admin_evaluation.php?evalAction=unlink_and_move&evalID=' . $evalID . '&rangeID=' . $showrangeID . $add_cancel)
             );
             $html .= LinkButton::create(_('Löschen'), $links[0], array('title' => $label["delete"])) . "\n";
             $html .= LinkButton::create(_('Verschieben'), $links[1], array('title' => $label["template"])) . "\n";
@@ -1631,7 +1631,7 @@ class EvalOverview {
                 . "   </tr>\n";
 
         if ($referer)
-            $html .= "    <tr><td>&nbsp;</td><td><a href=\"" . UrlHelper::getLink($referer) . "\">" . $label["referer"] . "</a></td></tr>";
+            $html .= "    <tr><td>&nbsp;</td><td><a href=\"" . URLHelper::getLink($referer) . "\">" . $label["referer"] . "</a></td></tr>";
 
         $html .="   </table>\n";
 
@@ -2288,7 +2288,7 @@ class EvalOverview {
                         $td = new HTML("td");
                         $td->addAttr("align", "center");
                         $link = new HTML("a");
-                        $link->addAttr("href", UrlHelper::getLink(EVAL_FILE_ADMIN . "?rangeID=" . $range['id']));
+                        $link->addAttr("href", URLHelper::getLink(EVAL_FILE_ADMIN . "?rangeID=" . $range['id']));
                         $link->addContent(_("Diesen Bereich anzeigen."));
                         $td->addContent($link);
                         $tr->addContent($td);

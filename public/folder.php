@@ -633,7 +633,7 @@ if ($rechte && Request::submitted('delete_selected')) {
         $template->set_attribute('elements', array('<ul><li>' . join('</li><li>', $files_to_delete) . '</li></ul>'));
         $template->set_attribute('approvalbutton', Button::createAccept(_('JA!'), 'delete'));
         $template->set_attribute('disapprovalbutton', Button::createCancel(_('NEIN!')));
-        $template->set_attribute('action', UrlHelper::getLink());
+        $template->set_attribute('action', URLHelper::getLink());
         $question = $template->render();
     }
 }

@@ -50,10 +50,10 @@ PageLayout::setTitle($SessSemName["header_line"].' - '._("Ablaufplan"));
 
 if (Request::get('date_type') == '1') {
     Navigation::activateItem('/course/schedule/type1');
-    UrlHelper::bindLinkParam('type', Request::option('type'));
+    URLHelper::bindLinkParam('type', Request::option('type'));
 } else if (Request::get('date_type') == 'other') {
     Navigation::activateItem('/course/schedule/other');
-    UrlHelper::bindLinkParam('type', Request::option('type'));
+    URLHelper::bindLinkParam('type', Request::option('type'));
 } else {
     Navigation::activateItem('/course/schedule/all');
 }
@@ -116,7 +116,7 @@ if (Request::get('export') && $rechte) {
     PageLayout::addSqueezePackage('raumzeit');
     PageLayout::addHeadElement('script', array(), "
     jQuery(function () {
-        STUDIP.CancelDatesDialog.reloadUrlOnClose = '" . UrlHelper::getUrl() ."';
+        STUDIP.CancelDatesDialog.reloadUrlOnClose = '" . URLHelper::getUrl() ."';
     });");
     if ($cmd == 'openAll') $openAll = true;
     $dates = array();

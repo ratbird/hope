@@ -183,9 +183,9 @@ if ($perm->have_studip_perm("admin",$sem->getId())) {
 ?>
 <script>
 jQuery(function () {
-    STUDIP.RoomRequestDialog.reloadUrlOnClose = '<?= UrlHelper::getUrl()?>';
-    STUDIP.BlockAppointmentsDialog.reloadUrlOnClose = '<?= UrlHelper::getUrl()?>';
-    STUDIP.CancelDatesDialog.reloadUrlOnClose = '<?= UrlHelper::getUrl()?>';
+    STUDIP.RoomRequestDialog.reloadUrlOnClose = '<?= URLHelper::getUrl()?>';
+    STUDIP.BlockAppointmentsDialog.reloadUrlOnClose = '<?= URLHelper::getUrl()?>';
+    STUDIP.CancelDatesDialog.reloadUrlOnClose = '<?= URLHelper::getUrl()?>';
 });
 </script>
 <table width="100%" border="0" cellpadding="0" cellspacing="0" id="raumzeit">
@@ -468,7 +468,7 @@ jQuery(function () {
                 <tr>
                     <td colspan="9" class="blank">
                         <?= LinkButton::create(_('Einzeltermin hinzufügen'), URLHelper::getURL('', array('cmd' => 'createNewSingleDate')) . '#newSingleDate') ?>
-                        <?= LinkButton::create(_('Blocktermine hinzufügen'), 'javascript:STUDIP.BlockAppointmentsDialog.initialize("'.UrlHelper::getURL('dispatch.php/course/block_appointments').'")'); ?>
+                        <?= LinkButton::create(_('Blocktermine hinzufügen'), 'javascript:STUDIP.BlockAppointmentsDialog.initialize("'.URLHelper::getURL('dispatch.php/course/block_appointments').'")'); ?>
                     </td>
                 </tr>
                 <? endif ?>

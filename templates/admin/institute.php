@@ -21,7 +21,7 @@ $may_edit_faculty = $perm->is_fak_admin()
                   && ($perm->have_studip_perm('admin', $institute['fakultaets_id']) || $i_view == 'new');
 
 ?>
-<form method="POST" name="edit" action="<?= UrlHelper::getLink() ?>">
+<form method="POST" name="edit" action="<?= URLHelper::getLink() ?>">
     <?= CSRFProtection::tokenTag() ?>
 
     <table class="default admin-institute">

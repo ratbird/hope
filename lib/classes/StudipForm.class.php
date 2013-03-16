@@ -443,7 +443,7 @@ class StudipForm {
 
     function getFormStart($action = false, $attributes = false){
         if (!$action){
-            $action = UrlHelper::getLink();
+            $action = URLHelper::getLink();
         }
         $ret = "\n<form action=\"$action\" method=\"post\" name=\"{$this->form_name}\" " . $this->getAttributes($attributes) . ">";
         $ret .= CSRFProtection::tokenTag();

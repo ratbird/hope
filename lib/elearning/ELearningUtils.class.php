@@ -710,7 +710,7 @@ class ELearningUtils
             else
                 $output["courses"] = _("Diese Veranstaltung ist mit einem Ilias-Kurs verkn&uuml;pft. Hier gelangen Sie direkt in den Kurs: ") . "<br>".implode($course_output, "<br>")."<br><br>";
             $output["update"] .=  "<font style=\"font-size: -1\">" . _("Hier k&ouml;nnen Sie die Zuordnungen zu den verkn&uuml;pften Kursen aktualisieren."). "<br></font>";
-            $output["update"] .=  "<form method=\"POST\" action=\"" . UrlHelper::getLink() . "#anker\">\n";
+            $output["update"] .=  "<form method=\"POST\" action=\"" . URLHelper::getLink() . "#anker\">\n";
             $output["update"] .= CSRFProtection::tokenTag();
             $output["update"] .= "<input type=\"HIDDEN\" name=\"view\" value=\"" . $view . "\">\n";
             $output["update"] .= "<input type=\"HIDDEN\" name=\"cms_select\" value=\"" . $cms_select . "\">\n";
@@ -748,7 +748,7 @@ class ELearningUtils
             $cmsystems[$row["system_type"]]["modules"] = $row['c'];
 
         if (Request::submitted('delete')) {
-            $messages["info"] .= "<form method=\"POST\" action=\"" . UrlHelper::getLink() . "\">";
+            $messages["info"] .= "<form method=\"POST\" action=\"" . URLHelper::getLink() . "\">";
             $messages["info"] .= CSRFProtection::tokenTag();
             $messages["info"] .= "<table>";
             $messages["info"] .= "<tr><td>&nbsp;</td></tr>";
@@ -792,7 +792,7 @@ class ELearningUtils
             }
             else {
                 $output .= ELearningUtils::getCMSHeader("<font color=FF0000> Unbekanntes System: " . $cms_type . "</font>");
-                $output .= "<form method=\"POST\" action=\"" . UrlHelper::getLink() . "\">";
+                $output .= "<form method=\"POST\" action=\"" . URLHelper::getLink() . "\">";
                 $output .= CSRFProtection::tokenTag();
                 $output .= "<table>";
                 $output .= "<tr><td colspan=\"2\">&nbsp;</td></tr>";

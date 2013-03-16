@@ -45,7 +45,7 @@ class JsupdaterController extends AuthenticatedController {
         } else {
             $notification = new PersonalNotifications($id);
             if ($notification->url) {
-                $this->redirect(UrlHelper::getUrl($notification->url));
+                $this->redirect(URLHelper::getUrl($notification->url));
             } else {
                 $this->render_nothing();
             }

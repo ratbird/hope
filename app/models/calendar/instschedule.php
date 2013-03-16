@@ -56,7 +56,7 @@ class CalendarInstscheduleModel
                 $entry['end']     = ((int)$cycle->getEndStunde() * 100) + ($cycle->getEndMinute());
                 $entry['day']     = $cycle->getDay();
                 $entry['content'] = $sem->getNumber() . ' ' . $sem->getName();
-                $entry['url']     = UrlHelper::getLink('dispatch.php/calendar/instschedule/entry/' . $seminar_id
+                $entry['url']     = URLHelper::getLink('dispatch.php/calendar/instschedule/entry/' . $seminar_id
                                   . '/' . $cycle->getMetaDateId());
                 $entry['onClick'] = "function(id) { STUDIP.Instschedule.showSeminarDetails('$seminar_id', '"
                                   . $cycle->getMetaDateId() ."'); }";

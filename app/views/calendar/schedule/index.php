@@ -75,15 +75,15 @@ $infobox['content'][2]['eintrag'][] = array (
 $infobox['content'][3]['eintrag'] = array (
     array (
         'icon' => 'icons/16/'. ($zoom == 0 ? 'red' : 'black') . '/schedule.png',
-        'text' => '<a href="'. UrlHelper::getLink('', array('zoom' => 0)) .'">'. _("klein") .'</a>'
+        'text' => '<a href="'. URLHelper::getLink('', array('zoom' => 0)) .'">'. _("klein") .'</a>'
     ),
     array (
         'icon' => 'icons/16/'. ($zoom == 2 ? 'red' : 'black') . '/schedule.png',
-        'text' => '<a href="'. UrlHelper::getLink('', array('zoom' => 2)) .'">'. _("mittel") .'</a>'
+        'text' => '<a href="'. URLHelper::getLink('', array('zoom' => 2)) .'">'. _("mittel") .'</a>'
     ),
     array (
         'icon' => 'icons/16/'. ($zoom == 4 ? 'red' : 'black') . '/schedule.png',
-        'text' => '<a href="'. UrlHelper::getLink('', array('zoom' => 4)) .'">'. _("groﬂ") .'</a>'
+        'text' => '<a href="'. URLHelper::getLink('', array('zoom' => 4)) .'">'. _("groﬂ") .'</a>'
     )
 );
 ?>

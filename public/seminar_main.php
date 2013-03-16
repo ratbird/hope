@@ -245,7 +245,7 @@ if (!$studygroup_mode) {
         PageLayout::addSqueezePackage('raumzeit');
         PageLayout::addHeadElement('script', array(), "
         jQuery(function () {
-            STUDIP.CancelDatesDialog.reloadUrlOnClose = '" . UrlHelper::getUrl() ."';
+            STUDIP.CancelDatesDialog.reloadUrlOnClose = '" . URLHelper::getUrl() ."';
         });");
     }
     show_dates($start_zeit, $end_zeit, $smain_data["dopen"], $course_id, 0, TRUE, $show_admin);

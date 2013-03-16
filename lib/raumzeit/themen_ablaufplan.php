@@ -50,7 +50,7 @@ $modules = $moduleClass->getLocalModules($id);
 PageLayout::addSqueezePackage('raumzeit');
 PageLayout::addHeadElement('script', array(), "
         jQuery(function () {
-        STUDIP.CancelDatesDialog.reloadUrlOnClose = '" . UrlHelper::getUrl() ."';
+        STUDIP.CancelDatesDialog.reloadUrlOnClose = '" . URLHelper::getUrl() ."';
 });");
 //Output starts here
 

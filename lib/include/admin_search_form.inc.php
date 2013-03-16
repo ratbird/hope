@@ -524,7 +524,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
             do{
                 if ($db4row['username']) {
                     if ($k) echo ', ';
-                    echo "<a href=\"".UrlHelper::GetLink("dispatch.php/profile?username=".$db4row['username'])."\">".htmlReady($db4row['fullname'])."</a>";
+                    echo "<a href=\"".URLHelper::GetLink("dispatch.php/profile?username=".$db4row['username'])."\">".htmlReady($db4row['fullname'])."</a>";
                     $k++;
                 }
             }while($db4row = $db4statement->fetch(PDO::FETCH_ASSOC));

@@ -55,7 +55,7 @@ class EvalTemplateGUI {
 
      $form = new HTM( "form" );
 
-     $form->attr( "action", UrlHelper::getLink("?page=edit&evalID=".$evalID) );
+     $form->attr( "action", URLHelper::getLink("?page=edit&evalID=".$evalID) );
      $form->attr( "method", "post" );
      $form->html(CSRFProtection::tokenTag());
 
@@ -369,7 +369,7 @@ class EvalTemplateGUI {
      $tdA = new HTM( "td" );
 
      $form = new HTM( "form" );
-     $form->attr( "action", UrlHelper::getLink("?page=edit&evalID=".$evalID) );
+     $form->attr( "action", URLHelper::getLink("?page=edit&evalID=".$evalID) );
 
     $form->attr( "method", "post" );
     $form->html(CSRFProtection::tokenTag());
@@ -826,7 +826,7 @@ class EvalTemplateGUI {
      $trA = new HTM( "tr" );
      $tdA = new HTM( "td" );
      $form = new HTM( "form" );
-     $form->attr( "action", UrlHelper::getLink("?page=edit&evalID=".$evalID) );
+     $form->attr( "action", URLHelper::getLink("?page=edit&evalID=".$evalID) );
      $form->attr( "method", "post" );
      $form->html(CSRFProtection::tokenTag());
 
@@ -1017,7 +1017,7 @@ class EvalTemplateGUI {
           $rangeID = get_Username($user->id);
 
       $infoOverviewText = sprintf(_("Zurück zur %s Evaluations-Verwaltung %s"),
-                  "<a href=\"". UrlHelper::getLink('admin_evaluation.php?page=overview'
+                  "<a href=\"". URLHelper::getLink('admin_evaluation.php?page=overview'
                     ."&check_abort_creation_button=1&evalID=$evalID&rangeID=$rangeID") .
                   "\">",
                   "</a>");

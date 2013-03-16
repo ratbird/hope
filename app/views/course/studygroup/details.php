@@ -6,7 +6,7 @@ if ($GLOBALS['perm']->have_studip_perm('autor',$studygroup->getId())) {
     if ($membership_requested) {
         $infotext= _("Mitgliedschaft bereits beantragt!");
     } else {
-        $infolink = '<a href="'. UrlHelper::getLink('seminar_main.php?auswahl='. $studygroup->getId()) .'">%s</a>';
+        $infolink = '<a href="'. URLHelper::getLink('seminar_main.php?auswahl='. $studygroup->getId()) .'">%s</a>';
         $infotext= sprintf($infolink, _("Direkt zur Studiengruppe"));
     }
 } else if ($GLOBALS['perm']->have_perm('admin')) {
@@ -17,7 +17,7 @@ if ($GLOBALS['perm']->have_studip_perm('autor',$studygroup->getId())) {
 
 } else {
     $action = _("Aktionen:");
-    $infolink = '<a href="'. UrlHelper::getLink('sem_verify.php?id='. $studygroup->getId()) .'">%s</a>';
+    $infolink = '<a href="'. URLHelper::getLink('sem_verify.php?id='. $studygroup->getId()) .'">%s</a>';
     $infotext= sprintf( $infolink, $studygroup->admission_prelim ? _("Mitgliedschaft beantragen") : _("Studiengruppe beitreten"));
 }
 
@@ -54,7 +54,7 @@ $infobox['content'] = array(
 );
 
 $search = array(
-    'text' => '<a href="'. UrlHelper::getLink($send_from_search_page) . '">'. _("zurück zur Suche") .'</a>',
+    'text' => '<a href="'. URLHelper::getLink($send_from_search_page) . '">'. _("zurück zur Suche") .'</a>',
     'icon' => 'icons/16/black/schedule.png'
 );
 

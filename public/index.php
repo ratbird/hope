@@ -79,7 +79,7 @@ include 'lib/include/header.php';
 // only for authenticated users
 if ($auth->is_authenticated() && $user->id != 'nobody') {
 
-    UrlHelper::bindLinkParam('index_data', $index_data);
+    URLHelper::bindLinkParam('index_data', $index_data);
 
     //Auf und Zuklappen News
     require_once 'lib/showNews.inc.php';

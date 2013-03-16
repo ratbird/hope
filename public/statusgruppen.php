@@ -197,7 +197,7 @@ function PrintNonMembers ($range_id)
 }
 
 // Command-Parsing
-UrlHelper::bindLinkParam('opened_groups', $opened_groups);
+URLHelper::bindLinkParam('opened_groups', $opened_groups);
 
 if ($assign = Request::option('assign')) {
     if (GetRangeOfStatusgruppe($assign)==$SessSemName[1] && CheckAssignRights($assign, $user->id, $SessSemName[1])) {

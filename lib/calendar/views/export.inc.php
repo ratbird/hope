@@ -252,7 +252,7 @@ auf diese Nachricht nicht antworten.") . "\n\n";
                 . $exstartyear . "\">"
                 . ($err['exstart'] ? "&nbsp;$error_sign" : '')
                 . ' <img align="absmiddle" src="' . Assets::image_path('popupcalendar.png')
-                . "\" onClick=\"window.open('" . UrlHelper::getLink("termin_eingabe_dispatch.php?element_switch=54${atimetxt}")
+                . "\" onClick=\"window.open('" . URLHelper::getLink("termin_eingabe_dispatch.php?element_switch=54${atimetxt}")
                 . "', 'InsertDate', 'dependent=yes, width=210, height=210, left=500, top=150')\">&nbsp;&nbsp;";
 
         if (!$exendday)
@@ -271,7 +271,7 @@ auf diese Nachricht nicht antworten.") . "\n\n";
                 . $exendyear . "\">"
                 . ($err['exend'] ? "&nbsp;$error_sign" : '')
                 . ' <img align="absmiddle" src="' . Assets::image_path('popupcalendar.png')
-                . "\" onClick=\"window.open('" . UrlHelper::getLink("termin_eingabe_dispatch.php?element_switch=55${atimetxt}")
+                . "\" onClick=\"window.open('" . URLHelper::getLink("termin_eingabe_dispatch.php?element_switch=55${atimetxt}")
                 . "', 'InsertDate', 'dependent=yes, width=210, height=210, left=500, top=150')\">";
         $params['content'] .= ">\n&nbsp;" . sprintf(_("Nur Termine vom:%sbis zum:%s"), $text_exstart, $text_exend);
         $params['button'] = Button::create(_('export'));

@@ -212,7 +212,7 @@ if ( $authorID != $user->id ) {
 if ($error_msgs){
 
     $back_button = ("&nbsp;&nbsp;&nbsp;")
-                    . "<a href=\"". UrlHelper::getLink('admin_evaluation.php?page=overview&rangeID='. Request::option('rangeID')) ."\">"
+                    . "<a href=\"". URLHelper::getLink('admin_evaluation.php?page=overview&rangeID='. Request::option('rangeID')) ."\">"
                     . _("Zur Evaluations-Verwaltung")
                     . "</a>";
     

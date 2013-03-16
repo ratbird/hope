@@ -188,7 +188,7 @@ require_once 'lib/admission.inc.php';
     if (empty($ask)) {
         $ask = "TRUE";
     }
-    $temp_url = UrlHelper::getLink('?' . $_SERVER['QUERY_STRING']);
+    $temp_url = URLHelper::getLink('?' . $_SERVER['QUERY_STRING']);
 
     // admins und roots haben hier nix verloren
     if ($perm->have_perm("admin")) {

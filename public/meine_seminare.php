@@ -122,7 +122,7 @@ $cmd = Request::option('cmd');
 if(in_array($cmd, words('no_kill suppose_to_kill suppose_to_kill_admission kill kill_admission'))){
     $current_seminar = Seminar::getInstance(Request::option('auswahl'));
     $ticket_check = Seminar_Session::check_ticket(Request::option('studipticket'));
-    UrlHelper::addLinkParam('studipticket', Seminar_Session::get_ticket());
+    URLHelper::addLinkParam('studipticket', Seminar_Session::get_ticket());
 
     //Ausgabe bei bindenden Veranstaltungen, loeschen nicht moeglich!
     if ($cmd == "no_kill") {

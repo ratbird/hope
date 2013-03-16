@@ -263,8 +263,8 @@ function print_snd_message($psm) {
 
         // buttons
         $edit = '<div class="button-group">';
-        $edit .= LinkButton::create(_('Weiterleiten'), UrlHelper::getUrl('sms_send.php', array('cmd' => 'write', 'quote' => $psm['message_id'], 'forward' => 'snd')));
-        $edit .= LinkButton::create(_('Drucken'),  UrlHelper::getUrl('dispatch.php/messages/show_print/' . $psm['message_id'] . '/snd'), array('target' => '_blank', 'class' => 'print_action'));
+        $edit .= LinkButton::create(_('Weiterleiten'), URLHelper::getUrl('sms_send.php', array('cmd' => 'write', 'quote' => $psm['message_id'], 'forward' => 'snd')));
+        $edit .= LinkButton::create(_('Drucken'),  URLHelper::getUrl('dispatch.php/messages/show_print/' . $psm['message_id'] . '/snd'), array('target' => '_blank', 'class' => 'print_action'));
         $edit .= LinkButton::create(_('Löschen'), URLHelper::getURL("?cmd=delete_selected", array('sel_sms[1]' => $psm['message_id'])), array('title' => _('Diese Nachricht löschen.')));
         if (have_msgfolder($sms_data['view']) == TRUE) {
             $edit .= LinkButton::create(_('Verschieben'), URLHelper::getURL('', array('move_to_folder[1]' => $psm['message_id'])), array('title' => _('Diese Nachricht in einen frei wählbaren Ordner verschieben.')));
@@ -446,8 +446,8 @@ function print_rec_message($prm) {
             $edit .= LinkButton::create(_('Antworten'), URLHelper::getURL('sms_send.php', array('cmd'=> 'write', 'answer_to' => $prm['message_id'])));
             $edit .= LinkButton::create(_('Zitieren'), URLHelper::getURL('sms_send.php', array('cmd' => 'write', 'quote' => $prm['message_id'], 'answer_to' => $prm['message_id'])));
         }
-        $edit .= LinkButton::create(_('Weiterleiten'), UrlHelper::getUrl('sms_send.php', array('cmd' => 'write', 'quote' => $prm['message_id'], 'forward' => 'rec')));
-        $edit .= LinkButton::create(_('Drucken'),  UrlHelper::getUrl('dispatch.php/messages/show_print/' . $prm['message_id'] . '/rec'), array('target' => '_blank', 'class' => 'print_action'));
+        $edit .= LinkButton::create(_('Weiterleiten'), URLHelper::getUrl('sms_send.php', array('cmd' => 'write', 'quote' => $prm['message_id'], 'forward' => 'rec')));
+        $edit .= LinkButton::create(_('Drucken'),  URLHelper::getUrl('dispatch.php/messages/show_print/' . $prm['message_id'] . '/rec'), array('target' => '_blank', 'class' => 'print_action'));
         $edit .= LinkButton::create(_('Löschen'), URLHelper::getURL('', array('cmd' => 'delete_selected', "sel_sms[1]" => $prm['message_id'])));
         if (have_msgfolder($sms_data['view']) == TRUE) {
             $edit .= LinkButton::create(_('Verschieben'), URLHelper::getURL('', array('move_to_folder[1]'=> $prm['message_id'])), array('title' => _('Diese Nachricht in einen frei wählbaren Ordner verschieben.')));

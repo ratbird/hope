@@ -68,12 +68,12 @@ function redirect_to_course_admin($course_id) {
     if ($sem_class) {
         $nav = array_shift($sem_class->getNavigationForSlot("admin", $course_id));
         if ($nav) {
-            header("Location: " . UrlHelper::getUrl($nav->getURL()));
+            header("Location: " . URLHelper::getUrl($nav->getURL()));
         } else {
-            header("Location: ".UrlHelper::getUrl("seminar_main.php"));
+            header("Location: ".URLHelper::getUrl("seminar_main.php"));
         }
     } else {
-        header("Location: " . UrlHelper::getUrl('dispatch.php/course/basicdata/view/' . $course_id));
+        header("Location: " . URLHelper::getUrl('dispatch.php/course/basicdata/view/' . $course_id));
     }
     page_close();
     die();
@@ -2768,7 +2768,7 @@ if ($level == 2)
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
-                            &nbsp; <?= LinkButton::create('<< '._('Zurück'), UrlHelper::getUrl('?jump_back=1&form=' . $level)) .'&nbsp;'. Button::create(_('Weiter').' >>', 'jump_next') ?>
+                            &nbsp; <?= LinkButton::create('<< '._('Zurück'), URLHelper::getUrl('?jump_back=1&form=' . $level)) .'&nbsp;'. Button::create(_('Weiter').' >>', 'jump_next') ?>
                         </td>
                     </tr>
                     <tr <? $cssSw->switchClass() ?>>
@@ -3159,7 +3159,7 @@ if ($level == 2)
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
-                            &nbsp; <?= LinkButton::create('<< '._('Zurück'), UrlHelper::getUrl('?jump_back=1&form=' . $level)) ?>&nbsp;<?= Button::create(_('Weiter').' >>', 'jump_next') ?>
+                            &nbsp; <?= LinkButton::create('<< '._('Zurück'), URLHelper::getUrl('?jump_back=1&form=' . $level)) ?>&nbsp;<?= Button::create(_('Weiter').' >>', 'jump_next') ?>
                         </td>
                     </tr>
                 </table>
@@ -3217,7 +3217,7 @@ if ($level == 3) {
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
-                            &nbsp; <?= LinkButton::create('<< '._('Zurück'), UrlHelper::getUrl('?jump_back=1&form=' . $level)) ?>&nbsp;<?= Button::create(_('Weiter').' >>', 'jump_next') ?>
+                            &nbsp; <?= LinkButton::create('<< '._('Zurück'), URLHelper::getUrl('?jump_back=1&form=' . $level)) ?>&nbsp;<?= Button::create(_('Weiter').' >>', 'jump_next') ?>
                         </td>
                     </tr>
                     <?
@@ -3427,7 +3427,7 @@ if ($level == 3) {
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
-                            &nbsp; <?= LinkButton::create('<< '._('Zurück'), UrlHelper::getUrl('?jump_back=1&form=' . $level)) ?>&nbsp;<?= Button::create(_('Weiter').' >>', 'jump_next') ?>
+                            &nbsp; <?= LinkButton::create('<< '._('Zurück'), URLHelper::getUrl('?jump_back=1&form=' . $level)) ?>&nbsp;<?= Button::create(_('Weiter').' >>', 'jump_next') ?>
                         </td>
                     </tr>
                 </table>
@@ -3483,7 +3483,7 @@ if ($level == 4) {
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="96%" align="center" colspan=3>
-                            &nbsp; <?= LinkButton::create('<< '._('Zurück'), UrlHelper::getUrl('?jump_back=1&form=' . $level)) ?>&nbsp;<?= Button::create(_('Weiter').' >>', 'jump_next') ?>
+                            &nbsp; <?= LinkButton::create('<< '._('Zurück'), URLHelper::getUrl('?jump_back=1&form=' . $level)) ?>&nbsp;<?= Button::create(_('Weiter').' >>', 'jump_next') ?>
                         </td>
                     </tr>
                     <?
@@ -3535,9 +3535,9 @@ if ($level == 4) {
                             </noscript>
                             <div id="assi_room_request_with_js" style="margin-bottom:10px;"></div>
                             <script>
-                                jQuery('#assi_room_request_with_js').load('<?=UrlHelper::getUrl('dispatch.php/course/room_requests/index_assi/-')?>');
+                                jQuery('#assi_room_request_with_js').load('<?=URLHelper::getUrl('dispatch.php/course/room_requests/index_assi/-')?>');
                                 jQuery('#RoomRequestDialogbox').live('dialogclose', function () {
-                                                                        jQuery('#assi_room_request_with_js').load('<?=UrlHelper::getUrl('dispatch.php/course/room_requests/index_assi/-')?>');
+                                                                        jQuery('#assi_room_request_with_js').load('<?=URLHelper::getUrl('dispatch.php/course/room_requests/index_assi/-')?>');
                                                                     }
                                                                     );
                             </script>
@@ -3703,7 +3703,7 @@ if ($level == 4) {
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="96%" align="center" colspan=3>
-                            &nbsp; <?= LinkButton::create('<< '._('Zurück'), UrlHelper::getUrl('?jump_back=1&form=' . $level)) ?>&nbsp;<?= Button::create(_('Weiter').' >>', 'jump_next') ?>
+                            &nbsp; <?= LinkButton::create('<< '._('Zurück'), URLHelper::getUrl('?jump_back=1&form=' . $level)) ?>&nbsp;<?= Button::create(_('Weiter').' >>', 'jump_next') ?>
                         </td>
                     </tr>
                 </table>
@@ -3751,7 +3751,7 @@ if ($level == 5)
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
-                            &nbsp; <?= LinkButton::create('<< '._('Zurück'), UrlHelper::getUrl('?jump_back=1&form=' . $level)) ?>&nbsp;<?= Button::create(_('Weiter').' >>', 'jump_next') ?>
+                            &nbsp; <?= LinkButton::create('<< '._('Zurück'), URLHelper::getUrl('?jump_back=1&form=' . $level)) ?>&nbsp;<?= Button::create(_('Weiter').' >>', 'jump_next') ?>
                         </td>
                     </tr>
                     <? if ($_SESSION['sem_create_data']["sem_admission"] != 3) { ?>
@@ -4111,7 +4111,7 @@ if ($level == 5)
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
-                            &nbsp; <?= LinkButton::create('<< '._('Zurück'), UrlHelper::getUrl('?jump_back=1&form=' . $level)) ?>&nbsp;<?= Button::create(_('Weiter').' >>', 'jump_next') ?>
+                            &nbsp; <?= LinkButton::create('<< '._('Zurück'), URLHelper::getUrl('?jump_back=1&form=' . $level)) ?>&nbsp;<?= Button::create(_('Weiter').' >>', 'jump_next') ?>
                         </td>
                     </tr>
                 </table>
@@ -4142,7 +4142,7 @@ if ($level == 6)
                 <form method="POST" action="<? echo URLHelper::getLink() ?>">
                     <?= CSRFProtection::tokenTag() ?>
                     <input type="hidden" name="form" value=6>
-                    <?= LinkButton::create('<< '._('Zurück'), UrlHelper::getUrl('?jump_back=1&form=' . $level)) ?>&nbsp;<?= Button::create(_('Anlegen'), 'jump_next') ?>
+                    <?= LinkButton::create('<< '._('Zurück'), URLHelper::getUrl('?jump_back=1&form=' . $level)) ?>&nbsp;<?= Button::create(_('Anlegen'), 'jump_next') ?>
                 </form>
                 </div>
             </td>
@@ -4177,7 +4177,7 @@ if ($level == 7)
                     <form method="POST" action="<? echo URLHelper::getLink() ?>">
                         <?= CSRFProtection::tokenTag() ?>
                         <input type="hidden" name="form" value=7>
-                        <?= LinkButton::create('<< '._('Zurück'), UrlHelper::getUrl('?jump_back=1&form=' . $level)) ?>
+                        <?= LinkButton::create('<< '._('Zurück'), URLHelper::getUrl('?jump_back=1&form=' . $level)) ?>
                     </form>
                     </div>
                 </td>

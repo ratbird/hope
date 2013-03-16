@@ -11,7 +11,7 @@ use Studip\Button, Studip\LinkButton;
         <div align="left" style="border: 1px solid #000000; padding: 3px; width: 95%">
             <b><?= _("Maximale Gr&ouml;&szlig;e:") ?> <?= ($max_filesize / 1024) ?></b> <?= _("Kilobyte") ?><br>
 
-            <form enctype="multipart/form-data" name="upload_form" action="<?= UrlHelper::getLink() ?>" method="post">
+            <form enctype="multipart/form-data" name="upload_form" action="<?= URLHelper::getLink() ?>" method="post">
                 <?= CSRFProtection::tokenTag() ?>
                 <div width="100%" class="content_seperator" style="padding : 2px; margin: 10px 0px 10px 0px">
                     <?= _("1. Klicken Sie auf <b>'Durchsuchen...'</b>, um eine Datei auszuw&auml;hlen.") ?>

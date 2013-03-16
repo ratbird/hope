@@ -5,9 +5,9 @@ $zoom = Request::get('zoom', 0);
 $text  = _("Der Stundenplan zeigt die regelm‰ﬂigen Veranstaltungen dieser Einrichtung.");
 
 if ($zoom) {
-    $zoom_text = '<a href="'. UrlHelper::getLink('', array('zoom' => 0)) .'">'. _("Normalansicht") .'</a>';
+    $zoom_text = '<a href="'. URLHelper::getLink('', array('zoom' => 0)) .'">'. _("Normalansicht") .'</a>';
 } else {
-    $zoom_text = '<a href="'. UrlHelper::getLink('', array('zoom' => 7)) .'">'. _("Groﬂansicht") .'</a>';
+    $zoom_text = '<a href="'. URLHelper::getLink('', array('zoom' => 7)) .'">'. _("Groﬂansicht") .'</a>';
 }
 
 $infobox = array();
@@ -41,15 +41,15 @@ $infobox['content'][1]['eintrag'][] = array (
 $infobox['content'][2]['eintrag'] = array (
     array (
         'icon' => 'icons/16/'. ($zoom == 0 ? 'red' : 'black') . '/schedule.png',
-        'text' => '<a href="'. UrlHelper::getLink('', array('zoom' => 0)) .'">'. _("klein") .'</a>'
+        'text' => '<a href="'. URLHelper::getLink('', array('zoom' => 0)) .'">'. _("klein") .'</a>'
     ),
     array (
         'icon' => 'icons/16/'. ($zoom == 2 ? 'red' : 'black') . '/schedule.png',
-        'text' => '<a href="'. UrlHelper::getLink('', array('zoom' => 2)) .'">'. _("mittel") .'</a>'
+        'text' => '<a href="'. URLHelper::getLink('', array('zoom' => 2)) .'">'. _("mittel") .'</a>'
     ),
     array (
         'icon' => 'icons/16/'. ($zoom == 4 ? 'red' : 'black') . '/schedule.png',
-        'text' => '<a href="'. UrlHelper::getLink('', array('zoom' => 4)) .'">'. _("groﬂ") .'</a>'
+        'text' => '<a href="'. URLHelper::getLink('', array('zoom' => 4)) .'">'. _("groﬂ") .'</a>'
     )
 );
 

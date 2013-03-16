@@ -297,9 +297,9 @@ class ShowToolsRequests
         $sem_link = $perm->have_studip_perm('tutor', $semObj->getId()) ?
             "seminar_main.php?auswahl=" . $semObj->getId() :
             "details.php?sem_id=" . $semObj->getId() . "&send_from_search=1&send_from_search_page="
-            . UrlHelper::getLink("resources.php?working_on_request=$request_id");
+            . URLHelper::getLink("resources.php?working_on_request=$request_id");
         ?>
-        <form method="POST" action="<?echo UrlHelper::getLink('?working_on_request=' . $request_id);?>">
+        <form method="POST" action="<?echo URLHelper::getLink('?working_on_request=' . $request_id);?>">
         <?= CSRFProtection::tokenTag() ?>
         <input type="hidden" name="view" value="edit_request">
         <table border=0 celpadding=2 cellspacing=0 width="99%" align="center">
@@ -307,7 +307,7 @@ class ShowToolsRequests
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" colspan="2" width="96%" valign="top">
-                    <a href="<?=UrlHelper::getLink($sem_link)?>">
+                    <a href="<?=URLHelper::getLink($sem_link)?>">
                         <b><?= $semObj->seminar_number ? htmlReady($semObj->seminar_number).':' : '' ?><?=htmlReady($semObj->getName())?></b>
                     </a>
                     <font size="-1">
@@ -316,7 +316,7 @@ class ShowToolsRequests
                         $names = $this->selectSemInstituteNames($semObj->getInstitutId());
 
                         print "&nbsp;&nbsp;&nbsp;&nbsp;"._("Art der Anfrage:")." ".$reqObj->getTypeExplained()."<br>";
-                        print "&nbsp;&nbsp;&nbsp;&nbsp;"._("Erstellt von:")." <a href=\"".UrlHelper::getLink('dispatch.php/profile?username='.get_username($reqObj->getUserId()))."\">".htmlReady(get_fullname($reqObj->getUserId()))."</a><br>";
+                        print "&nbsp;&nbsp;&nbsp;&nbsp;"._("Erstellt von:")." <a href=\"".URLHelper::getLink('dispatch.php/profile?username='.get_username($reqObj->getUserId()))."\">".htmlReady(get_fullname($reqObj->getUserId()))."</a><br>";
                         print "&nbsp;&nbsp;&nbsp;&nbsp;"._("Erstellt am:") ." ". strftime('%x %H:%M', $reqObj->mkdate) . '<br>';
                         print "&nbsp;&nbsp;&nbsp;&nbsp;"._("Letzte Änderung:") ." ". strftime('%x %H:%M', $reqObj->chdate) . '<br>';
                         print "&nbsp;&nbsp;&nbsp;&nbsp;"._("Lehrende: ");

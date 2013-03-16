@@ -87,7 +87,7 @@ if ($perm->have_studip_perm('tutor', $SessSemName[1]) && in_array($i_view, words
         $_show_scm = $scms[0]['scm_id'];
     }
     $_SESSION['scm-flash'] = $msg;
-    header('Location: ' . UrlHelper::getUrl('scm.php', array('show_scm' => $_show_scm)));
+    header('Location: ' . URLHelper::getUrl('scm.php', array('show_scm' => $_show_scm)));
     page_close();
     die();
 }

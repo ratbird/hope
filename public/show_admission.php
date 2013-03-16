@@ -676,13 +676,13 @@ if(is_object($group_obj)){
         <? if(count($distinct_members)  > 0 ) :?>
         <li style="margin-top:5px;">
         <span style="display:block;float:left;width:200px;"><?=_("Anzahl aller Anmeldungen:")?></span><?=count($distinct_members)?>
-        <a href="<?php echo UrlHelper::getLink('', array('group_id' => $group_obj->getId(), 'cmd' => 'download_all_members'))?>" title="<?php echo _("Download")?>"><?php echo Assets::img('icons/16/blue/file-xls.png', array('style' => 'vertical-align:bottom'))?></a>
+        <a href="<?php echo URLHelper::getLink('', array('group_id' => $group_obj->getId(), 'cmd' => 'download_all_members'))?>" title="<?php echo _("Download")?>"><?php echo Assets::img('icons/16/blue/file-xls.png', array('style' => 'vertical-align:bottom'))?></a>
         </li>
         <? endif;?>
         <? if(count($multi_members)  > 0 ) :?>
         <li style="margin-top:5px;">
         <span style="display:block;float:left;width:200px;"><?=_("Mehrfachanmeldungen:")?></span><?=count($multi_members)?>
-        <a href="<?php echo UrlHelper::getLink('', array('group_id' => $group_obj->getId(), 'cmd' => 'download_multi_members'))?>" title="<?php echo _("Download")?>"><?php echo Assets::img('icons/16/blue/file-xls.png', array('style' => 'vertical-align:bottom'))?></a>
+        <a href="<?php echo URLHelper::getLink('', array('group_id' => $group_obj->getId(), 'cmd' => 'download_multi_members'))?>" title="<?php echo _("Download")?>"><?php echo Assets::img('icons/16/blue/file-xls.png', array('style' => 'vertical-align:bottom'))?></a>
         </li>
         <? endif;?>
         <li style="margin-top:5px;">

@@ -1474,7 +1474,7 @@ function display_file_body($datei, $folder_id, $open, $change, $move, $upload, $
             $content .= "<br>" . sprintf("<b>%s</b> <a class=\"link-intern\" title=\"%s\" href=\"%s\">%s</a>",
                     _("Ordner:"),
                     _("Diesen Ordner in der Ordneransicht öffnen"),
-                    UrlHelper::getLink('folder.php#anker', array('open' => $datei['range_id'], 'data' => null, 'cmd' => 'tree')),
+                    URLHelper::getLink('folder.php#anker', array('open' => $datei['range_id'], 'data' => null, 'cmd' => 'tree')),
                     htmlReady($folder_tree->getShortPath($datei['range_id'], null, '/', 1)));
         }
     }

@@ -32,7 +32,7 @@ echo $flash['message'];
                 <?= Assets::img('icons/16/blue/edit.png', array('title' => _('Diese Anfrage bearbeiten'))) ?>
             </a>
             <? if (getGlobalPerms($GLOBALS['user']->id) == 'admin' || ($GLOBALS['perm']->have_perm('admin') && count(getMyRoomRequests(null, null, true, $rr->getId())))) : ?>
-                <a href="<?= UrlHelper::getLink('resources.php', array('view' => 'edit_request', 'single_request' => $rr->getId())) ?>">
+                <a href="<?= URLHelper::getLink('resources.php', array('view' => 'edit_request', 'single_request' => $rr->getId())) ?>">
                     <?= Assets::img('icons/16/blue/admin.png', array('title' => _('Diese Anfrage selbst auflösen'))) ?>
                 </a>
             <? endif ?>

@@ -2203,7 +2203,7 @@ function createButtonbar ( $show = ARRANGMENT_BLOCK ){
         $child->getText == ""){
         
         $a_content = LinkButton::createCancel(_('Abbrechen'), 
-                UrlHelper::getURL(EVAL_FILE_ADMIN. "?evalID=").$this->tree->eval->getObjectID()."&abort_creation_button=1",
+                URLHelper::getURL(EVAL_FILE_ADMIN. "?evalID=").$this->tree->eval->getObjectID()."&abort_creation_button=1",
                 array('title' => _("Erstellung einer Evaluation abbrechen")));
        
         $buttons .= $seperator
@@ -2313,7 +2313,7 @@ function createFormNew($show = ARRANGMENT_BLOCK){
         $cancel = $seperator ."&nbsp;";
         
         $a_content = LinkButton::createCancel(_('Abbrechen'), 
-                UrlHelper::getURL(EVAL_FILE_ADMIN . "?evalID=".$this->tree->eval->getObjectID()."&abort_creation_button=1"),
+                URLHelper::getURL(EVAL_FILE_ADMIN . "?evalID=".$this->tree->eval->getObjectID()."&abort_creation_button=1"),
                 array('title' => _("Erstellung einer Evaluation abbrechen")));
         
         $cancel .= $a_content;

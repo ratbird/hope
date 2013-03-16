@@ -102,7 +102,7 @@ if (!$set_recur_x) {
           if (!((isset($_calendar->event) && !($_calendar->event instanceof SeminarEvent))
           || !$_calendar->event->havePermission(Event::PERMISSION_WRITABLE))) {
          */
-        echo Assets::img('popupcalendar.png', array('onClick' => "window.open('" . UrlHelper::getLink("termin_eingabe_dispatch.php?element_switch=start{$atimetxt}&form_name=edit_event&element_depending=end") . "', 'InsertDate', 'dependent=yes, width=210, height=210, left=500, top=150')", 'style' => 'vertical-align:middle;'));
+        echo Assets::img('popupcalendar.png', array('onClick' => "window.open('" . URLHelper::getLink("termin_eingabe_dispatch.php?element_switch=start{$atimetxt}&form_name=edit_event&element_depending=end") . "', 'InsertDate', 'dependent=yes, width=210, height=210, left=500, top=150')", 'style' => 'vertical-align:middle;'));
     }
     echo "&nbsp; &nbsp;";
     echo _("Uhrzeit");
@@ -160,7 +160,7 @@ if (!$set_recur_x) {
           if (!((isset($_calendar->event) && strtolower(get_class($_calendar->event)) == 'seminarevent')
           || !$_calendar->event->havePermission(Event::PERMISSION_WRITABLE))) {
          */
-        echo Assets::img('popupcalendar.png', array('onClick' => "window.open('" . UrlHelper::getLink("termin_eingabe_dispatch.php?element_switch=end{$atimetxt}&form_name=edit_event") . "', 'InsertDate', 'dependent=yes, width=210, height=210, left=500, top=150')", 'style' => 'vertical-align:middle;'));
+        echo Assets::img('popupcalendar.png', array('onClick' => "window.open('" . URLHelper::getLink("termin_eingabe_dispatch.php?element_switch=end{$atimetxt}&form_name=edit_event") . "', 'InsertDate', 'dependent=yes, width=210, height=210, left=500, top=150')", 'style' => 'vertical-align:middle;'));
     }
     echo "&nbsp; &nbsp;";
     echo _("Uhrzeit");
@@ -642,7 +642,7 @@ else {
               || !$_calendar->event->havePermission(Event::PERMISSION_WRITABLE))) {
              */
 
-            echo Assets::img('popupcalendar.png', array('onClick' => "window.open('" . UrlHelper::getLink("termin_eingabe_dispatch.php?element_switch=exp{$atimetxt}&form_name=edit_event&mcount=6") . "', 'InsertDate', 'dependent=yes, width=700, height=450, left=250, top=150')", 'style' => 'vertical-align:middle;'));
+            echo Assets::img('popupcalendar.png', array('onClick' => "window.open('" . URLHelper::getLink("termin_eingabe_dispatch.php?element_switch=exp{$atimetxt}&form_name=edit_event&mcount=6") . "', 'InsertDate', 'dependent=yes, width=700, height=450, left=250, top=150')", 'style' => 'vertical-align:middle;'));
         }
         echo '<br>&nbsp; <input type="radio" name="exp_c" value="count"';
         if ($exp_c == "count")
@@ -676,7 +676,7 @@ else {
             echo '&nbsp;&nbsp;';
 
             // insert popup calendar
-            echo Assets::img('popupcalendar.png', array('onClick' => "window.open('" . UrlHelper::getLink("termin_eingabe_dispatch.php?element_switch=exc{$atimetxt}&form_name=edit_event&mcount=6") . "', 'InsertDate', 'dependent=yes, width=700, height=450, left=250, top=150')", 'style' => 'vertical-align:middle;'));
+            echo Assets::img('popupcalendar.png', array('onClick' => "window.open('" . URLHelper::getLink("termin_eingabe_dispatch.php?element_switch=exc{$atimetxt}&form_name=edit_event&mcount=6") . "', 'InsertDate', 'dependent=yes, width=700, height=450, left=250, top=150')", 'style' => 'vertical-align:middle;'));
 
             echo '&nbsp;&nbsp;';
             echo '<input type="image" src="' . Assets::image_path('icons/16/yellow/arr_2right.png');

@@ -224,7 +224,7 @@ class SemBrowse {
         // add a skip link for advanced search here
      //   SkipLinks::addLink(_("Erweiterte Suche"), URLHelper::getLink('sem_portal.php', array('cmd' => 'xts', 'level' => 'f')), 120);
         //Quicksort Formular... fuer die eiligen oder die DAUs....
-        echo $this->search_obj->getFormStart(UrlHelper::getLink());
+        echo $this->search_obj->getFormStart(URLHelper::getLink());
         echo "<table id=\"search_sem_qs\" border=\"0\" align=\"center\" cellspacing=0 cellpadding=2 width = \"99%\">\n";
         echo "<tr><td class=\"table_row_even\" align=\"center\" valign=\"middle\"><font size=\"-1\">";
         echo '<label for="search_sem_qs_choose">' . _("Schnellsuche:") . "</label>&nbsp;";

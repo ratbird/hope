@@ -49,7 +49,7 @@ SkipLinks::addIndex(Navigation::getItem('/community/contacts/' . Request::get('v
 
 
 $filter = Request::option('filter');
-$contact = Request::quotedArray('contact');
+$contact = Request::getArray('contact');
 $view = Request::option('view');
 $contact_id = Request::option('contact_id');
 $open = Request::option('open');
@@ -115,14 +115,14 @@ if (Request::option('move')) {
 }
 
 // add a new userinfo
-$owninfocontent = Request::quotedArray('owninfocontent');
-$owninfolabel =  Request::quotedArray('owninfolabel');
+$owninfocontent = Request::getArray('owninfocontent');
+$owninfolabel =  Request::getArray('owninfolabel');
 if ($owninfolabel AND ($owninfocontent[0]!=_("Inhalt"))){
     AddNewUserinfo ($edit_id, $owninfolabel[0], $owninfocontent[0]);
 }
-$existingowninfolabel = Request::quotedArray('existingowninfolabel');
+$existingowninfolabel = Request::getArray('existingowninfolabel');
 $userinfo_id = Request::optionArray('userinfo_id');
-$existingowninfocontent = Request::quotedArray('existingowninfocontent');
+$existingowninfocontent = Request::getArray('existingowninfocontent');
 if ($existingowninfolabel) {
     for ($i=0; $i<sizeof($existingowninfolabel); $i++) {
       UpdateUserinfo ($existingowninfolabel[$i], $existingowninfocontent[$i], $userinfo_id[$i]);
@@ -134,7 +134,7 @@ if (Request::get('edit_id') && Request::submitted('uebernehmen')) {
     PageLayout::postMessage(MessageBox::success(_('Die Änderungen wurden übernommen.')));
 }
 
-$search_exp = Request::quoted('search_exp');
+$search_exp = Request::get('search_exp');
 $search_results = false;
 if ($search_exp) {
     $search_exp = str_replace("%", "\%", $search_exp);

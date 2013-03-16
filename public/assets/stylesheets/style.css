@@ -478,6 +478,15 @@ tr.sortable th.sortdesc {
   box-sizing: border-box;
   width: 100%;
 }
+.settings tbody.maxed td[colspan] input[type=email],
+.settings tbody.maxed td[colspan] input[type=password],
+.settings tbody.maxed td[colspan] input[type=tel],
+.settings tbody.maxed td[colspan] input[type=text],
+.settings tbody.maxed td[colspan] input[type=url],
+.settings tbody.maxed td[colspan] select,
+.settings tbody.maxed td[colspan] textarea {
+  width: 200px;
+}
 .settings tbody.privacy td:first-child ~ td {
   font-style: italic;
   text-align: center;

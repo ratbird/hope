@@ -27,6 +27,18 @@
         var target = $(this).data().target;
         $(target).val(this.value);
     });
+    
+    $(document).ready(function () {
+        $('#edit_userdata').on('change', 'input[name^=email]', function () {
+            var changed = false;
+            $('#edit_userdata input[name^=email]').each(function () {
+                changed = changed || (this.value != this.defaultValue);
+            });
+            $('#edit_userdata .email-change-confirm').toggle(changed);
+        });
+
+        $('#edit_userdata .email-change-confirm').hide();
+    });
 }(jQuery));
 
 //

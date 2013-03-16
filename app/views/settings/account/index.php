@@ -174,6 +174,17 @@
                 <? endforeach; ?>
                 </td>
             </tr>
+        <? if (!$restricted && $controller->shallChange('auth_user_md5.Email')): ?>
+            <tr class="divider email-change-confirm">
+                <td colspan="3" class="printhead">
+                    <p id="email-change-confirm">
+                        <?= _('Falls Sie Ihre E-Mail-Adresse ändern, muss diese Änderung durch die Eingabe '
+                             .'Ihres Passworts bestätigt werden:') ?>
+                    </p>
+                    <input type="password" name="password" aria-labelledby="email-change-confirm">
+                </td>
+            </tr>
+        <? endif; ?>
         </tbody>
         <tfoot>
             <tr>

@@ -285,6 +285,11 @@ tr.sortable {
                 .box-sizing(border-box);
                 width: 100%;
             }
+            td[colspan] {
+                input[type=email], input[type=password], input[type=tel], input[type=text], input[type=url], select, textarea {
+                    width: 200px;
+                }
+            }
         }
         &.privacy td:first-child ~ td {
             font-style: italic;

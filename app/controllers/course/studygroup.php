@@ -296,6 +296,7 @@ class Course_StudygroupController extends AuthenticatedController {
 
                 // de-/activate modules
                 $mods              = new Modules();
+                $admin_mods        = new AdminModules();
                 $bitmask           = 0;
                 $available_modules = StudygroupModel::getInstalledModules();
                 $active_plugins    = Request::getArray('groupplugin');

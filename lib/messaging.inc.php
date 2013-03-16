@@ -437,7 +437,7 @@ class messaging
         }
         PersonalNotifications::add(
             $rec_id,
-            URLHelper::getUrl("sms_box.php?mopen=$tmp_message_id#$tmp_message_id"),
+            URLHelper::getUrl("sms_box.php?sms_inout=in&mopen=$tmp_message_id#$tmp_message_id"),
             sprintf(_('Sie haben eine Nachricht von %s erhalten!'), $snd_name),
             'message_'.$tmp_message_id,
             Assets::image_path("icons/40/blue/mail")

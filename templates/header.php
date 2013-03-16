@@ -117,7 +117,7 @@
             <? if (Navigation::hasItem('/links')) : ?>
             <? foreach (Navigation::getItem('/links') as $nav) : ?>
                 <? if ($nav->isVisible()) : ?>
-                    <li>
+                    <li <? if ($nav->isActive()) echo 'class="active"'; ?>>
                     <a
                     <? if (is_internal_url($url = $nav->getURL())) : ?>
                         href="<?= URLHelper::getLink($url, $link_params) ?>"

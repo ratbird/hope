@@ -41,8 +41,7 @@ STUDIP.OldUpload = {
         }
 
         STUDIP.OldUpload.msg_window = window.open("", "messagewindow", "height=250,width=200,left=20,top=20,scrollbars=no,resizable=no,toolbar=no");
-        STUDIP.OldUpload.msg_window.document.write(jQuery("#upload_window_template").text());
-        jQuery(STUDIP.OldUpload.msg_window.document).find('b').text(file_only);
+        STUDIP.OldUpload.msg_window.document.write(jQuery("#upload_window_template").text().replace(/\:file_only/, file_only));
 
         STUDIP.OldUpload.upload = true;
         return true;

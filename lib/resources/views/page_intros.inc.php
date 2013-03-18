@@ -397,10 +397,9 @@ switch ($view) {
 
         $infobox[0]["kategorie"] = _("Aktionen:");
         $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
-                                    "text"  =>  sprintf("<a href=\"javascript:void(null)\" onclick=\"window.open('resources.php?actual_object={$_SESSION['resources_data']['resolve_requests_one_res']}&amp;quick_view=view_sem_schedule&amp;quick_view_mode=no_nav','','scrollbars=yes,left=10,top=10,width=1000,height=680,resizable=yes');\">%s</a>", _("Semesterplan")));
+                                    "text"  =>  sprintf("<a href=\"resources.php?actual_object={$_SESSION['resources_data']['resolve_requests_one_res']}&quick_view=view_sem_schedule&quick_view_mode=no_nav\" onclick=\"window.open(this.href,'','scrollbars=yes,left=10,top=10,width=1000,height=680,resizable=yes');return false;\">%s</a>", _("Semesterplan")));
 
-
-
+        $infopic = "infobox/schedules.jpg";
     break;
     //default
     default:

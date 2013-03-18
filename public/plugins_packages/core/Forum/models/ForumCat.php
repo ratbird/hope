@@ -185,4 +185,20 @@ class ForumCat {
             SET entry_name = ? WHERE category_id = ?");
         $stmt->execute(array($name, $category_id));
     }
+    
+    /**
+     * Return the data for the passed category_id
+     * 
+     * @param type $category_id
+     * 
+     * @return array the data for the passed category_id
+     */
+    static function get($category_id)
+    {
+        $stmt = DBManager::get()->prepare("SELECT * FROM forum_categories
+            WHERE category_id = ?");
+        $stmt->execute(array($category_id));
+        
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }

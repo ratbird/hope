@@ -133,6 +133,9 @@ class IndexController extends StudipController
             $this->constraint   = ForumEntry::getConstraints($this->topic_id);
         }
 
+        // check if the topic_id matches the currently selected seminar
+        ForumPerm::checkTopicId($this->getId(), $this->topic_id);
+        
 
         /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
          * B E R E I C H E / T H R E A D S / P O S T I N G S   L A D E N *
@@ -380,7 +383,7 @@ class IndexController extends StudipController
             throw new Exception('missing seminar_id/topic_id while adding a new entry!');
         }
         
-        ForumPerm::check('add_entry', $this->getId());
+        ForumPerm::check('add_entry', $this->getId(), $parent_id);
         
         $constraints = ForumEntry::getConstraints($parent_id);
         
@@ -440,7 +443,9 @@ class IndexController extends StudipController
         $page = ForumEntry::getPostingPage($topic_id);
         URLHelper::addLinkParam('page', $page);
         
-        if (ForumPerm::hasEditPerms($topic_id) || ForumPerm::has('remove_entry', $seminar_id)) {
+        ForumPerm::check('remove_entry', $this->getId(), $topic_id);
+
+        if (ForumPerm::hasEditPerms($topic_id)) {
             $path = ForumEntry::getPathToPosting($topic_id);
             $topic  = array_pop($path);
             $parent = array_pop($path);
@@ -474,6 +479,8 @@ class IndexController extends StudipController
         $name    = studip_utf8decode(Request::get('name', _('Kein Titel')));
         $content = studip_utf8decode(Request::get('content', _('Keine Beschreibung')));
 
+        ForumPerm::check('add_entry', $this->getId(), $topic_id);
+
         if (ForumPerm::hasEditPerms($topic_id)) {
             ForumEntry::update($topic_id, $name, $content);
         } else {
@@ -493,7 +500,8 @@ class IndexController extends StudipController
     }
 
     function move_thread_action($thread_id, $destination) {
-        ForumPerm::check('move_thread', $this->getId());
+        ForumPerm::check('move_thread', $this->getId(), $thread_id);
+        ForumPerm::check('move_thread', $this->getId(), $destination);
 
         ForumEntry::move($thread_id, $destination);
 
@@ -502,6 +510,8 @@ class IndexController extends StudipController
 
     function set_favorite_action($topic_id)
     {
+        ForumPerm::check('fav_entry', $this->getId(), $topic_id);
+        
         ForumFavorite::set($topic_id);
         
         if (Request::isXhr()) {
@@ -515,6 +525,8 @@ class IndexController extends StudipController
     }
     
     function unset_favorite_action($topic_id) {
+        ForumPerm::check('fav_entry', $this->getId(), $topic_id);
+        
         ForumFavorite::remove($topic_id);
         
         if (Request::isXhr()) {
@@ -555,6 +567,8 @@ class IndexController extends StudipController
 
     function like_action($topic_id)
     {
+        ForumPerm::check('like_entry', $this->getId(), $topic_id);
+        
         ForumLike::like($topic_id);
 
         if (Request::isAjax()) {
@@ -568,6 +582,8 @@ class IndexController extends StudipController
 
     function dislike_action($topic_id)
     {
+        ForumPerm::check('like_entry', $this->getId(), $topic_id);
+
         ForumLike::dislike($topic_id);
         
         if (Request::isAjax()) {
@@ -585,7 +601,7 @@ class IndexController extends StudipController
 
     function cite_action($topic_id)
     {
-        ForumPerm::check('add_entry', $this->getId());
+        ForumPerm::check('add_entry', $this->getId(), $topic_id);
 
         $topic = ForumEntry::getConstraints($topic_id);
 
@@ -598,7 +614,7 @@ class IndexController extends StudipController
 
     function new_entry_action($topic_id)
     {
-        ForumPerm::check('add_entry', $this->getId());
+        ForumPerm::check('add_entry', $this->getId(), $topic_id);
 
         $this->flash['edit_entry'] = true;
         $this->redirect(PluginEngine::getLink('coreforum/index/index/'. $topic_id .'#create'));
@@ -609,13 +625,15 @@ class IndexController extends StudipController
         ForumPerm::check('add_category', $this->getId());
 
         $category_id = ForumCat::add($this->getId(), Request::get('category'));
-        $this->topic_id = $topic_id;
-
+        
+        ForumPerm::checkCategoryId($this->getId(), $category_id);
+                    
         $this->redirect(PluginEngine::getLink('coreforum/index#cat_'. $category_id));
     }
 
     function remove_category_action($category_id)
     {
+        ForumPerm::checkCategoryId($this->getId(), $category_id);
         ForumPerm::check('remove_category', $this->getId());
         
         $this->flash['messages'] = array('success' => _('Die Kategorie wurde gelöscht!'));
@@ -631,7 +649,7 @@ class IndexController extends StudipController
 
     function edit_area_action($area_id)
     {
-        ForumPerm::check('edit_area', $this->getId());
+        ForumPerm::check('edit_area', $this->getId(), $area_id);
 
         if (Request::isAjax()) {
             ForumEntry::update($area_id, studip_utf8decode(Request::get('name')), studip_utf8decode(Request::get('content')));
@@ -645,6 +663,7 @@ class IndexController extends StudipController
     }
 
     function edit_category_action($category_id) {
+        ForumPerm::checkCategoryId($this->getId(), $category_id);
         ForumPerm::check('edit_category', $this->getId());
         
         if (Request::isAjax()) {
@@ -664,6 +683,7 @@ class IndexController extends StudipController
 
         $pos = 0;
         foreach (Request::getArray('categories') as $category_id) {
+            ForumPerm::checkCategoryId($this->getId(), $category_id);
             ForumCat::setPosition($category_id, $pos);
             $pos++;
         }
@@ -678,6 +698,9 @@ class IndexController extends StudipController
         foreach (Request::getArray('areas') as $category_id => $areas) {
             $pos = 0;
             foreach ($areas as $area_id) {
+                ForumPerm::checkCategoryId($this->getId(), $category_id);
+                ForumPerm::check('sort_area', $this->getId(), $area_id);
+
                 ForumCat::addArea($category_id, $area_id);
                 ForumCat::setAreaPosition($area_id, $pos);
                 $pos++;
@@ -689,7 +712,7 @@ class IndexController extends StudipController
     
     function abo_action($topic_id)
     {
-        ForumPerm::check('abo', $this->getId());
+        ForumPerm::check('abo', $this->getId(), $topic_id);
             
         ForumAbo::add($topic_id);
         $this->constraint = ForumEntry::getConstraints($topic_id);
@@ -709,7 +732,7 @@ class IndexController extends StudipController
 
     function remove_abo_action($topic_id)
     {
-        ForumPerm::check('abo', $this->getId());
+        ForumPerm::check('abo', $this->getId(), $topic_id);
 
         ForumAbo::delete($topic_id);
         
@@ -724,7 +747,7 @@ class IndexController extends StudipController
 
     function pdfexport_action($parent_id = null)
     {
-        ForumPerm::check('pdfexport', $this->getId());
+        ForumPerm::check('pdfexport', $this->getId(), $parent_id);
         
         ForumHelpers::createPDF($this->getId(), $parent_id);
     }
@@ -931,7 +954,7 @@ class IndexController extends StudipController
     
     function admin_getchilds_action($parent_id)
     {
-        ForumPerm::check('admin', $this->getId());
+        ForumPerm::check('admin', $this->getId(), $parent_id);
 
         $this->set_layout(null);
         $entries = ForumEntry::getList('flat', $parent_id);
@@ -941,10 +964,12 @@ class IndexController extends StudipController
 
     function admin_move_action($destination)
     {
-        ForumPerm::check('admin', $this->getId());
+        ForumPerm::check('admin', $this->getId(), $destination);
 
         foreach (Request::getArray('topics') as $topic_id) {
             // TODO: create adjusted move-function, the curent one is not up the task for multi-level movement
+            // TODO: make sure every passed topic_id is checked
+            ForumPerm::check('admin', $this->getId(), $topic_id);
             // ForumEntry::move($topic_id, $destination);
         }
 

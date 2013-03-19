@@ -59,14 +59,18 @@ PageLayout::setTitle(_("Verwaltung von Umfragen und Tests"));
 require_once 'lib/admin_search.inc.php';
 
 if (Request::option('list') || Request::option('view') && !(isDeputyEditAboutActivated() && isDeputy($auth->auth["uid"], get_userid(Request::get('cid')), true))) {
+    $navigation_item = '/course/admin/vote';
     if ($perm->have_perm('admin')) {
         if ($_SESSION['links_admin_data']['topkat'] == 'sem') {
-            Navigation::activateItem('/admin/course/vote');
+            $navigation_item = '/admin/course/vote';
         } else {
-            Navigation::activateItem('/admin/institute/vote');
+            $navigation_item = '/admin/institute/vote';
         }
+    }
+    if (Navigation::hasItem($navigation_item)) {
+        Navigation::activateItem($navigation_item);
     } else {
-        Navigation::activateItem('/course/admin/vote');
+        Navigation::activateItem('/tools/vote');
     }
 } else {
     Navigation::activateItem('/tools/vote');

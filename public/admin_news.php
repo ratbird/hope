@@ -84,16 +84,22 @@ if ($list || $view || ($news_range_id != $user->id &&
         isDeputy($auth->auth["uid"], $news_range_id, true))){
     include 'lib/admin_search.inc.php';
 
+    $navigation_item = '/tools/news';
     if ($perm->have_perm('admin')) {
         if ($_SESSION['links_admin_data']['topkat'] == 'sem' && !SeminarCategories::getByTypeId($SessSemName['art_num'])->studygroup_mode) {
-            Navigation::activateItem('/admin/course/news');
+            $navigation_item = '/admin/course/news';
         } elseif ($_SESSION['links_admin_data']['topkat'] == 'inst') {
-            Navigation::activateItem('/admin/institute/news');
+            $navigation_item = '/admin/institute/news';
         } else {
-            Navigation::activateItem('/tools/news');
+            $navigation_item = '/tools/news';
         }
     } else {
-        Navigation::activateItem('/course/admin/news');
+        $navigation_item = '/course/admin/news';
+    }
+    if (Navigation::hasItem($navigation_item)) {
+        Navigation::activateItem($navigation_item);
+    } else {
+        Navigation::activateItem('/tools/news');
     }
 } else {
     Navigation::activateItem('/tools/news');

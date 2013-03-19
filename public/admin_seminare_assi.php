@@ -2518,9 +2518,9 @@ elseif ((!$level) || ($level == 1))
                             foreach ($all_semester as $key => $semester) {
                                 if ((!$semester["past"]) && ($semester["ende"] > time())) {
                                     if ($_SESSION['sem_create_data']["sem_start_time"] ==$semester["beginn"]) {
-                                        echo "<option value=".$semester["beginn"]." selected>", $semester["name"], "</option>";
+                                        echo "<option value=".$semester["beginn"]." selected>", htmlReady($semester["name"]), "</option>";
                                     } else {
-                                        echo "<option value=".$semester["beginn"].">", $semester["name"], "</option>";
+                                        echo "<option value=".$semester["beginn"].">", htmlReady($semester["name"]), "</option>";
                                     }
                                 }
                             }
@@ -2551,7 +2551,7 @@ elseif ((!$level) || ($level == 1))
                                                 echo "<option value=",$all_semester[$i]["beginn"], ">"._("bis")." ", $all_semester[$i]["name"], "</option>";
                                             }
                                         else
-                                            echo "<option value=",$all_semester[$i]["beginn"], ">"._("bis")." ", $all_semester[$i]["name"], "</option>";
+                                            echo "<option value=",$all_semester[$i]["beginn"], ">"._("bis")." ", htmlReady($all_semester[$i]["name"]), "</option>";
                                         }
                                 if ($_SESSION['sem_create_data']["sem_duration_time"] == -1)
                                     echo "<option value=-1 selected>"._("unbegrenzt")."</option>";

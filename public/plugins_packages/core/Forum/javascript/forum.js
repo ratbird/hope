@@ -183,7 +183,7 @@ STUDIP.Forum = {
         name.name = jQuery('table[data-category-id=' + category_id + '] span.heading_edit input[type=text]').val();
 
         if (!$.trim(name.name).length) {
-            jQuery('table[data-category-id=' + category_id + '] span.heading_edit input[type=text]').val('').closest('form').checkValidity();
+            jQuery('table[data-category-id=' + category_id + '] span.heading_edit input[type=text]').val('').closest('form').data('validator').checkValidity();
             return;
         }
 

@@ -862,7 +862,7 @@ table.tree .centered table {
 #barBottomright li:hover .list .item {
   opacity: 1;
 }
-#barBottomright li.active a {
+#barBottomright li.active > a {
   color: #fff;
   font-weight: bold;
 }

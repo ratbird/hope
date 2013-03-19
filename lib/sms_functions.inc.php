@@ -284,12 +284,17 @@ function print_snd_message($psm) {
     $custom_data = "data-behaviour=\"'ajaxContent'\" "
                  . "data-target=\"'#msg_item_{$psm['message_id']}'\" "
                  . "data-url=\"'{$ajax_link}'\"";
+    $subject = $psm['message_subject'];
+    if (strlen($subject) > 80) {
+        $custom_data .= sprintf(' title="%s"', htmlReady($subject));
+        $subject = mila($subject, 80);
+    }
 
     $titel = "<a name=\"{$psm['message_id']}\" "
            . "href=\"{$link}\" "
            . "class=\"tree\" "
            . $custom_data . "> "
-           . htmlready($psm['message_subject'])
+           . htmlReady($subject)
            . "{$attachment_icon}</a>";
     $message_hovericon['titel'] = $psm['message_subject'];
     // (hover) icon
@@ -388,12 +393,17 @@ function print_rec_message($prm) {
     $custom_data = "data-behaviour=\"'ajaxContent'\" "
                  . "data-target=\"'#msg_item_{$prm['message_id']}'\" "
                  . "data-url=\"'{$ajax_link}'\"";
+    $subject = $prm['message_subject'];
+    if (strlen($subject) > 80) {
+        $custom_data .= sprintf(' title="%s"', htmlReady($subject));
+        $subject = mila($subject, 80);
+    }
 
     $titel = "<a name=\"{$prm['message_id']}\" "
            . "href=\"{$link}\" "
            . "class=\"tree\" "
            . $custom_data . '"> '
-           . htmlReady($prm['message_subject'])."{$attachment_icon}</a>";
+           . htmlReady($subject)."{$attachment_icon}</a>";
 
     if ($open == 'open'){
         $content = formatReady($prm['message']);

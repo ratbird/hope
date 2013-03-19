@@ -1288,7 +1288,7 @@ while (list ($key, $val) = each ($gruppe)) {
 
             $postings_user = 0;
             foreach (PluginEngine::getPlugins('ForumModule') as $plugin) {
-                $postings_user += $plugin->getNumberOfPostingsForUser($one_user['user_id']);
+                $postings_user += $plugin->getNumberOfPostingsForUser($one_user['user_id'], $_SESSION['SessionSeminar']);
             }
             
             // Aktivitaet berechnen

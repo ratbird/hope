@@ -748,14 +748,15 @@ class ForumEntry {
      * 
      * @return int  number of entries user has ever written
      */
-    static function countUserEntries($user_id)
+    static function countUserEntries($user_id, $seminar_id = null)
     {
         static $entries;
 
         if (!$entries[$user_id]) {
             $stmt = DBManager::get()->prepare("SELECT COUNT(*)
-                FROM forum_entries WHERE user_id = ?");
-            $stmt->execute(array($user_id));
+                FROM forum_entries
+                WHERE user_id = ? AND seminar_id = IFNULL(?, seminar_id)");
+            $stmt->execute(array($user_id, $seminar_id));
 
             $entries[$user_id] = $stmt->fetchColumn();
         }

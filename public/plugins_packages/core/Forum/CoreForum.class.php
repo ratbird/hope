@@ -161,9 +161,9 @@ class CoreForum extends StudipPlugin implements ForumModule
         ForumIssue::setThreadForIssue($GLOBALS['SessSemName'][1], $issue_id, $title, $content);
     }
     
-    function getNumberOfPostingsForUser($user_id)
+    function getNumberOfPostingsForUser($user_id, $seminar_id = null)
     {
-        return ForumEntry::countUserEntries($user_id);
+        return ForumEntry::countUserEntries($user_id, $seminar_id);
     }
     
     function getNumberOfPostingsForIssue($issue_id)

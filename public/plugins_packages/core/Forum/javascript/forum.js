@@ -175,12 +175,17 @@ STUDIP.Forum = {
         // reset the input field with the unchanged name
         jQuery('table[data-category-id=' + category_id + '] span.heading_edit input[type=text]').val(
             jQuery('table[data-category-id=' + category_id + '] span.category_name').text().trim()
-        );
+        ).closest('form').data('validator').reset();
     },
 
     saveCategoryName: function (category_id) {
         var name = {};
         name.name = jQuery('table[data-category-id=' + category_id + '] span.heading_edit input[type=text]').val();
+
+        if (!$.trim(name.name).length) {
+            jQuery('table[data-category-id=' + category_id + '] span.heading_edit input[type=text]').val('').closest('form').checkValidity();
+            return;
+        }
 
         // display the new name immediately
         jQuery('table[data-category-id=' + category_id + '] span.category_name').text(name.name);

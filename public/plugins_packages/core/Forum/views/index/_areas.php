@@ -14,7 +14,7 @@
             </span>
             <span class="heading_edit" style="<?= Request::get('edit_category') == $category_id ? '' : 'display: none;' ?> margin-left: 5px;">
                 <form method="post" action="<?= PluginEngine::getLink('coreforum/index/edit_category/' . $category_id) ?>">
-                    <input type="text" name="name" size="40" value="<?= htmlReady($categories[$category_id]) ?>">
+                    <input type="text" required name="name" size="40" value="<?= htmlReady($categories[$category_id]) ?>">
 
                     <?= Studip\Button::createAccept('Kategorie speichern', '', 
                         array('onClick' => "javascript:STUDIP.Forum.saveCategoryName('". $category_id ."'); return false;")) ?>

@@ -80,7 +80,7 @@
                         <div style="font-size: 16px; margin-bottom: 5px;">
                             <a href="<?= PluginEngine::getLink('coreforum/index/move_thread/'. $entry['topic_id'].'/'. $area_id) ?>">
                             <?= Assets::img('icons/16/yellow/arr_2right.png') ?>
-                            <?= $area['name'] ?>
+                            <?= htmlReady($area['name_raw']) ?>
                             </a>
                         </div>
                         <? endif ?>

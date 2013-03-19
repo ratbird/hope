@@ -8,7 +8,7 @@
     <tr>
         <td class="index_box_cell" style="font-weight: bold;">
     <? foreach ($seminare as $semester => $seminar) :?>
-            <?= $semester ?><br>
+            <?= htmlReady($semester) ?><br>
             <br>
 
         <? foreach ($seminar as $id => $inhalt) :?>

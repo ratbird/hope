@@ -37,7 +37,7 @@ function printSiteTitle($semester = NULL){
           . "    <td class=table_header_bold align=left colspan=\"2\">\n"
           . "     " . Assets::img('icons/16/white/seminar.png', array('class' => 'text-top', 'title' =>_('Veranstaltungsübersicht erstellen'))) . "\n"
           . "     &nbsp;<b>"._("Veranstaltungsübersicht erstellen:")."</b>\n"
-          . "     <font size=\"-1\">$semester</font>\n"
+          . "     <font size=\"-1\">" . htmlReady($semester) . "</font>\n"
           . "    </td>\n"
           . "   </tr>\n"
           . "</table>\n";
@@ -67,7 +67,7 @@ function printSelectSemester($infobox,$semestersAR){
           . "       &nbsp;<select name=\"semesterid\" style=\"vertical-align:middle;\">\n";
     // the semester
     foreach ($semestersAR as $semester){
-        $html .= "        <option value=\"".$semester["id"]."\">".$semester["name"]."</option>\n";
+        $html .= "        <option value=\"".$semester["id"]."\">".htmlReady($semester["name"])."</option>\n";
     }
     $html .="       </select>\n"
           . Button::create(_('Auswählen'), 'semester_selected', array('title' => _("Semester und Kriterium auswählen.")))
@@ -78,7 +78,7 @@ function printSelectSemester($infobox,$semestersAR){
     if(sizeof($record_of_study_templates)>1){
         $html .="       <br><br>&nbsp;". _("Vorlage").": <select name=\"template\" style=\"vertical-align:middle;\">\n";
         for ($i=1;$i<=sizeof($record_of_study_templates);$i++){
-            $html .="        <option value=\"".$i."\">".$record_of_study_templates[$i]["title"]."</option>\n";
+            $html .="        <option value=\"".$i."\">".htmlReady($record_of_study_templates[$i]["title"])."</option>\n";
         }
         $html .="       </select>\n";
     } else {
@@ -159,14 +159,14 @@ function printRecordOfStudies($infobox, $basicdata, $seminare, $notice = NULL){
         else                $displayclass = "table_row_odd";
     $html .="       <tr>\n"
           . "        <td class=\"$displayclass\" height=\"40\"><font size=\"-1\">\n"
-          . "         &nbsp;<input name=\"seminarnumber$i\" type=\"text\" size=\"6\" maxlength=\"6\" value=\"".$seminare[$i]["seminarnumber"]."\">\n"
+          . "         &nbsp;<input name=\"seminarnumber$i\" type=\"text\" size=\"6\" maxlength=\"6\" value=\"".htmlReady($seminare[$i]["seminarnumber"])."\">\n"
           . "        </td>\n"
           . "        <td class=\"$displayclass\"><font size=\"-1\">\n"
           . "         &nbsp;<input name=\"tutor$i\" type=\"text\" size=\"70\" maxlength=\"70\" value=\"".$seminare[$i]["tutor"]."\">\n"
           . "         \n"
           . "        </td>\n"
           . "        <td class=\"$displayclass\" align=\"center\"><font size=\"-1\">\n"
-          . "         &nbsp;<input name=\"sws$i\" type=\"text\" size=\"2\" maxlength=\"2\" value=\"".$seminare[$i]["sws"]."\">"._("SWS")."\n"
+          . "         &nbsp;<input name=\"sws$i\" type=\"text\" size=\"2\" maxlength=\"2\" value=\"".htmlReady($seminare[$i]["sws"])."\">"._("SWS")."\n"
           . "        </td>\n"
           . "        <td class=\"$displayclass\" rowspan=\"2\" align=\"center\">\n"
           . "         &nbsp;<input type=\"checkbox\" name=\"delete$i\" value=\"1\">\n"
@@ -174,7 +174,7 @@ function printRecordOfStudies($infobox, $basicdata, $seminare, $notice = NULL){
           . "       </tr>\n"
           . "       <tr>\n"
           . "        <td class=\"$displayclass\" colspan=\"3\"><font size=\"-1\" align=\"top\">\n"
-          . "         &nbsp;<b>"._("Genaue Bezeichnung:")."</b><br>&nbsp;<textarea name=\"description$i\" cols=\"60\" rows=\"2\">".$seminare[$i]["description"]."</textarea>\n"
+          . "         &nbsp;<b>"._("Genaue Bezeichnung:")."</b><br>&nbsp;<textarea name=\"description$i\" cols=\"60\" rows=\"2\">".htmlReady($seminare[$i]["description"])."</textarea>\n"
           . "        &nbsp;<br><br></td>\n"
           . "       </tr>\n";
     }
@@ -189,7 +189,7 @@ function printRecordOfStudies($infobox, $basicdata, $seminare, $notice = NULL){
           . Button::create(_('Hinzufügen'), 'add_seminars', array('title' => _('Neue Veranstaltung hinzufügen.')))
           . "         <select style=\"vertical-align:middle;\" name=\"newseminarfields\" size=1>\n";
     for( $i=1; $i<=10; $i++ )
-        $html .= "        <option value=\"$i\">$i</option>\n";
+        $html .= "        <option>$i</option>\n";
     $html .="         </select>\n"
           . "        </font></td>\n"
           . "        <td align=right><font size=\"-1\" style=\"vertical-align:middle;\">\n";
@@ -241,18 +241,18 @@ function printPdfAssortment($infobox,$seminars){
           : sprintf(_("Ihre Einträge können auf einer Seite untergebracht werden."),$seminars["numberofseminars"])."\n";
     $html .="     <br><br>\n"
           . _("Ihre Studiendaten:")."<br>\n"
-          . "&nbsp;" . _("Hochschule: ") . $seminars["university"] . "<br>\n"
-          . "&nbsp;" . _("Studienfach: ") . $seminars["fieldofstudy"] . "<br>\n"
-          . "&nbsp;" . _("Name (Vor- und Zuname): ") . $seminars["studentname"] . "<br>\n"
-          . "&nbsp;" . _("Semester: ") . $seminars["semester"] . "<br>\n"
-          . "&nbsp;" . _("Fachsemester: ") . $seminars["semesternumber"] . "<br>\n"
+          . "&nbsp;" . _("Hochschule: ") . htmlReady($seminars["university"]) . "<br>\n"
+          . "&nbsp;" . _("Studienfach: ") . htmlReady($seminars["fieldofstudy"]) . "<br>\n"
+          . "&nbsp;" . _("Name (Vor- und Zuname): ") . htmlReady($seminars["studentname"]) . "<br>\n"
+          . "&nbsp;" . _("Semester: ") . htmlReady($seminars["semester"]) . "<br>\n"
+          . "&nbsp;" . _("Fachsemester: ") . htmlReady($seminars["semesternumber"]) . "<br>\n"
           . "<br>\n"
-          . _("Vorlage:") ." ". $record_of_study_templates[$template]["title"] . "\n"
+          . _("Vorlage:") ." ". htmlReady($record_of_study_templates[$template]["title"]) . "\n"
           . "<br><br>\n";
 
     $html .= ($seminars["numberofpages"]>1)
-          ? sprintf(_("Klicken Sie nun auf die einzelnen Links, um Ihre Veranstaltungsübersicht zu erstellen."),$seminars["numberofpages"])."\n"
-          : sprintf(_("Klicken Sie nun auf den Link, um Ihre Veranstaltungsübersicht zu erstellen."),$seminars["numberofseminars"])."\n";
+          ? _("Klicken Sie nun auf die einzelnen Links, um Ihre Veranstaltungsübersicht zu erstellen.")."\n"
+          : _("Klicken Sie nun auf den Link, um Ihre Veranstaltungsübersicht zu erstellen.")."\n";
 
     $html .="     <br>\n";
     if ($seminars["numberofpages"]>1)
@@ -302,7 +302,7 @@ function printPdfAssortment($infobox,$seminars){
 function createInputBox($text, $value, $name, $class, $size, $additionaltext = NULL){
     $html = "    <tr>\n"
           . "     <td class=\"".$class."\" colspan=\"4\" width=\"99%\"><font size=\"-1\">\n"
-          . "      &nbsp;".$text."<br><input name=\"".$name."\" type=\"text\" size=\"".$size."\" maxlength=\"".$size."\" value=\"".$value."\">".$additionaltext."\n"
+          . "      &nbsp;".$text."<br><input name=\"".$name."\" type=\"text\" size=\"".$size."\" maxlength=\"".$size."\" value=\"".htmlReady($value)."\">".htmlReady($additionaltext)."\n"
           . "     </font></td>\n"
           . "    </tr>\n";
 
@@ -319,7 +319,7 @@ function createInputBox($text, $value, $name, $class, $size, $additionaltext = N
  */
 function createSeminarHeadTD($text, $align = "left"){
     $html = "        <td class=\"table_header\" height=\"26\" align=\"".$align."\" style=\"vertical-align:bottom;\" ><font size=\"-1\"><b>\n"
-          . "         &nbsp;".$text."\n"
+          . "         &nbsp;".htmlReady($text)."\n"
           . "        </font></b></td>\n";
     return $html;
 }

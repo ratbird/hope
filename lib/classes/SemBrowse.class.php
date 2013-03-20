@@ -395,7 +395,7 @@ class SemBrowse {
                 echo "\n<tr><td class=\"table_header\" colspan=\"4\"><font size=-1><b>";
                 switch ($this->sem_browse_data["group_by"]){
                     case 0:
-                    echo $this->search_obj->sem_dates[$group_field]['name'];
+                    echo htmlReady($this->search_obj->sem_dates[$group_field]['name']);
                     break;
 
                     case 1:

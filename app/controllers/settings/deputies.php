@@ -37,11 +37,6 @@ class Settings_DeputiesController extends Settings_SettingsController
         SkipLinks::addIndex(_('Standardvertretung'), 'main_content', 100);
 
         $this->edit_about_enabled = get_config('DEPUTIES_EDIT_ABOUT_ENABLE');
-
-        // Needed for QuickSearch to function without JavaScript.
-        if (Request::get('deputy_id_parameter')) {
-            $_SESSION['deputy_id_parameter'] = Request::get('deputy_id_parameter');
-        }
     }
 
     /**
@@ -65,10 +60,6 @@ class Settings_DeputiesController extends Settings_SettingsController
             return;
         }
 
-        if ($_SESSION['deputy_id_parameter']) {
-            Request::set('deputy_id_parameter', $_SESSION['deputy_id_parameter']);
-        }
-
         $deputies = getDeputies($this->user->user_id, true);
 
         $exclude_users = array($this->user->user_id);
@@ -76,10 +67,10 @@ class Settings_DeputiesController extends Settings_SettingsController
             $exclude_users = array_merge($exclude_users, array_map(function($d) { return $d['user_id']; }, $deputies));
         }
 
-        $this->deputies           = $deputies;
-        $this->search             = new PermissionSearch('user', _('Vor-, Nach- oder Benutzername'),
-                                                         'user_id', array('permission'   => getValidDeputyPerms(),
-                                                                          'exclude_user' => $exclude_users));
+        $this->deputies = $deputies;
+        $this->search   = new PermissionSearch('user', _('Vor-, Nach- oder Benutzername'),
+                                               'user_id', array('permission'   => getValidDeputyPerms(),
+                                                                'exclude_user' => $exclude_users));
 
         $this->setInfoboxImage('infobox/groups.jpg');
         $this->addToInfobox(_('Informationen'), _('Legen Sie hier fest, wer standardmäßig als Vertretung in Ihren Veranstaltungen eingetragen sein soll.'), 'icons/16/black/info');
@@ -121,7 +112,7 @@ class Settings_DeputiesController extends Settings_SettingsController
             if ($success && $changed > 0) {
                 $this->reportSuccess(_('Die Einstellungen wurden gespeichert.'));
             } else if ($changed > 0) {
-                $this->reportErorr(_('Fehler beim Speichern der Einstellungen.'));
+                $this->reportError(_('Fehler beim Speichern der Einstellungen.'));
             }
         }
 

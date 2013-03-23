@@ -31,9 +31,10 @@ class Svg2pngController extends Trails_Controller
         $this->set_layout('layout');
 
         $this->inputs = array(
-            1 => '../Vektor/16px/Vector-Iconset 16x16.svg',
-            2 => '../Vektor/16px/Vector-Pfeile 16x16.svg',
-            3 => '../Vektor/32px/Vector-Iconset 32x32.svg',
+            1 => '../Vektor/16px/Vector-Alle 16x16.svg',
+            2 => '../Vektor/16px/Vector-Iconset 16x16.svg',
+            3 => '../Vektor/16px/Vector-Pfeile 16x16.svg',
+            4 => '../Vektor/32px/Vector-Iconset 32x32.svg',
         );
 
         $this->extra_color = Request::get('extra-color', '#cb1800');

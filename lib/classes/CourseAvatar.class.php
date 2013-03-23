@@ -85,13 +85,13 @@ class CourseAvatar extends Avatar
      *
      * @return array      a tupel of integers [width, height]
      */
-    function getDimension($size) {
+    /*function getDimension($size) {
       $dimensions = array(
         Avatar::NORMAL => array(250, 125),
         Avatar::MEDIUM => array( 80,  80),
         Avatar::SMALL  => array( 20,  20));
       return $dimensions[$size];
-    }
+    }*/
 
     /**
      * Return the default title of the avatar.

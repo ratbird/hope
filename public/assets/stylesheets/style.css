@@ -1269,29 +1269,29 @@ div.autocomplete {
 /* --- Avatars of users, courses and institutes ----------------------------- */
 .avatar-small {
   vertical-align: middle;
-  width: 20px;
+  max-width: 25px;
   height: 25px;
 }
 .avatar-medium {
-  width: 80px;
+  max-width: 100px;
   height: 100px;
 }
 .avatar-normal {
-  width: 200px;
+  max-width: 250px;
   height: 250px;
 }
 .course-avatar-small {
   vertical-align: middle;
-  width: 20px;
-  height: 20px;
+  max-width: 25px;
+  height: 25px;
 }
 .course-avatar-medium {
-  width: 80px;
-  height: 80px;
+  max-width: 100px;
+  height: 100px;
 }
 .course-avatar-normal {
   width: 250px;
-  height: 125px;
+  max-height: 250px;
 }
 #custom_avatar label {
   display: block;

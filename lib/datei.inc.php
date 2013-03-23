@@ -2184,6 +2184,7 @@ function GetFileIcon($ext, $with_img_tag = false){
         case 'rtf':
         case 'doc':
         case 'docx':
+        case 'odt':
             $icon = 'icons/16/blue/file-text.png';
         break;
         case 'xls':

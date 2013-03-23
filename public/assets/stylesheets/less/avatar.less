@@ -1,17 +1,30 @@
 /* --- Avatars of users, courses and institutes ----------------------------- */
 .avatar-small {
     vertical-align: middle;
-    .size(25px, 20px);
+    .size(25px, 25px);
 }
-.avatar-medium { .size(100px, 80px); }
-.avatar-normal { .size(250px, 200px); }
+.avatar-medium { 
+    max-width: 100px;
+    height: 100px; 
+}
+.avatar-normal { 
+    max-width: 250px;
+    height: 250px; 
+}
 
 .course-avatar-small {
     vertical-align: middle;
-    .size(20px, 20px);
+    max-width: 25px;
+    height: 25px;
 }
-.course-avatar-medium { .size(80px, 80px); }
-.course-avatar-normal { .size(125px, 250px); }
+.course-avatar-medium { 
+    max-width: 100px;
+    height: 100px; 
+}
+.course-avatar-normal {
+    max-height: 250px;
+    width: 250px;
+}
 
 #custom_avatar label {
     display: block;

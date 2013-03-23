@@ -17,8 +17,8 @@
           <?
             $dimensions = Assets::getImageSize($picture);
             $height = $dimensions
-                ? min(floor(($dimensions['height'] / $dimensions['width']) * 250), 250)
-                : 250;
+                ? min(floor(($dimensions['height'] / $dimensions['width']) * 190), 190)
+                : 190;
           ?>
         <td class="infobox-img">
             <div style="background-image: url('<?= Assets::image_path($picture) ?>'); min-height: <?= $height ?>px;"></div>

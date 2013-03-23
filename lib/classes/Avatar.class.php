@@ -343,9 +343,10 @@ class Avatar {
      */
     function getDimension($size) {
         $dimensions = array(
-            Avatar::NORMAL => array(200, 250),
-            Avatar::MEDIUM => array( 80, 100),
-            Avatar::SMALL    => array( 20,    25));
+            Avatar::NORMAL => array(250, 250),
+            Avatar::MEDIUM => array(100, 100),
+            Avatar::SMALL  => array(25, 25)
+        );
         return $dimensions[$size];
     }
 

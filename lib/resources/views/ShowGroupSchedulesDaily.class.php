@@ -213,7 +213,7 @@ class ShowGroupSchedulesDaily extends ShowSemSchedules {
                 ?>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="10%" align="center">&nbsp;
-                    <a href="<? echo URLHelper::getLink('?quick_view='.$this->used_view.'&quick_view_mode='.$view_mode,'&next_day=1')?>"><?= Assets::img("icons/16/blue/arr_2right.png", array('alt' => _("Nächsten Tag anzeigen"), 'title' => _("Nächsten Tag anzeigen"), "border" => 0)) ?></a>
+                    <a href="<? echo URLHelper::getLink('?quick_view='.$this->used_view.'&quick_view_mode='.$view_mode. '&next_day=1')?>"><?= Assets::img("icons/16/blue/arr_2right.png", array('alt' => _("Nächsten Tag anzeigen"), 'title' => _("Nächsten Tag anzeigen"), "border" => 0)) ?></a>
                 </td>
             </tr>
             <tr>

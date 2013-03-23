@@ -281,7 +281,7 @@ class ShowSemSchedules extends ShowSchedules {
                 <td class="<? echo $cssSw->getClass() ?>" width="4%" align="center" valign="bottom">&nbsp;
                     <?
                     if ((!$_SESSION['resources_data']["schedule_time_range"]) || ($_SESSION['resources_data']["schedule_time_range"] == -1))
-                        printf ("<a href=\"".URLHelper::getLink('?quick_view=%s&quick_view_mode=%s&time_range=%s')."\">" .  . Assets::img("icons/16/blue/arr_2down.png", array('alt' => _("Spätere Belegungen anzeigen"), 'title' => _("Spätere Belegungen anzeigen"), 'border' => 0)) . "</a>", $this->used_view, $view_mode, ($_SESSION['resources_data']["schedule_time_range"]) ? "FALSE" : 1);
+                        printf ("<a href=\"".URLHelper::getLink('?quick_view=%s&quick_view_mode=%s&time_range=%s')."\">" . Assets::img("icons/16/blue/arr_2down.png", array('alt' => _("Spätere Belegungen anzeigen"), 'title' => _("Spätere Belegungen anzeigen"), 'border' => 0)) . "</a>", $this->used_view, $view_mode, ($_SESSION['resources_data']["schedule_time_range"]) ? "FALSE" : 1);
                     ?>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="20%" nowrap colspan="3">

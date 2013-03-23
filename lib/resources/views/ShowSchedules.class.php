@@ -293,6 +293,11 @@ class ShowSchedules {
                     <?php
                     $this->showSemWeekNumber($start_time);
                     ?>
+                    <br>
+                    <?php
+                    $room = ResourceObject::Factory($this->resource_id);
+                    echo "Raum: ".htmlReady($room->getName());
+                    ?>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?> hidden" width="10%" align="center">&nbsp;
                     <a href="<? echo URLHelper::getLink('?quick_view='.$this->used_view.'&quick_view_mode='.$view_mode.'&next_week=TRUE')?>"><?= Assets::img("icons/16/blue/arr_2right.png", array('alt' => _("Nächste Woche anzeigen"), 'title' => _("Nächste Woche anzeigen"), 'border' => 0)) ?></a>

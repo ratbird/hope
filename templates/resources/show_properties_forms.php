@@ -48,6 +48,14 @@ use Studip\Button, Studip\LinkButton;
             <!-- Infobox -->
             <td class="blank" rowspan="5" valign="top" style="padding-left: 20px" align="right">
             <?
+                $content[] = array('kategorie' => _("Raum:"),
+                    'eintrag' => array(
+                        array(
+                            'icon' => 'icons/16/black/info.png',
+                            'text' => htmlReady($resObject->getName())
+                        )
+                    )
+                );
                 $content[] = array('kategorie' => _("Informationen:"),
                     'eintrag' => array(
                         array(

@@ -32,7 +32,6 @@ if ($_SESSION['resources_data']["actual_object"]) {
     $currentObjectTitelAdd=": ".$currentObject->getName()." (".$currentObject->getOwnerName().")";
 }
 
-
 switch ($view) {
     //Reiter "Uebersicht"
     case "plan":
@@ -59,7 +58,7 @@ switch ($view) {
         Navigation::activateItem('/search/resources');
 
         $infobox = array(
-            array  ("kategorie" => _("Aktionen:"),
+            array ("kategorie" => _("Aktionen:"),
                 "eintrag" => array (
                     array (
                         "icon" => "icons/16/black/search.png",
@@ -142,6 +141,12 @@ switch ($view) {
                 )
             );
         } else {
+
+            $infobox[1]["kategorie"] = _("Raum:");
+            $infobox[1]["eintrag"][] = array ("icon" => "icons/16/black/info.png",
+            "text"  =>  $currentObject->getName());
+
+
             $infobox[0]["kategorie"] = _("Aktionen:");
             if (($ActualObjectPerms->havePerm("autor")) && ($currentObject->getCategoryId()))
             $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/add/date.png",
@@ -166,6 +171,10 @@ switch ($view) {
         $page_intro=_("Hier können Sie sich die Belegungszeiten der Ressource anzeigen  und auf unterschiedliche Art darstellen lassen.");
         PageLayout::setTitle(_("Belegungszeiten ausgeben").$currentObjectTitelAdd);
         Navigation::activateItem('/resources/objects/view_schedule');
+
+        $infobox[1]["kategorie"] = _("Raum:");
+        $infobox[1]["eintrag"][] = array ("icon" => "icons/16/black/info.png",
+            "text"  =>  $currentObject->getName());
 
         $infobox[0]["kategorie"] = _("Aktionen:");
         $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/resources.png",
@@ -203,6 +212,11 @@ switch ($view) {
         $page_intro=_("Hier können Sie sich die Belegungszeiten der Ressource anzeigen  und auf unterschiedliche Art darstellen lassen.");
         PageLayout::setTitle(_("Belegungszeiten pro Semester ausgeben").$currentObjectTitelAdd);
         Navigation::activateItem('/resources/objects/view_sem_schedule');
+
+        $infobox[1]["kategorie"] = _("Raum:");
+        $infobox[1]["eintrag"][] = array ("icon" => "icons/16/black/info.png",
+            "text"  =>  $currentObject->getName());
+
 
         $infobox[0]["kategorie"] = _("Aktionen:");
 
@@ -334,8 +348,6 @@ switch ($view) {
     break;
     case "openobject_details":
     case "view_details":
-        if ($_SESSION['resources_data']["actual_object"])
-            $page_intro= sprintf(_("Hier sehen Sie detaillierte Informationen der Ressource %s"), "<b>".htmlReady($currentObject->getName())."</b> (".(($currentObject->getCategoryName()) ? $currentObject->getCategoryName() : _("Hierachieebene")).").");
         if ($view_mode == "oobj") {
             PageLayout::setTitle($SessSemName["header_line"]." - "._("Ressourcendetails").$currentObjectTitelAdd);
             Navigation::activateItem('/course/resources/view_details');
@@ -343,8 +355,6 @@ switch ($view) {
             PageLayout::setTitle(_("Anzeige der Ressourceneigenschaften").$currentObjectTitelAdd);
             Navigation::activateItem('/resources/objects/view_details');
         }
-
-        $infobox[0]["kategorie"] = _("Aktionen:");
 
         if ($view_mode == "no_nav") {
 
@@ -359,12 +369,6 @@ switch ($view) {
 
         }
 
-        $infobox[0]["kategorie"] = _("Aktionen:");
-        $infobox[0]['eintrag'][] = array(
-            'icon' => 'icons/16/black/search.png',
-            'text' => '<a href="'. URLHelper::getLink('resources.php?view=search&quick_view_mode=' . $view_mode) .'">'
-                   . _('zur Ressourcensuche') . '</a>'
-        );
     break;
 
     case "openobject_schedule":

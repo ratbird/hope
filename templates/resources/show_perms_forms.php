@@ -31,6 +31,14 @@ use Studip\Button, Studip\LinkButton;
             <!-- Infobox -->
             <td rowspan="8" valign="top" style="padding-left: 20px" align="right">
             <?
+                $content[] = array('kategorie' => _("Raum:"),
+                    'eintrag' => array(
+                        array(
+                            'icon' => 'icons/16/black/info.png',
+                            'text' => htmlReady($resObject->getName())
+                        )
+                    )
+                );
                 $content[] = array('kategorie' => _("Informationen:"),
                     'eintrag' => array(
                         array(
@@ -94,7 +102,7 @@ use Studip\Button, Studip\LinkButton;
             <? endif; ?>
 
             <!-- tutor-perms -->
-            <? if (($resObject->getOwnerType($user_id) == 'user') && $admin_perms && (($perm == 'tutor') || $owner_perms)): ?> 
+            <? if (($resObject->getOwnerType($user_id) == 'user') && $admin_perms && (($perm == 'tutor') || $owner_perms)): ?>
                 <label>
                     <input type="radio" name="change_user_perms[<?= $i ?>]" value="tutor"
                            <? if ($perm == 'tutor') echo 'checked'; ?>>

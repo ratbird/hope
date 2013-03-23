@@ -33,6 +33,9 @@ div#barBottomleft:before, #barBottomContainer.public_course div#barBottomleft:be
 }
 div#barBottommiddle {
     background-image: url("../images/header/header_bottom_isolator.png");
+    background-image: -webkit-image-set(
+        url("../images/header/header_bottom_isolator.png") 1x,
+        url("../images/header/header_bottom_isolator@2x.png") 2x);    
     background-position: left center;
     background-repeat: no-repeat;
 }
@@ -41,4 +44,8 @@ div#barBottommiddle:before {
 }
 #barBottomContainer.public_course div#barBottommiddle {
     background-image: url("../images/header/header_bottom_isolator_public.png");
+    background-image: -webkit-image-set(
+        url("../images/header/header_bottom_isolator_public.png") 1x,
+        url("../images/header/header_bottom_isolator_public@2x.png") 2x);    
+
 }

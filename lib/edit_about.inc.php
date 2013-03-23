@@ -32,14 +32,14 @@ require_once('lib/vote/VoteDB.class.php');
 require_once('lib/evaluation/classes/db/EvaluationDB.class.php');
 require_once('lib/classes/StudipLitList.class.php');
 
-function edit_email($uid, $email, $force=False) {
+function edit_email($user, $email, $force=False) {
     $msg = '';
 
     $query = "SELECT email, username, auth_plugin
               FROM auth_user_md5
               WHERE user_id = ?";
     $statement = DBManager::get()->prepare($query);
-    $statement->execute(array($uid));
+    $statement->execute(array($user->user_id));
     $row = $statement->fetch(PDO::FETCH_ASSOC);
 
     $email_cur   = $row['email'];
@@ -50,7 +50,7 @@ function edit_email($uid, $email, $force=False) {
         return array(True, $msg);
     }
 
-    if (StudipAuthAbstract::CheckField("auth_user_md5.Email", $auth_plugin) || LockRules::check($uid, 'email')) {
+    if (StudipAuthAbstract::CheckField("auth_user_md5.Email", $auth_plugin) || LockRules::check($user->user_id, 'email')) {
         return array(False, $msg);
     }
 
@@ -102,7 +102,7 @@ function edit_email($uid, $email, $force=False) {
               FROM auth_user_md5
               WHERE Email = ? AND user_id != ?";
     $statement = DBManager::get()->prepare($query);
-    $statement->execute(array($email, $uid));
+    $statement->execute(array($email, $user->user_id));
     $row = $statement->fetch(PDO::FETCH_ASSOC);
     if ($row) {
         $msg.=  "error§" . sprintf(_("Die angegebene E-Mail-Adresse wird bereits von einem anderen Benutzer (%s %s) verwendet. Bitte geben Sie eine andere E-Mail-Adresse an."), htmlReady($row['Vorname']), htmlReady($row['Nachname'])) . "§";
@@ -131,10 +131,11 @@ function edit_email($uid, $email, $force=False) {
                 $temp += 87;   // a = chr(97), z = chr(122)
             $key .= chr($temp);
         }
+        $user->validation_key = $key;
 
         $activatation_url = $GLOBALS['ABSOLUTE_URI_STUDIP']
-                            .'activate_email.php?uid='. $uid
-                            .'&key='. $key;
+                            .'activate_email.php?uid='. $user->user_id
+                            .'&key='. $user->validation_key;
 
         // include language-specific subject and mailbody with fallback to german
         $lang = $GLOBALS['_language_path']; // workaround
@@ -151,10 +152,10 @@ function edit_email($uid, $email, $force=False) {
 
         $query = "UPDATE auth_user_md5 SET validation_key = ? WHERE user_id = ?";
         $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($key, $uid));
+        $statement->execute(array($user->validation_key, $user->user_id));
 
         $msg.= "info§<b>" . sprintf(_('An Ihre neue E-Mail-Adresse <b>%s</b> wurde ein Aktivierungslink geschickt, dem Sie folgen müssen bevor Sie sich das nächste mal einloggen können.'), $email). '</b>§';
-        log_event("USER_NEWPWD",$uid); // logging
+        log_event("USER_NEWPWD",$user->user_id); // logging
     }
     return array(True, $msg);
 }

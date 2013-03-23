@@ -102,7 +102,8 @@ if(Request::get('key')) {
         // change mail
         require_once('lib/edit_about.inc.php');
 
-        $send = edit_email(Request::option('uid'), Request::quoted('email1'), True);
+        $tmp_user = User::find(Request::option('uid'));
+        $send = edit_email($tmp_user, Request::quoted('email1'), True);
 
         if($send[0]) {
             $_SESSION['semi_logged_in'] = False;

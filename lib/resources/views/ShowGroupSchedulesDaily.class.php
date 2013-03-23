@@ -71,7 +71,7 @@ class ShowGroupSchedulesDaily extends ShowSemSchedules {
             <tr>
                 <td class="<? echo $cssSw->getClass() ?>" width="4%" rowspan="2">&nbsp;
                 </td>
-                <td class="<? echo $cssSw->getClass() ?>" width="40%" valign="bottom">
+                <td class="<? echo $cssSw->getClass() ?>" width="40%" valign="middle">
                     <input type="text" name="schedule_begin_day" size=2 maxlength=2 value="<?echo date("d",$start_time); ?>">.
                     <input type="text" name="schedule_begin_month" size=2 maxlength=2 value="<?echo date("m",$start_time); ?>">.
                     <input type="text" name="schedule_begin_year" size=4 maxlength=4 value="<?echo date("Y",$start_time); ?>">

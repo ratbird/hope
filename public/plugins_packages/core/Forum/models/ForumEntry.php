@@ -892,7 +892,7 @@ class ForumEntry {
         $chdate = $stmt->fetchColumn();
 
         $stmt_insert = DBManager::get()->prepare("UPDATE forum_entries
-            SET latest_chdate = ? WHERE topic_id = ?");
+            SET chdate = ? WHERE topic_id = ?");
         if ($chdate) {
             $stmt_insert->execute(array($chdate, $parent['topic_id']));
         } else {

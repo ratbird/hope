@@ -12,7 +12,7 @@ $available_colors = array(
     'black'  => '#000000',
     'blue'   => '#24437c',
     'green'  => '#00962d',
-    'gray'   => '#6e6e6e',
+    'grey'   => '#6e6e6e',
     'red'    => '#cb1800',
     'white'  => '#ffffff',
     'yellow' => '#ffad00'
@@ -136,7 +136,7 @@ $available_colors = array(
 
     <div class="files">
     <? foreach ($files as $file => $png): ?>
-        <label>
+        <label title="<?= basename($file) ?>">
         <? if ($imagick): ?>
             <input type="checkbox" name="extras[]" value="<?= urlencode($file) ?>">
         <? endif; ?>

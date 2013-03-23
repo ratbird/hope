@@ -18,7 +18,6 @@
 require '../lib/bootstrap.php';
 require '../lib/webservices/webservices_bootstrap.php';
 
-unregister_globals();
 $delegate = new Studip_Ws_SoapDispatcher($AVAILABLE_SERVICES);
 $server   = new DelegatingSoapServer($delegate);
 

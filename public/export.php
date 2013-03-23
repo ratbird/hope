@@ -39,7 +39,6 @@
 
 require '../lib/bootstrap.php';
 
-unregister_globals();
 ob_start();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Default_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $o_mode = Request::option('o_mode');

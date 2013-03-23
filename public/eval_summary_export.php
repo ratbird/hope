@@ -33,7 +33,6 @@
 
 
 require '../lib/bootstrap.php';
-unregister_globals();
 
 if (!isset($EVAL_AUSWERTUNG_GRAPH_FORMAT)) $EVAL_AUSWERTUNG_GRAPH_FORMAT = 'gif';
 

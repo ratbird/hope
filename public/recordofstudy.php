@@ -4,20 +4,12 @@
 # Lifter003: TODO
 # Lifter010: TODO
 /**
-
  * Creates a record of study and exports the data to pdf
-
  *
-
  * @author      Christian Bauer <alfredhitchcock@gmx.net>
-
-
  * @copyright   2003 Stud.IP-Project
-
  * @access      public
-
  * @module      recordofstudy
-
  */
 
 /* ************************************************************************** *
@@ -45,8 +37,6 @@
 /* ************************************************************************* */
 
 require '../lib/bootstrap.php';
-
-unregister_globals();
 
 page_open (array ("sess" => "Seminar_Session", "auth" => "Seminar_Auth",
           "perm" => "Seminar_Perm", "user" => "Seminar_User"));

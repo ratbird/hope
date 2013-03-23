@@ -28,7 +28,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
-unregister_globals();
 
 ob_start();
 page_open(array("sess" => "Seminar_Session",

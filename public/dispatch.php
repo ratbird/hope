@@ -17,8 +17,6 @@
 
 
 require '../lib/bootstrap.php';
-
-unregister_globals();
 require_once 'lib/functions.php';
 
 # define root

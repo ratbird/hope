@@ -1635,38 +1635,6 @@ function remove_magic_quotes($mixed)
 }
 
 /**
- * Unset all variables set by register_globals (if enabled).
- * Note: The session variables 'auth' and 'SessSemName' are preserved.
- *
- * @return void
- */
-function unregister_globals ()
-{
-    if (!ini_get('register_globals')) {
-        return;
-    }
-
-    if (isset($_REQUEST['GLOBALS']) || isset($_FILES['GLOBALS'])) {
-        die('GLOBALS overwrite attempt detected');
-    }
-
-    $noUnset = array('GLOBALS', '_GET', '_POST', '_COOKIE',
-                     '_REQUEST', '_SERVER', '_ENV', '_FILES',
-                     'auth', 'SessionSeminar', 'SessSemName');
-    $vars = array_merge($_GET, $_POST, $_COOKIE, $_SERVER, $_ENV, $_FILES);
-
-    if (isset($_SESSION)) {
-        $vars = array_merge($vars, $_SESSION);
-    }
-
-    foreach ($vars as $var => $value) {
-        if (!in_array($var, $noUnset) && isset($GLOBALS[$var])) {
-            unset($GLOBALS[$var]);
-        }
-    }
-}
-
-/**
   * Extracts an excerpt from the 'text' surrounding the 'phrase' with a number
   * of characters on each side determined by 'radius'. If the phrase isn't
   * found, null is returned.

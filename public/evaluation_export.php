@@ -39,7 +39,6 @@
 
 require '../lib/bootstrap.php';
 
-unregister_globals();
 $o_mode = Request::option('o_mode');
 $xml_file_id = Request::option('xml_file_id',"");
 $xslt_filename = Request::quoted('xslt_filename');

@@ -18,7 +18,6 @@
 require '../lib/bootstrap.php';
 require '../lib/webservices/webservices_bootstrap.php';
 
-unregister_globals();
 # create server
 $dispatcher = new Studip_Ws_XmlrpcDispatcher($AVAILABLE_SERVICES);
 

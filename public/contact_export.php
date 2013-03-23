@@ -13,8 +13,6 @@
 use Studip\Button, Studip\LinkButton;
 
 require '../lib/bootstrap.php';
-
-unregister_globals();
 require_once 'lib/statusgruppe.inc.php';
 require_once 'lib/user_visible.inc.php';
 

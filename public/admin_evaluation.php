@@ -36,9 +36,7 @@
  * @package evaluation
  */
 
-
 require '../lib/bootstrap.php';
-unregister_globals();
 
 ob_start(); // start output buffering
 

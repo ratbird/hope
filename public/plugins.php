@@ -14,9 +14,6 @@
  */
 
 require '../lib/bootstrap.php';
-
-unregister_globals();
-
 require_once 'lib/functions.php';
 require_once 'vendor/trails/trails.php';
 

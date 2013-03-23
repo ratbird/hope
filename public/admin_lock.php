@@ -25,8 +25,6 @@
 use Studip\Button, Studip\LinkButton; 
 
 require '../lib/bootstrap.php';
-unregister_globals();
-//unregister_globals();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth",
                 "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $auth->login_if($auth->auth["uid"] == "nobody");

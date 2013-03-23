@@ -38,7 +38,6 @@
 
 require '../lib/bootstrap.php';
 
-unregister_globals();
 ob_start(); // start output buffering
 
 page_open (array ("sess" => "Seminar_Session", "auth" => "Seminar_Auth",

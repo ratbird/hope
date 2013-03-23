@@ -369,12 +369,11 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
 
     /**
      * passes objects for given sql through given callback
-     * and returns an array of callback return values
      *
      * @param callable $callable callback which gets the current record as param
      * @param string where clause of sql
      * @param array sql statement parameters
-     * @return array
+     * @return integer number of found records
      */
     public static function findEachBySQL($callable, $where, $params = array())
     {
@@ -384,12 +383,13 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         $sql = "SELECT * FROM `" .  $record->db_table . "` WHERE " . $where;
         $st = $db->prepare($sql);
         $st->execute($params);
-        $ret = array();
+        $ret = 0;
         while ($row = $st->fetch(PDO::FETCH_ASSOC)) {
             $current = clone $record;
             $current->setData($row, true);
             $current->setNew(false);
-            $ret[] = $callable($current);
+            $callable($current);
+            ++$ret;
         }
         return $ret;
     }
@@ -400,7 +400,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      * @param string order by clause
      * @return array
      */
-    public static function findMany($pks = array(), $order = '')
+    public static function findMany($pks = array(), $order = '', $order_params = array())
     {
         $class = get_called_class();
         $record = new $class();
@@ -409,7 +409,46 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
             throw new Exception('not implemented yet');
         }
         $where = "`{$record->db_table}`.`{$record->pk[0]}` IN ("  . $db->quote($pks) . ") ";
-        return self::findBySQL($where . $order);
+        return self::findBySQL($where . $order, $order_params);
+    }
+
+    /**
+     * passes objects for by given pks through given callback
+     *
+     * @param callable $callable callback which gets the current record as param
+     * @param array $pks array of primary keys of called class
+     * @param string $order order by sql
+     * @return integer number of found records
+     */
+    public static function findEachMany($callable, $pks = array(), $order = '', $order_params = array())
+    {
+        $class = get_called_class();
+        $record = new $class();
+        $db = DBManager::get();
+        if (count($record->pk) > 1) {
+            throw new Exception('not implemented yet');
+        }
+        $where = "`{$record->db_table}`.`{$record->pk[0]}` IN ("  . $db->quote($pks) . ") ";
+        return self::findEachBySQL($callable, $where . $order, $order_params);
+    }
+
+    /**
+     * passes objects for given sql through given callback
+     * and returns an array of callback return values
+     *
+     * @param callable $callable callback which gets the current record as param
+     * @param string where clause of sql
+     * @param array sql statement parameters
+     * @return array return values of callback
+     */
+    public static function findAndMapBySQL($callable, $where, $params = array())
+    {
+        $ret = array();
+        $calleach = function($m) use (&$ret, $callable) {
+            $ret[] = $callable($m);
+        };
+        self::findEachBySQL($calleach, $where, $params);
+        return $ret;
     }
 
     /**
@@ -419,18 +458,16 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      * @param callable $callable callback which gets the current record as param
      * @param array $pks array of primary keys of called class
      * @param string $order order by sql
-     * @return array
+     * @return array return values of callback
      */
-    public static function findEachMany($callable, $pks = array(), $order = '')
+    public static function findAndMapMany($callable, $pks = array(), $order = '', $order_params = array())
     {
-        $class = get_called_class();
-        $record = new $class();
-        $db = DBManager::get();
-        if (count($record->pk) > 1) {
-            throw new Exception('not implemented yet');
-        }
-        $where = "`{$record->db_table}`.`{$record->pk[0]}` IN ("  . $db->quote($pks) . ") ";
-        return self::findEachBySQL($callable, $where . $order);
+        $ret = array();
+        $calleach = function($m) use (&$ret, $callable) {
+            $ret[] = $callable($m);
+        };
+        self::findEachBySQL($calleach, $order, $params);
+        return $ret;
     }
 
     /**

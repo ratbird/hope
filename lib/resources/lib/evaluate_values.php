@@ -2216,8 +2216,8 @@ if ($view == "view_sem_schedule" || $view == "view_group_schedule" || $view == "
     $_SESSION['_default_sem'] = $_SESSION['resources_data']['sem_schedule_semester_id'];
 }
 
-if ((Request::option('show_repeat_mode')) && (Request::submitted('send_schedule_repeat_mode'))) {
-    $_SESSION['resources_data']["show_repeat_mode"] = $show_repeat_mode;
+if (Request::option('show_repeat_mode') && Request::submitted('send_schedule_repeat_mode')) {
+    $_SESSION['resources_data']["show_repeat_mode"] = Request::option('show_repeat_mode');
 }
 
 if (Request::option('time_range')) {

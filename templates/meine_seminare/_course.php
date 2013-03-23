@@ -77,9 +77,10 @@ foreach ($group_members as $member) {
                 }
                 if ($adminnavigation) : ?>
                 <a href="<?= URLHelper::getLink($adminnavigation->getURL(), array('cid' => $semid)) ?>">
-                    <img <? foreach ($adminnavigation->getImage() as $attribute => $value) {
-                        echo " ".$attribute."=\"".$value."\"";
-                    } ?>>
+                    <?
+					$image=$adminnavigation->getImage();
+            		echo Assets::img($image['src'], array_map("htmlready", $image));
+                    ?>
                 </a>
                 <? endif ?>
 

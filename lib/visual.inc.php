@@ -213,11 +213,11 @@ function get_ampel_read ($mein_status, $admission_status, $read_level, $print="T
     return $ampel_status;
 }
 
-function htmlReady ($what, $trim = TRUE, $br = FALSE) {
+function htmlReady ($what, $trim = TRUE, $br = FALSE, $double_encode = false) {
     if ($trim) {
-        $what = trim(htmlspecialchars($what, ENT_QUOTES, 'cp1252', false));
+        $what = trim(htmlspecialchars($what, ENT_QUOTES, 'cp1252', $double_encode));
     } else {
-        $what = htmlspecialchars($what,ENT_QUOTES, 'cp1252', false);
+        $what = htmlspecialchars($what,ENT_QUOTES, 'cp1252', $double_encode);
     }
 
     if ($br) { // fix newlines
@@ -227,7 +227,7 @@ function htmlReady ($what, $trim = TRUE, $br = FALSE) {
     return $what;
 }
 
-function jsReady ($what = "", $target = "overlib") {
+function jsReady ($what, $target) {
     switch ($target) {
 
     case "script-single" :
@@ -239,40 +239,13 @@ function jsReady ($what = "", $target = "overlib") {
     break;
 
     case "inline-single" :
-        return htmlReady(addcslashes($what, "\\'\n\r"));
+        return htmlReady(addcslashes($what, "\\'\n\r"), false, false, true);
     break;
 
     case "inline-double" :
-        return htmlReady(addcslashes($what, "\\\"\n\r"));
+        return htmlReady(addcslashes($what, "\\\"\n\r"), false, false, true);
     break;
 
-    case "contact" :
-        $what = htmlReady($what);
-        $what = str_replace("\n","<br>",$what);
-        $what = str_replace("\r","",$what);
-        return $what;
-    break;
-
-    case "alert" :
-        $what = addslashes(htmlReady($what));
-        $what = str_replace("\r","",$what);
-        $what = str_replace("\n","\\n",$what); // alert boxen stellen keine html tags dar
-        return $what;
-    break;
-
-    case 'forum' :
-        $what = str_replace("\r",'',formatReady($what));
-        $what = '<p width="100%"class="printcontent">' . $what . '</p>';
-        return addslashes(htmlReady($what));
-        break;
-
-    case "overlib" :
-    default :
-        $what = addslashes(htmlReady(htmlReady($what)));
-        $what = str_replace("\n","<br>",$what);
-        $what = str_replace("\r","",$what);
-        return $what;
-        break;
     }
 }
 

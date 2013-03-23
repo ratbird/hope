@@ -806,7 +806,7 @@ function js_hover(Event $aterm)
     }
     $jscript_text .= '<br>';
 
-    return " onmouseover=\"STUDIP.CalendarDialog.openCalendarHover('" . JSReady($aterm->toStringDate('SHORT_DAY')) . "', '" . JSReady($jscript_text, 'contact') . "', this);\" onmouseout=\"STUDIP.CalendarDialog.closeCalendarHover();\"";
+    return " onmouseover=\"STUDIP.CalendarDialog.openCalendarHover('" . JSReady($aterm->toStringDate('SHORT_DAY'), 'inline-single') . "', '" . JSReady($jscript_text, 'inline-single') . "', this);\" onmouseout=\"STUDIP.CalendarDialog.closeCalendarHover();\"";
 }
 
 

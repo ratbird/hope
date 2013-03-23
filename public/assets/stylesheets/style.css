@@ -1377,10 +1377,18 @@ button.button[disabled] {
   width: 16px;
 }
 .button.accept:before {
-  background: url("../images/icons/16/blue/accept.png") no-repeat;
+  background: no-repeat; 
+  background-image: url("../images/icons/16/blue/accept.png"); 
+  background-image: -webkit-image-set(
+      url("../images/icons/16/blue/accept.png") 1x,
+      url("../images/icons/32/blue/accept.png") 2x);    
 }
 .button.cancel:before {
-  background: url("../images/icons/16/blue/decline.png") no-repeat;
+  background: no-repeat;
+  background-image: url("../images/icons/16/blue/decline.png"); 
+  background-image: -webkit-image-set(
+      url("../images/icons/16/blue/decline.png") 1x,
+      url("../images/icons/32/blue/decline.png") 2x);     
 }
 /****************************************************************************/
 /* Grouped Buttons                                                          */

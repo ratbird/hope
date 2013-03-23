@@ -139,9 +139,9 @@ class Assets {
       return '';
       
    $parts = explode('/', $source);
-    
-    if (($pos = array_search("icons", $parts)) || (in_array("icons", $parts))) {
-        $opt['size'] = $parts[$pos+1];
+   
+    if (($pos = array_search("icons", $parts)) !== false) {
+        $opt['size'] = $parts[$pos+1] . '@' . $parts[$pos+1];
         if ($GLOBALS['auth']->auth['devicePixelRatio'] == 2) {
             $parts[$pos+1] = $parts[$pos+1] * 2;
         }

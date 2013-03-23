@@ -71,13 +71,13 @@ class ShowGroupSchedulesDaily extends ShowSemSchedules {
             <tr>
                 <td class="<? echo $cssSw->getClass() ?>" width="4%" rowspan="2">&nbsp;
                 </td>
-                <td class="<? echo $cssSw->getClass() ?>" width="40%" valign="top">
+                <td class="<? echo $cssSw->getClass() ?>" width="40%" valign="bottom">
                     <input type="text" name="schedule_begin_day" size=2 maxlength=2 value="<?echo date("d",$start_time); ?>">.
                     <input type="text" name="schedule_begin_month" size=2 maxlength=2 value="<?echo date("m",$start_time); ?>">.
                     <input type="text" name="schedule_begin_year" size=4 maxlength=4 value="<?echo date("Y",$start_time); ?>">
                     <?= Button::create(_('Auswählen'), 'jump') ?><br>
                 </td>
-                <td class="<? echo $cssSw->getClass() ?>" width="60%" valign="top">
+                <td class="<? echo $cssSw->getClass() ?>" width="60%" valign="bottom">
                     <?= ($view_mode == 'oobj' ? _("Eine Ressourcengruppe ausw&auml;hlen") : _("Eine Raumgruppe ausw&auml;hlen")) ?>:<br>
                     <select name="group_schedule_choose_group" onChange="document.schedule_form.submit()">
                     <? foreach($this->resources_groups->getAvailableGroups() as $gid) :
@@ -213,7 +213,7 @@ class ShowGroupSchedulesDaily extends ShowSemSchedules {
                 ?>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="10%" align="center">&nbsp;
-                    <a href="<? echo URLHelper::getLink('?quick_view='.$this->used_view.'&quick_view_mode='.$view_mode. '&next_day=1')?>"><?= Assets::img("icons/16/blue/arr_2right.png", array('alt' => _("Nächsten Tag anzeigen"), 'title' => _("Nächsten Tag anzeigen"), "border" => 0)) ?></a>
+                    <a href="<? echo URLHelper::getLink('?quick_view='.$this->used_view.'&quick_view_mode='.$view_mode.'&next_day=1')?>"><?= Assets::img("icons/16/blue/arr_2right.png", array('alt' => _("Nächsten Tag anzeigen"), 'title' => _("Nächsten Tag anzeigen"), "border" => 0)) ?></a>
                 </td>
             </tr>
             <tr>
@@ -237,7 +237,7 @@ class ShowGroupSchedulesDaily extends ShowSemSchedules {
                     printf ("<option %s style=\"font-size:10px;\" value=\"single\">"._("nur Einzeltermine")."</option>", ($_SESSION['resources_data']["show_repeat_mode"] == "single") ? "selected" : "");
                     printf ("<option %s style=\"font-size:10px;\" value=\"repeated\">"._("nur Wiederholungstermine")."</option>", ($_SESSION['resources_data']["show_repeat_mode"] == "repeated") ? "selected" : "");
                     print "</select>";
-                    print "&nbsp;".Assets::input("icons/16/icons/16/green/accept.png", array('type' => "image", 'class' => "middle", 'name' => "send_schedule_repeat_mode", 'title' => _('Ansicht umschalten')));
+                    print "&nbsp;".Assets::input("icons/16/green/accept.png", array('type' => "image", 'class' => "middle", 'name' => "send_schedule_repeat_mode", 'title' => _('Ansicht umschalten')));
                     ?>
                 </td>
             </tr>

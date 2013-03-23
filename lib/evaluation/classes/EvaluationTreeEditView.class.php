@@ -509,7 +509,7 @@ function getEvalPath(){
     $path .= "<a class=\"tree\" href=\""
         . URLHelper::getLink($this->getSelf("itemID=root"))
         . "\">"
-#       . "<img src=\"".Assets::image_path("icons/16/red/arr_1right.png")."\" "
+#       . Assets::img("icons/16/red/arr_1right.png")
 #       . "width=\"10\" hight=\"20\">"
 #       . "&nbsp;"
         . _("Evaluation")
@@ -3043,6 +3043,14 @@ function createImage ( $pic,
                        $alt = "",
                        $args = NULL){
 
+	if (!isset($args['alt'])) {
+	    $args['alt'] = $alt;
+	    $args['title'] = $alt;
+	    }
+	
+	$args['border'] = 0;
+	$args['style'] = "vertical-align:middle;";
+	
     $img = new HTMLempty ("img");
     $img->addString (tooltip($alt,TRUE,TRUE));
     $img->addAttr ("src",$pic);

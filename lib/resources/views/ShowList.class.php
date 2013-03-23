@@ -148,9 +148,9 @@ class ShowList extends ShowTreeRow{
             //clipboard in/out
             if ((is_object($clipObj)) && $simple_perms && $resObject->getCategoryId())
                 if ($clipObj->isInClipboard($resObject->getId()))
-                    $zusatz .= " <a href=\"".URLHelper::getLink('?clip_out='.$resObject->getId().$link_add)."\"><img class=\"text-top\" src=\"".Assets::image_path('icons/16/blue/remove/resources.png')."\" ".tooltip(_("Aus der Merkliste entfernen"))."></a>";
+                    $zusatz .= " <a href=\"".URLHelper::getLink('?clip_out='.$resObject->getId().$link_add)."\">" . Assets::img("icons/16/blue/remove/resources.png", array('alt' => _("Aus der Merkliste entfernen"), 'title' => _("Aus der Merkliste entfernen"))) . "</a>";
                 else
-                    $zusatz .= " <a href=\"".URLHelper::getLink('?clip_in='.$resObject->getId().$link_add)."\"><img class=\"text-top\" src=\"".Assets::image_path('icons/16/blue/add/resources.png')."\" ".tooltip(_("In Merkliste aufnehmen"))."></a>";
+                    $zusatz .= " <a href=\"".URLHelper::getLink('?clip_in='.$resObject->getId().$link_add)."\">" . Assets::img("icons/16/blue/add/resources.png", array('alt' => _("In Merkliste aufnehmen"), 'title' => _("In Merkliste aufnehmen"))) . "</a>";
 
             $new=TRUE;
             

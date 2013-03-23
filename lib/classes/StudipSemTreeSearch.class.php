@@ -195,7 +195,7 @@ class StudipSemTreeSearch {
 
     function getSearchButton($attributes = array())
     {
-        $ret = "\n<input type=\"image\" name=\"{$this->form_name}_do_search\" src=\"". Assets::image_path('icons/16/blue/search.png')."\"" . tooltip(_("Suche nach Studienbereichen starten"));
+        $ret = Assets::input("icons/16/blue/search.png", array('type' => "image", 'class' => "middle", 'name' => "{$this->form_name}_do_search", 'title' => _('Suche nach Studienbereichen starten')));
         foreach ($attributes as $key => $value) {
             $ret .= "$key=\"$value\"";
         }

@@ -202,8 +202,9 @@ class FoafDisplay
         // kopfzeile
         echo '<a name="foaf"></a>';
         echo "\n<table border=\"0\" cellpadding=\"2\" cellspacing=\"0\" width=\"100%\" align=\"center\">";
-        echo "\n<tr>\n<td class=\"table_header_bold\"><img src=\"".Assets::image_path('icons/16/white/guestbook.png')."\" align=\"texttop\"><b>";
-        echo sprintf(_("Verbindung zu %s"),htmlReady(get_fullname($this->target_id)));
+        echo "\n<tr>\n<td class=\"table_header_bold\">";
+        echo Assets::img("icons/16/white/guestbook.png", array('alt' => $text, 'title' => $text, 'align' => "texttop"));
+        echo "<b>".sprintf(_("Verbindung zu %s"),htmlReady(get_fullname($this->target_id)));
         echo "</b></td>\n</tr>";
 
         // inhaltbox

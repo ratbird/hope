@@ -679,8 +679,7 @@ else {
             echo Assets::img('popupcalendar.png', array('onClick' => "window.open('" . URLHelper::getLink("termin_eingabe_dispatch.php?element_switch=exc{$atimetxt}&form_name=edit_event&mcount=6") . "', 'InsertDate', 'dependent=yes, width=700, height=450, left=250, top=150')", 'style' => 'vertical-align:middle;'));
 
             echo '&nbsp;&nbsp;';
-            echo '<input type="image" src="' . Assets::image_path('icons/16/yellow/arr_2right.png');
-            echo '" name="add_exc"' . tooltip(_("Ausnahme hinzufügen")) . ' align="absmiddle">';
+            echo Assets::input("icons/16/yellow/arr_2right.png", array('type' => "image", 'class' => "middle", 'name' => "add_exc", 'title' => _('Ausnahme hinzufügen')));
             echo '&nbsp; &nbsp;</td>';
         }
         echo "<td>\n";
@@ -699,9 +698,7 @@ else {
               || !$_calendar->event->havePermission(Event::PERMISSION_WRITABLE))) {
              */
 
-            echo "<input style=\"vertical-align:middle;\" type=\"image\" ";
-            echo ' src="' . Assets::image_path('icons/16/blue/trash.png') . '" name="del_exc"';
-            echo tooltip(_("ausgewählte Ausnahme löschen")) . ">\n";
+            echo Assets::input("icons/16/blue/trash.png", array('type' => "image", 'class' => "middle", 'name' => "del_exc", 'title' => _('ausgewählte Ausnahme löschen')));
             echo _("ausgew&auml;hlte l&ouml;schen");
         }
         echo "</td></tr></table>\n</td>\n</tr>\n";

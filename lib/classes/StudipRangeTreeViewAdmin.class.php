@@ -506,7 +506,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
         if ($item_id == $this->edit_item_id )
             return $this->getEditItemContent();
         if ($item_id == $this->move_item_id){
-            $this->msg[$item_id] = "info§" . sprintf(_("Dieses Element wurde zum Verschieben markiert. Bitte w&auml;hlen Sie ein Einfügesymbol %s aus, um das Element zu verschieben."), "<img src=\"".Assets::image_path('icons/16/yellow/arr_2right.png')."\" " .tooltip(_("Einfügesymbol")) . ">");
+            $this->msg[$item_id] = "info§" . sprintf(_("Dieses Element wurde zum Verschieben markiert. Bitte w&auml;hlen Sie ein Einfügesymbol %s aus, um das Element zu verschieben."), Assets::img("icons/16/yellow/arr_2right.png", array('alt' => "Einfügesymbol", 'title' => "Einfügesymbol")));
             }
         $content = "\n<table width=\"90%\" cellpadding=\"2\" cellspacing=\"2\" align=\"center\" style=\"font-size:10pt\">";
         $content .= $this->getItemMessage($item_id);
@@ -614,7 +614,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
             && ($this->move_item_id != $item_id) && ($this->tree->tree_data[$this->move_item_id]['parent_id'] != $item_id)
             && !$this->tree->isChildOf($this->move_item_id,$item_id)){
             $head .= "<a href=\"" . URLHelper::getLink($this->getSelf("cmd=DoMoveItem&item_id=$item_id")) . "\">"
-            . "<img src=\"".Assets::image_path('icons/16/yellow/arr_2right.png')."\" " .tooltip(_("An dieser Stelle einfügen")) . "></a>&nbsp;";
+            .  Assets::img("icons/16/yellow/arr_2right.png", array('alt' => "An dieser Stelle einfügen", 'title' => "An dieser Stelle einfügen"))."</a>&nbsp;";
         }
         $head .= parent::getItemHead($item_id);
         if ($item_id != $this->start_item_id && $this->isParentAdmin($item_id) && $item_id != $this->edit_item_id){

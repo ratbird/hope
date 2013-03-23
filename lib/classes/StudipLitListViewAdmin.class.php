@@ -578,13 +578,11 @@ class StudipLitListViewAdmin extends TreeView
             $head .= "</td><td align=\"right\" valign=\"bottom\" nowrap class=\"printhead\">";
             if (!$this->tree->isFirstKid($item_id)){
                 $head .= " <a href=\"". URLHelper::getLink($this->getSelf("cmd=OrderItem&direction=up&item_id=$item_id")) .
-                "\"><img src=\"" . Assets::image_path('icons/16/yellow/arr_2up.png') . "\" " .
-                tooltip(_("Element nach oben verschieben")) ."></a>";
+                "\">".Assets::img("icons/16/yellow/arr_2up.png", array('alt' => _("Element nach oben verschieben"), 'title' =>  _("Element nach oben verschieben")))."</a>";
             }
             if (!$this->tree->isLastKid($item_id)){
                 $head .= " <a href=\"". URLHelper::getLink($this->getSelf("cmd=OrderItem&direction=down&item_id=$item_id")) .
-                "\"><img src=\"" . Assets::image_path('icons/16/yellow/arr_2down.png') . "\" " .
-                tooltip(_("Element nach unten verschieben")) . "></a>";
+               "\">".Assets::img("icons/16/yellow/arr_2down.png", array('alt' => _("Element nach unten verschieben"), 'title' =>  _("Element nach unten verschieben")))."</a>";
             }
             if ($this->tree->isElement($item_id)){
                 $head .= ($this->clip_board->isInClipboard($this->tree->tree_data[$item_id]["catalog_id"]))

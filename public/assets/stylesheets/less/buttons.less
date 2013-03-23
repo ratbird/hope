@@ -55,11 +55,21 @@ a.button, button.button {
 }
 
 .button.accept {
-    &:before { background: url("@{icon-path}/blue/accept.png") no-repeat; }
+    &:before { background: no-repeat; 
+  	    background-image: url("@{image-path}/icons/16/blue/accept.png"); 
+  	    background-image: -webkit-image-set(
+            url("@{image-path}/icons/16/blue/accept.png") 1x,
+            url("@{image-path}/icons/32/blue/accept.png") 2x);       
+    }
 }
 
 .button.cancel {
-    &:before { background: url("@{icon-path}/blue/decline.png") no-repeat; }
+    &:before { background: no-repeat; 
+  	    background-image: url("@{image-path}/icons/16/blue/decline.png"); 
+  	    background-image: -webkit-image-set(
+            url("@{image-path}/icons/16/blue/decline.png") 1x,
+            url("@{image-path}/icons/32/blue/decline.png") 2x);           
+    }
 }
 
 /****************************************************************************/

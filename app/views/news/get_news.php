@@ -5,7 +5,7 @@ if (!Request::isXhr()) :
     ?>
     <div class="table_header_bold" style="clear:both">
         <div style="float:left">
-            <?= Assets::img('icons/16/white/breaking-news.png') ?>
+            <?= Assets::img('icons/16/white/news.png') ?>
             <span style="padding-left:2px;"><?= htmlReady($news['topic']); ?></span>
         </div>
         <div style="text-align:right">

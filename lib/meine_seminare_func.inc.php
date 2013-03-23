@@ -365,11 +365,11 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
 
         if ($db2->f('neue')) {
             $nav->setURL('?new_news=true');
-            $nav->setImage('icons/16/red/new/breaking-news.png', array('title' =>
+            $nav->setImage('icons/16/red/new/news.png', array('title' =>
                 sprintf(_('%s Ankündigungen, %s neue'), $db2->f('count'), $db2->f('neue'))));
             $nav->setBadgeNumber($db2->f('neue'));
         } else if ($db2->f('count')) {
-            $nav->setImage('icons/16/grey/breaking-news.png', array('title' => sprintf(_('%s Ankündigungen'), $db2->f('count'))));
+            $nav->setImage('icons/16/grey/news.png', array('title' => sprintf(_('%s Ankündigungen'), $db2->f('count'))));
         }
 
         $my_obj[$object_id]['news'] = $nav;

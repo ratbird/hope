@@ -203,7 +203,7 @@ class Score
             $tmp = sprintf(ngettext('Eine persönliche Ankündigung', '%s persönliche Ankündigungen', $news), $news);
             $content .= sprintf('<a href="%s">%s</a> ',
                                 URLHelper::getLink('dispatch.php/profile', compact('username')),
-                                Assets::img('icons/16/blue/breaking-news.png', tooltip2($tmp)));
+                                Assets::img('icons/16/blue/news.png', tooltip2($tmp)));
         } else {
             $content .= Assets::img('blank.gif', array('width' => 16)) . ' ';
         }

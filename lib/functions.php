@@ -365,9 +365,11 @@ function closeObject()
     $SemUserStatus = null;
     $rechte = false;
 
+    unset($_SESSION['SessionSeminar']);
+    unset($_SESSION['SessSemName']);
+    unset($_SESSION['raumzeitFilter']);
+
     URLHelper::removeLinkParam('cid');
-    //$sess->unregister('raumzeitFilter');
-    $_SESSION['raumzeitFilter'] = '';
 }
 
 /**

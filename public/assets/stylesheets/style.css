@@ -1687,17 +1687,29 @@ div.clear {
   width: 100%;
 }
 #tabs2 li {
-  background: url("../images/icons/16/grey/arr_1right.png") no-repeat left center;
+  background: no-repeat left center;
+  background-image: url("../images/icons/16/grey/arr_1right.png"); 
+  background-image: -webkit-image-set(
+      url("../images/icons/16/grey/arr_1right.png") 1x,
+      url("../images/icons/32/grey/arr_1right.png") 2x);    
+ 
   cursor: pointer;
   line-height: 20pt;
   margin-left: 1em;
   padding-left: 20px;
 }
 #tabs2 li:hover {
-  background-image: url("../images/icons/16/black/arr_1right.png");
+        	background-image: url("../images/icons/16/black/arr_1right.png"); 
+    		background-image: -webkit-image-set(
+                url("../images/icons/16/black/arr_1right.png") 1x,
+                url("../images/icons/32/black/arr_1right.png") 2x);    
 }
 #tabs2 li.current {
-  background-image: url("../images/icons/16/red/arr_1down.png");
+  			background-image: url("../images/icons/16/red/arr_1down.png");
+   			background-image: -webkit-image-set(
+                url("../images/icons/16/red/arr_1down.png") 1x,
+                url("../images/icons/32/red/arr_1down.png") 2x);    
+  
 }
 #tabs2 a {
   color: #6e6e6e;

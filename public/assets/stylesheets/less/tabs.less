@@ -63,14 +63,29 @@ div.clear
     width: 100%;
 
     li {
-        background: url("@{icon-path}/grey/arr_1right.png") no-repeat left center;
+        background: no-repeat left center;
+       	background-image: url("@{image-path}/icons/16/grey/arr_1right.png"); 
+   		background-image: -webkit-image-set(
+            url("@{image-path}/icons/16/black/arr_1right.png") 1x,
+            url("@{image-path}/icons/32/black/arr_1right.png") 2x);    
+         
         cursor: pointer;
         line-height: 20pt;
         margin-left: 1em;
         padding-left: 20px;
 
-        &:hover   { background-image: url("@{icon-path}/black/arr_1right.png"); }
-        &.current { background-image: url("@{icon-path}/red/arr_1down.png"); }
+        &:hover   { 
+        	background-image: url("@{image-path}/icons/16/black/arr_1right.png"); 
+    		background-image: -webkit-image-set(
+                url("@{image-path}/icons/16/black/arr_1right.png") 1x,
+                url("@{image-path}/icons/32/black/arr_1right.png") 2x);    
+        }
+        &.current { 
+        	background-image: url("@{image-path}/icons/16/red/arr_1down.png"); 
+    		background-image: -webkit-image-set(
+                url("@{image-path}/icons/16/red/arr_1down.png") 1x,
+                url("@{image-path}/icons/32/red/arr_1down.png") 2x);    
+        }
     }
     a {
         color: #6e6e6e;

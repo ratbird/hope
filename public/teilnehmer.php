@@ -1392,7 +1392,7 @@ while (list ($key, $val) = each ($gruppe)) {
                 $username=$one_user['username'];
                 if ($one_user['visible'] == 'yes' || $i_see_everybody) {
 
-                    printf ("<a href=\"%s\"><img class=\"text-top\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/mail.png\" %s ></a>", URLHelper::getLink("sms_send.php", array("sms_source_page" => 'teilnehmer.php?cid=' . $_SESSION['SessionSeminar'], "subject" => $subject, "rec_uname" => $one_user['username'])), tooltip(_("Nachricht an Benutzer verschicken")));
+                    printf ("<a href=\"%s\">".Assets::img("icons/16/blue/mail.png", array('alt' => tooltip(_("Nachricht an Benutzer verschicken")), 'title' => tooltip(_("Nachricht an Benutzer verschicken"))))."</a>", URLHelper::getLink("sms_send.php", array("sms_source_page" => 'teilnehmer.php?cid=' . $_SESSION['SessionSeminar'], "subject" => $subject, "rec_uname" => $one_user['username'])));
 
                     if (isset($multiaction[$key]['send'][0]) && $rechte)
                         printf("<input class=\"text-top\" type=\"checkbox\" name=\"send_msg[%s]\" value=\"1\"></td>", $username);
@@ -1407,7 +1407,7 @@ while (list ($key, $val) = each ($gruppe)) {
                     if ($key == "tutor" AND $SemUserStatus!="tutor") {
                         echo "<td>&nbsp</td>";
                         echo "<td align=\"center\">";
-                        echo "<a href=\"".URLHelper::getLink("?cmd=pain&username=$username&studipticket=$studipticket")."\"><img border=\"0\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/yellow/arr_2down.png\"></a>";
+                        echo "<a href=\"".URLHelper::getLink("?cmd=pain&username=$username&studipticket=$studipticket")."\">".Assets::img("icons/16/yellow/arr_2down.png", array('alt' => tooltip(_("Schreibrecht entziehen")), 'title' => tooltip(_("Schreibrecht entziehen"))))."</a>";
                         echo "<input type=\"checkbox\" name=\"tutor_to_autor[]\" value=\"$username\">";
                         echo "</td>";
                     }
@@ -1434,14 +1434,14 @@ while (list ($key, $val) = each ($gruppe)) {
                             if ($check) {
                                 ++$tutor_count;
                                 echo "<td align=\"center\">";
-                                echo "<a href=\"".URLHelper::getLink("?cmd=pleasure&username=$username&studipticket=$studipticket")."\"><img border=\"0\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/yellow/arr_2up.png\"></a>";
+                                echo "<a href=\"".URLHelper::getLink("?cmd=pleasure&username=$username&studipticket=$studipticket")."\">".Assets::img("icons/16/yellow/arr_2up.png", array('alt' => tooltip(_("Tutor ernennen")), 'title' => tooltip(_("Tutor ernennen"))))."</a>";
                                 echo "<input type=\"checkbox\" name=\"autor_to_tutor[]\" value=\"$username\">";
                                 echo "</td>";
                             } else echo "<td>&nbsp;</td>";
                         } else echo "<td>&nbsp;</td>";
                         // Schreibrecht entziehen
                         echo "<td align=\"center\">";
-                        echo "<a href=\"".URLHelper::getLink("?cmd=lesen&username=$username&studipticket=$studipticket")."\"><img border=\"0\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/yellow/arr_2down.png\"></a>";
+                        echo "<a href=\"".URLHelper::getLink("?cmd=lesen&username=$username&studipticket=$studipticket")."\">".Assets::img("icons/16/yellow/arr_2down.png", array('alt' => tooltip(_("Schreibrecht entziehen")), 'title' => tooltip(_("Schreibrecht entziehen"))))."</a>";
                         echo "<input type=\"checkbox\" name=\"autor_to_user[]\" value=\"$username\">";
                         echo "</td>";
                     }
@@ -2009,12 +2009,12 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
         $infobox[1] = array(
                 "eintrag" => array(
                     array(
-                        'icon' => "icons/16/black/file-text.png",
+                        'icon' => "icons/16/black/doc-text.png",
                         'text' => export_link($SessSemName[1], "person", _("TeilnehmerInnen") . ' '. $SessSemName[0], "rtf", "rtf-teiln", "",
                                   _("TeilnehmerInnen exportieren als rtf Dokument"), 'passthrough')
                     ),
                     array(
-                        'icon' => 'icons/16/black/file-xls.png',
+                        'icon' => 'icons/16/black/doc-office.png',
                         'text' => export_link($SessSemName[1], "person", _("TeilnehmerInnen") . ' '. $SessSemName[0], "csv", "csv-teiln", "",
                                   _("TeilnehmerInnen exportieren als csv Dokument"), 'passthrough')
                     )

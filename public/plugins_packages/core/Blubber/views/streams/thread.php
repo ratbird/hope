@@ -57,6 +57,8 @@ $commentable = $GLOBALS['perm']->have_perm("autor") ? true : (bool) $commentable
        title="<?= _("Veranstaltung")." ".htmlReady($title['name']) ?>"
        class="contextinfo"
        style="background-image: url('<?= CourseAvatar::getAvatar($thread['Seminar_id'])->getURL(Avatar::NORMAL) ?>');">
+        <div class="name"><?= htmlReady(Course::find($thread['Seminar_id'])->name) ?></div>
+        <div class="empty"></div>
     </a>
     <? elseif($thread['context_type'] === "private") : ?>
     <? 

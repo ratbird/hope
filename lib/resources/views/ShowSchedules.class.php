@@ -126,7 +126,7 @@ class ShowSchedules {
                     <input type="text" name="schedule_begin_year" size=4 maxlength=4 value="<? if (!$start_time) echo date("Y",time()); else echo date("Y",$start_time); ?>"><br>
                     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;<?= Button::create(_('Auswählen'), 'jump') ?>
                 </td>
-                <td class="<? echo $cssSw->getClass() ?>" width="66%" valign="top"><font size=-1>
+                <td class="<? echo $cssSw->getClass() ?>" width="66%" valign="bottom"><font size=-1>
                     <input type="text" name="schedule_length_factor" size=2 maxlength=2 / value="<? if (!$this->length_factor) echo "1"; else echo $this->length_factor; ?>">
                     &nbsp; <select name="schedule_length_unit">
                         <option <? if ($this->length_unit  == "d") echo "selected" ?> value="d"><?=_("Tag(e)")?></option>
@@ -138,7 +138,7 @@ class ShowSchedules {
                 </td>
             </tr>
             <tr>
-                <td class="<? echo $cssSw->getClass() ?>" width="66%" valign="top">
+                <td class="<? echo $cssSw->getClass() ?>" width="66%" valign="bottom">
                     <i>oder</i>
                     <?= Button::create(_('Eine Woche grafisch ausgeben'), 'start_graphical') ?>
                 </td>

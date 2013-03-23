@@ -6,9 +6,8 @@
 require '../lib/bootstrap.php';
 
 use Studip\Button, Studip\LinkButton;
-unregister_globals();
 
-Request::set('cancel_login',1);
+$_GET['cancel_login'] = 1;
 page_open(array('sess' => 'Seminar_Session', 'auth' => 'Seminar_Default_Auth', 'perm' => 'Seminar_Perm', 'user' => 'Seminar_User'));
 
 function head($headline, $red=False) {

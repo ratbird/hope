@@ -451,8 +451,9 @@ class DataFieldBoolEntry extends DataFieldEntry
         $field_id = $name . '_' . $this->structure->getID();
         if($this->getValue())
             $checked = 'checked';
+        $require = $this->structure->getIsRequired() ? "required" : "";
         return "<input type=\"hidden\" name=\"$field_name\" value=\"0\">
-        <input type=\"checkbox\" name=\"$field_name\" id=\"$field_id\" value=\"1\" $checked>";
+        <input type=\"checkbox\" name=\"$field_name\" id=\"$field_id\" value=\"1\" $checked $require>";
     }
 
     function getDisplayValue($entities = true) //wofür ist $entities? wird nicht benutzt?!?
@@ -474,7 +475,8 @@ class DataFieldTextlineEntry extends DataFieldEntry
         $field_name = $name . '[' . $this->structure->getID() . ']';
         $field_id = $name . '_' . $this->structure->getID();
         $valattr = 'value="' . $this->getDisplayValue() . '"';
-        return "<input type=\"text\" name=\"$field_name\" id=\"$field_id\" $valattr>";
+        $require = $this->structure->getIsRequired() ? "required" : "";
+        return "<input type=\"text\" name=\"$field_name\" id=\"$field_id\" $valattr $require>";
     }
 }
 
@@ -493,7 +495,8 @@ class DataFieldTextareaEntry extends DataFieldEntry
     {
         $field_name = $name . '[' . $this->structure->getID() . ']';
         $field_id = $name . '_' . $this->structure->getID();
-        return sprintf('<textarea name="%s" id="%s" rows="6" cols="58">%s</textarea>', $field_name, $field_id, htmlReady($this->getValue()));
+        $require = $this->structure->getIsRequired() ? "required" : "";
+        return sprintf('<textarea name="%s" id="%s" rows="6" cols="58" %s>%s</textarea>', $field_name, $field_id, htmlReady($this->getValue()), $require);
     }
    
 }
@@ -505,7 +508,8 @@ class DataFieldEmailEntry extends DataFieldEntry
     {
         $field_name = $name . '[' . $this->structure->getID() . ']';
         $field_id = $name . '_' . $this->structure->getID();
-        return sprintf('<input type="email" name="%s" id="%s" value="%s" size="30">', $field_name, $field_id, $this->getDisplayValue());
+        $require = $this->structure->getIsRequired() ? "required" : "";
+        return sprintf('<input type="email" name="%s" id="%s" value="%s" size="30" %s>', $field_name, $field_id, $this->getDisplayValue(), $require);
     }
 
     function isValid()
@@ -523,7 +527,8 @@ class DataFieldLinkEntry extends DataFieldEntry
     {
         $field_name = $name . '[' . $this->structure->getID() . ']';
         $field_id = $name . '_' . $this->structure->getID();
-        return sprintf('<input type="url" name="%s" id="%s" value="%s" size="30" placeholder="http://">', $field_name, $field_id, htmlready($this->getValue()));
+        $require = $this->structure->getIsRequired() ? "required" : "";
+        return sprintf('<input type="url" name="%s" id="%s" value="%s" size="30" placeholder="http://" %s>', $field_name, $field_id, htmlready($this->getValue()), $require);
     }
 
     public function getDisplayValue($entities = true)
@@ -579,7 +584,8 @@ class DataFieldSelectboxEntry extends DataFieldEntry
     {
         $field_name = $name . '[' . $this->structure->getID() . ']';
         $field_id = $name . '_' . $this->structure->getID();
-        $ret = "<select name=\"$field_name\" name=\"$field_id\">";
+        $require = $this->structure->getIsRequired() ? "required" : "";
+        $ret = "<select name=\"$field_name\" name=\"$field_id\" $require>";
         foreach($this->type_param as $pkey => $pval)
         {
             $value = $this->is_assoc_param ? (string) $pkey : $pval;
@@ -632,7 +638,8 @@ class DataFieldRadioEntry extends DataFieldSelectboxEntry
         foreach($this->type_param as $pkey => $pval)
         {
             $value = $this->is_assoc_param ? (string) $pkey : $pval;
-            $ret .= "<label>".sprintf('<input type="radio" value="%s" name="%s"%s> %s', htmlReady($value), $field_name, $value == $this->getValue() ? ' checked="checked"' : '', htmlReady($pval))."</label>";
+            $require = $this->structure->getIsRequired() ? "required" : "";
+            $ret .= "<label>".sprintf('<input type="radio" value="%s" name="%s"%s %s> %s', htmlReady($value), $field_name, $value == $this->getValue() ? ' checked="checked"' : '', htmlReady($pval), $require)."</label>";
         }
         return $ret;
     }
@@ -733,8 +740,9 @@ class DataFieldPhoneEntry extends DataFieldEntry
         $ret = '';
         foreach($parts as $i => $part)
         {
+            $require = ($this->structure->getIsRequired() && $i > 0) ? "required" : "";
             //      $part = preg_replace('/^0+(.*)$/', '\1', $part);
-            $ret .= sprintf('%s<input type="tel" name="%s" maxlength="%d" size="%d" value="%s" title="%s">', $prefix[$i], $name, $size[$i], $size[$i] - 1, htmlReady($part), $title[$i]);
+            $ret .= sprintf('%s<input type="tel" name="%s" maxlength="%d" size="%d" value="%s" title="%s" %s>', $prefix[$i], $name, $size[$i], $size[$i] - 1, htmlReady($part), $title[$i], $require);
         }
         $ret .= '<font size="-1">';
         $ret .= ' ' . _('z.B.:') . ' +<span style="border-style:inset; border-width:2px;"> 49 </span>';
@@ -779,15 +787,16 @@ class DataFieldDateEntry extends DataFieldEntry
     {
         $field_name = $name . '[' . $this->structure->getID() . '][]';
         $parts = explode('-', $this->value);
-        $ret = sprintf('<input name="%s" maxlength="2" size="1" value="%s" title="'._("Tag").'">', $field_name, $parts[2]);
+        $require = $this->structure->getIsRequired() ? "required" : "";
+        $ret = sprintf('<input name="%s" maxlength="2" size="1" value="%s" title="'._("Tag").'" %s>', $field_name, $parts[2], $require);
         $ret .= ". ";
         //TODO: was ist, wenn studip auf englisch eingestellt ist?!? lieber srfttime oder so benutzen...
         $months = array('' , 'Januar' , 'Februar' , 'März' , 'April' , 'Mai' , 'Juni' , 'Juli' , 'August' , 'September' , 'Oktober' , 'Novemember' , 'Dezember');
-        $ret .= "<select name=\"$field_name\" title=\""._("Monat")."\">";
+        $ret .= "<select name=\"$field_name\" title=\""._("Monat")."\" $require>";
         foreach($months as $i => $m)
             $ret .= sprintf('<option %s value="%s">%s</option>', ($parts[1] == $i ? 'selected' : ''), $i, $m);
         $ret .= "</select> ";
-        $ret .= sprintf('<input name="%s" maxlength="4" size="3" value="%s" title="'._("Jahr").'">', $field_name, $parts[0]);
+        $ret .= sprintf('<input name="%s" maxlength="4" size="3" value="%s" title="'._("Jahr").'" %s>', $field_name, $parts[0], $require);
         return $ret;
     }
 
@@ -821,8 +830,9 @@ class DataFieldTimeEntry extends DataFieldEntry
     {
         $name = $name . '[' . $this->structure->getID() . '][]';
         $parts = explode(':', $this->value);
-        $ret = sprintf('<input name="%s" maxlength="2" size="1" value="%s" title="'._("Stunden").'">:', $name, $parts[0]);
-        $ret .= sprintf('<input name="%s" maxlength="2" size="1" value="%s" title="'._("Minuten").'">', $name, $parts[1]);
+        $require = $this->structure->getIsRequired() ? "required" : "";
+        $ret = sprintf('<input name="%s" maxlength="2" size="1" value="%s" title="'._("Stunden").'" %s>:', $name, $parts[0], $require);
+        $ret .= sprintf('<input name="%s" maxlength="2" size="1" value="%s" title="'._("Minuten").'" %s>', $name, $parts[1], $require);
         return $ret;
     }
 

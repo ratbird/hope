@@ -242,7 +242,7 @@ class CalendarScheduleModel
                         'url'   => $bind_url,
                         'image' => Assets::image_path('icons/16/white/visibility-invisible.png'),
                         'onClick' => "function(id) { window.location = '". $bind_url ."'; }",
-                        'title' => _("Diesen Eintrag wieder einblenden")
+                        'title' => _("Diesen Eintrag wieder einblenden"),
                     );
                 }
 
@@ -254,7 +254,7 @@ class CalendarScheduleModel
                         'url'     => $unbind_url,
                         'image'   => Assets::image_path('icons/16/white/visibility-visible.png'),
                         'onClick' => "function(id) { window.location = '". $unbind_url ."'; }",
-                        'title'   => _("Diesen Eintrag ausblenden")
+                        'title'   => _("Diesen Eintrag ausblenden"),
                     );
 
                 }

@@ -61,7 +61,7 @@
                    title="<?= _('0 = keine Ablaufzeit') ?>"> <?= _('Tage') ?>
           </td>
           <td style="font-size: smaller;">
-            <input type="image" name="save" src="<?= Assets::image_path('icons/16/blue/accept.png') ?>">
+            <?= Assets::input("icons/16/blue/accept.png", array('type' => "image", 'class' => "middle", 'name' => "save", 'title' => _('Speichern'))) ?>
           </td>
         <? else: ?>
           <td style="font-size: smaller;">

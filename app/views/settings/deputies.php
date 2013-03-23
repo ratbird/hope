@@ -12,8 +12,7 @@ use Studip\Button, Studip\LinkButton;
             <form method="post" action="<?= $controller->url_for('settings/deputies') ?>">
                 <input type="hidden" name="studipticket" value="<?= get_ticket() ?>">
                 <?= CSRFProtection::tokenTag() ?>
-                <input type="image" src="<?= Assets::image_path('icons/16/yellow/arr_2left') ?>"
-                       <?= tooltip(_('NutzerIn hinzufügen')) ?> border="0" name="add_deputy">
+                <?= Assets::input("icons/16/yellow/arr_2left", array('type' => "image", 'class' => "middle", 'border' => "0", 'name' => "add_deputy", 'title' => _('NutzerIn hinzufügen'))) ?>
                 <?= QuickSearch::get('deputy_id', $search)->withButton()->render() ?>
              </form>
         </td>

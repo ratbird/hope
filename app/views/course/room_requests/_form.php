@@ -39,11 +39,9 @@ if ($request_resource_id = $request->getResourceId()) :
         <b><?= htmlReady($resObject->getName()) ?></b>,
         <?= _("verantwortlich:") ?>
         <a href="<?= $resObject->getOwnerLink() ?>"><?= htmlReady($resObject->getOwnerName()) ?></a>
-        <input style="vertical-align:bottom" type="image" src="<?= Assets::image_path('icons/16/blue/trash.png') ?>" <?= tooltip(_("den ausgewählten Raum löschen")) ?> name="reset_resource_id">
-        <img style="vertical-align:bottom" src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/grey/info-circle.png"
-            <?= tooltip(_("Der ausgewählte Raum bietet folgende der wünschbaren Eigenschaften:")
-            ." \n".$resObject->getPlainProperties(TRUE), TRUE, TRUE) ?>>
-        <input type="hidden" name="selected_room" value="<?= htmlready($request_resource_id)?>">
+        <?= Assets::input("icons/16/blue/trash.png", array('type' => "image", 'style' => "vertical-align:bottom", 'name' => "reset_resource_id", 'title' => _('den ausgewählten Raum löschen'))) ?>
+        <?= Assets::img("icons/16/grey/info-circle.png", array('alt' => _('Der ausgewählte Raum bietet folgende der wünschbaren Eigenschaften:')." \n".$resObject->getPlainProperties(TRUE))) ?>
+         <input type="hidden" name="selected_room" value="<?= htmlready($request_resource_id)?>">
     </td>
 </tr>
 <? endif ?>
@@ -66,8 +64,8 @@ if ($request_resource_id = $request->getResourceId()) :
                                 );
                             }
                             print "</select>";
-                            print "&nbsp;<input style=\"vertical-align:bottom\" type=\"IMAGE\" value=\""._("Raumtyp auswählen")."\" name=\"send_room_type\" src=\"" . Assets::image_path('icons/16/blue/accept.png') . "\" ".tooltip(_("Raumtyp auswählen")).">";
-                            print "&nbsp;&nbsp;<input style=\"vertical-align:bottom\" type=\"IMAGE\" src=\"" . Assets::image_path('icons/16/blue/trash.png') . "\" ".tooltip(_("alle Angaben zurücksetzen"))." name=\"reset_room_type\"><br><br>";
+                            print "&nbsp;".Assets::input("icons/16/blue/accept.png", array('type' => "image", 'style' => "vertical-align:bottom", 'name' => "send_room_type", 'value' => _("Raumtyp auswählen"), 'title' => _('Raumtyp auswählen')));
+                            print "&nbsp;&nbsp;".Assets::input("icons/16/blue/trash.png", array('type' => "image", 'style' => "vertical-align:bottom", 'name' => "reset_room_type", 'title' => _('alle Angaben zurücksetzen')))".<br><br>";
                         }
 
                         print _("Folgende Eigenschaften sind wünschbar:")."<br><br>";
@@ -123,7 +121,7 @@ if ($request_resource_id = $request->getResourceId()) :
                             printf ("<option value=\"%s\">%s </option>", $rc["category_id"], htmlReady($rc["name"]));
                         }
                         print "</select>";
-                        print "&nbsp;<input type=\"IMAGE\" value=\""._("Raumtyp auswählen")."\" name=\"send_room_type\" src=\"".Assets::image_path('icons/16/blue/accept.png')."\" ".tooltip(_("Raumtyp auswählen")).">";
+                        print "&nbsp;".Assets::input("icons/16/blue/accept.png", array('type' => "image", 'style' => "vertical-align:bottom", 'name' => "send_room_type", 'value' => _("Raumtyp auswählen"), 'title' => _('Raumtyp auswählen')));
                     }
                     ?>
 
@@ -140,8 +138,8 @@ if ($request_resource_id = $request->getResourceId()) :
                                 printf ("<option value=\"%s\">%s </option>", $key, htmlReady(my_substr($val, 0, 30)));
                             }
                             print "</select>";
-                            print "&nbsp;<input type=\"IMAGE\" src=\"" . Assets::image_path('icons/16/blue/accept.png') . "\" ".tooltip(_("Den Raum als Wunschraum auswählen"))." name=\"send_room\">";
-                            print "&nbsp;&nbsp;<input type=\"IMAGE\" src=\"" . Assets::image_path('icons/16/blue/refresh.png') . "\" ".tooltip(_("neue Suche starten"))." name=\"reset_room_search\">";
+                            print "&nbsp;".Assets::input("icons/16/blue/accept.png", array('type' => "image", 'style' => "vertical-align:bottom", 'name' => "send_room", 'value' => _("Den Raum als Wunschraum auswählen"), 'title' => _('Den Raum als Wunschraum auswählen')));
+                            print "&nbsp;&nbsp;".Assets::input("icons/16/blue/refresh.png", array('type' => "image", 'style' => "vertical-align:bottom", 'name' => "reset_room_search", 'value' => _("neue Suche starten"), 'title' => _('neue Suche starten')));
                             if ($search_by_properties) {
                                 print "<br><br>"._("(Diese Räume erfüllen die Wunschkriterien, die Sie links angegeben haben.)");
                             }
@@ -154,7 +152,7 @@ if ($request_resource_id = $request->getResourceId()) :
                         <br>
                         <?=_("Geben Sie zur Suche den Raumnamen ganz oder teilweise ein:"); ?>
                         <input type="text" size="30" maxlength="255" name="search_exp_room">
-                        <input type="image" src="<?= Assets::image_path('icons/16/blue/search.png') ?>" <? echo tooltip(_("Suche starten")) ?> name="search_room"><br>
+                        <?= Assets::input("icons/16/blue/search.png", array('type' => "image", 'class' => "middle", 'name' => "search_room", 'title' => _('Suche starten'))) ?><br>
                         <?
                     }
                     ?>
@@ -166,7 +164,7 @@ if ($request_resource_id = $request->getResourceId()) :
             <tr>
                 <td align="right">
                     <?=("passende Räume suchen")?>
-                    <input type="image" src="<?= Assets::image_path('icons/16/yellow/arr_2right.png') ?>" <? echo tooltip(_("passende Räume suchen")) ?> name="search_properties">
+                    <?= Assets::input("icons/16/yellow/arr_2right.png", array('type' => "image", 'class' => "middle", 'name' => "search_properties", 'title' => _('passende Räume suchen'))) ?>
                 </td>
                 <td>
                     &nbsp;

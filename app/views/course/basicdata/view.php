@@ -189,7 +189,7 @@ $message_types = array('msg' => "success", 'error' => "error", 'info' => "info")
           <? if ($perm_dozent && !$dozent_is_locked) : ?>
               <tr>
                   <td style="padding-top: 15px"></td>
-                  <td style="padding-top: 15px"><input class="middle" type="image" src="<?= Assets::image_path("icons/16/yellow/arr_2up.png") ?>" name="add_dozent" title="<?= sprintf(_("Neuen %s hinzufügen"), $dozenten_title) ?>"></td>
+                  <td style="padding-top: 15px"><?= Assets::input("icons/16/yellow/arr_2up.png", array('type' => "image", 'class' => "middle", 'name' => "add_dozent", 'title' => sprintf(_("Neuen %s hinzufügen"), $dozenten_title))) ?></td>
                   <td style="padding-top: 15px"></td>
                   <td style="padding-top: 15px"><?= $dozentensuche ?></td>
                   <td style="padding-top: 15px"></td>
@@ -227,7 +227,7 @@ $message_types = array('msg' => "success", 'error' => "error", 'info' => "info")
           <? if ($perm_dozent && !$dozent_is_locked) : ?>
               <tr>
                   <td style="padding-top: 15px"></td>
-                  <td style="padding-top: 15px"><input class="middle" type="image" src="<?= Assets::image_path("icons/16/yellow/arr_2up.png") ?>" name="add_deputy" title="<?= sprintf(_("Neuen %s hinzufügen"), $deputy_title) ?>"></td>
+                  <td style="padding-top: 15px"><?= Assets::input("icons/16/yellow/arr_2up.png", array('type' => "image", 'class' => "middle", 'name' => "add_deputy", 'title' => sprintf(_("Neuen %s hinzufügen"), $deputy_title))) ?></td>
                   <td style="padding-top: 15px"></td>
                   <td style="padding-top: 15px"><?= $deputysearch ?></td>
                   <td style="padding-top: 15px"></td>
@@ -286,7 +286,7 @@ $message_types = array('msg' => "success", 'error' => "error", 'info' => "info")
           <? if ($perm_dozent && !$tutor_is_locked) : ?>
               <tr>
                   <td style="padding-top: 15px"></td>
-                  <td style="padding-top: 15px"><input class="middle" type="image" src="<?= Assets::image_path("icons/16/yellow/arr_2up.png") ?>" name="add_tutor" title="<?= sprintf(_("Neuen %s hinzufügen"), $tutor_title) ?>"></td>
+                  <td style="padding-top: 15px"><?= Assets::input("icons/16/yellow/arr_2up.png", array('type' => "image", 'class' => "middle", 'name' => "add_tutor", 'title' => sprintf(_("Neuen %s hinzufügen"), $tutor_title))) ?></td>
                   <td style="padding-top: 15px"></td>
                   <td style="padding-top: 15px"><?= $tutorensuche ?></td>
                   <td style="padding-top: 15px"></td>

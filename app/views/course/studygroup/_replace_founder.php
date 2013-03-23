@@ -13,7 +13,7 @@
         </div>
         <? if(!empty($tutors)) :?>
             <div style="width: 50%; float: left; vertiacl-align:middle;">
-                <input type="image" name="replace_founder" src="<?= Assets::image_path('icons/16/yellow/arr_2left.png') ?>" title="<?= _("Als GruppengründerIn eintragen") ?>">
+                <?= Assets::input("icons/16/yellow/arr_2left.png", array('type' => "image", 'class' => "middle", 'name' => "replace_founder", 'title' => _('Als GruppengründerIn eintragen'))) ?>
                 <select name="choose_founder">
                     <? foreach($tutors as $uid => $tutor) : ?>
                         <option value="<?=$uid?>"> <?= htmlReady($tutor['fullname']) ?> </option>

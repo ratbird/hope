@@ -81,9 +81,7 @@ use Studip\Button, Studip\LinkButton;
                       <? endif ?>
                     <? endforeach; ?>
                     </select>
-                    <input class="middle" type="image"
-                        src="<?= Assets::image_path("icons/16/blue/plus.png") ?>"
-                        name="add_filter">
+                    <?= Assets::input("icons/16/blue/plus.png", array('type' => "image", 'class' => "middle", 'name' => "add_filter", 'title' => _('Filter hinzuf&uuml;gen'))) ?>
                 </td>
             </tr>
         <? endif ?>
@@ -102,9 +100,7 @@ use Studip\Button, Studip\LinkButton;
           <? endif ?>
                 <td colspan="<?= $index % 2 ? 1 : 2 ?>">
                     <label for="<?= $type ?>"><b><?= $available_filtertypes[$type] ?></b></label>
-                    <input type="image" name="remove_filter[<?= $type ?>]" class="middle"
-                        src="<?= Assets::image_path('icons/16/blue/minus.png') ?>"
-                        title="<?= _('Filter entfernen') ?>">
+                    <?= Assets::input("icons/16/blue/minus.png", array('type' => "image", 'class' => "middle", 'name' => "remove_filter[".$type."]", 'title' => _('Filter entfernen'))) ?>
                     <br>
 
                     <select name="filter[<?= $type ?>][]" multiple="multiple" size="5">
@@ -131,9 +127,7 @@ use Studip\Button, Studip\LinkButton;
             <tr>
                 <td colspan="3">
                     <?= Button::create(_('Eintragen'), 'submit') ?>
-                    <input type="image" name="preview" title="<?= _('Vorschau') ?>"
-                        style="vertical-align: middle;"
-                        src="<?= Assets::image_path('icons/16/blue/question-circle.png') ?>">
+                    <?= Assets::input("icons/16/blue/question-circle.png", array('type' => "image", 'style' => "vertical-align: middle;", 'name' => "preview", 'title' => _('Vorschau'))) ?>
                 </td>
             </tr>
         </tfoot>

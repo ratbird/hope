@@ -9,5 +9,5 @@
         <? endif ?>
     <? endforeach ?>
     </select>
-    <input type="image" src="<?= Assets::image_path('icons/16/green/accept.png') ?>">
+    <?= Assets::input("icons/16/green/accept.png", array('type' => "image", 'class' => "middle", 'title' => _('auswählen'))) ?>
 </form>

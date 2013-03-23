@@ -15,6 +15,6 @@
     </select>
 
     <noscript>
-        <input type="image" class="middle" name="show" src="<?= Assets::image_path('icons/16/blue/accept.png') ?>">
+  	    <?= Assets::input("icons/16/blue/accept.png", array('type' => "image", 'class' => "middle", 'name' => "show")) ?>
     </noscript>
 </form>

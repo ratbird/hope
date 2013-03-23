@@ -37,8 +37,7 @@
     <h3><?=_("Suche:")?></h3>
 
     <input type="text" name="study_area_selection[search_key]" value="">
-    <input type="image" name="study_area_selection[search_button]" src="<?= Assets::image_path('icons/16/blue/search.png') ?>">
-
+    <?= Assets::input("icons/16/blue/search.png", array('type' => "image", 'class' => "middle", 'name' => "study_area_selection[search_button]", 'title' => _('Suche starten'))) ?>
     <? if ($selection->searched()) : ?>
       <a href="<?= URLHelper::getLink(isset($url) ? $url : '',
                       array('study_area_selection[rewind_button]' => 1,

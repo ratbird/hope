@@ -12,14 +12,14 @@
                     <option value="<?= $user_id ?>"><?= htmlReady(my_substr($data['fullname']." (".$data['username'],0,35)) ?>) - <?= $data['perms'] ?></option>
                     <? endforeach; ?>
                 </select>
-                <input type="image" name="add_founder" src="<?= Assets::image_path('icons/16/blue/accept.png') ?>" title="<?= _("NutzerIn hinzufügen") ?>">
-                <input type="image" name="new_search" src="<?= Assets::image_path('icons/16/blue/refresh.png') ?>" title="<?= _("neue Suche starten") ?>">
+                <?= Assets::input("icons/16/blue/accept.png", array('type' => "image", 'class' => "middle", 'name' => "add_founder", 'title' => _('NutzerIn hinzufügen'))) ?>
+                <?= Assets::input("icons/16/blue/refresh.png", array('type' => "image", 'class' => "middle", 'name' => "new_search", 'title' => _('neue Suche starten'))) ?>
                 <? if (sizeof($results_choose_founders) == 500) : ?>
                 <br><span style="color:red"><?= sprintf(_("Es werden nur die ersten %s Treffer angezeigt!"), 500) ?></span>
                 <? endif; ?>
             <? else : ?>
                 <input type="text" name="search_for_founder">
-                <input type="image" name="search_founder" src="<?= Assets::image_path('icons/16/blue/search.png') ?>" title="<?= _("Suchen") ?>"><br>
+                <?= Assets::input("icons/16/blue/search.png", array('type' => "image", 'class' => "middle", 'name' => "search_founder", 'title' => _('Suchen'))) ?>
                 <?= _("Geben Sie zur Suche den Vor-, Nach- oder Benutzernamen ein.") ?>
             <? endif; ?>
             </div>
@@ -33,7 +33,7 @@
                     
                     <?= htmlReady(get_fullname($user_id, 'full_rev')) ?> (<?= get_username($user_id) ?>)
                     <input type="hidden" name="founders[]" value="<?= $user_id ?>">
-                    <input type="image" name="remove_founder" src="<?= Assets::image_path('icons/16/blue/trash.png') ?>" <?= tooltip("NutzerIn entfernen") ?>>
+                    <?= Assets::input("icons/16/blue/refresh.png", array('type' => "image", 'class' => "middle", 'name' => "remove_founder", 'title' => _('NutzerIn entfernen'))) ?>
                     <br>
                 <? endforeach; ?>
             <? endif; ?>

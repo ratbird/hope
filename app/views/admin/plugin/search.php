@@ -69,7 +69,7 @@ use Studip\Button, Studip\LinkButton;
                     <form action="<?= $controller->url_for('admin/plugin/install', $name) ?>" method="post">
                         <?= CSRFProtection::tokenTag() ?>
                         <input type="hidden" name="ticket" value="<?= get_ticket() ?>">
-                        <input type="image" name="install" src="<?= Assets::image_path('icons/16/blue/install.png') ?>" title="<?= _('Plugin installieren') ?>">
+                        <?= Assets::input("icons/16/blue/install.png", array('type' => "image", 'class' => "middle", 'name' => "install", 'title' => _('Plugin installieren'))) ?>
                     </form>
                 </td>
             </tr>

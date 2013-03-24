@@ -17,7 +17,7 @@
           <?
             $dimensions = Assets::getImageSize($picture);
             $height = $dimensions
-                ? min(floor(($dimensions['height'] / $dimensions['width']) * 190), 190)
+                ? min(floor(($dimensions['height'] / $dimensions['width']) * 250), 190)
                 : 190;
           ?>
         <td class="infobox-img">

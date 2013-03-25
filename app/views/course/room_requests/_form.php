@@ -65,7 +65,7 @@ if ($request_resource_id = $request->getResourceId()) :
                             }
                             print "</select>";
                             print "&nbsp;".Assets::input("icons/16/blue/accept.png", array('type' => "image", 'style' => "vertical-align:bottom", 'name' => "send_room_type", 'value' => _("Raumtyp auswählen"), 'title' => _('Raumtyp auswählen')));
-                            print "&nbsp;&nbsp;".Assets::input("icons/16/blue/trash.png", array('type' => "image", 'style' => "vertical-align:bottom", 'name' => "reset_room_type", 'title' => _('alle Angaben zurücksetzen')))".<br><br>";
+                            print "&nbsp;&nbsp;".Assets::input("icons/16/blue/trash.png", array('type' => "image", 'style' => "vertical-align:bottom", 'name' => "reset_room_type", 'title' => _('alle Angaben zurücksetzen')))."<br><br>";
                         }
 
                         print _("Folgende Eigenschaften sind wünschbar:")."<br><br>";

@@ -134,19 +134,21 @@ class Assets {
    * * file name without extension, like "logo", that gets expanded to "/images/logo.png"
    */
   static function img($source, $opt = array()) {
-
+  
     if (!$source)
       return '';
       
    $parts = explode('/', $source);
    
-    if (($pos = array_search("icons", $parts)) !== false) {
-        $opt['size'] = $parts[$pos+1] . '@' . $parts[$pos+1];
+   if (($pos = array_search("icons", $parts)) !== false) {
+        $size = $parts[$pos+1] . '@' . $parts[$pos+1];
         if ($GLOBALS['auth']->auth['devicePixelRatio'] == 2) {
             $parts[$pos+1] = $parts[$pos+1] * 2;
         }
+ 
         $source = implode("/", $parts);
-    }
+    } else
+    	$size = $opt['size'];
 
     $opt = Assets::parse_attributes($opt);
 
@@ -160,9 +162,8 @@ class Assets {
     if (!isset($opt['alt']))
       $opt['alt'] = ucfirst(current(explode('.', basename($opt['src']))));
 
-
-    if (isset($opt['size'])) {
-      list($opt['width'], $opt['height']) = explode('@', $opt['size'], 2);
+    if (isset($size)) {
+      list($size, $opt['height']) = explode('@', $size, 2);
       unset($opt['size']);
     }
    

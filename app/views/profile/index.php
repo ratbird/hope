@@ -130,16 +130,18 @@
                 <br>
                 * Diese Felder sind nur für Sie und AdministratorInnen sichtbar.<br>
             <?endif?>
-               <br />
-            <?=$kings?>
-            <? if(!empty($shortDatafields)) : ?>
-                <? foreach ($shortDatafields as $name => $entry) : ?>
-                    <strong><?= htmlReady($name) ?>:</strong>
-                    <?= $entry['content'] ?>
-                    <span class="minor"><?= $entry['visible'] ?></span>
-                    <br>
-                <? endforeach ?>
-            <?endif?>
+               <br>
+            <? if (isset($kings)): ?>
+                <?= $kings ?><br>
+            <? endif; ?>
+        <? if(!empty($shortDatafields)) : ?>
+            <? foreach ($shortDatafields as $name => $entry) : ?>
+                <strong><?= htmlReady($name) ?>:</strong>
+                <?= $entry['content'] ?>
+                <span class="minor"><?= $entry['visible'] ?></span>
+                <br>
+            <? endforeach ?>
+        <?endif?>
         </td>
     </tr>
 </table>

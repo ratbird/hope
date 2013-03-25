@@ -1,4 +1,6 @@
 <?php
+if (!defined('SORT_NATURAL')) define('SORT_NATURAL', 6);
+if (!defined('SORT_FLAG_CASE')) define('SORT_FLAG_CASE', 8);
 /**
  * SimpleORMapCollection.class.php
  * simple object-relational mapping
@@ -418,5 +420,41 @@ class SimpleORMapCollection extends ArrayObject
             }
         }
         return $ret;
+    }
+    
+    function orderBy($order, $sort_flags = SORT_STRING)
+    {
+         //('name asc, nummer desc ')
+        switch ($sort_flags) {
+            case SORT_NATURAL:
+                $sort_func = 'natcmp';
+            break;
+            case SORT_NATURAL & SORT_FLAG_CASE:
+                $sort_func = 'natcasecmp';
+            break;
+            case SORT_STRING & SORT_FLAG_CASE:
+                $sort_func = 'strcasecmp';
+            break;
+            default:
+                $sort_func = 'strcmp';
+        }
+        $sorter = array();
+        foreach (explode(',', strtolower($order)) as $one) {
+            $sorter[] = array_map('trim', explode(' ', $one));
+        }
+        
+        $func = function ($d1, $d2) use ($sorter, $sort_func) {
+            do {
+                list($field, $dir) = current($sorter);
+                $ret = $sort_func($d1[$field], $d2[$field]);
+                if ($dir == 'desc') $ret = $ret * -1;
+            } while ($ret === 0 && next($sorter));
+            
+            return $ret;
+        };
+        if (count($sorter)) {
+            $this->uasort($func);
+        }
+        return $this;
     }
 }

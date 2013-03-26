@@ -46,6 +46,7 @@
     display: inline-block;
     white-space: normal;
     opacity: 0;
+    max-width: 100%;
 }
 #forum_threads > li.thread:hover .contextinfo {
     opacity: 1;

@@ -163,7 +163,7 @@ class Assets {
       $opt['alt'] = ucfirst(current(explode('.', basename($opt['src']))));
 
     if (isset($size)) {
-      list($size, $opt['height']) = explode('@', $size, 2);
+      list($opt['width'], $opt['height']) = explode('@', $size, 2);
       unset($opt['size']);
     }
    

@@ -703,22 +703,25 @@ class ForumEntry {
                 unset($_searchfor[$key]);
             } else {
                 $search_word = '%'. $val .'%';
+                $zw_search_string = array();
                 if ($options['search_title']) {
-                    $search_string[] .= "name LIKE " . DBManager::get()->quote($search_word);
+                    $zw_search_string[] .= "name LIKE " . DBManager::get()->quote($search_word);
                 }
 
                 if ($options['search_content']) {
-                    $search_string[] .= "content LIKE " . DBManager::get()->quote($search_word);
+                    $zw_search_string[] .= "content LIKE " . DBManager::get()->quote($search_word);
                 }
 
                 if ($options['search_author']) {
-                    $search_string[] .= "author LIKE " . DBManager::get()->quote($search_word);
+                    $zw_search_string[] .= "author LIKE " . DBManager::get()->quote($search_word);
                 }
+                
+                $search_string[] = '('. implode(' OR ', $zw_search_string) .')';
             }
         }
 
         if (!empty($search_string)) {
-            $add = "AND (" . implode(' OR ', $search_string) . ")";
+            $add = "AND (" . implode(' AND ', $search_string) . ")";
             return array_merge(
                 array('highlight' => $_searchfor),
                 ForumEntry::getEntries($parent_id, ForumEntry::WITH_CHILDS, $add, 'DESC', $start)

@@ -920,8 +920,12 @@ class IndexController extends StudipController
     function admin_action()
     {
         ForumPerm::check('admin', $this->getId());
+        $nav = Navigation::getItem('course/forum2');
+        $nav->setImage('icons/16/black/forum.png');
         Navigation::activateItem('course/forum2/admin');
+
         $list = ForumEntry::getList('flat', $this->getId());
+        $this->seminar_id = $this->getId();
 
         // sort by cat
         $new_list = array();
@@ -964,13 +968,34 @@ class IndexController extends StudipController
 
     function admin_move_action($destination)
     {
+        // check if destination is a category_id. if yes, use seminar_id instead
+       if ($cat = ForumCat::get($destination)) {
+           $destination = $this->getId();
+       }
+        
         ForumPerm::check('admin', $this->getId(), $destination);
 
         foreach (Request::getArray('topics') as $topic_id) {
-            // TODO: create adjusted move-function, the curent one is not up the task for multi-level movement
-            // TODO: make sure every passed topic_id is checked
+            // make sure every passed topic_id is checked against the current seminar
             ForumPerm::check('admin', $this->getId(), $topic_id);
-            // ForumEntry::move($topic_id, $destination);
+            
+            // first step: move the whole topic with all childs
+            ForumEntry::move($topic_id, $destination);
+            
+            // if the current topic id is an area, remove it from any categories
+            ForumCat::removeArea($topic_id);
+            
+            // second step: move all to deep childs a level up (depth > 3)
+            $data = ForumEntry::getList('depth_to_large', $topic_id);
+            foreach ($data['list'] as $entry) {
+                $path = ForumEntry::getPathToPosting($entry['topic_id']);
+                array_shift($path); // Category
+                array_shift($path); // Area
+
+                $thread = array_shift($path); // Thread
+                
+                ForumEntry::move($entry['topic_id'], $thread['id']);
+            }
         }
 
         $this->render_nothing();

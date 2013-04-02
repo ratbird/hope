@@ -18,7 +18,7 @@
     <div class="postbody">
         <div class="title">
 
-            <? if ($post['name_raw'] && $post['depth'] < 3) : ?>  
+            <? if ($post['depth'] < 3) : ?>  
             <span data-edit-topic="<?= $post['topic_id'] ?>" <?= Request::get('edit_posting') == $post['topic_id'] ? '' : 'style="display: none;"' ?>>
                 <input type="text" name="name" value="<?= htmlReady($post['name_raw']) ?>" data-reset="<?= htmlReady($post['name_raw']) ?>" style="width: 100%">
             </span>

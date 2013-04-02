@@ -61,7 +61,7 @@
         <td class="areaentry">
             <div style="position: relative;">
                 <a href="<?= PluginEngine::getLink('coreforum/index/index/'. $jump_to_topic_id .'#'. $jump_to_topic_id) ?>">
-                    <span class="areaname"><?= htmlReady($entry['name_raw']) ?></span>
+                    <span class="areaname"><?= htmlReady($entry['name_raw'] ?: _('Ohne Titel')) ?></span>
                 </a>
 
                 <span class="action-icons">

@@ -408,7 +408,7 @@ class ForumEntry {
                     AND lft > ? AND rgt < ?) "
                 . ($depth > 2 ? " OR forum_entries.topic_id = ". DBManager::get()->quote($parent_id) : '')
                 . $add
-                . " ORDER BY forum_entries.mkdate $sort_order");
+                . " ORDER BY forum_entries.lft ASC, forum_entries.mkdate $sort_order");
             $count_stmt->execute(array($GLOBALS['user']->id, $seminar_id, $constraint['lft'], $constraint['rgt']));
             $count = $count_stmt->fetchColumn();
         } else {
@@ -419,7 +419,7 @@ class ForumEntry {
                     AND lft > ? AND rgt < ?) "
                 . ($depth > 2 ? " OR forum_entries.topic_id = ". DBManager::get()->quote($parent_id) : '')
                 . ') '. $add
-                . " ORDER BY forum_entries.mkdate $sort_order");
+                . " ORDER BY forum_entries.lft ASC, forum_entries.mkdate $sort_order");
             $count_stmt->execute(array($GLOBALS['user']->id, $depth, $seminar_id, $constraint['lft'], $constraint['rgt']));
             $count = $count_stmt->fetchColumn();            
         }
@@ -440,7 +440,7 @@ class ForumEntry {
                     AND lft > ? AND rgt < ?) "
                 . ($depth > 2 ? " OR forum_entries.topic_id = ". DBManager::get()->quote($parent_id) : '')
                 . $add
-                . " ORDER BY forum_entries.mkdate $sort_order"
+                . " ORDER BY forum_entries.lft ASC, forum_entries.mkdate $sort_order"
                 . ($limit ? " LIMIT $start, $limit" : ''));
             $stmt->execute(array($GLOBALS['user']->id, $seminar_id, $constraint['lft'], $constraint['rgt']));
         } else {
@@ -451,7 +451,7 @@ class ForumEntry {
                     AND lft > ? AND rgt < ?) "
                 . ($depth > 2 ? " OR forum_entries.topic_id = ". DBManager::get()->quote($parent_id) : '')
                 . ') '. $add
-                . " ORDER BY forum_entries.mkdate $sort_order"
+                . " ORDER BY forum_entries.lft ASC, forum_entries.mkdate $sort_order"
                 . ($limit ? " LIMIT $start, $limit" : ''));
             $stmt->execute(array($GLOBALS['user']->id, $depth, $seminar_id, $constraint['lft'], $constraint['rgt']));
         }
@@ -644,6 +644,19 @@ class ForumEntry {
                 }
 
                 return array('list' => $posting_list, 'count' => $count);
+                break;
+                
+            case 'depth_to_large':
+                $constraint = ForumEntry::getConstraints($parent_id);
+                
+                $stmt = DBManager::get()->prepare("SELECT SQL_CALC_FOUND_ROWS * FROM forum_entries
+                    WHERE lft > ? AND rgt < ? AND seminar_id = ? AND depth > 3
+                    ORDER BY name ASC");
+                $stmt->execute(array($constraint['lft'], $constraint['rgt'], $constraint['seminar_id']));
+                
+                $count = DBManager::get()->query("SELECT FOUND_ROWS()")->fetchColumn();
+
+                return array('list' => $stmt->fetchAll(PDO::FETCH_ASSOC), 'count' => $count);
                 break;
         }
     }
@@ -932,7 +945,7 @@ class ForumEntry {
         // make some space by updating the lft and rgt values of the target node
         $constraints_destination = ForumEntry::getConstraints($destination);
         $size = $constraints['rgt'] - $constraints['lft'] + 1;
-
+        
         DBManager::get()->exec("UPDATE forum_entries SET lft = lft + $size
             WHERE lft > ". $constraints_destination['rgt'] ." AND seminar_id = '". $constraints_destination['seminar_id'] ."'");
         DBManager::get()->exec("UPDATE forum_entries SET rgt = rgt + $size
@@ -941,6 +954,17 @@ class ForumEntry {
         //move the entries from "outside" the tree to the target node
         $constraints_destination = ForumEntry::getConstraints($destination);
 
+        
+        // update the depth to reflect the new position in the tree
+        // determine if we need to add, subtract or even do nothing to/from the depth
+        $depth_mod = $constraints_destination['depth'] - $constraints['depth'] + 1;
+        
+        DBManager::get()->exec("UPDATE forum_entries
+            SET depth = depth + (" . $depth_mod .")
+            WHERE seminar_id = '". $constraints_destination['seminar_id'] ."'
+                AND lft < 0");
+
+        // move the tree to its destination
         $diff = ($constraints_destination['rgt'] - ($constraints['rgt'] - $constraints['lft'])) - 1 - $constraints['lft'];
 
         DBManager::get()->exec("UPDATe forum_entries

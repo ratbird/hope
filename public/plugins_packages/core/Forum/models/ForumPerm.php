@@ -48,9 +48,6 @@ class ForumPerm {
     {
         static $permissions = array();
         
-        // TODO: remove the the following line when multi-move-administration is completed
-        if ($perm == 'admin') return false;
-
         // if no user-id is passed, use the current user (for your convenience)
         if (!$user_id) {
             $user_id = $GLOBALS['user']->id;
@@ -96,7 +93,7 @@ class ForumPerm {
             words('edit_category add_category remove_category sort_category '
             . 'edit_area add_area remove_area sort_area '
             . 'search edit_entry add_entry remove_entry fav_entry like_entry move_thread '
-            . 'abo forward_entry pdfexport admin')
+            . 'abo forward_entry pdfexport')
         ) !== false) {
             return true;
         } else if ($status == 'autor' && in_array($perm, words('search add_entry fav_entry like_entry forward_entry abo pdfexport')) !== false) {

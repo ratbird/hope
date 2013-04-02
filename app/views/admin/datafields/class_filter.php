@@ -13,6 +13,6 @@
     </select>
 
     <noscript>
-  	    <?= Assets::input("icons/16/blue/accept.png", array('type' => "image", 'class' => "middle", 'name' => "show")) ?>
+        <?= Assets::input("icons/16/blue/accept.png", array('type' => "image", 'class' => "middle", 'name' => "show")) ?>
     </noscript>
 </form>

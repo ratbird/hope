@@ -143,7 +143,7 @@ class ExternEditModule extends ExternEditHtml {
             }
 
             if (!in_array("visible", $hide)) {
-            	// move left
+                // move left
                 $out .= "<td valign=\"middle\" nowrap=\"nowrap\">";
                 $out .= Assets::input("icons/16/yellow/arr_2up.png", array('type' => "image", 'class' => "middle", 'name' => $this->element_name."_move_left[".$i."]", 'title' => _('Datenfeld verschieben')));
 

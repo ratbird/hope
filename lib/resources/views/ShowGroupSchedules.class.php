@@ -223,7 +223,7 @@ class ShowGroupSchedules extends ShowSemSchedules {
                 <td class="<? echo $cssSw->getClass() ?>"  width="10%" align="left">&nbsp;
                     <a href="<?= URLHelper::getLink('?quick_view='.$this->used_view.'&quick_view_mode='.$view_mode.'&previous_day=1') ?>">
                     <?= Assets::img("icons/16/blue/arr_2left.png", array('class' => "middle", 'alt' => "Vorherigen Tag anzeigen", 'title' => "Vorherigen Tag anzeigen")) ?>
-					</a>
+                    </a>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="76%" align="center">
                 <b>

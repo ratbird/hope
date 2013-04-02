@@ -123,4 +123,3 @@ class ProfileModulesController extends AuthenticatedController {
     }
 
 }
-?>

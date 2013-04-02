@@ -148,7 +148,7 @@ class Assets {
  
         $source = implode("/", $parts);
     } else
-    	$size = $opt['size'];
+        $size = $opt['size'];
 
     $opt = Assets::parse_attributes($opt);
 

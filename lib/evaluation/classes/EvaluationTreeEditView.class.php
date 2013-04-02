@@ -3043,14 +3043,14 @@ function createImage ( $pic,
                        $alt = "",
                        $args = NULL){
 
-	if (!isset($args['alt'])) {
-	    $args['alt'] = $alt;
-	    $args['title'] = $alt;
-	    }
-	
-	$args['border'] = 0;
-	$args['style'] = "vertical-align:middle;";
-	
+    if (!isset($args['alt'])) {
+        $args['alt'] = $alt;
+        $args['title'] = $alt;
+        }
+    
+    $args['border'] = 0;
+    $args['style'] = "vertical-align:middle;";
+    
     $img = new HTMLempty ("img");
     $img->addString (tooltip($alt,TRUE,TRUE));
     $img->addAttr ("src",$pic);

@@ -78,8 +78,8 @@ foreach ($group_members as $member) {
                 if ($adminnavigation) : ?>
                 <a href="<?= URLHelper::getLink($adminnavigation->getURL(), array('cid' => $semid)) ?>">
                     <?
-					$image=$adminnavigation->getImage();
-            		echo Assets::img($image['src'], array_map("htmlready", $image));
+                    $image=$adminnavigation->getImage();
+                    echo Assets::img($image['src'], array_map("htmlready", $image));
                     ?>
                 </a>
                 <? endif ?>

@@ -61,10 +61,10 @@ function print_seminar_content($semid, $my_obj_values, $type = 'seminar', $sem_c
         if (isset($nav) && $nav->isVisible(true)) {
             // need to use strtr() here to deal with seminar_main craziness
             $url = $type.'_main.php?auswahl='.$semid.'&redirect_to='.strtr($nav->getURL(), '?', '&');
-			$image=$nav->getImage();
+            $image=$nav->getImage();
             printf('<a %s href="%s">'.Assets::img($image['src'], array_map("htmlready", $image)).'</a>', 
-            	$nav->hasBadgeNumber() ? 'class="badge" data-badge-number="' . intval($nav->getBadgeNumber())  . '"' : '', 
-            	htmlReady($url));
+                $nav->hasBadgeNumber() ? 'class="badge" data-badge-number="' . intval($nav->getBadgeNumber())  . '"' : '', 
+                htmlReady($url));
        } else if (is_string($key)) {
             echo Assets::img('blank.gif', array('width' => 16, 'height' => 16));
         }

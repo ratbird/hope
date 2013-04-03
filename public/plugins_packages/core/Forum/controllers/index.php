@@ -67,7 +67,7 @@ class IndexController extends StudipController
 
     function enter_seminar_action() {
         if (ForumPerm::has('fav_entry', $this->getId())
-            && ForumVisit::getCount($this->getId(), ForumVisit::getLastVisit($this->getId())) > 0) {
+            && ForumVisit::getCount($this->getId(), ForumVisit::getVisit($this->getId())) > 0) {
             $this->redirect(PluginEngine::getLink('coreforum/index/newest'));
         } else {
             $this->redirect(PluginEngine::getLink('coreforum/index/index'));

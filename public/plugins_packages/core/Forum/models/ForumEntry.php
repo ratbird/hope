@@ -408,7 +408,7 @@ class ForumEntry {
                     AND lft > ? AND rgt < ?) "
                 . ($depth > 2 ? " OR forum_entries.topic_id = ". DBManager::get()->quote($parent_id) : '')
                 . $add
-                . " ORDER BY forum_entries.lft ASC, forum_entries.mkdate $sort_order");
+                . " ORDER BY forum_entries.mkdate $sort_order");
             $count_stmt->execute(array($GLOBALS['user']->id, $seminar_id, $constraint['lft'], $constraint['rgt']));
             $count = $count_stmt->fetchColumn();
         } else {
@@ -419,7 +419,7 @@ class ForumEntry {
                     AND lft > ? AND rgt < ?) "
                 . ($depth > 2 ? " OR forum_entries.topic_id = ". DBManager::get()->quote($parent_id) : '')
                 . ') '. $add
-                . " ORDER BY forum_entries.lft ASC, forum_entries.mkdate $sort_order");
+                . " ORDER BY forum_entries.mkdate $sort_order");
             $count_stmt->execute(array($GLOBALS['user']->id, $depth, $seminar_id, $constraint['lft'], $constraint['rgt']));
             $count = $count_stmt->fetchColumn();            
         }
@@ -440,7 +440,7 @@ class ForumEntry {
                     AND lft > ? AND rgt < ?) "
                 . ($depth > 2 ? " OR forum_entries.topic_id = ". DBManager::get()->quote($parent_id) : '')
                 . $add
-                . " ORDER BY forum_entries.lft ASC, forum_entries.mkdate $sort_order"
+                . " ORDER BY forum_entries.mkdate $sort_order"
                 . ($limit ? " LIMIT $start, $limit" : ''));
             $stmt->execute(array($GLOBALS['user']->id, $seminar_id, $constraint['lft'], $constraint['rgt']));
         } else {
@@ -451,7 +451,7 @@ class ForumEntry {
                     AND lft > ? AND rgt < ?) "
                 . ($depth > 2 ? " OR forum_entries.topic_id = ". DBManager::get()->quote($parent_id) : '')
                 . ') '. $add
-                . " ORDER BY forum_entries.lft ASC, forum_entries.mkdate $sort_order"
+                . " ORDER BY forum_entries.mkdate $sort_order"
                 . ($limit ? " LIMIT $start, $limit" : ''));
             $stmt->execute(array($GLOBALS['user']->id, $depth, $seminar_id, $constraint['lft'], $constraint['rgt']));
         }

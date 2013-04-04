@@ -179,7 +179,7 @@
 #forum_threads .content_column > .content {
     margin-top: 7px;
     width: 100%;
-    max-width: 100%;
+    max-width: 700%;
     overflow: hidden;
     hyphens: auto;
     word-wrap: break-word;
@@ -189,13 +189,22 @@
     word-break: break-all;
 }
 #forum_threads .posting img, #forum_threads .posting video, #forum_threads .content_column > .content {
-    max-width: 500px;
+    max-width: 600px;
 }
 #forum_threads.globalstream .posting img, #forum_threads.globalstream .posting video, #forum_threads.globalstream .content_column > .content {
-    max-width: 400px;
+    max-width: 500px;
 }
 #forum_threads.singlethread .posting img, #forum_threads.singlethread .posting video, #forum_threads.singlethread .content_column > .content {
-    max-width: 700px;
+    max-width: 800px;
+}
+#forum_threads .comment img, #forum_threads .comment video, #forum_threads .comment .content_column > .content {
+    max-width: 550px;
+}
+#forum_threads.globalstream .comment img, #forum_threads.globalstream .comment video, #forum_threads.globalstream  .comment .content_column > .content {
+    max-width: 450px;
+}
+#forum_threads.singlethread .comment img, #forum_threads.singlethread .comment video, #forum_threads.singlethread  .comment .content_column > .content {
+    max-width: 750px;
 }
 #forum_threads li.more {
     cursor: pointer;

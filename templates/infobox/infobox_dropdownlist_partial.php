@@ -29,7 +29,7 @@
                     </td>
                     <td valign="center">
                         &nbsp;
-                        <?= Assets::input('images/icons/16/blue/accept.png', array('name' => 'semester', 'type' => 'image')) ?>
+                        <?= Assets::input('icons/16/blue/accept.png', array('name' => 'semester', 'type' => 'image')) ?>
                         <input type="hidden" name="cmd" value="applyFilter">
                     </td>
                 </tr></tbody>

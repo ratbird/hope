@@ -532,7 +532,7 @@ class StudipFormat extends TextFormat
         
         if ($link && $tag === "img") {
             $media = sprintf('<a href="%s"%s>%s</a>',
-                $media_url,
+                $link,
                 !isLinkIntern($link) ? ' target="_blank"' : "",
                 $media
             );

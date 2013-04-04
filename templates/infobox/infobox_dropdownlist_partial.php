@@ -29,7 +29,7 @@
                     </td>
                     <td valign="center">
                         &nbsp;
-                        <input type="image" src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/blue/accept.png" name="semester" border="0">
+                        <?= Assets::input('images/icons/16/blue/accept.png', array('name' => 'semester', 'type' => 'image')) ?>
                         <input type="hidden" name="cmd" value="applyFilter">
                     </td>
                 </tr></tbody>

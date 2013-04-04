@@ -4,5 +4,5 @@
         <option title="<?= htmlReady($seminar['VeranstaltungsNummer'] . ' ' . $seminar['Name']) ?>" value="<?= htmlReady($seminar['Seminar_id']) ?>"<?= ($seminar['Seminar_id'] === $course_id ? " selected" : "") ?>><?= htmlReady(my_substr($seminar['Name'],0,30)) ?></option>
     <? endforeach ?>
     </select>
-    <input class="text-top" type="image" src="<?= Assets::image_path('icons/16/green/accept.png')?>" title="<?= _("auswählen") ?>">
+    <?= Assets::input('icons/16/green/accept.png', array('type' => 'image', 'class' => 'text-top', 'title' => _('Auswählen'))) ?>
 </form>

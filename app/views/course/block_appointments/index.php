@@ -1,7 +1,7 @@
 <? foreach(PageLayout::getMessages() as $pm) : ?>
     <?= $pm ?>
 <? endforeach; ?>
-<?= $form->getFormStart($controller->url_for('course/block_appointments')) ?>
+<?= $form->getFormStart($controller->url_for('course/block_appointments/index/' . $course_id)) ?>
 <h3>
 <?=_("Die Veranstaltung findet in folgendem Zeitraum statt")?>:
 </h3>

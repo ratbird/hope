@@ -68,7 +68,11 @@ function studip_default_exception_handler($exception) {
         $status = 403;
         $template = 'check_object_exception';
     } else {
-        $status = 500;
+        if ($exception instanceOf Trails_Exception) {
+            $status = $exception->getCode();
+        } else {
+            $status = 500;
+        }
         error_log($exception->__toString());
         $template = 'unhandled_exception';
     }

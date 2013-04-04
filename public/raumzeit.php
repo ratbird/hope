@@ -60,7 +60,7 @@ if (get_config('RESOURCES_ENABLE')) {
     include_once ($GLOBALS['RELATIVE_PATH_RESOURCES'] ."/lib/VeranstaltungResourcesAssign.class.php");
     include_once ($GLOBALS['RELATIVE_PATH_RESOURCES'] ."/lib/ResourceObjectPerms.class.php");
     $resList = ResourcesUserRoomsList::getInstance($user->id, true, false, true);
-    
+
     // fetch the number of seats each room has
     if ($resList->numberOfRooms()) {
         $resList->reset();
@@ -70,7 +70,7 @@ if (get_config('RESOURCES_ENABLE')) {
         while ($res = $resList->next()) {
             $resource_ids[] = $res['resource_id'];
         }
-        
+
         // get seats in a single query
         $db = DBManager::get()->query("SELECT ro.resource_id, a.state
             FROM resources_objects AS ro
@@ -79,7 +79,7 @@ if (get_config('RESOURCES_ENABLE')) {
             LEFT JOIN resources_categories_properties AS c USING (property_id)
             WHERE resource_id IN ('". implode("', '", $resource_ids) ."') AND c.category_id = ro.category_id AND b.system = 2
             ORDER BY b.name");
-        
+
         $seats = $db->fetchAll(PDO::FETCH_KEY_PAIR);
     }
 }
@@ -384,7 +384,7 @@ jQuery(function () {
                                     }
                                 }
                                 // Template fuer einzelnes Datum
-                                
+
                                 // $tpl['checked'] = '';
                                 $val->restore();
                                 $tpl = getTemplateDataForSingleDate($val, $metadate_id);
@@ -393,11 +393,11 @@ jQuery(function () {
 
 
                                 include('lib/raumzeit/templates/singledate.tpl');
-                                
+
                                 if (Request::option('singleDateID') == $singledate_id) {
                                     include('lib/raumzeit/templates/openedsingledate.tpl');
                                 }
-                                
+
                                 unset($tpl);
                                 // Ende Template einzelnes Datum
                             }
@@ -430,7 +430,7 @@ jQuery(function () {
                 <tr>
                     <td colspan="9"> &nbsp; </td>
                 </tr>
-                
+
                 <? } ?>
                 </form>
             <? }
@@ -467,11 +467,11 @@ jQuery(function () {
                 <tr>
                     <td colspan="9" class="blank">
                         <?= LinkButton::create(_('Einzeltermin hinzufügen'), URLHelper::getURL('', array('cmd' => 'createNewSingleDate')) . '#newSingleDate') ?>
-                        <?= LinkButton::create(_('Blocktermine hinzufügen'), 'javascript:STUDIP.BlockAppointmentsDialog.initialize("'.URLHelper::getURL('dispatch.php/course/block_appointments').'")'); ?>
+                        <?= LinkButton::create(_('Blocktermine hinzufügen'), 'javascript:STUDIP.BlockAppointmentsDialog.initialize("'.URLHelper::getURL('dispatch.php/course/block_appointments/index/' . $sem->getId()).'")'); ?>
                     </td>
                 </tr>
                 <? endif ?>
-                
+
                 <? if ($termine =& $sem->getSingleDates(true, true, true)) { ?>
                 <tr>
                     <td align="left" colspan="9" class="table_row_even">
@@ -485,7 +485,7 @@ jQuery(function () {
                             foreach ($termine as $key => $val) {
                                 $tpl['checked'] = '';
                                 $tpl = getTemplateDataForSingleDate($val);
-                                
+
                                 if ( ($grenze == 0) || ($grenze < $val->getStartTime()) ) {
                                     foreach ($all_semester as $zwsem) {
                                         if ( ($zwsem['beginn'] < $val->getStartTime()) && ($zwsem['ende'] > $val->getStartTime()) ) {
@@ -502,7 +502,7 @@ jQuery(function () {
                                 }
 
                                 include('lib/raumzeit/templates/singledate.tpl');
-                                
+
                                 if (Request::option('singleDateID') == $val->getSingleDateID()) {
                                     include('lib/raumzeit/templates/openedsingledate.tpl');
                                 }

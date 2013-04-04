@@ -231,14 +231,14 @@ jQuery(function () {
                                     if ($sem->getStartSemester() == $val['beginn']) {
                                         echo ' selected';
                                     }
-                                    echo '>'.$val['name']."</option>\n";
+                                    echo '>'.htmlReady($val['name'])."</option>\n";
                                 }
                                 echo "</select>\n";
                             } else {
                                 $all_semester = $semester->getAllSemesterData();
                                 foreach ($all_semester as $val) {
                                     if ($sem->getStartSemester() == $val['beginn']) {
-                                        echo $val["name"];
+                                        echo htmlReady($val["name"]);
                                     }
                                 }
                             }
@@ -255,7 +255,7 @@ jQuery(function () {
                                         if ($sem->getEndSemester() == $val['beginn']) {
                                             echo ' selected';
                                         }
-                                        echo '>'.$val['name'].'</option>';
+                                        echo '>'.htmlReady($val['name']).'</option>';
                                     }
                                 }
                                 ?>
@@ -277,7 +277,7 @@ jQuery(function () {
                                 default:
                                     foreach ($all_semester as $val) {
                                         if ($val['beginn'] == $sem->getEndSemester()) {
-                                            echo $val['beginn'];
+                                            echo htmlReady($val['beginn']);
                                         }
                                     }
                                     break;
@@ -376,7 +376,7 @@ jQuery(function () {
                                             ?>
                                             <tr>
                                                 <td class="table_row_odd" align="center" colspan="9">
-                                                    <b><?=$zwsem['name']?></b>
+                                                    <b><?= htmlReady($zwsem['name']) ?></b>
                                                 </td>
                                             </tr>
                                             <?
@@ -493,7 +493,7 @@ jQuery(function () {
                                             ?>
                                             <tr>
                                                 <td class="table_row_odd" align="center" colspan="9">
-                                                    <b><?=$zwsem['name']?></b>
+                                                    <b><?= htmlReady($zwsem['name']) ?></b>
                                                 </td>
                                             </tr>
                                             <?

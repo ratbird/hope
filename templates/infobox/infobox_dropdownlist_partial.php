@@ -16,9 +16,13 @@
                         <select name="newFilter" size="1" title="<?= _("Semester auswählen") ?>">
                         <? for ($i = 0; $i < count($selectionlist); $i++) : ?>
                             <? if ( $selectionlist[$i]['is_selected'] ) : ?>
-                            <option value="<?=$selectionlist[$i]['value']?>" selected><?=$selectionlist[$i]['linktext']?></option>
+                            <option value="<?=$selectionlist[$i]['value']?>" selected>
+                                <?= htmlReady($selectionlist[$i]['linktext']) ?>
+                            </option>
                             <? else: ?>
-                            <option value="<?=$selectionlist[$i]['value']?>"><?=$selectionlist[$i]['linktext']?></option>
+                            <option value="<?=$selectionlist[$i]['value']?>">
+                                <?= htmlReady($selectionlist[$i]['linktext']) ?>
+                            </option>
                             <? endif; ?>
                         <? endfor; ?>
                         </select>

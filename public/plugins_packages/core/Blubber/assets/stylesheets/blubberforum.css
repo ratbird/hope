@@ -188,13 +188,13 @@
 #forum_threads .content_column > .content a {
     word-break: break-all;
 }
-#forum_threads .posting img, #forum_threads .posting video {
+#forum_threads .posting img, #forum_threads .posting video, #forum_threads .content_column > .content {
     max-width: 500px;
 }
-#forum_threads.globalstream .posting img, #forum_threads.globalstream .posting video {
+#forum_threads.globalstream .posting img, #forum_threads.globalstream .posting video, #forum_threads.globalstream .content_column > .content {
     max-width: 400px;
 }
-#forum_threads.singlethread .posting img, #forum_threads.singlethread .posting video {
+#forum_threads.singlethread .posting img, #forum_threads.singlethread .posting video, #forum_threads.singlethread .content_column > .content {
     max-width: 700px;
 }
 #forum_threads li.more {

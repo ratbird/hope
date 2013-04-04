@@ -292,53 +292,53 @@ class BlubberPosting extends SimpleORMap {
             $sql_params['since'] = $parameter['since'];
         }
         if ($parameter['seminar_id']) {
-            $where_and[] = "AND blubber.Seminar_id = :seminar_id ";
+            $where_and[] = "AND threads.Seminar_id = :seminar_id ";
             $sql_params['seminar_id'] = $parameter['seminar_id'];
             if ($parameter['search']) {
-                $where_and[] = "AND MATCH (blubber.description) AGAINST (:search IN BOOLEAN MODE) ";
+                $where_and[] = "AND MATCH (threads.description) AGAINST (:search IN BOOLEAN MODE) ";
                 $sql_params['search'] = $parameter['search'];
             }
         }
         if ($parameter['user_id']) {
-            $where_and[] = "AND blubber.Seminar_id = :user_id ";
-            $where_and[] = "AND blubber.context_type = 'public' ";
+            $where_and[] = "AND threads.Seminar_id = :user_id ";
+            $where_and[] = "AND threads.context_type = 'public' ";
             $sql_params['user_id'] = $parameter['user_id'];
         }
         if ($parameter['thread']) {
-            $where_and[] = "AND blubber.root_id = :thread ";
+            $where_and[] = "AND threads.topic_id = :thread ";
             $sql_params['thread'] = $parameter['thread'];
         }
         if ($parameter['search'] && !is_array($parameter['search']) && !$parameter['seminar_id']) {
-            $where_and[] = "AND MATCH (blubber.description) AGAINST (:search IN BOOLEAN MODE) ";
+            $where_and[] = "AND MATCH (threads.description) AGAINST (:search IN BOOLEAN MODE) ";
             $sql_params['search'] = $parameter['search'];
         }
         if (!$parameter['seminar_id'] && !$parameter['user_id'] && !$parameter['thread']) {
             //Globaler Stream:
             $seminar_ids = self::getMyBlubberCourses();
             if (count($seminar_ids)) {
-                $where_or[] = "OR blubber.Seminar_id IN (:seminar_ids) ";
+                $where_or[] = "OR threads.Seminar_id IN (:seminar_ids) ";
                 $sql_params['seminar_ids'] = $seminar_ids;
             }
             $user_ids = self::getMyBlubberBuddys();
             if (count($user_ids)) {
                 //$joins[] = "INNER JOIN blubber AS thread ON (thread.topic_id = blubber.root_id) ";
-                $where_or[] = "OR (blubber.context_type = 'public' AND blubber.Seminar_id IN (:internal_user_ids) AND blubber.external_contact = '0') ";
+                $where_or[] = "OR (threads.context_type = 'public' AND threads.Seminar_id IN (:internal_user_ids) AND threads.external_contact = '0') ";
                 $sql_params['internal_user_ids'] = $user_ids;
             }
             $user_ids = self::getMyExternalContacts();
             if (count($user_ids)) {
-                $where_or[] = "OR (blubber.context_type = 'public' AND blubber.Seminar_id IN (:external_user_ids) AND blubber.external_contact = '1' ) ";
+                $where_or[] = "OR (threads.context_type = 'public' AND threads.Seminar_id IN (:external_user_ids) AND threads.external_contact = '1' ) ";
                 $sql_params['external_user_ids'] = $user_ids;
             }
             
             //private Blubber
-            $where_or[] = "OR (blubber.context_type != 'course' AND blubber_mentions.user_id = :me) ";
-            $joins[] = "LEFT JOIN blubber_mentions ON (blubber_mentions.topic_id = blubber.root_id) ";
+            $where_or[] = "OR (threads.context_type != 'course' AND blubber_mentions.user_id = :me) ";
+            $joins[] = "LEFT JOIN blubber_mentions ON (blubber_mentions.topic_id = threads.root_id) ";
             $sql_params['me'] = $GLOBALS['user']->id;
             
             if ($parameter['search'] && is_array($parameter['search'])) {
                 foreach ($parameter['search'] as $key => $searchword) {
-                    $where_or[] = "OR (blubber.Seminar_id = blubber.user_id AND MATCH (blubber.description) AGAINST (:searchword".($key + 1)." IN BOOLEAN MODE) ) ";
+                    $where_or[] = "OR (threads.Seminar_id = threads.user_id AND MATCH (threads.description) AGAINST (:searchword".($key + 1)." IN BOOLEAN MODE) ) ";
                     $sql_params['searchword'.($key + 1)] = $searchword;
                 }
             }
@@ -346,6 +346,7 @@ class BlubberPosting extends SimpleORMap {
 
         $sql = "SELECT blubber.topic_id " .
             "FROM blubber " .
+                "INNER JOIN blubber AS threads ON (threads.topic_id = blubber.root_id) " .
                 implode(" ", $joins) . " " .
             "WHERE 1=1 " .
                 implode(" ", $where_and) . " " .

@@ -921,15 +921,15 @@ class Vote extends StudipObject {
     * @param   integer $second The second (optional)
     * @return  integer If an error occurs -> -1. Otherwise the UNIX-timestamp
     */
-   function date2timestamp ($day, $month, $year,
-                $hour = 0, $minute = 0, $second = 0) {
-      if (!checkdate ((int)$month, (int)$day, (int)$year) ||
-      $hour < 0 || $hour > 24 ||
-      $minute < 0 || $minute > 59 ||
-      $second < 0 || $second > 59) {
-     return -1;
+   function date2timestamp ($date, $hour = 0, $minute = 0, $second = 0) {
+      if ($hour < 0 || $hour > 24 ||
+          $minute < 0 || $minute > 59 ||
+          $second < 0 || $second > 59) {
+            
+          return -1;
       }
-      return mktime ($hour, $minute, $second, $month, $day, $year);
+      $dates = explode('.', $date);
+      return mktime ($hour, $minute, $second, $dates[1], $dates[0], $dates[2]);
    }
 # ===================================================== end: static functions #
 

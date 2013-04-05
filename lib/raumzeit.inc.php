@@ -254,22 +254,40 @@ function raumzeit_doDeleteCycle($sem) {
     $sem->createMessage(sprintf(_("Der regelm&auml;&szlig;ige Eintrag \"%s\" wurde gel&ouml;scht."), '<b>'.$sem->metadate->cycles[Request::option('cycle_id')]->toString().'</b>'));
     $sem->deleteCycle(Request::option('cycle_id'));
 }
-
+function raumzeit_checkDate($date, $startStunde,$startMinute,$endStunde,$endMinute){
+    if(strlen($date)<8
+            ||($startStunde<0 || $startStunde>23)
+            ||($startMinute<0 || $startMinute>23)
+            ||($endStunde<0   ||$endStunde>23)
+            ||($endMinute<0   ||$endMinute>23)     ){
+        return FALSE;
+    }
+    else{
+        return TRUE;
+    }
+}
 function raumzeit_doAddSingleDate($sem) {
     global $cmd;
-    
-    // check validity of the date
-    if (!check_singledate(Request::get('day'), Request::get('month'), Request::get('year'), Request::get('start_stunde'),
-        Request::get('start_minute'), Request::get('end_stunde'), Request::get('end_minute'))) {
+    //check date aus calendar_functions.inc.php herausgezogen und fuer datepicker angepasst
+    if(!raumzeit_checkDate(Request::get('startDate'), Request::get('start_stunde'), Request::get('start_minute'), Request::get('end_stunde'), Request::get('end_minute'))){
         $sem->createError(_("Bitte geben Sie ein gültiges Datum und eine gültige Uhrzeit an!"));
         $cmd = 'createNewSingleDate';
     }
+    
+    // check validity of the date
+    //if (!check_singledate(Request::get('day'), Request::get('month'), Request::get('year'), Request::get('start_stunde'),
+    //    Request::get('start_minute'), Request::get('end_stunde'), Request::get('end_minute'))) {
+    //    $sem->createError(_("Bitte geben Sie ein gültiges Datum und eine gültige Uhrzeit an!"));
+    //    $cmd = 'createNewSingleDate';
+    //}
 
     // create date
     else {
         $termin = new SingleDate();
-        $start = mktime(Request::get('start_stunde'), Request::get('start_minute'), 0, Request::get('month'), Request::get('day'), Request::get('year'));
-        $ende = mktime(Request::get('end_stunde'), Request::get('end_minute'), 0, Request::get('month'), Request::get('day'), Request::get('year'));
+        //dates[0]=day, dates[1]=month,dates[2]=year
+        $dates = explode('.', Request::get('startDate'));        
+        $start = mktime(Request::get('start_stunde'), Request::get('start_minute'), 0,$dates[1],$dates[0],$dates[2]);
+        $ende = mktime(Request::get('end_stunde'), Request::get('end_minute'), 0, $dates[1],$dates[0],$dates[2]);
         $termin->setTime($start, $ende);
         $termin->setDateType(Request::get('dateType'));
         $termin->store();
@@ -332,10 +350,11 @@ function raumzeit_editSingleDate($sem) {
     if (!Request::submitted("editSingleDate_button")) {
         return;
     }
-
     // generate time-stamps we can compare directly
-    $start = mktime(Request::quoted('start_stunde'), Request::quoted('start_minute'), 0, Request::quoted('month'), Request::quoted('day'), Request::quoted('year'));
-    $ende = mktime(Request::quoted('end_stunde'), Request::quoted('end_minute'), 0, Request::quoted('month'), Request::quoted('day'), Request::quoted('year'));
+    //dates[0]=day, dates[1]=month,dates[2]=year
+        $dates = explode('.', Request::get('startDate'));        
+        $start = mktime(Request::get('start_stunde'), Request::get('start_minute'), 0,$dates[1],$dates[0],$dates[2]);
+        $ende = mktime(Request::get('end_stunde'), Request::get('end_minute'), 0, $dates[1],$dates[0],$dates[2]);
 
     // get request-variables
     $termin_id = Request::option('singleDateID');

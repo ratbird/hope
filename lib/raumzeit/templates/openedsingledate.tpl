@@ -27,10 +27,12 @@ use Studip\Button,
         <? else : ?>
             <div style="float: left; width: 49%">
                 <b><?= _('Datum/Uhrzeit:') ?></b><br>
+                <input type=text id="startDate" name="startDate" size=10 maxlength=10 value="<?=$tpl['day'].'.'.$tpl['month'].'.'.$tpl['year']?>">
+                <!--
                 <input type="text" id="day" name="day" maxlength="2" size="2" value="<?=$tpl['day']?>">.
                 <input type="text" id="month" name="month" maxlength="2" size="2" value="<?=$tpl['month']?>">.
                 <input type="text" id="year" name="year" maxlength="4" size="4" value="<?=$tpl['year']?>">
-                
+                -->
                 <b><?=_("von")?></b>
                 <input type="text" id="start_stunde" name="start_stunde" maxlength="2" size="2" value="<?=$tpl['start_stunde']?>">:
                 <input type="text" id="start_minute" name="start_minute" maxlength="2" size="2" value="<?=$tpl['start_minute']?>">
@@ -185,3 +187,6 @@ use Studip\Button,
         <? endif ?>
     </td>
 </tr>
+<script>
+    jQuery("#startDate").datepicker();
+</script>

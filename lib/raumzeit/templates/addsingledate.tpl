@@ -19,9 +19,12 @@ use Studip\Button,
                     <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/blue/arr_1down.png" border="0" align="abstop">
                 </TD>
                 <TD width="98%" nowrap class="<?=$tpl['class']?>" colspan="8">
+                        <input type=text id="startDate" name="startDate" size=10 maxlength=10 value="<?= htmlReady(Request::get('date',_("Datum"))) ?>">.
+                        <!-- Ersetzt durch startDate
                         <INPUT type="text" id="day" name="day" maxlength="2" size="2" value="<?= htmlReady(Request::get('day', _("dd"))) ?>">.
                         <INPUT type="text" id="month" name="month" maxlength="2" size="2" value="<?= htmlReady(Request::get('month',_("mm"))) ?>">.
                         <INPUT type="text" id="year" name="year" maxlength="4" size="4" value="<?= htmlReady(Request::get('year', _("jjjj"))) ?>">&nbsp;,&nbsp;
+                        -->
                         <INPUT type="text" id="start_stunde" name="start_stunde" maxlength="2" size="2" value="<?= htmlReady(Request::get('start_stunde', _("hh"))) ?>">:
                         <INPUT type="text" id="start_minute" name="start_minute" maxlength="2" size="2" value="<?= htmlReady(Request::get('start_minute', _("mm"))) ?>">
                         <?=_("bis")?>
@@ -100,3 +103,6 @@ use Studip\Button,
 <?
 unset($tpl)
 ?>
+<script>
+    jQuery("#startDate").datepicker();
+</script>

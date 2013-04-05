@@ -236,7 +236,7 @@ function create_month_view(&$calendar, $atime, $step = NULL)
     $out .= Assets::img('icons/16/blue/arr_1left.png', tooltip2(_("einen Monat zurück"))) . "</a>&nbsp;</td>\n";
     $out .= sprintf("<td colspan=\"%s\" class=\"calhead\">\n", $mod == "nokw" ? "5" : "6");
     $out .= '<font size="+2">';
-    $out .= htmlReady(strftime("%B ", $month->getStart())) . $month->getYear();
+    $out .= htmlReady(strftime("%B ", $month->getStart())) .' '. $month->getYear();
     $out .= "</font></td>\n";
     $out .= '<td align="center">&nbsp;<a href="' . URLHelper::getLink('', array('cmd' => 'showmonth', 'atime' => $month->getEnd() + 1)) . '">';
     $out .= Assets::img('icons/16/blue/arr_1right.png', tooltip2(_("einen Monat vor"))) . '</a>';

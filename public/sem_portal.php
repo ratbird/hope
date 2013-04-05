@@ -85,20 +85,20 @@ include ('lib/include/header.php');   // Output of Stud.IP head
 function getToplist($rubrik, $query, $type = 'count', $parameters = array()) {
     $cache = StudipCacheFactory::getCache();
     $hash  = '/sem_portal/' . md5($query);
-    
+
     $top_list = unserialize($cache->read($hash));
     if (!$top_list) {
         $statement = DBManager::get()->prepare($query);
         $statement->execute($parameters);
         $top_list = $statement->fetchAll(PDO::FETCH_ASSOC);
-        
+
         $cache->write($hash, serialize($top_list), 5 * 60);
     }
-    
+
     if (empty($top_list)) {
         return '';
     }
-    
+
     return getToplistOutput($top_list, $type, $rubrik);
 }
 
@@ -108,7 +108,12 @@ function getToplistOutput($top_list, $type, $rubrik) {
     $i=1;
     foreach ($top_list as $item) {
         $result .= "<tr><td width=\"1%\" valign=\"top\"><font size=\"-1\">$i.</font></td>";
-        $result .= "<td width=\"99%\"><font size=\"-1\"><a href=\"details.php?sem_id=".$item['seminar_id']."&send_from_search=true&send_from_search_page=".$_SERVER['PHP_SELF']."\">";
+        $send_from_search = URLHelper::getUrl(basename($_SERVER['PHP_SELF']), array('cid' => null));
+        $send_from_search_link = UrlHelper::getLink('details.php', array('sem_id' => $item['seminar_id'],
+                                                                         'cid' => null,
+                                                                         'send_from_search' => 1,
+                                                                         'send_from_search_page' => $send_from_search));
+        $result .= "<td width=\"99%\"><font size=\"-1\"><a href=\"$send_from_search_link\">";
         $result .= htmlReady(substr($item['name'], 0, 45));
         if (strlen ($item['name']) > 45) {
             $result .= "... ";
@@ -241,7 +246,7 @@ if ($sem_browse_obj->show_result && count($_SESSION['sem_browse_data']['search_r
 
     $sql_where_query_seminare = " WHERE 1 ";
     $parameters = array();
-    
+
     if (!$GLOBALS['perm']->have_perm(get_config('SEM_VISIBILITY_PERM'))) {
         $sql_where_query_seminare .= " AND seminare.visible = 1 ";
     }
@@ -256,7 +261,7 @@ if ($sem_browse_obj->show_result && count($_SESSION['sem_browse_data']['search_r
         case 4:
         default:
             $query = "SELECT seminar_id, name, mkdate AS count
-                      FROM seminare 
+                      FROM seminare
                       {$sql_where_query_seminare}
                       ORDER BY mkdate DESC
                       LIMIT 5";
@@ -275,7 +280,7 @@ if ($sem_browse_obj->show_result && count($_SESSION['sem_browse_data']['search_r
         case 2:
             $query = "SELECT dokumente.seminar_id, seminare.name, COUNT(dokumente.seminar_id) AS count
                       FROM seminare
-                      INNER JOIN dokumente USING (seminar_id) 
+                      INNER JOIN dokumente USING (seminar_id)
                       {$sql_where_query_seminare}
                       GROUP BY dokumente.seminar_id
                       ORDER BY count DESC
@@ -285,40 +290,40 @@ if ($sem_browse_obj->show_result && count($_SESSION['sem_browse_data']['search_r
         case 3:
             $cache = StudipCacheFactory::getCache();
             $hash  = '/sem_portal/most_active';
-    
+
             $top_list = unserialize($cache->read($hash));
             if (!$top_list) {
-                // get TopTen of seminars from all ForumModules and add up the 
-                // count for seminars with more than one active ForumModule 
-                // to get a combined toplist 
-                foreach (PluginEngine::getPlugins('ForumModule') as $plugin) { 
-                    $new_seminars = $plugin->getTopTenSeminars(); 
-                    foreach ($new_seminars as $sem) { 
-                        if (!isset($seminars[$sem['seminar_id']])) { 
-                            $seminars[$sem['seminar_id']] = $sem; 
-                            $seminars[$sem['seminar_id']]['name'] = $seminars[$sem['seminar_id']]['display']; 
-                        } else { 
-                            $seminars[$sem['seminar_id']]['count'] += $sem['count']; 
-                        } 
-                    } 
-                } 
+                // get TopTen of seminars from all ForumModules and add up the
+                // count for seminars with more than one active ForumModule
+                // to get a combined toplist
+                foreach (PluginEngine::getPlugins('ForumModule') as $plugin) {
+                    $new_seminars = $plugin->getTopTenSeminars();
+                    foreach ($new_seminars as $sem) {
+                        if (!isset($seminars[$sem['seminar_id']])) {
+                            $seminars[$sem['seminar_id']] = $sem;
+                            $seminars[$sem['seminar_id']]['name'] = $seminars[$sem['seminar_id']]['display'];
+                        } else {
+                            $seminars[$sem['seminar_id']]['count'] += $sem['count'];
+                        }
+                    }
+                }
 
-                // sort the seminars by the number of combined postings 
-                usort($seminars, function($a, $b) { 
-                    if ($a['count'] == $b['count']) { 
-                        return 0; 
-                    } 
-                    return ($a['count'] > $b['count']) ? -1 : 1; 
+                // sort the seminars by the number of combined postings
+                usort($seminars, function($a, $b) {
+                    if ($a['count'] == $b['count']) {
+                        return 0;
+                    }
+                    return ($a['count'] > $b['count']) ? -1 : 1;
                 });
-                
+
                 $top_list = $seminars;
-                
+
                 // use only the first five seminars
                 $top_list = array_slice($top_list, 0, 5);
 
                 $cache->write($hash, serialize($top_list), 5 * 60);
             }
-            
+
             $toplist = getToplistOutput($top_list, 'count', _("aktivste Veranstaltungen"));
         break;
     }

@@ -331,7 +331,7 @@ class SemBrowse {
 
     function print_level(){
         ob_start();
-        
+
         SkipLinks::addIndex(_("Gefundene Bereiche"), 'sem_search_level', 110);
 
         echo "\n<table id=\"sem_search_level\" border=\"0\" align=\"center\" cellspacing=0 cellpadding=0 width = \"99%\">\n";
@@ -455,20 +455,22 @@ class SemBrowse {
                             echo '</td>';
 
                         }
-
+                        $send_from_search = URLHelper::getUrl(basename($_SERVER['PHP_SELF']), array('keep_result_set' => 1, 'cid' => null));
+                        $send_from_search_link = UrlHelper::getLink($this->target_url, array($this->target_id => $seminar_id,
+                                                                                             'cid' => null,
+                                                                                             'send_from_search' => 1,
+                                                                                             'send_from_search_page' => $send_from_search));
                         echo '<td class="table_row_even" width="66%" colspan="2">';
-                        echo "<a href=\"{$this->target_url}?{$this->target_id}={$seminar_id}&send_from_search=1&send_from_search_page=";
-                        echo URLHelper::getLink('?keep_result_set=1')."\">", htmlReady($sem_name), "</a><br>";
-
+                        echo '<a href="' . $send_from_search_link . '">' . htmlReady($sem_name) . '</a><br>';
                         //create Turnus field
                         if ($studygroup_mode) {
                             echo "<div style=\"font-size:smaller\">" . htmlReady(substr($seminar_obj->description,0,100)) . "</div>";
                         } else {
-                            $temp_turnus_string = $seminar_obj->getDatesExport(array('short' => $short, 'shrink' => true, 'semester_id' => $current_semester_id));
+                            $temp_turnus_string = $seminar_obj->getDatesExport(array('short' => true, 'shrink' => true, 'semester_id' => $current_semester_id));
                             //Shorten, if string too long (add link for details.php)
                             if (strlen($temp_turnus_string) > 70) {
                                 $temp_turnus_string = htmlReady(substr($temp_turnus_string, 0, strpos(substr($temp_turnus_string, 70, strlen($temp_turnus_string)), ",") + 71));
-                                $temp_turnus_string .= " ... <a href=\"".$this->target_url."?".$this->target_id."=".$seminar_id."&send_from_search=1&send_from_search_page={$_SERVER['PHP_SELF']}?keep_result_set=1\">("._("mehr").")</a>";
+                                $temp_turnus_string .= " ... <a href=\"$send_from_search_link\">("._("mehr").")</a>";
                             } else {
                                 $temp_turnus_string = htmlReady($temp_turnus_string);
                             }
@@ -497,10 +499,10 @@ class SemBrowse {
                             foreach ($doz_name as $index => $value){
                                 if ($value) {  // hide dozenten with empty username
                                     if ($i == 4){
-                                        echo "... <a href=\"".$this->target_url."?".$this->target_id."=".$seminar_id."&send_from_search=1&send_from_search_page={$_SERVER['PHP_SELF']}?keep_result_set=1\">("._("mehr").")</a>";
+                                        echo "... <a href=\"$send_from_search_link\">("._("mehr").")</a>";
                                         break;
                                     }
-                                    echo "<a href=\"dispatch.php/profile?username=" . $doz_uname[$index] ."\">" . htmlReady($value) . "</a>";
+                                    echo "<a href=\"" . UrlHelper::getLink('dispatch.php/profile', array('username' => $doz_uname[$index])) ."\">" . htmlReady($value) . "</a>";
                                     if($i != count($doz_name)-1){
                                         echo ", ";
                                     }

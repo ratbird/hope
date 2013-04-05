@@ -45,8 +45,8 @@ if (empty($sem_id)) {
 }
 //Inits
 $info_msg = $abo_msg = $delete_msg = $back_msg = '';
-$send_from_search = Request::quoted('send_from_search');
-$send_from_search_page = Request::quoted('send_from_search_page');
+$send_from_search = Request::get('send_from_search') !== null;
+$send_from_search_page = Request::get('send_from_search_page');
 if (!preg_match('/^('.preg_quote($CANONICAL_RELATIVE_PATH_STUDIP,'/').')?([a-zA-Z0-9_-]+\.php)([a-zA-Z0-9_?&=-]*)$/', $send_from_search_page)) $send_from_search_page = '';
 
 $sem = new Seminar($sem_id);

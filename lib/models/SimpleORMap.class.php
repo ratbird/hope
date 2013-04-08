@@ -852,10 +852,10 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      * $only_these_fields = array('field_1',
      *                            'field_2',
      *                            'relation1',
-     *                            'relation2' => array('rel1_f1',
-     *                                                 'rel1_f2',
-     *                                                 'rel1_rel11' => array(
-     *                                                           rel1_rel1_f1)
+     *                            'relation2' => array('rel2_f1',
+     *                                                 'rel2_f2',
+     *                                                 'rel2_rel11' => array(
+     *                                                           rel2_rel1_f1)
      *                                                )
      *                           )
      * Here all fields of relation1 will be returned.

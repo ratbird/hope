@@ -846,7 +846,20 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
 
     /**
      * returns data of table row as assoc array
-     * including all related records with a 'has*' relationship
+     * including related records with a 'has*' relationship
+     *
+     * $only_these_fields limits output for realtionships in this way:
+     * $only_these_fields = array('field_1',
+     *                            'field_2',
+     *                            'relation1',
+     *                            'relation2' => array('rel1_f1',
+     *                                                 'rel1_f2',
+     *                                                 'rel1_rel11' => array(
+     *                                                           rel1_rel1_f1)
+     *                                                )
+     *                           )
+     * Here all fields of relation1 will be returned.
+     * $depth obverwrites $only_these_fields array nestings.
      *
      * @param $depth set to > 1 if related objects schuld also call their related records
      * @param mixed $only_these_fields limit returned fields
@@ -854,18 +867,46 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      */
     function toArrayRecursive($depth = 1, $only_these_fields = null)
     {
+        //check for assoc array for relation depth > 1
+        if(is_array($only_these_fields) && array_keys($only_these_fields) !==
+                range(0, count($only_these_fields) - 1)) {
+            $only_these_fields = array($only_these_fields);
+        }
         $ret = $this->toArray($only_these_fields);
         if ($depth > 0) {
-            foreach (array_keys($this->relations) as $relation) {
-                $options = $this->getRelationOptions($relation);
+            //get relations of $only_these_fields or return all
+            if($only_these_fields) {
+                $relations = array_diff($only_these_fields, array_keys($ret));
+            } else {
+                $relations = $this->relations;
+            }
+            foreach ($relations as $relation) {
+                //check if all fields of relation should be returned
+                if(is_array($relation)) {
+                    $relation_name = key($relation);
+                    //$relation_val is $only_these_fields for next call of
+                    //toArrayRecursive
+                    $relation_val = current($relation);
+                } else {
+                    $relation_name = $relation;
+                    $relation_val = null;
+                }
+                $options = $this->getRelationOptions($relation_name);
                 if ($options['type'] === 'has_one') {
-                    $ret[$relation] = $this->{$relation}->toArrayRecursive($depth - 1, $only_these_fields);
+                    $ret[$relation_name] =
+                            $this->{$relation_name}->
+                                            toArrayRecursive($depth - 1,
+                                            $relation_val);
                 }
                 if ($options['type'] === 'has_many' ||
                     $options['type'] === 'has_and_belongs_to_many') {
-                    $ret[$relation] = $this->{$relation}->sendMessage('toArrayRecursive', array($depth - 1, $only_these_fields));
+                    $ret[$relation_name] =
+                            $this->{$relation_name}->
+                                            sendMessage('toArrayRecursive',
+                                            array($depth - 1, $relation_val));
                 }
             }
+            
         }
         return $ret;
     }

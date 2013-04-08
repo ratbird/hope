@@ -319,12 +319,15 @@ table.zebra-horizontal > tbody > tr > td:nth-child(2n+1) {
   font-weight: bold;
 }
 .collapsable .toggle-indicator a {
-  background: url("../images/icons/16/blue/arr_1down.png") left center no-repeat;
+  background: left center no-repeat;
+  background-image: url("../images/icons/16/blue/arr_1down.png");
+  background-image: -webkit-image-set(url("../images/icons/16/blue/arr_1down") 1 x, url("../images/icons/32/blue/arr_1down") 2 x);
   color: #000;
   cursor: pointer;
 }
 .collapsable .empty .toggle-indicator a {
   background-image: url("../images/icons/16/grey/arr_1right.png");
+  background-image: -webkit-image-set(url("../images/icons/16/grey/arr_1right.png") 1 x, url("../images/icons/32/grey/arr_1right.png") 2 x);
 }
 .collapsable .collapsed .toggle-indicator a {
   background-image: url("../images/icons/16/blue/arr_1right.png");
@@ -672,9 +675,6 @@ table.tree .centered table {
   -webkit-border-radius: 0 0 2px 2px;
   -moz-border-radius: 0 0 2px 2px;
   border-radius: 0 0 2px 2px;
-  -webkit-box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
-  -moz-box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
-  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
   margin: 0;
   display: table;
   width: 100%;
@@ -1269,7 +1269,7 @@ div.autocomplete {
 /* --- Avatars of users, courses and institutes ----------------------------- */
 .avatar-small {
   vertical-align: middle;
-  max-width: 25px;
+  width: 25px;
   height: 25px;
 }
 .avatar-medium {
@@ -1290,8 +1290,8 @@ div.autocomplete {
   height: 100px;
 }
 .course-avatar-normal {
-  width: 250px;
   max-height: 250px;
+  width: 250px;
 }
 #custom_avatar label {
   display: block;
@@ -1377,18 +1377,14 @@ button.button[disabled] {
   width: 16px;
 }
 .button.accept:before {
-  background: no-repeat; 
-  background-image: url("../images/icons/16/blue/accept.png"); 
-  background-image: -webkit-image-set(
-      url("../images/icons/16/blue/accept.png") 1x,
-      url("../images/icons/32/blue/accept.png") 2x);    
+  background: no-repeat;
+  background-image: url("../images/icons/16/blue/accept.png");
+  background-image: -webkit-image-set(url("../images/icons/16/blue/accept.png") 1 x, url("../images/icons/32/blue/accept.png") 2 x);
 }
 .button.cancel:before {
   background: no-repeat;
-  background-image: url("../images/icons/16/blue/decline.png"); 
-  background-image: -webkit-image-set(
-      url("../images/icons/16/blue/decline.png") 1x,
-      url("../images/icons/32/blue/decline.png") 2x);     
+  background-image: url("../images/icons/16/blue/decline.png");
+  background-image: -webkit-image-set(url("../images/icons/16/blue/decline.png") 1 x, url("../images/icons/32/blue/decline.png") 2 x);
 }
 /****************************************************************************/
 /* Grouped Buttons                                                          */
@@ -1696,28 +1692,20 @@ div.clear {
 }
 #tabs2 li {
   background: no-repeat left center;
-  background-image: url("../images/icons/16/grey/arr_1right.png"); 
-  background-image: -webkit-image-set(
-      url("../images/icons/16/grey/arr_1right.png") 1x,
-      url("../images/icons/32/grey/arr_1right.png") 2x);    
- 
+  background-image: url("../images/icons/16/grey/arr_1right.png");
+  background-image: -webkit-image-set(url("../images/icons/16/black/arr_1right.png") 1 x, url("../images/icons/32/black/arr_1right.png") 2 x);
   cursor: pointer;
   line-height: 20pt;
   margin-left: 1em;
   padding-left: 20px;
 }
 #tabs2 li:hover {
-        	background-image: url("../images/icons/16/black/arr_1right.png"); 
-    		background-image: -webkit-image-set(
-                url("../images/icons/16/black/arr_1right.png") 1x,
-                url("../images/icons/32/black/arr_1right.png") 2x);    
+  background-image: url("../images/icons/16/black/arr_1right.png");
+  background-image: -webkit-image-set(url("../images/icons/16/black/arr_1right.png") 1 x, url("../images/icons/32/black/arr_1right.png") 2 x);
 }
 #tabs2 li.current {
-  			background-image: url("../images/icons/16/red/arr_1down.png");
-   			background-image: -webkit-image-set(
-                url("../images/icons/16/red/arr_1down.png") 1x,
-                url("../images/icons/32/red/arr_1down.png") 2x);    
-  
+  background-image: url("../images/icons/16/red/arr_1down.png");
+  background-image: -webkit-image-set(url("../images/icons/16/red/arr_1down.png") 1 x, url("../images/icons/32/red/arr_1down.png") 2 x);
 }
 #tabs2 a {
   color: #6e6e6e;

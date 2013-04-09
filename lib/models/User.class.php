@@ -30,7 +30,7 @@ class User extends AuthUserMd5
 {
     /**
      * return user object for given username
-     * 
+     *
      * @param string $username a username
      * @return User
      */
@@ -154,10 +154,10 @@ class User extends AuthUserMd5
         }
         return $db->query("SELECT " . str_replace($search, $replace, strtolower($sql)))->fetchColumn();
     }
-    
-    function toArrayRecursive($depth = 1, $only_these_fields = null)
+
+    function toArrayRecursive($only_these_fields = null)
     {
-        $ret = parent::toArrayRecursive($depth, $only_these_fields);
+        $ret = parent::toArrayRecursive($only_these_fields);
         unset($ret['info']);
         return  $ret;
     }

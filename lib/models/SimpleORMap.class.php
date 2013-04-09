@@ -128,14 +128,14 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
     protected $known_slots = array();
 
     /**
-     * reserved indentifiers, fields with those names must not have an explicit getXXX() method 
+     * reserved indentifiers, fields with those names must not have an explicit getXXX() method
      * @var array $reserved_slots
      */
     protected $reserved_slots = array('value','newid','iterator','tablemetadata', 'relationvalue','wherequery','relationoptions','data','new','id');
 
     /**
      * fetch table metadata from db or from local cache
-     * 
+     *
      * @param string $db_table
      * @return bool true if metadata could be fetched
      */
@@ -255,7 +255,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      * if given array contains data of related objects in sub-arrays
      * they are also generated. Existing records are updated, new records are created
      * (but changes are not yet stored)
-     * 
+     *
      * @param array $data
      * @return SimpleORMap
      */
@@ -598,7 +598,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         } elseif (count($this->pk) === 1) {
             $this->registerCallback('before_store', 'cbAutoKeyCreation');
         }
-
+re
         $this->known_slots = array_merge(array_keys($this->db_fields), array_keys($this->alias_fields), array_keys($this->additional_fields), array_keys($this->relations));
 
         if ($id) {
@@ -847,8 +847,9 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
     /**
      * returns data of table row as assoc array
      * including related records with a 'has*' relationship
+     * recurses one level without param
      *
-     * $only_these_fields limits output for realtionships in this way:
+     * $only_these_fields limits output for relationships in this way:
      * $only_these_fields = array('field_1',
      *                            'field_2',
      *                            'relation1',
@@ -859,61 +860,53 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      *                                                )
      *                           )
      * Here all fields of relation1 will be returned.
-     * $depth obverwrites $only_these_fields array nestings.
      *
-     * @param $depth set to > 1 if related objects schuld also call their related records
      * @param mixed $only_these_fields limit returned fields
      * @return array
      */
-    function toArrayRecursive($depth = 1, $only_these_fields = null)
+    function toArrayRecursive($only_these_fields = null)
     {
-        //check for assoc array for relation depth > 1
-        if(is_array($only_these_fields) && array_keys($only_these_fields) !==
-                range(0, count($only_these_fields) - 1)) {
-            $only_these_fields = array($only_these_fields);
+        if (is_string($only_these_fields)) {
+            $only_these_fields = words($only_these_fields);
+        }
+        if (is_null($only_these_fields)) {
+            $only_these_fields = $this->known_slots;
         }
         $ret = $this->toArray($only_these_fields);
-        if ($depth > 0) {
-            //get relations of $only_these_fields or return all
-            if($only_these_fields) {
-                $relations = array_diff($only_these_fields, array_keys($ret));
-            } else {
-                $relations = $this->relations;
-            }
-            foreach ($relations as $relation) {
-                //check if all fields of relation should be returned
-                if(is_array($relation)) {
-                    $relation_name = key($relation);
-                    //$relation_val is $only_these_fields for next call of
-                    //toArrayRecursive
-                    $relation_val = current($relation);
-                } else {
-                    $relation_name = $relation;
-                    $relation_val = null;
+        $relations = array();
+        if (is_array($only_these_fields)) {
+            foreach ($only_these_fields as $key => $value) {
+                if (array_key_exists($value, $this->relations)) {
+                    $relations[$value] = 0; //not null|array|string to stop recursion
                 }
+                if (array_key_exists($key, $this->relations)) {
+                    $relations[$key] = $value;
+                }
+            }
+        }
+        if (count($relations)) {
+            foreach ($relations as $relation_name => $relation_only_these_fields) {
                 $options = $this->getRelationOptions($relation_name);
                 if ($options['type'] === 'has_one') {
                     $ret[$relation_name] =
                             $this->{$relation_name}->
-                                            toArrayRecursive($depth - 1,
-                                            $relation_val);
+                                            toArrayRecursive($relation_only_these_fields);
                 }
                 if ($options['type'] === 'has_many' ||
                     $options['type'] === 'has_and_belongs_to_many') {
                     $ret[$relation_name] =
                             $this->{$relation_name}->
                                             sendMessage('toArrayRecursive',
-                                            array($depth - 1, $relation_val));
+                                            array($relation_only_these_fields));
                 }
             }
-            
         }
         return $ret;
     }
 
     /**
      * returns value of a column
-     * 
+     *
      * @throws InvalidArgumentException if column could not be found
      * @throws BadMethodCallException if getter for additional field could not be found
      * @param string $field
@@ -968,7 +961,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
 
     /**
      * sets value of a column
-     * 
+     *
      * @throws InvalidArgumentException if column could not be found
      * @throws BadMethodCallException if setter for additional field could not be found
      * @param string $field
@@ -1488,7 +1481,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
 
     /**
      * init internal content arrays with nulls
-     * 
+     *
      * @throws UnexpectedValueException if there is an unmatched alias
      */
     protected function initializeContent()

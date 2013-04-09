@@ -598,7 +598,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         } elseif (count($this->pk) === 1) {
             $this->registerCallback('before_store', 'cbAutoKeyCreation');
         }
-re
+
         $this->known_slots = array_merge(array_keys($this->db_fields), array_keys($this->alias_fields), array_keys($this->additional_fields), array_keys($this->relations));
 
         if ($id) {

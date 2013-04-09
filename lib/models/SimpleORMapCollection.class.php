@@ -421,35 +421,41 @@ class SimpleORMapCollection extends ArrayObject
         }
         return $ret;
     }
-    
-    function orderBy($order, $sort_flags = SORT_STRING)
+
+    function orderBy($order, $sort_flags = SORT_LOCALE_STRING)
     {
          //('name asc, nummer desc ')
         switch ($sort_flags) {
             case SORT_NATURAL:
-                $sort_func = 'natcmp';
+                $sort_func = 'strnatcmp';
             break;
             case SORT_NATURAL & SORT_FLAG_CASE:
-                $sort_func = 'natcasecmp';
+                $sort_func = 'strnatcasecmp';
             break;
             case SORT_STRING & SORT_FLAG_CASE:
                 $sort_func = 'strcasecmp';
             break;
-            default:
+            case SORT_STRING:
                 $sort_func = 'strcmp';
+            break;
+            case SORT_NUMERIC:
+                $sort_func = function($a,$b) {return (int)$a-(int)$b;};
+                break;
+            default:
+                $sort_func = 'strcoll';
         }
         $sorter = array();
         foreach (explode(',', strtolower($order)) as $one) {
             $sorter[] = array_map('trim', explode(' ', $one));
         }
-        
+
         $func = function ($d1, $d2) use ($sorter, $sort_func) {
             do {
                 list($field, $dir) = current($sorter);
                 $ret = $sort_func($d1[$field], $d2[$field]);
                 if ($dir == 'desc') $ret = $ret * -1;
             } while ($ret === 0 && next($sorter));
-            
+
             return $ret;
         };
         if (count($sorter)) {

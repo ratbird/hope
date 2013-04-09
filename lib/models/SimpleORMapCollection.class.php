@@ -429,10 +429,10 @@ class SimpleORMapCollection extends ArrayObject
             case SORT_NATURAL:
                 $sort_func = 'strnatcmp';
             break;
-            case SORT_NATURAL & SORT_FLAG_CASE:
+            case SORT_NATURAL | SORT_FLAG_CASE:
                 $sort_func = 'strnatcasecmp';
             break;
-            case SORT_STRING & SORT_FLAG_CASE:
+            case SORT_STRING | SORT_FLAG_CASE:
                 $sort_func = 'strcasecmp';
             break;
             case SORT_STRING:

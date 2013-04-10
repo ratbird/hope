@@ -277,7 +277,7 @@ class Admin_SmileysController extends AuthenticatedController
         $upload = sprintf('<a href="%s">%s</a>',
                           $this->url_for('admin/smileys/upload', $view),
                           _('Neues Smiley hochladen'));
-        $this->addToInfobox(_('Aktionen'), $upload, 'icons/16/black/plus.png');
+        $this->addToInfobox(_('Aktionen'), $upload, 'icons/16/black/add.png');
 
         $count = sprintf('<a href="%s">%s</a>',
                          $this->url_for('admin/smileys/count', $view),

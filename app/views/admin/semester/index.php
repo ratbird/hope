@@ -56,7 +56,7 @@
     <td></td>
     <td align="right">
         <a class="load-in-new-row" href="<?=URLHelper::getLink('dispatch.php/admin/semester/edit_semester') ?>">
-            <?= Assets::img('icons/16/blue/plus.png', array('title' => _('Neues Semester anlegen'))) ?>
+            <?= Assets::img('icons/16/blue/add.png', array('title' => _('Neues Semester anlegen'))) ?>
         </a>
     </td>
 </tr>
@@ -92,7 +92,7 @@
     <td></td>
     <td align="right">
         <a class="load-in-new-row" href="<?=URLHelper::getLink('dispatch.php/admin/semester/edit_holidays') ?>">
-            <?= Assets::img('icons/16/blue/plus.png', array('title' => _('Neue Ferien anlegen'))) ?>
+            <?= Assets::img('icons/16/blue/add.png', array('title' => _('Neue Ferien anlegen'))) ?>
         </a>
     </td>
 </tr>

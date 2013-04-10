@@ -126,7 +126,7 @@ class Admin_DomainController extends AuthenticatedController
             array(
                 'kategorie' => _('Nutzerdomänen verwalten'),
                 'eintrag'   => array(array(
-                    'icon' => 'icons/16/black/plus.png',
+                    'icon' => 'icons/16/black/add.png',
                     'text' => '<a href="'.$this->url_for('admin/domain/new').'">'._('Neue Nutzerdomäne anlegen').'</a>'
                 ))
             ), array(

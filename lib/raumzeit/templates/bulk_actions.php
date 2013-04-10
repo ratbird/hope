@@ -53,7 +53,7 @@ use Studip\Button, Studip\LinkButton;
         <? endwhile; ?>
     </select>
 
-    <?= Assets::img('icons/16/grey/room_clear.png', array(
+    <?= Assets::img('icons/16/grey/room-clear.png', array(
         'class'     => 'bookable_rooms_action',
         'title'     => _("Nur buchbare Räume anzeigen"),
         'data-name' => 'bulk_action'

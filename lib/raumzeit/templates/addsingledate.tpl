@@ -51,7 +51,7 @@ use Studip\Button,
                         <? endif ?>
                     </select>
                     
-                    <?= Assets::img('icons/16/grey/room_clear.png', array('class' => 'bookable_rooms_action', 'title' => _("Nur buchbare Räume anzeigen"))) ?>
+                    <?= Assets::img('icons/16/grey/room-clear.png', array('class' => 'bookable_rooms_action', 'title' => _("Nur buchbare Räume anzeigen"))) ?>
 
                     <br>
                     <? endif ?>

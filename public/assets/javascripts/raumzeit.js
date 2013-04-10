@@ -42,7 +42,7 @@ jQuery(function ($) {
                         } else {
                             select.title = '';
                         }
-                        me.attr('src', STUDIP.ASSETS_URL + 'images/icons/16/blue/room_clear.png');
+                        me.attr('src', STUDIP.ASSETS_URL + 'images/icons/16/blue/room-clear.png');
                         me.attr('title', 'Alle RÃ¤ume anzeigen'.toLocaleString());
                         me.attr('data-state', 'enabled');
                     }
@@ -208,7 +208,7 @@ STUDIP.Raumzeit = {
         });
 
         me.attr('data-state', false);
-        me.attr('src', STUDIP.ASSETS_URL + 'images/icons/16/grey/room_clear.png');
+        me.attr('src', STUDIP.ASSETS_URL + 'images/icons/16/grey/room-clear.png');
         me.attr('title', 'Nur buchbare Räume anzeigen'.toLocaleString());
     }
 };

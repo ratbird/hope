@@ -47,7 +47,7 @@ echo $message;
                 'text' => $this->render_partial('admin/lockrules/_chooser.php')
             ),
             array(
-                    'icon' => 'icons/16/black/plus.png',
+                    'icon' => 'icons/16/black/add.png',
                     'text' => '<a href="'.$controller->url_for('admin/lockrules/new').'">'._('Neue Sperrebene anlegen').'</a>'
                 ))
             ),

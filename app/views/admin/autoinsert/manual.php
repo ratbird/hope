@@ -81,7 +81,7 @@ use Studip\Button, Studip\LinkButton;
                       <? endif ?>
                     <? endforeach; ?>
                     </select>
-                    <?= Assets::input("icons/16/blue/plus.png", array('type' => "image", 'class' => "middle", 'name' => "add_filter", 'title' => _('Filter hinzuf&uuml;gen'))) ?>
+                    <?= Assets::input("icons/16/blue/add.png", array('type' => "image", 'class' => "middle", 'name' => "add_filter", 'title' => _('Filter hinzuf&uuml;gen'))) ?>
                 </td>
             </tr>
         <? endif ?>
@@ -100,7 +100,7 @@ use Studip\Button, Studip\LinkButton;
           <? endif ?>
                 <td colspan="<?= $index % 2 ? 1 : 2 ?>">
                     <label for="<?= $type ?>"><b><?= $available_filtertypes[$type] ?></b></label>
-                    <?= Assets::input("icons/16/blue/minus.png", array('type' => "image", 'class' => "middle", 'name' => "remove_filter[".$type."]", 'title' => _('Filter entfernen'))) ?>
+                    <?= Assets::input("icons/16/blue/remove.png", array('type' => "image", 'class' => "middle", 'name' => "remove_filter[".$type."]", 'title' => _('Filter entfernen'))) ?>
                     <br>
 
                     <select name="filter[<?= $type ?>][]" multiple="multiple" size="5">

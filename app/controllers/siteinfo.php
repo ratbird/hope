@@ -110,7 +110,7 @@ class SiteinfoController extends StudipController
         global $rubrics_empty;
         if (!$rubrics_empty) {
             if ($this->currentrubric > 0) {
-                $infobox_actions[] = array('icon' => 'icons/16/black/plus.png',
+                $infobox_actions[] = array('icon' => 'icons/16/black/add.png',
                                            'text' => '<a href="'.$this->url_for('siteinfo/new/'.$this->currentrubric).'">'._('Neue Seite anlegen').'</a>');
             }
             if ($this->currentdetail > 0) {
@@ -120,7 +120,7 @@ class SiteinfoController extends StudipController
                                            'text' => '<a href="'.$this->url_for('siteinfo/delete/'.$this->currentrubric.'/'.$this->currentdetail).'">'._('Seite löschen').'</a>');
             }
         }
-        $infobox_actions[] = array('icon' => 'icons/16/black/plus.png',
+        $infobox_actions[] = array('icon' => 'icons/16/black/add.png',
                                    'text' => '<a href="'.$this->url_for('siteinfo/new').'">'._('Neue Rubrik anlegen').'</a>');
         if ($this->currentrubric > 0) {
             $infobox_actions[] = array('icon' => 'icons/16/black/edit.png',

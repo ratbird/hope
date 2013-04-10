@@ -197,7 +197,7 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
             print "\n<tr>";
             print "\n<td width=\"5%\" class=\"table_row_odd\" align=\"left\"> ";
             if ($rechte)
-                print '<a href="' . URLHelper::getLink('raumzeit.php?cmd=createNewSingleDate#newSingleDate') . '"><img class="middle" src="' . Assets::image_path('icons/16/blue/plus.png') . '" ' . tooltip(_("Einen neuen Termin anlegen")) . '></a></td>';
+                print '<a href="' . URLHelper::getLink('raumzeit.php?cmd=createNewSingleDate#newSingleDate') . '"><img class="middle" src="' . Assets::image_path('icons/16/blue/add.png') . '" ' . tooltip(_("Einen neuen Termin anlegen")) . '></a></td>';
             print "\n<td class=\"table_row_odd\" align=\"center\">";
             if ($open == "all")
                 print '<a href="' . URLHelper::getLink('?dclose=1') . '"><img style="vertical-align:middle;" src="' . Assets::image_path('close_all.png') . '" ' . tooltip(_("Alle schließen")) . '></a>';

@@ -335,7 +335,7 @@ class ModulesNotification extends Modules {
                     $text = _("Eine neue Ankündigung wurde angelegt:");
                 }
                 $redirect = '';
-                $icon = "icons/16/blue/breaking-news.png";
+                $icon = "icons/16/blue/news.png";
                 break;
             case 'basic_data' :
                 if ($r_data['chdate'] > $r_data['visitdate']) {

@@ -64,7 +64,7 @@ $infobox_content = array(
         'text' => _("Hier sehen Sie eine Übersicht der Raumanfragen zu dieser Veranstaltung.")
     ),
     array(
-            'icon' => 'icons/16/black/plus.png',
+            'icon' => 'icons/16/black/add.png',
             'text' => '<a href="'.$controller->link_for('new/'.$course_id).'">'._('Neue Raumanfrage erstellen').'</a>'
         ))
     ),

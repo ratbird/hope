@@ -14,7 +14,7 @@ $infobox_content = array(
                'text' => '<a href="'.$controller->url_for('admin/lockrules/delete/' . $lock_rule->getid()).'">'._("Diese Ebene löschen").'</a>'
             ),
             array(
-                'icon' => 'icons/16/black/minus.png',
+                'icon' => 'icons/16/black/remove.png',
                 'text' => '<a href="'.$controller->url_for('admin/lockrules').'">'._('Bearbeiten abbrechen').'</a>'
                 ))
             ), array(

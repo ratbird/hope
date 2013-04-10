@@ -552,15 +552,15 @@ if (is_array($msgs)) {
             echo "&nbsp; <font size=\"-1\">" . _("Ihr Suchbegriff muss mindestens 3 Zeichen umfassen!");
             echo "<br><br><label for=\"search_exp\"><font size=\"-1\">&nbsp; " . _("freie Personensuche (wird in Adressbuch übernommen)") . "</font></label><br>";
             echo "&nbsp; <input type=\"text\" name=\"search_exp\" id=\"search_exp\" value=\"\">";
-            printf(" <input class=\"middle\" type=\"IMAGE\" name=\"search\" src=\"" . Assets::image_path('icons/16/blue/search.png') . "\"  value=\" %s \" %s>&nbsp;  ", _("Person suchen"), tooltip(_("Person suchen")));
+            echo Assets::input("icons/16/blue/search.png", array('type' => "image", 'alt' => _("Person suchen"), 'title' => _("Person suchen"), 'class' => "middle", 'name' => "search"))."&nbsp;  ";
         } else {
             PrintSearchResults($search_exp, $range_id);
-            printf("<input type=\"IMAGE\" name=\"search\" src=\"" . Assets::image_path('icons/16/blue/refresh.png') . "\"  value=\" %s \" %s>&nbsp;  ", _("neue Suche"), tooltip(_("neue Suche")));
+            echo Assets::input("icons/16/blue/refresh.png", array('type' => "image", 'alt' => _("neue Suche"), 'title' => _("neue Suche"), 'class' => "middle", 'name' => "search"))."&nbsp;  ";
         }
     } else {
         echo "<label for=\"search_exp\">"._("freie Personensuche (wird in Adressbuch &uuml;bernommen)") . "</label><br>";
         echo "&nbsp; <input type=\"text\" name=\"search_exp\" id=\"search_exp\" value=\"\">";
-        printf(" <input class=\"middle\" type=\"IMAGE\" name=\"search\" src=\"" . Assets::image_path('icons/16/blue/search.png') . "\"  value=\" %s \" %s>&nbsp;  ", _("Person suchen"), tooltip(_("Person suchen")));
+        echo Assets::input("icons/16/blue/search.png", array('type' => "image", 'alt' => _("Person suchen"), 'title' => _("Person suchen"), 'class' => "middle", 'name' => "search"))."&nbsp;  ";
     }
     echo "<br><br>\n";
     if ($GLOBALS['CALENDAR_GROUP_ENABLE']) {

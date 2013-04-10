@@ -316,10 +316,10 @@ class Admin_SemesterController extends AuthenticatedController
         $infobox = array('picture' => 'infobox/board1.jpg');
         $aktionen[] = array(
             "text" => '<a href="'.$this->url_for('admin/semester/edit_semester').'">'._('Neues Semester anlegen').'</a>',
-            "icon" => "icons/16/black/plus.png");
+            "icon" => "icons/16/black/add.png");
         $aktionen[] = array(
             "text" => '<a href="'.$this->url_for('admin/semester/edit_holidays').'">'._('Neue Ferien anlegen').'</a>',
-            "icon" => "icons/16/black/plus.png");
+            "icon" => "icons/16/black/add.png");
         $infobox['content'] = array(
             array(
                 'kategorie' => _("Aktionen"),

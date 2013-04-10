@@ -839,19 +839,13 @@ function show_addrform()
         ->withoutButton()
         ->fireJSFunctionOnSelect("STUDIP.Messaging.addToAdressees")
         ->render();
-    ?>
 
-    <input style="vertical-align: text-top;"
-           type="image"
-           name="search_person"
-           title="<?= !(Request::get("adressee_parameter") && Request::get("adressee_parameter") !== _("Nutzer suchen") )
-                        ? _("Suchen")
-                        : _("Suche zurücksetzen") ?>"
-           src="<?= !(Request::get("adressee_parameter") && Request::get("adressee_parameter") !== _("Nutzer suchen") )
-                        ? Assets::image_path('icons/16/blue/search.png')
-                        : Assets::image_path('icons/16/blue/refresh.png') ?>">
 
-    <?
+	print Assets::input(!(Request::get("adressee_parameter") && Request::get("adressee_parameter") !== _("Nutzer suchen")) 
+              ? 'icons/16/blue/search.png' : 'icons/16/blue/refresh.png', 
+              array('type' => "image", 'style' => "vertical-align: text-top;", 'name' => "search_person", 
+	          'title' => !(Request::get("adressee_parameter") && Request::get("adressee_parameter") !== _("Nutzer suchen")) ? _("Suchen"): _("Suche zurücksetzen")));
+
     $tmp .= ob_get_clean();
 
     return $tmp;

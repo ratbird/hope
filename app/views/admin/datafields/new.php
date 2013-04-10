@@ -160,7 +160,7 @@ $infobox = array(
                 ),
                 array(
                     'text' => '<a href="'.$controller->url_for('admin/datafields/new/'.$class_filter).'">'._('Neues Datenfeld anlegen').'</a>',
-                    'icon' => 'icons/16/black/plus.png',
+                    'icon' => 'icons/16/black/add.png',
                 )
             )
         ),

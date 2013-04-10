@@ -53,7 +53,7 @@ $infobox = array(
             'kategorie' => _("Aktionen"),
             'eintrag' => array(
                 array(
-                    "icon" => "icons/16/black/plus.png",
+                    "icon" => "icons/16/black/add.png",
                     "text" => '<a href="' . $controller->url_for('admin/specification/edit') . '">' . _('Neue Regel anlegen') . '</a>'
                 )
             )

@@ -95,7 +95,7 @@ $infobox = array(
         'kategorie' => _('Aktionen:'),
         'eintrag'   => array(
             array(
-                'icon' => 'icons/16/black/plus.png',
+                'icon' => 'icons/16/black/add.png',
                 'text' => '<a href="#" onClick="STUDIP.sem_classes.add(); return false;">'._("Fügen Sie eine neue Veranstaltungskategorie hinzu.").'</a>'
             )
         )

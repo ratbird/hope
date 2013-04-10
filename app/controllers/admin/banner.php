@@ -431,6 +431,6 @@ class Admin_BannerController extends AuthenticatedController
         $create = sprintf('<a href="%s">%s</a>',
                           $this->url_for('admin/banner/new'),
                           _('Neues Banner anlegen'));
-        $this->addToInfobox(_('Aktionen'), $create, 'icons/16/black/plus.png');
+        $this->addToInfobox(_('Aktionen'), $create, 'icons/16/black/add.png');
     }
 }

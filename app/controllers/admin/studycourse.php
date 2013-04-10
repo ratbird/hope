@@ -247,11 +247,11 @@ class Admin_StudycourseController extends AuthenticatedController
         );
         $aktionen[] = array(
             "text" => '<a href="'.$this->url_for('admin/studycourse/newprofession').'">'._('Neue Fächer anlegen').'</a>',
-            "icon" => "icons/16/black/plus.png"
+            "icon" => "icons/16/black/add.png"
         );
         $aktionen[] = array(
             "text" => '<a href="'.$this->url_for('admin/studycourse/newdegree').'">'._('Neue Abschlüsse anlegen').'</a>',
-            "icon" => "icons/16/black/plus.png"
+            "icon" => "icons/16/black/add.png"
         );
 
         $infobox['content'] = array(

@@ -230,6 +230,10 @@ class Assets {
    *
    * file name without extension,
    *   like "logo", that gets expanded to "/images/logo.png"
+   *
+   * Note: This function should be private/depracated for the use in other
+   * scripts, as we would like to always generate the complete <image> oder
+   * <input> tag. Please use Assets::img or Assets::input instead.
    */
   static function image_path($source) {
     return Assets::compute_public_path($source, 'images', 'png');

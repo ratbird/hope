@@ -29,11 +29,11 @@ $infobox_content = array(
             array(
                 'kategorie' => _('Zugriffsregeln testen'),
                 'eintrag'   => array(array(
-                'icon' => 'icons/16/black/plus.png',
+                'icon' => 'icons/16/black/add.png',
                 'text' => '<a href="'.$controller->url_for('admin/webservice_access').'">'._('Liste der Zugriffsregeln').'</a>'
             ),
             array(
-                    'icon' => 'icons/16/black/plus.png',
+                    'icon' => 'icons/16/black/add.png',
                     'text' => '<a href="'.$controller->url_for('admin/webservice_access/new').'">'._('Neue Zugriffsregel anlegen').'</a>'
                 ))
             ),

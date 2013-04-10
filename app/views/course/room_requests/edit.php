@@ -29,7 +29,7 @@ $infobox_content = array(
         'text' => $info_txt
     ),
     array(
-            'icon' => 'icons/16/black/minus.png',
+            'icon' => 'icons/16/black/remove.png',
             'text' => '<a href="'.$controller->link_for('index/'.$course_id).'">'._('Bearbeiten abbrechen').'</a>'
         ))
     ),

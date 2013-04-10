@@ -876,7 +876,8 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         $relations = array();
         if (is_array($only_these_fields)) {
             foreach ($only_these_fields as $key => $value) {
-                if (array_key_exists($value, $this->relations)) {
+                if (!is_array($value) &&
+                        array_key_exists($value, $this->relations)) {
                     $relations[$value] = 0; //not null|array|string to stop recursion
                 }
                 if (array_key_exists($key, $this->relations)) {

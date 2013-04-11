@@ -107,6 +107,10 @@ class Avatar {
 
 
     function getCustomAvatarUrl($size, $ext = 'png') {
+        $retina = $GLOBALS['auth']->auth['devicePixelRatio'] == 2;
+        $size = $retina && file_exists($this->getCustomAvatarPath($size, 'png', true))
+            ? $size."@2x"
+            : $size;
         return sprintf('%s/%s_%s.%s',
                                      $this->getAvatarDirectoryUrl(),
                                      $this->user_id,
@@ -115,11 +119,11 @@ class Avatar {
     }
 
 
-    function getCustomAvatarPath($size, $ext = 'png') {
+    function getCustomAvatarPath($size, $ext = 'png', $retina = false) {
         return sprintf('%s/%s_%s.%s',
                                      $this->getAvatarDirectoryPath(),
                                      $this->user_id,
-                                     $size,
+                                     $retina ? $size."@2x" : $size,
                                      $ext);
     }
 
@@ -330,6 +334,9 @@ class Avatar {
             @unlink($this->getCustomAvatarPath(Avatar::NORMAL));
             @unlink($this->getCustomAvatarPath(Avatar::SMALL));
             @unlink($this->getCustomAvatarPath(Avatar::MEDIUM));
+            @unlink($this->getCustomAvatarPath(Avatar::NORMAL, 'png', true));
+            @unlink($this->getCustomAvatarPath(Avatar::SMALL, 'png', true));
+            @unlink($this->getCustomAvatarPath(Avatar::MEDIUM, 'png', true));
         }
     }
 

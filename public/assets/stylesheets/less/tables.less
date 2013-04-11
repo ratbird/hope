@@ -185,8 +185,8 @@ table.zebra-horizontal > tbody > tr > td {
             background: left center no-repeat;
 	    	background-image: url("@{image-path}/icons/16/blue/arr_1down.png"); 
   			background-image: -webkit-image-set(
-      			url("@{image-path}/icons/16/blue/arr_1down") 1x,
-      			url("@{image-path}/icons/32/blue/arr_1down") 2x);               
+      			url("@{image-path}/icons/16/blue/arr_1down") ~"1x",
+      			url("@{image-path}/icons/32/blue/arr_1down") ~"2x");               
             color: #000;
             cursor: pointer;
         }
@@ -194,8 +194,8 @@ table.zebra-horizontal > tbody > tr > td {
     .empty .toggle-indicator a { 
     	background-image: url("@{image-path}/icons/16/grey/arr_1right.png"); 
   		background-image: -webkit-image-set(
-      		url("@{image-path}/icons/16/grey/arr_1right.png") 1x,
-      		url("@{image-path}/icons/32/grey/arr_1right.png") 2x);    
+      		url("@{image-path}/icons/16/grey/arr_1right.png") ~"1x",
+      		url("@{image-path}/icons/32/grey/arr_1right.png") ~"2x");    
  }
     .collapsed .toggle-indicator a { background-image: url("@{image-path}/icons/16/blue/arr_1right.png"); }
     td.label-cell, .toggle-indicator a, .empty .toggle-indicator { padding-left: 20px; }

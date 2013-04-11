@@ -74,17 +74,22 @@ div.clear
         margin-left: 1em;
         padding-left: 20px;
 
+       
+        @one: "1x";
+        @two: "2x";
+
+
         &:hover   { 
         	background-image: url("@{image-path}/icons/16/black/arr_1right.png"); 
     		background-image: -webkit-image-set(
-                url("@{image-path}/icons/16/black/arr_1right.png") 1x,
-                url("@{image-path}/icons/32/black/arr_1right.png") 2x);    
+                url("@{image-path}/icons/16/black/arr_1right.png") ~"1x",
+                url("@{image-path}/icons/32/black/arr_1right.png") ~"2x");    
         }
         &.current { 
         	background-image: url("@{image-path}/icons/16/red/arr_1down.png"); 
     		background-image: -webkit-image-set(
-                url("@{image-path}/icons/16/red/arr_1down.png") 1x,
-                url("@{image-path}/icons/32/red/arr_1down.png") 2x);    
+                url("@{image-path}/icons/16/red/arr_1down.png") ~"1x",
+                url("@{image-path}/icons/32/red/arr_1down.png") ~"2x");    
         }
     }
     a {

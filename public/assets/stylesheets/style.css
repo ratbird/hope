@@ -321,13 +321,13 @@ table.zebra-horizontal > tbody > tr > td:nth-child(2n+1) {
 .collapsable .toggle-indicator a {
   background: left center no-repeat;
   background-image: url("../images/icons/16/blue/arr_1down.png");
-  background-image: -webkit-image-set(url("../images/icons/16/blue/arr_1down") 1 x, url("../images/icons/32/blue/arr_1down") 2 x);
+  background-image: -webkit-image-set(url("../images/icons/16/blue/arr_1down") 1x, url("../images/icons/32/blue/arr_1down") 2x);
   color: #000;
   cursor: pointer;
 }
 .collapsable .empty .toggle-indicator a {
   background-image: url("../images/icons/16/grey/arr_1right.png");
-  background-image: -webkit-image-set(url("../images/icons/16/grey/arr_1right.png") 1 x, url("../images/icons/32/grey/arr_1right.png") 2 x);
+  background-image: -webkit-image-set(url("../images/icons/16/grey/arr_1right.png") 1x, url("../images/icons/32/grey/arr_1right.png") 2x);
 }
 .collapsable .collapsed .toggle-indicator a {
   background-image: url("../images/icons/16/blue/arr_1right.png");
@@ -1379,12 +1379,12 @@ button.button[disabled] {
 .button.accept:before {
   background: no-repeat;
   background-image: url("../images/icons/16/blue/accept.png");
-  background-image: -webkit-image-set(url("../images/icons/16/blue/accept.png") 1 x, url("../images/icons/32/blue/accept.png") 2 x);
+  background-image: -webkit-image-set(url("../images/icons/16/blue/accept.png") 1x, url("../images/icons/32/blue/accept.png") 2x);
 }
 .button.cancel:before {
   background: no-repeat;
   background-image: url("../images/icons/16/blue/decline.png");
-  background-image: -webkit-image-set(url("../images/icons/16/blue/decline.png") 1 x, url("../images/icons/32/blue/decline.png") 2 x);
+  background-image: -webkit-image-set(url("../images/icons/16/blue/decline.png") 1x, url("../images/icons/32/blue/decline.png") 2x);
 }
 /****************************************************************************/
 /* Grouped Buttons                                                          */
@@ -1701,11 +1701,11 @@ div.clear {
 }
 #tabs2 li:hover {
   background-image: url("../images/icons/16/black/arr_1right.png");
-  background-image: -webkit-image-set(url("../images/icons/16/black/arr_1right.png") 1 x, url("../images/icons/32/black/arr_1right.png") 2 x);
+  background-image: -webkit-image-set(url("../images/icons/16/black/arr_1right.png") 1x, url("../images/icons/32/black/arr_1right.png") 2x);
 }
 #tabs2 li.current {
   background-image: url("../images/icons/16/red/arr_1down.png");
-  background-image: -webkit-image-set(url("../images/icons/16/red/arr_1down.png") 1 x, url("../images/icons/32/red/arr_1down.png") 2 x);
+  background-image: -webkit-image-set(url("../images/icons/16/red/arr_1down.png") 1x, url("../images/icons/32/red/arr_1down.png") 2x);
 }
 #tabs2 a {
   color: #6e6e6e;

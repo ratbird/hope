@@ -277,7 +277,7 @@ jQuery(function () {
                                 default:
                                     foreach ($all_semester as $val) {
                                         if ($val['beginn'] == $sem->getEndSemester()) {
-                                            echo htmlReady($val['beginn']);
+                                            echo htmlReady($val['name']);
                                         }
                                     }
                                     break;

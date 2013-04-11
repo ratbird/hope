@@ -318,9 +318,12 @@ class Avatar {
         set_error_handler(array(__CLASS__, 'error_handler'));
 
         $this->resize(Avatar::NORMAL, $filename);
+        $this->resize(Avatar::NORMAL, $filename, true);
         $this->resize(Avatar::MEDIUM, $filename);
-        $this->resize(Avatar::SMALL,    $filename);
-
+        $this->resize(Avatar::MEDIUM, $filename, true);
+        $this->resize(Avatar::SMALL,  $filename);
+        $this->resize(Avatar::SMALL,  $filename, true);
+        
         restore_error_handler();
     }
 
@@ -366,9 +369,11 @@ class Avatar {
      *
      * @return void
      */
-    private function resize($size, $filename) {
+    private function resize($size, $filename, $retina = false) {
 
         list($thumb_width, $thumb_height) = $this->getDimension($size);
+        $thumb_width = $retina ? $thumb_width * 2 : $thumb_width;
+        $thumb_height = $retina ? $thumb_height * 2 : $thumb_height;
 
         list($width, $height, $type) = getimagesize($filename);
 
@@ -390,15 +395,12 @@ class Avatar {
             $factor = max($thumb_width / $width, $thumb_height / $height);
             $resized_width = round($width * $factor);
             $resized_height = round($height * $factor);
-        }
-
-        else {
+        } else {
             $resized_width    = $width;
             $resized_height = $height;
         }
 
-        $image = self::imageresize($image, $width, $height,
-                                                             $resized_width, $resized_height);
+        $image = self::imageresize($image, $width, $height, $resized_width, $resized_height);
 
         $dst = imagecreatetruecolor($thumb_width, $thumb_height);
         imagealphablending($dst, FALSE);
@@ -414,14 +416,11 @@ class Avatar {
         imagecopy($dst, $image, $xpos, $ypos, 0, 0,
                             $resized_width, $resized_height);
 
-        imagepng($dst, $this->getCustomAvatarPath($size));
+        imagepng($dst, $this->getCustomAvatarPath($size, 'png', $retina));
     }
 
 
-    private function imageresize($image,
-                                                             $current_width, $current_height,
-                                                             $width, $height) {
-
+    private function imageresize($image, $current_width, $current_height, $width, $height) {
         $image_resized = imagecreatetruecolor($width, $height);
 
         imagealphablending($image_resized, FALSE);

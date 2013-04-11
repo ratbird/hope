@@ -463,4 +463,17 @@ class SimpleORMapCollection extends ArrayObject
         }
         return $this;
     }
+
+    function limit($offset, $row_count = null)
+    {
+        if (is_null($row_count)) {
+            if ($offset > 0) {
+                $row_count = $offset;
+                $offset = 0;
+            } else {
+                $row_count = abs($offset);
+            }
+        }
+        return self::createFromArray(array_slice($this->getArrayCopy(), $offset, $row_count));
+    }
 }

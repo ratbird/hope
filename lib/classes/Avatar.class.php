@@ -33,6 +33,11 @@ class Avatar {
     /**
      * This constant stands for the maximal size of a user picture.
      */
+    const ORIGINAL = 'original';
+
+    /**
+     * This constant stands for the maximal size of a user picture.
+     */
     const NORMAL = 'normal';
 
     /**
@@ -314,9 +319,9 @@ class Avatar {
             throw new Exception(_("Es ist ein Fehler beim Bearbeiten des Bildes aufgetreten."));
         }
 
-
         set_error_handler(array(__CLASS__, 'error_handler'));
 
+        copy($filename, $this->getCustomAvatarPath(Avatar::ORIGINAL));
         $this->resize(Avatar::NORMAL, $filename);
         $this->resize(Avatar::NORMAL, $filename, true);
         $this->resize(Avatar::MEDIUM, $filename);
@@ -334,6 +339,7 @@ class Avatar {
      */
     function reset() {
         if ($this->is_customized()) {
+            @unlink($this->getCustomAvatarPath(Avatar::ORIGINAL));
             @unlink($this->getCustomAvatarPath(Avatar::NORMAL));
             @unlink($this->getCustomAvatarPath(Avatar::SMALL));
             @unlink($this->getCustomAvatarPath(Avatar::MEDIUM));

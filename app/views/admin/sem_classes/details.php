@@ -44,7 +44,7 @@
                     </div>
                     <div style="margin-left: 21px;">
                         <a href="#" onClick="jQuery(this).closest('.add').children().toggle(); jQuery('#new_sem_type').focus(); return false;">
-                            <?= Assets::img("icons/16/blue/plus", array('class' => "text-bottom", "title" => _("Veranstaltungstyp hinzufügen"))) ?>
+                            <?= Assets::img("icons/16/blue/add", array('class' => "text-bottom", "title" => _("Veranstaltungstyp hinzufügen"))) ?>
                         </a>
                     </div>
                 </div>

@@ -45,7 +45,7 @@ class Admin_RssFeedsController extends AuthenticatedController
         $add = sprintf('<a href="%s">%s</a>',
                        $this->url_for('admin/rss_feeds/create'),
                        _('RSS-Feed neu anlegen'));
-        $this->addToInfobox(_('Aktionen'), $add, 'icons/16/black/plus');
+        $this->addToInfobox(_('Aktionen'), $add, 'icons/16/black/add');
 
         // Infobox: "Check feeds"
         $add = sprintf('<a href="%s">%s</a>',

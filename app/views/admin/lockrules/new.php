@@ -15,7 +15,7 @@ $infobox_content = array(
                'kategorie' => _('Sperrebenen verwalten'),
                'eintrag'   => array(
                 array(
-                'icon' => 'icons/16/black/minus.png',
+                'icon' => 'icons/16/black/remove.png',
                 'text' => '<a href="'.$controller->url_for('admin/lockrules').'">'._('Bearbeiten abbrechen').'</a>'
                 ))
             )

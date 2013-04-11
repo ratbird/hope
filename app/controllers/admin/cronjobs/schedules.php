@@ -106,7 +106,7 @@ class Admin_Cronjobs_SchedulesController extends AuthenticatedController
         $register = sprintf('<a href="%s">%s</a>',
                             $this->url_for('admin/cronjobs/schedules/edit'),
                             _('Neuen Cronjob registrieren'));
-        $this->addToInfobox(_('Aktionen'), $register, 'icons/16/black/plus');
+        $this->addToInfobox(_('Aktionen'), $register, 'icons/16/black/add');
     }
 
     /**

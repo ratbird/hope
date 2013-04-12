@@ -61,13 +61,72 @@ class SimpleORMapCollection extends ArrayObject
     public static function createFromArray(Array $data)
     {
         $ret = new SimpleORMapCollection();
-        if ($data[0] instanceof SimpleORMap) {
-            $ret->setClassName(get_class($data[0]));
+        $first = current($data);
+        if ($first instanceof SimpleORMap) {
+            $ret->setClassName(get_class($first));
             foreach ($data as $one) {
                 $ret[] = $one;
             }
         }
         return $ret;
+    }
+
+    public static function getCompFunc($operator, $args)
+    {
+        if (!is_array($args)) {
+            $args = array($args);
+        }
+        switch ($operator) {
+            case '==':
+                $comp_func = function ($a) use ($args) {return in_array($a, $args);};
+            case '===':
+                $comp_func = function ($a) use ($args) {return in_array($a, $args, true);};
+            break;
+            case '!=':
+            case '<>':
+                $comp_func = function ($a) use ($args) {return !in_array($a, $args);};
+            break;
+            case '!==':
+                $comp_func = function ($a) use ($args) {return !in_array($a, $args, true);};
+            break;
+            case '<':
+            case '>':
+            case '<=':
+            case '>=':
+                $op_func = create_function('$a,$b', 'return $a ' . $operator . ' $b;');
+                $comp_func = function($a) use ($op_func, $args) {return $op_func($a, $args[0]);};
+            break;
+            case '><':
+                $comp_func = function($a) use ($args) {return $a >= $args[0] && $a <= $args[1];};
+            break;
+            case '%=':
+                $comp_func = function($a) use ($args) {
+                    $a = strtolower(SimpleOrMapCollection::translitLatin1($a));
+                    $args = array_map('SimpleOrMapCollection::translitLatin1', $args);
+                    $args = array_map('strtolower', $args);
+                    return in_array($a, $args);
+                };
+            break;
+            default:
+                throw new InvalidArgumentException('unknown operator: ' . $operator);
+         }
+         return $comp_func;
+    }
+
+    public static function translitLatin1($text) {
+        $text = str_replace(array('ä','A','ö','Ö','ü','Ü','ß'), array('a','A','o','O','u','U','s'), $text);
+        $text = str_replace(array('À','Á','Â','Ã','Å','Æ'), 'A' , $text);
+        $text = str_replace(array('à','á','â','ã','å','æ'), 'a' , $text);
+        $text = str_replace(array('È','É','Ê','Ë'), 'E' , $text);
+        $text = str_replace(array('è','é','ê','ë'), 'e' , $text);
+        $text = str_replace(array('Ì','Í','Î','Ï'), 'I' , $text);
+        $text = str_replace(array('ì','í','î','ï'), 'i' , $text);
+        $text = str_replace(array('Ò','Ó','Õ','Ô','Ø'), 'O' , $text);
+        $text = str_replace(array('ò','ó','ô','õ','ø'), 'o' , $text);
+        $text = str_replace(array('Ù','Ú','Û'), 'U' , $text);
+        $text = str_replace(array('ù','ú','û'), 'u' , $text);
+        $text = str_replace(array('Ç','ç','Ð','Ñ','Ý','ñ','ý','ÿ'), array('C','c','D','N','Y','n','y','y') , $text);
+        return $text;
     }
 
     /**
@@ -237,18 +296,16 @@ class SimpleORMapCollection extends ArrayObject
     /**
      * returns a new collection containing all elements
      * where given column has given value(s)
-     * pass array or space-delimited string for multiple values
+     * pass array for multiple values
      *
      * @param string $key the column name
      * @param mixed $value value to search for,
      * @return SimpleORMapCollection with found records
      */
-    function findBy($key, $values)
+    function findBy($key, $values, $op = '==')
     {
-        if (!is_array($values)) {
-            $values = words($values);
-        }
-        return $this->filter(function($record) use ($key, $values) {return in_array($record->$key, $values);});
+        $comp_func = self::getCompFunc($op, $values);
+        return $this->filter(function($record) use ($comp_func, $key) {return $comp_func($record[$key]);});
     }
 
     /**
@@ -277,8 +334,8 @@ class SimpleORMapCollection extends ArrayObject
     function map(Closure $func)
     {
         $results = array();
-        foreach ($this as $record) {
-            $results[] = call_user_func($func, $record);
+        foreach ($this as $key => $value) {
+            $results[$key] = call_user_func($func, $value, $key);
         }
         return $results;
     }
@@ -293,9 +350,9 @@ class SimpleORMapCollection extends ArrayObject
     function filter(Closure $func = null)
     {
         $results = array();
-        foreach ($this as $record) {
-            if (call_user_func($func, $record)) {
-                $results[] = $record;
+        foreach ($this as $key => $value) {
+            if (call_user_func($func, $value, $key)) {
+                $results[$key] = $value;
             }
         }
         return self::createFromArray($results);
@@ -407,14 +464,12 @@ class SimpleORMapCollection extends ArrayObject
      * @param mixed $values
      * @return number of unsetted elements
      */
-    function unsetBy($key, $values)
+    function unsetBy($key, $values, $op = '==')
     {
         $ret = false;
-        if (!is_array($values)) {
-            $values = words($values);
-        }
+        $comp_func = self::getCompFunc($op, $values);
         foreach ($this as $k => $record) {
-            if (in_array($record->$key, $values)) {
+            if ($comp_func($record[$key])) {
                 $this->offsetunset($k);
                 $ret += 1;
             }
@@ -424,35 +479,46 @@ class SimpleORMapCollection extends ArrayObject
 
     function orderBy($order, $sort_flags = SORT_LOCALE_STRING)
     {
-         //('name asc, nummer desc ')
+        //('name asc, nummer desc ')
+        $sort_locale = false;
         switch ($sort_flags) {
-            case SORT_NATURAL:
-                $sort_func = 'strnatcmp';
+        case SORT_NATURAL:
+            $sort_func = 'strnatcmp';
             break;
-            case SORT_NATURAL | SORT_FLAG_CASE:
-                $sort_func = 'strnatcasecmp';
+        case SORT_NATURAL | SORT_FLAG_CASE:
+            $sort_func = 'strnatcasecmp';
             break;
-            case SORT_STRING | SORT_FLAG_CASE:
-                $sort_func = 'strcasecmp';
+        case SORT_STRING | SORT_FLAG_CASE:
+            $sort_func = 'strcasecmp';
             break;
-            case SORT_STRING:
-                $sort_func = 'strcmp';
+        case SORT_STRING:
+            $sort_func = 'strcmp';
             break;
-            case SORT_NUMERIC:
-                $sort_func = function($a,$b) {return (int)$a-(int)$b;};
-                break;
-            default:
-                $sort_func = 'strcoll';
+        case SORT_NUMERIC:
+            $sort_func = function($a,$b) {return (int)$a-(int)$b;};
+            break;
+        case SORT_LOCALE_STRING:
+        default:
+            $sort_func = 'strnatcasecmp';
+            $sort_locale = true;
         }
+
         $sorter = array();
         foreach (explode(',', strtolower($order)) as $one) {
             $sorter[] = array_map('trim', explode(' ', $one));
         }
 
-        $func = function ($d1, $d2) use ($sorter, $sort_func) {
+        $func = function ($d1, $d2) use ($sorter, $sort_func, $sort_locale) {
             do {
                 list($field, $dir) = current($sorter);
-                $ret = $sort_func($d1[$field], $d2[$field]);
+                if (!$sort_locale) {
+                    $value1 = $d1[$field];
+                    $value2 = $d2[$field];
+                } else {
+                    $value1 = SimpleOrMapCollection::translitLatin1($d1[$field]);
+                    $value2 = SimpleOrMapCollection::translitLatin1($d2[$field]);
+                }
+                $ret = $sort_func($value1, $value2);
                 if ($dir == 'desc') $ret = $ret * -1;
             } while ($ret === 0 && next($sorter));
 

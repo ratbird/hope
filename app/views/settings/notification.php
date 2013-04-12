@@ -38,16 +38,16 @@
                 <th><?= _('Alle') ?></th>
             </tr>
             <tr>
-                <td colspan="2" align="right">
+                <td colspan="2" class="blue_gradient">
                     <?= _('Benachrichtigung für alle aufgelisteten Veranstaltungen:') ?>
                 </td>
             <? for ($i = 0; $i < count($modules); $i += 1): ?>
-                <td>
+                <td class="blue_gradient">
                     <input type="checkbox" name="all[columns][]" value="<?= $i ?>"
                            <? if (count(array_filter($checked, function ($item) use ($i) { return $item[$i]; })) == count($checked)) echo 'checked'; ?>>
                 </td>
             <? endfor; ?>
-                <td>
+                <td class="blue_gradient">
                     <input type="checkbox" name="all[all]" value="all"
                            <? if (count(array_filter($checked, function ($item) { return $item['all']; })) == count($checked)) echo 'checked'; ?>>
 

@@ -31,7 +31,7 @@
     <tbody>
     <? if (count($about->user_fach_abschluss) === 0 && $allow_change['sg']): ?>
         <tr>
-            <td colspan="4">
+            <td colspan="4" style="background: inherit;">
                 <strong><?= _('Sie haben sich noch keinem Studiengang zugeordnet.') ?></strong><br>
                 <br>
                 <?= _('Tragen Sie bitte hier die Angaben aus Ihrem Studierendenausweis ein!') ?>

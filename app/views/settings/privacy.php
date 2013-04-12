@@ -178,7 +178,7 @@ if (!$user_domains) {
             </tr>
         </thead>
         <tbody class="privacy">
-            <tr>
+            <tr class="blue_gradient">
                 <td>&nbsp;</td>
             <? foreach ($visibilities as $visibility): ?>
                 <td><?= htmlReady($visibility) ?></td>

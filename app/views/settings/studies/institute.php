@@ -32,7 +32,7 @@
     <tbody>
     <? if (count($institutes) === 0 && $allow_change['in']): ?>
         <tr>
-            <td colspan="2">
+            <td colspan="2" style="background: inherit;">
                 <strong><?= _('Sie haben sich noch keinen Einrichtungen zugeordnet.') ?></strong><br>
                 <br>
                 <?= _('Wenn Sie auf Ihrem Profil die Einrichtungen, an denen Sie studieren, '

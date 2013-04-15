@@ -307,24 +307,12 @@ class UserModel
      */
     public static function convert($old_id, $new_id, $identity = false)
     {
+        NotificationCenter::postNotification('UserWillMigrate', $old_id, $new_id); 
+
         $messages = array();
 
         //Identitätsrelevante Daten migrieren
         if ($identity) {
-            // Namen übertragen
-            $query = "SELECT Vorname, Nachname FROM auth_user_md5 WHERE user_id = ?";
-            $statement = DBManager::get()->prepare($query);
-            $statement->execute(array($old_id));
-            $db = $statement->fetch(PDO::FETCH_ASSOC);
-
-            $update = "UPDATE IGNORE auth_user_md5
-                       SET Vorname = ?, Nachname = ?
-                       WHERE user_id = ?";
-            $statement = DBManager::get()->prepare($update);
-            $statement->execute(array(
-                $db['Vorname'], $db['Nachname'], $old_id
-            ));
-
             // Veranstaltungseintragungen
             self::removeDoubles('seminar_user', 'Seminar_id', $new_id, $old_id);
             $query = "UPDATE IGNORE seminar_user SET user_id = ? WHERE user_id = ?";
@@ -362,19 +350,49 @@ class UserModel
             $statement = DBManager::get()->prepare($query);
             $statement->execute(array($new_id, $old_id));
 
-            // Generische Datenfelder
-            $query = "DELETE FROM datafields_entries WHERE range_id = ?";
-            $statement = DBManager::get()->prepare($query);
-            $statement->execute(array($new_id));
+            // Generische Datenfelder zusammenführen (bestehende Einträge des
+            // "neuen" Nutzers werden dabei nicht überschrieben)
+            $old_user = User::find($old_id);
 
-            $query = "UPDATE IGNORE datafields_entries SET range_id = ? WHERE range_id = ?";
+            $query = "INSERT INTO datafields_entries
+                        (datafield_id, range_id, sec_range_id, content, mkdate, chdate)
+                      VALUES (:datafield_id, :range_id, :sec_range_id, :content,
+                              UNIX_TIMESTAMP(), UNIX_TIMESTAMP())
+                      ON DUPLICATE KEY
+                        UPDATE content = IF(content IN ('', 'default_value'), VALUES(content), content),
+                               chdate = UNIX_TIMESTAMP()";
             $statement = DBManager::get()->prepare($query);
-            $statement->execute(array($new_id, $old_id));
+            $statement->bindValue(':range_id', $new_id);
+
+            $old_user->datafields->each(function ($field) use ($new_id, $statement) {
+                $statement->bindValue(':datafield_id', $field->datafield_id);
+                $statement->bindValue(':sec_range_id', $field->sec_range_id);
+                $statement->bindValue(':content', $field->content);
+                $statement->execute();
+            });
+
+            # Datenfelder des alten Nutzers leeren
+            $old_user->datafields = array();
+            $old_user->store();
 
             //Buddys
             $query = "UPDATE IGNORE contact SET owner_id = ? WHERE owner_id = ?";
             $statement = DBManager::get()->prepare($query);
             $statement->execute(array($new_id, $old_id));
+
+            // Avatar
+            $old_avatar = Avatar::getAvatar($old_id);
+            $new_avatar = Avatar::getAvatar($new_id);
+            if ($old_avatar->is_customized()) {
+                if (!$new_avatar->is_customized()) {
+                    $avatar_file = $old_avatar->getFilename(AVATAR::ORIGINAL);
+                    if (!file_exists($avatar_file)) {
+                        $avatar_file = $old_avatar->getFilename(AVATAR::NORMAL);
+                    }
+                    $new_avatar->createFrom($avatar_file);
+                }
+                $old_avatar->reset();
+            }
 
             $messages[] = _('Identitätsrelevante Daten wurden migriert.');
         }
@@ -385,7 +403,7 @@ class UserModel
         foreach (PluginEngine::getPlugins('ForumModule') as $plugin) {
             $plugin->migrateUser($old_id, $new_id);
         }
-        
+
         // Dateieintragungen und Ordner
         // TODO (mlunzena) should post a notification
         $query = "UPDATE IGNORE dokumente SET user_id = ? WHERE user_id = ?";
@@ -513,6 +531,8 @@ class UserModel
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($new_id, $old_id));
 
+        NotificationCenter::postNotification('UserDidMigrate', $old_id, $new_id); 
+
         $messages[] = _('Dateien, Termine, Adressbuch, Nachrichten und weitere Daten wurden migriert.');
         return $messages;
     }
@@ -561,7 +581,7 @@ class UserModel
 
         if (!empty($items)) {
             $query = "DELETE FROM `{$table}`
-                  WHERE user_id = :user_id AND `{$field}` IN (:items)";                  
+                  WHERE user_id = :user_id AND `{$field}` IN (:items)";
 
             $statement = DBManager::get()->prepare($query);
             $statement->bindValue(':user_id', $new_id);
@@ -569,7 +589,7 @@ class UserModel
             $statement->execute();
         }
     }
-    
+
     public static function getAvailableAuthPlugins()
     {
         $query = "SELECT DISTINCT IFNULL(auth_plugin, 'standard') as auth_plugin FROM auth_user_md5 ORDER BY auth_plugin='standard',auth_plugin";

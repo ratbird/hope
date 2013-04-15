@@ -39,7 +39,7 @@ class SendMailNotificationsJob extends CronJob
     {
         return _('Versendet tägliche E-Mailbenachrichtigungen');
     }
-    
+
     /**
      * Returns the description of the cronjob.
      */
@@ -47,7 +47,7 @@ class SendMailNotificationsJob extends CronJob
     {
         return _('Versendet die täglichen E-Mailbenachrichtigungen an alle Nutzer, die diese aktiviert haben');
     }
-    
+
     /**
      * Setup method. Loads neccessary classes and checks environment. Will
      * bail out with an exception if environment does not match requirements.
@@ -67,7 +67,24 @@ class SendMailNotificationsJob extends CronJob
             throw new Exception('To use mail notifications you MUST set correct values for $ABSOLUTE_URI_STUDIP in config_local.inc.php!');
         }
     }
-    
+
+    /**
+     * Return the paremeters for this cronjob.
+     *
+     * @return Array Parameters.
+     */
+    public static function getParameters()
+    {
+        return array(
+            'verbose' => array(
+                'type'        => 'boolean',
+                'default'     => false,
+                'status'      => 'optional',
+                'description' => _('Sollen Ausgaben erzeugt werden (sind später im Log des Cronjobs sichtbar)'),
+            ),
+        );
+    }
+
     /**
      * Executes the cronjob.
      *
@@ -81,26 +98,24 @@ class SendMailNotificationsJob extends CronJob
      */
     public function execute($last_result, $parameters = array())
     {
+        global $user;
+
         $notification = new ModulesNotification();
 
-        $query = "SELECT user_id, aum.username, Email,
-                         {$GLOBALS['_fullname_sql']['full']} AS fullname
-                  FROM seminar_user AS su
-                  INNER JOIN auth_user_md5 AS aum USING (user_id)
-                  LEFT JOIN user_info AS ui USING (user_id)
-                  WHERE notification != 0";
-        if (Config::get()->DEPUTIES_ENABLE) {
-            $query .= " UNION " . getMyDeputySeminarsQuery('notification_cli', '', '', '', '');
+        $query = "SELECT DISTINCT user_id FROM seminar_user su WHERE notification <> 0";
+        if (get_config('DEPUTIES_ENABLE')) {
+            $query .= " UNION SELECT DISTINCT user_id FROM deputies WHERE notification <> 0";
         }
-        $query .= " GROUP BY user_id";
-        $statement = DBManager::get()->query($query);
-        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-            setTempLanguage($row['user_id']);
-            $to = $row['Email'];
+        $rs = DBManager::get()->query($query);
+        while($r = $rs->fetch()){
+            $user->start($r["user_id"]);
+            setTempLanguage('', $user->preferred_language);
+            $to = $user->email;
             $title = "[" . $GLOBALS['UNI_NAME_CLEAN'] . "] " . _("Tägliche Benachrichtigung");
-            $mailmessage = $notification->getAllNotifications($row['user_id']);
+            $mailmessage = $notification->getAllNotifications($user->id);
+            $ok = false;
             if ($mailmessage) {
-                if (UserConfig::get($row['user_id'])->MAIL_AS_HTML) {
+                if ($user->cfg->getValue('MAIL_AS_HTML')) {
                     $smail = new StudipMail();
                     $ok = $smail->setSubject($title)
                                 ->addRecipient($to)
@@ -111,6 +126,8 @@ class SendMailNotificationsJob extends CronJob
                     $ok = StudipMail::sendMessage($to, $title, $mailmessage['text']);
                 }
             }
+            UserConfig::set($user->id, null);
+            if ($ok !== false && $parameters['verbose']) echo $user->username . ':' . $ok . "\n";
         }
     }
 }

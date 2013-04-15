@@ -1,7 +1,7 @@
 #!/usr/bin/php -q
 <?php
-# Lifter003: TEST
 # Lifter007: TODO
+# Lifter003: TODO
 /**
 * send_mail_notifications.php
 *
@@ -40,32 +40,24 @@ require_once 'lib/classes/ModulesNotification.class.php';
 get_config('MAIL_NOTIFICATION_ENABLE') || trigger_error('Mail notifications are disabled in this Stud.IP installation.', E_USER_ERROR);
 ($ABSOLUTE_URI_STUDIP) || trigger_error('To use mail notifications you MUST set correct values for $ABSOLUTE_URI_STUDIP in config_local.inc.php!', E_USER_ERROR);
 
-set_time_limit(60*60*2);
-
 // note: notifications for plugins not implemented
 
 $notification = new ModulesNotification();
 
-$query = "SELECT user_id, aum.username, Email,
-                 {$GLOBALS['_fullname_sql']['full']} AS fullname
-          FROM seminar_user AS su
-          INNER JOIN auth_user_md5 AS aum USING (user_id)
-          LEFT JOIN user_info AS ui USING (user_id)
-          WHERE notification != 0";
+$query = "SELECT DISTINCT user_id FROM seminar_user su WHERE notification <> 0";
 if (get_config('DEPUTIES_ENABLE')) {
-    $query .= " UNION ".getMyDeputySeminarsQuery('notification_cli', '', '', '', '');
+    $query .= " UNION SELECT DISTINCT user_id FROM deputies WHERE notification <> 0";
 }
-$query .= " GROUP BY user_id";
-$statement = DBManager::get()->query($query);
-while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-    $user = new Seminar_User($row['user_id']);
-    setTempLanguage($row['user_id']);
-    $to = $row['Email'];
+$rs = DBManager::get()->query($query);
+while($r = $rs->fetch()){
+    $user->start($r["user_id"]);
+    setTempLanguage('', $user->preferred_language);
+    $to = $user->email;
     $title = "[" . $GLOBALS['UNI_NAME_CLEAN'] . "] " . _("Tägliche Benachrichtigung");
-    $mailmessage = $notification->getAllNotifications($row['user_id']);
+    $mailmessage = $notification->getAllNotifications($user->id);
+    $ok = false;
     if ($mailmessage) {
-        $user_cfg = UserConfig::get($row['user_id']);
-        if ($user_cfg->getValue('MAIL_AS_HTML')) {
+        if ($user->cfg->getValue('MAIL_AS_HTML')) {
             $smail = new StudipMail();
             $ok = $smail->setSubject($title)
                         ->addRecipient($to)
@@ -76,4 +68,8 @@ while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
             $ok = StudipMail::sendMessage($to, $title, $mailmessage['text']);
         }
     }
+    UserConfig::set($user->id, null);
+    if ($ok !== false && $_SERVER['argv'][1] === '-v') echo $user->username . ':' . $ok . "\n";
 }
+exit(1);
+?>

@@ -2007,12 +2007,12 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
         $infobox[1] = array(
                 "eintrag" => array(
                     array(
-                        'icon' => "icons/16/black/doc-text.png",
+                        'icon' => "icons/16/black/export/file-office.png",
                         'text' => export_link($SessSemName[1], "person", _("TeilnehmerInnen") . ' '. $SessSemName[0], "rtf", "rtf-teiln", "",
                                   _("TeilnehmerInnen exportieren als rtf Dokument"), 'passthrough')
                     ),
                     array(
-                        'icon' => 'icons/16/black/doc-office.png',
+                        'icon' => 'icons/16/black/export/file-office.png',
                         'text' => export_link($SessSemName[1], "person", _("TeilnehmerInnen") . ' '. $SessSemName[0], "csv", "csv-teiln", "",
                                   _("TeilnehmerInnen exportieren als csv Dokument"), 'passthrough')
                     )
@@ -2023,12 +2023,12 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
             $infobox[2] = array(
                 "eintrag" => array(
                     array(
-                        'icon' => "icons/16/blue/file-text.png",
+                        'icon' => "icons/16/blue/export/file-office.png",
                         'text' => export_link($SessSemName[1], "person", _("Warteliste") .' ' . $SessSemName[0], "rtf", "rtf-warteliste", "awaiting",
                                   _("Warteliste exportieren als rtf Dokument"), 'passthrough')
                     ),
                     array(
-                        'icon' => 'icons/16/blue/file-xls.png',
+                        'icon' => 'icons/16/blue/export/file-office.png',
                         'text' => export_link($SessSemName[1], "person", _("Warteliste") .' ' . $SessSemName[0], "csv", "csv-warteliste", "awaiting",
                                   _("Warteliste exportieren csv Dokument"), 'passthrough')
                     )

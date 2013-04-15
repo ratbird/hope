@@ -440,7 +440,7 @@ class messaging
             URLHelper::getUrl("sms_box.php?sms_inout=in&mopen=$tmp_message_id#$tmp_message_id", array('cid' => null)),
             sprintf(_('Sie haben eine Nachricht von %s erhalten!'), $snd_name),
             'msg_item_'.$tmp_message_id,
-            Assets::image_path("icons/40/blue/mail")
+            Assets::image_path("icons/80/blue/mail")
         );
 
 

@@ -49,7 +49,7 @@ $infobox = array(
         array(
             array(
                 "icon" => "icons/16/black/info",
-                "text" => _("Ein Echtzeitkommunikations-Forum.")
+                "text" => _("Alle öffentlichen Nachrichten dieses Kontakts als Feed und in Echtzeit.")
             ),
             array(
                 "icon" => "icons/16/black/date",

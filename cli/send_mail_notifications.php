@@ -50,7 +50,7 @@ if (get_config('DEPUTIES_ENABLE')) {
 }
 $rs = DBManager::get()->query($query);
 while($r = $rs->fetch()){
-    $user->start($r["user_id"]);
+    $user = new Seminar_User($r["user_id"]);
     setTempLanguage('', $user->preferred_language);
     $to = $user->email;
     $title = "[" . $GLOBALS['UNI_NAME_CLEAN'] . "] " . _("Tägliche Benachrichtigung");

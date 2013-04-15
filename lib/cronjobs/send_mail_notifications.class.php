@@ -100,6 +100,8 @@ class SendMailNotificationsJob extends CronJob
     {
         global $user;
 
+        $cli_user = $user;
+
         $notification = new ModulesNotification();
 
         $query = "SELECT DISTINCT user_id FROM seminar_user su WHERE notification <> 0";
@@ -108,7 +110,7 @@ class SendMailNotificationsJob extends CronJob
         }
         $rs = DBManager::get()->query($query);
         while($r = $rs->fetch()){
-            $user->start($r["user_id"]);
+            $user = new Seminar_User($r["user_id"]);
             setTempLanguage('', $user->preferred_language);
             $to = $user->email;
             $title = "[" . $GLOBALS['UNI_NAME_CLEAN'] . "] " . _("Tägliche Benachrichtigung");
@@ -129,5 +131,6 @@ class SendMailNotificationsJob extends CronJob
             UserConfig::set($user->id, null);
             if ($ok !== false && $parameters['verbose']) echo $user->username . ':' . $ok . "\n";
         }
+        $user = $cli_user;
     }
 }

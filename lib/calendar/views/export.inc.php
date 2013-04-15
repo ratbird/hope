@@ -29,9 +29,11 @@ require_once('lib/msg.inc.php');
 $experiod = Request::option('experiod');
 $expmod = Request::option('expmod');
 $extype = Request::option('extype');
+$exEndDate = Request::option('exEndDate');
 $exendday = Request::option('exendday');
 $exendmonth = Request::option('exendmonth');
 $exendyear = Request::option('exendyear');
+$exStartDate = Request::option('exStartDate');
 $exstartday = Request::option('exstartday');
 $exstartmonth = Request::option('exstartmonth');
 $exstartyear = Request::option('exstartyear');
@@ -39,9 +41,11 @@ if ($experiod != 'period') {
     unset($exstartmonth);
     unset($exstartday);
     unset($exstartyear);
-    unset($exendtmonth);
+    unset($exendmonth);
     unset($exendday);
     unset($exendyear);
+    unset($exEndDate);
+    unset($exStartDate);
 }
 
 
@@ -63,11 +67,14 @@ if ($expmod == 'exp_direct' && $termin_id) {
 }
 
 $err = array();
+
 if ($experiod == 'period') {
-    if (!$exstart = check_date(Request::option('exstartmonth'), Request::option('exstartday'), Request::option('exstartyear'), 0, 0)) {
+    $fooStart = explode('.', $_POST['exStartDate']);
+    $fooStop = explode('.',$_POST['exEndDate']);
+    if (!$exstart = check_date($fooStart[1], $fooStart[0], $fooStart[2], 0, 0)) {
         $err['exstart'] = true;
     }
-    if (!$exend = check_date(Request::option('exendmonth'), Request::option('exendday'), Request::option('exendyear'), 23, 59)) {
+    if (!$exend = check_date($fooStop[1],$fooStop[0],$fooStop[2], 23, 59)) {
         $err['exend'] = true;
     }
     if ($exstart >= $exend) {
@@ -238,22 +245,27 @@ auf diese Nachricht nicht antworten.") . "\n\n";
         if (!$exstartday)
             $exstartday = date("d", time());
         if (!$exstartmonth)
-            $exstartmonth = date("m", time());
-        if (!$exstartyear)
+            $exstartmonth = date("m", time()); 
+       if (!$exstartyear)
             $exstartyear = date("Y", time());
+        if(!$exStartDate)
+            $exStartDate = $exstartday.'.'.$exstartmonth.'.'.$exstartyear;
 
+        
         // insert popup calendar
         $atimetxt = '&atime=' . mktime(12, 0, 0, $exstartday, $exstartmonth, $exstartyear);
-        $text_exstart = " &nbsp <input type=\"text\" name=\"exstartday\" size=\"2\" maxlength=\"2\" value=\""
-                . $exstartday . "\">.&nbsp;\n"
-                . "<input type=\"text\" name=\"exstartmonth\" size=\"2\" maxlength=\"2\" value=\""
-                . $exstartmonth . "\">.&nbsp;\n"
-                . "<input type=\"text\" name=\"exstartyear\" size=\"4\" maxlength=\"4\" value=\""
-                . $exstartyear . "\">"
-                . ($err['exstart'] ? "&nbsp;$error_sign" : '')
-                . ' <img align="absmiddle" src="' . Assets::image_path('popupcalendar.png')
-                . "\" onClick=\"window.open('" . URLHelper::getLink("termin_eingabe_dispatch.php?element_switch=54${atimetxt}")
-                . "', 'InsertDate', 'dependent=yes, width=210, height=210, left=500, top=150')\">&nbsp;&nbsp;";
+        $text_exstart = "<input type=\"text\" id=\"exStartDate\" name=\"exStartDate\" size=\"10\" maxlength=\"10\" value=\"". $exStartDate."\">&nbsp;\n"
+                ."<script>jQuery('#exStartDate').datepicker();</script>";
+                //." &nbsp <input type=\"text\" name=\"exstartday\" size=\"2\" maxlength=\"2\" value=\""
+                //. $exstartday . "\">.&nbsp;\n"
+                //. "<input type=\"text\" name=\"exstartmonth\" size=\"2\" maxlength=\"2\" value=\""
+                //. $exstartmonth . "\">.&nbsp;\n"
+                //. "<input type=\"text\" name=\"exstartyear\" size=\"4\" maxlength=\"4\" value=\""
+                //. $exstartyear . "\">"
+                //. ($err['exstart'] ? "&nbsp;$error_sign" : '')
+                //. ' <img align="absmiddle" src="' . Assets::image_path('popupcalendar.png')
+                //. "\" onClick=\"window.open('" . URLHelper::getLink("termin_eingabe_dispatch.php?element_switch=54${atimetxt}")
+                //. "', 'InsertDate', 'dependent=yes, width=210, height=210, left=500, top=150')\">&nbsp;&nbsp;";
 
         if (!$exendday)
             $exendday = date("d", time());
@@ -261,18 +273,22 @@ auf diese Nachricht nicht antworten.") . "\n\n";
             $exendmonth = date("m", time());
         if (!$exendyear)
             $exendyear = date("Y", time()) + 1;
+        if(!$exEndDate)
+        $exEndDate = $exendday.'.'.$exendmonth.'.'.$exendyear;
 
         $atimetxt = '&atime=' . mktime(12, 0, 0, $exendday, $exendmonth, $exendyear);
-        $text_exend = " &nbsp; <input type=\"text\" name=\"exendday\" size=\"2\" maxlength=\"2\" value=\""
-                . $exendday . "\">.&nbsp;\n"
-                . "<input type=\"text\" name=\"exendmonth\" size=\"2\" maxlength=\"2\" value=\""
-                . $exendmonth . "\">.&nbsp;\n"
-                . "<input type=\"text\" name=\"exendyear\" size=\"4\" maxlength=\"4\" value=\""
-                . $exendyear . "\">"
-                . ($err['exend'] ? "&nbsp;$error_sign" : '')
-                . ' <img align="absmiddle" src="' . Assets::image_path('popupcalendar.png')
-                . "\" onClick=\"window.open('" . URLHelper::getLink("termin_eingabe_dispatch.php?element_switch=55${atimetxt}")
-                . "', 'InsertDate', 'dependent=yes, width=210, height=210, left=500, top=150')\">";
+        $text_exend = "<input type=\"text\" id=\"exEndDate\" name=\"exEndDate\" size=\"10\" maxlength=\"10\" value=\"". $exEndDate ."\">"
+                ."<script>jQuery('#exEndDate').datepicker();</script>";
+                //." &nbsp; <input type=\"text\" name=\"exendday\" size=\"2\" maxlength=\"2\" value=\""
+                //. $exendday . "\">.&nbsp;\n"
+                //. "<input type=\"text\" name=\"exendmonth\" size=\"2\" maxlength=\"2\" value=\""
+                //. $exendmonth . "\">.&nbsp;\n"
+                //. "<input type=\"text\" name=\"exendyear\" size=\"4\" maxlength=\"4\" value=\""
+                //. $exendyear . "\">"
+                //. ($err['exend'] ? "&nbsp;$error_sign" : '')
+                //. ' <img align="absmiddle" src="' . Assets::image_path('popupcalendar.png')
+                //. "\" onClick=\"window.open('" . URLHelper::getLink("termin_eingabe_dispatch.php?element_switch=55${atimetxt}")
+                //. "', 'InsertDate', 'dependent=yes, width=210, height=210, left=500, top=150')\">";
         $params['content'] .= ">\n&nbsp;" . sprintf(_("Nur Termine vom:%sbis zum:%s"), $text_exstart, $text_exend);
         $params['button'] = Button::create(_('export'));
         $params['expmod'] = "exp";

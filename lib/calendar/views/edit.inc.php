@@ -87,23 +87,26 @@ if (!$set_recur_x) {
     echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n";
     echo "<tr>\n<td>";
     echo _("Beginn:") . " </td>\n<td> &nbsp;";
-    echo _("Tag");
-    echo " <input type=\"text\" name=\"start_day\" size=\"2\" maxlength=\"2\" value=\"";
-    echo ((strlen($start_day) < 2) ? '0' . $start_day : $start_day) . "\"$disabled>\n";
-    echo " . <input type=\"text\" name=\"start_month\" size=\"2\" maxlength=\"2\" value=\"";
-    echo ((strlen($start_month) < 2) ? '0' . $start_month : $start_month) . "\"\"$disabled>\n";
-    echo " . <input type=\"text\" name=\"start_year\" size=\"4\" maxlength=\"4\" ";
-    echo "value=\"$start_year\"$disabled>\n";
+    echo _("Tag ");
+    echo '<input type=text id="startDate" name="startDate" size="10" maxlength="10" value='. $start_day. '.' .$start_month. '.' .$start_year .'>';
+    //echo " <input type=\"text\" name=\"start_day\" size=\"2\" maxlength=\"2\" value=\"";
+    //echo ((strlen($start_day) < 2) ? '0' . $start_day : $start_day) . "\"$disabled>\n";
+    //echo " . <input type=\"text\" name=\"start_month\" size=\"2\" maxlength=\"2\" value=\"";
+    //echo ((strlen($start_month) < 2) ? '0' . $start_month : $start_month) . "\"\"$disabled>\n";
+    //echo " . <input type=\"text\" name=\"start_year\" size=\"4\" maxlength=\"4\" ";
+    //echo "value=\"$start_year\"$disabled>\n";
     $atimetxt = ($start_day && $start_month && $start_year) ?
             '&atime=' . mktime(12, 0, 0, $start_month, $start_day, $start_year) : '';
     echo "&nbsp;";
+    /*Change for Datepicker
     if (!(is_object($_calendar->event) && (($_calendar->event instanceof SeminarEvent) || !$_calendar->event->havePermission(Event::PERMISSION_WRITABLE)))) {
-        /*
+        
           if (!((isset($_calendar->event) && !($_calendar->event instanceof SeminarEvent))
           || !$_calendar->event->havePermission(Event::PERMISSION_WRITABLE))) {
-         */
+        
         echo Assets::img('popupcalendar.png', array('onClick' => "window.open('" . URLHelper::getLink("termin_eingabe_dispatch.php?element_switch=start{$atimetxt}&form_name=edit_event&element_depending=end") . "', 'InsertDate', 'dependent=yes, width=210, height=210, left=500, top=150')", 'style' => 'vertical-align:middle;'));
     }
+    */
     echo "&nbsp; &nbsp;";
     echo _("Uhrzeit");
     echo " <select name=\"start_h\" size=\"1\"$disabled>\n";
@@ -144,24 +147,28 @@ if (!$set_recur_x) {
     echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
     echo '<tr><td>';
     echo _("Ende:") . ' </td><td> &nbsp;';
-    echo _("Tag");
-    echo " <input type=\"text\" name=\"end_day\" size=\"2\" maxlength=\"2\" value=\"";
-    echo ((strlen($end_day) < 2) ? '0' . $end_day : $end_day) . "\"$disabled>\n";
-    echo " . <input type=\"text\" name=\"end_month\" size=\"2\" maxlength=\"2\" value=\"";
-    echo ((strlen($end_month) < 2) ? '0' . $end_month : $end_month) . "\"$disabled>\n";
-    echo " . <input type=\"text\" name=\"end_year\" size=\"4\" maxlength=\"4\" value=\"$end_year\"$disabled>\n";
+    echo _("Tag ");
+    //Change for Datepicker
+    echo '<input type=text id=endDate name=endDate size=10 maxlength=10 value='. $end_day.'.'.$end_month. '.'. $end_year .'>';
+    //echo " <input type=\"text\" name=\"end_day\" size=\"2\" maxlength=\"2\" value=\"";
+    //echo ((strlen($end_day) < 2) ? '0' . $end_day : $end_day) . "\"$disabled>\n";
+    //echo " . <input type=\"text\" name=\"end_month\" size=\"2\" maxlength=\"2\" value=\"";
+    //echo ((strlen($end_month) < 2) ? '0' . $end_month : $end_month) . "\"$disabled>\n";
+    //echo " . <input type=\"text\" name=\"end_year\" size=\"4\" maxlength=\"4\" value=\"$end_year\"$disabled>\n";
 
     $atimetxt = ($end_day && $end_month && $end_year) ?
             '&atime=' . mktime(12, 0, 0, $end_month, $end_day, $end_year) : '';
     echo '&nbsp;';
+    /*Change for Datepicker
     if (!(is_object($_calendar->event) && (($_calendar->event instanceof SeminarEvent) || !$_calendar->event->havePermission(Event::PERMISSION_WRITABLE)))) {
 
-        /*
+        
           if (!((isset($_calendar->event) && strtolower(get_class($_calendar->event)) == 'seminarevent')
           || !$_calendar->event->havePermission(Event::PERMISSION_WRITABLE))) {
-         */
+        
         echo Assets::img('popupcalendar.png', array('onClick' => "window.open('" . URLHelper::getLink("termin_eingabe_dispatch.php?element_switch=end{$atimetxt}&form_name=edit_event") . "', 'InsertDate', 'dependent=yes, width=210, height=210, left=500, top=150')", 'style' => 'vertical-align:middle;'));
     }
+    */
     echo "&nbsp; &nbsp;";
     echo _("Uhrzeit");
     echo " <select name=\"end_h\" size=\"1\"$disabled>\n";
@@ -853,3 +860,17 @@ print_infobox($info_box['all'], "infobox/dates.jpg");
 echo "</td></tr>\n";
 echo "</table></td></tr></table><br>\n";
 echo "</td></tr></table>\n";
+
+/*
+ * SCRRIPT for Datepicker
+ */
+?>
+<script>
+
+    jQuery("#startDate").datepicker();
+    jQuery("#endDate").datepicker();
+</script>
+<?
+/*
+ * SCRIPT for Datepicker ende
+ */

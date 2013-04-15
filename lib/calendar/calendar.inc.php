@@ -179,7 +179,7 @@ if ($cmd == '') {
 
 $_calendar->setUserSettings($calendar_user_control_data);
 
-$accepted_vars = array('start_m', 'start_h', 'start_day', 'start_month', 'start_year', 'end_m',
+$accepted_vars = array('startDate','endDate','start_m', 'start_h', 'start_day', 'start_month', 'start_year', 'end_m',
     'end_h', 'end_day', 'end_month', 'end_year', 'exp_day', 'exp_month',
     'exp_year', 'cat', 'priority', 'txt', 'content', 'loc', 'linterval_d',
     'linterval_w', 'type_d', 'type_m', 'linterval_m2', 'sinterval_m',

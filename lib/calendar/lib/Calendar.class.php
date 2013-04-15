@@ -464,17 +464,26 @@ class Calendar
 
         return (isset($this->user_settings[$index]) ? $this->user_settings[$index] : $this->getDefaultUserSettings($index));
     }
-
+    
+    function explodeDate($dateFromPicker){
+        $foo = explode('.', $dateFromPicker);
+        $date['day']=$foo[0];
+        $date['month']=$foo[1];
+        $date['year']=$foo[2];
+        return $date;
+    }
     function setEventProperties(&$calendar_form_data, $mod)
     {
-
+        
+        $startDate=$this->explodeDate($calendar_form_data['startDate']);
+        $endDate=$this->explodeDate($calendar_form_data['endDate']);
         if ($calendar_form_data['wholeday']) {
-            $this->event->properties['DTSTART'] = mktime(0, 0, 0, $calendar_form_data['start_month'], $calendar_form_data['start_day'], $calendar_form_data['start_year']);
-            $this->event->properties['DTEND'] = mktime(23, 59, 59, $calendar_form_data['end_month'], $calendar_form_data['end_day'], $calendar_form_data['end_year']);
+            $this->event->properties['DTSTART'] = mktime(0, 0, 0, $startDate['month'], $startDate['day'], $startDate['year']);
+            $this->event->properties['DTEND'] = mktime(23, 59, 59,  $endDate['month'], $endDate['day'], $endDate['year']);
             $this->event->setDayEvent();
         } else {
-            $this->event->properties['DTSTART'] = mktime($calendar_form_data['start_h'], $calendar_form_data['start_m'], 0, $calendar_form_data['start_month'], $calendar_form_data['start_day'], $calendar_form_data['start_year']);
-            $this->event->properties['DTEND'] = mktime($calendar_form_data['end_h'], $calendar_form_data['end_m'], 0, $calendar_form_data['end_month'], $calendar_form_data['end_day'], $calendar_form_data['end_year']);
+            $this->event->properties['DTSTART'] = mktime($calendar_form_data['start_h'], $calendar_form_data['start_m'], 0,  $startDate['month'], $startDate['day'], $startDate['year']);
+            $this->event->properties['DTEND'] = mktime($calendar_form_data['end_h'], $calendar_form_data['end_m'], 0,  $endDate['month'], $endDate['day'], $endDate['year']);
         }
         $this->event->properties['SUMMARY'] = decodeHTML($calendar_form_data['txt']);
         $this->event->properties['CATEGORIES'] = decodeHTML($calendar_form_data['cat_text']);
@@ -679,7 +688,14 @@ class Calendar
 
     function checkFormData(&$calendar_form_data)
     {
-
+        $foo = explode('.',$calendar_form_data['startDate']);
+        $calendar_form_data['start_day'] = $foo[0];
+        $calendar_form_data['start_month'] = $foo[1];
+        $calendar_form_data['start_year'] = $foo[2];
+        $fooBar = explode('.',$calendar_form_data['endDate']);
+        $calendar_form_data['end_day'] = $fooBar[0];
+        $calendar_form_data['end_month'] = $fooBar[1];
+        $calendar_form_data['end_year'] = $fooBar[2];  
         $err = array();
         if (!check_date($calendar_form_data['start_month'], $calendar_form_data['start_day'], $calendar_form_data['start_year']))
             $err['start_time'] = true;

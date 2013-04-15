@@ -119,7 +119,7 @@ class ShowSchedules {
             <tr>
                 <td class="<? echo $cssSw->getClass() ?>" width="4%" rowspan="2">&nbsp;
                 </td>
-                <td class="<? echo $cssSw->getClass() ?>" width="30%" rowspan="2"><font size=-1>
+                <td class="<? echo $cssSw->getClass() ?>" width="30%" rowspan="2" valign="middle"><font size=-1>
                     <font size=-1>Beginn:
                     <input type="text" name="schedule_begin_day" size=2 maxlength=2 value="<? if (!$start_time) echo date("d",time()); else echo date("d",$start_time); ?>">.
                     <input type="text" name="schedule_begin_month" size=2 maxlength=2 value="<? if (!$start_time) echo date("m",time()); else echo date("m",$start_time); ?>">.

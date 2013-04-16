@@ -315,19 +315,9 @@ class Course_StudygroupController extends AuthenticatedController {
                     if ($active_plugins[$module_name]) {
                         // activate modules
                         $mods->setBit($bitmask, $mods->registered_modules[$key]["id"]);
-                        if (!$orig_modules[$key]) {
-                            $methodActivate = "module".ucfirst($key)."Activate";
-                            if (method_exists($admin_mods, $methodActivate)) {
-                                $admin_mods->$methodActivate($sem->id);
-                            }
-                        }
-                    }
-
-                    if ($available_modules[$key] && $enable) {
-                        $mods->setBit($bitmask, $mods->registered_modules[$key]["id"]);
-                        $methodActivate = "module".$key."Activate";
-                        if (method_exists($mods, $methodActivate)) {
-                            $mods->$methodActivate($sem->id);
+                        $methodActivate = "module".ucfirst($key)."Activate";
+                        if (method_exists($admin_mods, $methodActivate)) {
+                            $admin_mods->$methodActivate($sem->id);
                         }
                     }
                 }

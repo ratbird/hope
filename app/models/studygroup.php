@@ -82,7 +82,7 @@ class StudygroupModel
      */
     function getInstitutes()
     {
-        $institues = array();
+        $institutes = array();
 
         // Prepare institutes statement
         $query = "SELECT Institut_id, Name

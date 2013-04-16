@@ -11,11 +11,29 @@ class Step00247ForumDataMigration extends Migration
 
     function up()
     {
+        // check px_topics-consistency
+        $problems = DBManager::get()->query("SELECT * FROM px_topics WHERE topic_id = parent_id")->fetchAll();
+        if (sizeof($problems) > 0) {
+            echo _('Sie haben fehlerhafte Einträge in ihrer px_topics-Tabelle. Folgende Einträge zeigen auf sich selbst (parent_id = topic_id)');
+            echo "\n";
+            foreach ($problems as $prob) {
+                echo implode(', ', $prob) ."\n";
+            }
+
+            echo "\n";
+            echo _('Beheben Sie zuerst die fehlerhaften Einträge und führen Sie danach diese Migration erneut aus!');
+            echo "\n\n";
+            die;
+        }
+
         // get all seminars that need to be migrated
         $stmt = DBManager::get()->prepare("SELECT DISTINCT Seminar_id FROM px_topics
             WHERE topic_id = root_id
             ORDER BY mkdate ASC");
         $stmt->execute(); 
+
+        // get plugin-id
+        $plugin_id = DBManager::get()->query("SELECT pluginid FROM plugins WHERE pluginclassname = 'CoreForum'")->fetchColumn();
 
         // first, fetch all seminar_ids (When used inline at foreach, this does not work, must be a strange php-bug)
         $seminar_ids = $stmt->fetchAll(PDO::FETCH_COLUMN);
@@ -33,7 +51,15 @@ class Step00247ForumDataMigration extends Migration
 
             // migrate the connections with issues
             self::migrateIssues($seminar_id);
+
+            self::activatePlugin($seminar_id, $plugin_id);
         }
+    }
+
+    static function activatePlugin($seminar_id, $plugin_id) {
+        $stmt = DBManager::get()->prepare("INSERT IGNORE INTO plugins_activated
+            (`pluginid`, `poiid`, `state`) VALUES (?, ?, 'on')");
+        $stmt->execute(array($plugin_id, 'sem' . $seminar_id));
     }
 
     static function migrateIssues($seminar_id)

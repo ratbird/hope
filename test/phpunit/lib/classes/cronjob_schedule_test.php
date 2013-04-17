@@ -254,4 +254,22 @@ class ScheduleTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($then, $schedule->next_execution);
     }
+    
+    /**
+     * @depends testPeriodicSchedule
+     */
+    function testBuggyConditions($schedule)
+    {
+        $now  = strtotime('16.04.2013 01:10:00');
+        $then = strtotime('17.04.2013 01:07:00');
+
+        $schedule->minute      = 7;
+        $schedule->hour        = 1;
+        $schedule->day         = null;
+        $schedule->month       = null;
+        $schedule->day_of_week = null;
+        $schedule->calculateNextExecution($now);
+
+        $this->assertEquals($then, $schedule->next_execution);
+    }
 }

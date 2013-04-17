@@ -2581,6 +2581,11 @@ span.wikitoc_editlink {
 span.wikitoc_toggler {
   font-size: 0.8em;
 }
+textarea.wiki-editor {
+  display: block;
+  height: 250px;
+  width: 98%;
+}
 #raumzeit ul.teachers {
   padding: 0;
   margin: 5px 0 10px 0;

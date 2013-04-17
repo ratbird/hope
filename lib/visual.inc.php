@@ -245,8 +245,9 @@ function jsReady ($what, $target) {
     case "inline-double" :
         return htmlReady(addcslashes($what, "\\\"\n\r"), false, false, true);
     break;
-
+        
     }
+    return addslashes($what);
 }
 
 /**

@@ -205,7 +205,7 @@ function printTitleField ( $title = "" ) {
 
     $html = "<font size=-1><b>" . _("Titel:")   . "</b></font><br>"
     . "<input type=text size=50 maxlength=100 name=\"title\" value=\"".htmlReady($title)."\" ".$js." tabindex=1>";
-    $html .= Assets::img('icons/16/grey/info-circle.png', tooltip(_("Wenn Sie keinen Titel angeben, wird dieser automatisch aus der Fragestellung übernommen."), FALSE, TRUE));
+    $html .= tooltipIcon(_('Wenn Sie keinen Titel angeben, wird dieser automatisch aus der Fragestellung übernommen.'));
     $html .= "<br><br>\n";
 
     echo $html;
@@ -551,12 +551,9 @@ function printRuntimeSettings ( $startMode = "manual",
 
     $html .= "<tr><td colspan=2 style=\"padding-bottom:0;\">\n";
     $html .= "<font size=-1><b>" . _("Einstellungen zur Laufzeit:") . "</b></font>";
-    $html .= "<img class=\"text-top\" src=\"".Assets::image_path('icons/16/grey/info-circle.png')."\" "
-    . tooltip( ($type=="test"
-            ? _("Legen Sie hier fest, von wann bis wann der Test in Stud.IP öffentlich sichtbar sein soll.")
-            : _("Legen Sie hier fest, von wann bis wann die Umfrage in Stud.IP öffentlich sichtbar sein soll.")),
-           FALSE, TRUE )
-    . ">";
+    $html .= tooltipIcon($type == 'test'
+                         ? _('Legen Sie hier fest, von wann bis wann der Test in Stud.IP öffentlich sichtbar sein soll.')
+                         : _("Legen Sie hier fest, von wann bis wann die Umfrage in Stud.IP öffentlich sichtbar sein soll."));
     $html .= "</td></tr>";
 
     $html .= "<tr><td class=table_row_even width=\"50%\" valign=top>"
@@ -711,10 +708,9 @@ function printProperties ( $multipleChoice,
     // result visibility
     $html .= "<tr><td align=right class=blank style=\"border-bottom:1px dotted black;\">";
     if( $type == "test" ) {
-    $html .= "<img class=\"text-top\" src=\"".Assets::image_path('icons/16/grey/info-circle.png')."\" "
-        . tooltip(_("Bedenken Sie, dass die Einstellung 'immer', also eine Voransicht des Zwischenstands, bei einem Test nicht unbedingt sinnvoll ist."),
-              FALSE, TRUE)
-        . "> ";
+        $html .= tooltipIcon(_("Bedenken Sie, dass die Einstellung 'immer', "
+                              ."also eine Voransicht des Zwischenstands, bei "
+                              ."einem Test nicht unbedingt sinnvoll ist."));
     }
 
     $html .= "<font size=-1>";
@@ -776,9 +772,11 @@ function printProperties ( $multipleChoice,
     // -------------------------------------------
     // anonymity
     $html .= "<tr><td align=right class=blank style=\"border-bottom:1px dotted black;\">";
-    $html .= "<img class=\"text-top\" src=\"".Assets::image_path('icons/16/grey/info-circle.png')."\" "
-    . tooltip(_("'Anonym' bedeutet, dass niemandem angezeigt und nirgends gespeichert wird, welche Antwort ein Teilnehmer wählt. \n\n'Personalisiert' bedeutet, dass Sie sehen können, wer wofür stimmt."), FALSE, TRUE)
-    . "> ";
+    $html .= tooltipIcon(_("'Anonym' bedeutet, dass niemandem angezeigt und "
+                          ."nirgends gespeichert wird, welche Antwort ein "
+                          ."Teilnehmer wählt. \n\n"
+                          ."'Personalisiert' bedeutet, dass Sie sehen können, "
+                          ."wer wofür stimmt."));
 
     $html .= "<font size=-1>";
     $html .= ($type=="test")
@@ -803,10 +801,9 @@ function printProperties ( $multipleChoice,
     // -------------------------------------------
     // names visibility
     $html .= "<tr><td align=right class=blank style=\"border-bottom:1px dotted black;\">";
-    $html .= "<img class=\"text-top\" src=\"".Assets::image_path('icons/16/grey/info-circle.png')."\" "
-    . tooltip(_("Diese Option ist nur möglich, wenn Sie die Auswertung auf 'personalisiert' schalten, und wenn die Ergebnissichtbarkeit nicht auf 'nie' steht. "),
-          FALSE, TRUE)
-    . "> ";
+    $html .= tooltipIcon(_("Diese Option ist nur möglich, wenn Sie die "
+                          ."Auswertung auf 'personalisiert' schalten, und "
+                          ."wenn die Ergebnissichtbarkeit nicht auf 'nie' steht."));
 
     $html .= "<font size=-1>";
     $html .= _("Die Namen der Teilnehmer werden &ouml;ffentlich sichtbar gemacht:") . "</font>&nbsp;&nbsp;";
@@ -826,13 +823,13 @@ function printProperties ( $multipleChoice,
     // changeable?
     if( ! ($anonymous && $pageMode == MODE_RESTRICTED ) ) {
     $html .= "<tr><td align=right class=blank>";
-    $html .= "<img class=\"text-top\" src=\"".Assets::image_path('icons/16/grey/info-circle.png')."\" "
-        . tooltip(_("Diese Option ist nur möglich, wenn Sie die Auswertung auf 'personalisiert' schalten. ").
-              ( ($type=="test")
-            ? _("\n\nBeachten Sie außerdem, dass das Einschalten dieser Option in Kombination mit 'Richtigkeits-Anzeige: sofort' keinen Sinn macht.")
-            : "" ),
-              FALSE, TRUE)
-        . "> ";
+    $html .= tooltipIcon(_("Diese Option ist nur möglich, wenn Sie die "
+                          ."Auswertung auf 'personalisiert' schalten.")
+                          .(($type == 'test')
+                             ? _("\n\nBeachten Sie außerdem, dass das "
+                                ."Einschalten dieser Option in Kombination "
+                                ."mit 'Richtigkeits-Anzeige: sofort' keinen Sinn macht.")
+                             : '' ));
 
     $html .= "<font size=-1>";
     $html .= _("Der Teilnehmer darf seine gegebene(n) Antwort(en) beliebig oft revidieren:");

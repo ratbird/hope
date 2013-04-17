@@ -121,12 +121,13 @@ jQuery(function () {
 
     jQuery('.add_toolbar').addToolbar();
 
-    jQuery('textarea.resizable').resizable({
-        handles: 's',
-        minHeight: 50,
-        zIndex: 1
-    });
-
+    if (document.createElement('textarea').style.resize === undefined) {
+        jQuery('textarea.resizable').resizable({
+            handles: 's',
+            minHeight: 50,
+            zIndex: 1
+        });
+    }
 });
 
 

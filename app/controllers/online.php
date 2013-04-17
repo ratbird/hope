@@ -166,7 +166,7 @@ class OnlineController extends AuthenticatedController
 
         if ($show_buddy_groups) {
             // Add groups to buddies
-            $buddy_ids = array_map(function ($user) { return $user['userid']; }, $buddies);
+            $buddy_ids = array_map(function ($user) { return $user['user_id']; }, $buddies);
 
             $name_format = $GLOBALS['user']->cfg->ONLINE_NAME_FORMAT;
             if (!isset($GLOBALS['_fullname_sql'][$name_format])) {
@@ -186,8 +186,8 @@ class OnlineController extends AuthenticatedController
             $grouped = $statement->fetchGrouped();
 
             foreach ($buddies as $username => $buddy) {
-                if (isset($grouped[$buddy['userid']])) {
-                    $group = $grouped[$buddy['userid']];
+                if (isset($grouped[$buddy['user_id']])) {
+                    $group = $grouped[$buddy['user_id']];
                     $buddies[$username]['group']          = $group['name'];
                     $buddies[$username]['group_id']       = $group['statusgruppe_id'];
                     $buddies[$username]['group_position'] = $group['position'];

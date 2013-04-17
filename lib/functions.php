@@ -1237,28 +1237,25 @@ function archiv_check_perm($seminar_id)
  */
 function get_users_online($active_time = 5, $name_format = 'full_rev')
 {
-    global $user, $_fullname_sql;
-
-    if (!isset($_fullname_sql[$name_format])) {
-        reset($_fullname_sql);
-        $name_format = key($_fullname_sql);
+    if (!isset($GLOBALS['_fullname_sql'][$name_format])) {
+        $name_format = reset(array_keys($GLOBALS['_fullname_sql']));
     }
 
-    $query = "SELECT a.username, {$_fullname_sql[$name_format]} AS name,
+    $query = "SELECT a.username AS temp, a.username, {$GLOBALS['_fullname_sql'][$name_format]} AS name,
                      UNIX_TIMESTAMP() - last_lifesign AS last_action,
                      a.user_id, contact_id AS is_buddy, " . get_vis_query('a', 'online') . " AS is_visible
               FROM user_online uo
-              LEFT JOIN auth_user_md5 a ON (a.user_id = uo.user_id)
+              JOIN auth_user_md5 a ON (a.user_id = uo.user_id)
               LEFT JOIN user_info ON (user_info.user_id = uo.user_id)
               LEFT JOIN user_visibility ON (user_visibility.user_id = uo.user_id)
               LEFT JOIN contact ON (owner_id = ? AND contact.user_id = a.user_id AND buddy = 1)
               WHERE last_lifesign > ? AND uo.user_id <> ?
-              ORDER BY a.Nachname ASC, a.Vorname ASC";
+              ORDER BY last_action ASC, {$GLOBALS['_fullname_sql'][$name_format]} ASC";
     $statement = DBManager::get()->prepare($query);
     $statement->execute(array(
-        $user->id,
+        $GLOBALS['user']->id,
         time() - $active_time * 60,
-        $user->id,
+        $GLOBALS['user']->id,
     ));
     $online = $statement->fetchGrouped();
 
@@ -1945,4 +1942,63 @@ function array_flatten($ary)
         }
     }
     return $ary;
+}
+
+/**
+ * Displays "relative time" - a textual representation between now and a
+ * certain timestamp, e.g. "3 hours ago".
+ *
+ * @param int  $timestamp        Timestamp to relate to.
+ * @param bool $verbose          Display long or short texts (optional)
+ * @param int  $displayed_levels How many levels shall be displayed
+ * @param int  $tolerance        Defines a tolerance area of seconds around
+ *                               now (How many seconds must have passed until
+ *                               the function won't return "now")
+ * @return String Textual representation of the difference between the passed
+ *                timestamp and now
+ */
+function reltime($timestamp, $verbose = true, $displayed_levels = 1, $tolerance = 5)
+{
+    if ($verbose) {
+        $glue = ', ';
+        $levels = array(
+            array(60, array(_('vor %u Sekunde'), _('vor %u Sekunden')), array(_('in %u Sekunde'), _('in %u Sekunden'))),
+            array(60, array(_('vor %u Minute'),  _('vor %u Minuten')),  array(_('in %u Minute'),  _('in %u Minuten'))),
+            array(24, array(_('vor %u Stunde'),  _('vor %u Stunden')),  array(_('in %u Stunde'),  _('in %u Stunden'))),
+            array(30, array(_('vor %u Tag'),     _('vor %u Tagen')),    array(_('in %u Tag'),     _('in %u Tagen'))),
+            array(12, array(_('vor %u Monat'),   _('vor %u Monaten')),  array(_('in %u Monat'),   _('in %u Monaten'))),
+            array(99, array(_('vor %u Jahr'),    _('vor %u Jahren')),   array(_('in %u Jahr'),    _('in %u Jahren'))),
+        );
+    } else {
+        $glue = '';
+        $levels = array(
+            array(60, array(_('%us'),   _('%us')),   array(_('%us'),   _('%us'))),
+            array(60, array(_('%umin'), _('%umin')), array(_('%umin'), _('%umin'))),
+            array(24, array(_('%uh'),   _('%uh')),   array(_('%uh'),   _('%uh'))),
+            array(30, array(_('%ud'),   _('%ud')),   array(_('%ud'),   _('%ud'))),
+            array(12, array(_('%uM'),   _('%uM')),   array(_('%uM'),   _('%uM'))),
+            array(99, array(_('%uy'),   _('%uy')),   array(_('%uy'),   _('%uy'))),
+        );
+    }
+
+    $now   = time();
+    $diff  = abs($timestamp - $now);
+    $index = $timestamp < $now ? 1 : 2;
+
+    if ($diff < $tolerance) {
+        return _('jetzt');
+    }
+
+    $result = array();
+    for ($i = 0; $i < count($levels) && $diff > 0; $i++) {
+        $remainder = $diff % $levels[$i][0];
+        if ($remainder > 0) {
+            $result[] = sprintf(ngettext($levels[$i][$index][0], $levels[$i][$index][1], $remainder), $remainder);
+        }
+        $diff = floor($diff / $levels[$i][0]);
+        if ($diff === 0) {
+            break;
+        }
+    }
+    return implode($glue, array_reverse(array_slice($result, -$displayed_levels)));
 }

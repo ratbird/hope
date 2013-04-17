@@ -3095,3 +3095,29 @@ div.info {
 .printhead .rating img {
   padding: 0;
 }
+/* --- online list --- */
+.online-list img {
+  vertical-align: text-top;
+}
+.online-list td[colspan="4"] {
+  text-align: center;
+}
+.online-list-double {
+  *zoom: 1;
+}
+.online-list-double:before,
+.online-list-double:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+.online-list-double:after {
+  clear: both;
+}
+.online-list-double table {
+  float: right;
+  width: 49.5%;
+}
+.online-list-double table:first-child {
+  float: left;
+}

@@ -49,7 +49,7 @@ class CommunityNavigation extends Navigation
         parent::initSubNavigation();
 
         // online list
-        $navigation = new Navigation(_('Wer ist online?'), 'online.php');
+        $navigation = new Navigation(_('Wer ist online?'), 'dispatch.php/online');
         $this->addSubNavigation('online', $navigation);
 
         // contacts

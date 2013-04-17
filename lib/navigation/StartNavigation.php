@@ -143,7 +143,7 @@ class StartNavigation extends Navigation
         }
         // administration of ressources
         if ($perm->have_perm('admin')) {
-            
+
             if (get_config('RESOURCES_ENABLE')) {
                 $navigation = new Navigation(_('Verwaltung von Ressourcen'));
                 $navigation->addSubNavigation('hierarchy', new Navigation(_('Struktur'), 'resources.php#a', array('view' => 'resources')));
@@ -152,28 +152,16 @@ class StartNavigation extends Navigation
                     $navigation->addSubNavigation('edit_types', new Navigation(_('Anpassen'), 'resources.php', array('view' => 'edit_types')));
                 }
                 $this->addSubNavigation('ressources', $navigation);
-                
+
             }
         }
-        
+
         // messaging
         $navigation = new Navigation(_('Nachrichten'));
         $navigation->addSubNavigation('in', new Navigation(_('Posteingang'), 'sms_box.php', array('sms_inout' => 'in')));
         $navigation->addSubNavigation('out', new Navigation(_('Gesendet'), 'sms_box.php', array('sms_inout' => 'out')));
         $navigation->addSubNavigation('write', new Navigation(_('Neue Nachricht schreiben'), 'sms_send.php?cmd=new'));
         $this->addSubNavigation('messaging', $navigation);
-        
-        // community
-        $navigation = new Navigation(_('Community'));
-        $navigation->addSubNavigation('online', new Navigation(_('Wer ist online?'), 'online.php'));
-        $navigation->addSubNavigation('contacts', new Navigation(_('Meine Kontakte'), 'contact.php', array('view' => 'alpha')));
-        // study groups
-        if (get_config('STUDYGROUPS_ENABLE')) {
-            $navigation->addSubNavigation('browse',new Navigation(_('Studiengruppen'), 'dispatch.php/studygroup/browse'));
-        }
-        // ranking
-        $navigation->addSubNavigation('score', new Navigation(_('Rangliste'), 'dispatch.php/score'));
-        $this->addSubNavigation('community', $navigation);
 
         // calendar / home page
         if (!$perm->have_perm('admin')) {
@@ -209,16 +197,16 @@ class StartNavigation extends Navigation
         $navigation->addSubNavigation('user', new Navigation(_('Personensuche'), 'browse.php'));
         $navigation->addSubNavigation('course', new Navigation(_('Veranstaltungssuche'), 'sem_portal.php'));
         $this->addSubNavigation('search', $navigation);
-        
+
         // tools
         $navigation = new Navigation(_('Tools'));
         $navigation->addSubNavigation('news', new Navigation(_('Ankündigungen'), 'admin_news.php?range_id=self'));
-        
+
         if (get_config('VOTE_ENABLE')) {
             $navigation->addSubNavigation('vote', new Navigation(_('Umfragen und Tests'), 'admin_vote.php', array('page' => 'overview', 'showrangeID' => $username)));
             $navigation->addSubNavigation('evaluation',new Navigation(_('Evaluationen'), 'admin_evaluation.php', array('rangeID' => $username)));
         }
-        
+
         // literature
         if (get_config('LITERATURE_ENABLE')) {
             $navigation->addSubNavigation('literature', new Navigation(_('Literatur'), 'admin_lit_list.php', array('_range_id' => 'self')));
@@ -233,10 +221,10 @@ class StartNavigation extends Navigation
         if (get_config('EXPORT_ENABLE') && $perm->have_perm('tutor')) {
             $navigation->addSubNavigation('export', new Navigation(_('Export'), 'export.php'));
         }
-        
+
         $this->addSubNavigation('tools', $navigation);
-            
-   
+
+
         // external help
         $navigation = new Navigation(_('Hilfe'), format_help_url('Basis.Allgemeines'));
         $navigation->addSubNavigation('intro', new Navigation(_('Schnelleinstieg'), format_help_url('Basis.SchnellEinstiegKomplett')));

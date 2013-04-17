@@ -239,7 +239,7 @@ class ExternModuleTemplateDownload extends ExternModule {
                     case 'jpeg' :
                     case 'tif' :
                         if (!$content['FILES']['FILE'][$i]['FILE_ICON-HREF'] = $this->config->getValue('Main', 'iconpic'))
-                            $content['FILES']['FILE'][$i]['FILE_ICON-HREF'] = $GLOBALS['ASSETS_URL'].'images/icons/16/blue/file-image.png';
+                            $content['FILES']['FILE'][$i]['FILE_ICON-HREF'] = $GLOBALS['ASSETS_URL'].'images/icons/16/blue/file-pic.png';
                         break;
                     case 'pdf' :
                         if (!$content['FILES']['FILE'][$i]['FILE_ICON-HREF'] = $this->config->getValue('Main', 'iconpdf'))

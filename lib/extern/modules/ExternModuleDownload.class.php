@@ -205,7 +205,7 @@ class ExternModuleDownload extends ExternModule {
                     case "jpeg" :
                     case "tif" :
                         if (!$picture_file = $this->config->getValue("Main", "iconpic"))
-                            $icon = "icons/16/blue/file-image.png";
+                            $icon = "icons/16/blue/file-pic.png";
                         break;
                     case "pdf" :
                         if (!$picture_file = $this->config->getValue("Main", "iconpdf"))

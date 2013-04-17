@@ -86,8 +86,8 @@ foreach ($modules->registered_modules as $key => $val) {
 }
 
 foreach ($available_plugins as $plugin) {
-    if (!$sem_class || 
-            (!$sem_class->isModuleMandatory($plugin->getPluginname()) 
+    if ((!$sem_class && !$plugin->isCorePlugin()) || 
+            ($sem_class && !$sem_class->isModuleMandatory($plugin->getPluginname()) 
                 && $sem_class->isModuleAllowed($plugin->getPluginname())
                 && !$sem_class->isSlotModule(get_class($plugin))
             )) :

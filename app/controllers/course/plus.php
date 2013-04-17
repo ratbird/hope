@@ -63,12 +63,6 @@ class Course_PlusController extends AuthenticatedController
         $this->modules           = new AdminModules();
         $this->save_url          = "?";
         
-        // for institutes we do not have any seminar-classes. We have to remove
-        // the default-module 'forum' and let the (core-)plugins handle it
-        if ($object_type != 'sem') {
-            unset($this->modules->registered_modules['forum']);
-        }
-
         if (!Request::submitted('uebernehmen')) {
             $_SESSION['admin_modules_data']["modules_list"] = $this->modules->getLocalModules($id);
             $_SESSION['admin_modules_data']["orig_bin"] = $this->modules->getBin($id);
@@ -111,6 +105,7 @@ class Course_PlusController extends AuthenticatedController
                 $resolve_conflicts = TRUE;
             }
         }
+
         //consistency: cancel kill objects
         foreach ($modules->registered_modules as $key => $val) {
             if (Request::option('cancel_'.$key)=='TRUE') {
@@ -119,6 +114,7 @@ class Course_PlusController extends AuthenticatedController
                 $resolve_conflicts = TRUE;
             }
         }
+
         if (Request::submitted('uebernehmen') || Request::get('retry')) {
             $msg='';
             if (Request::submitted('uebernehmen')) {
@@ -131,6 +127,7 @@ class Course_PlusController extends AuthenticatedController
                     } else {
                         $modules->clearBit($_SESSION['admin_modules_data']["changed_bin"], $modules->registered_modules[$key]["id"]);
                     }
+
                     if ($this->sem_class) {
                         $studip_module = $this->sem_class->getModule($key);
                         if (is_a($studip_module, "StandardPlugin")) {
@@ -140,11 +137,22 @@ class Course_PlusController extends AuthenticatedController
                                 Request::option($key.'_value') == "TRUE"
                             );
                         }
+                    } else {
+                        // check, if the passed module is represented by a core-plugin
+                        if (strtolower(get_parent_class('core' . $key)) == 'studipplugin') {
+                            $plugin = PluginEngine::getPlugin('core'. $key);
+                            #var_dump($plugin->getPluginId(), $seminar_id, Request::option($key . '_value') == "TRUE");die;
+                            PluginManager::getInstance()->setPluginActivated(
+                                $plugin->getPluginId(),
+                                $seminar_id,
+                                Request::option($key . '_value') == "TRUE"
+                            );
+                        }                        
                     }
                 }
                 // Setzen der Plugins
                 foreach ($plugins as $plugin) {
-                    if (!$this->sem_class || !$this->sem_class->isSlotModule(get_class($plugin))) {
+                    if ((!$this->sem_class && !$plugin->isCorePlugin())|| ($this->sem_class && !$this->sem_class->isSlotModule(get_class($plugin)))) {
                         $check = ( $_POST[ "plugin_" . $plugin->getPluginId() ] == "TRUE" );
                         $setting = $plugin->isActivated($seminar_id);
                         if( $check != $setting ){

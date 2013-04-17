@@ -72,9 +72,16 @@ class ShowGroupSchedulesDaily extends ShowSemSchedules {
                 <td class="<? echo $cssSw->getClass() ?>" width="4%" rowspan="2">&nbsp;
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="40%" valign="middle">
+                    <!--CHANGE for Datepicker-->
+                    <input type="text" id="schedule_begin_date" name="schedule_begin_date" size="10" value="<?echo date("d",$start_time).'.'.date("m",$start_time).'.'.date("Y",$start_time);; ?>">
+                    <script>
+                        jQuery('#schedule_begin_date').datepicker();
+                    </script>                    
+                    <!--
                     <input type="text" name="schedule_begin_day" size=2 maxlength=2 value="<?echo date("d",$start_time); ?>">.
                     <input type="text" name="schedule_begin_month" size=2 maxlength=2 value="<?echo date("m",$start_time); ?>">.
                     <input type="text" name="schedule_begin_year" size=4 maxlength=4 value="<?echo date("Y",$start_time); ?>">
+                    -->
                     <?= Button::create(_('Auswählen'), 'jump') ?><br>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="60%" valign="bottom">

@@ -2544,9 +2544,9 @@ elseif ((!$level) || ($level == 1))
                                         if (($_SESSION['sem_create_data']["sem_start_time"] + $_SESSION['sem_create_data']["sem_duration_time"]) == $all_semester[$i]["beginn"])
                                             {
                                             if (!$_SESSION['sem_create_data']["sem_duration_time"] == 0)
-                                                echo "<option value=",$all_semester[$i]["beginn"], " selected>"._("bis")." ", $all_semester[$i]["name"], "</option>";
+                                                echo "<option value=",$all_semester[$i]["beginn"], " selected>"._("bis")." ", htmlReady($all_semester[$i]["name"]), "</option>";
                                             else
-                                                echo "<option value=",$all_semester[$i]["beginn"], ">"._("bis")." ", $all_semester[$i]["name"], "</option>";
+                                                echo "<option value=",$all_semester[$i]["beginn"], ">"._("bis")." ", htmlReady($all_semester[$i]["name"]), "</option>";
                                             }
                                         else
                                             echo "<option value=",$all_semester[$i]["beginn"], ">"._("bis")." ", htmlReady($all_semester[$i]["name"]), "</option>";

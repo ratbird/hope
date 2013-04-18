@@ -4,7 +4,7 @@
 <? if ($total > $max_per_page) : ?>
     <? if ($page != 0) : ?>
         <?= Assets::img('icons/16/blue/arr_2right.png') ?>
-        <a title="<?= sprintf(_('Lassen Sie sich alle %s anzeigen'), htmlReady($status_groups['autor'])) ?>" 
+        <a title="<?= sprintf(_('Lassen Sie sich alle %s anzeigen'), htmlReady($status_groups['autor'])) ?>"
            href="<?= $controller->url_for('course/members/index/0') ?>#autoren">
             <?= sprintf(_('Alle %s anzeigen'), htmlReady($status_groups['autor'])) ?>
         </a>
@@ -20,15 +20,15 @@
 <? if ($rechte) : ?>
 <div style="float: right; padding: 10px 0px 0px 28px; width: 60%; text-align: right">
     <? if (!empty($autoren)) : ?>
-        <?=Course_MembersController::getEmailLinkByStatus($course_id, 'autor')?>
-        <a href="<?= URLHelper::getLink('sms_send.php', 
-            array('filter' => 'send_sms_to_all', 
-                'who' => 'autor', 
-                'sms_source_page' => sprintf('dispatch.php/course/members?cid=%s',$course_id), 
-                'course_id' => $course_id, 
-                'subject' => $subject)) 
+        <?=$controller->getEmailLinkByStatus('autor')?>
+        <a href="<?= URLHelper::getLink('sms_send.php',
+            array('filter' => 'send_sms_to_all',
+                'who' => 'autor',
+                'sms_source_page' => sprintf('dispatch.php/course/members?cid=%s',$course_id),
+                'course_id' => $course_id,
+                'subject' => $subject))
         ?>">
-            <?= Assets::img('icons/16/blue/inbox.png', 
+            <?= Assets::img('icons/16/blue/inbox.png',
                     tooltip2(sprintf(_('Nachricht an alle %s verschicken'), htmlReady($status_groups['autor'])))) ?>
         </a>
     <? endif ?>
@@ -41,7 +41,7 @@
 
     <? if ($is_dozent) : ?>
         <a href="<?= $controller->url_for('course/members/add_member')?>">
-            <?= Assets::img('icons/16/blue/add/community.png', 
+            <?= Assets::img('icons/16/blue/add/community.png',
                     tooltip2(sprintf(_('Neuen %s zur Veranstaltung hinzufügen'),htmlReady($status_groups['autor'])))) ?>
         </a>
     <? endif ?>
@@ -53,12 +53,12 @@
 
 <form action="<?= $controller->url_for(sprintf('course/members/edit_autor/%s',$page)) ?>"
           method="post" onsubmit="if ($('#action_autor').val() == 'remove')
-              return confirm('<?= sprintf(_('Wollen Sie die markierten %s wirklich austragen?'), 
+              return confirm('<?= sprintf(_('Wollen Sie die markierten %s wirklich austragen?'),
                       htmlReady($status_groups['autor'])) ?>');">
-     
+
     <table id="autor" class="default collapsable zebra-hover tablesorter">
         <colgroup>
-            <col width="3%"> 
+            <col width="3%">
             <? if($rechte) : ?>
                 <col width="3%">
                 <col width="25%">
@@ -90,20 +90,20 @@
                 </th>
             </tr>
             <tr class="sortable">
-                <th colspan="<?=$cols_head?>" <?= ($sort_by == 'nachname' && $sort_status == 'autor') ? 
+                <th colspan="<?=$cols_head?>" <?= ($sort_by == 'nachname' && $sort_status == 'autor') ?
                     sprintf('class="sort%s"', $order) : '' ?>>
                     <? if ($rechte) : ?>
-                        <input aria-label="<?= _('NutzerInnen auswählen') ?>" 
+                        <input aria-label="<?= _('NutzerInnen auswählen') ?>"
                                type="checkbox" name="all" value="1" data-proxyfor=":checkbox[name^=autor]">
                     <? endif ?>
-                    <a href="<?= URLHelper::getLink(sprintf('?sortby=nachname&sort_status=autor&order=%s&toggle=%s', 
+                    <a href="<?= URLHelper::getLink(sprintf('?sortby=nachname&sort_status=autor&order=%s&toggle=%s',
                        $order, ($sort_by == 'nachname'))) ?>#autoren">
                        <?=_('Nachname, Vorname')?>
                    </a>
                 </th>
                 <? if($rechte) :?>
                 <th <?= ($sort_by == 'mkdate' && $sort_status == 'tutor') ? sprintf('class="sort%s"', $order) : '' ?>>
-                    <a href="<?= URLHelper::getLink(sprintf('?sortby=mkdate&sort_status=autor&order=%s&toggle=%s', 
+                    <a href="<?= URLHelper::getLink(sprintf('?sortby=mkdate&sort_status=autor&order=%s&toggle=%s',
                        $order, ($sort_by == 'mkdate'))) ?>#autoren">
                         <?= _('Anmeldedatum') ?>
                     </a>
@@ -119,21 +119,22 @@
         <tbody>
         <? $nr = $autor_nr?>
         <? foreach($autoren as $autor) : ?>
+        <? $fullname = $autor->user->getFullName();?>
             <tr>
                 <? if ($rechte) : ?>
                 <td>
-                    <input aria-label="<?= sprintf(_('Alle %s auswählen'), $status_groups['autor']) ?>" 
+                    <input aria-label="<?= sprintf(_('Alle %s auswählen'), $status_groups['autor']) ?>"
                            type="checkbox" name="autor[<?= $autor['user_id'] ?>]" value="1" />
                 </td>
                 <? endif ?>
                 <td><?= (++$nr < 10) ? sprintf('%02d', $nr) : $nr ?></td>
                 <td>
                     <a href="<?= $controller->url_for(sprintf('profile?username=%s',$autor['username'])) ?>">
-                    <?= Avatar::getAvatar($autor['user_id'])->getImageTag(Avatar::SMALL, 
-                            array('style' => 'margin-right: 5px')); ?> 
-                    <?= $autor['mkdate'] >= $last_visitdate ? Assets::img('red_star.png', 
+                    <?= Avatar::getAvatar($autor['user_id'], $autor['username'])->getImageTag(Avatar::SMALL,
+                            array('style' => 'margin-right: 5px', 'title' => htmlReady($fullname))); ?>
+                    <?= $autor['mkdate'] >= $last_visitdate ? Assets::img('red_star.png',
                         array('style' => 'position: relative; top: -5px; left: -15px; margin: 0px; right: 0px')) : '' ?>
-                    <?= htmlReady($autor->user->getFullName()) ?>  
+                    <?= htmlReady($fullname) ?>
                     <? if ($user_id == $autor['user_id'] && $autor['visible'] == 'no') : ?>
                        (<?= _('unsichtbar') ?>)
                    <? endif ?>
@@ -170,24 +171,24 @@
                     <? endif ?>
                 <? endif ?>
                 <td style="text-align: right">
-                    <a href="<?= URLHelper::getLink('sms_send.php', 
-                                array('filter' => 'send_sms_to_all', 
-                                'rec_uname' => $autor['username'], 
-                                'sms_source_page' => sprintf('dispatch.php/course/members?cid=%s', $course_id), 
-                                'subject' => $subject)) 
+                    <a href="<?= URLHelper::getLink('sms_send.php',
+                                array('filter' => 'send_sms_to_all',
+                                'rec_uname' => $autor['username'],
+                                'sms_source_page' => sprintf('dispatch.php/course/members?cid=%s', $course_id),
+                                'subject' => $subject))
                             ?>
                     ">
-                        <?= Assets::img('icons/16/blue/mail.png', 
-                                tooltip2(sprintf(_('Nachricht an %s verschicken'), htmlReady($autor->user->getFullName())))) ?>
+                        <?= Assets::img('icons/16/blue/mail.png',
+                                tooltip2(sprintf(_('Nachricht an %s verschicken'), htmlReady($fullname)))) ?>
                     </a>
-                    
+
                     <? if ($rechte && $is_tutor) : ?>
-                    <a onclick="return confirm('<?= sprintf(_('Wollen Sie  %s wirklich austragen?'), 
-                            htmlReady($autor->user->getFullname())) ?>');" 
+                    <a onclick="return confirm('<?= sprintf(_('Wollen Sie  %s wirklich austragen?'),
+                            htmlReady($fullname)) ?>');"
                         href="<?= $controller->url_for(sprintf('course/members/cancel_subscription/singleuser/autor/%s/%s',
                                 $page, $autor['user_id'])) ?>">
-                        <?= Assets::img('icons/16/blue/remove/person.png', 
-                                tooltip2(sprintf(_('%s austragen'), htmlReady($autor->user->getFullName())))) ?>
+                        <?= Assets::img('icons/16/blue/remove/person.png',
+                                tooltip2(sprintf(_('%s austragen'), htmlReady($fullname)))) ?>
                     </a>
                     <? endif ?>
                 </td>
@@ -208,9 +209,9 @@
                 <td class="printhead" colspan="<?=$cols_foot?>">
                     <select name="action_autor" id="action_autor" aria-label="<?= _('Aktion ausführen') ?>">
                         <option value="">- <?= _('Aktion wählen') ?></option>
-                        <option value="upgrade"><?= sprintf(_('Als %s befördern'), 
+                        <option value="upgrade"><?= sprintf(_('Als %s befördern'),
                                 htmlReady($status_groups['tutor'])) ?></option>
-                        <option value="downgrade"><?= sprintf(_('Als %s herabstufen'), 
+                        <option value="downgrade"><?= sprintf(_('Als %s herabstufen'),
                                 htmlReady($status_groups['user'])) ?></option>
                         <!--<option value="to_admission">Auf Warteliste setzen</option>-->
                         <option value="remove"><?= _('Austragen') ?></option>
@@ -238,7 +239,7 @@
     </table>
 </form>
 <? else : ?>
-    <?= MessageBox::info(sprintf(_('Derzeit sind noch keine %s in der Veranstaltung eingetragen.'), 
+    <?= MessageBox::info(sprintf(_('Derzeit sind noch keine %s in der Veranstaltung eingetragen.'),
             htmlReady($status_groups['autor']))) ?>
 <? endif; ?>
 

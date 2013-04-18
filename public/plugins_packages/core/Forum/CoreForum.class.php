@@ -18,9 +18,13 @@ require_once 'lib/plugins/core/ForumModule.class.php';
 require_once 'vendor/trails/trails.php';
 require_once 'lib/classes/exportdocument/ExportPDF.class.php';
 
+require_once 'models/ForumAbo.php';
+require_once 'models/ForumBulkMail.php';
+require_once 'models/ForumCat.php';
 require_once 'models/ForumEntry.php';
 require_once 'models/ForumHelpers.php';
 require_once 'models/ForumIssue.php';
+require_once 'models/ForumLike.php';
 require_once 'models/ForumPerm.php';
 require_once 'models/ForumVisit.php';
 

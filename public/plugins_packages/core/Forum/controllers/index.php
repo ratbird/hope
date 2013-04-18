@@ -19,15 +19,6 @@
 require_once 'app/controllers/studip_controller.php';
 require_once 'lib/classes/AdminModules.class.php';
 require_once 'lib/classes/Config.class.php';
-require_once $this->trails_root .'/models/ForumEntry.php';
-require_once $this->trails_root .'/models/ForumPerm.php';
-require_once $this->trails_root .'/models/ForumHelpers.php';
-require_once $this->trails_root .'/models/ForumCat.php';
-require_once $this->trails_root .'/models/ForumLike.php';
-require_once $this->trails_root .'/models/ForumVisit.php';
-require_once $this->trails_root .'/models/ForumFavorite.php';
-require_once $this->trails_root .'/models/ForumAbo.php';
-require_once $this->trails_root .'/models/ForumBulkMail.php';
 
 /*
 if (!defined('FEEDCREATOR_VERSION')) {

@@ -7,7 +7,7 @@
         ."Um die Änderung Ihrer E-Mail Adresse abzuschließen,\n"
         ."folgen Sie bitte dem nachfolgendem Link:\n"
         . $activatation_url . "\n\n"
-        ."Der aktivierungs Schlüssel lautet:\n"
+        ."Der Aktivierungsschlüssel lautet:\n"
         . $key . "\n\n"
 
 ?>

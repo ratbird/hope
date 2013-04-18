@@ -1,6 +1,7 @@
 <? use \Studip\Button; ?>
 
 <a name="tutoren"></a>
+<? if($rechte) : ?>
 <div style="float: right">
     <?=Course_MembersController::getEmailLinkByStatus($course_id, 'tutor')?>
     <a href="<?= URLHelper::getLink('sms_send.php', 
@@ -21,6 +22,7 @@
     <? endif ?>
 </div>
 <div class="clear"></div>
+<? endif ?>
 
 <form action="<?= $controller->url_for(sprintf('course/members/edit_tutor/%s',$page)) ?>" 
       method="post" onsubmit="if ($('#tutor_action').val() == 'remove') 

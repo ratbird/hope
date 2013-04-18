@@ -269,7 +269,7 @@ class ModulesNotification extends Modules {
                     } else if ($r_data['newparticipants'] > 0) {
                         $text = _("1 neuer TeilnehmerIn:");
                     }
-                    $redirect = '&redirect_to=teilnehmer.php';
+                    $redirect = '&redirect_to=dispatch.php/course/member/index';
                     $icon = "icons/16/blue/persons.png";
                 }
                 break;

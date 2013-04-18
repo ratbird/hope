@@ -47,7 +47,7 @@
                             array('style' => 'margin-right: 5px')); ?> 
                     <?= $dozent['mkdate'] >= $last_visitdate ? Assets::img('red_star.png', 
                             array('style' => 'position: relative; top: -5px; left: -15px; margin: 0px; right: 0px')) : '' ?>
-                    <?= $dozent->user->getFullName() ?>                    
+                    <?= htmlReady($dozent->user->getFullName()) ?>                    
                 </a>
             </td>
             <td style="text-align: right">
@@ -59,16 +59,16 @@
                         ?>
                 ">
                     <?= Assets::img('icons/16/blue/mail.png', 
-                            tooltip2(sprintf(_('Nachricht an %s verschicken'), $dozent->user->getFullName()))) ?>
+                            tooltip2(sprintf(_('Nachricht an %s verschicken'), htmlReady($dozent->user->getFullName())))) ?>
                 </a>
                 
             <? if ($rechte && $is_dozent && $user_id != $dozent['user_id'] && count($dozenten) > 1) : ?>
                 <a onclick="return confirm('<?= sprintf(_('Wollen Sie  %s wirklich austragen?'), 
-                        $dozent->user->getFullname()) ?>');" 
+                        htmlReady($dozent->user->getFullName())) ?>');" 
                     href="<?= $controller->url_for(sprintf('course/members/cancel_subscription/singleuser/dozent/%s/%s',
                             $page, $dozent['user_id'])) ?>">
                     <?= Assets::img('icons/16/blue/remove/person.png', 
-                            tooltip2(sprintf(_('%s austragen'), $dozent->user->getFullName()))) ?>
+                            tooltip2(sprintf(_('%s austragen'), htmlReady($dozent->user->getFullName())))) ?>
                 </a>
             <? endif ?>
             </td>

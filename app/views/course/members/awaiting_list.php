@@ -72,7 +72,7 @@
                             array('style' => 'margin-right: 5px')); ?> 
                     <?= $waiting['mkdate'] >= $last_visitdate ? Assets::img('red_star.png', 
                         array('style' => 'position: relative; top: -5px; left: -15px; margin: 0px; right: 0px')) : '' ?>
-                    <?= $waiting->user->getFullName() ?>                    
+                    <?= htmlReady($waiting->user->getFullName()) ?>                    
                     </a>
                 </td>
                 <? if ($rechte) : ?>
@@ -90,15 +90,15 @@
                             ?>
                     ">
                         <?= Assets::img('icons/16/blue/mail.png', 
-                                tooltip2(sprintf(_('Nachricht an %s verschicken'), $waiting->user->getFullName()))) ?>
+                                tooltip2(sprintf(_('Nachricht an %s verschicken'), htmlReady($waiting->user->getFullName())))) ?>
                     </a>
                     <? if ($rechte && $is_tutor) : ?>
                     <a onclick="return confirm('<?= sprintf(_('Wollen Sie  %s wirklich austragen?'), 
-                            $waiting->user->getFullname()) ?>');" 
+                            htmlReady($waiting->user->getFullName())) ?>');" 
                         href="<?= $controller->url_for(sprintf('course/members/cancel_subscription/singleuser/awaiting/%s/%s',
                                 $page, $waiting['user_id'])) ?>">
                         <?= Assets::img('icons/16/blue/remove/person.png', 
-                                tooltip2(sprintf(_('%s austragen'), $waiting->user->getFullName()))) ?>
+                                tooltip2(sprintf(_('%s austragen'), htmlReady($waiting->user->getFullName())))) ?>
                     </a>
                     <? endif ?>
                 </td>

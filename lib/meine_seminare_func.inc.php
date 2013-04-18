@@ -627,7 +627,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
                 if (SeminarCategories::GetByTypeId($my_obj[$object_id]['sem_status'])->studygroup_mode) {
                     $nav = new Navigation('participants', 'dispatch.php/course/studygroup/members/'. $object_id);
                 } else {
-                    $nav = new Navigation('participants', 'teilnehmer.php');
+                    $nav = new Navigation('participants', 'dispatch.php/course/members/index');
                 }
                 $neue = $my_obj[$object_id]["newparticipants"] + $my_obj[$object_id]["new_accepted_participants"];
                 $count = $my_obj[$object_id]["countparticipants"] + $my_obj[$object_id]["count_accepted_participants"];
@@ -659,7 +659,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
                 if (SeminarCategories::GetByTypeId($my_obj[$object_id]['sem_status'])->studygroup_mode) {
                     $nav = new Navigation('participants', 'dispatch.php/course/studygroup/members/'. $object_id);
                 } else {
-                    $nav = new Navigation('participants', 'teilnehmer.php');
+                    $nav = new Navigation('participants', 'dispatch.php/course/members/index');
                 }
                 $nav->setImage('icons/16/grey/persons.png', array('title' => sprintf(_('%s TeilnehmerInnen'), $count)));
                 $my_obj[$object_id]['participants'] = $nav;

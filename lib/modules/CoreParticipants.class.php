@@ -14,19 +14,18 @@ require_once 'lib/modules/StudipModule.class.php';
 class CoreParticipants implements StudipModule {
     
     function getIconNavigation($course_id, $last_visit, $user_id) {
-        $navigation = new Navigation(_('TeilnehmerInnen'), "seminar_main.php?auswahl=".$course_id."&redirect_to=teilnehmer.php");
+        $navigation = new Navigation(_('TeilnehmerInnen'), "seminar_main.php?auswahl=".$course_id."&redirect_to=dispatch.php/course/members/index");
         $navigation->setImage('icons/16/grey/persons.png');
         return $navigation;
     }
     
     function getTabNavigation($course_id) {
         $rule = AuxLockRules::getLockRuleBySemId($course_id);
-        $navigation = new Navigation(_('TeilnehmerInnen'));
+        #$navigation = new AutoNavigation(_('TeilnehmerInnen'));
+        $navigation = new Navigation(_('TeilnehmerInnen'), URLHelper::getLink("dispatch.php/course/members/index"));
         $navigation->setImage('icons/16/white/persons.png');
         $navigation->setActiveImage('icons/16/black/persons.png');
-
-        $navigation->addSubNavigation('view', new Navigation(_('TeilnehmerInnen'), "teilnehmer.php"));
-
+        $navigation->addSubNavigation('view', new AutoNavigation(_('TeilnehmerInnen'), URLHelper::getLink("dispatch.php/course/members/index")));
         if (is_array($rule['attributes']) && in_array(1, $rule['attributes'])) {
             $navigation->addSubNavigation('aux_data', new Navigation(_('Zusatzangaben'), 'teilnehmer_aux.php'));
         }
@@ -65,7 +64,7 @@ class CoreParticipants implements StudipModule {
 
             $items[] = new ContentElement(
                 'Studiengruppe: Neue/r Teilnehmer/in', $summary, '', $row['user_id'], $row['fullname'],
-                URLHelper::getLink('seminar_main.php?auswahl='. $row['Seminar_id'] .'&redirect_to=teilnehmer.php'),
+                URLHelper::getLink('seminar_main.php?auswahl='. $row['Seminar_id'] .'&redirect_to=dispatch.php/course/member/index'),
                 $row['mkdate']
             );
         }

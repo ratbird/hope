@@ -85,15 +85,16 @@ function export_link($range_id, $ex_type = "", $filename = "", $format = "", $ch
     global $PATH_EXPORT, $xslt_filename, $i_page;
 
     $filename = preg_replace('/[\x7f-\x9f]/', '_', $filename);
-    $export_string = "";
+    $export_string = '<a href="';
     if ($choose != "")
-        $export_string .= "<a href=\"" . "export.php?range_id=$range_id&ex_type=$ex_type&xslt_filename=".rawurlencode($filename)."&format=$format&choose=$choose&o_mode=$o_mode&filter=$filter&jump=$i_page\">";
+        $export_string .= URLHelper::getLink('export.php', array('range_id' => $range_id, 'ex_type' => $ex_type, 'xslt_filename' =>rawurlencode($filename), 'format' => $format, 'choose' => $choose, 'o_mode' => $o_mode, 'filter' => $filter, 'jump' => $i_page));
     elseif ($ex_type != "")
-        $export_string .= "<a href=\"" . "export.php?range_id=$range_id&ex_type=$ex_type&xslt_filename=".rawurlencode($filename)."&o_mode=choose&filter=$filter\">";
+        $export_string .= URLHelper::getLink('export.php', array('range_id' => $range_id, 'ex_type' => $ex_type, 'xslt_filename' => rawurlencode($filename), 'o_mode' => 'choose', 'filter' => $filter));
     else
-        $export_string .= "<a href=\"" . "export.php?range_id=$range_id&o_mode=start\">";
-    $export_string .= ($content ? $content : _("Diese Daten exportieren"));
-    $export_string .= "</a>";
+        $export_string .= URLHelper::getLink('export.php', array('range_id' => $range_id, 'o_mode' => 'start'));
+
+    $export_string .= '">' . ($content ? $content : _("Diese Daten exportieren"));
+    $export_string .= '</a>';
     return $export_string;
 }
     

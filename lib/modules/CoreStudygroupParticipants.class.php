@@ -14,7 +14,7 @@ require_once 'lib/modules/StudipModule.class.php';
 class CoreStudygroupParticipants implements StudipModule {
     
     function getIconNavigation($course_id, $last_visit, $user_id) {
-        $navigation = new Navigation(_('TeilnehmerInnen'), "seminar_main.php?auswahl=".$course_id."&redirect_to=teilnehmer.php");
+        $navigation = new Navigation(_('TeilnehmerInnen'), "seminar_main.php?auswahl=".$course_id."&redirect_to=dispatch.php/course/members/index");
         $navigation->setImage('icons/16/grey/persons.png');
         return $navigation;
     }

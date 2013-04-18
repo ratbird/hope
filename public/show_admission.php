@@ -1015,7 +1015,7 @@ function getUrlToSeminar($semdata)
     $modules = new Modules();
     $activated_modules = $modules->getLocalModules($semdata['Seminar_id'], 'sem', $semdata['modules'], $semdata['status']);
     if ($activated_modules["participants"]) {
-        return URLHelper::getLink("teilnehmer.php?cid=". $semdata['Seminar_id']);
+        return URLHelper::getLink("dispatch.php/course/members/index?cid=". $semdata['Seminar_id']);
     }
     else {
         return URLHelper::getLink("seminar_main.php?cid=" . $semdata['Seminar_id']);

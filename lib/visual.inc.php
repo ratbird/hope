@@ -814,11 +814,11 @@ function tooltip2($text, $with_alt = TRUE, $with_popup = FALSE) {
  *
  * @param type $text
  */
-function tooltipIcon($text, $important = false)
+function tooltipIcon($text, $important = false, $html = false)
 {
     // prepare text
     $text = preg_replace("/(\n\r|\r\n|\n|\r)/", " ", $text);
-    $text = htmlReady($text);
+    $text = ($html) ? $text : htmlReady($text);
 
     // render tooltip
     $template = $GLOBALS['template_factory']->open('shared/tooltip');

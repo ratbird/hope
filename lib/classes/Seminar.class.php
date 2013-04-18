@@ -122,11 +122,12 @@ class Seminar
         // user_id needs to be be defined twice so it can be used both as
         // a key for the associative array and as a regular field in the array
         $query = "SELECT user_id AS tmp, user_id, username, Vorname, Nachname, Email,
-                         {$GLOBALS['_fullname_sql']['full']} AS fullname,
-                         admission_studiengang_id, su.status, su.label
+                         {$GLOBALS['_fullname_sql']['full']} AS fullname, su.position,
+                         admission_studiengang_id, su.status, su.label, su.mkdate, su.visible, stg.name AS studiengang
                   FROM seminar_user AS su
                   INNER JOIN auth_user_md5 USING (user_id)
                   LEFT JOIN user_info USING (user_id)
+                  LEFT JOIN studiengaenge AS stg ON (su.admission_studiengang_id = stg.studiengang_id)
                   WHERE status = ? AND su.seminar_id = ?
                   ORDER BY su.position, Nachname";
         $statement = DBManager::get()->prepare($query);
@@ -149,11 +150,12 @@ class Seminar
         // user_id needs to be be defined twice so it can be used both as
         // a key for the associative array and as a regular field in the array
         $query = "SELECT user_id AS tmp, user_id, username, Vorname, Nachname, Email,
-                         {$GLOBALS['_fullname_sql']['full']} AS fullname,
-                         studiengang_id, su.status
+                         {$GLOBALS['_fullname_sql']['full']} AS fullname, su.position,
+                         studiengang_id, su.status, su.mkdate, su.visible, stg.name AS studiengang
                   FROM admission_seminar_user AS su
                   INNER JOIN auth_user_md5 USING (user_id)
                   LEFT JOIN user_info USING (user_id)
+                  LEFT JOIN studiengaenge stg USING (studiengang_id)
                   WHERE status = ? AND su.seminar_id = ?
                   ORDER BY su.position, Nachname";
         $statement = DBManager::get()->prepare($query);
@@ -2484,11 +2486,13 @@ class Seminar
      */
     public function addMember($user_id, $status = 'autor', $force = false)
     {
+        
         if (in_array(get_global_perm($user_id), array("admin", "root"))) {
             $this->createError(_("Admin und Root dürfen nicht Mitglied einer Veranstaltung sein."));
             return false;
         }
         $db = DBManager::get();
+
         $rangordnung = array_flip(array('user', 'autor', 'tutor', 'dozent'));
         if ($rangordnung[$status] > $rangordnung['autor'] && SeminarCategories::getByTypeId($this->status)->only_inst_user) {
             //überprüfe, ob im richtigen Institut:
@@ -2499,8 +2503,10 @@ class Seminar
             "");
             $user_institute_stmt->execute(array('user_id' => $user_id));
             $user_institute = $user_institute_stmt->fetchAll(PDO::FETCH_COLUMN, 0);
+            
             if (!in_array($this->institut_id, $user_institute) && !count(array_intersect($user_institute, $this->getInstitutes()))) {
                 $this->createError(_("Einzutragender Nutzer stammt nicht einem beteiligten Institut an."));
+
                 return false;
             }
         }
@@ -2580,6 +2586,7 @@ class Seminar
                                    get_title_for_status('dozent', 1, $this->status)) .
                                    ' ' . _("Tragen Sie zunächst einen anderen ein, um diesen herabzustufen."));
             }
+            
             return false;
         }
     }
@@ -2615,6 +2622,7 @@ class Seminar
             $this->createMessage(sprintf(_("Nutzer %s wurde aus der Veranstaltung entfernt."),
                     "<i>".htmlReady(get_fullname($user_id))."</i>"));
             NotificationCenter::postNotification("CourseDidChangeMember", $this, $user_id);
+ 
             return $this;
         } else {
             $this->createError(sprintf(_("Die Veranstaltung muss wenigstens <b>einen/eine</b> VeranstaltungsleiterIn (%s) eingetragen haben!"),

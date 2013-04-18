@@ -251,7 +251,7 @@ function check_group($user_id, $username, $grouped_sems, $cur_name, $cur_id)
 
         $query = "DELETE FROM seminar_user WHERE user_id = ? AND Seminar_id = ?";
         $statement = DBManager::get()->prepare($query);
-        $statement->execute(array($seminar_id));
+        $statement->execute(array($user_id, $seminar_id));
         if ($statement->rowCount() > 0) {
             $query = "SELECT Name FROM seminare WHERE Seminar_id = ?";
             $statement = DBManager::get()->prepare($query);

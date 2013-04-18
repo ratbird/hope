@@ -72,7 +72,7 @@
                 </a>
             <? endif; ?>
             <? if (($visio[$row['user_id']] || $rechte) && $row['user_id'] != $GLOBALS['user']->id): ?>
-                <a href="<?= URLHelper::getLink('sms_send.php?sms_source_page=teilnehmer.php', array('rec_uname' => $row['username'])) ?>">
+                <a href="<?= URLHelper::getLink('sms_send.php?sms_source_page=dispatch.php/course/members/index', array('rec_uname' => $row['username'])) ?>">
                     <?= Assets::img('icons/16/blue/mail', tooltip2(_('Systemnachricht an Benutzer verschicken'))) ?>
                 </a>
             <? endif; ?>

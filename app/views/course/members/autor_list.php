@@ -146,16 +146,19 @@
                         <? if(!empty($study_courses)) : ?>
                             <? if (count($study_courses) < 2) : ?>
                                 <? for ($i = 0; $i < 1; $i++) : ?>
-                                    <?= $study_courses[$i]['fach'] ?> (<?= $study_courses[$i]['abschluss'] ?>)
+                                    <?= htmlReady($study_courses[$i]['fach']) ?>
+                                    (<?= htmlReady($study_courses[$i]['abschluss']) ?>)
                                 <? endfor ?>
                             <? else : ?>
-                                <?= $study_courses[0]['fach'] ?> (<?= $study_courses[0]['abschluss'] ?>)
+                                <?= htmlReady($study_courses[0]['fach']) ?>
+                                (<?= htmlReady($study_courses[0]['abschluss']) ?>)
                                 [...]
                                 <? foreach($study_courses as $course) : ?>
-                                    <? $course_res .= sprintf('- %s (%s) <br />', $course['fach'],$course['abschluss'])?>
+                                    <? $course_res .= sprintf('- %s (%s)<br>',
+                                                              htmlReady($course['fach']),
+                                                              htmlReady($course['abschluss'])) ?>
                                 <? endforeach ?>
-                                <?= tooltipIcon(sprintf(_('<strong>Weitere Studiengänge</strong><br /> %s'), 
-                                        $course_res), false, true) ?>
+                                <?= tooltipIcon('<strong>' . _('Weitere Studiengänge') . '</strong><br>' . $course_res, false, true) ?>
                                 <? unset($course_res); ?>
                             <? endif ?>
                         <? endif ?>

@@ -28,11 +28,11 @@
         </a>
     <? if ($user['is_buddy']): ?>
         <a href="<?= $controller->url_for('online/buddy/remove?username=' . $user['username']) ?>">
-            <?= Assets::img('icons/16/blue/remove/community.png', tooltip2(_('Aus der Buddy-Liste entfernen'))) ?>
+            <?= Assets::img('icons/16/blue/remove/person.png', tooltip2(_('Aus der Buddy-Liste entfernen'))) ?>
         </a>
     <? else: ?>
         <a href="<?= $controller->url_for('online/buddy/add?username=' . $user['username']) ?>">
-            <?= Assets::img('icons/16/blue/add/community.png', tooltip2(_('Zu den Buddies hinzufügen'))) ?>
+            <?= Assets::img('icons/16/blue/add/person.png', tooltip2(_('Zu den Buddies hinzufügen'))) ?>
         </a>
     <? endif; ?>
     </td>

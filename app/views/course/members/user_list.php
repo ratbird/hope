@@ -36,6 +36,13 @@
         <col width="15%">
     </colgroup>
         <thead>
+            <tr>
+                <th class="table_header_bold" colspan="<?=($rechte) ? 4 : 3?>">
+                    <?= $status_groups['user'] ?>
+                    <?= tooltipIcon(sprintf(_('%s haben keine Schreibrechte.'), 
+                            $status_groups['user'])) ?>
+                </th>
+            </tr>
             <tr class="sortable">
                 <th colspan="<?=($rechte) ? 3 : 2 ?>" <?= ($sort_by == 'nachname' && $sort_status == 'user') ? sprintf('class="sort%s"', $order) : '' ?>>
                     <? if ($rechte) : ?>
@@ -44,10 +51,8 @@
                     <? endif ?>
                     <a href="<?= URLHelper::getLink(sprintf('?sortby=nachname&sort_status=user&order=%s&toggle=%s', 
                             $order, ($sort_by == 'nachname'))) ?>#users">
-                        <?= $status_groups['user'] ?>
+                        <?=_('Nachname, Vorname')?>
                     </a>
-                    <?= tooltipIcon(sprintf(_('%s haben keine Schreibrechte.'), 
-                            $status_groups['user'])) ?>
                 </th>
                 <th style="text-align: right"><?= _('Aktion') ?></th>
             </tr>

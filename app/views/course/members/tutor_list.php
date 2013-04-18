@@ -38,6 +38,13 @@
         <col width="15%">
     </colgroup>
         <thead>
+            <tr>
+                <th class="table_header_bold" colspan="<?=($rechte) ? 4 : 3?>">
+                    <?= $status_groups['tutor'] ?>
+                    <?= tooltipIcon(sprintf(_('%s haben Verwaltungsrechte, können jedoch keine %s hinzufügen.'), 
+                            $status_groups['tutor'], $status_groups['dozent'])) ?>
+                </th>
+            </tr>
             <tr class="sortable">
                 <th colspan="<?=($rechte) ? 3 : 2 ?>" <?= ($sort_by == 'nachname' && $sort_status == 'tutor') ? 
                     sprintf('class="sort%s"', $order) : '' ?>>
@@ -47,10 +54,9 @@
                     <? endif ?>
                     <a href="<?= URLHelper::getLink(sprintf('?sortby=nachname&sort_status=tutor&order=%s&toggle=%s', 
                             $order, ($sort_by == 'nachname'))) ?>#tutoren">
-                        <?= $status_groups['tutor'] ?>
+                        <?=_('Nachname, Vorname')?>
                     </a>
-                    <?= tooltipIcon(sprintf(_('%s haben Verwaltungsrechte, können jedoch keine %s hinzufügen.'), 
-                            $status_groups['tutor'], $status_groups['dozent'])) ?>
+                    
                 </th>
                 <th style="text-align: right"><?= _('Aktion') ?></th>
             </tr>

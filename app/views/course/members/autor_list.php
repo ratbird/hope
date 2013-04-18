@@ -1,7 +1,6 @@
 <? use \Studip\Button; ?>
 <a name="autoren"></a>
 
-
 <? if ($total > $max_per_page) : ?>
     <? if ($page != 0) : ?>
         <?= Assets::img('icons/16/blue/arr_2right.png') ?>
@@ -84,6 +83,12 @@
             <col width="15%">
         </colgroup>
         <thead>
+            <tr>
+                <th class="table_header_bold" colspan="<?=$cols?>">
+                    <?= $status_groups['autor'] ?>
+                    <?= tooltipIcon(sprintf(_('%s haben Schreib- und Leserechte'), htmlReady($status_groups['autor']))) ?>
+                </th>
+            </tr>
             <tr class="sortable">
                 <th colspan="<?=$cols_head?>" <?= ($sort_by == 'nachname' && $sort_status == 'autor') ? 
                     sprintf('class="sort%s"', $order) : '' ?>>
@@ -93,9 +98,8 @@
                     <? endif ?>
                     <a href="<?= URLHelper::getLink(sprintf('?sortby=nachname&sort_status=autor&order=%s&toggle=%s', 
                        $order, ($sort_by == 'nachname'))) ?>#autoren">
-                       <?= $status_groups['autor'] ?>
+                       <?=_('Nachname, Vorname')?>
                    </a>
-                   <?= tooltipIcon(sprintf(_('%s haben Schreib- und Leserechte'), htmlReady($status_groups['autor']))) ?>
                 </th>
                 <? if($rechte) :?>
                 <th <?= ($sort_by == 'mkdate' && $sort_status == 'tutor') ? sprintf('class="sort%s"', $order) : '' ?>>

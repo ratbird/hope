@@ -25,13 +25,19 @@
         <col width="15%">
     </colgroup>
     <thead>
+        <tr>
+            <th colspan="3" class="table_header_bold" >
+                <?= $this->status_groups['dozent'] ?>
+                <?= tooltipIcon(sprintf(_('%s haben Administrationrechte'), $status_groups['dozent'])) ?>
+            </th>
+        </tr>
         <tr class="sortable">
             <th colspan="2" <?= ($sort_by == 'nachname' && $sort_status == 'dozent') ? sprintf('class="sort%s"', $order) : '' ?>>
                 <a href="<?= URLHelper::getLink(sprintf('?sortby=nachname&sort_status=dozent&order=%s&toggle=%s', 
                         $order, ($sort_by == 'nachname'))) ?>">
-                    <?= $this->status_groups['dozent'] ?>
+                    <?=_('Nachname, Vorname')?>
                 </a>
-                <?= tooltipIcon(sprintf(_('%s haben Administrationrechte'), $status_groups['dozent'])) ?>
+                
             </th>
             <th style="text-align: right"><?= _('Aktion') ?></th>
         </tr>

@@ -114,6 +114,9 @@ class SimpleORMapCollection extends ArrayObject
     }
 
     public static function translitLatin1($text) {
+        if (!preg_match('/[\200-\377]/', $text)) {
+            return $text;
+        }
         $text = str_replace(array('ä','A','ö','Ö','ü','Ü','ß'), array('a','A','o','O','u','U','s'), $text);
         $text = str_replace(array('À','Á','Â','Ã','Å','Æ'), 'A' , $text);
         $text = str_replace(array('à','á','â','ã','å','æ'), 'a' , $text);
@@ -290,7 +293,7 @@ class SimpleORMapCollection extends ArrayObject
      */
     function find($value)
     {
-        return $this->findBy('id', $value)->first();
+        return $this->findOneBy('id', $value);
     }
 
     /**
@@ -306,6 +309,21 @@ class SimpleORMapCollection extends ArrayObject
     {
         $comp_func = self::getCompFunc($op, $values);
         return $this->filter(function($record) use ($comp_func, $key) {return $comp_func($record[$key]);});
+    }
+
+    /**
+     * returns the first element
+     * where given column has given value(s)
+     * pass array for multiple values
+     *
+     * @param string $key the column name
+     * @param mixed $value value to search for,
+     * @return SimpleORMap found record
+     */
+    function findOneBy($key, $values, $op = '==')
+    {
+        $comp_func = self::getCompFunc($op, $values);
+        return $this->filter(function($record) use ($comp_func, $key) {return $comp_func($record[$key]);}, 1)->first();
     }
 
     /**
@@ -345,17 +363,24 @@ class SimpleORMapCollection extends ArrayObject
      * if given callback returns true
      *
      * @param Closure $func the function to call
+     * @param integer $limit limit number of found records
      * @return SimpleORMapCollection containing filtered elements
      */
-    function filter(Closure $func = null)
+    function filter(Closure $func = null, $limit = null)
     {
         $results = array();
+        $found = 0;
         foreach ($this as $key => $value) {
             if (call_user_func($func, $value, $key)) {
                 $results[$key] = $value;
+                if ($limit && (++$found == $limit)) {
+                    break;
+                }
             }
         }
-        return self::createFromArray($results);
+        $ret = new SimpleORMapCollection();
+        $ret->exchangeArray($results);
+        return $ret;
     }
 
     /**
@@ -515,8 +540,8 @@ class SimpleORMapCollection extends ArrayObject
                     $value1 = $d1[$field];
                     $value2 = $d2[$field];
                 } else {
-                    $value1 = SimpleOrMapCollection::translitLatin1($d1[$field]);
-                    $value2 = SimpleOrMapCollection::translitLatin1($d2[$field]);
+                    $value1 = SimpleOrMapCollection::translitLatin1(substr($d1[$field], 0, 10));
+                    $value2 = SimpleOrMapCollection::translitLatin1(substr($d2[$field], 0, 10));
                 }
                 $ret = $sort_func($value1, $value2);
                 if ($dir == 'desc') $ret = $ret * -1;
@@ -540,6 +565,8 @@ class SimpleORMapCollection extends ArrayObject
                 $row_count = abs($offset);
             }
         }
-        return self::createFromArray(array_slice($this->getArrayCopy(), $offset, $row_count));
+        $ret = new SimpleORMapCollection();
+        $ret->exchangeArray(array_slice($this->getArrayCopy(), $offset, $row_count));
+        return $ret;
     }
 }

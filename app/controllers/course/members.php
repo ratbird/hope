@@ -178,11 +178,13 @@ class Course_MembersController extends AuthenticatedController {
 
         //preload user objects to avoid n+1 performance penalty
         $members = $this->course->members;
+        $member_ids = $members->pluck('user_id');
+        $member_ids_map = array_flip($member_ids);
         User::findEachMany(
-            function ($u) use ($members) {
-                $m = $members->findBy('user_id', $u->id)->first();
-                $m->user = $u;
-            }, $members->pluck('user_id'));
+            function ($u) use ($members, $member_ids_map) {
+                $offset = $member_ids_map[$u->id];
+                $members[$offset]->user = $u;
+            }, $member_ids);
 
         // get member informations
         $this->dozenten     = $this->getMembers('dozent');

@@ -2,17 +2,6 @@
 # Lifter010: TODO
 use Studip\Button, Studip\LinkButton;
 
-$visibilities = array(
-    VISIBILITY_ME      => _('nur mich selbst'),
-    VISIBILITY_BUDDIES => _('Buddies'),
-    VISIBILITY_DOMAIN  => _('meine Nutzerdomäne'),
-    VISIBILITY_STUDIP  => _('Stud.IP-intern'),
-    VISIBILITY_EXTERN  => _('externe Seiten'),
-);
-if (!$user_domains) {
-    unset($visibilities[VISIBILITY_DOMAIN]);
-}
-
 ?>
 <form method="post" action="<?= $controller->url_for('settings/privacy/global') ?>">
     <?= CSRFProtection::tokenTag() ?>
@@ -152,6 +141,119 @@ if (!$user_domains) {
     <table class="settings zebra-hover">
         <colgroup>
             <col width="34%">
+        <? for($i = 1; $i <= $colCount; $i++): ?>
+            <col width="<?= $colWidth ?>%">
+        <? endfor; ?>
+        </colgroup>
+        <thead>
+            <tr>
+                <th colspan="<?= $colCount + 1 ?>">
+                    <?= _('Privatsphäre') ?>:
+                    <?= _('Eigenes Profil') ?>
+                </th>
+            </tr>
+            <tr class="divider">
+                <th style="text-align: left; font-size: 10pt"><?= _('Profil-Element'); ?></th>
+                <th style="font-size: 10pt;" colspan="<?= $colCount ?>"><?= _('sichtbar für'); ?></th>
+            </tr>
+        </thead>
+        <tbody class="privacy">
+            <tr>
+                <td>&nbsp;</td>
+            <? foreach ($visibilities as $visibility): ?>
+                <td><?= htmlReady($visibility) ?></td>
+            <? endforeach; ?>
+            </tr>
+    <? foreach ($homepage_elements['entry'] as $element): ?>
+            <? if($element['is_header']): ?>
+            <tr>
+                <td colspan="<?= 1 + $colCount ?>">
+                    <?= htmlReady($element['name']) ?>
+                </td>
+            </tr>
+            <? else: ?>
+            <tr>
+                <td style="padding-left: <?= $element['padding'] ?>"><?= htmlReady($element['name']) ?></td>
+            <? foreach ($homepage_elements['states'] as $state): ?>
+                <td>
+                    <input type="radio" name="visibility_update[<?= $element['id'] ?>]" value="<?= $state ?>"
+                           <? if ($element['state'] == $state) echo 'checked'; ?>>
+                </td>
+            <? endforeach; ?>
+            </tr>
+            <? endif; ?>
+    <? endforeach; ?>
+        </tbody>
+        <tfoot>
+            <tr>
+                 <td colspan="<?= 1 + $colCount ?>">
+                    <?= Button::create(_('Übernehmen'), 'store', array('title' =>  _('Änderungen speichern')))?>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</form>
+
+<br><br>
+<form method="post" action="<?= $controller->url_for('settings/privacy/bulk') ?>">
+    <?= CSRFProtection::tokenTag() ?>
+    <input type="hidden" name="studipticket" value="<?= get_ticket() ?>">
+    <table class="zebra settings">
+        <thead>
+            <tr>
+                <th width="50%" colspan="2"><?= _('Bulk Aktionen auf Profil-Elemente') ?></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="table_row_even">
+                    <label>
+                        <?= _('neu hinzugefügte Profil-Elemente sind standardmäßig sichtbar für'); ?>
+                        <select name="default">
+                            <option value="">-- <?= _('bitte wählen'); ?> --</option>
+                        <? foreach ($visibilities as $visibility => $label): ?>
+                            <option value="<?= $visibility ?>" <? if ($default_homepage_visibility == $visibility) echo 'selected'; ?>>
+                                <?= htmlReady($label) ?>
+                            </option>
+                        <? endforeach; ?>
+                        </select>
+                    </label>
+                </td>
+                <td class="table_row_even">
+                    <?= Button::create(_('Übernehmen'), 'store_default', array('title' =>  _('Änderungen speichern')))?>
+                </td>
+            </tr>
+            <tr>
+                <td class="table_row_even">
+                    <label>
+                        <?= _('alle Sichtbarkeiten setzen auf'); ?>
+                        <select name="all">
+                            <option value="">-- <?= _("bitte wählen"); ?> --</option>
+                        <? foreach ($visibilities as $visibility => $label): ?>
+                            <option value="<?= $visibility ?>">
+                                <?= htmlReady($label) ?>
+                            </option>
+                        <? endforeach; ?>
+                        </select>
+                    </label>
+                </td>
+                <td class="table_row_even">
+                    <?= Button::create(_('Übernehmen'), 'store_all', array('title' => _('Änderungen speichern'))) ?>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    
+</form>
+
+<? /* BACKUP JUST IN CASE
+<form method="post" action="<?= $controller->url_for('settings/privacy/homepage') ?>">
+    <?= CSRFProtection::tokenTag() ?>
+    <input type="hidden" name="studipticket" value="<?= get_ticket() ?>">
+    
+    <table class="settings zebra-hover">
+        <colgroup>
+            <col width="34%">
         <? if ($user_domains): ?>
             <col width="13.2%">
             <col width="13.2%">
@@ -264,3 +366,4 @@ if (!$user_domains) {
     </table>
     
 </form>
+*/?>

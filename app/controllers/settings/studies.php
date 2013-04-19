@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Settings_StudiesController - Administration of all user studies related
  * settings
@@ -13,19 +14,17 @@
  * @category    Stud.IP
  * @since       2.4
  */
-
 require_once 'settings.php';
 
-class Settings_StudiesController extends Settings_SettingsController
-{
+class Settings_StudiesController extends Settings_SettingsController {
+
     /**
      * Set up this controller.
      *
      * @param String $action Name of the action to be invoked
      * @param Array  $args   Arguments to be passed to the action method
      */
-    public function before_filter(&$action, &$args)
-    {
+    public function before_filter(&$action, &$args) {
         parent::before_filter($action, $args);
 
         if (!in_array($this->user->perms, words('autor tutor dozent'))) {
@@ -40,7 +39,7 @@ class Settings_StudiesController extends Settings_SettingsController
 
         $this->allow_change = array(
             'sg' => !StudipAuthAbstract::CheckField('studiengang_id', $this->user->auth_plugin)
-                    && ($GLOBALS['ALLOW_SELFASSIGN_STUDYCOURSE'] || $GLOBALS['perm']->have_perm('admin')),
+            && ($GLOBALS['ALLOW_SELFASSIGN_STUDYCOURSE'] || $GLOBALS['perm']->have_perm('admin')),
             'in' => $GLOBALS['ALLOW_SELFASSIGN_INSTITUTE'] || $GLOBALS['perm']->have_perm('admin'),
         );
     }
@@ -48,8 +47,7 @@ class Settings_StudiesController extends Settings_SettingsController
     /**
      * Displays the study information of a user.
      */
-    public function index_action()
-    {
+    public function index_action() {
         $infobox_message = _('Hier können Sie Angaben &uuml;ber Ihre Studienkarriere machen.');
         $this->setInfoBoxImage('infobox/groups.jpg');
         $this->addToInfobox(_('Informationen'), $infobox_message, 'icons/16/black/info.png');
@@ -58,8 +56,7 @@ class Settings_StudiesController extends Settings_SettingsController
     /**
      * Stores the study information of a user (subject and degree-wise).
      */
-    public function store_sg_action()
-    {
+    public function store_sg_action() {
         $this->check_ticket();
 
         $any_change = false;
@@ -78,6 +75,11 @@ class Settings_StudiesController extends Settings_SettingsController
                 ));
                 if ($statement->rowCount() > 0) {
                     $any_change = true;
+                }
+                
+                // if we have no studies anymore we delete the visibilitysetting
+                if (!$this->hasStudiengang()) {
+                    Visibility::removePrivacySetting('studying');
                 }
             }
         }
@@ -105,6 +107,9 @@ class Settings_StudiesController extends Settings_SettingsController
 
             $new_studiengang = Request::option('new_studiengang');
             if ($new_studiengang && $new_studiengang != 'none') {
+                if (!$this->hasStudiengang()) {
+                    Visibility::addPrivacySetting(_("Wo ich studiere"), 'studying', 'studdata');
+                }
                 $query = "INSERT IGNORE INTO user_studiengang
                             (user_id, studiengang_id, abschluss_id, semester)
                           VALUES (?, ?, ?, ?)";
@@ -135,8 +140,7 @@ class Settings_StudiesController extends Settings_SettingsController
     /**
      * Stores the study information of a user (institute-wise).
      */
-    public function store_in_action()
-    {
+    public function store_in_action() {
         $this->check_ticket();
 
         $inst_delete = Request::optionArray('inst_delete');
@@ -158,6 +162,11 @@ class Settings_StudiesController extends Settings_SettingsController
 
         $new_inst = Request::option('new_inst');
         if ($new_inst) {
+
+            // if we didnt have a institute yet we create the visibilityID
+            if (!$this->hasInstitute()) {
+                
+            }
             $query = "INSERT IGNORE INTO user_inst
                         (user_id, Institut_id, inst_perms)
                       VALUES (?, ?, 'user')";
@@ -167,7 +176,7 @@ class Settings_StudiesController extends Settings_SettingsController
                 $new_inst
             ));
             if ($statement->rowCount() > 0) {
-                log_event('INST_USER_ADD', $new_inst , $this->user->user_id, 'user');
+                log_event('INST_USER_ADD', $new_inst, $this->user->user_id, 'user');
                 $new = true;
             }
         }
@@ -182,4 +191,25 @@ class Settings_StudiesController extends Settings_SettingsController
 
         $this->redirect('settings/studies');
     }
+
+    private function hasStudiengang() {
+        $query = "SELECT * FROM user_studiengang
+                      WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $this->user->user_id
+        ));
+        return $statement->rowCount() > 0;
+    }
+
+    private function hasInstitute() {
+        $query = "SELECT * FROM user_inst
+                      WHERE user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $this->user->user_id
+        ));
+        return $statement->rowCount() > 0;
+    }
+
 }

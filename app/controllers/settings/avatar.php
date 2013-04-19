@@ -69,6 +69,7 @@ class Settings_AvatarController extends Settings_SettingsController
                 setTempLanguage($this->user->user_id);
                 $this->postPrivateMessage(_("Ein neues Bild wurde hochgeladen.\n"));
                 restoreLanguage();
+                Visibility::addPrivacySetting(_('Avatar'), 'picture', 'privatedata');
             } catch (Exception $e) {
                 $this->reportError($e->getMessage());
             }
@@ -85,6 +86,7 @@ class Settings_AvatarController extends Settings_SettingsController
 
         if (Request::submitted('reset')) {
             Avatar::getAvatar($this->user->user_id)->reset();
+            Visibility::removePrivacySetting('picture');
             $this->reportSuccess(_('Bild gel&ouml;scht.'));
         }
         $this->redirect('settings/avatar');

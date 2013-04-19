@@ -70,7 +70,9 @@ class Settings_DetailsController extends Settings_SettingsController
 
         if ($GLOBALS['ENABLE_SKYPE_INFO']) {
             $this->config->store('SKYPE_NAME', preg_replace('/[^a-z0-9.,_-]/i', '', Request::get('skype_name')));
+            Visibility::updatePrivacySettingWithTest(Request::get('skype_name'), _("Skype Name"), "skype_name", 'privatedata', 1,$this->user->user_id);
             $this->config->store('SKYPE_ONLINE_STATUS', Request::int('skype_online_status'));
+            Visibility::updatePrivacySettingWithTest(Request::int('skype_online_status'), _("Skype Online Status"), "skype_online_status", 'skype_name', 1, $this->user->user_id);
         }
 
         $mapping = array(
@@ -84,11 +86,24 @@ class Settings_DetailsController extends Settings_SettingsController
             'schwerp'    => 'schwerp',
             'publi'      => 'publi',
         );
+        
+        $settingsname = array(
+            'telefon'    => _('Private Telefonnummer'),
+            'cell'       => _('Private Handynummer'),
+            'anschrift'  => _('Private Adresse'),
+            'home'       => _('Homepage-Adresse'),
+            'motto'      => _('Motto'),
+            'hobby'      => _('Hobbies'),
+            'lebenslauf' => _('Lebenslauf'),
+            'schwerp'    => _('Arbeitsschwerpunkte'),
+            'publi'      => _('Publikationen'),
+        );
 
         foreach ($mapping as $key => $column) {
             $value = Request::get($key);
             if ($this->shallChange('user_info.' . $column, $column, $value)) {
                 $this->user->$column = $value;
+                Visibility::updatePrivacySettingWithTest($value, $settingsname[$key], $column, 'privatedata', 1, $this->user->user_id);
             }
         }
 
@@ -99,6 +114,10 @@ class Settings_DetailsController extends Settings_SettingsController
         $data       = Request::getArray('datafields');
         foreach ($datafields as $id => $entry) {
             if (isset($data[$id]) && $data[$id] != $entry->getValue()) {
+                
+                // i really dont know if this is correct but it works
+                $visibility = $datafields[$id]->structure->data;
+                Visibility::updatePrivacySettingWithTest($data[$id], $visibility['name'], $visibility['datafield_id'], 'additionaldata', 1, $this->user->user_id);
                 $entry->setValueFromSubmit($data[$id]);
                 if ($entry->isValid()) {
                     if ($entry->store()) {
@@ -120,6 +139,6 @@ class Settings_DetailsController extends Settings_SettingsController
             $this->postPrivateMessage(_('Daten im Lebenslauf u.a. wurden geändert.'));
             restoreLanguage();
         }
-        $this->redirect('settings/details');
+        //$this->redirect('settings/details');
     }
 }

@@ -97,6 +97,7 @@ class Settings_CategoriesController extends Settings_SettingsController
         
         if ($category->store()) {
             $this->reportSuccess(_('Neue Kategorie angelegt.'));
+            Visibility::addPrivacySetting($category->name, 'kat_'.$category->id, 'owncategory');
         } else {
             $this->reportSuccess(_('Anlegen der Kategorie fehlgeschlagen.'));
         }
@@ -129,6 +130,7 @@ class Settings_CategoriesController extends Settings_SettingsController
 
         if ($category->delete()) {
             $this->reportSuccess(_('Kategorie "%s" gelöscht!'), $name);
+            Visibility::removePrivacySetting('kat_'.$id);
         } else {
             $this->reportError(_('Kategorie "%s" konnte nicht gelöscht werden!'), $name);
         }
@@ -153,6 +155,7 @@ class Settings_CategoriesController extends Settings_SettingsController
             $category->content = $data['content'];
             if ($category->store()) {
                 $this->reportSuccess(_('Kategorien geändert!'));
+                Visibility::renamePrivacySetting('kat_'.$category->id, $category->name);
             }
         }
 

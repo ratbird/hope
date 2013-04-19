@@ -68,7 +68,7 @@ class ProfileModel
      */
     function checkVisibility($param)
     {
-        return is_element_visible_for_user($this->user->user_id, $this->current_user->user_id, $this->visibilities[$param]);
+        return Visibility::verify($param, $this->current_user->user_id);
     }
 
     /**
@@ -78,7 +78,7 @@ class ProfileModel
      */
     function getVisibilityValue($param, $visibility = '')
     {
-        if (is_element_visible_for_user($this->user->user_id, $this->current_user->user_id, $this->visibilities[$visibility ?: $param])) {
+        if (Visibility::verify($visibility ?: $param, $this->current_user->user_id)) {
             return $this->current_user->$param;
         }
         return false;
@@ -205,8 +205,9 @@ class ProfileModel
         $short_datafields = array();
         $long_datafields  = array();
         foreach (DataFieldEntry::getDataFieldEntries($this->current_user->user_id, 'user') as $entry) {
-            if ($entry->structure->accessAllowed($this->perm, $this->user->user_id, $this->current_user->user_id) &&
-                $entry->getDisplayValue()) {
+            if (($entry->structure->accessAllowed($this->perm, $this->user->user_id, $this->current_user->user_id) 
+                    || Visibility::verify($entry->structure->getID(), $this->current_user->user_id)) 
+                            && $entry->getDisplayValue()) {
                 if ($entry instanceof DataFieldTextareaEntry) {
                     $long_datafields[] = $entry;
                 } else {

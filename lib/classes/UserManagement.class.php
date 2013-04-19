@@ -378,6 +378,9 @@ class UserManagement
 
         // send mail
         StudipMail::sendMessage($this->user_data['auth_user_md5.Email'],$subject, $mailbody);
+        
+        // add default visibility settings
+        Visibility::createDefaultCategories($this->user_data['auth_user_md5.user_id']);
 
         return TRUE;
     }
@@ -939,6 +942,9 @@ class UserManagement
             $avatar->reset();
             $this->msg .= "info§" . _("Bild gel&ouml;scht.") . "§";
         }
+        
+        // delete visibility settings
+        Visibility::removeUserPrivacySettings($this->user_data['auth_user_md5.user_id']);
 
         //delete connected users
         if (get_config('ELEARNING_INTERFACE_ENABLE')){

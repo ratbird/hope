@@ -49,22 +49,20 @@ class Settings_PrivacyController extends Settings_SettingsController
         $this->email_visibility  = get_local_visibility_by_id($this->user->user_id, 'email');
 
         // Get default visibility for homepage elements.
-        $this->default_homepage_visibility = get_default_homepage_visibility($this->user->user_id);
-
-        // Now get elements of user's homepage.
-        $homepage_elements_unsorted = $this->about->get_homepage_elements();
-
-        // Group elements by category.
-        $homepage_elements = array();
-        foreach ($homepage_elements_unsorted as $key => $element) {
-            $homepage_elements[$element['category']][$key] = $element;
-        }
-        $this->homepage_elements = $homepage_elements;
+        $this->default_homepage_visibility = Visibility::get_default_homepage_visibility();
 
         $this->NOT_HIDEABLE_FIELDS = $GLOBALS['NOT_HIDEABLE_FIELDS'];
         $this->user_perm           = $GLOBALS['perm']->get_perm($this->user->user_id);
         $this->user_domains        = UserDomain::getUserDomains();
         $this->FOAF_ENABLE         = $GLOBALS['FOAF_ENABLE'];
+        
+        // Calculate colWidth and colCount for different visibilities
+        $this->colCount = Visibility::getColCount();
+        $this->colWidth = 67 / $this->colCount;
+        $this->visibilities = Visibility::getVisibilities();
+        $this->homepage_elements = Visibility::getHTMLArgs(); 
+        
+        //$visibilities = get_local_visibility_by_id($this->current_user->user_id, 'homepage');
     }
 
     /**
@@ -112,7 +110,7 @@ class Settings_PrivacyController extends Settings_SettingsController
         } else {
             $this->reportError(_('Ihre Sichtbarkeitseinstellungen wurden nicht gespeichert!'));
         }
-
+        
         $this->redirect('settings/privacy');
     }
 
@@ -124,20 +122,14 @@ class Settings_PrivacyController extends Settings_SettingsController
     {
         $this->check_ticket();
 
-        $data = array();
-        foreach(array_keys($this->about->get_homepage_elements()) as $key) {
-            if (Request::int($key) !== null) {
-                $data[$key] = Request::int($key);
-            }
-        }
-
-        if ($this->about->change_homepage_visibility($data)) {
+        $data = Request::getArray('visibility_update');
+                if (Visibility::updateUserFromRequest($data)) {
             $this->reportSuccess(_('Ihre Sichtbarkeitseinstellungen wurden gespeichert.'));
         } else {
             $this->reportError(_('Ihre Sichtbarkeitseinstellungen wurden nicht gespeichert!'));
         }
-
-        $this->redirect('settings/privacy');
+        
+  $this->redirect('settings/privacy');
     }
     
     /**
@@ -162,7 +154,7 @@ class Settings_PrivacyController extends Settings_SettingsController
         if (Request::submitted('store_all')) {
             if (!$visiblity = Request::int('all')) {
                 $this->reportError(_('Bitte wählen Sie eine Sichtbarkeitsstufe für Ihre Profilelemente!'));
-            } else if ($this->about->change_all_homepage_visibility($visiblity)) {
+            } else if (Visibility::setAllSettingsForUser($visiblity)) {
                 $this->reportSuccess(_('Die Sichtbarkeit der Profilelemente wurde gespeichert.'));
             } else {
                 $this->reportError(_('Die Sichtbarkeitseinstellungen der Profilelemente wurden nicht gespeichert!'));

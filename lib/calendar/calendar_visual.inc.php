@@ -736,7 +736,9 @@ function fit_title($title, $cols, $rows, $max_length, $end_str = "...", $pad = T
         $new_title = substr($new_title, 0, - (strlen($end_str))) . $end_str;
 
     $new_title = htmlReady(chunk_split($new_title, $length, "\n"));
-    $new_title = substr(str_replace("\n", '<br>', $new_title), 0, -4);
+    $new_title = str_replace("\n", '<br>', $new_title);
+    if(substr($new_title, -4) === "<br>")
+        $new_title = substr($new_title, 0, -4);
 
     if ($pad && $title_length < $length)
         $new_title .= str_repeat('&nbsp;', $length - $title_length);

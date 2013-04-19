@@ -67,7 +67,7 @@ class VisibilitySettings {
         // scan folder
         if ($handle = opendir("$includepath/visibilitySettings")) {
             while (false !== ($file = readdir($handle))) {
-                if ($file != "." && $file != "..") {
+                if ($file != "." && $file != ".." && substr($file, -4) != ".svn") {
                     
                     // load file and save everything needed
                     $require_path = "$includepath/visibilitySettings/$file";

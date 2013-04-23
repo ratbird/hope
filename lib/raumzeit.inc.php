@@ -146,7 +146,6 @@ function raumzeit_checkboxAction($sem) {
 }
 
 function raumzeit_bookRoom($sem) {
-    die("hgdf");
     $singledate = Request::getArray('singledate');
     if (empty ($singledate)) return;
     $resObj = ResourceObject::Factory(Request::option('room'));

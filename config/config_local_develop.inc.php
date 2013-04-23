@@ -5,13 +5,13 @@ you find here the basic system settings. You shouldn't have to touch much of the
 please note the CONFIG.INC.PHP in the system folder for the indivual settings of your installation!*/
 
 $UNI_NAME_CLEAN = "Stud.IP Entwicklungs- und Anwendungsforum";                          //the clean-name of your master-faculty (e.g. University of Göttingen), without html-entities (used for mail-system)
+$STUDIP_INSTALLATION_ID = 'develop';      //unique identifier for installation
 
 
 /*settings for database access
 ----------------------------------------------------------------
 please fill in your database connection settings.
-please note: Stud.IP uses the class DB_Seminar,
-DB_Ilias is used to connect to an Ilias Database*/
+*/
 
 // default Stud.IP database (DB_Seminar)
 $DB_STUDIP_HOST = "localhost";
@@ -19,12 +19,13 @@ $DB_STUDIP_USER = "";
 $DB_STUDIP_PASSWORD = "";
 $DB_STUDIP_DATABASE = "studip";
 @include "dbpass.inc";
-//additional class for Ilias connection (DB_Ilias)
-$DB_ILIAS_HOST = "localhost";
-$DB_ILIAS_USER = "<username>";
-$DB_ILIAS_PASSWORD = "<password>";
-$DB_ILIAS_DATABASE = "ilias";
-
+/*
+// optional Stud.IP slave database
+$DB_STUDIP_SLAVE_HOST = "localhost";
+$DB_STUDIP_SLAVE_USER = "";
+$DB_STUDIP_SLAVE_PASSWORD = "";
+$DB_STUDIP_SLAVE_DATABASE = "studip-slave";
+*/
 
 #####    ##   ##### #    #  ####
 #    #  #  #    #   #    # #
@@ -39,14 +40,26 @@ $ABSOLUTE_PATH_STUDIP = $STUDIP_BASE_PATH . '/public/';
 
 
 // CANONICAL_RELATIVE_PATH_STUDIP should end with a '/'
-$CANONICAL_RELATIVE_PATH_STUDIP = dirname($_SERVER['PHP_SELF']) . '/';
+$CANONICAL_RELATIVE_PATH_STUDIP = dirname($_SERVER['PHP_SELF']);
+if (DIRECTORY_SEPARATOR != '/') {
+    $CANONICAL_RELATIVE_PATH_STUDIP = str_replace(DIRECTORY_SEPARATOR, '/', $CANONICAL_RELATIVE_PATH_STUDIP);
+}
 
+if (substr($CANONICAL_RELATIVE_PATH_STUDIP,-1) != "/"){
+    $CANONICAL_RELATIVE_PATH_STUDIP .= "/";
+}
 
 // ABSOLUTE_URI_STUDIP: insert the absolute URL to your Stud.IP installation; it should end with a '/'
 $ABSOLUTE_URI_STUDIP = "http://develop.studip.de/studip/";
 
 // automagically compute ABSOLUTE_URI_STUDIP if $_SERVER['SERVER_NAME'] is set
 if (isset($_SERVER['SERVER_NAME'])) {
+    // work around possible bug in lighttpd
+    if (strpos($_SERVER['SERVER_NAME'], ':') !== false) {
+        list($_SERVER['SERVER_NAME'], $_SERVER['SERVER_PORT']) =
+            explode(':', $_SERVER['SERVER_NAME']);
+    }
+
     $ABSOLUTE_URI_STUDIP = $_SERVER['HTTPS'] == 'on' ? 'https' : 'http';
     $ABSOLUTE_URI_STUDIP .= '://'.$_SERVER['SERVER_NAME'];
 
@@ -69,6 +82,7 @@ if ($ASSETS_URL[0] === '/') {
     $ASSETS_URL = $ABSOLUTE_URI_STUDIP . $ASSETS_URL;
 }
 
+
 // absolute filesystem path to the plugin packages
 $PLUGINS_PATH = $ABSOLUTE_PATH_STUDIP . 'plugins_packages';
 
@@ -82,8 +96,8 @@ $EXTERN_CONFIG_FILE_PATH =  $STUDIP_BASE_PATH . "/data/extern_config/";
 
 
 // path and url for dynamically generated static content like smilies..
-$DYNAMIC_CONTENT_PATH = $ABSOLUTE_PATH_STUDIP . "/pictures";
-$DYNAMIC_CONTENT_URL  = $ABSOLUTE_URI_STUDIP . "/pictures";
+$DYNAMIC_CONTENT_PATH = $ABSOLUTE_PATH_STUDIP . "pictures";
+$DYNAMIC_CONTENT_URL  = $ABSOLUTE_URI_STUDIP  . "pictures";
 
 
 //path to the temporary folder
@@ -92,7 +106,7 @@ $TMP_PATH ="/tmp/studip";                                   //the system temp pa
 //paths to the command line tools, used in Stud.IP
 $ZIP_USE_INTERNAL = false;                              //set to true, if command-line zip/unzip is not available
 $ZIP_PATH = "/usr/bin/zip";                             //zip tool
-$ZIP_OPTIONS = "";                                    //command line options for zip, e.g. when using SuSE try "-K" to correct long filenames for windows
+$ZIP_OPTIONS = "-K";                                    //command line options for zip, e.g. when using SuSE try "-K" to correct long filenames for windows
 $UNZIP_PATH = "/usr/bin/unzip";
 
 // media proxy settings
@@ -108,7 +122,6 @@ $RELATIVE_PATH_ADMIN_MODULES = "lib/admin";                         //Stud.IP mo
 $RELATIVE_PATH_EXTERN = "lib/extern";                           //Stud.IP module: SRI-System for including Stud.IP data in other websites
 $RELATIVE_PATH_ELEARNING_INTERFACE = "lib/elearning";                   //Stud.IP module: Ilias 3 lerningmodules-connection / general E-Learning-interface
 $RELATIVE_PATH_SOAP = "lib/soap";
-$RELATIVE_PATH_SUPPORT = "lib/support";
 
 $PATH_EXPORT = "lib/export";                                //Stud.IP module: export
 
@@ -126,6 +139,7 @@ $XSLT_ENABLE = TRUE;
 $FOP_ENABLE = TRUE;
 $FOP_SH_CALL = "JAVACMD=/usr/bin/java /opt/fop-0.20.5/fop.sh";                       //path to fop
 
+$EXTERN_SERVER_NAME = "";                               //define name, if you use special setup
 $EXTERN_SRI_ENABLE = TRUE;                              //allow the usage of SRI-interface (Stud.IP Remote Include)
 $EXTERN_SRI_ENABLE_BY_ROOT = FALSE;                         //only root allows the usage of SRI-interface for specific institutes
 $EXTERN_ALLOW_ACCESS_WITHOUT_CONFIG = FALSE;                        //free access to external pages (without the need of a configuration), independent of SRI settings above
@@ -136,8 +150,6 @@ $SOAP_USE_PHP5 = TRUE;
 $WEBSERVICES_ENABLE = TRUE;
 
 $PLUGINS_UPLOAD_ENABLE = TRUE;                  //Upload of Plugins is enabled
-                                                //if disabled for security reasons, uploads have to go into $NEW_PLUGINS_PATH
-$NEW_PLUGINS_PATH = "";                             //The place from which new plugins should be loaded
 
 $PLUGIN_REPOSITORIES = array(
     'http://plugins.studip.de/plugin-wiki.php'
@@ -148,7 +160,6 @@ $PLUGIN_REPOSITORIES = array(
 activate or deactivate some basic system-functions here*/
 
 $SMILEY_COUNTER = TRUE;                             //enable Smiley-counter
-
 
 /*domain name and path translation
 ----------------------------------------------------------------
@@ -166,25 +177,36 @@ and add all used domain names. Below, some examples are given.
 //
 //stud.ip root is a normal directory
 $STUDIP_DOMAINS[1] = "test.studip.de/studip";
-$STUDIP_DOMAINS[2] = "www.test.studip.de/studip";
-$STUDIP_DOMAINS[3] = "develop.studip.de/studip";
-$STUDIP_DOMAINS[4] = "134.76.82.67/studip";
+$STUDIP_DOMAINS[2] = "develop.studip.de/studip";
 
 
 /*mail settings
 ----------------------------------------------------------------
-leave blank if localhost is also the mailserver*/
+possible settings for $MAIL_TRANSPORT:
+smtp      use smtp to deliver to $MAIL_HOST_NAME
+php       use php's mail() function
+sendmail  use local sendmail script
+qmail     use local Qmail MTA
+debug     mails are only written to a file in $TMP_PATH
+*/
 $MAIL_TRANSPORT = "smtp";
-$MAIL_LOCALHOST = "develop.studip.de";                  //name of the mail sending machine (the web server) defaults to SERVER_NAME
-$MAIL_HOST_NAME = "127.0.0.1";                                  //which mailserver should we use? (must allow mail-relaying from $MAIL_LOCALHOST, defaults to SERVER_NAME)
-$MAIL_CHARSET = "";                                 //character set of mail body, defaults to ISO-8859-1
-$MAIL_ENV_FROM = "develop-noreply@studip.de";       //sender mail adress, defaults to wwwrun @ $MAIL_LOCAHOST
+
+/*smtp settings
+----------------------------------------------------------------
+leave blank or try 127.0.0.1 if localhost is also the mailserver
+ignore if you don't use smtp as transport*/
+$MAIL_HOST_NAME = "127.0.0.1";                               //which mailserver should we use? (must allow mail-relaying from $MAIL_LOCALHOST, defaults to SERVER_NAME)
+
+$MAIL_LOCALHOST = "develop.studip.de";                               //name of the mail sending machine (the web server) defaults to SERVER_NAME
+$MAIL_CHARSET = "";                                 //character set of mail body, defaults to WINDOWS-1252
+$MAIL_ENV_FROM = "develop-noreply@studip.de";                                //sender mail adress, defaults to wwwrun @ $MAIL_LOCALHOST
 $MAIL_FROM = "";                                    //name of sender, defaults to "Stud.IP"
-$MAIL_ABUSE = "abuse@studip.de";                                    //mail adress to reply to in case of abuse, defaults to abuse @  $MAIL_LOCAHOST
-$MAIL_BULK_DELIVERY = true;
+$MAIL_ABUSE = "abuse@studip.de";                                   //mail adress to reply to in case of abuse, defaults to abuse @  $MAIL_LOCALHOST
+
+$MAIL_BULK_DELIVERY = TRUE;                        //try to improve the message queueing rate (experimental, does not work for php transport)
 
 $MAIL_VALIDATE_HOST = TRUE;                             //check for valid mail host when user enters email adress
-$MAIL_VALIDATE_BOX = FALSE;                             //check for valid mail account when user enters email adress; set to false if the webserver got no valid MX record
+$MAIL_VALIDATE_BOX = FALSE;                              //check for valid mail account when user enters email adress; set to false if the webserver got no valid MX record
 
 $MESSAGING_FORWARD_AS_EMAIL = TRUE;                         //enable to forward every internal message to the user-mail (the user is able to deactivate this function in his personal settings)
 $MESSAGING_FORWARD_DEFAULT = 3;                             //the default setting: if 1, the user has to switch it on; if 2, every message will be forwarded; if 3 every message will be forwarded on request of the sender
@@ -205,12 +227,19 @@ $ALLOW_GROUPING_SEMINARS = TRUE;                            //if true, administr
 $ALLOW_SELFASSIGN_STUDYCOURSE = TRUE;                           //if true, students are allowed to set or change
                                             //their studycourse (studiengang)
 
-$SHOW_TERMS_ON_FIRST_LOGIN = FALSE;                         //if true, the user has to accept the terms on his first login
+$SHOW_TERMS_ON_FIRST_LOGIN = TRUE;                         //if true, the user has to accept the terms on his first login
                                             //(this feature makes only sense, if you use disable $ENABLE_SELF_REGISTRATION).
+
+$USER_VISIBILITY_CHECK = TRUE;             // enable presentation of visibility decision texts for users after first login
+                                            // see lib/include/header.php and lib/user_visible.inc.php for further info
 
 $CONVERT_IDNA_URL = TRUE;                               //if true, urls with german "umlauts" are converted
 
 $USERNAME_REGULAR_EXPRESSION = '/^([a-zA-Z0-9_@.-]{4,})$/'; //regex for allowed characters in usernames
+
+/*timezone
+----------------------------------------------------------------*/
+$DEFAULT_TIMEZONE = 'Europe/Berlin';
 
 /*language settings
 ----------------------------------------------------------------*/
@@ -296,7 +325,13 @@ $_lit_search_plugins[] = array('name' => 'Rkgoe', 'display_name' =>'Regionalkata
 //$_lit_search_plugins[] = array('name' => "Leopoldina", 'link' => 'http://haweb1.bibliothek.uni-halle.de:8080/DB=4/SET=1/TTL=1/CMD?ACT=SRCHA&IKT=12&SRT=YOP&TRM={accession_number}');
 
 /* Universitätsbibliothek Trier */
-$_lit_search_plugins[] = array('name' => 'UB_Trier', 'display_name' =>'BIB-KAT Universität Trier', 'link' => 'http://bibkat.uni-trier.de/F/?func=find-c&local_base=tri01&ccl_term={accession_number}');
+//$_lit_search_plugins[] = array('name' => 'UB_Trier', 'display_name' =>'BIB-KAT Universität Trier', 'link' => 'http://bibkat.uni-trier.de/F/?func=find-c&local_base=tri01&ccl_term={accession_number}');
+
+/* Südwestdeutscher Bibliotheksverbund SWB Online */
+//$_lit_search_plugins[] = array('name' => "Swb", 'display_name' => "SWB Online Katalog", 'link' => 'http://swb.bsz-bw.de/DB=2.1/SET=1/TTL=2/CLK?IKT=12&TRM={accession_number}');
+
+/* IWF Campusmedien */
+//$_lit_search_plugins[] = array('name' => "IWFdigiClips", 'display_name' => "IWF Campusmedien", 'link' => 'http://gso.gbv.de/DB=1.65/SET=1/TTL=1/CMD?ACT=SRCHA&IKT=12&SRT=YOP&TRM={accession_number}');
 
 /*authentication plugins
 ----------------------------------------------------------------
@@ -307,6 +342,8 @@ Ldap            authentication using an LDAP server, this plugin uses anonymous 
             then it uses the submitted password to authenticate with this user dn
 LdapReader      authentication using an LDAP server, this plugin binds to the server using a given dn and a password,
             this account must have read access to gather the attributes for the user who tries to authenticate.
+CAS         authentication using a central authentication server (CAS)
+Shib            authentication using a Shibboleth identity provider (IdP)
 
 If you write your own plugin put it in studip-htdocs/lib/classes/auth_plugins
 and enable it here. The name of the plugin is the classname excluding "StudipAuth".
@@ -320,6 +357,8 @@ all uppercase each item of the configuration array will become a member of your 
 $STUDIP_AUTH_PLUGIN[] = "Standard";
 // $STUDIP_AUTH_PLUGIN[] = "CAS";
 $STUDIP_AUTH_PLUGIN[] = "Shib";
+
+$STUDIP_AUTH_CONFIG_STANDARD = array("error_head" => "intern");
 
 $STUDIP_AUTH_CONFIG_SHIB = array(
     // SessionInitator URL for remote SP
@@ -405,27 +444,19 @@ $ALLOW_CHANGE_USERNAME = TRUE;                          //if true, users are all
 $ALLOW_CHANGE_EMAIL = TRUE;                         //if true, users are allowed to change their email-address
 $ALLOW_CHANGE_NAME = TRUE;                          //if true, users are allowed to change their name
 $ALLOW_CHANGE_TITLE = TRUE;                         //if true, users are allowed to change their titles
+$ENABLE_SELF_REGISTRATION = TRUE;               //should it be possible for an user to register himself
 
 $ENABLE_REQUEST_NEW_PASSWORD_BY_USER = TRUE;            //if true, users are able to request a new password themselves
+$REQUEST_NEW_PASSWORD_SECRET = 'jh896fajsb974b4850aMhlf'; // if the above feature is used, set this to somthing different!!!
 
-$ENABLE_SELF_REGISTRATION = TRUE;                       //should it be possible for an user to register himself
 $ENABLE_FREE_ACCESS = TRUE;                         //if true, courses with public access are available
 
-// WIKI PLUGINS
-// - plugins are loaded from the wiki module
-// - plugins can define own wiki markup applied after general markup rules//
-// uncomment/change below to activate
-//
-$WIKI_PLUGINS=array(
-    "wiki_lifters.inc.php",  // Lifters Proposal System
-    "wiki_steps.inc.php",  // Stud.IP Enhancement Proposal System
-    "wiki_biests.inc.php"  // Bug and Inconsistency Detection System
-    );
 
-//path generation
+/*path generation
+-----------------------------------------------------------------
+(end of user defined settings)*/
+
 
 //create the html-version of $UNI_NAME clean
-$UNI_NAME=htmlentities($UNI_NAME_CLEAN, ENT_QUOTES);
+$UNI_NAME = htmlspecialchars($UNI_NAME_CLEAN, ENT_QUOTES, 'cp1252');
 
-
-?>

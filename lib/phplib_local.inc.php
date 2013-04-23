@@ -47,7 +47,7 @@ if (Studip\ENV == 'development') {
 }
 
 // set default time zone
-date_default_timezone_set(@date_default_timezone_get());
+date_default_timezone_set($DEFAULT_TIMEZONE ?:@date_default_timezone_get());
 
 // set assets url
 Assets::set_assets_url($GLOBALS['ASSETS_URL']);
@@ -130,6 +130,7 @@ if (isset($GLOBALS['DB_STUDIP_SLAVE_HOST'])) {
 } else {
     DBManager::getInstance()->aliasConnection('studip', 'studip-slave');
 }
+
 /**
  * @deprecated
  */

@@ -305,6 +305,10 @@ $CONVERT_IDNA_URL = TRUE;                   //if true, urls with german "umlauts
 
 $USERNAME_REGULAR_EXPRESSION = '/^([a-zA-Z0-9_@.-]{4,})$/'; //regex for allowed characters in usernames
 
+/*timezone
+----------------------------------------------------------------*/
+$DEFAULT_TIMEZONE = 'Europe/Berlin';
+
 /*language settings
 ----------------------------------------------------------------*/
 

@@ -22,6 +22,7 @@ require_once 'models/ForumAbo.php';
 require_once 'models/ForumBulkMail.php';
 require_once 'models/ForumCat.php';
 require_once 'models/ForumEntry.php';
+require_once 'models/ForumFavorite.php';
 require_once 'models/ForumHelpers.php';
 require_once 'models/ForumIssue.php';
 require_once 'models/ForumLike.php';

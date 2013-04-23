@@ -53,7 +53,7 @@
 <table style="background:#ddffdd; border:1px solid black;" cellpadding=4>
 <tr>
 <td width="50%" valign="top">
-<p><b>Ich möchte sichbar sein und alle Möglichkeiten von Stud.IP nutzen können.</b></p>
+<p><b>Ich möchte sichtbar sein und alle Möglichkeiten von Stud.IP nutzen können.</b></p>
 <p>Ich akzeptiere damit, dass die in den <a href="datenschutz.php" target="_blank">Erl&auml;uterungen zum Datenschutz</a> aufgeführten Informationen
 anderen zugänglich sind.</p>
 <p>&nbsp;</p>

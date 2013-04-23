@@ -8,4 +8,10 @@
     <? endif; ?>
         <?= htmlReady($notification['text']) ?>
     </a>
+    <? $more = $notification->more_unseen();
+    if ($more > 0) : ?>
+    <div class="more">
+        <?= htmlReady(sprintf(_("... und %s weitere"), $more)) ?>
+    </div>
+    <? endif ?>
 </li>

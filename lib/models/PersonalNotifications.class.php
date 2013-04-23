@@ -33,7 +33,7 @@
  * handled by this class automatically.
  */
 class PersonalNotifications extends SimpleORMap {
-    
+
     /**
      * Central function to add a personal notification to the user. This could be
      * anything that needs to catch the attention of the user. The notification
@@ -89,13 +89,13 @@ class PersonalNotifications extends SimpleORMap {
         if (!$user_id) {
             $user_id = $GLOBALS['user']->id;
         }
-        $db = DBManager::get();
-        $statement = $db->prepare(
+        $statement = DBManager::get()->prepare(
             "SELECT pn.* " .
             "FROM personal_notifications AS pn " .
                 "INNER JOIN personal_notifications_user AS u ON (u.personal_notification_id = pn.personal_notification_id) " .
             "WHERE u.user_id = :user_id " .
                 ($only_unread ? "AND u.seen = '0' " : "") .
+            "GROUP BY pn.url " .
             "ORDER BY mkdate ASC " .
         "");
         $statement->execute(array('user_id' => $user_id));
@@ -224,16 +224,6 @@ class PersonalNotifications extends SimpleORMap {
     }
     
     /**
-     * Returns HTML-represantation of the notification which is a list-element.
-     * @return string : html-output;
-     */
-    public function getLiElement() {
-        return $GLOBALS['template_factory']
-                ->open("personal_notifications/notification.php")
-                ->render(array('notification' => $this));
-    }
-
-    /**
      * Constructor of PersonalNotifications
      * @param type $id
      */
@@ -243,4 +233,32 @@ class PersonalNotifications extends SimpleORMap {
         $this->default_values['text'] = '';
         parent::__construct($id);
     }
+
+    /**
+     * Returns HTML-represantation of the notification which is a list-element.
+     * @return string : html-output;
+     */
+    public function getLiElement() {
+        return $GLOBALS['template_factory']
+                ->open("personal_notifications/notification.php")
+                ->render(array('notification' => $this));
+    }
+
+    public function more_unseen() {
+        $statement = DBManager::get()->prepare(
+            "SELECT count(*) " .
+            "FROM personal_notifications AS pn " .
+                "INNER JOIN personal_notifications_user AS u ON (pn.personal_notification_id = u.personal_notification_id) " .
+            "WHERE pn.personal_notification_id = :pn_id " .
+                "AND u.user_id = :user_id " .
+                "AND u.seen = '0' " .
+        "");
+        $statement->execute(array(
+            'pn_id' => $this->getId(),
+            'user_id' => $GLOBALS['user']->id
+        ));
+        $number = $statement->fetch(PDO::FETCH_COLUMN, 0);
+        return $number;
+    }
+
 }

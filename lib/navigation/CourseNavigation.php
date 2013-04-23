@@ -75,9 +75,6 @@ class CourseNavigation extends Navigation
 
         parent::initSubNavigation();
 
-        /*$object_type = $SessSemName['class'];
-        */
-        
         // list of used modules
         $Modules = new Modules();
         $modules = $Modules->getLocalModules($_SESSION['SessionSeminar']);

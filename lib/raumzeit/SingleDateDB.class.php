@@ -75,6 +75,7 @@ class SingleDateDB
         }
 
         if ($termin->isUpdate()) {
+            //die($termin->getTerminID());
             $query = "UPDATE :table
                       SET metadate_id = :metadate_id, date_typ = :date_typ,
                           date = :date, end_time = :end_time,

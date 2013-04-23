@@ -1254,7 +1254,6 @@ class Seminar
         if (!$roomID) {
             return false;
         }
-
         if ($cycle_id != '') {  // SingleDate of an MetaDate
             $this->readSingleDatesForCycle($cycle_id, $this->filterStart, $this->filterEnd);    // Let the cycle-object read in all of his single dates
 

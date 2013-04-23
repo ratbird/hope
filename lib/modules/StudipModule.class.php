@@ -27,6 +27,20 @@ interface StudipModule {
      */
     function getIconNavigation($course_id, $last_visit, $user_id);
     
+    /**
+     * Return a navigation object representing this plugin in the
+     * course overview table or return NULL if you want to display
+     * no icon for this plugin (or course). The navigation object's
+     * title will not be shown, only the image (and its associated
+     * attributes like 'title') and the URL are actually used.
+     *
+     * By convention, new or changed plugin content is indicated
+     * by a different icon and a corresponding tooltip.
+     *
+     * @param  string   $course_id   course or institute range id
+     *
+     * @return array    navigation item to render or NULL
+     */
     function getTabNavigation($course_id);
 
     /**

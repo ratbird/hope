@@ -124,8 +124,7 @@ class StreamsController extends ApplicationController {
      */
     public function more_comments_action() {
         $thread = new BlubberPosting(Request::option("thread_id"));
-        if ($thread['context_type'] === "course") {
-            //&& !$GLOBALS['perm']->have_studip_perm("autor", $thread['Seminar_id'])) {
+        if ($thread['context_type'] === "course" && $GLOBALS['SessSemName']['class'] === "sem") {
             $seminar = new Seminar($thread['Seminar_id']);
             if ($seminar->read_level > 0 && !$GLOBALS['perm']->have_studip_perm("autor", $thread['Seminar_id'])) {
                 throw new AccessDeniedException("Kein Zugriff");
@@ -172,7 +171,7 @@ class StreamsController extends ApplicationController {
      */
     public function more_postings_action() {
         $context_id = Request::option("context_id");
-        if (Request::get("stream") === "course") {
+        if (Request::get("stream") === "course" && $GLOBALS['SessSemName']['class'] === "sem") {
             $seminar = new Seminar($context_id);
             if ($seminar->read_level > 0 && !$GLOBALS['perm']->have_studip_perm("autor", $context_id)) {
                 throw new AccessDeniedException("Kein Zugriff");
@@ -217,7 +216,7 @@ class StreamsController extends ApplicationController {
     public function new_posting_action() {
         $context = Request::option("context");
         $context_type = Request::option("context_type");
-        if ($context_type === "course") {
+        if ($context_type === "course" && $GLOBALS['SessSemName']['class'] === "sem") {
             $seminar = new Seminar($context);
             if ($seminar->write_level > 0 && !$GLOBALS['perm']->have_studip_perm("autor", $context)) {
                 throw new AccessDeniedException("Kein Zugriff");
@@ -318,7 +317,7 @@ class StreamsController extends ApplicationController {
     public function get_source_action() {
         $posting = new BlubberPosting(Request::get("topic_id"));
         $thread = new BlubberPosting($posting['root_id']);
-        if (($thread['context_type'] === "course" && !$GLOBALS['perm']->have_studip_perm("autor", $posting['Seminar_id'])) 
+        if (($thread['context_type'] === "course" && !$GLOBALS['perm']->have_studip_perm("autor", $posting['Seminar_id']))
                 or ($thread['context_type'] === "private" && !$thread->isRelated())) {
             throw new AccessDeniedException("Kein Zugriff");
         }
@@ -411,7 +410,7 @@ class StreamsController extends ApplicationController {
     public function comment_action() {
         $context = Request::option("context");
         $thread = new BlubberPosting(Request::option("thread"));
-        if ($thread['context_type'] === "course") {
+        if ($thread['context_type'] === "course" && $GLOBALS['SessSemName']['class'] === "sem") {
             $seminar = new Seminar($context);
             if ($seminar->write_level > 0 && !$GLOBALS['perm']->have_studip_perm("autor", $context)) {
                 throw new AccessDeniedException("Kein Zugriff");

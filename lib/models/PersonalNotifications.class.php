@@ -249,7 +249,7 @@ class PersonalNotifications extends SimpleORMap {
             "SELECT count(*) " .
             "FROM personal_notifications AS pn " .
                 "INNER JOIN personal_notifications_user AS u ON (pn.personal_notification_id = u.personal_notification_id) " .
-            "WHERE pn.personal_notification_id = :pn_id " .
+            "WHERE pn.personal_notification_id != :pn_id " .
                 "AND u.user_id = :user_id " .
                 "AND u.seen = '0' " .
         "");

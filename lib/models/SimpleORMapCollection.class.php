@@ -442,7 +442,9 @@ class SimpleORMapCollection extends ArrayObject
      */
     function first()
     {
-        return $this->offsetGet(0);
+        $keys = array_keys($this->getArrayCopy());
+        $first_offset = reset($keys);
+        return $this->offsetGet($first_offset ?: 0);
     }
 
     /**
@@ -452,7 +454,9 @@ class SimpleORMapCollection extends ArrayObject
      */
     function last()
     {
-        return $this->offsetGet($this->count() ? $this->count() - 1 : 0);
+        $keys = array_keys($this->getArrayCopy());
+        $last_offset = end($keys);
+        return $this->offsetGet($last_offset ?: 0);
     }
 
      /**

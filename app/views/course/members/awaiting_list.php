@@ -75,7 +75,7 @@
                 <td>
                     <a href="<?= $controller->url_for(sprintf('profile?username=%s',$waiting['username'])) ?>">
                     <?= Avatar::getAvatar($waiting['user_id'], $waiting['username'])->getImageTag(Avatar::SMALL,
-                            array('style' => 'margin-right: 5px''title' => htmlReady($fullname))); ?>
+                            array('style' => 'margin-right: 5px', 'title' => htmlReady($fullname))); ?>
                     <?= $waiting['mkdate'] >= $last_visitdate ? Assets::img('red_star.png',
                         array('style' => 'position: relative; top: -5px; left: -15px; margin: 0px; right: 0px')) : '' ?>
                     <?= htmlReady($fullname) ?>

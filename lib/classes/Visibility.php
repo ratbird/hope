@@ -618,7 +618,7 @@ class Visibility {
      * @param type $user the user for whom the settings should be created
      */
     private function createHomepagePluginEntries($user) {
-        self::getUser(&$user);
+        self::getUser($user);
         $homepageplugins = PluginEngine::getPlugins('HomepagePlugin');
         foreach ($homepageplugins as $plugin) {
             self::addPrivacySetting($plugin->getPluginName(), ("plugin".$plugin->getPluginId()), 'plugins', 1, $user, null, $plugin->getPluginId());

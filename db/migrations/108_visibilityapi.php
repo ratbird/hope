@@ -10,21 +10,19 @@ class Visibilityapi extends Migration {
 
     function up() {
         $sql = "CREATE TABLE IF NOT EXISTS `user_visibility_settings` (
-  `user_id` varchar(32) COLLATE latin1_german1_ci NOT NULL DEFAULT '',
+  `user_id` varchar(32)  NOT NULL DEFAULT '',
   `visibilityid` int(32) NOT NULL AUTO_INCREMENT,
   `parent_id` int(32) NOT NULL,
-  `category` varchar(128) COLLATE latin1_german1_ci NOT NULL,
-  `name` varchar(128) COLLATE latin1_german1_ci NOT NULL,
+  `category` varchar(128)  NOT NULL,
+  `name` varchar(128)  NOT NULL,
   `state` int(2) NOT NULL,
   `plugin` int(11),
-  `identifier` varchar(64) COLLATE latin1_german1_ci NOT NULL,
+  `identifier` varchar(64)  NOT NULL,
   PRIMARY KEY (`visibilityid`),
-  UNIQUE KEY `visibilityid` (`visibilityid`),
-  KEY `visibilityid_2` (`visibilityid`),
   KEY `parent_id` (`parent_id`),
   KEY `identifier` (`identifier`),
   KEY `userid` (`user_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci AUTO_INCREMENT=1;";
+) ENGINE=MyISAM";
         $db = DBManager::get();
         $stmt = $db->prepare($sql);
         $stmt->execute();
@@ -34,7 +32,7 @@ class Visibilityapi extends Migration {
             'Zusätzliche Datenfelder' => 'additionaldata',
             'Eigene Kategorien' => 'owncategory',
             'Allgemeine Daten' => 'commondata');
-        
+
 
         $sql = "SELECT `username` FROM `auth_user_md5`";
         $stmt = $db->prepare($sql);
@@ -57,7 +55,7 @@ class Visibilityapi extends Migration {
     }
 
     function down() {
-        
+
     }
 
 }

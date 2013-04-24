@@ -1,7 +1,7 @@
 <? if ($msg) parse_msg($msg); ?>
 
 <? if (!$is_tutor) : ?>
-    <? if (!$my_visibilty['iam_visible']) : ?>
+    <? if ($my_visibilty['iam_visible']) : ?>
         <br />
         <b><?= _('Sie erscheinen nicht auf der Teilnehmerliste.'); ?></b><br>
         <a href="<?= $controller->url_for(sprintf('course/members/change_visibility?cmd=make_visible&mode=%s', 

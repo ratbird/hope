@@ -1,46 +1,40 @@
 <? use \Studip\Button; ?>
 <br />
 <a name="users"></a>
-<? if ($rechte) : ?>
-<div style="float: right">
-    <?=$controller->getEmailLinkByStatus('accepted')?>
-    <a href="<?= URLHelper::getLink('sms_send.php',
-            array('filter' => 'prelim',
-                'sms_source_page' => 'dispatch.php/course/members?cid=' . $course_id,
-                'course_id' => $course_id,
-                'subject' => $subject))
-    ?>">
-        <?= Assets::img('icons/16/blue/inbox.png',
-                tooltip2(_('Nachricht an alle NutzerInnen verschicken')))?>
-    </a>
-</div>
-<div class="clear"></div>
-<? endif ?>
+
 <form action="<?= $controller->url_for(sprintf('course/members/edit_accepted/%s',$page)) ?>"
       method="post" onsubmit="if ($('#action_accepted').val() == 'remove')
           return confirm('<?= _('Wollen Sie die markierten NutzerInnen wirklich austragen?') ?>');">
     <table class="default collapsable zebra">
         <colgroup>
-        <? if($rechte) : ?>
-        <col width="3%">
-        <? endif ?>
-        <col width="3%">
-        <col width="<?=($rechte) ? '79%' : '82%'?>">
-        <col width="15%">
-    </colgroup>
+            <col width="3%">
+            <col width="3%">
+            <col width="79%">
+            <col width="15%">
+        </colgroup>
         <thead>
             <tr>
-                <th class="table_header_bold" colspan="<?=($rechte) ? 4 : 3?>">
+                <th class="table_header_bold" colspan="3">
                     <?= _('Vorläufig akzeptierte TeilnehmerInnen') ?>
+                </th>
+                <th class="table_header_bold" style="text-align: right">
+                    <?=$controller->getEmailLinkByStatus('accepted')?>
+                    <a href="<?= URLHelper::getLink('sms_send.php',
+                            array('filter' => 'prelim',
+                                'sms_source_page' => 'dispatch.php/course/members?cid=' . $course_id,
+                                'course_id' => $course_id,
+                                'subject' => $subject))
+                    ?>">
+                        <?= Assets::img('icons/16/blue/inbox.png',
+                                tooltip2(_('Nachricht an alle NutzerInnen verschicken')))?>
+                    </a>
                 </th>
             </tr>
             <tr class="sortable">
-                <th colspan="<?=($rechte) ? 3 : 2 ?>" <?= ($sort_by == 'nachname' && $sort_status == 'accepted') ?
+                <th colspan="3" <?= ($sort_by == 'nachname' && $sort_status == 'accepted') ?
                 sprintf('class="sort%s"', $order) : '' ?>>
-                    <? if ($rechte) : ?>
-                        <input aria-label="<?= _('NutzerInnen auswählen') ?>"
+                    <input aria-label="<?= _('NutzerInnen auswählen') ?>"
                                type="checkbox" name="all" value="1" data-proxyfor=":checkbox[name^=accepted]">
-                    <? endif ?>
                     <a href="<?= URLHelper::getLink(sprintf('?sortby=nachname&sort_status=accepted&order=%s&toggle=%s',
                             $order, ($sort_by == 'nachname'))) ?>#users">
                         <?=_('Nachname, Vorname')?>
@@ -53,12 +47,10 @@
         <? $nr= 0; foreach($accepted as $accept) : ?>
         <? $fullname = $accept->user->getFullName();?>
             <tr>
-                <? if ($rechte) : ?>
                 <td>
-                    <input aria-label="<?= sprintf(_('Alle %s auswählen'), $status_groups['user']) ?>"
-                           type="checkbox" name="accepted[<?= $accept['user_id'] ?>]" value="1" />
+                <input aria-label="<?= sprintf(_('Alle %s auswählen'), $status_groups['user']) ?>"
+                        type="checkbox" name="accepted[<?= $accept['user_id'] ?>]" value="1" />
                 </td>
-                <? endif ?>
                 <td><?= (++$nr < 10) ? sprintf('%02d', $nr) : $nr ?></td>
                 <td>
                     <a href="<?= $controller->url_for(sprintf('profile?username=%s',$accept['username'])) ?>">

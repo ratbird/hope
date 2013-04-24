@@ -1,55 +1,44 @@
 <? use \Studip\Button; ?>
 <br />
 <a name="awaiting"></a>
-<? if ($rechte) : ?>
-<div style="float: right">
-    <?=$controller->getEmailLinkByStatus('awaiting')?>
-    <a href="<?= URLHelper::getLink('sms_send.php',
-            array('sms_source_page' => 'dispatch.php/course/members?cid=' . $course_id,
-                'course_id' => $course_id,
-                'subject' => $subject))
-    ?>">
-        <?= Assets::img('icons/16/blue/inbox.png', tooltip2( _('Nachricht an alle NutzerInnen verschicken')))?>
-    </a>
-</div>
-<div class="clear"></div>
-<? endif ?>
-
 <form action="<?= $controller->url_for(sprintf('course/members/edit_awaiting/%s/?cid=%s', $page, Request::get('cid'))) ?>"
       method="post" onsubmit="if ($('#action_awaiting').val() == 'remove')
           return confirm('<?= _('Wollen Sie die markierten NutzerInnen wirklich austragen?') ?>');">
     <table class="default collapsable zebra-hover">
         <colgroup>
-            <? if($rechte) : ?>
             <col width="3%">
-            <? endif ?>
             <col width="3%">
-            <col width="<?=($rechte) ? '49%' : '82%'?>">
-            <? if($rechte) : ?>
+            <col width="49%">
             <col width="5%">
             <col width="25%"
-            <? endif ?>
             <col width="15%">
         </colgroup>
         <thead>
             <tr>
-                <th class="table_header_bold" colspan="<?=($rechte) ? 4: 3?>">
+                <th class="table_header_bold" colspan="5">
                     <?= $waitingTitle ?>
+                </th>
+                <th class="table_header_bold" style="text-align: right">
+                    <?=$controller->getEmailLinkByStatus('awaiting')?>
+                    <a href="<?= URLHelper::getLink('sms_send.php',
+                            array('sms_source_page' => 'dispatch.php/course/members?cid=' . $course_id,
+                                'course_id' => $course_id,
+                                'subject' => $subject))
+                    ?>">
+                        <?= Assets::img('icons/16/blue/inbox.png', tooltip2( _('Nachricht an alle NutzerInnen verschicken')))?>
+                    </a>
                 </th>
             </tr>
             <tr class="sortable">
-                <th colspan="<?=($rechte) ? 3 : 2?>"<?= ($sort_by == 'nachname' && $sort_status == 'awaiting') ?
+                <th colspan="3>"<?= ($sort_by == 'nachname' && $sort_status == 'awaiting') ?
                     sprintf('class="sort%s"', $order) : '' ?>>
-                    <? if ($rechte) : ?>
-                        <input aria-label="<?= _('NutzerInnen auswählen') ?>"
-                               type="checkbox" name="all" value="1" data-proxyfor=":checkbox[name^=awaiting]">
-                    <? endif ?>
+                    <input aria-label="<?= _('NutzerInnen auswählen') ?>"
+                            type="checkbox" name="all" value="1" data-proxyfor=":checkbox[name^=awaiting]">
                     <a href="<?= URLHelper::getLink(sprintf('?sortby=nachname&sort_status=awaiting&order=%s&toggle=%s',
                             $order, ($sort_by == 'nachname'))) ?>#awaiting">
                         <?=_('Nachname, Vorname')?>
                     </a>
                 </th>
-                <? if ($rechte) : ?>
                 <th style="text-align: center" <?= ($sort_by == 'position' && $sort_status == 'awaiting') ?
                     sprintf('class="sort%s"', $order) : '' ?>>
                     <a href="<?= URLHelper::getLink(sprintf('?sortby=position&sort_status=awaiting&order=%s&toggle=%s',
@@ -58,7 +47,6 @@
                     </a>
                 </th>
                 <th style="text-align: center"><?= _('Kontingent') ?></th>
-                <? endif ?>
                 <th style="text-align: right"><?= _('Aktion') ?></th>
             </tr>
         </thead>
@@ -67,10 +55,8 @@
         <? foreach($awaiting as $waiting) : ?>
         <? $fullname = $waiting->user->getFullName();?>
             <tr>
-                <? if ($rechte) : ?>
-                    <td><input aria-label="<?= _('Alle NutzerInnen auswählen') ?>" type="checkbox"
-                               name="awaiting[<?= $user['user_id'] ?>]" value="1" /></td>
-                <? endif ?>
+                <td><input aria-label="<?= _('Alle NutzerInnen auswählen') ?>" type="checkbox"
+                            name="awaiting[<?= $user['user_id'] ?>]" value="1" /></td>
                 <td><?= (++$nr < 10) ? sprintf('%02d', $nr) : $nr ?></td>
                 <td>
                     <a href="<?= $controller->url_for(sprintf('profile?username=%s',$waiting['username'])) ?>">
@@ -81,12 +67,10 @@
                     <?= htmlReady($fullname) ?>
                     </a>
                 </td>
-                <? if ($rechte) : ?>
-                    <td style="text-align: center"><?= $waiting['position'] ?></td>
-                    <td style="text-align: center">
-                        <?= ($autor['admission_studiengang_id'] == 'all') ? _('alle Studiengänge') : '' ?>
-                    </td>
-                <? endif ?>
+                <td style="text-align: center"><?= $waiting['position'] ?></td>
+                <td style="text-align: center">
+                    <?= ($autor['admission_studiengang_id'] == 'all') ? _('alle Studiengänge') : '' ?>
+                </td>
                 <td style="text-align: right">
                     <a href="<?= URLHelper::getLink('sms_send.php',
                                 array('filter' => 'send_sms_to_all',
@@ -111,10 +95,9 @@
             </tr>
         <? endforeach ?>
         </tbody>
-        <? if ($rechte) : ?>
         <tfoot>
             <tr>
-                <td class="printhead" colspan="<?=($rechte) ? 6 : 3?>">
+                <td class="printhead" colspan="6">
                     <select name="action_awaiting" id="action_awaiting" aria-label="<?= _('Aktion ausführen') ?>">
                         <option value="">- <?= _('Aktion wählen') ?></option>
                         <option value="upgrade"><?= _('Als NutzerInnen befördern') ?></option>
@@ -129,6 +112,5 @@
                 </td>
             </tr>
         </tfoot>
-        <? endif ?>
     </table>
 </form>

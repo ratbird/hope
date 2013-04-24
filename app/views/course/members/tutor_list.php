@@ -1,29 +1,6 @@
 <? use \Studip\Button; ?>
 
 <a name="tutoren"></a>
-<? if($rechte) : ?>
-<div style="float: right">
-    <?=$controller->getEmailLinkByStatus('tutor')?>
-    <a href="<?= URLHelper::getLink('sms_send.php',
-            array('filter' => 'send_sms_to_all',
-                'who' => 'tutor',
-                'sms_source_page' => sprintf('dispatch.php/course/members?cid=%s',$course_id),
-                'course_id' => $course_id,
-                'subject' => $subject))
-    ?>">
-        <?= Assets::img('icons/16/blue/inbox.png',
-                tooltip2(sprintf(_('Nachricht an alle %s verschicken'), $status_groups['tutor'])))?>
-    </a>
-    <? if ($is_dozent && !$is_tutor_locked) : ?>
-    <a href="<?= $controller->url_for('course/members/add_tutor/')?>">
-        <?= Assets::img('icons/16/blue/add/community.png',
-                tooltip2(sprintf(_('Neue/n %s in der Veranstaltung eintragen'), $status_groups['tutor']))) ?>
-    </a>
-    <? endif ?>
-</div>
-<div class="clear"></div>
-<? endif ?>
-
 <form action="<?= $controller->url_for(sprintf('course/members/edit_tutor/%s',$page)) ?>"
       method="post" onsubmit="if ($('#tutor_action').val() == 'remove')
           return confirm('<?= sprintf(_('Wollen Sie die markierten %s wirklich austragen?'),
@@ -39,10 +16,31 @@
     </colgroup>
         <thead>
             <tr>
-                <th class="table_header_bold" colspan="<?=($rechte) ? 4 : 3?>">
+                <th class="table_header_bold" colspan="<?=($rechte) ? 3 : 2?>">
                     <?= $status_groups['tutor'] ?>
                     <?= tooltipIcon(sprintf(_('%s haben Verwaltungsrechte, können jedoch keine %s hinzufügen.'),
                             $status_groups['tutor'], $status_groups['dozent'])) ?>
+                </th>
+                <th class="table_header_bold" style="text-align: right">
+                <? if($rechte) : ?>
+                    <?=$controller->getEmailLinkByStatus('tutor')?>
+                    <a href="<?= URLHelper::getLink('sms_send.php',
+                            array('filter' => 'send_sms_to_all',
+                                'who' => 'tutor',
+                                'sms_source_page' => sprintf('dispatch.php/course/members?cid=%s',$course_id),
+                                'course_id' => $course_id,
+                                'subject' => $subject))
+                    ?>">
+                        <?= Assets::img('icons/16/blue/inbox.png',
+                                tooltip2(sprintf(_('Nachricht an alle %s verschicken'), $status_groups['tutor'])))?>
+                    </a>
+                    <? if ($is_dozent && !$is_tutor_locked) : ?>
+                    <a href="<?= $controller->url_for('course/members/add_tutor/')?>">
+                        <?= Assets::img('icons/16/blue/add/community.png',
+                                tooltip2(sprintf(_('Neue/n %s in der Veranstaltung eintragen'), $status_groups['tutor']))) ?>
+                    </a>
+                    <? endif ?>
+                <? endif ?>
                 </th>
             </tr>
             <tr class="sortable">

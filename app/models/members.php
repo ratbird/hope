@@ -57,43 +57,7 @@ class MembersModel {
         return $subject;
     }
 
-    /**
-     * Get the visibility of a user in a seminar 
-     * @param String $user_id
-     * @param String $seminar_id
-     * @return Array
-     */
-    public function getUserVisibility($user_id, $seminar_id) {
 
-        $course = new Course($seminar_id);
-
-        $member = $course->members->findBy('user_id', $user_id);
-        $visibility = $member->val('visible');
-        $status = $member->val('status');
-
-        $result['visible_mode'] = 'false';
-
-        if ($visibility) {
-            $result['iam_visible'] = $visibility == 'yes';
-
-            if ($status == 'user' || $status == 'autor') {
-                $result['visible_mode'] = 'participant';
-            } else {
-                $result['iam_visible'] = true;
-                $result['visible_mode'] = false;
-            }
-        }
-
-        $admission_member = $course->admission_applicants->findBy('user_id', $user_id);
-        $admission_visibility = $admission_member->val('visible');
-
-        if ($admission_visibility) {
-            $result['iam_visible'] = $admission_visibility == 'yes';
-            $result['visible_mode'] = 'awaiting';
-        }
-
-        return $result;
-    }
 
     public function setAdmissionVisibility($user_id, $status) {
         $query = "UPDATE admission_seminar_user SET visible = '?' WHERE user_id = ? AND seminar_id = ?";

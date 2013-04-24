@@ -1,54 +1,48 @@
 <? use \Studip\Button; ?>
 <a name="users"></a>
-<? if ($rechte) : ?>
-<div style="float: right">
-    <?=$controller->getEmailLinkByStatus('user')?>
-    <a href="<?= URLHelper::getLink('sms_send.php',
-            array('filter' => 'send_sms_to_all',
-                'who' => 'user',
-                'sms_source_page' => 'dispatch.php/course/members?cid=' . $course_id,
-                'course_id' => $course_id,
-                'subject' => $subject))
-    ?>">
-        <?= Assets::img('icons/16/blue/inbox.png',
-                tooltip2(sprintf(_('Nachricht an alle %s verschicken'), $status_groups['user'])))?>
-    </a>
-    <? if ($is_dozent) : ?>
-    <a href="<?= $controller->url_for('course/members/add_member/user/')?>">
-        <?= Assets::img('icons/16/blue/add/community.png',
-                tooltip2(sprintf(_('Neue/n %s in der Veranstaltung eintragen'), $status_groups['user']))) ?>
-    </a>
-    <? endif ?>
-</div>
-<div class="clear"></div>
-<? endif ?>
+
 <form action="<?= $controller->url_for(sprintf('course/members/edit_user/%s',$page)) ?>"
       method="post" onsubmit="if ($('#user_action').val() == 'remove')
           return confirm('<?= sprintf(_('Wollen Sie die markierten %s wirklich austragen?'),
                   $status_groups['user']) ?>');">
     <table class="default collapsable zebra">
         <colgroup>
-        <? if($rechte) : ?>
-        <col width="3%">
-        <? endif ?>
-        <col width="3%">
-        <col width="<?=($rechte) ? '79%' : '82%'?>">
-        <col width="15%">
-    </colgroup>
+            <col width="3%">
+            <col width="3%">
+            <col width="79%">
+            <col width="15%">
+        </colgroup>
         <thead>
             <tr>
-                <th class="table_header_bold" colspan="<?=($rechte) ? 4 : 3?>">
+                <th class="table_header_bold" colspan="<?=($rechte) ? 3 : 2?>">
                     <?= $status_groups['user'] ?>
                     <?= tooltipIcon(sprintf(_('%s haben keine Schreibrechte.'),
                             $status_groups['user'])) ?>
                 </th>
+                <th class="table_header_bold" style="text-align: right">
+                    <?=$controller->getEmailLinkByStatus('user')?>
+                    <a href="<?= URLHelper::getLink('sms_send.php',
+                            array('filter' => 'send_sms_to_all',
+                                'who' => 'user',
+                                'sms_source_page' => 'dispatch.php/course/members?cid=' . $course_id,
+                                'course_id' => $course_id,
+                                'subject' => $subject))
+                    ?>">
+                        <?= Assets::img('icons/16/blue/inbox.png',
+                                tooltip2(sprintf(_('Nachricht an alle %s verschicken'), $status_groups['user'])))?>
+                    </a>
+                    <? if ($is_dozent) : ?>
+                    <a href="<?= $controller->url_for('course/members/add_member/user/')?>">
+                        <?= Assets::img('icons/16/blue/add/community.png',
+                                tooltip2(sprintf(_('Neue/n %s in der Veranstaltung eintragen'), $status_groups['user']))) ?>
+                    </a>
+                    <? endif ?>
+                </th>
             </tr>
             <tr class="sortable">
-                <th colspan="<?=($rechte) ? 3 : 2 ?>" <?= ($sort_by == 'nachname' && $sort_status == 'user') ? sprintf('class="sort%s"', $order) : '' ?>>
-                    <? if ($rechte) : ?>
-                        <input aria-label="<?= _('NutzerInnen auswählen') ?>"
+                <th colspan="3" <?= ($sort_by == 'nachname' && $sort_status == 'user') ? sprintf('class="sort%s"', $order) : '' ?>>
+                    <input aria-label="<?= _('NutzerInnen auswählen') ?>"
                                type="checkbox" name="all" value="1" data-proxyfor=":checkbox[name^=user]">
-                    <? endif ?>
                     <a href="<?= URLHelper::getLink(sprintf('?sortby=nachname&sort_status=user&order=%s&toggle=%s',
                             $order, ($sort_by == 'nachname'))) ?>#users">
                         <?=_('Nachname, Vorname')?>
@@ -61,12 +55,10 @@
         <? $nr= 0; foreach($users as $leser) : ?>
         <? $fullname = $leser->user->getFullName();?>
             <tr>
-                <? if ($rechte) : ?>
                 <td>
                     <input aria-label="<?= sprintf(_('Alle %s auswählen'), $status_groups['user']) ?>"
                            type="checkbox" name="user[<?= $leser['user_id'] ?>]" value="1" />
                 </td>
-                <? endif ?>
                 <td><?= (++$nr < 10) ? sprintf('%02d', $nr) : $nr ?></td>
                 <td>
                     <a href="<?= $controller->url_for(sprintf('profile?username=%s',$leser['username'])) ?>">

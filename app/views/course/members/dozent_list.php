@@ -1,23 +1,3 @@
-<? if ($rechte) : ?>
-<div style="float: right">
-    <?=$controller->getEmailLinkByStatus('dozent')?>
-    <a href="<?= URLHelper::getLink('sms_send.php', array('filter' => 'send_sms_to_all', 'who' =>
-            'dozent', 'sms_source_page' => 'dispatch.php/course/members',
-            'course_id' => $course_id, 'subject' => $subject)) ?>">
-
-        <?= Assets::img('icons/16/blue/inbox.png',
-                tooltip2(sprintf(_('Nachricht an alle %s verschicken'), $status_groups['dozent']))) ?>
-    </a>
-    <? if ($is_dozent && !$dozent_is_locked) : ?>
-        <a href="<?=$controller->url_for('course/members/add_dozent/')?>">
-            <?= Assets::img('icons/16/blue/add/community.png',
-                    tooltip2(sprintf(_('Neuen %s hinzufügen'), $status_groups['dozent'])))?>
-        </a>
-    <? endif ?>
-</div>
-<div class="clear"></div>
-<? endif ?>
-
 <table class="default collapsable zebra-hover">
     <colgroup>
         <col width="<?=($rechte) ? '6%' : '3%'?>">
@@ -26,9 +6,27 @@
     </colgroup>
     <thead>
         <tr>
-            <th colspan="3" class="table_header_bold" >
+            <th colspan="2" class="table_header_bold" >
                 <?= $this->status_groups['dozent'] ?>
                 <?= tooltipIcon(sprintf(_('%s haben Administrationrechte'), $status_groups['dozent'])) ?>
+            </th>
+            <th class="table_header_bold" style="text-align:right">
+            <? if ($rechte) : ?>
+                <?=$controller->getEmailLinkByStatus('dozent')?>
+                <a href="<?= URLHelper::getLink('sms_send.php', array('filter' => 'send_sms_to_all', 'who' =>
+                        'dozent', 'sms_source_page' => 'dispatch.php/course/members',
+                        'course_id' => $course_id, 'subject' => $subject)) ?>">
+
+                    <?= Assets::img('icons/16/blue/inbox.png',
+                            tooltip2(sprintf(_('Nachricht an alle %s verschicken'), $status_groups['dozent']))) ?>
+                </a>
+                <? if ($is_dozent && !$dozent_is_locked) : ?>
+                    <a href="<?=$controller->url_for('course/members/add_dozent/')?>">
+                        <?= Assets::img('icons/16/blue/add/community.png',
+                                tooltip2(sprintf(_('Neuen %s hinzufügen'), $status_groups['dozent'])))?>
+                    </a>
+                <? endif ?>
+            <? endif ?>
             </th>
         </tr>
         <tr class="sortable">

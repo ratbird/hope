@@ -1,56 +1,7 @@
 <? use \Studip\Button; ?>
 <a name="autoren"></a>
 
-<? if ($total > $max_per_page) : ?>
-    <? if ($page != 0) : ?>
-        <?= Assets::img('icons/16/blue/arr_2right.png') ?>
-        <a title="<?= sprintf(_('Lassen Sie sich alle %s anzeigen'), htmlReady($status_groups['autor'])) ?>"
-           href="<?= $controller->url_for('course/members/index/0') ?>#autoren">
-            <?= sprintf(_('Alle %s anzeigen'), htmlReady($status_groups['autor'])) ?>
-        </a>
-    <? else : ?>
-        <?= Assets::img('icons/16/blue/arr_2down.png') ?>
-        <a title="<?= sprintf(_('Lassen Sie sich eine gekürzte Liste von %s anzeigen'), htmlReady($status_groups['autor'])) ?>
-           " href="<?= $controller->url_for('course/members/index/1') ?>#autoren">
-            <?= _('Gekürzte Liste anzeigen') ?>
-        </a>
-    <? endif ?>
-<? endif ?>
-
-<? if ($rechte) : ?>
-<div style="float: right; padding: 10px 0px 0px 28px; width: 60%; text-align: right">
-    <? if (!empty($autoren)) : ?>
-        <?=$controller->getEmailLinkByStatus('autor')?>
-        <a href="<?= URLHelper::getLink('sms_send.php',
-            array('filter' => 'send_sms_to_all',
-                'who' => 'autor',
-                'sms_source_page' => sprintf('dispatch.php/course/members?cid=%s',$course_id),
-                'course_id' => $course_id,
-                'subject' => $subject))
-        ?>">
-            <?= Assets::img('icons/16/blue/inbox.png',
-                    tooltip2(sprintf(_('Nachricht an alle %s verschicken'), htmlReady($status_groups['autor'])))) ?>
-        </a>
-    <? endif ?>
-
-
-    <? if (!empty($autoren)) : ?>
-        <?= $rtfExport ?>
-        <?= $csvExport ?>
-    <? endif ?>
-
-    <? if ($is_dozent) : ?>
-        <a href="<?= $controller->url_for('course/members/add_member')?>">
-            <?= Assets::img('icons/16/blue/add/community.png',
-                    tooltip2(sprintf(_('Neuen %s zur Veranstaltung hinzufügen'),htmlReady($status_groups['autor'])))) ?>
-        </a>
-    <? endif ?>
-</div>
-<div class="clear"></div>
-<? endif ?>
-
-<? if (!empty($autoren)) : ?>
-
+<? if (count($autoren) >0 ) : ?>
 <form action="<?= $controller->url_for(sprintf('course/members/edit_autor/%s',$page)) ?>"
           method="post" onsubmit="if ($('#action_autor').val() == 'remove')
               return confirm('<?= sprintf(_('Wollen Sie die markierten %s wirklich austragen?'),
@@ -84,9 +35,32 @@
         </colgroup>
         <thead>
             <tr>
-                <th class="table_header_bold" colspan="<?=$cols?>">
+                <th class="table_header_bold" colspan="<?=($rechte) ? $cols-2 : $cols-1?>">
                     <?= $status_groups['autor'] ?>
                     <?= tooltipIcon(sprintf(_('%s haben Schreib- und Leserechte'), htmlReady($status_groups['autor']))) ?>
+                </th>
+                <th class="table_header_bold" style="text-align: right" <?= ($rechte) ? 'colspan="2"' : ''?>>
+                <? if ($rechte) : ?>
+                    <? if (!empty($autoren)) : ?>
+                        <?=$controller->getEmailLinkByStatus('autor')?>
+                        <a href="<?= URLHelper::getLink('sms_send.php',
+                            array('filter' => 'send_sms_to_all',
+                                'who' => 'autor',
+                                'sms_source_page' => sprintf('dispatch.php/course/members?cid=%s',$course_id),
+                                'course_id' => $course_id,
+                                'subject' => $subject))
+                        ?>">
+                            <?= Assets::img('icons/16/blue/inbox.png',
+                                    tooltip2(sprintf(_('Nachricht an alle %s verschicken'), htmlReady($status_groups['autor'])))) ?>
+                        </a>
+                    <? endif ?>
+                    <? if ($is_dozent) : ?>
+                        <a href="<?= $controller->url_for('course/members/add_member')?>">
+                            <?= Assets::img('icons/16/blue/add/community.png',
+                                    tooltip2(sprintf(_('Neuen %s zur Veranstaltung hinzufügen'),htmlReady($status_groups['autor'])))) ?>
+                        </a>
+                    <? endif ?>
+                <? endif ?>
                 </th>
             </tr>
             <tr class="sortable">
@@ -238,8 +212,5 @@
         </tfoot>
     </table>
 </form>
-<? else : ?>
-    <?= MessageBox::info(sprintf(_('Derzeit sind noch keine %s in der Veranstaltung eingetragen.'),
-            htmlReady($status_groups['autor']))) ?>
 <? endif; ?>
 

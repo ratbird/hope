@@ -49,7 +49,7 @@ class Course_MembersController extends AuthenticatedController {
         $this->tutor_is_locked = LockRules::Check($this->course_id, 'tutor');
 
         // Layoutsettings
-        PageLayout::setTitle($this->header_line . " - " . _("TeilnehmerInnen"));
+        PageLayout::setTitle(sprintf('%s - %s', $this->header_line, _("TeilnehmerInnen")));
 
         SkipLinks::addIndex(Navigation::getItem('/course/members')->getTitle(), 'main_content', 100);
 
@@ -99,34 +99,6 @@ class Course_MembersController extends AuthenticatedController {
         global $perm, $rechte, $PATH_EXPORT;
         $sem = Seminar::getInstance($this->course_id);
 
-        #echo "<pre>"; var_dump($this->course); echo "</pre>";
-        // if export enable, include export function an create export links
-        if (get_config('EXPORT_ENABLE') AND $perm->have_studip_perm("tutor", $this->course_id)) {
-            include_once($PATH_EXPORT . "/export_linking_func.inc.php");
-
-            // create csv-export link
-            $this->csvExport = export_link($this->course_id, "person",
-                    sprintf('%s %s', htmlReady($this->status_groups['autor']),
-                            htmlReady($this->course_title)), 'csv', 'csv-teiln', '',
-                    Assets::img('icons/16/blue/file-xls.png', array(
-                        'alt' => sprintf(_('%s exportieren als csv Dokument'),
-                                htmlReady($this->decoratedStatusGroups['autor'])),
-                        'title' => sprintf(_('%s exportieren als csv Dokument'),
-                                htmlReady($this->status_groups['autor'])))),
-                    'passthrough');
-
-            // create csv-export link
-            $this->rtfExport = export_link($this->course_id, "person",
-                    sprintf('%s %s', htmlReady($this->status_groups['autor']),
-                            htmlReady($this->course_title)), 'rtf', 'rtf-teiln', '',
-                    Assets::img('icons/16/blue/file-text.png', array(
-                        'alt' => sprintf(_('%s exportieren als rtf Dokument'),
-                                htmlReady($this->decoratedStatusGroups['autor'])),
-                        'title' => sprintf(_('%s exportieren als rtf Dokument'),
-                                htmlReady($this->decoratedStatusGroups['autor'])))),
-                    'passthrough');
-        }
-
         // old message style
         if ($_SESSION['sms_msg']) {
             $this->msg = $_SESSION['sms_msg'];
@@ -153,8 +125,7 @@ class Course_MembersController extends AuthenticatedController {
             SkipLinks::addIndex(_("Sichtbarkeit ändern"), 'change_visibility');
             $this->is_autor = true;
             $this->invisibles = $this->getInvisibleCount();
-
-            $this->my_visibilty = $this->members->getUserVisibility($this->user_id, $this->course_id);
+            $this->my_visibilty = $this->getUserVisibility();
         }
 
         // Check Seminar
@@ -213,6 +184,26 @@ class Course_MembersController extends AuthenticatedController {
                         'filter' => 'all',
                         'emailrequest' => 1)), _('Nachricht an alle (Rundmail)'));
             $this->addToInfobox(_('Aktionen'), $link, 'icons/16/blue/inbox.png');
+            
+            if (get_config('EXPORT_ENABLE') AND $perm->have_studip_perm("tutor", $this->course_id)) {
+                include_once($PATH_EXPORT . "/export_linking_func.inc.php");
+
+                // create csv-export link
+                $csvExport = export_link($this->course_id, "person",
+                        sprintf('%s %s', htmlReady($this->status_groups['autor']),
+                                htmlReady($this->course_title)), 'csv', 'csv-teiln', '',
+                        _('TeilnehmerInnen exportieren als csv Dokument'),
+                        'passthrough');
+
+                // create csv-export link
+                $trtfExport = export_link($this->course_id, "person",
+                        sprintf('%s %s', htmlReady($this->status_groups['autor']),
+                                htmlReady($this->course_title)), 'rtf', 'rtf-teiln', '',
+                        _('TeilnehmerInnen exportieren als rtf Dokument'),
+                        'passthrough');
+                $this->addToInfobox(_('Aktionen'), $csvExport, 'icons/16/blue/file-xls.png');
+                $this->addToInfobox(_('Aktionen'), $trtfExport, 'icons/16/blue/file-text.png');
+            }
         }
     }
 
@@ -268,7 +259,7 @@ class Course_MembersController extends AuthenticatedController {
         }
 
         // Count total member for pagination
-        $this->total = count($members);
+//        $this->total = count($members);
 
         // Sorting
         if ($this->sort_status == 'autor') {
@@ -277,15 +268,15 @@ class Course_MembersController extends AuthenticatedController {
             $members->orderBy('nachname asc');
         }
 
-        if ($this->page != 0) {
-            $offset = ($this->page - 1) * $this->max_per_page;
+//        if ($this->page != 0) {
+//            $offset = ($this->page - 1) * $this->max_per_page;
+//
+//            $results = $members->limit($offset, $this->max_per_page);
+//        } else {
+//            $results = $members;
+//        }
 
-            $results = $members->limit($offset, $this->max_per_page);
-        } else {
-            $results = $members;
-        }
-
-        return $results;
+        return $members;
     }
 
     /*
@@ -1170,7 +1161,41 @@ class Course_MembersController extends AuthenticatedController {
         $this->redirect(sprintf('course/members/index/%s', $page));
     }
 
+    /**
+     * Get the visibility of a user in a seminar 
+     * @param String $user_id
+     * @param String $seminar_id
+     * @return Array
+     */
+    public function getUserVisibility() {
+        $member = $this->course->members->findBy('user_id', $this->user_id);
+        
+        $visibility = $member->val('visible');
+        $status = $member->val('status');
+ 
+        $result['visible_mode'] = 'false';
 
+        if ($visibility) {
+            $result['iam_visible'] = $visibility == 'yes';
+
+            if ($status == 'user' || $status == 'autor') {
+                $result['visible_mode'] = 'participant';
+            } else {
+                $result['iam_visible'] = true;
+                $result['visible_mode'] = false;
+            }
+        }
+
+        $admission_member = $this->course->admission_applicants->findBy('user_id', $this->user_id);
+        $admission_visibility = $admission_member->val('visible');
+
+        if ($admission_visibility) {
+            $result['iam_visible'] = $admission_visibility == 'yes';
+            $result['visible_mode'] = 'awaiting';
+        }
+        
+        return $result;
+    }
     /**
      * Creates a String for the waitinglist
      * @return String

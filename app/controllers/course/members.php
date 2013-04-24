@@ -60,7 +60,10 @@ class Course_MembersController extends AuthenticatedController {
         } else {
             $this->set_layout($GLOBALS['template_factory']->open('layouts/base'));
         }
-
+        
+        checkObject();
+        checkObjectModule("participants");
+        object_set_visit_module('participants');
         $this->last_visitdate = object_get_visit($this->course_id, 'participants');
 
         // Check perms and set the last visit date

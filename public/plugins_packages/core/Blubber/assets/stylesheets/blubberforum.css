@@ -179,7 +179,7 @@
 #forum_threads .content_column > .content {
     margin-top: 7px;
     width: 100%;
-    max-width: 700%;
+    max-width: 100%;
     overflow: hidden;
     hyphens: auto;
     word-wrap: break-word;

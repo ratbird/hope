@@ -61,7 +61,12 @@ class BlubberPosting extends SimpleORMap {
         $posting = new BlubberPosting(self::$mention_posting_id);
         $username = stripslashes(substr($mention, 1));
         if ($username[0] !== '"') {
-            $user = new BlubberUser(get_userid($username));
+            $user_id = get_userid($username);
+            if ($user_id) {
+                $user = new BlubberUser($user_id);
+            } else {
+                $user = BlubberExternalContact::findByEmail($username);
+            }
         } else {
             $name = substr($username, 1, strlen($username) -2);
             $statement = DBManager::get()->prepare(
@@ -80,7 +85,7 @@ class BlubberPosting extends SimpleORMap {
                 $user = BlubberExternalContact::find($user_id);
             }
         }
-        if (!$posting->isNew() && $user && $user->getId() !== $GLOBALS['user']->id) {
+        if (!$posting->isNew() && $user->getId() && $user->getId() !== $GLOBALS['user']->id) {
             $user->mention($posting);
             $statement = DBManager::get()->prepare(
                 "INSERT IGNORE INTO blubber_mentions " .

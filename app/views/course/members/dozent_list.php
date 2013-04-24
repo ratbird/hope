@@ -43,7 +43,7 @@
     <tbody>
         <? $nr = 0?>
         <? foreach($dozenten as $dozent) : ?>
-        <? $fullname = $dozent->user->getFullName();?>
+        <? $fullname = $dozent->user->getFullName('full_rev');?>
         <tr>
             <td style="text-align: right"><?= (++$nr < 10) ? sprintf('%02d', $nr) : $nr ?></td>
             <td>

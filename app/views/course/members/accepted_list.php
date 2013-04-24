@@ -45,7 +45,7 @@
         </thead>
         <tbody>
         <? $nr= 0; foreach($accepted as $accept) : ?>
-        <? $fullname = $accept->user->getFullName();?>
+        <? $fullname = $accept->user->getFullName('full_rev');?>
             <tr>
                 <td>
                 <input aria-label="<?= sprintf(_('Alle %s auswählen'), $status_groups['user']) ?>"

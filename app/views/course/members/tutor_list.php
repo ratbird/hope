@@ -61,7 +61,7 @@
         </thead>
         <tbody>
         <? $nr= 0; foreach($tutoren as $tutor) : ?>
-        <? $fullname = $tutor->user->getFullName();?>
+        <? $fullname = $tutor->user->getFullName('full_rev');?>
             <tr>
                 <? if ($rechte) : ?>
                 <td>

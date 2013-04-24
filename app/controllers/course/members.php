@@ -36,7 +36,7 @@ class Course_MembersController extends AuthenticatedController {
         } else {
             PageLayout::setHelpKeyword("Basis.InVeranstaltungTeilnehmer");
         }
-
+        
         // Get the global rights
         $this->rechte = $GLOBALS['rechte'];
         $this->course_id = $_SESSION['SessSemName'][1];
@@ -196,13 +196,26 @@ class Course_MembersController extends AuthenticatedController {
                         'passthrough');
 
                 // create csv-export link
-                $trtfExport = export_link($this->course_id, "person",
+                $rtfExport = export_link($this->course_id, "person",
                         sprintf('%s %s', htmlReady($this->status_groups['autor']),
                                 htmlReady($this->course_title)), 'rtf', 'rtf-teiln', '',
                         _('TeilnehmerInnen exportieren als rtf Dokument'),
                         'passthrough');
                 $this->addToInfobox(_('Aktionen'), $csvExport, 'icons/16/blue/file-xls.png');
-                $this->addToInfobox(_('Aktionen'), $trtfExport, 'icons/16/blue/file-text.png');
+                $this->addToInfobox(_('Aktionen'), $rtfExport, 'icons/16/blue/file-text.png');
+                
+                if(count($this->awaiting) > 0) {
+                    $awaiting_rtf = export_link($this->course_id, "person", sprintf('%s %s', _("Warteliste"), $this->course_title), 
+                            "rtf", "rtf-warteliste", "awaiting", _("Warteliste exportieren als rtf Dokument"), 
+                            'passthrough');
+                    
+                    $awaiting_csv =  export_link($this->course_id, "person", sprintf('%s %s', _("Warteliste"), $this->course_title), 
+                            "csv", "csv-warteliste", "awaiting", _("Warteliste exportieren als csv Dokument"), 
+                            'passthrough');
+                    
+                    $this->addToInfobox(_('Aktionen'), $awaiting_csv, 'icons/16/blue/file-xls.png');
+                    $this->addToInfobox(_('Aktionen'), $awaiting_rtf, 'icons/16/blue/file-text.png'); 
+                }
             }
         }
     }
@@ -231,7 +244,7 @@ class Course_MembersController extends AuthenticatedController {
                 $res->orderBy(sprintf('%s %s', $this->sort_by, $this->order),
                         ($this->sort_by != 'nachname') ? SORT_NUMERIC : SORT_LOCALE_STRING);
             } else {
-                $res->orderBy('nachname asc');
+                $res->orderBy('position nachname asc');
             }
         }
 
@@ -265,7 +278,7 @@ class Course_MembersController extends AuthenticatedController {
         if ($this->sort_status == 'autor') {
             $members->orderBy(sprintf('%s %s', $this->sort_by, $this->order));
         } else {
-            $members->orderBy('nachname asc');
+            $members->orderBy('position asc');
         }
 
 //        if ($this->page != 0) {

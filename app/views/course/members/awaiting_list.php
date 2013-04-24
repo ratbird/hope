@@ -53,7 +53,7 @@
         <tbody>
         <? $nr = 0 ?>
         <? foreach($awaiting as $waiting) : ?>
-        <? $fullname = $waiting->user->getFullName();?>
+        <? $fullname = $waiting->user->getFullName('full_rev');?>
             <tr>
                 <td><input aria-label="<?= _('Alle NutzerInnen auswählen') ?>" type="checkbox"
                             name="awaiting[<?= $user['user_id'] ?>]" value="1" /></td>

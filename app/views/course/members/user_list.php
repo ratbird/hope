@@ -53,7 +53,7 @@
         </thead>
         <tbody>
         <? $nr= 0; foreach($users as $leser) : ?>
-        <? $fullname = $leser->user->getFullName();?>
+        <? $fullname = $leser->user->getFullName('full_rev');?>
             <tr>
                 <td>
                     <input aria-label="<?= sprintf(_('Alle %s auswählen'), $status_groups['user']) ?>"

@@ -93,7 +93,7 @@
         <tbody>
         <? $nr = $autor_nr?>
         <? foreach($autoren as $autor) : ?>
-        <? $fullname = $autor->user->getFullName();?>
+        <? $fullname = $autor->user->getFullName('full_rev');?>
             <tr>
                 <? if ($rechte) : ?>
                 <td>

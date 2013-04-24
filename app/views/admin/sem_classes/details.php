@@ -229,7 +229,7 @@
                     <div class="droparea">
                         <? foreach ($modules as $module_name => $module_info) : ?>
                         <? $module_attribute = $sem_class->getModuleMetadata($module_name); ?>
-                        <? if (!$module_attribute['activated'] && !$module_attribute['sticky'] && is_numeric($module_info['id'])) : ?>
+                        <? if (!$module_attribute['activated'] && is_numeric($module_info['id'])) : ?>
                             <?= $this->render_partial("admin/sem_classes/content_plugin.php",
                                 array(
                                     'plugin' => $module_info,

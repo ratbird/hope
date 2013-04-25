@@ -1,14 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 3.4.11
+-- version 3.5.6
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 02. Aug 2012 um 17:56
--- Server Version: 5.1.63
--- PHP-Version: 5.3.2-1ubuntu4.17
+-- Erstellungszeit: 25. Apr 2013 um 11:35
+-- Server Version: 5.1.69-0ubuntu0.10.04.1
+-- PHP-Version: 5.3.2-1ubuntu4.19
 
 --
--- Datenbank: `studip_22`
+-- Datenbank: `studip_24`
 --
 
 -- --------------------------------------------------------
@@ -236,6 +236,102 @@ CREATE TABLE IF NOT EXISTS `banner_ads` (
 -- --------------------------------------------------------
 
 --
+-- Tabellenstruktur für Tabelle `blubber`
+--
+
+DROP TABLE IF EXISTS `blubber`;
+CREATE TABLE IF NOT EXISTS `blubber` (
+  `topic_id` varchar(32) NOT NULL DEFAULT '',
+  `parent_id` varchar(32) NOT NULL DEFAULT '',
+  `root_id` varchar(32) NOT NULL DEFAULT '',
+  `context_type` enum('public','private','course') NOT NULL DEFAULT 'public',
+  `name` varchar(255) DEFAULT NULL,
+  `description` text,
+  `mkdate` int(20) NOT NULL DEFAULT '0',
+  `chdate` int(20) NOT NULL DEFAULT '0',
+  `author_host` varchar(255) DEFAULT NULL,
+  `Seminar_id` varchar(32) NOT NULL DEFAULT '',
+  `user_id` varchar(32) NOT NULL DEFAULT '',
+  `external_contact` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`topic_id`),
+  KEY `root_id` (`root_id`),
+  KEY `Seminar_id` (`Seminar_id`),
+  KEY `parent_id` (`parent_id`),
+  KEY `chdate` (`chdate`),
+  KEY `mkdate` (`mkdate`),
+  KEY `user_id` (`user_id`,`Seminar_id`)
+) ENGINE=MyISAM;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `blubber_events_queue`
+--
+
+DROP TABLE IF EXISTS `blubber_events_queue`;
+CREATE TABLE IF NOT EXISTS `blubber_events_queue` (
+  `event_type` varchar(32) NOT NULL,
+  `item_id` varchar(32) NOT NULL,
+  `mkdate` int(11) NOT NULL,
+  PRIMARY KEY (`event_type`,`item_id`,`mkdate`),
+  KEY `item_id` (`item_id`)
+) ENGINE=MyISAM;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `blubber_external_contact`
+--
+
+DROP TABLE IF EXISTS `blubber_external_contact`;
+CREATE TABLE IF NOT EXISTS `blubber_external_contact` (
+  `external_contact_id` varchar(32) NOT NULL,
+  `mail_identifier` varchar(256) DEFAULT NULL,
+  `contact_type` varchar(16) NOT NULL DEFAULT 'anonymous',
+  `name` varchar(256) NOT NULL,
+  `data` text,
+  `chdate` bigint(20) NOT NULL,
+  `mkdate` bigint(20) NOT NULL,
+  PRIMARY KEY (`external_contact_id`),
+  KEY `mail_identifier` (`mail_identifier`),
+  KEY `contact_type` (`contact_type`)
+) ENGINE=MyISAM;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `blubber_follower`
+--
+
+DROP TABLE IF EXISTS `blubber_follower`;
+CREATE TABLE IF NOT EXISTS `blubber_follower` (
+  `studip_user_id` varchar(32) NOT NULL,
+  `external_contact_id` varchar(32) NOT NULL,
+  `left_follows_right` tinyint(1) NOT NULL,
+  KEY `studip_user_id` (`studip_user_id`),
+  KEY `external_contact_id` (`external_contact_id`)
+) ENGINE=MyISAM;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `blubber_mentions`
+--
+
+DROP TABLE IF EXISTS `blubber_mentions`;
+CREATE TABLE IF NOT EXISTS `blubber_mentions` (
+  `topic_id` varchar(32) NOT NULL,
+  `user_id` varchar(32) NOT NULL,
+  `external_contact` tinyint(4) NOT NULL DEFAULT '0',
+  `mkdate` int(11) NOT NULL,
+  UNIQUE KEY `unique_users_per_topic` (`topic_id`,`user_id`,`external_contact`),
+  KEY `topic_id` (`topic_id`),
+  KEY `user_id` (`user_id`)
+) ENGINE=MyISAM;
+
+-- --------------------------------------------------------
+
+--
 -- Tabellenstruktur für Tabelle `calendar_events`
 --
 
@@ -278,20 +374,6 @@ CREATE TABLE IF NOT EXISTS `calendar_events` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `chat_data`
---
-
-DROP TABLE IF EXISTS `chat_data`;
-CREATE TABLE IF NOT EXISTS `chat_data` (
-  `id` int(11) NOT NULL DEFAULT '0',
-  `data` mediumblob NOT NULL,
-  `tstamp` timestamp NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM;
-
--- --------------------------------------------------------
-
---
 -- Tabellenstruktur für Tabelle `comments`
 --
 
@@ -320,7 +402,7 @@ CREATE TABLE IF NOT EXISTS `config` (
   `field` varchar(255) NOT NULL DEFAULT '',
   `value` text NOT NULL,
   `is_default` tinyint(4) NOT NULL DEFAULT '0',
-  `type` enum('boolean','integer','string') NOT NULL DEFAULT 'boolean',
+  `type` enum('boolean','integer','string','array') NOT NULL DEFAULT 'boolean',
   `range` enum('global','user') NOT NULL DEFAULT 'global',
   `section` varchar(255) NOT NULL DEFAULT '',
   `position` int(11) NOT NULL DEFAULT '0',
@@ -373,6 +455,73 @@ CREATE TABLE IF NOT EXISTS `contact_userinfo` (
 -- --------------------------------------------------------
 
 --
+-- Tabellenstruktur für Tabelle `cronjobs_logs`
+--
+
+DROP TABLE IF EXISTS `cronjobs_logs`;
+CREATE TABLE IF NOT EXISTS `cronjobs_logs` (
+  `log_id` char(32) NOT NULL DEFAULT '',
+  `schedule_id` char(32) NOT NULL DEFAULT '',
+  `scheduled` int(11) unsigned NOT NULL,
+  `executed` int(11) unsigned NOT NULL,
+  `exception` text,
+  `output` text,
+  `duration` float NOT NULL,
+  PRIMARY KEY (`log_id`),
+  KEY `schedule_id` (`schedule_id`)
+) ENGINE=MyISAM;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `cronjobs_schedules`
+--
+
+DROP TABLE IF EXISTS `cronjobs_schedules`;
+CREATE TABLE IF NOT EXISTS `cronjobs_schedules` (
+  `schedule_id` char(32) NOT NULL DEFAULT '',
+  `task_id` char(32) NOT NULL DEFAULT '',
+  `active` tinyint(1) NOT NULL DEFAULT '0',
+  `title` varchar(255) DEFAULT NULL,
+  `description` varchar(4096) DEFAULT NULL,
+  `parameters` text,
+  `priority` enum('low','normal','high') NOT NULL DEFAULT 'normal',
+  `type` enum('periodic','once') NOT NULL DEFAULT 'periodic',
+  `minute` tinyint(2) DEFAULT NULL,
+  `hour` tinyint(2) DEFAULT NULL,
+  `day` tinyint(2) DEFAULT NULL,
+  `month` tinyint(2) DEFAULT NULL,
+  `day_of_week` tinyint(1) unsigned DEFAULT NULL,
+  `next_execution` int(11) unsigned NOT NULL DEFAULT '0',
+  `last_execution` int(11) unsigned DEFAULT NULL,
+  `last_result` text,
+  `execution_count` bigint(20) unsigned NOT NULL DEFAULT '0',
+  `mkdate` int(11) unsigned NOT NULL,
+  `chdate` int(11) unsigned NOT NULL,
+  PRIMARY KEY (`schedule_id`),
+  KEY `task_id` (`task_id`)
+) ENGINE=MyISAM;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `cronjobs_tasks`
+--
+
+DROP TABLE IF EXISTS `cronjobs_tasks`;
+CREATE TABLE IF NOT EXISTS `cronjobs_tasks` (
+  `task_id` char(32) NOT NULL DEFAULT '',
+  `filename` varchar(255) NOT NULL,
+  `class` varchar(255) NOT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT '0',
+  `execution_count` bigint(20) unsigned NOT NULL DEFAULT '0',
+  `assigned_count` int(11) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`task_id`)
+) ENGINE=MyISAM;
+
+-- --------------------------------------------------------
+
+--
 -- Tabellenstruktur für Tabelle `datafields`
 --
 
@@ -389,6 +538,8 @@ CREATE TABLE IF NOT EXISTS `datafields` (
   `chdate` int(20) unsigned DEFAULT NULL,
   `type` enum('bool','textline','textarea','selectbox','date','time','email','phone','radio','combo','link') NOT NULL DEFAULT 'textline',
   `typeparam` text NOT NULL,
+  `is_required` tinyint(4) NOT NULL DEFAULT '0',
+  `description` text NOT NULL,
   PRIMARY KEY (`datafield_id`),
   KEY `object_type` (`object_type`)
 ) ENGINE=MyISAM;
@@ -721,19 +872,127 @@ CREATE TABLE IF NOT EXISTS `folder` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `guestbook`
+-- Tabellenstruktur für Tabelle `forum_abo_users`
 --
 
-DROP TABLE IF EXISTS `guestbook`;
-CREATE TABLE IF NOT EXISTS `guestbook` (
-  `post_id` varchar(32) NOT NULL DEFAULT '',
-  `range_id` varchar(32) NOT NULL DEFAULT '',
-  `user_id` varchar(32) NOT NULL DEFAULT '',
-  `mkdate` int(20) NOT NULL DEFAULT '0',
+DROP TABLE IF EXISTS `forum_abo_users`;
+CREATE TABLE IF NOT EXISTS `forum_abo_users` (
+  `topic_id` varchar(32) NOT NULL,
+  `user_id` varchar(32) NOT NULL,
+  PRIMARY KEY (`topic_id`,`user_id`)
+) ENGINE=MyISAM;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `forum_categories`
+--
+
+DROP TABLE IF EXISTS `forum_categories`;
+CREATE TABLE IF NOT EXISTS `forum_categories` (
+  `category_id` varchar(32) NOT NULL,
+  `seminar_id` varchar(32) NOT NULL,
+  `entry_name` varchar(255) NOT NULL,
+  `pos` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`category_id`),
+  KEY `seminar_id` (`seminar_id`)
+) ENGINE=MyISAM;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `forum_categories_entries`
+--
+
+DROP TABLE IF EXISTS `forum_categories_entries`;
+CREATE TABLE IF NOT EXISTS `forum_categories_entries` (
+  `category_id` varchar(32) NOT NULL,
+  `topic_id` varchar(32) NOT NULL,
+  `pos` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`category_id`,`topic_id`)
+) ENGINE=MyISAM;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `forum_entries`
+--
+
+DROP TABLE IF EXISTS `forum_entries`;
+CREATE TABLE IF NOT EXISTS `forum_entries` (
+  `topic_id` varchar(32) NOT NULL,
+  `seminar_id` varchar(32) NOT NULL,
+  `user_id` varchar(32) NOT NULL,
+  `name` varchar(255) NOT NULL,
   `content` text NOT NULL,
-  PRIMARY KEY (`post_id`),
-  KEY `user_id` (`user_id`),
-  KEY `range_id` (`range_id`,`mkdate`)
+  `area` tinyint(4) NOT NULL DEFAULT '0',
+  `mkdate` int(20) NOT NULL,
+  `latest_chdate` int(11) DEFAULT NULL,
+  `chdate` int(20) NOT NULL,
+  `author` varchar(255) NOT NULL,
+  `author_host` varchar(255) NOT NULL,
+  `lft` int(11) NOT NULL,
+  `rgt` int(11) NOT NULL,
+  `depth` int(11) NOT NULL,
+  `anonymous` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`topic_id`),
+  KEY `seminar_id` (`seminar_id`,`lft`),
+  KEY `seminar_id_2` (`seminar_id`,`rgt`),
+  KEY `user_id` (`user_id`)
+) ENGINE=MyISAM;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `forum_entries_issues`
+--
+
+DROP TABLE IF EXISTS `forum_entries_issues`;
+CREATE TABLE IF NOT EXISTS `forum_entries_issues` (
+  `topic_id` varchar(32) NOT NULL,
+  `issue_id` varchar(32) NOT NULL,
+  PRIMARY KEY (`topic_id`,`issue_id`)
+) ENGINE=MyISAM;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `forum_favorites`
+--
+
+DROP TABLE IF EXISTS `forum_favorites`;
+CREATE TABLE IF NOT EXISTS `forum_favorites` (
+  `user_id` varchar(32) NOT NULL,
+  `topic_id` varchar(32) NOT NULL,
+  PRIMARY KEY (`user_id`,`topic_id`)
+) ENGINE=MyISAM;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `forum_likes`
+--
+
+DROP TABLE IF EXISTS `forum_likes`;
+CREATE TABLE IF NOT EXISTS `forum_likes` (
+  `topic_id` varchar(32) NOT NULL,
+  `user_id` varchar(32) NOT NULL,
+  PRIMARY KEY (`topic_id`,`user_id`)
+) ENGINE=MyISAM;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `forum_visits`
+--
+
+DROP TABLE IF EXISTS `forum_visits`;
+CREATE TABLE IF NOT EXISTS `forum_visits` (
+  `user_id` varchar(32) NOT NULL,
+  `seminar_id` varchar(32) NOT NULL,
+  `visitdate` int(11) NOT NULL,
+  `last_visitdate` int(11) NOT NULL,
+  PRIMARY KEY (`user_id`,`seminar_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -1195,6 +1454,38 @@ CREATE TABLE IF NOT EXISTS `object_views` (
 -- --------------------------------------------------------
 
 --
+-- Tabellenstruktur für Tabelle `personal_notifications`
+--
+
+DROP TABLE IF EXISTS `personal_notifications`;
+CREATE TABLE IF NOT EXISTS `personal_notifications` (
+  `personal_notification_id` int(11) NOT NULL AUTO_INCREMENT,
+  `url` varchar(512) NOT NULL DEFAULT '',
+  `text` text NOT NULL,
+  `avatar` varchar(256) NOT NULL DEFAULT '',
+  `html_id` varchar(64) NOT NULL DEFAULT '',
+  `mkdate` int(11) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`personal_notification_id`)
+) ENGINE=MyISAM;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `personal_notifications_user`
+--
+
+DROP TABLE IF EXISTS `personal_notifications_user`;
+CREATE TABLE IF NOT EXISTS `personal_notifications_user` (
+  `personal_notification_id` int(10) unsigned NOT NULL,
+  `user_id` binary(32) NOT NULL,
+  `seen` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`personal_notification_id`,`user_id`),
+  KEY `user_id` (`user_id`,`seen`)
+) ENGINE=MyISAM;
+
+-- --------------------------------------------------------
+
+--
 -- Tabellenstruktur für Tabelle `plugins`
 --
 
@@ -1209,7 +1500,7 @@ CREATE TABLE IF NOT EXISTS `plugins` (
   `navigationpos` int(10) unsigned NOT NULL DEFAULT '0',
   `dependentonid` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`pluginid`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM ;
 
 -- --------------------------------------------------------
 
@@ -1311,6 +1602,7 @@ CREATE TABLE IF NOT EXISTS `resources_assign` (
   `repeat_day_of_week` int(2) DEFAULT NULL,
   `mkdate` int(20) NOT NULL DEFAULT '0',
   `chdate` int(20) NOT NULL DEFAULT '0',
+  `comment_internal` text,
   PRIMARY KEY (`assign_id`),
   KEY `resource_id` (`resource_id`),
   KEY `assign_user_id` (`assign_user_id`)
@@ -1519,7 +1811,7 @@ CREATE TABLE IF NOT EXISTS `roles` (
   `rolename` varchar(80) NOT NULL DEFAULT '',
   `system` enum('y','n') NOT NULL DEFAULT 'n',
   PRIMARY KEY (`roleid`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM ;
 
 -- --------------------------------------------------------
 
@@ -1833,6 +2125,58 @@ CREATE TABLE IF NOT EXISTS `seminar_userdomains` (
 -- --------------------------------------------------------
 
 --
+-- Tabellenstruktur für Tabelle `sem_classes`
+--
+
+DROP TABLE IF EXISTS `sem_classes`;
+CREATE TABLE IF NOT EXISTS `sem_classes` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) NOT NULL,
+  `compact_mode` tinyint(4) NOT NULL,
+  `workgroup_mode` tinyint(4) NOT NULL,
+  `only_inst_user` tinyint(4) NOT NULL,
+  `turnus_default` int(11) NOT NULL,
+  `default_read_level` int(11) NOT NULL,
+  `default_write_level` int(11) NOT NULL,
+  `bereiche` tinyint(4) NOT NULL,
+  `show_browse` tinyint(4) NOT NULL,
+  `write_access_nobody` tinyint(4) NOT NULL,
+  `topic_create_autor` tinyint(4) NOT NULL,
+  `visible` tinyint(4) NOT NULL,
+  `course_creation_forbidden` tinyint(4) NOT NULL,
+  `overview` varchar(64) DEFAULT NULL,
+  `forum` varchar(64) DEFAULT NULL,
+  `admin` varchar(64) DEFAULT NULL,
+  `documents` varchar(64) DEFAULT NULL,
+  `schedule` varchar(64) DEFAULT NULL,
+  `participants` varchar(64) DEFAULT NULL,
+  `literature` varchar(64) DEFAULT NULL,
+  `scm` varchar(64) DEFAULT NULL,
+  `wiki` varchar(64) DEFAULT NULL,
+  `resources` varchar(64) DEFAULT NULL,
+  `calendar` varchar(64) DEFAULT NULL,
+  `elearning_interface` varchar(64) DEFAULT NULL,
+  `modules` text NOT NULL,
+  `description` text NOT NULL,
+  `create_description` text NOT NULL,
+  `studygroup_mode` tinyint(4) NOT NULL,
+  `admission_prelim_default` tinyint(4) NOT NULL DEFAULT '0',
+  `admission_type_default` tinyint(4) NOT NULL DEFAULT '0',
+  `title_dozent` varchar(64) DEFAULT NULL,
+  `title_dozent_plural` varchar(64) DEFAULT NULL,
+  `title_tutor` varchar(64) DEFAULT NULL,
+  `title_tutor_plural` varchar(64) DEFAULT NULL,
+  `title_autor` varchar(64) DEFAULT NULL,
+  `title_autor_plural` varchar(64) DEFAULT NULL,
+  `mkdate` bigint(20) NOT NULL,
+  `chdate` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=MyISAM ;
+
+-- --------------------------------------------------------
+
+--
 -- Tabellenstruktur für Tabelle `sem_tree`
 --
 
@@ -1850,6 +2194,22 @@ CREATE TABLE IF NOT EXISTS `sem_tree` (
   KEY `priority` (`priority`),
   KEY `studip_object_id` (`studip_object_id`)
 ) ENGINE=MyISAM;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `sem_types`
+--
+
+DROP TABLE IF EXISTS `sem_types`;
+CREATE TABLE IF NOT EXISTS `sem_types` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) NOT NULL,
+  `class` int(11) NOT NULL,
+  `mkdate` bigint(20) NOT NULL,
+  `chdate` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM ;
 
 -- --------------------------------------------------------
 
@@ -1880,7 +2240,7 @@ CREATE TABLE IF NOT EXISTS `siteinfo_details` (
   `name` varchar(255) NOT NULL,
   `content` text NOT NULL,
   PRIMARY KEY (`detail_id`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM ;
 
 -- --------------------------------------------------------
 
@@ -1894,7 +2254,7 @@ CREATE TABLE IF NOT EXISTS `siteinfo_rubrics` (
   `position` tinyint(3) unsigned DEFAULT NULL,
   `name` varchar(255) NOT NULL,
   PRIMARY KEY (`rubric_id`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM ;
 
 -- --------------------------------------------------------
 
@@ -2329,6 +2689,20 @@ CREATE TABLE IF NOT EXISTS `user_inst` (
 -- --------------------------------------------------------
 
 --
+-- Tabellenstruktur für Tabelle `user_online`
+--
+
+DROP TABLE IF EXISTS `user_online`;
+CREATE TABLE IF NOT EXISTS `user_online` (
+  `user_id` char(32) NOT NULL,
+  `last_lifesign` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`user_id`),
+  KEY `user_id` (`user_id`,`last_lifesign`)
+) ENGINE=MyISAM;
+
+-- --------------------------------------------------------
+
+--
 -- Tabellenstruktur für Tabelle `user_studiengang`
 --
 
@@ -2337,8 +2711,8 @@ CREATE TABLE IF NOT EXISTS `user_studiengang` (
   `user_id` varchar(32) NOT NULL DEFAULT '',
   `studiengang_id` varchar(32) NOT NULL DEFAULT '',
   `semester` tinyint(2) DEFAULT '0',
-  `abschluss_id` char(32) DEFAULT '0',
-  PRIMARY KEY (`user_id`,`studiengang_id`),
+  `abschluss_id` char(32) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`user_id`,`studiengang_id`,`abschluss_id`),
   KEY `studiengang_id` (`studiengang_id`)
 ) ENGINE=MyISAM;
 
@@ -2382,7 +2756,6 @@ DROP TABLE IF EXISTS `user_visibility`;
 CREATE TABLE IF NOT EXISTS `user_visibility` (
   `user_id` varchar(32) NOT NULL,
   `online` tinyint(1) NOT NULL DEFAULT '1',
-  `chat` tinyint(1) NOT NULL DEFAULT '1',
   `search` tinyint(1) NOT NULL DEFAULT '1',
   `email` tinyint(1) NOT NULL DEFAULT '1',
   `homepage` text NOT NULL,

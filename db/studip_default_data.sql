@@ -39,7 +39,6 @@ INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, 
 INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('9e0579653e585a688665a6ea2e2d7c90', '', 'EVAL_AUSWERTUNG_CONFIG_ENABLE', '1', 1, 'boolean', 'global', 'evaluation', 0, 1141225624, 1141225624, 'Ermöglicht es dem Nutzer, die grafische Darstellung der Evaluationsauswertung zu konfigurieren', '', '');
 INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('0ad11a4cafa548d3c72a3dc1776568d8', '', 'EVAL_AUSWERTUNG_GRAPH_FORMAT', 'png', 1, 'string', 'global', 'evaluation', 0, 1141225624, 1141225624, 'Das Format, in dem die Diagramme der grafischen Evaluationsauswertung erstellt werden (jpg, png, gif).', '', '');
 INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('781e0998a1b5c998ebbc02a4f0d907ac', '', 'USER_VISIBILITY_UNKNOWN', '1', 1, 'boolean', 'global', 'privacy', 0, 1153815901, 1153815901, 'Sollen Nutzer mit Sichtbarkeit "unknown" wie sichtbare behandelt werden?', '', '');
-INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('3ca9d678f11a73917420161180838205', '', 'CHAT_USE_AJAX_CLIENT', '1', 1, 'boolean', 'user', '', 0, 1153815830, 1153815830, 'Einstellung für Nutzer, ob der AJAX chatclient benutzt werden soll; Systemdefault', '', '');
 INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('54ad03142e6704434976c9a0df8329c8', '', 'ONLINE_NAME_FORMAT', 'full_rev', 1, 'string', 'user', '', 0, 1153814980, 1153814980, 'Default-Wert für wer-ist-online Namensformatierung', '', '');
 INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('8a147b2d487d7ae91264f03cab5d8c07', '', 'ADMISSION_PRELIM_COMMENT_ENABLE', '0', 1, 'boolean', 'global', '', 0, 1153814966, 1153814966, 'Schaltet ein oder aus, ob ein Nutzer im Modus "Vorläufiger Eintrag" eine Bemerkung hinterlegen kann', '', '');
 INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('a93eb21bb08719b3a522b7e238bd8b7e', '', 'EXTERNAL_HELP', '1', 1, 'boolean', 'global', '', 0, 1155128579, 1155128579, 'Schaltet das externe Hilfesystem ein', '', '');
@@ -74,14 +73,14 @@ INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, 
 INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('64031f867c3688ecf1c697bd79eff230', '', 'RESOURCES_ALLOW_ROOM_REQUESTS_ALL_ROOMS', '1', 1, 'boolean', 'global', 'resources', 0, 1257956185, 1257956185, 'Schaltet in der Ressourcenverwaltung ein,ob alle Räume gewünscht werden können, oder nur eigene und ''Global'' gesetzte', '', '');
 INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('f2ce635d994363fad26e010f5dbae2c4', '', 'STUDYGROUPS_ENABLE', '0', 1, 'boolean', 'global', 'studygroups', 0, 1257956185, 1293118059, 'Schaltet ein oder aus, ob die Studiengruppen global verfügbar sind.', '', '');
 INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('ebe2dd4ffa77bb1966c5940272d7c8dd', '', 'STUDYGROUP_TERMS', 'Mir ist bekannt, dass ich die Gruppe nicht zu rechtswidrigen Zwecken nutzen darf. Dazu zählen u.a. Urheberrechtsverletzungen, Beleidigungen und andere Persönlichkeitsdelikte.\n\nIch erkläre mich damit einverstanden, dass AdministratorInnen die Inhalte der Gruppe zu Kontrollzwecken einsehen dürfen.', 1, 'string', 'global', 'studygroups', 0, 1257956185, 1257956185, 'Hier werden die Nutzungsbedinungen der Studiengruppen hinterlegt.', '', '');
-INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('c73737d9119e86faa22810a1c154271e', '', 'STUDYGROUP_SETTINGS', 'forum:1 documents:0 schedule:0 participants:1', 1, 'string', 'global', 'studygroups', 0, 1257956185, 1257956185, 'Hier werden die globalen Einstellungen aller Studiengruppen hinterlegt.', '', '');
+INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('2034a3eb8484cc4744fddf65767674cd', '', 'PERSONAL_NOTIFICATIONS_ACTIVATED', '1', 1, 'boolean', 'global', 'privacy', 0, 1366882121, 1366882121, 'Sollen persönliche Benachrichtigungen aktiviert sein?', '', '');
+INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('ae429c21b4ce1c354745e52ef671f1ff', '', 'CALENDAR_SETTINGS', '{"view":"showweek","start":9,"end":20,"step_day":900,"step_week":3600,"type_week":"LONG","holidays":true,"sem_data":true,"delete":0}', 1, 'array', 'user', '', 0, 1366882121, 1366882121, 'persönliche Einstellungen des Kalenders', '', '');
 INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('da0a01b50f472296f940de98c56b5a9f', '', 'STUDYGROUP_DEFAULT_INST', '', 1, 'string', 'global', 'studygroups', 0, 1258042892, 1258042892, 'Die Standardeinrichtung für Studiengruppen kann hier gesetzt werden.', '', '');
 INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('e776a479dc024fb9b6478be3f60455da', '', 'ENABLE_PROTECTED_DOWNLOAD_RESTRICTION', '0', 1, 'boolean', 'global', 'files', 0, 1257956185, 1257956185, 'Schaltet die Überprüfung (fester Teilnehmerkreis) bei Download von als geschützt markierten Dateien ein', '', '');
 INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('9e601ed3a973474c0aac3d7a18c5bf02', '', 'DOZENT_ALWAYS_VISIBLE', '1', 1, 'boolean', 'global', 'privacy', 0, 1293118059, 1293118059, 'Legt fest, ob Personen mit Dozentenrechten immer global sichtbar sind und das auch nicht selbst ändern können.', '', '');
 INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('80ccace5c451cec67d88da1edb4b5eec', '', 'HOMEPAGE_VISIBILITY_DEFAULT', 'VISIBILITY_STUDIP', 1, 'string', 'global', 'privacy', 0, 1293118059, 1293118059, 'Standardsichtbarkeit für Homepageelemente, falls der Benutzer nichts anderes eingestellt hat. Gültige Werte sind: VISIBILITY_ME, VISIBILITY_BUDDIES, VISIBILITY_DOMAIN, VISIBILITY_STUDIP, VISIBILITY_EXTERN', '', '');
 INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('1115645eb5439f998a8cc6f4a3a9dccf', '', 'FORUM_ANONYMOUS_POSTINGS', '0', 1, 'boolean', 'global', 'privacy', 0, 1293118059, 1293118059, 'Legt fest, ob Forenbeiträge anonym verfasst werden dürfen (Root sieht aber immer den Urheber).', '', '');
 INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('d1eef8315d340d78d7eca557139937f1', '', 'INST_FAK_ADMIN_PERMS', 'all', 1, 'string', 'global', 'permissions', 0, 1293118059, 1293118059, '"none" Fakultätsadmin darf Einrichtungen weder anlegen noch löschen, "create" Fakultätsadmin darf Einrichtungen anlegen, aber nicht löschen, "all" Fakultätsadmin darf Einrichtungen anlegen und löschen.', '', '');
-INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('48c97315d9c6473cd7aad2e311daa55e', '', 'CHAT_ENABLE', '1', 1, 'boolean', 'global', 'modules', 0, 1293118059, 1293118059, 'Schaltet ein oder aus, ob der Chat global verfügbar ist.', '', '');
 INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('45e7816a1bfb1521e7a1d6311a964b00', '', 'CALENDAR_ENABLE', '1', 1, 'boolean', 'global', 'modules', 0, 1293118059, 1293118059, 'Schaltet ein oder aus, ob der Kalender global verfügbar ist.', '', '');
 INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('be154136cfaf6ed1c753a6cc26c2ec66', '', 'EXPORT_ENABLE', '1', 1, 'boolean', 'global', 'modules', 0, 1293118059, 1293118059, 'Schaltet ein oder aus, ob der Export global verfügbar ist.', '', '');
 INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('8481ee7faec9805d577de600a0835bc3', '', 'EXTERN_ENABLE', '1', 1, 'boolean', 'global', 'modules', 0, 1293118059, 1293118059, 'Schaltet ein oder aus, ob die externen Seiten global verfügbar sind.', '', '');
@@ -105,7 +104,8 @@ INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, 
 INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('ce272afc2347f03fcbc69568f8a0098a', '', 'PDF_LOGO', '', 1, 'string', 'global', 'global', 0, 1311411856, 1311411856, 'Geben Sie hier den absoluten Pfad auf Ihrem Server (also ohne http) zu einem Logo an, das bei PDF-Exporten im Kopfbereich verwendet wird.', '', '');
 INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('86bbdf3b3ac03a5ad6be7c3c7cd402d4', '', 'AUTO_INSERT_SEM_PARTICIPANTS_VIEW_PERM', 'tutor', 1, 'string', 'global', 'global', 0, 1311411856, 1311411856, 'Ab welchem Status soll in Veranstaltungen mit automatisch eingetragenen Nutzern der Teilnehmerreiter zu sehen sein?', '', '');
 INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('f2469d9595be17d9ef4dd8b45b51f794', '', 'SKIPLINKS_ENABLE', '', 1, 'boolean', 'user', 'privacy', 0, 1311411856, 1311411856, 'Wählen Sie diese Option, um Skiplinks beim ersten Drücken der Tab-Taste anzuzeigen (Systemdefault).', '', '');
-INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('56fdc51c067684a628d3d2535f8f2789', '', 'CHAT_VISIBILITY_DEFAULT', '1', 1, 'boolean', 'global', 'privacy', 0, 1326799691, 1326799691, 'Ist der private Chatraum sichtbar, falls der Nutzer nichts anderes eingestellt hat?', '', '');
+INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('e4983898ecf465efde62b32ffdc9b12b', '', 'CRONJOBS_ENABLE', '0', 1, 'boolean', 'global', 'global', 0, 1366882121, 1366882121, 'Schaltet die Cronjobs an', '', '');
+INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('b9f480020414ca0d41b3e8844b8af5e7', '', 'CRONJOBS_ESCALATION', '300', 1, 'integer', 'global', 'global', 0, 1366882121, 1366882121, 'Gibt an, nach wievielen Sekunden ein Cronjob als steckengeblieben angesehen wird', '', '');
 INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('7f6084adb44da8c24647109544db4d1d', '', 'EMAIL_VISIBILITY_DEFAULT', '1', 1, 'boolean', 'global', 'privacy', 0, 1326799691, 1326799691, 'Ist die eigene Emailadresse sichtbar, falls der Nutzer nichts anderes eingestellt hat?', '', '');
 INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('5591ed8d2ff2afeb186d5f788cbb7e2f', '', 'ONLINE_VISIBILITY_DEFAULT', '1', 1, 'boolean', 'global', 'privacy', 0, 1326799691, 1326799691, 'Sind Nutzer sichtbar in der Wer ist online-Liste, falls sie nichts anderes eingestellt haben?', '', '');
 INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('94bca8fa4c2ad851ddaf26df8b7ec1d3', '', 'SEARCH_VISIBILITY_DEFAULT', '1', 1, 'boolean', 'global', 'privacy', 0, 1326799691, 1326799691, 'Sind Nutzer auffindbar in der Personensuche, falls sie nichts anderes eingestellt haben?', '', '');
@@ -113,6 +113,18 @@ INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, 
 INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('88a3a312b783c9d890b77e84a51853fa', '', 'SCHEDULE_ENABLE', '1', 1, 'boolean', 'global', 'modules', 0, 1326799692, 1326799692, 'Schaltet ein oder aus, ob der Stundenplan global verfügbar ist.', '', '');
 INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('4a38babf107742cf71c8f7d23fea2c9a', '', 'CALENDAR_GROUP_ENABLE', '0', 1, 'boolean', 'global', 'modules', 0, 1326799692, 1326799692, 'Schaltet die Gruppenterminkalender-Funktionen ein.', '', '');
 INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('d7332ad7fba147d81bd1ccae6211284f', '', 'COURSE_CALENDAR_ENABLE', '0', 1, 'boolean', 'global', 'modules', 0, 1326799692, 1326799692, 'Kalender als Inhaltselement in Veranstaltungen.', '', '');
+INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('678424efcbb858b401edbb5f98b43dac', '', 'HOMEPAGEPLUGIN_DEFAULT_ACTIVATION', '1', 1, 'boolean', 'global', 'privacy', 0, 1366882121, 1366882121, 'Sollen neu installierte Homepageplugins automatisch für Benutzer aktiviert sein?', '', '');
+INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('bcd4820eebd8e027cef91bc761ab9a75', '', 'STUDYGROUP_TERMS', 'Mir ist bekannt, dass ich die Gruppe nicht zu rechtswidrigen Zwecken nutzen darf. Dazu zählen u.a. Urheberrechtsverletzungen, Beleidigungen und andere Persönlichkeitsdelikte.\r\n\r\nIch erkläre mich damit einverstanden, dass AdministratorInnen die Inhalte der Gruppe zu Kontrollzwecken einsehen dürfen.', 0, 'string', 'global', '', 0, 1268739461, 1268739461, 'Studiengruppen', '', '');
+INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('d924152d8c38aca6a6363eb2a4f51ecb', '', 'MESSAGING_SETTINGS', '{"show_only_buddys":false,"delete_messages_after_logout":false,"timefilter":"30d","opennew":1,"logout_markreaded":false,"openall":false,"addsignature":false,"save_snd":true,"sms_sig":"","send_view":false,"confirm_reading":3,"send_as_email":false,"folder":{"in":["dummy"],"out":["dummy"]}}', 1, 'array', 'user', '', 0, 1366882121, 1366882121, 'persönliche Einstellungen Nachrichtenbereich', '', '');
+INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('135bc61587772882a8dba504b5aa9f05', '', 'FORUM_SETTINGS', '{"neuauf":false,"rateallopen":true,"showimages":true,"sortthemes":"last","themeview":"mixed","presetview":"mixed","shrink":604800}', 1, 'array', 'user', '', 0, 1366882121, 1366882121, 'persönliche Einstellungen Forum', '', '');
+INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('1f284b41a375d9e9707a3af416d03a0e', '', 'SCHEDULE_SETTINGS', '{"glb_start_time":8,"glb_end_time":19,"glb_days":[0,1,2,3,4,5,6],"glb_sem":null,"converted":true}', 1, 'array', 'user', '', 0, 1366882121, 1366882121, 'persönliche Einstellungen Stundenplan', '', '');
+INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('062039db1a9873d253ec8bb8ac956166', '', 'PROFILE_LAST_VISIT', '0', 1, 'integer', 'user', '', 0, 1366882121, 1366882121, 'Zeitstempel des letzten Besuchs der Profilseite', '', '');
+INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('8f794863e1e9f6940eea8030a75f2da1', '', 'CURRENT_LOGIN_TIMESTAMP', '0', 1, 'integer', 'user', '', 0, 1366882121, 1366882121, 'Zeitstempel des Logins', '', '');
+INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('12721c47c36f3b0f91cea4b51350530d', '', 'LAST_LOGIN_TIMESTAMP', '0', 1, 'integer', 'user', '', 0, 1366882121, 1366882121, 'Zeitstempel des vorherigen Logins', '', '');
+INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('04d58f9f2944cdfb31452aa9fc5baf9c', '', 'PERSONAL_STARTPAGE', '0', 1, 'integer', 'user', '', 0, 1366882121, 1366882121, 'Persönliche Startseite', '', '');
+INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('ff78074546ad3589c1a25fa0d06c0e9a', '', 'MY_COURSES_GROUPING', '', 1, 'string', 'user', '', 0, 1366882121, 1366882121, 'Gruppierung der Veranstaltungsübersicht', '', '');
+INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('859f6640b59468bee5a11084feb34d54', '', 'MY_COURSES_OPEN_GROUPS', '[]', 1, 'array', 'user', '', 0, 1366882121, 1366882121, 'geöffnete Gruppen der Veranstaltungsübersicht', '', '');
+INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES('78da757c0e141b11cfda80126cc56c40', '', 'MY_INSTITUTES_DEFAULT', '', 1, 'string', 'user', '', 0, 1366882121, 1366882121, 'Standard Einrichtung in der Veranstaltungsübersicht für Admins', '', '');
 
 --
 -- Daten für Tabelle `evalanswer`
@@ -220,6 +232,13 @@ INSERT INTO `log_actions` (`action_id`, `name`, `description`, `info_template`, 
 INSERT INTO `log_actions` (`action_id`, `name`, `description`, `info_template`, `active`, `expires`) VALUES('9ed46a3ca3d4f43e17f91e314224dcae', 'SEM_CHANGE_CYCLE', 'Regelmäßige Zeit geändert', '%user hat in %sem(%affected) die regelmäßige Zeit %info geändert', 1, 0);
 
 --
+-- Daten für Tabelle `plugins`
+--
+
+INSERT INTO `plugins` (`pluginid`, `pluginclassname`, `pluginpath`, `pluginname`, `plugintype`, `enabled`, `navigationpos`, `dependentonid`) VALUES(1, 'Blubber', 'core/Blubber', 'Blubber', 'StandardPlugin,SystemPlugin', 'yes', 1, NULL);
+INSERT INTO `plugins` (`pluginid`, `pluginclassname`, `pluginpath`, `pluginname`, `plugintype`, `enabled`, `navigationpos`, `dependentonid`) VALUES(2, 'CoreForum', 'core/Forum', 'Forum', 'ForumModule,StandardPlugin,StudipModule', 'yes', 2, NULL);
+
+--
 -- Daten für Tabelle `roles`
 --
 
@@ -230,6 +249,25 @@ INSERT INTO `roles` (`roleid`, `rolename`, `system`) VALUES(4, 'Lehrende(r)', 'y
 INSERT INTO `roles` (`roleid`, `rolename`, `system`) VALUES(5, 'Studierende(r)', 'y');
 INSERT INTO `roles` (`roleid`, `rolename`, `system`) VALUES(6, 'Tutor(in)', 'y');
 INSERT INTO `roles` (`roleid`, `rolename`, `system`) VALUES(7, 'Nobody', 'y');
+
+--
+-- Daten für Tabelle `roles_plugins`
+--
+
+INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(1, 1);
+INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(1, 2);
+INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(2, 1);
+INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(2, 2);
+INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(3, 1);
+INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(3, 2);
+INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(4, 1);
+INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(4, 2);
+INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(5, 1);
+INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(5, 2);
+INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(6, 1);
+INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(6, 2);
+INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(7, 1);
+INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(7, 2);
 
 --
 -- Daten für Tabelle `roles_studipperms`
@@ -254,20 +292,20 @@ INSERT INTO `roles_user` (`roleid`, `userid`) VALUES(7, 'nobody');
 -- Daten für Tabelle `schema_version`
 --
 
-INSERT INTO `schema_version` (`domain`, `version`) VALUES('studip', 90);
+INSERT INTO `schema_version` (`domain`, `version`) VALUES('studip', 107);
 
 --
 -- Daten für Tabelle `semester_data`
 --
 
-INSERT INTO `semester_data` (`semester_id`, `name`, `description`, `semester_token`, `beginn`, `ende`, `vorles_beginn`, `vorles_ende`) VALUES('f2b4fdf5ac59a9cb57dd73c4d3bbb651', 'SS 2012', '', '', 1333231200, 1349042399, 1334527200, 1342821599);
-INSERT INTO `semester_data` (`semester_id`, `name`, `description`, `semester_token`, `beginn`, `ende`, `vorles_beginn`, `vorles_ende`) VALUES('eb828ebb81bb946fac4108521a3b4697', 'WS 2012/13', '', '', 1349042400, 1364767199, 1350252000, 1360969199);
+INSERT INTO `semester_data` (`semester_id`, `name`, `description`, `semester_token`, `beginn`, `ende`, `vorles_beginn`, `vorles_ende`) VALUES('f2b4fdf5ac59a9cb57dd73c4d3bbb651', 'SS 2013', '', '', 1364767200, 1380578399, 1365372000, 1373666399);
+INSERT INTO `semester_data` (`semester_id`, `name`, `description`, `semester_token`, `beginn`, `ende`, `vorles_beginn`, `vorles_ende`) VALUES('eb828ebb81bb946fac4108521a3b4697', 'WS 2013/14', '', '', 1380578400, 1396303199, 1382306400, 1391900399);
 
 --
 -- Daten für Tabelle `semester_holiday`
 --
 
-INSERT INTO `semester_holiday` (`holiday_id`, `semester_id`, `name`, `description`, `beginn`, `ende`) VALUES ('75a24d5f6f0c4f633d5293221629b9a6', '1', 'Weihnachtsferien 2012/2013', '', 1356303600, 1357081199);
+INSERT INTO `semester_holiday` (`holiday_id`, `semester_id`, `name`, `description`, `beginn`, `ende`) VALUES('75a24d5f6f0c4f633d5293221629b9a6', '1', 'Weihnachtsferien 2013/2014', '', 1387839600, 1388617199);
 
 --
 -- Daten für Tabelle `siteinfo_details`
@@ -286,11 +324,4 @@ INSERT INTO `siteinfo_details` (`detail_id`, `rubric_id`, `position`, `name`, `c
 
 INSERT INTO `siteinfo_rubrics` (`rubric_id`, `position`, `name`) VALUES(1, NULL, '[lang=de]Kontakt[/lang][lang=en]Contact[/lang]');
 INSERT INTO `siteinfo_rubrics` (`rubric_id`, `position`, `name`) VALUES(2, NULL, '[lang=de]Über Stud.IP[/lang][lang=en]About Stud.IP[/lang]');
-
---
--- Daten für Tabelle `user_visibility`
---
-
-INSERT INTO `user_visibility` (`user_id`, `online`, `chat`, `search`, `email`, `homepage`, `default_homepage_visibility`, `mkdate`) VALUES
-('studip', 1, 1, 1, 1, '', 0, UNIX_TIMESTAMP());
 
